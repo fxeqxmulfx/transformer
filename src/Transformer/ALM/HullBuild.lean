@@ -1,0 +1,127 @@
+/-
+# What building the hull costs
+
+`Transformer.ALM.HullIndex` priced a query and proved the price paid:
+`hullIndex_query_paid` charges the binary search and `hullProbe_cost` bounds
+it.  The other half of `NNIndex` — `build` — was a number with nothing behind
+it, the same kind of fiction as `freeIndex`'s zero prices in
+`Transformer.ALM.Independence`.
+
+`HullHalf::add_line` (`transformer_vm/attention/hull2d_cht.h`, lines 143-195)
+does three things per key: one `lower_bound`, one `insert`, and then the two
+erase loops
+
+    while (isect(y, z)) z = lines.erase(z);
+    while ((y = x) != lines.begin() && (--x)->p >= y->p) isect(x, lines.erase(y));
+
+which can each run many times on a single call — enough to make one insertion
+cost `Θ(n)`.  What keeps the build near-linear is not a bound per call but an
+amortized one: a line is inserted once and erased at most once, so however the
+loops distribute, the erases over the whole build are at most the insertions.
+`pops_add_size` is that invariant, stated exactly — pops plus the surviving
+lines equal the keys seen — and `pops_le_length` is its consequence.
+
+From there `buildCost_le` charges two ordered-container searches per key, at
+`Nat.log 2 n + 1` comparisons each by `Transformer.ALM.BinSearch`, plus one
+unit per erase (erasing at a known iterator is amortized constant), and lands
+under `3n(log₂ n + 1)` — which is what `hullIndex.build` now declares, so
+`hullIndex_build_paid` is a payment and not a promise.
+
+At `m ≠ 1` the price stays zero because nothing is built: `hullAns` is `bfAns`
+there, and a linear scan has no preprocessing.
+-/
+
+import Transformer.ALM.HullIndex
+
+namespace Transformer
+namespace ALM
+
+/-! ### The amortized invariant -/
+
+/-- One `add_line`, as it acts on `(lines.size(), erases so far)`: the erase
+loops remove `p` lines — never more than are there — and then the new line is
+inserted. -/
+def stepState (st : ℕ × ℕ) (p : ℕ) : ℕ × ℕ := (st.1 - p + 1, st.2 + min p st.1)
+
+/-- A whole build: one `p` per key, in insertion order. -/
+def runState (ps : List ℕ) : ℕ × ℕ := ps.foldl stepState (0, 0)
+
+/-- **Nothing is erased twice.**  After every prefix of the build, the lines
+erased so far plus the lines still standing are exactly the lines inserted so
+far — a line leaves the container at most once because it entered it once. -/
+theorem foldl_stepState_count (ps : List ℕ) (st : ℕ × ℕ) :
+    (ps.foldl stepState st).2 + (ps.foldl stepState st).1
+      = st.2 + st.1 + ps.length := by
+  induction ps generalizing st with
+  | nil => simp
+  | cons p ps ih =>
+      rw [List.foldl_cons, ih (stepState st p)]
+      simp only [stepState, List.length_cons]
+      omega
+
+/-- The invariant at the start of the build, where the container is empty. -/
+theorem pops_add_size (ps : List ℕ) :
+    (runState ps).2 + (runState ps).1 = ps.length := by
+  simpa [runState] using foldl_stepState_count ps (0, 0)
+
+/-- **So the erase loops are amortized constant.**  However the two `while`
+loops of `add_line` distribute their work, over the whole build they run at
+most once per key. -/
+theorem pops_le_length (ps : List ℕ) : (runState ps).2 ≤ ps.length := by
+  have := pops_add_size ps
+  omega
+
+/-- And a single `add_line` really can erase many lines, so the bound above is
+amortized and not per call: three keys inserted, the third erasing two. -/
+example : (runState [0, 0, 2]).2 = 2 ∧ (runState [0, 0, 2]).1 = 1 := by
+  constructor <;> rfl
+
+/-! ### The price of the build -/
+
+/-- The comparisons a build performs: `lower_bound` and `insert` per key, each
+a search of an ordered container of at most `n` lines, plus one unit for each
+erase. -/
+def buildCost (ps : List ℕ) (n : ℕ) : ℕ :=
+  2 * ps.length * (Nat.log 2 n + 1) + (runState ps).2
+
+/-- **The build is `O(n log n)`, amortization included.**  The erase loops
+contribute `n` in total, not `n` per call. -/
+theorem buildCost_le (ps : List ℕ) (n : ℕ) (h : ps.length ≤ n) :
+    buildCost ps n ≤ 3 * n * (Nat.log 2 n + 1) := by
+  have hpop : (runState ps).2 ≤ n := le_trans (pops_le_length ps) h
+  have hlen : 2 * ps.length * (Nat.log 2 n + 1) ≤ 2 * n * (Nat.log 2 n + 1) :=
+    Nat.mul_le_mul_right _ (by omega)
+  have hn : n ≤ n * (Nat.log 2 n + 1) := Nat.le_mul_of_pos_right n (by omega)
+  unfold buildCost
+  calc 2 * ps.length * (Nat.log 2 n + 1) + (runState ps).2
+      ≤ 2 * n * (Nat.log 2 n + 1) + n := Nat.add_le_add hlen hpop
+    _ ≤ 2 * n * (Nat.log 2 n + 1) + n * (Nat.log 2 n + 1) := Nat.add_le_add_left hn _
+    _ = 3 * n * (Nat.log 2 n + 1) := by ring
+
+/-- The hypothesis is satisfiable: a build of three keys into a hull of size
+three or more. -/
+example : ([0, 0, 2] : List ℕ).length ≤ 3 := by norm_num
+
+/-- **The declared price covers it.**  `hullIndex.build` is no longer a number
+chosen to make an inequality go through: every build of at most `n` keys fits
+inside it. -/
+theorem hullIndex_build_paid (ps : List ℕ) (n : ℕ) (h : ps.length ≤ n) :
+    ((buildCost ps n : ℕ) : ℝ) ≤ hullIndex.build n 1 := by
+  have hb : hullIndex.build n 1 = 3 * (n : ℝ) * ((Nat.log 2 n : ℝ) + 1) := by
+    show (if (1 : ℕ) = 1 then 3 * (n : ℝ) * ((Nat.log 2 n : ℝ) + 1) else 0) = _
+    rw [if_pos rfl]
+  rw [hb]
+  have := buildCost_le ps n h
+  have hcast : ((3 * n * (Nat.log 2 n + 1) : ℕ) : ℝ) = 3 * (n : ℝ) * ((Nat.log 2 n : ℝ) + 1) := by
+    push_cast
+    ring
+  calc ((buildCost ps n : ℕ) : ℝ) ≤ ((3 * n * (Nat.log 2 n + 1) : ℕ) : ℝ) := by exact_mod_cast this
+    _ = 3 * (n : ℝ) * ((Nat.log 2 n : ℝ) + 1) := hcast
+
+/-- The hypothesis is satisfiable, and the payment is not trivial: a build of
+three keys against a hull of three costs `14` and is charged `18`. -/
+example : ((buildCost [0, 0, 2] 3 : ℕ) : ℝ) ≤ hullIndex.build 3 1 :=
+  hullIndex_build_paid [0, 0, 2] 3 (by norm_num)
+
+end ALM
+end Transformer

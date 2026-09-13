@@ -15,6 +15,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.KeyOrder` | the sorted, deduplicated keys that search is run over |
 | `ALM.HullScan` | and why the tie-merge walk after it is a constant-time step |
 | `ALM.HullResolve` | and what that walk hands back: the mean of the tied values |
+| `ALM.HullBuild` | and what building it costs, the erase loops amortized away |
 | `ALM.HullCost` | and what one query costs in full: the search plus the walk |
 | `ALM.FloatHull` | and why finite precision does not change either answer |
 | `ALM.FloatIndex` | and that the index itself is the one the running code answers |
@@ -55,6 +56,7 @@ import Transformer.ALM.BinSearch
 import Transformer.ALM.KeyOrder
 import Transformer.ALM.HullScan
 import Transformer.ALM.HullResolve
+import Transformer.ALM.HullBuild
 import Transformer.ALM.HullCost
 import Transformer.ALM.FloatHull
 import Transformer.ALM.FloatIndex

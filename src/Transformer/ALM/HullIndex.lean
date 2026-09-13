@@ -123,7 +123,7 @@ search, and a scan elsewhere.  Building sorts the keys. -/
 noncomputable def hullIndex : NNIndex where
   ans := fun K q => hullAns K q
   ans_isGreatest := fun K q j => hullAns_isGreatest K q j
-  build := fun n m => if m = 1 then (n : ℝ) * ((Nat.log 2 n : ℝ) + 1) else 0
+  build := fun n m => if m = 1 then 3 * (n : ℝ) * ((Nat.log 2 n : ℝ) + 1) else 0
   query := fun n m => if m = 1 then (Nat.log 2 n : ℝ) + 1 else (n : ℝ) * (m : ℝ)
 
 /-- **The declared price is the price paid.**  In dimension one the query cost
@@ -158,7 +158,7 @@ noncomputable def naiveModel_implements_hullIndex : naiveModel.Implements hullIn
   cost_le := fun n d => by
     rw [reduction_dimension_even n d]
     show 2 * (n : ℝ) ^ 2 * (d : ℝ)
-      ≤ (if d + d = 1 then (n : ℝ) * ((Nat.log 2 n : ℝ) + 1) else 0)
+      ≤ (if d + d = 1 then 3 * (n : ℝ) * ((Nat.log 2 n : ℝ) + 1) else 0)
         + (n : ℝ) * ((n : ℝ) * ((d + d : ℕ) : ℝ))
     rw [if_neg (by omega)]
     push_cast
