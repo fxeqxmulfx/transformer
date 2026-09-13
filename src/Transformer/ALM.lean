@@ -19,6 +19,8 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.Lattice` | the tail bounds that remove the factor `n` |
 | `ALM.ScalarInt` | the length-free bound for distinct integer scalar keys |
 | `ALM.ScalarSharp` | the strictly better bound the quadratic gap gives |
+| `ALM.Theta` | counting lattice points by the theta function instead |
+| `ALM.VectorInt` | which gives the same length-free bound in every dimension |
 | `ALM.OrthVectors` | one lookup decides an Orthogonal Vectors instance |
 | `ALM.SAT` | satisfiability *is* an Orthogonal Vectors question |
 | `ALM.LookupIndex` | an exact index, and the reduction run through it |
@@ -48,6 +50,8 @@ import Transformer.ALM.Softmax
 import Transformer.ALM.Lattice
 import Transformer.ALM.ScalarInt
 import Transformer.ALM.ScalarSharp
+import Transformer.ALM.Theta
+import Transformer.ALM.VectorInt
 import Transformer.ALM.OrthVectors
 import Transformer.ALM.SAT
 import Transformer.ALM.LookupIndex
