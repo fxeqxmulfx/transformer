@@ -29,6 +29,9 @@ where all three hold at once, so the implication is not vacuous.
 The dimension in the conjecture is `c · log n`, not a constant.  That is the
 honest statement, and it is why the barrier says nothing about the planar
 hull the machine actually uses: for fixed `d` the hypothesis is silent.
+`Transformer.ALM.FixedDim` turns that remark into a theorem — at a fixed
+dimension the conjecture is not merely unused but false, so the growing
+dimension cannot be removed.
 -/
 
 import Transformer.ALM.LookupIndex
