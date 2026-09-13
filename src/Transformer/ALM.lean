@@ -24,6 +24,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.Sparsification` | SETH without a density restriction, plus the sparsification |
 | `ALM.SparseModel` | a model where those two hypotheses hold together |
 | `ALM.Polylog` | the same barrier from SETH alone, at polylog dimension |
+| `ALM.Independence` | and why that last conjecture cannot be dropped either |
 -/
 
 import Transformer.ALM.Defs
@@ -44,3 +45,4 @@ import Transformer.ALM.SETH
 import Transformer.ALM.Sparsification
 import Transformer.ALM.SparseModel
 import Transformer.ALM.Polylog
+import Transformer.ALM.Independence
