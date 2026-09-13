@@ -15,7 +15,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.BinSearch` | `lower_bound` written out, and its comparison count bounded |
 | `ALM.KeyOrder` | the sorted, deduplicated keys that search is run over |
 | `ALM.HullScan` | and why the tie-merge walk after it is a constant-time step |
-| `ALM.HullResolve` | and what that walk hands back: the mean of the tied values |
+| `ALM.HullResolve` | and what that walk hands back, in either tie-break mode |
 | `ALM.HullBuild` | and what building it costs, the erase loops amortized away |
 | `ALM.HullCost` | and what one query costs, and returns, search and walk together |
 | `ALM.FloatHull` | and why finite precision does not change either answer |

@@ -98,6 +98,46 @@ theorem scanCombined_resolveLatest (M : ℕ → Meta) (b c : ℕ) (v w : ℝ × 
     simp [scanCombined, scanBest, Meta.merge, Meta.empty, hb, hc, Meta.add, h1, h2, hlt]
   rw [Meta.resolveLatest, if_neg (by omega), hvlast]
 
+/-- **Which side the walk reached first does not matter.**  `query` merges the
+left neighbour before the right one, so the aggregate depends on an order the
+geometry does not fix; with distinct sequence numbers `Meta.merge_comm` says
+the two orders agree, and the walk's answer is well defined. -/
+theorem scanCombined_comm (M : ℕ → Meta) (b c : ℕ)
+    (hb : 0 ≤ (M b).lastSeq) (hc : 0 ≤ (M c).lastSeq)
+    (hne : (M b).lastSeq ≠ (M c).lastSeq) :
+    scanCombined M b c = scanCombined M c b := by
+  unfold scanCombined
+  rw [scanBest_eq M b hb, scanBest_eq M c hc]
+  exact Meta.merge_comm hne
+
+/-- **LATEST, in either order.**  `scanCombined_resolveLatest` fixed the order
+of the two sequence numbers; the hull fixes the order of the two *positions*
+and says nothing about insertion times.  Under `TieBreak::LATEST` the walk
+returns the payload of whichever tied line was appended later, whichever side
+of the winner it sits on. -/
+theorem scanCombined_resolveLatest_of_ne (M : ℕ → Meta) (b c : ℕ) (v w : ℝ × ℝ) (sb sc : ℤ)
+    (hsb : 0 ≤ sb) (hsc : 0 ≤ sc) (hne : sb ≠ sc)
+    (hb : M b = Meta.empty.add v sb) (hc : M c = Meta.empty.add w sc) :
+    (scanCombined M b c).resolveLatest = if sb < sc then w else v := by
+  have hlb : (M b).lastSeq = sb := by rw [hb]; simp [Meta.add, Meta.empty]; omega
+  have hlc : (M c).lastSeq = sc := by rw [hc]; simp [Meta.add, Meta.empty]; omega
+  rcases lt_or_gt_of_ne hne with hlt | hgt
+  · rw [if_pos hlt]
+    exact scanCombined_resolveLatest M b c v w sb sc hsb hlt hb hc
+  · rw [if_neg (not_lt.mpr hgt.le),
+      scanCombined_comm M b c (by omega) (by omega) (by omega)]
+    exact scanCombined_resolveLatest M c b w v sc sb hsc hgt hc hb
+
+/-- The hypotheses are satisfiable in the order the earlier lemma could not
+reach: here the *first* position carries the later insertion, and LATEST
+returns its payload rather than the second one's. -/
+example :
+    (scanCombined (fun j : ℕ => Meta.empty.add ((j : ℝ), 0) (1 - (j : ℤ))) 0 1).resolveLatest
+      = (0, 0) := by
+  rw [scanCombined_resolveLatest_of_ne _ 0 1 (0, 0) (1, 0) 1 0 (by norm_num) (by norm_num)
+    (by norm_num) (by norm_num) (by norm_num)]
+  norm_num
+
 /-- The hypotheses are satisfiable, and the two modes really do differ on them:
 the values `(1,0)` and `(3,0)` appended in that order average to `(2,0)` and
 resolve latest to `(3,0)`. -/

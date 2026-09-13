@@ -24,7 +24,9 @@ an arbitrary index of an arbitrary `argmaxSet`: it never knew that the walk
 starts at `hullProbe`.  `hullQuery_resolve` instantiates it there, so the
 value the head returns is determined by the geometry the search landed in —
 the winner's own payload where the winner is alone, the mean of the two where
-the walk merged a neighbour.
+the walk merged a neighbour.  `hullQuery_resolveLatest` does the same for the
+other tie-break mode, where the order the walk merges in would matter and
+`scanCombined_comm` says it does not.
 -/
 
 import Transformer.ALM.HullIndex
@@ -155,6 +157,49 @@ example : (∀ j : ℕ, (0 : ℤ) ≤ (j : ℤ)) ∧
     ∀ j : ℕ, (fun i : ℕ => Meta.empty.add ((i : ℝ), 0) (i : ℤ)) j
       = Meta.empty.add ((fun i : ℕ => ((i : ℝ), (0 : ℝ))) j) ((fun i : ℕ => (i : ℤ)) j) :=
   ⟨fun j => Int.natCast_nonneg j, fun _ => rfl⟩
+
+/-- **The same query under `LATEST`.**  Where the winner is alone the walk
+returns its payload; where a neighbour tied, the payload of whichever of the
+two was appended later.  The neighbour is named rather than placed, because
+`scanCombined_comm` makes the side it lies on irrelevant once the sequence
+numbers differ — which for an append-only log they always do. -/
+theorem hullQuery_resolveLatest [Nonempty (Fin n)] (K : Fin n → ℝ) (q : ℝ)
+    (M : ℕ → Meta) (V : ℕ → ℝ × ℝ) (s : ℕ → ℤ) (hs : ∀ j, 0 ≤ s j)
+    (hsinj : Function.Injective s)
+    (hM : ∀ j, M j = Meta.empty.add (V j) (s j)) :
+    (argmaxSet (sortedKey K) q (keyCard K - 1) = {hullProbe K q} ∧
+        (scanBest M (hullProbe K q)).resolveLatest = V (hullProbe K q)) ∨
+      ∃ c, c ≠ hullProbe K q ∧
+        (argmaxSet (sortedKey K) q (keyCard K - 1) = {hullProbe K q, c} ∨
+          argmaxSet (sortedKey K) q (keyCard K - 1) = {c, hullProbe K q}) ∧
+        (scanCombined M (hullProbe K q) c).resolveLatest
+          = if s (hullProbe K q) < s c then V c else V (hullProbe K q) := by
+  set b := hullProbe K q with hbdef
+  have hsingle : (scanBest M b).resolveLatest = V b := by
+    have hlast : 0 ≤ (M b).lastSeq := by
+      rw [hM b]
+      simp only [Meta.add, Meta.empty]
+      exact le_max_of_le_left (hs b)
+    rw [scanBest_eq M b hlast, hM b]
+    exact (Meta.resolve_eq_of_single (V b) (s b) (hs b)).2
+  rcases hullQuery_collects K q with h | h | h
+  · exact Or.inl ⟨h, hsingle⟩
+  · exact Or.inr ⟨b + 1, by omega, Or.inl h,
+      scanCombined_resolveLatest_of_ne M b (b + 1) (V b) (V (b + 1)) (s b) (s (b + 1))
+        (hs b) (hs (b + 1)) (fun he => absurd (hsinj he) (by omega)) (hM b) (hM (b + 1))⟩
+  · rcases Nat.eq_zero_or_pos b with hb0 | hbpos
+    · refine Or.inl ⟨?_, hsingle⟩
+      have hself : b - 1 = b := by omega
+      rw [h, hself]
+      exact Finset.insert_eq_self.mpr (Finset.mem_singleton_self b)
+    · exact Or.inr ⟨b - 1, by omega, Or.inr h,
+        scanCombined_resolveLatest_of_ne M b (b - 1) (V b) (V (b - 1)) (s b) (s (b - 1))
+          (hs b) (hs (b - 1)) (fun he => absurd (hsinj he) (by omega)) (hM b) (hM (b - 1))⟩
+
+/-- The added hypothesis is satisfiable by the same aggregates: an append-only
+log numbers its lines `0, 1, 2, …`, and that numbering is injective. -/
+example : Function.Injective (fun i : ℕ => (i : ℤ)) :=
+  fun a b h => by simpa using h
 
 end ALM
 end Transformer
