@@ -28,6 +28,10 @@ will be released shortly" — so every claim below is prose and released code,
 with no proof behind it anywhere.  Quotes are verbatim from the recovered text,
 whose header records what did not survive the extraction.
 
+The released implementation is `transformer-vm/` (gitignored), read 2026-09-14.
+Every constant quoted below comes from it, because the posts give none.  What is
+wrong with that code *as code*, rather than unproved, is `todo3.md`.
+
 Ordered by what is both provable and load-bearing here.
 
 - [ ] **Softmax approximates hard-max — with which constant?**  "Standard
@@ -35,12 +39,21 @@ Ordered by what is both provable and load-bearing here.
       **a large constant**, so the same construction carries over with
       exponentially small approximation error."
 
-      As written this fails in their own headline regime.  `ALM.SoftmaxValue`
-      gives `(n-1) e^{-β} C`: the error carries the trace length, so over
-      "millions of steps" `β` must grow like `log n` and is not a constant.
-      The constant-in-`n` form exists — `ALM.VectorInt.softmax_winner_int_sharp`
-      — but needs **distinct integer** keys and pays the dimension in the
-      exponent, a hypothesis the post never states.
+      The constant is `HARD_K = 1e10` (`model/weights.py:22`), and at that
+      value the claim fails in their own headline regime.  Latest-write
+      separates consecutive positions by only
+      `δ(p) = 0.3 (1/log(p+2) − 1/log(p+3)) ≈ 0.3/(p log² p)`, so `HARD_K · δ`
+      is 226 at `p = 10^5`, **15.7** at `10^6` and **1.16** at `10^7`, and the
+      mass left off the winner, `(n−1) e^{−βδ}`, goes ~0 → 0.15 → above 1
+      across those three.  "Millions of steps" is exactly where it breaks, and
+      no path in the release ever runs a softmax (todo3 §1).
+
+      `ALM.SoftmaxValue` already has that `(n-1) e^{-β} C` shape: the error
+      carries the trace length, so `β` must grow like `log n + log(1/δ)` and is
+      not a constant.  The constant-in-`n` form exists —
+      `ALM.VectorInt.softmax_winner_int_sharp` — but needs **distinct integer**
+      keys and pays the dimension in the exponent, a hypothesis the post never
+      states and the perturbation below destroys on purpose.
 
       This is T1 of §3.  Doing it settles the authors' claim and the bot's head
       in one statement.
@@ -49,13 +62,39 @@ Ordered by what is both provable and load-bearing here.
       position-dependent perturbation to each key.  Among entries with the same
       logical key, the latest one then scores strictly highest."
 
-      A perturbation that separates `n` positions shrinks the score gap `δ`,
-      and the softmax error is `e^{-βδ}`.  The two claims pull in opposite
-      directions and the post never multiplies them together.  What to prove:
-      the `β` that latest-write costs as a function of the perturbation scale,
-      and the threshold at which it beats the integer route of
-      `ALM.SoftmaxLatestMass`, where the tie gap is `1` and no perturbation is
-      needed at all.  Small, and it is the tie-break the item timer uses.
+      The perturbation is `0.3 · (1/log 2 − 1/log(p+2))` added to the key's
+      `y` coordinate (`graph/core.py`, `LATEST_ALPHA`, `_to_2d_key`).  A
+      perturbation that separates `n` positions shrinks the score gap `δ`, and
+      the softmax error is `e^{-βδ}` at the `β` of the item above.  The two
+      claims pull in opposite directions and the post never multiplies them
+      together.
+
+      "Strictly highest" is also false once the key is large: the perturbation
+      is added to `-k²` in float64 and survives only while
+      `p log² p · k² ≲ 1.4·10^15`, so at `k = 10^5, p = 10^4` two consecutive
+      writes to one key are already bit-identical.  What implements latest-write
+      in the released system is an integer sequence number inside the data
+      structure, outside the model entirely (todo3 §2).
+
+      What to prove: the `β` that latest-write costs as a function of the
+      perturbation scale, and the threshold at which it beats the integer route
+      of `ALM.SoftmaxLatestMass`, where the tie gap is `1` and no perturbation
+      is needed at all.  Small, and it is the tie-break the item timer uses.
+
+- [ ] **The ceiling nobody states: where float64 ends.**  Neither post bounds
+      the trace length, and the code carries no assertion.  There is a bound:
+      the parabolic key needs the gap `(q−k)² ≥ 1` to be visible beside `q²`,
+      i.e. `ulp(n²) < 1`, i.e. **`n < 2^26 ≈ 6.7·10^7`**.
+
+      Measured on their own `HardAttentionHead` with `key = position`: clean at
+      `n = 10^7`, 2.1 % of lookups wrong at `n = 10^8`, first failure by direct
+      scan at `q ≈ 7.7·10^7`.  The Sudoku demo is ~5.4·10^6 tokens, a factor of
+      13 below it.
+
+      The smallest item in this file and the only one that ends in a number.
+      `ALM.FloatGrid.fp_eval_exact_of_grid` is the tool: it says a float
+      evaluation is exact on a grid, and what is wanted is that read against
+      grid spacing `1` at magnitude `n²`.
 
 - [ ] **Differentiability through the executed program.**  "Because the
       execution trace is part of the forward pass, the whole process remains
@@ -64,11 +103,15 @@ Ordered by what is both provable and load-bearing here.
 
       By their own statement, "our construction uses hard-max attention".
       Gradients flow through the retrieved *values*; through *which key was
-      retrieved* there is none.  Substituting softmax at large `β` to recover
-      one makes the off-winner weights `e^{-βδ}` by the bound above — the same
-      `β` that makes execution exact makes the training signal vanish.  What to
-      prove: that trade-off as an inequality, gradient magnitude against
-      retrieval error, at one lookup head.
+      retrieved* there is none.  The released code does not even pose the
+      question: generation is `@torch.no_grad()`, picks tokens with
+      `.argmax().item()`, and passes keys through `.numpy()` into C++
+      (`model/transformer.py:41,69`, `attention/hull_cache.py:48`) — three
+      independent severings of the autograd graph.  Substituting softmax at
+      large `β` to recover a gradient makes the off-winner weights `e^{-βδ}` by
+      the bound above — the same `β` that makes execution exact makes the
+      training signal vanish.  What to prove: that trade-off as an inequality,
+      gradient magnitude against retrieval error, at one lookup head.
 
       Likely a negative result, which is why it comes early: it decides whether
       the compiled-fast-path branch of §2 is worth anything.
@@ -120,7 +163,10 @@ Ordered by what is both provable and load-bearing here.
       The largest item by far, and the last: only the final link is in reach
       today (`ALM.FloatHead.fp_head_output` proves the float head against their
       own `hull2d_cht.h`), and the rest needs CALM and the scheduler formalized
-      first.
+      first.  Note also that the last link does not hold as released: their hull
+      cache and their own brute-force head disagree on ties (todo3 §3), so
+      "the transformer's execution is correct as well" is false before the
+      compiler is even reached.
 
 - [ ] **Not a theorem, now or later: 2D heads under training.**  "we find that
       it is still flexible enough to train efficiently and can capture very
