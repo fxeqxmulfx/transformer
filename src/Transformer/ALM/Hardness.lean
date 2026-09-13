@@ -146,7 +146,7 @@ noncomputable def naiveModel : CostModel where
 algorithm is the quadratic one.  This is not evidence for the conjecture; it
 witnesses that `OVHard` is satisfiable, so `query_lower_bound` is not vacuous
 on that side. -/
-example : naiveModel.OVHard := by
+lemma naiveModel_OVHard : naiveModel.OVHard := by
   intro ε hε
   refine ⟨1, fun _ _ N => ⟨max N 2, le_max_left _ _, ?_⟩⟩
   have hn2 : 2 ≤ max N 2 := le_max_right _ _
@@ -169,7 +169,7 @@ example : naiveModel.OVHard := by
 /-- And `naiveModel` implements the reduction through `bruteForce`, at exactly
 the accounted cost.  So all three hypotheses of `query_lower_bound` hold
 simultaneously — the theorem has content. -/
-example : naiveModel.Implements bruteForce where
+noncomputable def naiveModel_implements : naiveModel.Implements bruteForce where
   alg := ()
   decides_reduce := fun A B => (bruteForce.reduce_iff A B).symm
   cost_le := fun n d => by

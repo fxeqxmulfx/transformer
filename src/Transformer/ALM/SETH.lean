@@ -94,6 +94,35 @@ theorem Reduces.solves {S : SATModel} {M : CostModel} (R : Reduces S M)
 
 /-! ### The conjecture becomes a theorem -/
 
+/-- **The arithmetic of the reduction, once.**  Suppose the reduction's total
+bill on `2^n` vectors is at least `2^{2n(1-ε/4)}`, that it splits as a
+construction cost `b` and a call cost `c` with `b ≤ c` — which is what
+`cost_ge_input` gives — and that `n` is past `2/ε`.  Then the call alone
+already costs `(2^n)^{2-ε}`.
+
+Half the slack `ε/4` pays for the construction, the other half for the `-1`
+in the exponent that absorbs the factor `2`. -/
+theorem two_pow_rpow_le_of_bill {ε : ℝ} (hε : 0 < ε) {n : ℕ} {b c : ℝ}
+    (hn : 2 / ε ≤ (n : ℝ))
+    (hbill : (2 : ℝ) ^ (2 * (n : ℝ) * (1 - ε / 4)) ≤ b + c) (hbc : b ≤ c) :
+    ((2 ^ n : ℕ) : ℝ) ^ (2 - ε) ≤ c := by
+  have hslack : 1 ≤ (n : ℝ) * ε / 2 := by
+    rw [div_le_iff₀ hε] at hn
+    linarith
+  have hexp : (n : ℝ) * (2 - ε) ≤ 2 * (n : ℝ) * (1 - ε / 4) - 1 := by nlinarith
+  have hmono : (2 : ℝ) ^ ((n : ℝ) * (2 - ε))
+      ≤ (2 : ℝ) ^ (2 * (n : ℝ) * (1 - ε / 4) - 1) :=
+    Real.rpow_le_rpow_of_exponent_le (by norm_num) hexp
+  have hhalf : (2 : ℝ) ^ (2 * (n : ℝ) * (1 - ε / 4) - 1)
+      = (2 : ℝ) ^ (2 * (n : ℝ) * (1 - ε / 4)) / 2 := by
+    rw [Real.rpow_sub (by norm_num), Real.rpow_one]
+  have hpow : ((2 ^ n : ℕ) : ℝ) ^ (2 - ε) = (2 : ℝ) ^ ((n : ℝ) * (2 - ε)) := by
+    push_cast
+    rw [← Real.rpow_natCast 2 n, ← Real.rpow_mul (by norm_num)]
+  rw [hpow]
+  rw [hhalf] at hmono
+  linarith
+
 /-- **SETH implies the Orthogonal Vectors conjecture.**  An Orthogonal Vectors
 algorithm running in `N^{2-ε}` on `N = 2^n` vectors of dimension `C·n` would
 decide satisfiability of a `2n`-variable formula in about `2^{2n(1-ε/2)}`,
@@ -114,28 +143,10 @@ theorem OVHard_of_SETH {S : SATModel} {M : CostModel} (hS : S.SETH)
     have h1 : (⌈2 / ε⌉₊ : ℝ) ≤ (n : ℝ) := by
       exact_mod_cast le_trans (le_max_right N₀ _) hn
     exact le_trans (Nat.le_ceil _) h1
-  have hslack : 1 ≤ (n : ℝ) * ε / 2 := by
-    rw [div_le_iff₀ hε] at hnbig
-    linarith
-  -- the reduction's cost, with the construction absorbed into the call
   have hin := R.cost_ge_input a (2 ^ n) (C * n)
   have hle := R.cost_le a n (C * n)
-  have habs : (2 : ℝ) ^ (2 * (n : ℝ) * (1 - ε / 4)) ≤ 2 * M.cost a (2 ^ n) (C * n) := by
-    push_cast at hin hle
-    linarith
-  -- and the exponent SETH names beats the one the conclusion asks for
-  have hexp : (n : ℝ) * (2 - ε) ≤ 2 * (n : ℝ) * (1 - ε / 4) - 1 := by nlinarith
-  have hmono : (2 : ℝ) ^ ((n : ℝ) * (2 - ε))
-      ≤ (2 : ℝ) ^ (2 * (n : ℝ) * (1 - ε / 4) - 1) :=
-    Real.rpow_le_rpow_of_exponent_le (by norm_num) hexp
-  have hhalf : (2 : ℝ) ^ (2 * (n : ℝ) * (1 - ε / 4) - 1)
-      = (2 : ℝ) ^ (2 * (n : ℝ) * (1 - ε / 4)) / 2 := by
-    rw [Real.rpow_sub (by norm_num), Real.rpow_one]
-  have hpow : ((2 ^ n : ℕ) : ℝ) ^ (2 - ε) = (2 : ℝ) ^ ((n : ℝ) * (2 - ε)) := by
-    push_cast
-    rw [← Real.rpow_natCast 2 n, ← Real.rpow_mul (by norm_num)]
-  rw [hpow]
-  rw [hhalf] at hmono
+  refine two_pow_rpow_le_of_bill hε hnbig (le_trans hcost hle) ?_
+  push_cast at hin ⊢
   linarith
 
 /-- **The barrier, with SETH as the only conjecture.**  Composing with
@@ -167,7 +178,7 @@ noncomputable def naiveSATModel : SATModel where
 /-- SETH holds in `naiveSATModel` — trivially, its only algorithm being the
 exponential one.  This is not evidence for SETH; it witnesses that the
 hypothesis of `OVHard_of_SETH` is satisfiable. -/
-example : naiveSATModel.SETH := by
+lemma naiveSATModel_SETH : naiveSATModel.SETH := by
   intro δ hδ
   refine ⟨1, fun _ _ N => ⟨max N 1, le_max_left _ _, ?_⟩⟩
   set n := max N 1 with hn
@@ -188,7 +199,7 @@ example : naiveSATModel.SETH := by
 
 /-- And the reduction is available between the two naive models, so all the
 hypotheses of `OVHard_of_SETH` hold at once. -/
-example : Reduces naiveSATModel naiveModel where
+noncomputable def naiveReduces : Reduces naiveSATModel naiveModel where
   alg := id
   decides_reduce := fun _ => fun _ => Iff.rfl
   cost_le := fun _ n m => by
