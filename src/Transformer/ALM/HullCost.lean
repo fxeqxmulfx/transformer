@@ -60,19 +60,18 @@ theorem hullQuery_cost_total [Nonempty (Fin n)] (K : Fin n → ℝ) (q : ℝ) :
     scan_merge_count_le_one (sortedKey K) q (keyCard K - 1) (sortedKey_lt_succ K)
       (hullProbe_mem_argmaxSet K q)⟩
 
-/-- **And exactly what it collects.**  No hypothesis: whatever the keys and
-the query, the tie set is the winner alone, the winner with its successor, or
-the winner with its predecessor — the left loop and the right loop of
-`HullHalf::query` between them, each running at most once. -/
-theorem hullQuery_collects [Nonempty (Fin n)] (K : Fin n → ℝ) (q : ℝ) :
-    argmaxSet (sortedKey K) q (keyCard K - 1) = {hullProbe K q} ∨
-      argmaxSet (sortedKey K) q (keyCard K - 1) = {hullProbe K q, hullProbe K q + 1} ∨
-      argmaxSet (sortedKey K) q (keyCard K - 1) = {hullProbe K q - 1, hullProbe K q} := by
-  set S := argmaxSet (sortedKey K) q (keyCard K - 1) with hSdef
-  set b := hullProbe K q with hbdef
-  have hb : b ∈ S := hullProbe_mem_argmaxSet K q
-  have hcard : S.card ≤ 2 :=
-    argmaxSet_card_le_two (sortedKey K) q (keyCard K - 1) (sortedKey_lt_succ K)
+/-- **The tie set around any winner.**  Whatever the keys and the query, a
+maximizer's tie set is that maximizer alone, it with its successor, or it with
+its predecessor: at most two lines tie, and two that tie are adjacent.  The
+winner is arbitrary because the walk starts wherever the search landed, and in
+floating point (`Transformer.ALM.FloatLattice`) that need not be the index the
+exact search returns. -/
+theorem argmaxSet_trichotomy (K : ℕ → ℝ) (q : ℝ) (N : ℕ) (hstep : ∀ j, K j < K (j + 1))
+    {b : ℕ} (hb : b ∈ argmaxSet K q N) :
+    argmaxSet K q N = {b} ∨ argmaxSet K q N = {b, b + 1} ∨
+      argmaxSet K q N = {b - 1, b} := by
+  set S := argmaxSet K q N with hSdef
+  have hcard : S.card ≤ 2 := argmaxSet_card_le_two K q N hstep
   have hpos : 1 ≤ S.card := Finset.card_pos.mpr ⟨b, hb⟩
   have herase : (S.erase b).card = S.card - 1 := Finset.card_erase_of_mem hb
   have hins : insert b (S.erase b) = S := Finset.insert_erase hb
@@ -87,30 +86,41 @@ theorem hullQuery_collects [Nonempty (Fin n)] (K : Fin n → ℝ) (q : ℝ) :
     have hSeq : S = {b, c} := by rw [← hins, hc]
     rcases Nat.lt_or_ge c b with hlt | hge
     · right; right
-      have hadj := argmaxSet_adjacent (sortedKey K) q (keyCard K - 1) (sortedKey_lt_succ K)
-        hcS hb hlt
+      have hadj := argmaxSet_adjacent K q N hstep hcS hb hlt
       rw [hSeq, show c = b - 1 by omega, Finset.pair_comm]
     · right; left
       have hlt' : b < c := lt_of_le_of_ne hge (Ne.symm hcne)
-      have hadj := argmaxSet_adjacent (sortedKey K) q (keyCard K - 1) (sortedKey_lt_succ K)
-        hb hcS hlt'
+      have hadj := argmaxSet_adjacent K q N hstep hb hcS hlt'
       rw [hSeq, show c = b + 1 by omega]
 
-/-- The hypotheses are satisfiable: `Fin 3` is nonempty, so the price and the
-trichotomy are statements about a family of keys that exists. -/
-example :
-    argmaxSet (sortedKey (fun j : Fin 3 => (j : ℝ))) 2
-        (keyCard (fun j : Fin 3 => (j : ℝ)) - 1)
-      = {hullProbe (fun j : Fin 3 => (j : ℝ)) 2} ∨
-    argmaxSet (sortedKey (fun j : Fin 3 => (j : ℝ))) 2
-        (keyCard (fun j : Fin 3 => (j : ℝ)) - 1)
-      = {hullProbe (fun j : Fin 3 => (j : ℝ)) 2,
-          hullProbe (fun j : Fin 3 => (j : ℝ)) 2 + 1} ∨
-    argmaxSet (sortedKey (fun j : Fin 3 => (j : ℝ))) 2
-        (keyCard (fun j : Fin 3 => (j : ℝ)) - 1)
-      = {hullProbe (fun j : Fin 3 => (j : ℝ)) 2 - 1,
-          hullProbe (fun j : Fin 3 => (j : ℝ)) 2} :=
-  hullQuery_collects _ _
+/-- The hypotheses are satisfiable, and the pair case is reachable: the keys
+`j ↦ j` are sorted and at the query `1/2` the index `0` is a winner tied with
+its successor. -/
+example : (∀ j : ℕ, (fun i : ℕ => (i : ℝ)) j < (fun i : ℕ => (i : ℝ)) (j + 1)) ∧
+    (0 : ℕ) ∈ argmaxSet (fun i : ℕ => (i : ℝ)) (1 / 2) 1 := by
+  refine ⟨fun j => by push_cast; linarith, ?_⟩
+  rw [mem_argmaxSet]
+  refine ⟨by omega, fun i hi => ?_⟩
+  interval_cases i <;> simp [lineEval_liftKey]
+
+/-- **And exactly what one query collects.**  No hypothesis: whatever the keys
+and the query, the tie set is the winner alone, the winner with its successor,
+or the winner with its predecessor — the left loop and the right loop of
+`HullHalf::query` between them, each running at most once. -/
+theorem hullQuery_collects [Nonempty (Fin n)] (K : Fin n → ℝ) (q : ℝ) :
+    argmaxSet (sortedKey K) q (keyCard K - 1) = {hullProbe K q} ∨
+      argmaxSet (sortedKey K) q (keyCard K - 1) = {hullProbe K q, hullProbe K q + 1} ∨
+      argmaxSet (sortedKey K) q (keyCard K - 1) = {hullProbe K q - 1, hullProbe K q} :=
+  argmaxSet_trichotomy (sortedKey K) q (keyCard K - 1) (sortedKey_lt_succ K)
+    (hullProbe_mem_argmaxSet K q)
+
+/-- The hypotheses are satisfiable: `Fin 3` is nonempty, so the trichotomy is
+a statement about a family of keys that exists. -/
+example : ∀ K : Fin 3 → ℝ,
+    argmaxSet (sortedKey K) 2 (keyCard K - 1) = {hullProbe K 2} ∨
+      argmaxSet (sortedKey K) 2 (keyCard K - 1) = {hullProbe K 2, hullProbe K 2 + 1} ∨
+      argmaxSet (sortedKey K) 2 (keyCard K - 1) = {hullProbe K 2 - 1, hullProbe K 2} :=
+  fun K => hullQuery_collects K 2
 
 /-! ### And what it hands back -/
 
