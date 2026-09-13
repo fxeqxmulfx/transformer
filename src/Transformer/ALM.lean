@@ -51,6 +51,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.SoftmaxMass` | and where the mass that bound assumes actually comes from |
 | `ALM.SoftmaxTieInt` | and that on the stored integer keys it needs no gap at all |
 | `ALM.SoftmaxLatest` | and how far it is from the other tie-break mode, exactly |
+| `ALM.SoftmaxLatestMass` | and that that mode is priced by the keys too, with no gap assumed |
 | `ALM.HullHead` | and that the tie it averages is the one the hull walk found |
 | `ALM.HullHeadLatest` | and what the other tie-break mode costs it, exactly |
 | `ALM.FloatHead` | and the value the head returns at the line that code lands on |
@@ -112,6 +113,7 @@ import Transformer.ALM.SoftmaxTie
 import Transformer.ALM.SoftmaxMass
 import Transformer.ALM.SoftmaxTieInt
 import Transformer.ALM.SoftmaxLatest
+import Transformer.ALM.SoftmaxLatestMass
 import Transformer.ALM.HullHead
 import Transformer.ALM.HullHeadLatest
 import Transformer.ALM.FloatHead
