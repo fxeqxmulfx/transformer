@@ -17,7 +17,7 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace CausalMeta
+namespace Causal
 
 open Causal
 
@@ -94,5 +94,5 @@ The number of (strong) R'enyi centers with separation `δ = c β^{-1/2}` is
 theorem renyi_count (d : ℕ) (hd : 2 ≤ d) :
     True := by trivial
 
-end CausalMeta
+end Causal
 end Transformer

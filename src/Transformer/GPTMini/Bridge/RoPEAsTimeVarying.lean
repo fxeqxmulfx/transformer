@@ -56,7 +56,7 @@ theorem rope_timeParam_norm_preserved
 
 If the input tokens lie on `𝕊^{d-1}` with `d ≥ 3` and the attention uses
 RoPE with otherwise-constant `Q, K` and `V = I_d`, then the formalized
-clustering theorem `Transformer.SectionHighD.boumal_clustering` applies
+clustering theorem `Transformer.Perspective.boumal_clustering` applies
 (in its existing form, modulo finishing its `sorry`). -/
 theorem rope_clustering_via_boumal
     (cfg : Config) :

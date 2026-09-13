@@ -18,7 +18,7 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace InterpolationNeuralODE
+namespace Interpolation
 
 open Interpolation
 
@@ -98,5 +98,5 @@ theorem Hartman_Grobman
           ≤ K * Real.exp (-(lam * t)) := by
   sorry
 
-end InterpolationNeuralODE
+end Interpolation
 end Transformer

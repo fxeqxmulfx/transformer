@@ -19,9 +19,9 @@ open scoped BigOperators
 open Real MeasureTheory
 
 namespace Transformer
-namespace SectionBBGKY
+namespace Perspective
 
-open SectionCircle
+open Perspective
 
 variable (n : ℕ)
 
@@ -54,5 +54,5 @@ def bbgkyTransport
               - (2 * ((n : ℝ) - 2) / (β * (n : ℝ))) * g t x
     True   -- the actual distributional identity is omitted.
 
-end SectionBBGKY
+end Perspective
 end Transformer

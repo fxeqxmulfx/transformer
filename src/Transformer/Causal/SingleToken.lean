@@ -16,7 +16,7 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace CausalSingleToken
+namespace Causal
 
 open Causal
 
@@ -48,5 +48,5 @@ theorem single_token_convergence
         ‖x t‖ ≤ C * Real.exp (-(c * t)) := by
   sorry
 
-end CausalSingleToken
+end Causal
 end Transformer

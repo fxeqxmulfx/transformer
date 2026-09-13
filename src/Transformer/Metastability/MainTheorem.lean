@@ -27,7 +27,7 @@ open Real
 namespace Transformer
 namespace Metastability
 
-open SectionIPS
+open Perspective
 
 variable (d n : ℕ)
 
@@ -48,7 +48,7 @@ within-cap inner-product minimum `ρ_q(t)`:
   `ρ̇_q(t) ≥ (2/n) ρ_q(t)(1 - ρ_q(t)) e^{β(ρ_q(t) - 1)}
                 - 2 n e^{-(1-α) β}`. -/
 theorem rho_diff_ineq
-    (β α : ℝ) (X : ℝ → SphereTuple d n) (hX : SectionIPS.SA d n β X)
+    (β α : ℝ) (X : ℝ → SphereTuple d n) (hX : Perspective.SA d n β X)
     (q : ℕ) (ρq : ℝ → ℝ) (Tesc : ℝ) :
     ∀ t : ℝ, 0 ≤ t → t ≤ Tesc →
       (2 / (n : ℝ)) * ρq t * (1 - ρq t) * Real.exp (β * (ρq t - 1))
@@ -88,7 +88,7 @@ If `⟨x_i(0), x_j(0)⟩ ≥ 1 - δ` for all `(i, j) ∈ I²` and
   `⟨x_i(t), x_j(t)⟩ ≥ 1 - δ`  for all `(i, j) ∈ I²` and `t ∈ [0, T]`. -/
 lemma propagation
     (β : ℝ) (hβ : 1 < β) (δ α : ℝ)
-    (X : ℝ → SphereTuple d n) (hX : SectionIPS.SA d n β X)
+    (X : ℝ → SphereTuple d n) (hX : Perspective.SA d n β X)
     (I : Finset (Idx n)) (T : ℝ) (hT : 0 ≤ T)
     (h_cond : (1 / (n : ℝ)) * δ * (1 - δ) * Real.exp (-(δ * β))
                 > (n : ℝ) * Real.exp (-((1 - α) * β)))
@@ -124,7 +124,7 @@ theorem metastability
       -- T₁, T₂ satisfy the explicit bounds in `MetastabilityTimes`
       0 < T₁ ∧ T₁ < T₂ ∧
       ∀ X : ℝ → SphereTuple d n,
-        X 0 = X₀ → SectionIPS.SA d n β X →
+        X 0 = X₀ → Perspective.SA d n β X →
         -- (1) staying in safety caps
         (∀ i : Idx n, ∀ q : Idx k,
           (X₀ i) ∈ sphericalCap d (w q) ε →

@@ -16,9 +16,9 @@ open scoped BigOperators
 open Real MeasureTheory
 
 namespace Transformer
-namespace InterpolationClustering
+namespace Interpolation
 
-open Interpolation SectionFlowMap
+open Interpolation Perspective
 
 variable (d N M : ℕ)
 
@@ -68,5 +68,5 @@ homotopy steps. -/
 theorem rem_nb_disc_clustering (N M : ℕ) :
     True := by trivial
 
-end InterpolationClustering
+end Interpolation
 end Transformer

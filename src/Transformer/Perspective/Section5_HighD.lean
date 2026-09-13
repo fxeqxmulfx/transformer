@@ -31,9 +31,9 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace SectionHighD
+namespace Perspective
 
-open SectionIPS
+open Perspective
 
 variable (d n : ℕ)
 
@@ -46,7 +46,7 @@ theorem boumal_clustering
     (hd : 3 ≤ d) (hn : 2 ≤ n) (β : ℝ) (hβ : 0 ≤ β) :
     ∀ (X₀ : SphereTuple d n),
       ∃ x_star : SSphere d,
-        ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → SectionIPS.SA d n β X →
+        ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
           ∀ i : Idx n,
             Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
               Filter.atTop (nhds 0) := by
@@ -73,7 +73,7 @@ theorem d_infty_exponential
     ∀ (X₀ : SphereTuple d n),
       ∃ (x_star : SSphere d) (C lam : ℝ),
         0 < C ∧ 0 < lam ∧
-        ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → SectionIPS.SA d n β X →
+        ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
           ∀ i : Idx n, ∀ t : ℝ, 0 ≤ t →
             ‖((X t i : EucSpace d)) - x_star‖ ≤ C * Real.exp (-(lam * t)) := by
   sorry
@@ -107,7 +107,7 @@ lemma hemisphere_clustering
               0 < inner (𝕜 := ℝ) ((X₀ i : EucSpace d)) ((w : EucSpace d))) :
     ∃ (x_star : SSphere d) (C lam : ℝ),
       0 < C ∧ 0 < lam ∧
-      ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → SectionIPS.SA d n β X →
+      ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
         ∀ i : Idx n, ∀ t : ℝ, 0 ≤ t →
           ‖((X t i : EucSpace d)) - x_star‖ ≤ C * Real.exp (-(lam * t)) := by
   sorry
@@ -117,7 +117,7 @@ lemma hemisphere_clustering
 `r(t) := min_i ⟨x_i(t), w⟩` is non-decreasing on `ℝ_{≥0}`. -/
 theorem hemisphere_step1_monotone
     (β : ℝ) (w : SSphere d) (X : ℝ → SphereTuple d n)
-    (hX : SectionIPS.SA d n β X)
+    (hX : Perspective.SA d n β X)
     (hinit : ∀ i : Idx n,
               0 < inner (𝕜 := ℝ) ((X 0 i : EucSpace d)) ((w : EucSpace d))) :
     Monotone (fun t : ℝ => Finset.univ.inf'
@@ -129,7 +129,7 @@ theorem hemisphere_step1_monotone
 derive the qualitative convergence step. -/
 theorem step1_rhs_eq_zero
     (β : ℝ) (X : ℝ → SphereTuple d n)
-    (hX : SectionIPS.SA d n β X) :
+    (hX : Perspective.SA d n β X) :
     True := by trivial
 
 /-- **Equation (eq: qual.conv).** *Qualitative convergence at step 1.*
@@ -140,7 +140,7 @@ theorem hemisphere_step1_qual_conv
     (hX₀ : ∃ w : SSphere d, ∀ i : Idx n,
               0 < inner (𝕜 := ℝ) ((X₀ i : EucSpace d)) ((w : EucSpace d))) :
     ∃ x_star : SSphere d,
-      ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → SectionIPS.SA d n β X →
+      ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
         ∀ i : Idx n,
           Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
             Filter.atTop (nhds 0) := by
@@ -150,7 +150,7 @@ theorem hemisphere_step1_qual_conv
 
   `x⋆ = Σ_k θ_k(t) x_k(t)`,  with `Σ_k θ_k(t) ≥ 1`, `θ_k(t) ≥ 0`. -/
 theorem step2_decomposition
-    (β : ℝ) (X : ℝ → SphereTuple d n) (hX : SectionIPS.SA d n β X)
+    (β : ℝ) (X : ℝ → SphereTuple d n) (hX : Perspective.SA d n β X)
     (x_star : SSphere d) :
     ∀ t : ℝ, 0 < t → ∃ θ : Idx n → ℝ,
       (∀ k, 0 ≤ θ k) ∧ (1 ≤ ∑ k : Idx n, θ k) ∧
@@ -161,7 +161,7 @@ theorem step2_decomposition
 
   `α̇(t) ≥ 1/(2 n e^{2β}) · (1 - α(t))`,  for `t ≥ t₀`. -/
 theorem step2_alpha_diffineq
-    (β : ℝ) (X : ℝ → SphereTuple d n) (hX : SectionIPS.SA d n β X)
+    (β : ℝ) (X : ℝ → SphereTuple d n) (hX : Perspective.SA d n β X)
     (x_star : SSphere d) :
     True := by trivial
 
@@ -212,7 +212,7 @@ theorem orthogonal_initial
     (h_ortho : ∀ i j : Idx n, i ≠ j →
                 inner (𝕜 := ℝ) ((X₀ i : EucSpace d)) ((X₀ j : EucSpace d)) = 0) :
     ∃ γ : ℝ → ℝ, ybetaODE_SA n β γ ∧
-      ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → SectionIPS.SA d n β X →
+      ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
         ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx n, i ≠ j →
           inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((X t j : EucSpace d)) = γ t := by
   sorry
@@ -234,7 +234,7 @@ theorem phase_transition_curve
       ∃ (C lam : ℝ), 0 < C ∧ 0 < lam ∧
         -- with probability at least `1 - 2 n² d^{-1/64}` (under uniform init),
         ∀ (X₀ : SphereTuple d n),
-          ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → SectionIPS.SA d n β X →
+          ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
             ∀ γ : ℝ → ℝ, ybetaODE_SA n β γ →
               ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx n, i ≠ j →
                 |inner (𝕜 := ℝ)
@@ -257,5 +257,5 @@ noncomputable def Γ (d : ℕ) (δ : ℝ) (n : ℕ) (β : ℝ) : Set (ℝ × ℝ
 def ΓInf (n : ℕ) (δ : ℝ) : Set (ℝ × ℝ) :=
   { p | ∃ γ : ℝ → ℝ, ybetaODE_SA n p.2 γ ∧ γ p.1 = 1 - δ }
 
-end SectionHighD
+end Perspective
 end Transformer

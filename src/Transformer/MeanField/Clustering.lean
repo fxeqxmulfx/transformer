@@ -20,9 +20,9 @@ open scoped BigOperators
 open Real MeasureTheory
 
 namespace Transformer
-namespace MFClustering
+namespace MeanField
 
-open MeanField SectionFlowMap SectionIPS
+open MeanField Perspective Perspective
 
 variable (d n : ℕ)
 
@@ -41,7 +41,7 @@ theorem thm_clustering_finite
 
 /-- **Theorem (thm: cone-collapse).** *Cone-collapse: exponential rate.*
 
-Same statement as `SectionHighD.hemisphere_clustering`, recalled for
+Same statement as `Perspective.hemisphere_clustering`, recalled for
 convenience. -/
 theorem thm_cone_collapse
     (β : ℝ) (hβ : 0 < β) (n : ℕ) (hn : 1 ≤ n)
@@ -71,5 +71,5 @@ theorem thm_mfclust
     (hd : 2 ≤ d) :
     True := by trivial
 
-end MFClustering
+end MeanField
 end Transformer

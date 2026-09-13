@@ -14,7 +14,7 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace NormSymmetric
+namespace Normalization
 
 open Normalization
 
@@ -41,5 +41,5 @@ theorem thm_symmetric
     (scheme : Scheme) :
     True := by trivial
 
-end NormSymmetric
+end Normalization
 end Transformer

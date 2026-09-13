@@ -18,9 +18,9 @@ open scoped BigOperators
 open Real MeasureTheory
 
 namespace Transformer
-namespace InterpolationDisentanglement
+namespace Interpolation
 
-open Interpolation SectionFlowMap
+open Interpolation Perspective
 
 variable (d N : ℕ)
 
@@ -86,5 +86,5 @@ theorem identity_flow_outside
     (T : ℝ) (μ₀ ν₀ : ProbSphere d) :
     True := by trivial
 
-end InterpolationDisentanglement
+end Interpolation
 end Transformer

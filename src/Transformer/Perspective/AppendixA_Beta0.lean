@@ -21,7 +21,7 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace AppendixBeta0
+namespace Perspective
 
 variable (d n : ℕ)
 
@@ -111,8 +111,8 @@ combines:
       saddle). -/
 theorem p_beta0_proof
     (hd : 2 ≤ d) (hn : 2 ≤ n) :
-    -- Same statement as `SectionSmallBeta.beta0_consensus`.
+    -- Same statement as `Perspective.beta0_consensus`.
     True := by trivial
 
-end AppendixBeta0
+end Perspective
 end Transformer

@@ -43,8 +43,8 @@ noncomputable def attentionDiscrete
 
   `𝒠_β(μ) = (1/(2β)) ∬ e^{β ⟨x,y⟩} dμ(x) dμ(y)`. -/
 noncomputable def Eβ_mf
-    (β : ℝ) (μ : SectionFlowMap.ProbSphere d) : ℝ :=
-  SectionFlowMap.interactionEnergy d β μ
+    (β : ℝ) (μ : Perspective.ProbSphere d) : ℝ :=
+  Perspective.interactionEnergy d β μ
 
 end MeanField
 end Transformer

@@ -15,7 +15,7 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace MFNoisy
+namespace MeanField
 
 variable (d n : ℕ)
 
@@ -32,7 +32,7 @@ def noisyTransformerSDE
   `∂_t μ_t + (1/κ) Δ μ_t
         = ∇ · (μ_t · ∫ e^{β ⟨·, y⟩} y dμ_t(y))`. -/
 def fokkerPlanck
-    (β κ : ℝ) (μ : ℝ → SectionFlowMap.ProbSphere d) : Prop :=
+    (β κ : ℝ) (μ : ℝ → Perspective.ProbSphere d) : Prop :=
   True
 
 /-- *Pitchfork bifurcation* of the noisy Kuramoto model.
@@ -44,5 +44,5 @@ exists. -/
 theorem pitchfork_bifurcation_κ_eq_2 :
     True := by trivial
 
-end MFNoisy
+end MeanField
 end Transformer

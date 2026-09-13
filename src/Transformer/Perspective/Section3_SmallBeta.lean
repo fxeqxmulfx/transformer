@@ -21,9 +21,9 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace SectionSmallBeta
+namespace Perspective
 
-open SectionIPS
+open Perspective
 
 variable (d n : ℕ)
 
@@ -60,7 +60,7 @@ to the Cauchy problem for `SA` (or `USA`) converges to a single cluster. -/
 def clusteringSet
     (β : ℝ) : Set (SphereTuple d n) :=
   { X₀ | ∃ x_star : SSphere d, ∀ X : ℝ → SphereTuple d n,
-            X 0 = X₀ → SectionIPS.SA d n β X →
+            X 0 = X₀ → Perspective.SA d n β X →
               ∀ i : Idx n,
                 Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
                   Filter.atTop (nhds 0) }
@@ -106,7 +106,7 @@ theorem solutions_close_at_small_beta
     (X0 : SphereTuple d n) (β : ℝ) (hβ : 0 ≤ β)
     (Xβ : ℝ → SphereTuple d n) (X0t : ℝ → SphereTuple d n)
     (h1 : Xβ 0 = X0) (h2 : X0t 0 = X0)
-    (hβ1 : SectionIPS.SA d n β Xβ)
+    (hβ1 : Perspective.SA d n β Xβ)
     (hβ0 : beta0Dynamics d n X0t) :
     ∃ C : ℝ, ∀ t : ℝ, 0 ≤ t → ∀ i : Idx n,
       ‖((Xβ t i : EucSpace d)) - ((X0t t i : EucSpace d))‖ ≤ C * β * Real.exp (3 * t) := by
@@ -122,7 +122,7 @@ theorem distance_bound_at_time_m
       ∀ β : ℝ, 0 ≤ β → β ≤ βm →
         ∀ Xβ X0t : ℝ → SphereTuple d n,
           Xβ 0 = X0 → X0t 0 = X0 →
-          SectionIPS.SA d n β Xβ → beta0Dynamics d n X0t →
+          Perspective.SA d n β Xβ → beta0Dynamics d n X0t →
           ∀ i : Idx n,
             ‖((Xβ (m : ℝ) i : EucSpace d))
               - ((X0t (m : ℝ) i : EucSpace d))‖ ≤ (1/8 : ℝ) := by
@@ -143,7 +143,7 @@ theorem beta_tiny
     ∃ C : ℝ, 0 < C ∧ ∀ β : ℝ, 0 ≤ β → β ≤ C / n →
       ∀ (X₀ : SphereTuple d n),
         ∃ x_star : SSphere d,
-          ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → SectionIPS.SA d n β X →
+          ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
             ∀ i : Idx n,
               Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
                 Filter.atTop (nhds 0) := by
@@ -156,11 +156,11 @@ theorem beta_tiny_circle (hn : 2 ≤ n) :
     ∀ β : ℝ, 0 ≤ β → β ≤ 1 →
       ∀ (X₀ : SphereTuple 2 n),
         ∃ x_star : SSphere 2,
-          ∀ X : ℝ → SphereTuple 2 n, X 0 = X₀ → SectionIPS.SA 2 n β X →
+          ∀ X : ℝ → SphereTuple 2 n, X 0 = X₀ → Perspective.SA 2 n β X →
             ∀ i : Idx n,
               Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace 2) - x_star))
                 Filter.atTop (nhds 0) := by
   sorry
 
-end SectionSmallBeta
+end Perspective
 end Transformer

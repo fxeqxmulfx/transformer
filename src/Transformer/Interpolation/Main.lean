@@ -22,9 +22,9 @@ open scoped BigOperators
 open Real MeasureTheory
 
 namespace Transformer
-namespace InterpolationMain
+namespace Interpolation
 
-open Interpolation SectionFlowMap
+open Interpolation Perspective
 
 variable (d N : ℕ)
 
@@ -112,5 +112,5 @@ lemma univ_approx
     ∃ θ : TimeParams d, True := by
   exact ⟨fun _ => { V := 0, B := 0, W := 0, U := 0, b := 0 }, trivial⟩
 
-end InterpolationMain
+end Interpolation
 end Transformer

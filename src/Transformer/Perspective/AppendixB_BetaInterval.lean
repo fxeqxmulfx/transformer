@@ -22,7 +22,7 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace AppendixBetaInterval
+namespace Perspective
 
 variable (d n : ℕ)
 
@@ -115,5 +115,5 @@ theorem metric_hess_comparison
     (β : ℝ) (X : SphereTuple d n) :
     True := by trivial
 
-end AppendixBetaInterval
+end Perspective
 end Transformer

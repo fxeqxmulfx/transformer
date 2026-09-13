@@ -21,7 +21,7 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace MetaStaircase
+namespace Metastability
 
 variable (n : ℕ)
 
@@ -114,5 +114,5 @@ theorem staircase
     (τ : ℝ → ℝ) (h_τ : staircaseReparam n β θ τ) :
     True := by trivial
 
-end MetaStaircase
+end Metastability
 end Transformer

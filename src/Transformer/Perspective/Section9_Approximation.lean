@@ -15,7 +15,7 @@ import Transformer.Basic
 import Transformer.Perspective.Section1_IPS
 
 namespace Transformer
-namespace SectionApproximation
+namespace Perspective
 
 variable (d n : ℕ)
 
@@ -31,5 +31,5 @@ a universal approximation property. -/
 theorem universal_approximation_measure :
     True := by trivial
 
-end SectionApproximation
+end Perspective
 end Transformer

@@ -27,7 +27,7 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace SectionIPS
+namespace Perspective
 
 variable (d n : ℕ)
 
@@ -207,5 +207,5 @@ theorem SA_permutation_equivariant
     SA d n β X → SA d n β (fun t => (X t) ∘ σπ) := by
   sorry
 
-end SectionIPS
+end Perspective
 end Transformer

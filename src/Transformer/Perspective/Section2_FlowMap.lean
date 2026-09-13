@@ -37,7 +37,7 @@ open scoped BigOperators
 open Real MeasureTheory
 
 namespace Transformer
-namespace SectionFlowMap
+namespace Perspective
 
 variable (d n : ℕ)
 
@@ -192,7 +192,7 @@ theorem SA_is_gradient_flow
     (_β : ℝ) (_Q _K _V : TimeParam d)
     (_hsym : True) (_hV : True)
     (X : ℝ → SphereTuple d n) :
-    SectionIPS.transformerODE d n _β _Q _K _V X →
+    Perspective.transformerODE d n _β _Q _K _V X →
     True := by
   intro _; trivial
 
@@ -204,5 +204,5 @@ def auxCE (_μ : ℝ → ProbSphere d) (_v : ℝ → EucSpace d → EucSpace d) 
 def conteqFirstRewriting (_β : ℝ) (_μ : ℝ → ProbSphere d) : Prop :=
   ∀ _ : ℝ, True
 
-end SectionFlowMap
+end Perspective
 end Transformer

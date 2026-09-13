@@ -27,9 +27,9 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace AppendixPhaseTransition
+namespace Perspective
 
-open SectionIPS SectionHighD
+open Perspective Perspective
 
 variable (d n : ℕ)
 
@@ -42,7 +42,7 @@ For two solutions of `SA` with possibly distinct initial data,
 where `c(β) = e^{10 max(1, β)}`. -/
 theorem stability_orthogonal
     (β : ℝ) (X Y : ℝ → SphereTuple d n)
-    (hX : SectionIPS.SA d n β X) (hY : SectionIPS.SA d n β Y) :
+    (hX : Perspective.SA d n β X) (hY : Perspective.SA d n β Y) :
     ∀ t : ℝ, 0 ≤ t →
       (Finset.univ : Finset (Idx n)).sup'
         ⟨⟨0, by sorry⟩, Finset.mem_univ _⟩
@@ -72,7 +72,7 @@ theorem almost_orthogonal
   `‖x_i(t) - y_i(t)‖ ≤ c(β)^{n t} √(log d / d)`. -/
 theorem shortdist_bound
     (β : ℝ) (X Y : ℝ → SphereTuple d n)
-    (hX : SectionIPS.SA d n β X) (hY : SectionIPS.SA d n β Y) :
+    (hX : Perspective.SA d n β X) (hY : Perspective.SA d n β Y) :
     True := by trivial
 
 /-- **Equation (e:ineqfirstpart).** First part of `eq: upto-t`:
@@ -80,7 +80,7 @@ theorem shortdist_bound
   `|⟨x_i(t), x_j(t)⟩ - γ_β(t)| ≤ 2 c(β)^{n t} √(log d / d)`. -/
 theorem ineq_first_part
     (β : ℝ) (X : ℝ → SphereTuple d n) (γ : ℝ → ℝ)
-    (hX : SectionIPS.SA d n β X) (hγ : ybetaODE_SA n β γ) :
+    (hX : Perspective.SA d n β X) (hγ : ybetaODE_SA n β γ) :
     True := by trivial
 
 /-- **Equation (e:ybetacloseto1).**
@@ -113,7 +113,7 @@ theorem d_star_definition
   `α(1/n) ≥ (1/2) γ_β(1/n)`. -/
 theorem alpha_at_one_over_n
     (β : ℝ) (γ : ℝ → ℝ) (X : ℝ → SphereTuple d n)
-    (hX : SectionIPS.SA d n β X) (hγ : ybetaODE_SA n β γ)
+    (hX : Perspective.SA d n β X) (hγ : ybetaODE_SA n β γ)
     (x_star : SSphere d) :
     let α := fun t : ℝ =>
               (Finset.univ : Finset (Idx n)).inf'
@@ -128,7 +128,7 @@ theorem alpha_at_one_over_n
   `α̇(t) ≥ (1/(n e^{2β})) α(1/n) (1 - α(t))`. -/
 theorem diffineq_alpha
     (β : ℝ) (X : ℝ → SphereTuple d n)
-    (hX : SectionIPS.SA d n β X) :
+    (hX : Perspective.SA d n β X) :
     True := by trivial
 
 /-- **Equation (e:productcloseto1).**
@@ -136,7 +136,7 @@ theorem diffineq_alpha
   `1 - α(t) ≤ exp( (1 - γ_β(1/n) · t) / (2 n e^{2β}) )`. -/
 theorem product_close_to_one
     (β : ℝ) (X : ℝ → SphereTuple d n) (γ : ℝ → ℝ)
-    (hX : SectionIPS.SA d n β X) (hγ : ybetaODE_SA n β γ) :
+    (hX : Perspective.SA d n β X) (hγ : ybetaODE_SA n β γ) :
     True := by trivial
 
 /-- **Equation (e:ineqsecondpart).** Second part of `eq: upto-t`:
@@ -146,7 +146,7 @@ theorem product_close_to_one
           + (1/2) exp( (n² e^β)/(2(n + e^{β/2})) - n t / (n + e^{β/2}) )`. -/
 theorem ineq_second_part
     (β : ℝ) (X : ℝ → SphereTuple d n) (γ : ℝ → ℝ)
-    (hX : SectionIPS.SA d n β X) (hγ : ybetaODE_SA n β γ) :
+    (hX : Perspective.SA d n β X) (hγ : ybetaODE_SA n β γ) :
     True := by trivial
 
 /-- *Final assembly.*  Combining `e:ineqfirstpart` and `e:ineqsecondpart`
@@ -163,5 +163,5 @@ theorem usa_analogue
     (β : ℝ) (γ : ℝ → ℝ) (hγ : ybetaODE_USA n β γ) :
     True := by trivial
 
-end AppendixPhaseTransition
+end Perspective
 end Transformer

@@ -23,9 +23,9 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace SectionGeneralMatrices
+namespace Perspective
 
-open SectionIPS
+open Perspective
 
 variable (d n : ℕ)
 
@@ -35,7 +35,7 @@ variable (d n : ℕ)
 
   `𝖤_β[μ] = (e^β / (2β)) ∫∫ exp(-β/2 ‖x - x'‖²) dμ(x) dμ(x')`. -/
 noncomputable def squaredDistEnergy
-    (β : ℝ) (μ : SectionFlowMap.ProbSphere d) : ℝ := by
+    (β : ℝ) (μ : Perspective.ProbSphere d) : ℝ := by
   exact 0  -- abstract placeholder for the integral expression.
 
 /-- A finite point set `𝒞 ⊂ 𝕊^{d-1}` of size `n` is a *spherical `t`-design*
@@ -144,5 +144,5 @@ def limitODE
     HasDerivAt (fun s => z s i)
       ((C.card : ℝ)⁻¹ • ∑ j ∈ C, V (z t j - z t i)) t
 
-end SectionGeneralMatrices
+end Perspective
 end Transformer

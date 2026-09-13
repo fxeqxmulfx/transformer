@@ -29,6 +29,12 @@ Grouping axioms/lemmas/theorems into separate files is an anti-pattern: it split
 def from its API, forces consumers to import all layers, and cycles as soon as two
 subjects interact.
 
+**Namespace = `Transformer.` + the file's directory path**, so a full name is
+guessable from a path and vice versa: `Transformer/Metastability/Staircase.lean`
+declares into `Transformer.Metastability`. Files at the root take their own name
+(`XSA.lean` → `Transformer.XSA`); `Basic.lean` takes `Transformer`. A `structure`'s
+own dot-notation namespace nested inside is fine and unrelated.
+
 Every module must be reachable from `src/Transformer.lean` or it is not built.
 
 ## No decorative proofs

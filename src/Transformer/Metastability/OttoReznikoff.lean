@@ -29,7 +29,7 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace MetaOR
+namespace Metastability
 
 variable (d n : ℕ)
 
@@ -97,7 +97,7 @@ lemma bakry_emery
 
 /-! ### §3.2 — Application to `𝖤_β` on `𝕋^n` -/
 
-open SectionCircle Metastability
+open Perspective Metastability
 
 /-- **Definition (hyp: init.theta).** Angular form of `(β, τ)`-separated
 configurations:
@@ -228,5 +228,5 @@ theorem reverse_PL_acceleration
         ≤ (gradNorm (X t))^2 := by
   sorry
 
-end MetaOR
+end Metastability
 end Transformer

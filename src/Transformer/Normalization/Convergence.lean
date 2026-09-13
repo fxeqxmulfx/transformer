@@ -21,7 +21,7 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace NormConvergence
+namespace Normalization
 
 open Normalization
 
@@ -61,5 +61,5 @@ theorem unconditional_sync_pre_peri
     (h_scheme : scheme = Scheme.pre ∨ scheme = Scheme.peri) :
     True := by trivial
 
-end NormConvergence
+end Normalization
 end Transformer

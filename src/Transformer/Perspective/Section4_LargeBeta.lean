@@ -16,9 +16,9 @@ import Transformer.Perspective.Section3_SmallBeta
 open scoped BigOperators
 
 namespace Transformer
-namespace SectionLargeBeta
+namespace Perspective
 
-open SectionIPS
+open Perspective
 
 variable (d n : ℕ)
 
@@ -35,11 +35,11 @@ theorem beta_interval
     ∃ C : ℝ, 0 < C ∧ ∀ β : ℝ, C * (n : ℝ)^2 ≤ β →
       ∀ (X₀ : SphereTuple d n),
         ∃ x_star : SSphere d,
-          ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → SectionIPS.SA d n β X →
+          ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
             ∀ i : Idx n,
               Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
                 Filter.atTop (nhds 0) := by
   sorry
 
-end SectionLargeBeta
+end Perspective
 end Transformer

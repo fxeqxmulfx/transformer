@@ -20,7 +20,7 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace SectionCircle
+namespace Perspective
 
 variable (n : ℕ)
 
@@ -97,5 +97,5 @@ def strict_saddle_open_problem (β : ℝ) : Prop :=
     -- either θ is a global maximum, or it is a strict saddle
     True
 
-end SectionCircle
+end Perspective
 end Transformer

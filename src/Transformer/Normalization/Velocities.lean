@@ -14,7 +14,7 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace NormVelocities
+namespace Normalization
 
 open Normalization
 
@@ -64,5 +64,5 @@ theorem thm_preln_slow
     (h_norm : ‖Q‖ ≤ 1 ∧ ‖K‖ ≤ 1) :
     True := by trivial
 
-end NormVelocities
+end Normalization
 end Transformer

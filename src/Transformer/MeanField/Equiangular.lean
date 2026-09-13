@@ -14,7 +14,7 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace MFEquiangular
+namespace MeanField
 
 variable (n : ℕ)
 
@@ -63,5 +63,5 @@ theorem long_context_phase_transition
     (γ ρ : ℝ) (hρ : 0 < ρ ∧ ρ < 1) :
     True := by trivial
 
-end MFEquiangular
+end MeanField
 end Transformer

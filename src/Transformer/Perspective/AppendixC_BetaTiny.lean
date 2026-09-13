@@ -22,9 +22,9 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace AppendixBetaTiny
+namespace Perspective
 
-open AppendixBeta0
+open Perspective
 
 variable (d n : ℕ)
 
@@ -64,5 +64,5 @@ theorem beta_tiny_proof_synthesis
     (d n : ℕ) (hd : 2 ≤ d) (hn : 2 ≤ n) :
     True := by trivial
 
-end AppendixBetaTiny
+end Perspective
 end Transformer

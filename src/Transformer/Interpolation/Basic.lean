@@ -46,7 +46,7 @@ particle system on `𝕊^{d-1}`:
 
   `𝐯[μ](t, x) = Proj_x (𝐕(t) · 𝒜_𝐁[μ](t, x) + 𝐖(t) · (𝐔(t) x + b(t))_+)`. -/
 noncomputable def fullVF
-    (θ : TimeParams d) (μ : SectionFlowMap.ProbSphere d)
+    (θ : TimeParams d) (μ : Perspective.ProbSphere d)
     (t : ℝ) (x : EucSpace d) : EucSpace d :=
   let Bt := (θ t).B
   let Vt := (θ t).V
@@ -70,7 +70,7 @@ noncomputable def fullVF
 
   `𝐯[μ](t, x) = Proj_x (𝐕(t) · 𝔼_μ[z] + 𝐖(t) · (𝐔(t) x + b(t))_+)`. -/
 noncomputable def averageVF
-    (θ : TimeParams d) (μ : SectionFlowMap.ProbSphere d)
+    (θ : TimeParams d) (μ : Perspective.ProbSphere d)
     (t : ℝ) (x : EucSpace d) : EucSpace d :=
   let Vt := (θ t).V
   let Wt := (θ t).W
@@ -87,14 +87,14 @@ noncomputable def averageVF
 
   `∂_t μ(t) + div(μ(t) · 𝐯[μ(t)]) = 0`,    `μ(0) = μ_0`. -/
 def cauchyPB
-    (θ : TimeParams d) (μ : ℝ → SectionFlowMap.ProbSphere d) : Prop :=
+    (θ : TimeParams d) (μ : ℝ → Perspective.ProbSphere d) : Prop :=
   ∀ t : ℝ, True   -- distributional form left abstract.
 
 /-- Flow map associated with parameters `θ` — the solution operator of
 `eq: cauchy.pb`. -/
 noncomputable def flowMap
-    (θ : TimeParams d) (t : ℝ) (μ₀ : SectionFlowMap.ProbSphere d) :
-    SectionFlowMap.ProbSphere d := by
+    (θ : TimeParams d) (t : ℝ) (μ₀ : Perspective.ProbSphere d) :
+    Perspective.ProbSphere d := by
   exact μ₀  -- placeholder: the flow map is well-posed.
 
 /-- The hyperplane `H_ε^γ = { x ∈ 𝕊^{d-1} : |⟨x, γ⟩| ≤ ε }`. -/

@@ -20,7 +20,7 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace MetaInitial
+namespace Metastability
 
 variable (d n : ℕ)
 
@@ -102,5 +102,5 @@ theorem low_dim_decay (β ε : ℝ) (hε : 0 < ε ∧ ε < 1/16) (hn : 2 ≤ n) 
     ∃ c : ℝ, 0 < c ∧ c < 1 := by
   refine ⟨1/2, by norm_num, by norm_num⟩
 
-end MetaInitial
+end Metastability
 end Transformer

@@ -21,9 +21,9 @@ open scoped BigOperators
 open Real MeasureTheory
 
 namespace Transformer
-namespace MetaMeanField
+namespace Metastability
 
-open SectionFlowMap Metastability
+open Perspective Metastability
 
 variable (d n : ℕ)
 
@@ -93,5 +93,5 @@ theorem within_cap_variance_small
     (β ε α lam : ℝ) (k : ℕ) :
     True := by trivial
 
-end MetaMeanField
+end Metastability
 end Transformer

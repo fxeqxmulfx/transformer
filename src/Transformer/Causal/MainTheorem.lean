@@ -16,7 +16,7 @@ open scoped BigOperators
 open Real
 
 namespace Transformer
-namespace CausalMain
+namespace Causal
 
 open Causal
 
@@ -63,5 +63,5 @@ theorem thm2
     (h_V : True) :
     True := by trivial
 
-end CausalMain
+end Causal
 end Transformer
