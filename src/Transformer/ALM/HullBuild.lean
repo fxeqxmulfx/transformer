@@ -1,10 +1,9 @@
 /-
 # What building the hull costs
 
-`Transformer.ALM.HullIndex` priced a query and proved the price paid:
-`hullIndex_query_paid` charges the binary search and `hullProbe_cost` bounds
-it.  The other half of `NNIndex` — `build` — was a number with nothing behind
-it, the same kind of fiction as `freeIndex`'s zero prices in
+`Transformer.ALM.HullIndex` priced a query and proved the price paid.  The
+other half of `NNIndex` — `build` — was a number with nothing behind it, the
+same kind of fiction as `freeIndex`'s zero prices in
 `Transformer.ALM.Independence`.
 
 `HullHalf::add_line` (`transformer_vm/attention/hull2d_cht.h`, lines 143-195)
@@ -15,11 +14,15 @@ erase loops
     while ((y = x) != lines.begin() && (--x)->p >= y->p) isect(x, lines.erase(y));
 
 which can each run many times on a single call — enough to make one insertion
-cost `Θ(n)`.  What keeps the build near-linear is not a bound per call but an
-amortized one: a line is inserted once and erased at most once, so however the
-loops distribute, the erases over the whole build are at most the insertions.
+cost `Θ(n)`.  What keeps the build near-linear is amortization: a line is
+inserted once and erased at most once, so the erases over the whole build are
+at most the insertions.
 `pops_add_size` is that invariant, stated exactly — pops plus the surviving
-lines equal the keys seen — and `pops_le_length` is its consequence.
+lines equal the keys seen — and `pops_le_length` is its consequence.  On the
+paraboloid the loops never run at all (`liftKey_not_dominated`), and
+`runState_of_no_erase` draws the conclusion that was left in that theorem's
+docstring: the container ends holding one line per key, which is the range the
+query's binary search is proved over.
 
 From there `buildCost_le` charges two ordered-container searches per key, at
 `Nat.log 2 n + 1` comparisons each by `Transformer.ALM.BinSearch`, plus one
@@ -29,11 +32,9 @@ under `3n(log₂ n + 1)` — which is what `hullIndex.build` now declares, so
 
 At `m ≠ 1` the price stays zero because nothing is built, and that is the last
 section: `hullAns_eq_bfAns` and `hullIndex_agrees_with_bruteForce` say the
-index is then the exhaustive scan of `Transformer.ALM.LookupIndex` outright —
-same answer, same build, same query.  The hull is the hull in dimension one
-and nowhere else, which is the honest reading of `reduction_dimension_even`:
-the barrier is dodged by a claim about one dimension, not by a better index in
-every dimension.
+index is then the exhaustive scan of `Transformer.ALM.LookupIndex` outright.
+The hull is the hull in dimension one and nowhere else, which is the honest
+reading of `reduction_dimension_even`.
 -/
 
 import Transformer.ALM.HullIndex
@@ -81,6 +82,40 @@ amortized and not per call: three keys inserted, the third erasing two. -/
 example : (runState [0, 0, 2]).2 = 2 ∧ (runState [0, 0, 2]).1 = 1 := by
   constructor <;> rfl
 
+/-! ### And on the paraboloid it never fires at all -/
+
+/-- A build that erases nothing erases nothing, at any starting state. -/
+theorem foldl_stepState_pops_of_no_erase (ps : List ℕ) (st : ℕ × ℕ)
+    (h : ∀ p ∈ ps, p = 0) : (ps.foldl stepState st).2 = st.2 := by
+  induction ps generalizing st with
+  | nil => simp
+  | cons p ps ih =>
+      rw [List.foldl_cons, ih (stepState st p) (fun q hq => h q (List.mem_cons_of_mem p hq))]
+      simp [stepState, h p (List.mem_cons_self ..)]
+
+/-- **Every lifted key stays in the container.**  `liftKey_not_dominated` says
+the erase test never fires on three lifted keys in increasing order; this is
+what that buys: the hull ends holding one line per key inserted, so the
+`lower_bound` of `argmax` really does search all of them — the range
+`Transformer.ALM.Hull` and `Transformer.ALM.KeyOrder` assume it searches.
+
+Source: `hull2d_cht.h`, lines 143-195. -/
+theorem runState_of_no_erase (ps : List ℕ) (h : ∀ p ∈ ps, p = 0) :
+    runState ps = (ps.length, 0) := by
+  have hpop : (runState ps).2 = 0 := foldl_stepState_pops_of_no_erase ps (0, 0) h
+  have hsum := pops_add_size ps
+  refine Prod.ext ?_ hpop
+  omega
+
+/-- The hypothesis is the content of `liftKey_not_dominated`, and it does hold
+of the lift: the middle of the three lifted keys `0, 1, 2` is somewhere
+strictly above the envelope of the outer two, so no `add_line` on a sorted
+lifted family erases anything. -/
+example : (∀ p ∈ ([0, 0, 0] : List ℕ), p = 0) ∧
+    ¬ ∀ x : ℝ, lineEval (liftKey 1) x
+      ≤ max (lineEval (liftKey 0) x) (lineEval (liftKey 2) x) :=
+  ⟨by decide, liftKey_not_dominated (by norm_num) (by norm_num)⟩
+
 /-! ### The price of the build -/
 
 /-- The comparisons a build performs: `lower_bound` and `insert` per key, each
@@ -106,6 +141,13 @@ theorem buildCost_le (ps : List ℕ) (n : ℕ) (h : ps.length ≤ n) :
 /-- The hypothesis is satisfiable: a build of three keys into a hull of size
 three or more. -/
 example : ([0, 0, 2] : List ℕ).length ≤ 3 := by norm_num
+
+/-- **And on the paraboloid the price is exactly the two searches per key.**
+With no erase to amortize, `buildCost` loses its third term: building the hull
+of `n` lifted keys is `2n(log₂ n + 1)` comparisons and nothing else. -/
+theorem buildCost_of_no_erase (ps : List ℕ) (n : ℕ) (h : ∀ p ∈ ps, p = 0) :
+    buildCost ps n = 2 * ps.length * (Nat.log 2 n + 1) := by
+  simp [buildCost, runState_of_no_erase ps h]
 
 /-- **The declared price covers it.**  `hullIndex.build` is no longer a number
 chosen to make an inequality go through: every build of at most `n` keys fits
