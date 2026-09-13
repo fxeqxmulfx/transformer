@@ -121,6 +121,33 @@ Ordered by what is both provable and load-bearing here.
       evaluation is exact on a grid, and what is wanted is that read against
       grid spacing `1` at magnitude `n²`.
 
+- [ ] **The queries are not integers, and the margin is one ulp.**
+      "`p` is known from the embedding, multiplying that average by `p`
+      recovers the **exact** cumulative sum … This is how quantities such as the
+      instruction pointer, stack depth, and call-stack depth are maintained
+      exactly over time."
+
+      It is not exact.  The head divides (`HullMeta::resolve`: `inv = 1.0/count;
+      out = vsum*inv`) and the FFN multiplies back, and `fl(fl(s·fl(1/p))·p) = s`
+      fails for **25.8 %** of round trips — first at `s = 3, p = 5` — and at
+      `p ≈ 10^6` **37.3 %** of the cumulative sums are not integers.  Since
+      `cursor` is one of them and `5·cursor + 1` is the query of the instruction
+      fetch (`wasm/interpreter.py:316,320`), the `q : ℤ` hypothesis of
+      `fp_exact_of_grid` is false on the machine's main path.
+
+      Nothing is wrong with the construction — the division is forced, because
+      the alternative recurrence costs a layer per token (todo3 §8).  What is
+      wrong is that exactness is the wrong statement for this path.  The right
+      one is a margin: a lookup whose query is within `ε` of an integer still
+      returns the same key, provided `2kε + ρ < 1/2`.  `ALM.FloatHull.cmp_of_sep`
+      is already that shape — `|a'−a| ≤ δ₁`, `|b'−b| ≤ δ₂`, `δ₁+δ₂ < |a−b|` — and
+      what is missing is its instantiation at `δ = ulp(q)·k`, which turns the
+      measured fact that one ulp is survivable and two are not into a theorem.
+
+      Small, self-contained, and it is the hypothesis every other exactness
+      result in `ALM.FloatGrid` silently assumes.  Do it directly after the
+      ceiling above; together they say how long the machine actually runs.
+
 - [ ] **Differentiability through the executed program.**  "Because the
       execution trace is part of the forward pass, the whole process remains
       differentiable: we can even propagate gradients through the computation

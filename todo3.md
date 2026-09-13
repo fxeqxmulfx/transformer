@@ -321,6 +321,58 @@ that discards an out-of-range lookup, and a cleared entry is the same kind of
 event.  That is a design change, not a patch, and it is the only one on this
 list.
 
+## 8. The cumulative sum is not exact, and it is the main path
+
+The post: "multiplying that average by `position` recovers the exact cumulative
+sum".  It does not.  The head returns `vsum * (1.0/count)`
+(`hull2d_cht.h`, `HullMeta::resolve`) and the FFN multiplies by `position`
+(`graph/core.py`, `fetch_sum`), so the machine computes
+`fl(fl(s · fl(1/p)) · p)` and asks it to be `s`.  Measured over byte-valued and
+0/1-valued payloads, `p` up to `2·10^6`:
+
+    round trips that fail        25.8 %      (first: s = 3, p = 5 → 3.0000000000000004)
+    at p ≈ 10^6, non-integer     37.3 %
+
+This is `stack_depth`, `cursor` and `call_depth` (`wasm/interpreter.py:316`) —
+the instruction pointer among them — and `cursor` goes straight into a query as
+`5·cursor + 1` (`:320`).  So on the main path the query handed to the lookup is
+not an integer, and the hypothesis `q : ℤ` of `ALM.FloatGrid.fp_exact_of_grid`
+does not hold of the running machine.  Everything §0 proves about exactness
+applies to the keys and not to these queries.
+
+What saves it is margin, and the margin is exactly one ulp wide:
+
+    query off by 0 ulp    first key that loses to its neighbour = 94 906 266
+    query off by 1 ulp                                           94 906 266
+    query off by 2 ulp                                           50 331 647
+
+The error out of `fetch_sum` is one ulp, so the machine runs on the last row it
+can afford, and `5·cursor + 1 + i` adds one or two more roundings on top.
+
+**No fix, and that is the point.**  The division is not a mistake: cumulative
+sums by uniform attention are the only constant-depth route, since the obvious
+recurrence `c(p) = c(p−1) + δ(p)` needs the previous position's *computed* value
+and a transformer layer can only read the previous layer, so the recurrence
+costs one layer per token.  The average is forced, the division is forced, and
+the inexactness is forced with it.
+
+What changes is what has to be proved.  Exactness is not available on this path;
+what is true is exactness **within a margin**, and `ALM.FloatHull.cmp_of_sep` is
+already the right tool — it wants `δ₁ + δ₂ < |a − b|`, here `2k·ε + rounding <
+1/2` with `ε = ulp(q)`.  The measurement above is that statement's content.
+This is the most valuable thing in this file to formalize, and `todo2.md` §0
+now carries it: it is the one place where the machine is not exact and cannot
+be made so.
+
+The other ReGLU identities degrade gracefully under the same perturbation,
+which is worth stating in their favour.  `_make_multiply(a,b) = reglu(a,b) −
+reglu(a,−b) = a·b` is exact for any real `b`.  `stepglu(a,b) = a·step(b ≥ 0)`
+and the hat filter `reglu(x,d+1) − 2reglu(x,d) + reglu(x,d−1) = x·[d = 0]` are
+exact for integer arguments and, at `b = −ε` or `d = ε`, return `a(1 − ε)`
+rather than flipping: a relative error of one ulp, not a wrong branch.  The
+construction is 1-ulp-Lipschitz rather than brittle.  Nobody has bounded the
+composition of those errors, and that is the open question this section leaves.
+
 ## Order of work
 
 1. §0, both halves — one conditional in `weights.py` and one deleted term in
@@ -333,6 +385,8 @@ list.
    closed, for the reasons in §2.
 5. §5 — prove the lower bound first, since it decides whether there is anything
    to fix.
+6. §8 — nothing to fix in the code; the work is the margin theorem, and it is
+   the one that decides how much of §0's wall the machine actually keeps.
 
 What is *not* on this list is the Lean side.  None of these findings belongs in
 `src/`: their use is that they fix hypotheses, and the hypotheses they fix
