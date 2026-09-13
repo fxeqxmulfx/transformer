@@ -169,6 +169,24 @@ structural rather than numerical:
   `10^6`-token trace that is 95 distinct logical keys.  Latest-write cannot be
   bought back on the grid.
 
+And the sentence is not merely false, it is unaffordable.  Recency in the key
+has to fit inside the width-`1` score gap between distinct integer keys, so `n`
+recencies need spacing `≤ 1/n`, and that spacing must stay visible beside a
+score of size `k² ~ n²`.  One float then carries two quantities three decades
+apart and the wall becomes `n³ < 2^mantissa` instead of `n² < 2^53`.  Measured,
+as the largest trace on which the sentence holds:
+
+    even spacing 1/n, float64                          262 143
+    their spacing 0.3/(p log² p), float64               30 730
+    even spacing 1/n, long double (64-bit mantissa)   2 516 581
+    for comparison, §0's fix, recency not in the key  94 906 266
+
+The cube-root law is confirmed at both mantissa widths, so binary128 would be
+needed — `n ≈ 2^37.7` — merely to beat what float64 already gives without
+recency in the key.  Making the claim true costs a factor of 362, and their own
+spacing is a further factor of 8.5 worse than an evenly spaced one.  The Sudoku
+demo at 5.4·10^6 tokens does not run in any row of that table.
+
 So the disjunction has one branch.  The post has to drop "the latest one then
 scores strictly highest": latest-write is not in the weights and cannot be put
 there.  Their own reference semantics already says so — `evaluator.py:158-165`
