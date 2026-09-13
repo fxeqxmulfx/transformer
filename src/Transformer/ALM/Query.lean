@@ -97,19 +97,24 @@ theorem lineEval_anti_right (hslope : ∀ j, j < n → (L j).1 < (L (j + 1)).1)
 /-- **`lower_bound` returns a maximizer.**  `hslope` is the set ordering by
 slope; `hbp` is the breakpoint invariant the file states; `hlt` and `hge`
 together say that `i` is what `lower_bound(x)` yields — every earlier
-breakpoint is strictly before `x`, and `i`'s own breakpoint is at or after it.
-The fallback branch `it == end` is the case `i = n`, where `hge` is vacuous. -/
+breakpoint is at or before `x`, and `i`'s own breakpoint is at or after it.
+The fallback branch `it == end` is the case `i = n`, where `hge` is vacuous.
+
+`hlt` is deliberately not strict: at a breakpoint the two lines agree, so a
+comparison decided either way still lands on a maximizer.  That is what makes
+the statement apply to a query sitting exactly on a breakpoint — the tie case
+the walk of `Transformer.ALM.HullScan` exists for. -/
 theorem lowerBound_isGreatest
     (hslope : ∀ j, j < n → (L j).1 < (L (j + 1)).1)
     (hbp : ∀ a b, a ≤ b → b < n → interX (L a) (L (a + 1)) ≤ interX (L b) (L (b + 1)))
     (i : ℕ) (hi : i ≤ n)
-    (hlt : ∀ j, j < i → interX (L j) (L (j + 1)) < x)
+    (hlt : ∀ j, j < i → interX (L j) (L (j + 1)) ≤ x)
     (hge : i < n → x ≤ interX (L i) (L (i + 1))) :
     ∀ j ≤ n, lineEval (L j) x ≤ lineEval (L i) x := by
   intro j hj
   rcases le_total j i with hji | hij
   · exact lineEval_mono_right L x hslope j i hji hi
-      fun k _ hk' => (hlt k hk').le
+      fun k _ hk' => hlt k hk'
   · refine lineEval_anti_right L x hslope i j hij hj fun k hk hk' => ?_
     have hkn : k < n := by omega
     have hin : i < n := by omega
@@ -122,7 +127,7 @@ example :
     let L : ℕ → ℝ × ℝ := fun k => if k = 0 then (0, 0) else (1, 0)
     (∀ j, j < 1 → (L j).1 < (L (j + 1)).1) ∧
       (∀ a b, a ≤ b → b < 1 → interX (L a) (L (a + 1)) ≤ interX (L b) (L (b + 1))) ∧
-      (∀ j, j < 0 → interX (L j) (L (j + 1)) < (0 : ℝ)) ∧
+      (∀ j, j < 0 → interX (L j) (L (j + 1)) ≤ (0 : ℝ)) ∧
       ((0 : ℕ) < 1 → (0 : ℝ) ≤ interX (L 0) (L (0 + 1))) := by
   intro L
   refine ⟨fun j hj => ?_, fun a b hab hb => ?_, fun j hj => absurd hj (by omega), fun _ => ?_⟩

@@ -59,7 +59,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`norm_sq_eq_sum`](src/Transformer/ALM/Basic.lean#L67) | lemma | proved |
 | [`one_le_dist_sq_of_int`](src/Transformer/ALM/Basic.lean#L73) | theorem | proved |
 
-**[Transformer.ALM.BinSearch](src/Transformer/ALM/BinSearch.lean)** — 213 lines
+**[Transformer.ALM.BinSearch](src/Transformer/ALM/BinSearch.lean)** — 214 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -183,7 +183,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`naiveModel_OVHard`](src/Transformer/ALM/Hardness.lean#L159) | lemma | proved |
 | [`naiveModel_implements`](src/Transformer/ALM/Hardness.lean#L182) | def |  |
 
-**[Transformer.ALM.Hull](src/Transformer/ALM/Hull.lean)** — 174 lines
+**[Transformer.ALM.Hull](src/Transformer/ALM/Hull.lean)** — 175 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -194,8 +194,8 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`le_of_step_lt`](src/Transformer/ALM/Hull.lean#L94) | lemma | proved |
 | [`hslope_liftKey`](src/Transformer/ALM/Hull.lean#L102) | lemma | proved |
 | [`hbp_liftKey`](src/Transformer/ALM/Hull.lean#L113) | lemma | proved |
-| [`hull_isGreatest`](src/Transformer/ALM/Hull.lean#L133) | theorem | proved |
-| [`hull_isGreatest_score`](src/Transformer/ALM/Hull.lean#L149) | theorem | proved |
+| [`hull_isGreatest`](src/Transformer/ALM/Hull.lean#L134) | theorem | proved |
+| [`hull_isGreatest_score`](src/Transformer/ALM/Hull.lean#L150) | theorem | proved |
 
 **[Transformer.ALM.HullBuild](src/Transformer/ALM/HullBuild.lean)** — 165 lines
 
@@ -438,7 +438,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`scan`](src/Transformer/ALM/Probe.lean#L113) | def |  |
 | [`run_scan`](src/Transformer/ALM/Probe.lean#L118) | theorem | proved |
 
-**[Transformer.ALM.Query](src/Transformer/ALM/Query.lean)** — 137 lines
+**[Transformer.ALM.Query](src/Transformer/ALM/Query.lean)** — 142 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -447,7 +447,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`lineEval_le_iff_le_interX`](src/Transformer/ALM/Query.lean#L45) | theorem | proved |
 | [`lineEval_mono_right`](src/Transformer/ALM/Query.lean#L63) | theorem | proved |
 | [`lineEval_anti_right`](src/Transformer/ALM/Query.lean#L80) | theorem | proved |
-| [`lowerBound_isGreatest`](src/Transformer/ALM/Query.lean#L102) | theorem | proved |
+| [`lowerBound_isGreatest`](src/Transformer/ALM/Query.lean#L107) | theorem | proved |
 
 **[Transformer.ALM.QueryModel](src/Transformer/ALM/QueryModel.lean)** — 188 lines
 

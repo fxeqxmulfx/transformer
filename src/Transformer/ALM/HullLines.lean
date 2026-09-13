@@ -61,7 +61,7 @@ theorem bsearch_lines_isGreatest (L : ℕ → ℝ × ℝ) (x : ℝ) (n : ℕ)
     bcount_le_log n⟩
   · have := bsearch_lt p hp 0 n j (Nat.zero_le j) hj
     simp only [p, decide_eq_false_iff_not, not_le] at this
-    exact this
+    exact this.le
   · have := bsearch_ge_of_lt p 0 n (by simpa using hin)
     simpa [p] using this
 

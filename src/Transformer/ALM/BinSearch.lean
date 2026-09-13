@@ -194,8 +194,9 @@ theorem hull_bsearch_isGreatest (K : ℕ → ℝ) (q : ℝ) (n : ℕ)
     linarith
   refine ⟨hull_isGreatest K q (fun j _ => hstep j) (bsearch p 0 n)
     (by simpa using bsearch_le p 0 n) (fun j hj => ?_) (fun hin => ?_), bcount_le_log n⟩
-  · have := bsearch_lt p hp 0 n j (Nat.zero_le j) hj
-    simpa [p] using this
+  · have hfalse := bsearch_lt p hp 0 n j (Nat.zero_le j) hj
+    simp only [p, decide_eq_false_iff_not, not_le] at hfalse
+    exact hfalse.le
   · have := bsearch_ge_of_lt p 0 n (by simpa using hin)
     simpa [p] using this
 

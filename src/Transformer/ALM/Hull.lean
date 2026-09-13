@@ -125,15 +125,16 @@ lemma hbp_liftKey {n : ℕ} {K : ℕ → ℝ} (hstep : ∀ j, j < n → K j < K 
 
 /-- **What the machine computes is what the lookup asks for.**  Let the keys
 be sorted, and let `i` be the index `lower_bound(q)` yields — every earlier
-midpoint is strictly left of `q`, and `i`'s own midpoint is at or right of it,
+midpoint is at or left of `q`, and `i`'s own midpoint is at or right of it,
 with `i = n` the `it == end` fallback.  Then key `i` maximizes the scalar
-paraboloid score over the whole list.
+paraboloid score over the whole list.  A query sitting exactly on a midpoint
+is allowed: there the two keys score the same, so either branch is right.
 
 This is the statement `hull2d_cht.h` assumes and never proves. -/
 theorem hull_isGreatest {n : ℕ} (K : ℕ → ℝ) (q : ℝ)
     (hstep : ∀ j, j < n → K j < K (j + 1))
     (i : ℕ) (hi : i ≤ n)
-    (hlt : ∀ j, j < i → (K j + K (j + 1)) / 2 < q)
+    (hlt : ∀ j, j < i → (K j + K (j + 1)) / 2 ≤ q)
     (hge : i < n → q ≤ (K i + K (i + 1)) / 2) :
     ∀ j ≤ n, lineEval (liftKey (K j)) q ≤ lineEval (liftKey (K i)) q := by
   refine lowerBound_isGreatest (n := n) (fun j => liftKey (K j)) q
@@ -149,7 +150,7 @@ the attention score, which is what `NNIndex.ans_isGreatest` demands. -/
 theorem hull_isGreatest_score {n : ℕ} (Kv : ℕ → EucSpace 1) (q : EucSpace 1)
     (hstep : ∀ j, j < n → Kv j 0 < Kv (j + 1) 0)
     (i : ℕ) (hi : i ≤ n)
-    (hlt : ∀ j, j < i → (Kv j 0 + Kv (j + 1) 0) / 2 < q 0)
+    (hlt : ∀ j, j < i → (Kv j 0 + Kv (j + 1) 0) / 2 ≤ q 0)
     (hge : i < n → q 0 ≤ (Kv i 0 + Kv (i + 1) 0) / 2) :
     ∀ j ≤ n, score q (Kv j) ≤ score q (Kv i) := by
   intro j hj
@@ -162,7 +163,7 @@ the first key is strictly worse. -/
 example :
     let K : ℕ → ℝ := fun j => (j : ℝ)
     (∀ j, j < 2 → K j < K (j + 1)) ∧
-      (∀ j, j < 2 → (K j + K (j + 1)) / 2 < (1.9 : ℝ)) ∧
+      (∀ j, j < 2 → (K j + K (j + 1)) / 2 ≤ (1.9 : ℝ)) ∧
       lineEval (liftKey (K 0)) 1.9 < lineEval (liftKey (K 2)) 1.9 := by
   refine ⟨fun j hj => ?_, fun j hj => ?_, ?_⟩
   · simp only []
