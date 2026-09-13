@@ -10,6 +10,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.Duality` | the 1D reduction the convex-hull implementation rests on |
 | `ALM.Envelope` | when the hull may discard a line, and why erasing it is safe |
 | `ALM.Query` | why one binary search over the breakpoints finds the maximum |
+| `ALM.Hull` | and why that search answers the lookup: the two halves joined |
 | `ALM.TieBreak` | where score ties live, and what the two tie-break modes do |
 | `ALM.Basic` | exact hardmax lookup in arbitrary key dimension |
 | `ALM.Softmax` | softmax-to-hardmax error bounds for an abstract score gap |
@@ -34,6 +35,7 @@ import Transformer.ALM.Duality
 import Transformer.ALM.Envelope
 import Transformer.ALM.Query
 import Transformer.ALM.Basic
+import Transformer.ALM.Hull
 import Transformer.ALM.TieBreak
 import Transformer.ALM.Softmax
 import Transformer.ALM.Lattice
