@@ -83,13 +83,16 @@ Ordered by what is both provable and load-bearing here.
 
 - [ ] **The ceiling nobody states: where float64 ends.**  Neither post bounds
       the trace length, and the code carries no assertion.  There is a bound:
-      the parabolic key needs the gap `(q−k)² ≥ 1` to be visible beside `q²`,
-      i.e. `ulp(n²) < 1`, i.e. **`n < 2^26 ≈ 6.7·10^7`**.
+      the score `2qk − k²` is an integer, and float64 holds integers exactly
+      only below `2^53`, so exact retrieval needs `n < √(2^53) =` **`94 906 266`**.
 
-      Measured on their own `HardAttentionHead` with `key = position`: clean at
-      `n = 10^7`, 2.1 % of lookups wrong at `n = 10^8`, first failure by direct
-      scan at `q ≈ 7.7·10^7`.  The Sudoku demo is ~5.4·10^6 tokens, a factor of
-      13 below it.
+      Measured, and the bound is attained to the unit: computing the score on
+      the integer grid, the first query that loses to its own neighbour is
+      `q = 94 906 266 = ⌈√(2^53)⌉`.  Their arithmetic does not reach it — the
+      `HARD_K·√2` scaling takes the score off the grid and costs 0.86 of a bit,
+      so the shipped head fails from `q = 52 301 885` (2^25.64) and is 2.1 %
+      wrong at `n = 10^8`.  The Sudoku demo is ~5.4·10^6 tokens, a factor of 10
+      below the shipped wall and 18 below the grid one.
 
       The smallest item in this file and the only one that ends in a number.
       `ALM.FloatGrid.fp_eval_exact_of_grid` is the tool: it says a float
