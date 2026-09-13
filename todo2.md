@@ -14,6 +14,125 @@ that would decide between attention and a recurrent core are engineering and
 are not in this file.  What is here is only what can be checked against the
 build.
 
+§0 comes first because it is not this task's invention: it is the list of
+claims the ALM authors make and do not prove, and several of them are the same
+statements the bot needs.  §1-§3 then say what the repository supplies, what it
+does not, and what is missing.
+
+## 0. Do first: what the ALM authors asserted and did not prove
+
+Source: the two Percepta posts of 2026-03-11, recovered under `papers/`
+(gitignored) from https://www.percepta.ai/blog/can-llms-be-computers and its
+companion.  The companion says plainly, "A formal write-up with the key theory
+will be released shortly" — so every claim below is prose and released code,
+with no proof behind it anywhere.  Quotes are verbatim from the recovered text,
+whose header records what did not survive the extraction.
+
+Ordered by what is both provable and load-bearing here.
+
+- [ ] **Softmax approximates hard-max — with which constant?**  "Standard
+      softmax attention approximates hard-max when the scores are scaled up by
+      **a large constant**, so the same construction carries over with
+      exponentially small approximation error."
+
+      As written this fails in their own headline regime.  `ALM.SoftmaxValue`
+      gives `(n-1) e^{-β} C`: the error carries the trace length, so over
+      "millions of steps" `β` must grow like `log n` and is not a constant.
+      The constant-in-`n` form exists — `ALM.VectorInt.softmax_winner_int_sharp`
+      — but needs **distinct integer** keys and pays the dimension in the
+      exponent, a hypothesis the post never states.
+
+      This is T1 of §3.  Doing it settles the authors' claim and the bot's head
+      in one statement.
+
+- [ ] **Latest-write by perturbation: the gap it destroys.**  "we add a small
+      position-dependent perturbation to each key.  Among entries with the same
+      logical key, the latest one then scores strictly highest."
+
+      A perturbation that separates `n` positions shrinks the score gap `δ`,
+      and the softmax error is `e^{-βδ}`.  The two claims pull in opposite
+      directions and the post never multiplies them together.  What to prove:
+      the `β` that latest-write costs as a function of the perturbation scale,
+      and the threshold at which it beats the integer route of
+      `ALM.SoftmaxLatestMass`, where the tie gap is `1` and no perturbation is
+      needed at all.  Small, and it is the tie-break the item timer uses.
+
+- [ ] **Differentiability through the executed program.**  "Because the
+      execution trace is part of the forward pass, the whole process remains
+      differentiable: we can even propagate gradients through the computation
+      itself."
+
+      By their own statement, "our construction uses hard-max attention".
+      Gradients flow through the retrieved *values*; through *which key was
+      retrieved* there is none.  Substituting softmax at large `β` to recover
+      one makes the off-winner weights `e^{-βδ}` by the bound above — the same
+      `β` that makes execution exact makes the training signal vanish.  What to
+      prove: that trade-off as an inequality, gradient magnitude against
+      retrieval error, at one lookup head.
+
+      Likely a negative result, which is why it comes early: it decides whether
+      the compiled-fast-path branch of §2 is worth anything.
+
+- [ ] **The cost of `k`-sparse retrieval.**  "it is easy to approximate it with
+      k-sparse softmax attention: retrieve the top-`k` keys and perform the
+      softmax only over those.  By storing points across nested convex hulls,
+      this yields a decoding cost of …", and alongside it the admission "we do
+      not yet know whether exact softmax attention can be maintained with the
+      same efficiency".
+
+      The nested-hull structure is one sentence, never built and never
+      analysed.  `ALM.SparseSoftmax` prices the *answer* exactly — its total
+      variation is an equality, not a bound — and says in its own docstring that
+      nothing there bounds the cost of producing the retained set.  That cost is
+      the open half.
+
+- [ ] **Where the dimension boundary actually is.**  "The same machinery also
+      extends naturally to 3D heads via 3D convex hulls, although higher
+      dimensions quickly become less efficient", and "The key question is
+      whether 2D already captures most of the speedup, or whether slightly
+      larger heads unlock substantially more capability."
+
+      No bound is given, and "quickly becomes less efficient" is not the shape
+      of it: `ALM.FixedDim.OVHard_needs_growing_dimension` says the barrier
+      needs a dimension growing like `log n` and is simply absent at any fixed
+      `d`.  What is missing is the query cost at fixed `d ≥ 3` between those two
+      regimes.
+
+- [ ] **Turing completeness of ALM.**  "ALMs **can be shown** to be Turing
+      Complete", and "for Turing completeness, 2D attention is all you need!"
+
+      "Can be shown" is the entire proof.  Neither post sketches it and it is
+      not in this repository.  Large: it needs the ALM machine as a syntactic
+      object, which `Transformer.ALM` does not have — every file there is about
+      one head, not about a machine.
+
+- [ ] **Compiler correctness.**  "if the compiled solver is correct, the
+      transformer's execution is correct as well" — offered as a guarantee that
+      "is universal rather than benchmark-specific".
+
+      The chain is CALM semantics → gate graph → MILP schedule → slot
+      allocation → weight matrices → float execution, and no link of it is
+      proved.  The authors concede this by listing "Formally verifying the logic
+      a transformer implements" as future work.  The step most likely to be
+      wrong gets one sentence in the post: "When a slot is reused, the stale
+      value must be subtracted before the new value is written."
+
+      The largest item by far, and the last: only the final link is in reach
+      today (`ALM.FloatHead.fp_head_output` proves the float head against their
+      own `hull2d_cht.h`), and the rest needs CALM and the scheduler formalized
+      first.
+
+- [ ] **Not a theorem, now or later: 2D heads under training.**  "we find that
+      it is still flexible enough to train efficiently and can capture very
+      complicated logic", hedged in the same paragraph by "we are still
+      exploring how limiting this is in practice for training" and "The real
+      question is how capable such models become when trained at scale".
+
+      Every weight in both posts was *compiled*, never trained, so there is no
+      evidence in them either way.  Listed only so that it is not mistaken for
+      an open problem someone could close here: it is an experiment, and §2
+      applies to it.
+
 ## 1. What this repository supplies
 
 `Transformer.ALM` is 67 modules and 366 theorems with no `sorry`, no vacuous
@@ -103,6 +222,9 @@ that gap is what this section names.
       count, which for a match of ~10³ tokens is `β ≈ 10`.  That number is the
       answer to "does the head still work at the end of a long match", and it
       cannot be claimed before T1 is proved.
+
+      It also settles the first item of §0: the published claim is that a large
+      *constant* suffices, and `log n` is not a constant.
 
 - [ ] **T2 — error does not accumulate with depth.**
 
