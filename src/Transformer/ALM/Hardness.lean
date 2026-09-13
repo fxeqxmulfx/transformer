@@ -23,8 +23,15 @@ repository require.
 algorithms, what each one decides, and what each one costs.  `OVHard` is the
 conjecture in that model.  `Implements` says the model actually contains the
 reduction of `Transformer.ALM.LookupIndex`.  From those three,
-`query_lower_bound` is a theorem — and the final `example` exhibits a model
-where all three hold at once, so the implication is not vacuous.
+`query_lower_bound` is a theorem.
+
+It is not vacuous, but the witness cannot stand here: a model in which all
+three hold at once is built further down the import graph, where the query
+model is available.  `Transformer.ALM.Unconditional` discharges every
+hypothesis of `query_ge_of_build_small` against `ovProbeModel` and
+`scanIndex`, with no conjecture left, and `Transformer.ALM.Independence`
+supplies the complementary witness — a model satisfying every hypothesis but
+`hM`, where the conclusion fails, so none of the three is decorative.
 
 The dimension in the conjecture is `c · log n`, not a constant.  That is the
 honest statement, and it is why the barrier says nothing about the planar

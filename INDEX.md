@@ -159,19 +159,19 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`fp_hullIndex_isGreatest`](src/Transformer/ALM/FloatIndex.lean#L119) | theorem | proved |
 | [`fp_hullIndex_longDouble`](src/Transformer/ALM/FloatIndex.lean#L157) | theorem | proved |
 
-**[Transformer.ALM.Hardness](src/Transformer/ALM/Hardness.lean)** — 185 lines
+**[Transformer.ALM.Hardness](src/Transformer/ALM/Hardness.lean)** — 192 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`CostModel`](src/Transformer/ALM/Hardness.lean#L45) | structure |  |
-| [`Solves`](src/Transformer/ALM/Hardness.lean#L59) | def |  |
-| [`OVHard`](src/Transformer/ALM/Hardness.lean#L70) | def |  |
-| [`Implements`](src/Transformer/ALM/Hardness.lean#L78) | structure |  |
-| [`query_lower_bound`](src/Transformer/ALM/Hardness.lean#L99) | theorem | proved |
-| [`query_ge_of_build_small`](src/Transformer/ALM/Hardness.lean#L116) | theorem | proved |
-| [`naiveModel`](src/Transformer/ALM/Hardness.lean#L143) | def |  |
-| [`naiveModel_OVHard`](src/Transformer/ALM/Hardness.lean#L152) | lemma | proved |
-| [`naiveModel_implements`](src/Transformer/ALM/Hardness.lean#L175) | def |  |
+| [`CostModel`](src/Transformer/ALM/Hardness.lean#L52) | structure |  |
+| [`Solves`](src/Transformer/ALM/Hardness.lean#L66) | def |  |
+| [`OVHard`](src/Transformer/ALM/Hardness.lean#L77) | def |  |
+| [`Implements`](src/Transformer/ALM/Hardness.lean#L85) | structure |  |
+| [`query_lower_bound`](src/Transformer/ALM/Hardness.lean#L106) | theorem | proved |
+| [`query_ge_of_build_small`](src/Transformer/ALM/Hardness.lean#L123) | theorem | proved |
+| [`naiveModel`](src/Transformer/ALM/Hardness.lean#L150) | def |  |
+| [`naiveModel_OVHard`](src/Transformer/ALM/Hardness.lean#L159) | lemma | proved |
+| [`naiveModel_implements`](src/Transformer/ALM/Hardness.lean#L182) | def |  |
 
 **[Transformer.ALM.Hull](src/Transformer/ALM/Hull.lean)** — 174 lines
 
