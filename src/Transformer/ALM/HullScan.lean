@@ -20,12 +20,12 @@ midpoint query, so a third key would have to satisfy `k₂ = 2q - k₁ = k₃`:
 * `tie_adjacent` — and when two are, no key lies between them, so they are
   neighbours in the sorted order the hull keeps;
 * `scan_left_step` / `scan_right_step` — therefore each `while` loop executes
-  at most one iteration, and `scan_merges_le_two` says `combined` is the merge
-  of at most two `Meta`s.
+  at most one iteration, and `scan_merge_count_le_one` says `combined` is the
+  merge of at most two `Meta`s.
 
 So the walk is `O(1)` on top of the search, and the published bound stands.
-The sorted order is `Transformer.ALM.KeyOrder`'s; the metas are
-`Transformer.ALM.TieBreak`'s.
+What that merge resolves to is `Transformer.ALM.HullResolve`.  The sorted order
+is `Transformer.ALM.KeyOrder`'s; the metas are `Transformer.ALM.TieBreak`'s.
 -/
 
 import Transformer.ALM.KeyOrder
@@ -190,20 +190,6 @@ theorem argmaxSet_eq_pair (hstep : ∀ j, K j < K (j + 1)) {b : ℕ}
       simp [← this]
   · rw [Finset.card_pair (by omega)]
     exact Finset.one_lt_card.mpr ⟨b, hb, b + 1, hb1, by omega⟩
-
-/-! ### What the walk hands to `resolve` -/
-
-/-- `HullMeta combined; combined.merge(best); combined.merge(neighbour);` —
-the whole of the merge walk when a neighbour ties. -/
-def scanCombined (M : ℕ → Meta) (b c : ℕ) : Meta :=
-  Meta.merge (Meta.merge Meta.empty (M b)) (M c)
-
-/-- **`resolve` sees both values and nothing else.**  The counts add, so the
-`AVERAGE` mode of `Transformer.ALM.TieBreak` averages exactly the two tied
-lines' payloads. -/
-theorem scanCombined_count (M : ℕ → Meta) (b c : ℕ) :
-    (scanCombined M b c).count = (M b).count + (M c).count := by
-  simp [scanCombined, Meta.merge, Meta.empty]
 
 /-- The hypotheses of the walk are satisfiable, and not vacuously: the keys
 `j ↦ j` are sorted, and at the query `1/2` the lines `0` and `1` really do
