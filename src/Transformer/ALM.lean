@@ -50,6 +50,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.SoftmaxIndex` | and that the softmax head returns what that index answers |
 | `ALM.SoftmaxValue` | and that its output vector is the value stored at that answer |
 | `ALM.SoftmaxTie` | and that on a tie it returns what the tie-break returns |
+| `ALM.SparseSoftmax` | and what truncating it to the retained keys costs, exactly |
 | `ALM.SoftmaxMass` | and where the mass that bound assumes actually comes from |
 | `ALM.SoftmaxTieInt` | and that on the stored integer keys it needs no gap at all |
 | `ALM.SoftmaxLatest` | and how far it is from the other tie-break mode, exactly |
@@ -117,6 +118,7 @@ import Transformer.ALM.HullIndex
 import Transformer.ALM.SoftmaxIndex
 import Transformer.ALM.SoftmaxValue
 import Transformer.ALM.SoftmaxTie
+import Transformer.ALM.SparseSoftmax
 import Transformer.ALM.SoftmaxMass
 import Transformer.ALM.SoftmaxTieInt
 import Transformer.ALM.SoftmaxLatest
