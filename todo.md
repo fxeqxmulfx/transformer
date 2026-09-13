@@ -6,7 +6,7 @@
 - [ ] QK-norm obstructs the lookup head — state both halves (§1.4)
 - [ ] `GPTMini/QKNorm.lean`: `rmsNorm q = √head_dim • normL2 q` (§2.1)
 - [ ] `GPTMini/Config.lean`: GQA, `n_kv_heads ∣ n_heads` (§2.1)
-- [ ] `XSA.lean`: restate or delete `attention_similarity_bias_observation : True` (§2.2)
+- [x] `XSA.lean`: the two `True` placeholders deleted, the two `sorry`s proved (§2.2)
 - [ ] `GPTMini.lean`: the dangling "Phases 5–6 of `todo.md`" (§3)
 
 The sections below are the reasoning behind these, not further items.

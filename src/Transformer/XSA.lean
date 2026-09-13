@@ -7,6 +7,16 @@ Formalization of:
 The paper is empirical (no theorems).  Only one equation is introduced:
 `eq:xsa`.  We record it here and note one mathematical observation that ties
 XSA to the spherical-`SA` model already formalized in `Transformer.Section1_IPS`.
+
+Two claims of the paper are empirical and stay prose, because there is nothing
+in them to prove: that `⟪y_i, v_i⟫ / (‖y_i‖ ‖v_i‖)` is consistently positive in
+*trained* transformers and grows with depth (§1), and that the mass XSA frees
+is reallocated to `a_{i,i}`, an implicit attention sink (§4).  Both are about
+what training produces, not about the operator; the record runs of
+`openai/parameter-golf` (2026-09-13) adopting XSA on the deepest layers and then
+on all of them (1.1307 → 1.1099 BPB) are evidence for the first, and evidence is
+not a theorem.  What *is* provable about `z_i` is `xsa_output_orthogonal_to_value`
+below: the component XSA removes is removed exactly.
 -/
 
 import Transformer.Basic
@@ -51,7 +61,22 @@ theorem xsa_output_orthogonal_to_value
     (Q K V : ParamMatrix d) (x : Idx n → EucSpace d) (i : Idx n)
     (hv : V (x i) ≠ 0) :
     inner (𝕜 := ℝ) (XSAOutput d n Q K V x i) (V (x i)) = 0 := by
-  sorry
+  have hnorm : ‖V (x i)‖ ^ 2 ≠ 0 := pow_ne_zero 2 (norm_ne_zero_iff.mpr hv)
+  show inner (𝕜 := ℝ) (SAOutput d n Q K V x i
+      - (inner (𝕜 := ℝ) (SAOutput d n Q K V x i) (V (x i)) / ‖V (x i)‖ ^ 2) • V (x i))
+    (V (x i)) = 0
+  rw [inner_sub_left, real_inner_smul_left, real_inner_self_eq_norm_sq]
+  field_simp
+  ring
+
+/-- The hypothesis is satisfiable, and the theorem is not vacuous on it: any
+nonzero value vector will do, and `V = I` at a unit input is one. -/
+example (x : EucSpace d) (hx : ‖x‖ = 1) :
+    (ContinuousLinearMap.id ℝ (EucSpace d)) x ≠ 0 := by
+  intro h
+  have hx0 : x = 0 := h
+  rw [hx0, norm_zero] at hx
+  exact zero_ne_one hx
 
 /-- **Reduction to spherical `SA`.**  When `V = I_d` and `‖x_i‖ = 1`,
 XSA's output coincides with the spherical-tangent projection used in the
@@ -64,22 +89,22 @@ theorem xsa_equals_spherical_SA_when_V_is_identity
     XSAOutput d n Q K (ContinuousLinearMap.id ℝ (EucSpace d)) x i
       = proj d (x i) (SAOutput d n Q K
                         (ContinuousLinearMap.id ℝ (EucSpace d)) x i) := by
-  sorry
+  have hx : ‖x i‖ ^ 2 = 1 := by rw [h_unit i]; norm_num
+  show SAOutput d n Q K (ContinuousLinearMap.id ℝ (EucSpace d)) x i
+      - (inner (𝕜 := ℝ) (SAOutput d n Q K (ContinuousLinearMap.id ℝ (EucSpace d)) x i)
+          ((ContinuousLinearMap.id ℝ (EucSpace d)) (x i))
+        / ‖(ContinuousLinearMap.id ℝ (EucSpace d)) (x i)‖ ^ 2)
+        • (ContinuousLinearMap.id ℝ (EucSpace d)) (x i) = _
+  rw [show (ContinuousLinearMap.id ℝ (EucSpace d)) (x i) = x i from rfl, hx, div_one,
+    real_inner_comm]
+  rfl
 
-/-- *Attention similarity bias (informal).*
-
-The empirical observation of the paper is that for *trained* transformers,
-`⟨y_i, v_i⟩ / (‖y_i‖ ‖v_i‖)` is consistently positive and grows with depth.
-XSA removes this component by construction.  As a formal statement this is
-just a *training-time* observation; we record it here as a `True`-placeholder
-to mark its role in motivating the construction. -/
-theorem attention_similarity_bias_observation : True := trivial
-
-/-- *Implicit attention sink (Remark in §4 of the paper).*
-
-XSA reallocates "unused" attention mass to the diagonal entry `a_{i,i}`, which
-behaves like an implicit attention sink à la Xiao–Tian–Han. -/
-theorem implicit_attention_sink_remark : True := trivial
+/-- The hypothesis is satisfiable: the constant unit tuple. -/
+example : ∀ _i : Idx n, ‖(WithLp.toLp 2 (fun j => if j = (0 : Fin (d + 1)) then (1 : ℝ) else 0)
+    : EucSpace (d + 1))‖ = 1 := by
+  intro _
+  rw [EuclideanSpace.norm_eq]
+  simp
 
 end XSA
 end Transformer
