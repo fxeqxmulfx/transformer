@@ -119,6 +119,23 @@ theorem exists_eq_sortedKey [Nonempty (Fin n)] (K : Fin n → ℝ) {j : ℕ}
   obtain ⟨i, -, hi⟩ := Finset.mem_image.mp hmem
   exact ⟨i, hi⟩
 
+/-- **Distinct keys are all of them.**  When no two keys coincide the
+deduplicated array has one entry per key, so the window `keyCard K - 1` the
+search runs over is the whole family — the container `HullHalf::add_line`
+leaves behind (`Transformer.ALM.HullCover`).
+
+Source: `transformer_vm/attention/hull2d_cht.h`, lines 143-195. -/
+theorem keyCard_eq_of_injective (K : Fin n → ℝ) (hinj : Function.Injective K) :
+    keyCard K = n := by
+  rw [keyCard, keySet, Finset.card_image_of_injective _ hinj, Finset.card_univ,
+    Fintype.card_fin]
+
+/-- The hypothesis is satisfiable, and on a family that is not already sorted:
+the three keys `2, 0, 1` are distinct. -/
+example : Function.Injective (fun j : Fin 3 => (![2, 0, 1] : Fin 3 → ℝ) j) := by
+  intro a b h
+  fin_cases a <;> fin_cases b <;> simp_all
+
 /-- **The keys the search runs over are bounded.**  Finitely many sorted keys
 have a largest absolute value, so the bound every floating-point statement in
 this development assumes — `|sortedKey K j| ≤ B` on the searched window — is
