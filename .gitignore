@@ -1,0 +1,37 @@
+# ── Lean / Lake build artifacts ──────────────────────────────────────────
+/.lake/
+build/
+*.olean
+*.ilean
+*.trace
+*.hash
+
+# ── Papers ───────────────────────────────────────────────────────────────
+# arXiv sources for the formalized manuscripts (~13 MB of LaTeX + figures).
+# Fetch them from arXiv rather than tracking them here:
+#   2312.10794  A mathematical perspective on Transformers
+#   2410.06833  Dynamic metastability in the self-attention model
+#   2411.04551  Measure-to-measure interpolation using Transformers
+#   2411.04990  Clustering in Causal Attention Masking
+#   2510.22026  Normalization in Attention Dynamics
+#   2512.01868  The Mean-Field Dynamics of Transformers
+#   2603.09078  Exclusive self-attention (XSA)
+/papers/
+
+# ── Vendored sources ─────────────────────────────────────────────────────
+# Percepta-Core/transformer-vm — cloned for reference, carries its own .git
+/transformer-vm/
+
+# ── Python ───────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# ── Editors / OS ─────────────────────────────────────────────────────────
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*~
