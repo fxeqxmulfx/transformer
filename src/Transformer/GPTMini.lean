@@ -13,11 +13,30 @@ The architecture is:
   - Tied embedding / unembedding
   - 12 unique blocks, no recurrence
 
-For the architectural specification and basic universal-in-weights
-properties, see the sub-modules.  For clustering / convergence
-theorems and bridges to the formalized theory in
-`Transformer.Section1_IPS … Transformer.MeanField`, see Phases 5–6
-of `todo.md`.
+| Module | Contents |
+| --- | --- |
+| `GPTMini.Config` | the hyperparameters, and the grouped-query head split |
+| `GPTMini.RMSNorm` | the block normalization, and the sphere it maps onto |
+| `GPTMini.RoPE` | the rotary tables, and that they rotate |
+| `GPTMini.QKNorm` | the normalized score, its bounds, and the RMS parameterization |
+| `GPTMini.CausalMHA` | the head itself, masked, with XSA on its output |
+| `GPTMini.ReLU2FFN` | the feed-forward map |
+| `GPTMini.Block` | one pre-norm block, and the residual it adds to |
+| `GPTMini.Model` | the stack, the tied unembedding, and the forward pass |
+| `GPTMini.Properties` | what holds of it at every weight assignment at all |
+| `GPTMini.Bridge` | and how it sits inside the setups of the formalized papers |
+| `GPTMini.ClusteringTheorem` | and what those setups would then say about its layers |
+
+The bridges are the connection to `Transformer.Section1_IPS …
+Transformer.MeanField`: `Bridge.SphereResidence` puts the tokens on the sphere
+those theorems live on, `Bridge.RoPEAsTimeVarying` reads RoPE as the
+time-varying `Q, K` they already allow, `Bridge.CausalConnection` matches the
+mask with `Transformer.Causal.CSA`, and `Bridge.XSAEquivalence` identifies the
+XSA output at `V = I` with the spherical projection.  `ClusteringTheorem`
+assembles them into the statement that the representations cluster to one
+direction for almost every initial configuration — a composition of bridges,
+whose remaining `sorry`-leaves are the deep theorems of the paper
+formalizations themselves and not anything about `gpt-mini`.
 -/
 
 import Transformer.GPTMini.Config

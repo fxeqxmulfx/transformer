@@ -7,7 +7,7 @@
 - [x] `GPTMini/QKNorm.lean`: `rmsNorm q = √head_dim • normL2 q` (§2.1)
 - [x] `GPTMini/Config.lean`: GQA, `n_kv_heads ∣ n_heads` (§2.1)
 - [x] `XSA.lean`: the two `True` placeholders deleted, the two `sorry`s proved (§2.2)
-- [ ] `GPTMini.lean`: the dangling "Phases 5–6 of `todo.md`" (§3)
+- [x] `GPTMini.lean`: the dangling "Phases 5–6 of `todo.md`" (§3)
 
 The sections below are the reasoning behind these, not further items.
 
