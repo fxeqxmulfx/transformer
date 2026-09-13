@@ -22,6 +22,14 @@ the index names, the gap being the unit lattice gap of
 to — `softmax_at_hullIndex_int` gives the length-free bound of
 `softmax_winner_int_sharp_one`, which does not degrade as keys accumulate.
 
+All of that is on the lookup path, where the query is a stored key.  The last
+section leaves it: on the lattice a score is an integer (`score_embInt_int`),
+so two keys either tie exactly or differ by a whole unit, and
+`softmax_at_index_ge_of_untied` gives the same bound at *any* integer query the
+index does not tie at — the tie locus being the hyperplanes of
+`Transformer.ALM.TieHyperplane`, which `Transformer.ALM.HullResolve` resolves
+by averaging.
+
 Source of the head: `transformer_vm/attention/hull2d_cht.h`, lines 203-215.
 -/
 
@@ -130,6 +138,65 @@ example : (0 : ℝ) < 1 ∧ Function.Injective (fun j : Fin 3 => fun _ : Fin 1 =
   refine ⟨by norm_num, fun a b h => Fin.ext ?_⟩
   have h0 : ((a : ℕ) : ℤ) = ((b : ℕ) : ℤ) := congrFun h 0
   exact_mod_cast h0
+
+
+/-! ### Off the lookup path: an integer query -/
+
+/-- **The score of integer data is an integer.**  `score q k = 2⟪k,q⟫ - ‖k‖²`
+is a difference of integer sums whenever query and key are lattice points, so
+scores never differ by less than one. -/
+theorem score_embInt_int (q k : Fin m → ℤ) :
+    score (embInt q) (embInt k) = ((2 * ∑ i, k i * q i - ∑ i, k i ^ 2 : ℤ) : ℝ) := by
+  unfold score
+  rw [norm_sq_eq_sum]
+  push_cast
+  simp only [PiLp.inner_apply, RCLike.inner_apply, conj_trivial, embInt_apply]
+  have hcomm : ∀ i : Fin m, ((q i : ℝ)) * ((k i : ℝ)) = ((k i : ℝ)) * ((q i : ℝ)) :=
+    fun i => mul_comm _ _
+  simp only [hcomm]
+
+/-- **So the lattice gap survives an arbitrary query.**  Two integer keys whose
+scores differ against an integer query differ by at least one — the hypothesis
+`score_gap_one_of_int` got from `one_le_dist_sq_of_int`, now without asking the
+query to be one of the keys. -/
+theorem one_le_score_gap_int (q k k' : Fin m → ℤ)
+    (h : score (embInt q) (embInt k) < score (embInt q) (embInt k')) :
+    score (embInt q) (embInt k) + 1 ≤ score (embInt q) (embInt k') := by
+  rw [score_embInt_int q k, score_embInt_int q k'] at h ⊢
+  exact_mod_cast Int.add_one_le_of_lt (by exact_mod_cast h)
+
+/-- **The head agrees with the index at every integer query it does not tie
+at.**  `softmax_at_index_ge` needed the query to be one of the stored keys; all
+that was really needed is that the index's answer is the only argmax, which off
+the tie hyperplanes of `Transformer.ALM.TieHyperplane` it is.  The bound is the
+same `1 - (n-1)e^{-β}`, because a broken tie on the lattice is a gap of one. -/
+theorem softmax_at_index_ge_of_untied (I : NNIndex) [Nonempty (Fin n)] (β : ℝ) (hβ : 0 ≤ β)
+    (K : Fin n → (Fin m → ℤ)) (q : Fin m → ℤ)
+    (hno : ∀ j, j ≠ I.ans (fun i => embInt (K i)) (embInt q) →
+      score (embInt q) (embInt (K j)) ≠
+        score (embInt q) (embInt (K (I.ans (fun i => embInt (K i)) (embInt q))))) :
+    1 - ((n : ℝ) - 1) * Real.exp (-(β * 1))
+      ≤ Real.exp (β * score (embInt q)
+            (embInt (K (I.ans (fun i => embInt (K i)) (embInt q)))))
+          / ∑ j, Real.exp (β * score (embInt q) (embInt (K j))) := by
+  set i₀ := I.ans (fun i => embInt (K i)) (embInt q) with hi₀
+  refine softmax_winner_ge β hβ (fun j => score (embInt q) (embInt (K j))) i₀ 1
+    (fun j hj => ?_)
+  have hle : score (embInt q) (embInt (K j)) ≤ score (embInt q) (embInt (K i₀)) :=
+    I.ans_isGreatest (fun i => embInt (K i)) (embInt q) j
+  exact one_le_score_gap_int q (K j) (K i₀) (lt_of_le_of_ne hle (hno j hj))
+
+/-- The hypothesis is satisfiable away from the stored keys, and satisfiable
+for whichever key the index picks: against the query `1` the scalar keys `0`
+and `3` score `0` and `-3`, so no two of them tie, and the head concentrates on
+the index's answer at a query that is not a key at all. -/
+example : ∀ i₀ j : Fin 2, j ≠ i₀ →
+    score (embInt (fun _ : Fin 1 => (1 : ℤ))) (embInt ((![![0], ![3]] : Fin 2 → Fin 1 → ℤ) j))
+      ≠ score (embInt (fun _ : Fin 1 => (1 : ℤ)))
+          (embInt ((![![0], ![3]] : Fin 2 → Fin 1 → ℤ) i₀)) := by
+  intro i₀ j hj
+  rw [score_embInt_one, score_embInt_one]
+  fin_cases i₀ <;> fin_cases j <;> simp_all [sScore] <;> norm_num
 
 end ALM
 end Transformer
