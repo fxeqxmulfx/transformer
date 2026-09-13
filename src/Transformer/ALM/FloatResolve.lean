@@ -16,7 +16,9 @@ stated at an arbitrary maximizer — with the tie set rewritten as the set the
 loops actually collect (`fp_walk_collects_of_grid`).  So the conclusion is
 about the index the running search returns, the comparison the running loops
 make, and the value the running `resolve` writes out, under three conditions
-on the arithmetic and none on the query.
+on the arithmetic and none on the query.  `fp_query_cost_total` carries the
+price over the same way: the search costs what the index charges for it, and
+the loops merge at most one line.
 
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 268-306.
 -/
@@ -81,6 +83,27 @@ theorem fp_query_resolveLatest (S : FPScore) (F : FPArith) [Nonempty (Fin n)]
     (sortedKey_lt_succ K) (fpProbe_mem_argmaxSet_of_int F K hK q B hbd hu) M V s hs hsinj hM
   rw [← hcol] at h
   exact h
+
+/-- **And the price, in the arithmetic that runs.**  `hullQuery_cost_total`
+charges the search and bounds the merges at `hullProbe`; the same two bounds
+hold of the running query.  The search count is unchanged — `bcount` depends
+on the length of the range and not on how the comparisons come out — and the
+merge bound is the trichotomy above: the loops merge at most one line on top
+of the one the search found.
+
+Source: `hull2d_cht.h`, lines 268-306. -/
+theorem fp_query_cost_total (S : FPScore) (F : FPArith) [Nonempty (Fin n)] (K : Fin n → ℝ)
+    (hK : ∀ i, ∃ z : ℤ, K i = (z : ℝ)) (q : ℤ) (B : ℝ)
+    (hbd : ∀ j ≤ keyCard K - 1, |sortedKey K j| ≤ B) (hu : F.u * B < 1 / 2)
+    (hδ : S.δ < 1)
+    (hgrid : ∀ i ≤ keyCard K - 1,
+      ∃ z : ℤ, S.eval (liftQuery (q : ℝ)) (liftKey (sortedKey K i)) = (z : ℝ)) :
+    ((bcount (keyCard K - 1) : ℕ) : ℝ) ≤ hullIndex.query n 1 ∧
+      ((fpTieSet S F K (q : ℝ)).erase (fpProbe F K (q : ℝ))).card ≤ 1 := by
+  refine ⟨hullIndex_query_paid K, ?_⟩
+  rw [fp_walk_collects_of_grid S F K hK q B hbd hu hδ hgrid]
+  exact scan_merge_count_le_one (sortedKey K) (q : ℝ) (keyCard K - 1) (sortedKey_lt_succ K)
+    (fpProbe_mem_argmaxSet_of_int F K hK q B hbd hu)
 
 /-- Every hypothesis holds at once, for the rounding score routine on any
 integer family: the keys are integers and bounded, exact breakpoints clear the
