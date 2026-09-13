@@ -10,6 +10,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.Duality` | the 1D reduction the convex-hull implementation rests on |
 | `ALM.Envelope` | when the hull may discard a line, and why erasing it is safe |
 | `ALM.HullErase` | and that erasing it changes no answer, at any query at all |
+| `ALM.HullPrune` | and that a whole build of erases changes none either |
 | `ALM.Query` | why one binary search over the breakpoints finds the maximum |
 | `ALM.Hull` | and why that search answers the lookup: the two halves joined |
 | `ALM.BinSearch` | `lower_bound` written out, and its comparison count bounded |
@@ -68,6 +69,7 @@ import Transformer.ALM.Defs
 import Transformer.ALM.Duality
 import Transformer.ALM.Envelope
 import Transformer.ALM.HullErase
+import Transformer.ALM.HullPrune
 import Transformer.ALM.Query
 import Transformer.ALM.Basic
 import Transformer.ALM.Hull
