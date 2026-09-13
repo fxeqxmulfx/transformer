@@ -21,6 +21,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.HullResolve` | and what that walk hands back, in either tie-break mode |
 | `ALM.HullBuild` | and what building it costs, the erase loops amortized away |
 | `ALM.HullCover` | and that it holds one line per key, so the search covers them all |
+| `ALM.HullLift` | and that on the paraboloid no erase rule whatsoever can fire |
 | `ALM.HullCost` | and what one query costs, and returns, search and walk together |
 | `ALM.HullValue` | and what it hands back, at any maximizer and at the search's own |
 | `ALM.FloatHull` | and why finite precision does not change either answer |
@@ -84,6 +85,7 @@ import Transformer.ALM.HullScan
 import Transformer.ALM.HullResolve
 import Transformer.ALM.HullBuild
 import Transformer.ALM.HullCover
+import Transformer.ALM.HullLift
 import Transformer.ALM.HullCost
 import Transformer.ALM.HullValue
 import Transformer.ALM.FloatHull
