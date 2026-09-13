@@ -27,14 +27,19 @@ grid, and its error is below one unit.  `fp_exact_of_grid` discharges both for
 integer keys at an integer query — `2qk − k²` is an integer, and float64 holds
 integers exactly below `2^53`.  Exactness is free; it has to be thrown away.
 
-The released code throws it away twice:
+The released code throws it away twice, but not equally:
 
 - `weights.py:431-432, 491-492` multiply the **query** by `HARD_K · √2 ≈
   1.41·10^10`.  `HARD_K` is a softmax temperature (`weights.py:22`).  The hull
   path is an argmax, where a positive scale changes no comparison and buys
-  nothing — it only takes `2qk − k²` off the grid.
+  nothing — it only takes `2qk − k²` off the grid.  **This one costs range**,
+  0.86 of a bit, and it is the whole of the measurable damage.
 - `graph/core.py`, `_to_2d_key`, adds `LATEST_ALPHA · inv_log_pos(p)` to `ky`.
-  This is irrational by construction and off the grid by construction.
+  Off the grid by construction, but bounded by `0.433` against a key gap of
+  `1`, so it decides every comparison correctly and **costs nothing
+  numerically** — the table below shows it moving no wall at all.  It has to go
+  for the grid theorem to apply and for the softmax path of §1 to have a gap,
+  not because it is doing harm today.
 
 Remove both and the grid condition holds exactly.  Measured on their own heads,
 `10^5` insert/query steps, hull versus their own brute reference:
@@ -108,8 +113,13 @@ structure carries an integer sequence number: `HullMeta::last_seq`
 (`attention/hull2d_cht.h:46-56`), set from a counter incremented per layer per
 token in `transformer.cpp` and passed through `hull_cache.py:51`.
 
-That is not a transformer operation.  Nothing in the weights computes it, and a
-real softmax head has no access to it.  The perturbation it replaces is
+This is the right design, and the Lean side endorses it: `Meta.resolveLatest`
+is what `ALM.SoftmaxLatestMass` proves the log's answer against.  The defect is
+not the mechanism but the description — and the consequence, which the post
+does not draw, that a transformer without it cannot run this interpreter.
+
+Because it is not a transformer operation.  Nothing in the weights computes it,
+and a real softmax head has no access to it.  The perturbation it replaces is
 numerically dead well inside the advertised regime: it is added to `−k²` in
 float64 and survives only while `p log² p · k² ≲ 1.4·10^15`.
 
