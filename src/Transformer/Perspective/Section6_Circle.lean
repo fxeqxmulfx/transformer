@@ -1,6 +1,9 @@
 /-
 # §7 — Dynamics on the circle
 
+Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
+*A mathematical perspective on Transformers*.
+
 This file formalizes §7 of the survey:
 
 * `eq:onangles`        — angular form of `USA` on `𝕊^1`,
@@ -11,7 +14,7 @@ This file formalizes §7 of the survey:
 -/
 
 import Transformer.Basic
-import Transformer.Section1_IPS
+import Transformer.Perspective.Section1_IPS
 
 open scoped BigOperators
 open Real

@@ -9,7 +9,7 @@ Formalization of §2 of arXiv:2411.04551v3:
 -/
 
 import Transformer.Basic
-import Transformer.Section2_FlowMap
+import Transformer.Perspective.Section2_FlowMap
 import Transformer.Interpolation.Basic
 
 open scoped BigOperators

@@ -1,6 +1,9 @@
 /-
 # §9 — General matrices
 
+Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
+*A mathematical perspective on Transformers*.
+
 This file formalizes §9 of the survey:
 
 * §9.1 — the *repulsive case* `V = -I_d`, with the connection to optimal
@@ -13,8 +16,8 @@ This file formalizes §9 of the survey:
 -/
 
 import Transformer.Basic
-import Transformer.Section1_IPS
-import Transformer.Section2_FlowMap
+import Transformer.Perspective.Section1_IPS
+import Transformer.Perspective.Section2_FlowMap
 
 open scoped BigOperators
 open Real

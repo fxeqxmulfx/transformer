@@ -1,6 +1,9 @@
 /-
 # Appendix D — Proof of Theorem (thm: phase.transition.curve)
 
+Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
+*A mathematical perspective on Transformers*.
+
 This file formalizes Appendix D of the survey:
 
 * `eq: lip.1`,    `eq: lip.2`,    `eq: lip.3` — Lipschitz bound on the flow,
@@ -17,8 +20,8 @@ This file formalizes Appendix D of the survey:
 -/
 
 import Transformer.Basic
-import Transformer.Section1_IPS
-import Transformer.Section5_HighD
+import Transformer.Perspective.Section1_IPS
+import Transformer.Perspective.Section5_HighD
 
 open scoped BigOperators
 open Real

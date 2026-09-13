@@ -13,7 +13,7 @@ Equations and statements covered:
 -/
 
 import Transformer.Basic
-import Transformer.Section6_Circle
+import Transformer.Perspective.Section6_Circle
 import Transformer.Metastability.Basic
 import Transformer.Metastability.MainTheorem
 

@@ -1,6 +1,9 @@
 /-
 # §8 — BBGKY hierarchy
 
+Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
+*A mathematical perspective on Transformers*.
+
 This file formalizes §8 of the survey, which considers a hierarchy of
 correlation functions for the dynamics on the circle.  Main object:
 
@@ -9,7 +12,7 @@ correlation functions for the dynamics on the circle.  Main object:
 -/
 
 import Transformer.Basic
-import Transformer.Section6_Circle
+import Transformer.Perspective.Section6_Circle
 import Mathlib.MeasureTheory.Measure.MeasureSpace
 
 open scoped BigOperators

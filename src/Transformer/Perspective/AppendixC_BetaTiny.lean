@@ -1,6 +1,9 @@
 /-
 # Appendix C — Proof of Theorem (thm: beta.tiny)
 
+Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
+*A mathematical perspective on Transformers*.
+
 This file formalizes Appendix C of the survey:
 
 * `e:contebeta`         — first-order expansion of `𝖤_β` around `β = 0`,
@@ -12,8 +15,8 @@ This file formalizes Appendix C of the survey:
 -/
 
 import Transformer.Basic
-import Transformer.Section3_SmallBeta
-import Transformer.AppendixA_Beta0
+import Transformer.Perspective.Section3_SmallBeta
+import Transformer.Perspective.AppendixA_Beta0
 
 open scoped BigOperators
 open Real

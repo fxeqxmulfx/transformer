@@ -1,6 +1,9 @@
 /-
 # §10 — Approximation, control, training
 
+Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
+*A mathematical perspective on Transformers*.
+
 The original §10 is a brief survey of known results on universal
 approximation, control and training of Transformers.  This file records the
 relevant statements as `True`-placeholders, so the structure of the survey is
@@ -9,7 +12,7 @@ formalized in Mathlib.
 -/
 
 import Transformer.Basic
-import Transformer.Section1_IPS
+import Transformer.Perspective.Section1_IPS
 
 namespace Transformer
 namespace SectionApproximation

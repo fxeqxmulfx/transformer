@@ -20,8 +20,8 @@ Equations and statements covered:
 -/
 
 import Transformer.Basic
-import Transformer.Section1_IPS
-import Transformer.Section6_Circle
+import Transformer.Perspective.Section1_IPS
+import Transformer.Perspective.Section6_Circle
 import Transformer.Metastability.Basic
 import Transformer.Metastability.MainTheorem
 

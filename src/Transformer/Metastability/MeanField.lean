@@ -14,7 +14,7 @@ Equations and statements covered:
 -/
 
 import Transformer.Basic
-import Transformer.Section2_FlowMap
+import Transformer.Perspective.Section2_FlowMap
 import Transformer.Metastability.Basic
 
 open scoped BigOperators

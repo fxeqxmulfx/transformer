@@ -1,6 +1,9 @@
 /-
 # Appendix B — Proof of Theorem (thm: beta.interval)
 
+Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
+*A mathematical perspective on Transformers*.
+
 This file formalizes Appendix B of the survey:
 
 * `eq: taylor2` — non-positivity of the partial Hessian,
@@ -12,8 +15,8 @@ This file formalizes Appendix B of the survey:
 -/
 
 import Transformer.Basic
-import Transformer.Section4_LargeBeta
-import Transformer.Section1_IPS
+import Transformer.Perspective.Section4_LargeBeta
+import Transformer.Perspective.Section1_IPS
 
 open scoped BigOperators
 open Real

@@ -1,6 +1,9 @@
 /-
 # §2 — Interacting particle system
 
+Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
+*A mathematical perspective on Transformers*.
+
 This file formalizes the equations from §2 of the survey.  The main objects:
 
 * `eq: resnet`           — discrete-time ResNet,

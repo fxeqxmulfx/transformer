@@ -1,6 +1,9 @@
 /-
 # Appendix A — Proof of Theorem (p:beta0)
 
+Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
+*A mathematical perspective on Transformers*.
+
 This file formalizes Appendix A of the survey:
 
 * `eq: E0`              — the `β = 0` energy,
@@ -12,7 +15,7 @@ This file formalizes Appendix A of the survey:
 -/
 
 import Transformer.Basic
-import Transformer.Section3_SmallBeta
+import Transformer.Perspective.Section3_SmallBeta
 
 open scoped BigOperators
 open Real

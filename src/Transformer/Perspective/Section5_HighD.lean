@@ -1,6 +1,9 @@
 /-
 # §6 — The high-dimensional case
 
+Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
+*A mathematical perspective on Transformers*.
+
 This file formalizes §6 of the survey:
 
 * `Theorem thm: boumal`            — clustering for `d ≥ 3`, any `β ≥ 0`,
@@ -20,7 +23,7 @@ This file formalizes §6 of the survey:
 -/
 
 import Transformer.Basic
-import Transformer.Section1_IPS
+import Transformer.Perspective.Section1_IPS
 import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 

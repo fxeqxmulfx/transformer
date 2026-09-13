@@ -35,19 +35,7 @@ are translated directly.
 
 import Transformer.Basic
 import Transformer.ALM
-import Transformer.Section1_IPS
-import Transformer.Section2_FlowMap
-import Transformer.Section3_SmallBeta
-import Transformer.Section4_LargeBeta
-import Transformer.Section5_HighD
-import Transformer.Section6_Circle
-import Transformer.Section7_BBGKY
-import Transformer.Section8_General
-import Transformer.Section9_Approximation
-import Transformer.AppendixA_Beta0
-import Transformer.AppendixB_BetaInterval
-import Transformer.AppendixC_BetaTiny
-import Transformer.AppendixD_PhaseTransition
+import Transformer.Perspective
 import Transformer.Metastability
 import Transformer.Interpolation
 import Transformer.Causal

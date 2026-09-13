@@ -8,8 +8,8 @@
 -/
 
 import Transformer.Basic
-import Transformer.Section1_IPS
-import Transformer.Section2_FlowMap
+import Transformer.Perspective.Section1_IPS
+import Transformer.Perspective.Section2_FlowMap
 
 open scoped BigOperators
 open Real

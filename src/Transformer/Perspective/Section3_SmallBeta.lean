@@ -1,6 +1,9 @@
 /-
 # §4 — A single cluster for small β
 
+Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
+*A mathematical perspective on Transformers*.
+
 This file formalizes §4 of the survey:
 
 * `e:Snonres0`              — the `β = 0` dynamics,
@@ -12,7 +15,7 @@ This file formalizes §4 of the survey:
 -/
 
 import Transformer.Basic
-import Transformer.Section1_IPS
+import Transformer.Perspective.Section1_IPS
 
 open scoped BigOperators
 open Real

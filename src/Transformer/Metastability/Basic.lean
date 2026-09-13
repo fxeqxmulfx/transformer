@@ -16,7 +16,7 @@ This file collects the basic objects used throughout the paper:
 -/
 
 import Transformer.Basic
-import Transformer.Section1_IPS
+import Transformer.Perspective.Section1_IPS
 
 open scoped BigOperators
 open Real

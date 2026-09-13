@@ -1,6 +1,9 @@
 /-
 # §3 — Measure to measure flow map
 
+Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
+*A mathematical perspective on Transformers*.
+
 This file formalizes §3 of the survey.
 
 Main objects:
@@ -26,7 +29,7 @@ measurable space (it is a metric subspace of `ℝ^d`).
 -/
 
 import Transformer.Basic
-import Transformer.Section1_IPS
+import Transformer.Perspective.Section1_IPS
 import Mathlib.MeasureTheory.Measure.MeasureSpace
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 

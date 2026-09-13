@@ -1,14 +1,17 @@
 /-
 # §5 — A single cluster for large β
 
+Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
+*A mathematical perspective on Transformers*.
+
 This file formalizes §5 of the survey, which contains:
 
 * `Theorem thm: beta.interval` — clustering when `β ≥ C(d) n²`.
 -/
 
 import Transformer.Basic
-import Transformer.Section1_IPS
-import Transformer.Section3_SmallBeta
+import Transformer.Perspective.Section1_IPS
+import Transformer.Perspective.Section3_SmallBeta
 
 open scoped BigOperators
 

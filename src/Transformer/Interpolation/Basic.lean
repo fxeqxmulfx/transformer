@@ -18,7 +18,7 @@ This file collects:
 -/
 
 import Transformer.Basic
-import Transformer.Section2_FlowMap
+import Transformer.Perspective.Section2_FlowMap
 import Mathlib.MeasureTheory.Measure.MeasureSpace
 
 open scoped BigOperators

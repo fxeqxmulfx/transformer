@@ -12,7 +12,7 @@ Formalization of the main theorems of arXiv:2411.04551v3:
 -/
 
 import Transformer.Basic
-import Transformer.Section2_FlowMap
+import Transformer.Perspective.Section2_FlowMap
 import Transformer.Interpolation.Basic
 import Transformer.Interpolation.Clustering
 import Transformer.Interpolation.Disentanglement

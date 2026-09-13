@@ -26,7 +26,7 @@ is encoded; what remains is filling the underlying analytic content.
 
 import Transformer.GPTMini.Bridge
 import Transformer.GPTMini.Model
-import Transformer.Section5_HighD
+import Transformer.Perspective.Section5_HighD
 import Transformer.Causal.MainTheorem
 import Transformer.Normalization.Convergence
 

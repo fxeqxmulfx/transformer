@@ -18,7 +18,7 @@ Equations covered:
 -/
 
 import Transformer.Basic
-import Transformer.Section1_IPS
+import Transformer.Perspective.Section1_IPS
 import Transformer.Metastability.Basic
 
 open scoped BigOperators

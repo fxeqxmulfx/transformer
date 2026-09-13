@@ -11,9 +11,9 @@
 -/
 
 import Transformer.Basic
-import Transformer.Section1_IPS
-import Transformer.Section2_FlowMap
-import Transformer.Section5_HighD
+import Transformer.Perspective.Section1_IPS
+import Transformer.Perspective.Section2_FlowMap
+import Transformer.Perspective.Section5_HighD
 import Transformer.MeanField.Basic
 
 open scoped BigOperators
