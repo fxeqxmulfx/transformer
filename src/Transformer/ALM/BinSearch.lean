@@ -80,6 +80,27 @@ theorem bsearch_le (p : ℕ → Bool) (lo len : ℕ) : bsearch p lo len ≤ lo +
   | case2 lo m _ ih => rw [bsearch_succ, if_pos ‹_›]; omega
   | case3 lo m _ ih => rw [bsearch_succ, if_neg ‹_›]; omega
 
+/-- **The search only looks inside its window.**  Two predicates that agree
+on `[lo, lo + len)` send the search down the same path, so the answer depends
+on nothing outside the range being searched.  `Transformer.ALM.FloatIndex`
+needs exactly this: the floating-point comparisons agree with the exact ones
+only where the keys are, and that is enough. -/
+theorem bsearch_congr (p p' : ℕ → Bool) (lo len : ℕ) :
+    (∀ j, lo ≤ j → j < lo + len → p j = p' j) →
+      bsearch p lo len = bsearch p' lo len := by
+  induction lo, len using bsearch.induct p with
+  | case1 lo => intro _; simp
+  | case2 lo m htrue ih =>
+      intro h
+      have hm : p (lo + m / 2) = p' (lo + m / 2) := h _ (by omega) (by omega)
+      rw [bsearch_succ, bsearch_succ, if_pos htrue, if_pos (hm ▸ htrue)]
+      exact ih (fun j hj hlt => h j hj (by omega))
+  | case3 lo m hfalse ih =>
+      intro h
+      have hm : p (lo + m / 2) = p' (lo + m / 2) := h _ (by omega) (by omega)
+      rw [bsearch_succ, bsearch_succ, if_neg hfalse, if_neg (hm ▸ hfalse)]
+      exact ih (fun j hj hlt => h j (by omega) (by omega))
+
 /-- **Nothing before the answer satisfies `p`.**  This is the `hlt`
 hypothesis of `lowerBound_isGreatest`.  Monotonicity of `p` is used exactly
 once, to discard the half the search skipped. -/
