@@ -85,6 +85,21 @@ def SETHGeneral : Prop :=
 
 end SATModel
 
+/-- **The sparse hypothesis is the stronger one.**  Pinning the clause count
+to `C·n` is a restriction on the instances the hypothesis speaks about, so it
+asserts more; dropping it can only weaken the statement.  `C·n ≤ n^{C+2}` once
+`n` is past `C`, which is all the bookkeeping the direction needs. -/
+theorem SATModel.SETHGeneral_of_SETH {S : SATModel} (hS : S.SETH) : S.SETHGeneral := by
+  intro δ hδ
+  obtain ⟨C, hC⟩ := hS δ hδ
+  refine ⟨C + 2, fun a ha N => ?_⟩
+  obtain ⟨n, hn, hcost⟩ := hC a ha (max N (C + 1))
+  have hbig : C + 1 ≤ n := le_trans (le_max_right N (C + 1)) hn
+  refine ⟨n, C * n, le_trans (le_max_left _ _) hn, ?_, hcost⟩
+  calc C * n ≤ n * n := Nat.mul_le_mul_right n (by omega)
+    _ = n ^ 2 := by ring
+    _ ≤ n ^ (C + 2) := Nat.pow_le_pow_right (by omega) (by omega)
+
 /-- **The Sparsification Lemma**, as an interface.  From an algorithm `a` good
 on sparse formulas it builds, for each `ε > 0`, an algorithm good on all of
 them: split the formula into `2^{εn}` pieces of at most `dens ε · n` clauses
