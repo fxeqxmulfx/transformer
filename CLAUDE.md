@@ -68,8 +68,27 @@ Required:
 - `rfl` / `trivial` / one-line `simp` closing a substantive theorem ⇒ suspect a
   placeholder definition beneath it.
 
-Current debt, per `INDEX.md`: 61 `sorry`, 82 vacuous statements, 20 placeholder
+Current debt, per `INDEX.md`: 85 `sorry`, 80 vacuous statements, 20 placeholder
 definitions. Never add to these counts; the index makes any increase visible.
+
+## Finding lemmas
+
+Use `dt` (discrtree) to find Mathlib declarations, not grep over
+`.lake/packages/mathlib` and not memory:
+
+```
+dt find 'Real.exp _ ≤ _'          -- by shape; a pattern implies --elaborated
+dt find --name addHaar --in Mathlib.MeasureTheory --kind theorem
+dt find --uses Finset.sum --text summable
+dt show <name>                    -- the statement, and the import that provides it
+dt deps <name> / dt status
+```
+
+It searches what is *not* imported yet and answers with the import line, which
+`#find` cannot. Reach for it whenever a lemma is easy to describe and hard to
+name, and before writing a proof by hand that Mathlib probably already has.
+`.discrtree/`, `discrtree.toml` and the `discrtree` skill belong to another line
+of work: never stage them here.
 
 ## Build
 
