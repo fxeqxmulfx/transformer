@@ -21,6 +21,8 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.LookupIndex` | an exact index, and the reduction run through it |
 | `ALM.Hardness` | the conditional lower bound that reduction yields |
 | `ALM.SETH` | and the same bound with SETH as the only conjecture |
+| `ALM.Sparsification` | SETH without a density restriction, plus the sparsification |
+| `ALM.SparseModel` | a model where those two hypotheses hold together |
 -/
 
 import Transformer.ALM.Defs
@@ -38,3 +40,5 @@ import Transformer.ALM.SAT
 import Transformer.ALM.LookupIndex
 import Transformer.ALM.Hardness
 import Transformer.ALM.SETH
+import Transformer.ALM.Sparsification
+import Transformer.ALM.SparseModel

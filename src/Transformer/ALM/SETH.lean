@@ -19,8 +19,10 @@ statement about a geometric problem.
 
 `SETH` is stated in the sparsified form — clause count linear in the number of
 variables — which is what the reduction consumes.  The Sparsification Lemma
-that licenses that form is **not** proved here; it is part of the cited
-hypothesis.
+that licenses that form is **not** proved here.  `Transformer.ALM.Sparsification`
+separates the two: it states SETH without any density restriction, states the
+Sparsification Lemma as an interface, and derives the form used below from the
+pair.
 
 One mild convention appears as the field `cost_ge_input`: an algorithm costs
 at least the size of its input.  It is what lets the construction cost be
