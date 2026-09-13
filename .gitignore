@@ -37,6 +37,9 @@ venv/
 *~
 
 # ── discrtree ────────────────────────────────────────────────────────────
-# The index, the JSONL dumps and the fetched corpora: 1.4 GB, all of it
-# reproducible from discrtree.toml with `dt fetch && dt dump && dt index`.
+# The tool's own state: the config, the index, the JSONL dumps and the
+# fetched corpora.  Local to the machine, and reproducible with
+# `dt init && dt fetch && dt dump && dt index`.
 /.discrtree/
+/discrtree.toml
+/.claude/skills/discrtree/
