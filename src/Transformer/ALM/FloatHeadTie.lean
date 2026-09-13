@@ -17,11 +17,14 @@ value `combined.resolve` writes out.
 `fp_walk_sound` needs no exactness of the score routine, only `2δ < 1` and a
 bound on the keys, so the head's output is within `ε·C` of what the running
 code resolves under a condition on the precision alone.
+`fp_head_tie_resolves_latest` is the same composition through
+`argmaxTie_head_resolves_latest`, so that the machine's other tie-break mode is
+priced at the tie the running code merged too.
 
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 70-83 and 268-306.
 -/
 
-import Transformer.ALM.HullHead
+import Transformer.ALM.HullHeadLatest
 import Transformer.ALM.FloatWalk
 
 open scoped BigOperators
@@ -98,6 +101,81 @@ example :
       (((0 : ℤ) : ℝ)))
     (fpProbe_mem_fpTieSet _ _ _ _) (fpProbe_mem_fpTieSet _ _ _ _) hi hi
     ((by decide : ∀ j : Fin 2, j ≠ Fin.rev j) i) le_rfl le_rfl rfl rfl ?_ ?_
+  · have h0 := softmax_weight_nonneg (n := 2) 1
+      (fun _ => score (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1)
+        (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1)) 0
+    simp only [sub_self] at *
+    linarith
+  · intro j
+    norm_num
+
+/-- **And against what the other mode writes out.**  The same two positions of
+`fpTieSet`, resolved by `TieBreak::LATEST` instead: the head's output is within
+`ε·C` of one of the two payloads rather than of their mean, so it is within
+`ε·C + ‖V i₁ - V i₂‖/2` of what the running code returns.  The extra term is
+the whole difference between the modes, and it vanishes exactly when the two
+tied lines carry the same payload.
+
+Source: `hull2d_cht.h`, lines 70-83 and 268-306. -/
+theorem fp_head_tie_resolves_latest (S : FPScore) (F : FPArith) [Nonempty (Fin n)]
+    (Kv : Fin n → EucSpace 1) (qv : EucSpace 1) (q : ℤ) (hq : qv 0 = (q : ℝ))
+    (hK : ∀ i, ∃ z : ℤ, Kv i 0 = (z : ℝ)) (B : ℝ)
+    (hbd : ∀ j ≤ keyCard (fun j => Kv j 0) - 1, |sortedKey (fun j => Kv j 0) j| ≤ B)
+    (hu : F.u * B < 1 / 2) (hδ : 2 * S.δ < 1)
+    (β ε C : ℝ) (V : Fin n → ℝ × ℝ) (Mt : ℕ → Meta) (p r : ℕ) (sp sr : ℤ)
+    (i₁ i₂ : Fin n) (b c : ℕ)
+    (hb : b ∈ fpTieSet S F (fun j => Kv j 0) (q : ℝ))
+    (hc : c ∈ fpTieSet S F (fun j => Kv j 0) (q : ℝ))
+    (h₁ : Kv i₁ 0 = sortedKey (fun j => Kv j 0) b)
+    (h₂ : Kv i₂ 0 = sortedKey (fun j => Kv j 0) c)
+    (hne : i₁ ≠ i₂) (hsp : 0 ≤ sp) (hsr : 0 ≤ sr) (hsne : sp ≠ sr)
+    (hMp : Mt p = Meta.empty.add (V i₁) sp) (hMr : Mt r = Meta.empty.add (V i₂) sr)
+    (hmass : 1 - ε
+      ≤ Real.exp (β * score qv (Kv i₁)) / ∑ k, Real.exp (β * score qv (Kv k))
+          + Real.exp (β * score qv (Kv i₂)) / ∑ k, Real.exp (β * score qv (Kv k)))
+    (hC : ∀ j, ‖V j - (((V i₁).1 + (V i₂).1) / 2, ((V i₁).2 + (V i₂).2) / 2)‖ ≤ C) :
+    ‖(∑ j, (Real.exp (β * score qv (Kv j)) / ∑ k, Real.exp (β * score qv (Kv k))) • V j)
+        - Meta.resolveLatest (scanCombined Mt p r)‖ ≤ ε * C + ‖V i₁ - V i₂‖ / 2 := by
+  have hsub := fp_walk_sound S F (fun j => Kv j 0) hK q B hbd hu hδ
+  have hbA : b ∈ argmaxSet (sortedKey fun j => Kv j 0) (qv 0)
+      (keyCard (fun j => Kv j 0) - 1) := by rw [hq]; exact hsub hb
+  have hcA : c ∈ argmaxSet (sortedKey fun j => Kv j 0) (qv 0)
+      (keyCard (fun j => Kv j 0) - 1) := by rw [hq]; exact hsub hc
+  exact argmaxTie_head_resolves_latest Kv qv β ε C V Mt p r sp sr i₁ i₂ b c hbA hcA h₁ h₂
+    hne hsp hsr hsne hMp hMr hmass hC
+
+/-- The same hypotheses, with two distinct append positions so that the log
+really has a later line to prefer: the tie-break has something to break, and
+with equal payloads it returns what averaging returns. -/
+example :
+    ‖(∑ _j : Fin 2, (Real.exp (1 * score (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1)
+              (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1))
+            / ∑ _k : Fin 2, Real.exp (1 * score (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1)
+              (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1)))
+          • ((0 : ℝ), (0 : ℝ)))
+        - Meta.resolveLatest
+            (scanCombined (fun i : ℕ => Meta.empty.add ((0 : ℝ), (0 : ℝ)) (i : ℤ)) 0 1)‖
+      ≤ 1 * 0 + ‖((0 : ℝ), (0 : ℝ)) - ((0 : ℝ), (0 : ℝ))‖ / 2 := by
+  obtain ⟨B, hB⟩ := exists_bound_sortedKey
+    (fun j : Fin 2 => (fun _ : Fin 2 => (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1)) j 0)
+  obtain ⟨i, hi⟩ := exists_eq_sortedKey
+    (fun j : Fin 2 => (fun _ : Fin 2 => (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1)) j 0)
+    (fpProbe_le exactArith
+      (fun j : Fin 2 => (fun _ : Fin 2 => (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1)) j 0)
+      (((0 : ℤ) : ℝ)))
+  refine fp_head_tie_resolves_latest exactScore exactArith
+    (fun _ : Fin 2 => (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1))
+    (WithLp.toLp 2 ![(0 : ℝ)]) 0 (by norm_num) (fun _ => ⟨0, by norm_num⟩) B hB
+    (by simp [exactArith]) (by norm_num [exactScore]) 1 1 0 (fun _ => ((0 : ℝ), (0 : ℝ)))
+    (fun i : ℕ => Meta.empty.add ((0 : ℝ), (0 : ℝ)) (i : ℤ)) 0 1 0 1 i (Fin.rev i)
+    (fpProbe exactArith
+      (fun j : Fin 2 => (fun _ : Fin 2 => (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1)) j 0)
+      (((0 : ℤ) : ℝ)))
+    (fpProbe exactArith
+      (fun j : Fin 2 => (fun _ : Fin 2 => (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1)) j 0)
+      (((0 : ℤ) : ℝ)))
+    (fpProbe_mem_fpTieSet _ _ _ _) (fpProbe_mem_fpTieSet _ _ _ _) hi hi
+    ((by decide : ∀ j : Fin 2, j ≠ Fin.rev j) i) le_rfl (by norm_num) (by decide) rfl rfl ?_ ?_
   · have h0 := softmax_weight_nonneg (n := 2) 1
       (fun _ => score (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1)
         (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1)) 0
