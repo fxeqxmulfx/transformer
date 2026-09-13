@@ -24,6 +24,7 @@ which match exactly the partition-function bounds of §2.2 in 2312.10794v5.
 
 import Transformer.Basic
 import Transformer.GPTMini.Config
+import Transformer.GPTMini.RMSNorm
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 
@@ -135,6 +136,60 @@ theorem partition_bounds
 /-- The hypothesis of the three theorems above is satisfiable, and by the
 value the implementation uses: `eps = 1e-6` in `CausalMHA.forward`. -/
 example : (0 : ℝ) ≤ 1e-6 := by norm_num
+
+/-! ### The RMS parameterization is the same head
+
+`reference/model.py` normalizes `q, k` by their Euclidean norm; the record
+stacks of `openai/parameter-golf` (`train_gpt.py`, 2026-09-13) normalize them
+by their **RMS** norm, `x / √(mean x²)`, and carry a learned per-head gain.
+The two differ by the constant `√d_head`, which the gain absorbs — so the
+bounds above cover both parameterizations, and that is a theorem rather than a
+remark.  `rmsNorm` is the one already formalized in
+`Transformer.GPTMini.RMSNorm`, the block normalization of `reference/model.py`;
+the point is that the same map, applied per head to `q` and `k`, is the QK-norm
+of this file up to that constant. -/
+
+/-- The score of the RMS parameterization, with its own per-head gain: the
+head of `train_gpt.py`, where `q, k` are RMS-normalized rather than
+L2-normalized before the dot product. -/
+noncomputable def rmsScore (alpha : ℝ) (q k : EucSpace d_head) : ℝ :=
+  Real.exp alpha * inner (𝕜 := ℝ) (rmsNorm q) (rmsNorm k)
+
+/-- **The two normalizations differ by `√d_head` and nothing else.**  At `x = 0`
+both sides are `0`, and elsewhere the RMS norm is `‖x‖ / √d_head`, so dividing
+by it is dividing by `‖x‖` and multiplying by `√d_head`.
+
+Source: `reference/model.py` (`RMSNorm`, `CausalMHA.forward`) against
+`openai/parameter-golf`, `train_gpt.py` (`CausalSelfAttention`). -/
+theorem rmsNorm_eq_smul_normL2 (x : EucSpace d_head) :
+    rmsNorm x = Real.sqrt d_head • normL2 0 x := by
+  unfold rmsNorm normL2
+  rw [add_zero]
+  by_cases hx : ‖x‖ = 0
+  · rw [if_pos hx, norm_eq_zero.mp hx, smul_zero, smul_zero]
+  · rw [if_neg hx, smul_smul, mul_one_div]
+
+/-- **And the gain absorbs it.**  An RMS-normalized head with gain `α` is the
+L2-normalized head with gain `α + log d_head`: the same operator at a shifted
+parameter, so `score_bounded` and `partition_bounds` apply to it verbatim, and
+the formalized head covers both parameterizations.
+
+Source: `openai/parameter-golf`, `train_gpt.py` (`CausalSelfAttention`), whose
+per-head gain multiplies `q` rather than the score — the same thing. -/
+theorem rmsScore_eq_score (hd : 0 < d_head) (alpha : ℝ) (q k : EucSpace d_head) :
+    rmsScore alpha q k = score (alpha + Real.log d_head) 0 q k := by
+  have hdpos : (0 : ℝ) < (d_head : ℝ) := Nat.cast_pos.mpr hd
+  have hsq : Real.sqrt d_head * Real.sqrt d_head = (d_head : ℝ) :=
+    Real.mul_self_sqrt hdpos.le
+  unfold rmsScore score
+  rw [rmsNorm_eq_smul_normL2, rmsNorm_eq_smul_normL2, real_inner_smul_left,
+    real_inner_smul_right, Real.exp_add, Real.exp_log hdpos,
+    ← mul_assoc (Real.sqrt d_head) (Real.sqrt d_head), hsq]
+  ring
+
+/-- The hypothesis is satisfiable, and at the head dimension the reference
+implementation uses: `d_head = 64`. -/
+example : 0 < 64 := by norm_num
 
 end GPTMini
 end Transformer

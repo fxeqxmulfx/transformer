@@ -4,7 +4,7 @@
 - [ ] `ALM/PlanarHead.lean` — the hull answers any 2D head, not only the lift (§1.2)
 - [ ] `k`-sparse softmax: the truncation bound only, not the `O(k + log n)` (§1.3)
 - [ ] QK-norm obstructs the lookup head — state both halves (§1.4)
-- [ ] `GPTMini/QKNorm.lean`: `rmsNorm q = √head_dim • normL2 q` (§2.1)
+- [x] `GPTMini/QKNorm.lean`: `rmsNorm q = √head_dim • normL2 q` (§2.1)
 - [ ] `GPTMini/Config.lean`: GQA, `n_kv_heads ∣ n_heads` (§2.1)
 - [x] `XSA.lean`: the two `True` placeholders deleted, the two `sorry`s proved (§2.2)
 - [ ] `GPTMini.lean`: the dangling "Phases 5–6 of `todo.md`" (§3)
