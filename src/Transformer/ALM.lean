@@ -31,6 +31,8 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.Independence` | and why that last conjecture cannot be dropped either |
 | `ALM.Probe` | algorithms that can only evaluate the formula |
 | `ALM.QueryModel` | where SETH stops being a conjecture and is proved |
+| `ALM.OVProbe` | the same restriction on the Orthogonal Vectors side |
+| `ALM.Unconditional` | and the whole chain with nothing assumed at all |
 -/
 
 import Transformer.ALM.Defs
@@ -58,3 +60,5 @@ import Transformer.ALM.Polylog
 import Transformer.ALM.Independence
 import Transformer.ALM.Probe
 import Transformer.ALM.QueryModel
+import Transformer.ALM.OVProbe
+import Transformer.ALM.Unconditional
