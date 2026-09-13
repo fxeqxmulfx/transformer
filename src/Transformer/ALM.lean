@@ -20,6 +20,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.SAT` | satisfiability *is* an Orthogonal Vectors question |
 | `ALM.LookupIndex` | an exact index, and the reduction run through it |
 | `ALM.Hardness` | the conditional lower bound that reduction yields |
+| `ALM.SETH` | and the same bound with SETH as the only conjecture |
 -/
 
 import Transformer.ALM.Defs
@@ -36,3 +37,4 @@ import Transformer.ALM.OrthVectors
 import Transformer.ALM.SAT
 import Transformer.ALM.LookupIndex
 import Transformer.ALM.Hardness
+import Transformer.ALM.SETH
