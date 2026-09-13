@@ -22,6 +22,15 @@ maximizer over the original family.  `eraseStep_of_slope_eq` and
 `eraseStep_of_interX_le` say the two loop conditions each produce such a step,
 so the chain is the one the code walks and not an abstraction of it.
 
+A build is not a sequence of erases either: `add_line` inserts, then erases,
+then the next call inserts again, and the family a query has to be answered
+against grows while the container shrinks.  `BuildStep` is one call on both at
+once, and `build_isGreatest_of_inserted` is the build's correctness — the
+container standing at the end holds a line that is highest at every query
+among all the lines ever inserted.  `Transformer.ALM.HullBuild` prices that
+build and `Transformer.ALM.HullCover` counts what it holds; neither says it
+answers anything.
+
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 143-195.
 -/
 
@@ -100,6 +109,80 @@ example :
         (by simp) (by simp) rfl (by norm_num)))
     (eraseStep_of_slope_eq (l := ((0 : ℝ), (1 : ℝ))) (l' := ((0 : ℝ), (2 : ℝ)))
       (by simp) (by simp) rfl (by norm_num))) ⟨((0 : ℝ), (2 : ℝ)), by simp⟩ 0
+
+/-! ### And the insertions in between -/
+
+/-- **One call of `add_line`, on the container and on the log.**  Either a new
+line is inserted — into the container and into the record of everything ever
+inserted alike — or one of the erase loops drops a line from the container,
+leaving that record untouched. -/
+def BuildStep (p q : Finset (ℝ × ℝ) × Finset (ℝ × ℝ)) : Prop :=
+  (∃ l, q = (insert l p.1, insert l p.2)) ∨ (EraseStep p.1 q.1 ∧ q.2 = p.2)
+
+/-- The container is empty only before anything was inserted, and while it is
+not, it holds a maximizer over every line inserted so far.  The first half is
+what makes the second inductive: an erase step cannot empty the container,
+since the line it drops is dominated by one that stays. -/
+private lemma build_invariant (x : ℝ) {p : Finset (ℝ × ℝ) × Finset (ℝ × ℝ)}
+    (h : Relation.ReflTransGen BuildStep (∅, ∅) p) :
+    (p.1 = ∅ → p.2 = ∅) ∧
+      (p.1.Nonempty → ∃ a ∈ p.1, ∀ b ∈ p.2, lineEval b x ≤ lineEval a x) := by
+  induction h with
+  | refl => exact ⟨fun _ => rfl, fun hne => absurd hne (by simp)⟩
+  | tail _ hstep ih =>
+      rename_i b c _
+      rcases hstep with ⟨l, rfl⟩ | ⟨hers, h2⟩
+      · refine ⟨fun hc => absurd hc (by simp), fun _ => ?_⟩
+        simp only
+        rcases Finset.eq_empty_or_nonempty b.1 with hb | hb
+        · refine ⟨l, Finset.mem_insert_self l b.1, fun z hz => ?_⟩
+          rw [ih.1 hb] at hz
+          rw [Finset.mem_insert] at hz
+          rcases hz with rfl | hz
+          · exact le_rfl
+          · exact absurd hz (by simp)
+        · obtain ⟨a, ha, hmax⟩ := ih.2 hb
+          rcases le_total (lineEval a x) (lineEval l x) with hle | hle
+          · refine ⟨l, Finset.mem_insert_self l b.1, fun z hz => ?_⟩
+            rcases Finset.mem_insert.mp hz with rfl | hz
+            · exact le_rfl
+            · exact (hmax z hz).trans hle
+          · refine ⟨a, Finset.mem_insert_of_mem ha, fun z hz => ?_⟩
+            rcases Finset.mem_insert.mp hz with rfl | hz
+            · exact hle
+            · exact hmax z hz
+      · obtain ⟨l, hl, hct, hdom⟩ := hers
+        obtain ⟨l', hl', -⟩ := hdom x
+        refine ⟨fun hc => absurd hl' (by rw [hc]; simp), fun _ => ?_⟩
+        obtain ⟨a, ha, hmax⟩ := ih.2 ⟨l, hl⟩
+        rw [hct] at hl' ⊢
+        obtain ⟨a', ha', hmax'⟩ := erase_preserves_isGreatest hl ⟨l', hl'⟩ x (hct ▸ hdom x)
+        exact ⟨a', ha', fun z hz => (hmax z (h2 ▸ hz)).trans (hmax' a ha)⟩
+
+/-- **The hull the build ends with answers every query the input could ask.**
+However insertions and erases interleave — and `add_line` interleaves them on
+every call — the container standing at the end contains a line that is highest
+at `x` among all the lines ever inserted.  This is the correctness of the
+build, as against `Transformer.ALM.HullBuild`, which prices it, and
+`Transformer.ALM.HullCover`, which counts what it holds. -/
+theorem build_isGreatest_of_inserted {c s : Finset (ℝ × ℝ)}
+    (h : Relation.ReflTransGen BuildStep (∅, ∅) (c, s)) (hne : c.Nonempty) (x : ℝ) :
+    ∃ a ∈ c, ∀ b ∈ s, lineEval b x ≤ lineEval a x :=
+  (build_invariant x h).2 hne
+
+/-- The hypothesis is satisfiable by a build that really builds: two lines
+inserted one after the other, the first then erased by the equal-slope test,
+and the query at `x = 0` still answered against both. -/
+example :
+    ∃ a ∈ (insert ((0:ℝ), (1:ℝ)) (insert ((0:ℝ), (0:ℝ)) (∅ : Finset (ℝ × ℝ)))).erase (0, 0),
+      ∀ b ∈ insert ((0:ℝ), (1:ℝ)) (insert ((0:ℝ), (0:ℝ)) (∅ : Finset (ℝ × ℝ))),
+        lineEval b 0 ≤ lineEval a 0 := by
+  refine build_isGreatest_of_inserted (Relation.ReflTransGen.tail
+    (Relation.ReflTransGen.tail
+      (Relation.ReflTransGen.single (Or.inl ⟨((0 : ℝ), (0 : ℝ)), rfl⟩))
+      (Or.inl ⟨((0 : ℝ), (1 : ℝ)), rfl⟩))
+    (Or.inr ⟨eraseStep_of_slope_eq (l := ((0 : ℝ), (0 : ℝ))) (l' := ((0 : ℝ), (1 : ℝ)))
+      (by simp) (by simp) rfl (by norm_num), rfl⟩)) ⟨((0 : ℝ), (1 : ℝ)), by simp⟩ 0
 
 end ALM
 end Transformer
