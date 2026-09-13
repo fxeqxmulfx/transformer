@@ -19,13 +19,40 @@ position wherever the proof is not carried over.  Debt counts may rise in
       Lemma E.1 with the Fourier analysis they need, and the §4 separation.
       The conjecture is stated as a hypothesis, not a theorem.
 - [ ] `arXiv-2506.16055v3` — "Knee-Deep in C-RASP: A Transformer Depth
-      Hierarchy" (COLM 2025).  The largest of the three: 11 definitions,
-      ~10 theorems (`thm:TLC_depth`, `thm:TLCl_depth`,
-      `thm:tlclpos_depth_hierarchy`, `thm:rtfr_depth_hierarchy`,
-      `thm:rtfr_pes_depth_hierarchy`, `thm:rtfr_eq_tlclmod`,
-      `thm:tlc_to_majtwo`, `thm:majtwo_to_tlc`, `thm:logical_inclusions`),
-      5 propositions, ~8 lemmas.  Depth hierarchies are hard; expect `sorry`
-      for most proofs and state them honestly.
+      Hierarchy" (COLM 2025).  Formalized as `Transformer.CRASP`, 14 modules,
+      27 `sorry`.  Written out: the syntax, semantics and depth of
+      `TL[◁#]`/`TL[◁#, ▷#]` (`CRASP.Defs`, `CRASP.Basic`), the §4 vocabulary of
+      Parikh vectors, intervals and affix restrictions (`CRASP.Parikh`),
+      piecewise testability and `A_k` (`CRASP.PiecewiseTestable`), the Cropping
+      and Reduction Lemmas with `thm:TLCl_depth` and `thm:TLC_depth`
+      (`CRASP.Depth`, `CRASP.TLCDepth`), the Appendix A.3 sugar and its
+      elimination (`CRASP.Extensions`), fixed-precision arithmetic
+      (`CRASP.Fixed`, sorry-free), future-masked rounded transformers and
+      `thm:rtfr_depth_hierarchy` (`CRASP.Transformers`), `MAJ²` with its
+      quantifier elimination and the translations (`CRASP.MajTwo`,
+      `CRASP.MajTwoEquiv`), and `TL[◁#]^pos` with `thm:ynf`,
+      `lem:tlclpos_reduction` and `thm:tlclpos_depth_hierarchy`
+      (`CRASP.Positional`, `CRASP.PositionalDepth`).
+
+      **Where I stopped.**  What remains is Appendix E on the transformer
+      side: transformers with sinusoidal position encodings
+      (`thm:rtfr_eq_tlclmod` and the unlabelled depth theorem below it,
+      appendix.tex 1148-1157), with RoPE (`thm:rtfr_to_TLClmod` and the
+      unlabelled theorem, 1272-1288), and with ALiBi (`lem:alibi_window`,
+      `thm:rtfr_to_TLCly` and the unlabelled theorem, 1300-1332).  Each needs
+      `RTfr` of `CRASP.Transformers` re-scored: sinusoidal adds
+      `R(θ)^{i-1}(0,1)` to the layer-0 embedding, RoPE replaces the score by
+      `R(θ)^i q_i · R(θ)^j k_j`, ALiBi subtracts `a(i-j)` from it.  The plan
+      was one file, `CRASP.PositionalTransformers`, with a single scored layer
+      and the three instantiations, then the six statements with `sorry`.
+      Also still missing: the step from `MAJ²` to `FO[<]`-uniform `LTC⁰`
+      circuits in `thm:ltc0_hierarchy`, which needs a circuit model this
+      development does not have (`CRASP.MajTwoEquiv` states the logical half).
+
+      Deliberately omitted, both inside `\iffalse` blocks in the source and so
+      not part of the paper: `lem:bb`, and
+      `lem:piecewise_testable_depth_majtwo` together with `thm:mnf`,
+      `thm:tlmod_to_rtfr` and `thm:TLCmod_to_rtfr` (appendix.tex 1171-1271).
 
 ## 1. Statements present in a formalized paper but absent from `src/`
 
@@ -88,3 +115,23 @@ its two claims are empirical and deliberately stay prose.
   both require the transpose — rows are queries, columns are keys.
   `RASP.Defs` takes the convention of the example and records the
   discrepancy.
+- arXiv:2506.16055 Appendix A.3 defines the strict left-counting operator as
+  `◁#_<[φ]^{w,i} = |{j ∈ [i, |w|-1] : w,j ⊨ φ}|`.  The range should be
+  `[1, i-1]`: as printed it contradicts both the operator's name and its own
+  rewriting rule `◁#_<[φ] ≡ ◁#[φ] - (φ ? 1 : 0)` three lines below.
+  Recorded in `CRASP.Extensions`.
+- arXiv:2506.16055 `eq:altsingle`, even case, sets `A_k = Σ*(aΣ*bΣ*)^k`; it
+  should be `^{k/2}`, as the companion `B_k` correctly has.  As printed it
+  fixes `2k` symbols and so is not `k`-piecewise testable, which is what the
+  lemma below it needs.  Recorded in `CRASP.PiecewiseTestable`.
+- arXiv:2506.16055 `lem:reduction` concludes with "a formula `φ'` of depth
+  `(k-1)` of `TL[◁#]^P_{k-1}` (or `TL[◁#,▷#]^P_k`, resp.)".  The parenthetical
+  should read `TL[◁#,▷#]^P_{k-1}`, as the sentence's own "of depth `(k-1)`"
+  says and as the proof of `thm:TLC_depth` uses it.  Recorded in
+  `CRASP.Depth`.
+- arXiv:2506.16055 appendix.tex 1154, the proof of the sinusoidal depth
+  theorem, reads "every language definable by a rtfr **with RoPE** is
+  definable in `TL[◁#,MOD]_k`"; it should say "with sinusoidal positional
+  encoding".  The sentence is copied verbatim from the RoPE subsection
+  (appendix.tex 1287), which cites `thm:rtfr_to_TLClmod` where this one
+  correctly cites `thm:rtfr_eq_tlclmod`.

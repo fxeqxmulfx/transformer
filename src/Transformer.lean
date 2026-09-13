@@ -1,5 +1,5 @@
 /-
-Formalization of nine papers on the mathematics of Transformers:
+Formalization of ten papers on the mathematics of Transformers:
 
 1. Weiss, Goldberg, Yahav — arXiv:2106.06981v2
    "Thinking Like Transformers".
@@ -9,25 +9,28 @@ Formalization of nine papers on the mathematics of Transformers:
    "What Algorithms can Transformers Learn?  A Study in Length
    Generalization".
 
-3. Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5
+3. Yang, Huang, Chiang — arXiv:2506.16055v3
+   "Knee-Deep in C-RASP: A Transformer Depth Hierarchy".
+
+4. Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5
    "A mathematical perspective on Transformers".
 
-4. Geshkovski, Koubbi, Polyanskiy, Rigollet — arXiv:2410.06833v1
+5. Geshkovski, Koubbi, Polyanskiy, Rigollet — arXiv:2410.06833v1
    "Dynamic metastability in the self-attention model".
 
-5. Geshkovski, Karagodin, Polyanskiy, Rigollet — arXiv:2411.04551v3
+6. Geshkovski, Karagodin, Polyanskiy, Rigollet — arXiv:2411.04551v3
    "Measure-to-measure interpolation using Transformers".
 
-6. Karagodin, Polyanskiy, Rigollet — arXiv:2411.04990v2
+7. Karagodin, Polyanskiy, Rigollet — arXiv:2411.04990v2
    "Clustering in Causal Attention Masking".
 
-7. Karagodin, Polyanskiy, Rigollet — arXiv:2510.22026v2
+8. Karagodin, Polyanskiy, Rigollet — arXiv:2510.22026v2
    "Normalization in Attention Dynamics".
 
-8. Geshkovski, Polyanskiy, Rigollet — arXiv:2512.01868v4
+9. Geshkovski, Polyanskiy, Rigollet — arXiv:2512.01868v4
    "The Mean-Field Dynamics of Transformers" (survey).
 
-9. Zhai — arXiv:2603.09078v1
+10. Zhai — arXiv:2603.09078v1
    "Exclusive Self Attention".
 
 Alongside these, `Transformer.ALM` formalizes the paraboloid-lifted lookup
@@ -45,6 +48,7 @@ import Transformer.Basic
 import Transformer.ALM
 import Transformer.RASP
 import Transformer.RASPL
+import Transformer.CRASP
 import Transformer.Perspective
 import Transformer.Metastability
 import Transformer.Interpolation
