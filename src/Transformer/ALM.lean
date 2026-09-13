@@ -48,6 +48,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.SoftmaxTie` | and that on a tie it returns what the tie-break returns |
 | `ALM.HullHead` | and that the tie it averages is the one the hull walk found |
 | `ALM.FloatHead` | and the value the head returns at the line that code lands on |
+| `ALM.FloatHeadTie` | and at the tie that code merges, on the arithmetic it merges in |
 | `ALM.FixedDim` | why that bound needs a growing dimension, unconditionally |
 | `ALM.SETH` | and the same bound with SETH as the only conjecture |
 | `ALM.Sparsification` | SETH without a density restriction, plus the sparsification |
@@ -102,6 +103,7 @@ import Transformer.ALM.SoftmaxValue
 import Transformer.ALM.SoftmaxTie
 import Transformer.ALM.HullHead
 import Transformer.ALM.FloatHead
+import Transformer.ALM.FloatHeadTie
 import Transformer.ALM.FixedDim
 import Transformer.ALM.SETH
 import Transformer.ALM.Sparsification
