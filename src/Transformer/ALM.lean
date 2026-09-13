@@ -25,6 +25,8 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.SparseModel` | a model where those two hypotheses hold together |
 | `ALM.Polylog` | the same barrier from SETH alone, at polylog dimension |
 | `ALM.Independence` | and why that last conjecture cannot be dropped either |
+| `ALM.Probe` | algorithms that can only evaluate the formula |
+| `ALM.QueryModel` | where SETH stops being a conjecture and is proved |
 -/
 
 import Transformer.ALM.Defs
@@ -46,3 +48,5 @@ import Transformer.ALM.Sparsification
 import Transformer.ALM.SparseModel
 import Transformer.ALM.Polylog
 import Transformer.ALM.Independence
+import Transformer.ALM.Probe
+import Transformer.ALM.QueryModel
