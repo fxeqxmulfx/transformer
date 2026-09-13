@@ -10,6 +10,13 @@ for a line the two tests above reject is what makes the erase loops correct" —
 and never applies it.  The composition was the claim; the pieces were the
 theorems.
 
+The same split reappeared one level up: `erase_preserves_isGreatest` carries an
+erase to the lookup, but only from a hypothesis naming a surviving line that
+matches the erased one, and nothing discharged that hypothesis from the loop
+conditions.  `erase_slope_eq_preserves_isGreatest` and
+`erase_interX_le_preserves_isGreatest` close it: what `add_line` erases, the
+tests in `add_line` prove it may erase.
+
 This file makes the composition a theorem, once for each of the two erases
 `_HullCHT::add_line` performs (`transformer_vm/attention/hull2d_cht.h`,
 lines 132-139 for the equal-slope early return, lines 140-192 for the two
@@ -59,17 +66,22 @@ line may be erased with no effect on the envelope at any query whatsoever.
 This is `sup'_erase_of_le` applied at every `x` through
 `dominated_iff_le_at_interX`, the step `Transformer.ALM.Envelope` only
 described. -/
-theorem sup'_erase_of_interX_le {s : Finset (ℝ × ℝ)} {l₁ l₂ l₃ : ℝ × ℝ}
+theorem exists_ge_of_interX_le {s : Finset (ℝ × ℝ)} {l₁ l₂ l₃ : ℝ × ℝ}
     (h₁₂ : l₁.1 < l₂.1) (h₂₃ : l₂.1 < l₃.1) (htest : interX l₂ l₃ ≤ interX l₁ l₂)
-    (hl₂ : l₂ ∈ s) (h₁ : l₁ ∈ s.erase l₂) (h₃ : l₃ ∈ s.erase l₂) (x : ℝ) :
-    s.sup' ⟨l₂, hl₂⟩ (fun a => lineEval a x)
-      = (s.erase l₂).sup' ⟨l₁, h₁⟩ (fun a => lineEval a x) := by
-  refine sup'_erase_of_le hl₂ ⟨l₁, h₁⟩ x ?_
+    (h₁ : l₁ ∈ s.erase l₂) (h₃ : l₃ ∈ s.erase l₂) (x : ℝ) :
+    ∃ l' ∈ s.erase l₂, lineEval l₂ x ≤ lineEval l' x := by
   have hdom := (dominated_iff_le_at_interX h₁₂ h₂₃).mpr
     ((interX_le_interX_iff h₁₂ h₂₃).mp htest) x
   rcases max_cases (lineEval l₁ x) (lineEval l₃ x) with ⟨he, -⟩ | ⟨he, -⟩
   · exact ⟨l₁, h₁, by rwa [he] at hdom⟩
   · exact ⟨l₃, h₃, by rwa [he] at hdom⟩
+
+theorem sup'_erase_of_interX_le {s : Finset (ℝ × ℝ)} {l₁ l₂ l₃ : ℝ × ℝ}
+    (h₁₂ : l₁.1 < l₂.1) (h₂₃ : l₂.1 < l₃.1) (htest : interX l₂ l₃ ≤ interX l₁ l₂)
+    (hl₂ : l₂ ∈ s) (h₁ : l₁ ∈ s.erase l₂) (h₃ : l₃ ∈ s.erase l₂) (x : ℝ) :
+    s.sup' ⟨l₂, hl₂⟩ (fun a => lineEval a x)
+      = (s.erase l₂).sup' ⟨l₁, h₁⟩ (fun a => lineEval a x) :=
+  sup'_erase_of_le hl₂ ⟨l₁, h₁⟩ x (exists_ge_of_interX_le h₁₂ h₂₃ htest h₁ h₃ x)
 
 /-- The hypotheses are satisfiable: `y = -x`, `y = 0` and `y = x` all meet at
 the origin, so both breakpoints are `0` and the loop condition holds with
@@ -105,6 +117,51 @@ example :
       ∀ b ∈ ({((0:ℝ), (0:ℝ)), (0, 1)} : Finset (ℝ × ℝ)), lineEval b 0 ≤ lineEval a 0 :=
   erase_preserves_isGreatest (by simp) ⟨(0, 1), by simp⟩ 0
     ⟨(0, 1), by simp, by simp [lineEval]⟩
+
+/-- **And the two loop conditions are exactly what supplies that.**  The
+`hdom` of `erase_preserves_isGreatest` was a hypothesis, discharged nowhere:
+the two theorems above establish the *envelope* is unchanged, and the lookup
+statement asked separately for a surviving line that matches the erased one.
+Here the loop conditions themselves discharge it — the equal-slope test first,
+then the breakpoint test — so what `add_line` erases, it erases without
+changing the answer to any lookup. -/
+theorem erase_slope_eq_preserves_isGreatest {s : Finset (ℝ × ℝ)} {l l' : ℝ × ℝ}
+    (hl : l ∈ s) (hmem : l' ∈ s.erase l) (hm : l.1 = l'.1) (hb : l.2 ≤ l'.2) (x : ℝ) :
+    ∃ a ∈ s.erase l, ∀ b ∈ s, lineEval b x ≤ lineEval a x :=
+  erase_preserves_isGreatest hl ⟨l', hmem⟩ x
+    ⟨l', hmem, lineEval_le_of_slope_eq hm hb x⟩
+
+/-- The hypotheses are satisfiable, on the family the equal-slope example
+already used: the lower of two parallel lines is dropped and the lookup at
+`x = 0` is still answered by a stored line. -/
+example :
+    ∃ a ∈ ({((0:ℝ), (0:ℝ)), (0, 1)} : Finset (ℝ × ℝ)).erase (0, 0),
+      ∀ b ∈ ({((0:ℝ), (0:ℝ)), (0, 1)} : Finset (ℝ × ℝ)), lineEval b 0 ≤ lineEval a 0 :=
+  by
+  refine erase_slope_eq_preserves_isGreatest (l := ((0 : ℝ), (0 : ℝ)))
+    (l' := ((0 : ℝ), (1 : ℝ))) ?_ ?_ rfl (by norm_num) 0 <;> simp
+
+/-- **The breakpoint loops lose no argmax either.**  When
+`isect(l₁,l₂).p ≥ isect(l₂,l₃).p` fires, the middle line is at or below one of
+its two neighbours at every query, and both of them survive — so the best
+score over the pruned hull is still the best score over everything the build
+ever inserted. -/
+theorem erase_interX_le_preserves_isGreatest {s : Finset (ℝ × ℝ)} {l₁ l₂ l₃ : ℝ × ℝ}
+    (h₁₂ : l₁.1 < l₂.1) (h₂₃ : l₂.1 < l₃.1) (htest : interX l₂ l₃ ≤ interX l₁ l₂)
+    (hl₂ : l₂ ∈ s) (h₁ : l₁ ∈ s.erase l₂) (h₃ : l₃ ∈ s.erase l₂) (x : ℝ) :
+    ∃ a ∈ s.erase l₂, ∀ b ∈ s, lineEval b x ≤ lineEval a x :=
+  erase_preserves_isGreatest hl₂ ⟨l₁, h₁⟩ x
+    (exists_ge_of_interX_le h₁₂ h₂₃ htest h₁ h₃ x)
+
+/-- The hypotheses are satisfiable, on the three concurrent lines above: the
+loop condition fires with equality, the middle line goes, and the query at
+`x = 1` is answered by one of the two that stay. -/
+example :
+    ∃ a ∈ ({((-1:ℝ), (0:ℝ)), (0, 0), (1, 0)} : Finset (ℝ × ℝ)).erase (0, 0),
+      ∀ b ∈ ({((-1:ℝ), (0:ℝ)), (0, 0), (1, 0)} : Finset (ℝ × ℝ)),
+        lineEval b 1 ≤ lineEval a 1 :=
+  erase_interX_le_preserves_isGreatest (l₁ := ((-1 : ℝ), (0 : ℝ))) (l₃ := ((1 : ℝ), (0 : ℝ)))
+    (by norm_num) (by norm_num) (by norm_num [interX]) (by simp) (by simp) (by simp) 1
 
 end ALM
 end Transformer
