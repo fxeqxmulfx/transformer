@@ -14,14 +14,19 @@ query: the line the implementation's `lower_bound` lands on carries exactly the
 queried key, and the head's output is the value at that line up to the softmax
 error.  Nothing is assumed about the query beyond what the running code needs
 — a bound on the keys and a separation from the breakpoints, the hypotheses of
-`fpProbe_eq_hullProbe`, which the last example discharges for every integer
-family at every one of its own keys.
+`fpProbe_eq_hullProbe`.
+
+On the integer data the primitive stores the separation is not a hypothesis at
+all: `half_le_key_dist_mid` shows a stored key is half a unit from every
+breakpoint, so `fp_head_output_of_int` asks only that the rounding error stay
+below that half unit — one condition on the precision, checkable once for the
+machine rather than once per query.
 
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 203-215.
 -/
 
 import Transformer.ALM.SoftmaxValue
-import Transformer.ALM.FloatIndex
+import Transformer.ALM.FloatLattice
 
 open scoped BigOperators
 
@@ -92,36 +97,101 @@ theorem fp_head_output {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
   rwa [hullIndex.ans_eq_of_query_mem (fun j => embInt (fun _ : Fin 1 => K j))
     (embInt_one_injective hinj) i₀] at h
 
-/-- The hypotheses are satisfiable, and the separation one is no accident: a
-stored key is never a breakpoint, because every breakpoint lies strictly
-between two adjacent keys.  So with exact arithmetic every integer family
-meets the conditions at every one of its own keys. -/
+/-! ### And on integer data the separation is free -/
+
+/-- **A stored key is half a unit from every breakpoint.**  For an integer
+family the sorted keys are integers and the breakpoint of two adjacent ones is
+a multiple of `1/2`; a breakpoint lies strictly between its two keys, so it is
+never a key itself, and two distinct multiples of `1/2` are `1/2` apart.  The
+separation condition of `fpProbe_eq_hullProbe` is therefore not something a
+caller has to check on the lookup path: it holds by arithmetic. -/
+lemma half_le_key_dist_mid [Nonempty (Fin n)] (K : Fin n → ℤ) (i₀ : Fin n) (j : ℕ) :
+    1 / 2 ≤ |(K i₀ : ℝ) - (sortedKey (fun i => (K i : ℝ)) j
+      + sortedKey (fun i => (K i : ℝ)) (j + 1)) / 2| := by
+  set Ks : Fin n → ℝ := fun i => (K i : ℝ) with hKs
+  have hKi : ∀ i, ∃ z : ℤ, Ks i = (z : ℝ) := fun i => ⟨K i, rfl⟩
+  have hmono : StrictMono (sortedKey Ks) := strictMono_nat_of_lt_succ (sortedKey_lt_succ Ks)
+  obtain ⟨t, -, hteq⟩ := exists_sortedKey_eq Ks i₀
+  obtain ⟨za, hza⟩ := sortedKey_int Ks hKi t
+  obtain ⟨zj, hzj⟩ := mid_half_int (sortedKey_int Ks hKi) j
+  have hstep := sortedKey_lt_succ Ks j
+  have hkey : Ks i₀ = (za : ℝ) := by rw [← hteq, hza]
+  have hne : Ks i₀ ≠ (sortedKey Ks j + sortedKey Ks (j + 1)) / 2 := by
+    rw [← hteq]
+    rcases Nat.lt_or_ge t (j + 1) with hlt | hge
+    · have hle : sortedKey Ks t ≤ sortedKey Ks j := hmono.monotone (by omega)
+      intro h; rw [h] at hle; linarith
+    · have hle : sortedKey Ks (j + 1) ≤ sortedKey Ks t := hmono.monotone hge
+      intro h; rw [h] at hle; linarith
+  rw [hkey, hzj] at hne
+  have hzne : 2 * za - zj ≠ 0 := by
+    intro h
+    refine hne ?_
+    have hc : (2 : ℝ) * (za : ℝ) - (zj : ℝ) = 0 := by exact_mod_cast congrArg (fun z : ℤ => (z : ℝ)) h
+    linarith
+  have hR : (1 : ℝ) ≤ |2 * (za : ℝ) - (zj : ℝ)| := by
+    have h1 : (1 : ℤ) ≤ |2 * za - zj| := Int.one_le_abs hzne
+    have h2 : ((1 : ℤ) : ℝ) ≤ ((|2 * za - zj| : ℤ) : ℝ) := Int.cast_le.mpr h1
+    push_cast at h2
+    exact h2
+  rw [show (2 : ℝ) * (za : ℝ) - (zj : ℝ) = 2 * ((za : ℝ) - (zj : ℝ) / 2) by ring,
+    abs_mul, abs_two] at hR
+  rw [show (K i₀ : ℝ) = Ks i₀ from rfl, hkey, hzj]
+  linarith
+
+/-- **The whole machine on integer data, with a bound and nothing else.**  The
+separation hypothesis of `fp_head_output` is discharged by
+`half_le_key_dist_mid`, so all that is left of the arithmetic is one condition
+on the precision: the rounding error on the breakpoints must stay below half a
+unit of the key lattice.  For long double (`u ≤ 2^-60`) on keys below `2^56`
+that error is `2^-4`. -/
+theorem fp_head_output_of_int {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    [Nonempty (Fin n)] (F : FPArith) (β : ℝ) (hβ : 0 ≤ β) (K : Fin n → ℤ)
+    (hinj : Function.Injective K) (i₀ : Fin n) (M : ℝ)
+    (hb : ∀ j ≤ keyCard (fun i => (K i : ℝ)) - 1, |sortedKey (fun i => (K i : ℝ)) j| ≤ M)
+    (hu : F.u * M < 1 / 2)
+    (V : Fin n → E) (C : ℝ) (hC : ∀ j, ‖V j - V i₀‖ ≤ C) :
+    sortedKey (fun i => (K i : ℝ)) (fpProbe F (fun i => (K i : ℝ)) (K i₀)) = (K i₀ : ℝ) ∧
+      ‖(∑ j, (Real.exp (β * score (embInt (fun _ : Fin 1 => K i₀))
+              (embInt (fun _ : Fin 1 => K j)))
+            / ∑ k, Real.exp (β * score (embInt (fun _ : Fin 1 => K i₀))
+              (embInt (fun _ : Fin 1 => K k)))) • V j) - V i₀‖
+        ≤ ((n : ℝ) - 1) * Real.exp (-(β * 1)) * C :=
+  fp_head_output F β hβ K hinj i₀ M hb
+    (fun j _ => lt_of_lt_of_le hu (half_le_key_dist_mid K i₀ j)) V C hC
+
+/-- The remaining hypotheses are satisfiable for every integer family: the
+sorted keys are finitely many, hence bounded, and exact arithmetic meets the
+precision condition. -/
+example [Nonempty (Fin n)] (K : Fin n → ℤ) :
+    ∃ M : ℝ, (∀ j ≤ keyCard (fun i => (K i : ℝ)) - 1,
+        |sortedKey (fun i => (K i : ℝ)) j| ≤ M) ∧ exactArith.u * M < 1 / 2 := by
+  obtain ⟨b, -, hb⟩ := Finset.exists_max_image (Finset.range (keyCard (fun i => (K i : ℝ))))
+    (fun j => |sortedKey (fun i => (K i : ℝ)) j|)
+    ⟨0, Finset.mem_range.mpr (keyCard_pos (fun i => (K i : ℝ)))⟩
+  refine ⟨|sortedKey (fun i => (K i : ℝ)) b|, fun j hj => hb j (Finset.mem_range.mpr ?_), ?_⟩
+  · have hpos := keyCard_pos (fun i => (K i : ℝ))
+    omega
+  · simp [exactArith]
+
+/-- The hypotheses of `fp_head_output` are satisfiable, and the separation one
+is no accident: by `half_le_key_dist_mid` a stored key is never within half a
+unit of a breakpoint, so with exact arithmetic every integer family meets the
+conditions at every one of its own keys. -/
 example [Nonempty (Fin n)] (K : Fin n → ℤ) (i₀ : Fin n) :
     ∃ M : ℝ, (∀ j ≤ keyCard (fun i => (K i : ℝ)) - 1,
         |sortedKey (fun i => (K i : ℝ)) j| ≤ M) ∧
       ∀ j < keyCard (fun i => (K i : ℝ)) - 1,
         exactArith.u * M < |(K i₀ : ℝ) - (sortedKey (fun i => (K i : ℝ)) j
           + sortedKey (fun i => (K i : ℝ)) (j + 1)) / 2| := by
-  set Ks : Fin n → ℝ := fun i => (K i : ℝ) with hKs
-  obtain ⟨b, -, hbmax⟩ := Finset.exists_max_image (Finset.range (keyCard Ks))
-    (fun j => |sortedKey Ks j|) ⟨0, by simp [keyCard_pos Ks]⟩
-  refine ⟨|sortedKey Ks b|, fun j hj => hbmax j (Finset.mem_range.mpr ?_), fun j hj => ?_⟩
-  · have hpos := keyCard_pos Ks
+  obtain ⟨b, -, hb⟩ := Finset.exists_max_image (Finset.range (keyCard (fun i => (K i : ℝ))))
+    (fun j => |sortedKey (fun i => (K i : ℝ)) j|)
+    ⟨0, Finset.mem_range.mpr (keyCard_pos (fun i => (K i : ℝ)))⟩
+  refine ⟨|sortedKey (fun i => (K i : ℝ)) b|, fun j hj => hb j (Finset.mem_range.mpr ?_),
+    fun j _ => lt_of_lt_of_le ?_ (half_le_key_dist_mid K i₀ j)⟩
+  · have hpos := keyCard_pos (fun i => (K i : ℝ))
     omega
-  · have hmono : StrictMono (sortedKey Ks) := strictMono_nat_of_lt_succ (sortedKey_lt_succ Ks)
-    obtain ⟨t, -, hteq⟩ := exists_sortedKey_eq Ks i₀
-    have hzero : exactArith.u * |sortedKey Ks b| = 0 := by simp [exactArith]
-    have hval : ((K i₀ : ℝ)) = sortedKey Ks t := hteq.symm
-    rw [hzero, hval]
-    rcases Nat.lt_or_ge t (j + 1) with hlt | hge
-    · have h₁ : sortedKey Ks t ≤ sortedKey Ks j := hmono.monotone (by omega)
-      have h₂ : sortedKey Ks j < sortedKey Ks (j + 1) := hmono (by omega)
-      rw [abs_of_neg (by linarith)]
-      linarith
-    · have h₁ : sortedKey Ks (j + 1) ≤ sortedKey Ks t := hmono.monotone hge
-      have h₂ : sortedKey Ks j < sortedKey Ks (j + 1) := hmono (by omega)
-      rw [abs_of_pos (by linarith)]
-      linarith
+  · simp [exactArith]
 
 end ALM
 end Transformer
