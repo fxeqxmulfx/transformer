@@ -21,6 +21,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.HullCost` | and what one query costs, and returns, search and walk together |
 | `ALM.FloatHull` | and why finite precision does not change either answer |
 | `ALM.FloatIndex` | and that the index itself is the one the running code answers |
+| `ALM.IntGrid` | integer keys on a grid, and their breakpoints on a half-grid |
 | `ALM.FloatLattice` | and that on integer data no separation is needed at all |
 | `ALM.FloatTie` | and that the `==` the merge loops branch on is the real tie |
 | `ALM.FloatWalk` | and the whole query, search and walk, in the arithmetic that runs |
@@ -71,6 +72,7 @@ import Transformer.ALM.HullBuild
 import Transformer.ALM.HullCost
 import Transformer.ALM.FloatHull
 import Transformer.ALM.FloatIndex
+import Transformer.ALM.IntGrid
 import Transformer.ALM.FloatLattice
 import Transformer.ALM.FloatTie
 import Transformer.ALM.FloatWalk
