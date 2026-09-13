@@ -17,7 +17,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.HullScan` | and why the tie-merge walk after it is a constant-time step |
 | `ALM.HullResolve` | and what that walk hands back: the mean of the tied values |
 | `ALM.HullBuild` | and what building it costs, the erase loops amortized away |
-| `ALM.HullCost` | and what one query costs in full: the search plus the walk |
+| `ALM.HullCost` | and what one query costs, and returns, search and walk together |
 | `ALM.FloatHull` | and why finite precision does not change either answer |
 | `ALM.FloatIndex` | and that the index itself is the one the running code answers |
 | `ALM.TieBreak` | where score ties live, and what the two tie-break modes do |

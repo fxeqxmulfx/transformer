@@ -18,10 +18,17 @@ one statement.
 `hullQuery_collects` then says, with no hypothesis at all, which lines the
 walk can ever see: the winner alone, or the winner with one neighbour on one
 side — the left loop and the right loop, each running at most once.
+
+`Transformer.ALM.HullResolve` prices the other end of the same walk, but about
+an arbitrary index of an arbitrary `argmaxSet`: it never knew that the walk
+starts at `hullProbe`.  `hullQuery_resolve` instantiates it there, so the
+value the head returns is determined by the geometry the search landed in —
+the winner's own payload where the winner is alone, the mean of the two where
+the walk merged a neighbour.
 -/
 
 import Transformer.ALM.HullIndex
-import Transformer.ALM.HullScan
+import Transformer.ALM.HullResolve
 
 namespace Transformer
 namespace ALM
@@ -102,6 +109,52 @@ example :
       = {hullProbe (fun j : Fin 3 => (j : ℝ)) 2 - 1,
           hullProbe (fun j : Fin 3 => (j : ℝ)) 2} :=
   hullQuery_collects _ _
+
+/-! ### And what it hands back -/
+
+/-- **The whole query, value and all.**  Which of the three cases of
+`hullQuery_collects` holds decides what `resolve` returns under
+`TieBreak::AVERAGE`: the payload of the key the search found, when that key is
+the only maximizer; the componentwise mean of two payloads, when the walk
+merged the neighbour on one side.  This is `Transformer.ALM.HullResolve` at
+the index `HullHalf::query` actually starts from, rather than at an arbitrary
+element of the tie set. -/
+theorem hullQuery_resolve [Nonempty (Fin n)] (K : Fin n → ℝ) (q : ℝ)
+    (M : ℕ → Meta) (V : ℕ → ℝ × ℝ) (s : ℕ → ℤ) (hs : ∀ j, 0 ≤ s j)
+    (hM : ∀ j, M j = Meta.empty.add (V j) (s j)) :
+    (argmaxSet (sortedKey K) q (keyCard K - 1) = {hullProbe K q} ∧
+        (scanBest M (hullProbe K q)).resolveAverage = V (hullProbe K q)) ∨
+      (argmaxSet (sortedKey K) q (keyCard K - 1)
+          = {hullProbe K q, hullProbe K q + 1} ∧
+        (scanCombined M (hullProbe K q) (hullProbe K q + 1)).resolveAverage
+          = (((V (hullProbe K q)).1 + (V (hullProbe K q + 1)).1) / 2,
+             ((V (hullProbe K q)).2 + (V (hullProbe K q + 1)).2) / 2)) ∨
+      (argmaxSet (sortedKey K) q (keyCard K - 1)
+          = {hullProbe K q - 1, hullProbe K q} ∧
+        (scanCombined M (hullProbe K q) (hullProbe K q - 1)).resolveAverage
+          = (((V (hullProbe K q)).1 + (V (hullProbe K q - 1)).1) / 2,
+             ((V (hullProbe K q)).2 + (V (hullProbe K q - 1)).2) / 2)) := by
+  set b := hullProbe K q with hbdef
+  have hlast : ∀ j, 0 ≤ (M j).lastSeq := by
+    intro j
+    rw [hM j]
+    simp only [Meta.add, Meta.empty]
+    exact le_max_of_le_left (hs j)
+  rcases hullQuery_collects K q with h | h | h
+  · refine Or.inl ⟨h, ?_⟩
+    rw [scanBest_eq M b (hlast b), hM b]
+    exact (Meta.resolve_eq_of_single (V b) (s b) (hs b)).1
+  · exact Or.inr (Or.inl ⟨h, scanCombined_resolveAverage M b (b + 1) (V b) (V (b + 1))
+      (s b) (s (b + 1)) (hs b) (hs (b + 1)) (hM b) (hM (b + 1))⟩)
+  · exact Or.inr (Or.inr ⟨h, scanCombined_resolveAverage M b (b - 1) (V b) (V (b - 1))
+      (s b) (s (b - 1)) (hs b) (hs (b - 1)) (hM b) (hM (b - 1))⟩)
+
+/-- The hypotheses are satisfiable: aggregates built one value per line, in
+insertion order, are what `HullMeta::add` produces. -/
+example : (∀ j : ℕ, (0 : ℤ) ≤ (j : ℤ)) ∧
+    ∀ j : ℕ, (fun i : ℕ => Meta.empty.add ((i : ℝ), 0) (i : ℤ)) j
+      = Meta.empty.add ((fun i : ℕ => ((i : ℝ), (0 : ℝ))) j) ((fun i : ℕ => (i : ℤ)) j) :=
+  ⟨fun j => Int.natCast_nonneg j, fun _ => rfl⟩
 
 end ALM
 end Transformer
