@@ -19,6 +19,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.HullResolve` | and what that walk hands back, in either tie-break mode |
 | `ALM.HullBuild` | and what building it costs, the erase loops amortized away |
 | `ALM.HullCost` | and what one query costs, and returns, search and walk together |
+| `ALM.HullValue` | and what it hands back, at any maximizer and at the search's own |
 | `ALM.FloatHull` | and why finite precision does not change either answer |
 | `ALM.FloatIndex` | and that the index itself is the one the running code answers |
 | `ALM.IntGrid` | integer keys on a grid, and their breakpoints on a half-grid |
@@ -26,6 +27,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.FloatTie` | and that the `==` the merge loops branch on is the real tie |
 | `ALM.FloatWalk` | and the whole query, search and walk, in the arithmetic that runs |
 | `ALM.FloatGrid` | and that the exactness that walk needs is a property of the grid |
+| `ALM.FloatResolve` | and the value `resolve` writes out, in the arithmetic that runs |
 | `ALM.TieBreak` | where score ties live, and what the two tie-break modes do |
 | `ALM.Basic` | exact hardmax lookup in arbitrary key dimension |
 | `ALM.Softmax` | softmax-to-hardmax error bounds for an abstract score gap |
@@ -71,6 +73,7 @@ import Transformer.ALM.HullScan
 import Transformer.ALM.HullResolve
 import Transformer.ALM.HullBuild
 import Transformer.ALM.HullCost
+import Transformer.ALM.HullValue
 import Transformer.ALM.FloatHull
 import Transformer.ALM.FloatIndex
 import Transformer.ALM.IntGrid
@@ -78,6 +81,7 @@ import Transformer.ALM.FloatLattice
 import Transformer.ALM.FloatTie
 import Transformer.ALM.FloatWalk
 import Transformer.ALM.FloatGrid
+import Transformer.ALM.FloatResolve
 import Transformer.ALM.TieBreak
 import Transformer.ALM.Softmax
 import Transformer.ALM.Lattice
