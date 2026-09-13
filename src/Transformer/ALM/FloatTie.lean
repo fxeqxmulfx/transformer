@@ -19,8 +19,10 @@ exact arithmetic is the case `δ = 0`.  Two theorems bound it from both sides.
   walk therefore never merges a line that is not a winner, *whatever* the
   rounding does.
 * `fp_tie_no_false_negative` — a real winner does fire the test, provided the
-  scores are computed exactly, which for binary64 they are on integers below
-  `2^53`.
+  scores are computed exactly.  That proviso is discharged, not assumed:
+  `Transformer.ALM.FloatGrid` shows a routine returning values on the integer
+  grid to within a unit is exact on lattice data, which is what binary64 is on
+  integers below `2^53`.
 
 `fp_walk_collects` puts the two together at the index the search lands on: the
 set the loops collect is exactly `argmaxSet`, and `fp_walk_collects_trichotomy`
@@ -140,9 +142,9 @@ example : (∀ j : ℕ, ∃ z : ℤ, 2 * (j : ℝ) = (z : ℝ)) ∧ 2 * exactSco
 /-! ### And an exact routine misses no winner -/
 
 /-- **The `==` of the loops fires on every winner.**  With the scores computed
-exactly — which binary64 is on integers below `2^53`, the range the `LookUp`
-primitive stores — two tied lines compare equal, so the walk stops only where
-`argmaxSet` ends.
+exactly two tied lines compare equal, so the walk stops only where `argmaxSet`
+ends.  `Transformer.ALM.FloatGrid` discharges the exactness on lattice data
+from a grid condition on the routine.
 
 Source: `hull2d_cht.h`, lines 283 and 296. -/
 theorem fp_tie_no_false_negative (S : FPScore) (K : ℕ → ℝ) (q : ℝ) (N : ℕ)

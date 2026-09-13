@@ -17,7 +17,8 @@ primitive stores:
 * `fp_walk_sound` — it contains no line that is not an exact maximizer, with
   no exactness assumed of the score routine, only `2δ < 1`.
 * `fp_walk_collects` — with the scores computed exactly it is precisely
-  `argmaxSet`, the set the development resolves.
+  `argmaxSet`, the set the development resolves; `Transformer.ALM.FloatGrid`
+  gets that exactness out of a grid condition a rounded routine can meet.
 * `fp_walk_trichotomy` — and so it is the winner alone, or the winner with one
   neighbour: each loop runs at most once, and `combined.resolve` is handed
   exactly what `Transformer.ALM.HullResolve` says it is handed.
@@ -61,9 +62,9 @@ theorem fp_walk_sound (S : FPScore) (F : FPArith) [Nonempty (Fin n)] (K : Fin n 
   exact fp_tie_no_false_positive S (sortedKey K) (sortedKey_int K hK) q (keyCard K - 1) hδ
     (fpProbe_mem_argmaxSet_of_int F K hK q M hbd hu) (by omega) hj.2
 
-/-- **And misses no winner.**  With the scores computed exactly — binary64 on
-integers below `2^53` — the set the loops collect is exactly the tie set the
-development resolves. -/
+/-- **And misses no winner.**  With the scores computed exactly the set the
+loops collect is exactly the tie set the development resolves;
+`fp_walk_collects_of_grid` weakens that hypothesis to the grid condition. -/
 theorem fp_walk_collects (S : FPScore) (F : FPArith) [Nonempty (Fin n)] (K : Fin n → ℝ)
     (hK : ∀ i, ∃ z : ℤ, K i = (z : ℝ)) (q : ℤ) (M : ℝ)
     (hbd : ∀ j ≤ keyCard K - 1, |sortedKey K j| ≤ M) (hu : F.u * M < 1 / 2)

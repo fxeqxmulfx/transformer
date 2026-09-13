@@ -25,6 +25,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.FloatLattice` | and that on integer data no separation is needed at all |
 | `ALM.FloatTie` | and that the `==` the merge loops branch on is the real tie |
 | `ALM.FloatWalk` | and the whole query, search and walk, in the arithmetic that runs |
+| `ALM.FloatGrid` | and that the exactness that walk needs is a property of the grid |
 | `ALM.TieBreak` | where score ties live, and what the two tie-break modes do |
 | `ALM.Basic` | exact hardmax lookup in arbitrary key dimension |
 | `ALM.Softmax` | softmax-to-hardmax error bounds for an abstract score gap |
@@ -76,6 +77,7 @@ import Transformer.ALM.IntGrid
 import Transformer.ALM.FloatLattice
 import Transformer.ALM.FloatTie
 import Transformer.ALM.FloatWalk
+import Transformer.ALM.FloatGrid
 import Transformer.ALM.TieBreak
 import Transformer.ALM.Softmax
 import Transformer.ALM.Lattice
