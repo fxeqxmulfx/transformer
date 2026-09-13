@@ -14,6 +14,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.BinSearch` | `lower_bound` written out, and its comparison count bounded |
 | `ALM.KeyOrder` | the sorted, deduplicated keys that search is run over |
 | `ALM.HullScan` | and why the tie-merge walk after it is a constant-time step |
+| `ALM.HullCost` | and what one query costs in full: the search plus the walk |
 | `ALM.FloatHull` | and why finite precision does not change either answer |
 | `ALM.TieBreak` | where score ties live, and what the two tie-break modes do |
 | `ALM.Basic` | exact hardmax lookup in arbitrary key dimension |
@@ -50,6 +51,7 @@ import Transformer.ALM.Hull
 import Transformer.ALM.BinSearch
 import Transformer.ALM.KeyOrder
 import Transformer.ALM.HullScan
+import Transformer.ALM.HullCost
 import Transformer.ALM.FloatHull
 import Transformer.ALM.TieBreak
 import Transformer.ALM.Softmax
