@@ -49,6 +49,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.SoftmaxValue` | and that its output vector is the value stored at that answer |
 | `ALM.SoftmaxTie` | and that on a tie it returns what the tie-break returns |
 | `ALM.SoftmaxMass` | and where the mass that bound assumes actually comes from |
+| `ALM.SoftmaxTieInt` | and that on the stored integer keys it needs no gap at all |
 | `ALM.SoftmaxLatest` | and how far it is from the other tie-break mode, exactly |
 | `ALM.HullHead` | and that the tie it averages is the one the hull walk found |
 | `ALM.HullHeadLatest` | and what the other tie-break mode costs it, exactly |
@@ -109,6 +110,7 @@ import Transformer.ALM.SoftmaxIndex
 import Transformer.ALM.SoftmaxValue
 import Transformer.ALM.SoftmaxTie
 import Transformer.ALM.SoftmaxMass
+import Transformer.ALM.SoftmaxTieInt
 import Transformer.ALM.SoftmaxLatest
 import Transformer.ALM.HullHead
 import Transformer.ALM.HullHeadLatest
