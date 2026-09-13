@@ -27,8 +27,13 @@ unit per erase (erasing at a known iterator is amortized constant), and lands
 under `3n(log₂ n + 1)` — which is what `hullIndex.build` now declares, so
 `hullIndex_build_paid` is a payment and not a promise.
 
-At `m ≠ 1` the price stays zero because nothing is built: `hullAns` is `bfAns`
-there, and a linear scan has no preprocessing.
+At `m ≠ 1` the price stays zero because nothing is built, and that is the last
+section: `hullAns_eq_bfAns` and `hullIndex_agrees_with_bruteForce` say the
+index is then the exhaustive scan of `Transformer.ALM.LookupIndex` outright —
+same answer, same build, same query.  The hull is the hull in dimension one
+and nowhere else, which is the honest reading of `reduction_dimension_even`:
+the barrier is dodged by a claim about one dimension, not by a better index in
+every dimension.
 -/
 
 import Transformer.ALM.HullIndex
@@ -122,6 +127,39 @@ theorem hullIndex_build_paid (ps : List ℕ) (n : ℕ) (h : ps.length ≤ n) :
 three keys against a hull of three costs `14` and is charged `18`. -/
 example : ((buildCost [0, 0, 2] 3 : ℕ) : ℝ) ≤ hullIndex.build 3 1 :=
   hullIndex_build_paid [0, 0, 2] 3 (by norm_num)
+
+
+/-! ### Where the hull is actually the hull -/
+
+/-- **Outside dimension one there is no hull.**  `hullAns` matches on the key
+dimension and takes the scanning branch everywhere but `m = 1`; this is that
+match, as a statement. -/
+theorem hullAns_eq_bfAns : ∀ {m n : ℕ} [Nonempty (Fin n)], m ≠ 1 →
+    ∀ (K : Fin n → EucSpace m) (q : EucSpace m), hullAns K q = bfAns K q
+  | 0, _, _, _, _, _ => rfl
+  | 1, _, _, hm, _, _ => absurd rfl hm
+  | _ + 2, _, _, _, _, _ => rfl
+
+/-- **And no saving either.**  Both prices fall back to `bruteForce`'s, so
+outside dimension one `hullIndex` is the exhaustive scan under another name.
+What dodges the barrier of `Transformer.ALM.Hardness` is therefore a claim
+about a single dimension — `reduction_dimension_even` — and not an index that
+beats a scan wherever it is asked. -/
+theorem hullIndex_agrees_with_bruteForce (n m : ℕ) (hm : m ≠ 1) :
+    hullIndex.build n m = bruteForce.build n m ∧
+      hullIndex.query n m = bruteForce.query n m := by
+  constructor
+  · show (if m = 1 then 3 * (n : ℝ) * ((Nat.log 2 n : ℝ) + 1) else 0) = 0
+    rw [if_neg hm]
+  · show (if m = 1 then (Nat.log 2 n : ℝ) + 1 else (n : ℝ) * (m : ℝ))
+      = (n : ℝ) * (m : ℝ)
+    rw [if_neg hm]
+
+/-- The hypothesis is satisfiable, and the agreement is not the empty claim:
+the reduction of `Transformer.ALM.LookupIndex` queries at `d + d`, which is
+even, so this is the branch it always takes. -/
+example (d : ℕ) : hullIndex.query 8 (d + d + 2) = bruteForce.query 8 (d + d + 2) :=
+  (hullIndex_agrees_with_bruteForce 8 (d + d + 2) (by omega)).2
 
 end ALM
 end Transformer
