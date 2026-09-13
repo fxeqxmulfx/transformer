@@ -12,11 +12,12 @@ position wherever the proof is not carried over.  Debt counts may rise in
       RASP semantics (§3), the `selector_width` implementation (Figure 8), the
       worked programs (§3, Figure 12) and the compilation rule (§3.1, §4).
       Formalized as `Transformer.RASP`.
-- [ ] `arXiv-2310.16028v1` — "What Algorithms can Transformers Learn? A Study
-      in Length Generalization" (ICLR 2024).  RASP-L, the RASP-Generalization
-      Conjecture, 4 lemmas (one `[Constructability]`).  Builds on
-      `Transformer.RASP`; the conjecture is a conjecture and must be stated as
-      a hypothesis, never as a theorem.
+- [x] `arXiv-2310.16028v1` — "What Algorithms can Transformers Learn? A Study
+      in Length Generalization" (ICLR 2024).  Formalized as
+      `Transformer.RASPL`: the RASP-L core (Listing 3), the Constructability
+      Lemma and the max-aggregation construction (Appendix C), Lemma 4.1 and
+      Lemma E.1 with the Fourier analysis they need, and the §4 separation.
+      The conjecture is stated as a hypothesis, not a theorem.
 - [ ] `arXiv-2506.16055v3` — "Knee-Deep in C-RASP: A Transformer Depth
       Hierarchy" (COLM 2025).  The largest of the three: 11 definitions,
       ~10 theorems (`thm:TLC_depth`, `thm:TLCl_depth`,
@@ -70,6 +71,11 @@ its two claims are empirical and deliberately stay prose.
   lose expressive power.  The argument is informal and the restricted
   architectures are not modelled; `RASP.Sort` formalizes the sorting program
   and its correctness, which is the half that is a theorem.
+- The footnote to §3 of arXiv:2310.16028: a next-token function requiring
+  `Ω(n³)` time is representable by no Transformer, since Transformers are
+  simulable by Turing machines in `O(n²)` time and such tasks exist by the
+  Time Hierarchy Theorem.  Both halves are statements about Turing machines,
+  which this development does not model.
 - Dyck-`k`-PTF (Figures 3 and 9 of arXiv:2106.06981).  The programs are
   written out in the paper but no property of them is claimed beyond "solves
   the task in a fixed number of heads and layers for any `k`"; worth adding
