@@ -17,6 +17,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.ScalarInt` | the length-free bound for distinct integer scalar keys |
 | `ALM.ScalarSharp` | the strictly better bound the quadratic gap gives |
 | `ALM.OrthVectors` | one lookup decides an Orthogonal Vectors instance |
+| `ALM.SAT` | satisfiability *is* an Orthogonal Vectors question |
 | `ALM.LookupIndex` | an exact index, and the reduction run through it |
 | `ALM.Hardness` | the conditional lower bound that reduction yields |
 -/
@@ -32,5 +33,6 @@ import Transformer.ALM.Lattice
 import Transformer.ALM.ScalarInt
 import Transformer.ALM.ScalarSharp
 import Transformer.ALM.OrthVectors
+import Transformer.ALM.SAT
 import Transformer.ALM.LookupIndex
 import Transformer.ALM.Hardness

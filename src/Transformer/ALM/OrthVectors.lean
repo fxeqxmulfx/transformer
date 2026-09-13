@@ -65,6 +65,21 @@ value — this is the entire reason the reduction points the right way. -/
 lemma ip_nonneg (a b : BVec d) : 0 ≤ ip a b :=
   Finset.sum_nonneg fun _ _ => mul_nonneg (bit_nonneg _) (bit_nonneg _)
 
+/-- Orthogonality read coordinatewise: no coordinate carries a `1` in both.
+The sum of nonnegative terms vanishes exactly when every term does. -/
+lemma orth_iff (a b : BVec d) : Orth a b ↔ ∀ i, (a i && b i) = false := by
+  rw [Orth, ip, Finset.sum_eq_zero_iff_of_nonneg
+    (fun i _ => mul_nonneg (bit_nonneg _) (bit_nonneg _))]
+  constructor
+  · intro h i
+    have := h i (Finset.mem_univ i)
+    revert this
+    cases a i <;> cases b i <;> simp [bit]
+  · intro h i _
+    have := h i
+    revert this
+    cases a i <;> cases b i <;> simp [bit]
+
 /-! ### The embedding -/
 
 /-- The query embedding `a ↦ (a, 0)`. -/
