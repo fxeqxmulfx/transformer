@@ -19,10 +19,17 @@ keys the lines the build leaves are exactly the positions
 `Transformer.ALM.KeyOrder` sorts and `Transformer.ALM.Hull` searches, at a
 price of two ordered-container searches per key and nothing else.
 
+`Transformer.ALM.HullPrune` proves the other thing a finished container owes
+its queries — that it holds a maximizer over every line inserted — and states
+it of lines.  The machine's lookup is over keys, and `build_isGreatest_score`
+is that same conclusion read through the paraboloid: the container answers the
+attention query itself.
+
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 143-195.
 -/
 
 import Transformer.ALM.HullBuild
+import Transformer.ALM.HullPrune
 
 namespace Transformer
 namespace ALM
@@ -100,6 +107,37 @@ example : Function.Injective (fun j : Fin 3 => ((j : ℕ) : ℝ)) ∧
     liftKey_not_dominated (by norm_num) (by norm_num)⟩
   simp only at h
   exact_mod_cast h
+
+/-! ### And what it answers -/
+
+/-- **The finished container answers the lookup.**  `build_isGreatest_of_inserted`
+bounds line values; under the paraboloid lift a line value at `q` *is* a score
+(`score_eq_lineEval`), so a container built by any interleaving of insertions
+and erases, holding the lifted line of every key, holds a line whose value at
+the query beats every key's score.  This is `hullAns` justified at the level
+of the build rather than at the level of the finished array. -/
+theorem build_isGreatest_score [Nonempty (Fin n)] (Kv : Fin n → EucSpace 1)
+    (qv : EucSpace 1) {c s : Finset (ℝ × ℝ)}
+    (h : Relation.ReflTransGen BuildStep (∅, ∅) (c, s))
+    (hins : ∀ i, liftKey (Kv i 0) ∈ s) (hne : c.Nonempty) :
+    ∃ a ∈ c, ∀ i, score qv (Kv i) ≤ lineEval a (qv 0) := by
+  obtain ⟨a, ha, hmax⟩ := build_isGreatest_of_inserted h hne (qv 0)
+  refine ⟨a, ha, fun i => ?_⟩
+  rw [score_eq_lineEval]
+  exact hmax _ (hins i)
+
+/-- The hypotheses are satisfiable: a build of the single key `0`, whose
+lifted line is the one the container ends with, and the query `0` scored
+against it. -/
+example :
+    ∃ a ∈ insert (liftKey (0 : ℝ)) (∅ : Finset (ℝ × ℝ)),
+      ∀ i : Fin 1, score (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1)
+          ((fun _ : Fin 1 => (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1)) i)
+        ≤ lineEval a ((WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1) 0) :=
+  build_isGreatest_score (fun _ : Fin 1 => (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1))
+    (WithLp.toLp 2 ![(0 : ℝ)])
+    (Relation.ReflTransGen.single (Or.inl ⟨liftKey (0 : ℝ), rfl⟩))
+    (fun _ => by norm_num) ⟨liftKey (0 : ℝ), by simp⟩
 
 end ALM
 end Transformer
