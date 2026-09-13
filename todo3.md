@@ -131,11 +131,40 @@ carried in the aggregate — which is `HullMeta` exactly.
 That theorem also fixes the honest statement of the claim.  Its bound is
 `((n−2) e^{−β}/2)·C + ‖V_b − V_c‖/2`, and the second term does not shrink with
 `β`.  A softmax head cannot resolve latest-write at all; it returns the mean of
-the tied payloads, and no temperature changes that.  So either the post drops
-"the latest one then scores strictly highest", or CALM must guarantee at most
-one live write per `(key, channel)` — a static check the compiler is in a
-position to make, and the only route by which the weights alone could carry the
-semantics.
+the tied payloads, and no temperature changes that.
+
+There is no way out of this inside the construction, and the reason is
+structural rather than numerical:
+
+- **CALM has no write.**  `fetch` (`graph/core.py:328`) declares a lookup gate;
+  the key expression is then evaluated at *every* position, so every token
+  writes to every gate at every step.  There is no channel object to attach a
+  single-writer check to — the gate is the channel — and nothing is conditional.
+  `clear_key` is not a conditional write: it subtracts `BIG = 1e30` from `ky`,
+  so the write happens and is made to lose.
+- **Duplicate keys are the mechanism, not the corner case.**  Every mutable
+  cell in the WASM interpreter is a repeated write under one key: memory bytes
+  at `key = memory_write_address` (`wasm/interpreter.py:423-427`), locals at
+  `key = LOCAL_STRIDE·call_depth + 4·immediate + byte_index` (`:388-394`),
+  stack slots at `key = stack_depth` (`:397-412`).  A single-writer restriction
+  would forbid storing to the same address twice, which is to forbid mutable
+  memory.
+- **The hat filter does not cover it.**  `memory_byte_dirty_position` is the
+  stored *address*, not a position, so the filter at `:429-433` rejects a read
+  whose address does not match — but two writes to the same address both match,
+  and their mean passes as a valid byte.  Latest-write is load-bearing for
+  memory correctness and unprotected.
+- **The integer route does not scale.**  Folding recency into the key as
+  `k·S + p` with `S > n` needs `(k·S)² < 2^53`, i.e. `k·S < 9.49·10^7`: at a
+  `10^6`-token trace that is 95 distinct logical keys.  Latest-write cannot be
+  bought back on the grid.
+
+So the disjunction has one branch.  The post has to drop "the latest one then
+scores strictly highest": latest-write is not in the weights and cannot be put
+there.  Their own reference semantics already says so — `evaluator.py:158-165`
+resolves a tie by the highest sequence number, never by the perturbation, which
+is thus absent from the specification, absent from both C++ heads, and present
+only in the emitted weights.
 
 ## 3. The hull cache is not equivalent to the attention it replaces
 
@@ -271,9 +300,9 @@ list.
    says so on their own code.
 2. §4's assertion, and §6's differential test to hold it in place.
 3. §7's two one-liners.
-4. §2's second half — decide whether CALM enforces single-writer, or the post
-   stops claiming a softmax head does latest-write.  This is the only item that
-   changes the language rather than the runtime.
+4. §2's second half — a text change, not a code change: the post stops
+   claiming a softmax head does latest-write.  The single-writer alternative is
+   closed, for the reasons in §2.
 5. §5 — prove the lower bound first, since it decides whether there is anything
    to fix.
 
