@@ -76,10 +76,32 @@ Ordered by what is both provable and load-bearing here.
       in the released system is an integer sequence number inside the data
       structure, outside the model entirely (todo3 §2).
 
-      What to prove: the `β` that latest-write costs as a function of the
-      perturbation scale, and the threshold at which it beats the integer route
-      of `ALM.SoftmaxLatestMass`, where the tie gap is `1` and no perturbation
-      is needed at all.  Small, and it is the tie-break the item timer uses.
+      What to prove, and the gap is bigger than it looked.  `ALM.SoftmaxLatestMass`
+      already bounds the softmax head against the log's latest resolution, and its
+      `‖V b − V c‖ / 2` term is tight rather than slack — at a tie the head returns
+      the mean and the mean is not the later payload.  But that covers less of the
+      machine than its name suggests:
+
+      - `softmax_head_resolves_latest_of_int` assumes `Function.Injective K`, and
+        `ALM.SoftmaxTieInt.sScore_tie_gap_one` needs it: the proof runs through
+        `2q = K c + K b`, so the tie it is about is a *reflection* tie between two
+        distinct keys straddling the query — the miss of todo3 §3, not two writes
+        under one key.  The duplicate-key case is covered only by the general
+        `softmax_head_resolves_latest_of_gap`, where the caller supplies `δ = 1`
+        by hand.
+      - Neither version reaches three or more writes under one key, which is what
+        a memory byte ordinarily gets.  For `m` copies the head returns their mean
+        and the error is `‖mean − V_last‖`, up to `(1 − 1/m)` of the payload
+        spread; what is needed is the same statement with the gap hypothesis taken
+        over the complement of the tie *set* rather than of a pair.
+      - And the claim that latest-write cannot live in the weights at all is
+        currently one theorem plus one measurement: the theorem is about an exact
+        tie, which the perturbation is designed to prevent, and what defeats the
+        perturbation is arithmetic (todo3 §2).  The missing theorem is the grid
+        budget — any key encoding that separates `S` recencies multiplies the key
+        magnitude by `S`, so `fp_eval_exact_of_grid` caps `k · S < √(2^53)`, which
+        is 95 logical keys on a `10^6`-token trace.  That is what would make the
+        obstruction a theorem rather than a table.
 
 - [ ] **The ceiling nobody states: where float64 ends.**  Neither post bounds
       the trace length, and the code carries no assertion.  There is a bound:
