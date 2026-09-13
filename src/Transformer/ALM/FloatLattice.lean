@@ -166,10 +166,7 @@ theorem fpProbe_mem_argmaxSet_of_int [Nonempty (Fin n)] (F : FPArith) (K : Fin n
     (hK : ∀ i, ∃ z : ℤ, K i = (z : ℝ)) (q : ℤ) (M : ℝ)
     (hbd : ∀ j ≤ keyCard K - 1, |sortedKey K j| ≤ M) (hu : F.u * M < 1 / 2) :
     fpProbe F K (q : ℝ) ∈ argmaxSet (sortedKey K) (q : ℝ) (keyCard K - 1) := by
-  refine (mem_argmaxSet _ _ _).mpr ⟨by
-    simpa [fpProbe, fpSearch] using bsearch_le
-      (fun j => decide ((q : ℝ) ≤ F.isect (liftKey (sortedKey K j))
-        (liftKey (sortedKey K (j + 1))))) 0 (keyCard K - 1), fun i hi => ?_⟩
+  refine (mem_argmaxSet _ _ _).mpr ⟨fpProbe_le F K (q : ℝ), fun i hi => ?_⟩
   exact fpSearch_isGreatest_of_int F (sortedKey K) q (keyCard K - 1) M
     (sortedKey_lt_succ K) (sortedKey_int K hK) hbd hu i hi
 

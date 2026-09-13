@@ -11,9 +11,11 @@ composition was prose.
 
 `fpTieSet` is the set of lines the two loops accept: those whose recomputed
 score compares equal to `best_score`, around the index the floating-point
-search returned.  Three statements about it, on the integer data the `LookUp`
-primitive stores:
+search returned.  Four statements about it, the last three on the integer data
+the `LookUp` primitive stores:
 
+* `fpProbe_mem_fpTieSet` — it is never empty: the probe compares equal to
+  itself, so `combined.resolve` always has a line to resolve.
 * `fp_walk_sound` — it contains no line that is not an exact maximizer, with
   no exactness assumed of the score routine, only `2δ < 1`.
 * `fp_walk_collects` — with the scores computed exactly it is precisely
@@ -45,6 +47,25 @@ noncomputable def fpTieSet (S : FPScore) (F : FPArith) [Nonempty (Fin n)]
   (Finset.range (keyCard K)).filter (fun j =>
     S.eval (liftQuery q) (liftKey (sortedKey K j))
       = S.eval (liftQuery q) (liftKey (sortedKey K (fpProbe F K q))))
+
+/-- **The probe is always kept.**  The comparison the loops make is an
+equality with the score at the probe itself, so the probe passes it, and the
+set the two `while` loops hand to `combined.resolve` is never empty: whatever
+the rounding does, the line the search landed on is resolved.
+
+Source: `hull2d_cht.h`, lines 277-303. -/
+theorem fpProbe_mem_fpTieSet (S : FPScore) (F : FPArith) [Nonempty (Fin n)]
+    (K : Fin n → ℝ) (q : ℝ) : fpProbe F K q ∈ fpTieSet S F K q := by
+  refine Finset.mem_filter.mpr ⟨Finset.mem_range.mpr ?_, rfl⟩
+  have hle := fpProbe_le F K q
+  have hpos := keyCard_pos K
+  omega
+
+/-- And so the tie set is nonempty, for every score routine and every
+query. -/
+theorem fpTieSet_nonempty (S : FPScore) (F : FPArith) [Nonempty (Fin n)]
+    (K : Fin n → ℝ) (q : ℝ) : (fpTieSet S F K q).Nonempty :=
+  ⟨fpProbe F K q, fpProbe_mem_fpTieSet S F K q⟩
 
 /-- **The walk accepts no loser.**  On integer keys at an integer query, with
 the breakpoints accurate to better than `1/2` and the scores to better than

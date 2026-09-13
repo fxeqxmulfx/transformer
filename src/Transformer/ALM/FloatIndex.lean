@@ -93,6 +93,17 @@ example : fpSearch exactArith (fun j : ℕ => (j : ℝ)) 0 5
 noncomputable def fpProbe (F : FPArith) [Nonempty (Fin n)] (K : Fin n → ℝ) (q : ℝ) : ℕ :=
   fpSearch F (sortedKey K) q (keyCard K - 1)
 
+/-- **The probe stays inside the key array.**  `bsearch` never returns more
+than the length it was given, so the index the running search hands back is a
+position of the sorted keys, not one past the end.
+
+Source: `hull2d_cht.h`, lines 203-215. -/
+lemma fpProbe_le [Nonempty (Fin n)] (F : FPArith) (K : Fin n → ℝ) (q : ℝ) :
+    fpProbe F K q ≤ keyCard K - 1 := by
+  simpa [fpProbe, fpSearch] using
+    bsearch_le (fun j => decide (q ≤ F.isect (liftKey (sortedKey K j))
+      (liftKey (sortedKey K (j + 1))))) 0 (keyCard K - 1)
+
 /-- **The machine in floating point answers what the index answers.**  Under
 the separation condition the computed probe is the exact one, so every
 statement `Transformer.ALM.HullIndex` proves about `hullIndex` — exactness and
