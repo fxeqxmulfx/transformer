@@ -31,6 +31,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.LookupIndex` | an exact index, and the reduction run through it |
 | `ALM.Hardness` | the conditional lower bound that reduction yields |
 | `ALM.HullIndex` | the machine itself as an index, and why the barrier misses it |
+| `ALM.SoftmaxIndex` | and that the softmax head returns what that index answers |
 | `ALM.FixedDim` | why that bound needs a growing dimension, unconditionally |
 | `ALM.SETH` | and the same bound with SETH as the only conjecture |
 | `ALM.Sparsification` | SETH without a density restriction, plus the sparsification |
@@ -68,6 +69,7 @@ import Transformer.ALM.SAT
 import Transformer.ALM.LookupIndex
 import Transformer.ALM.Hardness
 import Transformer.ALM.HullIndex
+import Transformer.ALM.SoftmaxIndex
 import Transformer.ALM.FixedDim
 import Transformer.ALM.SETH
 import Transformer.ALM.Sparsification
