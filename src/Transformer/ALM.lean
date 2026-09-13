@@ -58,6 +58,8 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.HullHeadLatest` | and what the other tie-break mode costs it, exactly |
 | `ALM.FloatHead` | and the value the head returns at the line that code lands on |
 | `ALM.FloatHeadTie` | and at the tie that code merges, on the arithmetic it merges in |
+| `ALM.SAHead` | and that the head is an ordinary attention head, at two projections |
+| `ALM.SAHeadValue` | and so that every bound above is a bound on standard attention |
 | `ALM.FixedDim` | why that bound needs a growing dimension, unconditionally |
 | `ALM.SETH` | and the same bound with SETH as the only conjecture |
 | `ALM.Sparsification` | SETH without a density restriction, plus the sparsification |
@@ -122,6 +124,8 @@ import Transformer.ALM.HullHead
 import Transformer.ALM.HullHeadLatest
 import Transformer.ALM.FloatHead
 import Transformer.ALM.FloatHeadTie
+import Transformer.ALM.SAHead
+import Transformer.ALM.SAHeadValue
 import Transformer.ALM.FixedDim
 import Transformer.ALM.SETH
 import Transformer.ALM.Sparsification

@@ -1,6 +1,6 @@
 # todo
 
-- [ ] `ALM/SAHead.lean` — the lookup head is an ordinary attention head (§1.1)
+- [x] `ALM/SAHead.lean` — the lookup head is an ordinary attention head (§1.1)
 - [ ] `ALM/PlanarHead.lean` — the hull answers any 2D head, not only the lift (§1.2)
 - [ ] `k`-sparse softmax: the truncation bound only, not the `O(k + log n)` (§1.3)
 - [ ] QK-norm obstructs the lookup head — state both halves (§1.4)
