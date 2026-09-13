@@ -1,25 +1,28 @@
 /-
-Formalization of seven papers on the mathematics of Transformers:
+Formalization of eight papers on the mathematics of Transformers:
 
-1. Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5
+1. Weiss, Goldberg, Yahav — arXiv:2106.06981v2
+   "Thinking Like Transformers".
+
+2. Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5
    "A mathematical perspective on Transformers".
 
-2. Geshkovski, Koubbi, Polyanskiy, Rigollet — arXiv:2410.06833v1
+3. Geshkovski, Koubbi, Polyanskiy, Rigollet — arXiv:2410.06833v1
    "Dynamic metastability in the self-attention model".
 
-3. Geshkovski, Karagodin, Polyanskiy, Rigollet — arXiv:2411.04551v3
+4. Geshkovski, Karagodin, Polyanskiy, Rigollet — arXiv:2411.04551v3
    "Measure-to-measure interpolation using Transformers".
 
-4. Karagodin, Polyanskiy, Rigollet — arXiv:2411.04990v2
+5. Karagodin, Polyanskiy, Rigollet — arXiv:2411.04990v2
    "Clustering in Causal Attention Masking".
 
-5. Karagodin, Polyanskiy, Rigollet — arXiv:2510.22026v2
+6. Karagodin, Polyanskiy, Rigollet — arXiv:2510.22026v2
    "Normalization in Attention Dynamics".
 
-6. Geshkovski, Polyanskiy, Rigollet — arXiv:2512.01868v4
+7. Geshkovski, Polyanskiy, Rigollet — arXiv:2512.01868v4
    "The Mean-Field Dynamics of Transformers" (survey).
 
-7. Zhai — arXiv:2603.09078v1
+8. Zhai — arXiv:2603.09078v1
    "Exclusive Self Attention".
 
 Alongside these, `Transformer.ALM` formalizes the paraboloid-lifted lookup
@@ -35,6 +38,7 @@ are translated directly.
 
 import Transformer.Basic
 import Transformer.ALM
+import Transformer.RASP
 import Transformer.Perspective
 import Transformer.Metastability
 import Transformer.Interpolation
