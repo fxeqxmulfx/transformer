@@ -55,6 +55,34 @@ example [Nonempty (Fin n)] (Kv : Fin n → EucSpace 1) (qv : EucSpace 1) :
         = sortedKey (fun j => Kv j 0) (hullProbe (fun j => Kv j 0) (qv 0)) :=
   ⟨hullProbe_mem_argmaxSet (fun j => Kv j 0) (qv 0), hullIdx_spec (fun j => Kv j 0) (qv 0)⟩
 
+/-- **The head returns what the walk resolved, at any two lines the walk can
+collect.**  Both keys are named by positions the tie set contains, and nothing
+says either is the one the exact search returns: two keys collected by *any*
+walk over `argmaxSet` score alike, because each of them scores what `hullIdx`
+scores.  `hullTie_head_resolves` is the case where one of them is `hullIdx`;
+`Transformer.ALM.FloatHeadTie` is the case where one of them is the index the
+floating-point search returned, which at a tie need not be the same. -/
+theorem argmaxTie_head_resolves [Nonempty (Fin n)] (Kv : Fin n → EucSpace 1) (qv : EucSpace 1)
+    (β ε C : ℝ) (V : Fin n → ℝ × ℝ) (M : ℕ → Meta) (p r : ℕ) (sp sr : ℤ)
+    (i₁ i₂ : Fin n) (b c : ℕ)
+    (hb : b ∈ argmaxSet (sortedKey fun j => Kv j 0) (qv 0) (keyCard (fun j => Kv j 0) - 1))
+    (hc : c ∈ argmaxSet (sortedKey fun j => Kv j 0) (qv 0) (keyCard (fun j => Kv j 0) - 1))
+    (h₁ : Kv i₁ 0 = sortedKey (fun j => Kv j 0) b)
+    (h₂ : Kv i₂ 0 = sortedKey (fun j => Kv j 0) c)
+    (hne : i₁ ≠ i₂) (hsp : 0 ≤ sp) (hsr : 0 ≤ sr)
+    (hMp : M p = Meta.empty.add (V i₁) sp) (hMr : M r = Meta.empty.add (V i₂) sr)
+    (hmass : 1 - ε
+      ≤ Real.exp (β * score qv (Kv i₁)) / ∑ k, Real.exp (β * score qv (Kv k))
+          + Real.exp (β * score qv (Kv i₂)) / ∑ k, Real.exp (β * score qv (Kv k)))
+    (hC : ∀ j, ‖V j - (((V i₁).1 + (V i₂).1) / 2, ((V i₁).2 + (V i₂).2) / 2)‖ ≤ C) :
+    ‖(∑ j, (Real.exp (β * score qv (Kv j)) / ∑ k, Real.exp (β * score qv (Kv k))) • V j)
+        - (scanCombined M p r).resolveAverage‖ ≤ ε * C :=
+  softmax_head_resolves_average β (fun j => score qv (Kv j)) V i₁ i₂ hne
+    (score qv (Kv i₁)) rfl
+    ((score_eq_of_mem_argmaxSet Kv qv i₂ c hc h₂).trans
+      (score_eq_of_mem_argmaxSet Kv qv i₁ b hb h₁).symm)
+    M p r sp sr hsp hsr hMp hMr ε C hmass hC
+
 /-- **The head returns what the walk resolved, on the hull's own tie.**  No
 hypothesis names a score: the second key is given by a position the search
 collected, and `score_eq_of_mem_argmaxSet` turns that into the level-set
@@ -78,15 +106,15 @@ theorem hullTie_head_resolves [Nonempty (Fin n)] (Kv : Fin n → EucSpace 1) (qv
         ((V (hullIdx (fun j => Kv j 0) (qv 0))).2 + (V i₂).2) / 2)‖ ≤ C) :
     ‖(∑ j, (Real.exp (β * score qv (Kv j)) / ∑ k, Real.exp (β * score qv (Kv k))) • V j)
         - (scanCombined M p r).resolveAverage‖ ≤ ε * C :=
-  softmax_head_resolves_average β (fun j => score qv (Kv j)) V
-    (hullIdx (fun j => Kv j 0) (qv 0)) i₂ hne
-    (score qv (Kv (hullIdx (fun j => Kv j 0) (qv 0)))) rfl
-    (score_eq_of_mem_argmaxSet Kv qv i₂ c hc h₂) M p r sp sr hsp hsr hMp hMr ε C hmass hC
+  argmaxTie_head_resolves Kv qv β ε C V M p r sp sr
+    (hullIdx (fun j => Kv j 0) (qv 0)) i₂ (hullProbe (fun j => Kv j 0) (qv 0)) c
+    (hullProbe_mem_argmaxSet (fun j => Kv j 0) (qv 0)) hc
+    (hullIdx_spec (fun j => Kv j 0) (qv 0)) h₂ hne hsp hsr hMp hMr hmass hC
 
-/-- The hypotheses are satisfiable together, and the tie is a real one: two
-lines carrying the same key tie at every query, so whichever of the two
-`hullIdx` names, the other is collected beside it, and the head's output is
-the aggregate the walk built. -/
+/-- The hypotheses of both are satisfiable together, and the tie is a real
+one: two lines carrying the same key tie at every query, so whichever of the
+two `hullIdx` names, the other is collected beside it, and the head's output
+is the aggregate the walk built. -/
 example :
     ‖(∑ _j : Fin 2, (Real.exp (1 * score (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1)
               (WithLp.toLp 2 ![(0 : ℝ)] : EucSpace 1))
