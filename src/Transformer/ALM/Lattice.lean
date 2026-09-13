@@ -24,7 +24,12 @@ open Real
 namespace Transformer
 namespace ALM
 
-/-! ### A geometric tail -/
+/-! ### Geometric tails
+
+`geom_pos_le` is the tail used by the linear-margin bound below;
+`geom_sq_le` is the sparser tail the quadratic margin gives, used by
+`Transformer.ALM.ScalarSharp`.
+-/
 
 /-- `∑_{t=1}^{N} r^t ≤ r/(1-r)` for `0 ≤ r < 1`. -/
 lemma geom_pos_le {r : ℝ} (hr0 : 0 ≤ r) (hr1 : r < 1) (N : ℕ) :
@@ -51,6 +56,49 @@ lemma geom_pos_le {r : ℝ} (hr0 : 0 ≤ r) (hr1 : r < 1) (N : ℕ) :
     field_simp
     ring
   linarith
+
+/-- `∑_{t < N} s^t ≤ 1/(1-s)` for `0 ≤ s < 1`. -/
+private lemma geom_range_le {s : ℝ} (hs0 : 0 ≤ s) (hs1 : s < 1) (N : ℕ) :
+    ∑ t ∈ Finset.range N, s ^ t ≤ 1 / (1 - s) := by
+  have h1s : (0 : ℝ) < 1 - s := by linarith
+  rw [geom_sum_eq (by linarith : s ≠ 1)]
+  have hrw : (s ^ N - 1) / (s - 1) = (1 - s ^ N) / (1 - s) := by
+    rw [← neg_div_neg_eq]; ring_nf
+  rw [hrw, div_le_div_iff_of_pos_right h1s]
+  have : 0 ≤ s ^ N := pow_nonneg hs0 N
+  linarith
+
+/-- **The theta tail.**  For `0 ≤ r < 1` the squares thin the series out:
+
+  `∑_{t = 1}^{N} r^{t²} ≤ r / (1 - r³)`,
+
+because `t² ≥ 3t - 2` for every `t ≥ 1`.  Compare `geom_pos_le` of
+`Transformer.ALM.Lattice`, which gives `r/(1-r)` for the linear exponents. -/
+theorem geom_sq_le {r : ℝ} (hr0 : 0 ≤ r) (hr1 : r < 1) (N : ℕ) :
+    ∑ t ∈ (Finset.range (N + 1)).erase 0, r ^ (t ^ 2) ≤ r / (1 - r ^ 3) := by
+  have hr3 : r ^ 3 < 1 := pow_lt_one₀ hr0 hr1 (by norm_num)
+  have hr30 : (0 : ℝ) ≤ r ^ 3 := pow_nonneg hr0 3
+  -- drop the `t = 0` term and reindex
+  have hmem0 : (0 : ℕ) ∈ Finset.range (N + 1) := Finset.mem_range.mpr (Nat.succ_pos N)
+  have hshift : ∑ t ∈ (Finset.range (N + 1)).erase 0, r ^ (t ^ 2)
+      = ∑ t ∈ Finset.range N, r ^ ((t + 1) ^ 2) := by
+    rw [Finset.sum_erase_eq_sub hmem0, Finset.sum_range_succ' (fun t => r ^ (t ^ 2)) N]
+    simp
+  rw [hshift]
+  -- `(t+1)² ≥ 3t + 1`, so each term is at most `r · (r³)^t`
+  have hterm : ∀ t ∈ Finset.range N, r ^ ((t + 1) ^ 2) ≤ r * (r ^ 3) ^ t := by
+    intro t _
+    have hsq : t ≤ t ^ 2 := Nat.le_self_pow (by norm_num) t
+    have hexpand : (t + 1) ^ 2 = t ^ 2 + 2 * t + 1 := by ring
+    have hexp : 3 * t + 1 ≤ (t + 1) ^ 2 := by omega
+    calc r ^ ((t + 1) ^ 2) ≤ r ^ (3 * t + 1) := pow_le_pow_of_le_one hr0 hr1.le hexp
+      _ = r * (r ^ 3) ^ t := by rw [← pow_mul, ← pow_succ']
+  calc ∑ t ∈ Finset.range N, r ^ ((t + 1) ^ 2)
+      ≤ ∑ t ∈ Finset.range N, r * (r ^ 3) ^ t := Finset.sum_le_sum hterm
+    _ = r * ∑ t ∈ Finset.range N, (r ^ 3) ^ t := by rw [Finset.mul_sum]
+    _ ≤ r * (1 / (1 - r ^ 3)) := by
+        exact mul_le_mul_of_nonneg_left (geom_range_le hr30 hr3 N) hr0
+    _ = r / (1 - r ^ 3) := by ring
 
 /-! ### The counting bound -/
 

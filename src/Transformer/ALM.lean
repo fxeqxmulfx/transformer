@@ -13,8 +13,9 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.TieBreak` | where score ties live, and what the two tie-break modes do |
 | `ALM.Basic` | exact hardmax lookup in arbitrary key dimension |
 | `ALM.Softmax` | softmax-to-hardmax error bounds for an abstract score gap |
-| `ALM.Lattice` | the geometric-series bound that removes the factor `n` |
+| `ALM.Lattice` | the tail bounds that remove the factor `n` |
 | `ALM.ScalarInt` | the length-free bound for distinct integer scalar keys |
+| `ALM.ScalarSharp` | the strictly better bound the quadratic gap gives |
 -/
 
 import Transformer.ALM.Defs
@@ -26,3 +27,4 @@ import Transformer.ALM.TieBreak
 import Transformer.ALM.Softmax
 import Transformer.ALM.Lattice
 import Transformer.ALM.ScalarInt
+import Transformer.ALM.ScalarSharp
