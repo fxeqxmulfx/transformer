@@ -55,7 +55,7 @@ theorem normL2_norm_le
   rw [Real.norm_eq_abs, abs_of_nonneg (by positivity : (0:ℝ) ≤ 1 / (‖x‖ + eps))]
   by_cases hx : ‖x‖ = 0
   · rw [hx]
-    simp [norm_eq_zero.mp hx]
+    simp
   · have hxpos : 0 < ‖x‖ := lt_of_le_of_ne (norm_nonneg _) (Ne.symm hx)
     have : 0 < ‖x‖ + eps := by linarith
     rw [div_mul_eq_mul_div, one_mul, div_le_one this]
@@ -114,7 +114,27 @@ theorem partition_bounds
     ∧
     (∑ j : Fin n, Real.exp (score alpha eps (q i) (k j)))
       ≤ (n : ℝ) * Real.exp (Real.exp alpha) := by
-  sorry
+  have hb : ∀ j : Fin n, |score alpha eps (q i) (k j)| ≤ Real.exp alpha :=
+    fun j => score_bounded alpha eps heps _ _
+  constructor
+  · have h1 : ∀ j ∈ Finset.univ, Real.exp (-(Real.exp alpha))
+        ≤ Real.exp (score alpha eps (q i) (k j)) := by
+      intro j _
+      refine Real.exp_le_exp.mpr ?_
+      linarith [(abs_le.mp (hb j)).1]
+    simpa [Finset.card_univ, nsmul_eq_mul] using
+      Finset.card_nsmul_le_sum Finset.univ _ _ h1
+  · have h2 : ∀ j ∈ Finset.univ, Real.exp (score alpha eps (q i) (k j))
+        ≤ Real.exp (Real.exp alpha) := by
+      intro j _
+      refine Real.exp_le_exp.mpr ?_
+      linarith [(abs_le.mp (hb j)).2]
+    simpa [Finset.card_univ, nsmul_eq_mul] using
+      Finset.sum_le_card_nsmul Finset.univ _ _ h2
+
+/-- The hypothesis of the three theorems above is satisfiable, and by the
+value the implementation uses: `eps = 1e-6` in `CausalMHA.forward`. -/
+example : (0 : ℝ) ≤ 1e-6 := by norm_num
 
 end GPTMini
 end Transformer
