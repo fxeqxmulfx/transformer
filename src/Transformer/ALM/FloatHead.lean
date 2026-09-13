@@ -166,13 +166,8 @@ precision condition. -/
 example [Nonempty (Fin n)] (K : Fin n → ℤ) :
     ∃ M : ℝ, (∀ j ≤ keyCard (fun i => (K i : ℝ)) - 1,
         |sortedKey (fun i => (K i : ℝ)) j| ≤ M) ∧ exactArith.u * M < 1 / 2 := by
-  obtain ⟨b, -, hb⟩ := Finset.exists_max_image (Finset.range (keyCard (fun i => (K i : ℝ))))
-    (fun j => |sortedKey (fun i => (K i : ℝ)) j|)
-    ⟨0, Finset.mem_range.mpr (keyCard_pos (fun i => (K i : ℝ)))⟩
-  refine ⟨|sortedKey (fun i => (K i : ℝ)) b|, fun j hj => hb j (Finset.mem_range.mpr ?_), ?_⟩
-  · have hpos := keyCard_pos (fun i => (K i : ℝ))
-    omega
-  · simp [exactArith]
+  obtain ⟨B, hB⟩ := exists_bound_sortedKey (fun i => (K i : ℝ))
+  exact ⟨B, hB, by simp [exactArith]⟩
 
 /-- The hypotheses of `fp_head_output` are satisfiable, and the separation one
 is no accident: by `half_le_key_dist_mid` a stored key is never within half a
@@ -184,14 +179,8 @@ example [Nonempty (Fin n)] (K : Fin n → ℤ) (i₀ : Fin n) :
       ∀ j < keyCard (fun i => (K i : ℝ)) - 1,
         exactArith.u * M < |(K i₀ : ℝ) - (sortedKey (fun i => (K i : ℝ)) j
           + sortedKey (fun i => (K i : ℝ)) (j + 1)) / 2| := by
-  obtain ⟨b, -, hb⟩ := Finset.exists_max_image (Finset.range (keyCard (fun i => (K i : ℝ))))
-    (fun j => |sortedKey (fun i => (K i : ℝ)) j|)
-    ⟨0, Finset.mem_range.mpr (keyCard_pos (fun i => (K i : ℝ)))⟩
-  refine ⟨|sortedKey (fun i => (K i : ℝ)) b|, fun j hj => hb j (Finset.mem_range.mpr ?_),
-    fun j _ => lt_of_lt_of_le ?_ (half_le_key_dist_mid K i₀ j)⟩
-  · have hpos := keyCard_pos (fun i => (K i : ℝ))
-    omega
-  · simp [exactArith]
+  obtain ⟨B, hB⟩ := exists_bound_sortedKey (fun i => (K i : ℝ))
+  exact ⟨B, hB, fun j _ => lt_of_lt_of_le (by simp [exactArith]) (half_le_key_dist_mid K i₀ j)⟩
 
 end ALM
 end Transformer

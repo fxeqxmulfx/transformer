@@ -138,13 +138,8 @@ example [Nonempty (Fin n)] (K : Fin n → ℤ) (q : ℤ) :
           |sortedKey (fun i => (K i : ℝ)) j| ≤ M) ∧ exactArith.u * M < 1 / 2 := by
   refine ⟨fun i => ⟨K i, rfl⟩, by norm_num [roundScore], by norm_num [roundScore],
     fun i _ => roundScore_grid _ _, ?_⟩
-  obtain ⟨b, -, hb⟩ := Finset.exists_max_image (Finset.range (keyCard (fun i => (K i : ℝ))))
-    (fun j => |sortedKey (fun i => (K i : ℝ)) j|)
-    ⟨0, Finset.mem_range.mpr (keyCard_pos (fun i => (K i : ℝ)))⟩
-  refine ⟨|sortedKey (fun i => (K i : ℝ)) b|, fun j hj => hb j (Finset.mem_range.mpr ?_), ?_⟩
-  · have hpos := keyCard_pos (fun i => (K i : ℝ))
-    omega
-  · simp [exactArith]
+  obtain ⟨M, hM⟩ := exists_bound_sortedKey (fun i => (K i : ℝ))
+  exact ⟨M, hM, by simp [exactArith]⟩
 
 end ALM
 end Transformer

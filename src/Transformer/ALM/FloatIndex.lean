@@ -146,11 +146,7 @@ example [Nonempty (Fin n)] (K : Fin n → ℝ) :
       ∀ j < keyCard K - 1, exactArith.u * 0
         < |sortedKey K 0 - (sortedKey K j + sortedKey K (j + 1)) / 2| := by
   constructor
-  · obtain ⟨b, -, hb⟩ := Finset.exists_max_image (Finset.range (keyCard K))
-      (fun j => |sortedKey K j|) ⟨0, by simp [keyCard_pos K]⟩
-    refine ⟨|sortedKey K b|, fun j hj => hb j (Finset.mem_range.mpr ?_)⟩
-    have hpos := keyCard_pos K
-    omega
+  · exact exists_bound_sortedKey K
   · intro j _
     have hmono : StrictMono (sortedKey K) := strictMono_nat_of_lt_succ (sortedKey_lt_succ K)
     have h₁ : sortedKey K 0 ≤ sortedKey K j := hmono.monotone (Nat.zero_le j)

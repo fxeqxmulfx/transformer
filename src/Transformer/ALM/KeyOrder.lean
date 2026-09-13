@@ -119,6 +119,21 @@ theorem exists_eq_sortedKey [Nonempty (Fin n)] (K : Fin n → ℝ) {j : ℕ}
   obtain ⟨i, -, hi⟩ := Finset.mem_image.mp hmem
   exact ⟨i, hi⟩
 
+/-- **The keys the search runs over are bounded.**  Finitely many sorted keys
+have a largest absolute value, so the bound every floating-point statement in
+this development assumes — `|sortedKey K j| ≤ B` on the searched window — is
+never a restriction on the data: it holds for some `B` for every family.
+
+Source: `transformer_vm/attention/hull2d_cht.h`, lines 203-215 (the window the
+search runs over). -/
+theorem exists_bound_sortedKey [Nonempty (Fin n)] (K : Fin n → ℝ) :
+    ∃ B : ℝ, ∀ j ≤ keyCard K - 1, |sortedKey K j| ≤ B := by
+  obtain ⟨b, -, hb⟩ := Finset.exists_max_image (Finset.range (keyCard K))
+    (fun j => |sortedKey K j|) ⟨0, Finset.mem_range.mpr (keyCard_pos K)⟩
+  refine ⟨|sortedKey K b|, fun j hj => hb j (Finset.mem_range.mpr ?_)⟩
+  have hpos := keyCard_pos K
+  omega
+
 /-- The construction is not vacuous: two keys, one of them repeated, sort to
 the two distinct values. -/
 example : keyCard (fun j : Fin 3 => (![1, 1, 2] : Fin 3 → ℝ) j) = 2 := by

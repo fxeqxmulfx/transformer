@@ -135,14 +135,9 @@ example [Nonempty (Fin n)] (K : Fin n → ℤ) (q : ℤ) :
           = dot (liftQuery (q : ℝ)) (liftKey (sortedKey (fun i => (K i : ℝ)) i))) ∧
       ∃ M : ℝ, (∀ j ≤ keyCard (fun i => (K i : ℝ)) - 1,
           |sortedKey (fun i => (K i : ℝ)) j| ≤ M) ∧ exactArith.u * M < 1 / 2 := by
-  refine ⟨fun i => ⟨K i, rfl⟩, by norm_num [exactScore], fun i _ => rfl, ?_⟩
-  obtain ⟨b, -, hb⟩ := Finset.exists_max_image (Finset.range (keyCard (fun i => (K i : ℝ))))
-    (fun j => |sortedKey (fun i => (K i : ℝ)) j|)
-    ⟨0, Finset.mem_range.mpr (keyCard_pos (fun i => (K i : ℝ)))⟩
-  refine ⟨|sortedKey (fun i => (K i : ℝ)) b|, fun j hj => hb j (Finset.mem_range.mpr ?_), ?_⟩
-  · have hpos := keyCard_pos (fun i => (K i : ℝ))
-    omega
-  · simp [exactArith]
+  obtain ⟨B, hB⟩ := exists_bound_sortedKey (fun i => (K i : ℝ))
+  exact ⟨fun i => ⟨K i, rfl⟩, by norm_num [exactScore], fun i _ => rfl, B, hB,
+    by simp [exactArith]⟩
 
 end ALM
 end Transformer
