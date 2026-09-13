@@ -14,6 +14,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.Hull` | and why that search answers the lookup: the two halves joined |
 | `ALM.BinSearch` | `lower_bound` written out, and its comparison count bounded |
 | `ALM.HullLines` | the same search over the arbitrary lines the code really stores |
+| `ALM.HullBranch` | and the three branches of `query`, one of which can never tie |
 | `ALM.KeyOrder` | the sorted, deduplicated keys that search is run over |
 | `ALM.HullScan` | and why the tie-merge walk after it is a constant-time step |
 | `ALM.HullResolve` | and what that walk hands back, in either tie-break mode |
@@ -68,6 +69,7 @@ import Transformer.ALM.Basic
 import Transformer.ALM.Hull
 import Transformer.ALM.BinSearch
 import Transformer.ALM.HullLines
+import Transformer.ALM.HullBranch
 import Transformer.ALM.KeyOrder
 import Transformer.ALM.HullScan
 import Transformer.ALM.HullResolve
