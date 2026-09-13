@@ -35,3 +35,8 @@ venv/
 .DS_Store
 *.swp
 *~
+
+# ── discrtree ────────────────────────────────────────────────────────────
+# The index, the JSONL dumps and the fetched corpora: 1.4 GB, all of it
+# reproducible from discrtree.toml with `dt fetch && dt dump && dt index`.
+/.discrtree/
