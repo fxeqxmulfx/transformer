@@ -21,6 +21,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.HullCost` | and what one query costs, and returns, search and walk together |
 | `ALM.FloatHull` | and why finite precision does not change either answer |
 | `ALM.FloatIndex` | and that the index itself is the one the running code answers |
+| `ALM.FloatLattice` | and that on integer data no separation is needed at all |
 | `ALM.TieBreak` | where score ties live, and what the two tie-break modes do |
 | `ALM.Basic` | exact hardmax lookup in arbitrary key dimension |
 | `ALM.Softmax` | softmax-to-hardmax error bounds for an abstract score gap |
@@ -68,6 +69,7 @@ import Transformer.ALM.HullBuild
 import Transformer.ALM.HullCost
 import Transformer.ALM.FloatHull
 import Transformer.ALM.FloatIndex
+import Transformer.ALM.FloatLattice
 import Transformer.ALM.TieBreak
 import Transformer.ALM.Softmax
 import Transformer.ALM.Lattice
