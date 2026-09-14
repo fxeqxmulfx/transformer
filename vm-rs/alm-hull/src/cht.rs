@@ -8,10 +8,33 @@
 //! instead: the same one order, searched by slope or by breakpoint as needed,
 //! and a neighbour is the next element rather than a tree walk.
 //!
-//! A vector is the right shape here and not only the convenient one.  The
-//! envelope is a stack more than a set: over the reference suite the mean
-//! insertion has half a line above it, so it lands at the end, and nine out of
-//! ten insertions erase a line from the end as well.
+//! That trade is real and worth stating, because it is a trade.  `Vec::insert`
+//! and `Vec::remove` shift every element past the position they touch, so the
+//! build is `O(n)` amortized per key where a tree is `O(log n)`.  Measured
+//! over the reference suite, the shifted tail is a fixed fraction of the
+//! envelope, near `n / 33 000` — linear in `n`, not a constant.
+//!
+//!     tokens      envelope    mean shift    hull, vec    hull, tree    hull, C++
+//!         59 089    44 588          1.4        1.13s         4.11s        1.32s
+//!        178 226   178 225          7.7           --            --           --
+//!      1 055 417  1 055 416        26.8       34.90s        81.84s       29.88s
+//!
+//! Two comparisons, and they do not agree.  Against the `BTreeMap` the array
+//! wins at every size measured, by 3.6x at 59 089 tokens and still 2.3x at a
+//! million: a shift is a memmove of contiguous lines, a tree step is a pointer
+//! chased into a cold cache line, and the Rust tree pays for keeping a map and
+//! its breakpoint index in step where one container would do.  Against the
+//! C++ `std::multiset`, which is that one container, the array is 15% ahead at
+//! 59 089 tokens and 15% behind at a million.  The linear term is real and it
+//! does catch up.
+//!
+//! What it costs is not spread evenly.  Over the sudoku trace at a million
+//! tokens, 97.6% of insertions shift fewer than four lines and 0.92% shift
+//! more than a thousand — and that 0.92% moves 94% of all the elements ever
+//! moved.  The mean of 26.8 is one rare deep insertion, not a tail that grows
+//! under every key.  So the fix for the linear term is to bound the shift, not
+//! to give up the array: the shape that makes it slow is also the shape that
+//! makes it rare.
 
 use crate::breakpoint::Break;
 use crate::meta::HullMeta;
