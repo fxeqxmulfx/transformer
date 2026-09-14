@@ -84,13 +84,22 @@ const CROSS_FILTER: f64 = 2.0 * f64::EPSILON;
 /// four operations; the expansion runs only when it cannot (Shewchuk 1997,
 /// §3).  The answer is the same either way — the filter decides who computes
 /// it, not what it is.
+///
+/// Which is why the two error terms are computed after the filter and not
+/// before it.  They are `two_prod`'s reason for existing and the expansion's
+/// only input, and nothing on the fast path reads them; computing them up
+/// front put two `mul_add` on every breakpoint comparison in the program, and
+/// a `mul_add` with no FMA instruction enabled for the target is a call into
+/// libm.  On the `sudoku` trace this test was 5.9 % of the whole run.
 pub fn cross_sign(a: f64, b: f64, c: f64, d: f64) -> core::cmp::Ordering {
-    let (p, pe) = two_prod(a, b);
-    let (q, qe) = two_prod(c, d);
+    let p = a * b;
+    let q = c * d;
     let det = p - q;
     if det.abs() > CROSS_FILTER * (p.abs() + q.abs()) {
         return if det > 0.0 { core::cmp::Ordering::Greater } else { core::cmp::Ordering::Less };
     }
+    let pe = a.mul_add(b, -p);
+    let qe = c.mul_add(d, -q);
     expansion_sign(&[p, pe, -q, -qe])
 }
 
