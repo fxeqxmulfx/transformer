@@ -102,6 +102,18 @@ cd transformer-vm && uv run python -m transformer_vm.build --plan plan.yaml --sa
 Rebuilding against the recorded plan takes about 1.5 s; without `--plan` the
 MILP scheduler runs again and takes minutes.
 
+* **The compiler does not build the same model twice.**  Ten builds of
+  `model.bin` from the released plan give four distinct files.  The erased slots
+  of a half-layer are held in a `set` of ints, the loop that zeroes them
+  iterates it directly, and that fixes which source slot is packed into which
+  passthrough head — but a CPython set of ints iterates in table order, and the
+  table order depends on the insertion order, which comes from a set of
+  `Dimension` objects hashed by address.  The four files differ only in the
+  order of layer 5's FFN passthrough neurons, so they compute the same function;
+  what they cost is the ability to check a build against its source, and to
+  check this port against the original.  Two `sorted()` calls fix it:
+  `patches/reproducible-build.patch`.  `todo3.md` section 9.
+
 * **The key perturbation is load-bearing, and it is a noise margin.**  The
   post says the latest write wins because of a small position-dependent term
   added to each key; the release also carries a sequence number in the cache,

@@ -666,6 +666,46 @@ rather than flipping: a relative error of one ulp, not a wrong branch.  The
 construction is 1-ulp-Lipschitz rather than brittle.  Nobody has bounded the
 composition of those errors, and that is the open question this section leaves.
 
+## 9. The compiler does not build the same model twice
+
+`weights.py:485` and `weights.py:553` subtract the old value of each erased slot
+by iterating `erased_at[(L, sp)]`, a `set` of slot indices:
+
+```python
+if use_erase:
+    for s in erased_at[(layer_idx, 1)]:
+        pt[s][s] -= 1.0
+```
+
+`pt` is an insertion-ordered `defaultdict`, and the next step packs its keys two
+per attention head (and one per FFN neuron), so the iteration order of that set
+chooses which source slot lands in which head.  A CPython `set` of small ints
+iterates in table order, and a slot that collides is placed by linear probing —
+so the table order depends on the order the elements went in.  They go in from
+`for d in dying`, and `dying` is a set difference of `frozenset`s of `Dimension`
+objects, which have no `__hash__` and are therefore hashed by address.  Under
+ASLR the address order changes from run to run.
+
+Measured: ten builds of `model.bin` from the released `plan.yaml` produced
+**four distinct files** — 5 of one, 3 of another, and two singletons.  Five of
+the fourteen erase sets iterate unsorted, e.g. `erased_at[(5, 3)]` comes out
+`[32, 33, 34, 36, 37, 6, 7, 4, 13, 15, 16, 19, 25, 30]`.  Loading two of those
+builds and comparing tensor by tensor, the only difference is layer 5's `ff_in`
+and `ff_out`: the same passthrough neurons in a different order.
+
+So every build computes the same function, and nothing observable about a run
+changes.  What changes is that the artefact cannot be checked.  `model.bin` is
+1 188 074 bytes of float64 with no accompanying hash and no way to produce it
+again; a bug report cannot name a build, a regression cannot be bisected, and a
+reimplementation — this one — cannot be verified against the original at all,
+because there is no "the original" to compare with.
+
+**Fix.** Two `sorted()` calls, `patches/reproducible-build.patch`.  With them,
+ten builds are one file.  This is the precondition for everything else on this
+list that is measured by rebuilding: §0, §2a and §8a all compare a rebuilt
+`model.bin` against the released one, and until the build is a function of its
+input those comparisons are comparing noise as well as the change.
+
 ## Order of work
 
 1. §4's query-time guard, `ulp(best_score) <= abs(qy)`, and §6's differential
@@ -678,7 +718,9 @@ composition of those errors, and that is the open question this section leaves.
    scale's own rounding.  §0a is the argument against urgency: on the released
    programs it changes no answer and removes no crossing.  §0's second half is
    withdrawn — see §2a.
-3. §7's two one-liners.
+3. §9's two `sorted()` calls, and §7's two one-liners.  §9 is small and comes
+   early because it is what makes §0's and §8a's rebuild comparisons mean
+   anything.
 4. §2's second half — a text change, not a code change: the post stops
    claiming a softmax head does latest-write.  The single-writer alternative is
    closed, for the reasons in §2.  What replaces the deletion §2 asked for is

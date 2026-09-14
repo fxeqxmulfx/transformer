@@ -1,0 +1,42 @@
+todo3.md section 9 — the compiler's output depends on object addresses.
+
+`erased_at[(L, sp)]` is a `set` of slot indices, and the loop that subtracts the
+old value of each erased slot iterates it directly.  A CPython `set` of small
+ints iterates in table order, and the table order depends on the order the
+elements were inserted, which here comes from iterating `dying` — a set of
+`Dimension` objects, hashed by address.  Under ASLR that order changes from run
+to run, so the passthrough sources are packed into heads and FFN neurons in a
+different order each build.
+
+Measured on the released plan, ten builds of `model.bin` produced **four
+distinct files**: 5 of one, 3 of another, and 2 singletons.  The difference is a
+permutation of layer 5's FFN passthrough neurons (`ff_in`/`ff_out` rows), so
+every build computes the same function — but no build can be reproduced, no
+`model.bin` can be checked against its source, and a port cannot be verified
+against the original at all.  The two `sorted()` calls below fix it; with them
+ten builds are one file.
+
+--- a/transformer_vm/model/weights.py
++++ b/transformer_vm/model/weights.py
+@@ -483,7 +483,10 @@
+                         pt[slot_of[d]][slot_of[pd]] += c
+ 
+             if use_erase:
+-                for s in erased_at[(layer_idx, 1)]:
++                # todo3.md section 9: sorted(), because a set of ints iterates in
++                # table order and the table order depends on the insertion order,
++                # which comes from a set of Dimension objects hashed by address.
++                for s in sorted(erased_at[(layer_idx, 1)]):
+                     pt[s][s] -= 1.0
+ 
+             # 3) Pack passthroughs 2 per head (each reads one src_slot)
+@@ -548,7 +551,8 @@
+                         pt_ffn[slot_of[d]][slot_of[pd]] += c
+ 
+             if use_erase:
+-                for s in erased_at[(layer_idx, 3)]:
++                # todo3.md section 9, as above.
++                for s in sorted(erased_at[(layer_idx, 3)]):
+                     pt_ffn[s][s] -= 1.0
+ 
+             # 3) One neuron per source slot
