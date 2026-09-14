@@ -19,7 +19,7 @@
 //! one hides are dropped at the cursor that found them, nothing else moves,
 //! and the new line is linked where the walk stopped.  None of that depends
 //! on the order the keys arrive in, which is the point: `alm-stress` builds
-//! 262 144 keys in each of five orders and the spread is 0.054s to 0.152s.
+//! 262 144 keys in each of five orders and the spread is 0.030s to 0.123s.
 //!
 //! Two tariffs account for that spread, and they disagree about it.
 //! `BuildOrder.lean` prices the container the C++ header uses -- two searches
@@ -40,8 +40,14 @@
 //! the same lifted keys a factor of `log n` apart, and `alm-stress` counts the
 //! descents and finds three of its five orders have none.  The remainder is
 //! memory: two of the orders descend on the same keys to within fifty and
-//! still differ two-fold, which is the whole reason this is `tree.rs` and not
-//! a vector.
+//! still differ by half again, which is the whole reason this is `tree.rs` and
+//! not a vector.
+//!
+//! One thing the tariff never charged for, the port used to pay anyway.  Both
+//! walks here probe past the end -- the successor loop reads `next(hi)` and
+//! the predecessor walk reads `prev(at)` -- and finding nothing there cost a
+//! climb to the root until `tree.rs` answered those two from `ends`.  The
+//! model charged zero for a probe that fails; now so does the code.
 
 use crate::breakpoint::Break;
 use crate::meta::HullMeta;

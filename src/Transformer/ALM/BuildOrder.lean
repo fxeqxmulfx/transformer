@@ -8,7 +8,7 @@ sequence is what one arrival order produced.  Nothing in it said the next
 order could not be worse, and the question is not idle — `cache.rs` reads its
 keys from a learned projection, so no order is guaranteed, and
 `vm-rs/alm-hull/src/bin/alm-stress.rs` measures five of them on the same
-262 144 keys and finds a three-fold spread, `0.054 s` to `0.152 s`.  The old
+262 144 keys and finds a four-fold spread, `0.030 s` to `0.123 s`.  The old
 `Vec` port spread thirty-one-fold on the same table, which is why it is gone.
 
 `buildPrices m n` is every price a build of `m` keys can be charged, over every
@@ -33,9 +33,9 @@ the case on every key of three of the five orders.  So the collapse above says
 only that the tariff cannot see the fast path.
 `Transformer.ALM.BuildFinger` prices the port instead, and there the set does
 not collapse: the same lifted keys cost `m` in one order and `m(log₂ n + 1)` in
-another.  Part of the measured spread is comparisons this file cannot count,
-and the rest — two orders that descend on the same keys and still differ
-two-fold — is the memory the comparisons walk.
+another.  Most of the measured spread is comparisons this file cannot count,
+and the rest — two orders that descend on the same keys and still differ by
+half again — is the memory the comparisons walk.
 
 Source: `vm-rs/alm-hull/src/bin/alm-stress.rs` (the measured table) and
 `vm-rs/alm-hull/src/envelope.rs`; `transformer_vm/attention/hull2d_cht.h`,
@@ -133,10 +133,10 @@ example : buildCost [0, 0, 2] 3 ∈ buildPrices 3 3 ∧ buildCost [0, 0, 0] 3 �
 theorem log_two_stress : Nat.log 2 262144 = 18 := by
   rw [show (262144 : ℕ) = 2 ^ 18 by norm_num, Nat.log_pow (by norm_num)]
 
-/-- **Under three per cent, against a measured three-fold.**  At the size
+/-- **Under three per cent, against a measured four-fold.**  At the size
 `alm-stress` reports, the tariff permits the worst arrival order to cost
-`39/38` of the best.  The measured spread is `0.152 / 0.054`, a factor of
-`2.8`, so whatever the five orders differ in, it is not the comparisons *this*
+`39/38` of the best.  The measured spread is `0.123 / 0.030`, a factor of
+`4.1`, so whatever the five orders differ in, it is not the comparisons *this*
 model counts — `Transformer.ALM.BuildFinger.stress_port_ratio` counts more of
 them and permits twenty. -/
 theorem stress_spread_le {c d : ℕ} (hc : c ∈ buildPrices 262144 262144)

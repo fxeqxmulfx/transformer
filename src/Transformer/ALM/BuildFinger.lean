@@ -28,8 +28,8 @@ blind to the fast path, so on the paraboloid it collapses to one number
 charged to memory.  A tariff that can see the fast path sees a band instead:
 `portCost_moves_on_the_paraboloid` produces two orders of the same lifted keys
 whose prices differ, and `portPrices_ratio` bounds the band by `log₂ n + 2` —
-`20` at the stress size, against a measured `2.8`.  Half the measured spread
-is comparisons after all; the tariff simply could not see them.
+`20` at the stress size, against a measured `4.1`.  Most of the measured
+spread is comparisons after all; the tariff simply could not see them.
 
 Source: `vm-rs/alm-hull/src/envelope.rs` (`add_line`),
 `vm-rs/alm-hull/src/tree.rs` (`lower_bound_slope` and the cached `ends`), and
@@ -247,12 +247,12 @@ theorem portCost_moves_on_the_paraboloid {m n : ℕ} (hm : 1 ≤ m) (hn : 2 ≤ 
 /-- The hypotheses are satisfiable, at the size the stress test drives. -/
 example : 1 ≤ 262144 ∧ 2 ≤ 262144 := by norm_num
 
-/-- **Twenty, against a measured two point eight.**  At the stress size the
+/-- **Twenty, against a measured four point one.**  At the stress size the
 sharper tariff permits the worst arrival order twenty times the best, where
 `stress_spread_le` permitted three per cent.  The measured table sits between
-them — `0.054 s` to `0.152 s` — so the descent counts explain part of the
+them — `0.030 s` to `0.123 s` — so the descent counts explain most of the
 spread and cannot explain all of it: `shuffled` and `outside-in` descend on
-the same keys to within fifty and still differ by a factor of two, and that
+the same keys to within fifty and still differ by half again, and that
 remainder is the memory the identical comparisons reach for. -/
 theorem stress_port_ratio {c d : ℕ} (hc : c ∈ portPrices 262144 262144)
     (hd : d ∈ portPrices 262144 262144) : c ≤ d * 20 := by
