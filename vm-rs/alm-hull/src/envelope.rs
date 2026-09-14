@@ -19,15 +19,29 @@
 //! one hides are dropped at the cursor that found them, nothing else moves,
 //! and the new line is linked where the walk stopped.  None of that depends
 //! on the order the keys arrive in, which is the point: `alm-stress` builds
-//! 262 144 keys in each of five orders and the spread is 0.069s to 0.153s.
+//! 262 144 keys in each of five orders and the spread is 0.054s to 0.152s.
 //!
-//! `BuildOrder.lean` says how much of that spread the tariff can account for,
-//! and the answer is none of it.  `buildPrices_spread` caps the difference
-//! between two orders at one erase per key, which at this size is under three
-//! per cent (`stress_spread_le`); and on lifted keys the erase test never
-//! fires at all, so `buildPrices_paraboloid` charges every order the same
-//! single number.  What is left over is the memory the comparisons walk,
-//! which is the whole reason this is `tree.rs` and not a vector.
+//! Two tariffs account for that spread, and they disagree about it.
+//! `BuildOrder.lean` prices the container the C++ header uses -- two searches
+//! per key, because `std::map::insert` after a `lower_bound` searches again --
+//! and can account for none of the spread: `buildPrices_spread` caps the
+//! difference between two orders at one erase per key, under three per cent at
+//! this size (`stress_spread_le`), and on lifted keys no erase fires at all,
+//! so `buildPrices_paraboloid` charges every order one single number.
+//!
+//! `BuildFinger.lean` prices what this file runs, which is less.  `add_line`
+//! descends once, not twice: `insert_before` is handed the cursor
+//! `lower_bound_slope` returned, and every erase after it is a cursor walk.
+//! And on a key whose slope falls outside the span the envelope covers there
+//! is no descent at all, because `tree.rs` holds both ends in a field --
+//! `portCost_le_buildCost` is that saving, and `portCost_of_all_ends` is the
+//! near-sorted build, linear with no logarithm in it.  That tariff does see
+//! part of the spread: `portCost_moves_on_the_paraboloid` gives two orders of
+//! the same lifted keys a factor of `log n` apart, and `alm-stress` counts the
+//! descents and finds three of its five orders have none.  The remainder is
+//! memory: two of the orders descend on the same keys to within fifty and
+//! still differ two-fold, which is the whole reason this is `tree.rs` and not
+//! a vector.
 
 use crate::breakpoint::Break;
 use crate::meta::HullMeta;
@@ -304,9 +318,11 @@ mod tests {
     /// notice.
     ///
     /// The envelope also keeps every line, in every order, which is the
-    /// hypothesis `ALM.BuildOrder.buildPrices_paraboloid` needs to collapse
-    /// the price of the build to one number: no erase fires on lifted keys,
-    /// so no order can be charged for one.
+    /// hypothesis both build tariffs need: no erase fires on lifted keys, so
+    /// no order can be charged for one.  It is all
+    /// `ALM.BuildOrder.buildPrices_paraboloid` is left with, and it is why
+    /// `ALM.BuildFinger.portCost_moves_on_the_paraboloid` can put the whole
+    /// remaining difference between two orders on the searches.
     #[test]
     fn every_arrival_order_builds_the_same_envelope() {
         let mut want: Option<Vec<(f64, f64)>> = None;
