@@ -19,5 +19,14 @@ pub mod plan;
 pub mod slots;
 pub mod weights;
 
+/// A path inside the vendored release, resolved against this crate rather than
+/// against the working directory.  `cargo test` runs a unit test from the
+/// package root, so a plain `../transformer-vm/...` silently misses and every
+/// check against the released artefacts skips instead of running.
+#[cfg(test)]
+pub(crate) fn vendored(rel: &str) -> std::path::PathBuf {
+    std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../transformer-vm").join(rel)
+}
+
 pub use expr::{DimId, Expr};
 pub use graph::{Graph, LookUp, TieBreak};

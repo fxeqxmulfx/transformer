@@ -400,8 +400,8 @@ mod tests {
     #[test]
     fn the_model_comes_out_byte_for_byte_the_python_one() {
         let (Ok(plan_text), Ok(want)) = (
-            std::fs::read_to_string("../transformer-vm/plan.yaml"),
-            std::fs::read("../transformer-vm/model.bin"),
+            std::fs::read_to_string(crate::vendored("plan.yaml")),
+            std::fs::read(crate::vendored("model.bin")),
         ) else {
             return;
         };
@@ -423,7 +423,7 @@ mod tests {
     /// needs no Python, so it runs wherever the vendored plan is present.
     #[test]
     fn dropping_the_query_scale_touches_the_query_rows_and_nothing_else() {
-        let Ok(plan_text) = std::fs::read_to_string("../transformer-vm/plan.yaml") else {
+        let Ok(plan_text) = std::fs::read_to_string(crate::vendored("plan.yaml")) else {
             return;
         };
         let mg = crate::interpreter::build();

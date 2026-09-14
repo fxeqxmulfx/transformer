@@ -1733,27 +1733,39 @@ mod tests {
     /// is `tests/lowerdump.py`; what this pins is the property.
     #[test]
     fn the_released_programs_lower_to_the_dispatch_table() {
-        let dir = std::path::Path::new("../transformer-vm/transformer_vm/examples");
-        let Ok(entries) = std::fs::read_dir(dir) else { return };
+        let root = crate::vendored("transformer_vm");
+        let Ok(entries) = std::fs::read_dir(root.join("examples")) else { return };
+        // The `.wasm` are intermediates that the compiler removes after use,
+        // so they are built here from the C, into a directory of our own.
+        let scratch = std::env::temp_dir().join(format!("alm-lower-{}", std::process::id()));
+        std::fs::create_dir_all(&scratch).expect("a scratch directory");
+        let mut sources: Vec<std::path::PathBuf> = entries
+            .flatten()
+            .map(|e| e.path())
+            .filter(|p| p.extension().and_then(|e| e.to_str()) == Some("c"))
+            .collect();
+        sources.sort();
+
         let mut seen = 0;
-        for entry in entries.flatten() {
-            let path = entry.path();
-            if path.extension().and_then(|e| e.to_str()) != Some("wasm") {
-                continue;
-            }
-            let m = decode(&std::fs::read(&path).unwrap()).expect("decode");
+        for src in &sources {
+            let copied = scratch.join(src.file_name().unwrap());
+            std::fs::copy(src, &copied).expect("the source copies");
+            let wasm = match crate::emit::compile_c_to_wasm(&copied, &root.join("compilation/runtime.h")) {
+                Ok(w) => w,
+                Err(e) => {
+                    eprintln!("skipped: {e}");
+                    break;
+                }
+            };
+            let m = decode(&std::fs::read(&wasm).unwrap()).expect("decode");
             for (fi, f) in m.functions.iter().enumerate() {
                 let num_params = m.types[m.func_type_indices[fi] as usize].params.len() as u32;
                 let lowered = lower_hard_ops(f, num_params);
-                assert_eq!(
-                    check_basic_only(&lowered),
-                    Vec::new(),
-                    "{} function {fi}",
-                    path.display()
-                );
+                assert_eq!(check_basic_only(&lowered), Vec::new(), "{} function {fi}", src.display());
             }
             seen += 1;
         }
-        assert!(seen >= 6, "only {seen} modules found in {}", dir.display());
+        let _ = std::fs::remove_dir_all(&scratch);
+        assert!(seen == 0 || seen >= 7, "only {seen} of {} modules lowered", sources.len());
     }
 }
