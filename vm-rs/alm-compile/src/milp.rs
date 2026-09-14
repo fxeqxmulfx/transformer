@@ -243,8 +243,10 @@ impl Builder<'_> {
     fn is_ge(&mut self, name: String, expr: &Lin, c: Phase, witness: bool) -> usize {
         let p = self.p as f64;
         let v = self.bin(name, witness);
+        // expr >= c - P(1 - v)
         self.row(expr.clone(), Cmp::Ge, Lin::constant(c as f64 - p).term(v, p));
-        self.row(expr.clone(), Cmp::Le, Lin::constant((c - 1) as f64 + p).term(v, p));
+        // expr <= c - 1 + P v
+        self.row(expr.clone(), Cmp::Le, Lin::constant((c - 1) as f64).term(v, p));
         v
     }
 }
@@ -615,6 +617,64 @@ mod tests {
         );
         assert_eq!(values[milp.d_half], 19.0, "the released plan is d_model 38");
         assert_eq!(milp.schedule(&sg, &values), pa, "the solution reads back as the schedule");
+    }
+
+    /// A formulation is only as strong as its tighter direction.  Every bit in
+    /// the program stands for a fact about the schedule — this dimension is
+    /// born by here, that one is still read after there — and the schedule has
+    /// to *force* it, not merely permit it.  A bit the schedule leaves free is
+    /// a bit the solver sets to whatever is cheapest, and the objective stops
+    /// being the width: it was a big-M added on the wrong side of one
+    /// indicator that let HiGHS prove a residual stream of 26 optimal for a
+    /// schedule that needs 40.  So: around the released witness, flipping any
+    /// single bit must break a row.
+    #[test]
+    fn no_bit_of_the_program_is_free_to_flip() {
+        let path = crate::vendored("plan.yaml");
+        let Ok(released) = std::fs::read_to_string(&path) else {
+            println!("skipped: no {}", path.display());
+            return;
+        };
+        let mg = crate::interpreter::build();
+        let sg = SchedGraph::build(&mg.graph);
+        let plan = crate::plan::Plan::load(&released, &mg.graph).unwrap();
+        let pa = phases_from_plan(&plan, &sg).unwrap();
+        let milp = build(&mg, &sg, min_layers(&sg), None, Some(&pa));
+
+        let mut rows_of: Vec<Vec<usize>> = vec![Vec::new(); milp.vars.len()];
+        for (i, r) in milp.rows.iter().enumerate() {
+            for &(v, _) in &r.terms {
+                rows_of[v].push(i);
+            }
+        }
+        let holds = |i: usize, vals: &[f64]| {
+            let r = &milp.rows[i];
+            let lhs: f64 = r.terms.iter().map(|&(v, c)| c * vals[v]).sum();
+            match r.op {
+                Cmp::Le => lhs <= r.rhs + 1e-6,
+                Cmp::Ge => lhs >= r.rhs - 1e-6,
+                Cmp::Eq => (lhs - r.rhs).abs() <= 1e-6,
+            }
+        };
+
+        let mut values = milp.witness.clone().unwrap();
+        let free: Vec<&str> = (0..milp.vars.len())
+            .filter(|&v| milp.vars[v].kind == VarKind::Binary)
+            .filter(|&v| {
+                values[v] = 1.0 - values[v];
+                let pinned = rows_of[v].iter().any(|&i| !holds(i, &values));
+                values[v] = 1.0 - values[v];
+                !pinned
+            })
+            .map(|v| milp.vars[v].name.as_str())
+            .collect();
+        assert!(
+            free.is_empty(),
+            "{} of {} bits are free, first are {:?}",
+            free.len(),
+            milp.vars.len(),
+            &free[..free.len().min(8)]
+        );
     }
 
     /// Sizes, so a change to the graph or the formulation that quietly blows
