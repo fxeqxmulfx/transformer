@@ -22,23 +22,37 @@
 //! What it finds, for the same 262 144 keys under five arrival orders:
 //!
 //! ```text
-//!        order         n    upper    lower   seconds
-//!    ascending    262144   262144        2     0.069
-//!   descending    262144   262144        2     0.072
-//!     shuffled    262144   262144        2     0.153
-//!   outside-in    262144   262144        2     0.083
-//!   inside-out    262144   262144        2     0.078
+//!        order         n    upper    lower    u.desc    l.desc   seconds
+//!    ascending    262144   262144        2         0         0     0.054
+//!   descending    262144   262144        2         0         0     0.066
+//!     shuffled    262144   262144        2    262118    262118     0.152
+//!   outside-in    262144   262144        2    262142    262142     0.078
+//!   inside-out    262144   262144        2         0         0     0.060
 //! ```
 //!
-//! Two-fold between the best order and the worst, and the spread does not
-//! widen with the size.  The vector this port used to carry spent 0.040s on
-//! the first of those lines and 102.861s on the second, where the same
-//! descending order at a quarter of the keys had cost it 3.296s -- four times
-//! the keys, thirty-one times the work.  That is why it is no longer here.
+//! Three-fold between the best order and the worst, and the spread does not
+//! widen with the size.  The descent columns say where half of it comes from:
+//! three of the five orders hand `lower_bound_slope` a slope outside the span
+//! the envelope already covers, which the cached ends answer with no descent
+//! at all, and those three are the three fastest.  A tariff that counts a
+//! search per key cannot see that difference; it is the difference between
+//! `2n` comparisons and `n log n` of them.
+//!
+//! The other half is not comparisons.  `shuffled` and `outside-in` descend on
+//! the same number of keys, to within fifty, and one of them takes twice as
+//! long: `outside-in` walks a short prefix of the same path every time and
+//! `shuffled` walks the whole tree, so what separates those two lines is the
+//! memory the identical comparisons reach for.
+//!
+//! The vector this port used to carry spent 0.040s on the first of those
+//! lines and 102.861s on the second, where the same descending order at a
+//! quarter of the keys had cost it 3.296s -- four times the keys, thirty-one
+//! times the work.  That is why it is no longer here.
 
 use std::time::Instant;
 
 use alm_hull::envelope::Envelope;
+use alm_hull::tree::NIL;
 use alm_hull::HullMeta;
 
 /// The key of position `k` under the lift the compiler emits: `(2k, -k^2)`.
@@ -75,7 +89,9 @@ fn order(name: &str, n: u64) -> Option<Vec<u64>> {
         // The mirror of it, which one of the two halves always sees.
         "descending" => (0..n).rev().collect(),
         "shuffled" => shuffled(n),
-        // Alternating ends: every key lands at one extreme of the envelope.
+        // Alternating ends of the key range, which is not the same as the
+        // ends of the envelope: after the first two, every key falls strictly
+        // inside the span the envelope already covers, and so descends.
         "outside-in" => {
             let (mut lo, mut hi, mut v) = (0, n - 1, Vec::with_capacity(n as usize));
             while lo < hi {
@@ -89,7 +105,9 @@ fn order(name: &str, n: u64) -> Option<Vec<u64>> {
             }
             v
         }
-        // The reverse: every key lands in the middle of what is there.
+        // Sorted by distance from the middle, so it starts there -- and then
+        // every key is further out than every key before it, which is to say
+        // it is a new extreme too, on whichever side it fell.
         "inside-out" => {
             let mut v: Vec<u64> = (0..n).collect();
             v.sort_by_key(|k| (*k as i64 - (n as i64) / 2).abs());
@@ -97,6 +115,19 @@ fn order(name: &str, n: u64) -> Option<Vec<u64>> {
         }
         _ => return None,
     })
+}
+
+/// Whether inserting a line of slope `m` would descend the tree.
+///
+/// The three cases `lower_bound_slope` answers from the cached ends: an empty
+/// envelope, a slope above every slope there, a slope below every slope
+/// there.  Anything else walks down from the root.  Counting this is the
+/// point of the program: the search is the only part of an insertion whose
+/// cost grows with the length, so an order that never descends is charged a
+/// constant per key and an order that always descends is charged a logarithm.
+fn descends(e: &Envelope, m: f64) -> bool {
+    let (lo, hi) = (e.first(), e.last());
+    hi != NIL && e.get(hi).m.get() >= m && e.get(lo).m.get() < m
 }
 
 /// One half of a head, as `HullHalf` drives it: the lower negates the slope.
@@ -112,7 +143,27 @@ fn add(e: &mut Envelope, kx: f64, ky: f64, upper: bool, seq: i32) {
 struct Run {
     upper: usize,
     lower: usize,
+    descents: (usize, usize),
     secs: f64,
+}
+
+/// The descent counts of the two halves, taken on a second pass so that the
+/// timed loop is the one the library really runs and nothing else.
+///
+/// They are reported apart because they are not the same price: the upper
+/// envelope holds every key, so a descent into it is a walk of `log n` nodes,
+/// while the lower holds two and a descent into it is a walk of one.
+fn count_descents(ks: &[u64]) -> (usize, usize) {
+    let (mut u, mut l) = (Envelope::new(), Envelope::new());
+    let (mut du, mut dl) = (0, 0);
+    for (i, &k) in ks.iter().enumerate() {
+        let (kx, ky) = lift(k);
+        du += usize::from(descends(&u, kx));
+        dl += usize::from(descends(&l, -kx));
+        add(&mut u, kx, ky, true, i as i32);
+        add(&mut l, kx, ky, false, i as i32);
+    }
+    (du, dl)
 }
 
 fn run(ks: &[u64]) -> Run {
@@ -124,7 +175,7 @@ fn run(ks: &[u64]) -> Run {
         add(&mut l, kx, ky, false, i as i32);
     }
     let secs = t.elapsed().as_secs_f64();
-    Run { upper: u.len(), lower: l.len(), secs }
+    Run { upper: u.len(), lower: l.len(), descents: count_descents(ks), secs }
 }
 
 const ORDERS: [&str; 5] = ["ascending", "descending", "shuffled", "outside-in", "inside-out"];
@@ -170,12 +221,18 @@ fn main() {
         names = ORDERS.iter().map(|s| s.to_string()).collect();
     }
 
-    println!("{:>12} {:>9} {:>8} {:>8} {:>9}", "order", "n", "upper", "lower", "seconds");
+    println!(
+        "{:>12} {:>9} {:>8} {:>8} {:>9} {:>9} {:>9}",
+        "order", "n", "upper", "lower", "u.desc", "l.desc", "seconds"
+    );
     for &n in &sizes {
         for name in &names {
             let ks = order(name, n).expect("the order was checked when it was parsed");
             let r = run(&ks);
-            println!("{:>12} {:>9} {:>8} {:>8} {:>9.3}", name, n, r.upper, r.lower, r.secs);
+            println!(
+                "{:>12} {:>9} {:>8} {:>8} {:>9} {:>9} {:>9.3}",
+                name, n, r.upper, r.lower, r.descents.0, r.descents.1, r.secs
+            );
         }
     }
 }

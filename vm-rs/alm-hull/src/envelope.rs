@@ -65,6 +65,20 @@ impl Envelope {
         self.t.get(i)
     }
 
+    /// The leftmost line, or `NIL` when the envelope is empty.
+    ///
+    /// Held rather than walked to, and so is `last`.  They are what decides
+    /// whether an insertion descends at all: `lower_bound_slope` answers from
+    /// them when the new slope is outside the range they span.
+    pub fn first(&self) -> u32 {
+        self.t.first()
+    }
+
+    /// The rightmost line, or `NIL` when the envelope is empty.
+    pub fn last(&self) -> u32 {
+        self.t.last()
+    }
+
     /// The next line along the envelope, or `NIL` past the end.
     pub fn next(&self, i: u32) -> u32 {
         self.t.next(i)
