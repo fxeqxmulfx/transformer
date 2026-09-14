@@ -24,6 +24,8 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.HullBuild` | and what building it costs, the erase loops amortized away |
 | `ALM.HullCover` | and that it holds one line per key, so the search covers them all |
 | `ALM.HullLift` | and that on the paraboloid no erase rule whatsoever can fire |
+| `ALM.HullLower` | while the other half of the head keeps two lines at any length |
+| `ALM.HullSpace` | and no container at all keeps fewer than one line per key |
 | `ALM.HullCost` | and what one query costs, and returns, search and walk together |
 | `ALM.HullValue` | and what it hands back, at any maximizer and at the search's own |
 | `ALM.FloatHull` | and why finite precision does not change either answer |
@@ -100,6 +102,8 @@ import Transformer.ALM.HullResolve
 import Transformer.ALM.HullBuild
 import Transformer.ALM.HullCover
 import Transformer.ALM.HullLift
+import Transformer.ALM.HullLower
+import Transformer.ALM.HullSpace
 import Transformer.ALM.HullCost
 import Transformer.ALM.HullValue
 import Transformer.ALM.FloatHull
