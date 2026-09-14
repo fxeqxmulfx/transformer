@@ -196,3 +196,77 @@ fn the_envelope_stays_small_while_the_head_grows() {
         assert_eq!(hull.query(q, TieBreak::Latest), brute.query(q, TieBreak::Latest));
     }
 }
+
+/// The wall, on a real head: the witness fires exactly where the answer stops
+/// being the true `argmax_k 2qk - k^2`.
+///
+/// `todo3.md` section 4.  Below the wall the head returns the query's own key;
+/// at it, the key one *past* the query scores the same, because that key's
+/// stored `-k^2` has rounded up by one and the unit it lost is the whole
+/// margin.  `TieBreak::Latest` then hands back the wrong entry, silently.
+#[test]
+fn the_head_reports_the_wall_and_is_wrong_just_past_it() {
+    use alm_hull::TieBreak;
+
+    let probe = |q: i64| -> (Option<[f64; 2]>, bool) {
+        let mut head = HardAttentionHead::new();
+        for (seq, k) in (q - 1..=q + 1).enumerate() {
+            // The value carries the key, so the answer names the winner.
+            head.insert(parabolic_key(k), [k as f64, 0.0], seq as i32);
+        }
+        let out = head.query([q as f64, 1.0], TieBreak::Latest);
+        (out, head.grid_witness().is_clean())
+    };
+
+    // Comfortably below the wall: the query's own key wins, and the head has
+    // seen nothing it cannot separate.
+    let (out, clean) = probe(1_000_000);
+    assert_eq!(out, Some([1_000_000.0, 0.0]));
+    assert!(clean);
+
+    // One below the wall: still right, still clean.
+    let (out, clean) = probe(94_906_264);
+    assert_eq!(out, Some([94_906_264.0, 0.0]));
+    assert!(clean);
+
+    // At the wall: the witness fires, and the answer is the key one past the
+    // query rather than the query itself.
+    let (out, clean) = probe(94_906_266);
+    assert!(!clean, "the head has crossed 2^53 and says so");
+    assert_eq!(out, Some([94_906_267.0, 0.0]), "the wrong entry, by one");
+}
+
+/// The wall is not only about trace length: a head keyed on a 32-bit WebAssembly
+/// value is past it from the first token.
+///
+/// This key and this query scale are taken verbatim from a `hello` run of the
+/// released `model.bin` — `q = [4.763922097235979e18, 14142135623.730951]`,
+/// winning key `[673720322.0, -1.1347476806894592e17]`, which is the parabolic
+/// embedding of the value `336 860 161`.  `todo3.md` section 4 states the wall
+/// as 94 906 266 *tokens*; at this scale it is 73 966 031 in whatever the head
+/// is keyed on, and a 32-bit value runs to 4.29e9.
+#[test]
+fn a_head_keyed_on_a_32_bit_value_is_past_the_wall_from_the_start() {
+    use alm_hull::TieBreak;
+
+    /// The hard-attention scale the released model queries at.
+    const SCALE: f64 = 14142135623.730951;
+    const V: i64 = 336860161;
+
+    let mut head = HardAttentionHead::new();
+    for (seq, k) in (V - 3..=V + 3).enumerate() {
+        head.insert(parabolic_key(k), [k as f64, 0.0], seq as i32);
+    }
+
+    // The query asks for V itself, and V is the true argmax of `2qk - k^2`.
+    let out = head.query([SCALE * V as f64, SCALE], TieBreak::Average);
+    let got = out.expect("the head is not empty")[0];
+    assert_ne!(got, V as f64, "the head does not return the key it was asked for");
+
+    // What it returns is drawn from the keys whose rounded scores tie the
+    // maximum — V is not among them, its own score rounds *below* theirs — so
+    // the answer is off by a whole key, not by an ulp.
+    assert!((got - V as f64).abs() >= 1.0, "returned {got}, asked for {V}");
+
+    assert!(!head.grid_witness().is_clean(), "and the head says so");
+}

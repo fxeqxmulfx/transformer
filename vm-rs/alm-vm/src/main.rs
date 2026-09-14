@@ -179,6 +179,15 @@ fn check(
     if !result.stopped && opts.max_new.is_none() && program.reference.is_none() {
         println!("  (budget exhausted: the run did not reach the stop token)");
     }
+    let grid = cache.grid_witness();
+    if let Some(first) = grid.first {
+        println!(
+            "  OFF THE GRID: {} quer(ies) won at a score past 2^53 (todo3.md section 4)",
+            grid.count
+        );
+        println!("    first: score {} at query {:?}, key {:?}", first.score, first.query, first.key);
+    }
+
     let bytes = run::output_bytes(model, &result.ids);
     if !bytes.is_empty() {
         let shown: String = bytes

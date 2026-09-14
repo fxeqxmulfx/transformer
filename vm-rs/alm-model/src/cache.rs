@@ -6,7 +6,7 @@
 //! the sequence counter advances once per *layer step*, not once per token, and
 //! every head in a layer therefore shares one sequence number.
 
-use alm_hull::{BruteAttentionHead, HardAttentionHead, TieBreak};
+use alm_hull::{BruteAttentionHead, GridWitness, HardAttentionHead, TieBreak};
 
 /// Which head implementation answers the queries.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -80,5 +80,19 @@ impl KvCache {
             }
         }
         out
+    }
+
+    /// Everything the heads have seen that float64 cannot separate, summed
+    /// across the stack.  `todo3.md` section 4: above `2^53` the construction
+    /// is not slow or approximate, it is wrong, and the original says nothing.
+    /// Here it is reported rather than asserted — an assertion would kill a
+    /// three-minute run to tell it something the last line could have said.
+    pub fn grid_witness(&self) -> GridWitness {
+        let mut all = GridWitness::default();
+        match &self.heads {
+            Heads::Hull(hs) => hs.iter().for_each(|h| all.merge(&h.grid_witness())),
+            Heads::Brute(bs) => bs.iter().for_each(|h| all.merge(&h.grid_witness())),
+        }
+        all
     }
 }

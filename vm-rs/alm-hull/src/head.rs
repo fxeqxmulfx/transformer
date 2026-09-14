@@ -5,8 +5,11 @@
 //! against each other: the C++ release disagrees with its own reference on ties
 //! (`todo3.md` section 3), and reproducing both is how that is measured here.
 
+use core::cell::Cell;
+
 use crate::breakpoint::Break;
 use crate::cht::{Cht, Slope};
+use crate::grid::GridWitness;
 use crate::meta::{HullMeta, TieBreak};
 
 /// One envelope: the upper hull maximises `kx * m + ky`, the lower minimises it
@@ -22,6 +25,8 @@ pub struct Hit {
     pub out: [f64; 2],
     pub score: f64,
     pub best_kx: f64,
+    /// The winning key, as the head stored it.
+    pub best_key: [f64; 2],
 }
 
 impl HullHalf {
@@ -83,7 +88,7 @@ impl HullHalf {
         // the ties there are already collapsed into that node's aggregate.
         if qy == 0.0 {
             let out = self.cht.get(best).unwrap().meta.resolve(tb);
-            return Some(Hit { out, score: best_score, best_kx: kx_best });
+            return Some(Hit { out, score: best_score, best_kx: kx_best, best_key: [kx_best, ky_best] });
         }
 
         let mut combined = HullMeta::default();
@@ -111,7 +116,7 @@ impl HullHalf {
             }
         }
 
-        Some(Hit { out: combined.resolve(tb), score: best_score, best_kx: kx_best })
+        Some(Hit { out: combined.resolve(tb), score: best_score, best_kx: kx_best, best_key: [kx_best, ky_best] })
     }
 }
 
@@ -125,6 +130,9 @@ pub struct HardAttentionHead {
     min_kx: f64,
     max_kx: f64,
     n: usize,
+    /// Written from `query`, which takes `&self`: the witness is an
+    /// observation of the head, not part of its answer.
+    grid: Cell<GridWitness>,
 }
 
 impl Default for HardAttentionHead {
@@ -138,6 +146,7 @@ impl Default for HardAttentionHead {
             min_kx: f64::INFINITY,
             max_kx: f64::NEG_INFINITY,
             n: 0,
+            grid: Cell::new(GridWitness::default()),
         }
     }
 }
@@ -183,6 +192,22 @@ impl HardAttentionHead {
         self.n += 1;
     }
 
+    /// What this head has answered that float64 could not separate — empty
+    /// unless a *winning score* has crossed `2^53`.  See `grid`.
+    pub fn grid_witness(&self) -> GridWitness {
+        self.grid.get()
+    }
+
+    /// The margin a winner must beat: for the parabolic keys of this machine
+    /// the runner-up's true score is at least one integer step away, and one
+    /// step in the score is `|qy|`.  The `qy == 0` shortcut compares along the
+    /// other axis, where a step is `|qx|`.
+    fn note(&self, score: f64, margin: f64, query: [f64; 2], key: Option<[f64; 2]>) {
+        let mut w = self.grid.get();
+        w.observe(score, margin, query, key);
+        self.grid.set(w);
+    }
+
     pub fn query(&self, q: [f64; 2], tb: TieBreak) -> Option<[f64; 2]> {
         let (qx, qy) = (q[0], q[1]);
         if qy == 0.0 {
@@ -190,15 +215,20 @@ impl HardAttentionHead {
                 return None;
             }
             return Some(if qx > 0.0 {
+                self.note(qx * self.max_kx, qx, q, None);
                 self.right_meta.resolve(tb)
             } else if qx < 0.0 {
+                self.note(qx * self.min_kx, qx, q, None);
                 self.left_meta.resolve(tb)
             } else {
                 self.global.resolve(tb)
             });
         }
         let half = if qy > 0.0 { &self.upper } else { &self.lower };
-        half.query(qx, qy, tb).map(|h| h.out)
+        half.query(qx, qy, tb).map(|h| {
+            self.note(h.score, qy, q, Some(h.best_key));
+            h.out
+        })
     }
 }
 
@@ -206,6 +236,7 @@ impl HardAttentionHead {
 #[derive(Default)]
 pub struct BruteAttentionHead {
     entries: Vec<([f64; 2], [f64; 2], i32)>,
+    grid: Cell<GridWitness>,
 }
 
 impl BruteAttentionHead {
@@ -223,10 +254,17 @@ impl BruteAttentionHead {
 
     pub fn clear(&mut self) {
         self.entries.clear();
+        self.grid.set(GridWitness::default());
     }
 
     pub fn insert(&mut self, key: [f64; 2], val: [f64; 2], seq: i32) {
         self.entries.push((key, val, seq));
+    }
+
+    /// As `HardAttentionHead::grid_witness`: the wall is a property of the
+    /// arithmetic, so the brute head crosses it on exactly the same query.
+    pub fn grid_witness(&self) -> GridWitness {
+        self.grid.get()
     }
 
     pub fn query(&self, q: [f64; 2], tb: TieBreak) -> Option<[f64; 2]> {
@@ -235,6 +273,10 @@ impl BruteAttentionHead {
         }
         let score = |k: &[f64; 2]| q[0] * k[0] + q[1] * k[1];
         let max = self.entries.iter().map(|(k, _, _)| score(k)).fold(f64::NEG_INFINITY, f64::max);
+        let winner = self.entries.iter().find(|(k, _, _)| score(k) == max).map(|(k, _, _)| *k);
+        let mut w = self.grid.get();
+        w.observe(max, if q[1] != 0.0 { q[1] } else { q[0] }, q, winner);
+        self.grid.set(w);
         let mut meta = HullMeta::default();
         for (k, v, seq) in &self.entries {
             if score(k) == max {
