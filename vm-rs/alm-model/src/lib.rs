@@ -1,27 +1,17 @@
-use burn::backend::ndarray::{NdArray, NdArrayDevice};
-use burn::tensor::{Tensor, TensorData};
+//! The compiled WASM transformer: weights, the forward pass, and generation.
+//!
+//! A port of `transformer_vm/model/` from the Percepta `transformer-vm`
+//! release.  The tensor work runs on burn, pinned to the `ndarray` backend
+//! with `f64` elements; the attention does not, because it is a convex-hull
+//! query rather than a tensor operation (`alm_hull`).
 
-pub type B = NdArray<f64, i64, i8>;
+pub mod cache;
+pub mod model;
+pub mod weights;
 
-pub fn probe() -> f64 {
-    let d = NdArrayDevice::Cpu;
-    let a = Tensor::<B, 2>::from_data(TensorData::from([[1.0f64, 2.0], [3.0, 4.0]]), &d);
-    let b = Tensor::<B, 2>::from_data(TensorData::from([[1.0f64], [1.0]]), &d);
-    let c = a.matmul(b);
-    c.into_data().to_vec::<f64>().unwrap()[0]
-}
+pub use cache::{CacheKind, KvCache};
+pub use model::Alm;
+pub use weights::{RawModel, Shapes};
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[test]
-    fn f64_is_really_f64() {
-        assert_eq!(probe(), 3.0);
-        let d = NdArrayDevice::Cpu;
-        // 2^53 - 1 survives a matmul only if the element type is f64.
-        let big = 9007199254740991.0f64;
-        let a = Tensor::<B, 2>::from_data(TensorData::from([[big]]), &d);
-        let b = Tensor::<B, 2>::from_data(TensorData::from([[1.0f64]]), &d);
-        assert_eq!(a.matmul(b).into_data().to_vec::<f64>().unwrap()[0], big);
-    }
-}
+/// The backend every entry point uses: `ndarray`, with `f64` elements.
+pub type Backend = burn::backend::ndarray::NdArray<f64, i64, i8>;
