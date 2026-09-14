@@ -494,6 +494,37 @@ What saves it is margin, and the margin is exactly one ulp wide:
 The error out of `fetch_sum` is one ulp, so the machine runs on the last row it
 can afford, and `5·cursor + 1 + i` adds one or two more roundings on top.
 
+### 8a. Measured on the released model: a quarter, and exactly one ulp
+
+Both halves of the paragraph above are predictions from reading the source.
+The Rust port measures them, by dividing every hard-attention query by its own
+`|qᵧ|` — which removes the scale and leaves the value being looked up — and
+comparing that to the nearest integer:
+
+    program      not integers              share
+    hello            10 757 / 43 344       24.8 %
+    addition         44 488 / 183 120      24.3 %
+    fibonacci        85 370 / 382 284      22.3 %
+    collatz         491 963 / 1 872 654    26.3 %
+    min_cost_m.   2 062 833 / 7 485 408    27.6 %
+    sudoku       14 247 970 / 44 327 430   32.1 %
+
+which brackets the predicted `25.8 %`, arrived at from the other end: the round
+trip was counted over synthetic payloads, this is the running machine.
+
+The second number is the one this section leaves open, and it is good news.
+Over every one of those queries — 54 million across the six programs — the worst
+distance to an integer is `1.907e-6`, at queries like `17 179 869 078.999998`,
+and it is **exactly one ulp**, in all six.  Not
+one and a half, not two: the accumulated rounding of `fetch_sum` followed by
+`5·cursor + 1 + i` never leaves the last row of the table above.  It is also
+`2.6·10^5` times inside the half-unit `ALM.FloatHull.cmp_of_sep` wants, because
+these queries are of order `10^10` and a half-unit is a half-unit at any
+magnitude.  The margin is therefore not tight in absolute terms and is exactly
+tight in relative ones, which is the distinction the open question needs to
+make.  Instrument: `vm-rs/alm-hull/src/query.rs`; measurement:
+`vm-rs/alm-vm/tests/reference.rs::a_quarter_of_the_real_queries_are_not_integers`.
+
 **No fix, and that is the point.**  The division is not a mistake: cumulative
 sums by uniform attention are the only constant-depth route, since the obvious
 recurrence `c(p) = c(p−1) + δ(p)` needs the previous position's *computed* value

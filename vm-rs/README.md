@@ -75,6 +75,16 @@ of 36-wide matvecs with no batch — while the hull is ordinary Rust.
   that ratio by `2^33/s = 0.607` or `2^34/s = 1.215`, so it shuffles rather
   than loses; what it shifts one way is the threshold.  `todo3.md` section 0a.
 
+* **A quarter to a third of the machine's queries are not integers.**  The
+  exactness argument assumes an integer query; the machine recovers a
+  cumulative sum by multiplying an average back by its count, which does not
+  round-trip.  Dividing each query by its own `abs(qy)` and comparing to the
+  nearest integer: 24.8 % in `hello`, 22.3 % in `fibonacci`, 32.1 % across
+  `sudoku`'s 44 million queries.  What saves it is that the worst offset over
+  all 54 million of them is `1.907e-6` — exactly one ulp of a query of order
+  `1e10`, which is the last row of the margin table `todo3.md` section 8 gives
+  and not past it.
+
 ## Running it
 
 `model.bin` and the program traces are build artefacts of the original Python
