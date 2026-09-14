@@ -20,6 +20,14 @@
 //! and the new line is linked where the walk stopped.  None of that depends
 //! on the order the keys arrive in, which is the point: `alm-stress` builds
 //! 262 144 keys in each of five orders and the spread is 0.069s to 0.153s.
+//!
+//! `BuildOrder.lean` says how much of that spread the tariff can account for,
+//! and the answer is none of it.  `buildPrices_spread` caps the difference
+//! between two orders at one erase per key, which at this size is under three
+//! per cent (`stress_spread_le`); and on lifted keys the erase test never
+//! fires at all, so `buildPrices_paraboloid` charges every order the same
+//! single number.  What is left over is the memory the comparisons walk,
+//! which is the whole reason this is `tree.rs` and not a vector.
 
 use crate::breakpoint::Break;
 use crate::meta::HullMeta;
@@ -280,6 +288,11 @@ mod tests {
     /// This is what the container is kept for: the five orders `alm-stress`
     /// drives differ only in the path to the answer, and the answer must not
     /// notice.
+    ///
+    /// The envelope also keeps every line, in every order, which is the
+    /// hypothesis `ALM.BuildOrder.buildPrices_paraboloid` needs to collapse
+    /// the price of the build to one number: no erase fires on lifted keys,
+    /// so no order can be charged for one.
     #[test]
     fn every_arrival_order_builds_the_same_envelope() {
         let mut want: Option<Vec<(f64, f64)>> = None;
@@ -297,6 +310,7 @@ mod tests {
             let xs: Vec<f64> = (0..64).map(|i| f64::from(i) * 20.0).collect();
             answers_the_maximum(&e, &given, &xs);
             let got: Vec<(f64, f64)> = e.iter().map(|l| (l.m.get(), l.b)).collect();
+            assert_eq!(got.len(), 601, "order {step} erased a lifted key");
             match &want {
                 None => want = Some(got),
                 Some(w) => {
