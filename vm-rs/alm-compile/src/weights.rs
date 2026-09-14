@@ -390,47 +390,34 @@ mod tests {
     use crate::plan::Plan;
 
     /// The whole point of the port: the file this builds is the file the
-    /// Python builder writes, to the byte.  Both are skipped when the vendored
-    /// checkout is absent — `plan.yaml` and `model.bin` are build products of
-    /// the Python and are not in this repository.
+    /// Python builder writes, to the byte.  The released `model.bin` is 1.2 MB
+    /// of build product and is not in this repository, so what it is compared
+    /// against is its SHA-256 — the same statement, in sixty-four characters.
     ///
-    /// `model.bin` has to have been built with `patches/reproducible-build.patch`
+    /// That `model.bin` was built with `patches/reproducible-build.patch`
     /// applied; without it the Python picks a different permutation of layer
     /// 5's FFN passthrough neurons on most runs (todo3.md section 9).
     #[test]
     fn the_model_comes_out_byte_for_byte_the_python_one() {
-        let (plan_path, model_path) = (crate::vendored("plan.yaml"), crate::vendored("model.bin"));
-        let (Ok(plan_text), Ok(want)) =
-            (std::fs::read_to_string(&plan_path), std::fs::read(&model_path))
-        else {
-            println!("skipped: no {} or no {}", plan_path.display(), model_path.display());
-            return;
-        };
         let mg = crate::interpreter::build();
-        let plan = Plan::load(&plan_text, &mg.graph).expect("plan.yaml resolves");
+        let plan = Plan::load(crate::release::PLAN, &mg.graph).expect("plan.yaml resolves");
         let model = build(&mg, &plan, Options::default());
 
         assert_eq!(model.tokens.len(), 915);
         assert_eq!((model.d_model, model.n_heads, model.d_ffn), (38, 19, 47));
 
         let got = model.to_bytes();
-        assert_eq!(got.len(), want.len(), "same size as the Python model.bin");
-        let first = got.iter().zip(&want).position(|(a, b)| a != b);
-        assert_eq!(first, None, "first differing byte");
+        assert_eq!(got.len(), 1_188_074, "the size of the released model.bin");
+        let want = crate::release::released_digest("model.bin").expect("the manifest names it");
+        assert_eq!(crate::release::sha256(&got), want, "model.bin differs from the released one");
     }
 
     /// `--grid` is the whole of `patches/on-the-grid.patch`: the query rows
-    /// come out divided by `HARD_K * sqrt(2)` and nothing else moves.  This
-    /// needs no Python, so it runs wherever the vendored plan is present.
+    /// come out divided by `HARD_K * sqrt(2)` and nothing else moves.
     #[test]
     fn dropping_the_query_scale_touches_the_query_rows_and_nothing_else() {
-        let path = crate::vendored("plan.yaml");
-        let Ok(plan_text) = std::fs::read_to_string(&path) else {
-            println!("skipped: no {}", path.display());
-            return;
-        };
         let mg = crate::interpreter::build();
-        let plan = Plan::load(&plan_text, &mg.graph).expect("plan.yaml resolves");
+        let plan = Plan::load(crate::release::PLAN, &mg.graph).expect("plan.yaml resolves");
         let released = build(&mg, &plan, Options::default());
         let grid = build(&mg, &plan, Options::on_the_grid());
 

@@ -23,17 +23,9 @@ pub mod scheduler;
 pub mod slots;
 pub mod weights;
 
-/// A path inside the vendored release, resolved against this crate rather than
-/// against the working directory.  `cargo test` runs a unit test from the
-/// package root, so a plain `../transformer-vm/...` silently misses and every
-/// check against the released artefacts skips instead of running.
-#[cfg(test)]
-pub(crate) fn vendored(rel: &str) -> std::path::PathBuf {
-    std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../transformer-vm").join(rel)
-}
-
-/// A path inside `vm-rs/programs/`, resolved the same way.  The reference
-/// programs are in this repository, so what is under here is always present.
+/// A path inside `vm-rs/programs/`, resolved against this crate rather than
+/// against the working directory: `cargo test` runs a unit test from the
+/// package root, so a plain `../programs/...` would silently miss.
 #[cfg(test)]
 pub(crate) fn programs(rel: &str) -> std::path::PathBuf {
     std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../programs").join(rel)

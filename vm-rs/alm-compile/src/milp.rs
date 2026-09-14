@@ -587,14 +587,9 @@ mod tests {
     /// point must be feasible, and must cost what it is said to cost.
     #[test]
     fn the_released_schedule_is_a_feasible_point_of_this_program() {
-        let path = crate::vendored("plan.yaml");
-        let Ok(released) = std::fs::read_to_string(&path) else {
-            println!("skipped: no {}", path.display());
-            return;
-        };
         let mg = crate::interpreter::build();
         let sg = SchedGraph::build(&mg.graph);
-        let plan = crate::plan::Plan::load(&released, &mg.graph).unwrap();
+        let plan = crate::plan::Plan::load(crate::release::PLAN, &mg.graph).unwrap();
         let pa = phases_from_plan(&plan, &sg).unwrap();
 
         let milp = build(&mg, &sg, min_layers(&sg), None, Some(&pa));
@@ -630,14 +625,9 @@ mod tests {
     /// single bit must break a row.
     #[test]
     fn no_bit_of_the_program_is_free_to_flip() {
-        let path = crate::vendored("plan.yaml");
-        let Ok(released) = std::fs::read_to_string(&path) else {
-            println!("skipped: no {}", path.display());
-            return;
-        };
         let mg = crate::interpreter::build();
         let sg = SchedGraph::build(&mg.graph);
-        let plan = crate::plan::Plan::load(&released, &mg.graph).unwrap();
+        let plan = crate::plan::Plan::load(crate::release::PLAN, &mg.graph).unwrap();
         let pa = phases_from_plan(&plan, &sg).unwrap();
         let milp = build(&mg, &sg, min_layers(&sg), None, Some(&pa));
 

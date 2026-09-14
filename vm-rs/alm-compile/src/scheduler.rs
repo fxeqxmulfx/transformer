@@ -819,19 +819,15 @@ mod tests {
 
     #[test]
     fn the_released_plan_is_what_this_schedule_reports() {
-        let path = crate::vendored("plan.yaml");
-        let Ok(released) = std::fs::read_to_string(&path) else {
-            println!("skipped: no {}", path.display());
-            return;
-        };
+        let released = crate::release::PLAN;
         let mg = crate::interpreter::build();
         let sg = SchedGraph::build(&mg.graph);
-        let plan = crate::plan::Plan::load(&released, &mg.graph).unwrap();
+        let plan = crate::plan::Plan::load(released, &mg.graph).unwrap();
         let pa = phases_from_plan(&plan, &sg).unwrap();
         let a = analyze(&mg, &sg, &pa);
         let ours = write_plan(&mg.graph, &sg, &a);
 
-        let (want, got) = (canonical(&released), canonical(&ours));
+        let (want, got) = (canonical(released), canonical(&ours));
         for (i, (w, g)) in want.iter().zip(got.iter()).enumerate() {
             assert_eq!(w, g, "line {} differs", i + 1);
         }

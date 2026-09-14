@@ -1,21 +1,18 @@
 //! The token prefix, against the released one.
 //!
 //! The six manifest programs are compiled here from their C sources in
-//! `programs/`, run, and the result compared with `transformer_vm/data/*.txt`,
-//! `*_spec.txt` and `*_ref.txt` byte for byte.  That is the whole of the
-//! program path — decode, lower, flatten, format, execute — checked at once
-//! against the only artefacts that can settle it.
+//! `programs/`, run, and the result compared with the released
+//! `transformer_vm/data/*.txt`, `*_spec.txt` and `*_ref.txt`.  That is the
+//! whole of the program path — decode, lower, flatten, format, execute —
+//! checked at once against the only artefacts that can settle it.
 //!
-//! The sources are ours; the released outputs are build products of the
-//! original Python and are not in this repository, so the test says what is
-//! missing and passes when the vendored checkout, or a clang that targets
-//! wasm32, is not there.
+//! The sources are ours; the released outputs are ten megabytes of build
+//! product and are not in this repository, so the comparison is against their
+//! SHA-256 in `reference/sha256sums`.  What can still be missing is a clang
+//! that targets wasm32, and then the test says so and passes.
 
+use alm_compile::release::{released_digest, sha256};
 use std::path::{Path, PathBuf};
-
-fn vendored() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../transformer-vm/transformer_vm")
-}
 
 fn programs() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../programs")
@@ -39,7 +36,6 @@ fn build(name: &str, scratch: &Path) -> Option<Vec<u8>> {
 
 #[test]
 fn the_six_manifest_programs_compile_and_run_to_the_released_files() {
-    let root = vendored();
     let manifest =
         std::fs::read_to_string(programs().join("manifest.yaml")).expect("the manifest is ours");
     let programs = alm_compile::emit::load_manifest(&manifest).expect("the manifest reads");
@@ -62,20 +58,18 @@ fn the_six_manifest_programs_compile_and_run_to_the_released_files() {
         assert!(run.token_count > 0, "{name} produced no tokens");
 
         for (suffix, ours) in [(".txt", &txt), ("_spec.txt", &spec), ("_ref.txt", &reference)] {
-            let path = root.join(format!("data/{name}{suffix}"));
-            let Ok(theirs) = std::fs::read_to_string(&path) else {
-                eprintln!("skipped: no {}", path.display());
-                continue;
-            };
-            assert_eq!(*ours, theirs, "{name}{suffix} differs from the released one");
+            let file = format!("data/{name}{suffix}");
+            let want = released_digest(&file).expect("the manifest covers the six programs");
+            assert_eq!(sha256(ours.as_bytes()), want, "{file} differs from the released one");
             checked += 1;
         }
     }
     let _ = std::fs::remove_dir_all(&scratch);
 
     if checked == 0 {
-        eprintln!("skipped: nothing to compare against");
+        eprintln!("skipped: no clang that targets wasm32");
     } else {
+        assert_eq!(checked, 18, "six programs, three files each");
         eprintln!("{checked} released files reproduced byte for byte");
     }
 }

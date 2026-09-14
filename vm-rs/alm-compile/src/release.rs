@@ -41,8 +41,8 @@ const H0: [u32; 8] = [
 /// One block through the compression function (FIPS 180-4 section 6.2.2).
 fn compress(h: &mut [u32; 8], block: &[u8; 64]) {
     let mut w = [0u32; 64];
-    for (i, c) in block.chunks_exact(4).enumerate() {
-        w[i] = u32::from_be_bytes(c.try_into().unwrap());
+    for (i, c) in block.as_chunks::<4>().0.iter().enumerate() {
+        w[i] = u32::from_be_bytes(*c);
     }
     for i in 16..64 {
         let (a, b) = (w[i - 15], w[i - 2]);
@@ -72,20 +72,19 @@ fn compress(h: &mut [u32; 8], block: &[u8; 64]) {
 /// SHA-256 of `bytes`, in lowercase hex — the same string `sha256sum` prints.
 pub fn sha256(bytes: &[u8]) -> String {
     let mut h = H0;
-    let mut blocks = bytes.chunks_exact(64);
-    for block in blocks.by_ref() {
-        compress(&mut h, block.try_into().unwrap());
+    let (blocks, rest) = bytes.as_chunks::<64>();
+    for block in blocks {
+        compress(&mut h, block);
     }
     // The tail: a one bit, zeroes, and the length in bits, which needs a
     // second block when the remainder leaves no eight bytes for it.
-    let rest = blocks.remainder();
     let mut tail = [0u8; 128];
     tail[..rest.len()].copy_from_slice(rest);
     tail[rest.len()] = 0x80;
     let n = if rest.len() < 56 { 64 } else { 128 };
     tail[n - 8..n].copy_from_slice(&(8 * bytes.len() as u64).to_be_bytes());
-    for block in tail[..n].chunks_exact(64) {
-        compress(&mut h, block.try_into().unwrap());
+    for block in tail[..n].as_chunks::<64>().0 {
+        compress(&mut h, block);
     }
     h.iter().fold(String::with_capacity(64), |mut s, x| {
         use std::fmt::Write;

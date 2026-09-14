@@ -311,18 +311,12 @@ mod tests {
         assert_eq!(items, vec!["a", "store_bytes[0]", "b+1", "c"]);
     }
 
-    /// The released schedule, against the graph this crate builds.  Skipped
-    /// when the vendored checkout is not there: `plan.yaml` is a build product
-    /// of the Python and is not in this repository.
+    /// The released schedule, against the graph this crate builds.  The plan
+    /// is an input and is compiled in, so this cannot skip.
     #[test]
     fn the_released_plan_resolves_against_the_ported_graph() {
-        let path = crate::vendored("plan.yaml");
-        let Ok(text) = std::fs::read_to_string(&path) else {
-            println!("skipped: no {}", path.display());
-            return;
-        };
         let mg = interpreter::build();
-        let plan = Plan::load(&text, &mg.graph).expect("plan.yaml resolves");
+        let plan = Plan::load(crate::release::PLAN, &mg.graph).expect("plan.yaml resolves");
         assert_eq!(plan.n_layers, 7);
         assert_eq!(plan.layers.len(), 7);
         let l0 = &plan.layers[0];
