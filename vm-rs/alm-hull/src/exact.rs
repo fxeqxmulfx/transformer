@@ -30,16 +30,16 @@ pub fn two_prod(a: f64, b: f64) -> (f64, f64) {
     (p, e)
 }
 
-/// The exact sign of `terms[0] + terms[1] + ... `, for up to four finite terms.
+/// The exact sign of `terms[0] + terms[1] + ... `, for up to eight finite terms.
 ///
 /// The terms are accumulated into a non-overlapping expansion, whose sign is
 /// the sign of its largest component.  No rounding occurs anywhere, so the
 /// answer is the sign of the exact sum even when it cancels to zero.
 pub fn expansion_sign(terms: &[f64]) -> core::cmp::Ordering {
     use core::cmp::Ordering;
-    debug_assert!(terms.len() <= 4);
+    debug_assert!(terms.len() <= 8);
 
-    let mut e = [0.0f64; 5];
+    let mut e = [0.0f64; 9];
     let mut len = 0usize;
 
     for &t in terms {
@@ -76,6 +76,32 @@ pub fn cross_sign(a: f64, b: f64, c: f64, d: f64) -> core::cmp::Ordering {
     expansion_sign(&[p, pe, -q, -qe])
 }
 
+/// The exact sign of `q . a - q . b`, for finite 2D vectors.
+///
+/// This makes a head return the true `argmax_k q . k` of the points it holds,
+/// instead of the argmax of the rounded scores, so the hull head and the brute
+/// one agree by construction rather than by luck.
+///
+/// It does **not** move the wall, and the reason is worth stating because it
+/// is the reason no wider accumulator moves it either.  The wall of
+/// `todo3.md` section 0 is not about how the score is computed: the key
+/// coordinate is `-k^2`, and it stops being an exact `f64` at
+/// `k = 94 906 267`.  Past that the two keys handed to this function are
+/// already the wrong points.  Scanning both, the first query whose own key
+/// stops being the strict argmax among its neighbours is `q = 94 906 266`
+/// under rounded scoring and `q = 94 906 266` under exact scoring — the same
+/// number, to the unit.  Exact arithmetic, `f128`, a `long double`
+/// accumulator: none of them recover a coordinate that was rounded before it
+/// arrived.  Only a wider embedding would, and that is a change to the
+/// weights, not to the attention.
+pub fn dot_cmp(q: [f64; 2], a: [f64; 2], b: [f64; 2]) -> core::cmp::Ordering {
+    let (p0, e0) = two_prod(q[0], a[0]);
+    let (p1, e1) = two_prod(q[1], a[1]);
+    let (p2, e2) = two_prod(q[0], b[0]);
+    let (p3, e3) = two_prod(q[1], b[1]);
+    expansion_sign(&[p0, e0, p1, e1, -p2, -e2, -p3, -e3])
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -101,6 +127,61 @@ mod tests {
         assert_eq!(cross_sign(m, m, hi, lo), Ordering::Greater);
         assert_eq!(cross_sign(hi, lo, m, m), Ordering::Less);
         assert_eq!(cross_sign(m, m, m, m), Ordering::Equal);
+    }
+
+    /// The parabolic embedding: key `k` at `(2k, -k^2)`, query `q` at `(q, 1)`.
+    fn key(k: f64) -> [f64; 2] {
+        [2.0 * k, -(k * k)]
+    }
+
+    #[test]
+    fn dot_cmp_is_exact_on_the_points_it_is_given() {
+        let q = 94906265.0;
+        let score = |k: f64| 2.0 * q * k - k * k;
+        // One below the wall every coordinate is still exact, and both the
+        // rounded scores and the exact comparison put the query's own key first.
+        assert!(score(q) > score(q - 1.0));
+        assert_eq!(dot_cmp([q, 1.0], key(q), key(q - 1.0)), Ordering::Greater);
+        assert_eq!(dot_cmp([q, 1.0], key(q), key(q)), Ordering::Equal);
+    }
+
+    #[test]
+    fn the_wall_is_the_key_coordinate_not_the_arithmetic() {
+        // `todo3.md` section 0 measures the first query that loses to a
+        // neighbour at q = 94 906 266 = ceil(sqrt(2^53)).  Exact arithmetic on
+        // the same stored points fails at exactly the same q, because what has
+        // gone wrong is the coordinate, not the sum: -k^2 is rounded before
+        // `dot_cmp` ever sees it.
+        let q = 94906266i64;
+        let qf = [q as f64, 1.0];
+
+        // Left of the query, exact arithmetic still separates what f64 cannot.
+        let lo = key((q - 1) as f64);
+        assert_eq!(
+            2.0 * q as f64 * (q - 1) as f64 - ((q - 1) * (q - 1)) as f64,
+            2.0 * q as f64 * q as f64 - (q * q) as f64,
+            "the rounded scores of k = q-1 and k = q are one double"
+        );
+        assert_eq!(dot_cmp(qf, key(q as f64), lo), Ordering::Greater);
+
+        // Right of it, exact arithmetic ties, and that is the wall: the stored
+        // coordinate of q+1 is 9 007 199 515 875 288, one short of the true
+        // 9 007 199 515 875 289, and the missing unit is exactly the gap that
+        // made q the argmax.
+        let hi = key((q + 1) as f64);
+        assert_eq!(-hi[1], 9007199515875288.0);
+        assert_eq!((q + 1) * (q + 1), 9007199515875289);
+        assert_eq!(
+            dot_cmp(qf, key(q as f64), hi),
+            Ordering::Equal,
+            "exact arithmetic on rounded points still cannot tell them apart"
+        );
+
+        // Below the wall both agree, and agree with the truth.
+        let p = (q - 1) as f64;
+        let pf = [p, 1.0];
+        assert_eq!(dot_cmp(pf, key(p), key(p + 1.0)), Ordering::Greater);
+        assert_eq!(dot_cmp(pf, key(p), key(p - 1.0)), Ordering::Greater);
     }
 
     #[test]
