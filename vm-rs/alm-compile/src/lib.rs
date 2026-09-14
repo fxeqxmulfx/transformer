@@ -6,8 +6,11 @@
 //! keeps the port honest is byte identity: the `model.bin` this builds must be
 //! the file the Python builder writes.
 
+pub mod dump;
 pub mod expr;
 pub mod graph;
+pub mod interpreter;
+pub mod isa;
 pub mod naming;
 
 pub use expr::{DimId, Expr};
