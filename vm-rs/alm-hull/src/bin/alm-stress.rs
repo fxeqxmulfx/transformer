@@ -30,23 +30,23 @@
 //!
 //! ```text
 //!        order         n    upper    lower    u.desc    l.desc   seconds
-//!    ascending    262144   262144        2         0         0     0.054
-//!   descending    262144   262144        2         0         0     0.066
-//!     shuffled    262144   262144        2    262118    262118     0.152
+//!    ascending    262144   262144        2         0         0     0.030
+//!   descending    262144   262144        2         0         0     0.042
+//!     shuffled    262144   262144        2    262118    262118     0.123
 //!   outside-in    262144   262144        2    262142    262142     0.078
-//!   inside-out    262144   262144        2         0         0     0.060
+//!   inside-out    262144   262144        2         0         0     0.036
 //! ```
 //!
-//! Three-fold between the best order and the worst, and the spread does not
-//! widen with the size.  The descent columns say where half of it comes from:
+//! Four-fold between the best order and the worst, and the spread does not
+//! widen with the size.  The descent columns say where most of it comes from:
 //! three of the five orders hand `lower_bound_slope` a slope outside the span
 //! the envelope already covers, which the cached ends answer with no descent
 //! at all, and those three are the three fastest.  A tariff that counts a
 //! search per key cannot see that difference; it is the difference between
 //! `2n` comparisons and `n log n` of them.
 //!
-//! The other half is not comparisons.  `shuffled` and `outside-in` descend on
-//! the same number of keys, to within fifty, and one of them takes twice as
+//! Not all of it is comparisons.  `shuffled` and `outside-in` descend on the
+//! same number of keys, to within fifty, and one of them takes half again as
 //! long: `outside-in` walks a short prefix of the same path every time and
 //! `shuffled` walks the whole tree, so what separates those two lines is the
 //! memory the identical comparisons reach for.
@@ -61,7 +61,7 @@
 //! ```text
 //!      queries         n  descents      near   seconds
 //!        sweep    262144    262143    262143     0.031
-//!     shuffled    262144    262143         1     0.106
+//!     shuffled    262144    262143         1     0.092
 //!        local    262144    262144     46262     0.027
 //!       repeat    262144    262144    262143     0.015
 //! ```
