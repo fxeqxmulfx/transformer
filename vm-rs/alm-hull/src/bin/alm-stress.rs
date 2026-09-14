@@ -13,6 +13,13 @@
 //! so the whole cost is the upper half, and the whole of *that* is the rank
 //! of the arriving slope among the slopes already there.
 //!
+//! It then asks the other half of the question.  Insertions are not where the
+//! time goes: `tree.rs` counts 123.5 million query descents against two
+//! million insertions on the sudoku trace, so a table of arrival orders
+//! measures under two per cent of the work.  The second table is the other
+//! ninety-eight -- `n` lookups into the envelope of the same `n` keys, in four
+//! patterns.
+//!
 //! ```text
 //! alm-stress                    # every order, at 4096, 16384 and 65536 keys
 //! alm-stress --n 262144         # one size
@@ -48,12 +55,35 @@
 //! lines and 102.861s on the second, where the same descending order at a
 //! quarter of the keys had cost it 3.296s -- four times the keys, thirty-one
 //! times the work.  That is why it is no longer here.
+//!
+//! The query table, at the same size:
+//!
+//! ```text
+//!      queries         n  descents      near   seconds
+//!        sweep    262144    262143    262143     0.031
+//!     shuffled    262144    262143         1     0.106
+//!        local    262144    262144     46262     0.027
+//!       repeat    262144    262144    262143     0.015
+//! ```
+//!
+//! Every one of them descends.  The cached ends answer an insertion whose
+//! slope is outside the span the envelope covers, and three of the five
+//! arrival orders are made entirely of those; a query inside the span is not,
+//! and a query outside it is a query with no answer.  So the fast path that
+//! carries the build carries none of the lookups.
+//!
+//! The `near` column says what a second fast path would be worth.  On the
+//! sweep every answer is the previous answer or the line beside it, and on
+//! the repeat likewise -- 262 143 of 262 144 -- and each of them still pays a
+//! full descent from the root to find a node one step from the one the last
+//! query already found.  The random walk of eight lines hits on eighteen per
+//! cent, and the shuffled queries hit once.
 
 use std::time::Instant;
 
 use alm_hull::envelope::Envelope;
 use alm_hull::tree::NIL;
-use alm_hull::HullMeta;
+use alm_hull::{Break, HullMeta};
 
 /// The key of position `k` under the lift the compiler emits: `(2k, -k^2)`.
 ///
@@ -180,6 +210,85 @@ fn run(ks: &[u64]) -> Run {
 
 const ORDERS: [&str; 5] = ["ascending", "descending", "shuffled", "outside-in", "inside-out"];
 
+/// The query patterns, each `n` lookups into the envelope of the same `n`
+/// keys.
+///
+/// The build is not where the time goes.  `tree.rs` reports 123.5 million
+/// query descents against two million insertions on the sudoku trace, so a
+/// table that measures only insertions measures under two per cent of the
+/// work.  These are the other ninety-eight.
+fn queries(name: &str, n: u64) -> Option<Vec<f64>> {
+    Some(match name {
+        // A sequential pass: the answer advances by one line each time.
+        "sweep" => (0..n).map(|k| k as f64).collect(),
+        // No locality at all, which is the worst a descent can be handed.
+        "shuffled" => shuffled(n).into_iter().map(|k| k as f64).collect(),
+        // A random walk of eight lines, which is what a windowed head asks.
+        "local" => {
+            let mut state = 0x243f_6a88_85a3_08d3u64;
+            let mut at = (n / 2) as i64;
+            (0..n)
+                .map(|_| {
+                    state ^= state >> 12;
+                    state ^= state << 25;
+                    state ^= state >> 27;
+                    at += (state.wrapping_mul(0x2545_f491_4f6c_dd1d) % 17) as i64 - 8;
+                    at = at.clamp(0, n as i64 - 1);
+                    at as f64
+                })
+                .collect()
+        }
+        // The same line every time, which no descent should have to find twice.
+        "repeat" => vec![(n / 2) as f64; n as usize],
+        _ => return None,
+    })
+}
+
+const PATTERNS: [&str; 4] = ["sweep", "shuffled", "local", "repeat"];
+
+/// Whether a query of breakpoint `p` would descend the tree.
+///
+/// The same three cases as `descends`, read off `lower_bound_break` instead:
+/// an empty envelope, or a query outside the breakpoints the ends carry.
+fn query_descends(e: &Envelope, p: Break) -> bool {
+    let (lo, hi) = (e.first(), e.last());
+    hi != NIL && e.get(hi).p >= p && e.get(lo).p < p
+}
+
+struct Queried {
+    descents: usize,
+    /// Answers that are the previous answer, or one step from it.
+    ///
+    /// This is what a remembered cursor would save.  `tree.rs` holds the two
+    /// ends of the envelope and nothing in between, so a query that lands
+    /// beside the last one still pays a full descent; counting them says
+    /// whether a third cursor would be worth its upkeep.
+    near: usize,
+    secs: f64,
+}
+
+fn query(e: &Envelope, xs: &[f64]) -> Queried {
+    let (mut descents, mut near) = (0, 0);
+    let mut prev = NIL;
+    for &x in xs {
+        let p = Break::ratio(x, 1.0);
+        descents += usize::from(query_descends(e, p));
+        let at = e.argmax(p).expect("the envelope is not empty");
+        if prev != NIL && (at == prev || at == e.next(prev) || at == e.prev(prev)) {
+            near += 1;
+        }
+        prev = at;
+    }
+    let t = Instant::now();
+    let mut sink = 0u64;
+    for &x in xs {
+        sink += e.argmax(Break::ratio(x, 1.0)).expect("the envelope is not empty") as u64;
+    }
+    let secs = t.elapsed().as_secs_f64();
+    assert!(sink > 0, "the answers were used");
+    Queried { descents, near, secs }
+}
+
 fn main() {
     let argv: Vec<String> = std::env::args().skip(1).collect();
     let mut sizes: Vec<u64> = Vec::new();
@@ -232,6 +341,24 @@ fn main() {
             println!(
                 "{:>12} {:>9} {:>8} {:>8} {:>9} {:>9} {:>9.3}",
                 name, n, r.upper, r.lower, r.descents.0, r.descents.1, r.secs
+            );
+        }
+    }
+
+    println!();
+    println!("{:>12} {:>9} {:>9} {:>9} {:>9}", "queries", "n", "descents", "near", "seconds");
+    for &n in &sizes {
+        let mut e = Envelope::new();
+        for (i, k) in (0..n).enumerate() {
+            let (kx, ky) = lift(k);
+            add(&mut e, kx, ky, true, i as i32);
+        }
+        for name in &PATTERNS {
+            let xs = queries(name, n).expect("the patterns are a fixed list");
+            let q = query(&e, &xs);
+            println!(
+                "{:>12} {:>9} {:>9} {:>9} {:>9.3}",
+                name, n, q.descents, q.near, q.secs
             );
         }
     }
