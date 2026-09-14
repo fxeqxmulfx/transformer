@@ -11,7 +11,7 @@ mod program;
 mod run;
 
 use alm_hull::TieBreak;
-use alm_model::{Alm, Backend, CacheKind, KvCache, RawModel, Timings};
+use alm_model::{Alm, CacheKind, KvCache, RawModel, Timings};
 use program::Program;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
@@ -126,7 +126,7 @@ fn cache_for(raw: &RawModel, kind: CacheKind, grid: bool) -> KvCache {
 /// One program: run it, compare against its reference, report as the original
 /// reports.  Returns `None` when there was no reference to compare against.
 fn check(
-    model: &Alm<Backend>,
+    model: &Alm,
     raw: &RawModel,
     opts: &Options,
     path: &Path,
@@ -261,8 +261,7 @@ fn main() -> ExitCode {
         println!("Querying at unit scale (todo3.md section 0)");
     }
 
-    let device = Default::default();
-    let model: Alm<Backend> = Alm::from_raw(&raw, &device);
+    let model = Alm::from_raw(&raw);
     let (nz, total) = model.head_density();
     println!("Head sparsity: {nz}/{total} nonzero ({:.0}% sparse)", 100.0 * (1.0 - nz as f64 / total as f64));
 

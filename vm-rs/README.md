@@ -6,19 +6,26 @@ formalization licenses.  `todo3.md` is the fix list; this is where the fixes go.
 
 ## Crates
 
-| crate       | what it is                                              | burn |
-|-------------|---------------------------------------------------------|------|
-| `alm-hull`  | the 2D hard-attention KV cache (`attention/hull2d_cht.h`) | no |
-| `alm-model` | the transformer itself (`model/transformer.py`, `.cpp`)   | yes |
-| `alm-vm`    | the driver: load `model.bin`, generate                    | —  |
-| `alm-compile` | the compiler: the graph, the weights, the programs       | no |
-| `alm-schedule` | the scheduler: the MILP, and `plan.yaml` out of HiGHS   | no |
+| crate       | what it is                                                |
+|-------------|-----------------------------------------------------------|
+| `alm-hull`  | the 2D hard-attention KV cache (`attention/hull2d_cht.h`)  |
+| `alm-model` | the transformer itself (`model/transformer.py`, `.cpp`)    |
+| `alm-vm`    | the driver: load `model.bin`, generate                     |
+| `alm-compile` | the compiler: the graph, the weights, the programs       |
+| `alm-schedule` | the scheduler: the MILP, and `plan.yaml` out of HiGHS    |
 
-`burn` is pinned at 0.21, on the `ndarray` backend with `f64` elements.  The
-element type is not a detail: every exactness claim in the construction is a
-claim about float64, and `NdArray<f64, i64, i8>` is the only backend in burn
-that holds one.  burn covers the model layer only — the forward pass is a chain
-of 36-wide matvecs with no batch — while the hull is ordinary Rust.
+Nothing here runs on a tensor framework, and the reason is the shape of the
+computation rather than a preference: generation is one token at a time with no
+batch, so the whole of the linear algebra is four matrix-vector products a
+layer against a residual stream 38 wide, and the attention is a convex-hull
+query rather than an inner product at all.  A `[1, 38] x [38, 114]` product is
+a hundred nanoseconds of arithmetic; a tensor type's dispatch, allocation and
+round trip cost several times that, and it was measured at 3.5x.  The element
+type is `f64` everywhere, which is not a detail either: every exactness claim
+in the construction is a claim about float64.
+
+The only dependency left outside the standard library is HiGHS, under
+`alm-schedule`, and it is not on any path a run takes.
 
 ## What is already different from the original
 
@@ -215,16 +222,22 @@ collatz   44 589 tok, 9 009 ops  7 22 11 34 17 52 26 13 40 20 10 5 16 8 4 2 1
 fibonacci  9 104 tok, 892 ops    55
 ```
 
-Against the C++ engine on the same 59 089 tokens:
+Against the C++ engine on the same 59 089 tokens, back to back on one machine:
 
 ```
             total     proj     hull     head
-C++         3.31s    2.012    1.107    0.176
-alm-vm     11.40s    6.758    4.362    0.190
+C++         4.02s    2.490    1.294    0.217
+alm-vm      7.86s    2.382    5.176    0.235
 ```
 
-The head matches once it is sparse, as the original's is.  What is left is
-3.4x on the projections — burn's per-call overhead on a 38-wide residual
-stream generated one token at a time, with no batch to amortize it — and 3.9x
-on the hull, which is what the exact rational breakpoints cost against the
-original's rounded `long double`.  Neither changes an answer.
+The projections and the head are at parity or better; what is left is 3.9x on
+the hull, which is what the exact rational breakpoints cost against the
+original's rounded `long double`.  It does not change an answer.
+
+The projections are not merely as fast as the C++ — they are the same
+arithmetic.  `transformer.cpp` sums each row left to right into one accumulator
+(and only calls BLAS on macOS); `Dense::apply` writes that loop out, so on the
+whole of `hello` and `addition` — 37 756 layer steps, 1 434 728 residual-stream
+values — every `f64` matches the C++ bit for bit.  A tensor framework did not:
+its `matmul` splits the reduction, and the two disagreed by an ulp often enough
+to move a quarter of the hull queries off the integers.

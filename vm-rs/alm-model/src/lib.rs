@@ -1,17 +1,15 @@
 //! The compiled WASM transformer: weights, the forward pass, and generation.
 //!
 //! A port of `transformer_vm/model/` from the Percepta `transformer-vm`
-//! release.  The tensor work runs on burn, pinned to the `ndarray` backend
-//! with `f64` elements; the attention does not, because it is a convex-hull
-//! query rather than a tensor operation (`alm_hull`).
+//! release.  Everything is `f64` and nothing is a tensor: generation is one
+//! token at a time, so the linear algebra is four matrix-vector products a
+//! layer, and the attention is a convex-hull query rather than an inner
+//! product at all (`alm_hull`).
 
 pub mod cache;
 pub mod model;
 pub mod weights;
 
 pub use cache::{CacheKind, KvCache};
-pub use model::{Alm, Timings};
+pub use model::{Alm, Scratch, Timings};
 pub use weights::{RawModel, Shapes};
-
-/// The backend every entry point uses: `ndarray`, with `f64` elements.
-pub type Backend = burn::backend::ndarray::NdArray<f64, i64, i8>;

@@ -1,6 +1,6 @@
 //! The generation loop, and what the original reports about it.
 
-use alm_model::{Alm, Backend, KvCache, Timings};
+use alm_model::{Alm, KvCache, Scratch, Timings};
 
 /// What one program run produced.
 pub struct Run {
@@ -19,7 +19,7 @@ pub struct Run {
 /// and the C++ driver do it: every position is pushed through the stack, and
 /// only the last one is decoded.
 pub fn generate(
-    model: &Alm<Backend>,
+    model: &Alm,
     cache: &mut KvCache,
     prompt: &[usize],
     max_new: usize,
@@ -31,12 +31,13 @@ pub fn generate(
     let stop = model.shapes.stop_token;
     let mut stopped = false;
     let mut timings = Timings::default();
+    let mut scratch = Scratch::new(model.shapes);
 
     for pos in 0..prompt.len() + max_new {
-        let x = model.forward_timed(ids[pos], pos, cache, &mut timings);
+        let x = model.forward_timed(ids[pos], pos, cache, &mut scratch, &mut timings);
         if pos + 1 == ids.len() {
             let mark = std::time::Instant::now();
-            let next = model.decode(&x);
+            let next = model.decode(x);
             timings.head += mark.elapsed().as_secs_f64();
             ids.push(next);
             let gen = pos + 1 - prompt.len();
@@ -64,7 +65,7 @@ pub fn generate(
 
 /// The bytes the program wrote: every `out(..)` token, its payload either one
 /// literal character or a hex byte.
-pub fn output_bytes(model: &Alm<Backend>, ids: &[usize]) -> Vec<u8> {
+pub fn output_bytes(model: &Alm, ids: &[usize]) -> Vec<u8> {
     let mut out = Vec::new();
     for &i in ids {
         let t = &model.tokens[i];

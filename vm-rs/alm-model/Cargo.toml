@@ -5,5 +5,4 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
-burn = { workspace = true }
 alm-hull = { path = "../alm-hull" }

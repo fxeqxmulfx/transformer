@@ -1,22 +1,26 @@
-//! The transformer itself, on burn.
+//! The transformer itself.
 //!
 //! Ported from `VanillaTransformer` in `transformer_vm/model/transformer.py`
 //! and its C++ twin.  The shape of the computation is unusual for a tensor
 //! framework and worth stating: generation is one token at a time with no
 //! batch, so every operation here is a matrix-vector product against a residual
-//! stream 36 wide.  burn's part is that linear algebra; the attention is not
-//! a tensor operation at all but a query into a convex hull, which is why the
-//! forward pass hands the projections out to `alm_hull` and takes a vector back.
+//! stream 38 wide, and the attention is not a tensor operation at all but a
+//! query into a convex hull, which is why the forward pass hands the
+//! projections out to `alm_hull` and takes a vector back.
+//!
+//! Those two facts are why there is no tensor framework under this.  A
+//! `[1, 38] x [38, 114]` product is a hundred nanoseconds of arithmetic and
+//! several times that in dispatch, allocation and the round trip through a
+//! tensor type; measured against the same loop written out, a tensor
+//! framework's `Linear` cost 3.5 times the arithmetic it performed, and the
+//! projections are 60 % of a run.  What is here instead is the loop
+//! `transformer.cpp` writes.
 //!
 //! The element type is `f64` throughout, as it is in the original
 //! (`torch.set_default_dtype(torch.float64)`).  It is not an implementation
 //! detail: the exactness the construction claims is exactness of integers below
 //! `2^53`, and nothing about it survives a narrower float.
 
-use burn::module::Param;
-use burn::nn::{Linear, LinearConfig};
-use burn::prelude::Backend;
-use burn::tensor::{Tensor, TensorData};
 use std::time::Instant;
 
 use crate::cache::KvCache;
@@ -34,12 +38,41 @@ pub struct Timings {
     pub head: f64,
 }
 
+/// A dense matrix, row-major `[rows, cols]`, exactly as `model.bin` stores it.
+struct Dense {
+    cols: usize,
+    w: Vec<f64>,
+}
+
+impl Dense {
+    fn of(w: &[f64], rows: usize, cols: usize) -> Dense {
+        assert_eq!(w.len(), rows * cols, "the weight file declares its own shapes");
+        Dense { cols, w: w.to_vec() }
+    }
+
+    /// `y = W x`, each row summed left to right.
+    ///
+    /// The order is the one `transformer.cpp` uses and the one the reference
+    /// traces were generated under; float addition is not associative, so it
+    /// is part of the answer rather than of the schedule.
+    fn apply(&self, x: &[f64], y: &mut [f64]) {
+        debug_assert_eq!(x.len(), self.cols);
+        for (row, out) in self.w.chunks_exact(self.cols).zip(y.iter_mut()) {
+            let mut s = 0.0;
+            for (a, b) in row.iter().zip(x) {
+                s += a * b;
+            }
+            *out = s;
+        }
+    }
+}
+
 /// The four projections of one layer.
-pub struct LayerWeights<B: Backend> {
-    qkv: Linear<B>,
-    out: Linear<B>,
-    ff_in: Linear<B>,
-    ff_out: Linear<B>,
+struct LayerWeights {
+    qkv: Dense,
+    out: Dense,
+    ff_in: Dense,
+    ff_out: Dense,
 }
 
 /// The output head, in compressed sparse rows.
@@ -92,41 +125,55 @@ impl SparseHead {
     }
 }
 
+/// The buffers one position's forward pass writes into.
+///
+/// Held by the caller rather than allocated per token: the whole of a step is
+/// a few microseconds, and five allocations inside it are not free at that
+/// scale.  `Alm::forward` keeps one for callers that do not want to.
+pub struct Scratch {
+    x: Vec<f64>,
+    qkv: Vec<f64>,
+    attn_out: Vec<f64>,
+    ff: Vec<f64>,
+    gated: Vec<f64>,
+    back: Vec<f64>,
+}
+
+impl Scratch {
+    pub fn new(s: Shapes) -> Scratch {
+        let (d, f) = (s.d_model, s.d_ffn);
+        Scratch {
+            x: vec![0.0; d],
+            qkv: vec![0.0; 3 * d],
+            attn_out: vec![0.0; d],
+            ff: vec![0.0; 2 * f],
+            gated: vec![0.0; f],
+            back: vec![0.0; d],
+        }
+    }
+}
+
 /// The compiled transformer.
-pub struct Alm<B: Backend> {
+pub struct Alm {
     pub shapes: Shapes,
     pub tokens: Vec<String>,
     embedding: Vec<f64>,
-    layers: Vec<LayerWeights<B>>,
+    layers: Vec<LayerWeights>,
     head: SparseHead,
-    device: B::Device,
 }
 
-/// Build a `Linear` from a row-major `[rows, cols]` matrix, without a bias.
-///
-/// burn stores a linear layer's weight as `[d_input, d_output]` and computes
-/// `O = I W`, while the file stores `[d_output, d_input]` and computes `y = W x`,
-/// so the matrix is transposed once here rather than at every token.
-fn linear_from<B: Backend>(w: &[f64], rows: usize, cols: usize, device: &B::Device) -> Linear<B> {
-    let data = TensorData::new(w.to_vec(), [rows, cols]);
-    let weight = Tensor::<B, 2>::from_data(data, device).transpose();
-    let mut layer = LinearConfig::new(cols, rows).with_bias(false).init(device);
-    layer.weight = Param::from_tensor(weight);
-    layer
-}
-
-impl<B: Backend> Alm<B> {
-    pub fn from_raw(raw: &RawModel, device: &B::Device) -> Alm<B> {
+impl Alm {
+    pub fn from_raw(raw: &RawModel) -> Alm {
         let s = raw.shapes;
         let (d, f, v) = (s.d_model, s.d_ffn, s.vocab);
         let layers = raw
             .layers
             .iter()
             .map(|l| LayerWeights {
-                qkv: linear_from(&l.qkv, 3 * d, d, device),
-                out: linear_from(&l.out, d, d, device),
-                ff_in: linear_from(&l.ff_in, 2 * f, d, device),
-                ff_out: linear_from(&l.ff_out, d, f, device),
+                qkv: Dense::of(&l.qkv, 3 * d, d),
+                out: Dense::of(&l.out, d, d),
+                ff_in: Dense::of(&l.ff_in, 2 * f, d),
+                ff_out: Dense::of(&l.ff_out, d, f),
             })
             .collect();
         Alm {
@@ -135,16 +182,7 @@ impl<B: Backend> Alm<B> {
             embedding: raw.embedding.clone(),
             layers,
             head: SparseHead::of(&raw.head, v, d),
-            device: device.clone(),
         }
-    }
-
-    fn row(&self, x: &[f64]) -> Tensor<B, 2> {
-        Tensor::from_data(TensorData::new(x.to_vec(), [1, x.len()]), &self.device)
-    }
-
-    fn plain(t: Tensor<B, 2>) -> Vec<f64> {
-        t.into_data().to_vec::<f64>().expect("the backend is f64")
     }
 
     /// The residual stream at the start of a position: the token embedding plus
@@ -155,54 +193,66 @@ impl<B: Backend> Alm<B> {
     /// key of the position.
     pub fn embed(&self, token: usize, pos: usize) -> Vec<f64> {
         let d = self.shapes.d_model;
-        let mut x = self.embedding[token * d..(token + 1) * d].to_vec();
+        let mut x = vec![0.0; d];
+        self.embed_into(token, pos, &mut x);
+        x
+    }
+
+    fn embed_into(&self, token: usize, pos: usize, x: &mut [f64]) {
+        let d = self.shapes.d_model;
+        x.copy_from_slice(&self.embedding[token * d..(token + 1) * d]);
         let p = pos as f64;
         x[0] += p;
         x[1] += 1.0 / std::f64::consts::LN_2 - 1.0 / ((p + 2.0).ln());
         x[2] += p * p;
-        x
     }
 
     /// One position through the whole stack, updating the cache as it goes.
     pub fn forward(&self, token: usize, pos: usize, cache: &mut KvCache) -> Vec<f64> {
-        self.forward_timed(token, pos, cache, &mut Timings::default())
+        let mut s = Scratch::new(self.shapes);
+        self.forward_timed(token, pos, cache, &mut s, &mut Timings::default());
+        s.x
     }
 
-    /// The same, charging each part of the step to `t`.
-    pub fn forward_timed(
+    /// The same, charging each part of the step to `t` and leaving the residual
+    /// stream in `s.x`.
+    pub fn forward_timed<'s>(
         &self,
         token: usize,
         pos: usize,
         cache: &mut KvCache,
+        s: &'s mut Scratch,
         t: &mut Timings,
-    ) -> Vec<f64> {
+    ) -> &'s [f64] {
         let (d, f) = (self.shapes.d_model, self.shapes.d_ffn);
-        let mut x = self.embed(token, pos);
+        self.embed_into(token, pos, &mut s.x);
 
         for (li, layer) in self.layers.iter().enumerate() {
             let mark = Instant::now();
-            let qkv = Self::plain(layer.qkv.forward(self.row(&x)));
+            layer.qkv.apply(&s.x, &mut s.qkv);
             t.proj += mark.elapsed().as_secs_f64();
 
             let mark = Instant::now();
-            let attn = cache.layer_step(li, &qkv[d..2 * d], &qkv[..d], &qkv[2 * d..]);
+            let attn = cache.layer_step(li, &s.qkv[d..2 * d], &s.qkv[..d], &s.qkv[2 * d..]);
             t.hull += mark.elapsed().as_secs_f64();
 
             let mark = Instant::now();
-            let projected = Self::plain(layer.out.forward(self.row(&attn)));
+            layer.out.apply(&attn, &mut s.attn_out);
             for i in 0..d {
-                x[i] += projected[i];
+                s.x[i] += s.attn_out[i];
             }
 
-            let ff = Self::plain(layer.ff_in.forward(self.row(&x)));
-            let gated: Vec<f64> = (0..f).map(|i| ff[i].max(0.0) * ff[f + i]).collect();
-            let back = Self::plain(layer.ff_out.forward(self.row(&gated)));
+            layer.ff_in.apply(&s.x, &mut s.ff);
+            for i in 0..f {
+                s.gated[i] = s.ff[i].max(0.0) * s.ff[f + i];
+            }
+            layer.ff_out.apply(&s.gated, &mut s.back);
             for i in 0..d {
-                x[i] += back[i];
+                s.x[i] += s.back[i];
             }
             t.proj += mark.elapsed().as_secs_f64();
         }
-        x
+        &s.x
     }
 
     /// The token the residual stream decodes to.
