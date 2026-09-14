@@ -45,6 +45,16 @@ pub struct KvCache {
 /// introduced, and it is harmless: `q_x` is the correctly rounded `s * q` for
 /// an integer `q`, so `q_x / |q_y|` is within `q * 2^-52` of `q`, and for every
 /// `q` below the wall that rounds back to `q` exactly.
+///
+/// `ALM.QueryScale` is that paragraph proved.  `order_scale_invariant` and
+/// `maximizers_scale_invariant` are the invariance, over the maximizers and not
+/// merely the value; `onTheGrid_scaleQuery` says the division returns the
+/// lifted `(q, 1)` on the nose and `onTheGrid_score_isInt` says the score is an
+/// integer again; `rounded_normalization_keeps_the_winner` is the price of the
+/// rounding, paid out of the unit gap between distinct keys.  The divisor is
+/// `gridScale`, and `gridScale_eq_zero_iff` is why the early return below costs
+/// nothing: the zero query is the only one with no divisor, and there every key
+/// ties and the tie-break answers.
 fn on_the_grid(q: [f64; 2]) -> [f64; 2] {
     let s = if q[1] != 0.0 { q[1].abs() } else { q[0].abs() };
     if s == 0.0 || !s.is_finite() {
