@@ -43,3 +43,6 @@ venv/
 /.discrtree/
 /discrtree.toml
 /.claude/skills/discrtree/
+
+# ── Rust ─────────────────────────────────────────────────────────────────
+/vm-rs/target/

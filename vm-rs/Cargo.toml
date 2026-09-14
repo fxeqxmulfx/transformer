@@ -1,0 +1,11 @@
+[workspace]
+resolver = "2"
+members = ["alm-hull", "alm-model", "alm-vm"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+
+[workspace.dependencies]
+burn = { version = "0.21", default-features = false, features = ["std", "ndarray"] }

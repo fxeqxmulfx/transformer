@@ -1,0 +1,9 @@
+[package]
+name = "alm-vm"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+alm-model = { path = "../alm-model" }
+alm-hull = { path = "../alm-hull" }
