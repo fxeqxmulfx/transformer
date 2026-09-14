@@ -15,6 +15,7 @@ pub mod grid;
 pub mod head;
 pub mod meta;
 pub mod query;
+pub mod tree;
 
 pub use breakpoint::Break;
 pub use gap::{ScoreGaps, NOISE};

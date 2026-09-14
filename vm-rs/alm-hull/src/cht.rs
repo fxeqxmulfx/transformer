@@ -56,49 +56,7 @@
 
 use crate::breakpoint::Break;
 use crate::meta::HullMeta;
-use core::cmp::Ordering;
-
-/// A slope, ordered totally so that it can be searched for.
-///
-/// Construction folds `-0.0` to `0.0`: the lower envelope stores negated keys,
-/// so a zero slope arrives with either sign, and the two must name one line.
-#[derive(Clone, Copy, Debug)]
-pub struct Slope(f64);
-
-impl Slope {
-    pub fn new(m: f64) -> Slope {
-        Slope(if m == 0.0 { 0.0 } else { m })
-    }
-    pub fn get(self) -> f64 {
-        self.0
-    }
-}
-
-impl PartialEq for Slope {
-    fn eq(&self, o: &Self) -> bool {
-        self.0.total_cmp(&o.0) == Ordering::Equal
-    }
-}
-impl Eq for Slope {}
-impl PartialOrd for Slope {
-    fn partial_cmp(&self, o: &Self) -> Option<Ordering> {
-        Some(self.cmp(o))
-    }
-}
-impl Ord for Slope {
-    fn cmp(&self, o: &Self) -> Ordering {
-        self.0.total_cmp(&o.0)
-    }
-}
-
-/// One line of the envelope: `y = m x + b`, optimal up to `p`.
-#[derive(Clone, Copy, Debug)]
-pub struct Line {
-    pub m: Slope,
-    pub b: f64,
-    pub p: Break,
-    pub meta: HullMeta,
-}
+pub use crate::tree::{Line, Slope};
 
 /// The upper envelope of a set of lines, in increasing slope order.
 ///
