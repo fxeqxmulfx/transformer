@@ -48,6 +48,35 @@ pub struct Layer {
     pub ff_out: Mat,
 }
 
+/// The softmax temperature the released compiler multiplies every
+/// hard-attention query row by.  The hull path takes an argmax, so it changes
+/// no comparison; what it changes is where the score sits relative to the
+/// integer grid.  `todo3.md` section 0.
+pub const HARD_K: f64 = 1e10;
+
+/// What to build.  The default is the release, so that the file this produces
+/// is the file the unpatched Python produces.
+#[derive(Clone, Copy)]
+pub struct Options {
+    /// Subtract a dying slot's old value instead of masking it.
+    pub use_erase: bool,
+    /// Scale hard-attention queries by `HARD_K * sqrt(2)`, as the release does.
+    pub query_scale: bool,
+}
+
+impl Default for Options {
+    fn default() -> Self {
+        Options { use_erase: true, query_scale: true }
+    }
+}
+
+impl Options {
+    /// `patches/on-the-grid.patch`: the same model with the scale dropped.
+    pub fn on_the_grid() -> Options {
+        Options { query_scale: false, ..Options::default() }
+    }
+}
+
 pub struct Model {
     pub tokens: Vec<String>,
     pub d_model: usize,
@@ -102,7 +131,7 @@ fn reglu_exprs(g: &Graph, d: DimId) -> (&Expr, &Expr) {
     }
 }
 
-pub fn build(mg: &MachineGraph, plan: &Plan, use_erase: bool) -> Model {
+pub fn build(mg: &MachineGraph, plan: &Plan, opts: Options) -> Model {
     let g = &mg.graph;
     let lay = slots::compute(g, plan, &mg.output_tokens);
     let (d, dffn, nh) = (lay.d_model, lay.d_ffn, lay.n_heads);
@@ -137,6 +166,18 @@ pub fn build(mg: &MachineGraph, plan: &Plan, use_erase: bool) -> Model {
         head.set_row(idx(name), &lay.expr_to_row(e));
     }
 
+    // The release writes `expr_to_tensor(q) * HARD_K * sqrt_dh`, two scalar
+    // multiplications in that order, and float64 multiplication is not
+    // associative — so the order is part of the file.
+    let sqrt_dh = 2.0f64.sqrt();
+    let query = |row: Vec<f64>| -> Vec<f64> {
+        if opts.query_scale {
+            row.into_iter().map(|x| x * HARD_K * sqrt_dh).collect()
+        } else {
+            row
+        }
+    };
+
     let one_row = lay.expr_to_row(&g.one_expr());
     let pos_row = lay.expr_to_row(&Expr::dim(g.position));
     let pos2_row = lay.expr_to_row(&Expr::scaled(g.position, 2.0));
@@ -160,11 +201,8 @@ pub fn build(mg: &MachineGraph, plan: &Plan, use_erase: bool) -> Model {
             let lu = g.lookup(lu_id);
             let nv = lu.value_exprs.len();
             tiebreak.push(i32::from(lu.tie_break == TieBreak::Latest));
-            // todo3.md section 0: no `HARD_K * sqrt(d_head)` here — the hull
-            // takes an argmax, which a positive scale cannot change, and the
-            // scale is what lifts the score off the integer grid.
-            ip.set_row(h * 2, &lay.expr_to_row(&lu.query_2d[0]));
-            ip.set_row(h * 2 + 1, &lay.expr_to_row(&lu.query_2d[1]));
+            ip.set_row(h * 2, &query(lay.expr_to_row(&lu.query_2d[0])));
+            ip.set_row(h * 2 + 1, &query(lay.expr_to_row(&lu.query_2d[1])));
             ip.set_row(d + h * 2, &lay.expr_to_row(&lu.key_2d[0]));
             ip.set_row(d + h * 2 + 1, &lay.expr_to_row(&lu.key_2d[1]));
             for c in 0..2 {
@@ -195,7 +233,7 @@ pub fn build(mg: &MachineGraph, plan: &Plan, use_erase: bool) -> Model {
                 }
             }
         }
-        if use_erase {
+        if opts.use_erase {
             for &s in &lay.erased_at[li][0] {
                 pt.add(s, s, -1.0);
             }
@@ -204,8 +242,8 @@ pub fn build(mg: &MachineGraph, plan: &Plan, use_erase: bool) -> Model {
         // Two source slots per head: the head reads a value and the residual
         // stream adds it back wherever the persist expressions asked for it.
         for pair in pt.entries.chunks(2) {
-            ip.set_row(h * 2, &pos_row);
-            ip.set_row(h * 2 + 1, &one_row);
+            ip.set_row(h * 2, &query(pos_row.clone()));
+            ip.set_row(h * 2 + 1, &query(one_row.clone()));
             ip.set_row(d + h * 2, &pos2_row);
             ip.set_row(d + h * 2 + 1, &one_row);
             for (c, (src, dsts)) in pair.iter().enumerate() {
@@ -244,7 +282,7 @@ pub fn build(mg: &MachineGraph, plan: &Plan, use_erase: bool) -> Model {
                 }
             }
         }
-        if use_erase {
+        if opts.use_erase {
             for &s in &lay.erased_at[li][1] {
                 pt_ffn.add(s, s, -1.0);
             }
@@ -369,7 +407,7 @@ mod tests {
         };
         let mg = crate::interpreter::build();
         let plan = Plan::load(&plan_text, &mg.graph).expect("plan.yaml resolves");
-        let model = build(&mg, &plan, true);
+        let model = build(&mg, &plan, Options::default());
 
         assert_eq!(model.tokens.len(), 915);
         assert_eq!((model.d_model, model.n_heads, model.d_ffn), (38, 19, 47));
@@ -378,5 +416,36 @@ mod tests {
         assert_eq!(got.len(), want.len(), "same size as the Python model.bin");
         let first = got.iter().zip(&want).position(|(a, b)| a != b);
         assert_eq!(first, None, "first differing byte");
+    }
+
+    /// `--grid` is the whole of `patches/on-the-grid.patch`: the query rows
+    /// come out divided by `HARD_K * sqrt(2)` and nothing else moves.  This
+    /// needs no Python, so it runs wherever the vendored plan is present.
+    #[test]
+    fn dropping_the_query_scale_touches_the_query_rows_and_nothing_else() {
+        let Ok(plan_text) = std::fs::read_to_string("../transformer-vm/plan.yaml") else {
+            return;
+        };
+        let mg = crate::interpreter::build();
+        let plan = Plan::load(&plan_text, &mg.graph).expect("plan.yaml resolves");
+        let released = build(&mg, &plan, Options::default());
+        let grid = build(&mg, &plan, Options::on_the_grid());
+
+        assert_eq!(released.tok.data, grid.tok.data);
+        assert_eq!(released.head.data, grid.head.data);
+        let d = released.d_model;
+        let mut scaled = 0;
+        for (a, b) in released.layers.iter().zip(&grid.layers) {
+            assert_eq!(a.out_proj.data, b.out_proj.data);
+            assert_eq!(a.ff_in.data, b.ff_in.data);
+            assert_eq!(a.ff_out.data, b.ff_out.data);
+            // Rows `0 .. d` are the queries; `d .. 3d` are keys and values.
+            assert_eq!(a.in_proj.data[d * d..], b.in_proj.data[d * d..]);
+            for (x, y) in a.in_proj.data[..d * d].iter().zip(&b.in_proj.data) {
+                assert_eq!(*x, y * HARD_K * 2.0f64.sqrt());
+                scaled += usize::from(*x != 0.0);
+            }
+        }
+        assert!(scaled > 0, "the scale reaches some weight");
     }
 }

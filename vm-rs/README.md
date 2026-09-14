@@ -11,6 +11,7 @@ formalization licenses.  `todo3.md` is the fix list; this is where the fixes go.
 | `alm-hull`  | the 2D hard-attention KV cache (`attention/hull2d_cht.h`) | no |
 | `alm-model` | the transformer itself (`model/transformer.py`, `.cpp`)   | yes |
 | `alm-vm`    | the driver: load `model.bin`, generate                    | —  |
+| `alm-compile` | the compiler: the graph, the schedule, `model.bin`      | no |
 
 `burn` is pinned at 0.21, on the `ndarray` backend with `f64` elements.  The
 element type is not a detail: every exactness claim in the construction is a
@@ -146,10 +147,25 @@ cargo run --release -p alm-vm -- ../transformer-vm/model.bin     ../transformer-
 ```
 
 The command line is the C++ driver's: `--brute`, `--trace[=N]`, `--args=STR`,
-`--max=N`, plus `--grid`, which has no counterpart there.  `model.bin` itself is out of scope here — it is the output of the
-compiler (`graph/`, `scheduler/milp.py`, `compilation/`, `model/weights.py`),
-not of the model, and the Lean conclusions this port exists to carry are all
-about the runtime.
+`--max=N`, plus `--grid`, which has no counterpart there.
+
+`model.bin` no longer has to come from the Python.  `alm-compile` is a port of
+`graph/core.py`, `wasm/interpreter.py` and `model/weights.py`, and
+
+```
+cargo run --release -p alm-compile --bin alm-build -- ../transformer-vm/plan.yaml model.bin
+```
+
+writes the same 1 188 074 bytes, checked byte for byte in
+`alm-compile/src/weights.rs`.  `--grid` builds the `on-the-grid.patch` variant
+and `--mask` the masking one, so both `todo3.md` experiments can be run without
+a Python at all.  What is still Python is `plan.yaml` (`scheduler/milp.py`) and
+the program traces (`compilation/`).
+
+The check that keeps the port honest is byte identity at every layer:
+`alm-graph-dump` against `alm-compile/tests/pydump.py` is 1 938 lines of
+dimensions, expressions and float64 bit patterns with no difference, and the
+weights are the file itself.
 
 ## Status
 
