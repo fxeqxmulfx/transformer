@@ -11,6 +11,13 @@
 //! together than the gap between the winner and the runner-up.  Stated that way
 //! it is scale-invariant, and it has to be, because the real machine does not
 //! query at unit scale.
+//!
+//! What this file claims is proved in `ALM.ScoreGuard`, `ALM.GuardSep` and
+//! `ALM.GridWitness`: that the scale cancels out of the test except inside a
+//! band of two binades (`clean_at_every_scale`, `dirty_at_every_scale`), that
+//! passing the test is exactly the separation the comparison needs
+//! (`cmp_of_guard`), and that the run-level verdict here is the pointwise one
+//! aggregated (`clean_iff_forall`, `clean_iff_worst_le_one`, `clean_merge`).
 
 /// `2^53`: the last magnitude at which consecutive doubles are one apart.
 pub const GRID_LIMIT: f64 = 9007199254740992.0;
@@ -54,6 +61,14 @@ pub fn ulp(x: f64) -> f64 {
 /// A margin of zero is not a crossing.  It means the query is the zero vector,
 /// every key scores `0`, and the tie is exact — resolving it is the tie-break's
 /// job and float64 does it perfectly.
+///
+/// The test is `>` and not `>=`, and that is deliberate.  `ulp == |margin|` is
+/// the whole binade `[2^52, 2^53)` at unit scale, where the scores are integers
+/// held exactly: the comparison there has no error to survive at all, and
+/// `ALM.GuardSep.guard_le_no_inversion` is the statement that even at the
+/// boundary the order cannot invert, only flatten to a tie the merge walk
+/// resolves.  Firing there would move the wall from `94 906 266` back to
+/// `sqrt(2^52) = 67 108 864` and report nothing true.
 pub fn off_the_grid(score: f64, margin: f64) -> bool {
     margin != 0.0 && ulp(score) > margin.abs()
 }
@@ -64,6 +79,12 @@ pub fn off_the_grid(score: f64, margin: f64) -> bool {
 /// rather than the threshold is what makes the cost of the query scale
 /// visible.  A run whose worst ratio is `0.5` is one binade from the wall; a
 /// run whose worst ratio is `18` answered a query it could not see.
+///
+/// `ALM.GridWitness.offGrid_iff_one_lt_gridRatio`: the ratio carries the whole
+/// verdict, `off_the_grid` being `grid_ratio > 1`.  The division rounds and the
+/// equivalence survives it, because the ratio of two doubles that is strictly
+/// above `1` is at least `1/(1 - 2^-53)`, which is past the midpoint and rounds
+/// up — `is_clean_is_the_worst_ratio_at_most_one` tests the tightest case.
 pub fn grid_ratio(score: f64, margin: f64) -> f64 {
     if margin == 0.0 {
         0.0
@@ -113,6 +134,11 @@ impl GridWitness {
         }
     }
 
+    /// Two heads' records into one.  The count adds and the worst is the
+    /// larger, so a run is clean exactly when every head was
+    /// (`ALM.GridWitness.clean_merge`, `runWorst_append`): merging cannot turn
+    /// a crossing into a clean run, and cannot hide the query that came
+    /// closest.
     pub fn merge(&mut self, other: &GridWitness) {
         if self.first.is_none() {
             self.first = other.first;
@@ -124,6 +150,9 @@ impl GridWitness {
         }
     }
 
+    /// Whether every query this head answered was one float64 could separate.
+    /// Equivalently `worst <= 1` (`ALM.GridWitness.clean_iff_worst_le_one`),
+    /// which is why the report can print one number instead of two.
     pub fn is_clean(&self) -> bool {
         self.count == 0
     }
@@ -222,5 +251,63 @@ mod tests {
         assert_eq!(first.query, [2.0, 3.0]);
         assert_eq!(first.key, Some([4.0, 5.0]));
         assert_eq!(w.count, 2);
+    }
+
+    #[test]
+    fn the_test_is_strict_because_the_boundary_is_still_exact() {
+        // `ulp == margin` is the binade `[2^52, 2^53)` at unit scale.  The
+        // scores there are integers held exactly, so the comparison the guard
+        // is protecting has no error to survive: the winner and the runner-up
+        // are a whole representable unit apart and subtract exactly.
+        let best = GRID_LIMIT / 2.0 + 3.0;
+        let second = GRID_LIMIT / 2.0 + 2.0;
+        assert_eq!(ulp(best), 1.0);
+        assert!(!off_the_grid(best, 1.0), "the boundary is not a crossing");
+        assert_eq!(best - second, 1.0, "and the difference is exact");
+
+        // A `>=` test would call the whole binade dirty, which moves the wall
+        // from `94 906 266` back to `sqrt(2^52)` and reports nothing true.
+        assert_eq!(ulp(67108864.0 * 67108864.0), 1.0);
+        assert_eq!(ulp(94906265.0 * 94906265.0), 1.0);
+        assert!(!off_the_grid(94906265.0 * 94906265.0, 1.0));
+    }
+
+    #[test]
+    fn is_clean_is_the_worst_ratio_at_most_one() {
+        // `ALM.GridWitness.clean_iff_worst_le_one` holds in the reals.  Here
+        // the ratio is a rounded division, and the tightest case it has is a
+        // margin one double below the `ulp`: the true ratio is `1/(1 - 2^-53)`,
+        // which is past the midpoint and rounds up, so the equivalence stands.
+        let score = GRID_LIMIT / 2.0;
+        let just_under = f64::from_bits(1.0f64.to_bits() - 1);
+        assert_eq!(ulp(score), 1.0);
+        assert!(just_under < 1.0);
+        assert!(off_the_grid(score, just_under));
+        assert!(grid_ratio(score, just_under) > 1.0);
+
+        for margin in [1.0, just_under, 0.0, 0.5, 1e-3, -1.0] {
+            let mut w = GridWitness::default();
+            w.observe(score, margin, [0.0, margin], None);
+            assert_eq!(w.is_clean(), w.worst <= 1.0, "margin {margin}");
+        }
+    }
+
+    #[test]
+    fn merging_heads_does_not_soften_the_verdict() {
+        let mut clean = GridWitness::default();
+        clean.observe(1.0, 1.0, [1.0, 1.0], None);
+        let mut dirty = GridWitness::default();
+        dirty.observe(GRID_LIMIT, 1.0, [2.0, 3.0], None);
+
+        let mut both = clean;
+        both.merge(&dirty);
+        assert!(!both.is_clean(), "a clean head cannot absorb a crossing");
+        assert_eq!(both.count, clean.count + dirty.count);
+        assert_eq!(both.worst, clean.worst.max(dirty.worst));
+
+        let mut other_way = dirty;
+        other_way.merge(&clean);
+        assert_eq!(other_way.count, both.count);
+        assert_eq!(other_way.worst, both.worst);
     }
 }
