@@ -17,9 +17,22 @@ use burn::module::Param;
 use burn::nn::{Linear, LinearConfig};
 use burn::prelude::Backend;
 use burn::tensor::{Tensor, TensorData};
+use std::time::Instant;
 
 use crate::cache::KvCache;
 use crate::weights::{RawModel, Shapes};
+
+/// Where the time goes, split the way `transformer.cpp` splits it, so the two
+/// runtimes can be compared line for line.
+#[derive(Clone, Copy, Default, Debug)]
+pub struct Timings {
+    /// The four projections of every layer.
+    pub proj: f64,
+    /// Insert and query, across every head.
+    pub hull: f64,
+    /// The output head: one 915-wide argmax per generated token.
+    pub head: f64,
+}
 
 /// The four projections of one layer.
 pub struct LayerWeights<B: Backend> {
@@ -29,13 +42,63 @@ pub struct LayerWeights<B: Backend> {
     ff_out: Linear<B>,
 }
 
+/// The output head, in compressed sparse rows.
+///
+/// It is the one projection the C++ runtime does not do densely, and the
+/// reason is in the numbers: the head is `vocab x d_model`, 915 x 38 here and
+/// 85 % zero, and it runs once per generated token.  Skipping the zeros is
+/// exact — adding `0.0 * x` to a finite partial sum never changes it — so
+/// this is the same argmax, not an approximation of it.
+struct SparseHead {
+    rows: usize,
+    /// `row i` occupies `col[ptr[i]..ptr[i+1]]`.
+    ptr: Vec<usize>,
+    col: Vec<usize>,
+    val: Vec<f64>,
+}
+
+impl SparseHead {
+    fn of(w: &[f64], rows: usize, cols: usize) -> SparseHead {
+        let mut head = SparseHead { rows, ptr: vec![0], col: Vec::new(), val: Vec::new() };
+        for i in 0..rows {
+            for j in 0..cols {
+                let v = w[i * cols + j];
+                if v != 0.0 {
+                    head.col.push(j);
+                    head.val.push(v);
+                }
+            }
+            head.ptr.push(head.col.len());
+        }
+        head
+    }
+
+    /// The first index attaining the maximum, as `Tensor::argmax` and the C++
+    /// loop both resolve it.
+    fn argmax(&self, x: &[f64]) -> usize {
+        let mut best = 0;
+        let mut best_score = f64::NEG_INFINITY;
+        for i in 0..self.rows {
+            let mut s = 0.0;
+            for k in self.ptr[i]..self.ptr[i + 1] {
+                s += self.val[k] * x[self.col[k]];
+            }
+            if s > best_score {
+                best_score = s;
+                best = i;
+            }
+        }
+        best
+    }
+}
+
 /// The compiled transformer.
 pub struct Alm<B: Backend> {
     pub shapes: Shapes,
     pub tokens: Vec<String>,
     embedding: Vec<f64>,
     layers: Vec<LayerWeights<B>>,
-    head: Linear<B>,
+    head: SparseHead,
     device: B::Device,
 }
 
@@ -71,7 +134,7 @@ impl<B: Backend> Alm<B> {
             tokens: raw.tokens.clone(),
             embedding: raw.embedding.clone(),
             layers,
-            head: linear_from(&raw.head, v, d, device),
+            head: SparseHead::of(&raw.head, v, d),
             device: device.clone(),
         }
     }
@@ -102,13 +165,30 @@ impl<B: Backend> Alm<B> {
 
     /// One position through the whole stack, updating the cache as it goes.
     pub fn forward(&self, token: usize, pos: usize, cache: &mut KvCache) -> Vec<f64> {
+        self.forward_timed(token, pos, cache, &mut Timings::default())
+    }
+
+    /// The same, charging each part of the step to `t`.
+    pub fn forward_timed(
+        &self,
+        token: usize,
+        pos: usize,
+        cache: &mut KvCache,
+        t: &mut Timings,
+    ) -> Vec<f64> {
         let (d, f) = (self.shapes.d_model, self.shapes.d_ffn);
         let mut x = self.embed(token, pos);
 
         for (li, layer) in self.layers.iter().enumerate() {
+            let mark = Instant::now();
             let qkv = Self::plain(layer.qkv.forward(self.row(&x)));
-            let attn = cache.layer_step(li, &qkv[d..2 * d], &qkv[..d], &qkv[2 * d..]);
+            t.proj += mark.elapsed().as_secs_f64();
 
+            let mark = Instant::now();
+            let attn = cache.layer_step(li, &qkv[d..2 * d], &qkv[..d], &qkv[2 * d..]);
+            t.hull += mark.elapsed().as_secs_f64();
+
+            let mark = Instant::now();
             let projected = Self::plain(layer.out.forward(self.row(&attn)));
             for i in 0..d {
                 x[i] += projected[i];
@@ -120,21 +200,19 @@ impl<B: Backend> Alm<B> {
             for i in 0..d {
                 x[i] += back[i];
             }
+            t.proj += mark.elapsed().as_secs_f64();
         }
         x
     }
 
     /// The token the residual stream decodes to.
     pub fn decode(&self, x: &[f64]) -> usize {
-        let logits = Self::plain(self.head.forward(self.row(x)));
-        let mut best = 0;
-        let mut best_score = f64::NEG_INFINITY;
-        for (i, &s) in logits.iter().enumerate() {
-            if s > best_score {
-                best_score = s;
-                best = i;
-            }
-        }
-        best
+        self.head.argmax(x)
+    }
+
+    /// How many of the head's entries are actually nonzero — the C++ prints
+    /// this at load time, and it is the justification for the sparse form.
+    pub fn head_density(&self) -> (usize, usize) {
+        (self.head.val.len(), self.head.rows * self.shapes.d_model)
     }
 }

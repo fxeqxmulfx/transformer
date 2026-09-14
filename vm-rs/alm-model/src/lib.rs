@@ -10,7 +10,7 @@ pub mod model;
 pub mod weights;
 
 pub use cache::{CacheKind, KvCache};
-pub use model::Alm;
+pub use model::{Alm, Timings};
 pub use weights::{RawModel, Shapes};
 
 /// The backend every entry point uses: `ndarray`, with `f64` elements.

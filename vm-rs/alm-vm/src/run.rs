@@ -1,6 +1,6 @@
 //! The generation loop, and what the original reports about it.
 
-use alm_model::{Alm, Backend, KvCache};
+use alm_model::{Alm, Backend, KvCache, Timings};
 
 /// What one program run produced.
 pub struct Run {
@@ -11,6 +11,8 @@ pub struct Run {
     pub seconds: f64,
     /// Whether generation ended on the stop token rather than the budget.
     pub stopped: bool,
+    /// Where the time went, split as `transformer.cpp` splits it.
+    pub timings: Timings,
 }
 
 /// Greedy generation, one token at a time, exactly as `generate_with_cache`
@@ -28,11 +30,14 @@ pub fn generate(
     ids.reserve(max_new);
     let stop = model.shapes.stop_token;
     let mut stopped = false;
+    let mut timings = Timings::default();
 
     for pos in 0..prompt.len() + max_new {
-        let x = model.forward(ids[pos], pos, cache);
+        let x = model.forward_timed(ids[pos], pos, cache, &mut timings);
         if pos + 1 == ids.len() {
+            let mark = std::time::Instant::now();
             let next = model.decode(&x);
+            timings.head += mark.elapsed().as_secs_f64();
             ids.push(next);
             let gen = pos + 1 - prompt.len();
             if trace_every > 0 && (gen.is_multiple_of(trace_every) || next == stop) {
@@ -54,7 +59,7 @@ pub fn generate(
             t.contains("commit") || t == "branch_taken"
         })
         .count();
-    Run { ids, ops, seconds: started.elapsed().as_secs_f64(), stopped }
+    Run { ids, ops, seconds: started.elapsed().as_secs_f64(), stopped, timings }
 }
 
 /// The bytes the program wrote: every `out(..)` token, its payload either one

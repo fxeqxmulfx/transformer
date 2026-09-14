@@ -11,7 +11,7 @@ mod program;
 mod run;
 
 use alm_hull::TieBreak;
-use alm_model::{Alm, Backend, CacheKind, KvCache, RawModel};
+use alm_model::{Alm, Backend, CacheKind, KvCache, RawModel, Timings};
 use program::Program;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
@@ -68,6 +68,41 @@ fn parse(argv: &[String]) -> Result<Options, String> {
     Ok(Options { model, programs, kind, trace_every, args, max_new })
 }
 
+/// The benchmark line the C++ driver prints after every program has run.
+#[derive(Default)]
+struct Totals {
+    tokens: usize,
+    ops: usize,
+    seconds: f64,
+    timings: Timings,
+}
+
+impl Totals {
+    fn add(&mut self, tokens: usize, ops: usize, seconds: f64, t: &Timings) {
+        self.tokens += tokens;
+        self.ops += ops;
+        self.seconds += seconds;
+        self.timings.proj += t.proj;
+        self.timings.hull += t.hull;
+        self.timings.head += t.head;
+    }
+
+    fn report(&self) {
+        if self.seconds <= 0.0 {
+            return;
+        }
+        let (tok, ops, dt) = (self.tokens as f64, self.ops as f64, self.seconds);
+        println!("\nBenchmark: {} tok, {} ops, {dt:.2}s", self.tokens, self.ops);
+        println!("  {:.0} tok/s, {:.0} wasm-ops/s", tok / dt, ops / dt);
+        let t = &self.timings;
+        let misc = dt - t.proj - t.hull - t.head;
+        println!("\nTime breakdown:");
+        for (name, v) in [("proj", t.proj), ("hull", t.hull), ("head", t.head), ("misc", misc)] {
+            println!("  {name}:  {v:.3}s ({:4.1}%)", 100.0 * v / dt);
+        }
+    }
+}
+
 /// A fresh cache per program, with the per-head tie-break the file records.
 fn cache_for(raw: &RawModel, kind: CacheKind) -> KvCache {
     let mut cache = KvCache::new(raw.shapes.n_layers, raw.shapes.n_heads, kind);
@@ -85,7 +120,13 @@ fn cache_for(raw: &RawModel, kind: CacheKind) -> KvCache {
 
 /// One program: run it, compare against its reference, report as the original
 /// reports.  Returns `None` when there was no reference to compare against.
-fn check(model: &Alm<Backend>, raw: &RawModel, opts: &Options, path: &Path) -> std::io::Result<Option<bool>> {
+fn check(
+    model: &Alm<Backend>,
+    raw: &RawModel,
+    opts: &Options,
+    path: &Path,
+    total: &mut Totals,
+) -> std::io::Result<Option<bool>> {
     let program = Program::load(raw, path, opts.args.as_deref())?;
     let max_new = opts.max_new.unwrap_or_else(|| match &program.reference {
         Some(r) => (r.len() + 100).saturating_sub(program.ids.len()).max(100),
@@ -99,6 +140,7 @@ fn check(model: &Alm<Backend>, raw: &RawModel, opts: &Options, path: &Path) -> s
     let mut cache = cache_for(raw, opts.kind);
     let result = run::generate(model, &mut cache, &program.ids, max_new, opts.trace_every);
     let (n, ops, dt) = (result.ids.len(), result.ops, result.seconds);
+    total.add(n, ops, dt, &result.timings);
     let rate = if dt > 0.0 { n as f64 / dt } else { 0.0 };
 
     let verdict = match &program.reference {
@@ -176,10 +218,13 @@ fn main() -> ExitCode {
 
     let device = Default::default();
     let model: Alm<Backend> = Alm::from_raw(&raw, &device);
+    let (nz, total) = model.head_density();
+    println!("Head sparsity: {nz}/{total} nonzero ({:.0}% sparse)", 100.0 * (1.0 - nz as f64 / total as f64));
 
     let (mut passed, mut failed, mut skipped) = (0, 0, 0);
+    let mut totals = Totals::default();
     for path in &opts.programs {
-        match check(&model, &raw, &opts, path) {
+        match check(&model, &raw, &opts, path, &mut totals) {
             Ok(Some(true)) => passed += 1,
             Ok(Some(false)) => failed += 1,
             Ok(None) => skipped += 1,
@@ -190,5 +235,6 @@ fn main() -> ExitCode {
         }
     }
     println!("\n{passed} passed, {failed} failed, {skipped} no-ref");
+    totals.report();
     if failed > 0 { ExitCode::FAILURE } else { ExitCode::SUCCESS }
 }
