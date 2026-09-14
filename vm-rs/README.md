@@ -161,7 +161,7 @@ target/release/alm-vm model.bin data/hello.txt data/addition.txt
 ```
 
 Nothing there reads the vendored release: run it with `transformer-vm/` moved
-out of the way and the same `plan.yaml`, the same 1 175 314-byte `model.bin`
+out of the way and the same `plan.yaml`, the same 1 188 074-byte `model.bin`
 and the same eighteen `data/` files come out.  What makes that possible is
 `programs/` — the six `.c` sources, the manifest and `runtime.h`, copied from
 the release under its own Apache-2.0 licence, because the programs are the
@@ -177,10 +177,14 @@ without a Python at all.  `alm-cc` runs clang with the release's own flags and
 writes the token prefix; `alm-ref` executes it and writes the trace the model
 is checked against.
 
-What still wants the vendored checkout is the checking, not the building: the
-released `plan.yaml`, `model.bin` and `data/*.txt` are what the port is
-compared against, and every test that needs one says so and skips when it is
-absent.
+The checking does not want the vendored checkout either.  `reference/` holds
+the two things needed for it: the released `plan.yaml`, which is an input and
+the one file of the release that is not a build product, and `sha256sums`,
+which is what the released `model.bin` and the eighteen `data/*.txt` hash to.
+Every test builds the artefact it is about and compares the digest — byte
+identity in sixty-four characters instead of ten megabytes — so `cargo test`
+on a bare clone runs everything.  The one thing it can still skip for is a
+clang that cannot target wasm32.
 
 `alm-vm`'s command line is the C++ driver's: `--brute`, `--trace[=N]`,
 `--args=STR`, `--max=N`, plus `--grid`, which has no counterpart there.
@@ -191,7 +195,8 @@ dimensions, expressions and float64 bit patterns with no difference;
 `alm-wasm-dump --lower` against `tests/lowerdump.py` is 12 298 lines of decoded
 and lowered instructions with no difference; the weights are `model.bin`
 itself; the eighteen released `data/*.txt`, `*_spec.txt` and `*_ref.txt` are
-reproduced byte for byte from the C sources in `tests/programs.rs`; and the
+reproduced byte for byte from the C sources in `tests/programs.rs`, digest
+against digest; and the
 released `plan.yaml` is written back out line for line from the ported
 schedule's own analysis, down to pyyaml's line folding.  The one field that
 cannot be reproduced is each layer's `attention:` order, which the Python
