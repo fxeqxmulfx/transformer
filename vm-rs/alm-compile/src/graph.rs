@@ -226,9 +226,9 @@ impl Graph {
 
     // ── Attention ───────────────────────────────────────────────────
 
-    /// Map a 1D key (plus an optional clear flag) to the parabolic 2D key
+    /// Embed a 1D key (plus an optional clear flag) in the parabolic 2D key
     /// `k -> (2k, -k^2)` the hull head scores against.
-    fn to_2d_key(&mut self, k: &Expr, clear_key: Option<&Expr>, tie_break: TieBreak) -> [Expr; 2] {
+    fn embed_key(&mut self, k: &Expr, clear_key: Option<&Expr>, tie_break: TieBreak) -> [Expr; 2] {
         let one_expr = self.one_expr();
         let k_abs = if k.len() == 1 && k.contains(self.one) {
             let c = k.get(self.one);
@@ -264,7 +264,7 @@ impl Graph {
         [kx, ky]
     }
 
-    fn to_2d_query(&self, q: &Expr) -> [Expr; 2] {
+    fn embed_query(&self, q: &Expr) -> [Expr; 2] {
         let one_expr = self.one_expr();
         [q.sub(&one_expr.mul(KEY_OFFSET)), one_expr]
     }
@@ -281,8 +281,8 @@ impl Graph {
     ) -> Vec<DimId> {
         let q = query.cloned().unwrap_or_default();
         let k = key.cloned().unwrap_or_default();
-        let key_2d = self.to_2d_key(&k, clear_key, tie_break);
-        let query_2d = self.to_2d_query(&q);
+        let key_2d = self.embed_key(&k, clear_key, tie_break);
+        let query_2d = self.embed_query(&q);
 
         let lu_id = self.lookups.len() as LookUpId;
         let mut dims = Vec::with_capacity(values.len());
