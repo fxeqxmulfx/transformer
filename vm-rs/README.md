@@ -75,15 +75,17 @@ of 36-wide matvecs with no batch — while the hull is ordinary Rust.
   that ratio by `2^33/s = 0.607` or `2^34/s = 1.215`, so it shuffles rather
   than loses; what it shifts one way is the threshold.  `todo3.md` section 0a.
 
-* **A quarter to a third of the machine's queries are not integers.**  The
-  exactness argument assumes an integer query; the machine recovers a
-  cumulative sum by multiplying an average back by its count, which does not
-  round-trip.  Dividing each query by its own `abs(qy)` and comparing to the
-  nearest integer: 24.8 % in `hello`, 22.3 % in `fibonacci`, 32.1 % across
-  `sudoku`'s 44 million queries.  What saves it is that the worst offset over
-  all 54 million of them is `1.907e-6` — exactly one ulp of a query of order
-  `1e10`, which is the last row of the margin table `todo3.md` section 8 gives
-  and not past it.
+* **Four fifths of the non-integer queries are the query scale's own
+  rounding.**  The exactness argument assumes an integer query; the machine
+  recovers a cumulative sum by multiplying an average back by its count, which
+  does not round-trip.  Measured on the released weights that costs 22 % to
+  32 % of all queries — but on those weights the reconstruction divides by the
+  scale the weight rows were rounded *after* being multiplied by, so it counts
+  two roundings the machine never makes.  On weights rebuilt without the scale
+  the share is 2.8 % to 7.1 %, and the worst offset reaches **two** ulp
+  (`collatz`, at `2573.000000000001`) rather than the one ulp the shipped
+  model reports.  Two ulp is the row of `todo3.md` section 8's margin table
+  that halves the wall, to `50 331 647`.  `todo3.md` section 8a.
 
 ## Patches to the vendored compiler
 

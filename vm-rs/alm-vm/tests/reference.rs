@@ -91,12 +91,17 @@ fn unit_scale_queries_reproduce_them_as_well() {
 }
 
 #[test]
-fn a_quarter_of_the_real_queries_are_not_integers() {
-    // `todo3.md` section 8, measured rather than derived.  The hypothesis
-    // `q : Z` of `ALM.FloatGrid.fp_exact_of_grid` is about the query, and the
-    // machine forms queries by multiplying an averaged sum back by its count;
-    // section 8 predicts that round trip fails 25.8 % of the time from the
-    // arithmetic alone.  On the released weights it runs 22 % to 32 %.
+fn the_query_scale_inflates_the_non_integer_share() {
+    // `todo3.md` section 8a.  The hypothesis `q : Z` of
+    // `ALM.FloatGrid.fp_exact_of_grid` is about the query, and the machine
+    // forms queries by multiplying an averaged sum back by its count, which
+    // does not round-trip.  Counting the failures on the *released* weights
+    // overstates them by a factor of five: there `|qy|` is the query scale
+    // `s = sqrt(2) * 1e10`, the weight rows were rounded after being
+    // multiplied by `s`, and reconstructing the number divides by `s` again.
+    // What this test pins is that inflated figure, because `model.bin` is the
+    // only artefact it has; the honest 2.8 % to 7.1 % needs weights rebuilt
+    // with `patches/on-the-grid.patch` and is recorded in section 8a.
     let Some(text) = run(&[]) else { return };
     let lines: Vec<&str> = text.lines().filter(|l| l.trim_start().starts_with("queries:")).collect();
     assert_eq!(lines.len(), 2, "one per program\n{text}");
@@ -108,11 +113,13 @@ fn a_quarter_of_the_real_queries_are_not_integers() {
         let share = off / total;
         assert!((0.20..0.35).contains(&share), "{share} of {total} in {line}");
 
-        // And what saves it: the offset is one ulp of a query of order 1e10,
-        // which is six orders of magnitude inside the half-unit that
-        // `ALM.FloatHull.cmp_of_sep` asks for.
+        // And the offset that goes with it: one ulp of a query of order 1e10,
+        // which is `1.9e-6` — an absolute margin six orders inside the
+        // half-unit `ALM.FloatHull.cmp_of_sep` asks for, and an artefact of
+        // the same scale.  Unscaled, the queries are of order 1e3 and the
+        // worst offset is two ulp.
         let worst: f64 = line.split("worst offset ").nth(1).unwrap().split(' ').next().unwrap().parse().unwrap();
         assert!(worst < 1e-5, "worst query offset {worst} in {line}");
-        assert!(line.contains("(1.0 ulp,"), "and it is exactly one ulp: {line}");
+        assert!(line.contains("(1.0 ulp,"), "at the shipped scale it is one ulp: {line}");
     }
 }

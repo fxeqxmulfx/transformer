@@ -494,36 +494,50 @@ What saves it is margin, and the margin is exactly one ulp wide:
 The error out of `fetch_sum` is one ulp, so the machine runs on the last row it
 can afford, and `5·cursor + 1 + i` adds one or two more roundings on top.
 
-### 8a. Measured on the released model: a quarter, and exactly one ulp
+### 8a. Measured, and most of it was the scale's own rounding
 
 Both halves of the paragraph above are predictions from reading the source.
-The Rust port measures them, by dividing every hard-attention query by its own
-`|qᵧ|` — which removes the scale and leaves the value being looked up — and
-comparing that to the nearest integer:
+The port measures them, by dividing every hard-attention query by its own
+`|qᵧ|` — which leaves the value being looked up — and comparing that to the
+nearest integer.  Done against the released `model.bin` it reports 22 % to
+32 % non-integer queries and a worst offset of exactly one ulp in all six
+programs, and **both of those numbers are artefacts**: on the released weights
+`qᵧ` is the query scale `s = √2·10^10`, the weight rows were rounded *after*
+being multiplied by `s`, and the reconstruction divides by `s` again.  Two
+roundings the machine does not make are being counted.
 
-    program      not integers              share
-    hello            10 757 / 43 344       24.8 %
-    addition         44 488 / 183 120      24.3 %
-    fibonacci        85 370 / 382 284      22.3 %
-    collatz         491 963 / 1 872 654    26.3 %
-    min_cost_m.   2 062 833 / 7 485 408    27.6 %
-    sudoku       14 247 970 / 44 327 430   32.1 %
+The honest measurement is on weights rebuilt without the scale
+(`vm-rs/patches/on-the-grid.patch`, §0), where `qᵧ = 1` and the query is the
+number:
 
-which brackets the predicted `25.8 %`, arrived at from the other end: the round
-trip was counted over synthetic payloads, this is the running machine.
+    program       not integers             share   worst offset        at
+    hello             1 815 / 43 344        4.2 %  5.684e-14  1 ulp   260.99999999999994
+    addition          7 807 / 183 120       4.3 %  1.137e-13  1 ulp   675.9999999999999
+    fibonacci        10 769 / 382 284       2.8 %  9.095e-13  1 ulp   4316.000000000001
+    collatz          95 027 / 1 872 654     5.1 %  9.095e-13  2 ulp   2573.000000000001
+    min_cost_m.     421 519 / 7 485 408     5.6 %  1.819e-12  1 ulp   13876.000000000002
+    sudoku        3 135 417 / 44 327 430    7.1 %  3.638e-12  1 ulp   16805.999999999996
 
-The second number is the one this section leaves open, and it is good news.
-Over every one of those queries — 54 million across the six programs — the worst
-distance to an integer is `1.907e-6`, at queries like `17 179 869 078.999998`,
-and it is **exactly one ulp**, in all six.  Not
-one and a half, not two: the accumulated rounding of `fetch_sum` followed by
-`5·cursor + 1 + i` never leaves the last row of the table above.  It is also
-`2.6·10^5` times inside the half-unit `ALM.FloatHull.cmp_of_sep` wants, because
-these queries are of order `10^10` and a half-unit is a half-unit at any
-magnitude.  The margin is therefore not tight in absolute terms and is exactly
-tight in relative ones, which is the distinction the open question needs to
-make.  Instrument: `vm-rs/alm-hull/src/query.rs`; measurement:
-`vm-rs/alm-vm/tests/reference.rs::a_quarter_of_the_real_queries_are_not_integers`.
+Two things change against the shipped-model figures, in opposite directions.
+
+The share drops by a factor of five, from 22–32 % to 2.8–7.1 %.  So roughly
+four fifths of the queries that miss an integer on the released model miss it
+because of the scale and not because of `fetch_sum` — which is an argument for
+§0's first half that §0 does not make, and a better one than the 0.86 of a bit
+it does make.  The `25.8 %` predicted at the top of this section was counting
+the round trip in isolation; the running machine, unscaled, is well inside it.
+
+The worst offset gets worse.  `collatz` reaches **two ulp**, at the query
+`2573.000000000001`, which is the third row of the margin table above and not
+the second: the wall for a query off by two ulp is `50 331 647`, half of
+`94 906 266`.  The one-ulp uniformity reported on the shipped model was the
+scale's doing — at magnitude `10^10` an ulp is `1.9·10^-6` and swallows the
+composition of roundings that is visible at magnitude `10^3`.  So the sentence
+this section wanted to close with is not "never past one ulp"; it is that the
+composition of `fetch_sum`'s division and `5·cursor + 1 + i` reaches two ulp on
+the fourth program anyone runs, and nothing bounds it at two.  Instrument:
+`vm-rs/alm-hull/src/query.rs`; measurement:
+`vm-rs/alm-vm/tests/reference.rs`.
 
 **No fix, and that is the point.**  The division is not a mistake: cumulative
 sums by uniform attention are the only constant-depth route, since the obvious
