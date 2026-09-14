@@ -12,6 +12,7 @@ formalization licenses.  `todo3.md` is the fix list; this is where the fixes go.
 | `alm-model` | the transformer itself (`model/transformer.py`, `.cpp`)   | yes |
 | `alm-vm`    | the driver: load `model.bin`, generate                    | —  |
 | `alm-compile` | the compiler: the graph, the weights, the programs       | no |
+| `alm-schedule` | the scheduler: the MILP, and `plan.yaml` out of HiGHS   | no |
 
 `burn` is pinned at 0.21, on the `ndarray` backend with `f64` elements.  The
 element type is not a detail: every exactness claim in the construction is a
@@ -65,6 +66,20 @@ of 36-wide matvecs with no batch — while the hull is ordinary Rust.
   neighbourhood is attained at `v-3`, `v-1` and `v+1` and not at `v`.  The
   reference programs pass because their values are never within ~20 of each
   other in one head; nothing arranges that.  `todo3.md` section 4b.
+
+* **38 is the optimum, and the released schedule is one of them.**  The
+  scheduler is a mixed-integer program — 14 392 variables over 34 498 rows for
+  the shipped graph's 159 gates and 186 dimensions — and porting it makes the
+  claim checkable in two directions at once.  The released schedule satisfies
+  every row and costs exactly the `milp_d_model: 38` it reports; and HiGHS
+  proves in 9.6 s that no seven-layer schedule of this graph costs less.  What
+  it finds is a *different* schedule of the same cost, whose deepest dependence
+  width is 30 against the release's 31, which builds a working `model.bin`.
+  The port's own arithmetic agrees with the solver's to the unit, and that is
+  the check that caught the one real bug in it: an indicator whose upper row
+  had its big-M on the wrong side, which let a solver claim a residual stream
+  of 26 for a schedule needing 40.  The test is
+  `no_bit_of_the_program_is_free_to_flip`.
 
 * **Removing the query scale is free, and on these programs it buys nothing.**
   `--grid` divides each query by `abs(qy)` before scoring, which an argmax
@@ -130,25 +145,30 @@ MILP scheduler runs again and takes minutes.
 
 ## Running it
 
-`model.bin` and the program traces are build artefacts, not files in this
-repository — but they no longer need a Python to make.  `alm-compile` is a port
-of `graph/core.py`, `wasm/interpreter.py`, `model/weights.py` and the whole of
-`compilation/`, so the four binaries below are the entire build:
+`plan.yaml`, `model.bin` and the program traces are build artefacts, not files
+in this repository — and none of them needs a Python to make any more.
+`alm-compile` is a port of `graph/core.py`, `wasm/interpreter.py`,
+`model/weights.py`, `scheduler/milp.py` and the whole of `compilation/`, so the
+five binaries below are the entire build:
 
 ```
 cargo build --release
-target/release/alm-build ../transformer-vm/plan.yaml model.bin
+target/release/alm-schedule -o plan.yaml
+target/release/alm-build plan.yaml model.bin
 target/release/alm-cc  --all --examples ../transformer-vm/transformer_vm/examples --out data
 target/release/alm-ref --all --data data
 target/release/alm-vm model.bin data/hello.txt data/addition.txt
 ```
 
-`alm-build` writes the same 1 188 074 bytes as the Python builder; `--grid`
-builds the `on-the-grid.patch` variant and `--mask` the masking one, so both
-`todo3.md` experiments can be run without a Python at all.  `alm-cc` runs clang
-with the release's own flags and writes the token prefix; `alm-ref` executes it
-and writes the trace the model is checked against.  What is still Python is
-`plan.yaml` (`scheduler/milp.py`), and nothing else.
+`alm-schedule` builds the mixed-integer program and gives it to HiGHS, which
+`highs-sys` compiles from source, so there is no solver to install; `--lp`
+writes the program in CPLEX LP format instead, for a second opinion.  Handed
+the release's own `plan.yaml` instead, `alm-build` writes the same 1 188 074
+bytes as the Python builder; `--grid` builds the `on-the-grid.patch` variant
+and `--mask` the masking one, so both `todo3.md` experiments can be run
+without a Python at all.  `alm-cc` runs clang with the release's own flags and
+writes the token prefix; `alm-ref` executes it and writes the trace the model
+is checked against.
 
 `alm-vm`'s command line is the C++ driver's: `--brute`, `--trace[=N]`,
 `--args=STR`, `--max=N`, plus `--grid`, which has no counterpart there.
@@ -158,8 +178,12 @@ The check that keeps the port honest is byte identity at every layer:
 dimensions, expressions and float64 bit patterns with no difference;
 `alm-wasm-dump --lower` against `tests/lowerdump.py` is 12 298 lines of decoded
 and lowered instructions with no difference; the weights are `model.bin`
-itself; and the eighteen released `data/*.txt`, `*_spec.txt` and `*_ref.txt`
-are reproduced byte for byte from the C sources in `tests/programs.rs`.
+itself; the eighteen released `data/*.txt`, `*_spec.txt` and `*_ref.txt` are
+reproduced byte for byte from the C sources in `tests/programs.rs`; and the
+released `plan.yaml` is written back out line for line from the ported
+schedule's own analysis, down to pyyaml's line folding.  The one field that
+cannot be reproduced is each layer's `attention:` order, which the Python
+takes from a `set` of objects hashed by address, so it is compared as a set.
 
 ## Status
 
