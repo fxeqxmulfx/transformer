@@ -283,13 +283,76 @@ Neither post states a bound, and the code has no assertion.  `int seq` in the
 C++ head overflows at `2^31`, which is past this wall and therefore moot, but
 it is equally unguarded.
 
-**Fix.** One assertion, at insert, in both `hull_cache.py` and
-`hull2d_cht.h`: `n < 94906266`.  This is the item that "ends in a number", and
-the number is now exact rather than an order of magnitude: it is
-`⌈√(2^53)⌉`, the hypothesis `S.δ < 1` of
-`ALM.FloatGrid.fp_eval_exact_of_grid` failing at the point where the integer
-grid of float64 stops having spacing `1`.  Above it the construction is not
-slow or approximate, it is wrong, and it fails silently.
+### 4a. The shipped model queries at a scale, and the scale moves the wall
+
+`94 906 266` is the unit-scale number.  The released `model.bin` scales its
+hard-attention queries by `√2·10^10 = 14142135623.730951`, which multiplies the
+score and the gap to the runner-up together — so the failure point moves, but
+not by the factor, only by the residue of the cancellation.  `ulp` is relative
+and the margin is not, and the residue is 22 %:
+
+    query scale         first q whose winner is unseparable
+    1                              94 906 266
+    √2·10^10                        73 966 031
+
+The second number is the one that bounds the shipped model.  It also means an
+absolute test — "is the winning score past `2^53`" — is the wrong test in both
+directions: it fires at token 799 of a 1034-token `hello` run whose every token
+is correct, and it would still fire on a program that stays safely inside the
+wall.  The scale-free form is `ulp(score) > |qᵧ|`: one integer step of the key
+is `|qᵧ|` in the score, so a winner whose float64 neighbourhood is wider than
+that step cannot be told from its runner-up.  That is the hypothesis
+`S.δ < 1` of `ALM.FloatGrid.fp_eval_exact_of_grid` stated where the rounding
+actually happens.  Implemented as `off_the_grid` in
+`vm-rs/alm-hull/src/grid.rs`, wired through every head, reported per run by
+`alm-vm`.
+
+A guard of this shape must also know that a key which *cannot* win is not a
+problem.  The compiler disables one by subtracting `BIG = 1e30` from its second
+coordinate (`graph/core.py:8,314`, the `clear_key` mechanism); those keys sit
+far off the grid by construction and an insert-time test counts thousands of
+them per program while meaning nothing by it.  The winning score is the only
+thing worth testing.
+
+### 4b. A head keyed on a 32-bit value is past the wall from the first token
+
+The wall is usually presented as a limit on trace length.  It is not: it is a
+limit on whatever the head is keyed on, and this machine keys heads on
+WebAssembly values, which run to `2^32 = 4.29·10^9` — 58× past the scaled wall
+of `7.4·10^7` before a single token is generated.
+
+Taken verbatim from a `hello` run, the first crossing:
+
+    query  [4.763922097235979e18, 14142135623.730951]
+    key    [673720322.0, -1.1347476806894592e17]
+
+which is the parabolic embedding `v ↦ (2v, −v²)` of `v = 336 860 161`, not of
+a position.  At that magnitude and scale the float64 maximum of `2qk − k²`
+over the neighbourhood `v−60 … v+60` is attained at `v−3`, `v−1` and `v+1`,
+and `v` is **not** among them: a query for `v` does not return `v`.  The
+unresolvable neighbourhood is `ulp/scale ≈ 19.44` keys wide.  (Another
+crossing in `collatz` and `fibonacci` is keyed on `538 976 288 = 0x20202020`,
+four ASCII spaces — the same class.)
+
+The released traces are all correct anyway, because the 32-bit values actually
+present in one head are never within ~20 of each other.  Nothing arranges
+that: it is a property of the programs, not of the construction, and no part
+of the compiler checks it.  Test:
+`vm-rs/alm-hull/tests/differential.rs::a_head_keyed_on_a_32_bit_value_is_past_the_wall_from_the_start`.
+
+**Fix.** Not `n < 94906266` at insert — that bounds the wrong quantity and uses
+the wrong constant.  Two things, at query, in both `hull_cache.py` and
+`hull2d_cht.h`:
+
+1.  `ulp(best_score) <= abs(qy)` on the winner, which is scale-free, survives
+    `clear_key`, and catches §4b as well as §4 (measured: 26 crossings in
+    `hello`, 788 in `addition`, 2863 in `collatz`, all real).
+2.  A compile-time check that no head is keyed on an unbounded 32-bit value,
+    or a documented statement that the compiler does not guarantee correctness
+    for programs whose values collide inside one head.
+
+Above the wall the construction is not slow or approximate, it is wrong, and
+it fails silently.
 
 ## 5. Space is linear in the trace and never released
 

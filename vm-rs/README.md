@@ -47,6 +47,24 @@ of 36-wide matvecs with no batch — while the hull is ordinary Rust.
   wider accumulator helps; only a wider embedding would, and that is a change
   to the weights.  `todo3.md` section 4.
 
+* **The shipped model's query scale moves that wall 22 % earlier.**  Hard
+  attention queries at `sqrt(2) * 10^10`, which multiplies the score and the
+  gap to the runner-up together but does not cancel, because `ulp` is relative
+  and the gap is not.  At unit scale the first unseparable query is
+  `94 906 266`; at the model's scale it is `73 966 031`.  So the right guard is
+  not `score > 2^53` but `ulp(score) > abs(qy)` — scale-free, and quiet about
+  the keys the compiler deliberately disables with `BIG = 1e30`.  Implemented
+  in `alm-hull/src/grid.rs` and reported per run by `alm-vm`.
+
+* **A head keyed on a 32-bit value is past the wall from the first token.**
+  The wall bounds whatever the head is keyed on, not the trace length, and this
+  machine keys heads on WebAssembly values, which reach `4.29e9`.  The first
+  crossing in `hello` is the key `[673720322, -1.1347476806894592e17]` — the
+  parabolic embedding of `336 860 161` — where the float64 maximum over the
+  neighbourhood is attained at `v-3`, `v-1` and `v+1` and not at `v`.  The
+  reference programs pass because their values are never within ~20 of each
+  other in one head; nothing arranges that.  `todo3.md` section 4b.
+
 ## Running it
 
 `model.bin` and the program traces are build artefacts of the original Python
