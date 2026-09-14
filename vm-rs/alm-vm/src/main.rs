@@ -195,6 +195,19 @@ fn check(
             q.worst
         );
     }
+    let gaps = cache.gap_witness();
+    if gaps.total > 0 {
+        println!(
+            "  gaps: closest runner-up {:.3e} key steps, {} of {} under {:.0e} (todo3.md section 2a)",
+            gaps.worst,
+            gaps.noise,
+            gaps.total,
+            alm_hull::NOISE
+        );
+        if let Some(q) = gaps.worst_at {
+            println!("    at: query {q:?}");
+        }
+    }
     let grid = cache.grid_witness();
     println!("  grid: worst ulp(score)/margin = {:.3}", grid.worst);
     if let Some(w) = grid.worst_at {

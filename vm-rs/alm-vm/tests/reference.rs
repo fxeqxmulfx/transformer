@@ -123,3 +123,31 @@ fn the_query_scale_inflates_the_non_integer_share() {
         assert!(line.contains("(1.0 ulp,"), "at the shipped scale it is one ulp: {line}");
     }
 }
+
+#[test]
+fn nothing_on_the_released_weights_is_decided_by_rounding() {
+    // `todo3.md` section 2a.  The compiler adds `LATEST_ALPHA * inv_log_pos(p)`
+    // to every key so that two writes to one logical key are separated before
+    // the comparison; the cache's `last_seq` is a fallback for the case where
+    // they arrive equal anyway.  If that separation ever fell to the size of
+    // the key path's own rounding, the answer would be whichever way the
+    // matvec rounded.  On these programs it does not come close: the closest
+    // runner-up is `6.0e-6` key steps in `hello` and `9.8e-7` in `addition`,
+    // eight orders above the `4.3e-15` that rebuilding without the
+    // perturbation produces.  The two figures are also the trend section 2a
+    // leaves open: the separation is `0.3 / (p log^2 p)` and it shrinks with
+    // the trace while the rounding does not.
+    let Some(text) = run(&["--brute"]) else { return };
+    let lines: Vec<&str> = text.lines().filter(|l| l.trim_start().starts_with("gaps:")).collect();
+    assert_eq!(lines.len(), 2, "one per program\n{text}");
+
+    for line in lines {
+        let noise: usize = line.split(", ").nth(1).unwrap().split(' ').next().unwrap().parse().unwrap();
+        assert_eq!(noise, 0, "a gap decided by rounding: {line}");
+
+        let worst: f64 =
+            line.split("runner-up ").nth(1).unwrap().split(' ').next().unwrap().parse().unwrap();
+        assert!(worst > 1e-7, "the perturbation is still visible: {line}");
+        assert!(worst < 0.5, "and inside the unit gap between distinct keys: {line}");
+    }
+}

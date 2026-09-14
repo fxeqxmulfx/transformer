@@ -10,12 +10,14 @@
 pub mod breakpoint;
 pub mod cht;
 pub mod exact;
+pub mod gap;
 pub mod grid;
 pub mod head;
 pub mod meta;
 pub mod query;
 
 pub use breakpoint::Break;
+pub use gap::{ScoreGaps, NOISE};
 pub use grid::{grid_ratio, off_the_grid, ulp, Crossing, GridWitness, GRID_LIMIT};
 pub use head::{BruteAttentionHead, HardAttentionHead, HullHalf};
 pub use meta::{HullMeta, TieBreak};

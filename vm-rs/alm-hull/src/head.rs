@@ -8,6 +8,7 @@
 use core::cell::Cell;
 
 use crate::breakpoint::Break;
+use crate::gap::ScoreGaps;
 use crate::cht::{Cht, Slope};
 use crate::grid::GridWitness;
 use crate::meta::{HullMeta, TieBreak};
@@ -237,6 +238,7 @@ impl HardAttentionHead {
 pub struct BruteAttentionHead {
     entries: Vec<([f64; 2], [f64; 2], i32)>,
     grid: Cell<GridWitness>,
+    gaps: Cell<ScoreGaps>,
 }
 
 impl BruteAttentionHead {
@@ -255,6 +257,14 @@ impl BruteAttentionHead {
     pub fn clear(&mut self) {
         self.entries.clear();
         self.grid.set(GridWitness::default());
+        self.gaps.set(ScoreGaps::default());
+    }
+
+    /// How close the runner-up came, in key steps — the diagnostic of
+    /// `todo3.md` section 2a.  Only this head can report it: it scores every
+    /// entry anyway, while the hull visits the winner and its ties and stops.
+    pub fn gap_witness(&self) -> ScoreGaps {
+        self.gaps.get()
     }
 
     pub fn insert(&mut self, key: [f64; 2], val: [f64; 2], seq: i32) {
@@ -277,6 +287,16 @@ impl BruteAttentionHead {
         let mut w = self.grid.get();
         w.observe(max, if q[1] != 0.0 { q[1] } else { q[0] }, q, winner);
         self.grid.set(w);
+        let second = self
+            .entries
+            .iter()
+            .map(|(k, _, _)| score(k))
+            .filter(|&s| s < max)
+            .fold(f64::NEG_INFINITY, f64::max);
+        let mut g = self.gaps.get();
+        g.observe(max, second, q);
+        self.gaps.set(g);
+
         let mut meta = HullMeta::default();
         for (k, v, seq) in &self.entries {
             if score(k) == max {

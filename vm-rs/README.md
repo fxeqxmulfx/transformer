@@ -109,9 +109,10 @@ MILP scheduler runs again and takes minutes.
   that term set to zero and all four cheap programs stop, under both caches and
   at different tokens.  The reason is that two writes to one logical key do not
   reach the head with the same key — the key is a matvec and the matvec rounds
-  — so the sequence number never sees a tie to break.  With the term the
-  smallest positive score gap in `hello` is `1.0e-5`; without it, 305 queries
-  land inside `1e-9` of their runner-up.  Any coefficient from `1e-6` to `0.49`
+  — so the sequence number never sees a tie to break.  Measured by
+  `alm-hull/src/gap.rs` and reported per run under `--brute`: with the term,
+  the closest runner-up in `hello` is `6.0e-6` key steps and nothing is inside
+  `1e-9`; without it, 1 402 queries are.  Any coefficient from `1e-6` to `0.49`
   works, which is what a margin looks like.  `todo3.md` section 2a.
 
 ## Running it

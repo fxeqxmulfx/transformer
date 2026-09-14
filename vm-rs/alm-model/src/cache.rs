@@ -6,7 +6,7 @@
 //! the sequence counter advances once per *layer step*, not once per token, and
 //! every head in a layer therefore shares one sequence number.
 
-use alm_hull::{BruteAttentionHead, GridWitness, HardAttentionHead, IntegerQueries, TieBreak};
+use alm_hull::{BruteAttentionHead, GridWitness, HardAttentionHead, IntegerQueries, ScoreGaps, TieBreak};
 
 /// Which head implementation answers the queries.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -130,6 +130,17 @@ impl KvCache {
     /// argument assumes, and this is the count.
     pub fn query_witness(&self) -> IntegerQueries {
         self.queries
+    }
+
+    /// How close the runner-up came, in key steps, over the whole run —
+    /// `todo3.md` section 2a.  Empty under the hull cache, which never looks
+    /// past the winner's ties.
+    pub fn gap_witness(&self) -> ScoreGaps {
+        let mut all = ScoreGaps::default();
+        if let Heads::Brute(bs) = &self.heads {
+            bs.iter().for_each(|h| all.merge(&h.gap_witness()));
+        }
+        all
     }
 
     pub fn grid_witness(&self) -> GridWitness {

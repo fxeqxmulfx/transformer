@@ -272,17 +272,19 @@ Three further measurements say what the perturbation was doing.
    still correct.  So at the level of the graph, §2 is right: latest-write is
    the sequence number's job and the perturbation is redundant.
 
-3. **The transformer's keys are not the graph's keys.**  Over `hello`'s first
-   400 tokens, the brute head's gap from the winner to the best strictly-lower
-   score, divided by `|qᵧ|`:
+3. **The transformer's keys are not the graph's keys.**  The gap from the
+   winner to the best strictly-lower score, divided by `|qᵧ|` — one step of the
+   key — over `hello`:
 
-       weights              gaps in (0, 10^-9)   smallest positive gap
-       as shipped                            0   1.015e-5
-       LATEST_ALPHA = 0                    305   4.316e-15
+       weights              gaps under 10^-9 steps   closest runner-up
+       as shipped                    0 of 43 344     6.026e-6
+       LATEST_ALPHA = 0          1 402 of 47 586     4.316e-15
+
+   (the totals differ because the second trace has already diverged)
 
    Two writes to the *same logical key* do not arrive at the head with the same
    key, because the key is a matvec through the residual stream and the matvec
-   rounds.  With the perturbation they are separated by at least `10^-5` and
+   rounds.  With the perturbation they are separated by `6·10^-6` at worst and
    the later one wins by construction.  Without it they are separated by
    `10^-15` in whichever direction the rounding fell, and `last_seq` is never
    consulted — there is no exact tie left to break.  On the released weights
@@ -299,7 +301,32 @@ residue is empty, which means the release runs on the perturbation alone and
 
 — the lower bound because it must dominate the matvec's noise, the upper
 because it must not cross the unit gap between distinct integer keys.  Both
-`10^-6` and `0.3` sit inside it; `0` does not.
+`10^-6` and `0.3` sit inside it; `0` does not.  Instrument:
+`vm-rs/alm-hull/src/gap.rs`; measurement:
+`vm-rs/alm-vm/tests/reference.rs::nothing_on_the_released_weights_is_decided_by_rounding`.
+
+The window closes with the trace, and how fast is measurable.  The closest
+runner-up on the released weights, per program:
+
+    program     tokens    closest runner-up   0.3/(p log² p)
+    hello        1 034    6.026e-6            6.0e-6
+    addition     4 362    9.794e-7            9.8e-7
+    fibonacci    9 104    3.987e-7            4.0e-7
+
+The prediction is `Δ inv_log_pos(p) = 1/((p+2) log²(p+2))` and it is attained
+to two digits, so the separation really is the perturbation's last step and
+nothing else.  Setting it equal to `hello`'s observed noise floor of
+`4.3·10^-15` gives `p ≈ 8·10^10` — four orders past `sudoku`, so on these
+programs the margin is not close to spent.
+
+That is not the same as safe, because the floor is not a constant: the noise is
+`ulp(ky)`, and `ky ≈ −k²`.  On a head keyed on small integers it is `10^-15`;
+on a head keyed on a 32-bit WebAssembly value, `|ky| ≈ 10^17` and `ulp(ky) ≈
+16` *key steps* — the perturbation is invisible there from the first token, and
+so is any separation below 16.  That is §4b seen from the other side, and it
+says the two sections have one cause: the wall is `ulp(ky)` against whatever
+has to be distinguished, whether that is two writes to one key or two adjacent
+keys.
 
 **Fix, revised.**  Keep the perturbation.  §2's structural argument stands
 untouched — a softmax head returns the mean of the tied payloads and cannot
@@ -308,9 +335,9 @@ not a replacement for the perturbation, it is a fallback that the released
 model never reaches.  What §2's float64 table then bounds is not a defect to
 be removed but the trace length: `0.3/(p log² p)` shrinks with position while
 the matvec's noise does not, so past some length the ordering is lost silently
-and the answer becomes whichever the rounding prefers.  Where that length is
-has not been measured — on the six reference programs the shipped model shows
-no gap below `10^-5` — and it is the sharpest open question in this file.
+and the answer becomes whichever the rounding prefers.  On heads keyed on
+small integers that length is `p ≈ 8·10^10`, four orders past anything that
+runs; on heads keyed on 32-bit values it has already passed, and that is §4b.
 
 ## 3. The hull cache is not equivalent to the attention it replaces
 
@@ -655,9 +682,9 @@ composition of those errors, and that is the open question this section leaves.
 4. §2's second half — a text change, not a code change: the post stops
    claiming a softmax head does latest-write.  The single-writer alternative is
    closed, for the reasons in §2.  What replaces the deletion §2 asked for is
-   §2a's open question: measure the trace length at which the perturbation
-   drops below the key path's own rounding, because that is where latest-write
-   fails silently.
+   §2a's finding: the perturbation is the margin, `last_seq` is the fallback
+   the release never reaches, and the trace length at which the margin runs out
+   is `8·10^10` on small keys and zero on 32-bit ones.
 5. §5 — prove the lower bound first, since it decides whether there is anything
    to fix.
 6. §8 — nothing to fix in the code; the work is the margin theorem, and it is
