@@ -65,6 +65,16 @@ of 36-wide matvecs with no batch — while the hull is ordinary Rust.
   reference programs pass because their values are never within ~20 of each
   other in one head; nothing arranges that.  `todo3.md` section 4b.
 
+* **Removing the query scale is free, and on these programs it buys nothing.**
+  `--grid` divides each query by `abs(qy)` before scoring, which an argmax
+  cannot notice, and the released weights agree: every reference trace comes
+  back token for token, `hello` through `sudoku`.  It also removes no
+  off-the-grid query — the counts are identical in both modes — because the
+  worst `ulp(score)/margin` is 512 at unit scale against 311 as shipped in
+  `hello`, and 1024 against 1244 in `addition`.  The scale can only multiply
+  that ratio by `2^33/s = 0.607` or `2^34/s = 1.215`, so it shuffles rather
+  than loses; what it shifts one way is the threshold.  `todo3.md` section 0a.
+
 ## Running it
 
 `model.bin` and the program traces are build artefacts of the original Python
@@ -84,7 +94,7 @@ cargo run --release -p alm-vm -- ../transformer-vm/model.bin     ../transformer-
 ```
 
 The command line is the C++ driver's: `--brute`, `--trace[=N]`, `--args=STR`,
-`--max=N`.  `model.bin` itself is out of scope here — it is the output of the
+`--max=N`, plus `--grid`, which has no counterpart there.  `model.bin` itself is out of scope here — it is the output of the
 compiler (`graph/`, `scheduler/milp.py`, `compilation/`, `model/weights.py`),
 not of the model, and the Lean conclusions this port exists to carry are all
 about the runtime.

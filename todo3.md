@@ -77,6 +77,48 @@ Then assert `n < 94 906 266` (§4) and the head is exact by
 conditions — grid-valued scores, breakpoints good to half a unit — proves the
 merge loops of `HullHalf::query` collect the argmax set and nothing else.
 
+### 0a. On the released model the scale is not what binds
+
+The fix needs no weight surgery to test.  An argmax is invariant under
+`q → q/s` for any `s > 0`, so dividing the query by `|qᵧ|` at query time is the
+same change applied at the only place it can change anything.  That is
+`--grid` in `vm-rs/alm-vm`, and against the released `model.bin` it
+
+* reproduces **every** reference trace token for token, `hello` through
+  `sudoku`'s 1 055 417 tokens — the invariance confirmed on the shipped
+  weights rather than argued;
+* removes **no** off-the-grid query.  The counts are identical in both modes:
+  26 in `hello`, 788 in `addition`, 2863 in `collatz`, 265 in `fibonacci`,
+  8093 in `min_cost_matching`, 65 727 in `sudoku`.
+
+The reason is visible in the worst `ulp(score)/|qᵧ|` of a run — the quantity
+the wall thresholds at `1`, reported per program by the driver:
+
+    program              as shipped   at unit scale   ratio
+    hello                   310.989         512.000   0.607
+    collatz                 310.989         512.000   0.607
+    fibonacci               310.989         512.000   0.607
+    addition               1243.955        1024.000   1.215
+    min_cost_matching      2487.911        2048.000   1.215
+    sudoku                 4975.822        4096.000   1.215
+
+The scale helps three programs and hurts three, and it can do nothing else:
+the last column takes exactly two values, `2^33/s = 0.607` and
+`2^34/s = 1.215`, according to where the score falls in its binade.  It is a
+shuffle, not a loss.  What it
+moves one way is the threshold, and that is the 22 % of §4a — a real cost, but
+a quarter of a binade, not the difference between exact and wrong.
+
+What binds instead is §4b.  A ratio of `512` says 512 consecutive key values
+score identically; `sudoku` reaches `4096`, on the key
+`[3334915682, −2.7804156515123814e18]`, the parabolic embedding of
+`1 667 457 841`.  These heads are keyed on 32-bit WebAssembly values, and no
+rescaling of the query touches the magnitude of the key.  So §0's claim holds
+as stated — grid-valued scores are exact and the scale throws that away — but
+on *these programs* the scale was never the binding constraint, and removing
+it alone would leave every crossing in place.  Measured:
+`vm-rs/alm-vm/tests/reference.rs::unit_scale_queries_reproduce_them_as_well`.
+
 ## 1. No path in the release runs softmax attention
 
 The README's first sentence is "A standard softmax-ReGLU transformer whose
@@ -478,10 +520,15 @@ composition of those errors, and that is the open question this section leaves.
 
 ## Order of work
 
-1. §0, both halves — one conditional in `weights.py` and one deleted term in
-   `graph/core.py`.  Fixes 1, 2, 3 and half of 4, and the measurement above
-   says so on their own code.
-2. §4's assertion, and §6's differential test to hold it in place.
+1. §4's query-time guard, `ulp(best_score) <= abs(qy)`, and §6's differential
+   test to hold it in place.  This is first because it is the only item that
+   reports whether a given run was answered or guessed, and because running it
+   is what turned up §4a and §4b.
+2. §0, both halves — one conditional in `weights.py` and one deleted term in
+   `graph/core.py`.  Still right, still two lines, and it is what makes the
+   grid theorem apply at all; but §0a measured it on the released model and it
+   changes no answer and removes no crossing there, so it is not the urgent
+   one.  Fixes 1, 2 and 3.
 3. §7's two one-liners.
 4. §2's second half — a text change, not a code change: the post stops
    claiming a softmax head does latest-write.  The single-writer alternative is
