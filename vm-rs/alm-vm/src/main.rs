@@ -184,6 +184,17 @@ fn check(
     if !result.stopped && opts.max_new.is_none() && program.reference.is_none() {
         println!("  (budget exhausted: the run did not reach the stop token)");
     }
+    let q = cache.query_witness();
+    if q.off > 0 {
+        let (at, ulps) = q.worst_at.unwrap_or((0.0, 0.0));
+        println!(
+            "  queries: {}/{} not integers ({:.1}%), worst offset {:.3e} ({ulps:.1} ulp, at {at})",
+            q.off,
+            q.total,
+            100.0 * q.off as f64 / q.total as f64,
+            q.worst
+        );
+    }
     let grid = cache.grid_witness();
     println!("  grid: worst ulp(score)/margin = {:.3}", grid.worst);
     if let Some(w) = grid.worst_at {

@@ -13,8 +13,10 @@ pub mod exact;
 pub mod grid;
 pub mod head;
 pub mod meta;
+pub mod query;
 
 pub use breakpoint::Break;
 pub use grid::{grid_ratio, off_the_grid, ulp, Crossing, GridWitness, GRID_LIMIT};
 pub use head::{BruteAttentionHead, HardAttentionHead, HullHalf};
 pub use meta::{HullMeta, TieBreak};
+pub use query::IntegerQueries;

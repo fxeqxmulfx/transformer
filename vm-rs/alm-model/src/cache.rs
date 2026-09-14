@@ -6,7 +6,7 @@
 //! the sequence counter advances once per *layer step*, not once per token, and
 //! every head in a layer therefore shares one sequence number.
 
-use alm_hull::{BruteAttentionHead, GridWitness, HardAttentionHead, TieBreak};
+use alm_hull::{BruteAttentionHead, GridWitness, HardAttentionHead, IntegerQueries, TieBreak};
 
 /// Which head implementation answers the queries.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -29,6 +29,7 @@ pub struct KvCache {
     n_heads: usize,
     seq: i32,
     grid: bool,
+    queries: IntegerQueries,
 }
 
 /// Rescale a query to unit scale without changing what it selects.
@@ -59,7 +60,14 @@ impl KvCache {
             CacheKind::Hull => Heads::Hull((0..n).map(|_| HardAttentionHead::new()).collect()),
             CacheKind::Brute => Heads::Brute((0..n).map(|_| BruteAttentionHead::new()).collect()),
         };
-        KvCache { heads, tie: vec![TieBreak::Average; n], n_heads, seq: -1, grid: false }
+        KvCache {
+            heads,
+            tie: vec![TieBreak::Average; n],
+            n_heads,
+            seq: -1,
+            grid: false,
+            queries: IntegerQueries::default(),
+        }
     }
 
     /// Answer queries at unit scale rather than at the compiler's — the fix of
@@ -90,6 +98,7 @@ impl KvCache {
                 [queries[2 * h], queries[2 * h + 1]],
                 [values[2 * h], values[2 * h + 1]],
             );
+            self.queries.observe(q);
             let q = if self.grid { on_the_grid(q) } else { q };
             let answer = match &mut self.heads {
                 Heads::Hull(hs) => {
@@ -116,6 +125,13 @@ impl KvCache {
     /// is not slow or approximate, it is wrong, and the original says nothing.
     /// Here it is reported rather than asserted — an assertion would kill a
     /// three-minute run to tell it something the last line could have said.
+    /// What the run's queries were, as values rather than as directions:
+    /// `todo3.md` section 8 asks whether they are the integers the exactness
+    /// argument assumes, and this is the count.
+    pub fn query_witness(&self) -> IntegerQueries {
+        self.queries
+    }
+
     pub fn grid_witness(&self) -> GridWitness {
         let mut all = GridWitness::default();
         match &self.heads {
