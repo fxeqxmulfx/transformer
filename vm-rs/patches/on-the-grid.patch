@@ -1,0 +1,47 @@
+todo3.md section 0, first half: drop the hard-attention query scale.
+
+The compiler multiplies every hard-attention query by `HARD_K * sqrt_dh`
+= sqrt(2) * 1e10, a softmax temperature the hull path never uses: that path
+takes an argmax, and an argmax over `<q, k>` is invariant under `q -> q/s`
+for `s > 0`.  What the scale does do is multiply the winning score by 1e10
+while the gap to the runner-up scales with it, so the score leaves the
+integer grid that `ALM.FloatGrid.fp_exact_of_grid` needs about 22 % earlier
+(`todo3.md` section 4a).
+
+Measured on weights rebuilt with this patch (`--plan plan.yaml`, 1.5 s): all
+six reference programs reproduce their traces token for token, the queries
+come back at unit scale, and the share of non-integer queries drops from
+22-32 % to 2.8-5.1 % — the difference was the scale's own rounding, not the
+machine's arithmetic (`todo3.md` section 8a).
+
+The vendored `transformer-vm/` tree is gitignored, so the change lives here.
+Apply with `git apply --directory=transformer-vm` from the repository root,
+or `patch -p1` inside `transformer-vm/`.
+
+--- a/transformer_vm/model/weights.py
++++ b/transformer_vm/model/weights.py
+@@ -428,8 +428,11 @@
+                     head_idx += 1
+                     n_hulls += 1
+                     layer_tiebreak.append(1 if lu.tie_break == "latest" else 0)
+-                    ip[h * 2] = expr_to_tensor(lu.query_exprs_2d[0]) * HARD_K * sqrt_dh
+-                    ip[h * 2 + 1] = expr_to_tensor(lu.query_exprs_2d[1]) * HARD_K * sqrt_dh
++                    # todo3.md section 0: the hull path takes an argmax, where a
++                    # positive scale changes no comparison and only lifts the
++                    # score off the integer grid `ALM.FloatGrid` needs.
++                    ip[h * 2] = expr_to_tensor(lu.query_exprs_2d[0])
++                    ip[h * 2 + 1] = expr_to_tensor(lu.query_exprs_2d[1])
+                     ip[D + h * 2] = expr_to_tensor(lu.key_exprs_2d[0])
+                     ip[D + h * 2 + 1] = expr_to_tensor(lu.key_exprs_2d[1])
+                     ip[2 * D + h * 2] = expr_to_tensor(lu.value_exprs[p * 2])
+@@ -488,8 +491,8 @@
+             for pair_idx in range(0, len(pt_items), 2):
+                 h = head_idx
+                 head_idx += 1
+-                ip[h * 2] = expr_to_tensor(erase_q2d[0]) * HARD_K * sqrt_dh
+-                ip[h * 2 + 1] = expr_to_tensor(erase_q2d[1]) * HARD_K * sqrt_dh
++                ip[h * 2] = expr_to_tensor(erase_q2d[0])
++                ip[h * 2 + 1] = expr_to_tensor(erase_q2d[1])
+                 ip[D + h * 2] = expr_to_tensor(erase_k2d[0])
+                 ip[D + h * 2 + 1] = expr_to_tensor(erase_k2d[1])
+ 

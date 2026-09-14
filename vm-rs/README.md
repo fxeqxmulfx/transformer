@@ -85,6 +85,21 @@ of 36-wide matvecs with no batch — while the hull is ordinary Rust.
   `1e10`, which is the last row of the margin table `todo3.md` section 8 gives
   and not past it.
 
+## Patches to the vendored compiler
+
+`transformer-vm/` is gitignored, so a correction that belongs to the Python
+side cannot live there.  `patches/` holds them as unified diffs against the
+release, each with a header saying which `todo3.md` section it implements and
+what rebuilding with it measured.  Apply one with
+
+```
+git apply --directory=transformer-vm vm-rs/patches/on-the-grid.patch
+cd transformer-vm && uv run python -m transformer_vm.build --plan plan.yaml --save-weights=model.bin
+```
+
+Rebuilding against the recorded plan takes about 1.5 s; without `--plan` the
+MILP scheduler runs again and takes minutes.
+
 ## Running it
 
 `model.bin` and the program traces are build artefacts of the original Python
