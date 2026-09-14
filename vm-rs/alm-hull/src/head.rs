@@ -9,7 +9,7 @@ use core::cell::Cell;
 
 use crate::breakpoint::Break;
 use crate::gap::ScoreGaps;
-use crate::cht::{Cht, Slope};
+use crate::cht::Cht;
 use crate::grid::GridWitness;
 use crate::meta::{HullMeta, TieBreak};
 
@@ -56,13 +56,13 @@ impl HullHalf {
         }
     }
 
-    /// The stored key of the line at `s`, undoing the negation of a lower hull.
-    fn key_at(&self, s: Slope) -> (f64, f64) {
-        let b = self.cht.get(s).unwrap().b;
+    /// The stored key of the line at `i`, undoing the negation of a lower hull.
+    fn key_at(&self, i: usize) -> (f64, f64) {
+        let l = self.cht.get(i);
         if self.is_upper {
-            (s.get(), b)
+            (l.m.get(), l.b)
         } else {
-            (-s.get(), -b)
+            (-l.m.get(), -l.b)
         }
     }
 
@@ -88,33 +88,29 @@ impl HullHalf {
         // A query with `qy == 0` reads one extreme of the envelope and stops:
         // the ties there are already collapsed into that node's aggregate.
         if qy == 0.0 {
-            let out = self.cht.get(best).unwrap().meta.resolve(tb);
+            let out = self.cht.get(best).meta.resolve(tb);
             return Some(Hit { out, score: best_score, best_kx: kx_best, best_key: [kx_best, ky_best] });
         }
 
         let mut combined = HullMeta::default();
-        combined.merge(&self.cht.get(best).unwrap().meta);
+        combined.merge(&self.cht.get(best).meta);
 
         let mut left = best;
-        while let Some(prev) = self.cht.pred(left) {
-            let (kx, ky) = self.key_at(prev);
-            if qx * kx + qy * ky == best_score {
-                combined.merge(&self.cht.get(prev).unwrap().meta);
-                left = prev;
-            } else {
+        while left > 0 {
+            let (kx, ky) = self.key_at(left - 1);
+            if qx * kx + qy * ky != best_score {
                 break;
             }
+            combined.merge(&self.cht.get(left - 1).meta);
+            left -= 1;
         }
 
-        let mut right = self.cht.succ(best);
-        while let Some(next) = right {
+        for next in best + 1..self.cht.len() {
             let (kx, ky) = self.key_at(next);
-            if qx * kx + qy * ky == best_score {
-                combined.merge(&self.cht.get(next).unwrap().meta);
-                right = self.cht.succ(next);
-            } else {
+            if qx * kx + qy * ky != best_score {
                 break;
             }
+            combined.merge(&self.cht.get(next).meta);
         }
 
         Some(Hit { out: combined.resolve(tb), score: best_score, best_kx: kx_best, best_key: [kx_best, ky_best] })

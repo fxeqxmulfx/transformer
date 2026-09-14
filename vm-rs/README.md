@@ -225,14 +225,17 @@ fibonacci  9 104 tok, 892 ops    55
 Against the C++ engine on the same 59 089 tokens, back to back on one machine:
 
 ```
-            total     proj     hull     head
-C++         4.02s    2.490    1.294    0.217
-alm-vm      7.86s    2.382    5.176    0.235
+            total     proj     hull     head     misc
+C++         4.06s    2.497    1.320    0.216    0.022
+alm-vm      3.80s    2.375    1.127    0.232    0.066
 ```
 
-The projections and the head are at parity or better; what is left is 3.9x on
-the hull, which is what the exact rational breakpoints cost against the
-original's rounded `long double`.  It does not change an answer.
+The port is the faster of the two, and it is faster in the part that was
+supposed to cost it: the hull answers in 1.13s against 1.32s while comparing
+breakpoints *exactly*, where the original compares rounded `long double`s.
+What is left on the other side of the ledger is `misc`, which is the
+per-query diagnostics this port carries and the original has no counterpart
+for.
 
 The projections are not merely as fast as the C++ — they are the same
 arithmetic.  `transformer.cpp` sums each row left to right into one accumulator
