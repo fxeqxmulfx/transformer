@@ -102,6 +102,18 @@ cd transformer-vm && uv run python -m transformer_vm.build --plan plan.yaml --sa
 Rebuilding against the recorded plan takes about 1.5 s; without `--plan` the
 MILP scheduler runs again and takes minutes.
 
+* **The key perturbation is load-bearing, and it is a noise margin.**  The
+  post says the latest write wins because of a small position-dependent term
+  added to each key; the release also carries a sequence number in the cache,
+  which looks like the same thing done properly.  Rebuild the weights with
+  that term set to zero and all four cheap programs stop, under both caches and
+  at different tokens.  The reason is that two writes to one logical key do not
+  reach the head with the same key — the key is a matvec and the matvec rounds
+  — so the sequence number never sees a tie to break.  With the term the
+  smallest positive score gap in `hello` is `1.0e-5`; without it, 305 queries
+  land inside `1e-9` of their runner-up.  Any coefficient from `1e-6` to `0.49`
+  works, which is what a margin looks like.  `todo3.md` section 2a.
+
 ## Running it
 
 `model.bin` and the program traces are build artefacts of the original Python

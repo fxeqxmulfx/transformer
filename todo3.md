@@ -37,19 +37,27 @@ The released code throws it away twice, but not equally:
 - `graph/core.py`, `_to_2d_key`, adds `LATEST_ALPHA · inv_log_pos(p)` to `ky`.
   Off the grid by construction, but bounded by `0.433` against a key gap of
   `1`, so it decides every comparison correctly and **costs nothing
-  numerically** — the table below shows it moving no wall at all.  It has to go
-  for the grid theorem to apply and for the softmax path of §1 to have a gap,
-  not because it is doing harm today.
+  numerically** — the table below shows it moving no wall at all.  It looks
+  removable, because the data structure carries a sequence number that does the
+  same job (§2).  It is not: §2a rebuilds the weights without it and all four
+  programs stop, in both caches.  The perturbation is the margin that keeps two
+  writes to one key apart after the key has been through a matvec, and nothing
+  else in the release supplies one.
 
-Remove both and the grid condition holds exactly.  Measured on their own heads,
+Remove the scale and the grid condition holds on every key; the perturbation
+stays, and the score stays off the grid by less than half a unit.
+
+Measured on their own heads,
 `10^5` insert/query steps, hull versus their own brute reference:
 
     key range        10^3   10^4   10^5   10^6   10^7   2^26
     as shipped          0      0      1     11     38     14
     on the grid         0      0      0      0      0      0
 
-and latest-write is still correct on every hit in both columns, because it
-never came from the perturbation in the first place (§2).
+and latest-write is still correct on every hit in both columns — on their own
+heads, with keys handed in exactly.  That is what makes the perturbation look
+redundant, and §2a is what shows the difference between handing a key in and
+computing it in the model.
 
 The exactness wall moves with it.  Scanning for the first query that loses to
 its own neighbour `q ± 1`:
@@ -71,8 +79,9 @@ proves that an integer key is at least `1/2` from every breakpoint, so
 The defect was never in the hull — it was in the score handed to it.
 
 **Fix.** Do not scale the query on the hard-max path; scale only where a
-softmax is actually taken.  Delete the `LATEST_ALPHA` term from `_to_2d_key`.
-Then assert `n < 94 906 266` (§4) and the head is exact by
+softmax is actually taken — `vm-rs/patches/on-the-grid.patch`, measured in §0a
+and §8a.  Keep the `LATEST_ALPHA` term; §2a is why.  Then assert
+`n < 94 906 266` (§4) and the head is exact up to that half-unit by
 `ALM.FloatGrid.fp_walk_collects_of_grid`, which under exactly these two
 conditions — grid-valued scores, breakpoints good to half a unit — proves the
 merge loops of `HullHalf::query` collect the argmax set and nothing else.
@@ -235,6 +244,73 @@ there.  Their own reference semantics already says so — `evaluator.py:158-165`
 resolves a tie by the highest sequence number, never by the perturbation, which
 is thus absent from the specification, absent from both C++ heads, and present
 only in the emitted weights.
+
+### 2a. Measured: the perturbation is a noise margin, and deleting it stops the machine
+
+The fix above is a prediction, and it is wrong.  Rebuilt with
+`LATEST_ALPHA = 0` and nothing else changed — same plan, same allocation,
+`--plan plan.yaml` — the machine stops:
+
+    cache    hello                  addition
+    hull     503:  00 ≠ 57          1231:  2b ≠ 03
+    brute    606:  01 ≠ 6f          2591:  00 ≠ 01
+
+`collatz` and `fibonacci` fail too; 0 passed, 4 failed, in both caches.  Both
+caches carry `last_seq`, both heads are flagged latest from the weight file,
+and they fail at *different* tokens — which is already the shape of the answer.
+
+Three further measurements say what the perturbation was doing.
+
+1. **Its magnitude carries no information.**  Rebuilt at `LATEST_ALPHA` =
+   `10^-6`, `0.1` and `0.49`, all four programs reproduce their traces token
+   for token.  Six orders of magnitude and nothing changes: it is a margin, not
+   a signal.
+
+2. **The expression graph does not need it.**  `evaluator.py`'s brute
+   attention resolves a tie by the highest sequence number, exactly as §2
+   describes.  Run `hello` through it with `LATEST_ALPHA = 0` and the output is
+   still correct.  So at the level of the graph, §2 is right: latest-write is
+   the sequence number's job and the perturbation is redundant.
+
+3. **The transformer's keys are not the graph's keys.**  Over `hello`'s first
+   400 tokens, the brute head's gap from the winner to the best strictly-lower
+   score, divided by `|qᵧ|`:
+
+       weights              gaps in (0, 10^-9)   smallest positive gap
+       as shipped                            0   1.015e-5
+       LATEST_ALPHA = 0                    305   4.316e-15
+
+   Two writes to the *same logical key* do not arrive at the head with the same
+   key, because the key is a matvec through the residual stream and the matvec
+   rounds.  With the perturbation they are separated by at least `10^-5` and
+   the later one wins by construction.  Without it they are separated by
+   `10^-15` in whichever direction the rounding fell, and `last_seq` is never
+   consulted — there is no exact tie left to break.  On the released weights
+   the latest tie-break never fires at all: **zero** ties on latest-flagged
+   heads across `hello`, against 3 939 once the perturbation is gone.
+
+So the perturbation is not a redundant restatement of `last_seq`.  It orders
+nearly-equal keys *before* the comparison; `last_seq` catches only the residue
+where the rounding happened to come out identical.  On the released model that
+residue is empty, which means the release runs on the perturbation alone and
+`HullMeta::last_seq` is dead code in it.  Its admissible window is
+
+    rounding error of the key path  <  α · Δ inv_log_pos(p)  <  1/2
+
+— the lower bound because it must dominate the matvec's noise, the upper
+because it must not cross the unit gap between distinct integer keys.  Both
+`10^-6` and `0.3` sit inside it; `0` does not.
+
+**Fix, revised.**  Keep the perturbation.  §2's structural argument stands
+untouched — a softmax head returns the mean of the tied payloads and cannot
+resolve latest-write — but its operational conclusion does not: `last_seq` is
+not a replacement for the perturbation, it is a fallback that the released
+model never reaches.  What §2's float64 table then bounds is not a defect to
+be removed but the trace length: `0.3/(p log² p)` shrinks with position while
+the matvec's noise does not, so past some length the ordering is lost silently
+and the answer becomes whichever the rounding prefers.  Where that length is
+has not been measured — on the six reference programs the shipped model shows
+no gap below `10^-5` — and it is the sharpest open question in this file.
 
 ## 3. The hull cache is not equivalent to the attention it replaces
 
@@ -569,15 +645,19 @@ composition of those errors, and that is the open question this section leaves.
    test to hold it in place.  This is first because it is the only item that
    reports whether a given run was answered or guessed, and because running it
    is what turned up §4a and §4b.
-2. §0, both halves — one conditional in `weights.py` and one deleted term in
-   `graph/core.py`.  Still right, still two lines, and it is what makes the
-   grid theorem apply at all; but §0a measured it on the released model and it
-   changes no answer and removes no crossing there, so it is not the urgent
-   one.  Fixes 1, 2 and 3.
+2. §0's first half — `patches/on-the-grid.patch`, five lines of `weights.py`.
+   It is what makes the grid theorem apply at all, and §8a is the measured
+   argument for it: four fifths of the machine's non-integer queries are the
+   scale's own rounding.  §0a is the argument against urgency: on the released
+   programs it changes no answer and removes no crossing.  §0's second half is
+   withdrawn — see §2a.
 3. §7's two one-liners.
 4. §2's second half — a text change, not a code change: the post stops
    claiming a softmax head does latest-write.  The single-writer alternative is
-   closed, for the reasons in §2.
+   closed, for the reasons in §2.  What replaces the deletion §2 asked for is
+   §2a's open question: measure the trace length at which the perturbation
+   drops below the key path's own rounding, because that is where latest-write
+   fails silently.
 5. §5 — prove the lower bound first, since it decides whether there is anything
    to fix.
 6. §8 — nothing to fix in the code; the work is the margin theorem, and it is
