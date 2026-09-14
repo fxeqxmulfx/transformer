@@ -72,6 +72,21 @@ struct Link {
 
 const BLACK_NIL: Link = Link { left: NIL, right: NIL, parent: NIL, red: false };
 
+/// What a query descent reads at each node: the breakpoint it compares, and
+/// the two children it chooses between.
+///
+/// They sit together because the descent needs both at every level and the
+/// query descent is nearly the whole of the cost: the sudoku trace answers
+/// 123.5 million of them against two million insertions.  Split across two
+/// arrays each level costs two cache misses instead of one.
+#[derive(Clone, Copy)]
+struct Nav {
+    p: Break,
+    l: Link,
+}
+
+const NAV_NIL: Nav = Nav { p: Break::Unset, l: BLACK_NIL };
+
 /// One line of the envelope: `y = m x + b`, optimal up to `p`.
 #[derive(Clone, Copy, Debug)]
 pub struct Line {
@@ -84,9 +99,8 @@ pub struct Line {
 /// The envelope, ordered by slope and searchable by breakpoint.
 pub struct Tree {
     slope: Vec<Slope>,
-    brk: Vec<Break>,
+    nav: Vec<Nav>,
     rest: Vec<(f64, HullMeta)>,
-    link: Vec<Link>,
     root: u32,
     /// The ends, held rather than walked to.
     ///
@@ -109,9 +123,8 @@ impl Tree {
     pub fn new() -> Tree {
         Tree {
             slope: vec![Slope(0.0)],
-            brk: vec![Break::Unset],
+            nav: vec![NAV_NIL],
             rest: vec![(0.0, HullMeta::default())],
-            link: vec![BLACK_NIL],
             root: NIL,
             ends: (NIL, NIL),
             free: NIL,
@@ -129,10 +142,9 @@ impl Tree {
 
     pub fn clear(&mut self) {
         self.slope.truncate(1);
-        self.brk.truncate(1);
+        self.nav.truncate(1);
         self.rest.truncate(1);
-        self.link.truncate(1);
-        self.link[0] = BLACK_NIL;
+        self.nav[0] = NAV_NIL;
         self.root = NIL;
         self.ends = (NIL, NIL);
         self.free = NIL;
@@ -143,7 +155,7 @@ impl Tree {
     pub fn get(&self, i: u32) -> Line {
         let k = i as usize;
         let (b, meta) = self.rest[k];
-        Line { m: self.slope[k], b, p: self.brk[k], meta }
+        Line { m: self.slope[k], b, p: self.nav[k].p, meta }
     }
 
     pub fn slope_of(&self, i: u32) -> Slope {
@@ -151,11 +163,11 @@ impl Tree {
     }
 
     pub fn break_of(&self, i: u32) -> Break {
-        self.brk[i as usize]
+        self.nav[i as usize].p
     }
 
     pub fn set_break(&mut self, i: u32, p: Break) {
-        self.brk[i as usize] = p;
+        self.nav[i as usize].p = p;
     }
 
     pub fn set_meta(&mut self, i: u32, meta: HullMeta) {
@@ -171,12 +183,12 @@ impl Tree {
     /// index.  Not a trade worth making.
     #[inline(always)]
     fn lk(&self, i: u32) -> &Link {
-        &self.link[i as usize]
+        &self.nav[i as usize].l
     }
 
     #[inline(always)]
     fn lk_mut(&mut self, i: u32) -> &mut Link {
-        &mut self.link[i as usize]
+        &mut self.nav[i as usize].l
     }
 
     /// The slope of the node at `i`, which is what a descent by slope reads.
@@ -188,7 +200,7 @@ impl Tree {
     /// The breakpoint of the node at `i`, which is what a query reads.
     #[inline(always)]
     fn bk(&self, i: u32) -> Break {
-        self.brk[i as usize]
+        self.nav[i as usize].p
     }
 
     /// The leftmost node, or `NIL` when the envelope is empty.
@@ -295,15 +307,14 @@ impl Tree {
             let i = self.free;
             self.free = self.lk(i).parent;
             self.slope[i as usize] = line.m;
-            self.brk[i as usize] = line.p;
+            self.nav[i as usize].p = line.p;
             self.rest[i as usize] = (line.b, line.meta);
             i
         } else {
-            let i = self.link.len() as u32;
+            let i = self.nav.len() as u32;
             self.slope.push(line.m);
-            self.brk.push(line.p);
+            self.nav.push(Nav { p: line.p, l: BLACK_NIL });
             self.rest.push((line.b, line.meta));
-            self.link.push(BLACK_NIL);
             i
         };
         *self.lk_mut(i) = Link { left: NIL, right: NIL, parent: NIL, red: true };
@@ -527,7 +538,7 @@ impl Tree {
                 continue;
             }
             let (wl, wr) = (self.lk(w).left, self.lk(w).right);
-            let red = |t: &Self, n: u32| n != NIL && t.link[n as usize].red;
+            let red = |t: &Self, n: u32| n != NIL && t.nav[n as usize].l.red;
             if !red(self, wl) && !red(self, wr) {
                 self.lk_mut(w).red = true;
                 x = parent;
@@ -575,36 +586,36 @@ mod tests {
         if x == NIL {
             return 1;
         }
-        let l = t.link[x as usize].left;
-        let r = t.link[x as usize].right;
+        let l = t.nav[x as usize].l.left;
+        let r = t.nav[x as usize].l.right;
         if l != NIL {
-            assert_eq!(t.link[l as usize].parent, x, "left child disowns its parent");
+            assert_eq!(t.nav[l as usize].l.parent, x, "left child disowns its parent");
             assert!(t.slope[l as usize] < t.slope[x as usize], "left child is not below");
         }
         if r != NIL {
-            assert_eq!(t.link[r as usize].parent, x, "right child disowns its parent");
+            assert_eq!(t.nav[r as usize].l.parent, x, "right child disowns its parent");
             assert!(t.slope[x as usize] < t.slope[r as usize], "right child is not above");
         }
-        if t.link[x as usize].red {
-            assert!(l == NIL || !t.link[l as usize].red, "red node with a red left child");
-            assert!(r == NIL || !t.link[r as usize].red, "red node with a red right child");
+        if t.nav[x as usize].l.red {
+            assert!(l == NIL || !t.nav[l as usize].l.red, "red node with a red left child");
+            assert!(r == NIL || !t.nav[r as usize].l.red, "red node with a red right child");
         }
         let (bl, br) = (check(t, l), check(t, r));
         assert_eq!(bl, br, "black heights differ under one node");
-        bl + usize::from(!t.link[x as usize].red)
+        bl + usize::from(!t.nav[x as usize].l.red)
     }
 
     fn audit(t: &Tree) {
-        assert!(t.root == NIL || !t.link[t.root as usize].red, "the root is red");
-        assert_eq!(t.link[t.root as usize].parent, NIL, "the root has a parent");
+        assert!(t.root == NIL || !t.nav[t.root as usize].l.red, "the root is red");
+        assert_eq!(t.nav[t.root as usize].l.parent, NIL, "the root has a parent");
         check(t, t.root);
         // The cached ends must be the ends, or every fast path lies.
         let (mut lo, mut hi) = (t.root, t.root);
-        while lo != NIL && t.link[lo as usize].left != NIL {
-            lo = t.link[lo as usize].left;
+        while lo != NIL && t.nav[lo as usize].l.left != NIL {
+            lo = t.nav[lo as usize].l.left;
         }
-        while hi != NIL && t.link[hi as usize].right != NIL {
-            hi = t.link[hi as usize].right;
+        while hi != NIL && t.nav[hi as usize].l.right != NIL {
+            hi = t.nav[hi as usize].l.right;
         }
         assert_eq!(t.ends, (lo, hi), "the cached ends are not the ends");
         let mut n = 0;
@@ -714,7 +725,7 @@ mod tests {
         for i in 0..500 {
             insert(&mut t, f64::from(i));
         }
-        let cells = t.link.len();
+        let cells = t.nav.len();
         while t.first() != NIL {
             t.erase(t.first());
         }
@@ -723,7 +734,7 @@ mod tests {
         for i in 0..500 {
             insert(&mut t, f64::from(-i));
         }
-        assert_eq!(t.link.len(), cells, "the arena grew instead of reusing");
+        assert_eq!(t.nav.len(), cells, "the arena grew instead of reusing");
         audit(&t);
     }
 
