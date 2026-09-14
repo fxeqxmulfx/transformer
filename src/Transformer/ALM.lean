@@ -11,6 +11,8 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.Envelope` | when the hull may discard a line, and why erasing it is safe |
 | `ALM.HullErase` | and that erasing it changes no answer, at any query at all |
 | `ALM.HullPrune` | and that a whole build of them changes none either |
+| `ALM.TieSet` | and the winner it can drop while keeping the value |
+| `ALM.GeneralPosition` | the hypothesis that stops it, which the lift happens to meet |
 | `ALM.Query` | why one binary search over the breakpoints finds the maximum |
 | `ALM.Hull` | and why that search answers the lookup: the two halves joined |
 | `ALM.BinSearch` | `lower_bound` written out, and its comparison count bounded |
@@ -82,6 +84,8 @@ import Transformer.ALM.Duality
 import Transformer.ALM.Envelope
 import Transformer.ALM.HullErase
 import Transformer.ALM.HullPrune
+import Transformer.ALM.TieSet
+import Transformer.ALM.GeneralPosition
 import Transformer.ALM.Query
 import Transformer.ALM.Basic
 import Transformer.ALM.Hull
