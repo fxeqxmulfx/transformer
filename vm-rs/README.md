@@ -11,7 +11,7 @@ formalization licenses.  `todo3.md` is the fix list; this is where the fixes go.
 | `alm-hull`  | the 2D hard-attention KV cache (`attention/hull2d_cht.h`) | no |
 | `alm-model` | the transformer itself (`model/transformer.py`, `.cpp`)   | yes |
 | `alm-vm`    | the driver: load `model.bin`, generate                    | —  |
-| `alm-compile` | the compiler: the graph, the schedule, `model.bin`      | no |
+| `alm-compile` | the compiler: the graph, the weights, the programs       | no |
 
 `burn` is pinned at 0.21, on the `ndarray` backend with `f64` elements.  The
 element type is not a detail: every exactness claim in the construction is a
@@ -130,47 +130,42 @@ MILP scheduler runs again and takes minutes.
 
 ## Running it
 
-`model.bin` and the program traces are build artefacts of the original Python
-and are not in this repository:
+`model.bin` and the program traces are build artefacts, not files in this
+repository — but they no longer need a Python to make.  `alm-compile` is a port
+of `graph/core.py`, `wasm/interpreter.py`, `model/weights.py` and the whole of
+`compilation/`, so the four binaries below are the entire build:
 
 ```
-cd transformer-vm
-uv sync --extra-index-url https://download.pytorch.org/whl/cpu --index-strategy unsafe-best-match
-uv run python -m transformer_vm.build --save-weights=model.bin
-uv run python -c 'from transformer_vm.compilation.compile_wasm import ensure_data; ensure_data()'
+cargo build --release
+target/release/alm-build ../transformer-vm/plan.yaml model.bin
+target/release/alm-cc  --all --examples ../transformer-vm/transformer_vm/examples --out data
+target/release/alm-ref --all --data data
+target/release/alm-vm model.bin data/hello.txt data/addition.txt
 ```
 
-Then
+`alm-build` writes the same 1 188 074 bytes as the Python builder; `--grid`
+builds the `on-the-grid.patch` variant and `--mask` the masking one, so both
+`todo3.md` experiments can be run without a Python at all.  `alm-cc` runs clang
+with the release's own flags and writes the token prefix; `alm-ref` executes it
+and writes the trace the model is checked against.  What is still Python is
+`plan.yaml` (`scheduler/milp.py`), and nothing else.
 
-```
-cargo run --release -p alm-vm -- ../transformer-vm/model.bin     ../transformer-vm/transformer_vm/data/hello.txt
-```
-
-The command line is the C++ driver's: `--brute`, `--trace[=N]`, `--args=STR`,
-`--max=N`, plus `--grid`, which has no counterpart there.
-
-`model.bin` no longer has to come from the Python.  `alm-compile` is a port of
-`graph/core.py`, `wasm/interpreter.py` and `model/weights.py`, and
-
-```
-cargo run --release -p alm-compile --bin alm-build -- ../transformer-vm/plan.yaml model.bin
-```
-
-writes the same 1 188 074 bytes, checked byte for byte in
-`alm-compile/src/weights.rs`.  `--grid` builds the `on-the-grid.patch` variant
-and `--mask` the masking one, so both `todo3.md` experiments can be run without
-a Python at all.  What is still Python is `plan.yaml` (`scheduler/milp.py`) and
-the program traces (`compilation/`).
+`alm-vm`'s command line is the C++ driver's: `--brute`, `--trace[=N]`,
+`--args=STR`, `--max=N`, plus `--grid`, which has no counterpart there.
 
 The check that keeps the port honest is byte identity at every layer:
 `alm-graph-dump` against `alm-compile/tests/pydump.py` is 1 938 lines of
-dimensions, expressions and float64 bit patterns with no difference, and the
-weights are the file itself.
+dimensions, expressions and float64 bit patterns with no difference;
+`alm-wasm-dump --lower` against `tests/lowerdump.py` is 12 298 lines of decoded
+and lowered instructions with no difference; the weights are `model.bin`
+itself; and the eighteen released `data/*.txt`, `*_spec.txt` and `*_ref.txt`
+are reproduced byte for byte from the C sources in `tests/programs.rs`.
 
 ## Status
 
 All four cheap reference programs reproduce their traces token for token,
-under both caches:
+under both caches — and now from artefacts this port built itself, weights and
+programs and reference traces alike:
 
 ```
 hello      1 034 tok, 149 ops    Hello World!
