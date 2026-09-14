@@ -15,11 +15,21 @@
 //! being walked are an order of magnitude past the last level of cache and
 //! every parent hop is a load from memory.
 //!
-//! Hence the sizes and orders here.  `n = 65536` puts the arena near the
-//! measured average and well outside a 16 MB L3; the keys are the parabolic
-//! lift `(2k, -k^2)` that `alm-stress` uses and `hull_cache.py` stores, so
-//! `descending` is the 82.8 % case, `ascending` the 12.4 % one, and `shuffled`
-//! the 4.8 %.
+//! Hence the orders here: the keys are the parabolic lift `(2k, -k^2)` that
+//! `alm-stress` uses and `hull_cache.py` stores, so `descending` is the 82.8 %
+//! case, `ascending` the 12.4 % one, and `shuffled` the 4.8 %.
+//!
+//! And hence two sizes rather than one.  A node is 96 bytes across the three
+//! arenas, so 65536 of them are 6 MB — inside a 16 MB L3, which is the wrong
+//! side of the line the paragraph above draws.  At that size the arena is a
+//! cache-resident structure and what a change costs is measured in capacity:
+//! a wider field is worse because less of the array stays resident.  At
+//! 2097152 the arena is 201 MB, nothing is resident, and what a change costs
+//! is measured in misses: a wider field is better when it puts two loads in
+//! one line.  The two sizes disagree about layout, and the run the machine
+//! actually does — a 1.58 GB resident set — is the second of them.  Both are
+//! kept because a change that helps one and hurts the other should be visible
+//! as exactly that.
 //!
 //! Source: `vm-rs/alm-hull/src/bin/alm-stress.rs` for the orders and the
 //! query patterns, which this reuses so the two tables can be read together.
@@ -31,8 +41,11 @@ use alm_hull::tree::NIL;
 use alm_hull::{Break, HullMeta};
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
 
-/// The measured average envelope length, rounded to a power of two.
-const N: u64 = 65536;
+/// The two regimes: an arena inside the last level of cache, and one well
+/// past it.  The first is near the measured average envelope length; the
+/// second is the cache behaviour of the trace, which holds many envelopes at
+/// once and gives none of them the cache.
+const SIZES: [u64; 2] = [1 << 16, 1 << 21];
 
 /// The parabolic lift of a key, exactly as `alm-stress` and `hull_cache.py`
 /// take it: the line `y = 2k x - k^2`, tangent to the paraboloid at `k`.
@@ -70,28 +83,30 @@ const ORDERS: [&str; 3] = ["descending", "ascending", "shuffled"];
 fn build(c: &mut Criterion) {
     let mut g = c.benchmark_group("build");
     g.sample_size(20);
-    for name in ORDERS {
-        let ks: Vec<(f64, f64)> = order(name, N).into_iter().map(lift).collect();
-        g.throughput(Throughput::Elements(N));
-        g.bench_with_input(BenchmarkId::from_parameter(name), &ks, |b, ks| {
-            b.iter_batched_ref(
-                Envelope::new,
-                |e| {
-                    for (i, &(kx, ky)) in ks.iter().enumerate() {
-                        e.add_line(kx, ky, HullMeta::of([0.0, 0.0], i as i32));
-                    }
-                },
-                criterion::BatchSize::LargeInput,
-            )
-        });
+    for n in SIZES {
+        for name in ORDERS {
+            let ks: Vec<(f64, f64)> = order(name, n).into_iter().map(lift).collect();
+            g.throughput(Throughput::Elements(n));
+            g.bench_with_input(BenchmarkId::new(name, n), &ks, |b, ks| {
+                b.iter_batched_ref(
+                    Envelope::new,
+                    |e| {
+                        for (i, &(kx, ky)) in ks.iter().enumerate() {
+                            e.add_line(kx, ky, HullMeta::of([0.0, 0.0], i as i32));
+                        }
+                    },
+                    criterion::BatchSize::LargeInput,
+                )
+            });
+        }
     }
     g.finish();
 }
 
-/// An envelope of `N` lifted keys, which holds all of them.
-fn filled() -> Envelope {
+/// An envelope of `n` lifted keys, which holds all of them.
+fn filled(n: u64) -> Envelope {
     let mut e = Envelope::new();
-    for k in 0..N {
+    for k in 0..n {
         let (kx, ky) = lift(k);
         e.add_line(kx, ky, HullMeta::of([0.0, 0.0], k as i32));
     }
@@ -127,21 +142,25 @@ const PATTERNS: [&str; 4] = ["sweep", "shuffled", "local", "repeat"];
 /// `argmax`, and the one step either side of it that every head takes to
 /// collect the ties — the `prev`/`next` of `HullHalf::query`.
 fn query(c: &mut Criterion) {
-    let e = filled();
     let mut g = c.benchmark_group("query");
-    for name in PATTERNS {
-        let xs: Vec<Break> = pattern(name, N).into_iter().map(|x| Break::ratio(x, 1.0)).collect();
-        g.throughput(Throughput::Elements(N));
-        g.bench_with_input(BenchmarkId::from_parameter(name), &xs, |b, xs| {
-            b.iter(|| {
-                let mut acc = 0u64;
-                for &x in xs {
-                    let at = e.argmax(black_box(x)).unwrap();
-                    acc += u64::from(e.prev(at) != NIL) + u64::from(e.next(at) != NIL);
-                }
-                acc
-            })
-        });
+    g.sample_size(20);
+    for n in SIZES {
+        let e = filled(n);
+        for name in PATTERNS {
+            let xs: Vec<Break> =
+                pattern(name, n).into_iter().map(|x| Break::ratio(x, 1.0)).collect();
+            g.throughput(Throughput::Elements(n));
+            g.bench_with_input(BenchmarkId::new(name, n), &xs, |b, xs| {
+                b.iter(|| {
+                    let mut acc = 0u64;
+                    for &x in xs {
+                        let at = e.argmax(black_box(x)).unwrap();
+                        acc += u64::from(e.prev(at) != NIL) + u64::from(e.next(at) != NIL);
+                    }
+                    acc
+                })
+            });
+        }
     }
     g.finish();
 }
