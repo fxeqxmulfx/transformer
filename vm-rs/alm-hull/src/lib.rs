@@ -9,6 +9,7 @@
 
 pub mod breakpoint;
 pub mod cht;
+pub mod envelope;
 pub mod exact;
 pub mod gap;
 pub mod grid;
