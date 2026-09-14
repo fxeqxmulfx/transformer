@@ -253,7 +253,7 @@ pub struct Analysis {
 }
 
 /// The dimensions the output head scores with: they must survive to the end.
-fn output_dims(mg: &MachineGraph) -> HashSet<DimId> {
+pub fn output_dims(mg: &MachineGraph) -> HashSet<DimId> {
     let mut out = HashSet::new();
     for (_, e) in &mg.output_tokens {
         out.extend(e.terms().iter().map(|t| t.0));

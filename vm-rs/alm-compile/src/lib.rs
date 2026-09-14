@@ -14,6 +14,7 @@ pub mod graph;
 pub mod interpreter;
 pub mod isa;
 pub mod lower;
+pub mod milp;
 pub mod naming;
 pub mod plan;
 pub mod reference;
