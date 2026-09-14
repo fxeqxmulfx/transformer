@@ -1,14 +1,15 @@
 //! The token prefix, against the released one.
 //!
-//! The six manifest programs are compiled here from their C sources, run, and
-//! the result compared with `transformer_vm/data/*.txt`, `*_spec.txt` and
-//! `*_ref.txt` byte for byte.  That is the whole of the program path — decode,
-//! lower, flatten, format, execute — checked at once against the only
-//! artefacts that can settle it.
+//! The six manifest programs are compiled here from their C sources in
+//! `programs/`, run, and the result compared with `transformer_vm/data/*.txt`,
+//! `*_spec.txt` and `*_ref.txt` byte for byte.  That is the whole of the
+//! program path — decode, lower, flatten, format, execute — checked at once
+//! against the only artefacts that can settle it.
 //!
-//! Both halves are build products of the original Python and are not in this
-//! repository, so the test says what is missing and passes when the vendored
-//! checkout, or a clang that targets wasm32, is not there.
+//! The sources are ours; the released outputs are build products of the
+//! original Python and are not in this repository, so the test says what is
+//! missing and passes when the vendored checkout, or a clang that targets
+//! wasm32, is not there.
 
 use std::path::{Path, PathBuf};
 
@@ -16,19 +17,18 @@ fn vendored() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../transformer-vm/transformer_vm")
 }
 
+fn programs() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../programs")
+}
+
 /// Compile a C source into a directory of our own, so that removing the
 /// intermediate `.wasm` — which is what the Python does — cannot disturb the
-/// vendored tree.
+/// sources.
 fn build(name: &str, scratch: &Path) -> Option<Vec<u8>> {
-    let root = vendored();
-    let c_path = root.join(format!("examples/{name}.c"));
-    if !c_path.exists() {
-        eprintln!("skipped: no {}", c_path.display());
-        return None;
-    }
+    let root = programs();
     let copied = scratch.join(format!("{name}.c"));
-    std::fs::copy(&c_path, &copied).expect("the source copies");
-    match alm_compile::emit::compile_c_to_wasm(&copied, &root.join("compilation/runtime.h")) {
+    std::fs::copy(root.join(format!("{name}.c")), &copied).expect("the source copies");
+    match alm_compile::emit::compile_c_to_wasm(&copied, &root.join("runtime.h")) {
         Ok(wasm) => Some(std::fs::read(wasm).expect("clang wrote the module")),
         Err(e) => {
             eprintln!("skipped: {e}");
@@ -40,10 +40,8 @@ fn build(name: &str, scratch: &Path) -> Option<Vec<u8>> {
 #[test]
 fn the_six_manifest_programs_compile_and_run_to_the_released_files() {
     let root = vendored();
-    let Ok(manifest) = std::fs::read_to_string(root.join("examples/manifest.yaml")) else {
-        eprintln!("skipped: no vendored examples");
-        return;
-    };
+    let manifest =
+        std::fs::read_to_string(programs().join("manifest.yaml")).expect("the manifest is ours");
     let programs = alm_compile::emit::load_manifest(&manifest).expect("the manifest reads");
     assert_eq!(programs.len(), 6, "the release ships six programs");
 

@@ -18,7 +18,7 @@ fn main() {
         }
     }
     let mut args = rest.into_iter();
-    let plan_path = args.next().unwrap_or_else(|| "../transformer-vm/plan.yaml".into());
+    let plan_path = args.next().unwrap_or_else(|| "plan.yaml".into());
     let out = args.next().unwrap_or_else(|| "model.bin".into());
 
     let mg = interpreter::build();

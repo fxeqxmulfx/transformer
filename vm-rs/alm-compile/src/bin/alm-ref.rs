@@ -36,7 +36,7 @@ fn main() {
     let mut files: Vec<String> = Vec::new();
     let mut all = false;
     let mut regen = false;
-    let mut data = "transformer-vm/transformer_vm/data".to_string();
+    let mut data = "data".to_string();
     let mut max_tokens: u64 = 100_000_000;
 
     let mut i = 0;

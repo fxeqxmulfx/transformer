@@ -1727,14 +1727,15 @@ mod tests {
         assert_eq!(lowered.num_locals, f.num_locals, "and gains no temporaries");
     }
 
-    /// The released examples, lowered.  Skipped when the vendored checkout is
-    /// not there: the modules are clang's output and are not in this
-    /// repository.  The byte-for-byte comparison against `compilation/lower.py`
-    /// is `tests/lowerdump.py`; what this pins is the property.
+    /// The released examples, lowered.  The sources are in `programs/`; what
+    /// is skipped is a machine with no clang that targets wasm32, since the
+    /// modules are clang's output and are not in this repository.  The
+    /// byte-for-byte comparison against `compilation/lower.py` is
+    /// `tests/lowerdump.py`; what this pins is the property.
     #[test]
     fn the_released_programs_lower_to_the_dispatch_table() {
-        let root = crate::vendored("transformer_vm");
-        let Ok(entries) = std::fs::read_dir(root.join("examples")) else { return };
+        let root = crate::programs("");
+        let Ok(entries) = std::fs::read_dir(&root) else { return };
         // The `.wasm` are intermediates that the compiler removes after use,
         // so they are built here from the C, into a directory of our own.
         let scratch = std::env::temp_dir().join(format!("alm-lower-{}", std::process::id()));
@@ -1750,7 +1751,7 @@ mod tests {
         for src in &sources {
             let copied = scratch.join(src.file_name().unwrap());
             std::fs::copy(src, &copied).expect("the source copies");
-            let wasm = match crate::emit::compile_c_to_wasm(&copied, &root.join("compilation/runtime.h")) {
+            let wasm = match crate::emit::compile_c_to_wasm(&copied, &root.join("runtime.h")) {
                 Ok(w) => w,
                 Err(e) => {
                     eprintln!("skipped: {e}");

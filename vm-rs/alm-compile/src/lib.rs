@@ -31,5 +31,12 @@ pub(crate) fn vendored(rel: &str) -> std::path::PathBuf {
     std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../transformer-vm").join(rel)
 }
 
+/// A path inside `vm-rs/programs/`, resolved the same way.  The reference
+/// programs are in this repository, so what is under here is always present.
+#[cfg(test)]
+pub(crate) fn programs(rel: &str) -> std::path::PathBuf {
+    std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../programs").join(rel)
+}
+
 pub use expr::{DimId, Expr};
 pub use graph::{Graph, LookUp, TieBreak};

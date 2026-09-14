@@ -155,10 +155,17 @@ five binaries below are the entire build:
 cargo build --release
 target/release/alm-schedule -o plan.yaml
 target/release/alm-build plan.yaml model.bin
-target/release/alm-cc  --all --examples ../transformer-vm/transformer_vm/examples --out data
+target/release/alm-cc  --all --out data
 target/release/alm-ref --all --data data
 target/release/alm-vm model.bin data/hello.txt data/addition.txt
 ```
+
+Nothing there reads the vendored release: run it with `transformer-vm/` moved
+out of the way and the same `plan.yaml`, the same 1 175 314-byte `model.bin`
+and the same eighteen `data/` files come out.  What makes that possible is
+`programs/` — the six `.c` sources, the manifest and `runtime.h`, copied from
+the release under its own Apache-2.0 licence, because the programs are the
+machine's input and were never part of the compiler this port replaces.
 
 `alm-schedule` builds the mixed-integer program and gives it to HiGHS, which
 `highs-sys` compiles from source, so there is no solver to install; `--lp`
@@ -169,6 +176,11 @@ and `--mask` the masking one, so both `todo3.md` experiments can be run
 without a Python at all.  `alm-cc` runs clang with the release's own flags and
 writes the token prefix; `alm-ref` executes it and writes the trace the model
 is checked against.
+
+What still wants the vendored checkout is the checking, not the building: the
+released `plan.yaml`, `model.bin` and `data/*.txt` are what the port is
+compared against, and every test that needs one says so and skips when it is
+absent.
 
 `alm-vm`'s command line is the C++ driver's: `--brute`, `--trace[=N]`,
 `--args=STR`, `--max=N`, plus `--grid`, which has no counterpart there.

@@ -5,8 +5,8 @@
 //! tokens — and `<name>_spec.txt` for the specialized model.
 //!
 //! ```text
-//! alm-cc examples/hello.c --args World -o data/hello
-//! alm-cc --all --examples examples --out data
+//! alm-cc programs/hello.c --args World -o data/hello
+//! alm-cc --all                       # every program in `programs/`, into `data/`
 //! ```
 
 use std::path::{Path, PathBuf};
@@ -58,8 +58,8 @@ fn main() {
     let mut args_str = String::new();
     let mut out_base: Option<String> = None;
     let mut all = false;
-    let mut examples = "transformer-vm/transformer_vm/examples".to_string();
-    let mut out_dir = "transformer-vm/transformer_vm/data".to_string();
+    let mut examples = "programs".to_string();
+    let mut out_dir = "data".to_string();
     let mut runtime_h: Option<String> = None;
 
     let mut i = 0;
@@ -83,9 +83,15 @@ fn main() {
         i += 1;
     }
 
+    // `runtime.h` sits beside the sources here and under `compilation/` in the
+    // release, so both a `programs/` and a vendored `--examples` work unsaid.
     let examples = PathBuf::from(&examples);
     let runtime = runtime_h.map(PathBuf::from).unwrap_or_else(|| {
-        examples.parent().unwrap_or(Path::new(".")).join("compilation/runtime.h")
+        let beside = examples.join("runtime.h");
+        match beside.exists() {
+            true => beside,
+            false => examples.parent().unwrap_or(Path::new(".")).join("compilation/runtime.h"),
+        }
     });
 
     let result = if all {
