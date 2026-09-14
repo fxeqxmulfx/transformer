@@ -12,8 +12,39 @@
 //! different `f64` and a different reference trace.  What may move is the
 //! order *between* rows, which share nothing.
 
-/// A dense matrix, row-major `[rows, cols]`, exactly as `model.bin` stores it.
+/// How many rows are summed at once: the width of one AVX2 register in `f64`.
+///
+/// Four independent accumulators is also roughly what it takes to cover the
+/// four-cycle latency of an FMA, so the number would be about this even on a
+/// machine with no vector unit at all.
+const LANES: usize = 8;
+
+/// A dense matrix, `[rows, cols]` as `model.bin` stores it, held four rows at
+/// a time.
+///
+/// The file is row-major and the obvious loop follows it: one row, one
+/// accumulator, `cols` dependent additions into it.  At `cols = 38` that is
+/// thirty-eight FMAs in a chain four cycles deep and one core that can retire
+/// two of them a cycle — a ninety per cent idle pipeline, and `perf` duly
+/// finds forty-eight per cent of a run inside it.
+///
+/// So the weights are interleaved instead: `w[(b * cols + j) * LANES + l]`
+/// holds row `b * LANES + l`, column `j`, which puts the `j`-th entry of four
+/// consecutive rows in four adjacent words.  One load, one broadcast of `x[j]`
+/// and one vector FMA then advance four rows at once, each lane carrying its
+/// own accumulator.
+///
+/// This changes no answer, and the reason is the layout rather than an
+/// analysis: each lane still sums its own row left to right, in the order
+/// `transformer.cpp` sums it, so every partial sum is the `f64` it was before
+/// and so is the total.  It is the order *between* rows that moves, and rows
+/// share nothing.  The reference traces are bit-for-bit what they were.
+///
+/// Rows are padded up to a multiple of `LANES` with zeros; their sums are
+/// computed and thrown away, which costs at most three rows of a matrix and
+/// removes the remainder loop from the hot path.
 pub struct Dense {
+    rows: usize,
     cols: usize,
     w: Vec<f64>,
 }
@@ -21,22 +52,33 @@ pub struct Dense {
 impl Dense {
     pub fn of(w: &[f64], rows: usize, cols: usize) -> Dense {
         assert_eq!(w.len(), rows * cols, "the weight file declares its own shapes");
-        Dense { cols, w: w.to_vec() }
+        let mut packed = vec![0.0; rows.div_ceil(LANES) * cols * LANES];
+        for (i, row) in w.chunks_exact(cols).enumerate() {
+            let (b, l) = (i / LANES, i % LANES);
+            for (j, &a) in row.iter().enumerate() {
+                packed[(b * cols + j) * LANES + l] = a;
+            }
+        }
+        Dense { rows, cols, w: packed }
     }
 
-    /// `y = W x`, each row summed left to right.
+    /// `y = W x`, each row summed left to right, four rows at a time.
     ///
-    /// The order is the one `transformer.cpp` uses and the one the reference
-    /// traces were generated under; float addition is not associative, so it
-    /// is part of the answer rather than of the schedule.
+    /// The order within a row is the one `transformer.cpp` uses and the one
+    /// the reference traces were generated under; float addition is not
+    /// associative, so it is part of the answer rather than of the schedule.
     pub fn apply(&self, x: &[f64], y: &mut [f64]) {
         debug_assert_eq!(x.len(), self.cols);
-        for (row, out) in self.w.chunks_exact(self.cols).zip(y.iter_mut()) {
-            let mut s = 0.0;
-            for (a, b) in row.iter().zip(x) {
-                s += a * b;
+        debug_assert_eq!(y.len(), self.rows);
+        let (blocks, _) = self.w.as_chunks::<LANES>();
+        for (blk, out) in blocks.chunks_exact(self.cols).zip(y.chunks_mut(LANES)) {
+            let mut s = [0.0; LANES];
+            for (col, &b) in blk.iter().zip(x) {
+                for l in 0..LANES {
+                    s[l] += col[l] * b;
+                }
             }
-            *out = s;
+            out.copy_from_slice(&s[..out.len()]);
         }
     }
 }
