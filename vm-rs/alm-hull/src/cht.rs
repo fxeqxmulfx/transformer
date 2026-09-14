@@ -3,10 +3,21 @@
 //! Ported from `_HullCHT` in `attention/hull2d_cht.h`.  The C++ keeps the
 //! envelope in one `std::multiset` ordered by slope and searches it by
 //! breakpoint through a heterogeneous comparator, which works because the
-//! breakpoints increase with the slope.  A `BTreeMap` cannot be searched that
-//! way on stable Rust, so the envelope is a plain vector in slope order
-//! instead: the same one order, searched by slope or by breakpoint as needed,
-//! and a neighbour is the next element rather than a tree walk.
+//! breakpoints increase with the slope.  Here the envelope is a plain vector
+//! in slope order: the same one order, searched by slope or by breakpoint as
+//! needed, and a neighbour is the next element rather than a tree walk.
+//!
+//! The multiset is expressible, and was measured rather than assumed away.  A
+//! `BTreeSet` of an enum that is either a line or a query, ordered by slope
+//! between two lines and by the line's breakpoint against a query, is the C++
+//! comparator exactly; stable Rust has no cursor API (`btree_cursors`,
+//! rust#107540), but a `range` iterator is one descent and then O(1) per step,
+//! and removals defer out of the walk.  Built that way it agrees with this
+//! vector line for line.  What it costs is the arrival order the traces
+//! actually have: inserting 262 144 parabolic keys in position order takes it
+//! 0.216s against this container's 0.041s.  It is the faster container only
+//! where this one is pathological -- 0.106s against 92.4s in the reverse
+//! order -- which is `alm-stress`, not a trace.
 //!
 //! That trade is real and worth stating, because it is a trade.  Insertion
 //! shifts every line past the point it touches, so the build is `O(n)`
