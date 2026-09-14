@@ -227,39 +227,53 @@ Against the C++ engine on the same 59 089 tokens, back to back on one machine:
 ```
             total     proj     hull     head     misc
 C++         4.05s    2.491    1.316    0.217    0.023
-alm-vm      3.74s    2.365    1.071    0.232    0.068
+alm-vm      3.88s    2.370    1.207    0.230    0.068
 ```
 
 The port is the faster of the two, and it is faster in the part that was
-supposed to cost it: the hull answers in 1.07s against 1.32s while comparing
+supposed to cost it: the hull answers in 1.21s against 1.32s while comparing
 breakpoints *exactly*, where the original compares rounded `long double`s.
 What is left on the other side of the ledger is `misc`, which is the
 per-query diagnostics this port carries and the original has no counterpart
 for.
 
-The lead holds as the traces grow, which is not free and was not always true.
-The C++ keeps the envelope in a `std::multiset`; the port keeps it in one
-array in slope order, faster to search and to walk but shifting a tail on
-every insertion, and that tail grows with the envelope.  On the sudoku trace,
-eighteen times the tokens:
+The lead holds as the traces grow.  On the sudoku trace, eighteen times the
+tokens:
 
 ```
             total     proj     hull     head     misc
 C++        79.08s   44.455   29.637    4.568    0.417
-alm-vm     74.14s   42.088   26.030    4.835    1.188
+alm-vm     75.65s   42.397   27.263    4.793    1.196
 ```
 
-The hull got there by moving the tail once per insertion rather than once per
-line dropped: `add_line` decides what survives by reading the array and then
-rewrites it in a single `copy_within`, which took that bucket from 34.9s to
-26.0s and turned a 4.5% loss into a 6.2% win.  The asymptotics are still the
-array's weak side — `O(n)` per insertion against the multiset's `O(log n)` —
-but the constant is large enough that fitting the three measured sizes puts
-the two level near `1.4e8` tokens, and the score `2qk - k^2` leaves the exact
-integers at `9.5e7`.  There is no size at which this engine answers correctly
-and the tree would be the better container; a `BTreeMap` envelope answers the
-sudoku trace in 81.8s, worse than either.  `alm-hull/src/cht.rs` states the
-measurement in full.
+Both engines keep the envelope in the same shape of container, and it took
+two goes to get there.  The C++ uses one `std::multiset`, ordered by slope
+and searched by breakpoint through a heterogeneous comparator; the port began
+with a vector in slope order, which searches and walks faster but shifts a
+tail on every insertion.  The vector was the quicker of the two on every
+trace here — 26.1s against 27.1s on this one — and it was the wrong
+container.  `HullBuild.lean` charges a build two searches per key and one
+unit per erase and proves it `O(n log n)` from that tariff, which is only
+true where erasing at a known cursor is amortized constant.  Erasing from a
+vector costs the tail it moves, so `buildCost_le` was a theorem about a
+container the engine did not have.
+
+`alm-hull/src/tree.rs` is the one it describes: a red-black tree in an arena
+addressed by `u32`, with the cursors `BTreeSet` does not offer on stable Rust
+(`btree_cursors`, rust#107540).  A run of erases walks the envelope once
+instead of searching again for each line it drops, nothing ever moves, and
+the ends are held rather than walked to, so an insertion at either end costs
+no descent at all — which leaves one search per key where the C++ spends two.
+What it buys is that the numbers stop depending on the order the keys arrive
+in: `alm-stress` builds 262 144 keys in descending order in 0.080s, where the
+vector takes 102.9s and grows quadratically.  Nothing in the engine promises
+the near-sorted order the traces happen to have, since `cache.rs` reads the
+keys from a learned projection.
+
+The vector is kept as the reference the tree is tested against line for line.
+`alm-hull/src/cht.rs` states both measurements in full, including the
+`BTreeMap` envelope that answered the sudoku trace in 81.8s, worse than
+either.
 
 The projections are not merely as fast as the C++ — they are the same
 arithmetic.  `transformer.cpp` sums each row left to right into one accumulator
