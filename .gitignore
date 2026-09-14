@@ -54,3 +54,4 @@ venv/
 # — and none of them belong in history.
 model.bin
 *.wasm
+/vm-rs/data/
