@@ -10,3 +10,11 @@ license = "Apache-2.0"
 [workspace.dependencies]
 good_lp = { version = "1.15", default-features = false, features = ["highs"] }
 burn = { version = "0.21", default-features = false, features = ["std", "ndarray"] }
+
+# `transformer.cpp` is one translation unit, so everything in it inlines; the
+# port is five crates and burn on top, and without link-time optimization the
+# projection path pays a call for every tensor operation.  Worth 9 % of a run
+# and nothing at build time that HiGHS was not already costing.
+[profile.release]
+lto = "fat"
+codegen-units = 1
