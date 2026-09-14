@@ -12,6 +12,7 @@ pub mod expr;
 pub mod graph;
 pub mod interpreter;
 pub mod isa;
+pub mod lower;
 pub mod naming;
 pub mod plan;
 pub mod slots;
