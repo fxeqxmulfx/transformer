@@ -226,36 +226,40 @@ Against the C++ engine on the same 59 089 tokens, back to back on one machine:
 
 ```
             total     proj     hull     head     misc
-C++         4.06s    2.497    1.320    0.216    0.022
-alm-vm      3.80s    2.375    1.127    0.232    0.066
+C++         4.05s    2.491    1.316    0.217    0.023
+alm-vm      3.74s    2.365    1.071    0.232    0.068
 ```
 
-The port is the faster of the two at this size, and it is faster in the part
-that was supposed to cost it: the hull answers in 1.13s against 1.32s while
-comparing breakpoints *exactly*, where the original compares rounded `long
-double`s.  What is left on the other side of the ledger is `misc`, which is
-the per-query diagnostics this port carries and the original has no
-counterpart for.
+The port is the faster of the two, and it is faster in the part that was
+supposed to cost it: the hull answers in 1.07s against 1.32s while comparing
+breakpoints *exactly*, where the original compares rounded `long double`s.
+What is left on the other side of the ledger is `misc`, which is the
+per-query diagnostics this port carries and the original has no counterpart
+for.
 
-That lead does not hold at every size, and the reason is in the hull.  The
-C++ keeps the envelope in a `std::multiset`; the port keeps it in one array
-in slope order, which is faster to search and to walk but shifts a tail on
-every insertion.  The shifted tail grows with the envelope, so on the sudoku
-trace — eighteen times the tokens — the two have changed places:
+The lead holds as the traces grow, which is not free and was not always true.
+The C++ keeps the envelope in a `std::multiset`; the port keeps it in one
+array in slope order, faster to search and to walk but shifting a tail on
+every insertion, and that tail grows with the envelope.  On the sudoku trace,
+eighteen times the tokens:
 
 ```
             total     proj     hull     head     misc
-C++        79.32s   44.504   29.882    4.75     1.22
-alm-vm     83.08s   42.159   34.895    4.87     1.17
+C++        79.08s   44.455   29.637    4.568    0.417
+alm-vm     74.14s   42.088   26.030    4.835    1.188
 ```
 
-The projections stay ahead; the hull gives back more than they win.  The
-array is still the right container — a `BTreeMap` envelope answers the same
-trace in 81.8s, worse than either — but its insertion cost is `O(n)` where
-the multiset's is `O(log n)`, and at a million tokens that shows.  The cost
-is concentrated rather than spread: 97.6% of insertions shift fewer than four
-lines, and 0.92% shift more than a thousand and account for 94% of all
-movement.  `alm-hull/src/cht.rs` states the measurement in full.
+The hull got there by moving the tail once per insertion rather than once per
+line dropped: `add_line` decides what survives by reading the array and then
+rewrites it in a single `copy_within`, which took that bucket from 34.9s to
+26.0s and turned a 4.5% loss into a 6.2% win.  The asymptotics are still the
+array's weak side — `O(n)` per insertion against the multiset's `O(log n)` —
+but the constant is large enough that fitting the three measured sizes puts
+the two level near `1.4e8` tokens, and the score `2qk - k^2` leaves the exact
+integers at `9.5e7`.  There is no size at which this engine answers correctly
+and the tree would be the better container; a `BTreeMap` envelope answers the
+sudoku trace in 81.8s, worse than either.  `alm-hull/src/cht.rs` states the
+measurement in full.
 
 The projections are not merely as fast as the C++ — they are the same
 arithmetic.  `transformer.cpp` sums each row left to right into one accumulator
