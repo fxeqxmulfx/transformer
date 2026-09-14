@@ -1,58 +1,49 @@
-//! The dynamic convex hull trick: an upper envelope of lines under insertion.
+//! The dynamic convex hull trick in a vector: the envelope the tree is tested
+//! against.
 //!
-//! Ported from `_HullCHT` in `attention/hull2d_cht.h`.  The C++ keeps the
-//! envelope in one `std::multiset` ordered by slope and searches it by
-//! breakpoint through a heterogeneous comparator, which works because the
-//! breakpoints increase with the slope.  Here the envelope is a plain vector
-//! in slope order: the same one order, searched by slope or by breakpoint as
-//! needed, and a neighbour is the next element rather than a tree walk.
+//! This was the engine's container and is not any more, which is worth
+//! stating in one place because the reason is not the one the measurements
+//! pointed at.  `HullBuild.lean` charges a build two searches per key and one
+//! unit per erase and proves it `O(n log n)` from that tariff; the tariff is
+//! only true of a container whose erase at a known cursor is amortized
+//! constant.  Erasing from a vector costs the tail it moves, so `buildCost_le`
+//! was a theorem about a container the engine did not have.  `envelope.rs` is
+//! the one it describes.
 //!
-//! The multiset is expressible, and was measured rather than assumed away.  A
-//! `BTreeSet` of an enum that is either a line or a query, ordered by slope
-//! between two lines and by the line's breakpoint against a query, is the C++
-//! comparator exactly; stable Rust has no cursor API (`btree_cursors`,
-//! rust#107540), but a `range` iterator is one descent and then O(1) per step,
-//! and removals defer out of the walk.  Built that way it agrees with this
-//! vector line for line.  What it costs is the arrival order the traces
-//! actually have: inserting 262 144 parabolic keys in position order takes it
-//! 0.216s against this container's 0.041s.  It is the faster container only
-//! where this one is pathological -- 0.106s against 92.4s in the reverse
-//! order -- which is `alm-stress`, not a trace.
-//!
-//! That trade is real and worth stating, because it is a trade.  Insertion
-//! shifts every line past the point it touches, so the build is `O(n)`
-//! amortized per key where a tree is `O(log n)`, and the shifted tail is not
-//! a constant: measured over the reference suite it is a fixed fraction of
-//! the envelope, near `n / 33 000`.
-//!
-//! Back to back on one machine, the `hull` bucket alone:
+//! What the vector was, it was honestly: the faster container on every trace
+//! this engine can be trusted at.  Back to back on one machine, the `hull`
+//! bucket alone:
 //!
 //! ```text
-//! tokens      envelope    mean shift      vec    BTreeMap      C++    vec/C++
-//!     59 089    44 588          1.4     1.07s       4.11s    1.32s      0.81
-//!    178 226   178 225          7.7     3.70s          --    4.55s      0.81
-//!  1 055 417  1 055 416        26.8    26.03s      81.84s   29.64s      0.88
+//! tokens      envelope    mean shift      vec       tree    BTreeMap      C++
+//!     59 089    44 588          1.4     1.05s      1.20s       4.11s    1.32s
+//!    178 226   178 225          7.7     3.78s      4.05s          --    4.55s
+//!  1 055 417  1 055 416        26.8    26.11s     27.07s      81.84s   29.64s
 //! ```
 //!
-//! The constant is what decides it, and the constant is large.  A shift is a
-//! memmove of contiguous lines; a tree step is a pointer chased into a cold
-//! cache line, and the C++ container is searched twice per key.  The Rust
-//! `BTreeMap` was worse than either, because it needed a second index in step
-//! with the map where one container serves here.
+//! Each figure is the better of two runs taken alternately; the vector's
+//! spread across runs (3.78s and 4.26s on the middle trace) is wider than the
+//! gap it wins by there.  Four to thirteen per cent, which is what an
+//! insertion that shifts nothing on a trace whose keys arrive nearly sorted
+//! is worth.  The same insertion off that
+//! order is quadratic: 262 144 keys in descending order build in 102.9s
+//! against the tree's 0.080s, and `alm-stress` will show it in any of five
+//! orders.  Nothing in the engine promises the sorted one -- `cache.rs` reads
+//! the keys from a learned projection -- so the vector was one trace away
+//! from stopping.
 //!
-//! The linear term does close, but slowly.  Fitting the three sizes above
-//! puts the array level with the C++ multiset near `1.4e8` tokens — the same
-//! order as the `9.5e7` at which the score `2qk - k^2` leaves the exact
-//! integers (`grid.rs`) and this machine stops answering correctly at all.
-//! The array is the right shape for every `n` this engine can be trusted at,
-//! and only for those.
+//! It is kept because two containers that must agree are worth more than one
+//! that cannot be checked: `envelope.rs` is tested against this line for
+//! line, over random lines, over the parabolic lift, over every arrival order
+//! and over repeated slopes, the same way `BruteAttentionHead` is kept to
+//! test `HardAttentionHead`.
 //!
-//! What the linear term costs is not spread evenly, which is what leaves room
-//! to shrink it further.  Over the sudoku trace 97.6% of insertions shift
-//! fewer than four lines and 0.92% shift more than a thousand — and that
-//! 0.92% moves 94% of everything ever moved.  The mean of 26.8 is one rare
-//! deep insertion, not a tail that grows under every key, so bounding the
-//! shift would not cost the locality the array is kept for.
+//! What the shift cost when it was paid is still the clearest picture of why
+//! it had to go.  Over the sudoku trace 97.6% of insertions shifted fewer
+//! than four lines and 0.92% shifted more than a thousand -- and that 0.92%
+//! moved 94% of the 4.2e9 lines of 80 bytes the container ever moved.  The
+//! mean of 26.8 was one rare deep insertion, not a tail that grows under
+//! every key.
 
 use crate::breakpoint::Break;
 use crate::meta::HullMeta;
