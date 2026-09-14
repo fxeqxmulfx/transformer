@@ -8,35 +8,40 @@
 //! instead: the same one order, searched by slope or by breakpoint as needed,
 //! and a neighbour is the next element rather than a tree walk.
 //!
-//! That trade is real and worth stating, because it is a trade.  `Vec::insert`
-//! and `Vec::remove` shift every element past the position they touch, so the
-//! build is `O(n)` amortized per key where a tree is `O(log n)`.  Measured
-//! over the reference suite, the shifted tail is a fixed fraction of the
-//! envelope, near `n / 33 000` — linear in `n`, not a constant.
+//! That trade is real and worth stating, because it is a trade.  Insertion
+//! shifts every line past the point it touches, so the build is `O(n)`
+//! amortized per key where a tree is `O(log n)`, and the shifted tail is not
+//! a constant: measured over the reference suite it is a fixed fraction of
+//! the envelope, near `n / 33 000`.
+//!
+//! Back to back on one machine, the `hull` bucket alone:
 //!
 //! ```text
-//! tokens      envelope    mean shift    hull, vec    hull, tree    hull, C++
-//!     59 089    44 588          1.4        1.13s         4.11s        1.32s
-//!    178 226   178 225          7.7           --            --           --
-//!  1 055 417  1 055 416        26.8       34.90s        81.84s       29.88s
+//! tokens      envelope    mean shift      vec    BTreeMap      C++    vec/C++
+//!     59 089    44 588          1.4     1.07s       4.11s    1.32s      0.81
+//!    178 226   178 225          7.7     3.70s          --    4.55s      0.81
+//!  1 055 417  1 055 416        26.8    26.03s      81.84s   29.64s      0.88
 //! ```
 //!
-//! Two comparisons, and they do not agree.  Against the `BTreeMap` the array
-//! wins at every size measured, by 3.6x at 59 089 tokens and still 2.3x at a
-//! million: a shift is a memmove of contiguous lines, a tree step is a pointer
-//! chased into a cold cache line, and the Rust tree pays for keeping a map and
-//! its breakpoint index in step where one container would do.  Against the
-//! C++ `std::multiset`, which is that one container, the array is 15% ahead at
-//! 59 089 tokens and 15% behind at a million.  The linear term is real and it
-//! does catch up.
+//! The constant is what decides it, and the constant is large.  A shift is a
+//! memmove of contiguous lines; a tree step is a pointer chased into a cold
+//! cache line, and the C++ container is searched twice per key.  The Rust
+//! `BTreeMap` was worse than either, because it needed a second index in step
+//! with the map where one container serves here.
 //!
-//! What it costs is not spread evenly.  Over the sudoku trace at a million
-//! tokens, 97.6% of insertions shift fewer than four lines and 0.92% shift
-//! more than a thousand — and that 0.92% moves 94% of all the elements ever
-//! moved.  The mean of 26.8 is one rare deep insertion, not a tail that grows
-//! under every key.  So the fix for the linear term is to bound the shift, not
-//! to give up the array: the shape that makes it slow is also the shape that
-//! makes it rare.
+//! The linear term does close, but slowly.  Fitting the three sizes above
+//! puts the array level with the C++ multiset near `1.4e8` tokens — the same
+//! order as the `9.5e7` at which the score `2qk - k^2` leaves the exact
+//! integers (`grid.rs`) and this machine stops answering correctly at all.
+//! The array is the right shape for every `n` this engine can be trusted at,
+//! and only for those.
+//!
+//! What the linear term costs is not spread evenly, which is what leaves room
+//! to shrink it further.  Over the sudoku trace 97.6% of insertions shift
+//! fewer than four lines and 0.92% shift more than a thousand — and that
+//! 0.92% moves 94% of everything ever moved.  The mean of 26.8 is one rare
+//! deep insertion, not a tail that grows under every key, so bounding the
+//! shift would not cost the locality the array is kept for.
 
 use crate::breakpoint::Break;
 use crate::meta::HullMeta;
