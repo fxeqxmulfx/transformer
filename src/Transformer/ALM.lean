@@ -23,6 +23,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.HullResolve` | and what that walk hands back, in either tie-break mode |
 | `ALM.HullBuild` | and what building it costs, the erase loops amortized away |
 | `ALM.HullCover` | and that it holds one line per key, so the search covers them all |
+| `ALM.BuildOrder` | and that no arrival order can cost it more than one erase per key |
 | `ALM.HullLift` | and that on the paraboloid no erase rule whatsoever can fire |
 | `ALM.HullLower` | while the other half of the head keeps two lines at any length |
 | `ALM.HullSpace` | and no container at all keeps fewer than one line per key |
@@ -107,6 +108,7 @@ import Transformer.ALM.HullScan
 import Transformer.ALM.HullResolve
 import Transformer.ALM.HullBuild
 import Transformer.ALM.HullCover
+import Transformer.ALM.BuildOrder
 import Transformer.ALM.HullLift
 import Transformer.ALM.HullLower
 import Transformer.ALM.HullSpace
