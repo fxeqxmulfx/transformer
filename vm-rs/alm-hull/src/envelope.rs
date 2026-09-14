@@ -109,18 +109,32 @@ impl Envelope {
         self.t.prev(i)
     }
 
+    /// The line at `i`, without the aggregate behind it.
+    ///
+    /// Both walks below compare lines and never look at what they carry, so
+    /// this is what they ask the tree for: two of the six words a node holds.
+    pub fn key(&self, i: u32) -> (f64, f64) {
+        let (m, b) = self.t.key(i);
+        (m.get(), b)
+    }
+
+    /// The aggregate carried by the line at `i`.
+    pub fn meta_of(&self, i: u32) -> HullMeta {
+        self.t.meta_of(i)
+    }
+
     /// The breakpoint of the line at `i` against `r`, or `PosInf` past the end.
-    fn break_against(&self, i: u32, r: Option<Line>) -> Break {
-        let x = self.t.get(i);
+    fn break_against(&self, i: u32, r: Option<(f64, f64)>) -> Break {
+        let (m, b) = self.key(i);
         match r {
-            Some(y) => Break::between(x.m.get(), x.b, y.m.get(), y.b),
+            Some((rm, rb)) => Break::between(m, b, rm, rb),
             None => Break::PosInf,
         }
     }
 
     /// The line at the cursor, or `None` past the end.
-    fn line_at(&self, i: u32) -> Option<Line> {
-        (i != NIL).then(|| self.t.get(i))
+    fn key_at(&self, i: u32) -> Option<(f64, f64)> {
+        (i != NIL).then(|| self.key(i))
     }
 
     /// Insert `y = m x + b` carrying `meta`, keeping only the upper envelope.
@@ -137,12 +151,12 @@ impl Envelope {
         let at = self.t.lower_bound_slope(s);
         let mut hi = at;
         if at != NIL && self.t.slope_of(at) == s {
-            let l = self.t.get(at);
-            if l.b == b {
-                let mut merged = l.meta;
+            let lb = self.t.key(at).1;
+            if lb == b {
+                let mut merged = self.t.meta_of(at);
                 merged.merge(&meta);
                 new_meta = merged;
-            } else if l.b >= b {
+            } else if lb >= b {
                 return;
             }
             hi = self.t.next(at);
@@ -151,12 +165,12 @@ impl Envelope {
 
         // Drop successors the new line has made redundant.
         loop {
-            let Some(succ) = self.line_at(hi) else {
+            let Some((sm, sb)) = self.key_at(hi) else {
                 new.p = Break::PosInf;
                 break;
             };
-            new.p = Break::between(new.m.get(), new.b, succ.m.get(), succ.b);
-            if new.p >= succ.p {
+            new.p = Break::between(new.m.get(), new.b, sm, sb);
+            if new.p >= self.t.break_of(hi) {
                 hi = self.t.next(hi);
             } else {
                 break;
@@ -170,12 +184,12 @@ impl Envelope {
         let pred = self.t.prev(at);
         if pred != NIL {
             let mut cur = pred;
-            let mut p = self.break_against(cur, Some(new));
+            let mut p = self.break_against(cur, Some((new.m.get(), new.b)));
             if p >= new.p {
                 keep = false;
-                p = self.break_against(cur, self.line_at(hi));
+                p = self.break_against(cur, self.key_at(hi));
             }
-            let right = if keep { Some(new) } else { self.line_at(hi) };
+            let right = if keep { Some((new.m.get(), new.b)) } else { self.key_at(hi) };
             loop {
                 let back = self.t.prev(cur);
                 if back == NIL || self.t.break_of(back) < p {

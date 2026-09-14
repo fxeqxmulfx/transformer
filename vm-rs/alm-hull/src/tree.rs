@@ -10,11 +10,21 @@
 //!
 //! This is that container, written out.  Nodes live in an arena addressed by
 //! `u32`, so a link is four bytes rather than eight and the whole envelope is
-//! three allocations that grow by doubling.  The arena is split by field:
-//! a descent by slope touches `slope` and `link` and nothing else, 24 bytes a
-//! node against the 96 a node would be if it were one struct.  Searching
+//! three allocations that grow by doubling.  The arena is split by field, not
+//! by node: a descent by slope touches `key` and `nav` and nothing else, 32
+//! bytes against the 96 a node would be if it were one struct.  Searching
 //! 1e6 keys laid out that way costs 220ns against 356ns for the same search
 //! over whole lines.
+//!
+//! Where the split is drawn matters as much as that it is drawn, and the
+//! sudoku trace is what draws it.  The walks read a line's `m` and `b`
+//! together and never anything else; the aggregate behind the line is read
+//! once per query and once per insertion onto an equal slope.  So `m` and `b`
+//! share a sixteen-byte slot, which is one cache line for the pair, and the
+//! forty bytes of aggregate they used to sit beside are their own array.
+//! Splitting the aggregate off alone was measured first and gained nothing --
+//! `m` and `b` were still two misses.  Both changes together took the hull
+//! from 21.37s to 20.13s of a 42s run.
 //!
 //! Index `0` is the sentinel.  It is its own black leaf, every empty child
 //! points at it, and it exists so that the rebalancing cases can name the
@@ -98,9 +108,9 @@ pub struct Line {
 
 /// The envelope, ordered by slope and searchable by breakpoint.
 pub struct Tree {
-    slope: Vec<Slope>,
+    key: Vec<(Slope, f64)>,
     nav: Vec<Nav>,
-    rest: Vec<(f64, HullMeta)>,
+    meta: Vec<HullMeta>,
     root: u32,
     /// The ends, held rather than walked to.
     ///
@@ -122,9 +132,9 @@ impl Default for Tree {
 impl Tree {
     pub fn new() -> Tree {
         Tree {
-            slope: vec![Slope(0.0)],
+            key: vec![(Slope(0.0), 0.0)],
             nav: vec![NAV_NIL],
-            rest: vec![(0.0, HullMeta::default())],
+            meta: vec![HullMeta::default()],
             root: NIL,
             ends: (NIL, NIL),
             free: NIL,
@@ -141,9 +151,9 @@ impl Tree {
     }
 
     pub fn clear(&mut self) {
-        self.slope.truncate(1);
+        self.key.truncate(1);
         self.nav.truncate(1);
-        self.rest.truncate(1);
+        self.meta.truncate(1);
         self.nav[0] = NAV_NIL;
         self.root = NIL;
         self.ends = (NIL, NIL);
@@ -151,15 +161,36 @@ impl Tree {
         self.len = 0;
     }
 
-    /// The line at `i`, which is what a query and its neighbour walk read.
+    /// The whole of the node at `i`: the line, its breakpoint, and the
+    /// aggregate behind it.
+    ///
+    /// Three arrays, so three places; the walks that run in the hot path ask
+    /// for `key` instead, which is the part of it they read.
     pub fn get(&self, i: u32) -> Line {
         let k = i as usize;
-        let (b, meta) = self.rest[k];
-        Line { m: self.slope[k], b, p: self.nav[k].p, meta }
+        let (m, b) = self.key[k];
+        Line { m, b, p: self.nav[k].p, meta: self.meta[k] }
+    }
+
+    /// The line at `i` and nothing else: what both walks compare.
+    ///
+    /// One load, because `m` and `b` are adjacent.  `break_against` and
+    /// `key_at` ask for exactly this pair and the envelope of the sudoku
+    /// trace is a 1.6 GB arena in which a node visit is a cache miss, so
+    /// whether the pair is one slot or two is the difference the walks feel.
+    #[inline(always)]
+    pub fn key(&self, i: u32) -> (Slope, f64) {
+        self.key[i as usize]
+    }
+
+    /// The aggregate behind the line at `i`.
+    #[inline(always)]
+    pub fn meta_of(&self, i: u32) -> HullMeta {
+        self.meta[i as usize]
     }
 
     pub fn slope_of(&self, i: u32) -> Slope {
-        self.slope[i as usize]
+        self.key[i as usize].0
     }
 
     pub fn break_of(&self, i: u32) -> Break {
@@ -171,7 +202,7 @@ impl Tree {
     }
 
     pub fn set_meta(&mut self, i: u32, meta: HullMeta) {
-        self.rest[i as usize].1 = meta;
+        self.meta[i as usize] = meta;
     }
 
     /// The links of the node at `i`, named rather than indexed.
@@ -194,7 +225,7 @@ impl Tree {
     /// The slope of the node at `i`, which is what a descent by slope reads.
     #[inline(always)]
     fn sl(&self, i: u32) -> Slope {
-        self.slope[i as usize]
+        self.key[i as usize].0
     }
 
     /// The breakpoint of the node at `i`, which is what a query reads.
@@ -321,15 +352,15 @@ impl Tree {
         let i = if self.free != NIL {
             let i = self.free;
             self.free = self.lk(i).parent;
-            self.slope[i as usize] = line.m;
+            self.key[i as usize] = (line.m, line.b);
             self.nav[i as usize].p = line.p;
-            self.rest[i as usize] = (line.b, line.meta);
+            self.meta[i as usize] = line.meta;
             i
         } else {
             let i = self.nav.len() as u32;
-            self.slope.push(line.m);
+            self.key.push((line.m, line.b));
             self.nav.push(Nav { p: line.p, l: BLACK_NIL });
-            self.rest.push((line.b, line.meta));
+            self.meta.push(line.meta);
             i
         };
         *self.lk_mut(i) = Link { left: NIL, right: NIL, parent: NIL, red: true };
@@ -605,11 +636,11 @@ mod tests {
         let r = t.nav[x as usize].l.right;
         if l != NIL {
             assert_eq!(t.nav[l as usize].l.parent, x, "left child disowns its parent");
-            assert!(t.slope[l as usize] < t.slope[x as usize], "left child is not below");
+            assert!(t.key[l as usize].0 < t.key[x as usize].0, "left child is not below");
         }
         if r != NIL {
             assert_eq!(t.nav[r as usize].l.parent, x, "right child disowns its parent");
-            assert!(t.slope[x as usize] < t.slope[r as usize], "right child is not above");
+            assert!(t.key[x as usize].0 < t.key[r as usize].0, "right child is not above");
         }
         if t.nav[x as usize].l.red {
             assert!(l == NIL || !t.nav[l as usize].l.red, "red node with a red left child");

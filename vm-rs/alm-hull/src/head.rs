@@ -59,11 +59,11 @@ impl HullHalf {
 
     /// The stored key of the line at `i`, undoing the negation of a lower hull.
     fn key_at(&self, i: u32) -> (f64, f64) {
-        let l = self.cht.get(i);
+        let (m, b) = self.cht.key(i);
         if self.is_upper {
-            (l.m.get(), l.b)
+            (m, b)
         } else {
-            (-l.m.get(), -l.b)
+            (-m, -b)
         }
     }
 
@@ -89,12 +89,12 @@ impl HullHalf {
         // A query with `qy == 0` reads one extreme of the envelope and stops:
         // the ties there are already collapsed into that node's aggregate.
         if qy == 0.0 {
-            let out = self.cht.get(best).meta.resolve(tb);
+            let out = self.cht.meta_of(best).resolve(tb);
             return Some(Hit { out, score: best_score, best_kx: kx_best, best_key: [kx_best, ky_best] });
         }
 
         let mut combined = HullMeta::default();
-        combined.merge(&self.cht.get(best).meta);
+        combined.merge(&self.cht.meta_of(best));
 
         // The ties either side of the winner, walked with the cursor that
         // found it: a neighbour is one step, not another search.
@@ -104,7 +104,7 @@ impl HullHalf {
             if qx * kx + qy * ky != best_score {
                 break;
             }
-            combined.merge(&self.cht.get(left).meta);
+            combined.merge(&self.cht.meta_of(left));
             left = self.cht.prev(left);
         }
 
@@ -114,7 +114,7 @@ impl HullHalf {
             if qx * kx + qy * ky != best_score {
                 break;
             }
-            combined.merge(&self.cht.get(right).meta);
+            combined.merge(&self.cht.meta_of(right));
             right = self.cht.next(right);
         }
 
