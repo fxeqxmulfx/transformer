@@ -38,6 +38,8 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.LatestWindow` | and what orders the writes the released weights never tie |
 | `ALM.LatestClose` | and how long that lasts, past which rounding decides instead |
 | `ALM.ScoreWall` | and that the wall is the stored coordinate, not the arithmetic |
+| `ALM.CumSum` | the counter the average has to divide out, and cannot |
+| `ALM.DriftMargin` | and the margin that replaces the exactness it costs |
 | `ALM.Basic` | exact hardmax lookup in arbitrary key dimension |
 | `ALM.Softmax` | softmax-to-hardmax error bounds for an abstract score gap |
 | `ALM.Lattice` | the tail bounds that remove the factor `n` |
@@ -112,6 +114,8 @@ import Transformer.ALM.TieBreak
 import Transformer.ALM.LatestWindow
 import Transformer.ALM.LatestClose
 import Transformer.ALM.ScoreWall
+import Transformer.ALM.CumSum
+import Transformer.ALM.DriftMargin
 import Transformer.ALM.Softmax
 import Transformer.ALM.Lattice
 import Transformer.ALM.ScalarInt
