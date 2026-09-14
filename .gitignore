@@ -46,3 +46,10 @@ venv/
 
 # ── Rust ─────────────────────────────────────────────────────────────────
 /vm-rs/target/
+
+# ── Compiler artefacts ───────────────────────────────────────────────────
+# What `alm-build` and the ported compiler write: the 1.2 MB weight file, the
+# clang output, and the token traces.  All of them are reproducible from the
+# sources here plus the vendored release, and none of them belong in history.
+model.bin
+*.wasm
