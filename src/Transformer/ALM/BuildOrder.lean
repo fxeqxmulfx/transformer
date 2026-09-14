@@ -8,7 +8,7 @@ sequence is what one arrival order produced.  Nothing in it said the next
 order could not be worse, and the question is not idle — `cache.rs` reads its
 keys from a learned projection, so no order is guaranteed, and
 `vm-rs/alm-hull/src/bin/alm-stress.rs` measures five of them on the same
-262 144 keys and finds a two-fold spread, `0.069 s` to `0.153 s`.  The old
+262 144 keys and finds a three-fold spread, `0.054 s` to `0.152 s`.  The old
 `Vec` port spread thirty-one-fold on the same table, which is why it is gone.
 
 `buildPrices m n` is every price a build of `m` keys can be charged, over every
@@ -23,9 +23,19 @@ does move the price, just not far.
 And on the paraboloid it does not move it at all.  `Transformer.ALM.HullCover`
 proves the erase test never fires on lifted keys, so the pop sequence is forced
 to be zeros and `buildPrices_paraboloid` collapses the whole set to a single
-number.  The five orders of the stress table are charged *the same price*, and
-the two-fold between them is therefore not comparisons: it is the memory the
-comparisons walk, which is what `tree.rs` is kept for and what the vector lost.
+number.  The five orders of the stress table are charged *the same price*.
+
+That is a fact about this tariff and not about the port, and the difference
+matters.  `buildCost` charges a search per key unconditionally; `tree.rs` holds
+the two ends of the envelope in a field and runs no search at all when the
+arriving slope falls outside them, which `alm-stress` now counts and finds is
+the case on every key of three of the five orders.  So the collapse above says
+only that the tariff cannot see the fast path.
+`Transformer.ALM.BuildFinger` prices the port instead, and there the set does
+not collapse: the same lifted keys cost `m` in one order and `m(log₂ n + 1)` in
+another.  Part of the measured spread is comparisons this file cannot count,
+and the rest — two orders that descend on the same keys and still differ
+two-fold — is the memory the comparisons walk.
 
 Source: `vm-rs/alm-hull/src/bin/alm-stress.rs` (the measured table) and
 `vm-rs/alm-hull/src/envelope.rs`; `transformer_vm/attention/hull2d_cht.h`,
@@ -123,11 +133,12 @@ example : buildCost [0, 0, 2] 3 ∈ buildPrices 3 3 ∧ buildCost [0, 0, 0] 3 �
 theorem log_two_stress : Nat.log 2 262144 = 18 := by
   rw [show (262144 : ℕ) = 2 ^ 18 by norm_num, Nat.log_pow (by norm_num)]
 
-/-- **Under three per cent, against a measured two-fold.**  At the size
+/-- **Under three per cent, against a measured three-fold.**  At the size
 `alm-stress` reports, the tariff permits the worst arrival order to cost
-`39/38` of the best.  The measured spread is `0.153 / 0.069`, a factor of
-`2.2`, so whatever the five orders differ in, it is not the comparisons this
-model counts. -/
+`39/38` of the best.  The measured spread is `0.152 / 0.054`, a factor of
+`2.8`, so whatever the five orders differ in, it is not the comparisons *this*
+model counts — `Transformer.ALM.BuildFinger.stress_port_ratio` counts more of
+them and permits twenty. -/
 theorem stress_spread_le {c d : ℕ} (hc : c ∈ buildPrices 262144 262144)
     (hd : d ∈ buildPrices 262144 262144) : c * 38 ≤ d * 39 := by
   have h := buildPrices_ratio hc hd
@@ -152,8 +163,10 @@ example : buildCost (List.replicate 262144 0) 262144 ∈ buildPrices 262144 2621
 /-- **One price, not a band.**  `Transformer.ALM.HullCover` proves the erase
 test never fires on lifted keys, so every arrival order produces the same pop
 sequence — zeros — and the set of prices collapses to a point.  The five orders
-of the stress table are charged identically, and the two-fold between them is
-memory traffic rather than work this tariff can see. -/
+of the stress table are charged identically, which is a limit of this tariff
+and not a property of the port: it counts a search per key whether or not one
+is run, and `Transformer.ALM.BuildFinger.portCost_moves_on_the_paraboloid`
+shows the price does move once the searches that never happen are counted. -/
 theorem buildPrices_paraboloid (m n : ℕ) :
     {c | ∃ ps : List ℕ, ps.length = m ∧ (∀ p ∈ ps, p = 0) ∧ buildCost ps n = c}
       = {2 * m * (Nat.log 2 n + 1)} := by
