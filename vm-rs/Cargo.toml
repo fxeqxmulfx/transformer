@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["alm-compile", "alm-hull", "alm-model", "alm-vm"]
+members = ["alm-compile", "alm-hull", "alm-model", "alm-schedule", "alm-vm"]
 
 [workspace.package]
 version = "0.1.0"
@@ -8,4 +8,5 @@ edition = "2021"
 license = "Apache-2.0"
 
 [workspace.dependencies]
+good_lp = { version = "1.15", default-features = false, features = ["highs"] }
 burn = { version = "0.21", default-features = false, features = ["std", "ndarray"] }

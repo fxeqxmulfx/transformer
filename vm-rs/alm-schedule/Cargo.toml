@@ -1,0 +1,9 @@
+[package]
+name = "alm-schedule"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+alm-compile = { path = "../alm-compile" }
+good_lp = { workspace = true }
