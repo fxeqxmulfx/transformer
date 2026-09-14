@@ -85,6 +85,7 @@ dependencies = [
 name = "alm-vm"
 version = "0.1.0"
 dependencies = [
+ "alm-compile",
  "alm-hull",
  "alm-model",
 ]

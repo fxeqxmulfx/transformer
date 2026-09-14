@@ -7,3 +7,8 @@ license.workspace = true
 [dependencies]
 alm-model = { path = "../alm-model" }
 alm-hull = { path = "../alm-hull" }
+
+# The reference test builds the weights and the traces it runs on, rather than
+# asking for the release's build products.
+[dev-dependencies]
+alm-compile = { path = "../alm-compile" }

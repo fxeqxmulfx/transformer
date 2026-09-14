@@ -1,41 +1,84 @@
 //! Run the real model against the real reference traces.
 //!
-//! The artefacts these need are produced by the original Python and are not in
-//! this repository: `model.bin` comes from `python -m transformer_vm.build
-//! --save-weights=model.bin` and the programs from `compile_wasm.ensure_data()`.
-//! When they are absent the test says so and passes — there is no point in
-//! failing a checkout for want of a 1.2 MB artefact — but when they are present
-//! it is the only test here that checks the whole stack at once.
+//! Everything the driver is run on is built here, out of this repository: the
+//! weights from the compiled-in `plan.yaml`, the programs from the C sources
+//! in `programs/`.  Each artefact is checked against its SHA-256 in
+//! `reference/sha256sums` before the driver sees it, so this is a run on the
+//! released `model.bin` and the released traces under another name — and the
+//! released files themselves, ten megabytes of them, stay out of the tree.
+//!
+//! What can be missing is a clang that targets wasm32.  Then the test says so
+//! and passes; there is no point in failing a checkout for want of a compiler.
 
-use std::path::PathBuf;
+use alm_compile::release::{released_digest, sha256};
+use std::path::{Path, PathBuf};
 use std::process::Command;
-
-fn vendored() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../transformer-vm")
-}
+use std::sync::OnceLock;
 
 /// The programs cheap enough to run on every `cargo test`.  `collatz` is
 /// 44 589 tokens and `sudoku` is millions; those are for the driver, not here.
 const PROGRAMS: [&str; 2] = ["hello", "addition"];
 
-fn run(extra: &[&str]) -> Option<String> {
-    let root = vendored();
-    let model = root.join("model.bin");
-    let data = root.join("transformer_vm/data");
-    if !model.exists() {
-        eprintln!("skipped: no {} — build it with the original Python", model.display());
-        return None;
-    }
+/// Refuse to hand the driver anything that is not the released artefact.
+fn released(name: &str, bytes: &[u8]) {
+    let want = released_digest(name).unwrap_or_else(|| panic!("{name} is not in the manifest"));
+    assert_eq!(sha256(bytes), want, "{name} differs from the released one");
+}
 
-    let mut cmd = Command::new(env!("CARGO_BIN_EXE_alm-vm"));
-    cmd.arg(&model).args(extra);
-    for p in PROGRAMS {
-        let prog = data.join(format!("{p}.txt"));
-        if !prog.exists() {
-            eprintln!("skipped: no {}", prog.display());
-            return None;
+/// Build `model.bin` and the two traces.  The one thing that can go wrong
+/// outside our control is the C compiler, so that is the only `Err`;
+/// everything else is a failure of the port and asserts.
+fn build_fixture() -> Result<PathBuf, String> {
+    let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join("reference");
+    std::fs::create_dir_all(&dir).expect("a directory under target/");
+
+    let mg = alm_compile::interpreter::build();
+    let plan = alm_compile::plan::Plan::load(alm_compile::release::PLAN, &mg.graph)
+        .expect("the released plan resolves");
+    let model = alm_compile::weights::build(&mg, &plan, Default::default()).to_bytes();
+    released("model.bin", &model);
+    std::fs::write(dir.join("model.bin"), &model).expect("the model writes");
+
+    let src = Path::new(env!("CARGO_MANIFEST_DIR")).join("../programs");
+    let manifest = std::fs::read_to_string(src.join("manifest.yaml")).expect("the manifest is ours");
+    let args = alm_compile::emit::load_manifest(&manifest).expect("the manifest reads");
+    for name in PROGRAMS {
+        let (_, input) = args.iter().find(|(n, _)| n == name).expect("the manifest has it");
+        // clang removes the `.wasm` beside its input, so compile a copy.
+        let copied = dir.join(format!("{name}.c"));
+        std::fs::copy(src.join(format!("{name}.c")), &copied).expect("the source copies");
+        let wasm = alm_compile::emit::compile_c_to_wasm(&copied, &src.join("runtime.h"))?;
+        let wasm = std::fs::read(wasm).expect("clang wrote the module");
+        let (txt, _, _) =
+            alm_compile::emit::compile_program(&wasm, input).expect("the module compiles");
+        let (trace, _) =
+            alm_compile::reference::generate_ref(&txt, 100_000_000).expect("the program runs");
+        for (file, text) in [(format!("{name}.txt"), txt), (format!("{name}_ref.txt"), trace)] {
+            released(&format!("data/{file}"), text.as_bytes());
+            std::fs::write(dir.join(&file), text).expect("the trace writes");
         }
-        cmd.arg(prog);
+    }
+    Ok(dir)
+}
+
+/// The fixture, built once for the whole test binary.
+fn fixture() -> Option<&'static PathBuf> {
+    static DIR: OnceLock<Result<PathBuf, String>> = OnceLock::new();
+    match DIR.get_or_init(build_fixture) {
+        Ok(dir) => Some(dir),
+        Err(e) => {
+            eprintln!("skipped: {e}");
+            None
+        }
+    }
+}
+
+fn run(extra: &[&str]) -> Option<String> {
+    let dir = fixture()?;
+    let mut cmd = Command::new(env!("CARGO_BIN_EXE_alm-vm"));
+    cmd.arg(dir.join("model.bin")).args(extra);
+    for p in PROGRAMS {
+        cmd.arg(dir.join(format!("{p}.txt")));
     }
 
     let out = cmd.output().expect("the driver runs");
