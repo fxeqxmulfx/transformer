@@ -1,12 +1,10 @@
 //! What the envelope costs when the keys do not arrive in a helpful order.
 //!
-//! The array envelope in `alm_hull::cht` is `O(n)` per insertion where the
-//! `std::multiset` it was ported from is `O(log n)`, and on the reference
-//! traces that has not cost anything: the deepest insertion the sudoku trace
-//! ever makes moves 3 741 lines out of an envelope of 1 055 416.  That is a
-//! measurement, not a guarantee, and the difference is the point of this
-//! program.  Nothing in the model forces a key coordinate to arrive in any
-//! particular order, so the question is what happens when it does not.
+//! Nothing in the model forces a key coordinate to arrive in any particular
+//! order -- `cache.rs` reads the keys from a learned projection -- so a
+//! container that is only fast on the order the reference traces happen to
+//! have is one trace away from stopping.  This program asks for the other
+//! orders.
 //!
 //! A head inserts each key into both halves, the lower one negating the
 //! slope, so an order that is cheap for one half is expensive for the other.
@@ -21,31 +19,25 @@
 //! alm-stress --order descending
 //! ```
 //!
-//! The moved column is exact rather than sampled: with no line ever dropped,
-//! an insertion at index `i` of an envelope of `len` rewrites `len - i`
-//! lines, which is what `Cht::add_line` hands to `copy_within`.
-//!
-//! What it finds, for the same keys under five arrival orders:
+//! What it finds, for the same 262 144 keys under five arrival orders:
 //!
 //! ```text
-//!        order         n            moved       mean       max    seconds
-//!    ascending    262144           524285        1.0         2      0.043
-//!   descending    262144      34359607296    65535.8    262143     97.617
-//!     shuffled    262144      17189215144    32785.8    260814     37.334
-//!   outside-in    262144      17180000255    32768.2    131071     28.519
-//!   inside-out    262144      17180131326    32768.5    262143     50.875
+//!        order         n    upper    lower   seconds
+//!    ascending    262144   262144        2     0.069
+//!   descending    262144   262144        2     0.072
+//!     shuffled    262144   262144        2     0.153
+//!   outside-in    262144   262144        2     0.083
+//!   inside-out    262144   262144        2     0.078
 //! ```
 //!
-//! Four times the keys is twenty-nine times the work, which is the `O(n^2)`
-//! the container's asymptotics promise and the reference traces never
-//! collect.  Position order costs one move per key; anything else costs
-//! `n / 2`.  The whole of the sudoku trace answers its hull in 26 seconds
-//! with a million keys; one head fed a quarter of that many in descending
-//! order spends 98.  A tree would not care which order they came in.
+//! Two-fold between the best order and the worst, and the spread does not
+//! widen with the size.  The vector this port used to carry spent 0.040s on
+//! the first of those lines and 102.861s on the second, where the same
+//! descending order at a quarter of the keys had cost it 3.296s -- four times
+//! the keys, thirty-one times the work.  That is why it is no longer here.
 
 use std::time::Instant;
 
-use alm_hull::cht::Cht;
 use alm_hull::envelope::Envelope;
 use alm_hull::HullMeta;
 
@@ -108,41 +100,23 @@ fn order(name: &str, n: u64) -> Option<Vec<u64>> {
 }
 
 /// One half of a head, as `HullHalf` drives it: the lower negates the slope.
-fn add(c: &mut Cht, kx: f64, ky: f64, upper: bool, seq: i32) {
+fn add(e: &mut Envelope, kx: f64, ky: f64, upper: bool, seq: i32) {
     let meta = HullMeta::of([0.0, 0.0], seq);
     if upper {
-        c.add_line(kx, ky, meta)
+        e.add_line(kx, ky, meta)
     } else {
-        c.add_line(-kx, -ky, meta)
+        e.add_line(-kx, -ky, meta)
     }
-}
-
-/// Where `m` would go: the number of slopes already below it.
-fn rank(c: &Cht, m: f64) -> usize {
-    let (mut lo, mut hi) = (0, c.len());
-    while lo < hi {
-        let mid = (lo + hi) / 2;
-        if c.get(mid).m.get() < m {
-            lo = mid + 1
-        } else {
-            hi = mid
-        }
-    }
-    lo
 }
 
 struct Run {
     upper: usize,
     lower: usize,
-    moved: u128,
-    max: usize,
     secs: f64,
-    tree: f64,
 }
 
 fn run(ks: &[u64]) -> Run {
-    // Timed first, on its own pair, so that counting costs the clock nothing.
-    let (mut u, mut l) = (Cht::new(), Cht::new());
+    let (mut u, mut l) = (Envelope::new(), Envelope::new());
     let t = Instant::now();
     for (i, &k) in ks.iter().enumerate() {
         let (kx, ky) = lift(k);
@@ -150,34 +124,7 @@ fn run(ks: &[u64]) -> Run {
         add(&mut l, kx, ky, false, i as i32);
     }
     let secs = t.elapsed().as_secs_f64();
-    let (upper, lower) = (u.len(), l.len());
-
-    // The same keys through the tree, which moves nothing whatever they are.
-    let (mut tu, mut tl) = (Envelope::new(), Envelope::new());
-    let t = Instant::now();
-    for (i, &k) in ks.iter().enumerate() {
-        let (kx, ky) = lift(k);
-        let meta = HullMeta::of([0.0, 0.0], i as i32);
-        tu.add_line(kx, ky, meta);
-        tl.add_line(-kx, -ky, meta);
-    }
-    let tree = t.elapsed().as_secs_f64();
-    assert_eq!((tu.len(), tl.len()), (upper, lower), "the containers disagree on the envelope");
-
-    // Counted second: the tail each insertion rewrites, exactly.
-    let (mut u, mut l) = (Cht::new(), Cht::new());
-    let (mut moved, mut max) = (0u128, 0usize);
-    for (i, &k) in ks.iter().enumerate() {
-        let (kx, ky) = lift(k);
-        for (c, upper) in [(&mut u, true), (&mut l, false)] {
-            let m = if upper { kx } else { -kx };
-            let shift = c.len() - rank(c, m);
-            moved += shift as u128;
-            max = max.max(shift);
-            add(c, kx, ky, upper, i as i32);
-        }
-    }
-    Run { upper, lower, moved, max, secs, tree }
+    Run { upper: u.len(), lower: l.len(), secs }
 }
 
 const ORDERS: [&str; 5] = ["ascending", "descending", "shuffled", "outside-in", "inside-out"];
@@ -223,13 +170,12 @@ fn main() {
         names = ORDERS.iter().map(|s| s.to_string()).collect();
     }
 
-    println!("{:>12} {:>9} {:>8} {:>8} {:>16} {:>10} {:>9} {:>9} {:>9} {:>7}", "order", "n", "upper", "lower", "moved", "mean", "max", "vec s", "tree s", "ratio");
+    println!("{:>12} {:>9} {:>8} {:>8} {:>9}", "order", "n", "upper", "lower", "seconds");
     for &n in &sizes {
         for name in &names {
             let ks = order(name, n).expect("the order was checked when it was parsed");
             let r = run(&ks);
-            let mean = r.moved as f64 / (2.0 * n as f64);
-            println!("{:>12} {:>9} {:>8} {:>8} {:>16} {:>10.1} {:>9} {:>9.3} {:>9.3} {:>7.2}", name, n, r.upper, r.lower, r.moved, mean, r.max, r.secs, r.tree, r.secs / r.tree);
+            println!("{:>12} {:>9} {:>8} {:>8} {:>9.3}", name, n, r.upper, r.lower, r.secs);
         }
     }
 }

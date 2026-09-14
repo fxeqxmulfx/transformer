@@ -1,14 +1,25 @@
-//! The same upper envelope as `cht`, kept in the tree instead of a vector.
+//! The dynamic convex hull trick: an upper envelope of lines under insertion.
 //!
-//! The two differ in one place and it is the erase loops.  The vector reads
-//! the array to decide what falls and then rewrites the tail once; the cost
-//! is that one rewrite, linear in the tail.  Here nothing moves at all: the
-//! lines that fall are unlinked at the cursor that found them, and the walk
-//! that finds them is the walk that erases them.  That is the C++ cost model
-//! -- `hull2d_cht.h` exists because the Percepta vector version ran into the
-//! same memmove -- with one descent per call rather than the two the C++
-//! spends, because the insertion point is already in hand when the new line
-//! is linked in.
+//! Ported from `_HullCHT` in `attention/hull2d_cht.h`.  The C++ keeps the
+//! envelope in one `std::multiset` ordered by slope and searched by breakpoint
+//! through a heterogeneous comparator, which works because the breakpoints
+//! increase with the slope.  This keeps it in `tree.rs`, which is that
+//! container with cursors: one order, searched by slope or by breakpoint as
+//! needed, and a neighbour is a step rather than a search.
+//!
+//! What the container has to give, `HullBuild.lean` says exactly.  `buildCost`
+//! charges a build two searches per key and one unit for each erase, and
+//! `buildCost_le` proves it `O(n log n)` from that -- a tariff that holds only
+//! where erasing at a known cursor is amortized constant.  A vector cannot
+//! meet it: its erase costs the tail it moves.  This port is cheaper than the
+//! tariff, at one search per key, because `insert_before` takes the place
+//! `lower_bound_slope` already found.
+//!
+//! So the erase loops here read and unlink in the same walk.  The lines a new
+//! one hides are dropped at the cursor that found them, nothing else moves,
+//! and the new line is linked where the walk stopped.  None of that depends
+//! on the order the keys arrive in, which is the point: `alm-stress` builds
+//! 262 144 keys in each of five orders and the spread is 0.069s to 0.153s.
 
 use crate::breakpoint::Break;
 use crate::meta::HullMeta;
@@ -178,7 +189,6 @@ impl Envelope {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::cht::Cht;
 
     /// The envelope's two invariants, which both searches rest on.
     fn well_formed(e: &Envelope) {
@@ -188,23 +198,29 @@ mod tests {
             assert!(w[0].p < w[1].p, "breakpoints increase: {:?} {:?}", w[0].p, w[1].p);
         }
         if let Some(l) = lines.last() {
-            assert_eq!(l.p, Break::PosInf, "the last breakpoint is not at infinity");
+            assert_eq!(l.p, Break::PosInf, "the last line runs forever");
         }
     }
 
-    /// The tree and the vector must agree line for line, not merely in what
-    /// they answer: the same set survives, with the same breakpoints.
-    fn same(e: &Envelope, c: &Cht) {
-        let got: Vec<Line> = e.iter().collect();
-        let want: Vec<&Line> = c.iter().collect();
-        assert_eq!(got.len(), want.len(), "envelopes differ in size");
-        for (g, w) in got.iter().zip(want) {
-            assert_eq!(g.m, w.m, "slopes differ");
-            assert_eq!(g.b, w.b, "intercepts differ");
-            assert_eq!(g.p, w.p, "breakpoints differ");
+    /// `max_i (m_i x + b_i)`, scored directly over everything ever inserted.
+    fn brute(given: &[(f64, f64)], x: f64) -> f64 {
+        given.iter().map(|(m, b)| m * x + b).fold(f64::NEG_INFINITY, f64::max)
+    }
+
+    /// The envelope answers each `x` with the maximum of the lines it was given.
+    ///
+    /// This is the reference, and it is not another envelope: whatever the
+    /// container does, the line it hands back must score what the whole set
+    /// scores at that point.
+    fn answers_the_maximum(e: &Envelope, given: &[(f64, f64)], xs: &[f64]) {
+        for &q in xs {
+            let i = e.argmax(Break::ratio(q, 1.0)).expect("the envelope is not empty");
+            let l = e.get(i);
+            assert_eq!(l.m.get() * q + l.b, brute(given, q), "the maximum at {q}");
         }
     }
 
+    /// xorshift64*, so every case list is reproducible without a dependency.
     fn rng() -> impl FnMut() -> u64 {
         let mut s = 0x9E37_79B9_7F4A_7C15u64;
         move || {
@@ -215,95 +231,128 @@ mod tests {
         }
     }
 
-    /// Random lines, the order that exercises every branch of `add_line`.
+    const PROBES: [f64; 7] = [-1e7, -1234.0, -1.0, 0.0, 1.0, 1234.0, 1e7];
+
     #[test]
-    fn agrees_with_the_vector_on_random_lines() {
+    fn the_envelope_is_the_maximum_of_the_lines_it_was_given() {
         let mut next = rng();
-        for trial in 0..60 {
-            let (mut e, mut c) = (Envelope::new(), Cht::new());
-            for _ in 0..200 {
-                let m = (next() % 41) as f64 - 20.0;
-                let b = (next() % 41) as f64 - 20.0;
-                e.add_line(m, b, HullMeta::default());
-                c.add_line(m, b, HullMeta::default());
-                same(&e, &c);
+        let mut coord = move || ((next() >> 40) as f64) - 8388608.0;
+        for _ in 0..200 {
+            let mut e = Envelope::new();
+            let mut given = Vec::new();
+            for _ in 0..60 {
+                let (m, b) = (coord(), coord());
+                e.add_line(m, b, HullMeta::of([0.0, 0.0], 0));
+                given.push((m, b));
                 well_formed(&e);
+                answers_the_maximum(&e, &given, &PROBES);
             }
-            assert!(!e.is_empty(), "trial {trial} emptied the envelope");
         }
     }
 
     /// The parabolic lift, which is the only shape the engine ever inserts.
+    ///
+    /// Strictly concave in the slope, so no key is ever dropped and the
+    /// envelope is every key that arrived.
     #[test]
-    fn agrees_with_the_vector_on_lifted_keys() {
+    fn the_lifted_keys_all_survive_and_answer() {
         let mut next = rng();
-        for &span in &[16i64, 1024, 65536] {
-            let (mut e, mut c) = (Envelope::new(), Cht::new());
+        for &span in &[16u64, 1024, 65536] {
+            let mut e = Envelope::new();
+            let mut given = Vec::new();
+            let mut seen = std::collections::BTreeSet::new();
             for _ in 0..500 {
-                let k = (next() % (span as u64)) as f64;
-                let (m, b) = (2.0 * k, -k * k);
-                e.add_line(m, b, HullMeta::default());
-                c.add_line(m, b, HullMeta::default());
+                let k = next() % span;
+                let (m, b) = (2.0 * k as f64, -((k * k) as f64));
+                e.add_line(m, b, HullMeta::of([0.0, 0.0], 0));
+                given.push((m, b));
+                seen.insert(k);
             }
-            same(&e, &c);
+            assert_eq!(e.len(), seen.len(), "a lifted key was dropped at span {span}");
             well_formed(&e);
+            let xs: Vec<f64> = (0..64).map(|i| f64::from(i) * (span as f64) / 64.0).collect();
+            answers_the_maximum(&e, &given, &xs);
         }
     }
 
-    /// The arrival orders `alm-stress` drives, where the vector is quadratic.
+    /// Every arrival order builds the same envelope and answers the same way.
+    ///
+    /// This is what the container is kept for: the five orders `alm-stress`
+    /// drives differ only in the path to the answer, and the answer must not
+    /// notice.
     #[test]
-    fn agrees_with_the_vector_on_every_arrival_order() {
+    fn every_arrival_order_builds_the_same_envelope() {
+        let mut want: Option<Vec<(f64, f64)>> = None;
         for &step in &[1i64, -1, 7, -7, 2003] {
-            let (mut e, mut c) = (Envelope::new(), Cht::new());
-            for i in 0..600i64 {
+            let mut e = Envelope::new();
+            let mut given = Vec::new();
+            // 601 is prime, so every step below walks the same 601 keys.
+            for i in 0..601i64 {
                 let k = (i * step).rem_euclid(601) as f64;
                 let (m, b) = (2.0 * k, -k * k);
-                e.add_line(m, b, HullMeta::default());
-                c.add_line(m, b, HullMeta::default());
+                e.add_line(m, b, HullMeta::of([0.0, 0.0], 0));
+                given.push((m, b));
             }
-            same(&e, &c);
             well_formed(&e);
-        }
-    }
-
-    /// Queries, which is the other search and the one the tree must not lose.
-    #[test]
-    fn argmax_agrees_with_the_vector() {
-        let mut next = rng();
-        let (mut e, mut c) = (Envelope::new(), Cht::new());
-        for _ in 0..400 {
-            let k = (next() % 4096) as f64;
-            let (m, b) = (2.0 * k, -k * k);
-            e.add_line(m, b, HullMeta::default());
-            c.add_line(m, b, HullMeta::default());
-        }
-        for q in 0..4096 {
-            let x = Break::between(0.0, 0.0, 1.0, -f64::from(q));
-            let a = e.argmax(x).map(|i| e.get(i));
-            let b = c.argmax(x).map(|i| *c.get(i));
-            match (a, b) {
-                (Some(a), Some(b)) => {
-                    assert_eq!(a.m, b.m, "argmax differs at {q}");
-                    assert_eq!(a.b, b.b, "argmax differs at {q}");
+            let xs: Vec<f64> = (0..64).map(|i| f64::from(i) * 20.0).collect();
+            answers_the_maximum(&e, &given, &xs);
+            let got: Vec<(f64, f64)> = e.iter().map(|l| (l.m.get(), l.b)).collect();
+            match &want {
+                None => want = Some(got),
+                Some(w) => {
+                    assert_eq!(got.len(), w.len(), "order {step} built {} lines, not {}", got.len(), w.len());
+                    for (i, (g, w)) in got.iter().zip(w).enumerate() {
+                        assert_eq!(g, w, "order {step} differs at line {i}");
+                    }
                 }
-                (None, None) => {}
-                _ => panic!("one container answered and the other did not"),
             }
         }
     }
 
-    /// Equal slopes, which is the branch that merges or drops instead.
+    /// Repeated slopes, the branch that merges or drops rather than inserting.
     #[test]
-    fn agrees_with_the_vector_on_repeated_slopes() {
+    fn repeated_slopes_still_answer_the_maximum() {
         let mut next = rng();
-        let (mut e, mut c) = (Envelope::new(), Cht::new());
+        let mut e = Envelope::new();
+        let mut given = Vec::new();
         for _ in 0..800 {
             let m = (next() % 7) as f64;
             let b = (next() % 11) as f64 - 5.0;
-            e.add_line(m, b, HullMeta::default());
-            c.add_line(m, b, HullMeta::default());
-            same(&e, &c);
+            e.add_line(m, b, HullMeta::of([0.0, 0.0], 0));
+            given.push((m, b));
+            answers_the_maximum(&e, &given, &PROBES);
         }
         well_formed(&e);
+    }
+
+    #[test]
+    fn a_line_under_the_envelope_is_dropped_and_an_equal_one_is_merged() {
+        let mut e = Envelope::new();
+        e.add_line(0.0, 10.0, HullMeta::of([1.0, 0.0], 0));
+        e.add_line(1.0, 0.0, HullMeta::of([2.0, 0.0], 1));
+        assert_eq!(e.len(), 2);
+
+        // Strictly below the envelope everywhere: the same slope, less offset.
+        e.add_line(0.0, 5.0, HullMeta::of([9.0, 0.0], 2));
+        assert_eq!(e.len(), 2);
+        let first = e.iter().next().expect("the envelope is not empty");
+        assert_eq!(first.meta.count, 1, "the loser did not join the winner");
+
+        // The same line twice: one node, two entries.
+        e.add_line(0.0, 10.0, HullMeta::of([3.0, 0.0], 3));
+        assert_eq!(e.len(), 2);
+        let first = e.iter().next().expect("the envelope is not empty");
+        assert_eq!(first.meta.count, 2);
+        assert_eq!(first.meta.vsum[0], 4.0);
+    }
+
+    #[test]
+    fn minus_zero_and_zero_are_one_line() {
+        let mut e = Envelope::new();
+        e.add_line(0.0, 1.0, HullMeta::of([1.0, 0.0], 0));
+        e.add_line(-0.0, 1.0, HullMeta::of([1.0, 0.0], 1));
+        assert_eq!(e.len(), 1);
+        let first = e.iter().next().expect("the envelope is not empty");
+        assert_eq!(first.meta.count, 2);
     }
 }
