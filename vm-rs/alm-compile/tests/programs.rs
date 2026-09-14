@@ -1,9 +1,10 @@
 //! The token prefix, against the released one.
 //!
-//! The six manifest programs are compiled here from their C sources and the
-//! result compared with `transformer_vm/data/*.txt` byte for byte.  That is
-//! the whole of the program path — decode, lower, flatten, format — checked
-//! at once against the only artefact that can settle it.
+//! The six manifest programs are compiled here from their C sources, run, and
+//! the result compared with `transformer_vm/data/*.txt`, `*_spec.txt` and
+//! `*_ref.txt` byte for byte.  That is the whole of the program path — decode,
+//! lower, flatten, format, execute — checked at once against the only
+//! artefacts that can settle it.
 //!
 //! Both halves are build products of the original Python and are not in this
 //! repository, so the test says what is missing and passes when the vendored
@@ -37,7 +38,7 @@ fn build(name: &str, scratch: &Path) -> Option<Vec<u8>> {
 }
 
 #[test]
-fn the_six_manifest_programs_compile_to_the_released_token_prefix() {
+fn the_six_manifest_programs_compile_and_run_to_the_released_files() {
     let root = vendored();
     let Ok(manifest) = std::fs::read_to_string(root.join("examples/manifest.yaml")) else {
         eprintln!("skipped: no vendored examples");
@@ -56,7 +57,13 @@ fn the_six_manifest_programs_compile_to_the_released_token_prefix() {
             alm_compile::emit::compile_program(&wasm, args).expect("the module compiles");
         assert_ne!(input_base, 0, "{name} takes its input from memory");
 
-        for (suffix, ours) in [(".txt", &txt), ("_spec.txt", &spec)] {
+        // The trace is the program's own reference run: the tokens the model
+        // is expected to produce, down to the carry marks.
+        let (reference, run) =
+            alm_compile::reference::generate_ref(&txt, 100_000_000).expect("the program runs");
+        assert!(run.token_count > 0, "{name} produced no tokens");
+
+        for (suffix, ours) in [(".txt", &txt), ("_spec.txt", &spec), ("_ref.txt", &reference)] {
             let path = root.join(format!("data/{name}{suffix}"));
             let Ok(theirs) = std::fs::read_to_string(&path) else {
                 eprintln!("skipped: no {}", path.display());

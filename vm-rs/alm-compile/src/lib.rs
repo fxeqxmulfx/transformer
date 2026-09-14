@@ -16,6 +16,7 @@ pub mod isa;
 pub mod lower;
 pub mod naming;
 pub mod plan;
+pub mod reference;
 pub mod slots;
 pub mod weights;
 
