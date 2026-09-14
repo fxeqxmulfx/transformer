@@ -80,10 +80,9 @@ fn has_three_collinear(keys: &[[f64; 2]]) -> bool {
     for i in 0..keys.len() {
         for j in i + 1..keys.len() {
             for k in j + 1..keys.len() {
-                if keys[i] != keys[j] && keys[j] != keys[k] && keys[i] != keys[k] {
-                    if collinear(keys[i], keys[j], keys[k]) {
-                        return true;
-                    }
+                let distinct = keys[i] != keys[j] && keys[j] != keys[k] && keys[i] != keys[k];
+                if distinct && collinear(keys[i], keys[j], keys[k]) {
+                    return true;
                 }
             }
         }

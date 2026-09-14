@@ -83,7 +83,7 @@ impl<R: Read> Reader<R> {
     fn f64s(&mut self, n: usize) -> io::Result<Vec<f64>> {
         let mut bytes = vec![0u8; n * 8];
         self.inner.read_exact(&mut bytes)?;
-        Ok(bytes.chunks_exact(8).map(|c| f64::from_le_bytes(c.try_into().unwrap())).collect())
+        Ok(bytes.as_chunks::<8>().0.iter().map(|&c| f64::from_le_bytes(c)).collect())
     }
 }
 
