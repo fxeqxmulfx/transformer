@@ -19,7 +19,9 @@ scale and not a convenience.  `onTheGrid_scaleQuery` is the other: dividing by
 `|qy|` returns the lifted query `(q, 1)` on the nose, and
 `onTheGrid_score_isInt` is what that buys — the score is an integer again,
 which is the grid hypothesis `ALM.FloatGrid.fp_exact_of_grid` needs and the
-only thing the scale ever took away.
+only thing the scale ever took away.  `gridScale` is the divisor the code
+really picks, `|qy|` or, when that is zero, `|qx|`, so the degenerate branch is
+the one query with no divisor at all rather than a whole half-plane.
 
 Between them, `order_scale_invariant` and `maximizers_scale_invariant`: a
 positive rescaling of the query changes no comparison and no set of maximizers,
@@ -88,11 +90,34 @@ theorem maximizers_scale_invariant {c : ℝ} (hc : 0 < c) (q : ℝ × ℝ)
 
 /-! ### What the division returns -/
 
-/-- `on_the_grid`: divide both coordinates by `|qy|`, and leave the query alone
-when that is zero — a zero second coordinate is the degenerate branch, where
-every key ties and the tie-break answers. -/
+/-- The divisor `on_the_grid` picks: the query's second coordinate when that is
+nonzero, and its first coordinate when it is not.  The second branch is the one
+`head.rs` takes on its `qy == 0` shortcut, where the score is linear in `qx` and
+`qx` is the margin the guard is handed. -/
+noncomputable def gridScale (q : ℝ × ℝ) : ℝ := if q.2 = 0 then |q.1| else |q.2|
+
+lemma gridScale_nonneg (q : ℝ × ℝ) : 0 ≤ gridScale q := by
+  unfold gridScale; split <;> exact abs_nonneg _
+
+/-- The divisor vanishes on the zero query and on nothing else, so that is the
+only query `on_the_grid` has to hand back untouched. -/
+lemma gridScale_eq_zero_iff (q : ℝ × ℝ) : gridScale q = 0 ↔ q = (0, 0) := by
+  unfold gridScale
+  rcases eq_or_ne q.2 0 with h2 | h2
+  · rw [if_pos h2, abs_eq_zero, Prod.ext_iff]
+    simp [h2]
+  · rw [if_neg h2, abs_eq_zero, Prod.ext_iff]
+    simp [h2]
+
+/-- `on_the_grid`: divide both coordinates by that divisor, and hand back the
+zero query — the one query with no divisor — unchanged.  Every key ties there
+and the tie-break answers. -/
 noncomputable def onTheGrid (q : ℝ × ℝ) : ℝ × ℝ :=
-  if q.2 = 0 then q else (q.1 / |q.2|, q.2 / |q.2|)
+  if gridScale q = 0 then q else (q.1 / gridScale q, q.2 / gridScale q)
+
+lemma gridScale_scaleQuery {σ q : ℝ} (hσ : 0 < σ) : gridScale (scaleQuery σ q) = σ := by
+  show (if σ = 0 then |σ * q| else |σ|) = σ
+  rw [if_neg (ne_of_gt hσ), abs_of_pos hσ]
 
 /-- **The division inverts the scale exactly.**  Not approximately: for a
 positive scale the normalized query is the lifted `(q, 1)` itself, which is why
@@ -100,20 +125,23 @@ every statement at `qy = 1` is a statement about the shipped model. -/
 theorem onTheGrid_scaleQuery {σ q : ℝ} (hσ : 0 < σ) :
     onTheGrid (scaleQuery σ q) = liftQuery q := by
   have hne : σ ≠ 0 := ne_of_gt hσ
-  unfold onTheGrid scaleQuery liftQuery
-  rw [if_neg hne]
-  simp only [abs_of_pos hσ, Prod.mk.injEq]
+  unfold onTheGrid
+  rw [gridScale_scaleQuery hσ, if_neg hne]
+  unfold scaleQuery liftQuery
+  simp only [Prod.mk.injEq]
   refine ⟨by field_simp, by field_simp⟩
 
 /-- A normalized query is a positive rescaling of the original, so it compares
-keys the same way. -/
-theorem onTheGrid_preserves_order {q : ℝ × ℝ} (hq : q.2 ≠ 0) (k k' : ℝ × ℝ) :
+keys the same way — on the `qy == 0` branch as much as on the ordinary one,
+which is why the shortcut in `head.rs` needs no argument of its own. -/
+theorem onTheGrid_preserves_order {q : ℝ × ℝ} (hq : q ≠ (0, 0)) (k k' : ℝ × ℝ) :
     dot (onTheGrid q) k ≤ dot (onTheGrid q) k' ↔ dot q k ≤ dot q k' := by
-  have hpos : 0 < 1 / |q.2| := by positivity
-  have hrw : onTheGrid q = ((1 / |q.2|) * q.1, (1 / |q.2|) * q.2) := by
+  have hs : gridScale q ≠ 0 := fun h => hq ((gridScale_eq_zero_iff q).mp h)
+  have hpos : 0 < 1 / gridScale q :=
+    one_div_pos.mpr (lt_of_le_of_ne (gridScale_nonneg q) (Ne.symm hs))
+  have hrw : onTheGrid q = ((1 / gridScale q) * q.1, (1 / gridScale q) * q.2) := by
     unfold onTheGrid
-    rw [if_neg hq]
-    rw [one_div, inv_mul_eq_div, inv_mul_eq_div]
+    rw [if_neg hs, one_div, inv_mul_eq_div, inv_mul_eq_div]
   rw [hrw]
   exact order_scale_invariant hpos q k k'
 
@@ -163,9 +191,12 @@ hypotheses of `dot_scaleQuery_int`, `onTheGrid_scaleQuery`,
 `onTheGrid_preserves_order` and `onTheGrid_score_isInt`. -/
 example : (0 : ℝ) < 14142135623.730951 ∧
     onTheGrid (scaleQuery 14142135623.730951 (7 : ℝ)) = liftQuery 7 ∧
+    scaleQuery 14142135623.730951 (7 : ℝ) ≠ (0, 0) ∧
     dot (scaleQuery 14142135623.730951 ((7 : ℤ) : ℝ)) (liftKey ((7 : ℤ) : ℝ))
       = 14142135623.730951 * sScore 7 7 := by
-  refine ⟨by norm_num, onTheGrid_scaleQuery (by norm_num), dot_scaleQuery_int _ 7 7⟩
+  refine ⟨by norm_num, onTheGrid_scaleQuery (by norm_num), ?_, dot_scaleQuery_int _ 7 7⟩
+  rw [Ne, Prod.ext_iff]
+  norm_num [scaleQuery]
 
 /-- And the rounded division that still lands on the right key: the query `0`
 over the keys `{0, 1}`, where `1` wins and a drift of `10⁻⁹` against keys
