@@ -265,15 +265,19 @@ instead of searching again for each line it drops, nothing ever moves, and
 the ends are held rather than walked to, so an insertion at either end costs
 no descent at all — which leaves one search per key where the C++ spends two.
 What it buys is that the numbers stop depending on the order the keys arrive
-in: `alm-stress` builds 262 144 keys in descending order in 0.080s, where the
-vector takes 102.9s and grows quadratically.  Nothing in the engine promises
+in: `alm-stress` builds 262 144 keys in descending order in 0.072s, where the
+vector took 102.9s and grew quadratically.  Nothing in the engine promises
 the near-sorted order the traces happen to have, since `cache.rs` reads the
 keys from a learned projection.
 
-The vector is kept as the reference the tree is tested against line for line.
-`alm-hull/src/cht.rs` states both measurements in full, including the
-`BTreeMap` envelope that answered the sudoku trace in 81.8s, worse than
-either.
+So the vector is gone, and with it the `BTreeMap` envelope tried before it,
+which answered the sudoku trace in 81.8s — worse than either.  What the tree
+is checked against is the definition rather than another container:
+`alm-hull/src/envelope.rs` takes the maximum over the given lines by brute
+force at every probe and asserts the envelope agrees with it under every
+arrival order, and `alm-hull/src/tree.rs` audits the red-black invariants,
+the cached ends and the cursor walk against a sorted vector of what was put
+in.
 
 The projections are not merely as fast as the C++ — they are the same
 arithmetic.  `transformer.cpp` sums each row left to right into one accumulator
