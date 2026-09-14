@@ -14,6 +14,15 @@
 //! doing its job, and a gap near `10^-15` is rounding deciding the answer.
 //! Only the brute head can report it — it scores everything anyway, while the
 //! hull visits the winner and its ties and stops.
+//!
+//! `ALM.ScoreGap` is the gap as a number: `keyGap_scale_free` is why dividing
+//! by the step makes it a property of the keys and not of the query scale, and
+//! `one_le_keyGap_iff` is what a gap of `1` means — exactly the separation
+//! `ALM.GuardSep.cmp_of_guard` needs, so a run whose worst gap is at least `1`
+//! and whose `GridWitness` is clean answered every query and guessed none.
+//! The `step` divided out here is the same number `grid.rs` is handed as the
+//! `margin` (`ALM.QueryScale.gridScale`), which is what lets the two reports be
+//! read against each other.
 
 /// A gap this small, in key steps, is smaller than any `LATEST_ALPHA` the
 /// compiler would emit over a reachable position, so it is the key path's own
@@ -109,6 +118,27 @@ mod tests {
         rounded.observe(score(nudged), score(ky), q);
         assert_eq!(rounded.noise, 1, "the matvec's is not");
         assert!(rounded.worst < NOISE);
+    }
+
+    #[test]
+    fn the_step_is_the_margin_the_guard_is_handed() {
+        // `ALM.ScoreGap.one_le_keyGap_iff`: a gap of at least one key step is
+        // `margin <= best - second`, the hypothesis `cmp_of_guard` needs.  It
+        // is a hypothesis about the same number the guard thresholds against,
+        // and this is the line that says so — both branches of it, the second
+        // being `head.rs`'s `qy == 0` shortcut.
+        let queries: [[f64; 2]; 3] =
+            [[7.0, 1.0], [7.0 * 14142135623.730951, 14142135623.730951], [5.0, 0.0]];
+        for q in queries {
+            let step = if q[1] != 0.0 { q[1].abs() } else { q[0].abs() };
+            let (best, second) = (1.0e6 + step, 1.0e6);
+
+            let mut w = ScoreGaps::default();
+            w.observe(best, second, q);
+            assert_eq!(w.worst, 1.0, "one step, whatever the scale: {q:?}");
+            assert!(step <= best - second, "which is the guard's hypothesis");
+            assert!(!crate::grid::off_the_grid(best, step), "and the guard passes");
+        }
     }
 
     #[test]
