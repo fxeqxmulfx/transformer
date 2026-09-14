@@ -8,6 +8,7 @@
 
 pub mod decoder;
 pub mod dump;
+pub mod emit;
 pub mod expr;
 pub mod graph;
 pub mod interpreter;
