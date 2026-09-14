@@ -47,8 +47,52 @@ of 36-wide matvecs with no batch — while the hull is ordinary Rust.
   wider accumulator helps; only a wider embedding would, and that is a change
   to the weights.  `todo3.md` section 4.
 
+## Running it
+
+`model.bin` and the program traces are build artefacts of the original Python
+and are not in this repository:
+
+```
+cd transformer-vm
+uv sync --extra-index-url https://download.pytorch.org/whl/cpu --index-strategy unsafe-best-match
+uv run python -m transformer_vm.build --save-weights=model.bin
+uv run python -c 'from transformer_vm.compilation.compile_wasm import ensure_data; ensure_data()'
+```
+
+Then
+
+```
+cargo run --release -p alm-vm -- ../transformer-vm/model.bin     ../transformer-vm/transformer_vm/data/hello.txt
+```
+
+The command line is the C++ driver's: `--brute`, `--trace[=N]`, `--args=STR`,
+`--max=N`.  `model.bin` itself is out of scope here — it is the output of the
+compiler (`graph/`, `scheduler/milp.py`, `compilation/`, `model/weights.py`),
+not of the model, and the Lean conclusions this port exists to carry are all
+about the runtime.
+
 ## Status
 
-`alm-hull` is complete and differentially tested against a brute-force head.
-`alm-model` reads `model.bin` and runs the forward pass on burn; `alm-vm` is
-a stub.
+All four cheap reference programs reproduce their traces token for token,
+under both caches:
+
+```
+hello      1 034 tok, 149 ops    Hello World!
+addition   4 362 tok, 718 ops    19134
+collatz   44 589 tok, 9 009 ops  7 22 11 34 17 52 26 13 40 20 10 5 16 8 4 2 1
+fibonacci  9 104 tok, 892 ops    55
+```
+
+Against the C++ engine on the same 59 089 tokens:
+
+```
+            total     proj     hull     head
+C++         3.31s    2.012    1.107    0.176
+alm-vm     11.40s    6.758    4.362    0.190
+```
+
+The head matches once it is sparse, as the original's is.  What is left is
+3.4x on the projections — burn's per-call overhead on a 38-wide residual
+stream generated one token at a time, with no batch to amortize it — and 3.9x
+on the hull, which is what the exact rational breakpoints cost against the
+original's rounded `long double`.  Neither changes an answer.
