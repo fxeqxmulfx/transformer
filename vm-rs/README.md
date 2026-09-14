@@ -230,12 +230,32 @@ C++         4.06s    2.497    1.320    0.216    0.022
 alm-vm      3.80s    2.375    1.127    0.232    0.066
 ```
 
-The port is the faster of the two, and it is faster in the part that was
-supposed to cost it: the hull answers in 1.13s against 1.32s while comparing
-breakpoints *exactly*, where the original compares rounded `long double`s.
-What is left on the other side of the ledger is `misc`, which is the
-per-query diagnostics this port carries and the original has no counterpart
-for.
+The port is the faster of the two at this size, and it is faster in the part
+that was supposed to cost it: the hull answers in 1.13s against 1.32s while
+comparing breakpoints *exactly*, where the original compares rounded `long
+double`s.  What is left on the other side of the ledger is `misc`, which is
+the per-query diagnostics this port carries and the original has no
+counterpart for.
+
+That lead does not hold at every size, and the reason is in the hull.  The
+C++ keeps the envelope in a `std::multiset`; the port keeps it in one array
+in slope order, which is faster to search and to walk but shifts a tail on
+every insertion.  The shifted tail grows with the envelope, so on the sudoku
+trace — eighteen times the tokens — the two have changed places:
+
+```
+            total     proj     hull     head     misc
+C++        79.32s   44.504   29.882    4.75     1.22
+alm-vm     83.08s   42.159   34.895    4.87     1.17
+```
+
+The projections stay ahead; the hull gives back more than they win.  The
+array is still the right container — a `BTreeMap` envelope answers the same
+trace in 81.8s, worse than either — but its insertion cost is `O(n)` where
+the multiset's is `O(log n)`, and at a million tokens that shows.  The cost
+is concentrated rather than spread: 97.6% of insertions shift fewer than four
+lines, and 0.92% shift more than a thousand and account for 94% of all
+movement.  `alm-hull/src/cht.rs` states the measurement in full.
 
 The projections are not merely as fast as the C++ — they are the same
 arithmetic.  `transformer.cpp` sums each row left to right into one accumulator
