@@ -66,13 +66,31 @@ pub fn expansion_sign(terms: &[f64]) -> core::cmp::Ordering {
     e[len - 1].partial_cmp(&0.0).unwrap_or(Ordering::Equal)
 }
 
+/// How far `fl(a*b) - fl(c*d)` can sit from `a*b - c*d`, relative to
+/// `|fl(a*b)| + |fl(c*d)|`.
+///
+/// Each product is off by at most `u = eps/2` of itself and the subtraction
+/// by at most `u` of its result, so the total is under `2u(1 + 2u)` of the
+/// sum of the magnitudes.  `2 * eps` clears that with room over.
+const CROSS_FILTER: f64 = 2.0 * f64::EPSILON;
+
 /// The exact sign of `a * b - c * d`, for finite inputs.
 ///
 /// This is the whole of the breakpoint comparison: `n1/d1 >= n2/d2` becomes
 /// `n1 * d2 - n2 * d1 >= 0` once the denominators are known positive.
+///
+/// The float subtraction of the two products answers first when it is far
+/// enough from zero to carry its own error, which is the usual case and costs
+/// four operations; the expansion runs only when it cannot (Shewchuk 1997,
+/// §3).  The answer is the same either way — the filter decides who computes
+/// it, not what it is.
 pub fn cross_sign(a: f64, b: f64, c: f64, d: f64) -> core::cmp::Ordering {
     let (p, pe) = two_prod(a, b);
     let (q, qe) = two_prod(c, d);
+    let det = p - q;
+    if det.abs() > CROSS_FILTER * (p.abs() + q.abs()) {
+        return if det > 0.0 { core::cmp::Ordering::Greater } else { core::cmp::Ordering::Less };
+    }
     expansion_sign(&[p, pe, -q, -qe])
 }
 
@@ -127,6 +145,54 @@ mod tests {
         assert_eq!(cross_sign(m, m, hi, lo), Ordering::Greater);
         assert_eq!(cross_sign(hi, lo, m, m), Ordering::Less);
         assert_eq!(cross_sign(m, m, m, m), Ordering::Equal);
+    }
+
+    #[test]
+    fn the_filter_never_changes_the_answer() {
+        // The expansion alone, which is what `cross_sign` computed before the
+        // float filter was put in front of it.
+        fn unfiltered(a: f64, b: f64, c: f64, d: f64) -> Ordering {
+            let (p, pe) = two_prod(a, b);
+            let (q, qe) = two_prod(c, d);
+            expansion_sign(&[p, pe, -q, -qe])
+        }
+
+        // xorshift64*, so the case list is reproducible without a dependency.
+        let mut x = 0x2545_f491_4f6c_dd1du64;
+        let mut next = move || {
+            x ^= x >> 12;
+            x ^= x << 25;
+            x ^= x >> 27;
+            x.wrapping_mul(0x2545_f491_4f6c_dd1d)
+        };
+
+        let mut filtered_out = 0;
+        for _ in 0..200_000 {
+            // Magnitudes spanning the range breakpoints actually take, and
+            // pairs that nearly cancel, which is where a filter would fail.
+            let m = |r: u64| {
+                let sign = if r & 1 == 0 { 1.0 } else { -1.0 };
+                sign * ((r >> 11) as f64) * 2f64.powi(((r >> 1) & 63) as i32 - 32)
+            };
+            let (a, b, c) = (m(next()), m(next()), m(next()));
+            for d in [m(next()), a * b / c, (a * b / c).next_up(), (a * b / c).next_down()] {
+                if !(a * b).is_finite() || !(c * d).is_finite() {
+                    continue;
+                }
+                assert_eq!(
+                    cross_sign(a, b, c, d),
+                    unfiltered(a, b, c, d),
+                    "a*b - c*d for {a} {b} {c} {d}"
+                );
+                // The same test the filter itself applies, to confirm the
+                // expansion is the path these cases take.
+                let (p, q) = (a * b, c * d);
+                if (p - q).abs() <= CROSS_FILTER * (p.abs() + q.abs()) {
+                    filtered_out += 1;
+                }
+            }
+        }
+        assert!(filtered_out > 500_000, "the cases the filter cannot decide were reached: {filtered_out}");
     }
 
     /// The parabolic embedding: key `k` at `(2k, -k^2)`, query `q` at `(q, 1)`.
