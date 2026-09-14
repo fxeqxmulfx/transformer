@@ -6,3 +6,10 @@ license.workspace = true
 
 [dependencies]
 alm-hull = { path = "../alm-hull" }
+
+[dev-dependencies]
+criterion = { version = "0.8.2", default-features = false, features = ["cargo_bench_support"] }
+
+[[bench]]
+name = "linear"
+harness = false

@@ -7,9 +7,11 @@
 //! product at all (`alm_hull`).
 
 pub mod cache;
+pub mod linear;
 pub mod model;
 pub mod weights;
 
 pub use cache::{CacheKind, KvCache};
+pub use linear::{Dense, SparseHead};
 pub use model::{Alm, Scratch, Timings};
 pub use weights::{RawModel, Shapes};

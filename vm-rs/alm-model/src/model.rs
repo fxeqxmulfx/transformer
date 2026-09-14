@@ -24,6 +24,7 @@
 use std::time::Instant;
 
 use crate::cache::KvCache;
+use crate::linear::{Dense, SparseHead};
 use crate::weights::{RawModel, Shapes};
 
 /// Where the time goes, split the way `transformer.cpp` splits it, so the two
@@ -38,91 +39,12 @@ pub struct Timings {
     pub head: f64,
 }
 
-/// A dense matrix, row-major `[rows, cols]`, exactly as `model.bin` stores it.
-struct Dense {
-    cols: usize,
-    w: Vec<f64>,
-}
-
-impl Dense {
-    fn of(w: &[f64], rows: usize, cols: usize) -> Dense {
-        assert_eq!(w.len(), rows * cols, "the weight file declares its own shapes");
-        Dense { cols, w: w.to_vec() }
-    }
-
-    /// `y = W x`, each row summed left to right.
-    ///
-    /// The order is the one `transformer.cpp` uses and the one the reference
-    /// traces were generated under; float addition is not associative, so it
-    /// is part of the answer rather than of the schedule.
-    fn apply(&self, x: &[f64], y: &mut [f64]) {
-        debug_assert_eq!(x.len(), self.cols);
-        for (row, out) in self.w.chunks_exact(self.cols).zip(y.iter_mut()) {
-            let mut s = 0.0;
-            for (a, b) in row.iter().zip(x) {
-                s += a * b;
-            }
-            *out = s;
-        }
-    }
-}
-
 /// The four projections of one layer.
 struct LayerWeights {
     qkv: Dense,
     out: Dense,
     ff_in: Dense,
     ff_out: Dense,
-}
-
-/// The output head, in compressed sparse rows.
-///
-/// It is the one projection the C++ runtime does not do densely, and the
-/// reason is in the numbers: the head is `vocab x d_model`, 915 x 38 here and
-/// 85 % zero, and it runs once per generated token.  Skipping the zeros is
-/// exact — adding `0.0 * x` to a finite partial sum never changes it — so
-/// this is the same argmax, not an approximation of it.
-struct SparseHead {
-    rows: usize,
-    /// `row i` occupies `col[ptr[i]..ptr[i+1]]`.
-    ptr: Vec<usize>,
-    col: Vec<usize>,
-    val: Vec<f64>,
-}
-
-impl SparseHead {
-    fn of(w: &[f64], rows: usize, cols: usize) -> SparseHead {
-        let mut head = SparseHead { rows, ptr: vec![0], col: Vec::new(), val: Vec::new() };
-        for i in 0..rows {
-            for j in 0..cols {
-                let v = w[i * cols + j];
-                if v != 0.0 {
-                    head.col.push(j);
-                    head.val.push(v);
-                }
-            }
-            head.ptr.push(head.col.len());
-        }
-        head
-    }
-
-    /// The first index attaining the maximum, as `Tensor::argmax` and the C++
-    /// loop both resolve it.
-    fn argmax(&self, x: &[f64]) -> usize {
-        let mut best = 0;
-        let mut best_score = f64::NEG_INFINITY;
-        for i in 0..self.rows {
-            let mut s = 0.0;
-            for k in self.ptr[i]..self.ptr[i + 1] {
-                s += self.val[k] * x[self.col[k]];
-            }
-            if s > best_score {
-                best_score = s;
-                best = i;
-            }
-        }
-        best
-    }
 }
 
 /// The buffers one position's forward pass writes into.
@@ -263,6 +185,6 @@ impl Alm {
     /// How many of the head's entries are actually nonzero — the C++ prints
     /// this at load time, and it is the justification for the sparse form.
     pub fn head_density(&self) -> (usize, usize) {
-        (self.head.val.len(), self.head.rows * self.shapes.d_model)
+        (self.head.nnz(), self.head.rows() * self.shapes.d_model)
     }
 }
