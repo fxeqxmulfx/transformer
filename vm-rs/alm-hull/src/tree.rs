@@ -88,6 +88,13 @@ pub struct Tree {
     rest: Vec<(f64, HullMeta)>,
     link: Vec<Link>,
     root: u32,
+    /// The ends, held rather than walked to.
+    ///
+    /// Every arrival order the engine sees is near-sorted, so nearly every
+    /// insertion lands at one end and nearly every erase leaves from one.
+    /// With the ends in hand those calls answer without touching the tree at
+    /// all, which is the whole of what a C++ hint insert buys.
+    ends: (u32, u32),
     free: u32,
     len: usize,
 }
@@ -106,6 +113,7 @@ impl Tree {
             rest: vec![(0.0, HullMeta::default())],
             link: vec![BLACK_NIL],
             root: NIL,
+            ends: (NIL, NIL),
             free: NIL,
             len: 0,
         }
@@ -126,6 +134,7 @@ impl Tree {
         self.link.truncate(1);
         self.link[0] = BLACK_NIL;
         self.root = NIL;
+        self.ends = (NIL, NIL);
         self.free = NIL;
         self.len = 0;
     }
@@ -153,22 +162,43 @@ impl Tree {
         self.rest[i as usize].1 = meta;
     }
 
+    /// The links of the node at `i`, named rather than indexed.
+    ///
+    /// The bounds check stays.  Dropping it with `get_unchecked` was written
+    /// and measured: the insert path did not move at all, and the query
+    /// descent went from 1.284s to 1.216s over the four reference programs --
+    /// 5%, for a container whose every cursor would then be an unchecked
+    /// index.  Not a trade worth making.
+    #[inline(always)]
+    fn lk(&self, i: u32) -> &Link {
+        &self.link[i as usize]
+    }
+
+    #[inline(always)]
+    fn lk_mut(&mut self, i: u32) -> &mut Link {
+        &mut self.link[i as usize]
+    }
+
+    /// The slope of the node at `i`, which is what a descent by slope reads.
+    #[inline(always)]
+    fn sl(&self, i: u32) -> Slope {
+        self.slope[i as usize]
+    }
+
+    /// The breakpoint of the node at `i`, which is what a query reads.
+    #[inline(always)]
+    fn bk(&self, i: u32) -> Break {
+        self.brk[i as usize]
+    }
+
     /// The leftmost node, or `NIL` when the envelope is empty.
     pub fn first(&self) -> u32 {
-        let mut x = self.root;
-        while x != NIL && self.link[x as usize].left != NIL {
-            x = self.link[x as usize].left;
-        }
-        x
+        self.ends.0
     }
 
     /// The rightmost node, or `NIL` when the envelope is empty.
     pub fn last(&self) -> u32 {
-        let mut x = self.root;
-        while x != NIL && self.link[x as usize].right != NIL {
-            x = self.link[x as usize].right;
-        }
-        x
+        self.ends.1
     }
 
     /// The next line along the envelope, or `NIL` past the end.
@@ -176,17 +206,17 @@ impl Tree {
         if x == NIL {
             return NIL;
         }
-        if self.link[x as usize].right != NIL {
-            x = self.link[x as usize].right;
-            while self.link[x as usize].left != NIL {
-                x = self.link[x as usize].left;
+        if self.lk(x).right != NIL {
+            x = self.lk(x).right;
+            while self.lk(x).left != NIL {
+                x = self.lk(x).left;
             }
             return x;
         }
-        let mut p = self.link[x as usize].parent;
-        while p != NIL && self.link[p as usize].right == x {
+        let mut p = self.lk(x).parent;
+        while p != NIL && self.lk(p).right == x {
             x = p;
-            p = self.link[p as usize].parent;
+            p = self.lk(p).parent;
         }
         p
     }
@@ -194,33 +224,42 @@ impl Tree {
     /// The previous line along the envelope, or `NIL` before the start.
     pub fn prev(&self, mut x: u32) -> u32 {
         if x == NIL {
-            return self.last();
+            return self.ends.1;
         }
-        if self.link[x as usize].left != NIL {
-            x = self.link[x as usize].left;
-            while self.link[x as usize].right != NIL {
-                x = self.link[x as usize].right;
+        if self.lk(x).left != NIL {
+            x = self.lk(x).left;
+            while self.lk(x).right != NIL {
+                x = self.lk(x).right;
             }
             return x;
         }
-        let mut p = self.link[x as usize].parent;
-        while p != NIL && self.link[p as usize].left == x {
+        let mut p = self.lk(x).parent;
+        while p != NIL && self.lk(p).left == x {
             x = p;
-            p = self.link[p as usize].parent;
+            p = self.lk(p).parent;
         }
         p
     }
 
     /// The first line whose slope is not below `m`, or `NIL` past the end.
+    ///
+    /// The two ends are answered from the cached cursors, without a descent:
+    /// that is the case the traces are almost entirely made of.
     pub fn lower_bound_slope(&self, m: Slope) -> u32 {
+        let (lo, hi) = self.ends;
+        if hi == NIL || self.sl(hi) < m {
+            return NIL;
+        }
+        if self.sl(lo) >= m {
+            return lo;
+        }
         let (mut x, mut at) = (self.root, NIL);
         while x != NIL {
-            let k = x as usize;
-            if self.slope[k] < m {
-                x = self.link[k].right;
+            if self.sl(x) < m {
+                x = self.lk(x).right;
             } else {
                 at = x;
-                x = self.link[k].left;
+                x = self.lk(x).left;
             }
         }
         at
@@ -231,14 +270,20 @@ impl Tree {
     /// This is the heterogeneous search: the tree is ordered by slope, and it
     /// answers by breakpoint because the two orders agree along the envelope.
     pub fn lower_bound_break(&self, p: Break) -> u32 {
+        let (lo, hi) = self.ends;
+        if hi == NIL || self.bk(hi) < p {
+            return NIL;
+        }
+        if self.bk(lo) >= p {
+            return lo;
+        }
         let (mut x, mut at) = (self.root, NIL);
         while x != NIL {
-            let k = x as usize;
-            if self.brk[k] < p {
-                x = self.link[k].right;
+            if self.bk(x) < p {
+                x = self.lk(x).right;
             } else {
                 at = x;
-                x = self.link[k].left;
+                x = self.lk(x).left;
             }
         }
         at
@@ -248,7 +293,7 @@ impl Tree {
     fn alloc(&mut self, line: Line) -> u32 {
         let i = if self.free != NIL {
             let i = self.free;
-            self.free = self.link[i as usize].parent;
+            self.free = self.lk(i).parent;
             self.slope[i as usize] = line.m;
             self.brk[i as usize] = line.p;
             self.rest[i as usize] = (line.b, line.meta);
@@ -261,7 +306,7 @@ impl Tree {
             self.link.push(BLACK_NIL);
             i
         };
-        self.link[i as usize] = Link { left: NIL, right: NIL, parent: NIL, red: true };
+        *self.lk_mut(i) = Link { left: NIL, right: NIL, parent: NIL, red: true };
         i
     }
 
@@ -276,21 +321,28 @@ impl Tree {
         self.len += 1;
         if self.root == NIL {
             self.root = x;
-            self.link[x as usize].red = false;
+            self.lk_mut(x).red = false;
+            self.ends = (x, x);
             return x;
         }
         let (parent, left) = if at == NIL {
-            (self.last(), false)
-        } else if self.link[at as usize].left == NIL {
+            (self.ends.1, false)
+        } else if self.lk(at).left == NIL {
             (at, true)
         } else {
             (self.prev(at), false)
         };
-        self.link[x as usize].parent = parent;
+        if at == self.ends.0 {
+            self.ends.0 = x;
+        }
+        if at == NIL {
+            self.ends.1 = x;
+        }
+        self.lk_mut(x).parent = parent;
         if left {
-            self.link[parent as usize].left = x;
+            self.lk_mut(parent).left = x;
         } else {
-            self.link[parent as usize].right = x;
+            self.lk_mut(parent).right = x;
         }
         self.fix_insert(x);
         x
@@ -310,134 +362,140 @@ impl Tree {
     pub fn erase(&mut self, x: u32) {
         debug_assert!(x != NIL);
         self.len -= 1;
-        let (mut y, child) = if self.link[x as usize].left == NIL {
-            (x, self.link[x as usize].right)
-        } else if self.link[x as usize].right == NIL {
-            (x, self.link[x as usize].left)
+        if x == self.ends.0 {
+            self.ends.0 = self.next(x);
+        }
+        if x == self.ends.1 {
+            self.ends.1 = self.prev(x);
+        }
+        let (mut y, child) = if self.lk(x).left == NIL {
+            (x, self.lk(x).right)
+        } else if self.lk(x).right == NIL {
+            (x, self.lk(x).left)
         } else {
-            let mut s = self.link[x as usize].right;
-            while self.link[s as usize].left != NIL {
-                s = self.link[s as usize].left;
+            let mut s = self.lk(x).right;
+            while self.lk(s).left != NIL {
+                s = self.lk(s).left;
             }
-            (s, self.link[s as usize].right)
+            (s, self.lk(s).right)
         };
         let parent;
         if y != x {
             // Put `y` where `x` stood, taking over both of its children.
-            let xl = self.link[x as usize].left;
-            self.link[xl as usize].parent = y;
-            self.link[y as usize].left = xl;
-            if y != self.link[x as usize].right {
-                parent = self.link[y as usize].parent;
+            let xl = self.lk(x).left;
+            self.lk_mut(xl).parent = y;
+            self.lk_mut(y).left = xl;
+            if y != self.lk(x).right {
+                parent = self.lk(y).parent;
                 if child != NIL {
-                    self.link[child as usize].parent = parent;
+                    self.lk_mut(child).parent = parent;
                 }
-                self.link[parent as usize].left = child;
-                let xr = self.link[x as usize].right;
-                self.link[y as usize].right = xr;
-                self.link[xr as usize].parent = y;
+                self.lk_mut(parent).left = child;
+                let xr = self.lk(x).right;
+                self.lk_mut(y).right = xr;
+                self.lk_mut(xr).parent = y;
             } else {
                 parent = y;
             }
-            let xp = self.link[x as usize].parent;
+            let xp = self.lk(x).parent;
             if self.root == x {
                 self.root = y;
-            } else if self.link[xp as usize].left == x {
-                self.link[xp as usize].left = y;
+            } else if self.lk(xp).left == x {
+                self.lk_mut(xp).left = y;
             } else {
-                self.link[xp as usize].right = y;
+                self.lk_mut(xp).right = y;
             }
-            self.link[y as usize].parent = xp;
-            let red = self.link[y as usize].red;
-            self.link[y as usize].red = self.link[x as usize].red;
-            self.link[x as usize].red = red;
+            self.lk_mut(y).parent = xp;
+            let red = self.lk(y).red;
+            self.lk_mut(y).red = self.lk(x).red;
+            self.lk_mut(x).red = red;
             // The colour that left the tree is the one `y` carried, and `x`
             // now holds it: from here `y` names that node.
             y = x;
         } else {
-            parent = self.link[y as usize].parent;
+            parent = self.lk(y).parent;
             if child != NIL {
-                self.link[child as usize].parent = parent;
+                self.lk_mut(child).parent = parent;
             }
             if self.root == x {
                 self.root = child;
-            } else if self.link[parent as usize].left == x {
-                self.link[parent as usize].left = child;
+            } else if self.lk(parent).left == x {
+                self.lk_mut(parent).left = child;
             } else {
-                self.link[parent as usize].right = child;
+                self.lk_mut(parent).right = child;
             }
         }
-        if !self.link[y as usize].red {
+        if !self.lk(y).red {
             self.fix_erase(child, parent);
         }
-        self.link[x as usize] = Link { left: NIL, right: NIL, parent: self.free, red: false };
+        *self.lk_mut(x) = Link { left: NIL, right: NIL, parent: self.free, red: false };
         self.free = x;
     }
 
     fn rotate_left(&mut self, x: u32) {
-        let y = self.link[x as usize].right;
-        let b = self.link[y as usize].left;
-        self.link[x as usize].right = b;
+        let y = self.lk(x).right;
+        let b = self.lk(y).left;
+        self.lk_mut(x).right = b;
         if b != NIL {
-            self.link[b as usize].parent = x;
+            self.lk_mut(b).parent = x;
         }
-        let p = self.link[x as usize].parent;
-        self.link[y as usize].parent = p;
+        let p = self.lk(x).parent;
+        self.lk_mut(y).parent = p;
         if p == NIL {
             self.root = y;
-        } else if self.link[p as usize].left == x {
-            self.link[p as usize].left = y;
+        } else if self.lk(p).left == x {
+            self.lk_mut(p).left = y;
         } else {
-            self.link[p as usize].right = y;
+            self.lk_mut(p).right = y;
         }
-        self.link[y as usize].left = x;
-        self.link[x as usize].parent = y;
+        self.lk_mut(y).left = x;
+        self.lk_mut(x).parent = y;
     }
 
     fn rotate_right(&mut self, x: u32) {
-        let y = self.link[x as usize].left;
-        let b = self.link[y as usize].right;
-        self.link[x as usize].left = b;
+        let y = self.lk(x).left;
+        let b = self.lk(y).right;
+        self.lk_mut(x).left = b;
         if b != NIL {
-            self.link[b as usize].parent = x;
+            self.lk_mut(b).parent = x;
         }
-        let p = self.link[x as usize].parent;
-        self.link[y as usize].parent = p;
+        let p = self.lk(x).parent;
+        self.lk_mut(y).parent = p;
         if p == NIL {
             self.root = y;
-        } else if self.link[p as usize].left == x {
-            self.link[p as usize].left = y;
+        } else if self.lk(p).left == x {
+            self.lk_mut(p).left = y;
         } else {
-            self.link[p as usize].right = y;
+            self.lk_mut(p).right = y;
         }
-        self.link[y as usize].right = x;
-        self.link[x as usize].parent = y;
+        self.lk_mut(y).right = x;
+        self.lk_mut(x).parent = y;
     }
 
     fn fix_insert(&mut self, mut x: u32) {
-        while x != self.root && self.link[self.link[x as usize].parent as usize].red {
-            let p = self.link[x as usize].parent;
-            let g = self.link[p as usize].parent;
-            let left = self.link[g as usize].left == p;
-            let uncle = if left { self.link[g as usize].right } else { self.link[g as usize].left };
-            if uncle != NIL && self.link[uncle as usize].red {
-                self.link[p as usize].red = false;
-                self.link[uncle as usize].red = false;
-                self.link[g as usize].red = true;
+        while x != self.root && self.lk(self.lk(x).parent).red {
+            let p = self.lk(x).parent;
+            let g = self.lk(p).parent;
+            let left = self.lk(g).left == p;
+            let uncle = if left { self.lk(g).right } else { self.lk(g).left };
+            if uncle != NIL && self.lk(uncle).red {
+                self.lk_mut(p).red = false;
+                self.lk_mut(uncle).red = false;
+                self.lk_mut(g).red = true;
                 x = g;
                 continue;
             }
-            let p = if left && self.link[p as usize].right == x {
+            let p = if left && self.lk(p).right == x {
                 self.rotate_left(p);
                 x
-            } else if !left && self.link[p as usize].left == x {
+            } else if !left && self.lk(p).left == x {
                 self.rotate_right(p);
                 x
             } else {
                 p
             };
-            self.link[p as usize].red = false;
-            self.link[g as usize].red = true;
+            self.lk_mut(p).red = false;
+            self.lk_mut(g).red = true;
             if left {
                 self.rotate_right(g);
             } else {
@@ -445,57 +503,53 @@ impl Tree {
             }
             break;
         }
-        self.link[self.root as usize].red = false;
+        self.lk_mut(self.root).red = false;
     }
 
     fn fix_erase(&mut self, mut x: u32, mut parent: u32) {
-        while x != self.root && (x == NIL || !self.link[x as usize].red) {
-            let left = self.link[parent as usize].left == x;
-            let mut w = if left {
-                self.link[parent as usize].right
-            } else {
-                self.link[parent as usize].left
-            };
-            if w != NIL && self.link[w as usize].red {
-                self.link[w as usize].red = false;
-                self.link[parent as usize].red = true;
+        while x != self.root && (x == NIL || !self.lk(x).red) {
+            let left = self.lk(parent).left == x;
+            let mut w = if left { self.lk(parent).right } else { self.lk(parent).left };
+            if w != NIL && self.lk(w).red {
+                self.lk_mut(w).red = false;
+                self.lk_mut(parent).red = true;
                 if left {
                     self.rotate_left(parent);
-                    w = self.link[parent as usize].right;
+                    w = self.lk(parent).right;
                 } else {
                     self.rotate_right(parent);
-                    w = self.link[parent as usize].left;
+                    w = self.lk(parent).left;
                 }
             }
             if w == NIL {
                 x = parent;
-                parent = self.link[x as usize].parent;
+                parent = self.lk(x).parent;
                 continue;
             }
-            let (wl, wr) = (self.link[w as usize].left, self.link[w as usize].right);
+            let (wl, wr) = (self.lk(w).left, self.lk(w).right);
             let red = |t: &Self, n: u32| n != NIL && t.link[n as usize].red;
             if !red(self, wl) && !red(self, wr) {
-                self.link[w as usize].red = true;
+                self.lk_mut(w).red = true;
                 x = parent;
-                parent = self.link[x as usize].parent;
+                parent = self.lk(x).parent;
                 continue;
             }
             let (near, far) = if left { (wl, wr) } else { (wr, wl) };
             if !red(self, far) {
-                self.link[near as usize].red = false;
-                self.link[w as usize].red = true;
+                self.lk_mut(near).red = false;
+                self.lk_mut(w).red = true;
                 if left {
                     self.rotate_right(w);
-                    w = self.link[parent as usize].right;
+                    w = self.lk(parent).right;
                 } else {
                     self.rotate_left(w);
-                    w = self.link[parent as usize].left;
+                    w = self.lk(parent).left;
                 }
             }
-            self.link[w as usize].red = self.link[parent as usize].red;
-            self.link[parent as usize].red = false;
-            let far = if left { self.link[w as usize].right } else { self.link[w as usize].left };
-            self.link[far as usize].red = false;
+            self.lk_mut(w).red = self.lk(parent).red;
+            self.lk_mut(parent).red = false;
+            let far = if left { self.lk(w).right } else { self.lk(w).left };
+            self.lk_mut(far).red = false;
             if left {
                 self.rotate_left(parent);
             } else {
@@ -505,7 +559,7 @@ impl Tree {
             parent = NIL;
         }
         if x != NIL {
-            self.link[x as usize].red = false;
+            self.lk_mut(x).red = false;
         }
     }
 }
@@ -544,6 +598,15 @@ mod tests {
         assert!(t.root == NIL || !t.link[t.root as usize].red, "the root is red");
         assert_eq!(t.link[t.root as usize].parent, NIL, "the root has a parent");
         check(t, t.root);
+        // The cached ends must be the ends, or every fast path lies.
+        let (mut lo, mut hi) = (t.root, t.root);
+        while lo != NIL && t.link[lo as usize].left != NIL {
+            lo = t.link[lo as usize].left;
+        }
+        while hi != NIL && t.link[hi as usize].right != NIL {
+            hi = t.link[hi as usize].right;
+        }
+        assert_eq!(t.ends, (lo, hi), "the cached ends are not the ends");
         let mut n = 0;
         let mut x = t.first();
         let mut last = None;

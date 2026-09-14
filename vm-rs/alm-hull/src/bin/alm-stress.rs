@@ -46,6 +46,7 @@
 use std::time::Instant;
 
 use alm_hull::cht::Cht;
+use alm_hull::envelope::Envelope;
 use alm_hull::HullMeta;
 
 /// The key of position `k` under the lift the compiler emits: `(2k, -k^2)`.
@@ -136,6 +137,7 @@ struct Run {
     moved: u128,
     max: usize,
     secs: f64,
+    tree: f64,
 }
 
 fn run(ks: &[u64]) -> Run {
@@ -150,6 +152,18 @@ fn run(ks: &[u64]) -> Run {
     let secs = t.elapsed().as_secs_f64();
     let (upper, lower) = (u.len(), l.len());
 
+    // The same keys through the tree, which moves nothing whatever they are.
+    let (mut tu, mut tl) = (Envelope::new(), Envelope::new());
+    let t = Instant::now();
+    for (i, &k) in ks.iter().enumerate() {
+        let (kx, ky) = lift(k);
+        let meta = HullMeta::of([0.0, 0.0], i as i32);
+        tu.add_line(kx, ky, meta);
+        tl.add_line(-kx, -ky, meta);
+    }
+    let tree = t.elapsed().as_secs_f64();
+    assert_eq!((tu.len(), tl.len()), (upper, lower), "the containers disagree on the envelope");
+
     // Counted second: the tail each insertion rewrites, exactly.
     let (mut u, mut l) = (Cht::new(), Cht::new());
     let (mut moved, mut max) = (0u128, 0usize);
@@ -163,7 +177,7 @@ fn run(ks: &[u64]) -> Run {
             add(c, kx, ky, upper, i as i32);
         }
     }
-    Run { upper, lower, moved, max, secs }
+    Run { upper, lower, moved, max, secs, tree }
 }
 
 const ORDERS: [&str; 5] = ["ascending", "descending", "shuffled", "outside-in", "inside-out"];
@@ -209,13 +223,13 @@ fn main() {
         names = ORDERS.iter().map(|s| s.to_string()).collect();
     }
 
-    println!("{:>12} {:>9} {:>8} {:>8} {:>16} {:>10} {:>9} {:>9}", "order", "n", "upper", "lower", "moved", "mean", "max", "seconds");
+    println!("{:>12} {:>9} {:>8} {:>8} {:>16} {:>10} {:>9} {:>9} {:>9} {:>7}", "order", "n", "upper", "lower", "moved", "mean", "max", "vec s", "tree s", "ratio");
     for &n in &sizes {
         for name in &names {
             let ks = order(name, n).expect("the order was checked when it was parsed");
             let r = run(&ks);
             let mean = r.moved as f64 / (2.0 * n as f64);
-            println!("{:>12} {:>9} {:>8} {:>8} {:>16} {:>10.1} {:>9} {:>9.3}", name, n, r.upper, r.lower, r.moved, mean, r.max, r.secs);
+            println!("{:>12} {:>9} {:>8} {:>8} {:>16} {:>10.1} {:>9} {:>9.3} {:>9.3} {:>7.2}", name, n, r.upper, r.lower, r.moved, mean, r.max, r.secs, r.tree, r.secs / r.tree);
         }
     }
 }
