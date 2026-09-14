@@ -219,6 +219,27 @@ right at every magnitude tested.  That is a caveat on the severity, not on the
 defect: two procedures asserted equal are not equal, and the interpreter leans
 on misses deliberately.
 
+### 3a. The hull head is exact only if no three keys are collinear
+
+This is a second, independent gap between the two heads, found by porting the
+hull to Rust (`vm-rs/alm-hull`) and running the two against each other on
+*arbitrary* 2D keys rather than parabolic ones.  The envelope keeps vertices.
+A key that is maximal at exactly one query and interior everywhere else is
+erased the moment a later line covers it, and its payload — `vsum`, `vlast`,
+`last_seq` — goes with it.  Both tie-breaks then answer with the wrong entry:
+on the three collinear keys of the test, `Latest` gives 101 where the brute
+head gives 102, and `Average` gives 100.5 where the brute head gives 101.
+
+The machine is safe from this, but by accident of the embedding, not by
+anything the code checks: `k ↦ (2k, −k²)` is strictly convex, so no three key
+points are ever collinear.  Neither post nor code states the hypothesis, and
+`HullKVCache` is offered as a general drop-in.
+
+**Fix.** State it.  The hull head is equivalent to the brute head *for keys in
+general position*; anything else needs the brute head or a hull that keeps
+collinear vertices.  Witness and characterization:
+`vm-rs/alm-hull/tests/differential.rs`.
+
 **Fix.** §0 — the divergence is gone at every key magnitude once the score is
 on the grid, with no change to the hull.  What remains is that
 `hull_cache.py` and `standard_cache.py` are two implementations of one
@@ -238,6 +259,25 @@ below `2^53`, so exact retrieval needs `n < √(2^53) = 94 906 266`.  Measured o
 with the first failure of the shipped arithmetic at `q = 52 301 885` and of
 grid arithmetic at `q = 94 906 266` (§0).  The Sudoku demo is ~5.4·10^6 tokens
 (3 minutes at ~30k tok/s), a factor of 10 below the shipped wall.
+
+The wall is in the representation, not in the arithmetic, and that settles
+what a wider float would buy: nothing.  Scanning each query against its
+neighbours for the first `q` whose own key stops being the strict argmax:
+
+    rounded float64 scoring                first failure at q = 94 906 266
+    exact scoring on the same stored pts   first failure at q = 94 906 266
+
+the same number, to the unit.  The coordinate `−k²` stops being an exact
+double at `k = 94 906 267`; at `q = 94 906 266` the stored coordinate of `q+1`
+is `9 007 199 515 875 288` against a true `9 007 199 515 875 289`, and the
+missing unit is exactly the gap that made `q` the argmax — so exact rational
+arithmetic on the stored points ties them too.  Shewchuk expansions, an 80-bit
+`long double` accumulator, `f128`: none of them recover a coordinate that was
+rounded before it arrived.  Only a wider *embedding* moves the wall, and that
+is a change to the weights.  (`f128` in Rust is nightly-only —
+`#![feature(f128)]`, tracking issue 116909 — and software-emulated on x86-64:
+measured 72× slower than `f64`.)  Measurement and test:
+`vm-rs/alm-hull/src/exact.rs::the_wall_is_the_key_coordinate_not_the_arithmetic`.
 
 Neither post states a bound, and the code has no assertion.  `int seq` in the
 C++ head overflows at `2^31`, which is past this wall and therefore moot, but

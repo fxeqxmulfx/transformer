@@ -38,7 +38,17 @@ of 36-wide matvecs with no batch — while the hull is ordinary Rust.
   is why the machine gets away with it, but neither post nor code states the
   hypothesis.  Witness and characterization: `alm-hull/tests/differential.rs`.
 
+* **The float64 wall is a wall of the representation.**  Scoring exactly —
+  `dot_cmp` in `alm-hull/src/exact.rs`, Dekker products and a Shewchuk
+  expansion sign — does not move it.  The first query whose own key stops
+  being the strict argmax is `q = 94 906 266` under rounded scoring and
+  `q = 94 906 266` under exact scoring, the same number to the unit, because
+  the coordinate `-k^2` is rounded before the comparison ever sees it.  No
+  wider accumulator helps; only a wider embedding would, and that is a change
+  to the weights.  `todo3.md` section 4.
+
 ## Status
 
 `alm-hull` is complete and differentially tested against a brute-force head.
-`alm-model` and `alm-vm` are stubs.
+`alm-model` reads `model.bin` and runs the forward pass on burn; `alm-vm` is
+a stub.
