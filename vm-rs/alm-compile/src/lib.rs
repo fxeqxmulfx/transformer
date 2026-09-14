@@ -13,6 +13,8 @@ pub mod interpreter;
 pub mod isa;
 pub mod naming;
 pub mod plan;
+pub mod slots;
+pub mod weights;
 
 pub use expr::{DimId, Expr};
 pub use graph::{Graph, LookUp, TieBreak};
