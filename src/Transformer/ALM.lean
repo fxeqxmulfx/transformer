@@ -43,6 +43,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.ScoreGuard` | and the query-time test for it, which the scale nearly cancels out of |
 | `ALM.GuardSep` | and what passing that test buys: the separation the comparison needs |
 | `ALM.ScoreGap` | and the gap the runtime reports, which is that separation counted out |
+| `ALM.GridWitness` | and the whole run's verdict, which merging the heads does not soften |
 | `ALM.CumSum` | the counter the average has to divide out, and cannot |
 | `ALM.DriftMargin` | and the margin that replaces the exactness it costs |
 | `ALM.ClearKey` | and the cleared entry, which wins by no arithmetic at all |
@@ -128,6 +129,7 @@ import Transformer.ALM.DriftMargin
 import Transformer.ALM.ClearKey
 import Transformer.ALM.GuardSep
 import Transformer.ALM.ScoreGap
+import Transformer.ALM.GridWitness
 import Transformer.ALM.Softmax
 import Transformer.ALM.Lattice
 import Transformer.ALM.ScalarInt
