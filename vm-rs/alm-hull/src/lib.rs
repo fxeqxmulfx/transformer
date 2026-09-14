@@ -15,6 +15,6 @@ pub mod head;
 pub mod meta;
 
 pub use breakpoint::Break;
-pub use grid::{off_the_grid, ulp, Crossing, GridWitness, GRID_LIMIT};
+pub use grid::{grid_ratio, off_the_grid, ulp, Crossing, GridWitness, GRID_LIMIT};
 pub use head::{BruteAttentionHead, HardAttentionHead, HullHalf};
 pub use meta::{HullMeta, TieBreak};

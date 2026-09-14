@@ -4,7 +4,7 @@
 //! pointed at the same files:
 //!
 //! ```text
-//! alm-vm model.bin [--brute] [--trace[=N]] [--args=STR] [--max=N] prog.txt ...
+//! alm-vm model.bin [--brute] [--grid] [--trace[=N]] [--args=STR] [--max=N] prog.txt ...
 //! ```
 
 mod program;
@@ -26,6 +26,7 @@ struct Options {
     trace_every: usize,
     args: Option<String>,
     max_new: Option<usize>,
+    grid: bool,
 }
 
 fn parse(argv: &[String]) -> Result<Options, String> {
@@ -35,6 +36,7 @@ fn parse(argv: &[String]) -> Result<Options, String> {
     let mut trace_every = 0;
     let mut args = None;
     let mut max_new = None;
+    let mut grid = false;
 
     let mut it = argv.iter();
     while let Some(a) = it.next() {
@@ -50,6 +52,8 @@ fn parse(argv: &[String]) -> Result<Options, String> {
             args = it.next().cloned();
         } else if let Some(n) = a.strip_prefix("--max=") {
             max_new = Some(n.parse().map_err(|_| format!("--max={n} is not a count"))?);
+        } else if a == "--grid" {
+            grid = true;
         } else if a.starts_with("--") {
             return Err(format!("unknown option {a}"));
         } else if model.is_none() {
@@ -65,7 +69,7 @@ fn parse(argv: &[String]) -> Result<Options, String> {
     if programs.is_empty() {
         return Err("no programs given".into());
     }
-    Ok(Options { model, programs, kind, trace_every, args, max_new })
+    Ok(Options { model, programs, kind, trace_every, args, max_new, grid })
 }
 
 /// The benchmark line the C++ driver prints after every program has run.
@@ -104,8 +108,9 @@ impl Totals {
 }
 
 /// A fresh cache per program, with the per-head tie-break the file records.
-fn cache_for(raw: &RawModel, kind: CacheKind) -> KvCache {
+fn cache_for(raw: &RawModel, kind: CacheKind, grid: bool) -> KvCache {
     let mut cache = KvCache::new(raw.shapes.n_layers, raw.shapes.n_heads, kind);
+    cache.set_grid(grid);
     if let Some(latest) = &raw.latest_heads {
         for (l, row) in latest.iter().enumerate() {
             for (h, &is_latest) in row.iter().enumerate() {
@@ -137,7 +142,7 @@ fn check(
     use std::io::Write;
     std::io::stdout().flush()?;
 
-    let mut cache = cache_for(raw, opts.kind);
+    let mut cache = cache_for(raw, opts.kind, opts.grid);
     let result = run::generate(model, &mut cache, &program.ids, max_new, opts.trace_every);
     let (n, ops, dt) = (result.ids.len(), result.ops, result.seconds);
     total.add(n, ops, dt, &result.timings);
@@ -180,9 +185,13 @@ fn check(
         println!("  (budget exhausted: the run did not reach the stop token)");
     }
     let grid = cache.grid_witness();
+    println!("  grid: worst ulp(score)/margin = {:.3}", grid.worst);
+    if let Some(w) = grid.worst_at {
+        println!("    at: query {:?}, key {:?}", w.query, w.key);
+    }
     if let Some(first) = grid.first {
         println!(
-            "  OFF THE GRID: {} quer(ies) won at a score past 2^53 (todo3.md section 4)",
+            "  OFF THE GRID: {} quer(ies) won with no margin to spare (todo3.md section 4)",
             grid.count
         );
         println!("    first: score {} at query {:?}, key {:?}", first.score, first.query, first.key);
@@ -223,6 +232,9 @@ fn main() -> ExitCode {
     );
     if opts.kind == CacheKind::Brute {
         println!("Using the brute-force O(n) KV cache");
+    }
+    if opts.grid {
+        println!("Querying at unit scale (todo3.md section 0)");
     }
 
     let device = Default::default();

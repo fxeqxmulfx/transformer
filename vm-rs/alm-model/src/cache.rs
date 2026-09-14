@@ -28,6 +28,28 @@ pub struct KvCache {
     tie: Vec<TieBreak>,
     n_heads: usize,
     seq: i32,
+    grid: bool,
+}
+
+/// Rescale a query to unit scale without changing what it selects.
+///
+/// `todo3.md` section 0: the compiler multiplies every hard-attention query by
+/// `HARD_K * sqrt(2) = 1.41e10`, a softmax temperature applied on a path that
+/// takes an argmax.  `argmax_k <q, k>` is invariant under `q -> q / s` for any
+/// `s > 0`, so the scale decides nothing — it only lifts `2qk - k^2` off the
+/// integer grid, which is the one hypothesis
+/// `ALM.FloatGrid.fp_eval_exact_of_grid` needs to call the score exact.
+///
+/// Dividing by `|q_y|` puts it back.  The division is the only rounding
+/// introduced, and it is harmless: `q_x` is the correctly rounded `s * q` for
+/// an integer `q`, so `q_x / |q_y|` is within `q * 2^-52` of `q`, and for every
+/// `q` below the wall that rounds back to `q` exactly.
+fn on_the_grid(q: [f64; 2]) -> [f64; 2] {
+    let s = if q[1] != 0.0 { q[1].abs() } else { q[0].abs() };
+    if s == 0.0 || !s.is_finite() {
+        return q;
+    }
+    [q[0] / s, q[1] / s]
 }
 
 impl KvCache {
@@ -37,7 +59,13 @@ impl KvCache {
             CacheKind::Hull => Heads::Hull((0..n).map(|_| HardAttentionHead::new()).collect()),
             CacheKind::Brute => Heads::Brute((0..n).map(|_| BruteAttentionHead::new()).collect()),
         };
-        KvCache { heads, tie: vec![TieBreak::Average; n], n_heads, seq: -1 }
+        KvCache { heads, tie: vec![TieBreak::Average; n], n_heads, seq: -1, grid: false }
+    }
+
+    /// Answer queries at unit scale rather than at the compiler's — the fix of
+    /// `todo3.md` section 0.  See `on_the_grid`.
+    pub fn set_grid(&mut self, on: bool) {
+        self.grid = on;
     }
 
     /// Mark a head as resolving ties to the latest write.
@@ -62,6 +90,7 @@ impl KvCache {
                 [queries[2 * h], queries[2 * h + 1]],
                 [values[2 * h], values[2 * h + 1]],
             );
+            let q = if self.grid { on_the_grid(q) } else { q };
             let answer = match &mut self.heads {
                 Heads::Hull(hs) => {
                     hs[i].insert(k, v, seq);

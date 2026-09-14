@@ -71,3 +71,21 @@ fn the_two_caches_agree_token_for_token() {
     assert_eq!(counts(&hull), counts(&brute));
     assert!(!counts(&hull).is_empty());
 }
+
+#[test]
+fn unit_scale_queries_reproduce_them_as_well() {
+    // `todo3.md` section 0 asks for the hard-attention query scale to go.  It
+    // is an argmax, so dividing the query by `|qy|` cannot change the answer —
+    // and on the released weights it does not, to the token.  What it does not
+    // do is remove a single off-the-grid query: those come from the 32-bit
+    // values the heads are keyed on (section 4b), which no rescaling touches.
+    let (Some(shipped), Some(grid)) = (run(&[]), run(&["--grid"])) else { return };
+    assert!(grid.contains("2 passed, 0 failed"), "{grid}");
+    assert!(grid.contains("Hello World!") && grid.contains("19134"), "{grid}");
+
+    let crossings = |s: &str| -> Vec<String> {
+        s.lines().filter(|l| l.contains("OFF THE GRID")).map(|l| l.trim().to_string()).collect()
+    };
+    assert_eq!(crossings(&shipped), crossings(&grid), "the scale is not what puts them off the grid");
+    assert!(!crossings(&grid).is_empty(), "and they are off it");
+}

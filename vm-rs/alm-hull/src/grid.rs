@@ -50,8 +50,26 @@ pub fn ulp(x: f64) -> f64 {
 ///
 /// `todo3.md` section 4 states the first number.  The shipped model runs at the
 /// second scale, so the second number is the one that bounds it.
+///
+/// A margin of zero is not a crossing.  It means the query is the zero vector,
+/// every key scores `0`, and the tie is exact — resolving it is the tie-break's
+/// job and float64 does it perfectly.
 pub fn off_the_grid(score: f64, margin: f64) -> bool {
-    ulp(score) > margin.abs()
+    margin != 0.0 && ulp(score) > margin.abs()
+}
+
+/// How much of the available separation a query used: `ulp(score) / |margin|`.
+///
+/// This is the quantity `off_the_grid` thresholds at `1`, and reporting it
+/// rather than the threshold is what makes the cost of the query scale
+/// visible.  A run whose worst ratio is `0.5` is one binade from the wall; a
+/// run whose worst ratio is `18` answered a query it could not see.
+pub fn grid_ratio(score: f64, margin: f64) -> f64 {
+    if margin == 0.0 {
+        0.0
+    } else {
+        ulp(score) / margin.abs()
+    }
 }
 
 /// One query that float64 could not answer, kept for the report.
@@ -71,12 +89,21 @@ pub struct GridWitness {
     pub first: Option<Crossing>,
     /// How many queries were answered off the grid.
     pub count: usize,
+    /// The largest `grid_ratio` seen, crossing or not: how close the run came.
+    pub worst: f64,
+    /// The query that attained it.
+    pub worst_at: Option<Crossing>,
 }
 
 impl GridWitness {
     /// Record a winning score against the margin it had to beat, returning
     /// whether the pair was past what float64 can separate.
     pub fn observe(&mut self, score: f64, margin: f64, query: [f64; 2], key: Option<[f64; 2]>) -> bool {
+        let r = grid_ratio(score, margin);
+        if r > self.worst {
+            self.worst = r;
+            self.worst_at = Some(Crossing { score, query, key });
+        }
         if off_the_grid(score, margin) {
             self.count += 1;
             self.first.get_or_insert(Crossing { score, query, key });
@@ -91,6 +118,10 @@ impl GridWitness {
             self.first = other.first;
         }
         self.count += other.count;
+        if other.worst > self.worst {
+            self.worst = other.worst;
+            self.worst_at = other.worst_at;
+        }
     }
 
     pub fn is_clean(&self) -> bool {
@@ -143,6 +174,40 @@ mod tests {
         let mut w = GridWitness::default();
         assert!(!w.observe(4.0 * 94906.0, 1.0, [1.0, 1.0], None));
         assert!(w.is_clean());
+    }
+
+    #[test]
+    fn a_zero_query_ties_everything_exactly_and_is_not_a_crossing() {
+        assert!(!off_the_grid(0.0, 0.0));
+        assert_eq!(grid_ratio(0.0, 0.0), 0.0);
+    }
+
+    #[test]
+    fn the_scale_shuffles_binades_and_only_the_threshold_moves() {
+        // Both pairs are the worst query of a real run, at the two scales:
+        // `hello` and `addition`, against the same value-keyed head.  The
+        // scale helps one and hurts the other, by the two factors it can
+        // apply -- `2^33 / s` and `2^34 / s` -- so it is not a uniform loss.
+        let s = 14142135623.730951;
+        let key = [673720322.0, -1.1347476806894592e17];
+        let ratio = |qx: f64, qy: f64| grid_ratio(qx * key[0] + qy * key[1], qy);
+
+        let hello = (ratio(4294967380.0, 1.0), ratio(6.074001118746039e19, s));
+        assert_eq!(hello.0, 512.0);
+        assert!(hello.1 < hello.0, "the scale helped here: {hello:?}");
+
+        let addition = (ratio(8589934503.0, 1.0), ratio(1.2148001874039192e20, s));
+        assert_eq!(addition.0, 1024.0);
+        assert!(addition.1 > addition.0, "and hurt here: {addition:?}");
+
+        // What the scale does move, one way, is the threshold.  Across the
+        // whole binade `[2^52, 2^53)` the unit-scale ratio is exactly `1` --
+        // separable, to the last unit -- and the scale pushes the upper 72 %
+        // of it past.  That is the 22 % of section 4a, in `q` rather than in
+        // `q^2`.
+        let x = 1.3 * (GRID_LIMIT / 2.0);
+        assert!(!off_the_grid(x, 1.0));
+        assert!(off_the_grid(s * x, s));
     }
 
     #[test]
