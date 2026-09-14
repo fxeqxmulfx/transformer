@@ -35,6 +35,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.TieBreak` | where score ties live, and what the two tie-break modes do |
 | `ALM.LatestWindow` | and what orders the writes the released weights never tie |
 | `ALM.LatestClose` | and how long that lasts, past which rounding decides instead |
+| `ALM.ScoreWall` | and that the wall is the stored coordinate, not the arithmetic |
 | `ALM.Basic` | exact hardmax lookup in arbitrary key dimension |
 | `ALM.Softmax` | softmax-to-hardmax error bounds for an abstract score gap |
 | `ALM.Lattice` | the tail bounds that remove the factor `n` |
@@ -106,6 +107,7 @@ import Transformer.ALM.FloatResolve
 import Transformer.ALM.TieBreak
 import Transformer.ALM.LatestWindow
 import Transformer.ALM.LatestClose
+import Transformer.ALM.ScoreWall
 import Transformer.ALM.Softmax
 import Transformer.ALM.Lattice
 import Transformer.ALM.ScalarInt
