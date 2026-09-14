@@ -9,14 +9,15 @@ use core::cell::Cell;
 
 use crate::breakpoint::Break;
 use crate::gap::ScoreGaps;
-use crate::cht::Cht;
+use crate::envelope::Envelope;
 use crate::grid::GridWitness;
 use crate::meta::{HullMeta, TieBreak};
+use crate::tree::NIL;
 
 /// One envelope: the upper hull maximises `kx * m + ky`, the lower minimises it
 /// by maximising the negated line.
 pub struct HullHalf {
-    cht: Cht,
+    cht: Envelope,
     is_upper: bool,
 }
 
@@ -32,7 +33,7 @@ pub struct Hit {
 
 impl HullHalf {
     pub fn new(is_upper: bool) -> HullHalf {
-        HullHalf { cht: Cht::new(), is_upper }
+        HullHalf { cht: Envelope::new(), is_upper }
     }
 
     pub fn len(&self) -> usize {
@@ -57,7 +58,7 @@ impl HullHalf {
     }
 
     /// The stored key of the line at `i`, undoing the negation of a lower hull.
-    fn key_at(&self, i: usize) -> (f64, f64) {
+    fn key_at(&self, i: u32) -> (f64, f64) {
         let l = self.cht.get(i);
         if self.is_upper {
             (l.m.get(), l.b)
@@ -95,22 +96,26 @@ impl HullHalf {
         let mut combined = HullMeta::default();
         combined.merge(&self.cht.get(best).meta);
 
-        let mut left = best;
-        while left > 0 {
-            let (kx, ky) = self.key_at(left - 1);
+        // The ties either side of the winner, walked with the cursor that
+        // found it: a neighbour is one step, not another search.
+        let mut left = self.cht.prev(best);
+        while left != NIL {
+            let (kx, ky) = self.key_at(left);
             if qx * kx + qy * ky != best_score {
                 break;
             }
-            combined.merge(&self.cht.get(left - 1).meta);
-            left -= 1;
+            combined.merge(&self.cht.get(left).meta);
+            left = self.cht.prev(left);
         }
 
-        for next in best + 1..self.cht.len() {
-            let (kx, ky) = self.key_at(next);
+        let mut right = self.cht.next(best);
+        while right != NIL {
+            let (kx, ky) = self.key_at(right);
             if qx * kx + qy * ky != best_score {
                 break;
             }
-            combined.merge(&self.cht.get(next).meta);
+            combined.merge(&self.cht.get(right).meta);
+            right = self.cht.next(right);
         }
 
         Some(Hit { out: combined.resolve(tb), score: best_score, best_kx: kx_best, best_key: [kx_best, ky_best] })
