@@ -14,10 +14,12 @@
 //! over the reference suite, the shifted tail is a fixed fraction of the
 //! envelope, near `n / 33 000` — linear in `n`, not a constant.
 //!
-//!     tokens      envelope    mean shift    hull, vec    hull, tree    hull, C++
-//!         59 089    44 588          1.4        1.13s         4.11s        1.32s
-//!        178 226   178 225          7.7           --            --           --
-//!      1 055 417  1 055 416        26.8       34.90s        81.84s       29.88s
+//! ```text
+//! tokens      envelope    mean shift    hull, vec    hull, tree    hull, C++
+//!     59 089    44 588          1.4        1.13s         4.11s        1.32s
+//!    178 226   178 225          7.7           --            --           --
+//!  1 055 417  1 055 416        26.8       34.90s        81.84s       29.88s
+//! ```
 //!
 //! Two comparisons, and they do not agree.  Against the `BTreeMap` the array
 //! wins at every size measured, by 3.6x at 59 089 tokens and still 2.3x at a
