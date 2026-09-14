@@ -33,6 +33,8 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.FloatGrid` | and that the exactness that walk needs is a property of the grid |
 | `ALM.FloatResolve` | and the value `resolve` writes out, in the arithmetic that runs |
 | `ALM.TieBreak` | where score ties live, and what the two tie-break modes do |
+| `ALM.LatestWindow` | and what orders the writes the released weights never tie |
+| `ALM.LatestClose` | and how long that lasts, past which rounding decides instead |
 | `ALM.Basic` | exact hardmax lookup in arbitrary key dimension |
 | `ALM.Softmax` | softmax-to-hardmax error bounds for an abstract score gap |
 | `ALM.Lattice` | the tail bounds that remove the factor `n` |
@@ -102,6 +104,8 @@ import Transformer.ALM.FloatWalk
 import Transformer.ALM.FloatGrid
 import Transformer.ALM.FloatResolve
 import Transformer.ALM.TieBreak
+import Transformer.ALM.LatestWindow
+import Transformer.ALM.LatestClose
 import Transformer.ALM.Softmax
 import Transformer.ALM.Lattice
 import Transformer.ALM.ScalarInt
