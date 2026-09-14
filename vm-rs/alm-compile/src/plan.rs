@@ -316,7 +316,9 @@ mod tests {
     /// of the Python and is not in this repository.
     #[test]
     fn the_released_plan_resolves_against_the_ported_graph() {
-        let Ok(text) = std::fs::read_to_string(crate::vendored("plan.yaml")) else {
+        let path = crate::vendored("plan.yaml");
+        let Ok(text) = std::fs::read_to_string(&path) else {
+            println!("skipped: no {}", path.display());
             return;
         };
         let mg = interpreter::build();

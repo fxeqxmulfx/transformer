@@ -399,10 +399,11 @@ mod tests {
     /// 5's FFN passthrough neurons on most runs (todo3.md section 9).
     #[test]
     fn the_model_comes_out_byte_for_byte_the_python_one() {
-        let (Ok(plan_text), Ok(want)) = (
-            std::fs::read_to_string(crate::vendored("plan.yaml")),
-            std::fs::read(crate::vendored("model.bin")),
-        ) else {
+        let (plan_path, model_path) = (crate::vendored("plan.yaml"), crate::vendored("model.bin"));
+        let (Ok(plan_text), Ok(want)) =
+            (std::fs::read_to_string(&plan_path), std::fs::read(&model_path))
+        else {
+            println!("skipped: no {} or no {}", plan_path.display(), model_path.display());
             return;
         };
         let mg = crate::interpreter::build();
@@ -423,7 +424,9 @@ mod tests {
     /// needs no Python, so it runs wherever the vendored plan is present.
     #[test]
     fn dropping_the_query_scale_touches_the_query_rows_and_nothing_else() {
-        let Ok(plan_text) = std::fs::read_to_string(crate::vendored("plan.yaml")) else {
+        let path = crate::vendored("plan.yaml");
+        let Ok(plan_text) = std::fs::read_to_string(&path) else {
+            println!("skipped: no {}", path.display());
             return;
         };
         let mg = crate::interpreter::build();
