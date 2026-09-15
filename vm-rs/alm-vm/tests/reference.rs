@@ -134,6 +134,39 @@ fn unit_scale_queries_reproduce_them_as_well() {
 }
 
 #[test]
+fn the_integer_cache_reproduces_them_and_clears_the_grid() {
+    // `todo3.md` section 4.  The integer head compares the keys rather than
+    // the ordinates they were rounded into, which moves the wall from `2^26.5`
+    // to `2^52`; the two things to check on the released weights are that it
+    // changes no answer, and that it actually reaches the heads section 4b is
+    // about -- the ones keyed on 32-bit values, which are past the old wall
+    // from their first token and are also the heads that clear.
+    let (Some(shipped), Some(lift)) = (run(&["--grid"]), run(&["--lift"])) else { return };
+    assert!(lift.contains("2 passed, 0 failed"), "{lift}");
+    assert!(lift.contains("Hello World!") && lift.contains("19134"), "{lift}");
+
+    let lines = |s: &str, mark: &str| -> Vec<String> {
+        s.lines().filter(|l| l.contains(mark)).map(|l| l.trim().to_string()).collect()
+    };
+    assert!(!lines(&shipped, "OFF THE GRID").is_empty(), "the hull path answers some of it blind");
+    assert!(lines(&lift, "OFF THE GRID").is_empty(), "and the integer path answers none of it so\n{lift}");
+
+    // Both heads of section 4b are reached, on both programs, and neither
+    // retires: the clear markers they are full of are held beside the
+    // container rather than in it (`ALM.ClearKey.marked_sup'_eq_live`).
+    let past = lines(&lift, "past the old wall");
+    assert_eq!(past.len(), 2, "one line per program\n{lift}");
+    for l in &past {
+        assert!(l.contains("2 kept the integer path and 0 retired"), "{l}");
+    }
+    for l in lines(&lift, "settled by the marker") {
+        let after = l.split(", ").nth(1).expect("the second clause");
+        let settled: usize = after.split(' ').next().expect("its count").parse().expect("a number");
+        assert!(settled > 0, "{l}");
+    }
+}
+
+#[test]
 fn the_query_scale_inflates_the_non_integer_share() {
     // `todo3.md` section 8a.  The hypothesis `q : Z` of
     // `ALM.FloatGrid.fp_exact_of_grid` is about the query, and the machine
