@@ -2025,14 +2025,14 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`Monge`](src/Transformer/Interpolation/Main.lean#L133) | def |  |
 | [`UnivApprox`](src/Transformer/Interpolation/Main.lean#L149) | def |  |
 
-**[Transformer.Interpolation.NeuralODE](src/Transformer/Interpolation/NeuralODE.lean)** — 102 lines
+**[Transformer.Interpolation.NeuralODE](src/Transformer/Interpolation/NeuralODE.lean)** — 137 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`neuralODESphere`](src/Transformer/Interpolation/NeuralODE.lean#L30) | def |  |
 | [`prop_interpolation_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L53) | theorem | sorry |
-| [`lem_induction_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L76) | theorem | sorry |
-| [`Hartman_Grobman`](src/Transformer/Interpolation/NeuralODE.lean#L92) | theorem | sorry |
+| [`lem_induction_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L85) | theorem | sorry |
+| [`Hartman_Grobman`](src/Transformer/Interpolation/NeuralODE.lean#L127) | theorem | sorry |
 
 ### `Transformer.MeanField`
 
@@ -2804,8 +2804,8 @@ Everything the build cannot vouch for, in one place.
 | [`softmaxEntropy_lower_bound`](src/Transformer/GPTMini/Properties/Entropy.lean#L85) | theorem | `Transformer.GPTMini.Properties.Entropy` |
 | [`blockForward_lipschitz`](src/Transformer/GPTMini/Properties/LipschitzConstants.lean#L80) | theorem | `Transformer.GPTMini.Properties.LipschitzConstants` |
 | [`prop_interpolation_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L53) | theorem | `Transformer.Interpolation.NeuralODE` |
-| [`lem_induction_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L76) | theorem | `Transformer.Interpolation.NeuralODE` |
-| [`Hartman_Grobman`](src/Transformer/Interpolation/NeuralODE.lean#L92) | theorem | `Transformer.Interpolation.NeuralODE` |
+| [`lem_induction_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L85) | theorem | `Transformer.Interpolation.NeuralODE` |
+| [`Hartman_Grobman`](src/Transformer/Interpolation/NeuralODE.lean#L127) | theorem | `Transformer.Interpolation.NeuralODE` |
 | [`equiangular_local_rate`](src/Transformer/MeanField/Equiangular.lean#L44) | theorem | `Transformer.MeanField.Equiangular` |
 | [`rho_diff_ineq`](src/Transformer/Metastability/MainTheorem.lean#L51) | theorem | `Transformer.Metastability.MainTheorem` |
 | [`eminem`](src/Transformer/Metastability/MainTheorem.lean#L69) | lemma | `Transformer.Metastability.MainTheorem` |

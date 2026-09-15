@@ -72,17 +72,52 @@ theorem prop_interpolation_neural_ode
 /-- **Proposition (lem: induction.neural.ode).** *Induction step.*
 
 Specializing to `x_0^i = y^i` for `i ∈ [M - 1]` and a common pair
-`(γ, ε)`, only the `M`-th pair is moved, with at most 6 switches. -/
+`(γ, ε)`, only the `M`-th pair is moved, with at most 6 switches.
+
+The data is indexed by `Idx (M + 1)`, so the moving pair is `Fin.last M` and
+the fixed ones are the indices below it; this is what lets the last index be
+named without a side condition.
+
+Not proved here: it is the base case of the induction that proves
+`prop: interpolation.neural.ode`, and rests on `eq: Hartman.Grobman`.
+
+Source: arXiv:2411.04551v3, §4, `lem: induction.neural.ode`. -/
 theorem lem_induction_neural_ode
-    (hd : 3 ≤ d) (M : ℕ) (hM : 1 ≤ M)
-    (x₀ y : Idx M → SSphere d)
-    (h_fixed : ∀ i : Idx M, (i : ℕ) < M - 1 → x₀ i = y i)
-    (γ : SSphere d) (ε : ℝ)
+    (hd : 3 ≤ d)
+    (x₀ y : Idx (M + 1) → SSphere d)
+    (h_fixed : ∀ i : Idx (M + 1), (i : ℕ) < M → x₀ i = y i)
+    (γ : SSphere d) (ε : ℝ) (hε : 0 < ε)
     (h_orth : inner (𝕜 := ℝ) ((γ : EucSpace d))
-                ((x₀ ⟨M - 1, by sorry⟩ : EucSpace d)
-                  - (y ⟨M - 1, by sorry⟩ : EucSpace d)) = 0)
+                ((x₀ (Fin.last M) : EucSpace d)
+                  - (y (Fin.last M) : EucSpace d)) = 0)
+    (h_sep : ∀ i : Idx (M + 1), i ≠ Fin.last M → x₀ i ∉ Hε d γ ε)
     (T : ℝ) (hT : 0 < T) :
-    True := by trivial
+    ∃ (W U : ℝ → ParamMatrix d) (b : ℝ → EucSpace d) (switches : ℕ),
+      switches ≤ 6 ∧
+      ∀ x : ℝ → Idx (M + 1) → EucSpace d,
+        (∀ i : Idx (M + 1), x 0 i = (x₀ i : EucSpace d)) →
+        neuralODESphere d (M + 1) W U b x →
+        ∀ i : Idx (M + 1), x T i = (y i : EucSpace d) := by
+  sorry
+
+/-- The hypotheses of `lem_induction_neural_ode` are satisfiable: at `M = 0`
+there is a single pair, no index below it and none beside it, so `h_fixed`
+and `h_sep` are vacuous, and `x_0 = y` makes `h_orth` an inner product with
+the zero vector. -/
+example :
+    3 ≤ 3 ∧ (0 : ℝ) < 1 ∧
+      inner (𝕜 := ℝ) ((basePoint 2 : EucSpace 3))
+        (((fun _ => basePoint 2 : Idx 1 → SSphere 3) (Fin.last 0) : EucSpace 3)
+          - ((fun _ => basePoint 2 : Idx 1 → SSphere 3) (Fin.last 0) : EucSpace 3))
+        = (0 : ℝ) ∧
+      (∀ i : Idx 1, (i : ℕ) < 0 →
+        (fun _ => basePoint 2 : Idx 1 → SSphere 3) i
+          = (fun _ => basePoint 2 : Idx 1 → SSphere 3) i) ∧
+      (∀ i : Idx 1, i ≠ Fin.last 0 →
+        (fun _ => basePoint 2 : Idx 1 → SSphere 3) i ∉ Hε 3 (basePoint 2) 1) ∧
+      (0 : ℝ) < 1 :=
+  ⟨le_rfl, one_pos, by simp, fun _ _ => rfl,
+    fun i hi => absurd (Subsingleton.elim i (Fin.last 0)) hi, one_pos⟩
 
 /-- **Equation (eq: Hartman.Grobman).** Exponential settling near the
 attractor:
