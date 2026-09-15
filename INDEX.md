@@ -1808,7 +1808,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`rmsNorm_eq_smul_normL2`](src/Transformer/GPTMini/QKNorm.lean#L164) | theorem | proved |
 | [`rmsScore_eq_score`](src/Transformer/GPTMini/QKNorm.lean#L179) | theorem | proved |
 
-**[Transformer.GPTMini.RMSNorm](src/Transformer/GPTMini/RMSNorm.lean)** — 93 lines
+**[Transformer.GPTMini.RMSNorm](src/Transformer/GPTMini/RMSNorm.lean)** — 92 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -1818,7 +1818,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`rmsNorm_norm_eq_sqrt_d`](src/Transformer/GPTMini/RMSNorm.lean#L55) | theorem | proved |
 | [`rmsNormEps_norm_le`](src/Transformer/GPTMini/RMSNorm.lean#L65) | theorem | sorry |
 | [`rmsNorm_pos_homog`](src/Transformer/GPTMini/RMSNorm.lean#L73) | theorem | proved |
-| [`continuous_rmsNorm`](src/Transformer/GPTMini/RMSNorm.lean#L88) | theorem | sorry |
+| [`continuous_rmsNorm`](src/Transformer/GPTMini/RMSNorm.lean#L87) | theorem | sorry |
 
 **[Transformer.GPTMini.ReLU2FFN](src/Transformer/GPTMini/ReLU2FFN.lean)** — 115 lines
 
@@ -2795,7 +2795,7 @@ Everything the build cannot vouch for, in one place.
 | [`blockForward_growth`](src/Transformer/GPTMini/Block.lean#L132) | theorem | `Transformer.GPTMini.Block` |
 | [`causalAttnWeights_bounds`](src/Transformer/GPTMini/CausalMHA.lean#L140) | theorem | `Transformer.GPTMini.CausalMHA` |
 | [`rmsNormEps_norm_le`](src/Transformer/GPTMini/RMSNorm.lean#L65) | theorem | `Transformer.GPTMini.RMSNorm` |
-| [`continuous_rmsNorm`](src/Transformer/GPTMini/RMSNorm.lean#L88) | theorem | `Transformer.GPTMini.RMSNorm` |
+| [`continuous_rmsNorm`](src/Transformer/GPTMini/RMSNorm.lean#L87) | theorem | `Transformer.GPTMini.RMSNorm` |
 | [`relu2Vec_norm_bound`](src/Transformer/GPTMini/ReLU2FFN.lean#L96) | theorem | `Transformer.GPTMini.ReLU2FFN` |
 | [`relu2FFN_lipschitz_on_ball`](src/Transformer/GPTMini/ReLU2FFN.lean#L105) | theorem | `Transformer.GPTMini.ReLU2FFN` |
 | [`softmaxEntropy_le_log_vocab`](src/Transformer/GPTMini/Properties/Entropy.lean#L69) | theorem | `Transformer.GPTMini.Properties.Entropy` |

@@ -77,8 +77,7 @@ theorem rmsNorm_pos_homog (x : EucSpace d) (c : ℝ) (hc : 0 < c) :
     rw [norm_smul, Real.norm_eq_abs, abs_of_pos hc]
   rw [h_smul_norm]
   by_cases hx : ‖x‖ = 0
-  · have : c * ‖x‖ = 0 := by rw [hx]; ring
-    simp [this, hx]
+  · simp [hx]
   · have hcx : c * ‖x‖ ≠ 0 := mul_ne_zero (ne_of_gt hc) hx
     rw [ite_eq_right hcx, ite_eq_right hx, smul_smul]
     congr 1

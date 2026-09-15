@@ -46,20 +46,20 @@ theorem relu2_nonneg (z : ℝ) : 0 ≤ relu2 z := by
 /-- `relu2` on the positive ray. -/
 theorem relu2_of_pos (z : ℝ) (hz : 0 < z) : relu2 z = z^2 := by
   unfold relu2
-  simp [le_of_lt hz, max_eq_right]
+  simp [le_of_lt hz]
 
 /-- `relu2` on the non-positive ray. -/
 theorem relu2_of_nonpos (z : ℝ) (hz : z ≤ 0) : relu2 z = 0 := by
   unfold relu2
-  simp [hz, max_eq_left]
+  simp [hz]
 
 /-- Piecewise polynomial bound:  `relu2 z ≤ z²`. -/
 theorem relu2_le_sq (z : ℝ) : relu2 z ≤ z^2 := by
   unfold relu2
   by_cases h : z ≤ 0
-  · simp [h, max_eq_left]; positivity
+  · simp [h]; positivity
   · push Not at h
-    simp [le_of_lt h, max_eq_right]
+    simp [le_of_lt h]
 
 /-- **Continuity of `relu2`.** -/
 theorem continuous_relu2 : Continuous relu2 := by
