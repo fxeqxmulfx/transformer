@@ -27,6 +27,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.BuildFinger` | and that this port pays half of that, and on sorted keys no logarithm |
 | `ALM.HullLift` | and that on the paraboloid no erase rule whatsoever can fire |
 | `ALM.HullMark` | and that the recency term the compiler adds does not revive one |
+| `ALM.MarkedPosition` | and that it does not cost the general position either, which is what the hull head assumed |
 | `ALM.HullClear` | while the clear marker does, which is how a cleared entry leaves |
 | `ALM.HullWall` | and that past the wall the recency term is not there to begin with |
 | `ALM.HullNear` | so a live head answers with the key nearest the query, and only that |
@@ -127,6 +128,7 @@ import Transformer.ALM.BuildOrder
 import Transformer.ALM.BuildFinger
 import Transformer.ALM.HullLift
 import Transformer.ALM.HullMark
+import Transformer.ALM.MarkedPosition
 import Transformer.ALM.HullClear
 import Transformer.ALM.HullWall
 import Transformer.ALM.HullNear
