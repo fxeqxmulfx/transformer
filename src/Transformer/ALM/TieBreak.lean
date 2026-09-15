@@ -138,9 +138,9 @@ hypothesis. -/
 theorem merge_comm {m o : Meta} (h : m.lastSeq ≠ o.lastSeq) : m.merge o = o.merge m := by
   unfold merge
   rcases lt_or_gt_of_ne h with hlt | hgt
-  · rw [if_pos hlt, if_neg (not_lt.mpr hlt.le)]
+  · rw [ite_eq_left hlt, ite_eq_right (not_lt.mpr hlt.le)]
     congr 1 <;> simp [add_comm, max_comm]
-  · rw [if_neg (not_lt.mpr hgt.le), if_pos hgt]
+  · rw [ite_eq_right (not_lt.mpr hgt.le), ite_eq_left hgt]
     congr 1 <;> simp [add_comm, max_comm]
 
 /-- Without distinct sequence numbers the merge is genuinely order-dependent:

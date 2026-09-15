@@ -91,7 +91,7 @@ theorem coeff_restrict_of_mem {i : Fin n} {S : Finset (Fin n)} (hi : i ∈ S) (b
     funext (restrict_eq i b f), coeff_sum]
   refine Finset.sum_eq_zero fun T hT => ?_
   simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hT
-  rw [coeff_smul, coeff_chi, if_neg (fun h : S = T => hT (h ▸ hi)), mul_zero]
+  rw [coeff_smul, coeff_chi, ite_eq_right (fun h : S = T => hT (h ▸ hi)), mul_zero]
 
 /-- And at a set avoiding it, the two coefficients of `f` are folded
 together. -/
@@ -108,7 +108,7 @@ theorem coeff_restrict_of_notMem {i : Fin n} {S : Finset (Fin n)} (hi : i ∉ S)
       coeff (fun x => (coeff f T + bitSign b * coeff f (insert i T)) * chi T x) S
         = (coeff f T + bitSign b * coeff f (insert i T)) * (if S = T then 1 else 0))]
   simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_filter, Finset.mem_univ,
-    true_and, if_pos hi]
+    true_and, ite_eq_left hi]
 
 end RASPL
 end Transformer

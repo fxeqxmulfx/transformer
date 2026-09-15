@@ -132,9 +132,9 @@ theorem firstMax_first (f : ℕ → ℝ) {n j : ℕ} (hj : j < firstMax f n) :
   | succ m ih =>
     rw [firstMax] at hj ⊢
     split at hj
-    · rw [if_pos ‹_›]
+    · rw [ite_eq_left ‹_›]
       exact lt_of_le_of_lt (firstMax_le f hj) ‹_›
-    · rw [if_neg ‹_›]
+    · rw [ite_eq_right ‹_›]
       exact ih hj
 
 /-- Both hypotheses are satisfiable at a head with a genuine tie in it: rows

@@ -48,8 +48,8 @@ the value. -/
 theorem gate_eq_ite (a b : ℝ) : gate a b = (if 0 < a then a else 0) * b := by
   unfold gate
   rcases lt_or_ge 0 a with h | h
-  · rw [if_pos h, max_eq_left h.le]
-  · rw [if_neg (not_lt.mpr h), max_eq_right h]
+  · rw [ite_eq_left h, max_eq_left h.le]
+  · rw [ite_eq_right (not_lt.mpr h), max_eq_right h]
 
 /-! ### The rectifier is free and the product is not -/
 

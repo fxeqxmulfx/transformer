@@ -13,7 +13,7 @@ correlation functions for the dynamics on the circle.  Main object:
 
 import Transformer.Basic
 import Transformer.Perspective.Section6_Circle
-import Mathlib.MeasureTheory.Measure.MeasureSpace
+import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 
 open scoped BigOperators
 open Real MeasureTheory

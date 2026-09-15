@@ -78,14 +78,14 @@ theorem lowerBound_eq_find (p : α → Bool) :
     obtain ⟨hv, hr⟩ := List.pairwise_cons.mp hvr
     rw [RBNode.toList_node, List.find?_append]
     by_cases hpv : p v = true
-    · rw [lowerBound, if_pos hpv, lowerBound_eq_find p l (some v) hl,
+    · rw [lowerBound, ite_eq_left hpv, lowerBound_eq_find p l (some v) hl,
         List.find?_cons_of_pos hpv]
       cases l.toList.find? p <;> simp
     · have hnone : l.toList.find? p = none := by
         rw [List.find?_eq_none]
         intro x hx hpx
         exact hpv (hcross x hx v (List.mem_cons_self ..) hpx)
-      rw [lowerBound, if_neg hpv, lowerBound_eq_find p r acc hr, hnone,
+      rw [lowerBound, ite_eq_right hpv, lowerBound_eq_find p r acc hr, hnone,
         List.find?_cons_of_neg (by simpa using hpv)]
       simp
   termination_by t => t

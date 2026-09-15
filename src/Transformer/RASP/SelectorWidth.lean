@@ -71,10 +71,10 @@ lemma selected_and0 (hn : 0 < n) (S : Selector n) (i : Fin n) :
     simp [selectZero, Fin.ext_iff]
   simp only [mem_selected, and0, Selector.and', Bool.and_eq_true, hj]
   by_cases h : S i ⟨0, hn⟩ = true
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     simp only [Finset.mem_singleton]
     exact ⟨fun hx => hx.2, fun hx => ⟨hx ▸ h, hx⟩⟩
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     simp only [Finset.notMem_empty, iff_false, not_and]
     intro h1 h2
     exact h (h2 ▸ h1)
@@ -107,7 +107,7 @@ theorem or0Width_eq (hn : 0 < n) (S : Selector n) (i : Fin n) :
   have hcard := card_selected_or0 hn S i
   have hpos : ((selected (or0 S) i).card : ℝ) ≠ 0 := by
     rw [hcard]; positivity
-  rw [or0Width, aggregate, if_neg (by rw [hcard]; omega), sum_light0_or0 hn,
+  rw [or0Width, aggregate, ite_eq_right (by rw [hcard]; omega), sum_light0_or0 hn,
     one_div_one_div, hcard]
   push_cast
   ring
@@ -117,10 +117,10 @@ exactly at the query positions whose `sel` row already contained it. -/
 theorem and0Width_eq (hn : 0 < n) (S : Selector n) (i : Fin n) :
     and0Width S i = if S i ⟨0, hn⟩ = true then 1 else 0 := by
   by_cases h : S i ⟨0, hn⟩ = true
-  · rw [and0Width, aggregate_of_selected_eq_singleton (by rw [selected_and0 hn, if_pos h]),
-      if_pos h, light0, if_pos rfl]
-  · rw [and0Width, aggregate_of_selected_eq_empty (by rw [selected_and0 hn, if_neg h]),
-      if_neg h]
+  · rw [and0Width, aggregate_of_selected_eq_singleton (by rw [selected_and0 hn, ite_eq_left h]),
+      ite_eq_left h, light0, ite_eq_left rfl]
+  · rw [and0Width, aggregate_of_selected_eq_empty (by rw [selected_and0 hn, ite_eq_right h]),
+      ite_eq_right h]
 
 /-- **Figure 8 computes `selector_width`.**  Without a beginning-of-sequence
 token, `nobos_res` is the width of the selector, at every query position and
@@ -130,14 +130,14 @@ theorem noBosRes_eq_selectorWidth (hn : 0 < n) (S : Selector n) (i : Fin n) :
   rw [noBosRes, bosRes, or0Width_eq hn, and0Width_eq hn, selectorWidth]
   by_cases h : S i ⟨0, hn⟩ = true
   · have hmem : (⟨0, hn⟩ : Fin n) ∈ selected S i := by simpa using h
-    rw [if_pos h, Finset.card_erase_of_mem hmem]
+    rw [ite_eq_left h, Finset.card_erase_of_mem hmem]
     have hone : 1 ≤ (selected S i).card := Finset.card_pos.2 ⟨_, hmem⟩
     have hcast : (((selected S i).card - 1 : ℕ) : ℝ) = ((selected S i).card : ℝ) - 1 := by
       push_cast [hone]
       ring
     rw [hcast]; ring
   · have hmem : (⟨0, hn⟩ : Fin n) ∉ selected S i := by simpa using h
-    rw [if_neg h, Finset.erase_eq_of_notMem hmem]
+    rw [ite_eq_right h, Finset.erase_eq_of_notMem hmem]
     ring
 
 /-- **And with one, it computes the width less the BOS position.**  The

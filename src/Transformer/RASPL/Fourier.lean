@@ -94,7 +94,7 @@ lemma sum_chi (S : Finset (Fin n)) :
   by_cases h : S = ∅
   · simp [h]
   · obtain ⟨i, hi⟩ := Finset.nonempty_iff_ne_empty.2 h
-    rw [if_neg h, Finset.prod_eq_zero (Finset.mem_univ i) (by simp [hi])]
+    rw [ite_eq_right h, Finset.prod_eq_zero (Finset.mem_univ i) (by simp [hi])]
 
 /-- And the dual orthogonality, summing over the characters instead: the
 `2^n` characters separate the points of the cube. -/
@@ -118,7 +118,7 @@ lemma sum_chi_mul_chi (x y : Cube n) :
   by_cases h : x = y
   · simp [h]
   · obtain ⟨i, hi⟩ := Function.ne_iff.1 h
-    rw [if_neg h, Finset.prod_eq_zero (Finset.mem_univ i) (by simp [hi])]
+    rw [ite_eq_right h, Finset.prod_eq_zero (Finset.mem_univ i) (by simp [hi])]
 
 /-- The Fourier coefficient `f̂(S)`. -/
 noncomputable def coeff (f : Cube n → ℝ) (S : Finset (Fin n)) : ℝ :=
@@ -140,7 +140,7 @@ theorem sum_coeff_mul_chi (f : Cube n → ℝ) (x : Cube n) :
         exact congrArg (· / 2 ^ n) (Finset.sum_congr rfl fun y _ => (Finset.mul_sum _ _ _).symm)
     _ = f x := by
         simp only [sum_chi_mul_chi, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-          if_pos]
+          ite_eq_left]
         field_simp
 
 /-- The coefficients of a character are the indicator of that character. -/
@@ -152,7 +152,7 @@ theorem sum_coeff_mul_chi (f : Cube n → ℝ) (x : Cube n) :
   by_cases h : S = T
   · subst h
     simp [h2]
-  · rw [if_neg (fun hst : symmDiff T S = ∅ => h (symmDiff_eq_bot.1 hst).symm), if_neg h,
+  · rw [ite_eq_right (fun hst : symmDiff T S = ∅ => h (symmDiff_eq_bot.1 hst).symm), ite_eq_right h,
       zero_div]
 
 lemma coeff_add (f g : Cube n → ℝ) (S : Finset (Fin n)) :

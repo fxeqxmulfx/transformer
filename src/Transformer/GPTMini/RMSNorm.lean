@@ -56,7 +56,7 @@ theorem rmsNorm_norm_eq_sqrt_d (x : EucSpace d) (hx : x ≠ 0) :
     ‖rmsNorm x‖ = Real.sqrt (d : ℝ) := by
   unfold rmsNorm
   have h_norm_ne : ‖x‖ ≠ 0 := norm_ne_zero_iff.mpr hx
-  rw [if_neg h_norm_ne]
+  rw [ite_eq_right h_norm_ne]
   rw [norm_smul, Real.norm_eq_abs]
   rw [abs_of_nonneg (div_nonneg (Real.sqrt_nonneg _) (norm_nonneg _))]
   exact div_mul_cancel₀ _ h_norm_ne
@@ -80,7 +80,7 @@ theorem rmsNorm_pos_homog (x : EucSpace d) (c : ℝ) (hc : 0 < c) :
   · have : c * ‖x‖ = 0 := by rw [hx]; ring
     simp [this, hx]
   · have hcx : c * ‖x‖ ≠ 0 := mul_ne_zero (ne_of_gt hc) hx
-    rw [if_neg hcx, if_neg hx, smul_smul]
+    rw [ite_eq_right hcx, ite_eq_right hx, smul_smul]
     congr 1
     field_simp
 

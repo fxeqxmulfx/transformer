@@ -100,7 +100,7 @@ theorem selWidth_eq (k : Seq n α) (q : Seq n β) (p : α → β → Bool) (i : 
 /-- `aggr_max` at a nonempty row is the maximum of the selected values. -/
 theorem aggrMax_of_mem {A : Selector n} {v : Seq n ℝ} {d : ℝ} {i j : Fin n}
     (hj : j ∈ selected A i) : aggrMax A v d i = (selected A i).sup' ⟨j, hj⟩ v := by
-  rw [aggrMax, dif_pos ⟨j, hj⟩]
+  rw [aggrMax, dite_eq_left ⟨j, hj⟩]
 
 /-- The causal core is not vacuous: on three positions, `select` with `<`
 selects strictly earlier positions only, and its width is the index. -/

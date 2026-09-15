@@ -134,7 +134,7 @@ theorem hullIndex_query_paid [Nonempty (Fin n)] (K : Fin n → ℝ) :
   have h := hullProbe_cost K
   have hq : hullIndex.query n 1 = (Nat.log 2 n : ℝ) + 1 := by
     show (if (1 : ℕ) = 1 then (Nat.log 2 n : ℝ) + 1 else (n : ℝ) * ((1 : ℕ) : ℝ)) = _
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
   rw [hq]
   exact_mod_cast h
 
@@ -147,7 +147,7 @@ Orthogonal Vectors side, whatever `d` is. -/
 theorem reduction_dimension_even (n d : ℕ) :
     hullIndex.query n (d + d) = (n : ℝ) * ((d + d : ℕ) : ℝ) := by
   show (if d + d = 1 then (Nat.log 2 n : ℝ) + 1 else (n : ℝ) * ((d + d : ℕ) : ℝ)) = _
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
 
 /-- The quadratic model implements the reduction through `hullIndex`, at
 exactly the accounted cost — the same accounting as for `bruteForce`, because
@@ -160,7 +160,7 @@ noncomputable def naiveModel_implements_hullIndex : naiveModel.Implements hullIn
     show 2 * (n : ℝ) ^ 2 * (d : ℝ)
       ≤ (if d + d = 1 then 3 * (n : ℝ) * ((Nat.log 2 n : ℝ) + 1) else 0)
         + (n : ℝ) * ((n : ℝ) * ((d + d : ℕ) : ℝ))
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
     push_cast
     ring_nf
     exact le_refl _
@@ -176,7 +176,7 @@ theorem hullIndex_consistent_with_OVHard :
       ∀ n : ℕ, hullIndex.query n 1 = (Nat.log 2 n : ℝ) + 1 :=
   ⟨naiveModel, naiveModel_OVHard, ⟨naiveModel_implements_hullIndex⟩, fun n => by
     show (if (1 : ℕ) = 1 then (Nat.log 2 n : ℝ) + 1 else (n : ℝ) * ((1 : ℕ) : ℝ)) = _
-    rw [if_pos rfl]⟩
+    rw [ite_eq_left rfl]⟩
 
 /-- The hypotheses are satisfiable: `Fin 3` is nonempty, and on the scalar keys
 `0, 1, 2` the index really returns a best-scoring one. -/

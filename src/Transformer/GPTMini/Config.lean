@@ -9,7 +9,7 @@ specifications take the config as input and derive `Fin`-indexed types from
 it.
 -/
 
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Fintype.Pigeonhole
 

@@ -66,8 +66,8 @@ theorem andProg_apply (x : Cube n) (i : Fin n) :
       exact Bool.noConfusion hxf
   rw [andProg, kqv, aggrMean, aggregate]
   by_cases h : ∀ j : Fin n, (j : ℕ) ≤ (i : ℕ) → x j = true
-  · rw [if_pos (hcard.2 h), if_pos h]
-  · rw [if_neg (fun hc => h (hcard.1 hc)), if_neg h]
+  · rw [ite_eq_left (hcard.2 h), ite_eq_left h]
+  · rw [ite_eq_right (fun hc => h (hcard.1 hc)), ite_eq_right h]
     simp [full]
 
 /-- At the last position the running AND is the AND of the whole input, so
@@ -75,8 +75,8 @@ the program's final output is exactly the task's label. -/
 theorem andProg_last (x : Cube (n + 1)) : andProg x (Fin.last n) = andAll (n + 1) x := by
   rw [andProg_apply, andAll]
   by_cases h : ∀ i, x i = true
-  · rw [if_pos (fun j _ => h j), if_pos h]
-  · rw [if_neg, if_neg h]
+  · rw [ite_eq_left (fun j _ => h j), ite_eq_left h]
+  · rw [ite_eq_right, ite_eq_right h]
     intro hall
     exact h fun j => hall j (Nat.le_of_lt_succ j.isLt)
 
@@ -87,11 +87,11 @@ theorem minDeg_ne_andAll {T : Finset (Cube n)} {g : Cube n → ℝ} {i : Fin n}
     (hmem : (fun _ => true) ∈ T) : g ≠ andAll n := by
   have hdep := minDeg_not_dependsOn hmin hconst
   have h1 : g (fun _ => true) = 1 := by
-    rw [hmin.1 _ hmem, andAll, if_pos (fun _ => rfl)]
+    rw [hmin.1 _ hmem, andAll, ite_eq_left (fun _ => rfl)]
   intro hg
   have h2 : g (Function.update (fun _ => true) i false) = 1 := by
     rw [apply_update_of_not_dependsOn hdep, h1]
-  rw [hg, andAll, if_neg] at h2
+  rw [hg, andAll, ite_eq_right] at h2
   · norm_num at h2
   · intro hall
     have hi := hall i
@@ -110,14 +110,14 @@ lemma coeff_const_one (S : Finset (Fin n)) :
     funext fun x => (chi_empty x).symm, coeff_chi]
 
 lemma levelWeight_const_one_zero : levelWeight (fun _ : Cube n => (1 : ℝ)) 0 = 1 := by
-  rw [levelWeight, filter_card_zero, Finset.sum_singleton, coeff_const_one, if_pos rfl]
+  rw [levelWeight, filter_card_zero, Finset.sum_singleton, coeff_const_one, ite_eq_left rfl]
   norm_num
 
 lemma levelWeight_const_one_of_ne {k : ℕ} (hk : k ≠ 0) :
     levelWeight (fun _ : Cube n => (1 : ℝ)) k = 0 := by
   refine Finset.sum_eq_zero fun S hS => ?_
   simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hS
-  rw [coeff_const_one, if_neg (fun h : S = ∅ => hk (by rw [← hS, h, Finset.card_empty]))]
+  rw [coeff_const_one, ite_eq_right (fun h : S = ∅ => hk (by rw [← hS, h, Finset.card_empty]))]
   ring
 
 /-- The hypotheses of `minDeg_ne_andAll` are satisfiable.  On one bit with
@@ -129,7 +129,7 @@ example : MinDegInterpolator ({fun _ => true} : Finset (Cube 1)) (andAll 1) (fun
     (fun _ => true) ∈ ({fun _ => true} : Finset (Cube 1)) := by
   refine ⟨⟨fun x hx => ?_, fun h hint => ?_⟩, ⟨true, fun x hx => by
     rw [Finset.mem_singleton.1 hx]⟩, Finset.mem_singleton_self _⟩
-  · rw [Finset.mem_singleton.1 hx, andAll, if_pos (fun _ => rfl)]
+  · rw [Finset.mem_singleton.1 hx, andAll, ite_eq_left (fun _ => rfl)]
   · rintro ⟨d, hlt, heq⟩
     rcases Nat.eq_zero_or_pos d with hd | hd
     · subst hd
@@ -146,7 +146,7 @@ example : MinDegInterpolator ({fun _ => true} : Finset (Cube 1)) (andAll 1) (fun
         ring
       have hone : coeff h ∅ = 1 := by
         rw [← hconst (fun _ => true), hint _ (Finset.mem_singleton_self _), andAll,
-          if_pos (fun _ => rfl)]
+          ite_eq_left (fun _ => rfl)]
       rw [levelWeight, filter_card_zero, Finset.sum_singleton, hone,
         levelWeight_const_one_zero] at hlt
       norm_num at hlt

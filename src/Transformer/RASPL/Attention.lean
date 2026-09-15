@@ -36,9 +36,9 @@ theorem sum_oneHot_mul (P : V → V → Bool) (a b : V) :
     (∑ m : V, (if a = m then (1 : ℝ) else 0) * (if P m b then (1 : ℝ) else 0))
       = if P a b then (1 : ℝ) else 0 := by
   rw [Finset.sum_eq_single a]
-  · rw [if_pos rfl, one_mul]
+  · rw [ite_eq_left rfl, one_mul]
   · intro m _ hm
-    rw [if_neg (fun h : a = m => hm h.symm), zero_mul]
+    rw [ite_eq_right (fun h : a = m => hm h.symm), zero_mul]
   · intro h
     exact absurd (Finset.mem_univ a) h
 
@@ -86,13 +86,13 @@ theorem constructable_value {X : Fin T → Fin d → ℝ} {v : Fin T → ℝ} {b
     fun i j => ?_⟩
   rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, one_smul,
     Finset.sum_eq_single b₁, Finset.sum_eq_single b₀]
-  · rw [if_pos rfl, if_pos rfl, one_mul, one_mul, hv j, hone i, one_mul]
+  · rw [ite_eq_left rfl, ite_eq_left rfl, one_mul, one_mul, hv j, hone i, one_mul]
   · intro b _ hb
-    rw [if_neg hb, zero_mul]
+    rw [ite_eq_right hb, zero_mul]
   · intro h
     exact absurd (Finset.mem_univ b₀) h
   · intro b _ hb
-    rw [if_neg hb, zero_mul]
+    rw [ite_eq_right hb, zero_mul]
   · intro h
     exact absurd (Finset.mem_univ b₁) h
 
@@ -113,13 +113,13 @@ theorem argmax_shift {m : ℕ} (v : Fin m → ℕ) (P : Fin m → Bool) (C : ℕ
       · rfl
       · exact absurd hPj' hc
     have := hj a₀
-    rw [if_pos ha₀, hcf, if_neg Bool.false_ne_true] at this
+    rw [ite_eq_left ha₀, hcf, ite_eq_right Bool.false_ne_true] at this
     have h1 := hv a₀
     have h2 := hv j
     omega
   refine ⟨hPj, fun a ha => ?_⟩
   have := hj a
-  rw [if_pos ha, if_pos hPj] at this
+  rw [ite_eq_left ha, ite_eq_left hPj] at this
   omega
 
 /-- The hypotheses are satisfiable: the zero matrix is constructable from any

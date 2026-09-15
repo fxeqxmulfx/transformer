@@ -40,7 +40,7 @@ the shape of `frac_as = aggregate(select_all, 1 if tokens=="a" else 0)`. -/
 theorem aggregate_selectAll (hn : 0 < n) (v : Seq n ℝ) (d : ℝ) (i : Fin n) :
     aggregate (selectAll n) v d i = (∑ j, v j) / (n : ℝ) := by
   simp only [aggregate, selected_selectAll, Finset.card_univ, Fintype.card_fin]
-  rw [if_neg hn.ne']
+  rw [ite_eq_right hn.ne']
 
 /-- A row that selects exactly one position aggregates to the value there. -/
 theorem aggregate_of_selected_eq_singleton {S : Selector n} {i j : Fin n}
@@ -55,7 +55,7 @@ theorem aggregateOne_of_selected_eq_singleton {S : Selector n} {i j : Fin n}
   have hspec := (Finset.card_eq_one.mp hc).choose_spec
   have hchoose : (Finset.card_eq_one.mp hc).choose = j :=
     Finset.singleton_injective (hspec.symm.trans h)
-  simp only [aggregateOne, dif_pos hc, hchoose]
+  simp only [aggregateOne, dite_eq_left hc, hchoose]
 
 /-- A row that selects nothing aggregates to the default (§3). -/
 theorem aggregate_of_selected_eq_empty {S : Selector n} {i : Fin n}

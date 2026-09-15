@@ -166,8 +166,8 @@ theorem rmsNorm_eq_smul_normL2 (x : EucSpace d_head) :
   unfold rmsNorm normL2
   rw [add_zero]
   by_cases hx : ‖x‖ = 0
-  · rw [if_pos hx, norm_eq_zero.mp hx, smul_zero, smul_zero]
-  · rw [if_neg hx, smul_smul, mul_one_div]
+  · rw [ite_eq_left hx, norm_eq_zero.mp hx, smul_zero, smul_zero]
+  · rw [ite_eq_right hx, smul_smul, mul_one_div]
 
 /-- **And the gain absorbs it.**  An RMS-normalized head with gain `α` is the
 L2-normalized head with gain `α + log d_head`: the same operator at a shifted

@@ -19,7 +19,7 @@ This file collects:
 
 import Transformer.Basic
 import Transformer.Perspective.Section2_FlowMap
-import Mathlib.MeasureTheory.Measure.MeasureSpace
+import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 
 open scoped BigOperators
 open Real MeasureTheory

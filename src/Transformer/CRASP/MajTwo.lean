@@ -130,14 +130,14 @@ theorem sat_ex (w : List σ) (ξ : Var → ℕ) (v : Var) (φ : Maj2 σ) :
     have hz : (∑ i ∈ Finset.Icc 1 w.length,
         (if φ.sat w (Function.update ξ v i) then 1 else 0)) = 0 := by
       refine Finset.sum_eq_zero fun i hi => ?_
-      rw [if_neg]
+      rw [ite_eq_right]
       simpa using hc i hi
     omega
   · rintro ⟨i, hi, hsat⟩
     have hpos : 0 < ∑ i ∈ Finset.Icc 1 w.length,
         (if φ.sat w (Function.update ξ v i) then 1 else 0) := by
       refine Finset.sum_pos' (fun _ _ => Nat.zero_le _) ⟨i, hi, ?_⟩
-      rw [if_pos hsat]
+      rw [ite_eq_left hsat]
       omega
     omega
 

@@ -104,9 +104,9 @@ only query `on_the_grid` has to hand back untouched. -/
 lemma gridScale_eq_zero_iff (q : ℝ × ℝ) : gridScale q = 0 ↔ q = (0, 0) := by
   unfold gridScale
   rcases eq_or_ne q.2 0 with h2 | h2
-  · rw [if_pos h2, abs_eq_zero, Prod.ext_iff]
+  · rw [ite_eq_left h2, abs_eq_zero, Prod.ext_iff]
     simp [h2]
-  · rw [if_neg h2, abs_eq_zero, Prod.ext_iff]
+  · rw [ite_eq_right h2, abs_eq_zero, Prod.ext_iff]
     simp [h2]
 
 /-- `on_the_grid`: divide both coordinates by that divisor, and hand back the
@@ -117,7 +117,7 @@ noncomputable def onTheGrid (q : ℝ × ℝ) : ℝ × ℝ :=
 
 lemma gridScale_scaleQuery {σ q : ℝ} (hσ : 0 < σ) : gridScale (scaleQuery σ q) = σ := by
   show (if σ = 0 then |σ * q| else |σ|) = σ
-  rw [if_neg (ne_of_gt hσ), abs_of_pos hσ]
+  rw [ite_eq_right (ne_of_gt hσ), abs_of_pos hσ]
 
 /-- **The division inverts the scale exactly.**  Not approximately: for a
 positive scale the normalized query is the lifted `(q, 1)` itself, which is why
@@ -126,7 +126,7 @@ theorem onTheGrid_scaleQuery {σ q : ℝ} (hσ : 0 < σ) :
     onTheGrid (scaleQuery σ q) = liftQuery q := by
   have hne : σ ≠ 0 := ne_of_gt hσ
   unfold onTheGrid
-  rw [gridScale_scaleQuery hσ, if_neg hne]
+  rw [gridScale_scaleQuery hσ, ite_eq_right hne]
   unfold scaleQuery liftQuery
   simp only [Prod.mk.injEq]
   refine ⟨by field_simp, by field_simp⟩
@@ -141,7 +141,7 @@ theorem onTheGrid_preserves_order {q : ℝ × ℝ} (hq : q ≠ (0, 0)) (k k' : �
     one_div_pos.mpr (lt_of_le_of_ne (gridScale_nonneg q) (Ne.symm hs))
   have hrw : onTheGrid q = ((1 / gridScale q) * q.1, (1 / gridScale q) * q.2) := by
     unfold onTheGrid
-    rw [if_neg hs, one_div, inv_mul_eq_div, inv_mul_eq_div]
+    rw [ite_eq_right hs, one_div, inv_mul_eq_div, inv_mul_eq_div]
   rw [hrw]
   exact order_scale_invariant hpos q k k'
 

@@ -130,7 +130,7 @@ theorem box_sum_le {m : ℕ} {r : ℝ} (hr0 : 0 ≤ r) (hr1 : r < 1) (M : ℕ) :
       (fun _ a => r ^ (a.natAbs ^ 2))]
   calc ∏ _i : Fin m, ∑ a ∈ Finset.Icc (-(M : ℤ)) (M : ℤ), r ^ (a.natAbs ^ 2)
       ≤ ∏ _i : Fin m, (1 + 2 * (r / (1 - r ^ 3))) :=
-        Finset.prod_le_prod (fun _ _ => Finset.sum_nonneg fun _ _ => pow_nonneg hr0 _)
+        Finset.prod_le_prod₀ (fun _ _ => Finset.sum_nonneg fun _ _ => pow_nonneg hr0 _)
           (fun _ _ => theta1_le hr0 hr1 M)
     _ = (1 + 2 * (r / (1 - r ^ 3))) ^ m := by
         rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin]

@@ -72,15 +72,15 @@ theorem fpSearch_isGreatest_of_int (F : FPArith) (K : ℕ → ℝ) (q : ℤ) (N 
   have hpin : ∀ j, j < N →
       (p j = true ↔ (q : ℝ) ≤ F.isect (liftKey (K j)) (liftKey (K (j + 1)))) := by
     intro j hj
-    simp only [hp, if_pos hj, decide_eq_true_eq]
+    simp only [hp, ite_eq_left hj, decide_eq_true_eq]
   have hpout : ∀ j, ¬ j < N → (p j = true ↔ (q : ℝ) ≤ (K j + K (j + 1)) / 2) := by
     intro j hj
-    simp only [hp, if_neg hj, decide_eq_true_eq]
+    simp only [hp, ite_eq_right hj, decide_eq_true_eq]
   have hcongr : fpSearch F K (q : ℝ) N = bsearch p 0 N := by
     unfold fpSearch
     refine bsearch_congr _ _ 0 N (fun j _ hj => ?_)
     rw [Nat.zero_add] at hj
-    simp only [hp, if_pos hj]
+    simp only [hp, ite_eq_left hj]
   have hmono : ∀ a b, a ≤ b → p a = true → p b = true := by
     intro a b hab ha
     rcases Nat.eq_or_lt_of_le hab with rfl | hlt

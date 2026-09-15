@@ -43,7 +43,7 @@ theorem merge_empty_left (m : Meta) (h : 0 ≤ m.lastSeq) : Meta.empty.merge m =
     show (-1 : ℤ) < m.lastSeq
     omega
   unfold merge
-  rw [if_pos hlt]
+  rw [ite_eq_left hlt]
   simp [Meta.empty, max_eq_left (show (-1 : ℤ) ≤ m.lastSeq by omega)]
 
 end Meta
@@ -80,7 +80,7 @@ theorem scanCombined_resolveAverage (M : ℕ → Meta) (b c : ℕ) (v w : ℝ ×
     rw [scanCombined_count, hb, hc]; simp [Meta.add, Meta.empty]
   have hsum : (scanCombined M b c).vsum = (v.1 + w.1, v.2 + w.2) := by
     simp [scanCombined, scanBest, Meta.merge, Meta.empty, hb, hc, Meta.add]
-  rw [Meta.resolveAverage, if_neg (by omega), hcount, hsum]
+  rw [Meta.resolveAverage, ite_eq_right (by omega), hcount, hsum]
   norm_num
   constructor <;> ring
 
@@ -96,7 +96,7 @@ theorem scanCombined_resolveLatest (M : ℕ → Meta) (b c : ℕ) (v w : ℝ × 
     have h1 : (-1 : ℤ) < sb := by omega
     have h2 : (-1 : ℤ) < sc := by omega
     simp [scanCombined, scanBest, Meta.merge, Meta.empty, hb, hc, Meta.add, h1, h2, hlt]
-  rw [Meta.resolveLatest, if_neg (by omega), hvlast]
+  rw [Meta.resolveLatest, ite_eq_right (by omega), hvlast]
 
 /-- **Which side the walk reached first does not matter.**  `query` merges the
 left neighbour before the right one, so the aggregate depends on an order the
@@ -122,9 +122,9 @@ theorem scanCombined_resolveLatest_of_ne (M : ℕ → Meta) (b c : ℕ) (v w : �
   have hlb : (M b).lastSeq = sb := by rw [hb]; simp [Meta.add, Meta.empty]; omega
   have hlc : (M c).lastSeq = sc := by rw [hc]; simp [Meta.add, Meta.empty]; omega
   rcases lt_or_gt_of_ne hne with hlt | hgt
-  · rw [if_pos hlt]
+  · rw [ite_eq_left hlt]
     exact scanCombined_resolveLatest M b c v w sb sc hsb hlt hb hc
-  · rw [if_neg (not_lt.mpr hgt.le),
+  · rw [ite_eq_right (not_lt.mpr hgt.le),
       scanCombined_comm M b c (by omega) (by omega) (by omega)]
     exact scanCombined_resolveLatest M c b w v sc sb hsc hgt hc hb
 

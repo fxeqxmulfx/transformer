@@ -113,7 +113,7 @@ theorem hullIndex_build_paid (ps : List ℕ) (n : ℕ) (h : ps.length ≤ n) :
     ((buildCost ps n : ℕ) : ℝ) ≤ hullIndex.build n 1 := by
   have hb : hullIndex.build n 1 = 3 * (n : ℝ) * ((Nat.log 2 n : ℝ) + 1) := by
     show (if (1 : ℕ) = 1 then 3 * (n : ℝ) * ((Nat.log 2 n : ℝ) + 1) else 0) = _
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
   rw [hb]
   have := buildCost_le ps n h
   have hcast : ((3 * n * (Nat.log 2 n + 1) : ℕ) : ℝ) = 3 * (n : ℝ) * ((Nat.log 2 n : ℝ) + 1) := by
@@ -149,10 +149,10 @@ theorem hullIndex_agrees_with_bruteForce (n m : ℕ) (hm : m ≠ 1) :
       hullIndex.query n m = bruteForce.query n m := by
   constructor
   · show (if m = 1 then 3 * (n : ℝ) * ((Nat.log 2 n : ℝ) + 1) else 0) = 0
-    rw [if_neg hm]
+    rw [ite_eq_right hm]
   · show (if m = 1 then (Nat.log 2 n : ℝ) + 1 else (n : ℝ) * (m : ℝ))
       = (n : ℝ) * (m : ℝ)
-    rw [if_neg hm]
+    rw [ite_eq_right hm]
 
 /-- The hypothesis is satisfiable, and the agreement is not the empty claim:
 the reduction of `Transformer.ALM.LookupIndex` queries at `d + d`, which is

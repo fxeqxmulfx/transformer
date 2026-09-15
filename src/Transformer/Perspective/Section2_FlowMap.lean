@@ -30,7 +30,7 @@ measurable space (it is a metric subspace of `ℝ^d`).
 
 import Transformer.Basic
 import Transformer.Perspective.Section1_IPS
-import Mathlib.MeasureTheory.Measure.MeasureSpace
+import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 
 open scoped BigOperators

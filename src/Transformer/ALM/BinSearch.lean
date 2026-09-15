@@ -76,15 +76,15 @@ lemma bcount_succ (m : ℕ) :
 theorem le_bsearch (p : ℕ → Bool) (lo len : ℕ) : lo ≤ bsearch p lo len := by
   induction lo, len using bsearch.induct p with
   | case1 lo => simp
-  | case2 lo m _ ih => rw [bsearch_succ, if_pos ‹_›]; exact ih
-  | case3 lo m _ ih => rw [bsearch_succ, if_neg ‹_›]; omega
+  | case2 lo m _ ih => rw [bsearch_succ, ite_eq_left ‹_›]; exact ih
+  | case3 lo m _ ih => rw [bsearch_succ, ite_eq_right ‹_›]; omega
 
 /-- Nor on the right: `lo + len` is the `it == end` fallback. -/
 theorem bsearch_le (p : ℕ → Bool) (lo len : ℕ) : bsearch p lo len ≤ lo + len := by
   induction lo, len using bsearch.induct p with
   | case1 lo => simp
-  | case2 lo m _ ih => rw [bsearch_succ, if_pos ‹_›]; omega
-  | case3 lo m _ ih => rw [bsearch_succ, if_neg ‹_›]; omega
+  | case2 lo m _ ih => rw [bsearch_succ, ite_eq_left ‹_›]; omega
+  | case3 lo m _ ih => rw [bsearch_succ, ite_eq_right ‹_›]; omega
 
 /-- **The search only looks inside its window.**  Two predicates that agree
 on `[lo, lo + len)` send the search down the same path, so the answer depends
@@ -99,12 +99,12 @@ theorem bsearch_congr (p p' : ℕ → Bool) (lo len : ℕ) :
   | case2 lo m htrue ih =>
       intro h
       have hm : p (lo + m / 2) = p' (lo + m / 2) := h _ (by omega) (by omega)
-      rw [bsearch_succ, bsearch_succ, if_pos htrue, if_pos (hm ▸ htrue)]
+      rw [bsearch_succ, bsearch_succ, ite_eq_left htrue, ite_eq_left (hm ▸ htrue)]
       exact ih (fun j hj hlt => h j hj (by omega))
   | case3 lo m hfalse ih =>
       intro h
       have hm : p (lo + m / 2) = p' (lo + m / 2) := h _ (by omega) (by omega)
-      rw [bsearch_succ, bsearch_succ, if_neg hfalse, if_neg (hm ▸ hfalse)]
+      rw [bsearch_succ, bsearch_succ, ite_eq_right hfalse, ite_eq_right (hm ▸ hfalse)]
       exact ih (fun j hj hlt => h j (by omega) (by omega))
 
 /-- **Nothing before the answer satisfies `p`.**  This is the `hlt`
@@ -116,11 +116,11 @@ theorem bsearch_lt (p : ℕ → Bool) (hp : ∀ a b, a ≤ b → p a = true → 
   | case1 lo => intro j hj hlt; simp at hlt; omega
   | case2 lo m _ ih =>
       intro j hj hlt
-      rw [bsearch_succ, if_pos ‹_›] at hlt
+      rw [bsearch_succ, ite_eq_left ‹_›] at hlt
       exact ih j hj hlt
   | case3 lo m hfalse ih =>
       intro j hj hlt
-      rw [bsearch_succ, if_neg hfalse] at hlt
+      rw [bsearch_succ, ite_eq_right hfalse] at hlt
       rcases Nat.lt_or_ge j (lo + m / 2 + 1) with hlow | hge
       · rcases Nat.lt_or_ge j (lo + m / 2) with hj' | hj'
         · by_contra hcon
@@ -138,7 +138,7 @@ theorem bsearch_ge_of_lt (p : ℕ → Bool) (lo len : ℕ) :
   | case1 lo => intro h; simp at h
   | case2 lo m htrue ih =>
       intro _
-      rw [bsearch_succ, if_pos htrue]
+      rw [bsearch_succ, ite_eq_left htrue]
       rcases Nat.lt_or_ge (bsearch p lo (m / 2)) (lo + m / 2) with h | h
       · exact ih h
       · have : bsearch p lo (m / 2) = lo + m / 2 :=
@@ -146,7 +146,7 @@ theorem bsearch_ge_of_lt (p : ℕ → Bool) (lo len : ℕ) :
         rw [this]; exact htrue
   | case3 lo m hfalse ih =>
       intro h
-      rw [bsearch_succ, if_neg hfalse] at h ⊢
+      rw [bsearch_succ, ite_eq_right hfalse] at h ⊢
       exact ih (by omega)
 
 /-! ### The comparison count is logarithmic -/

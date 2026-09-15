@@ -37,7 +37,7 @@ row.
 Source: `vm-rs/alm-model/src/linear.rs`, `Dense::of` and `Dense::apply`.
 -/
 
-import Mathlib.Data.Real.Basic
+import Mathlib.Basic.Real.Basic
 import Mathlib.Data.List.Range
 import Mathlib.Tactic.IntervalCases
 import Mathlib.Tactic.Ring

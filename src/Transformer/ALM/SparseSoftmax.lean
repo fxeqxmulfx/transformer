@@ -65,12 +65,12 @@ theorem sparseWeight_sum (β : ℝ) (s : Fin n → ℝ) (T : Finset (Fin n)) (hT
     Finset.sum_pos (fun _ _ => Real.exp_pos _) hT
   rw [← Finset.sum_add_sum_compl T]
   have hval : ∀ j ∈ T, sparseWeight β s T j
-      = Real.exp (β * s j) / ∑ l ∈ T, Real.exp (β * s l) := fun j hj => if_pos hj
+      = Real.exp (β * s j) / ∑ l ∈ T, Real.exp (β * s l) := fun j hj => ite_eq_left hj
   have h1 : ∑ j ∈ T, sparseWeight β s T j = 1 := by
     rw [Finset.sum_congr rfl hval, ← Finset.sum_div, div_self hpos.ne']
   have h2 : ∑ j ∈ Tᶜ, sparseWeight β s T j = 0 :=
     Finset.sum_eq_zero fun j hj => by
-      simp only [sparseWeight, if_neg (Finset.mem_compl.mp hj)]
+      simp only [sparseWeight, ite_eq_right (Finset.mem_compl.mp hj)]
   rw [h1, h2, add_zero]
 
 /-! ### Two convex combinations, at their ℓ¹ distance -/
@@ -127,17 +127,17 @@ theorem sparse_total_variation (β : ℝ) (s : Fin n → ℝ) (T : Finset (Fin n
         = sparseWeight β s T j - Real.exp (β * s j) / ∑ l, Real.exp (β * s l) := by
     intro j hj
     have hb : Real.exp (β * s j) / (∑ l, Real.exp (β * s l)) ≤ sparseWeight β s T j := by
-      simp only [sparseWeight, if_pos hj]
+      simp only [sparseWeight, ite_eq_left hj]
       exact div_le_div_of_nonneg_left (Real.exp_pos _).le hZTpos hle
     rw [abs_sub_comm, abs_of_nonneg (by linarith)]
   have hTout : ∀ j ∈ Tᶜ,
       |Real.exp (β * s j) / (∑ l, Real.exp (β * s l)) - sparseWeight β s T j|
         = Real.exp (β * s j) / ∑ l, Real.exp (β * s l) := by
     intro j hj
-    simp only [sparseWeight, if_neg (Finset.mem_compl.mp hj), sub_zero]
+    simp only [sparseWeight, ite_eq_right (Finset.mem_compl.mp hj), sub_zero]
     exact abs_of_nonneg (div_nonneg (Real.exp_pos _).le hZpos.le)
   have hval : ∀ j ∈ T, sparseWeight β s T j
-      = Real.exp (β * s j) / ∑ l ∈ T, Real.exp (β * s l) := fun j hj => if_pos hj
+      = Real.exp (β * s j) / ∑ l ∈ T, Real.exp (β * s l) := fun j hj => ite_eq_left hj
   have hone : ∑ j ∈ T, sparseWeight β s T j = 1 := by
     rw [Finset.sum_congr rfl hval, ← Finset.sum_div, div_self hZTpos.ne']
   have hsplit : (∑ j ∈ T, Real.exp (β * s j) / ∑ l, Real.exp (β * s l))

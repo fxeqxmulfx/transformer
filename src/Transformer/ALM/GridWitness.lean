@@ -54,13 +54,13 @@ of the ratio can stand in for the counter. -/
 theorem offGrid_iff_one_lt_gridRatio (u m : ℝ) : OffGrid u m ↔ 1 < gridRatio u m := by
   unfold OffGrid gridRatio
   by_cases hm : m = 0
-  · rw [if_pos hm]
+  · rw [ite_eq_left hm]
     constructor
     · rintro ⟨h, -⟩
       exact absurd hm h
     · intro h
       exact absurd h (by norm_num)
-  · rw [if_neg hm, lt_div_iff₀ (abs_pos.mpr hm), one_mul]
+  · rw [ite_eq_right hm, lt_div_iff₀ (abs_pos.mpr hm), one_mul]
     exact ⟨fun h => h.2, fun h => ⟨hm, h⟩⟩
 
 /-! ### The fold `observe` performs -/
@@ -161,7 +161,7 @@ shipped comparison does not insist on. -/
 theorem strict_guard_of_worst_lt_one {l : List (ℝ × ℝ)} (hw : runWorst l < 1)
     {u m : ℝ} (hmem : (u, m) ∈ l) (hm : m ≠ 0) : u < |m| := by
   have hle : gridRatio u m ≤ runWorst l := le_foldr_max (List.mem_map.mpr ⟨(u, m), hmem, rfl⟩)
-  rw [gridRatio, if_neg hm, div_le_iff₀ (abs_pos.mpr hm)] at hle
+  rw [gridRatio, ite_eq_right hm, div_le_iff₀ (abs_pos.mpr hm)] at hle
   nlinarith [abs_pos.mpr hm]
 
 /-- And one whose worst ratio is at most `1/2` is a whole binade from the wall,
@@ -169,7 +169,7 @@ which is how `grid_ratio`'s docstring reads the number. -/
 theorem binade_of_worst_le_half {l : List (ℝ × ℝ)} (hw : runWorst l ≤ 1 / 2)
     {u m : ℝ} (hmem : (u, m) ∈ l) (hm : m ≠ 0) : 2 * u ≤ |m| := by
   have hle : gridRatio u m ≤ runWorst l := le_foldr_max (List.mem_map.mpr ⟨(u, m), hmem, rfl⟩)
-  rw [gridRatio, if_neg hm, div_le_iff₀ (abs_pos.mpr hm)] at hle
+  rw [gridRatio, ite_eq_right hm, div_le_iff₀ (abs_pos.mpr hm)] at hle
   nlinarith [abs_nonneg m]
 
 /-- **From the run's report to a query's answer.**  A run that came within a
@@ -208,7 +208,7 @@ example : runCount [((1 : ℝ), (4 : ℝ)), (1, -4)] = 0 ∧
         norm_num [hn4] at h
       · exact absurd hq'' List.not_mem_nil
   · simp only [runWorst, List.map_cons, List.map_nil, List.foldr_cons, List.foldr_nil, gridRatio,
-      if_neg (by norm_num : (4 : ℝ) ≠ 0), if_neg (by norm_num : (-4 : ℝ) ≠ 0), h4, hn4]
+      ite_eq_right (by norm_num : (4 : ℝ) ≠ 0), ite_eq_right (by norm_num : (-4 : ℝ) ≠ 0), h4, hn4]
     norm_num
 
 /-- And the query the last theorem answers: a spacing of `2^-52` against a unit
@@ -218,7 +218,7 @@ example : ((ulpOf 53 0, (1 : ℝ)) ∈ [(ulpOf 53 0, (1 : ℝ))]) ∧ (0 : ℝ) 
     runWorst [(ulpOf 53 0, (1 : ℝ))] < 1 ∧ 1 ≤ keyGap 1 1 0 := by
   refine ⟨List.mem_singleton_self _, by norm_num, ?_, ?_⟩
   · simp only [runWorst, List.map_cons, List.map_nil, List.foldr_cons, List.foldr_nil, gridRatio,
-      if_neg (by norm_num : (1 : ℝ) ≠ 0), abs_of_pos (by norm_num : (0 : ℝ) < 1), ulpOf]
+      ite_eq_right (by norm_num : (1 : ℝ) ≠ 0), abs_of_pos (by norm_num : (0 : ℝ) < 1), ulpOf]
     norm_num
   · simp only [keyGap]
     norm_num

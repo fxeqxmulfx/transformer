@@ -162,12 +162,12 @@ theorem SAOutput_eq_softmax_head [Nonempty (Idx n)] (β : ℝ) (q k : Idx n → 
   have hZ : ∀ j : Idx n, (if (j : ℕ) ≤ (i : ℕ) then
       Real.exp (inner (𝕜 := ℝ) ((β • queryProj) (residual (q i) (k i)))
         (keyProj (residual (q j) (k j)))) else 0)
-      = Real.exp (β * score (q i) (k j)) := fun j => by rw [if_pos (hi j), hlogit j]
+      = Real.exp (β * score (q i) (k j)) := fun j => by rw [ite_eq_left (hi j), hlogit j]
   have hnum : ∀ j : Idx n, (if (j : ℕ) ≤ (i : ℕ) then
       Real.exp (inner (𝕜 := ℝ) ((β • queryProj) (residual (q i) (k i)))
         (keyProj (residual (q j) (k j)))) • Vm (residual (q j) (k j)) else 0)
       = Real.exp (β * score (q i) (k j)) • Vm (residual (q j) (k j)) :=
-    fun j => by rw [if_pos (hi j), hlogit j]
+    fun j => by rw [ite_eq_left (hi j), hlogit j]
   simp only [XSA.SAOutput]
   rw [Finset.sum_congr rfl fun j _ => hZ j, Finset.sum_congr rfl fun j _ => hnum j,
     Finset.smul_sum]
