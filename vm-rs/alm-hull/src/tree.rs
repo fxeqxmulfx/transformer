@@ -212,6 +212,17 @@ impl Tree {
         self.meta[i as usize] = meta;
     }
 
+    /// Move the intercept of the line at `i`, leaving its slope where it is.
+    ///
+    /// Safe to do in place, and only this half of the key is: the order the
+    /// tree is built on is the slope, and the only other search it answers
+    /// reads `nav[i].p`.  Neither looks at the intercept, so no node changes
+    /// place.  `lifthead.rs` is what needs it -- its node per key carries the
+    /// largest offset written at that key, and a later write raises it.
+    pub fn set_intercept(&mut self, i: u32, b: f64) {
+        self.key[i as usize].1 = b;
+    }
+
     /// The links of the node at `i`, named rather than indexed.
     ///
     /// The bounds check stays.  Dropping it with `get_unchecked` was written
