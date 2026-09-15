@@ -27,10 +27,12 @@ a row is untouched.  `apply_eq_rowMajor` then says the two layouts fold to
 the identical element for any such pair, which is the bit-exactness claim:
 had the kernel regrouped a row, no theorem at this generality could hold.
 
-What is *not* covered here is the padding.  `Dense::of` rounds the row count
-up to a multiple of `LANES` with zeros and `apply` truncates their sums away
-with `&s[..out.len()]`; that is a fact about slice lengths, not about the
-layout, and it is left to `debug_assert_eq!(y.len(), self.rows)`.
+What is not covered here is the padding.  `Dense::of` rounds the row count up
+to a multiple of `LANES` with zeros and `apply` truncates their sums away with
+`&s[..out.len()]`; that is a fact about slice lengths, not about the layout,
+and it is `Transformer.ALM.DensePad` -- which also discharges the hypothesis
+`packed_lt_buffer` takes below, that the allocated block count covers every
+row.
 
 Source: `vm-rs/alm-model/src/linear.rs`, `Dense::of` and `Dense::apply`.
 -/
