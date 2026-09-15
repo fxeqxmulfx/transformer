@@ -15,7 +15,8 @@ file proves that identification for `Q = K = V = I_d`:
   projected gradient of `E`.
 
 The clustering statement of `Theorem thm: convergence` itself is almost-sure
-with respect to a random initialization and is not formalized here.
+with respect to a random initialization and is not formalized here; the
+explicit bound behind its corollary is in `Normalization.Radial`.
 -/
 
 import Transformer.Basic
@@ -134,7 +135,7 @@ theorem hasDerivAt_energy
 /-- `proj` is linear in the vector it projects. -/
 theorem proj_smul (x y : EucSpace d) (c : ℝ) :
     proj d x (c • y) = c • proj d x y := by
-  simp [proj, real_inner_smul_right, smul_sub, smul_smul, mul_comm]
+  simp [proj, real_inner_smul_right, smul_sub, smul_smul]
 
 /-- **Equation (NA) is the projected gradient flow of `E`.**
 
@@ -169,18 +170,6 @@ theorem na_velocity_eq_energyGrad
 /-- The inverse temperature of `na_velocity_eq_energyGrad` is nonzero in the
 regime the paper studies (`β > 0`), so its hypothesis is satisfiable. -/
 example : (1 : ℝ) ≠ 0 := one_ne_zero
-
-/-- **Corollary.** For Pre-LN and Peri-LN with `n ≤ e^β` we have
-*unconditional* synchronization.
-
-The proof uses the simple lower bound
-
-  `ṙ_j = ⟨θ_j, A_j(Θ)⟩ ≥ (1 / (n e^β)) (e^β - (n - 1)) ≥ 1/(n e^β)`. -/
-theorem unconditional_sync_pre_peri
-    (β : ℝ) (hβ : 0 < β) (h_n : (n : ℝ) ≤ Real.exp β)
-    (scheme : Scheme)
-    (h_scheme : scheme = Scheme.pre ∨ scheme = Scheme.peri) :
-    True := by trivial
 
 end Normalization
 end Transformer
