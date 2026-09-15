@@ -17,6 +17,7 @@ The architecture is:
 | --- | --- |
 | `GPTMini.Config` | the hyperparameters, and the grouped-query head split |
 | `GPTMini.RMSNorm` | the block normalization, and the sphere it maps onto |
+| `GPTMini.Reshape` | the coordinate layout between `d_model` and the heads |
 | `GPTMini.RoPE` | the rotary tables, and that they rotate |
 | `GPTMini.QKNorm` | the normalized score, its bounds, and the RMS parameterization |
 | `GPTMini.CausalMHA` | the head itself, masked, with XSA on its output |
@@ -41,6 +42,7 @@ formalizations themselves and not anything about `gpt-mini`.
 
 import Transformer.GPTMini.Config
 import Transformer.GPTMini.RMSNorm
+import Transformer.GPTMini.Reshape
 import Transformer.GPTMini.RoPE
 import Transformer.GPTMini.QKNorm
 import Transformer.GPTMini.CausalMHA

@@ -30,6 +30,7 @@ We define the abstract block, then prove:
 import Transformer.Basic
 import Transformer.GPTMini.Config
 import Transformer.GPTMini.RMSNorm
+import Transformer.GPTMini.Reshape
 import Transformer.GPTMini.QKNorm
 import Transformer.GPTMini.RoPE
 import Transformer.GPTMini.CausalMHA
@@ -67,16 +68,25 @@ Given input `x : Fin T → EucSpace d_model`, applies:
   1. RMSNorm
   2. QKV projection
   3. Reshape to heads + QK-norm + RoPE + softmax-attention + XSA
-  4. Output projection. -/
+  4. Output projection.
+
+The reshapes of step 3 are `GPTMini.Reshape`: `qkvSlice` is the
+`chunk(3, dim=-1)` of `reference/model.py`, `headSlice` its
+`view(T, n_heads, head_dim)`, and `headMerge` the transpose-and-view that
+puts the heads back together for the output projection. -/
 noncomputable def attnSubLayer
     (cfg : Config) (params : AttnParams cfg)
     (eps : ℝ)
     {T : ℕ} (positions : Fin T → ℝ)
     (x : Fin T → EucSpace cfg.d_model) :
-    Fin T → EucSpace cfg.d_model := by
-  -- Detailed coordinate manipulation between (d_model = n_heads · head_dim)
-  -- representations is mechanical; we declare the function abstractly.
-  exact x   -- placeholder identity; the real forward is left for Phase 4.
+    Fin T → EucSpace cfg.d_model :=
+  let qkv := fun i => params.W_qkv (rmsNormEps eps (x i))
+  let q := fun (h : Fin cfg.n_heads) i => headSlice cfg (qkvSlice cfg (qkvQ cfg) (qkv i)) h
+  let k := fun (h : Fin cfg.n_heads) i => headSlice cfg (qkvSlice cfg (qkvK cfg) (qkv i)) h
+  let v := fun (h : Fin cfg.n_heads) i => headSlice cfg (qkvSlice cfg (qkvV cfg) (qkv i)) h
+  fun i =>
+    params.W_o (headMerge cfg (fun h =>
+      attentionHead cfg (params.log_alpha h) eps (q h) (k h) (v h) positions i))
 
 /-- **FFN sub-layer forward.**
 
