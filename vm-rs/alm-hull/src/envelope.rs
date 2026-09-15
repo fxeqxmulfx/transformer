@@ -143,6 +143,27 @@ impl Envelope {
     /// walk from that cursor: the successors the new line hides are erased as
     /// the walk passes them, and so are the predecessors it hides, and the
     /// new line is linked at the place the walk stopped.
+    ///
+    /// Which lines may be erased is `ALM.HullErase`, and that a whole build of
+    /// those erases changes no answer is `ALM.HullPrune`.  Both are stated over
+    /// a set of lines, which is not what runs here: the envelope is a list of
+    /// nodes, and beside each node sits the breakpoint at which it gives way to
+    /// the next, which is what `break_of` reads and what both loops below
+    /// compare against.  `ALM.HullCache` covers that half.  The surgery erases
+    /// a contiguous run, links the new line where the run was, and writes one
+    /// cached breakpoint -- the `set_break(cur, p)` below -- and
+    /// `cacheOk_splice` is that this one write restores the cache, given only
+    /// the value the successor loop has already left in `new.p`.
+    /// `cacheOk_splice_dropped` is the `keep == false` branch, the same write
+    /// against the other right neighbour.  Neither theorem mentions a node
+    /// outside the run except to leave it alone, which is the claim: no node
+    /// before `cur` and none after `hi` is written, or even read.
+    ///
+    /// What is still not proved is that the breakpoints increase along the
+    /// result -- the second of the two invariants above, and the one the
+    /// breakpoint search depends on.  The erase conditions are what make it
+    /// true, and connecting them to this list surgery is the piece that has
+    /// not been written.
     pub fn add_line(&mut self, m: f64, b: f64, meta: HullMeta) {
         let s = Slope::new(m);
         let mut new_meta = meta;
