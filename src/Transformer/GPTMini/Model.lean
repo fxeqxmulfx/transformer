@@ -15,9 +15,13 @@ class GPTMini(nn.Module):
 
 We assemble the complete forward pass and prove its first universal-in-
 weights properties:
-  - well-definedness (totality)
-  - output is a probability vector in the simplex (after softmax)
-  - residual stream growth bound across all `n_layers` blocks.
+  - well-definedness (totality),
+  - the residual stream `hidden` after each layer, which the properties of
+    `Transformer.GPTMini.Properties` are stated about.
+
+The simplex property of the softmax output is in
+`Transformer.GPTMini.Properties.OutputSimplex`, and the growth of the stream
+in `Transformer.GPTMini.Properties.StreamGrowth`.
 -/
 
 import Transformer.Basic
@@ -57,6 +61,27 @@ noncomputable def unembed
     (i : Fin T) (v : Fin cfg.vocab_size) : ℝ :=
   inner (𝕜 := ℝ) (x i) (params.embedding v)
 
+/-- **The residual stream after `L` layers.**
+
+  `x_0 = embed(tokens)`,   `x_{L+1} = blockForward(blocks[L], x_L)`,
+
+the blocks being applied in index order and the stream staying put once the
+`n_layers` blocks are exhausted, so that `hidden … L` is the input of block
+`L` for every `L ≤ n_layers`.  Mirrors the `for block in self.blocks` loop of
+`reference/model.py` (`GPTMini.forward`). -/
+noncomputable def hidden
+    (cfg : Config) (params : ModelParams cfg) (eps : ℝ)
+    {T : ℕ} (positions : Fin T → ℝ)
+    (tokens : Fin T → Fin cfg.vocab_size) :
+    ℕ → Fin T → EucSpace cfg.d_model
+  | 0 => embed cfg params tokens
+  | L + 1 =>
+      if h : L < cfg.n_layers then
+        blockForward cfg (params.blocks ⟨L, h⟩) eps positions
+          (hidden cfg params eps positions tokens L)
+      else
+        hidden cfg params eps positions tokens L
+
 /-- **Top-level forward.**
 
 Given tokens of length `T ≤ max_seq_len`, applies the stack of `n_layers`
@@ -66,18 +91,13 @@ noncomputable def forward
     {T : ℕ} (positions : Fin T → ℝ)
     (tokens : Fin T → Fin cfg.vocab_size)
     (i : Fin T) (v : Fin cfg.vocab_size) : ℝ :=
-  let x0 := embed cfg params tokens
-  let xL :=
-    (Finset.univ : Finset (Fin cfg.n_layers)).val.toList.foldl
-      (fun x l => blockForward cfg (params.blocks l) eps positions x)
-      x0
   unembed cfg params
-    (fun i => rmsNormEps eps (xL i)) i v
+    (fun i => rmsNormEps eps (hidden cfg params eps positions tokens cfg.n_layers i)) i v
 
 /-- **Forward total.**  For any parameters and any token sequence
 of length `T ≤ max_seq_len`, the forward function returns a finite real. -/
 theorem forward_total
-    (cfg : Config) (params : ModelParams cfg) (eps : ℝ) (heps : 0 < eps)
+    (cfg : Config) (params : ModelParams cfg) (eps : ℝ)
     {T : ℕ} (positions : Fin T → ℝ)
     (tokens : Fin T → Fin cfg.vocab_size)
     (i : Fin T) (v : Fin cfg.vocab_size) :
@@ -96,40 +116,6 @@ noncomputable def softmaxOutput
     /
   (∑ w : Fin cfg.vocab_size,
       Real.exp (forward cfg params eps positions tokens i w))
-
-/-- **Output is in the simplex** (after softmax):
-
-  `0 ≤ prob_i(v)` and `Σ_v prob_i(v) = 1`. -/
-theorem softmaxOutput_is_distribution
-    (cfg : Config) (params : ModelParams cfg) (eps : ℝ) (heps : 0 < eps)
-    {T : ℕ} (positions : Fin T → ℝ)
-    (tokens : Fin T → Fin cfg.vocab_size)
-    (i : Fin T) :
-    (∀ v : Fin cfg.vocab_size,
-        0 ≤ softmaxOutput cfg params eps positions tokens i v)
-    ∧
-    (∑ v : Fin cfg.vocab_size,
-        softmaxOutput cfg params eps positions tokens i v) = 1 := by
-  sorry
-
-/-- **Residual stream growth bound** through `n_layers`:
-
-  `‖x_L i‖ ≤ ‖x_0 i‖ + n_layers · C(params)`,
-
-where `C(params)` is the per-layer sub-layer-output bound. -/
-theorem residual_stream_growth
-    (cfg : Config) (params : ModelParams cfg) (eps : ℝ) (heps : 0 < eps)
-    {T : ℕ} (positions : Fin T → ℝ)
-    (tokens : Fin T → Fin cfg.vocab_size) (i : Fin T) :
-    True := by trivial
-
-/-- **End-to-end Lipschitz constant** (placeholder for Phase 4).
-
-For each pair of input token-sequences differing in just one position, the
-logits differ by at most `L(params) · max ‖embedding_difference‖`. -/
-theorem forward_lipschitz_in_embedding
-    (cfg : Config) (params : ModelParams cfg) (eps : ℝ) :
-    True := by trivial
 
 end GPTMini
 end Transformer
