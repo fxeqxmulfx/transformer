@@ -7,6 +7,7 @@ This top-level module re-exports every section of the formalization.
 -/
 
 import Transformer.Metastability.Basic
+import Transformer.Metastability.AngularEnergy
 import Transformer.Metastability.MainTheorem
 import Transformer.Metastability.OttoReznikoff
 import Transformer.Metastability.Initial
