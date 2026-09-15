@@ -68,7 +68,7 @@ Required:
 - `rfl` / `trivial` / one-line `simp` closing a substantive theorem ⇒ suspect a
   placeholder definition beneath it.
 
-Current debt, per `INDEX.md`: 86 `sorry`, 0 vacuous statements, 0 placeholder
+Current debt, per `INDEX.md`: 89 `sorry`, 0 vacuous statements, 0 placeholder
 definitions. Never add to these counts; the index makes any increase visible.
 
 ## Finding lemmas
