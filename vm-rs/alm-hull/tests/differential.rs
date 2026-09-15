@@ -90,6 +90,11 @@ fn has_three_collinear(keys: &[[f64; 2]]) -> bool {
     false
 }
 
+/// Arbitrary 2D keys, general position filtered for by brute force.
+///
+/// This is the sampled form of the hypothesis; `marked_keys_are_never_collinear`
+/// below is the same thing on the machine's own keys, where it is a theorem
+/// rather than a filter.
 #[test]
 fn arbitrary_keys_agree_when_no_three_are_collinear() {
     let mut rng = Rng(0xDEAD_BEEF_CAFE_F00D);
@@ -124,6 +129,54 @@ fn arbitrary_keys_agree_when_no_three_are_collinear() {
     assert!(tested > 100, "only {tested} configurations were in general position");
 }
 
+/// The keys the compiler emits: the parabola plus the recency term.
+///
+/// `LATEST_ALPHA * inv_log_pos(p)` raises the intercept, which is exactly a
+/// perturbation off the paraboloid, so strict convexity no longer covers the
+/// test above.  `Transformer.ALM.markKey_not_concurrent` covers it instead:
+/// three marked keys are concurrent only if the offsets spread further than
+/// the product of the two key gaps, which on integer keys is at least one
+/// against an offset below `0.3 / ln 2 = 0.433`.  Here that theorem is
+/// checked rather than assumed, on every triple of a spread of positions.
+#[test]
+fn marked_keys_are_never_collinear() {
+    let offset = |p: i64| 0.3 * (1.0 / std::f64::consts::LN_2 - 1.0 / ((p as f64 + 2.0).ln()));
+    let marked = |k: i64| [2.0 * k as f64, -((k * k) as f64) + offset(k)];
+    let ks: Vec<i64> = (0..40).chain([100, 101, 500, 1000, 1001, 4096]).collect();
+    let mut triples = 0;
+    for a in 0..ks.len() {
+        for b in (a + 1)..ks.len() {
+            for c in (b + 1)..ks.len() {
+                triples += 1;
+                assert!(
+                    !collinear(marked(ks[a]), marked(ks[b]), marked(ks[c])),
+                    "keys {} {} {} came out collinear",
+                    ks[a],
+                    ks[b],
+                    ks[c]
+                );
+            }
+        }
+    }
+    assert!(triples > 10_000, "only {triples} triples were tested");
+
+    // And the two heads agree on them, which is what the general position was
+    // needed for: `ALM.marked_erase_preserves_tieSet`.
+    let mut hull = HardAttentionHead::new();
+    let mut brute = BruteAttentionHead::new();
+    for (seq, k) in ks.iter().enumerate() {
+        let val = [100.0 + seq as f64, 0.0];
+        hull.insert(marked(*k), val, seq as i32);
+        brute.insert(marked(*k), val, seq as i32);
+    }
+    for q in -10..=4200 {
+        let query = [q as f64, 1.0];
+        for tb in [TieBreak::Average, TieBreak::Latest] {
+            assert_eq!(hull.query(query, tb), brute.query(query, tb), "q {q} {tb:?}");
+        }
+    }
+}
+
 #[test]
 fn three_collinear_keys_are_where_the_hull_head_stops_being_exact() {
     // The hull keeps vertices, not points.  A key that is a maximiser at
@@ -131,7 +184,9 @@ fn three_collinear_keys_are_where_the_hull_head_stops_being_exact() {
     // on insertion and its payload goes with it.  Every tie in the machine
     // proper is between two keys straddling the query on the parabola
     // `k -> (2k, -k^2)`, which is strictly convex and has no three collinear
-    // points; that is the unstated hypothesis under `HardAttentionHead`.
+    // points; that is the hypothesis under `HardAttentionHead`, stated as
+    // `Transformer.ALM.GeneralPosition.liftKey_not_concurrent` and, for the
+    // keys the compiler really emits, as `ALM.markKey_not_concurrent`.
     let keys = [[-5.0, 5.0], [5.0, 5.0], [0.0, 5.0]];
     let mut hull = HardAttentionHead::new();
     let mut brute = BruteAttentionHead::new();
