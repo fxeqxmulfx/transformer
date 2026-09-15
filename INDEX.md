@@ -2240,32 +2240,33 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`fullTransformer`](src/Transformer/Perspective/Section1_IPS.lean#L175) | def |  |
 | [`SA_permutation_equivariant`](src/Transformer/Perspective/Section1_IPS.lean#L205) | theorem | sorry |
 
-**[Transformer.Perspective.Section2_FlowMap](src/Transformer/Perspective/Section2_FlowMap.lean)** — 223 lines
+**[Transformer.Perspective.Section2_FlowMap](src/Transformer/Perspective/Section2_FlowMap.lean)** — 228 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`sphereMeasurableSpace`](src/Transformer/Perspective/Section2_FlowMap.lean#L46) | instance |  |
-| [`ProbSphere`](src/Transformer/Perspective/Section2_FlowMap.lean#L50) | abbrev |  |
-| [`partitionMu`](src/Transformer/Perspective/Section2_FlowMap.lean#L57) | def |  |
-| [`vectorField`](src/Transformer/Perspective/Section2_FlowMap.lean#L65) | def |  |
-| [`meanFieldIPS`](src/Transformer/Perspective/Section2_FlowMap.lean#L74) | def |  |
-| [`empiricalMeasure`](src/Transformer/Perspective/Section2_FlowMap.lean#L82) | def |  |
-| [`continuityEquation`](src/Transformer/Perspective/Section2_FlowMap.lean#L98) | def |  |
-| [`interactionEnergy`](src/Transformer/Perspective/Section2_FlowMap.lean#L111) | def |  |
-| [`dissipation_softmax`](src/Transformer/Perspective/Section2_FlowMap.lean#L121) | theorem | vacuous |
-| [`existence_uniqueness_energy`](src/Transformer/Perspective/Section2_FlowMap.lean#L133) | theorem | vacuous |
-| [`vectorField_eq_grad_log`](src/Transformer/Perspective/Section2_FlowMap.lean#L143) | theorem | vacuous |
-| [`USA`](src/Transformer/Perspective/Section2_FlowMap.lean#L148) | def |  |
-| [`usaContinuityEquation`](src/Transformer/Perspective/Section2_FlowMap.lean#L160) | def | placeholder |
-| [`usa_vectorField_eq_grad_firstVariation`](src/Transformer/Perspective/Section2_FlowMap.lean#L164) | theorem | vacuous |
-| [`aggregationEquation`](src/Transformer/Perspective/Section2_FlowMap.lean#L169) | def | placeholder |
-| [`usa_dissipation`](src/Transformer/Perspective/Section2_FlowMap.lean#L173) | theorem | vacuous |
-| [`particleEnergy`](src/Transformer/Perspective/Section2_FlowMap.lean#L181) | def |  |
-| [`particlePartition`](src/Transformer/Perspective/Section2_FlowMap.lean#L188) | def |  |
-| [`modifiedMetric`](src/Transformer/Perspective/Section2_FlowMap.lean#L195) | def |  |
-| [`SA_is_gradient_flow`](src/Transformer/Perspective/Section2_FlowMap.lean#L206) | theorem | vacuous |
-| [`auxCE`](src/Transformer/Perspective/Section2_FlowMap.lean#L215) | def | placeholder |
-| [`conteqFirstRewriting`](src/Transformer/Perspective/Section2_FlowMap.lean#L219) | def | placeholder |
+| [`sphereBorelSpace`](src/Transformer/Perspective/Section2_FlowMap.lean#L52) | instance |  |
+| [`ProbSphere`](src/Transformer/Perspective/Section2_FlowMap.lean#L55) | abbrev |  |
+| [`partitionMu`](src/Transformer/Perspective/Section2_FlowMap.lean#L62) | def |  |
+| [`vectorField`](src/Transformer/Perspective/Section2_FlowMap.lean#L70) | def |  |
+| [`meanFieldIPS`](src/Transformer/Perspective/Section2_FlowMap.lean#L79) | def |  |
+| [`empiricalMeasure`](src/Transformer/Perspective/Section2_FlowMap.lean#L87) | def |  |
+| [`continuityEquation`](src/Transformer/Perspective/Section2_FlowMap.lean#L103) | def |  |
+| [`interactionEnergy`](src/Transformer/Perspective/Section2_FlowMap.lean#L116) | def |  |
+| [`dissipation_softmax`](src/Transformer/Perspective/Section2_FlowMap.lean#L126) | theorem | vacuous |
+| [`existence_uniqueness_energy`](src/Transformer/Perspective/Section2_FlowMap.lean#L138) | theorem | vacuous |
+| [`vectorField_eq_grad_log`](src/Transformer/Perspective/Section2_FlowMap.lean#L148) | theorem | vacuous |
+| [`USA`](src/Transformer/Perspective/Section2_FlowMap.lean#L153) | def |  |
+| [`usaContinuityEquation`](src/Transformer/Perspective/Section2_FlowMap.lean#L165) | def | placeholder |
+| [`usa_vectorField_eq_grad_firstVariation`](src/Transformer/Perspective/Section2_FlowMap.lean#L169) | theorem | vacuous |
+| [`aggregationEquation`](src/Transformer/Perspective/Section2_FlowMap.lean#L174) | def | placeholder |
+| [`usa_dissipation`](src/Transformer/Perspective/Section2_FlowMap.lean#L178) | theorem | vacuous |
+| [`particleEnergy`](src/Transformer/Perspective/Section2_FlowMap.lean#L186) | def |  |
+| [`particlePartition`](src/Transformer/Perspective/Section2_FlowMap.lean#L193) | def |  |
+| [`modifiedMetric`](src/Transformer/Perspective/Section2_FlowMap.lean#L200) | def |  |
+| [`SA_is_gradient_flow`](src/Transformer/Perspective/Section2_FlowMap.lean#L211) | theorem | vacuous |
+| [`auxCE`](src/Transformer/Perspective/Section2_FlowMap.lean#L220) | def | placeholder |
+| [`conteqFirstRewriting`](src/Transformer/Perspective/Section2_FlowMap.lean#L224) | def | placeholder |
 
 **[Transformer.Perspective.Section3_SmallBeta](src/Transformer/Perspective/Section3_SmallBeta.lean)** — 166 lines
 
@@ -2759,12 +2760,12 @@ Everything the build cannot vouch for, in one place.
 | [`ineq_second_part`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L147) | theorem | `Transformer.Perspective.AppendixD_PhaseTransition` |
 | [`phase_transition_proof_assembly`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L154) | theorem | `Transformer.Perspective.AppendixD_PhaseTransition` |
 | [`usa_analogue`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L162) | theorem | `Transformer.Perspective.AppendixD_PhaseTransition` |
-| [`dissipation_softmax`](src/Transformer/Perspective/Section2_FlowMap.lean#L121) | theorem | `Transformer.Perspective.Section2_FlowMap` |
-| [`existence_uniqueness_energy`](src/Transformer/Perspective/Section2_FlowMap.lean#L133) | theorem | `Transformer.Perspective.Section2_FlowMap` |
-| [`vectorField_eq_grad_log`](src/Transformer/Perspective/Section2_FlowMap.lean#L143) | theorem | `Transformer.Perspective.Section2_FlowMap` |
-| [`usa_vectorField_eq_grad_firstVariation`](src/Transformer/Perspective/Section2_FlowMap.lean#L164) | theorem | `Transformer.Perspective.Section2_FlowMap` |
-| [`usa_dissipation`](src/Transformer/Perspective/Section2_FlowMap.lean#L173) | theorem | `Transformer.Perspective.Section2_FlowMap` |
-| [`SA_is_gradient_flow`](src/Transformer/Perspective/Section2_FlowMap.lean#L206) | theorem | `Transformer.Perspective.Section2_FlowMap` |
+| [`dissipation_softmax`](src/Transformer/Perspective/Section2_FlowMap.lean#L126) | theorem | `Transformer.Perspective.Section2_FlowMap` |
+| [`existence_uniqueness_energy`](src/Transformer/Perspective/Section2_FlowMap.lean#L138) | theorem | `Transformer.Perspective.Section2_FlowMap` |
+| [`vectorField_eq_grad_log`](src/Transformer/Perspective/Section2_FlowMap.lean#L148) | theorem | `Transformer.Perspective.Section2_FlowMap` |
+| [`usa_vectorField_eq_grad_firstVariation`](src/Transformer/Perspective/Section2_FlowMap.lean#L169) | theorem | `Transformer.Perspective.Section2_FlowMap` |
+| [`usa_dissipation`](src/Transformer/Perspective/Section2_FlowMap.lean#L178) | theorem | `Transformer.Perspective.Section2_FlowMap` |
+| [`SA_is_gradient_flow`](src/Transformer/Perspective/Section2_FlowMap.lean#L211) | theorem | `Transformer.Perspective.Section2_FlowMap` |
 | [`clustering_probability_small_beta`](src/Transformer/Perspective/Section3_SmallBeta.lean#L73) | theorem | `Transformer.Perspective.Section3_SmallBeta` |
 | [`Sset0_probability_tends_to_one`](src/Transformer/Perspective/Section3_SmallBeta.lean#L98) | theorem | `Transformer.Perspective.Section3_SmallBeta` |
 | [`no_smooth_invariant_measure`](src/Transformer/Perspective/Section5_HighD.lean#L57) | theorem | `Transformer.Perspective.Section5_HighD` |
@@ -2784,8 +2785,8 @@ Everything the build cannot vouch for, in one place.
 | [`meanFieldPDE`](src/Transformer/Metastability/MeanField.lean#L44) | def | `Transformer.Metastability.MeanField` |
 | [`isSeparatedMeasure`](src/Transformer/Metastability/MeanField.lean#L53) | def | `Transformer.Metastability.MeanField` |
 | [`τ_β_star`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L42) | def | `Transformer.Perspective.AppendixB_BetaInterval` |
-| [`usaContinuityEquation`](src/Transformer/Perspective/Section2_FlowMap.lean#L160) | def | `Transformer.Perspective.Section2_FlowMap` |
-| [`aggregationEquation`](src/Transformer/Perspective/Section2_FlowMap.lean#L169) | def | `Transformer.Perspective.Section2_FlowMap` |
-| [`auxCE`](src/Transformer/Perspective/Section2_FlowMap.lean#L215) | def | `Transformer.Perspective.Section2_FlowMap` |
-| [`conteqFirstRewriting`](src/Transformer/Perspective/Section2_FlowMap.lean#L219) | def | `Transformer.Perspective.Section2_FlowMap` |
+| [`usaContinuityEquation`](src/Transformer/Perspective/Section2_FlowMap.lean#L165) | def | `Transformer.Perspective.Section2_FlowMap` |
+| [`aggregationEquation`](src/Transformer/Perspective/Section2_FlowMap.lean#L174) | def | `Transformer.Perspective.Section2_FlowMap` |
+| [`auxCE`](src/Transformer/Perspective/Section2_FlowMap.lean#L220) | def | `Transformer.Perspective.Section2_FlowMap` |
+| [`conteqFirstRewriting`](src/Transformer/Perspective/Section2_FlowMap.lean#L224) | def | `Transformer.Perspective.Section2_FlowMap` |
 | [`Γ`](src/Transformer/Perspective/Section5_HighD.lean#L251) | def | `Transformer.Perspective.Section5_HighD` |

@@ -46,6 +46,11 @@ variable (d n : ℕ)
 noncomputable instance sphereMeasurableSpace : MeasurableSpace (SSphere d) :=
   borel _
 
+/-- That σ-algebra *is* the Borel one, by definition.  Registering the fact
+makes the sphere's continuous maps measurable and its singletons measurable
+sets, which is what integration against a measure on `𝕊^{d-1}` needs. -/
+instance sphereBorelSpace : BorelSpace (SSphere d) := ⟨rfl⟩
+
 /-- Probability measures on `𝕊^{d-1}`. -/
 abbrev ProbSphere (d : ℕ) : Type := ProbabilityMeasure (SSphere d)
 
