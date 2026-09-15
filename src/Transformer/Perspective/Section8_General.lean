@@ -18,9 +18,11 @@ This file formalizes §9 of the survey:
 import Transformer.Basic
 import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section2_FlowMap
+import Mathlib.Algebra.MvPolynomial.Degrees
+import Mathlib.Analysis.Normed.Algebra.Exponential
 
 open scoped BigOperators
-open Real
+open Real MeasureTheory
 
 namespace Transformer
 namespace Perspective
@@ -33,37 +35,115 @@ variable (d n : ℕ)
 
 /-- The interaction energy `𝖤_β` rewritten via squared distances:
 
-  `𝖤_β[μ] = (e^β / (2β)) ∫∫ exp(-β/2 ‖x - x'‖²) dμ(x) dμ(x')`. -/
-noncomputable def squaredDistEnergy
-    (β : ℝ) (μ : Perspective.ProbSphere d) : ℝ := by
-  exact 0  -- abstract placeholder for the integral expression.
+  `𝖤_β[μ] = (e^β / (2β)) ∫∫ exp(-β/2 ‖x - x'‖²) dμ(x) dμ(x')`.
 
-/-- A finite point set `𝒞 ⊂ 𝕊^{d-1}` of size `n` is a *spherical `t`-design*
-if `(1/n) Σ_{x ∈ 𝒞} p(x) = ∫ p dσ_d` for every polynomial `p` of total degree
-`≤ t`. -/
+Source: arXiv:2312.10794v5, §9.1. -/
+noncomputable def squaredDistEnergy
+    (β : ℝ) (μ : Perspective.ProbSphere d) : ℝ :=
+  (Real.exp β / (2 * β)) *
+    ∫ x, ∫ x',
+      Real.exp (-(β / 2) * ‖(x : EucSpace d) - (x' : EucSpace d)‖ ^ 2)
+        ∂(μ : Measure (SSphere d)) ∂(μ : Measure (SSphere d))
+
+/-- **The kernel identity behind the rewriting.**  On the unit sphere
+`‖x - y‖² = 2 - 2⟨x, y⟩`, so
+
+  `e^{β ⟨x,y⟩} = e^β · e^{-(β/2) ‖x - y‖²}`:
+
+the Gaussian-like kernel and the softmax kernel differ by the constant `e^β`.
+Source: arXiv:2312.10794v5, §9.1. -/
+theorem exp_inner_eq_exp_sqDist (β : ℝ) (x y : SSphere d) :
+    Real.exp (β * inner (𝕜 := ℝ) (x : EucSpace d) (y : EucSpace d))
+      = Real.exp β * Real.exp (-(β / 2) * ‖(x : EucSpace d) - (y : EucSpace d)‖ ^ 2) := by
+  have hx : ‖(x : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
+  have hy : ‖(y : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp y.2
+  have hd : ‖(x : EucSpace d) - (y : EucSpace d)‖ ^ 2
+      = 2 - 2 * inner (𝕜 := ℝ) (x : EucSpace d) (y : EucSpace d) := by
+    rw [norm_sub_sq_real, hx, hy]; ring
+  rw [← Real.exp_add, hd]
+  congr 1
+  ring
+
+/-- **The rewriting itself.**  `squaredDistEnergy` and `interactionEnergy` are
+the same functional, by `exp_inner_eq_exp_sqDist` under the double integral.
+Source: arXiv:2312.10794v5, §9.1. -/
+theorem squaredDistEnergy_eq_interactionEnergy (β : ℝ) (μ : Perspective.ProbSphere d) :
+    squaredDistEnergy d β μ = interactionEnergy d β μ := by
+  rw [squaredDistEnergy, interactionEnergy]
+  simp_rw [exp_inner_eq_exp_sqDist d β, MeasureTheory.integral_const_mul]
+  ring
+
+/-- The energy of a finite configuration:
+
+  `𝖧_β(𝒞) = Σ_{x ∈ 𝒞} Σ_{y ∈ 𝒞} e^{β ⟨x,y⟩}`,
+
+the discrete counterpart of `2β 𝖤_β`. -/
+noncomputable def discreteEnergy (β : ℝ) (𝒞 : Finset (SSphere d)) : ℝ :=
+  ∑ x ∈ 𝒞, ∑ y ∈ 𝒞, Real.exp (β * inner (𝕜 := ℝ) (x : EucSpace d) (y : EucSpace d))
+
+/-- `𝖧_β` is, up to the constant `e^β`, a sum of `f(‖x - y‖²)` over all pairs,
+with `f(r) = e^{-(β/2) r}`.  This is what places the survey's energy inside the
+Cohn–Kumar framework of potentials that decrease with distance. -/
+theorem discreteEnergy_eq_sqDist (β : ℝ) (𝒞 : Finset (SSphere d)) :
+    discreteEnergy d β 𝒞
+      = Real.exp β * ∑ x ∈ 𝒞, ∑ y ∈ 𝒞,
+          Real.exp (-(β / 2) * ‖(x : EucSpace d) - (y : EucSpace d)‖ ^ 2) := by
+  rw [discreteEnergy, Finset.mul_sum]
+  refine Finset.sum_congr rfl fun x _ => ?_
+  rw [Finset.mul_sum]
+  exact Finset.sum_congr rfl fun y _ => exp_inner_eq_exp_sqDist d β x y
+
+/-- The potential `f(r) = e^{-(β/2) r}` of `discreteEnergy_eq_sqDist` is
+strictly decreasing in the squared distance whenever `β > 0`: minimizing
+`𝖧_β` pushes the points apart.  Source: arXiv:2312.10794v5, §9.1. -/
+theorem exp_sqDist_strictAnti (β : ℝ) (hβ : 0 < β) :
+    StrictAnti (fun r : ℝ => Real.exp (-(β / 2) * r)) := by
+  intro a b hab
+  exact Real.exp_lt_exp.mpr (by nlinarith)
+
+/-- The hypothesis `0 < β` of `exp_sqDist_strictAnti` is satisfiable. -/
+example : (0 : ℝ) < 1 := one_pos
+
+/-- A finite point set `𝒞 ⊂ 𝕊^{d-1}` is a *spherical `t`-design* for the
+reference measure `σ` if
+
+  `(1/#𝒞) Σ_{x ∈ 𝒞} p(x) = ∫ p dσ`
+
+for every polynomial `p` of total degree `≤ t`.  The survey takes `σ` to be the
+uniform measure on the sphere; this development does not fix a normalized
+surface measure on `SSphere d`, so it is carried as a parameter.
+Source: arXiv:2312.10794v5, §9.1. -/
 def sphericalDesign
-    (t : ℕ) (𝒞 : Finset (SSphere d)) : Prop :=
-  -- ∀ polynomials p of total degree at most t, ∫ p dσ_d = (1/|𝒞|) Σ p(x).
-  True
+    (σ : Measure (SSphere d)) (t : ℕ) (𝒞 : Finset (SSphere d)) : Prop :=
+  ∀ p : MvPolynomial (Fin d) ℝ, p.totalDegree ≤ t →
+    ((𝒞.card : ℝ))⁻¹ * ∑ x ∈ 𝒞, MvPolynomial.eval (fun i => (x : EucSpace d) i) p
+      = ∫ x, MvPolynomial.eval (fun i => (x : EucSpace d) i) p ∂σ
 
 /-- A finite point set `𝒞 ⊂ 𝕊^{d-1}` is a *sharp configuration* if there are
 `m > 1` distinct pairwise inner products and `𝒞` is a spherical
 `(2m-1)`-design. -/
-def sharpConfiguration (𝒞 : Finset (SSphere d)) : Prop :=
+def sharpConfiguration (σ : Measure (SSphere d)) (𝒞 : Finset (SSphere d)) : Prop :=
   ∃ m : ℕ, 1 < m ∧
     (Finset.image
       (fun p : SSphere d × SSphere d =>
         inner (𝕜 := ℝ) (p.1 : EucSpace d) (p.2 : EucSpace d))
       (𝒞 ×ˢ 𝒞)).card = m ∧
-    sphericalDesign d (2 * m - 1) 𝒞
+    sphericalDesign d σ (2 * m - 1) 𝒞
 
 /-- **Cohn–Kumar theorem.**  Every global minimum of `𝖧_β` among finite
-configurations `𝒞 ⊂ 𝕊^{d-1}` with `#𝒞 = n` is either a sharp configuration
-or the vertices of the 600-cell (a particular 4-dimensional polytope with
-120 vertices). -/
-theorem cohn_kumar
-    (β : ℝ) (hβ : 0 < β) (hn : 2 ≤ n) :
-    True := by trivial
+configurations `𝒞 ⊂ 𝕊^{d-1}` with `#𝒞 = n` is either a sharp configuration or
+the vertices of the 600-cell (a 4-dimensional polytope with 120 vertices).
+
+Stated, not proved: the theorem is a deep result of Cohn and Kumar, and the
+600-cell is not constructed here — it enters as the parameter `exceptional`,
+the configuration the dichotomy is allowed to except.
+Source: arXiv:2312.10794v5, §9.1. -/
+def CohnKumarDichotomy
+    (σ : Measure (SSphere d)) (β : ℝ) (exceptional : Finset (SSphere d)) : Prop :=
+  ∀ 𝒞 : Finset (SSphere d), 𝒞.card = n →
+    (∀ 𝒟 : Finset (SSphere d), 𝒟.card = n →
+        discreteEnergy d β 𝒞 ≤ discreteEnergy d β 𝒟) →
+      sharpConfiguration d σ 𝒞 ∨ 𝒞 = exceptional
 
 /-! ### §9.2 — Pure self-attention (no projection) -/
 
@@ -82,12 +162,21 @@ def pureSA
 
 /-- **Equation (eq:zifromxi).**  The rescaling
 
-  `z_i(t) = e^{-t V} x_i(t)`. -/
-noncomputable def rescaled
-    (V : ParamMatrix d) (x : ℝ → Idx n → EucSpace d)
-    (t : ℝ) (i : Idx n) : EucSpace d :=
-  -- We use the matrix exponential of `-t V`.
-  by exact x t i  -- placeholder: `Real.exp (-t)` of an operator is heavy to express here.
+  `z_i(t) = e^{-t V} x_i(t)`,
+
+stated as the relation `x_i(t) = e^{t V} z_i(t)` between the two families, with
+`e^{t V}` the exponential of the bounded operator `t V`.
+Source: arXiv:2312.10794v5, §9.2. -/
+def IsRescaling
+    (V : ParamMatrix d) (x z : ℝ → Idx n → EucSpace d) : Prop :=
+  ∀ (t : ℝ) (i : Idx n), x t i = NormedSpace.exp (t • V) (z t i)
+
+/-- The relation is satisfiable: at `V = 0` the rescaling is the identity. -/
+example (x : ℝ → Idx n → EucSpace d) : IsRescaling d n 0 x x := by
+  intro t i
+  have h : t • (0 : ParamMatrix d) = 0 := by ext v; simp
+  show x t i = NormedSpace.exp (t • (0 : ParamMatrix d)) (x t i)
+  rw [h, NormedSpace.exp_zero, one_apply_eq_self]
 
 /-- **Equation (e:Rres).** Equation satisfied by the rescaled particles:
 
