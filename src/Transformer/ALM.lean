@@ -53,6 +53,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.DotError` | except that the score costs three roundings and they do not cancel |
 | `ALM.Expansion` | and the exact sum the arbiter accumulates when they cannot decide |
 | `ALM.ExpansionSign` | and the one component it reads that sum's sign off |
+| `ALM.ExactDot` | and the eight terms that make that sign the comparison's |
 | `ALM.ScoreGap` | and the gap the runtime reports, which is that separation counted out |
 | `ALM.GridWitness` | and the whole run's verdict, which merging the heads does not soften |
 | `ALM.QueryScale` | and the scale all of that is stated at, which one division removes |
@@ -151,6 +152,7 @@ import Transformer.ALM.GuardSep
 import Transformer.ALM.DotError
 import Transformer.ALM.Expansion
 import Transformer.ALM.ExpansionSign
+import Transformer.ALM.ExactDot
 import Transformer.ALM.ScoreGap
 import Transformer.ALM.GridWitness
 import Transformer.ALM.QueryScale
