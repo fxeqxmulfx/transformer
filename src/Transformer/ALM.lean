@@ -59,6 +59,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.TreeQuery` | and the container the query descends, which is not an array |
 | `ALM.TreeBalance` | and its rebalancing, which moves nodes and not their order |
 | `ALM.Dense` | and the layout the rest of the forward pass reads its weights from |
+| `ALM.GateGrid` | and the gate between two of them, which squares the stream's range |
 | `ALM.SparseHead` | and the head that skips its zeros, ties resolved as the C++ resolves them |
 | `ALM.ScoreGap` | and the gap the runtime reports, which is that separation counted out |
 | `ALM.GridWitness` | and the whole run's verdict, which merging the heads does not soften |
@@ -170,6 +171,7 @@ import Transformer.ALM.CrossFilter
 import Transformer.ALM.TreeBalance
 import Transformer.ALM.TreeQuery
 import Transformer.ALM.Dense
+import Transformer.ALM.GateGrid
 import Transformer.ALM.SparseHead
 import Transformer.ALM.ScoreGap
 import Transformer.ALM.GridWitness
