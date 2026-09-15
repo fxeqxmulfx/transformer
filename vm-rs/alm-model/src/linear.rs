@@ -85,10 +85,17 @@ impl Dense {
     /// `add` and `mul` whatsoever.  A kernel that regrouped a row could not
     /// satisfy a statement that weak in its arithmetic.
     ///
-    /// The padding is not covered there.  Rows are rounded up to a multiple
-    /// of `LANES` with zeros, whose sums are computed and then dropped by
-    /// `&s[..out.len()]`; that is a fact about slice lengths and is left to
-    /// the `debug_assert_eq!` above.
+    /// The padding is `Transformer.ALM.DensePad`, and it is a fact about
+    /// lengths rather than about sums -- over an arbitrary `add` and `mul` the
+    /// padded lanes do not come to zero, and they do not have to, because they
+    /// are dropped.  Block and lane are the quotient and the remainder of the
+    /// row index, so every row is written by exactly one lane of exactly one
+    /// block (`chunkOf_writeAt`, `chunkOf_mem`); a lane this line copies is a
+    /// row the matrix has (`writeAt_lt_rows`) and a lane it truncates is past
+    /// the last one (`dropped_ge_rows`).  `blocks_of_buffer` is that the two
+    /// sides of the `zip` have the same number of steps, so neither loop ends
+    /// early, and `rows_le_blockCount_mul` is the hypothesis `packed_lt_buffer`
+    /// took on faith, discharged for the allocation `of` really makes.
     pub fn apply(&self, x: &[f64], y: &mut [f64]) {
         debug_assert_eq!(x.len(), self.cols);
         debug_assert_eq!(y.len(), self.rows);
