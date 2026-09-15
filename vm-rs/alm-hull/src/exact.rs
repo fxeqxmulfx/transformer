@@ -95,8 +95,13 @@ pub fn expansion_sign(terms: &[f64]) -> core::cmp::Ordering {
 /// `|fl(a*b)| + |fl(c*d)|`.
 ///
 /// Each product is off by at most `u = eps/2` of itself and the subtraction
-/// by at most `u` of its result, so the total is under `2u(1 + 2u)` of the
-/// sum of the magnitudes.  `2 * eps` clears that with room over.
+/// by at most `u` of its result, which is `u(2 + u)` of the exact terms
+/// (`ALM.DotError.dot_error_le`); the exact terms in turn exceed the rounded
+/// products measured here by at most `1/(1 - u)`.  `2 * eps` is `4u`, and it
+/// clears `u(2 + u)/(1 - u)` for every `u <= 2/5` -- at binary64's `2^-53` by
+/// nearly a factor of two.  `ALM.CrossFilter.cross_filter_sound` is the chain,
+/// and `cross_paths_agree` is that clearing it makes this branch and the
+/// expansion return the same thing.
 const CROSS_FILTER: f64 = 2.0 * f64::EPSILON;
 
 /// The exact sign of `a * b - c * d`, for finite inputs.
@@ -108,7 +113,9 @@ const CROSS_FILTER: f64 = 2.0 * f64::EPSILON;
 /// enough from zero to carry its own error, which is the usual case and costs
 /// four operations; the expansion runs only when it cannot (Shewchuk 1997,
 /// §3).  The answer is the same either way — the filter decides who computes
-/// it, not what it is.
+/// it, not what it is.  `ALM.CrossFilter.cross_paths_agree` is that claim:
+/// `cross_filter_sound` for this branch, `cross_sign_eq` for the expansion,
+/// and both are the sign of `a * b - c * d`.
 ///
 /// Which is why the two error terms are computed after the filter and not
 /// before it.  They are `two_prod`'s reason for existing and the expansion's
