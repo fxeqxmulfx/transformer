@@ -4,7 +4,8 @@
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
-This file formalizes §3 of the survey.
+This file formalizes §3.1 and §3.2 of the survey; §3.3 (`USA`) and §3.4 (the
+modified-metric gradient flow) are in `Perspective.Section2_GradientFlow`.
 
 Main objects:
 
@@ -12,17 +13,10 @@ Main objects:
 * `eq: vfSd`               — the vector field `𝒳[μ]`,
 * `eq: partition.function` — the partition function `Z_{β,μ}(x)`,
 * `eq: conteqSd`           — the continuity equation,
+* `eq: CE`                 — its form for an arbitrary velocity field,
 * `eq: interaction.energy` — the interaction energy `𝖤_β[μ]`,
 * `eq: dissipation.softmax`— its dissipation along `SA`,
-* `Proposition prop: existence.uniqueness.energy`,
-* `eq: logder`             — logarithmic-derivative form of `𝒳[μ]`,
-* `USA`                    — the unnormalised SA model,
-* `eq: pde.nosoftmaxZ`     — continuity equation for `USA`,
-* `e:XmuE`, `eq: aggregation.eq`, `Lemma lem: dissipation`,
-* `e:dynonX`               — gradient flow on `(𝕊^{d-1})^n`,
-* §3.4 — `SA` is a gradient flow for a modified metric;
-        `e:scalarproduct`, `eq:r3`, `eq:r4`,
-        `eq: first.rewriting`, `eq: CE`.
+* `Proposition prop: existence.uniqueness.energy`.
 
 For the integrals over `SSphere d` we equip the sphere with its induced Borel
 measurable space (it is a metric subspace of `ℝ^d`).
@@ -88,6 +82,24 @@ noncomputable def empiricalMeasure
     (X : SphereTuple d n) : Measure (SSphere d) :=
   ((n : ℝ)⁻¹ : ℝ).toNNReal • (∑ i : Idx n, (Measure.dirac (X i)))
 
+/-- **Equation (eq: CE), §3.4.**  The continuity equation
+
+  `∂_t μ(t) + div(μ(t) v(t, ·)) = 0`
+
+for an arbitrary (tangent) velocity field `v`, in the distributional form the
+paper works with: for every `C¹` test function `φ` on the ambient space,
+
+  `d/dt ∫ φ dμ(t) = ∫ ⟨∇φ(x), v(t, x)⟩ dμ(t)(x)`.
+
+It is stated here rather than in §3.4 because every continuity equation below
+— `eq: conteqSd`, `eq: pde.nosoftmaxZ`, `eq: aggregation.eq`,
+`eq: first.rewriting` — is this one at a particular `v`. -/
+def auxCE (μ : ℝ → ProbSphere d) (v : ℝ → EucSpace d → EucSpace d) : Prop :=
+  ∀ φ : EucSpace d → ℝ, ContDiff ℝ 1 φ → ∀ t : ℝ,
+    HasDerivAt (fun s => ∫ x, φ (x : EucSpace d) ∂(μ s : Measure (SSphere d)))
+      (∫ x, inner (𝕜 := ℝ) (gradient φ (x : EucSpace d)) (v t (x : EucSpace d))
+        ∂(μ t : Measure (SSphere d))) t
+
 /-- **Equation (eq: conteqSd).** The continuity equation on the sphere,
 
   `∂_t μ(t) + div(μ(t) 𝒳[μ(t)]) = 0`,
@@ -108,6 +120,10 @@ def continuityEquation
           (vectorField d β (μ t) (x : EucSpace d))
         ∂(μ t : Measure (SSphere d))) t
 
+/-- `eq: conteqSd` is `eq: CE` at the velocity field `𝒳[μ(t)]`. -/
+theorem continuityEquation_eq_auxCE (β : ℝ) (μ : ℝ → ProbSphere d) :
+    continuityEquation d β μ = auxCE d μ (fun t x => vectorField d β (μ t) x) := rfl
+
 /-! ### §3.2 — The interaction energy -/
 
 /-- **Equation (eq: interaction.energy).** Interaction energy:
@@ -122,107 +138,58 @@ noncomputable def interactionEnergy
 
 /-- **Equation (eq: dissipation.softmax).** Energy-dissipation identity:
 
-  `d/dt 𝖤_β[μ(t)] = ∫ ‖𝒳[μ(t)](x)‖² Z_{β,μ(t)}(x) dμ(t,x)`. -/
-theorem dissipation_softmax
-    (β : ℝ) (μ : ℝ → ProbSphere d)
-    (_hμ : continuityEquation d β μ) :
-    ∀ _ : ℝ, True := by
-  intro _; trivial
+  `d/dt 𝖤_β[μ(t)] = ∫ ‖𝒳[μ(t)](x)‖² Z_{β,μ(t)}(x) dμ(t,x)`.
+
+In particular the interaction energy is non-decreasing along `SA`.
+
+A `Prop`-valued definition and not a theorem: differentiating the energy under
+the integral sign along a solution of the continuity equation is not
+formalized here.
+
+Source: arXiv:2312.10794v5, §3.2, `eq: dissipation.softmax`. -/
+def DissipationSoftmax (β : ℝ) (μ : ℝ → ProbSphere d) : Prop :=
+  continuityEquation d β μ →
+    ∀ t : ℝ,
+      HasDerivAt (fun s => interactionEnergy d β (μ s))
+        (∫ x, ‖vectorField d β (μ t) (x : EucSpace d)‖ ^ 2
+              * partitionMu d β (μ t) (x : EucSpace d)
+          ∂(μ t : Measure (SSphere d))) t
+
+/-- A linear isometry of the ambient space, restricted to the unit sphere:
+the action of `O(d)` on `𝕊^{d-1}` that the uniform measure `σ_d` — and only
+it, among probability measures — is invariant under. -/
+def sphereMap (U : EucSpace d ≃ₗᵢ[ℝ] EucSpace d) (x : SSphere d) : SSphere d :=
+  ⟨U (x : EucSpace d), by
+    rw [mem_sphere_zero_iff_norm, LinearIsometryEquiv.norm_map]
+    exact mem_sphere_zero_iff_norm.mp x.2⟩
 
 /-- **Proposition (prop: existence.uniqueness.energy).**  For `β > 0`
 and `d ≥ 2`:
 
 * the unique global minimiser of `𝖤_β` over `𝒫(𝕊^{d-1})` is the uniform
   measure `σ_d` on the sphere;
-* every global maximiser is a Dirac mass `δ_{x⋆}`. -/
-theorem existence_uniqueness_energy
-    (β : ℝ) (_hβ : 0 < β) (_hd : 2 ≤ d) :
-    True := by
-  trivial
+* every global maximiser is a Dirac mass `δ_{x⋆}`.
 
-/-! ### §3.3 — A Wasserstein gradient flow proxy (`USA`) -/
+The minimiser is pinned down here by rotation invariance rather than by
+name — a probability measure on `𝕊^{d-1}` invariant under every linear
+isometry of `ℝ^d` *is* `σ_d` — so that no Haar-measure machinery is needed to
+state the proposition.
 
-/-- **Equation (eq: logder).** Logarithmic-derivative form of `𝒳[μ]`:
+A `Prop`-valued definition and not a theorem: neither half is proved here.
 
-  `𝒳[μ](x) = ∇ log ∫ β⁻¹ exp(β ⟨x,y⟩) dμ(y)`. -/
-theorem vectorField_eq_grad_log
-    (_β : ℝ) (_μ : ProbSphere d) (_x : EucSpace d) :
-    True := by trivial
-
-/-- **Equation (USA).** Unnormalised Self-Attention dynamics. -/
-def USA (β : ℝ) (X : ℝ → SphereTuple d n) : Prop :=
-  ∀ t : ℝ, ∀ i : Idx n,
-    HasDerivAt (fun s => (X s i : EucSpace d))
-      (proj d ((X t i : EucSpace d))
-        (((n : ℝ)⁻¹) •
-          ∑ j : Idx n,
-            Real.exp (β * inner (𝕜 := ℝ)
-                        ((X t i : EucSpace d))
-                        ((X t j : EucSpace d)))
-            • ((X t j : EucSpace d)))) t
-
-/-- **Equation (eq: pde.nosoftmaxZ).** Continuity equation for `USA`. -/
-def usaContinuityEquation (_β : ℝ) (_μ : ℝ → ProbSphere d) : Prop :=
-  ∀ _ : ℝ, True
-
-/-- **Lemma (e:XmuE).**  `𝒳[μ] = ∇ δ𝖤_β[μ]` for the `USA` vector field. -/
-theorem usa_vectorField_eq_grad_firstVariation
-    (_β : ℝ) (_μ : ProbSphere d) :
-    True := by trivial
-
-/-- **Equation (eq: aggregation.eq).** Aggregation form of the `USA`-PDE. -/
-def aggregationEquation (_β : ℝ) (_μ : ℝ → ProbSphere d) : Prop :=
-  ∀ _ : ℝ, True
-
-/-- **Lemma (lem: dissipation).** -/
-theorem usa_dissipation
-    (β : ℝ) (μ : ℝ → ProbSphere d) (_hμ : usaContinuityEquation d β μ) :
-    ∀ _ : ℝ, True := by intro _; trivial
-
-/-! ### §3.4 — `SA` is a gradient flow for a modified metric -/
-
-/-- The particle interaction energy
-`𝖤_β(X) = (1/(2β)) Σ_i Σ_j exp(β ⟨V x_i, x_j⟩)`. -/
-noncomputable def particleEnergy
-    (β : ℝ) (V : ParamMatrix d) (X : SphereTuple d n) : ℝ :=
-  (2 * β)⁻¹ *
-    ∑ i : Idx n, ∑ j : Idx n,
-      Real.exp (β * inner (𝕜 := ℝ) (V (X i)) ((X j) : EucSpace d))
-
-/-- `Z_{β,i}(X) = Σ_j exp(β ⟨V x_i, x_j⟩)`. -/
-noncomputable def particlePartition
-    (β : ℝ) (V : ParamMatrix d) (X : SphereTuple d n) (i : Idx n) : ℝ :=
-  ∑ j : Idx n, Real.exp (β * inner (𝕜 := ℝ) (V (X i)) ((X j) : EucSpace d))
-
-/-- **Equation (e:scalarproduct).** Modified inner product on `T_X (𝕊^{d-1})^n`:
-
-  `⟨(a_i), (b_i)⟩_X = Σ_i Z_{β,i}(X) ⟨a_i, b_i⟩`. -/
-noncomputable def modifiedMetric
-    (β : ℝ) (V : ParamMatrix d) (X : SphereTuple d n)
-    (a b : Idx n → EucSpace d) : ℝ :=
-  ∑ i : Idx n,
-    particlePartition d n β V X i * inner (𝕜 := ℝ) (a i) (b i)
-
-/-- For `Q^⊤ K` symmetric and `V = Q^⊤ K`, `eq: transformerSd.QKV` is a
-gradient flow for the modified metric.  Stated abstractly (the symmetry
-condition is left as a hypothesis `True` because `ContinuousLinearMap.adjoint`
-is not available for an arbitrary inner-product map without the
-`FiniteDimensional` infrastructure here). -/
-theorem SA_is_gradient_flow
-    (_β : ℝ) (_Q _K _V : TimeParam d)
-    (_hsym : True) (_hV : True)
-    (X : ℝ → SphereTuple d n) :
-    Perspective.transformerODE d n _β _Q _K _V X →
-    True := by
-  intro _; trivial
-
-/-- **Equation (eq: CE).** Auxiliary continuity equation. -/
-def auxCE (_μ : ℝ → ProbSphere d) (_v : ℝ → EucSpace d → EucSpace d) : Prop :=
-  ∀ _ : ℝ, True
-
-/-- **Equation (eq: first.rewriting).** Rewriting of `eq: conteqSd`. -/
-def conteqFirstRewriting (_β : ℝ) (_μ : ℝ → ProbSphere d) : Prop :=
-  ∀ _ : ℝ, True
+Source: arXiv:2312.10794v5, §3.2, `prop: existence.uniqueness.energy`. -/
+def ExistenceUniquenessEnergy (β : ℝ) : Prop :=
+  0 < β → 2 ≤ d →
+    (∃! μ₀ : ProbSphere d, ∀ μ : ProbSphere d,
+        interactionEnergy d β μ₀ ≤ interactionEnergy d β μ) ∧
+    (∀ μ₀ : ProbSphere d,
+        (∀ μ : ProbSphere d, interactionEnergy d β μ₀ ≤ interactionEnergy d β μ) →
+        ∀ U : EucSpace d ≃ₗᵢ[ℝ] EucSpace d,
+          (μ₀ : Measure (SSphere d)).map (sphereMap d U)
+            = (μ₀ : Measure (SSphere d))) ∧
+    (∀ μ₁ : ProbSphere d,
+        (∀ μ : ProbSphere d, interactionEnergy d β μ ≤ interactionEnergy d β μ₁) →
+        ∃ x : SSphere d, (μ₁ : Measure (SSphere d)) = Measure.dirac x)
 
 end Perspective
 end Transformer

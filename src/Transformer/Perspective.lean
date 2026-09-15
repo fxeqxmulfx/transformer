@@ -10,6 +10,7 @@ followed by the four appendices.  Everything lives in the namespace
 
 import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section2_FlowMap
+import Transformer.Perspective.Section2_GradientFlow
 import Transformer.Perspective.Section3_SmallBeta
 import Transformer.Perspective.Section4_LargeBeta
 import Transformer.Perspective.Section5_HighD
