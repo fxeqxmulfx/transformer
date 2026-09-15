@@ -31,7 +31,7 @@ comparison is total, ties included, which is what a container has to answer.
 
 The integers it runs on are squared distances, and `sq_dist_le` bounds them:
 at `|k|, |q| ≤ 2^52` a squared distance is at most `2^106`, which is `i128` with
-twenty-one bits to spare, so the comparison the machine makes is exact
+twenty bits to spare, so the comparison the machine makes is exact
 arithmetic and not floating point at all.  The wall moves from `2^26.5` to
 `2^52`, in the same two dimensions and at the same weights.
 
