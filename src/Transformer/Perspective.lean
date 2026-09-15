@@ -14,6 +14,7 @@ import Transformer.Perspective.Section2_GradientFlow
 import Transformer.Perspective.Section3_SmallBeta
 import Transformer.Perspective.Section4_LargeBeta
 import Transformer.Perspective.Section5_HighD
+import Transformer.Perspective.Section5_HighDCurve
 import Transformer.Perspective.Section6_Circle
 import Transformer.Perspective.Section7_BBGKY
 import Transformer.Perspective.Section8_General

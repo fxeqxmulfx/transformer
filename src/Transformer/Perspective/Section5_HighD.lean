@@ -15,20 +15,21 @@ This file formalizes §6 of the survey:
 * `e:decompox*.step2`, `e:dotalpha.step2`,
 * `e:mineqalpha.step2`, `e:diffineqalpha.step2`,
 * `Theorem r:wendel` — Wendel's hemisphere probability,
-* `Theorem thm: orthogonal`        — orthogonal-initial dynamics,
-* `eq: ybeta`, `eq: ybetaUSA`      — the scalar ODE for the angle,
-* `Theorem thm: phase.transition.curve` — `d ≫ n` quantitative result,
-* `eq: upto-t`,
-* `eq: gamma.infty`                — phase-transition curve.
+* `Theorem r:wendel` — Wendel's hemisphere probability.
+
+§6.2 (`thm: orthogonal`, `eq: ybeta`, `thm: phase.transition.curve`) and §6.3
+(the phase-transition curve) are in `Perspective.Section5_HighDCurve`.
 -/
 
 import Transformer.Basic
 import Transformer.Perspective.Section1_IPS
+import Transformer.Perspective.Section3_SmallBeta
 import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+import Mathlib.Analysis.InnerProductSpace.Calculus
 
 open scoped BigOperators
-open Real
+open Real MeasureTheory
 
 namespace Transformer
 namespace Perspective
@@ -53,10 +54,27 @@ theorem boumal_clustering
   sorry
 
 /-- *Invariant measures remark.* When `thm: beta.tiny` applies (e.g. always
-for `d ≥ 3`), neither `SA` nor `USA` admits a smooth invariant measure. -/
-theorem no_smooth_invariant_measure
-    (hd : 3 ≤ d) (hn : 2 ≤ n) (β : ℝ) (hβ : 0 ≤ β) :
-    True := by trivial
+for `d ≥ 3`), neither `SA` nor `USA` admits a smooth invariant measure.
+
+"Smooth" is read as *having a density*: `μ ≪ P`, with `P` the uniform law
+`UniformTuple` of §4.  That already rules out the Dirac masses on consensus
+configurations, which *are* invariant but sit on a `P`-null set, and it is what
+makes the remark a consequence of `boumal_clustering`: everything is swept into
+that null set, so no measure with a density can be preserved.  The flow is
+presented as any map `Φ` that transports initial data along solutions of `SA`.
+
+A `Prop`-valued definition and not a theorem: it rests on
+`boumal_clustering`, which is a `sorry` here.
+
+Source: arXiv:2312.10794v5, §6.1 (remark after `thm: boumal`). -/
+def NoSmoothInvariantMeasure (β : ℝ) : Prop :=
+  3 ≤ d → 2 ≤ n → 0 ≤ β →
+  ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+  ∀ μ : Measure (SphereTuple d n), IsProbabilityMeasure μ → μ ≪ P →
+    ¬ ∃ Φ : ℝ → SphereTuple d n → SphereTuple d n,
+        (∀ (X : ℝ → SphereTuple d n), Perspective.SA d n β X →
+            ∀ t : ℝ, Φ t (X 0) = X t) ∧
+        ∀ t : ℝ, μ.map (Φ t) = μ
 
 /-! ### §6.1 — Exponential rate when `d ≥ n` -/
 
@@ -125,12 +143,50 @@ theorem hemisphere_step1_monotone
       (fun i : Idx n => inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((w : EucSpace d)))) := by
   sorry
 
-/-- **Equation (eq: therighthandside).** Right-hand-side identity used to
-derive the qualitative convergence step. -/
-theorem step1_rhs_eq_zero
-    (β : ℝ) (X : ℝ → SphereTuple d n)
-    (hX : Perspective.SA d n β X) :
-    True := by trivial
+/-- **Equation (eq: therighthandside).**  The right-hand side of `SA` tested
+against a fixed direction `w`:
+
+  `d/dt ⟨x_i(t), w⟩
+     = Z_{β,i}(t)⁻¹ Σ_j e^{β ⟨x_i,x_j⟩} ( ⟨x_j, w⟩ - ⟨x_i, x_j⟩ ⟨x_i, w⟩ )`.
+
+The projection `Proj_{x_i}` is what produces the second summand, and with it
+the sign that makes `r(t) = min_i ⟨x_i(t), w⟩` non-decreasing in
+`hemisphere_step1_monotone`: at a minimising `i` every bracket is `≥ 0`.
+
+Source: arXiv:2312.10794v5, §6.1, `eq: therighthandside`. -/
+theorem step1_rhs
+    (β : ℝ) (X : ℝ → SphereTuple d n) (hX : Perspective.SA d n β X)
+    (w : EucSpace d) (t : ℝ) (i : Idx n) :
+    HasDerivAt (fun s => inner (𝕜 := ℝ) ((X s i : EucSpace d)) w)
+      ((partitionSA d n β X t i)⁻¹ *
+        ∑ j : Idx n,
+          Real.exp (β * inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((X t j : EucSpace d))) *
+            (inner (𝕜 := ℝ) ((X t j : EucSpace d)) w
+              - inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((X t j : EucSpace d))
+                  * inner (𝕜 := ℝ) ((X t i : EucSpace d)) w)) t := by
+  have key : ∀ (x : EucSpace d) (c : ℝ) (S : Idx n → ℝ) (v : Idx n → EucSpace d),
+      inner (𝕜 := ℝ) (proj d x (c • ∑ j : Idx n, S j • v j)) w
+        = c * ∑ j : Idx n, S j *
+            (inner (𝕜 := ℝ) (v j) w - inner (𝕜 := ℝ) x (v j) * inner (𝕜 := ℝ) x w) := by
+    intro x c S v
+    have h1 : inner (𝕜 := ℝ) (c • ∑ j : Idx n, S j • v j) w
+        = c * ∑ j : Idx n, S j * inner (𝕜 := ℝ) (v j) w := by
+      rw [real_inner_smul_left, sum_inner]
+      simp [real_inner_smul_left]
+    have h2 : inner (𝕜 := ℝ) x (c • ∑ j : Idx n, S j • v j)
+        = c * ∑ j : Idx n, S j * inner (𝕜 := ℝ) x (v j) := by
+      rw [real_inner_smul_right, inner_sum]
+      simp [real_inner_smul_right]
+    have h3 : ∑ j : Idx n, S j *
+          (inner (𝕜 := ℝ) (v j) w - inner (𝕜 := ℝ) x (v j) * inner (𝕜 := ℝ) x w)
+        = (∑ j : Idx n, S j * inner (𝕜 := ℝ) (v j) w)
+            - (∑ j : Idx n, S j * inner (𝕜 := ℝ) x (v j)) * inner (𝕜 := ℝ) x w := by
+      rw [Finset.sum_mul, ← Finset.sum_sub_distrib]
+      exact Finset.sum_congr rfl fun j _ => by ring
+    rw [proj, inner_sub_left, h1, real_inner_smul_left, h2, h3]
+    ring
+  refine (HasDerivAt.inner ℝ (hX t i) (hasDerivAt_const t w)).congr_deriv ?_
+  rw [inner_zero_right, zero_add, key]
 
 /-- **Equation (eq: qual.conv).** *Qualitative convergence at step 1.*
 
@@ -157,13 +213,32 @@ theorem step2_decomposition
         ((x_star : EucSpace d) = ∑ k : Idx n, (θ k) • ((X t k : EucSpace d))) := by
   sorry
 
-/-- **Equation (e:diffineqalpha.step2).** Differential inequality:
+/-- **Equation (e:diffineqalpha.step2).** Differential inequality for
+`α(t) = min_i ⟨x_i(t), x⋆⟩`:
 
-  `α̇(t) ≥ 1/(2 n e^{2β}) · (1 - α(t))`,  for `t ≥ t₀`. -/
-theorem step2_alpha_diffineq
-    (β : ℝ) (X : ℝ → SphereTuple d n) (hX : Perspective.SA d n β X)
-    (x_star : SSphere d) :
-    True := by trivial
+  `α̇(t) ≥ 1/(2 n e^{2β}) · (1 - α(t))`,  for `t ≥ t₀`,
+
+which integrates to the exponential rate of `lem: hemisphere.clustering`.
+
+The minimum is presented by its two defining properties (`α t` is a lower
+bound, and is attained) rather than as a `Finset.inf'`, so that no nonemptiness
+witness for `Idx n` has to be carried through the statement.
+
+A `Prop`-valued definition and not a theorem: the inequality is step 2 of the
+proof of `lem: hemisphere.clustering`, which is a `sorry` here.
+
+Source: arXiv:2312.10794v5, §6.1, `e:diffineqalpha.step2`. -/
+def Step2AlphaDiffIneq
+    (β : ℝ) (X : ℝ → SphereTuple d n) (x_star : SSphere d)
+    (α : ℝ → ℝ) (t₀ : ℝ) : Prop :=
+  0 ≤ β → Perspective.SA d n β X →
+  (∀ t : ℝ, ∀ i : Idx n,
+      α t ≤ inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((x_star : EucSpace d))) →
+  (∀ t : ℝ, ∃ i : Idx n,
+      α t = inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((x_star : EucSpace d))) →
+  ∀ t : ℝ, t₀ ≤ t →
+    ∃ α' : ℝ, HasDerivAt α α' t ∧
+      (1 - α t) / (2 * (n : ℝ) * Real.exp (2 * β)) ≤ α'
 
 /-- **Theorem (r:wendel) — Wendel's theorem.**
 
@@ -171,91 +246,21 @@ Let `1 ≤ d ≤ n` and let `x_1,…,x_n` be i.i.d. uniformly distributed points
 `𝕊^{d-1}`. The probability that they all lie in the same open hemisphere
 equals
 
-  `2^{-(n-1)} · Σ_{k=0}^{d-1} C(n-1, k)`. -/
-theorem wendel (d n : ℕ) (hd : 1 ≤ d) (hdn : d ≤ n) :
-    -- `ℙ(∃ w, ∀ i, ⟨x_i, w⟩ > 0) = 2^{-(n-1)} Σ_{k=0}^{d-1} (n-1 choose k)`.
-    True := by trivial
+  `2^{-(n-1)} · Σ_{k=0}^{d-1} C(n-1, k)`.
 
-/-! ### §6.2 — More precise quantitative convergence -/
+The event is the one `lem: hemisphere.clustering` needs, written on the
+initial sequence itself; the law is the uniform `UniformTuple` of §4.
 
-/-- The scalar ODE driving the angle between pairwise orthogonal particles
-under `SA`:
+A `Prop`-valued definition and not a theorem: Wendel's counting argument is
+not formalized here.
 
-  `γ̇_β(t) = 2 e^{β γ_β(t)} (1 - γ_β(t)) ((n-1) γ_β(t) + 1)
-             / (e^β + (n-1) e^{β γ_β(t)})`,
-  `γ_β(0) = 0`.
-
-This is **Equation (eq: ybeta).** -/
-def ybetaODE_SA (n : ℕ) (β : ℝ) (γ : ℝ → ℝ) : Prop :=
-  γ 0 = 0 ∧
-  ∀ t : ℝ, HasDerivAt γ
-    (2 * Real.exp (β * γ t) * (1 - γ t) * ((n - 1 : ℝ) * γ t + 1)
-      / (Real.exp β + (n - 1 : ℝ) * Real.exp (β * γ t))) t
-
-/-- The scalar ODE for `USA` (eq: ybetaUSA):
-
-  `γ̇_β(t) = (2/n) e^{β γ_β(t)} (1 - γ_β(t)) ((n-1) γ_β(t) + 1)`. -/
-def ybetaODE_USA (n : ℕ) (β : ℝ) (γ : ℝ → ℝ) : Prop :=
-  γ 0 = 0 ∧
-  ∀ t : ℝ, HasDerivAt γ
-    ((2 / (n : ℝ)) * Real.exp (β * γ t) * (1 - γ t) * ((n - 1 : ℝ) * γ t + 1)) t
-
-/-- **Theorem (thm: orthogonal).** *Orthogonal initial sequence.*
-
-Let `β ≥ 0`, `d, n ≥ 2`.  If `(x_i(0))_{i ∈ [n]}` are pairwise orthogonal on
-`𝕊^{d-1}`, then the angle `θ(t) := ∠(x_i(t), x_j(t))` is the same for all
-distinct `i, j`, and `γ_β(t) := cos θ(t)` satisfies `eq: ybeta` (for `SA`) or
-`eq: ybetaUSA` (for `USA`). -/
-theorem orthogonal_initial
-    (β : ℝ) (hβ : 0 ≤ β) (hd : 2 ≤ d) (hn : 2 ≤ n)
-    (X₀ : SphereTuple d n)
-    (h_ortho : ∀ i j : Idx n, i ≠ j →
-                inner (𝕜 := ℝ) ((X₀ i : EucSpace d)) ((X₀ j : EucSpace d)) = 0) :
-    ∃ γ : ℝ → ℝ, ybetaODE_SA n β γ ∧
-      ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
-        ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx n, i ≠ j →
-          inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((X t j : EucSpace d)) = γ t := by
-  sorry
-
-/-- **Theorem (thm: phase.transition.curve), eq: upto-t.**
-
-For each `n ≥ 2` and `β ≥ 0`, there exists `d⋆(n, β) ≥ n` such that for all
-`d ≥ d⋆(n, β)` and an i.i.d. uniform initial sequence `(x_i(0))_{i ∈ [n]}`,
-the solution to the `SA` Cauchy problem satisfies, with probability at least
-`1 - 2 n² d^{-1/64}`,
-
-  `|⟨x_i(t), x_j(t)⟩ - γ_β(t)| ≤ min{ 2 c(β)^{n t} √(log d / d), C e^{-λ t} }`
-
-for all `i ≠ j` and `t ≥ 0`, where `c(β) = e^{10 max(1,β)}` and `γ_β` is the
-unique solution to `eq: ybeta`. -/
-theorem phase_transition_curve
-    (β : ℝ) (hβ : 0 ≤ β) (hn : 2 ≤ n) :
-    ∃ d_star : ℕ, n ≤ d_star ∧ ∀ d : ℕ, d_star ≤ d →
-      ∃ (C lam : ℝ), 0 < C ∧ 0 < lam ∧
-        -- with probability at least `1 - 2 n² d^{-1/64}` (under uniform init),
-        ∀ (X₀ : SphereTuple d n),
-          ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
-            ∀ γ : ℝ → ℝ, ybetaODE_SA n β γ →
-              ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx n, i ≠ j →
-                |inner (𝕜 := ℝ)
-                    ((X t i : EucSpace d)) ((X t j : EucSpace d)) - γ t|
-                  ≤ min
-                      (2 * (Real.exp (10 * max 1 β))^(n * t) *
-                          Real.sqrt (Real.log d / d))
-                      (C * Real.exp (-(lam * t))) := by
-  sorry
-
-/-! ### §6.3 — Phase transition curve -/
-
-/-- The phase-transition curve `Γ_{d,δ}` in `(t, β)`-space. -/
-noncomputable def Γ (d : ℕ) (δ : ℝ) (n : ℕ) (β : ℝ) : Set (ℝ × ℝ) := by
-  exact ∅  -- placeholder; defined as a topological boundary.
-
-/-- **Equation (eq: gamma.infty).** Limiting phase-transition curve:
-
-  `Γ_{∞, δ} = {(t, β) ≥ 0 : γ_β(t) = 1 - δ}`. -/
-def ΓInf (n : ℕ) (δ : ℝ) : Set (ℝ × ℝ) :=
-  { p | ∃ γ : ℝ → ℝ, ybetaODE_SA n p.2 γ ∧ γ p.1 = 1 - δ }
+Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962). -/
+def Wendel : Prop :=
+  1 ≤ d → d ≤ n →
+  ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+    (P { X₀ : SphereTuple d n | ∃ w : SSphere d, ∀ i : Idx n,
+          0 < inner (𝕜 := ℝ) ((X₀ i : EucSpace d)) ((w : EucSpace d)) }).toReal
+      = (∑ k ∈ Finset.range d, ((n - 1).choose k : ℝ)) / 2 ^ (n - 1)
 
 end Perspective
 end Transformer

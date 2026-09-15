@@ -22,6 +22,7 @@ This file formalizes Appendix D of the survey:
 import Transformer.Basic
 import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section5_HighD
+import Transformer.Perspective.Section5_HighDCurve
 
 open scoped BigOperators
 open Real
