@@ -29,6 +29,9 @@ pub struct Hit {
     pub best_kx: f64,
     /// The winning key, as the head stored it.
     pub best_key: [f64; 2],
+    /// The entries at it, before the tie-break collapsed them into `out`.
+    /// A caller holding a second container has to merge, not resolve.
+    pub meta: HullMeta,
 }
 
 impl HullHalf {
@@ -89,8 +92,10 @@ impl HullHalf {
         // A query with `qy == 0` reads one extreme of the envelope and stops:
         // the ties there are already collapsed into that node's aggregate.
         if qy == 0.0 {
-            let out = self.cht.meta_of(best).resolve(tb);
-            return Some(Hit { out, score: best_score, best_kx: kx_best, best_key: [kx_best, ky_best] });
+            let meta = self.cht.meta_of(best);
+            let out = meta.resolve(tb);
+            let best_key = [kx_best, ky_best];
+            return Some(Hit { out, score: best_score, best_kx: kx_best, best_key, meta });
         }
 
         let mut combined = HullMeta::default();
@@ -118,7 +123,9 @@ impl HullHalf {
             right = self.cht.next(right);
         }
 
-        Some(Hit { out: combined.resolve(tb), score: best_score, best_kx: kx_best, best_key: [kx_best, ky_best] })
+        let out = combined.resolve(tb);
+        let best_key = [kx_best, ky_best];
+        Some(Hit { out, score: best_score, best_kx: kx_best, best_key, meta: combined })
     }
 }
 
@@ -226,11 +233,36 @@ impl HardAttentionHead {
                 self.global.resolve(tb)
             });
         }
-        let half = if qy > 0.0 { &self.upper } else { &self.lower };
-        half.query(qx, qy, tb).map(|h| {
+        self.hit(q, tb).map(|h| {
             self.note(h.score, qy, q, Some(h.best_key));
             h.out
         })
+    }
+
+    /// The same query, handing back the winner itself rather than only what it
+    /// resolved to.
+    ///
+    /// `lifthead.rs` needs it: that head holds the cleared entries in a head of
+    /// its own, and on the queries where the clear marker gives it no margin it
+    /// has to compare this head's winner against its own and merge what ties.
+    /// A resolved payload can do neither.
+    ///
+    /// The axis is not answered here.  At `qy == 0` the ordinate is multiplied
+    /// away, there is no single winning key to hand back, and the caller that
+    /// needs this holds its own ends for exactly that case.
+    ///
+    /// Nor is the grid witness written here, and that is the other half of why
+    /// this is separate from `query`: a caller comparing this head's winner
+    /// against another container's has not decided anything yet, and a winner
+    /// that goes on to lose is not a query answered with no margin to spare.
+    /// `query` notes what it returns; a caller of `hit` notes what it keeps.
+    pub fn hit(&self, q: [f64; 2], tb: TieBreak) -> Option<Hit> {
+        let (qx, qy) = (q[0], q[1]);
+        if qy == 0.0 {
+            return None;
+        }
+        let half = if qy > 0.0 { &self.upper } else { &self.lower };
+        half.query(qx, qy, tb)
     }
 }
 

@@ -34,19 +34,30 @@
 //!     any length.  Those are held in fields, as `head.rs` holds its own.
 //!   * `qy == 0` reads one end and every key written there, offsets and all.
 //!
+//! The cleared entries are held *beside* the container rather than in it.
+//! `clearkey.rs` says why they cannot go in it and `ALM.ClearKey` why they do
+//! not have to: while the marker is wider than twice the largest base score,
+//! a cleared entry loses to every live one at every query, so the answer is
+//! the live container's answer and the marker is never scored at all.  When
+//! that margin is not there -- `qy <= 0`, or a score past `BIG` itself, both
+//! of which the new range reaches -- the cleared entries are asked in a hull
+//! head of their own and the two winners are compared on their stored points,
+//! which is neither better nor worse than what `head.rs` does today.
+//!
 //! And what is *not* covered leaves.  `lift.rs` names three families; only the
-//! live one has an integer key with an offset under one.  The first key that
-//! is not live -- a clear marker, a flat `ky = 1`, a non-integer `kx / 2`, a
-//! key past `2^52` -- retires the integer path for good and hands the head to
-//! `HardAttentionHead`, rebuilt from the journal.  On the released model that
-//! is the twenty flat heads immediately and the seven clearing heads at their
-//! first clear; the remaining ninety-nine keep the integer path, and two of
-//! them are heads `todo3.md` section 4b shows the old one answering wrongly.
+//! live one has an integer key with an offset under one, and only the cleared
+//! one has the marker to hide behind.  The first key that is neither -- a flat
+//! `ky = 1`, a non-integer `kx / 2`, a key past `2^52` -- retires the integer
+//! path for good and hands the head to `HardAttentionHead`, rebuilt from the
+//! journal.  On the released model that is the twenty flat heads immediately;
+//! the remaining hundred and thirteen keep the integer path, and two of them
+//! are heads `todo3.md` section 4b shows the old one answering wrongly.
 
 use core::cell::Cell;
 use core::cmp::Ordering;
 
 use crate::breakpoint::Break;
+use crate::clearkey::{ClearGuard, ClearKey};
 use crate::exact;
 use crate::grid::GridWitness;
 use crate::head::HardAttentionHead;
@@ -59,6 +70,9 @@ use crate::tree::{Line, Slope, Tree, NIL};
 pub struct LiftCensus {
     /// Keys the integer path accepted.
     pub keys: usize,
+    /// Keys carrying the clear marker, held beside the container rather than
+    /// in it.
+    pub cleared: usize,
     /// Queries answered by the `i128` comparison of `liftkey.rs`, which is
     /// exact to `2^52`.
     pub integer: usize,
@@ -70,6 +84,13 @@ pub struct LiftCensus {
     pub axis: usize,
     /// Queries handed to the hull head after the integer path retired.
     pub hull: usize,
+    /// Queries a head holding cleared entries answered without looking at
+    /// them, the marker being wider than twice any base score
+    /// (`ALM.ClearKey.marked_sup'_eq_live`).
+    pub dominated: usize,
+    /// And queries where it was not, so the cleared entries had to be scored
+    /// on their stored points beside the live ones.
+    pub mixed: usize,
     /// Heads that retired, and the key that retired the first of them.
     pub retired: usize,
     pub retired_at: Option<[f64; 2]>,
@@ -78,10 +99,13 @@ pub struct LiftCensus {
 impl LiftCensus {
     pub fn merge(&mut self, other: &LiftCensus) {
         self.keys += other.keys;
+        self.cleared += other.cleared;
         self.integer += other.integer;
         self.stored += other.stored;
         self.axis += other.axis;
         self.hull += other.hull;
+        self.dominated += other.dominated;
+        self.mixed += other.mixed;
         self.retired += other.retired;
         self.retired_at = self.retired_at.or(other.retired_at);
     }
@@ -119,13 +143,22 @@ pub struct LiftAttentionHead {
     /// Where the head goes when a key arrives that the argument above does not
     /// cover.
     other: Option<HardAttentionHead>,
+    /// The cleared entries, in a head of their own, built only once one
+    /// arrives.  `ALM.ClearKey.marked_sup'_eq_live` is what lets most queries
+    /// skip it; `guard` is the hypothesis of that theorem, tested.
+    cleared: Option<Box<HardAttentionHead>>,
+    guard: ClearGuard,
     /// Every entry, for the one query that reads them all: `q == (0, 0)`.
     global: HullMeta,
+    /// The extreme *live* key, which is where a `qy < 0` query is answered.
     min_v: i64,
     max_v: i64,
-    /// Every entry written at each end, which is what a query along the
-    /// abscissa returns -- the ordinate is multiplied by zero, so the offsets
-    /// do not separate anything.
+    /// The extreme abscissa over every entry, cleared ones included, and every
+    /// entry written there.  That is what a query along the abscissa returns:
+    /// the ordinate is multiplied by zero, so neither the offsets nor the
+    /// marker separate anything and a cleared entry is an ordinary competitor.
+    min_kx: f64,
+    max_kx: f64,
     left_all: HullMeta,
     right_all: HullMeta,
     /// And the *smallest* offset at each end, which is what a query with
@@ -136,6 +169,9 @@ pub struct LiftAttentionHead {
     /// Written from `query`, which takes `&self`: the census is an observation
     /// of the head, not part of its answer.
     census: Cell<LiftCensus>,
+    /// And what it answered with no margin to spare, which on this head can
+    /// only be a cleared entry that won.
+    grid: Cell<GridWitness>,
 }
 
 impl Default for LiftAttentionHead {
@@ -144,15 +180,20 @@ impl Default for LiftAttentionHead {
             live: Tree::new(),
             journal: Vec::new(),
             other: None,
+            cleared: None,
+            guard: ClearGuard::default(),
             global: HullMeta::default(),
             min_v: i64::MAX,
             max_v: i64::MIN,
+            min_kx: f64::INFINITY,
+            max_kx: f64::NEG_INFINITY,
             left_all: HullMeta::default(),
             right_all: HullMeta::default(),
             left_low: (f64::INFINITY, HullMeta::default()),
             right_low: (f64::INFINITY, HullMeta::default()),
             n: 0,
             census: Cell::new(LiftCensus::default()),
+            grid: Cell::new(GridWitness::default()),
         }
     }
 }
@@ -171,9 +212,10 @@ impl LiftAttentionHead {
     }
 
     pub fn clear(&mut self) {
-        let census = self.census.get();
+        let (census, grid) = (self.census.get(), self.grid.get());
         *self = Self::default();
         self.census.set(census);
+        self.grid.set(grid);
     }
 
     /// What this head carried, and what it handed away.
@@ -188,14 +230,24 @@ impl LiftAttentionHead {
 
     /// What the head behind this one has answered with no margin to spare.
     ///
-    /// Empty while the integer path is live, and that is the claim rather than
-    /// an omission: below `2^52` the `i128` comparison has a whole unit of
-    /// margin and there is nothing to report.  The queries that do *not* get
-    /// that margin are the ones off the unit grid, which fall back to the
-    /// stored points and so back to the old wall; `LiftCensus::stored` counts
-    /// them, and it is the number to read beside this one.
+    /// Empty while the integer path answers alone, and that is the claim
+    /// rather than an omission: below `2^52` the `i128` comparison has a whole
+    /// unit of margin and there is nothing to report.  The queries that do
+    /// *not* get that margin are the ones off the unit grid, which fall back
+    /// to the stored points and so back to the old wall; `LiftCensus::stored`
+    /// counts them, and it is the number to read beside this one.
+    ///
+    /// What it is not empty of is the marker.  A query a cleared entry *wins*
+    /// was decided in float64 at `10^30`, where `ulp` is `2^47` and the unit
+    /// step is long gone (`ALM.ClearKey.the_marker_costs_the_grid`), so it is
+    /// recorded -- and a query where the cleared entry merely took part and
+    /// lost is not, because nothing about the answer rested on it.
     pub fn grid_witness(&self) -> GridWitness {
-        self.other.as_ref().map(|h| h.grid_witness()).unwrap_or_default()
+        let mut w = self.grid.get();
+        if let Some(h) = self.other.as_ref() {
+            w.merge(&h.grid_witness());
+        }
+        w
     }
 
     fn note(&self, f: impl FnOnce(&mut LiftCensus)) {
@@ -211,17 +263,43 @@ impl LiftAttentionHead {
             h.insert(key, val, seq);
             return;
         }
-        match LiftKey::of(key) {
-            Some(lk) => {
-                self.journal.push((key, val, seq));
-                self.note(|c| c.keys += 1);
-                self.insert_live(lk, val, seq);
-            }
-            None => {
-                self.retire(key);
-                let h = self.other.as_mut().expect("retire installs the hull head");
-                h.insert(key, val, seq);
-            }
+        // The live family is taken out first, and `ClearKey::of` says why it
+        // has to be: past `|k| = 7.1e14` a live `-k^2` is below the marker's
+        // own threshold, and the new range reaches that.
+        if let Some(lk) = LiftKey::of(key) {
+            self.journal.push((key, val, seq));
+            self.note(|c| c.keys += 1);
+            self.guard.observe(key[0], key[1]);
+            self.ends(key[0], val, seq);
+            self.insert_live(lk, val, seq);
+        } else if let Some(ck) = ClearKey::of(key) {
+            self.journal.push((key, val, seq));
+            self.note(|c| c.cleared += 1);
+            self.guard.observe(key[0], ck.base_bound);
+            self.ends(key[0], val, seq);
+            self.cleared.get_or_insert_with(Default::default).insert(key, val, seq);
+        } else {
+            self.retire(key);
+            let h = self.other.as_mut().expect("retire installs the hull head");
+            h.insert(key, val, seq);
+        }
+    }
+
+    /// Hold the extremes of the abscissa, over every entry the head takes.
+    fn ends(&mut self, kx: f64, val: [f64; 2], seq: i32) {
+        if kx < self.min_kx {
+            self.min_kx = kx;
+            self.left_all = HullMeta::default();
+        }
+        if kx == self.min_kx {
+            self.left_all.add(val, seq);
+        }
+        if kx > self.max_kx {
+            self.max_kx = kx;
+            self.right_all = HullMeta::default();
+        }
+        if kx == self.max_kx {
+            self.right_all.add(val, seq);
         }
     }
 
@@ -237,6 +315,7 @@ impl LiftAttentionHead {
         }
         self.journal.shrink_to_fit();
         self.live.clear();
+        self.cleared = None;
         self.other = Some(h);
         self.note(|c| {
             c.retired += 1;
@@ -247,20 +326,16 @@ impl LiftAttentionHead {
     fn insert_live(&mut self, lk: LiftKey, val: [f64; 2], seq: i32) {
         if lk.v < self.min_v {
             self.min_v = lk.v;
-            self.left_all = HullMeta::default();
             self.left_low = (f64::INFINITY, HullMeta::default());
         }
         if lk.v == self.min_v {
-            self.left_all.add(val, seq);
             lower(&mut self.left_low, lk.delta, val, seq);
         }
         if lk.v > self.max_v {
             self.max_v = lk.v;
-            self.right_all = HullMeta::default();
             self.right_low = (f64::INFINITY, HullMeta::default());
         }
         if lk.v == self.max_v {
-            self.right_all.add(val, seq);
             lower(&mut self.right_low, lk.delta, val, seq);
         }
 
@@ -365,7 +440,61 @@ impl LiftAttentionHead {
                 x = self.live.next(x);
             }
         }
-        best.map(|(_, m)| m.resolve(tb))
+        self.with_cleared(q, tb, best)
+    }
+
+    /// Put the cleared entries back into the answer, or prove they are not in
+    /// it.
+    ///
+    /// `ALM.ClearKey.marked_sup'_eq_live` is the fast path and needs both of
+    /// its remaining hypotheses: a live entry, which is `best.is_some()`, and
+    /// the margin `2M < qy * B`, which is `ClearGuard::dominated`.  With both
+    /// the cleared head is not even searched -- the theorem says its maximum
+    /// is below every live score, so it cannot be the answer and cannot tie
+    /// one either, the domination in `cleared_lt_live` being strict.
+    ///
+    /// Without them the two winners are compared on their stored points.  That
+    /// is the old arithmetic and the old wall, deliberately: a score carrying
+    /// `BIG` has no unit grid left to be exact on
+    /// (`ALM.ClearKey.the_marker_costs_the_grid`), so there is nothing better
+    /// to do here than what `head.rs` already does.
+    fn with_cleared(
+        &self,
+        q: [f64; 2],
+        tb: TieBreak,
+        best: Option<(LiftKey, HullMeta)>,
+    ) -> Option<[f64; 2]> {
+        let Some(h) = self.cleared.as_ref() else {
+            return best.map(|(_, m)| m.resolve(tb));
+        };
+        if best.is_some() && self.guard.dominated(q) {
+            self.note(|c| c.dominated += 1);
+            return best.map(|(_, m)| m.resolve(tb));
+        }
+        self.note(|c| c.mixed += 1);
+        let Some(hit) = h.hit(q, tb) else {
+            return best.map(|(_, m)| m.resolve(tb));
+        };
+        let Some((bk, mut bm)) = best else {
+            let mut w = self.grid.get();
+            w.observe(hit.score, q[1], q, Some(hit.best_key));
+            self.grid.set(w);
+            return Some(hit.meta.resolve(tb));
+        };
+        let won = exact::dot_cmp(q, hit.best_key, bk.point());
+        if won != Ordering::Less {
+            let mut w = self.grid.get();
+            w.observe(hit.score, q[1], q, Some(hit.best_key));
+            self.grid.set(w);
+        }
+        match won {
+            Ordering::Greater => Some(hit.meta.resolve(tb)),
+            Ordering::Equal => {
+                bm.merge(&hit.meta);
+                Some(bm.resolve(tb))
+            }
+            Ordering::Less => Some(bm.resolve(tb)),
+        }
     }
 }
 
@@ -457,11 +586,11 @@ mod tests {
 
     #[test]
     fn a_key_the_argument_does_not_cover_retires_the_integer_path() {
-        // The clear marker of `ALM.HullClear` and the flat key of `ALM.CumSum`
-        // are both outside the live family, and either one hands the head over
-        // for good.  What it answers afterwards is the hull head's answer,
-        // entry for entry, including the entries that arrived before it.
-        for late in [[8.0, -16.0 - CLEAR_MARK + offset(9.0)], [8.0, 1.0]] {
+        // The flat key of `ALM.CumSum` and a key off the paraboloid are both
+        // outside every family this head can speak for, and either one hands
+        // it over for good.  What it answers afterwards is the hull head's
+        // answer, entry for entry, including the entries that arrived before.
+        for late in [[8.0, 1.0], [9.0, -20.25]] {
             let (mut lift, mut hull) = pair(&[(1.0, 1.0, 1.0), (2.0, 2.0, 2.0), (5.0, 3.0, 5.0)]);
             assert!(lift.on_the_integers());
             lift.insert(late, [99.0, 0.0], 3);
@@ -477,6 +606,53 @@ mod tests {
             assert_eq!(lift.census().integer, 0, "and nothing was answered on the integers");
             assert!(lift.census().hull > 200);
         }
+    }
+
+    #[test]
+    fn a_cleared_key_is_held_beside_the_container_and_does_not_retire_it() {
+        // `ALM.ClearKey.marked_sup'_eq_live`: the marker is not a key the
+        // integer path can hold, and it is not a key it has to hold either.
+        // The head stays on the integers, the live answers are unchanged, and
+        // the hull head -- which does score the marker -- agrees with all of
+        // it, at `qy < 0` where the marker wins and at `qy == 0` where it ties.
+        let (mut lift, mut hull) = pair(&[(1.0, 1.0, 1.0), (2.0, 2.0, 2.0), (5.0, 3.0, 5.0)]);
+        let marked = [8.0, -16.0 - CLEAR_MARK + offset(9.0)];
+        lift.insert(marked, [99.0, 0.0], 3);
+        hull.insert(marked, [99.0, 0.0], 3);
+        assert!(lift.on_the_integers(), "the marker did not retire it");
+        assert_eq!(lift.census().cleared, 1);
+        assert_eq!(lift.census().retired, 0);
+        for qi in -40..=40 {
+            for qy in [1.0, -1.0, 0.0] {
+                for tb in [TieBreak::Latest, TieBreak::Average] {
+                    let q = [qi as f64, qy];
+                    assert_eq!(lift.query(q, tb), hull.query(q, tb), "at {q:?} {tb:?}");
+                }
+            }
+        }
+        let c = lift.census();
+        assert_eq!(c.integer + c.axis + c.stored, 486, "every query, and none on the hull");
+        assert_eq!(c.dominated, 162, "the qy > 0 half never looked at the marker");
+        assert_eq!(c.mixed, 162, "and the qy < 0 half had to");
+    }
+
+    #[test]
+    fn a_cleared_key_that_outgrows_the_marker_is_scored_rather_than_assumed() {
+        // The margin `2M < qy * BIG` is not free in the range `liftkey.rs`
+        // opens: at `2^52` a live score is `2^106`, eighty times the marker.
+        // So the head asks the cleared entries even at `qy > 0`, and the
+        // answer is the hull head's -- the old wall, honestly reached.
+        let k = 1e15;
+        let (mut lift, mut hull) = pair(&[(k, 1.0, 7.0)]);
+        let marked = [2.0, -1.0 - CLEAR_MARK];
+        lift.insert(marked, [99.0, 0.0], 1);
+        hull.insert(marked, [99.0, 0.0], 1);
+        assert!(lift.on_the_integers());
+        assert_eq!(lift.census().cleared, 1);
+        let q = [k, 1.0];
+        assert_eq!(lift.query(q, TieBreak::Latest), hull.query(q, TieBreak::Latest));
+        assert_eq!(lift.census().dominated, 0, "there was no margin to spend");
+        assert_eq!(lift.census().mixed, 1);
     }
 
     #[test]

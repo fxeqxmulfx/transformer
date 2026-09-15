@@ -292,6 +292,12 @@ fn check(
             "  lift: {} quer(ies) on the integers, {} on the stored points, {} along an axis, {} on the hull",
             lift.integer, lift.stored, lift.axis, lift.hull
         );
+        if lift.cleared > 0 {
+            println!(
+                "    {} cleared key(s) held out of the container, {} quer(ies) settled by the marker and {} scored beside it",
+                lift.cleared, lift.dominated, lift.mixed
+            );
+        }
         let cs = cache.lift_censuses();
         println!(
             "    {} of {} head(s) kept the integer path, holding {} key(s)",
