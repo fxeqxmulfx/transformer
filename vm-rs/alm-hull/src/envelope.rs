@@ -159,11 +159,28 @@ impl Envelope {
     /// outside the run except to leave it alone, which is the claim: no node
     /// before `cur` and none after `hi` is written, or even read.
     ///
-    /// What is still not proved is that the breakpoints increase along the
-    /// result -- the second of the two invariants above, and the one the
-    /// breakpoint search depends on.  The erase conditions are what make it
-    /// true, and connecting them to this list surgery is the piece that has
-    /// not been written.
+    /// The other invariant, that the breakpoints increase along the result, is
+    /// `ALM.HullMono` and `ALM.HullSplice`.  `interX_lt_interX_iff` is the
+    /// erase test negated: two adjacent cached breakpoints are in order exactly
+    /// when the line between them is not redundant, so a loop that drops every
+    /// redundant line leaves an ordered envelope.  `breakOrd_splice` is the
+    /// surgery under that reading -- the splice replaces one adjacency with
+    /// three and touches no other, and each of the three is a comparison this
+    /// function has already made: `hback` is the `break_of(back) < p` the left
+    /// walk stops on, `hkeep` is the `p >= new.p` that would have cleared
+    /// `keep`, and `hhi` is the `new.p < break_of(hi)` the right walk stops on.
+    /// `breakOrd_splice_dropped` is the `keep == false` shape, two comparisons
+    /// and no middle one.
+    ///
+    /// `interX_lt_interX_widen_left` is the step the left walk takes after
+    /// that: it erases a neighbour and recomputes against the one beyond it
+    /// without re-running the test that kept the new line, and the witness that
+    /// this is sound is the erased neighbour's own crossing with the line on
+    /// the right, where the new line is strictly above both.
+    ///
+    /// What is still not written is the induction that runs that step along the
+    /// whole walk -- the loop's invariant, as opposed to one turn of it.  Each
+    /// turn is licensed; that the last one still is, is not.
     pub fn add_line(&mut self, m: f64, b: f64, meta: HullMeta) {
         let s = Slope::new(m);
         let mut new_meta = meta;
@@ -239,8 +256,9 @@ impl Envelope {
 
     /// The line maximal at `x`: the first whose breakpoint reaches `x`.
     ///
-    /// The breakpoints increase along the envelope, so the tree ordered by
-    /// slope answers this without a second index -- which is what the C++
+    /// The breakpoints increase along the envelope (`ALM.HullSplice.BreakOrd`,
+    /// restored by `breakOrd_splice` at every insertion), so the tree ordered
+    /// by slope answers this without a second index -- which is what the C++
     /// heterogeneous comparator buys and what this reproduces.
     pub fn argmax(&self, x: Break) -> Option<u32> {
         if self.t.is_empty() {
