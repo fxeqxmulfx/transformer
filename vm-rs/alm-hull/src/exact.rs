@@ -10,8 +10,21 @@
 //!
 //! Both transformations are standard (Dekker 1971; Knuth 1969); the expansion
 //! sum is Shewchuk, "Adaptive Precision Floating-Point Arithmetic", 1997, §2.
+//!
+//! `Transformer.ALM.Expansion`, `.ExpansionSign` and `.ExactDot` are this file
+//! in Lean.  What they prove outright is the sum: the sweep below preserves
+//! `sum(e) + q = sum(terms)` step for step, and the eight terms `dot_cmp`
+//! builds sum to `q . a - q . b` exactly.  That is the half a transcription
+//! error would break, and it is pure algebra.  What they assume is the half
+//! that is about binary floating point and not about arithmetic: that
+//! `two_sum` and `two_prod` are error-free (`ExactSum.exact`, `ExactProd.exact`
+//! -- Knuth's and Dekker's theorems), and that the expansion is
+//! non-overlapping, so the last component carries the sign of all of them.
 
 /// `two_sum(a, b) = (s, e)` with `s = fl(a + b)` and `a + b = s + e` exactly.
+///
+/// The identity is Knuth's; `ALM.ExactSum` is it as a hypothesis, and every
+/// theorem about the sweep below is stated for any pair of functions with it.
 #[inline]
 pub fn two_sum(a: f64, b: f64) -> (f64, f64) {
     let s = a + b;
@@ -23,6 +36,11 @@ pub fn two_sum(a: f64, b: f64) -> (f64, f64) {
 /// `two_prod(a, b) = (p, e)` with `p = fl(a * b)` and `a * b = p + e` exactly.
 ///
 /// Uses a fused multiply-add, so the error term costs one instruction.
+///
+/// The identity is Dekker's; `ALM.ExactProd` is it as a hypothesis.  It is a
+/// statement about which reals are representable, which the Lean development's
+/// real-valued model of floating point cannot make, so it is assumed there and
+/// tested here (`two_prod_is_exact`).
 #[inline]
 pub fn two_prod(a: f64, b: f64) -> (f64, f64) {
     let p = a * b;
@@ -35,6 +53,13 @@ pub fn two_prod(a: f64, b: f64) -> (f64, f64) {
 /// The terms are accumulated into a non-overlapping expansion, whose sign is
 /// the sign of its largest component.  No rounding occurs anywhere, so the
 /// answer is the sign of the exact sum even when it cancels to zero.
+///
+/// `ALM.expansion_sum` is the three loops below with the array reads replaced
+/// by list ones: the components always sum to the terms consumed so far.
+/// `ALM.sign_of_top` is the final `partial_cmp`, licensed by the expansion
+/// being non-overlapping, and `ALM.expansion_nil_sum` is the `len == 0` return
+/// -- no components left means the terms cancelled exactly, so `Equal` is not
+/// a fallback but the answer.
 pub fn expansion_sign(terms: &[f64]) -> core::cmp::Ordering {
     use core::cmp::Ordering;
     debug_assert!(terms.len() <= 8);
@@ -107,7 +132,12 @@ pub fn cross_sign(a: f64, b: f64, c: f64, d: f64) -> core::cmp::Ordering {
 ///
 /// This makes a head return the true `argmax_k q . k` of the points it holds,
 /// instead of the argmax of the rounded scores, so the hull head and the brute
-/// one agree by construction rather than by luck.
+/// one agree by construction rather than by luck.  `ALM.dot_cmp_eq` is that
+/// claim: the eight terms sum to `q . a - q . b` (`ALM.crossTerms_sum`), the
+/// sweep preserves the sum, and the last component carries its sign -- so what
+/// comes back is the order and not an estimate of it.  Which is what
+/// `head.rs` needs from it, since it calls this exactly where the error bound
+/// of `ALM.DotError.cmp_of_dot_guard` has already given up.
 ///
 /// It does **not** move the wall, and the reason is worth stating because it
 /// is the reason no wider accumulator moves it either.  The wall of
