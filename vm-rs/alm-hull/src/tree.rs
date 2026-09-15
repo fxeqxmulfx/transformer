@@ -27,11 +27,18 @@
 //! from 21.37s to 20.13s of a 42s run.
 //!
 //! `Transformer.ALM.TreeQuery` is the descent of `lower_bound_slope` in Lean,
-//! with the balance factor taken from Batteries' red-black development.  What
-//! is not there is the rebalancing: `fix_insert` and `fix_erase` below are
-//! checked by `audit` in the tests and by nothing else, so the depth bound is
-//! a theorem about trees that satisfy the invariant, not a proof that these
-//! do.
+//! with the balance factor taken from Batteries' red-black development.
+//!
+//! `ALM.TreeBalance` covers the rebalancing, in one half and not the other.
+//! Every write `fix_insert` and `fix_erase` perform is a colour or one of the
+//! two rotations, and none of those moves a node past its neighbour
+//! (`toList_of_rebalances`), so the ordering `lowerBound_eq_find` runs on
+//! survives any amount of it: `lowerBound_eq_find_of_rebalances`.  What is not
+//! covered is that the tree is still *balanced* -- the colours are carried and
+//! nothing is proved about them, and `the_rotation_moves_the_depth` is there
+//! so that is not read the other way.  So `audit` in the tests below is still
+//! the only evidence for the depth bound, and what it is now the only evidence
+//! for is a cost rather than an answer.
 //!
 //! Index `0` is the sentinel.  It is its own black leaf, every empty child
 //! points at it, and it exists so that the rebalancing cases can name the
