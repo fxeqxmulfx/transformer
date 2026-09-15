@@ -305,7 +305,25 @@ impl BruteAttentionHead {
             .map(|(k, _, _)| terms(k))
             .fold(0.0f64, f64::max);
         let mut g = self.gaps.get();
-        g.observe(max, second, q, worst_terms);
+        // Where the bound does not decide the comparison, ask arithmetic that
+        // does.  `ALM.DotError.cmp_of_dot_guard` licenses the float answer
+        // only when the gap clears twice the bound; on the handful of queries
+        // where it does not, `exact::dot_cmp` says whether the doubt was
+        // warranted.  It is a handful, so the cost is nothing.
+        if g.observe(max, second, q, worst_terms) {
+            // Which key wins under exact arithmetic, and is it one of the
+            // keys the float scan called maximal?  If not, no tie-break can
+            // recover it: the head answered with a key that does not win.
+            let mut best = self.entries[0].0;
+            for (k, _, _) in &self.entries {
+                if crate::exact::dot_cmp(q, *k, best) == core::cmp::Ordering::Greater {
+                    best = *k;
+                }
+            }
+            if score(&best) != max {
+                g.observe_misranked();
+            }
+        }
         self.gaps.set(g);
 
         let mut meta = HullMeta::default();
@@ -315,5 +333,45 @@ impl BruteAttentionHead {
             }
         }
         Some(meta.resolve(tb))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_query_the_bound_doubts_and_the_exact_dot_product_overturns() {
+        // Three roundings are not monotone in the exact score, so the float
+        // scan really can put the wrong key first -- one rounding could only
+        // ever tie.  Here `7 * k0` rounds up for the first key by more than
+        // the quarter that separates the two exact scores, so the float order
+        // is the reverse of the exact one.  `ALM.DotError.cmp_of_dot_guard`
+        // is exactly what fails: the gap is 2 and twice the bound is 5.8.
+        let q = [7.0, 1.0];
+        let mut h = BruteAttentionHead::new();
+        h.insert([1725231710801247.5, -1016251981013381.0], [1.0, 0.0], 0);
+        h.insert([1725231710801247.0, -1016251981013377.2], [2.0, 0.0], 1);
+        assert_eq!(h.query(q, TieBreak::Latest), Some([1.0, 0.0]), "float picks the first");
+        let g = h.gap_witness();
+        assert_eq!(g.unresolved, 1, "and the bound says so");
+        assert_eq!(g.misranked, 1, "and it was right to");
+        assert!(g.worst_guard > 2.9 && g.worst_guard < 2.91, "guard: {}", g.worst_guard);
+    }
+
+    #[test]
+    fn a_query_the_bound_doubts_and_the_exact_dot_product_upholds() {
+        // The same machinery on keys a whole step apart: the bound is loose
+        // enough to doubt a gap it should not, and the exact comparison sends
+        // it away.  This is the shape of all 61 unresolved queries on
+        // `fibonacci`, where `misranked` came back zero.
+        let q = [2.0e18, 1.0];
+        let mut h = BruteAttentionHead::new();
+        h.insert([1.0, 0.0], [1.0, 0.0], 0);
+        h.insert([1.0 + f64::EPSILON, 0.0], [2.0, 0.0], 1);
+        assert_eq!(h.query(q, TieBreak::Latest), Some([2.0, 0.0]));
+        let g = h.gap_witness();
+        assert_eq!(g.unresolved, 1, "the gap is one ulp of the product");
+        assert_eq!(g.misranked, 0, "but the float order is the exact one");
     }
 }

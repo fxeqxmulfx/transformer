@@ -211,6 +211,12 @@ fn check(
             "    against that gap: worst 2*u*(2+u)*terms/(best-second) = {:.3e}, {} unresolved of {} (ALM.DotError.cmp_of_dot_guard)",
             gaps.worst_guard, gaps.unresolved, gaps.total
         );
+        if gaps.unresolved > 0 {
+            println!(
+                "    of those {} the exact dot product overturns {} (alm_hull::exact::dot_cmp)",
+                gaps.unresolved, gaps.misranked
+            );
+        }
         if let Some(q) = gaps.worst_guard_at {
             println!("    at: query {q:?}");
         }

@@ -33,14 +33,21 @@
 //! `2k^2` and `-k^2` while their sum is near `k^2` — so the terms are three
 //! times the result and their rounding error is carried into it undiminished.
 //! `score_error_bound` is that bound, `u(2 + u)(|q0*k0| + |q1*k1|)` of
-//! `ALM.DotError.dot_error_le`, `cmp_of_dot_guard` is what clearing twice it
-//! decides, and
-//! `unresolved` counts the queries whose real gap did not clear twice it —
-//! twice because both the winner's score and the runner-up's carry it.
-//! Measuring against `ulp(best)` instead would understate the error by the
-//! cancellation factor and could only ever fail at a binade boundary, where
-//! the predecessor is half an ulp away — which is a fact about `ulp` and not
-//! about the model.
+//! `ALM.DotError.dot_error_le`; `cmp_of_dot_guard` is what clearing twice it
+//! decides, and `unresolved` counts the queries whose real gap did not —
+//! twice the bound because both the winner's score and the runner-up's carry
+//! it.  Measuring against `ulp(best)` instead would understate the error by
+//! the cancellation factor and could only ever fail at a binade boundary,
+//! where the predecessor is half an ulp away — which is a fact about `ulp`
+//! and not about the model.
+//!
+//! A bound is not a verdict, and three roundings are not monotone in the
+//! exact score, so an unresolved query may have been answered correctly or
+//! not.  `misranked` is which: on those queries and no others the head scans
+//! again with `exact::dot_cmp` and asks whether the exact winner is one of
+//! the keys the float scan called maximal.  On `hello` and `addition` nothing
+//! is unresolved; on `fibonacci` 61 of 382284 are, and the exact dot product
+//! upholds all 61.  The shipped answer is right; the bound cannot say so.
 //!
 //! `ALM.ScoreGap` is the gap as a number: `keyGap_scale_free` is why dividing
 //! by the step makes it a property of the keys and not of the query scale, and
@@ -99,6 +106,11 @@ pub struct ScoreGaps {
     pub worst_guard: f64,
     /// The query that attained it.
     pub worst_guard_at: Option<[f64; 2]>,
+    /// Of the `unresolved` queries, how many the bound was right to doubt:
+    /// the float winner is not a maximizer under exact arithmetic
+    /// (`exact::dot_cmp`), so the head answered with the wrong key.  The rest
+    /// the runtime got right and the bound could not say so.
+    pub misranked: usize,
 }
 
 impl Default for ScoreGaps {
@@ -111,6 +123,7 @@ impl Default for ScoreGaps {
             unresolved: 0,
             worst_guard: 0.0,
             worst_guard_at: None,
+            misranked: 0,
         }
     }
 }
@@ -121,17 +134,21 @@ impl ScoreGaps {
     /// formed at this query — the size the rounding of the dot product is
     /// relative to.  Pass `best.abs()` for a score computed without
     /// cancellation, which is the bound `score_error_bound` degenerates to.
-    pub fn observe(&mut self, best: f64, second: f64, q: [f64; 2], terms: f64) {
+    ///
+    /// Returns whether the gap failed to clear twice the bound, so the caller
+    /// can spend exact arithmetic on the queries where it matters and on no
+    /// others.
+    pub fn observe(&mut self, best: f64, second: f64, q: [f64; 2], terms: f64) -> bool {
         if !second.is_finite() {
-            return;
+            return false;
         }
         let step = if q[1] != 0.0 { q[1].abs() } else { q[0].abs() };
         if step == 0.0 || !step.is_finite() {
-            return;
+            return false;
         }
         let gap = (best - second) / step;
         if !gap.is_finite() || gap <= 0.0 {
-            return;
+            return false;
         }
         self.total += 1;
         if gap < NOISE {
@@ -153,6 +170,13 @@ impl ScoreGaps {
             self.worst_guard = guard;
             self.worst_guard_at = Some(q);
         }
+        guard >= 1.0
+    }
+
+    /// Record that an unresolved query really was decided wrongly: the float
+    /// winner loses to some key under `exact::dot_cmp`.
+    pub fn observe_misranked(&mut self) {
+        self.misranked += 1;
     }
 
     pub fn merge(&mut self, other: &ScoreGaps) {
@@ -163,6 +187,7 @@ impl ScoreGaps {
             self.worst_at = other.worst_at;
         }
         self.unresolved += other.unresolved;
+        self.misranked += other.misranked;
         if other.worst_guard > self.worst_guard {
             self.worst_guard = other.worst_guard;
             self.worst_guard_at = other.worst_guard_at;
@@ -269,6 +294,22 @@ mod tests {
         b.observe(big + crate::grid::ulp(big), big, [1.0, 1.0], 3.0 * big);
         assert_eq!(b.unresolved, 1);
         assert!(b.worst_guard > 1.0);
+    }
+
+    #[test]
+    fn an_unresolved_query_is_reported_as_such_to_the_caller() {
+        // The return value is what `head.rs` spends exact arithmetic on, so
+        // it has to agree with the count, on both sides of the threshold.
+        let mut w = ScoreGaps::default();
+        assert!(!w.observe(1e6, 1e6 - 1.0, [1.0, 1.0], 3e6), "a gap of one is decided");
+        let big = 1e17;
+        assert!(w.observe(big + crate::grid::ulp(big), big, [1.0, 1.0], 3.0 * big));
+        assert_eq!(w.unresolved, 1);
+        // And a query the witness declines to score reports nothing to spend.
+        assert!(!w.observe(1.0, f64::NEG_INFINITY, [1.0, 1.0], 1.0));
+        assert!(!w.observe(1.0, 1.0, [1.0, 1.0], 1.0), "no runner-up, no gap");
+        assert_eq!(w.unresolved, 1);
+        assert_eq!(w.misranked, 0, "the caller has not spoken");
     }
 
     #[test]
