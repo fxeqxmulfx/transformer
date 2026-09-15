@@ -6,7 +6,9 @@
 * `Conjecture thm1.5`   — analogue for `V` diagonalizable with `λ_max > 0`
                           of multiplicity 1,
 * `Conjecture thm2`     — analogue for `V` with `λ_max > 0` of multiplicity
-                          `≥ 2`.
+                          `≥ 2`,
+* `Lemma lemma:scalar`  — the scalar inequality the proof of `thm1` opens
+                          with, and its equality cases.
 
 All three statements quantify over "almost every initial configuration", which
 is relative to a reference measure on `(𝕊^{d-1})^n`; the paper's measure is the
@@ -19,6 +21,7 @@ import Transformer.Basic
 import Transformer.Causal.Basic
 import Transformer.Perspective.Section2_FlowMap
 import Mathlib.Analysis.InnerProductSpace.Projection.Basic
+import Mathlib.Basic.Real.Sign
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -99,6 +102,61 @@ def SubspaceCluster
         Filter.Tendsto (fun t : ℝ => (X t k : EucSpace d)) Filter.atTop
           (nhds (‖L.starProjection ((X₀ ⟨0, hn⟩ : SSphere d) : EucSpace d)‖⁻¹ •
             L.starProjection ((X₀ ⟨0, hn⟩ : SSphere d) : EucSpace d)))
+
+/-- **Lemma (lemma:scalar).** *A scalar inequality for unit vectors.*
+
+For `‖x‖ = ‖y‖ = 1` and `|⟨y, z⟩| ≤ ⟨x, z⟩`,
+
+  `⟨x, z⟩ ≥ ⟨x, y⟩ ⟨y, z⟩`.
+
+The chain is `⟨x,y⟩⟨y,z⟩ ≤ |⟨x,y⟩| |⟨y,z⟩| ≤ |⟨x,y⟩| ⟨x,z⟩ ≤ ⟨x,z⟩`, the last
+step because `|⟨x,y⟩| ≤ 1` for unit vectors and `⟨x,z⟩ ≥ 0` by hypothesis.
+
+Source: arXiv:2411.04990v2, §A, `lemma:scalar`. -/
+theorem inner_mul_le_inner_of_abs_le
+    {d : ℕ} (x y z : EucSpace d) (hx : ‖x‖ = 1) (hy : ‖y‖ = 1)
+    (h : |inner (𝕜 := ℝ) y z| ≤ inner (𝕜 := ℝ) x z) :
+    inner (𝕜 := ℝ) x y * inner (𝕜 := ℝ) y z ≤ inner (𝕜 := ℝ) x z := by
+  have hxz : 0 ≤ inner (𝕜 := ℝ) x z := le_trans (abs_nonneg _) h
+  have hxy : |inner (𝕜 := ℝ) x y| ≤ 1 := by
+    simpa [hx, hy] using abs_real_inner_le_norm x y
+  calc inner (𝕜 := ℝ) x y * inner (𝕜 := ℝ) y z
+      ≤ |inner (𝕜 := ℝ) x y| * |inner (𝕜 := ℝ) y z| := by
+        rw [← abs_mul]; exact le_abs_self _
+    _ ≤ |inner (𝕜 := ℝ) x y| * inner (𝕜 := ℝ) x z :=
+        mul_le_mul_of_nonneg_left h (abs_nonneg _)
+    _ ≤ 1 * inner (𝕜 := ℝ) x z := mul_le_mul_of_nonneg_right hxy hxz
+    _ = inner (𝕜 := ℝ) x z := one_mul _
+
+/-- The hypotheses of `inner_mul_le_inner_of_abs_le` are satisfiable: two
+copies of the first standard basis vector, and `z = 0`. -/
+example :
+    ‖EuclideanSpace.single (0 : Fin 1) (1 : ℝ)‖ = 1 ∧
+      |inner (𝕜 := ℝ) (EuclideanSpace.single (0 : Fin 1) (1 : ℝ))
+          (0 : EucSpace 1)|
+        ≤ inner (𝕜 := ℝ) (EuclideanSpace.single (0 : Fin 1) (1 : ℝ))
+            (0 : EucSpace 1) := by
+  refine ⟨by simp, ?_⟩
+  simp
+
+/-- **Lemma (lemma:scalar), the equality cases.**
+
+Equality `⟨x, z⟩ = ⟨x, y⟩ ⟨y, z⟩` holds if and only if either `⟨x, z⟩ = 0`, or
+`|⟨y, z⟩| = ⟨x, z⟩` together with `⟨x, y⟩ = sign⟨y, z⟩`.
+
+Not proved here: the paper reads the conditions off the three inequalities of
+`inner_mul_le_inner_of_abs_le` one by one, and that case analysis is not
+carried out.
+
+Source: arXiv:2411.04990v2, §A, `lemma:scalar`. -/
+theorem inner_mul_eq_inner_iff
+    {d : ℕ} (x y z : EucSpace d) (hx : ‖x‖ = 1) (hy : ‖y‖ = 1)
+    (h : |inner (𝕜 := ℝ) y z| ≤ inner (𝕜 := ℝ) x z) :
+    inner (𝕜 := ℝ) x y * inner (𝕜 := ℝ) y z = inner (𝕜 := ℝ) x z ↔
+      inner (𝕜 := ℝ) x z = 0 ∨
+        (|inner (𝕜 := ℝ) y z| = inner (𝕜 := ℝ) x z ∧
+          inner (𝕜 := ℝ) x y = Real.sign (inner (𝕜 := ℝ) y z)) := by
+  sorry
 
 end Causal
 end Transformer
