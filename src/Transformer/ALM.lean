@@ -26,6 +26,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.BuildOrder` | and that no arrival order can cost it more than one erase per key |
 | `ALM.BuildFinger` | and that this port pays half of that, and on sorted keys no logarithm |
 | `ALM.HullLift` | and that on the paraboloid no erase rule whatsoever can fire |
+| `ALM.HullMark` | and that the recency term the compiler adds does not revive one |
 | `ALM.HullLower` | while the other half of the head keeps two lines at any length |
 | `ALM.HullSpace` | and no container at all keeps fewer than one line per key |
 | `ALM.HullCost` | and what one query costs, and returns, search and walk together |
@@ -112,6 +113,7 @@ import Transformer.ALM.HullCover
 import Transformer.ALM.BuildOrder
 import Transformer.ALM.BuildFinger
 import Transformer.ALM.HullLift
+import Transformer.ALM.HullMark
 import Transformer.ALM.HullLower
 import Transformer.ALM.HullSpace
 import Transformer.ALM.HullCost
