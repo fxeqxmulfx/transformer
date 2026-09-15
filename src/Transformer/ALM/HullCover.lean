@@ -25,6 +25,12 @@ it of lines.  The machine's lookup is over keys, and `build_isGreatest_score`
 is that same conclusion read through the paraboloid: the container answers the
 attention query itself.
 
+Everything here is conditional on `hno : ∀ p ∈ ps, p = 0`, and what decides
+that hypothesis for the keys the compiler actually emits is
+`Transformer.ALM.HullMark` — which holds it for a live head — and
+`Transformer.ALM.HullClear`, which refutes it for a head that clears.  On the
+latter the count below is an upper bound and not the container's size.
+
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 143-195.
 -/
 

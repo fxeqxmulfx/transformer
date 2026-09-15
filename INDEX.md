@@ -423,15 +423,15 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`argmaxSet_trichotomy`](src/Transformer/ALM/HullCost.lean#L63) | theorem | proved |
 | [`hullQuery_collects`](src/Transformer/ALM/HullCost.lean#L104) | theorem | proved |
 
-**[Transformer.ALM.HullCover](src/Transformer/ALM/HullCover.lean)** — 143 lines
+**[Transformer.ALM.HullCover](src/Transformer/ALM/HullCover.lean)** — 149 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`foldl_stepState_pops_of_no_erase`](src/Transformer/ALM/HullCover.lean#L42) | theorem | proved |
-| [`runState_of_no_erase`](src/Transformer/ALM/HullCover.lean#L57) | theorem | proved |
-| [`buildCost_of_no_erase`](src/Transformer/ALM/HullCover.lean#L76) | theorem | proved |
-| [`hull_covers_every_key`](src/Transformer/ALM/HullCover.lean#L89) | theorem | proved |
-| [`build_isGreatest_score`](src/Transformer/ALM/HullCover.lean#L119) | theorem | proved |
+| [`foldl_stepState_pops_of_no_erase`](src/Transformer/ALM/HullCover.lean#L48) | theorem | proved |
+| [`runState_of_no_erase`](src/Transformer/ALM/HullCover.lean#L63) | theorem | proved |
+| [`buildCost_of_no_erase`](src/Transformer/ALM/HullCover.lean#L82) | theorem | proved |
+| [`hull_covers_every_key`](src/Transformer/ALM/HullCover.lean#L95) | theorem | proved |
+| [`build_isGreatest_score`](src/Transformer/ALM/HullCover.lean#L125) | theorem | proved |
 
 **[Transformer.ALM.HullErase](src/Transformer/ALM/HullErase.lean)** — 167 lines
 
@@ -479,18 +479,18 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`naiveModel_implements_hullIndex`](src/Transformer/ALM/HullIndex.lean#L155) | def |  |
 | [`hullIndex_consistent_with_OVHard`](src/Transformer/ALM/HullIndex.lean#L174) | theorem | proved |
 
-**[Transformer.ALM.HullLift](src/Transformer/ALM/HullLift.lean)** — 151 lines
+**[Transformer.ALM.HullLift](src/Transformer/ALM/HullLift.lean)** — 158 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`liftKey_injective`](src/Transformer/ALM/HullLift.lean#L38) | theorem | proved |
-| [`lineEval_liftKey_self`](src/Transformer/ALM/HullLift.lean#L45) | theorem | proved |
-| [`lineEval_liftKey_lt_of_ne`](src/Transformer/ALM/HullLift.lean#L53) | theorem | proved |
-| [`Lifted`](src/Transformer/ALM/HullLift.lean#L69) | def |  |
-| [`not_eraseStep_of_lift`](src/Transformer/ALM/HullLift.lean#L77) | theorem | proved |
-| [`erasesTo_eq_of_lift`](src/Transformer/ALM/HullLift.lean#L98) | theorem | proved |
-| [`build_eq_of_lift`](src/Transformer/ALM/HullLift.lean#L112) | theorem | proved |
-| [`build_card_eq_keyCard`](src/Transformer/ALM/HullLift.lean#L129) | theorem | proved |
+| [`liftKey_injective`](src/Transformer/ALM/HullLift.lean#L45) | theorem | proved |
+| [`lineEval_liftKey_self`](src/Transformer/ALM/HullLift.lean#L52) | theorem | proved |
+| [`lineEval_liftKey_lt_of_ne`](src/Transformer/ALM/HullLift.lean#L60) | theorem | proved |
+| [`Lifted`](src/Transformer/ALM/HullLift.lean#L76) | def |  |
+| [`not_eraseStep_of_lift`](src/Transformer/ALM/HullLift.lean#L84) | theorem | proved |
+| [`erasesTo_eq_of_lift`](src/Transformer/ALM/HullLift.lean#L105) | theorem | proved |
+| [`build_eq_of_lift`](src/Transformer/ALM/HullLift.lean#L119) | theorem | proved |
+| [`build_card_eq_keyCard`](src/Transformer/ALM/HullLift.lean#L136) | theorem | proved |
 
 **[Transformer.ALM.HullLines](src/Transformer/ALM/HullLines.lean)** — 122 lines
 

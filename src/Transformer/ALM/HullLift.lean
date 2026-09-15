@@ -22,6 +22,13 @@ exactly the set of lines inserted into it, and by `build_card_eq_keyCard` it
 holds `keyCard K` lines — one per distinct key, which is what the binary
 search of `argmax` assumes it is searching.
 
+None of which is a statement about the shipped model, because `_to_2d_key`
+never emits a lift: it adds `LATEST_ALPHA * inv_log_pos` to the intercept of
+every live key and subtracts `BIG` from a cleared one.
+`Transformer.ALM.HullMark` carries the argument below through the first term,
+which is too small to revive an erase, and `Transformer.ALM.HullClear` shows
+the second is not — a cleared entry *is* erased, and that is how it leaves.
+
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 143-195.
 -/
 
