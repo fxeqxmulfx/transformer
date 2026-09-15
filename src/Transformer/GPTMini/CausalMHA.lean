@@ -121,7 +121,7 @@ theorem causalAttnWeights_row_sum
         · exact le_of_lt (Real.exp_pos _)
         · exact le_refl 0
       · exact ⟨i, Finset.mem_univ _, by
-          simp only [le_refl, if_true]; exact Real.exp_pos _⟩
+          simp only [le_refl, ite_true]; exact Real.exp_pos _⟩
     exact div_self (ne_of_gt hS_pos)
   · -- Show the rewrite: divide-by-S commutes with the conditional
     rw [Finset.sum_div]
