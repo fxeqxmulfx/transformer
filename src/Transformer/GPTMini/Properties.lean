@@ -12,5 +12,6 @@ Contents:
 import Transformer.GPTMini.Properties.OutputSimplex
 import Transformer.GPTMini.Properties.Causal
 import Transformer.GPTMini.Properties.StreamGrowth
+import Transformer.GPTMini.Properties.LipschitzConstants
 import Transformer.GPTMini.Properties.Lipschitz
 import Transformer.GPTMini.Properties.Entropy

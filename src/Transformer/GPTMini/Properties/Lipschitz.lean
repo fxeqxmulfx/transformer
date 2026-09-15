@@ -1,32 +1,33 @@
 /-
-# Property: Forward pass is Lipschitz in input embeddings
+# Property: the representation is Lipschitz in the input
 
-The `gpt-mini` forward map is Lipschitz with respect to perturbations of
-the input token embeddings, with constant bounded by a polynomial in the
-operator norms of the parameter matrices and the per-head temperatures.
+Two `gpt-mini` streams driven by the same parameters and started from two
+configurations `x_0, y_0 : Fin T → ℝ^{d_model}` stay within
 
-Concretely, given two input embedding sequences `x, x' : Fin T → ℝ^d`,
-their logits differ by at most
+  `L(params, α_max, R) · max_i ‖x_0(i) - y_0(i)‖`
 
-  `L(params, α, ε) · max_i ‖x_i - x'_i‖`,
+of each other at every depth, `L` being the product `endToEndLipschitz` of the
+per-block constants of `Properties.LipschitzConstants`.  That is
+`stream_lipschitz`, proved here by induction on the depth: each per-block
+constant is at least `1`, so the partial products increase and the same `L`
+bounds every depth, and past `n_layers` no block is applied any more.
 
-where `L` is the product of per-block Lipschitz constants.  Each per-block
-constant has the form
+The recursion is taken as a hypothesis (`IsStream`) rather than read off
+`GPTMini.hidden`, so that the initial configuration is arbitrary and not only
+one a token lookup can produce; `hidden_isStream` is the witness that the
+hypothesis is satisfiable.
 
-  `L_block = 1 + L_attn + L_ffn + (cross-term)`,
+The bound stops at the representation: the logits are one `rmsNormEps` and one
+unembedding further on, and no Lipschitz bound for `rmsNormEps` is available —
+`Properties.StreamGrowth` bounds its norm, not its modulus of continuity.  And
+it rests on the `sorry`-leaf `blockForward_lipschitz`.
 
-with `L_attn` bounded by `‖W_o‖ · e^{2α_max} · ‖W_v‖` and `L_ffn` by
-`‖W_out‖ · 2R · ‖W_in‖²` where `R` is the residual stream bound (linear in
-depth from `Properties.StreamGrowth`).
-
-This bound matters for:
-  - adversarial robustness (perturbation amplification)
-  - mean-field continuity (Wasserstein-style stability)
-  - numerical analysis (error propagation under `bf16` rounding)
+The bound matters for adversarial robustness (perturbation amplification),
+mean-field continuity (Wasserstein-style stability) and numerical analysis
+(error propagation under `bf16` rounding).
 -/
 
-import Transformer.GPTMini.Model
-import Transformer.GPTMini.Properties.StreamGrowth
+import Transformer.GPTMini.Properties.LipschitzConstants
 
 open scoped BigOperators
 open Real
@@ -37,76 +38,150 @@ namespace Properties
 
 variable (cfg : Config) (eps : ℝ)
 
-/-- **Per-block Lipschitz constant.**
+/-- **The layer recursion, as a property of an arbitrary sequence.**
 
-For a single Pre-LN block with parameters `p`, the Lipschitz constant
-is at most
+`GPTMini.hidden` satisfies it (`hidden_isStream`), but so does the stream
+started from any configuration whatever, which is what makes
+`stream_lipschitz` a statement about perturbations of the representation and
+not only about those a token lookup can produce.  Source: `reference/model.py`
+(`GPTMini.forward`). -/
+def IsStream (params : ModelParams cfg) {T : ℕ} (positions : Fin T → ℝ)
+    (x : ℕ → Fin T → EucSpace cfg.d_model) : Prop :=
+  ∀ L : ℕ,
+    x (L + 1)
+      = if h : L < cfg.n_layers then
+          blockForward cfg (params.blocks ⟨L, h⟩) eps positions (x L)
+        else x L
 
-  `1 + Lattn(p) + Lffn(p) + Lattn(p) · Lffn(p)`
+/-- The stream of `GPTMini.hidden` is one. -/
+theorem hidden_isStream
+    (params : ModelParams cfg) {T : ℕ} (positions : Fin T → ℝ)
+    (tokens : Fin T → Fin cfg.vocab_size) :
+    IsStream cfg eps params positions (hidden cfg params eps positions tokens) := by
+  intro L
+  rw [hidden]
 
-(where the cross-term comes from composition `ffn ∘ (1 + attn)`). -/
-noncomputable def perBlockLipschitz
-    (params : BlockParams cfg) (alpha_max : ℝ) (R : ℝ) : ℝ :=
-  let L_attn := ‖params.attn.W_o‖ * Real.exp (2 * alpha_max)
-  let L_ffn  := ‖params.ffn.W_out‖ * (2 * R) * ‖params.ffn.W_in‖^2
-  1 + L_attn + L_ffn + L_attn * L_ffn
+/-- **Lipschitz dependence of the representation on the input.**
 
-/-- **Per-block Lipschitz constant is non-negative.** -/
-theorem perBlockLipschitz_nonneg
-    (params : BlockParams cfg) (alpha_max : ℝ) (R : ℝ) (hR : 0 ≤ R) :
-    0 ≤ perBlockLipschitz cfg params alpha_max R := by
-  unfold perBlockLipschitz
-  have h1 : 0 ≤ ‖params.attn.W_o‖ * Real.exp (2 * alpha_max) := by
-    apply mul_nonneg (norm_nonneg _) (le_of_lt (Real.exp_pos _))
-  have h2 : 0 ≤ ‖params.ffn.W_out‖ * (2 * R) * ‖params.ffn.W_in‖^2 := by
-    apply mul_nonneg
-    · apply mul_nonneg (norm_nonneg _)
-      linarith
-    · exact sq_nonneg _
-  have h3 : 0 ≤ (‖params.attn.W_o‖ * Real.exp (2 * alpha_max))
-            * (‖params.ffn.W_out‖ * (2 * R) * ‖params.ffn.W_in‖^2) :=
-    mul_nonneg h1 h2
-  linarith
+Two streams driven by the same parameters and differing at depth `0` stay
+within
 
-/-- **End-to-end Lipschitz constant** through all `n_layers` blocks. -/
-noncomputable def endToEndLipschitz
-    (params : ModelParams cfg) (alpha_max : ℝ) (R : ℝ) : ℝ :=
-  ∏ l : Fin cfg.n_layers, perBlockLipschitz cfg (params.blocks l) alpha_max R
+  `endToEndLipschitz · max_i ‖x_0(i) - y_0(i)‖`
 
-/-- **End-to-end Lipschitz constant is non-negative.** -/
-theorem endToEndLipschitz_nonneg
-    (params : ModelParams cfg) (alpha_max : ℝ) (R : ℝ) (hR : 0 ≤ R) :
-    0 ≤ endToEndLipschitz cfg params alpha_max R := by
-  unfold endToEndLipschitz
-  apply Finset.prod_nonneg
-  intros l _
-  exact perBlockLipschitz_nonneg cfg (params.blocks l) alpha_max R hR
+of each other at every depth: the per-block constants multiply, and past
+`n_layers` nothing is applied any more.  The bound holds at every `L`, not
+only at `L = n_layers`, because each per-block constant is at least `1`
+(`one_le_perBlockLipschitz`).
 
-/-- **Block Lipschitz bound** (statement only — proof requires
-`Block.attnSubLayer_bounded` and `Block.ffnSubLayer_bounded`, which are
-still `sorry`-leaves). -/
-theorem blockForward_lipschitz
-    (params : BlockParams cfg) (alpha_max R : ℝ) (heps : 0 < eps)
+The logits are one RMSNorm and one unembedding further on, and this file says
+nothing about that last step: `rmsNormEps` has no Lipschitz bound here, only
+the bound on its norm of `Properties.StreamGrowth`.
+
+Source: `reference/model.py` (`GPTMini.forward`), by induction from
+`blockForward_lipschitz`. -/
+theorem stream_lipschitz
+    (params : ModelParams cfg) (alpha_max R : ℝ) (hR : 0 ≤ R) (heps : 0 < eps)
     {T : ℕ} [Nonempty (Fin T)] (positions : Fin T → ℝ)
-    (x y : Fin T → EucSpace cfg.d_model) :
-    ∀ i : Fin T,
-      ‖blockForward cfg params eps positions x i
-        - blockForward cfg params eps positions y i‖
-      ≤ perBlockLipschitz cfg params alpha_max R
+    (x y : ℕ → Fin T → EucSpace cfg.d_model)
+    (hx : IsStream cfg eps params positions x) (hy : IsStream cfg eps params positions y)
+    (L : ℕ) (i : Fin T) :
+    ‖x L i - y L i‖
+      ≤ endToEndLipschitz cfg params alpha_max R
         * (Finset.univ : Finset (Fin T)).sup' Finset.univ_nonempty
-            (fun i' => ‖x i' - y i'‖) := by
-  sorry
+            (fun i' => ‖x 0 i' - y 0 i'‖) := by
+  classical
+  set δ : ℝ := (Finset.univ : Finset (Fin T)).sup' Finset.univ_nonempty
+    (fun i' => ‖x 0 i' - y 0 i'‖) with hδdef
+  have hδ0 : 0 ≤ δ :=
+    le_trans (norm_nonneg _)
+      (Finset.le_sup' (fun i' => ‖x 0 i' - y 0 i'‖) (Finset.mem_univ i))
+  set P : ℕ → ℝ := fun l =>
+    if h : l < cfg.n_layers then perBlockLipschitz cfg (params.blocks ⟨l, h⟩) alpha_max R
+    else 1 with hPdef
+  have hP1 : ∀ l : ℕ, 1 ≤ P l := by
+    intro l
+    by_cases h : l < cfg.n_layers
+    · simpa [hPdef, h] using one_le_perBlockLipschitz cfg (params.blocks ⟨l, h⟩) alpha_max R hR
+    · simp [hPdef, h]
+  have hprod1 : ∀ n : ℕ, 1 ≤ ∏ l ∈ Finset.range n, P l := by
+    intro n
+    induction n with
+    | zero => simp
+    | succ n ih => rw [Finset.prod_range_succ]; nlinarith [hP1 n]
+  have hmono : ∀ a b : ℕ, a ≤ b →
+      (∏ l ∈ Finset.range a, P l) ≤ ∏ l ∈ Finset.range b, P l := by
+    intro a b hab
+    induction b, hab using Nat.le_induction with
+    | base => exact le_refl _
+    | succ b hab ih =>
+        rw [Finset.prod_range_succ]
+        nlinarith [hprod1 b, hP1 b, ih, hprod1 a]
+  have hstop : ∀ b : ℕ, cfg.n_layers ≤ b →
+      (∏ l ∈ Finset.range b, P l) = ∏ l ∈ Finset.range cfg.n_layers, P l := by
+    intro b hb
+    induction b, hb using Nat.le_induction with
+    | base => rfl
+    | succ b hb ih =>
+        rw [Finset.prod_range_succ, ih, hPdef]
+        simp [Nat.not_lt.mpr hb]
+  have hend : (∏ l ∈ Finset.range cfg.n_layers, P l)
+      = endToEndLipschitz cfg params alpha_max R := by
+    rw [endToEndLipschitz, ← Fin.prod_univ_eq_prod_range]
+    refine Finset.prod_congr rfl fun l _ => ?_
+    simp [hPdef, l.isLt]
+  have key : ∀ L : ℕ, ∀ i : Fin T,
+      ‖x L i - y L i‖ ≤ (∏ l ∈ Finset.range L, P l) * δ := by
+    intro L
+    induction L with
+    | zero =>
+        intro i
+        rw [Finset.prod_range_zero, one_mul]
+        exact Finset.le_sup' (fun i' => ‖x 0 i' - y 0 i'‖) (Finset.mem_univ i)
+    | succ L ih =>
+        intro i
+        have hsup : (Finset.univ : Finset (Fin T)).sup' Finset.univ_nonempty
+            (fun i' => ‖x L i' - y L i'‖) ≤ (∏ l ∈ Finset.range L, P l) * δ :=
+          Finset.sup'_le _ _ fun i' _ => ih i'
+        by_cases h : L < cfg.n_layers
+        · have hstep := blockForward_lipschitz cfg eps (params.blocks ⟨L, h⟩) alpha_max R heps
+            positions (x L) (y L) i
+          have hPL : P L = perBlockLipschitz cfg (params.blocks ⟨L, h⟩) alpha_max R := by
+            simp [hPdef, h]
+          rw [show x (L + 1) i
+              = blockForward cfg (params.blocks ⟨L, h⟩) eps positions (x L) i from by
+                rw [hx L]; simp [h],
+            show y (L + 1) i
+              = blockForward cfg (params.blocks ⟨L, h⟩) eps positions (y L) i from by
+                rw [hy L]; simp [h],
+            Finset.prod_range_succ, hPL]
+          nlinarith [hstep, hsup, hprod1 L, one_le_perBlockLipschitz cfg (params.blocks ⟨L, h⟩)
+            alpha_max R hR]
+        · rw [show x (L + 1) i = x L i from by rw [hx L]; simp [h],
+            show y (L + 1) i = y L i from by rw [hy L]; simp [h],
+            Finset.prod_range_succ]
+          have hPL : P L = 1 := by simp [hPdef, h]
+          rw [hPL]
+          simpa using ih i
+  refine le_trans (key L i) ?_
+  have hle : (∏ l ∈ Finset.range L, P l) ≤ endToEndLipschitz cfg params alpha_max R := by
+    by_cases hL : L ≤ cfg.n_layers
+    · rw [← hend]; exact hmono L cfg.n_layers hL
+    · rw [← hend, hstop L (Nat.le_of_lt (Nat.lt_of_not_le hL))]
+  exact mul_le_mul_of_nonneg_right hle hδ0
 
-/-- **Top-level Lipschitz in embedding perturbations.**
-
-If two input embedding sequences `x, x' : Fin T → ℝ^{d_model}` differ
-pointwise by at most `δ`, then the resulting logits differ by at most
-`endToEndLipschitz · δ`. -/
-theorem forward_lipschitz_embedding
-    (params : ModelParams cfg) (alpha_max R : ℝ) (heps : 0 < eps)
-    {T : ℕ} (positions : Fin T → ℝ)
-    (tokens tokens' : Fin T → Fin cfg.vocab_size) :
-    True := by trivial
+/-- The hypotheses are satisfiable: the streams of two token sequences at the
+default config are `IsStream`, and `Fin 1` is nonempty. -/
+example (params : ModelParams Config.default)
+    (tokens tokens' : Fin 1 → Fin Config.default.vocab_size) :
+    ‖hidden Config.default params 1e-6 (fun _ : Fin 1 => (0 : ℝ)) tokens 3 0
+        - hidden Config.default params 1e-6 (fun _ : Fin 1 => (0 : ℝ)) tokens' 3 0‖
+      ≤ endToEndLipschitz Config.default params 1 1
+        * (Finset.univ : Finset (Fin 1)).sup' Finset.univ_nonempty
+            (fun i' => ‖hidden Config.default params 1e-6 (fun _ : Fin 1 => (0 : ℝ)) tokens 0 i'
+              - hidden Config.default params 1e-6 (fun _ : Fin 1 => (0 : ℝ)) tokens' 0 i'‖) :=
+  stream_lipschitz Config.default 1e-6 params 1 1 (by norm_num) (by norm_num) _ _ _
+    (hidden_isStream Config.default 1e-6 params _ tokens)
+    (hidden_isStream Config.default 1e-6 params _ tokens') 3 0
 
 end Properties
 end GPTMini
