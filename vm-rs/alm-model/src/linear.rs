@@ -11,6 +11,13 @@
 //! right is a specification: any regrouping of one row's terms would produce a
 //! different `f64` and a different reference trace.  What may move is the
 //! order *between* rows, which share nothing.
+//!
+//! Both kernels are formalized: `Transformer.ALM.Dense` for the interleaved
+//! layout and `Transformer.ALM.SparseHead` for the compressed head.  Each is
+//! stated over an *arbitrary* `add` and `mul`, with no associativity and no
+//! commutativity assumed, because that is precisely the strength of the claim
+//! being made — the answer is unchanged step for step, in `f64` as in `R`,
+//! rather than to within a rounding.
 
 /// How many rows are summed at once: the width of one AVX2 register in `f64`.
 ///
@@ -40,6 +47,11 @@ const LANES: usize = 8;
 /// and so is the total.  It is the order *between* rows that moves, and rows
 /// share nothing.  The reference traces are bit-for-bit what they were.
 ///
+/// `Transformer.ALM.unpack_packed` is the half a mistyped index would break:
+/// the scatter is injective, proved by exhibiting the inverse that reads a
+/// row and a column back out of an address, and `packed_lt_buffer` puts every
+/// address it writes inside the buffer allocated below.
+///
 /// Rows are padded up to a multiple of `LANES` with zeros; their sums are
 /// computed and thrown away, which costs at most three rows of a matrix and
 /// removes the remainder loop from the hot path.
@@ -67,6 +79,16 @@ impl Dense {
     /// The order within a row is the one `transformer.cpp` uses and the one
     /// the reference traces were generated under; float addition is not
     /// associative, so it is part of the answer rather than of the schedule.
+    ///
+    /// `Transformer.ALM.apply_eq_rowMajor` is that sentence as a theorem: the
+    /// packed row and the file's row fold to the same element for *every*
+    /// `add` and `mul` whatsoever.  A kernel that regrouped a row could not
+    /// satisfy a statement that weak in its arithmetic.
+    ///
+    /// The padding is not covered there.  Rows are rounded up to a multiple
+    /// of `LANES` with zeros, whose sums are computed and then dropped by
+    /// `&s[..out.len()]`; that is a fact about slice lengths and is left to
+    /// the `debug_assert_eq!` above.
     pub fn apply(&self, x: &[f64], y: &mut [f64]) {
         debug_assert_eq!(x.len(), self.cols);
         debug_assert_eq!(y.len(), self.rows);
@@ -88,8 +110,15 @@ impl Dense {
 /// It is the one projection the C++ runtime does not do densely, and the
 /// reason is in the numbers: the head is `vocab x d_model`, 915 x 38 here and
 /// 85 % zero, and it runs once per generated token.  Skipping the zeros is
-/// exact — adding `0.0 * x` to a finite partial sum never changes it — so
-/// this is the same argmax, not an approximation of it.
+/// exact — adding `0.0 * x` to a partial sum never changes it — so this is
+/// the same argmax, not an approximation of it.
+///
+/// `Transformer.ALM.sparseFold_eq_rowFold` is that claim, and carrying it
+/// through Lean sharpened the condition it rests on: `0.0 * x` is `NaN` when
+/// `x` is infinite or `NaN`, which destroys the partial sum rather than
+/// preserving it.  So the hypothesis is quantified over the *entries of the
+/// input*, and it is the activations reaching the head that have to be
+/// finite — not, as an earlier wording here had it, the partial sum.
 pub struct SparseHead {
     rows: usize,
     /// `row i` occupies `col[ptr[i]..ptr[i+1]]`.
@@ -116,6 +145,13 @@ impl SparseHead {
 
     /// The first index attaining the maximum, as `Tensor::argmax` and the C++
     /// loop both resolve it.
+    ///
+    /// The strict `>` is what resolves it that way, and the reference traces
+    /// depend on the choice.  `Transformer.ALM.firstMax` is this loop,
+    /// `firstMax_le` that its answer is a maximum and `firstMax_first` that
+    /// nothing before it attains one; `firstMax_sparse_eq` composes them with
+    /// the line above, so the compressed head returns the dense head's index
+    /// and not merely an equally good one.
     pub fn argmax(&self, x: &[f64]) -> usize {
         let mut best = 0;
         let mut best_score = f64::NEG_INFINITY;
