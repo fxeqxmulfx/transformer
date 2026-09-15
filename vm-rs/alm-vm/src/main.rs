@@ -207,6 +207,13 @@ fn check(
         if let Some(q) = gaps.worst_at {
             println!("    at: query {q:?}");
         }
+        println!(
+            "    against that gap: worst 2*eps*terms/(best-second) = {:.3e}, {} unresolved of {} (ALM.GuardSep.cmp_of_guard)",
+            gaps.worst_guard, gaps.unresolved, gaps.total
+        );
+        if let Some(q) = gaps.worst_guard_at {
+            println!("    at: query {q:?}");
+        }
     }
     let lifts = cache.lift_witness();
     if lifts.total > 0 {

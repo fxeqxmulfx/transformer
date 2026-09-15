@@ -15,6 +15,31 @@
 //! Only the brute head can report it — it scores everything anyway, while the
 //! hull visits the winner and its ties and stops.
 //!
+//! And it is the gap the guard should be read against.  `grid.rs` is handed
+//! `|qy|` as the margin — one key step, what two distinct integer keys would
+//! be worth — while `ALM.GuardSep.cmp_of_guard` asks for
+//! `hsep : sigma <= |a - b|`, the separation the two scores *actually* have.
+//! The assumed margin is neither an upper nor a lower bound on that.  Where
+//! the query lands between two keys and the recency offset decides the
+//! winner, the real gap is a millionth of a step and the assumption is far too
+//! generous; where the keys are byte patterns thousands apart, it is too mean
+//! by the square of their separation, and the guard fires on a query that was
+//! never in doubt.  Both were measured, on the same run.
+//!
+//! The other half of `cmp_of_guard` is `hd1, hd2 : |a' - a| <= ulpOf p E / 2`:
+//! each score within half an ulp of exact, which is what one rounding costs.
+//! The runtime does not spend one rounding.  It computes `q0*k0 + q1*k1`, two
+//! products and a sum, and on a parabolic key the two products are near
+//! `2k^2` and `-k^2` while their sum is near `k^2` — so the terms are three
+//! times the result and their rounding error is carried into it undiminished.
+//! `score_error_bound` is that bound, `eps * (|q0*k0| + |q1*k1|)`, and
+//! `unresolved` counts the queries whose real gap did not clear twice it —
+//! twice because both the winner's score and the runner-up's carry it.
+//! Measuring against `ulp(best)` instead would understate the error by the
+//! cancellation factor and could only ever fail at a binade boundary, where
+//! the predecessor is half an ulp away — which is a fact about `ulp` and not
+//! about the model.
+//!
 //! `ALM.ScoreGap` is the gap as a number: `keyGap_scale_free` is why dividing
 //! by the step makes it a property of the keys and not of the query scale, and
 //! `one_le_keyGap_iff` is what a gap of `1` means — exactly the separation
@@ -29,6 +54,20 @@
 /// rounding and not a separation anyone intended.
 pub const NOISE: f64 = 1e-9;
 
+/// How far `fl(q0*k0 + q1*k1)` can sit from the exact value, given that the
+/// two products summed to `terms` in absolute value.
+///
+/// Each product is within `u` relative, the sum within `u` relative, and the
+/// sum's own magnitude is at most `terms`, so the whole is at most
+/// `2 * u * terms` with `u = eps / 2`.  What makes it worth computing rather
+/// than assuming is the cancellation: for a parabolic key queried near itself
+/// the products are `2k^2` and `-k^2` and the result is `k^2`, so `terms` is
+/// three times the answer and the bound is three times what `ulp(result)`
+/// would suggest.  `ALM.GuardSep.cmp_of_guard` takes this as its `hd1`, `hd2`.
+pub fn score_error_bound(terms: f64) -> f64 {
+    f64::EPSILON * terms.abs()
+}
+
 /// The gaps a run's queries showed.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct ScoreGaps {
@@ -40,17 +79,41 @@ pub struct ScoreGaps {
     pub worst: f64,
     /// The query that attained it.
     pub worst_at: Option<[f64; 2]>,
+    /// Queries whose real gap did not clear twice the error the dot product
+    /// can carry: `best - second <= 2 * score_error_bound(terms)`.  This is
+    /// `ALM.GuardSep.cmp_of_guard` failing on the model the runtime actually
+    /// computes with, and it is the case where the computed order can differ
+    /// from the exact one.
+    pub unresolved: usize,
+    /// The largest `2 * score_error_bound(terms) / (best - second)` seen: how
+    /// much of the real separation a query used, where `grid.rs`'s
+    /// `grid_ratio` reports how much of the assumed one it used.
+    pub worst_guard: f64,
+    /// The query that attained it.
+    pub worst_guard_at: Option<[f64; 2]>,
 }
 
 impl Default for ScoreGaps {
     fn default() -> Self {
-        ScoreGaps { total: 0, noise: 0, worst: f64::INFINITY, worst_at: None }
+        ScoreGaps {
+            total: 0,
+            noise: 0,
+            worst: f64::INFINITY,
+            worst_at: None,
+            unresolved: 0,
+            worst_guard: 0.0,
+            worst_guard_at: None,
+        }
     }
 }
 
 impl ScoreGaps {
-    /// `best` is the winning score, `second` the largest strictly below it.
-    pub fn observe(&mut self, best: f64, second: f64, q: [f64; 2]) {
+    /// `best` is the winning score, `second` the largest strictly below it,
+    /// and `terms` the largest `|q0*k0| + |q1*k1|` any entry of the head
+    /// formed at this query — the size the rounding of the dot product is
+    /// relative to.  Pass `best.abs()` for a score computed without
+    /// cancellation, which is the bound `score_error_bound` degenerates to.
+    pub fn observe(&mut self, best: f64, second: f64, q: [f64; 2], terms: f64) {
         if !second.is_finite() {
             return;
         }
@@ -70,6 +133,18 @@ impl ScoreGaps {
             self.worst = gap;
             self.worst_at = Some(q);
         }
+        // The guard against the separation this query really had, on the
+        // error the dot product really carries.  `best` and `second` are
+        // within a factor of two of each other whenever this is close, so the
+        // subtraction is exact where the answer matters.
+        let guard = 2.0 * score_error_bound(terms) / (best - second);
+        if guard >= 1.0 {
+            self.unresolved += 1;
+        }
+        if guard > self.worst_guard {
+            self.worst_guard = guard;
+            self.worst_guard_at = Some(q);
+        }
     }
 
     pub fn merge(&mut self, other: &ScoreGaps) {
@@ -78,6 +153,11 @@ impl ScoreGaps {
         if other.worst < self.worst {
             self.worst = other.worst;
             self.worst_at = other.worst_at;
+        }
+        self.unresolved += other.unresolved;
+        if other.worst_guard > self.worst_guard {
+            self.worst_guard = other.worst_guard;
+            self.worst_guard_at = other.worst_guard_at;
         }
     }
 }
@@ -94,7 +174,8 @@ mod tests {
         for s in [1.0, 14142135623.730951] {
             let (k, q) = (7.0f64, [7.0 * s, s]);
             let score = |x: f64| q[0] * (2.0 * x) + q[1] * (-x * x);
-            w.observe(score(k), score(k + 1.0), q);
+            let terms = |x: f64| (q[0] * 2.0 * x).abs() + (q[1] * x * x).abs();
+            w.observe(score(k), score(k + 1.0), q, terms(k).max(terms(k + 1.0)));
         }
         assert_eq!((w.total, w.noise), (2, 0));
         assert!((w.worst - 1.0).abs() < 1e-9, "one step, at either scale: {w:?}");
@@ -108,14 +189,15 @@ mod tests {
         let q = [7.0, 1.0];
         let ky = -49.0;
         let score = |y: f64| q[0] * 14.0 + q[1] * y;
+        let terms = |y: f64| (q[0] * 14.0).abs() + (q[1] * y).abs();
 
         let mut perturbed = ScoreGaps::default();
-        perturbed.observe(score(ky + 0.3 * 1.0e-5), score(ky), q);
+        perturbed.observe(score(ky + 0.3 * 1.0e-5), score(ky), q, terms(ky));
         assert_eq!(perturbed.noise, 0, "the compiler's separation is visible");
 
         let mut rounded = ScoreGaps::default();
         let nudged = ky + 8.0 * f64::EPSILON * ky.abs();
-        rounded.observe(score(nudged), score(ky), q);
+        rounded.observe(score(nudged), score(ky), q, terms(ky));
         assert_eq!(rounded.noise, 1, "the matvec's is not");
         assert!(rounded.worst < NOISE);
     }
@@ -134,7 +216,7 @@ mod tests {
             let (best, second) = (1.0e6 + step, 1.0e6);
 
             let mut w = ScoreGaps::default();
-            w.observe(best, second, q);
+            w.observe(best, second, q, 3.0e6);
             assert_eq!(w.worst, 1.0, "one step, whatever the scale: {q:?}");
             assert!(step <= best - second, "which is the guard's hypothesis");
             assert!(!crate::grid::off_the_grid(best, step), "and the guard passes");
@@ -142,9 +224,61 @@ mod tests {
     }
 
     #[test]
+    fn the_cancellation_is_what_the_error_bound_is_for() {
+        // A score formed without cancellation costs about one ulp.
+        assert!(score_error_bound(1e17) <= 2.0 * crate::grid::ulp(1e17));
+        // The same score formed as `2k^2 - k^2` costs three times that,
+        // and `ulp(result)` cannot see the difference.
+        let k2 = 1e17;
+        assert!(score_error_bound(3.0 * k2) >= 2.5 * crate::grid::ulp(k2));
+    }
+
+    #[test]
+    fn the_guard_is_read_against_the_real_gap_and_the_real_error() {
+        // A gap of one against a score of `1e6`: the error is `2*eps*3e6`,
+        // about `1.3e-9` of the gap, and nothing is close to unresolved.
+        let mut w = ScoreGaps::default();
+        w.observe(1e6, 1e6 - 1.0, [1.0, 1.0], 3e6);
+        assert_eq!(w.unresolved, 0);
+        assert!(w.worst_guard < 1e-8);
+
+        // And two that are adjacent doubles: the ulp reading calls this the
+        // boundary case and lets it through, while the error the dot product
+        // really carries is three ulp, so the order can invert.
+        let big = 1e17;
+        let mut b = ScoreGaps::default();
+        b.observe(big + crate::grid::ulp(big), big, [1.0, 1.0], 3.0 * big);
+        assert_eq!(b.unresolved, 1);
+        assert!(b.worst_guard > 1.0);
+    }
+
+    #[test]
+    fn the_assumed_margin_is_neither_a_bound_nor_the_other_bound() {
+        // Where the query sits between two keys and the recency offset
+        // decides, the real gap is a fraction of a step and the assumed
+        // margin of one step is far too generous.
+        let step = 1.0;
+        let (best, second) = (1e6, 1e6 - 1e-6);
+        let mut tight = ScoreGaps::default();
+        tight.observe(best, second, [0.0, step], 3e6);
+        assert!(tight.worst < 1e-5 && tight.worst > 0.0);
+        assert!(step > best - second, "the assumed margin overstates the real one");
+        assert!(!crate::grid::off_the_grid(best, step), "so the assumed guard passes");
+
+        // And where the keys are far apart the assumed margin understates it,
+        // so the assumed guard fires on a query that was never in doubt.
+        let (best, second) = (1e17, 1e17 - 1e9);
+        let mut loose = ScoreGaps::default();
+        loose.observe(best, second, [0.0, step], 3e17);
+        assert_eq!(loose.unresolved, 0);
+        assert!(loose.worst_guard < 1e-4, "resolved with four orders to spare");
+        assert!(crate::grid::off_the_grid(best, step), "and the assumed guard fires anyway");
+    }
+
+    #[test]
     fn an_exact_tie_is_not_a_gap() {
         let mut w = ScoreGaps::default();
-        w.observe(12.0, 12.0, [3.0, 1.0]);
+        w.observe(12.0, 12.0, [3.0, 1.0], 12.0);
         assert_eq!(w.total, 0, "a tie is `last_seq`'s business, not this one's");
         assert_eq!(w.worst, f64::INFINITY);
     }

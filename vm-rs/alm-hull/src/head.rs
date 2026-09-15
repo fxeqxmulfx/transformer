@@ -294,8 +294,18 @@ impl BruteAttentionHead {
             .map(|(k, _, _)| score(k))
             .filter(|&s| s < max)
             .fold(f64::NEG_INFINITY, f64::max);
+        // The size the rounding of `q0*k0 + q1*k1` is relative to, taken over
+        // the two entries actually in the race: an error bound drawn from a
+        // key that lost by miles would say nothing about this comparison.
+        let terms = |k: &[f64; 2]| (q[0] * k[0]).abs() + (q[1] * k[1]).abs();
+        let worst_terms = self
+            .entries
+            .iter()
+            .filter(|(k, _, _)| score(k) == max || score(k) == second)
+            .map(|(k, _, _)| terms(k))
+            .fold(0.0f64, f64::max);
         let mut g = self.gaps.get();
-        g.observe(max, second, q);
+        g.observe(max, second, q, worst_terms);
         self.gaps.set(g);
 
         let mut meta = HullMeta::default();
