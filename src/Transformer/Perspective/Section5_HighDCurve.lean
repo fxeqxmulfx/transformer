@@ -14,6 +14,7 @@ Continues `Perspective.Section5_HighD`:
 -/
 
 import Transformer.Perspective.Section5_HighD
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 open scoped BigOperators
 open Real
@@ -48,6 +49,24 @@ def ybetaODE_USA (n : ℕ) (β : ℝ) (γ : ℝ → ℝ) : Prop :=
   γ 0 = 0 ∧
   ∀ t : ℝ, HasDerivAt γ
     ((2 / (n : ℝ)) * Real.exp (β * γ t) * (1 - γ t) * ((n - 1 : ℝ) * γ t + 1)) t
+
+/-- **A solution of `eq: ybeta`.**  At `n = 1` and `β = 0` the equation is
+`γ̇ = 2(1 - γ)`, `γ(0) = 0`, whose solution is `γ(t) = 1 - e^{-2t}`: the angle
+closes at an exponential rate.
+
+It is the one solution of `eq: ybeta` available in closed form, and it is what
+witnesses that the hypothesis `ybetaODE_SA` of the estimates below is
+satisfiable. -/
+theorem ybetaODE_SA_one_zero :
+    ybetaODE_SA 1 0 (fun t => 1 - Real.exp (-2 * t)) := by
+  refine ⟨by simp, fun t => ?_⟩
+  have hlin : HasDerivAt (fun s : ℝ => -2 * s) (-2 : ℝ) t := by
+    simpa using HasDerivAt.const_mul (-2 : ℝ) (hasDerivAt_id t)
+  have h : HasDerivAt (fun s : ℝ => 1 - Real.exp (-2 * s))
+      (-(Real.exp (-2 * t) * -2)) t := hlin.exp.const_sub 1
+  refine h.congr_deriv ?_
+  norm_num
+  ring
 
 /-- **Theorem (thm: orthogonal).** *Orthogonal initial sequence.*
 
