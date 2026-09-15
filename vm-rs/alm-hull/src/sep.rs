@@ -48,10 +48,8 @@ pub const TWIN_ULPS: f64 = 8.0;
 /// when the nearest other key is `sep` away and the offsets spread by `A`.
 /// `None` below the floor, where there is no such window.
 pub fn window(sep: f64, spread: f64) -> Option<f64> {
-    if !(sep > 0.0) || sep * sep <= spread {
-        return None;
-    }
-    Some((sep * sep - spread) / (2.0 * sep))
+    // Positive tests throughout, so a `NaN` separation has no window.
+    (sep > 0.0 && sep * sep > spread).then(|| (sep * sep - spread) / (2.0 * sep))
 }
 
 /// A total order on the finite doubles, so a `BTreeSet` can hold keys.
@@ -191,8 +189,8 @@ mod tests {
     fn the_floor_is_the_square_root_of_the_offset_spread() {
         assert_eq!(SEP_FLOOR * SEP_FLOOR, MARK_SPREAD);
         // `ALM.HullSep.the_shipped_separation_floor`, both halves.
-        assert!(0.657 * 0.657 < MARK_SPREAD);
-        assert!(MARK_SPREAD < 0.659 * 0.659);
+        const { assert!(0.657 * 0.657 < MARK_SPREAD) };
+        const { assert!(MARK_SPREAD < 0.659 * 0.659) };
     }
 
     #[test]

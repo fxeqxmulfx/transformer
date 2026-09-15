@@ -81,11 +81,9 @@ impl LiftKey {
             return None;
         }
         let delta = k[1] + v * v;
-        // Written as a positive test so that a `NaN` ordinate falls through it.
-        if !(delta.abs() <= MARK_SPREAD) {
-            return None;
-        }
-        Some(LiftKey { v: v as i64, delta })
+        // A positive test, so that a `NaN` ordinate fails it rather than passing
+        // a negated one.
+        (delta.abs() <= MARK_SPREAD).then_some(LiftKey { v: v as i64, delta })
     }
 
     /// The point the compiler emitted, rebuilt from the integer.
