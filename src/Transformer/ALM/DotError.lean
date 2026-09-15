@@ -25,7 +25,10 @@ This is what `alm-hull/src/gap.rs::score_error_bound` computes and what
 `ScoreGaps::unresolved` counts the failures of.  Read this way the shipped
 model leaves queries uncovered where the `ulp` reading said it did not: on
 `fibonacci` the worst ratio is `3.86` and 61 of 382284 queries have a gap that
-does not clear the rounding at all.
+does not clear the rounding at all.  Uncovered is not wrong -- the guard is
+sufficient and not necessary, as the examples below show -- and rescanning
+those 61 with `alm-hull/src/exact.rs`'s exact dot product upholds every one of
+them.  What the theorem does not reach, the runtime still gets right.
 
 Source: `todo3.md` §4a; `vm-rs/alm-hull/src/head.rs`, `BruteAttentionHead::query`;
 Higham, *Accuracy and Stability of Numerical Algorithms*, 2nd ed., §3.1.
@@ -108,6 +111,27 @@ example : ∀ a' b' : ℝ,
     (a' ≤ b' ↔ (1 : ℝ) ≤ 2) :=
   fun _ _ ha hb =>
     cmp_of_dot_guard ha hb (by rw [show |(1 : ℝ) - 2| = 1 by norm_num]; norm_num)
+
+/-- **And the hypothesis cannot be dropped.**  At `u = 1/4` and terms of `1`
+the bound is `9/16`, and two errors of exactly that size carry `a = 0` and
+`b = 1` past each other: the computed comparison is the reverse of the exact
+one.  So a gap that fails to clear twice the bound really is undecided. -/
+example : |(9 / 16 : ℝ) - 0| ≤ 1 / 4 * (2 + 1 / 4) * 1 ∧
+    |(7 / 16 : ℝ) - 1| ≤ 1 / 4 * (2 + 1 / 4) * 1 ∧
+    ¬ ((9 / 16 : ℝ) ≤ 7 / 16 ↔ (0 : ℝ) ≤ 1) := by
+  norm_num
+
+/-- **Undecided is not wrong.**  The same bound, the same gap, and errors that
+the bound permits but does not force: the comparison comes out right anyway.
+The guard is sufficient and not necessary, which is why
+`alm-hull/src/head.rs` answers an unresolved query by rescanning with an exact
+dot product rather than by calling it a failure -- and why all 61 unresolved
+queries on `fibonacci` are upheld. -/
+example : |(1 / 10 : ℝ) - 0| ≤ 1 / 4 * (2 + 1 / 4) * 1 ∧
+    |(9 / 10 : ℝ) - 1| ≤ 1 / 4 * (2 + 1 / 4) * 1 ∧
+    ¬ 2 * ((1 : ℝ) / 4 * (2 + 1 / 4) * 1) < |(0 : ℝ) - 1| ∧
+    ((1 / 10 : ℝ) ≤ 9 / 10 ↔ (0 : ℝ) ≤ 1) := by
+  norm_num
 
 /-! ### And why the factor is three and not one -/
 

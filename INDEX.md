@@ -144,15 +144,15 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`score`](src/Transformer/ALM/Defs.lean#L33) | def |  |
 | [`sScore`](src/Transformer/ALM/Defs.lean#L39) | def |  |
 
-**[Transformer.ALM.DotError](src/Transformer/ALM/DotError.lean)** — 142 lines
+**[Transformer.ALM.DotError](src/Transformer/ALM/DotError.lean)** — 166 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`dotTerms`](src/Transformer/ALM/DotError.lean#L45) | def |  |
-| [`abs_add_le_dotTerms`](src/Transformer/ALM/DotError.lean#L48) | theorem | proved |
-| [`dot_error_le`](src/Transformer/ALM/DotError.lean#L56) | theorem | proved |
-| [`cmp_of_dot_guard`](src/Transformer/ALM/DotError.lean#L97) | theorem | proved |
-| [`dotTerms_markKey_self`](src/Transformer/ALM/DotError.lean#L121) | theorem | proved |
+| [`dotTerms`](src/Transformer/ALM/DotError.lean#L48) | def |  |
+| [`abs_add_le_dotTerms`](src/Transformer/ALM/DotError.lean#L51) | theorem | proved |
+| [`dot_error_le`](src/Transformer/ALM/DotError.lean#L59) | theorem | proved |
+| [`cmp_of_dot_guard`](src/Transformer/ALM/DotError.lean#L100) | theorem | proved |
+| [`dotTerms_markKey_self`](src/Transformer/ALM/DotError.lean#L145) | theorem | proved |
 
 **[Transformer.ALM.DriftMargin](src/Transformer/ALM/DriftMargin.lean)** — 155 lines
 
