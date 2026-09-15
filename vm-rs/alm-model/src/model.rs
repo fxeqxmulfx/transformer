@@ -113,6 +113,15 @@ impl Alm {
     /// `1/log 2 - 1/log(pos + 2)` is the recency feature the latest-write
     /// perturbation is built from, and `pos * pos` is what makes a parabolic
     /// key of the position.
+    ///
+    /// The feature is `Transformer.ALM.LatestWindow.invLogPos`, the same
+    /// expression the compiler computes (`transformer_vm/evaluator.py:230`),
+    /// and it is the one coordinate of the residual stream that is not an
+    /// integer.  What the head needs of it is proved there and in
+    /// `ALM.LatestClose`: it rises with the position, so the latest write
+    /// wins a tie, and consecutive positions close up like `1/log(pos + 2)`,
+    /// which is the window `ALM.HullNear` and `alm_hull`'s `SepWitness`
+    /// measure a run against.
     pub fn embed(&self, token: usize, pos: usize) -> Vec<f64> {
         let d = self.shapes.d_model;
         let mut x = vec![0.0; d];
@@ -138,6 +147,21 @@ impl Alm {
 
     /// The same, charging each part of the step to `t` and leaving the residual
     /// stream in `s.x`.
+    ///
+    /// Three parts of this loop carry a theorem and the rest does not.  The
+    /// projections are `Transformer.ALM.apply_eq_rowMajor`, the attention is
+    /// `KvCache::layer_step` and everything `alm_hull` is checked by, and the
+    /// decode is `ALM.firstMax_sparse_eq`.  The two residual additions and the
+    /// gated feed-forward are a straight port of `transformer.cpp` with
+    /// nothing proved about them: their fidelity rests on
+    /// `alm-vm/tests/reference.rs`, which reproduces the released traces token
+    /// for token, and not on an argument.
+    ///
+    /// The gate is spelled differently from its original and answers the same:
+    /// `transformer.cpp:315` writes `(ff[i] > 0 ? ff[i] : 0.0)` and this
+    /// writes `.max(0.0)`, which agree on `NaN` and, as compiled here, on a
+    /// negative zero — the one case the standard leaves to the
+    /// implementation, and one no comparison downstream can see anyway.
     pub fn forward_timed<'s>(
         &self,
         token: usize,
