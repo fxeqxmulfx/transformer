@@ -151,10 +151,10 @@ fn the_integer_cache_reproduces_them_and_clears_the_grid() {
     // And the crossings, which are the point of the exercise.  Both paths
     // weigh every answer they take from a stored ordinate, so the two counts
     // are comparable: what the integer path removes is the queries it answers
-    // in `i128` instead, and what it leaves is the queries it cannot -- the
-    // ones off the unit grid, which fall back to the stored points and so to
-    // the old wall.  `hello` loses all of its crossings and `addition` keeps
-    // the 8 %% that the query scale left one ulp off an integer.
+    // in `i128` instead.  It removes all of them -- the last 64, which the
+    // query scale left an ulp off an integer, went when `UnitQuery` started
+    // carrying that ulp instead of refusing it (`todo3.md` section 4a,
+    // `ALM.LiftResidual.upper_near_lt_iff`).
     let crossings = |s: &str| -> Vec<usize> {
         lines(s, "OFF THE GRID")
             .iter()
@@ -162,7 +162,21 @@ fn the_integer_cache_reproduces_them_and_clears_the_grid() {
             .collect()
     };
     assert_eq!(crossings(&shipped), vec![26, 788], "the hull path answers these blind\n{shipped}");
-    assert_eq!(crossings(&lift), vec![64], "one program left, and only its off-grid queries\n{lift}");
+    assert!(crossings(&lift).is_empty(), "and the integer path answers none of them blind\n{lift}");
+
+    // Every query that reached the container was answered on the integers,
+    // residual and all: none fell back to the stored points.
+    let stored = |s: &str| -> Vec<usize> {
+        lines(s, "quer(ies) on the integers")
+            .iter()
+            .map(|l| l.split(", ").nth(1).and_then(|r| r.split(' ').next()).expect("a count").parse().expect("a number"))
+            .collect()
+    };
+    assert_eq!(stored(&lift), vec![0, 0], "no query fell back to a stored ordinate\n{lift}");
+    for l in lines(&lift, "carried a residual") {
+        let n: usize = l.split(' ').next().expect("a count").parse().expect("a number");
+        assert!(n > 0, "{l}");
+    }
 
     // Both heads of section 4b are reached, on both programs, and neither
     // retires: the clear markers they are full of are held beside the

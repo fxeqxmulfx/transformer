@@ -292,6 +292,12 @@ fn check(
             "  lift: {} quer(ies) on the integers, {} on the stored points, {} along an axis, {} on the hull",
             lift.integer, lift.stored, lift.axis, lift.hull
         );
+        if lift.near > 0 {
+            println!(
+                "    {} of those integer(s) carried a residual the normalisation left (todo3.md section 4a)",
+                lift.near
+            );
+        }
         if lift.cleared > 0 {
             println!(
                 "    {} cleared key(s) held out of the container, {} quer(ies) settled by the marker and {} scored beside it",

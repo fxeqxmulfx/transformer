@@ -76,6 +76,11 @@ pub struct LiftCensus {
     /// Queries answered by the `i128` comparison of `liftkey.rs`, which is
     /// exact to `2^52`.
     pub integer: usize,
+    /// Of those, the ones whose abscissa the normalisation left off the
+    /// integer, so the comparison carried the residual
+    /// (`ALM.LiftResidual.upper_near_lt_iff`).  These are the queries that used
+    /// to fall through to `stored`.
+    pub near: usize,
     /// Queries answered by `exact::dot_cmp` on the reconstructed points: the
     /// keys are integers but the query is not on the unit grid, so the
     /// comparison is the stored one and the wall is back where it was.
@@ -101,6 +106,7 @@ impl LiftCensus {
         self.keys += other.keys;
         self.cleared += other.cleared;
         self.integer += other.integer;
+        self.near += other.near;
         self.stored += other.stored;
         self.axis += other.axis;
         self.hull += other.hull;
@@ -417,12 +423,14 @@ impl LiftAttentionHead {
         // `LiftKey::point` rebuilds those bit for bit, by Sterbenz: `ky` is
         // within one of `-k^2`, so `ky + k * k` is exact.
         let unit = UnitQuery::of(q);
-        self.note(|c| {
-            if unit.is_some() {
+        self.note(|c| match unit {
+            Some(u) => {
                 c.integer += 1;
-            } else {
-                c.stored += 1;
+                if u.eps != 0.0 {
+                    c.near += 1;
+                }
             }
+            None => c.stored += 1,
         });
         let cmp = |a: LiftKey, b: LiftKey| match unit {
             Some(u) => u.cmp(a, b),

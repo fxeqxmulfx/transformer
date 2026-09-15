@@ -31,15 +31,22 @@
 //! `None` for it -- which is also how the cleared family (`d ~ -1e30`) and the
 //! flat one (`ky = 1`) are turned away, with no separate test.
 //!
-//! The query has to be an integer at unit scale for the same reason, and that
-//! is what `on_the_grid` already makes of it: `ALM.QueryScale.onTheGrid_scaleQuery`
-//! returns the lifted `(q, 1)` on the nose and `onTheGrid_score_isInt` says the
-//! score is an integer again.  Off the grid there is no integer comparison to
-//! make and the caller falls back to `exact::dot_cmp`, which is exact in the
-//! stored points and therefore no better and no worse than the hull head.
+//! The query is put at unit scale by `on_the_grid`
+//! (`ALM.QueryScale.onTheGrid_scaleQuery` returns the lifted `(q, 1)` on the
+//! nose), but the division rounds, so what arrives is an integer plus a
+//! residual of an ulp or two rather than an integer.  The residual is kept,
+//! not rounded away: `ALM.LiftResidual.upper_near_lt_iff` is the same
+//! equivalence at `z0 + eps`, and it holds for every `|eps| < 1/2 - A`, which
+//! is `RESIDUAL_WINDOW`.  The keys being integers is what pays for it -- the
+//! score moves by `2 eps (k - k')` but the order does not, because that same
+//! step divides out against the integer gap between the squared distances.  A
+//! query outside the window is refused and the caller falls back to
+//! `exact::dot_cmp`, which is exact in the stored points and therefore no
+//! better and no worse than the hull head.
 
 use core::cmp::Ordering;
 
+use crate::exact;
 use crate::lift::MARK_SPREAD;
 
 /// The largest `|k|` recoverable from the abscissa `2k`.
@@ -93,17 +100,42 @@ impl LiftKey {
     }
 }
 
-/// A query at unit scale with an integer abscissa: what `on_the_grid` makes of
-/// every hard-attention query of a run that is on the grid.
+/// How far off the integer the query's abscissa may be and still be answered
+/// on the integers: `1/2 - MARK_SPREAD`, about `0.0672`.
+///
+/// Two offsets spread by `MARK_SPREAD` and a residual of `eps` between them
+/// have to leave a unit of integer separation standing, which is
+/// `2 A + 2 |eps| < 1`.  `ALM.LiftResidual.the_shipped_window` is this number
+/// at the shipped spread, and the released programs leave a residual of one
+/// ulp -- `1.9e-6` at a query of `2^33`, five orders inside it.
+pub const RESIDUAL_WINDOW: f64 = 0.5 - MARK_SPREAD;
+
+/// A query at unit scale, as the integer it was meant to be and the residual
+/// the normalisation left on it.
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub struct UnitQuery {
+    /// The nearest integer to the abscissa.
     pub qx: i64,
+    /// `qx_f64 - qx`, exactly: the two are within half a unit of each other,
+    /// so the subtraction is exact by Sterbenz's lemma and the residual is the
+    /// whole of what the division rounded.
+    pub eps: f64,
     /// `qy == 1`, the upper envelope.  `false` is `qy == -1`, where the score
     /// is convex in the key and the maximum sits at an end.
     pub upper: bool,
 }
 
 impl UnitQuery {
+    /// Read a normalised query, or refuse it.
+    ///
+    /// `on_the_grid` divides the compiler's scale out, and the division is a
+    /// rounding: at a query of `2^33` the quotient misses the integer by an
+    /// ulp.  Refusing those was the whole of `todo3.md` section 4a's residual
+    /// cost -- 64 queries of the `addition` run fell back to the stored
+    /// points, on the one head whose ordinate the wall had already eaten.
+    /// They are not refused now: the residual is carried into the comparison,
+    /// where `ALM.LiftResidual.upper_near_lt_iff` says it changes the order
+    /// only between two keys the query is equidistant from.
     pub fn of(q: [f64; 2]) -> Option<UnitQuery> {
         let upper = if q[1] == 1.0 {
             true
@@ -112,10 +144,14 @@ impl UnitQuery {
         } else {
             return None;
         };
-        if q[0] != q[0].round() || q[0].abs() > KEY_LIMIT as f64 {
+        let qx = q[0].round();
+        if qx.abs() > KEY_LIMIT as f64 {
             return None;
         }
-        Some(UnitQuery { qx: q[0] as i64, upper })
+        // A positive test, so a `NaN` abscissa is refused here rather than
+        // rounded into an integer above.
+        let eps = q[0] - qx;
+        (eps.abs() < RESIDUAL_WINDOW).then_some(UnitQuery { qx: qx as i64, eps, upper })
     }
 
     /// Which of two live keys this query scores higher.
@@ -135,6 +171,14 @@ impl UnitQuery {
     /// it is `2^106` (`ALM.LiftCompare.sq_dist_le`), twenty bits inside the
     /// width (`sq_dist_fits`).  This is the whole of the move from `2^26.5`
     /// to `2^52`.
+    ///
+    /// The residual enters only where those integers tie, and there it is the
+    /// comparison: `ALM.LiftResidual.upper_lt_iff_of_sq_eq` says two keys the
+    /// query is equidistant from are separated by `2 eps (k - k')` and the two
+    /// offsets, with no bound on `eps` needed, since that is an identity and
+    /// not an estimate.  Its four terms are summed exactly by
+    /// `exact::expansion_sign`: `2 eps` is exact and `k - k'` is at most
+    /// `2^53`, so the product is a `two_prod` and nothing rounds here either.
     pub fn cmp(self, a: LiftKey, b: LiftKey) -> Ordering {
         let sq = |v: i64| {
             let t = (if self.upper { v - self.qx } else { v + self.qx }) as i128;
@@ -144,8 +188,9 @@ impl UnitQuery {
         if sa != sb {
             return if self.upper { sb.cmp(&sa) } else { sa.cmp(&sb) };
         }
-        let (da, db) = if self.upper { (a.delta, b.delta) } else { (-a.delta, -b.delta) };
-        da.partial_cmp(&db).unwrap_or(Ordering::Equal)
+        let (p, e) = exact::two_prod(2.0 * self.eps, (a.v - b.v) as f64);
+        let (da, db) = if self.upper { (a.delta, b.delta) } else { (b.delta, a.delta) };
+        exact::expansion_sign(&[p, e, da, -db])
     }
 }
 
@@ -255,10 +300,62 @@ mod tests {
     #[test]
     fn a_query_the_grid_has_not_normalised_is_refused() {
         assert_eq!(UnitQuery::of([10.0, 14142135623.730951]), None, "the compiler's scale");
-        assert_eq!(UnitQuery::of([10.5, 1.0]), None, "a non-integer abscissa");
+        assert_eq!(UnitQuery::of([10.5, 1.0]), None, "an abscissa between two keys");
         assert_eq!(UnitQuery::of([10.0, 0.0]), None, "and the degenerate direction");
-        assert_eq!(UnitQuery::of([10.0, 1.0]), Some(UnitQuery { qx: 10, upper: true }));
-        assert_eq!(UnitQuery::of([10.0, -1.0]), Some(UnitQuery { qx: 10, upper: false }));
+        assert_eq!(UnitQuery::of([10.0, 1.0]), Some(UnitQuery { qx: 10, eps: 0.0, upper: true }));
+        assert_eq!(UnitQuery::of([10.0, -1.0]), Some(UnitQuery { qx: 10, eps: 0.0, upper: false }));
+        assert_eq!(UnitQuery::of([f64::NAN, 1.0]), None);
+    }
+
+    #[test]
+    fn the_division_leaves_a_residual_and_the_residual_is_carried() {
+        // `todo3.md` section 4a: the query the `addition` run asks 64 times,
+        // where the scale divided back out lands an ulp short of the integer.
+        // The old `UnitQuery::of` refused it and the head fell back to the
+        // stored points -- on the one head past the wall, where those points
+        // have already lost the unit that separates two keys.
+        let q = [4294967291.0000005, 1.0];
+        let u = UnitQuery::of(q).expect("an ulp off the grid is still on it");
+        assert_eq!(u.qx, 4294967291);
+        assert_eq!(u.eps, q[0] - 4294967291.0, "and the residual is exact");
+        assert!(u.eps.abs() < RESIDUAL_WINDOW && u.eps != 0.0, "{} ", u.eps);
+        // Half a step is not a residual but a different query, and the window
+        // stops well short of it.
+        assert_eq!(UnitQuery::of([10.07, 1.0]), None, "outside `1/2 - MARK_SPREAD`");
+        const { assert!(RESIDUAL_WINDOW > 0.067) }; // `ALM.LiftResidual.the_shipped_window`
+    }
+
+    #[test]
+    fn inside_the_window_the_residual_moves_the_score_and_not_the_order() {
+        // The score at these keys moves by `2 eps (k - k')`, which here is
+        // thousands of units; the answer does not move at all.
+        let (a, b) = (key(336860161.0, 1e6), key(336860162.0, 1e6));
+        let (la, lb) = (LiftKey::of(a).unwrap(), LiftKey::of(b).unwrap());
+        for eps in [0.0, 1e-6, -1e-6, 0.06, -0.06] {
+            let u = UnitQuery::of([336860161.0 + eps, 1.0]).expect("inside the window");
+            assert_eq!(u.cmp(la, lb), Ordering::Greater, "at eps = {eps}");
+        }
+    }
+
+    #[test]
+    fn the_symmetric_pair_is_where_the_residual_decides() {
+        // Two keys equidistant from the integer: there the offsets decide, and
+        // the residual is weighed against them, multiplied by the step between
+        // the keys -- so a residual of `1e-4` over a step of two is nothing
+        // beside an offset gap of `0.11`, and one of `0.05` overturns it.
+        // `ALM.LiftResidual.upper_lt_iff_of_sq_eq` is that comparison exactly.
+        let (early, late) = (key(9.0, 10.0), key(11.0, 1e9));
+        let (a, b) = (LiftKey::of(early).unwrap(), LiftKey::of(late).unwrap());
+        assert!(b.delta - a.delta > 0.1, "the later position carries the larger offset");
+        assert_eq!(UnitQuery::of([10.0, 1.0]).unwrap().cmp(a, b), Ordering::Less, "the offset");
+        assert_eq!(UnitQuery::of([10.0001, 1.0]).unwrap().cmp(a, b), Ordering::Less, "and with it");
+        assert_eq!(UnitQuery::of([9.95, 1.0]).unwrap().cmp(a, b), Ordering::Greater, "against it");
+        // And the exact dot product on the stored points agrees, these keys
+        // being far below the wall.
+        for qx in [10.0, 10.0001, 9.95, 10.05] {
+            let u = UnitQuery::of([qx, 1.0]).unwrap();
+            assert_eq!(u.cmp(a, b), dot_cmp([qx, 1.0], early, late), "at {qx}");
+        }
     }
 
     #[test]
@@ -273,15 +370,17 @@ mod tests {
                 let (pa, pb) = (key(a as f64, 7.0), key(b as f64, 9.0));
                 let (la, lb) = (LiftKey::of(pa).unwrap(), LiftKey::of(pb).unwrap());
                 for qx in [-30i64, -1, 0, 1, 17, 1000] {
-                    for qy in [1.0, -1.0] {
-                        let q = [qx as f64, qy];
-                        let uq = UnitQuery::of(q).unwrap();
-                        assert_eq!(uq.cmp(la, lb), dot_cmp(q, pa, pb), "{a} vs {b} at {q:?}");
-                        pairs += 1;
+                    for eps in [0.0, 1e-9, -1e-9, 0.05, -0.05] {
+                        for qy in [1.0, -1.0] {
+                            let q = [qx as f64 + eps, qy];
+                            let uq = UnitQuery::of(q).unwrap();
+                            assert_eq!(uq.cmp(la, lb), dot_cmp(q, pa, pb), "{a} vs {b} at {q:?}");
+                            pairs += 1;
+                        }
                     }
                 }
             }
         }
-        assert!(pairs > 10_000, "only {pairs} comparisons");
+        assert!(pairs > 50_000, "only {pairs} comparisons");
     }
 }
