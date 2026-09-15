@@ -6,7 +6,9 @@
 //! the sequence counter advances once per *layer step*, not once per token, and
 //! every head in a layer therefore shares one sequence number.
 
-use alm_hull::{BruteAttentionHead, GridWitness, HardAttentionHead, IntegerQueries, ScoreGaps, TieBreak};
+use alm_hull::{
+    BruteAttentionHead, GridWitness, HardAttentionHead, IntegerQueries, LiftWitness, ScoreGaps, TieBreak,
+};
 
 /// Which head implementation answers the queries.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -30,6 +32,7 @@ pub struct KvCache {
     seq: i32,
     grid: bool,
     queries: IntegerQueries,
+    lifts: Vec<LiftWitness>,
 }
 
 /// Rescale a query to unit scale without changing what it selects.
@@ -77,6 +80,7 @@ impl KvCache {
             seq: -1,
             grid: false,
             queries: IntegerQueries::default(),
+            lifts: vec![LiftWitness::default(); n],
         }
     }
 
@@ -108,6 +112,7 @@ impl KvCache {
                 [queries[2 * h], queries[2 * h + 1]],
                 [values[2 * h], values[2 * h + 1]],
             );
+            self.lifts[i].observe(k);
             self.queries.observe(q);
             let q = if self.grid { on_the_grid(q) } else { q };
             let answer = match &mut self.heads {
@@ -140,6 +145,25 @@ impl KvCache {
     /// argument assumes, and this is the count.
     pub fn query_witness(&self) -> IntegerQueries {
         self.queries
+    }
+
+    /// Which of the three families `embed_key` emits each head's keys came
+    /// from, summed across the stack.  `todo3.md` section 4's group: every
+    /// theorem about the container's size is about one family, and the
+    /// compiler emits three.  `ALM.HullMark.Marked` is the live one,
+    /// `ALM.HullClear.not_marked_of_clearKey` refutes it for a clearing head,
+    /// and `ALM.HullWall.lifted_of_marked_of_wall` says which live keys lost
+    /// their recency term to the wall on the way in.
+    pub fn lift_witness(&self) -> LiftWitness {
+        let mut all = LiftWitness::default();
+        self.lifts.iter().for_each(|w| all.merge(w));
+        all
+    }
+
+    /// The same, one entry per `(layer, head)` in the order `layer_step`
+    /// indexes them, so a run can be read head by head.
+    pub fn lift_heads(&self) -> &[LiftWitness] {
+        &self.lifts
     }
 
     /// How close the runner-up came, in key steps, over the whole run —

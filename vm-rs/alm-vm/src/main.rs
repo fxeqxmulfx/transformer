@@ -208,6 +208,32 @@ fn check(
             println!("    at: query {q:?}");
         }
     }
+    let lifts = cache.lift_witness();
+    if lifts.total > 0 {
+        println!(
+            "  keys: {} lifted, {} marked, {} cleared, {} flat, {} off (of {})",
+            lifts.lifted, lifts.marked, lifts.cleared, lifts.flat, lifts.off, lifts.total
+        );
+        println!(
+            "    worst live offset {:.3e} of {:.3e}; {} past the wall, {} non-integer",
+            lifts.worst,
+            alm_hull::MARK_SPREAD,
+            lifts.past_wall,
+            lifts.noninteger
+        );
+        let hs = cache.lift_heads();
+        let regime = |f: alm_hull::Family| hs.iter().filter(|h| h.regime() == Some(f)).count();
+        let ever = |f: fn(&alm_hull::LiftWitness) -> usize| hs.iter().filter(|h| f(h) > 0).count();
+        println!(
+            "    heads: {} live, {} flat, {} mixed (of {}); {} ever clear, {} past the wall",
+            regime(alm_hull::Family::Lifted),
+            regime(alm_hull::Family::Flat),
+            hs.iter().filter(|h| h.regime().is_none()).count(),
+            hs.len(),
+            ever(|h| h.cleared),
+            ever(|h| h.past_wall)
+        );
+    }
     let grid = cache.grid_witness();
     println!("  grid: worst ulp(score)/margin = {:.3}", grid.worst);
     if let Some(w) = grid.worst_at {
