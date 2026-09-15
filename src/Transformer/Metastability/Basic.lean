@@ -44,9 +44,11 @@ def sphericalCap (w : SSphere d) (ε : ℝ) : Set (SSphere d) :=
 
   `α(ε) = max { ⟨x, y⟩ : x ∈ 𝒮_i(2ε), y ∈ 𝒮_j(2ε), i ≠ j }`. -/
 noncomputable def αDist
-    (k : ℕ) (w : Idx k → SSphere d) (ε : ℝ) : ℝ := by
-  -- supremum over `i ≠ j` of `⟨x, y⟩` with `x ∈ 𝒮_i(2ε), y ∈ 𝒮_j(2ε)`.
-  exact 0
+    (k : ℕ) (w : Idx k → SSphere d) (ε : ℝ) : ℝ :=
+  sSup { c : ℝ |
+    ∃ i j : Idx k, i ≠ j ∧
+      ∃ x ∈ sphericalCap d (w i) (2 * ε), ∃ y ∈ sphericalCap d (w j) (2 * ε),
+        c = inner (𝕜 := ℝ) ((x : EucSpace d)) ((y : EucSpace d)) }
 
 /-- **Parameter γ (eq: gamma).**
 
@@ -64,7 +66,7 @@ noncomputable def γβ
 2. `γ(β) > 0` and `γ(β) = Ω(1)`. -/
 def isSeparated
     (β ε : ℝ) (X : SphereTuple d n) : Prop :=
-  ∃ (k : ℕ) (hk : k ≤ n) (w : Idx k → SSphere d),
+  ∃ k ≤ n, ∃ w : Idx k → SSphere d,
     (∀ i : Idx n, ∃ q : Idx k, X i ∈ sphericalCap d (w q) ε)
     ∧ 0 < γβ n β (αDist d k w ε) ε
 
