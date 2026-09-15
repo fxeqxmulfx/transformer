@@ -234,6 +234,29 @@ fn check(
             ever(|h| h.past_wall)
         );
     }
+    let seps = cache.sep_witness();
+    if seps.distinct > 1 {
+        let ss = cache.sep_heads();
+        println!(
+            "  spread: closest live keys {:.3e} apart of {} distinct ({} rewrites); floor {:.3e}",
+            seps.worst, seps.distinct, seps.repeats, alm_hull::SEP_FLOOR
+        );
+        match seps.window() {
+            Some(w) => println!("    window {w:.3e} per key (ALM.HullSep.sq_dist_gap_of_sep)"),
+            None => println!(
+                "    UNDER THE FLOOR: {} pair(s) leave no window at all (ALM.HullSep.nearest_fails_of_close)",
+                seps.under_floor
+            ),
+        }
+        if let Some(p) = seps.worst_at {
+            println!("    at: keys {p:?}");
+        }
+        println!(
+            "    heads: {} of {} clear the floor",
+            ss.iter().filter(|h| h.distinct > 0 && h.clears_the_floor()).count(),
+            ss.iter().filter(|h| h.distinct > 0).count()
+        );
+    }
     let grid = cache.grid_witness();
     println!("  grid: worst ulp(score)/margin = {:.3}", grid.worst);
     if let Some(w) = grid.worst_at {

@@ -7,7 +7,8 @@
 //! every head in a layer therefore shares one sequence number.
 
 use alm_hull::{
-    BruteAttentionHead, GridWitness, HardAttentionHead, IntegerQueries, LiftWitness, ScoreGaps, TieBreak,
+    BruteAttentionHead, Family, GridWitness, HardAttentionHead, IntegerQueries, LiftWitness, ScoreGaps,
+    SepWitness, TieBreak,
 };
 
 /// Which head implementation answers the queries.
@@ -33,6 +34,7 @@ pub struct KvCache {
     grid: bool,
     queries: IntegerQueries,
     lifts: Vec<LiftWitness>,
+    seps: Vec<SepWitness>,
 }
 
 /// Rescale a query to unit scale without changing what it selects.
@@ -81,6 +83,7 @@ impl KvCache {
             grid: false,
             queries: IntegerQueries::default(),
             lifts: vec![LiftWitness::default(); n],
+            seps: vec![SepWitness::new(); n],
         }
     }
 
@@ -112,7 +115,12 @@ impl KvCache {
                 [queries[2 * h], queries[2 * h + 1]],
                 [values[2 * h], values[2 * h + 1]],
             );
-            self.lifts[i].observe(k);
+            // Only the live families have a separation to speak of: a flat
+            // key threw its abscissa's meaning away with the lift, and a
+            // cleared one is leaving.  `ALM.HullSep` is about `markKey`.
+            if matches!(self.lifts[i].observe(k), Family::Lifted | Family::Marked) {
+                self.seps[i].observe(k[0] / 2.0);
+            }
             self.queries.observe(q);
             let q = if self.grid { on_the_grid(q) } else { q };
             let answer = match &mut self.heads {
@@ -164,6 +172,23 @@ impl KvCache {
     /// indexes them, so a run can be read head by head.
     pub fn lift_heads(&self) -> &[LiftWitness] {
         &self.lifts
+    }
+
+    /// How close two live keys of one head ever came, worst over the stack.
+    /// `ALM.HullNear` answers a query with the nearest key on unit-separated
+    /// keys; `ALM.HullSep.sq_dist_gap_of_sep` generalises that to a measured
+    /// separation and `the_shipped_separation_floor` says the measurement has
+    /// to clear `alm_hull::SEP_FLOOR`, because
+    /// `ALM.HullSep.nearest_fails_of_close` is a counter-example below it.
+    pub fn sep_witness(&self) -> SepWitness {
+        let mut all = SepWitness::new();
+        self.seps.iter().for_each(|w| all.merge(w));
+        all
+    }
+
+    /// The same, head by head, so the offender can be named.
+    pub fn sep_heads(&self) -> &[SepWitness] {
+        &self.seps
     }
 
     /// How close the runner-up came, in key steps, over the whole run —

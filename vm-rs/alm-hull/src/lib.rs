@@ -16,6 +16,7 @@ pub mod head;
 pub mod lift;
 pub mod meta;
 pub mod query;
+pub mod sep;
 pub mod tree;
 
 pub use breakpoint::Break;
@@ -25,3 +26,4 @@ pub use head::{BruteAttentionHead, HardAttentionHead, HullHalf};
 pub use lift::{Family, LiftWitness, CLEAR_MARK, MARK_SPREAD};
 pub use meta::{HullMeta, TieBreak};
 pub use query::IntegerQueries;
+pub use sep::{SepWitness, SEP_FLOOR};
