@@ -97,5 +97,24 @@ noncomputable def radialDerivative
   | .nGPT  => 0
   | .CoD   => 0
 
+/-- The identity parameters `Q^t = K^t = V^t = I_d` of `thm: convergence`. -/
+noncomputable def idParams (d : ℕ) : ℝ → ParamMatrix d :=
+  fun _ => ContinuousLinearMap.id ℝ (EucSpace d)
+
+/-- **The dynamics of one normalization scheme.**
+
+`θ` follows `eq: NA` with the speed-regulation factor `s_j(t)` of `scheme`,
+and `r` is the magnitude that factor refers to, evolving by the `ṙ_j(t)` of
+the same row of Table 2.  `α` is the nGPT step size and `τ` the Mix-LN
+switching time; both are ignored by the schemes that do not mention them.
+
+Source: arXiv:2510.22026v2, `eq: NA` and Table 2. -/
+def SchemeDynamics
+    (β : ℝ) (Q K V : ℝ → ParamMatrix d) (α : ℝ → ℝ) (τ : ℝ) (scheme : Scheme)
+    (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ) : Prop :=
+  NA d n β Q K V (speedFactor d n β Q K V α θ r τ scheme) θ ∧
+  ∀ t : ℝ, ∀ j : Idx n,
+    HasDerivAt (fun u => r u j) (radialDerivative d n β Q K V θ τ scheme t j) t
+
 end Normalization
 end Transformer

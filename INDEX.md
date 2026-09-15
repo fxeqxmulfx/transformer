@@ -2199,7 +2199,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 **[Transformer.Normalization](src/Transformer/Normalization.lean)** — 13 lines, aggregator
 
-**[Transformer.Normalization.Basic](src/Transformer/Normalization/Basic.lean)** — 101 lines
+**[Transformer.Normalization.Basic](src/Transformer/Normalization/Basic.lean)** — 120 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -2207,18 +2207,18 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`NA`](src/Transformer/Normalization/Basic.lean#L53) | def |  |
 | [`speedFactor`](src/Transformer/Normalization/Basic.lean#L63) | def |  |
 | [`radialDerivative`](src/Transformer/Normalization/Basic.lean#L79) | def |  |
+| [`idParams`](src/Transformer/Normalization/Basic.lean#L101) | def |  |
+| [`SchemeDynamics`](src/Transformer/Normalization/Basic.lean#L112) | def |  |
 
-**[Transformer.Normalization.Clustering](src/Transformer/Normalization/Clustering.lean)** — 149 lines
+**[Transformer.Normalization.Clustering](src/Transformer/Normalization/Clustering.lean)** — 128 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`idParams`](src/Transformer/Normalization/Clustering.lean#L36) | def |  |
-| [`SchemeDynamics`](src/Transformer/Normalization/Clustering.lean#L47) | def |  |
-| [`Synchronizes`](src/Transformer/Normalization/Clustering.lean#L60) | def |  |
-| [`RadialStalls`](src/Transformer/Normalization/Clustering.lean#L71) | def |  |
-| [`ClustersFromUniform`](src/Transformer/Normalization/Clustering.lean#L94) | def |  |
-| [`ClustersOrStallsFromGaussian`](src/Transformer/Normalization/Clustering.lean#L118) | def |  |
-| [`UnconditionalSynchronization`](src/Transformer/Normalization/Clustering.lean#L138) | def |  |
+| [`Synchronizes`](src/Transformer/Normalization/Clustering.lean#L39) | def |  |
+| [`RadialStalls`](src/Transformer/Normalization/Clustering.lean#L50) | def |  |
+| [`ClustersFromUniform`](src/Transformer/Normalization/Clustering.lean#L73) | def |  |
+| [`ClustersOrStallsFromGaussian`](src/Transformer/Normalization/Clustering.lean#L97) | def |  |
+| [`UnconditionalSynchronization`](src/Transformer/Normalization/Clustering.lean#L117) | def |  |
 
 **[Transformer.Normalization.Convergence](src/Transformer/Normalization/Convergence.lean)** — 175 lines
 

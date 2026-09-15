@@ -32,27 +32,6 @@ namespace Normalization
 
 variable (d n : ℕ)
 
-/-- The identity parameters `Q^t = K^t = V^t = I_d` of `thm: convergence`. -/
-noncomputable def idParams (d : ℕ) : ℝ → ParamMatrix d :=
-  fun _ => ContinuousLinearMap.id ℝ (EucSpace d)
-
-/-- **The dynamics of one normalization scheme.**
-
-`θ` follows `eq: NA` with the speed-regulation factor `s_j(t)` of `scheme`,
-and `r` is the magnitude that factor refers to, evolving by the `ṙ_j(t)` of
-the same row of Table 2.  `α` is the nGPT step size and `τ` the Mix-LN
-switching time; both are ignored by the schemes that do not mention them.
-
-Source: arXiv:2510.22026v2, `eq: NA` and Table 2. -/
-def SchemeDynamics
-    (β : ℝ) (α : ℝ → ℝ) (τ : ℝ) (scheme : Scheme)
-    (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ) : Prop :=
-  NA d n β (idParams d) (idParams d) (idParams d)
-      (speedFactor d n β (idParams d) (idParams d) (idParams d) α θ r τ scheme) θ ∧
-  ∀ t : ℝ, ∀ j : Idx n,
-    HasDerivAt (fun u => r u j)
-      (radialDerivative d n β (idParams d) (idParams d) (idParams d) θ τ scheme t j) t
-
 /-- **The tokens synchronize to one cluster:** every `θ_j(t)` converges, as
 `t → ∞`, to one and the same point.
 
@@ -96,7 +75,7 @@ def ClustersFromUniform
     (scheme : Scheme) : Prop :=
   scheme = Scheme.post ∨ scheme = Scheme.nGPT ∨ scheme = Scheme.CoD →
   ∀ᵐ Θ₀ ∂σ, ∀ (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ),
-    θ 0 = tupleCoe Θ₀ → SchemeDynamics d n β α τ scheme θ r →
+    θ 0 = tupleCoe Θ₀ → SchemeDynamics d n β (idParams d) (idParams d) (idParams d) α τ scheme θ r →
       Synchronizes d n θ
 
 /-- **Theorem (thm: convergence), second half.** *Pre-LN, Mix-LN and Peri-LN.*
@@ -122,7 +101,7 @@ def ClustersOrStallsFromGaussian
   ∀ᵐ X₀ : Idx n → EucSpace d ∂σ, (∀ j : Idx n, X₀ j ≠ 0) →
     ∀ (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ),
       (∀ j : Idx n, θ 0 j = ‖X₀ j‖⁻¹ • X₀ j) → (∀ j : Idx n, r 0 j = ‖X₀ j‖) →
-        SchemeDynamics d n β α τ scheme θ r →
+        SchemeDynamics d n β (idParams d) (idParams d) (idParams d) α τ scheme θ r →
           Synchronizes d n θ ∨ RadialStalls d n β τ scheme θ
 
 /-- **Corollary.** *Unconditional synchronization for Pre-LN and Peri-LN.*
@@ -143,7 +122,7 @@ def UnconditionalSynchronization
   ∀ᵐ X₀ : Idx n → EucSpace d ∂σ, (∀ j : Idx n, X₀ j ≠ 0) →
     ∀ (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ),
       (∀ j : Idx n, θ 0 j = ‖X₀ j‖⁻¹ • X₀ j) → (∀ j : Idx n, r 0 j = ‖X₀ j‖) →
-        SchemeDynamics d n β α τ scheme θ r → Synchronizes d n θ
+        SchemeDynamics d n β (idParams d) (idParams d) (idParams d) α τ scheme θ r → Synchronizes d n θ
 
 end Normalization
 end Transformer
