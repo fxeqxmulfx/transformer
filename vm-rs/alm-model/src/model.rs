@@ -152,14 +152,28 @@ impl Alm {
     /// projections are `Transformer.ALM.apply_eq_rowMajor`, the attention is
     /// `KvCache::layer_step` and everything `alm_hull` is checked by, and the
     /// decode is `ALM.firstMax_sparse_eq`.  The two residual additions and the
-    /// gated feed-forward are a straight port of `transformer.cpp` with
-    /// nothing proved about them: their fidelity rests on
-    /// `alm-vm/tests/reference.rs`, which reproduces the released traces token
-    /// for token, and not on an argument.
+    /// gated feed-forward are a straight port of `transformer.cpp`: that the
+    /// port is faithful rests on `alm-vm/tests/reference.rs`, which reproduces
+    /// the released traces token for token, and on nothing else — the traces
+    /// are evidence only as far as they reach.
     ///
-    /// The gate is spelled differently from its original and answers the same:
-    /// `transformer.cpp:315` writes `(ff[i] > 0 ? ff[i] : 0.0)` and this
-    /// writes `.max(0.0)`, which agree on `NaN` and, as compiled here, on a
+    /// What `ALM.GateGrid` adds is where they stop.  `max(ff, 0) * ff'`
+    /// multiplies two coordinates of the residual stream together, so it
+    /// leaves the integer grid once the stream passes 94 906 265
+    /// (`the_ffn_wall`, `isBinary_gate_of_wall`) — the same wall
+    /// `ALM.ScoreWall` finds for the score `2qk - k^2`, reached by squaring
+    /// the stream's range instead of the score's.  Under it the gate and both
+    /// `+=` are exact (`isBinary_gate`, `isBinary_add`), and the rectifier is
+    /// free at any magnitude (`relu_isBinary`): `max a 0` is `a` or `0`, and
+    /// both are representable as soon as `a` is.  All of that is conditional
+    /// on integer operands, which one lane of the stream is not — `x[1]`
+    /// carries the logarithm `embed_into` writes there — and for that lane
+    /// nothing here replaces the rounding it costs.
+    ///
+    /// The gate is spelled differently from its original and answers the same
+    /// (`ALM.GateGrid.gate_eq_ite`, over the reals, where the two cases below
+    /// do not exist): `transformer.cpp:315` writes `(ff[i] > 0 ? ff[i] : 0.0)`
+    /// and this writes `.max(0.0)`, which agree on `NaN` and, as compiled here, on a
     /// negative zero — the one case the standard leaves to the
     /// implementation, and one no comparison downstream can see anyway.
     pub fn forward_timed<'s>(
