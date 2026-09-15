@@ -65,6 +65,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.CumSum` | the counter the average has to divide out, and cannot |
 | `ALM.DriftMargin` | and the margin that replaces the exactness it costs |
 | `ALM.ClearKey` | and the cleared entry, which wins by no arithmetic at all |
+| `ALM.LiftCompare` | and the live one, whose abscissa the wall never reached |
 | `ALM.Basic` | exact hardmax lookup in arbitrary key dimension |
 | `ALM.Softmax` | softmax-to-hardmax error bounds for an abstract score gap |
 | `ALM.Lattice` | the tail bounds that remove the factor `n` |
@@ -154,6 +155,7 @@ import Transformer.ALM.ScoreGuard
 import Transformer.ALM.CumSum
 import Transformer.ALM.DriftMargin
 import Transformer.ALM.ClearKey
+import Transformer.ALM.LiftCompare
 import Transformer.ALM.GuardSep
 import Transformer.ALM.DotError
 import Transformer.ALM.Expansion
