@@ -241,20 +241,29 @@ fn check(
             "  spread: closest live keys {:.3e} apart of {} distinct ({} rewrites); floor {:.3e}",
             seps.worst, seps.distinct, seps.repeats, alm_hull::SEP_FLOOR
         );
-        match seps.window() {
-            Some(w) => println!("    window {w:.3e} per key (ALM.HullSep.sq_dist_gap_of_sep)"),
-            None => println!(
-                "    UNDER THE FLOOR: {} pair(s) leave no window at all (ALM.HullSep.nearest_fails_of_close)",
-                seps.under_floor
-            ),
-        }
         if let Some(p) = seps.worst_at {
             println!("    at: keys {p:?}");
         }
         println!(
-            "    heads: {} of {} clear the floor",
+            "    of the {} pair(s) under the floor, {} are one key rounded twice (ALM.HullTwin)",
+            seps.under_floor, seps.twins
+        );
+        match seps.window() {
+            Some(w) => println!(
+                "    and the rest are {:.3e} apart, a window of {w:.3e} per key (ALM.HullSep.sq_dist_gap_of_sep)",
+                seps.worst_apart
+            ),
+            None => println!(
+                "    COLLISION: {} pair(s) leave no window at all (ALM.HullSep.nearest_fails_of_close) at {:?}",
+                seps.collisions(),
+                seps.worst_apart_at
+            ),
+        }
+        println!(
+            "    heads: {} of {} clear the floor, {} hold no collision",
             ss.iter().filter(|h| h.distinct > 0 && h.clears_the_floor()).count(),
-            ss.iter().filter(|h| h.distinct > 0).count()
+            ss.iter().filter(|h| h.distinct > 0).count(),
+            ss.iter().filter(|h| h.distinct > 0 && h.collisions() == 0).count()
         );
     }
     let grid = cache.grid_witness();

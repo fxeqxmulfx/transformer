@@ -28,12 +28,20 @@
 
 use std::collections::BTreeSet;
 
+use crate::grid::ulp;
 use crate::lift::MARK_SPREAD;
 
 /// `sqrt(MARK_SPREAD)`: the separation a live head's keys must clear for the
 /// nearest key to be the answer.  `ALM.HullSep.the_shipped_separation_floor`
 /// brackets it between `0.657` and `0.659`.
 pub const SEP_FLOOR: f64 = 0.6578818376172799;
+
+/// How many representable steps apart two keys may be and still count as one
+/// key the projection rounded twice rather than two keys of its own.  On the
+/// six reference programs every pair under `SEP_FLOOR` is between `0.5` and
+/// `3` steps apart, so the margin here is wide and the distinction is sharp:
+/// nothing measured falls between `3` ulp and the floor.
+pub const TWIN_ULPS: f64 = 8.0;
 
 /// The window `(sep^2 - A) / (2*sep)` of `ALM.HullSep.sq_dist_gap_of_sep`:
 /// how far a query may stray from a key and still be answered by it alone,
@@ -75,6 +83,18 @@ pub struct SepWitness {
     pub distinct: usize,
     /// Insertions whose nearest neighbour was closer than `SEP_FLOOR`.
     pub under_floor: usize,
+    /// Of those, the ones within `TWIN_ULPS` of it — one key rounded two
+    /// ways rather than two keys that collided.  The distinction matters:
+    /// `ALM.HullTwin.twin_later_wins` says a twin pair resolves to the later
+    /// write over a radius the whole key range fits inside, so the loser
+    /// answers nothing and dropping it changes no answer.  A gap that is
+    /// under the floor and *not* a twin has no such excuse.
+    pub twins: usize,
+    /// The smallest gap between two keys that are not rounding twins — the
+    /// separation `ALM.HullSep.sq_dist_gap_of_sep` is really about.
+    pub worst_apart: f64,
+    /// The pair that realised it.
+    pub worst_apart_at: Option<[f64; 2]>,
     /// The smallest gap between two distinct keys, `INFINITY` until there are
     /// two of them.
     pub worst: f64,
@@ -84,7 +104,7 @@ pub struct SepWitness {
 
 impl SepWitness {
     pub fn new() -> SepWitness {
-        SepWitness { worst: f64::INFINITY, ..SepWitness::default() }
+        SepWitness { worst: f64::INFINITY, worst_apart: f64::INFINITY, ..SepWitness::default() }
     }
 
     /// Offer one key abscissa — `kx / 2`, the `k` of `ALM.HullMark.markKey`.
@@ -105,12 +125,21 @@ impl SepWitness {
         let above = self.keys.range(u + 1..).next().map(|&v| from_order_bits(v) - k);
         for (gap, other) in [(below, true), (above, false)] {
             let Some(gap) = gap else { continue };
+            let pair = if other { [k - gap, k] } else { [k, k + gap] };
+            let twin = gap <= TWIN_ULPS * ulp(pair[1].abs().max(pair[0].abs()));
             if gap < SEP_FLOOR {
                 self.under_floor += 1;
+                if twin {
+                    self.twins += 1;
+                }
             }
             if gap < self.worst {
                 self.worst = gap;
-                self.worst_at = Some(if other { [k - gap, k] } else { [k, k + gap] });
+                self.worst_at = Some(pair);
+            }
+            if !twin && gap < self.worst_apart {
+                self.worst_apart = gap;
+                self.worst_apart_at = Some(pair);
             }
         }
     }
@@ -123,21 +152,34 @@ impl SepWitness {
         self.repeats += other.repeats;
         self.distinct += other.distinct;
         self.under_floor += other.under_floor;
+        self.twins += other.twins;
         if other.worst < self.worst {
             self.worst = other.worst;
             self.worst_at = other.worst_at;
         }
+        if other.worst_apart < self.worst_apart {
+            self.worst_apart = other.worst_apart;
+            self.worst_apart_at = other.worst_apart_at;
+        }
     }
 
-    /// The window the measured separation buys, at the shipped offset spread.
+    /// The window the measured separation buys, at the shipped offset spread,
+    /// counting only keys that are not roundings of one another.
     pub fn window(&self) -> Option<f64> {
-        window(self.worst, MARK_SPREAD)
+        window(self.worst_apart, MARK_SPREAD)
     }
 
     /// Whether every pair of keys this head holds clears the floor, so that
     /// `ALM.HullSep.lineEval_markKey_lt_of_sep` applies to it.
     pub fn clears_the_floor(&self) -> bool {
         self.under_floor == 0
+    }
+
+    /// The weaker thing that was actually true of every head measured: the
+    /// pairs under the floor are all roundings of one key, which
+    /// `ALM.HullTwin` covers, and no two keys of the head's own collided.
+    pub fn collisions(&self) -> usize {
+        self.under_floor - self.twins
     }
 }
 
@@ -172,7 +214,7 @@ mod tests {
             w.observe(k);
         }
         assert_eq!((w.total, w.distinct, w.repeats, w.under_floor), (5, 5, 0, 0));
-        assert_eq!(w.worst, 1.0);
+        assert_eq!((w.worst, w.worst_apart), (1.0, 1.0));
         assert!(w.clears_the_floor());
         assert!(w.window().unwrap() > 0.283);
     }
@@ -194,8 +236,8 @@ mod tests {
         for k in [0.0, 2.0, 0.6] {
             w.observe(k);
         }
-        assert_eq!(w.under_floor, 1);
-        assert_eq!(w.worst, 0.6);
+        assert_eq!((w.under_floor, w.twins, w.collisions()), (1, 0, 1));
+        assert_eq!((w.worst, w.worst_apart), (0.6, 0.6));
         assert_eq!(w.worst_at, Some([0.0, 0.6]));
         assert!(!w.clears_the_floor());
         assert_eq!(w.window(), None);
@@ -205,8 +247,42 @@ mod tests {
         for k in [0.6, 2.0, 0.0] {
             v.observe(k);
         }
-        assert_eq!((v.under_floor, v.worst), (1, 0.6));
+        assert_eq!((v.under_floor, v.twins, v.worst), (1, 0, 0.6));
         assert_eq!(v.worst_at, Some([0.0, 0.6]));
+    }
+
+    #[test]
+    fn a_key_rounded_two_ways_is_told_apart_from_two_keys_that_collided() {
+        // What every under-floor pair of the six reference programs looks
+        // like: an integer and its neighbouring double, one ulp away.
+        let mut w = SepWitness::new();
+        for k in [10.0, 10.0 + ulp(10.0), 10.0 - ulp(10.0), 12.0] {
+            w.observe(k);
+        }
+        // Two adjacencies, not three: `10 - u` and `10 + u` never become
+        // neighbours, and the gap between them is not the smallest anyway.
+        assert_eq!((w.under_floor, w.twins, w.collisions()), (2, 2, 0));
+        assert_eq!(w.worst, ulp(10.0));
+        // The twins are set aside and the separation that is left is the one
+        // `ALM.HullSep` is about — two units, with a window to spare.
+        assert!((w.worst_apart - 2.0).abs() < 1e-12);
+        // `(sep^2 - A) / (2*sep)` at `sep = 2`, which is `(4 - 0.4328) / 4`.
+        assert!(w.window().unwrap() > 0.89);
+        // But the floor is still not cleared: `ALM.HullMark.Marked` is false
+        // of this head, and saying otherwise is what the split is for.
+        assert!(!w.clears_the_floor());
+    }
+
+    #[test]
+    fn a_gap_between_a_twin_and_a_collision_is_a_collision() {
+        // Three ulp is a twin, a millionth of a key step is not: nothing
+        // measured lands between them, and the rule does not interpolate.
+        let mut w = SepWitness::new();
+        for k in [4.0, 4.0 + 3.0 * ulp(4.0), 4.0 + 1e-6] {
+            w.observe(k);
+        }
+        assert_eq!((w.under_floor, w.twins, w.collisions()), (2, 1, 1));
+        assert!((w.worst_apart - 1e-6).abs() < 1e-14);
     }
 
     #[test]
@@ -244,7 +320,7 @@ mod tests {
         // 0.5 sits between b's keys but is half a step from a's, and that
         // proximity is not a fact about either head.
         assert_eq!((a.total, a.distinct, a.worst), (4, 4, 1.0));
-        assert_eq!(a.under_floor, 0);
+        assert_eq!((a.under_floor, a.twins, a.worst_apart), (0, 0, 1.0));
     }
 
     #[test]
