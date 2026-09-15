@@ -50,6 +50,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.ScoreWall` | and that the wall is the stored coordinate, not the arithmetic |
 | `ALM.ScoreGuard` | and the query-time test for it, which the scale nearly cancels out of |
 | `ALM.GuardSep` | and what passing that test buys: the separation the comparison needs |
+| `ALM.DotError` | except that the score costs three roundings and they do not cancel |
 | `ALM.ScoreGap` | and the gap the runtime reports, which is that separation counted out |
 | `ALM.GridWitness` | and the whole run's verdict, which merging the heads does not soften |
 | `ALM.QueryScale` | and the scale all of that is stated at, which one division removes |
@@ -145,6 +146,7 @@ import Transformer.ALM.CumSum
 import Transformer.ALM.DriftMargin
 import Transformer.ALM.ClearKey
 import Transformer.ALM.GuardSep
+import Transformer.ALM.DotError
 import Transformer.ALM.ScoreGap
 import Transformer.ALM.GridWitness
 import Transformer.ALM.QueryScale
