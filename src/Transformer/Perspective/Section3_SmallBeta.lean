@@ -16,9 +16,11 @@ This file formalizes §4 of the survey:
 
 import Transformer.Basic
 import Transformer.Perspective.Section1_IPS
+import Transformer.Perspective.Section2_FlowMap
+import Mathlib.MeasureTheory.Constructions.Pi
 
 open scoped BigOperators
-open Real
+open Real MeasureTheory
 
 namespace Transformer
 namespace Perspective
@@ -65,15 +67,39 @@ def clusteringSet
                 Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
                   Filter.atTop (nhds 0) }
 
+/-- The uniform law on `(𝕊^{d-1})^n`: the `n`-fold product of a rotation-invariant
+Borel probability measure on the sphere.
+
+That marginal is unique — a Borel probability measure on `𝕊^{d-1}` invariant
+under every linear isometry of `ℝ^d` *is* `σ_d` — so `UniformTuple d n` holds
+for exactly one `P`, and quantifying over all of them below is not a
+strengthening of the paper's statement.  Writing it this way keeps the Haar
+machinery out: invariance is stated through `Perspective.sphereMap`. -/
+def UniformTuple (P : Measure (SphereTuple d n)) : Prop :=
+  ∃ σ : Measure (SSphere d), IsProbabilityMeasure σ ∧
+    (∀ U : EucSpace d ≃ₗᵢ[ℝ] EucSpace d, σ.map (sphereMap d U) = σ) ∧
+    P = Measure.pi (fun _ : Idx n => σ)
+
 /-- **Theorem (th:beta_small).** *Clustering with high probability at small β.*
 
 For fixed `d, n ≥ 2`, the probability (w.r.t. uniform initialization on
 `(𝕊^{d-1})^n`) that the initial sequence belongs to `𝒮_β` tends to `1` as
-`β → 0`. -/
-theorem clustering_probability_small_beta
-    (hd : 2 ≤ d) (hn : 2 ≤ n) :
-    -- ℙ(𝒮_β) →[β→0] 1
-    True := by trivial
+`β → 0⁺`:
+
+  `ℙ(𝒮_β) →[β → 0⁺] 1`.
+
+A `Prop`-valued definition and not a theorem: the proof runs through
+`beta0_consensus`, `Sset0ProbabilityTendsToOne` and `distance_bound_at_time_m`,
+and is not formalized here.  Measurability of `clusteringSet` is part of what
+is being asserted: `P (𝒮_β)` is the outer measure when the set is not
+measurable, so the statement is the one the paper makes in either case.
+
+Source: arXiv:2312.10794v5, §4, `th:beta_small`. -/
+def ClusteringProbabilitySmallBeta : Prop :=
+  2 ≤ d → 2 ≤ n →
+  ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+    Filter.Tendsto (fun β : ℝ => (P (clusteringSet d n β)).toReal)
+      (nhdsWithin 0 (Set.Ioi 0)) (nhds 1)
 
 /-! ### Auxiliary objects used inside the proof of `th:beta_small`. -/
 
@@ -94,10 +120,19 @@ def Sset0 (m : ℕ) : Set (SphereTuple d n) :=
             X 0 = X₀ ∧ beta0Dynamics d n X ∧
               alphaClustered d n (3/4 : ℝ) (X (m : ℝ)) }
 
-/-- **Equation (e:Ps0n).** As `m → ∞`, `ℙ(𝒮_0^m) → 1`. -/
-theorem Sset0_probability_tends_to_one
-    (hd : 2 ≤ d) (hn : 2 ≤ n) :
-    True := by trivial
+/-- **Equation (e:Ps0n).** As `m → ∞`, `ℙ(𝒮_0^m) → 1`: almost every initial
+sequence is `(3/4)`-clustered by the `β = 0` dynamics at a late enough integer
+time, so the measure of `Sset0 d n m` tends to `1`.
+
+A `Prop`-valued definition and not a theorem: it is the quantitative form of
+`beta0_consensus`, which is a `sorry` here.
+
+Source: arXiv:2312.10794v5, §4, `e:Ps0n`. -/
+def Sset0ProbabilityTendsToOne : Prop :=
+  2 ≤ d → 2 ≤ n →
+  ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+    Filter.Tendsto (fun m : ℕ => (P (Sset0 d n m)).toReal)
+      Filter.atTop (nhds 1)
 
 /-- **Equation (e:approxsphere).** Gronwall bound:
 
