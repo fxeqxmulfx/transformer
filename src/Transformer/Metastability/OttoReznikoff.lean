@@ -38,12 +38,16 @@ variable (d n : ℕ)
 
 /-- **Equation (eq: otto.gf).** Abstract gradient flow on a manifold:
 
-  `u̇(t) = -∇𝖤(u(t))`,  `u(0) = u_0`. -/
+  `u̇(t) = -∇𝖤(u(t))`,  `u(0) = u_0`.
+
+The manifold is flattened to a normed space and the gradient is carried as an
+abstract field `gradE`: the Riemannian structure of §3.1 is not formalized.
+Source: arXiv:2410.06833v1, §3.1, `eq: otto.gf`. -/
 def abstractGF
-    {M : Type*} [TopologicalSpace M]
-    (gradE : M → M)   -- abstract placeholder for `-∇𝖤`
+    {M : Type*} [NormedAddCommGroup M] [NormedSpace ℝ M]
+    (gradE : M → M)
     (u₀ : M) (u : ℝ → M) : Prop :=
-  u 0 = u₀
+  u 0 = u₀ ∧ ∀ t : ℝ, HasDerivAt u (-(gradE (u t))) t
 
 /-- **Hypothesis (H1).** For every `u ∈ ℳ` there is `v ∈ 𝒩` with
 
@@ -121,12 +125,15 @@ configurations:
 
   `𝒮_q(τ) = { θ ∈ 𝕋 : cos(θ - ω_q) ≥ 1 - τ }`,
 
-and `γ(β) := 1 - α - 8τ - β⁻¹ log(2 n²/τ) > 0` with `γ(β) = Ω(1)`. -/
+and `γ(β) := 1 - α - 8τ - β⁻¹ log(2 n²/τ) > 0`, which is the last conjunct.
+The asymptotic side of the paper's condition, `γ(β) = Ω(1)`, is not part of
+the definition: it is a statement about a family of configurations, not about
+one.  Source: arXiv:2410.06833v1, §3.2, `hyp: init.theta`. -/
 def isSeparatedAngles
-    (β τ : ℝ) (θ : Idx n → ℝ) : Prop :=
-  ∃ (k : ℕ) (hk : k ≤ n) (ω : Idx k → ℝ),
-    ∀ i : Idx n, ∃ q : Idx k,
-      1 - τ ≤ Real.cos (θ i - ω q)
+    (α β τ : ℝ) (θ : Idx n → ℝ) : Prop :=
+  ∃ (k : ℕ), k ≤ n ∧ ∃ ω : Idx k → ℝ,
+    (∀ i : Idx n, ∃ q : Idx k, 1 - τ ≤ Real.cos (θ i - ω q)) ∧
+    0 < 1 - α - 8 * τ - β⁻¹ * Real.log (2 * (n : ℝ)^2 / τ)
 
 /-- The slow manifold `𝒩_β` of `Lemma lem: PL.borjan`:
 
@@ -158,7 +165,7 @@ energy satisfies
 for some `U ∈ 𝒩_β` and `κ(β, n) > 0`. -/
 lemma PL_borjan
     (β τ δ α lam : ℝ) (hβ : 1 < β) (hn : 2 ≤ n)
-    (Θ : Idx n → ℝ) (hsep : isSeparatedAngles n β τ Θ)
+    (Θ : Idx n → ℝ) (hsep : isSeparatedAngles n α β τ Θ)
     (k : ℕ) (hk : k ≤ n) (ω : Idx k → ℝ)
     (h_tau_small : ∀ q : Idx k, ∀ u v : ℝ,
                     (1 - 2*τ ≤ Real.cos (u - ω q)) →
@@ -219,8 +226,8 @@ to `𝖤_β` on `𝕋^n`, and both that theorem and the verification of (H1), (H
 for `𝖤_β` — which is `PL_borjan` — are `sorry` here.  Source:
 arXiv:2410.06833v1, §3.2, `eq: otto.attention`. -/
 def OttoAttention
-    (n : ℕ) (β τ lam : ℝ) (Θ : Idx n → ℝ) (k : ℕ) (ω : Idx k → ℝ) : Prop :=
-  1 < β → isSeparatedAngles n β τ Θ →
+    (n : ℕ) (α β τ lam : ℝ) (Θ : Idx n → ℝ) (k : ℕ) (ω : Idx k → ℝ) : Prop :=
+  1 < β → isSeparatedAngles n α β τ Θ →
   ∀ ε : ℝ, 0 < ε → ε < 1 →
     ∃ Cε : ℝ, 0 < Cε ∧
       ∀ U : ℝ → Idx n → ℝ, ∀ V : ℝ → Idx n → ℝ,

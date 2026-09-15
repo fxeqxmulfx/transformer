@@ -2147,24 +2147,24 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`CapExit`](src/Transformer/Metastability/MeanField.lean#L142) | def |  |
 | [`VarianceSmall`](src/Transformer/Metastability/MeanField.lean#L154) | def |  |
 
-**[Transformer.Metastability.OttoReznikoff](src/Transformer/Metastability/OttoReznikoff.lean)** — 264 lines
+**[Transformer.Metastability.OttoReznikoff](src/Transformer/Metastability/OttoReznikoff.lean)** — 271 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`abstractGF`](src/Transformer/Metastability/OttoReznikoff.lean#L42) | def |  |
-| [`H1`](src/Transformer/Metastability/OttoReznikoff.lean#L51) | def |  |
-| [`H2`](src/Transformer/Metastability/OttoReznikoff.lean#L61) | def |  |
-| [`otto_reznikoff`](src/Transformer/Metastability/OttoReznikoff.lean#L72) | theorem | sorry |
-| [`bakry_emery`](src/Transformer/Metastability/OttoReznikoff.lean#L95) | lemma | sorry |
-| [`isSeparatedAngles`](src/Transformer/Metastability/OttoReznikoff.lean#L125) | def |  |
-| [`slowManifold`](src/Transformer/Metastability/OttoReznikoff.lean#L135) | def |  |
-| [`g_OR`](src/Transformer/Metastability/OttoReznikoff.lean#L144) | def |  |
-| [`PL_borjan`](src/Transformer/Metastability/OttoReznikoff.lean#L159) | lemma | sorry |
-| [`Claim1`](src/Transformer/Metastability/OttoReznikoff.lean#L188) | def |  |
-| [`quantitative_inequality`](src/Transformer/Metastability/OttoReznikoff.lean#L201) | lemma | sorry |
-| [`OttoAttention`](src/Transformer/Metastability/OttoReznikoff.lean#L221) | def |  |
-| [`reversePL`](src/Transformer/Metastability/OttoReznikoff.lean#L239) | def |  |
-| [`reverse_PL_acceleration`](src/Transformer/Metastability/OttoReznikoff.lean#L253) | theorem | sorry |
+| [`abstractGF`](src/Transformer/Metastability/OttoReznikoff.lean#L46) | def |  |
+| [`H1`](src/Transformer/Metastability/OttoReznikoff.lean#L55) | def |  |
+| [`H2`](src/Transformer/Metastability/OttoReznikoff.lean#L65) | def |  |
+| [`otto_reznikoff`](src/Transformer/Metastability/OttoReznikoff.lean#L76) | theorem | sorry |
+| [`bakry_emery`](src/Transformer/Metastability/OttoReznikoff.lean#L99) | lemma | sorry |
+| [`isSeparatedAngles`](src/Transformer/Metastability/OttoReznikoff.lean#L132) | def |  |
+| [`slowManifold`](src/Transformer/Metastability/OttoReznikoff.lean#L142) | def |  |
+| [`g_OR`](src/Transformer/Metastability/OttoReznikoff.lean#L151) | def |  |
+| [`PL_borjan`](src/Transformer/Metastability/OttoReznikoff.lean#L166) | lemma | sorry |
+| [`Claim1`](src/Transformer/Metastability/OttoReznikoff.lean#L195) | def |  |
+| [`quantitative_inequality`](src/Transformer/Metastability/OttoReznikoff.lean#L208) | lemma | sorry |
+| [`OttoAttention`](src/Transformer/Metastability/OttoReznikoff.lean#L228) | def |  |
+| [`reversePL`](src/Transformer/Metastability/OttoReznikoff.lean#L246) | def |  |
+| [`reverse_PL_acceleration`](src/Transformer/Metastability/OttoReznikoff.lean#L260) | theorem | sorry |
 
 **[Transformer.Metastability.Staircase](src/Transformer/Metastability/Staircase.lean)** — 118 lines
 
@@ -2732,11 +2732,11 @@ Everything the build cannot vouch for, in one place.
 | [`eminem`](src/Transformer/Metastability/MainTheorem.lean#L69) | lemma | `Transformer.Metastability.MainTheorem` |
 | [`propagation`](src/Transformer/Metastability/MainTheorem.lean#L90) | lemma | `Transformer.Metastability.MainTheorem` |
 | [`metastability`](src/Transformer/Metastability/MainTheorem.lean#L119) | theorem | `Transformer.Metastability.MainTheorem` |
-| [`otto_reznikoff`](src/Transformer/Metastability/OttoReznikoff.lean#L72) | theorem | `Transformer.Metastability.OttoReznikoff` |
-| [`bakry_emery`](src/Transformer/Metastability/OttoReznikoff.lean#L95) | lemma | `Transformer.Metastability.OttoReznikoff` |
-| [`PL_borjan`](src/Transformer/Metastability/OttoReznikoff.lean#L159) | lemma | `Transformer.Metastability.OttoReznikoff` |
-| [`quantitative_inequality`](src/Transformer/Metastability/OttoReznikoff.lean#L201) | lemma | `Transformer.Metastability.OttoReznikoff` |
-| [`reverse_PL_acceleration`](src/Transformer/Metastability/OttoReznikoff.lean#L253) | theorem | `Transformer.Metastability.OttoReznikoff` |
+| [`otto_reznikoff`](src/Transformer/Metastability/OttoReznikoff.lean#L76) | theorem | `Transformer.Metastability.OttoReznikoff` |
+| [`bakry_emery`](src/Transformer/Metastability/OttoReznikoff.lean#L99) | lemma | `Transformer.Metastability.OttoReznikoff` |
+| [`PL_borjan`](src/Transformer/Metastability/OttoReznikoff.lean#L166) | lemma | `Transformer.Metastability.OttoReznikoff` |
+| [`quantitative_inequality`](src/Transformer/Metastability/OttoReznikoff.lean#L208) | lemma | `Transformer.Metastability.OttoReznikoff` |
+| [`reverse_PL_acceleration`](src/Transformer/Metastability/OttoReznikoff.lean#L260) | theorem | `Transformer.Metastability.OttoReznikoff` |
 | [`isWellPrepared`](src/Transformer/Metastability/Staircase.lean#L35) | def | `Transformer.Metastability.Staircase` |
 | [`modifiedUSA`](src/Transformer/Metastability/Staircase.lean#L49) | def | `Transformer.Metastability.Staircase` |
 | [`staircaseReparam`](src/Transformer/Metastability/Staircase.lean#L59) | def | `Transformer.Metastability.Staircase` |
