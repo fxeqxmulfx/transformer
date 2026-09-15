@@ -20,6 +20,7 @@ This file collects:
 import Transformer.Basic
 import Transformer.Perspective.Section2_FlowMap
 import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
+import Mathlib.Analysis.Calculus.Gradient.Basic
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -83,19 +84,37 @@ noncomputable def averageVF
         (fun i =>
           max ((EuclideanSpace.equiv _ ℝ (Ut x + bt)) i) 0)))
 
-/-- **Equation (eq: cauchy.pb).** Continuity equation on the sphere:
+/-- **Equation (eq: cauchy.pb).** Continuity equation on the sphere,
 
-  `∂_t μ(t) + div(μ(t) · 𝐯[μ(t)]) = 0`,    `μ(0) = μ_0`. -/
+  `∂_t μ(t) + div(μ(t) · 𝐯[μ(t)]) = 0`,
+
+in distributional form: for every `C¹` test function `φ` on the ambient space,
+
+  `d/dt ∫ φ dμ(t) = ∫ ⟨∇φ(x), 𝐯[μ(t)](t,x)⟩ dμ(t)(x)`.
+
+The initial condition `μ(0) = μ_0` is imposed separately by the statements that
+use this, since it is what varies between them.  As in
+`Perspective.continuityEquation`, the ambient gradient is the right pairing
+because `fullVF` ends in `proj`. -/
 def cauchyPB
     (θ : TimeParams d) (μ : ℝ → Perspective.ProbSphere d) : Prop :=
-  ∀ t : ℝ, True   -- distributional form left abstract.
+  ∀ φ : EucSpace d → ℝ, ContDiff ℝ 1 φ → ∀ t : ℝ,
+    HasDerivAt (fun s => ∫ x, φ (x : EucSpace d) ∂(μ s : Measure (SSphere d)))
+      (∫ x, inner (𝕜 := ℝ) (gradient φ (x : EucSpace d))
+          (fullVF d θ (μ t) t (x : EucSpace d))
+        ∂(μ t : Measure (SSphere d))) t
 
-/-- Flow map associated with parameters `θ` — the solution operator of
-`eq: cauchy.pb`. -/
-noncomputable def flowMap
-    (θ : TimeParams d) (t : ℝ) (μ₀ : Perspective.ProbSphere d) :
-    Perspective.ProbSphere d := by
-  exact μ₀  -- placeholder: the flow map is well-posed.
+/-- **Flow map associated with parameters `θ`** — the solution operator of
+`eq: cauchy.pb`.
+
+It is a property of a candidate `Φ`, not a construction: `Φ^t_θ μ₀` is the
+solution of the Cauchy problem started at `μ₀`, and producing one is exactly
+the well-posedness the paper assumes.  Stating it this way keeps that
+assumption visible wherever a flow map is used. -/
+def IsFlowMap
+    (θ : TimeParams d) (Φ : ℝ → Perspective.ProbSphere d → Perspective.ProbSphere d) :
+    Prop :=
+  ∀ μ₀ : Perspective.ProbSphere d, Φ 0 μ₀ = μ₀ ∧ cauchyPB d θ (fun t => Φ t μ₀)
 
 /-- The hyperplane `H_ε^γ = { x ∈ 𝕊^{d-1} : |⟨x, γ⟩| ≤ ε }`. -/
 def Hε (γ : SSphere d) (ε : ℝ) : Set (SSphere d) :=

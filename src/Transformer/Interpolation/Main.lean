@@ -77,10 +77,14 @@ theorem main_result
 
 /-- *Three-step factorization*:
 
-  `Φ^T_fin := (Φ^{T/3}_{θ_3})⁻¹ ∘ Φ^{T/3}_{θ_2} ∘ Φ^{T/3}_{θ_1}`. -/
+  `Φ^T_fin := (Φ^{T/3}_{θ_3})⁻¹ ∘ Φ^{T/3}_{θ_2} ∘ Φ^{T/3}_{θ_1}`.
+
+The three flows are arguments, since `Interpolation.IsFlowMap` is a property of
+a candidate solution operator and not a construction of one. -/
 noncomputable def threeStepFlow
-    (θ₁ θ₂ θ₃ : TimeParams d) (T : ℝ) (μ : ProbSphere d) : ProbSphere d :=
-  flowMap d θ₃ (T/3) (flowMap d θ₂ (T/3) (flowMap d θ₁ (T/3) μ))
+    (Φ₁ Φ₂ Φ₃ : ℝ → ProbSphere d → ProbSphere d) (T : ℝ) (μ : ProbSphere d) :
+    ProbSphere d :=
+  Φ₃ (T/3) (Φ₂ (T/3) (Φ₁ (T/3) μ))
 
 /-- **Lemma (lem: hyp.propagation).**  Propagation of transport maps along
 the first/last flows.
