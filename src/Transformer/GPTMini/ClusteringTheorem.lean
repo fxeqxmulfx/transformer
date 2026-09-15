@@ -1,27 +1,46 @@
 /-
-# Headline Theorem: Clustering of `gpt-mini` representations
+# Clustering of `gpt-mini` representations
 
-This is the **Phase 6 capstone** of the formalization:
+The capstone statement of the development:
 
-> For sufficiently many layers, with `V = I_d`, the representations of
-> `gpt-mini` cluster to a single direction on the unit sphere, for almost
-> every initial token configuration.
+> with the value projection equal to the identity, the token directions of
+> `gpt-mini` cluster to one point of the unit sphere as the depth grows, for
+> almost every initial configuration.
 
-The theorem is the composition of:
-  1. `Bridge.SphereResidence`           — RMSNorm-direction is on √d-sphere
-  2. `Bridge.RoPEAsTimeVarying`         — RoPE is a special time-varying QK
-  3. `Bridge.CausalConnection`          — causal mask matches `eq: csa`
-  4. `Bridge.XSAEquivalence`            — XSA at V=I = sphere proj
-  5. `Causal.MainTheorem.thm1`          — clustering for V=I causal SA
-  6. `Section5_HighD.hemisphere_clustering` — exponential rate inside a
-                                              hemisphere
-  7. `Normalization.Convergence`        — Pre-LN clustering for our LN
-                                          scheme
+The chain of bridges that is supposed to prove it:
 
-The full proof depends on the `sorry`-leaves in each of the above (which
-encode the actual mathematical content of the seven papers).  The
-theorem **statement** here is fully formal and the structural composition
-is encoded; what remains is filling the underlying analytic content.
+  1. `Bridge.SphereResidence`     — the RMSNorm direction lies on the sphere,
+  2. `Bridge.RoPEAsTimeVarying`   — RoPE is a time-varying `Q, K`,
+  3. `Bridge.CausalConnection`    — the causal mask matches `eq: csa`,
+  4. `Bridge.XSAEquivalence`      — XSA at `V = I` is the spherical projection,
+  5. `Causal.MainTheorem`         — clustering for causal SA with `V = I`,
+  6. `Section5_HighD`             — the exponential rate inside a cap,
+  7. `Normalization.Convergence`  — Pre-LN clustering.
+
+None of the three statements below is proved here, and each rests on
+`sorry`-leaves of the papers it composes, so each is a `Prop`-valued
+definition.  Three things are worth reading off them before they are used.
+
+*The layer dynamics are the Pre-LN residual recursion of one head*, written
+out in `PreLNHead`: the sub-layer reads `rmsNormEps` of the stream and its
+output is added back.  `V = I_d` is imposed structurally — the value argument
+of `attentionHead` is the normalized stream itself, not a projection of it —
+rather than as a hypothesis on `AttnParams`, whose single `W_qkv` has no
+`V`-block accessor.  The one head and the absent FFN are a restriction: what
+is stated is the depth behaviour of the attention recursion, not of
+`GPTMini.forward`, whose `Block.attnSubLayer` is still a placeholder.
+
+*The rate is polynomial in the depth, not exponential.*  The exponential rate
+of `Section5_HighD` is exponential in the time of the continuous dynamics, and
+under Pre-LN the layer index is not that time: the residual stream grows while
+the sub-layer output stays bounded, so the direction moves less and less.
+`LayerClustering` therefore states convergence only, and the quantitative
+`PolynomialRate` states the `1/L³` of `thm: preln-slow`.
+
+*`W₂` is a parameter* — Mathlib has no Wasserstein distance — and the
+mean-field limit `n → ∞` is not taken: `MeanFieldClustering` is the finite-`T`
+statement that the empirical distribution of the directions converges to a
+Dirac, the limit in `T` not being expressible at a fixed `Fin T`.
 -/
 
 import Transformer.GPTMini.Bridge
@@ -29,86 +48,105 @@ import Transformer.GPTMini.Model
 import Transformer.Perspective.Section5_HighD
 import Transformer.Causal.MainTheorem
 import Transformer.Normalization.Convergence
+import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+import Mathlib.MeasureTheory.Constructions.Pi
 
 open scoped BigOperators
-open Real
+open Real MeasureTheory
 
 namespace Transformer
 namespace GPTMini
 
-/-- **Headline Theorem: `gpt-mini` representations cluster.**
+variable (cfg : Config)
 
-Assume:
-  - the value-projection in every attention block is the identity
-    (`V = I_d` in `BlockParams`)
-  - the dimension condition `d_head ≥ 3` (so `Section5_HighD.boumal_clustering`
-    is in-scope)
-  - per-head temperatures `α_h` are *bounded* (no temperature blow-up)
-  - the input embeddings are generic (almost every — in the volume measure
-    on `(𝕊^{d-1})^n`)
+/-- **The Pre-LN layer recursion of a single head with `V = I_d`.**
 
-Then there exists a layer count `L_*` and a direction `x_∞ : 𝕊^{d_head-1}`
-such that all token representations after `L_*` layers concentrate around
-`x_∞` exponentially:
+  `x_{L+1}(i) = x_L(i) + head(RMSNorm_eps(x_L))(i)`,
 
-  `‖toSphere d_head (x_L i) - x_∞‖ ≤ C · e^{-λ L}`.
+where `head` is `CausalMHA.attentionHead`: QK-norm, RoPE, causal softmax and
+XSA, with the value stream equal to its own input — which is what `V = I_d`
+means.  Source: `reference/model.py` (`Block.forward`), and
+arXiv:2411.04990v2, `eq: csa`, for the sub-layer. -/
+def PreLNHead (alpha eps : ℝ) {T : ℕ} (positions : Fin T → ℝ)
+    (x : ℕ → Fin T → EucSpace cfg.head_dim) : Prop :=
+  ∀ (L : ℕ) (i : Fin T),
+    x (L + 1) i
+      = x L i
+        + attentionHead cfg alpha eps
+            (fun j => rmsNormEps eps (x L j)) (fun j => rmsNormEps eps (x L j))
+            (fun j => rmsNormEps eps (x L j)) positions i
 
-The exact constants `C, λ` depend on the parameter operator norms and
-the temperatures; for our QK-norm setup `λ = Ω(1)` independent of depth.
+/-- **Clustering of the representations.**
 
-**Proof structure** (entirely via bridges + existing formalized theorems):
+For `d_head ≥ 3`, for almost every initial stream — "almost every" for the
+Lebesgue measure of `(ℝ^{d_head})^T`, the product of the volumes of
+`EuclideanSpace ℝ (Fin d_head)` — every token direction `Φ(x_L(i))` converges,
+as the depth `L` grows, to one common point `x_∞` of the unit sphere.
 
-  forward
-   ↓ Bridge.SphereResidence.toSphere_norm  (tokens on √d-sphere)
-  spherical IPS
-   ↓ Bridge.RoPEAsTimeVarying              (RoPE = time-varying QK)
-  time-varying-QK SA on sphere
-   ↓ Bridge.CausalConnection               (mask is causal)
-  CSA from Causal.Basic
-   ↓ Causal.MainTheorem.thm1                (V=I clustering, `sorry`)
-  clustering qualitatively
-   ↓ Section5_HighD.hemisphere_clustering   (exponential rate, `sorry`)
-  exponential clustering ✓
+The stream is assumed to stay away from the origin, where the direction map
+`Bridge.toSphere` is not defined.
 
-The two `sorry`-leaves are in the seven formalized papers, not in our
-bridges. -/
-theorem gptMini_clustering
-    (cfg : GPTMini.Config) (params : ModelParams cfg) (eps : ℝ) (heps : 0 < eps)
-    (hd : 3 ≤ cfg.head_dim)
-    (h_V_identity :  -- placeholder: in the full formalization, this is
-                     -- the condition that the value projection in every
-                     -- block is the identity matrix.
-      True)
-    (h_alpha_bounded :  -- placeholder: per-head log_alpha is bounded
-      True) :
-    True := trivial
+Source: arXiv:2411.04990v2, §4 (`thm1`), through the bridges listed in the
+module docstring. -/
+def LayerClustering (T : ℕ) : Prop :=
+  3 ≤ cfg.head_dim →
+  ∀ (alpha eps : ℝ) (positions : Fin T → ℝ), 0 < eps →
+    ∀ᵐ x₀ : Fin T → EucSpace cfg.head_dim, ∀ x : ℕ → Fin T → EucSpace cfg.head_dim,
+      x 0 = x₀ → PreLNHead cfg alpha eps positions x → (∀ (L : ℕ) (i : Fin T), x L i ≠ 0) →
+        ∃ xinf : EucSpace cfg.head_dim, ‖xinf‖ = 1 ∧
+          ∀ i : Fin T,
+            Filter.Tendsto (fun L : ℕ => Bridge.toSphere cfg.head_dim (x L i))
+              Filter.atTop (nhds xinf)
 
-/-- **Mean-field analogue** (asymptotic in number of tokens).
+/-- **Mean-field form of the same conclusion.**
 
-If the empirical measure of initial tokens converges weakly to some
-absolutely continuous `μ₀ ∈ 𝒫(𝕊^{d_head-1})`, then the empirical
-distribution at layer `L` converges (in `W_2`) to a Dirac:
+The empirical distribution of the `T` token directions at depth `L`,
 
-  `W_2(empirical_L, δ_{x_∞}) → 0`  as  `n, L → ∞`.
+  `(1/T) Σ_i δ_{Φ(x_L(i))}`,
 
-This follows from the `gptMini_clustering` for finite particles and
-the mean-field equicontinuity arguments of `Transformer.MeanField.Clustering`. -/
-theorem gptMini_meanField_clustering
-    (cfg : GPTMini.Config) (params : ModelParams cfg) (eps : ℝ) :
-    True := trivial
+converges to `δ_{x_∞}` in the Wasserstein distance `W₂`, which is a parameter:
+Mathlib has no Wasserstein distance, and nothing below constrains `W₂` to be
+one, so the statement is only as strong as the `W₂` it is applied to.
 
-/-- **Quantitative rate** (depends on Pre-LN choice).
+Source: arXiv:2512.01868v4, §2 (mean-field clustering). -/
+def MeanFieldClustering
+    (W₂ : Measure (EucSpace cfg.head_dim) → Measure (EucSpace cfg.head_dim) → ℝ)
+    (T : ℕ) : Prop :=
+  3 ≤ cfg.head_dim → 0 < T →
+  ∀ (alpha eps : ℝ) (positions : Fin T → ℝ), 0 < eps →
+    ∀ᵐ x₀ : Fin T → EucSpace cfg.head_dim, ∀ x : ℕ → Fin T → EucSpace cfg.head_dim,
+      x 0 = x₀ → PreLNHead cfg alpha eps positions x → (∀ (L : ℕ) (i : Fin T), x L i ≠ 0) →
+        ∃ xinf : EucSpace cfg.head_dim, ‖xinf‖ = 1 ∧
+          Filter.Tendsto
+            (fun L : ℕ =>
+              W₂ (((T : ℝ)⁻¹).toNNReal •
+                  ∑ i : Fin T, Measure.dirac (Bridge.toSphere cfg.head_dim (x L i)))
+                (Measure.dirac xinf))
+            Filter.atTop (nhds (0 : ℝ))
 
-For our Pre-LN with QK-norm setup, the clustering rate is `polynomial 1/L³`
-in depth.  (Compare paper 2510 `thm: preln-slow`.)  This is *slower* than
-the Post-LN exponential rate of paper 2312, but matches the production
-norm scheme.
+/-- **The depth rate under Pre-LN is polynomial.**
 
-Concretely:
-  `‖toSphere(x_L i) - x_∞‖ ≤ C / L³`. -/
-theorem gptMini_polynomial_rate
-    (cfg : GPTMini.Config) (params : ModelParams cfg) (eps : ℝ) :
-    True := trivial
+With the temperatures bounded, `|α| ≤ A`, the directions approach their common
+limit at the rate
+
+  `‖Φ(x_L(i)) - x_∞‖ ≤ C / L³`,
+
+with `C` depending on `A` alone — the quantifier order is what says so, since
+`C` is chosen before `α`, `eps` and the initial stream.  This is slower than
+the exponential rate of the Post-LN scheme of arXiv:2312.10794v5, and it is
+the Pre-LN scheme that `gpt-mini` uses.
+
+Source: arXiv:2510.22026v2, `thm: preln-slow`. -/
+def PolynomialRate (A : ℝ) (T : ℕ) : Prop :=
+  3 ≤ cfg.head_dim → 0 ≤ A →
+  ∃ C : ℝ, 0 < C ∧
+    ∀ (alpha eps : ℝ) (positions : Fin T → ℝ), |alpha| ≤ A → 0 < eps →
+      ∀ᵐ x₀ : Fin T → EucSpace cfg.head_dim, ∀ x : ℕ → Fin T → EucSpace cfg.head_dim,
+        x 0 = x₀ → PreLNHead cfg alpha eps positions x →
+        (∀ (L : ℕ) (i : Fin T), x L i ≠ 0) →
+          ∃ xinf : EucSpace cfg.head_dim, ‖xinf‖ = 1 ∧
+            ∀ (L : ℕ), 1 ≤ L → ∀ i : Fin T,
+              ‖Bridge.toSphere cfg.head_dim (x L i) - xinf‖ ≤ C / (L : ℝ) ^ 3
 
 end GPTMini
 end Transformer
