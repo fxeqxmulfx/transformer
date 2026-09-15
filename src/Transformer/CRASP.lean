@@ -26,12 +26,16 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.MajTwoEquiv` | its translations to and from `TL[◁#, ▷#]`, and `LTC⁰` |
 | `CRASP.Positional` | `TL[◁#]^pos`, the extension by `MOD` and `Y` |
 | `CRASP.PositionalDepth` | its `Y`-normal form, its reduction, and its hierarchy |
+| `CRASP.PositionalTransformers` | sinusoidal, RoPE and ALiBi position encodings |
+| `CRASP.PositionalHierarchy` | what they simulate, and their depth hierarchies |
 
 Two things the paper carries are deliberately absent.  `lem:bb` and
 `lem:piecewise_testable_depth_majtwo` sit inside `\iffalse` blocks in the
-source and so are not part of it.  And the transformers with sinusoidal, RoPE
-and ALiBi position encodings of Appendix E, together with the step from `MAJ²`
-to `FO[<]`-uniform `LTC⁰` circuits, are not yet formalized.
+source and so are not part of it; so do `thm:mnf`, `thm:tlmod_to_rtfr` and
+`thm:TLCmod_to_rtfr` of Appendix E, and `lem:find_half_planes_oneway` of §4.3.
+The step from `MAJ²` to `FO[<]`-uniform `LTC⁰` circuits is not formalized
+either: it is a statement about circuits, which this development does not
+model.
 -/
 
 import Transformer.CRASP.Defs
@@ -46,4 +50,6 @@ import Transformer.CRASP.Transformers
 import Transformer.CRASP.MajTwo
 import Transformer.CRASP.MajTwoEquiv
 import Transformer.CRASP.Positional
+import Transformer.CRASP.PositionalTransformers
 import Transformer.CRASP.PositionalDepth
+import Transformer.CRASP.PositionalHierarchy
