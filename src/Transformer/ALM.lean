@@ -31,6 +31,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.HullWall` | and that past the wall the recency term is not there to begin with |
 | `ALM.HullNear` | so a live head answers with the key nearest the query, and only that |
 | `ALM.HullSep` | provided its keys clear two thirds of a step, which is where that breaks |
+| `ALM.HullTwin` | and where the shipped model breaks it, it is one key rounded twice |
 | `ALM.HullLower` | while the other half of the head keeps two lines at any length |
 | `ALM.HullSpace` | and no container at all keeps fewer than one line per key |
 | `ALM.HullCost` | and what one query costs, and returns, search and walk together |
@@ -122,6 +123,7 @@ import Transformer.ALM.HullClear
 import Transformer.ALM.HullWall
 import Transformer.ALM.HullNear
 import Transformer.ALM.HullSep
+import Transformer.ALM.HullTwin
 import Transformer.ALM.HullLower
 import Transformer.ALM.HullSpace
 import Transformer.ALM.HullCost
