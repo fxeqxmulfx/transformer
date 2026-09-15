@@ -329,6 +329,15 @@ fn check(
     if let Some(w) = grid.worst_at {
         println!("    at: query {:?}, key {:?}", w.query, w.key);
     }
+    // Under the integer cache the ratio above is measured over part of the
+    // run, and the part matters: the integer path compares in `i128` and has
+    // no rounding to weigh (`ALM.LiftCompare.upper_lt_iff`), so a worst ratio
+    // of zero says nothing until the size of the weighed population is beside
+    // it.  Everything answered from a stored ordinate is weighed.
+    if lift.keys > 0 || lift.retired > 0 {
+        let weighed = lift.stored + lift.axis + lift.hull;
+        println!("    over the {} quer(ies) answered from a stored ordinate, of {}", weighed, weighed + lift.integer);
+    }
     if let Some(first) = grid.first {
         println!(
             "  OFF THE GRID: {} quer(ies) won with no margin to spare (todo3.md section 4)",

@@ -148,8 +148,21 @@ fn the_integer_cache_reproduces_them_and_clears_the_grid() {
     let lines = |s: &str, mark: &str| -> Vec<String> {
         s.lines().filter(|l| l.contains(mark)).map(|l| l.trim().to_string()).collect()
     };
-    assert!(!lines(&shipped, "OFF THE GRID").is_empty(), "the hull path answers some of it blind");
-    assert!(lines(&lift, "OFF THE GRID").is_empty(), "and the integer path answers none of it so\n{lift}");
+    // And the crossings, which are the point of the exercise.  Both paths
+    // weigh every answer they take from a stored ordinate, so the two counts
+    // are comparable: what the integer path removes is the queries it answers
+    // in `i128` instead, and what it leaves is the queries it cannot -- the
+    // ones off the unit grid, which fall back to the stored points and so to
+    // the old wall.  `hello` loses all of its crossings and `addition` keeps
+    // the 8 %% that the query scale left one ulp off an integer.
+    let crossings = |s: &str| -> Vec<usize> {
+        lines(s, "OFF THE GRID")
+            .iter()
+            .map(|l| l.split(": ").nth(1).and_then(|r| r.split(' ').next()).expect("a count").parse().expect("a number"))
+            .collect()
+    };
+    assert_eq!(crossings(&shipped), vec![26, 788], "the hull path answers these blind\n{shipped}");
+    assert_eq!(crossings(&lift), vec![64], "one program left, and only its off-grid queries\n{lift}");
 
     // Both heads of section 4b are reached, on both programs, and neither
     // retires: the clear markers they are full of are held beside the

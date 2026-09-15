@@ -169,8 +169,9 @@ pub struct LiftAttentionHead {
     /// Written from `query`, which takes `&self`: the census is an observation
     /// of the head, not part of its answer.
     census: Cell<LiftCensus>,
-    /// And what it answered with no margin to spare, which on this head can
-    /// only be a cleared entry that won.
+    /// And what it answered with no margin to spare, over every query whose
+    /// answer came from a stored ordinate: the integer path is exact and has
+    /// nothing to put here.
     grid: Cell<GridWitness>,
 }
 
@@ -228,20 +229,28 @@ impl LiftAttentionHead {
         self.other.is_none()
     }
 
-    /// What the head behind this one has answered with no margin to spare.
+    /// What this head has answered with no margin to spare.
     ///
-    /// Empty while the integer path answers alone, and that is the claim
-    /// rather than an omission: below `2^52` the `i128` comparison has a whole
-    /// unit of margin and there is nothing to report.  The queries that do
-    /// *not* get that margin are the ones off the unit grid, which fall back
-    /// to the stored points and so back to the old wall; `LiftCensus::stored`
-    /// counts them, and it is the number to read beside this one.
+    /// Three of the four paths a query can take report here, and the fourth is
+    /// the one that has nothing to report: on the unit grid the comparison ran
+    /// in `i128` with a whole unit of margin
+    /// (`ALM.LiftCompare.upper_lt_iff`, `sq_dist_le`), so there is no rounding
+    /// to measure and a silent witness is the claim rather than an omission.
+    /// Off the grid the answer came from the stored points and the old wall is
+    /// back (`ALM.ScoreWall`); along an axis the ordinate is multiplied by zero
+    /// but the product `qx * kx` still rounds.  Both are measured, on the
+    /// margin `head.rs` measures them on, so the two heads are comparable at
+    /// every query neither of them answers as integers.
     ///
-    /// What it is not empty of is the marker.  A query a cleared entry *wins*
+    /// The fourth contributor is the marker.  A query a cleared entry *wins*
     /// was decided in float64 at `10^30`, where `ulp` is `2^47` and the unit
     /// step is long gone (`ALM.ClearKey.the_marker_costs_the_grid`), so it is
     /// recorded -- and a query where the cleared entry merely took part and
     /// lost is not, because nothing about the answer rested on it.
+    ///
+    /// `LiftCensus::stored` counts the queries the second of these covers, and
+    /// it is the number to read beside this one: a worst ratio of zero means
+    /// something only once it is known how many queries were weighed for it.
     pub fn grid_witness(&self) -> GridWitness {
         let mut w = self.grid.get();
         if let Some(h) = self.other.as_ref() {
@@ -254,6 +263,16 @@ impl LiftAttentionHead {
         let mut c = self.census.get();
         f(&mut c);
         self.census.set(c);
+    }
+
+    /// Weigh one answer that came from a stored ordinate against the margin it
+    /// had to beat, exactly as `HardAttentionHead` weighs its own: for these
+    /// keys the runner-up is an integer step away and a step in the score is
+    /// `|qy|`, or `|qx|` where the query lies along the abscissa.
+    fn note_grid(&self, score: f64, margin: f64, query: [f64; 2], key: Option<[f64; 2]>) {
+        let mut w = self.grid.get();
+        w.observe(score, margin, query, key);
+        self.grid.set(w);
     }
 
     pub fn insert(&mut self, key: [f64; 2], val: [f64; 2], seq: i32) {
@@ -374,9 +393,18 @@ impl LiftAttentionHead {
         let (qx, qy) = (q[0], q[1]);
         if qy == 0.0 {
             self.note(|c| c.axis += 1);
+            // The ordinate is multiplied by zero, so no offset and no marker
+            // separates anything -- but `qx * kx` is still a product of two
+            // doubles, and a step between two abscissae is `2 |qx|`.  `|qx|` is
+            // the margin recorded, which is what `head.rs` records and is the
+            // conservative half of the truth.  At `q == (0, 0)` every key
+            // scores zero and the tie is exact, which `observe` reads off a
+            // margin of zero and does not count.
             return Some(if qx > 0.0 {
+                self.note_grid(qx * self.max_kx, qx, q, None);
                 self.right_all.resolve(tb)
             } else if qx < 0.0 {
+                self.note_grid(qx * self.min_kx, qx, q, None);
                 self.left_all.resolve(tb)
             } else {
                 self.global.resolve(tb)
@@ -438,6 +466,18 @@ impl LiftAttentionHead {
                 }
                 fold(&mut best, self.key_at(x), self.live.meta_of(x), &cmp);
                 x = self.live.next(x);
+            }
+        }
+        // Off the unit grid the winner was chosen by comparing stored points,
+        // so the wall that applies is the old one and the query has to be
+        // weighed against it -- `LiftCensus::stored` counts these, and without
+        // this the count stood beside a witness that had never looked at them.
+        // On the grid there is nothing to weigh: `UnitQuery::cmp` ran in
+        // `i128`.
+        if unit.is_none() {
+            if let Some((bk, _)) = best {
+                let p = bk.point();
+                self.note_grid(q[0] * p[0] + q[1] * p[1], qy, q, Some(p));
             }
         }
         self.with_cleared(q, tb, best)
