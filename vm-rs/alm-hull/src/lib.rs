@@ -8,6 +8,7 @@
 //! cross-multiplication.  See `breakpoint` and `exact`.
 
 pub mod breakpoint;
+pub mod clearkey;
 pub mod envelope;
 pub mod exact;
 pub mod gap;
@@ -22,6 +23,7 @@ pub mod sep;
 pub mod tree;
 
 pub use breakpoint::Break;
+pub use clearkey::{ClearGuard, ClearKey};
 pub use gap::{ScoreGaps, NOISE};
 pub use grid::{grid_ratio, off_the_grid, ulp, Crossing, GridWitness, GRID_LIMIT};
 pub use head::{BruteAttentionHead, HardAttentionHead, HullHalf};
