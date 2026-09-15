@@ -2,7 +2,8 @@
 # Normalization — Initial and terminal token velocities (§4.2–§4.3 of 2510.22026v2)
 
 * `Theorem thm: initial-velocity`  — uniform bound on `‖A_j(0)‖` for random
-                                      directional init,
+                                      directional init (the deterministic
+                                      part, `‖A_j‖ ≤ 1`, is proved),
 * `Theorem thm: preln-slow`        — radial growth `r_k(t) ≥ (1 - δ) t`
                                       (proved, as a velocity bound) and
                                       `d/dt Var(t)` rates for each scheme
@@ -23,20 +24,51 @@ open Normalization
 
 variable (d n : ℕ)
 
-/-- **Theorem (thm: initial-velocity).** *Initial attention magnitude bound.*
+/-- **The attention vector is a convex combination.**
 
-For `Q, K, V ∈ ℝ^{d × d}` with `max(‖Q^⊤ K‖_op, ‖V‖_op) ≤ 1`, `β = 1`, and
-i.i.d. uniform directional init `θ_j(0) ∼ Unif(𝕊^{d-1})`, there exist
-absolute constants `c, C > 0` such that for `e^{√d} ≥ n log n ≥ d`, with
-probability `1 - n^{-C}`,
+`A_j(Θ) = Z_j⁻¹ Σ_k e^{β ⟨Q θ_j, K θ_k⟩} V θ_k` averages the vectors `V θ_k`
+against positive weights summing to `Z_j`, so with unit-norm tokens and
+`‖V‖_op ≤ 1`,
 
-  `‖A_j(0)‖ ≤ C (√(log n / n) + log n / d)`  uniformly in `j ∈ [n]`. -/
-theorem thm_initial_velocity
-    (Q K V : ParamMatrix d)
-    (h_norms : ‖Q‖ ≤ 1 ∧ ‖K‖ ≤ 1 ∧ ‖V‖ ≤ 1)
-    (h_size : Real.exp (Real.sqrt d) ≥ (n : ℝ) * Real.log n
-                ∧ (n : ℝ) * Real.log n ≥ d) :
-    True := by trivial
+  `‖A_j(Θ)‖ ≤ 1`,
+
+whatever `Q`, `K` and `β` are.  This is the deterministic bound under the
+norm hypotheses of `thm: initial-velocity`; the theorem's point is the much
+sharper `C (√(log n / n) + log n / d)`, which holds only with high probability
+over an i.i.d. uniform directional initialization, and that is not formalized.
+Source: arXiv:2510.22026v2, §4.2. -/
+theorem norm_attentionVec_le_one
+    (β : ℝ) (Q K V : ParamMatrix d) (hV : ‖V‖ ≤ 1)
+    (Θ : Idx n → EucSpace d) (hΘ : ∀ l : Idx n, ‖Θ l‖ = 1) (j : Idx n) :
+    ‖attentionVec d n β Q K V Θ j‖ ≤ 1 := by
+  have hZpos : (0 : ℝ) < ∑ l : Idx n,
+      Real.exp (β * inner (𝕜 := ℝ) (Q (Θ j)) (K (Θ l))) :=
+    Finset.sum_pos (fun i _ => Real.exp_pos _) ⟨j, Finset.mem_univ j⟩
+  have hnum : ‖∑ k : Idx n,
+      Real.exp (β * inner (𝕜 := ℝ) (Q (Θ j)) (K (Θ k))) • V (Θ k)‖
+      ≤ ∑ l : Idx n, Real.exp (β * inner (𝕜 := ℝ) (Q (Θ j)) (K (Θ l))) := by
+    refine (norm_sum_le _ _).trans (Finset.sum_le_sum fun k _ => ?_)
+    rw [norm_smul, Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
+    have hVk : ‖V (Θ k)‖ ≤ 1 := by
+      have := V.le_opNorm (Θ k)
+      rw [hΘ k, mul_one] at this
+      linarith
+    nlinarith [Real.exp_pos (β * inner (𝕜 := ℝ) (Q (Θ j)) (K (Θ k))), norm_nonneg (V (Θ k))]
+  rw [attentionVec, norm_smul, norm_inv, Real.norm_eq_abs, abs_of_pos hZpos]
+  calc (∑ l : Idx n, Real.exp (β * inner (𝕜 := ℝ) (Q (Θ j)) (K (Θ l))))⁻¹ *
+        ‖∑ k : Idx n,
+          Real.exp (β * inner (𝕜 := ℝ) (Q (Θ j)) (K (Θ k))) • V (Θ k)‖
+      ≤ (∑ l : Idx n, Real.exp (β * inner (𝕜 := ℝ) (Q (Θ j)) (K (Θ l))))⁻¹ *
+          ∑ l : Idx n, Real.exp (β * inner (𝕜 := ℝ) (Q (Θ j)) (K (Θ l))) :=
+        mul_le_mul_of_nonneg_left hnum (le_of_lt (inv_pos.mpr hZpos))
+    _ = 1 := inv_mul_cancel₀ (ne_of_gt hZpos)
+
+/-- The hypotheses are satisfiable: the zero map has operator norm `0 ≤ 1`,
+and the first standard basis vector has norm `1`. -/
+example (n : ℕ) : ‖(0 : ParamMatrix 1)‖ ≤ 1 ∧
+    ∀ l : Idx n, ‖(fun _ : Idx n => EuclideanSpace.single (0 : Fin 1) (1 : ℝ)) l‖ = 1 := by
+  refine ⟨by simp, fun l => ?_⟩
+  simp
 
 /-- The empirical *intra-cluster variance* used in `thm: preln-slow`:
 
