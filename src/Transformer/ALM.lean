@@ -65,6 +65,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.CumSum` | the counter the average has to divide out, and cannot |
 | `ALM.DriftMargin` | and the margin that replaces the exactness it costs |
 | `ALM.ClearKey` | and the cleared entry, which wins by no arithmetic at all |
+| `ALM.ClearQuery` | the same guard when the query does not normalise its ordinate |
 | `ALM.LiftCompare` | and the live one, whose abscissa the wall never reached |
 | `ALM.LiftResidual` | the same comparison when the query misses the grid by a residual |
 | `ALM.Basic` | exact hardmax lookup in arbitrary key dimension |
@@ -156,6 +157,7 @@ import Transformer.ALM.ScoreGuard
 import Transformer.ALM.CumSum
 import Transformer.ALM.DriftMargin
 import Transformer.ALM.ClearKey
+import Transformer.ALM.ClearQuery
 import Transformer.ALM.LiftCompare
 import Transformer.ALM.LiftResidual
 import Transformer.ALM.GuardSep
