@@ -8,17 +8,21 @@
 //! accumulator, `f128` -- returns the same first failure to the unit, because
 //! none of them recover a coordinate that was rounded before it arrived.
 //!
-//! But `2k` is exact up to `k = 2^52`, and the second coordinate is a function
-//! of the first: for a live key it is `-k^2` plus a recency term under one.
-//! So the head does not have to read it.  Recovering `k` from the abscissa and
-//! rebuilding the comparison from `k` moves the wall from `2^26.5` to `2^52`,
-//! in the same 2D, at the same `O(log n)`, and without a wider embedding --
+//! But `2k` is exact up to `k = 2^52` -- an integer of one more bit than the
+//! key, so the format holds it and holds the half of it that recovers the key
+//! (`ALM.LiftCompare.the_abscissa_and_its_half_are_both_storable`) -- and the
+//! second coordinate is a function of the first: for a live key it is `-k^2`
+//! plus a recency term under one.  So the head does not have to read it.
+//! Recovering `k` from the abscissa and rebuilding the comparison from `k`
+//! moves the wall from `2^26.5` to `2^52`, in the same 2D, at the same
+//! `O(log n)`, and without a wider embedding --
 //! which is the one thing `todo3.md` section 4 leaves as the alternative, and
 //! it is a change to the weights.
 //!
 //! What licenses reading the ordinate off the abscissa is the family: the
 //! offset `d` lives in `[0, MARK_SPREAD]` with `MARK_SPREAD < 1/2`
-//! (`ALM.HullMark.marked_sep_of_shipped`), so two live offsets differ by less
+//! (`ALM.LiftCompare.the_shipped_spread`, the shipped constant; bounded by one
+//! in `ALM.HullMark.marked_sep_of_shipped`), so two live offsets differ by less
 //! than one and cannot bridge the unit gap between two integer keys.  That is
 //! the same inequality `ALM.HullMark.not_eraseStep_of_marked` spends to show
 //! the container drops no key, and `ALM.MarkedPosition.markKey_not_concurrent`
@@ -42,7 +46,10 @@ use crate::lift::MARK_SPREAD;
 ///
 /// Doubles are one apart below `2^53`, so `2k` is exact and `2k / 2` returns
 /// `k` for every `|k| <= 2^52`.  Above it the abscissa itself is rounded and
-/// there is nothing left to recover.
+/// there is nothing left to recover.  Both halves of that are
+/// `ALM.LiftCompare.the_abscissa_and_its_half_are_both_storable`, and
+/// `ALM.LiftCompare.the_section_4b_key` is one shipped key at which the
+/// abscissa is stored and the ordinate is not.
 pub const KEY_LIMIT: i64 = 1 << 52;
 
 /// A live key, as the integer it is rather than as the point it arrived in.
@@ -119,13 +126,17 @@ impl UnitQuery {
     /// the order is the order of `(k - q)^2` reversed, and the offsets decide
     /// only where those are equal -- they cannot do more, because two of them
     /// differ by less than one and `(k - q)^2` is an integer.  That is
-    /// `ALM.HullNear` counted out: the key nearest the query wins, and the
-    /// recency term breaks the symmetric case.  At `qy = -1` the sign flips
-    /// and the same expression is `(k + q)^2` maximised instead.
+    /// `ALM.LiftCompare.upper_lt_iff`, and `lower_lt_iff` is the `qy = -1`
+    /// branch, where the sign flips and the same expression is `(k + q)^2`
+    /// maximised instead with the offsets reversed.  Both are stated as
+    /// equivalences, so the two arms below are the comparison and not a
+    /// sufficient condition for it; `ALM.HullNear` proves the same win from a
+    /// query near a key, which is the weaker thing a container cannot use.
     ///
     /// `(k - q)^2` is computed in `i128` and never rounds: at the limit above
-    /// it is `2^106`, a fifth of the width.  This is the whole of the move
-    /// from `2^26.5` to `2^52`.
+    /// it is `2^106` (`ALM.LiftCompare.sq_dist_le`), twenty bits inside the
+    /// width (`sq_dist_fits`).  This is the whole of the move from `2^26.5`
+    /// to `2^52`.
     pub fn cmp(self, a: LiftKey, b: LiftKey) -> Ordering {
         let sq = |v: i64| {
             let t = (if self.upper { v - self.qx } else { v + self.qx }) as i128;
@@ -210,6 +221,8 @@ mod tests {
         // tie-break can recover it -- the head answers with a key that does
         // not win.  This is `ScoreGaps::observe_misranked` on the shipped
         // model, and the reason section 4b is a defect and not a caveat.
+        // `ALM.LiftCompare.the_section_4b_query` is the same pair decided the
+        // other way, from the abscissa, at any offsets the compiler emits.
         assert_eq!(dot_cmp(qf, a, b), Ordering::Less, "the stored points are misranked");
 
         let uq = UnitQuery::of(qf).unwrap();
