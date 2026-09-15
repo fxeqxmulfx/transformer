@@ -7,6 +7,7 @@ Formalization of:
 import Transformer.Normalization.Basic
 import Transformer.Normalization.Clustering
 import Transformer.Normalization.Convergence
+import Transformer.Normalization.Lojasiewicz
 import Transformer.Normalization.Radial
 import Transformer.Normalization.Symmetric
 import Transformer.Normalization.Velocities
