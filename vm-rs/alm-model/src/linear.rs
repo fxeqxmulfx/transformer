@@ -19,15 +19,16 @@
 //! being made — the answer is unchanged step for step, in `f64` as in `R`,
 //! rather than to within a rounding.
 
-/// How many rows are summed at once: the width of one AVX2 register in `f64`.
+/// How many rows are summed at once: two AVX2 registers of `f64`, or one
+/// AVX-512 register.
 ///
-/// Four independent accumulators is also roughly what it takes to cover the
-/// four-cycle latency of an FMA, so the number would be about this even on a
-/// machine with no vector unit at all.
+/// Eight independent accumulators also cover the four-cycle latency of an FMA
+/// twice over, so the number would be in this range even on a machine with no
+/// vector unit at all.
 const LANES: usize = 8;
 
-/// A dense matrix, `[rows, cols]` as `model.bin` stores it, held four rows at
-/// a time.
+/// A dense matrix, `[rows, cols]` as `model.bin` stores it, held eight rows
+/// at a time.
 ///
 /// The file is row-major and the obvious loop follows it: one row, one
 /// accumulator, `cols` dependent additions into it.  At `cols = 38` that is
@@ -36,10 +37,10 @@ const LANES: usize = 8;
 /// finds forty-eight per cent of a run inside it.
 ///
 /// So the weights are interleaved instead: `w[(b * cols + j) * LANES + l]`
-/// holds row `b * LANES + l`, column `j`, which puts the `j`-th entry of four
-/// consecutive rows in four adjacent words.  One load, one broadcast of `x[j]`
-/// and one vector FMA then advance four rows at once, each lane carrying its
-/// own accumulator.
+/// holds row `b * LANES + l`, column `j`, which puts the `j`-th entry of
+/// eight consecutive rows in eight adjacent words.  One load, one broadcast of
+/// `x[j]` and one vector FMA then advance eight rows at once, each lane
+/// carrying its own accumulator.
 ///
 /// This changes no answer, and the reason is the layout rather than an
 /// analysis: each lane still sums its own row left to right, in the order
@@ -53,7 +54,7 @@ const LANES: usize = 8;
 /// address it writes inside the buffer allocated below.
 ///
 /// Rows are padded up to a multiple of `LANES` with zeros; their sums are
-/// computed and thrown away, which costs at most three rows of a matrix and
+/// computed and thrown away, which costs at most seven rows of a matrix and
 /// removes the remainder loop from the hot path.
 pub struct Dense {
     rows: usize,
@@ -74,7 +75,7 @@ impl Dense {
         Dense { rows, cols, w: packed }
     }
 
-    /// `y = W x`, each row summed left to right, four rows at a time.
+    /// `y = W x`, each row summed left to right, eight rows at a time.
     ///
     /// The order within a row is the one `transformer.cpp` uses and the one
     /// the reference traces were generated under; float addition is not
