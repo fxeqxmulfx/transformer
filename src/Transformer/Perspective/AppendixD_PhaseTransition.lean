@@ -1,22 +1,21 @@
 /-
-# Appendix D — Proof of Theorem (thm: phase.transition.curve)
+# Appendix D — the stability estimates behind `thm: phase.transition.curve`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
-This file formalizes Appendix D of the survey:
+The first half of Appendix D of the survey:
 
-* `eq: lip.1`,    `eq: lip.2`,    `eq: lip.3` — Lipschitz bound on the flow,
-* `eq: stability.4ortho`               — Gronwall stability estimate,
-* `eq: almost.ortho.vec`               — almost-orthogonality (Lévy),
-* `e:shortdist`                         — distance bound between `x_i` and
-                                          its orthogonal approximation `y_i`,
-* `e:ineqfirstpart`                     — first part of `eq: upto-t`,
-* `e:ybetacloseto1`                     — `1 - γ_β(t) ≤ ⋯` estimate,
-* `eq: d.large`                         — definition of `d⋆(n, β)`,
-* `e:productcloseto1`, `e:1/n`,
-* `e:dotalpha`, `e:mineqalpha`, `e:diffineqalpha`,
-* `e:ineqsecondpart`                    — second part of `eq: upto-t`.
+* `eq: stability.4ortho`  — the Grönwall stability estimate for `SA`,
+* `eq: almost.ortho.vec`  — almost-orthogonality of a uniform sample (Lévy),
+* `e:shortdist`           — the distance between `x_i` and its orthogonal
+                            approximation `y_i`,
+* `e:ineqfirstpart`       — the first half of `eq: upto-t`,
+* `e:ybetacloseto1`       — the decay of `1 - γ_β(t)`,
+* `eq: d.large`           — the definition of `d⋆(n, β)`.
+
+The lower bound on the smallest coordinate `α(t)` and the assembly of the
+theorem are in `Perspective.AppendixD_Alpha`.
 -/
 
 import Transformer.Basic
@@ -25,69 +24,188 @@ import Transformer.Perspective.Section5_HighD
 import Transformer.Perspective.Section5_HighDCurve
 
 open scoped BigOperators
-open Real
+open Real MeasureTheory
 
 namespace Transformer
 namespace Perspective
 
-open Perspective Perspective
-
 variable (d n : ℕ)
 
-/-- **Equation (eq: stability.4ortho).** *Lipschitz estimate of the flow.*
+/-- The Lipschitz constant `c(β) = e^{10 max(1, β)}` of the flow, as it appears
+throughout Appendix D.
 
-For two solutions of `SA` with possibly distinct initial data,
+Source: arXiv:2312.10794v5, Appendix D, `eq: lip.3`. -/
+noncomputable def cBeta (β : ℝ) : ℝ := Real.exp (10 * max 1 β)
 
-  `max_j ‖x_j(t) - y_j(t)‖ ≤ c(β)^{n t} · max_j ‖x_j(0) - y_j(0)‖`,
+/-- `c(β) ≥ 1`: the bound it multiplies never shrinks. -/
+theorem one_le_cBeta (β : ℝ) : 1 ≤ cBeta β := by
+  have : (0 : ℝ) ≤ 10 * max 1 β := by
+    have : (1 : ℝ) ≤ max 1 β := le_max_left _ _
+    linarith
+  simp [cBeta, Real.one_le_exp this]
 
-where `c(β) = e^{10 max(1, β)}`. -/
+/-- **Equation (eq: stability.4ortho).** *Grönwall stability of the flow.*
+
+Any two solutions of `SA` with the same `β` separate at most at the rate
+`c(β)^{n t}`: if every pair of initial particles is within `M`, then
+
+  `‖x_i(t) - y_i(t)‖ ≤ c(β)^{n t} · M`   for all `t ≥ 0` and all `i`.
+
+The survey writes this with `max_j` on both sides; taking an arbitrary upper
+bound `M` of the initial distances says the same thing and avoids carrying a
+nonemptiness proof of `[n]` inside the statement.
+
+Not proved here: the Grönwall argument rests on the Lipschitz bounds
+`eq: lip.1`–`eq: lip.3` for the right-hand side of `SA`.
+
+Source: arXiv:2312.10794v5, Appendix D, `eq: stability.4ortho`. -/
 theorem stability_orthogonal
-    (β : ℝ) (X Y : ℝ → SphereTuple d n)
-    (hX : Perspective.SA d n β X) (hY : Perspective.SA d n β Y) :
-    ∀ t : ℝ, 0 ≤ t →
-      (Finset.univ : Finset (Idx n)).sup'
-        ⟨⟨0, by sorry⟩, Finset.mem_univ _⟩
-        (fun j => ‖((X t j : EucSpace d)) - ((Y t j : EucSpace d))‖)
-      ≤
-      (Real.exp (10 * max 1 β))^(n * t) *
-        (Finset.univ : Finset (Idx n)).sup'
-          ⟨⟨0, by sorry⟩, Finset.mem_univ _⟩
-          (fun j => ‖((X 0 j : EucSpace d)) - ((Y 0 j : EucSpace d))‖) := by
+    (β : ℝ) (X Y : ℝ → SphereTuple d n) (M : ℝ)
+    (hX : SA d n β X) (hY : SA d n β Y)
+    (hM : ∀ j : Idx n, ‖(X 0 j : EucSpace d) - (Y 0 j : EucSpace d)‖ ≤ M) :
+    ∀ t : ℝ, 0 ≤ t → ∀ i : Idx n,
+      ‖(X t i : EucSpace d) - (Y t i : EucSpace d)‖ ≤ cBeta β ^ ((n : ℝ) * t) * M := by
   sorry
 
-/-- **Equation (eq: almost.ortho.vec).** *Almost-orthogonality (Lévy
-concentration of measure).*
+/-- The hypotheses of `stability_orthogonal` are satisfiable: one consensus
+solution compared with itself, at initial distance `M = 0`. -/
+example :
+    SA 1 1 0 (fun _ _ => basePoint 0) ∧
+      ‖((basePoint 0 : SSphere 1) : EucSpace 1) -
+        ((basePoint 0 : SSphere 1) : EucSpace 1)‖ ≤ (0 : ℝ) :=
+  ⟨SA_const_consensus 1 1 one_pos 0 (basePoint 0), by simp⟩
 
-For i.i.d. uniform points on `𝕊^{d-1}`, there exist `n` pairwise orthogonal
-points `y_i ∈ 𝕊^{d-1}` such that
+/-- **Equation (eq: almost.ortho.vec).** *Almost-orthogonality of a uniform
+sample (Lévy's concentration of measure).*
 
-  `‖x_i(0) - y_i(0)‖ ≤ √(log d / d)`,
+For `n` i.i.d. uniform points on `𝕊^{d-1}` with `2 ≤ n ≤ d` there are, with
+probability at least `1 - 2 n² d^{-1/64}`, pairwise orthogonal points
+`y_1, …, y_n ∈ 𝕊^{d-1}` with `‖x_i(0) - y_i‖ ≤ √(log d / d)`.
 
-with probability `≥ 1 - 2 n² d^{-1/64}`. -/
-theorem almost_orthogonal
-    (hn : 2 ≤ n) (hdn : n ≤ d) :
-    True := by trivial
+A `Prop`-valued definition and not a theorem: the concentration inequality on
+the sphere, and the Gram–Schmidt construction of the `y_i` from it, are not
+formalized here.
+
+Source: arXiv:2312.10794v5, Appendix D, `eq: almost.ortho.vec`. -/
+def AlmostOrthogonal : Prop :=
+  2 ≤ n → n ≤ d →
+  ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+    1 - 2 * (n : ℝ) ^ 2 * (d : ℝ) ^ (-(1 / 64 : ℝ)) ≤
+      (P { X₀ : SphereTuple d n |
+            ∃ Y : SphereTuple d n,
+              (∀ i j : Idx n, i ≠ j →
+                inner (𝕜 := ℝ) ((Y i : EucSpace d)) ((Y j : EucSpace d)) = 0) ∧
+              ∀ i : Idx n,
+                ‖(X₀ i : EucSpace d) - (Y i : EucSpace d)‖
+                  ≤ Real.sqrt (Real.log d / d) }).toReal
 
 /-- **Equation (e:shortdist).**
 
-  `‖x_i(t) - y_i(t)‖ ≤ c(β)^{n t} √(log d / d)`. -/
+  `‖x_i(t) - y_i(t)‖ ≤ c(β)^{n t} √(log d / d)`,
+
+where `y` is the solution started from the orthogonal approximation supplied by
+`eq: almost.ortho.vec`.  It is `eq: stability.4ortho` at `M = √(log d / d)`.
+
+Source: arXiv:2312.10794v5, Appendix D, `e:shortdist`. -/
 theorem shortdist_bound
     (β : ℝ) (X Y : ℝ → SphereTuple d n)
-    (hX : Perspective.SA d n β X) (hY : Perspective.SA d n β Y) :
-    True := by trivial
+    (hX : SA d n β X) (hY : SA d n β Y)
+    (hM : ∀ j : Idx n,
+      ‖(X 0 j : EucSpace d) - (Y 0 j : EucSpace d)‖ ≤ Real.sqrt (Real.log d / d)) :
+    ∀ t : ℝ, 0 ≤ t → ∀ i : Idx n,
+      ‖(X t i : EucSpace d) - (Y t i : EucSpace d)‖
+        ≤ cBeta β ^ ((n : ℝ) * t) * Real.sqrt (Real.log d / d) :=
+  stability_orthogonal d n β X Y _ hX hY hM
 
-/-- **Equation (e:ineqfirstpart).** First part of `eq: upto-t`:
+/-- The hypotheses of `shortdist_bound` are satisfiable: at `d = 1` the bound
+`√(log d / d)` is `0`, and a consensus solution is at distance `0` from
+itself. -/
+example :
+    SA 1 1 0 (fun _ _ => basePoint 0) ∧
+      ‖((basePoint 0 : SSphere 1) : EucSpace 1) -
+        ((basePoint 0 : SSphere 1) : EucSpace 1)‖
+        ≤ Real.sqrt (Real.log 1 / 1) :=
+  ⟨SA_const_consensus 1 1 one_pos 0 (basePoint 0), by simp⟩
 
-  `|⟨x_i(t), x_j(t)⟩ - γ_β(t)| ≤ 2 c(β)^{n t} √(log d / d)`. -/
+/-- **Equation (e:ineqfirstpart).** *First half of `eq: upto-t`.*
+
+If `y` is a solution whose particles stay pairwise at the common angle `γ_β`
+(that is `⟨y_i(t), y_j(t)⟩ = γ_β(t)` for `i ≠ j`, which is `thm: orthogonal`),
+and `x` starts within `√(log d / d)` of it, then
+
+  `|⟨x_i(t), x_j(t)⟩ - γ_β(t)| ≤ 2 c(β)^{n t} √(log d / d)`.
+
+The proof is `e:shortdist` followed by Cauchy–Schwarz on
+`⟨x_i, x_j⟩ - ⟨y_i, y_j⟩ = ⟨x_i - y_i, x_j⟩ + ⟨y_i, x_j - y_j⟩`, both particles
+being unit vectors.
+
+Source: arXiv:2312.10794v5, Appendix D, `e:ineqfirstpart`. -/
 theorem ineq_first_part
-    (β : ℝ) (X : ℝ → SphereTuple d n) (γ : ℝ → ℝ)
-    (hX : Perspective.SA d n β X) (hγ : ybetaODE_SA n β γ) :
-    True := by trivial
+    (β : ℝ) (X Y : ℝ → SphereTuple d n) (γ : ℝ → ℝ)
+    (hX : SA d n β X) (hY : SA d n β Y)
+    (hM : ∀ j : Idx n,
+      ‖(X 0 j : EucSpace d) - (Y 0 j : EucSpace d)‖ ≤ Real.sqrt (Real.log d / d))
+    (hγ : ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx n, i ≠ j →
+      inner (𝕜 := ℝ) ((Y t i : EucSpace d)) ((Y t j : EucSpace d)) = γ t) :
+    ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx n, i ≠ j →
+      |inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((X t j : EucSpace d)) - γ t|
+        ≤ 2 * cBeta β ^ ((n : ℝ) * t) * Real.sqrt (Real.log d / d) := by
+  intro t ht i j hij
+  have hi := shortdist_bound d n β X Y hX hY hM t ht i
+  have hj := shortdist_bound d n β X Y hX hY hM t ht j
+  have hxj : ‖(X t j : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp (X t j).2
+  have hyi : ‖(Y t i : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp (Y t i).2
+  have key :
+      inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((X t j : EucSpace d)) - γ t
+        = inner (𝕜 := ℝ)
+              ((X t i : EucSpace d) - (Y t i : EucSpace d)) ((X t j : EucSpace d))
+          + inner (𝕜 := ℝ)
+              ((Y t i : EucSpace d)) ((X t j : EucSpace d) - (Y t j : EucSpace d)) := by
+    rw [← hγ t ht i j hij, inner_sub_left, inner_sub_right]
+    ring
+  rw [key]
+  calc
+    |inner (𝕜 := ℝ)
+          ((X t i : EucSpace d) - (Y t i : EucSpace d)) ((X t j : EucSpace d))
+        + inner (𝕜 := ℝ)
+          ((Y t i : EucSpace d)) ((X t j : EucSpace d) - (Y t j : EucSpace d))|
+      ≤ |inner (𝕜 := ℝ)
+            ((X t i : EucSpace d) - (Y t i : EucSpace d)) ((X t j : EucSpace d))|
+        + |inner (𝕜 := ℝ)
+            ((Y t i : EucSpace d)) ((X t j : EucSpace d) - (Y t j : EucSpace d))| :=
+        abs_add_le _ _
+    _ ≤ ‖(X t i : EucSpace d) - (Y t i : EucSpace d)‖ * ‖(X t j : EucSpace d)‖
+        + ‖(Y t i : EucSpace d)‖ * ‖(X t j : EucSpace d) - (Y t j : EucSpace d)‖ :=
+        add_le_add (abs_real_inner_le_norm _ _) (abs_real_inner_le_norm _ _)
+    _ = ‖(X t i : EucSpace d) - (Y t i : EucSpace d)‖
+        + ‖(X t j : EucSpace d) - (Y t j : EucSpace d)‖ := by
+        rw [hxj, hyi, mul_one, one_mul]
+    _ ≤ cBeta β ^ ((n : ℝ) * t) * Real.sqrt (Real.log d / d)
+        + cBeta β ^ ((n : ℝ) * t) * Real.sqrt (Real.log d / d) := add_le_add hi hj
+    _ = 2 * cBeta β ^ ((n : ℝ) * t) * Real.sqrt (Real.log d / d) := by ring
+
+/-- The hypotheses of `ineq_first_part` are satisfiable: at `d = n = 1` there
+is no pair `i ≠ j`, so `hγ` is vacuous, and the consensus solution is at
+distance `0` from itself. -/
+example :
+    SA 1 1 0 (fun _ _ => basePoint 0) ∧
+      ‖((basePoint 0 : SSphere 1) : EucSpace 1) -
+        ((basePoint 0 : SSphere 1) : EucSpace 1)‖
+        ≤ Real.sqrt (Real.log 1 / 1) ∧
+      ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx 1, i ≠ j →
+        inner (𝕜 := ℝ) ((basePoint 0 : EucSpace 1)) ((basePoint 0 : EucSpace 1))
+          = (0 : ℝ) :=
+  ⟨SA_const_consensus 1 1 one_pos 0 (basePoint 0), by simp,
+    fun _ _ i j hij => absurd (Subsingleton.elim i j) hij⟩
 
 /-- **Equation (e:ybetacloseto1).**
 
-  `1 - γ_β(t) ≤ (1/2) exp( (n² e^β) / (2(n + e^{β/2}))
-                              - n t / (n + e^{β/2}) )`. -/
+  `1 - γ_β(t) ≤ (1/2) exp( n² e^β / (2(n + e^{β/2})) - n t / (n + e^{β/2}) )`.
+
+Not proved here: it is the Grönwall estimate for `eq: ybeta` itself, using
+`e^{βγ} ≤ e^β` and `(n-1)γ + 1 ≥ 1` on `[0, 1]`.
+
+Source: arXiv:2312.10794v5, Appendix D, `e:ybetacloseto1`. -/
 theorem ybeta_close_to_1
     (β : ℝ) (γ : ℝ → ℝ) (hγ : ybetaODE_SA n β γ) :
     ∀ t : ℝ, 0 ≤ t →
@@ -98,71 +216,28 @@ theorem ybeta_close_to_1
               - ((n : ℝ) * t) / ((n : ℝ) + Real.exp (β / 2))) := by
   sorry
 
-/-- **Equation (eq: d.large).** Defines `d⋆(n, β)` as the smallest `d` for
-which
+/-- The hypothesis `ybetaODE_SA n β γ` of `ybeta_close_to_1` and
+`d_star_definition` is satisfiable: `ybetaODE_SA_one_zero`. -/
+example : ybetaODE_SA 1 0 (fun t => 1 - Real.exp (-2 * t)) := ybetaODE_SA_one_zero
 
-  `d / log d ≥ 16 c(β)² / γ_β(1/n)²`. -/
+/-- **Equation (eq: d.large).** *The threshold `d⋆(n, β)`.*
+
+There is a dimension past which
+
+  `16 c(β)² / γ_β(1/n)² ≤ d / log d`,
+
+which is what makes the error term `√(log d / d)` of `e:ineqfirstpart` small
+compared with `γ_β(1/n)` at time `1/n`.
+
+Not proved here: it needs `γ_β(1/n) > 0` together with `d / log d → ∞`.
+
+Source: arXiv:2312.10794v5, Appendix D, `eq: d.large`. -/
 theorem d_star_definition
     (β : ℝ) (γ : ℝ → ℝ) (hγ : ybetaODE_SA n β γ) :
     ∃ d_star : ℕ, ∀ d : ℕ, d_star ≤ d →
-      16 * (Real.exp (10 * max 1 β))^2 / (γ ((n : ℝ)⁻¹))^2
+      16 * (cBeta β)^2 / (γ ((n : ℝ)⁻¹))^2
         ≤ (d : ℝ) / Real.log d := by
   sorry
-
-/-- **Equation (e:1/n).**
-
-  `α(1/n) ≥ (1/2) γ_β(1/n)`. -/
-theorem alpha_at_one_over_n
-    (β : ℝ) (γ : ℝ → ℝ) (X : ℝ → SphereTuple d n)
-    (hX : Perspective.SA d n β X) (hγ : ybetaODE_SA n β γ)
-    (x_star : SSphere d) :
-    let α := fun t : ℝ =>
-              (Finset.univ : Finset (Idx n)).inf'
-                ⟨⟨0, by sorry⟩, Finset.mem_univ _⟩
-                (fun i => inner (𝕜 := ℝ)
-                            ((X t i : EucSpace d)) ((x_star : EucSpace d)))
-    (1/2 : ℝ) * γ ((n : ℝ)⁻¹) ≤ α ((n : ℝ)⁻¹) := by
-  sorry
-
-/-- **Equation (e:diffineqalpha).** Differential inequality:
-
-  `α̇(t) ≥ (1/(n e^{2β})) α(1/n) (1 - α(t))`. -/
-theorem diffineq_alpha
-    (β : ℝ) (X : ℝ → SphereTuple d n)
-    (hX : Perspective.SA d n β X) :
-    True := by trivial
-
-/-- **Equation (e:productcloseto1).**
-
-  `1 - α(t) ≤ exp( (1 - γ_β(1/n) · t) / (2 n e^{2β}) )`. -/
-theorem product_close_to_one
-    (β : ℝ) (X : ℝ → SphereTuple d n) (γ : ℝ → ℝ)
-    (hX : Perspective.SA d n β X) (hγ : ybetaODE_SA n β γ) :
-    True := by trivial
-
-/-- **Equation (e:ineqsecondpart).** Second part of `eq: upto-t`:
-
-  `|⟨x_i(t), x_j(t)⟩ - γ_β(t)|
-        ≤ exp((1 - γ_β(1/n) t) / (2 n e^{2β}))
-          + (1/2) exp( (n² e^β)/(2(n + e^{β/2})) - n t / (n + e^{β/2}) )`. -/
-theorem ineq_second_part
-    (β : ℝ) (X : ℝ → SphereTuple d n) (γ : ℝ → ℝ)
-    (hX : Perspective.SA d n β X) (hγ : ybetaODE_SA n β γ) :
-    True := by trivial
-
-/-- *Final assembly.*  Combining `e:ineqfirstpart` and `e:ineqsecondpart`
-gives `eq: upto-t`, which is `phase_transition_curve`. -/
-theorem phase_transition_proof_assembly :
-    True := by trivial
-
-/-! ### Remark (rem: usa.d) — analogue for `USA`
-
-An analogue holds for `USA` with `γ_β` replaced by the solution to
-`eq: ybetaUSA`.  In particular `1 - γ_β(t) ≤ (1/2) exp(-e^{β/2} (t - n/2))`. -/
-
-theorem usa_analogue
-    (β : ℝ) (γ : ℝ → ℝ) (hγ : ybetaODE_USA n β γ) :
-    True := by trivial
 
 end Perspective
 end Transformer
