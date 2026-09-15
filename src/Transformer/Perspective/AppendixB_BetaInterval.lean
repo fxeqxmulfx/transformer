@@ -1,17 +1,16 @@
 /-
-# Appendix B — Proof of Theorem (thm: beta.interval)
+# Appendix B — the angle `τ_β^*`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
-This file formalizes Appendix B of the survey:
+The kernels `g_β` of Appendix B, and the angle `τ_β^*` at which `g_β` changes
+sign: the unique solution of `β sin² τ = (d - 1) cos τ` in `[0, π/2)`.
 
-* `eq: taylor2` — non-positivity of the partial Hessian,
-* `eq: taylor3` — sub-block inequality involving the kernel `g`,
-* `eq: claim.yury` — `d`-dimensional generalization,
-* `eq: dr1`     — skew-symmetric perturbation inequality,
-* `e:Hessianincoord` — Hessian in local coordinates,
-* `eq: metric.grad`, `eq: metric.hess` — metric-invariance of saddle property.
+The block Hessian on the circle (`eq: taylor2`, `eq: taylor3`) is in
+`Perspective.AppendixB_Taylor`; the `d`-dimensional statements
+(`eq: claim.yury`, `eq: dr1`, `e:Hessianincoord`, `eq: metric.grad`,
+`eq: metric.hess`) are in `Perspective.AppendixB_HighD`.
 -/
 
 import Transformer.Basic
@@ -38,82 +37,105 @@ noncomputable def g_β_2d (β τ : ℝ) : ℝ :=
 noncomputable def g_β_d (d : ℕ) (β ζ : ℝ) : ℝ :=
   Real.exp (β * Real.cos ζ) * (((d : ℝ) - 1) * Real.cos ζ - β * Real.sin ζ ^ 2)
 
-/-- The unique solution `τ_β^* ∈ [0, π/2)` of `β sin² τ = (d - 1) cos τ`. -/
-noncomputable def τ_β_star (d : ℕ) (β : ℝ) : ℝ := by
-  exact 0  -- abstract placeholder; existence/uniqueness should be proved.
+/-- `cos τ_β^*`: the positive root of `β c² + (d-1) c - β = 0`, written out by
+the quadratic formula.
 
-/-- **Equation (eq: taylor2).** Hessian non-positivity inequality:
+The equation `β sin² τ = (d-1) cos τ` of the survey is this quadratic in
+`c = cos τ`, since `sin² τ = 1 - c²`. -/
+noncomputable def cosTauStar (d : ℕ) (β : ℝ) : ℝ :=
+  (Real.sqrt (((d : ℝ) - 1) ^ 2 + 4 * β ^ 2) - ((d : ℝ) - 1)) / (2 * β)
 
-For any subset of indices `𝒮 ⊂ [n]`, at a critical point of `𝖤_β` with
-non-positive Hessian,
+/-- The solution `τ_β^* ∈ [0, π/2)` of `β sin² τ = (d - 1) cos τ`.
 
-  `Σ_{i ∈ 𝒮} Σ_{j ∈ 𝒮} ∂_{θ_i} ∂_{θ_j} 𝖤_β(θ_1,…,θ_n) ≤ 0`. -/
-theorem taylor2_inequality
-    (β : ℝ) (θ : Idx n → ℝ) (𝒮 : Finset (Idx n))
-    (h_crit : True) (h_hess_nonpos : True) :
-    True := by trivial
+It is `arccos` of the root above; `τ_β_star_spec` proves that it solves the
+equation and lies in `[0, π/2)`, and `τ_β_star_unique` that it is the only
+such solution. -/
+noncomputable def τ_β_star (d : ℕ) (β : ℝ) : ℝ := Real.arccos (cosTauStar d β)
 
-/-- **Equation (eq: taylor3).** Sub-block inequality:
+/-- The discriminant is a square: `(√((d-1)² + 4β²))² = (d-1)² + 4β²`. -/
+theorem sq_sqrt_disc (d : ℕ) (β : ℝ) :
+    Real.sqrt (((d : ℝ) - 1) ^ 2 + 4 * β ^ 2) ^ 2 = ((d : ℝ) - 1) ^ 2 + 4 * β ^ 2 :=
+  Real.sq_sqrt (by positivity)
 
-  `Σ_{i ∈ 𝒮} Σ_{j ∈ 𝒮^c} g_β(θ_i - θ_j) ≥ 0`. -/
-theorem taylor3_inequality
-    (β : ℝ) (θ : Idx n → ℝ) (𝒮 : Finset (Idx n))
-    (h_crit : True) (h_hess_nonpos : True) :
-    0 ≤ ∑ i ∈ 𝒮, ∑ j ∈ 𝒮ᶜ, g_β_2d β (θ i - θ j) := by
-  sorry
+/-- The hypotheses `0 < β` and `1 ≤ d` of the lemmas below are satisfiable. -/
+example : (0 : ℝ) < 1 ∧ 1 ≤ 2 := ⟨one_pos, one_le_two⟩
 
-/-- **Equation (eq: claim.yury).** *Higher-dimensional generalization.*
+/-- `cos τ_β^* > 0`, which is what puts `τ_β^*` strictly below `π/2`. -/
+theorem cosTauStar_pos (d : ℕ) (β : ℝ) (hβ : 0 < β) (hd : 1 ≤ d) :
+    0 < cosTauStar d β := by
+  have hD : (0 : ℝ) ≤ (d : ℝ) - 1 := by
+    have : (1 : ℝ) ≤ (d : ℝ) := by exact_mod_cast hd
+    linarith
+  have hlt : ((d : ℝ) - 1) < Real.sqrt (((d : ℝ) - 1) ^ 2 + 4 * β ^ 2) :=
+    Real.lt_sqrt_of_sq_lt (by nlinarith)
+  exact div_pos (by linarith) (by linarith)
 
-For a critical point `(x_1,…,x_n) ∈ (𝕊^{d-1})^n` of `𝖤_β` with non-positive
-Hessian, with `θ_{ij} ∈ [0, π]` the geodesic distance
-(`cos θ_{ij} = ⟨x_i, x_j⟩`),
+/-- `cos τ_β^* ≤ 1`, so `τ_β^*` is a genuine angle. -/
+theorem cosTauStar_le_one (d : ℕ) (β : ℝ) (hβ : 0 < β) (hd : 1 ≤ d) :
+    cosTauStar d β ≤ 1 := by
+  have hD : (0 : ℝ) ≤ (d : ℝ) - 1 := by
+    have : (1 : ℝ) ≤ (d : ℝ) := by exact_mod_cast hd
+    linarith
+  have hle : Real.sqrt (((d : ℝ) - 1) ^ 2 + 4 * β ^ 2) ≤ 2 * β + ((d : ℝ) - 1) := by
+    have h1 : ((d : ℝ) - 1) ^ 2 + 4 * β ^ 2 ≤ (2 * β + ((d : ℝ) - 1)) ^ 2 := by nlinarith
+    calc Real.sqrt (((d : ℝ) - 1) ^ 2 + 4 * β ^ 2)
+        ≤ Real.sqrt ((2 * β + ((d : ℝ) - 1)) ^ 2) := Real.sqrt_le_sqrt h1
+      _ = 2 * β + ((d : ℝ) - 1) := Real.sqrt_sq (by linarith)
+  rw [cosTauStar, div_le_one (by linarith)]
+  linarith
 
-  `Σ_{i ∈ 𝒮} Σ_{j ∈ 𝒮^c} g_β(θ_{ij}) ≥ 0`. -/
-theorem claim_yury
-    (β : ℝ) (X : SphereTuple d n) (𝒮 : Finset (Idx n))
-    (h_crit : True) (h_hess_nonpos : True) :
-    0 ≤ ∑ i ∈ 𝒮, ∑ j ∈ 𝒮ᶜ,
-      g_β_d d β (Real.arccos (inner (𝕜 := ℝ) ((X i : EucSpace d)) ((X j : EucSpace d)))) := by
-  sorry
+/-- `cos τ_β^*` solves `β c² + (d-1) c - β = 0`. -/
+theorem cosTauStar_quadratic (d : ℕ) (β : ℝ) (hβ : 0 < β) :
+    β * cosTauStar d β ^ 2 + ((d : ℝ) - 1) * cosTauStar d β - β = 0 := by
+  have hS := sq_sqrt_disc d β
+  rw [cosTauStar]
+  set S := Real.sqrt (((d : ℝ) - 1) ^ 2 + 4 * β ^ 2) with hSdef
+  field_simp
+  nlinarith [hS, sq_nonneg β]
 
-/-- **Equation (eq:dr1).**  For an arbitrary skew-symmetric matrix `B`:
+/-- **The solution of `β sin² τ = (d-1) cos τ`.**  `τ_β^*` lies in `[0, π/2)`
+and solves the equation. -/
+theorem τ_β_star_spec (d : ℕ) (β : ℝ) (hβ : 0 < β) (hd : 1 ≤ d) :
+    τ_β_star d β ∈ Set.Ico 0 (π / 2) ∧
+      β * Real.sin (τ_β_star d β) ^ 2 = ((d : ℝ) - 1) * Real.cos (τ_β_star d β) := by
+  have hpos := cosTauStar_pos d β hβ hd
+  have hle := cosTauStar_le_one d β hβ hd
+  have hcos : Real.cos (τ_β_star d β) = cosTauStar d β :=
+    Real.cos_arccos (by linarith) hle
+  refine ⟨⟨Real.arccos_nonneg _, Real.arccos_lt_pi_div_two.mpr hpos⟩, ?_⟩
+  have hsin : Real.sin (τ_β_star d β) ^ 2 = 1 - cosTauStar d β ^ 2 := by
+    have h := Real.sin_sq_add_cos_sq (τ_β_star d β)
+    rw [hcos] at h
+    linarith
+  rw [hsin, hcos]
+  have := cosTauStar_quadratic d β hβ
+  linarith
 
-  `Σ_{i ∈ 𝒮} Σ_{j ∈ 𝒮^c} e^{β ⟨x_i, x_j⟩}
-        (β ⟨B x_i, x_j⟩² + ⟨B² x_i, x_j⟩) ≤ 0`. -/
-theorem dr1_skew_inequality
-    (β : ℝ) (X : SphereTuple d n) (𝒮 : Finset (Idx n))
-    (B : EucSpace d →L[ℝ] EucSpace d) (h_skew : True)  -- skew-symmetric
-    (h_crit : True) (h_hess_nonpos : True) :
-    (∑ i ∈ 𝒮, ∑ j ∈ 𝒮ᶜ,
-        Real.exp (β * inner (𝕜 := ℝ) ((X i : EucSpace d)) ((X j : EucSpace d)))
-          * (β * (inner (𝕜 := ℝ) (B (X i)) ((X j : EucSpace d)))^2
-              + inner (𝕜 := ℝ) (B (B (X i))) ((X j : EucSpace d)))) ≤ 0 := by
-  sorry
-
-/-- **Equation (e:Hessianincoord).** Hessian in local coordinates:
-
-  `Hess(f) = ( ∂²f/∂y_i ∂y_j - Γ_{ij}^k ∂f/∂y_k ) dy_i ⊗ dy_j`.
-
-In particular, at a critical point the Christoffel symbols drop out, so the
-strict-saddle property is metric-independent. -/
-theorem hessian_in_coord
-    (f : SphereTuple d n → ℝ) (X : SphereTuple d n) (h_crit : True) :
-    True := by trivial
-
-/-- **Equation (eq: metric.grad).** Comparison of gradients of `𝖤_β` for two
-different metrics `g, g_β` on `(𝕊^{d-1})^n`:
-
-  `g_β(∇_{g_β} 𝖤_β(x), v) = g(∇_g 𝖤_0(x), v) + O(β)`. -/
-theorem metric_grad_comparison
-    (β : ℝ) (X : SphereTuple d n) :
-    True := by trivial
-
-/-- **Equation (eq: metric.hess).** Comparison of Hessians:
-
-  `Hess_{g_β} 𝖤_β(x)[v] = Hess_g 𝖤_0(x)[v] + O(β)`. -/
-theorem metric_hess_comparison
-    (β : ℝ) (X : SphereTuple d n) :
-    True := by trivial
+/-- **Uniqueness.**  `τ_β^*` is the only solution of `β sin² τ = (d-1) cos τ`
+in `[0, π/2)`: the quadratic has a single positive root. -/
+theorem τ_β_star_unique
+    (d : ℕ) (β : ℝ) (hβ : 0 < β) (hd : 1 ≤ d)
+    (τ : ℝ) (hτ : τ ∈ Set.Ico 0 (π / 2))
+    (h : β * Real.sin τ ^ 2 = ((d : ℝ) - 1) * Real.cos τ) :
+    τ = τ_β_star d β := by
+  have hD : (0 : ℝ) ≤ (d : ℝ) - 1 := by
+    have : (1 : ℝ) ≤ (d : ℝ) := by exact_mod_cast hd
+    linarith
+  have hcospos : 0 < Real.cos τ :=
+    Real.cos_pos_of_mem_Ioo ⟨by linarith [hτ.1, Real.pi_pos], hτ.2⟩
+  have hquad : β * Real.cos τ ^ 2 + ((d : ℝ) - 1) * Real.cos τ - β = 0 := by
+    have hpyth := Real.sin_sq_add_cos_sq τ
+    nlinarith [h, hpyth]
+  have hquad' := cosTauStar_quadratic d β hβ
+  have hstar := cosTauStar_pos d β hβ hd
+  have heq : Real.cos τ = cosTauStar d β := by
+    have hfac : (Real.cos τ - cosTauStar d β) *
+        (β * (Real.cos τ + cosTauStar d β) + ((d : ℝ) - 1)) = 0 := by nlinarith
+    have hposfac : 0 < β * (Real.cos τ + cosTauStar d β) + ((d : ℝ) - 1) := by nlinarith
+    rcases mul_eq_zero.mp hfac with h1 | h2
+    · linarith
+    · linarith
+  rw [τ_β_star, ← heq, Real.arccos_cos hτ.1 (by linarith [hτ.2, Real.pi_pos])]
 
 end Perspective
 end Transformer

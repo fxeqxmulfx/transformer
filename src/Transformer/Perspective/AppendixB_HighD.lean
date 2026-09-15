@@ -1,0 +1,216 @@
+/-
+# Appendix B — the `d`-dimensional statements
+
+Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
+*A mathematical perspective on Transformers*.
+
+The part of Appendix B that runs on `(𝕊^{d-1})^n` rather than on the torus:
+
+* `eq: claim.yury`   — the sub-block inequality in dimension `d`,
+* `eq: dr1`          — the skew-symmetric perturbation inequality,
+* `e:Hessianincoord` — the Hessian at a critical point is intrinsic,
+* `eq: metric.grad`, `eq: metric.hess` — the modified metric of §3.4 costs
+                        `O(β)` against the round one.
+
+The energy is `Perspective.particleEnergy` at `V = Id`; the skew-symmetric
+perturbations and `𝖤_0` come from `Perspective.AppendixA_Saddle`.
+-/
+
+import Transformer.Perspective.AppendixB_BetaInterval
+import Transformer.Perspective.AppendixA_Saddle
+import Transformer.Perspective.Section2_GradientFlow
+
+open scoped BigOperators
+open Real
+
+namespace Transformer
+namespace Perspective
+
+variable (d n : ℕ)
+
+/-- The interaction energy of Appendix B,
+
+  `𝖤_β(X) = (2β)⁻¹ Σ_i Σ_j e^{β ⟨x_i, x_j⟩}`,
+
+that is `Perspective.particleEnergy` at `V = Id`. -/
+noncomputable def selfEnergy (β : ℝ) (X : SphereTuple d n) : ℝ :=
+  particleEnergy d n β (ContinuousLinearMap.id ℝ (EucSpace d)) X
+
+/-- With a single token the only interaction is the token with itself, so
+`𝖤_β` is the constant `(2β)⁻¹ e^β`. -/
+theorem selfEnergy_one (β : ℝ) (X : SphereTuple d 1) :
+    selfEnergy d 1 β X = (2 * β)⁻¹ * Real.exp β := by
+  have hx : ‖(X 0 : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp (X 0).2
+  simp [selfEnergy, particleEnergy, hx]
+
+/-- A critical point of `𝖤_β` on `(𝕊^{d-1})^n`: the Riemannian gradient
+
+  `Proj_{x_i} Σ_j e^{β ⟨x_i, x_j⟩} x_j`
+
+vanishes at every token.  It is the right-hand side of `USA`, so the critical
+points are exactly the stationary configurations of the dynamics. -/
+def IsCriticalEBeta (β : ℝ) (X : SphereTuple d n) : Prop :=
+  ∀ i : Idx n,
+    proj d ((X i : EucSpace d))
+      (∑ j : Idx n,
+        Real.exp (β * inner (𝕜 := ℝ) ((X i : EucSpace d)) ((X j : EucSpace d)))
+          • ((X j : EucSpace d))) = 0
+
+/-- `c` is the second derivative of `t ↦ 𝖤_β(Y t)` at `t = 0`, in the same
+sense as `Perspective.SecondDerivE0At` for `𝖤_0`. -/
+def SecondDerivEBetaAt (β : ℝ) (Y : ℝ → SphereTuple d n) (c : ℝ) : Prop :=
+  ∃ f' : ℝ → ℝ,
+    (∀ t : ℝ, HasDerivAt (fun s => selfEnergy d n β (Y s)) (f' t) t) ∧
+    HasDerivAt f' c 0
+
+/-- *Non-positive Hessian at `X`*, along the block rotations Appendix B
+perturbs by: for every skew-symmetric `B` and every `𝒮 ⊂ [n]`, rotating the
+tokens of `𝒮` by `e^{tB}` does not increase `𝖤_β` to second order.
+
+This is the hypothesis placed on a critical point that is not a strict saddle.
+
+Source: arXiv:2312.10794v5, Appendix B. -/
+def EBetaHessianNonPos (β : ℝ) (X : SphereTuple d n) : Prop :=
+  ∀ (B : ParamMatrix d) (𝒮 : Finset (Idx n)), IsSkew d B →
+    ∀ Y : ℝ → SphereTuple d n, PerturbationBy d n B 𝒮 X Y →
+      ∀ c : ℝ, SecondDerivEBetaAt d n β Y c → c ≤ 0
+
+/-- **Equation (eq: claim.yury).** *Higher-dimensional generalization of
+`eq: taylor3`.*
+
+For a critical point `(x_1,…,x_n) ∈ (𝕊^{d-1})^n` of `𝖤_β` with non-positive
+Hessian, and `θ_{ij} = arccos ⟨x_i, x_j⟩ ∈ [0, π]` the geodesic distance,
+
+  `Σ_{i ∈ 𝒮} Σ_{j ∈ 𝒮^c} g_β(θ_{ij}) ≥ 0`.
+
+Source: arXiv:2312.10794v5, Appendix B, `eq: claim.yury`. -/
+theorem claim_yury
+    (β : ℝ) (X : SphereTuple d n) (𝒮 : Finset (Idx n))
+    (h_crit : IsCriticalEBeta d n β X) (h_hess : EBetaHessianNonPos d n β X) :
+    0 ≤ ∑ i ∈ 𝒮, ∑ j ∈ 𝒮ᶜ,
+      g_β_d d β
+        (Real.arccos (inner (𝕜 := ℝ) ((X i : EucSpace d)) ((X j : EucSpace d)))) := by
+  sorry
+
+/-- **Equation (eq:dr1).**  The second-order term of the block rotation by a
+skew-symmetric `B`, written out at a critical point with non-positive Hessian:
+
+  `Σ_{i ∈ 𝒮} Σ_{j ∈ 𝒮^c} e^{β ⟨x_i, x_j⟩}
+        (β ⟨B x_i, x_j⟩² + ⟨B² x_i, x_j⟩) ≤ 0`.
+
+Source: arXiv:2312.10794v5, Appendix B, `eq: dr1`. -/
+theorem dr1_skew_inequality
+    (β : ℝ) (X : SphereTuple d n) (𝒮 : Finset (Idx n)) (B : ParamMatrix d)
+    (h_skew : IsSkew d B)
+    (h_crit : IsCriticalEBeta d n β X) (h_hess : EBetaHessianNonPos d n β X) :
+    (∑ i ∈ 𝒮, ∑ j ∈ 𝒮ᶜ,
+        Real.exp (β * inner (𝕜 := ℝ) ((X i : EucSpace d)) ((X j : EucSpace d)))
+          * (β * (inner (𝕜 := ℝ) (B (X i)) ((X j : EucSpace d)))^2
+              + inner (𝕜 := ℝ) (B (B (X i))) ((X j : EucSpace d)))) ≤ 0 := by
+  sorry
+
+/-- **Equation (e:Hessianincoord).** *The Hessian at a critical point is
+intrinsic.*
+
+In coordinates `Hess(f)_{ij} = ∂²f/∂y_i ∂y_j - Γ_{ij}^k ∂f/∂y_k`, and at a
+critical point the Christoffel term drops out.  Stated without Christoffel
+symbols: at a critical point the second derivative of `𝖤_β` along a curve
+depends on the curve only through its initial velocity — which is exactly why
+the strict-saddle property does not depend on the metric.
+
+A `Prop`-valued definition and not a theorem: the second-order expansion is
+not carried out here.
+
+Source: arXiv:2312.10794v5, Appendix B, `e:Hessianincoord`. -/
+def HessianAtCriticalIntrinsic (β : ℝ) : Prop :=
+  ∀ X : SphereTuple d n, IsCriticalEBeta d n β X →
+    ∀ (Y Z : ℝ → SphereTuple d n) (v : Idx n → EucSpace d),
+      Y 0 = X → Z 0 = X →
+      (∀ i : Idx n, HasDerivAt (fun s => (Y s i : EucSpace d)) (v i) 0) →
+      (∀ i : Idx n, HasDerivAt (fun s => (Z s i : EucSpace d)) (v i) 0) →
+      ∀ c c' : ℝ,
+        SecondDerivEBetaAt d n β Y c → SecondDerivEBetaAt d n β Z c' → c = c'
+
+/-- **Equation (eq: metric.grad).** *The modified metric costs `O(β)`.*
+
+  `g_β(∇_{g_β} 𝖤_β(x), v) = g(∇_g 𝖤_0(x), v) + O(β)`.
+
+Both sides are directional derivatives: the left one of `𝖤_β` and the right
+one of `𝖤_0`, along a curve with velocity `v`.  The factor `n/2` is the
+difference of normalisations, `𝖤_0 = n⁻¹ Σ_i Σ_j ⟨x_i, x_j⟩` against
+`𝖤_β = (2β)⁻¹ Σ_i Σ_j e^{β ⟨x_i, x_j⟩}`, whose `β → 0` derivative is
+`Σ_i Σ_j ⟨v_i, x_j⟩`.
+
+A `Prop`-valued definition and not a theorem: the expansion in `β` is not
+carried out here.
+
+Source: arXiv:2312.10794v5, Appendix B, `eq: metric.grad`. -/
+def MetricGradComparison : Prop :=
+  ∀ (X : SphereTuple d n) (v : Idx n → EucSpace d),
+    ∃ C : ℝ, 0 < C ∧
+      ∀ Y : ℝ → SphereTuple d n, Y 0 = X →
+        (∀ i : Idx n, HasDerivAt (fun s => (Y s i : EucSpace d)) (v i) 0) →
+        ∀ c₀ : ℝ, HasDerivAt (fun s => E0 d n (Y s)) c₀ 0 →
+          ∀ β : ℝ, 0 < β → β ≤ 1 →
+            ∀ cβ : ℝ, HasDerivAt (fun s => selfEnergy d n β (Y s)) cβ 0 →
+              |cβ - ((n : ℝ) / 2) * c₀| ≤ C * β
+
+/-- **Equation (eq: metric.hess).** *Comparison of Hessians.*
+
+  `Hess_{g_β} 𝖤_β(x)[v] = Hess_g 𝖤_0(x)[v] + O(β)`,
+
+along the same block rotation, and with the same normalisation factor as in
+`MetricGradComparison`.  Together with `HessianAtCriticalIntrinsic` this is
+what transports the `β = 0` saddle analysis of Appendix A to small `β > 0`.
+
+A `Prop`-valued definition and not a theorem: the expansion in `β` is not
+carried out here.
+
+Source: arXiv:2312.10794v5, Appendix B, `eq: metric.hess`. -/
+def MetricHessComparison : Prop :=
+  ∀ (X : SphereTuple d n) (B : ParamMatrix d) (𝒮 : Finset (Idx n)), IsSkew d B →
+    ∃ C : ℝ, 0 < C ∧
+      ∀ Y : ℝ → SphereTuple d n, PerturbationBy d n B 𝒮 X Y →
+        ∀ c₀ : ℝ, SecondDerivE0At d n Y c₀ →
+          ∀ β : ℝ, 0 < β → β ≤ 1 →
+            ∀ cβ : ℝ, SecondDerivEBetaAt d n β Y cβ →
+              |cβ - ((n : ℝ) / 2) * c₀| ≤ C * β
+
+/-! ### The hypotheses are satisfiable -/
+
+/-- The single token of `𝕊^0 ⊂ ℝ^1`. -/
+noncomputable def singleToken : SphereTuple 1 1 :=
+  fun _ => ⟨EuclideanSpace.single (0 : Fin 1) (1 : ℝ), by simp⟩
+
+/-- The hypotheses of `claim_yury` and `dr1_skew_inequality` are satisfiable:
+a single token is a critical point — its gradient is a multiple of
+`Proj_x x = 0` — and `𝖤_β` is constant on `(𝕊^{d-1})^1`, so every second
+derivative vanishes.  The zero matrix is skew-symmetric. -/
+example :
+    IsSkew 1 0 ∧ IsCriticalEBeta 1 1 1 singleToken ∧
+      EBetaHessianNonPos 1 1 1 singleToken := by
+  refine ⟨fun x y => by simp, ?_, ?_⟩
+  · intro i
+    have h0 : ∀ j : Idx 1, (singleToken j : EucSpace 1) = (singleToken i : EucSpace 1) := by
+      intro j; rw [Subsingleton.elim j i]
+    have hx : ‖(singleToken i : EucSpace 1)‖ = 1 :=
+      mem_sphere_zero_iff_norm.mp (singleToken i).2
+    simp only [h0, Finset.sum_const, Finset.card_univ, Fintype.card_fin, one_smul]
+    rw [proj_smul]
+    have hself : proj 1 (singleToken i : EucSpace 1) (singleToken i : EucSpace 1) = 0 := by
+      simp [proj, hx]
+    rw [hself, smul_zero]
+  · rintro B 𝒮 _ Y _ c ⟨f', hf', hc⟩
+    have hconst : (fun s : ℝ => selfEnergy 1 1 1 (Y s))
+        = fun _ : ℝ => (2 * (1 : ℝ))⁻¹ * Real.exp 1 := by
+      funext s
+      exact selfEnergy_one 1 1 (Y s)
+    have hf0 : f' = fun _ : ℝ => (0 : ℝ) := by
+      funext s
+      exact (hf' s).unique (by rw [hconst]; exact hasDerivAt_const s _)
+    rw [hf0] at hc
+    have hc0 : c = 0 := hc.unique (hasDerivAt_const (0 : ℝ) (0 : ℝ))
+    simp [hc0]
+
+end Perspective
+end Transformer

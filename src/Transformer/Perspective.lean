@@ -22,5 +22,7 @@ import Transformer.Perspective.Section9_Approximation
 import Transformer.Perspective.AppendixA_Beta0
 import Transformer.Perspective.AppendixA_Saddle
 import Transformer.Perspective.AppendixB_BetaInterval
+import Transformer.Perspective.AppendixB_Taylor
+import Transformer.Perspective.AppendixB_HighD
 import Transformer.Perspective.AppendixC_BetaTiny
 import Transformer.Perspective.AppendixD_PhaseTransition
