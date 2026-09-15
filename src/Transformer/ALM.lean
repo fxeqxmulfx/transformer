@@ -57,6 +57,7 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.ExactDot` | and the eight terms that make that sign the comparison's |
 | `ALM.CrossFilter` | and the breakpoint test, whose fast path answers the same |
 | `ALM.TreeQuery` | and the container the query descends, which is not an array |
+| `ALM.TreeBalance` | and its rebalancing, which moves nodes and not their order |
 | `ALM.Dense` | and the layout the rest of the forward pass reads its weights from |
 | `ALM.SparseHead` | and the head that skips its zeros, ties resolved as the C++ resolves them |
 | `ALM.ScoreGap` | and the gap the runtime reports, which is that separation counted out |
@@ -166,6 +167,7 @@ import Transformer.ALM.Expansion
 import Transformer.ALM.ExpansionSign
 import Transformer.ALM.ExactDot
 import Transformer.ALM.CrossFilter
+import Transformer.ALM.TreeBalance
 import Transformer.ALM.TreeQuery
 import Transformer.ALM.Dense
 import Transformer.ALM.SparseHead
