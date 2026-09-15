@@ -18,6 +18,12 @@ on the same recursion.  Then
 So the logarithmic query cost of the planar hull is a theorem about the
 procedure that runs, not a number declared in a structure field.
 
+The procedure that runs *in C++*, that is.  `alm-hull/src/tree.rs` keeps the
+envelope in a red-black tree rather than a sorted array, and pays
+`2·log₂(n + 1)` for the same query; `Transformer.ALM.TreeQuery` is that
+descent and its price, and `TreeQuery.log_succ_bound` is the factor of two
+between the two containers.
+
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 203-215 (`argmax`
 calls `lower_bound` once); the comparison count is the standard bound
 `⌈log₂ (len + 1)⌉` for `std::lower_bound`.
