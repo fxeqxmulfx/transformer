@@ -127,6 +127,40 @@ def SA
                         ((X t j : EucSpace d)))
             • ((X t j : EucSpace d)))) t
 
+/-- **The consensus configurations are the equilibria of `SA`.**
+
+When every token sits at the same point `x`, the attention average is `x`
+itself — the weights are equal and sum to one — and `Proj_x x = 0`, so the
+constant curve solves `eq: SA`.  It is the one solution of `SA` available in
+closed form, and it is what makes the hypotheses of the Appendix D estimates
+satisfiable. -/
+theorem SA_const_consensus (hn : 0 < n) (β : ℝ) (x : SSphere d) :
+    SA d n β (fun _ _ => x) := by
+  intro t i
+  have hx : ‖(x : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
+  have hxx : inner (𝕜 := ℝ) ((x : EucSpace d)) ((x : EucSpace d)) = 1 := by
+    rw [real_inner_self_eq_norm_mul_norm, hx]; ring
+  have hne : ((n : ℝ) * Real.exp β) ≠ 0 :=
+    mul_ne_zero (Nat.cast_ne_zero.mpr hn.ne') (Real.exp_ne_zero β)
+  have hZ : partitionSA d n β (fun _ _ => x) t i = (n : ℝ) * Real.exp β := by
+    simp [partitionSA]
+  have hsum : ∑ _j : Idx n,
+      Real.exp (β * inner (𝕜 := ℝ) ((x : EucSpace d)) ((x : EucSpace d)))
+        • ((x : EucSpace d)) = ((n : ℝ) * Real.exp β) • ((x : EucSpace d)) := by
+    simp only [hxx, mul_one, Finset.sum_const, Finset.card_univ, Fintype.card_fin]
+    rw [← Nat.cast_smul_eq_nsmul ℝ, smul_smul]
+  have hval : proj d ((x : EucSpace d))
+      ((partitionSA d n β (fun _ _ => x) t i)⁻¹ •
+        ∑ _j : Idx n,
+          Real.exp (β * inner (𝕜 := ℝ) ((x : EucSpace d)) ((x : EucSpace d)))
+            • ((x : EucSpace d))) = 0 := by
+    rw [hZ, hsum, smul_smul, inv_mul_cancel₀ hne, one_smul, proj, hxx, one_smul,
+      sub_self]
+  exact (hasDerivAt_const t ((x : EucSpace d))).congr_deriv hval.symm
+
+/-- The hypothesis `0 < n` of `SA_const_consensus` is satisfiable. -/
+example : 0 < 1 := one_pos
+
 /-! ### §2.2 — Boundedness of the partition function
 
 The text right after `eq: dissipation.softmax` notes that

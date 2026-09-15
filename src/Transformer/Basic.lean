@@ -61,6 +61,14 @@ abbrev Idx (n : ℕ) : Type := Fin n
 /-- Convenience: `n`-tuples of sphere points (particles). -/
 abbrev SphereTuple (d n : ℕ) : Type := Idx n → SSphere d
 
+/-- The first standard basis vector of `ℝ^{d+1}`, as a point of `𝕊^d`.
+
+Every sphere of positive dimension has one, so `SSphere (d+1)` and
+`SphereTuple (d+1) n` are inhabited; that is what the statements below need it
+for. -/
+noncomputable def basePoint (d : ℕ) : SSphere (d + 1) :=
+  ⟨EuclideanSpace.single (0 : Fin (d + 1)) (1 : ℝ), by simp [PiLp.norm_single]⟩
+
 /-- Coordinate map from a sphere tuple to a tuple of vectors. -/
 noncomputable def tupleCoe {d n : ℕ} (X : SphereTuple d n) : Idx n → EucSpace d :=
   fun i => (X i : EucSpace d)
