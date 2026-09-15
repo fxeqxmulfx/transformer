@@ -28,18 +28,6 @@ namespace Perspective
 
 variable (d n : ℕ)
 
-/-- `α(t) = min_i ⟨x_i(t), x⋆⟩`, the smallest coordinate of the configuration
-along a fixed direction `x⋆`, written as a specification rather than as a
-`Finset.inf'`: `α t` is a lower bound for all `i`, and it is attained.
-
-Source: arXiv:2312.10794v5, Appendix D, `e:dotalpha`. -/
-def IsAlphaMin (X : ℝ → SphereTuple d n) (x_star : SSphere d) (α : ℝ → ℝ) : Prop :=
-  ∀ t : ℝ,
-    (∀ i : Idx n,
-      α t ≤ inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((x_star : EucSpace d))) ∧
-    ∃ i : Idx n,
-      α t = inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((x_star : EucSpace d))
-
 /-- **Equation (e:1/n).**
 
   `α(1/n) ≥ (1/2) γ_β(1/n)`.
@@ -59,7 +47,7 @@ Source: arXiv:2312.10794v5, Appendix D, `e:1/n`. -/
 theorem alpha_at_one_over_n
     (β : ℝ) (γ α : ℝ → ℝ) (X : ℝ → SphereTuple d n) (x_star : SSphere d)
     (hX : SA d n β X) (hγ : ybetaODE_SA n β γ)
-    (hα : IsAlphaMin d n X x_star α) :
+    (hα : IsMinInner d n X x_star α) :
     (1/2 : ℝ) * γ ((n : ℝ)⁻¹) ≤ α ((n : ℝ)⁻¹) := by
   sorry
 
@@ -69,7 +57,7 @@ constant `α ≡ 1 = ⟨x, x⟩`. -/
 example :
     SA 1 1 0 (fun _ _ => basePoint 0) ∧
       ybetaODE_SA 1 0 (fun t => 1 - Real.exp (-2 * t)) ∧
-      IsAlphaMin 1 1 (fun _ _ => basePoint 0) (basePoint 0) (fun _ => 1) := by
+      IsMinInner 1 1 (fun _ _ => basePoint 0) (basePoint 0) (fun _ => 1) := by
   refine ⟨SA_const_consensus 1 1 one_pos 0 (basePoint 0), ybetaODE_SA_one_zero,
     fun t => ?_⟩
   have hx : ‖((basePoint 0 : SSphere 1) : EucSpace 1)‖ = 1 :=
@@ -91,7 +79,7 @@ half is proved here.
 Source: arXiv:2312.10794v5, Appendix D, `e:mineqalpha`, `e:diffineqalpha`. -/
 def DiffIneqAlpha (β : ℝ) : Prop :=
   ∀ (X : ℝ → SphereTuple d n) (x_star : SSphere d) (α : ℝ → ℝ),
-    SA d n β X → IsAlphaMin d n X x_star α →
+    SA d n β X → IsMinInner d n X x_star α →
     ∀ t : ℝ, (n : ℝ)⁻¹ ≤ t →
       ∃ c : ℝ, HasDerivAt α c t ∧
         ((n : ℝ) * Real.exp (2 * β))⁻¹ * α ((n : ℝ)⁻¹) * (1 - α t) ≤ c
@@ -106,7 +94,7 @@ integrated by Grönwall, starting from `e:1/n`, neither of which is proved here.
 Source: arXiv:2312.10794v5, Appendix D, `e:productcloseto1`. -/
 def ProductCloseToOne (β : ℝ) : Prop :=
   ∀ (X : ℝ → SphereTuple d n) (γ α : ℝ → ℝ) (x_star : SSphere d),
-    SA d n β X → ybetaODE_SA n β γ → IsAlphaMin d n X x_star α →
+    SA d n β X → ybetaODE_SA n β γ → IsMinInner d n X x_star α →
     ∀ t : ℝ, 0 ≤ t →
       1 - α t
         ≤ Real.exp ((1 - γ ((n : ℝ)⁻¹) * t) / (2 * (n : ℝ) * Real.exp (2 * β)))
@@ -127,7 +115,7 @@ A `Prop`-valued definition and not a theorem: it rests on
 Source: arXiv:2312.10794v5, Appendix D, `e:ineqsecondpart`. -/
 def IneqSecondPart (β : ℝ) : Prop :=
   ∀ (X : ℝ → SphereTuple d n) (γ α : ℝ → ℝ) (x_star : SSphere d),
-    SA d n β X → ybetaODE_SA n β γ → IsAlphaMin d n X x_star α →
+    SA d n β X → ybetaODE_SA n β γ → IsMinInner d n X x_star α →
     ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx n, i ≠ j →
       |inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((X t j : EucSpace d)) - γ t|
         ≤ Real.exp ((1 - γ ((n : ℝ)⁻¹) * t) / (2 * (n : ℝ) * Real.exp (2 * β)))
@@ -150,7 +138,7 @@ def PhaseTransitionProofAssembly : Prop :=
     AlmostOrthogonal d n → IneqSecondPart d n β →
       ∃ C lam : ℝ, 0 < C ∧ 0 < lam ∧
         ∀ (X : ℝ → SphereTuple d n) (α : ℝ → ℝ) (x_star : SSphere d),
-          SA d n β X → IsAlphaMin d n X x_star α →
+          SA d n β X → IsMinInner d n X x_star α →
           ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx n, i ≠ j →
             |inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((X t j : EucSpace d)) - γ t|
               ≤ min (2 * cBeta β ^ ((n : ℝ) * t) * Real.sqrt (Real.log d / d))

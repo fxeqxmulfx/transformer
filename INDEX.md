@@ -2322,17 +2322,16 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`eigvalBetaConst`](src/Transformer/Perspective/AppendixC_BetaTiny.lean#L114) | def |  |
 | [`eigvalBetaConst_pos`](src/Transformer/Perspective/AppendixC_BetaTiny.lean#L129) | theorem | proved |
 
-**[Transformer.Perspective.AppendixD_Alpha](src/Transformer/Perspective/AppendixD_Alpha.lean)** — 176 lines
+**[Transformer.Perspective.AppendixD_Alpha](src/Transformer/Perspective/AppendixD_Alpha.lean)** — 164 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`IsAlphaMin`](src/Transformer/Perspective/AppendixD_Alpha.lean#L36) | def |  |
-| [`alpha_at_one_over_n`](src/Transformer/Perspective/AppendixD_Alpha.lean#L59) | theorem | sorry |
-| [`DiffIneqAlpha`](src/Transformer/Perspective/AppendixD_Alpha.lean#L92) | def |  |
-| [`ProductCloseToOne`](src/Transformer/Perspective/AppendixD_Alpha.lean#L107) | def |  |
-| [`IneqSecondPart`](src/Transformer/Perspective/AppendixD_Alpha.lean#L128) | def |  |
-| [`PhaseTransitionProofAssembly`](src/Transformer/Perspective/AppendixD_Alpha.lean#L147) | def |  |
-| [`UsaAnalogue`](src/Transformer/Perspective/AppendixD_Alpha.lean#L170) | def |  |
+| [`alpha_at_one_over_n`](src/Transformer/Perspective/AppendixD_Alpha.lean#L47) | theorem | sorry |
+| [`DiffIneqAlpha`](src/Transformer/Perspective/AppendixD_Alpha.lean#L80) | def |  |
+| [`ProductCloseToOne`](src/Transformer/Perspective/AppendixD_Alpha.lean#L95) | def |  |
+| [`IneqSecondPart`](src/Transformer/Perspective/AppendixD_Alpha.lean#L116) | def |  |
+| [`PhaseTransitionProofAssembly`](src/Transformer/Perspective/AppendixD_Alpha.lean#L135) | def |  |
+| [`UsaAnalogue`](src/Transformer/Perspective/AppendixD_Alpha.lean#L158) | def |  |
 
 **[Transformer.Perspective.AppendixD_PhaseTransition](src/Transformer/Perspective/AppendixD_PhaseTransition.lean)** — 243 lines
 
@@ -2424,7 +2423,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | --- | --- | --- |
 | [`beta_interval`](src/Transformer/Perspective/Section4_LargeBeta.lean#L33) | theorem | sorry |
 
-**[Transformer.Perspective.Section5_HighD](src/Transformer/Perspective/Section5_HighD.lean)** — 266 lines
+**[Transformer.Perspective.Section5_HighD](src/Transformer/Perspective/Section5_HighD.lean)** — 303 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -2433,12 +2432,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`d_infty_exponential`](src/Transformer/Perspective/Section5_HighD.lean#L89) | theorem | sorry |
 | [`ez_lemma`](src/Transformer/Perspective/Section5_HighD.lean#L103) | lemma | sorry |
 | [`hemisphere_clustering`](src/Transformer/Perspective/Section5_HighD.lean#L121) | lemma | sorry |
-| [`hemisphere_step1_monotone`](src/Transformer/Perspective/Section5_HighD.lean#L136) | theorem | sorry |
-| [`step1_rhs`](src/Transformer/Perspective/Section5_HighD.lean#L157) | theorem | proved |
-| [`hemisphere_step1_qual_conv`](src/Transformer/Perspective/Section5_HighD.lean#L194) | theorem | sorry |
-| [`step2_decomposition`](src/Transformer/Perspective/Section5_HighD.lean#L208) | theorem | sorry |
-| [`Step2AlphaDiffIneq`](src/Transformer/Perspective/Section5_HighD.lean#L231) | def |  |
-| [`Wendel`](src/Transformer/Perspective/Section5_HighD.lean#L258) | def |  |
+| [`IsMinInner`](src/Transformer/Perspective/Section5_HighD.lean#L143) | def |  |
+| [`hemisphere_step1_monotone`](src/Transformer/Perspective/Section5_HighD.lean#L158) | theorem | sorry |
+| [`step1_rhs`](src/Transformer/Perspective/Section5_HighD.lean#L194) | theorem | proved |
+| [`hemisphere_step1_qual_conv`](src/Transformer/Perspective/Section5_HighD.lean#L231) | theorem | sorry |
+| [`step2_decomposition`](src/Transformer/Perspective/Section5_HighD.lean#L245) | theorem | sorry |
+| [`Step2AlphaDiffIneq`](src/Transformer/Perspective/Section5_HighD.lean#L268) | def |  |
+| [`Wendel`](src/Transformer/Perspective/Section5_HighD.lean#L295) | def |  |
 
 **[Transformer.Perspective.Section5_HighDCurve](src/Transformer/Perspective/Section5_HighDCurve.lean)** — 140 lines
 
@@ -2820,7 +2820,7 @@ Everything the build cannot vouch for, in one place.
 | [`taylor_eq`](src/Transformer/Perspective/AppendixA_Beta0.lean#L191) | theorem | `Transformer.Perspective.AppendixA_Beta0` |
 | [`claim_yury`](src/Transformer/Perspective/AppendixB_HighD.lean#L87) | theorem | `Transformer.Perspective.AppendixB_HighD` |
 | [`dr1_skew_inequality`](src/Transformer/Perspective/AppendixB_HighD.lean#L102) | theorem | `Transformer.Perspective.AppendixB_HighD` |
-| [`alpha_at_one_over_n`](src/Transformer/Perspective/AppendixD_Alpha.lean#L59) | theorem | `Transformer.Perspective.AppendixD_Alpha` |
+| [`alpha_at_one_over_n`](src/Transformer/Perspective/AppendixD_Alpha.lean#L47) | theorem | `Transformer.Perspective.AppendixD_Alpha` |
 | [`stability_orthogonal`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L62) | theorem | `Transformer.Perspective.AppendixD_PhaseTransition` |
 | [`ybeta_close_to_1`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L209) | theorem | `Transformer.Perspective.AppendixD_PhaseTransition` |
 | [`d_star_definition`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L235) | theorem | `Transformer.Perspective.AppendixD_PhaseTransition` |
@@ -2836,9 +2836,9 @@ Everything the build cannot vouch for, in one place.
 | [`d_infty_exponential`](src/Transformer/Perspective/Section5_HighD.lean#L89) | theorem | `Transformer.Perspective.Section5_HighD` |
 | [`ez_lemma`](src/Transformer/Perspective/Section5_HighD.lean#L103) | lemma | `Transformer.Perspective.Section5_HighD` |
 | [`hemisphere_clustering`](src/Transformer/Perspective/Section5_HighD.lean#L121) | lemma | `Transformer.Perspective.Section5_HighD` |
-| [`hemisphere_step1_monotone`](src/Transformer/Perspective/Section5_HighD.lean#L136) | theorem | `Transformer.Perspective.Section5_HighD` |
-| [`hemisphere_step1_qual_conv`](src/Transformer/Perspective/Section5_HighD.lean#L194) | theorem | `Transformer.Perspective.Section5_HighD` |
-| [`step2_decomposition`](src/Transformer/Perspective/Section5_HighD.lean#L208) | theorem | `Transformer.Perspective.Section5_HighD` |
+| [`hemisphere_step1_monotone`](src/Transformer/Perspective/Section5_HighD.lean#L158) | theorem | `Transformer.Perspective.Section5_HighD` |
+| [`hemisphere_step1_qual_conv`](src/Transformer/Perspective/Section5_HighD.lean#L231) | theorem | `Transformer.Perspective.Section5_HighD` |
+| [`step2_decomposition`](src/Transformer/Perspective/Section5_HighD.lean#L245) | theorem | `Transformer.Perspective.Section5_HighD` |
 | [`orthogonal_initial`](src/Transformer/Perspective/Section5_HighDCurve.lean#L77) | theorem | `Transformer.Perspective.Section5_HighDCurve` |
 | [`phase_transition_curve`](src/Transformer/Perspective/Section5_HighDCurve.lean#L99) | theorem | `Transformer.Perspective.Section5_HighDCurve` |
 
