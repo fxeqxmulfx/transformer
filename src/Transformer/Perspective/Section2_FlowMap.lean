@@ -32,6 +32,7 @@ import Transformer.Basic
 import Transformer.Perspective.Section1_IPS
 import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+import Mathlib.Analysis.Calculus.Gradient.Basic
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -82,11 +83,25 @@ noncomputable def empiricalMeasure
     (X : SphereTuple d n) : Measure (SSphere d) :=
   ((n : ℝ)⁻¹ : ℝ).toNNReal • (∑ i : Idx n, (Measure.dirac (X i)))
 
-/-- **Equation (eq: conteqSd).** The continuity equation on the sphere
-(stated in distributional form). -/
+/-- **Equation (eq: conteqSd).** The continuity equation on the sphere,
+
+  `∂_t μ(t) + div(μ(t) 𝒳[μ(t)]) = 0`,
+
+in the distributional form that is the one the paper works with: for every
+`C¹` test function `φ` on the ambient space,
+
+  `d/dt ∫ φ dμ(t) = ∫ ⟨∇φ(x), 𝒳[μ(t)](x)⟩ dμ(t)(x)`.
+
+The ambient gradient is the right pairing even though the flow lives on the
+sphere, because `𝒳[μ]` is tangent there: `vectorField` ends in `proj`, so the
+normal part of `∇φ` is annihilated. -/
 def continuityEquation
     (β : ℝ) (μ : ℝ → ProbSphere d) : Prop :=
-  ∀ _ : SSphere d → ℝ, ∀ _ : ℝ, True
+  ∀ φ : EucSpace d → ℝ, ContDiff ℝ 1 φ → ∀ t : ℝ,
+    HasDerivAt (fun s => ∫ x, φ (x : EucSpace d) ∂(μ s : Measure (SSphere d)))
+      (∫ x, inner (𝕜 := ℝ) (gradient φ (x : EucSpace d))
+          (vectorField d β (μ t) (x : EucSpace d))
+        ∂(μ t : Measure (SSphere d))) t
 
 /-! ### §3.2 — The interaction energy -/
 
