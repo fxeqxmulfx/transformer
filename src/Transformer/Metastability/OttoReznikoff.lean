@@ -24,6 +24,7 @@ import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section6_Circle
 import Transformer.Metastability.Basic
 import Transformer.Metastability.MainTheorem
+import Transformer.Metastability.AngularEnergy
 
 open scoped BigOperators
 open Real
@@ -86,14 +87,27 @@ theorem otto_reznikoff
 If `⟨∇𝖤(X(t)), Hess 𝖤(X(t)) ∇𝖤(X(t))⟩ ≤ -c ‖∇𝖤(X(t))‖²` for all
 `t ∈ [0, T]`, with `X(T) = v` and `X(0) = u`, then
 
-  `𝖤(v) - 𝖤(u) ≤ (1/(2c)) ‖∇𝖤(u)‖²`. -/
+  `𝖤(v) - 𝖤(u) ≤ (1/(2c)) ‖∇𝖤(u)‖²`.
+
+The Hessian quadratic form is carried as an abstract `gradHess`, the way
+`reversePL` below carries it: the Riemannian Hessian of `𝖤_β` on `𝕋^n` is not
+formalized.  Source: arXiv:2410.06833v1, §3.1, `lem: bakry-emery`. -/
 lemma bakry_emery
     {M : Type*} [NormedAddCommGroup M]
-    (E : M → ℝ) (gradNorm : M → ℝ)
+    (E : M → ℝ) (gradNorm gradHess : M → ℝ)
     (u v : M) (c T : ℝ) (hc : 0 < c) (hT : 0 < T)
-    (hHess : True) :   -- placeholder for the inner-product Hessian inequality
+    (X : ℝ → M) (hX0 : X 0 = u) (hXT : X T = v)
+    (hHess : ∀ t : ℝ, 0 ≤ t → t ≤ T →
+      gradHess (X t) ≤ -(c * (gradNorm (X t))^2)) :
     E v - E u ≤ (1 / (2 * c)) * (gradNorm u)^2 := by
   sorry
+
+/-- The hypotheses of `bakry_emery` are satisfiable: a constant flow with a
+vanishing gradient meets the Hessian bound at every `c > 0`. -/
+example (E : ℝ → ℝ) (u : ℝ) (c : ℝ) (hc : 0 < c) :
+    E u - E u ≤ (1 / (2 * c)) * (0 : ℝ)^2 :=
+  bakry_emery E (fun _ => 0) (fun _ => 0) u u c 1 hc one_pos (fun _ => u) rfl rfl
+    (fun _ _ _ => by simp)
 
 /-! ### §3.2 — Application to `𝖤_β` on `𝕋^n` -/
 
@@ -155,26 +169,29 @@ lemma PL_borjan
     ∃ (U : Idx n → ℝ) (κ : ℝ),
       U ∈ slowManifold n β τ lam k ω ∧
       0 < κ ∧
-      Metastability.Eβ 2 n β
-        (fun i => ⟨EuclideanSpace.equiv _ ℝ |>.symm
-                      ![Real.cos (U i), Real.sin (U i)], by sorry⟩)
-        - Metastability.Eβ 2 n β
-            (fun i => ⟨EuclideanSpace.equiv _ ℝ |>.symm
-                        ![Real.cos (Θ i), Real.sin (Θ i)], by sorry⟩)
-      ≤ (1 / (2 * κ))
-          * (∑ i : Idx n,
-              ((1 / (n : ℝ)^2) *
-                ∑ m : Idx n, Real.sin (Θ i - Θ m)
-                  * Real.exp (β * (Real.cos (Θ i - Θ m) - 1)))^2) := by
+      angularEβ n β U - angularEβ n β Θ
+      ≤ (1 / (2 * κ)) * ∑ i : Idx n, (angularGrad n β Θ i)^2 := by
   sorry
 
 /-- **Claim (claim: 1).**
 
   `max_ℓ |∂_{θ_ℓ} 𝖤_β(Θ)|
-     ≤ (e/2) max{ |∂_{θ_1} 𝖤_β(Θ)|, |∂_{θ_r} 𝖤_β(Θ)| }`. -/
-lemma claim_1
-    (β : ℝ) (hβ : 1 < β) (Θ : Idx n → ℝ) (r : ℕ) (hr : r ≤ n) :
-    True := by trivial
+     ≤ (e/2) max{ |∂_{θ_1} 𝖤_β(Θ)|, |∂_{θ_r} 𝖤_β(Θ)| }`:
+
+inside a cluster the largest partial derivative of the angular energy is
+controlled by the two at the ends of the cluster, `θ_1` and `θ_r`.
+
+A `Prop`-valued definition and not a lemma: the claim is proved in the paper
+by a monotonicity argument along the cluster that is not formalized here.
+The partial derivative is `angularGrad`, which `hasDerivAt_angularEβ` proves
+to be one.  Source: arXiv:2410.06833v1, §3.2, `claim: 1`. -/
+def Claim1
+    (n : ℕ) (β : ℝ) (Θ : Idx n → ℝ) (r : ℕ)
+    (h0 : 0 < n) (hr1 : 1 ≤ r) (hrn : r ≤ n) : Prop :=
+  1 < β →
+    ∀ l : Idx n, |angularGrad n β Θ l|
+      ≤ (Real.exp 1 / 2)
+        * max |angularGrad n β Θ ⟨0, h0⟩| |angularGrad n β Θ ⟨r - 1, by omega⟩|
 
 /-- **Lemma (lem: quantitative inequality).**
 
@@ -193,11 +210,26 @@ lemma quantitative_inequality
 
 For `β > 1` and a `(β, τ)`-separated configuration meeting (eq: tau.small),
 the conclusion of `thm: Otto result` holds for the angular `USA` dynamics
-with `δ = e^{-λ β/2}`. -/
-theorem otto_attention
-    (β τ lam : ℝ) (hβ : 1 < β) (Θ : Idx n → ℝ)
-    (h_sep : isSeparatedAngles n β τ Θ) :
-    True := by trivial
+with `δ = e^{-λ β / 2}`: the angular energy along the flow approaches, at the
+exponential rate of `otto_reznikoff`, that of a point of the slow manifold,
+up to `C_ε e^{-λ β / 2}`.
+
+A `Prop`-valued definition and not a theorem: it is `otto_reznikoff` applied
+to `𝖤_β` on `𝕋^n`, and both that theorem and the verification of (H1), (H2)
+for `𝖤_β` — which is `PL_borjan` — are `sorry` here.  Source:
+arXiv:2410.06833v1, §3.2, `eq: otto.attention`. -/
+def OttoAttention
+    (n : ℕ) (β τ lam : ℝ) (Θ : Idx n → ℝ) (k : ℕ) (ω : Idx k → ℝ) : Prop :=
+  1 < β → isSeparatedAngles n β τ Θ →
+  ∀ ε : ℝ, 0 < ε → ε < 1 →
+    ∃ Cε : ℝ, 0 < Cε ∧
+      ∀ U : ℝ → Idx n → ℝ, ∀ V : ℝ → Idx n → ℝ,
+        (∀ t : ℝ, V t ∈ slowManifold n β τ lam k ω) →
+        ∀ t : ℝ, 0 ≤ t →
+          Real.sqrt (angularEβ n β (U t) - angularEβ n β (V t))
+            ≤ Real.exp (-(1 - ε) * t)
+                * Real.sqrt (angularEβ n β (U 0) - angularEβ n β (V 0))
+              + Cε * Real.exp (-(lam * β / 2))
 
 /-! ### §3.3 — Acceleration of the gradient between metastable states -/
 
