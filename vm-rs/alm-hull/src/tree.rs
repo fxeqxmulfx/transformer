@@ -26,6 +26,13 @@
 //! `m` and `b` were still two misses.  Both changes together took the hull
 //! from 21.37s to 20.13s of a 42s run.
 //!
+//! `Transformer.ALM.TreeQuery` is the descent of `lower_bound_slope` in Lean,
+//! with the balance factor taken from Batteries' red-black development.  What
+//! is not there is the rebalancing: `fix_insert` and `fix_erase` below are
+//! checked by `audit` in the tests and by nothing else, so the depth bound is
+//! a theorem about trees that satisfy the invariant, not a proof that these
+//! do.
+//!
 //! Index `0` is the sentinel.  It is its own black leaf, every empty child
 //! points at it, and it exists so that the rebalancing cases can name the
 //! parent of nothing without a special case.
@@ -303,6 +310,16 @@ impl Tree {
     ///
     /// The two ends are answered from the cached cursors, without a descent:
     /// that is the case the traces are almost entirely made of.
+    ///
+    /// `ALM.TreeQuery.lowerBound` is the loop below, accumulator and all, and
+    /// `lowerBound_eq_find` is that it returns the first line the test accepts
+    /// when the test rises along the envelope.  It costs one comparison per
+    /// node on the path, so at most the tree's depth
+    /// (`ALM.TreeQuery.lbCount_le_depth`), which balance puts at
+    /// `2 log2(n + 1)` (`lbCount_le_two_log`).  That is twice what
+    /// `ALM.BinSearch.bcount_le_log` prices the C++ array search at, and
+    /// `ALM.TreeQuery.log_succ_bound` is that the factor is two and no more:
+    /// the price of keeping the cursor semantics, paid once per query.
     pub fn lower_bound_slope(&self, m: Slope) -> u32 {
         let (lo, hi) = self.ends;
         if hi == NIL || self.sl(hi) < m {
