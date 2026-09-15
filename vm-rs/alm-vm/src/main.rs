@@ -208,7 +208,7 @@ fn check(
             println!("    at: query {q:?}");
         }
         println!(
-            "    against that gap: worst 2*eps*terms/(best-second) = {:.3e}, {} unresolved of {} (ALM.GuardSep.cmp_of_guard)",
+            "    against that gap: worst 2*u*(2+u)*terms/(best-second) = {:.3e}, {} unresolved of {} (ALM.DotError.cmp_of_dot_guard)",
             gaps.worst_guard, gaps.unresolved, gaps.total
         );
         if let Some(q) = gaps.worst_guard_at {

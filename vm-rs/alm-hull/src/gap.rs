@@ -32,7 +32,9 @@
 //! products and a sum, and on a parabolic key the two products are near
 //! `2k^2` and `-k^2` while their sum is near `k^2` — so the terms are three
 //! times the result and their rounding error is carried into it undiminished.
-//! `score_error_bound` is that bound, `eps * (|q0*k0| + |q1*k1|)`, and
+//! `score_error_bound` is that bound, `u(2 + u)(|q0*k0| + |q1*k1|)` of
+//! `ALM.DotError.dot_error_le`, `cmp_of_dot_guard` is what clearing twice it
+//! decides, and
 //! `unresolved` counts the queries whose real gap did not clear twice it —
 //! twice because both the winner's score and the runner-up's carry it.
 //! Measuring against `ulp(best)` instead would understate the error by the
@@ -57,15 +59,21 @@ pub const NOISE: f64 = 1e-9;
 /// How far `fl(q0*k0 + q1*k1)` can sit from the exact value, given that the
 /// two products summed to `terms` in absolute value.
 ///
-/// Each product is within `u` relative, the sum within `u` relative, and the
-/// sum's own magnitude is at most `terms`, so the whole is at most
-/// `2 * u * terms` with `u = eps / 2`.  What makes it worth computing rather
-/// than assuming is the cancellation: for a parabolic key queried near itself
-/// the products are `2k^2` and `-k^2` and the result is `k^2`, so `terms` is
-/// three times the answer and the bound is three times what `ulp(result)`
-/// would suggest.  `ALM.GuardSep.cmp_of_guard` takes this as its `hd1`, `hd2`.
+/// `ALM.DotError.dot_error_le`: each product is within `u = eps / 2`
+/// relative, the sum within `u` relative, and the sum's magnitude is at most
+/// `(1 + u) * terms` once the products have grown, so the whole is at most
+/// `u * (2 + u) * terms`.  What makes it worth computing rather than
+/// assuming is the cancellation: `ALM.DotError.dotTerms_markKey_self` says a parabolic key
+/// queried near itself forms `2k^2` and `-k^2` and answers `k^2`, so `terms`
+/// is three times the result and the bound is three times what `ulp(result)`
+/// would suggest.
 pub fn score_error_bound(terms: f64) -> f64 {
-    f64::EPSILON * terms.abs()
+    // `u * (2 + u)` is not representable: with `u = eps / 2`, `2 + u` rounds
+    // to `2` and the product would land a hair *below* the theorem's bound.
+    // Two `next_up`s put it back above, with room for the `u^2` term and for
+    // this multiplication's own rounding alike -- one ulp is `eps` relative
+    // and the shortfall is `eps^2`.
+    (f64::EPSILON * terms.abs()).next_up().next_up()
 }
 
 /// The gaps a run's queries showed.
@@ -221,6 +229,17 @@ mod tests {
             assert!(step <= best - second, "which is the guard's hypothesis");
             assert!(!crate::grid::off_the_grid(best, step), "and the guard passes");
         }
+    }
+
+    #[test]
+    fn the_bound_is_the_one_the_theorem_proves() {
+        // `ALM.DotError.dot_error_le` bounds the error at `u * (2 + u) * T`,
+        // which is above the first-order `2 * u * T` by the `u^2` the sum
+        // spends on products that have already grown.
+        let t = 3.0e17;
+        assert!(score_error_bound(t) > f64::EPSILON * t, "above the first-order bound");
+        assert!(score_error_bound(t) < f64::EPSILON * t * (1.0 + 1.0e-15), "and by two ulp");
+        assert_eq!(score_error_bound(-t), score_error_bound(t), "a bound, so unsigned");
     }
 
     #[test]
