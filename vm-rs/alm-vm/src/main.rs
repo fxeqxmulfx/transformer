@@ -4,7 +4,7 @@
 //! pointed at the same files:
 //!
 //! ```text
-//! alm-vm model.bin [--brute] [--grid] [--trace[=N]] [--args=STR] [--max=N] prog.txt ...
+//! alm-vm model.bin [--brute|--lift] [--grid] [--trace[=N]] [--args=STR] [--max=N] prog.txt ...
 //! ```
 
 mod program;
@@ -42,6 +42,13 @@ fn parse(argv: &[String]) -> Result<Options, String> {
     while let Some(a) = it.next() {
         if a == "--brute" || a == "--nohull" {
             kind = CacheKind::Brute;
+        } else if a == "--lift" {
+            // The integer head compares keys rather than the ordinates they
+            // were rounded into, and it can only do that on a query whose
+            // `qy` is a unit -- so this option carries `--grid` with it
+            // rather than quietly answering everything the old way.
+            kind = CacheKind::Lift;
+            grid = true;
         } else if a == "--trace" {
             trace_every = 1;
         } else if let Some(n) = a.strip_prefix("--trace=") {
@@ -279,6 +286,38 @@ fn check(
             ss.iter().filter(|h| h.distinct > 0 && h.collisions() == 0).count()
         );
     }
+    let lift = cache.lift_census();
+    if lift.keys > 0 || lift.retired > 0 {
+        println!(
+            "  lift: {} quer(ies) on the integers, {} on the stored points, {} along an axis, {} on the hull",
+            lift.integer, lift.stored, lift.axis, lift.hull
+        );
+        let cs = cache.lift_censuses();
+        println!(
+            "    {} of {} head(s) kept the integer path, holding {} key(s)",
+            cs.iter().filter(|c| c.retired == 0 && c.keys > 0).count(),
+            cs.iter().filter(|c| c.keys > 0 || c.retired > 0).count(),
+            lift.keys
+        );
+        if let Some(k) = lift.retired_at {
+            println!("    first key outside the live family: {k:?}");
+        }
+        // The heads `todo3.md` section 4b is about: the ones keyed on 32-bit
+        // WASM values, whose `k^2` is past `2^53`.  Whether the integer path
+        // reached them is the whole question, so it is printed rather than
+        // left to be inferred from two other lines.
+        let past = |keep: bool| {
+            cs.iter()
+                .zip(cache.lift_heads())
+                .filter(|(c, w)| w.past_wall > 0 && (c.retired == 0) == keep)
+                .count()
+        };
+        println!(
+            "    of the head(s) past the old wall, {} kept the integer path and {} retired",
+            past(true),
+            past(false)
+        );
+    }
     let grid = cache.grid_witness();
     println!("  grid: worst ulp(score)/margin = {:.3}", grid.worst);
     if let Some(w) = grid.worst_at {
@@ -327,6 +366,9 @@ fn main() -> ExitCode {
     );
     if opts.kind == CacheKind::Brute {
         println!("Using the brute-force O(n) KV cache");
+    }
+    if opts.kind == CacheKind::Lift {
+        println!("Using the integer KV cache: the wall moves to 2^52 (todo3.md section 4)");
     }
     if opts.grid {
         println!("Querying at unit scale (todo3.md section 0)");

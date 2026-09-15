@@ -7,8 +7,8 @@
 //! every head in a layer therefore shares one sequence number.
 
 use alm_hull::{
-    BruteAttentionHead, Family, GridWitness, HardAttentionHead, IntegerQueries, LiftWitness, ScoreGaps,
-    SepWitness, TieBreak,
+    BruteAttentionHead, Family, GridWitness, HardAttentionHead, IntegerQueries, LiftAttentionHead,
+    LiftCensus, LiftWitness, ScoreGaps, SepWitness, TieBreak,
 };
 
 /// Which head implementation answers the queries.
@@ -19,11 +19,17 @@ pub enum CacheKind {
     /// The linear scan: `O(n)` per query, and the reference the hull is
     /// checked against.
     Brute,
+    /// The integer head: the same `O(log n)`, answering on the key rather
+    /// than on the ordinate it was rounded into, which moves the wall of
+    /// `todo3.md` section 4 from `2^26.5` to `2^52`.  It needs the query at
+    /// unit scale to do that, so `CacheKind::Lift` turns `set_grid` on.
+    Lift,
 }
 
 enum Heads {
     Hull(Vec<HardAttentionHead>),
     Brute(Vec<BruteAttentionHead>),
+    Lift(Vec<LiftAttentionHead>),
 }
 
 pub struct KvCache {
@@ -74,13 +80,14 @@ impl KvCache {
         let heads = match kind {
             CacheKind::Hull => Heads::Hull((0..n).map(|_| HardAttentionHead::new()).collect()),
             CacheKind::Brute => Heads::Brute((0..n).map(|_| BruteAttentionHead::new()).collect()),
+            CacheKind::Lift => Heads::Lift((0..n).map(|_| LiftAttentionHead::new()).collect()),
         };
         KvCache {
             heads,
             tie: vec![TieBreak::Average; n],
             n_heads,
             seq: -1,
-            grid: false,
+            grid: kind == CacheKind::Lift,
             queries: IntegerQueries::default(),
             lifts: vec![LiftWitness::default(); n],
             seps: vec![SepWitness::new(); n],
@@ -131,6 +138,10 @@ impl KvCache {
                 Heads::Brute(bs) => {
                     bs[i].insert(k, v, seq);
                     bs[i].query(q, self.tie[i])
+                }
+                Heads::Lift(ls) => {
+                    ls[i].insert(k, v, seq);
+                    ls[i].query(q, self.tie[i])
                 }
             };
             // A head always holds this position's own entry, so it is never
@@ -202,11 +213,34 @@ impl KvCache {
         all
     }
 
+    /// How much of the run the integer path carried, and what pushed it off.
+    ///
+    /// Empty under the other two caches, which have no integer path.  The two
+    /// numbers to read together are `integer` and `stored`: the first is
+    /// queries compared as integers, where the wall is `2^52`, the second
+    /// queries compared on the stored points, where it is where it always was.
+    pub fn lift_census(&self) -> LiftCensus {
+        let mut all = LiftCensus::default();
+        if let Heads::Lift(ls) = &self.heads {
+            ls.iter().for_each(|h| all.merge(&h.census()));
+        }
+        all
+    }
+
+    /// The same, one entry per `(layer, head)`, so a retired head can be named.
+    pub fn lift_censuses(&self) -> Vec<LiftCensus> {
+        match &self.heads {
+            Heads::Lift(ls) => ls.iter().map(|h| h.census()).collect(),
+            _ => Vec::new(),
+        }
+    }
+
     pub fn grid_witness(&self) -> GridWitness {
         let mut all = GridWitness::default();
         match &self.heads {
             Heads::Hull(hs) => hs.iter().for_each(|h| all.merge(&h.grid_witness())),
             Heads::Brute(bs) => bs.iter().for_each(|h| all.merge(&h.grid_witness())),
+            Heads::Lift(ls) => ls.iter().for_each(|h| all.merge(&h.grid_witness())),
         }
         all
     }

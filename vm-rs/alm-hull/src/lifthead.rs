@@ -48,6 +48,7 @@ use core::cmp::Ordering;
 
 use crate::breakpoint::Break;
 use crate::exact;
+use crate::grid::GridWitness;
 use crate::head::HardAttentionHead;
 use crate::liftkey::{LiftKey, UnitQuery};
 use crate::meta::{HullMeta, TieBreak};
@@ -183,6 +184,18 @@ impl LiftAttentionHead {
     /// Whether the integer path is still the one answering.
     pub fn on_the_integers(&self) -> bool {
         self.other.is_none()
+    }
+
+    /// What the head behind this one has answered with no margin to spare.
+    ///
+    /// Empty while the integer path is live, and that is the claim rather than
+    /// an omission: below `2^52` the `i128` comparison has a whole unit of
+    /// margin and there is nothing to report.  The queries that do *not* get
+    /// that margin are the ones off the unit grid, which fall back to the
+    /// stored points and so back to the old wall; `LiftCensus::stored` counts
+    /// them, and it is the number to read beside this one.
+    pub fn grid_witness(&self) -> GridWitness {
+        self.other.as_ref().map(|h| h.grid_witness()).unwrap_or_default()
     }
 
     fn note(&self, f: impl FnOnce(&mut LiftCensus)) {
