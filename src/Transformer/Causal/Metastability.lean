@@ -54,45 +54,117 @@ with `c > β^{1/2} arccos((-1 + √(4 β² + 1)) / (2 β))`.  For any `T_j` with
 
 the displacement of each center is bounded:
 
-  `max_{t ∈ [0, T_j]} |x_{s_j}(t) - x_{s_j}(0)| < ε c β^{-1/2}`. -/
+  `max_{t ∈ [0, T_j]} |x_{s_j}(t) - x_{s_j}(0)| < ε c β^{-1/2}`.
+
+Source: arXiv:2411.04990v2, §5, `lemma: meta`. -/
 theorem lemma_meta
     (β c ε : ℝ) (hβ : 0 < β) (hc : 0 < c) (hε : 0 < ε)
     (X : ℝ → SphereTuple 2 n)
     (hX : Causal.CSA 2 n β (ContinuousLinearMap.id ℝ (EucSpace 2))
             (ContinuousLinearMap.id ℝ (EucSpace 2))
             (ContinuousLinearMap.id ℝ (EucSpace 2)) X)
-    (s : ℕ → ℕ) (h_strong :
-      ∀ j i : ℕ, i < s j →
-        c * (1 + 2 * ε) * β^(-(1/2 : ℝ))
-          < ‖((X 0 ⟨s j, by sorry⟩ : EucSpace 2))
-              - ((X 0 ⟨i, by sorry⟩ : EucSpace 2))‖)
+    (s : ℕ → ℕ) (hs : ∀ j : ℕ, s j < n)
+    (h_strong :
+      ∀ (j : ℕ) (i : Idx n), (i : ℕ) < s j →
+        c * (1 + 2 * ε) * β ^ (-(1/2 : ℝ))
+          < ‖((X 0 ⟨s j, hs j⟩ : EucSpace 2)) - ((X 0 i : EucSpace 2))‖)
     (h_c : Real.sqrt β
               * Real.arccos ((-1 + Real.sqrt (4 * β^2 + 1)) / (2 * β))
             < c)
     (j : ℕ) (T_j : ℝ) (hT :
-      T_j * (s j : ℝ) * Causal.h_pot β (c * β^(-(1/2 : ℝ)))
-        < ε * c * β^(-(1/2 : ℝ))) :
+      T_j * (s j : ℝ) * Causal.h_pot β (c * β ^ (-(1/2 : ℝ)))
+        < ε * c * β ^ (-(1/2 : ℝ))) :
     ∀ t : ℝ, 0 ≤ t → t ≤ T_j →
-      ‖((X t ⟨s j, by sorry⟩ : EucSpace 2))
-          - ((X 0 ⟨s j, by sorry⟩ : EucSpace 2))‖
-        < ε * c * β^(-(1/2 : ℝ)) := by
+      ‖((X t ⟨s j, hs j⟩ : EucSpace 2))
+          - ((X 0 ⟨s j, hs j⟩ : EucSpace 2))‖
+        < ε * c * β ^ (-(1/2 : ℝ)) := by
   sorry
+
+/-- A single token on the circle is a stationary solution of `CSA`: its own
+attention average is itself, and `Proj_x x = 0`. -/
+theorem csa_const_one (β : ℝ) (x₀ : SSphere 2) :
+    Causal.CSA 2 1 β (ContinuousLinearMap.id ℝ (EucSpace 2))
+      (ContinuousLinearMap.id ℝ (EucSpace 2))
+      (ContinuousLinearMap.id ℝ (EucSpace 2)) (fun _ => fun _ => x₀) := by
+  intro t k
+  have hx : ‖(x₀ : EucSpace 2)‖ = 1 := by
+    exact mem_sphere_zero_iff_norm.mp x₀.2
+  have hE : (Real.exp (β * inner (𝕜 := ℝ) ((x₀ : EucSpace 2)) ((x₀ : EucSpace 2))))⁻¹
+      • (Real.exp (β * inner (𝕜 := ℝ) ((x₀ : EucSpace 2)) ((x₀ : EucSpace 2)))
+          • (x₀ : EucSpace 2)) = (x₀ : EucSpace 2) := by
+    rw [smul_smul, inv_mul_cancel₀ (Real.exp_ne_zero _), one_smul]
+  have hproj : proj 2 ((x₀ : EucSpace 2)) ((x₀ : EucSpace 2)) = 0 := by
+    rw [proj, real_inner_self_eq_norm_mul_norm, hx, one_mul, one_smul, sub_self]
+  simpa [Subsingleton.elim k (0 : Idx 1), hE, hproj] using
+    (hasDerivAt_const t ((x₀ : EucSpace 2)))
+
+/-- The hypotheses of `lemma_meta` are satisfiable: one token on the circle,
+`s ≡ 0` — so that `h_strong` quantifies over an empty range and `hT` reads
+`0 < ε c β^{-1/2}` — at `β = 1`, `c = 5` (a value above `π ≥ arccos`) and
+`ε = 1`. -/
+example (x₀ : SSphere 2) :
+    ∀ t : ℝ, 0 ≤ t → t ≤ 1 →
+      ‖((x₀ : EucSpace 2)) - ((x₀ : EucSpace 2))‖
+        < 1 * 5 * (1 : ℝ) ^ (-(1/2 : ℝ)) :=
+  lemma_meta 1 1 5 1 one_pos (by norm_num) one_pos (fun _ => fun _ => x₀)
+    (csa_const_one 1 x₀) (fun _ => 0) (fun _ => one_pos)
+    (fun _ i hi => absurd hi (Nat.not_lt_zero _))
+    (by
+      rw [Real.sqrt_one, one_mul]
+      exact lt_of_le_of_lt (Real.arccos_le_pi _) (by linarith [Real.pi_le_four]))
+    0 1
+    (by
+      rw [Real.one_rpow]
+      norm_num)
 
 /-- **Theorem (thm: fixed_centers).**  *Convergence to strong R'enyi centers.*
 
 For an arbitrary set of stationary (strong R'enyi) tokens, all other tokens
-converge to the vicinity of one of them as `t → ∞`.  The result extends to
-the case of additional cross-attention components. -/
-theorem thm_fixed_centers
-    (β : ℝ) (hβ : 0 < β) :
-    True := by trivial
+converge to the vicinity of one of them as `t → ∞`: every token eventually
+stays within the separation scale `δ` of some center.
+
+A `Prop`-valued definition and not a theorem: the paper's proof runs through
+`lemma_meta`, which is itself a `sorry` here, and the "vicinity" of the
+statement is taken to be the separation scale `δ` the centers are defined by.
+
+Source: arXiv:2411.04990v2, §5, `thm: fixed_centers`. -/
+def FixedCentersConvergence (n : ℕ) (β δ : ℝ) : Prop :=
+  0 < β → 0 < δ →
+  ∀ X : ℝ → SphereTuple 2 n,
+    Causal.CSA 2 n β (ContinuousLinearMap.id ℝ (EucSpace 2))
+      (ContinuousLinearMap.id ℝ (EucSpace 2))
+      (ContinuousLinearMap.id ℝ (EucSpace 2)) X →
+    ∀ (m : ℕ) (s : ℕ → ℕ) (hs : ∀ j : ℕ, s j < n),
+      (∀ (j : ℕ), j < m → ∀ i : Idx n, (i : ℕ) < s j →
+        δ < ‖((X 0 ⟨s j, hs j⟩ : EucSpace 2)) - ((X 0 i : EucSpace 2))‖) →
+      ∀ i : Idx n, ∃ j : ℕ, j < m ∧
+        ∀ᶠ t : ℝ in Filter.atTop,
+          ‖((X t i : EucSpace 2)) - ((X t ⟨s j, hs j⟩ : EucSpace 2))‖ < δ
+
+/-- A finite `δ`-separated set of unit vectors: the values a R'enyi center
+subsequence takes, stripped of the indexing. -/
+def SeparatedOnSphere (d : ℕ) (S : Finset (EucSpace d)) (δ : ℝ) : Prop :=
+  (∀ x ∈ S, ‖x‖ = 1) ∧ ∀ x ∈ S, ∀ y ∈ S, x ≠ y → δ < ‖x - y‖
 
 /-- **Conjecture (cardinality).**
 
 The number of (strong) R'enyi centers with separation `δ = c β^{-1/2}` is
-`Θ(β^{(d-1)/2})`. -/
-theorem renyi_count (d : ℕ) (hd : 2 ≤ d) :
-    True := by trivial
+`Θ(β^{(d-1)/2})` — the packing number of the sphere `𝕊^{d-1}` at that scale,
+since the centers are exactly a `δ`-separated set of unit vectors.
+
+A `Prop`-valued definition: the conjecture is not proved here, and the
+`Θ` is spelled out as a pair of constants independent of `β`.
+
+Source: arXiv:2411.04990v2, §5 (the cardinality conjecture). -/
+def RenyiCount (d : ℕ) (c : ℝ) : Prop :=
+  2 ≤ d → 0 < c →
+  ∃ C₁ C₂ : ℝ, 0 < C₁ ∧ 0 < C₂ ∧ ∀ β : ℝ, 1 ≤ β →
+    (∀ S : Finset (EucSpace d),
+        SeparatedOnSphere d S (c * β ^ (-(1/2 : ℝ))) →
+        (S.card : ℝ) ≤ C₂ * β ^ (((d : ℝ) - 1) / 2)) ∧
+    ∃ S : Finset (EucSpace d),
+      SeparatedOnSphere d S (c * β ^ (-(1/2 : ℝ))) ∧
+      C₁ * β ^ (((d : ℝ) - 1) / 2) ≤ (S.card : ℝ)
 
 end Causal
 end Transformer
