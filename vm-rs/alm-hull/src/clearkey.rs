@@ -17,11 +17,15 @@
 //! plainly fails, so `ClearGuard` carries the bounds and tests them at each
 //! query rather than assuming them.
 //!
-//! The query enters the hypotheses too.  `dot_marked` is stated at `qy = 1`,
-//! where the marker passes into the score undiminished; at a general `qy` it
-//! arrives as `qy * B`, so the test is `2M < qy * B`, and a query with
-//! `qy <= 0` has no margin at all -- at `qy < 0` the marker is *added* to the
-//! score and the cleared entry wins every time, which is a fact about the
+//! The query enters the hypotheses too, and `ALM.ClearQuery` is that half.
+//! `dot_marked` is stated at `qy = 1`, where the marker passes into the score
+//! undiminished; `dot_marked_query` leaves the ordinate free, and the marker
+//! arrives as `qy * B`.  So the test is `2M < qy * B`
+//! (`marked_sup'_eq_live_at_query`), and a query with `qy <= 0` has no margin
+//! at all: at `qy = 0` the score never reads the ordinate
+//! (`marker_vanishes_at_zero_ordinate`) and at `qy < 0` the marker is *added*,
+//! so the cleared entry beats every live one by the margin that was meant to
+//! sink it (`live_lt_cleared_of_added_marker`).  That is a fact about the
 //! released representation and not something a container may round away.
 
 use crate::grid::ulp;
@@ -91,17 +95,25 @@ impl ClearGuard {
 
     /// `M` of the theorem at this query: a bound on the base score of every
     /// entry the head holds, cleared entries included.
+    ///
+    /// `ALM.ClearQuery.clearBound` is this expression, and
+    /// `abs_dot_le_clearBound` is that it bounds the score.
     pub fn bound(&self, q: [f64; 2]) -> f64 {
         q[0].abs() * self.max_kx + q[1].abs() * self.max_ky
     }
 
     /// Whether this query's answer can leave the cleared entries out.
     ///
-    /// `hB` of `marked_sup'_eq_live`, at the marker this query actually sees.
-    /// Written as a positive test, so an infinite bound or a `NaN` query fails
-    /// it and the cleared entries are consulted -- which is the safe side.
-    /// The remaining hypothesis, `hL`, is the caller's: this says nothing at
-    /// all about a head with no live entry in it.
+    /// `hB` of `ALM.ClearQuery.marked_sup'_eq_live_at_query`, at the marker
+    /// this query actually sees.  Written as a positive test, so an infinite
+    /// bound or a `NaN` query fails it and the cleared entries are consulted
+    /// -- which is the safe side.  The remaining hypothesis, `hL`, is the
+    /// caller's: this says nothing at all about a head with no live entry in
+    /// it.
+    ///
+    /// The sign test is redundant in exact arithmetic -- a nonnegative bound
+    /// under a positive marker forces `qy > 0`, which is `pos_of_margin` --
+    /// and is kept for the one case the reals do not have, a `NaN` ordinate.
     pub fn dominated(&self, q: [f64; 2]) -> bool {
         q[1] > 0.0 && 2.0 * self.bound(q) < q[1] * CLEAR_MARK
     }
