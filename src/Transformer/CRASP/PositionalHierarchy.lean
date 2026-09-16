@@ -49,8 +49,34 @@ weight to zero.
 Source: arXiv:2506.16055v3, Appendix E, `lem:alibi_window`. -/
 theorem alibi_window (p s : ℕ) (a : ℝ) (ha : 0 < a) :
     ∃ Δ : ℕ, ∀ i j : ℕ, j + Δ ≤ i → ∀ x : Fx p s,
-      Fx.round p s (Real.exp (x.val - a * ((i : ℝ) - (j : ℝ)))) = 0 :=
-  sorry
+      Fx.round p s (Real.exp (x.val - a * ((i : ℝ) - (j : ℝ)))) = 0 := by
+  have hs : (0 : ℝ) < 2 ^ s := by positivity
+  set M : ℝ := (2 : ℝ) ^ (p - 1) / 2 ^ s with hM
+  refine ⟨⌈(M + s * Real.log 2) / a⌉₊ + 1, fun i j hij x => ?_⟩
+  have hxlt : x.val < M := by
+    rw [hM, Fx.val]
+    gcongr
+    exact_mod_cast x.hi
+  have hd : (M + s * Real.log 2) / a + 1 ≤ (i : ℝ) - (j : ℝ) := by
+    have hceil : (M + s * Real.log 2) / a ≤ (⌈(M + s * Real.log 2) / a⌉₊ : ℝ) := Nat.le_ceil _
+    have hcast : (j : ℝ) + (⌈(M + s * Real.log 2) / a⌉₊ : ℝ) + 1 ≤ (i : ℝ) := by
+      exact_mod_cast hij
+    linarith
+  have hmul : M + s * Real.log 2 + a ≤ a * ((i : ℝ) - (j : ℝ)) := by
+    have h := mul_le_mul_of_nonneg_left hd ha.le
+    rwa [mul_add, mul_div_cancel₀ _ (ne_of_gt ha), mul_one] at h
+  have hexp : Real.exp (x.val - a * ((i : ℝ) - (j : ℝ))) < ((2 : ℝ) ^ s)⁻¹ := by
+    rw [← Real.lt_log_iff_exp_lt (by positivity), Real.log_inv, Real.log_pow]
+    linarith
+  refine Fx.ext ?_
+  have hfloor : ⌊Real.exp (x.val - a * ((i : ℝ) - (j : ℝ))) * 2 ^ s⌋ = 0 := by
+    rw [Int.floor_eq_zero_iff, Set.mem_Ico]
+    refine ⟨by positivity, ?_⟩
+    have h := mul_lt_mul_of_pos_right hexp hs
+    rwa [inv_mul_cancel₀ (ne_of_gt hs)] at h
+  rw [Fx.m_round, hfloor, Fx.m_zero, Fx.clamp]
+  have hpos : (0 : ℤ) < 2 ^ (p - 1) := by positivity
+  omega
 
 /-- The hypothesis of `alibi_window` is satisfiable: `a = 1` is a slope. -/
 example : (0 : ℝ) < 1 := one_pos
