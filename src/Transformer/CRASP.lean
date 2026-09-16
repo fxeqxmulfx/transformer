@@ -38,6 +38,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.Spread` | the string map `e^r w₁ e^{r−1} ⋯ wₙ e^{r−1}` of the reduction, read by blocks |
 | `CRASP.PositionalReductionAtom` | the translation of the reduction on `Y`-atoms, and the block size it needs |
 | `CRASP.PositionalReduction` | the translation on formulas and terms, at the same depth |
+| `CRASP.PositionalReductionAtomEquiv` | the translation of a `Y`-atom reads the letter its position carries |
 | `CRASP.PositionalDepth` | its reduction to `TL[◁#]`, and its hierarchy |
 | `CRASP.PositionalTransformers` | sinusoidal, RoPE and ALiBi position encodings |
 | `CRASP.PositionalHierarchy` | what they simulate, and their depth hierarchies |
@@ -77,5 +78,6 @@ import Transformer.CRASP.YNormalFormEquiv
 import Transformer.CRASP.Spread
 import Transformer.CRASP.PositionalReductionAtom
 import Transformer.CRASP.PositionalReduction
+import Transformer.CRASP.PositionalReductionAtomEquiv
 import Transformer.CRASP.PositionalDepth
 import Transformer.CRASP.PositionalHierarchy
