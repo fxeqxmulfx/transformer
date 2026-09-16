@@ -20,11 +20,16 @@ This file formalizes §6 of the survey:
 (the phase-transition curve) are in `Perspective.Section5_HighDCurve`; the
 auxiliary calculus lemma `lem: ez.lemma`, which the section uses but which
 belongs to no dynamics, is proved in `Perspective.Section5_Vanishing`.
+
+Both theorems of §6.1 are almost-everywhere statements, and the initial
+sequences they have to exclude are exhibited in
+`Perspective.Section5_Exceptional`.
 -/
 
 import Transformer.Basic
 import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section3_SmallBeta
+import Transformer.Perspective.Section5_Exceptional
 import Transformer.Perspective.Section5_Vanishing
 import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
@@ -44,16 +49,27 @@ variable (d n : ℕ)
 
 For `n ≥ 2`, `d ≥ 3` and `β ≥ 0`, the conclusion of `thm: beta.tiny` holds for
 both `SA` and `USA`: Lebesgue-almost every initial sequence converges to a
-single cluster `x⋆`. -/
+single cluster `x⋆`, that is, lies in `𝒮_β = clusteringSet`.
+
+*Almost every* is not *every*, and the difference is not decoration: at every
+`β` and every `d`, `antipodalPair_not_mem_clusteringSet` exhibits an initial
+sequence outside `𝒮_β`, so the `∀ X₀` reading of this theorem is false rather
+than unproved.  The exceptional set is null but non-empty, which is why the
+conclusion is read against the uniform law `UniformTuple` of §4, exactly as in
+`beta_interval`.
+
+Not proved here.
+
+Source: arXiv:2312.10794v5, §6.1, `thm: boumal`. -/
 theorem boumal_clustering
     (hd : 3 ≤ d) (hn : 2 ≤ n) (β : ℝ) (hβ : 0 ≤ β) :
-    ∀ (X₀ : SphereTuple d n),
-      ∃ x_star : SSphere d,
-        ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
-          ∀ i : Idx n,
-            Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
-              Filter.atTop (nhds 0) := by
+    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+      ∀ᵐ X₀ ∂P, X₀ ∈ clusteringSet d n β := by
   sorry
+
+/-- The hypotheses of `boumal_clustering` are satisfiable: `d = 3`, `n = 2`,
+`β = 0`. -/
+example : 3 ≤ 3 ∧ 2 ≤ 2 ∧ (0 : ℝ) ≤ 0 := ⟨le_rfl, le_rfl, le_rfl⟩
 
 /-- *Invariant measures remark.* When `thm: beta.tiny` applies (e.g. always
 for `d ≥ 3`), neither `SA` nor `USA` admits a smooth invariant measure.
@@ -87,16 +103,31 @@ For `n ≥ 1`, `β > 0` and `d ≥ n`, if the initial points
 `(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n` are uniformly distributed, then almost
 surely there exist `x⋆ ∈ 𝕊^{d-1}` and constants `C, lam > 0` such that
 
-  `‖x_i(t) - x⋆‖ ≤ C e^{-λ t}`  for all `i` and `t ≥ 0`. -/
+  `‖x_i(t) - x⋆‖ ≤ C e^{-λ t}`  for all `i` and `t ≥ 0`.
+
+*Almost surely* is part of the statement and not a turn of phrase: for `n = 2`
+the antipodal pair admits no such rate at any `β`
+(`antipodalPair_not_exponential`), so the `∀ X₀` reading is false.  As in
+`boumal_clustering`, the initial sequence is drawn from the uniform law
+`UniformTuple` of §4.
+
+Not proved here.
+
+Source: arXiv:2312.10794v5, §6.1, `thm: d.infty`, `eq: expconvtocons`. -/
 theorem d_infty_exponential
     (hn : 1 ≤ n) (β : ℝ) (hβ : 0 < β) (hdn : n ≤ d) :
-    ∀ (X₀ : SphereTuple d n),
-      ∃ (x_star : SSphere d) (C lam : ℝ),
-        0 < C ∧ 0 < lam ∧
-        ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
-          ∀ i : Idx n, ∀ t : ℝ, 0 ≤ t →
-            ‖((X t i : EucSpace d)) - x_star‖ ≤ C * Real.exp (-(lam * t)) := by
+    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+      ∀ᵐ X₀ ∂P,
+        ∃ (x_star : SSphere d) (C lam : ℝ),
+          0 < C ∧ 0 < lam ∧
+          ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
+            ∀ i : Idx n, ∀ t : ℝ, 0 ≤ t →
+              ‖((X t i : EucSpace d)) - x_star‖ ≤ C * Real.exp (-(lam * t)) := by
   sorry
+
+/-- The hypotheses of `d_infty_exponential` are satisfiable: `d = n = 1`,
+`β = 1`. -/
+example : 1 ≤ 1 ∧ (0 : ℝ) < 1 ∧ 1 ≤ 1 := ⟨le_rfl, one_pos, le_rfl⟩
 
 /-- **Lemma (lem: hemisphere.clustering) — *Cone collapse.*
 
