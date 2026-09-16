@@ -10,7 +10,6 @@ This file formalizes §6 of the survey:
 * `Theorem thm: d.infty`           — exponential rate when `d ≥ n`,
 * `eq: expconvtocons`              — explicit convergence rate,
 * `Lemma lem: hemisphere.clustering`  — *cone collapse*,
-* `Lemma lem: ez.lemma`            — auxiliary calculus lemma,
 * `eq: therighthandside`, `eq: qual.conv`,
 * `e:decompox*.step2`, `e:dotalpha.step2`,
 * `e:mineqalpha.step2`, `e:diffineqalpha.step2`,
@@ -18,12 +17,15 @@ This file formalizes §6 of the survey:
 * `Theorem r:wendel` — Wendel's hemisphere probability.
 
 §6.2 (`thm: orthogonal`, `eq: ybeta`, `thm: phase.transition.curve`) and §6.3
-(the phase-transition curve) are in `Perspective.Section5_HighDCurve`.
+(the phase-transition curve) are in `Perspective.Section5_HighDCurve`; the
+auxiliary calculus lemma `lem: ez.lemma`, which the section uses but which
+belongs to no dynamics, is proved in `Perspective.Section5_Vanishing`.
 -/
 
 import Transformer.Basic
 import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section3_SmallBeta
+import Transformer.Perspective.Section5_Vanishing
 import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 import Mathlib.Analysis.InnerProductSpace.Calculus
@@ -94,18 +96,6 @@ theorem d_infty_exponential
         ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
           ∀ i : Idx n, ∀ t : ℝ, 0 ≤ t →
             ‖((X t i : EucSpace d)) - x_star‖ ≤ C * Real.exp (-(lam * t)) := by
-  sorry
-
-/-- **Lemma (lem: ez.lemma).** *Vanishing-of-integrand lemma.*
-
-If `f : ℝ_{≥0} → ℝ` is differentiable, `∫₀^∞ |f(t)| dt < ∞` and `f'` is
-uniformly bounded, then `lim_{t→∞} f(t) = 0`. -/
-lemma ez_lemma
-    (f : ℝ → ℝ) (hf : Differentiable ℝ f)
-    (hf_int : MeasureTheory.IntegrableOn (fun t => |f t|)
-                (Set.Ici (0 : ℝ)) MeasureTheory.volume)
-    (hf_dbnd : ∃ M : ℝ, ∀ t : ℝ, 0 ≤ t → |deriv f t| ≤ M) :
-    Filter.Tendsto f Filter.atTop (nhds 0) := by
   sorry
 
 /-- **Lemma (lem: hemisphere.clustering) — *Cone collapse.*
