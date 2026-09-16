@@ -29,8 +29,10 @@ the positions before the interval, where the PNPs are free
 `k = 2`, in both of its versions (`reduction_past_unsound`,
 `reduction_unsound`): no depth-1 formula whose PNPs are constant on the middle
 checks the affix `ab`, because the middle contains the last position of the
-prefix (`Transformer.CRASP.ReductionUnsound`).  The hierarchy itself is stated
-with `sorry` in proof position: the paper derives it from those two lemmas.
+prefix (`Transformer.CRASP.ReductionUnsound`).  The hierarchy itself holds
+(`definableL_altPlus`): `Transformer.CRASP.LowerBound` crops with the positions
+before the interval fixed to a prefix, and adds one block per level of depth in
+place of the reduction.
 
 **A typo.**  `lem:reduction` promises "a formula `φ'` of depth `(k-1)` of
 `TL[◁#]^P_{k-1}` (or `TL[◁#,▷#]^P_k`, resp.)"; the parenthetical should read
@@ -41,6 +43,7 @@ proof of `thm:TLC_depth` uses it (it goes from depth `ℓ+1` to depth `ℓ`).
 
 import Transformer.CRASP.Commutative
 import Transformer.CRASP.CroppingUnsound
+import Transformer.CRASP.LowerBound
 import Transformer.CRASP.ReductionUnsound
 import Transformer.CRASP.PiecewiseTestable
 
@@ -145,11 +148,18 @@ definable in `TL[◁#]_{k+1}` but not in `TL[◁#]_k`.
 The positive half asks for nothing beyond §2.4: `L_{k+1}` is `(k+1)`-piecewise
 testable by `lem:piecewise_testable`, and `lem:piecewise_testable_depth` reads
 every such language inside `TL[◁#]_{k+1}`.  The negative half is the one the
-chapter is about, and only it is left open. -/
+chapter is about, and the paper derives it from `lem:cropping_oneway` and
+`lem:reduction`, both false as stated; it is `not_definableL_altPlus`, where a
+formula of depth `k` agrees on a word of `L_{k+1}` and a word of `L_{k+3}`. -/
 theorem definableL_altPlus (k : ℕ) (hk : 0 < k) :
-    DefinableL (altPlus false (k + 1)) (k + 1) ∧ ¬ DefinableL (altPlus false (k + 1)) k :=
-  ⟨definableL_of_kPiecewiseTestable (k + 1) _ (kPiecewiseTestable_altPlus (k + 1) k.succ_pos),
-    sorry⟩
+    DefinableL (altPlus false (k + 1)) (k + 1) ∧ ¬ DefinableL (altPlus false (k + 1)) k := by
+  refine ⟨definableL_of_kPiecewiseTestable (k + 1) _
+    (kPiecewiseTestable_altPlus (k + 1) k.succ_pos), ?_⟩
+  obtain ⟨k, rfl⟩ : ∃ k', k = k' + 1 := ⟨k - 1, by omega⟩
+  exact not_definableL_altPlus k
+
+/-- The hypothesis of `definableL_altPlus` is satisfiable: `0 < 1`. -/
+example : 0 < 1 := Nat.one_pos
 
 end CRASP
 end Transformer
