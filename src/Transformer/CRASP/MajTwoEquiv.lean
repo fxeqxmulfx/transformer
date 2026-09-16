@@ -161,11 +161,19 @@ example (k : ℕ) : 0 < k + 1 ∧ Definable (σ := σ) Set.univ (k + 1) ∧
 hierarchy is strict: `D_k` is `MAJ²_k`-definable while `D_{k+1}` is not.  By
 Theorem 3 of Behle & Lange this is equivalent to the strictness of the circuit
 depth hierarchy for `FO[<]`-uniform `LTC⁰`, which is the corollary as stated in
-the paper; circuits are not modelled here. -/
+the paper; circuits are not modelled here.
+
+The second half is `definable_of_closed_majTwo` against `thm:TLC_depth` and is
+proved.  The first half is not derivable from the two inclusions — they cost a
+level, and `D_k` is `TL[◁#,▷#]`-definable at depth `k`, not at `k - 1` — so it
+is exactly `lem:piecewise_testable_depth_majtwo`, the explicit `MAJ²_{k+1}`
+construction for `(2k+1)`-piecewise testable languages that sits in an
+`\iffalse` block of the source and is left out here with the rest of them. -/
 theorem majTwo_depth_hierarchy (k : ℕ) (hk : 0 < k) :
     (∃ φ ∈ MajTwo Bool k, φ.Closed ∧ φ.lang = altPlusDouble k) ∧
-      ∀ φ ∈ MajTwo Bool k, φ.Closed → φ.lang ≠ altPlusDouble (k + 1) :=
-  sorry
+      ∀ φ ∈ MajTwo Bool k, φ.Closed → φ.lang ≠ altPlusDouble (k + 1) := by
+  refine ⟨sorry, fun φ hφ hc hlang => (definable_altPlusDouble k hk).2 ?_⟩
+  exact hlang ▸ definable_of_closed_majTwo k φ hφ hc
 
 end CRASP
 end Transformer

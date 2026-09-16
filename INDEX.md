@@ -1595,7 +1595,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sat_eq_of_closed_depth_le_one`](src/Transformer/CRASP/MajTwoDepthOne.lean#L89) | theorem | proved |
 | [`not_forall_closed_majTwo_of_definable`](src/Transformer/CRASP/MajTwoDepthOne.lean#L159) | theorem | proved |
 
-**[Transformer.CRASP.MajTwoEquiv](src/Transformer/CRASP/MajTwoEquiv.lean)** — 171 lines
+**[Transformer.CRASP.MajTwoEquiv](src/Transformer/CRASP/MajTwoEquiv.lean)** — 179 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -1604,7 +1604,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`exists_mem_TLC_of_majTwo`](src/Transformer/CRASP/MajTwoEquiv.lean#L54) | theorem | sorry |
 | [`exists_closed_majTwo_of_definable`](src/Transformer/CRASP/MajTwoEquiv.lean#L79) | theorem | proved |
 | [`definable_of_closed_majTwo`](src/Transformer/CRASP/MajTwoEquiv.lean#L145) | theorem | sorry |
-| [`majTwo_depth_hierarchy`](src/Transformer/CRASP/MajTwoEquiv.lean#L165) | theorem | sorry |
+| [`majTwo_depth_hierarchy`](src/Transformer/CRASP/MajTwoEquiv.lean#L172) | theorem | sorry |
 
 **[Transformer.CRASP.Parikh](src/Transformer/CRASP/Parikh.lean)** — 190 lines
 
@@ -3161,7 +3161,7 @@ Everything the build cannot vouch for, in one place.
 | [`exists_closed_majTwo`](src/Transformer/CRASP/MajTwoEquiv.lean#L47) | theorem | `Transformer.CRASP.MajTwoEquiv` |
 | [`exists_mem_TLC_of_majTwo`](src/Transformer/CRASP/MajTwoEquiv.lean#L54) | theorem | `Transformer.CRASP.MajTwoEquiv` |
 | [`definable_of_closed_majTwo`](src/Transformer/CRASP/MajTwoEquiv.lean#L145) | theorem | `Transformer.CRASP.MajTwoEquiv` |
-| [`majTwo_depth_hierarchy`](src/Transformer/CRASP/MajTwoEquiv.lean#L165) | theorem | `Transformer.CRASP.MajTwoEquiv` |
+| [`majTwo_depth_hierarchy`](src/Transformer/CRASP/MajTwoEquiv.lean#L172) | theorem | `Transformer.CRASP.MajTwoEquiv` |
 | [`definableL_of_kPiecewiseTestable`](src/Transformer/CRASP/PiecewiseTestable.lean#L95) | theorem | `Transformer.CRASP.PiecewiseTestable` |
 | [`definable_of_kPiecewiseTestable`](src/Transformer/CRASP/PiecewiseTestable.lean#L101) | theorem | `Transformer.CRASP.PiecewiseTestable` |
 | [`exists_yNormal`](src/Transformer/CRASP/PositionalDepth.lean#L66) | theorem | `Transformer.CRASP.PositionalDepth` |
