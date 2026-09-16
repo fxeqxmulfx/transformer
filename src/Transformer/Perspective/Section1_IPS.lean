@@ -167,20 +167,36 @@ The text right after `eq: dissipation.softmax` notes that
 `e^{-β} ≤ Z_{β,μ}(x) ≤ e^{β}` for all `x ∈ 𝕊^{d-1}`.  We record the
 particle-system analogue. -/
 
+/-- **Boundedness of the partition function.**
+
+`e^{-β} n ≤ Z_{β,i}(t) ≤ e^{β} n`: Cauchy-Schwarz on the sphere gives
+`|⟨x_i, x_k⟩| ≤ 1`, so each of the `n` exponents lies in `[-β, β]`.
+
+Source: arXiv:2312.10794v5, §2, the text after `eq: dissipation.softmax`. -/
 lemma partitionSA_bounds (β : ℝ) (X : ℝ → SphereTuple d n) (t : ℝ) (i : Idx n)
-    (hβ : 0 ≤ β) (hn : 0 < n) :
+    (hβ : 0 ≤ β) :
     Real.exp (-β) * n ≤ partitionSA d n β X t i
       ∧ partitionSA d n β X t i ≤ Real.exp β * n := by
-  -- The proof rests on the bound `|⟨x_i, x_j⟩| ≤ 1` for unit-norm vectors
-  -- on the sphere.  This in turn gives `-β ≤ β⟨x_i, x_j⟩ ≤ β`, hence
-  -- `exp(-β) ≤ exp(β⟨x_i, x_j⟩) ≤ exp(β)`, and summing over `n` terms
-  -- yields the claimed bounds.
-  --
-  -- The substantive analytic content (Cauchy-Schwarz on the sphere,
-  -- monotonicity of `Real.exp`) is in Mathlib; the orchestration
-  -- requires bookkeeping the `SSphere d` ↪ `EucSpace d` coercion.
-  -- Deferred — connected separately via `GPTMini.QKNorm.score_bounded`.
-  sorry
+  have hnorm : ∀ k : Idx n, ‖(X t k : EucSpace d)‖ = 1 := fun k =>
+    mem_sphere_zero_iff_norm.mp (X t k).2
+  have hbound : ∀ k : Idx n,
+      |inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((X t k : EucSpace d))| ≤ 1 := fun k => by
+    simpa [hnorm i, hnorm k] using
+      abs_real_inner_le_norm ((X t i : EucSpace d)) ((X t k : EucSpace d))
+  have hconst : ∀ c : ℝ, (∑ _k : Idx n, c) = c * n := by
+    intro c
+    rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
+    ring
+  refine ⟨?_, ?_⟩
+  · rw [← hconst (Real.exp (-β)), partitionSA]
+    refine Finset.sum_le_sum fun k _ => Real.exp_le_exp.mpr ?_
+    nlinarith [neg_le_of_abs_le (hbound k)]
+  · rw [← hconst (Real.exp β), partitionSA]
+    refine Finset.sum_le_sum fun k _ => Real.exp_le_exp.mpr ?_
+    nlinarith [le_of_abs_le (hbound k)]
+
+/-- The hypothesis `0 ≤ β` of `partitionSA_bounds` is satisfiable. -/
+example : (0 : ℝ) ≤ 1 := zero_le_one
 
 /-! ### §2.3 — Toward the complete Transformer -/
 
@@ -239,7 +255,18 @@ solution. -/
 theorem SA_permutation_equivariant
     (β : ℝ) (X : ℝ → SphereTuple d n) (σπ : Idx n ≃ Idx n) :
     SA d n β X → SA d n β (fun t => (X t) ∘ σπ) := by
-  sorry
+  intro h t i
+  have hZ : partitionSA d n β (fun s => (X s) ∘ σπ) t i
+      = partitionSA d n β X t (σπ i) :=
+    Fintype.sum_equiv σπ _ _ fun _ => rfl
+  have hsum : (∑ j : Idx n, Real.exp (β * inner (𝕜 := ℝ)
+        ((X t (σπ i) : EucSpace d)) ((X t (σπ j) : EucSpace d)))
+        • ((X t (σπ j) : EucSpace d)))
+      = ∑ j : Idx n, Real.exp (β * inner (𝕜 := ℝ)
+        ((X t (σπ i) : EucSpace d)) ((X t j : EucSpace d)))
+        • ((X t j : EucSpace d)) :=
+    Fintype.sum_equiv σπ _ _ fun _ => rfl
+  simpa [Function.comp_apply, hZ, hsum] using h t (σπ i)
 
 end Perspective
 end Transformer
