@@ -46,6 +46,19 @@ theorem softmaxOutput_denom_pos
   · intros _ _; exact Real.exp_pos _
   · exact Finset.univ_nonempty
 
+/-- **Softmax output is strictly positive.**
+
+`exp` never vanishes, so no token is ever assigned probability exactly zero —
+this is what makes `log (prob_i v)` well behaved in the entropy bounds. -/
+theorem softmaxOutput_pos
+    {T : ℕ} (positions : Fin T → ℝ)
+    (tokens : Fin T → Fin cfg.vocab_size)
+    (i : Fin T) (v : Fin cfg.vocab_size)
+    (hvocab : 0 < cfg.vocab_size) :
+    0 < softmaxOutput cfg params eps positions tokens i v :=
+  div_pos (Real.exp_pos _)
+    (softmaxOutput_denom_pos cfg params eps positions tokens i hvocab)
+
 /-- **Softmax output sums to 1.**
 
 `Σ_v prob_i(v) = 1`. -/
