@@ -21,8 +21,10 @@ The architecture is:
 | `GPTMini.RoPE` | the rotary tables, and that they rotate |
 | `GPTMini.QKNorm` | the normalized score, its bounds, and the RMS parameterization |
 | `GPTMini.CausalMHA` | the head itself, masked, with XSA on its output |
+| `GPTMini.AttentionBounds` | how large the weights and the head output can get |
 | `GPTMini.ReLU2FFN` | the feed-forward map |
 | `GPTMini.Block` | one pre-norm block, and the residual it adds to |
+| `GPTMini.BlockLipschitz` | and how far apart it sends two residual streams |
 | `GPTMini.Model` | the stack, the tied unembedding, and the forward pass |
 | `GPTMini.Properties` | what holds of it at every weight assignment at all |
 | `GPTMini.Bridge` | and how it sits inside the setups of the formalized papers |
@@ -49,6 +51,7 @@ import Transformer.GPTMini.CausalMHA
 import Transformer.GPTMini.AttentionBounds
 import Transformer.GPTMini.ReLU2FFN
 import Transformer.GPTMini.Block
+import Transformer.GPTMini.BlockLipschitz
 import Transformer.GPTMini.Model
 import Transformer.GPTMini.Properties
 import Transformer.GPTMini.Bridge
