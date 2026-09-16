@@ -2,8 +2,8 @@
 # The depth hierarchy of `TL[◁#]`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), §4.4–4.5 and §5.1: `lem:cropping_oneway`, `lem:reduction`,
-`thm:TLCl_depth`, `def:prediction_task`, `cor:prediction_task_depth`.
+(COLM 2025), §4.4–4.5: `lem:cropping_oneway`, `lem:reduction` and
+`thm:TLCl_depth`.
 
 The argument runs downwards.  A depth-`k` formula defining `L_{k+1}` is peeled
 one counting level at a time: the Cropping Lemma finds a sub-family of
@@ -46,10 +46,6 @@ import Transformer.CRASP.PiecewiseTestable
 
 namespace Transformer
 namespace CRASP
-
-universe u
-
-variable {σ : Type u}
 
 /-! ## Sticking to one side only -/
 
@@ -154,27 +150,6 @@ theorem definableL_altPlus (k : ℕ) (hk : 0 < k) :
     DefinableL (altPlus false (k + 1)) (k + 1) ∧ ¬ DefinableL (altPlus false (k + 1)) k :=
   ⟨definableL_of_kPiecewiseTestable (k + 1) _ (kPiecewiseTestable_altPlus (k + 1) k.succ_pos),
     sorry⟩
-
-/-- **Definition `def:prediction_task`.**  A `TL[◁#]` formula solves the
-next-token prediction problem for `L` when, on every prefix of every string of
-`L`, it says exactly whether that prefix is itself in `L`.  Only prefixes of
-strings of `L` are considered, which is what separates prediction from
-recognition. -/
-def SolvesPrediction [DecidableEq σ] (φ : Form σ) (L : Set (List σ)) : Prop :=
-  ∀ w ∈ L, ∀ i, 1 ≤ i → i ≤ w.length → (φ.models (w.take i) ↔ w.take i ∈ L)
-
-/-- **Corollary `cor:prediction_task_depth`.**  A depth-`(k+1)` `TL[◁#]`
-formula solves the next-token prediction problem for `L_{k+3}`, and no
-depth-`k` formula does. -/
-theorem prediction_task_depth (k : ℕ) (hk : 0 < k) :
-    (∃ φ ∈ TLCl Bool (k + 1), SolvesPrediction φ (altPlus false (k + 3))) ∧
-      ∀ φ ∈ TLCl Bool k, ¬ SolvesPrediction φ (altPlus false (k + 3)) :=
-  sorry
-
-/-- The prediction problem is not vacuous: the formula `⊤` — written `¬(1 < 1)`
-— solves the prediction problem for `Σ*`, in which every prefix lies. -/
-example : SolvesPrediction (σ := Bool) (.neg (.lt .one .one)) Set.univ :=
-  fun _ _ _ _ _ => by simp [Form.models, Form.sat, Term.val]
 
 end CRASP
 end Transformer

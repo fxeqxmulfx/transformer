@@ -29,6 +29,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.CroppingUnsound` | the cropping lemmas fail: a count also reads the positions before the interval |
 | `CRASP.ReductionUnsound` | the Reduction Lemma fails: no depth-1 formula checks the affix `ab` |
 | `CRASP.Depth` | the Cropping and Reduction Lemmas refuted, and `thm:TLCl_depth` |
+| `CRASP.Prediction` | the next-token prediction problem for `L_{k+3}`, solved at depth `k + 1` |
 | `CRASP.TLCDepth` | the two-sided Cropping Lemma refuted, and `thm:TLC_depth` |
 | `CRASP.Extensions` | the sugar of Appendix A.3 as an extended syntax, and its elimination |
 | `CRASP.Fixed` | fixed-precision numbers, rounding, and their two characterizing bounds |
@@ -75,6 +76,7 @@ import Transformer.CRASP.Commutative
 import Transformer.CRASP.CroppingUnsound
 import Transformer.CRASP.ReductionUnsound
 import Transformer.CRASP.Depth
+import Transformer.CRASP.Prediction
 import Transformer.CRASP.TLCDepth
 import Transformer.CRASP.Extensions
 import Transformer.CRASP.Fixed
