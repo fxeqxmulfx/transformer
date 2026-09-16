@@ -14,6 +14,7 @@ into a hierarchy for `TL[◁#]^pos` with the separating language `E_{k+1}`.
 
 import Transformer.CRASP.NeutralLetter
 import Transformer.CRASP.PositionalEmbedding
+import Transformer.CRASP.Spread
 import Transformer.CRASP.YNormalFormEquiv
 
 namespace Transformer
@@ -22,28 +23,6 @@ namespace CRASP
 universe u
 
 variable {σ : Type u} [DecidableEq σ]
-
-/-- The string map `f` of `lem:tlclpos_reduction`:
-`w₁ ⋯ wₙ ↦ e^r w₁ e^{r−1} w₂ e^{r−1} ⋯ wₙ e^{r−1}`, with the neutral letter
-`e` written `none`. -/
-def spread (r : ℕ) (w : List σ) : List (Option σ) :=
-  List.replicate r none ++ w.flatMap fun a => some a :: List.replicate (r - 1) none
-
-omit [DecidableEq σ] in
-@[simp] theorem spread_nil (r : ℕ) : spread (σ := σ) r [] = List.replicate r none := by
-  simp [spread]
-
-omit [DecidableEq σ] in
-/-- `spread` only inserts neutral letters, so deleting them gives the string
-back: `spread r` is a section of `List.reduceOption`. -/
-@[simp] theorem reduceOption_spread (r : ℕ) (w : List σ) : (spread r w).reduceOption = w := by
-  rw [spread, List.reduceOption_append, List.reduceOption_replicate_none, List.nil_append]
-  induction w with
-  | nil => simp
-  | cons a l ih =>
-      rw [List.flatMap_cons, List.reduceOption_append, ih, List.reduceOption_cons_of_some,
-        List.reduceOption_replicate_none]
-      rfl
 
 /-- **Lemma `lem:tlclpos_reduction`.**  A `TL[◁#]^pos_k` formula over
 `Σ ∪ {e}` is pulled back along `spread r`, for a suitable `r ≥ 1`, to a plain
