@@ -15,8 +15,10 @@ starting with `b` is a subsequence — and its last symbol is that of block
 `φ_{B_{k+1}} ∧ Q_b` (`k` odd), `predictAltPlus` below.
 
 The negative half is derived in the paper from `lem:cropping_oneway` and
-`lem:reduction`, both false as stated (`Transformer.CRASP.Depth`), and is left
-open.
+`lem:reduction`, both false as stated (`Transformer.CRASP.Depth`).  It holds
+nonetheless (`not_solvesPrediction_altPlus`): a formula of depth `k + 1` agrees
+on a word of `L_{k+2}` that is a prefix of a word of `L_{k+4}`, and on a word of
+`L_{k+4}` (`Transformer.CRASP.LowerBound`).
 -/
 
 import Transformer.CRASP.Blocks
@@ -80,17 +82,48 @@ theorem solvesPrediction_predictAltPlus (k : ℕ) :
     obtain rfl : j = k + 2 := by have := eq_of_mem_altPlus hu h; omega
     exact ⟨by omega, by omega⟩
 
+/-- **No formula of depth `k + 1` solves the prediction problem for
+`L_{k+4}`.**  It agrees on a word of `L_{k+2}` that is a prefix of a word of
+`L_{k+4}`, which it must reject, and on a word of `L_{k+4}`, which it must
+accept (Appendix C.4, the second half of the proof of
+`cor:prediction_task_depth`, with `exists_models_iff_altPlus` in place of
+`lem:cropping_oneway` and `lem:reduction`). -/
+theorem not_solvesPrediction_altPlus (k : ℕ) (φ : Form Bool) (hφ : φ ∈ TLCl Bool (k + 1)) :
+    ¬ SolvesPrediction φ (altPlus false (k + 4)) := by
+  intro hs
+  obtain ⟨w₁, w₂, v, h₁, h₂, h₃, h⟩ := exists_models_iff_altPlus k φ hφ
+  have hpos : ∀ {j} {w : List Bool}, w ∈ altPlus false (j + 1) → 1 ≤ w.length := by
+    rintro j w ⟨m, hm, v', -, rfl⟩
+    rw [List.length_append, List.length_replicate]
+    omega
+  have e₁ := hs (w₁ ++ v) h₃ w₁.length (hpos h₁) (by rw [List.length_append]; omega)
+  have e₂ := hs w₂ h₂ w₂.length (hpos h₂) le_rfl
+  rw [List.take_left] at e₁
+  rw [List.take_length] at e₂
+  have := eq_of_mem_altPlus (e₁.1 (h.2 (e₂.2 h₂))) h₁
+  omega
+
+/-- The hypothesis of `not_solvesPrediction_altPlus` is satisfiable:
+`◁#[Q_a] < 1` has depth `1`. -/
+example : (Form.lt (.countL (.sym false)) .one : Form Bool) ∈ TLCl Bool (0 + 1) :=
+  ⟨rfl, rfl, by simp [Form.depth, Term.depth]⟩
+
 /-- **Corollary `cor:prediction_task_depth`.**  A depth-`(k+1)` `TL[◁#]`
 formula solves the next-token prediction problem for `L_{k+3}`, and no
 depth-`k` formula does.
 
-The positive half is `solvesPrediction_predictAltPlus`.  The negative half is
-the one the paper derives from `lem:cropping_oneway` and `lem:reduction`, both
-false as stated, and only it is left open. -/
+The positive half is `solvesPrediction_predictAltPlus`.  The negative half,
+which the paper derives from `lem:cropping_oneway` and `lem:reduction`, both
+false as stated, is `not_solvesPrediction_altPlus`. -/
 theorem prediction_task_depth (k : ℕ) (hk : 0 < k) :
     (∃ φ ∈ TLCl Bool (k + 1), SolvesPrediction φ (altPlus false (k + 3))) ∧
-      ∀ φ ∈ TLCl Bool k, ¬ SolvesPrediction φ (altPlus false (k + 3)) :=
-  ⟨⟨predictAltPlus k, predictAltPlus_mem k, solvesPrediction_predictAltPlus k⟩, sorry⟩
+      ∀ φ ∈ TLCl Bool k, ¬ SolvesPrediction φ (altPlus false (k + 3)) := by
+  refine ⟨⟨predictAltPlus k, predictAltPlus_mem k, solvesPrediction_predictAltPlus k⟩, ?_⟩
+  obtain ⟨k, rfl⟩ : ∃ k', k = k' + 1 := ⟨k - 1, by omega⟩
+  exact not_solvesPrediction_altPlus k
+
+/-- The hypothesis of `prediction_task_depth` is satisfiable: `0 < 1`. -/
+example : 0 < 1 := Nat.one_pos
 
 end CRASP
 end Transformer
