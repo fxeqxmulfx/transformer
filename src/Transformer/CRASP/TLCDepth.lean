@@ -60,12 +60,6 @@ theorem altPlusDouble_succ (k : ℕ) : altPlusDouble (k + 1) = altPlus false (2 
   rw [altPlusDouble]
   congr 1
 
-/-- **Theorem `thm:TLC_depth`.**  `D_{k+1}` is definable in `TL[◁#,▷#]_{k+1}`
-but not in `TL[◁#,▷#]_k`. -/
-theorem definable_altPlusDouble (k : ℕ) (hk : 0 < k) :
-    Definable (altPlusDouble (k + 1)) (k + 1) ∧ ¬ Definable (altPlusDouble (k + 1)) k :=
-  sorry
-
 /-- The closing remark of the proof: "by `lem:piecewise_testable`,
 `D_{k+1} = L_{2k+1}` is a `(2k+1)`-piecewise testable language", which with
 `lem:piecewise_testable_depth` is what puts it inside `TL[◁#,▷#]_{k+1}`. -/
@@ -73,6 +67,18 @@ theorem kPiecewiseTestable_altPlusDouble (k : ℕ) :
     KPiecewiseTestable (2 * k + 1) (altPlusDouble (k + 1)) := by
   rw [altPlusDouble_succ]
   exact kPiecewiseTestable_altPlus (2 * k + 1) (by omega)
+
+/-- **Theorem `thm:TLC_depth`.**  `D_{k+1}` is definable in `TL[◁#,▷#]_{k+1}`
+but not in `TL[◁#,▷#]_k`.
+
+The positive half is the closing remark of the paper's proof, read in this
+order: `D_{k+1}` is `(2k+1)`-piecewise testable, and
+`lem:piecewise_testable_depth` turns that into a depth-`(k+1)` definition.
+The negative half is the one that needs `lem:cropping`, and only it is left
+open. -/
+theorem definable_altPlusDouble (k : ℕ) (hk : 0 < k) :
+    Definable (altPlusDouble (k + 1)) (k + 1) ∧ ¬ Definable (altPlusDouble (k + 1)) k :=
+  ⟨definable_of_kPiecewiseTestable k _ (kPiecewiseTestable_altPlusDouble k), sorry⟩
 
 end CRASP
 end Transformer

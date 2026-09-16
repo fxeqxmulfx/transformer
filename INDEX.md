@@ -1711,7 +1711,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`Accepts`](src/Transformer/CRASP/PositionalTransformers.lean#L141) | def |  |
 | [`Recognizes`](src/Transformer/CRASP/PositionalTransformers.lean#L144) | def |  |
 
-**[Transformer.CRASP.TLCDepth](src/Transformer/CRASP/TLCDepth.lean)** — 78 lines
+**[Transformer.CRASP.TLCDepth](src/Transformer/CRASP/TLCDepth.lean)** — 84 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -1719,8 +1719,8 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`cropping`](src/Transformer/CRASP/TLCDepth.lean#L35) | theorem | sorry |
 | [`altPlusDouble`](src/Transformer/CRASP/TLCDepth.lean#L55) | def |  |
 | [`altPlusDouble_succ`](src/Transformer/CRASP/TLCDepth.lean#L59) | theorem | proved |
-| [`definable_altPlusDouble`](src/Transformer/CRASP/TLCDepth.lean#L65) | theorem | sorry |
-| [`kPiecewiseTestable_altPlusDouble`](src/Transformer/CRASP/TLCDepth.lean#L72) | theorem | proved |
+| [`kPiecewiseTestable_altPlusDouble`](src/Transformer/CRASP/TLCDepth.lean#L66) | theorem | proved |
+| [`definable_altPlusDouble`](src/Transformer/CRASP/TLCDepth.lean#L79) | theorem | sorry |
 
 **[Transformer.CRASP.Transformers](src/Transformer/CRASP/Transformers.lean)** — 194 lines
 
@@ -3174,7 +3174,7 @@ Everything the build cannot vouch for, in one place.
 | [`exists_mem_TLClY_of_alibi`](src/Transformer/CRASP/PositionalHierarchy.lean#L138) | theorem | `Transformer.CRASP.PositionalHierarchy` |
 | [`rtfr_pes_depth_hierarchy`](src/Transformer/CRASP/PositionalHierarchy.lean#L170) | theorem | `Transformer.CRASP.PositionalHierarchy` |
 | [`cropping`](src/Transformer/CRASP/TLCDepth.lean#L35) | theorem | `Transformer.CRASP.TLCDepth` |
-| [`definable_altPlusDouble`](src/Transformer/CRASP/TLCDepth.lean#L65) | theorem | `Transformer.CRASP.TLCDepth` |
+| [`definable_altPlusDouble`](src/Transformer/CRASP/TLCDepth.lean#L79) | theorem | `Transformer.CRASP.TLCDepth` |
 | [`exists_rtfr_of_mem_TLCl`](src/Transformer/CRASP/Transformers.lean#L107) | theorem | `Transformer.CRASP.Transformers` |
 | [`finite_function`](src/Transformer/CRASP/Transformers.lean#L129) | theorem | `Transformer.CRASP.Transformers` |
 | [`exists_mem_TLCl_of_rtfr`](src/Transformer/CRASP/Transformers.lean#L154) | theorem | `Transformer.CRASP.Transformers` |
