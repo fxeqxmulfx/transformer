@@ -163,6 +163,15 @@ def DefinableMod (L : Set (List σ)) (k : ℕ) : Prop := ∃ φ ∈ TLClMod σ k
 /-- Definability at depth `k` in `TL[◁#, Y]`. -/
 def DefinableY (L : Set (List σ)) (k : ℕ) : Prop := ∃ φ ∈ TLClY σ k, φ.lang = L
 
+/-- `TL[◁#, MOD]_k` is a fragment of `TL[◁#]^pos_k`: the two ask for the same
+depth bound, and the full logic does not ask for `Y`-freeness. -/
+theorem TLClMod_subset_TLClPos (σ : Type u) (k : ℕ) : TLClMod σ k ⊆ TLClPos σ k :=
+  fun _ hφ => hφ.2
+
+/-- `TL[◁#, Y]_k` is a fragment of `TL[◁#]^pos_k`, for the same reason as
+`TLClMod_subset_TLClPos`. -/
+theorem TLClY_subset_TLClPos (σ : Type u) (k : ℕ) : TLClY σ k ⊆ TLClPos σ k :=
+  fun _ hφ => hφ.2
 
 end CRASP
 end Transformer

@@ -160,6 +160,11 @@ by `thm:tlclpos_depth_hierarchy`, which denies `E_{k+1}` to both
 The rational-angle assumption is the one under which the periodic encodings
 are simulated at all; it is vacuous for ALiBi.
 
+Only the negative half is proved here, and it is proved exactly that way: it
+is a corollary of the three simulations above.  The positive half asks for a
+depth-`(k+1)` transformer carrying the *given* encoding, which needs the
+construction of `thm:rtfr_to_TLCl` and is left open.
+
 Source: arXiv:2506.16055v3, §5.2, `thm:rtfr_pes_depth_hierarchy`, and the
 three unnamed theorems of Appendix E. -/
 theorem rtfr_pes_depth_hierarchy (k : ℕ) (hk : 0 < k)
@@ -167,8 +172,23 @@ theorem rtfr_pes_depth_hierarchy (k : ℕ) (hk : 0 < k)
     (∃ (p s d : ℕ) (T : PTfr (Option (Option Bool)) p s d (k + 1)),
         T.pe = pe ∧ T.Recognizes (altPlusNeutral (k + 1))) ∧
       ∀ (p s d : ℕ) (T : PTfr (Option (Option Bool)) p s d k),
-        T.pe = pe → ¬ T.Recognizes (altPlusNeutral (k + 1)) :=
-  sorry
+        T.pe = pe → ¬ T.Recognizes (altPlusNeutral (k + 1)) := by
+  refine ⟨sorry, fun p s d T hTpe hrec => (definablePos_altPlusNeutral k hk).2 ?_⟩
+  have hlang : {w : List (Option Bool) | T.Accepts (bos w)} = altPlusNeutral (k + 1) :=
+    Set.ext hrec
+  cases pe with
+  | plain => exact hpe.elim
+  | sinusoidal θ =>
+      have h := (definableMod_iff_recognizes_sinusoidal (altPlusNeutral (k + 1)) k hk).mpr
+        ⟨p, s, d, θ, T, hTpe, hrat, hrec⟩
+      obtain ⟨φ, hφ, hφlang⟩ := h
+      exact ⟨φ, TLClMod_subset_TLClPos _ _ hφ, hφlang⟩
+  | rope θ =>
+      obtain ⟨φ, hφ, hφlang⟩ := exists_mem_TLClMod_of_rope θ hrat T hTpe
+      exact ⟨φ, TLClMod_subset_TLClPos _ _ hφ, hφlang.trans hlang⟩
+  | alibi a =>
+      obtain ⟨φ, hφ, hφlang⟩ := exists_mem_TLClY_of_alibi a T hTpe
+      exact ⟨φ, TLClY_subset_TLClPos _ _ hφ, hφlang.trans hlang⟩
 
 /-- The hypotheses of `rtfr_pes_depth_hierarchy` are satisfiable: `k = 1` is
 positive, and ALiBi with slope `1` is one of the three encodings and carries
