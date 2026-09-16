@@ -25,6 +25,7 @@ The architecture is:
 | `GPTMini.AttentionBounds` | how large the weights and the head output can get |
 | `GPTMini.SoftmaxStability` | and how far the weight row can move when the scores do |
 | `GPTMini.AttentionLipschitz` | how far the output and the XSA projection move with it |
+| `GPTMini.HeadLipschitz` | and how far the whole head moves |
 | `GPTMini.ReLU2FFN` | the feed-forward map |
 | `GPTMini.Block` | one pre-norm block, and the residual it adds to |
 | `GPTMini.BlockLipschitz` | and how far apart it sends two residual streams |
@@ -55,6 +56,7 @@ import Transformer.GPTMini.CausalMHA
 import Transformer.GPTMini.AttentionBounds
 import Transformer.GPTMini.SoftmaxStability
 import Transformer.GPTMini.AttentionLipschitz
+import Transformer.GPTMini.HeadLipschitz
 import Transformer.GPTMini.ReLU2FFN
 import Transformer.GPTMini.Block
 import Transformer.GPTMini.BlockLipschitz
