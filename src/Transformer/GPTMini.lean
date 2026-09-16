@@ -46,6 +46,7 @@ import Transformer.GPTMini.Reshape
 import Transformer.GPTMini.RoPE
 import Transformer.GPTMini.QKNorm
 import Transformer.GPTMini.CausalMHA
+import Transformer.GPTMini.AttentionBounds
 import Transformer.GPTMini.ReLU2FFN
 import Transformer.GPTMini.Block
 import Transformer.GPTMini.Model

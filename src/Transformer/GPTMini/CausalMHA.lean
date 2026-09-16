@@ -132,22 +132,6 @@ theorem causalAttnWeights_row_sum
     · have hij_le : (j : ℕ) ≤ (i : ℕ) := not_lt.mp hij
       simp [hij, hij_le]
 
-/-- **Two-sided bound on attention weights** (consequence of `QKNorm`):
-
-  `(i+1)⁻¹ · e^{-2 e^α} ≤ a_{i,j}^{(h)} ≤ (i+1)⁻¹ · e^{2 e^α}`
-
-for `j ≤ i`, where `(i + 1)` is the number of unmasked positions. -/
-theorem causalAttnWeights_bounds
-    {T : ℕ} (alpha eps : ℝ) (heps : 0 ≤ eps)
-    (q k : Fin T → EucSpace cfg.head_dim)
-    (i j : Fin T) (hij : (j : ℕ) ≤ (i : ℕ)) :
-    (((i : ℕ) + 1 : ℝ))⁻¹ * Real.exp (-(2 * Real.exp alpha))
-      ≤ causalAttnWeights cfg alpha eps q k i j
-    ∧
-    causalAttnWeights cfg alpha eps q k i j
-      ≤ (((i : ℕ) + 1 : ℝ))⁻¹ * Real.exp (2 * Real.exp alpha) := by
-  sorry
-
 /-! ### Attention output and XSA -/
 
 /-- **Pre-XSA attention output** (a single head):

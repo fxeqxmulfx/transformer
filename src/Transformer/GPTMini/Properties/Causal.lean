@@ -16,7 +16,7 @@ sub-layer composition); instead we prove the foundational lemma at the
 attention-weight level, which is the load-bearing fact.
 -/
 
-import Transformer.GPTMini.CausalMHA
+import Transformer.GPTMini.AttentionBounds
 
 open scoped BigOperators
 open Real
@@ -26,36 +26,6 @@ namespace GPTMini
 namespace Properties
 
 variable (cfg : Config)
-
-/-- **Attention weights are zero past the causal cutoff.**
-
-For positions `j > i`, the causal attention weight is `0` by construction. -/
-theorem causalAttnWeights_zero_above
-    {T : ℕ} (alpha eps : ℝ)
-    (q k : Fin T → EucSpace cfg.head_dim)
-    (i j : Fin T) (hij : (i : ℕ) < (j : ℕ)) :
-    causalAttnWeights cfg alpha eps q k i j = 0 := by
-  unfold causalAttnWeights
-  simp [hij]
-
-/-- **Attention weights are non-negative.**
-
-Direct consequence of `Real.exp_pos` and the softmax-style construction. -/
-theorem causalAttnWeights_nonneg
-    {T : ℕ} (alpha eps : ℝ)
-    (q k : Fin T → EucSpace cfg.head_dim)
-    (i j : Fin T) :
-    0 ≤ causalAttnWeights cfg alpha eps q k i j := by
-  unfold causalAttnWeights
-  split_ifs with hij
-  · exact le_refl 0
-  · apply div_nonneg
-    · exact le_of_lt (Real.exp_pos _)
-    · apply Finset.sum_nonneg
-      intros j' _
-      split_ifs with h
-      · exact le_of_lt (Real.exp_pos _)
-      · exact le_refl 0
 
 /-- **Attention output at position `i` is a convex combination of values
 at positions `j ≤ i`.**
