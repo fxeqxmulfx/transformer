@@ -21,8 +21,8 @@ residual connection `cᵢ + h^{prev}ᵢ` is rounded, since `𝔽` is not closed 
 addition and the paper does not say what happens on overflow.
 -/
 
+import Transformer.CRASP.Depth
 import Transformer.CRASP.Fixed
-import Transformer.CRASP.PiecewiseTestable
 
 namespace Transformer
 namespace CRASP
@@ -157,19 +157,38 @@ theorem exists_mem_TLCl_of_rtfr {p s d k : ℕ} (T : RTfr (Option σ) p s d k) :
 
 /-- **Theorem `thm:transformer_equivalence`.**  A language is defined by a
 `TL[◁#]` formula of depth `k` exactly when `⊲ · L` is recognized by a
-future-masked rounded transformer of depth `k`. -/
+future-masked rounded transformer of depth `k`.
+
+The paper states it as the conjunction of the two simulations, and that is how
+it is proved here: `exists_rtfr_of_mem_TLCl` gives the forward direction and
+`exists_mem_TLCl_of_rtfr` the backward one, with nothing left to do but rewrite
+the language along `RTfr.Recognizes`. -/
 theorem definableL_iff_recognizes (L : Set (List σ)) (k : ℕ) :
-    DefinableL L k ↔ ∃ (p s d : ℕ) (T : RTfr (Option σ) p s d k), T.Recognizes L :=
-  sorry
+    DefinableL L k ↔ ∃ (p s d : ℕ) (T : RTfr (Option σ) p s d k), T.Recognizes L := by
+  constructor
+  · rintro ⟨φ, hφ, rfl⟩
+    exact exists_rtfr_of_mem_TLCl k φ hφ
+  · rintro ⟨p, s, d, T, hT⟩
+    obtain ⟨φ, hφ, hlang⟩ := exists_mem_TLCl_of_rtfr T
+    exact ⟨φ, hφ, hlang.trans (Set.ext hT)⟩
 
 /-- **Theorem `thm:rtfr_depth_hierarchy`.**  A depth-`(k+1)` transformer
-recognizes `L_{k+1}`, and no depth-`k` transformer does. -/
+recognizes `L_{k+1}`, and no depth-`k` transformer does.
+
+A corollary of the depth hierarchy `thm:TLCl_depth` for the logic and of the
+equivalence `definableL_iff_recognizes`, exactly as the paper derives it: the
+transformer hierarchy carries no combinatorics of its own. -/
 theorem rtfr_depth_hierarchy (k : ℕ) (hk : 0 < k) :
     (∃ (p s d : ℕ) (T : RTfr (Option Bool) p s d (k + 1)),
         T.Recognizes (altPlus false (k + 1))) ∧
       ∀ (p s d : ℕ) (T : RTfr (Option Bool) p s d k),
-        ¬ T.Recognizes (altPlus false (k + 1)) :=
-  sorry
+        ¬ T.Recognizes (altPlus false (k + 1)) := by
+  obtain ⟨hpos, hneg⟩ := definableL_altPlus k hk
+  exact ⟨(definableL_iff_recognizes _ _).mp hpos,
+    fun p s d T hT => hneg ((definableL_iff_recognizes _ _).mpr ⟨p, s, d, T, hT⟩)⟩
+
+/-- The hypothesis of `rtfr_depth_hierarchy` is satisfiable: `k = 1`. -/
+example : (0 : ℕ) < 1 := Nat.one_pos
 
 end CRASP
 end Transformer
