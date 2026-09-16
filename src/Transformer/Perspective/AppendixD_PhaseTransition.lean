@@ -216,9 +216,40 @@ theorem ybeta_close_to_1
               - ((n : ℝ) * t) / ((n : ℝ) + Real.exp (β / 2))) := by
   sorry
 
-/-- The hypothesis `ybetaODE_SA n β γ` of `ybeta_close_to_1` and
-`d_star_definition` is satisfiable: `ybetaODE_SA_one_zero`. -/
+/-- The hypothesis `ybetaODE_SA n β γ` of `ybeta_close_to_1` is satisfiable:
+`ybetaODE_SA_one_zero`. -/
 example : ybetaODE_SA 1 0 (fun t => 1 - Real.exp (-2 * t)) := ybetaODE_SA_one_zero
+
+/-- `d / log d` grows beyond every bound: for each real `K` there is a
+dimension past which `K ≤ d / log d`.
+
+The elementary route: `log d = 2 log √d ≤ 2 (√d - 1) < 2 √d`, so
+`d / log d ≥ √d / 2`, which passes `K` as soon as `d ≥ 4 K²`.
+
+Source: arXiv:2312.10794v5, Appendix D, `eq: d.large` — the growth that makes
+the threshold `d⋆(n, β)` exist. -/
+theorem exists_le_div_log (K : ℝ) :
+    ∃ D : ℕ, ∀ d : ℕ, D ≤ d → K ≤ (d : ℝ) / Real.log d := by
+  set K' : ℝ := max K 0 with hK'def
+  have hKK' : K ≤ K' := le_max_left _ _
+  have hK'0 : 0 ≤ K' := le_max_right _ _
+  refine ⟨max 2 ⌈4 * K' ^ 2⌉₊, fun d hd => ?_⟩
+  have hd2 : (2 : ℝ) ≤ (d : ℝ) := by exact_mod_cast le_trans (le_max_left _ _) hd
+  have hd0 : (0 : ℝ) ≤ (d : ℝ) := by linarith
+  have hdK : 4 * K' ^ 2 ≤ (d : ℝ) :=
+    le_trans (Nat.le_ceil _) (by exact_mod_cast le_trans (le_max_right 2 _) hd)
+  have hsq : Real.sqrt d * Real.sqrt d = (d : ℝ) := Real.mul_self_sqrt hd0
+  have hsqrt0 : 0 < Real.sqrt d := Real.sqrt_pos.mpr (by linarith)
+  have h2K : 2 * K' ≤ Real.sqrt d := Real.le_sqrt_of_sq_le (by nlinarith)
+  have hlogpos : 0 < Real.log d := Real.log_pos (by linarith)
+  have hlog : Real.log d ≤ 2 * Real.sqrt d := by
+    have h := Real.log_le_sub_one_of_pos hsqrt0
+    rw [Real.log_sqrt hd0] at h
+    linarith
+  rw [le_div_iff₀ hlogpos]
+  nlinarith [mul_le_mul_of_nonneg_left hlog hK'0,
+    mul_le_mul_of_nonneg_right h2K hsqrt0.le,
+    mul_le_mul_of_nonneg_right hKK' hlogpos.le]
 
 /-- **Equation (eq: d.large).** *The threshold `d⋆(n, β)`.*
 
@@ -229,15 +260,17 @@ There is a dimension past which
 which is what makes the error term `√(log d / d)` of `e:ineqfirstpart` small
 compared with `γ_β(1/n)` at time `1/n`.
 
-Not proved here: it needs `γ_β(1/n) > 0` together with `d / log d → ∞`.
+The survey derives the threshold from `γ_β(1/n) > 0`, but that hypothesis is
+not needed: `d / log d` passes *every* real bound, and when `γ_β(1/n) = 0` the
+left-hand side is `0` under Lean's division convention.  So the ODE plays no
+role here and the hypothesis `ybetaODE_SA n β γ` is dropped.
 
 Source: arXiv:2312.10794v5, Appendix D, `eq: d.large`. -/
-theorem d_star_definition
-    (β : ℝ) (γ : ℝ → ℝ) (hγ : ybetaODE_SA n β γ) :
+theorem d_star_definition (β : ℝ) (γ : ℝ → ℝ) :
     ∃ d_star : ℕ, ∀ d : ℕ, d_star ≤ d →
       16 * (cBeta β)^2 / (γ ((n : ℝ)⁻¹))^2
-        ≤ (d : ℝ) / Real.log d := by
-  sorry
+        ≤ (d : ℝ) / Real.log d :=
+  exists_le_div_log _
 
 end Perspective
 end Transformer
