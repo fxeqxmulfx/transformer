@@ -11,4 +11,5 @@ import Transformer.Normalization.Lojasiewicz
 import Transformer.Normalization.Radial
 import Transformer.Normalization.Rates
 import Transformer.Normalization.Symmetric
+import Transformer.Normalization.UnstableProduct
 import Transformer.Normalization.Velocities

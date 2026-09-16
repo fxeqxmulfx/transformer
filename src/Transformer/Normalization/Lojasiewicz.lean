@@ -1,27 +1,21 @@
 /-
 # Normalization — The convergence machinery of the proof (App. D of 2510.22026v2)
 
-Three statements the proof of `thm: convergence` rests on:
+Two of the three statements the proof of `thm: convergence` rests on:
 
 * `Lemma lem: loj` — the Łojasiewicz convergence theorem generalized to a
   modulated gradient flow `ẋ = -M(t) ∇E(x)`;
 * `Proposition sprop: time_change` — a monotone time change turns `eq: NA`
-  with speed factors `s_j` into `eq: NA` with `s_j(t(τ)) / t'(τ)`;
-* `Lemma lem: matrix` — the product of a symmetric positive-definite matrix
-  and a symmetric unstable one is unstable.
+  with speed factors `s_j` into `eq: NA` with `s_j(t(τ)) / t'(τ)`.
 
-"Unstable" is read as "has a positive real eigenvalue": that is what the
-proof of `lem: matrix` produces from Sylvester's law of inertia, and what its
-use in Step 4 of Appendix D needs of the energy Hessian.
-
-None of the three is proved here.
+Neither is proved here.  The third, `Lemma lem: matrix`, is proved in
+`Normalization.UnstableProduct`, whose matrix square root the two above do
+not need.
 -/
 
 import Transformer.Basic
 import Transformer.Normalization.Basic
 import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.LinearAlgebra.Matrix.PosDef
-import Mathlib.Algebra.Order.Star.Real
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 
 open scoped BigOperators
@@ -140,42 +134,6 @@ example :
         (fun _ _ => 0) (fun _ _ => 0) := by
   refine ⟨strictMono_id, one_pos, fun u => hasDerivAt_id u, fun t j => ?_⟩
   simpa using hasDerivAt_const t (0 : EucSpace 1)
-
-/-- **Lemma (lem: matrix).** *A positive-definite factor preserves
-instability.*
-
-For a symmetric unstable `A` and a symmetric positive-definite `D`, the
-product `D A` is unstable.  The proof conjugates by the square root `P` of `D`:
-`P⁻¹ (D A) P = P A P` is symmetric and has the inertia of `A`, so it keeps a
-positive eigenvalue, and similar matrices share their spectrum.
-
-Instability is spelled out as the existence of a real eigenvalue `μ > 0` with
-an eigenvector; the symmetry of `A` is what makes that the right reading, and
-the lemma is false without it.
-
-Not proved here.
-
-Source: arXiv:2510.22026v2, Appendix D, Step 4, `lem: matrix`. -/
-theorem unstable_mul_of_posDef
-    (N : ℕ) (A D : Matrix (Fin N) (Fin N) ℝ)
-    (hA : A.IsHermitian) (hD : D.PosDef)
-    (hAunstable : ∃ (μ : ℝ) (v : Fin N → ℝ),
-      v ≠ 0 ∧ A.mulVec v = μ • v ∧ 0 < μ) :
-    ∃ (μ : ℝ) (v : Fin N → ℝ), v ≠ 0 ∧ (D * A).mulVec v = μ • v ∧ 0 < μ := by
-  sorry
-
-/-- The hypotheses of `unstable_mul_of_posDef` are satisfiable: the identity
-matrix is symmetric, positive-definite, and unstable — its only eigenvalue is
-`1 > 0`. -/
-example :
-    (1 : Matrix (Fin 1) (Fin 1) ℝ).IsHermitian ∧
-      (1 : Matrix (Fin 1) (Fin 1) ℝ).PosDef ∧
-      ∃ (μ : ℝ) (v : Fin 1 → ℝ),
-        v ≠ 0 ∧ (1 : Matrix (Fin 1) (Fin 1) ℝ).mulVec v = μ • v ∧ 0 < μ := by
-  refine ⟨Matrix.isHermitian_one, Matrix.PosDef.one, 1, fun _ => 1, ?_, ?_, one_pos⟩
-  · intro h
-    simpa using congrFun h 0
-  · simp
 
 end Normalization
 end Transformer
