@@ -1,21 +1,17 @@
 /-
-# Appendix D — the smallest coordinate `α(t)`, and the assembly
+# Appendix D — the smallest coordinate `α(1/n)`
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
-The second half of Appendix D of the survey:
+`e:1/n`, the estimate that starts the second half of Appendix D: at time `1/n`
+the configuration is already within half of the orthogonal angle `γ_β(1/n)` of
+one of its own particles.  It is proved here, and so is the fact that it holds
+of *that* particle only and not of an arbitrary direction.
 
-* `e:1/n`            — the lower bound `α(1/n) ≥ γ_β(1/n)/2`,
-* `e:dotalpha`, `e:mineqalpha`, `e:diffineqalpha`
-                     — the differential inequality satisfied by `α`,
-* `e:productcloseto1` — its integrated form,
-* `e:ineqsecondpart`  — the second half of `eq: upto-t`,
-* the assembly of `thm: phase.transition.curve`,
-* `rem: usa.d`        — the analogue for `USA`.
-
-The stability estimates these rest on are in
-`Perspective.AppendixD_PhaseTransition`.
+The stability estimates it rests on are in
+`Perspective.AppendixD_PhaseTransition`, and what the survey builds on top of
+it is in `Perspective.AppendixD_Assembly`.
 -/
 
 import Transformer.Perspective.AppendixD_PhaseTransition
@@ -30,135 +26,117 @@ variable (d n : ℕ)
 
 /-- **Equation (e:1/n).**
 
-  `α(1/n) ≥ (1/2) γ_β(1/n)`.
+  `α(1/n) ≥ (1/2) γ_β(1/n)`,  for a suitable `x⋆`.
 
-At time `1/n` the configuration is already within half of the orthogonal
-angle `γ_β(1/n)` of the direction `x⋆`, for a suitable `x⋆`.
+At time `1/n` the configuration is already within half of the orthogonal angle
+`γ_β(1/n)` of a direction `x⋆`, and a direction that works is one of the
+particles itself, `x⋆ = x_j(1/n)`.
 
-Not proved here: it is `e:ineqfirstpart` at `t = 1/n` combined with
-`eq: d.large`, which makes the error `2 c(β)^{1} √(log d / d)` smaller than
-`γ_β(1/n)/2`.
+The hypotheses are the two halves of the survey's argument evaluated at the
+single time `t = 1/n`: `hpair` is `e:ineqfirstpart` there, where the stability
+factor `c(β)^{n · (1/n)}` is `c(β)`, and `hlarge` is `eq: d.large`, which is
+exactly what makes the error `2 c(β) √(log d / d)` smaller than
+`γ_β(1/n)/2`.  `hγle` records that `γ_β` is a cosine, so that the diagonal
+`⟨x_j(1/n), x_j(1/n)⟩ = 1` clears the bound as well.
 
-The survey states this for `n ≥ 2`; no such restriction is needed for the
-inequality itself, and dropping it is what makes the hypotheses satisfiable at
-the one solution of `eq: ybeta` available in closed form.
+The survey states this for `n ≥ 2`; only `n ≥ 1` is needed, and only so that
+there is a particle to point at.
+
+Reading `x⋆` as universally quantified — which the survey's notation
+`α(t) = min_i ⟨x_i(t), x⋆⟩` invites, since it never says which `x⋆` — makes
+the statement false: `not_alpha_at_one_over_n_of_free` measures a consensus
+configuration against its own antipode, where `α ≡ -1` while `γ_β(1/n) > 0`.
 
 Source: arXiv:2312.10794v5, Appendix D, `e:1/n`. -/
 theorem alpha_at_one_over_n
-    (β : ℝ) (γ α : ℝ → ℝ) (X : ℝ → SphereTuple d n) (x_star : SSphere d)
-    (hX : SA d n β X) (hγ : ybetaODE_SA n β γ)
-    (hα : IsMinInner d n X x_star α) :
-    (1/2 : ℝ) * γ ((n : ℝ)⁻¹) ≤ α ((n : ℝ)⁻¹) := by
-  sorry
+    (hn : 0 < n) (hd : 2 ≤ d) (β : ℝ) (γ : ℝ → ℝ) (X : ℝ → SphereTuple d n)
+    (hγpos : 0 < γ ((n : ℝ)⁻¹)) (hγle : γ ((n : ℝ)⁻¹) ≤ 2)
+    (hlarge : 16 * (cBeta β) ^ 2 / (γ ((n : ℝ)⁻¹)) ^ 2 ≤ (d : ℝ) / Real.log d)
+    (hpair : ∀ i j : Idx n, i ≠ j →
+      |inner (𝕜 := ℝ) ((X ((n : ℝ)⁻¹) i : EucSpace d))
+            ((X ((n : ℝ)⁻¹) j : EucSpace d)) - γ ((n : ℝ)⁻¹)|
+        ≤ 2 * cBeta β * Real.sqrt (Real.log d / d)) :
+    ∃ (x_star : SSphere d) (α : ℝ → ℝ),
+      IsMinInner d n X x_star α ∧ (1/2 : ℝ) * γ ((n : ℝ)⁻¹) ≤ α ((n : ℝ)⁻¹) := by
+  have hne : (Finset.univ : Finset (Idx n)).Nonempty := ⟨⟨0, hn⟩, Finset.mem_univ _⟩
+  refine ⟨X ((n : ℝ)⁻¹) ⟨0, hn⟩,
+    fun s => Finset.univ.inf' hne (fun i =>
+      inner (𝕜 := ℝ) ((X s i : EucSpace d)) ((X ((n : ℝ)⁻¹) ⟨0, hn⟩ : EucSpace d))),
+    fun s => ⟨fun i => Finset.inf'_le _ (Finset.mem_univ i), ?_⟩, ?_⟩
+  · obtain ⟨i, _, hi⟩ := Finset.exists_mem_eq_inf' hne (fun i =>
+      inner (𝕜 := ℝ) ((X s i : EucSpace d)) ((X ((n : ℝ)⁻¹) ⟨0, hn⟩ : EucSpace d)))
+    exact ⟨i, hi⟩
+  · have hc1 : 1 ≤ cBeta β := one_le_cBeta β
+    have hd2 : (2 : ℝ) ≤ (d : ℝ) := by exact_mod_cast hd
+    have hdpos : (0 : ℝ) < (d : ℝ) := by linarith
+    have hlog : 0 < Real.log d := Real.log_pos (by linarith)
+    have hcross : 16 * cBeta β ^ 2 * Real.log d ≤ (d : ℝ) * γ ((n : ℝ)⁻¹) ^ 2 :=
+      (div_le_div_iff₀ (by positivity) hlog).mp hlarge
+    have hratio : Real.log d / d ≤ (γ ((n : ℝ)⁻¹) / (4 * cBeta β)) ^ 2 := by
+      rw [div_pow, div_le_div_iff₀ hdpos (by positivity)]
+      nlinarith
+    have hsqrt : Real.sqrt (Real.log d / d) ≤ γ ((n : ℝ)⁻¹) / (4 * cBeta β) :=
+      le_trans (Real.sqrt_le_sqrt hratio) (le_of_eq (Real.sqrt_sq (by positivity)))
+    have herr : 2 * cBeta β * Real.sqrt (Real.log d / d) ≤ γ ((n : ℝ)⁻¹) / 2 := by
+      have hmul := mul_le_mul_of_nonneg_left hsqrt
+        (by positivity : (0 : ℝ) ≤ 2 * cBeta β)
+      have hval : 2 * cBeta β * (γ ((n : ℝ)⁻¹) / (4 * cBeta β)) = γ ((n : ℝ)⁻¹) / 2 := by
+        field_simp
+        ring
+      linarith [hval ▸ hmul]
+    refine Finset.le_inf' hne _ fun i _ => ?_
+    by_cases hij : i = ⟨0, hn⟩
+    · rw [hij, real_inner_self_eq_norm_mul_norm,
+        mem_sphere_zero_iff_norm.mp (X ((n : ℝ)⁻¹) ⟨0, hn⟩).2]
+      linarith
+    · linarith [(abs_le.mp (hpair i ⟨0, hn⟩ hij)).1]
 
-/-- The hypotheses of `alpha_at_one_over_n` are satisfiable: the consensus
-solution at `d = n = 1`, the closed-form solution of `eq: ybeta`, and the
-constant `α ≡ 1 = ⟨x, x⟩`. -/
-example :
-    SA 1 1 0 (fun _ _ => basePoint 0) ∧
-      ybetaODE_SA 1 0 (fun t => 1 - Real.exp (-2 * t)) ∧
-      IsMinInner 1 1 (fun _ _ => basePoint 0) (basePoint 0) (fun _ => 1) := by
-  refine ⟨SA_const_consensus 1 1 one_pos 0 (basePoint 0), ybetaODE_SA_one_zero,
-    fun t => ?_⟩
+/-- The hypotheses of `alpha_at_one_over_n` are satisfiable, and the estimate
+it yields is not vacuous: one particle, where `hpair` quantifies over an empty
+range, `γ ≡ 1`, and any dimension past the threshold `exists_le_div_log`
+produces for `eq: d.large`. -/
+example (β : ℝ) :
+    ∃ m : ℕ, ∃ (x_star : SSphere (m + 2)) (α : ℝ → ℝ),
+      IsMinInner (m + 2) 1 (fun _ _ => basePoint (m + 1)) x_star α ∧
+        (1/2 : ℝ) * 1 ≤ α (((1 : ℕ) : ℝ)⁻¹) := by
+  obtain ⟨D, hD⟩ := exists_le_div_log (16 * (cBeta β) ^ 2 / (1 : ℝ) ^ 2)
+  exact ⟨D, alpha_at_one_over_n (D + 2) 1 one_pos (by omega) β (fun _ => 1)
+    (fun _ _ => basePoint (D + 1)) one_pos one_le_two (hD _ (by omega))
+    (fun i j hij => absurd (Subsingleton.elim i j) hij)⟩
+
+/-- **`e:1/n` is a statement about one `x⋆`, not about every one.**
+
+Read with `x⋆` quantified universally, the estimate fails at the simplest
+configuration there is: a single particle standing still, measured against its
+own antipode.  There `α ≡ -1`, while the closed-form solution of `eq: ybeta`
+at `n = 1`, `β = 0` has `γ_β(1) = 1 - e^{-2} > 0`.
+
+Source: arXiv:2312.10794v5, Appendix D, `e:1/n`. -/
+theorem not_alpha_at_one_over_n_of_free :
+    ¬ ∀ (d n : ℕ) (β : ℝ) (γ α : ℝ → ℝ) (X : ℝ → SphereTuple d n)
+        (x_star : SSphere d),
+        SA d n β X → ybetaODE_SA n β γ → IsMinInner d n X x_star α →
+          (1/2 : ℝ) * γ ((n : ℝ)⁻¹) ≤ α ((n : ℝ)⁻¹) := by
+  intro h
   have hx : ‖((basePoint 0 : SSphere 1) : EucSpace 1)‖ = 1 :=
     mem_sphere_zero_iff_norm.mp (basePoint 0).2
   have hxx : inner (𝕜 := ℝ) (((basePoint 0 : SSphere 1)) : EucSpace 1)
       (((basePoint 0 : SSphere 1)) : EucSpace 1) = 1 := by
     rw [real_inner_self_eq_norm_mul_norm, hx]; ring
-  exact ⟨fun _ => le_of_eq hxx.symm, ⟨0, hxx.symm⟩⟩
-
-/-- **Equation (e:diffineqalpha).** *The differential inequality for `α`.*
-
-  `α̇(t) ≥ (1/(n e^{2β})) α(1/n) (1 - α(t))`   for `t ≥ 1/n`.
-
-A `Prop`-valued definition and not a theorem: `α` is a minimum of finitely many
-smooth functions, so the survey argues with its lower Dini derivative; the
-statement below asserts, in addition, that `α` is differentiable, and neither
-half is proved here.
-
-Source: arXiv:2312.10794v5, Appendix D, `e:mineqalpha`, `e:diffineqalpha`. -/
-def DiffIneqAlpha (β : ℝ) : Prop :=
-  ∀ (X : ℝ → SphereTuple d n) (x_star : SSphere d) (α : ℝ → ℝ),
-    SA d n β X → IsMinInner d n X x_star α →
-    ∀ t : ℝ, (n : ℝ)⁻¹ ≤ t →
-      ∃ c : ℝ, HasDerivAt α c t ∧
-        ((n : ℝ) * Real.exp (2 * β))⁻¹ * α ((n : ℝ)⁻¹) * (1 - α t) ≤ c
-
-/-- **Equation (e:productcloseto1).**
-
-  `1 - α(t) ≤ exp( (1 - γ_β(1/n) t) / (2 n e^{2β}) )`.
-
-A `Prop`-valued definition and not a theorem: it is `e:diffineqalpha`
-integrated by Grönwall, starting from `e:1/n`, neither of which is proved here.
-
-Source: arXiv:2312.10794v5, Appendix D, `e:productcloseto1`. -/
-def ProductCloseToOne (β : ℝ) : Prop :=
-  ∀ (X : ℝ → SphereTuple d n) (γ α : ℝ → ℝ) (x_star : SSphere d),
-    SA d n β X → ybetaODE_SA n β γ → IsMinInner d n X x_star α →
-    ∀ t : ℝ, 0 ≤ t →
-      1 - α t
-        ≤ Real.exp ((1 - γ ((n : ℝ)⁻¹) * t) / (2 * (n : ℝ) * Real.exp (2 * β)))
-
-/-- **Equation (e:ineqsecondpart).** *Second half of `eq: upto-t`.*
-
-  `|⟨x_i(t), x_j(t)⟩ - γ_β(t)|
-      ≤ exp((1 - γ_β(1/n) t) / (2 n e^{2β}))
-        + (1/2) exp( n² e^β / (2(n + e^{β/2})) - n t / (n + e^{β/2}) )`.
-
-The first summand bounds `|⟨x_i, x_j⟩ - 1|` through `e:productcloseto1`, the
-second `|1 - γ_β(t)|` through `e:ybetacloseto1`; both terms decay
-exponentially in `t`, which is the `C e^{-λt}` branch of `eq: upto-t`.
-
-A `Prop`-valued definition and not a theorem: it rests on
-`ProductCloseToOne`, which is not proved here.
-
-Source: arXiv:2312.10794v5, Appendix D, `e:ineqsecondpart`. -/
-def IneqSecondPart (β : ℝ) : Prop :=
-  ∀ (X : ℝ → SphereTuple d n) (γ α : ℝ → ℝ) (x_star : SSphere d),
-    SA d n β X → ybetaODE_SA n β γ → IsMinInner d n X x_star α →
-    ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx n, i ≠ j →
-      |inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((X t j : EucSpace d)) - γ t|
-        ≤ Real.exp ((1 - γ ((n : ℝ)⁻¹) * t) / (2 * (n : ℝ) * Real.exp (2 * β)))
-          + (1/2 : ℝ) * Real.exp
-              ((n : ℝ)^2 * Real.exp β / (2 * ((n : ℝ) + Real.exp (β / 2)))
-                - (n : ℝ) * t / ((n : ℝ) + Real.exp (β / 2)))
-
-/-- *Assembly of `thm: phase.transition.curve`.*  Past the threshold
-`eq: d.large`, `e:ineqfirstpart` gives the `√(log d / d)` branch of `eq: upto-t`
-and `e:ineqsecondpart` the exponentially decaying branch; the theorem is their
-minimum.
-
-A `Prop`-valued definition and not a theorem: the implication is stated, not
-proved, and neither is `IneqSecondPart` which it consumes.
-
-Source: arXiv:2312.10794v5, Appendix D. -/
-def PhaseTransitionProofAssembly : Prop :=
-  2 ≤ n → ∀ β : ℝ, 0 ≤ β → ∀ γ : ℝ → ℝ, ybetaODE_SA n β γ →
-    16 * (cBeta β)^2 / (γ ((n : ℝ)⁻¹))^2 ≤ (d : ℝ) / Real.log d →
-    AlmostOrthogonal d n → IneqSecondPart d n β →
-      ∃ C lam : ℝ, 0 < C ∧ 0 < lam ∧
-        ∀ (X : ℝ → SphereTuple d n) (α : ℝ → ℝ) (x_star : SSphere d),
-          SA d n β X → IsMinInner d n X x_star α →
-          ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx n, i ≠ j →
-            |inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((X t j : EucSpace d)) - γ t|
-              ≤ min (2 * cBeta β ^ ((n : ℝ) * t) * Real.sqrt (Real.log d / d))
-                    (C * Real.exp (-(lam * t)))
-
-/-- **Remark (rem: usa.d).** *The analogue for `USA`.*
-
-The same argument runs with `eq: ybeta` replaced by `eq: ybetaUSA`; there the
-angle closes at the cleaner rate
-
-  `1 - γ_β(t) ≤ (1/2) exp(-e^{β/2} (t - n/2))`.
-
-A `Prop`-valued definition and not a theorem: the `USA` estimate is not proved
-here.
-
-Source: arXiv:2312.10794v5, Appendix D, `rem: usa.d`. -/
-def UsaAnalogue : Prop :=
-  ∀ (β : ℝ) (γ : ℝ → ℝ), 0 ≤ β → ybetaODE_USA n β γ →
-    ∀ t : ℝ, 0 ≤ t →
-      1 - γ t ≤ (1/2 : ℝ) * Real.exp (-(Real.exp (β / 2) * (t - (n : ℝ) / 2)))
+  have hmin : IsMinInner 1 1 (fun _ _ => basePoint 0) (antipode 1 (basePoint 0))
+      (fun _ => -1) := by
+    have hval : inner (𝕜 := ℝ) (((basePoint 0 : SSphere 1)) : EucSpace 1)
+        ((antipode 1 (basePoint 0) : EucSpace 1)) = -1 := by
+      show inner (𝕜 := ℝ) (((basePoint 0 : SSphere 1)) : EucSpace 1)
+        (-(((basePoint 0 : SSphere 1)) : EucSpace 1)) = -1
+      rw [inner_neg_right, hxx]
+    exact fun _ => ⟨fun _ => le_of_eq hval.symm, ⟨0, hval.symm⟩⟩
+  have hineq := h 1 1 0 (fun t => 1 - Real.exp (-2 * t)) (fun _ => -1)
+    (fun _ _ => basePoint 0) (antipode 1 (basePoint 0))
+    (SA_const_consensus 1 1 one_pos 0 (basePoint 0)) ybetaODE_SA_one_zero hmin
+  have hlt : Real.exp (-2 : ℝ) < 1 := Real.exp_lt_one_iff.mpr (by norm_num)
+  norm_num at hineq
+  linarith
 
 end Perspective
 end Transformer
