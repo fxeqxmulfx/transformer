@@ -32,7 +32,9 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.MajTwoEquiv` | its translations to and from `TL[◁#, ▷#]`, and `LTC⁰` |
 | `CRASP.Positional` | `TL[◁#]^pos`, the extension by `MOD` and `Y` |
 | `CRASP.PositionalEmbedding` | `TL[◁#]` inside `TL[◁#]^pos` and both its fragments, at the same depth |
-| `CRASP.PositionalDepth` | its `Y`-normal form, its reduction, and its hierarchy |
+| `CRASP.YNormalForm` | its `Y`-normal form, and the transformation into it |
+| `CRASP.YNormalFormEquiv` | the transformation preserves meaning, once guarded as the paper's is not |
+| `CRASP.PositionalDepth` | its reduction to `TL[◁#]`, and its hierarchy |
 | `CRASP.PositionalTransformers` | sinusoidal, RoPE and ALiBi position encodings |
 | `CRASP.PositionalHierarchy` | what they simulate, and their depth hierarchies |
 
@@ -65,5 +67,7 @@ import Transformer.CRASP.MajTwoEquiv
 import Transformer.CRASP.Positional
 import Transformer.CRASP.PositionalEmbedding
 import Transformer.CRASP.PositionalTransformers
+import Transformer.CRASP.YNormalForm
+import Transformer.CRASP.YNormalFormEquiv
 import Transformer.CRASP.PositionalDepth
 import Transformer.CRASP.PositionalHierarchy

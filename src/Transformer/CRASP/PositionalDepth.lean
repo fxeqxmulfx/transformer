@@ -1,76 +1,27 @@
 /-
-# `TL[◁#]^pos`: normal form, reduction, and the depth hierarchy
+# `TL[◁#]^pos`: reduction to `TL[◁#]`, and the depth hierarchy
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix E (`app:tlclpos`, "Depth Hierarchy"): `thm:ynf`,
+(COLM 2025), Appendix E (`app:tlclpos`, "Depth Hierarchy"):
 `lem:tlclpos_reduction`, `thm:tlclpos_depth_hierarchy`.
 
-A formula is in `Y`-normal form when `Y` occurs only around atomic formulas;
-every formula has an equivalent one of the same depth in that form.  The
-reduction then pulls a `TL[◁#]^pos_k` formula over `Σ ∪ {e}` back along the
+The reduction pulls a `TL[◁#]^pos_k` formula over `Σ ∪ {e}` back along the
 string map `w ↦ e^r w₁ e^{r−1} ⋯ wₙ e^{r−1}` to a plain `TL[◁#]_k` formula
-over `Σ`, which turns the hierarchy of `thm:TLCl_depth` into a hierarchy for
-`TL[◁#]^pos` with the separating language `E_{k+1}`.
+over `Σ`; its proof starts from the `Y`-normal form of
+`Transformer.CRASP.YNormalFormEquiv`.  This turns the hierarchy of `thm:TLCl_depth`
+into a hierarchy for `TL[◁#]^pos` with the separating language `E_{k+1}`.
 -/
 
 import Transformer.CRASP.NeutralLetter
 import Transformer.CRASP.PositionalEmbedding
+import Transformer.CRASP.YNormalFormEquiv
 
 namespace Transformer
 namespace CRASP
 
 universe u
 
-variable {σ : Type u}
-
-/-- `Y`-atoms: `Y` applied to a symbol or a modular predicate, any number of
-times (Appendix E, the `ψ` line of the `Y`-normal form grammar). -/
-inductive YAtomic : FormP σ → Prop
-  /-- `Q_σ` is a `Y`-atom. -/
-  | sym (a : σ) : YAtomic (.sym a)
-  /-- `MOD_m^r` is a `Y`-atom. -/
-  | mod (m r : ℕ) : YAtomic (.mod m r)
-  /-- `Y` of a `Y`-atom is a `Y`-atom. -/
-  | prev {ψ : FormP σ} : YAtomic ψ → YAtomic (.prev ψ)
-
-mutual
-
-/-- **`Y`-normal form** (Appendix E): `Y` occurs only around atomic
-formulas. -/
-inductive YNormal : FormP σ → Prop
-  /-- A comparison of two normal terms. -/
-  | lt {t₁ t₂ : TermP σ} : YNormalT t₁ → YNormalT t₂ → YNormal (.lt t₁ t₂)
-  /-- A negation. -/
-  | neg {φ : FormP σ} : YNormal φ → YNormal (.neg φ)
-  /-- A conjunction. -/
-  | and {φ₁ φ₂ : FormP σ} : YNormal φ₁ → YNormal φ₂ → YNormal (.and φ₁ φ₂)
-  /-- A `Y`-atom. -/
-  | atom {ψ : FormP σ} : YAtomic ψ → YNormal ψ
-
-/-- `Y`-normal form for terms. -/
-inductive YNormalT : TermP σ → Prop
-  /-- A count of a normal formula. -/
-  | countL {φ : FormP σ} : YNormal φ → YNormalT (.countL φ)
-  /-- A sum. -/
-  | add {t₁ t₂ : TermP σ} : YNormalT t₁ → YNormalT t₂ → YNormalT (.add t₁ t₂)
-  /-- The constant `1`. -/
-  | one : YNormalT .one
-
-end
-
-variable [DecidableEq σ]
-
-/-- **Lemma `thm:ynf`.**  Every `TL[◁#]^pos_k` formula has an equivalent
-`TL[◁#]^pos_k` formula in `Y`-normal form, of the same depth: the
-transformation `N^c⟦·⟧` of the proof pushes `Y` inwards while remembering how
-many have been pushed. -/
-theorem exists_yNormal (k : ℕ) (φ : FormP σ) (hφ : φ ∈ TLClPos σ k) :
-    ∃ φ' ∈ TLClPos σ k, YNormal φ' ∧ ∀ (w : List σ) (i : ℕ), φ.sat w i = φ'.sat w i :=
-  sorry
-
-/-- The hypothesis is satisfiable: `Q_a` lies in `TL[◁#]^pos_k` at every
-depth. -/
-example (a : σ) (k : ℕ) : (FormP.sym a : FormP σ) ∈ TLClPos σ k := Nat.zero_le k
+variable {σ : Type u} [DecidableEq σ]
 
 /-- The string map `f` of `lem:tlclpos_reduction`:
 `w₁ ⋯ wₙ ↦ e^r w₁ e^{r−1} w₂ e^{r−1} ⋯ wₙ e^{r−1}`, with the neutral letter
