@@ -20,6 +20,7 @@ The architecture is:
 | `GPTMini.Reshape` | the coordinate layout between `d_model` and the heads |
 | `GPTMini.RoPE` | the rotary tables, and that they rotate |
 | `GPTMini.QKNorm` | the normalized score, its bounds, and the RMS parameterization |
+| `GPTMini.QKNormLipschitz` | and how much that score can move |
 | `GPTMini.CausalMHA` | the head itself, masked, with XSA on its output |
 | `GPTMini.AttentionBounds` | how large the weights and the head output can get |
 | `GPTMini.ReLU2FFN` | the feed-forward map |
@@ -47,6 +48,7 @@ import Transformer.GPTMini.RMSNorm
 import Transformer.GPTMini.Reshape
 import Transformer.GPTMini.RoPE
 import Transformer.GPTMini.QKNorm
+import Transformer.GPTMini.QKNormLipschitz
 import Transformer.GPTMini.CausalMHA
 import Transformer.GPTMini.AttentionBounds
 import Transformer.GPTMini.ReLU2FFN

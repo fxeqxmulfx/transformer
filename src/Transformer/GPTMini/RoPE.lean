@@ -136,6 +136,27 @@ theorem applyRope_isometry
   linear_combination (x (ropeFst d_head k) ^ 2 + x (ropeSnd d_head k) ^ 2)
     * Real.sin_sq_add_cos_sq (ropeAngle d_head theta t k)
 
+/-- RoPE acts linearly on the coordinates, so it commutes with differences. -/
+theorem ropeCoord_sub (d_head : ℕ) (theta t : ℝ) (x y : EucSpace d_head)
+    (s : (Fin (d_head / 2) ⊕ Fin (d_head / 2)) ⊕ Fin (d_head - 2 * (d_head / 2))) :
+    ropeCoord d_head theta t (x - y) s
+      = ropeCoord d_head theta t x s - ropeCoord d_head theta t y s := by
+  rcases s with (k | k) | j <;> simp [ropeCoord] <;> ring
+
+/-- The rotation of a difference is the difference of the rotations. -/
+theorem applyRope_sub (d_head : ℕ) (theta t : ℝ) (x y : EucSpace d_head) :
+    applyRope d_head theta t (x - y)
+      = applyRope d_head theta t x - applyRope d_head theta t y := by
+  ext i
+  simp [applyRope_apply, ropeCoord_sub]
+
+/-- **RoPE preserves distances**, being linear and norm-preserving.  This is
+what lets a Lipschitz estimate for the head ignore the positional encoding
+entirely.  Source: `reference/model.py` (`apply_rope`). -/
+theorem applyRope_dist (d_head : ℕ) (theta t : ℝ) (x y : EucSpace d_head) :
+    ‖applyRope d_head theta t x - applyRope d_head theta t y‖ = ‖x - y‖ := by
+  rw [← applyRope_sub, applyRope_isometry]
+
 /-- The angle at position `s - t` is the difference of the angles: RoPE is a
 one-parameter group of rotations, which is what `applyRope_relative` rests on. -/
 theorem ropeAngle_sub (d_head : ℕ) (theta t s : ℝ) (k : Fin (d_head / 2)) :
