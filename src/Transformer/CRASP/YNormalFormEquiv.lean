@@ -9,7 +9,7 @@ that `N^c⟦t⟧` takes at `i` the value `t` takes at `i − c`.  The paper stat
 with `i` and `i − c` exchanged, and as its transformation is written the
 invariant fails at the first `c` positions.  `Y^c φ` is false there whatever
 `φ` is, but `¬` and `<` do not preserve falsity: `N^1⟦¬Q_a⟧ = ¬Y Q_a` holds at
-position `1`, where `Y ¬Q_a` does not.  With the
+position `1`, where `Y ¬Q_a` does not (`pushY_unguarded_unsound`).  With the
 guard of `FormP.pushY` the invariant holds everywhere, and `thm:ynf` follows at
 `c = 0`.
 -/
@@ -112,6 +112,17 @@ theorem exists_yNormal (k : ℕ) (φ : FormP σ) (hφ : φ ∈ TLClPos σ k) :
 /-- The hypothesis is satisfiable: `Q_a` lies in `TL[◁#]^pos_k` at every
 depth. -/
 example (a : σ) (k : ℕ) : (FormP.sym a : FormP σ) ∈ TLClPos σ k := Nat.zero_le k
+
+/-- **`N^c⟦·⟧` needs the guard.**  Without it the transformation of `thm:ynf`
+sends `Y ¬Q_a` to `N^1⟦¬Q_a⟧ = ¬Y Q_a`, and the two disagree on the
+one-letter string `a`: its only position has no predecessor, so `Y ¬Q_a` fails
+there while `¬Y Q_a` holds.  `Y (1 < 1 + 1)` and `N^1⟦1 < 1 + 1⟧ = 1 < 1 + 1`
+disagree in the same way.
+
+Source: arXiv:2506.16055v3, Appendix E, proof of `thm:ynf`. -/
+theorem pushY_unguarded_unsound (a : σ) :
+    ¬ (FormP.prev (.neg (.sym a))).models [a] ∧ (FormP.neg (.prev (.sym a))).models [a] := by
+  simp [FormP.models, FormP.sat]
 
 end CRASP
 end Transformer
