@@ -13,6 +13,7 @@ over `Σ`, which turns the hierarchy of `thm:TLCl_depth` into a hierarchy for
 `TL[◁#]^pos` with the separating language `E_{k+1}`.
 -/
 
+import Mathlib.Data.List.ReduceOption
 import Transformer.CRASP.Positional
 
 namespace Transformer
@@ -81,6 +82,18 @@ omit [DecidableEq σ] in
 @[simp] theorem spread_nil (r : ℕ) : spread (σ := σ) r [] = List.replicate r none := by
   simp [spread]
 
+omit [DecidableEq σ] in
+/-- `spread` only inserts neutral letters, so deleting them gives the string
+back: `spread r` is a section of `List.reduceOption`. -/
+@[simp] theorem reduceOption_spread (r : ℕ) (w : List σ) : (spread r w).reduceOption = w := by
+  rw [spread, List.reduceOption_append, List.reduceOption_replicate_none, List.nil_append]
+  induction w with
+  | nil => simp
+  | cons a l ih =>
+      rw [List.flatMap_cons, List.reduceOption_append, ih, List.reduceOption_cons_of_some,
+        List.reduceOption_replicate_none]
+      rfl
+
 /-- **Lemma `lem:tlclpos_reduction`.**  A `TL[◁#]^pos_k` formula over
 `Σ ∪ {e}` is pulled back along `spread r`, for a suitable `r ≥ 1`, to a plain
 `TL[◁#]_k` formula over `Σ`.  The `r` of the proof is `M(Y+1)` for `M` the
@@ -102,11 +115,26 @@ def altPlusNeutral (k : ℕ) : Set (List (Option Bool)) := List.reduceOption ⁻
 /-- **Theorem `thm:tlclpos_depth_hierarchy`.**  `E_{k+1}` is definable in
 `TL[◁#]^pos_{k+1}` but not in `TL[◁#]^pos_k`: a depth-`k` definition would
 reduce along `spread` to a `TL[◁#]_k` definition of `A_{k+1}`, contradicting
-`thm:TLCl_depth`. -/
+`thm:TLCl_depth`.
+
+That is the half proved here, and it is proved in those words: `spread` is a
+section of `List.reduceOption`, so pulling `E_{k+1}` back along it gives
+`A_{k+1}` on the nose.  The positive half needs a `TL[◁#]^pos` formula and so
+an embedding of the plain syntax into the positional one, which this
+development does not have; it is left open. -/
 theorem definablePos_altPlusNeutral (k : ℕ) (hk : 0 < k) :
     DefinablePos (altPlusNeutral (k + 1)) (k + 1) ∧
-      ¬ DefinablePos (altPlusNeutral (k + 1)) k :=
-  sorry
+      ¬ DefinablePos (altPlusNeutral (k + 1)) k := by
+  refine ⟨sorry, ?_⟩
+  rintro ⟨φ, hφ, hlang⟩
+  obtain ⟨r, -, φ', hφ', hiff⟩ := exists_form_of_formP (σ := Bool) k φ hφ
+  refine (definableL_altPlus k hk).2 ⟨φ', hφ', ?_⟩
+  ext w
+  rw [← hiff w]
+  have hmem : FormP.models (spread r w) φ ↔ spread r w ∈ altPlusNeutral (k + 1) := by
+    rw [← hlang]
+    exact Iff.rfl
+  rw [hmem, altPlusNeutral, Set.mem_preimage, reduceOption_spread]
 
 end CRASP
 end Transformer
