@@ -29,6 +29,7 @@ require `Σ*(aΣ*bΣ*)^{k/2}`.
 
 import Transformer.CRASP.Alternating
 import Transformer.CRASP.Parikh
+import Transformer.CRASP.Subsequence
 
 namespace Transformer
 namespace CRASP
@@ -90,11 +91,57 @@ example : 0 < 1 := Nat.one_pos
 
 end Alternating
 
+/-- The formula of a Boolean combination of 𝒥-expressions: every 𝒥-expression
+becomes the subsequence test `subseqAt`, which reads its pattern last symbol
+first, and the Boolean connectives are kept (§2.4, proof of
+`lem:piecewise_testable_depth`). -/
+def PT.toForm : PT σ → Form σ
+  | .jexpr s => subseqAt s.reverse
+  | .neg e => .neg e.toForm
+  | .and e₁ e₂ => .and e₁.toForm e₂.toForm
+
+/-- Each fixed symbol of a 𝒥-expression costs one level of depth, and the
+Boolean connectives cost none. -/
+theorem PT.depth_toForm (e : PT σ) : e.toForm.depth = e.width := by
+  induction e with
+  | jexpr s => simp [PT.toForm, PT.width]
+  | neg e ih => simp [PT.toForm, PT.width, Form.depth, ih]
+  | and e₁ e₂ ih₁ ih₂ => simp [PT.toForm, PT.width, Form.depth, ih₁, ih₂]
+
+/-- The formula counts only over the past. -/
+theorem PT.past_toForm (e : PT σ) : e.toForm.past = true := by
+  induction e with
+  | jexpr s => simp [PT.toForm]
+  | neg e ih => simp [PT.toForm, Form.past, ih]
+  | and e₁ e₂ ih₁ ih₂ => simp [PT.toForm, Form.past, ih₁, ih₂]
+
+/-- The formula uses no Parikh numerical predicate. -/
+theorem PT.pnpFree_toForm (e : PT σ) : e.toForm.pnpFree = true := by
+  induction e with
+  | jexpr s => simp [PT.toForm]
+  | neg e ih => simp [PT.toForm, Form.pnpFree, ih]
+  | and e₁ e₂ ih₁ ih₂ => simp [PT.toForm, Form.pnpFree, ih₁, ih₂]
+
+/-- The formula defines the language of the Boolean combination. -/
+theorem PT.lang_toForm [DecidableEq σ] (e : PT σ) : e.toForm.lang = e.lang := by
+  induction e with
+  | jexpr s => rw [PT.toForm, lang_subseqAt, List.reverse_reverse, PT.lang]
+  | neg e ih =>
+      rw [PT.lang, ← ih]
+      ext w
+      simp [PT.toForm, Form.lang, Form.models, Form.sat]
+  | and e₁ e₂ ih₁ ih₂ =>
+      rw [PT.lang, ← ih₁, ← ih₂]
+      ext w
+      simp [PT.toForm, Form.lang, Form.models, Form.sat]
+
 /-- **Lemma `lem:piecewise_testable_depth`.**  Any `k`-piecewise testable
-language is definable in `TL[◁#]_k`. -/
+language is definable in `TL[◁#]_k`: `PT.toForm` turns the Boolean
+combination into a past-only formula whose depth is its width. -/
 theorem definableL_of_kPiecewiseTestable [DecidableEq σ] (k : ℕ) (L : Set (List σ))
-    (h : KPiecewiseTestable k L) : DefinableL L k :=
-  sorry
+    (h : KPiecewiseTestable k L) : DefinableL L k := by
+  obtain ⟨e, hwidth, rfl⟩ := h
+  exact ⟨e.toForm, ⟨e.past_toForm, e.pnpFree_toForm, e.depth_toForm ▸ hwidth⟩, e.lang_toForm⟩
 
 /-- **Lemma `lem:piecewise_testable_depth`, bidirectional half.**  Any
 `(2k+1)`-piecewise testable language is definable in `TL[◁#, ▷#]_{k+1}`. -/
