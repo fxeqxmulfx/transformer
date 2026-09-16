@@ -23,6 +23,7 @@ The architecture is:
 | `GPTMini.QKNormLipschitz` | and how much that score can move |
 | `GPTMini.CausalMHA` | the head itself, masked, with XSA on its output |
 | `GPTMini.AttentionBounds` | how large the weights and the head output can get |
+| `GPTMini.TotalVariation` | the ℓ¹ distance between two finite probability vectors |
 | `GPTMini.SoftmaxStability` | and how far the weight row can move when the scores do |
 | `GPTMini.AttentionLipschitz` | how far the output and the XSA projection move with it |
 | `GPTMini.HeadLipschitz` | and how far the whole head moves |
@@ -54,6 +55,7 @@ import Transformer.GPTMini.QKNorm
 import Transformer.GPTMini.QKNormLipschitz
 import Transformer.GPTMini.CausalMHA
 import Transformer.GPTMini.AttentionBounds
+import Transformer.GPTMini.TotalVariation
 import Transformer.GPTMini.SoftmaxStability
 import Transformer.GPTMini.AttentionLipschitz
 import Transformer.GPTMini.HeadLipschitz

@@ -11,88 +11,25 @@ The estimate is elementary and has nothing to do with attention:
   1. if every score moves by at most `r`, the partition function moves by a
      factor in `[e^{-r}, e^{r}]`, so each weight moves by a factor in
      `[e^{-2r}, e^{2r}]` (`causalAttnWeights_le_mul`);
-  2. two probability vectors related by `a ≤ c · b` pointwise are within
-     `2 (c - 1)` in ℓ¹ (`l1_le_of_le_mul`), because `|t| = 2 t⁺ - t` and the
-     `-t` part sums to `0`;
-  3. `e^{2r} - 1 ≤ 2 r e^{2r}` (`exp_two_mul_sub_one_le`) turns that into a
-     bound linear in `r` on any bounded range of `r`.
+  2. `TotalVariation.l1_le_of_le_mul` turns that into `2 (e^{2r} - 1)` in ℓ¹;
+  3. `TotalVariation.l1_le_of_le_exp` trades the multiplicative bound against
+     the trivial bound `2` and gets `8 r`, linear in `r` for every `r ≥ 0`.
 
-Together: `Σ_j |a_{i,j} - a'_{i,j}| ≤ 4 r e^{2r}`.  Combined with
-`QKNormLipschitz.score_lipschitz`, which bounds `r` by the movement of the
-normalized queries and keys, this is what makes one head Lipschitz.
+The second form is the one that matters: `2 (e^{2r} - 1)` is unbounded in `r`
+while the ℓ¹ distance it estimates never exceeds `2`, so only `8 r` makes a
+head *globally* Lipschitz.  Combined with `QKNormLipschitz.score_lipschitz`,
+which bounds `r` by the movement of the normalized queries and keys, this is
+what carries the Lipschitz constant of the whole block.
 -/
 
 import Transformer.GPTMini.AttentionBounds
+import Transformer.GPTMini.TotalVariation
 
 open scoped BigOperators
 open Real
 
 namespace Transformer
 namespace GPTMini
-
-/-! ### Two elementary inequalities -/
-
-/-- **ℓ¹ distance of two distributions from a pointwise ratio bound.**
-
-If `a` and `b` are probability vectors with `a j ≤ c · b j` for every `j`,
-then `Σ_j |a j - b j| ≤ 2 (c - 1)`.
-
-The proof is the standard total-variation identity `|t| = 2 t⁺ - t`: summing
-it, the linear part cancels because both vectors sum to `1`, and the positive
-part is bounded by `(c - 1) b j` termwise.
-
-Source: the classical bound on the total variation distance; used here for
-the softmax of `reference/model.py` (`CausalMHA.forward`). -/
-theorem l1_le_of_le_mul {T : ℕ} (a b : Fin T → ℝ) (c : ℝ)
-    (hb : ∀ j, 0 ≤ b j) (hab : ∀ j, a j ≤ c * b j)
-    (ha1 : ∑ j, a j = 1) (hb1 : ∑ j, b j = 1) :
-    ∑ j, |a j - b j| ≤ 2 * (c - 1) := by
-  have habs : ∀ t : ℝ, |t| = 2 * max 0 t - t := by
-    intro t
-    rcases le_total 0 t with h | h
-    · rw [abs_of_nonneg h, max_eq_right h]; ring
-    · rw [abs_of_nonpos h, max_eq_left h]; ring
-  have hrw : (∑ j, |a j - b j|)
-      = 2 * (∑ j, max 0 (a j - b j)) - ((∑ j, a j) - ∑ j, b j) := by
-    rw [Finset.mul_sum, ← Finset.sum_sub_distrib, ← Finset.sum_sub_distrib]
-    exact Finset.sum_congr rfl fun j _ => habs _
-  have hc : (1 : ℝ) ≤ c := by
-    have h := Finset.sum_le_sum fun j (_ : j ∈ Finset.univ) => hab j
-    rwa [ha1, ← Finset.mul_sum, hb1, mul_one] at h
-  have hmax : ∀ j, max 0 (a j - b j) ≤ (c - 1) * b j := by
-    intro j
-    refine max_le ?_ ?_
-    · nlinarith [hb j]
-    · nlinarith [hab j]
-  have hsum : (∑ j, max 0 (a j - b j)) ≤ (c - 1) * ∑ j, b j := by
-    rw [Finset.mul_sum]
-    exact Finset.sum_le_sum fun j _ => hmax j
-  rw [hb1, mul_one] at hsum
-  rw [hrw, ha1, hb1, sub_self, sub_zero]
-  linarith
-
-/-- The hypotheses are satisfiable: any probability vector is related to
-itself with `c = 1`. -/
-example : ∑ _j : Fin 2, |(1 / 2 : ℝ) - 1 / 2| ≤ 2 * ((1 : ℝ) - 1) :=
-  l1_le_of_le_mul (fun _ => 1 / 2) (fun _ => 1 / 2) 1
-    (fun _ => by norm_num) (fun _ => by norm_num)
-    (by norm_num [Fin.sum_univ_two]) (by norm_num [Fin.sum_univ_two])
-
-/-- **`e^{2r} - 1 ≤ 2 r e^{2r}`.**
-
-The convexity bound `x + 1 ≤ e^x` at `x = -2r`, multiplied by `e^{2r} > 0`.
-It converts the multiplicative softmax estimate into an additive one. -/
-theorem exp_two_mul_sub_one_le (r : ℝ) :
-    Real.exp (2 * r) - 1 ≤ 2 * r * Real.exp (2 * r) := by
-  have h := Real.add_one_le_exp (-(2 * r))
-  have hpos : (0 : ℝ) < Real.exp (2 * r) := Real.exp_pos _
-  have hmul : (-(2 * r) + 1) * Real.exp (2 * r)
-      ≤ Real.exp (-(2 * r)) * Real.exp (2 * r) :=
-    mul_le_mul_of_nonneg_right h hpos.le
-  rw [← Real.exp_add, neg_add_cancel, Real.exp_zero] at hmul
-  nlinarith
-
-/-! ### The causal softmax -/
 
 variable (cfg : Config)
 
@@ -200,6 +137,37 @@ example (cfg : Config) (alpha eps : ℝ)
         - causalAttnWeights cfg alpha eps q k i j|)
       ≤ 2 * (Real.exp (2 * 0) - 1) :=
   causalAttnWeights_l1_le cfg alpha eps 0 q k q k i (fun _ => by simp)
+
+/-- **Linear ℓ¹ stability of the causal softmax.**
+
+If every score at query position `i` moves by at most `r`, the whole row of
+attention weights moves by at most `8 r` in ℓ¹ — with no restriction on `r`,
+since for large `r` the trivial bound `2` takes over.
+
+Source: `reference/model.py` (`CausalMHA.forward`); `causalAttnWeights_le_mul`
+fed to `TotalVariation.l1_le_of_le_exp`. -/
+theorem causalAttnWeights_l1_le_linear
+    {T : ℕ} (alpha eps r : ℝ)
+    (q k q' k' : Fin T → EucSpace cfg.head_dim) (i : Fin T)
+    (hclose : ∀ j : Fin T,
+      |preScore cfg alpha eps q k i j - preScore cfg alpha eps q' k' i j| ≤ r) :
+    (∑ j : Fin T, |causalAttnWeights cfg alpha eps q k i j
+        - causalAttnWeights cfg alpha eps q' k' i j|)
+      ≤ 8 * r :=
+  l1_le_of_le_exp _ _ r ((abs_nonneg _).trans (hclose i))
+    (fun j => causalAttnWeights_nonneg cfg alpha eps q k i j)
+    (fun j => causalAttnWeights_nonneg cfg alpha eps q' k' i j)
+    (fun j => causalAttnWeights_le_mul cfg alpha eps r q k q' k' i hclose j)
+    (causalAttnWeights_row_sum cfg alpha eps q k i)
+    (causalAttnWeights_row_sum cfg alpha eps q' k' i)
+
+/-- The hypotheses are satisfiable: a score matrix is `0`-close to itself. -/
+example (cfg : Config) (alpha eps : ℝ)
+    (q k : Fin 3 → EucSpace cfg.head_dim) (i : Fin 3) :
+    (∑ j : Fin 3, |causalAttnWeights cfg alpha eps q k i j
+        - causalAttnWeights cfg alpha eps q k i j|)
+      ≤ 8 * (0 : ℝ) :=
+  causalAttnWeights_l1_le_linear cfg alpha eps 0 q k q k i (fun _ => by simp)
 
 end GPTMini
 end Transformer
