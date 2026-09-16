@@ -17,7 +17,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.Basic` | the derived connectives and the first properties of satisfaction |
 | `CRASP.Parikh` | Parikh vectors, intervals, affix restrictions, and the §4 vocabulary |
 | `CRASP.Alternating` | the separating family `A_k` and its 𝒥-expression characterization |
-| `CRASP.Blocks` | the blocks of a word of `L_k`: their number, its last letter, and its prefixes |
+| `CRASP.Blocks` | the blocks of a word of `L_k`: their number, its last letter, its prefixes, and appending blocks |
 | `CRASP.BoundedExists` | `∃ j ≤ i`, `∃ j < i` and `∃ j > i`, written as counts |
 | `CRASP.Indicator` | sums and indicators `ψ ? 1 : 0` in a comparison, at no cost in depth |
 | `CRASP.Subsequence` | the depth-`k` past-only formula testing a subsequence of length `k` |
@@ -33,6 +33,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.Strip` | formulas constant, letter by letter, on a strip of prefix vectors past a fixed prefix |
 | `CRASP.Affine` | past a prefix, a count of constant formulas is affine in the numbers of `a`s and `b`s |
 | `CRASP.Shrink` | `lem:cropping_oneway` repaired: a strip shrinks until given formulas are constant on it |
+| `CRASP.LowerBound` | a depth-`(k+1)` formula confuses `L_{k+2}` with `L_{k+4}`, without `lem:reduction` |
 | `CRASP.Depth` | the Cropping and Reduction Lemmas refuted, and `thm:TLCl_depth` |
 | `CRASP.Prediction` | the next-token prediction problem for `L_{k+3}`, solved at depth `k + 1` |
 | `CRASP.TLCDepth` | the two-sided Cropping Lemma refuted, and `thm:TLC_depth` |
@@ -85,6 +86,7 @@ import Transformer.CRASP.Locality
 import Transformer.CRASP.Strip
 import Transformer.CRASP.Affine
 import Transformer.CRASP.Shrink
+import Transformer.CRASP.LowerBound
 import Transformer.CRASP.Depth
 import Transformer.CRASP.Prediction
 import Transformer.CRASP.TLCDepth

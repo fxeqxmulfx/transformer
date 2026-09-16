@@ -7,7 +7,9 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 What the depth lower bounds read off a word of `L_k`: the number of its blocks
 is determined by the word (`eq_of_mem_altPlus`), and so is its last letter
 (`getElem?_of_mem_altPlus`); a nonempty prefix keeps the blocks before the cut
-(`take_mem_altPlus`); and an alternating subsequence starting with the letter
+(`take_mem_altPlus`); letters equal to the last one lengthen the last block,
+and a word starting with the other letter adds its blocks
+(`append_mem_altPlus`); and an alternating subsequence starting with the letter
 of the second block is shorter than the number of blocks, while every shorter
 one occurs (`altList_not_sublist_iff`).
 -/
@@ -110,6 +112,44 @@ symbol is a prefix. -/
 example : ([false, true] : List Bool) ∈ altPlus false (1 + 1) ∧ 0 < 1 ∧
     1 ≤ ([false, true] : List Bool).length :=
   ⟨⟨1, Nat.one_pos, [true], ⟨1, Nat.one_pos, [], rfl, rfl⟩, rfl⟩, Nat.one_pos, by decide⟩
+
+/-- **Blocks appended to a word of `L_{j+1}`.**  Letters equal to the last one
+lengthen its last block, and a word of `n` blocks starting with the other letter
+adds `n` blocks (§2.4, Equation `eq:altplus`). -/
+theorem append_mem_altPlus (j : ℕ) :
+    ∀ (t : Bool) (w : List Bool), w ∈ altPlus t (j + 1) →
+      ∀ p n (v : List Bool), v ∈ altPlus (!(t ^^ decide (j % 2 = 1))) n →
+        w ++ List.replicate p (t ^^ decide (j % 2 = 1)) ++ v ∈ altPlus t (j + 1 + n) := by
+  induction j with
+  | zero =>
+      rintro t w ⟨m, hm, v₀, hv₀, rfl⟩ p n v hv
+      rw [Set.mem_singleton_iff.1 hv₀, Nat.zero_add, Nat.add_comm]
+      simp only [Nat.zero_mod, Nat.zero_ne_one, decide_false, Bool.xor_false] at hv ⊢
+      exact ⟨m + p, by omega, v, hv, by rw [List.append_nil, List.replicate_add]⟩
+  | succ j ih =>
+      rintro t w ⟨m, hm, w', hw', rfl⟩ p n v hv
+      have e : (t ^^ decide ((j + 1) % 2 = 1)) = ((!t) ^^ decide (j % 2 = 1)) := by
+        rcases Nat.mod_two_eq_zero_or_one j with h | h <;> cases t <;> simp [h, Nat.add_mod]
+      rw [e] at hv ⊢
+      rw [show j + 1 + 1 + n = j + 1 + n + 1 by omega]
+      exact ⟨m, hm, _, ih (!t) w' hw' p n v hv, by simp only [List.append_assoc]⟩
+
+/-- The hypotheses of `append_mem_altPlus` are satisfiable: `a` has one block,
+and `b` has one block starting with the other letter. -/
+example : ([false] : List Bool) ∈ altPlus false (0 + 1) ∧
+    ([true] : List Bool) ∈ altPlus (!(false ^^ decide (0 % 2 = 1))) 1 :=
+  ⟨⟨1, Nat.one_pos, [], rfl, rfl⟩, ⟨1, Nat.one_pos, [], rfl, rfl⟩⟩
+
+/-- `c̄cc̄` and `c̄c̄cc̄` have three blocks (§2.4). -/
+theorem mem_altPlus_three (c : Bool) :
+    [!c, c, !c] ∈ altPlus (!c) 3 ∧ [!c, !c, c, !c] ∈ altPlus (!c) 3 := by
+  cases c
+  · exact ⟨⟨1, Nat.one_pos, [false, true], ⟨1, Nat.one_pos, [true], ⟨1, Nat.one_pos, [], rfl, rfl⟩,
+      rfl⟩, rfl⟩, ⟨2, by decide, [false, true], ⟨1, Nat.one_pos, [true],
+        ⟨1, Nat.one_pos, [], rfl, rfl⟩, rfl⟩, rfl⟩⟩
+  · exact ⟨⟨1, Nat.one_pos, [true, false], ⟨1, Nat.one_pos, [false], ⟨1, Nat.one_pos, [], rfl, rfl⟩,
+      rfl⟩, rfl⟩, ⟨2, by decide, [true, false], ⟨1, Nat.one_pos, [false],
+        ⟨1, Nat.one_pos, [], rfl, rfl⟩, rfl⟩, rfl⟩⟩
 
 end CRASP
 end Transformer
