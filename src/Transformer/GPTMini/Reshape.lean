@@ -144,6 +144,16 @@ theorem qkvV_injective (cfg : Config) : Function.Injective (qkvV cfg) := by
   intro i j h
   simpa using (qkvSplit cfg).symm.injective h
 
+/-- `qkvQ` is injective, being two `Sum.inl`s followed by an equivalence. -/
+theorem qkvQ_injective (cfg : Config) : Function.Injective (qkvQ cfg) := by
+  intro i j h
+  simpa using (qkvSplit cfg).symm.injective h
+
+/-- `qkvK` is injective, being `Sum.inl ∘ Sum.inr` followed by an equivalence. -/
+theorem qkvK_injective (cfg : Config) : Function.Injective (qkvK cfg) := by
+  intro i j h
+  simpa using (qkvSplit cfg).symm.injective h
+
 /-- A head reads `head_dim` distinct coordinates, so it is norm-decreasing. -/
 theorem headSlice_norm_le (cfg : Config) (u : EucSpace cfg.d_model)
     (h : Fin cfg.n_heads) :

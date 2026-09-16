@@ -18,6 +18,7 @@ The architecture is:
 | `GPTMini.Config` | the hyperparameters, and the grouped-query head split |
 | `GPTMini.RMSNorm` | the block normalization, and the sphere it maps onto |
 | `GPTMini.Reshape` | the coordinate layout between `d_model` and the heads |
+| `GPTMini.ReshapeDist` | and what it does to the distance between two streams |
 | `GPTMini.RoPE` | the rotary tables, and that they rotate |
 | `GPTMini.QKNorm` | the normalized score, its bounds, and the RMS parameterization |
 | `GPTMini.QKNormLipschitz` | and how much that score can move |
@@ -27,6 +28,7 @@ The architecture is:
 | `GPTMini.SoftmaxStability` | and how far the weight row can move when the scores do |
 | `GPTMini.AttentionLipschitz` | how far the output and the XSA projection move with it |
 | `GPTMini.HeadLipschitz` | and how far the whole head moves |
+| `GPTMini.AttnSubLayerLipschitz` | and how far the sub-layer around it moves |
 | `GPTMini.ReLU2FFN` | the feed-forward map |
 | `GPTMini.Block` | one pre-norm block, and the residual it adds to |
 | `GPTMini.BlockLipschitz` | and how far apart it sends two residual streams |
@@ -50,6 +52,7 @@ formalizations themselves and not anything about `gpt-mini`.
 import Transformer.GPTMini.Config
 import Transformer.GPTMini.RMSNorm
 import Transformer.GPTMini.Reshape
+import Transformer.GPTMini.ReshapeDist
 import Transformer.GPTMini.RoPE
 import Transformer.GPTMini.QKNorm
 import Transformer.GPTMini.QKNormLipschitz
@@ -59,6 +62,7 @@ import Transformer.GPTMini.TotalVariation
 import Transformer.GPTMini.SoftmaxStability
 import Transformer.GPTMini.AttentionLipschitz
 import Transformer.GPTMini.HeadLipschitz
+import Transformer.GPTMini.AttnSubLayerLipschitz
 import Transformer.GPTMini.ReLU2FFN
 import Transformer.GPTMini.Block
 import Transformer.GPTMini.BlockLipschitz

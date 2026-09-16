@@ -69,6 +69,22 @@ and a zero value bound. -/
 example (alpha : ℝ) : 0 ≤ headLipschitz alpha 1e-6 0 :=
   headLipschitz_nonneg alpha 1e-6 0 (by norm_num) le_rfl
 
+/-- The head constant is monotone in the temperature exponent `α`: a hotter
+head is a steeper one, which is what lets a whole sub-layer be estimated by
+its largest `log α`. -/
+theorem headLipschitz_mono (alpha alpha' eps B : ℝ) (heps : 0 < eps) (hB : 0 ≤ B)
+    (h : alpha ≤ alpha') :
+    headLipschitz alpha eps B ≤ headLipschitz alpha' eps B := by
+  unfold headLipschitz
+  have he : Real.exp alpha ≤ Real.exp alpha' := Real.exp_le_exp.mpr h
+  have hterm : 64 * Real.exp alpha * B / eps ≤ 64 * Real.exp alpha' * B / eps := by
+    gcongr
+  linarith
+
+/-- The hypotheses are satisfiable: the `eps = 10⁻⁶` of `reference/model.py`. -/
+example (alpha : ℝ) : headLipschitz alpha 1e-6 0 ≤ headLipschitz (alpha + 1) 1e-6 0 :=
+  headLipschitz_mono alpha (alpha + 1) 1e-6 0 (by norm_num) le_rfl (by linarith)
+
 /-- **How far one attention head moves.**
 
 If every query, key and value moves by at most `D`, and the values of the
