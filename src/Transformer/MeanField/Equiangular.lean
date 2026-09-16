@@ -37,13 +37,81 @@ def equiangularUSA
     ((2 / (n : ℝ)) * Real.exp (β * ρ t) * (1 - ρ t)
         * ((n - 1 : ℝ) * ρ t + 1)) t
 
+/-- The equiangular simplex `ρ ≡ -1/(n-1)` is a stationary solution of the
+equiangular `eq: SA` ODE: the factor `(n - 1) ρ + 1` vanishes.  For `n ≥ 2` it
+is a configuration of `n` unit vectors — the vertices of a regular simplex —
+and it is the obstruction to a global convergence rate below. -/
+theorem equiangularSA_const_simplex (hn : 2 ≤ n) (β : ℝ) :
+    equiangularSA n β (fun _ => -1 / ((n : ℝ) - 1)) := by
+  have hn1 : ((n : ℝ) - 1) ≠ 0 := by
+    have : (2 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
+    intro h; linarith [h]
+  intro t
+  have hzero : 2 * Real.exp (β * (-1 / ((n : ℝ) - 1))) * (1 - -1 / ((n : ℝ) - 1))
+      * ((n - 1 : ℝ) * (-1 / ((n : ℝ) - 1)) + 1)
+      / (Real.exp β + (n - 1 : ℝ) * Real.exp (β * (-1 / ((n : ℝ) - 1)))) = 0 := by
+    have : ((n : ℝ) - 1) * (-1 / ((n : ℝ) - 1)) + 1 = 0 := by
+      field_simp
+      norm_num
+    rw [this]
+    ring
+  rw [hzero]
+  exact hasDerivAt_const t _
+
+/-- **The clustering rate is not global.**
+
+At the equiangular simplex the right-hand side of the `eq: SA` ODE vanishes,
+so `ρ` stays at `-1/(n-1) < 1` forever and `1 - ρ` stays at `n/(n-1) ≥ 1`,
+which no decaying exponential dominates.  This is why
+`equiangular_local_rate` carries the initial condition `(n-1) ρ(0) + 1 > 0`:
+the rate is local to the basin of `ρ = 1`, exactly as the word
+*linearization* says. -/
+theorem not_exists_rate_at_simplex (hn : 2 ≤ n) :
+    ¬ ∃ (C lam : ℝ), 0 < C ∧ 0 < lam ∧
+      ∀ t : ℝ, 0 ≤ t →
+        1 - (fun _ : ℝ => -1 / ((n : ℝ) - 1)) t ≤ C * Real.exp (-(lam * t)) := by
+  rintro ⟨C, lam, hC, hlam, h⟩
+  have hn2 : (2 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
+  have hone : (1 : ℝ) ≤ 1 - -1 / ((n : ℝ) - 1) := by
+    have h1 : (0 : ℝ) < (n : ℝ) - 1 := by linarith
+    have : (0 : ℝ) < 1 / ((n : ℝ) - 1) := by positivity
+    simp only [neg_div, sub_neg_eq_add]
+    linarith
+  set t : ℝ := max 0 ((Real.log C + 1) / lam) with ht
+  have ht0 : 0 ≤ t := le_max_left _ _
+  have hdiv : Real.log C + 1 ≤ lam * t := by
+    have hle := mul_le_mul_of_nonneg_left (le_max_right (0 : ℝ) ((Real.log C + 1) / lam)) hlam.le
+    have hcancel : lam * ((Real.log C + 1) / lam) = Real.log C + 1 := by
+      field_simp
+    rw [hcancel] at hle
+    exact hle
+  have hstep : C * Real.exp (-(lam * t)) ≤ C * Real.exp (-(Real.log C + 1)) :=
+    mul_le_mul_of_nonneg_left (Real.exp_le_exp.mpr (by linarith)) hC.le
+  have hval : C * Real.exp (-(Real.log C + 1)) = Real.exp (-1) := by
+    rw [show -(Real.log C + 1) = -Real.log C + -1 by ring, Real.exp_add, Real.exp_neg,
+      Real.exp_log hC, ← mul_assoc, mul_inv_cancel₀ (ne_of_gt hC), one_mul]
+  have hlt : Real.exp (-1 : ℝ) < 1 := Real.exp_lt_one_iff.mpr (by norm_num)
+  have := h t ht0
+  simp only at this
+  linarith
+
 /-- Local linearization rate near the clustered state `ρ = 1`:
 
   `(SA)`  `1 - ρ(t) ≲ e^{-2 t}`,
-  `(USA)` `1 - ρ(t) ≲ e^{-2 e^β t}`. -/
+  `(USA)` `1 - ρ(t) ≲ e^{-2 e^β t}`.
+
+The initial condition `(n - 1) ρ(0) + 1 > 0` is what puts `ρ(0)` in the basin
+of the clustered state: it is the sign that makes `ρ̇ ≥ 0` for `ρ ≤ 1`, and
+without it the statement is false — `not_exists_rate_at_simplex` refutes it at
+`ρ ≡ -1/(n-1)`, where the right-hand side vanishes identically.
+
+Not proved here.
+
+Source: arXiv:2512.01868v4, §6. -/
 theorem equiangular_local_rate
     (β : ℝ) (hβ : 0 ≤ β) (ρ : ℝ → ℝ)
-    (hρ_sa : equiangularSA n β ρ) :
+    (hρ_sa : equiangularSA n β ρ)
+    (hρ0 : 0 < (n - 1 : ℝ) * ρ 0 + 1) :
     ∃ (C lam : ℝ), 0 < C ∧ 0 < lam ∧
       ∀ t : ℝ, 0 ≤ t →
         1 - ρ t ≤ C * Real.exp (-(lam * t)) := by
@@ -57,12 +125,13 @@ theorem equiangularSA_const_one (β : ℝ) :
   simpa using hasDerivAt_const t (1 : ℝ)
 
 /-- The hypotheses of `equiangular_local_rate` are satisfiable: `ρ ≡ 1` solves
-the equiangular `eq: SA` ODE at every `β ≥ 0`. -/
+the equiangular `eq: SA` ODE at every `β ≥ 0`, and at `n = 2` it sits in the
+basin, `(n - 1) ρ(0) + 1 = 2 > 0`. -/
 example (β : ℝ) (hβ : 0 ≤ β) :
     ∃ (C lam : ℝ), 0 < C ∧ 0 < lam ∧
       ∀ t : ℝ, 0 ≤ t →
         1 - (fun _ : ℝ => (1 : ℝ)) t ≤ C * Real.exp (-(lam * t)) :=
-  equiangular_local_rate n β hβ (fun _ => 1) (equiangularSA_const_one n β)
+  equiangular_local_rate 2 β hβ (fun _ => 1) (equiangularSA_const_one 2 β) (by norm_num)
 
 /-! ### One attention layer on an equiangular configuration -/
 
