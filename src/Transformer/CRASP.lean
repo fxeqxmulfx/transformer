@@ -28,6 +28,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.Commutative` | `lem:TLCP_commutative`: depth-1 formulas define languages commutative on the middle |
 | `CRASP.CroppingUnsound` | the cropping lemmas fail: a count also reads the positions before the interval |
 | `CRASP.ReductionUnsound` | the Reduction Lemma fails: no depth-1 formula checks the affix `ab` |
+| `CRASP.Locality` | a past-only formula reads the prefix up to its position; the formulas under its counts |
 | `CRASP.Depth` | the Cropping and Reduction Lemmas refuted, and `thm:TLCl_depth` |
 | `CRASP.Prediction` | the next-token prediction problem for `L_{k+3}`, solved at depth `k + 1` |
 | `CRASP.TLCDepth` | the two-sided Cropping Lemma refuted, and `thm:TLC_depth` |
@@ -75,6 +76,7 @@ import Transformer.CRASP.Middle
 import Transformer.CRASP.Commutative
 import Transformer.CRASP.CroppingUnsound
 import Transformer.CRASP.ReductionUnsound
+import Transformer.CRASP.Locality
 import Transformer.CRASP.Depth
 import Transformer.CRASP.Prediction
 import Transformer.CRASP.TLCDepth
