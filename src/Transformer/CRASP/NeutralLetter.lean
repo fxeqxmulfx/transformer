@@ -2,7 +2,7 @@
 # A neutral letter does not change piecewise testability
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix E ("Depth Hierarchy"): the language
+(COLM 2025), Appendix F ("Depth Hierarchy"): the language
 `E_k = del⁻¹(L_k)` of `thm:tlclpos_depth_hierarchy`.
 
 The theorem asserts that `E_{k+1}` is definable in `TL[◁#]^pos_{k+1}`, but its
@@ -70,7 +70,7 @@ theorem PT.lang_mapSome (e : PT σ) : e.mapSome.lang = List.reduceOption ⁻¹' 
 `k`-piecewise testable, so is `del⁻¹(L)`; in particular `E_k` is, since `L_k`
 is (`lem:piecewise_testable`).
 
-Source: arXiv:2506.16055v3, Appendix E, the definition of `E_k` before
+Source: arXiv:2506.16055v3, Appendix F, the definition of `E_k` before
 `thm:tlclpos_depth_hierarchy`. -/
 theorem KPiecewiseTestable.preimage_reduceOption {k : ℕ} {L : Set (List σ)}
     (h : KPiecewiseTestable k L) : KPiecewiseTestable k (List.reduceOption ⁻¹' L) := by

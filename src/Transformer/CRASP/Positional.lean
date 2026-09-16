@@ -2,7 +2,7 @@
 # `TL[◁#]^pos`: position encodings on the logic side
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix E (`app:pes`, `app:tlclpos`): the extension of `TL[◁#]`
+(COLM 2025), Appendix F (`app:pes`, `app:tlclpos`): the extension of `TL[◁#]`
 by the predicates `MOD_m^r` and the operator `Y`, its `Y`-normal form
 (`thm:ynf`), the reduction to plain `TL[◁#]` (`lem:tlclpos_reduction`) and the
 depth hierarchy that follows (`thm:tlclpos_depth_hierarchy`).
@@ -13,7 +13,7 @@ and `Y φ` holds at `i` when `i > 1` and `φ` holds at `i − 1`.  The paper not
 it is the logic `C-RASP[local, periodic]` of Huang et al. (2025).  Its two
 sublogics `TL[◁#, MOD]` and `TL[◁#, Y]` are the `MOD`-only and `Y`-only
 fragments, which are what the sinusoidal/RoPE and the ALiBi transformers of
-Appendix E simulate; those transformers are not yet formalized.
+Appendix F simulate; those transformers are not yet formalized.
 
 The separating language is `E_k`, the language `altPlus` of
 `Transformer.CRASP.PiecewiseTestable` with a neutral letter `e` allowed to be
@@ -32,7 +32,7 @@ variable {σ : Type u}
 
 mutual
 
-/-- Formulas of `TL[◁#]^pos` (Appendix E, `app:tlclpos`). -/
+/-- Formulas of `TL[◁#]^pos` (Appendix F, `app:tlclpos`). -/
 inductive FormP (σ : Type u) : Type u
   /-- `Q_σ`. -/
   | sym : σ → FormP σ
@@ -62,7 +62,7 @@ variable [DecidableEq σ]
 
 mutual
 
-/-- `w, i ⊨ φ` for `TL[◁#]^pos` (Appendix E, the two new semantic rules). -/
+/-- `w, i ⊨ φ` for `TL[◁#]^pos` (Appendix F, the two new semantic rules). -/
 def FormP.sat (w : List σ) (i : ℕ) : FormP σ → Bool
   | .sym a => w[i - 1]? = some a
   | .mod m r => decide (i % m = r % m)
@@ -90,7 +90,7 @@ def FormP.lang (φ : FormP σ) : Set (List σ) := {w | φ.models w}
 
 mutual
 
-/-- Counting depth; `Y` and `MOD` add none (Appendix E). -/
+/-- Counting depth; `Y` and `MOD` add none (Appendix F). -/
 def FormP.depth : FormP σ → ℕ
   | .sym _ => 0
   | .mod _ _ => 0
@@ -145,7 +145,7 @@ def TermP.prevFree : TermP σ → Bool
 
 end
 
-/-- `TL[◁#]^pos_k` (Appendix E). -/
+/-- `TL[◁#]^pos_k` (Appendix F). -/
 def TLClPos (σ : Type u) (k : ℕ) : Set (FormP σ) := {φ | φ.depth ≤ k}
 
 /-- `TL[◁#, MOD]_k`, the `Y`-free fragment. -/

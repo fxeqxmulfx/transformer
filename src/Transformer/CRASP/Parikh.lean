@@ -2,7 +2,7 @@
 # Parikh vectors, intervals, and affix restrictions
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), §2.3 (`def:Parikh_map`, `def:intervals`, `def:PNP`) and §4.1–4.2
+(COLM 2025), §2.3 (`def:Parikh_map`, `def:intervals`, `def:PNP`) and §4.2–4.3
 (`def:affix_restriction`, `def:accommodating`, `def:constant`).
 
 The depth-hierarchy proof works with the counts of symbols rather than with
@@ -66,13 +66,13 @@ def Accommodating (I : IntervalFamily σ) : Prop :=
   ∀ s : PVec σ, ∃ n : PVec σ, ∀ a, s a + (I n).lo a ≤ (I n).hi a
 
 /-- An interval *sticks to the top of* another when it sits inside it and
-their upper corners agree at `b` (§4.3).  The paper takes `Σ = {a, b}` there
+their upper corners agree at `b` (§4.4).  The paper takes `Σ = {a, b}` there
 and reads a Parikh vector as a point of the plane; the definition is stated
 here for whichever symbol is named. -/
 def SticksTo (b : σ) (I' I : Interval σ) : Prop := I'.Subset I ∧ I'.hi b = I.hi b
 
 /-- The companion of `SticksTo` at the lower corner: "sticking to the bottom"
-for `b`, "sticking to the left" for `a` (§4.3, "analogously"). -/
+for `b`, "sticking to the left" for `a` (§4.4, "analogously"). -/
 def SticksToLo (b : σ) (I' I : Interval σ) : Prop := I'.Subset I ∧ I'.lo b = I.lo b
 
 variable [DecidableEq σ]
@@ -95,7 +95,7 @@ def Affix.restrict (A : Affix σ) (L : Set (List σ)) : Set (List σ) :=
   {w | w ∈ L ∧ A.matches w}
 
 /-- The *middle* of an affix restriction: the family of intervals
-`n⃗ ↦ [ℙ(λ(n⃗)), n⃗ - ℙ(ϱ(n⃗))]` (§4.1). -/
+`n⃗ ↦ [ℙ(λ(n⃗)), n⃗ - ℙ(ϱ(n⃗))]` (§4.2). -/
 def Affix.middle (A : Affix σ) : IntervalFamily σ :=
   fun n => ⟨parikh (A.pre n), fun a => n a - parikh (A.suf n) a⟩
 
@@ -105,7 +105,7 @@ def Affix.Accommodating (A : Affix σ) : Prop := CRASP.Accommodating A.middle
 
 /-- A language is *commutative on the middle* of an affix restriction when
 any two strings matching the restriction with the same Parikh vector are
-either both in it or both out (§4.2). -/
+either both in it or both out (§4.3). -/
 def CommutativeOnMiddle (L : Set (List σ)) (A : Affix σ) : Prop :=
   ∀ w w' : List σ, A.matches w → A.matches w' → parikh w = parikh w' → (w ∈ L ↔ w' ∈ L)
 
@@ -162,16 +162,16 @@ def Term.minimalOne : Term σ → List (Form σ)
 
 end
 
-/-- "The PNPs of `φ` are constant on `I`" (§4.2). -/
+/-- "The PNPs of `φ` are constant on `I`" (§4.3). -/
 def PnpsConstantOn (φ : Form σ) (I : IntervalFamily σ) : Prop :=
   ∀ ψ ∈ φ.pnps, ConstantOn ψ I
 
-/-- "The minimal depth-1 subformulas of `φ` are constant on `I`" (§4.3). -/
+/-- "The minimal depth-1 subformulas of `φ` are constant on `I`" (§4.4). -/
 def MinimalOneConstantOn (φ : Form σ) (I : IntervalFamily σ) : Prop :=
   ∀ ψ ∈ φ.minimalOne, ConstantOn ψ I
 
 /-- The trivial affix restriction, `λ(n⃗) = ϱ(n⃗) = ε`, is accommodating: its
-middle is the whole box `[0⃗, n⃗]`, so any `s⃗` fits at `n⃗ = s⃗` (§4.1, "An
+middle is the whole box `[0⃗, n⃗]`, so any `s⃗` fits at `n⃗ = s⃗` (§4.2, "An
 accommodating affix restriction is the trivial one"). -/
 theorem accommodating_trivial : (⟨fun _ => [], fun _ => []⟩ : Affix σ).Accommodating := by
   intro s

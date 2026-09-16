@@ -2,7 +2,7 @@
 # `MAJ²`: majority quantification over two variables
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix D: `def:MAJtwo`, `def:depth_MAJtwo`, and the elimination
+(COLM 2025), Appendix E: `def:MAJtwo`, `def:depth_MAJtwo`, and the elimination
 of `∀`/`∃` in favour of `MAJ`.
 
 `MAJ²` has atoms `Q_σ(x)`, `Q_σ(y)`, `x < y`, `y < x`, the Boolean
@@ -101,10 +101,10 @@ def top : Maj2 σ := .neg (.lt .x .x)
 @[simp] theorem sat_top (w : List σ) (ξ : Var → ℕ) : (top : Maj2 σ).sat w ξ = true := by
   simp [top, sat]
 
-/-- `∃v[φ]`, written `MAJ_v⟨φ, ⊤⟩` (Appendix D, elimination of quantifiers). -/
+/-- `∃v[φ]`, written `MAJ_v⟨φ, ⊤⟩` (Appendix E, elimination of quantifiers). -/
 def ex (v : Var) (φ : Maj2 σ) : Maj2 σ := .maj v 1 ![φ, top]
 
-/-- `∀v[φ]`, written `¬MAJ_v⟨¬φ, ⊤⟩` (Appendix D). -/
+/-- `∀v[φ]`, written `¬MAJ_v⟨¬φ, ⊤⟩` (Appendix E). -/
 def all (v : Var) (φ : Maj2 σ) : Maj2 σ := .neg (.maj v 1 ![.neg φ, top])
 
 /-- **The `∃` half of the quantifier-elimination lemma.**  `MAJ_v⟨φ, ⊤⟩` holds

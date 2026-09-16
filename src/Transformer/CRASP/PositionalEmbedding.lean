@@ -2,7 +2,7 @@
 # `TL[◁#]` inside `TL[◁#]^pos`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix E (`app:tlclpos`): `TL[◁#]^pos` is `TL[◁#]` with `MOD`
+(COLM 2025), Appendix F (`app:tlclpos`): `TL[◁#]^pos` is `TL[◁#]` with `MOD`
 and `Y` added, so a formula of `TL[◁#]` is already one of `TL[◁#]^pos` — and
 of both fragments `TL[◁#, MOD]` and `TL[◁#, Y]` — at the same depth.
 

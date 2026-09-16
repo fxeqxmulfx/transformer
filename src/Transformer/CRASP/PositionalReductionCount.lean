@@ -2,7 +2,7 @@
 # `TL[◁#]^pos` reduces to `TL[◁#]`: counts, block by block
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix E, the `◁#[φ]` case of the proof of
+(COLM 2025), Appendix F, the `◁#[φ]` case of the proof of
 `lem:tlclpos_reduction`.
 
 The paper splits a count over `f(w) = e^r w₁ e^{r−1} ⋯ wₙ e^{r−1}` up to
@@ -39,7 +39,7 @@ variable [DecidableEq σ]
 /-- **The rest of the current block.**  The count of `φ` up to `r·i + ρ`, plus
 the `ρ' ∈ (ρ, r]` at which `T ρ'` holds, is the count up to the end `r·i + r`
 of the block, when `T ρ'` holds at `i` exactly where `φ` holds at `r·i + ρ'`
-(Appendix E, proof of `lem:tlclpos_reduction`, the last part of the `◁#[φ]`
+(Appendix F, proof of `lem:tlclpos_reduction`, the last part of the `◁#[φ]`
 case). -/
 theorem TermP.val_countL_blockEnd (w : List σ) (φ : FormP (Option σ)) (T : ℕ → Form σ)
     {r i ρ : ℕ} (hρ : ρ ≤ r)
@@ -59,7 +59,7 @@ theorem TermP.val_countL_blockEnd (w : List σ) (φ : FormP (Option σ)) (T : �
 /-- **The full blocks.**  The count of `φ` up to the end `r·i + r` of block
 `i` is the count `C_φ` over the first block, which `φ` reads as `e^r`, plus
 the counts up to `i` of the formulas `T ρ'`, when `T ρ'` holds at every
-`i' ∈ [i]` exactly where `φ` holds at `r·i' + ρ'` (Appendix E, proof of
+`i' ∈ [i]` exactly where `φ` holds at `r·i' + ρ'` (Appendix F, proof of
 `lem:tlclpos_reduction`, the first two parts of the `◁#[φ]` case). -/
 theorem TermP.val_countL_spread (w : List σ) (φ : FormP (Option σ)) (T : ℕ → Form σ)
     (r i : ℕ)

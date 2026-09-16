@@ -19,7 +19,7 @@ depth.
 range; it contradicts both the operator's name and the rewriting rule
 `◁#_<[φ] ≡ ◁#[φ] − (φ ? 1 : 0)` given a few lines below, which force
 `[1, i−1]`.  The definition below takes `[1, i−1]`, and the proof of
-`lem:cropping` in Appendix B uses `◁#_<` in exactly that sense.
+`lem:cropping` in Appendix D uses `◁#_<` in exactly that sense.
 -/
 
 import Transformer.CRASP.Basic

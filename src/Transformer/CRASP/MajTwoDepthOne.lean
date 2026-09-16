@@ -2,7 +2,7 @@
 # Closed `MAJ²` formulas of depth one are blind to the order of symbols
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix D, `def:MAJtwo` and `def:depth_MAJtwo`.
+(COLM 2025), Appendix E, `def:MAJtwo` and `def:depth_MAJtwo`.
 
 Every atom of `MAJ²` names a variable, so a closed formula has to bind it, and
 at depth `1` there is room for exactly one majority quantifier: the body of

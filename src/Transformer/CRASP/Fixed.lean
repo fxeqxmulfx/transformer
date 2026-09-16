@@ -2,7 +2,7 @@
 # Fixed-precision numbers
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix C.1, `def:fixed_precision`.
+(COLM 2025), Appendix B.1, `def:fixed_precision`.
 
 "A *fixed-precision number* with `p` total bits and `s` fractional bits is a
 rational number of the form `m · 2^{-s}` where `m` is an integer and

@@ -2,7 +2,7 @@
 # `MAJ²`: the translations to and from `TL[◁#, ▷#]`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix D: `thm:tlc_to_majtwo`, `thm:tlc_to_majtwo_closed`,
+(COLM 2025), Appendix E: `thm:tlc_to_majtwo`, `thm:tlc_to_majtwo_closed`,
 `thm:majtwo_to_tlc`, `thm:logical_inclusions`, `thm:ltc0_hierarchy`.
 
 The two translations are depth-preserving in one direction and cost one level
@@ -15,7 +15,7 @@ Theorem 3 of Behle & Lange, about circuits, which this development does not
 model; what is stated below is the half that lives in the logic — the `MAJ²`
 depth hierarchy is strict.
 
-Appendix D also carries a `lem:piecewise_testable_depth_majtwo` giving an
+Appendix E also carries a `lem:piecewise_testable_depth_majtwo` giving an
 explicit `MAJ²_{k+1}` construction for `(2k+1)`-piecewise testable languages.
 It sits inside an `\iffalse` block in the source and so is not part of the
 paper; like `lem:bb` it is deliberately left out here.
@@ -75,7 +75,7 @@ satisfaction into the existential form `exists_closed_majTwo` produces; at
 And the empty string, which no position of which satisfies anything, has to be
 put back by hand: `¬∃x[⊤]` is the closed `MAJ²_1` formula that does it.
 
-Source: arXiv:2506.16055v3, Appendix D, `thm:logical_inclusions`. -/
+Source: arXiv:2506.16055v3, Appendix E, `thm:logical_inclusions`. -/
 theorem exists_closed_majTwo_of_definable (k : ℕ) (hk : 0 < k) (L : Set (List σ))
     (h : Definable L k) :
     ∃ φ' ∈ MajTwo σ (k + 1), φ'.Closed ∧ φ'.lang = L := by

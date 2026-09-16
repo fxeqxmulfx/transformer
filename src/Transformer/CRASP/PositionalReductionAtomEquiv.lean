@@ -2,7 +2,7 @@
 # `TL[◁#]^pos` reduces to `TL[◁#]`: the `Y`-atoms preserve meaning
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix E, the `Y^c Q_σ` and `Y^c MOD_m^r` cases of the proof of
+(COLM 2025), Appendix F, the `Y^c Q_σ` and `Y^c MOD_m^r` cases of the proof of
 `lem:tlclpos_reduction`.
 
 The translation simulates `φ` at the positions `r·i + ρ` of
@@ -27,7 +27,7 @@ variable {σ : Type u}
 
 /-- **The letter `Y^c` looks at.**  From a simulated position `r·i + ρ` of
 `f(w)`, with `c + 2 ≤ r`, position `r·i + ρ − c` carries `wᵢ` when
-`ρ − c = 1` and `e` otherwise (Appendix E, the `Y^c Q_σ` case of the proof of
+`ρ − c = 1` and `e` otherwise (Appendix F, the `Y^c Q_σ` case of the proof of
 `lem:tlclpos_reduction`). -/
 theorem getElem?_spread_sub (w : List σ) {r i ρ c : ℕ} (hc : c + 2 ≤ r)
     (hadm : (1 ≤ i ∧ i ≤ w.length ∧ 1 ≤ ρ ∧ ρ ≤ r) ∨ (i = 0 ∧ ρ = r)) :
@@ -59,7 +59,7 @@ example (w : List σ) : 0 + 2 ≤ 2 ∧ ((1 ≤ 0 ∧ 0 ≤ w.length ∧ 1 ≤ 2
 
 variable [DecidableEq σ]
 
-/-- **The invariant on `Y`-atoms** (Appendix E, the `Y^c Q_σ` and
+/-- **The invariant on `Y`-atoms** (Appendix F, the `Y^c Q_σ` and
 `Y^c MOD_m^r` cases of the proof of `lem:tlclpos_reduction`): at a simulated
 position `r·i + ρ`, `T_ρ⟦Y^c α⟧` holds at `i` of `w` exactly where `Y^c α`
 holds on `f(w)`, once `c + reach ≤ r` and `r` is a multiple of the moduli.

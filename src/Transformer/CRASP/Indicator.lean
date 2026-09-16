@@ -4,7 +4,7 @@
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 (COLM 2025), Appendix A.3: the conditional term `φ ? t : t'` "does not increase
 [the] expressive power or affect the depth of formulas", the elimination lemma
-of Yang & Chiang.  The proof of `lem:tlclpos_reduction` in Appendix E compares
+of Yang & Chiang.  The proof of `lem:tlclpos_reduction` in Appendix F compares
 sums of counts, constants and indicators `φ ? 1 : 0`.
 
 This is the case of that lemma the reduction needs: a comparison

@@ -2,7 +2,7 @@
 # Future-masked transformers with a position encoding
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix E (`app:pes`): the three position encodings the paper
+(COLM 2025), Appendix F (`app:pes`): the three position encodings the paper
 treats — sinusoidal (`sec:sinusoidal_pes`, `eq:rotation`), RoPE
 (`sec:rope_pes`) and ALiBi (`sec:alibi_pes`, `eq:alibi`).
 
@@ -26,7 +26,7 @@ the paper's one-based `i` is `rotate d θ i`.
 
 The paper's `θ` is indexed by the blocks `c ∈ [d/2]`, so `θ (c / 2)` is the
 angle governing the coordinate `c`.  It is carried as a parameter: the
-theorems of Appendix E do not use `θ_c = 1000^{-2(c-1)/d}`, only that the
+theorems of Appendix F do not use `θ_c = 1000^{-2(c-1)/d}`, only that the
 angles are rational multiples of `π` and the encoding is therefore periodic.
 -/
 
@@ -61,7 +61,7 @@ noncomputable def rotate (d : ℕ) (θ : ℕ → ℝ) (i : ℕ) (v : Fin d → �
 noncomputable def sinusoidalVec (d : ℕ) (θ : ℕ → ℝ) (i : ℕ) : Fin d → ℝ :=
   rotate d θ i fun c => if c.val % 2 = 0 then 0 else 1
 
-/-- Which position encoding a transformer uses (Appendix E). -/
+/-- Which position encoding a transformer uses (Appendix F). -/
 inductive PosEnc : Type where
   /-- No position encoding, as in `def:transformer` itself. -/
   | plain : PosEnc
@@ -101,7 +101,7 @@ noncomputable def PosEnc.logit (pe : PosEnc) {p s d : ℕ} (i j : ℕ)
   | _ => ∑ c : Fin d, (q c).val * (k c).val
 
 /-- A future-masked rounded transformer carrying a position encoding
-(Appendix E). -/
+(Appendix F). -/
 structure PTfr (σ : Type u) (p s d k : ℕ) extends RTfr σ p s d k where
   /-- The position encoding in force. -/
   pe : PosEnc

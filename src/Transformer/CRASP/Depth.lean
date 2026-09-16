@@ -2,7 +2,7 @@
 # The depth hierarchy of `TL[◁#]`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), §4.2–4.4 and §5.2: `lem:cropping_oneway`, `lem:reduction`,
+(COLM 2025), §4.4–4.5 and §5.1: `lem:cropping_oneway`, `lem:reduction`,
 `thm:TLCl_depth`, `def:prediction_task`, `cor:prediction_task_depth`.
 
 The argument runs downwards.  A depth-`k` formula defining `L_{k+1}` is peeled
@@ -16,7 +16,7 @@ to those affixes is not — the two strings `λ b^{s_b} a^{s_a-1} b a ϱ` and
 `λ b^{s_b} a^{s_a} ϱ b a` have the same Parikh vector and only one of them
 alternates correctly.
 
-From §4.3 on, the paper fixes `Σ = {a, b}`, so the statements below that use
+From §4.4 on, the paper fixes `Σ = {a, b}`, so the statements below that use
 the plane are over `Bool`, with `false` for `a` and `true` for `b`, matching
 `CRASP.PiecewiseTestable`.
 
@@ -44,13 +44,13 @@ variable {σ : Type u}
 /-! ## Sticking to one side only -/
 
 /-- An interval sticks *only to the top* of another when it shares its upper
-`b`-corner and no other side (§4.3). -/
+`b`-corner and no other side (§4.4). -/
 def SticksOnlyToTop (I' I : Interval Bool) : Prop :=
   SticksTo true I' I ∧ ¬ SticksTo false I' I ∧
     ¬ SticksToLo true I' I ∧ ¬ SticksToLo false I' I
 
 /-- An interval sticks *only to the right* of another when it shares its upper
-`a`-corner and no other side (§4.3). -/
+`a`-corner and no other side (§4.4). -/
 def SticksOnlyToRight (I' I : Interval Bool) : Prop :=
   SticksTo false I' I ∧ ¬ SticksTo true I' I ∧
     ¬ SticksToLo true I' I ∧ ¬ SticksToLo false I' I

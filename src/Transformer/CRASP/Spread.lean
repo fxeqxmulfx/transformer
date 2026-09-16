@@ -2,7 +2,7 @@
 # The string map of the reduction from `TL[◁#]^pos`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix E, `lem:tlclpos_reduction`: the map
+(COLM 2025), Appendix F, `lem:tlclpos_reduction`: the map
 `f(w₁ ⋯ wₙ) = e^r w₁ e^{r−1} w₂ e^{r−1} ⋯ wₙ e^{r−1}`.
 
 For `r ≥ 1` the string `f(w)` falls into `n + 1` blocks of `r` positions:
@@ -104,7 +104,7 @@ variable [DecidableEq σ]
 mutual
 
 /-- **A formula does not look ahead.**  At a position `1 ≤ j ≤ |u|` of
-`u ++ v`, a `TL[◁#]^pos` formula has its value on `u` (Appendix E: every
+`u ++ v`, a `TL[◁#]^pos` formula has its value on `u` (Appendix F: every
 operator of `TL[◁#]^pos` looks at the current position or earlier ones). -/
 theorem FormP.sat_append (u v : List σ) :
     ∀ (φ : FormP σ) (j : ℕ), 1 ≤ j → j ≤ u.length → φ.sat (u ++ v) j = φ.sat u j

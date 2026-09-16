@@ -2,7 +2,7 @@
 # `TL[◁#]^pos` reduces to `TL[◁#]`: the translation preserves meaning
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix E, the proof of `lem:tlclpos_reduction`, equation
+(COLM 2025), Appendix F, the proof of `lem:tlclpos_reduction`, equation
 `eq:y_invariant` and the final step `f(w) ⊨ φ ⟺ w ⊨ T_r⟦φ⟧`.
 
 The invariant is proved at every admissible `(i, ρ)`: `i ∈ [|w|]` with
@@ -25,7 +25,7 @@ variable {σ : Type u} [DecidableEq σ]
 
 mutual
 
-/-- **Equation `eq:y_invariant` for formulas** (Appendix E, proof of
+/-- **Equation `eq:y_invariant` for formulas** (Appendix F, proof of
 `lem:tlclpos_reduction`): at an admissible `(i, ρ)`, `T_ρ⟦φ⟧` holds at `i` of
 `w` exactly where `φ` holds at `r·i + ρ` of `f(w)`, for `φ` in `Y`-normal form,
 `reach φ ≤ r` and `r` a multiple of the moduli of `φ`. -/
@@ -78,7 +78,7 @@ theorem FormP.sat_tr (w : List σ) {r : ℕ} :
         φ₁.sat_tr w h₁ hreach.1 ((Nat.dvd_mul_right _ _).trans hper) hadm,
         φ₂.sat_tr w h₂ hreach.2 ((Nat.dvd_mul_left _ _).trans hper) hadm]
 
-/-- **Equation `eq:y_invariant` for terms** (Appendix E, proof of
+/-- **Equation `eq:y_invariant` for terms** (Appendix F, proof of
 `lem:tlclpos_reduction`), in the form of `Summands`: the value of `t` at
 `r·i + ρ` of `f(w)`, plus the indicators `T_ρ⟦t⟧` subtracts, is its constant
 plus its counts at `i` of `w`. -/
@@ -115,7 +115,7 @@ theorem TermP.val_tr (w : List σ) {r : ℕ} :
 
 end
 
-/-- **The final step of `lem:tlclpos_reduction`** (Appendix E):
+/-- **The final step of `lem:tlclpos_reduction`** (Appendix F):
 `f(w) ⊨ φ ⟺ w ⊨ T_r⟦φ⟧`, the invariant at the last position `r·|w| + r` of
 `f(w)`.  For `w = ε` that position is the end of the first block, outside the
 positions `i ∈ [|w|]` the paper proves the invariant for. -/
@@ -144,7 +144,7 @@ moduli and one `Y`, so the proof of `lem:tlclpos_reduction` takes
 read the letter `w_i`, yet `f(ε) = ee` satisfies `Y Q_e`: at `i = 0` the first
 block has no letter to read.  `FormP.reach` asks for `r ≥ 3` here.
 
-Source: arXiv:2506.16055v3, Appendix E, proof of `lem:tlclpos_reduction`. -/
+Source: arXiv:2506.16055v3, Appendix F, proof of `lem:tlclpos_reduction`. -/
 theorem tr_paperBlockSize_unsound :
     FormP.models (spread 2 ([] : List σ)) (.prev (.sym none)) ∧
       ¬ ((FormP.prev (.sym none)).tr 2 2 : Form σ).models [] := by

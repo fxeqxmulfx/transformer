@@ -2,7 +2,7 @@
 # `TL[◁#]^pos` reduces to `TL[◁#]`: the `Y`-atoms
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix E, the proof of `lem:tlclpos_reduction`.
+(COLM 2025), Appendix F, the proof of `lem:tlclpos_reduction`.
 
 The reduction reads a string `w` over `Σ` through
 `f(w) = e^r w₁ e^{r−1} ⋯ wₙ e^{r−1}` block by block: position `i` of `w`
@@ -50,7 +50,7 @@ end Form
 mutual
 
 /-- Two more than the number of `Y`s around any atom, and `s + 2` more around
-`MOD_m^s`: the translation is exact once `reach ≤ r` (Appendix E, the bound
+`MOD_m^s`: the translation is exact once `reach ≤ r` (Appendix F, the bound
 `r > Y` of `lem:tlclpos_reduction`, raised by one). -/
 def FormP.reach : FormP σ → ℕ
   | .sym _ => 2
@@ -70,7 +70,7 @@ end
 
 mutual
 
-/-- A common multiple of the positive moduli (Appendix E, the `M` of
+/-- A common multiple of the positive moduli (Appendix F, the `M` of
 `lem:tlclpos_reduction`, as a product rather than a least common multiple). -/
 def FormP.period : FormP σ → ℕ
   | .sym _ => 1
@@ -107,7 +107,7 @@ theorem TermP.period_pos : ∀ t : TermP σ, 0 < t.period
 
 end
 
-/-- **The translation of a `Y`-atom** `T_ρ⟦Y^c α⟧` (Appendix E, proof of
+/-- **The translation of a `Y`-atom** `T_ρ⟦Y^c α⟧` (Appendix F, proof of
 `lem:tlclpos_reduction`): position `r·i + ρ − c` of `f(w)` carries `wᵢ` when
 `ρ − c = 1` and `e` otherwise, and is congruent to `r + ρ − c` modulo every
 modulus dividing `r`.  `atomTr r ρ c φ` translates `Y^c φ`, so a `Y` is peeled

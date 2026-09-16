@@ -2,7 +2,7 @@
 # Future-masked fixed-precision transformers
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix C.1, `def:transformer`.
+(COLM 2025), Appendix B.1, `def:transformer`.
 
 A *future-masked rounded transformer* of depth `k` is the map `Σ* → 𝔽` given by
 
@@ -96,7 +96,7 @@ def bos (w : List σ) : List (Option σ) := none :: w.map some
   simp [bos]
 
 /-- A transformer *recognizes* `L` when it accepts exactly the strings `⊲ · w`
-with `w ∈ L` (Appendix C.2). -/
+with `w ∈ L` (Appendix B.2). -/
 def RTfr.Recognizes {p s d k : ℕ} (T : RTfr (Option σ) p s d k) (L : Set (List σ)) : Prop :=
   ∀ w : List σ, T.Accepts (bos w) ↔ w ∈ L
 

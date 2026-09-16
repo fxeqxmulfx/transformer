@@ -51,7 +51,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 Two things the paper carries are deliberately absent.  `lem:bb` and
 `lem:piecewise_testable_depth_majtwo` sit inside `\iffalse` blocks in the
 source and so are not part of it; so do `thm:mnf`, `thm:tlmod_to_rtfr` and
-`thm:TLCmod_to_rtfr` of Appendix E, and `lem:find_half_planes_oneway` of §4.3.
+`thm:TLCmod_to_rtfr` of Appendix F, and `lem:find_half_planes_oneway` of §4.4.
 The step from `MAJ²` to `FO[<]`-uniform `LTC⁰` circuits is not formalized
 either: it is a statement about circuits, which this development does not
 model.

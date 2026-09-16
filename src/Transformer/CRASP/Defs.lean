@@ -169,7 +169,7 @@ def Term.pnpFree : Term σ → Bool
 end
 
 /-- `TL[◁#]^P_k`: past-only formulas of depth at most `k`, Parikh numerical
-predicates allowed (§4.1). -/
+predicates allowed (§2.3). -/
 def TLClP (σ : Type u) (k : ℕ) : Set (Form σ) := {φ | φ.past = true ∧ φ.depth ≤ k}
 
 /-- `TL[◁#, ▷#]^P_k`: formulas of depth at most `k`, future counting and

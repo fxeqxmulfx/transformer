@@ -2,7 +2,7 @@
 # The `Y`-normal form of `TL[◁#]^pos`: equivalence
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix E (`app:tlclpos`, "Depth Hierarchy"): `thm:ynf`.
+(COLM 2025), Appendix F (`app:tlclpos`, "Depth Hierarchy"): `thm:ynf`.
 
 The invariant of `N^c⟦·⟧` is that `N^c⟦φ⟧` holds where `Y^c φ` does, and
 that `N^c⟦t⟧` takes at `i` the value `t` takes at `i − c`.  The paper states it
@@ -24,7 +24,7 @@ universe u
 variable {σ : Type u} [DecidableEq σ]
 
 /-- `Y^c φ` holds at `i` when `φ` holds at `i − c` and, for `c ≥ 1`, the
-position `i − c` is on the string, i.e. `c < i` (Appendix E, the semantics of
+position `i − c` is on the string, i.e. `c < i` (Appendix F, the semantics of
 `Y`). -/
 theorem FormP.sat_prevN (w : List σ) (φ : FormP σ) :
     ∀ c i : ℕ, (FormP.prevN c φ).sat w i = (decide (c = 0 ∨ c < i) && φ.sat w (i - c))
@@ -38,7 +38,7 @@ theorem FormP.sat_prevN (w : List σ) (φ : FormP σ) :
           omega
 
 /-- The guard `Y^c MOD_1^0` holds exactly at the positions `i` where `Y^c`
-does not fail for want of predecessors (Appendix E, proof of `thm:ynf`). -/
+does not fail for want of predecessors (Appendix F, proof of `thm:ynf`). -/
 theorem FormP.sat_guard (w : List σ) (c i : ℕ) :
     (FormP.prevN c (.mod 1 0)).sat w i = decide (c = 0 ∨ c < i) := by
   rw [FormP.sat_prevN, FormP.sat, Nat.mod_one, Nat.zero_mod, decide_eq_true rfl, Bool.and_true]
@@ -66,7 +66,7 @@ theorem length_filter_range'_delay (p : ℕ → Bool) (c i : ℕ) :
 mutual
 
 /-- **The invariant of `N^c⟦·⟧`**, for formulas: `N^c⟦φ⟧` holds where `Y^c φ`
-does (Appendix E, proof of `thm:ynf`). -/
+does (Appendix F, proof of `thm:ynf`). -/
 theorem FormP.sat_pushY (w : List σ) :
     ∀ (φ : FormP σ) (c i : ℕ), (φ.pushY c).sat w i = (FormP.prevN c φ).sat w i
   | .sym _, _, _ => rfl
@@ -86,7 +86,7 @@ theorem FormP.sat_pushY (w : List σ) :
       cases decide (c = 0 ∨ c < i) <;> rfl
 
 /-- **The invariant of `N^c⟦·⟧`**, for terms: `N^c⟦t⟧` takes at `i` the value
-`t` takes at `i − c` (Appendix E, proof of `thm:ynf`). -/
+`t` takes at `i − c` (Appendix F, proof of `thm:ynf`). -/
 theorem TermP.val_pushY (w : List σ) :
     ∀ (t : TermP σ) (c i : ℕ), (t.pushY c).val w i = t.val w (i - c)
   | .countL φ, c, i => by
@@ -103,7 +103,7 @@ end
 `TL[◁#]^pos_k` formula in `Y`-normal form: `N^0⟦φ⟧`, with the guards of
 `FormP.pushY`.
 
-Source: arXiv:2506.16055v3, Appendix E, `thm:ynf`. -/
+Source: arXiv:2506.16055v3, Appendix F, `thm:ynf`. -/
 theorem exists_yNormal (k : ℕ) (φ : FormP σ) (hφ : φ ∈ TLClPos σ k) :
     ∃ φ' ∈ TLClPos σ k, YNormal φ' ∧ ∀ (w : List σ) (i : ℕ), φ.sat w i = φ'.sat w i :=
   ⟨φ.pushY 0, (φ.depth_pushY 0).trans_le hφ, φ.yNormal_pushY 0,
@@ -119,7 +119,7 @@ one-letter string `a`: its only position has no predecessor, so `Y ¬Q_a` fails
 there while `¬Y Q_a` holds.  `Y (1 < 1 + 1)` and `N^1⟦1 < 1 + 1⟧ = 1 < 1 + 1`
 disagree in the same way.
 
-Source: arXiv:2506.16055v3, Appendix E, proof of `thm:ynf`. -/
+Source: arXiv:2506.16055v3, Appendix F, proof of `thm:ynf`. -/
 theorem pushY_unguarded_unsound (a : σ) :
     ¬ (FormP.prev (.neg (.sym a))).models [a] ∧ (FormP.neg (.prev (.sym a))).models [a] := by
   simp [FormP.models, FormP.sat]

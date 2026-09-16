@@ -2,7 +2,7 @@
 # `TL[◁#]^pos` reduces to `TL[◁#]`: the translation
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix E, the proof of `lem:tlclpos_reduction`.
+(COLM 2025), Appendix F, the proof of `lem:tlclpos_reduction`.
 
 The translation `T_ρ⟦·⟧` takes a `TL[◁#]^pos` formula `φ` over `Σ ∪ {e}` in
 `Y`-normal form to a `TL[◁#]` formula over `Σ` that, at position `i` of `w`,
@@ -50,7 +50,7 @@ variable [DecidableEq σ]
 
 mutual
 
-/-- **The translation `T_ρ⟦φ⟧`** of `lem:tlclpos_reduction` (Appendix E), with
+/-- **The translation `T_ρ⟦φ⟧`** of `lem:tlclpos_reduction` (Appendix F), with
 the count and comparison rules described in the module docstring. -/
 def FormP.tr (r ρ : ℕ) : FormP (Option σ) → Form σ
   | .sym a => FormP.atomTr r ρ 0 (.sym a)
@@ -80,7 +80,7 @@ end
 
 mutual
 
-/-- **`T_ρ⟦φ⟧` lies in `TL[◁#]` at the depth of `φ`** (Appendix E, proof of
+/-- **`T_ρ⟦φ⟧` lies in `TL[◁#]` at the depth of `φ`** (Appendix F, proof of
 `lem:tlclpos_reduction`: "by construction, `T_r⟦φ⟧` has the same depth as
 `φ`"). -/
 theorem FormP.tr_mem_TLCl (r ρ : ℕ) :

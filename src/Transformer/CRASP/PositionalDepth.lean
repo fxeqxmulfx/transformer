@@ -2,7 +2,7 @@
 # `TL[◁#]^pos`: reduction to `TL[◁#]`, and the depth hierarchy
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix E (`app:tlclpos`, "Depth Hierarchy"):
+(COLM 2025), Appendix F (`app:tlclpos`, "Depth Hierarchy"):
 `lem:tlclpos_reduction`, `thm:tlclpos_depth_hierarchy`.
 
 The reduction pulls a `TL[◁#]^pos_k` formula over `Σ ∪ {e}` back along the
@@ -51,7 +51,7 @@ example (a : σ) (k : ℕ) : (FormP.sym (some a) : FormP (Option σ)) ∈ TLClPo
   Nat.zero_le k
 
 /-- `E_k`, the language `altPlus` with a neutral letter: the strings over
-`Σ ∪ {e}` that lie in `A_k` once every `e` is deleted (Appendix E,
+`Σ ∪ {e}` that lie in `A_k` once every `e` is deleted (Appendix F,
 `app:tlclpos`). -/
 def altPlusNeutral (k : ℕ) : Set (List (Option Bool)) := List.reduceOption ⁻¹' altPlus false k
 
@@ -70,7 +70,7 @@ The paper does not argue the positive half.  It holds without `MOD` and `Y`:
 letter does not change that, `lem:piecewise_testable_depth` puts it in
 `TL[◁#]_{k+1}`, and `TL[◁#]` sits inside `TL[◁#]^pos`.
 
-Source: arXiv:2506.16055v3, Appendix E, `thm:tlclpos_depth_hierarchy`. -/
+Source: arXiv:2506.16055v3, Appendix F, `thm:tlclpos_depth_hierarchy`. -/
 theorem definablePos_altPlusNeutral (k : ℕ) (hk : 0 < k) :
     DefinablePos (altPlusNeutral (k + 1)) (k + 1) ∧
       ¬ DefinablePos (altPlusNeutral (k + 1)) k := by

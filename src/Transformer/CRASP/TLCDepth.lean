@@ -2,7 +2,7 @@
 # The depth hierarchy of `TL[◁#, ▷#]`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), Appendix B: `lem:cropping` and `thm:TLC_depth`.
+(COLM 2025), Appendix D: `lem:cropping` and `thm:TLC_depth`.
 
 Adding future counting costs a factor of two in the separating language.  The
 reason is stated at the head of the appendix: "if the Parikh vector of a word
@@ -23,7 +23,7 @@ namespace Transformer
 namespace CRASP
 
 /-- An interval sticks to *no* side of another: it sits strictly inside it in
-every one of the four directions (Appendix B, `lem:cropping`). -/
+every one of the four directions (Appendix D, `lem:cropping`). -/
 def SticksToNoSide (I' I : Interval Bool) : Prop :=
   I'.Subset I ∧ ¬ SticksTo true I' I ∧ ¬ SticksTo false I' I ∧
     ¬ SticksToLo true I' I ∧ ¬ SticksToLo false I' I
@@ -51,7 +51,7 @@ example (a : Bool) :
   simp [Form.isZero, Form.pnps, Term.pnps] at hψ
 
 /-- `D_k = L_{2k-1} = (a⁺b⁺)^{k-1} a⁺`, the family separating the depth levels
-of `TL[◁#, ▷#]` (Appendix B, `thm:TLC_depth`). -/
+of `TL[◁#, ▷#]` (Appendix D, `thm:TLC_depth`). -/
 def altPlusDouble (k : ℕ) : Set (List Bool) := altPlus false (2 * k - 1)
 
 /-- `D_{k+1} = L_{2k+1}`, the form in which the theorem and its piecewise-
