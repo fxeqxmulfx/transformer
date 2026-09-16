@@ -251,21 +251,24 @@ theorem taylor_eq
   rw [Finset.sum_singleton, hself, htot] at hsplit
   linarith
 
-/-- The antipodal pair `(e₀, -e₀)` on `𝕊^0 ⊂ ℝ¹`. -/
-noncomputable def antipodalPair : SphereTuple 1 2 :=
-  ![⟨EuclideanSpace.single (0 : Fin 1) (1 : ℝ), by simp⟩,
-    ⟨-EuclideanSpace.single (0 : Fin 1) (1 : ℝ), by simp⟩]
+/-- The north pole `e₀` of `𝕊^0 ⊂ ℝ¹`. -/
+noncomputable def northPole : SSphere 1 :=
+  ⟨EuclideanSpace.single (0 : Fin 1) (1 : ℝ), by simp⟩
 
-/-- The hypotheses of `taylor_eq` are satisfiable: two antipodal points form a
-non-trivial critical configuration, their sum being `0`. -/
-example : IsCriticalE0 1 2 antipodalPair ∧ NonTrivialTuple 1 2 antipodalPair := by
+/-- The hypotheses of `taylor_eq` are satisfiable: the antipodal pair
+`(e₀, -e₀)` of `Perspective.antipodalPair` is a non-trivial critical
+configuration, its sum being `0`. -/
+example : IsCriticalE0 1 2 (antipodalPair 1 northPole) ∧
+    NonTrivialTuple 1 2 (antipodalPair 1 northPole) := by
   refine ⟨fun i => ?_, 0, 1, ?_⟩
-  · simp [antipodalPair, proj, Fin.sum_univ_two]
-  · have hx : ‖((antipodalPair 0 : SSphere 1) : EucSpace 1)‖ = 1 :=
-      mem_sphere_zero_iff_norm.mp (antipodalPair 0).2
-    have hneg : ((antipodalPair 1 : SSphere 1) : EucSpace 1)
-        = -((antipodalPair 0 : SSphere 1) : EucSpace 1) := rfl
-    rw [hneg]
+  · simp [antipodalPair, antipode, proj, Fin.sum_univ_two]
+  · have hx : ‖((northPole : SSphere 1) : EucSpace 1)‖ = 1 :=
+      mem_sphere_zero_iff_norm.mp northPole.2
+    have h0 : ((antipodalPair 1 northPole 0 : SSphere 1) : EucSpace 1)
+        = ((northPole : SSphere 1) : EucSpace 1) := rfl
+    have h1 : ((antipodalPair 1 northPole 1 : SSphere 1) : EucSpace 1)
+        = -((northPole : SSphere 1) : EucSpace 1) := rfl
+    rw [h0, h1]
     exact ne_neg_self_of_norm_eq_one 1 hx
 
 end Perspective

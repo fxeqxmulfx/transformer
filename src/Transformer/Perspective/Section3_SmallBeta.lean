@@ -39,34 +39,6 @@ def beta0Dynamics (X : ℝ → SphereTuple d n) : Prop :=
       (proj d ((X t i : EucSpace d))
         (((n : ℝ)⁻¹) • ∑ j : Idx n, ((X t j : EucSpace d)))) t
 
-/-- **Theorem (p:beta0).** *Consensus at zero temperature.*
-
-For `d, n ≥ 2`, and Lebesgue-almost any initial sequence
-`(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n`, the unique solution to the Cauchy problem
-for `e:Snonres0` satisfies
-
-  `lim_{t → ∞} x_i(t) = x⋆`  for some `x⋆ ∈ 𝕊^{d-1}` and all `i`. -/
-theorem beta0_consensus
-    (hd : 2 ≤ d) (hn : 2 ≤ n) :
-    -- "For Lebesgue almost-every X₀, the solution converges to a single point."
-    ∀ (X₀ : SphereTuple d n),
-      ∃ x_star : SSphere d, ∀ X : ℝ → SphereTuple d n,
-        X 0 = X₀ → beta0Dynamics d n X →
-          ∀ i : Idx n,
-            Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
-              Filter.atTop (nhds 0) := by
-  sorry
-
-/-- The subset `𝒮_β ⊂ (𝕊^{d-1})^n` of initial sequences for which the solution
-to the Cauchy problem for `SA` (or `USA`) converges to a single cluster. -/
-def clusteringSet
-    (β : ℝ) : Set (SphereTuple d n) :=
-  { X₀ | ∃ x_star : SSphere d, ∀ X : ℝ → SphereTuple d n,
-            X 0 = X₀ → Perspective.SA d n β X →
-              ∀ i : Idx n,
-                Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
-                  Filter.atTop (nhds 0) }
-
 /-- The uniform law on `(𝕊^{d-1})^n`: the `n`-fold product of a rotation-invariant
 Borel probability measure on the sphere.
 
@@ -79,6 +51,96 @@ def UniformTuple (P : Measure (SphereTuple d n)) : Prop :=
   ∃ σ : Measure (SSphere d), IsProbabilityMeasure σ ∧
     (∀ U : EucSpace d ≃ₗᵢ[ℝ] EucSpace d, σ.map (sphereMap d U) = σ) ∧
     P = Measure.pi (fun _ : Idx n => σ)
+
+/-- The set of initial sequences whose `β = 0` solution reaches consensus:
+the `β = 0` counterpart of `clusteringSet`. -/
+def consensusSet0 : Set (SphereTuple d n) :=
+  { X₀ | ∃ x_star : SSphere d, ∀ X : ℝ → SphereTuple d n,
+            X 0 = X₀ → beta0Dynamics d n X →
+              ∀ i : Idx n,
+                Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
+                  Filter.atTop (nhds 0) }
+
+/-- **Theorem (p:beta0).** *Consensus at zero temperature.*
+
+For `d, n ≥ 2`, and Lebesgue-almost any initial sequence
+`(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n`, the unique solution to the Cauchy problem
+for `e:Snonres0` satisfies
+
+  `lim_{t → ∞} x_i(t) = x⋆`  for some `x⋆ ∈ 𝕊^{d-1}` and all `i`.
+
+The almost-everywhere quantifier is not decoration, and the statement is false
+without it: the antipodal pair `n = 2`, `x₂ = -x₁` is a stationary point of
+`e:Snonres0` — the mean `(x₁ + x₂)/2` is `0`, so both velocities vanish — and
+it never reaches consensus.  The exceptional set is null but non-empty, which
+is why the conclusion is read against the uniform law `UniformTuple` and not
+against every `X₀`.
+
+Not proved here.
+
+Source: arXiv:2312.10794v5, §4, `p:beta0`. -/
+theorem beta0_consensus (hd : 2 ≤ d) (hn : 2 ≤ n) :
+    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+      ∀ᵐ X₀ ∂P, X₀ ∈ consensusSet0 d n := by
+  sorry
+
+/-- The hypotheses of `beta0_consensus` are satisfiable: `d = n = 2`. -/
+example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
+
+/-- The antipode `-x` of a point of `𝕊^{d-1}`. -/
+def antipode (x : SSphere d) : SSphere d :=
+  ⟨-(x : EucSpace d), by
+    have hx : ‖(x : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
+    simp [hx]⟩
+
+/-- The antipodal pair `(x, -x) ∈ (𝕊^{d-1})²`. -/
+def antipodalPair (x : SSphere d) : SphereTuple d 2 :=
+  fun i => if i = 0 then x else antipode d x
+
+/-- **The exceptional set of `beta0_consensus` is not empty.**
+
+The antipodal pair is a stationary point of `e:Snonres0`: its mean is `0`, so
+`Proj_{x_i} 0 = 0` and the constant path is a solution.  The two particles stay
+antipodal forever, so no `x⋆` can attract both, and `beta0_consensus` fails for
+this one initial condition.  This is what forces the almost-everywhere
+quantifier there — `∀ X₀` would be false.
+
+Source: arXiv:2312.10794v5, §4, `p:beta0` (the "almost every" of the
+statement). -/
+theorem antipodalPair_not_mem_consensusSet0 (x : SSphere d) :
+    antipodalPair d x ∉ consensusSet0 d 2 := by
+  rintro ⟨x_star, hstar⟩
+  have hsum : ∑ j : Idx 2, ((antipodalPair d x j : EucSpace d)) = 0 := by
+    simp [antipodalPair, antipode, Fin.sum_univ_two]
+  have hdyn : beta0Dynamics d 2 (fun _ => antipodalPair d x) := by
+    intro t i
+    simp only [hsum, smul_zero, proj, inner_zero_right, zero_smul, sub_self]
+    exact hasDerivAt_const t _
+  have h0 := tendsto_const_nhds_iff.mp (hstar (fun _ => antipodalPair d x) rfl hdyn 0)
+  have h1 := tendsto_const_nhds_iff.mp (hstar (fun _ => antipodalPair d x) rfl hdyn 1)
+  simp only [antipodalPair, antipode, sub_eq_zero] at h0 h1
+  have hneg : (x : EucSpace d) = -(x : EucSpace d) := h0.trans h1.symm
+  have h2 : (2 : ℝ) • (x : EucSpace d) = 0 := by
+    rw [two_smul]
+    nth_rewrite 2 [hneg]
+    exact add_neg_cancel _
+  have hx0 : (x : EucSpace d) = 0 := by
+    rcases smul_eq_zero.mp h2 with h' | h'
+    · norm_num at h'
+    · exact h'
+  have hx : ‖(x : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
+  rw [hx0] at hx
+  norm_num at hx
+
+/-- The subset `𝒮_β ⊂ (𝕊^{d-1})^n` of initial sequences for which the solution
+to the Cauchy problem for `SA` (or `USA`) converges to a single cluster. -/
+def clusteringSet
+    (β : ℝ) : Set (SphereTuple d n) :=
+  { X₀ | ∃ x_star : SSphere d, ∀ X : ℝ → SphereTuple d n,
+            X 0 = X₀ → Perspective.SA d n β X →
+              ∀ i : Idx n,
+                Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
+                  Filter.atTop (nhds 0) }
 
 /-- **Theorem (th:beta_small).** *Clustering with high probability at small β.*
 
@@ -170,32 +232,42 @@ Fix `d, n ≥ 2`.  There is a numerical constant `C > 0` such that whenever
 
 For Lebesgue-almost any `(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n`, there exists
 `x⋆ ∈ 𝕊^{d-1}` with `lim_{t→∞} x_i(t) = x⋆` for the unique solution of `SA`
-(resp. `USA`) starting from `X₀`.
+(resp. `USA`) starting from `X₀` — that is, `𝒮_β` is co-null.
 
-Moreover, when `d = 2` one can take `β ≤ 1`. -/
-theorem beta_tiny
-    (hd : 2 ≤ d) (hn : 2 ≤ n) :
+Moreover, when `d = 2` one can take `β ≤ 1` (`beta_tiny_circle`).
+
+As in `beta0_consensus` the almost-everywhere quantifier is necessary: the
+antipodal pair `n = 2`, `x₂ = -x₁` is stationary for `SA` at every `β`, since
+the weighted mean `(e^{β} x₁ + e^{-β} x₂) / Z` is again a multiple of `x₁` and
+its projection onto `T_{x₁} 𝕊^{d-1}` vanishes.
+
+Not proved here.
+
+Source: arXiv:2312.10794v5, §4, `thm: beta.tiny`. -/
+theorem beta_tiny (hd : 2 ≤ d) (hn : 2 ≤ n) :
     ∃ C : ℝ, 0 < C ∧ ∀ β : ℝ, 0 ≤ β → β ≤ C / n →
-      ∀ (X₀ : SphereTuple d n),
-        ∃ x_star : SSphere d,
-          ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
-            ∀ i : Idx n,
-              Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
-                Filter.atTop (nhds 0) := by
+      ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+        ∀ᵐ X₀ ∂P, X₀ ∈ clusteringSet d n β := by
   sorry
+
+/-- The hypotheses of `beta_tiny` are satisfiable: `d = n = 2`. -/
+example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 
 /-- *d = 2 improvement of `thm: beta.tiny` (Criscitiello-Boumal 2024).*
 
-When `d = 2`, the constant in `beta_tiny` can be taken so that `β ≤ 1`. -/
+When `d = 2`, the constant in `beta_tiny` can be taken so that `β ≤ 1`.
+
+Not proved here.
+
+Source: arXiv:2312.10794v5, §4, remark after `thm: beta.tiny`. -/
 theorem beta_tiny_circle (hn : 2 ≤ n) :
     ∀ β : ℝ, 0 ≤ β → β ≤ 1 →
-      ∀ (X₀ : SphereTuple 2 n),
-        ∃ x_star : SSphere 2,
-          ∀ X : ℝ → SphereTuple 2 n, X 0 = X₀ → Perspective.SA 2 n β X →
-            ∀ i : Idx n,
-              Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace 2) - x_star))
-                Filter.atTop (nhds 0) := by
+      ∀ P : Measure (SphereTuple 2 n), UniformTuple 2 n P →
+        ∀ᵐ X₀ ∂P, X₀ ∈ clusteringSet 2 n β := by
   sorry
+
+/-- The hypothesis of `beta_tiny_circle` is satisfiable: `n = 2`. -/
+example : 2 ≤ 2 := le_rfl
 
 end Perspective
 end Transformer
