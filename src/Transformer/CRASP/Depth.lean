@@ -20,10 +20,14 @@ From §4.4 on, the paper fixes `Σ = {a, b}`, so the statements below that use
 the plane are over `Bool`, with `false` for `a` and `true` for `b`, matching
 `CRASP.PiecewiseTestable`.
 
-`lem:TLCP_commutative` is proved in `Transformer.CRASP.Commutative`.  The
-cropping and reduction lemmas and the hierarchy itself are stated with `sorry`
-in proof position: their proofs are the geometric content of Appendices
-C.2–C.4 and are not carried over here.
+`lem:TLCP_commutative` is proved in `Transformer.CRASP.Commutative`.
+`lem:cropping_oneway` is false as stated, in both of its halves
+(`cropping_oneway_unsound`, `cropping_oneway_right_unsound`): its proof reads a
+minimal depth-1 subformula as a half-plane in the prefix vector, which forgets
+the positions before the interval, where the PNPs are free
+(`Transformer.CRASP.CroppingUnsound`).  The reduction lemma and the hierarchy
+itself are stated with `sorry` in proof position: their proofs are the
+geometric content of Appendices C.3–C.4 and are not carried over here.
 
 **A typo.**  `lem:reduction` promises "a formula `φ'` of depth `(k-1)` of
 `TL[◁#]^P_{k-1}` (or `TL[◁#,▷#]^P_k`, resp.)"; the parenthetical should read
@@ -32,6 +36,7 @@ proof of `thm:TLC_depth` uses it (it goes from depth `ℓ+1` to depth `ℓ`).
 -/
 
 import Transformer.CRASP.Commutative
+import Transformer.CRASP.CroppingUnsound
 import Transformer.CRASP.PiecewiseTestable
 
 namespace Transformer
@@ -57,34 +62,41 @@ def SticksOnlyToRight (I' I : Interval Bool) : Prop :=
 
 /-! ## Cropping and reduction -/
 
-/-- **Lemma `lem:cropping_oneway` (Cropping Lemma for `TL[◁#]`).**  An
-accommodating family of intervals on which the PNPs of a past-only formula are
-constant can be cropped to an accommodating sub-family that sticks only to the
-top of it and on which the minimal depth-1 subformulas are constant too. -/
-theorem cropping_oneway (φ : Form Bool) (hφ : φ.past = true) (I : IntervalFamily Bool)
-    (hI : Accommodating I) (hpnp : PnpsConstantOn φ I) :
-    ∃ I' : IntervalFamily Bool, Accommodating I' ∧ (∀ n, SticksOnlyToTop (I' n) (I n)) ∧
-      MinimalOneConstantOn φ I' ∧ PnpsConstantOn φ I' :=
-  sorry
+/-- **`lem:cropping_oneway` (Cropping Lemma for `TL[◁#]`) is false.**  "For
+any formula `φ` of `TL[◁#]^P` and any accommodating family of intervals `I`
+such that the PNPs of `φ` are constant on `I`, there exists an accommodating
+family of intervals `I'` such that `I'(n⃗)` sticks only to the top (and no other
+side) of `I(n⃗)` for all `n⃗`, and all of the minimal depth-1 subformulas (and
+PNPs) of `φ` are constant on `I'`."  `firstNotA` on `n⃗ ↦ [(1,1), n⃗]` meets the
+hypotheses, and no accommodating family inside that one keeps its minimal
+depth-1 subformula constant, whichever sides it sticks to.
 
-/-- **Lemma `lem:cropping_oneway`, second half.**  "Additionally, there exists
-such an `I'` such that `I'(n⃗)` sticks only to the right of `I(n⃗)`." -/
-theorem cropping_oneway_right (φ : Form Bool) (hφ : φ.past = true) (I : IntervalFamily Bool)
-    (hI : Accommodating I) (hpnp : PnpsConstantOn φ I) :
-    ∃ I' : IntervalFamily Bool, Accommodating I' ∧ (∀ n, SticksOnlyToRight (I' n) (I n)) ∧
-      MinimalOneConstantOn φ I' ∧ PnpsConstantOn φ I' :=
-  sorry
+Source: arXiv:2506.16055v3, §4.4, `lem:cropping_oneway`, and its proof in
+Appendix C.2: "because any PNPs in each `ψ_ℓ` are constant on `I`, each `ψ_ℓ`
+defines a half-plane". -/
+theorem cropping_oneway_unsound :
+    ¬ ∀ φ : Form Bool, φ.past = true → ∀ I : IntervalFamily Bool, Accommodating I →
+      PnpsConstantOn φ I → ∃ I' : IntervalFamily Bool, Accommodating I' ∧
+        (∀ n, SticksOnlyToTop (I' n) (I n)) ∧ MinimalOneConstantOn φ I' ∧ PnpsConstantOn φ I' :=
+  fun h => by
+    obtain ⟨I', hI', hstick, hmin, -⟩ :=
+      h Form.firstNotA rfl _ accommodating_one pnpsConstantOn_firstNotA
+    exact not_minimalOneConstantOn_firstNotA hI' (fun n => (hstick n).1.1) hmin
 
-/-- The hypotheses of the cropping lemma are satisfiable: a PNP-free past-only
-formula and the family `n⃗ ↦ [0⃗, n⃗]`, which is accommodating. -/
-example (a : Bool) :
-    (Form.isZero (.countL (.sym a))).past = true ∧
-      Accommodating (fun n => ⟨fun _ => 0, n⟩ : IntervalFamily Bool) ∧
-      PnpsConstantOn (Form.isZero (.countL (.sym a)))
-        (fun n => ⟨fun _ => 0, n⟩ : IntervalFamily Bool) := by
-  refine ⟨rfl, fun s => ⟨s, fun _ => by simp⟩, ?_⟩
-  intro ψ hψ
-  simp [Form.isZero, Form.pnps, Term.pnps] at hψ
+/-- **The second half of `lem:cropping_oneway` is false too.**  "Additionally,
+there exists such an `I'` such that `I'(n⃗)` sticks only to the right of
+`I(n⃗)`": the same `firstNotA` on `n⃗ ↦ [(1,1), n⃗]` refutes it.
+
+Source: arXiv:2506.16055v3, §4.4, `lem:cropping_oneway`, and its proof in
+Appendix C.2. -/
+theorem cropping_oneway_right_unsound :
+    ¬ ∀ φ : Form Bool, φ.past = true → ∀ I : IntervalFamily Bool, Accommodating I →
+      PnpsConstantOn φ I → ∃ I' : IntervalFamily Bool, Accommodating I' ∧
+        (∀ n, SticksOnlyToRight (I' n) (I n)) ∧ MinimalOneConstantOn φ I' ∧ PnpsConstantOn φ I' :=
+  fun h => by
+    obtain ⟨I', hI', hstick, hmin, -⟩ :=
+      h Form.firstNotA rfl _ accommodating_one pnpsConstantOn_firstNotA
+    exact not_minimalOneConstantOn_firstNotA hI' (fun n => (hstick n).1.1) hmin
 
 section Reduction
 

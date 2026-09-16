@@ -26,7 +26,8 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.DepthZero` | what a depth-0 formula reads: the letter at its position and its PNPs |
 | `CRASP.Middle` | in the middle of an affix restriction, a depth-0 formula reads the letter alone |
 | `CRASP.Commutative` | `lem:TLCP_commutative`: depth-1 formulas define languages commutative on the middle |
-| `CRASP.Depth` | the Cropping and Reduction Lemmas and `thm:TLCl_depth` |
+| `CRASP.CroppingUnsound` | the cropping lemmas fail: a count also reads the positions before the interval |
+| `CRASP.Depth` | the Cropping Lemma refuted, the Reduction Lemma, and `thm:TLCl_depth` |
 | `CRASP.TLCDepth` | their two-sided companions and `thm:TLC_depth` |
 | `CRASP.Extensions` | the sugar of Appendix A.3 as an extended syntax, and its elimination |
 | `CRASP.Fixed` | fixed-precision numbers, rounding, and their two characterizing bounds |
@@ -70,6 +71,7 @@ import Transformer.CRASP.NeutralLetter
 import Transformer.CRASP.DepthZero
 import Transformer.CRASP.Middle
 import Transformer.CRASP.Commutative
+import Transformer.CRASP.CroppingUnsound
 import Transformer.CRASP.Depth
 import Transformer.CRASP.TLCDepth
 import Transformer.CRASP.Extensions
