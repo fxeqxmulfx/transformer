@@ -14,7 +14,8 @@ the unimodality with peak at `τ_β^*`, and two-sided Gaussian bounds on both
 
 Periodicity, parity, positivity and the formula for `g` are proved here; the
 Gaussian bounds of items (4) and (5) are in `Causal.InteractionBounds`, and
-the unimodality of item (3) is stated and left open.
+the unimodality of item (3) — which needs the quartic bound on the cosine
+proved there — is in `Causal.InteractionPeak`.
 -/
 
 import Transformer.Basic
@@ -78,35 +79,6 @@ theorem h_pot_nonneg (β : ℝ) {x : ℝ} (hx : x ∈ Set.Icc 0 Real.pi) :
 /-- The interval of `h_pot_nonneg` is inhabited: `0 ∈ [0, π]`. -/
 example : (0 : ℝ) ∈ Set.Icc 0 Real.pi :=
   ⟨le_rfl, Real.pi_pos.le⟩
-
-/-- **Lemma (lemma:interaction), 3.** *`h` is unimodal on `[0, π]`.*
-
-`h` increases on `[0, τ_β^*]` and decreases on `[τ_β^*, π]`, where
-
-  `cos τ_β^* = (-1 + √(4β² + 1)) / (2β)`,
-
-and for `β ≥ 1` the peak sits at the interaction scale,
-
-  `(β + 1/2)^{-1/2} < τ_β^* < β^{-1/2}`.
-
-The peak is existentially quantified rather than constructed: `τ_β^*` is the
-arccosine of the displayed value, and what the statement keeps of it is what
-the proof of `thm: fixed_centers` uses — it lies in `(0, π)`, it is where the
-two monotonicity intervals meet, and it is of order `β^{-1/2}`.
-
-Not proved here.
-
-Source: arXiv:2411.04990v2, §B, `lemma:interaction` (3). -/
-theorem h_pot_unimodal (β : ℝ) (hβ : 1 ≤ β) :
-    ∃ τ : ℝ, 0 < τ ∧ τ < Real.pi ∧
-      Real.cos τ = (-1 + Real.sqrt (4 * β ^ 2 + 1)) / (2 * β) ∧
-      (β + 1 / 2) ^ (-(1 / 2 : ℝ)) < τ ∧ τ < β ^ (-(1 / 2 : ℝ)) ∧
-      StrictMonoOn (h_pot β) (Set.Icc 0 τ) ∧
-      StrictAntiOn (h_pot β) (Set.Icc τ Real.pi) := by
-  sorry
-
-/-- The hypothesis of `h_pot_unimodal` is satisfiable: `β = 1`. -/
-example : (1 : ℝ) ≤ 1 := le_rfl
 
 end Causal
 end Transformer

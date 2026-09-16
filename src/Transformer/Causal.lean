@@ -10,6 +10,7 @@ import Transformer.Causal.MainTheorem
 import Transformer.Causal.Interaction
 import Transformer.Causal.InteractionBounds
 import Transformer.Causal.InteractionNumerics
+import Transformer.Causal.InteractionPeak
 import Transformer.Causal.InteractionWindow
 import Transformer.Causal.Metastability
 import Transformer.Causal.SequentialFlow
