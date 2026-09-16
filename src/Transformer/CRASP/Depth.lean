@@ -2,9 +2,8 @@
 # The depth hierarchy of `TL[◁#]`
 
 arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
-(COLM 2025), §4.2–4.4 and §5.2: `lem:TLCP_commutative`, `lem:cropping_oneway`,
-`lem:reduction`, `thm:TLCl_depth`, `def:prediction_task`,
-`cor:prediction_task_depth`.
+(COLM 2025), §4.2–4.4 and §5.2: `lem:cropping_oneway`, `lem:reduction`,
+`thm:TLCl_depth`, `def:prediction_task`, `cor:prediction_task_depth`.
 
 The argument runs downwards.  A depth-`k` formula defining `L_{k+1}` is peeled
 one counting level at a time: the Cropping Lemma finds a sub-family of
@@ -21,9 +20,10 @@ From §4.3 on, the paper fixes `Σ = {a, b}`, so the statements below that use
 the plane are over `Bool`, with `false` for `a` and `true` for `b`, matching
 `CRASP.PiecewiseTestable`.
 
-The cropping and reduction lemmas and the hierarchy itself are stated with
-`sorry` in proof position: their proofs are the geometric content of
-Appendices A.5–A.7 and are not carried over here.
+`lem:TLCP_commutative` is proved in `Transformer.CRASP.Commutative`.  The
+cropping and reduction lemmas and the hierarchy itself are stated with `sorry`
+in proof position: their proofs are the geometric content of Appendices
+C.2–C.4 and are not carried over here.
 
 **A typo.**  `lem:reduction` promises "a formula `φ'` of depth `(k-1)` of
 `TL[◁#]^P_{k-1}` (or `TL[◁#,▷#]^P_k`, resp.)"; the parenthetical should read
@@ -31,6 +31,7 @@ Appendices A.5–A.7 and are not carried over here.
 proof of `thm:TLC_depth` uses it (it goes from depth `ℓ+1` to depth `ℓ`).
 -/
 
+import Transformer.CRASP.Commutative
 import Transformer.CRASP.PiecewiseTestable
 
 namespace Transformer
@@ -53,40 +54,6 @@ def SticksOnlyToTop (I' I : Interval Bool) : Prop :=
 def SticksOnlyToRight (I' I : Interval Bool) : Prop :=
   SticksTo false I' I ∧ ¬ SticksTo true I' I ∧
     ¬ SticksToLo true I' I ∧ ¬ SticksToLo false I' I
-
-/-! ## Commutativity of depth 1 -/
-
-section Commutative
-
-variable [DecidableEq σ]
-
-/-- **Lemma `lem:TLCP_commutative` (Commutativity of depth 1).**  For a
-depth-1 formula of `TL[◁#,▷#]^P` — and so in particular of `TL[◁#]^P` — and an
-affix restriction whose suffix is never empty, if the PNPs of the formula are
-constant on the middle then the language it defines is commutative on the
-middle.
-
-The nonempty-suffix hypothesis is what stops `Q_σ` from reading the last
-position, which is the position the whole formula is judged at. -/
-theorem commutativeOnMiddle_of_mem_TLCP_one (φ : Form σ) (hφ : φ ∈ TLCP σ 1)
-    (A : Affix σ) (hsuf : ∀ n : PVec σ, 1 ≤ (A.suf n).length)
-    (hpnp : PnpsConstantOn φ A.middle) :
-    CommutativeOnMiddle φ.lang A :=
-  sorry
-
-/-- The hypotheses of `commutativeOnMiddle_of_mem_TLCP_one` are satisfiable:
-the formula `◁#[Q_a] < 1` has depth 1 and no PNPs, and the affix restriction
-that pins a single `a` at the end has a nonempty suffix everywhere. -/
-example (a : σ) :
-    (Form.isZero (.countL (.sym a)) ∈ TLCP σ 1) ∧
-      (∀ n : PVec σ, 1 ≤ ((⟨fun _ => [], fun _ => [a]⟩ : Affix σ).suf n).length) ∧
-      PnpsConstantOn (Form.isZero (.countL (.sym a)))
-        (⟨fun _ => [], fun _ => [a]⟩ : Affix σ).middle := by
-  refine ⟨Nat.le_refl 1, fun _ => Nat.le_refl 1, ?_⟩
-  intro ψ hψ
-  simp [Form.isZero, Form.pnps, Term.pnps] at hψ
-
-end Commutative
 
 /-! ## Cropping and reduction -/
 
