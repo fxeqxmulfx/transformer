@@ -172,6 +172,25 @@ theorem lang_subseqTwoSided (k : ℕ) (s : List σ) :
       simp only [Form.sat, Bool.and_eq_true, sat_subseqStrict, List.reverse_reverse,
         sat_subseqAfter, decide_eq_true_eq, and_assoc]
 
+/-- **The paper's two-sided formula needs the strict count too.**  At `k = 1`
+the formula the proof builds for the pattern `aaa` is
+`◁#[◁#[Q_a] ≥ 1 ∧ Q_a ∧ ▷#[Q_a] ≥ 1] ≥ 1`, and on the string `a` its halves
+and its middle all match at the one position there is, although `aaa` is not a
+subsequence of `a`.
+
+Source: arXiv:2506.16055v3, Appendix A, proof of `lem:piecewise_testable_depth`. -/
+theorem nonstrict_twoSided_formula_unsound (a : σ) :
+    (Form.exAt (.and (.and (Form.exAt (.sym a)) (.sym a))
+      (Form.le .one (.countR (.sym a))))).models [a] ∧ ¬ [a, a, a].Sublist [a] := by
+  refine ⟨?_, fun h => by simpa using h.length_le⟩
+  have hsym : (Form.sym a).sat [a] 1 = true := by simp [Form.sat]
+  rw [Form.models, Form.sat_exAt]
+  refine ⟨1, le_rfl, le_rfl, ?_⟩
+  rw [Form.sat, Form.sat, Bool.and_eq_true, Bool.and_eq_true, Form.sat_exAt, Form.sat_le,
+    decide_eq_true_eq]
+  exact ⟨⟨⟨1, le_rfl, le_rfl, hsym⟩, hsym⟩,
+    (val_countR_pos_iff [a] 1 (.sym a)).mpr ⟨1, le_rfl, le_rfl, hsym⟩⟩
+
 end Semantics
 
 end CRASP
