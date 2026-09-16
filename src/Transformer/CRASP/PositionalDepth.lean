@@ -13,8 +13,8 @@ over `Σ`, which turns the hierarchy of `thm:TLCl_depth` into a hierarchy for
 `TL[◁#]^pos` with the separating language `E_{k+1}`.
 -/
 
-import Mathlib.Data.List.ReduceOption
-import Transformer.CRASP.Positional
+import Transformer.CRASP.NeutralLetter
+import Transformer.CRASP.PositionalEmbedding
 
 namespace Transformer
 namespace CRASP
@@ -117,15 +117,22 @@ def altPlusNeutral (k : ℕ) : Set (List (Option Bool)) := List.reduceOption ⁻
 reduce along `spread` to a `TL[◁#]_k` definition of `A_{k+1}`, contradicting
 `thm:TLCl_depth`.
 
-That is the half proved here, and it is proved in those words: `spread` is a
-section of `List.reduceOption`, so pulling `E_{k+1}` back along it gives
-`A_{k+1}` on the nose.  The positive half needs a `TL[◁#]^pos` formula and so
-an embedding of the plain syntax into the positional one, which this
-development does not have; it is left open. -/
+The negative half is proved in those words: `spread` is a section of
+`List.reduceOption`, so pulling `E_{k+1}` back along it gives `A_{k+1}` on the
+nose.  The proof in the paper starts from `φ ∈ TL[◁#]^pos_{k+1}`, which has to
+read `TL[◁#]^pos_k` for the reduction to land in `TL[◁#]_k`.
+
+The paper does not argue the positive half.  It holds without `MOD` and `Y`:
+`E_{k+1}` is `(k+1)`-piecewise testable because `A_{k+1}` is and a neutral
+letter does not change that, `lem:piecewise_testable_depth` puts it in
+`TL[◁#]_{k+1}`, and `TL[◁#]` sits inside `TL[◁#]^pos`.
+
+Source: arXiv:2506.16055v3, Appendix E, `thm:tlclpos_depth_hierarchy`. -/
 theorem definablePos_altPlusNeutral (k : ℕ) (hk : 0 < k) :
     DefinablePos (altPlusNeutral (k + 1)) (k + 1) ∧
       ¬ DefinablePos (altPlusNeutral (k + 1)) k := by
-  refine ⟨sorry, ?_⟩
+  refine ⟨(definableL_of_kPiecewiseTestable (k + 1) _
+    (kPiecewiseTestable_altPlus (k + 1) k.succ_pos).preimage_reduceOption).definablePos, ?_⟩
   rintro ⟨φ, hφ, hlang⟩
   obtain ⟨r, -, φ', hφ', hiff⟩ := exists_form_of_formP (σ := Bool) k φ hφ
   refine (definableL_altPlus k hk).2 ⟨φ', hφ', ?_⟩

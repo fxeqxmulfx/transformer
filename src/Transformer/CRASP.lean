@@ -21,6 +21,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.Subsequence` | the depth-`k` past-only formula testing a subsequence of length `k` |
 | `CRASP.SubsequenceTwoSided` | the depth-`(k+1)` formula testing a subsequence of length `2k+1` from its middle |
 | `CRASP.PiecewiseTestable` | `𝒥`-expressions, `k`-piecewise testability, and `A_k` |
+| `CRASP.NeutralLetter` | a neutral letter preserves `k`-piecewise testability |
 | `CRASP.Depth` | the Cropping and Reduction Lemmas and `thm:TLCl_depth` |
 | `CRASP.TLCDepth` | their two-sided companions and `thm:TLC_depth` |
 | `CRASP.Extensions` | the sugar of Appendix A.3 as an extended syntax, and its elimination |
@@ -52,6 +53,7 @@ import Transformer.CRASP.BoundedExists
 import Transformer.CRASP.Subsequence
 import Transformer.CRASP.SubsequenceTwoSided
 import Transformer.CRASP.PiecewiseTestable
+import Transformer.CRASP.NeutralLetter
 import Transformer.CRASP.Depth
 import Transformer.CRASP.TLCDepth
 import Transformer.CRASP.Extensions
