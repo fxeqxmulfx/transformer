@@ -16,6 +16,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.Defs` | the syntax and semantics of `TL[◁#, ▷#]`, its depth, and its fragments |
 | `CRASP.Basic` | the derived connectives and the first properties of satisfaction |
 | `CRASP.Parikh` | Parikh vectors, intervals, affix restrictions, and the §4 vocabulary |
+| `CRASP.Alternating` | the separating family `A_k` and its 𝒥-expression characterization |
 | `CRASP.PiecewiseTestable` | `𝒥`-expressions, `k`-piecewise testability, and `A_k` |
 | `CRASP.Depth` | the Cropping and Reduction Lemmas and `thm:TLCl_depth` |
 | `CRASP.TLCDepth` | their two-sided companions and `thm:TLC_depth` |
@@ -41,6 +42,7 @@ model.
 import Transformer.CRASP.Defs
 import Transformer.CRASP.Basic
 import Transformer.CRASP.Parikh
+import Transformer.CRASP.Alternating
 import Transformer.CRASP.PiecewiseTestable
 import Transformer.CRASP.Depth
 import Transformer.CRASP.TLCDepth

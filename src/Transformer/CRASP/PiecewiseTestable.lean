@@ -11,20 +11,15 @@ fixed symbols.  `PT` is the syntax of such a Boolean combination and
 `PT.width` counts its longest 𝒥-expression, so `KPiecewiseTestable` reads off
 the definition directly.
 
-The separating family of the whole paper is
+The separating family `L_k = altPlus false k` and the identity
+`altPlus_eq` the paper's proof of `lem:piecewise_testable` asserts,
+`L_k = (Σ* ∖ K_b^k) ∩ K_a^k`, are in `CRASP.Alternating`; what is left here is
+the syntax of the Boolean combinations and the two definability lemmas.
 
-    L_k = (a⁺b⁺)^{k/2}        k even
-    L_k = (a⁺b⁺)^{(k-1)/2} a⁺  k odd
-
-— strings of `k` alternating nonempty blocks, starting with `a`.  Written
-recursively, that is `altPlus`.  The alphabet is `Bool` here, with `false`
-for `a` and `true` for `b`, because the paper's `Σ = {a, b}` is exactly a
-two-element alphabet and the characterization below is false over a larger
-one.
-
-`altPlus_eq` is the identity the paper's proof of `lem:piecewise_testable`
-asserts, `L_k = (Σ* ∖ K_b^k) ∩ K_a^k`, with the two 𝒥-expressions being the
-alternating subsequences of length `k` starting with `a` and with `b`.
+`kPiecewiseTestable_altPlus` inherits the restriction `0 < k` of
+`altPlus_eq`, and needs it for its own sake: at `k = 0` every 𝒥-expression of
+width `0` is `Σ*`, so the `0`-piecewise testable languages are `∅` and `Σ*`,
+neither of which is `L_0 = {ε}`.
 
 **A typo.**  Equation `eq:altsingle` writes the even case of `K_a^k` as
 `Σ*(aΣ*bΣ*)^k`, which fixes `2k` symbols and so is not `k`-piecewise
@@ -32,6 +27,7 @@ testable; the odd case, the companion `K_b^k`, and the use made of both
 require `Σ*(aΣ*bΣ*)^{k/2}`.
 -/
 
+import Transformer.CRASP.Alternating
 import Transformer.CRASP.Parikh
 
 namespace Transformer
@@ -74,54 +70,23 @@ def PiecewiseTestable (L : Set (List σ)) : Prop := ∃ k, KPiecewiseTestable k 
 
 section Alternating
 
-/-- The alternating string of length `k` beginning with `s`: `ababab⋯`. -/
-def altList (s : Bool) : ℕ → List Bool
-  | 0 => []
-  | k + 1 => s :: altList (!s) k
+/-- **Lemma `lem:piecewise_testable`.**  `L_k` is `k`-piecewise testable, for
+`k ≥ 1`.
 
-@[simp] theorem length_altList (s : Bool) (k : ℕ) : (altList s k).length = k := by
-  induction k generalizing s with
-  | zero => rfl
-  | succ k ih => rw [altList, List.length_cons, ih]
-
-/-- `A_k` (for `s = a`) and `B_k` (for `s = b`), the two 𝒥-expressions of
-Equation `eq:altsingle`: the strings containing `k` alternating symbols
-starting with `s` as a subsequence. -/
-def altSingle (s : Bool) (k : ℕ) : Set (List Bool) := {w | (altList s k).Sublist w}
-
-/-- `L_k` beginning with the symbol `s`: `k` alternating nonempty blocks
-(Equation `eq:altplus`).  The paper's `L_k` is `altPlus false k`. -/
-def altPlus (s : Bool) : ℕ → Set (List Bool)
-  | 0 => {[]}
-  | k + 1 => {w | ∃ m, 0 < m ∧ ∃ v ∈ altPlus (!s) k, w = List.replicate m s ++ v}
-
-/-- `L_1 = a⁺`. -/
-theorem altPlus_one (s : Bool) : altPlus s 1 = {w | ∃ m, 0 < m ∧ w = List.replicate m s} := by
-  ext w
-  constructor
-  · rintro ⟨m, hm, v, hv, rfl⟩
-    exact ⟨m, hm, by rw [Set.mem_singleton_iff.1 hv, List.append_nil]⟩
-  · rintro ⟨m, hm, rfl⟩
-    exact ⟨m, hm, [], rfl, by rw [List.append_nil]⟩
-
-/-- **The characterization behind `lem:piecewise_testable`.**  A string of
-`{a, b}*` has `k` alternating blocks starting with `a` exactly when it
-contains the alternating subsequence of length `k` starting with `a` but not
-the one starting with `b`. -/
-theorem altPlus_eq (s : Bool) (k : ℕ) :
-    altPlus s k = altSingle s k \ altSingle (!s) k :=
-  sorry
-
-/-- **Lemma `lem:piecewise_testable`.**  `L_k` is `k`-piecewise testable. -/
-theorem kPiecewiseTestable_altPlus (k : ℕ) : KPiecewiseTestable k (altPlus false k) := by
+Source: arXiv:2506.16055v3, §2.4, `lem:piecewise_testable`. -/
+theorem kPiecewiseTestable_altPlus (k : ℕ) (hk : 0 < k) :
+    KPiecewiseTestable k (altPlus false k) := by
   refine ⟨.and (.neg (.jexpr (altList true k))) (.jexpr (altList false k)), ?_, ?_⟩
   · simp only [PT.width, length_altList]
     omega
-  · rw [altPlus_eq]
+  · rw [altPlus_eq false k hk]
     ext w
     simp only [PT.lang, Set.mem_inter_iff, Set.mem_compl_iff, Set.mem_ofPred_eq,
       Set.mem_sdiff, altSingle, Bool.not_false]
     tauto
+
+/-- The hypothesis of `kPiecewiseTestable_altPlus` is satisfiable: `k = 1`. -/
+example : 0 < 1 := Nat.one_pos
 
 end Alternating
 

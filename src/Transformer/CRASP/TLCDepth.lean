@@ -72,7 +72,7 @@ theorem definable_altPlusDouble (k : ℕ) (hk : 0 < k) :
 theorem kPiecewiseTestable_altPlusDouble (k : ℕ) :
     KPiecewiseTestable (2 * k + 1) (altPlusDouble (k + 1)) := by
   rw [altPlusDouble_succ]
-  exact kPiecewiseTestable_altPlus (2 * k + 1)
+  exact kPiecewiseTestable_altPlus (2 * k + 1) (by omega)
 
 end CRASP
 end Transformer
