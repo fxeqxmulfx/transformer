@@ -14,11 +14,10 @@ three maps, and each one is estimated separately here:
      `QKNormLipschitz.score_lipschitz` turns a bound on `q, k` into the score
      shift `r` that step 1 needs.
 
-The result, `attentionHead_dist_le`, is the first estimate in this
-development that sees the whole head at once.  It is not linear in the input
-displacement `D` — the softmax contributes `e^{2r} - 1` — so it is a modulus
-of continuity, and a Lipschitz constant only on a bounded set, which is where
-`Properties.LipschitzConstants` picks it up.
+All three are linear in the displacement, `SoftmaxStability` having already
+traded the exponential softmax estimate against the trivial one, so what
+`Properties.LipschitzConstants` picks up from here is a genuine Lipschitz
+constant and not a modulus of continuity on a bounded set.
 -/
 
 import Transformer.GPTMini.SoftmaxStability
@@ -39,10 +38,11 @@ variable (cfg : Config)
 With `r` a bound on the score movement at query position `i`, `B` a bound on
 the values `v'`, and `M` a bound on the movement of the values,
 
-  `‖y_i - y'_i‖ ≤ 2 (e^{2r} - 1) B + M`.
+  `‖y_i - y'_i‖ ≤ 8 r B + M`.
 
-The first term is `SoftmaxStability.causalAttnWeights_l1_le` against `B`; the
-second is the convexity of the weights (`causalAttnWeights_row_sum`).
+The first term is `SoftmaxStability.causalAttnWeights_l1_le_linear` against
+`B`; the second is the convexity of the weights
+(`causalAttnWeights_row_sum`).
 
 Source: `reference/model.py` (`CausalMHA.forward`, `y = attn @ v`). -/
 theorem attnOutput_dist_le
@@ -52,7 +52,7 @@ theorem attnOutput_dist_le
       |preScore cfg alpha eps q k i j - preScore cfg alpha eps q' k' i j| ≤ r)
     (hB : ∀ j, ‖v' j‖ ≤ B) (hM : ∀ j, ‖v j - v' j‖ ≤ M) :
     ‖attnOutput cfg alpha eps q k v i - attnOutput cfg alpha eps q' k' v' i‖
-      ≤ 2 * (Real.exp (2 * r) - 1) * B + M := by
+      ≤ 8 * r * B + M := by
   have hB0 : 0 ≤ B := (norm_nonneg _).trans (hB i)
   have hdiff : attnOutput cfg alpha eps q k v i - attnOutput cfg alpha eps q' k' v' i
       = (∑ j : Fin T, (causalAttnWeights cfg alpha eps q k i j
@@ -62,7 +62,7 @@ theorem attnOutput_dist_le
     exact Finset.sum_congr rfl fun j _ => by module
   have h1 : ‖∑ j : Fin T, (causalAttnWeights cfg alpha eps q k i j
         - causalAttnWeights cfg alpha eps q' k' i j) • v' j‖
-      ≤ 2 * (Real.exp (2 * r) - 1) * B := by
+      ≤ 8 * r * B := by
     calc ‖∑ j : Fin T, (causalAttnWeights cfg alpha eps q k i j
           - causalAttnWeights cfg alpha eps q' k' i j) • v' j‖
         ≤ ∑ j : Fin T, ‖(causalAttnWeights cfg alpha eps q k i j
@@ -75,9 +75,9 @@ theorem attnOutput_dist_le
           Finset.sum_le_sum fun j _ => mul_le_mul_of_nonneg_left (hB j) (abs_nonneg _)
       _ = (∑ j : Fin T, |causalAttnWeights cfg alpha eps q k i j
             - causalAttnWeights cfg alpha eps q' k' i j|) * B := by rw [Finset.sum_mul]
-      _ ≤ 2 * (Real.exp (2 * r) - 1) * B :=
+      _ ≤ 8 * r * B :=
           mul_le_mul_of_nonneg_right
-            (causalAttnWeights_l1_le cfg alpha eps r q k q' k' i hclose) hB0
+            (causalAttnWeights_l1_le_linear cfg alpha eps r q k q' k' i hclose) hB0
   have h2 : ‖∑ j : Fin T, causalAttnWeights cfg alpha eps q k i j • (v j - v' j)‖ ≤ M := by
     calc ‖∑ j : Fin T, causalAttnWeights cfg alpha eps q k i j • (v j - v' j)‖
         ≤ ∑ j : Fin T, ‖causalAttnWeights cfg alpha eps q k i j • (v j - v' j)‖ :=
@@ -97,7 +97,7 @@ theorem attnOutput_dist_le
 example (cfg : Config) (alpha eps : ℝ)
     (q k v : Fin 3 → EucSpace cfg.head_dim) (i : Fin 3) (B : ℝ) (hB : ∀ j, ‖v j‖ ≤ B) :
     ‖attnOutput cfg alpha eps q k v i - attnOutput cfg alpha eps q k v i‖
-      ≤ 2 * (Real.exp (2 * 0) - 1) * B + 0 :=
+      ≤ 8 * 0 * B + 0 :=
   attnOutput_dist_le cfg alpha eps 0 B 0 q k v q k v i (fun _ => by simp) hB
     (fun _ => by simp)
 
