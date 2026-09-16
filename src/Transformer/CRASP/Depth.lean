@@ -25,18 +25,23 @@ the plane are over `Bool`, with `false` for `a` and `true` for `b`, matching
 (`cropping_oneway_unsound`, `cropping_oneway_right_unsound`): its proof reads a
 minimal depth-1 subformula as a half-plane in the prefix vector, which forgets
 the positions before the interval, where the PNPs are free
-(`Transformer.CRASP.CroppingUnsound`).  The reduction lemma and the hierarchy
-itself are stated with `sorry` in proof position: their proofs are the
-geometric content of Appendices C.3–C.4 and are not carried over here.
+(`Transformer.CRASP.CroppingUnsound`).  `lem:reduction` is false already at
+`k = 2`, in both of its versions (`reduction_past_unsound`,
+`reduction_unsound`): no depth-1 formula whose PNPs are constant on the middle
+checks the affix `ab`, because the middle contains the last position of the
+prefix (`Transformer.CRASP.ReductionUnsound`).  The hierarchy itself is stated
+with `sorry` in proof position: the paper derives it from those two lemmas.
 
 **A typo.**  `lem:reduction` promises "a formula `φ'` of depth `(k-1)` of
 `TL[◁#]^P_{k-1}` (or `TL[◁#,▷#]^P_k`, resp.)"; the parenthetical should read
 `TL[◁#,▷#]^P_{k-1}`, as the sentence's own "of depth `(k-1)`" says and as the
 proof of `thm:TLC_depth` uses it (it goes from depth `ℓ+1` to depth `ℓ`).
+`reduction_unsound` refutes it in that reading.
 -/
 
 import Transformer.CRASP.Commutative
 import Transformer.CRASP.CroppingUnsound
+import Transformer.CRASP.ReductionUnsound
 import Transformer.CRASP.PiecewiseTestable
 
 namespace Transformer
@@ -98,45 +103,43 @@ theorem cropping_oneway_right_unsound :
       h Form.firstNotA rfl _ accommodating_one pnpsConstantOn_firstNotA
     exact not_minimalOneConstantOn_firstNotA hI' (fun n => (hstick n).1.1) hmin
 
-section Reduction
+/-- **`lem:reduction` (Reduction Lemma) is false**, already at `k = 2`.  "For
+any depth-`k` formula `φ` of `TL[◁#]^P_k` and affix restriction `(λ, ϱ)`, if
+the PNPs and minimal depth-1 subformulas of `φ` are constant on the middle of
+`(λ, ϱ)`, then there is a formula `φ'` of depth `(k-1)` of `TL[◁#]^P_{k-1}`
+that defines `L(φ)` restricted to `(λ, ϱ)`, and the PNPs of `φ'` are constant
+on the middle of `(λ, ϱ)`."  Take `φ = ⊤`, written `¬(1 < 1)`, which has no
+PNPs and no minimal depth-1 subformulas, and `(λ, ϱ) = (ab, ε)`: the restricted
+language holds `abab` and not `aabb`, which no depth-1 formula with PNPs
+constant on the middle tells apart (`Form.sat_abab_eq_aabb`).
 
-variable [DecidableEq σ]
+Source: arXiv:2506.16055v3, §4.4, `lem:reduction`, and its proof in
+Appendix C.3, where `Π_σ` is claimed constant on the middle. -/
+theorem reduction_past_unsound :
+    ¬ ∀ k : ℕ, 0 < k → ∀ φ : Form Bool, φ ∈ TLClP Bool k → ∀ A : Affix Bool,
+      PnpsConstantOn φ A.middle → MinimalOneConstantOn φ A.middle →
+      ∃ φ' ∈ TLClP Bool (k - 1), φ'.lang = A.restrict φ.lang ∧ PnpsConstantOn φ' A.middle :=
+  fun h => by
+    obtain ⟨φ', hφ', hlang, hpnp⟩ := h 2 two_pos (.neg (.lt .one .one)) ⟨rfl, Nat.zero_le 2⟩
+      Affix.startAB (fun ψ hψ => by simp [Form.pnps, Term.pnps] at hψ)
+      (fun ψ hψ => by simp [Form.minimalOne, Term.minimalOne, Term.depth] at hψ)
+    exact not_lang_eq_restrict_startAB φ' hφ'.2 hpnp hlang
 
-/-- **Lemma `lem:reduction` (Reduction Lemma), `TL[◁#]^P` version.**  A
-depth-`k` formula whose PNPs and minimal depth-1 subformulas are constant on
-the middle of an affix restriction can be traded for a depth-`(k-1)` formula
-defining the affix-restricted language. -/
-theorem reduction_past (k : ℕ) (hk : 0 < k) (φ : Form σ) (hφ : φ ∈ TLClP σ k)
-    (A : Affix σ) (hpnp : PnpsConstantOn φ A.middle)
-    (hmin : MinimalOneConstantOn φ A.middle) :
-    ∃ φ' ∈ TLClP σ (k - 1), φ'.lang = A.restrict φ.lang ∧ PnpsConstantOn φ' A.middle :=
-  sorry
+/-- **The `TL[◁#,▷#]^P` version of `lem:reduction` is false too**, by the same
+`⊤` and `(ab, ε)`: `Form.sat_abab_eq_aabb` does not need the formula to be
+past-only.
 
-/-- **Lemma `lem:reduction`, `TL[◁#,▷#]^P` version.**  The same statement
-without the past-only restriction. -/
-theorem reduction (k : ℕ) (hk : 0 < k) (φ : Form σ) (hφ : φ ∈ TLCP σ k)
-    (A : Affix σ) (hpnp : PnpsConstantOn φ A.middle)
-    (hmin : MinimalOneConstantOn φ A.middle) :
-    ∃ φ' ∈ TLCP σ (k - 1), φ'.lang = A.restrict φ.lang ∧ PnpsConstantOn φ' A.middle :=
-  sorry
-
-/-- The hypotheses of the reduction lemmas are satisfiable at `k = 1`: `Q_a`
-is past-only of depth `0`, and it has neither a PNP nor a minimal depth-1
-subformula, so both constancy hypotheses hold under any affix restriction.
-(The constancy hypotheses are the binding ones: `◁#[Q_a] < 1` *is* a minimal
-depth-1 subformula of itself, and it is not constant on the middle of the
-trivial restriction — which is exactly why the lemma restricts the language.) -/
-example (a : σ) (A : Affix σ) :
-    (0 < 1) ∧ (Form.sym a : Form σ) ∈ TLClP σ 1 ∧
-      PnpsConstantOn (Form.sym a : Form σ) A.middle ∧
-      MinimalOneConstantOn (Form.sym a : Form σ) A.middle := by
-  refine ⟨Nat.one_pos, ⟨rfl, Nat.zero_le 1⟩, ?_, ?_⟩
-  · intro ψ hψ
-    simp [Form.pnps] at hψ
-  · intro ψ hψ
-    simp [Form.minimalOne] at hψ
-
-end Reduction
+Source: arXiv:2506.16055v3, §4.4, `lem:reduction`, and its proof in
+Appendix C.3. -/
+theorem reduction_unsound :
+    ¬ ∀ k : ℕ, 0 < k → ∀ φ : Form Bool, φ ∈ TLCP Bool k → ∀ A : Affix Bool,
+      PnpsConstantOn φ A.middle → MinimalOneConstantOn φ A.middle →
+      ∃ φ' ∈ TLCP Bool (k - 1), φ'.lang = A.restrict φ.lang ∧ PnpsConstantOn φ' A.middle :=
+  fun h => by
+    obtain ⟨φ', hφ', hlang, hpnp⟩ := h 2 two_pos (.neg (.lt .one .one)) (Nat.zero_le 2)
+      Affix.startAB (fun ψ hψ => by simp [Form.pnps, Term.pnps] at hψ)
+      (fun ψ hψ => by simp [Form.minimalOne, Term.minimalOne, Term.depth] at hψ)
+    exact not_lang_eq_restrict_startAB φ' hφ' hpnp hlang
 
 /-! ## The hierarchy -/
 
