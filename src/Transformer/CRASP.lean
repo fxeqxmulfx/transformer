@@ -30,6 +30,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.ReductionUnsound` | the Reduction Lemma fails: no depth-1 formula checks the affix `ab` |
 | `CRASP.Locality` | a past-only formula reads the prefix up to its position; the formulas under its counts |
 | `CRASP.Strip` | formulas constant, letter by letter, on a strip of prefix vectors past a fixed prefix |
+| `CRASP.Affine` | past a prefix, a count of constant formulas is affine in the numbers of `a`s and `b`s |
 | `CRASP.Depth` | the Cropping and Reduction Lemmas refuted, and `thm:TLCl_depth` |
 | `CRASP.Prediction` | the next-token prediction problem for `L_{k+3}`, solved at depth `k + 1` |
 | `CRASP.TLCDepth` | the two-sided Cropping Lemma refuted, and `thm:TLC_depth` |
@@ -79,6 +80,7 @@ import Transformer.CRASP.CroppingUnsound
 import Transformer.CRASP.ReductionUnsound
 import Transformer.CRASP.Locality
 import Transformer.CRASP.Strip
+import Transformer.CRASP.Affine
 import Transformer.CRASP.Depth
 import Transformer.CRASP.Prediction
 import Transformer.CRASP.TLCDepth
