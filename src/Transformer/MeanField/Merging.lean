@@ -20,6 +20,10 @@ The `β → ∞` limit is uniform on a rescaled time interval `[0, T]`, so it is
 written with a `δ`/`B` pair.  Every hypothesis that names a trajectory sits in
 the conclusion rather than among the hypotheses: solutions of `eq: SA` are not
 constructed here, so a satisfiability witness could not produce one.
+
+What `hardmaxPair` then does — the clusters outside the pair standing still,
+and the pair approaching each other without ever arriving — is proved in
+`MeanField.PairMerge`.
 -/
 
 import Transformer.Basic
@@ -118,25 +122,6 @@ example (X₀ : SphereTuple d 2) :
   refine ⟨fun _ => by norm_num, by norm_num, by decide, fun i j hne h1 h2 => ?_,
     one_pos, one_pos⟩
   fin_cases i <;> fin_cases j <;> simp_all
-
-/-- **Theorem (thm: agazzi_merge), the limiting picture.**
-
-"All clusters remain stationary except for the closest pair `(ī, j̄)`, which
-move along the unique geodesic connecting them and merge in finite rescaled
-time."  The geodesic is unique exactly when the pair is not antipodal, which
-is the hypothesis on `⟨y_ī(0), y_j̄(0)⟩`.
-
-Source: arXiv:2512.01868v4, §5, `thm: agazzi_merge`. -/
-theorem hardmaxPair_merges (K : ℕ) (ibar jbar : Idx K) (hij : ibar ≠ jbar) :
-    ∀ Y : ℝ → SphereTuple d K, hardmaxPair d K ibar jbar Y →
-      inner (𝕜 := ℝ) ((Y 0 ibar : EucSpace d)) ((Y 0 jbar : EucSpace d)) ≠ -1 →
-        (∀ k : Idx K, k ≠ ibar → k ≠ jbar → ∀ s : ℝ, Y s k = Y 0 k) ∧
-        ∃ S : ℝ, 0 < S ∧ Y S ibar = Y S jbar := by
-  sorry
-
-/-- The hypothesis of `hardmaxPair_merges` is satisfiable: `0 ≠ 1` in
-`Idx 2`. -/
-example : (0 : Idx 2) ≠ 1 := by decide
 
 end MeanField
 end Transformer

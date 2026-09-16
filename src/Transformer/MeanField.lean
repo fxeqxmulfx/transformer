@@ -9,3 +9,4 @@ import Transformer.MeanField.Clustering
 import Transformer.MeanField.Equiangular
 import Transformer.MeanField.Merging
 import Transformer.MeanField.Noisy
+import Transformer.MeanField.PairMerge
