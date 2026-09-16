@@ -128,6 +128,25 @@ omit [DecidableEq σ] in
 @[simp] theorem past_isZero (t : Term σ) : (isZero t).past = t.past := by
   simp [isZero, Form.past, Term.past]
 
+/-- `▷#[⊤] < 2`, with `⊤` written `¬(1 < 1)`: the position is the last one of
+the string.  The suffix `w[i:n]` the term counts has `n - i + 1` positions, so
+the formula holds exactly when `n ≤ i`; off the string it holds as well, the
+suffix being empty there (§2.2). -/
+def atEnd : Form σ := .lt (.countR (.neg (.lt .one .one))) (Term.ofPos 1)
+
+@[simp] theorem sat_atEnd (w : List σ) (i : ℕ) :
+    (atEnd : Form σ).sat w i = decide (w.length ≤ i) := by
+  simp only [atEnd, Form.sat, Term.val, Term.val_ofPos, lt_self_iff_false, decide_false,
+    Bool.not_false, List.filter_true, List.length_range', decide_eq_decide]
+  omega
+
+omit [DecidableEq σ] in
+@[simp] theorem depth_atEnd : (atEnd : Form σ).depth = 1 := by
+  simp [atEnd, Form.depth, Term.depth]
+
+omit [DecidableEq σ] in
+@[simp] theorem pnpFree_atEnd : (atEnd : Form σ).pnpFree = true := rfl
+
 end Form
 
 section Dyck

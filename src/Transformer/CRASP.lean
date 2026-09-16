@@ -24,6 +24,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.Fixed` | fixed-precision numbers, rounding, and their two characterizing bounds |
 | `CRASP.Transformers` | future-masked rounded transformers and the equivalence with `TL[◁#]` |
 | `CRASP.MajTwo` | `MAJ²`, majority quantification over two variables |
+| `CRASP.MajTwoDepthOne` | why its closed depth-`1` formulas cannot read the last symbol |
 | `CRASP.MajTwoEquiv` | its translations to and from `TL[◁#, ▷#]`, and `LTC⁰` |
 | `CRASP.Positional` | `TL[◁#]^pos`, the extension by `MOD` and `Y` |
 | `CRASP.PositionalDepth` | its `Y`-normal form, its reduction, and its hierarchy |
@@ -50,6 +51,7 @@ import Transformer.CRASP.Extensions
 import Transformer.CRASP.Fixed
 import Transformer.CRASP.Transformers
 import Transformer.CRASP.MajTwo
+import Transformer.CRASP.MajTwoDepthOne
 import Transformer.CRASP.MajTwoEquiv
 import Transformer.CRASP.Positional
 import Transformer.CRASP.PositionalTransformers

@@ -21,7 +21,7 @@ It sits inside an `\iffalse` block in the source and so is not part of the
 paper; like `lem:bb` it is deliberately left out here.
 -/
 
-import Transformer.CRASP.MajTwo
+import Transformer.CRASP.MajTwoDepthOne
 
 namespace Transformer
 namespace CRASP
@@ -65,10 +65,80 @@ example (a : σ) (k : ℕ) :
 
 /-- **Theorem `thm:logical_inclusions`, first inclusion.**  `TL[◁#,▷#]_k`
 languages are `MAJ²_{k+1}` languages; the extra level pays for the end
-satisfaction of the temporal logic, which becomes `∃x[¬∃y[y > x] ∧ φ'(x)]`. -/
-theorem exists_closed_majTwo_of_definable (k : ℕ) (L : Set (List σ)) (h : Definable L k) :
-    ∃ φ' ∈ MajTwo σ (k + 1), φ'.Closed ∧ φ'.lang = L :=
-  sorry
+satisfaction of the temporal logic, which becomes `∃x[¬∃y[y > x] ∧ φ'(x)]`.
+
+Two things the paper leaves implicit are hypotheses here.  The depth has to be
+positive, because "the position is the last one" — `Form.atEnd`, the `¬∃y[y>x]`
+of the statement — is itself of depth `1`, and conjoining it is what turns end
+satisfaction into the existential form `exists_closed_majTwo` produces; at
+`k = 0` the inclusion is false, by `not_forall_closed_majTwo_of_definable`.
+And the empty string, which no position of which satisfies anything, has to be
+put back by hand: `¬∃x[⊤]` is the closed `MAJ²_1` formula that does it.
+
+Source: arXiv:2506.16055v3, Appendix D, `thm:logical_inclusions`. -/
+theorem exists_closed_majTwo_of_definable (k : ℕ) (hk : 0 < k) (L : Set (List σ))
+    (h : Definable L k) :
+    ∃ φ' ∈ MajTwo σ (k + 1), φ'.Closed ∧ φ'.lang = L := by
+  obtain ⟨φ, ⟨hpnp, hdepth⟩, hlang⟩ := h
+  have hmem : ∀ w : List σ, w ∈ L ↔ φ.sat w w.length = true := by
+    intro w
+    rw [← hlang]
+    exact Iff.rfl
+  obtain ⟨φ₀, hmem₀, hclosed₀, hlang₀⟩ :=
+    exists_closed_majTwo k (φ.and Form.atEnd)
+      ⟨by simp [Form.pnpFree, hpnp], by simp only [Form.depth, Form.depth_atEnd]; omega⟩
+  have hdiff : {w : List σ | ∃ i, 1 ≤ i ∧ i ≤ w.length ∧ (φ.and Form.atEnd).sat w i = true}
+      = L \ {[]} := by
+    ext w
+    simp only [Set.mem_ofPred_eq, Form.sat, Bool.and_eq_true, Form.sat_atEnd,
+      decide_eq_true_eq, Set.mem_sdiff, Set.mem_singleton_iff]
+    constructor
+    · rintro ⟨i, hi₁, hi₂, hsat, hend⟩
+      have hi : i = w.length := le_antisymm hi₂ hend
+      subst hi
+      exact ⟨(hmem w).mpr hsat, fun hw => by simp [hw] at hi₁⟩
+    · rintro ⟨hw, hne⟩
+      exact ⟨w.length, List.length_pos_iff.mpr hne, le_rfl, (hmem w).mp hw, le_rfl⟩
+  by_cases hempty : ([] : List σ) ∈ L
+  · have hex : ∀ w : List σ,
+        (Maj2.ex Var.x (Maj2.top : Maj2 σ)).sat w (fun _ => 0) = true ↔ w ≠ [] := by
+      intro w
+      rw [Maj2.sat_ex]
+      constructor
+      · rintro ⟨i, hi, -⟩ rfl
+        simp at hi
+      · intro hne
+        exact ⟨1, Finset.mem_Icc.mpr ⟨le_rfl, List.length_pos_iff.mpr hne⟩, by simp⟩
+    refine ⟨.neg (.and (.neg φ₀) (Maj2.ex Var.x Maj2.top)), ?_, ?_, ?_⟩
+    · have hone : (Maj2.ex Var.x (Maj2.top : Maj2 σ)).depth = 1 := by
+        rw [Maj2.depth_ex, Maj2.top, Maj2.depth, Maj2.depth]
+      simp only [MajTwo, Set.mem_ofPred_eq, Maj2.depth, hone, max_le_iff]
+      exact ⟨hmem₀, by omega⟩
+    · intro v
+      simp only [Maj2.freeIn, Bool.or_eq_false_iff, hclosed₀ v, true_and]
+      cases v <;> simp [Maj2.ex, Maj2.top, Maj2.freeIn, Fin.exists_fin_two]
+    · ext w
+      have hlang₀' : φ₀.sat w (fun _ => 0) = true ↔ w ∈ L ∧ w ≠ [] := by
+        have hw : w ∈ φ₀.lang ↔ w ∈ L \ {[]} := by rw [hlang₀, hdiff]
+        simpa [Maj2.lang, Maj2.models] using hw
+      show (Maj2.neg (Maj2.and (Maj2.neg φ₀) (Maj2.ex Var.x Maj2.top)) : Maj2 σ).models w
+        ↔ w ∈ L
+      rw [Maj2.models]
+      cases hb : φ₀.sat w (fun _ => 0)
+      · simp only [Maj2.sat, hb, Bool.not_false, Bool.true_and]
+        by_cases hc : w = []
+        · subst hc
+          have hnil : (Maj2.ex Var.x (Maj2.top : Maj2 σ)).sat [] (fun _ => 0) = false := by
+            rcases Bool.eq_false_or_eq_true
+              ((Maj2.ex Var.x (Maj2.top : Maj2 σ)).sat [] (fun _ => 0)) with h | h
+            · exact absurd ((hex []).mp h) (by simp)
+            · exact h
+          simp [hnil, hempty]
+        · rw [(hex w).mpr hc]
+          simpa using fun hL => hc (by simpa [hb, hL] using hlang₀')
+      · simp only [Maj2.sat, hb, Bool.not_true, Bool.false_and, Bool.not_false, true_iff]
+        exact (hlang₀'.mp hb).1
+  · exact ⟨φ₀, hmem₀, hclosed₀, by rw [hlang₀, hdiff, Set.sdiff_singleton_eq_self hempty]⟩
 
 /-- **Theorem `thm:logical_inclusions`, second inclusion.**  `MAJ²_k`
 languages are `TL[◁#,▷#]_k` languages. -/
@@ -76,12 +146,13 @@ theorem definable_of_closed_majTwo (k : ℕ) (φ : Maj2 σ) (hφ : φ ∈ MajTwo
     (hc : φ.Closed) : Definable φ.lang k :=
   sorry
 
-/-- The hypotheses of the two inclusions are satisfiable: `Σ*` is definable at
-every depth, by `¬(1 < 1)`, and `¬(∃x[⊤] ∧ ¬∃x[⊤])` is a closed `MAJ²`
-formula. -/
-example (k : ℕ) : Definable (σ := σ) Set.univ k ∧
+/-- The hypotheses of the two inclusions are satisfiable: `k + 1` is positive,
+`Σ*` is definable at every depth by `¬(1 < 1)`, and `¬(∃x[⊤] ∧ ¬∃x[⊤])` is a
+closed `MAJ²` formula. -/
+example (k : ℕ) : 0 < k + 1 ∧ Definable (σ := σ) Set.univ (k + 1) ∧
     (Maj2.closedTop : Maj2 σ) ∈ MajTwo σ 1 ∧ (Maj2.closedTop : Maj2 σ).Closed := by
-  refine ⟨⟨.neg (.lt .one .one), ⟨rfl, Nat.zero_le k⟩, ?_⟩, ?_, Maj2.closed_closedTop⟩
+  refine ⟨Nat.succ_pos k, ⟨.neg (.lt .one .one), ⟨rfl, Nat.zero_le _⟩, ?_⟩, ?_,
+    Maj2.closed_closedTop⟩
   · ext w
     simp [Form.lang, Form.models, Form.sat, Term.val]
   · simp [MajTwo]
