@@ -15,6 +15,9 @@ right.  The separating family is
     D_k = L_{2k-1} = (a⁺b⁺)^{k-1} a⁺,
 
 and `D_{k+1}` separates depth `k` from depth `k+1`.
+
+`lem:cropping` is false as stated, for the reason `lem:cropping_oneway` is
+(`cropping_unsound`): a count reads the positions before the interval too.
 -/
 
 import Transformer.CRASP.Depth
@@ -28,27 +31,27 @@ def SticksToNoSide (I' I : Interval Bool) : Prop :=
   I'.Subset I ∧ ¬ SticksTo true I' I ∧ ¬ SticksTo false I' I ∧
     ¬ SticksToLo true I' I ∧ ¬ SticksToLo false I' I
 
-/-- **Lemma `lem:cropping` (Cropping Lemma for `TL[◁#, ▷#]`).**  For a formula
-of `TL[◁#,▷#]^P` and an accommodating family of intervals inside `[0⃗, n⃗]` on
-which its PNPs are constant, there is an accommodating sub-family sticking to
-no side of it on which the minimal depth-1 subformulas are constant too. -/
-theorem cropping (φ : Form Bool) (I : IntervalFamily Bool) (hI : Accommodating I)
-    (hsub : ∀ n, (I n).Subset ⟨fun _ => 0, n⟩) (hpnp : PnpsConstantOn φ I) :
-    ∃ I' : IntervalFamily Bool, Accommodating I' ∧ (∀ n, SticksToNoSide (I' n) (I n)) ∧
-      MinimalOneConstantOn φ I' ∧ PnpsConstantOn φ I' :=
-  sorry
+/-- **`lem:cropping` (Cropping Lemma for `TL[◁#, ▷#]`) is false.**  "For any
+formula `φ` of `TL[◁#,▷#]^P` and any accommodating family of intervals `I`,
+such that `I(n⃗) ⊆ [0⃗, n⃗]` and the PNPs of `φ` are constant on `I`, there
+exists an accommodating family of intervals `I'` such that `I'(n⃗) ⊆ I(n⃗)` but
+does not stick to any side of `I(n⃗)` for all `n⃗`, and all of the minimal
+depth-1 subformulas (and PNPs) of `φ` are constant on `I'`."  The past-only
+`firstNotA` on `n⃗ ↦ [(1,1), n⃗]` refutes it as it refutes
+`lem:cropping_oneway`: no accommodating family inside that one keeps its
+minimal depth-1 subformula constant.
 
-/-- The hypotheses of `lem:cropping` are satisfiable: `n⃗ ↦ [0⃗, n⃗]` is
-accommodating, is contained in `[0⃗, n⃗]`, and a PNP-free formula has nothing to
-keep constant. -/
-example (a : Bool) :
-    Accommodating (fun n => ⟨fun _ => 0, n⟩ : IntervalFamily Bool) ∧
-      (∀ n, ((fun n => ⟨fun _ => 0, n⟩ : IntervalFamily Bool) n).Subset ⟨fun _ => 0, n⟩) ∧
-      PnpsConstantOn (Form.isZero (.countL (.sym a)))
-        (fun n => ⟨fun _ => 0, n⟩ : IntervalFamily Bool) := by
-  refine ⟨fun s => ⟨s, fun _ => by simp⟩, fun _ _ hv => hv, ?_⟩
-  intro ψ hψ
-  simp [Form.isZero, Form.pnps, Term.pnps] at hψ
+Source: arXiv:2506.16055v3, Appendix D, `lem:cropping` and its proof: "now
+each `ψ_ℓ` defines a half-plane over `◁#[Q_a]` and `◁#[Q_b]`". -/
+theorem cropping_unsound :
+    ¬ ∀ (φ : Form Bool) (I : IntervalFamily Bool), Accommodating I →
+      (∀ n, (I n).Subset ⟨fun _ => 0, n⟩) → PnpsConstantOn φ I →
+      ∃ I' : IntervalFamily Bool, Accommodating I' ∧ (∀ n, SticksToNoSide (I' n) (I n)) ∧
+        MinimalOneConstantOn φ I' ∧ PnpsConstantOn φ I' :=
+  fun h => by
+    obtain ⟨I', hI', hstick, hmin, -⟩ := h Form.firstNotA _ accommodating_one
+      (fun _ _ hv => ⟨fun _ => Nat.zero_le _, hv.2⟩) pnpsConstantOn_firstNotA
+    exact not_minimalOneConstantOn_firstNotA hI' (fun n => (hstick n).1) hmin
 
 /-- `D_k = L_{2k-1} = (a⁺b⁺)^{k-1} a⁺`, the family separating the depth levels
 of `TL[◁#, ▷#]` (Appendix D, `thm:TLC_depth`). -/
@@ -74,8 +77,8 @@ but not in `TL[◁#,▷#]_k`.
 The positive half is the closing remark of the paper's proof, read in this
 order: `D_{k+1}` is `(2k+1)`-piecewise testable, and
 `lem:piecewise_testable_depth` turns that into a depth-`(k+1)` definition.
-The negative half is the one that needs `lem:cropping`, and only it is left
-open. -/
+The negative half is the one the paper derives from `lem:cropping`, which is
+false as stated, and only it is left open. -/
 theorem definable_altPlusDouble (k : ℕ) (hk : 0 < k) :
     Definable (altPlusDouble (k + 1)) (k + 1) ∧ ¬ Definable (altPlusDouble (k + 1)) k :=
   ⟨definable_of_kPiecewiseTestable k _ (kPiecewiseTestable_altPlusDouble k), sorry⟩

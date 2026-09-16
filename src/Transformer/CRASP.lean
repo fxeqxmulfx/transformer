@@ -28,7 +28,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.Commutative` | `lem:TLCP_commutative`: depth-1 formulas define languages commutative on the middle |
 | `CRASP.CroppingUnsound` | the cropping lemmas fail: a count also reads the positions before the interval |
 | `CRASP.Depth` | the Cropping Lemma refuted, the Reduction Lemma, and `thm:TLCl_depth` |
-| `CRASP.TLCDepth` | their two-sided companions and `thm:TLC_depth` |
+| `CRASP.TLCDepth` | the two-sided Cropping Lemma refuted, and `thm:TLC_depth` |
 | `CRASP.Extensions` | the sugar of Appendix A.3 as an extended syntax, and its elimination |
 | `CRASP.Fixed` | fixed-precision numbers, rounding, and their two characterizing bounds |
 | `CRASP.Transformers` | future-masked rounded transformers and the equivalence with `TL[◁#]` |
