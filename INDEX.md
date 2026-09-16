@@ -1502,7 +1502,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sat_eq`](src/Transformer/CRASP/Defs.lean#L198) | theorem | proved |
 | [`depth_eq`](src/Transformer/CRASP/Defs.lean#L206) | theorem | proved |
 
-**[Transformer.CRASP.Depth](src/Transformer/CRASP/Depth.lean)** — 192 lines
+**[Transformer.CRASP.Depth](src/Transformer/CRASP/Depth.lean)** — 198 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -1513,9 +1513,9 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`cropping_oneway_right`](src/Transformer/CRASP/Depth.lean#L105) | theorem | sorry |
 | [`reduction_past`](src/Transformer/CRASP/Depth.lean#L130) | theorem | sorry |
 | [`reduction`](src/Transformer/CRASP/Depth.lean#L138) | theorem | sorry |
-| [`definableL_altPlus`](src/Transformer/CRASP/Depth.lean#L166) | theorem | sorry |
-| [`SolvesPrediction`](src/Transformer/CRASP/Depth.lean#L175) | def |  |
-| [`prediction_task_depth`](src/Transformer/CRASP/Depth.lean#L181) | theorem | sorry |
+| [`definableL_altPlus`](src/Transformer/CRASP/Depth.lean#L171) | theorem | sorry |
+| [`SolvesPrediction`](src/Transformer/CRASP/Depth.lean#L181) | def |  |
+| [`prediction_task_depth`](src/Transformer/CRASP/Depth.lean#L187) | theorem | sorry |
 
 **[Transformer.CRASP.Extensions](src/Transformer/CRASP/Extensions.lean)** — 213 lines
 
@@ -3156,8 +3156,8 @@ Everything the build cannot vouch for, in one place.
 | [`cropping_oneway_right`](src/Transformer/CRASP/Depth.lean#L105) | theorem | `Transformer.CRASP.Depth` |
 | [`reduction_past`](src/Transformer/CRASP/Depth.lean#L130) | theorem | `Transformer.CRASP.Depth` |
 | [`reduction`](src/Transformer/CRASP/Depth.lean#L138) | theorem | `Transformer.CRASP.Depth` |
-| [`definableL_altPlus`](src/Transformer/CRASP/Depth.lean#L166) | theorem | `Transformer.CRASP.Depth` |
-| [`prediction_task_depth`](src/Transformer/CRASP/Depth.lean#L181) | theorem | `Transformer.CRASP.Depth` |
+| [`definableL_altPlus`](src/Transformer/CRASP/Depth.lean#L171) | theorem | `Transformer.CRASP.Depth` |
+| [`prediction_task_depth`](src/Transformer/CRASP/Depth.lean#L187) | theorem | `Transformer.CRASP.Depth` |
 | [`exists_form_of_formX`](src/Transformer/CRASP/Extensions.lean#L198) | theorem | `Transformer.CRASP.Extensions` |
 | [`exists_majTwo_of_mem_TLC`](src/Transformer/CRASP/MajTwoEquiv.lean#L37) | theorem | `Transformer.CRASP.MajTwoEquiv` |
 | [`exists_closed_majTwo`](src/Transformer/CRASP/MajTwoEquiv.lean#L47) | theorem | `Transformer.CRASP.MajTwoEquiv` |

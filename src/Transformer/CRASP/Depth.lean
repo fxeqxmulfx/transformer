@@ -162,10 +162,16 @@ end Reduction
 /-! ## The hierarchy -/
 
 /-- **Theorem `thm:TLCl_depth`.**  For `k > 0` the language `L_{k+1}` is
-definable in `TL[◁#]_{k+1}` but not in `TL[◁#]_k`. -/
+definable in `TL[◁#]_{k+1}` but not in `TL[◁#]_k`.
+
+The positive half asks for nothing beyond §2.4: `L_{k+1}` is `(k+1)`-piecewise
+testable by `lem:piecewise_testable`, and `lem:piecewise_testable_depth` reads
+every such language inside `TL[◁#]_{k+1}`.  The negative half is the one the
+chapter is about, and only it is left open. -/
 theorem definableL_altPlus (k : ℕ) (hk : 0 < k) :
     DefinableL (altPlus false (k + 1)) (k + 1) ∧ ¬ DefinableL (altPlus false (k + 1)) k :=
-  sorry
+  ⟨definableL_of_kPiecewiseTestable (k + 1) _ (kPiecewiseTestable_altPlus (k + 1) k.succ_pos),
+    sorry⟩
 
 /-- **Definition `def:prediction_task`.**  A `TL[◁#]` formula solves the
 next-token prediction problem for `L` when, on every prefix of every string of
