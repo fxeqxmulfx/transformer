@@ -175,6 +175,23 @@ theorem lang_subseqAt (s : List σ) : (subseqAt s).lang = {w : List σ | s.rever
   rw [Form.lang, Set.mem_ofPred_eq, Form.models, sat_subseqAt, List.take_length]
   exact Iff.rfl
 
+/-- **The paper's formula needs the strict count.**  The proof of
+`lem:piecewise_testable_depth` tests `Σ*σ₁Σ*⋯Σ*σ_kΣ*` with
+`◁#[⋯◁#[◁#[Q_σ₁] ≥ 1 ∧ Q_σ₂] ≥ 1 ⋯ ∧ Q_σ_k] ≥ 1`, the non-strict `◁#` at every
+level, so two equal neighbours `σⱼ = σⱼ₊₁` can be matched at one position.
+For `Σ*aΣ*aΣ*` that formula accepts the one-letter string `a`, which does not
+contain `aa`.  The separating languages alternate their letters and are not
+affected; `subseqStrict` counts strictly below the top level instead.
+
+Source: arXiv:2506.16055v3, Appendix A, proof of `lem:piecewise_testable_depth`. -/
+theorem nonstrict_subseq_formula_unsound (a : σ) :
+    (Form.exAt (.and (Form.exAt (.sym a)) (.sym a))).models [a] ∧ ¬ [a, a].Sublist [a] := by
+  refine ⟨?_, fun h => by simpa using h.length_le⟩
+  rw [Form.models, Form.sat_exAt]
+  refine ⟨1, le_rfl, le_rfl, ?_⟩
+  rw [Form.sat, Bool.and_eq_true, Form.sat_exAt]
+  exact ⟨⟨1, le_rfl, le_rfl, by simp [Form.sat]⟩, by simp [Form.sat]⟩
+
 end Semantics
 
 end CRASP
