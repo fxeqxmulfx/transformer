@@ -14,6 +14,7 @@ import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section3_SmallBeta
 
 open scoped BigOperators
+open MeasureTheory
 
 namespace Transformer
 namespace Perspective
@@ -29,17 +30,26 @@ Fix `d, n ≥ 2`.  There exists a constant `C = C(d) > 0` (depending only on
 for both `SA` and `USA`:
 
 For Lebesgue-almost any initial sequence `X₀ ∈ (𝕊^{d-1})^n`, there exists
-`x⋆ ∈ 𝕊^{d-1}` such that `lim_{t→∞} x_i(t) = x⋆` for all `i ∈ [n]`. -/
+`x⋆ ∈ 𝕊^{d-1}` such that `lim_{t→∞} x_i(t) = x⋆` for all `i ∈ [n]`.
+
+*Almost any* is not *any*: `antipodalPair_not_mem_clusteringSet` exhibits, for
+every `β`, an initial sequence outside `𝒮_β` — an antipodal pair is stationary
+for `SA`, so its two particles never meet.  The exceptional set is therefore
+non-empty at every `β`, however large, and the quantifier has to be the
+almost-everywhere one, read against the uniform law as in §4.
+
+Not proved here.
+
+Source: arXiv:2312.10794v5, §5, `thm: beta.interval`. -/
 theorem beta_interval
     (hd : 2 ≤ d) (hn : 2 ≤ n) :
     ∃ C : ℝ, 0 < C ∧ ∀ β : ℝ, C * (n : ℝ)^2 ≤ β →
-      ∀ (X₀ : SphereTuple d n),
-        ∃ x_star : SSphere d,
-          ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
-            ∀ i : Idx n,
-              Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
-                Filter.atTop (nhds 0) := by
+      ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+        ∀ᵐ X₀ ∂P, X₀ ∈ clusteringSet d n β := by
   sorry
+
+/-- The hypotheses of `beta_interval` are satisfiable: `d = n = 2`. -/
+example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 
 end Perspective
 end Transformer

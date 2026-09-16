@@ -55,6 +55,19 @@ has norm `1`. -/
 example : ‖(EuclideanSpace.single (0 : Fin 1) (1 : ℝ))‖ = 1 := by
   simp [PiLp.norm_single]
 
+/-- **The projection kills the radial direction:** `Proj_x (c x) = 0` for a
+unit vector `x`.  This is what makes a configuration whose attention average
+is parallel to the particle itself a stationary point of the dynamics. -/
+theorem proj_smul_self {d : ℕ} {x : EucSpace d} (hx : ‖x‖ = 1) (c : ℝ) :
+    proj d x (c • x) = 0 := by
+  rw [proj, real_inner_smul_right, real_inner_self_eq_norm_mul_norm, hx,
+    mul_one, mul_one, sub_self]
+
+/-- The hypothesis is satisfiable: the first standard basis vector of `ℝ^1`
+has norm `1`. -/
+example : ‖(EuclideanSpace.single (0 : Fin 1) (1 : ℝ))‖ = 1 := by
+  simp [PiLp.norm_single]
+
 /-- The "indexing set" `[n] = {1,…,n}`, realized as `Fin n`. -/
 abbrev Idx (n : ℕ) : Type := Fin n
 

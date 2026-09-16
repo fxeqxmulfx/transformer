@@ -142,6 +142,61 @@ def clusteringSet
                 Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
                   Filter.atTop (nhds 0) }
 
+/-- **An antipodal pair is a stationary point of `SA` at every `β`.**
+
+At the first particle the attention weights are `e^{β}` on `x` and `e^{-β}` on
+`-x`, at the second the other way round, so both weighted sums equal
+`(e^{β} - e^{-β}) x` up to the sign carried by the particle itself: each is a
+multiple of the particle, and `proj_smul_self` kills it.
+
+Source: arXiv:2312.10794v5, §4, the exceptional set of `p:beta0`. -/
+theorem SA_const_antipodalPair (β : ℝ) (x : SSphere d) :
+    Perspective.SA d 2 β (fun _ => antipodalPair d x) := by
+  have hx : ‖(x : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
+  have hnorm : ∀ i : Idx 2, ‖((antipodalPair d x i : SSphere d) : EucSpace d)‖ = 1 := by
+    intro i; fin_cases i <;> simp [antipodalPair, antipode, hx]
+  have hsum : ∀ i : Idx 2,
+      ∑ j : Idx 2, Real.exp (β * inner (𝕜 := ℝ)
+          ((antipodalPair d x i : SSphere d) : EucSpace d)
+          ((antipodalPair d x j : SSphere d) : EucSpace d))
+          • (((antipodalPair d x j : SSphere d) : EucSpace d))
+        = (Real.exp β - Real.exp (-β))
+            • (((antipodalPair d x i : SSphere d) : EucSpace d)) := by
+    intro i
+    fin_cases i <;>
+      simp [antipodalPair, antipode, Fin.sum_univ_two, hx, inner_neg_right, mul_neg] <;>
+      module
+  intro t i
+  refine (hasDerivAt_const t _).congr_deriv ?_
+  rw [hsum i, smul_smul, proj_smul_self (hnorm i)]
+
+/-- The antipodal pair is outside `𝒮_β` for every `β`: the constant path is a
+solution of `SA` through it, and the two particles stay antipodal, so no `x⋆`
+attracts both.  This is why `beta_tiny` and `beta_interval` are read almost
+everywhere.
+
+Source: arXiv:2312.10794v5, §4. -/
+theorem antipodalPair_not_mem_clusteringSet (β : ℝ) (x : SSphere d) :
+    antipodalPair d x ∉ clusteringSet d 2 β := by
+  rintro ⟨x_star, hstar⟩
+  have h0 := tendsto_const_nhds_iff.mp
+    (hstar (fun _ => antipodalPair d x) rfl (SA_const_antipodalPair d β x) 0)
+  have h1 := tendsto_const_nhds_iff.mp
+    (hstar (fun _ => antipodalPair d x) rfl (SA_const_antipodalPair d β x) 1)
+  simp only [antipodalPair, antipode, sub_eq_zero] at h0 h1
+  have hneg : (x : EucSpace d) = -(x : EucSpace d) := h0.trans h1.symm
+  have h2 : (2 : ℝ) • (x : EucSpace d) = 0 := by
+    rw [two_smul]
+    nth_rewrite 2 [hneg]
+    exact add_neg_cancel _
+  have hx0 : (x : EucSpace d) = 0 := by
+    rcases smul_eq_zero.mp h2 with h' | h'
+    · norm_num at h'
+    · exact h'
+  have hx : ‖(x : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
+  rw [hx0] at hx
+  norm_num at hx
+
 /-- **Theorem (th:beta_small).** *Clustering with high probability at small β.*
 
 For fixed `d, n ≥ 2`, the probability (w.r.t. uniform initialization on
