@@ -4,7 +4,7 @@
 Two `gpt-mini` streams driven by the same parameters and started from two
 configurations `x_0, y_0 : Fin T → ℝ^{d_model}` stay within
 
-  `L(params, α_max, R) · max_i ‖x_0(i) - y_0(i)‖`
+  `L(params, eps, α_max) · max_i ‖x_0(i) - y_0(i)‖`
 
 of each other at every depth, `L` being the product `endToEndLipschitz` of the
 per-block constants of `Properties.LipschitzConstants`.  That is
@@ -18,9 +18,10 @@ one a token lookup can produce; `hidden_isStream` is the witness that the
 hypothesis is satisfiable.
 
 The bound stops at the representation: the logits are one `rmsNormEps` and one
-unembedding further on, and no Lipschitz bound for `rmsNormEps` is available —
-`Properties.StreamGrowth` bounds its norm, not its modulus of continuity.  And
-it rests on the `sorry`-leaf `blockForward_lipschitz`.
+unembedding further on, and this file says nothing about that last step.
+
+`α_max` is a uniform upper bound for every head's `log α` in every block —
+the only thing the per-block constants need to know about the temperatures.
 
 The bound matters for adversarial robustness (perturbation amplification),
 mean-field continuity (Wasserstein-style stability) and numerical analysis
@@ -77,16 +78,21 @@ The logits are one RMSNorm and one unembedding further on, and this file says
 nothing about that last step: `rmsNormEps` has no Lipschitz bound here, only
 the bound on its norm of `Properties.StreamGrowth`.
 
+`α_max` has to dominate the `log α` of every head of every block: the head
+constant grows with the temperature, so a single hot head sets the pace.
+
 Source: `reference/model.py` (`GPTMini.forward`), by induction from
 `blockForward_lipschitz`. -/
 theorem stream_lipschitz
-    (params : ModelParams cfg) (alpha_max R : ℝ) (hR : 0 ≤ R) (heps : 0 < eps)
+    (params : ModelParams cfg) (alpha_max : ℝ) (heps : 0 < eps)
+    (halpha : ∀ (l : Fin cfg.n_layers) (h : Fin cfg.n_heads),
+      (params.blocks l).attn.log_alpha h ≤ alpha_max)
     {T : ℕ} [Nonempty (Fin T)] (positions : Fin T → ℝ)
     (x y : ℕ → Fin T → EucSpace cfg.d_model)
     (hx : IsStream cfg eps params positions x) (hy : IsStream cfg eps params positions y)
     (L : ℕ) (i : Fin T) :
     ‖x L i - y L i‖
-      ≤ endToEndLipschitz cfg params alpha_max R
+      ≤ endToEndLipschitz cfg eps params alpha_max
         * (Finset.univ : Finset (Fin T)).sup' Finset.univ_nonempty
             (fun i' => ‖x 0 i' - y 0 i'‖) := by
   classical
@@ -96,12 +102,13 @@ theorem stream_lipschitz
     le_trans (norm_nonneg _)
       (Finset.le_sup' (fun i' => ‖x 0 i' - y 0 i'‖) (Finset.mem_univ i))
   set P : ℕ → ℝ := fun l =>
-    if h : l < cfg.n_layers then perBlockLipschitz cfg (params.blocks ⟨l, h⟩) alpha_max R
+    if h : l < cfg.n_layers then perBlockLipschitz cfg eps (params.blocks ⟨l, h⟩) alpha_max
     else 1 with hPdef
   have hP1 : ∀ l : ℕ, 1 ≤ P l := by
     intro l
     by_cases h : l < cfg.n_layers
-    · simpa [hPdef, h] using one_le_perBlockLipschitz cfg (params.blocks ⟨l, h⟩) alpha_max R hR
+    · simpa [hPdef, h] using
+        one_le_perBlockLipschitz cfg eps (params.blocks ⟨l, h⟩) alpha_max heps
     · simp [hPdef, h]
   have hprod1 : ∀ n : ℕ, 1 ≤ ∏ l ∈ Finset.range n, P l := by
     intro n
@@ -125,7 +132,7 @@ theorem stream_lipschitz
         rw [Finset.prod_range_succ, ih, hPdef]
         simp [Nat.not_lt.mpr hb]
   have hend : (∏ l ∈ Finset.range cfg.n_layers, P l)
-      = endToEndLipschitz cfg params alpha_max R := by
+      = endToEndLipschitz cfg eps params alpha_max := by
     rw [endToEndLipschitz, ← Fin.prod_univ_eq_prod_range]
     refine Finset.prod_congr rfl fun l _ => ?_
     simp [hPdef, l.isLt]
@@ -143,9 +150,9 @@ theorem stream_lipschitz
             (fun i' => ‖x L i' - y L i'‖) ≤ (∏ l ∈ Finset.range L, P l) * δ :=
           Finset.sup'_le _ _ fun i' _ => ih i'
         by_cases h : L < cfg.n_layers
-        · have hstep := blockForward_lipschitz cfg eps (params.blocks ⟨L, h⟩) alpha_max R heps
-            positions (x L) (y L) i
-          have hPL : P L = perBlockLipschitz cfg (params.blocks ⟨L, h⟩) alpha_max R := by
+        · have hstep := blockForward_lipschitz cfg eps (params.blocks ⟨L, h⟩) alpha_max heps
+            (halpha ⟨L, h⟩) positions (x L) (y L) i
+          have hPL : P L = perBlockLipschitz cfg eps (params.blocks ⟨L, h⟩) alpha_max := by
             simp [hPdef, h]
           rw [show x (L + 1) i
               = blockForward cfg (params.blocks ⟨L, h⟩) eps positions (x L) i from by
@@ -154,8 +161,8 @@ theorem stream_lipschitz
               = blockForward cfg (params.blocks ⟨L, h⟩) eps positions (y L) i from by
                 rw [hy L]; simp [h],
             Finset.prod_range_succ, hPL]
-          nlinarith [hstep, hsup, hprod1 L, one_le_perBlockLipschitz cfg (params.blocks ⟨L, h⟩)
-            alpha_max R hR]
+          nlinarith [hstep, hsup, hprod1 L,
+            one_le_perBlockLipschitz cfg eps (params.blocks ⟨L, h⟩) alpha_max heps]
         · rw [show x (L + 1) i = x L i from by rw [hx L]; simp [h],
             show y (L + 1) i = y L i from by rw [hy L]; simp [h],
             Finset.prod_range_succ]
@@ -163,7 +170,7 @@ theorem stream_lipschitz
           rw [hPL]
           simpa using ih i
   refine le_trans (key L i) ?_
-  have hle : (∏ l ∈ Finset.range L, P l) ≤ endToEndLipschitz cfg params alpha_max R := by
+  have hle : (∏ l ∈ Finset.range L, P l) ≤ endToEndLipschitz cfg eps params alpha_max := by
     by_cases hL : L ≤ cfg.n_layers
     · rw [← hend]; exact hmono L cfg.n_layers hL
     · rw [← hend, hstop L (Nat.le_of_lt (Nat.lt_of_not_le hL))]
@@ -171,15 +178,17 @@ theorem stream_lipschitz
 
 /-- The hypotheses are satisfiable: the streams of two token sequences at the
 default config are `IsStream`, and `Fin 1` is nonempty. -/
-example (params : ModelParams Config.default)
+example (params : ModelParams Config.default) (alpha_max : ℝ)
+    (halpha : ∀ (l : Fin Config.default.n_layers) (h : Fin Config.default.n_heads),
+      (params.blocks l).attn.log_alpha h ≤ alpha_max)
     (tokens tokens' : Fin 1 → Fin Config.default.vocab_size) :
     ‖hidden Config.default params 1e-6 (fun _ : Fin 1 => (0 : ℝ)) tokens 3 0
         - hidden Config.default params 1e-6 (fun _ : Fin 1 => (0 : ℝ)) tokens' 3 0‖
-      ≤ endToEndLipschitz Config.default params 1 1
+      ≤ endToEndLipschitz Config.default 1e-6 params alpha_max
         * (Finset.univ : Finset (Fin 1)).sup' Finset.univ_nonempty
             (fun i' => ‖hidden Config.default params 1e-6 (fun _ : Fin 1 => (0 : ℝ)) tokens 0 i'
               - hidden Config.default params 1e-6 (fun _ : Fin 1 => (0 : ℝ)) tokens' 0 i'‖) :=
-  stream_lipschitz Config.default 1e-6 params 1 1 (by norm_num) (by norm_num) _ _ _
+  stream_lipschitz Config.default 1e-6 params alpha_max (by norm_num) halpha _ _ _
     (hidden_isStream Config.default 1e-6 params _ tokens)
     (hidden_isStream Config.default 1e-6 params _ tokens') 3 0
 
