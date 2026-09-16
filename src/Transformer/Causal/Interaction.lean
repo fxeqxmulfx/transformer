@@ -13,7 +13,8 @@ the unimodality with peak at `τ_β^*`, and two-sided Gaussian bounds on both
 `Causal.InteractionWindow`.
 
 Periodicity, parity, positivity and the formula for `g` are proved here; the
-quantitative parts are stated and left open.
+Gaussian bounds of items (4) and (5) are in `Causal.InteractionBounds`, and
+the unimodality of item (3) is stated and left open.
 -/
 
 import Transformer.Basic
@@ -106,41 +107,6 @@ theorem h_pot_unimodal (β : ℝ) (hβ : 1 ≤ β) :
 
 /-- The hypothesis of `h_pot_unimodal` is satisfiable: `β = 1`. -/
 example : (1 : ℝ) ≤ 1 := le_rfl
-
-/-- **Lemma (lemma:interaction), 4.** *Gaussian bounds on `h`.*
-
-For `x > 0`,
-
-  `e^{-βx²/2} (x - x³/6) < h(x) < e^{-βx²/2 + βx⁴/24} x`.
-
-Not proved here.
-
-Source: arXiv:2411.04990v2, §B, `lemma:interaction` (4). -/
-theorem h_pot_bounds (β : ℝ) (hβ : 0 < β) {x : ℝ} (hx : 0 < x) :
-    Real.exp (-(β * x ^ 2 / 2)) * (x - x ^ 3 / 6) < h_pot β x ∧
-      h_pot β x < Real.exp (-(β * x ^ 2 / 2) + β * x ^ 4 / 24) * x := by
-  sorry
-
-/-- The hypotheses of `h_pot_bounds` are satisfiable: `β = 1`, `x = 1`. -/
-example : (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 := ⟨one_pos, one_pos⟩
-
-/-- **Lemma (lemma:interaction), 5.** *Gaussian bounds on `g`.*
-
-  `g(x) > e^{-βx²/2} (1 - x²/2 - β x²)`   for `0 < x < (β + 1/2)^{-1/2}`,
-  `g(x) > -e^{-βx²/2 + βx⁴/24} β x²`      for `x > 0`.
-
-Not proved here.
-
-Source: arXiv:2411.04990v2, §B, `lemma:interaction` (5). -/
-theorem g_pot_lower_bounds (β : ℝ) (hβ : 0 < β) {x : ℝ} (hx : 0 < x) :
-    (x < (β + 1 / 2) ^ (-(1 / 2 : ℝ)) →
-        Real.exp (-(β * x ^ 2 / 2)) * (1 - x ^ 2 / 2 - β * x ^ 2) < g_pot β x) ∧
-      -(Real.exp (-(β * x ^ 2 / 2) + β * x ^ 4 / 24) * (β * x ^ 2)) < g_pot β x := by
-  sorry
-
-/-- The hypotheses of `g_pot_lower_bounds` are satisfiable: `β = 1`, `x = 1`,
-and the first branch is then vacuous since `1 > (3/2)^{-1/2}`. -/
-example : (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 := ⟨one_pos, one_pos⟩
 
 end Causal
 end Transformer
