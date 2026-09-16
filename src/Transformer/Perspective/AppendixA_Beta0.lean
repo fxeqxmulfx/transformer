@@ -187,7 +187,15 @@ def NonTrivialTuple (X : SphereTuple d n) : Prop :=
 /-- **Equation (eq: taylor).** If `(x_1,…,x_n) ∈ (𝕊^{d-1})^n` is a non-trivial
 critical point of `𝖤_0`, then there exists `𝒮 ⊂ [n]` with
 
-  `Σ_{i ∈ 𝒮} Σ_{j ∈ 𝒮^c} ⟨x_i, x_j⟩ < 0`. -/
+  `Σ_{i ∈ 𝒮} Σ_{j ∈ 𝒮^c} ⟨x_i, x_j⟩ < 0`.
+
+A singleton always works.  Criticality says `S = Σ_j x_j` is `⟨x_i, S⟩ x_i`
+for every `i`, so `|⟨x_i, S⟩| = ‖S‖`; were every `⟨x_i, S⟩` positive they
+would all equal `‖S‖ > 0` and every `x_i` would be `S/‖S‖`, which is the
+trivial critical point.  So some `⟨x_i, S⟩ ≤ 0`, and for `𝒮 = {i}` the double
+sum is `⟨x_i, S⟩ - 1 ≤ -1`.
+
+Source: arXiv:2312.10794v5, Appendix A, `eq: taylor`. -/
 theorem taylor_eq
     (X : SphereTuple d n)
     (h_crit : IsCriticalE0 d n X)
@@ -195,7 +203,53 @@ theorem taylor_eq
     ∃ 𝒮 : Finset (Idx n),
       ∑ i ∈ 𝒮, ∑ j ∈ 𝒮ᶜ,
         inner (𝕜 := ℝ) ((X i : EucSpace d)) ((X j : EucSpace d)) < 0 := by
-  sorry
+  classical
+  set S : EucSpace d := ∑ j : Idx n, (X j : EucSpace d) with hS
+  have hnorm : ∀ i : Idx n, ‖(X i : EucSpace d)‖ = 1 := fun i =>
+    mem_sphere_zero_iff_norm.mp (X i).2
+  -- criticality says the barycentre is normal to the sphere at every particle
+  have hpar : ∀ i : Idx n,
+      S = (inner (𝕜 := ℝ) ((X i : EucSpace d)) S) • ((X i : EucSpace d)) := by
+    intro i
+    have h := h_crit i
+    rw [proj, sub_eq_zero] at h
+    exact h
+  -- so `|⟨x_i, S⟩| = ‖S‖`, and were every one of them positive the particles
+  -- would all sit at `S / ‖S‖`
+  have hex : ∃ i : Idx n, inner (𝕜 := ℝ) ((X i : EucSpace d)) S ≤ 0 := by
+    by_contra hcontra
+    have hcon : ∀ i : Idx n, 0 < inner (𝕜 := ℝ) ((X i : EucSpace d)) S := fun i =>
+      lt_of_not_ge fun h => hcontra ⟨i, h⟩
+    have hlam : ∀ i : Idx n, inner (𝕜 := ℝ) ((X i : EucSpace d)) S = ‖S‖ := by
+      intro i
+      have h1 : ‖S‖ = |inner (𝕜 := ℝ) ((X i : EucSpace d)) S| * 1 := by
+        conv_lhs => rw [hpar i]
+        rw [norm_smul, Real.norm_eq_abs, hnorm i]
+      rw [h1, abs_of_pos (hcon i), mul_one]
+    obtain ⟨i, j, hij⟩ := h_nontriv
+    refine hij ?_
+    have hSpos : (0 : ℝ) < ‖S‖ := by
+      have h := hcon i
+      rwa [hlam i] at h
+    have hi := hpar i
+    have hj := hpar j
+    rw [hlam i] at hi
+    rw [hlam j] at hj
+    exact smul_right_injective (EucSpace d) hSpos.ne'
+      (show (‖S‖ : ℝ) • ((X i : EucSpace d)) = (‖S‖ : ℝ) • ((X j : EucSpace d)) by
+        rw [← hi, ← hj])
+  obtain ⟨i, hi⟩ := hex
+  refine ⟨{i}, ?_⟩
+  rw [Finset.sum_singleton]
+  have hself : inner (𝕜 := ℝ) ((X i : EucSpace d)) ((X i : EucSpace d)) = 1 := by
+    rw [real_inner_self_eq_norm_mul_norm, hnorm i]; ring
+  have htot : ∑ j : Idx n, inner (𝕜 := ℝ) ((X i : EucSpace d)) ((X j : EucSpace d))
+      = inner (𝕜 := ℝ) ((X i : EucSpace d)) S := by
+    rw [hS, inner_sum]
+  have hsplit := Finset.sum_compl_add_sum ({i} : Finset (Idx n))
+    (fun j => inner (𝕜 := ℝ) ((X i : EucSpace d)) ((X j : EucSpace d)))
+  rw [Finset.sum_singleton, hself, htot] at hsplit
+  linarith
 
 /-- The antipodal pair `(e₀, -e₀)` on `𝕊^0 ⊂ ℝ¹`. -/
 noncomputable def antipodalPair : SphereTuple 1 2 :=
