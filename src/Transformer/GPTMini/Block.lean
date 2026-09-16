@@ -33,7 +33,7 @@ import Transformer.GPTMini.RMSNorm
 import Transformer.GPTMini.Reshape
 import Transformer.GPTMini.QKNorm
 import Transformer.GPTMini.RoPE
-import Transformer.GPTMini.CausalMHA
+import Transformer.GPTMini.AttentionBounds
 import Transformer.GPTMini.ReLU2FFN
 
 open scoped BigOperators
@@ -117,22 +117,85 @@ noncomputable def blockForward
 For Pre-LN with RMSNorm-without-γ, each sub-layer output has L2 norm
 bounded by a constant depending only on the parameter operator norms,
 NOT on `‖x‖`.  This is the key property that prevents Pre-LN residual
-stream divergence (despite "growth issue" folklore). -/
+stream divergence (despite "growth issue" folklore).
+
+The chain is: RMSNorm puts the sub-layer input inside the ball of radius
+`√d_model`; `W_qkv` and the two reshapes bound every value vector by
+`‖W_qkv‖ √d_model`; the head is a convex combination of those followed by
+XSA, which at most doubles it; `headMerge` collects `n_heads` of them.
+
+`‖W_qkv‖` is part of the constant and cannot be dropped: nothing downstream
+of the QKV projection renormalizes the values, so scaling `W_qkv` scales the
+whole sub-layer output. -/
 theorem attnSubLayer_bounded
     (cfg : Config) (params : AttnParams cfg) (eps : ℝ) (heps : 0 < eps)
     {T : ℕ} (positions : Fin T → ℝ)
     (x : Fin T → EucSpace cfg.d_model) (i : Fin T) :
     ‖attnSubLayer cfg params eps positions x i‖
-      ≤ ‖params.W_o‖ * Real.sqrt (cfg.d_model : ℝ) := by
-  sorry
+      ≤ 2 * ‖params.W_o‖ * ‖params.W_qkv‖
+          * Real.sqrt (cfg.n_heads : ℝ) * Real.sqrt (cfg.d_model : ℝ) := by
+  set B := ‖params.W_qkv‖ * Real.sqrt (cfg.d_model : ℝ) with hB
+  have hvalue : ∀ (h : Fin cfg.n_heads) (j : Fin T),
+      ‖headSlice cfg (qkvSlice cfg (qkvV cfg)
+        (params.W_qkv (rmsNormEps eps (x j)))) h‖ ≤ B := by
+    intro h j
+    refine (headSlice_norm_le cfg _ h).trans ?_
+    refine (qkvSlice_norm_le cfg _ (qkvV_injective cfg) _).trans ?_
+    refine (params.W_qkv.le_opNorm _).trans ?_
+    exact mul_le_mul_of_nonneg_left
+      (rmsNormEps_norm_le eps heps cfg.d_model_pos _) (norm_nonneg _)
+  have hhead : ∀ h : Fin cfg.n_heads,
+      ‖attentionHead cfg (params.log_alpha h) eps
+        (fun j => headSlice cfg (qkvSlice cfg (qkvQ cfg)
+          (params.W_qkv (rmsNormEps eps (x j)))) h)
+        (fun j => headSlice cfg (qkvSlice cfg (qkvK cfg)
+          (params.W_qkv (rmsNormEps eps (x j)))) h)
+        (fun j => headSlice cfg (qkvSlice cfg (qkvV cfg)
+          (params.W_qkv (rmsNormEps eps (x j)))) h)
+        positions i‖ ≤ 2 * B := fun h =>
+    attentionHead_norm_le cfg _ eps heps.le _ _ _ positions i B (hvalue h)
+  have hmerge := headMerge_norm_le cfg _ (2 * B) hhead
+  calc ‖attnSubLayer cfg params eps positions x i‖
+      ≤ ‖params.W_o‖ * ‖headMerge cfg (fun h =>
+          attentionHead cfg (params.log_alpha h) eps
+            (fun j => headSlice cfg (qkvSlice cfg (qkvQ cfg)
+              (params.W_qkv (rmsNormEps eps (x j)))) h)
+            (fun j => headSlice cfg (qkvSlice cfg (qkvK cfg)
+              (params.W_qkv (rmsNormEps eps (x j)))) h)
+            (fun j => headSlice cfg (qkvSlice cfg (qkvV cfg)
+              (params.W_qkv (rmsNormEps eps (x j)))) h)
+            positions i)‖ := params.W_o.le_opNorm _
+    _ ≤ ‖params.W_o‖ * (Real.sqrt (cfg.n_heads : ℝ) * (2 * B)) :=
+        mul_le_mul_of_nonneg_left hmerge (norm_nonneg _)
+    _ = 2 * ‖params.W_o‖ * ‖params.W_qkv‖
+          * Real.sqrt (cfg.n_heads : ℝ) * Real.sqrt (cfg.d_model : ℝ) := by
+        rw [hB]; ring
 
+/-- The FFN sub-layer is bounded by `‖W_out‖ ‖W_in‖² d_model`: RMSNorm puts
+its input in the ball of radius `√d_model`, and `relu2Vec` squares norms. -/
 theorem ffnSubLayer_bounded
     (cfg : Config) (params : FFNParams cfg) (eps : ℝ) (heps : 0 < eps)
     {T : ℕ}
     (x : Fin T → EucSpace cfg.d_model) (i : Fin T) :
     ‖ffnSubLayer cfg params eps x i‖
       ≤ ‖params.W_out‖ * ‖params.W_in‖^2 * (cfg.d_model : ℝ) := by
-  sorry
+  have hz : ‖rmsNormEps eps (x i)‖ ≤ Real.sqrt (cfg.d_model : ℝ) :=
+    rmsNormEps_norm_le eps heps cfg.d_model_pos _
+  have hd : Real.sqrt (cfg.d_model : ℝ) ^ 2 = (cfg.d_model : ℝ) :=
+    Real.sq_sqrt (Nat.cast_nonneg _)
+  calc ‖ffnSubLayer cfg params eps x i‖
+      = ‖params.W_out (relu2Vec (params.W_in (rmsNormEps eps (x i))))‖ := rfl
+    _ ≤ ‖params.W_out‖ * ‖relu2Vec (params.W_in (rmsNormEps eps (x i)))‖ :=
+        params.W_out.le_opNorm _
+    _ ≤ ‖params.W_out‖ * ‖params.W_in (rmsNormEps eps (x i))‖ ^ 2 := by
+        gcongr
+        exact relu2Vec_norm_bound _
+    _ ≤ ‖params.W_out‖ * (‖params.W_in‖ * Real.sqrt (cfg.d_model : ℝ)) ^ 2 := by
+        gcongr
+        exact (params.W_in.le_opNorm _).trans
+          (mul_le_mul_of_nonneg_left hz (norm_nonneg _))
+    _ = ‖params.W_out‖ * ‖params.W_in‖ ^ 2 * (cfg.d_model : ℝ) := by
+        rw [mul_pow, hd]; ring
 
 /-- **Residual stream growth bound (single block).**
 
@@ -145,9 +208,20 @@ theorem blockForward_growth
     (x : Fin T → EucSpace cfg.d_model) (i : Fin T) :
     ‖blockForward cfg params eps positions x i‖
       ≤ ‖x i‖
-        + ‖params.attn.W_o‖ * Real.sqrt (cfg.d_model : ℝ)
+        + 2 * ‖params.attn.W_o‖ * ‖params.attn.W_qkv‖
+            * Real.sqrt (cfg.n_heads : ℝ) * Real.sqrt (cfg.d_model : ℝ)
         + ‖params.ffn.W_out‖ * ‖params.ffn.W_in‖^2 * (cfg.d_model : ℝ) := by
-  sorry
+  set x1 := fun j => x j + attnSubLayer cfg params.attn eps positions x j with hx1
+  have hattn := attnSubLayer_bounded cfg params.attn eps heps positions x i
+  have hffn := ffnSubLayer_bounded cfg params.ffn eps heps x1 i
+  have hstep1 : ‖x1 i‖ ≤ ‖x i‖
+      + 2 * ‖params.attn.W_o‖ * ‖params.attn.W_qkv‖
+          * Real.sqrt (cfg.n_heads : ℝ) * Real.sqrt (cfg.d_model : ℝ) :=
+    le_trans (norm_add_le _ _) (by linarith)
+  calc ‖blockForward cfg params eps positions x i‖
+      = ‖x1 i + ffnSubLayer cfg params.ffn eps x1 i‖ := rfl
+    _ ≤ ‖x1 i‖ + ‖ffnSubLayer cfg params.ffn eps x1 i‖ := norm_add_le _ _
+    _ ≤ _ := by linarith
 
 end GPTMini
 end Transformer

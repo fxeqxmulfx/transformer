@@ -18,12 +18,15 @@ this is what rules out the Pre-LN "exploding residual stream":
   - softmax outputs convex combinations of the `v_j`, of bounded norm,
   - the ReLU² FFN output is bounded by `‖W_out‖ · ‖W_in‖² · d`.
 
+The attention constant carries `‖W_qkv‖`: the values are never renormalized
+after the QKV projection, so the sub-layer output scales with it.
+
 What the representation itself is bounded by is a second, unconditional
 statement: the final RMSNorm puts it inside the ball of radius `√d_model`
 whatever the parameters and the depth (`final_representation_norm_le`).
 
-Both rest on the `sorry`-leaves of `Transformer.GPTMini.Block` and
-`Transformer.GPTMini.RMSNorm`, which is where the per-block bounds live.
+Both rest on `Transformer.GPTMini.Block` and `Transformer.GPTMini.RMSNorm`,
+which is where the per-block bounds live.
 -/
 
 import Transformer.GPTMini.Model
@@ -39,19 +42,20 @@ variable (cfg : Config) (params : ModelParams cfg) (eps : ℝ)
 
 /-- The per-block growth constant of `Block.blockForward_growth`:
 
-  `C(p) = ‖W_o‖ √d_model + ‖W_out‖ ‖W_in‖² d_model`.
+  `C(p) = 2 ‖W_o‖ ‖W_qkv‖ √n_heads √d_model + ‖W_out‖ ‖W_in‖² d_model`.
 
 Source: `reference/model.py` (`Block.forward`), through
 `GPTMini.attnSubLayer_bounded` and `GPTMini.ffnSubLayer_bounded`. -/
 noncomputable def blockGrowth (p : BlockParams cfg) : ℝ :=
-  ‖p.attn.W_o‖ * Real.sqrt (cfg.d_model : ℝ)
+  2 * ‖p.attn.W_o‖ * ‖p.attn.W_qkv‖
+      * Real.sqrt (cfg.n_heads : ℝ) * Real.sqrt (cfg.d_model : ℝ)
     + ‖p.ffn.W_out‖ * ‖p.ffn.W_in‖ ^ 2 * (cfg.d_model : ℝ)
 
 /-- The per-block growth constant is non-negative. -/
 theorem blockGrowth_nonneg (p : BlockParams cfg) : 0 ≤ blockGrowth cfg p := by
   unfold blockGrowth
-  have h₁ : 0 ≤ ‖p.attn.W_o‖ * Real.sqrt (cfg.d_model : ℝ) :=
-    mul_nonneg (norm_nonneg _) (Real.sqrt_nonneg _)
+  have h₁ : 0 ≤ 2 * ‖p.attn.W_o‖ * ‖p.attn.W_qkv‖
+      * Real.sqrt (cfg.n_heads : ℝ) * Real.sqrt (cfg.d_model : ℝ) := by positivity
   have h₂ : 0 ≤ ‖p.ffn.W_out‖ * ‖p.ffn.W_in‖ ^ 2 * (cfg.d_model : ℝ) :=
     mul_nonneg (mul_nonneg (norm_nonneg _) (sq_nonneg _)) (Nat.cast_nonneg _)
   linarith
@@ -104,7 +108,8 @@ theorem residual_stream_linear_growth
         rw [hidden]; simp [h]
       rw [hunf, hcast]
       have hgrowth : blockGrowth cfg (params.blocks ⟨L, h⟩)
-          = ‖(params.blocks ⟨L, h⟩).attn.W_o‖ * Real.sqrt (cfg.d_model : ℝ)
+          = 2 * ‖(params.blocks ⟨L, h⟩).attn.W_o‖ * ‖(params.blocks ⟨L, h⟩).attn.W_qkv‖
+              * Real.sqrt (cfg.n_heads : ℝ) * Real.sqrt (cfg.d_model : ℝ)
             + ‖(params.blocks ⟨L, h⟩).ffn.W_out‖ * ‖(params.blocks ⟨L, h⟩).ffn.W_in‖ ^ 2
               * (cfg.d_model : ℝ) := rfl
       have := ih i
