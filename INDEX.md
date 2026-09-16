@@ -1476,28 +1476,29 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`dyck`](src/Transformer/CRASP/Basic.lean#L168) | def |  |
 | [`dyck_mem`](src/Transformer/CRASP/Basic.lean#L171) | theorem | proved |
 
-**[Transformer.CRASP.BoundedExists](src/Transformer/CRASP/BoundedExists.lean)** — 166 lines
+**[Transformer.CRASP.BoundedExists](src/Transformer/CRASP/BoundedExists.lean)** — 175 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`val_countL_succ`](src/Transformer/CRASP/BoundedExists.lean#L31) | theorem | proved |
-| [`val_countL_pos_iff`](src/Transformer/CRASP/BoundedExists.lean#L40) | theorem | proved |
-| [`val_countR_eq_succ`](src/Transformer/CRASP/BoundedExists.lean#L52) | theorem | proved |
-| [`val_countR_pos_iff`](src/Transformer/CRASP/BoundedExists.lean#L67) | theorem | proved |
-| [`exAt`](src/Transformer/CRASP/BoundedExists.lean#L82) | def |  |
-| [`exBefore`](src/Transformer/CRASP/BoundedExists.lean#L86) | def |  |
-| [`exAfter`](src/Transformer/CRASP/BoundedExists.lean#L91) | def |  |
-| [`depth_exAt`](src/Transformer/CRASP/BoundedExists.lean#L95) | theorem | proved |
-| [`depth_exBefore`](src/Transformer/CRASP/BoundedExists.lean#L99) | theorem | proved |
-| [`past_exAt`](src/Transformer/CRASP/BoundedExists.lean#L103) | theorem | proved |
-| [`past_exBefore`](src/Transformer/CRASP/BoundedExists.lean#L106) | theorem | proved |
-| [`pnpFree_exAt`](src/Transformer/CRASP/BoundedExists.lean#L109) | theorem | proved |
-| [`pnpFree_exBefore`](src/Transformer/CRASP/BoundedExists.lean#L112) | theorem | proved |
-| [`depth_exAfter`](src/Transformer/CRASP/BoundedExists.lean#L115) | theorem | proved |
-| [`pnpFree_exAfter`](src/Transformer/CRASP/BoundedExists.lean#L119) | theorem | proved |
-| [`sat_exAt`](src/Transformer/CRASP/BoundedExists.lean#L125) | theorem | proved |
-| [`sat_exBefore`](src/Transformer/CRASP/BoundedExists.lean#L132) | theorem | proved |
-| [`sat_exAfter`](src/Transformer/CRASP/BoundedExists.lean#L146) | theorem | proved |
+| [`countP_range'_add`](src/Transformer/CRASP/BoundedExists.lean#L27) | theorem | proved |
+| [`val_countL_succ`](src/Transformer/CRASP/BoundedExists.lean#L40) | theorem | proved |
+| [`val_countL_pos_iff`](src/Transformer/CRASP/BoundedExists.lean#L49) | theorem | proved |
+| [`val_countR_eq_succ`](src/Transformer/CRASP/BoundedExists.lean#L61) | theorem | proved |
+| [`val_countR_pos_iff`](src/Transformer/CRASP/BoundedExists.lean#L76) | theorem | proved |
+| [`exAt`](src/Transformer/CRASP/BoundedExists.lean#L91) | def |  |
+| [`exBefore`](src/Transformer/CRASP/BoundedExists.lean#L95) | def |  |
+| [`exAfter`](src/Transformer/CRASP/BoundedExists.lean#L100) | def |  |
+| [`depth_exAt`](src/Transformer/CRASP/BoundedExists.lean#L104) | theorem | proved |
+| [`depth_exBefore`](src/Transformer/CRASP/BoundedExists.lean#L108) | theorem | proved |
+| [`past_exAt`](src/Transformer/CRASP/BoundedExists.lean#L112) | theorem | proved |
+| [`past_exBefore`](src/Transformer/CRASP/BoundedExists.lean#L115) | theorem | proved |
+| [`pnpFree_exAt`](src/Transformer/CRASP/BoundedExists.lean#L118) | theorem | proved |
+| [`pnpFree_exBefore`](src/Transformer/CRASP/BoundedExists.lean#L121) | theorem | proved |
+| [`depth_exAfter`](src/Transformer/CRASP/BoundedExists.lean#L124) | theorem | proved |
+| [`pnpFree_exAfter`](src/Transformer/CRASP/BoundedExists.lean#L128) | theorem | proved |
+| [`sat_exAt`](src/Transformer/CRASP/BoundedExists.lean#L134) | theorem | proved |
+| [`sat_exBefore`](src/Transformer/CRASP/BoundedExists.lean#L141) | theorem | proved |
+| [`sat_exAfter`](src/Transformer/CRASP/BoundedExists.lean#L155) | theorem | proved |
 
 **[Transformer.CRASP.Defs](src/Transformer/CRASP/Defs.lean)** — 213 lines
 
@@ -1793,14 +1794,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`getElem?_spread_sub`](src/Transformer/CRASP/PositionalReductionAtomEquiv.lean#L32) | theorem | proved |
 | [`FormP.sat_atomTr`](src/Transformer/CRASP/PositionalReductionAtomEquiv.lean#L68) | theorem | proved |
 
-**[Transformer.CRASP.PositionalReductionCount](src/Transformer/CRASP/PositionalReductionCount.lean)** — 111 lines
+**[Transformer.CRASP.PositionalReductionCount](src/Transformer/CRASP/PositionalReductionCount.lean)** — 102 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`countP_range'_add`](src/Transformer/CRASP/PositionalReductionCount.lean#L32) | theorem | proved |
-| [`sum_map_ite_eq_countP`](src/Transformer/CRASP/PositionalReductionCount.lean#L40) | theorem | proved |
-| [`TermP.val_countL_blockEnd`](src/Transformer/CRASP/PositionalReductionCount.lean#L53) | theorem | proved |
-| [`TermP.val_countL_spread`](src/Transformer/CRASP/PositionalReductionCount.lean#L73) | theorem | proved |
+| [`sum_map_ite_eq_countP`](src/Transformer/CRASP/PositionalReductionCount.lean#L31) | theorem | proved |
+| [`TermP.val_countL_blockEnd`](src/Transformer/CRASP/PositionalReductionCount.lean#L44) | theorem | proved |
+| [`TermP.val_countL_spread`](src/Transformer/CRASP/PositionalReductionCount.lean#L64) | theorem | proved |
 
 **[Transformer.CRASP.PositionalReductionEquiv](src/Transformer/CRASP/PositionalReductionEquiv.lean)** — 154 lines
 

@@ -27,15 +27,6 @@ universe u
 
 variable {σ : Type u}
 
-/-- Counting over `[1, a + b]` is counting over `[1, a]`, and then over
-`[1, b]` shifted by `a`. -/
-theorem countP_range'_add (p : ℕ → Bool) (a b : ℕ) :
-    (List.range' 1 (a + b)).countP p =
-      (List.range' 1 a).countP p + (List.range' 1 b).countP fun j => p (a + j) := by
-  rw [← List.range'_append_1, List.countP_append, Nat.add_comm 1 a,
-    ← List.map_add_range' (a := a) 1 b 1, List.countP_map]
-  rfl
-
 /-- A sum of indicators is a count. -/
 theorem sum_map_ite_eq_countP {α : Type*} (p : α → Bool) :
     ∀ l : List α, (l.map fun x => if p x = true then 1 else 0).sum = l.countP p
