@@ -18,6 +18,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.Parikh` | Parikh vectors, intervals, affix restrictions, and the §4 vocabulary |
 | `CRASP.Alternating` | the separating family `A_k` and its 𝒥-expression characterization |
 | `CRASP.BoundedExists` | `∃ j ≤ i`, `∃ j < i` and `∃ j > i`, written as counts |
+| `CRASP.Indicator` | sums and indicators `ψ ? 1 : 0` in a comparison, at no cost in depth |
 | `CRASP.Subsequence` | the depth-`k` past-only formula testing a subsequence of length `k` |
 | `CRASP.SubsequenceTwoSided` | the depth-`(k+1)` formula testing a subsequence of length `2k+1` from its middle |
 | `CRASP.PiecewiseTestable` | `𝒥`-expressions, `k`-piecewise testability, and `A_k` |
@@ -52,6 +53,7 @@ import Transformer.CRASP.Basic
 import Transformer.CRASP.Parikh
 import Transformer.CRASP.Alternating
 import Transformer.CRASP.BoundedExists
+import Transformer.CRASP.Indicator
 import Transformer.CRASP.Subsequence
 import Transformer.CRASP.SubsequenceTwoSided
 import Transformer.CRASP.PiecewiseTestable
