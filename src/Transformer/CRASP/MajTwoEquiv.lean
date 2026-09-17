@@ -48,8 +48,25 @@ translates to is closed, which is what lets the translation be used on
 languages rather than on formulas with a free variable. -/
 theorem exists_closed_majTwo (k : ℕ) (ψ : Form σ) (hψ : ψ ∈ TLC σ k) :
     ∃ φ' ∈ MajTwo σ (k + 1), φ'.Closed ∧
-      φ'.lang = {w : List σ | ∃ i, 1 ≤ i ∧ i ≤ w.length ∧ ψ.sat w i = true} :=
-  sorry
+      φ'.lang = {w : List σ | ∃ i, 1 ≤ i ∧ i ≤ w.length ∧ ψ.sat w i = true} := by
+  refine ⟨.ex .x (ψ.toMaj .x), ?_, fun v => ?_, ?_⟩
+  · simp only [MajTwo, Set.mem_ofPred_eq, Maj2.depth_ex]
+    have := (ψ.depth_toMaj_le .x).trans hψ.2
+    omega
+  · have hy : (ψ.toMaj .x).freeIn .y = false := ψ.freeIn_toMaj .x
+    cases v <;> simp [Maj2.ex, Maj2.freeIn, Maj2.top, Fin.exists_fin_two, hy]
+  · ext w
+    simp only [Maj2.lang, Maj2.models, Set.mem_ofPred_eq, Maj2.sat_ex, Finset.mem_Icc]
+    refine exists_congr fun i => ?_
+    constructor
+    · rintro ⟨⟨h₁, h₂⟩, h⟩
+      rw [ψ.sat_toMaj w .x _ hψ.1 (by rwa [Function.update_self])
+        (by rwa [Function.update_self]), Function.update_self] at h
+      exact ⟨h₁, h₂, h⟩
+    · rintro ⟨h₁, h₂, h⟩
+      refine ⟨⟨h₁, h₂⟩, ?_⟩
+      rwa [ψ.sat_toMaj w .x _ hψ.1 (by rwa [Function.update_self])
+        (by rwa [Function.update_self]), Function.update_self]
 
 /-- **Theorem `thm:majtwo_to_tlc`.**  Conversely, a `MAJ²_k` formula with one
 free variable `x` is matched by a `TL[◁#,▷#]_k` formula. -/
