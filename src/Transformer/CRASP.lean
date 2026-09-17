@@ -49,6 +49,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.ExtensionsElim` | the sugar eliminated at no cost in depth: `thm:strict` and `?`-elimination |
 | `CRASP.Fixed` | fixed-precision numbers, rounding, and their two characterizing bounds |
 | `CRASP.Transformers` | future-masked rounded transformers and the equivalence with `TL[◁#]` |
+| `CRASP.Collapse` | a conjecture, in no paper: collapse after `L` layers caps the depth at `L` |
 | `CRASP.MajTwo` | `MAJ²`, majority quantification over two variables |
 | `CRASP.MajTwoDepthOne` | why its closed depth-`1` formulas cannot read the last symbol |
 | `CRASP.MajTwoCount` | majorities over lists of formulas, and the masks that turn them into counts |
@@ -113,6 +114,7 @@ import Transformer.CRASP.ExtensionsCounts
 import Transformer.CRASP.ExtensionsElim
 import Transformer.CRASP.Fixed
 import Transformer.CRASP.Transformers
+import Transformer.CRASP.Collapse
 import Transformer.CRASP.MajTwo
 import Transformer.CRASP.MajTwoDepthOne
 import Transformer.CRASP.MajTwoCount
