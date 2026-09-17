@@ -10,9 +10,9 @@ and `thm:strict` for the three counting variants.
 None of the four adds expressive power or depth, and the two lemmas say so.
 To state them one needs a syntax that *has* them, so `FormX`/`TermX` below is
 `Form`/`Term` with the four extra constructors; `Form.toX` embeds the plain
-syntax into it, and `exists_form_of_formX` is both lemmas at once — every
-extended formula is matched by a plain one of the same language and the same
-depth.
+syntax into it, and `exists_form_of_formX` (in `CRASP.ExtensionsElim`) is both
+lemmas at once — every extended formula is matched by a plain one of the same
+language and the same depth.
 
 **A typo.**  Appendix A.3 defines the strict left-counting operator as
 `◁#_<[φ]^{w,i} = |{j ∈ [i, |w|−1] | w,j ⊨ φ}|`.  That range is a *right*-hand
@@ -189,15 +189,6 @@ theorem Form.lang_toX (φ : Form σ) : φ.toX.lang = φ.lang := by
   ext w
   simp only [FormX.lang, Form.lang, FormX.models, Form.models, Set.mem_ofPred_eq,
     φ.sat_toX w w.length]
-
-/-- **Appendix A.3, `thm:strict` together with the `?`-elimination lemma of
-Yang & Chiang.**  Every formula written with the `?` operator, the unmasked
-counting operator `#`, or the strict counting operators `◁#_<` and `▷#_>` can
-be converted into one that uses none of them, defining the same language and
-having the same depth. -/
-theorem exists_form_of_formX (φ : FormX σ) :
-    ∃ ψ : Form σ, ψ.lang = φ.lang ∧ ψ.depth = φ.depth :=
-  sorry
 
 /-- The sugar is not vacuous: `◁#_<[Q_a] < ◁#[Q_a]` says that the current
 position carries an `a`, which is the content of the rewriting rule

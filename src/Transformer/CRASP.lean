@@ -43,9 +43,10 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.FrameShrink` | `lem:cropping` repaired: a box shrinks until given formulas are constant on it |
 | `CRASP.LowerBoundTwoSided` | `thm:TLC_depth` lower bound: depth `k+1` confuses `L_{2k+3}` with `L_{2k+5}`, without `lem:reduction` |
 | `CRASP.TLCDepth` | the two-sided Cropping Lemma refuted, and `thm:TLC_depth` |
-| `CRASP.Extensions` | the sugar of Appendix A.3 as an extended syntax, and its elimination |
+| `CRASP.Extensions` | the sugar of Appendix A.3 as an extended syntax, and its semantics |
 | `CRASP.ExtensionsPieces` | terms as guarded pieces: comparisons, `?` and `+` without subtraction |
 | `CRASP.ExtensionsCounts` | `#`, `◁#_<` and `▷#_>` as guarded pieces, with the position `0` the rules miss |
+| `CRASP.ExtensionsElim` | the sugar eliminated at no cost in depth: `thm:strict` and `?`-elimination |
 | `CRASP.Fixed` | fixed-precision numbers, rounding, and their two characterizing bounds |
 | `CRASP.Transformers` | future-masked rounded transformers and the equivalence with `TL[◁#]` |
 | `CRASP.MajTwo` | `MAJ²`, majority quantification over two variables |
@@ -107,6 +108,7 @@ import Transformer.CRASP.TLCDepth
 import Transformer.CRASP.Extensions
 import Transformer.CRASP.ExtensionsPieces
 import Transformer.CRASP.ExtensionsCounts
+import Transformer.CRASP.ExtensionsElim
 import Transformer.CRASP.Fixed
 import Transformer.CRASP.Transformers
 import Transformer.CRASP.MajTwo
