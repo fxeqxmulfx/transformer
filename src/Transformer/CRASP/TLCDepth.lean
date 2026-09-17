@@ -17,10 +17,12 @@ right.  The separating family is
 and `D_{k+1}` separates depth `k` from depth `k+1`.
 
 `lem:cropping` is false as stated, for the reason `lem:cropping_oneway` is
-(`cropping_unsound`): a count reads the positions before the interval too.
+(`cropping_unsound`): a count reads the positions before the interval too.  The
+lower bound is proved without it, in `CRASP.LowerBoundTwoSided`.
 -/
 
 import Transformer.CRASP.Depth
+import Transformer.CRASP.LowerBoundTwoSided
 
 namespace Transformer
 namespace CRASP
@@ -78,10 +80,18 @@ The positive half is the closing remark of the paper's proof, read in this
 order: `D_{k+1}` is `(2k+1)`-piecewise testable, and
 `lem:piecewise_testable_depth` turns that into a depth-`(k+1)` definition.
 The negative half is the one the paper derives from `lem:cropping`, which is
-false as stated, and only it is left open. -/
+false as stated; it is `not_definable_altPlus_double`, which crops frames of
+fixed Parikh vector instead. -/
 theorem definable_altPlusDouble (k : ℕ) (hk : 0 < k) :
     Definable (altPlusDouble (k + 1)) (k + 1) ∧ ¬ Definable (altPlusDouble (k + 1)) k :=
-  ⟨definable_of_kPiecewiseTestable k _ (kPiecewiseTestable_altPlusDouble k), sorry⟩
+  ⟨definable_of_kPiecewiseTestable k _ (kPiecewiseTestable_altPlusDouble k), by
+    obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_lt hk
+    rw [altPlusDouble_succ, show 2 * (0 + k + 1) + 1 = 2 * k + 3 by omega, Nat.zero_add]
+    exact not_definable_altPlus_double k⟩
+
+/-- The hypothesis of `definable_altPlusDouble` is satisfiable: `D_2 = a⁺b⁺a⁺`
+separates depth `1` from depth `2`. -/
+example : 0 < 1 := Nat.one_pos
 
 end CRASP
 end Transformer
