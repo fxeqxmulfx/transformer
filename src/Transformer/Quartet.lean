@@ -21,14 +21,16 @@ scheme built on it.
 | `Quartet.Section3_NVFP4` | the two quantizers: unbiased `Q_SR`, and the clipping `Q_RTN` of `MS-EDEN` |
 | `Quartet.Section3_Eden` | the randomized Hadamard transform, the EDEN correction, and `MS-EDEN` |
 | `Quartet.Section4_FourOverSix` | the two-branch grid choice, unbiased branch by branch and biased together |
+| `Quartet.AppendixA_Concentration` | what the concentration plot measures: the `1/B` slope, and the plateau of a bias |
 
-Most of the paper is experimental: the pre-training loss gaps of §5, the
-kernel benchmarks of §6 and the concentration plots of Appendix A are
-measurements, not statements, and are not formalized.  What is formalized is
-the arithmetic the guarantees rest on.
+Most of the paper is experimental: the pre-training loss gaps of §5 and the
+kernel benchmarks of §6 are measurements, not statements, and are not
+formalized.  What is formalized is the arithmetic the guarantees rest on, and
+— for Appendix A — what its plot would have to show.
 -/
 
 import Transformer.Quartet.Section3_Grids
 import Transformer.Quartet.Section3_NVFP4
 import Transformer.Quartet.Section3_Eden
 import Transformer.Quartet.Section4_FourOverSix
+import Transformer.Quartet.AppendixA_Concentration
