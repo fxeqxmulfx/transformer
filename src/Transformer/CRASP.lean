@@ -41,6 +41,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.FrameAffine` | inside the middle of a frame, a count is affine in the letter counts before the position |
 | `CRASP.FrameBox` | a comparison of affine functions is constant on a box of the middles of a frame |
 | `CRASP.FrameShrink` | `lem:cropping` repaired: a box shrinks until given formulas are constant on it |
+| `CRASP.LowerBoundTwoSided` | `thm:TLC_depth` lower bound: depth `k+1` confuses `L_{2k+3}` with `L_{2k+5}`, without `lem:reduction` |
 | `CRASP.TLCDepth` | the two-sided Cropping Lemma refuted, and `thm:TLC_depth` |
 | `CRASP.Extensions` | the sugar of Appendix A.3 as an extended syntax, and its elimination |
 | `CRASP.Fixed` | fixed-precision numbers, rounding, and their two characterizing bounds |
@@ -99,6 +100,7 @@ import Transformer.CRASP.FrameCount
 import Transformer.CRASP.FrameAffine
 import Transformer.CRASP.FrameBox
 import Transformer.CRASP.FrameShrink
+import Transformer.CRASP.LowerBoundTwoSided
 import Transformer.CRASP.TLCDepth
 import Transformer.CRASP.Extensions
 import Transformer.CRASP.Fixed
