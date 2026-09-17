@@ -39,6 +39,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.Frame` | formulas constant on the middles of a frame: a prefix, a suffix and a Parikh vector |
 | `CRASP.FrameCount` | counts around the middle of a frame: `▷#` through `◁#`, and nothing read from the middle outside it |
 | `CRASP.FrameAffine` | inside the middle of a frame, a count is affine in the letter counts before the position |
+| `CRASP.FrameBox` | a comparison of affine functions is constant on a box of the middles of a frame |
 | `CRASP.TLCDepth` | the two-sided Cropping Lemma refuted, and `thm:TLC_depth` |
 | `CRASP.Extensions` | the sugar of Appendix A.3 as an extended syntax, and its elimination |
 | `CRASP.Fixed` | fixed-precision numbers, rounding, and their two characterizing bounds |
@@ -95,6 +96,7 @@ import Transformer.CRASP.Prediction
 import Transformer.CRASP.Frame
 import Transformer.CRASP.FrameCount
 import Transformer.CRASP.FrameAffine
+import Transformer.CRASP.FrameBox
 import Transformer.CRASP.TLCDepth
 import Transformer.CRASP.Extensions
 import Transformer.CRASP.Fixed
