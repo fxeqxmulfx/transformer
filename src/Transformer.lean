@@ -1,5 +1,5 @@
 /-
-Formalization of twelve papers on the mathematics of Transformers:
+Formalization of eleven papers on the mathematics of Transformers:
 
 1. Weiss, Goldberg, Yahav — arXiv:2106.06981v2
    "Thinking Like Transformers".
@@ -37,10 +37,6 @@ Formalization of twelve papers on the mathematics of Transformers:
    "Quartet II: Accurate LLM Pre-Training in NVFP4 by Improved Unbiased
    Gradient Estimation".
 
-12. Zhou, Wu, Ni, Zhou, Wen, Zou — arXiv:1606.06160v3
-   "DoReFa-Net: Training Low Bitwidth Convolutional Neural Networks with Low
-   Bitwidth Gradients".
-
 Alongside these, `Transformer.ALM` formalizes the paraboloid-lifted lookup
 used by the append-only lookup machine (Percepta, transformer-vm).
 
@@ -65,5 +61,4 @@ import Transformer.Normalization
 import Transformer.MeanField
 import Transformer.XSA
 import Transformer.Quartet
-import Transformer.DoReFa
 import Transformer.GPTMini
