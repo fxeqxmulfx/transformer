@@ -18,6 +18,7 @@ gradient usable at all.
 | `DoReFa.Section2_BitConv` | the bitwise dot product, its `M · K` bit planes, and a sign slip in footnote 2 |
 | `DoReFa.Section2_Quantize` | `quantize_k`: the grid it rounds onto, its error, and its monotonicity |
 | `DoReFa.Section2_Weights` | `tanh`-squashed `k`-bit weights, the `1`-bit binarization, and `k`-bit activations |
+| `DoReFa.Section2_Gradients` | the gradient quantizer, and the uniform dither that makes it unbiased |
 
 Everything rests on one operator, `quantize_k`, and the paper's claims about
 it are claims about rounding: what grid the output lands on, how far it is from
@@ -28,3 +29,4 @@ discussion; neither is formalized.
 import Transformer.DoReFa.Section2_BitConv
 import Transformer.DoReFa.Section2_Quantize
 import Transformer.DoReFa.Section2_Weights
+import Transformer.DoReFa.Section2_Gradients
