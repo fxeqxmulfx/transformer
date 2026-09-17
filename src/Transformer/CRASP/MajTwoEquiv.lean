@@ -21,7 +21,7 @@ It sits inside an `\iffalse` block in the source and so is not part of the
 paper; like `lem:bb` it is deliberately left out here.
 -/
 
-import Transformer.CRASP.MajTwoDepthOne
+import Transformer.CRASP.MajTwoOfTLC
 
 namespace Transformer
 namespace CRASP
@@ -37,8 +37,10 @@ variable [DecidableEq σ]
 theorem exists_majTwo_of_mem_TLC (k : ℕ) (φ : Form σ) (hφ : φ ∈ TLC σ k) :
     ∃ φ' ∈ MajTwo σ k, φ'.freeIn .y = false ∧
       ∀ (w : List σ) (i : ℕ), 1 ≤ i → i ≤ w.length →
-        φ.sat w i = φ'.sat w (Function.update (fun _ => 0) Var.x i) :=
-  sorry
+        φ.sat w i = φ'.sat w (Function.update (fun _ => 0) Var.x i) := by
+  refine ⟨φ.toMaj .x, (φ.depth_toMaj_le .x).trans hφ.2, φ.freeIn_toMaj .x, fun w i h₁ h₂ => ?_⟩
+  rw [φ.sat_toMaj w .x _ hφ.1 (by rwa [Function.update_self]) (by rwa [Function.update_self]),
+    Function.update_self]
 
 /-- **Proposition `thm:tlc_to_majtwo_closed`.**  When the formula is
 `#[ψ] > 0` — "at least one position satisfies `ψ`" — the `MAJ²` formula it
