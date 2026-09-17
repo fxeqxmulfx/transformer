@@ -156,6 +156,16 @@ theorem covers_condPieces {c : Form σ} {P Q : List (Form σ × Term σ × ℕ)}
       Bool.not_true, Bool.false_and, Bool.false_eq_true] at h
     exact hP z hz h
 
+omit [DecidableEq σ] in
+theorem depth_condPieces_le {d : ℕ} {c : Form σ} {P Q : List (Form σ × Term σ × ℕ)}
+    (hc : c.depth ≤ d) (hP : ∀ x ∈ P, x.1.depth ≤ d ∧ x.2.1.depth ≤ d)
+    (hQ : ∀ x ∈ Q, x.1.depth ≤ d ∧ x.2.1.depth ≤ d) :
+    ∀ x ∈ condPieces c P Q, x.1.depth ≤ d ∧ x.2.1.depth ≤ d := by
+  simp only [condPieces, List.mem_append, List.mem_map]
+  rintro _ (⟨x, hx, rfl⟩ | ⟨x, hx, rfl⟩)
+  · simpa [Form.depth, hc] using hP x hx
+  · simpa [Form.depth, hc] using hQ x hx
+
 /-- `t₁ + t₂`, over pairs of pieces (Appendix A.3). -/
 def addPieces (P Q : List (Form σ × Term σ × ℕ)) : List (Form σ × Term σ × ℕ) :=
   P.flatMap fun x => Q.map fun y => (.and x.1 y.1, .add x.2.1 y.2.1, x.2.2 + y.2.2)
@@ -173,8 +183,20 @@ theorem covers_addPieces {P Q : List (Form σ × Term σ × ℕ)} {w : List σ} 
   simp only [Term.val]
   omega
 
+omit [DecidableEq σ] in
+theorem depth_addPieces_le {d : ℕ} {P Q : List (Form σ × Term σ × ℕ)}
+    (hP : ∀ x ∈ P, x.1.depth ≤ d ∧ x.2.1.depth ≤ d) (hQ : ∀ x ∈ Q, x.1.depth ≤ d ∧ x.2.1.depth ≤ d) :
+    ∀ x ∈ addPieces P Q, x.1.depth ≤ d ∧ x.2.1.depth ≤ d := by
+  simp only [addPieces, List.mem_flatMap, List.mem_map]
+  rintro _ ⟨x, hx, y, hy, rfl⟩
+  have := hP x hx
+  have := hQ y hy
+  simp only [Form.depth, Term.depth]
+  omega
+
 /-- The hypotheses of `sat_ltPieces`, `covers_condPieces` and `covers_addPieces` are
-satisfiable:
+satisfiable (those of the depth bounds are, by the example after
+`depth_ltPieces_le`):
 `1` is represented by `(⊤, 1, 0)`. -/
 example : Covers [(Form.topAt 0, (.one : Term Bool), 0)] [] 0 1 :=
   ⟨⟨_, List.mem_singleton_self _, Form.sat_topAt ..⟩, fun x hx _ => by

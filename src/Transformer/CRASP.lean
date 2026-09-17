@@ -45,6 +45,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.TLCDepth` | the two-sided Cropping Lemma refuted, and `thm:TLC_depth` |
 | `CRASP.Extensions` | the sugar of Appendix A.3 as an extended syntax, and its elimination |
 | `CRASP.ExtensionsPieces` | terms as guarded pieces: comparisons, `?` and `+` without subtraction |
+| `CRASP.ExtensionsCounts` | `#`, `◁#_<` and `▷#_>` as guarded pieces, with the position `0` the rules miss |
 | `CRASP.Fixed` | fixed-precision numbers, rounding, and their two characterizing bounds |
 | `CRASP.Transformers` | future-masked rounded transformers and the equivalence with `TL[◁#]` |
 | `CRASP.MajTwo` | `MAJ²`, majority quantification over two variables |
@@ -105,6 +106,7 @@ import Transformer.CRASP.LowerBoundTwoSided
 import Transformer.CRASP.TLCDepth
 import Transformer.CRASP.Extensions
 import Transformer.CRASP.ExtensionsPieces
+import Transformer.CRASP.ExtensionsCounts
 import Transformer.CRASP.Fixed
 import Transformer.CRASP.Transformers
 import Transformer.CRASP.MajTwo
