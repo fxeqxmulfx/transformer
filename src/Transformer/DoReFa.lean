@@ -19,6 +19,7 @@ gradient usable at all.
 | `DoReFa.Section2_Quantize` | `quantize_k`: the grid it rounds onto, its error, and its monotonicity |
 | `DoReFa.Section2_Weights` | `tanh`-squashed `k`-bit weights, the `1`-bit binarization, and `k`-bit activations |
 | `DoReFa.Section2_Gradients` | the gradient quantizer, and the uniform dither that makes it unbiased |
+| `DoReFa.Section2_Fusing` | what monotonicity buys: rounding by comparisons, and commuting with `max` |
 
 Everything rests on one operator, `quantize_k`, and the paper's claims about
 it are claims about rounding: what grid the output lands on, how far it is from
@@ -30,3 +31,4 @@ import Transformer.DoReFa.Section2_BitConv
 import Transformer.DoReFa.Section2_Quantize
 import Transformer.DoReFa.Section2_Weights
 import Transformer.DoReFa.Section2_Gradients
+import Transformer.DoReFa.Section2_Fusing
