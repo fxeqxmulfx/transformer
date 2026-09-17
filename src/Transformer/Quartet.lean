@@ -19,6 +19,7 @@ scheme built on it.
 | --- | --- |
 | `Quartet.Section3_Grids` | the E2M1 and E4M3 grids, `RTN`, and `SR` with its coin |
 | `Quartet.Section3_NVFP4` | the two quantizers: unbiased `Q_SR`, and the clipping `Q_RTN` of `MS-EDEN` |
+| `Quartet.Section3_Eden` | the randomized Hadamard transform, the EDEN correction, and `MS-EDEN` |
 
 Most of the paper is experimental: the pre-training loss gaps of §5, the
 kernel benchmarks of §6 and the concentration plots of Appendix A are
@@ -28,3 +29,4 @@ the arithmetic the guarantees rest on.
 
 import Transformer.Quartet.Section3_Grids
 import Transformer.Quartet.Section3_NVFP4
+import Transformer.Quartet.Section3_Eden
