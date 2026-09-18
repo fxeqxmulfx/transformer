@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["alm-compile", "alm-hull", "alm-model", "alm-schedule", "alm-vm"]
+members = ["alm-compile", "alm-hull", "alm-margin", "alm-model", "alm-schedule", "alm-vm"]
 
 [workspace.package]
 version = "0.1.0"

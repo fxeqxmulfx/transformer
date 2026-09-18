@@ -32,6 +32,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "alm-margin"
+version = "0.1.0"
+
+[[package]]
 name = "alm-model"
 version = "0.1.0"
 dependencies = [
