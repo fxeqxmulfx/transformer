@@ -161,6 +161,24 @@ pub fn last_resolving_position(r: Recency, f: Format, addr: u64) -> Option<u64> 
     Some(lo)
 }
 
+/// **The largest address an inexact query still reaches**, which is lower than
+/// the wall an exact one reaches -- `2^25 = 33 554 431` against
+/// `crate::ceiling::score_wall`'s `94 906 266` in float64, a factor of
+/// `2^1.5`.
+///
+/// A query off its integer value by `d` needs `2|d| + span < 1` over the
+/// reals, and over floats it needs the rounding of `a^2` to fit in what is
+/// left too.  Allowing two ulps for that (measured: `1.12` suffices), the
+/// allowance survives while `2 * ulp(a^2) < (1 - span) / 2`, that is while
+/// `a^2 < 2^(m - 3)`.  Above this the address space is still addressable, but
+/// only by a query that is exactly its integer -- so the top `2^1.5` of the
+/// range is closed to anything a network computes approximately.
+pub fn drift_wall(f: Format) -> u64 {
+    let bound = (1.0 - recency_span()) / 2.0;
+    debug_assert!((0.2835..0.2836).contains(&bound));
+    (2.0f64).powf((f.mantissa as f64 - 3.0) / 2.0).ceil() as u64 - 1
+}
+
 /// **The longest horizon a linear term may span at this address**, which is
 /// [`levels`] and so the budget itself.  The logarithm is what costs the rest.
 pub fn largest_horizon(f: Format, addr: u64) -> u64 {
@@ -315,6 +333,84 @@ mod tests {
                 assert_eq!(w32.1, 11, "f32 should still resolve at {addr}");
             }
         }
+    }
+
+    /// **A recency term cannot change which address is retrieved**, and what
+    /// the drift is left with is the mantissa again.
+    ///
+    /// This is the scale separation the span exists for, and it is quantified
+    /// over the term's *values*, not over the two variants: any recency
+    /// feature whatever, so long as it stays inside `[0, span)`, leaves the
+    /// address alone.  The gap between distinct integer keys is `1`, a drift
+    /// `d` eats `2|d|` of it, and `span` has to fit in what is left, which
+    /// over the reals is `|d| < (1 - span) / 2 = 0.2836`.
+    ///
+    /// Over float64 it is a little less, and the measurement is how much: the
+    /// worst drift that loses the address sits within `1.12 * ulp(a^2)` of the
+    /// bound, scanning in eighths of an ulp, so `2 * ulp(a^2)` is safe with
+    /// margin.  That is invisible below address `10^5` and eleven percent of
+    /// the budget at `10^7`.  The same mantissa that bounds the address space
+    /// (`crate::ceiling`) and the rewrite depth ([`levels`]) bounds the
+    /// query's accuracy too: three consumers, one budget.
+    ///
+    /// The loss is not monotone in the drift -- at address `10^6` the address
+    /// is lost at `0.283474` and held again at `0.283482` -- so a bisection on
+    /// "does it still hold" finds some crossing and not the first one, and the
+    /// scan below is a scan for that reason.  Nor is the allowance
+    /// conservative: two ulps the other side of the bound the neighbour takes
+    /// the query at every address here.
+    #[test]
+    fn recency_never_moves_the_address() {
+        let span = recency_span();
+        let bound = (1.0 - span) / 2.0;
+        assert!(
+            (0.2835..0.2836).contains(&bound),
+            "2|d| + span < 1 leaves {bound}"
+        );
+        let score = |k: f64, term: f64, q: f64| 2.0 * k * q - k * k + term;
+        assert_eq!(drift_wall(F64), 33_554_431);
+        assert_eq!(drift_wall(crate::ceiling::F32), 1448);
+        for a in [64.0f64, 1024.0, 65536.0, 1e6, 1e7, 3.3e7, drift_wall(F64) as f64] {
+            // the address carries the least recency there is, every rival the
+            // most: the worst case the span can produce.
+            let holds = |d: f64| {
+                let q = a + d;
+                let here = score(a, 0.0, q);
+                [-3.0f64, -2.0, -1.0, 1.0, 2.0, 3.0]
+                    .iter()
+                    .all(|&off| score(a + off, span, q) < here)
+            };
+            let u = ulp_at(a * a, F64.mantissa);
+            let usable = bound - 2.0 * u;
+            for i in 0..=400 {
+                for sgn in [-1.0f64, 1.0] {
+                    let d = sgn * usable * i as f64 / 400.0;
+                    assert!(holds(d), "address {a} lost the address at drift {d}");
+                }
+            }
+            // and two ulps the other side of the bound the neighbour takes it,
+            // so the allowance is not conservative either.
+            let past = bound + 2.0 * u + 1e-12;
+            assert!(
+                !holds(past) && !holds(-past),
+                "at {a} the bound (1 - span) / 2 is conservative"
+            );
+        }
+        // and the wall is where the allowance runs out, not somewhere near it
+        let bound_of = |a: u64| 2.0 * ulp_at((a * a) as f64, F64.mantissa);
+        assert!(bound_of(drift_wall(F64)) < bound);
+        assert!(bound_of(drift_wall(F64) + 1) > bound);
+    }
+
+    /// And it is the span that does it, not the arithmetic: at `alpha = 2.4`
+    /// the same term reaches past the unit gap and the neighbour wins.
+    #[test]
+    fn an_oversized_span_does_move_it() {
+        let q = 1000.0f64;
+        let score = |k: f64, term: f64| 2.0 * k * q - k * k + term;
+        let here = score(1000.0, 0.0);
+        assert!(score(1001.0, recency_span()) < here, "0.4328 is not enough");
+        assert!(score(1001.0, 1.2) > here, "1.2 is");
     }
 
     /// **The same head, late in the sequence, is where the two terms part.**

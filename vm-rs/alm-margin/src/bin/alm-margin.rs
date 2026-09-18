@@ -4,7 +4,7 @@
 use alm_margin::ceiling::{first_failing_key_f32, score_wall, F32, F64, FORMATS};
 use alm_margin::drift::{lean_bound, margin_of, Rng};
 use alm_margin::rewrite::{
-    addresses_for, capacity, largest_horizon, last_resolving_position, levels, Recency,
+    addresses_for, capacity, drift_wall, largest_horizon, last_resolving_position, levels, Recency,
 };
 use alm_margin::DRIFT_MARGIN;
 
@@ -68,7 +68,14 @@ fn main() {
         );
     }
     println!("\n  float32 holds 4096 addresses, not 2^24: the score squares the key.");
-    println!("  this is what forces KEY_OFFSET, and it is not a drift problem.");
+    println!("  this is what forces KEY_OFFSET, and it is not a drift problem.\n");
+    println!(
+        "  and an inexact query reaches lower still -- {} (f32), {} (f64) --",
+        drift_wall(F32),
+        drift_wall(F64)
+    );
+    println!("  because 2*ulp(a^2) has to fit inside the 0.2836 the span leaves");
+    println!("  the drift.  the top 2^1.5 of the range wants an exact integer.");
 
     println!("\n\nrewriting an address: the recency term shares that same mantissa\n");
     println!(
