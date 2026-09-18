@@ -4,7 +4,7 @@
 use alm_margin::ceiling::{first_failing_key_f32, score_wall, F32, F64, FORMATS};
 use alm_margin::drift::{lean_bound, margin_of, Rng};
 use alm_margin::rewrite::{
-    addresses_for, capacity, last_resolving_position, levels, linear_capacity,
+    addresses_for, capacity, largest_horizon, last_resolving_position, levels, Recency,
 };
 use alm_margin::DRIFT_MARGIN;
 
@@ -85,8 +85,8 @@ fn main() {
             a,
             levels(F32, a),
             levels(F64, a),
-            show(last_resolving_position(F32, a)),
-            show(last_resolving_position(F64, a)),
+            show(last_resolving_position(Recency::InvLogPos, F32, a)),
+            show(last_resolving_position(Recency::InvLogPos, F64, a)),
         );
     }
     println!(
@@ -103,10 +103,24 @@ fn main() {
     }
     println!("\n  last pos is what the shipped inv_log_pos actually delivers: it");
     println!("  saturates, so consecutive rewrites stop resolving long before the");
-    println!("  budget runs out.  a linear recency term of the same span would");
+    println!("  budget runs out.  a linear recency term of the same span reaches");
+    println!("  it exactly, and costs one thing: the horizon is named in advance.\n");
+
     println!(
-        "  reach it -- {} rewrites at address 10^5 in float64, not {}.",
-        linear_capacity(F64, 100_000),
-        show(last_resolving_position(F64, 100_000))
+        "{:>10} {:>14} {:>16} {:>10}",
+        "address", "inv_log_pos", "linear horizon", "gained"
     );
+    for a in [1024u64, 4096, 100_000, 10_000_000] {
+        let h = largest_horizon(F64, a);
+        let got = last_resolving_position(Recency::InvLogPos, F64, a);
+        let ratio = match got {
+            Some(p) if p > 0 => format!("{:.0}x", h as f64 / p as f64),
+            _ => "-".to_string(),
+        };
+        assert_eq!(
+            last_resolving_position(Recency::Linear { horizon: h }, F64, a),
+            Some(h - 1)
+        );
+        println!("{:>10} {:>14} {:>16} {:>10}", a, show(got), h, ratio);
+    }
 }

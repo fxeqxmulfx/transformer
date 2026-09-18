@@ -37,4 +37,7 @@ pub mod rewrite;
 
 pub use ceiling::{first_failing_key_f32, score_wall, wall_f32, wall_f64, Format};
 pub use drift::{flip_point, margin_of, winner_at, Margin, DRIFT_MARGIN};
-pub use rewrite::{capacity, last_resolving_position, levels, recency_span, RECENCY_ALPHA};
+pub use rewrite::{
+    capacity, largest_horizon, last_resolving_position, levels, recency_span, Recency,
+    RECENCY_ALPHA,
+};

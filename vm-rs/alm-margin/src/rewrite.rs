@@ -28,15 +28,19 @@
 //! rewritten once, or 60 addresses rewritten a thousand times, and not both.
 //! [`capacity`] is that constant and [`levels`] the count at one address.
 //!
-//! **And `inv_log_pos` saturates, so the real figure is far below that.**  The
-//! bound above assumes the whole span is available, which would need the writes
-//! spaced to use it.  Consecutive positions are what actually happens, and
-//! there the increment is `LATEST_ALPHA / ((p + 2) ln^2(p + 2))`, which decays
-//! while `ulp(a^2)` does not.  [`last_resolving_position`] measures it: at
-//! address `10^5` in float64 a rewrite stops outranking its predecessor after
-//! position **2552**, ninety times below the `227 000` the budget allows.
-//! [`linear_capacity`] is the term that would not do that -- uniform increments
-//! `span / p_max` -- and it reaches the budget exactly.
+//! **And `inv_log_pos` saturates, so the shipped term reaches nowhere near
+//! it.**  The bound above assumes the whole span is available, which would need
+//! the writes spaced to use it.  Consecutive positions are what actually
+//! happens, and there the increment is `LATEST_ALPHA / ((p + 2) ln^2(p + 2))`,
+//! which decays while `ulp(a^2)` does not.
+//!
+//! [`Recency`] is the choice this costs: [`Recency::InvLogPos`] is what ships,
+//! [`Recency::Linear`] spends the same span in equal steps over a horizon fixed
+//! in advance.  Neither is free of the budget -- [`levels`] bounds both -- but
+//! the linear term reaches it, and the logarithm stops at a ninetieth of it.
+//! [`last_resolving_position`] is the measurement: at address `10^5` in float64
+//! the shipped term stops ordering rewrites after position **2552**, and a
+//! linear term of the same span orders all **226 916** the budget allows.
 
 use crate::ceiling::Format;
 
@@ -49,12 +53,54 @@ pub fn inv_log_pos(p: u64) -> f64 {
     1.0 / std::f64::consts::LN_2 - 1.0 / ((p + 2) as f64).ln()
 }
 
+/// **Which recency feature the key carries.**  The compiler scales whatever
+/// sits in this dimension by `LATEST_ALPHA`, so both variants are functions of
+/// the position into `[0, 1 / ln 2)` and the choice does not touch the weights
+/// -- only the positional feature fed in at inference.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum Recency {
+    /// What ships: `1/ln 2 - 1/ln(p + 2)`.  Needs no horizon, and saturates.
+    InvLogPos,
+    /// `(p / horizon) / ln 2`, held at `1 / ln 2` from `horizon` on.  Equal
+    /// steps, so it orders every rewrite up to the horizon and none after it;
+    /// the price of not saturating is having to name the horizon in advance.
+    Linear { horizon: u64 },
+}
+
+impl Recency {
+    /// The value of the feature dimension at this position.
+    #[inline]
+    pub fn feature(self, p: u64) -> f64 {
+        match self {
+            Recency::InvLogPos => inv_log_pos(p),
+            Recency::Linear { horizon } => {
+                let h = horizon.max(1) as f64;
+                (p as f64 / h).min(1.0) / std::f64::consts::LN_2
+            }
+        }
+    }
+
+    /// What the feature contributes to `ky`, after the compiler's scaling.
+    #[inline]
+    pub fn term(self, p: u64) -> f64 {
+        RECENCY_ALPHA * self.feature(p)
+    }
+
+    /// How much a rewrite at `p + 1` outranks the write at `p` by, before the
+    /// rounding of `-k^2` is allowed to eat it.
+    #[inline]
+    pub fn step(self, p: u64) -> f64 {
+        self.term(p + 1) - self.term(p)
+    }
+}
+
 /// The whole range the recency term can move a key through: `0.4328`.
 ///
 /// It has to stay below the unit gap between distinct integer keys, which is
 /// what makes `0.3` a safe choice and not a tuned one -- with the drift margin
 /// of `crate::drift`, the condition on a query drift `d` is
-/// `2|d| + span < 1`, so `|d| < 0.284`.
+/// `2|d| + span < 1`, so `|d| < 0.284`.  Both variants of [`Recency`] spend
+/// exactly this much.
 pub fn recency_span() -> f64 {
     RECENCY_ALPHA / std::f64::consts::LN_2
 }
@@ -70,8 +116,8 @@ pub fn ulp_at(x: f64, mantissa: u32) -> f64 {
 }
 
 /// **How many times one address can be rewritten and still be told apart**, if
-/// the writes were spaced to use the whole recency range.  An upper bound;
-/// [`last_resolving_position`] is what the shipped term delivers.
+/// the writes were spaced to use the whole recency range.  The budget both
+/// variants of [`Recency`] live under; only the linear one attains it.
 pub fn levels(f: Format, addr: u64) -> f64 {
     let a = addr as f64;
     recency_span() / ulp_at(a * a, f.mantissa)
@@ -87,20 +133,26 @@ pub fn addresses_for(f: Format, rewrites: u64) -> u64 {
     (capacity(f) / rewrites.max(1) as f64).sqrt() as u64
 }
 
-/// **The last position at which a rewrite still outranks the write before it**,
-/// under the shipped `inv_log_pos`.  `Some(0)` means only a rewrite at the
-/// very first position resolves; `None` means not even that one does.
-pub fn last_resolving_position(f: Format, addr: u64) -> Option<u64> {
+/// **The last position at which a rewrite still outranks the write before it.**
+/// `Some(0)` means only a rewrite at the very first position resolves; `None`
+/// means not even that one does.
+///
+/// For [`Recency::Linear`] the steps are equal, so the answer is the horizon
+/// or nothing at all -- which is the point: the horizon is a choice, and
+/// [`largest_horizon`] says how large a choice the address allows.
+pub fn last_resolving_position(r: Recency, f: Format, addr: u64) -> Option<u64> {
     let a = addr as f64;
     let u = ulp_at(a * a, f.mantissa);
-    let resolves = |p: u64| RECENCY_ALPHA * (inv_log_pos(p + 1) - inv_log_pos(p)) > u;
-    if !resolves(0) {
+    if r.step(0) <= u {
         return None;
+    }
+    if let Recency::Linear { horizon } = r {
+        return Some(horizon.max(1) - 1);
     }
     let (mut lo, mut hi) = (0u64, 1u64 << 40);
     while lo + 1 < hi {
         let mid = lo + (hi - lo) / 2;
-        if resolves(mid) {
+        if r.step(mid) > u {
             lo = mid;
         } else {
             hi = mid;
@@ -109,37 +161,36 @@ pub fn last_resolving_position(f: Format, addr: u64) -> Option<u64> {
     Some(lo)
 }
 
-/// And the same for a recency term that does not saturate: `span * p / p_max`,
-/// whose increments are all `span / p_max`.  It resolves every position up to
-/// [`levels`], which is the budget -- the logarithm is what costs the rest.
-pub fn linear_capacity(f: Format, addr: u64) -> u64 {
+/// **The longest horizon a linear term may span at this address**, which is
+/// [`levels`] and so the budget itself.  The logarithm is what costs the rest.
+pub fn largest_horizon(f: Format, addr: u64) -> u64 {
     levels(f, addr) as u64
 }
 
 /// The score of a lifted key at a parabolic query, in float32, exactly as
 /// `_to_2d_key` and `_to_2d_query` build them.
 #[inline]
-pub fn score_f32(addr: i64, pos: u64, q: i64) -> f32 {
+pub fn score_f32(r: Recency, addr: i64, pos: u64, q: i64) -> f32 {
     let k = addr as f32;
     let kx = 2.0f32 * k;
-    let ky = -k * k + (RECENCY_ALPHA as f32) * (inv_log_pos(pos) as f32);
+    let ky = -k * k + (r.term(pos) as f32);
     kx * (q as f32) + ky
 }
 
 /// The same in float64.
 #[inline]
-pub fn score_f64(addr: i64, pos: u64, q: i64) -> f64 {
+pub fn score_f64(r: Recency, addr: i64, pos: u64, q: i64) -> f64 {
     let k = addr as f64;
-    2.0 * k * (q as f64) - k * k + RECENCY_ALPHA * inv_log_pos(pos)
+    2.0 * k * (q as f64) - k * k + r.term(pos)
 }
 
 /// Which `(address, position)` a query retrieves, in one format or the other.
-pub fn winner(cells: &[(i64, u64)], q: i64, f: Format) -> Option<(i64, u64)> {
+pub fn winner(r: Recency, cells: &[(i64, u64)], q: i64, f: Format) -> Option<(i64, u64)> {
     let score = |c: &(i64, u64)| -> f64 {
         if f.mantissa <= 24 {
-            score_f32(c.0, c.1, q) as f64
+            score_f32(r, c.0, c.1, q) as f64
         } else {
-            score_f64(c.0, c.1, q)
+            score_f64(r, c.0, c.1, q)
         }
     };
     cells
@@ -156,10 +207,26 @@ mod tests {
     use super::*;
     use crate::ceiling::{F32, F64};
 
+    const SHIPPED: Recency = Recency::InvLogPos;
+
     #[test]
     fn the_span_stays_under_the_unit_gap() {
         assert!(recency_span() < 1.0);
         assert!((recency_span() - 0.4328).abs() < 1e-4);
+    }
+
+    /// Both variants spend the same span, so the drift condition does not know
+    /// which one is in the key.
+    #[test]
+    fn both_terms_span_the_same() {
+        let lin = Recency::Linear { horizon: 1000 };
+        assert!((lin.term(1000) - recency_span()).abs() < 1e-12);
+        assert_eq!(lin.term(5000), lin.term(1000));
+        assert_eq!(lin.term(0), 0.0);
+        assert!(SHIPPED.term(u32::MAX as u64) < recency_span());
+        for p in [0u64, 1, 7, 100] {
+            assert!(SHIPPED.step(p) > 0.0 && SHIPPED.step(p) < recency_span());
+        }
     }
 
     #[test]
@@ -192,23 +259,42 @@ mod tests {
         assert!(levels(F64, 100_000) > 2.2e5);
     }
 
-    /// **The saturation.**  The budget allows `227 000` rewrites at address
+    /// **The saturation.**  The budget allows `226 916` rewrites at address
     /// `10^5` in float64; consecutive positions stop resolving at `2552`.
     #[test]
     fn inv_log_pos_saturates() {
-        assert_eq!(last_resolving_position(F32, 64), Some(40));
-        assert_eq!(last_resolving_position(F32, 256), Some(5));
+        assert_eq!(last_resolving_position(SHIPPED, F32, 64), Some(40));
+        assert_eq!(last_resolving_position(SHIPPED, F32, 256), Some(5));
         // only the first position resolves at 1024, and none at all at the wall
-        assert_eq!(last_resolving_position(F32, 1024), Some(0));
-        assert_eq!(last_resolving_position(F32, 4096), None);
-        assert_eq!(last_resolving_position(F64, 100_000), Some(2552));
-        assert_eq!(last_resolving_position(F64, 10_000_000), Some(3));
+        assert_eq!(last_resolving_position(SHIPPED, F32, 1024), Some(0));
+        assert_eq!(last_resolving_position(SHIPPED, F32, 4096), None);
+        assert_eq!(last_resolving_position(SHIPPED, F64, 100_000), Some(2552));
+        assert_eq!(last_resolving_position(SHIPPED, F64, 10_000_000), Some(3));
 
-        let ratio = linear_capacity(F64, 100_000) as f64
-            / last_resolving_position(F64, 100_000).unwrap() as f64;
+        let ratio = largest_horizon(F64, 100_000) as f64
+            / last_resolving_position(SHIPPED, F64, 100_000).unwrap() as f64;
         assert!(
             ratio > 80.0,
             "linear recency should be ~90x better, got {ratio}"
+        );
+    }
+
+    /// **And the linear term reaches the budget, to the position.**  At the
+    /// budget's own horizon every step still resolves; one address wider, none
+    /// of them does.
+    #[test]
+    fn linear_recency_attains_the_budget() {
+        let addr = 100_000u64;
+        let h = largest_horizon(F64, addr);
+        assert_eq!(h, 226_916);
+        assert_eq!(
+            last_resolving_position(Recency::Linear { horizon: h }, F64, addr),
+            Some(h - 1)
+        );
+        assert_eq!(
+            last_resolving_position(Recency::Linear { horizon: h + 1 }, F64, addr),
+            None,
+            "one step past the budget nothing resolves at all"
         );
     }
 
@@ -219,14 +305,40 @@ mod tests {
     fn the_later_write_wins_only_in_float64() {
         for addr in [64i64, 256, 1024, 1905, 4096] {
             let cells = [(addr, 10u64), (addr, 11), (addr - 1, 12), (addr + 1, 13)];
-            assert_eq!(winner(&cells, addr, F64), Some((addr, 11)), "f64 at {addr}");
-            let w32 = winner(&cells, addr, F32).unwrap();
+            let w = winner(SHIPPED, &cells, addr, F64);
+            assert_eq!(w, Some((addr, 11)), "f64 at {addr}");
+            let w32 = winner(SHIPPED, &cells, addr, F32).unwrap();
             assert_eq!(w32.0, addr, "f32 lost the address itself at {addr}");
             if addr >= 256 {
                 assert_eq!(w32.1, 10, "f32 should be stale at {addr}");
             } else {
                 assert_eq!(w32.1, 11, "f32 should still resolve at {addr}");
             }
+        }
+    }
+
+    /// **The same head, late in the sequence, is where the two terms part.**
+    /// At address `10^5` and position `2 * 10^5` the shipped term has long
+    /// saturated and the head returns the stale write; the linear term of the
+    /// same span returns the fresh one.
+    #[test]
+    fn late_rewrites_need_the_linear_term() {
+        let addr = 100_000i64;
+        let lin = Recency::Linear {
+            horizon: largest_horizon(F64, addr as u64),
+        };
+        for p in [10_000u64, 50_000, 200_000, 226_000] {
+            let cells = [(addr, p), (addr, p + 1)];
+            assert_eq!(
+                winner(SHIPPED, &cells, addr, F64),
+                Some((addr, p)),
+                "inv_log_pos should be stale at {p}"
+            );
+            assert_eq!(
+                winner(lin, &cells, addr, F64),
+                Some((addr, p + 1)),
+                "linear should be fresh at {p}"
+            );
         }
     }
 }
