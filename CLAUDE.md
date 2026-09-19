@@ -40,6 +40,68 @@ every declaration, its module, and whether it is `sorry` / `vacuous` /
 `placeholder`. Regenerate it in the same commit as any change under `src/`;
 never edit it by hand. Read it first to find where something lives.
 
+## Only theorems
+
+Every statement of a paper is a `theorem`, and its truth is the `sorry` count's
+business. Never a `def _ : Prop`, never an `axiom`, never a claim parked in a
+`structure` field for the reader to assume: those are invisible to the sorry
+count and to `#print axioms`, and what is invisible cannot be trusted, used, or
+built on. Open problems and conjectures are theorems too — open is a kind of
+unproved, and `sorry` is where unproved is recorded.
+
+A `def _ : Prop` survives only as a genuine predicate of its arguments: the
+vocabulary a theorem is written in, not a claim. When something looks like a
+predicate only because one of its parameters is unconstrained, it is not a
+statement at all, and there are exactly two honest endings —
+
+- pin the parameter down by the property that characterizes it, and state the
+  theorem (`IsUniformOn`, `IsEnergyGradNorm`, `IsCapMin`);
+- or prove it false as written (`not_forall_wToBall`,
+  `not_forall_raspGeneralizationConjecture`).
+
+## The tree must be valid, on the three axioms and no more
+
+`lake build` warns only about a declaration that contains `sorry` *itself*. A
+theorem that merely *uses* a sorried theorem elaborates in silence, and
+`INDEX.md` counts it as proved. `#print axioms` sees through that, and
+`scripts/Axioms.lean` runs it over every `Transformer.*` declaration at once:
+
+```
+lake env lean scripts/Axioms.lean
+```
+
+Three numbers, to be read before every commit, next to `scripts/index.py`:
+
+- `sorry` — the declaration is sorried itself. This is the debt of `INDEX.md`;
+  it only ever goes down.
+- `rests` — proved, but on top of a sorried one: `#print axioms` shows
+  `sorryAx`. **Must be 0.** A result needing an unproved input takes that input
+  as an explicit hypothesis, exactly as an assumption is carried instead of an
+  `axiom`. Then it is genuinely proved and its dependence is legible in its own
+  signature, not hidden one import away.
+- `axiom` — anything outside `propext`, `Classical.choice`, `Quot.sound`.
+  **Must be 0.** Those three are the minimum Mathlib itself runs on; every
+  further axiom is an assumption in disguise.
+
+Current: 122 `sorry` · 5 resting on a sorry · 0 extra axioms. The five are the
+standing exception, to be cleared by moving their unproved input into a
+hypothesis; until then no new one may appear.
+
+## When the paper is wrong
+
+A proof that will not go through is evidence about the paper, not only about
+the proof. Decide which, and never let a bad statement sit under a `sorry` that
+will never close.
+
+- **Fixable** — a missing hypothesis, a wrong constant, an index off by one:
+  fix it. State the corrected theorem, and record in its docstring what the
+  source says and what was changed, so the deviation is auditable.
+- **Not fixable** — the statement is false as written: refute it. A proved
+  counterexample theorem, a docstring naming the claim it kills, and move on.
+
+Never weaken a statement until it becomes provable and keep the paper's name on
+it; that is a third, silent way of lying about what is proved.
+
 ## No decorative proofs
 
 Forbidden:
@@ -73,9 +135,9 @@ Required:
 
 Current debt, per `INDEX.md`: 122 theorems using `sorry`, 0 vacuous statements,
 0 placeholder definitions. Never add to these counts; the index makes any
-increase visible. The one admissible increase is turning a statement-`Prop` into
-a sorried theorem: that debt already existed, hidden, and the number here is
-corrected in the same commit.
+increase visible. There is no longer an admissible increase: the conversion of
+statement-`Prop`s into sorried theorems is finished, and every number above may
+now only fall.
 
 ## Finding lemmas
 
@@ -101,6 +163,7 @@ of work: never stage them here.
 ```
 lake build [Transformer.X]
 #print axioms F                  -- expect [propext, Classical.choice, Quot.sound]
+lake env lean scripts/Axioms.lean -- the same over the whole tree; `rests` = 0
 python3 scripts/index.py         -- regenerate INDEX.md; run before committing
 grep -rn 'native_decide\|^axiom \|linter\..* false' src
 ```
