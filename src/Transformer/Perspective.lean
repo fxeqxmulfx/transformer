@@ -21,7 +21,10 @@ import Transformer.Perspective.Section2_GradientFlow
 import Transformer.Perspective.Section2_ParticleFlow
 import Transformer.Perspective.Section3_SmallBeta
 import Transformer.Perspective.Beta0Field
+import Transformer.Perspective.Softmax
 import Transformer.Perspective.Beta0Gronwall
+import Transformer.Perspective.SAField
+import Transformer.Perspective.SALipschitz
 import Transformer.Perspective.Section3_Gronwall
 import Transformer.Perspective.Section4_LargeBeta
 import Transformer.Perspective.MinCurve
@@ -47,6 +50,7 @@ import Transformer.Perspective.AppendixB_MetricHess
 import Transformer.Perspective.DoubleSum
 import Transformer.Perspective.AppendixC_BetaTiny
 import Transformer.Perspective.Gronwall
+import Transformer.Perspective.AppendixD_Stability
 import Transformer.Perspective.AppendixD_PhaseTransition
 import Transformer.Perspective.AppendixD_Alpha
 import Transformer.Perspective.AppendixD_AlphaDeriv

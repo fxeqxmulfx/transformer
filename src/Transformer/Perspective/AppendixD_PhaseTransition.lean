@@ -6,12 +6,12 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 The first half of Appendix D of the survey:
 
-* `eq: stability.4ortho`  — the Grönwall stability estimate for `SA`,
 * `eq: almost.ortho.vec`  — almost-orthogonality of a uniform sample (Lévy),
-* `e:shortdist`           — the distance between `x_i` and its orthogonal
-                            approximation `y_i`,
 * `e:ineqfirstpart`       — the first half of `eq: upto-t`,
 * `eq: d.large`           — the definition of `d⋆(n, β)`.
+
+`eq: stability.4ortho` and the `e:shortdist` it specializes to are in
+`Perspective.AppendixD_Stability`.
 
 The decay of `1 - γ_β(t)`, `e:ybetacloseto1`, is in
 `Perspective.AppendixD_Ybeta`.  The lower bound on the smallest coordinate
@@ -20,6 +20,7 @@ in `Perspective.AppendixD_Assembly`.
 -/
 
 import Transformer.Basic
+import Transformer.Perspective.AppendixD_Stability
 import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section5_HighD
 import Transformer.Perspective.Section5_HighDCurve
@@ -31,50 +32,6 @@ namespace Transformer
 namespace Perspective
 
 variable (d n : ℕ)
-
-/-- The Lipschitz constant `c(β) = e^{10 max(1, β)}` of the flow, as it appears
-throughout Appendix D.
-
-Source: arXiv:2312.10794v5, Appendix D, `eq: lip.3`. -/
-noncomputable def cBeta (β : ℝ) : ℝ := Real.exp (10 * max 1 β)
-
-/-- `c(β) ≥ 1`: the bound it multiplies never shrinks. -/
-theorem one_le_cBeta (β : ℝ) : 1 ≤ cBeta β := by
-  have : (0 : ℝ) ≤ 10 * max 1 β := by
-    have : (1 : ℝ) ≤ max 1 β := le_max_left _ _
-    linarith
-  simp [cBeta, Real.one_le_exp this]
-
-/-- **Equation (eq: stability.4ortho).** *Grönwall stability of the flow.*
-
-Any two solutions of `SA` with the same `β` separate at most at the rate
-`c(β)^{n t}`: if every pair of initial particles is within `M`, then
-
-  `‖x_i(t) - y_i(t)‖ ≤ c(β)^{n t} · M`   for all `t ≥ 0` and all `i`.
-
-The survey writes this with `max_j` on both sides; taking an arbitrary upper
-bound `M` of the initial distances says the same thing and avoids carrying a
-nonemptiness proof of `[n]` inside the statement.
-
-Not proved here: the Grönwall argument rests on the Lipschitz bounds
-`eq: lip.1`–`eq: lip.3` for the right-hand side of `SA`.
-
-Source: arXiv:2312.10794v5, Appendix D, `eq: stability.4ortho`. -/
-theorem stability_orthogonal
-    (β : ℝ) (X Y : ℝ → SphereTuple d n) (M : ℝ)
-    (hX : SA d n β X) (hY : SA d n β Y)
-    (hM : ∀ j : Idx n, ‖(X 0 j : EucSpace d) - (Y 0 j : EucSpace d)‖ ≤ M) :
-    ∀ t : ℝ, 0 ≤ t → ∀ i : Idx n,
-      ‖(X t i : EucSpace d) - (Y t i : EucSpace d)‖ ≤ cBeta β ^ ((n : ℝ) * t) * M := by
-  sorry
-
-/-- The hypotheses of `stability_orthogonal` are satisfiable: one consensus
-solution compared with itself, at initial distance `M = 0`. -/
-example :
-    SA 1 1 0 (fun _ _ => basePoint 0) ∧
-      ‖((basePoint 0 : SSphere 1) : EucSpace 1) -
-        ((basePoint 0 : SSphere 1) : EucSpace 1)‖ ≤ (0 : ℝ) :=
-  ⟨SA_const_consensus 1 1 one_pos 0 (basePoint 0), by simp⟩
 
 /-- **Equation (eq: almost.ortho.vec).** *Almost-orthogonality of a uniform
 sample (Lévy's concentration of measure).*
@@ -103,42 +60,6 @@ theorem almost_orthogonal (hn : 2 ≤ n) (hnd : n ≤ d) :
 /-- The hypotheses of `almost_orthogonal` are satisfiable: `d = n = 2`. -/
 example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 
-/-- **Equation (e:shortdist).**
-
-  `‖x_i(t) - y_i(t)‖ ≤ c(β)^{n t} √(log d / d)`,
-
-where `y` is the solution started from the orthogonal approximation supplied by
-`eq: almost.ortho.vec`.  It is `eq: stability.4ortho` at `M = √(log d / d)`.
-
-`eq: stability.4ortho` is `stability_orthogonal`, which is not proved, so it is
-carried here as a hypothesis rather than used: what this theorem asserts is the
-specialization, and that is what it proves.
-
-Source: arXiv:2312.10794v5, Appendix D, `e:shortdist`. -/
-theorem shortdist_bound
-    (β : ℝ) (X Y : ℝ → SphereTuple d n)
-    (hX : SA d n β X) (hY : SA d n β Y)
-    (hM : ∀ j : Idx n,
-      ‖(X 0 j : EucSpace d) - (Y 0 j : EucSpace d)‖ ≤ Real.sqrt (Real.log d / d)) :
-    (∀ M : ℝ, SA d n β X → SA d n β Y →
-        (∀ j : Idx n, ‖(X 0 j : EucSpace d) - (Y 0 j : EucSpace d)‖ ≤ M) →
-        ∀ t : ℝ, 0 ≤ t → ∀ i : Idx n,
-          ‖(X t i : EucSpace d) - (Y t i : EucSpace d)‖
-            ≤ cBeta β ^ ((n : ℝ) * t) * M) →
-    ∀ t : ℝ, 0 ≤ t → ∀ i : Idx n,
-      ‖(X t i : EucSpace d) - (Y t i : EucSpace d)‖
-        ≤ cBeta β ^ ((n : ℝ) * t) * Real.sqrt (Real.log d / d) :=
-  fun hstab => hstab _ hX hY hM
-
-/-- The hypotheses of `shortdist_bound` are satisfiable: at `d = 1` the bound
-`√(log d / d)` is `0`, and a consensus solution is at distance `0` from
-itself. -/
-example :
-    SA 1 1 0 (fun _ _ => basePoint 0) ∧
-      ‖((basePoint 0 : SSphere 1) : EucSpace 1) -
-        ((basePoint 0 : SSphere 1) : EucSpace 1)‖
-        ≤ Real.sqrt (Real.log 1 / 1) :=
-  ⟨SA_const_consensus 1 1 one_pos 0 (basePoint 0), by simp⟩
 
 /-- **Equation (e:ineqfirstpart).** *First half of `eq: upto-t`.*
 
@@ -150,29 +71,23 @@ and `x` starts within `√(log d / d)` of it, then
 
 The proof is `e:shortdist` followed by Cauchy–Schwarz on
 `⟨x_i, x_j⟩ - ⟨y_i, y_j⟩ = ⟨x_i - y_i, x_j⟩ + ⟨y_i, x_j - y_j⟩`, both particles
-being unit vectors.  Only the Cauchy–Schwarz half is proved here;
-`eq: stability.4ortho`, which `e:shortdist` specializes, is a hypothesis, as in
-`shortdist_bound`.
+being unit vectors.  It carries `stability_orthogonal`'s added hypothesis
+`0 ≤ β`.
 
 Source: arXiv:2312.10794v5, Appendix D, `e:ineqfirstpart`. -/
 theorem ineq_first_part
-    (β : ℝ) (X Y : ℝ → SphereTuple d n) (γ : ℝ → ℝ)
+    (β : ℝ) (hβ : 0 ≤ β) (X Y : ℝ → SphereTuple d n) (γ : ℝ → ℝ)
     (hX : SA d n β X) (hY : SA d n β Y)
     (hM : ∀ j : Idx n,
       ‖(X 0 j : EucSpace d) - (Y 0 j : EucSpace d)‖ ≤ Real.sqrt (Real.log d / d))
     (hγ : ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx n, i ≠ j →
       inner (𝕜 := ℝ) ((Y t i : EucSpace d)) ((Y t j : EucSpace d)) = γ t) :
-    (∀ M : ℝ, SA d n β X → SA d n β Y →
-        (∀ j : Idx n, ‖(X 0 j : EucSpace d) - (Y 0 j : EucSpace d)‖ ≤ M) →
-        ∀ t : ℝ, 0 ≤ t → ∀ i : Idx n,
-          ‖(X t i : EucSpace d) - (Y t i : EucSpace d)‖
-            ≤ cBeta β ^ ((n : ℝ) * t) * M) →
     ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx n, i ≠ j →
       |inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((X t j : EucSpace d)) - γ t|
         ≤ 2 * cBeta β ^ ((n : ℝ) * t) * Real.sqrt (Real.log d / d) := by
-  intro hstab t ht i j hij
-  have hi := shortdist_bound d n β X Y hX hY hM hstab t ht i
-  have hj := shortdist_bound d n β X Y hX hY hM hstab t ht j
+  intro t ht i j hij
+  have hi := shortdist_bound d n β hβ X Y hX hY hM t ht i
+  have hj := shortdist_bound d n β hβ X Y hX hY hM t ht j
   have hxj : ‖(X t j : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp (X t j).2
   have hyi : ‖(Y t i : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp (Y t i).2
   have key :
@@ -208,14 +123,14 @@ theorem ineq_first_part
 is no pair `i ≠ j`, so `hγ` is vacuous, and the consensus solution is at
 distance `0` from itself. -/
 example :
-    SA 1 1 0 (fun _ _ => basePoint 0) ∧
+    (0 : ℝ) ≤ 0 ∧ SA 1 1 0 (fun _ _ => basePoint 0) ∧
       ‖((basePoint 0 : SSphere 1) : EucSpace 1) -
         ((basePoint 0 : SSphere 1) : EucSpace 1)‖
         ≤ Real.sqrt (Real.log 1 / 1) ∧
       ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx 1, i ≠ j →
         inner (𝕜 := ℝ) ((basePoint 0 : EucSpace 1)) ((basePoint 0 : EucSpace 1))
           = (0 : ℝ) :=
-  ⟨SA_const_consensus 1 1 one_pos 0 (basePoint 0), by simp,
+  ⟨le_rfl, SA_const_consensus 1 1 one_pos 0 (basePoint 0), by simp,
     fun _ _ i j hij => absurd (Subsingleton.elim i j) hij⟩
 
 /-- `d / log d` grows beyond every bound: for each real `K` there is a
