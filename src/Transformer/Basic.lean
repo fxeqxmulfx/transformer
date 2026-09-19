@@ -68,6 +68,24 @@ has norm `1`. -/
 example : ‖(EuclideanSpace.single (0 : Fin 1) (1 : ℝ))‖ = 1 := by
   simp [PiLp.norm_single]
 
+/-- **The projection is a contraction:** `‖Proj_x y‖ ≤ ‖y‖` for a unit vector
+`x`, since `‖Proj_x y‖² = ‖y‖² - ⟨x, y⟩²`.  This is what gives the `β = 0`
+drift of §4 its Lipschitz constant. -/
+theorem norm_proj_le {d : ℕ} {x : EucSpace d} (hx : ‖x‖ = 1) (y : EucSpace d) :
+    ‖proj d x y‖ ≤ ‖y‖ := by
+  have hsq : ‖proj d x y‖ ^ 2 = ‖y‖ ^ 2 - (inner (𝕜 := ℝ) x y) ^ 2 := by
+    rw [proj, norm_sub_sq_real, real_inner_smul_right, norm_smul,
+      real_inner_comm y x, hx]
+    simp
+    ring
+  nlinarith [norm_nonneg (proj d x y), norm_nonneg y,
+    sq_nonneg (inner (𝕜 := ℝ) x y), hsq]
+
+/-- The hypothesis is satisfiable: the first standard basis vector of `ℝ^1`
+has norm `1`. -/
+example : ‖(EuclideanSpace.single (0 : Fin 1) (1 : ℝ))‖ = 1 := by
+  simp [PiLp.norm_single]
+
 /-- The "indexing set" `[n] = {1,…,n}`, realized as `Fin n`. -/
 abbrev Idx (n : ℕ) : Type := Fin n
 

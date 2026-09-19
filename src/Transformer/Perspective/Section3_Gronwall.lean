@@ -4,17 +4,15 @@
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
-The two auxiliary equations of §4 that compare the `β` dynamics with the `β = 0`
-one:
+`eq: youareawizardharry` — the Grönwall bound of §4 read at `t = m`, below
+`1/8`, for `β` small — together with the one-particle lemmas that make it
+satisfiable: at `n = 1` a lone token stands still under both dynamics.
 
-* `e:approxsphere`            — `‖x_i^β(t) - x_i^0(t)‖ ≤ O(β) e^{3t}`,
-* `eq: youareawizardharry`    — the same at `t = m`, below `1/8`, for `β` small,
-
-together with the one-particle lemmas that make them satisfiable: at `n = 1`
-a lone token stands still under both dynamics.
+`e:approxsphere`, the Grönwall bound itself, is proved in
+`Transformer.Perspective.Beta0Gronwall`.
 -/
 
-import Transformer.Perspective.Section3_SmallBeta
+import Transformer.Perspective.Beta0Gronwall
 import Mathlib.Analysis.Calculus.MeanValue
 
 open scoped BigOperators
@@ -26,33 +24,6 @@ namespace Perspective
 open Perspective
 
 variable (d n : ℕ)
-
-/-- **Equation (e:approxsphere).** Gronwall bound:
-
-  `‖x_i^β(t) - x_i^0(t)‖ ≤ O(β) e^{3t}`.
-
-**What the source says and what is changed here.**  The form this development
-gave the bound put `∃ C` *after* `β` and after the two solutions, which makes
-it say nothing: for `β > 0` the constant `C = 2/β` already works, since two
-points of `𝕊^{d-1}` are never further apart than `2 ≤ 2 e^{3t}`.  The survey's
-`O(β)` is a constant depending on `d` and `n` alone, so the quantifier is
-hoisted to the front here.  With it in front the bound has content at every
-`β`, including `β = 0`, where it asserts that `e:Snonres0` has at most one
-solution from a given initial tuple.
-
-Not proved here.
-
-Source: arXiv:2312.10794v5, §4, `e:approxsphere`. -/
-theorem solutions_close_at_small_beta :
-    ∃ C : ℝ, 0 < C ∧
-      ∀ β : ℝ, 0 ≤ β →
-        ∀ Xβ X0t : ℝ → SphereTuple d n,
-          Xβ 0 = X0t 0 →
-          Perspective.SA d n β Xβ → beta0Dynamics d n X0t →
-          ∀ t : ℝ, 0 ≤ t → ∀ i : Idx n,
-            ‖((Xβ t i : EucSpace d)) - ((X0t t i : EucSpace d))‖
-              ≤ C * β * Real.exp (3 * t) := by
-  sorry
 
 /-- **A lone token does not move under `eq: SA`.**
 
@@ -140,9 +111,10 @@ such that for `β ∈ [0, β_m]`,
 
   `‖x_i^β(m) - x_i^0(m)‖ ≤ 1/8`.
 
-Proved here, from the Gronwall bound `e:approxsphere` — which is not proved —
-carried as an explicit hypothesis: its constant `C` is the `C` below, and
-`β_m = 1/(8 C e^{3m})` turns the bound at `t = m` into `1/8`.
+Proved here, from the Grönwall bound `e:approxsphere` carried as an explicit
+hypothesis: its constant `C` is the `C` below, and `β_m = 1/(8 C e^{3m})` turns
+the bound at `t = m` into `1/8`.  `Perspective.solutions_close_at_small_beta`
+discharges that hypothesis with `C = 2 e²`.
 
 Source: arXiv:2312.10794v5, §4, `eq: youareawizardharry`. -/
 theorem distance_bound_at_time_m (m : ℕ) (C : ℝ) (hC : 0 < C)
