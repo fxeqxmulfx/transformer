@@ -46,6 +46,8 @@ import Transformer.Perspective.AppendixA_Saddle
 import Transformer.Perspective.AppendixB_BetaInterval
 import Transformer.Perspective.AppendixB_Taylor
 import Transformer.Perspective.StrictSaddle
+import Transformer.Perspective.AppendixB_EBeta
+import Transformer.Perspective.AppendixB_HessBeta
 import Transformer.Perspective.AppendixB_HighD
 import Transformer.Perspective.AppendixB_MetricGrad
 import Transformer.Perspective.AppendixB_MetricHess
