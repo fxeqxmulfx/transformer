@@ -1,9 +1,0 @@
-[package]
-name = "alm-margin"
-version.workspace = true
-edition.workspace = true
-license.workspace = true
-
-[[bin]]
-name = "alm-margin"
-path = "src/bin/alm-margin.rs"

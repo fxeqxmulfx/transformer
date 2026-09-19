@@ -39,15 +39,3 @@ venv/
 /.discrtree/
 /discrtree.toml
 /.claude/skills/discrtree/
-
-# ── Rust ─────────────────────────────────────────────────────────────────
-/vm-rs/target/
-
-# ── Compiler artefacts ───────────────────────────────────────────────────
-# What `alm-build` and the ported compiler write: the 1.2 MB weight file, the
-# clang output, and the token traces.  All of them are reproducible from the
-# sources here alone — `vm-rs/reference/sha256sums` says what they come out to
-# — and none of them belong in history.
-model.bin
-*.wasm
-/vm-rs/data/
