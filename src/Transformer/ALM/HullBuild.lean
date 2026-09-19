@@ -2,9 +2,7 @@
 # What building the hull costs
 
 `Transformer.ALM.HullIndex` priced a query and proved the price paid.  The
-other half of `NNIndex` — `build` — was a number with nothing behind it, the
-same kind of fiction as `freeIndex`'s zero prices in
-`Transformer.ALM.Independence`.
+other half of `NNIndex` — `build` — was a number with nothing behind it.
 
 `HullHalf::add_line` (`transformer_vm/attention/hull2d_cht.h`, lines 143-195)
 does three things per key: one `lower_bound`, one `insert`, and then the two
@@ -140,10 +138,9 @@ theorem hullAns_eq_bfAns : ∀ {m n : ℕ} [Nonempty (Fin n)], m ≠ 1 →
   | _ + 2, _, _, _, _, _ => rfl
 
 /-- **And no saving either.**  Both prices fall back to `bruteForce`'s, so
-outside dimension one `hullIndex` is the exhaustive scan under another name.
-What dodges the barrier of `Transformer.ALM.Hardness` is therefore a claim
-about a single dimension — `reduction_dimension_even` — and not an index that
-beats a scan wherever it is asked. -/
+outside dimension one `hullIndex` is the exhaustive scan under another name:
+whatever the machine gains, it gains in a single dimension, and not by
+beating a scan wherever it is asked. -/
 theorem hullIndex_agrees_with_bruteForce (n m : ℕ) (hm : m ≠ 1) :
     hullIndex.build n m = bruteForce.build n m ∧
       hullIndex.query n m = bruteForce.query n m := by

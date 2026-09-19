@@ -1,24 +1,15 @@
 /-
 # Orthogonal Vectors reduce to one lookup
 
-The reason exact nearest-neighbour search is believed to be hard in high
-dimension is not a theorem but a reduction: Orthogonal Vectors reduces to it,
-and Orthogonal Vectors inherits a quadratic lower bound from the Strong
-Exponential Time Hypothesis.
+Exact nearest-neighbour search in high dimension answers a question about
+`0/1` vectors: given `A, B ⊆ {0,1}^d`, is some `a ∈ A` orthogonal to some
+`b ∈ B`?
 
-* Impagliazzo, Paturi, *On the complexity of k-SAT*, JCSS 62 (2001) — SETH.
-* R. Williams, *A new algorithm for optimal 2-constraint satisfaction and its
-  implications*, Theoret. Comput. Sci. 348 (2005) — SETH implies that
-  Orthogonal Vectors needs `n^{2-o(1)}` time.
-* V. Vassilevska Williams, *On some fine-grained questions in algorithms and
-  complexity*, ICM 2018, §3 — the Orthogonal Vectors conjecture and its
-  consequences for nearest-neighbour search.
-
-This file formalizes the geometric half of that chain, which needs no model
-of computation: an explicit embedding of a `0/1` instance into the paraboloid
-scores of `Transformer.ALM.Defs`, under which the **single** key returned by
-an exact lookup already decides the whole instance.  The cost accounting that
-turns this into a lower bound is `Transformer.ALM.Hardness`.
+This file formalizes that reduction, which needs no model of computation: an
+explicit embedding of a `0/1` instance into the paraboloid scores of
+`Transformer.ALM.Defs`, under which the **single** key returned by an exact
+lookup already decides the whole instance.  `Transformer.ALM.LookupIndex`
+runs it through an index.
 
 The embedding is the standard one: a key `b` is sent to `(1 - b, b)`, whose
 complement block equalizes all key norms and reverses the direction of

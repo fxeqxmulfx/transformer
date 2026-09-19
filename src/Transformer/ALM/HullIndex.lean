@@ -1,42 +1,24 @@
 /-
-# The machine as an index, and why the barrier does not reach it
+# The machine as an index
 
-Two halves of this development never met.  `Transformer.ALM.BinSearch` proves
-that the planar hull answers a lookup in `log₂ n + 1` comparisons;
-`Transformer.ALM.Hardness` proves that an exact index cannot answer one in
-fewer than `n^{1-ε}` at dimension `Θ(log n)`.  Both are theorems, and they
-speak about different objects: the first about a procedure, the second about
-an `NNIndex`.  Nothing in Lean compared them, so the reconciliation — "the
-machine runs at dimension one, where the barrier is silent" — was prose.
+`Transformer.ALM.BinSearch` proves that the planar hull answers a lookup in
+`log₂ n + 1` comparisons; `Transformer.ALM.LookupIndex` names the thing that
+answers lookups, an `NNIndex`, and specifies it.  The two never met: the first
+speaks about a procedure, the second about a structure, and nothing in Lean
+identified them.
 
-This module makes it a theorem.  `hullIndex` is an `NNIndex` whose answer in
-dimension one *is* the hull's binary search over the sorted keys of
+This module does.  `hullIndex` is an `NNIndex` whose answer in dimension one
+*is* the hull's binary search over the sorted keys of
 `Transformer.ALM.KeyOrder`, and whose declared query price there is exactly
-the comparison count `bcount` that search pays (`hullIndex_query_paid`) — the
-opposite of `Transformer.ALM.Independence`'s `freeIndex`, whose prices are
-invented.  Outside dimension one it falls back to a scan and is charged for
-it.
-
-Then the reconciliation, in three statements:
-
-* `reduction_dimension_even` — the lookup the Orthogonal Vectors reduction
-  performs is never one-dimensional.  `Implements.cost_le` queries the index
-  at `d + d`, and that is even, so the logarithmic price is never the one the
-  reduction pays.  The machine's regime and the barrier's regime are disjoint
-  for a reason that needs no conjecture.
-* `naiveModel_implements_hullIndex` — the reduction *is* implemented by this
-  index, in a model where Orthogonal Vectors is hard.
-* `hullIndex_consistent_with_OVHard` — so the two coexist: a logarithmic
-  exact lookup in dimension one and the quadratic barrier at dimension
-  `Θ(log n)` are simultaneously satisfiable.  The machine is not a
-  counterexample to the conjecture, and the conjecture is not an obstacle to
-  the machine.
+the comparison count `bcount` that search pays (`hullIndex_query_paid`), not
+an invented one.  Outside dimension one it falls back to a scan and is charged
+for it.
 
 Source: `transformer_vm/attention/hull2d_cht.h`, lines 203-215.
 -/
 
 import Transformer.ALM.KeyOrder
-import Transformer.ALM.Hardness
+import Transformer.ALM.LookupIndex
 
 namespace Transformer
 namespace ALM
@@ -137,46 +119,6 @@ theorem hullIndex_query_paid [Nonempty (Fin n)] (K : Fin n → ℝ) :
     rw [ite_eq_left rfl]
   rw [hq]
   exact_mod_cast h
-
-/-! ### Why the barrier never charges that price -/
-
-/-- **The reduction never makes a one-dimensional lookup.**  `Implements`
-queries the index at `d + d`, so the dimension it asks about is even and
-never `1`: the logarithmic branch of `hullIndex` is unreachable from the
-Orthogonal Vectors side, whatever `d` is. -/
-theorem reduction_dimension_even (n d : ℕ) :
-    hullIndex.query n (d + d) = (n : ℝ) * ((d + d : ℕ) : ℝ) := by
-  show (if d + d = 1 then (Nat.log 2 n : ℝ) + 1 else (n : ℝ) * ((d + d : ℕ) : ℝ)) = _
-  rw [ite_eq_right (by omega)]
-
-/-- The quadratic model implements the reduction through `hullIndex`, at
-exactly the accounted cost — the same accounting as for `bruteForce`, because
-the reduction only ever reaches the scanning branch. -/
-noncomputable def naiveModel_implements_hullIndex : naiveModel.Implements hullIndex where
-  alg := ()
-  decides_reduce := fun A B => (hullIndex.reduce_iff A B).symm
-  cost_le := fun n d => by
-    rw [reduction_dimension_even n d]
-    show 2 * (n : ℝ) ^ 2 * (d : ℝ)
-      ≤ (if d + d = 1 then 3 * (n : ℝ) * ((Nat.log 2 n : ℝ) + 1) else 0)
-        + (n : ℝ) * ((n : ℝ) * ((d + d : ℕ) : ℝ))
-    rw [ite_eq_right (by omega)]
-    push_cast
-    ring_nf
-    exact le_refl _
-
-/-- **The machine and the barrier coexist.**  There is a model in which
-Orthogonal Vectors is hard, the reduction through `hullIndex` is implemented,
-and the index still answers a one-dimensional lookup in `log₂ n + 1`.  So the
-logarithmic lookup of `hull2d_cht.h` neither refutes the conjecture nor is
-refuted by it: the two speak about different dimensions, and
-`reduction_dimension_even` says which. -/
-theorem hullIndex_consistent_with_OVHard :
-    ∃ M : CostModel, M.OVHard ∧ Nonempty (M.Implements hullIndex) ∧
-      ∀ n : ℕ, hullIndex.query n 1 = (Nat.log 2 n : ℝ) + 1 :=
-  ⟨naiveModel, naiveModel_OVHard, ⟨naiveModel_implements_hullIndex⟩, fun n => by
-    show (if (1 : ℕ) = 1 then (Nat.log 2 n : ℝ) + 1 else (n : ℝ) * ((1 : ℕ) : ℝ)) = _
-    rw [ite_eq_left rfl]⟩
 
 /-- The hypotheses are satisfiable: `Fin 3` is nonempty, and on the scalar keys
 `0, 1, 2` the index really returns a best-scoring one. -/

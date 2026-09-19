@@ -4,9 +4,8 @@
 `Transformer.ALM.FloatHull` proves that the hull's individual comparisons are
 decided correctly in floating point: `fp_query_branch` says a query separated
 from a breakpoint takes the branch exact arithmetic would take.  But the
-object the complexity barrier of `Transformer.ALM.Hardness` is compared
-against is `hullIndex`, and no statement connected the two — `FPArith`
-appeared nowhere outside `FloatHull`.  So "finite precision does not change
+index the machine answers with is `hullIndex`, and no statement connected the
+two — `FPArith` appeared nowhere outside `FloatHull`.  So "finite precision does not change
 the answer" was proved of a comparison and asserted of an index.
 
 Here it is proved of the index.  `fpSearch` is the binary search of

@@ -14,8 +14,6 @@ that is pure geometry: the procedure that queries the index once per left-hand
 vector and inspects only the returned key decides Orthogonal Vectors
 correctly (`NNIndex.reduce_iff`).
 
-The cost side is `Transformer.ALM.Hardness`.
-
 Source of the reduction: V. Vassilevska Williams, *On some fine-grained
 questions in algorithms and complexity*, ICM 2018, §3.
 -/
@@ -70,8 +68,7 @@ end NNIndex
 
 Scanning all keys satisfies the specification, with query cost `n · m`.  It
 witnesses that `NNIndex` is inhabited, so nothing proved about indices is
-vacuous — and its query cost is exactly the one the lower bound of
-`Transformer.ALM.Hardness` says cannot be beaten at dimension `Θ(log n)`.
+vacuous.
 -/
 
 /-- The key of maximal score, chosen by exhaustive comparison. -/

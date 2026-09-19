@@ -84,10 +84,8 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.TieHyperplane` | and the tie locus in every dimension: a bisecting hyperplane |
 | `ALM.TieMeasure` | and that that locus is null, so the merge path is almost never taken |
 | `ALM.OrthVectors` | one lookup decides an Orthogonal Vectors instance |
-| `ALM.SAT` | satisfiability *is* an Orthogonal Vectors question |
 | `ALM.LookupIndex` | an exact index, and the reduction run through it |
-| `ALM.Hardness` | the conditional lower bound that reduction yields |
-| `ALM.HullIndex` | the machine itself as an index, and why the barrier misses it |
+| `ALM.HullIndex` | the machine itself as an index |
 | `ALM.SoftmaxIndex` | and that the softmax head returns what that index answers |
 | `ALM.SoftmaxValue` | and that its output vector is the value stored at that answer |
 | `ALM.SoftmaxTie` | and that on a tie it returns what the tie-break returns |
@@ -103,16 +101,6 @@ Machine* (Percepta, `Percepta-Core/transformer-vm`).
 | `ALM.SAHead` | and that the head is an ordinary attention head, at two projections |
 | `ALM.SAHeadValue` | and so that every bound above is a bound on standard attention |
 | `ALM.PlanarHead` | and that one hull query answers any planar head, not only the lift |
-| `ALM.FixedDim` | why that bound needs a growing dimension, unconditionally |
-| `ALM.SETH` | and the same bound with SETH as the only conjecture |
-| `ALM.Sparsification` | SETH without a density restriction, plus the sparsification |
-| `ALM.SparseModel` | a model where those two hypotheses hold together |
-| `ALM.Polylog` | the same barrier from SETH alone, at polylog dimension |
-| `ALM.Independence` | and why that last conjecture cannot be dropped either |
-| `ALM.Probe` | algorithms that can only evaluate the formula |
-| `ALM.QueryModel` | where SETH stops being a conjecture and is proved |
-| `ALM.OVProbe` | the same restriction on the Orthogonal Vectors side |
-| `ALM.Unconditional` | and the whole chain with nothing assumed at all |
 -/
 
 import Transformer.ALM.Defs
@@ -193,9 +181,7 @@ import Transformer.ALM.VectorInt
 import Transformer.ALM.TieHyperplane
 import Transformer.ALM.TieMeasure
 import Transformer.ALM.OrthVectors
-import Transformer.ALM.SAT
 import Transformer.ALM.LookupIndex
-import Transformer.ALM.Hardness
 import Transformer.ALM.HullIndex
 import Transformer.ALM.SoftmaxIndex
 import Transformer.ALM.SoftmaxValue
@@ -212,13 +198,3 @@ import Transformer.ALM.FloatHeadTie
 import Transformer.ALM.SAHead
 import Transformer.ALM.SAHeadValue
 import Transformer.ALM.PlanarHead
-import Transformer.ALM.FixedDim
-import Transformer.ALM.SETH
-import Transformer.ALM.Sparsification
-import Transformer.ALM.SparseModel
-import Transformer.ALM.Polylog
-import Transformer.ALM.Independence
-import Transformer.ALM.Probe
-import Transformer.ALM.QueryModel
-import Transformer.ALM.OVProbe
-import Transformer.ALM.Unconditional
