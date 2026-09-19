@@ -34,6 +34,8 @@ import Transformer.Perspective.AppendixB_Taylor
 import Transformer.Perspective.StrictSaddle
 import Transformer.Perspective.AppendixB_HighD
 import Transformer.Perspective.AppendixB_MetricGrad
+import Transformer.Perspective.AppendixB_MetricHess
+import Transformer.Perspective.DoubleSum
 import Transformer.Perspective.AppendixC_BetaTiny
 import Transformer.Perspective.AppendixD_PhaseTransition
 import Transformer.Perspective.AppendixD_Alpha

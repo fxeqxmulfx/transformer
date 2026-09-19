@@ -8,12 +8,12 @@ The part of Appendix B that runs on `(𝕊^{d-1})^n` rather than on the torus:
 
 * `eq: claim.yury`   — the sub-block inequality in dimension `d`,
 * `eq: dr1`          — the skew-symmetric perturbation inequality,
-* `e:Hessianincoord` — the Hessian at a critical point is intrinsic,
-* `eq: metric.hess`  — the modified metric of §3.4 costs `O(β)` against the
-                        round one, at second order.
+* `e:Hessianincoord` — the Hessian at a critical point is intrinsic.
 
-Its first-order half, `eq: metric.grad`, is proved in
-`Perspective.AppendixB_MetricGrad`, which is built on this file.
+The comparison of the modified metric of §3.4 with the round one,
+`eq: metric.grad` and `eq: metric.hess`, is proved in
+`Perspective.AppendixB_MetricGrad` and `Perspective.AppendixB_MetricHess`,
+which are built on this file.
 
 The energy is `Perspective.particleEnergy` at `V = Id`; the skew-symmetric
 perturbations and `𝖤_0` come from `Perspective.AppendixA_Saddle`.
@@ -133,28 +133,6 @@ theorem hessian_at_critical_intrinsic
     (c c' : ℝ) (hc : SecondDerivEBetaAt d n β Y c)
     (hc' : SecondDerivEBetaAt d n β Z c') :
     c = c' := by
-  sorry
-
-/-- **Equation (eq: metric.hess).** *Comparison of Hessians.*
-
-  `Hess_{g_β} 𝖤_β(x)[v] = Hess_g 𝖤_0(x)[v] + O(β)`,
-
-along the same block rotation, and with the same normalisation factor as in
-`Perspective.metric_grad_comparison` (`Perspective.AppendixB_MetricGrad`).  Together with `hessian_at_critical_intrinsic` this
-is what transports the `β = 0` saddle analysis of Appendix A to small `β > 0`.
-
-Not proved here: the expansion in `β` is not carried out.
-
-Source: arXiv:2312.10794v5, Appendix B, `eq: metric.hess`. -/
-theorem metric_hess_comparison
-    (X : SphereTuple d n) (B : ParamMatrix d) (𝒮 : Finset (Idx n))
-    (hB : IsSkew d B) :
-    ∃ C : ℝ, 0 < C ∧
-      ∀ Y : ℝ → SphereTuple d n, PerturbationBy d n B 𝒮 X Y →
-        ∀ c₀ : ℝ, SecondDerivE0At d n Y c₀ →
-          ∀ β : ℝ, 0 < β → β ≤ 1 →
-            ∀ cβ : ℝ, SecondDerivEBetaAt d n β Y cβ →
-              |cβ - ((n : ℝ) / 2) * c₀| ≤ C * β := by
   sorry
 
 /-! ### The hypotheses are satisfiable -/
