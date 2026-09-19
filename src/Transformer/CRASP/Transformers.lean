@@ -114,40 +114,12 @@ example (a : σ) (k : ℕ) : (Form.sym a : Form σ) ∈ TLCl σ k :=
   ⟨rfl, rfl, Nat.zero_le k⟩
 
 /-- The `b`-th bit of the `i`-th entry of a length-preserving fixed-precision
-map, at the logic's one-based positions; `false` off the string. -/
+map, at the logic's one-based positions; `false` off the string.
+
+`lem:finite_function`, which postcomposes such a map with an arbitrary
+`g : 𝔽 → 𝔽` at no cost in depth, is `Transformer.CRASP.FiniteFunction`. -/
 noncomputable def bitAt {p s : ℕ} (F : List σ → List (Fx p s)) (w : List σ) (i b : ℕ) : Bool :=
   ((F w)[i - 1]?).elim false fun x => x.bit b
-
-/-- **Lemma `lem:finite_function`** (Chiang, Cholak & Pillay).  A
-length-preserving fixed-precision map whose bits are definable stays definable
-after any postcomposition `g : 𝔽 → 𝔽`.
-
-The depth clause is left implicit by the paper: the construction is a Boolean
-combination of the given formulas, and the uses the paper makes of the lemma —
-threading it through every projection of every layer — need the depth not to
-grow. -/
-theorem finite_function {p s : ℕ} (F : List σ → List (Fx p s))
-    (hF : ∀ w, (F w).length = w.length) (g : Fx p s → Fx p s) (ψ : ℕ → Form σ)
-    (hψ : ∀ b w i, (ψ b).sat w i = bitAt F w i b) :
-    ∃ ψ' : ℕ → Form σ, (∀ b w i, (ψ' b).sat w i = bitAt (fun w => (F w).map g) w i b) ∧
-      ∀ b, (ψ' b).depth ≤ (Finset.range p).sup fun c => (ψ c).depth :=
-  sorry
-
-/-- The hypotheses of `finite_function` are satisfiable: the map sending every
-position to `0` is length-preserving, and `⊥` — written `1 < 1` — defines all of
-its bits, since every bit of `0` is `0`. -/
-example {p s : ℕ} :
-    (∀ w : List σ, ((w.map fun _ => (0 : Fx p s))).length = w.length) ∧
-      ∀ b (w : List σ) i,
-        (Form.lt .one .one : Form σ).sat w i = bitAt (fun w => w.map fun _ => (0 : Fx p s)) w i b := by
-  refine ⟨fun w => by simp, fun b w i => ?_⟩
-  have hbit : ∀ b, (0 : Fx p s).bit b = false := by
-    intro b
-    simp [Fx.bit, Fx.val_zero]
-  rw [Form.sat, bitAt, List.getElem?_map]
-  cases w[i - 1]? with
-  | none => simp [Term.val]
-  | some _ => simp [Term.val, hbit]
 
 /-- **Proposition `thm:rtfr_to_TLCl`.**  Every future-masked rounded
 transformer of depth `k` is simulated by a `TL[◁#]` formula of depth `k`. -/
