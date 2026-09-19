@@ -17,8 +17,8 @@ is unbiased for its own `c`; the selection, however, reads the *realized*
 rounding — the errors it compares are those of the drawn E2M1 values — so it
 correlates the branch with the coins, and the expectation moves.  The paper
 validates the claim empirically (Appendix A, Figure 5: the curve for
-NVIDIA + 4/6 plateaus instead of falling as `1/B`), so `exists_mean_q46At_ne`
-is stated here as the paper states it, with no proof to import.
+NVIDIA + 4/6 plateaus instead of falling as `1/B`) and gives no witness; one is
+built in `Transformer.Quartet.Section4_Bias`, where the claim is proved.
 
 §4.1 is not formalized: the choice between square-block and native scales is
 argued from pre-training loss curves, not from a statement.
@@ -82,17 +82,6 @@ example : 0 < absMax (fun _ _ => (1 : ℝ) : Fin (2 ^ 0) → Fin 16 → ℝ) ∧
   unfold absMax
   exact lt_of_lt_of_le (by norm_num)
     (Finset.le_sup' _ (Finset.mem_univ ((0 : Fin (2 ^ 0)), (0 : Fin 16))))
-
-/-- **Their combination is biased** (§4.2, "it does not constitute an unbiased
-estimation, as the act of picking a lower MSE scale branch introduces bias"):
-some tensor has an entry whose expectation under Four Over Six is not that
-entry.  This is why the paper drops the scheme from its backward pass, and
-Appendix A measures the leftover bias as a plateau in the concentration
-curve. -/
-theorem exists_mean_q46At_ne :
-    ∃ (x : Fin (2 ^ 0) → Fin 16 → ℝ) (i : Fin (2 ^ 0)) (j : Fin 16),
-      meanGroup (fun t => q46At x i j t) ≠ x i j :=
-  sorry
 
 end Quartet
 end Transformer

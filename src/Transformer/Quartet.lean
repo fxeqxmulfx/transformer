@@ -25,7 +25,10 @@ scheme built on it.
 | `Quartet.Section3_NonClipping` | why neither quantizer asks E2M1 for a value outside `[-6, 6]` |
 | `Quartet.Section3_Unbiased` | `E_ω Q_SR(x) = x`, one entry at a time |
 | `Quartet.Section3_Eden` | the EDEN correction and `MS-EDEN` |
-| `Quartet.Section4_FourOverSix` | the two-branch grid choice, unbiased branch by branch and biased together |
+| `Quartet.Section4_FourOverSix` | the two-branch grid choice, unbiased branch by branch |
+| `Quartet.Section4_Witness` | the tensor that catches the bias, and its two scales |
+| `Quartet.Section4_Rounding` | what Four Over Six returns on it, coin by coin |
+| `Quartet.Section4_Bias` | the mean over the coins is `65/64`, not `1`: the scheme is biased |
 | `Quartet.AppendixA_Concentration` | what the concentration plot measures: the `1/B` slope, and the plateau of a bias |
 
 Most of the paper is experimental: the pre-training loss gaps of §5 and the
@@ -44,4 +47,7 @@ import Transformer.Quartet.Section3_NonClipping
 import Transformer.Quartet.Section3_Unbiased
 import Transformer.Quartet.Section3_Eden
 import Transformer.Quartet.Section4_FourOverSix
+import Transformer.Quartet.Section4_Witness
+import Transformer.Quartet.Section4_Rounding
+import Transformer.Quartet.Section4_Bias
 import Transformer.Quartet.AppendixA_Concentration

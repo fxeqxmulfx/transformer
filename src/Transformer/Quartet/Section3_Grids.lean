@@ -75,6 +75,36 @@ example : fp4.Finite ∧ (∃ y ∈ fp4, y ≤ (0.75 : ℝ)) ∧ ∃ y ∈ fp4, 
   ⟨by unfold fp4; apply Set.toFinite, ⟨0.5, by norm_num [fp4], by norm_num⟩,
     ⟨1, by norm_num [fp4], by norm_num⟩⟩
 
+/-- **Reading off the floor.**  A grid point below `x` that dominates every
+grid point below `x` is `floorOn G x`: the supremum is attained there.  This is
+how the `RTN` and `SR` displays of §3.1 are evaluated at a concrete argument. -/
+theorem floorOn_eq {G : Set ℝ} {x f : ℝ} (hf : f ∈ G) (hfx : f ≤ x)
+    (hub : ∀ y ∈ G, y ≤ x → y ≤ f) : floorOn G x = f :=
+  IsGreatest.csSup_eq ⟨⟨hf, hfx⟩, fun _ hy => hub _ hy.1 hy.2⟩
+
+/-- The hypotheses of `floorOn_eq` are satisfiable: `0.5` is the E2M1 point
+just below `0.75`. -/
+example : (0.5 : ℝ) ∈ fp4 ∧ (0.5 : ℝ) ≤ 0.75 ∧ ∀ y ∈ fp4, y ≤ (0.75 : ℝ) → y ≤ 0.5 := by
+  refine ⟨by norm_num [fp4], by norm_num, ?_⟩
+  intro y hy hle
+  simp only [fp4, Set.mem_insert_iff, Set.mem_singleton_iff] at hy
+  rcases hy with rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl <;>
+    (revert hle; norm_num)
+
+/-- **Reading off the ceiling**, the same statement for the infimum. -/
+theorem ceilOn_eq {G : Set ℝ} {x c : ℝ} (hc : c ∈ G) (hxc : x ≤ c)
+    (hlb : ∀ y ∈ G, x ≤ y → c ≤ y) : ceilOn G x = c :=
+  IsLeast.csInf_eq ⟨⟨hc, hxc⟩, fun _ hy => hlb _ hy.1 hy.2⟩
+
+/-- The hypotheses of `ceilOn_eq` are satisfiable: `1` is the E2M1 point just
+above `0.75`. -/
+example : (1 : ℝ) ∈ fp4 ∧ (0.75 : ℝ) ≤ 1 ∧ ∀ y ∈ fp4, (0.75 : ℝ) ≤ y → 1 ≤ y := by
+  refine ⟨by norm_num [fp4], by norm_num, ?_⟩
+  intro y hy hle
+  simp only [fp4, Set.mem_insert_iff, Set.mem_singleton_iff] at hy
+  rcases hy with rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl <;>
+    (revert hle; norm_num)
+
 /-- Round-to-nearest lands on the grid. -/
 theorem rtn_mem {G : Set ℝ} {x : ℝ} (hfin : G.Finite) (hlo : ∃ y ∈ G, y ≤ x)
     (hhi : ∃ y ∈ G, x ≤ y) : rtn G x ∈ G := by
