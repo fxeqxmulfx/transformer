@@ -98,29 +98,44 @@ of `v[μ(t)]` (`eq: flow.map`).  Then there are `T_2 > T_1 > 0` such that:
    `𝒮_q(2ε)` has
    `∫_{𝒮_q(2ε)} ‖Φ^t(x') - z‖² dμ_0(x') ≤ e^{-λ β}`.
 
+Not proved here.
+
 Source: arXiv:2410.06833v1, §5. -/
-def MetastabilityMF
+theorem metastability_mf
     (β ε lam : ℝ) (μ₀ : ProbSphere d) (k : ℕ) (w : Idx k → SSphere d)
-    (ν : Idx k → ProbSphere d) (Φ : ℝ → SSphere d → SSphere d) : Prop :=
-  1 < β → 0 < ε → ε < 1 / 16 → 2 ≤ d → 0 < lam → 0 < k →
-  (∀ q : Idx k, (ν q : Measure (SSphere d)).support ⊆ sphericalCap d (w q) ε) →
-  (μ₀ : Measure (SSphere d))
-      = ((k : ℝ)⁻¹).toNNReal • ∑ q : Idx k, (ν q : Measure (SSphere d)) →
-  8 * ε < γβ k β (αDist d k w ε) ε →
-  ∀ μ : ℝ → ProbSphere d, μ 0 = μ₀ → meanFieldPDE d β μ →
-    (∀ t : ℝ, Measurable (Φ t)) → (∀ x : SSphere d, Φ 0 x = x) →
-    (∀ x : SSphere d, ∀ t : ℝ,
-      HasDerivAt (fun s => (Φ s x : EucSpace d))
-        (MFVel d β (μ t) ((Φ t x : EucSpace d))) t) →
-      ∃ T₁ T₂ : ℝ, 0 < T₁ ∧ T₁ < T₂ ∧
-        (∀ q : Idx k, ∀ t ∈ Set.Icc (0 : ℝ) T₂,
-          (Measure.map (Φ t) (ν q : Measure (SSphere d))).support
-            ⊆ sphericalCap d (w q) (2 * ε)) ∧
-        ∀ q : Idx k, ∀ t ∈ Set.Icc T₁ T₂, ∃ z ∈ sphericalCap d (w q) (2 * ε),
-          ∫ x in sphericalCap d (w q) (2 * ε),
-              ‖(Φ t x : EucSpace d) - (z : EucSpace d)‖ ^ 2
-            ∂(μ₀ : Measure (SSphere d))
-              ≤ Real.exp (-lam * β)
+    (ν : Idx k → ProbSphere d) (Φ : ℝ → SSphere d → SSphere d)
+    (hβ : 1 < β) (hε : 0 < ε) (hε16 : ε < 1 / 16) (hd : 2 ≤ d)
+    (hlam : 0 < lam) (hk : 0 < k) :
+    (∀ q : Idx k, (ν q : Measure (SSphere d)).support ⊆ sphericalCap d (w q) ε) →
+    (μ₀ : Measure (SSphere d))
+        = ((k : ℝ)⁻¹).toNNReal • ∑ q : Idx k, (ν q : Measure (SSphere d)) →
+    8 * ε < γβ k β (αDist d k w ε) ε →
+    ∀ μ : ℝ → ProbSphere d, μ 0 = μ₀ → meanFieldPDE d β μ →
+      (∀ t : ℝ, Measurable (Φ t)) → (∀ x : SSphere d, Φ 0 x = x) →
+      (∀ x : SSphere d, ∀ t : ℝ,
+        HasDerivAt (fun s => (Φ s x : EucSpace d))
+          (MFVel d β (μ t) ((Φ t x : EucSpace d))) t) →
+        ∃ T₁ T₂ : ℝ, 0 < T₁ ∧ T₁ < T₂ ∧
+          (∀ q : Idx k, ∀ t ∈ Set.Icc (0 : ℝ) T₂,
+            (Measure.map (Φ t) (ν q : Measure (SSphere d))).support
+              ⊆ sphericalCap d (w q) (2 * ε)) ∧
+          ∀ q : Idx k, ∀ t ∈ Set.Icc T₁ T₂, ∃ z ∈ sphericalCap d (w q) (2 * ε),
+            ∫ x in sphericalCap d (w q) (2 * ε),
+                ‖(Φ t x : EucSpace d) - (z : EucSpace d)‖ ^ 2
+              ∂(μ₀ : Measure (SSphere d))
+                ≤ Real.exp (-lam * β) := by
+  sorry
+
+/-- The numeric hypotheses of `metastability_mf` are satisfiable: `β = 2`,
+`ε = 1/32`, `d = 2`, `λ = 1`, one cap.  The three structural hypotheses —
+the caps supporting `ν`, the decomposition of `μ₀` and the separation
+`8ε < γ_β` — stay inside the statement: no separated mean-field
+configuration is constructed in this development, so there is none to
+exhibit. -/
+example :
+    (1 : ℝ) < 2 ∧ (0 : ℝ) < 1 / 32 ∧ (1 : ℝ) / 32 < 1 / 16 ∧ 2 ≤ 2 ∧
+      (0 : ℝ) < 1 ∧ 0 < 1 := by
+  norm_num
 
 /-- The times at which the cap `q` may be left, as in
 `claim: de sortie de cap`:
