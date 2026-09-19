@@ -16,6 +16,10 @@ This file formalizes §6 of the survey:
 * `Theorem r:wendel` — Wendel's hemisphere probability,
 * `Theorem r:wendel` — Wendel's hemisphere probability.
 
+Step 1 of `lem: hemisphere.clustering` — that `min_i ⟨x_i(t), w⟩` does not
+decrease — is `Perspective.Section5_Hemisphere`, which needs the one-sided
+calculus of `Perspective.MinCurve`.
+
 §6.2 (`thm: orthogonal`, `eq: ybeta`, `thm: phase.transition.curve`) and §6.3
 (the phase-transition curve) are in `Perspective.Section5_HighDCurve`; the
 auxiliary calculus lemma `lem: ez.lemma`, which the section uses but which
@@ -157,8 +161,8 @@ bound for every `i`, and it is attained.
 
 Spelling the minimum out this way rather than as `Finset.inf'` keeps the
 nonemptiness proof of `[n]` out of the statements that use it — here
-`hemisphere_step1_monotone`, and in `Perspective.AppendixD_Alpha` the
-function `α` of `e:dotalpha`.
+`Perspective.Section5_Hemisphere.hemisphere_step1_monotone`, and in
+`Perspective.AppendixD_Alpha` the function `α` of `e:dotalpha`.
 
 Source: arXiv:2312.10794v5, §6.1, step 1 of `lem: hemisphere.clustering`. -/
 def IsMinInner (X : ℝ → SphereTuple d n) (w : SSphere d) (r : ℝ → ℝ) : Prop :=
@@ -168,39 +172,6 @@ def IsMinInner (X : ℝ → SphereTuple d n) (w : SSphere d) (r : ℝ → ℝ) :
     ∃ i : Idx n,
       r t = inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((w : EucSpace d))
 
-/-- *Step 1 inequalities in the proof of `lem: hemisphere.clustering`:*
-
-`r(t) := min_i ⟨x_i(t), w⟩` is non-decreasing on `ℝ_{≥0}`.
-
-Not proved here: it follows from `step1_rhs`, whose brackets are all `≥ 0` at
-a minimising index.
-
-Source: arXiv:2312.10794v5, §6.1, `lem: hemisphere.clustering`, step 1. -/
-theorem hemisphere_step1_monotone
-    (β : ℝ) (w : SSphere d) (X : ℝ → SphereTuple d n) (r : ℝ → ℝ)
-    (hX : Perspective.SA d n β X) (hr : IsMinInner d n X w r)
-    (hinit : ∀ i : Idx n,
-              0 < inner (𝕜 := ℝ) ((X 0 i : EucSpace d)) ((w : EucSpace d))) :
-    MonotoneOn r (Set.Ici (0 : ℝ)) := by
-  sorry
-
-/-- The hypotheses of `hemisphere_step1_monotone` are satisfiable: the
-consensus solution, with `w` the common position and `r ≡ ⟨x, x⟩ = 1`. -/
-example :
-    Perspective.SA 1 1 0 (fun _ _ => basePoint 0) ∧
-      IsMinInner 1 1 (fun _ _ => basePoint 0) (basePoint 0) (fun _ => 1) ∧
-      ∀ i : Idx 1,
-        0 < inner (𝕜 := ℝ)
-              (((fun _ _ => basePoint 0 : ℝ → SphereTuple 1 1) 0 i : EucSpace 1))
-              (((basePoint 0 : SSphere 1)) : EucSpace 1) := by
-  have hx : ‖((basePoint 0 : SSphere 1) : EucSpace 1)‖ = 1 :=
-    mem_sphere_zero_iff_norm.mp (basePoint 0).2
-  have hxx : inner (𝕜 := ℝ) (((basePoint 0 : SSphere 1)) : EucSpace 1)
-      (((basePoint 0 : SSphere 1)) : EucSpace 1) = 1 := by
-    rw [real_inner_self_eq_norm_mul_norm, hx]; ring
-  exact ⟨Perspective.SA_const_consensus 1 1 one_pos 0 (basePoint 0),
-    fun _ => ⟨fun _ => le_of_eq hxx.symm, ⟨0, hxx.symm⟩⟩, fun _ => by norm_num [hxx]⟩
-
 /-- **Equation (eq: therighthandside).**  The right-hand side of `SA` tested
 against a fixed direction `w`:
 
@@ -209,7 +180,7 @@ against a fixed direction `w`:
 
 The projection `Proj_{x_i}` is what produces the second summand, and with it
 the sign that makes `r(t) = min_i ⟨x_i(t), w⟩` non-decreasing in
-`hemisphere_step1_monotone`: at a minimising `i` every bracket is `≥ 0`.
+`Perspective.Section5_Hemisphere`: at a minimising `i` every bracket is `≥ 0`.
 
 Source: arXiv:2312.10794v5, §6.1, `eq: therighthandside`. -/
 theorem step1_rhs

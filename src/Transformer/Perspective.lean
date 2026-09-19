@@ -5,7 +5,8 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5.
 
 One module per section of the manuscript (`Section1_IPS … Section9_Approximation`),
 followed by the four appendices.  Everything lives in the namespace
-`Transformer.Perspective`.
+`Transformer.Perspective`.  `MinCurve` carries no section of its own: it is
+the one-sided calculus behind step 1 of §6.1.
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -14,7 +15,9 @@ import Transformer.Perspective.Section2_GradientFlow
 import Transformer.Perspective.Section2_ParticleFlow
 import Transformer.Perspective.Section3_SmallBeta
 import Transformer.Perspective.Section4_LargeBeta
+import Transformer.Perspective.MinCurve
 import Transformer.Perspective.Section5_HighD
+import Transformer.Perspective.Section5_Hemisphere
 import Transformer.Perspective.Section5_Exceptional
 import Transformer.Perspective.Section5_HighDCurve
 import Transformer.Perspective.Section5_Vanishing
