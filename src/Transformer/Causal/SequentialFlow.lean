@@ -116,25 +116,51 @@ converges to a strongly stable critical point.
 is `ContDiff ℝ 1`, the `C^1` of the statement; the two-sided bound on `Z_k` is
 carried as a hypothesis on every configuration.
 
-A `Prop`-valued definition and not a theorem: the paper's proof runs through a
-stable-manifold argument that is not available here, and none of it is
-formalized.
+Not proved here: the paper's proof runs through a stable-manifold argument that
+is not available in this development.
 
 Source: arXiv:2411.04990v2, §A, `lemma:convergence`. -/
-def SequentialFlowConverges : Prop :=
-  ∀ (E Z : Idx n → (Idx n → ℝ) → ℝ) (c C : ℝ), 0 < c →
-    (∀ k : Idx n, ContDiff ℝ 1 (E k) ∧ ContDiff ℝ 1 (Z k)) →
-    (∀ k : Idx n, ∀ ψ : Idx n → ℝ, c < Z k ψ ∧ Z k ψ < C) →
-    DependsOnPrefix n E → DependsOnPrefix n Z →
-    IsolatedCritical n E →
-    (∀ k : Idx n, ∀ ψ : Idx n → ℝ, IsCriticalPrefix n E Z k ψ →
-      StronglyStablePrefix n E Z k ψ ∨ StronglyUnstablePrefix n E Z k ψ) →
+theorem sequentialFlow_converges
+    (E Z : Idx n → (Idx n → ℝ) → ℝ) (c C : ℝ) (hc : 0 < c)
+    (hsmooth : ∀ k : Idx n, ContDiff ℝ 1 (E k) ∧ ContDiff ℝ 1 (Z k))
+    (hZ : ∀ k : Idx n, ∀ ψ : Idx n → ℝ, c < Z k ψ ∧ Z k ψ < C)
+    (hEpre : DependsOnPrefix n E) (hZpre : DependsOnPrefix n Z)
+    (hiso : IsolatedCritical n E)
+    (hhyp : ∀ k : Idx n, ∀ ψ : Idx n → ℝ, IsCriticalPrefix n E Z k ψ →
+      StronglyStablePrefix n E Z k ψ ∨ StronglyUnstablePrefix n E Z k ψ) :
     ∀ᵐ φ₀ : Idx n → ℝ ∂(Measure.pi fun _ : Idx n => (volume : Measure ℝ)),
       ∀ φ : ℝ → Idx n → ℝ, φ 0 = φ₀ → SequentialFlow n E Z φ →
         ∃ φstar : Idx n → ℝ,
           Filter.Tendsto φ Filter.atTop (nhds φstar) ∧
           (∀ k : Idx n, IsCriticalPrefix n E Z k φstar ∧
-            StronglyStablePrefix n E Z k φstar)
+            StronglyStablePrefix n E Z k φstar) := by
+  sorry
+
+/-- The hypotheses of `sequentialFlow_converges` are satisfiable, and not
+vacuously so: take `E_k(ψ) = ψ_k` and `Z_k ≡ 1` on one particle, with
+`c = 1/2` and `C = 2`.  Every angle then turns at the constant speed `-1`, so
+there is no critical point at all — which is what makes the last two
+hypotheses hold, the first of them by an isolation condition with no premise
+to satisfy. -/
+example :
+    (0 : ℝ) < 1 / 2 ∧
+      (∀ k : Idx 1, ContDiff ℝ 1 (fun ψ : Idx 1 → ℝ => ψ k) ∧
+        ContDiff ℝ 1 (fun _ : Idx 1 → ℝ => (1 : ℝ))) ∧
+      (∀ _k : Idx 1, ∀ _ψ : Idx 1 → ℝ, (1 / 2 : ℝ) < 1 ∧ (1 : ℝ) < 2) ∧
+      DependsOnPrefix 1 (fun k ψ => ψ k) ∧
+      DependsOnPrefix 1 (fun _ _ => (1 : ℝ)) ∧
+      IsolatedCritical 1 (fun k ψ => ψ k) ∧
+      (∀ k : Idx 1, ∀ ψ : Idx 1 → ℝ,
+        IsCriticalPrefix 1 (fun k ψ => ψ k) (fun _ _ => (1 : ℝ)) k ψ →
+          StronglyStablePrefix 1 (fun k ψ => ψ k) (fun _ _ => (1 : ℝ)) k ψ ∨
+            StronglyUnstablePrefix 1 (fun k ψ => ψ k) (fun _ _ => (1 : ℝ)) k ψ) := by
+  refine ⟨by norm_num, fun k => ⟨by fun_prop, by fun_prop⟩, fun _ _ => by norm_num,
+    fun k ψ ψ' h => h k le_rfl, fun _ _ _ _ => rfl, ?_, ?_⟩
+  · intro k ψ u hu
+    simp [Function.update_self] at hu
+  · intro k ψ hcrit
+    have := hcrit ⟨k, le_rfl⟩
+    simp [seqVelocity, Function.update_self] at this
 
 end Causal
 end Transformer

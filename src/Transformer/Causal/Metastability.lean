@@ -123,13 +123,12 @@ For an arbitrary set of stationary (strong R'enyi) tokens, all other tokens
 converge to the vicinity of one of them as `t → ∞`: every token eventually
 stays within the separation scale `δ` of some center.
 
-A `Prop`-valued definition and not a theorem: the paper's proof runs through
-`lemma_meta`, which is itself a `sorry` here, and the "vicinity" of the
-statement is taken to be the separation scale `δ` the centers are defined by.
+Not proved here: the paper's proof runs through `lemma_meta`, which is itself a
+`sorry`, and the "vicinity" of the statement is taken to be the separation
+scale `δ` the centers are defined by.
 
 Source: arXiv:2411.04990v2, §5, `thm: fixed_centers`. -/
-def FixedCentersConvergence (n : ℕ) (β δ : ℝ) : Prop :=
-  0 < β → 0 < δ →
+theorem fixed_centers_convergence (n : ℕ) (β δ : ℝ) (hβ : 0 < β) (hδ : 0 < δ) :
   ∀ X : ℝ → SphereTuple 2 n,
     Causal.CSA 2 n β (ContinuousLinearMap.id ℝ (EucSpace 2))
       (ContinuousLinearMap.id ℝ (EucSpace 2))
@@ -139,7 +138,11 @@ def FixedCentersConvergence (n : ℕ) (β δ : ℝ) : Prop :=
         δ < ‖((X 0 ⟨s j, hs j⟩ : EucSpace 2)) - ((X 0 i : EucSpace 2))‖) →
       ∀ i : Idx n, ∃ j : ℕ, j < m ∧
         ∀ᶠ t : ℝ in Filter.atTop,
-          ‖((X t i : EucSpace 2)) - ((X t ⟨s j, hs j⟩ : EucSpace 2))‖ < δ
+          ‖((X t i : EucSpace 2)) - ((X t ⟨s j, hs j⟩ : EucSpace 2))‖ < δ := by
+  sorry
+
+/-- The hypotheses of `fixed_centers_convergence` are satisfiable: `β = δ = 1`. -/
+example : (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 := ⟨one_pos, one_pos⟩
 
 /-- A finite `δ`-separated set of unit vectors: the values a R'enyi center
 subsequence takes, stripped of the indexing. -/
@@ -152,19 +155,22 @@ The number of (strong) R'enyi centers with separation `δ = c β^{-1/2}` is
 `Θ(β^{(d-1)/2})` — the packing number of the sphere `𝕊^{d-1}` at that scale,
 since the centers are exactly a `δ`-separated set of unit vectors.
 
-A `Prop`-valued definition: the conjecture is not proved here, and the
-`Θ` is spelled out as a pair of constants independent of `β`.
+Not proved here; the `Θ` is spelled out as a pair of constants independent of
+`β`.
 
 Source: arXiv:2411.04990v2, §5 (the cardinality conjecture). -/
-def RenyiCount (d : ℕ) (c : ℝ) : Prop :=
-  2 ≤ d → 0 < c →
-  ∃ C₁ C₂ : ℝ, 0 < C₁ ∧ 0 < C₂ ∧ ∀ β : ℝ, 1 ≤ β →
-    (∀ S : Finset (EucSpace d),
-        SeparatedOnSphere d S (c * β ^ (-(1/2 : ℝ))) →
-        (S.card : ℝ) ≤ C₂ * β ^ (((d : ℝ) - 1) / 2)) ∧
-    ∃ S : Finset (EucSpace d),
-      SeparatedOnSphere d S (c * β ^ (-(1/2 : ℝ))) ∧
-      C₁ * β ^ (((d : ℝ) - 1) / 2) ≤ (S.card : ℝ)
+theorem renyi_count (d : ℕ) (c : ℝ) (hd : 2 ≤ d) (hc : 0 < c) :
+    ∃ C₁ C₂ : ℝ, 0 < C₁ ∧ 0 < C₂ ∧ ∀ β : ℝ, 1 ≤ β →
+      (∀ S : Finset (EucSpace d),
+          SeparatedOnSphere d S (c * β ^ (-(1/2 : ℝ))) →
+          (S.card : ℝ) ≤ C₂ * β ^ (((d : ℝ) - 1) / 2)) ∧
+      ∃ S : Finset (EucSpace d),
+        SeparatedOnSphere d S (c * β ^ (-(1/2 : ℝ))) ∧
+        C₁ * β ^ (((d : ℝ) - 1) / 2) ≤ (S.card : ℝ) := by
+  sorry
+
+/-- The hypotheses of `renyi_count` are satisfiable: `d = 2`, `c = 1`. -/
+example : 2 ≤ 2 ∧ (0 : ℝ) < 1 := ⟨le_rfl, one_pos⟩
 
 end Causal
 end Transformer
