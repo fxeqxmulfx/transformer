@@ -9,11 +9,13 @@
 * the low-dimensional bound on the probability of being `(β, ε)`-separated.
 
 All three bound the probability of an event under the *uniform* measure on
-`𝕊^{d-1}`, which this development does not construct: it is carried as a
-parameter `σ`, a family of measures indexed by the dimension, and each
-statement is a `Prop`-valued definition of that family.  Nothing here says
-`σ d` is the uniform measure — that is the content the statements are relative
-to.
+`𝕊^{d-1}`, which this development does not construct.  It is pinned down
+instead of built: `IsUniformFamily` asks for a probability measure on each
+sphere invariant under every linear isometry of `ℝ^d`, and such a measure is
+unique, so quantifying over all families satisfying it is not a strengthening.
+This is `Perspective.UniformTuple`'s device, one sphere at a time.
+
+None of the three is proved.
 -/
 
 import Transformer.Basic
@@ -26,6 +28,20 @@ open Real MeasureTheory
 
 namespace Transformer
 namespace Metastability
+
+/-- The uniform law on `𝕊^{d-1}`, dimension by dimension: a probability measure
+on every sphere at once, each invariant under every linear isometry of its
+ambient `ℝ^d`.
+
+Such a family is unique — a rotation-invariant Borel probability measure on
+`𝕊^{d-1}` *is* `σ_d` — so the statements below, read against every family
+satisfying this, say exactly what the survey says about the uniform one.  The
+invariance is stated through `Perspective.sphereMap`, which keeps the Haar
+machinery out. -/
+def IsUniformFamily (σ : ∀ d : ℕ, Measure (SSphere d)) : Prop :=
+  ∀ d : ℕ, IsProbabilityMeasure (σ d) ∧
+    ∀ U : EucSpace d ≃ₗᵢ[ℝ] EucSpace d,
+      (σ d).map (Perspective.sphereMap d U) = σ d
 
 /-- The law of `n` i.i.d. draws from a measure `ν` on `𝕊^{d-1}`. -/
 noncomputable def iidSphere (d n : ℕ) (ν : Measure (SSphere d)) :
@@ -49,11 +65,18 @@ For `n ≥ 2` there is `d⋆(n) > n` such that for every `d ≥ d⋆(n)`, an i.i
 uniform sample on `𝕊^{d-1}` lies in `nearOrthogonal` with probability at
 least `1 - 2 n² d^{-1/64}`.
 
+Not proved here.
+
 Source: arXiv:2410.06833v1, §4. -/
-def ConcentrationUnif (σ : ∀ d : ℕ, Measure (SSphere d)) : Prop :=
-  ∀ n : ℕ, 2 ≤ n → ∃ d_star : ℕ, n < d_star ∧ ∀ d : ℕ, d_star ≤ d →
-    1 - 2 * (n : ℝ)^2 * (d : ℝ) ^ (-(1 : ℝ) / 64)
-      ≤ (iidSphere d n (σ d)).real (nearOrthogonal d n)
+theorem concentration_unif (n : ℕ) (hn : 2 ≤ n) :
+    ∀ σ : ∀ d : ℕ, Measure (SSphere d), IsUniformFamily σ →
+      ∃ d_star : ℕ, n < d_star ∧ ∀ d : ℕ, d_star ≤ d →
+        1 - 2 * (n : ℝ)^2 * (d : ℝ) ^ (-(1 : ℝ) / 64)
+          ≤ (iidSphere d n (σ d)).real (nearOrthogonal d n) := by
+  sorry
+
+/-- The hypothesis of `concentration_unif` is satisfiable: `n = 2`. -/
+example : 2 ≤ 2 := le_rfl
 
 /-- **Corollary (coro: cm) with equation (eq: technical.cond).**
 
@@ -64,16 +87,24 @@ For `d ≥ max(d⋆(n), 381)` and `β > 0` satisfying
 an i.i.d. uniform sample on `𝕊^{d-1}` is `(β, ε)`-separated with
 `ε = 4 log d / d` with probability at least `1 - 2 n² d^{-1/64}`.
 
+Not proved here; it rests on `concentration_unif`, which is not proved
+either.
+
 Source: arXiv:2410.06833v1, §4. -/
-def UniformSeparated (σ : ∀ d : ℕ, Measure (SSphere d)) : Prop :=
-  ∀ n : ℕ, 2 ≤ n → ∃ d_star : ℕ, n ≤ d_star ∧ 381 ≤ d_star ∧
-    ∀ d : ℕ, d_star ≤ d → ∀ β : ℝ, 0 < β →
-      (16 * (Real.log d)^2 / (d : ℝ)^2)
-          + (40 * Real.log d / (d : ℝ))
-          + β⁻¹ * Real.log ((n : ℝ)^2 * d / (2 * Real.log d)) < 1 →
-        1 - 2 * (n : ℝ)^2 * (d : ℝ) ^ (-(1 : ℝ) / 64)
-          ≤ (iidSphere d n (σ d)).real
-              { X | isSeparated d n β (4 * Real.log d / (d : ℝ)) X }
+theorem uniform_separated (n : ℕ) (hn : 2 ≤ n) :
+    ∀ σ : ∀ d : ℕ, Measure (SSphere d), IsUniformFamily σ →
+      ∃ d_star : ℕ, n ≤ d_star ∧ 381 ≤ d_star ∧
+        ∀ d : ℕ, d_star ≤ d → ∀ β : ℝ, 0 < β →
+          (16 * (Real.log d)^2 / (d : ℝ)^2)
+              + (40 * Real.log d / (d : ℝ))
+              + β⁻¹ * Real.log ((n : ℝ)^2 * d / (2 * Real.log d)) < 1 →
+            1 - 2 * (n : ℝ)^2 * (d : ℝ) ^ (-(1 : ℝ) / 64)
+              ≤ (iidSphere d n (σ d)).real
+                  { X | isSeparated d n β (4 * Real.log d / (d : ℝ)) X } := by
+  sorry
+
+/-- The hypothesis of `uniform_separated` is satisfiable: `n = 2`. -/
+example : 2 ≤ 2 := le_rfl
 
 /-- **Low-dimensional bound.**
 
@@ -83,12 +114,18 @@ there is `c ∈ (0, 1)`, depending on `β` and `ε` alone, with
 
   `ℙ((x_1,…,x_n) is (β, ε)-separated) ≤ c^n`.
 
+Not proved here.
+
 Source: arXiv:2410.06833v1, §4. -/
-def LowDimDecay (σ : ∀ d : ℕ, Measure (SSphere d)) : Prop :=
-  ∀ β ε : ℝ, 0 < ε → ε < 1 / 16 →
-    ∃ c : ℝ, 0 < c ∧ c < 1 ∧
-      ∀ n : ℕ, 2 ≤ n →
-        (iidSphere 2 n (σ 2)).real { X | isSeparated 2 n β ε X } ≤ c ^ n
+theorem low_dim_decay (β ε : ℝ) (hε : 0 < ε) (hε16 : ε < 1 / 16) :
+    ∀ σ : ∀ d : ℕ, Measure (SSphere d), IsUniformFamily σ →
+      ∃ c : ℝ, 0 < c ∧ c < 1 ∧
+        ∀ n : ℕ, 2 ≤ n →
+          (iidSphere 2 n (σ 2)).real { X | isSeparated 2 n β ε X } ≤ c ^ n := by
+  sorry
+
+/-- The hypotheses of `low_dim_decay` are satisfiable: `ε = 1/32`. -/
+example : (0 : ℝ) < 1 / 32 ∧ (1 : ℝ) / 32 < 1 / 16 := by norm_num
 
 end Metastability
 end Transformer

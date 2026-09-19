@@ -138,22 +138,43 @@ def capExitSet (β c Tesc : ℝ) (η V : ℝ → ℝ) : Set ℝ :=
 For every `c > 0` the set `capExitSet` is non-empty and its infimum `T_*(q, c)`
 is smaller than `(4 ε / k) e^{(c - 8 ε) β}`.
 
+Not proved here.
+
 Source: arXiv:2410.06833v1, §5. -/
-def CapExit (β ε c Tesc : ℝ) (k : ℕ) (η V : ℝ → ℝ) : Prop :=
-  0 < c → 0 < ε → 0 < k →
+theorem cap_exit (β ε c Tesc : ℝ) (k : ℕ) (η V : ℝ → ℝ)
+    (hc : 0 < c) (hε : 0 < ε) (hk : 0 < k) :
     (capExitSet β c Tesc η V).Nonempty ∧
       sInf (capExitSet β c Tesc η V)
-        < (4 * ε / (k : ℝ)) * Real.exp ((c - 8 * ε) * β)
+        < (4 * ε / (k : ℝ)) * Real.exp ((c - 8 * ε) * β) := by
+  sorry
+
+/-- The hypotheses of `cap_exit` are satisfiable: `c = ε = 1`, one cap. -/
+example : (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧ 0 < 1 := ⟨one_pos, one_pos, one_pos⟩
 
 /-- **Equation (eq: v.small).**  At the cap-exit time the within-cap variance
 is exponentially small:
 
   `𝖵_q(T_*(q, c)) ≤ e^{-λ β}`.
 
+Not proved here; the exit time it is read at is the one `cap_exit` produces,
+which is not proved either.
+
 Source: arXiv:2410.06833v1, §5. -/
-def VarianceSmall (β c lam Tesc : ℝ) (η V : ℝ → ℝ) : Prop :=
-  0 < c → 0 < lam → (capExitSet β c Tesc η V).Nonempty →
-    V (sInf (capExitSet β c Tesc η V)) ≤ Real.exp (-lam * β)
+theorem variance_small (β c lam Tesc : ℝ) (η V : ℝ → ℝ)
+    (hc : 0 < c) (hlam : 0 < lam)
+    (hne : (capExitSet β c Tesc η V).Nonempty) :
+    V (sInf (capExitSet β c Tesc η V)) ≤ Real.exp (-lam * β) := by
+  sorry
+
+/-- The hypotheses of `variance_small` are satisfiable: at zero cap mass the
+exit condition `0 ≤ 2 e^{-cβ}` holds at every time, so `t = 0` is in the exit
+set. -/
+example :
+    (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧
+      (capExitSet 1 1 1 (fun _ => 0) (fun _ => 0)).Nonempty := by
+  refine ⟨one_pos, one_pos, ⟨0, ⟨le_rfl, zero_le_one⟩, ?_⟩⟩
+  have h : (0 : ℝ) ≤ 2 * Real.exp (-1 * 1) := by positivity
+  simpa using h
 
 end Metastability
 end Transformer

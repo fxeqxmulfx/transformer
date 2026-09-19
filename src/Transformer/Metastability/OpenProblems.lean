@@ -116,7 +116,7 @@ reparametrizations `(τ_β)_{β}` of `ℝ_{≥0}` along which the energy has the
 staircase profile above?
 
 The survey answers this affirmatively only for the modified `USA` dynamics on
-the circle (`StaircaseProfile` in `Metastability.Staircase`); in the
+the circle (`Metastability.staircase_profile`); in the
 generality below it is open.
 
 Source: arXiv:2410.06833v1, §6, `conj: saddle-to-saddle`. -/
