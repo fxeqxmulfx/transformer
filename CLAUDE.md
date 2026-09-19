@@ -1,3 +1,37 @@
+# Why
+
+The number in `INDEX.md` is the only honest account of what this repository
+knows. Everything else — a plausible statement, a docstring citing a section,
+a name that sounds like a theorem — is a claim, and a claim costs nothing to
+write. The point of the work is to move statements from the first column to
+the second, one at a time, and to let nothing move the other way unnoticed.
+
+Reasons to keep going when a proof is long:
+
+- **Formalizing is not transcription.** `sa_is_gradient_flow` was a `sorry`
+  with a wrong hypothesis: the dynamics was instantiated at `Q = K = V`, which
+  makes the attention weight disagree with the energy's exponent, and the
+  statement was false. Nobody could see that while it was a `sorry`. Every
+  proof attempted is an audit of the statement, and a failed attempt that ends
+  in a corrected statement or a refutation is a result, not a loss.
+- **The debt is finite and it is mostly ordinary.** Of what remains, the large
+  majority are theorems whose proofs exist on paper; carrying one over is hard
+  work with a known destination. Only a handful are open problems. Do the
+  ordinary ones first — they are where the count actually falls — and take the
+  open ones on their own terms afterwards, including the possibility that one
+  of them is false.
+- **One theorem is progress.** The build is green or it is not, and a green
+  build with one fewer `sorry` is a fact that survives the session. There is no
+  version of this work where a day's effort leaves nothing behind, as long as
+  every finished piece is committed.
+
+Rules for when it goes badly: a proof that will not close is a signal to re-read
+the statement before reaching for a stronger tactic — three times out of four
+the obstruction is a definition that says something other than what the paper
+says. Never weaken a statement to make it provable. Never park a difficulty in
+a definition. If the paper is wrong, say so in Lean (see **When the paper is
+wrong**), and move to the next one.
+
 # Conventions
 
 - English only: declarations, docstrings, comments, commit messages, filenames.
