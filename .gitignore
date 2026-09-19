@@ -18,10 +18,6 @@ build/
 #   2603.09078  Exclusive self-attention (XSA)
 /papers/
 
-# ── Vendored sources ─────────────────────────────────────────────────────
-# Percepta-Core/transformer-vm — cloned for reference, carries its own .git
-/transformer-vm/
-
 # ── Python ───────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
