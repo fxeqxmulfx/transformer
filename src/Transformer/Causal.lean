@@ -15,3 +15,4 @@ import Transformer.Causal.InteractionWindow
 import Transformer.Causal.Metastability
 import Transformer.Causal.SequentialFlow
 import Transformer.Causal.ParkingCount
+import Transformer.Causal.CapMass
