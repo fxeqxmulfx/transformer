@@ -71,7 +71,7 @@ Required:
 - `rfl` / `trivial` / one-line `simp` closing a substantive theorem ⇒ suspect a
   placeholder definition beneath it.
 
-Current debt, per `INDEX.md`: 53 theorems using `sorry`, 0 vacuous statements,
+Current debt, per `INDEX.md`: 58 theorems using `sorry`, 0 vacuous statements,
 0 placeholder definitions. Never add to these counts; the index makes any
 increase visible. The one admissible increase is turning a statement-`Prop` into
 a sorried theorem: that debt already existed, hidden, and the number here is

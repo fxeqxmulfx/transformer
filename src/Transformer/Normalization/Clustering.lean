@@ -8,10 +8,10 @@
 * its corollary — for Pre-LN and Peri-LN with `n ≤ e^β` the second alternative
   is excluded and the synchronization is unconditional.
 
-Both are `Prop`-valued definitions: the paper's statement is almost-sure with
-respect to a reference measure on the initial configuration, and this
-development does not construct the uniform or the Gaussian measure — each
-carries it as a parameter instead.  The gradient-flow identification the proof
+Neither is proved here.  The paper's statement is almost-sure with respect to
+a reference measure on the initial configuration, and this development does not
+construct the uniform or the Gaussian measure — each statement carries it as a
+parameter instead.  The gradient-flow identification the proof
 starts from is in `Normalization.Convergence`, the velocity lower bound behind
 the corollary in `Normalization.Radial`, and the convergence machinery of the
 proof in `Normalization.Lojasiewicz`.
@@ -70,13 +70,18 @@ records that the same conclusion holds for constant `Q, K` and
 Not proved here.
 
 Source: arXiv:2510.22026v2, §3, `thm: convergence`. -/
-def ClustersFromUniform
-    (σ : Measure (SphereTuple d n)) (β : ℝ) (α : ℝ → ℝ) (τ : ℝ)
-    (scheme : Scheme) : Prop :=
-  scheme = Scheme.post ∨ scheme = Scheme.nGPT ∨ scheme = Scheme.CoD →
-  ∀ᵐ Θ₀ ∂σ, ∀ (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ),
-    θ 0 = tupleCoe Θ₀ → SchemeDynamics d n β (idParams d) (idParams d) (idParams d) α τ scheme θ r →
-      Synchronizes d n θ
+theorem clusters_from_uniform
+    (σ : Measure (SphereTuple d n)) (β : ℝ) (α : ℝ → ℝ) (τ : ℝ) (scheme : Scheme)
+    (hscheme : scheme = Scheme.post ∨ scheme = Scheme.nGPT ∨ scheme = Scheme.CoD) :
+    ∀ᵐ Θ₀ ∂σ, ∀ (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ),
+      θ 0 = tupleCoe Θ₀ →
+        SchemeDynamics d n β (idParams d) (idParams d) (idParams d) α τ scheme θ r →
+          Synchronizes d n θ := by
+  sorry
+
+/-- The hypothesis of `clusters_from_uniform` is satisfiable: Post-LN. -/
+example : Scheme.post = Scheme.post ∨ Scheme.post = Scheme.nGPT ∨ Scheme.post = Scheme.CoD :=
+  Or.inl rfl
 
 /-- **Theorem (thm: convergence), second half.** *Pre-LN, Mix-LN and Peri-LN.*
 
@@ -94,15 +99,20 @@ Gaussian on `(ℝ^d)^{⊗ n}` is not constructed here.
 Not proved here.
 
 Source: arXiv:2510.22026v2, §3, `thm: convergence`. -/
-def ClustersOrStallsFromGaussian
-    (σ : Measure (Idx n → EucSpace d)) (β : ℝ) (α : ℝ → ℝ) (τ : ℝ)
-    (scheme : Scheme) : Prop :=
-  scheme = Scheme.pre ∨ scheme = Scheme.mix ∨ scheme = Scheme.peri →
-  ∀ᵐ X₀ : Idx n → EucSpace d ∂σ, (∀ j : Idx n, X₀ j ≠ 0) →
-    ∀ (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ),
-      (∀ j : Idx n, θ 0 j = ‖X₀ j‖⁻¹ • X₀ j) → (∀ j : Idx n, r 0 j = ‖X₀ j‖) →
-        SchemeDynamics d n β (idParams d) (idParams d) (idParams d) α τ scheme θ r →
-          Synchronizes d n θ ∨ RadialStalls d n β τ scheme θ
+theorem clusters_or_stalls_from_gaussian
+    (σ : Measure (Idx n → EucSpace d)) (β : ℝ) (α : ℝ → ℝ) (τ : ℝ) (scheme : Scheme)
+    (hscheme : scheme = Scheme.pre ∨ scheme = Scheme.mix ∨ scheme = Scheme.peri) :
+    ∀ᵐ X₀ : Idx n → EucSpace d ∂σ, (∀ j : Idx n, X₀ j ≠ 0) →
+      ∀ (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ),
+        (∀ j : Idx n, θ 0 j = ‖X₀ j‖⁻¹ • X₀ j) → (∀ j : Idx n, r 0 j = ‖X₀ j‖) →
+          SchemeDynamics d n β (idParams d) (idParams d) (idParams d) α τ scheme θ r →
+            Synchronizes d n θ ∨ RadialStalls d n β τ scheme θ := by
+  sorry
+
+/-- The hypothesis of `clusters_or_stalls_from_gaussian` is satisfiable:
+Pre-LN. -/
+example : Scheme.pre = Scheme.pre ∨ Scheme.pre = Scheme.mix ∨ Scheme.pre = Scheme.peri :=
+  Or.inl rfl
 
 /-- **Corollary.** *Unconditional synchronization for Pre-LN and Peri-LN.*
 
@@ -114,15 +124,22 @@ Not proved here: what is available is the velocity bound, not the implication
 from it to clustering, which is the content of `thm: convergence` itself.
 
 Source: arXiv:2510.22026v2, §3, the corollary to `thm: convergence`. -/
-def UnconditionalSynchronization
-    (σ : Measure (Idx n → EucSpace d)) (β : ℝ) (α : ℝ → ℝ) (τ : ℝ)
-    (scheme : Scheme) : Prop :=
-  0 < β → (n : ℝ) ≤ Real.exp β →
-  scheme = Scheme.pre ∨ scheme = Scheme.peri →
-  ∀ᵐ X₀ : Idx n → EucSpace d ∂σ, (∀ j : Idx n, X₀ j ≠ 0) →
-    ∀ (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ),
-      (∀ j : Idx n, θ 0 j = ‖X₀ j‖⁻¹ • X₀ j) → (∀ j : Idx n, r 0 j = ‖X₀ j‖) →
-        SchemeDynamics d n β (idParams d) (idParams d) (idParams d) α τ scheme θ r → Synchronizes d n θ
+theorem unconditional_synchronization
+    (σ : Measure (Idx n → EucSpace d)) (β : ℝ) (α : ℝ → ℝ) (τ : ℝ) (scheme : Scheme)
+    (hβ : 0 < β) (hn : (n : ℝ) ≤ Real.exp β)
+    (hscheme : scheme = Scheme.pre ∨ scheme = Scheme.peri) :
+    ∀ᵐ X₀ : Idx n → EucSpace d ∂σ, (∀ j : Idx n, X₀ j ≠ 0) →
+      ∀ (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ),
+        (∀ j : Idx n, θ 0 j = ‖X₀ j‖⁻¹ • X₀ j) → (∀ j : Idx n, r 0 j = ‖X₀ j‖) →
+          SchemeDynamics d n β (idParams d) (idParams d) (idParams d) α τ scheme θ r →
+            Synchronizes d n θ := by
+  sorry
+
+/-- The hypotheses of `unconditional_synchronization` are satisfiable: one token,
+`β = 1`, Pre-LN, since `1 ≤ e`. -/
+example :
+    (0 : ℝ) < 1 ∧ ((1 : ℕ) : ℝ) ≤ Real.exp 1 ∧ (Scheme.pre = Scheme.pre ∨ Scheme.pre = Scheme.peri) :=
+  ⟨one_pos, by simp, Or.inl rfl⟩
 
 end Normalization
 end Transformer

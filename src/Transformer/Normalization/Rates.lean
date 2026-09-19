@@ -12,9 +12,9 @@ Part (i) of `thm: preln-slow`, the radial growth `r_k(t) ≥ (1 - δ) t`, is
 proved in `Normalization.Velocities`; the bound `‖A_j‖ ≤ 1` that holds at every
 configuration is there too.
 
-Both statements here are `Prop`-valued definitions.  The first is almost-sure
-with respect to the uniform measure on `(𝕊^{d-1})^{⊗ n}`, which this
-development does not construct, and carries it as a parameter.  The second is
+Neither statement here is proved.  The first is almost-sure with respect to the
+uniform measure on `(𝕊^{d-1})^{⊗ n}`, which this development does not
+construct, and carries it as a parameter.  The second is
 an asymptotic two-sided bound: the `Θ(·)` is spelled out as a pair of
 constants `0 < c ≤ C` sandwiching the derivative, which is what `Θ` means, and
 neither is proved here.
@@ -25,6 +25,7 @@ import Transformer.Normalization.Basic
 import Transformer.Normalization.Velocities
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+import Mathlib.Analysis.Complex.ExponentialBounds
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -53,17 +54,39 @@ part of what it would have to supply.
 Not proved here.
 
 Source: arXiv:2510.22026v2, §4.2, `thm: initial-velocity`. -/
-def InitialVelocitySmall (σ : Measure (SphereTuple d n)) : Prop :=
-  ∃ c C : ℝ, 0 < c ∧ 0 < C ∧
-    ∀ Q K V : ParamMatrix d,
-      (∀ x y : EucSpace d, |inner (𝕜 := ℝ) (Q x) (K y)| ≤ ‖x‖ * ‖y‖) →
-      ‖V‖ ≤ 1 →
-      (n : ℝ) * Real.log n ≤ Real.exp (Real.sqrt d) →
-      (d : ℝ) ≤ (n : ℝ) * Real.log n →
-      1 - ENNReal.ofReal ((n : ℝ) ^ (-c))
-        ≤ σ { Θ : SphereTuple d n | ∀ j : Idx n,
-            ‖attentionVec d n 1 Q K V (tupleCoe Θ) j‖
-              ≤ C * (Real.sqrt (Real.log n / n) + Real.log n / d) }
+theorem initial_velocity_small (σ : Measure (SphereTuple d n)) :
+    ∃ c C : ℝ, 0 < c ∧ 0 < C ∧
+      ∀ Q K V : ParamMatrix d,
+        (∀ x y : EucSpace d, |inner (𝕜 := ℝ) (Q x) (K y)| ≤ ‖x‖ * ‖y‖) →
+        ‖V‖ ≤ 1 →
+        (n : ℝ) * Real.log n ≤ Real.exp (Real.sqrt d) →
+        (d : ℝ) ≤ (n : ℝ) * Real.log n →
+        1 - ENNReal.ofReal ((n : ℝ) ^ (-c))
+          ≤ σ { Θ : SphereTuple d n | ∀ j : Idx n,
+              ‖attentionVec d n 1 Q K V (tupleCoe Θ) j‖
+                ≤ C * (Real.sqrt (Real.log n / n) + Real.log n / d) } := by
+  sorry
+
+/-- The hypotheses `initial_velocity_small` carries under its quantifiers are
+satisfiable: `Q = K = V = I_d` meet the two operator bounds by Cauchy–Schwarz,
+and `n = 2`, `d = 1` meet `n log n ≤ e^{√d}` and `d ≤ n log n`, since
+`1 ≤ 2 log 2 ≈ 1.386 ≤ e`. -/
+example :
+    (∀ x y : EucSpace 1,
+        |inner (𝕜 := ℝ) (ContinuousLinearMap.id ℝ (EucSpace 1) x)
+          (ContinuousLinearMap.id ℝ (EucSpace 1) y)| ≤ ‖x‖ * ‖y‖) ∧
+      ‖ContinuousLinearMap.id ℝ (EucSpace 1)‖ ≤ 1 ∧
+      ((2 : ℕ) : ℝ) * Real.log ((2 : ℕ) : ℝ) ≤ Real.exp (Real.sqrt ((1 : ℕ) : ℝ)) ∧
+      ((1 : ℕ) : ℝ) ≤ ((2 : ℕ) : ℝ) * Real.log ((2 : ℕ) : ℝ) := by
+  refine ⟨fun x y => abs_real_inner_le_norm x y, ContinuousLinearMap.norm_id_le, ?_, ?_⟩
+  · have h1 : Real.log 2 < 0.6931471808 := Real.log_two_lt_d9
+    have h2 : (2.7182818283 : ℝ) < Real.exp 1 := Real.exp_one_gt_d9
+    push_cast
+    rw [Real.sqrt_one]
+    nlinarith
+  · have h1 : (0.6931471803 : ℝ) < Real.log 2 := Real.log_two_gt_d9
+    push_cast
+    nlinarith
 
 /-- The time scale by which `thm: preln-slow (ii)` divides the intra-cluster
 variance, one row per scheme: `1` for Post-LN, `t` for Pre-LN, Mix-LN and
@@ -99,19 +122,30 @@ Part (i) is `radialDerivative_pre_ge_of_localCone`.
 Not proved here.
 
 Source: arXiv:2510.22026v2, §4.3, `thm: preln-slow` (ii). -/
-def ClusteringRate (β δ : ℝ) (α : ℝ → ℝ) (τ : ℝ) (scheme : Scheme) : Prop :=
-  δ < 1 / (100 * (n : ℝ) ^ 2 * β ^ 2) →
-  ∀ Q K : ℝ → ParamMatrix d,
-    (∀ t : ℝ, ∀ x y : EucSpace d,
-      |inner (𝕜 := ℝ) (Q t x) (K t y)| ≤ ‖x‖ * ‖y‖) →
-    ∃ c C : ℝ, 0 < c ∧ c ≤ C ∧
-      ∀ (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ),
-        (∀ j k : Idx n, 1 - δ ≤ inner (𝕜 := ℝ) (θ 0 j) (θ 0 k)) →
-        SchemeDynamics d n β Q K (idParams d) α τ scheme θ r →
-          ∀ t : ℝ, 0 < t → ∃ v : ℝ,
-            HasDerivAt (intraClusterVar d n θ) v t ∧
-            -(C * intraClusterVar d n θ t / varScale α scheme t) ≤ v ∧
-            v ≤ -(c * intraClusterVar d n θ t / varScale α scheme t)
+theorem clustering_rate (β δ : ℝ) (α : ℝ → ℝ) (τ : ℝ) (scheme : Scheme)
+    (hδ : δ < 1 / (100 * (n : ℝ) ^ 2 * β ^ 2)) :
+    ∀ Q K : ℝ → ParamMatrix d,
+      (∀ t : ℝ, ∀ x y : EucSpace d,
+        |inner (𝕜 := ℝ) (Q t x) (K t y)| ≤ ‖x‖ * ‖y‖) →
+      ∃ c C : ℝ, 0 < c ∧ c ≤ C ∧
+        ∀ (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ),
+          (∀ j k : Idx n, 1 - δ ≤ inner (𝕜 := ℝ) (θ 0 j) (θ 0 k)) →
+          SchemeDynamics d n β Q K (idParams d) α τ scheme θ r →
+            ∀ t : ℝ, 0 < t → ∃ v : ℝ,
+              HasDerivAt (intraClusterVar d n θ) v t ∧
+              -(C * intraClusterVar d n θ t / varScale α scheme t) ≤ v ∧
+              v ≤ -(c * intraClusterVar d n θ t / varScale α scheme t) := by
+  sorry
+
+/-- The hypotheses of `clustering_rate` are satisfiable: one token, `β = 1` and
+`δ = 0`, since `0 < 1 / 100`; and `Q = K = I_d` meet the operator bound at every
+time by Cauchy–Schwarz. -/
+example :
+    (0 : ℝ) < 1 / (100 * ((1 : ℕ) : ℝ) ^ 2 * (1 : ℝ) ^ 2) ∧
+      ∀ _t : ℝ, ∀ x y : EucSpace 1,
+        |inner (𝕜 := ℝ) (ContinuousLinearMap.id ℝ (EucSpace 1) x)
+          (ContinuousLinearMap.id ℝ (EucSpace 1) y)| ≤ ‖x‖ * ‖y‖ := by
+  refine ⟨by norm_num, fun _ x y => abs_real_inner_le_norm x y⟩
 
 end Normalization
 end Transformer
