@@ -52,6 +52,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.Conjunctions` | the conjunction of a list, and the depth-`0` test that a position carries a letter |
 | `CRASP.Transformers` | future-masked rounded transformers and the equivalence with `TL[◁#]` |
 | `CRASP.FiniteFunction` | `lem:finite_function`: postcomposing a definable map with any `g : 𝔽 → 𝔽` |
+| `CRASP.ConstantLayer` | above a constant activation a layer computes one vector, and the collapsed transformer |
 | `CRASP.Collapse` | a conjecture, in no paper: collapse after `L` layers caps the depth at `L` |
 | `CRASP.MajTwo` | `MAJ²`, majority quantification over two variables |
 | `CRASP.MajTwoDepthOne` | why its closed depth-`1` formulas cannot read the last symbol |
@@ -120,6 +121,7 @@ import Transformer.CRASP.FixedBits
 import Transformer.CRASP.Conjunctions
 import Transformer.CRASP.Transformers
 import Transformer.CRASP.FiniteFunction
+import Transformer.CRASP.ConstantLayer
 import Transformer.CRASP.Collapse
 import Transformer.CRASP.MajTwo
 import Transformer.CRASP.MajTwoDepthOne

@@ -107,6 +107,22 @@ theorem round_val (p s : ℕ) (y : Fx p s) : round p s y.val = y := by
   ext
   rw [m_round, this, clamp_eq_self y.lo y.hi]
 
+/-- **One grid step separates distinct fixed-precision numbers.**  Two numbers
+whose values differ by less than `2^{-s}` are equal: both are integer
+multiples of `2^{-s}`, so their mantissas differ by less than one. -/
+theorem eq_of_abs_val_sub_lt {x y : Fx p s} (h : |x.val - y.val| < 2⁻¹ ^ s) :
+    x = y := by
+  have hpos : (0 : ℝ) < 2 ^ s := by positivity
+  have hval : x.val - y.val = ((x.m - y.m : ℤ) : ℝ) / 2 ^ s := by
+    rw [val, val, div_sub_div_same]
+    push_cast
+    ring
+  rw [hval, inv_pow, abs_div, abs_of_pos hpos, div_lt_iff₀ hpos,
+    inv_mul_cancel₀ (ne_of_gt hpos), ← Int.cast_abs] at h
+  have hm : |x.m - y.m| < 1 := by exact_mod_cast h
+  have := abs_lt.mp hm
+  exact ext (by omega)
+
 /-- Rounded addition, which is exact whenever the sum is representable: the
 paper writes `c + h` for the residual connection without saying what happens on
 overflow (`def:transformer`). -/
