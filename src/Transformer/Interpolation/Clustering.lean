@@ -3,21 +3,24 @@
 
 Formalization of §2 of arXiv:2411.04551v3:
 
-* `Proposition prop: targets.atoms`  — clustering to a single point mass,
 * `Proposition prop: compression`     — clustering to discrete measures,
 * `Remark rem: nb.disc.clustering`    — bound on the number of switches.
 
-Both propositions assert that *some* parameter curve drives `eq: cauchy.pb`
-to a prescribed target, and measure the error in a Wasserstein distance, which
-Mathlib does not have; the geodesic convex hull `conv_g` is not available here
-either.  They therefore carry the distance as a parameter, with the geodesic
-hull replaced by the support of the measure — weaker, and stated as such — and
-neither is proved.  `rem: nb.disc.clustering` counts the switches of
-the parameter curve; the count is here reduced to "finitely many", since the
-packing and homotopy quantities `𝖭_k^i(δ)` and `L_{k,n}^i` it is expressed in
-are not defined in this development.
+`Proposition prop: targets.atoms`, clustering to a single point mass, is
+`Transformer.Interpolation.AtomClustering`, together with the refutation of the
+form it had here.
 
-What is proved is the invariance that both proofs start from: the barycenter
+`prop: compression` asserts that *some* parameter curve drives `eq: cauchy.pb`
+to a prescribed target, and measures the error in a Wasserstein distance, which
+Mathlib does not have; the geodesic convex hull `conv_g` is not available here
+either.  It therefore carries the distance as a parameter, with the geodesic
+hull replaced by the support of the measure — weaker, and stated as such — and
+is not proved.  `rem: nb.disc.clustering` counts the switches of the parameter
+curve; the count is here reduced to "finitely many", since the packing and
+homotopy quantities `𝖡_k^i(δ)` and `L_{k,n}^i` it is expressed in are not
+defined in this development.
+
+What is proved is the invariance that the proof starts from: the barycenter
 of a measure supported in a cap `⟨·, w⟩ ≥ c` lies in that same cap, so a
 measure supported in an open hemisphere has a nonzero barycenter — which is
 what makes the drift of `eq: average.vf` point into the hemisphere.
@@ -110,50 +113,6 @@ example (x₀ : SSphere 1) :
       = Measure.dirac x₀ from rfl, MeasureTheory.ae_dirac_eq, Filter.eventually_pure]
   have hx : ‖(x₀ : EucSpace 1)‖ = 1 := mem_sphere_zero_iff_norm.mp x₀.2
   rw [real_inner_self_eq_norm_mul_norm, hx, mul_one]
-
-/-- **Proposition (prop: targets.atoms).**  *Clustering to a single point.*
-
-If `𝐁 ∈ M_{d×d}(ℝ)` and `supp μ_0` is contained in an open hemisphere, then
-the solution to `eq: cauchy.pb`–`eq: vf` with `(𝐕, 𝐁, 𝐖) ≡ (I_d, 𝐁, 0)`
-satisfies `diam(conv_g supp μ(t)) → 0` as `t → ∞`, and for any `ε > 0` there
-are `z ∈ conv_g supp μ_0` and `T > 0` with `W_∞(μ(T), δ_z) ≤ ε`.
-
-Three weakenings: `conv_g` is replaced by the support itself (the diameters
-agree inside an open hemisphere, which is not proved here), the membership
-`z ∈ conv_g supp μ_0` is dropped, and `W_∞` (`Winf`) is a parameter.  The paper's
-companion rate `inf{ t : W_2(μ(t), δ_z) ≤ ε } = O(log(1/ε))` is not
-formalized.
-
-Not proved here.
-
-Source: arXiv:2411.04551v3, §2. -/
-theorem clustering_to_atom
-    (Winf : Measure (SSphere d) → Measure (SSphere d) → ℝ)
-    (B : ParamMatrix d) (μ₀ : ProbSphere d)
-    (hhemi : ∃ w : SSphere d, ∀ x ∈ (μ₀ : Measure (SSphere d)).support,
-      0 < inner (𝕜 := ℝ) (x : EucSpace d) ((w : EucSpace d))) :
-    ∀ μ : ℝ → ProbSphere d, μ 0 = μ₀ →
-      cauchyPB d (fun _ => ⟨ContinuousLinearMap.id ℝ (EucSpace d), B, 0, 0, 0⟩) μ →
-        Filter.Tendsto
-            (fun t : ℝ => Metric.diam ((μ t : Measure (SSphere d)).support))
-            Filter.atTop (nhds 0) ∧
-          ∀ ε : ℝ, 0 < ε → ∃ (z : SSphere d) (T : ℝ), 0 < T ∧
-            Winf (μ T : Measure (SSphere d)) (Measure.dirac z) ≤ ε := by
-  sorry
-
-/-- The hypothesis of `clustering_to_atom` is satisfiable: a Dirac mass is
-supported at its own point, which lies in the open hemisphere around itself. -/
-example (x₀ : SSphere 1) :
-    ∃ w : SSphere 1,
-      ∀ x ∈ ((⟨Measure.dirac x₀, inferInstance⟩ : ProbSphere 1) :
-          Measure (SSphere 1)).support,
-        0 < inner (𝕜 := ℝ) (x : EucSpace 1) ((w : EucSpace 1)) := by
-  refine ⟨x₀, fun x hx => ?_⟩
-  have hxx : x = x₀ := eq_of_mem_support_dirac hx
-  subst hxx
-  have hx1 : ‖(x : EucSpace 1)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
-  rw [real_inner_self_eq_norm_mul_norm, hx1, mul_one]
-  exact one_pos
 
 /-- `θ` is piecewise constant on `[0, T]` with at most `K` pieces — hence at
 most `K - 1` switches: there are times `0 = t_0 ≤ … ≤ t_K = T` such that `θ`

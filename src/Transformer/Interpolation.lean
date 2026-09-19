@@ -6,6 +6,7 @@ Formalization of:
 
 import Transformer.Interpolation.Basic
 import Transformer.Interpolation.Clustering
+import Transformer.Interpolation.AtomClustering
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.IdentityFlow
 import Transformer.Interpolation.NeuralODE
