@@ -20,6 +20,7 @@ scheme built on it.
 | `Quartet.Walsh` | the Walsh characters on `(ℤ/2)^n` and their orthogonality |
 | `Quartet.Hadamard` | the randomized Hadamard transform: orthonormal, involutive, inner-product preserving |
 | `Quartet.Section3_Grids` | the E2M1 and E4M3 grids, `RTN`, and `SR` with its coin |
+| `Quartet.Fp8Grid` | how far `RTN_FP8` can move a group scale: the factor `16/17` of §3.1 |
 | `Quartet.Section3_NVFP4` | the two quantizers: unbiased `Q_SR`, and the clipping `Q_RTN` of `MS-EDEN` |
 | `Quartet.Section3_Eden` | the EDEN correction and `MS-EDEN` |
 | `Quartet.Section4_FourOverSix` | the two-branch grid choice, unbiased branch by branch and biased together |
@@ -35,6 +36,7 @@ import Transformer.Quartet.SeedSums
 import Transformer.Quartet.Walsh
 import Transformer.Quartet.Hadamard
 import Transformer.Quartet.Section3_Grids
+import Transformer.Quartet.Fp8Grid
 import Transformer.Quartet.Section3_NVFP4
 import Transformer.Quartet.Section3_Eden
 import Transformer.Quartet.Section4_FourOverSix
