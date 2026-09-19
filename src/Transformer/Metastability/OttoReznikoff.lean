@@ -19,8 +19,11 @@ Equations and statements covered:
   `Transformer.Metastability.QuantitativeInequality`, which proves it with the
   sign and the constant its argument supports,
 * `Corollary eq: otto.attention`,
-* `Remark rem: sa.extension` — the extension to `SA`,
-* `eq: hessian.lb.reverse.pl`  — acceleration / reverse PL inequality.
+* `Remark rem: sa.extension` — the extension to `SA`.
+
+`eq: hessian.lb.reverse.pl`, the acceleration of §3.3, is in
+`Transformer.Metastability.ReversePL`, which proves it with the chain rule its
+derivation uses and refutes the form that leaves the two scalar fields free.
 -/
 
 import Transformer.Basic
@@ -238,35 +241,6 @@ separation of `Θ` stays inside the statement — `isSeparatedAngles` carries
 `γ(β) > 0`, which ties `α`, `τ` and `β` together, and no configuration
 meeting it is built in this file. -/
 example : (1 : ℝ) < 2 := by norm_num
-
-/-! ### §3.3 — Acceleration of the gradient between metastable states -/
-
-/-- **Equation (eq: hessian.lb.reverse.pl).**
-
-  `⟨Hess 𝖤(X(t)) ∇𝖤(X(t)), ∇𝖤(X(t))⟩ ≥ c ‖∇𝖤(X(t))‖²`. -/
-def reversePL
-    {M : Type*} [NormedAddCommGroup M]
-    (gradHess : M → ℝ) (gradNorm : M → ℝ)
-    (c T : ℝ) (X : ℝ → M) : Prop :=
-  ∀ t : ℝ, 0 ≤ t → t ≤ T →
-    c * (gradNorm (X t))^2 ≤ gradHess (X t)
-
-/-- *Reverse PL inequality:* if (eq: hessian.lb.reverse.pl) holds, then
-
-  `𝖤(v) - 𝖤(u) ≥ c ‖∇𝖤(v)‖²`,
-
-and one obtains the exponential acceleration
-
-  `‖∇𝖤(X(t))‖² ≥ e^{2 c t} ‖∇𝖤(X(0))‖²`. -/
-theorem reverse_PL_acceleration
-    {M : Type*} [NormedAddCommGroup M]
-    (E : M → ℝ) (gradHess gradNorm : M → ℝ)
-    (X : ℝ → M) (c T : ℝ) (hc : 0 < c) (hT : 0 < T)
-    (hrev : reversePL gradHess gradNorm c T X) :
-    ∀ t : ℝ, 0 ≤ t → t ≤ T →
-      (gradNorm (X 0))^2 * Real.exp (2 * c * t)
-        ≤ (gradNorm (X t))^2 := by
-  sorry
 
 end Metastability
 end Transformer
