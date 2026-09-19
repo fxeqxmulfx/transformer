@@ -6,11 +6,12 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 The part of Appendix B that runs on `(𝕊^{d-1})^n` rather than on the torus:
 
-* `eq: dr1`          — the skew-symmetric perturbation inequality, proved,
-* `e:Hessianincoord` — the Hessian at a critical point is intrinsic.
+* `eq: dr1` — the skew-symmetric perturbation inequality, proved.
 
 `eq: claim.yury`, which is `eq: dr1` summed over a family of skew directions,
-is proved in `Perspective.AppendixB_ClaimYury`.
+is proved in `Perspective.AppendixB_ClaimYury`; `e:Hessianincoord`, that the
+Hessian at a critical point is intrinsic, in
+`Perspective.AppendixB_Intrinsic`.
 
 The comparison of the modified metric of §3.4 with the round one,
 `eq: metric.grad` and `eq: metric.hess`, is proved in
@@ -71,29 +72,6 @@ theorem dr1_skew_inequality
   have h := h_hess B 𝒮 h_skew Y hY _ (secondDeriv_selfEnergy d n X β B 𝒮 h_skew Y hY)
   rwa [inv_mul_cancel_left₀ (mul_ne_zero (two_ne_zero) hβ)] at h
 
-/-- **Equation (e:Hessianincoord).** *The Hessian at a critical point is
-intrinsic.*
-
-In coordinates `Hess(f)_{ij} = ∂²f/∂y_i ∂y_j - Γ_{ij}^k ∂f/∂y_k`, and at a
-critical point the Christoffel term drops out.  Stated without Christoffel
-symbols: at a critical point the second derivative of `𝖤_β` along a curve
-depends on the curve only through its initial velocity — which is exactly why
-the strict-saddle property does not depend on the metric.
-
-Not proved here: the second-order expansion is not carried out.
-
-Source: arXiv:2312.10794v5, Appendix B, `e:Hessianincoord`. -/
-theorem hessian_at_critical_intrinsic
-    (β : ℝ) (X : SphereTuple d n) (hX : IsCriticalEBeta d n β X)
-    (Y Z : ℝ → SphereTuple d n) (v : Idx n → EucSpace d)
-    (hY0 : Y 0 = X) (hZ0 : Z 0 = X)
-    (hY : ∀ i : Idx n, HasDerivAt (fun s => (Y s i : EucSpace d)) (v i) 0)
-    (hZ : ∀ i : Idx n, HasDerivAt (fun s => (Z s i : EucSpace d)) (v i) 0)
-    (c c' : ℝ) (hc : SecondDerivEBetaAt d n β Y c)
-    (hc' : SecondDerivEBetaAt d n β Z c') :
-    c = c' := by
-  sorry
-
 /-! ### The hypotheses are satisfiable -/
 
 /-- The hypotheses of `dr1_skew_inequality` and `metric_hess_comparison` are
@@ -103,21 +81,6 @@ example :
     (1 : ℝ) ≠ 0 ∧ IsSkew 1 0 ∧ IsCriticalEBeta 1 1 1 singleToken ∧
       EBetaHessianNonPos 1 1 1 singleToken :=
   ⟨one_ne_zero, singleToken_isSkew_critical_hessianNonPos⟩
-
-/-- The hypotheses of `hessian_at_critical_intrinsic` are satisfiable: the
-single token sits still, so both curves are the constant one, their common
-velocity is `0`, and the energy they carry is constant, hence has second
-derivative `0` along each of them. -/
-example :
-    IsCriticalEBeta 1 1 1 singleToken ∧
-      ((fun _ : ℝ => singleToken) 0 = singleToken) ∧
-      (∀ i : Idx 1,
-        HasDerivAt (fun s => (((fun _ : ℝ => singleToken) s i : SSphere 1) : EucSpace 1))
-          ((fun _ : Idx 1 => (0 : EucSpace 1)) i) 0) ∧
-      SecondDerivEBetaAt 1 1 1 (fun _ => singleToken) 0 := by
-  refine ⟨singleToken_isSkew_critical_hessianNonPos.2.1, rfl,
-    fun _ => hasDerivAt_const _ _, ⟨fun _ => 0, fun t => ?_, hasDerivAt_const _ _⟩⟩
-  exact hasDerivAt_const t _
 
 end Perspective
 end Transformer

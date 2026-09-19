@@ -14,8 +14,9 @@ second derivative of it along a curve, and the hypothesis "the Hessian at `X`
 is non-positive" that a critical point which is not a strict saddle satisfies.
 
 The statements built on this are in `Perspective.AppendixB_HessBeta` (the
-Hessian along a block rotation, `eq: dr1`) and `Perspective.AppendixB_HighD`
-(`eq: claim.yury`, `e:Hessianincoord`).
+Hessian along a block rotation, `eq: dr1`), `Perspective.AppendixB_HighD`
+(`eq: claim.yury`) and `Perspective.AppendixB_Intrinsic`
+(`e:Hessianincoord`).
 -/
 
 import Transformer.Perspective.AppendixA_Rotation

@@ -9,7 +9,9 @@ followed by the four appendices.  Everything lives in the namespace
 the one-sided calculus behind step 1 of §6.1, `PartitionGradient` is the
 differentiation of `Z_{β,μ}` under the integral sign that §3.3 rests on, and
 `RussianTrick` is the linear-algebra identity `e:russiantrick` of Appendix A
-with the rank-two construction that proves it.
+with the rank-two construction that proves it.  `InnerAsymptotics` and
+`PeanoTaylor` are the two ledgers of real analysis Appendix B's second-order
+expansion runs on; neither mentions the survey.
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -47,9 +49,13 @@ import Transformer.Perspective.AppendixA_Saddle
 import Transformer.Perspective.AppendixB_BetaInterval
 import Transformer.Perspective.AppendixB_Taylor
 import Transformer.Perspective.StrictSaddle
+import Transformer.Perspective.InnerAsymptotics
+import Transformer.Perspective.PeanoTaylor
 import Transformer.Perspective.AppendixB_EBeta
+import Transformer.Perspective.AppendixB_Expansion
 import Transformer.Perspective.AppendixB_HessBeta
 import Transformer.Perspective.AppendixB_HighD
+import Transformer.Perspective.AppendixB_Intrinsic
 import Transformer.Perspective.AppendixB_ClaimYury
 import Transformer.Perspective.AppendixB_MetricGrad
 import Transformer.Perspective.AppendixB_MetricHess
