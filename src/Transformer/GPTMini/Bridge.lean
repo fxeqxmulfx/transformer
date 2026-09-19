@@ -13,7 +13,8 @@ The bridges enable the following inferential chain:
    ↓ `Bridge.XSAEquivalence`    (XSA at V=I → spherical projection)
   spherical SA from `Section1_IPS`
    ↓ `Bridge.RoPEAsTimeVarying` (RoPE = time-varying Q, K)
-  time-varying-Q,K spherical SA, `V = I_d`
+  time-varying-Q,K spherical SA, `V = I_d`  (`Bridge.RoPENoClustering`: this
+  chain clusters almost every initial sequence, never every one)
    ↓ `Bridge.CausalConnection`  (mask matches eq: csa)
   causal SA from `Causal.Basic`
    ↓ `Causal.MainTheorem.thm1`  (clustering, modulo extension)
@@ -33,4 +34,5 @@ import Transformer.GPTMini.Bridge.SphereResidence
 import Transformer.GPTMini.Bridge.XSAEquivalence
 import Transformer.GPTMini.Bridge.CausalConnection
 import Transformer.GPTMini.Bridge.RoPEAsTimeVarying
+import Transformer.GPTMini.Bridge.RoPENoClustering
 import Transformer.GPTMini.Bridge.ALMLookup

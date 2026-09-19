@@ -14,12 +14,10 @@ generality, and this file exhibits it as one:
     the attention score of two tokens is a function of their *relative*
     position only.
 
-`rope_clustering` is the statement that the resulting RoPE-attention dynamics
-cluster, and it is not proved: it is *not* a corollary of
-`Perspective.boumal_clustering`, which is stated for the simplified model
-`Q = K = V = I_d` (and is itself a `sorry`), whereas here `Q, K` are arbitrary
-and time-varying.  What this file proves is the parametrization, not the
-clustering.
+What this file proves is the parametrization, not the dynamics.  The file used
+to carry `rope_clustering` as well, the claim that the resulting RoPE-attention
+dynamics send *every* initial sequence to a common point; that claim is false,
+and `Bridge.RoPENoClustering` refutes it.
 -/
 
 import Transformer.Basic
@@ -103,38 +101,6 @@ theorem rope_score_relative
     inner (𝕜 := ℝ) (rope_timeParam Q theta t x) (rope_timeParam K theta s y)
       = inner (𝕜 := ℝ) (Q x) (applyRope d_head theta (s - t) (K y)) :=
   applyRope_relative d_head theta t s (Q x) (K y)
-
-/-- **Clustering of RoPE attention.**
-
-For `d_head ≥ 3`, `n ≥ 2` particles on the sphere and `β ≥ 0`, the
-`transformerODE` of `eq: transformerSd.QKV` driven by the RoPE-rotated
-`Q, K` and by `V = I_d` sends every particle to one common point of the
-sphere.
-
-Not proved here, and not a corollary of `Perspective.boumal_clustering`,
-which covers `Q = K = V = I_d` only; the missing ingredient is the
-time-varying analogue of its argument.  Source: arXiv:2312.10794v5, §6
-(`thm: main.d.geq.3`), through `Perspective.Section5_HighD`. -/
-theorem rope_clustering
-    (cfg : Config) (n : ℕ)
-    (Q K : ParamMatrix cfg.head_dim) (theta beta : ℝ)
-    (hd : 3 ≤ cfg.head_dim) (hn : 2 ≤ n) (hbeta : 0 ≤ beta) :
-    ∀ X₀ : SphereTuple cfg.head_dim n,
-    ∃ x_star : SSphere cfg.head_dim,
-      ∀ X : ℝ → SphereTuple cfg.head_dim n, X 0 = X₀ →
-        Perspective.transformerODE cfg.head_dim n beta
-          (rope_timeParam Q theta) (rope_timeParam K theta)
-          (fun _ => ContinuousLinearMap.id ℝ (EucSpace cfg.head_dim)) X →
-        ∀ i : Idx n,
-          Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace cfg.head_dim) - x_star))
-            Filter.atTop (nhds 0) := by
-  sorry
-
-/-- The hypotheses of `rope_clustering` are satisfiable: the default
-`gpt-mini` config has `d_head = 768 / 12 = 64`, and `n = 2`, `β = 0`. -/
-example : 3 ≤ Config.default.head_dim ∧ 2 ≤ 2 ∧ (0 : ℝ) ≤ 0 := by
-  refine ⟨?_, le_rfl, le_rfl⟩
-  norm_num [Config.head_dim, Config.default]
 
 end Bridge
 end GPTMini
