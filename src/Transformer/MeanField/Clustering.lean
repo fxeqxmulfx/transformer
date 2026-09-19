@@ -12,8 +12,8 @@ and is not restated here.
 
 Two of the three statements name objects this development does not construct —
 the uniform measure on `(𝕊^{d-1})^n` and the Wasserstein distance `W₂`, which
-Mathlib does not have — so they are `Prop`-valued definitions taking those as
-parameters rather than theorems.  What *is* proved is the deterministic core of
+Mathlib does not have — so they take those as parameters, and neither is
+proved.  What *is* proved is the deterministic core of
 `cor: d-ge-n`: linearly independent particles lie in a common open hemisphere,
 which is the hypothesis `thm: cone-collapse` runs on, and which `n` points in
 dimension `d ≥ n` satisfy almost surely.  The almost-sure half is not
@@ -49,14 +49,23 @@ to a single cluster:
 
 "Almost any" is relative to the reference measure `σ` on the configuration
 space; the survey's `σ` is the uniform one, which this development does not
-construct, so it is a parameter.  Source: arXiv:2512.01868v4, §4. -/
-def GlobalClustering
-    (σ : Measure (SphereTuple d n)) (β : ℝ) : Prop :=
-  ∀ᵐ X₀ ∂σ, ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
-    ∀ i j : Idx n,
-      Filter.Tendsto
-        (fun t : ℝ => ‖(X t i : EucSpace d) - (X t j : EucSpace d)‖)
-        Filter.atTop (nhds 0)
+construct, so it is a parameter.
+
+Not proved here.
+
+Source: arXiv:2512.01868v4, §4. -/
+theorem global_clustering
+    (σ : Measure (SphereTuple d n)) (β : ℝ) (hd : 3 ≤ d) (hn : 2 ≤ n) (hβ : 0 ≤ β) :
+    ∀ᵐ X₀ ∂σ, ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
+      ∀ i j : Idx n,
+        Filter.Tendsto
+          (fun t : ℝ => ‖(X t i : EucSpace d) - (X t j : EucSpace d)‖)
+          Filter.atTop (nhds 0) := by
+  sorry
+
+/-- The hypotheses of `global_clustering` are satisfiable: `d = 3`, `n = 2`,
+`β = 0`. -/
+example : 3 ≤ 3 ∧ 2 ≤ 2 ∧ (0 : ℝ) ≤ 0 := ⟨le_rfl, le_rfl, le_rfl⟩
 
 /-- **The deterministic core of `cor: d-ge-n`.**
 
@@ -146,17 +155,30 @@ there exist `β_0, C_0, T_0 > 0` (depending on `μ_0`) such that for
 
 `W₂` is a parameter: Mathlib has no Wasserstein distance, so the statement is
 made relative to a given metric on probability measures.
+
+Not proved here.
+
 Source: arXiv:2512.01868v4, §4 (Chen–Lin–Polyanskiy 2025). -/
-def MeanFieldExponentialRate
+theorem meanField_exponential_rate
     (W₂ : Perspective.ProbSphere d → Perspective.ProbSphere d → ℝ)
-    (μ₀ : Perspective.ProbSphere d) : Prop :=
-  0 < ‖∫ x, (x : EucSpace d) ∂(μ₀ : Measure (SSphere d))‖ ^ 2 →
+    (μ₀ : Perspective.ProbSphere d) (hd : 2 ≤ d)
+    (hR : 0 < ‖∫ x, (x : EucSpace d) ∂(μ₀ : Measure (SSphere d))‖ ^ 2) :
     ∃ β₀ C₀ T₀ : ℝ, 0 < β₀ ∧ 0 < C₀ ∧ 0 < T₀ ∧
       ∀ β : ℝ, |β| < β₀ →
         ∀ μ : ℝ → Perspective.ProbSphere d, μ 0 = μ₀ →
           Perspective.continuityEquation d β μ →
             ∃ x_inf : SSphere d, ∀ t : ℝ, T₀ ≤ t →
-              W₂ (μ t) (diracProb d x_inf) ≤ C₀ * Real.exp (-t / 100)
+              W₂ (μ t) (diracProb d x_inf) ≤ C₀ * Real.exp (-t / 100) := by
+  sorry
+
+/-- The hypotheses of `meanField_exponential_rate` are satisfiable: in dimension
+`2`, a Dirac mass has mean of norm `1`, so `R₀ = 1 > 0`. -/
+example (x : SSphere 2) :
+    2 ≤ 2 ∧ 0 < ‖∫ y, (y : EucSpace 2) ∂((diracProb 2 x : Perspective.ProbSphere 2) :
+      Measure (SSphere 2))‖ ^ 2 := by
+  refine ⟨le_rfl, ?_⟩
+  have hx : ‖(x : EucSpace 2)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
+  simp [diracProb, hx]
 
 end MeanField
 end Transformer

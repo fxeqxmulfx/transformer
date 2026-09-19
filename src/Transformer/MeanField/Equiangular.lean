@@ -142,15 +142,14 @@ attention layer, the output directions satisfy
       4ρ / (1 + 3 ρ),             if γ = 1/(1 - ρ),
       ρ,                          if γ > 1/(1 - ρ).`
 
-A `Prop`-valued definition and not a theorem: the three limits are not proved
-here.  The configuration is entered through its Gram matrix (`equiGram`), and
-the sequence is indexed so that `n = m + 2` always admits the two distinct
-tokens `0` and `1` the statement compares.
+Not proved here: none of the three limits is.  The configuration is entered
+through its Gram matrix (`equiGram`), and the sequence is indexed so that
+`n = m + 2` always admits the two distinct tokens `0` and `1` the statement
+compares.
 
 Source: arXiv:2512.01868v4, §6, `thm: long-context-phase-transition`
 (Chen et al. 2025). -/
-def LongContextPhaseTransition (γ ρ : ℝ) : Prop :=
-  0 < ρ → ρ < 1 →
+theorem long_context_phase_transition (γ ρ : ℝ) (hρ₀ : 0 < ρ) (hρ₁ : ρ < 1) :
     (γ < 1 / (1 - ρ) →
       Filter.Tendsto
         (fun m : ℕ => equiOutCos (m + 2) (γ * Real.log (m + 2 : ℕ)) ρ 0 1)
@@ -162,7 +161,12 @@ def LongContextPhaseTransition (γ ρ : ℝ) : Prop :=
     ∧ (1 / (1 - ρ) < γ →
       Filter.Tendsto
         (fun m : ℕ => equiOutCos (m + 2) (γ * Real.log (m + 2 : ℕ)) ρ 0 1)
-        Filter.atTop (nhds ρ))
+        Filter.atTop (nhds ρ)) := by
+  sorry
+
+/-- The hypotheses of `long_context_phase_transition` are satisfiable: `ρ = 1/2`
+lies strictly between `0` and `1`. -/
+example : (0 : ℝ) < 1 / 2 ∧ (1 : ℝ) / 2 < 1 := by norm_num
 
 end MeanField
 end Transformer
