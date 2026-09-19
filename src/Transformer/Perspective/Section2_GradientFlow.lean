@@ -36,14 +36,18 @@ variable (d n : ℕ)
 
 since `∇_x log Z_{β,μ}(x) = β Z_{β,μ}(x)⁻¹ ∫ exp(β ⟨x,y⟩) y dμ(y)`.
 
-A `Prop`-valued definition and not a theorem: differentiating `partitionMu`
-under the integral sign is not formalized here.
+Not proved here: differentiating `partitionMu` under the integral sign is not
+formalized.
 
 Source: arXiv:2312.10794v5, §3.3, `eq: logder`. -/
-def VectorFieldEqGradLog (β : ℝ) (μ : ProbSphere d) : Prop :=
-  0 < β → ∀ x : EucSpace d,
-    vectorField d β μ x
-      = proj d x (gradient (fun z => β⁻¹ * Real.log (partitionMu d β μ z)) x)
+theorem vectorField_eq_grad_log (β : ℝ) (hβ : 0 < β) (μ : ProbSphere d) :
+    ∀ x : EucSpace d,
+      vectorField d β μ x
+        = proj d x (gradient (fun z => β⁻¹ * Real.log (partitionMu d β μ z)) x) := by
+  sorry
+
+/-- The hypothesis of `vectorField_eq_grad_log` is satisfiable: `β = 1`. -/
+example : (0 : ℝ) < 1 := one_pos
 
 /-- **Equation (USA).** Unnormalised Self-Attention dynamics. -/
 def USA (β : ℝ) (X : ℝ → SphereTuple d n) : Prop :=
@@ -76,14 +80,20 @@ def usaContinuityEquation (β : ℝ) (μ : ℝ → ProbSphere d) : Prop :=
 the interaction energy `𝖤_β` at `μ` is `x ↦ β⁻¹ Z_{β,μ}(x)`, and its ambient
 gradient, projected onto the tangent space, is the `USA` vector field.
 
-A `Prop`-valued definition and not a theorem: the first variation is computed
-by differentiating under the integral sign, which is not formalized here.
+Not proved here: the first variation is computed by differentiating under the
+integral sign, which is not formalized.
 
 Source: arXiv:2312.10794v5, §3.3, `e:XmuE`. -/
-def UsaVectorFieldEqGradFirstVariation (β : ℝ) (μ : ProbSphere d) : Prop :=
-  0 < β → ∀ x : EucSpace d,
-    usaVectorField d β μ x
-      = proj d x (gradient (fun z => β⁻¹ * partitionMu d β μ z) x)
+theorem usaVectorField_eq_grad_first_variation (β : ℝ) (hβ : 0 < β)
+    (μ : ProbSphere d) :
+    ∀ x : EucSpace d,
+      usaVectorField d β μ x
+        = proj d x (gradient (fun z => β⁻¹ * partitionMu d β μ z) x) := by
+  sorry
+
+/-- The hypothesis of `usaVectorField_eq_grad_first_variation` is satisfiable:
+`β = 1`. -/
+example : (0 : ℝ) < 1 := one_pos
 
 /-- **Equation (eq: aggregation.eq).** Aggregation form of the `USA`-PDE:
 `eq: CE` driven by the gradient of the first variation of `𝖤_β`,
@@ -104,17 +114,47 @@ dissipates at rate
 — the same identity as `eq: dissipation.softmax` with the partition-function
 weight `Z_{β,μ}` removed, which is precisely what the normalisation costs.
 
-A `Prop`-valued definition and not a theorem: as for
-`DissipationSoftmax`, differentiating the energy along the flow is not
-formalized here.
+Not proved here: as for `dissipation_softmax`, differentiating the energy
+along the flow is not formalized.
 
 Source: arXiv:2312.10794v5, §3.3, `lem: dissipation`. -/
-def UsaDissipation (β : ℝ) (μ : ℝ → ProbSphere d) : Prop :=
-  usaContinuityEquation d β μ →
+theorem usa_dissipation (β : ℝ) (μ : ℝ → ProbSphere d)
+    (hCE : usaContinuityEquation d β μ) :
     ∀ t : ℝ,
       HasDerivAt (fun s => interactionEnergy d β (μ s))
         (∫ x, ‖usaVectorField d β (μ t) (x : EucSpace d)‖ ^ 2
-          ∂(μ t : Measure (SSphere d))) t
+          ∂(μ t : Measure (SSphere d))) t := by
+  sorry
+
+/-- A Dirac mass is a stationary point of the `USA` vector field too: the only
+point `δ_x` sees is `x`, so the integral is a multiple of `x` and `Proj_x`
+kills it.  Dropping the partition function changes the length of the velocity,
+never its direction. -/
+theorem usaVectorField_diracProb_self (β : ℝ) (x : SSphere d) :
+    usaVectorField d β (diracProb d x) (x : EucSpace d) = 0 := by
+  have hx : ‖(x : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
+  have hμ : ((diracProb d x : ProbSphere d) : Measure (SSphere d))
+      = Measure.dirac x := rfl
+  rw [usaVectorField, hμ, integral_dirac]
+  exact proj_smul_self hx _
+
+/-- The constant curve at a Dirac mass solves `eq: pde.nosoftmaxZ`, so the
+hypothesis of `usa_dissipation` is satisfiable. -/
+theorem usaContinuityEquation_const_diracProb (β : ℝ) (x : SSphere d) :
+    usaContinuityEquation d β (fun _ => diracProb d x) := by
+  intro φ _ t
+  have hμ : ((diracProb d x : ProbSphere d) : Measure (SSphere d))
+      = Measure.dirac x := rfl
+  have hrhs :
+      (∫ y, inner (𝕜 := ℝ) (gradient φ (y : EucSpace d))
+          (usaVectorField d β (diracProb d x) (y : EucSpace d))
+        ∂((diracProb d x : ProbSphere d) : Measure (SSphere d))) = 0 := by
+    rw [hμ, integral_dirac, usaVectorField_diracProb_self, inner_zero_right]
+  rw [hrhs]
+  exact hasDerivAt_const t _
+
+example : usaContinuityEquation 1 1 (fun _ => diracProb 1 (basePoint 0)) :=
+  usaContinuityEquation_const_diracProb 1 1 (basePoint 0)
 
 /-! ### §3.4 — `SA` is a gradient flow for a modified metric -/
 
@@ -155,19 +195,49 @@ Self-adjointness is a hypothesis on `V` spelled out as
 `⟨V x, y⟩ = ⟨x, V y⟩` rather than through `ContinuousLinearMap.adjoint`, which
 would need the `FiniteDimensional` infrastructure here.
 
-A `Prop`-valued definition and not a theorem: the identity is not proved here.
+Not proved here: the identity is not.
 
 Source: arXiv:2312.10794v5, §3.4. -/
-def SAIsGradientFlow (β : ℝ) (V : ParamMatrix d) (X : ℝ → SphereTuple d n) : Prop :=
-  0 < β →
-  (∀ x y : EucSpace d, inner (𝕜 := ℝ) (V x) y = inner (𝕜 := ℝ) x (V y)) →
-  Perspective.transformerODE d n β (fun _ => V) (fun _ => V) (fun _ => V) X →
-  ∀ (t : ℝ) (Y : ℝ → SphereTuple d n) (b : Idx n → EucSpace d),
+theorem sa_is_gradient_flow (β : ℝ) (V : ParamMatrix d) (X : ℝ → SphereTuple d n)
+    (hβ : 0 < β)
+    (hV : ∀ x y : EucSpace d, inner (𝕜 := ℝ) (V x) y = inner (𝕜 := ℝ) x (V y))
+    (hX : Perspective.transformerODE d n β (fun _ => V) (fun _ => V) (fun _ => V) X) :
+    ∀ (t : ℝ) (Y : ℝ → SphereTuple d n) (b : Idx n → EucSpace d),
     Y 0 = X t →
     (∀ i : Idx n, HasDerivAt (fun s => (Y s i : EucSpace d)) (b i) 0) →
     HasDerivAt (fun s => particleEnergy d n β V (Y s))
       (modifiedMetric d n β V (X t)
-        (fun i => deriv (fun s => (X s i : EucSpace d)) t) b) 0
+        (fun i => deriv (fun s => (X s i : EucSpace d)) t) b) 0 := by
+  sorry
+
+/-- A single token sitting still solves `eq: transformerSd.QKV` with
+`Q = K = V = I_d`: it attends only to itself, so the attention average is `x`
+and `Proj_x x = 0`. -/
+theorem transformerODE_const_one (β : ℝ) (p : SSphere d) :
+    Perspective.transformerODE d 1 β
+      (fun _ => ContinuousLinearMap.id ℝ (EucSpace d))
+      (fun _ => ContinuousLinearMap.id ℝ (EucSpace d))
+      (fun _ => ContinuousLinearMap.id ℝ (EucSpace d)) (fun _ _ => p) := by
+  intro t _
+  have hp : ‖(p : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp p.2
+  simp only [ContinuousLinearMap.coe_id', id_eq, Fin.sum_univ_one, smul_smul]
+  rw [proj_smul_self hp]
+  exact hasDerivAt_const t _
+
+/-- The hypotheses of `sa_is_gradient_flow` are satisfiable, and by a genuine
+solution: `β = 1`, `V = I_d` — self-adjoint, since `⟨x, y⟩ = ⟨x, y⟩` — and the
+stationary one-token solution of `transformerODE_const_one`. -/
+example :
+    (0 : ℝ) < 1 ∧
+      (∀ x y : EucSpace 1,
+        inner (𝕜 := ℝ) (ContinuousLinearMap.id ℝ (EucSpace 1) x) y
+          = inner (𝕜 := ℝ) x (ContinuousLinearMap.id ℝ (EucSpace 1) y)) ∧
+      Perspective.transformerODE 1 1 1
+        (fun _ => ContinuousLinearMap.id ℝ (EucSpace 1))
+        (fun _ => ContinuousLinearMap.id ℝ (EucSpace 1))
+        (fun _ => ContinuousLinearMap.id ℝ (EucSpace 1))
+        (fun _ _ => basePoint 0) :=
+  ⟨one_pos, fun _ _ => rfl, transformerODE_const_one 1 1 (basePoint 0)⟩
 
 /-- **Equation (eq: first.rewriting).** Rewriting of `eq: conteqSd` through
 `eq: logder`: `eq: CE` at the velocity field `Proj_x ∇(β⁻¹ log Z_{β,μ(t)})`.

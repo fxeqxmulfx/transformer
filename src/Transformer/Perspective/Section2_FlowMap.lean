@@ -148,18 +148,54 @@ noncomputable def interactionEnergy
 
 In particular the interaction energy is non-decreasing along `SA`.
 
-A `Prop`-valued definition and not a theorem: differentiating the energy under
-the integral sign along a solution of the continuity equation is not
-formalized here.
+Not proved here: differentiating the energy under the integral sign along a
+solution of the continuity equation is not formalized.
 
 Source: arXiv:2312.10794v5, §3.2, `eq: dissipation.softmax`. -/
-def DissipationSoftmax (β : ℝ) (μ : ℝ → ProbSphere d) : Prop :=
-  continuityEquation d β μ →
+theorem dissipation_softmax (β : ℝ) (μ : ℝ → ProbSphere d)
+    (hCE : continuityEquation d β μ) :
     ∀ t : ℝ,
       HasDerivAt (fun s => interactionEnergy d β (μ s))
         (∫ x, ‖vectorField d β (μ t) (x : EucSpace d)‖ ^ 2
               * partitionMu d β (μ t) (x : EucSpace d)
-          ∂(μ t : Measure (SSphere d))) t
+          ∂(μ t : Measure (SSphere d))) t := by
+  sorry
+
+/-- **A Dirac mass is a stationary solution of `eq: conteqSd`.**
+
+`𝒳[δ_x](x)` is a multiple of `x` — the only point the measure sees is `x`
+itself — and `Proj_x` kills the radial direction, so the velocity vanishes
+`δ_x`-almost everywhere and the mass does not move.  This is what makes the
+hypothesis of `dissipation_softmax` satisfiable, and satisfiable by something
+other than a contradiction. -/
+theorem vectorField_diracProb_self (β : ℝ) (x : SSphere d) :
+    vectorField d β (diracProb d x) (x : EucSpace d) = 0 := by
+  have hx : ‖(x : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
+  have hμ : ((diracProb d x : ProbSphere d) : Measure (SSphere d))
+      = Measure.dirac x := rfl
+  rw [vectorField, hμ, integral_dirac, smul_smul]
+  exact proj_smul_self hx _
+
+/-- The constant curve at a Dirac mass solves `eq: conteqSd`: both sides of the
+distributional form vanish, the left because the curve is constant and the
+right by `vectorField_diracProb_self`. -/
+theorem continuityEquation_const_diracProb (β : ℝ) (x : SSphere d) :
+    continuityEquation d β (fun _ => diracProb d x) := by
+  intro φ _ t
+  have hμ : ((diracProb d x : ProbSphere d) : Measure (SSphere d))
+      = Measure.dirac x := rfl
+  have hrhs :
+      (∫ y, inner (𝕜 := ℝ) (gradient φ (y : EucSpace d))
+          (vectorField d β (diracProb d x) (y : EucSpace d))
+        ∂((diracProb d x : ProbSphere d) : Measure (SSphere d))) = 0 := by
+    rw [hμ, integral_dirac, vectorField_diracProb_self, inner_zero_right]
+  rw [hrhs]
+  exact hasDerivAt_const t _
+
+/-- The hypothesis of `dissipation_softmax` is satisfiable: the constant curve
+at a Dirac mass solves the continuity equation. -/
+example : continuityEquation 1 1 (fun _ => diracProb 1 (basePoint 0)) :=
+  continuityEquation_const_diracProb 1 1 (basePoint 0)
 
 /-- A linear isometry of the ambient space, restricted to the unit sphere:
 the action of `O(d)` on `𝕊^{d-1}` that the uniform measure `σ_d` — and only
@@ -181,11 +217,10 @@ name — a probability measure on `𝕊^{d-1}` invariant under every linear
 isometry of `ℝ^d` *is* `σ_d` — so that no Haar-measure machinery is needed to
 state the proposition.
 
-A `Prop`-valued definition and not a theorem: neither half is proved here.
+Not proved here: neither half is.
 
 Source: arXiv:2312.10794v5, §3.2, `prop: existence.uniqueness.energy`. -/
-def ExistenceUniquenessEnergy (β : ℝ) : Prop :=
-  0 < β → 2 ≤ d →
+theorem existence_uniqueness_energy (β : ℝ) (hβ : 0 < β) (hd : 2 ≤ d) :
     (∃! μ₀ : ProbSphere d, ∀ μ : ProbSphere d,
         interactionEnergy d β μ₀ ≤ interactionEnergy d β μ) ∧
     (∀ μ₀ : ProbSphere d,
@@ -195,7 +230,12 @@ def ExistenceUniquenessEnergy (β : ℝ) : Prop :=
             = (μ₀ : Measure (SSphere d))) ∧
     (∀ μ₁ : ProbSphere d,
         (∀ μ : ProbSphere d, interactionEnergy d β μ ≤ interactionEnergy d β μ₁) →
-        ∃ x : SSphere d, (μ₁ : Measure (SSphere d)) = Measure.dirac x)
+        ∃ x : SSphere d, (μ₁ : Measure (SSphere d)) = Measure.dirac x) := by
+  sorry
+
+/-- The hypotheses of `existence_uniqueness_energy` are satisfiable: `β = 1`
+and `d = 2`. -/
+example : (0 : ℝ) < 1 ∧ 2 ≤ 2 := ⟨one_pos, le_rfl⟩
 
 end Perspective
 end Transformer

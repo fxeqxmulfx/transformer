@@ -86,18 +86,22 @@ makes the remark a consequence of `boumal_clustering`: everything is swept into
 that null set, so no measure with a density can be preserved.  The flow is
 presented as any map `Φ` that transports initial data along solutions of `SA`.
 
-A `Prop`-valued definition and not a theorem: it rests on
-`boumal_clustering`, which is a `sorry` here.
+Not proved here: it rests on `boumal_clustering`, which is a `sorry`.
 
 Source: arXiv:2312.10794v5, §6.1 (remark after `thm: boumal`). -/
-def NoSmoothInvariantMeasure (β : ℝ) : Prop :=
-  3 ≤ d → 2 ≤ n → 0 ≤ β →
-  ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-  ∀ μ : Measure (SphereTuple d n), IsProbabilityMeasure μ → μ ≪ P →
-    ¬ ∃ Φ : ℝ → SphereTuple d n → SphereTuple d n,
-        (∀ (X : ℝ → SphereTuple d n), Perspective.SA d n β X →
-            ∀ t : ℝ, Φ t (X 0) = X t) ∧
-        ∀ t : ℝ, μ.map (Φ t) = μ
+theorem no_smooth_invariant_measure (β : ℝ) (hd : 3 ≤ d) (hn : 2 ≤ n)
+    (hβ : 0 ≤ β) :
+    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+    ∀ μ : Measure (SphereTuple d n), IsProbabilityMeasure μ → μ ≪ P →
+      ¬ ∃ Φ : ℝ → SphereTuple d n → SphereTuple d n,
+          (∀ (X : ℝ → SphereTuple d n), Perspective.SA d n β X →
+              ∀ t : ℝ, Φ t (X 0) = X t) ∧
+          ∀ t : ℝ, μ.map (Φ t) = μ := by
+  sorry
+
+/-- The hypotheses of `no_smooth_invariant_measure` are satisfiable: `d = 3`,
+`n = 2`, `β = 0`. -/
+example : 3 ≤ 3 ∧ 2 ≤ 2 ∧ (0 : ℝ) ≤ 0 := ⟨le_rfl, le_rfl, le_rfl⟩
 
 /-! ### §6.1 — Exponential rate when `d ≥ n` -/
 
@@ -243,21 +247,44 @@ The minimum is presented by its two defining properties (`α t` is a lower
 bound, and is attained) rather than as a `Finset.inf'`, so that no nonemptiness
 witness for `Idx n` has to be carried through the statement.
 
-A `Prop`-valued definition and not a theorem: the inequality is step 2 of the
-proof of `lem: hemisphere.clustering`, which is a `sorry` here.
+Not proved here: the inequality is step 2 of the proof of
+`lem: hemisphere.clustering`, which is a `sorry` too.
 
 Source: arXiv:2312.10794v5, §6.1, `e:diffineqalpha.step2`. -/
-def Step2AlphaDiffIneq
+theorem step2_alpha_diff_ineq
     (β : ℝ) (X : ℝ → SphereTuple d n) (x_star : SSphere d)
-    (α : ℝ → ℝ) (t₀ : ℝ) : Prop :=
-  0 ≤ β → Perspective.SA d n β X →
-  (∀ t : ℝ, ∀ i : Idx n,
-      α t ≤ inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((x_star : EucSpace d))) →
-  (∀ t : ℝ, ∃ i : Idx n,
-      α t = inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((x_star : EucSpace d))) →
-  ∀ t : ℝ, t₀ ≤ t →
-    ∃ α' : ℝ, HasDerivAt α α' t ∧
-      (1 - α t) / (2 * (n : ℝ) * Real.exp (2 * β)) ≤ α'
+    (α : ℝ → ℝ) (t₀ : ℝ) (hβ : 0 ≤ β) (hX : Perspective.SA d n β X)
+    (hlb : ∀ t : ℝ, ∀ i : Idx n,
+      α t ≤ inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((x_star : EucSpace d)))
+    (hmin : ∀ t : ℝ, ∃ i : Idx n,
+      α t = inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((x_star : EucSpace d))) :
+    ∀ t : ℝ, t₀ ≤ t →
+      ∃ α' : ℝ, HasDerivAt α α' t ∧
+        (1 - α t) / (2 * (n : ℝ) * Real.exp (2 * β)) ≤ α' := by
+  sorry
+
+/-- The hypotheses of `step2_alpha_diff_ineq` are satisfiable, and by a genuine
+solution: one token sitting at `x⋆` is a consensus equilibrium of `eq: SA`, and
+`α ≡ 1` is then the minimum `min_i ⟨x_i(t), x⋆⟩`, attained at the only token
+there is. -/
+example :
+    (0 : ℝ) ≤ 1 ∧
+      Perspective.SA 1 1 1 (fun _ _ => basePoint 0) ∧
+      (∀ t : ℝ, ∀ i : Idx 1,
+        (1 : ℝ) ≤ inner (𝕜 := ℝ)
+          (((fun _ _ => basePoint 0 : ℝ → SphereTuple 1 1) t i : EucSpace 1))
+          ((basePoint 0 : EucSpace 1))) ∧
+      (∀ t : ℝ, ∃ i : Idx 1,
+        (1 : ℝ) = inner (𝕜 := ℝ)
+          (((fun _ _ => basePoint 0 : ℝ → SphereTuple 1 1) t i : EucSpace 1))
+          ((basePoint 0 : EucSpace 1))) := by
+  have hb : inner (𝕜 := ℝ) ((basePoint 0 : EucSpace 1)) ((basePoint 0 : EucSpace 1))
+      = 1 := by
+    rw [real_inner_self_eq_norm_mul_norm,
+      mem_sphere_zero_iff_norm.mp (basePoint 0 : SSphere 1).2]
+    ring
+  exact ⟨zero_le_one, Perspective.SA_const_consensus 1 1 one_pos 1 (basePoint 0),
+    fun _ _ => hb.ge, fun _ => ⟨0, hb.symm⟩⟩
 
 /-- **Theorem (r:wendel) — Wendel's theorem.**
 
@@ -270,16 +297,18 @@ equals
 The event is the one `lem: hemisphere.clustering` needs, written on the
 initial sequence itself; the law is the uniform `UniformTuple` of §4.
 
-A `Prop`-valued definition and not a theorem: Wendel's counting argument is
-not formalized here.
+Not proved here: Wendel's counting argument is not formalized.
 
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962). -/
-def Wendel : Prop :=
-  1 ≤ d → d ≤ n →
-  ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-    (P { X₀ : SphereTuple d n | ∃ w : SSphere d, ∀ i : Idx n,
-          0 < inner (𝕜 := ℝ) ((X₀ i : EucSpace d)) ((w : EucSpace d)) }).toReal
-      = (∑ k ∈ Finset.range d, ((n - 1).choose k : ℝ)) / 2 ^ (n - 1)
+theorem wendel (hd : 1 ≤ d) (hdn : d ≤ n) :
+    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+      (P { X₀ : SphereTuple d n | ∃ w : SSphere d, ∀ i : Idx n,
+            0 < inner (𝕜 := ℝ) ((X₀ i : EucSpace d)) ((w : EucSpace d)) }).toReal
+        = (∑ k ∈ Finset.range d, ((n - 1).choose k : ℝ)) / 2 ^ (n - 1) := by
+  sorry
+
+/-- The hypotheses of `wendel` are satisfiable: `d = n = 1`. -/
+example : 1 ≤ 1 ∧ 1 ≤ 1 := ⟨le_rfl, le_rfl⟩
 
 end Perspective
 end Transformer

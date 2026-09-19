@@ -118,18 +118,19 @@ symbols: at a critical point the second derivative of `𝖤_β` along a curve
 depends on the curve only through its initial velocity — which is exactly why
 the strict-saddle property does not depend on the metric.
 
-A `Prop`-valued definition and not a theorem: the second-order expansion is
-not carried out here.
+Not proved here: the second-order expansion is not carried out.
 
 Source: arXiv:2312.10794v5, Appendix B, `e:Hessianincoord`. -/
-def HessianAtCriticalIntrinsic (β : ℝ) : Prop :=
-  ∀ X : SphereTuple d n, IsCriticalEBeta d n β X →
-    ∀ (Y Z : ℝ → SphereTuple d n) (v : Idx n → EucSpace d),
-      Y 0 = X → Z 0 = X →
-      (∀ i : Idx n, HasDerivAt (fun s => (Y s i : EucSpace d)) (v i) 0) →
-      (∀ i : Idx n, HasDerivAt (fun s => (Z s i : EucSpace d)) (v i) 0) →
-      ∀ c c' : ℝ,
-        SecondDerivEBetaAt d n β Y c → SecondDerivEBetaAt d n β Z c' → c = c'
+theorem hessian_at_critical_intrinsic
+    (β : ℝ) (X : SphereTuple d n) (hX : IsCriticalEBeta d n β X)
+    (Y Z : ℝ → SphereTuple d n) (v : Idx n → EucSpace d)
+    (hY0 : Y 0 = X) (hZ0 : Z 0 = X)
+    (hY : ∀ i : Idx n, HasDerivAt (fun s => (Y s i : EucSpace d)) (v i) 0)
+    (hZ : ∀ i : Idx n, HasDerivAt (fun s => (Z s i : EucSpace d)) (v i) 0)
+    (c c' : ℝ) (hc : SecondDerivEBetaAt d n β Y c)
+    (hc' : SecondDerivEBetaAt d n β Z c') :
+    c = c' := by
+  sorry
 
 /-- **Equation (eq: metric.grad).** *The modified metric costs `O(β)`.*
 
@@ -141,40 +142,41 @@ difference of normalisations, `𝖤_0 = n⁻¹ Σ_i Σ_j ⟨x_i, x_j⟩` against
 `𝖤_β = (2β)⁻¹ Σ_i Σ_j e^{β ⟨x_i, x_j⟩}`, whose `β → 0` derivative is
 `Σ_i Σ_j ⟨v_i, x_j⟩`.
 
-A `Prop`-valued definition and not a theorem: the expansion in `β` is not
-carried out here.
+Not proved here: the expansion in `β` is not carried out.
 
 Source: arXiv:2312.10794v5, Appendix B, `eq: metric.grad`. -/
-def MetricGradComparison : Prop :=
-  ∀ (X : SphereTuple d n) (v : Idx n → EucSpace d),
+theorem metric_grad_comparison
+    (X : SphereTuple d n) (v : Idx n → EucSpace d) :
     ∃ C : ℝ, 0 < C ∧
       ∀ Y : ℝ → SphereTuple d n, Y 0 = X →
         (∀ i : Idx n, HasDerivAt (fun s => (Y s i : EucSpace d)) (v i) 0) →
         ∀ c₀ : ℝ, HasDerivAt (fun s => E0 d n (Y s)) c₀ 0 →
           ∀ β : ℝ, 0 < β → β ≤ 1 →
             ∀ cβ : ℝ, HasDerivAt (fun s => selfEnergy d n β (Y s)) cβ 0 →
-              |cβ - ((n : ℝ) / 2) * c₀| ≤ C * β
+              |cβ - ((n : ℝ) / 2) * c₀| ≤ C * β := by
+  sorry
 
 /-- **Equation (eq: metric.hess).** *Comparison of Hessians.*
 
   `Hess_{g_β} 𝖤_β(x)[v] = Hess_g 𝖤_0(x)[v] + O(β)`,
 
 along the same block rotation, and with the same normalisation factor as in
-`MetricGradComparison`.  Together with `HessianAtCriticalIntrinsic` this is
-what transports the `β = 0` saddle analysis of Appendix A to small `β > 0`.
+`metric_grad_comparison`.  Together with `hessian_at_critical_intrinsic` this
+is what transports the `β = 0` saddle analysis of Appendix A to small `β > 0`.
 
-A `Prop`-valued definition and not a theorem: the expansion in `β` is not
-carried out here.
+Not proved here: the expansion in `β` is not carried out.
 
 Source: arXiv:2312.10794v5, Appendix B, `eq: metric.hess`. -/
-def MetricHessComparison : Prop :=
-  ∀ (X : SphereTuple d n) (B : ParamMatrix d) (𝒮 : Finset (Idx n)), IsSkew d B →
+theorem metric_hess_comparison
+    (X : SphereTuple d n) (B : ParamMatrix d) (𝒮 : Finset (Idx n))
+    (hB : IsSkew d B) :
     ∃ C : ℝ, 0 < C ∧
       ∀ Y : ℝ → SphereTuple d n, PerturbationBy d n B 𝒮 X Y →
         ∀ c₀ : ℝ, SecondDerivE0At d n Y c₀ →
           ∀ β : ℝ, 0 < β → β ≤ 1 →
             ∀ cβ : ℝ, SecondDerivEBetaAt d n β Y cβ →
-              |cβ - ((n : ℝ) / 2) * c₀| ≤ C * β
+              |cβ - ((n : ℝ) / 2) * c₀| ≤ C * β := by
+  sorry
 
 /-! ### The hypotheses are satisfiable -/
 
@@ -182,11 +184,12 @@ def MetricHessComparison : Prop :=
 noncomputable def singleToken : SphereTuple 1 1 :=
   fun _ => ⟨EuclideanSpace.single (0 : Fin 1) (1 : ℝ), by simp⟩
 
-/-- The hypotheses of `claim_yury` and `dr1_skew_inequality` are satisfiable:
-a single token is a critical point — its gradient is a multiple of
-`Proj_x x = 0` — and `𝖤_β` is constant on `(𝕊^{d-1})^1`, so every second
-derivative vanishes.  The zero matrix is skew-symmetric. -/
-example :
+/-- A single token is a critical point of `𝖤_β` — its gradient is a multiple
+of `Proj_x x = 0` — and `𝖤_β` is constant on `(𝕊^{d-1})^1`, so every second
+derivative vanishes and the Hessian is non-positive.  The zero matrix is
+skew-symmetric.  This is the witness the statements of this file are tested
+against. -/
+theorem singleToken_isSkew_critical_hessianNonPos :
     IsSkew 1 0 ∧ IsCriticalEBeta 1 1 1 singleToken ∧
       EBetaHessianNonPos 1 1 1 singleToken := by
   refine ⟨fun x y => by simp, ?_, ?_⟩
@@ -211,6 +214,28 @@ example :
     rw [hf0] at hc
     have hc0 : c = 0 := hc.unique (hasDerivAt_const (0 : ℝ) (0 : ℝ))
     simp [hc0]
+
+/-- The hypotheses of `claim_yury`, `dr1_skew_inequality` and
+`metric_hess_comparison` are satisfiable. -/
+example :
+    IsSkew 1 0 ∧ IsCriticalEBeta 1 1 1 singleToken ∧
+      EBetaHessianNonPos 1 1 1 singleToken :=
+  singleToken_isSkew_critical_hessianNonPos
+
+/-- The hypotheses of `hessian_at_critical_intrinsic` are satisfiable: the
+single token sits still, so both curves are the constant one, their common
+velocity is `0`, and the energy they carry is constant, hence has second
+derivative `0` along each of them. -/
+example :
+    IsCriticalEBeta 1 1 1 singleToken ∧
+      ((fun _ : ℝ => singleToken) 0 = singleToken) ∧
+      (∀ i : Idx 1,
+        HasDerivAt (fun s => (((fun _ : ℝ => singleToken) s i : SSphere 1) : EucSpace 1))
+          ((fun _ : Idx 1 => (0 : EucSpace 1)) i) 0) ∧
+      SecondDerivEBetaAt 1 1 1 (fun _ => singleToken) 0 := by
+  refine ⟨singleToken_isSkew_critical_hessianNonPos.2.1, rfl,
+    fun _ => hasDerivAt_const _ _, ⟨fun _ => 0, fun t => ?_, hasDerivAt_const _ _⟩⟩
+  exact hasDerivAt_const t _
 
 end Perspective
 end Transformer

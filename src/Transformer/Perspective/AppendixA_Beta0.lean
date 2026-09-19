@@ -255,10 +255,12 @@ theorem taylor_eq
 noncomputable def northPole : SSphere 1 :=
   ⟨EuclideanSpace.single (0 : Fin 1) (1 : ℝ), by simp⟩
 
-/-- The hypotheses of `taylor_eq` are satisfiable: the antipodal pair
-`(e₀, -e₀)` of `Perspective.antipodalPair` is a non-trivial critical
-configuration, its sum being `0`. -/
-example : IsCriticalE0 1 2 (antipodalPair 1 northPole) ∧
+/-- The antipodal pair `(e₀, -e₀)` of `Perspective.antipodalPair` is a
+non-trivial critical configuration of `𝖤_0`, its sum being `0`.  It is the
+witness for the hypotheses of `taylor_eq` here and of `yury_lemma` and
+`hessian_at_critical` in `Perspective.AppendixA_Saddle`. -/
+theorem antipodalPair_critical_nonTrivial :
+    IsCriticalE0 1 2 (antipodalPair 1 northPole) ∧
     NonTrivialTuple 1 2 (antipodalPair 1 northPole) := by
   refine ⟨fun i => ?_, 0, 1, ?_⟩
   · simp [antipodalPair, antipode, proj, Fin.sum_univ_two]
@@ -270,6 +272,11 @@ example : IsCriticalE0 1 2 (antipodalPair 1 northPole) ∧
         = -((northPole : SSphere 1) : EucSpace 1) := rfl
     rw [h0, h1]
     exact ne_neg_self_of_norm_eq_one 1 hx
+
+/-- The hypotheses of `taylor_eq` are satisfiable. -/
+example : IsCriticalE0 1 2 (antipodalPair 1 northPole) ∧
+    NonTrivialTuple 1 2 (antipodalPair 1 northPole) :=
+  antipodalPair_critical_nonTrivial
 
 end Perspective
 end Transformer

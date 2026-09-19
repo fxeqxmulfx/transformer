@@ -15,6 +15,7 @@ Continues `Perspective.Section5_HighD`:
 
 import Transformer.Perspective.Section5_HighD
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 open scoped BigOperators
 open Real
@@ -68,6 +69,48 @@ theorem ybetaODE_SA_one_zero :
   norm_num
   ring
 
+/-- **The derivative of `tanh`,** `tanh' = 1 - tanh²`.
+
+Not in Mathlib, and what makes `tanh` the solution of both scalar ODEs at
+`n = 2`, `β = 0`: there the right-hand side of `eq: ybeta` and of
+`eq: ybetaUSA` both collapse to `(1 - γ)(1 + γ)`. -/
+theorem hasDerivAt_tanh (t : ℝ) : HasDerivAt Real.tanh (1 - Real.tanh t ^ 2) t := by
+  have hcosh : Real.cosh t ≠ 0 := ne_of_gt (Real.cosh_pos t)
+  have hfun : Real.tanh = fun s : ℝ => Real.sinh s / Real.cosh s :=
+    funext Real.tanh_eq_sinh_div_cosh
+  have htanh : HasDerivAt Real.tanh
+      ((Real.cosh t * Real.cosh t - Real.sinh t * Real.sinh t)
+        / Real.cosh t ^ 2) t := by
+    rw [hfun]
+    exact (Real.hasDerivAt_sinh t).div (Real.hasDerivAt_cosh t) hcosh
+  refine htanh.congr_deriv ?_
+  rw [Real.tanh_eq_sinh_div_cosh]
+  field_simp
+
+/-- **A second solution of `eq: ybeta`.**  At `n = 2` and `β = 0` the equation
+reads `γ̇ = (1 - γ)(1 + γ) = 1 - γ²`, `γ(0) = 0`, whose solution is `tanh`.
+
+Unlike `ybetaODE_SA_one_zero` this one has two particles, so the pair estimates
+of `Perspective.AppendixD_Assembly`, which say nothing when `i ≠ j` is
+unsatisfiable, are witnessed non-vacuously by it. -/
+theorem ybetaODE_SA_two_zero : ybetaODE_SA 2 0 Real.tanh := by
+  refine ⟨Real.tanh_zero, fun t => ?_⟩
+  refine (hasDerivAt_tanh t).congr_deriv ?_
+  norm_num
+  ring
+
+/-- **A solution of `eq: ybetaUSA`.**  At `n = 2` and `β = 0` the `USA`
+equation is `γ̇ = (2/2)(1 - γ)(1 + γ)`, the same `1 - γ²` as `eq: ybeta` at
+those parameters, so `tanh` solves it too.
+
+This is what witnesses that the hypothesis `ybetaODE_USA` of
+`Perspective.usa_analogue` is satisfiable at the `n ≥ 2` the estimate needs. -/
+theorem ybetaODE_USA_two_zero : ybetaODE_USA 2 0 Real.tanh := by
+  refine ⟨Real.tanh_zero, fun t => ?_⟩
+  refine (hasDerivAt_tanh t).congr_deriv ?_
+  norm_num
+  ring
+
 /-- **Theorem (thm: orthogonal).** *Orthogonal initial sequence.*
 
 Let `β ≥ 0`, `d, n ≥ 2`.  If `(x_i(0))_{i ∈ [n]}` are pairwise orthogonal on
@@ -95,7 +138,19 @@ the solution to the `SA` Cauchy problem satisfies, with probability at least
   `|⟨x_i(t), x_j(t)⟩ - γ_β(t)| ≤ min{ 2 c(β)^{n t} √(log d / d), C e^{-λ t} }`
 
 for all `i ≠ j` and `t ≥ 0`, where `c(β) = e^{10 max(1,β)}` and `γ_β` is the
-unique solution to `eq: ybeta`. -/
+unique solution to `eq: ybeta`.
+
+Appendix D assembles this from two halves, each covering one branch of the
+minimum past the threshold `eq: d.large`: `e:ineqfirstpart` — the
+`√(log d / d)` branch, from `Perspective.almost_orthogonal` — and
+`e:ineqsecondpart` — the exponentially decaying branch, from
+`Perspective.ineq_second_part`.  Neither half is proved, and neither is the
+assembly.
+
+Not proved here.
+
+Source: arXiv:2312.10794v5, §6.2, `thm: phase.transition.curve`, and
+Appendix D for the assembly. -/
 theorem phase_transition_curve
     (β : ℝ) (hβ : 0 ≤ β) (hn : 2 ≤ n) :
     ∃ d_star : ℕ, n ≤ d_star ∧ ∀ d : ℕ, d_star ≤ d →

@@ -14,8 +14,9 @@ The first half of Appendix D of the survey:
 * `e:ybetacloseto1`       — the decay of `1 - γ_β(t)`,
 * `eq: d.large`           — the definition of `d⋆(n, β)`.
 
-The lower bound on the smallest coordinate `α(t)` and the assembly of the
-theorem are in `Perspective.AppendixD_Alpha`.
+The lower bound on the smallest coordinate `α(t)` is in
+`Perspective.AppendixD_Alpha`, and what the survey builds on it in
+`Perspective.AppendixD_Assembly`.
 -/
 
 import Transformer.Basic
@@ -82,22 +83,25 @@ For `n` i.i.d. uniform points on `𝕊^{d-1}` with `2 ≤ n ≤ d` there are, wi
 probability at least `1 - 2 n² d^{-1/64}`, pairwise orthogonal points
 `y_1, …, y_n ∈ 𝕊^{d-1}` with `‖x_i(0) - y_i‖ ≤ √(log d / d)`.
 
-A `Prop`-valued definition and not a theorem: the concentration inequality on
-the sphere, and the Gram–Schmidt construction of the `y_i` from it, are not
-formalized here.
+Not proved here: neither the concentration inequality on the sphere nor the
+Gram–Schmidt construction of the `y_i` from it is formalized.  As in §4, the
+uniform law is quantified over as `UniformTuple`, which pins it down uniquely.
 
 Source: arXiv:2312.10794v5, Appendix D, `eq: almost.ortho.vec`. -/
-def AlmostOrthogonal : Prop :=
-  2 ≤ n → n ≤ d →
-  ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-    1 - 2 * (n : ℝ) ^ 2 * (d : ℝ) ^ (-(1 / 64 : ℝ)) ≤
-      (P { X₀ : SphereTuple d n |
-            ∃ Y : SphereTuple d n,
-              (∀ i j : Idx n, i ≠ j →
-                inner (𝕜 := ℝ) ((Y i : EucSpace d)) ((Y j : EucSpace d)) = 0) ∧
-              ∀ i : Idx n,
-                ‖(X₀ i : EucSpace d) - (Y i : EucSpace d)‖
-                  ≤ Real.sqrt (Real.log d / d) }).toReal
+theorem almost_orthogonal (hn : 2 ≤ n) (hnd : n ≤ d) :
+    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+      1 - 2 * (n : ℝ) ^ 2 * (d : ℝ) ^ (-(1 / 64 : ℝ)) ≤
+        (P { X₀ : SphereTuple d n |
+              ∃ Y : SphereTuple d n,
+                (∀ i j : Idx n, i ≠ j →
+                  inner (𝕜 := ℝ) ((Y i : EucSpace d)) ((Y j : EucSpace d)) = 0) ∧
+                ∀ i : Idx n,
+                  ‖(X₀ i : EucSpace d) - (Y i : EucSpace d)‖
+                    ≤ Real.sqrt (Real.log d / d) }).toReal := by
+  sorry
+
+/-- The hypotheses of `almost_orthogonal` are satisfiable: `d = n = 2`. -/
+example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 
 /-- **Equation (e:shortdist).**
 

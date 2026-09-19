@@ -12,6 +12,11 @@ This file formalizes §7 of the survey:
 * `eq:energyF`         — interaction energy `𝖤_β` on the torus,
 * `e:variantkuramoto`  — generalized Kuramoto with non-linearity `h`,
 * and the identification of `eq:onangles` with the gradient flow of `𝖤_β`.
+
+Open Problem `o:strictsaddle` of §7 — apart from the global maxima, every
+critical point of `𝖤_β` on `𝕋^n` is a strict saddle — is not stated here.  The
+survey flags it as open, so it is neither a theorem this file may `sorry` (that
+would assert something nobody knows) nor something anything may be built on.
 -/
 
 import Transformer.Basic
@@ -168,15 +173,6 @@ theorem h_β_neg (β θ : ℝ) : h_β β (-θ) = h_β β θ := by
 therefore attractive at every angle, which is what makes `torusEnergy` a sum of
 positive terms. -/
 theorem h_β_pos (β θ : ℝ) : 0 < h_β β θ := Real.exp_pos _
-
-/-- *Open Problem `o:strictsaddle`.*  Apart from the global maxima, every
-critical point of `𝖤_β` (on `𝕋^n`) is a strict saddle. -/
-def strict_saddle_open_problem (β : ℝ) : Prop :=
-  ∀ θ : Angles n,
-    (∀ i, HasDerivAt (fun x : ℝ => torusEnergy n β (Function.update θ i x)) 0 (θ i))
-    → -- θ is a critical point
-    -- either θ is a global maximum, or it is a strict saddle
-    True
 
 /-! ### The hypotheses are satisfiable -/
 

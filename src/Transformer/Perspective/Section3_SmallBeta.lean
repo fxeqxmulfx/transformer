@@ -205,18 +205,22 @@ For fixed `d, n ≥ 2`, the probability (w.r.t. uniform initialization on
 
   `ℙ(𝒮_β) →[β → 0⁺] 1`.
 
-A `Prop`-valued definition and not a theorem: the proof runs through
-`beta0_consensus`, `Sset0ProbabilityTendsToOne` and `distance_bound_at_time_m`,
-and is not formalized here.  Measurability of `clusteringSet` is part of what
-is being asserted: `P (𝒮_β)` is the outer measure when the set is not
-measurable, so the statement is the one the paper makes in either case.
+Not proved here: the proof runs through `beta0_consensus`,
+`sset0_probability_tendsto_one` and `distance_bound_at_time_m`, none of which
+is formalized.  Measurability of `clusteringSet` is part of what is being
+asserted: `P (𝒮_β)` is the outer measure when the set is not measurable, so the
+statement is the one the paper makes in either case.
 
 Source: arXiv:2312.10794v5, §4, `th:beta_small`. -/
-def ClusteringProbabilitySmallBeta : Prop :=
-  2 ≤ d → 2 ≤ n →
-  ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-    Filter.Tendsto (fun β : ℝ => (P (clusteringSet d n β)).toReal)
-      (nhdsWithin 0 (Set.Ioi 0)) (nhds 1)
+theorem clustering_probability_small_beta (hd : 2 ≤ d) (hn : 2 ≤ n) :
+    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+      Filter.Tendsto (fun β : ℝ => (P (clusteringSet d n β)).toReal)
+        (nhdsWithin 0 (Set.Ioi 0)) (nhds 1) := by
+  sorry
+
+/-- The hypotheses of `clustering_probability_small_beta` are satisfiable:
+`d = n = 2`. -/
+example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 
 /-! ### Auxiliary objects used inside the proof of `th:beta_small`. -/
 
@@ -241,15 +245,19 @@ def Sset0 (m : ℕ) : Set (SphereTuple d n) :=
 sequence is `(3/4)`-clustered by the `β = 0` dynamics at a late enough integer
 time, so the measure of `Sset0 d n m` tends to `1`.
 
-A `Prop`-valued definition and not a theorem: it is the quantitative form of
-`beta0_consensus`, which is a `sorry` here.
+Not proved here: it is the quantitative form of `beta0_consensus`, which is a
+`sorry` here.
 
 Source: arXiv:2312.10794v5, §4, `e:Ps0n`. -/
-def Sset0ProbabilityTendsToOne : Prop :=
-  2 ≤ d → 2 ≤ n →
-  ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-    Filter.Tendsto (fun m : ℕ => (P (Sset0 d n m)).toReal)
-      Filter.atTop (nhds 1)
+theorem sset0_probability_tendsto_one (hd : 2 ≤ d) (hn : 2 ≤ n) :
+    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+      Filter.Tendsto (fun m : ℕ => (P (Sset0 d n m)).toReal)
+        Filter.atTop (nhds 1) := by
+  sorry
+
+/-- The hypotheses of `sset0_probability_tendsto_one` are satisfiable:
+`d = n = 2`. -/
+example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 
 /-- **Equation (e:approxsphere).** Gronwall bound:
 

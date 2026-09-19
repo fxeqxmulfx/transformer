@@ -14,9 +14,10 @@ This file formalizes the second half of Appendix A of the survey:
 * the assembly of `Theorem p:beta0`.
 
 The energy itself, its gradient flow and `eq: taylor` are in
-`Perspective.AppendixA_Beta0`.  Everything below is a `Prop`-valued
-definition: the statements are written out in full, none of them is proved
-here.
+`Perspective.AppendixA_Beta0`.  The statements below are written out in full
+and none of them is proved: each is a theorem closed by `sorry`.  `IsSkew`,
+`PerturbationBy` and `SecondDerivE0At` are predicates of their arguments and
+stay definitions.
 -/
 
 import Transformer.Perspective.AppendixA_Beta0
@@ -69,17 +70,28 @@ For a skew-symmetric `B`, a subset `𝒮 ⊂ [n]`, and the perturbation
 The first-order term is absent precisely because `X` is critical, which is why
 criticality is a hypothesis rather than decoration.
 
-A `Prop`-valued definition and not a theorem: the second-order expansion is
-not carried out here.
+Not proved here: the second-order expansion is not carried out.
 
 Source: arXiv:2312.10794v5, Appendix A, `e:helpcl`. -/
-def HessianAtCritical : Prop :=
-  ∀ (X : SphereTuple d n) (B : ParamMatrix d) (𝒮 : Finset (Idx n)),
-    IsSkew d B → IsCriticalE0 d n X →
-    ∀ Y : ℝ → SphereTuple d n, PerturbationBy d n B 𝒮 X Y →
-      SecondDerivE0At d n Y
-        ((2 * (n : ℝ)⁻¹) * ∑ i ∈ 𝒮, ∑ j ∈ 𝒮ᶜ,
-          inner (𝕜 := ℝ) (B (B ((X i : EucSpace d)))) ((X j : EucSpace d)))
+theorem hessian_at_critical
+    (X : SphereTuple d n) (B : ParamMatrix d) (𝒮 : Finset (Idx n))
+    (hB : IsSkew d B) (hX : IsCriticalE0 d n X)
+    (Y : ℝ → SphereTuple d n) (hY : PerturbationBy d n B 𝒮 X Y) :
+    SecondDerivE0At d n Y
+      ((2 * (n : ℝ)⁻¹) * ∑ i ∈ 𝒮, ∑ j ∈ 𝒮ᶜ,
+        inner (𝕜 := ℝ) (B (B ((X i : EucSpace d)))) ((X j : EucSpace d))) := by
+  sorry
+
+/-- The hypotheses of `hessian_at_critical` are satisfiable: the zero matrix is
+skew, the antipodal pair is a critical point
+(`antipodalPair_critical_nonTrivial`), and rotating none of its particles —
+`𝒮 = ∅` — leaves the constant curve as the perturbation. -/
+example :
+    IsSkew 1 0 ∧ IsCriticalE0 1 2 (antipodalPair 1 northPole) ∧
+      PerturbationBy 1 2 0 ∅ (antipodalPair 1 northPole)
+        (fun _ => antipodalPair 1 northPole) :=
+  ⟨fun x y => by simp, antipodalPair_critical_nonTrivial.1,
+    rfl, fun i hi => absurd hi (Finset.notMem_empty i), fun _ _ _ => rfl⟩
 
 /-- **Equation (e:russiantrick).** *"Russian trick".*  In odd dimension `d`
 there are `d` skew-symmetric matrices `B_1, …, B_d` with
@@ -91,15 +103,17 @@ by zeroing out its `k`-th `2×2` rotation block; the identity is what turns the
 Hessian formula `e:helpcl` into a *sum* of directions along which `𝖤_0` can be
 increased.
 
-A `Prop`-valued definition and not a theorem: the construction of the blocks
-is not formalized here.
+Not proved here: the construction of the blocks is not formalized.
 
 Source: arXiv:2312.10794v5, Appendix A, `e:russiantrick`. -/
-def RussianTrick : Prop :=
-  Odd d →
+theorem russian_trick (hd : Odd d) :
     ∃ B : Idx d → ParamMatrix d,
       (∀ k : Idx d, IsSkew d (B k)) ∧
-      ∀ x : EucSpace d, (((d : ℝ) - 1)⁻¹) • ∑ k : Idx d, B k (B k x) = -x
+      ∀ x : EucSpace d, (((d : ℝ) - 1)⁻¹) • ∑ k : Idx d, B k (B k x) = -x := by
+  sorry
+
+/-- The hypothesis of `russian_trick` is satisfiable: `d = 1` is odd. -/
+example : Odd 1 := odd_one
 
 /-- **Lemma (lem: yury.lemma).** *Every non-trivial critical point of `𝖤_0` is
 a strict saddle.*
@@ -112,14 +126,21 @@ means the critical point is not a local maximum — and hence, by
 particular every local maximum of `𝖤_0` is a consensus configuration, hence a
 global maximum.
 
-A `Prop`-valued definition and not a theorem: the proof combines `eq: taylor`,
-`e:helpcl` and `e:russiantrick`, none of which is proved here.
+Not proved here: the proof combines `eq: taylor`, `hessian_at_critical` and
+`russian_trick`, none of which is proved either.
 
 Source: arXiv:2312.10794v5, Appendix A, `lem: yury.lemma`. -/
-def YuryLemma : Prop :=
-  ∀ X : SphereTuple d n, IsCriticalE0 d n X → NonTrivialTuple d n X →
+theorem yury_lemma (X : SphereTuple d n) (hcrit : IsCriticalE0 d n X)
+    (hnt : NonTrivialTuple d n X) :
     ∃ (B : ParamMatrix d) (𝒮 : Finset (Idx n)) (Y : ℝ → SphereTuple d n) (c : ℝ),
-      IsSkew d B ∧ PerturbationBy d n B 𝒮 X Y ∧ SecondDerivE0At d n Y c ∧ 0 < c
+      IsSkew d B ∧ PerturbationBy d n B 𝒮 X Y ∧ SecondDerivE0At d n Y c ∧ 0 < c := by
+  sorry
+
+/-- The hypotheses of `yury_lemma` are satisfiable: the antipodal pair is a
+non-trivial critical point. -/
+example : IsCriticalE0 1 2 (antipodalPair 1 northPole) ∧
+    NonTrivialTuple 1 2 (antipodalPair 1 northPole) :=
+  antipodalPair_critical_nonTrivial
 
 /-- **Lemma (l:nosaddleconv).** *No-saddle-convergence lemma.*
 
@@ -130,19 +151,19 @@ instance the survey uses it: `ℳ = (𝕊^{d-1})^n`, `f = 𝖤_0`, and — by
 `YuryLemma` — the strict saddles are the non-trivial critical points.  Volume
 is the uniform measure `UniformTuple`.
 
-A `Prop`-valued definition and not a theorem: the center-stable manifold
-theorem is not available here.
+Not proved here: the center-stable manifold theorem is not available.
 
 Source: arXiv:2312.10794v5, Appendix A, `l:nosaddleconv`. -/
-def NoSaddleConvergence : Prop :=
-  ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-    P { X₀ : SphereTuple d n |
-        ∃ X : ℝ → SphereTuple d n, X 0 = X₀ ∧ E0GradientAscent d n X ∧
-          ∃ Z : SphereTuple d n, IsCriticalE0 d n Z ∧ NonTrivialTuple d n Z ∧
-            ∀ i : Idx n,
-              Filter.Tendsto
-                (fun t : ℝ => ((X t i : EucSpace d) - (Z i : EucSpace d)))
-                Filter.atTop (nhds 0) } = 0
+theorem no_saddle_convergence :
+    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+      P { X₀ : SphereTuple d n |
+          ∃ X : ℝ → SphereTuple d n, X 0 = X₀ ∧ E0GradientAscent d n X ∧
+            ∃ Z : SphereTuple d n, IsCriticalE0 d n Z ∧ NonTrivialTuple d n Z ∧
+              ∀ i : Idx n,
+                Filter.Tendsto
+                  (fun t : ℝ => ((X t i : EucSpace d) - (Z i : EucSpace d)))
+                  Filter.atTop (nhds 0) } = 0 := by
+  sorry
 
 /-- **Theorem (p:beta0)**, in the almost-sure form Appendix A proves: for
 `d, n ≥ 2` the set of initial sequences whose `β = 0` trajectory does *not*
@@ -152,40 +173,29 @@ This is the statement `Perspective.beta0_consensus` should have; the latter
 quantifies over every initial sequence, which is false at the exceptional
 null set.
 
-Source: arXiv:2312.10794v5, §4, `p:beta0`. -/
-def AlmostSureConsensusBeta0 : Prop :=
-  2 ≤ d → 2 ≤ n →
-  ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-    P { X₀ : SphereTuple d n | ¬ ∃ x_star : SSphere d,
-          ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → beta0Dynamics d n X →
-            ∀ i : Idx n,
-              Filter.Tendsto
-                (fun t : ℝ => ((X t i : EucSpace d) - (x_star : EucSpace d)))
-                Filter.atTop (nhds 0) } = 0
+Not proved here.  The paper's proof assembles three ingredients, and each of
+them is a `sorry` of its own: (i) Łojasiewicz — `𝖤_0` is analytic on a compact
+analytic manifold, so every trajectory of `e:gradfl` converges to a critical
+point; (ii) `no_saddle_convergence` — the non-trivial critical points are
+reached from a null set; (iii) `yury_lemma` — those are exactly the strict
+saddles.  The assembly is not recorded as a statement of its own: with the
+conclusion already a sorried theorem, the implication would be provable in one
+line and would assert nothing.
 
-/-- *Assembly of the proof of `p:beta0`.*  The three ingredients are:
+Source: arXiv:2312.10794v5, §4, `p:beta0`; Appendix A for the proof. -/
+theorem almost_sure_consensus_beta0 (hd : 2 ≤ d) (hn : 2 ≤ n) :
+    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+      P { X₀ : SphereTuple d n | ¬ ∃ x_star : SSphere d,
+            ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → beta0Dynamics d n X →
+              ∀ i : Idx n,
+                Filter.Tendsto
+                  (fun t : ℝ => ((X t i : EucSpace d) - (x_star : EucSpace d)))
+                  Filter.atTop (nhds 0) } = 0 := by
+  sorry
 
-  (i) Łojasiewicz — `𝖤_0` is analytic on a compact analytic manifold, so every
-      trajectory of `e:gradfl` converges to a critical point (the hypothesis
-      spelled out first below);
- (ii) `l:nosaddleconv` — the non-trivial critical points are reached from a
-      null set;
-(iii) `lem: yury.lemma` — those are exactly the strict saddles.
-
-Together they give `AlmostSureConsensusBeta0`.
-
-A `Prop`-valued definition and not a theorem: the implication itself, like its
-three hypotheses, is not proved here.
-
-Source: arXiv:2312.10794v5, Appendix A. -/
-def PBeta0Proof : Prop :=
-  (∀ X : ℝ → SphereTuple d n, E0GradientAscent d n X →
-      ∃ Z : SphereTuple d n, IsCriticalE0 d n Z ∧
-        ∀ i : Idx n,
-          Filter.Tendsto
-            (fun t : ℝ => ((X t i : EucSpace d) - (Z i : EucSpace d)))
-            Filter.atTop (nhds 0)) →
-    NoSaddleConvergence d n → YuryLemma d n → AlmostSureConsensusBeta0 d n
+/-- The hypotheses of `almost_sure_consensus_beta0` are satisfiable:
+`d = n = 2`. -/
+example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 
 end Perspective
 end Transformer

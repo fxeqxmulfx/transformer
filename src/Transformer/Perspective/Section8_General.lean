@@ -134,16 +134,38 @@ def sharpConfiguration (σ : Measure (SSphere d)) (𝒞 : Finset (SSphere d)) : 
 configurations `𝒞 ⊂ 𝕊^{d-1}` with `#𝒞 = n` is either a sharp configuration or
 the vertices of the 600-cell (a 4-dimensional polytope with 120 vertices).
 
-Stated, not proved: the theorem is a deep result of Cohn and Kumar, and the
-600-cell is not constructed here — it enters as the parameter `exceptional`,
-the configuration the dichotomy is allowed to except.
+Not proved here: the theorem is a deep result of Cohn and Kumar, and the
+600-cell is not constructed — it enters as the parameter `exceptional`, the
+configuration the dichotomy is allowed to except.
 Source: arXiv:2312.10794v5, §9.1. -/
-def CohnKumarDichotomy
-    (σ : Measure (SSphere d)) (β : ℝ) (exceptional : Finset (SSphere d)) : Prop :=
-  ∀ 𝒞 : Finset (SSphere d), 𝒞.card = n →
-    (∀ 𝒟 : Finset (SSphere d), 𝒟.card = n →
-        discreteEnergy d β 𝒞 ≤ discreteEnergy d β 𝒟) →
-      sharpConfiguration d σ 𝒞 ∨ 𝒞 = exceptional
+theorem cohn_kumar_dichotomy
+    (σ : Measure (SSphere d)) (β : ℝ) (exceptional : Finset (SSphere d))
+    (𝒞 : Finset (SSphere d)) (hcard : 𝒞.card = n)
+    (hmin : ∀ 𝒟 : Finset (SSphere d), 𝒟.card = n →
+      discreteEnergy d β 𝒞 ≤ discreteEnergy d β 𝒟) :
+    sharpConfiguration d σ 𝒞 ∨ 𝒞 = exceptional := by
+  sorry
+
+/-- On the sphere every singleton has the same energy `e^β`, since
+`⟨x, x⟩ = 1`.  This is what makes the minimality hypothesis of
+`cohn_kumar_dichotomy` satisfiable at `n = 1`. -/
+theorem discreteEnergy_singleton (β : ℝ) (x : SSphere d) :
+    discreteEnergy d β {x} = Real.exp β := by
+  have hx : ‖(x : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
+  have hxx : inner (𝕜 := ℝ) ((x : EucSpace d)) ((x : EucSpace d)) = 1 := by
+    rw [real_inner_self_eq_norm_mul_norm, hx]; ring
+  rw [discreteEnergy, Finset.sum_singleton, Finset.sum_singleton, hxx, mul_one]
+
+/-- The hypotheses of `cohn_kumar_dichotomy` are satisfiable at `n = 1`: a
+singleton is a global minimiser among singletons, all of them having energy
+`e^β`. -/
+example (β : ℝ) :
+    ({basePoint 0} : Finset (SSphere 1)).card = 1 ∧
+      ∀ 𝒟 : Finset (SSphere 1), 𝒟.card = 1 →
+        discreteEnergy 1 β {basePoint 0} ≤ discreteEnergy 1 β 𝒟 := by
+  refine ⟨Finset.card_singleton _, fun 𝒟 h𝒟 => ?_⟩
+  obtain ⟨y, rfl⟩ := Finset.card_eq_one.mp h𝒟
+  rw [discreteEnergy_singleton, discreteEnergy_singleton]
 
 /-! ### §9.2 — Pure self-attention (no projection) -/
 

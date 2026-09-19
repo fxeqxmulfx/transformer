@@ -62,22 +62,30 @@ rather than as a composition, so that the depth `L` and the per-layer
 parameters `Q, K, V, w, a, b` are the existential witnesses and the initial
 sequence ranges over the compact set.
 
-A `Prop`-valued definition and not a theorem: the proof is Yun, Bhojanapalli,
-Rawat, Reddi, Kumar, *Are Transformers universal approximators of
-sequence-to-sequence functions?*, ICLR 2020.
+Not proved here: the proof is Yun, Bhojanapalli, Rawat, Reddi, Kumar, *Are
+Transformers universal approximators of sequence-to-sequence functions?*,
+ICLR 2020.
 
 Source: arXiv:2312.10794v5, §10. -/
-def UniversalApproximationDiscrete (β : ℝ) : Prop :=
-  ∀ f : (Idx n → EucSpace d) → (Idx n → EucSpace d), Continuous f →
-  ∀ S : Set (Idx n → EucSpace d), IsCompact S →
-  ∀ ε : ℝ, 0 < ε →
-  ∃ (L : ℕ) (Q K V w a : ℕ → ParamMatrix d) (b : ℕ → EucSpace d) (σ : ℝ → ℝ),
+theorem universal_approximation_discrete (β : ℝ)
+    (f : (Idx n → EucSpace d) → (Idx n → EucSpace d)) (hf : Continuous f)
+    (S : Set (Idx n → EucSpace d)) (hS : IsCompact S) (ε : ℝ) (hε : 0 < ε) :
+    ∃ (L : ℕ) (Q K V w a : ℕ → ParamMatrix d) (b : ℕ → EucSpace d) (σ : ℝ → ℝ),
     Continuous σ ∧
     ∀ x₀ ∈ S, ∀ x : ℕ → Idx n → EucSpace d,
       x 0 = x₀ →
       (∀ k : ℕ,
         x (k + 1) = discreteLayer d n β (Q k) (K k) (V k) σ (w k) (a k) (b k) (x k)) →
-      ∀ i : Idx n, ‖x L i - f x₀ i‖ < ε
+      ∀ i : Idx n, ‖x L i - f x₀ i‖ < ε := by
+  sorry
+
+/-- The hypotheses of `universal_approximation_discrete` are satisfiable, and
+not by an empty compactum: the identity on one token of `ℝ¹`, approximated on
+the one-point set `{0}` to within `1`. -/
+example :
+    Continuous (id : (Idx 1 → EucSpace 1) → (Idx 1 → EucSpace 1)) ∧
+      IsCompact ({0} : Set (Idx 1 → EucSpace 1)) ∧ (0 : ℝ) < 1 :=
+  ⟨continuous_id, isCompact_singleton, one_pos⟩
 
 /-! ### Measure-to-measure flow maps -/
 
@@ -108,21 +116,26 @@ topology, which is the one `Continuous Φ` refers to.  The flow map is presented
 through `auxCE`: `m` is any solution of the continuity equation driven by
 `vectorFieldQKV` with `m 0 = μ`, and it is `m T` that must be close to `Φ μ`.
 
-A `Prop`-valued definition and not a theorem: neither the approximation result
-nor well-posedness of the continuity equation is proved here.
+Not proved here: neither the approximation result nor well-posedness of the
+continuity equation is established.
 
 Source: arXiv:2312.10794v5, §10. -/
-def UniversalApproximationMeasure (β : ℝ) : Prop :=
-  ∀ Φ : ProbSphere d → ProbSphere d, Continuous Φ →
-  ∀ ε : ℝ, 0 < ε →
-  ∃ (T : ℝ) (Q K V : TimeParam d), 0 < T ∧
+theorem universal_approximation_measure (β : ℝ) (Φ : ProbSphere d → ProbSphere d)
+    (hΦ : Continuous Φ) (ε : ℝ) (hε : 0 < ε) :
+    ∃ (T : ℝ) (Q K V : TimeParam d), 0 < T ∧
     ∀ (μ : ProbSphere d) (m : ℝ → ProbSphere d),
       m 0 = μ →
       auxCE d m (fun t x => vectorFieldQKV d β Q K V t (m t) x) →
       ∀ φ : EucSpace d → ℝ, LipschitzWith 1 φ → (∀ x : EucSpace d, |φ x| ≤ 1) →
         |(∫ x, φ (x : EucSpace d) ∂(m T : Measure (SSphere d)))
             - ∫ x, φ (x : EucSpace d) ∂((Φ μ : ProbSphere d) : Measure (SSphere d))|
-          < ε
+          < ε := by
+  sorry
+
+/-- The hypotheses of `universal_approximation_measure` are satisfiable: the
+identity self-map of `𝒫(𝕊^{d-1})`, to within `1`. -/
+example : Continuous (id : ProbSphere 1 → ProbSphere 1) ∧ (0 : ℝ) < 1 :=
+  ⟨continuous_id, one_pos⟩
 
 end Perspective
 end Transformer
