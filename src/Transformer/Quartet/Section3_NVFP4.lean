@@ -21,7 +21,9 @@ paper build the same three levels, and differ in how they round:
   rescaling of §3.2 are what will restore unbiasedness.
 
 `qSRAt` and `qRTN` return the *dequantized* value `x^FP4 · x^FP8 · x^FP32`,
-since that is what the guarantees of the paper speak about.
+since that is what the guarantees of the paper speak about.  That neither of
+them clips, and that `Q_SR` is unbiased, is
+`Transformer.Quartet.Section3_NonClipping`.
 -/
 
 import Transformer.Quartet.Section3_Grids
@@ -47,6 +49,11 @@ theorem groupAbsMax_le_absMax (x : Fin (2 ^ k) → Fin 16 → ℝ) (i : Fin (2 ^
     groupAbsMax x i ≤ absMax x :=
   Finset.sup'_le _ _ fun j _ =>
     Finset.le_sup' (fun p : Fin (2 ^ k) × Fin 16 => |x p.1 p.2|) (Finset.mem_univ (i, j))
+
+/-- Every entry of a group is bounded by the group's largest absolute value. -/
+theorem abs_le_groupAbsMax (x : Fin (2 ^ k) → Fin 16 → ℝ) (i : Fin (2 ^ k)) (j : Fin 16) :
+    |x i j| ≤ groupAbsMax x i :=
+  Finset.le_sup' (fun j : Fin 16 => |x i j|) (Finset.mem_univ j)
 
 /-- And it is never negative, being a supremum of absolute values. -/
 theorem groupAbsMax_nonneg (x : Fin (2 ^ k) → Fin 16 → ℝ) (i : Fin (2 ^ k)) :
@@ -89,42 +96,6 @@ noncomputable def qRTN (s : ℝ) (x : Fin (2 ^ k) → Fin 16 → ℝ) (i : Fin (
   rtn fp4 (x i j / (groupScaleRTN s x i * tensorScaleRTN s x)) *
     groupScaleRTN s x i * tensorScaleRTN s x
 
-/-- **`Q_SR` is unbiased**, entry by entry: "`E_ω[x_i^FP4 × x^FP8_{i//16} ×
-x^FP32] = x_i`" (§3.1).  This is the property every FP4 training method before
-the paper pays for with element-wise stochastic rounding. -/
-theorem integral_qSRAt {x : Fin (2 ^ k) → Fin 16 → ℝ} (hc : 0 < c) (hc' : c ≤ 6)
-    (hx : 0 < absMax x) (i : Fin (2 ^ k)) (j : Fin 16) :
-    ∫ t in (0 : ℝ)..1, qSRAt c x i j t = x i j :=
-  sorry
-
-/-- **`Q_SR` never clips**: with the constants of §3.1 the argument handed to
-`SR_FP4` stays in `[-6, 6]`, the range of E2M1 — "Given the choice of
-constants, stochastic rounding `SR_FP4` does not clip its arguments".  The
-factor `16/17`, "the maximum factor by which `RTN_FP8` can increase the
-underlying values", is exactly what buys this. -/
-theorem abs_div_groupScaleSR_le {x : Fin (2 ^ k) → Fin 16 → ℝ} (hc : 0 < c) (hc' : c ≤ 6)
-    (hx : 0 < absMax x) (i : Fin (2 ^ k)) (j : Fin 16) :
-    |x i j / (groupScaleSR c x i * tensorScaleSR c x)| ≤ 6 :=
-  sorry
-
-/-- The hypotheses of the two statements above are satisfiable at the grid
-maximum `6.0` of §3.1: a tensor of ones has largest absolute value `1`. -/
-example : 0 < (6 : ℝ) ∧ (6 : ℝ) ≤ 6 ∧
-    0 < absMax (fun _ _ => (1 : ℝ) : Fin (2 ^ 0) → Fin 16 → ℝ) := by
-  refine ⟨by norm_num, le_rfl, ?_⟩
-  unfold absMax
-  exact lt_of_lt_of_le (by norm_num)
-    (Finset.le_sup' _ (Finset.mem_univ ((0 : Fin (2 ^ 0)), (0 : Fin 16))))
-
-/-- **`Q_RTN(·, s)` clips nothing when `s ≤ 6 · 16/17`** (§3.3, "Setting the
-clipping factor `s` to `6 × 16/17` or lower makes the scheme non-clipping");
-above that value it does clip, which is what the paper's numerically optimal
-`s = 6 · 16/17 / 0.93` trades error for. -/
-theorem abs_div_groupScaleRTN_le {x : Fin (2 ^ k) → Fin 16 → ℝ} (hs : 0 < s)
-    (hs' : s ≤ 6 * (16 / 17)) (hx : 0 < absMax x) (i : Fin (2 ^ k)) (j : Fin 16) :
-    |x i j / (groupScaleRTN s x i * tensorScaleRTN s x)| ≤ 6 :=
-  sorry
-
 /-- **The group scales of `Q_RTN` stay below `256`**, whatever `s` is: the
 headroom of §3.3 that lets `MS-EDEN` scale a group up without overflowing
 E4M3, whose largest value is `448`. -/
@@ -149,11 +120,11 @@ theorem groupScaleRTN_le {x : Fin (2 ^ k) → Fin 16 → ℝ} (hs : 0 < s) (hx :
     rintro y ⟨hy, -⟩
     exact (abs_le.mp hy.1).1
 
-/-- The hypotheses of the two statements above are satisfiable at the paper's
-own non-clipping bound `s = 6 · 16/17`. -/
-example : 0 < 6 * (16 / 17 : ℝ) ∧ 6 * (16 / 17 : ℝ) ≤ 6 * (16 / 17) ∧
+/-- Its hypotheses are satisfiable at the paper's own non-clipping bound
+`s = 6 · 16/17`. -/
+example : 0 < 6 * (16 / 17 : ℝ) ∧
     0 < absMax (fun _ _ => (1 : ℝ) : Fin (2 ^ 0) → Fin 16 → ℝ) := by
-  refine ⟨by norm_num, le_rfl, ?_⟩
+  refine ⟨by norm_num, ?_⟩
   unfold absMax
   exact lt_of_lt_of_le (by norm_num)
     (Finset.le_sup' _ (Finset.mem_univ ((0 : Fin (2 ^ 0)), (0 : Fin 16))))

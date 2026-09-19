@@ -25,6 +25,7 @@ argued from pre-training loss curves, not from a statement.
 -/
 
 import Transformer.Quartet.Section3_Eden
+import Transformer.Quartet.Section3_Unbiased
 
 namespace Transformer
 namespace Quartet
@@ -59,16 +60,25 @@ noncomputable def meanGroup (f : (Fin 16 → ℝ) → ℝ) : ℝ :=
 
 /-- **Either branch on its own is unbiased** (§4.2, "even if both scale
 branches are individually unbiased via SR"): this is `integral_qSRAt` at the
-two grid maxima Four Over Six chooses between. -/
+two grid maxima Four Over Six chooses between, and it carries that statement's
+hypothesis on how small a group may be. -/
 theorem integral_qSRAt_four_and_six {x : Fin (2 ^ k) → Fin 16 → ℝ} (hx : 0 < absMax x)
-    (i : Fin (2 ^ k)) (j : Fin 16) :
+    (i : Fin (2 ^ k)) (hg : absMax x ≤ 2 ^ (14 : ℕ) * groupAbsMax x i) (j : Fin 16) :
     (∫ t in (0 : ℝ)..1, qSRAt 4 x i j t) = x i j ∧ (∫ t in (0 : ℝ)..1, qSRAt 6 x i j t) = x i j :=
-  ⟨integral_qSRAt (by norm_num) (by norm_num) hx i j,
-    integral_qSRAt (by norm_num) (by norm_num) hx i j⟩
+  ⟨integral_qSRAt (by norm_num) (by norm_num) hx i hg j,
+    integral_qSRAt (by norm_num) (by norm_num) hx i hg j⟩
 
-/-- The hypothesis above is satisfiable: a tensor of ones has largest absolute
-value `1`. -/
-example : 0 < absMax (fun _ _ => (1 : ℝ) : Fin (2 ^ 0) → Fin 16 → ℝ) := by
+/-- The hypotheses above are satisfiable: a tensor of ones has
+`max|x| = max_g|x| = 1`. -/
+example : 0 < absMax (fun _ _ => (1 : ℝ) : Fin (2 ^ 0) → Fin 16 → ℝ) ∧
+    absMax (fun _ _ => (1 : ℝ) : Fin (2 ^ 0) → Fin 16 → ℝ) ≤
+      2 ^ (14 : ℕ) * groupAbsMax (fun _ _ => (1 : ℝ) : Fin (2 ^ 0) → Fin 16 → ℝ) 0 := by
+  have h1 : absMax (fun _ _ => (1 : ℝ) : Fin (2 ^ 0) → Fin 16 → ℝ) ≤ 1 := by
+    unfold absMax
+    exact Finset.sup'_le _ _ fun p _ => by norm_num
+  have h2 : (1 : ℝ) ≤ groupAbsMax (fun _ _ => (1 : ℝ) : Fin (2 ^ 0) → Fin 16 → ℝ) 0 := by
+    simpa using abs_le_groupAbsMax (fun _ _ => (1 : ℝ) : Fin (2 ^ 0) → Fin 16 → ℝ) 0 0
+  refine ⟨?_, by norm_num; linarith⟩
   unfold absMax
   exact lt_of_lt_of_le (by norm_num)
     (Finset.le_sup' _ (Finset.mem_univ ((0 : Fin (2 ^ 0)), (0 : Fin 16))))
