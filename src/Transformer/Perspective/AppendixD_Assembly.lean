@@ -9,9 +9,10 @@ proved — as the deduction it is, from `e:productcloseto1` and
 `e:ybetacloseto1` carried as explicit hypotheses, and with the constant its own
 derivation supports rather than the one the survey prints.
 
-The differential inequality `e:diffineqalpha` and its integrated form
-`e:productcloseto1` are in `Perspective.AppendixD_Product`; the `USA` analogue
-`rem: usa.d` is in `Perspective.AppendixD_YbetaUSA`.
+The differential inequality `e:diffineqalpha` is in
+`Perspective.AppendixD_AlphaDeriv` and its integrated form `e:productcloseto1`
+in `Perspective.AppendixD_Product`; the `USA` analogue `rem: usa.d` is in
+`Perspective.AppendixD_YbetaUSA`.
 
 One range to watch: `hcp` below is asked on `t ≥ 0`, which is where the survey
 puts `e:productcloseto1`, while `Perspective.product_close_to_one` proves that

@@ -4,22 +4,21 @@
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
-Two of the survey's equations:
+One of the survey's equations: `e:productcloseto1`, the integrated form of the
+differential inequality for `α`.
 
-* `e:mineqalpha`, `e:diffineqalpha` — the differential inequality for `α`,
-* `e:productcloseto1`              — its integrated form.
-
-The first is not proved here.  The second is: it is the Grönwall step, and it
-is proved from the first and from `e:1/n` (`Perspective.alpha_at_one_over_n`)
-carried as explicit hypotheses, on the time range the survey's own argument
-supports.  `not_forall_product_close_to_one` shows that `e:1/n` cannot be
-dropped and that the range cannot be widened to `t ≥ 0`.
+It is the Grönwall step, and it is proved from `e:diffineqalpha`
+(`Perspective.diff_ineq_alpha`, in `Perspective.AppendixD_AlphaDeriv`) and
+from `e:1/n` (`Perspective.alpha_at_one_over_n`) carried as explicit
+hypotheses, on the time range the survey's own argument supports.
+`not_forall_product_close_to_one` shows that `e:1/n` cannot be dropped and
+that the range cannot be widened to `t ≥ 0`.
 
 What the survey builds on top of `e:productcloseto1` is in
 `Perspective.AppendixD_Assembly`.
 -/
 
-import Transformer.Perspective.AppendixD_Alpha
+import Transformer.Perspective.AppendixD_AlphaDeriv
 import Mathlib.Analysis.Calculus.MeanValue
 import Mathlib.Analysis.Complex.ExponentialBounds
 
@@ -43,31 +42,6 @@ theorem isMinInner_const_consensus (m : ℕ) (hm : 0 < m) :
     rw [real_inner_self_eq_norm_mul_norm, hx]; ring
   exact fun _ => ⟨fun _ => le_of_eq hxx.symm, ⟨⟨0, hm⟩, hxx.symm⟩⟩
 
-/-- **Equation (e:diffineqalpha).** *The differential inequality for `α`.*
-
-  `α̇(t) ≥ (1/(n e^{2β})) α(1/n) (1 - α(t))`   for `t ≥ 1/n`.
-
-`α` is a minimum of finitely many smooth functions, so the survey argues with
-its lower Dini derivative; the statement below asserts, in addition, that `α`
-is differentiable.
-
-Not proved here.
-
-Source: arXiv:2312.10794v5, Appendix D, `e:mineqalpha`, `e:diffineqalpha`. -/
-theorem diff_ineq_alpha (β : ℝ) (X : ℝ → SphereTuple d n) (x_star : SSphere d)
-    (α : ℝ → ℝ) (hX : SA d n β X) (hα : IsMinInner d n X x_star α) :
-    ∀ t : ℝ, (n : ℝ)⁻¹ ≤ t →
-      ∃ c : ℝ, HasDerivAt α c t ∧
-        ((n : ℝ) * Real.exp (2 * β))⁻¹ * α ((n : ℝ)⁻¹) * (1 - α t) ≤ c := by
-  sorry
-
-/-- The hypotheses of `diff_ineq_alpha` are satisfiable: two particles sitting
-together at `basePoint 0`, where `α ≡ 1`. -/
-example :
-    SA 1 2 0 (fun _ _ => basePoint 0) ∧
-      IsMinInner 1 2 (fun _ _ => basePoint 0) (basePoint 0) (fun _ => 1) :=
-  ⟨SA_const_consensus 1 2 two_pos 0 (basePoint 0), isMinInner_const_consensus 2 two_pos⟩
-
 /-- **Equation (e:productcloseto1).**
 
   `1 - α(t) ≤ exp( (1 - γ_β(1/n) t) / (2 n e^{2β}) )`.
@@ -78,7 +52,8 @@ This is `e:diffineqalpha` integrated by Grönwall, starting from `e:1/n`.
 two forced by the survey's own derivation.
 
 *The two inputs are carried as hypotheses.*  `hdiff` is `e:diffineqalpha`
-(`diff_ineq_alpha`, not proved here), and `hone` is `e:1/n`
+(`diff_ineq_alpha`, proved in `Perspective.AppendixD_AlphaDeriv` under the
+hypotheses the survey's derivation uses), and `hone` is `e:1/n`
 (`alpha_at_one_over_n`, proved).  What is proved below is the deduction, and
 its dependence is visible in its signature.
 

@@ -23,7 +23,8 @@ Step 2 of the same lemma opens with `e:decompox*.step2`, the decomposition of
 step 1, and there it is justified by `x⋆` lying in the convex hull of the
 configuration; written for an arbitrary point of the sphere it is false, which
 is what `not_step2_decomposition` records, so `step2_decomposition` carries
-that hull membership as a hypothesis.
+that hull membership as a hypothesis.  `exists_inner_le_of_mem_convexHull` is
+the one consequence of it Appendix D uses, `e:mineqalpha`.
 -/
 
 import Mathlib.Analysis.Convex.Combination
@@ -106,6 +107,46 @@ theorem hemisphere_step1_monotone
       (fun j => by rw [hcontact]; exact (hr u).1 j)
   intro a ha b _ hab
   exact hmono a (lt_of_lt_of_le hr0 (hmono 0 hr0 a ha)) b hab
+
+/-- **The smallest inner product of `x_i` with the configuration is at most its
+inner product with any point of the configuration's convex hull.**
+
+This is `e:mineqalpha` without the coefficients: the survey reads it off the
+decomposition `e:decompox*.step2`, `x⋆ = Σ_k θ_k x_k` with `θ_k ≥ 0` summing
+to one, and the version below is the same fact stated through the hull, where
+the convexity of a half-space replaces the computation with the `θ_k`.
+
+Source: arXiv:2312.10794v5, Appendix D, `e:mineqalpha`. -/
+theorem exists_inner_le_of_mem_convexHull (hn : 0 < n)
+    (Y : SphereTuple d n) (x_star : SSphere d)
+    (hhull : ((x_star : EucSpace d)) ∈
+      convexHull ℝ (Set.range fun k : Idx n => ((Y k : EucSpace d))))
+    (i : Idx n) :
+    ∃ j : Idx n,
+      inner (𝕜 := ℝ) ((Y i : EucSpace d)) ((Y j : EucSpace d))
+        ≤ inner (𝕜 := ℝ) ((Y i : EucSpace d)) ((x_star : EucSpace d)) := by
+  have : Nonempty (Idx n) := ⟨⟨0, hn⟩⟩
+  obtain ⟨j, -, hj⟩ := Finset.exists_min_image (Finset.univ : Finset (Idx n))
+    (fun k => inner (𝕜 := ℝ) ((Y i : EucSpace d)) ((Y k : EucSpace d)))
+    Finset.univ_nonempty
+  refine ⟨j, ?_⟩
+  have hlin : IsLinearMap ℝ
+      (fun v : EucSpace d => inner (𝕜 := ℝ) ((Y i : EucSpace d)) v) :=
+    ⟨fun a b => inner_add_right _ _ _, fun c a => real_inner_smul_right _ _ _⟩
+  have hsub : (Set.range fun k : Idx n => ((Y k : EucSpace d)))
+      ⊆ { v : EucSpace d |
+          inner (𝕜 := ℝ) ((Y i : EucSpace d)) ((Y j : EucSpace d))
+            ≤ inner (𝕜 := ℝ) ((Y i : EucSpace d)) v } := by
+    rintro v ⟨k, rfl⟩
+    exact hj k (Finset.mem_univ k)
+  exact convexHull_min hsub (convex_halfSpace_ge hlin _) hhull
+
+/-- The hypothesis of `exists_inner_le_of_mem_convexHull` is satisfiable: a
+particle of the configuration lies in its own convex hull. -/
+example :
+    (((basePoint 0 : SSphere 1)) : EucSpace 1) ∈
+      convexHull ℝ (Set.range fun _ : Idx 1 => (((basePoint 0 : SSphere 1)) : EucSpace 1)) :=
+  subset_convexHull ℝ _ ⟨0, rfl⟩
 
 /-- **Equation (e:decompox*.step2).**
 
