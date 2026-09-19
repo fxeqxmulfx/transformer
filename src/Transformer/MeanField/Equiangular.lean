@@ -7,7 +7,9 @@
   `β_n = γ log n` (Chen et al. 2025).
 
 The local clustering rate of the `eq: SA` ODE is
-`Transformer.MeanField.EquiangularRate`.
+`Transformer.MeanField.EquiangularRate`.  The phase transition itself is proved
+in `Transformer.MeanField.EquiangularLimit`, on top of the closed forms of
+`Transformer.MeanField.EquiangularWeights`; both are built on this file.
 -/
 
 import Transformer.Basic
@@ -130,43 +132,6 @@ layer, `θ_i = y_i / ‖y_i‖`. -/
 noncomputable def equiOutCos (n : ℕ) (β ρ : ℝ) (i j : Idx n) : ℝ :=
   equiOutInner n β ρ i j
     / Real.sqrt (equiOutInner n β ρ i i * equiOutInner n β ρ j j)
-
-/-- **Theorem (thm: long-context-phase-transition).**  *Phase transition at
-`β_n = γ log n`.*
-
-In the equiangular initialization with `⟨x_i, x_j⟩ = ρ`, after a single
-attention layer, the output directions satisfy
-
-  `lim_{n → ∞} ⟨θ_i, θ_j⟩ =
-      1,                          if γ < 1/(1 - ρ),
-      4ρ / (1 + 3 ρ),             if γ = 1/(1 - ρ),
-      ρ,                          if γ > 1/(1 - ρ).`
-
-Not proved here: none of the three limits is.  The configuration is entered
-through its Gram matrix (`equiGram`), and the sequence is indexed so that
-`n = m + 2` always admits the two distinct tokens `0` and `1` the statement
-compares.
-
-Source: arXiv:2512.01868v4, §6, `thm: long-context-phase-transition`
-(Chen et al. 2025). -/
-theorem long_context_phase_transition (γ ρ : ℝ) (hρ₀ : 0 < ρ) (hρ₁ : ρ < 1) :
-    (γ < 1 / (1 - ρ) →
-      Filter.Tendsto
-        (fun m : ℕ => equiOutCos (m + 2) (γ * Real.log (m + 2 : ℕ)) ρ 0 1)
-        Filter.atTop (nhds 1))
-    ∧ (γ = 1 / (1 - ρ) →
-      Filter.Tendsto
-        (fun m : ℕ => equiOutCos (m + 2) (γ * Real.log (m + 2 : ℕ)) ρ 0 1)
-        Filter.atTop (nhds (4 * ρ / (1 + 3 * ρ))))
-    ∧ (1 / (1 - ρ) < γ →
-      Filter.Tendsto
-        (fun m : ℕ => equiOutCos (m + 2) (γ * Real.log (m + 2 : ℕ)) ρ 0 1)
-        Filter.atTop (nhds ρ)) := by
-  sorry
-
-/-- The hypotheses of `long_context_phase_transition` are satisfiable: `ρ = 1/2`
-lies strictly between `0` and `1`. -/
-example : (0 : ℝ) < 1 / 2 ∧ (1 : ℝ) / 2 < 1 := by norm_num
 
 end MeanField
 end Transformer
