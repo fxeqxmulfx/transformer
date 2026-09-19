@@ -15,6 +15,8 @@ Equations covered:
 * `eq: delta.alpha.cond`        — propagation-of-smallness condition,
 * the auxiliary `compt: bound_far`, `compt: ineq_1`, `compt: minim`,
   `compt: bound_far_again`, `eq: rhoq.lb`, `eq: rhoq.lb2`.
+
+`rem: variance`, which closes §2, is in `Metastability.CapVariance`.
 -/
 
 import Transformer.Basic
@@ -209,36 +211,6 @@ theorem metastability
               ‖((X t i : EucSpace d)) - ((X t j : EucSpace d))‖^2
                 ≤ 2 * Real.exp (-(lam * β)) := by
   sorry
-
-/-- *Variance inequality (rem: variance).*
-
-Inside a cap the within-cap concentration `η_q` grows at a rate controlled by
-the attention-weighted variance of the cap around the reference token `i(t)`:
-
-  `η̇_q(t) ≥ η_q(t) Σ_{j: x_j ∈ 𝒮_q(2ε)} a_{i(t) j}(t) ‖x_j - x_i‖²/2
-              - n e^{-(1-α)β}`,
-
-the second term being the leakage from the tokens outside the cap.
-
-A `Prop`-valued definition and not a theorem: it carries the within-cap
-quantity `η_q` and the reference token `i(t)` as free parameters — the paper
-constructs both, and that construction is not formalized — so, unlike
-`rho_diff_ineq`, nothing here pins them down, and the inequality itself is
-not proved.
-
-Source: arXiv:2410.06833v1, §2, `rem: variance`. -/
-def VarianceInequality
-    (d n : ℕ) (β α ε : ℝ) (X : ℝ → SphereTuple d n) (w : SSphere d)
-    (η : ℝ → ℝ) (i : ℝ → Idx n) (Tesc : ℝ) : Prop :=
-  Perspective.SA d n β X →
-  ∀ t : ℝ, 0 ≤ t → t ≤ Tesc →
-    η t * (∑ j : Idx n,
-        if (X t j) ∈ sphericalCap d w (2 * ε) then
-          attn d n β X t (i t) j
-            * ‖((X t j : EucSpace d)) - ((X t (i t) : EucSpace d))‖^2 / 2
-        else 0)
-      - (n : ℝ) * Real.exp (-((1 - α) * β))
-    ≤ deriv η t
 
 end Metastability
 end Transformer
