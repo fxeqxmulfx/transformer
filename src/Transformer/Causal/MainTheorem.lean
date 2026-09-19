@@ -42,14 +42,20 @@ For arbitrary `Q, K`, `β ≥ 0` and `V = I_d`, for almost any
 
 The leader `x_1` is a fixed point of `eq: csa`: its own row of the causal mask
 sees only itself, so the whole cloud is dragged onto where it started.
+Not proved here.
+
 Source: arXiv:2411.04990v2, §4. -/
-def SingleCluster
-    (σ : Measure (SphereTuple d n)) (β : ℝ) (Q K : ParamMatrix d) (hn : 1 ≤ n) : Prop :=
-  0 ≤ β →
-  ∀ᵐ X₀ ∂σ, ∀ X : ℝ → SphereTuple d n, X 0 = X₀ →
-    Causal.CSA d n β Q K (ContinuousLinearMap.id ℝ (EucSpace d)) X →
-      ∀ k : Idx n,
-        Filter.Tendsto (fun t : ℝ => X t k) Filter.atTop (nhds (X₀ ⟨0, hn⟩))
+theorem single_cluster
+    (σ : Measure (SphereTuple d n)) (β : ℝ) (Q K : ParamMatrix d) (hn : 1 ≤ n)
+    (hβ : 0 ≤ β) :
+    ∀ᵐ X₀ ∂σ, ∀ X : ℝ → SphereTuple d n, X 0 = X₀ →
+      Causal.CSA d n β Q K (ContinuousLinearMap.id ℝ (EucSpace d)) X →
+        ∀ k : Idx n,
+          Filter.Tendsto (fun t : ℝ => X t k) Filter.atTop (nhds (X₀ ⟨0, hn⟩)) := by
+  sorry
+
+/-- The hypotheses of `single_cluster` are satisfiable: one token and `β = 0`. -/
+example : (1 : ℕ) ≤ 1 ∧ (0 : ℝ) ≤ 0 := ⟨le_rfl, le_rfl⟩
 
 /-- **Conjecture (thm1.5).**  *Two-cluster convergence (`λ_max > 0`, mult 1).*
 

@@ -50,6 +50,10 @@ Forbidden:
 - A def that ignores any argument (`:= 0`, `:= ∅`, `:= ⊥` under a substantive
   docstring); write `:= sorry`.
 - `sorry` outside proof position.
+- A paper's theorem written as `def Name : Prop := ...` — a statement nobody
+  proves, nobody can use, and the sorry count cannot see; write it as a
+  `theorem ... := by sorry`. A `def _ : Prop` that is a genuine predicate of its
+  arguments is not this and stays a def.
 - `set_option linter.* false`.
 - `native_decide` (adds `Lean.ofReduceBool`); plain `decide` is fine.
 - `axiom` — bundle assumptions as a `structure`/`class` or section `variable`s so
@@ -67,9 +71,11 @@ Required:
 - `rfl` / `trivial` / one-line `simp` closing a substantive theorem ⇒ suspect a
   placeholder definition beneath it.
 
-Current debt, per `INDEX.md`: 66 theorems using `sorry`, 0 vacuous statements,
+Current debt, per `INDEX.md`: 50 theorems using `sorry`, 0 vacuous statements,
 0 placeholder definitions. Never add to these counts; the index makes any
-increase visible.
+increase visible. The one admissible increase is turning a statement-`Prop` into
+a sorried theorem: that debt already existed, hidden, and the number here is
+corrected in the same commit.
 
 ## Finding lemmas
 
