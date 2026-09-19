@@ -44,8 +44,10 @@ import Transformer.Perspective.AppendixB_MetricGrad
 import Transformer.Perspective.AppendixB_MetricHess
 import Transformer.Perspective.DoubleSum
 import Transformer.Perspective.AppendixC_BetaTiny
+import Transformer.Perspective.Gronwall
 import Transformer.Perspective.AppendixD_PhaseTransition
 import Transformer.Perspective.AppendixD_Alpha
 import Transformer.Perspective.AppendixD_Product
 import Transformer.Perspective.AppendixD_Ybeta
+import Transformer.Perspective.AppendixD_YbetaUSA
 import Transformer.Perspective.AppendixD_Assembly

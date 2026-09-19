@@ -4,18 +4,14 @@
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
-What the survey builds on top of `e:productcloseto1`:
-
-* `e:ineqsecondpart`               — the second half of `eq: upto-t`,
-* `rem: usa.d`                     — the analogue for `USA`.
+One statement: `e:ineqsecondpart`, the second half of `eq: upto-t`.  It is
+proved — as the deduction it is, from `e:productcloseto1` and
+`e:ybetacloseto1` carried as explicit hypotheses, and with the constant its own
+derivation supports rather than the one the survey prints.
 
 The differential inequality `e:diffineqalpha` and its integrated form
-`e:productcloseto1` are in `Perspective.AppendixD_Product`.
-
-Of the two, `e:ineqsecondpart` is proved — as the deduction it is, from
-`e:productcloseto1` and `e:ybetacloseto1` carried as explicit hypotheses, and
-with the constant its own derivation supports rather than the one the survey
-prints.  `rem: usa.d` is not proved here.
+`e:productcloseto1` are in `Perspective.AppendixD_Product`; the `USA` analogue
+`rem: usa.d` is in `Perspective.AppendixD_YbetaUSA`.
 
 One range to watch: `hcp` below is asked on `t ≥ 0`, which is where the survey
 puts `e:productcloseto1`, while `Perspective.product_close_to_one` proves that
@@ -168,32 +164,6 @@ example :
     fun _ _ => ?_⟩ <;>
   · simp only [sub_self]
     positivity
-
-/-- **Remark (rem: usa.d).** *The analogue for `USA`.*
-
-The same argument runs with `eq: ybeta` replaced by `eq: ybetaUSA`; there the
-angle closes at the cleaner rate
-
-  `1 - γ_β(t) ≤ (1/2) exp(-e^{β/2} (t - n/2))`.
-
-The hypothesis `2 ≤ n` is not decoration: at `n = 1`, `β = 0`, `t = 0` the
-bound reads `1 - γ(0) = 1 ≤ (1/2) e^{1/2} ≈ 0.824`, which is false.  The
-remark is about the `n ≥ 2` regime of `thm: phase.transition.curve`.
-
-Not proved here.
-
-Source: arXiv:2312.10794v5, Appendix D, `rem: usa.d`. -/
-theorem usa_analogue (hn : 2 ≤ n) (β : ℝ) (γ : ℝ → ℝ) (hβ : 0 ≤ β)
-    (hγ : ybetaODE_USA n β γ) :
-    ∀ t : ℝ, 0 ≤ t →
-      1 - γ t ≤ (1/2 : ℝ) * Real.exp (-(Real.exp (β / 2) * (t - (n : ℝ) / 2))) := by
-  sorry
-
-/-- The hypotheses of `usa_analogue` are satisfiable at the smallest `n` it
-allows: `n = 2`, `β = 0`, `γ = tanh`, where at `t = 0` the conclusion reads
-`1 ≤ e/2 ≈ 1.359`. -/
-example : 2 ≤ 2 ∧ (0 : ℝ) ≤ 0 ∧ ybetaODE_USA 2 0 Real.tanh :=
-  ⟨le_rfl, le_rfl, ybetaODE_USA_two_zero⟩
 
 end Perspective
 end Transformer
