@@ -15,7 +15,7 @@
 
 ## Layout
 
-`src/` Lean (lakefile `srcDir`) · `papers/`, `transformer-vm/` gitignored.
+`src/` Lean (lakefile `srcDir`) · `papers/` gitignored.
 
 Paper formalizations mirror the manuscript (`Section*_*.lean`). Everything else:
 subject dir layered **by import depth, never by declaration kind** —
@@ -67,8 +67,9 @@ Required:
 - `rfl` / `trivial` / one-line `simp` closing a substantive theorem ⇒ suspect a
   placeholder definition beneath it.
 
-Current debt, per `INDEX.md`: 83 `sorry`, 0 vacuous statements, 0 placeholder
-definitions. Never add to these counts; the index makes any increase visible.
+Current debt, per `INDEX.md`: 66 theorems using `sorry`, 0 vacuous statements,
+0 placeholder definitions. Never add to these counts; the index makes any
+increase visible.
 
 ## Finding lemmas
 
