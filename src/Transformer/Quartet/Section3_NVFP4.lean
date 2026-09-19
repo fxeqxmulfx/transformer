@@ -41,6 +41,20 @@ noncomputable def absMax (x : Fin (2 ^ k) → Fin 16 → ℝ) : ℝ :=
 noncomputable def groupAbsMax (x : Fin (2 ^ k) → Fin 16 → ℝ) (i : Fin (2 ^ k)) : ℝ :=
   Finset.univ.sup' Finset.univ_nonempty fun j : Fin 16 => |x i j|
 
+/-- A group's largest absolute value is at most the tensor's: the `max_g |x|`
+of the group-scale displays never exceeds the `max|x|` of the tensor scale. -/
+theorem groupAbsMax_le_absMax (x : Fin (2 ^ k) → Fin 16 → ℝ) (i : Fin (2 ^ k)) :
+    groupAbsMax x i ≤ absMax x :=
+  Finset.sup'_le _ _ fun j _ =>
+    Finset.le_sup' (fun p : Fin (2 ^ k) × Fin 16 => |x p.1 p.2|) (Finset.mem_univ (i, j))
+
+/-- And it is never negative, being a supremum of absolute values. -/
+theorem groupAbsMax_nonneg (x : Fin (2 ^ k) → Fin 16 → ℝ) (i : Fin (2 ^ k)) :
+    0 ≤ groupAbsMax x i := by
+  unfold groupAbsMax
+  exact (abs_nonneg (x i 0)).trans
+    (Finset.le_sup' (fun j : Fin 16 => |x i j|) (Finset.mem_univ (0 : Fin 16)))
+
 /-- The per-tensor FP32 scale of `Q_SR`, `max|x| / (c · 16/17 · 448)` (§3.1),
 where the grid maximum `c` is `6.0`.  The Four Over Six heuristic of §4.2 is
 the same display with `c = 4.0`, which is why `c` is a parameter here. -/
@@ -115,8 +129,25 @@ theorem abs_div_groupScaleRTN_le {x : Fin (2 ^ k) → Fin 16 → ℝ} (hs : 0 < 
 headroom of §3.3 that lets `MS-EDEN` scale a group up without overflowing
 E4M3, whose largest value is `448`. -/
 theorem groupScaleRTN_le {x : Fin (2 ^ k) → Fin 16 → ℝ} (hs : 0 < s) (hx : 0 < absMax x)
-    (i : Fin (2 ^ k)) : groupScaleRTN s x i ≤ 256 :=
-  sorry
+    (i : Fin (2 ^ k)) : groupScaleRTN s x i ≤ 256 := by
+  have hscale : tensorScaleRTN s x * s = absMax x / 256 := by
+    unfold tensorScaleRTN
+    field_simp
+  have hpos : (0 : ℝ) < absMax x / 256 := by positivity
+  have hv0 : 0 ≤ groupAbsMax x i / (tensorScaleRTN s x * s) := by
+    rw [hscale]; exact div_nonneg (groupAbsMax_nonneg x i) hpos.le
+  have hv256 : groupAbsMax x i / (tensorScaleRTN s x * s) ≤ 256 := by
+    rw [hscale, div_le_iff₀ hpos]
+    have := groupAbsMax_le_absMax x i
+    linarith
+  unfold groupScaleRTN rtn
+  split
+  · refine csSup_le ⟨0, ⟨by norm_num, 0, 0, by norm_num⟩, hv0⟩ ?_
+    rintro y ⟨-, hyv⟩
+    exact hyv.trans hv256
+  · refine csInf_le ⟨-448, ?_⟩ ⟨⟨by norm_num, 8, 5, by norm_num⟩, hv256⟩
+    rintro y ⟨hy, -⟩
+    exact (abs_le.mp hy.1).1
 
 /-- The hypotheses of the two statements above are satisfiable at the paper's
 own non-clipping bound `s = 6 · 16/17`. -/
