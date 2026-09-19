@@ -40,6 +40,7 @@ import Transformer.Perspective.Section8_General
 import Transformer.Perspective.Section9_Approximation
 import Transformer.Perspective.RussianTrick
 import Transformer.Perspective.AppendixA_Beta0
+import Transformer.Perspective.AppendixA_Hessian
 import Transformer.Perspective.AppendixA_Saddle
 import Transformer.Perspective.AppendixB_BetaInterval
 import Transformer.Perspective.AppendixB_Taylor

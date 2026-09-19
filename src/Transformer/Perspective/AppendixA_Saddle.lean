@@ -6,7 +6,6 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 This file formalizes the second half of Appendix A of the survey:
 
-* `e:helpcl`            — the Hessian of `𝖤_0` at a critical point,
 * `Lemma lem: yury.lemma` — every non-trivial critical point of `𝖤_0` is a
                             strict saddle,
 * `Lemma l:nosaddleconv`  — gradient ascent avoids strict saddles,
@@ -14,14 +13,14 @@ This file formalizes the second half of Appendix A of the survey:
 
 The energy itself, its gradient flow and `eq: taylor` are in
 `Perspective.AppendixA_Beta0`; `e:russiantrick` and `IsSkew` are in
-`Perspective.RussianTrick`, where the identity is proved.  The statements below
-are written out in full and none of them is proved: each is a theorem closed by
-`sorry`.  `PerturbationBy` and `SecondDerivE0At` are predicates of their
-arguments and stay definitions.
+`Perspective.RussianTrick`, where the identity is proved; `e:helpcl`, the
+perturbation `PerturbationBy` it is read along and the second derivative
+`SecondDerivE0At` it computes are in `Perspective.AppendixA_Hessian`, where
+the identity is proved.  The statements below are written out in full and none
+of them is proved: each is a theorem closed by `sorry`.
 -/
 
-import Transformer.Perspective.AppendixA_Beta0
-import Transformer.Perspective.RussianTrick
+import Transformer.Perspective.AppendixA_Hessian
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -30,62 +29,6 @@ namespace Transformer
 namespace Perspective
 
 variable (d n : ℕ)
-
-/-- The perturbation of `X` used in `e:helpcl`:
-
-  `x_i(t) = e^{tB} x_i` for `i ∈ 𝒮`,   `x_i(t) = x_i` otherwise.
-
-The rotated particles are described by the differential equation
-`ẋ_i(t) = B x_i(t)` they solve rather than by the matrix exponential, which is
-the same thing for the initial condition `Y 0 = X` and keeps the statement
-inside the `HasDerivAt` API used everywhere else here. -/
-def PerturbationBy
-    (B : ParamMatrix d) (𝒮 : Finset (Idx n))
-    (X : SphereTuple d n) (Y : ℝ → SphereTuple d n) : Prop :=
-  Y 0 = X ∧
-  (∀ i ∈ 𝒮, ∀ t : ℝ,
-    HasDerivAt (fun s => (Y s i : EucSpace d)) (B ((Y t i : EucSpace d))) t) ∧
-  (∀ i ∉ 𝒮, ∀ t : ℝ, (Y t i : EucSpace d) = (X i : EucSpace d))
-
-/-- `c` is the second derivative of `t ↦ 𝖤_0(Y(t))` at `t = 0`: the energy is
-differentiable along the whole curve, and its derivative is again
-differentiable at `0`, with derivative `c`. -/
-def SecondDerivE0At (Y : ℝ → SphereTuple d n) (c : ℝ) : Prop :=
-  ∃ f' : ℝ → ℝ,
-    (∀ t : ℝ, HasDerivAt (fun s => E0 d n (Y s)) (f' t) t) ∧ HasDerivAt f' c 0
-
-/-- **Equation (e:helpcl).** *Hessian of `𝖤_0` at a critical point.*
-
-For a skew-symmetric `B`, a subset `𝒮 ⊂ [n]`, and the perturbation
-`x_i(t) = e^{tB} x_i` (`i ∈ 𝒮`), `x_i(t) = x_i` (`i ∉ 𝒮`) of a critical point,
-
-  `𝖤_0''(0) = (2/n) Σ_{i ∈ 𝒮} Σ_{j ∈ 𝒮^c} ⟨B² x_i, x_j⟩`.
-
-The first-order term is absent precisely because `X` is critical, which is why
-criticality is a hypothesis rather than decoration.
-
-Not proved here: the second-order expansion is not carried out.
-
-Source: arXiv:2312.10794v5, Appendix A, `e:helpcl`. -/
-theorem hessian_at_critical
-    (X : SphereTuple d n) (B : ParamMatrix d) (𝒮 : Finset (Idx n))
-    (hB : IsSkew d B) (hX : IsCriticalE0 d n X)
-    (Y : ℝ → SphereTuple d n) (hY : PerturbationBy d n B 𝒮 X Y) :
-    SecondDerivE0At d n Y
-      ((2 * (n : ℝ)⁻¹) * ∑ i ∈ 𝒮, ∑ j ∈ 𝒮ᶜ,
-        inner (𝕜 := ℝ) (B (B ((X i : EucSpace d)))) ((X j : EucSpace d))) := by
-  sorry
-
-/-- The hypotheses of `hessian_at_critical` are satisfiable: the zero matrix is
-skew, the antipodal pair is a critical point
-(`antipodalPair_critical_nonTrivial`), and rotating none of its particles —
-`𝒮 = ∅` — leaves the constant curve as the perturbation. -/
-example :
-    IsSkew 1 0 ∧ IsCriticalE0 1 2 (antipodalPair 1 northPole) ∧
-      PerturbationBy 1 2 0 ∅ (antipodalPair 1 northPole)
-        (fun _ => antipodalPair 1 northPole) :=
-  ⟨fun x y => by simp, antipodalPair_critical_nonTrivial.1,
-    rfl, fun i hi => absurd hi (Finset.notMem_empty i), fun _ _ _ => rfl⟩
 
 /-- **Lemma (lem: yury.lemma).** *Every non-trivial critical point of `𝖤_0` is
 a strict saddle.*
