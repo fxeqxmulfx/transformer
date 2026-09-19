@@ -17,8 +17,9 @@ produces, and `G` is the exact one.  The slope and the plateau are the two
 statements; the figure is the evidence the paper offers for them.
 -/
 
+import Transformer.Quartet.SeedSums
+import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Topology.UniformSpace.Real
-import Mathlib.Algebra.BigOperators.Fin
 
 namespace Transformer
 namespace Quartet
@@ -40,8 +41,29 @@ noncomputable def meanSqErr (B : ℕ) (g : Fin N → ℝ) (G : ℝ) : ℝ :=
 will decrease … as `~1/B` asymptotically"): the expected squared error of the
 `B`-fold average is exactly the variance of one draw over `B`. -/
 theorem meanSqErr_of_seedMean_eq {g : Fin N → ℝ} {G : ℝ} (hN : 0 < N) (hB : 0 < B)
-    (h : seedMean g = G) : meanSqErr B g G = seedVar g / B :=
-  sorry
+    (h : seedMean g = G) : meanSqErr B g G = seedVar g / B := by
+  have hNR : (N : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr hN.ne'
+  have hBR : (B : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr hB.ne'
+  have hg : ∑ i, g i = (N : ℝ) * G := by
+    rw [← h]
+    unfold seedMean
+    field_simp
+  have hc : ∑ i, (g i - G) = 0 := by
+    rw [Finset.sum_sub_distrib, hg, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
+      nsmul_eq_mul, sub_self]
+  have hterm : ∀ ω : Fin B → Fin N,
+      ((B : ℝ)⁻¹ * ∑ b, g (ω b) - G) ^ 2 = ((B : ℝ)⁻¹) ^ 2 * (∑ b, (g (ω b) - G)) ^ 2 := by
+    intro ω
+    rw [Finset.sum_sub_distrib, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
+      nsmul_eq_mul]
+    field_simp
+  have hS : (∑ ω : Fin B → Fin N, (∑ b, (g (ω b) - G)) ^ 2)
+      = (B : ℝ) * (N : ℝ) ^ B * (∑ i, (g i - G) ^ 2) / N := by
+    rw [eq_div_iff hNR]
+    linear_combination sum_pi_sum_sq hc B
+  unfold meanSqErr seedVar
+  rw [h, Finset.sum_congr rfl fun ω _ => hterm ω, ← Finset.mul_sum, hS]
+  field_simp
 
 /-- The hypotheses are satisfiable: a single seed that returns the exact value
 is unbiased, with one draw. -/
@@ -49,14 +71,56 @@ example : 0 < 1 ∧ 0 < 1 ∧ seedMean (fun _ : Fin 1 => (2 : ℝ)) = 2 := by
   refine ⟨Nat.one_pos, Nat.one_pos, ?_⟩
   simp [seedMean]
 
+/-- **The bias-variance decomposition of the plot** (Appendix A): whatever the
+estimator, the expected squared error of the `B`-fold average is the variance
+of one draw over `B` plus the square of the bias.  The two readings the paper
+gives of Figure 5 are the two halves of this identity. -/
+theorem meanSqErr_eq (hN : 0 < N) (hB : 0 < B) (g : Fin N → ℝ) (G : ℝ) :
+    meanSqErr B g G = seedVar g / B + (seedMean g - G) ^ 2 := by
+  have hNR : (N : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr hN.ne'
+  have hBR : (B : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr hB.ne'
+  have hNB : ((N : ℝ) ^ B) ≠ 0 := pow_ne_zero _ hNR
+  set μ := seedMean g with hμ
+  have hg : ∑ i, g i = (N : ℝ) * μ := by
+    rw [hμ]
+    unfold seedMean
+    field_simp
+  have hc : ∑ i, (g i - μ) = 0 := by
+    rw [Finset.sum_sub_distrib, hg, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
+      nsmul_eq_mul, sub_self]
+  have hterm : ∀ ω : Fin B → Fin N,
+      ((B : ℝ)⁻¹ * ∑ b, g (ω b) - G) ^ 2
+        = ((B : ℝ)⁻¹ * ∑ b, g (ω b) - μ) ^ 2
+          + 2 * (μ - G) * (B : ℝ)⁻¹ * (∑ b, (g (ω b) - μ)) + (μ - G) ^ 2 := by
+    intro ω
+    rw [Finset.sum_sub_distrib, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
+      nsmul_eq_mul]
+    field_simp
+    ring
+  have hmain : ((N : ℝ) ^ B)⁻¹ * ∑ ω : Fin B → Fin N, ((B : ℝ)⁻¹ * ∑ b, g (ω b) - μ) ^ 2
+      = seedVar g / B := meanSqErr_of_seedMean_eq hN hB hμ.symm
+  unfold meanSqErr
+  rw [Finset.sum_congr rfl fun ω _ => hterm ω, Finset.sum_add_distrib, Finset.sum_add_distrib,
+    ← Finset.mul_sum, sum_pi_sum_eq_zero hc B, Finset.sum_const, Finset.card_univ, nsmul_eq_mul,
+    card_pi, mul_add, mul_add, hmain, mul_zero, inv_mul_cancel_left₀ hNB]
+  ring
+
+/-- Its hypotheses are satisfiable: one seed and one draw. -/
+example : 0 < 1 ∧ 0 < 1 := ⟨Nat.one_pos, Nat.one_pos⟩
+
 /-- **A biased estimator plateaus** at the square of its bias, however many
 draws are averaged (Appendix A, "Plateauing methods (NVIDIA+4/6) introduce
 bias").  Together with the statement above, this is what makes the plot a
 test: the slope, not the height, is what unbiasedness shows up as. -/
 theorem tendsto_meanSqErr {g : Fin N → ℝ} {G : ℝ} (hN : 0 < N) :
     Filter.Tendsto (fun B => meanSqErr B g G) Filter.atTop
-      (nhds ((seedMean g - G) ^ 2)) :=
-  sorry
+      (nhds ((seedMean g - G) ^ 2)) := by
+  have heq : (fun B : ℕ => seedVar g / B + (seedMean g - G) ^ 2)
+      =ᶠ[Filter.atTop] fun B : ℕ => meanSqErr B g G :=
+    Filter.eventually_atTop.mpr ⟨1, fun B hB => (meanSqErr_eq hN hB g G).symm⟩
+  refine Filter.Tendsto.congr' heq ?_
+  simpa using (tendsto_const_div_atTop_nhds_zero_nat (seedVar g)).add
+    (tendsto_const_nhds (α := ℕ) (x := (seedMean g - G) ^ 2))
 
 /-- Its hypothesis is satisfiable, and the limit is not always `0`: two seeds
 that both overshoot by `1` leave a plateau of `1`. -/

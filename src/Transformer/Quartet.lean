@@ -31,6 +31,7 @@ formalized.  What is formalized is the arithmetic the guarantees rest on, and
 — for Appendix A — what its plot would have to show.
 -/
 
+import Transformer.Quartet.SeedSums
 import Transformer.Quartet.Walsh
 import Transformer.Quartet.Hadamard
 import Transformer.Quartet.Section3_Grids
