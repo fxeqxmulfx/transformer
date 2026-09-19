@@ -46,4 +46,5 @@ import Transformer.Perspective.DoubleSum
 import Transformer.Perspective.AppendixC_BetaTiny
 import Transformer.Perspective.AppendixD_PhaseTransition
 import Transformer.Perspective.AppendixD_Alpha
+import Transformer.Perspective.AppendixD_Product
 import Transformer.Perspective.AppendixD_Assembly

@@ -4,17 +4,25 @@
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
-What the survey does with the estimate `e:1/n` of `Perspective.AppendixD_Alpha`:
+What the survey builds on top of `e:productcloseto1`:
 
-* `e:mineqalpha`, `e:diffineqalpha` — the differential inequality for `α`,
-* `e:productcloseto1`              — its integrated form,
 * `e:ineqsecondpart`               — the second half of `eq: upto-t`,
 * `rem: usa.d`                     — the analogue for `USA`.
 
-Of the four, `e:ineqsecondpart` is proved — as the deduction it is, from
+The differential inequality `e:diffineqalpha` and its integrated form
+`e:productcloseto1` are in `Perspective.AppendixD_Product`.
+
+Of the two, `e:ineqsecondpart` is proved — as the deduction it is, from
 `e:productcloseto1` and `e:ybetacloseto1` carried as explicit hypotheses, and
 with the constant its own derivation supports rather than the one the survey
-prints.  The other three are not proved here.
+prints.  `rem: usa.d` is not proved here.
+
+One range to watch: `hcp` below is asked on `t ≥ 0`, which is where the survey
+puts `e:productcloseto1`, while `Perspective.product_close_to_one` proves that
+estimate only on `t ≥ 1/n` — on `[0, 1/n)` it is false, and
+`Perspective.not_forall_product_close_to_one` refutes it there.  The deduction
+below is stated at its full strength; the chain it belongs to runs on
+`t ≥ 1/n`.
 
 The assembly of `thm: phase.transition.curve`
 out of `e:ineqfirstpart` and `e:ineqsecondpart` is not a separate statement: the
@@ -26,7 +34,7 @@ configuration solves `SA` and `tanh` solves `eq: ybeta`
 (`Perspective.ybetaODE_SA_two_zero`).
 -/
 
-import Transformer.Perspective.AppendixD_Alpha
+import Transformer.Perspective.AppendixD_Product
 
 open scoped BigOperators
 open Real
@@ -35,68 +43,6 @@ namespace Transformer
 namespace Perspective
 
 variable (d n : ℕ)
-
-/-- The consensus configuration of `n` copies of `basePoint 0` in `𝕊^0`, with
-its minimum-inner-product function `α ≡ 1`: the common witness of the `SA` and
-`IsMinInner` hypotheses of this file. -/
-theorem isMinInner_const_consensus (m : ℕ) (hm : 0 < m) :
-    IsMinInner 1 m (fun _ _ => basePoint 0) (basePoint 0) (fun _ => 1) := by
-  have hx : ‖((basePoint 0 : SSphere 1) : EucSpace 1)‖ = 1 :=
-    mem_sphere_zero_iff_norm.mp (basePoint 0).2
-  have hxx : inner (𝕜 := ℝ) (((basePoint 0 : SSphere 1)) : EucSpace 1)
-      (((basePoint 0 : SSphere 1)) : EucSpace 1) = 1 := by
-    rw [real_inner_self_eq_norm_mul_norm, hx]; ring
-  exact fun _ => ⟨fun _ => le_of_eq hxx.symm, ⟨⟨0, hm⟩, hxx.symm⟩⟩
-
-/-- **Equation (e:diffineqalpha).** *The differential inequality for `α`.*
-
-  `α̇(t) ≥ (1/(n e^{2β})) α(1/n) (1 - α(t))`   for `t ≥ 1/n`.
-
-`α` is a minimum of finitely many smooth functions, so the survey argues with
-its lower Dini derivative; the statement below asserts, in addition, that `α`
-is differentiable.
-
-Not proved here.
-
-Source: arXiv:2312.10794v5, Appendix D, `e:mineqalpha`, `e:diffineqalpha`. -/
-theorem diff_ineq_alpha (β : ℝ) (X : ℝ → SphereTuple d n) (x_star : SSphere d)
-    (α : ℝ → ℝ) (hX : SA d n β X) (hα : IsMinInner d n X x_star α) :
-    ∀ t : ℝ, (n : ℝ)⁻¹ ≤ t →
-      ∃ c : ℝ, HasDerivAt α c t ∧
-        ((n : ℝ) * Real.exp (2 * β))⁻¹ * α ((n : ℝ)⁻¹) * (1 - α t) ≤ c := by
-  sorry
-
-/-- The hypotheses of `diff_ineq_alpha` are satisfiable: two particles sitting
-together at `basePoint 0`, where `α ≡ 1`. -/
-example :
-    SA 1 2 0 (fun _ _ => basePoint 0) ∧
-      IsMinInner 1 2 (fun _ _ => basePoint 0) (basePoint 0) (fun _ => 1) :=
-  ⟨SA_const_consensus 1 2 two_pos 0 (basePoint 0), isMinInner_const_consensus 2 two_pos⟩
-
-/-- **Equation (e:productcloseto1).**
-
-  `1 - α(t) ≤ exp( (1 - γ_β(1/n) t) / (2 n e^{2β}) )`.
-
-This is `e:diffineqalpha` integrated by Grönwall, starting from `e:1/n`.
-
-Not proved here.
-
-Source: arXiv:2312.10794v5, Appendix D, `e:productcloseto1`. -/
-theorem product_close_to_one (β : ℝ) (X : ℝ → SphereTuple d n) (γ α : ℝ → ℝ)
-    (x_star : SSphere d) (hX : SA d n β X) (hγ : ybetaODE_SA n β γ)
-    (hα : IsMinInner d n X x_star α) :
-    ∀ t : ℝ, 0 ≤ t →
-      1 - α t
-        ≤ Real.exp ((1 - γ ((n : ℝ)⁻¹) * t) / (2 * (n : ℝ) * Real.exp (2 * β))) := by
-  sorry
-
-/-- The hypotheses of `product_close_to_one` are satisfiable: the same two
-particles, and `γ = tanh`, which solves `eq: ybeta` at `n = 2`, `β = 0`. -/
-example :
-    SA 1 2 0 (fun _ _ => basePoint 0) ∧ ybetaODE_SA 2 0 Real.tanh ∧
-      IsMinInner 1 2 (fun _ _ => basePoint 0) (basePoint 0) (fun _ => 1) :=
-  ⟨SA_const_consensus 1 2 two_pos 0 (basePoint 0), ybetaODE_SA_two_zero,
-    isMinInner_const_consensus 2 two_pos⟩
 
 /-- **Equation (e:ineqsecondpart).** *Second half of `eq: upto-t`.*
 
