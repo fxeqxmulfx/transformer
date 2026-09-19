@@ -13,7 +13,9 @@ Equations and statements covered:
 * `Lemma lem: PL.borjan`    — PL inequality for `𝖤_β` on `𝕋^n`,
 * `eq: tau.small`, `eq: cond.sine`, `eq: Ht.first.lb`, `eq: Ht.second.lb`,
   `eq: Ht.third.lb`, `Claim claim: 1`,
-* `Lemma lem: quantitative inequality`,
+* `Lemma lem: quantitative inequality` — in
+  `Transformer.Metastability.QuantitativeInequality`, which proves it with the
+  sign and the constant its argument supports,
 * `Corollary eq: otto.attention`,
 * `Remark rem: sa.extension` — the extension to `SA`,
 * `eq: hessian.lb.reverse.pl`  — acceleration / reverse PL inequality.
@@ -199,19 +201,6 @@ def Claim1
     ∀ l : Idx n, |angularGrad n β Θ l|
       ≤ (Real.exp 1 / 2)
         * max |angularGrad n β Θ ⟨0, h0⟩| |angularGrad n β Θ ⟨r - 1, by omega⟩|
-
-/-- **Lemma (lem: quantitative inequality).**
-
-If `𝖤(v) - 𝖤(u) ≤ (1/(2 c)) ‖∇𝖤(u)‖²` (PL), then
-
-  `2 c ‖u - v‖² ≤ 𝖤(v) - 𝖤(u)`.   (quantitative inequality) -/
-lemma quantitative_inequality
-    {M : Type*} [NormedAddCommGroup M]
-    (E : M → ℝ) (gradNorm : M → ℝ)
-    (u v : M) (c T : ℝ) (hc : 0 < c) (hT : 0 < T)
-    (h_pl : E v - E u ≤ (1 / (2 * c)) * (gradNorm u)^2) :
-    2 * c * ‖u - v‖^2 ≤ E v - E u := by
-  sorry
 
 /-- **Corollary (eq: otto.attention).**
 

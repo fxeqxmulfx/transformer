@@ -10,6 +10,8 @@ import Transformer.Metastability.Basic
 import Transformer.Metastability.AngularEnergy
 import Transformer.Metastability.MainTheorem
 import Transformer.Metastability.OttoReznikoff
+import Transformer.Metastability.QuantitativeInequality
+import Transformer.Metastability.ExponentialFlow
 import Transformer.Metastability.Initial
 import Transformer.Metastability.InitialUniform
 import Transformer.Metastability.MeanField
