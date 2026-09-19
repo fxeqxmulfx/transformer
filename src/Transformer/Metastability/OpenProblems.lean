@@ -11,9 +11,14 @@ Three questions the survey poses and leaves open:
 * the `problem` of the reparametrization candidate — does it hold for the
   specific reparametrization `τ̇_β = log β / ‖∇𝖤_β‖`?
 
-Each is a `Prop`-valued definition: they are open, so neither a proof nor a
-refutation is available, and asserting them as `theorem … := sorry` would
-claim they are true.
+Each is a `theorem … := by sorry`: open is a kind of unproved, and the sorry
+count is where unproved is recorded.  Nothing in this development may be built
+on them, which is what the `sorry` says.
+
+What stays a `Prop`-valued definition is what is a genuine predicate of its
+arguments — `IsMetastable`, `HasStaircaseProfile`, `IsGradientReparam`,
+`IsEnergyGradNorm` — and those are the vocabulary the three statements are
+written in, not statements themselves.
 -/
 
 import Transformer.Basic
@@ -68,18 +73,27 @@ every `(x_1,…,x_n) ∈ (𝕊^{d-1})^n` with
 
 is metastable in the sense of `thm: metastability`?
 
-The uniform measure is not constructed in this development: it is carried as
-a parameter `ν`, and `𝔼[𝖤_β(U)]` is the integral of `𝖤_β` against the
-`n`-fold product `iidSphere d n ν`, exactly as in `InitialUniform`.
+The uniform measure is not constructed in this development: it is pinned down
+by `Metastability.IsUniformOn` — a rotation-invariant probability measure, of
+which there is exactly one — and `𝔼[𝖤_β(U)]` is the integral of `𝖤_β` against
+the `n`-fold product `iidSphere d n ν`, exactly as in `InitialUniform`.
+
+Not proved here; the survey leaves it open.
 
 Source: arXiv:2410.06833v1, §4, `sec: energy.levels`. -/
-def EnergyLevelMetastability (ν : Measure (SSphere d)) : Prop :=
-  2 ≤ d → 2 ≤ n → ∀ β : ℝ, 0 < β →
-    ∃ c₁ c₂ : ℝ, 0 < c₁ ∧ c₁ < c₂ ∧ c₂ < 1 ∧
-      ∀ X₀ : SphereTuple d n,
-        c₁ ≤ Eβ d n β X₀ - ∫ U, Eβ d n β U ∂(iidSphere d n ν) →
-        Eβ d n β X₀ - ∫ U, Eβ d n β U ∂(iidSphere d n ν) ≤ c₂ →
-          IsMetastable d n β X₀
+theorem energy_level_metastability (hd : 2 ≤ d) (hn : 2 ≤ n) :
+    ∀ ν : Measure (SSphere d), IsUniformOn d ν → ∀ β : ℝ, 0 < β →
+      ∃ c₁ c₂ : ℝ, 0 < c₁ ∧ c₁ < c₂ ∧ c₂ < 1 ∧
+        ∀ X₀ : SphereTuple d n,
+          c₁ ≤ Eβ d n β X₀ - ∫ U, Eβ d n β U ∂(iidSphere d n ν) →
+          Eβ d n β X₀ - ∫ U, Eβ d n β U ∂(iidSphere d n ν) ≤ c₂ →
+            IsMetastable d n β X₀ := by
+  sorry
+
+/-- The hypotheses of `energy_level_metastability` are satisfiable: `d = n = 2`.
+The uniformity of `ν` stays inside the statement — no rotation-invariant
+measure on `𝕊^{d-1}` is constructed here, so there is none to exhibit. -/
+example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 
 /-- The **staircase profile** of `conj: saddle-to-saddle`.
 
@@ -120,14 +134,17 @@ the circle (`Metastability.staircase_profile`); in the
 generality below it is open.
 
 Source: arXiv:2410.06833v1, §6, `conj: saddle-to-saddle`. -/
-def SaddleToSaddle : Prop :=
-  2 ≤ d → 2 ≤ n →
-  ∀ (X₀ : SphereTuple d n) (X : ℝ → ℝ → SphereTuple d n),
-    (∀ β : ℝ, 1 < β → X β 0 = X₀ ∧ Perspective.SA d n β (X β)) →
-    ∃ τ : ℝ → ℝ → ℝ,
-      (∀ β : ℝ, 1 < β → Continuous (τ β)) ∧
-      (∀ β t : ℝ, 0 ≤ t → 0 ≤ τ β t) ∧
-      HasStaircaseProfile d n X τ
+theorem saddle_to_saddle (hd : 2 ≤ d) (hn : 2 ≤ n) :
+    ∀ (X₀ : SphereTuple d n) (X : ℝ → ℝ → SphereTuple d n),
+      (∀ β : ℝ, 1 < β → X β 0 = X₀ ∧ Perspective.SA d n β (X β)) →
+      ∃ τ : ℝ → ℝ → ℝ,
+        (∀ β : ℝ, 1 < β → Continuous (τ β)) ∧
+        (∀ β t : ℝ, 0 ≤ t → 0 ≤ τ β t) ∧
+        HasStaircaseProfile d n X τ := by
+  sorry
+
+/-- The hypotheses of `saddle_to_saddle` are satisfiable: `d = n = 2`. -/
+example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 
 /-- **The reparametrization candidate.**
 
@@ -145,6 +162,23 @@ def IsGradientReparam
     τ β 0 = 0 ∧
     ∀ t : ℝ, HasDerivAt (τ β) (Real.log β / gradNorm β (X β (τ β t))) t
 
+/-- `gradNorm` is the Riemannian gradient norm of `𝖤_β` along `X β`.
+
+The gradient itself is not constructed here, so it is pinned down by the one
+identity that characterizes its norm along a gradient *ascent* — which `SA`
+is, `𝖤_β` increasing along it:
+
+  `d/dt 𝖤_β(X_β(t)) = ‖∇𝖤_β(X_β(t))‖²`,   `‖∇𝖤_β‖ ≥ 0`.
+
+Without this, `saddle_to_saddle_gradient_reparam` read over an arbitrary
+`gradNorm` would be a claim about an arbitrary time change, and false: the
+reparametrization candidate is the one built from the *actual* gradient. -/
+def IsEnergyGradNorm (gradNorm : ℝ → SphereTuple d n → ℝ)
+    (X : ℝ → ℝ → SphereTuple d n) : Prop :=
+  ∀ β : ℝ, 1 < β → ∀ t : ℝ,
+    0 ≤ gradNorm β (X β t) ∧
+    HasDerivAt (fun s => Eβ d n β (X β s)) ((gradNorm β (X β t)) ^ 2) t
+
 /-- **Problem (the reparametrization candidate).**
 
 Does `conj: saddle-to-saddle` hold for the explicit reparametrization
@@ -153,14 +187,23 @@ proof?  Writing `φ_β(t) := 𝖤_β(u(τ_β(t)))`, the candidate is the one for
 which `φ̇_β(t) = log β · ‖∇𝖤_β(u(τ_β(t)))‖`, the hope being that a jump in
 the energy then takes a time independent of `β`.
 
+Not proved here; the survey leaves it open.
+
 Source: arXiv:2410.06833v1, §6, "A reparametrization candidate". -/
-def SaddleToSaddleGradientReparam
-    (gradNorm : ℝ → SphereTuple d n → ℝ) : Prop :=
-  2 ≤ d → 2 ≤ n →
-  ∀ (X₀ : SphereTuple d n) (X : ℝ → ℝ → SphereTuple d n),
-    (∀ β : ℝ, 1 < β → X β 0 = X₀ ∧ Perspective.SA d n β (X β)) →
-    ∀ τ : ℝ → ℝ → ℝ, IsGradientReparam d n gradNorm X τ →
-      HasStaircaseProfile d n X τ
+theorem saddle_to_saddle_gradient_reparam (hd : 2 ≤ d) (hn : 2 ≤ n) :
+    ∀ (gradNorm : ℝ → SphereTuple d n → ℝ)
+      (X₀ : SphereTuple d n) (X : ℝ → ℝ → SphereTuple d n),
+      (∀ β : ℝ, 1 < β → X β 0 = X₀ ∧ Perspective.SA d n β (X β)) →
+      IsEnergyGradNorm d n gradNorm X →
+      ∀ τ : ℝ → ℝ → ℝ, IsGradientReparam d n gradNorm X τ →
+        HasStaircaseProfile d n X τ := by
+  sorry
+
+/-- The hypotheses of `saddle_to_saddle_gradient_reparam` are satisfiable:
+`d = n = 2`.  That `gradNorm` is the gradient norm of `𝖤_β` stays inside the
+statement — the gradient is not constructed here, so there is none to
+exhibit. -/
+example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 
 end Metastability
 end Transformer

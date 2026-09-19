@@ -29,19 +29,22 @@ open Real MeasureTheory
 namespace Transformer
 namespace Metastability
 
-/-- The uniform law on `𝕊^{d-1}`, dimension by dimension: a probability measure
-on every sphere at once, each invariant under every linear isometry of its
-ambient `ℝ^d`.
+/-- The uniform law on `𝕊^{d-1}`: a probability measure invariant under every
+linear isometry of the ambient `ℝ^d`.
 
-Such a family is unique — a rotation-invariant Borel probability measure on
-`𝕊^{d-1}` *is* `σ_d` — so the statements below, read against every family
+Such a measure is unique — a rotation-invariant Borel probability measure on
+`𝕊^{d-1}` *is* `σ_d` — so the statements below, read against every measure
 satisfying this, say exactly what the survey says about the uniform one.  The
 invariance is stated through `Perspective.sphereMap`, which keeps the Haar
 machinery out. -/
-def IsUniformFamily (σ : ∀ d : ℕ, Measure (SSphere d)) : Prop :=
-  ∀ d : ℕ, IsProbabilityMeasure (σ d) ∧
+def IsUniformOn (d : ℕ) (ν : Measure (SSphere d)) : Prop :=
+  IsProbabilityMeasure ν ∧
     ∀ U : EucSpace d ≃ₗᵢ[ℝ] EucSpace d,
-      (σ d).map (Perspective.sphereMap d U) = σ d
+      ν.map (Perspective.sphereMap d U) = ν
+
+/-- The same, dimension by dimension: a uniform law on every sphere at once. -/
+def IsUniformFamily (σ : ∀ d : ℕ, Measure (SSphere d)) : Prop :=
+  ∀ d : ℕ, IsUniformOn d (σ d)
 
 /-- The law of `n` i.i.d. draws from a measure `ν` on `𝕊^{d-1}`. -/
 noncomputable def iidSphere (d n : ℕ) (ν : Measure (SSphere d)) :
