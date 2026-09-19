@@ -11,8 +11,8 @@ This file formalizes §6 of the survey:
 * `eq: expconvtocons`              — explicit convergence rate,
 * `eq: therighthandside`, `eq: qual.conv`,
 * `e:dotalpha.step2`,
-* `e:mineqalpha.step2`, `e:diffineqalpha.step2`,
-* `Theorem r:wendel` — Wendel's hemisphere probability,
+* `e:mineqalpha.step2`; `e:diffineqalpha.step2` — refuted in the form that
+  leaves `x⋆` free, by `not_forall_step2_alpha_diff_ineq`,
 * `Theorem r:wendel` — Wendel's hemisphere probability.
 
 `Lemma lem: hemisphere.clustering` — *cone collapse* — is
@@ -215,57 +215,60 @@ theorem hemisphere_step1_qual_conv
             Filter.atTop (nhds 0) := by
   sorry
 
-/-- **Equation (e:diffineqalpha.step2).** Differential inequality for
-`α(t) = min_i ⟨x_i(t), x⋆⟩`:
+/-- **Equation (e:diffineqalpha.step2) is false with `x⋆` free.**
+
+The survey's step 2 is the differential inequality for
+`α(t) = min_i ⟨x_i(t), x⋆⟩`,
 
   `α̇(t) ≥ 1/(2 n e^{2β}) · (1 - α(t))`,  for `t ≥ t₀`,
 
-which integrates to the exponential rate of `lem: hemisphere.clustering`.
+and it integrates to the exponential rate of `lem: hemisphere.clustering`.
+But `x⋆` there is not an arbitrary point of the sphere: it is what step 1
+produces, the common limit of the particles, and by the time step 2 runs every
+particle is in an open hemisphere around it.
 
-The minimum is presented by its two defining properties (`α t` is a lower
-bound, and is attained) rather than as a `Finset.inf'`, so that no nonemptiness
-witness for `Idx n` has to be carried through the statement.
+Carried into Lean with `x⋆` a free binder, the inequality claims a *positive*
+lower bound on `α̇` at every configuration and every `x⋆`, and that is false.
+One token sitting still at `p ∈ 𝕊^0` is a consensus solution of `eq: SA`
+(`SA_const_consensus`); take `x⋆ = -p`.  Then `α ≡ -1` is the minimum, so
+`α̇ = 0`, while the right-hand side is `2/(2 n e^{2β}) > 0`.
 
-Not proved here: the inequality is step 2 of the proof of
-`lem: hemisphere.clustering`, and it is what
-`Perspective.Section5_ConeCollapse.hemisphere_clustering` carries as a
-hypothesis.
+The same inequality survives in the form Appendix D gives it,
+`Perspective.diff_ineq_alpha`, whose right-hand side carries the extra factor
+`α(1/n)`: at the configuration above that factor is `-1` and the bound reads
+`-2/(n e^{2β}) ≤ 0`, which is true.  That is the form this development
+carries, and `Perspective.hemisphere_clustering` takes the pair of steps as a
+hypothesis about *one* initial tuple and *one* `x⋆`, which this refutation
+does not touch.
 
 Source: arXiv:2312.10794v5, §6.1, `e:diffineqalpha.step2`. -/
-theorem step2_alpha_diff_ineq
-    (β : ℝ) (X : ℝ → SphereTuple d n) (x_star : SSphere d)
-    (α : ℝ → ℝ) (t₀ : ℝ) (hβ : 0 ≤ β) (hX : Perspective.SA d n β X)
-    (hlb : ∀ t : ℝ, ∀ i : Idx n,
-      α t ≤ inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((x_star : EucSpace d)))
-    (hmin : ∀ t : ℝ, ∃ i : Idx n,
-      α t = inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((x_star : EucSpace d))) :
-    ∀ t : ℝ, t₀ ≤ t →
-      ∃ α' : ℝ, HasDerivAt α α' t ∧
-        (1 - α t) / (2 * (n : ℝ) * Real.exp (2 * β)) ≤ α' := by
-  sorry
-
-/-- The hypotheses of `step2_alpha_diff_ineq` are satisfiable, and by a genuine
-solution: one token sitting at `x⋆` is a consensus equilibrium of `eq: SA`, and
-`α ≡ 1` is then the minimum `min_i ⟨x_i(t), x⋆⟩`, attained at the only token
-there is. -/
-example :
-    (0 : ℝ) ≤ 1 ∧
-      Perspective.SA 1 1 1 (fun _ _ => basePoint 0) ∧
-      (∀ t : ℝ, ∀ i : Idx 1,
-        (1 : ℝ) ≤ inner (𝕜 := ℝ)
-          (((fun _ _ => basePoint 0 : ℝ → SphereTuple 1 1) t i : EucSpace 1))
-          ((basePoint 0 : EucSpace 1))) ∧
-      (∀ t : ℝ, ∃ i : Idx 1,
-        (1 : ℝ) = inner (𝕜 := ℝ)
-          (((fun _ _ => basePoint 0 : ℝ → SphereTuple 1 1) t i : EucSpace 1))
-          ((basePoint 0 : EucSpace 1))) := by
-  have hb : inner (𝕜 := ℝ) ((basePoint 0 : EucSpace 1)) ((basePoint 0 : EucSpace 1))
-      = 1 := by
-    rw [real_inner_self_eq_norm_mul_norm,
-      mem_sphere_zero_iff_norm.mp (basePoint 0 : SSphere 1).2]
-    ring
-  exact ⟨zero_le_one, Perspective.SA_const_consensus 1 1 one_pos 1 (basePoint 0),
-    fun _ _ => hb.ge, fun _ => ⟨0, hb.symm⟩⟩
+theorem not_forall_step2_alpha_diff_ineq :
+    ¬ ∀ (d n : ℕ) (β : ℝ) (X : ℝ → SphereTuple d n) (x_star : SSphere d)
+        (α : ℝ → ℝ) (t₀ : ℝ), 0 ≤ β → Perspective.SA d n β X →
+        (∀ t : ℝ, ∀ i : Idx n,
+          α t ≤ inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((x_star : EucSpace d))) →
+        (∀ t : ℝ, ∃ i : Idx n,
+          α t = inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((x_star : EucSpace d))) →
+        ∀ t : ℝ, t₀ ≤ t →
+          ∃ α' : ℝ, HasDerivAt α α' t ∧
+            (1 - α t) / (2 * (n : ℝ) * Real.exp (2 * β)) ≤ α' := by
+  intro h
+  have hx : ‖((basePoint 0 : SSphere 1) : EucSpace 1)‖ = 1 :=
+    mem_sphere_zero_iff_norm.mp (basePoint 0).2
+  have hxx : inner (𝕜 := ℝ) (((basePoint 0 : SSphere 1)) : EucSpace 1)
+      (((basePoint 0 : SSphere 1)) : EucSpace 1) = 1 := by
+    rw [real_inner_self_eq_norm_mul_norm, hx]; ring
+  have hval : inner (𝕜 := ℝ) (((basePoint 0 : SSphere 1)) : EucSpace 1)
+      ((antipode 1 (basePoint 0) : EucSpace 1)) = -1 := by
+    show inner (𝕜 := ℝ) (((basePoint 0 : SSphere 1)) : EucSpace 1)
+      (-(((basePoint 0 : SSphere 1)) : EucSpace 1)) = -1
+    rw [inner_neg_right, hxx]
+  obtain ⟨α', hα', hle⟩ := h 1 1 0 (fun _ _ => basePoint 0)
+    (antipode 1 (basePoint 0)) (fun _ => -1) 0 le_rfl
+    (Perspective.SA_const_consensus 1 1 one_pos 0 (basePoint 0))
+    (fun _ _ => le_of_eq hval.symm) (fun _ => ⟨0, hval.symm⟩) 0 le_rfl
+  rw [← (hasDerivAt_const (0 : ℝ) (-1 : ℝ)).unique hα'] at hle
+  norm_num at hle
 
 /-- **Theorem (r:wendel) — Wendel's theorem.**
 
