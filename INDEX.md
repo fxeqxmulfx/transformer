@@ -1333,13 +1333,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sat_exBefore`](src/Transformer/CRASP/BoundedExists.lean#L141) | theorem | proved |
 | [`sat_exAfter`](src/Transformer/CRASP/BoundedExists.lean#L155) | theorem | proved |
 
-**[Transformer.CRASP.Collapse](src/Transformer/CRASP/Collapse.lean)** — 97 lines
+**[Transformer.CRASP.Collapse](src/Transformer/CRASP/Collapse.lean)** — 104 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`Clustered`](src/Transformer/CRASP/Collapse.lean#L48) | def |  |
 | [`exists_mem_TLCl_of_clustered`](src/Transformer/CRASP/Collapse.lean#L64) | theorem | sorry |
-| [`not_recognizes_altPlus_of_clustered`](src/Transformer/CRASP/Collapse.lean#L81) | theorem | proved |
+| [`not_recognizes_altPlus_of_clustered`](src/Transformer/CRASP/Collapse.lean#L85) | theorem | proved |
 
 **[Transformer.CRASP.Commutative](src/Transformer/CRASP/Commutative.lean)** — 199 lines
 
@@ -2019,7 +2019,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`kPiecewiseTestable_altPlusDouble`](src/Transformer/CRASP/TLCDepth.lean#L71) | theorem | proved |
 | [`definable_altPlusDouble`](src/Transformer/CRASP/TLCDepth.lean#L85) | theorem | proved |
 
-**[Transformer.CRASP.Transformers](src/Transformer/CRASP/Transformers.lean)** — 166 lines
+**[Transformer.CRASP.Transformers](src/Transformer/CRASP/Transformers.lean)** — 181 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -2036,8 +2036,8 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`exists_rtfr_of_mem_TLCl`](src/Transformer/CRASP/Transformers.lean#L107) | theorem | sorry |
 | [`bitAt`](src/Transformer/CRASP/Transformers.lean#L121) | def |  |
 | [`exists_mem_TLCl_of_rtfr`](src/Transformer/CRASP/Transformers.lean#L126) | theorem | sorry |
-| [`definableL_iff_recognizes`](src/Transformer/CRASP/Transformers.lean#L138) | theorem | proved |
-| [`rtfr_depth_hierarchy`](src/Transformer/CRASP/Transformers.lean#L153) | theorem | proved |
+| [`definableL_iff_recognizes`](src/Transformer/CRASP/Transformers.lean#L142) | theorem | proved |
+| [`rtfr_depth_hierarchy`](src/Transformer/CRASP/Transformers.lean#L163) | theorem | proved |
 
 **[Transformer.CRASP.YNormalForm](src/Transformer/CRASP/YNormalForm.lean)** — 153 lines
 
@@ -3053,7 +3053,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`ineq_second_part`](src/Transformer/Perspective/AppendixD_Assembly.lean#L111) | theorem | sorry |
 | [`usa_analogue`](src/Transformer/Perspective/AppendixD_Assembly.lean#L145) | theorem | sorry |
 
-**[Transformer.Perspective.AppendixD_PhaseTransition](src/Transformer/Perspective/AppendixD_PhaseTransition.lean)** — 280 lines
+**[Transformer.Perspective.AppendixD_PhaseTransition](src/Transformer/Perspective/AppendixD_PhaseTransition.lean)** — 296 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -3061,11 +3061,11 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`one_le_cBeta`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L42) | theorem | proved |
 | [`stability_orthogonal`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L63) | theorem | sorry |
 | [`almost_orthogonal`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L91) | theorem | sorry |
-| [`shortdist_bound`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L114) | theorem | proved |
-| [`ineq_first_part`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L147) | theorem | proved |
-| [`ybeta_close_to_1`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L213) | theorem | sorry |
-| [`exists_le_div_log`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L235) | theorem | proved |
-| [`d_star_definition`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L273) | theorem | proved |
+| [`shortdist_bound`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L118) | theorem | proved |
+| [`ineq_first_part`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L158) | theorem | proved |
+| [`ybeta_close_to_1`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L229) | theorem | sorry |
+| [`exists_le_div_log`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L251) | theorem | proved |
+| [`d_star_definition`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L289) | theorem | proved |
 
 **[Transformer.Perspective.MinCurve](src/Transformer/Perspective/MinCurve.lean)** — 164 lines
 
@@ -3760,7 +3760,7 @@ Everything the build cannot vouch for, in one place.
 | [`usa_analogue`](src/Transformer/Perspective/AppendixD_Assembly.lean#L145) | theorem | `Transformer.Perspective.AppendixD_Assembly` |
 | [`stability_orthogonal`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L63) | theorem | `Transformer.Perspective.AppendixD_PhaseTransition` |
 | [`almost_orthogonal`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L91) | theorem | `Transformer.Perspective.AppendixD_PhaseTransition` |
-| [`ybeta_close_to_1`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L213) | theorem | `Transformer.Perspective.AppendixD_PhaseTransition` |
+| [`ybeta_close_to_1`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L229) | theorem | `Transformer.Perspective.AppendixD_PhaseTransition` |
 | [`dissipation_softmax`](src/Transformer/Perspective/Section2_FlowMap.lean#L155) | theorem | `Transformer.Perspective.Section2_FlowMap` |
 | [`existence_uniqueness_energy`](src/Transformer/Perspective/Section2_FlowMap.lean#L223) | theorem | `Transformer.Perspective.Section2_FlowMap` |
 | [`vectorField_eq_grad_log`](src/Transformer/Perspective/Section2_GradientFlow.lean#L43) | theorem | `Transformer.Perspective.Section2_GradientFlow` |

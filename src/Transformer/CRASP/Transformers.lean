@@ -132,32 +132,47 @@ theorem exists_mem_TLCl_of_rtfr {p s d k : ℕ} (T : RTfr (Option σ) p s d k) :
 future-masked rounded transformer of depth `k`.
 
 The paper states it as the conjunction of the two simulations, and that is how
-it is proved here: `exists_rtfr_of_mem_TLCl` gives the forward direction and
-`exists_mem_TLCl_of_rtfr` the backward one, with nothing left to do but rewrite
-the language along `RTfr.Recognizes`. -/
+it is proved here: the first hypothesis is `exists_rtfr_of_mem_TLCl`, the
+second `exists_mem_TLCl_of_rtfr`, and what is proved is that together they give
+the equivalence — nothing left to do but rewrite the language along
+`RTfr.Recognizes`.
+
+Neither simulation is proved, so neither is used: both are hypotheses, and
+nothing beyond them is assumed here. -/
 theorem definableL_iff_recognizes (L : Set (List σ)) (k : ℕ) :
-    DefinableL L k ↔ ∃ (p s d : ℕ) (T : RTfr (Option σ) p s d k), T.Recognizes L := by
+    (∀ (j : ℕ) (φ : Form σ), φ ∈ TLCl σ j →
+        ∃ (p s d : ℕ) (T : RTfr (Option σ) p s d j), T.Recognizes φ.lang) →
+    (∀ (p s d j : ℕ) (T : RTfr (Option σ) p s d j),
+        ∃ φ ∈ TLCl σ j, φ.lang = {w : List σ | T.Accepts (bos w)}) →
+    (DefinableL L k ↔ ∃ (p s d : ℕ) (T : RTfr (Option σ) p s d k), T.Recognizes L) := by
+  intro hfwd hbwd
   constructor
   · rintro ⟨φ, hφ, rfl⟩
-    exact exists_rtfr_of_mem_TLCl k φ hφ
+    exact hfwd k φ hφ
   · rintro ⟨p, s, d, T, hT⟩
-    obtain ⟨φ, hφ, hlang⟩ := exists_mem_TLCl_of_rtfr T
+    obtain ⟨φ, hφ, hlang⟩ := hbwd p s d k T
     exact ⟨φ, hφ, hlang.trans (Set.ext hT)⟩
 
 /-- **Theorem `thm:rtfr_depth_hierarchy`.**  A depth-`(k+1)` transformer
 recognizes `L_{k+1}`, and no depth-`k` transformer does.
 
-A corollary of the depth hierarchy `thm:TLCl_depth` for the logic and of the
-equivalence `definableL_iff_recognizes`, exactly as the paper derives it: the
-transformer hierarchy carries no combinatorics of its own. -/
+A corollary of the depth hierarchy `thm:TLCl_depth` for the logic — which *is*
+proved here — and of the equivalence `definableL_iff_recognizes`, exactly as
+the paper derives it: the transformer hierarchy carries no combinatorics of its
+own.  The two simulations are the same hypotheses as there, passed through. -/
 theorem rtfr_depth_hierarchy (k : ℕ) (hk : 0 < k) :
-    (∃ (p s d : ℕ) (T : RTfr (Option Bool) p s d (k + 1)),
+    (∀ (j : ℕ) (φ : Form Bool), φ ∈ TLCl Bool j →
+        ∃ (p s d : ℕ) (T : RTfr (Option Bool) p s d j), T.Recognizes φ.lang) →
+    (∀ (p s d j : ℕ) (T : RTfr (Option Bool) p s d j),
+        ∃ φ ∈ TLCl Bool j, φ.lang = {w : List Bool | T.Accepts (bos w)}) →
+    ((∃ (p s d : ℕ) (T : RTfr (Option Bool) p s d (k + 1)),
         T.Recognizes (altPlus false (k + 1))) ∧
       ∀ (p s d : ℕ) (T : RTfr (Option Bool) p s d k),
-        ¬ T.Recognizes (altPlus false (k + 1)) := by
+        ¬ T.Recognizes (altPlus false (k + 1))) := by
+  intro hfwd hbwd
   obtain ⟨hpos, hneg⟩ := definableL_altPlus k hk
-  exact ⟨(definableL_iff_recognizes _ _).mp hpos,
-    fun p s d T hT => hneg ((definableL_iff_recognizes _ _).mpr ⟨p, s, d, T, hT⟩)⟩
+  exact ⟨(definableL_iff_recognizes _ _ hfwd hbwd).mp hpos,
+    fun p s d T hT => hneg ((definableL_iff_recognizes _ _ hfwd hbwd).mpr ⟨p, s, d, T, hT⟩)⟩
 
 /-- The hypothesis of `rtfr_depth_hierarchy` is satisfiable: `k = 1`. -/
 example : (0 : ℕ) < 1 := Nat.one_pos

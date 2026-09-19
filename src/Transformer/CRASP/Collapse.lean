@@ -74,15 +74,22 @@ example {p s d M : ℕ} (T : RTfr (Option σ) p s d (0 + M)) (hE : T.E = fun _ _
   simp [RTfr.act, hE]
 
 /-- **Corollary: a transformer that collapses after `L` layers does not
-recognize `L_{L+1}`,** however many layers sit above the collapse.  This is
-`exists_mem_TLCl_of_clustered` against `thm:TLCl_depth`
-(arXiv:2506.16055v3), the lower half of `thm:rtfr_depth_hierarchy` with the
-depth of the transformer replaced by the depth at which it collapses. -/
+recognize `L_{L+1}`,** however many layers sit above the collapse.  This is the
+conjecture above against `thm:TLCl_depth` (arXiv:2506.16055v3), the lower half
+of `thm:rtfr_depth_hierarchy` with the depth of the transformer replaced by the
+depth at which it collapses.
+
+The conjecture is unproved, so it is a hypothesis here — stated for this `T`,
+at every `ε` below one grid step — and what is proved is the implication.  The
+depth hierarchy `definableL_altPlus` it is played against is proved. -/
 theorem not_recognizes_altPlus_of_clustered {p s d L M : ℕ} (hL : 0 < L)
     (T : RTfr (Option Bool) p s d (L + M)) {ε : ℝ} (hε : ε < 2⁻¹ ^ s)
-    (hT : T.Clustered L ε) : ¬ T.Recognizes (altPlus false (L + 1)) := by
-  intro hrec
-  obtain ⟨φ, hφ, hlang⟩ := exists_mem_TLCl_of_clustered T hε hT
+    (hT : T.Clustered L ε) :
+    (∀ ε' : ℝ, ε' < 2⁻¹ ^ s → T.Clustered L ε' →
+        ∃ φ ∈ TLCl Bool L, φ.lang = {w : List Bool | T.Accepts (bos w)}) →
+      ¬ T.Recognizes (altPlus false (L + 1)) := by
+  intro hconj hrec
+  obtain ⟨φ, hφ, hlang⟩ := hconj ε hε hT
   exact (definableL_altPlus L hL).2 ⟨φ, hφ, hlang.trans (Set.ext hrec)⟩
 
 /-- The hypotheses of `not_recognizes_altPlus_of_clustered` are satisfiable: a

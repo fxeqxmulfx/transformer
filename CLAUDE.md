@@ -83,9 +83,8 @@ Three numbers, to be read before every commit, next to `scripts/index.py`:
   **Must be 0.** Those three are the minimum Mathlib itself runs on; every
   further axiom is an assumption in disguise.
 
-Current: 122 `sorry` · 5 resting on a sorry · 0 extra axioms. The five are the
-standing exception, to be cleared by moving their unproved input into a
-hypothesis; until then no new one may appear.
+Current: 122 `sorry` · 0 resting on a sorry · 0 extra axioms. Every proved
+declaration in the tree is proved, on those three axioms and nothing else.
 
 ## When the paper is wrong
 

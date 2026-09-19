@@ -110,16 +110,25 @@ example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 where `y` is the solution started from the orthogonal approximation supplied by
 `eq: almost.ortho.vec`.  It is `eq: stability.4ortho` at `M = √(log d / d)`.
 
+`eq: stability.4ortho` is `stability_orthogonal`, which is not proved, so it is
+carried here as a hypothesis rather than used: what this theorem asserts is the
+specialization, and that is what it proves.
+
 Source: arXiv:2312.10794v5, Appendix D, `e:shortdist`. -/
 theorem shortdist_bound
     (β : ℝ) (X Y : ℝ → SphereTuple d n)
     (hX : SA d n β X) (hY : SA d n β Y)
     (hM : ∀ j : Idx n,
       ‖(X 0 j : EucSpace d) - (Y 0 j : EucSpace d)‖ ≤ Real.sqrt (Real.log d / d)) :
+    (∀ M : ℝ, SA d n β X → SA d n β Y →
+        (∀ j : Idx n, ‖(X 0 j : EucSpace d) - (Y 0 j : EucSpace d)‖ ≤ M) →
+        ∀ t : ℝ, 0 ≤ t → ∀ i : Idx n,
+          ‖(X t i : EucSpace d) - (Y t i : EucSpace d)‖
+            ≤ cBeta β ^ ((n : ℝ) * t) * M) →
     ∀ t : ℝ, 0 ≤ t → ∀ i : Idx n,
       ‖(X t i : EucSpace d) - (Y t i : EucSpace d)‖
         ≤ cBeta β ^ ((n : ℝ) * t) * Real.sqrt (Real.log d / d) :=
-  stability_orthogonal d n β X Y _ hX hY hM
+  fun hstab => hstab _ hX hY hM
 
 /-- The hypotheses of `shortdist_bound` are satisfiable: at `d = 1` the bound
 `√(log d / d)` is `0`, and a consensus solution is at distance `0` from
@@ -141,7 +150,9 @@ and `x` starts within `√(log d / d)` of it, then
 
 The proof is `e:shortdist` followed by Cauchy–Schwarz on
 `⟨x_i, x_j⟩ - ⟨y_i, y_j⟩ = ⟨x_i - y_i, x_j⟩ + ⟨y_i, x_j - y_j⟩`, both particles
-being unit vectors.
+being unit vectors.  Only the Cauchy–Schwarz half is proved here;
+`eq: stability.4ortho`, which `e:shortdist` specializes, is a hypothesis, as in
+`shortdist_bound`.
 
 Source: arXiv:2312.10794v5, Appendix D, `e:ineqfirstpart`. -/
 theorem ineq_first_part
@@ -151,12 +162,17 @@ theorem ineq_first_part
       ‖(X 0 j : EucSpace d) - (Y 0 j : EucSpace d)‖ ≤ Real.sqrt (Real.log d / d))
     (hγ : ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx n, i ≠ j →
       inner (𝕜 := ℝ) ((Y t i : EucSpace d)) ((Y t j : EucSpace d)) = γ t) :
+    (∀ M : ℝ, SA d n β X → SA d n β Y →
+        (∀ j : Idx n, ‖(X 0 j : EucSpace d) - (Y 0 j : EucSpace d)‖ ≤ M) →
+        ∀ t : ℝ, 0 ≤ t → ∀ i : Idx n,
+          ‖(X t i : EucSpace d) - (Y t i : EucSpace d)‖
+            ≤ cBeta β ^ ((n : ℝ) * t) * M) →
     ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx n, i ≠ j →
       |inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((X t j : EucSpace d)) - γ t|
         ≤ 2 * cBeta β ^ ((n : ℝ) * t) * Real.sqrt (Real.log d / d) := by
-  intro t ht i j hij
-  have hi := shortdist_bound d n β X Y hX hY hM t ht i
-  have hj := shortdist_bound d n β X Y hX hY hM t ht j
+  intro hstab t ht i j hij
+  have hi := shortdist_bound d n β X Y hX hY hM hstab t ht i
+  have hj := shortdist_bound d n β X Y hX hY hM hstab t ht j
   have hxj : ‖(X t j : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp (X t j).2
   have hyi : ‖(Y t i : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp (Y t i).2
   have key :
