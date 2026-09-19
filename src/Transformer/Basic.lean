@@ -86,6 +86,69 @@ has norm `1`. -/
 example : ‖(EuclideanSpace.single (0 : Fin 1) (1 : ℝ))‖ = 1 := by
   simp [PiLp.norm_single]
 
+/-- **How far two projections can be apart.**
+
+For unit vectors `a`, `b` and a vector `v` with `‖v‖ ≤ 1`,
+
+  `Proj_a u - Proj_b v = Proj_a (u - v) - ⟨a, v⟩ (a - b) - ⟨a - b, v⟩ b`,
+
+whose three summands are bounded by `‖u - v‖`, `‖v‖ ‖a - b‖ ` and
+`‖a - b‖ ‖v‖ ‖b‖`.  So the difference of the projections is at most
+`‖u - v‖ + 2 ‖a - b‖`.  The naive split
+`(u - v) - (⟨a, u⟩ a - ⟨b, v⟩ b)` gives `3` in place of `2`.
+
+This is the estimate behind every Grönwall constant in the formalization: it
+turns a bound on the drifts' arguments into a bound on the drifts.
+
+Source: arXiv:2312.10794v5, §4 and Appendix D, the Lipschitz step preceding
+`e:approxsphere` and `eq: stability.4ortho`. -/
+theorem norm_proj_sub_proj_le {d : ℕ} {a b u v : EucSpace d} {δ r : ℝ}
+    (ha : ‖a‖ = 1) (hb : ‖b‖ = 1) (hv : ‖v‖ ≤ 1)
+    (hab : ‖a - b‖ ≤ δ) (huv : ‖u - v‖ ≤ r) :
+    ‖proj d a u - proj d b v‖ ≤ r + 2 * δ := by
+  have hd0 : (0 : ℝ) ≤ δ := le_trans (norm_nonneg _) hab
+  have hdecomp : proj d a u - proj d b v
+      = proj d a (u - v)
+        - ((inner (𝕜 := ℝ) a v) • (a - b) + (inner (𝕜 := ℝ) (a - b) v) • b) := by
+    simp only [proj, inner_sub_right, inner_sub_left, sub_smul]
+    module
+  have hA : ‖proj d a (u - v)‖ ≤ r := (norm_proj_le ha _).trans huv
+  have hB : ‖(inner (𝕜 := ℝ) a v) • (a - b)‖ ≤ δ := by
+    rw [norm_smul, Real.norm_eq_abs]
+    have h1 : |inner (𝕜 := ℝ) a v| ≤ 1 := by
+      have h2 := abs_real_inner_le_norm a v
+      rw [ha, one_mul] at h2
+      exact h2.trans hv
+    calc |inner (𝕜 := ℝ) a v| * ‖a - b‖ ≤ 1 * δ :=
+          mul_le_mul h1 hab (norm_nonneg _) zero_le_one
+      _ = δ := one_mul δ
+  have hC : ‖(inner (𝕜 := ℝ) (a - b) v) • b‖ ≤ δ := by
+    rw [norm_smul, Real.norm_eq_abs, hb, mul_one]
+    refine (abs_real_inner_le_norm (a - b) v).trans ?_
+    calc ‖a - b‖ * ‖v‖ ≤ δ * 1 := mul_le_mul hab hv (norm_nonneg _) hd0
+      _ = δ := mul_one δ
+  rw [hdecomp]
+  calc ‖proj d a (u - v)
+          - ((inner (𝕜 := ℝ) a v) • (a - b) + (inner (𝕜 := ℝ) (a - b) v) • b)‖
+      ≤ ‖proj d a (u - v)‖
+          + ‖(inner (𝕜 := ℝ) a v) • (a - b)
+              + (inner (𝕜 := ℝ) (a - b) v) • b‖ := norm_sub_le _ _
+    _ ≤ ‖proj d a (u - v)‖
+          + (‖(inner (𝕜 := ℝ) a v) • (a - b)‖
+              + ‖(inner (𝕜 := ℝ) (a - b) v) • b‖) := by
+          gcongr
+          exact norm_add_le _ _
+    _ ≤ r + (δ + δ) := by gcongr
+    _ = r + 2 * δ := by ring
+
+/-- The hypotheses are satisfiable: `a = b = u = v` the first standard basis
+vector of `ℝ^1`, with `δ = r = 0`. -/
+example : ‖(EuclideanSpace.single (0 : Fin 1) (1 : ℝ))‖ = 1 ∧
+    ‖(EuclideanSpace.single (0 : Fin 1) (1 : ℝ))‖ ≤ 1 ∧
+    ‖(EuclideanSpace.single (0 : Fin 1) (1 : ℝ))
+      - (EuclideanSpace.single (0 : Fin 1) (1 : ℝ))‖ ≤ (0 : ℝ) :=
+  ⟨by simp [PiLp.norm_single], by simp [PiLp.norm_single], by simp⟩
+
 /-- The "indexing set" `[n] = {1,…,n}`, realized as `Fin n`. -/
 abbrev Idx (n : ℕ) : Type := Fin n
 

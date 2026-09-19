@@ -11,14 +11,9 @@ names it (`beta0Field`) and proves the one property the Grönwall comparison of
 `3` for the sup-norm.
 
 The constant is the survey's: the `e^{3t}` of `e:approxsphere` is exactly
-`e^{Kt}` for this `K`.  It comes out of the splitting
-
-  `Proj_a m - Proj_b m' = Proj_a (m - m') - ⟨a, m'⟩ (a - b) - ⟨a - b, m'⟩ b`,
-
-whose three summands are bounded by `‖m - m'‖`, `‖m'‖ ‖a - b‖` and
-`‖a - b‖ ‖m'‖ ‖b‖`; on unit vectors `‖m'‖ ≤ 1` and `‖m - m'‖ ≤ sup_j ‖a_j - b_j‖`.
-The naive split `Proj_a m - Proj_b m' = (m - m') - (⟨a,m⟩a - ⟨b,m'⟩b)` gives `4`
-instead, which would turn `e^{3t}` into `e^{4t}`.
+`e^{Kt}` for this `K`.  It is `1 + 2`: `Transformer.norm_proj_sub_proj_le`
+gives `‖Proj_a m - Proj_b m'‖ ≤ ‖m - m'‖ + 2 ‖a - b‖`, and on unit tuples the
+means satisfy `‖m - m'‖ ≤ sup_j ‖y_j - z_j‖`.
 -/
 
 import Transformer.Perspective.Section3_SmallBeta
@@ -108,44 +103,9 @@ theorem lipschitzOnWith_beta0Field :
   have hmsub : ‖meanTuple d n Y - meanTuple d n Z‖ ≤ δ := by
     rw [meanTuple_sub]
     exact norm_meanTuple_le d n hn hstep
-  have hdecomp : beta0Field d n Y i - beta0Field d n Z i
-      = proj d (Y i) (meanTuple d n Y - meanTuple d n Z)
-        - ((inner (𝕜 := ℝ) (Y i) (meanTuple d n Z)) • (Y i - Z i)
-            + (inner (𝕜 := ℝ) (Y i - Z i) (meanTuple d n Z)) • Z i) := by
-    simp only [beta0Field, proj, inner_sub_right, inner_sub_left, sub_smul]
-    module
-  have hA : ‖proj d (Y i) (meanTuple d n Y - meanTuple d n Z)‖ ≤ δ :=
-    (norm_proj_le hYi _).trans hmsub
-  have hB : ‖(inner (𝕜 := ℝ) (Y i) (meanTuple d n Z)) • (Y i - Z i)‖ ≤ δ := by
-    rw [norm_smul, Real.norm_eq_abs]
-    have h1 : |inner (𝕜 := ℝ) (Y i) (meanTuple d n Z)| ≤ 1 := by
-      have := abs_real_inner_le_norm (Y i) (meanTuple d n Z)
-      rw [hYi, one_mul] at this
-      exact this.trans hmZ
-    calc |inner (𝕜 := ℝ) (Y i) (meanTuple d n Z)| * ‖Y i - Z i‖
-        ≤ 1 * δ := by
-          exact mul_le_mul h1 (hstep i) (norm_nonneg _) zero_le_one
-      _ = δ := one_mul δ
-  have hC : ‖(inner (𝕜 := ℝ) (Y i - Z i) (meanTuple d n Z)) • Z i‖ ≤ δ := by
-    rw [norm_smul, Real.norm_eq_abs, hZi, mul_one]
-    have := abs_real_inner_le_norm (Y i - Z i) (meanTuple d n Z)
-    refine this.trans ?_
-    calc ‖Y i - Z i‖ * ‖meanTuple d n Z‖ ≤ δ * 1 := by
-          exact mul_le_mul (hstep i) hmZ (norm_nonneg _) hd0
-      _ = δ := mul_one δ
-  rw [dist_eq_norm, hdecomp]
-  calc ‖proj d (Y i) (meanTuple d n Y - meanTuple d n Z)
-          - ((inner (𝕜 := ℝ) (Y i) (meanTuple d n Z)) • (Y i - Z i)
-              + (inner (𝕜 := ℝ) (Y i - Z i) (meanTuple d n Z)) • Z i)‖
-      ≤ ‖proj d (Y i) (meanTuple d n Y - meanTuple d n Z)‖
-          + ‖(inner (𝕜 := ℝ) (Y i) (meanTuple d n Z)) • (Y i - Z i)
-              + (inner (𝕜 := ℝ) (Y i - Z i) (meanTuple d n Z)) • Z i‖ := norm_sub_le _ _
-    _ ≤ ‖proj d (Y i) (meanTuple d n Y - meanTuple d n Z)‖
-          + (‖(inner (𝕜 := ℝ) (Y i) (meanTuple d n Z)) • (Y i - Z i)‖
-              + ‖(inner (𝕜 := ℝ) (Y i - Z i) (meanTuple d n Z)) • Z i‖) := by
-          gcongr
-          exact norm_add_le _ _
-    _ ≤ δ + (δ + δ) := by gcongr
+  have hbound := norm_proj_sub_proj_le (d := d) hYi hZi hmZ (hstep i) hmsub
+  rw [dist_eq_norm]
+  calc ‖beta0Field d n Y i - beta0Field d n Z i‖ ≤ δ + 2 * δ := hbound
     _ = 3 * δ := by ring
 
 end Perspective
