@@ -10,6 +10,7 @@ import Transformer.Metastability.Basic
 import Transformer.Metastability.AngularEnergy
 import Transformer.Metastability.MainTheorem
 import Transformer.Metastability.CapVariance
+import Transformer.Metastability.BakryEmery
 import Transformer.Metastability.OttoReznikoff
 import Transformer.Metastability.QuantitativeInequality
 import Transformer.Metastability.ExponentialFlow

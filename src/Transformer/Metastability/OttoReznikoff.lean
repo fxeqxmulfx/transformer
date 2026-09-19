@@ -8,8 +8,9 @@ Equations and statements covered:
 * `eq: first.inequality`    — Polyak–Łojasiewicz-like bound,
 * `Theorem thm: Otto result`,
 * `eq: otto.1, otto.2`      — the consequence of the Otto–Reznikoff theorem,
-* `Lemma lem: bakry-emery`,
-* `ineq: Almost Hessian`,
+* `Lemma lem: bakry-emery` with `ineq: Almost Hessian` — in
+  `Transformer.Metastability.BakryEmery`, which proves it with the flow and
+  the gradient the paper assumes, and refutes the form that leaves them free,
 * `Lemma lem: PL.borjan`    — PL inequality for `𝖤_β` on `𝕋^n`,
 * `eq: tau.small`, `eq: cond.sine`, `eq: Ht.first.lb`, `eq: Ht.second.lb`,
   `eq: Ht.third.lb`, `Claim claim: 1`,
@@ -87,33 +88,6 @@ theorem otto_reznikoff
                 * Real.sqrt (E (u 0) - E (v 0))
               + Cε * δ := by
   sorry
-
-/-- **Lemma (lem: bakry-emery), ineq: Almost Hessian.**
-
-If `⟨∇𝖤(X(t)), Hess 𝖤(X(t)) ∇𝖤(X(t))⟩ ≤ -c ‖∇𝖤(X(t))‖²` for all
-`t ∈ [0, T]`, with `X(T) = v` and `X(0) = u`, then
-
-  `𝖤(v) - 𝖤(u) ≤ (1/(2c)) ‖∇𝖤(u)‖²`.
-
-The Hessian quadratic form is carried as an abstract `gradHess`, the way
-`reversePL` below carries it: the Riemannian Hessian of `𝖤_β` on `𝕋^n` is not
-formalized.  Source: arXiv:2410.06833v1, §3.1, `lem: bakry-emery`. -/
-lemma bakry_emery
-    {M : Type*} [NormedAddCommGroup M]
-    (E : M → ℝ) (gradNorm gradHess : M → ℝ)
-    (u v : M) (c T : ℝ) (hc : 0 < c) (hT : 0 < T)
-    (X : ℝ → M) (hX0 : X 0 = u) (hXT : X T = v)
-    (hHess : ∀ t : ℝ, 0 ≤ t → t ≤ T →
-      gradHess (X t) ≤ -(c * (gradNorm (X t))^2)) :
-    E v - E u ≤ (1 / (2 * c)) * (gradNorm u)^2 := by
-  sorry
-
-/-- The hypotheses of `bakry_emery` are satisfiable: a constant flow with a
-vanishing gradient meets the Hessian bound at every `c > 0`. -/
-example (E : ℝ → ℝ) (u : ℝ) (c : ℝ) (hc : 0 < c) :
-    E u - E u ≤ (1 / (2 * c)) * (0 : ℝ)^2 :=
-  bakry_emery E (fun _ => 0) (fun _ => 0) u u c 1 hc one_pos (fun _ => u) rfl rfl
-    (fun _ _ _ => by simp)
 
 /-! ### §3.2 — Application to `𝖤_β` on `𝕋^n` -/
 
