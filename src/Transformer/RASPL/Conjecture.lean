@@ -94,12 +94,15 @@ def RASPGeneralizable (Rep L : Set (Prog V)) (size : Prog V → ℕ) (T : Task V
     (D : (n : ℕ) → Finset (Seq (n + 1) V)) : Prop :=
   ∃ P ∈ Rep, P ∈ L ∧ Computes P T ∧ Diverse L size P T D
 
-/-- **The RASP-Generalization Conjecture** (§3), as a hypothesis.
+/-- **The RASP-Generalization Conjecture** (§3), as a predicate.
 
-It is left as a `Prop` to be assumed: the conclusion "likely to
-length-generalize" is empirical, and is supplied here as the parameter
-`LengthGeneralizes`.  Nothing in this development proves it, and it is
-deliberately not a theorem. -/
+It is not written as a `theorem … := by sorry`, the way every unproved
+statement in this development is, because it is not unproved: read over an
+arbitrary `LengthGeneralizes` it is **false**, and
+`not_forall_raspGeneralizationConjecture` below proves it so.  The conclusion
+"likely to length-generalize" is empirical and has no formal content to fix
+`LengthGeneralizes` with, so the conjecture is a predicate of it — and a
+predicate of its arguments is a definition. -/
 def RASPGeneralizationConjecture (Rep L : Set (Prog V)) (size : Prog V → ℕ)
     (D : (n : ℕ) → Finset (Seq (n + 1) V)) (LengthGeneralizes : Task V → Prop) : Prop :=
   ∀ T : Task V, RASPGeneralizable Rep L size T D → LengthGeneralizes T
@@ -126,6 +129,23 @@ example :
 /-- Simplicity is satisfiable on its own too. -/
 example : Simple (V := Bool) Set.univ Set.univ (fun n x => x (Fin.last n)) :=
   ⟨fun _ x => x, Set.mem_univ _, Set.mem_univ _, fun _ _ => rfl⟩
+
+/-- **The conjecture is about one `LengthGeneralizes`, not about all of
+them.**
+
+Taking `LengthGeneralizes` to be the constantly false predicate, the
+conjecture asserts that no task is RASP-generalizable; the copy task of the
+example above is one.  So `RASPGeneralizationConjecture` quantified over its
+last argument is not an open statement but a refuted one, which is why it is
+a definition here and not a `theorem … := by sorry`. -/
+theorem not_forall_raspGeneralizationConjecture :
+    ¬ ∀ LengthGeneralizes : Task Bool → Prop,
+        RASPGeneralizationConjecture (V := Bool) Set.univ Set.univ (fun _ => 0)
+          (fun n => (Finset.univ : Finset (Seq (n + 1) Bool))) LengthGeneralizes := by
+  intro h
+  exact h (fun _ => False) (fun n x => x (Fin.last n))
+    ⟨fun _ x => x, Set.mem_univ _, Set.mem_univ _, fun _ _ => rfl,
+      fun _ _ _ hQ n x => hQ n x (Finset.mem_univ x)⟩
 
 end RASPL
 end Transformer
