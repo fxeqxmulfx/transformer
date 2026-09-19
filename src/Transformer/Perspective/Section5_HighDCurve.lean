@@ -144,8 +144,9 @@ Appendix D assembles this from two halves, each covering one branch of the
 minimum past the threshold `eq: d.large`: `e:ineqfirstpart` — the
 `√(log d / d)` branch, from `Perspective.almost_orthogonal` — and
 `e:ineqsecondpart` — the exponentially decaying branch, from
-`Perspective.ineq_second_part`.  Neither half is proved, and neither is the
-assembly.
+`Perspective.ineq_second_part`, which is proved from the two Grönwall estimates
+it deduces it from, carried as hypotheses.  The estimates themselves are not
+proved, nor is the first half, nor the assembly.
 
 Not proved here.
 
