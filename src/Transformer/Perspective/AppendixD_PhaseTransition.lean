@@ -11,12 +11,12 @@ The first half of Appendix D of the survey:
 * `e:shortdist`           — the distance between `x_i` and its orthogonal
                             approximation `y_i`,
 * `e:ineqfirstpart`       — the first half of `eq: upto-t`,
-* `e:ybetacloseto1`       — the decay of `1 - γ_β(t)`,
 * `eq: d.large`           — the definition of `d⋆(n, β)`.
 
-The lower bound on the smallest coordinate `α(t)` is in
-`Perspective.AppendixD_Alpha`, and what the survey builds on it in
-`Perspective.AppendixD_Assembly`.
+The decay of `1 - γ_β(t)`, `e:ybetacloseto1`, is in
+`Perspective.AppendixD_Ybeta`.  The lower bound on the smallest coordinate
+`α(t)` is in `Perspective.AppendixD_Alpha`, and what the survey builds on it
+in `Perspective.AppendixD_Assembly`.
 -/
 
 import Transformer.Basic
@@ -217,28 +217,6 @@ example :
           = (0 : ℝ) :=
   ⟨SA_const_consensus 1 1 one_pos 0 (basePoint 0), by simp,
     fun _ _ i j hij => absurd (Subsingleton.elim i j) hij⟩
-
-/-- **Equation (e:ybetacloseto1).**
-
-  `1 - γ_β(t) ≤ (1/2) exp( n² e^β / (2(n + e^{β/2})) - n t / (n + e^{β/2}) )`.
-
-Not proved here: it is the Grönwall estimate for `eq: ybeta` itself, using
-`e^{βγ} ≤ e^β` and `(n-1)γ + 1 ≥ 1` on `[0, 1]`.
-
-Source: arXiv:2312.10794v5, Appendix D, `e:ybetacloseto1`. -/
-theorem ybeta_close_to_1
-    (β : ℝ) (γ : ℝ → ℝ) (hγ : ybetaODE_SA n β γ) :
-    ∀ t : ℝ, 0 ≤ t →
-      1 - γ t
-        ≤ (1/2 : ℝ) * Real.exp
-            ((n : ℝ)^2 * Real.exp β
-                / (2 * ((n : ℝ) + Real.exp (β / 2)))
-              - ((n : ℝ) * t) / ((n : ℝ) + Real.exp (β / 2))) := by
-  sorry
-
-/-- The hypothesis `ybetaODE_SA n β γ` of `ybeta_close_to_1` is satisfiable:
-`ybetaODE_SA_one_zero`. -/
-example : ybetaODE_SA 1 0 (fun t => 1 - Real.exp (-2 * t)) := ybetaODE_SA_one_zero
 
 /-- `d / log d` grows beyond every bound: for each real `K` there is a
 dimension past which `K ≤ d / log d`.

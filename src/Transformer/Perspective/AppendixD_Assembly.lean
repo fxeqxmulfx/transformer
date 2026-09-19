@@ -55,9 +55,8 @@ by the survey's own derivation.
 
 *The two inputs are carried as hypotheses.*  The survey deduces this from
 `e:productcloseto1` (`product_close_to_one`) and `e:ybetacloseto1`
-(`ybeta_close_to_1`), neither of which is proved here; they enter as `hcp` and
-`hyb`, so that what is proved is the deduction and its dependence is visible in
-the signature.  `hγle`, that `γ_β ≤ 1`, is the remaining property of the
+(`ybeta_close_to_1`).  They enter as `hcp` and `hyb`, so that what is proved is
+the deduction and its dependence is visible in the signature.  `hγle`, that `γ_β ≤ 1`, is the remaining property of the
 solution of `eq: ybeta` the step uses, and is carried the same way.
 
 *The constant on the first summand is `4`, not `1`.*  `α` bounds the inner
