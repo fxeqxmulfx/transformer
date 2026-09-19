@@ -1720,16 +1720,16 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sat_eq_of_closed_depth_le_one`](src/Transformer/CRASP/MajTwoDepthOne.lean#L89) | theorem | proved |
 | [`not_forall_closed_majTwo_of_definable`](src/Transformer/CRASP/MajTwoDepthOne.lean#L159) | theorem | proved |
 
-**[Transformer.CRASP.MajTwoEquiv](src/Transformer/CRASP/MajTwoEquiv.lean)** — 198 lines
+**[Transformer.CRASP.MajTwoEquiv](src/Transformer/CRASP/MajTwoEquiv.lean)** — 224 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`exists_majTwo_of_mem_TLC`](src/Transformer/CRASP/MajTwoEquiv.lean#L37) | theorem | proved |
 | [`exists_closed_majTwo`](src/Transformer/CRASP/MajTwoEquiv.lean#L49) | theorem | proved |
-| [`exists_mem_TLC_of_majTwo`](src/Transformer/CRASP/MajTwoEquiv.lean#L73) | theorem | sorry |
-| [`exists_closed_majTwo_of_definable`](src/Transformer/CRASP/MajTwoEquiv.lean#L98) | theorem | proved |
-| [`definable_of_closed_majTwo`](src/Transformer/CRASP/MajTwoEquiv.lean#L164) | theorem | sorry |
-| [`majTwo_depth_hierarchy`](src/Transformer/CRASP/MajTwoEquiv.lean#L191) | theorem | sorry |
+| [`exists_mem_TLC_of_majTwo`](src/Transformer/CRASP/MajTwoEquiv.lean#L97) | theorem | sorry |
+| [`exists_closed_majTwo_of_definable`](src/Transformer/CRASP/MajTwoEquiv.lean#L124) | theorem | proved |
+| [`definable_of_closed_majTwo`](src/Transformer/CRASP/MajTwoEquiv.lean#L190) | theorem | sorry |
+| [`majTwo_depth_hierarchy`](src/Transformer/CRASP/MajTwoEquiv.lean#L217) | theorem | sorry |
 
 **[Transformer.CRASP.MajTwoOfTLC](src/Transformer/CRASP/MajTwoOfTLC.lean)** — 216 lines
 
@@ -4054,9 +4054,9 @@ Everything the build cannot vouch for, in one place.
 
 | declaration | kind | module |
 | --- | --- | --- |
-| [`exists_mem_TLC_of_majTwo`](src/Transformer/CRASP/MajTwoEquiv.lean#L73) | theorem | `Transformer.CRASP.MajTwoEquiv` |
-| [`definable_of_closed_majTwo`](src/Transformer/CRASP/MajTwoEquiv.lean#L164) | theorem | `Transformer.CRASP.MajTwoEquiv` |
-| [`majTwo_depth_hierarchy`](src/Transformer/CRASP/MajTwoEquiv.lean#L191) | theorem | `Transformer.CRASP.MajTwoEquiv` |
+| [`exists_mem_TLC_of_majTwo`](src/Transformer/CRASP/MajTwoEquiv.lean#L97) | theorem | `Transformer.CRASP.MajTwoEquiv` |
+| [`definable_of_closed_majTwo`](src/Transformer/CRASP/MajTwoEquiv.lean#L190) | theorem | `Transformer.CRASP.MajTwoEquiv` |
+| [`majTwo_depth_hierarchy`](src/Transformer/CRASP/MajTwoEquiv.lean#L217) | theorem | `Transformer.CRASP.MajTwoEquiv` |
 | [`definableMod_iff_recognizes_sinusoidal`](src/Transformer/CRASP/PositionalHierarchy.lean#L94) | theorem | `Transformer.CRASP.PositionalHierarchy` |
 | [`exists_mem_TLClMod_of_rope`](src/Transformer/CRASP/PositionalHierarchy.lean#L112) | theorem | `Transformer.CRASP.PositionalHierarchy` |
 | [`exists_mem_TLClY_of_alibi`](src/Transformer/CRASP/PositionalHierarchy.lean#L138) | theorem | `Transformer.CRASP.PositionalHierarchy` |

@@ -69,18 +69,44 @@ theorem exists_closed_majTwo (k : ℕ) (ψ : Form σ) (hψ : ψ ∈ TLC σ k) :
         (by rwa [Function.update_self]), Function.update_self]
 
 /-- **Theorem `thm:majtwo_to_tlc`.**  Conversely, a `MAJ²_k` formula with one
-free variable `x` is matched by a `TL[◁#,▷#]_k` formula. -/
-theorem exists_mem_TLC_of_majTwo (k : ℕ) (φ : Maj2 σ) (hφ : φ ∈ MajTwo σ k) :
+free variable `x` is matched by a `TL[◁#,▷#]_k` formula.
+
+**What the source says and what is changed here.**  A hypothesis is added:
+`φ` must not use the second variable `y`.  The paper says "a `MAJ²_k` formula
+with one free variable", and `Maj2.freeIn φ .y = false` is what that means; the
+formalization had `φ` range over all of `MajTwo σ k` and read it at the
+valuation `x ↦ i`, `y ↦ 0`, which is a different and false claim.
+
+*Why it is false without it.*  Take `φ = Q_a(y)`, of depth `0`, hence in
+`MajTwo σ k` for every `k`.  At the valuation above `ξ y = 0`, and
+`Maj2.sat` reads `w[ξ y - 1]?`, which is `w[0]?` in truncated subtraction — so
+`φ` says "the first symbol of `w` is `a`", the same answer at every position
+`i`.  That is not a `TL[◁#,▷#]_0` property: a depth-`0` formula is a Boolean
+combination of `Q_b` and comparisons of constants, so it cannot see past the
+current position, and `w = [a, b]`, `w' = [b, b]` read at `i = 2` agree on all
+of them while requiring different answers.  Depth `1` does not suffice either
+— `[a,b,b]` and `[b,a,b]` at `i = 3` agree on every `◁#`- and `▷#`-count of a
+depth-`0` formula — and the property is first expressible at depth `2`, as
+`◁#[Q_a ∧ ◁#[⊤] = 0] = 1`.  So no fixed `k` bounds the translation, and the
+hypothesis is the paper's own reading of its statement.
+
+The forward direction already produces formulas with this property:
+`exists_majTwo_of_mem_TLC` returns `φ'` together with `φ'.freeIn .y = false`.
+
+Source: arXiv:2506.16055v3, Appendix E, `thm:majtwo_to_tlc`. -/
+theorem exists_mem_TLC_of_majTwo (k : ℕ) (φ : Maj2 σ) (hφ : φ ∈ MajTwo σ k)
+    (hy : φ.freeIn .y = false) :
     ∃ φ' ∈ TLC σ k, ∀ (w : List σ) (i : ℕ), 1 ≤ i → i ≤ w.length →
       φ.sat w (Function.update (fun _ => 0) Var.x i) = φ'.sat w i :=
   sorry
 
 /-- The hypotheses of the three translation theorems are satisfiable: `Q_a` is
 a PNP-free formula of depth `0` on one side, and `Q_a(x)` is a `MAJ²` formula
-of depth `0` on the other. -/
+of depth `0` on the other, in which `y` does not occur. -/
 example (a : σ) (k : ℕ) :
-    (Form.sym a : Form σ) ∈ TLC σ k ∧ (Maj2.sym a Var.x : Maj2 σ) ∈ MajTwo σ k :=
-  ⟨⟨rfl, Nat.zero_le k⟩, Nat.zero_le k⟩
+    (Form.sym a : Form σ) ∈ TLC σ k ∧ (Maj2.sym a Var.x : Maj2 σ) ∈ MajTwo σ k ∧
+      (Maj2.sym a Var.x : Maj2 σ).freeIn .y = false :=
+  ⟨⟨rfl, Nat.zero_le k⟩, Nat.zero_le k, rfl⟩
 
 /-- **Theorem `thm:logical_inclusions`, first inclusion.**  `TL[◁#,▷#]_k`
 languages are `MAJ²_{k+1}` languages; the extra level pays for the end
