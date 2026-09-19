@@ -12,6 +12,7 @@ import Transformer.Causal.InteractionBounds
 import Transformer.Causal.InteractionNumerics
 import Transformer.Causal.InteractionPeak
 import Transformer.Causal.InteractionWindow
+import Transformer.Causal.InteractionRemark
 import Transformer.Causal.Metastability
 import Transformer.Causal.SequentialFlow
 import Transformer.Causal.ParkingCount

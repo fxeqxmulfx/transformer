@@ -1,10 +1,10 @@
 /-
 # Causal attention — The interaction window (§B of 2411.04990v2)
 
-* `Lemma lem:interaction`  — the two inequalities on the interaction scale
-  `β^{-1/2}` that the hypotheses of `thm: fixed_centers` ask of `h` and `g`;
-* `Remark rem:interaction` — the explicit `ε, c, β, N` window in which those
-  inequalities hold, so that only `β ≳ log N` is needed.
+`Lemma lem:interaction`: the two inequalities on the interaction scale
+`β^{-1/2}` that the hypotheses of `thm: fixed_centers` ask of `h` and `g`.
+The remark `rem:interaction`, which reads the lemma as an explicit window in
+`ε, c, β, N`, is in `Causal.InteractionRemark`.
 
 The functions themselves, and the Gaussian bounds the proof runs on, are in
 `Causal.Interaction` and `Causal.InteractionBounds`.
@@ -40,7 +40,8 @@ the latter entering only through `β s² = 1`.
 Each of the three points `bs`, `(b+1)s` and `εs` is confined by the
 hypotheses to the first arch of the sine, where the Gaussian sandwich of
 `Causal.InteractionBounds` applies: `h(bs) < e^{-5b²/12} bs` and
-`h(εs) > 0.99 εs`, while the hypothesis on `N` contributes `e^{3b²/8}` and
+`h(εs) > 0.99 εs`, while the hypothesis on `N` — non-strict, since each chain is already strict at its
+first step — contributes `e^{3b²/8}` and
 `e^{3b²/8 - 5b²/12} = e^{-b²/24} ≤ e^{-27/32} ≤ 1/2`.  For `g` the same
 sandwich gives `-g((b+1)s) < e^{-365(b+1)²/972}(b+1)²`, which `e^{3b²/8}`
 leaves below `e^{-365b/486} ≤ 71/(10b²)`, against `g(εs) > 0.9`.
@@ -49,7 +50,7 @@ Source: arXiv:2411.04990v2, §B, `lem:interaction`. -/
 theorem interaction_inequalities_core
     (N ε β b s : ℝ) (hε : 0 < ε) (hsmall : ε < 1 / 10) (hN : 0 < N)
     (hb : 9 / 2 ≤ b) (hβ : b ^ 2 / 2 ≤ β) (hs : 0 < s) (hs2 : β * s ^ 2 = 1)
-    (hNbound : N < Real.exp (3 * b ^ 2 / 8) * (ε / (b + 2 * ε))) :
+    (hNbound : N ≤ Real.exp (3 * b ^ 2 / 8) * (ε / (b + 2 * ε))) :
     N * h_pot β (b * s) < h_pot β (ε * s) ∧
       -(N * g_pot β ((b + 1) * s)) < g_pot β (ε * s) := by
   have hbpos : (0 : ℝ) < b := by linarith
@@ -111,9 +112,9 @@ theorem interaction_inequalities_core
       calc N * h_pot β (b * s)
           < N * (Real.exp (-(5 * b ^ 2 / 12)) * (b * s)) :=
             mul_lt_mul_of_pos_left hh1 hN
-        _ < Real.exp (3 * b ^ 2 / 8) * (ε / (b + 2 * ε))
+        _ ≤ Real.exp (3 * b ^ 2 / 8) * (ε / (b + 2 * ε))
               * (Real.exp (-(5 * b ^ 2 / 12)) * (b * s)) :=
-            mul_lt_mul_of_pos_right hNbound (by positivity)
+            mul_le_mul_of_nonneg_right hNbound (by positivity)
         _ = Real.exp (3 * b ^ 2 / 8) * Real.exp (-(5 * b ^ 2 / 12))
               * (ε / (b + 2 * ε) * b) * s := by ring
         _ = Real.exp (-(b ^ 2 / 24)) * (ε / (b + 2 * ε) * b) * s := by rw [hexp24]
@@ -187,9 +188,9 @@ theorem interaction_inequalities_core
           = N * -(g_pot β ((b + 1) * s)) := by ring
         _ < N * (Real.exp (-(365 / 972 * (b + 1) ^ 2)) * (b + 1) ^ 2) :=
             mul_lt_mul_of_pos_left hgauss hN
-        _ < Real.exp (3 * b ^ 2 / 8) * (ε / (b + 2 * ε))
+        _ ≤ Real.exp (3 * b ^ 2 / 8) * (ε / (b + 2 * ε))
               * (Real.exp (-(365 / 972 * (b + 1) ^ 2)) * (b + 1) ^ 2) :=
-            mul_lt_mul_of_pos_right hNbound (by positivity)
+            mul_le_mul_of_nonneg_right hNbound (by positivity)
         _ = ε / (b + 2 * ε) * (b + 1) ^ 2
               * (Real.exp (3 * b ^ 2 / 8) * Real.exp (-(365 / 972 * (b + 1) ^ 2))) := by
             ring
@@ -208,7 +209,7 @@ theorem interaction_inequalities_core
 `N = 1/100`, `ε = 1/20`, `β = 16`, `b = 9/2`, `s = 1/4`. -/
 example : ∃ N ε β b s : ℝ, 0 < ε ∧ ε < 1 / 10 ∧ 0 < N ∧ 9 / 2 ≤ b ∧
     b ^ 2 / 2 ≤ β ∧ 0 < s ∧ β * s ^ 2 = 1 ∧
-    N < Real.exp (3 * b ^ 2 / 8) * (ε / (b + 2 * ε)) := by
+    N ≤ Real.exp (3 * b ^ 2 / 8) * (ε / (b + 2 * ε)) := by
   refine ⟨1 / 100, 1 / 20, 16, 9 / 2, 1 / 4, by norm_num, by norm_num, by norm_num,
     le_rfl, by norm_num, by norm_num, by norm_num, ?_⟩
   have h := Real.add_one_le_exp (3 * (9 / 2 : ℝ) ^ 2 / 8)
@@ -260,7 +261,7 @@ theorem interaction_inequalities
       * (ε / (c - 1 - 2 * ε + 2 * ε)) := by
     rw [show c - 1 - 2 * ε + 2 * ε = c - 1 by ring]; exact hNbound
   rw [show c - 2 * ε = c - 1 - 2 * ε + 1 by ring]
-  exact interaction_inequalities_core N ε β _ _ hε hsmall hN hb hβ hs hs2 hNbound'
+  exact interaction_inequalities_core N ε β _ _ hε hsmall hN hb hβ hs hs2 hNbound'.le
 
 /-- The hypotheses of `interaction_inequalities` are satisfiable: the remark's
 own example with `ε` halved, `ε = 0.05`, `c = 6.5`, `β = 15`, `N = 1`.  Note
@@ -269,51 +270,6 @@ example :
     (0 : ℝ) < 0.05 ∧ (0.05 : ℝ) < 1 / 10 ∧ (0 : ℝ) < 1 ∧ (5.5 : ℝ) + 2 * 0.05 ≤ 6.5 ∧
       ((6.5 : ℝ) - 1 - 2 * 0.05) ^ 2 / 2 ≤ 15 ∧
       (1 : ℝ) < Real.exp (3 * ((6.5 : ℝ) - 1 - 2 * 0.05) ^ 2 / 8) * (0.05 / (6.5 - 1)) := by
-  refine ⟨by norm_num, by norm_num, one_pos, by norm_num, by norm_num, ?_⟩
-  have h1 : (3.6 : ℝ) ≤ Real.exp 2.6 := by
-    nlinarith [Real.add_one_le_exp (2.6 : ℝ)]
-  have h2 : Real.exp 10.4 = Real.exp 2.6 ^ 4 := by
-    rw [show (10.4 : ℝ) = (4 : ℕ) * 2.6 by norm_num, Real.exp_nat_mul]
-  have h3 : (167 : ℝ) ≤ Real.exp 10.4 := by
-    rw [h2]
-    have := pow_le_pow_left₀ (by norm_num : (0 : ℝ) ≤ 3.6) h1 4
-    norm_num at this
-    linarith
-  have h4 : Real.exp 10.4
-      ≤ Real.exp (3 * ((6.5 : ℝ) - 1 - 2 * 0.05) ^ 2 / 8) :=
-    Real.exp_le_exp.mpr (by norm_num)
-  nlinarith
-
-/-- **Remark (rem:interaction).** *An explicit window for `thm: fixed_centers`.*
-
-The hypotheses of `thm: fixed_centers` hold whenever
-
-  `ε < 0.1`,  `c ≥ 5.5 + 2ε`,  `β ≥ (c - 1 - 2ε)²/2`,
-  `N ≤ (ε / (c - 1)) e^{3(c-1-2ε)²/8}`,
-
-so that only `β ≳ log N` is needed.  This is `interaction_inequalities` read
-as a sufficient condition, with the strict bound on `N` relaxed to `≤`; the
-remark's own example is `ε = 0.1`, `c = 6.5`, `β ≥ 14`, `N ≤ 700`.
-
-Not proved here: `interaction_inequalities` bounds `-(N g)` and not `N g`, and
-the window's bound on `N` is the non-strict one.
-
-Source: arXiv:2411.04990v2, §B, `rem:interaction`. -/
-theorem interaction_window (N c ε β : ℝ) (hε : 0 < ε) (hsmall : ε < 0.1) (hN : 0 < N)
-    (hc : 5.5 + 2 * ε ≤ c) (hβ : (c - 1 - 2 * ε) ^ 2 / 2 ≤ β)
-    (hNbound : N ≤ (ε / (c - 1)) * Real.exp (3 * (c - 1 - 2 * ε) ^ 2 / 8)) :
-    N * h_pot β ((c - 1 - 2 * ε) * β ^ (-(1 / 2 : ℝ)))
-        < h_pot β (ε * β ^ (-(1 / 2 : ℝ))) ∧
-      N * g_pot β ((c - 2 * ε) * β ^ (-(1 / 2 : ℝ)))
-        < g_pot β (ε * β ^ (-(1 / 2 : ℝ))) := by
-  sorry
-
-/-- The hypotheses of `interaction_window` are satisfiable: the same example as
-for `interaction_inequalities`, `ε = 0.05`, `c = 6.5`, `β = 15`, `N = 1`. -/
-example :
-    (0 : ℝ) < 0.05 ∧ (0.05 : ℝ) < 0.1 ∧ (0 : ℝ) < 1 ∧ (5.5 : ℝ) + 2 * 0.05 ≤ 6.5 ∧
-      ((6.5 : ℝ) - 1 - 2 * 0.05) ^ 2 / 2 ≤ 15 ∧
-      (1 : ℝ) ≤ (0.05 / (6.5 - 1)) * Real.exp (3 * ((6.5 : ℝ) - 1 - 2 * 0.05) ^ 2 / 8) := by
   refine ⟨by norm_num, by norm_num, one_pos, by norm_num, by norm_num, ?_⟩
   have h1 : (3.6 : ℝ) ≤ Real.exp 2.6 := by
     nlinarith [Real.add_one_le_exp (2.6 : ℝ)]

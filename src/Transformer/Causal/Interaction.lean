@@ -21,6 +21,8 @@ proved there — is in `Causal.InteractionPeak`.
 import Transformer.Basic
 import Transformer.Causal.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
+import Mathlib.Analysis.Real.Pi.Bounds
 
 open scoped BigOperators
 open Real
@@ -79,6 +81,50 @@ theorem h_pot_nonneg (β : ℝ) {x : ℝ} (hx : x ∈ Set.Icc 0 Real.pi) :
 /-- The interval of `h_pot_nonneg` is inhabited: `0 ∈ [0, π]`. -/
 example : (0 : ℝ) ∈ Set.Icc 0 Real.pi :=
   ⟨le_rfl, Real.pi_pos.le⟩
+
+/-- **`g` is nonpositive past the interaction scale.**  On the first arch of
+the sine, `g(x) ≤ 0` as soon as `β x² ≥ 5`: for `x ≥ π/2` because `cos x ≤ 0`
+there, and for `x < π/2` because `sin x ≥ (2/π) x` there, so
+`β sin² x ≥ (4/π²) β x² ≥ 20/π² > 1 ≥ cos x`.
+
+The threshold is the crude one the argument gives, not a sharp one: the sign
+changes at the peak `τ_β^* < β^{-1/2}` of `h_pot_unimodal`, i.e. already at
+`β x² > 1`.  What it is for is `interaction_window`, which needs the sign of
+`g` at `(c - 2ε) β^{-1/2}` with `c - 2ε ≥ 5.5`.
+
+Source: arXiv:2411.04990v2, §B, `lemma:interaction` (3). -/
+theorem g_pot_nonpos (β x : ℝ) (hβ : 0 < β) (hx : 0 < x) (hxπ : x ≤ Real.pi)
+    (hbx : 5 ≤ β * x ^ 2) : g_pot β x ≤ 0 := by
+  have hpi0 : (0 : ℝ) < Real.pi := Real.pi_pos
+  have hpi : Real.pi < 4 := Real.pi_lt_four
+  have key : Real.cos x - β * Real.sin x ^ 2 ≤ 0 := by
+    rcases le_or_gt (Real.pi / 2) x with h | h
+    · have hcos : Real.cos x ≤ 0 :=
+        Real.cos_nonpos_of_pi_div_two_le_of_le h (by linarith)
+      nlinarith [sq_nonneg (Real.sin x)]
+    · have hlow : 2 / Real.pi * x ≤ Real.sin x := Real.mul_le_sin hx.le h.le
+      have h1 : 4 * x ^ 2 / Real.pi ^ 2 ≤ Real.sin x ^ 2 := by
+        have h := pow_le_pow_left₀ (by positivity : (0 : ℝ) ≤ 2 / Real.pi * x) hlow 2
+        calc 4 * x ^ 2 / Real.pi ^ 2 = (2 / Real.pi * x) ^ 2 := by field_simp; ring
+          _ ≤ Real.sin x ^ 2 := h
+      have h2 : β * (4 * x ^ 2 / Real.pi ^ 2) ≤ β * Real.sin x ^ 2 :=
+        mul_le_mul_of_nonneg_left h1 hβ.le
+      have h3 : 20 / Real.pi ^ 2 ≤ β * (4 * x ^ 2 / Real.pi ^ 2) := by
+        have e : β * (4 * x ^ 2 / Real.pi ^ 2) = 4 * (β * x ^ 2) / Real.pi ^ 2 := by ring
+        rw [e]
+        gcongr
+        linarith
+      have h4 : (1 : ℝ) < 20 / Real.pi ^ 2 := by
+        rw [lt_div_iff₀ (by positivity)]
+        nlinarith
+      nlinarith [Real.cos_le_one x]
+  have hexp := Real.exp_pos (β * (Real.cos x - 1))
+  unfold g_pot
+  nlinarith
+
+/-- The hypotheses of `g_pot_nonpos` are satisfiable: `β = 5`, `x = 1`. -/
+example : (0 : ℝ) < 5 ∧ (0 : ℝ) < 1 ∧ (1 : ℝ) ≤ Real.pi ∧ (5 : ℝ) ≤ 5 * 1 ^ 2 :=
+  ⟨by norm_num, by norm_num, by linarith [Real.pi_gt_three], by norm_num⟩
 
 end Causal
 end Transformer
