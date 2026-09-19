@@ -190,17 +190,24 @@ lemma PL_borjan
 inside a cluster the largest partial derivative of the angular energy is
 controlled by the two at the ends of the cluster, `θ_1` and `θ_r`.
 
-A `Prop`-valued definition and not a lemma: the claim is proved in the paper
-by a monotonicity argument along the cluster that is not formalized here.
-The partial derivative is `angularGrad`, which `hasDerivAt_angularEβ` proves
-to be one.  Source: arXiv:2410.06833v1, §3.2, `claim: 1`. -/
-def Claim1
+The paper proves it by a monotonicity argument along the cluster that is not
+formalized here.  The partial derivative is `angularGrad`, which
+`hasDerivAt_angularEβ` proves to be one.
+
+Not proved here.
+
+Source: arXiv:2410.06833v1, §3.2, `claim: 1`. -/
+theorem claim_one
     (n : ℕ) (β : ℝ) (Θ : Idx n → ℝ) (r : ℕ)
-    (h0 : 0 < n) (hr1 : 1 ≤ r) (hrn : r ≤ n) : Prop :=
-  1 < β →
+    (h0 : 0 < n) (hr1 : 1 ≤ r) (hrn : r ≤ n) (hβ : 1 < β) :
     ∀ l : Idx n, |angularGrad n β Θ l|
       ≤ (Real.exp 1 / 2)
-        * max |angularGrad n β Θ ⟨0, h0⟩| |angularGrad n β Θ ⟨r - 1, by omega⟩|
+        * max |angularGrad n β Θ ⟨0, h0⟩| |angularGrad n β Θ ⟨r - 1, by omega⟩| := by
+  sorry
+
+/-- The hypotheses of `claim_one` are satisfiable: one angle, `r = 1`,
+`β = 2`. -/
+example : 0 < 1 ∧ 1 ≤ 1 ∧ 1 ≤ 1 ∧ (1 : ℝ) < 2 := by norm_num
 
 /-- **Corollary (eq: otto.attention).**
 
@@ -210,22 +217,31 @@ with `δ = e^{-λ β / 2}`: the angular energy along the flow approaches, at the
 exponential rate of `otto_reznikoff`, that of a point of the slow manifold,
 up to `C_ε e^{-λ β / 2}`.
 
-A `Prop`-valued definition and not a theorem: it is `otto_reznikoff` applied
-to `𝖤_β` on `𝕋^n`, and both that theorem and the verification of (H1), (H2)
-for `𝖤_β` — which is `PL_borjan` — are `sorry` here.  Source:
-arXiv:2410.06833v1, §3.2, `eq: otto.attention`. -/
-def OttoAttention
-    (n : ℕ) (α β τ lam : ℝ) (Θ : Idx n → ℝ) (k : ℕ) (ω : Idx k → ℝ) : Prop :=
-  1 < β → isSeparatedAngles n α β τ Θ →
-  ∀ ε : ℝ, 0 < ε → ε < 1 →
-    ∃ Cε : ℝ, 0 < Cε ∧
-      ∀ U : ℝ → Idx n → ℝ, ∀ V : ℝ → Idx n → ℝ,
-        (∀ t : ℝ, V t ∈ slowManifold n β τ lam k ω) →
-        ∀ t : ℝ, 0 ≤ t →
-          Real.sqrt (angularEβ n β (U t) - angularEβ n β (V t))
-            ≤ Real.exp (-(1 - ε) * t)
-                * Real.sqrt (angularEβ n β (U 0) - angularEβ n β (V 0))
-              + Cε * Real.exp (-(lam * β / 2))
+Not proved here: it is `otto_reznikoff` applied to `𝖤_β` on `𝕋^n`, and both
+that theorem and the verification of (H1), (H2) for `𝖤_β` — which is
+`PL_borjan` — are `sorry` here.
+
+Source: arXiv:2410.06833v1, §3.2, `eq: otto.attention`. -/
+theorem otto_attention
+    (n : ℕ) (α β τ lam : ℝ) (Θ : Idx n → ℝ) (k : ℕ) (ω : Idx k → ℝ)
+    (hβ : 1 < β) :
+    isSeparatedAngles n α β τ Θ →
+    ∀ ε : ℝ, 0 < ε → ε < 1 →
+      ∃ Cε : ℝ, 0 < Cε ∧
+        ∀ U : ℝ → Idx n → ℝ, ∀ V : ℝ → Idx n → ℝ,
+          (∀ t : ℝ, V t ∈ slowManifold n β τ lam k ω) →
+          ∀ t : ℝ, 0 ≤ t →
+            Real.sqrt (angularEβ n β (U t) - angularEβ n β (V t))
+              ≤ Real.exp (-(1 - ε) * t)
+                  * Real.sqrt (angularEβ n β (U 0) - angularEβ n β (V 0))
+                + Cε * Real.exp (-(lam * β / 2)) := by
+  sorry
+
+/-- The hypothesis of `otto_attention` is satisfiable: `β = 2`.  The
+separation of `Θ` stays inside the statement — `isSeparatedAngles` carries
+`γ(β) > 0`, which ties `α`, `τ` and `β` together, and no configuration
+meeting it is built in this file. -/
+example : (1 : ℝ) < 2 := by norm_num
 
 /-! ### §3.3 — Acceleration of the gradient between metastable states -/
 
