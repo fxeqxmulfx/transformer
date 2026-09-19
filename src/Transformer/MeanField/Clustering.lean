@@ -7,8 +7,8 @@
 * `Theorem thm: mfclust`            — mean-field exponential rate for small
                                        `β` (Chen–Lin–Pol 2025).
 
-`Theorem thm: cone-collapse` is `Perspective.hemisphere_clustering` verbatim
-and is not restated here.
+`Theorem thm: cone-collapse` is `Perspective.hemisphere_clustering`
+(in `Perspective.Section5_ConeCollapse`) verbatim and is not restated here.
 
 Two of the three statements name objects this development does not construct —
 the uniform measure on `(𝕊^{d-1})^n` and the Wasserstein distance `W₂`, which
@@ -78,9 +78,10 @@ because a vector of the span orthogonal to every `x_i` is orthogonal to itself;
 the span has dimension `n`, so the map is onto, and the preimage of the
 all-ones vector is the required `w` up to normalization.
 
-This is the hypothesis of `Perspective.hemisphere_clustering`, so `cor: d-ge-n`
-follows from it together with the fact that `n` i.i.d. uniform points in
-dimension `d ≥ n` are almost surely independent — which is not formalized.
+This is the hypothesis `thm: cone-collapse` runs on — the one steps 1 and 2 of
+`Perspective.hemisphere_clustering` consume — so `cor: d-ge-n` follows from it
+together with the fact that `n` i.i.d. uniform points in dimension `d ≥ n` are
+almost surely independent, which is not formalized.
 Source: arXiv:2512.01868v4, §4. -/
 theorem exists_common_hemisphere_of_linearIndependent
     (X : Idx n → EucSpace d) (hX : LinearIndependent ℝ X) (hn : 1 ≤ n) :

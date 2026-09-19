@@ -24,6 +24,7 @@ import Transformer.Perspective.Section3_Gronwall
 import Transformer.Perspective.Section4_LargeBeta
 import Transformer.Perspective.MinCurve
 import Transformer.Perspective.Section5_HighD
+import Transformer.Perspective.Section5_ConeCollapse
 import Transformer.Perspective.Section5_Hemisphere
 import Transformer.Perspective.Section5_Exceptional
 import Transformer.Perspective.Section5_HighDCurve

@@ -9,17 +9,18 @@ This file formalizes §6 of the survey:
 * `Theorem thm: boumal`            — clustering for `d ≥ 3`, any `β ≥ 0`,
 * `Theorem thm: d.infty`           — exponential rate when `d ≥ n`,
 * `eq: expconvtocons`              — explicit convergence rate,
-* `Lemma lem: hemisphere.clustering`  — *cone collapse*,
 * `eq: therighthandside`, `eq: qual.conv`,
 * `e:dotalpha.step2`,
 * `e:mineqalpha.step2`, `e:diffineqalpha.step2`,
 * `Theorem r:wendel` — Wendel's hemisphere probability,
 * `Theorem r:wendel` — Wendel's hemisphere probability.
 
-Steps 1 and 2 of `lem: hemisphere.clustering` — that `min_i ⟨x_i(t), w⟩` does
-not decrease, and the decomposition `e:decompox*.step2` of `x⋆` along the
-particles — are `Perspective.Section5_Hemisphere`, which needs the one-sided
-calculus of `Perspective.MinCurve`.
+`Lemma lem: hemisphere.clustering` — *cone collapse* — is
+`Perspective.Section5_ConeCollapse`, where it is proved from the two steps of
+its own proof.  Steps 1 and 2 — that `min_i ⟨x_i(t), w⟩` does not decrease, and
+the decomposition `e:decompox*.step2` of `x⋆` along the particles — are
+`Perspective.Section5_Hemisphere`, which needs the one-sided calculus of
+`Perspective.MinCurve`.
 
 §6.2 (`thm: orthogonal`, `eq: ybeta`, `thm: phase.transition.curve`) and §6.3
 (the phase-transition curve) are in `Perspective.Section5_HighDCurve`; the
@@ -138,28 +139,6 @@ theorem d_infty_exponential
 `β = 1`. -/
 example : 1 ≤ 1 ∧ (0 : ℝ) < 1 ∧ 1 ≤ 1 := ⟨le_rfl, one_pos, le_rfl⟩
 
-/-- **Lemma (lem: hemisphere.clustering) — *Cone collapse.*
-
-Let `β > 0` and `(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n` be such that there exists
-`w ∈ 𝕊^{d-1}` with `⟨x_i(0), w⟩ > 0` for all `i`.  Then the unique solution
-of `SA` (or `USA`) converges exponentially to a common point `x⋆`:
-
-  `‖x_i(t) - x⋆‖ ≤ C e^{-λ t}`.
-
-The same conclusion holds for `eq: transformerSd.QKV` with `V = I_d` and
-arbitrary `d × d` matrices `Q, K`. -/
-lemma hemisphere_clustering
-    (β : ℝ) (hβ : 0 < β)
-    (X₀ : SphereTuple d n)
-    (hX₀ : ∃ w : SSphere d, ∀ i : Idx n,
-              0 < inner (𝕜 := ℝ) ((X₀ i : EucSpace d)) ((w : EucSpace d))) :
-    ∃ (x_star : SSphere d) (C lam : ℝ),
-      0 < C ∧ 0 < lam ∧
-      ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
-        ∀ i : Idx n, ∀ t : ℝ, 0 ≤ t →
-          ‖((X t i : EucSpace d)) - x_star‖ ≤ C * Real.exp (-(lam * t)) := by
-  sorry
-
 /-- `r t = min_i ⟨x_i(t), w⟩`, the smallest coordinate of the configuration
 along a fixed direction `w`, written as a specification: `r t` is a lower
 bound for every `i`, and it is attained.
@@ -248,7 +227,9 @@ bound, and is attained) rather than as a `Finset.inf'`, so that no nonemptiness
 witness for `Idx n` has to be carried through the statement.
 
 Not proved here: the inequality is step 2 of the proof of
-`lem: hemisphere.clustering`, which is a `sorry` too.
+`lem: hemisphere.clustering`, and it is what
+`Perspective.Section5_ConeCollapse.hemisphere_clustering` carries as a
+hypothesis.
 
 Source: arXiv:2312.10794v5, §6.1, `e:diffineqalpha.step2`. -/
 theorem step2_alpha_diff_ineq
