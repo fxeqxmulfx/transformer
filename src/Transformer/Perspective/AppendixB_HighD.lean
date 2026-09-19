@@ -9,8 +9,11 @@ The part of Appendix B that runs on `(𝕊^{d-1})^n` rather than on the torus:
 * `eq: claim.yury`   — the sub-block inequality in dimension `d`,
 * `eq: dr1`          — the skew-symmetric perturbation inequality,
 * `e:Hessianincoord` — the Hessian at a critical point is intrinsic,
-* `eq: metric.grad`, `eq: metric.hess` — the modified metric of §3.4 costs
-                        `O(β)` against the round one.
+* `eq: metric.hess`  — the modified metric of §3.4 costs `O(β)` against the
+                        round one, at second order.
+
+Its first-order half, `eq: metric.grad`, is proved in
+`Perspective.AppendixB_MetricGrad`, which is built on this file.
 
 The energy is `Perspective.particleEnergy` at `V = Id`; the skew-symmetric
 perturbations and `𝖤_0` come from `Perspective.AppendixA_Saddle`.
@@ -132,36 +135,12 @@ theorem hessian_at_critical_intrinsic
     c = c' := by
   sorry
 
-/-- **Equation (eq: metric.grad).** *The modified metric costs `O(β)`.*
-
-  `g_β(∇_{g_β} 𝖤_β(x), v) = g(∇_g 𝖤_0(x), v) + O(β)`.
-
-Both sides are directional derivatives: the left one of `𝖤_β` and the right
-one of `𝖤_0`, along a curve with velocity `v`.  The factor `n/2` is the
-difference of normalisations, `𝖤_0 = n⁻¹ Σ_i Σ_j ⟨x_i, x_j⟩` against
-`𝖤_β = (2β)⁻¹ Σ_i Σ_j e^{β ⟨x_i, x_j⟩}`, whose `β → 0` derivative is
-`Σ_i Σ_j ⟨v_i, x_j⟩`.
-
-Not proved here: the expansion in `β` is not carried out.
-
-Source: arXiv:2312.10794v5, Appendix B, `eq: metric.grad`. -/
-theorem metric_grad_comparison
-    (X : SphereTuple d n) (v : Idx n → EucSpace d) :
-    ∃ C : ℝ, 0 < C ∧
-      ∀ Y : ℝ → SphereTuple d n, Y 0 = X →
-        (∀ i : Idx n, HasDerivAt (fun s => (Y s i : EucSpace d)) (v i) 0) →
-        ∀ c₀ : ℝ, HasDerivAt (fun s => E0 d n (Y s)) c₀ 0 →
-          ∀ β : ℝ, 0 < β → β ≤ 1 →
-            ∀ cβ : ℝ, HasDerivAt (fun s => selfEnergy d n β (Y s)) cβ 0 →
-              |cβ - ((n : ℝ) / 2) * c₀| ≤ C * β := by
-  sorry
-
 /-- **Equation (eq: metric.hess).** *Comparison of Hessians.*
 
   `Hess_{g_β} 𝖤_β(x)[v] = Hess_g 𝖤_0(x)[v] + O(β)`,
 
 along the same block rotation, and with the same normalisation factor as in
-`metric_grad_comparison`.  Together with `hessian_at_critical_intrinsic` this
+`Perspective.metric_grad_comparison` (`Perspective.AppendixB_MetricGrad`).  Together with `hessian_at_critical_intrinsic` this
 is what transports the `β = 0` saddle analysis of Appendix A to small `β > 0`.
 
 Not proved here: the expansion in `β` is not carried out.
