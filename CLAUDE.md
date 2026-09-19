@@ -15,8 +15,7 @@
 
 ## Layout
 
-`src/` Lean (lakefile `srcDir`) · `reference/` Python, not built ·
-`papers/`, `transformer-vm/` gitignored.
+`src/` Lean (lakefile `srcDir`) · `papers/`, `transformer-vm/` gitignored.
 
 Paper formalizations mirror the manuscript (`Section*_*.lean`). Everything else:
 subject dir layered **by import depth, never by declaration kind** —
