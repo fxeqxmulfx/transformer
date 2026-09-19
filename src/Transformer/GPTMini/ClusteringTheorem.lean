@@ -18,8 +18,8 @@ The chain of bridges that is supposed to prove it:
   7. `Normalization.Convergence`  — Pre-LN clustering.
 
 None of the three statements below is proved here, and each rests on
-`sorry`-leaves of the papers it composes, so each is a `Prop`-valued
-definition.  Three things are worth reading off them before they are used.
+`sorry`-leaves of the papers it composes.  Three things are worth reading off
+them before they are used.
 
 *The layer dynamics are the Pre-LN residual recursion of one head*, written
 out in `PreLNHead`: the sub-layer reads `rmsNormEps` of the stream and its
@@ -34,11 +34,11 @@ is stated is the depth behaviour of the attention recursion, not of
 of `Section5_HighD` is exponential in the time of the continuous dynamics, and
 under Pre-LN the layer index is not that time: the residual stream grows while
 the sub-layer output stays bounded, so the direction moves less and less.
-`LayerClustering` therefore states convergence only, and the quantitative
-`PolynomialRate` states the `1/L³` of `thm: preln-slow`.
+`layer_clustering` therefore states convergence only, and the quantitative
+`polynomial_rate` states the `1/L³` of `thm: preln-slow`.
 
 *`W₂` is a parameter* — Mathlib has no Wasserstein distance — and the
-mean-field limit `n → ∞` is not taken: `MeanFieldClustering` is the finite-`T`
+mean-field limit `n → ∞` is not taken: `mean_field_clustering` is the finite-`T`
 statement that the empirical distribution of the directions converges to a
 Dirac, the limit in `T` not being expressible at a fixed `Fin T`.
 -/
@@ -86,17 +86,25 @@ as the depth `L` grows, to one common point `x_∞` of the unit sphere.
 The stream is assumed to stay away from the origin, where the direction map
 `Bridge.toSphere` is not defined.
 
+Not proved here.
+
 Source: arXiv:2411.04990v2, §4 (`thm1`), through the bridges listed in the
 module docstring. -/
-def LayerClustering (T : ℕ) : Prop :=
-  3 ≤ cfg.head_dim →
-  ∀ (alpha eps : ℝ) (positions : Fin T → ℝ), 0 < eps →
+theorem layer_clustering {T : ℕ} (hd : 3 ≤ cfg.head_dim)
+    (alpha eps : ℝ) (positions : Fin T → ℝ) (heps : 0 < eps) :
     ∀ᵐ x₀ : Fin T → EucSpace cfg.head_dim, ∀ x : ℕ → Fin T → EucSpace cfg.head_dim,
       x 0 = x₀ → PreLNHead cfg alpha eps positions x → (∀ (L : ℕ) (i : Fin T), x L i ≠ 0) →
         ∃ xinf : EucSpace cfg.head_dim, ‖xinf‖ = 1 ∧
           ∀ i : Fin T,
             Filter.Tendsto (fun L : ℕ => Bridge.toSphere cfg.head_dim (x L i))
-              Filter.atTop (nhds xinf)
+              Filter.atTop (nhds xinf) := by
+  sorry
+
+/-- The hypotheses of `layer_clustering` are satisfiable: the default
+`gpt-mini` config has `d_head = 768 / 12 = 64`. -/
+example : 3 ≤ Config.default.head_dim ∧ (0 : ℝ) < 1 := by
+  refine ⟨?_, one_pos⟩
+  norm_num [Config.head_dim, Config.default]
 
 /-- **Mean-field form of the same conclusion.**
 
@@ -108,12 +116,13 @@ converges to `δ_{x_∞}` in the Wasserstein distance `W₂`, which is a paramet
 Mathlib has no Wasserstein distance, and nothing below constrains `W₂` to be
 one, so the statement is only as strong as the `W₂` it is applied to.
 
+Not proved here.
+
 Source: arXiv:2512.01868v4, §2 (mean-field clustering). -/
-def MeanFieldClustering
+theorem mean_field_clustering
     (W₂ : Measure (EucSpace cfg.head_dim) → Measure (EucSpace cfg.head_dim) → ℝ)
-    (T : ℕ) : Prop :=
-  3 ≤ cfg.head_dim → 0 < T →
-  ∀ (alpha eps : ℝ) (positions : Fin T → ℝ), 0 < eps →
+    {T : ℕ} (hd : 3 ≤ cfg.head_dim) (hT : 0 < T)
+    (alpha eps : ℝ) (positions : Fin T → ℝ) (heps : 0 < eps) :
     ∀ᵐ x₀ : Fin T → EucSpace cfg.head_dim, ∀ x : ℕ → Fin T → EucSpace cfg.head_dim,
       x 0 = x₀ → PreLNHead cfg alpha eps positions x → (∀ (L : ℕ) (i : Fin T), x L i ≠ 0) →
         ∃ xinf : EucSpace cfg.head_dim, ‖xinf‖ = 1 ∧
@@ -122,7 +131,14 @@ def MeanFieldClustering
               W₂ (((T : ℝ)⁻¹).toNNReal •
                   ∑ i : Fin T, Measure.dirac (Bridge.toSphere cfg.head_dim (x L i)))
                 (Measure.dirac xinf))
-            Filter.atTop (nhds (0 : ℝ))
+            Filter.atTop (nhds (0 : ℝ)) := by
+  sorry
+
+/-- The hypotheses of `mean_field_clustering` are satisfiable: the default
+config and one token. -/
+example : 3 ≤ Config.default.head_dim ∧ 0 < 1 ∧ (0 : ℝ) < 1 := by
+  refine ⟨?_, one_pos, one_pos⟩
+  norm_num [Config.head_dim, Config.default]
 
 /-- **The depth rate under Pre-LN is polynomial.**
 
@@ -136,17 +152,25 @@ with `C` depending on `A` alone — the quantifier order is what says so, since
 the exponential rate of the Post-LN scheme of arXiv:2312.10794v5, and it is
 the Pre-LN scheme that `gpt-mini` uses.
 
+Not proved here.
+
 Source: arXiv:2510.22026v2, `thm: preln-slow`. -/
-def PolynomialRate (A : ℝ) (T : ℕ) : Prop :=
-  3 ≤ cfg.head_dim → 0 ≤ A →
-  ∃ C : ℝ, 0 < C ∧
+theorem polynomial_rate (A : ℝ) {T : ℕ} (hd : 3 ≤ cfg.head_dim) (hA : 0 ≤ A) :
+    ∃ C : ℝ, 0 < C ∧
     ∀ (alpha eps : ℝ) (positions : Fin T → ℝ), |alpha| ≤ A → 0 < eps →
       ∀ᵐ x₀ : Fin T → EucSpace cfg.head_dim, ∀ x : ℕ → Fin T → EucSpace cfg.head_dim,
         x 0 = x₀ → PreLNHead cfg alpha eps positions x →
         (∀ (L : ℕ) (i : Fin T), x L i ≠ 0) →
           ∃ xinf : EucSpace cfg.head_dim, ‖xinf‖ = 1 ∧
             ∀ (L : ℕ), 1 ≤ L → ∀ i : Fin T,
-              ‖Bridge.toSphere cfg.head_dim (x L i) - xinf‖ ≤ C / (L : ℝ) ^ 3
+              ‖Bridge.toSphere cfg.head_dim (x L i) - xinf‖ ≤ C / (L : ℝ) ^ 3 := by
+  sorry
+
+/-- The hypotheses of `polynomial_rate` are satisfiable: the default config and
+`A = 0`, which is the zero-temperature head. -/
+example : 3 ≤ Config.default.head_dim ∧ (0 : ℝ) ≤ 0 := by
+  refine ⟨?_, le_rfl⟩
+  norm_num [Config.head_dim, Config.default]
 
 end GPTMini
 end Transformer

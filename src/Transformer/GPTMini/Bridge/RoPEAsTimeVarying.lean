@@ -14,12 +14,12 @@ generality, and this file exhibits it as one:
     the attention score of two tokens is a function of their *relative*
     position only.
 
-`RoPEClustering` is the statement that the resulting RoPE-attention dynamics
-cluster.  It is a `Prop`-valued definition, not a theorem: it is *not* a
-corollary of `Perspective.boumal_clustering`, which is stated for the
-simplified model `Q = K = V = I_d` (and is itself a `sorry`), whereas here
-`Q, K` are arbitrary and time-varying.  What this file proves is the
-parametrization, not the clustering.
+`rope_clustering` is the statement that the resulting RoPE-attention dynamics
+cluster, and it is not proved: it is *not* a corollary of
+`Perspective.boumal_clustering`, which is stated for the simplified model
+`Q = K = V = I_d` (and is itself a `sorry`), whereas here `Q, K` are arbitrary
+and time-varying.  What this file proves is the parametrization, not the
+clustering.
 -/
 
 import Transformer.Basic
@@ -115,11 +115,11 @@ Not proved here, and not a corollary of `Perspective.boumal_clustering`,
 which covers `Q = K = V = I_d` only; the missing ingredient is the
 time-varying analogue of its argument.  Source: arXiv:2312.10794v5, §6
 (`thm: main.d.geq.3`), through `Perspective.Section5_HighD`. -/
-def RoPEClustering
+theorem rope_clustering
     (cfg : Config) (n : ℕ)
-    (Q K : ParamMatrix cfg.head_dim) (theta beta : ℝ) : Prop :=
-  3 ≤ cfg.head_dim → 2 ≤ n → 0 ≤ beta →
-  ∀ X₀ : SphereTuple cfg.head_dim n,
+    (Q K : ParamMatrix cfg.head_dim) (theta beta : ℝ)
+    (hd : 3 ≤ cfg.head_dim) (hn : 2 ≤ n) (hbeta : 0 ≤ beta) :
+    ∀ X₀ : SphereTuple cfg.head_dim n,
     ∃ x_star : SSphere cfg.head_dim,
       ∀ X : ℝ → SphereTuple cfg.head_dim n, X 0 = X₀ →
         Perspective.transformerODE cfg.head_dim n beta
@@ -127,7 +127,14 @@ def RoPEClustering
           (fun _ => ContinuousLinearMap.id ℝ (EucSpace cfg.head_dim)) X →
         ∀ i : Idx n,
           Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace cfg.head_dim) - x_star))
-            Filter.atTop (nhds 0)
+            Filter.atTop (nhds 0) := by
+  sorry
+
+/-- The hypotheses of `rope_clustering` are satisfiable: the default
+`gpt-mini` config has `d_head = 768 / 12 = 64`, and `n = 2`, `β = 0`. -/
+example : 3 ≤ Config.default.head_dim ∧ 2 ≤ 2 ∧ (0 : ℝ) ≤ 0 := by
+  refine ⟨?_, le_rfl, le_rfl⟩
+  norm_num [Config.head_dim, Config.default]
 
 end Bridge
 end GPTMini
