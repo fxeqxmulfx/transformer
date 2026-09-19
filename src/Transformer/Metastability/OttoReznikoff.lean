@@ -13,7 +13,8 @@ Equations and statements covered:
   the gradient the paper assumes, and refutes the form that leaves them free,
 * `Lemma lem: PL.borjan`    — PL inequality for `𝖤_β` on `𝕋^n`,
 * `eq: tau.small`, `eq: cond.sine`, `eq: Ht.first.lb`, `eq: Ht.second.lb`,
-  `eq: Ht.third.lb`, `Claim claim: 1`,
+* `eq: Ht.third.lb`, `Claim claim: 1` — refuted in the form that leaves the
+  cluster free, by `not_forall_claim_one`,
 * `Lemma lem: quantitative inequality` — in
   `Transformer.Metastability.QuantitativeInequality`, which proves it with the
   sign and the constant its argument supports,
@@ -156,32 +157,53 @@ lemma PL_borjan
       ≤ (1 / (2 * κ)) * ∑ i : Idx n, (angularGrad n β Θ i)^2 := by
   sorry
 
-/-- **Claim (claim: 1).**
+/-- **Claim (claim: 1) is false in the form it was carried here.**
+
+The paper's claim is
 
   `max_ℓ |∂_{θ_ℓ} 𝖤_β(Θ)|
-     ≤ (e/2) max{ |∂_{θ_1} 𝖤_β(Θ)|, |∂_{θ_r} 𝖤_β(Θ)| }`:
+     ≤ (e/2) max{ |∂_{θ_1} 𝖤_β(Θ)|, |∂_{θ_r} 𝖤_β(Θ)| }`,
 
-inside a cluster the largest partial derivative of the angular energy is
-controlled by the two at the ends of the cluster, `θ_1` and `θ_r`.
+and it is stated about *one cluster*: `θ_1, …, θ_r` are the particles of a
+single spherical cap `𝒮_q(2τ)`, **relabelled so that `θ_1 < ⋯ < θ_r`**, at a
+configuration `Θ ∉ 𝒩_β` off the slow manifold.  Its proof uses all of that —
+the ordering, to compare `sin(θ_k - θ_j)` with `sin(θ_k - θ_1)`; the cap, for
+`|sin(θ_j - θ_i)| ≤ β^{-1/2}`; and `Θ ∉ 𝒩_β`, for the final absorption of
+`(1 + β) e^{-(1-α)β}`.
 
-The paper proves it by a monotonicity argument along the cluster that is not
-formalized here.  The partial derivative is `angularGrad`, which
-`hasDerivAt_angularEβ` proves to be one.
+Carried into Lean with `Θ` and `r` free, the claim asserts that for *every*
+configuration of angles the `ℓ`-th partial derivative is controlled by those
+at the indices `0` and `r - 1`, and that is false.  Take `n = 3`, `β = 2`,
+`r = 1` and `Θ = (0, π/2, -π/2)`: the two neighbours of `θ_0` are symmetric
+about it, so `∂_{θ_0} 𝖤_β(Θ) = 0` and the right-hand side vanishes, while
 
-Not proved here.
+  `∂_{θ_1} 𝖤_β(Θ) = -(1/9) e^{-2} ≠ 0`.
 
-Source: arXiv:2410.06833v1, §3.2, `claim: 1`. -/
-theorem claim_one
-    (n : ℕ) (β : ℝ) (Θ : Idx n → ℝ) (r : ℕ)
-    (h0 : 0 < n) (hr1 : 1 ≤ r) (hrn : r ≤ n) (hβ : 1 < β) :
-    ∀ l : Idx n, |angularGrad n β Θ l|
-      ≤ (Real.exp 1 / 2)
-        * max |angularGrad n β Θ ⟨0, h0⟩| |angularGrad n β Θ ⟨r - 1, by omega⟩| := by
-  sorry
+None of the cluster structure is present in this file — `θ_1 < ⋯ < θ_r` in
+particular is a relabelling of the particles of `𝒮_q(2τ)`, which is not
+constructed here — so the claim is recorded as refuted in the form it was
+stated, and not restated.
 
-/-- The hypotheses of `claim_one` are satisfiable: one angle, `r = 1`,
-`β = 2`. -/
-example : 0 < 1 ∧ 1 ≤ 1 ∧ 1 ≤ 1 ∧ (1 : ℝ) < 2 := by norm_num
+Source: arXiv:2410.06833v1, §3.2, `claim: 1`, `eq: Ht.third.lb`. -/
+theorem not_forall_claim_one :
+    ¬ ∀ (n : ℕ) (β : ℝ) (Θ : Idx n → ℝ) (r : ℕ)
+        (h0 : 0 < n) (hr1 : 1 ≤ r) (hrn : r ≤ n), 1 < β →
+        ∀ l : Idx n, |angularGrad n β Θ l|
+          ≤ (Real.exp 1 / 2)
+            * max |angularGrad n β Θ ⟨0, h0⟩|
+                  |angularGrad n β Θ ⟨r - 1, by omega⟩| := by
+  intro h
+  have hbad := h 3 2 ![0, Real.pi/2, -(Real.pi/2)] 1 (by norm_num) le_rfl
+    (by norm_num) (by norm_num) 1
+  rw [show (⟨0, by norm_num⟩ : Idx 3) = 1 - 1 from rfl] at hbad
+  simp only [angularGrad, Fin.sum_univ_three, Matrix.cons_val_zero,
+    Matrix.cons_val_one, Matrix.head_cons, Matrix.cons_val_two, Matrix.tail_cons,
+    sub_zero, zero_sub, sub_self, sub_neg_eq_add] at hbad
+  norm_num [Real.sin_pi_div_two, Real.cos_pi_div_two, Real.sin_neg,
+    Real.cos_neg, show Real.pi/2 + Real.pi/2 = Real.pi by ring,
+    Real.sin_pi, Real.cos_pi] at hbad
+  have hpos : (0 : ℝ) < Real.exp (-2) := Real.exp_pos _
+  linarith
 
 /-- **Corollary (eq: otto.attention).**
 
