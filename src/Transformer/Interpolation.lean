@@ -9,6 +9,7 @@ import Transformer.Interpolation.Clustering
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.IdentityFlow
 import Transformer.Interpolation.NeuralODE
+import Transformer.Interpolation.Settling
 import Transformer.Interpolation.Main
 import Transformer.Interpolation.BallTransport
 import Transformer.Interpolation.MassConcentration

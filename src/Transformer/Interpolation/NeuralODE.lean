@@ -6,8 +6,8 @@ Formalization of §4 of arXiv:2411.04551v3:
 * `eq: neural.ode.sphere`              — neural-ODE-only flow on the sphere,
 * `Proposition prop: interpolation.neural.ode`,
 * `Proposition lem: induction.neural.ode`,
-* `eq: estimate.neural`, `eq: Hartman.Grobman` — exponential convergence
-                                                 of perceptron-only flow,
+* `eq: estimate.neural` — the exponential convergence of the perceptron-only
+  flow, `eq: Hartman.Grobman`, is `Transformer.Interpolation.Settling`,
 * `eq: sphere.separation`, `eq: geodesic.toll`, `eq: identity.flow.symm`.
 -/
 
@@ -119,19 +119,14 @@ example :
   ⟨le_rfl, one_pos, by simp, fun _ _ => rfl,
     fun i hi => absurd (Subsingleton.elim i (Fin.last 0)) hi, one_pos⟩
 
-/-- **Equation (eq: Hartman.Grobman).** Exponential settling near the
-attractor:
+/-! ### `eq: Hartman.Grobman`
 
-  `d_g(x(t), ω_+) ≤ K e^{-λ t}`  for `t ≥ 0`,
-with `λ > 0`, `K ≥ 1` depending only on `x_0`, `ε`, `γ`. -/
-theorem Hartman_Grobman
-    (γ ω_plus : SSphere d) (ε : ℝ) (hε : 0 < ε)
-    (x : ℝ → SSphere d) :
-    ∃ (K lam : ℝ), 1 ≤ K ∧ 0 < lam ∧
-      ∀ t : ℝ, 0 ≤ t →
-        ‖((x t : EucSpace d)) - ((ω_plus : EucSpace d))‖
-          ≤ K * Real.exp (-(lam * t)) := by
-  sorry
+The exponential settling of the perceptron-only flow onto its attractor is
+`Transformer.Interpolation.Hartman_Grobman`, in
+`Transformer.Interpolation.Settling`, together with the Gronwall estimate it
+rests on and the refutation of the form it had here — which quantified over
+every path on the sphere, and was false.
+-/
 
 end Interpolation
 end Transformer
