@@ -23,6 +23,7 @@ import Mathlib.Analysis.Calculus.Deriv.Comp
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Transformer.Perspective.Section2_FlowMap
+import Transformer.Perspective.PartitionGradient
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -40,15 +41,16 @@ variable (d n : ℕ)
 
 since `∇_x log Z_{β,μ}(x) = β Z_{β,μ}(x)⁻¹ ∫ exp(β ⟨x,y⟩) y dμ(y)`.
 
-Not proved here: differentiating `partitionMu` under the integral sign is not
-formalized.
+The differentiation under the integral sign is
+`Perspective.gradient_log_partitionMu`.
 
 Source: arXiv:2312.10794v5, §3.3, `eq: logder`. -/
 theorem vectorField_eq_grad_log (β : ℝ) (hβ : 0 < β) (μ : ProbSphere d) :
     ∀ x : EucSpace d,
       vectorField d β μ x
         = proj d x (gradient (fun z => β⁻¹ * Real.log (partitionMu d β μ z)) x) := by
-  sorry
+  intro x
+  rw [gradient_log_partitionMu d β (ne_of_gt hβ) μ x, vectorField]
 
 /-- The hypothesis of `vectorField_eq_grad_log` is satisfiable: `β = 1`. -/
 example : (0 : ℝ) < 1 := one_pos
@@ -84,8 +86,8 @@ def usaContinuityEquation (β : ℝ) (μ : ℝ → ProbSphere d) : Prop :=
 the interaction energy `𝖤_β` at `μ` is `x ↦ β⁻¹ Z_{β,μ}(x)`, and its ambient
 gradient, projected onto the tangent space, is the `USA` vector field.
 
-Not proved here: the first variation is computed by differentiating under the
-integral sign, which is not formalized.
+The differentiation under the integral sign is
+`Perspective.gradient_partitionMu`.
 
 Source: arXiv:2312.10794v5, §3.3, `e:XmuE`. -/
 theorem usaVectorField_eq_grad_first_variation (β : ℝ) (hβ : 0 < β)
@@ -93,7 +95,8 @@ theorem usaVectorField_eq_grad_first_variation (β : ℝ) (hβ : 0 < β)
     ∀ x : EucSpace d,
       usaVectorField d β μ x
         = proj d x (gradient (fun z => β⁻¹ * partitionMu d β μ z) x) := by
-  sorry
+  intro x
+  rw [gradient_partitionMu d β (ne_of_gt hβ) μ x, usaVectorField]
 
 /-- The hypothesis of `usaVectorField_eq_grad_first_variation` is satisfiable:
 `β = 1`. -/

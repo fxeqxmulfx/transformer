@@ -6,15 +6,17 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5.
 One module per section of the manuscript (`Section1_IPS … Section9_Approximation`),
 followed by the four appendices.  Everything lives in the namespace
 `Transformer.Perspective`.  `MinCurve` carries no section of its own: it is
-the one-sided calculus behind step 1 of §6.1, and `RussianTrick` is the
-linear-algebra identity `e:russiantrick` of Appendix A with the rank-two
-construction that proves it.
+the one-sided calculus behind step 1 of §6.1, `PartitionGradient` is the
+differentiation of `Z_{β,μ}` under the integral sign that §3.3 rests on, and
+`RussianTrick` is the linear-algebra identity `e:russiantrick` of Appendix A
+with the rank-two construction that proves it.
 -/
 
 import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section2_FlowMap
 import Transformer.Perspective.Section2_EnergyKernel
 import Transformer.Perspective.Section2_EnergyMax
+import Transformer.Perspective.PartitionGradient
 import Transformer.Perspective.Section2_GradientFlow
 import Transformer.Perspective.Section2_ParticleFlow
 import Transformer.Perspective.Section3_SmallBeta
