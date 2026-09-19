@@ -39,6 +39,7 @@ import Transformer.Perspective.Section7_BBGKY
 import Transformer.Perspective.Section8_General
 import Transformer.Perspective.Section9_Approximation
 import Transformer.Perspective.RussianTrick
+import Transformer.Perspective.RussianPairs
 import Transformer.Perspective.AppendixA_Beta0
 import Transformer.Perspective.AppendixA_Hessian
 import Transformer.Perspective.AppendixA_Rotation
@@ -49,6 +50,7 @@ import Transformer.Perspective.StrictSaddle
 import Transformer.Perspective.AppendixB_EBeta
 import Transformer.Perspective.AppendixB_HessBeta
 import Transformer.Perspective.AppendixB_HighD
+import Transformer.Perspective.AppendixB_ClaimYury
 import Transformer.Perspective.AppendixB_MetricGrad
 import Transformer.Perspective.AppendixB_MetricHess
 import Transformer.Perspective.DoubleSum

@@ -6,9 +6,11 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 The part of Appendix B that runs on `(𝕊^{d-1})^n` rather than on the torus:
 
-* `eq: claim.yury`   — the sub-block inequality in dimension `d`,
 * `eq: dr1`          — the skew-symmetric perturbation inequality, proved,
 * `e:Hessianincoord` — the Hessian at a critical point is intrinsic.
+
+`eq: claim.yury`, which is `eq: dr1` summed over a family of skew directions,
+is proved in `Perspective.AppendixB_ClaimYury`.
 
 The comparison of the modified metric of §3.4 with the round one,
 `eq: metric.grad` and `eq: metric.hess`, is proved in
@@ -31,23 +33,6 @@ namespace Transformer
 namespace Perspective
 
 variable (d n : ℕ)
-
-/-- **Equation (eq: claim.yury).** *Higher-dimensional generalization of
-`eq: taylor3`.*
-
-For a critical point `(x_1,…,x_n) ∈ (𝕊^{d-1})^n` of `𝖤_β` with non-positive
-Hessian, and `θ_{ij} = arccos ⟨x_i, x_j⟩ ∈ [0, π]` the geodesic distance,
-
-  `Σ_{i ∈ 𝒮} Σ_{j ∈ 𝒮^c} g_β(θ_{ij}) ≥ 0`.
-
-Source: arXiv:2312.10794v5, Appendix B, `eq: claim.yury`. -/
-theorem claim_yury
-    (β : ℝ) (X : SphereTuple d n) (𝒮 : Finset (Idx n))
-    (h_crit : IsCriticalEBeta d n β X) (h_hess : EBetaHessianNonPos d n β X) :
-    0 ≤ ∑ i ∈ 𝒮, ∑ j ∈ 𝒮ᶜ,
-      g_β_d d β
-        (Real.arccos (inner (𝕜 := ℝ) ((X i : EucSpace d)) ((X j : EucSpace d)))) := by
-  sorry
 
 /-- **Equation (eq:dr1).**  The second-order term of the block rotation by a
 skew-symmetric `B`, written out at a point with non-positive Hessian:
@@ -111,9 +96,9 @@ theorem hessian_at_critical_intrinsic
 
 /-! ### The hypotheses are satisfiable -/
 
-/-- The hypotheses of `claim_yury`, `dr1_skew_inequality` and
-`metric_hess_comparison` are satisfiable: `β = 1` is non-zero, and the single
-token is a critical point with non-positive Hessian. -/
+/-- The hypotheses of `dr1_skew_inequality` and `metric_hess_comparison` are
+satisfiable: `β = 1` is non-zero, and the single token is a critical point
+with non-positive Hessian. -/
 example :
     (1 : ℝ) ≠ 0 ∧ IsSkew 1 0 ∧ IsCriticalEBeta 1 1 1 singleToken ∧
       EBetaHessianNonPos 1 1 1 singleToken :=
