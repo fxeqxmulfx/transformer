@@ -17,9 +17,11 @@ scheme built on it.
 
 | Module | Contents |
 | --- | --- |
+| `Quartet.Walsh` | the Walsh characters on `(ℤ/2)^n` and their orthogonality |
+| `Quartet.Hadamard` | the randomized Hadamard transform: orthonormal, involutive, inner-product preserving |
 | `Quartet.Section3_Grids` | the E2M1 and E4M3 grids, `RTN`, and `SR` with its coin |
 | `Quartet.Section3_NVFP4` | the two quantizers: unbiased `Q_SR`, and the clipping `Q_RTN` of `MS-EDEN` |
-| `Quartet.Section3_Eden` | the randomized Hadamard transform, the EDEN correction, and `MS-EDEN` |
+| `Quartet.Section3_Eden` | the EDEN correction and `MS-EDEN` |
 | `Quartet.Section4_FourOverSix` | the two-branch grid choice, unbiased branch by branch and biased together |
 | `Quartet.AppendixA_Concentration` | what the concentration plot measures: the `1/B` slope, and the plateau of a bias |
 
@@ -29,6 +31,8 @@ formalized.  What is formalized is the arithmetic the guarantees rest on, and
 — for Appendix A — what its plot would have to show.
 -/
 
+import Transformer.Quartet.Walsh
+import Transformer.Quartet.Hadamard
 import Transformer.Quartet.Section3_Grids
 import Transformer.Quartet.Section3_NVFP4
 import Transformer.Quartet.Section3_Eden

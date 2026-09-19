@@ -13,11 +13,8 @@ smallest relative step of an E4M3 group scale is `1.0625`.  `MS-EDEN`
 (Algorithm 1) folds `S` into the group scale by *stochastic* rounding, so that
 the scale is right in expectation, and that is all the correction needs.
 
-The rotation here is the Walsh–Hadamard matrix with random signs, written on
-the two-level index of a tensor: `2^k` groups of `16` entries, so `hadamard`
-is the tensor product of the transform on the group index and the transform on
-the entry index.  The rotation group is the whole tensor, which the paper
-allows — "any multiple of the quantization group size 16 is valid".
+The rotation itself, and the fact that it is invertible and leaves inner
+products alone, are `Transformer.Quartet.Hadamard`.
 
 **What the Corollary claims.**  It is stated for every `d` and every `s ≠ 0`,
 while the EDEN theorem it rests on ("Based on Theorem 2.1 of Vargaftik et
@@ -27,48 +24,14 @@ is the paper's, at finite dimension.
 -/
 
 import Transformer.Quartet.Section3_NVFP4
+import Transformer.Quartet.Hadamard
 import Mathlib.MeasureTheory.Constructions.Pi
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 namespace Transformer
 namespace Quartet
 
 variable {k : ℕ} {s : ℝ}
-
-/-- The Walsh–Hadamard matrix on the `2^{k+4}` entries of a tensor laid out as
-`2^k` groups of `16`: the sign is `(-1)` to the number of binary digits the two
-indices share, over `√(2^{k+4})` (§3.2, the `RHT`). -/
-noncomputable def hadamard (k : ℕ) (i i' : Fin (2 ^ k)) (j j' : Fin 16) : ℝ :=
-  (-1) ^ (((Finset.range k).filter fun b => i.val.testBit b && i'.val.testBit b).card +
-      ((Finset.range 4).filter fun b => j.val.testBit b && j'.val.testBit b).card) /
-    Real.sqrt (2 ^ (k + 4))
-
-/-- The randomized Hadamard transform `RHT(x, ω)` (§3.2): flip the sign of
-every entry according to the seed `ε`, then apply the Hadamard matrix. -/
-noncomputable def rht (k : ℕ) (ε : Fin (2 ^ k) → Fin 16 → Bool) (x : Fin (2 ^ k) → Fin 16 → ℝ)
-    (i : Fin (2 ^ k)) (j : Fin 16) : ℝ :=
-  ∑ i', ∑ j', hadamard k i i' j j' * (if ε i' j' then -x i' j' else x i' j')
-
-/-- Its inverse `RHT⁻¹(·, ω)`: the Hadamard matrix is its own inverse, so only
-the signs have to be undone afterwards. -/
-noncomputable def rhtInv (k : ℕ) (ε : Fin (2 ^ k) → Fin 16 → Bool)
-    (y : Fin (2 ^ k) → Fin 16 → ℝ) (i : Fin (2 ^ k)) (j : Fin 16) : ℝ :=
-  (if ε i j then -1 else 1) * ∑ i', ∑ j', hadamard k i i' j j' * y i' j'
-
-/-- **The rotation is invertible**, which is what lets §3.2 speak of
-unbiasedness "in rotated space". -/
-theorem rhtInv_rht (ε : Fin (2 ^ k) → Fin 16 → Bool) (x : Fin (2 ^ k) → Fin 16 → ℝ)
-    (i : Fin (2 ^ k)) (j : Fin 16) : rhtInv k ε (rht k ε x) i j = x i j :=
-  sorry
-
-/-- **The rotation cancels along the inner dimension of a product**: rotating
-both factors with the same seed leaves every inner product where it was.  This
-is why §5 can say that the outputs of the NVFP4 GEMMs "need no further
-processing, as the rotations cancel out along the inner GEMM dimensions". -/
-theorem sum_rht_mul_rht (ε : Fin (2 ^ k) → Fin 16 → Bool) (x y : Fin (2 ^ k) → Fin 16 → ℝ) :
-    ∑ i, ∑ j, rht k ε x i j * rht k ε y i j = ∑ i, ∑ j, x i j * y i j :=
-  sorry
 
 /-- The EDEN bias correction of one group, `S_g = ⟨x^RHT_g, x^RHT_g⟩ /
 ⟨x^RHT_g, x^RTN_g⟩` (Algorithm 1), taken over the `16` entries of an NVFP4
