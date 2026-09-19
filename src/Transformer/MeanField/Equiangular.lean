@@ -5,6 +5,9 @@
   `eq: USA`,
 * `Theorem thm: long-context-phase-transition` — phase transition for
   `β_n = γ log n` (Chen et al. 2025).
+
+The local clustering rate of the `eq: SA` ODE is
+`Transformer.MeanField.EquiangularRate`.
 -/
 
 import Transformer.Basic
@@ -63,9 +66,10 @@ theorem equiangularSA_const_simplex (hn : 2 ≤ n) (β : ℝ) :
 At the equiangular simplex the right-hand side of the `eq: SA` ODE vanishes,
 so `ρ` stays at `-1/(n-1) < 1` forever and `1 - ρ` stays at `n/(n-1) ≥ 1`,
 which no decaying exponential dominates.  This is why
-`equiangular_local_rate` carries the initial condition `(n-1) ρ(0) + 1 > 0`:
-the rate is local to the basin of `ρ = 1`, exactly as the word
-*linearization* says. -/
+`Transformer.MeanField.equiangular_local_rate` — in
+`Transformer.MeanField.EquiangularRate`, which proves it — carries the initial
+condition `(n-1) ρ(0) + 1 > 0`: the rate is local to the basin of `ρ = 1`,
+exactly as the word *linearization* says. -/
 theorem not_exists_rate_at_simplex (hn : 2 ≤ n) :
     ¬ ∃ (C lam : ℝ), 0 < C ∧ 0 < lam ∧
       ∀ t : ℝ, 0 ≤ t →
@@ -95,43 +99,12 @@ theorem not_exists_rate_at_simplex (hn : 2 ≤ n) :
   simp only at this
   linarith
 
-/-- Local linearization rate near the clustered state `ρ = 1`:
-
-  `(SA)`  `1 - ρ(t) ≲ e^{-2 t}`,
-  `(USA)` `1 - ρ(t) ≲ e^{-2 e^β t}`.
-
-The initial condition `(n - 1) ρ(0) + 1 > 0` is what puts `ρ(0)` in the basin
-of the clustered state: it is the sign that makes `ρ̇ ≥ 0` for `ρ ≤ 1`, and
-without it the statement is false — `not_exists_rate_at_simplex` refutes it at
-`ρ ≡ -1/(n-1)`, where the right-hand side vanishes identically.
-
-Not proved here.
-
-Source: arXiv:2512.01868v4, §6. -/
-theorem equiangular_local_rate
-    (β : ℝ) (hβ : 0 ≤ β) (ρ : ℝ → ℝ)
-    (hρ_sa : equiangularSA n β ρ)
-    (hρ0 : 0 < (n - 1 : ℝ) * ρ 0 + 1) :
-    ∃ (C lam : ℝ), 0 < C ∧ 0 < lam ∧
-      ∀ t : ℝ, 0 ≤ t →
-        1 - ρ t ≤ C * Real.exp (-(lam * t)) := by
-  sorry
-
 /-- The clustered state `ρ ≡ 1` is a stationary solution of the equiangular
 `eq: SA` ODE: the factor `1 - ρ` vanishes. -/
 theorem equiangularSA_const_one (β : ℝ) :
     equiangularSA n β (fun _ => 1) := by
   intro t
   simpa using hasDerivAt_const t (1 : ℝ)
-
-/-- The hypotheses of `equiangular_local_rate` are satisfiable: `ρ ≡ 1` solves
-the equiangular `eq: SA` ODE at every `β ≥ 0`, and at `n = 2` it sits in the
-basin, `(n - 1) ρ(0) + 1 = 2 > 0`. -/
-example (β : ℝ) (hβ : 0 ≤ β) :
-    ∃ (C lam : ℝ), 0 < C ∧ 0 < lam ∧
-      ∀ t : ℝ, 0 ≤ t →
-        1 - (fun _ : ℝ => (1 : ℝ)) t ≤ C * Real.exp (-(lam * t)) :=
-  equiangular_local_rate 2 β hβ (fun _ => 1) (equiangularSA_const_one 2 β) (by norm_num)
 
 /-! ### One attention layer on an equiangular configuration -/
 
