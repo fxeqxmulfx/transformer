@@ -11,6 +11,8 @@ the one-sided calculus behind step 1 of §6.1.
 
 import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section2_FlowMap
+import Transformer.Perspective.Section2_EnergyKernel
+import Transformer.Perspective.Section2_EnergyMax
 import Transformer.Perspective.Section2_GradientFlow
 import Transformer.Perspective.Section2_ParticleFlow
 import Transformer.Perspective.Section3_SmallBeta
