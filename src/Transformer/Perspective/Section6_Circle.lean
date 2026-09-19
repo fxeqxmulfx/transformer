@@ -14,9 +14,9 @@ This file formalizes §7 of the survey:
 * and the identification of `eq:onangles` with the gradient flow of `𝖤_β`.
 
 Open Problem `o:strictsaddle` of §7 — apart from the global maxima, every
-critical point of `𝖤_β` on `𝕋^n` is a strict saddle — is not stated here.  The
-survey flags it as open, so it is neither a theorem this file may `sorry` (that
-would assert something nobody knows) nor something anything may be built on.
+critical point of `𝖤_β` on `𝕋^n` is a strict saddle — is in
+`Perspective.StrictSaddle`, which needs Appendix B's second derivative and so
+comes after this file.
 -/
 
 import Transformer.Basic
