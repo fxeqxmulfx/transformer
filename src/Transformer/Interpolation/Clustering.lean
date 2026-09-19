@@ -10,9 +10,9 @@ Formalization of §2 of arXiv:2411.04551v3:
 Both propositions assert that *some* parameter curve drives `eq: cauchy.pb`
 to a prescribed target, and measure the error in a Wasserstein distance, which
 Mathlib does not have; the geodesic convex hull `conv_g` is not available here
-either.  They are therefore `Prop`-valued definitions carrying the distance as
-a parameter, with the geodesic hull replaced by the support of the measure —
-weaker, and stated as such.  `rem: nb.disc.clustering` counts the switches of
+either.  They therefore carry the distance as a parameter, with the geodesic
+hull replaced by the support of the measure — weaker, and stated as such — and
+neither is proved.  `rem: nb.disc.clustering` counts the switches of
 the parameter curve; the count is here reduced to "finitely many", since the
 packing and homotopy quantities `𝖭_k^i(δ)` and `L_{k,n}^i` it is expressed in
 are not defined in this development.
@@ -122,19 +122,38 @@ Three weakenings: `conv_g` is replaced by the support itself (the diameters
 agree inside an open hemisphere, which is not proved here), the membership
 `z ∈ conv_g supp μ_0` is dropped, and `W_∞` (`Winf`) is a parameter.  The paper's
 companion rate `inf{ t : W_2(μ(t), δ_z) ≤ ε } = O(log(1/ε))` is not
-formalized.  Source: arXiv:2411.04551v3, §2. -/
-def ClusteringToAtom
+formalized.
+
+Not proved here.
+
+Source: arXiv:2411.04551v3, §2. -/
+theorem clustering_to_atom
     (Winf : Measure (SSphere d) → Measure (SSphere d) → ℝ)
-    (B : ParamMatrix d) (μ₀ : ProbSphere d) : Prop :=
-  (∃ w : SSphere d, ∀ x ∈ (μ₀ : Measure (SSphere d)).support,
-      0 < inner (𝕜 := ℝ) (x : EucSpace d) ((w : EucSpace d))) →
+    (B : ParamMatrix d) (μ₀ : ProbSphere d)
+    (hhemi : ∃ w : SSphere d, ∀ x ∈ (μ₀ : Measure (SSphere d)).support,
+      0 < inner (𝕜 := ℝ) (x : EucSpace d) ((w : EucSpace d))) :
     ∀ μ : ℝ → ProbSphere d, μ 0 = μ₀ →
       cauchyPB d (fun _ => ⟨ContinuousLinearMap.id ℝ (EucSpace d), B, 0, 0, 0⟩) μ →
         Filter.Tendsto
             (fun t : ℝ => Metric.diam ((μ t : Measure (SSphere d)).support))
             Filter.atTop (nhds 0) ∧
           ∀ ε : ℝ, 0 < ε → ∃ (z : SSphere d) (T : ℝ), 0 < T ∧
-            Winf (μ T : Measure (SSphere d)) (Measure.dirac z) ≤ ε
+            Winf (μ T : Measure (SSphere d)) (Measure.dirac z) ≤ ε := by
+  sorry
+
+/-- The hypothesis of `clustering_to_atom` is satisfiable: a Dirac mass is
+supported at its own point, which lies in the open hemisphere around itself. -/
+example (x₀ : SSphere 1) :
+    ∃ w : SSphere 1,
+      ∀ x ∈ ((⟨Measure.dirac x₀, inferInstance⟩ : ProbSphere 1) :
+          Measure (SSphere 1)).support,
+        0 < inner (𝕜 := ℝ) (x : EucSpace 1) ((w : EucSpace 1)) := by
+  refine ⟨x₀, fun x hx => ?_⟩
+  have hxx : x = x₀ := eq_of_mem_support_dirac hx
+  subst hxx
+  have hx1 : ‖(x : EucSpace 1)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
+  rw [real_inner_self_eq_norm_mul_norm, hx1, mul_one]
+  exact one_pos
 
 /-- `θ` is piecewise constant on `[0, T]` with at most `K` pieces — hence at
 most `K - 1` switches: there are times `0 = t_0 ≤ … ≤ t_K = T` such that `θ`
@@ -169,16 +188,20 @@ and have pairwise disjoint supports.
 requirement `x_k^i ∈ conv_g supp μ_0^i` are replaced by supports, and the
 remark's explicit switch count `N · M · max_{(i,k)} 𝖭_k^i(δ) · max_n L_{k,n}^i`
 is weakened to the existence of a finite count, its ingredients not being
-defined here.  Source: arXiv:2411.04551v3, §2. -/
-def Compression
+defined here.
+
+Not proved here.
+
+Source: arXiv:2411.04551v3, §2. -/
+theorem compression
     (W₂ : Measure (SSphere d) → Measure (SSphere d) → ℝ)
     (μ₀ : Idx N → ProbSphere d) (x : Idx N → Idx M → SSphere d)
-    (α : Idx N → Idx M → ℝ) (ε : ℝ) : Prop :=
-  1 ≤ M → 0 < ε →
-  (∀ i : Idx N, ∀ y : SSphere d, (μ₀ i : Measure (SSphere d)) {y} = 0) →
-  (∀ i j : Idx N, i ≠ j → Disjoint ((μ₀ i : Measure (SSphere d)).support)
-      ((μ₀ j : Measure (SSphere d)).support)) →
-  (∀ i : Idx N, ∀ k : Idx M, 0 ≤ α i k) → (∀ i : Idx N, ∑ k : Idx M, α i k = 1) →
+    (α : Idx N → Idx M → ℝ) (ε : ℝ) (hM : 1 ≤ M) (hε : 0 < ε)
+    (hatom : ∀ i : Idx N, ∀ y : SSphere d, (μ₀ i : Measure (SSphere d)) {y} = 0)
+    (hdisj : ∀ i j : Idx N, i ≠ j → Disjoint ((μ₀ i : Measure (SSphere d)).support)
+      ((μ₀ j : Measure (SSphere d)).support))
+    (hαnonneg : ∀ i : Idx N, ∀ k : Idx M, 0 ≤ α i k)
+    (hαsum : ∀ i : Idx N, ∑ k : Idx M, α i k = 1) :
     ∃ (θ : TimeParams d) (T : ℝ) (K : ℕ) (μ : Idx N → ℝ → ProbSphere d),
       0 < T ∧ (∀ s : ℝ, (θ s).V = 0) ∧ PiecewiseConstant d θ T K ∧
       (∀ i : Idx N, μ i 0 = μ₀ i ∧ cauchyPB d θ (μ i)) ∧
@@ -186,7 +209,23 @@ def Compression
           (∑ k : Idx M, (α i k).toNNReal • Measure.dirac (x i k)) ≤ ε) ∧
       (∀ i j : Idx N, i ≠ j →
         Disjoint ((μ i T : Measure (SSphere d)).support)
-          ((μ j T : Measure (SSphere d)).support))
+          ((μ j T : Measure (SSphere d)).support)) := by
+  sorry
+
+/-- The hypotheses of `compression` are satisfiable — but only on an empty
+family of initial measures, `N = 0`, where the atomlessness and disjointness
+conditions have nothing to check.  A witness with `N ≥ 1` would need an
+atomless probability measure on the sphere, and this development constructs
+none: the uniform measure is exactly what it carries as a parameter. -/
+example (μ₀ : Idx 0 → ProbSphere 1) (α : Idx 0 → Idx 1 → ℝ) :
+    1 ≤ 1 ∧ (0 : ℝ) < 1 ∧
+      (∀ i : Idx 0, ∀ y : SSphere 1, (μ₀ i : Measure (SSphere 1)) {y} = 0) ∧
+      (∀ i j : Idx 0, i ≠ j →
+        Disjoint ((μ₀ i : Measure (SSphere 1)).support)
+          ((μ₀ j : Measure (SSphere 1)).support)) ∧
+      (∀ i : Idx 0, ∀ k : Idx 1, 0 ≤ α i k) ∧
+      (∀ i : Idx 0, ∑ k : Idx 1, α i k = 1) :=
+  ⟨le_rfl, one_pos, fun i => i.elim0, fun i => i.elim0, fun i => i.elim0, fun i => i.elim0⟩
 
 end Interpolation
 end Transformer

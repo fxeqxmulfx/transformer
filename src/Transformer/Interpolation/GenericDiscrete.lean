@@ -45,23 +45,44 @@ is a hypothesis, since it is itself quoted from the survey of
 rotation invariance, which the survey's proof uses to rule out atoms, is not
 recorded, and neither is the proof.
 
-A `Prop`-valued definition and not a theorem: nothing of it is proved here.
+Two conditions the survey leaves implicit are written out, and they are not
+weakenings but repairs: `ref` is a probability measure, and `n ≥ 1`.  Without
+them the statement is refutable here rather than merely unproved — for `n = 0`
+the empirical measure of the empty tuple is the zero measure, which no
+probability measure equals, so the cluster hypothesis holds vacuously, while
+for `N ≥ 2` and a constant `f` the event `{f(X^i) ≠ f(X^j)}` is empty and has
+measure `0`, not `1`.
+
+Not proved here.
 
 Source: arXiv:2411.04551v3, §5, `prop:generic-discrete`. -/
-def GenericDiscreteDistinct
-    (d n N : ℕ) (β : ℝ) (ref : Measure (SphereTuple d n)) : Prop :=
-  3 ≤ d → 0 ≤ β →
-  ∀ f : SphereTuple d n → SSphere d,
-    (∀ᵐ X : SphereTuple d n ∂ref,
-      ∀ μ : ℝ → Perspective.ProbSphere d,
-        (μ 0 : Measure (SSphere d)) = Perspective.empiricalMeasure d n X →
-        cauchyPB d (genericParams d β) μ →
-        Filter.Tendsto μ Filter.atTop
-          (nhds (⟨Measure.dirac (f X), inferInstance⟩ :
-            Perspective.ProbSphere d))) →
-    ∀ i j : Idx N, i ≠ j →
-      (Measure.pi fun _ : Idx N => ref)
-          { X : Idx N → SphereTuple d n | f (X i) ≠ f (X j) } = 1
+theorem generic_discrete_distinct
+    (d n N : ℕ) (β : ℝ) (ref : Measure (SphereTuple d n)) [IsProbabilityMeasure ref]
+    (hd : 3 ≤ d) (hβ : 0 ≤ β) (hn : 1 ≤ n) :
+    ∀ f : SphereTuple d n → SSphere d,
+      (∀ᵐ X : SphereTuple d n ∂ref,
+        ∀ μ : ℝ → Perspective.ProbSphere d,
+          (μ 0 : Measure (SSphere d)) = Perspective.empiricalMeasure d n X →
+          cauchyPB d (genericParams d β) μ →
+          Filter.Tendsto μ Filter.atTop
+            (nhds (⟨Measure.dirac (f X), inferInstance⟩ :
+              Perspective.ProbSphere d))) →
+      ∀ i j : Idx N, i ≠ j →
+        (Measure.pi fun _ : Idx N => ref)
+            { X : Idx N → SphereTuple d n | f (X i) ≠ f (X j) } = 1 := by
+  sorry
+
+/-- The hypotheses `generic_discrete_distinct` carries in its binders are
+satisfiable: `d = 3`, `β = 0`, `n = 1`, and a Dirac mass for the reference
+measure, which is a probability measure.
+
+The condition on the cluster map `f` stays inside the statement, where the
+survey puts it: witnessing it means solving `eq: cauchy.pb` and identifying the
+limit, which is exactly what is not done here. -/
+example :
+    3 ≤ 3 ∧ (0 : ℝ) ≤ 0 ∧ 1 ≤ 1 ∧
+      IsProbabilityMeasure (Measure.dirac (fun _ : Idx 1 => basePoint 2)) :=
+  ⟨le_rfl, le_rfl, le_rfl, inferInstance⟩
 
 end Interpolation
 end Transformer

@@ -139,10 +139,6 @@ example : LinearIndependent ℝ (fun _ : Idx 1 => EuclideanSpace.single (0 : Fin
   rw [linearIndependent_unique_iff]
   simp
 
-/-- The Dirac measure at a point of the sphere, as a probability measure. -/
-noncomputable def diracProb (x : SSphere d) : Perspective.ProbSphere d :=
-  ⟨Measure.dirac x, by infer_instance⟩
-
 /-- **Theorem (thm: mfclust).** *Mean-field exponential rate (small `β`).*
 
 For `d ≥ 2`, an initial measure `μ_0` with
@@ -174,11 +170,11 @@ theorem meanField_exponential_rate
 /-- The hypotheses of `meanField_exponential_rate` are satisfiable: in dimension
 `2`, a Dirac mass has mean of norm `1`, so `R₀ = 1 > 0`. -/
 example (x : SSphere 2) :
-    2 ≤ 2 ∧ 0 < ‖∫ y, (y : EucSpace 2) ∂((diracProb 2 x : Perspective.ProbSphere 2) :
+    2 ≤ 2 ∧ 0 < ‖∫ y, (y : EucSpace 2) ∂((Perspective.diracProb 2 x : Perspective.ProbSphere 2) :
       Measure (SSphere 2))‖ ^ 2 := by
   refine ⟨le_rfl, ?_⟩
   have hx : ‖(x : EucSpace 2)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
-  simp [diracProb, hx]
+  simp [Perspective.diracProb, hx]
 
 end MeanField
 end Transformer

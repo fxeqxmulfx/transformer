@@ -10,9 +10,10 @@ Formalization of the main theorems of arXiv:2411.04551v3:
 * `Lemma lem: univ.approx`      — universal `L²`-map approximation.
 
 Each of these asserts the existence of a parameter curve, or of a map, with no
-construction available here, so each is a `Prop`-valued definition.  The
-weakenings are the ones already used in `Transformer.Interpolation.Clustering`
-and `…Disentanglement`: `W_2` is a parameter (Mathlib has no Wasserstein
+construction available here, so none is proved: each is a theorem closed by
+`sorry`.  The weakenings are the ones already used in
+`Transformer.Interpolation.Clustering` and `…Disentanglement`: `W_2` is a
+parameter (Mathlib has no Wasserstein
 distance), `conv_g` is replaced by the support, and the switch and norm bounds
 written `O(·)` in the paper carry an explicit constant as a parameter, whose
 uniformity in `d`, `N` and the data is not expressible one statement at a time.
@@ -43,6 +44,15 @@ variable (d N : ℕ)
 def IsHole (μ : Idx N → ProbSphere d) (w : SSphere d) : Prop :=
   ∀ i : Idx N, w ∉ (μ i : Measure (SSphere d)).support
 
+/-- A constant family of Dirac masses at `x` has a hole, namely the antipode of
+`x`: every support is `{x}`, and `-x ≠ x`.  This is the witness the
+satisfiability examples below use for `eq: assumption.hole`. -/
+theorem isHole_antipode_diracProb (x : SSphere d) :
+    IsHole d N (fun _ => diracProb d x) (antipode d x) := by
+  intro i hmem
+  have hmem' : antipode d x ∈ (Measure.dirac x).support := hmem
+  exact antipode_ne d x (eq_of_mem_support_dirac hmem')
+
 /-- **Theorem (thm: targets.atoms).**  *Interpolation to point-mass targets.*
 
 For `d ≥ 3` and data `(μ_0^i, δ_{x^i})_{i=1}^N` with a hole
@@ -55,17 +65,30 @@ can be chosen piecewise constant with `O(d · N)` switches and
 
 The `L^∞` norm of `θ` is measured coordinate by coordinate, as the sum of the
 operator norms of the four matrices and of `‖b‖`; `Params d` carries no norm of
-its own.  Source: arXiv:2411.04551v3, §1. -/
-def TargetsAtoms (W₂ : Measure (SSphere d) → Measure (SSphere d) → ℝ) (C : ℕ)
-    (μ₀ : Idx N → ProbSphere d) (xtarget : Idx N → SSphere d) (T ε : ℝ) : Prop :=
-  3 ≤ d → 0 < T → 0 < ε → (∃ w₀ : SSphere d, IsHole d N μ₀ w₀) →
+its own.
+
+Not proved here.
+
+Source: arXiv:2411.04551v3, §1. -/
+theorem targets_atoms (W₂ : Measure (SSphere d) → Measure (SSphere d) → ℝ) (C : ℕ)
+    (μ₀ : Idx N → ProbSphere d) (xtarget : Idx N → SSphere d) (T ε : ℝ)
+    (hd : 3 ≤ d) (hT : 0 < T) (hε : 0 < ε)
+    (hhole : ∃ w₀ : SSphere d, IsHole d N μ₀ w₀) :
     ∃ (θ : TimeParams d) (K : ℕ) (Cnorm : ℝ) (μ : Idx N → ℝ → ProbSphere d),
       K ≤ C * (d * N) ∧ PiecewiseConstant d θ T K ∧
       (∀ s ∈ Set.Icc (0 : ℝ) T,
         ‖(θ s).V‖ + ‖(θ s).B‖ + ‖(θ s).W‖ + ‖(θ s).U‖ + ‖(θ s).b‖
           ≤ Cnorm * ((d * N : ℝ) / T + Real.log (1 / ε))) ∧
       (∀ i : Idx N, μ i 0 = μ₀ i ∧ cauchyPB d θ (μ i)) ∧
-      ∀ i : Idx N, W₂ (μ i T : Measure (SSphere d)) (Measure.dirac (xtarget i)) ≤ ε
+      ∀ i : Idx N, W₂ (μ i T : Measure (SSphere d)) (Measure.dirac (xtarget i)) ≤ ε := by
+  sorry
+
+/-- The hypotheses of `targets_atoms` are satisfiable: `d = 3`, `T = ε = 1`, and
+a one-element family of Dirac masses on `𝕊^2`, whose hole is the antipode. -/
+example :
+    3 ≤ 3 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧
+      ∃ w₀ : SSphere 3, IsHole 3 1 (fun _ : Idx 1 => diracProb 3 (basePoint 2)) w₀ :=
+  ⟨le_rfl, one_pos, one_pos, _, isHole_antipode_diracProb 3 1 (basePoint 2)⟩
 
 /-- **Theorem (thm: main.result).**  *General interpolation.*
 
@@ -79,17 +102,34 @@ For `d ≥ 3` and data `(μ_0^i, μ_1^i)_{i=1}^N` such that
 for any `T, ε > 0` there is a piecewise-constant `θ` with `O(d · N)` switches
 such that `W_2(μ^i(T), μ_1^i) ≤ ε` for every `i`.
 
+Not proved here.
+
 Source: arXiv:2411.04551v3, §1. -/
-def MainResult (W₂ : Measure (SSphere d) → Measure (SSphere d) → ℝ) (C : ℕ)
-    (μ₀ μ₁ : Idx N → ProbSphere d) (T ε : ℝ) : Prop :=
-  3 ≤ d → 0 < T → 0 < ε →
-  (∃ w₀ : SSphere d, IsHole d N μ₀ w₀) → (∃ w₁ : SSphere d, IsHole d N μ₁ w₁) →
-  (∀ i : Idx N, ∃ Tr : SSphere d → SSphere d, Measurable Tr ∧
-    Measure.map Tr (μ₀ i : Measure (SSphere d)) = (μ₁ i : Measure (SSphere d))) →
+theorem main_result (W₂ : Measure (SSphere d) → Measure (SSphere d) → ℝ) (C : ℕ)
+    (μ₀ μ₁ : Idx N → ProbSphere d) (T ε : ℝ) (hd : 3 ≤ d) (hT : 0 < T) (hε : 0 < ε)
+    (hhole₀ : ∃ w₀ : SSphere d, IsHole d N μ₀ w₀)
+    (hhole₁ : ∃ w₁ : SSphere d, IsHole d N μ₁ w₁)
+    (hpush : ∀ i : Idx N, ∃ Tr : SSphere d → SSphere d, Measurable Tr ∧
+      Measure.map Tr (μ₀ i : Measure (SSphere d)) = (μ₁ i : Measure (SSphere d))) :
     ∃ (θ : TimeParams d) (K : ℕ) (μ : Idx N → ℝ → ProbSphere d),
       K ≤ C * (d * N) ∧ PiecewiseConstant d θ T K ∧
       (∀ i : Idx N, μ i 0 = μ₀ i ∧ cauchyPB d θ (μ i)) ∧
-      ∀ i : Idx N, W₂ (μ i T : Measure (SSphere d)) (μ₁ i : Measure (SSphere d)) ≤ ε
+      ∀ i : Idx N, W₂ (μ i T : Measure (SSphere d)) (μ₁ i : Measure (SSphere d)) ≤ ε := by
+  sorry
+
+/-- The hypotheses of `main_result` are satisfiable: `d = 3`, `T = ε = 1`, and
+the same one-element family of Dirac masses on both sides, which is its own
+pushforward under the identity and has the antipode as a hole. -/
+example :
+    3 ≤ 3 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧
+      (∃ w₀ : SSphere 3, IsHole 3 1 (fun _ : Idx 1 => diracProb 3 (basePoint 2)) w₀) ∧
+      (∃ w₁ : SSphere 3, IsHole 3 1 (fun _ : Idx 1 => diracProb 3 (basePoint 2)) w₁) ∧
+      ∀ i : Idx 1, ∃ Tr : SSphere 3 → SSphere 3, Measurable Tr ∧
+        Measure.map Tr ((fun _ : Idx 1 => diracProb 3 (basePoint 2)) i : Measure (SSphere 3))
+          = ((fun _ : Idx 1 => diracProb 3 (basePoint 2)) i : Measure (SSphere 3)) :=
+  ⟨le_rfl, one_pos, one_pos, ⟨_, isHole_antipode_diracProb 3 1 (basePoint 2)⟩,
+    ⟨_, isHole_antipode_diracProb 3 1 (basePoint 2)⟩,
+    fun _ => ⟨id, measurable_id, Measure.map_id⟩⟩
 
 /-- *Three-step factorization*:
 
@@ -110,16 +150,26 @@ If every `μ_1^i` is a measurable pushforward of `μ_0^i`, then there is a
 bijective Lipschitz `ψ : 𝕊^{d-1} → 𝕊^{d-1}` with
 `ψ_# Φ_1(μ_0^i) = Φ_3(μ_1^i)` for every `i`.
 
+Not proved here.
+
 Source: arXiv:2411.04551v3, §5. -/
-def HypPropagation (Φ₁ Φ₃ : ℝ → ProbSphere d → ProbSphere d) (t : ℝ)
-    (μ₀ μ₁ : Idx N → ProbSphere d) : Prop :=
-  (∀ i : Idx N, ∃ Tr : SSphere d → SSphere d, Measurable Tr ∧
-    Measure.map Tr (μ₀ i : Measure (SSphere d)) = (μ₁ i : Measure (SSphere d))) →
+theorem hyp_propagation (Φ₁ Φ₃ : ℝ → ProbSphere d → ProbSphere d) (t : ℝ)
+    (μ₀ μ₁ : Idx N → ProbSphere d)
+    (hpush : ∀ i : Idx N, ∃ Tr : SSphere d → SSphere d, Measurable Tr ∧
+      Measure.map Tr (μ₀ i : Measure (SSphere d)) = (μ₁ i : Measure (SSphere d))) :
     ∃ (ψ : SSphere d → SSphere d) (L : NNReal),
       LipschitzWith L ψ ∧ Function.Bijective ψ ∧
       ∀ i : Idx N,
         Measure.map ψ (Φ₁ t (μ₀ i) : Measure (SSphere d))
-          = (Φ₃ t (μ₁ i) : Measure (SSphere d))
+          = (Φ₃ t (μ₁ i) : Measure (SSphere d)) := by
+  sorry
+
+/-- The hypothesis of `hyp_propagation` is satisfiable: any family is its own
+pushforward under the identity. -/
+example (μ₀ : Idx N → ProbSphere d) :
+    ∀ i : Idx N, ∃ Tr : SSphere d → SSphere d, Measurable Tr ∧
+      Measure.map Tr (μ₀ i : Measure (SSphere d)) = (μ₀ i : Measure (SSphere d)) :=
+  fun _ => ⟨id, measurable_id, Measure.map_id⟩
 
 /-- **Lemma (lem: monge).**  Monge identity: the Wasserstein distance between
 two pushforwards of the same measure is controlled by the `L²(μ)` distance of
@@ -129,13 +179,22 @@ the maps,
 
 which is how `W_2((Φ^{2T/3}_{θ_2})_# Φ^{T/3}_{θ_1}(μ_0^i), Φ_3^{T/3}(μ_1^i))`
 is bounded in the proof — `μ` being `Φ^{T/3}_{θ_1}(μ_0^i)` and `ψ` the map of
-`lem: hyp.propagation`.  Source: arXiv:2411.04551v3, §5. -/
-def Monge (W₂ : Measure (SSphere d) → Measure (SSphere d) → ℝ)
-    (μ : ProbSphere d) (S ψ : SSphere d → SSphere d) (Cst : ℝ) : Prop :=
-  Measurable S → Measurable ψ →
+`lem: hyp.propagation`.
+
+Not proved here.
+
+Source: arXiv:2411.04551v3, §5. -/
+theorem monge (W₂ : Measure (SSphere d) → Measure (SSphere d) → ℝ)
+    (μ : ProbSphere d) (S ψ : SSphere d → SSphere d) (Cst : ℝ)
+    (hS : Measurable S) (hψ : Measurable ψ) :
     W₂ (Measure.map S (μ : Measure (SSphere d))) (Measure.map ψ (μ : Measure (SSphere d)))
       ≤ Cst * Real.sqrt
-          (∫ x, ‖(S x : EucSpace d) - (ψ x : EucSpace d)‖ ^ 2 ∂(μ : Measure (SSphere d)))
+          (∫ x, ‖(S x : EucSpace d) - (ψ x : EucSpace d)‖ ^ 2 ∂(μ : Measure (SSphere d))) := by
+  sorry
+
+/-- The hypotheses of `monge` are satisfiable: the identity is measurable. -/
+example : Measurable (id : SSphere d → SSphere d) ∧ Measurable (id : SSphere d → SSphere d) :=
+  ⟨measurable_id, measurable_id⟩
 
 /-- **Lemma (lem: univ.approx).** *Universal approximation of `L²` maps.*
 
@@ -145,15 +204,23 @@ in `L²(μ)`.  The flow map is the endpoint map of the characteristics of
 `eq: cauchy.pb`: for each `x` a curve started at `x` and driven by `eq: vf`
 along the solution `μ(·)`.
 
+Not proved here.
+
 Source: arXiv:2411.04551v3, §5. -/
-def UnivApprox (μ : ProbSphere d) (f : SSphere d → SSphere d) (T ε : ℝ) : Prop :=
-  0 < T → 0 < ε → Measurable f →
+theorem univ_approx (μ : ProbSphere d) (f : SSphere d → SSphere d) (T ε : ℝ)
+    (hT : 0 < T) (hε : 0 < ε) (hf : Measurable f) :
     ∃ (θ : TimeParams d) (K : ℕ) (μt : ℝ → ProbSphere d) (Φ : SSphere d → SSphere d),
       PiecewiseConstant d θ T K ∧ μt 0 = μ ∧ cauchyPB d θ μt ∧ Measurable Φ ∧
       (∀ x : SSphere d, ∃ γ : ℝ → EucSpace d,
         γ 0 = (x : EucSpace d) ∧ γ T = (Φ x : EucSpace d) ∧
         ∀ t : ℝ, HasDerivAt γ (fullVF d θ (μt t) t (γ t)) t) ∧
-      ∫ x, ‖(Φ x : EucSpace d) - (f x : EucSpace d)‖ ^ 2 ∂(μ : Measure (SSphere d)) ≤ ε
+      ∫ x, ‖(Φ x : EucSpace d) - (f x : EucSpace d)‖ ^ 2 ∂(μ : Measure (SSphere d)) ≤ ε := by
+  sorry
+
+/-- The hypotheses of `univ_approx` are satisfiable: `T = ε = 1` and the
+identity map, which is measurable. -/
+example : (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧ Measurable (id : SSphere d → SSphere d) :=
+  ⟨one_pos, one_pos, measurable_id⟩
 
 end Interpolation
 end Transformer

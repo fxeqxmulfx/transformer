@@ -14,12 +14,15 @@ This file collects:
                               `prop: separation`,
 * parameter type `Θ = (𝐕, 𝐁, 𝐖, 𝐔, b)`,
 * the flow map `Φ^t_θ : 𝒫(𝕊^{d-1}) → 𝒫(𝕊^{d-1})`,
-* the hyperplane / spherical-cap shorthands `H_ε^γ` and `𝒮_q(ε)`.
+* the hyperplane / spherical-cap shorthands `H_ε^γ` and `𝒮_q(ε)`,
+* `eq_of_mem_support_dirac`, `antipode` and `basePoint_mem_positiveQuadrant`,
+  the ingredients every satisfiability witness of §1–§5 is built from.
 -/
 
 import Transformer.Basic
 import Transformer.Perspective.Section2_FlowMap
 import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
+import Mathlib.MeasureTheory.Measure.Support
 import Mathlib.Analysis.Calculus.Gradient.Basic
 
 open scoped BigOperators
@@ -125,6 +128,55 @@ def Hε (γ : SSphere d) (ε : ℝ) : Set (SSphere d) :=
   `ℚ_1^{d-1} = 𝕊^{d-1} ∩ (ℝ_{>0})^d`. -/
 def positiveQuadrant : Set (SSphere d) :=
   { x | ∀ i : Fin d, 0 < (EuclideanSpace.equiv _ ℝ ((x : EucSpace d))) i }
+
+/-! ### Witnesses
+
+The statements of §2–§3 hypothesize supports inside `ℚ_1^{d-1}`, barycenters,
+and families of measures.  The cheapest measure satisfying such conditions is a
+Dirac mass, and the cheapest point of `ℚ_1^{d-1}` is `basePoint 0 = +1 ∈ 𝕊^0`;
+these two facts are what the satisfiability examples of those statements use. -/
+
+/-- **A Dirac mass sits at its own point.**  Any other point has the open
+complement of `{x}` as a null neighbourhood, hence lies outside the support.
+So a support hypothesis on `δ_x` is a hypothesis on `x` alone. -/
+theorem eq_of_mem_support_dirac {X : Type*} [MeasurableSpace X]
+    [TopologicalSpace X] [T1Space X] [MeasurableSingletonClass X] {x y : X}
+    (hy : y ∈ (Measure.dirac x).support) : y = x := by
+  by_contra hne
+  refine Measure.notMem_support_iff_exists.mpr ⟨{x}ᶜ, ?_, ?_⟩ hy
+  · exact isOpen_compl_singleton.mem_nhds (by simpa using hne)
+  · simp
+
+/-- The antipode `-x` of a point of `𝕊^{d-1}`. -/
+noncomputable def antipode (x : SSphere d) : SSphere d :=
+  ⟨-(x : EucSpace d), by
+    rw [mem_sphere_zero_iff_norm, norm_neg]
+    exact mem_sphere_zero_iff_norm.mp x.2⟩
+
+/-- A point of the sphere and its antipode are distinct — `-x = x` would force
+`x = 0`, and `‖x‖ = 1`.  So a Dirac mass has neither full support nor all of
+the sphere in its support's complement. -/
+theorem antipode_ne (x : SSphere d) : antipode d x ≠ x := by
+  intro h
+  have hx : ‖(x : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
+  have hv : -(x : EucSpace d) = (x : EucSpace d) := congrArg Subtype.val h
+  have h2 : (2 : ℝ) • (x : EucSpace d) = 0 := by
+    rw [two_smul]
+    nth_rewrite 1 [← hv]
+    exact neg_add_cancel _
+  rcases smul_eq_zero.mp h2 with h0 | h0
+  · exact absurd h0 (by norm_num)
+  · rw [h0, norm_zero] at hx
+    exact absurd hx (by norm_num)
+
+/-- `basePoint 0`, the point `+1` of `𝕊^0 ⊂ ℝ^1`, lies in the positive
+quadrant, so `ℚ_1^0` is inhabited.  In dimension `d ≥ 2` a point of
+`ℚ_1^{d-1}` has to have *all* its coordinates positive, so no basis vector
+will do and the witnesses of §2–§3 all take `d = 1`. -/
+theorem basePoint_mem_positiveQuadrant : basePoint 0 ∈ positiveQuadrant 1 := by
+  intro i
+  fin_cases i
+  simp [basePoint]
 
 end Interpolation
 end Transformer

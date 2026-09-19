@@ -48,6 +48,12 @@ instance sphereBorelSpace : BorelSpace (SSphere d) := ⟨rfl⟩
 /-- Probability measures on `𝕊^{d-1}`. -/
 abbrev ProbSphere (d : ℕ) : Type := ProbabilityMeasure (SSphere d)
 
+/-- The Dirac measure at a point of the sphere, as an element of
+`𝒫(𝕊^{d-1})`: the simplest inhabitant there is, and the one the satisfiability
+witnesses throughout this development are built from. -/
+noncomputable def diracProb (x : SSphere d) : ProbSphere d :=
+  ⟨Measure.dirac x, inferInstance⟩
+
 /-! ### §3.1 — The continuity equation -/
 
 /-- **Equation (eq: partition.function).** Partition function for a measure:
