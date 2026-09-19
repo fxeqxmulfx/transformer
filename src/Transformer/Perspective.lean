@@ -6,7 +6,9 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5.
 One module per section of the manuscript (`Section1_IPS … Section9_Approximation`),
 followed by the four appendices.  Everything lives in the namespace
 `Transformer.Perspective`.  `MinCurve` carries no section of its own: it is
-the one-sided calculus behind step 1 of §6.1.
+the one-sided calculus behind step 1 of §6.1, and `RussianTrick` is the
+linear-algebra identity `e:russiantrick` of Appendix A with the rank-two
+construction that proves it.
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -27,6 +29,7 @@ import Transformer.Perspective.Section6_Circle
 import Transformer.Perspective.Section7_BBGKY
 import Transformer.Perspective.Section8_General
 import Transformer.Perspective.Section9_Approximation
+import Transformer.Perspective.RussianTrick
 import Transformer.Perspective.AppendixA_Beta0
 import Transformer.Perspective.AppendixA_Saddle
 import Transformer.Perspective.AppendixB_BetaInterval

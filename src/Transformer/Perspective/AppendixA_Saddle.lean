@@ -7,20 +7,21 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 This file formalizes the second half of Appendix A of the survey:
 
 * `e:helpcl`            — the Hessian of `𝖤_0` at a critical point,
-* `e:russiantrick`      — the "Russian trick",
 * `Lemma lem: yury.lemma` — every non-trivial critical point of `𝖤_0` is a
                             strict saddle,
 * `Lemma l:nosaddleconv`  — gradient ascent avoids strict saddles,
 * the assembly of `Theorem p:beta0`.
 
 The energy itself, its gradient flow and `eq: taylor` are in
-`Perspective.AppendixA_Beta0`.  The statements below are written out in full
-and none of them is proved: each is a theorem closed by `sorry`.  `IsSkew`,
-`PerturbationBy` and `SecondDerivE0At` are predicates of their arguments and
-stay definitions.
+`Perspective.AppendixA_Beta0`; `e:russiantrick` and `IsSkew` are in
+`Perspective.RussianTrick`, where the identity is proved.  The statements below
+are written out in full and none of them is proved: each is a theorem closed by
+`sorry`.  `PerturbationBy` and `SecondDerivE0At` are predicates of their
+arguments and stay definitions.
 -/
 
 import Transformer.Perspective.AppendixA_Beta0
+import Transformer.Perspective.RussianTrick
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -29,13 +30,6 @@ namespace Transformer
 namespace Perspective
 
 variable (d n : ℕ)
-
-/-- A skew-symmetric endomorphism of `ℝ^d`: `⟨Bx, y⟩ = -⟨x, By⟩`.
-
-These are exactly the generators of the rotations, `e^{tB} ∈ O(d)`, which is
-why the perturbation below stays on the sphere. -/
-def IsSkew (B : ParamMatrix d) : Prop :=
-  ∀ x y : EucSpace d, inner (𝕜 := ℝ) (B x) y = -inner (𝕜 := ℝ) x (B y)
 
 /-- The perturbation of `X` used in `e:helpcl`:
 
@@ -93,28 +87,6 @@ example :
   ⟨fun x y => by simp, antipodalPair_critical_nonTrivial.1,
     rfl, fun i hi => absurd hi (Finset.notMem_empty i), fun _ _ _ => rfl⟩
 
-/-- **Equation (e:russiantrick).** *"Russian trick".*  In odd dimension `d`
-there are `d` skew-symmetric matrices `B_1, …, B_d` with
-
-  `-I_d = (1/(d-1)) Σ_k B_k²`.
-
-Each `B_k` is obtained from the canonical `(d-1)`-dimensional symplectic form
-by zeroing out its `k`-th `2×2` rotation block; the identity is what turns the
-Hessian formula `e:helpcl` into a *sum* of directions along which `𝖤_0` can be
-increased.
-
-Not proved here: the construction of the blocks is not formalized.
-
-Source: arXiv:2312.10794v5, Appendix A, `e:russiantrick`. -/
-theorem russian_trick (hd : Odd d) :
-    ∃ B : Idx d → ParamMatrix d,
-      (∀ k : Idx d, IsSkew d (B k)) ∧
-      ∀ x : EucSpace d, (((d : ℝ) - 1)⁻¹) • ∑ k : Idx d, B k (B k x) = -x := by
-  sorry
-
-/-- The hypothesis of `russian_trick` is satisfiable: `d = 1` is odd. -/
-example : Odd 1 := odd_one
-
 /-- **Lemma (lem: yury.lemma).** *Every non-trivial critical point of `𝖤_0` is
 a strict saddle.*
 
@@ -127,7 +99,7 @@ particular every local maximum of `𝖤_0` is a consensus configuration, hence a
 global maximum.
 
 Not proved here: the proof combines `eq: taylor`, `hessian_at_critical` and
-`russian_trick`, none of which is proved either.
+`russian_trick`; only the last of the three is proved.
 
 Source: arXiv:2312.10794v5, Appendix A, `lem: yury.lemma`. -/
 theorem yury_lemma (X : SphereTuple d n) (hcrit : IsCriticalE0 d n X)
