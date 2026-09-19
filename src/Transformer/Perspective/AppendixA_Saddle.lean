@@ -16,11 +16,13 @@ The energy itself, its gradient flow and `eq: taylor` are in
 `Perspective.RussianTrick`, where the identity is proved; `e:helpcl`, the
 perturbation `PerturbationBy` it is read along and the second derivative
 `SecondDerivE0At` it computes are in `Perspective.AppendixA_Hessian`, where
-the identity is proved.  The statements below are written out in full and none
-of them is proved: each is a theorem closed by `sorry`.
+the identity is proved; that the perturbation exists at all is
+`Perspective.exists_perturbationBy`, in `Perspective.AppendixA_Rotation`.
+`lem: yury.lemma` is proved here from those four; the other two statements are
+theorems closed by `sorry`.
 -/
 
-import Transformer.Perspective.AppendixA_Hessian
+import Transformer.Perspective.AppendixA_Rotation
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -41,21 +43,81 @@ means the critical point is not a local maximum — and hence, by
 particular every local maximum of `𝖤_0` is a consensus configuration, hence a
 global maximum.
 
-Not proved here: the proof combines `eq: taylor`, `hessian_at_critical` and
-`russian_trick`; only the last of the three is proved.
+The proof is the paper's, in three moves.  `taylor_eq` produces a block `𝒮`
+whose cross-energy `T = Σ_{i ∈ 𝒮} Σ_{j ∈ 𝒮^c} ⟨x_i, x_j⟩` is negative.
+`hessian_at_critical` says the rotation of that block by `e^{tB}` has second
+derivative `(2/n) Σ_{i ∈ 𝒮} Σ_{j ∈ 𝒮^c} ⟨B² x_i, x_j⟩`, and
+`exists_perturbationBy` says the rotation exists.  Summing that over the
+`russian_trick` family `B_1, …, B_d`, where `Σ_k B_k² = -(d-1) I`, gives
+`-(d-1) T > 0`, so at least one direction `B_k` has a positive second
+derivative — which is the assertion.
+
+**What the source says and what is changed here.**  The survey states the
+lemma with no restriction on `d`.  It is false at `d = 1`: the only skew
+endomorphism of `ℝ` is `0`, so `B² = 0` and the second derivative of every
+admissible perturbation is `0`, never positive — while non-trivial critical
+points do exist there (the antipodal pair).  The hypothesis `2 ≤ d` is added;
+it is the same one `russian_trick` needs, and Appendix A works in `d ≥ 2`
+throughout, `p:beta0` itself assuming `d, n ≥ 2`.
 
 Source: arXiv:2312.10794v5, Appendix A, `lem: yury.lemma`. -/
-theorem yury_lemma (X : SphereTuple d n) (hcrit : IsCriticalE0 d n X)
+theorem yury_lemma (hd : 2 ≤ d) (X : SphereTuple d n) (hcrit : IsCriticalE0 d n X)
     (hnt : NonTrivialTuple d n X) :
     ∃ (B : ParamMatrix d) (𝒮 : Finset (Idx n)) (Y : ℝ → SphereTuple d n) (c : ℝ),
       IsSkew d B ∧ PerturbationBy d n B 𝒮 X Y ∧ SecondDerivE0At d n Y c ∧ 0 < c := by
-  sorry
+  classical
+  obtain ⟨𝒮, hS⟩ := taylor_eq d n X hcrit hnt
+  obtain ⟨i₀, -, -⟩ := hnt
+  have hn : (0 : ℝ) < (n : ℝ) := by exact_mod_cast i₀.pos
+  obtain ⟨B, hBskew, hBsum⟩ := russian_trick (d := d) hd
+  have hd' : (2 : ℝ) ≤ (d : ℝ) := by exact_mod_cast hd
+  have hne : ((d : ℝ) - 1) ≠ 0 := by linarith
+  -- the "Russian trick" with the scalar cleared: `Σ_k B_k² = -(d-1) I`
+  have hBsum' : ∀ x : EucSpace d, ∑ k : Idx d, B k (B k x) = (-((d : ℝ) - 1)) • x := by
+    intro x
+    have h := congrArg (fun y : EucSpace d => ((d : ℝ) - 1) • y) (hBsum x)
+    simp only [smul_smul, mul_inv_cancel₀ hne, one_smul, smul_neg] at h
+    rw [h, neg_smul]
+  set T : ℝ := ∑ i ∈ 𝒮, ∑ j ∈ 𝒮ᶜ,
+    inner (𝕜 := ℝ) ((X i : EucSpace d)) ((X j : EucSpace d)) with hT
+  set F : Idx d → ℝ := fun k => ∑ i ∈ 𝒮, ∑ j ∈ 𝒮ᶜ,
+    inner (𝕜 := ℝ) (B k (B k ((X i : EucSpace d)))) ((X j : EucSpace d)) with hF
+  have hstep : ∀ i j : Idx n,
+      ∑ k : Idx d, inner (𝕜 := ℝ) (B k (B k ((X i : EucSpace d)))) ((X j : EucSpace d))
+        = (-((d : ℝ) - 1)) * inner (𝕜 := ℝ) ((X i : EucSpace d)) ((X j : EucSpace d)) := by
+    intro i j
+    rw [← sum_inner, hBsum', real_inner_smul_left]
+  have hsumF : ∑ k : Idx d, F k = (-((d : ℝ) - 1)) * T := by
+    calc ∑ k : Idx d, F k
+        = ∑ i ∈ 𝒮, ∑ j ∈ 𝒮ᶜ, ∑ k : Idx d,
+            inner (𝕜 := ℝ) (B k (B k ((X i : EucSpace d)))) ((X j : EucSpace d)) := by
+          rw [hF, Finset.sum_comm]
+          exact Finset.sum_congr rfl fun i _ => Finset.sum_comm
+      _ = ∑ i ∈ 𝒮, ∑ j ∈ 𝒮ᶜ, (-((d : ℝ) - 1)) *
+            inner (𝕜 := ℝ) ((X i : EucSpace d)) ((X j : EucSpace d)) :=
+          Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => hstep i j
+      _ = (-((d : ℝ) - 1)) * T := by
+          rw [hT, Finset.mul_sum]
+          exact Finset.sum_congr rfl fun i _ => by rw [Finset.mul_sum]
+  -- a negative cross-energy against a negative multiple of the identity
+  have hpos : (0 : ℝ) < ∑ k : Idx d, F k := by
+    rw [hsumF]
+    exact mul_pos_of_neg_of_neg (by linarith) hS
+  obtain ⟨k, -, hk⟩ := Finset.exists_lt_of_sum_lt
+    (f := fun _ : Idx d => (0 : ℝ)) (g := F) (s := Finset.univ) (by simpa using hpos)
+  obtain ⟨Y, hY⟩ := exists_perturbationBy d n (B k) (hBskew k) 𝒮 X
+  refine ⟨B k, 𝒮, Y, (2 * (n : ℝ)⁻¹) * F k, hBskew k, hY,
+    hessian_at_critical d n X (B k) 𝒮 (hBskew k) Y hY, ?_⟩
+  have h2 : (0 : ℝ) < 2 * (n : ℝ)⁻¹ := by
+    have := inv_pos.mpr hn
+    linarith
+  exact mul_pos h2 hk
 
-/-- The hypotheses of `yury_lemma` are satisfiable: the antipodal pair is a
-non-trivial critical point. -/
-example : IsCriticalE0 1 2 (antipodalPair 1 northPole) ∧
-    NonTrivialTuple 1 2 (antipodalPair 1 northPole) :=
-  antipodalPair_critical_nonTrivial
+/-- The hypotheses of `yury_lemma` are satisfiable: in the plane the antipodal
+pair is a non-trivial critical point. -/
+example : 2 ≤ 2 ∧ IsCriticalE0 2 2 (antipodalPair 2 (basePoint 1)) ∧
+    NonTrivialTuple 2 2 (antipodalPair 2 (basePoint 1)) :=
+  ⟨le_rfl, antipodalPair_critical_nonTrivial 2 (basePoint 1)⟩
 
 /-- **Lemma (l:nosaddleconv).** *No-saddle-convergence lemma.*
 
@@ -88,14 +150,14 @@ This is the statement `Perspective.beta0_consensus` should have; the latter
 quantifies over every initial sequence, which is false at the exceptional
 null set.
 
-Not proved here.  The paper's proof assembles three ingredients, and each of
-them is a `sorry` of its own: (i) Łojasiewicz — `𝖤_0` is analytic on a compact
-analytic manifold, so every trajectory of `e:gradfl` converges to a critical
-point; (ii) `no_saddle_convergence` — the non-trivial critical points are
-reached from a null set; (iii) `yury_lemma` — those are exactly the strict
-saddles.  The assembly is not recorded as a statement of its own: with the
-conclusion already a sorried theorem, the implication would be provable in one
-line and would assert nothing.
+Not proved here.  The paper's proof assembles three ingredients, of which one
+is now available: (i) Łojasiewicz — `𝖤_0` is analytic on a compact analytic
+manifold, so every trajectory of `e:gradfl` converges to a critical point —
+not stated here; (ii) `no_saddle_convergence` — the non-trivial critical
+points are reached from a null set — a `sorry` above; (iii) `yury_lemma` —
+those are exactly the strict saddles — proved.  The assembly is not recorded
+as a statement of its own: with the conclusion already a sorried theorem, the
+implication would be provable in one line and would assert nothing.
 
 Source: arXiv:2312.10794v5, §4, `p:beta0`; Appendix A for the proof. -/
 theorem almost_sure_consensus_beta0 (hd : 2 ≤ d) (hn : 2 ≤ n) :
