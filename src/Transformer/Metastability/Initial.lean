@@ -11,10 +11,10 @@ The uniform-initialization half of §4 (`prop: concentration unif`,
 `Transformer.Metastability.InitialUniform`.
 
 `prop: mixture.of.gaussians` bounds a probability, so it is stated against the
-law `mixtureLaw` of the sample — a product of measures with the density
-`eq: gaussian.mixture` — as a `Prop`-valued definition: nothing here proves
-that this law exists as a probability measure (the density is not shown to
-integrate to one), which is the hypothesis the paper starts from.
+law `mixtureLaw` of the sample — the product of measures with the density
+`eq: gaussian.mixture`.  That this law is a probability measure is not proved
+here (the density is not shown to integrate to one), which is one more thing
+the statement is unproved for.
 -/
 
 import Transformer.Basic
@@ -83,16 +83,50 @@ Gaussian-mixture density, and assume, with `δ = σ / √r`,
 Then `(X_i / ‖X_i‖)_{i=1}^n` is `(β, ε)`-separated with probability at least
 `1 - 2 e^{-d}`.
 
+Not proved here.
+
 Source: arXiv:2410.06833v1, §4. -/
-def MixtureSeparation
-    (β ε σ : ℝ) (r : ℕ) (w : Idx r → SSphere d) : Prop :=
-  isCentered d n β ε r w →
-  (6 * (σ / Real.sqrt r) * Real.sqrt d)
-        / (1 + (σ / Real.sqrt r) * Real.sqrt d)
-      + (σ / Real.sqrt r) * Real.sqrt (2 * d * Real.log n) ≤ ε →
+theorem mixture_separation
+    (β ε σ : ℝ) (r : ℕ) (w : Idx r → SSphere d)
+    (hcent : isCentered d n β ε r w)
+    (hδ : (6 * (σ / Real.sqrt r) * Real.sqrt d)
+            / (1 + (σ / Real.sqrt r) * Real.sqrt d)
+          + (σ / Real.sqrt r) * Real.sqrt (2 * d * Real.log n) ≤ ε) :
     1 - 2 * Real.exp (-(d : ℝ))
       ≤ (mixtureLaw d n r σ fun q => ((w q : EucSpace d))).real
-          (projectedSeparated d n β ε)
+          (projectedSeparated d n β ε) := by
+  sorry
+
+/-- A single cap centre is `(β, ε)`-centered once `β` is large enough: with
+`r = 1` no two centres exist, so `αDist` is the supremum of the empty set,
+`γ_β` reduces to `1 - 8ε - β⁻¹ log(2n²/ε)`, and `β = 100`, `ε = 1/32` makes
+it positive.  A degenerate mixture, `σ = 0`, then satisfies the second
+hypothesis: the hypotheses of `mixture_separation` are satisfiable. -/
+example :
+    isCentered 1 1 100 (1 / 32) 1 (fun _ => Transformer.basePoint 0) ∧
+      (6 * ((0 : ℝ) / Real.sqrt 1) * Real.sqrt 1)
+            / (1 + (0 / Real.sqrt 1) * Real.sqrt 1)
+          + (0 / Real.sqrt 1) * Real.sqrt (2 * 1 * Real.log 1) ≤ 1 / 32 := by
+  have hempty : { c : ℝ |
+      ∃ i j : Idx 1, i ≠ j ∧
+        ∃ x ∈ sphericalCap 1 ((fun _ => Transformer.basePoint 0) i) (2 * (1 / 32)),
+        ∃ y ∈ sphericalCap 1 ((fun _ => Transformer.basePoint 0) j) (2 * (1 / 32)),
+          c = inner (𝕜 := ℝ) ((x : EucSpace 1)) ((y : EucSpace 1)) } = ∅ := by
+    ext c
+    simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
+    rintro ⟨i, j, hij, -⟩
+    exact hij (Subsingleton.elim i j)
+  have hα : αDist 1 1 (fun _ => Transformer.basePoint 0) (1 / 32) = 0 := by
+    rw [αDist, hempty, Real.sSup_empty]
+  refine ⟨⟨le_rfl, ?_⟩, by norm_num⟩
+  rw [hα, γβ]
+  have hlog : Real.log (2 * (1 : ℝ) ^ 2 / (1 / 32)) < 64 := by
+    have h : Real.log (2 * (1 : ℝ) ^ 2 / (1 / 32)) < 2 * (1 : ℝ) ^ 2 / (1 / 32) - 1 :=
+      Real.log_lt_sub_one_of_pos (by norm_num) (by norm_num)
+    linarith [h]
+  norm_num
+  linarith
+
 
 end Metastability
 end Transformer
