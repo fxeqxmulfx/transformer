@@ -11,13 +11,14 @@ This file formalizes §6 of the survey:
 * `eq: expconvtocons`              — explicit convergence rate,
 * `Lemma lem: hemisphere.clustering`  — *cone collapse*,
 * `eq: therighthandside`, `eq: qual.conv`,
-* `e:decompox*.step2`, `e:dotalpha.step2`,
+* `e:dotalpha.step2`,
 * `e:mineqalpha.step2`, `e:diffineqalpha.step2`,
 * `Theorem r:wendel` — Wendel's hemisphere probability,
 * `Theorem r:wendel` — Wendel's hemisphere probability.
 
-Step 1 of `lem: hemisphere.clustering` — that `min_i ⟨x_i(t), w⟩` does not
-decrease — is `Perspective.Section5_Hemisphere`, which needs the one-sided
+Steps 1 and 2 of `lem: hemisphere.clustering` — that `min_i ⟨x_i(t), w⟩` does
+not decrease, and the decomposition `e:decompox*.step2` of `x⋆` along the
+particles — are `Perspective.Section5_Hemisphere`, which needs the one-sided
 calculus of `Perspective.MinCurve`.
 
 §6.2 (`thm: orthogonal`, `eq: ybeta`, `thm: phase.transition.curve`) and §6.3
@@ -229,17 +230,6 @@ theorem hemisphere_step1_qual_conv
         ∀ i : Idx n,
           Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
             Filter.atTop (nhds 0) := by
-  sorry
-
-/-- **Equation (e:decompox*.step2).**
-
-  `x⋆ = Σ_k θ_k(t) x_k(t)`,  with `Σ_k θ_k(t) ≥ 1`, `θ_k(t) ≥ 0`. -/
-theorem step2_decomposition
-    (β : ℝ) (X : ℝ → SphereTuple d n) (hX : Perspective.SA d n β X)
-    (x_star : SSphere d) :
-    ∀ t : ℝ, 0 < t → ∃ θ : Idx n → ℝ,
-      (∀ k, 0 ≤ θ k) ∧ (1 ≤ ∑ k : Idx n, θ k) ∧
-        ((x_star : EucSpace d) = ∑ k : Idx n, (θ k) • ((X t k : EucSpace d))) := by
   sorry
 
 /-- **Equation (e:diffineqalpha.step2).** Differential inequality for

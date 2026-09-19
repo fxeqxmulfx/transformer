@@ -17,8 +17,16 @@ projection `Proj_{x_i}` pays off, and where the hemisphere hypothesis is used.
 half: a minimum of finitely many differentiable curves is only one-sidedly
 differentiable, so the conclusion is drawn from a fencing argument rather than
 from `ṙ ≥ 0`.
+
+Step 2 of the same lemma opens with `e:decompox*.step2`, the decomposition of
+`x⋆` along the particles.  It is stated in the survey for the limit `x⋆` of
+step 1, and there it is justified by `x⋆` lying in the convex hull of the
+configuration; written for an arbitrary point of the sphere it is false, which
+is what `not_step2_decomposition` records, so `step2_decomposition` carries
+that hull membership as a hypothesis.
 -/
 
+import Mathlib.Analysis.Convex.Combination
 import Transformer.Perspective.MinCurve
 import Transformer.Perspective.Section5_HighD
 
@@ -98,6 +106,72 @@ theorem hemisphere_step1_monotone
       (fun j => by rw [hcontact]; exact (hr u).1 j)
   intro a ha b _ hab
   exact hmono a (lt_of_lt_of_le hr0 (hmono 0 hr0 a ha)) b hab
+
+/-- **Equation (e:decompox*.step2).**
+
+  `x⋆ = Σ_k θ_k(t) x_k(t)`,  with `θ_k(t) ≥ 0` and `Σ_k θ_k(t) ≥ 1`.
+
+The survey states the decomposition for the limit `x⋆` of step 1 and reads it
+off the convex hull of the configuration, which is where the coefficients come
+from; that membership is the hypothesis `hhull` here.  It is also the whole
+content of the step: once `x⋆` is a convex combination of the particles the
+dynamics plays no further role, which is why neither `β` nor the equation
+`SA` appears — and, as `not_step2_decomposition` shows, without `hhull` the
+statement is false.
+
+Source: arXiv:2312.10794v5, §6.1, `e:decompox*.step2`. -/
+theorem step2_decomposition
+    (X : ℝ → SphereTuple d n) (x_star : SSphere d) (t : ℝ)
+    (hhull : ((x_star : EucSpace d)) ∈
+      convexHull ℝ (Set.range fun k : Idx n => ((X t k : EucSpace d)))) :
+    ∃ θ : Idx n → ℝ,
+      (∀ k, 0 ≤ θ k) ∧ (1 ≤ ∑ k : Idx n, θ k) ∧
+        ((x_star : EucSpace d) = ∑ k : Idx n, (θ k) • ((X t k : EucSpace d))) := by
+  classical
+  rw [convexHull_range_eq_exists_affineCombination] at hhull
+  obtain ⟨s, w, hw0, hw1, hx⟩ := hhull
+  refine ⟨fun k => if k ∈ s then w k else 0, fun k => ?_, ?_, ?_⟩
+  · by_cases hk : k ∈ s
+    · simp [hk, hw0 k hk]
+    · simp [hk]
+  · rw [Finset.sum_ite_mem, Finset.univ_inter, hw1]
+  · rw [← hx, Finset.affineCombination_eq_linear_combination s _ w hw1,
+      ← Finset.sum_subset (Finset.subset_univ s) fun k _ hk => by simp [hk]]
+    exact Finset.sum_congr rfl fun k hk => by simp [hk]
+
+/-- The hypothesis of `step2_decomposition` is satisfiable: a point of the
+configuration is in the convex hull of the configuration. -/
+example :
+    (((basePoint 0 : SSphere 1)) : EucSpace 1) ∈
+      convexHull ℝ (Set.range fun _ : Idx 1 => (((basePoint 0 : SSphere 1)) : EucSpace 1)) :=
+  subset_convexHull ℝ _ ⟨0, rfl⟩
+
+/-- **Without the hull membership the decomposition fails.**
+
+One particle sitting at `x` is a solution of `SA`, and the antipode `-x` is
+not a non-negative combination of it: the coefficient would have to be `-1`.
+The survey's `x⋆` is the limit of the very configuration it is decomposed
+along, and that is what excludes this. -/
+theorem not_step2_decomposition :
+    ¬ ∀ (β : ℝ) (X : ℝ → SphereTuple 1 1), Perspective.SA 1 1 β X →
+        ∀ (x_star : SSphere 1) (t : ℝ), 0 < t →
+          ∃ θ : Idx 1 → ℝ, (∀ k, 0 ≤ θ k) ∧ (1 ≤ ∑ k : Idx 1, θ k) ∧
+            ((x_star : EucSpace 1) = ∑ k : Idx 1, (θ k) • ((X t k : EucSpace 1))) := by
+  intro h
+  obtain ⟨θ, hθ0, -, hθ⟩ :=
+    h 0 (fun _ _ => basePoint 0) (Perspective.SA_const_consensus 1 1 one_pos 0 (basePoint 0))
+      (antipode 1 (basePoint 0)) 1 one_pos
+  have hx : ‖((basePoint 0 : SSphere 1) : EucSpace 1)‖ = 1 :=
+    mem_sphere_zero_iff_norm.mp (basePoint 0).2
+  have hxx : inner (𝕜 := ℝ) (((basePoint 0 : SSphere 1)) : EucSpace 1)
+      (((basePoint 0 : SSphere 1)) : EucSpace 1) = 1 := by
+    rw [real_inner_self_eq_norm_mul_norm, hx]; ring
+  rw [Fin.sum_univ_one] at hθ
+  have hinner := congrArg
+    (fun v : EucSpace 1 => inner (𝕜 := ℝ) v (((basePoint 0 : SSphere 1)) : EucSpace 1)) hθ
+  simp only [antipode, real_inner_smul_left, inner_neg_left, hxx] at hinner
+  have := hθ0 0
+  linarith
 
 /-- The hypotheses of `hemisphere_step1_monotone` are satisfiable: the
 consensus solution, with `w` the common position and `r ≡ ⟨x, x⟩ = 1`. -/
