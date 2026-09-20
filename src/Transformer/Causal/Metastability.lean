@@ -12,6 +12,7 @@ Equations and statements covered:
 
 import Transformer.Basic
 import Transformer.Causal.Basic
+import Transformer.Causal.Packing
 
 open scoped BigOperators
 open Real
@@ -144,30 +145,42 @@ theorem fixed_centers_convergence (n : ℕ) (β δ : ℝ) (hβ : 0 < β) (hδ : 
 /-- The hypotheses of `fixed_centers_convergence` are satisfiable: `β = δ = 1`. -/
 example : (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 := ⟨one_pos, one_pos⟩
 
-/-- A finite `δ`-separated set of unit vectors: the values a R'enyi center
-subsequence takes, stripped of the indexing. -/
-def SeparatedOnSphere (d : ℕ) (S : Finset (EucSpace d)) (δ : ℝ) : Prop :=
-  (∀ x ∈ S, ‖x‖ = 1) ∧ ∀ x ∈ S, ∀ y ∈ S, x ≠ y → δ < ‖x - y‖
-
-/-- **Conjecture (cardinality).**
+/-- **Cardinality of the R'enyi centers.**
 
 The number of (strong) R'enyi centers with separation `δ = c β^{-1/2}` is
 `Θ(β^{(d-1)/2})` — the packing number of the sphere `𝕊^{d-1}` at that scale,
-since the centers are exactly a `δ`-separated set of unit vectors.
+since the centers are exactly a `δ`-separated set of unit vectors.  The `Θ` is
+spelled out as a pair of constants independent of `β`.
 
-Not proved here; the `Θ` is spelled out as a pair of constants independent of
-`β`.
+Proved, from the volume estimates of `Transformer.Causal.Packing`: the upper
+half holds for *every* `δ`-separated set, and the lower half is witnessed by a
+maximal one, which exists by `Packing.exists_maximalSeparated`.
+
+What is proved is therefore the geometric half of the survey's claim — the
+packing number of the sphere at scale `δ`.  The survey's centers are the
+centers *of a given sequence*, and that they are as many as the packing number
+allows needs in addition that they are a maximal separated set, which is a
+property of the sequence and not of the geometry; the expected count, for an
+i.i.d. sequence, is `Causal.strong_renyi_expected_count`.
 
 Source: arXiv:2411.04990v2, §5 (the cardinality conjecture). -/
 theorem renyi_count (d : ℕ) (c : ℝ) (hd : 2 ≤ d) (hc : 0 < c) :
     ∃ C₁ C₂ : ℝ, 0 < C₁ ∧ 0 < C₂ ∧ ∀ β : ℝ, 1 ≤ β →
       (∀ S : Finset (EucSpace d),
-          SeparatedOnSphere d S (c * β ^ (-(1/2 : ℝ))) →
+          Packing.SeparatedOnSphere d S (c * β ^ (-(1/2 : ℝ))) →
           (S.card : ℝ) ≤ C₂ * β ^ (((d : ℝ) - 1) / 2)) ∧
       ∃ S : Finset (EucSpace d),
-        SeparatedOnSphere d S (c * β ^ (-(1/2 : ℝ))) ∧
+        Packing.SeparatedOnSphere d S (c * β ^ (-(1/2 : ℝ))) ∧
         C₁ * β ^ (((d : ℝ) - 1) / 2) ≤ (S.card : ℝ) := by
-  sorry
+  have hdpos : (0 : ℝ) < (d : ℝ) := by
+    have : 0 < d := by omega
+    exact_mod_cast this
+  refine ⟨min ((d : ℝ) * (1 / (4 * c)) ^ (d - 1)) ((1 / (2 * c)) ^ (d - 1)),
+    2 * d * max (4 / c) 2 ^ (d - 1),
+    lt_min (mul_pos hdpos (by positivity)) (by positivity),
+    mul_pos (by linarith) (by positivity), fun β hβ =>
+      ⟨fun S hS => Packing.card_le_at_renyi_scale d (by omega) c hc β hβ S hS,
+        Packing.exists_card_ge_at_renyi_scale d (by omega) c hc β hβ⟩⟩
 
 /-- The hypotheses of `renyi_count` are satisfiable: `d = 2`, `c = 1`. -/
 example : 2 ≤ 2 ∧ (0 : ℝ) < 1 := ⟨le_rfl, one_pos⟩
