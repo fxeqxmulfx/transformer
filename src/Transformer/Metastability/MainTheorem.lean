@@ -8,7 +8,8 @@ Equations covered:
 * `eq: lambda.1, lambda.2, lambda.3`  — admissible decay rates `λ(β)`,
 * `eq: stick`                   — particles within a cap are exponentially close,
 * `eq: comparison`              — Cauchy-problem comparison for `ρ_q(t)`,
-* `Lemma lem: eminem` (Until collapse),
+* `Lemma lem: eminem` (Until collapse) — proved, from the scalar ODE
+  analysis of `Metastability.CollapseODE`,
 * `Lemma lem:collapsetime` (Propagation),
 * `eq: an.ineq`                 — `1 - ρ_q(T₁) ≤ e^{-λβ}`,
 * `eq: ze.equation`             — differential inequality for `ρ_q`,
@@ -22,6 +23,7 @@ Equations covered:
 import Transformer.Basic
 import Transformer.Perspective.Section1_IPS
 import Transformer.Metastability.Basic
+import Transformer.Metastability.CollapseODE
 
 open scoped BigOperators
 open Real
@@ -137,7 +139,13 @@ For `β > 1`, `c > 0`, `u_0 ∈ (0, 1]`, consider the Cauchy problem
 
 Then
 
-  `inf { t ≥ 0 : 1 - u(t) ≤ e^{-c β} } ≤ e^{β(1 - u_0)} / u_0 + (β² c e) / (β - 1)`. -/
+  `inf { t ≥ 0 : 1 - u(t) ≤ e^{-c β} } ≤ e^{β(1 - u_0)} / u_0 + (β² c e) / (β - 1)`.
+
+The analysis is `Metastability.exists_collapse_time`, which exhibits a time
+`t ≤ e^{β(1-u_0)}/u_0 + β² c e/(β-1)` at which `1 - u` has already fallen to
+`e^{-cβ}`; the infimum above is then at most that `t`.
+
+Source: arXiv:2410.06833v1, §2, `lem: eminem`. -/
 lemma eminem
     (β : ℝ) (hβ : 1 < β) (c : ℝ) (hc : 0 < c)
     (u₀ : ℝ) (hu : 0 < u₀ ∧ u₀ ≤ 1)
@@ -147,7 +155,20 @@ lemma eminem
     sInf { t : ℝ | 0 ≤ t ∧ 1 - u t ≤ Real.exp (-(c * β)) }
       ≤ Real.exp (β * (1 - u₀)) / u₀
         + β^2 * c * Real.exp 1 / (β - 1) := by
-  sorry
+  obtain ⟨t, ht0, htB, htu⟩ :=
+    exists_collapse_time β hβ c hc u (by rw [hu_init]; exact hu.1) hu_ode
+  rw [hu_init] at htB
+  exact le_trans (csInf_le ⟨0, fun s hs => hs.1⟩ ⟨ht0, htu⟩) htB
+
+/-- The hypotheses of `eminem` are satisfiable: `β = 2`, `c = 1`, and the
+constant solution `u ≡ 1` of the Cauchy problem at `u₀ = 1`. -/
+example : (1 : ℝ) < 2 ∧ (0 : ℝ) < 1 ∧ (0 < (1 : ℝ) ∧ (1 : ℝ) ≤ 1) ∧
+    (fun _ : ℝ => (1 : ℝ)) 0 = 1 ∧
+    ∀ t : ℝ, HasDerivAt (fun _ : ℝ => (1 : ℝ))
+      ((fun _ : ℝ => (1 : ℝ)) t * (1 - (fun _ : ℝ => (1 : ℝ)) t) *
+        Real.exp (2 * ((fun _ : ℝ => (1 : ℝ)) t - 1))) t := by
+  refine ⟨by norm_num, by norm_num, ⟨by norm_num, le_rfl⟩, rfl, fun t => ?_⟩
+  simpa using hasDerivAt_const t (1 : ℝ)
 
 /-- **Lemma (lem:collapsetime) — *Propagation.*
 
