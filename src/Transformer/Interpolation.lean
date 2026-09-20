@@ -5,6 +5,7 @@ Formalization of:
 -/
 
 import Transformer.Interpolation.Basic
+import Transformer.Interpolation.Wasserstein
 import Transformer.Interpolation.Clustering
 import Transformer.Interpolation.AtomClustering
 import Transformer.Interpolation.Disentanglement

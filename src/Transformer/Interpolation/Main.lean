@@ -7,16 +7,23 @@ Formalization of the main theorems of arXiv:2411.04551v3:
 * `Theorem thm: main.result`    — general interpolation,
 * `Lemma lem: hyp.propagation`  — propagation of transport maps,
 * `Lemma lem: monge`            — Monge-style optimal-transport identity,
+                                  proved, against the `W_2` of
+                                  `Transformer.Interpolation.Wasserstein`,
 * `Lemma lem: univ.approx`      — universal `L²`-map approximation.
 
-Each of these asserts the existence of a parameter curve, or of a map, with no
-construction available here, so none is proved: each is a theorem closed by
-`sorry`.  The weakenings are the ones already used in
-`Transformer.Interpolation.Clustering` and `…Disentanglement`: `W_2` is a
-parameter (Mathlib has no Wasserstein
-distance), `conv_g` is replaced by the support, and the switch and norm bounds
-written `O(·)` in the paper carry an explicit constant as a parameter, whose
-uniformity in `d`, `N` and the data is not expressible one statement at a time.
+All but `lem: monge` assert the existence of a parameter curve, or of a map,
+with no construction available here, so they are not proved: each is a theorem
+closed by `sorry`.  The weakenings are the ones already used in
+`Transformer.Interpolation.Clustering` and `…Disentanglement`: `conv_g` is
+replaced by the support, and the switch and norm bounds written `O(·)` in the
+paper carry an explicit constant as a parameter, whose uniformity in `d`, `N`
+and the data is not expressible one statement at a time.
+
+`W_2` was a parameter too — Mathlib has no Wasserstein distance — and that is
+what `lem: monge` could not survive, being a defining property of the distance
+rather than a claim about the flow: see `not_forall_monge`.  The distance is
+now defined in `Transformer.Interpolation.Wasserstein` and `lem: monge` is
+proved against it.
 
 The transport maps of `thm: main.result` are required to be measurable rather
 than to lie in `L²(𝕊^{d-1}; 𝕊^{d-1})`; on a sphere of finite measure and with
@@ -29,6 +36,7 @@ import Transformer.Interpolation.Basic
 import Transformer.Interpolation.Clustering
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.NeuralODE
+import Transformer.Interpolation.Wasserstein
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -175,26 +183,76 @@ example (μ₀ : Idx N → ProbSphere d) :
 two pushforwards of the same measure is controlled by the `L²(μ)` distance of
 the maps,
 
-  `W_2(S_# μ, ψ_# μ) ≤ Cst · ‖S - ψ‖_{L²(μ)}`,
+  `W_2(S_# μ, ψ_# μ) ≤ ‖S - ψ‖_{L²(μ)}`,
 
 which is how `W_2((Φ^{2T/3}_{θ_2})_# Φ^{T/3}_{θ_1}(μ_0^i), Φ_3^{T/3}(μ_1^i))`
 is bounded in the proof — `μ` being `Φ^{T/3}_{θ_1}(μ_0^i)` and `ψ` the map of
 `lem: hyp.propagation`.
 
-Not proved here.
+**What the source says and what is changed here.**  Two things, and both are
+what makes this a theorem rather than a request.
 
-Source: arXiv:2411.04551v3, §5. -/
-theorem monge (W₂ : Measure (SSphere d) → Measure (SSphere d) → ℝ)
-    (μ : ProbSphere d) (S ψ : SSphere d → SSphere d) (Cst : ℝ)
+*`W_2` is `Interpolation.W2`, not a parameter.*  Carried as a free function,
+as it was here, the inequality is false: `not_forall_monge` refutes it below.
+That is not an accident of the constant — the statement *is* a defining
+property of the 2-Wasserstein distance, so asking it of an arbitrary function
+of two measures asks for something no hypothesis in the binders supplies.  The
+distance is therefore defined, in `Interpolation.Wasserstein`, as the infimum
+of the quadratic transport cost over couplings, and the lemma is proved: the
+map `x ↦ (S x, ψ x)` pushes `μ` to a coupling of `S_# μ` and `ψ_# μ` whose
+cost is exactly the `L²(μ)` distance of the two maps.
+
+*The constant is `1`.*  The paper writes an unspecified `Cst`; the proof gives
+`1`, which is the sharp value, so nothing is lost by writing it.  Carried as a
+parameter it was, again, a free variable in the direction that makes the claim
+false.
+
+Source: arXiv:2411.04551v3, §5, `lem: monge`. -/
+theorem monge (μ : ProbSphere d) (S ψ : SSphere d → SSphere d)
     (hS : Measurable S) (hψ : Measurable ψ) :
-    W₂ (Measure.map S (μ : Measure (SSphere d))) (Measure.map ψ (μ : Measure (SSphere d)))
-      ≤ Cst * Real.sqrt
+    W2 d (Measure.map S (μ : Measure (SSphere d))) (Measure.map ψ (μ : Measure (SSphere d)))
+      ≤ Real.sqrt
           (∫ x, ‖(S x : EucSpace d) - (ψ x : EucSpace d)‖ ^ 2 ∂(μ : Measure (SSphere d))) := by
-  sorry
+  have hpair : Measurable (fun x : SSphere d => (S x, ψ x)) := hS.prodMk hψ
+  set γ : Measure (SSphere d × SSphere d) :=
+    Measure.map (fun x : SSphere d => (S x, ψ x)) (μ : Measure (SSphere d)) with hγdef
+  have hcoup : IsCoupling d (Measure.map S (μ : Measure (SSphere d)))
+      (Measure.map ψ (μ : Measure (SSphere d))) γ := by
+    constructor <;>
+      rw [hγdef, Measure.map_map (by fun_prop) hpair] <;> rfl
+  have hmeasf : AEStronglyMeasurable (fun p : SSphere d × SSphere d => dist p.1 p.2 ^ 2) γ := by
+    fun_prop
+  have hcost : ∫ p, dist p.1 p.2 ^ 2 ∂γ
+      = ∫ x, ‖(S x : EucSpace d) - (ψ x : EucSpace d)‖ ^ 2 ∂(μ : Measure (SSphere d)) := by
+    rw [hγdef, integral_map hpair.aemeasurable hmeasf]
+    exact integral_congr_ae (Filter.Eventually.of_forall fun x => by
+      simp only [Subtype.dist_eq, dist_eq_norm])
+  have := W2_le_of_coupling d _ _ γ hcoup
+  rwa [hcost] at this
 
 /-- The hypotheses of `monge` are satisfiable: the identity is measurable. -/
 example : Measurable (id : SSphere d → SSphere d) ∧ Measurable (id : SSphere d → SSphere d) :=
   ⟨measurable_id, measurable_id⟩
+
+/-- **`lem: monge` is false for a free `W_2` and a free constant.**
+
+Read with `W₂` and `Cst` as universally quantified binders, as the statement
+stood here before, the lemma claims an inequality about a function of two
+measures of which nothing is assumed.  `W₂ ≡ 1` and `Cst = 0` with `S = ψ`
+give `1 ≤ 0`.  This is what `monge` above repairs by defining `W_2`.
+
+Source: arXiv:2411.04551v3, §5, `lem: monge`. -/
+theorem not_forall_monge :
+    ¬ ∀ (d : ℕ) (W₂ : Measure (SSphere d) → Measure (SSphere d) → ℝ)
+        (μ : ProbSphere d) (S ψ : SSphere d → SSphere d) (Cst : ℝ),
+        Measurable S → Measurable ψ →
+        W₂ (Measure.map S (μ : Measure (SSphere d))) (Measure.map ψ (μ : Measure (SSphere d)))
+          ≤ Cst * Real.sqrt
+              (∫ x, ‖(S x : EucSpace d) - (ψ x : EucSpace d)‖ ^ 2
+                ∂(μ : Measure (SSphere d))) := by
+  intro h
+  have := h 1 (fun _ _ => 1) (diracProb 1 (basePoint 0)) id id 0 measurable_id measurable_id
+  norm_num at this
 
 /-- **Lemma (lem: univ.approx).** *Universal approximation of `L²` maps.*
 
