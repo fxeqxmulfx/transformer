@@ -8,3 +8,4 @@ Formalization of:
 import Transformer.Perceptron.Basic
 import Transformer.Perceptron.Geodesic
 import Transformer.Perceptron.Dirac
+import Transformer.Perceptron.Analytic
