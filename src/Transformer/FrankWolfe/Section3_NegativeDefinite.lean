@@ -67,6 +67,12 @@ them neither weakens nor strengthens the claim: the paper's instance is the
 instance `lam = λ_max(B_*^0)`, and every other `lam` satisfying the hypothesis
 is larger, hence gives a weaker conclusion that follows from it.
 
+The step size is the theorem's own, `γ^t = 2/(t+2)`; the paragraph after the
+theorem says instead "we fix `γ^t = 2/(t+1)`", but the statement and the proof
+of `sec: bach.proof` both run on `2/(t+2)` — the proof's recursion
+`a^{t+1} = (t+2)J^{t+1} ≤ (t+2)(1 - 2/(t+2))a^t/(t+1) + 4C` uses it — so the
+paragraph is the odd one out.
+
 Not proved here.
 
 Source: arXiv:2508.09628v1, §3, `thm: fw.cluster`. -/
