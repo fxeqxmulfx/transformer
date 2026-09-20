@@ -10,6 +10,11 @@ atoms of positive mass at pairwise distinct angles of `[0,2π)`.
 point is built from; `IsAtomicOnCircle` is a predicate of its arguments, not a
 claim, and `isAtomicOnCircle_atomicProb` says the constructor satisfies it.
 
+`circleVel` is the velocity `x'(θ)` of the parametrization, and
+`hasDerivAt_circleVel` is `x''(θ) = -x(θ)`: the unit circle has unit speed and
+unit curvature.  The angular derivatives of `rem:strictSOPD-perceptron` are
+read along it.
+
 Source: arXiv:2601.21366v2, `eq: atomic.thm.bound`.
 -/
 
@@ -75,6 +80,62 @@ theorem inner_basePoint_circlePoint (θ : ℝ) :
     inner (𝕜 := ℝ) ((basePoint 1 : SSphere 2) : EucSpace 2) (circlePoint θ : EucSpace 2)
       = Real.cos θ :=
   inner_greatCircle norm_basePoint_one inner_basePoint_secondAxis θ
+
+/-- The velocity `x'(θ) = (-sin θ, cos θ)` of the circle parametrization. -/
+noncomputable def circleVel (θ : ℝ) : EucSpace 2 :=
+  (-Real.sin θ) • ((basePoint 1 : SSphere 2) : EucSpace 2) + Real.cos θ • secondAxis
+
+/-- `x'` is the derivative of `x`. -/
+theorem hasDerivAt_circlePoint (θ : ℝ) :
+    HasDerivAt (fun s : ℝ => (circlePoint s : EucSpace 2)) (circleVel θ) θ :=
+  ((Real.hasDerivAt_cos θ).smul_const ((basePoint 1 : SSphere 2) : EucSpace 2)).add
+    ((Real.hasDerivAt_sin θ).smul_const secondAxis)
+
+/-- `x''(θ) = -x(θ)`: the circle parametrization has unit speed and unit
+curvature. -/
+theorem hasDerivAt_circleVel (θ : ℝ) :
+    HasDerivAt circleVel (-(circlePoint θ : EucSpace 2)) θ := by
+  have h : HasDerivAt circleVel ((-Real.cos θ) • ((basePoint 1 : SSphere 2) : EucSpace 2)
+      + (-Real.sin θ) • secondAxis) θ :=
+    (((Real.hasDerivAt_sin θ).neg).smul_const ((basePoint 1 : SSphere 2) : EucSpace 2)).add
+      ((Real.hasDerivAt_cos θ).smul_const secondAxis)
+  rwa [show (-Real.cos θ) • ((basePoint 1 : SSphere 2) : EucSpace 2)
+      + (-Real.sin θ) • secondAxis = -(circlePoint θ : EucSpace 2) by
+    rw [coe_circlePoint, greatCircle, neg_add, neg_smul, neg_smul]] at h
+
+/-- The coordinates of `x(θ)` in a frame: `⟪v, x(θ)⟫ = cos θ ⟪v, e₀⟫ + sin θ
+⟪v, e₁⟫`. -/
+theorem inner_circlePoint (v : EucSpace 2) (θ : ℝ) :
+    inner (𝕜 := ℝ) v (circlePoint θ : EucSpace 2)
+      = Real.cos θ * inner (𝕜 := ℝ) v ((basePoint 1 : SSphere 2) : EucSpace 2)
+        + Real.sin θ * inner (𝕜 := ℝ) v secondAxis := by
+  rw [coe_circlePoint, greatCircle, inner_add_right, real_inner_smul_right,
+    real_inner_smul_right]
+
+/-- The coordinates of `x'(θ)`: `⟪v, x'(θ)⟫ = -sin θ ⟪v, e₀⟫ + cos θ ⟪v, e₁⟫`. -/
+theorem inner_circleVel (v : EucSpace 2) (θ : ℝ) :
+    inner (𝕜 := ℝ) v (circleVel θ)
+      = -Real.sin θ * inner (𝕜 := ℝ) v ((basePoint 1 : SSphere 2) : EucSpace 2)
+        + Real.cos θ * inner (𝕜 := ℝ) v secondAxis := by
+  rw [circleVel, inner_add_right, real_inner_smul_right, real_inner_smul_right]
+
+/-- The derivative of `θ ↦ ⟪v, x(θ)⟫` is `⟪v, x'(θ)⟫`. -/
+theorem hasDerivAt_inner_circlePoint (v : EucSpace 2) (θ : ℝ) :
+    HasDerivAt (fun s : ℝ => inner (𝕜 := ℝ) v (circlePoint s : EucSpace 2))
+      (inner (𝕜 := ℝ) v (circleVel θ)) θ := by
+  simp only [inner_circlePoint, inner_circleVel]
+  exact ((Real.hasDerivAt_cos θ).mul_const _).add ((Real.hasDerivAt_sin θ).mul_const _)
+
+/-- The derivative of `θ ↦ ⟪v, x'(θ)⟫` is `-⟪v, x(θ)⟫`. -/
+theorem hasDerivAt_inner_circleVel (v : EucSpace 2) (θ : ℝ) :
+    HasDerivAt (fun s : ℝ => inner (𝕜 := ℝ) v (circleVel s))
+      (-inner (𝕜 := ℝ) v (circlePoint θ : EucSpace 2)) θ := by
+  simp only [inner_circlePoint, inner_circleVel]
+  have h := (((Real.hasDerivAt_sin θ).neg).mul_const
+      (inner (𝕜 := ℝ) v ((basePoint 1 : SSphere 2) : EucSpace 2))).add
+    ((Real.hasDerivAt_cos θ).mul_const (inner (𝕜 := ℝ) v secondAxis))
+  convert h using 1
+  ring
 
 /-! ### `eq: atomic.thm.bound` -/
 

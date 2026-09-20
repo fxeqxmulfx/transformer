@@ -16,6 +16,8 @@ import Transformer.Perceptron.Bound
 import Transformer.Perceptron.MinMax
 import Transformer.Perceptron.Kernel
 import Transformer.Perceptron.KernelSup
+import Transformer.Perceptron.CircleDeriv
+import Transformer.Perceptron.StrictSOPD
 import Transformer.Perceptron.Transform
 import Transformer.Perceptron.Hyperplane
 import Transformer.Perceptron.Bias
