@@ -16,3 +16,4 @@ import Transformer.Modes.Section2_RandomLine
 import Transformer.Modes.Section2_Field
 import Transformer.Modes.Section2_Degenerate
 import Transformer.Modes.Section2_MainForm
+import Transformer.Modes.Section2_Gt
