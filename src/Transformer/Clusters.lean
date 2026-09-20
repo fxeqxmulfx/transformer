@@ -27,3 +27,5 @@ import Transformer.Clusters.Section9_Hyperplanes
 import Transformer.Clusters.Section8_Polytope
 import Transformer.Clusters.Section8_Origin
 import Transformer.Clusters.Section10_ProjHull
+import Transformer.Clusters.Section10_Remainder
+import Transformer.Clusters.Section10_Step2
