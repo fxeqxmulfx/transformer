@@ -155,24 +155,37 @@ def IsStationary (β : ℝ) (σ : ℝ → ℝ) (ω : Idx d → ℝ) (a : Idx d �
   ∀ x ∈ (μ : Measure (SSphere d)).support,
     energyGrad β σ ω a μ (x : EucSpace d) = 0
 
-/-- **A Dirac mass is stationary for pure attention.**  Its own point is the
-only point of its support, and there the attention field is `e^β Proj_x x = 0`.
-This is the inhabitant every satisfiability witness below is built from.
+/-- **A Dirac mass is stationary whenever the perceptron's raw drift at its
+atom is radial.**  Its own point is the only point of its support; there the
+attention field is `e^β Proj_x x = 0`, and `Proj_x` kills every multiple of
+`x`.  This is the inhabitant every satisfiability witness below is built from.
 
 Source: arXiv:2601.21366v2, `eq: steady.state`. -/
-theorem isStationary_diracProb (β : ℝ) (σ : ℝ → ℝ) (a : Idx d → EucSpace d)
-    (x : SSphere d) : IsStationary β σ (0 : Idx d → ℝ) a (Perspective.diracProb d x) := by
+theorem isStationary_diracProb_of_radial (β : ℝ) (σ : ℝ → ℝ) (ω : Idx d → ℝ)
+    (a : Idx d → EucSpace d) (x : SSphere d) (c : ℝ)
+    (h : ∑ j : Idx d, (ω j * σ (inner (𝕜 := ℝ) (a j) (x : EucSpace d))) • a j
+      = c • (x : EucSpace d)) :
+    IsStationary β σ ω a (Perspective.diracProb d x) := by
   intro y hy
   have hyx : y = x := Interpolation.eq_of_mem_support_dirac hy
   have hx : ‖(x : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
   subst hyx
-  rw [energyGrad, drift_zero, add_zero]
+  rw [energyGrad, drift, h, proj_smul_self hx, add_zero]
   show (∫ z, Real.exp (β * inner (𝕜 := ℝ) (y : EucSpace d) (z : EucSpace d)) •
     proj d (y : EucSpace d) (z : EucSpace d) ∂(Measure.dirac y)) = 0
   rw [integral_dirac]
   rw [show proj d (y : EucSpace d) (y : EucSpace d)
       = proj d (y : EucSpace d) ((1 : ℝ) • (y : EucSpace d)) by rw [one_smul],
     proj_smul_self hx, smul_zero]
+
+/-- **A Dirac mass is stationary for pure attention**: the case `ω = 0` of
+`isStationary_diracProb_of_radial`.
+
+Source: arXiv:2601.21366v2, `eq: steady.state`. -/
+theorem isStationary_diracProb (β : ℝ) (σ : ℝ → ℝ) (a : Idx d → EucSpace d)
+    (x : SSphere d) : IsStationary β σ (0 : Idx d → ℝ) a (Perspective.diracProb d x) :=
+  isStationary_diracProb_of_radial β σ 0 a x 0 (by simp)
+
 
 end Perceptron
 end Transformer

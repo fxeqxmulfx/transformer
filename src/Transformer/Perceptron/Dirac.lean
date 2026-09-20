@@ -81,17 +81,34 @@ field vanishes at the only atom, and the drift is a multiple of `x` there. -/
 theorem isStationary_pin (β : ℝ) (j₀ : Idx d) (x : SSphere d) :
     IsStationary β (fun _ => (2 : ℝ)⁻¹) (Pi.single j₀ (1 : ℝ))
       (Pi.single j₀ (-(x : EucSpace d))) (Perspective.diracProb d x) := by
-  intro y hy
-  have hyx : y = x := Interpolation.eq_of_mem_support_dirac hy
-  have hx : ‖(x : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
-  subst hyx
-  rw [energyGrad, drift_pin, proj_smul_self hx]
-  show (∫ z, Real.exp (β * inner (𝕜 := ℝ) (y : EucSpace d) (z : EucSpace d)) •
-    proj d (y : EucSpace d) (z : EucSpace d) ∂(Measure.dirac y)) + 0 = 0
-  rw [integral_dirac, add_zero,
-    show proj d (y : EucSpace d) (y : EucSpace d)
-      = proj d (y : EucSpace d) ((1 : ℝ) • (y : EucSpace d)) by rw [one_smul],
-    proj_smul_self hx, smul_zero]
+  refine isStationary_diracProb_of_radial β _ _ _ x (-(2 : ℝ)⁻¹) ?_
+  rw [Finset.sum_eq_single j₀]
+  · simp [neg_smul]
+  · intro j _ hj
+    simp [Pi.single_eq_of_ne hj]
+  · intro h
+    exact absurd (Finset.mem_univ j₀) h
+
+/-- **`δ_x` is a critical point of the ReLU perceptron** pinned at `x`: the
+neuron `a_{j₀} = -x` is inactive at `x`, so the drift vanishes there outright.
+
+This is the witness for the stationarity hypothesis of `thm: circle` and of
+`thm: any.d`, whose activation is `σ(s) = s_+`.
+
+Source: arXiv:2601.21366v2, `eq: steady.state`. -/
+theorem isStationary_relu_pin (β : ℝ) (j₀ : Idx d) (x : SSphere d) :
+    IsStationary β (fun s => max s 0) (Pi.single j₀ (1 : ℝ))
+      (Pi.single j₀ (-(x : EucSpace d))) (Perspective.diracProb d x) := by
+  have hxx : inner (𝕜 := ℝ) (x : EucSpace d) (x : EucSpace d) = (1 : ℝ) := by
+    rw [real_inner_self_eq_norm_sq, mem_sphere_zero_iff_norm.mp x.2]; norm_num
+  refine isStationary_diracProb_of_radial β _ _ _ x 0 ?_
+  rw [Finset.sum_eq_single j₀]
+  · rw [Pi.single_eq_same, Pi.single_eq_same, inner_neg_left, hxx]
+    norm_num
+  · intro j _ hj
+    simp [Pi.single_eq_of_ne hj]
+  · intro h
+    exact absurd (Finset.mem_univ j₀) h
 
 /-- **`δ_x` is a *strictly* SOPD critical point** of the witness perceptron,
 with `κ = 1/2`: along every geodesic issued from `x`, the energy is

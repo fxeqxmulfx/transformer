@@ -73,6 +73,38 @@ theorem analyticOnNhd_greatCircle (u w : EucSpace d) :
   (Real.analyticAt_cos.smul analyticAt_const).add
     (Real.analyticAt_sin.smul analyticAt_const)
 
+/-! ### The ReLU primitive -/
+
+/-- `φ(s) = (s_+)²` is a primitive of `2σ` for the ReLU `σ(s) = s_+`, at every
+real number — including `0`, where it is differentiable with derivative `0`.
+This is the witness for the hypothesis `φ' = 2σ` whenever `σ` is the ReLU. -/
+theorem hasDerivAt_reluSq (s : ℝ) :
+    HasDerivAt (fun t : ℝ => max t 0 ^ 2) (2 * max s 0) s := by
+  rcases lt_trichotomy s 0 with hs | hs | hs
+  · have h : (fun t : ℝ => max t 0 ^ 2) =ᶠ[nhds s] fun _ : ℝ => (0 : ℝ) := by
+      filter_upwards [Iio_mem_nhds hs] with t ht
+      rw [max_eq_right (le_of_lt ht)]; ring
+    simpa [max_eq_right hs.le] using (hasDerivAt_const s (0 : ℝ)).congr_of_eventuallyEq h
+  · subst hs
+    have h : HasDerivAt (fun t : ℝ => max t 0 ^ 2) 0 0 := by
+      rw [hasDerivAt_iff_isLittleO, Asymptotics.isLittleO_iff]
+      intro c hc
+      filter_upwards [Metric.ball_mem_nhds (0 : ℝ) hc] with t ht
+      have htc : |t| < c := by simpa [Real.dist_eq] using ht
+      have h0 : (0 : ℝ) ≤ max t 0 := le_max_right t 0
+      have h1 : max t 0 ≤ |t| := max_le (le_abs_self t) (abs_nonneg t)
+      have key : |max t 0 ^ 2 - max 0 0 ^ 2 - (t - 0) • (0 : ℝ)| ≤ c * |t - 0| := by
+        have e : max t 0 ^ 2 - max 0 0 ^ 2 - (t - 0) • (0 : ℝ) = max t 0 ^ 2 := by simp
+        rw [e, abs_of_nonneg (sq_nonneg _), sub_zero]
+        nlinarith [mul_le_mul h1 h1 h0 (abs_nonneg t),
+          mul_le_mul_of_nonneg_right htc.le (abs_nonneg t)]
+      simpa [Real.norm_eq_abs] using key
+    simpa using h
+  · have h : (fun t : ℝ => max t 0 ^ 2) =ᶠ[nhds s] fun t : ℝ => t ^ 2 := by
+      filter_upwards [Ioi_mem_nhds hs] with t ht
+      rw [max_eq_left (le_of_lt ht)]
+    simpa [max_eq_left hs.le] using (hasDerivAt_pow 2 s).congr_of_eventuallyEq h
+
 /-! ### Analyticity of the potential on the sphere -/
 
 /-- **`v_ϑ` is real-analytic on `𝕊^{d-1}`**: it agrees on the sphere with a
