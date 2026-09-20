@@ -36,3 +36,4 @@ import Transformer.Homogenized.RademacherLaw
 import Transformer.Homogenized.MeanFieldLipschitz
 import Transformer.Homogenized.CoupledSystem
 import Transformer.Homogenized.PropagationChaos
+import Transformer.Homogenized.SphereSde
