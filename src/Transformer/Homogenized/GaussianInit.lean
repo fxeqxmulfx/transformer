@@ -78,7 +78,11 @@ theorem isGaussianHeadLaw_dirac_zero (d : ℕ) :
     rfl
 
 /-- **Consequence (i) of (G).**  Under `eq: tformers.at.initialization` the
-variance proxy of `ass:variance_proxy` is explicit: `ς² = σ_V²(d-1)`.
+variance proxy `ς` — the upper bound of `eq: defining.alpha`, which
+`eq:Alpha_Sec2` turns into `α = ης²/H` — is explicit: `ς² = σ_V²(d-1)`.
+
+The source states this consequence as `α = (η/H)σ_V²(d-1)`; dividing by the
+definition of `α` is what isolates `ς`, and `alphaOf_gaussian` puts it back.
 
 Not proved here.
 

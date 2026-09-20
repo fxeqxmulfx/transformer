@@ -2786,18 +2786,18 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`IsVarianceProxy`](src/Transformer/Homogenized/Defs.lean#L137) | def |  |
 | [`alphaOf`](src/Transformer/Homogenized/Defs.lean#L144) | def |  |
 
-**[Transformer.Homogenized.GaussianInit](src/Transformer/Homogenized/GaussianInit.lean)** — 189 lines
+**[Transformer.Homogenized.GaussianInit](src/Transformer/Homogenized/GaussianInit.lean)** — 193 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`IsGaussianHeadLaw`](src/Transformer/Homogenized/GaussianInit.lean#L37) | def |  |
 | [`IsDiffusiveSde`](src/Transformer/Homogenized/GaussianInit.lean#L62) | def |  |
 | [`isGaussianHeadLaw_dirac_zero`](src/Transformer/Homogenized/GaussianInit.lean#L69) | theorem | proved |
-| [`varianceProxy_gaussian`](src/Transformer/Homogenized/GaussianInit.lean#L86) | theorem | sorry |
-| [`alphaOf_gaussian`](src/Transformer/Homogenized/GaussianInit.lean#L113) | theorem | proved |
-| [`bField_gaussian`](src/Transformer/Homogenized/GaussianInit.lean#L129) | theorem | sorry |
-| [`weak_error_centered`](src/Transformer/Homogenized/GaussianInit.lean#L154) | theorem | sorry |
-| [`isDiffusiveSde_dirac_zero`](src/Transformer/Homogenized/GaussianInit.lean#L179) | theorem | proved |
+| [`varianceProxy_gaussian`](src/Transformer/Homogenized/GaussianInit.lean#L90) | theorem | sorry |
+| [`alphaOf_gaussian`](src/Transformer/Homogenized/GaussianInit.lean#L117) | theorem | proved |
+| [`bField_gaussian`](src/Transformer/Homogenized/GaussianInit.lean#L133) | theorem | sorry |
+| [`weak_error_centered`](src/Transformer/Homogenized/GaussianInit.lean#L158) | theorem | sorry |
+| [`isDiffusiveSde_dirac_zero`](src/Transformer/Homogenized/GaussianInit.lean#L183) | theorem | proved |
 
 **[Transformer.Homogenized.Generator](src/Transformer/Homogenized/Generator.lean)** — 215 lines
 
@@ -4555,9 +4555,9 @@ Everything the build cannot vouch for, in one place.
 | [`layer_clustering`](src/Transformer/GPTMini/ClusteringTheorem.lean#L93) | theorem | `Transformer.GPTMini.ClusteringTheorem` |
 | [`mean_field_clustering`](src/Transformer/GPTMini/ClusteringTheorem.lean#L122) | theorem | `Transformer.GPTMini.ClusteringTheorem` |
 | [`polynomial_rate`](src/Transformer/GPTMini/ClusteringTheorem.lean#L158) | theorem | `Transformer.GPTMini.ClusteringTheorem` |
-| [`varianceProxy_gaussian`](src/Transformer/Homogenized/GaussianInit.lean#L86) | theorem | `Transformer.Homogenized.GaussianInit` |
-| [`bField_gaussian`](src/Transformer/Homogenized/GaussianInit.lean#L129) | theorem | `Transformer.Homogenized.GaussianInit` |
-| [`weak_error_centered`](src/Transformer/Homogenized/GaussianInit.lean#L154) | theorem | `Transformer.Homogenized.GaussianInit` |
+| [`varianceProxy_gaussian`](src/Transformer/Homogenized/GaussianInit.lean#L90) | theorem | `Transformer.Homogenized.GaussianInit` |
+| [`bField_gaussian`](src/Transformer/Homogenized/GaussianInit.lean#L133) | theorem | `Transformer.Homogenized.GaussianInit` |
+| [`weak_error_centered`](src/Transformer/Homogenized/GaussianInit.lean#L158) | theorem | `Transformer.Homogenized.GaussianInit` |
 | [`kernel_regularity`](src/Transformer/Homogenized/Kernel.lean#L55) | theorem | `Transformer.Homogenized.Kernel` |
 | [`ballistic_regime`](src/Transformer/Homogenized/Regimes.lean#L65) | theorem | `Transformer.Homogenized.Regimes` |
 | [`modified_regime`](src/Transformer/Homogenized/Regimes.lean#L110) | theorem | `Transformer.Homogenized.Regimes` |
