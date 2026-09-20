@@ -11,3 +11,6 @@ import Transformer.Modes.Section1_Mammen
 import Transformer.Modes.Section1_Main
 import Transformer.Modes.Section1_Belt
 import Transformer.Modes.Section1_Sketch
+import Transformer.Modes.Section2_KacRice
+import Transformer.Modes.Section2_RandomLine
+import Transformer.Modes.Section2_Field
