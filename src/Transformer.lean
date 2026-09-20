@@ -58,6 +58,7 @@ are translated directly.
 -/
 
 import Transformer.Basic
+import Transformer.Wasserstein
 import Transformer.ALM
 import Transformer.RASP
 import Transformer.RASPL
