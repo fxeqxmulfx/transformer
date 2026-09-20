@@ -2711,19 +2711,18 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`fullVF_eq_zero`](src/Transformer/Interpolation/IdentityFlow.lean#L39) | theorem | proved |
 | [`identity_flow`](src/Transformer/Interpolation/IdentityFlow.lean#L61) | theorem | proved |
 
-**[Transformer.Interpolation.Main](src/Transformer/Interpolation/Main.lean)** — 284 lines
+**[Transformer.Interpolation.Main](src/Transformer/Interpolation/Main.lean)** — 297 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`IsHole`](src/Transformer/Interpolation/Main.lean#L52) | def |  |
 | [`isHole_antipode_diracProb`](src/Transformer/Interpolation/Main.lean#L58) | theorem | proved |
-| [`targets_atoms`](src/Transformer/Interpolation/Main.lean#L81) | theorem | sorry |
-| [`main_result`](src/Transformer/Interpolation/Main.lean#L116) | theorem | sorry |
-| [`threeStepFlow`](src/Transformer/Interpolation/Main.lean#L149) | def |  |
-| [`hyp_propagation`](src/Transformer/Interpolation/Main.lean#L164) | theorem | sorry |
-| [`monge`](src/Transformer/Interpolation/Main.lean#L211) | theorem | proved |
-| [`not_forall_monge`](src/Transformer/Interpolation/Main.lean#L245) | theorem | proved |
-| [`univ_approx`](src/Transformer/Interpolation/Main.lean#L268) | theorem | sorry |
+| [`targets_atoms`](src/Transformer/Interpolation/Main.lean#L96) | theorem | sorry |
+| [`main_result`](src/Transformer/Interpolation/Main.lean#L137) | theorem | sorry |
+| [`hyp_propagation`](src/Transformer/Interpolation/Main.lean#L173) | theorem | sorry |
+| [`monge`](src/Transformer/Interpolation/Main.lean#L224) | theorem | proved |
+| [`not_forall_monge`](src/Transformer/Interpolation/Main.lean#L258) | theorem | proved |
+| [`univ_approx`](src/Transformer/Interpolation/Main.lean#L281) | theorem | sorry |
 
 **[Transformer.Interpolation.MassConcentration](src/Transformer/Interpolation/MassConcentration.lean)** — 127 lines
 
@@ -4221,10 +4220,10 @@ Everything the build cannot vouch for, in one place.
 | [`induction_barycenter`](src/Transformer/Interpolation/Disentanglement.lean#L134) | theorem | `Transformer.Interpolation.Disentanglement` |
 | [`perturbation`](src/Transformer/Interpolation/Disentanglement.lean#L177) | theorem | `Transformer.Interpolation.Disentanglement` |
 | [`generic_discrete_distinct`](src/Transformer/Interpolation/GenericDiscrete.lean#L65) | theorem | `Transformer.Interpolation.GenericDiscrete` |
-| [`targets_atoms`](src/Transformer/Interpolation/Main.lean#L81) | theorem | `Transformer.Interpolation.Main` |
-| [`main_result`](src/Transformer/Interpolation/Main.lean#L116) | theorem | `Transformer.Interpolation.Main` |
-| [`hyp_propagation`](src/Transformer/Interpolation/Main.lean#L164) | theorem | `Transformer.Interpolation.Main` |
-| [`univ_approx`](src/Transformer/Interpolation/Main.lean#L268) | theorem | `Transformer.Interpolation.Main` |
+| [`targets_atoms`](src/Transformer/Interpolation/Main.lean#L96) | theorem | `Transformer.Interpolation.Main` |
+| [`main_result`](src/Transformer/Interpolation/Main.lean#L137) | theorem | `Transformer.Interpolation.Main` |
+| [`hyp_propagation`](src/Transformer/Interpolation/Main.lean#L173) | theorem | `Transformer.Interpolation.Main` |
+| [`univ_approx`](src/Transformer/Interpolation/Main.lean#L281) | theorem | `Transformer.Interpolation.Main` |
 | [`prop_interpolation_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L53) | theorem | `Transformer.Interpolation.NeuralODE` |
 | [`lem_induction_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L85) | theorem | `Transformer.Interpolation.NeuralODE` |
 | [`global_clustering`](src/Transformer/MeanField/Clustering.lean#L57) | theorem | `Transformer.MeanField.Clustering` |

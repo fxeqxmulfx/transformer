@@ -75,24 +75,40 @@ The `L^∞` norm of `θ` is measured coordinate by coordinate, as the sum of the
 operator norms of the four matrices and of `‖b‖`; `Params d` carries no norm of
 its own.
 
+**What the source says and what is changed here.**  Two repairs, neither of
+them a weakening.
+
+*`W_2` is `Interpolation.W2`.*  It was a free function of two measures, of
+which nothing was assumed — see `not_forall_monge` for what that costs.
+
+*The two `O(·)` constants are quantified before the data.*  That is what
+`O(d · N)` and `O((d·N)/T + log(1/ε))` mean: one pair of constants serving
+every dimension, every `N` and every datum.  Written as a universally
+quantified binder, as `C` was, the switch bound said instead that *every*
+constant works, so `C = 0` forced `K = 0`; written as an existential inside,
+as `Cnorm` was, it allowed a constant chosen after the data, which is weaker
+than the paper.  Both now stand outside every other quantifier, so `d` and `N`
+are bound here rather than taken from the section.
+
 Not proved here.
 
-Source: arXiv:2411.04551v3, §1. -/
-theorem targets_atoms (W₂ : Measure (SSphere d) → Measure (SSphere d) → ℝ) (C : ℕ)
-    (μ₀ : Idx N → ProbSphere d) (xtarget : Idx N → SSphere d) (T ε : ℝ)
-    (hd : 3 ≤ d) (hT : 0 < T) (hε : 0 < ε)
-    (hhole : ∃ w₀ : SSphere d, IsHole d N μ₀ w₀) :
-    ∃ (θ : TimeParams d) (K : ℕ) (Cnorm : ℝ) (μ : Idx N → ℝ → ProbSphere d),
-      K ≤ C * (d * N) ∧ PiecewiseConstant d θ T K ∧
-      (∀ s ∈ Set.Icc (0 : ℝ) T,
-        ‖(θ s).V‖ + ‖(θ s).B‖ + ‖(θ s).W‖ + ‖(θ s).U‖ + ‖(θ s).b‖
-          ≤ Cnorm * ((d * N : ℝ) / T + Real.log (1 / ε))) ∧
-      (∀ i : Idx N, μ i 0 = μ₀ i ∧ cauchyPB d θ (μ i)) ∧
-      ∀ i : Idx N, W₂ (μ i T : Measure (SSphere d)) (Measure.dirac (xtarget i)) ≤ ε := by
+Source: arXiv:2411.04551v3, §1, `thm: targets.atoms`. -/
+theorem targets_atoms :
+    ∃ C Cnorm : ℝ, ∀ (d N : ℕ) (μ₀ : Idx N → ProbSphere d) (xtarget : Idx N → SSphere d)
+      (T ε : ℝ), 3 ≤ d → 0 < T → 0 < ε → (∃ w₀ : SSphere d, IsHole d N μ₀ w₀) →
+      ∃ (θ : TimeParams d) (K : ℕ) (μ : Idx N → ℝ → ProbSphere d),
+        (K : ℝ) ≤ C * (d * N) ∧ PiecewiseConstant d θ T K ∧
+        (∀ s ∈ Set.Icc (0 : ℝ) T,
+          ‖(θ s).V‖ + ‖(θ s).B‖ + ‖(θ s).W‖ + ‖(θ s).U‖ + ‖(θ s).b‖
+            ≤ Cnorm * ((d * N : ℝ) / T + Real.log (1 / ε))) ∧
+        (∀ i : Idx N, μ i 0 = μ₀ i ∧ cauchyPB d θ (μ i)) ∧
+        ∀ i : Idx N,
+          W2 d (μ i T : Measure (SSphere d)) (Measure.dirac (xtarget i)) ≤ ε := by
   sorry
 
-/-- The hypotheses of `targets_atoms` are satisfiable: `d = 3`, `T = ε = 1`, and
-a one-element family of Dirac masses on `𝕊^2`, whose hole is the antipode. -/
+/-- The conditions inside `targets_atoms` are satisfiable, so its conclusion is
+asked of a nonempty class of data: `d = 3`, `T = ε = 1`, and a one-element
+family of Dirac masses on `𝕊^2`, whose hole is the antipode. -/
 example :
     3 ≤ 3 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧
       ∃ w₀ : SSphere 3, IsHole 3 1 (fun _ : Idx 1 => diracProb 3 (basePoint 2)) w₀ :=
@@ -110,23 +126,28 @@ For `d ≥ 3` and data `(μ_0^i, μ_1^i)_{i=1}^N` such that
 for any `T, ε > 0` there is a piecewise-constant `θ` with `O(d · N)` switches
 such that `W_2(μ^i(T), μ_1^i) ≤ ε` for every `i`.
 
+**What the source says and what is changed here.**  As in `targets_atoms`:
+`W_2` is `Interpolation.W2` rather than a free function, and the `O(d · N)`
+constant is quantified before the data, which is what `O(·)` asserts and what
+a universally quantified binder denied (`C = 0` forced `K = 0`).
+
 Not proved here.
 
-Source: arXiv:2411.04551v3, §1. -/
-theorem main_result (W₂ : Measure (SSphere d) → Measure (SSphere d) → ℝ) (C : ℕ)
-    (μ₀ μ₁ : Idx N → ProbSphere d) (T ε : ℝ) (hd : 3 ≤ d) (hT : 0 < T) (hε : 0 < ε)
-    (hhole₀ : ∃ w₀ : SSphere d, IsHole d N μ₀ w₀)
-    (hhole₁ : ∃ w₁ : SSphere d, IsHole d N μ₁ w₁)
-    (hpush : ∀ i : Idx N, ∃ Tr : SSphere d → SSphere d, Measurable Tr ∧
-      Measure.map Tr (μ₀ i : Measure (SSphere d)) = (μ₁ i : Measure (SSphere d))) :
-    ∃ (θ : TimeParams d) (K : ℕ) (μ : Idx N → ℝ → ProbSphere d),
-      K ≤ C * (d * N) ∧ PiecewiseConstant d θ T K ∧
-      (∀ i : Idx N, μ i 0 = μ₀ i ∧ cauchyPB d θ (μ i)) ∧
-      ∀ i : Idx N, W₂ (μ i T : Measure (SSphere d)) (μ₁ i : Measure (SSphere d)) ≤ ε := by
+Source: arXiv:2411.04551v3, §1, `thm: main.result`. -/
+theorem main_result :
+    ∃ C : ℝ, ∀ (d N : ℕ) (μ₀ μ₁ : Idx N → ProbSphere d) (T ε : ℝ),
+      3 ≤ d → 0 < T → 0 < ε →
+      (∃ w₀ : SSphere d, IsHole d N μ₀ w₀) → (∃ w₁ : SSphere d, IsHole d N μ₁ w₁) →
+      (∀ i : Idx N, ∃ Tr : SSphere d → SSphere d, Measurable Tr ∧
+        Measure.map Tr (μ₀ i : Measure (SSphere d)) = (μ₁ i : Measure (SSphere d))) →
+      ∃ (θ : TimeParams d) (K : ℕ) (μ : Idx N → ℝ → ProbSphere d),
+        (K : ℝ) ≤ C * (d * N) ∧ PiecewiseConstant d θ T K ∧
+        (∀ i : Idx N, μ i 0 = μ₀ i ∧ cauchyPB d θ (μ i)) ∧
+        ∀ i : Idx N, W2 d (μ i T : Measure (SSphere d)) (μ₁ i : Measure (SSphere d)) ≤ ε := by
   sorry
 
-/-- The hypotheses of `main_result` are satisfiable: `d = 3`, `T = ε = 1`, and
-the same one-element family of Dirac masses on both sides, which is its own
+/-- The conditions inside `main_result` are satisfiable: `d = 3`, `T = ε = 1`,
+and the same one-element family of Dirac masses on both sides, which is its own
 pushforward under the identity and has the antipode as a hole. -/
 example :
     3 ≤ 3 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧
@@ -138,18 +159,6 @@ example :
   ⟨le_rfl, one_pos, one_pos, ⟨_, isHole_antipode_diracProb 3 1 (basePoint 2)⟩,
     ⟨_, isHole_antipode_diracProb 3 1 (basePoint 2)⟩,
     fun _ => ⟨id, measurable_id, Measure.map_id⟩⟩
-
-/-- *Three-step factorization*:
-
-  `Φ^T_fin := (Φ^{T/3}_{θ_3})⁻¹ ∘ Φ^{T/3}_{θ_2} ∘ Φ^{T/3}_{θ_1}`.
-
-The three flows are arguments, since `Interpolation.IsFlowMap` is a property of
-a candidate solution operator and not a construction of one; `Φ₃` here stands
-for the inverse of the third flow, which is again a flow map. -/
-noncomputable def threeStepFlow
-    (Φ₁ Φ₂ Φ₃ : ℝ → ProbSphere d → ProbSphere d) (T : ℝ) (μ : ProbSphere d) :
-    ProbSphere d :=
-  Φ₃ (T/3) (Φ₂ (T/3) (Φ₁ (T/3) μ))
 
 /-- **Lemma (lem: hyp.propagation).**  Propagation of transport maps along
 the first and last flows.
@@ -202,10 +211,14 @@ of the quadratic transport cost over couplings, and the lemma is proved: the
 map `x ↦ (S x, ψ x)` pushes `μ` to a coupling of `S_# μ` and `ψ_# μ` whose
 cost is exactly the `L²(μ)` distance of the two maps.
 
-*The constant is `1`.*  The paper writes an unspecified `Cst`; the proof gives
-`1`, which is the sharp value, so nothing is lost by writing it.  Carried as a
-parameter it was, again, a free variable in the direction that makes the claim
-false.
+*The constant is `1`.*  The paper writes `≲`; the proof gives `1`, which is
+the sharp value, so nothing is lost by writing it.  Carried as a parameter, as
+`Cst` was here, it was again a free variable in the direction that makes the
+claim false.
+
+*The paper's bijectivity of `S` is dropped.*  `lem: monge` assumes the first
+map invertible; the proof uses nothing of it, so the hypothesis goes and the
+statement is the stronger one.
 
 Source: arXiv:2411.04551v3, §5, `lem: monge`. -/
 theorem monge (μ : ProbSphere d) (S ψ : SSphere d → SSphere d)
