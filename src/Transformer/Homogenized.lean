@@ -37,3 +37,4 @@ import Transformer.Homogenized.MeanFieldLipschitz
 import Transformer.Homogenized.CoupledSystem
 import Transformer.Homogenized.PropagationChaos
 import Transformer.Homogenized.SphereSde
+import Transformer.Homogenized.HansonWright
