@@ -45,10 +45,16 @@ out as the hypothesis `X 0 ω = x₀`, because without it the two expectations a
 `eq: first.sde` is taken in the sense of `IsFirstSde`, i.e. through the
 generator: see `Transformer.Homogenized.Generator`.
 
+The number of heads is positive.  The source writes `Σ_{h=1}^H`, so `H ≥ 1` is
+implicit there, and the hypothesis is needed: at `H = 0` the update of
+`eq:update_tokens` is the identity and the chain never moves, while the
+limiting dynamics has drift `b` and does, so the bound fails for every `φ` that
+separates `X(t_L)` from `X⁰`.
+
 Not proved here.
 
 Source: arXiv:2604.01978v1, `thm:weak_error_clean`. -/
-theorem weak_error_clean {d n H : ℕ} (β : ℝ) (σV σA : ℝ≥0)
+theorem weak_error_clean {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ≥0)
     (ρ : Measure (HeadParam d)) (hρ : HasHighOrderLaw d σV σA ρ)
     (φ : (Idx n → EucSpace d) → ℝ) (hφ : ContDiff ℝ 4 φ) :
     ∃ C : ℝ, 1 ≤ C ∧
@@ -69,9 +75,9 @@ theorem weak_error_clean {d n H : ℕ} (β : ℝ) (σV σA : ℝ≥0)
 law `ρ* = δ_0` satisfies `ass:high_order_short` by
 `hasHighOrderLaw_dirac_zero`, and a constant `φ` is `C⁴`. -/
 example (d n : ℕ) :
-    HasHighOrderLaw d 0 0 (Measure.dirac (0 : HeadParam d)) ∧
+    0 < 1 ∧ HasHighOrderLaw d 0 0 (Measure.dirac (0 : HeadParam d)) ∧
       ContDiff ℝ 4 (fun _ : Idx n → EucSpace d => (0 : ℝ)) :=
-  ⟨hasHighOrderLaw_dirac_zero d, contDiff_const⟩
+  ⟨Nat.one_pos, hasHighOrderLaw_dirac_zero d, contDiff_const⟩
 
 /-- **Theorem (thm:weak_error_clean, the improved rate).**  The same statement
 against the *modified* equation `eq:SDE_ito_clean`, whose drift carries the
@@ -84,7 +90,7 @@ Not proved here.
 
 Source: arXiv:2604.01978v1, §2.3.2, the paragraph after
 `thm:weak_error_clean`. -/
-theorem weak_error_modified {d n H : ℕ} (β : ℝ) (σV σA : ℝ≥0)
+theorem weak_error_modified {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ≥0)
     (ρ : Measure (HeadParam d)) (hρ : HasHighOrderLaw d σV σA ρ)
     (φ : (Idx n → EucSpace d) → ℝ) (hφ : ContDiff ℝ 4 φ) :
     ∃ C : ℝ, 1 ≤ C ∧
@@ -104,9 +110,9 @@ theorem weak_error_modified {d n H : ℕ} (β : ℝ) (σV σA : ℝ≥0)
 /-- The hypotheses of `weak_error_modified` are satisfiable, by the same
 witnesses as `weak_error_clean`. -/
 example (d n : ℕ) :
-    HasHighOrderLaw d 0 0 (Measure.dirac (0 : HeadParam d)) ∧
+    0 < 1 ∧ HasHighOrderLaw d 0 0 (Measure.dirac (0 : HeadParam d)) ∧
       ContDiff ℝ 4 (fun _ : Idx n → EucSpace d => (0 : ℝ)) :=
-  ⟨hasHighOrderLaw_dirac_zero d, contDiff_const⟩
+  ⟨Nat.one_pos, hasHighOrderLaw_dirac_zero d, contDiff_const⟩
 
 end Homogenized
 end Transformer

@@ -2834,13 +2834,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`IsRandomChain`](src/Transformer/Homogenized/RandomChain.lean#L140) | structure |  |
 | [`isRandomChain_dirac_zero`](src/Transformer/Homogenized/RandomChain.lean#L158) | theorem | proved |
 
-**[Transformer.Homogenized.Regimes](src/Transformer/Homogenized/Regimes.lean)** — 151 lines
+**[Transformer.Homogenized.Regimes](src/Transformer/Homogenized/Regimes.lean)** — 157 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`ballistic_regime`](src/Transformer/Homogenized/Regimes.lean#L37) | theorem | sorry |
-| [`modified_regime`](src/Transformer/Homogenized/Regimes.lean#L80) | theorem | sorry |
-| [`diffusive_regime`](src/Transformer/Homogenized/Regimes.lean#L118) | theorem | sorry |
+| [`ballistic_regime`](src/Transformer/Homogenized/Regimes.lean#L42) | theorem | sorry |
+| [`modified_regime`](src/Transformer/Homogenized/Regimes.lean#L85) | theorem | sorry |
+| [`diffusive_regime`](src/Transformer/Homogenized/Regimes.lean#L123) | theorem | sorry |
 
 **[Transformer.Homogenized.Simplex](src/Transformer/Homogenized/Simplex.lean)** — 158 lines
 
@@ -2865,12 +2865,12 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`hasDerivAt_logistic`](src/Transformer/Homogenized/SmallBeta.lean#L50) | theorem | proved |
 | [`clustering_small_beta`](src/Transformer/Homogenized/SmallBeta.lean#L86) | theorem | sorry |
 
-**[Transformer.Homogenized.WeakError](src/Transformer/Homogenized/WeakError.lean)** — 112 lines
+**[Transformer.Homogenized.WeakError](src/Transformer/Homogenized/WeakError.lean)** — 118 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`weak_error_clean`](src/Transformer/Homogenized/WeakError.lean#L51) | theorem | sorry |
-| [`weak_error_modified`](src/Transformer/Homogenized/WeakError.lean#L87) | theorem | sorry |
+| [`weak_error_clean`](src/Transformer/Homogenized/WeakError.lean#L57) | theorem | sorry |
+| [`weak_error_modified`](src/Transformer/Homogenized/WeakError.lean#L93) | theorem | sorry |
 
 ### `Transformer.Interpolation`
 
@@ -4558,14 +4558,14 @@ Everything the build cannot vouch for, in one place.
 | [`bField_gaussian`](src/Transformer/Homogenized/GaussianInit.lean#L129) | theorem | `Transformer.Homogenized.GaussianInit` |
 | [`weak_error_centered`](src/Transformer/Homogenized/GaussianInit.lean#L154) | theorem | `Transformer.Homogenized.GaussianInit` |
 | [`kernel_regularity`](src/Transformer/Homogenized/Kernel.lean#L55) | theorem | `Transformer.Homogenized.Kernel` |
-| [`ballistic_regime`](src/Transformer/Homogenized/Regimes.lean#L37) | theorem | `Transformer.Homogenized.Regimes` |
-| [`modified_regime`](src/Transformer/Homogenized/Regimes.lean#L80) | theorem | `Transformer.Homogenized.Regimes` |
-| [`diffusive_regime`](src/Transformer/Homogenized/Regimes.lean#L118) | theorem | `Transformer.Homogenized.Regimes` |
+| [`ballistic_regime`](src/Transformer/Homogenized/Regimes.lean#L42) | theorem | `Transformer.Homogenized.Regimes` |
+| [`modified_regime`](src/Transformer/Homogenized/Regimes.lean#L85) | theorem | `Transformer.Homogenized.Regimes` |
+| [`diffusive_regime`](src/Transformer/Homogenized/Regimes.lean#L123) | theorem | `Transformer.Homogenized.Regimes` |
 | [`simplex_overlap_wellDefined`](src/Transformer/Homogenized/Simplex.lean#L80) | theorem | `Transformer.Homogenized.Simplex` |
 | [`clustering_random_init`](src/Transformer/Homogenized/Simplex.lean#L120) | theorem | `Transformer.Homogenized.Simplex` |
 | [`clustering_small_beta`](src/Transformer/Homogenized/SmallBeta.lean#L86) | theorem | `Transformer.Homogenized.SmallBeta` |
-| [`weak_error_clean`](src/Transformer/Homogenized/WeakError.lean#L51) | theorem | `Transformer.Homogenized.WeakError` |
-| [`weak_error_modified`](src/Transformer/Homogenized/WeakError.lean#L87) | theorem | `Transformer.Homogenized.WeakError` |
+| [`weak_error_clean`](src/Transformer/Homogenized/WeakError.lean#L57) | theorem | `Transformer.Homogenized.WeakError` |
+| [`weak_error_modified`](src/Transformer/Homogenized/WeakError.lean#L93) | theorem | `Transformer.Homogenized.WeakError` |
 | [`clustering_to_atom`](src/Transformer/Interpolation/AtomClustering.lean#L195) | theorem | `Transformer.Interpolation.AtomClustering` |
 | [`claim_balls`](src/Transformer/Interpolation/BallDecomposition.lean#L91) | theorem | `Transformer.Interpolation.BallDecomposition` |
 | [`two_balls`](src/Transformer/Interpolation/BallTransport.lean#L58) | theorem | `Transformer.Interpolation.BallTransport` |

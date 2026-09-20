@@ -13,6 +13,11 @@ the scaling written as the convergence it is, and the displayed bound asserted
 at every index.  Nothing is weakened: that is what "in the subcritical scaling
 … the chain is weakly approximated by" says.
 
+**On the number of heads.**  `H ≥ 1`, as the source's `Σ_{h=1}^H` has it: at
+`H = 0` the update of `eq:update_tokens` is the identity, the chain never
+moves, and no approximation statement about it can hold.  See
+`weak_error_clean`.
+
 Source: arXiv:2604.01978v1, §4–§5, `cor:ode1`, `cor:ode2`, `cor:SDE`.
 -/
 
@@ -34,7 +39,7 @@ chain is weakly approximated by the solution of `eq: deterministic`,
 Not proved here.
 
 Source: arXiv:2604.01978v1, `cor:ode1`, `eq: deterministic`. -/
-theorem ballistic_regime {d n H : ℕ} (β : ℝ) (σV σA : ℝ≥0)
+theorem ballistic_regime {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ≥0)
     (ρ : Measure (HeadParam d)) (hρ : HasHighOrderLaw d σV σA ρ)
     (φ : (Idx n → EucSpace d) → ℝ) (hφ : ContDiff ℝ 4 φ)
     (η : ℕ → ℝ) (L : ℕ → ℕ) (s : ℝ) (hs : IsVarianceProxy d n β ρ s)
@@ -57,14 +62,14 @@ theorem ballistic_regime {d n H : ℕ} (β : ℝ) (σV σA : ℝ≥0)
 `ass:high_order_short`, a constant `φ` is `C⁴`, `s = 0` is the variance proxy
 of `δ_0`, and the scalings `η_m = 1/(m+1)`, `L_m = 0` are subcritical. -/
 example (d n : ℕ) (β : ℝ) :
-    HasHighOrderLaw (d + 1) 0 0 (Measure.dirac (0 : HeadParam (d + 1))) ∧
+    0 < 1 ∧ HasHighOrderLaw (d + 1) 0 0 (Measure.dirac (0 : HeadParam (d + 1))) ∧
       ContDiff ℝ 4 (fun _ : Idx (n + 1) → EucSpace (d + 1) => (0 : ℝ)) ∧
       IsVarianceProxy (d + 1) (n + 1) β (Measure.dirac (0 : HeadParam (d + 1))) 0 ∧
       (∀ m : ℕ, (0 : ℝ) < 1 / (m + 1)) ∧
-      Tendsto (fun m : ℕ => alphaOf (1 / (m + 1)) 0 0 * (1 / (m + 1)) * ((0 : ℕ) : ℝ))
+      Tendsto (fun m : ℕ => alphaOf (1 / (m + 1)) 0 1 * (1 / (m + 1)) * ((0 : ℕ) : ℝ))
         atTop (nhds 0) ∧
       Tendsto (fun m : ℕ => (1 / ((m : ℝ) + 1)) ^ 2 * ((0 : ℕ) : ℝ)) atTop (nhds 0) := by
-  refine ⟨hasHighOrderLaw_dirac_zero _, contDiff_const,
+  refine ⟨Nat.one_pos, hasHighOrderLaw_dirac_zero _, contDiff_const,
     isVarianceProxy_dirac_zero d n β (fun _ => (basePoint d : EucSpace (d + 1)))
       (fun _ => by simp [basePoint, PiLp.norm_single]),
     fun m => by positivity, ?_, ?_⟩ <;> simp
@@ -77,7 +82,7 @@ interpolated chain is weakly approximated by the solution of
 Not proved here.
 
 Source: arXiv:2604.01978v1, `cor:ode2`, `eq: deterministic.modified`. -/
-theorem modified_regime {d n H : ℕ} (β : ℝ) (σV σA : ℝ≥0)
+theorem modified_regime {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ≥0)
     (ρ : Measure (HeadParam d)) (hρ : HasHighOrderLaw d σV σA ρ)
     (φ : (Idx n → EucSpace d) → ℝ) (hφ : ContDiff ℝ 4 φ)
     (η : ℕ → ℝ) (L : ℕ → ℕ) (s : ℝ) (hs : IsVarianceProxy d n β ρ s)
@@ -99,10 +104,10 @@ theorem modified_regime {d n H : ℕ} (β : ℝ) (σV σA : ℝ≥0)
 /-- The hypotheses of `modified_regime` are satisfiable, by the same witnesses
 as `ballistic_regime`. -/
 example (d n : ℕ) (β : ℝ) :
-    HasHighOrderLaw (d + 1) 0 0 (Measure.dirac (0 : HeadParam (d + 1))) ∧
+    0 < 1 ∧ HasHighOrderLaw (d + 1) 0 0 (Measure.dirac (0 : HeadParam (d + 1))) ∧
       IsVarianceProxy (d + 1) (n + 1) β (Measure.dirac (0 : HeadParam (d + 1))) 0 ∧
       Tendsto (fun m : ℕ => (1 / ((m : ℝ) + 1)) ^ 3 * ((0 : ℕ) : ℝ)) atTop (nhds 0) := by
-  refine ⟨hasHighOrderLaw_dirac_zero _,
+  refine ⟨Nat.one_pos, hasHighOrderLaw_dirac_zero _,
     isVarianceProxy_dirac_zero d n β (fun _ => (basePoint d : EucSpace (d + 1)))
       (fun _ => by simp [basePoint, PiLp.norm_single]), ?_⟩
   simp
@@ -115,7 +120,7 @@ by the solution of `eq:SDE_ito_clean` at the rate
 Not proved here.
 
 Source: arXiv:2604.01978v1, `cor:SDE`. -/
-theorem diffusive_regime {d n H : ℕ} (β : ℝ) (σV σA : ℝ≥0)
+theorem diffusive_regime {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ≥0)
     (ρ : Measure (HeadParam d)) (hρ : HasHighOrderLaw d σV σA ρ)
     (φ : (Idx n → EucSpace d) → ℝ) (hφ : ContDiff ℝ 4 φ)
     (η : ℕ → ℝ) (L : ℕ → ℕ) (s : ℝ) (hs : IsVarianceProxy d n β ρ s)
@@ -139,10 +144,11 @@ theorem diffusive_regime {d n H : ℕ} (β : ℝ) (σV σA : ℝ≥0)
 /-- The hypotheses of `diffusive_regime` are satisfiable: the same witnesses,
 with `αηL ≤ 0` bounded. -/
 example (d n : ℕ) (β : ℝ) :
-    HasHighOrderLaw (d + 1) 0 0 (Measure.dirac (0 : HeadParam (d + 1))) ∧
+    0 < 1 ∧ HasHighOrderLaw (d + 1) 0 0 (Measure.dirac (0 : HeadParam (d + 1))) ∧
       IsVarianceProxy (d + 1) (n + 1) β (Measure.dirac (0 : HeadParam (d + 1))) 0 ∧
-      ∃ M : ℝ, ∀ m : ℕ, alphaOf (1 / ((m : ℝ) + 1)) 0 0 * (1 / ((m : ℝ) + 1)) * ((0 : ℕ) : ℝ) ≤ M := by
-  refine ⟨hasHighOrderLaw_dirac_zero _,
+      ∃ M : ℝ, ∀ m : ℕ,
+        alphaOf (1 / ((m : ℝ) + 1)) 0 1 * (1 / ((m : ℝ) + 1)) * ((0 : ℕ) : ℝ) ≤ M := by
+  refine ⟨Nat.one_pos, hasHighOrderLaw_dirac_zero _,
     isVarianceProxy_dirac_zero d n β (fun _ => (basePoint d : EucSpace (d + 1)))
       (fun _ => by simp [basePoint, PiLp.norm_single]), 0, ?_⟩
   intro m; simp

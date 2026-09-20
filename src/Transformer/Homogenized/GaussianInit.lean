@@ -145,13 +145,13 @@ with `C ≥ 1` depending on `‖φ‖_{C⁴}` but not on `η, α, L`.  The expon
 carries `t_L α`, so the approximation survives to a macroscopic time of order
 `1/α`.
 
-The same reading of the initial condition as in `weak_error_clean` is written
-into the statement.
+The same reading of the initial condition, and the same positivity of the
+number of heads, as in `weak_error_clean` are written into the statement.
 
 Not proved here.
 
 Source: arXiv:2604.01978v1, `cor:weak_error_centered`. -/
-theorem weak_error_centered {d n H : ℕ} (β : ℝ) (σV σA : ℝ≥0)
+theorem weak_error_centered {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ≥0)
     (ρ : Measure (HeadParam d)) (hρ : IsGaussianHeadLaw d σV σA ρ)
     (φ : (Idx n → EucSpace d) → ℝ) (hφ : ContDiff ℝ 4 φ) :
     ∃ C : ℝ, 1 ≤ C ∧
@@ -171,9 +171,9 @@ theorem weak_error_centered {d n H : ℕ} (β : ℝ) (σV σA : ℝ≥0)
 
 /-- The hypotheses of `weak_error_centered` are satisfiable. -/
 example (d n : ℕ) :
-    IsGaussianHeadLaw d 0 0 (Measure.dirac (0 : HeadParam d)) ∧
+    0 < 1 ∧ IsGaussianHeadLaw d 0 0 (Measure.dirac (0 : HeadParam d)) ∧
       ContDiff ℝ 4 (fun _ : Idx n → EucSpace d => (0 : ℝ)) :=
-  ⟨isGaussianHeadLaw_dirac_zero d, contDiff_const⟩
+  ⟨Nat.one_pos, isGaussianHeadLaw_dirac_zero d, contDiff_const⟩
 
 /-- The degenerate solution witnesses `IsDiffusiveSde`. -/
 theorem isDiffusiveSde_dirac_zero {d n : ℕ} {Ω : Type*} [MeasurableSpace Ω]
