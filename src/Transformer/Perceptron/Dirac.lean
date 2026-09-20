@@ -110,6 +110,28 @@ theorem isStationary_relu_pin (β : ℝ) (j₀ : Idx d) (x : SSphere d) :
   · intro h
     exact absurd (Finset.mem_univ j₀) h
 
+/-- **`δ_x` is a critical point of the linear perceptron** pinned at `x`: at
+`x` the neuron `a_{j₀} = -x` reads `σ(a_{j₀}·x) = -1`, so the raw drift is `x`
+itself, which the tangential projection kills.
+
+This is the witness for the stationarity hypothesis of `rem:genericity-vacuity`,
+whose activation is `σ(s) = s`.
+
+Source: arXiv:2601.21366v2, `eq: steady.state`. -/
+theorem isStationary_linear_pin (β : ℝ) (j₀ : Idx d) (x : SSphere d) :
+    IsStationary β (fun s => s) (Pi.single j₀ (1 : ℝ))
+      (Pi.single j₀ (-(x : EucSpace d))) (Perspective.diracProb d x) := by
+  have hxx : inner (𝕜 := ℝ) (x : EucSpace d) (x : EucSpace d) = (1 : ℝ) := by
+    rw [real_inner_self_eq_norm_sq, mem_sphere_zero_iff_norm.mp x.2]; norm_num
+  refine isStationary_diracProb_of_radial β _ _ _ x 1 ?_
+  rw [Finset.sum_eq_single j₀]
+  · rw [Pi.single_eq_same, Pi.single_eq_same, inner_neg_left, hxx]
+    simp
+  · intro j _ hj
+    simp [Pi.single_eq_of_ne hj]
+  · intro h
+    exact absurd (Finset.mem_univ j₀) h
+
 /-- **`δ_x` is a *strictly* SOPD critical point** of the witness perceptron,
 with `κ = 1/2`: along every geodesic issued from `x`, the energy is
 
