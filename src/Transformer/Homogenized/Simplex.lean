@@ -114,6 +114,12 @@ either.
 The initial configuration is deterministic, as in the source, where `X(0)` is
 given.
 
+The ODE is the source's, `γ̇ = b(γ)`, although the identity the source derives
+it from is false: the drift of an overlap on the simplex line is `b(γ)` only
+as `d → ∞`, by `not_forall_overlapDrift_eq_simplexDrift` and
+`overlapDrift_simplex_sub_simplexDrift`.  The `O(1/d)` discrepancy is left
+here, inside the `e^{CT}√(8T/d log(2n²/δ))` the conclusion allows.
+
 Not proved here.
 
 Source: arXiv:2604.01978v1, `thm:clustering_random_init`. -/

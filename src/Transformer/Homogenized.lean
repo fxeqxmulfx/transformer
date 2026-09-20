@@ -30,4 +30,5 @@ import Transformer.Homogenized.Regimes
 import Transformer.Homogenized.Simplex
 import Transformer.Homogenized.SimplexBary
 import Transformer.Homogenized.SimplexDrift
+import Transformer.Homogenized.GramStability
 import Transformer.Homogenized.SmallBeta
