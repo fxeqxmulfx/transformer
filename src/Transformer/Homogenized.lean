@@ -21,6 +21,7 @@ import Transformer.Homogenized.LogisticLimit
 import Transformer.Homogenized.GaussianInit
 import Transformer.Homogenized.GaussianEnsemble
 import Transformer.Homogenized.Kernel
+import Transformer.Homogenized.Barycenter
 import Transformer.Homogenized.Laplace
 import Transformer.Homogenized.Regimes
 import Transformer.Homogenized.Simplex
