@@ -1,0 +1,12 @@
+/-
+Formalization of:
+  Geshkovski, Rigollet, Sun,
+  "On the number of modes of Gaussian kernel density estimators",
+  arXiv:2412.09080v3.
+-/
+
+import Transformer.Modes.Growth
+import Transformer.Modes.Section1_KDE
+import Transformer.Modes.Section1_Mammen
+import Transformer.Modes.Section1_Main
+import Transformer.Modes.Section1_Belt
