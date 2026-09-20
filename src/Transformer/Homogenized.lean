@@ -11,6 +11,7 @@ import Transformer.Homogenized.MvGenerator
 import Transformer.Homogenized.McKeanVlasov
 import Transformer.Homogenized.WellPosed
 import Transformer.Homogenized.SlowMotion
+import Transformer.Homogenized.CoupledPair
 import Transformer.Homogenized.GaussianInit
 import Transformer.Homogenized.Kernel
 import Transformer.Homogenized.Regimes
