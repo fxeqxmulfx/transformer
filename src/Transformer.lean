@@ -1,5 +1,5 @@
 /-
-Formalization of thirteen papers on the mathematics of Transformers:
+Formalization of fourteen papers on the mathematics of Transformers:
 
 1. Weiss, Goldberg, Yahav — arXiv:2106.06981v2
    "Thinking Like Transformers".
@@ -43,6 +43,9 @@ Formalization of thirteen papers on the mathematics of Transformers:
    "Quartet II: Accurate LLM Pre-Training in NVFP4 by Improved Unbiased
    Gradient Estimation".
 
+14. Geshkovski, Koubbi, Rigollet — arXiv:2604.01978v1
+   "Homogenized Transformers".
+
 Alongside these, `Transformer.ALM` formalizes the paraboloid-lifted lookup
 used by the append-only lookup machine (Percepta, transformer-vm).
 
@@ -67,6 +70,7 @@ import Transformer.Normalization
 import Transformer.MeanField
 import Transformer.FrankWolfe
 import Transformer.Kinetic
+import Transformer.Homogenized
 import Transformer.XSA
 import Transformer.Quartet
 import Transformer.GPTMini
