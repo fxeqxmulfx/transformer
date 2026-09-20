@@ -11,3 +11,4 @@ import Transformer.Perceptron.Dirac
 import Transformer.Perceptron.Analytic
 import Transformer.Perceptron.Atomicity
 import Transformer.Perceptron.HigherDim
+import Transformer.Perceptron.Atoms
