@@ -7,6 +7,7 @@ Formalization of:
 import Transformer.Homogenized.Basic
 import Transformer.Homogenized.Generator
 import Transformer.Homogenized.MeanField
+import Transformer.Homogenized.OverlapObservable
 import Transformer.Homogenized.MvGenerator
 import Transformer.Homogenized.McKeanVlasov
 import Transformer.Homogenized.WellPosed
@@ -24,6 +25,7 @@ import Transformer.Homogenized.GaussianKernel
 import Transformer.Homogenized.Kernel
 import Transformer.Homogenized.Barycenter
 import Transformer.Homogenized.Laplace
+import Transformer.Homogenized.OverlapDrift
 import Transformer.Homogenized.Regimes
 import Transformer.Homogenized.Simplex
 import Transformer.Homogenized.SmallBeta

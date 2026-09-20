@@ -177,6 +177,13 @@ theorem sphHess_zero {d n : ℕ} (φ : (Idx n → EucSpace d) → ℝ) (X : Idx 
     ContinuousMultilinearMap.map_coord_zero _ (0 : Fin 2) (by simp)
   simp [sphHess, h]
 
+/-- At `α = ς = 1` the diffusion kernel is `G` itself: this is the normalization
+`eq:Diffusive_gaussian_case` is written in. -/
+theorem noiseField_one_one {d n : ℕ} (β : ℝ) (ρ : Measure (HeadParam d))
+    (θ : HeadParam d) (x : Idx n → EucSpace d) (i : Idx n) :
+    noiseField β 1 1 ρ θ x i = Gfield β ρ x θ i := by
+  simp [noiseField]
+
 theorem isItoSolution_dirac_zero {d n : ℕ} {Ω : Type*} [MeasurableSpace Ω]
     (P : Measure Ω) (β α s : ℝ) (x : Idx n → EucSpace d) (hx : ∀ i : Idx n, ‖x i‖ = 1) :
     IsFirstSde β α s (Measure.dirac (0 : HeadParam d)) P (fun _ _ => x) := by
