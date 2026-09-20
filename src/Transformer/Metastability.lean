@@ -11,6 +11,7 @@ import Transformer.Metastability.AlphaDist
 import Transformer.Metastability.AngularEnergy
 import Transformer.Metastability.CollapseODE
 import Transformer.Metastability.MainTheorem
+import Transformer.Metastability.CapVelocity
 import Transformer.Metastability.CapVariance
 import Transformer.Metastability.BakryEmery
 import Transformer.Metastability.OttoReznikoff
