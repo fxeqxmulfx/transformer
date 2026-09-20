@@ -10,6 +10,7 @@ points almost surely — the `O(1)`-switch regime the survey contrasts with the
 
 import Transformer.Basic
 import Transformer.Interpolation.Basic
+import Transformer.Perspective.Section3_SmallBeta
 import Mathlib.MeasureTheory.Constructions.Pi
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 
@@ -41,24 +42,30 @@ almost surely existing cluster point of `μ^i(t)`.  Then
 The cluster point is carried by a function `f` on configurations, whose
 defining property — almost sure weak convergence of the flow to `δ_{f(X)}` —
 is a hypothesis, since it is itself quoted from the survey of
-`Transformer.Perspective` rather than proved.  `ref`, the reference measure, is a parameter: its
-rotation invariance, which the survey's proof uses to rule out atoms, is not
-recorded, and neither is the proof.
+`Transformer.Perspective` rather than proved.
 
-Two conditions the survey leaves implicit are written out, and they are not
-weakenings but repairs: `ref` is a probability measure, and `n ≥ 1`.  Without
-them the statement is refutable here rather than merely unproved — for `n = 0`
-the empirical measure of the empty tuple is the zero measure, which no
-probability measure equals, so the cluster hypothesis holds vacuously, while
-for `N ≥ 2` and a constant `f` the event `{f(X^i) ≠ f(X^j)}` is empty and has
-measure `0`, not `1`.
+**What the source says and what is changed here.**  The reference measure is
+`Perspective.UniformTuple d n`, the `n`-fold product of a rotation-invariant
+Borel probability measure on the sphere: that is the survey's "uniform measure
+on `(𝕊^{d-1})^n`", it is unique, so quantifying over every such `ref` names
+it, and it is what the survey's proof actually uses — the rotation invariance
+is what rules out atoms, by `Perspective.measure_singleton_tuple_eq_zero`.
+Carried as a free probability measure, as it was, nothing rules them out: a
+Dirac `ref` charges one configuration, and for `N ≥ 2` a constant cluster map
+then makes `{f(X^i) ≠ f(X^j)}` null instead of full.
+
+One further condition the survey leaves implicit is written out, and it is not
+a weakening but a repair: `n ≥ 1`.  For `n = 0` the empirical measure of the
+empty tuple is the zero measure, which no probability measure equals, so the
+cluster hypothesis would hold vacuously.
 
 Not proved here.
 
 Source: arXiv:2411.04551v3, §5, `prop:generic-discrete`. -/
 theorem generic_discrete_distinct
-    (d n N : ℕ) (β : ℝ) (ref : Measure (SphereTuple d n)) [IsProbabilityMeasure ref]
+    (d n N : ℕ) (β : ℝ)
     (hd : 3 ≤ d) (hβ : 0 ≤ β) (hn : 1 ≤ n) :
+    ∀ ref : Measure (SphereTuple d n), Perspective.UniformTuple d n ref →
     ∀ f : SphereTuple d n → SSphere d,
       (∀ᵐ X : SphereTuple d n ∂ref,
         ∀ μ : ℝ → Perspective.ProbSphere d,
@@ -73,16 +80,15 @@ theorem generic_discrete_distinct
   sorry
 
 /-- The hypotheses `generic_discrete_distinct` carries in its binders are
-satisfiable: `d = 3`, `β = 0`, `n = 1`, and a Dirac mass for the reference
-measure, which is a probability measure.
+satisfiable: `d = 3`, `β = 0`, `n = 1`.
 
-The condition on the cluster map `f` stays inside the statement, where the
-survey puts it: witnessing it means solving `eq: cauchy.pb` and identifying the
-limit, which is exactly what is not done here. -/
-example :
-    3 ≤ 3 ∧ (0 : ℝ) ≤ 0 ∧ 1 ≤ 1 ∧
-      IsProbabilityMeasure (Measure.dirac (fun _ : Idx 1 => basePoint 2)) :=
-  ⟨le_rfl, le_rfl, le_rfl, inferInstance⟩
+The two conditions inside the statement stay there, where the survey puts
+them.  `UniformTuple d n ref` holds for exactly one measure and witnessing it
+means constructing the rotation-invariant law on `𝕊^{d-1}`, which this
+development does not do; and witnessing the condition on the cluster map `f`
+means solving `eq: cauchy.pb` and identifying the limit, which is exactly what
+is not done here. -/
+example : 3 ≤ 3 ∧ (0 : ℝ) ≤ 0 ∧ 1 ≤ 1 := ⟨le_rfl, le_rfl, le_rfl⟩
 
 end Interpolation
 end Transformer

@@ -2697,12 +2697,12 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`induction_barycenter`](src/Transformer/Interpolation/Disentanglement.lean#L134) | theorem | sorry |
 | [`perturbation`](src/Transformer/Interpolation/Disentanglement.lean#L177) | theorem | sorry |
 
-**[Transformer.Interpolation.GenericDiscrete](src/Transformer/Interpolation/GenericDiscrete.lean)** — 88 lines
+**[Transformer.Interpolation.GenericDiscrete](src/Transformer/Interpolation/GenericDiscrete.lean)** — 94 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`genericParams`](src/Transformer/Interpolation/GenericDiscrete.lean#L24) | def |  |
-| [`generic_discrete_distinct`](src/Transformer/Interpolation/GenericDiscrete.lean#L59) | theorem | sorry |
+| [`genericParams`](src/Transformer/Interpolation/GenericDiscrete.lean#L25) | def |  |
+| [`generic_discrete_distinct`](src/Transformer/Interpolation/GenericDiscrete.lean#L65) | theorem | sorry |
 
 **[Transformer.Interpolation.IdentityFlow](src/Transformer/Interpolation/IdentityFlow.lean)** — 87 lines
 
@@ -4194,7 +4194,7 @@ Everything the build cannot vouch for, in one place.
 | [`first_quadrant`](src/Transformer/Interpolation/Disentanglement.lean#L91) | theorem | `Transformer.Interpolation.Disentanglement` |
 | [`induction_barycenter`](src/Transformer/Interpolation/Disentanglement.lean#L134) | theorem | `Transformer.Interpolation.Disentanglement` |
 | [`perturbation`](src/Transformer/Interpolation/Disentanglement.lean#L177) | theorem | `Transformer.Interpolation.Disentanglement` |
-| [`generic_discrete_distinct`](src/Transformer/Interpolation/GenericDiscrete.lean#L59) | theorem | `Transformer.Interpolation.GenericDiscrete` |
+| [`generic_discrete_distinct`](src/Transformer/Interpolation/GenericDiscrete.lean#L65) | theorem | `Transformer.Interpolation.GenericDiscrete` |
 | [`targets_atoms`](src/Transformer/Interpolation/Main.lean#L73) | theorem | `Transformer.Interpolation.Main` |
 | [`main_result`](src/Transformer/Interpolation/Main.lean#L108) | theorem | `Transformer.Interpolation.Main` |
 | [`hyp_propagation`](src/Transformer/Interpolation/Main.lean#L156) | theorem | `Transformer.Interpolation.Main` |
