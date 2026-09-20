@@ -1,5 +1,5 @@
 /-
-Formalization of eleven papers on the mathematics of Transformers:
+Formalization of twelve papers on the mathematics of Transformers:
 
 1. Weiss, Goldberg, Yahav — arXiv:2106.06981v2
    "Thinking Like Transformers".
@@ -33,7 +33,10 @@ Formalization of eleven papers on the mathematics of Transformers:
 10. Zhai — arXiv:2603.09078v1
    "Exclusive Self Attention".
 
-11. Panferov, Schultheis, Tabesh, Alistarh — arXiv:2601.22813v2
+11. Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1
+   "Attention's forward pass and Frank-Wolfe".
+
+12. Panferov, Schultheis, Tabesh, Alistarh — arXiv:2601.22813v2
    "Quartet II: Accurate LLM Pre-Training in NVFP4 by Improved Unbiased
    Gradient Estimation".
 
@@ -59,6 +62,7 @@ import Transformer.Interpolation
 import Transformer.Causal
 import Transformer.Normalization
 import Transformer.MeanField
+import Transformer.FrankWolfe
 import Transformer.XSA
 import Transformer.Quartet
 import Transformer.GPTMini

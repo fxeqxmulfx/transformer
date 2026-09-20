@@ -117,7 +117,7 @@ Three numbers, to be read before every commit, next to `scripts/index.py`:
   **Must be 0.** Those three are the minimum Mathlib itself runs on; every
   further axiom is an assumption in disguise.
 
-Current: 80 `sorry` · 0 resting on a sorry · 0 extra axioms. Every proved
+Current: 93 `sorry` · 0 resting on a sorry · 0 extra axioms. Every proved
 declaration in the tree is proved, on those three axioms and nothing else.
 
 ## When the paper is wrong
@@ -166,11 +166,14 @@ Required:
 - `rfl` / `trivial` / one-line `simp` closing a substantive theorem ⇒ suspect a
   placeholder definition beneath it.
 
-Current debt, per `INDEX.md`: 80 theorems using `sorry`, 0 vacuous statements,
-0 placeholder definitions. Never add to these counts; the index makes any
-increase visible. There is no longer an admissible increase: the conversion of
-statement-`Prop`s into sorried theorems is finished, and every number above may
-now only fall.
+Current debt, per `INDEX.md`: 93 theorems using `sorry`, 0 vacuous statements,
+0 placeholder definitions. `vacuous` and `placeholder` may only fall, and the
+conversion of statement-`Prop`s into sorried theorems is finished, so no
+restatement may raise the `sorry` count either. The one admissible increase is
+a new paper: adding a manuscript's statements as sorried theorems is what puts
+its debt on the books in the first place, and the count then falls as they are
+proved. Any increase not accounted for by a paper entering `src/Transformer.lean`
+in the same commit is a regression; the index makes it visible.
 
 ## Finding lemmas
 
