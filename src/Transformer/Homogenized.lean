@@ -32,3 +32,5 @@ import Transformer.Homogenized.SimplexBary
 import Transformer.Homogenized.SimplexDrift
 import Transformer.Homogenized.GramStability
 import Transformer.Homogenized.SmallBeta
+import Transformer.Homogenized.RademacherLaw
+import Transformer.Homogenized.MeanFieldLipschitz
