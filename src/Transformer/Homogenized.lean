@@ -16,6 +16,7 @@ import Transformer.Homogenized.CoupledPair
 import Transformer.Homogenized.Frozen
 import Transformer.Homogenized.Logistic
 import Transformer.Homogenized.GaussianInit
+import Transformer.Homogenized.GaussianEnsemble
 import Transformer.Homogenized.Kernel
 import Transformer.Homogenized.Regimes
 import Transformer.Homogenized.Simplex
