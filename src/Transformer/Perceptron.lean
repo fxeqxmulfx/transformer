@@ -17,4 +17,6 @@ import Transformer.Perceptron.MinMax
 import Transformer.Perceptron.Kernel
 import Transformer.Perceptron.Transform
 import Transformer.Perceptron.Hyperplane
+import Transformer.Perceptron.Bias
+import Transformer.Perceptron.BiasedAtomicity
 import Transformer.Perceptron.Piecewise
