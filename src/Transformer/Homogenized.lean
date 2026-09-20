@@ -15,6 +15,7 @@ import Transformer.Homogenized.SlowMotion
 import Transformer.Homogenized.CoupledPair
 import Transformer.Homogenized.Frozen
 import Transformer.Homogenized.OneDim
+import Transformer.Homogenized.Metastability
 import Transformer.Homogenized.Logistic
 import Transformer.Homogenized.GaussianInit
 import Transformer.Homogenized.GaussianEnsemble
