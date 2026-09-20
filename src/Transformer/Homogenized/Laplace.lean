@@ -90,6 +90,32 @@ theorem norm_softBary_le_one {d : ℕ} (β : ℝ) (A : Matrix (Fin d) (Fin d) �
     div_le_one hZpos]
   exact hnum
 
+/-- **`s_μ(x,x')` of `eq:s_mu_defs_clean`**, the correlation of two softmax
+barycenters averaged over the head law:
+
+  `s_μ(x,x') = E_A⟨m_{β,A}[μ](x), m_{β,A}[μ](x')⟩`.
+
+The source's other statistic `s_μ(x) = E‖m_{β,A}[μ](x)‖²` is this one at
+`x' = x`, by `baryCorr_self`; there is one object, not two.
+
+Source: arXiv:2604.01978v1, `eq:s_mu_defs_clean`. -/
+noncomputable def baryCorr {d : ℕ} (β : ℝ) (ρ : Measure (HeadParam d))
+    (μ : Measure (EucSpace d)) (x y : EucSpace d) : ℝ :=
+  ∫ θ, inner (𝕜 := ℝ) (softBary β θ.2 μ x) (softBary β θ.2 μ y) ∂ρ
+
+/-- `s_μ(x) = s_μ(x,x)`. -/
+theorem baryCorr_self {d : ℕ} (β : ℝ) (ρ : Measure (HeadParam d))
+    (μ : Measure (EucSpace d)) (x : EucSpace d) :
+    baryCorr β ρ μ x x = ∫ θ, ‖softBary β θ.2 μ x‖ ^ 2 ∂ρ := by
+  simp only [baryCorr, real_inner_self_eq_norm_sq]
+
+/-- `s_μ` is symmetric. -/
+theorem baryCorr_comm {d : ℕ} (β : ℝ) (ρ : Measure (HeadParam d))
+    (μ : Measure (EucSpace d)) (x y : EucSpace d) :
+    baryCorr β ρ μ x y = baryCorr β ρ μ y x := by
+  simp only [baryCorr]
+  exact integral_congr_ae (Filter.Eventually.of_forall fun θ => real_inner_comm _ _)
+
 /-- The normalization `v ↦ v/‖v‖` is invariant under a positive rescaling.
 This is why `lemma:Laplace_method` and `lem:delta_method` compose although the
 source writes the first at `A = W W'ᵀ` and the second at
@@ -138,7 +164,7 @@ theorem laplace_method (ρmin ρmax L : ℝ) :
       ∀ (σ μ : Measure (EucSpace d)) (dens : EucSpace d → ℝ),
         IsLowTemperature d σ (fun _ => μ) (fun _ => dens) ρmin ρmax L →
       ∀ x y : EucSpace d, ‖x‖ = 1 → ‖y‖ = 1 →
-        |(∫ θ, inner (𝕜 := ℝ) (softBary β θ.2 μ x) (softBary β θ.2 μ y) ∂ρ)
+        |baryCorr β ρ μ x y
             - ∫ θ, inner (𝕜 := ℝ)
                 (normalizeLayer (qkMap θ x)) (normalizeLayer (qkMap θ y)) ∂ρ|
           ≤ C * ((d : ℝ) ^ (-(3 : ℝ) / 2) + effBeta d β σA ^ (-(1 : ℝ) / 2)) := by
