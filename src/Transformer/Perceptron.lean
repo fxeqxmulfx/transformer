@@ -13,3 +13,4 @@ import Transformer.Perceptron.Atomicity
 import Transformer.Perceptron.HigherDim
 import Transformer.Perceptron.Atoms
 import Transformer.Perceptron.Bound
+import Transformer.Perceptron.MinMax
