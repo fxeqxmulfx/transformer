@@ -27,6 +27,13 @@ weights are small enough, the whole configuration cannot be one such cluster.
 
 * `σ` globally Lipschitz with constant `1` is `LipschitzWith 1 σ`.
 
+* `rem: thm.bound.multid` states no theorem: it says that the restriction to
+  `d = 2` is an artefact of the proof — the angular parametrization of `𝕊¹` and
+  the scalar concavity estimate `lem: concavity` — and that `d ≥ 3` would need
+  a Hessian estimate on small geodesic caps.  It names no such estimate and
+  claims no bound in `d ≥ 3`, so there is nothing to put on the books; the
+  dimension hypothesis of both theorems above is the record of it.
+
 **What is not witnessed.**  The examples below exhibit every hypothesis except
 `IsSOPD`: a Lipschitz activation with its primitive, and a three-atom
 configuration two of whose atoms are `1/(2√β)` apart.  That such a cluster
