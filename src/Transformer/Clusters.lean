@@ -18,5 +18,6 @@ import Transformer.Clusters.Section6_ContEq
 import Transformer.Clusters.Section7_HigherDim
 import Transformer.Clusters.Section7_LogSumExp
 import Transformer.Clusters.Section7_Unbounded
+import Transformer.Clusters.Section7_Symmetric
 import Transformer.Clusters.Section8_Polytope
 import Transformer.Clusters.Section8_Origin
