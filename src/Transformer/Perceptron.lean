@@ -15,3 +15,4 @@ import Transformer.Perceptron.Atoms
 import Transformer.Perceptron.Bound
 import Transformer.Perceptron.MinMax
 import Transformer.Perceptron.Kernel
+import Transformer.Perceptron.Transform
