@@ -47,6 +47,23 @@ def IsGaussianHeadLaw (d : ℕ) (σV σA : ℝ≥0) (ρ : Measure (HeadParam d))
       (∀ i j, Measure.map (fun ω => Wr' ω i j) P = gaussianReal 0 (σA ^ 2)) ∧
       Measure.map (fun ω => ((Vr ω, Wr ω * (Wr' ω).transpose) : HeadParam d)) P = ρ
 
+/-- **Equation (eq:Diffusive_gaussian_case).**  The homogenized model at
+Gaussian initialization,
+
+  `dx_i = √α 𝐏_{x_i} ∫ B_θ[μ](x_i) W(dθ,dt) - (α/2) x_i ∫ ‖𝐏_{x_i} B_θ[μ](x_i)‖² ρ*(dθ)`,
+
+which is `eq: first.sde` read under `b_{ρ*} ≡ 0` — the centered fluctuation
+`ξ_θ` is then `B_θ` itself, by `bField_gaussian`.  The source rescales time to
+set `α = 1` and writes the noise without the `1/ς` normalization, so this is
+`IsFirstSde` at `α = ς = 1`; the Itô correction is the one the intrinsic
+formulation of `Transformer.Homogenized.Generator` carries.
+
+Source: arXiv:2604.01978v1, `eq:Diffusive_gaussian_case`. -/
+def IsDiffusiveSde {d n : ℕ} (β : ℝ) (ρ : Measure (HeadParam d))
+    {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω)
+    (X : ℝ → Ω → (Idx n → EucSpace d)) : Prop :=
+  IsFirstSde β 1 1 ρ P X
+
 /-- `IsGaussianHeadLaw` is satisfiable: at `σ_V = σ_A = 0` every Gaussian is a
 Dirac mass at `0`, and the law of the head is `δ_0`. -/
 theorem isGaussianHeadLaw_dirac_zero (d : ℕ) :
@@ -157,6 +174,16 @@ example (d n : ℕ) :
     IsGaussianHeadLaw d 0 0 (Measure.dirac (0 : HeadParam d)) ∧
       ContDiff ℝ 4 (fun _ : Idx n → EucSpace d => (0 : ℝ)) :=
   ⟨isGaussianHeadLaw_dirac_zero d, contDiff_const⟩
+
+/-- The degenerate solution witnesses `IsDiffusiveSde`. -/
+theorem isDiffusiveSde_dirac_zero {d n : ℕ} {Ω : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) (β : ℝ) (x : Idx n → EucSpace d) (hx : ∀ i, ‖x i‖ = 1) :
+    IsDiffusiveSde β (Measure.dirac (0 : HeadParam d)) P (fun _ _ => x) :=
+  isItoSolution_dirac_zero P β 1 1 x hx
+
+/-- The hypothesis of `isDiffusiveSde_dirac_zero` is satisfiable. -/
+example (d : ℕ) : ∀ _i : Idx 1, ‖((basePoint d : SSphere (d + 1)) : EucSpace (d + 1))‖ = 1 :=
+  fun _ => by simp [basePoint, PiLp.norm_single]
 
 end Homogenized
 end Transformer
