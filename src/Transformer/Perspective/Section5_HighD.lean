@@ -15,6 +15,9 @@ This file formalizes §6 of the survey:
   leaves `x⋆` free, by `not_forall_step2_alpha_diff_ineq`,
 * `Theorem r:wendel` — Wendel's hemisphere probability.
 
+The remark following `thm: boumal` — no smooth invariant measure — is
+`Perspective.Section5_InvariantMeasure`.
+
 `Lemma lem: hemisphere.clustering` — *cone collapse* — is
 `Perspective.Section5_ConeCollapse`, where it is proved from the two steps of
 its own proof.  Steps 1 and 2 — that `min_i ⟨x_i(t), w⟩` does not decrease, and
@@ -75,33 +78,6 @@ theorem boumal_clustering
 
 /-- The hypotheses of `boumal_clustering` are satisfiable: `d = 3`, `n = 2`,
 `β = 0`. -/
-example : 3 ≤ 3 ∧ 2 ≤ 2 ∧ (0 : ℝ) ≤ 0 := ⟨le_rfl, le_rfl, le_rfl⟩
-
-/-- *Invariant measures remark.* When `thm: beta.tiny` applies (e.g. always
-for `d ≥ 3`), neither `SA` nor `USA` admits a smooth invariant measure.
-
-"Smooth" is read as *having a density*: `μ ≪ P`, with `P` the uniform law
-`UniformTuple` of §4.  That already rules out the Dirac masses on consensus
-configurations, which *are* invariant but sit on a `P`-null set, and it is what
-makes the remark a consequence of `boumal_clustering`: everything is swept into
-that null set, so no measure with a density can be preserved.  The flow is
-presented as any map `Φ` that transports initial data along solutions of `SA`.
-
-Not proved here: it rests on `boumal_clustering`, which is a `sorry`.
-
-Source: arXiv:2312.10794v5, §6.1 (remark after `thm: boumal`). -/
-theorem no_smooth_invariant_measure (β : ℝ) (hd : 3 ≤ d) (hn : 2 ≤ n)
-    (hβ : 0 ≤ β) :
-    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-    ∀ μ : Measure (SphereTuple d n), IsProbabilityMeasure μ → μ ≪ P →
-      ¬ ∃ Φ : ℝ → SphereTuple d n → SphereTuple d n,
-          (∀ (X : ℝ → SphereTuple d n), Perspective.SA d n β X →
-              ∀ t : ℝ, Φ t (X 0) = X t) ∧
-          ∀ t : ℝ, μ.map (Φ t) = μ := by
-  sorry
-
-/-- The hypotheses of `no_smooth_invariant_measure` are satisfiable: `d = 3`,
-`n = 2`, `β = 0`. -/
 example : 3 ≤ 3 ∧ 2 ≤ 2 ∧ (0 : ℝ) ≤ 0 := ⟨le_rfl, le_rfl, le_rfl⟩
 
 /-! ### §6.1 — Exponential rate when `d ≥ n` -/
