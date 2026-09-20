@@ -34,3 +34,5 @@ import Transformer.Homogenized.GramStability
 import Transformer.Homogenized.SmallBeta
 import Transformer.Homogenized.RademacherLaw
 import Transformer.Homogenized.MeanFieldLipschitz
+import Transformer.Homogenized.CoupledSystem
+import Transformer.Homogenized.PropagationChaos
