@@ -20,5 +20,7 @@ import Transformer.Clusters.Section7_LogSumExp
 import Transformer.Clusters.Section7_Unbounded
 import Transformer.Clusters.Section7_Symmetric
 import Transformer.Clusters.Section7_Bounded
+import Transformer.Clusters.Section9_Eigen
+import Transformer.Clusters.Section9_Limits
 import Transformer.Clusters.Section8_Polytope
 import Transformer.Clusters.Section8_Origin
