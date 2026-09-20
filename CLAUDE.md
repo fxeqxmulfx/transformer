@@ -117,7 +117,7 @@ Three numbers, to be read before every commit, next to `scripts/index.py`:
   **Must be 0.** Those three are the minimum Mathlib itself runs on; every
   further axiom is an assumption in disguise.
 
-Current: 214 `sorry` · 0 resting on a sorry · 0 extra axioms. Every proved
+Current: 217 `sorry` · 0 resting on a sorry · 0 extra axioms. Every proved
 declaration in the tree is proved, on those three axioms and nothing else.
 
 ## When the paper is wrong
@@ -166,7 +166,7 @@ Required:
 - `rfl` / `trivial` / one-line `simp` closing a substantive theorem ⇒ suspect a
   placeholder definition beneath it.
 
-Current debt, per `INDEX.md`: 214 theorems using `sorry`, 0 vacuous statements,
+Current debt, per `INDEX.md`: 217 theorems using `sorry`, 0 vacuous statements,
 0 placeholder definitions. `vacuous` and `placeholder` may only fall, and the
 conversion of statement-`Prop`s into sorried theorems is finished, so no
 restatement may raise the `sorry` count either. The one admissible increase is

@@ -10,3 +10,4 @@ import Transformer.Modes.Section1_KDE
 import Transformer.Modes.Section1_Mammen
 import Transformer.Modes.Section1_Main
 import Transformer.Modes.Section1_Belt
+import Transformer.Modes.Section1_Sketch
