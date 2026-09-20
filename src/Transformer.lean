@@ -1,5 +1,5 @@
 /-
-Formalization of fifteen papers on the mathematics of Transformers:
+Formalization of sixteen papers on the mathematics of Transformers:
 
 1. Weiss, Goldberg, Yahav — arXiv:2106.06981v2
    "Thinking Like Transformers".
@@ -49,6 +49,9 @@ Formalization of fifteen papers on the mathematics of Transformers:
 15. Álvarez-López, Geshkovski, Ruiz-Balet — arXiv:2601.21366v2
    "Perceptrons and localization of attention's mean-field landscape".
 
+16. Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2305.05465v6
+   "The emergence of clusters in self-attention dynamics".
+
 Alongside these, `Transformer.ALM` formalizes the paraboloid-lifted lookup
 used by the append-only lookup machine (Percepta, transformer-vm).
 
@@ -76,6 +79,7 @@ import Transformer.FrankWolfe
 import Transformer.Kinetic
 import Transformer.Homogenized
 import Transformer.Perceptron
+import Transformer.Clusters
 import Transformer.XSA
 import Transformer.Quartet
 import Transformer.GPTMini
