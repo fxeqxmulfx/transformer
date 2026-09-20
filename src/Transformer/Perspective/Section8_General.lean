@@ -7,7 +7,8 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 This file formalizes §9 of the survey:
 
 * §9.1 — the *repulsive case* `V = -I_d`, with the connection to optimal
-  sphere configurations;
+  sphere configurations (the Cohn–Kumar dichotomy itself is in
+  `Transformer.Perspective.Section8_CohnKumar`);
 * §9.2 — pure self-attention without projection: `eq: transf-1`,
   `eq:zifromxi`, `e:Rres`;
 * §9.3 — *singular dynamics* in the `β → ∞` limit: `e:exp`, `e:maineq`,
@@ -18,7 +19,6 @@ This file formalizes §9 of the survey:
 import Transformer.Basic
 import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section2_FlowMap
-import Mathlib.Algebra.MvPolynomial.Degrees
 import Mathlib.Analysis.Normed.Algebra.Exponential
 
 open scoped BigOperators
@@ -104,68 +104,16 @@ theorem exp_sqDist_strictAnti (β : ℝ) (hβ : 0 < β) :
 /-- The hypothesis `0 < β` of `exp_sqDist_strictAnti` is satisfiable. -/
 example : (0 : ℝ) < 1 := one_pos
 
-/-- A finite point set `𝒞 ⊂ 𝕊^{d-1}` is a *spherical `t`-design* for the
-reference measure `σ` if
-
-  `(1/#𝒞) Σ_{x ∈ 𝒞} p(x) = ∫ p dσ`
-
-for every polynomial `p` of total degree `≤ t`.  The survey takes `σ` to be the
-uniform measure on the sphere; this development does not fix a normalized
-surface measure on `SSphere d`, so it is carried as a parameter.
-Source: arXiv:2312.10794v5, §9.1. -/
-def sphericalDesign
-    (σ : Measure (SSphere d)) (t : ℕ) (𝒞 : Finset (SSphere d)) : Prop :=
-  ∀ p : MvPolynomial (Fin d) ℝ, p.totalDegree ≤ t →
-    ((𝒞.card : ℝ))⁻¹ * ∑ x ∈ 𝒞, MvPolynomial.eval (fun i => (x : EucSpace d) i) p
-      = ∫ x, MvPolynomial.eval (fun i => (x : EucSpace d) i) p ∂σ
-
-/-- A finite point set `𝒞 ⊂ 𝕊^{d-1}` is a *sharp configuration* if there are
-`m > 1` distinct pairwise inner products and `𝒞` is a spherical
-`(2m-1)`-design. -/
-def sharpConfiguration (σ : Measure (SSphere d)) (𝒞 : Finset (SSphere d)) : Prop :=
-  ∃ m : ℕ, 1 < m ∧
-    (Finset.image
-      (fun p : SSphere d × SSphere d =>
-        inner (𝕜 := ℝ) (p.1 : EucSpace d) (p.2 : EucSpace d))
-      (𝒞 ×ˢ 𝒞)).card = m ∧
-    sphericalDesign d σ (2 * m - 1) 𝒞
-
-/-- **Cohn–Kumar theorem.**  Every global minimum of `𝖧_β` among finite
-configurations `𝒞 ⊂ 𝕊^{d-1}` with `#𝒞 = n` is either a sharp configuration or
-the vertices of the 600-cell (a 4-dimensional polytope with 120 vertices).
-
-Not proved here: the theorem is a deep result of Cohn and Kumar, and the
-600-cell is not constructed — it enters as the parameter `exceptional`, the
-configuration the dichotomy is allowed to except.
-Source: arXiv:2312.10794v5, §9.1. -/
-theorem cohn_kumar_dichotomy
-    (σ : Measure (SSphere d)) (β : ℝ) (exceptional : Finset (SSphere d))
-    (𝒞 : Finset (SSphere d)) (hcard : 𝒞.card = n)
-    (hmin : ∀ 𝒟 : Finset (SSphere d), 𝒟.card = n →
-      discreteEnergy d β 𝒞 ≤ discreteEnergy d β 𝒟) :
-    sharpConfiguration d σ 𝒞 ∨ 𝒞 = exceptional := by
-  sorry
-
 /-- On the sphere every singleton has the same energy `e^β`, since
-`⟨x, x⟩ = 1`.  This is what makes the minimality hypothesis of
-`cohn_kumar_dichotomy` satisfiable at `n = 1`. -/
+`⟨x, x⟩ = 1`: at `n = 1` the minimization problem of §9.1 is degenerate, every
+configuration being a global minimiser.
+Source: arXiv:2312.10794v5, §9.1. -/
 theorem discreteEnergy_singleton (β : ℝ) (x : SSphere d) :
     discreteEnergy d β {x} = Real.exp β := by
   have hx : ‖(x : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
   have hxx : inner (𝕜 := ℝ) ((x : EucSpace d)) ((x : EucSpace d)) = 1 := by
     rw [real_inner_self_eq_norm_mul_norm, hx]; ring
   rw [discreteEnergy, Finset.sum_singleton, Finset.sum_singleton, hxx, mul_one]
-
-/-- The hypotheses of `cohn_kumar_dichotomy` are satisfiable at `n = 1`: a
-singleton is a global minimiser among singletons, all of them having energy
-`e^β`. -/
-example (β : ℝ) :
-    ({basePoint 0} : Finset (SSphere 1)).card = 1 ∧
-      ∀ 𝒟 : Finset (SSphere 1), 𝒟.card = 1 →
-        discreteEnergy 1 β {basePoint 0} ≤ discreteEnergy 1 β 𝒟 := by
-  refine ⟨Finset.card_singleton _, fun 𝒟 h𝒟 => ?_⟩
-  obtain ⟨y, rfl⟩ := Finset.card_eq_one.mp h𝒟
-  rw [discreteEnergy_singleton, discreteEnergy_singleton]
 
 /-! ### §9.2 — Pure self-attention (no projection) -/
 

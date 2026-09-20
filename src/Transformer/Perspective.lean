@@ -42,6 +42,7 @@ import Transformer.Perspective.Section5_Vanishing
 import Transformer.Perspective.Section6_Circle
 import Transformer.Perspective.Section7_BBGKY
 import Transformer.Perspective.Section8_General
+import Transformer.Perspective.Section8_CohnKumar
 import Transformer.Perspective.Section9_Approximation
 import Transformer.Perspective.RussianTrick
 import Transformer.Perspective.RussianPairs
