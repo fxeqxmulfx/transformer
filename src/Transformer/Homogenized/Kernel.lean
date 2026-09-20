@@ -14,6 +14,13 @@ proof of `thm:weak_error_clean` runs on.
   least such `N` — and it avoids the junk value a supremum takes when the
   family is unbounded, which would make the bound vacuously true.
 
+  The same reading disposes of `def: derivatives`, the source's norm
+  `‖V‖_{𝔛^k((𝕊^{d-1})^n)} = max_X (‖V(X)‖ + max_{j≤k} ‖∇^j V(X)‖)` on vector
+  fields: it is vocabulary for exactly the bounds written out here, is used
+  only inside proofs — "`V₀ ∈ 𝔛⁴`, `G^σ ∈ 𝔛⁵`, `‖G^σ‖_{𝔛⁴} ∨ ‖V₀‖_{𝔛⁵} < ∞`"
+  is this lemma restated — and states nothing on its own, so it is not a
+  separate definition here.
+
 * The two claims "there exist `C₁, C₂ > 0`" and "we can choose
   `C₁ = O(1 + σ_A‖𝔼V‖_op β/σ_V)`, `C₂ = O(1 + β¹⁰σ_A¹⁰d⁵)`" are read as one: a
   universal `K`, produced before `d, n, β, σ_V, σ_A` are chosen, with `C₁` and
@@ -26,7 +33,8 @@ proof of `thm:weak_error_clean` runs on.
   `eq: defining.alpha`.  The per-token reading is the one `α` is defined from,
   and it is the one used here.
 
-Source: arXiv:2604.01978v1, `lem:Kernel_regularity`, `eq: defining.alpha`.
+Source: arXiv:2604.01978v1, `lem:Kernel_regularity`, `eq: defining.alpha`,
+`def: derivatives`.
 -/
 
 import Transformer.Homogenized.RandomChain
