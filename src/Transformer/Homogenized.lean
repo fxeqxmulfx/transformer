@@ -7,6 +7,8 @@ Formalization of:
 import Transformer.Homogenized.Basic
 import Transformer.Homogenized.Generator
 import Transformer.Homogenized.MeanField
+import Transformer.Homogenized.MvGenerator
+import Transformer.Homogenized.McKeanVlasov
 import Transformer.Homogenized.GaussianInit
 import Transformer.Homogenized.Kernel
 import Transformer.Homogenized.Regimes
