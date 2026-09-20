@@ -2988,7 +2988,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`IsEnergyGradNorm`](src/Transformer/Metastability/OpenProblems.lean#L176) | def |  |
 | [`saddle_to_saddle_gradient_reparam`](src/Transformer/Metastability/OpenProblems.lean#L193) | theorem | sorry |
 
-**[Transformer.Metastability.OttoReznikoff](src/Transformer/Metastability/OttoReznikoff.lean)** — 313 lines
+**[Transformer.Metastability.OttoReznikoff](src/Transformer/Metastability/OttoReznikoff.lean)** — 349 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -3002,7 +3002,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`g_OR`](src/Transformer/Metastability/OttoReznikoff.lean#L198) | def |  |
 | [`PL_borjan`](src/Transformer/Metastability/OttoReznikoff.lean#L213) | lemma | sorry |
 | [`not_forall_claim_one`](src/Transformer/Metastability/OttoReznikoff.lean#L258) | theorem | proved |
-| [`otto_attention`](src/Transformer/Metastability/OttoReznikoff.lean#L291) | theorem | sorry |
+| [`otto_attention`](src/Transformer/Metastability/OttoReznikoff.lean#L322) | theorem | sorry |
 
 **[Transformer.Metastability.PairVelocity](src/Transformer/Metastability/PairVelocity.lean)** — 283 lines
 
@@ -4217,7 +4217,7 @@ Everything the build cannot vouch for, in one place.
 | [`saddle_to_saddle_gradient_reparam`](src/Transformer/Metastability/OpenProblems.lean#L193) | theorem | `Transformer.Metastability.OpenProblems` |
 | [`otto_reznikoff`](src/Transformer/Metastability/OttoReznikoff.lean#L102) | theorem | `Transformer.Metastability.OttoReznikoff` |
 | [`PL_borjan`](src/Transformer/Metastability/OttoReznikoff.lean#L213) | lemma | `Transformer.Metastability.OttoReznikoff` |
-| [`otto_attention`](src/Transformer/Metastability/OttoReznikoff.lean#L291) | theorem | `Transformer.Metastability.OttoReznikoff` |
+| [`otto_attention`](src/Transformer/Metastability/OttoReznikoff.lean#L322) | theorem | `Transformer.Metastability.OttoReznikoff` |
 | [`staircase_profile`](src/Transformer/Metastability/StaircaseProfile.lean#L95) | theorem | `Transformer.Metastability.StaircaseProfile` |
 | [`clusters_from_uniform`](src/Transformer/Normalization/Clustering.lean#L73) | theorem | `Transformer.Normalization.Clustering` |
 | [`clusters_or_stalls_from_gaussian`](src/Transformer/Normalization/Clustering.lean#L102) | theorem | `Transformer.Normalization.Clustering` |

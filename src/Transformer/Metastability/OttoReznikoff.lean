@@ -278,36 +278,72 @@ theorem not_forall_claim_one :
 /-- **Corollary (eq: otto.attention).**
 
 For `β > 1` and a `(β, τ)`-separated configuration meeting (eq: tau.small),
-the conclusion of `thm: Otto result` holds for the angular `USA` dynamics
-with `δ = e^{-λ β / 2}`: the angular energy along the flow approaches, at the
-exponential rate of `otto_reznikoff`, that of a point of the slow manifold,
-up to `C_ε e^{-λ β / 2}`.
+the conclusion of `thm: Otto result` holds with `δ = e^{-λ β / 2}`: the
+angular energy along the flow approaches, at the exponential rate of
+`otto_reznikoff`, that of a point of the slow manifold, up to
+`C_ε e^{-λ β / 2}`.
 
-Not proved here: it is `otto_reznikoff` applied to `𝖤_β` on `𝕋^n`, and both
+**What the source says and what is changed here.**  Four things, all of them
+forced by what the corollary is a corollary *of*.
+
+*`C_ε` depends on `ε` alone.*  It is the constant of `thm: Otto result`, and
+with `β` quantified before it the statement would say nothing: `𝖤_β` is
+bounded — `0 < 𝖤_β ≤ 1/(2β)` — so a `C_ε` allowed to depend on `β` could be
+chosen to swallow the whole left-hand side, and the inequality would hold
+with no dynamics at all.  `ε` is therefore the outermost binder and everything
+else, `n` included, comes after `C_ε`, exactly as `C_ε` is written.
+
+*The sign.*  `V(t)` lies on the slow manifold and the flow moves towards it,
+so it is `𝖤_β(V) - 𝖤_β(U)` that decays, not the difference the other way
+round: the energy of `eq: otto.gf` — the one that *falls* along its flow, as
+`PL_borjan` and `quantitative_inequality` both read it — is `-𝖤_β`.  Written
+with the difference reversed the square roots are identically `0` below the
+slow manifold and the statement is empty.
+
+*`U` is the flow and `V` is its (H1)-projection.*  Both were free, which is
+what `not_forall_otto_reznikoff` refutes one import away.  `U` solves
+`U̇ = -∇(-𝖤_β)(U) = ∇𝖤_β(U)`, whose components are `angularGrad`, from `Θ`;
+`V(t)` is a point of the slow manifold satisfying (H1) against `U(t)`.  The
+angular `USA` dynamics of the paper is this same trajectory traversed at the
+constant speed `n e^β` — `angularUSA`'s velocity is `n e^β` times
+`angularGrad` — so it is the same curve up to a time change, and the rate
+`e^{-(1-ε)t}` is stated in the time of `thm: Otto result`, the result this
+one is a corollary of.
+
+*The norm in (H1) is Euclidean.*  `Idx n → ℝ` carries the sup norm in
+Mathlib, and the `‖u - v‖²` of (H1) is the Euclidean one, so it is written
+out as `∑ᵢ (U t i - V t i)²`.
+
+Not proved here: it is `otto_reznikoff` applied to `-𝖤_β` on `𝕋^n`, and both
 that theorem and the verification of (H1), (H2) for `𝖤_β` — which is
 `PL_borjan` — are `sorry` here.
 
 Source: arXiv:2410.06833v1, §3.2, `eq: otto.attention`. -/
-theorem otto_attention
-    (n : ℕ) (α β τ lam : ℝ) (Θ : Idx n → ℝ) (k : ℕ) (ω : Idx k → ℝ)
-    (hβ : 1 < β) :
-    isSeparatedAngles n α β τ Θ →
-    ∀ ε : ℝ, 0 < ε → ε < 1 →
-      ∃ Cε : ℝ, 0 < Cε ∧
-        ∀ U : ℝ → Idx n → ℝ, ∀ V : ℝ → Idx n → ℝ,
-          (∀ t : ℝ, V t ∈ slowManifold n β τ lam k ω) →
+theorem otto_attention (ε : ℝ) (hε : 0 < ε) (hε1 : ε < 1) :
+    ∃ Cε : ℝ, 0 < Cε ∧
+      ∀ (n : ℕ) (α β τ lam : ℝ) (Θ : Idx n → ℝ) (k : ℕ) (ω : Idx k → ℝ),
+        1 < β → isSeparatedAngles n α β τ Θ →
+        ∀ U V : ℝ → Idx n → ℝ,
+          U 0 = Θ →
+          (∀ t : ℝ, ∀ i : Idx n,
+            HasDerivAt (fun s => U s i) (angularGrad n β (U t) i) t) →
+          (∀ t : ℝ, V t ∈ slowManifold n β τ lam k ω ∧
+            (1/2 : ℝ) * ∑ i : Idx n, (U t i - V t i) ^ 2
+              ≤ angularEβ n β (V t) - angularEβ n β (U t) ∧
+            angularEβ n β (V t) - angularEβ n β (U t)
+              ≤ (1/2 : ℝ) * ∑ i : Idx n, (angularGrad n β (U t) i) ^ 2) →
           ∀ t : ℝ, 0 ≤ t →
-            Real.sqrt (angularEβ n β (U t) - angularEβ n β (V t))
+            Real.sqrt (angularEβ n β (V t) - angularEβ n β (U t))
               ≤ Real.exp (-(1 - ε) * t)
-                  * Real.sqrt (angularEβ n β (U 0) - angularEβ n β (V 0))
+                  * Real.sqrt (angularEβ n β (V 0) - angularEβ n β (U 0))
                 + Cε * Real.exp (-(lam * β / 2)) := by
   sorry
 
-/-- The hypothesis of `otto_attention` is satisfiable: `β = 2`.  The
-separation of `Θ` stays inside the statement — `isSeparatedAngles` carries
-`γ(β) > 0`, which ties `α`, `τ` and `β` together, and no configuration
-meeting it is built in this file. -/
-example : (1 : ℝ) < 2 := by norm_num
+/-- The hypotheses of `otto_attention` are satisfiable: `ε = 1/2`.  Everything
+else stays inside the statement — `isSeparatedAngles` carries `γ(β) > 0`,
+which ties `α`, `τ` and `β` together, and no configuration meeting it, and no
+flow out of one, is built in this file. -/
+example : (0 : ℝ) < 1 / 2 ∧ (1 : ℝ) / 2 < 1 := by norm_num
 
 end Metastability
 end Transformer
