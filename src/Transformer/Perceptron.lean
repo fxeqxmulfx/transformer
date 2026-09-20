@@ -1,0 +1,8 @@
+/-
+Formalization of:
+  Álvarez-López, Geshkovski, Ruiz-Balet,
+  "Perceptrons and localization of attention's mean-field landscape",
+  arXiv:2601.21366v2.
+-/
+
+import Transformer.Perceptron.Basic
