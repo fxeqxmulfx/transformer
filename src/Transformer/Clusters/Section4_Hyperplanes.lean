@@ -70,16 +70,32 @@ def IsSpectralRadiusLtOn (G : Submodule ℝ (EucSpace d)) (V : ParamMatrix d) (l
   ∃ C r : ℝ, 0 < C ∧ 0 ≤ r ∧ r < lam ∧
     ∀ (k : ℕ) (w : EucSpace d), w ∈ G → ‖(V ^ k) w‖ ≤ C * r ^ k * ‖w‖
 
+/-- **Definition (d:good), with its witnesses named.**  `λ₁ = lam` is real
+and positive, `φ₁ = φ` spans its eigenline, `G` is the complementary
+`V`-invariant subspace on which `V` has spectral radius `< λ₁`, and
+`⟨Qφ₁, Kφ₁⟩ > 0`.  §9 needs the leading eigenpair by name, which is what
+this form provides.
+
+Source: arXiv:2305.05465v6, `d:good`. -/
+def IsGoodTripleWith (Q K V : ParamMatrix d) (lam : ℝ) (φ : EucSpace d)
+    (G : Submodule ℝ (EucSpace d)) : Prop :=
+  0 < lam ∧ φ ≠ 0 ∧ V φ = lam • φ ∧ (∀ w ∈ G, V w ∈ G) ∧
+    IsCompl (Submodule.span ℝ {φ}) G ∧ IsSpectralRadiusLtOn G V lam ∧
+    0 < inner (𝕜 := ℝ) (Q φ) (K φ)
+
 /-- **Definition (d:good).**  `(Q,K,V)` is a good triple: the leading
 eigenvalue `λ₁` of `V` is real, positive and simple, and `⟨Q·, K·⟩` is
 positive along its eigenvector.
 
 Source: arXiv:2305.05465v6, `d:good`. -/
 def IsGoodTriple (Q K V : ParamMatrix d) : Prop :=
-  ∃ (lam : ℝ) (φ : EucSpace d) (G : Submodule ℝ (EucSpace d)),
-    0 < lam ∧ φ ≠ 0 ∧ V φ = lam • φ ∧ (∀ w ∈ G, V w ∈ G) ∧
-      IsCompl (Submodule.span ℝ {φ}) G ∧ IsSpectralRadiusLtOn G V lam ∧
-      0 < inner (𝕜 := ℝ) (Q φ) (K φ)
+  ∃ (lam : ℝ) (φ : EucSpace d) (G : Submodule ℝ (EucSpace d)), IsGoodTripleWith Q K V lam φ G
+
+/-- Being a good triple is having such a witness. -/
+theorem isGoodTriple_iff (Q K V : ParamMatrix d) :
+    IsGoodTriple Q K V ↔
+      ∃ (lam : ℝ) (φ : EucSpace d) (G : Submodule ℝ (EucSpace d)),
+        IsGoodTripleWith Q K V lam φ G := Iff.rfl
 
 /-- In dimension `1` a single non-zero vector spans everything. -/
 theorem span_singleton_eq_top {φ : EucSpace 1} (hφ : φ ≠ 0) :
@@ -90,10 +106,11 @@ theorem span_singleton_eq_top {φ : EucSpace 1} (hφ : φ ≠ 0) :
 /-- **`(I₁, I₁, I₁)` is a good triple**, the scalar case `d = 1`, `V = 1`: the
 leading eigenvalue is `1`, its eigenspace is all of `ℝ`, the complement is
 trivial, and `⟨φ, φ⟩ > 0`.  This witnesses `d:good`. -/
-theorem isGoodTriple_one : IsGoodTriple (1 : ParamMatrix 1) 1 1 := by
+theorem isGoodTripleWith_one :
+    IsGoodTripleWith (1 : ParamMatrix 1) 1 1 1 (EuclideanSpace.single 0 (1 : ℝ)) ⊥ := by
   have hφ : (EuclideanSpace.single 0 (1 : ℝ) : EucSpace 1) ≠ 0 :=
     by simp
-  refine ⟨1, EuclideanSpace.single 0 (1 : ℝ), ⊥, one_pos, hφ, (one_smul ℝ _).symm,
+  refine ⟨one_pos, hφ, (one_smul ℝ _).symm,
     fun w hw => by simpa using hw, ?_, ⟨1, 0, one_pos, le_rfl, one_pos, ?_⟩,
     real_inner_self_pos.mpr hφ⟩
   · rw [span_singleton_eq_top hφ]
@@ -102,6 +119,10 @@ theorem isGoodTriple_one : IsGoodTriple (1 : ParamMatrix 1) 1 1 := by
     have hw0 : w = 0 := by simpa using hw
     rw [hw0]
     simp
+
+/-- **`(I₁, I₁, I₁)` is a good triple.** -/
+theorem isGoodTriple_one : IsGoodTriple (1 : ParamMatrix 1) 1 1 :=
+  ⟨1, EuclideanSpace.single 0 (1 : ℝ), ⊥, isGoodTripleWith_one⟩
 
 /-! ### Convergence toward at most three hyperplanes -/
 
