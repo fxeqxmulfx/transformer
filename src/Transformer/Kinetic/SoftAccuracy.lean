@@ -10,6 +10,7 @@ representation, and the expansion that turns the U-shape of the correction
 `𝒮_t` into the U-shape of the accuracy itself.
 -/
 
+import Transformer.Kinetic.Accuracy
 import Transformer.Kinetic.Correlations
 import Transformer.Kinetic.Hardy
 
@@ -21,27 +22,9 @@ namespace Kinetic
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
-/-- The last token of a prompt of length `N`. -/
-def lastIdx (N : ℕ) (hN : 0 < N) : Idx N := ⟨N - 1, by omega⟩
-
-/-- The source position `i_* = ⌊σ₀N⌋` of the retrieval task, as a `0`-based
-index.
-
-**Where this differs from the source.**  The source writes
-`1 ≤ i_* = ⌊σ₀N⌋ ≤ N`, which is an assumption on `σ₀` and `N` and not a
-consequence of `σ₀ ∈ (0,1)`: at `σ₀ < 1/N` the floor is `0`.  A `Fin N` has to
-be total, so both ends are clamped — to the first token when `⌊σ₀N⌋ = 0`, and
-to the last when `σ₀ ≥ 1`.  Under the hypothesis `σ₀ ∈ (0,1)` that every
-theorem here carries, `σ₀N < N` gives `⌊σ₀N⌋ ≤ N - 1` and only the lower clamp
-can act; it makes `σ₀ ↦ 𝒜_N(t,σ₀)` constant on `(0, 1/N)` at the value of the
-first position, which is the position the source's own convention puts there.
-
-Source: arXiv:2605.09213v1, `eq:Acc-def`. -/
-noncomputable def sourceIdx (N : ℕ) (hN : 0 < N) (σ₀ : ℝ) : Idx N :=
-  ⟨min (⌊σ₀ * N⌋₊ - 1) (N - 1), by omega⟩
-
 /-- **Equation (eq:Acc-soft).**  The soft accuracy: the periodic Gaussian
-mollification of the retrieval indicator of `eq:Acc-def`,
+mollification of the retrieval indicator of `eq:Acc-def`, which `acc_def`
+identifies with the accuracy itself,
 
   `𝒜_N(t,σ₀) = E Σ_{k∈ℤ} exp(-M²(θ_N(t) - θ_{i_*}(0) - 2πk)²/(2π²))`.
 

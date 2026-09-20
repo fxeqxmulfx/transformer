@@ -18,5 +18,7 @@ import Transformer.Kinetic.Defs
 import Transformer.Kinetic.Hardy
 import Transformer.Kinetic.MeanField
 import Transformer.Kinetic.Fluctuations
+import Transformer.Kinetic.Codewords
+import Transformer.Kinetic.Accuracy
 import Transformer.Kinetic.Correlations
 import Transformer.Kinetic.SoftAccuracy
