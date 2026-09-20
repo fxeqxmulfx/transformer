@@ -6,7 +6,9 @@ Equations and statements covered:
 * `eq: otto.gf`             — abstract gradient flow,
 * `(H1), (H2)`              — the Otto–Reznikoff hypotheses,
 * `eq: first.inequality`    — Polyak–Łojasiewicz-like bound,
-* `Theorem thm: Otto result`,
+* `Theorem thm: Otto result` — restated over the gradient flow and its
+  (H1)-projection, the form that leaves both curves free being refuted by
+  `not_forall_otto_reznikoff`,
 * `eq: otto.1, otto.2`      — the consequence of the Otto–Reznikoff theorem,
 * `Lemma lem: bakry-emery` with `ineq: Almost Hessian` — in
   `Transformer.Metastability.BakryEmery`, which proves it with the flow and
@@ -79,19 +81,84 @@ Under hypotheses (H1) and (H2) the gradient flow is drawn into a
 `δ`-neighborhood of the slow manifold `𝒩` exponentially:
 
   `‖u(t) - v(t)‖ + √(𝖤(u(t)) - 𝖤(v(t)))
-        ≤ e^{-(1-ε) t} √(𝖤(u(0)) - 𝖤(v(0))) + C_ε δ`. -/
+        ≤ e^{-(1-ε) t} √(𝖤(u(0)) - 𝖤(v(0))) + C_ε δ`.
+
+**What the source says and what is changed here.**  `u` and `v` are not two
+arbitrary curves.  `u` is *the* gradient flow `eq: otto.gf` of `𝖤`, and `v(t)`
+is *the* point of `𝒩` that (H1) attaches to `u(t)` — the paper writes
+`v(t) ∈ 𝒩` for the projection whose existence (H1) asserts, and its proof uses
+both halves of (H1) at that point.  Carried with `u` and `v` free, as they
+were, the statement is false: `not_forall_otto_reznikoff` refutes it at
+`M = ℝ` with `𝖤 ≡ 0`, where (H1) and (H2) hold, by letting `u` sit at
+`C_ε + 1` and `v` at `0`.
+
+`gradNorm` is therefore no longer a free scalar field either: it is the norm
+of the field `gradE` that drives the flow, which is what `‖∇𝖤(u)‖` means.
+
+Not proved here.
+
+Source: arXiv:2410.06833v1, §3.1, `thm: Otto result`, `eq: otto.1`,
+`eq: otto.2`. -/
 theorem otto_reznikoff
-    {M : Type*} [NormedAddCommGroup M] (E : M → ℝ) (gradNorm : M → ℝ)
+    {M : Type*} [NormedAddCommGroup M] [NormedSpace ℝ M]
+    (E : M → ℝ) (gradE : M → M)
     (𝒩 : Set M) (δ : ℝ) (hδ : 0 < δ)
-    (h1 : H1 E gradNorm 𝒩) (h2 : H2 E 𝒩 δ) :
+    (h1 : H1 E (fun u => ‖gradE u‖) 𝒩) (h2 : H2 E 𝒩 δ) :
     ∀ (ε : ℝ), 0 < ε → ε < 1 →
       ∃ Cε : ℝ, 0 < Cε ∧
-        ∀ u : ℝ → M, ∀ v : ℝ → M, ∀ t : ℝ, 0 ≤ t →
-          ‖u t - v t‖ + Real.sqrt (E (u t) - E (v t))
-            ≤ Real.exp (-(1 - ε) * t)
-                * Real.sqrt (E (u 0) - E (v 0))
-              + Cε * δ := by
+        ∀ (u₀ : M) (u v : ℝ → M),
+          abstractGF gradE u₀ u →
+          (∀ t : ℝ, v t ∈ 𝒩 ∧
+            (1/2 : ℝ) * ‖u t - v t‖ ^ 2 ≤ E (u t) - E (v t) ∧
+            E (u t) - E (v t) ≤ (1/2 : ℝ) * ‖gradE (u t)‖ ^ 2) →
+          ∀ t : ℝ, 0 ≤ t →
+            ‖u t - v t‖ + Real.sqrt (E (u t) - E (v t))
+              ≤ Real.exp (-(1 - ε) * t)
+                  * Real.sqrt (E (u 0) - E (v 0))
+                + Cε * δ := by
   sorry
+
+/-- The hypotheses of `otto_reznikoff` are satisfiable: `M = ℝ`, `𝖤 ≡ 0`,
+`∇𝖤 ≡ 0`, `𝒩 = ℝ` and `δ = 1`.  (H1) holds with `v = u`, and (H2) reads
+`0 ≤ ‖v₁ - v₂‖`. -/
+example :
+    H1 (fun _ : ℝ => (0 : ℝ)) (fun u : ℝ => ‖(fun _ : ℝ => (0 : ℝ)) u‖) Set.univ ∧
+      H2 (fun _ : ℝ => (0 : ℝ)) Set.univ 1 :=
+  ⟨fun u => ⟨u, Set.mem_univ u, by simp, by simp⟩,
+    fun _ _ _ _ => by simp⟩
+
+/-- **`thm: Otto result` is false over two free curves.**
+
+The theorem is about the gradient flow `u` of `eq: otto.gf` and the
+`𝒩`-projection `v` that (H1) attaches to it.  With `u` and `v` free it claims
+that *any* two curves whatever stay within `C_ε δ` of each other, and that is
+false as soon as one of them is far away: at `M = ℝ` with `𝖤 ≡ 0`,
+`∇𝖤 ≡ 0`, `𝒩 = ℝ` and `δ = 1` both hypotheses hold — (H1) with `v = u`, (H2)
+because `0 ≤ ‖v₁ - v₂‖` — and, reading the conclusion at `t = 0` with
+`u ≡ C_ε + 1` and `v ≡ 0`, both square roots vanish and it says
+`C_ε + 1 ≤ C_ε`.
+
+Source: arXiv:2410.06833v1, §3.1, `thm: Otto result`. -/
+theorem not_forall_otto_reznikoff :
+    ¬ ∀ (E : ℝ → ℝ) (gradNorm : ℝ → ℝ) (𝒩 : Set ℝ) (δ : ℝ), 0 < δ →
+        H1 E gradNorm 𝒩 → H2 E 𝒩 δ →
+        ∀ ε : ℝ, 0 < ε → ε < 1 →
+          ∃ Cε : ℝ, 0 < Cε ∧
+            ∀ u v : ℝ → ℝ, ∀ t : ℝ, 0 ≤ t →
+              ‖u t - v t‖ + Real.sqrt (E (u t) - E (v t))
+                ≤ Real.exp (-(1 - ε) * t) * Real.sqrt (E (u 0) - E (v 0))
+                  + Cε * δ := by
+  intro h
+  obtain ⟨C, hC, hkey⟩ :=
+    h (fun _ => 0) (fun _ => 0) Set.univ 1 one_pos
+      (fun u => ⟨u, Set.mem_univ u, by simp, by simp⟩)
+      (fun _ _ _ _ => by simp)
+      (1/2) (by norm_num) (by norm_num)
+  have hbad := hkey (fun _ => C + 1) (fun _ => 0) 0 le_rfl
+  have hnorm : ‖(C + 1 : ℝ) - 0‖ = C + 1 := by
+    rw [sub_zero, Real.norm_eq_abs, abs_of_pos (by linarith)]
+  simp only [sub_self, Real.sqrt_zero, mul_zero, add_zero, mul_one, hnorm] at hbad
+  linarith
 
 /-! ### §3.2 — Application to `𝖤_β` on `𝕋^n` -/
 
