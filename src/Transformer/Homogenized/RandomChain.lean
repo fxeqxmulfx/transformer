@@ -103,13 +103,15 @@ def HasHighOrderLaw (d : ℕ) (σV σA : ℝ≥0) (ρ : Measure (HeadParam d)) :
     0 < C ∧ IsHighOrderLaw d C σV σA ρ P Vr Wr Wr' mV mA
 
 /-- The degenerate weight law `ρ* = δ_0` satisfies `ass:high_order_short`, with
-all three centered parts equal to `0` on a one-point space and both scales
-`σ_V = σ_A = 0`.  This is the witness that the assumption is not contradictory.
+all three centered parts equal to `0` on a one-point space, both means equal to
+`0`, and both scales `σ_V = σ_A = 0`.  This is the witness that the assumption
+is not contradictory; it is stated with its data explicit, so that a consumer
+of `ass:high_order_short` can name `𝔼V = 0` as well.
 
 Source: arXiv:2604.01978v1, `ass:high_order_short`. -/
-theorem hasHighOrderLaw_dirac_zero (d : ℕ) :
-    HasHighOrderLaw d 0 0 (Measure.dirac (0 : HeadParam d)) := by
-  refine ⟨1, Unit, inferInstance, Measure.dirac (), 0, 0, 0, 0, 0, one_pos, ?_⟩
+theorem isHighOrderLaw_dirac_zero (d : ℕ) :
+    IsHighOrderLaw d 1 0 0 (Measure.dirac (0 : HeadParam d)) (Measure.dirac ())
+      (0 : Unit → Matrix (Fin d) (Fin d) ℝ) 0 0 0 0 := by
   refine ⟨inferInstance, measurable_const, measurable_const, measurable_const,
     ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · simp
@@ -121,6 +123,14 @@ theorem hasHighOrderLaw_dirac_zero (d : ℕ) :
   · intro i j; simp
   · intro i j; simp
   · intro i j; simp
+
+/-- `ass:high_order_short` is satisfiable: the degenerate weight law `ρ* = δ_0`.
+
+Source: arXiv:2604.01978v1, `ass:high_order_short`. -/
+theorem hasHighOrderLaw_dirac_zero (d : ℕ) :
+    HasHighOrderLaw d 0 0 (Measure.dirac (0 : HeadParam d)) :=
+  ⟨1, Unit, inferInstance, Measure.dirac (), 0, 0, 0, 0, 0, one_pos,
+    isHighOrderLaw_dirac_zero d⟩
 
 /-- The discrete chain `eq:update_tokens` driven by heads drawn i.i.d. from the
 weight law: `θ^ℓ = (θ^ℓ_1, …, θ^ℓ_H)` with all `θ^ℓ_h` independent of law `ρ*`,
