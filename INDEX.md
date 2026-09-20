@@ -3011,7 +3011,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 **[Transformer.Kinetic](src/Transformer/Kinetic.lean)** — 22 lines, aggregator
 
-**[Transformer.Kinetic.Correlations](src/Transformer/Kinetic/Correlations.lean)** — 233 lines
+**[Transformer.Kinetic.Correlations](src/Transformer/Kinetic/Correlations.lean)** — 244 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -3027,7 +3027,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`AhatN`](src/Transformer/Kinetic/Correlations.lean#L141) | def |  |
 | [`ChatN`](src/Transformer/Kinetic/Correlations.lean#L150) | def |  |
 | [`InitConvD`](src/Transformer/Kinetic/Correlations.lean#L164) | def |  |
-| [`lost_correlations`](src/Transformer/Kinetic/Correlations.lean#L186) | theorem | sorry |
+| [`lost_correlations`](src/Transformer/Kinetic/Correlations.lean#L195) | theorem | sorry |
 
 **[Transformer.Kinetic.Defs](src/Transformer/Kinetic/Defs.lean)** — 130 lines
 
@@ -3046,7 +3046,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`wHat`](src/Transformer/Kinetic/Defs.lean#L120) | def |  |
 | [`aCoeff`](src/Transformer/Kinetic/Defs.lean#L127) | def |  |
 
-**[Transformer.Kinetic.Fluctuations](src/Transformer/Kinetic/Fluctuations.lean)** — 153 lines
+**[Transformer.Kinetic.Fluctuations](src/Transformer/Kinetic/Fluctuations.lean)** — 164 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -3054,7 +3054,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`InitConv`](src/Transformer/Kinetic/Fluctuations.lean#L47) | def |  |
 | [`thirdCumulant`](src/Transformer/Kinetic/Fluctuations.lean#L57) | def |  |
 | [`correlation_bounds`](src/Transformer/Kinetic/Fluctuations.lean#L75) | theorem | sorry |
-| [`mean_field_rate`](src/Transformer/Kinetic/Fluctuations.lean#L123) | theorem | sorry |
+| [`mean_field_rate`](src/Transformer/Kinetic/Fluctuations.lean#L133) | theorem | sorry |
 
 **[Transformer.Kinetic.Hardy](src/Transformer/Kinetic/Hardy.lean)** — 179 lines
 
@@ -3085,7 +3085,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`EmpiricalTendsto`](src/Transformer/Kinetic/MeanField.lean#L86) | def |  |
 | [`mean_field_limit`](src/Transformer/Kinetic/MeanField.lean#L104) | theorem | sorry |
 
-**[Transformer.Kinetic.SoftAccuracy](src/Transformer/Kinetic/SoftAccuracy.lean)** — 139 lines
+**[Transformer.Kinetic.SoftAccuracy](src/Transformer/Kinetic/SoftAccuracy.lean)** — 147 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -3093,8 +3093,8 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sourceIdx`](src/Transformer/Kinetic/SoftAccuracy.lean#L31) | def |  |
 | [`softAccuracy`](src/Transformer/Kinetic/SoftAccuracy.lean#L40) | def |  |
 | [`softAccuracy_fourier`](src/Transformer/Kinetic/SoftAccuracy.lean#L53) | theorem | sorry |
-| [`soft_accuracy_expansion`](src/Transformer/Kinetic/SoftAccuracy.lean#L78) | theorem | sorry |
-| [`soft_accuracy_uShape`](src/Transformer/Kinetic/SoftAccuracy.lean#L116) | theorem | sorry |
+| [`soft_accuracy_expansion`](src/Transformer/Kinetic/SoftAccuracy.lean#L85) | theorem | sorry |
+| [`soft_accuracy_uShape`](src/Transformer/Kinetic/SoftAccuracy.lean#L124) | theorem | sorry |
 
 ### `Transformer.MeanField`
 
@@ -4582,16 +4582,16 @@ Everything the build cannot vouch for, in one place.
 | [`univ_approx`](src/Transformer/Interpolation/Main.lean#L281) | theorem | `Transformer.Interpolation.Main` |
 | [`prop_interpolation_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L53) | theorem | `Transformer.Interpolation.NeuralODE` |
 | [`lem_induction_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L85) | theorem | `Transformer.Interpolation.NeuralODE` |
-| [`lost_correlations`](src/Transformer/Kinetic/Correlations.lean#L186) | theorem | `Transformer.Kinetic.Correlations` |
+| [`lost_correlations`](src/Transformer/Kinetic/Correlations.lean#L195) | theorem | `Transformer.Kinetic.Correlations` |
 | [`correlation_bounds`](src/Transformer/Kinetic/Fluctuations.lean#L75) | theorem | `Transformer.Kinetic.Fluctuations` |
-| [`mean_field_rate`](src/Transformer/Kinetic/Fluctuations.lean#L123) | theorem | `Transformer.Kinetic.Fluctuations` |
+| [`mean_field_rate`](src/Transformer/Kinetic/Fluctuations.lean#L133) | theorem | `Transformer.Kinetic.Fluctuations` |
 | [`hardy_bessel`](src/Transformer/Kinetic/Hardy.lean#L89) | theorem | `Transformer.Kinetic.Hardy` |
 | [`aCoeff_tendsto_zero`](src/Transformer/Kinetic/Hardy.lean#L118) | theorem | `Transformer.Kinetic.Hardy` |
 | [`u_shape`](src/Transformer/Kinetic/Hardy.lean#L152) | theorem | `Transformer.Kinetic.Hardy` |
 | [`mean_field_limit`](src/Transformer/Kinetic/MeanField.lean#L104) | theorem | `Transformer.Kinetic.MeanField` |
 | [`softAccuracy_fourier`](src/Transformer/Kinetic/SoftAccuracy.lean#L53) | theorem | `Transformer.Kinetic.SoftAccuracy` |
-| [`soft_accuracy_expansion`](src/Transformer/Kinetic/SoftAccuracy.lean#L78) | theorem | `Transformer.Kinetic.SoftAccuracy` |
-| [`soft_accuracy_uShape`](src/Transformer/Kinetic/SoftAccuracy.lean#L116) | theorem | `Transformer.Kinetic.SoftAccuracy` |
+| [`soft_accuracy_expansion`](src/Transformer/Kinetic/SoftAccuracy.lean#L85) | theorem | `Transformer.Kinetic.SoftAccuracy` |
+| [`soft_accuracy_uShape`](src/Transformer/Kinetic/SoftAccuracy.lean#L124) | theorem | `Transformer.Kinetic.SoftAccuracy` |
 | [`global_clustering`](src/Transformer/MeanField/Clustering.lean#L57) | theorem | `Transformer.MeanField.Clustering` |
 | [`meanField_exponential_rate`](src/Transformer/MeanField/Clustering.lean#L159) | theorem | `Transformer.MeanField.Clustering` |
 | [`agazzi_merge`](src/Transformer/MeanField/Merging.lean#L91) | theorem | `Transformer.MeanField.Merging` |

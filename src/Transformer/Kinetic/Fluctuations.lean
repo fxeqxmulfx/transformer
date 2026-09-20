@@ -112,10 +112,20 @@ example : IsProbabilityMeasure (Measure.dirac () : Measure Unit) ∧
 
   `E[|∫ φ (μ_N(t) - f(t))|²]^{1/2} ≲ N^{-δ∧1/2} e^{Ct} ‖φ‖_{L^∞([0,1];W^{m,∞}(𝕋))}`.
 
-The Sobolev norm on the right is carried as a bound `K` on the `θ`-derivatives
-of `φ` up to order `m`, uniformly in `σ ∈ [0,1]`: that is what
-`‖φ‖_{L^∞([0,1];W^{m,∞}(𝕋))} ≤ K` says, and it avoids the junk value an
+The Sobolev norm on the right is carried as a bound `K_φ` on the
+`θ`-derivatives of `φ` up to order `m`, uniformly in `σ ∈ [0,1]`: that is what
+`‖φ‖_{L^∞([0,1];W^{m,∞}(𝕋))} ≤ K_φ` says, and it avoids the junk value an
 unbounded supremum would take.
+
+**How the two constants are quantified.**  The implicit constant of `≲` may
+depend on everything the statement fixes before the estimate: the data
+`δ, γ, C` of `eq:init-conv` — the bias at `t = 0` is of size `C N^{-δ}‖φ‖`, so
+no bound uniform in `C` can hold — and the Sobolev order `m`, which is the
+order of the norm on the right.  It may not depend on `N`, on the prompt, on
+`φ` or on `t`, all of which the estimate quantifies over.  The rate `C` of
+`e^{Ct}` is a constant of the model alone and stays outermost.  Quantifying one
+constant outside `δ, γ, C` and `m`, as this statement did before the audit, is
+a strengthening the source does not claim.
 
 Not proved here.
 
@@ -123,19 +133,20 @@ Source: arXiv:2605.09213v1, `th:mf-gpt`(ii), `eq:conv-rate-muNf`. -/
 theorem mean_field_rate (lam β : ℝ) (f₀ : ℝ → ProbabilityMeasure Torus)
     (f : ℝ → ℝ → ProbabilityMeasure Torus) (hf : IsMeanFieldSolution lam β f₀ f) :
     ∃ C : ℝ, 0 < C ∧ ∀ (δ γ Cst : ℝ), 0 < δ →
-      ∀ (P : Measure Ω), IsProbabilityMeasure P →
-      ∀ (N : ℕ) (ϑ : Ω → ℝ → Idx N → ℝ),
-        (∀ ω, IsGPTFlow lam β N (ϑ ω)) →
-        iIndepFun (fun (j : Idx N) (ω : Ω) => ϑ ω 0 j) P →
-        InitConv P N (fun ω => ϑ ω 0) f₀ δ γ Cst →
       ∀ (m : ℕ), (m : ℝ) > max γ 2 + 1 / 2 →
-      ∀ (φ : ℝ × ℝ → ℝ) (hper : ∀ σ, Function.Periodic (fun u => φ (σ, u)) (2 * π)),
-        ∀ K : ℝ, (∀ σ ∈ Set.Icc (0 : ℝ) 1, ∀ r ≤ m, ∀ u : ℝ,
-            |iteratedDeriv r (fun u => φ (σ, u)) u| ≤ K) →
-      ∀ t ∈ Set.Ici (0 : ℝ),
-        Real.sqrt (∫ ω, ((N : ℝ)⁻¹ * ∑ j : Idx N, φ (((j : ℝ) + 1) / N, ϑ ω t j)
-            - ∫ σ in (0 : ℝ)..1, ∫ x, (hper σ).lift x ∂(f t σ : Measure Torus)) ^ 2 ∂P)
-          ≤ C * (N : ℝ) ^ (-(min δ (1 / 2))) * Real.exp (C * t) * K := by
+      ∃ K : ℝ, 0 < K ∧
+        ∀ (P : Measure Ω), IsProbabilityMeasure P →
+        ∀ (N : ℕ) (ϑ : Ω → ℝ → Idx N → ℝ),
+          (∀ ω, IsGPTFlow lam β N (ϑ ω)) →
+          iIndepFun (fun (j : Idx N) (ω : Ω) => ϑ ω 0 j) P →
+          InitConv P N (fun ω => ϑ ω 0) f₀ δ γ Cst →
+        ∀ (φ : ℝ × ℝ → ℝ) (hper : ∀ σ, Function.Periodic (fun u => φ (σ, u)) (2 * π)),
+          ∀ Kφ : ℝ, (∀ σ ∈ Set.Icc (0 : ℝ) 1, ∀ r ≤ m, ∀ u : ℝ,
+              |iteratedDeriv r (fun u => φ (σ, u)) u| ≤ Kφ) →
+        ∀ t ∈ Set.Ici (0 : ℝ),
+          Real.sqrt (∫ ω, ((N : ℝ)⁻¹ * ∑ j : Idx N, φ (((j : ℝ) + 1) / N, ϑ ω t j)
+              - ∫ σ in (0 : ℝ)..1, ∫ x, (hper σ).lift x ∂(f t σ : Measure Torus)) ^ 2 ∂P)
+            ≤ K * (N : ℝ) ^ (-(min δ (1 / 2))) * Real.exp (C * t) * Kφ := by
   sorry
 
 /-- The hypotheses of `mean_field_rate` are satisfiable.  Its one binder

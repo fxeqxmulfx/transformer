@@ -171,8 +171,8 @@ def InitConvD (P : Measure Ω) (N : ℕ) (ϑ : Ω → Idx N → ℝ) (f₀ : ℝ
 /-- **Theorem (th:lost).**  For independent initial data satisfying
 `eq:init-conv` with `δ > 0`, and for `ζ ≤ δ` with `ζ < 1`,
 
-  `|(Â^N_φ - Â_φ)(t,σ,n)| ≲ N^{-ζ} σ^{-2} ⟨n⟩^C e^{Ct}`,
-  `|(N Ĉ^N_φ - Ĉ_φ)(t,σ,n;σ₀)| ≲ N^{-ζ} σ₀^{-2} ⟨n⟩^C e^{Ct}`,
+  `|(Â^N_φ - Â_φ)(t,σ,n)| ≲_{ζ,φ} N^{-ζ} σ^{-2} ⟨n⟩^C e^{Ct}`,
+  `|(N Ĉ^N_φ - Ĉ_φ)(t,σ,n;σ₀)| ≲_{ζ,φ} N^{-ζ} σ₀^{-2} ⟨n⟩^C e^{Ct}`,
 
 where `A_φ` and `C_φ` are the unique solutions of `eq:Aphi-lambda` and
 `eq:Cphi-lambda`.
@@ -180,32 +180,43 @@ where `A_φ` and `C_φ` are the unique solutions of `eq:Aphi-lambda` and
 Uniqueness is stated at the level of the Fourier coefficients the estimates
 use, since a weak solution is determined only up to a null set in `θ`.
 
+**How the two constants are quantified.**  The source's `≲_{ζ,φ}` names its
+implicit prefactor's dependence: on `ζ`, on the test function `φ`, and — as
+data fixed by the standing assumption — on `δ`, `γ` and the constant of
+`eq:init-conv`.  The exponent `C` of `⟨n⟩^C e^{Ct}` is written explicitly and
+is a constant of the model alone.  So `C` is quantified outside `φ` and outside
+that data, and the prefactor `K` after them.  A single constant uniform in `ζ`
+and `φ` would be a strengthening the source does not claim, and is the shape
+this statement had before the audit.
+
 Not proved here.
 
 Source: arXiv:2605.09213v1, `th:lost`, `eq:estim-ANA`, `eq:estim-CNC`. -/
 theorem lost_correlations (lam β : ℝ) (f₀ : ℝ → ℝ → ℝ) (f : ℝ → ℝ → ℝ → ℝ)
-    (hf : IsDensitySolution lam β f₀ f) (φ : ℝ → ℝ)
-    (A : ℝ → ℝ → ℝ → ℝ) (hA : IsAphiSolution lam β f₀ f φ A)
-    (C : ℝ → ℝ → ℝ → ℝ → ℝ) (hC : IsCphiSolution lam β f A C) :
-    (∀ A' : ℝ → ℝ → ℝ → ℝ, IsAphiSolution lam β f₀ f φ A' →
-        ∀ t ∈ Set.Ici (0 : ℝ), ∀ σ ∈ Set.Ioc (0 : ℝ) 1, ∀ n : ℤ,
-          fourierDensity (A' t σ) n = fourierDensity (A t σ) n) ∧
-      (∀ C' : ℝ → ℝ → ℝ → ℝ → ℝ, IsCphiSolution lam β f A C' →
-        ∀ t ∈ Set.Ici (0 : ℝ), ∀ σ ∈ Set.Ioc (0 : ℝ) 1, ∀ σ₀ ∈ Set.Ioc (0 : ℝ) 1, ∀ n : ℤ,
-          fourierDensity (C' t σ σ₀) n = fourierDensity (C t σ σ₀) n) ∧
-      ∃ Cst : ℝ, 0 < Cst ∧ ∀ δ ζ Cγ γ : ℝ, 0 < δ → ζ ≤ δ → ζ < 1 →
-        ∀ (P : Measure Ω), IsProbabilityMeasure P →
-        ∀ (N : ℕ) (ϑ : Ω → ℝ → Idx N → ℝ),
-          (∀ ω, IsGPTFlow lam β N (ϑ ω)) →
-          iIndepFun (fun (j : Idx N) (ω : Ω) => ϑ ω 0 j) P →
-          InitConvD P N (fun ω => ϑ ω 0) f₀ δ γ Cγ →
-        ∀ t ∈ Set.Ici (0 : ℝ), ∀ σ ∈ Set.Ioc (0 : ℝ) 1, ∀ σ₀ ∈ Set.Ioc (0 : ℝ) 1, σ₀ < σ →
-        ∀ n : ℤ, ∀ j j₀ : Idx N,
-          (j : ℕ) + 1 = ⌈(N : ℝ) * σ⌉₊ → (j₀ : ℕ) + 1 = ⌈(N : ℝ) * σ₀⌉₊ →
-          ‖AhatN P N ϑ φ t j n - fourierDensity (A t σ) n‖
-              ≤ Cst * (N : ℝ) ^ (-ζ) * σ⁻¹ ^ 2 * bracket n ^ Cst * Real.exp (Cst * t) ∧
-            ‖(N : ℂ) * ChatN P N ϑ φ t j j₀ n - fourierDensity (C t σ σ₀) n‖
-              ≤ Cst * (N : ℝ) ^ (-ζ) * σ₀⁻¹ ^ 2 * bracket n ^ Cst * Real.exp (Cst * t) := by
+    (hf : IsDensitySolution lam β f₀ f) :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (φ : ℝ → ℝ) (A : ℝ → ℝ → ℝ → ℝ), IsAphiSolution lam β f₀ f φ A →
+      ∀ Cφ : ℝ → ℝ → ℝ → ℝ → ℝ, IsCphiSolution lam β f A Cφ →
+      (∀ A' : ℝ → ℝ → ℝ → ℝ, IsAphiSolution lam β f₀ f φ A' →
+          ∀ t ∈ Set.Ici (0 : ℝ), ∀ σ ∈ Set.Ioc (0 : ℝ) 1, ∀ n : ℤ,
+            fourierDensity (A' t σ) n = fourierDensity (A t σ) n) ∧
+        (∀ C' : ℝ → ℝ → ℝ → ℝ → ℝ, IsCphiSolution lam β f A C' →
+          ∀ t ∈ Set.Ici (0 : ℝ), ∀ σ ∈ Set.Ioc (0 : ℝ) 1, ∀ σ₀ ∈ Set.Ioc (0 : ℝ) 1, ∀ n : ℤ,
+            fourierDensity (C' t σ σ₀) n = fourierDensity (Cφ t σ σ₀) n) ∧
+        ∀ δ ζ Cγ γ : ℝ, 0 < δ → ζ ≤ δ → ζ < 1 →
+        ∃ K : ℝ, 0 < K ∧
+          ∀ (P : Measure Ω), IsProbabilityMeasure P →
+          ∀ (N : ℕ) (ϑ : Ω → ℝ → Idx N → ℝ),
+            (∀ ω, IsGPTFlow lam β N (ϑ ω)) →
+            iIndepFun (fun (j : Idx N) (ω : Ω) => ϑ ω 0 j) P →
+            InitConvD P N (fun ω => ϑ ω 0) f₀ δ γ Cγ →
+          ∀ t ∈ Set.Ici (0 : ℝ), ∀ σ ∈ Set.Ioc (0 : ℝ) 1, ∀ σ₀ ∈ Set.Ioc (0 : ℝ) 1, σ₀ < σ →
+          ∀ n : ℤ, ∀ j j₀ : Idx N,
+            (j : ℕ) + 1 = ⌈(N : ℝ) * σ⌉₊ → (j₀ : ℕ) + 1 = ⌈(N : ℝ) * σ₀⌉₊ →
+            ‖AhatN P N ϑ φ t j n - fourierDensity (A t σ) n‖
+                ≤ K * (N : ℝ) ^ (-ζ) * σ⁻¹ ^ 2 * bracket n ^ C * Real.exp (C * t) ∧
+              ‖(N : ℂ) * ChatN P N ϑ φ t j j₀ n - fourierDensity (Cφ t σ σ₀) n‖
+                ≤ K * (N : ℝ) ^ (-ζ) * σ₀⁻¹ ^ 2 * bracket n ^ C * Real.exp (C * t) := by
   sorry
 
 /-- The hypotheses of `lost_correlations` are satisfiable: the uniform prompt

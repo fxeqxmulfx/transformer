@@ -72,23 +72,31 @@ The leading term is the accuracy of a uniformly distributed answer; all the
 positional information sits in the `N⁻¹` correction `𝒮_t`, which is
 `softCorrection`.
 
+**How the two constants are quantified.**  The expansion is read off `th:lost`,
+whose `≲_{ζ,φ}` lets the implicit prefactor depend on `ζ` and on the data of
+`eq:init-conv`; the exponent `C` of `M^C e^{Ct}` is explicit and is a constant
+of the model alone, uniform in the vocabulary size `M`.  So the prefactor `K`
+is quantified after `ζ` and that data and before `M`, and `C` outside all of
+them — see the same discussion at `lost_correlations`.
+
 Not proved here.
 
 Source: arXiv:2605.09213v1, `eq:soft-accuracy-expansion`. -/
 theorem soft_accuracy_expansion (lam β : ℝ) (f₀ : ℝ → ℝ → ℝ) (f : ℝ → ℝ → ℝ → ℝ)
     (hf : IsDensitySolution lam β f₀ f) :
-    ∃ Cst : ℝ, 0 < Cst ∧ ∀ δ ζ Cγ γ : ℝ, 0 < δ → ζ ≤ δ → ζ < 1 →
-      ∀ M : ℝ, 2 ≤ M →
-      ∀ (P : Measure Ω), IsProbabilityMeasure P →
-      ∀ (N : ℕ) (hN : 0 < N) (ϑ : Ω → ℝ → Idx N → ℝ),
-        (∀ ω, IsGPTFlow lam β N (ϑ ω)) →
-        iIndepFun (fun (j : Idx N) (ω : Ω) => ϑ ω 0 j) P →
-        InitConvD P N (fun ω => ϑ ω 0) f₀ δ γ Cγ →
-      ∀ t ∈ Set.Ici (0 : ℝ), ∀ σ₀ ∈ Set.Ioo (0 : ℝ) 1,
-        |softAccuracy P M N hN ϑ t σ₀ -
-            (Real.sqrt (π / 2) / M +
-              Real.sqrt (2 * π) / (M * N) * softCorrection β lam M t σ₀)|
-          ≤ Cst * (N : ℝ) ^ (-(1 + ζ)) * σ₀⁻¹ ^ 2 * M ^ Cst * Real.exp (Cst * t) := by
+    ∃ C : ℝ, 0 < C ∧ ∀ δ ζ Cγ γ : ℝ, 0 < δ → ζ ≤ δ → ζ < 1 →
+      ∃ K : ℝ, 0 < K ∧
+        ∀ M : ℝ, 2 ≤ M →
+        ∀ (P : Measure Ω), IsProbabilityMeasure P →
+        ∀ (N : ℕ) (hN : 0 < N) (ϑ : Ω → ℝ → Idx N → ℝ),
+          (∀ ω, IsGPTFlow lam β N (ϑ ω)) →
+          iIndepFun (fun (j : Idx N) (ω : Ω) => ϑ ω 0 j) P →
+          InitConvD P N (fun ω => ϑ ω 0) f₀ δ γ Cγ →
+        ∀ t ∈ Set.Ici (0 : ℝ), ∀ σ₀ ∈ Set.Ioo (0 : ℝ) 1,
+          |softAccuracy P M N hN ϑ t σ₀ -
+              (Real.sqrt (π / 2) / M +
+                Real.sqrt (2 * π) / (M * N) * softCorrection β lam M t σ₀)|
+            ≤ K * (N : ℝ) ^ (-(1 + ζ)) * σ₀⁻¹ ^ 2 * M ^ C * Real.exp (C * t) := by
   sorry
 
 /-- The hypotheses of `soft_accuracy_expansion` are satisfiable: its binder
