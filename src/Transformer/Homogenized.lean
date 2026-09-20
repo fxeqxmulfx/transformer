@@ -6,3 +6,4 @@ Formalization of:
 
 import Transformer.Homogenized.Basic
 import Transformer.Homogenized.Generator
+import Transformer.Homogenized.GaussianInit
