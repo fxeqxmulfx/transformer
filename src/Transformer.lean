@@ -1,5 +1,5 @@
 /-
-Formalization of twelve papers on the mathematics of Transformers:
+Formalization of thirteen papers on the mathematics of Transformers:
 
 1. Weiss, Goldberg, Yahav — arXiv:2106.06981v2
    "Thinking Like Transformers".
@@ -36,7 +36,10 @@ Formalization of twelve papers on the mathematics of Transformers:
 11. Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1
    "Attention's forward pass and Frank-Wolfe".
 
-12. Panferov, Schultheis, Tabesh, Alistarh — arXiv:2601.22813v2
+12. Duerinckx, Geshkovski, Rossi — arXiv:2605.09213v1
+   "Kinetic theory for Transformers and the lost-in-the-middle phenomenon".
+
+13. Panferov, Schultheis, Tabesh, Alistarh — arXiv:2601.22813v2
    "Quartet II: Accurate LLM Pre-Training in NVFP4 by Improved Unbiased
    Gradient Estimation".
 
@@ -63,6 +66,7 @@ import Transformer.Causal
 import Transformer.Normalization
 import Transformer.MeanField
 import Transformer.FrankWolfe
+import Transformer.Kinetic
 import Transformer.XSA
 import Transformer.Quartet
 import Transformer.GPTMini
