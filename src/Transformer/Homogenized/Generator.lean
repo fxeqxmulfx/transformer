@@ -93,16 +93,24 @@ def IsItoSolution {d n : ℕ} (ρ : Measure (HeadParam d))
         HasDerivWithinAt (fun r => ∫ ω, φ (X r ω) ∂P)
           (∫ ω, sphGenerator ρ B G φ (X t ω) ∂P) (Set.Ici 0) t
 
-/-- The covariant derivative `(∇_{b(X)} b)(X)` of the drift along itself, the
+/-- The covariant derivative `(∇_F F)(X)` of a tangent field along itself, the
 Levi-Civita connection of `(𝕊^{d-1})^n` being the tangential part of the
 ambient derivative:
 
   `(∇_U V)(X) = Proj_X (DV(X)[U])`.
 
 Source: arXiv:2604.01978v1, `lem:toolkit_geo_riem` and `eq:SDE_ito_clean`. -/
+noncomputable def covDeriv {d n : ℕ}
+    (F : (Idx n → EucSpace d) → Idx n → EucSpace d)
+    (x : Idx n → EucSpace d) (i : Idx n) : EucSpace d :=
+  proj d (x i) (fderiv ℝ (fun y => F y i) x (F x))
+
+/-- The covariant derivative `(∇_{b(X)} b)(X)` of the drift along itself.
+
+Source: arXiv:2604.01978v1, `eq:SDE_ito_clean`. -/
 noncomputable def covDerivB {d n : ℕ} (β : ℝ) (ρ : Measure (HeadParam d))
     (x : Idx n → EucSpace d) (i : Idx n) : EucSpace d :=
-  proj d (x i) (fderiv ℝ (fun y => bField β ρ y i) x (bField β ρ x))
+  covDeriv (bField β ρ) x i
 
 /-- The diffusion kernel of the homogenized model: `√α G^σ = (√α/σ) G`.
 
