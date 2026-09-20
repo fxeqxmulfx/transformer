@@ -25,3 +25,7 @@ import Transformer.Perceptron.BiasedAtomicity
 import Transformer.Perceptron.GeneralAttention
 import Transformer.Perceptron.GeneralAtomicity
 import Transformer.Perceptron.Piecewise
+import Transformer.Perceptron.Normalized
+import Transformer.Perceptron.NormalizedMap
+import Transformer.Perceptron.SignedGram
+import Transformer.Perceptron.NormalizedAtomicity
