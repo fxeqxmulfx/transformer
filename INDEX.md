@@ -2930,11 +2930,11 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`matOpNorm_zero`](src/Transformer/Homogenized/HansonWright.lean#L57) | theorem | proved |
 | [`hanson_wright`](src/Transformer/Homogenized/HansonWright.lean#L73) | theorem | sorry |
 
-**[Transformer.Homogenized.Kernel](src/Transformer/Homogenized/Kernel.lean)** — 98 lines
+**[Transformer.Homogenized.Kernel](src/Transformer/Homogenized/Kernel.lean)** — 111 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`kernel_regularity`](src/Transformer/Homogenized/Kernel.lean#L63) | theorem | sorry |
+| [`kernel_regularity`](src/Transformer/Homogenized/Kernel.lean#L76) | theorem | sorry |
 
 **[Transformer.Homogenized.Laplace](src/Transformer/Homogenized/Laplace.lean)** — 118 lines
 
@@ -4936,7 +4936,7 @@ Everything the build cannot vouch for, in one place.
 | [`gaussian_drift_and_kernel`](src/Transformer/Homogenized/GaussianKernel.lean#L93) | theorem | `Transformer.Homogenized.GaussianKernel` |
 | [`gram_stability`](src/Transformer/Homogenized/GramStability.lean#L134) | theorem | `Transformer.Homogenized.GramStability` |
 | [`hanson_wright`](src/Transformer/Homogenized/HansonWright.lean#L73) | theorem | `Transformer.Homogenized.HansonWright` |
-| [`kernel_regularity`](src/Transformer/Homogenized/Kernel.lean#L63) | theorem | `Transformer.Homogenized.Kernel` |
+| [`kernel_regularity`](src/Transformer/Homogenized/Kernel.lean#L76) | theorem | `Transformer.Homogenized.Kernel` |
 | [`laplace_method`](src/Transformer/Homogenized/Laplace.lean#L55) | theorem | `Transformer.Homogenized.Laplace` |
 | [`delta_method`](src/Transformer/Homogenized/Laplace.lean#L84) | theorem | `Transformer.Homogenized.Laplace` |
 | [`logistic_range`](src/Transformer/Homogenized/Logistic.lean#L102) | theorem | `Transformer.Homogenized.Logistic` |

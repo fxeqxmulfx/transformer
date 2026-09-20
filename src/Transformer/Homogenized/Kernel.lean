@@ -33,8 +33,21 @@ proof of `thm:weak_error_clean` runs on.
   `eq: defining.alpha`.  The per-token reading is the one `α` is defined from,
   and it is the one used here.
 
+* Item 3 is stated for the **ambient** derivatives `D^k G(·,θ)` of `Gfield`,
+  not for the covariant derivatives `∇^k` of the tangent field it restricts to.
+  That is the stronger of the two: `claim:boumal` — the fact the source borrows
+  from Boumal (Prop. 5.31, Thm. 5.9, Prop. 3.31) to finish item 3 — says
+  exactly that `max_X ‖∇^k F(X)‖ ≤ C_k max_{s ≤ k} max_X ‖D^s F̃(X)‖` for every
+  smooth extension `F̃`, so an ambient bound implies the intrinsic one and not
+  conversely.  The claim is therefore the step from what is written here to
+  what the source writes, and it has nothing to do in this tree: no statement
+  in it mentions `∇^k`.  It is not formalized — writing it would mean defining
+  iterated covariant derivatives of a vector field on `(𝕊^{d-1})^n`, which
+  Mathlib does not have and which is the whole difficulty of the claim, so a
+  definition supplying it would be the difficulty parked in a definition.
+
 Source: arXiv:2604.01978v1, `lem:Kernel_regularity`, `eq: defining.alpha`,
-`def: derivatives`.
+`def: derivatives`, `claim:boumal`.
 -/
 
 import Transformer.Homogenized.RandomChain
