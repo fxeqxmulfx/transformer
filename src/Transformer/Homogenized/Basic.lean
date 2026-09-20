@@ -48,6 +48,17 @@ theorem normalizeLayer_of_norm_one {d : ℕ} {v : EucSpace d} (hv : ‖v‖ = 1)
 
 /-- The hypothesis of `normalizeLayer_of_norm_one` is satisfiable. -/
 example : ‖(EuclideanSpace.single (0 : Fin 1) (1 : ℝ))‖ = 1 := by simp [PiLp.norm_single]
+/-- At a grid time `t = ℓη` the interpolation `X^η(t) = X^{⌊t/η⌋}` of
+`eq:update_tokens` is the `ℓ`-th layer of the chain. -/
+@[simp]
+theorem interpChain_natCast_mul {d n : ℕ} {η : ℝ} (hη : 0 < η)
+    (X : ℕ → Idx n → EucSpace d) (l : ℕ) :
+    interpChain η X ((l : ℝ) * η) = X l := by
+  rw [interpChain, mul_div_assoc, div_self hη.ne', mul_one, Nat.floor_natCast]
+
+/-- The hypothesis of `interpChain_natCast_mul` is satisfiable. -/
+example : (0 : ℝ) < 1 := one_pos
+
 /-- The variance proxy is unique: two of them agree. -/
 theorem IsVarianceProxy.unique {d n : ℕ} {β : ℝ} {ρ : Measure (HeadParam d)} {s s' : ℝ}
     (h : IsVarianceProxy d n β ρ s) (h' : IsVarianceProxy d n β ρ s') : s = s' := by

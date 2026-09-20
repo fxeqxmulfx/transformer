@@ -10,7 +10,8 @@ Itô system `eq: first.sde` on `(𝕊^{d-1})^n`, uniformly on `[0, t_L]` with
 `t_L = ηL`, at rate `O(η)`.  The proof of the source shows more: the chain is
 approximated by the *modified* equation `eq:SDE_ito_clean` at the improved rate
 `η max(η, α)`, and `thm:weak_error_clean` follows because the two limiting
-equations differ by a drift of size `O(η)`.  Both are stated.
+equations differ by a drift of size `O(η)`.  Both are stated — the improved
+one at the grid times where it holds, see `weak_error_modified`.
 
 `C ≥ 1` depends on `‖φ‖_{C⁴}` but not on `η, α, L`: the quantifiers are
 arranged so that this is what the statement says — `φ` is fixed before `C` is
@@ -86,6 +87,22 @@ source states it as the content of the proof of `thm:weak_error_clean`, from
 which `thm:weak_error_clean` follows because the two limiting drifts differ
 uniformly by `O(η)`.
 
+**What the source says and what is changed here.**  The source states the
+improved rate for `sup_{t ∈ [0,t_L]}`, carrying over the display of
+`thm:weak_error_clean`.  That is false for the piecewise-constant
+interpolation `X^η(t) = X^{⌊t/η⌋}`: at `t = η/2` the chain is still at `X⁰`,
+while `𝔼φ(X(t))` has already moved by `(η/2)(𝖫φ)(X⁰) + O(η²)`.  Take a
+deterministic weight law — `ass:high_order_short` holds with `σ_V = σ_A = 0`
+and `𝔼V ≠ 0` — so that `α = 0` and `b ≢ 0`, and `φ(X) = ⟨e, x_1⟩`; then at
+`t_L = 1` the left-hand side is `Θ(η)` and the right-hand side is
+`C e^C η (t_L+1) max(η,0) = Θ(η²)`.
+
+That `Θ(η)` is the interpolation error, and it is what the `max(1,α)` of
+`thm:weak_error_clean` leaves room for.  The improved rate is a statement
+about the grid, as it is in the stochastic-modified-equation literature the
+proof follows, so it is stated at the grid times `t = ℓη`, `ℓ ≤ L`, where
+`interpChain_natCast_mul` identifies `X^η(ℓη)` with `X^ℓ`.
+
 Not proved here.
 
 Source: arXiv:2604.01978v1, §2.3.2, the paragraph after
@@ -102,8 +119,9 @@ theorem weak_error_modified {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ
       ∀ (Ω' : Type) [MeasurableSpace Ω'] (P' : Measure Ω')
         (X : ℝ → Ω' → (Idx n → EucSpace d)),
         IsModifiedSde η β (alphaOf η s H) s ρ P' X → (∀ ω', X 0 ω' = x₀) →
-      ∀ t ∈ Set.Icc (0 : ℝ) (η * L),
-        |(∫ ω', φ (X t ω') ∂P') - ∫ ω, φ (interpChain η (Xd ω) t) ∂P| ≤
+      ∀ l : ℕ, l ≤ L →
+        |(∫ ω', φ (X ((l : ℝ) * η) ω') ∂P') -
+            ∫ ω, φ (interpChain η (Xd ω) ((l : ℝ) * η)) ∂P| ≤
           C * Real.exp (C * (η * L)) * η * (η * L + 1) * max η (alphaOf η s H) := by
   sorry
 

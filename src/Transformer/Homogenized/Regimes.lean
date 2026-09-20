@@ -13,6 +13,27 @@ the scaling written as the convergence it is, and the displayed bound asserted
 at every index.  Nothing is weakened: that is what "in the subcritical scaling
 … the chain is weakly approximated by" says.
 
+**What the source says and what is changed here: the rate.**  All three
+corollaries display the improved rate `C e^{C t_L} η (t_L+1) max(η,α)` of the
+proof of `thm:weak_error_clean`.  For `cor:SDE`, whose limit is
+`eq:SDE_ito_clean` itself, that is exactly `weak_error_modified`, and it is
+kept — at the grid times where it holds, for the reason recorded there.  For
+the two deterministic limits it is too strong by a factor:
+
+* `cor:ode1` drops the corrector `-(η/2)∇_b b`, which moves the trajectory by
+  `Θ(η t_L)` — the classical `O(η)` weak error of an Euler scheme.  At a
+  deterministic weight law, `α = 0` and `t_L = 1`, that is `Θ(η)` against a
+  displayed `C e^C η (t_L+1) max(η,0) = Θ(η²)`.
+* `cor:ode2` keeps the corrector but drops the noise, whose contribution to
+  the generator is of size `α`, hence `Θ(α t_L)` over the horizon.  At
+  `α = ης²/H = Θ(η)` and `t_L = 1` that is `Θ(η)` against the same `Θ(η²)`.
+
+Both errors are `Θ((t_L+1) max(η,α))`, and that is the rate stated here: the
+source's display with the leading factor `η` removed.  It is the rate the
+source's own scaling conditions are calibrated to — for `cor:ode1`,
+`αηL = o(1)` and `η²L = o(1)` are exactly `α t_L = o(1)` and `η t_L = o(1)`,
+the two terms above.
+
 **On the number of heads.**  `H ≥ 1`, as the source's `Σ_{h=1}^H` has it: at
 `H = 0` the update of `eq:update_tokens` is the identity, the chain never
 moves, and no approximation statement about it can hold.  See
@@ -34,7 +55,9 @@ in the subcritical scaling `αηL = o(1)` and `η²L = o(1)`, the interpolated
 chain is weakly approximated by the solution of `eq: deterministic`,
 `Ẋ = b(X)`, started at `X⁰`: for every `φ ∈ C⁴`,
 
-  `sup_{t∈[0,t_L]} |𝔼φ(X^η(t)) - φ(X(t))| ≤ C e^{C t_L} η (t_L+1) max(η,α)`.
+  `sup_{t∈[0,t_L]} |𝔼φ(X^η(t)) - φ(X(t))| ≤ C e^{C t_L} (t_L+1) max(η,α)`,
+
+the source's display with the leading `η` removed: see the module docstring.
 
 Not proved here.
 
@@ -54,7 +77,7 @@ theorem ballistic_regime {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ≥
       ∀ X : ℝ → Idx n → EucSpace d, IsBallisticFlow β ρ X → X 0 = x₀ →
       ∀ t ∈ Set.Icc (0 : ℝ) (η m * L m),
         |(∫ ω, φ (interpChain (η m) (Xd ω) t) ∂P) - φ (X t)| ≤
-          C * Real.exp (C * (η m * L m)) * η m * (η m * L m + 1) *
+          C * Real.exp (C * (η m * L m)) * (η m * L m + 1) *
             max (η m) (alphaOf (η m) s H) := by
   sorry
 
@@ -77,7 +100,9 @@ example (d n : ℕ) (β : ℝ) :
 /-- **Corollary (cor:ode2), modified regime.**  Under `ass:high_order_short`,
 in the refined deterministic scaling `αηL = o(1)` and `η³L = o(1)`, the
 interpolated chain is weakly approximated by the solution of
-`eq: deterministic.modified`, `Ẋ = b(X) - (η/2)∇_{b(X)}b(X)`, at the same rate.
+`eq: deterministic.modified`, `Ẋ = b(X) - (η/2)∇_{b(X)}b(X)`, at the rate
+`C e^{C t_L} (t_L+1) max(η,α)` — again the source's display with the leading
+`η` removed, see the module docstring.
 
 Not proved here.
 
@@ -97,7 +122,7 @@ theorem modified_regime {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ≥0
       ∀ X : ℝ → Idx n → EucSpace d, IsModifiedFlow (η m) β ρ X → X 0 = x₀ →
       ∀ t ∈ Set.Icc (0 : ℝ) (η m * L m),
         |(∫ ω, φ (interpChain (η m) (Xd ω) t) ∂P) - φ (X t)| ≤
-          C * Real.exp (C * (η m * L m)) * η m * (η m * L m + 1) *
+          C * Real.exp (C * (η m * L m)) * (η m * L m + 1) *
             max (η m) (alphaOf (η m) s H) := by
   sorry
 
@@ -115,7 +140,8 @@ example (d n : ℕ) (β : ℝ) :
 /-- **Corollary (cor:SDE), diffusive regime.**  In the diffusive scaling
 `αηL = O(1)` and `η³L = o(1)`, the interpolated chain is weakly approximated
 by the solution of `eq:SDE_ito_clean` at the rate
-`C e^{C t_L} η (t_L+1) max(η,α)`.
+`C e^{C t_L} η (t_L+1) max(η,α)`, at the grid times `t = ℓη` where that rate
+holds — see `weak_error_modified`.
 
 Not proved here.
 
@@ -135,8 +161,9 @@ theorem diffusive_regime {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ≥
       ∀ (Ω' : Type) [MeasurableSpace Ω'] (P' : Measure Ω')
         (X : ℝ → Ω' → (Idx n → EucSpace d)),
         IsModifiedSde (η m) β (alphaOf (η m) s H) s ρ P' X → (∀ ω', X 0 ω' = x₀) →
-      ∀ t ∈ Set.Icc (0 : ℝ) (η m * L m),
-        |(∫ ω, φ (interpChain (η m) (Xd ω) t) ∂P) - ∫ ω', φ (X t ω') ∂P'| ≤
+      ∀ l : ℕ, l ≤ L m →
+        |(∫ ω, φ (interpChain (η m) (Xd ω) ((l : ℝ) * η m)) ∂P) -
+            ∫ ω', φ (X ((l : ℝ) * η m) ω') ∂P'| ≤
           C * Real.exp (C * (η m * L m)) * η m * (η m * L m + 1) *
             max (η m) (alphaOf (η m) s H) := by
   sorry
