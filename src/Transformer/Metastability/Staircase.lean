@@ -6,10 +6,11 @@ Equations and statements covered:
 * `Problem conj: saddle-to-saddle` — the staircase open problem,
 * `Definition d: init_s1`         — well-prepared configurations on `𝕊^1`,
 * `Definition def: modified USA`  — modified `USA` enforcing collisions,
-* `Theorem thm: staircase`        — staircase profile of the energy,
 * `compt: reparam`                — time-reparametrization `τ_β`,
 * `compt: derivative`             — derivative of the reparametrized angle,
 * `Lemma lem: exact time scale of clustering`.
+
+`Theorem thm: staircase` itself is `Metastability.StaircaseProfile`.
 -/
 
 import Transformer.Basic
@@ -154,48 +155,6 @@ theorem not_exact_time_scale :
     simp [Real.sqrt_nonneg]
   rw [hset, csInf_Ici, hone, Real.log_one] at key
   norm_num at key
-
-/-- **Theorem (thm: staircase).** *Staircase profile of the energy.*
-
-For `n ≥ 2`, a well-prepared `(θ_i(0))_{i=1}^n ∈ 𝕋^n` and the modified `USA`
-dynamics, there exists a time-reparametrization `τ_β` and a sequence
-`0 = T_0 < T_1 < ⋯ < T_k < T_{k+1} = +∞` (with `k ≤ n`), together with a
-piecewise-constant `φ_∞ ∈ L^∞(ℝ_{≥0}; [0, 1])`, such that
-
-  `lim_{β → ∞} max_{i ∈ {1,…,k}} sup_{t ∈ (T_i, T_{i+1})}
-              |𝖤_β(Θ(τ_β(t))) - φ_∞(t)| = 0`.
-
-The limit is in `β`, so the statement is about a whole family of dynamics
-indexed by `β`, and the `max`/`sup` is written out as uniform convergence:
-for every `ε > 0` there is a `B` past which the error is below `ε` on every
-plateau at once.  `φ_∞` is piecewise constant on the plateaux, and takes
-values in `[0, 1]`.
-
-This is `conj: saddle-to-saddle` made precise for the modified dynamics, and
-none of it is proved here.
-
-The three hypotheses stay inside the statement rather than becoming binders:
-no solution of `modifiedUSA` started from a well-prepared configuration is
-constructed in this development — that is the Cauchy problem the survey's §6
-solves — so there is no witness to exhibit alongside the theorem, and claiming
-one would be claiming the construction.
-
-Source: arXiv:2410.06833v1, §6, `thm: staircase`. -/
-theorem staircase_profile :
-    ∀ (θ θstar : ℝ → ℝ → Angles (n + 2)) (T_star : ℝ → ℝ) (τ m : ℝ → ℝ → ℝ),
-    (∀ β : ℝ, 1 < β → isWellPrepared n β (θ β 0)) →
-    (∀ β : ℝ, 1 < β → modifiedUSA n β (θ β) (θstar β) (T_star β)) →
-    (∀ β : ℝ, 1 < β → staircaseReparam n β (θ β) (τ β) (m β)) →
-    ∃ (k : ℕ) (T : ℕ → ℝ) (φ : ℝ → ℝ),
-      k ≤ n + 2 ∧ T 0 = 0 ∧
-      (∀ i : ℕ, i < k → T i < T (i + 1)) ∧
-      (∀ t : ℝ, φ t ∈ Set.Icc (0 : ℝ) 1) ∧
-      (∀ i : ℕ, i < k → ∀ s t : ℝ, s ∈ Set.Ioo (T i) (T (i + 1)) →
-        t ∈ Set.Ioo (T i) (T (i + 1)) → φ s = φ t) ∧
-      ∀ ε : ℝ, 0 < ε → ∃ B : ℝ, ∀ β : ℝ, B < β →
-        ∀ i : ℕ, i < k → ∀ t : ℝ, t ∈ Set.Ioo (T i) (T (i + 1)) →
-          |torusEnergy (n + 2) β (θstar β (τ β t)) - φ t| < ε := by
-  sorry
 
 end Metastability
 end Transformer

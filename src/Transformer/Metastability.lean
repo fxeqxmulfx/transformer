@@ -22,3 +22,4 @@ import Transformer.Metastability.InitialUniform
 import Transformer.Metastability.MeanField
 import Transformer.Metastability.OpenProblems
 import Transformer.Metastability.Staircase
+import Transformer.Metastability.StaircaseProfile
