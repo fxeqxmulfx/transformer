@@ -13,6 +13,10 @@ approximated by the *modified* equation `eq:SDE_ito_clean` at the improved rate
 equations differ by a drift of size `O(η)`.  Both are stated — the improved
 one at the grid times where it holds, see `weak_error_modified`.
 
+`lem:stability_generator`, the one-step estimate the telescoping of that proof
+runs on, is stated here too: it is the same comparison at a single step, and
+it is where the improved rate comes from.
+
 `C ≥ 1` depends on `‖φ‖_{C⁴}` but not on `η, α, L`: the quantifiers are
 arranged so that this is what the statement says — `φ` is fixed before `C` is
 produced, and `η`, `L`, the variance proxy and both probability spaces come
@@ -126,6 +130,61 @@ theorem weak_error_modified {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ
   sorry
 
 /-- The hypotheses of `weak_error_modified` are satisfiable, by the same
+witnesses as `weak_error_clean`. -/
+example (d n : ℕ) :
+    0 < 1 ∧ HasHighOrderLaw d 0 0 (Measure.dirac (0 : HeadParam d)) ∧
+      ContDiff ℝ 4 (fun _ : Idx n → EucSpace d => (0 : ℝ)) :=
+  ⟨Nat.one_pos, hasHighOrderLaw_dirac_zero d, contDiff_const⟩
+
+/-! ### The one-step estimate -/
+
+/-- **Lemma (lem:stability_generator).**  For `φ ∈ C⁴((𝕊^{d-1})^n)` there is `C > 0`,
+uniform in the starting configuration, with
+
+  `max_x |𝔼φ(X(η; x)) - 𝔼φ(X¹(x))| ≤ C η² max(η, α)`,
+
+where `X(·; x)` starts from `x` and `X¹(x)` is one step of the chain
+`eq:update_tokens` from `x`.  This is the estimate the telescoping argument of
+`thm:weak_error_clean` sums over the `L` layers.
+
+**What the source says and what is carried here.**  The source writes
+`X(η; x)` for "the solution of the SDE starting from `x`".  The SDE in question
+is the *modified* one: the proof names its drift `V₀(X) = b(X) - (η/2) ∇_{b(X)}
+b(X)` three lines in, and it is the matching of that drift's generator against
+the chain's that produces the `max(η, α)` rather than `max(1, α)`.  So the
+hypothesis carried here is `IsModifiedSde`, as in `weak_error_modified`.
+
+The `max_x` is the universal quantifier over `x` standing inside the `∃ C`:
+`C` is produced before the configuration, which is what makes the telescoping
+legitimate.  The same is true of `η`, of the variance proxy and of both
+probability spaces; `C` may depend on `‖φ‖_{C⁴}` and on the model
+`(d, n, H, β, ρ*)`, and those are fixed first.
+
+`X¹(x)` is the chain of `eq:update_tokens` started at `x` and read at index `1`,
+so the initial condition the source leaves implicit in the notation is the
+hypothesis `IsRandomChain η β ρ P Θ Xd x`; the continuous process is asked for
+the same one.  The number of heads is positive, as in `weak_error_clean`.
+
+Not proved here.
+
+Source: arXiv:2604.01978v1, `lem:stability_generator`. -/
+theorem stability_generator {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ≥0)
+    (ρ : Measure (HeadParam d)) (hρ : HasHighOrderLaw d σV σA ρ)
+    (φ : (Idx n → EucSpace d) → ℝ) (hφ : ContDiff ℝ 4 φ) :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (η s : ℝ), 0 < η → IsVarianceProxy d n β ρ s →
+      ∀ x : Idx n → EucSpace d, (∀ i, ‖x i‖ = 1) →
+      ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
+        (Θ : ℕ → Idx H → Ω → HeadParam d) (Xd : Ω → ℕ → Idx n → EucSpace d),
+        IsRandomChain η β ρ P Θ Xd x →
+      ∀ (Ω' : Type) [MeasurableSpace Ω'] (P' : Measure Ω')
+        (X : ℝ → Ω' → (Idx n → EucSpace d)),
+        IsModifiedSde η β (alphaOf η s H) s ρ P' X → (∀ ω', X 0 ω' = x) →
+        |(∫ ω', φ (X η ω') ∂P') - ∫ ω, φ (Xd ω 1) ∂P| ≤
+          C * η ^ 2 * max η (alphaOf η s H) := by
+  sorry
+
+/-- The hypotheses of `stability_generator` are satisfiable, by the same
 witnesses as `weak_error_clean`. -/
 example (d n : ℕ) :
     0 < 1 ∧ HasHighOrderLaw d 0 0 (Measure.dirac (0 : HeadParam d)) ∧
