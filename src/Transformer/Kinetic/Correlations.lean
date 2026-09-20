@@ -10,6 +10,17 @@ and is transported by the mean-field flow; the cross-correlation `C_φ` is
 `O(N⁻¹)` and solves the linearization, forced at the source position `σ₀`
 through the graphon `k_λ(σ,σ₀)`.  That forcing is what makes the retrieval
 profile depend on where the answer was placed.
+
+**The normalization of `∫_𝕋`.**  The source writes `f̂(n) = ∫_𝕋 e^{-inθ} f(θ) dθ`
+and `(w_β' ∗_θ f)`, with `∫_𝕋` the *normalized* integral `(2π)⁻¹ ∫_0^{2π}`.
+Three of its own statements force that reading: the iid uniform prompt has
+`f_∘ ≡ 1` in `eq:init-conv`, where the left-hand side `E[e^{inθ⁰}]` is `≤ 1`;
+`ŵ_β(n) = I_n(β)` is the normalized coefficient, which is what `a_n` is
+calibrated against; and `A_φ ≡ φ - ∫_𝕋 φ` of §`sec:litm` is centered only for
+the normalized mean.  So `torusConv` and `fourierDensity` carry the factor
+`(2π)⁻¹`, densities here are densities for the normalized measure — the uniform
+profile is `1`, not `(2π)⁻¹` — and `wConv` of `Transformer.Kinetic.MeanField`,
+an integral against a probability measure, is the same convolution.
 -/
 
 import Transformer.Kinetic.Fluctuations
@@ -22,15 +33,35 @@ namespace Kinetic
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
-/-- The convolution `w_β' ∗_θ g` of a `2π`-periodic density on `𝕋`. -/
-noncomputable def torusConv (β : ℝ) (g : ℝ → ℝ) (θ : ℝ) : ℝ :=
-  ∫ θ' in (0 : ℝ)..(2 * π), wBetaDeriv β (θ - θ') * g θ'
+/-- The convolution `(w_β' ∗_θ g)(θ) = ∫_𝕋 w_β'(θ - θ') g(θ') dθ'` of a
+`2π`-periodic density on `𝕋`, for the normalized integral — the same
+convolution as `wConv`, written for a density instead of a measure.
 
-/-- The Fourier coefficient `ĝ(n) = ∫_𝕋 e^{-inθ} g(θ) dθ` of a density.
+Source: arXiv:2605.09213v1, `eq:mfl-lambda`. -/
+noncomputable def torusConv (β : ℝ) (g : ℝ → ℝ) (θ : ℝ) : ℝ :=
+  (2 * π)⁻¹ * ∫ θ' in (0 : ℝ)..(2 * π), wBetaDeriv β (θ - θ') * g θ'
+
+/-- `w_β'` integrates to zero over a period, so a constant density is
+stationary: `w_β' ∗_θ c = 0`.  This is what makes the uniform profile a
+solution of `eq:mfl-lambda`. -/
+@[simp]
+theorem torusConv_const (β c θ : ℝ) : torusConv β (fun _ => c) θ = 0 := by
+  have hcont : Continuous (wBetaDeriv β) := by
+    unfold wBetaDeriv
+    fun_prop
+  have hsub : (∫ θ' in (0 : ℝ)..(2 * π), wBetaDeriv β (θ - θ')) = 0 := by
+    rw [intervalIntegral.integral_comp_sub_left (wBetaDeriv β) θ, sub_zero,
+      intervalIntegral.integral_eq_sub_of_hasDerivAt (fun x _ => hasDerivAt_wBeta β x)
+        (hcont.intervalIntegrable _ _), (wBeta_periodic β).sub_eq θ, sub_self]
+  simp [torusConv, intervalIntegral.integral_mul_const, hsub]
+
+/-- The Fourier coefficient `ĝ(n) = ∫_𝕋 e^{-inθ} g(θ) dθ` of a density, for the
+normalized integral on `𝕋`; see the header on that normalization.
 
 Source: arXiv:2605.09213v1, §1.3. -/
 noncomputable def fourierDensity (g : ℝ → ℝ) (n : ℤ) : ℂ :=
-  ∫ θ in (0 : ℝ)..(2 * π), Complex.exp (-(n : ℂ) * (θ : ℂ) * Complex.I) * (g θ : ℂ)
+  (2 * (π : ℂ))⁻¹ *
+    ∫ θ in (0 : ℝ)..(2 * π), Complex.exp (-(n : ℂ) * (θ : ℂ) * Complex.I) * (g θ : ℂ)
 
 /-- The mean-field velocity `∫_0^σ k_λ(σ,σ')(w_β' ∗_θ f)(t,σ',θ) dσ'`, written
 for a limit profile carrying a density — which is the form `eq:Aphi-lambda` and
@@ -71,7 +102,7 @@ Source: arXiv:2605.09213v1, `eq:Aphi-lambda`. -/
 def IsAphiSolution (lam β : ℝ) (f₀ : ℝ → ℝ → ℝ) (f : ℝ → ℝ → ℝ → ℝ) (φ : ℝ → ℝ)
     (A : ℝ → ℝ → ℝ → ℝ) : Prop :=
   (∀ σ θ, A 0 σ θ =
-      f₀ σ θ * (φ θ - ∫ θ' in (0 : ℝ)..(2 * π), φ θ' * f₀ σ θ')) ∧
+      f₀ σ θ * (φ θ - (2 * π)⁻¹ * ∫ θ' in (0 : ℝ)..(2 * π), φ θ' * f₀ σ θ')) ∧
   ∀ σ ∈ Set.Ioc (0 : ℝ) 1, IsTransportedBy (fun t => velD lam β f t σ) (fun t => A t σ)
 
 /-- **Equation (eq:Cphi-lambda).**  The limiting cross-correlation solves the
@@ -177,25 +208,26 @@ theorem lost_correlations (lam β : ℝ) (f₀ : ℝ → ℝ → ℝ) (f : ℝ �
               ≤ Cst * (N : ℝ) ^ (-ζ) * σ₀⁻¹ ^ 2 * bracket n ^ Cst * Real.exp (Cst * t) := by
   sorry
 
-/-- The hypotheses of `lost_correlations` are satisfiable: the stationary
-profile `f ≡ (2π)⁻¹`, which is the uniform prompt `f_∘ ≡ 1` of the source's
-most homogeneous baseline, together with `φ ≡ 0`, for which `A ≡ 0` and
-`C ≡ 0`.
+/-- The hypotheses of `lost_correlations` are satisfiable: the uniform prompt
+`f_∘ ≡ 1` of the source's most homogeneous baseline, which is stationary
+because `w_β' ∗ 1 = 0`, together with `φ ≡ 0`, for which `A ≡ 0` and `C ≡ 0`.
 
-The velocity `V[f]` need not vanish for this to work: `A` and `C` are
+The velocity `V[f]` need not vanish for the correlations: `A` and `C` are
 identically zero, so both transported quantities have zero flux, and the
 initial condition of `eq:Aphi-lambda` is `f_∘(σ,θ)(0 - 0) = 0`. -/
 example (lam β : ℝ) :
-    IsAphiSolution lam β (fun _ _ => (2 * π)⁻¹) (fun _ _ _ => (2 * π)⁻¹) (fun _ => 0)
-        (fun _ _ _ => 0) ∧
-      IsCphiSolution lam β (fun _ _ _ => (2 * π)⁻¹) (fun _ _ _ => 0) (fun _ _ _ _ => 0) := by
-  constructor
-  · refine ⟨by intro σ θ; simp, ?_⟩
-    intro σ _ ψ _ _ t _
+    IsDensitySolution lam β (fun _ _ => 1) (fun _ _ _ => 1) ∧
+      IsAphiSolution lam β (fun _ _ => 1) (fun _ _ _ => 1) (fun _ => 0) (fun _ _ _ => 0) ∧
+      IsCphiSolution lam β (fun _ _ _ => 1) (fun _ _ _ => 0) (fun _ _ _ _ => 0) := by
+  refine ⟨⟨by intro σ θ; simp, ?_⟩, ⟨by intro σ θ; simp, ?_⟩, ?_⟩
+  · intro σ _ ψ _ _ t _
+    simpa [velD] using
+      hasDerivWithinAt_const t (Set.Ici (0 : ℝ)) (∫ θ in (0 : ℝ)..(2 * π), ψ θ)
+  · intro σ _ ψ _ _ t _
     simpa using (hasDerivWithinAt_const t (Set.Ici (0 : ℝ)) (0 : ℝ))
   · refine ⟨by intro σ σ₀ θ; simp, ?_⟩
     intro σ _ σ₀ _ ψ _ _ t _
-    simpa [torusConv] using (hasDerivWithinAt_const t (Set.Ici (0 : ℝ)) (0 : ℝ))
+    simpa using (hasDerivWithinAt_const t (Set.Ici (0 : ℝ)) (0 : ℝ))
 
 end Kinetic
 end Transformer
