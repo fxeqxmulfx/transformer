@@ -8,7 +8,7 @@ The lemma bounds `max_{i≠j} |𝒟_ij(R) - b(γ)|` by `L ‖R - R(γ)‖_∞` w
 `L = O(1 + dσ_A⁴β²n)`, and adds parenthetically that `𝒟_ij(R(γ)) = b(γ)` —
 the claim of `lem:drift_on_simplex_selfcontained`.  That claim is false, and
 `not_forall_overlapDrift_eq_simplexDrift` refutes it: in `d = n = 2`, at the
-degenerate head law `ρ* = δ_0` and an orthonormal pair, the trace factor
+head law (G) with `σ_V² = 1/d` and `σ_A = 0`, and an orthonormal pair, the trace factor
 `d - 2 + R_ij²` of `eq:Dij_explicit_clean` vanishes, so the drift of the
 overlap is `0`, while `b(0) = g(0) = 1/2`.  With it the lemma's own statement
 is false too, since at `R = R(γ)` the right-hand side is `0` and the left-hand
@@ -36,13 +36,20 @@ namespace Homogenized
 `lem:Gram_stability`.
 
 The witness is the source's own setting at its smallest admissible size:
-`d = n = 2`, `β = 1`, the head law `ρ* = δ_0` of (G) at `σ_V = σ_A = 0`, and an
-orthonormal pair, which is a simplex configuration with overlap
-`γ = 0 ∈ (-1/(n-1), 1) = (-1,1)`.  There `f = g ≡ 1/2`, so `b(0) = 1/2`, while
-`eq:Dij_explicit_clean` gives `𝒟_{12} = (1/d)(d - 2 + 0)·(1/2) = 0`: in the
-plane the projections `𝐏_{x_1}` and `𝐏_{x_2}` onto two orthogonal lines
-compose to `0`, so `Tr(𝐏_{x_1}𝐏_{x_2}) = d - 2 + R² = 0` and the overlap does
-not move at all.
+`d = n = 2`, `β = 1`, the head law (G) at the standard scaling `σ_V² = 1/d`
+of §2.5 — under which `eq:Dij_explicit_clean`, with its prefactor `1/d`, is
+derived — and `σ_A = 0`, which the source leaves free; and an orthonormal
+pair, a simplex configuration with overlap `γ = 0 ∈ (-1/(n-1), 1) = (-1,1)`.
+At `σ_A = 0` the matrix `A = WW'ᵀ` vanishes almost surely, so `f = g ≡ 1/2`
+and `b(0) = 1/2`, while `eq:Dij_explicit_clean` gives
+`𝒟_{12} = (1/d)(d - 2 + 0)·(1/2) = 0`: in the plane the projections `𝐏_{x_1}`
+and `𝐏_{x_2}` onto two orthogonal lines compose to `0`, so
+`Tr(𝐏_{x_1}𝐏_{x_2}) = d - 2 + R² = 0` and the overlap does not move at all.
+
+`σ_A = 0` is not what the refutation rests on: at `γ = 0` the gap of
+`overlapDrift_simplex_sub_simplexDrift` is `-2g(0)/d`, and `g(0) > 0` for
+every head law, since attention probabilities are positive.  It is only what
+makes `f` and `g` computable in closed form here.
 
 The general gap is `overlapDrift_simplex_sub_simplexDrift`, which is `O(1/d)`;
 `b(γ)` is the drift's `d → ∞` form.
@@ -52,7 +59,8 @@ Source: arXiv:2604.01978v1, `lem:drift_on_simplex_selfcontained`,
 theorem not_forall_overlapDrift_eq_simplexDrift :
     ¬ ∀ (d n : ℕ) (β : ℝ) (σV σA : ℝ≥0) (ρ : Measure (HeadParam d))
         (f g : ℝ → ℝ) (γ : ℝ) (X : Idx (n + 1) → EucSpace d) (i j : Idx (n + 1)),
-      2 ≤ d → 2 ≤ n + 1 → 0 < β → IsProbabilityMeasure ρ → IsGaussianHeadLaw d σV σA ρ →
+      2 ≤ d → 2 ≤ n + 1 → 0 < β → (σV : ℝ) ^ 2 = 1 / d → IsProbabilityMeasure ρ →
+      IsGaussianHeadLaw d σV σA ρ →
       γ ∈ Set.Ioo (-(1 / (n : ℝ))) 1 → IsSimplexConfig γ X → i ≠ j →
       (∀ (c : ℝ) (x : Idx (n + 1) → EucSpace d), IsSimplexConfig c x → ∀ k : Idx (n + 1),
         (∫ θ, ∑ l : Idx (n + 1), attnProb β θ.2 x k l ^ 2 ∂ρ) = f c) →
@@ -70,33 +78,36 @@ theorem not_forall_overlapDrift_eq_simplexDrift :
   have hsimp : IsSimplexConfig (0 : ℝ) X := by
     refine ⟨fun k => by simp [hXdef, PiLp.norm_single], fun k l hkl => ?_⟩
     simp [hXdef, EuclideanSpace.inner_single_left, hkl.symm]
-  have hprob : IsProbabilityMeasure (Measure.dirac (0 : HeadParam 2)) := inferInstance
+  set ρ := gaussHeadLaw 2 (stdSigmaV 2) 0 with hρ
   have hf : ∀ (c : ℝ) (x : Idx 2 → EucSpace 2), IsSimplexConfig c x → ∀ k : Idx 2,
-      (∫ θ, ∑ l : Idx 2, attnProb 1 θ.2 x k l ^ 2 ∂(Measure.dirac (0 : HeadParam 2)))
-        = (1 / 2 : ℝ) := by
+      (∫ θ, ∑ l : Idx 2, attnProb 1 θ.2 x k l ^ 2 ∂ρ) = (1 / 2 : ℝ) := by
     intro c x _ k
-    rw [integral_dirac]
+    rw [hρ, integral_snd_gaussHeadLaw_zero 2 (stdSigmaV 2)
+      (fun A => ∑ l : Idx 2, attnProb 1 A x k l ^ 2)]
     simp [attnProb, attnWeight, qkMap]
     norm_num
   have hg : ∀ (c : ℝ) (x : Idx 2 → EucSpace 2), IsSimplexConfig c x → ∀ k l : Idx 2, k ≠ l →
-      (∫ θ, ∑ m : Idx 2, attnProb 1 θ.2 x k m * attnProb 1 θ.2 x l m
-        ∂(Measure.dirac (0 : HeadParam 2))) = (1 / 2 : ℝ) := by
+      (∫ θ, ∑ m : Idx 2, attnProb 1 θ.2 x k m * attnProb 1 θ.2 x l m ∂ρ)
+        = (1 / 2 : ℝ) := by
     intro c x _ k l _
-    rw [integral_dirac]
+    rw [hρ, integral_snd_gaussHeadLaw_zero 2 (stdSigmaV 2)
+      (fun A => ∑ m : Idx 2, attnProb 1 A x k m * attnProb 1 A x l m)]
     simp [attnProb, attnWeight, qkMap]
   have hsq : ∀ k : Idx 2, Integrable
-      (fun θ : HeadParam 2 => ∑ l : Idx 2, attnProb 1 θ.2 X k l ^ 2)
-      (Measure.dirac (0 : HeadParam 2)) := fun _ => integrable_dirac enorm_lt_top
+      (fun θ : HeadParam 2 => ∑ l : Idx 2, attnProb 1 θ.2 X k l ^ 2) ρ := fun k =>
+    integrable_snd_gaussHeadLaw_zero 2 _ (fun A => ∑ l : Idx 2, attnProb 1 A X k l ^ 2)
   have hpr : ∀ k l : Idx 2, Integrable
-      (fun θ : HeadParam 2 => ∑ m : Idx 2, attnProb 1 θ.2 X k m * attnProb 1 θ.2 X l m)
-      (Measure.dirac (0 : HeadParam 2)) := fun _ _ => integrable_dirac enorm_lt_top
+      (fun θ : HeadParam 2 => ∑ m : Idx 2, attnProb 1 θ.2 X k m * attnProb 1 θ.2 X l m) ρ :=
+    fun k l => integrable_snd_gaussHeadLaw_zero 2 _
+      (fun A => ∑ m : Idx 2, attnProb 1 A X k m * attnProb 1 A X l m)
   have hne : (0 : Idx 2) ≠ 1 := by decide
   have hgap := overlapDrift_simplex_sub_simplexDrift (d := 2) (n := 1) (by norm_num) 1
-    (Measure.dirac (0 : HeadParam 2)) (fun _ => (1 / 2 : ℝ)) (fun _ => (1 / 2 : ℝ))
+    ρ (fun _ => (1 / 2 : ℝ)) (fun _ => (1 / 2 : ℝ))
     hf hg 0 X hsimp hsq hpr 0 1 hne
-  have heq := hall 2 1 1 0 0 (Measure.dirac (0 : HeadParam 2))
+  have heq := hall 2 1 1 (stdSigmaV 2) 0 ρ
     (fun _ => (1 / 2 : ℝ)) (fun _ => (1 / 2 : ℝ)) 0 X 0 1 (by norm_num) (by norm_num) one_pos
-    hprob (isGaussianHeadLaw_dirac_zero 2) (by norm_num) hsimp hne hf hg hsq hpr
+    (by simp) inferInstance (isGaussianHeadLaw_gaussHeadLaw 2 _ _) (by norm_num) hsimp hne
+    hf hg hsq hpr
   rw [heq, sub_self] at hgap
   norm_num at hgap
 

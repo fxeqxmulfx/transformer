@@ -78,6 +78,54 @@ noncomputable def gaussHeadLaw (d : ℕ) (σV σA : ℝ≥0) : Measure (HeadPara
     (fun ω => ((gaussBlock 0 ω, gaussBlock 1 ω * (gaussBlock 2 ω).transpose) : HeadParam d))
     (gaussEnsemble d σV σA)
 
+theorem measurable_gaussHead (d : ℕ) :
+    Measurable (fun ω : GaussIdx d → ℝ =>
+      ((gaussBlock 0 ω, gaussBlock 1 ω * (gaussBlock 2 ω).transpose) : HeadParam d)) := by
+  refine (measurable_gaussBlock 0).prodMk ?_
+  refine (Matrix.measurable_of _ _ _).comp
+    (Measurable.of_eval fun i => Measurable.of_eval fun j => ?_)
+  show Measurable fun ω : GaussIdx d → ℝ => ∑ k, ω (1, i, k) * ω (2, j, k)
+  exact Finset.measurable_sum _ fun k _ => (measurable_pi_apply _).mul (measurable_pi_apply _)
+
+instance instIsProbabilityMeasureGaussHeadLaw (d : ℕ) (σV σA : ℝ≥0) :
+    IsProbabilityMeasure (gaussHeadLaw d σV σA) :=
+  (Measure.isProbabilityMeasure_map_iff (measurable_gaussHead d).aemeasurable).2 inferInstance
+
+/-- **At `σ_A = 0` the attention matrix vanishes almost surely**: every entry of
+`W` is `𝒩(0,0) = δ_0`, so `A = W W'ᵀ = 0`, whatever `σ_V` is. -/
+theorem ae_snd_eq_zero_gaussHeadLaw (d : ℕ) (σV : ℝ≥0) :
+    ∀ᵐ θ ∂(gaussHeadLaw d σV 0), θ.2 = 0 := by
+  have hs : MeasurableSet {θ : HeadParam d | θ.2 = 0} :=
+    measurable_snd (measurableSet_singleton 0)
+  refine (ae_map_iff (measurable_gaussHead d).aemeasurable hs).2 ?_
+  have h1 : ∀ i j : Fin d, ∀ᵐ ω ∂(gaussEnsemble d σV 0), gaussBlock 1 ω i j = 0 := by
+    intro i j
+    have := map_gaussBlock (d := d) σV 0 1 i j
+    simp only [entryVar_one, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
+      gaussianReal_zero_var] at this
+    have hm : Measurable fun ω : GaussIdx d → ℝ => gaussBlock 1 ω i j := measurable_pi_apply _
+    exact (ae_map_iff hm.aemeasurable (measurableSet_singleton (0 : ℝ))).1
+      (by rw [this]; exact (ae_dirac_iff (measurableSet_singleton 0)).2 rfl)
+  filter_upwards [ae_all_iff.2 fun i => ae_all_iff.2 (h1 i)] with ω hω
+  simp only [gaussBlock_apply] at hω
+  ext i j
+  simp [Matrix.mul_apply, hω]
+
+/-- At `σ_A = 0` an integrand that reads only the attention matrix integrates
+to its value at `A = 0`. -/
+theorem integral_snd_gaussHeadLaw_zero (d : ℕ) (σV : ℝ≥0)
+    (F : Matrix (Fin d) (Fin d) ℝ → ℝ) :
+    ∫ θ, F θ.2 ∂(gaussHeadLaw d σV 0) = F 0 := by
+  rw [integral_congr_ae ((ae_snd_eq_zero_gaussHeadLaw d σV).mono
+    fun θ h => (congrArg F h : F θ.2 = (fun _ => F 0) θ))]
+  simp
+
+theorem integrable_snd_gaussHeadLaw_zero (d : ℕ) (σV : ℝ≥0)
+    (F : Matrix (Fin d) (Fin d) ℝ → ℝ) :
+    Integrable (fun θ : HeadParam d => F θ.2) (gaussHeadLaw d σV 0) :=
+  (integrable_const (F 0)).congr ((ae_snd_eq_zero_gaussHeadLaw d σV).mono
+    fun _ h => (congrArg F h).symm)
+
 /-- **Assumption (G) is satisfiable at every pair of variances.**  The Gaussian
 ensemble realizes `IsGaussianHeadLaw d σ_V σ_A` for every `σ_V, σ_A`, in every
 dimension — not only at the degenerate `σ_V = σ_A = 0` of
