@@ -1,8 +1,9 @@
 /-
-# Round-to-nearest has a dead zone, and floating point has a context length
+# Floating point has a context length
 
 Any rounding to the nearest point of a grid that contains `0` and no point
-closer to `0` than `σ` sends `[0, σ/2)` to `0`.  For an IEEE binary format `σ`
+closer to `0` than `σ` sends `[0, σ/2)` to `0` (`Precision.IsNearest.eq_zero`).
+For an IEEE binary format `σ`
 is the smallest subnormal, `2^{-24}` in binary16, `2^{-133}` in bfloat16,
 `2^{-149}` in binary32.
 
@@ -17,41 +18,13 @@ image of `ieee` (`Transformer.GGUF.Basic`).
 
 import Transformer.GGUF.Basic
 import Transformer.Precision.ContextLength
+import Transformer.Precision.Nearest
 import Mathlib.Data.Set.Finite.Lemmas
 
 namespace Transformer
 namespace GGUF
 
 open Precision
-
-/-- `Q` rounds every real number to a nearest point of the grid `G`. -/
-def IsNearest (G : Set ℝ) (Q : ℝ → ℝ) : Prop :=
-  ∀ x, Q x ∈ G ∧ ∀ z ∈ G, |Q x - x| ≤ |z - x|
-
-/-- **The dead zone of round-to-nearest.**  If `0` is a grid point and every
-other grid point has absolute value at least `σ`, everything in `[0, σ/2)`
-rounds to `0`. -/
-theorem IsNearest.eq_zero {G : Set ℝ} {Q : ℝ → ℝ} {σ : ℝ} (hQ : IsNearest G Q) (h0 : (0 : ℝ) ∈ G)
-    (hσ : ∀ y ∈ G, y ≠ 0 → σ ≤ |y|) {x : ℝ} (hx0 : 0 ≤ x) (hx : x < σ / 2) : Q x = 0 := by
-  by_contra hne
-  have h1 := hσ _ (hQ x).1 hne
-  have h2 := (hQ x).2 0 h0
-  have h3 : |Q x| - x ≤ |Q x - x| := by
-    have := abs_sub_abs_le_abs_sub (Q x) x; rwa [abs_of_nonneg hx0] at this
-  rw [zero_sub, abs_neg, abs_of_nonneg hx0] at h2
-  linarith
-
-/-- A finite nonempty grid has a nearest rounding. -/
-theorem exists_isNearest {G : Set ℝ} (hfin : G.Finite) (hne : G.Nonempty) : ∃ Q, IsNearest G Q := by
-  choose Q hQ using fun x => Set.exists_min_image G (fun z => |z - x|) hfin hne
-  exact ⟨Q, fun x => hQ x⟩
-
-/-- The hypotheses of `IsNearest.eq_zero` are satisfiable: the grid `{0, 1}`
-with `σ = 1` has a nearest rounding. -/
-example : (∃ Q, IsNearest {0, 1} Q) ∧ (0 : ℝ) ∈ ({0, 1} : Set ℝ) ∧
-    ∀ y ∈ ({0, 1} : Set ℝ), y ≠ 0 → (1 : ℝ) ≤ |y| :=
-  ⟨exists_isNearest (Set.toFinite _) ⟨0, by simp⟩, by simp,
-    by rintro y (rfl | rfl) h <;> simp_all⟩
 
 /-- The numbers of the IEEE format with `E` exponent and `M` mantissa bits. -/
 def grid (E M : ℕ) : Set ℝ := {v | ∃ b < 2 ^ (1 + E + M), ieee E M b = some v}

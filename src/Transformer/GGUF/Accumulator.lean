@@ -47,6 +47,8 @@ import Transformer.GGUF.Nearest
 namespace Transformer
 namespace GGUF
 
+open Precision
+
 /-- Every number of the format is `± n · 2^k` with `n < 2^{M+1}`. -/
 theorem ieee_abs {E M b : ℕ} {z : ℝ} (h : ieee E M b = some z) :
     ∃ n : ℕ, n < 2 ^ (M + 1) ∧ ∃ k : ℤ, |z| = n * (2 : ℝ) ^ k := by
@@ -99,19 +101,6 @@ theorem ieee_gap {E M : ℕ} {a z : ℝ} {s : ℤ} (ha : a ∈ grid E M) (hz : z
     exact_mod_cast this
   have : (i : ℝ) + 1 ≤ j := by exact_mod_cast this
   nlinarith
-
-/-- **Absorption.**  If the grid point above `a` is at least `g` away, rounding
-`a + t` to nearest returns `a` for `0 ≤ t < g/2`. -/
-theorem IsNearest.add_eq {G : Set ℝ} {Q : ℝ → ℝ} (hQ : IsNearest G Q) {a g t : ℝ} (ha : a ∈ G)
-    (hg : ∀ z ∈ G, a < z → a + g ≤ z) (ht0 : 0 ≤ t) (ht : 2 * t < g) : Q (a + t) = a := by
-  have h1 := (hQ (a + t)).2 a ha
-  have h2 := hg _ (hQ (a + t)).1
-  rw [show a - (a + t) = -t by ring, abs_neg, abs_of_nonneg ht0] at h1
-  have h3 := abs_le.1 h1
-  by_contra hne
-  rcases lt_or_gt_of_ne hne with hlt | hlt
-  · linarith
-  · linarith [h2 hlt]
 
 /-- **The accumulator stops counting.**  `a_{k+1} = r(a_k + t_k)` with `r` a
 nearest rounding to the format: once `a_m ≥ 2^M · 2^s`, increments in
