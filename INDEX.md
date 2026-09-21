@@ -5487,13 +5487,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`biased_circle_isFinitelyAtomic`](src/Transformer/Perceptron/BiasedAtomicity.lean#L69) | theorem | sorry |
 | [`biased_any_d_measure_support_eq_zero`](src/Transformer/Perceptron/BiasedAtomicity.lean#L105) | theorem | sorry |
 
-**[Transformer.Perceptron.Bound](src/Transformer/Perceptron/Bound.lean)** — 199 lines
+**[Transformer.Perceptron.Bound](src/Transformer/Perceptron/Bound.lean)** — 210 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`bound_cluster_mass`](src/Transformer/Perceptron/Bound.lean#L70) | theorem | sorry |
-| [`not_cluster_univ_of_weights_small`](src/Transformer/Perceptron/Bound.lean#L134) | theorem | sorry |
-| [`bound_atom_count`](src/Transformer/Perceptron/Bound.lean#L163) | theorem | sorry |
+| [`bound_cluster_mass`](src/Transformer/Perceptron/Bound.lean#L78) | theorem | sorry |
+| [`not_cluster_univ_of_weights_small`](src/Transformer/Perceptron/Bound.lean#L142) | theorem | sorry |
+| [`bound_atom_count`](src/Transformer/Perceptron/Bound.lean#L174) | theorem | sorry |
 
 **[Transformer.Perceptron.CircleDeriv](src/Transformer/Perceptron/CircleDeriv.lean)** — 95 lines
 
@@ -7138,9 +7138,9 @@ Everything the build cannot vouch for, in one place.
 | [`circle_gelu_isFinitelyAtomic`](src/Transformer/Perceptron/Atomicity.lean#L122) | theorem | `Transformer.Perceptron.Atomicity` |
 | [`biased_circle_isFinitelyAtomic`](src/Transformer/Perceptron/BiasedAtomicity.lean#L69) | theorem | `Transformer.Perceptron.BiasedAtomicity` |
 | [`biased_any_d_measure_support_eq_zero`](src/Transformer/Perceptron/BiasedAtomicity.lean#L105) | theorem | `Transformer.Perceptron.BiasedAtomicity` |
-| [`bound_cluster_mass`](src/Transformer/Perceptron/Bound.lean#L70) | theorem | `Transformer.Perceptron.Bound` |
-| [`not_cluster_univ_of_weights_small`](src/Transformer/Perceptron/Bound.lean#L134) | theorem | `Transformer.Perceptron.Bound` |
-| [`bound_atom_count`](src/Transformer/Perceptron/Bound.lean#L163) | theorem | `Transformer.Perceptron.Bound` |
+| [`bound_cluster_mass`](src/Transformer/Perceptron/Bound.lean#L78) | theorem | `Transformer.Perceptron.Bound` |
+| [`not_cluster_univ_of_weights_small`](src/Transformer/Perceptron/Bound.lean#L142) | theorem | `Transformer.Perceptron.Bound` |
+| [`bound_atom_count`](src/Transformer/Perceptron/Bound.lean#L174) | theorem | `Transformer.Perceptron.Bound` |
 | [`ext_circle_isFinitelyAtomic`](src/Transformer/Perceptron/GeneralAtomicity.lean#L51) | theorem | `Transformer.Perceptron.GeneralAtomicity` |
 | [`ext_circle_gelu_isFinitelyAtomic`](src/Transformer/Perceptron/GeneralAtomicity.lean#L84) | theorem | `Transformer.Perceptron.GeneralAtomicity` |
 | [`ext_any_d_measure_support_eq_zero`](src/Transformer/Perceptron/GeneralAtomicity.lean#L117) | theorem | `Transformer.Perceptron.GeneralAtomicity` |

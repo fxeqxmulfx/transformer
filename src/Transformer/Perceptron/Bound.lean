@@ -9,11 +9,17 @@ weights are small enough, the whole configuration cannot be one such cluster.
 
 **What the source says and what is carried here.**
 
-* "for `β` sufficiently large … `≤ 0.5742 + O(e^{-β})`" is one statement:
-  constants `C, β₀` produced *before* the activation, the weights and the
-  configuration, with the bound `0.5742 + C e^{-β}` for every `β ≥ β₀`.  Read
-  the other way round — `C` chosen after the configuration — the claim would
-  say nothing, since `C` could absorb any cluster mass.
+* "for `β` sufficiently large … `≤ 0.5742 + O(e^{-β})`" is one statement about
+  the fixed perceptron `ϑ = (ω_j, a_j)_j` of the theorem: constants `C, β₀`
+  produced after `ϑ` but *before* `β`, the activation and the configuration,
+  with the bound `0.5742 + C e^{-β}` for every `β ≥ β₀`.  `C` may depend on
+  `ϑ`, and in the source's proof it does: the bound derived there is
+  `(2e^{β-3/2} + C_ϑ)/(2e^{β-3/2} + (3/8)e^{β-1/8})` with
+  `C_ϑ = 2 Σ_j |ω_j| ‖a_j‖²`, whose `O(e^{-β})` part is `C_ϑ e^{-β}` up to a
+  numerical factor.  A `C` uniform in `ϑ` would be a stronger claim than the
+  source makes or proves.  Read the other way round — `C` chosen after the
+  configuration — the claim would say nothing, since `C` could absorb any
+  cluster mass.
 
 * `max_{i,j ∈ S} min_{k ∈ ℤ} |θ_i - θ_j + 2πk| ≤ 1/(2√β)` is carried as: for
   every `i, j ∈ S` there is a `k` with `|θ_i - θ_j + 2πk| ≤ 1/(2√β)`.  The
@@ -62,17 +68,19 @@ Wasserstein critical point as in `eq: atomic.thm.bound`, and let
 
   `max_{i,j ∈ S} min_{k ∈ ℤ} |θ_i - θ_j + 2πk| ≤ 1/(2√β)`.
 
-Then, for `β` large enough, `Σ_{i ∈ S} m_i ≤ 0.5742 + O(e^{-β})`.
+Then, for `β` large enough, `Σ_{i ∈ S} m_i ≤ 0.5742 + O(e^{-β})`, the
+constant of `O(e^{-β})` depending on the weights `ϑ` — see the module
+docstring.
 
 Not proved here.
 
 Source: arXiv:2601.21366v2, `thm: bound`, `eq: conclusion`. -/
 theorem bound_cluster_mass :
+    ∀ (ω : Idx 2 → ℝ) (a : Idx 2 → EucSpace 2),
     ∃ C β₀ : ℝ, 0 < C ∧ 0 < β₀ ∧
       ∀ β : ℝ, β₀ ≤ β → ∀ φ σ : ℝ → ℝ, (∀ s : ℝ, HasDerivAt φ (2 * σ s) s) →
         LipschitzWith 1 σ → σ 0 = 0 →
-      ∀ (ω : Idx 2 → ℝ) (a : Idx 2 → EucSpace 2) (N : ℕ) (m θ : Idx N → ℝ)
-        (μ : Perspective.ProbSphere 2),
+      ∀ (N : ℕ) (m θ : Idx N → ℝ) (μ : Perspective.ProbSphere 2),
         IsAtomicOnCircle N m θ μ → IsSOPD β φ σ ω a μ →
       ∀ S : Finset (Idx N), 2 ≤ S.card →
         (∀ i ∈ S, ∀ j ∈ S, ∃ k : ℤ,
@@ -155,17 +163,20 @@ example (a : Idx 2 → EucSpace 2) :
 of length at most `L < 2π`, the number `N_ε` of atoms of mass at least `ε`
 satisfies, for `β` large enough,
 
-  `N_ε ≤ (M/ε) (1 + 2L√β) (0.5742 + O(e^{-β}))`.
+  `N_ε ≤ (M/ε) (1 + 2L√β) (0.5742 + O(e^{-β}))`,
+
+the constant of `O(e^{-β})` depending on the weights `ϑ`, as in
+`bound_cluster_mass`.
 
 Not proved here.
 
 Source: arXiv:2601.21366v2, `cor: bound`. -/
 theorem bound_atom_count :
+    ∀ (ω : Idx 2 → ℝ) (a : Idx 2 → EucSpace 2),
     ∃ C β₀ : ℝ, 0 < C ∧ 0 < β₀ ∧
       ∀ β : ℝ, β₀ ≤ β → ∀ φ σ : ℝ → ℝ, (∀ s : ℝ, HasDerivAt φ (2 * σ s) s) →
         LipschitzWith 1 σ → σ 0 = 0 →
-      ∀ (ω : Idx 2 → ℝ) (a : Idx 2 → EucSpace 2) (N : ℕ) (m θ : Idx N → ℝ)
-        (μ : Perspective.ProbSphere 2),
+      ∀ (N : ℕ) (m θ : Idx N → ℝ) (μ : Perspective.ProbSphere 2),
         IsAtomicOnCircle N m θ μ → IsSOPD β φ σ ω a μ →
       ∀ (M : ℕ), 1 ≤ M → ∀ (l r : Idx M → ℝ) (L : ℝ), L < 2 * π →
         (∀ j : Idx M, r j - l j ≤ L) →
