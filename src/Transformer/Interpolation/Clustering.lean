@@ -4,21 +4,14 @@
 Formalization of §2 of arXiv:2411.04551v3:
 
 * `Proposition prop: compression`     — clustering to discrete measures,
-* `Remark rem: nb.disc.clustering`    — bound on the number of switches.
 
 `Proposition prop: targets.atoms`, clustering to a single point mass, is
 `Transformer.Interpolation.AtomClustering`, together with the refutation of the
 form it had here.
 
 `prop: compression` asserts that *some* parameter curve drives `eq: cauchy.pb`
-to a prescribed target, and measures the error in a Wasserstein distance, which
-Mathlib does not have; the geodesic convex hull `conv_g` is not available here
-either.  It therefore carries the distance as a parameter, with the geodesic
-hull replaced by the support of the measure — weaker, and stated as such — and
-is not proved.  `rem: nb.disc.clustering` counts the switches of the parameter
-curve; the count is here reduced to "finitely many", since the packing and
-homotopy quantities `𝖡_k^i(δ)` and `L_{k,n}^i` it is expressed in are not
-defined in this development.
+to a prescribed target within `ε` in `W_2` (`Interpolation.W2`), keeping the
+geodesic convex hulls (`convG`) of the supports apart; it is not proved.
 
 What is proved is the invariance that the proof starts from: the barycenter
 of a measure supported in a cap `⟨·, w⟩ ≥ c` lies in that same cap, so a
@@ -29,6 +22,7 @@ what makes the drift of `eq: average.vf` point into the hemisphere.
 import Transformer.Basic
 import Transformer.Perspective.Section2_FlowMap
 import Transformer.Interpolation.Basic
+import Transformer.Interpolation.Wasserstein
 import Mathlib.MeasureTheory.Function.L2Space
 import Mathlib.MeasureTheory.Measure.Support
 
@@ -130,61 +124,67 @@ example (θ₀ : Params d) : PiecewiseConstant d (fun _ => θ₀) 1 1 := by
     fun k s s' _ _ => rfl⟩
   exact Nat.cast_le.mpr hab
 
-/-- **Proposition (prop: compression) with Remark (rem: nb.disc.clustering).**
-*Clustering to discrete measures.*
+/-- **Proposition (prop: compression).** *Clustering to discrete measures.*
 
-Let the `μ_0^i` have no atoms and pairwise disjoint supports.  For any
-`M ≥ 1`, targets `x_k^i` and weights `α_k^i ≥ 0` with `Σ_k α_k^i = 1`, there
-are piecewise-constant `(𝐖, 𝐔, b) : [0, T] → M_{d×d}(ℝ)² × ℝ^d` — finitely
-many switches, which is the content of `rem: nb.disc.clustering` — such that
-the solutions `μ^i` of `eq: cauchy.pb`–`eq: vf` with `𝐕 ≡ 0` satisfy
+Let the `μ_0^i` have no atoms and pairwise disjoint geodesic convex hulls of
+their supports.  Fix `M ≥ 1`, and targets `μ_1^i = Σ_k α_k^i δ_{x_k^i}` with
+`α_k^i ≥ 0`, `Σ_k α_k^i = 1`, `x_k^i ∈ conv_g supp μ_0^i`, and
+`x_k^i = x_{k'}^j` only if `(k, i) = (k', j)`.  Then for any `T > 0` and
+`ε > 0` there are piecewise-constant `(𝐖, 𝐔, b)` on `[0, T]` such that, with
+`𝐕 ≡ 0`, the solution `μ^i` of `eq: cauchy.pb`–`eq: vf` with data `μ_0^i`
+satisfies `W_2(μ^i(T), μ_1^i) ≤ ε`, and
+`conv_g supp μ^i(T) ∩ conv_g supp μ^j(T) = ∅` for `i ≠ j`.
 
-  `W_2(μ^i(T), Σ_k α_k^i δ_{x_k^i}) ≤ ε`
-
-and have pairwise disjoint supports.
-
-`W_2` is a parameter, the geodesic convex hulls of the hypothesis and the
-requirement `x_k^i ∈ conv_g supp μ_0^i` are replaced by supports, and the
-remark's explicit switch count `N · M · max_{(i,k)} 𝖭_k^i(δ) · max_n L_{k,n}^i`
-is weakened to the existence of a finite count, its ingredients not being
-defined here.
+"The solution" is read as: one exists, and every solution satisfies the
+conclusion.  `W_2` is `Interpolation.W2`, `conv_g` is `convG`.  The count of
+switches of `rem: nb.disc.clustering` is not part of the proposition and is
+not stated here: its ingredients `𝖭_k^i(δ)` and `L_{k,n}^i` are not defined
+in this development.
 
 Not proved here.
 
-Source: arXiv:2411.04551v3, §2. -/
+Source: arXiv:2411.04551v3, §2.2, `prop: compression`. -/
 theorem compression
-    (W₂ : Measure (SSphere d) → Measure (SSphere d) → ℝ)
     (μ₀ : Idx N → ProbSphere d) (x : Idx N → Idx M → SSphere d)
-    (α : Idx N → Idx M → ℝ) (ε : ℝ) (hM : 1 ≤ M) (hε : 0 < ε)
+    (α : Idx N → Idx M → ℝ) (T ε : ℝ) (hM : 1 ≤ M) (hT : 0 < T) (hε : 0 < ε)
     (hatom : ∀ i : Idx N, ∀ y : SSphere d, (μ₀ i : Measure (SSphere d)) {y} = 0)
-    (hdisj : ∀ i j : Idx N, i ≠ j → Disjoint ((μ₀ i : Measure (SSphere d)).support)
-      ((μ₀ j : Measure (SSphere d)).support))
+    (hdisj : ∀ i j : Idx N, i ≠ j →
+      Disjoint (convG d (μ₀ i : Measure (SSphere d)).support)
+        (convG d (μ₀ j : Measure (SSphere d)).support))
     (hαnonneg : ∀ i : Idx N, ∀ k : Idx M, 0 ≤ α i k)
-    (hαsum : ∀ i : Idx N, ∑ k : Idx M, α i k = 1) :
-    ∃ (θ : TimeParams d) (T : ℝ) (K : ℕ) (μ : Idx N → ℝ → ProbSphere d),
-      0 < T ∧ (∀ s : ℝ, (θ s).V = 0) ∧ PiecewiseConstant d θ T K ∧
-      (∀ i : Idx N, μ i 0 = μ₀ i ∧ cauchyPB d θ (μ i)) ∧
-      (∀ i : Idx N, W₂ (μ i T : Measure (SSphere d))
+    (hαsum : ∀ i : Idx N, ∑ k : Idx M, α i k = 1)
+    (hx : ∀ i : Idx N, ∀ k : Idx M, x i k ∈ convG d (μ₀ i : Measure (SSphere d)).support)
+    (hxinj : Function.Injective fun p : Idx N × Idx M => x p.1 p.2) :
+    ∃ (θ : TimeParams d) (K : ℕ),
+      (∀ s : ℝ, (θ s).V = 0) ∧ PiecewiseConstant d θ T K ∧
+      (∀ i : Idx N, ∃ μ : ℝ → ProbSphere d, μ 0 = μ₀ i ∧ cauchyPB d θ μ) ∧
+      (∀ i : Idx N, ∀ μ : ℝ → ProbSphere d, μ 0 = μ₀ i → cauchyPB d θ μ →
+        W2 d (μ T : Measure (SSphere d))
           (∑ k : Idx M, (α i k).toNNReal • Measure.dirac (x i k)) ≤ ε) ∧
-      (∀ i j : Idx N, i ≠ j →
-        Disjoint ((μ i T : Measure (SSphere d)).support)
-          ((μ j T : Measure (SSphere d)).support)) := by
+      (∀ i j : Idx N, i ≠ j → ∀ μ ν : ℝ → ProbSphere d,
+        μ 0 = μ₀ i → cauchyPB d θ μ → ν 0 = μ₀ j → cauchyPB d θ ν →
+        Disjoint (convG d (μ T : Measure (SSphere d)).support)
+          (convG d (ν T : Measure (SSphere d)).support)) := by
   sorry
 
 /-- The hypotheses of `compression` are satisfiable — but only on an empty
-family of initial measures, `N = 0`, where the atomlessness and disjointness
-conditions have nothing to check.  A witness with `N ≥ 1` would need an
-atomless probability measure on the sphere, and this development constructs
-none: the uniform measure is exactly what it carries as a parameter. -/
-example (μ₀ : Idx 0 → ProbSphere 1) (α : Idx 0 → Idx 1 → ℝ) :
-    1 ≤ 1 ∧ (0 : ℝ) < 1 ∧
+family of initial measures, `N = 0`, where the atomlessness, disjointness and
+target conditions have nothing to check.  A witness with `N ≥ 1` would need
+an atomless probability measure on the sphere, and none is shown atomless in
+this development. -/
+example (μ₀ : Idx 0 → ProbSphere 1) (x : Idx 0 → Idx 1 → SSphere 1)
+    (α : Idx 0 → Idx 1 → ℝ) :
+    1 ≤ 1 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧
       (∀ i : Idx 0, ∀ y : SSphere 1, (μ₀ i : Measure (SSphere 1)) {y} = 0) ∧
       (∀ i j : Idx 0, i ≠ j →
-        Disjoint ((μ₀ i : Measure (SSphere 1)).support)
-          ((μ₀ j : Measure (SSphere 1)).support)) ∧
+        Disjoint (convG 1 (μ₀ i : Measure (SSphere 1)).support)
+          (convG 1 (μ₀ j : Measure (SSphere 1)).support)) ∧
       (∀ i : Idx 0, ∀ k : Idx 1, 0 ≤ α i k) ∧
-      (∀ i : Idx 0, ∑ k : Idx 1, α i k = 1) :=
-  ⟨le_rfl, one_pos, fun i => i.elim0, fun i => i.elim0, fun i => i.elim0, fun i => i.elim0⟩
+      (∀ i : Idx 0, ∑ k : Idx 1, α i k = 1) ∧
+      (∀ i : Idx 0, ∀ k : Idx 1, x i k ∈ convG 1 (μ₀ i : Measure (SSphere 1)).support) ∧
+      Function.Injective fun p : Idx 0 × Idx 1 => x p.1 p.2 :=
+  ⟨le_rfl, one_pos, one_pos, fun i => i.elim0, fun i => i.elim0, fun i => i.elim0,
+    fun i => i.elim0, fun i => i.elim0, fun p => p.1.elim0⟩
 
 end Interpolation
 end Transformer

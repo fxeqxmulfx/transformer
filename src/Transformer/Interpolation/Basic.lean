@@ -15,6 +15,7 @@ This file collects:
 * parameter type `Θ = (𝐕, 𝐁, 𝐖, 𝐔, b)`,
 * the flow map `Φ^t_θ : 𝒫(𝕊^{d-1}) → 𝒫(𝕊^{d-1})`,
 * the hyperplane / spherical-cap shorthands `H_ε^γ` and `𝒮_q(ε)`,
+* the geodesic convex hull `conv_g`,
 * `eq_of_mem_support_dirac`, `antipode` and `basePoint_mem_positiveQuadrant`,
   the ingredients every satisfiability witness of §1–§5 is built from.
 -/
@@ -177,6 +178,23 @@ theorem basePoint_mem_positiveQuadrant : basePoint 0 ∈ positiveQuadrant 1 := b
   intro i
   fin_cases i
   simp [basePoint]
+
+/-- The geodesic convex hull `conv_g A` of a set `A ⊆ 𝕊^{d-1}` (§1.5,
+"Notation and basic definitions"): the radial projection onto the sphere of the Euclidean convex
+hull of `A`, and the whole sphere when that hull contains `0`, i.e. when `A`
+lies in no open hemisphere.  For `A` inside an open hemisphere it is the
+smallest set containing `A` and every minimizing geodesic between two of its
+points, which is the only case in which the source uses it.
+
+Source: arXiv:2411.04551v3, §1.5. -/
+def convG (A : Set (SSphere d)) : Set (SSphere d) :=
+  {x | (0 : EucSpace d) ∈ convexHull ℝ ((↑) '' A) ∨
+    ∃ v ∈ convexHull ℝ ((↑) '' A : Set (EucSpace d)), ∃ c : ℝ, 0 < c ∧
+      (x : EucSpace d) = c • v}
+
+/-- A set lies in its geodesic convex hull. -/
+theorem subset_convG (A : Set (SSphere d)) : A ⊆ convG d A :=
+  fun x hx => Or.inr ⟨x, subset_convexHull ℝ _ ⟨x, hx, rfl⟩, 1, one_pos, (one_smul ℝ _).symm⟩
 
 end Interpolation
 end Transformer
