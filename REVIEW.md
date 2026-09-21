@@ -248,64 +248,64 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.CRASP — arXiv:2506.16055
 
-- [ ] Transformer/CRASP/Affine.lean (3): `countP_bool_eq`, `Term.val_affine`, `Form.sat_eq_of_count_eq`
-- [ ] Transformer/CRASP/Alternating.lean (15): `altList_succ`, `length_altList`, `altList_not_succ`, `altPlus_one`, `sublist_of_ne_cons`, `sublist_of_ne_replicate`, `altList_sublist_succ`, `altList_succ_of_both`, `altList_sublist_of_mem_altPlus`, `not_altList_succ_sublist`, `not_altList_not_sublist_of_mem_altPlus`, `cons_mem_altPlus_same`, `cons_mem_altPlus_flip`, `mem_altPlus_of_sublist`, `altPlus_eq`
-- [ ] Transformer/CRASP/Basic.lean (18): `val_ofPos`, `depth_ofPos`, `past_ofPos`, `val_nsmul`, `depth_nsmul`, `past_nsmul`, `sat_or`, `depth_or`, `past_or`, `sat_le`, `depth_le`, `sat_isZero`, `depth_isZero`, `past_isZero`, `sat_atEnd`, `depth_atEnd`, `pnpFree_atEnd`, `dyck_mem`
-- [ ] Transformer/CRASP/Blocks.lean (7): `altList_sublist_of_le`, `altList_not_sublist_iff`, `eq_of_mem_altPlus`, `take_mem_altPlus`, `getElem?_of_mem_altPlus`, `append_mem_altPlus`, `mem_altPlus_three`
-- [ ] Transformer/CRASP/BoundedExists.lean (16): `countP_range'_add`, `val_countL_succ`, `val_countL_pos_iff`, `val_countR_eq_succ`, `val_countR_pos_iff`, `depth_exAt`, `depth_exBefore`, `past_exAt`, `past_exBefore`, `pnpFree_exAt`, `pnpFree_exBefore`, `depth_exAfter`, `pnpFree_exAfter`, `sat_exAt`, `sat_exBefore`, `sat_exAfter`
-- [ ] Transformer/CRASP/Collapse.lean (2): `exists_mem_TLCl_of_clustered`, `not_recognizes_altPlus_of_clustered`
-- [ ] Transformer/CRASP/Commutative.lean (4): `Term.val_countL_length_eq`, `Form.sat_length_eq_of_depth_le_one`, `Term.val_length_eq_of_depth_le_one`, `commutativeOnMiddle_of_mem_TLCP_one`
-- [ ] Transformer/CRASP/Conjunctions.lean (10): `Form.sat_all`, `Form.depth_all_le`, `Form.past_all`, `Form.pnpFree_all`, `Form.past_any`, `Form.pnpFree_any`, `Form.sat_onStr`, `Form.depth_onStr`, `Form.past_onStr`, `Form.pnpFree_onStr`
-- [ ] Transformer/CRASP/ConstantLayer.lean (5): `layer_of_const`, `act_add_of_const`, `layer_eq_of_fields`, `act_eq_of_fields`, `out_collapse`
-- [ ] Transformer/CRASP/CroppingUnsound.lean (6): `Form.sat_firstNotA`, `Form.minimalOne_firstNotA`, `accommodating_one`, `two_le_of_prefixVec_mem`, `pnpsConstantOn_firstNotA`, `not_minimalOneConstantOn_firstNotA`
-- [ ] Transformer/CRASP/Defs.lean (2): `sat_eq`, `depth_eq`
-- [ ] Transformer/CRASP/Depth.lean (5): `cropping_oneway_unsound`, `cropping_oneway_right_unsound`, `reduction_past_unsound`, `reduction_unsound`, `definableL_altPlus`
-- [ ] Transformer/CRASP/DepthZero.lean (5): `Form.exists_eq_pnp_of_mem_pnps`, `Term.exists_eq_pnp_of_mem_pnps`, `Term.val_eq_of_depth_eq_zero`, `Form.sat_eq_of_depth_eq_zero`, `Form.sat_eq_of_mem_pnps`
-- [ ] Transformer/CRASP/Extensions.lean (5): `Form.depth_toX`, `Term.depth_toX`, `Form.sat_toX`, `Term.val_toX`, `Form.lang_toX`
-- [ ] Transformer/CRASP/ExtensionsCounts.lean (10): `filter_range'_congr`, `length_filter_range'_strictL`, `length_filter_range'_strictR`, `length_filter_range'_all`, `covers_countL`, `covers_countR`, `exists_sat_neg_or`, `covers_countAll`, `covers_countLStrict`, `covers_countRStrict`
-- [ ] Transformer/CRASP/ExtensionsElim.lean (5): `FormX.depth_elim_le`, `TermX.depth_pieces_le`, `FormX.sat_elim`, `TermX.covers_pieces`, `exists_form_of_formX`
-- [ ] Transformer/CRASP/ExtensionsPieces.lean (14): `Form.sat_topAt`, `Form.depth_topAt`, `Form.sat_pos`, `Form.depth_pos`, `Form.sat_any`, `Form.depth_any_le`, `Term.val_addNat`, `Term.depth_addNat`, `sat_ltPieces`, `depth_ltPieces_le`, `covers_condPieces`, `depth_condPieces_le`, `covers_addPieces`, `depth_addPieces_le`
-- [ ] Transformer/CRASP/FiniteFunction.lean (9): `depth_ite_neg`, `past_ite_neg`, `pnpFree_ite_neg`, `sat_ite_neg`, `sat_bitsFormula`, `depth_bitsFormula_le`, `past_bitsFormula`, `pnpFree_bitsFormula`, `finite_function`
-- [ ] Transformer/CRASP/Fixed.lean (12): `ext`, `m_zero`, `val_zero`, `le_clamp`, `clamp_lt`, `clamp_eq_self`, `m_round`, `val_round`, `val_round_le`, `le_val_round`, `round_val`, `eq_of_abs_val_sub_lt`
-- [ ] Transformer/CRASP/FixedBits.lean (4): `bit_succ`, `emod_pow_eq_of_parity`, `ext_of_bit`, `bit_zero`
-- [ ] Transformer/CRASP/Frame.lean (8): `getElem?_frame`, `getElem?_frame_outside`, `Form.sat_eq_of_pnpFree_depth_eq_zero`, `length_eq_of_count`, `Form.constOnMiddle_of_depth_eq_zero`, `exists_middle`, `Form.mem_TLC_of_mem_countSubs`, `Term.mem_TLC_of_mem_countSubs`
-- [ ] Transformer/CRASP/FrameAffine.lean (2): `Term.val_affine_frame`, `Form.sat_eq_of_take_count_eq`
-- [ ] Transformer/CRASP/FrameBox.lean (5): `exists_half_mul_le`, `exists_box_lt`, `ConstOnBox.mono`, `ConstOnBox.neg`, `ConstOnBox.and`
-- [ ] Transformer/CRASP/FrameCount.lean (6): `Term.val_countR_add_val_countL`, `Term.val_countL_add`, `Term.val_countL_middle`, `Term.val_countL_outside`, `Term.val_eq_of_constOnMiddle`, `Form.sat_eq_of_constOnMiddle`
-- [ ] Transformer/CRASP/FrameShrink.lean (2): `Form.exists_constOnBox`, `exists_constOnBox_list`
-- [ ] Transformer/CRASP/Indicator.lean (10): `ite_mem_TLCl`, `lt_add_one_mem_TLCl`, `ltIndR_mem_TLCl`, `ltInd_mem_TLCl`, `ltSum_mem_TLCl`, `sat_ite`, `_root_.Transformer.CRASP.Term.val_sum`, `sat_ltIndR`, `sat_ltInd`, `sat_ltSum`
-- [ ] Transformer/CRASP/Locality.lean (4): `Form.mem_TLCl_of_mem_countSubs`, `Term.mem_TLCl_of_mem_countSubs`, `Form.sat_append`, `Term.val_append`
-- [ ] Transformer/CRASP/LowerBound.lean (3): `exists_constOnStrip_altPlus`, `exists_models_iff_altPlus`, `not_definableL_altPlus`
-- [ ] Transformer/CRASP/LowerBoundTwoSided.lean (5): `ConstOnBox.constOnMiddle`, `replicate_append_mem_altPlus`, `exists_constOnMiddle_altPlus`, `exists_models_iff_altPlusDouble`, `not_definable_altPlus_double`
-- [ ] Transformer/CRASP/MajTwo.lean (7): `sat_top`, `sat_ex`, `sat_all`, `depth_ex`, `closed_closedTop`, `depth_closedTop`, `lang_closedTop`
-- [ ] Transformer/CRASP/MajTwoCount.lean (13): `sum_Ico_boole_eq_length_filter`, `sum_Icc_le`, `sum_Icc_ge`, `sum_Icc_eq`, `_root_.Transformer.CRASP.Var.other_ne`, `_root_.Transformer.CRASP.Var.ne_other`, `sat_topv`, `mass_append`, `mass_map_neg`, `mass_replicate_topv`, `mass_replicate_lt`, `sat_majList`, `sat_cmpList`
-- [ ] Transformer/CRASP/MajTwoDepthOne.lean (6): `swapPos_one`, `swapPos_two`, `getElem?_swapPos`, `sat_swap_of_depth_eq_zero`, `sat_eq_of_closed_depth_le_one`, `not_forall_closed_majTwo_of_definable`
-- [ ] Transformer/CRASP/MajTwoEquiv.lean (3): `exists_majTwo_of_mem_TLC`, `exists_closed_majTwo`, `exists_closed_majTwo_of_definable`
-- [ ] Transformer/CRASP/MajTwoOfTLC.lean (7): `Form.freeIn_toMaj`, `Maj2.depth_majList_le`, `Form.depth_toMaj_le`, `Term.depth_toMajs_le`, `Term.val_eq_ones`, `Form.sat_toMaj`, `Term.mass_toMajs`
-- [ ] Transformer/CRASP/Middle.lean (7): `countP_range'_eq_countP`, `getElem?_length_sub_one_append`, `parikh_append`, `perm_of_parikh_eq`, `parikh_eq_of_parikh_append_eq`, `prefixVec_mem_middle`, `Form.sat_middle`
-- [ ] Transformer/CRASP/NeutralLetter.lean (4): `map_some_sublist_iff`, `PT.width_mapSome`, `PT.lang_mapSome`, `KPiecewiseTestable.preimage_reduceOption`
-- [ ] Transformer/CRASP/Parikh.lean (1): `accommodating_trivial`
-- [ ] Transformer/CRASP/PiecewiseTestable.lean (7): `kPiecewiseTestable_altPlus`, `PT.depth_toForm_le`, `PT.past_toForm`, `PT.pnpFree_toForm`, `PT.lang_toForm`, `definableL_of_kPiecewiseTestable`, `definable_of_kPiecewiseTestable`
-- [ ] Transformer/CRASP/Positional.lean (2): `TLClMod_subset_TLClPos`, `TLClY_subset_TLClPos`
-- [ ] Transformer/CRASP/PositionalDepth.lean (2): `exists_form_of_formP`, `definablePos_altPlusNeutral`
-- [ ] Transformer/CRASP/PositionalEmbedding.lean (6): `Form.exists_formP`, `Term.exists_termP`, `DefinableL.exists_formP`, `DefinableL.definablePos`, `DefinableL.definableMod`, `DefinableL.definableY`
-- [ ] Transformer/CRASP/PositionalHierarchy.lean (1): `alibi_window`
-- [ ] Transformer/CRASP/PositionalReduction.lean (2): `FormP.tr_mem_TLCl`, `TermP.tr_mem`
-- [ ] Transformer/CRASP/PositionalReductionAtom.lean (5): `ofBool_mem_TLCl`, `sat_ofBool`, `FormP.period_pos`, `TermP.period_pos`, `FormP.atomTr_mem_TLCl`
-- [ ] Transformer/CRASP/PositionalReductionAtomEquiv.lean (2): `getElem?_spread_sub`, `FormP.sat_atomTr`
-- [ ] Transformer/CRASP/PositionalReductionCount.lean (3): `sum_map_ite_eq_countP`, `TermP.val_countL_blockEnd`, `TermP.val_countL_spread`
-- [ ] Transformer/CRASP/PositionalReductionEquiv.lean (4): `FormP.sat_tr`, `TermP.val_tr`, `FormP.models_spread_iff`, `tr_paperBlockSize_unsound`
-- [ ] Transformer/CRASP/Prediction.lean (4): `predictAltPlus_mem`, `solvesPrediction_predictAltPlus`, `not_solvesPrediction_altPlus`, `prediction_task_depth`
-- [ ] Transformer/CRASP/ReductionUnsound.lean (2): `Form.sat_abab_eq_aabb`, `not_lang_eq_restrict_startAB`
-- [ ] Transformer/CRASP/Shrink.lean (3): `exists_strip_lt`, `Form.exists_constOnStrip`, `exists_constOnStrip_list`
-- [ ] Transformer/CRASP/Spread.lean (8): `spread_nil`, `reduceOption_spread`, `length_spread`, `getElem?_flatMap_block`, `getElem?_spread`, `FormP.sat_append`, `TermP.val_append`, `FormP.sat_spread_of_le`
-- [ ] Transformer/CRASP/Strip.lean (6): `getElem?_append_length_add`, `ConstOnStrip.mono`, `ConstOnStrip.append`, `ConstOnStrip.neg`, `ConstOnStrip.and`, `Form.constOnStrip_of_depth_eq_zero`
-- [ ] Transformer/CRASP/Subsequence.lean (12): `sublist_snoc_snoc`, `sublist_snoc_take`, `depth_subseqStrict`, `depth_subseqAt`, `past_subseqStrict`, `past_subseqAt`, `pnpFree_subseqStrict`, `pnpFree_subseqAt`, `sat_subseqStrict`, `sat_subseqAt`, `lang_subseqAt`, `nonstrict_subseq_formula_unsound`
-- [ ] Transformer/CRASP/SubsequenceTwoSided.lean (9): `cons_sublist_drop`, `append_cons_sublist_iff`, `depth_subseqAfter`, `pnpFree_subseqAfter`, `depth_subseqTwoSided_le`, `pnpFree_subseqTwoSided`, `sat_subseqAfter`, `lang_subseqTwoSided`, `nonstrict_twoSided_formula_unsound`
-- [ ] Transformer/CRASP/TLCDepth.lean (4): `cropping_unsound`, `altPlusDouble_succ`, `kPiecewiseTestable_altPlusDouble`, `definable_altPlusDouble`
-- [ ] Transformer/CRASP/Transformers.lean (4): `self_mem_masked`, `length_bos`, `definableL_iff_recognizes`, `rtfr_depth_hierarchy`
-- [ ] Transformer/CRASP/YNormalForm.lean (7): `FormP.prevN_succ'`, `FormP.depth_prevN`, `YAtomic.prevN`, `FormP.depth_pushY`, `TermP.depth_pushY`, `FormP.yNormal_pushY`, `TermP.yNormalT_pushY`
-- [ ] Transformer/CRASP/YNormalFormEquiv.lean (7): `FormP.sat_prevN`, `FormP.sat_guard`, `length_filter_range'_delay`, `FormP.sat_pushY`, `TermP.val_pushY`, `exists_yNormal`, `pushY_unguarded_unsound`
+- ok Transformer/CRASP/Affine.lean (3): `countP_bool_eq`, `Term.val_affine`, `Form.sat_eq_of_count_eq`
+- ok Transformer/CRASP/Alternating.lean (15): `altList_succ`, `length_altList`, `altList_not_succ`, `altPlus_one`, `sublist_of_ne_cons`, `sublist_of_ne_replicate`, `altList_sublist_succ`, `altList_succ_of_both`, `altList_sublist_of_mem_altPlus`, `not_altList_succ_sublist`, `not_altList_not_sublist_of_mem_altPlus`, `cons_mem_altPlus_same`, `cons_mem_altPlus_flip`, `mem_altPlus_of_sublist`, `altPlus_eq`
+- ok Transformer/CRASP/Basic.lean (18): `val_ofPos`, `depth_ofPos`, `past_ofPos`, `val_nsmul`, `depth_nsmul`, `past_nsmul`, `sat_or`, `depth_or`, `past_or`, `sat_le`, `depth_le`, `sat_isZero`, `depth_isZero`, `past_isZero`, `sat_atEnd`, `depth_atEnd`, `pnpFree_atEnd`, `dyck_mem`
+- ok Transformer/CRASP/Blocks.lean (7): `altList_sublist_of_le`, `altList_not_sublist_iff`, `eq_of_mem_altPlus`, `take_mem_altPlus`, `getElem?_of_mem_altPlus`, `append_mem_altPlus`, `mem_altPlus_three`
+- ok Transformer/CRASP/BoundedExists.lean (16): `countP_range'_add`, `val_countL_succ`, `val_countL_pos_iff`, `val_countR_eq_succ`, `val_countR_pos_iff`, `depth_exAt`, `depth_exBefore`, `past_exAt`, `past_exBefore`, `pnpFree_exAt`, `pnpFree_exBefore`, `depth_exAfter`, `pnpFree_exAfter`, `sat_exAt`, `sat_exBefore`, `sat_exAfter`
+- ok Transformer/CRASP/Collapse.lean (2): `exists_mem_TLCl_of_clustered`, `not_recognizes_altPlus_of_clustered`
+- ok Transformer/CRASP/Commutative.lean (4): `Term.val_countL_length_eq`, `Form.sat_length_eq_of_depth_le_one`, `Term.val_length_eq_of_depth_le_one`, `commutativeOnMiddle_of_mem_TLCP_one`
+- ok Transformer/CRASP/Conjunctions.lean (10): `Form.sat_all`, `Form.depth_all_le`, `Form.past_all`, `Form.pnpFree_all`, `Form.past_any`, `Form.pnpFree_any`, `Form.sat_onStr`, `Form.depth_onStr`, `Form.past_onStr`, `Form.pnpFree_onStr`
+- ok Transformer/CRASP/ConstantLayer.lean (5): `layer_of_const`, `act_add_of_const`, `layer_eq_of_fields`, `act_eq_of_fields`, `out_collapse`
+- ok Transformer/CRASP/CroppingUnsound.lean (6): `Form.sat_firstNotA`, `Form.minimalOne_firstNotA`, `accommodating_one`, `two_le_of_prefixVec_mem`, `pnpsConstantOn_firstNotA`, `not_minimalOneConstantOn_firstNotA`
+- ok Transformer/CRASP/Defs.lean (2): `sat_eq`, `depth_eq`
+- ok Transformer/CRASP/Depth.lean (5): `cropping_oneway_unsound`, `cropping_oneway_right_unsound`, `reduction_past_unsound`, `reduction_unsound`, `definableL_altPlus`
+- ok Transformer/CRASP/DepthZero.lean (5): `Form.exists_eq_pnp_of_mem_pnps`, `Term.exists_eq_pnp_of_mem_pnps`, `Term.val_eq_of_depth_eq_zero`, `Form.sat_eq_of_depth_eq_zero`, `Form.sat_eq_of_mem_pnps`
+- ok Transformer/CRASP/Extensions.lean (5): `Form.depth_toX`, `Term.depth_toX`, `Form.sat_toX`, `Term.val_toX`, `Form.lang_toX`
+- ok Transformer/CRASP/ExtensionsCounts.lean (10): `filter_range'_congr`, `length_filter_range'_strictL`, `length_filter_range'_strictR`, `length_filter_range'_all`, `covers_countL`, `covers_countR`, `exists_sat_neg_or`, `covers_countAll`, `covers_countLStrict`, `covers_countRStrict`
+- ok Transformer/CRASP/ExtensionsElim.lean (5): `FormX.depth_elim_le`, `TermX.depth_pieces_le`, `FormX.sat_elim`, `TermX.covers_pieces`, `exists_form_of_formX`
+- ok Transformer/CRASP/ExtensionsPieces.lean (14): `Form.sat_topAt`, `Form.depth_topAt`, `Form.sat_pos`, `Form.depth_pos`, `Form.sat_any`, `Form.depth_any_le`, `Term.val_addNat`, `Term.depth_addNat`, `sat_ltPieces`, `depth_ltPieces_le`, `covers_condPieces`, `depth_condPieces_le`, `covers_addPieces`, `depth_addPieces_le`
+- ok Transformer/CRASP/FiniteFunction.lean (9): `depth_ite_neg`, `past_ite_neg`, `pnpFree_ite_neg`, `sat_ite_neg`, `sat_bitsFormula`, `depth_bitsFormula_le`, `past_bitsFormula`, `pnpFree_bitsFormula`, `finite_function`
+- ok Transformer/CRASP/Fixed.lean (12): `ext`, `m_zero`, `val_zero`, `le_clamp`, `clamp_lt`, `clamp_eq_self`, `m_round`, `val_round`, `val_round_le`, `le_val_round`, `round_val`, `eq_of_abs_val_sub_lt`
+- ok Transformer/CRASP/FixedBits.lean (4): `bit_succ`, `emod_pow_eq_of_parity`, `ext_of_bit`, `bit_zero`
+- ok Transformer/CRASP/Frame.lean (8): `getElem?_frame`, `getElem?_frame_outside`, `Form.sat_eq_of_pnpFree_depth_eq_zero`, `length_eq_of_count`, `Form.constOnMiddle_of_depth_eq_zero`, `exists_middle`, `Form.mem_TLC_of_mem_countSubs`, `Term.mem_TLC_of_mem_countSubs`
+- ok Transformer/CRASP/FrameAffine.lean (2): `Term.val_affine_frame`, `Form.sat_eq_of_take_count_eq`
+- ok Transformer/CRASP/FrameBox.lean (5): `exists_half_mul_le`, `exists_box_lt`, `ConstOnBox.mono`, `ConstOnBox.neg`, `ConstOnBox.and`
+- ok Transformer/CRASP/FrameCount.lean (6): `Term.val_countR_add_val_countL`, `Term.val_countL_add`, `Term.val_countL_middle`, `Term.val_countL_outside`, `Term.val_eq_of_constOnMiddle`, `Form.sat_eq_of_constOnMiddle`
+- ok Transformer/CRASP/FrameShrink.lean (2): `Form.exists_constOnBox`, `exists_constOnBox_list`
+- ok Transformer/CRASP/Indicator.lean (10): `ite_mem_TLCl`, `lt_add_one_mem_TLCl`, `ltIndR_mem_TLCl`, `ltInd_mem_TLCl`, `ltSum_mem_TLCl`, `sat_ite`, `_root_.Transformer.CRASP.Term.val_sum`, `sat_ltIndR`, `sat_ltInd`, `sat_ltSum`
+- ok Transformer/CRASP/Locality.lean (4): `Form.mem_TLCl_of_mem_countSubs`, `Term.mem_TLCl_of_mem_countSubs`, `Form.sat_append`, `Term.val_append`
+- ok Transformer/CRASP/LowerBound.lean (3): `exists_constOnStrip_altPlus`, `exists_models_iff_altPlus`, `not_definableL_altPlus`
+- ok Transformer/CRASP/LowerBoundTwoSided.lean (5): `ConstOnBox.constOnMiddle`, `replicate_append_mem_altPlus`, `exists_constOnMiddle_altPlus`, `exists_models_iff_altPlusDouble`, `not_definable_altPlus_double`
+- ok Transformer/CRASP/MajTwo.lean (7): `sat_top`, `sat_ex`, `sat_all`, `depth_ex`, `closed_closedTop`, `depth_closedTop`, `lang_closedTop`
+- ok Transformer/CRASP/MajTwoCount.lean (13): `sum_Ico_boole_eq_length_filter`, `sum_Icc_le`, `sum_Icc_ge`, `sum_Icc_eq`, `_root_.Transformer.CRASP.Var.other_ne`, `_root_.Transformer.CRASP.Var.ne_other`, `sat_topv`, `mass_append`, `mass_map_neg`, `mass_replicate_topv`, `mass_replicate_lt`, `sat_majList`, `sat_cmpList`
+- ok Transformer/CRASP/MajTwoDepthOne.lean (6): `swapPos_one`, `swapPos_two`, `getElem?_swapPos`, `sat_swap_of_depth_eq_zero`, `sat_eq_of_closed_depth_le_one`, `not_forall_closed_majTwo_of_definable`
+- issue Transformer/CRASP/MajTwoEquiv.lean (3): `exists_majTwo_of_mem_TLC`, `exists_closed_majTwo`, `exists_closed_majTwo_of_definable` — majTwo_depth_hierarchy: the docstring says the second half is proved, but it calls the sorried definable_of_closed_majTwo
+- ok Transformer/CRASP/MajTwoOfTLC.lean (7): `Form.freeIn_toMaj`, `Maj2.depth_majList_le`, `Form.depth_toMaj_le`, `Term.depth_toMajs_le`, `Term.val_eq_ones`, `Form.sat_toMaj`, `Term.mass_toMajs`
+- ok Transformer/CRASP/Middle.lean (7): `countP_range'_eq_countP`, `getElem?_length_sub_one_append`, `parikh_append`, `perm_of_parikh_eq`, `parikh_eq_of_parikh_append_eq`, `prefixVec_mem_middle`, `Form.sat_middle`
+- ok Transformer/CRASP/NeutralLetter.lean (4): `map_some_sublist_iff`, `PT.width_mapSome`, `PT.lang_mapSome`, `KPiecewiseTestable.preimage_reduceOption`
+- ok Transformer/CRASP/Parikh.lean (1): `accommodating_trivial`
+- ok Transformer/CRASP/PiecewiseTestable.lean (7): `kPiecewiseTestable_altPlus`, `PT.depth_toForm_le`, `PT.past_toForm`, `PT.pnpFree_toForm`, `PT.lang_toForm`, `definableL_of_kPiecewiseTestable`, `definable_of_kPiecewiseTestable`
+- ok Transformer/CRASP/Positional.lean (2): `TLClMod_subset_TLClPos`, `TLClY_subset_TLClPos`
+- ok Transformer/CRASP/PositionalDepth.lean (2): `exists_form_of_formP`, `definablePos_altPlusNeutral`
+- ok Transformer/CRASP/PositionalEmbedding.lean (6): `Form.exists_formP`, `Term.exists_termP`, `DefinableL.exists_formP`, `DefinableL.definablePos`, `DefinableL.definableMod`, `DefinableL.definableY`
+- issue Transformer/CRASP/PositionalHierarchy.lean (1): `alibi_window` — rtfr_pes_depth_hierarchy: the docstring says the negative half is proved, but it calls the three sorried simulations; they should be hypotheses. 0 < k is extra
+- ok Transformer/CRASP/PositionalReduction.lean (2): `FormP.tr_mem_TLCl`, `TermP.tr_mem`
+- ok Transformer/CRASP/PositionalReductionAtom.lean (5): `ofBool_mem_TLCl`, `sat_ofBool`, `FormP.period_pos`, `TermP.period_pos`, `FormP.atomTr_mem_TLCl`
+- ok Transformer/CRASP/PositionalReductionAtomEquiv.lean (2): `getElem?_spread_sub`, `FormP.sat_atomTr`
+- ok Transformer/CRASP/PositionalReductionCount.lean (3): `sum_map_ite_eq_countP`, `TermP.val_countL_blockEnd`, `TermP.val_countL_spread`
+- ok Transformer/CRASP/PositionalReductionEquiv.lean (4): `FormP.sat_tr`, `TermP.val_tr`, `FormP.models_spread_iff`, `tr_paperBlockSize_unsound`
+- ok Transformer/CRASP/Prediction.lean (4): `predictAltPlus_mem`, `solvesPrediction_predictAltPlus`, `not_solvesPrediction_altPlus`, `prediction_task_depth`
+- ok Transformer/CRASP/ReductionUnsound.lean (2): `Form.sat_abab_eq_aabb`, `not_lang_eq_restrict_startAB`
+- ok Transformer/CRASP/Shrink.lean (3): `exists_strip_lt`, `Form.exists_constOnStrip`, `exists_constOnStrip_list`
+- ok Transformer/CRASP/Spread.lean (8): `spread_nil`, `reduceOption_spread`, `length_spread`, `getElem?_flatMap_block`, `getElem?_spread`, `FormP.sat_append`, `TermP.val_append`, `FormP.sat_spread_of_le`
+- ok Transformer/CRASP/Strip.lean (6): `getElem?_append_length_add`, `ConstOnStrip.mono`, `ConstOnStrip.append`, `ConstOnStrip.neg`, `ConstOnStrip.and`, `Form.constOnStrip_of_depth_eq_zero`
+- ok Transformer/CRASP/Subsequence.lean (12): `sublist_snoc_snoc`, `sublist_snoc_take`, `depth_subseqStrict`, `depth_subseqAt`, `past_subseqStrict`, `past_subseqAt`, `pnpFree_subseqStrict`, `pnpFree_subseqAt`, `sat_subseqStrict`, `sat_subseqAt`, `lang_subseqAt`, `nonstrict_subseq_formula_unsound`
+- ok Transformer/CRASP/SubsequenceTwoSided.lean (9): `cons_sublist_drop`, `append_cons_sublist_iff`, `depth_subseqAfter`, `pnpFree_subseqAfter`, `depth_subseqTwoSided_le`, `pnpFree_subseqTwoSided`, `sat_subseqAfter`, `lang_subseqTwoSided`, `nonstrict_twoSided_formula_unsound`
+- ok Transformer/CRASP/TLCDepth.lean (4): `cropping_unsound`, `altPlusDouble_succ`, `kPiecewiseTestable_altPlusDouble`, `definable_altPlusDouble`
+- issue Transformer/CRASP/Transformers.lean (4): `self_mem_masked`, `length_bos`, `definableL_iff_recognizes`, `rtfr_depth_hierarchy` — rtfr_depth_hierarchy adds 0 < k, which the paper does not have; k = 0 holds too (a+ vs depth 0)
+- ok Transformer/CRASP/YNormalForm.lean (7): `FormP.prevN_succ'`, `FormP.depth_prevN`, `YAtomic.prevN`, `FormP.depth_pushY`, `TermP.depth_pushY`, `FormP.yNormal_pushY`, `TermP.yNormalT_pushY`
+- ok Transformer/CRASP/YNormalFormEquiv.lean (7): `FormP.sat_prevN`, `FormP.sat_guard`, `length_filter_range'_delay`, `FormP.sat_pushY`, `TermP.val_pushY`, `exists_yNormal`, `pushY_unguarded_unsound`
 
 ### Transformer.Causal — arXiv:2411.04990
 
