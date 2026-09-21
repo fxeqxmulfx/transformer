@@ -18,9 +18,7 @@ whole configuration collapses to a single cluster at the origin.
   radius.  Its proof produces the explicit bound `max{‖x_i(0)‖, √(2n)}`, which
   is not carried: the statement is the existential.
 
-* `l:stationary` is split in two.  The substantive direction — a stationary
-  configuration is the zero one — is `eq_zero_of_isStationaryConfig`; the
-  converse is proved, and it is what witnesses the hypotheses.
+* `l:stationary` is in `Section8_Stationary`.
 
 * The remark following `t:cas-Idintro` is proved here, taking the theorem's
   conclusion as an explicit hypothesis: once every token tends to `0` the
@@ -95,7 +93,7 @@ theorem transformerDynamics_zero (Q K V : ParamMatrix d) :
   intro t i
   simpa using hasDerivAt_const t (0 : EucSpace d)
 
-/-! ### `l:cas1circle` and `l:stationary` -/
+/-! ### `l:cas1circle` -/
 
 /-- **Lemma (l:cas1circle).**  The trajectories of `e:-Iddyn` are uniformly
 bounded in time: there is `R > 0`, depending only on `n` and the initial
@@ -108,36 +106,6 @@ theorem exists_bound_negIdDynamics (Q K : ParamMatrix d) (hQK : IsIdentityQK Q K
     (X : ℝ → Idx n → EucSpace d) (hX : NegIdDynamics Q K X) :
     ∃ R : ℝ, 0 < R ∧ ∀ (i : Idx n) (t : ℝ), 0 ≤ t → ‖X t i‖ ≤ R := by
   sorry
-
-/-- A stationary configuration of `e:-Iddyn`: one at which every drift
-vanishes.
-
-Source: arXiv:2305.05465v6, `l:stationary`. -/
-def IsStationaryConfig (Q K : ParamMatrix d) (X : Idx n → EucSpace d) : Prop :=
-  ∀ i : Idx n, ∑ j : Idx n, attentionMatrix Q K X i j • X j = 0
-
-/-- The configuration at the origin is stationary — the converse half of
-`l:stationary`, and the witness for its hypotheses. -/
-theorem isStationaryConfig_zero (Q K : ParamMatrix d) :
-    IsStationaryConfig (n := n) Q K (fun _ => (0 : EucSpace d)) := by
-  intro i
-  simp
-
-/-- **Lemma (l:stationary).**  The only stationary configuration of `e:-Iddyn`
-is `x̄_1 = … = x̄_n = 0`.
-
-Not proved here.
-
-Source: arXiv:2305.05465v6, `l:stationary`. -/
-theorem eq_zero_of_isStationaryConfig (Q K : ParamMatrix d) (hQK : IsIdentityQK Q K)
-    (X : Idx n → EucSpace d) (hX : IsStationaryConfig Q K X) (i : Idx n) :
-    X i = 0 := by
-  sorry
-
-/-- The hypotheses of `eq_zero_of_isStationaryConfig` are satisfiable. -/
-example : IsIdentityQK (1 : ParamMatrix d) 1 ∧
-    IsStationaryConfig (n := n) (1 : ParamMatrix d) 1 (fun _ => (0 : EucSpace d)) :=
-  ⟨isIdentityQK_one d, isStationaryConfig_zero 1 1⟩
 
 /-! ### `e:finiteinegral` and `t:cas-Idintro` -/
 
