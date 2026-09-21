@@ -36,6 +36,8 @@ The architecture is:
 | `GPTMini.Properties` | what holds of it at every weight assignment at all |
 | `GPTMini.Bridge` | and how it sits inside the setups of the formalized papers |
 | `GPTMini.ClusteringTheorem` | and what those setups would then say about its layers |
+| `GPTMini.TwoTokens` | two tokens under the Pre-LN head: a ray, a monotone inner product, bounded steps |
+| `GPTMini.RateRefutation` | and why no depth rate is uniform in the initial stream |
 
 The bridges are the connection to `Transformer.Section1_IPS …
 Transformer.MeanField`: `Bridge.SphereResidence` puts the tokens on the sphere
@@ -70,4 +72,6 @@ import Transformer.GPTMini.Model
 import Transformer.GPTMini.Properties
 import Transformer.GPTMini.Bridge
 import Transformer.GPTMini.ClusteringTheorem
+import Transformer.GPTMini.TwoTokens
+import Transformer.GPTMini.RateRefutation
 import Transformer.GPTMini.MeanFieldRefutation

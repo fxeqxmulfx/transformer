@@ -30,12 +30,14 @@ rather than as a hypothesis on `AttnParams`, whose single `W_qkv` has no
 is stated is the depth behaviour of the attention recursion, not of
 `GPTMini.forward`, whose `Block.attnSubLayer` is still a placeholder.
 
-*The rate is polynomial in the depth, not exponential.*  The exponential rate
-of `Section5_HighD` is exponential in the time of the continuous dynamics, and
-under Pre-LN the layer index is not that time: the residual stream grows while
-the sub-layer output stays bounded, so the direction moves less and less.
-`layer_clustering` therefore states convergence only, and the quantitative
-`polynomial_rate` states the `1/L³` of `thm: preln-slow`.
+*No rate is stated.*  The exponential rate of `Section5_HighD` is exponential
+in the time of the continuous dynamics, and under Pre-LN the layer index is not
+that time: the residual stream grows while the sub-layer output stays bounded,
+so the direction moves less and less.  `layer_clustering` therefore states
+convergence only.  A rate `C / L³` with `C` uniform over the initial stream,
+once stated here as `polynomial_rate`, is false: a stream far from the origin
+turns by `O(1/‖x‖)` per layer (`GPTMini.not_polynomial_rate`, in
+`RateRefutation`).
 
 *The mean-field form is not stated.*  Its `W₂` could only be a parameter —
 Mathlib has no Wasserstein distance — and quantified over every `W₂` it is
@@ -103,38 +105,6 @@ theorem layer_clustering {T : ℕ} (hd : 3 ≤ cfg.head_dim)
 `gpt-mini` config has `d_head = 768 / 12 = 64`. -/
 example : 3 ≤ Config.default.head_dim ∧ (0 : ℝ) < 1 := by
   refine ⟨?_, one_pos⟩
-  norm_num [Config.head_dim, Config.default]
-
-/-- **The depth rate under Pre-LN is polynomial.**
-
-With the temperatures bounded, `|α| ≤ A`, the directions approach their common
-limit at the rate
-
-  `‖Φ(x_L(i)) - x_∞‖ ≤ C / L³`,
-
-with `C` depending on `A` alone — the quantifier order is what says so, since
-`C` is chosen before `α`, `eps` and the initial stream.  This is slower than
-the exponential rate of the Post-LN scheme of arXiv:2312.10794v5, and it is
-the Pre-LN scheme that `gpt-mini` uses.
-
-Not proved here.
-
-Source: arXiv:2510.22026v2, `thm: preln-slow`. -/
-theorem polynomial_rate (A : ℝ) {T : ℕ} (hd : 3 ≤ cfg.head_dim) (hA : 0 ≤ A) :
-    ∃ C : ℝ, 0 < C ∧
-    ∀ (alpha eps : ℝ) (positions : Fin T → ℝ), |alpha| ≤ A → 0 < eps →
-      ∀ᵐ x₀ : Fin T → EucSpace cfg.head_dim, ∀ x : ℕ → Fin T → EucSpace cfg.head_dim,
-        x 0 = x₀ → PreLNHead cfg alpha eps positions x →
-        (∀ (L : ℕ) (i : Fin T), x L i ≠ 0) →
-          ∃ xinf : EucSpace cfg.head_dim, ‖xinf‖ = 1 ∧
-            ∀ (L : ℕ), 1 ≤ L → ∀ i : Fin T,
-              ‖Bridge.toSphere cfg.head_dim (x L i) - xinf‖ ≤ C / (L : ℝ) ^ 3 := by
-  sorry
-
-/-- The hypotheses of `polynomial_rate` are satisfiable: the default config and
-`A = 0`, which is the zero-temperature head. -/
-example : 3 ≤ Config.default.head_dim ∧ (0 : ℝ) ≤ 0 := by
-  refine ⟨?_, le_rfl⟩
   norm_num [Config.head_dim, Config.default]
 
 end GPTMini

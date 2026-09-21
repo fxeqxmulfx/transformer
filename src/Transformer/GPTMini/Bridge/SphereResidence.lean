@@ -69,6 +69,46 @@ theorem token_sequence_on_sphere
   intro i
   exact toSphere_norm hd (x i) (hx i)
 
+/-- On a nonzero vector the direction map is `x / ‖x‖`: the `√d` of `rmsNorm`
+cancels. -/
+theorem toSphere_eq {d : ℕ} (hd : 0 < d) {x : EucSpace d} (hx : x ≠ 0) :
+    toSphere d x = ‖x‖⁻¹ • x := by
+  have hs : Real.sqrt (d : ℝ) ≠ 0 := (Real.sqrt_pos.mpr (Nat.cast_pos.mpr hd)).ne'
+  rw [toSphere, rmsNorm, ite_eq_right (norm_ne_zero_iff.mpr hx), smul_smul]
+  congr 1
+  field_simp
+
+/-- The hypotheses of `toSphere_eq` are satisfiable: `e₀ ≠ 0` in `ℝ¹`. -/
+example : 0 < 1 ∧ (EuclideanSpace.single (0 : Fin 1) (1 : ℝ) : EucSpace 1) ≠ 0 :=
+  ⟨one_pos, by simp⟩
+
+/-- Normalizing moves a vector by at most twice the relative perturbation:
+`‖b/‖b‖ - a/‖a‖‖ ≤ 2‖b - a‖/‖a‖`.  So a token far from the origin turns
+slowly under bounded updates. -/
+theorem norm_inv_smul_sub_le {d : ℕ} {a : EucSpace d} (b : EucSpace d) (ha : a ≠ 0) :
+    ‖‖b‖⁻¹ • b - ‖a‖⁻¹ • a‖ ≤ 2 * ‖b - a‖ / ‖a‖ := by
+  have hna : 0 < ‖a‖ := norm_pos_iff.mpr ha
+  have hsplit : ‖b‖⁻¹ • b - ‖a‖⁻¹ • a = ‖a‖⁻¹ • (b - a) + (‖b‖⁻¹ - ‖a‖⁻¹) • b := by
+    rw [smul_sub, sub_smul]; abel
+  have h2 : ‖(‖b‖⁻¹ - ‖a‖⁻¹) • b‖ ≤ ‖b - a‖ / ‖a‖ := by
+    rw [norm_smul, Real.norm_eq_abs]
+    rcases eq_or_ne ‖b‖ 0 with hb | hb
+    · rw [hb, mul_zero]; positivity
+    have hnb : 0 < ‖b‖ := lt_of_le_of_ne (norm_nonneg _) (Ne.symm hb)
+    have : (‖b‖⁻¹ - ‖a‖⁻¹) * ‖b‖ = (‖a‖ - ‖b‖) / ‖a‖ := by field_simp
+    rw [← abs_of_pos hnb, ← abs_mul, abs_of_pos hnb, this, abs_div, abs_of_pos hna]
+    gcongr
+    rw [abs_sub_comm]; exact abs_norm_sub_norm_le _ _
+  calc ‖‖b‖⁻¹ • b - ‖a‖⁻¹ • a‖
+      ≤ ‖‖a‖⁻¹ • (b - a)‖ + ‖(‖b‖⁻¹ - ‖a‖⁻¹) • b‖ := by rw [hsplit]; exact norm_add_le _ _
+    _ ≤ ‖b - a‖ / ‖a‖ + ‖b - a‖ / ‖a‖ := by
+        gcongr
+        rw [norm_smul, Real.norm_eq_abs, abs_inv, abs_norm, inv_mul_eq_div]
+    _ = 2 * ‖b - a‖ / ‖a‖ := by ring
+
+/-- The hypothesis of `norm_inv_smul_sub_le` is satisfiable: `e₀ ≠ 0`. -/
+example : (EuclideanSpace.single (0 : Fin 1) (1 : ℝ) : EucSpace 1) ≠ 0 := by simp
+
 end Bridge
 end GPTMini
 end Transformer
