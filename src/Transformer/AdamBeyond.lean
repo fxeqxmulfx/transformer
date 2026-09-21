@@ -20,13 +20,17 @@ makes it:
   and Theorem 2 states it for all large `T` and every `α > 0`;
 * Theorem 3 is run without projection from `x₁ = 0`, as its proof assumes,
   and its conclusion is `E[F(x_t)] - F(-1) ≥ δ` for every `t ≥ 1`.
+* Theorem 4 makes explicit `0 ≤ β_{1,t}`, `β₁ < 1`, `0 < β₂ < 1`, and holds
+  for every `T`; Corollary 1's second term gets the factor `d/α` its proof
+  gives; the `O(√T)` remark for `β_{1,t} = β₁/t` is `R_T ≤ K√T`.
 
 Not transcribed, deliberately: the experiments, the commented-out section on
-the proof of Kingma & Ba, and the convergence of SGD and AdaGrad, cited from
-the literature.
+the proof of Kingma & Ba, the convergence of SGD and AdaGrad, cited from
+the literature, and the averaged variant of §4, stated with no bound.
 -/
 
 import Transformer.AdamBeyond.Section2_Adam
 import Transformer.AdamBeyond.Section3_Run
 import Transformer.AdamBeyond.Section3_Counter
 import Transformer.AdamBeyond.Section3_General
+import Transformer.AdamBeyond.Section4_AMSGrad
