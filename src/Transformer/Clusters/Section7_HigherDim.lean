@@ -29,6 +29,12 @@ refutes the example offered for it: whatever the solution from
 `x_1(0) = (1,ε)`, `x_2(0) = (1,-ε)` does, it does not both cluster to a single
 point and have attention converging to `I_2`.
 
+The refutation is of the text as printed, `x_i(t) → (1,0)`.  The remark names
+no `(Q,K,V)`; in the setting of `t:boolean`, `V > 0`, the tokens themselves
+diverge and what clusters is a rescaling of them, while `P(t)` is computed
+from the unrescaled tokens.  If "`x_i(t)`" is read as `x_i(t)/‖x_i(t)‖` or as
+`e^{-tV}x_i(t)`, the example is not touched by anything here.
+
 Source: arXiv:2305.05465v6, `r:higherdimclus`.
 -/
 

@@ -3040,13 +3040,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`norm_sub_monotone`](src/Transformer/Clusters/Section7_DistNonDec.lean#L85) | theorem | proved |
 | [`ne_of_norm_sub_monotone`](src/Transformer/Clusters/Section7_DistNonDec.lean#L110) | theorem | proved |
 
-**[Transformer.Clusters.Section7_HigherDim](src/Transformer/Clusters/Section7_HigherDim.lean)** — 124 lines
+**[Transformer.Clusters.Section7_HigherDim](src/Transformer/Clusters/Section7_HigherDim.lean)** — 130 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`tendsto_attentionMatrix_of_tendsto_common`](src/Transformer/Clusters/Section7_HigherDim.lean#L53) | theorem | proved |
-| [`not_tendsto_zero_of_tendsto_common`](src/Transformer/Clusters/Section7_HigherDim.lean#L87) | theorem | proved |
-| [`not_tendsto_id_of_tendsto_common`](src/Transformer/Clusters/Section7_HigherDim.lean#L104) | theorem | proved |
+| [`tendsto_attentionMatrix_of_tendsto_common`](src/Transformer/Clusters/Section7_HigherDim.lean#L59) | theorem | proved |
+| [`not_tendsto_zero_of_tendsto_common`](src/Transformer/Clusters/Section7_HigherDim.lean#L93) | theorem | proved |
+| [`not_tendsto_id_of_tendsto_common`](src/Transformer/Clusters/Section7_HigherDim.lean#L110) | theorem | proved |
 
 **[Transformer.Clusters.Section7_LogSumExp](src/Transformer/Clusters/Section7_LogSumExp.lean)** — 152 lines
 
