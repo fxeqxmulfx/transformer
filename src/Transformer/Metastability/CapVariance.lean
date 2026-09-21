@@ -23,7 +23,7 @@ unit vectors.
 -/
 
 import Transformer.Metastability.MainTheorem
-import Transformer.Metastability.CapVelocity
+import Transformer.Metastability.CapVelocityBound
 import Mathlib.Analysis.InnerProductSpace.Calculus
 
 open scoped BigOperators Classical
@@ -52,7 +52,7 @@ def IsCapMin (ε : ℝ) (X : ℝ → SphereTuple d n) (w : SSphere d)
 /-- **Remark (rem: variance).** *Variance inequality.*
 
   `η̇_q(t) ≥ η_q(t) Σ_{j : x_j ∈ 𝒮_q(2ε)} a_{i(t)j}(t) ‖x_j - x_{i(t)}‖²/2
-              - 2 n e^{-(1-α)β}`,
+              - n e^{-(1-α)β}`,
 
 the subtracted term being the leakage from the tokens outside the cap.
 
@@ -73,11 +73,11 @@ hypothesis — namely `⟨x_{i(t)}, x_j⟩ ≤ α` for `x_j` outside the cap on
 `a_{i(t)j} ≤ e^{βα}/e^{β} = e^{-(1-α)β}`, the partition function being at
 least its own diagonal term.
 
-*The constant is `2 n`, not `n`.*  A token outside the cap contributes
-`a_{i(t)j} (⟨x_j, w⟩ - η_q)` and `⟨x_j, w⟩ - η_q` is only bounded below by
-`-2`, attained in the limit where `x_j` is antipodal to the cap's axis; there
-are at most `n` such tokens.  This is the same `2 n e^{-(1-α)β}` the section's
-`eq: ze.equation` carries.
+*The constant is the paper's `n`.*  A token outside the cap contributes to
+the gap sum and to the variance sum together
+`a_{i(t)j} ⟨x_j, w - η_q x_{i(t)}⟩`, and `‖w - η_q x_{i(t)}‖ = √(1 - η_q²) ≤ 1`
+bounds this below by `-a_{i(t)j} ≥ -e^{-(1-α)β}`; there are at most `n` such
+tokens.
 
 *`η_q` is differentiable and the reference token does not leave the cap.*  The
 minimum of finitely many smooth functions has corners, so `hη_diff` is a
@@ -85,11 +85,9 @@ hypothesis exactly as in `rho_diff_ineq`; and the envelope argument that
 identifies `η̇_q` with the derivative of the attaining token needs that token to
 stay admissible for nearby times, which is `h_stay`.  Below the escape time
 that is what `T_esc` means; stated for an arbitrary `i` it has to be assumed.
-`ε ≤ 1/2` makes `η_q ≥ 1 - 2ε` nonnegative, which is what lets the variance
-sum be restricted to the cap.
 
 Source: arXiv:2410.06833v1, §2, `rem: variance`. -/
-theorem variance_inequality (β α ε : ℝ) (hβ : 0 ≤ β) (hε : ε ≤ 1 / 2)
+theorem variance_inequality (β α ε : ℝ) (hβ : 0 ≤ β)
     (X : ℝ → SphereTuple d n)
     (w : SSphere d) (η : ℝ → ℝ) (i : ℝ → Idx n) (Tesc : ℝ)
     (hX : Perspective.SA d n β X) (hη : IsCapMin d n ε X w η i)
@@ -105,10 +103,10 @@ theorem variance_inequality (β α ε : ℝ) (hβ : 0 ≤ β) (hε : ε ≤ 1 / 
             attn d n β X t (i t) j
               * ‖((X t j : EucSpace d)) - ((X t (i t) : EucSpace d))‖ ^ 2 / 2
           else 0)
-        - 2 * (n : ℝ) * Real.exp (-((1 - α) * β))
+        - (n : ℝ) * Real.exp (-((1 - α) * β))
       ≤ deriv η t := by
   intro t ht0 htT
-  obtain ⟨hcap, hηt, hmin⟩ := hη t
+  obtain ⟨-, hηt, hmin⟩ := hη t
   have hnorm : ∀ j : Idx n, ‖((X t j : EucSpace d))‖ = 1 :=
     fun j => mem_sphere_zero_iff_norm.mp (X t j).2
   -- the attaining token moves with the `SA` velocity
@@ -156,15 +154,10 @@ theorem variance_inequality (β α ε : ℝ) (hβ : 0 ≤ β) (hε : ε ≤ 1 / 
       rw [← hsub.deriv]
       exact hmax.deriv_eq_zero
     linarith
-  -- `η t = ⟨x_(i t), w⟩ ≥ 1 - 2ε ≥ 0`
-  have hη0 : 0 ≤ η t := by
-    have hc : (1 : ℝ) - 2 * ε
-        ≤ inner (𝕜 := ℝ) ((X t (i t) : EucSpace d)) ((w : EucSpace d)) := hcap
-    rw [hηt]; linarith
   rw [hderiv]
   exact inner_proj_softmax_ge d n β α (η t) hβ (fun j => ((X t j : EucSpace d)))
     ((w : EucSpace d)) (i t) hnorm (mem_sphere_zero_iff_norm.mp w.2)
-    (fun j => X t j ∈ sphericalCap d w (2 * ε)) hη0 hηt hmin
+    (fun j => X t j ∈ sphericalCap d w (2 * ε)) hηt hmin
     (fun j hj => h_far t ht0 htT j hj)
 
 /-- The hypotheses of `variance_inequality` are satisfiable: one token

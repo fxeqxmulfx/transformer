@@ -506,8 +506,8 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - ok Transformer/Metastability/AlphaDist.lean (3): `norm_sub_le_of_mem_sphericalCap`, `αDist_le_of_orthogonal`, `isSeparated_of_near_orthogonal` — 4ε+4√ε replaces the proof step ε²+2ε (false: sup = sin 2θ at an orthogonal frame); deviation documented
 - ok Transformer/Metastability/AngularEnergy.lean (5): `inner_circlePoint`, `hasDerivAt_pairFst`, `hasDerivAt_pairSnd`, `hasDerivAt_angularEβ`, `Eβ_circlePoint` — angular gradient, helper
 - ok Transformer/Metastability/BakryEmery.lean (2): `bakry_emery`, `not_forall_bakry_emery` — lem: bakry-emery with gradient/flow tied to E; refutation checked in §1
-- issue Transformer/Metastability/CapVariance.lean (1): `variance_inequality` — variance_inequality weakened to 2n e^{-(1-α)β}; the paper's n is correct: outside term a_ij⟨x_j, w - η x_i⟩ ≥ -a_ij √(1-η²) ≥ -a_ij. Restore n
-- issue Transformer/Metastability/CapVelocity.lean (3): `inner_proj_softmax_eq`, `cap_variance_bound`, `inner_proj_softmax_ge` — inner_proj_softmax_ge carries 2n; -1 per outside token suffices (see CapVariance)
+- issue Transformer/Metastability/CapVariance.lean (1): `variance_inequality` — FIXED: the paper's n restored; hε and the η ≥ 0 hypothesis no longer needed. Was: variance_inequality weakened to 2n e^{-(1-α)β}; the paper's n is correct: outside term a_ij⟨x_j, w - η x_i⟩ ≥ -a_ij √(1-η²) ≥ -a_ij. Restore n
+- issue Transformer/Metastability/CapVelocity.lean (3): `inner_proj_softmax_eq`, `cap_variance_bound`, `inner_proj_softmax_ge` — FIXED: n, token by token; the lower bound split into CapVelocityBound.lean. Was: inner_proj_softmax_ge carries 2n; -1 per outside token suffices (see CapVariance)
 - ok Transformer/Metastability/CollapseODE.lean (1): `exists_collapse_time` — lem: eminem constants exact
 - ok Transformer/Metastability/ExponentialFlow.lean (2): `expFlow_spec`, `not_quantitative_inequality_two_mul` — witness + refutation checked in §1
 - ok Transformer/Metastability/InitialUniform.lean (1): `uniform_separated` — coro: cm from concentration carried; technical.cond corrected, stronger; prop and claim faithful
