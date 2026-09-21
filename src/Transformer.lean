@@ -64,7 +64,8 @@ Formalization of eighteen papers on the mathematics of Transformers:
 Alongside these, `Transformer.ALM` formalizes the paraboloid-lifted lookup
 used by the append-only lookup machine (Percepta, transformer-vm), and
 `Transformer.Precision` bounds the context length of attention whose weights
-are stored in a quantized format.
+are stored in a quantized format, and `Transformer.GGUF` decodes the tensor
+formats of llama.cpp (ggml) from their bytes.
 
 This top-level module re-exports the formalization of every section of all
 papers.  Each per-paper subdirectory mirrors the structure of the source
@@ -98,3 +99,4 @@ import Transformer.XSA
 import Transformer.Quartet
 import Transformer.GPTMini
 import Transformer.Precision
+import Transformer.GGUF
