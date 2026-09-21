@@ -5,9 +5,13 @@
 interaction inequalities of `lem:interaction` hold, so that only `β ≳ log N`
 is needed.
 
-The remark asks for `N g((c-2ε)β^{-1/2}) < g(εβ^{-1/2})`, where the lemma
-gives `-(N g(...)) < g(...)`; `g_pot_nonpos_core` closes the gap by showing
-that `g` is already negative at the far point, so that the two readings agree.
+`thm: fixed_centers` prints its second condition as
+`N g((c-2ε)β^{-1/2}) < g(εβ^{-1/2})`, where the lemma gives
+`-(N g(...)) < g(...)`.  They do not agree: `g_pot_nonpos_core` shows that
+`g` is negative at the far point, so the printed form holds for free and the
+lemma's is the one with content — and the one the theorem's proof uses.
+`Causal.fixed_centers` is stated with the minus sign, and the window here
+delivers it.
 
 Source: arXiv:2411.04990v2, §B, `rem:interaction`.
 -/
@@ -25,8 +29,9 @@ open Causal
 /-- **The sign of `g` at the far point.**  In the variables of
 `interaction_inequalities_core` the far point `(b+1)s` satisfies
 `β ((b+1)s)² = (b+1)² ≥ 5` and `(b+1)s ≤ 1.73 < π`, so `g_pot_nonpos`
-applies: the lemma's `-(N g((b+1)s))` and the remark's `N g((b+1)s)` sit on
-opposite sides of `0`.
+applies: the lemma's `-(N g((b+1)s))` and the printed `N g((b+1)s)` of
+`thm: fixed_centers` sit on opposite sides of `0`, so the printed condition
+is automatic.
 
 Source: arXiv:2411.04990v2, §B, `lemma:interaction` (3). -/
 theorem g_pot_nonpos_core (β b s : ℝ) (hb : 9 / 2 ≤ b) (hβ : b ^ 2 / 2 ≤ β)
@@ -66,12 +71,10 @@ so that only `β ≳ log N` is needed; the remark's own example is `ε = 0.1`,
 `c = 6.5`, `β ≥ 14`, `N ≤ 700`.
 
 This is `lem:interaction` read as a sufficient condition, and it differs from
-`interaction_inequalities` in exactly two places.  The bound on `N` is the
-non-strict one: `interaction_inequalities_core` takes it that way, both of
-its chains being strict already at their first step.  And the second
-inequality is the one `thm: fixed_centers` asks for, `N g` and not `-(N g)`:
-`g_pot_nonpos_core` puts `g` at the far point below `0`, where the two
-readings agree.
+`interaction_inequalities` only in the bound on `N`, which is the non-strict
+one: `interaction_inequalities_core` takes it that way, both of its chains
+being strict already at their first step.  The second inequality carries the
+minus sign, as in `Causal.fixed_centers`, which corrects the printed sign.
 
 Source: arXiv:2411.04990v2, §B, `rem:interaction`. -/
 theorem interaction_window (N c ε β : ℝ) (hε : 0 < ε) (hsmall : ε < 0.1) (hN : 0 < N)
@@ -79,7 +82,7 @@ theorem interaction_window (N c ε β : ℝ) (hε : 0 < ε) (hsmall : ε < 0.1) 
     (hNbound : N ≤ (ε / (c - 1)) * Real.exp (3 * (c - 1 - 2 * ε) ^ 2 / 8)) :
     N * h_pot β ((c - 1 - 2 * ε) * β ^ (-(1 / 2 : ℝ)))
         < h_pot β (ε * β ^ (-(1 / 2 : ℝ))) ∧
-      N * g_pot β ((c - 2 * ε) * β ^ (-(1 / 2 : ℝ)))
+      -(N * g_pot β ((c - 2 * ε) * β ^ (-(1 / 2 : ℝ))))
         < g_pot β (ε * β ^ (-(1 / 2 : ℝ))) := by
   have hb : 9 / 2 ≤ c - 1 - 2 * ε := by norm_num at hc ⊢; linarith
   have hsmall' : ε < 1 / 10 := by norm_num at hsmall ⊢; linarith
@@ -94,12 +97,8 @@ theorem interaction_window (N c ε β : ℝ) (hε : 0 < ε) (hsmall : ε < 0.1) 
   have hNbound' : N ≤ Real.exp (3 * (c - 1 - 2 * ε) ^ 2 / 8)
       * (ε / (c - 1 - 2 * ε + 2 * ε)) := by
     rw [show c - 1 - 2 * ε + 2 * ε = c - 1 by ring, mul_comm]; exact hNbound
-  obtain ⟨h1, h2⟩ :=
-    interaction_inequalities_core N ε β _ _ hε hsmall' hN hb hβ hs hs2 hNbound'
-  refine ⟨h1, ?_⟩
   rw [show c - 2 * ε = c - 1 - 2 * ε + 1 by ring]
-  have hg := g_pot_nonpos_core β (c - 1 - 2 * ε) (β ^ (-(1 / 2 : ℝ))) hb hβ hs hs2
-  nlinarith
+  exact interaction_inequalities_core N ε β _ _ hε hsmall' hN hb hβ hs hs2 hNbound'
 
 /-- The hypotheses of `interaction_window` are satisfiable: the same example as
 for `interaction_inequalities`, `ε = 0.05`, `c = 6.5`, `β = 15`, `N = 1`. -/

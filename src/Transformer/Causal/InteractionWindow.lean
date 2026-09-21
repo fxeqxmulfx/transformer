@@ -231,9 +231,9 @@ then
   `-N g((c - 2ε) β^{-1/2}) < g(ε β^{-1/2})`.
 
 The second inequality is stated as the lemma states it, with the minus sign;
-`thm: fixed_centers` asks for `N g((c-2ε)β^{-1/2}) < g(εβ^{-1/2})` without it,
-and the two agree exactly when `g((c-2ε)β^{-1/2}) ≤ 0`, which the peak
-location of `h_pot_unimodal` gives at `c - 2ε > 1`.
+`thm: fixed_centers` prints `N g((c-2ε)β^{-1/2}) < g(εβ^{-1/2})` without it,
+which holds for free wherever `g((c-2ε)β^{-1/2}) ≤ 0` and is not what its
+proof uses; `Causal.fixed_centers` restores the minus sign.
 
 The bound `ε < 0.1` is not in the lemma but is needed — see the file header.
 Everything else is `interaction_inequalities_core` at `b = c - 1 - 2ε` and

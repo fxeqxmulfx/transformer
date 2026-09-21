@@ -15,6 +15,7 @@ import Transformer.Causal.InteractionWindow
 import Transformer.Causal.InteractionRemark
 import Transformer.Causal.Packing
 import Transformer.Causal.Metastability
+import Transformer.Causal.FixedCenters
 import Transformer.Causal.SequentialFlow
 import Transformer.Causal.ParkingCount
 import Transformer.Causal.CapMass

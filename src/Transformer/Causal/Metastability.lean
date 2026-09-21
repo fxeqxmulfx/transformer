@@ -5,9 +5,10 @@ Equations and statements covered:
 
 * *R'enyi centers* and *strong R'enyi centers* (Definition),
 * `Lemma lemma:meta`               — strong R'enyi centers stay nearly fixed,
-* `eq: renyi`, `eq: c`, `eq: time_bd`,
-* `Theorem thm:fixed_centers`     — convergence of all tokens to the
-                                    vicinity of strong R'enyi centers.
+* `eq: renyi`, `eq: c`, `eq: time_bd`.
+
+`Theorem thm:fixed_centers`, clustering to frozen tokens, is in
+`Causal.FixedCenters`.
 -/
 
 import Transformer.Basic
@@ -117,33 +118,6 @@ example (x₀ : SSphere 2) :
     (by
       rw [Real.one_rpow]
       norm_num)
-
-/-- **Theorem (thm: fixed_centers).**  *Convergence to strong R'enyi centers.*
-
-For an arbitrary set of stationary (strong R'enyi) tokens, all other tokens
-converge to the vicinity of one of them as `t → ∞`: every token eventually
-stays within the separation scale `δ` of some center.
-
-Not proved here: the paper's proof runs through `lemma_meta`, which is itself a
-`sorry`, and the "vicinity" of the statement is taken to be the separation
-scale `δ` the centers are defined by.
-
-Source: arXiv:2411.04990v2, §5, `thm: fixed_centers`. -/
-theorem fixed_centers_convergence (n : ℕ) (β δ : ℝ) (hβ : 0 < β) (hδ : 0 < δ) :
-  ∀ X : ℝ → SphereTuple 2 n,
-    Causal.CSA 2 n β (ContinuousLinearMap.id ℝ (EucSpace 2))
-      (ContinuousLinearMap.id ℝ (EucSpace 2))
-      (ContinuousLinearMap.id ℝ (EucSpace 2)) X →
-    ∀ (m : ℕ) (s : ℕ → ℕ) (hs : ∀ j : ℕ, s j < n),
-      (∀ (j : ℕ), j < m → ∀ i : Idx n, (i : ℕ) < s j →
-        δ < ‖((X 0 ⟨s j, hs j⟩ : EucSpace 2)) - ((X 0 i : EucSpace 2))‖) →
-      ∀ i : Idx n, ∃ j : ℕ, j < m ∧
-        ∀ᶠ t : ℝ in Filter.atTop,
-          ‖((X t i : EucSpace 2)) - ((X t ⟨s j, hs j⟩ : EucSpace 2))‖ < δ := by
-  sorry
-
-/-- The hypotheses of `fixed_centers_convergence` are satisfiable: `β = δ = 1`. -/
-example : (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 := ⟨one_pos, one_pos⟩
 
 /-- **Cardinality of the R'enyi centers.**
 
