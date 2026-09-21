@@ -32,16 +32,6 @@ namespace AMSGrad
 
 variable {d : ℕ}
 
-/-- `v_t ≥ 0` for every rule, when `0 ≤ β₂ ≤ 1`. -/
-theorem v_nonneg {S : Setup d} (hβ₂ : 0 ≤ S.β₂) (hβ₂' : S.β₂ ≤ 1) (R : Rule d) (n : ℕ) :
-    0 ≤ (S.state R n).v := by
-  induction n with
-  | zero => exact le_rfl
-  | succ n ih =>
-    intro i
-    change 0 ≤ S.β₂ * (S.state R n).v i + (1 - S.β₂) * grad (S.f (n + 1)) (S.state R n).x i ^ 2
-    exact add_nonneg (mul_nonneg hβ₂ (ih i)) (mul_nonneg (by linarith) (sq_nonneg _))
-
 /-- `s_t = Σ_{k=1}^t c^{t-k} f_k`, through its recursion `s₀ = 0`,
 `s_t = c s_{t-1} + f_t`.  arXiv:1904.03590v4, §4, proof of Lemma 4.4. -/
 noncomputable def geomSum (c : ℝ) (f : ℕ → ℝ) : ℕ → ℝ

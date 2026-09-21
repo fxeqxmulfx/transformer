@@ -26,6 +26,7 @@ import Transformer.AMSGrad.Section1_AMSGrad
 import Transformer.AMSGrad.Section1_TheoremA
 import Transformer.AMSGrad.Section2_Prelim
 import Transformer.AMSGrad.Section2_Proj
+import Transformer.AMSGrad.Section3_Step
 import Transformer.AMSGrad.Section3_Issue
 import Transformer.AMSGrad.Section3_Example
 import Transformer.AMSGrad.Section3_Optimal
