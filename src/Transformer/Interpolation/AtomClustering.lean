@@ -66,8 +66,8 @@ theorem fullVF_diracProb_self (θ : TimeParams d) (t : ℝ) (x : SSphere d)
 
 /-- **The constant curve at a Dirac mass solves `eq: cauchy.pb`.**
 
-Both sides of the distributional form vanish, the left because the curve is
-constant and the right by `fullVF_diracProb_self`.
+The integrand of the integrated form vanishes by `fullVF_diracProb_self`,
+and the curve is constant.
 
 Source: arXiv:2411.04551v3, §2, `eq: cauchy.pb`. -/
 theorem cauchyPB_const_diracProb (θ : TimeParams d) (x : SSphere d)
@@ -76,12 +76,13 @@ theorem cauchyPB_const_diracProb (θ : TimeParams d) (x : SSphere d)
     cauchyPB d θ (fun _ => diracProb d x) := by
   intro φ _ t
   have hμ : ((diracProb d x : ProbSphere d) : Measure (SSphere d)) = Measure.dirac x := rfl
-  have hrhs : (∫ y, inner (𝕜 := ℝ) (gradient φ (y : EucSpace d))
-        (fullVF d θ (diracProb d x) t (y : EucSpace d))
-      ∂((diracProb d x : ProbSphere d) : Measure (SSphere d))) = 0 := by
-    rw [hμ, integral_dirac, fullVF_diracProb_self d θ t x (hV t) (hW t), inner_zero_right]
-  rw [hrhs]
-  exact hasDerivAt_const t _
+  have hrhs : (fun s => ∫ y, inner (𝕜 := ℝ) (gradient φ (y : EucSpace d))
+        (fullVF d θ (diracProb d x) s (y : EucSpace d))
+      ∂((diracProb d x : ProbSphere d) : Measure (SSphere d))) = fun _ => 0 := by
+    funext s
+    rw [hμ, integral_dirac, fullVF_diracProb_self d θ s x (hV s) (hW s), inner_zero_right]
+  simp only [hrhs, intervalIntegral.integral_zero, add_zero]
+  exact ⟨intervalIntegrable_const, trivial⟩
 
 /-- The hypotheses of `cauchyPB_const_diracProb` are satisfiable: the
 parameters of `prop: targets.atoms`, `(𝐕, 𝐁, 𝐖) ≡ (I_d, 𝐁, 0)`. -/

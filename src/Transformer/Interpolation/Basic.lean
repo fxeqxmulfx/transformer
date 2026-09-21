@@ -25,6 +25,7 @@ import Transformer.Perspective.Section2_FlowMap
 import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 import Mathlib.MeasureTheory.Measure.Support
 import Mathlib.Analysis.Calculus.Gradient.Basic
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -92,21 +93,46 @@ noncomputable def averageVF
 
   `∂_t μ(t) + div(μ(t) · 𝐯[μ(t)]) = 0`,
 
-in distributional form: for every `C¹` test function `φ` on the ambient space,
+in distributional form, integrated in time: for every `C¹` test function `φ`
+on the ambient space and every `t`,
 
-  `d/dt ∫ φ dμ(t) = ∫ ⟨∇φ(x), 𝐯[μ(t)](t,x)⟩ dμ(t)(x)`.
+  `∫ φ dμ(t) = ∫ φ dμ(0) + ∫_0^t ∫ ⟨∇φ(x), 𝐯[μ(s)](s,x)⟩ dμ(s)(x) ds`,
+
+the inner integral being integrable in `s`.  The parameters of the source are
+piecewise constant in time, so `s ↦ ∫ ⟨∇φ, 𝐯⟩ dμ(s)` jumps at every switch
+and `t ↦ ∫ φ dμ(t)` is not differentiable there: the pointwise form
+`d/dt ∫ φ dμ(t) = …` at every `t` has no solution as soon as a switch changes
+the field on the support, and the integrated form is the distributional
+solution the source means.  Integrability is required because an interval
+integral of a non-integrable function is `0`.
 
 The initial condition `μ(0) = μ_0` is imposed separately by the statements that
 use this, since it is what varies between them.  As in
 `Perspective.continuityEquation`, the ambient gradient is the right pairing
-because `fullVF` ends in `proj`. -/
+because `fullVF` ends in `proj`.
+
+Source: arXiv:2411.04551v3, §1, `eq: cauchy.pb`. -/
 def cauchyPB
     (θ : TimeParams d) (μ : ℝ → Perspective.ProbSphere d) : Prop :=
   ∀ φ : EucSpace d → ℝ, ContDiff ℝ 1 φ → ∀ t : ℝ,
-    HasDerivAt (fun s => ∫ x, φ (x : EucSpace d) ∂(μ s : Measure (SSphere d)))
-      (∫ x, inner (𝕜 := ℝ) (gradient φ (x : EucSpace d))
-          (fullVF d θ (μ t) t (x : EucSpace d))
-        ∂(μ t : Measure (SSphere d))) t
+    IntervalIntegrable (fun s => ∫ x, inner (𝕜 := ℝ) (gradient φ (x : EucSpace d))
+        (fullVF d θ (μ s) s (x : EucSpace d)) ∂(μ s : Measure (SSphere d))) volume 0 t ∧
+    ∫ x, φ (x : EucSpace d) ∂(μ t : Measure (SSphere d)) =
+      ∫ x, φ (x : EucSpace d) ∂(μ 0 : Measure (SSphere d)) +
+        ∫ s in (0 : ℝ)..t, ∫ x, inner (𝕜 := ℝ) (gradient φ (x : EucSpace d))
+          (fullVF d θ (μ s) s (x : EucSpace d)) ∂(μ s : Measure (SSphere d))
+
+/-- **Characteristics of eq: cauchy.pb.**  A curve `y` driven by the field
+`𝐯[μ(t)](t, ·)` along a measure curve `μ`, in integrated form:
+`y(t) = y(0) + ∫_0^t 𝐯[μ(s)](s, y(s)) ds`, the integrand being integrable.  As
+for `cauchyPB`, the pointwise form `ẏ(t) = 𝐯(t, y(t))` at every `t` fails at
+the switches of a piecewise-constant parameter.
+
+Source: arXiv:2411.04551v3, §1 (the characteristics of `eq: cauchy.pb`). -/
+def IsCharacteristic
+    (θ : TimeParams d) (μ : ℝ → Perspective.ProbSphere d) (y : ℝ → EucSpace d) : Prop :=
+  ∀ t : ℝ, IntervalIntegrable (fun s => fullVF d θ (μ s) s (y s)) volume 0 t ∧
+    y t = y 0 + ∫ s in (0 : ℝ)..t, fullVF d θ (μ s) s (y s)
 
 /-- **Flow map associated with parameters `θ`** — the solution operator of
 `eq: cauchy.pb`.

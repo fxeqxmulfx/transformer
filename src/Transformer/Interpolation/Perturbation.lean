@@ -110,7 +110,8 @@ Let `T > 0` and let `μ_0, ν_0 ∈ 𝒫(ℚ_1^{d-1})` be two different measures
 
 In case 1 the vector field is `eq: average.vf`, so `𝐁 ≡ 0` as well; with
 `𝐕 ≡ 0` it does not depend on the measure, and a characteristic is a curve
-`y` with `ẏ = 𝐯(t, y)` for any measure curve in the attention slot.
+`y` with `ẏ = 𝐯(t, y)` (`IsCharacteristic`) for any measure curve in the
+attention slot.
 
 Not proved here.
 
@@ -128,7 +129,7 @@ theorem perturbation (T γ₁ : ℝ) (μ₀ ν₀ : ProbSphere d) (hT : 0 < T) (
           ν 0 = ν₀ → cauchyPB d θ ν → barycenter d (μ T) ≠ barycenter d (ν T)) ∧
         ∃ Φ : SSphere d → SSphere d, (∃ L, LipschitzWith L Φ) ∧ Function.Bijective Φ ∧
           (∀ (x : SSphere d) (ρ : ℝ → ProbSphere d) (y : ℝ → EucSpace d),
-            y 0 = x → (∀ t : ℝ, HasDerivAt y (fullVF d θ (ρ t) t (y t)) t) →
+            y 0 = x → IsCharacteristic d θ ρ y →
               y T = Φ x) ∧
           ∀ x : SSphere d, x ∉ convG d (μ₀ : Measure (SSphere d)).support ∪
             convG d (ν₀ : Measure (SSphere d)).support → Φ x = x) ∧

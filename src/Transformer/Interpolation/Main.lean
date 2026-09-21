@@ -258,7 +258,7 @@ theorem univ_approx (μ : ProbSphere d) (f : SSphere d → SSphere d) (T ε : �
       PiecewiseConstant d θ T K ∧ μt 0 = μ ∧ cauchyPB d θ μt ∧ Measurable Φ ∧
       (∀ x : SSphere d, ∃ γ : ℝ → EucSpace d,
         γ 0 = (x : EucSpace d) ∧ γ T = (Φ x : EucSpace d) ∧
-        ∀ t : ℝ, HasDerivAt γ (fullVF d θ (μt t) t (γ t)) t) ∧
+        IsCharacteristic d θ μt γ) ∧
       ∫ x, ‖(Φ x : EucSpace d) - (f x : EucSpace d)‖ ^ 2 ∂(μ : Measure (SSphere d)) ≤ ε := by
   sorry
 

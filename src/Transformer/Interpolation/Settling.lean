@@ -54,14 +54,16 @@ noncomputable def perceptronField (W U : ParamMatrix d) (b z : EucSpace d) :
       (EuclideanSpace.equiv _ ℝ |>.symm
         (fun k => max ((EuclideanSpace.equiv _ ℝ ((U) z + b)) k) 0)))
 
-/-- `eq: neural.ode.sphere` is the perceptron field, particle by particle:
-the two read the same. -/
+/-- `eq: neural.ode.sphere` is the integrated perceptron field, particle by
+particle: the two read the same. -/
 theorem neuralODESphere_iff_perceptronField
     (M : ℕ) (W U : ℝ → ParamMatrix d) (b : ℝ → EucSpace d)
     (x : ℝ → Idx M → EucSpace d) :
     neuralODESphere d M W U b x ↔
       ∀ t : ℝ, ∀ i : Idx M,
-        HasDerivAt (fun s => x s i) (perceptronField d (W t) (U t) (b t) (x t i)) t :=
+        IntervalIntegrable (fun s => perceptronField d (W s) (U s) (b s) (x s i))
+            MeasureTheory.volume 0 t ∧
+          x t i = x 0 i + ∫ s in (0 : ℝ)..t, perceptronField d (W s) (U s) (b s) (x s i) :=
   Iff.rfl
 
 /-- **Gronwall's lemma in the form the settling estimate needs.**

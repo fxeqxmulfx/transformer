@@ -4194,16 +4194,16 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 **[Transformer.Interpolation](src/Transformer/Interpolation.lean)** — 23 lines, aggregator
 
-**[Transformer.Interpolation.AtomClustering](src/Transformer/Interpolation/AtomClustering.lean)** — 227 lines
+**[Transformer.Interpolation.AtomClustering](src/Transformer/Interpolation/AtomClustering.lean)** — 228 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`fullVF_diracProb_self`](src/Transformer/Interpolation/AtomClustering.lean#L56) | theorem | proved |
 | [`cauchyPB_const_diracProb`](src/Transformer/Interpolation/AtomClustering.lean#L73) | theorem | proved |
-| [`not_forall_clustering_to_atom`](src/Transformer/Interpolation/AtomClustering.lean#L102) | theorem | proved |
-| [`IsWinfToDirac`](src/Transformer/Interpolation/AtomClustering.lean#L138) | def |  |
-| [`exists_dirac_close_of_diam_tendsto`](src/Transformer/Interpolation/AtomClustering.lean#L159) | theorem | proved |
-| [`clustering_to_atom`](src/Transformer/Interpolation/AtomClustering.lean#L195) | theorem | sorry |
+| [`not_forall_clustering_to_atom`](src/Transformer/Interpolation/AtomClustering.lean#L103) | theorem | proved |
+| [`IsWinfToDirac`](src/Transformer/Interpolation/AtomClustering.lean#L139) | def |  |
+| [`exists_dirac_close_of_diam_tendsto`](src/Transformer/Interpolation/AtomClustering.lean#L160) | theorem | proved |
+| [`clustering_to_atom`](src/Transformer/Interpolation/AtomClustering.lean#L196) | theorem | sorry |
 
 **[Transformer.Interpolation.BallDecomposition](src/Transformer/Interpolation/BallDecomposition.lean)** — 132 lines
 
@@ -4221,24 +4221,25 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`basePoint`](src/Transformer/Interpolation/BallTransport.lean#L75) | def |  |
 | [`tubular_mass_movement`](src/Transformer/Interpolation/BallTransport.lean#L101) | theorem | sorry |
 
-**[Transformer.Interpolation.Basic](src/Transformer/Interpolation/Basic.lean)** — 200 lines
+**[Transformer.Interpolation.Basic](src/Transformer/Interpolation/Basic.lean)** — 226 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`Params`](src/Transformer/Interpolation/Basic.lean#L39) | structure |  |
-| [`TimeParams`](src/Transformer/Interpolation/Basic.lean#L47) | abbrev |  |
-| [`fullVF`](src/Transformer/Interpolation/Basic.lean#L53) | def |  |
-| [`averageVF`](src/Transformer/Interpolation/Basic.lean#L77) | def |  |
-| [`cauchyPB`](src/Transformer/Interpolation/Basic.lean#L103) | def |  |
-| [`IsFlowMap`](src/Transformer/Interpolation/Basic.lean#L118) | def |  |
-| [`Hε`](src/Transformer/Interpolation/Basic.lean#L124) | def |  |
-| [`positiveQuadrant`](src/Transformer/Interpolation/Basic.lean#L130) | def |  |
-| [`eq_of_mem_support_dirac`](src/Transformer/Interpolation/Basic.lean#L143) | theorem | proved |
-| [`antipode`](src/Transformer/Interpolation/Basic.lean#L152) | def |  |
-| [`antipode_ne`](src/Transformer/Interpolation/Basic.lean#L160) | theorem | proved |
-| [`basePoint_mem_positiveQuadrant`](src/Transformer/Interpolation/Basic.lean#L177) | theorem | proved |
-| [`convG`](src/Transformer/Interpolation/Basic.lean#L190) | def |  |
-| [`subset_convG`](src/Transformer/Interpolation/Basic.lean#L196) | theorem | proved |
+| [`Params`](src/Transformer/Interpolation/Basic.lean#L40) | structure |  |
+| [`TimeParams`](src/Transformer/Interpolation/Basic.lean#L48) | abbrev |  |
+| [`fullVF`](src/Transformer/Interpolation/Basic.lean#L54) | def |  |
+| [`averageVF`](src/Transformer/Interpolation/Basic.lean#L78) | def |  |
+| [`cauchyPB`](src/Transformer/Interpolation/Basic.lean#L115) | def |  |
+| [`IsCharacteristic`](src/Transformer/Interpolation/Basic.lean#L132) | def |  |
+| [`IsFlowMap`](src/Transformer/Interpolation/Basic.lean#L144) | def |  |
+| [`Hε`](src/Transformer/Interpolation/Basic.lean#L150) | def |  |
+| [`positiveQuadrant`](src/Transformer/Interpolation/Basic.lean#L156) | def |  |
+| [`eq_of_mem_support_dirac`](src/Transformer/Interpolation/Basic.lean#L169) | theorem | proved |
+| [`antipode`](src/Transformer/Interpolation/Basic.lean#L178) | def |  |
+| [`antipode_ne`](src/Transformer/Interpolation/Basic.lean#L186) | theorem | proved |
+| [`basePoint_mem_positiveQuadrant`](src/Transformer/Interpolation/Basic.lean#L203) | theorem | proved |
+| [`convG`](src/Transformer/Interpolation/Basic.lean#L216) | def |  |
+| [`subset_convG`](src/Transformer/Interpolation/Basic.lean#L222) | theorem | proved |
 
 **[Transformer.Interpolation.Clustering](src/Transformer/Interpolation/Clustering.lean)** — 190 lines
 
@@ -4273,7 +4274,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`asks`](src/Transformer/Interpolation/HypPropagationFalse.lean#L53) | lemma | proved |
 | [`not_hyp_propagation`](src/Transformer/Interpolation/HypPropagationFalse.lean#L56) | theorem | proved |
 
-**[Transformer.Interpolation.IdentityFlow](src/Transformer/Interpolation/IdentityFlow.lean)** — 87 lines
+**[Transformer.Interpolation.IdentityFlow](src/Transformer/Interpolation/IdentityFlow.lean)** — 90 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -4310,24 +4311,26 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`diagPoint_mem_positiveQuadrant`](src/Transformer/Interpolation/MassConcentrationSqrt.lean#L36) | theorem | proved |
 | [`massConcentrationQ1_sqrt`](src/Transformer/Interpolation/MassConcentrationSqrt.lean#L60) | theorem | proved |
 
-**[Transformer.Interpolation.NeuralODE](src/Transformer/Interpolation/NeuralODE.lean)** — 132 lines
+**[Transformer.Interpolation.NeuralODE](src/Transformer/Interpolation/NeuralODE.lean)** — 183 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`neuralODESphere`](src/Transformer/Interpolation/NeuralODE.lean#L30) | def |  |
-| [`prop_interpolation_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L53) | theorem | sorry |
-| [`lem_induction_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L85) | theorem | sorry |
+| [`neuralVF`](src/Transformer/Interpolation/NeuralODE.lean#L30) | def |  |
+| [`neuralODESphere`](src/Transformer/Interpolation/NeuralODE.lean#L47) | def |  |
+| [`neuralParams`](src/Transformer/Interpolation/NeuralODE.lean#L56) | def |  |
+| [`prop_interpolation_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L77) | theorem | sorry |
+| [`lem_induction_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L130) | theorem | sorry |
 
-**[Transformer.Interpolation.Perturbation](src/Transformer/Interpolation/Perturbation.lean)** — 214 lines
+**[Transformer.Interpolation.Perturbation](src/Transformer/Interpolation/Perturbation.lean)** — 215 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`induction_barycenter`](src/Transformer/Interpolation/Perturbation.lean#L50) | theorem | sorry |
-| [`perturbation`](src/Transformer/Interpolation/Perturbation.lean#L118) | theorem | sorry |
-| [`circlePt`](src/Transformer/Interpolation/Perturbation.lean#L146) | def |  |
-| [`circlePt_mem_positiveQuadrant`](src/Transformer/Interpolation/Perturbation.lean#L152) | theorem | proved |
-| [`mem_of_mem_support_halfDirac`](src/Transformer/Interpolation/Perturbation.lean#L159) | theorem | proved |
-| [`barycenter_halfDirac`](src/Transformer/Interpolation/Perturbation.lean#L168) | theorem | proved |
+| [`perturbation`](src/Transformer/Interpolation/Perturbation.lean#L119) | theorem | sorry |
+| [`circlePt`](src/Transformer/Interpolation/Perturbation.lean#L147) | def |  |
+| [`circlePt_mem_positiveQuadrant`](src/Transformer/Interpolation/Perturbation.lean#L153) | theorem | proved |
+| [`mem_of_mem_support_halfDirac`](src/Transformer/Interpolation/Perturbation.lean#L160) | theorem | proved |
+| [`barycenter_halfDirac`](src/Transformer/Interpolation/Perturbation.lean#L169) | theorem | proved |
 
 **[Transformer.Interpolation.SeparationFalse](src/Transformer/Interpolation/SeparationFalse.lean)** — 72 lines
 
@@ -4335,15 +4338,15 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | --- | --- | --- |
 | [`not_separation`](src/Transformer/Interpolation/SeparationFalse.lean#L38) | theorem | proved |
 
-**[Transformer.Interpolation.Settling](src/Transformer/Interpolation/Settling.lean)** — 302 lines
+**[Transformer.Interpolation.Settling](src/Transformer/Interpolation/Settling.lean)** — 304 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`perceptronField`](src/Transformer/Interpolation/Settling.lean#L50) | def |  |
 | [`neuralODESphere_iff_perceptronField`](src/Transformer/Interpolation/Settling.lean#L59) | theorem | proved |
-| [`norm_sub_le_of_contraction`](src/Transformer/Interpolation/Settling.lean#L75) | theorem | proved |
-| [`Hartman_Grobman`](src/Transformer/Interpolation/Settling.lean#L172) | theorem | proved |
-| [`not_forall_Hartman_Grobman`](src/Transformer/Interpolation/Settling.lean#L271) | theorem | proved |
+| [`norm_sub_le_of_contraction`](src/Transformer/Interpolation/Settling.lean#L77) | theorem | proved |
+| [`Hartman_Grobman`](src/Transformer/Interpolation/Settling.lean#L174) | theorem | proved |
+| [`not_forall_Hartman_Grobman`](src/Transformer/Interpolation/Settling.lean#L273) | theorem | proved |
 
 **[Transformer.Interpolation.Wasserstein](src/Transformer/Interpolation/Wasserstein.lean)** — 76 lines
 
@@ -6917,7 +6920,7 @@ Everything the build cannot vouch for, in one place.
 | [`exists_mckeanVlasovSolution`](src/Transformer/Homogenized/WellPosed.lean#L105) | theorem | `Transformer.Homogenized.WellPosed` |
 | [`mckeanVlasovSolution_unique`](src/Transformer/Homogenized/WellPosed.lean#L123) | theorem | `Transformer.Homogenized.WellPosed` |
 | [`poc_wellposedness`](src/Transformer/Homogenized/WellPosed.lean#L152) | theorem | `Transformer.Homogenized.WellPosed` |
-| [`clustering_to_atom`](src/Transformer/Interpolation/AtomClustering.lean#L195) | theorem | `Transformer.Interpolation.AtomClustering` |
+| [`clustering_to_atom`](src/Transformer/Interpolation/AtomClustering.lean#L196) | theorem | `Transformer.Interpolation.AtomClustering` |
 | [`claim_balls`](src/Transformer/Interpolation/BallDecomposition.lean#L91) | theorem | `Transformer.Interpolation.BallDecomposition` |
 | [`two_balls`](src/Transformer/Interpolation/BallTransport.lean#L58) | theorem | `Transformer.Interpolation.BallTransport` |
 | [`tubular_mass_movement`](src/Transformer/Interpolation/BallTransport.lean#L101) | theorem | `Transformer.Interpolation.BallTransport` |
@@ -6928,10 +6931,10 @@ Everything the build cannot vouch for, in one place.
 | [`targets_atoms`](src/Transformer/Interpolation/Main.lean#L98) | theorem | `Transformer.Interpolation.Main` |
 | [`main_result`](src/Transformer/Interpolation/Main.lean#L139) | theorem | `Transformer.Interpolation.Main` |
 | [`univ_approx`](src/Transformer/Interpolation/Main.lean#L255) | theorem | `Transformer.Interpolation.Main` |
-| [`prop_interpolation_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L53) | theorem | `Transformer.Interpolation.NeuralODE` |
-| [`lem_induction_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L85) | theorem | `Transformer.Interpolation.NeuralODE` |
+| [`prop_interpolation_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L77) | theorem | `Transformer.Interpolation.NeuralODE` |
+| [`lem_induction_neural_ode`](src/Transformer/Interpolation/NeuralODE.lean#L130) | theorem | `Transformer.Interpolation.NeuralODE` |
 | [`induction_barycenter`](src/Transformer/Interpolation/Perturbation.lean#L50) | theorem | `Transformer.Interpolation.Perturbation` |
-| [`perturbation`](src/Transformer/Interpolation/Perturbation.lean#L118) | theorem | `Transformer.Interpolation.Perturbation` |
+| [`perturbation`](src/Transformer/Interpolation/Perturbation.lean#L119) | theorem | `Transformer.Interpolation.Perturbation` |
 | [`lost_correlations`](src/Transformer/Kinetic/Correlations.lean#L195) | theorem | `Transformer.Kinetic.Correlations` |
 | [`correlation_bounds`](src/Transformer/Kinetic/Fluctuations.lean#L75) | theorem | `Transformer.Kinetic.Fluctuations` |
 | [`mean_field_rate`](src/Transformer/Kinetic/Fluctuations.lean#L133) | theorem | `Transformer.Kinetic.Fluctuations` |

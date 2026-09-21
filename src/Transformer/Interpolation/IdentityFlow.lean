@@ -60,28 +60,31 @@ move at all: `Φ^T(x) = x`.
 Source: arXiv:2411.04551v3, §3. -/
 theorem identity_flow
     (θ : TimeParams d) (μ : ℝ → ProbSphere d) (x : ℝ → EucSpace d) (T : ℝ)
-    (hx : ∀ t : ℝ, HasDerivAt x (fullVF d θ (μ t) t (x t)) t)
+    (hx : IsCharacteristic d θ μ x)
     (hV : ∀ t : ℝ, (θ t).V = 0)
     (hb : ∀ t : ℝ, ∀ i : Fin d,
       (EuclideanSpace.equiv (Fin d) ℝ ((θ t).U (x t) + (θ t).b)) i ≤ 0) :
     x T = x 0 := by
-  have hzero : ∀ t : ℝ, HasDerivAt x 0 t := fun t =>
-    (hx t).congr_deriv (fullVF_eq_zero d θ (μ t) t (x t) (hV t) (hb t))
-  exact is_const_of_deriv_eq_zero (fun t => (hzero t).differentiableAt)
-    (fun t => (hzero t).deriv) T 0
+  have hzero : (fun s => fullVF d θ (μ s) s (x s)) = fun _ => 0 :=
+    funext fun s => fullVF_eq_zero d θ (μ s) s (x s) (hV s) (hb s)
+  rw [(hx T).2, hzero, intervalIntegral.integral_zero, add_zero]
 
 /-- The hypotheses are satisfiable: with all parameters zero the field is zero
 everywhere, and a constant curve is a characteristic of it. -/
 example (y : SSphere d) (x₀ : EucSpace d) :
     ∃ (θ : TimeParams d) (μ : ℝ → ProbSphere d),
-      (∀ t : ℝ, HasDerivAt (fun _ : ℝ => x₀) (fullVF d θ (μ t) t x₀) t) ∧
+      IsCharacteristic d θ μ (fun _ => x₀) ∧
         (∀ t : ℝ, (θ t).V = 0) ∧
         (∀ t : ℝ, ∀ i : Fin d,
           (EuclideanSpace.equiv (Fin d) ℝ ((θ t).U x₀ + (θ t).b)) i ≤ 0) := by
   refine ⟨fun _ => { V := 0, B := 0, W := 0, U := 0, b := 0 },
     fun _ => ⟨Measure.dirac y, inferInstance⟩, fun t => ?_, fun _ => rfl, fun _ i => by simp⟩
-  exact (hasDerivAt_const t x₀).congr_deriv
-    (fullVF_eq_zero d _ _ t x₀ rfl (fun i => by simp)).symm
+  have hzero : (fun s => fullVF d (fun _ => { V := 0, B := 0, W := 0, U := 0, b := 0 })
+      ((fun _ => (⟨Measure.dirac y, inferInstance⟩ : ProbSphere d)) s) s
+      ((fun _ => x₀) s)) = fun _ => 0 :=
+    funext fun s => fullVF_eq_zero d _ _ s x₀ rfl (fun i => by simp)
+  rw [hzero, intervalIntegral.integral_zero, add_zero]
+  exact ⟨intervalIntegrable_const, rfl⟩
 
 end Interpolation
 end Transformer
