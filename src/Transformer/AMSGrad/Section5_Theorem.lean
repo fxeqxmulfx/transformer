@@ -1,4 +1,4 @@
-import Transformer.AMSGrad.Section5_AdamX
+import Transformer.AMSGrad.Section5_Bounds
 import Transformer.AMSGrad.Section2_Prelim
 
 /-
@@ -61,7 +61,16 @@ theorem mainthm2 {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineConve
       + α * Real.sqrt (Real.log T + 1) /
           ((1 - S.β₁ 1) ^ 2 * Real.sqrt (1 - S.β₂) * (1 - S.β₁ 1 / Real.sqrt S.β₂))
           * ∑ i, S.gnorm (adamXRule S.β₁) T i := by
-  sorry
+  have hα' : ∀ t, 1 ≤ t → 0 < S.α t := fun t ht => by
+    rw [hαt]; exact div_pos hα (Real.sqrt_pos.2 (by exact_mod_cast ht))
+  have hp := prepare_lem hS (le_adamXRule S.β₁) hα' hβ₁ hβ₁' hβ₂ hβ₂' hT hx
+  have h1 := eqmain_le_of hS (R := adamXRule S.β₁) (t₀ := 0) hα hαt hβ₁ hβ₁'
+    (fun t ht i => vtnew_div hS hβ₁ hβ₁' hβ₂.le hβ₂'.le t ht i)
+    (fun t ht i => adamX_mono hβ₁ hβ₁' hβ₂.le hβ₂'.le t ht i) hT hx
+  rw [show ∑ t ∈ Icc (1 : ℕ) 0, Real.sqrt (t : ℝ) = 0 by simp, zero_add] at h1
+  have h2 := eqsecond_le (le_adamXRule S.β₁) hα.le hαt hβ₁ hβ₁' hβ₂ hβ₂' hγ T
+  have h3 := eqthird_adamX_le hS hα hαt hβ₁ hβ₁' hβ₂.le hβ₂'.le T hx
+  linarith
 
 /-- **Corollary 5.5, the upper half.**  Under the assumptions of `mainthm2`, if
 `Σ_{t=2}^T β_{1,t}√(t-1)/T → 0`, then for every `ε > 0`, eventually
