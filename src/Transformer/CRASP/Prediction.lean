@@ -22,6 +22,7 @@ on a word of `L_{k+2}` that is a prefix of a word of `L_{k+4}`, and on a word of
 -/
 
 import Transformer.CRASP.Blocks
+import Transformer.CRASP.Frame
 import Transformer.CRASP.Depth
 
 namespace Transformer
@@ -108,22 +109,47 @@ theorem not_solvesPrediction_altPlus (k : ℕ) (φ : Form Bool) (hφ : φ ∈ TL
 example : (Form.lt (.countL (.sym false)) .one : Form Bool) ∈ TLCl Bool (0 + 1) :=
   ⟨rfl, rfl, by simp [Form.depth, Term.depth]⟩
 
+/-- **No formula of depth `0` solves the prediction problem for `L_3`.**  It
+reads only the current symbol, and the prefixes `a` and `aaba` of `aaba ∈ L_3`
+both end in `a`, while only the second is in `L_3`. -/
+theorem not_solvesPrediction_altPlus_three (φ : Form Bool) (hφ : φ ∈ TLCl Bool 0) :
+    ¬ SolvesPrediction φ (altPlus false 3) := by
+  intro hs
+  have hw : [false, false, true, false] ∈ altPlus false 3 :=
+    cons_mem_altPlus_same (cons_mem_altPlus_flip (cons_mem_altPlus_flip
+      (cons_mem_altPlus_flip (s := false) (k := 0) rfl)))
+  have e₁ := hs _ hw 1 le_rfl (by decide)
+  have e₄ := hs _ hw 4 (by decide) le_rfl
+  have e := Form.sat_eq_of_pnpFree_depth_eq_zero (w := [false]) (w' := [false, false, true, false])
+    (i := 1) (i' := 4) rfl φ hφ.2.1 (Nat.le_zero.1 hφ.2.2)
+  have h1 : [false] ∈ altPlus false 3 := by
+    refine e₁.1 ?_
+    change φ.sat [false] 1 = true
+    rw [e]
+    exact e₄.2 hw
+  have := eq_of_mem_altPlus h1 (cons_mem_altPlus_flip (s := false) (k := 0) rfl)
+  omega
+
+/-- The hypothesis of `not_solvesPrediction_altPlus_three` is satisfiable:
+`Q_a` has depth `0`. -/
+example : (Form.sym false : Form Bool) ∈ TLCl Bool 0 := ⟨rfl, rfl, le_rfl⟩
+
 /-- **Corollary `cor:prediction_task_depth`.**  A depth-`(k+1)` `TL[◁#]`
 formula solves the next-token prediction problem for `L_{k+3}`, and no
 depth-`k` formula does.
 
 The positive half is `solvesPrediction_predictAltPlus`.  The negative half,
 which the paper derives from `lem:cropping_oneway` and `lem:reduction`, both
-false as stated, is `not_solvesPrediction_altPlus`. -/
-theorem prediction_task_depth (k : ℕ) (hk : 0 < k) :
+false as stated, is `not_solvesPrediction_altPlus`, and at `k = 0`
+`not_solvesPrediction_altPlus_three`.  The paper puts no bound on `k`, and
+none is needed. -/
+theorem prediction_task_depth (k : ℕ) :
     (∃ φ ∈ TLCl Bool (k + 1), SolvesPrediction φ (altPlus false (k + 3))) ∧
       ∀ φ ∈ TLCl Bool k, ¬ SolvesPrediction φ (altPlus false (k + 3)) := by
   refine ⟨⟨predictAltPlus k, predictAltPlus_mem k, solvesPrediction_predictAltPlus k⟩, ?_⟩
-  obtain ⟨k, rfl⟩ : ∃ k', k = k' + 1 := ⟨k - 1, by omega⟩
-  exact not_solvesPrediction_altPlus k
-
-/-- The hypothesis of `prediction_task_depth` is satisfiable: `0 < 1`. -/
-example : 0 < 1 := Nat.one_pos
+  rcases k with _ | k
+  · exact not_solvesPrediction_altPlus_three
+  · exact not_solvesPrediction_altPlus k
 
 end CRASP
 end Transformer
