@@ -108,13 +108,22 @@ and `r` is the magnitude that factor refers to, evolving by the `ṙ_j(t)` of
 the same row of Table 2.  `α` is the nGPT step size and `τ` the Mix-LN
 switching time; both are ignored by the schemes that do not mention them.
 
+The dynamics runs forward from the initialization, `t ≥ 0`, with one-sided
+derivatives at `t = 0`, as in the source.  Asked on all of `ℝ` it would also
+demand a backward-global solution, which for Pre-, Mix- and Peri-LN need not
+exist (a radius `r_j` may reach `0` in finite negative time), and any
+statement quantified over such solutions could hold vacuously.
+
 Source: arXiv:2510.22026v2, `eq: NA` and Table 2. -/
 def SchemeDynamics
     (β : ℝ) (Q K V : ℝ → ParamMatrix d) (α : ℝ → ℝ) (τ : ℝ) (scheme : Scheme)
     (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ) : Prop :=
-  NA d n β Q K V (speedFactor d n β Q K V α θ r τ scheme) θ ∧
-  ∀ t : ℝ, ∀ j : Idx n,
-    HasDerivAt (fun u => r u j) (radialDerivative d n β Q K V θ τ scheme t j) t
+  ∀ t : ℝ, 0 ≤ t → ∀ j : Idx n,
+    HasDerivWithinAt (fun u => θ u j)
+      ((speedFactor d n β Q K V α θ r τ scheme t j)⁻¹ •
+        proj d (θ t j) (attentionVec d n β (Q t) (K t) (V t) (θ t) j)) (Set.Ici 0) t ∧
+    HasDerivWithinAt (fun u => r u j) (radialDerivative d n β Q K V θ τ scheme t j)
+      (Set.Ici 0) t
 
 end Normalization
 end Transformer

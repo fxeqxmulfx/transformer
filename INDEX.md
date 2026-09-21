@@ -5193,7 +5193,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 **[Transformer.Normalization](src/Transformer/Normalization.lean)** — 18 lines, aggregator
 
-**[Transformer.Normalization.Basic](src/Transformer/Normalization/Basic.lean)** — 120 lines
+**[Transformer.Normalization.Basic](src/Transformer/Normalization/Basic.lean)** — 129 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -5202,7 +5202,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`speedFactor`](src/Transformer/Normalization/Basic.lean#L63) | def |  |
 | [`radialDerivative`](src/Transformer/Normalization/Basic.lean#L79) | def |  |
 | [`idParams`](src/Transformer/Normalization/Basic.lean#L101) | def |  |
-| [`SchemeDynamics`](src/Transformer/Normalization/Basic.lean#L112) | def |  |
+| [`SchemeDynamics`](src/Transformer/Normalization/Basic.lean#L118) | def |  |
 
 **[Transformer.Normalization.ClusterSpeed](src/Transformer/Normalization/ClusterSpeed.lean)** — 178 lines
 
@@ -5226,7 +5226,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`clusters_or_stalls_from_gaussian`](src/Transformer/Normalization/Clustering.lean#L114) | theorem | sorry |
 | [`unconditional_synchronization`](src/Transformer/Normalization/Clustering.lean#L142) | theorem | sorry |
 
-**[Transformer.Normalization.ClusteringLine](src/Transformer/Normalization/ClusteringLine.lean)** — 185 lines
+**[Transformer.Normalization.ClusteringLine](src/Transformer/Normalization/ClusteringLine.lean)** — 187 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -5234,11 +5234,11 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`na_const_one`](src/Transformer/Normalization/ClusteringLine.lean#L39) | theorem | proved |
 | [`not_synchronizes_const`](src/Transformer/Normalization/ClusteringLine.lean#L51) | theorem | proved |
 | [`not_clusters_from_uniform_one`](src/Transformer/Normalization/ClusteringLine.lean#L67) | theorem | proved |
-| [`ne_zero_of_pos_neg`](src/Transformer/Normalization/ClusteringLine.lean#L96) | theorem | proved |
-| [`two_le_exp_one`](src/Transformer/Normalization/ClusteringLine.lean#L103) | theorem | proved |
-| [`pre_line_counter`](src/Transformer/Normalization/ClusteringLine.lean#L119) | theorem | proved |
-| [`not_clusters_or_stalls_from_gaussian_one`](src/Transformer/Normalization/ClusteringLine.lean#L155) | theorem | proved |
-| [`not_unconditional_synchronization_one`](src/Transformer/Normalization/ClusteringLine.lean#L172) | theorem | proved |
+| [`ne_zero_of_pos_neg`](src/Transformer/Normalization/ClusteringLine.lean#L97) | theorem | proved |
+| [`two_le_exp_one`](src/Transformer/Normalization/ClusteringLine.lean#L104) | theorem | proved |
+| [`pre_line_counter`](src/Transformer/Normalization/ClusteringLine.lean#L120) | theorem | proved |
+| [`not_clusters_or_stalls_from_gaussian_one`](src/Transformer/Normalization/ClusteringLine.lean#L157) | theorem | proved |
+| [`not_unconditional_synchronization_one`](src/Transformer/Normalization/ClusteringLine.lean#L174) | theorem | proved |
 
 **[Transformer.Normalization.Convergence](src/Transformer/Normalization/Convergence.lean)** — 175 lines
 

@@ -84,8 +84,9 @@ theorem not_clusters_from_uniform_one :
   have hΘ : ∀ i, Θ₀ i = sph0 (i = 0) := fun i => hΘ₀ i (Set.mem_univ i)
   refine not_synchronizes_const (tupleCoe Θ₀) 0 1 ?_
     (hQ (fun _ => tupleCoe Θ₀) (fun _ _ => 0) rfl
-      ⟨na_const_one _ _ _ _ _ _ fun j => mem_sphere_zero_iff_norm.mp (Θ₀ j).2,
-        fun t _ => hasDerivAt_const t 0⟩)
+      fun t _ j => ⟨(na_const_one _ _ _ _ _ _
+        (fun j => mem_sphere_zero_iff_norm.mp (Θ₀ j).2) t j).hasDerivWithinAt,
+        (hasDerivAt_const t 0).hasDerivWithinAt⟩)
   intro h01
   apply sph0_ne
   have := hΘ 0; have := hΘ 1
@@ -133,9 +134,10 @@ theorem pre_line_counter (β : ℝ) (hβ : 0 < β) (hn : ((2 : ℕ) : ℝ) ≤ R
       radialDerivative 1 2 β (idParams 1) (idParams 1) (idParams 1) (fun _ => Θ) τ .pre t j
         = k j := fun _ _ => rfl
   refine ⟨fun _ => Θ, fun t j => ‖X₀ j‖ + t * k j, fun _ => rfl, fun _ => by simp,
-    ⟨na_const_one _ _ _ _ _ _ hΘ, fun t j => ?_⟩, ?_, ?_⟩
+    fun t _ j => ⟨(na_const_one _ _ _ _ _ _ hΘ t j).hasDerivWithinAt, ?_⟩, ?_, ?_⟩
   · rw [hrd]
-    simpa using ((hasDerivAt_id t).mul_const (k j)).const_add ‖X₀ j‖
+    exact (by simpa using ((hasDerivAt_id t).mul_const (k j)).const_add ‖X₀ j‖ :
+      HasDerivAt (fun u => ‖X₀ j‖ + u * k j) (k j) t).hasDerivWithinAt
   · refine not_synchronizes_const Θ 0 1 fun h => ?_
     have := congrArg (fun x : EucSpace 1 => x 0) h
     simp only [Θ, PiLp.smul_apply, smul_eq_mul] at this

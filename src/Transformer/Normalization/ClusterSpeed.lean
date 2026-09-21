@@ -152,14 +152,14 @@ theorem not_clustering_rate (hd : 0 < d) (α : ℝ → ℝ) (τ : ℝ) :
     norm_num
   have hdyn : SchemeDynamics d 2 (1 / 100) (idParams d) (idParams d) (idParams d) α τ .post
       (fun _ k => pairSign k • u) (fun _ _ => 1) := by
-    refine ⟨fun t j => ?_, fun t j => hasDerivAt_const t (1 : ℝ)⟩
+    refine fun t _ j => ⟨?_, (hasDerivAt_const t (1 : ℝ)).hasDerivWithinAt⟩
     obtain ⟨a, ha⟩ := attentionVec_id_smul d 2 (1 / 100) u pairSign j
     have hzero : proj d (pairSign j • u) (attentionVec d 2 (1 / 100) (idParams d t)
         (idParams d t) (idParams d t) (fun k => pairSign k • u) j) = 0 := by
       rw [show idParams d t = ContinuousLinearMap.id ℝ (EucSpace d) from rfl, ha]
       exact proj_smul_self d u hu _ a (pairSign_sq j)
     rw [hzero, smul_zero]
-    exact hasDerivAt_const t _
+    exact (hasDerivAt_const t _).hasDerivWithinAt
   obtain ⟨T₀, hT⟩ := hall (fun _ k => pairSign k • u) (fun _ _ => 1)
     (fun j => by fin_cases j <;> simp [pairSign, hu])
     (fun _ => one_pos)
