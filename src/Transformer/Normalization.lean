@@ -6,7 +6,9 @@ Formalization of:
 
 import Transformer.Normalization.Basic
 import Transformer.Normalization.Clustering
+import Transformer.Normalization.ClusteringLine
 import Transformer.Normalization.Convergence
+import Transformer.Normalization.Line
 import Transformer.Normalization.Lojasiewicz
 import Transformer.Normalization.Radial
 import Transformer.Normalization.Rates

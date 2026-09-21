@@ -8,24 +8,33 @@
 * its corollary — for Pre-LN and Peri-LN with `n ≤ e^β` the second alternative
   is excluded and the synchronization is unconditional.
 
-Neither is proved here.  The paper's statement is almost-sure with respect to
-a reference measure on the initial configuration, and this development does not
-construct the uniform or the Gaussian measure — each statement carries it as a
-parameter instead.  The gradient-flow identification the proof
-starts from is in `Normalization.Convergence`, the velocity lower bound behind
-the corollary in `Normalization.Radial`, and the convergence machinery of the
-proof in `Normalization.Lojasiewicz`.
+Neither is proved here.  The uniform law is `Perspective.UniformTuple`, which
+pins it down by rotation invariance, and the Gaussian one is Mathlib's
+`stdGaussian`, taken `n` times independently.
+
+*Deviation from the source.*  The source states both for every `d`; each is
+stated here for `d ≥ 2`.  On `𝕊⁰ ⊆ ℝ¹` the tangent space is `0`, so every
+configuration is a rest point, and two tokens of opposite signs — an event of
+positive probability under both laws — never meet: `ClusteringLine` refutes all
+three statements at `d = 1`, `n = 2`.
+
+The gradient-flow identification the proof starts from is in
+`Normalization.Convergence`, the velocity lower bound behind the corollary in
+`Normalization.Radial`, and the convergence machinery of the proof in
+`Normalization.Lojasiewicz`.
 -/
 
 import Transformer.Basic
 import Transformer.Normalization.Basic
 import Transformer.Normalization.Radial
+import Transformer.Perspective.Section3_SmallBeta
+import Mathlib.Probability.Distributions.Gaussian.Multivariate
 import Mathlib.Order.LiminfLimsup
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 import Mathlib.Analysis.Normed.Lp.MeasurableSpace
 
 open scoped BigOperators
-open Real MeasureTheory
+open Real MeasureTheory ProbabilityTheory
 
 namespace Transformer
 namespace Normalization
@@ -58,34 +67,37 @@ def RadialStalls
 
 /-- **Theorem (thm: convergence), first half.** *Post-LN, nGPT and CoD cluster.*
 
-For `Q = K = V = I_d` and a uniformly sampled `Θ(0) ∈ (𝕊^{d-1})^{⊗ n}`, the
-Post-LN, nGPT and CoD dynamics synchronize to one cluster with probability `1`.
+For `d ≥ 2`, `Q = K = V = I_d` and a uniformly sampled
+`Θ(0) ∈ (𝕊^{d-1})^{⊗ n}`, the Post-LN, nGPT and CoD dynamics synchronize to one
+cluster with probability `1`.
 
-`σ` is the reference measure on the initial configuration; the paper takes it
-uniform, and this development neither constructs nor characterizes it, so the
-statement holds `σ`-almost surely for whatever `σ` is supplied.  The paper also
+The uniform law is read as every `σ` with `Perspective.UniformTuple d n σ`,
+which holds for exactly one `σ`.  The source has no `d ≥ 2`, and without it the
+statement is false: `not_clusters_from_uniform_one`.  The paper also
 records that the same conclusion holds for constant `Q, K` and
 `V = Q^⊤ K = K^⊤ Q`; only the identity case is stated here.
 
 Not proved here.
 
 Source: arXiv:2510.22026v2, §3, `thm: convergence`. -/
-theorem clusters_from_uniform
-    (σ : Measure (SphereTuple d n)) (β : ℝ) (α : ℝ → ℝ) (τ : ℝ) (scheme : Scheme)
+theorem clusters_from_uniform (hd : 2 ≤ d) (β : ℝ) (α : ℝ → ℝ) (τ : ℝ) (scheme : Scheme)
     (hscheme : scheme = Scheme.post ∨ scheme = Scheme.nGPT ∨ scheme = Scheme.CoD) :
+    ∀ σ : Measure (SphereTuple d n), Perspective.UniformTuple d n σ →
     ∀ᵐ Θ₀ ∂σ, ∀ (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ),
       θ 0 = tupleCoe Θ₀ →
         SchemeDynamics d n β (idParams d) (idParams d) (idParams d) α τ scheme θ r →
           Synchronizes d n θ := by
   sorry
 
-/-- The hypothesis of `clusters_from_uniform` is satisfiable: Post-LN. -/
-example : Scheme.post = Scheme.post ∨ Scheme.post = Scheme.nGPT ∨ Scheme.post = Scheme.CoD :=
-  Or.inl rfl
+/-- The hypotheses of `clusters_from_uniform` are satisfiable: `d = 2`, Post-LN. -/
+example : 2 ≤ 2 ∧ (Scheme.post = Scheme.post ∨ Scheme.post = Scheme.nGPT ∨
+    Scheme.post = Scheme.CoD) :=
+  ⟨le_rfl, Or.inl rfl⟩
 
 /-- **Theorem (thm: convergence), second half.** *Pre-LN, Mix-LN and Peri-LN.*
 
-For `Q = K = V = I_d` and a standard Gaussian sample `X(0) = r(0) · Θ(0)`, the
+For `d ≥ 2`, `Q = K = V = I_d` and a standard Gaussian sample
+`X(0) = r(0) · Θ(0) ∈ (ℝ^d)^{⊗ n}`, the
 Pre-LN, Mix-LN and Peri-LN dynamics almost surely either synchronize to one
 cluster or have a stalling radial velocity,
 
@@ -93,26 +105,27 @@ cluster or have a stalling radial velocity,
 
 The initialization is read off the Gaussian sample: `θ_j(0) = x_j / ‖x_j‖` and
 `r_j(0) = ‖x_j‖`, so the hypothesis `x_j ≠ 0` — which the Gaussian satisfies
-almost surely — is carried explicitly.  `σ` is again a parameter: the standard
-Gaussian on `(ℝ^d)^{⊗ n}` is not constructed here.
+almost surely — is carried explicitly.  The source has no `d ≥ 2`, and without
+it the statement is false: `not_clusters_or_stalls_from_gaussian_one`.
 
 Not proved here.
 
 Source: arXiv:2510.22026v2, §3, `thm: convergence`. -/
-theorem clusters_or_stalls_from_gaussian
-    (σ : Measure (Idx n → EucSpace d)) (β : ℝ) (α : ℝ → ℝ) (τ : ℝ) (scheme : Scheme)
+theorem clusters_or_stalls_from_gaussian (hd : 2 ≤ d) (β : ℝ) (α : ℝ → ℝ) (τ : ℝ)
+    (scheme : Scheme)
     (hscheme : scheme = Scheme.pre ∨ scheme = Scheme.mix ∨ scheme = Scheme.peri) :
-    ∀ᵐ X₀ : Idx n → EucSpace d ∂σ, (∀ j : Idx n, X₀ j ≠ 0) →
+    ∀ᵐ X₀ ∂(Measure.pi fun _ : Idx n => stdGaussian (EucSpace d)), (∀ j : Idx n, X₀ j ≠ 0) →
       ∀ (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ),
         (∀ j : Idx n, θ 0 j = ‖X₀ j‖⁻¹ • X₀ j) → (∀ j : Idx n, r 0 j = ‖X₀ j‖) →
           SchemeDynamics d n β (idParams d) (idParams d) (idParams d) α τ scheme θ r →
             Synchronizes d n θ ∨ RadialStalls d n β τ scheme θ := by
   sorry
 
-/-- The hypothesis of `clusters_or_stalls_from_gaussian` is satisfiable:
-Pre-LN. -/
-example : Scheme.pre = Scheme.pre ∨ Scheme.pre = Scheme.mix ∨ Scheme.pre = Scheme.peri :=
-  Or.inl rfl
+/-- The hypotheses of `clusters_or_stalls_from_gaussian` are satisfiable:
+`d = 2`, Pre-LN. -/
+example : 2 ≤ 2 ∧ (Scheme.pre = Scheme.pre ∨ Scheme.pre = Scheme.mix ∨
+    Scheme.pre = Scheme.peri) :=
+  ⟨le_rfl, Or.inl rfl⟩
 
 /-- **Corollary.** *Unconditional synchronization for Pre-LN and Peri-LN.*
 
@@ -122,24 +135,25 @@ For Pre-LN and Peri-LN at `n ≤ e^β` the radial velocity is bounded below by
 
 Not proved here: what is available is the velocity bound, not the implication
 from it to clustering, which is the content of `thm: convergence` itself.
+Stated for `d ≥ 2`, as `thm: convergence` is; without it the corollary is
+false: `not_unconditional_synchronization_one`.
 
 Source: arXiv:2510.22026v2, §3, the corollary to `thm: convergence`. -/
-theorem unconditional_synchronization
-    (σ : Measure (Idx n → EucSpace d)) (β : ℝ) (α : ℝ → ℝ) (τ : ℝ) (scheme : Scheme)
-    (hβ : 0 < β) (hn : (n : ℝ) ≤ Real.exp β)
+theorem unconditional_synchronization (hd : 2 ≤ d) (β : ℝ) (α : ℝ → ℝ) (τ : ℝ)
+    (scheme : Scheme) (hβ : 0 < β) (hn : (n : ℝ) ≤ Real.exp β)
     (hscheme : scheme = Scheme.pre ∨ scheme = Scheme.peri) :
-    ∀ᵐ X₀ : Idx n → EucSpace d ∂σ, (∀ j : Idx n, X₀ j ≠ 0) →
+    ∀ᵐ X₀ ∂(Measure.pi fun _ : Idx n => stdGaussian (EucSpace d)), (∀ j : Idx n, X₀ j ≠ 0) →
       ∀ (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ),
         (∀ j : Idx n, θ 0 j = ‖X₀ j‖⁻¹ • X₀ j) → (∀ j : Idx n, r 0 j = ‖X₀ j‖) →
           SchemeDynamics d n β (idParams d) (idParams d) (idParams d) α τ scheme θ r →
             Synchronizes d n θ := by
   sorry
 
-/-- The hypotheses of `unconditional_synchronization` are satisfiable: one token,
-`β = 1`, Pre-LN, since `1 ≤ e`. -/
-example :
-    (0 : ℝ) < 1 ∧ ((1 : ℕ) : ℝ) ≤ Real.exp 1 ∧ (Scheme.pre = Scheme.pre ∨ Scheme.pre = Scheme.peri) :=
-  ⟨one_pos, by simp, Or.inl rfl⟩
+/-- The hypotheses of `unconditional_synchronization` are satisfiable: `d = 2`,
+one token, `β = 1`, Pre-LN, since `1 ≤ e`. -/
+example : 2 ≤ 2 ∧ (0 : ℝ) < 1 ∧ ((1 : ℕ) : ℝ) ≤ Real.exp 1 ∧
+    (Scheme.pre = Scheme.pre ∨ Scheme.pre = Scheme.peri) :=
+  ⟨le_rfl, one_pos, by simp, Or.inl rfl⟩
 
 end Normalization
 end Transformer
