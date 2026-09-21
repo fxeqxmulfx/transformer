@@ -29,3 +29,4 @@ import Transformer.Modes.Section3_BR
 import Transformer.Modes.Section3_Edgeworth
 import Transformer.Modes.Section3_ErrorThird
 import Transformer.Modes.Section3_ErrorHigher
+import Transformer.Modes.Section3_ErrorKR
