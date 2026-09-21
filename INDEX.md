@@ -1319,14 +1319,14 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`exa_sign_one`](src/Transformer/AMSGrad/Section3_Example.lean#L137) | theorem | proved |
 | [`exa_sign_two`](src/Transformer/AMSGrad/Section3_Example.lean#L145) | theorem | proved |
 
-**[Transformer.AMSGrad.Section3_Issue](src/Transformer/AMSGrad/Section3_Issue.lean)** — 194 lines
+**[Transformer.AMSGrad.Section3_Issue](src/Transformer/AMSGrad/Section3_Issue.lean)** — 197 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`le_amsgradRule`](src/Transformer/AMSGrad/Section3_Issue.lean#L32) | theorem | proved |
-| [`prepare_lem`](src/Transformer/AMSGrad/Section3_Issue.lean#L42) | theorem | proved |
-| [`abel_eq`](src/Transformer/AMSGrad/Section3_Issue.lean#L162) | theorem | proved |
-| [`abel_le`](src/Transformer/AMSGrad/Section3_Issue.lean#L179) | theorem | proved |
+| [`le_amsgradRule`](src/Transformer/AMSGrad/Section3_Issue.lean#L34) | theorem | proved |
+| [`prepare_lem`](src/Transformer/AMSGrad/Section3_Issue.lean#L46) | theorem | proved |
+| [`abel_eq`](src/Transformer/AMSGrad/Section3_Issue.lean#L165) | theorem | proved |
+| [`abel_le`](src/Transformer/AMSGrad/Section3_Issue.lean#L182) | theorem | proved |
 
 **[Transformer.AMSGrad.Section3_Optimal](src/Transformer/AMSGrad/Section3_Optimal.lean)** — 119 lines
 
@@ -1338,16 +1338,16 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`exa_optimal`](src/Transformer/AMSGrad/Section3_Optimal.lean#L69) | theorem | proved |
 | [`not_red_ineq`](src/Transformer/AMSGrad/Section3_Optimal.lean#L92) | theorem | proved |
 
-**[Transformer.AMSGrad.Section3_Step](src/Transformer/AMSGrad/Section3_Step.lean)** — 203 lines
+**[Transformer.AMSGrad.Section3_Step](src/Transformer/AMSGrad/Section3_Step.lean)** — 209 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`v_nonneg`](src/Transformer/AMSGrad/Section3_Step.lean#L33) | theorem | proved |
-| [`m_eq_zero`](src/Transformer/AMSGrad/Section3_Step.lean#L44) | theorem | proved |
-| [`m_eq_zero_of_vhat`](src/Transformer/AMSGrad/Section3_Step.lean#L63) | theorem | proved |
-| [`proj_le`](src/Transformer/AMSGrad/Section3_Step.lean#L78) | theorem | proved |
-| [`young`](src/Transformer/AMSGrad/Section3_Step.lean#L121) | theorem | proved |
-| [`step_ineq`](src/Transformer/AMSGrad/Section3_Step.lean#L136) | theorem | proved |
+| [`v_nonneg`](src/Transformer/AMSGrad/Section3_Step.lean#L36) | theorem | proved |
+| [`m_eq_zero`](src/Transformer/AMSGrad/Section3_Step.lean#L47) | theorem | proved |
+| [`m_eq_zero_of_vhat`](src/Transformer/AMSGrad/Section3_Step.lean#L66) | theorem | proved |
+| [`proj_le`](src/Transformer/AMSGrad/Section3_Step.lean#L81) | theorem | proved |
+| [`young`](src/Transformer/AMSGrad/Section3_Step.lean#L124) | theorem | proved |
+| [`step_ineq`](src/Transformer/AMSGrad/Section3_Step.lean#L140) | theorem | proved |
 
 **[Transformer.AMSGrad.Section4_Corollary](src/Transformer/AMSGrad/Section4_Corollary.lean)** — 149 lines
 
@@ -1488,7 +1488,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sum_lambda_le`](src/Transformer/AMSGrad/Section5_Sums.lean#L21) | theorem | proved |
 | [`sum_inv_le`](src/Transformer/AMSGrad/Section5_Sums.lean#L60) | theorem | proved |
 
-**[Transformer.AMSGrad.Section5_Theorem](src/Transformer/AMSGrad/Section5_Theorem.lean)** — 77 lines
+**[Transformer.AMSGrad.Section5_Theorem](src/Transformer/AMSGrad/Section5_Theorem.lean)** — 78 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -1587,12 +1587,12 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`amsgrad_regret_lambda`](src/Transformer/AdamBeyond/Section4_Corollary.lean#L62) | theorem | proved |
 | [`amsgrad_regret_inv`](src/Transformer/AdamBeyond/Section4_Corollary.lean#L112) | theorem | proved |
 
-**[Transformer.AdamBeyond.Section4_Regret](src/Transformer/AdamBeyond/Section4_Regret.lean)** — 160 lines
+**[Transformer.AdamBeyond.Section4_Regret](src/Transformer/AdamBeyond/Section4_Regret.lean)** — 161 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`amsgrad_regret_moment`](src/Transformer/AdamBeyond/Section4_Regret.lean#L42) | theorem | proved |
-| [`amsgrad_regret`](src/Transformer/AdamBeyond/Section4_Regret.lean#L135) | theorem | proved |
+| [`amsgrad_regret`](src/Transformer/AdamBeyond/Section4_Regret.lean#L136) | theorem | proved |
 
 **[Transformer.AdamBeyond.Section5_AdamNC](src/Transformer/AdamBeyond/Section5_AdamNC.lean)** — 114 lines
 

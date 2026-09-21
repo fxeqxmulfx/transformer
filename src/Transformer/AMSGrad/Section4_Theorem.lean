@@ -58,8 +58,8 @@ theorem mainthm_lambda {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlin
   have hα' : ∀ t, 1 ≤ t → 0 < S.α t := fun t ht => by
     rw [hαt]; exact div_pos hα (Real.sqrt_pos.2 (by exact_mod_cast ht))
   refine ⟨t₀, ht₀1, fun T hT xstar hx => ?_⟩
-  have hp := prepare_lem hS (R := amsgradRule) (fun _ _ _ => le_sup_right) hα'
-    (by rw [hb1]; exact hβt) (by rw [hb1]; exact hβ₁') hβ₂ hβ₂' hT hx
+  have hp := prepare_lem hS (R := amsgradRule) hα' (by rw [hb1]; exact hβt)
+    (by rw [hb1]; exact hβ₁') hT (fun _ _ _ h => m_eq_zero_of_vhat le_amsgradRule hβ₂ hβ₂' h) hx
   have h1 := eqmain_le hS hα hαt hβt hβ₁' hβ₂.le hβ₂'.le ht₀ hT hx
   have h2 : ∑ i, ∑ t ∈ Icc 1 T, S.α t / (1 - S.β₁ 1) * S.m amsgradRule t i ^ 2 /
       Real.sqrt (S.vhat amsgradRule t i) ≤
@@ -99,8 +99,8 @@ theorem mainthm_inv {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineCo
   have hα' : ∀ t, 1 ≤ t → 0 < S.α t := fun t ht => by
     rw [hαt]; exact div_pos hα (Real.sqrt_pos.2 (by exact_mod_cast ht))
   refine ⟨t₀, ht₀1, fun T hT xstar hx => ?_⟩
-  have hp := prepare_lem hS (R := amsgradRule) (fun _ _ _ => le_sup_right) hα'
-    (by rw [hb1]; exact hβt) (by rw [hb1]; exact hβ₁') hβ₂ hβ₂' hT hx
+  have hp := prepare_lem hS (R := amsgradRule) hα' (by rw [hb1]; exact hβt)
+    (by rw [hb1]; exact hβ₁') hT (fun _ _ _ h => m_eq_zero_of_vhat le_amsgradRule hβ₂ hβ₂' h) hx
   have h1 := eqmain_le hS hα hαt hβt hβ₁' hβ₂.le hβ₂'.le ht₀ hT hx
   have h2 : ∑ i, ∑ t ∈ Icc 1 T, S.α t / (1 - S.β₁ 1) * S.m amsgradRule t i ^ 2 /
       Real.sqrt (S.vhat amsgradRule t i) ≤

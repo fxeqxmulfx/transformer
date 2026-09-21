@@ -18,6 +18,9 @@ single step `t`: the projection bound, the inequality (tvheq) for
 * Where `v̂_{t,i} = 0` the source's quotients `m_{t,i}/√v̂_{t,i}` are
   undefined; there `m_{t,i} = 0` (`m_eq_zero`), both sides of each identity
   vanish coordinatewise, and the division by zero of Lean is harmless.
+  (tvheq) uses of the rule only this, so `step_ineq` takes it as its
+  hypothesis: for a rule with `v_t ≤ v̂_t` and `0 < β₂ < 1` it is
+  `m_eq_zero_of_vhat`, and AdamNC of arXiv:1904.09237 gets it elsewhere.
 
 Source: arXiv:1904.03590v4, §3, proof of Lemma 3.1.
 -/
@@ -126,17 +129,17 @@ theorem young {a w m z : ℝ} (ha : 0 < a) (hw : 0 ≤ w) (hm : w = 0 → m = 0)
       le_div_iff₀ (by positivity)]
     nlinarith [sq_nonneg (w * z - a * m), mul_pos ha hw0]
 
-/-- **(tvheq).**  For a rule with `v_t ≤ v̂_t`, `α_t > 0`, `0 ≤ β_{1,t} < 1` and
-`0 < β₂ < 1`, for `t ≥ 1` and `x* ∈ F`,
+/-- **(tvheq).**  For a rule with `m_{t,i} = 0` wherever `v̂_{t,i} = 0` (by
+`m_eq_zero_of_vhat`, every rule with `v_t ≤ v̂_t` when `0 < β₂ < 1`), `α_t > 0`
+and `0 ≤ β_{1,t} < 1`, for `t ≥ 1` and `x* ∈ F`,
 
   `Σᵢ g_{t,i}(x_{t,i} - x*ᵢ) ≤ Σᵢ [√v̂_{t,i}/(2α_t(1-β_{1,t})) ((x_{t,i} - x*ᵢ)² - (x_{t+1,i} - x*ᵢ)²)`
   `    + α_t/(2(1-β_{1,t})) m²_{t,i}/√v̂_{t,i} + β_{1,t}/(1-β_{1,t}) m_{t-1,i}(x*ᵢ - x_{t,i})]`.
 
 Source: arXiv:1904.03590v4, §3, proof of Lemma 3.1, (tvheq). -/
 theorem step_ineq {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineConvex S F D G)
-    {R : Rule d} (hR : ∀ t a b, b ≤ R t a b) {t : ℕ} (ht : 1 ≤ t) (hα : 0 < S.α t)
-    (hb : 0 ≤ S.β₁ t) (hb' : S.β₁ t < 1) (hβ₂ : 0 < S.β₂) (hβ₂' : S.β₂ < 1)
-    {xstar : Vec d} (hx : xstar ∈ F) :
+    {R : Rule d} {t : ℕ} (ht : 1 ≤ t) (hα : 0 < S.α t) (hb : 0 ≤ S.β₁ t) (hb' : S.β₁ t < 1)
+    (hz : ∀ i, Real.sqrt (S.vhat R t i) = 0 → S.m R t i = 0) {xstar : Vec d} (hx : xstar ∈ F) :
     ∑ i, S.g R t i * (S.x R t i - xstar i) ≤
       ∑ i, (Real.sqrt (S.vhat R t i) / (2 * S.α t * (1 - S.β₁ t)) *
           ((S.x R t i - xstar i) ^ 2 - (S.x R (t + 1) i - xstar i) ^ 2)
@@ -165,7 +168,7 @@ theorem step_ineq {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineConv
     simp only [P, Q]
     rw [hy]
     by_cases hw : w i = 0
-    · have hm0 := m_eq_zero_of_vhat hR hβ₂ hβ₂' hw
+    · have hm0 := hz i hw
       rw [hw, hm0]
       rw [hm0] at hm
       simp only [div_zero, mul_zero, zero_mul, add_zero, zero_div, zero_pow two_ne_zero]
@@ -190,10 +193,13 @@ example :
       (∀ t (a b : Vec 1), b ≤ (fun _ _ b => b : Rule 1) t a b) ∧ 1 ≤ 1 ∧ 0 < S.α 1 ∧
       0 ≤ S.β₁ 1 ∧ S.β₁ 1 < 1 ∧ 0 < S.β₂ ∧ S.β₂ < 1 ∧
       S.v (fun _ _ b => b) 0 0 = 0 ∧ Real.sqrt (S.vhat (fun _ _ b => b) 0 0) = 0 ∧
+      (∀ i, Real.sqrt (S.vhat (fun _ _ b => b) 1 i) = 0 → S.m (fun _ _ b => b) 1 i = 0) ∧
       (0 : Vec 1) ∈ Set.Icc (fun _ => -1) (fun _ => 1) :=
   ⟨isOnlineConvex_zero _ _ _, convex_Icc _ _, fun _ => le_rfl, fun _ _ _ => le_rfl, le_rfl,
     one_pos, le_rfl, by simp [zeroSetup], by norm_num [zeroSetup], by norm_num [zeroSetup],
-    rfl, show Real.sqrt 0 = 0 from Real.sqrt_zero, fun _ => by norm_num, fun _ => by norm_num⟩
+    rfl, show Real.sqrt 0 = 0 from Real.sqrt_zero,
+    fun _ h => m_eq_zero_of_vhat (fun _ _ _ => le_rfl) (by norm_num [zeroSetup])
+      (by norm_num [zeroSetup]) h, fun _ => by norm_num, fun _ => by norm_num⟩
 
 /-- The hypotheses of `young` are satisfiable: `a = w = 1`, `m = 0`. -/
 example : (0 : ℝ) < 1 ∧ (0 : ℝ) ≤ 1 ∧ ((1 : ℝ) = 0 → (0 : ℝ) = 0) :=

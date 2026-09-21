@@ -52,7 +52,8 @@ theorem mainthm2 {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineConve
           * ∑ i, S.gnorm (adamXRule S.β₁) T i := by
   have hα' : ∀ t, 1 ≤ t → 0 < S.α t := fun t ht => by
     rw [hαt]; exact div_pos hα (Real.sqrt_pos.2 (by exact_mod_cast ht))
-  have hp := prepare_lem hS (le_adamXRule S.β₁) hα' hβ₁ hβ₁' hβ₂ hβ₂' hT hx
+  have hp := prepare_lem hS hα' hβ₁ hβ₁' hT
+    (fun _ _ _ h => m_eq_zero_of_vhat (le_adamXRule S.β₁) hβ₂ hβ₂' h) hx
   have h1 := eqmain_le_of hS (R := adamXRule S.β₁) (t₀ := 0) hα hαt hβ₁ hβ₁'
     (fun t ht i => vtnew_div hS hβ₁ hβ₁' hβ₂.le hβ₂'.le t ht i)
     (fun t ht i => adamX_mono hβ₁ hβ₁' hβ₂.le hβ₂'.le t ht i) hT hx

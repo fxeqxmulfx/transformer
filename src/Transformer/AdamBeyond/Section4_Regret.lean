@@ -55,7 +55,8 @@ theorem amsgrad_regret_moment {S : Setup d} {F : Set (Vec d)} {D G : ℝ}
   have hα' : ∀ t, 1 ≤ t → 0 < S.α t := fun t ht => by
     rw [hαt]; exact div_pos hα (Real.sqrt_pos.2 (by exact_mod_cast ht))
   have hB : 0 < 1 - S.β₁ 1 := by linarith
-  have hp := prepare_lem hS le_amsgradRule hα' hβ₁ hβ₁' hβ₂ hβ₂' hT hxstar
+  have hp := prepare_lem hS hα' hβ₁ hβ₁' hT
+    (fun _ _ _ h => m_eq_zero_of_vhat le_amsgradRule hβ₂ hβ₂' h) hxstar
   have hmono : ∀ t, 2 ≤ t → ∀ i, Real.sqrt (S.vhat amsgradRule (t - 1) i) / S.α (t - 1) ≤
       Real.sqrt (S.vhat amsgradRule t i) / S.α t := fun t ht2 i => by
     rw [hαt, div_div_eq_mul_div, div_div_eq_mul_div]
