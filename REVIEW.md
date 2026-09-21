@@ -49,9 +49,9 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - ok `not_exists_ball_of_mass_of_dirac` — Transformer/Interpolation/BallDecomposition.lean:42 — shows the dropped a.c. hypothesis of cl: balls is necessary; restored in claim_balls
 - ok `not_forall_monge` — Transformer/Interpolation/Main.lean:258 — kills the repo's free-W2/free-constant form; repaired and proved as monge (C=1)
 - fixed `not_forall_wToBall` — Transformer/Interpolation/MassConcentration.lean — refuted only the free-W₂ strawman; replaced by `wToBall` proved for the real W₂ (C=1), and lem: mass.concentration.Q1 found false as printed (Cη rate): `not_massConcentrationQ1`, corrected to 2√η in `massConcentrationQ1_sqrt`
-- [ ] `not_forall_Hartman_Grobman` — Transformer/Interpolation/Settling.lean:271
-- [ ] `not_exists_rate_at_simplex` — Transformer/MeanField/Equiangular.lean:75
-- [ ] `not_equiangular_local_rate_zero` — Transformer/MeanField/EquiangularRate.lean:159
+- ok `not_forall_Hartman_Grobman` — Transformer/Interpolation/Settling.lean:271 — kills the repo's former unrestricted form (every path, every omega), docstring says so; but see issue on Hartman_Grobman in section 2
+- ok `not_exists_rate_at_simplex` — Transformer/MeanField/Equiangular.lean:75 — necessity of the basin condition; paper assumes rho0 in [0,1], so no paper claim is refuted
+- ok `not_equiangular_local_rate_zero` — Transformer/MeanField/EquiangularRate.lean:159 — necessity of 1 <= n (n=0 kills the denominator); no paper claim refuted
 - [ ] `not_forall_bakry_emery` — Transformer/Metastability/BakryEmery.lean:185
 - [ ] `not_quantitative_inequality_two_mul` — Transformer/Metastability/ExponentialFlow.lean:61
 - [ ] `not_rho_diff_ineq_of_free` — Transformer/Metastability/MainTheorem.lean:159
@@ -468,7 +468,7 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - [ ] Transformer/Interpolation/Main.lean (3): `isHole_antipode_diracProb`, `monge`, `not_forall_monge`
 - fixed Transformer/Interpolation/MassConcentration.lean (5): `wToBall`, `measurableSet_positiveQuadrant`, `antipode_notMem_positiveQuadrant`, `one_le_dist_antipode_of_mem`, `not_massConcentrationQ1` — cl: W.to.ball and lem: mass.concentration.Q1 as printed
 - ok Transformer/Interpolation/MassConcentrationSqrt.lean (2): `diagPoint_mem_positiveQuadrant`, `massConcentrationQ1_sqrt` — paper's construction, rate 2√η, deviations in docstring
-- [ ] Transformer/Interpolation/Settling.lean (4): `neuralODESphere_iff_perceptronField`, `norm_sub_le_of_contraction`, `Hartman_Grobman`, `not_forall_Hartman_Grobman`
+- issue Transformer/Interpolation/Settling.lean (4): `neuralODESphere_iff_perceptronField`, `norm_sub_le_of_contraction`, `Hartman_Grobman`, `not_forall_Hartman_Grobman` — Hartman_Grobman assumes hcontr (linear contraction along the trajectory), which is the conclusion in differential form: a Gronwall lemma under the paper's name. Paper: the specific ODE xdot=(<gamma,x>-eps/2)_+ Proj_x omega_+, x0 in S_+={<gamma,x> >= eps}; faithful form looks provable via u=<x,omega_+>
 - [ ] Transformer/Interpolation/Wasserstein.lean (5): `transportCosts_nonneg`, `bddBelow_transportCosts`, `W2_nonneg`, `W2_le_of_coupling`, `W2_self`
 
 ### Transformer.Kinetic — arXiv:2605.09213
