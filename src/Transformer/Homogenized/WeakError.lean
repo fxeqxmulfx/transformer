@@ -99,7 +99,8 @@ while `𝔼φ(X(t))` has already moved by `(η/2)(𝖫φ)(X⁰) + O(η²)`.  Tak
 deterministic weight law — `ass:high_order_short` holds with `σ_V = σ_A = 0`
 and `𝔼V ≠ 0` — so that `α = 0` and `b ≢ 0`, and `φ(X) = ⟨e, x_1⟩`; then at
 `t_L = 1` the left-hand side is `Θ(η)` and the right-hand side is
-`C e^C η (t_L+1) max(η,0) = Θ(η²)`.
+`C e^C η (t_L+1) max(η,0) = Θ(η²)`.  This is proved:
+`not_weak_error_modified_printed`, in `WeakErrorRefutation`.
 
 That `Θ(η)` is the interpolation error, and it is what the `max(1,α)` of
 `thm:weak_error_clean` leaves room for.  The improved rate is a statement

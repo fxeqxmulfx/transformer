@@ -145,7 +145,8 @@ example (d n : ℕ) (β : ℝ) :
 `αηL = O(1)` and `η³L = o(1)`, the interpolated chain is weakly approximated
 by the solution of `eq:SDE_ito_clean` at the rate
 `C e^{C t_L} η (t_L+1) max(η,α)`, at the grid times `t = ℓη` where that rate
-holds — see `weak_error_modified`.
+holds — see `weak_error_modified`.  The source states it uniformly in
+`t ∈ [0, t_L]`, which is false: `not_diffusive_regime_printed`.
 
 Not proved here.
 
