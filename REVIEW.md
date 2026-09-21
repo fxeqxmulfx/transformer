@@ -543,15 +543,15 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.Normalization — arXiv:2510.22026
 
-- [ ] Transformer/Normalization/ClusteringLine.lean (9): `proj_one_eq_zero`, `na_const_one`, `not_synchronizes_const`, `not_clusters_from_uniform_one`, `ne_zero_of_pos_neg`, `two_le_exp_one`, `pre_line_counter`, `not_clusters_or_stalls_from_gaussian_one`, `not_unconditional_synchronization_one`
-- [ ] Transformer/Normalization/Convergence.lean (3): `hasDerivAt_energy`, `proj_smul`, `na_velocity_eq_energyGrad`
-- [ ] Transformer/Normalization/Line.lean (10): `stdGaussian_one_singleton`, `stdGaussian_one_pos`, `sph0_coord`, `sq_coord_of_norm_one`, `sph0_cases`, `sph0_ne`, `uniform_sph0_pos`, `uniformSph0_invariant`, `uniformTuple_sph0`, `not_ae_gaussian_pair`
-- [ ] Transformer/Normalization/Lojasiewicz.lean (1): `na_time_change`
-- [ ] Transformer/Normalization/Radial.lean (3): `inner_attentionVec_self`, `inner_attentionVec_self_lower_bound`, `radialDerivative_pre_lower_bound`
-- [ ] Transformer/Normalization/Rates.lean (1): `not_forall_initial_velocity_small`
-- [ ] Transformer/Normalization/Symmetric.lean (6): `partition_symmetricInit`, `inner_attentionVec_symmetricInit`, `hasDerivAt_similarity_symmetricInit`, `thm_symmetric_post`, `thm_symmetric_pre`, `returns`
-- [ ] Transformer/Normalization/UnstableProduct.lean (1): `unstable_mul_of_posDef`
-- [ ] Transformer/Normalization/Velocities.lean (2): `norm_attentionVec_le_one`, `radialDerivative_pre_ge_of_localCone`
+- issue Transformer/Normalization/ClusteringLine.lean (9): `proj_one_eq_zero`, `na_const_one`, `not_synchronizes_const`, `not_clusters_from_uniform_one`, `ne_zero_of_pos_neg`, `two_le_exp_one`, `pre_line_counter`, `not_clusters_or_stalls_from_gaussian_one`, `not_unconditional_synchronization_one` — refutations ok; but Clustering.lean's thm:convergence statements require SchemeDynamics for all t∈ℝ (paper t≥0): for Pre/Mix/Peri a backward-global solution may not exist (r hits 0), which can make them vacuous; β unconstrained (paper implicitly β>0)
+- ok Transformer/Normalization/Convergence.lean (3): `hasDerivAt_energy`, `proj_smul`, `na_velocity_eq_energyGrad`
+- ok Transformer/Normalization/Line.lean (10): `stdGaussian_one_singleton`, `stdGaussian_one_pos`, `sph0_coord`, `sq_coord_of_norm_one`, `sph0_cases`, `sph0_ne`, `uniform_sph0_pos`, `uniformSph0_invariant`, `uniformTuple_sph0`, `not_ae_gaussian_pair`
+- ok Transformer/Normalization/Lojasiewicz.lean (1): `na_time_change`
+- ok Transformer/Normalization/Radial.lean (3): `inner_attentionVec_self`, `inner_attentionVec_self_lower_bound`, `radialDerivative_pre_lower_bound`
+- issue Transformer/Normalization/Rates.lean (1): `not_forall_initial_velocity_small` — refutation ok, initial_velocity_small faithful; clustering_rate likely false as written: Θ-bounds claimed for every t>0 with constants independent of r(0) (paper: asymptotic; at t→0 Var/t→∞ while Pre-LN derivative ≈ -Var/r(0)); no ‖θ_j(0)‖=1; dynamics on all ℝ
+- issue Transformer/Normalization/Symmetric.lean (6): `partition_symmetricInit`, `inner_attentionVec_symmetricInit`, `hasDerivAt_similarity_symmetricInit`, `thm_symmetric_post`, `thm_symmetric_pre`, `returns` — proved rows faithful; thm:symmetric only t→0 for Post/Pre: Mix/Peri/nGPT/CoD rows, whole t→∞ column and 'γ constant across pairs' are off the books
+- ok Transformer/Normalization/UnstableProduct.lean (1): `unstable_mul_of_posDef`
+- issue Transformer/Normalization/Velocities.lean (2): `norm_attentionVec_le_one`, `radialDerivative_pre_ge_of_localCone` — proved lemmas ok; thm:preln-slow (i) r_k(t)≥(1-δ)t (Pre and Peri, all t) is off the books — only the pointwise Pre velocity bound; stale docstrings say (ii) 'not formalized' though Rates states it
 
 ### Transformer.Perceptron — arXiv:2601.21366
 
