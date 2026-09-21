@@ -12,13 +12,11 @@
 
 * `p:noninc` says `t ↦ Cx({z_i(t)})` is non-increasing for inclusion.  Its
   proof uses only that the attention weights are non-negative and that the
-  drift is `Σ_j P_ij (z_j - z_i)`; the hypotheses `V = I_d`, `QᵀK ≻ 0` are
-  carried as the source states them.
+  drift is `Σ_j P_ij (z_j - z_i)`, so it is proved with neither `QᵀK ≻ 0` nor
+  `0 ≤ s`: for every `A` and on the whole line.  `V = I_d` is the form of
+  `e:dynIdzi` itself.
 
-* `c:theziunifbdd` is deduced from `p:noninc` in one line in the source.  It
-  is stated here with the conclusion of `p:noninc` as an explicit hypothesis,
-  so that it is genuinely proved and its dependence on the unproved
-  proposition is legible in its own signature.
+* `c:theziunifbdd` is deduced from `p:noninc` in one line, as in the source.
 
 * `t:Idcase11` is the full statement whose simplified form `t:Idcase11int` is
   carried in `Section3_IdCase.lean`.  "The convex hull converges to a convex
@@ -33,6 +31,8 @@ Source: arXiv:2305.05465v6, `p:noninc`, `c:theziunifbdd`, `t:Idcase11`,
 -/
 
 import Transformer.Clusters.Section3_IdCase
+import Transformer.Clusters.Extremum
+import Mathlib.Analysis.LocallyConvex.Separation
 import Mathlib.Analysis.Convex.Topology
 import Mathlib.Analysis.Convex.Extreme
 import Mathlib.Topology.MetricSpace.HausdorffDistance
@@ -77,55 +77,60 @@ theorem idRescaledDynamics_const (A : ParamMatrix d) (z : EucSpace d) :
 solution of `e:dynIdzi` is such that `t ↦ Cx({z_i(t)}_{i∈[n]})` is
 non-increasing in the sense of set-inclusion.
 
-Not proved here.
+Proved for every `A`, without the source's `QᵀK ≻ 0`, and for all `s ≤ t`, not
+only `0 ≤ s`: neither is used.  As in the source, at an index realizing
+`max_i ℓ(z_i)` for a linear `ℓ` the derivative `Σ_j P_ij ℓ(z_j - z_i)` is
+`≤ 0`, so each such maximum does not increase (`antitone_sup'_of_hasDerivAt`),
+and a point outside the hull is separated from it by some `ℓ`
+(`geometric_hahn_banach_closed_point`).
 
 Source: arXiv:2305.05465v6, `p:noninc`. -/
-theorem tokenHull_antitone (Q K A : ParamMatrix d) (hA : IsAttentionRoot Q K A)
-    (Z : ℝ → Idx n → EucSpace d) (hZ : IdRescaledDynamics A Z) {s t : ℝ}
-    (hs : 0 ≤ s) (hst : s ≤ t) :
+theorem tokenHull_antitone (A : ParamMatrix d)
+    (Z : ℝ → Idx n → EucSpace d) (hZ : IdRescaledDynamics A Z) {s t : ℝ} (hst : s ≤ t) :
     tokenHull (Z t) ⊆ tokenHull (Z s) := by
-  sorry
+  rcases isEmpty_or_nonempty (Idx n) with hn | hn
+  · simp [tokenHull, Set.range_eq_empty]
+  refine convexHull_min ?_ (convex_convexHull ℝ _)
+  rintro _ ⟨j, rfl⟩
+  by_contra hj
+  obtain ⟨f, u, hf, hu⟩ := geometric_hahn_banach_closed_point (convex_convexHull ℝ _)
+    (isCompact_tokenHull (Z s)).isClosed hj
+  have hM := antitone_sup'_of_hasDerivAt (fun i t => f (Z t i)) _
+    (fun i t => (f.hasFDerivAt (x := Z t i)).comp_hasDerivAt t (hZ t i)) (fun i t hi => ?_) hst
+  · have h1 := Finset.le_sup' (fun i => f (Z t i)) (Finset.mem_univ j)
+    have h2 : (Finset.univ.sup' Finset.univ_nonempty fun i => f (Z s i)) < u :=
+      (Finset.sup'_lt_iff _).2 fun i _ => hf _ (mem_tokenHull _ i)
+    exact (hu.trans_le (h1.trans hM)).not_gt h2
+  · simp only [map_sum, map_smul, map_sub, smul_eq_mul]
+    exact Finset.sum_nonpos fun k _ => mul_nonpos_of_nonneg_of_nonpos
+      (Perspective.softmaxWeight_nonneg _ _) (sub_nonpos.2 (hi k))
 
-/-- The hypotheses of `tokenHull_antitone` are satisfiable: `Q = K = A = I_d`
-is an attention root, and the configuration in which all `n` tokens sit at one
-point solves `e:dynIdzi`. -/
+/-- The hypotheses of `tokenHull_antitone` are satisfiable: the configuration
+in which all `n` tokens sit at one point solves `e:dynIdzi`. -/
 example (z : EucSpace d) :
-    IsAttentionRoot (d := d) (ContinuousLinearMap.id ℝ (EucSpace d))
-        (ContinuousLinearMap.id ℝ (EucSpace d)) (ContinuousLinearMap.id ℝ (EucSpace d)) ∧
-      IdRescaledDynamics (n := n) (ContinuousLinearMap.id ℝ (EucSpace d)) (fun _ _ => z) ∧
-      (0 : ℝ) ≤ 0 ∧ (0 : ℝ) ≤ 1 :=
-  ⟨isAttentionRoot_id d, idRescaledDynamics_const _ z, le_rfl, zero_le_one⟩
+    IdRescaledDynamics (n := n) (ContinuousLinearMap.id ℝ (EucSpace d)) (fun _ _ => z) ∧
+      (0 : ℝ) ≤ 1 :=
+  ⟨idRescaledDynamics_const _ z, zero_le_one⟩
 
 /-- **Corollary (c:theziunifbdd), first half.**  For any `i ∈ [n]` and
-`t ≥ 0`, `z_i(t) ∈ Cx({z_i(0)}_{i∈[n]})`.
-
-The conclusion of `p:noninc` is taken as an explicit hypothesis.
+`t ≥ 0`, `z_i(t) ∈ Cx({z_i(0)}_{i∈[n]})`: `p:noninc` at `s = 0`.
 
 Source: arXiv:2305.05465v6, `c:theziunifbdd`. -/
-theorem mem_tokenHull_zero (Z : ℝ → Idx n → EucSpace d)
-    (hmono : ∀ ⦃s t : ℝ⦄, 0 ≤ s → s ≤ t → tokenHull (Z t) ⊆ tokenHull (Z s))
-    (i : Idx n) {t : ℝ} (ht : 0 ≤ t) :
+theorem mem_tokenHull_zero (A : ParamMatrix d) (Z : ℝ → Idx n → EucSpace d)
+    (hZ : IdRescaledDynamics A Z) (i : Idx n) {t : ℝ} (ht : 0 ≤ t) :
     Z t i ∈ tokenHull (Z 0) :=
-  hmono le_rfl ht (mem_tokenHull (Z t) i)
+  tokenHull_antitone A Z hZ ht (mem_tokenHull (Z t) i)
 
 /-- **Corollary (c:theziunifbdd), second half.**  Hence `z_i(·)` is uniformly
 bounded in time: one radius serves every token and every `t ≥ 0`.
 
 Source: arXiv:2305.05465v6, `c:theziunifbdd`. -/
-theorem exists_bound_of_tokenHull_antitone (Z : ℝ → Idx n → EucSpace d)
-    (hmono : ∀ ⦃s t : ℝ⦄, 0 ≤ s → s ≤ t → tokenHull (Z t) ⊆ tokenHull (Z s)) :
+theorem exists_bound_idRescaled (A : ParamMatrix d) (Z : ℝ → Idx n → EucSpace d)
+    (hZ : IdRescaledDynamics A Z) :
     ∃ R : ℝ, ∀ (i : Idx n) (t : ℝ), 0 ≤ t → ‖Z t i‖ ≤ R := by
   obtain ⟨R, hR⟩ := (isCompact_tokenHull (Z 0)).isBounded.subset_closedBall 0
   exact ⟨R, fun i t ht => by
-    simpa using hR (mem_tokenHull_zero Z hmono i ht)⟩
-
-/-- The hypothesis of `mem_tokenHull_zero` is satisfiable: a configuration
-that does not move has a constant hull. -/
-example (z : EucSpace d) :
-    ∀ ⦃s t : ℝ⦄, 0 ≤ s → s ≤ t →
-      tokenHull ((fun _ _ => z : ℝ → Idx n → EucSpace d) t)
-        ⊆ tokenHull ((fun _ _ => z : ℝ → Idx n → EucSpace d) s) :=
-  fun _ _ _ _ => subset_rfl
+    simpa using hR (mem_tokenHull_zero A Z hZ i ht)⟩
 
 /-! ### `t:Idcase11` -/
 
@@ -168,7 +173,7 @@ theorem idCase_tendsto_limitCandidates (Q K A : ParamMatrix d) (hA : IsAttention
   sorry
 
 /-- The hypotheses of `idCase_tendsto_limitCandidates` are satisfiable, by the
-same witness as `tokenHull_antitone`. -/
+witness of `tokenHull_antitone` and `A = Q = K = I_d`. -/
 example (z : EucSpace d) :
     IsAttentionRoot (d := d) (ContinuousLinearMap.id ℝ (EucSpace d))
         (ContinuousLinearMap.id ℝ (EucSpace d)) (ContinuousLinearMap.id ℝ (EucSpace d)) ∧

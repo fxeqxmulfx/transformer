@@ -16,8 +16,8 @@ replaced by its projection onto `ℱ`.
   non-increasing with respect to `t` (the proof of this fact is identical to
   that of Proposition `p:noninc`)."  Both halves are proved here: convexity
   because a linear image of a convex set is convex, and monotonicity because
-  images preserve inclusion — the conclusion of `p:noninc` is taken as an
-  explicit hypothesis, exactly as in `exists_bound_of_tokenHull_antitone`.
+  images preserve inclusion — the monotonicity of the hull along the
+  dynamics of §10 is taken as an explicit hypothesis.
 
 * "It therefore converges toward some convex polytope `𝒦`" is the sorried
   statement; it is the §10 analogue of the corresponding half of `t:Idcase11`,
