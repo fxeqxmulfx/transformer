@@ -411,7 +411,7 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 ### Transformer.GPTMini.Properties — —
 
 - ok Transformer/GPTMini/Properties/Causal.lean (1): `attnOutput_causal`
-- issue Transformer/GPTMini/Properties/Entropy.lean (6): `entropy_le_log_card`, `log_le_entropy_of_le`, `softmaxEntropy_nonneg`, `softmaxEntropy_eq`, `softmaxEntropy_le_log_vocab`, `softmaxEntropy_lower_bound` — header promises H ≥ log V - C(L,‖W‖,α_max) via nonexistent forward_lipschitz_embedding; what is proved takes the logit bound M as hypothesis
+- issue Transformer/GPTMini/Properties/Entropy.lean (6): `entropy_le_log_card`, `log_le_entropy_of_le`, `softmaxEntropy_nonneg`, `softmaxEntropy_eq`, `softmaxEntropy_le_log_vocab`, `softmaxEntropy_lower_bound` — FIXED: header states what is proved; the logit bound discharged in EntropyEmbedding (H ≥ log V − 2√d_model max‖E_v‖, depth-free). Was: header promises H ≥ log V - C(L,‖W‖,α_max) via nonexistent forward_lipschitz_embedding; what is proved takes the logit bound M as hypothesis
 - ok Transformer/GPTMini/Properties/Lipschitz.lean (2): `hidden_isStream`, `stream_lipschitz`
 - ok Transformer/GPTMini/Properties/LipschitzConstants.lean (6): `attnLipschitz_nonneg`, `ffnLipschitz_nonneg`, `one_le_perBlockLipschitz`, `perBlockLipschitz_nonneg`, `endToEndLipschitz_nonneg`, `blockForward_lipschitz`
 - ok Transformer/GPTMini/Properties/OutputSimplex.lean (6): `softmaxOutput_nonneg`, `softmaxOutput_denom_pos`, `softmaxOutput_pos`, `softmaxOutput_sum_one`, `softmaxOutput_le_one`, `softmaxOutput_is_distribution`

@@ -1,23 +1,17 @@
 /-
 # Property: Output entropy is bounded below
 
-The softmax output distribution has Shannon entropy bounded below by a
-function of the depth `L`, the parameter norms, and the per-head
-temperature `α_max`:
+The softmax output distribution has Shannon entropy at most `log V`
+(`softmaxEntropy_le_log_vocab`) and, given a bound `M` on the logits, at least
 
-  `H(prob_i(·)) ≥ log(vocab_size) - C(L, ‖W_*‖, α_max)`.
+  `H(prob_i(·)) ≥ log(vocab_size) - 2M`
 
-The bound is non-vacuous when the parameter norms and temperatures are
-not too large; in particular it implies that the output never degenerates
-to a delta on a single token (avoids the "rank collapse" pathology).
+(`softmaxEntropy_lower_bound`): a softmax with bounded logits cannot
+concentrate on a single token.  This is an *anti-collapse* property.
 
-This is an *anti-collapse* property: it ensures expressive output even at
-deep layers.
-
-The proof uses:
-  - logits boundedness: `|logits_i(v)| ≤ M(params, α_max)` (from
-    `forward_lipschitz_embedding` and the bounded residual stream)
-  - softmax with bounded logits has positive entropy
+The logit bound is discharged in `Properties.EntropyEmbedding`: the final
+RMSNorm and the tied unembedding give `M = √d_model · max_v ‖E_v‖`, whatever
+the depth and the blocks.
 -/
 
 import Transformer.GPTMini.Model
