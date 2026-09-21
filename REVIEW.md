@@ -306,7 +306,7 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - ok Transformer/CRASP/Subsequence.lean (12): `sublist_snoc_snoc`, `sublist_snoc_take`, `depth_subseqStrict`, `depth_subseqAt`, `past_subseqStrict`, `past_subseqAt`, `pnpFree_subseqStrict`, `pnpFree_subseqAt`, `sat_subseqStrict`, `sat_subseqAt`, `lang_subseqAt`, `nonstrict_subseq_formula_unsound`
 - ok Transformer/CRASP/SubsequenceTwoSided.lean (9): `cons_sublist_drop`, `append_cons_sublist_iff`, `depth_subseqAfter`, `pnpFree_subseqAfter`, `depth_subseqTwoSided_le`, `pnpFree_subseqTwoSided`, `sat_subseqAfter`, `lang_subseqTwoSided`, `nonstrict_twoSided_formula_unsound`
 - ok Transformer/CRASP/TLCDepth.lean (4): `cropping_unsound`, `altPlusDouble_succ`, `kPiecewiseTestable_altPlusDouble`, `definable_altPlusDouble`
-- issue Transformer/CRASP/Transformers.lean (4): `self_mem_masked`, `length_bos`, `definableL_iff_recognizes`, `rtfr_depth_hierarchy` — rtfr_depth_hierarchy adds 0 < k, which the paper does not have; k = 0 holds too (a+ vs depth 0)
+- issue Transformer/CRASP/Transformers.lean (4): `self_mem_masked`, `length_bos`, `definableL_iff_recognizes`, `rtfr_depth_hierarchy` — FIXED: 0 < k dropped, the k = 0 case proved (not_definableL_altPlus_one_zero). Was: rtfr_depth_hierarchy adds 0 < k, which the paper does not have; k = 0 holds too (a+ vs depth 0)
 - ok Transformer/CRASP/YNormalForm.lean (7): `FormP.prevN_succ'`, `FormP.depth_prevN`, `YAtomic.prevN`, `FormP.depth_pushY`, `TermP.depth_pushY`, `FormP.yNormal_pushY`, `TermP.yNormalT_pushY`
 - ok Transformer/CRASP/YNormalFormEquiv.lean (7): `FormP.sat_prevN`, `FormP.sat_guard`, `length_filter_range'_delay`, `FormP.sat_pushY`, `TermP.val_pushY`, `exists_yNormal`, `pushY_unguarded_unsound`
 

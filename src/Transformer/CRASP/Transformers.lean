@@ -23,6 +23,7 @@ addition and the paper does not say what happens on overflow.
 
 import Transformer.CRASP.Depth
 import Transformer.CRASP.Fixed
+import Transformer.CRASP.Frame
 
 namespace Transformer
 namespace CRASP
@@ -153,14 +154,37 @@ theorem definableL_iff_recognizes (L : Set (List σ)) (k : ℕ) :
     obtain ⟨φ, hφ, hlang⟩ := hbwd p s d k T
     exact ⟨φ, hφ, hlang.trans (Set.ext hT)⟩
 
+/-- **`L_1 = a⁺` is not definable at depth `0`.**  The case `k = 0` of the
+negative half of `thm:TLCl_depth`, which the paper states for `k > 0` only: a
+PNP-free formula of depth `0` reads nothing but the last letter, and `a ∈ L_1`
+while `ba ∉ L_1`. -/
+theorem not_definableL_altPlus_one_zero : ¬ DefinableL (altPlus false 1) 0 := by
+  rintro ⟨φ, ⟨-, hf, hd⟩, hlang⟩
+  have ha : [false] ∈ altPlus false 1 := by
+    rw [altPlus_one]; exact ⟨1, one_pos, rfl⟩
+  have hba : [true, false] ∉ altPlus false 1 := by
+    rw [altPlus_one]
+    rintro ⟨m, -, hm⟩
+    have h0 := congrArg (·[0]?) hm
+    cases m <;> simp at h0
+  rw [← hlang] at ha hba
+  apply hba
+  have h := Form.sat_eq_of_pnpFree_depth_eq_zero (w := [false]) (w' := [true, false])
+    (i := 1) (i' := 2) rfl φ hf (Nat.le_zero.mp hd)
+  show φ.sat [true, false] 2 = true
+  rw [← h]; exact ha
+
 /-- **Theorem `thm:rtfr_depth_hierarchy`.**  A depth-`(k+1)` transformer
 recognizes `L_{k+1}`, and no depth-`k` transformer does.
 
 A corollary of the depth hierarchy `thm:TLCl_depth` for the logic — which *is*
 proved here — and of the equivalence `definableL_iff_recognizes`, exactly as
 the paper derives it: the transformer hierarchy carries no combinatorics of its
-own.  The two simulations are the same hypotheses as there, passed through. -/
-theorem rtfr_depth_hierarchy (k : ℕ) (hk : 0 < k) :
+own.  The two simulations are the same hypotheses as there, passed through.
+
+The paper states it for every `k`, although `thm:TLCl_depth` asks for `k > 0`;
+the case `k = 0` is `not_definableL_altPlus_one_zero`. -/
+theorem rtfr_depth_hierarchy (k : ℕ) :
     (∀ (j : ℕ) (φ : Form Bool), φ ∈ TLCl Bool j →
         ∃ (p s d : ℕ) (T : RTfr (Option Bool) p s d j), T.Recognizes φ.lang) →
     (∀ (p s d j : ℕ) (T : RTfr (Option Bool) p s d j),
@@ -170,12 +194,15 @@ theorem rtfr_depth_hierarchy (k : ℕ) (hk : 0 < k) :
       ∀ (p s d : ℕ) (T : RTfr (Option Bool) p s d k),
         ¬ T.Recognizes (altPlus false (k + 1))) := by
   intro hfwd hbwd
-  obtain ⟨hpos, hneg⟩ := definableL_altPlus k hk
+  have hpos : DefinableL (altPlus false (k + 1)) (k + 1) :=
+    definableL_of_kPiecewiseTestable (k + 1) _
+      (kPiecewiseTestable_altPlus (k + 1) k.succ_pos)
+  have hneg : ¬ DefinableL (altPlus false (k + 1)) k := by
+    rcases Nat.eq_zero_or_pos k with rfl | hk
+    · exact not_definableL_altPlus_one_zero
+    · exact (definableL_altPlus k hk).2
   exact ⟨(definableL_iff_recognizes _ _ hfwd hbwd).mp hpos,
     fun p s d T hT => hneg ((definableL_iff_recognizes _ _ hfwd hbwd).mpr ⟨p, s, d, T, hT⟩)⟩
-
-/-- The hypothesis of `rtfr_depth_hierarchy` is satisfiable: `k = 1`. -/
-example : (0 : ℕ) < 1 := Nat.one_pos
 
 end CRASP
 end Transformer
