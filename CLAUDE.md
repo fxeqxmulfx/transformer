@@ -46,6 +46,12 @@ wrong**), and move to the next one.
 - **Commit every change.** One commit per logical change, made as soon as
   `lake build` is green for it. Never batch unrelated edits into one commit, and
   never leave finished work uncommitted.
+- **Re-check against the paper before every commit.** Each theorem stated or
+  proved in the commit is read once more side by side with its source in
+  `papers/`: hypotheses, quantifiers, constants, indices, the conclusion. Every
+  difference is either fixed or recorded in the docstring (see **When the paper
+  is wrong**). A proof closing is not evidence that the statement is the
+  paper's.
 
 ## Layout
 
