@@ -2724,20 +2724,21 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`strong_renyi_expected_count`](src/Transformer/Causal/ParkingCount.lean#L79) | theorem | proved |
 | [`northPole`](src/Transformer/Causal/ParkingCount.lean#L149) | def |  |
 
-**[Transformer.Causal.SequentialFlow](src/Transformer/Causal/SequentialFlow.lean)** — 166 lines
+**[Transformer.Causal.SequentialFlow](src/Transformer/Causal/SequentialFlow.lean)** — 228 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`seqVelocity`](src/Transformer/Causal/SequentialFlow.lean#L40) | def |  |
-| [`SequentialFlow`](src/Transformer/Causal/SequentialFlow.lean#L48) | def |  |
-| [`DependsOnPrefix`](src/Transformer/Causal/SequentialFlow.lean#L55) | def |  |
-| [`IsolatedCritical`](src/Transformer/Causal/SequentialFlow.lean#L61) | def |  |
-| [`Prefix`](src/Transformer/Causal/SequentialFlow.lean#L68) | abbrev |  |
-| [`seqJacobian`](src/Transformer/Causal/SequentialFlow.lean#L75) | def |  |
-| [`IsCriticalPrefix`](src/Transformer/Causal/SequentialFlow.lean#L82) | def |  |
-| [`StronglyStablePrefix`](src/Transformer/Causal/SequentialFlow.lean#L89) | def |  |
-| [`StronglyUnstablePrefix`](src/Transformer/Causal/SequentialFlow.lean#L97) | def |  |
-| [`sequentialFlow_converges`](src/Transformer/Causal/SequentialFlow.lean#L123) | theorem | sorry |
+| [`seqVelocity`](src/Transformer/Causal/SequentialFlow.lean#L41) | def |  |
+| [`SequentialFlow`](src/Transformer/Causal/SequentialFlow.lean#L49) | def |  |
+| [`DependsOnPrefix`](src/Transformer/Causal/SequentialFlow.lean#L56) | def |  |
+| [`PeriodicAngles`](src/Transformer/Causal/SequentialFlow.lean#L62) | def |  |
+| [`IsolatedCritical`](src/Transformer/Causal/SequentialFlow.lean#L67) | def |  |
+| [`Prefix`](src/Transformer/Causal/SequentialFlow.lean#L74) | abbrev |  |
+| [`seqJacobian`](src/Transformer/Causal/SequentialFlow.lean#L81) | def |  |
+| [`IsCriticalPrefix`](src/Transformer/Causal/SequentialFlow.lean#L88) | def |  |
+| [`StronglyStablePrefix`](src/Transformer/Causal/SequentialFlow.lean#L95) | def |  |
+| [`StronglyUnstablePrefix`](src/Transformer/Causal/SequentialFlow.lean#L103) | def |  |
+| [`sequentialFlow_converges`](src/Transformer/Causal/SequentialFlow.lean#L136) | theorem | sorry |
 
 **[Transformer.Causal.SingleToken](src/Transformer/Causal/SingleToken.lean)** — 194 lines
 
@@ -6773,7 +6774,7 @@ Everything the build cannot vouch for, in one place.
 | [`subspace_cluster`](src/Transformer/Causal/MainTheorem.lean#L125) | theorem | `Transformer.Causal.MainTheorem` |
 | [`lemma_meta`](src/Transformer/Causal/Metastability.lean#L61) | theorem | `Transformer.Causal.Metastability` |
 | [`fixed_centers_convergence`](src/Transformer/Causal/Metastability.lean#L132) | theorem | `Transformer.Causal.Metastability` |
-| [`sequentialFlow_converges`](src/Transformer/Causal/SequentialFlow.lean#L123) | theorem | `Transformer.Causal.SequentialFlow` |
+| [`sequentialFlow_converges`](src/Transformer/Causal/SequentialFlow.lean#L136) | theorem | `Transformer.Causal.SequentialFlow` |
 | [`exists_polytope_tendsto_image_tokenHull`](src/Transformer/Clusters/Section10_ProjHull.lean#L128) | theorem | `Transformer.Clusters.Section10_ProjHull` |
 | [`exists_bound_scoreRemainder`](src/Transformer/Clusters/Section10_Remainder.lean#L78) | theorem | `Transformer.Clusters.Section10_Remainder` |
 | [`exists_gamma_projScore`](src/Transformer/Clusters/Section10_Step2.lean#L109) | theorem | `Transformer.Clusters.Section10_Step2` |
