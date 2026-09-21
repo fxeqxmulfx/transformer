@@ -23,6 +23,10 @@ makes it:
 * Theorem 4 makes explicit `0 ≤ β_{1,t}`, `β₁ < 1`, `0 < β₂ < 1`, and holds
   for every `T`; Corollary 1's second term gets the factor `d/α` its proof
   gives; the `O(√T)` remark for `β_{1,t} = β₁/t` is `R_T ≤ K√T`.
+* AdamNC is the run with `β₂ = 0` and the rule `adamNCRule`; Theorem 5's
+  condition 1 is stated with `α_t`, as its proof uses it, not `α_T`, and
+  `0 ≤ β_{2,t} ≤ 1` is explicit; Corollary 2 gets its missing "`R_T ≤`", the
+  factor `d/α`, and `ζ = α`.
 
 Not transcribed, deliberately: the experiments, the commented-out section on
 the proof of Kingma & Ba, the convergence of SGD and AdaGrad, cited from
@@ -34,3 +38,5 @@ import Transformer.AdamBeyond.Section3_Run
 import Transformer.AdamBeyond.Section3_Counter
 import Transformer.AdamBeyond.Section3_General
 import Transformer.AdamBeyond.Section4_AMSGrad
+import Transformer.AdamBeyond.Section5_AdamNC
+import Transformer.AdamBeyond.Section5_Theorem
