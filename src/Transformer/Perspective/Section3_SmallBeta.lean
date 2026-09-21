@@ -208,8 +208,7 @@ For fixed `d, n ≥ 2`, the probability (w.r.t. uniform initialization on
 
 Not proved here: the proof runs through `beta0_consensus`,
 `sset0_probability_tendsto_one` and `distance_bound_at_time_m`.  Of the three
-only the last is proved, and that from the Gronwall bound `e:approxsphere`
-carried as a hypothesis.  Measurability of `clusteringSet` is part of what is being
+only the last is proved.  Measurability of `clusteringSet` is part of what is being
 asserted: `P (𝒮_β)` is the outer measure when the set is not measurable, so the
 statement is the one the paper makes in either case.
 

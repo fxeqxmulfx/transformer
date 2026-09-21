@@ -5,8 +5,8 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
 `eq: youareawizardharry` — the Grönwall bound of §4 read at `t = m`, below
-`1/8`, for `β` small — together with the one-particle lemmas that make it
-satisfiable: at `n = 1` a lone token stands still under both dynamics.
+`1/8`, for `β` small — together with the one-particle lemmas: at `n = 1` a
+lone token stands still under both dynamics.
 
 `e:approxsphere`, the Grönwall bound itself, is proved in
 `Transformer.Perspective.Beta0Gronwall`.
@@ -111,20 +111,12 @@ such that for `β ∈ [0, β_m]`,
 
   `‖x_i^β(m) - x_i^0(m)‖ ≤ 1/8`.
 
-Proved here, from the Grönwall bound `e:approxsphere` carried as an explicit
-hypothesis: its constant `C` is the `C` below, and `β_m = 1/(8 C e^{3m})` turns
-the bound at `t = m` into `1/8`.  `Perspective.solutions_close_at_small_beta`
-discharges that hypothesis with `C = 2 e²`.
+Proved from the Grönwall bound `e:approxsphere`
+(`Perspective.solutions_close_at_small_beta`, constant `C = 2 e²`):
+`β_m = 1/(8 C e^{3m})` turns its bound at `t = m` into `1/8`.
 
 Source: arXiv:2312.10794v5, §4, `eq: youareawizardharry`. -/
-theorem distance_bound_at_time_m (m : ℕ) (C : ℝ) (hC : 0 < C)
-    (hclose : ∀ β : ℝ, 0 ≤ β →
-      ∀ Xβ X0t : ℝ → SphereTuple d n,
-        Xβ 0 = X0t 0 →
-        Perspective.SA d n β Xβ → beta0Dynamics d n X0t →
-        ∀ t : ℝ, 0 ≤ t → ∀ i : Idx n,
-          ‖((Xβ t i : EucSpace d)) - ((X0t t i : EucSpace d))‖
-            ≤ C * β * Real.exp (3 * t)) :
+theorem distance_bound_at_time_m (m : ℕ) :
     ∃ βm : ℝ, 0 < βm ∧
       ∀ β : ℝ, 0 ≤ β → β ≤ βm →
         ∀ Xβ X0t : ℝ → SphereTuple d n,
@@ -133,6 +125,7 @@ theorem distance_bound_at_time_m (m : ℕ) (C : ℝ) (hC : 0 < C)
           ∀ i : Idx n,
             ‖((Xβ (m : ℝ) i : EucSpace d))
               - ((X0t (m : ℝ) i : EucSpace d))‖ ≤ (1/8 : ℝ) := by
+  obtain ⟨C, hC, hclose⟩ := solutions_close_at_small_beta d n
   have hE : (0 : ℝ) < Real.exp (3 * m) := Real.exp_pos _
   refine ⟨1 / (8 * C * Real.exp (3 * m)), by positivity, ?_⟩
   intro β hβ0 hβm Xβ X0t hinit hSA h0 i
@@ -142,23 +135,6 @@ theorem distance_bound_at_time_m (m : ℕ) (C : ℝ) (hC : 0 < C)
     gcongr
   refine h.trans (hmono.trans (le_of_eq ?_))
   field_simp
-
-/-- The hypotheses of `distance_bound_at_time_m` are satisfiable, and not
-vacuously: at `n = 1` the lone token stands still under both dynamics
-(`const_of_SA_one`, `const_of_beta0Dynamics_one`), so two solutions from the
-same initial tuple coincide and `C = 1` witnesses the Gronwall bound. -/
-example : (0 : ℝ) < 1 ∧
-    ∀ β : ℝ, 0 ≤ β →
-      ∀ Xβ X0t : ℝ → SphereTuple 1 1,
-        Xβ 0 = X0t 0 →
-        Perspective.SA 1 1 β Xβ → beta0Dynamics 1 1 X0t →
-        ∀ t : ℝ, 0 ≤ t → ∀ i : Idx 1,
-          ‖((Xβ t i : EucSpace 1)) - ((X0t t i : EucSpace 1))‖
-            ≤ 1 * β * Real.exp (3 * t) := by
-  refine ⟨one_pos, fun β hβ Xβ X0t hinit hSA h0 t _ i => ?_⟩
-  rw [const_of_SA_one 1 β Xβ hSA t i, const_of_beta0Dynamics_one 1 X0t h0 t i,
-    hinit, sub_self, norm_zero]
-  exact mul_nonneg (mul_nonneg zero_le_one hβ) (Real.exp_pos _).le
 
 end Perspective
 end Transformer
