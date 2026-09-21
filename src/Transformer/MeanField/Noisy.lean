@@ -3,8 +3,11 @@
 
 * `eq: noisy.SDE`         — noisy Transformer SDE on the sphere, stated
                             pathwise for a fixed realization of the noise,
-* `eq: McKV`              — McKean–Vlasov limit,
 * `eq: Fokker`            — Fokker–Planck equation, in weak form.
+
+`eq: McKV`, the McKean–Vlasov limit, is not stated: it is an SDE whose drift
+depends on the law of its own solution, and laws of processes are not
+modelled here.  `eq: Fokker` is the equation that law satisfies.
 
 Two objects the statements need are carried as parameters rather than built:
 the realization `W` of the driving Brownian motion, and the Laplace–Beltrami
@@ -19,7 +22,7 @@ which needs modified Bessel functions.
 
 import Transformer.Basic
 import Transformer.Perspective.Section1_IPS
-import Transformer.Perspective.Section2_FlowMap
+import Transformer.Perspective.Section2_GradientFlow
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 
 open scoped BigOperators
@@ -68,17 +71,33 @@ def noisyTransformerSDE
         + (∫ s in (0 : ℝ)..t, noisyDrift d n β (X s) i)
         + Real.sqrt (2 / κ) • (W t i - W 0 i)
 
-/-- **Equation (eq: Fokker).**  Fokker–Planck equation:
+/-- **Equation (eq: Fokker).**  Fokker–Planck equation of `eq: McKV`, in weak
+form: for every `C²` test function `φ`,
 
-  `∂_t μ_t + (1/κ) Δ μ_t = ∇ · ( μ_t 𝒳[μ_t] )`,
+  `d/dt ∫ φ dμ_t = ∫ ( κ⁻¹ Δφ + ⟨∇φ, v_t⟩ ) dμ_t`,
+  `v_t(x) = Proj_x ∫ e^{β⟨x,y⟩} y dμ_t(y)`,
 
-in weak form: for every `C²` test function `φ`,
+which is `∂_t μ_t = κ⁻¹ Δ μ_t - ∇ · (μ_t v_t)`.  The drift `v_t` is the
+`USA` field of `eq:continuity` (`Perspective.usaVectorField`), unnormalized,
+as in `eq: McKV`.
 
-  `d/dt ∫ φ dμ_t = ∫ ( κ⁻¹ Δφ + ⟨∇φ, 𝒳[μ_t]⟩ ) dμ_t`.
+**What the source says and what is changed here.**  The display prints
+
+  `∂_t μ_t + κ⁻¹ Δ μ_t = ∇ · ( μ_t ∫ e^{β⟨·,y⟩} y μ_t(dy) )`,
+
+with both signs reversed.  The sentence after it says the equation "reduces
+to `eq:continuity` as `κ → ∞`", and `eq:continuity` is
+`∂_t μ_t + ∇ · (μ_t v_t) = 0`, the opposite sign of the transport term; and
+`+κ⁻¹Δμ_t` on the left is the backward heat equation, not the law of the
+forward diffusion `√(2κ⁻¹) dW`.  The equation stated is the one the text
+describes: the law of `eq: McKV`, reducing to `eq:continuity`.  The printed
+drift also omits `Proj_x`; in weak form the drift is paired with the
+gradient of a test function along the sphere, which is tangent, so only the
+tangential part of the drift enters and the two agree.
 
 `Δ` is the Laplace–Beltrami operator of the sphere, carried as a parameter:
 this development does not construct it.
-Source: arXiv:2512.01868v4, §7. -/
+Source: arXiv:2512.01868v4, §7, `eq:Fokker`. -/
 def fokkerPlanck
     (β κ : ℝ) (Δ : (EucSpace d → ℝ) → EucSpace d → ℝ)
     (μ : ℝ → Perspective.ProbSphere d) : Prop :=
@@ -86,7 +105,7 @@ def fokkerPlanck
     HasDerivAt (fun s => ∫ x, φ (x : EucSpace d) ∂(μ s : Measure (SSphere d)))
       (∫ x, (κ⁻¹ * Δ φ (x : EucSpace d)
           + inner (𝕜 := ℝ) (gradient φ (x : EucSpace d))
-              (Perspective.vectorField d β (μ t) (x : EucSpace d)))
+              (Perspective.usaVectorField d β (μ t) (x : EucSpace d)))
         ∂(μ t : Measure (SSphere d))) t
 
 end MeanField

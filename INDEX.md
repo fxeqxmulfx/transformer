@@ -4671,14 +4671,14 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`hasDerivAt_pairPath`](src/Transformer/MeanField/MergingPaths.lean#L75) | theorem | proved |
 | [`two_sinh_mul_cosh_le`](src/Transformer/MeanField/MergingPaths.lean#L104) | theorem | proved |
 
-**[Transformer.MeanField.Noisy](src/Transformer/MeanField/Noisy.lean)** — 93 lines
+**[Transformer.MeanField.Noisy](src/Transformer/MeanField/Noisy.lean)** — 112 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`noisyDrift`](src/Transformer/MeanField/Noisy.lean#L38) | def |  |
-| [`inner_noisyDrift_eq_zero`](src/Transformer/MeanField/Noisy.lean#L48) | theorem | proved |
-| [`noisyTransformerSDE`](src/Transformer/MeanField/Noisy.lean#L63) | def |  |
-| [`fokkerPlanck`](src/Transformer/MeanField/Noisy.lean#L82) | def |  |
+| [`noisyDrift`](src/Transformer/MeanField/Noisy.lean#L41) | def |  |
+| [`inner_noisyDrift_eq_zero`](src/Transformer/MeanField/Noisy.lean#L51) | theorem | proved |
+| [`noisyTransformerSDE`](src/Transformer/MeanField/Noisy.lean#L66) | def |  |
+| [`fokkerPlanck`](src/Transformer/MeanField/Noisy.lean#L101) | def |  |
 
 **[Transformer.MeanField.PairMerge](src/Transformer/MeanField/PairMerge.lean)** — 175 lines
 
