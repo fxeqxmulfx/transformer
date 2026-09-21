@@ -1,4 +1,4 @@
-import Transformer.AMSGrad.Section1_TheoremA
+import Transformer.AMSGrad.Section4_MainLemma
 
 /-
 # Adam and beyond — §4: the regret of AMSGrad
@@ -90,7 +90,21 @@ theorem amsgrad_moment_sum {S : Setup d} {α : ℝ} (hα : 0 < α)
       α * Real.sqrt (1 + Real.log T) /
           ((1 - S.β₁ 1) * (1 - S.β₁ 1 / Real.sqrt S.β₂) * Real.sqrt (1 - S.β₂))
           * ∑ i, S.gnorm amsgradRule T i := by
-  sorry
+  have hl := fun i => mainlem le_amsgradRule hβ₁ hβ₁' hβ₂ hβ₂' hγ T i
+  calc ∑ t ∈ Icc 1 T, S.α t * ∑ i, S.m amsgradRule t i ^ 2 / Real.sqrt (S.vhat amsgradRule t i)
+      = α * ∑ i, ∑ t ∈ Icc 1 T,
+          S.m amsgradRule t i ^ 2 / Real.sqrt (t * S.vhat amsgradRule t i) := by
+        rw [sum_comm, mul_sum]
+        refine sum_congr rfl fun t _ => ?_
+        rw [mul_sum, mul_sum, hαt]
+        refine sum_congr rfl fun i _ => ?_
+        rw [Real.sqrt_mul (Nat.cast_nonneg _)]
+        ring
+    _ ≤ α * ∑ i, Real.sqrt (Real.log T + 1) /
+          ((1 - S.β₁ 1) * Real.sqrt (1 - S.β₂) * (1 - S.β₁ 1 / Real.sqrt S.β₂))
+          * S.gnorm amsgradRule T i := by
+        gcongr with i; exact hl i
+    _ = _ := by rw [← mul_sum, add_comm (Real.log _)]; ring
 
 /-- **Corollary 1**, with the factor `d/α` of its second term restored.  Under
 the assumptions of Theorem 4 with `β_{1,t} = β₁λ^{t-1}`, `0 ≤ λ < 1`, for
