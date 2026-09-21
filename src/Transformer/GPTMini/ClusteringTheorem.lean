@@ -17,7 +17,7 @@ The chain of bridges that is supposed to prove it:
   6. `Section5_HighD`             — the exponential rate inside a cap,
   7. `Normalization.Convergence`  — Pre-LN clustering.
 
-None of the three statements below is proved here, and each rests on
+Neither of the two statements below is proved here, and each rests on
 `sorry`-leaves of the papers it composes.  Three things are worth reading off
 them before they are used.
 
@@ -37,10 +37,9 @@ the sub-layer output stays bounded, so the direction moves less and less.
 `layer_clustering` therefore states convergence only, and the quantitative
 `polynomial_rate` states the `1/L³` of `thm: preln-slow`.
 
-*`W₂` is a parameter* — Mathlib has no Wasserstein distance — and the
-mean-field limit `n → ∞` is not taken: `mean_field_clustering` is the finite-`T`
-statement that the empirical distribution of the directions converges to a
-Dirac, the limit in `T` not being expressible at a fixed `Fin T`.
+*The mean-field form is not stated.*  Its `W₂` could only be a parameter —
+Mathlib has no Wasserstein distance — and quantified over every `W₂` it is
+false: `not_mean_field_clustering`, in `MeanFieldRefutation`.
 -/
 
 import Transformer.GPTMini.Bridge
@@ -104,40 +103,6 @@ theorem layer_clustering {T : ℕ} (hd : 3 ≤ cfg.head_dim)
 `gpt-mini` config has `d_head = 768 / 12 = 64`. -/
 example : 3 ≤ Config.default.head_dim ∧ (0 : ℝ) < 1 := by
   refine ⟨?_, one_pos⟩
-  norm_num [Config.head_dim, Config.default]
-
-/-- **Mean-field form of the same conclusion.**
-
-The empirical distribution of the `T` token directions at depth `L`,
-
-  `(1/T) Σ_i δ_{Φ(x_L(i))}`,
-
-converges to `δ_{x_∞}` in the Wasserstein distance `W₂`, which is a parameter:
-Mathlib has no Wasserstein distance, and nothing below constrains `W₂` to be
-one, so the statement is only as strong as the `W₂` it is applied to.
-
-Not proved here.
-
-Source: arXiv:2512.01868v4, §2 (mean-field clustering). -/
-theorem mean_field_clustering
-    (W₂ : Measure (EucSpace cfg.head_dim) → Measure (EucSpace cfg.head_dim) → ℝ)
-    {T : ℕ} (hd : 3 ≤ cfg.head_dim) (hT : 0 < T)
-    (alpha eps : ℝ) (positions : Fin T → ℝ) (heps : 0 < eps) :
-    ∀ᵐ x₀ : Fin T → EucSpace cfg.head_dim, ∀ x : ℕ → Fin T → EucSpace cfg.head_dim,
-      x 0 = x₀ → PreLNHead cfg alpha eps positions x → (∀ (L : ℕ) (i : Fin T), x L i ≠ 0) →
-        ∃ xinf : EucSpace cfg.head_dim, ‖xinf‖ = 1 ∧
-          Filter.Tendsto
-            (fun L : ℕ =>
-              W₂ (((T : ℝ)⁻¹).toNNReal •
-                  ∑ i : Fin T, Measure.dirac (Bridge.toSphere cfg.head_dim (x L i)))
-                (Measure.dirac xinf))
-            Filter.atTop (nhds (0 : ℝ)) := by
-  sorry
-
-/-- The hypotheses of `mean_field_clustering` are satisfiable: the default
-config and one token. -/
-example : 3 ≤ Config.default.head_dim ∧ 0 < 1 ∧ (0 : ℝ) < 1 := by
-  refine ⟨?_, one_pos, one_pos⟩
   norm_num [Config.head_dim, Config.default]
 
 /-- **The depth rate under Pre-LN is polynomial.**
