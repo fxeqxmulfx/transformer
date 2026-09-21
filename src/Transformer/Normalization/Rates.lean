@@ -59,12 +59,19 @@ free parameter, as it was, the statement is false: `σ = 0` makes the
 right-hand side `0` while the left-hand side `1 - n^{-c}` is positive for
 `c > 0`.  That is `not_forall_initial_velocity_small`.
 
+The constants are chosen before `d` and `n`, as "absolute constants" says.
+Chosen after them, as they were, the statement is empty: `‖A_j‖ ≤ 1` at every
+configuration (`norm_attentionVec_le_one`), and a `C` depending on `d, n` makes
+the bound hold everywhere as soon as `n ≥ 2`.  The source's probability is
+`1 - n^{-C}`, with the `c` it introduces left unused; it is read as
+`1 - n^{-c}`, the reading in which both constants are used.
+
 Not proved here.
 
 Source: arXiv:2510.22026v2, §4.2, `thm: initial-velocity`. -/
 theorem initial_velocity_small :
     ∃ c C : ℝ, 0 < c ∧ 0 < C ∧
-      ∀ σ : Measure (SphereTuple d n), Perspective.UniformTuple d n σ →
+      ∀ (d n : ℕ) (σ : Measure (SphereTuple d n)), Perspective.UniformTuple d n σ →
       ∀ Q K V : ParamMatrix d,
         (∀ x y : EucSpace d, |inner (𝕜 := ℝ) (Q x) (K y)| ≤ ‖x‖ * ‖y‖) →
         ‖V‖ ≤ 1 →

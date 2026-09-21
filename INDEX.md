@@ -5067,14 +5067,14 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`inner_attentionVec_self_lower_bound`](src/Transformer/Normalization/Radial.lean#L55) | theorem | proved |
 | [`radialDerivative_pre_lower_bound`](src/Transformer/Normalization/Radial.lean#L115) | theorem | proved |
 
-**[Transformer.Normalization.Rates](src/Transformer/Normalization/Rates.lean)** — 210 lines
+**[Transformer.Normalization.Rates](src/Transformer/Normalization/Rates.lean)** — 217 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`initial_velocity_small`](src/Transformer/Normalization/Rates.lean#L65) | theorem | sorry |
-| [`not_forall_initial_velocity_small`](src/Transformer/Normalization/Rates.lean#L115) | theorem | proved |
-| [`varScale`](src/Transformer/Normalization/Rates.lean#L155) | def |  |
-| [`clustering_rate`](src/Transformer/Normalization/Rates.lean#L184) | theorem | sorry |
+| [`initial_velocity_small`](src/Transformer/Normalization/Rates.lean#L72) | theorem | sorry |
+| [`not_forall_initial_velocity_small`](src/Transformer/Normalization/Rates.lean#L122) | theorem | proved |
+| [`varScale`](src/Transformer/Normalization/Rates.lean#L162) | def |  |
+| [`clustering_rate`](src/Transformer/Normalization/Rates.lean#L191) | theorem | sorry |
 
 **[Transformer.Normalization.Symmetric](src/Transformer/Normalization/Symmetric.lean)** — 161 lines
 
@@ -6823,8 +6823,8 @@ Everything the build cannot vouch for, in one place.
 | [`clusters_or_stalls_from_gaussian`](src/Transformer/Normalization/Clustering.lean#L102) | theorem | `Transformer.Normalization.Clustering` |
 | [`unconditional_synchronization`](src/Transformer/Normalization/Clustering.lean#L127) | theorem | `Transformer.Normalization.Clustering` |
 | [`lojasiewicz_modulated`](src/Transformer/Normalization/Lojasiewicz.lean#L46) | theorem | `Transformer.Normalization.Lojasiewicz` |
-| [`initial_velocity_small`](src/Transformer/Normalization/Rates.lean#L65) | theorem | `Transformer.Normalization.Rates` |
-| [`clustering_rate`](src/Transformer/Normalization/Rates.lean#L184) | theorem | `Transformer.Normalization.Rates` |
+| [`initial_velocity_small`](src/Transformer/Normalization/Rates.lean#L72) | theorem | `Transformer.Normalization.Rates` |
+| [`clustering_rate`](src/Transformer/Normalization/Rates.lean#L191) | theorem | `Transformer.Normalization.Rates` |
 | [`circle_isFinitelyAtomic`](src/Transformer/Perceptron/Atomicity.lean#L87) | theorem | `Transformer.Perceptron.Atomicity` |
 | [`circle_gelu_isFinitelyAtomic`](src/Transformer/Perceptron/Atomicity.lean#L122) | theorem | `Transformer.Perceptron.Atomicity` |
 | [`biased_circle_isFinitelyAtomic`](src/Transformer/Perceptron/BiasedAtomicity.lean#L69) | theorem | `Transformer.Perceptron.BiasedAtomicity` |
