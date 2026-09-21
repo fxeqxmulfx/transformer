@@ -58,6 +58,9 @@ Formalization of eighteen papers on the mathematics of Transformers:
 18. Tran, Le — arXiv:1904.03590v4
    "On the Convergence Proof of AMSGrad and a New Version".
 
+19. Reddi, Kale, Kumar — arXiv:1904.09237
+   "On the Convergence of Adam and Beyond".
+
 Alongside these, `Transformer.ALM` formalizes the paraboloid-lifted lookup
 used by the append-only lookup machine (Percepta, transformer-vm).
 
@@ -88,6 +91,7 @@ import Transformer.Perceptron
 import Transformer.Clusters
 import Transformer.Modes
 import Transformer.AMSGrad
+import Transformer.AdamBeyond
 import Transformer.XSA
 import Transformer.Quartet
 import Transformer.GPTMini
