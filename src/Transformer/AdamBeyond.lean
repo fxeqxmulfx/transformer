@@ -41,6 +41,9 @@ import Transformer.AdamBeyond.Section3_Run
 import Transformer.AdamBeyond.Section3_Counter
 import Transformer.AdamBeyond.Section3_General
 import Transformer.AdamBeyond.Section4_AMSGrad
+import Transformer.AdamBeyond.Section4_Abel
+import Transformer.AdamBeyond.Section4_Regret
+import Transformer.AdamBeyond.Section4_Corollary
 import Transformer.AdamBeyond.Section5_AdamNC
 import Transformer.AdamBeyond.Section5_Theorem
 import Transformer.AdamBeyond.AppendixG_Auxiliary
