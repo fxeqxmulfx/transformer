@@ -30,6 +30,29 @@ noncomputable def uniformSphere : Measure (SSphere d) :=
   ((volume : Measure (EucSpace d)).toSphere Set.univ)⁻¹ •
     (volume : Measure (EucSpace d)).toSphere
 
+/-- `uniformSphere d` is a probability measure once the sphere is nonempty:
+the spherical part of Lebesgue measure is finite, and nonzero in positive
+dimension, so dividing by its total mass normalizes it.
+
+Source: arXiv:2411.04990v2, §"R'enyi centers vs strong R'enyi centers" (the
+uniform law on `𝕊^{d-1}`). -/
+theorem isProbabilityMeasure_uniformSphere (hd : 1 ≤ d) :
+    IsProbabilityMeasure (uniformSphere d) := by
+  have : Nontrivial (EucSpace d) :=
+    nontrivial_of_ne (EuclideanSpace.single (⟨0, hd⟩ : Fin d) (1 : ℝ)) 0
+      (by simp)
+  have h0 : (volume : Measure (EucSpace d)).toSphere Set.univ ≠ 0 :=
+    Measure.measure_univ_eq_zero.not.mpr (Measure.toSphere_ne_zero _)
+  have htop : (volume : Measure (EucSpace d)).toSphere Set.univ ≠ ⊤ :=
+    measure_ne_top _ _
+  exact ⟨by
+    simp only [uniformSphere, Measure.smul_apply, smul_eq_mul]
+    exact ENNReal.inv_mul_cancel h0 htop⟩
+
+/-- The hypothesis of `isProbabilityMeasure_uniformSphere` is satisfiable:
+the circle, `d = 2`. -/
+example : 1 ≤ 2 := by norm_num
+
 /-- **Cap mass in dimension two.**
 
 On the circle `𝕊^1`, the uniform geodesic cap of radius `δ` has mass `δ / π`,

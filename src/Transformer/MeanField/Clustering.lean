@@ -3,15 +3,15 @@
 
 * `Theorem thm: clustering_finite`  — global clustering for `d ≥ 3` (revisits
                                        `thm: boumal`),
-* `Corollary cor: d-ge-n`           — uniform random init when `d ≥ n`,
-* `Theorem thm: mfclust`            — mean-field exponential rate for small
-                                       `β` (Chen–Lin–Pol 2025).
+* `Corollary cor: d-ge-n`           — uniform random init when `d ≥ n`.
+
+`Theorem thm: mfclust` is in `MeanField.GlobalRate`.
 
 `Theorem thm: cone-collapse` is `Perspective.hemisphere_clustering`
 (in `Perspective.Section5_ConeCollapse`) verbatim and is not restated here.
 
 `thm: clustering_finite` is read against the uniform law
-`Perspective.UniformTuple`; neither it nor `thm: mfclust` is proved.  What *is* proved is the deterministic core of
+`Perspective.UniformTuple`, and is not proved.  What *is* proved is the deterministic core of
 `cor: d-ge-n`: linearly independent particles lie in a common open hemisphere,
 which is the hypothesis `thm: cone-collapse` runs on, and which `n` points in
 dimension `d ≥ n` satisfy almost surely.  The almost-sure half is not
@@ -150,43 +150,6 @@ example : LinearIndependent ℝ (fun _ : Idx 1 => EuclideanSpace.single (0 : Fin
   refine ⟨?_, le_refl 1⟩
   rw [linearIndependent_unique_iff]
   simp
-
-/-- **Theorem (thm: mfclust).** *Mean-field exponential rate (small `β`).*
-
-For `d ≥ 2`, an initial measure `μ_0` with
-
-  `R_0 := ‖∫_{𝕊^{d-1}} x dμ_0(x)‖² > 0`,
-
-there exist `β_0, C_0, T_0 > 0` (depending on `μ_0`) such that for
-`|β| < β_0` the solution of the continuity equation started at `μ_0` satisfies
-`W_2(μ_t, δ_{x_∞}) ≤ C_0 e^{-t/100}` for `t ≥ T_0`.
-
-`W₂` is a parameter: Mathlib has no Wasserstein distance, so the statement is
-made relative to a given metric on probability measures.
-
-Not proved here.
-
-Source: arXiv:2512.01868v4, §4 (Chen–Lin–Polyanskiy 2025). -/
-theorem meanField_exponential_rate
-    (W₂ : Perspective.ProbSphere d → Perspective.ProbSphere d → ℝ)
-    (μ₀ : Perspective.ProbSphere d) (hd : 2 ≤ d)
-    (hR : 0 < ‖∫ x, (x : EucSpace d) ∂(μ₀ : Measure (SSphere d))‖ ^ 2) :
-    ∃ β₀ C₀ T₀ : ℝ, 0 < β₀ ∧ 0 < C₀ ∧ 0 < T₀ ∧
-      ∀ β : ℝ, |β| < β₀ →
-        ∀ μ : ℝ → Perspective.ProbSphere d, μ 0 = μ₀ →
-          Perspective.continuityEquation d β μ →
-            ∃ x_inf : SSphere d, ∀ t : ℝ, T₀ ≤ t →
-              W₂ (μ t) (diracProb d x_inf) ≤ C₀ * Real.exp (-t / 100) := by
-  sorry
-
-/-- The hypotheses of `meanField_exponential_rate` are satisfiable: in dimension
-`2`, a Dirac mass has mean of norm `1`, so `R₀ = 1 > 0`. -/
-example (x : SSphere 2) :
-    2 ≤ 2 ∧ 0 < ‖∫ y, (y : EucSpace 2) ∂((Perspective.diracProb 2 x : Perspective.ProbSphere 2) :
-      Measure (SSphere 2))‖ ^ 2 := by
-  refine ⟨le_rfl, ?_⟩
-  have hx : ‖(x : EucSpace 2)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
-  simp [Perspective.diracProb, hx]
 
 end MeanField
 end Transformer
