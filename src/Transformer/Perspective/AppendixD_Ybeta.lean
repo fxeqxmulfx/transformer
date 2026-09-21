@@ -5,10 +5,10 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
 `e:ybetacloseto1`, the Grönwall estimate for the scalar equation `eq: ybeta`
-itself.  It is proved here, on the range its own constant points at and with
-the two properties of the solution the survey uses without proving them —
-that `γ_β` stays in `[0, 1]`, and that it has passed `1/2` by time
-`n e^β / 2` — carried as explicit hypotheses.
+itself.  It is proved here, on the range its own constant points at, from
+`eq: ybeta` alone: the properties of the solution the survey's proof uses —
+`γ_β` stays in `[0, 1]`, increases, and has passed `1/2` by time `n e^β / 2` —
+are in `Perspective.AppendixD_YbetaInvariance`.
 
 `not_forall_ybeta_close_to_1` refutes the form the survey prints, which puts
 the estimate on all of `t ≥ 0`.
@@ -17,7 +17,7 @@ The stability estimates of the first half of Appendix D are in
 `Perspective.AppendixD_PhaseTransition`.
 -/
 
-import Transformer.Perspective.Section5_HighDCurve
+import Transformer.Perspective.AppendixD_YbetaInvariance
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
 import Mathlib.Analysis.Complex.ExponentialBounds
 
@@ -38,15 +38,16 @@ variable (n : ℕ)
 *The range is `t ≥ n e^β / 2`, not `t ≥ 0`.*  The survey's right-hand side is
 `(1/2) exp(-λ (t - n e^β/2))` with `λ = n/(n + e^{β/2})`, so at `t = n e^β/2`
 it asserts `γ_β ≥ 1/2` and before that time it asserts less than `1` only by
-the width of the exponential.  At `n = 1`, `β = 0`, where `eq: ybeta` is
-solved in closed form by `1 - e^{-2t}`, the printed form already fails at
-`t = 0`: it reads `1 ≤ (1/2) e^{1/4} ≈ 0.642`.  This is
-`not_forall_ybeta_close_to_1`.
+the width of the exponential.  At `n = 2`, `β = 0`, where `eq: ybeta` is
+solved in closed form by `tanh`, the printed form already fails at `t = 0`:
+it reads `1 ≤ (1/2) e^{2/3} ≈ 0.974`.  This is `not_forall_ybeta_close_to_1`.
 
-*The two properties of the solution are carried as hypotheses.*  `hinv` is the
-invariance of `[0, 1]` and `hhalf` is the half-way time; the survey uses both
-without comment, and neither is proved here.  Together they give what the
-Grönwall step needs: `γ_β` is nondecreasing, hence `γ_β ≥ 1/2` past
+*`n ≥ 1` instead of `n ≥ 2`.*  The theorem the estimate serves fixes `n ≥ 2`;
+the proof needs only `n ≥ 1`.
+
+*The proof is the survey's.*  `γ_β` stays in `[0, 1]` and is nondecreasing
+(`ybetaODE_SA.mem_Ico`, `ybetaODE_SA.monotoneOn`), and it has passed `1/2` at
+`n e^β / 2` (`ybetaODE_SA.half_le`), hence `γ_β ≥ 1/2` past
 `n e^β / 2`, hence `e^{β γ_β} ≥ e^{β/2}` and `(n-1) γ_β + 1 ≥ (n+1)/2`, and
 the rate
 
@@ -58,15 +59,16 @@ is the survey's `λ`.  The constant `n² e^β / (2(n + e^{β/2}))` is exactly
 
 Source: arXiv:2312.10794v5, Appendix D, `e:ybetacloseto1`. -/
 theorem ybeta_close_to_1 (hn : 0 < n) (β : ℝ) (hβ : 0 ≤ β) (γ : ℝ → ℝ)
-    (hγ : ybetaODE_SA n β γ)
-    (hinv : ∀ t : ℝ, 0 ≤ t → 0 ≤ γ t ∧ γ t ≤ 1)
-    (hhalf : (1/2 : ℝ) ≤ γ ((n : ℝ) * Real.exp β / 2)) :
+    (hγ : ybetaODE_SA n β γ) :
     ∀ t : ℝ, (n : ℝ) * Real.exp β / 2 ≤ t →
       1 - γ t
         ≤ (1/2 : ℝ) * Real.exp
             ((n : ℝ)^2 * Real.exp β
                 / (2 * ((n : ℝ) + Real.exp (β / 2)))
               - ((n : ℝ) * t) / ((n : ℝ) + Real.exp (β / 2))) := by
+  have hinv : ∀ t : ℝ, 0 ≤ t → 0 ≤ γ t ∧ γ t ≤ 1 := fun t ht =>
+    ⟨(hγ.mem_Ico hn t ht).1, (hγ.mem_Ico hn t ht).2.le⟩
+  have hhalf : (1/2 : ℝ) ≤ γ ((n : ℝ) * Real.exp β / 2) := hγ.half_le hn hβ
   have hnR : (0 : ℝ) < (n : ℝ) := Nat.cast_pos.mpr hn
   have hn1 : (1 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
   have hqpos : (0 : ℝ) < Real.exp (β / 2) := Real.exp_pos _
@@ -87,17 +89,7 @@ theorem ybeta_close_to_1 (hn : 0 < n) (β : ℝ) (hβ : 0 ≤ β) (γ : ℝ → 
     have : (0 : ℝ) ≤ ((n : ℝ) - 1) * Real.exp (β * γ t) :=
       mul_nonneg (by linarith) (Real.exp_pos _).le
     linarith
-  -- `γ_β` is nondecreasing on `[0, ∞)`: its right-hand side is nonnegative there
-  have hmono : MonotoneOn γ (Set.Ici (0 : ℝ)) := by
-    refine monotoneOn_of_deriv_nonneg (convex_Ici 0)
-      (fun s _ => (hderiv s).continuousAt.continuousWithinAt)
-      (fun s _ => (hderiv s).differentiableAt.differentiableWithinAt) ?_
-    intro s hs
-    rw [interior_Ici] at hs
-    obtain ⟨hg0, hg1⟩ := hinv s (Set.mem_Ioi.mp hs).le
-    rw [(hderiv s).deriv]
-    refine div_nonneg ?_ (hDpos s).le
-    exact mul_nonneg (mul_nonneg (by positivity) (by linarith)) (by nlinarith)
+  have hmono : MonotoneOn γ (Set.Ici (0 : ℝ)) := hγ.monotoneOn hn
   have hhalft : ∀ t : ℝ, T0 ≤ t → (1/2 : ℝ) ≤ γ t := fun t ht =>
     hhalf.trans (hmono (Set.mem_Ici.mpr hT0nn) (Set.mem_Ici.mpr (hT0nn.trans ht)) ht)
   -- past the half-way time the rate is at least `lam`
@@ -186,33 +178,23 @@ theorem ybeta_close_to_1 (hn : 0 < n) (β : ℝ) (hβ : 0 ≤ β) (γ : ℝ → 
     field_simp
   rw [hexpeq]
 
-/-- The hypotheses of `ybeta_close_to_1` are satisfiable, and by the one
-solution of `eq: ybeta` available in closed form: at `n = 1`, `β = 0` it is
-`γ(t) = 1 - e^{-2t}`, which stays in `[0, 1]` for `t ≥ 0` and has
-`γ(1/2) = 1 - e^{-1} > 1/2`. -/
-example :
-    (0 : ℕ) < 1 ∧ (0 : ℝ) ≤ 0 ∧ ybetaODE_SA 1 0 (fun t => 1 - Real.exp (-2 * t)) ∧
-      (∀ t : ℝ, 0 ≤ t →
-        0 ≤ 1 - Real.exp (-2 * t) ∧ 1 - Real.exp (-2 * t) ≤ 1) ∧
-      (1/2 : ℝ) ≤ 1 - Real.exp (-2 * (((1 : ℕ) : ℝ) * Real.exp 0 / 2)) := by
-  refine ⟨one_pos, le_rfl, ybetaODE_SA_one_zero, fun t ht => ⟨?_, ?_⟩, ?_⟩
-  · have : Real.exp (-2 * t) ≤ 1 := Real.exp_le_one_iff.mpr (by linarith)
-    linarith
-  · linarith [(Real.exp_pos (-2 * t)).le]
-  · have h : (-2 : ℝ) * (((1 : ℕ) : ℝ) * Real.exp 0 / 2) = -1 := by norm_num
-    rw [h]
-    linarith [Real.exp_neg_one_lt_half]
+/-- The hypotheses of `ybeta_close_to_1` are satisfiable: `tanh` solves
+`eq: ybeta` at `n = 2`, `β = 0`. -/
+example : (0 : ℕ) < 2 ∧ (0 : ℝ) ≤ 0 ∧ ybetaODE_SA 2 0 Real.tanh :=
+  ⟨two_pos, le_rfl, ybetaODE_SA_two_zero⟩
 
 /-- **On all of `t ≥ 0` the estimate is false.**
 
-At `n = 1`, `β = 0` the solution of `eq: ybeta` is `γ(t) = 1 - e^{-2t}`, and
-at `t = 0` the survey's bound reads `1 ≤ (1/2) e^{1/4}`, where
-`e^{1/4} < e < 3`.  The estimate is about the regime past the half-way time
-`n e^β / 2`, which is `1/2` here; `ybeta_close_to_1` proves it there.
+The survey states `e:ybetacloseto1` "for any `t ≥ 0`", within
+`thm: phase.transition.curve`, which fixes `β ≥ 0` and `n ≥ 2`.  At `n = 2`,
+`β = 0` the solution of `eq: ybeta` is `tanh`, and at `t = 0` the bound reads
+`1 ≤ (1/2) e^{2/3}`, false since `2/3 < log 2`.  The estimate is about the
+regime past the half-way time `n e^β / 2`, which is `1` here;
+`ybeta_close_to_1` proves it there.
 
 Source: arXiv:2312.10794v5, Appendix D, `e:ybetacloseto1`. -/
 theorem not_forall_ybeta_close_to_1 :
-    ¬ ∀ (n : ℕ) (β : ℝ) (γ : ℝ → ℝ), ybetaODE_SA n β γ →
+    ¬ ∀ (n : ℕ) (β : ℝ) (γ : ℝ → ℝ), 2 ≤ n → 0 ≤ β → ybetaODE_SA n β γ →
         ∀ t : ℝ, 0 ≤ t →
           1 - γ t
             ≤ (1/2 : ℝ) * Real.exp
@@ -220,12 +202,16 @@ theorem not_forall_ybeta_close_to_1 :
                     / (2 * ((n : ℝ) + Real.exp (β / 2)))
                   - ((n : ℝ) * t) / ((n : ℝ) + Real.exp (β / 2))) := by
   intro h
-  have hineq := h 1 0 (fun t => 1 - Real.exp (-2 * t)) ybetaODE_SA_one_zero 0 le_rfl
-  have hh : Real.exp (1/2 : ℝ) * Real.exp (1/2 : ℝ) = Real.exp 1 := by
-    rw [← Real.exp_add]; norm_num
-  have hhalf : Real.exp (1/2 : ℝ) < 2 := by
-    nlinarith [Real.exp_one_lt_three, Real.exp_pos (1/2 : ℝ), hh]
-  have hquarter : Real.exp (1/4 : ℝ) < 2 :=
-    lt_of_le_of_lt (Real.exp_le_exp.mpr (by norm_num)) hhalf
-  norm_num at hineq
+  have hineq := h 2 0 Real.tanh le_rfl le_rfl ybetaODE_SA_two_zero 0 le_rfl
+  have hval : ((2 : ℕ) : ℝ) ^ 2 * Real.exp 0 / (2 * (((2 : ℕ) : ℝ) + Real.exp (0 / 2)))
+      - (((2 : ℕ) : ℝ) * 0) / (((2 : ℕ) : ℝ) + Real.exp (0 / 2)) = 2 / 3 := by
+    norm_num
+  rw [hval, Real.tanh_zero] at hineq
+  have hlt : Real.exp (2 / 3 : ℝ) < 2 := by
+    calc Real.exp (2 / 3 : ℝ) < Real.exp (Real.log 2) :=
+          Real.exp_lt_exp.mpr (by linarith [Real.log_two_gt_d9])
+      _ = 2 := Real.exp_log two_pos
   linarith
+
+end Perspective
+end Transformer

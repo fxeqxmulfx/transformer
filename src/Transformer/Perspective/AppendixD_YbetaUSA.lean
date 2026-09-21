@@ -12,7 +12,7 @@ to `t = n/2` and supplies the half-way value there, and the fast rate
 -/
 
 import Transformer.Perspective.Gronwall
-import Transformer.Perspective.Section5_HighDCurve
+import Transformer.Perspective.AppendixD_YbetaInvariance
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
 import Mathlib.Analysis.Complex.ExponentialBounds
 
@@ -31,12 +31,10 @@ The same argument as `e:ybetacloseto1` runs with `eq: ybeta` replaced by
 
   `1 - γ_β(t) ≤ (1/2) exp(-e^{β/2} (t - n/2))`,   `t ≥ 0`.
 
-**What the source says and what is changed here.**  One change: the
-`[0,1]`-invariance of the solution of `eq: ybetaUSA` — `0 ≤ γ_β ≤ 1` on
-`[0, ∞)`, which the survey uses silently and which is a property of the
-solution, not of the equation as a differential relation — is carried as the
-hypothesis `hinv`.  The range `t ≥ 0` and the constant are the survey's, both
-unchanged.
+**What the source says.**  The range `t ≥ 0` and the constant are the
+survey's, both unchanged.  The `[0,1]`-invariance of the solution of
+`eq: ybetaUSA`, which the survey uses silently, is proved from the equation
+(`ybetaODE_USA.mem_Ico`).
 
 The hypothesis `2 ≤ n` is not decoration: at `n = 1`, `β = 0`, `t = 0` the
 bound reads `1 - γ(0) = 1 ≤ (1/2) e^{1/2} ≈ 0.824`, which is false — see
@@ -53,10 +51,11 @@ giving the rate `(2/n) e^{β/2} (n+1)/2 ≥ e^{β/2}`.
 
 Source: arXiv:2312.10794v5, Appendix D, `rem: usa.d`. -/
 theorem usa_analogue (hn : 2 ≤ n) (β : ℝ) (hβ : 0 ≤ β) (γ : ℝ → ℝ)
-    (hγ : ybetaODE_USA n β γ)
-    (hinv : ∀ t : ℝ, 0 ≤ t → 0 ≤ γ t ∧ γ t ≤ 1) :
+    (hγ : ybetaODE_USA n β γ) :
     ∀ t : ℝ, 0 ≤ t →
       1 - γ t ≤ (1/2 : ℝ) * Real.exp (-(Real.exp (β / 2) * (t - (n : ℝ) / 2))) := by
+  have hinv : ∀ t : ℝ, 0 ≤ t → 0 ≤ γ t ∧ γ t ≤ 1 := fun t ht =>
+    ⟨(hγ.mem_Ico (by omega) t ht).1, (hγ.mem_Ico (by omega) t ht).2.le⟩
   have hnR : (2 : ℝ) ≤ (n : ℝ) := by exact_mod_cast hn
   have hn0 : (0 : ℝ) < (n : ℝ) := by linarith
   have hderiv := hγ.2
@@ -163,14 +162,11 @@ theorem usa_analogue (hn : 2 ≤ n) (β : ℝ) (hβ : 0 ≤ β) (γ : ℝ → �
 /-- The hypotheses of `usa_analogue` are satisfiable at the smallest `n` it
 allows: `n = 2`, `β = 0`, `γ = tanh`, where at `t = 0` the conclusion reads
 `1 ≤ e/2 ≈ 1.359`. -/
-example : 2 ≤ 2 ∧ (0 : ℝ) ≤ 0 ∧ ybetaODE_USA 2 0 Real.tanh ∧
-    ∀ t : ℝ, 0 ≤ t → 0 ≤ Real.tanh t ∧ Real.tanh t ≤ 1 := by
-  refine ⟨le_rfl, le_rfl, ybetaODE_USA_two_zero, fun t ht => ⟨?_, (Real.tanh_lt_one t).le⟩⟩
-  rw [Real.tanh_eq_sinh_div_cosh]
-  exact div_nonneg (Real.sinh_nonneg_iff.mpr ht) (Real.cosh_pos t).le
+example : 2 ≤ 2 ∧ (0 : ℝ) ≤ 0 ∧ ybetaODE_USA 2 0 Real.tanh :=
+  ⟨le_rfl, le_rfl, ybetaODE_USA_two_zero⟩
 
 /-- **`2 ≤ n` is not decoration.**  Dropping it from `usa_analogue` — keeping
-everything else, `β ≥ 0`, the equation, and the `[0,1]`-invariance — makes the
+everything else, `β ≥ 0` and the equation — makes the
 remark false: at `n = 1`, `β = 0` the equation is `γ̇ = 2(1 - γ)`, solved by
 `γ(t) = 1 - e^{-2t}`, and at `t = 0` the bound reads
 
@@ -181,7 +177,6 @@ What fails is the gluing: the crude rate is `2/n = 2 > 1 = e^{β/2}`, so the
 hold before the solution has had time to reach `1/2`. -/
 theorem not_forall_usa_analogue :
     ¬ ∀ (n : ℕ) (β : ℝ) (γ : ℝ → ℝ), 0 ≤ β → ybetaODE_USA n β γ →
-        (∀ t : ℝ, 0 ≤ t → 0 ≤ γ t ∧ γ t ≤ 1) →
         ∀ t : ℝ, 0 ≤ t →
           1 - γ t
             ≤ (1/2 : ℝ) * Real.exp (-(Real.exp (β / 2) * (t - (n : ℝ) / 2))) := by
@@ -195,14 +190,7 @@ theorem not_forall_usa_analogue :
     refine hd.congr_deriv ?_
     norm_num
     ring
-  have hinv : ∀ t : ℝ, (0 : ℝ) ≤ t →
-      0 ≤ (fun t : ℝ => 1 - Real.exp (-2 * t)) t ∧
-        (fun t : ℝ => 1 - Real.exp (-2 * t)) t ≤ 1 := by
-    intro t ht
-    have h1 : Real.exp (-2 * t) ≤ 1 := Real.exp_le_one_iff.mpr (by linarith)
-    have h2 : (0 : ℝ) < Real.exp (-2 * t) := Real.exp_pos _
-    exact ⟨by simpa using h1, by simpa using h2.le⟩
-  have hbad := h 1 0 _ le_rfl hode hinv 0 le_rfl
+  have hbad := h 1 0 _ le_rfl hode 0 le_rfl
   have hq : Real.exp (1/2 : ℝ) * Real.exp (1/2 : ℝ) = Real.exp 1 := by
     rw [← Real.exp_add]; norm_num
   norm_num at hbad

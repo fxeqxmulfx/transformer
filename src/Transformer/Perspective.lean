@@ -74,6 +74,7 @@ import Transformer.Perspective.AppendixD_Alpha
 import Transformer.Perspective.AppendixD_DotAlpha
 import Transformer.Perspective.AppendixD_AlphaDeriv
 import Transformer.Perspective.AppendixD_Product
+import Transformer.Perspective.AppendixD_YbetaInvariance
 import Transformer.Perspective.AppendixD_Ybeta
 import Transformer.Perspective.AppendixD_YbetaUSA
 import Transformer.Perspective.AppendixD_Assembly
