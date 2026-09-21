@@ -555,28 +555,28 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.Perceptron — arXiv:2601.21366
 
-- [ ] Transformer/Perceptron/Analytic.lean (6): `norm_greatCircle`, `inner_greatCircle`, `analyticOnNhd_greatCircle`, `hasDerivAt_reluSq`, `analyticOnNhd_potential_greatCircle`, `not_isAnalyticOnSphere_relu`
-- [ ] Transformer/Perceptron/Atomicity.lean (4): `isFinitelyAtomic_diracProb`, `norm_secondAxis`, `norm_basePoint_one`, `inner_basePoint_secondAxis`
-- [ ] Transformer/Perceptron/Atoms.lean (11): `coe_atomicProb`, `isFinitelyAtomic_atomicProb`, `coe_circlePoint`, `inner_basePoint_circlePoint`, `hasDerivAt_circlePoint`, `hasDerivAt_circleVel`, `inner_circlePoint`, `inner_circleVel`, `hasDerivAt_inner_circlePoint`, `hasDerivAt_inner_circleVel`, `isAtomicOnCircle_atomicProb`
-- [ ] Transformer/Perceptron/Basic.lean (5): `drift_zero`, `hasGradientAt_potential`, `proj_gradient_potential`, `isStationary_diracProb_of_radial`, `isStationary_diracProb`
-- [ ] Transformer/Perceptron/Bias.lean (7): `biasedPotential_zero`, `biasedDrift_zero`, `biasedEnergyGrad_zero`, `isBiasedStationary_zero_iff`, `isBiasedAnalyticOnSphere_zero_iff`, `hasGradientAt_biasedPotential`, `proj_gradient_biasedPotential`
-- [ ] Transformer/Perceptron/BiasedAtomicity.lean (3): `hasTransverseHyperplane_zero`, `basePoint_ne_zero`, `single_neg_basePoint_ne_zero`
-- [ ] Transformer/Perceptron/CircleDeriv.lean (3): `hasDerivAt_potential_circlePoint`, `deriv_potential_circlePoint`, `secondDeriv_potential_circlePoint`
-- [ ] Transformer/Perceptron/Dirac.lean (8): `interactionEnergy_of_dirac`, `energy_of_dirac`, `potential_pin`, `drift_pin`, `isStationary_pin`, `isStationary_relu_pin`, `isStationary_linear_pin`, `isStrictSOPD_pin`
-- [ ] Transformer/Perceptron/GeneralAtomicity.lean (1): `isSymmetric_bijective_id`
-- [ ] Transformer/Perceptron/GeneralAttention.lean (11): `potential_smul`, `proj_smul_right`, `drift_smul`, `interactionEnergyMap_smul_id`, `energyMap_smul_id`, `energyGradMap_smul_id`, `isStationaryMap_smul_id_iff`, `energyMap_id_eq`, `isStationaryMap_id_iff`, `isStrictSOPDMap_id_iff`, `isSOPDMap_id_iff`
-- [ ] Transformer/Perceptron/Geodesic.lean (6): `sphereExp_zero`, `norm_sphereExp`, `inner_sphereExp_smul`, `isGradientField_zero`, `inner_isGradientField`, `IsSOPD_of_IsStrictSOPD`
-- [ ] Transformer/Perceptron/HigherDim.lean (1): `mutuallySingular_of_measure_support_eq_zero`
-- [ ] Transformer/Perceptron/Hyperplane.lean (3): `exists_unit_inner_eq_zero`, `smul_eq_of_inner_eq_norm`, `not_subsingleton_sphereHyperplane_iff`
-- [ ] Transformer/Perceptron/Kernel.lean (13): `hasDerivAt_kernelK`, `deriv_kernelK`, `hasDerivAt_deriv_kernelK`, `deriv2_kernelK`, `cosArg_mem_Ioo`, `cos_thetaC`, `thetaC_pos`, `thetaC_lt_pi_div_two`, `thetaC_le_pi`, `quadratic_cos_thetaC`, `kernelK2_neg`, `strictConcaveOn_kernelK`, `tendsto_thetaC_nhdsWithin_zero`
-- [ ] Transformer/Perceptron/KernelSup.lean (4): `two_mul_le_exp`, `abs_kernelK2_le`, `abs_kernelK2_zero`, `isGreatest_abs_kernelK2`
-- [ ] Transformer/Perceptron/MinMax.lean (6): `continuous_of_hasDerivAt`, `continuous_potential`, `integrable_potential`, `energy_diracProb`, `isMaxEnergy_diracProb_of_isMaxOn`, `exists_isMaxOn_potential_of_isMaxEnergy`
-- [ ] Transformer/Perceptron/Normalized.lean (8): `energyGrad_eq_attentionGrad_add_drift`, `attentionWeight_pos`, `proj_integral_expInner_smul`, `proj_gradient_attentionWeight`, `proj_inv_smul_gradient_attentionWeight`, `attentionGrad_diracProb`, `isNormalizedStationary_diracProb_of_radial`, `isNormalizedStationary_relu_pin`
-- [ ] Transformer/Perceptron/NormalizedMap.lean (7): `energyGradMap_eq_attentionGradMap_add_drift`, `attentionWeightMap_smul_id`, `attentionGradMap_smul_id`, `normalizedField_smul_id`, `isNormalizedStationaryMap_smul_id_iff`, `isNormalizedStationaryMap_id_iff`, `isNormalizedStationaryMap_relu_pin`
-- [ ] Transformer/Perceptron/Piecewise.lean (2): `isPiecewisePolynomial_relu`, `lipschitzWith_relu`
-- [ ] Transformer/Perceptron/SignedGram.lean (4): `sum_single_neuron`, `signedGram_single`, `isNonDegenerate_single`, `isNonDegenerate_pin`
-- [ ] Transformer/Perceptron/StrictSOPD.lean (1): `secondDeriv_ge_iff_simplified`
-- [ ] Transformer/Perceptron/Transform.lean (9): `attentionTransformMap_smul_id`, `coe_antipodeMap`, `measurable_antipodeMap`, `coe_antipode`, `attentionTransformMap_antipode`, `attentionTransform_antipode`, `even_attentionTransformMap_iff`, `even_attentionTransform_iff`, `isPolyOfDegreeLE_const`
+- ok Transformer/Perceptron/Analytic.lean (6): `norm_greatCircle`, `inner_greatCircle`, `analyticOnNhd_greatCircle`, `hasDerivAt_reluSq`, `analyticOnNhd_potential_greatCircle`, `not_isAnalyticOnSphere_relu`
+- ok Transformer/Perceptron/Atomicity.lean (4): `isFinitelyAtomic_diracProb`, `norm_secondAxis`, `norm_basePoint_one`, `inner_basePoint_secondAxis`
+- ok Transformer/Perceptron/Atoms.lean (11): `coe_atomicProb`, `isFinitelyAtomic_atomicProb`, `coe_circlePoint`, `inner_basePoint_circlePoint`, `hasDerivAt_circlePoint`, `hasDerivAt_circleVel`, `inner_circlePoint`, `inner_circleVel`, `hasDerivAt_inner_circlePoint`, `hasDerivAt_inner_circleVel`, `isAtomicOnCircle_atomicProb`
+- ok Transformer/Perceptron/Basic.lean (5): `drift_zero`, `hasGradientAt_potential`, `proj_gradient_potential`, `isStationary_diracProb_of_radial`, `isStationary_diracProb`
+- ok Transformer/Perceptron/Bias.lean (7): `biasedPotential_zero`, `biasedDrift_zero`, `biasedEnergyGrad_zero`, `isBiasedStationary_zero_iff`, `isBiasedAnalyticOnSphere_zero_iff`, `hasGradientAt_biasedPotential`, `proj_gradient_biasedPotential`
+- ok Transformer/Perceptron/BiasedAtomicity.lean (3): `hasTransverseHyperplane_zero`, `basePoint_ne_zero`, `single_neg_basePoint_ne_zero`
+- ok Transformer/Perceptron/CircleDeriv.lean (3): `hasDerivAt_potential_circlePoint`, `deriv_potential_circlePoint`, `secondDeriv_potential_circlePoint`
+- ok Transformer/Perceptron/Dirac.lean (8): `interactionEnergy_of_dirac`, `energy_of_dirac`, `potential_pin`, `drift_pin`, `isStationary_pin`, `isStationary_relu_pin`, `isStationary_linear_pin`, `isStrictSOPD_pin`
+- ok Transformer/Perceptron/GeneralAtomicity.lean (1): `isSymmetric_bijective_id`
+- ok Transformer/Perceptron/GeneralAttention.lean (11): `potential_smul`, `proj_smul_right`, `drift_smul`, `interactionEnergyMap_smul_id`, `energyMap_smul_id`, `energyGradMap_smul_id`, `isStationaryMap_smul_id_iff`, `energyMap_id_eq`, `isStationaryMap_id_iff`, `isStrictSOPDMap_id_iff`, `isSOPDMap_id_iff`
+- ok Transformer/Perceptron/Geodesic.lean (6): `sphereExp_zero`, `norm_sphereExp`, `inner_sphereExp_smul`, `isGradientField_zero`, `inner_isGradientField`, `IsSOPD_of_IsStrictSOPD`
+- ok Transformer/Perceptron/HigherDim.lean (1): `mutuallySingular_of_measure_support_eq_zero`
+- ok Transformer/Perceptron/Hyperplane.lean (3): `exists_unit_inner_eq_zero`, `smul_eq_of_inner_eq_norm`, `not_subsingleton_sphereHyperplane_iff`
+- issue Transformer/Perceptron/Kernel.lean (13): `hasDerivAt_kernelK`, `deriv_kernelK`, `hasDerivAt_deriv_kernelK`, `deriv2_kernelK`, `cosArg_mem_Ioo`, `cos_thetaC`, `thetaC_pos`, `thetaC_lt_pi_div_two`, `thetaC_le_pi`, `quadratic_cos_thetaC`, `kernelK2_neg`, `strictConcaveOn_kernelK`, `tendsto_thetaC_nhdsWithin_zero` — proved lemmas ok; Bound.lean (sorried): bound_cluster_mass and bound_atom_count choose C in O(e^{-β}) before the weights ϑ, but the paper's proof gives a constant that depends on C_ϑ = 2Σ|ω_j|‖a_j‖², so the statement is stronger than the paper and possibly false; fix: ∀ ω a, ∃ C β₀
+- ok Transformer/Perceptron/KernelSup.lean (4): `two_mul_le_exp`, `abs_kernelK2_le`, `abs_kernelK2_zero`, `isGreatest_abs_kernelK2`
+- ok Transformer/Perceptron/MinMax.lean (6): `continuous_of_hasDerivAt`, `continuous_potential`, `integrable_potential`, `energy_diracProb`, `isMaxEnergy_diracProb_of_isMaxOn`, `exists_isMaxOn_potential_of_isMaxEnergy`
+- ok Transformer/Perceptron/Normalized.lean (8): `energyGrad_eq_attentionGrad_add_drift`, `attentionWeight_pos`, `proj_integral_expInner_smul`, `proj_gradient_attentionWeight`, `proj_inv_smul_gradient_attentionWeight`, `attentionGrad_diracProb`, `isNormalizedStationary_diracProb_of_radial`, `isNormalizedStationary_relu_pin`
+- ok Transformer/Perceptron/NormalizedMap.lean (7): `energyGradMap_eq_attentionGradMap_add_drift`, `attentionWeightMap_smul_id`, `attentionGradMap_smul_id`, `normalizedField_smul_id`, `isNormalizedStationaryMap_smul_id_iff`, `isNormalizedStationaryMap_id_iff`, `isNormalizedStationaryMap_relu_pin`
+- ok Transformer/Perceptron/Piecewise.lean (2): `isPiecewisePolynomial_relu`, `lipschitzWith_relu`
+- ok Transformer/Perceptron/SignedGram.lean (4): `sum_single_neuron`, `signedGram_single`, `isNonDegenerate_single`, `isNonDegenerate_pin`
+- ok Transformer/Perceptron/StrictSOPD.lean (1): `secondDeriv_ge_iff_simplified`
+- ok Transformer/Perceptron/Transform.lean (9): `attentionTransformMap_smul_id`, `coe_antipodeMap`, `measurable_antipodeMap`, `coe_antipode`, `attentionTransformMap_antipode`, `attentionTransform_antipode`, `even_attentionTransformMap_iff`, `even_attentionTransform_iff`, `isPolyOfDegreeLE_const`
 
 ### Transformer.Perspective — arXiv:2312.10794
 
