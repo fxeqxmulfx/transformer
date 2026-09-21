@@ -116,9 +116,11 @@ def prefixVec (w : List σ) (i : ℕ) : PVec σ := parikh (w.take i)
 /-- A formula is *constant* on a family of intervals when its truth value
 depends on neither the string nor the position, as long as the string has the
 given Parikh vector and the position sits inside the interval (Definition
-`def:constant`). -/
+`def:constant`).  "Positions" are those of the strings, `1 ≤ i ≤ |w|`, as in
+the paper; `prefixVec` alone would also admit `i = 0` and `i > |w|`. -/
 def ConstantOn (φ : Form σ) (I : IntervalFamily σ) : Prop :=
   ∀ (n : PVec σ) (w w' : List σ) (i i' : ℕ), parikh w = n → parikh w' = n →
+    1 ≤ i → i ≤ w.length → 1 ≤ i' → i' ≤ w'.length →
     prefixVec w i ∈ I n → prefixVec w' i' ∈ I n → φ.sat w i = φ.sat w' i'
 
 mutual
@@ -184,7 +186,7 @@ when it also cannot read the current symbol; the constant predicates of the
 paper are the ones a PNP can express.  Here is the simplest nontrivial
 witness that `ConstantOn` is satisfiable: a PNP that ignores its arguments. -/
 example (I : IntervalFamily σ) : ConstantOn (.pnp fun _ _ => true) I :=
-  fun _ _ _ _ _ _ _ _ _ => rfl
+  fun _ _ _ _ _ _ _ _ _ _ _ _ _ => rfl
 
 end CRASP
 end Transformer

@@ -107,38 +107,44 @@ any depth-`k` formula `φ` of `TL[◁#]^P_k` and affix restriction `(λ, ϱ)`, i
 the PNPs and minimal depth-1 subformulas of `φ` are constant on the middle of
 `(λ, ϱ)`, then there is a formula `φ'` of depth `(k-1)` of `TL[◁#]^P_{k-1}`
 that defines `L(φ)` restricted to `(λ, ϱ)`, and the PNPs of `φ'` are constant
-on the middle of `(λ, ϱ)`."  Take `φ = ⊤`, written `¬(1 < 1)`, which has no
-PNPs and no minimal depth-1 subformulas, and `(λ, ϱ) = (ab, ε)`: the restricted
-language holds `abab` and not `aabb`, which no depth-1 formula with PNPs
-constant on the middle tells apart (`Form.sat_abab_eq_aabb`).
+on the middle of `(λ, ϱ)`."  Take `φ = ⊤`, written at depth exactly `2` as
+`Form.topTwo`, which has no PNPs and whose only minimal depth-1 subformula is a
+tautology, and `(λ, ϱ) = (ab, ε)`: the restricted language holds `abab` and not
+`aabb`, which no depth-1 formula with PNPs constant on the middle tells apart
+(`Form.sat_abab_eq_aabb`).
+
+The refutation rests on the lower end of the middle: the paper's
+`[ℙ(λ(n⃗)), n⃗ - ℙ(ϱ(n⃗))]` contains the prefix vector of the last position of
+`λ(n⃗)`.  With the middle starting one letter later the counterexample
+disappears; that corrected lemma is not stated here.
 
 Source: arXiv:2506.16055v3, §4.4, `lem:reduction`, and its proof in
 Appendix C.3, where `Π_σ` is claimed constant on the middle. -/
 theorem reduction_past_unsound :
-    ¬ ∀ k : ℕ, 0 < k → ∀ φ : Form Bool, φ ∈ TLClP Bool k → ∀ A : Affix Bool,
+    ¬ ∀ k : ℕ, 0 < k → ∀ φ : Form Bool, φ ∈ TLClP Bool k → φ.depth = k → ∀ A : Affix Bool,
       PnpsConstantOn φ A.middle → MinimalOneConstantOn φ A.middle →
       ∃ φ' ∈ TLClP Bool (k - 1), φ'.lang = A.restrict φ.lang ∧ PnpsConstantOn φ' A.middle :=
   fun h => by
-    obtain ⟨φ', hφ', hlang, hpnp⟩ := h 2 two_pos (.neg (.lt .one .one)) ⟨rfl, Nat.zero_le 2⟩
-      Affix.startAB (fun ψ hψ => by simp [Form.pnps, Term.pnps] at hψ)
-      (fun ψ hψ => by simp [Form.minimalOne, Term.minimalOne, Term.depth] at hψ)
-    exact not_lang_eq_restrict_startAB φ' hφ'.2 hpnp hlang
+    obtain ⟨φ', hφ', hlang, hpnp⟩ := h 2 two_pos Form.topTwo
+      ⟨Form.past_topTwo, Form.depth_topTwo.le⟩ Form.depth_topTwo Affix.startAB
+      (Form.pnpsConstantOn_topTwo _) (Form.minimalOneConstantOn_topTwo _)
+    exact not_lang_eq_restrict_startAB φ' hφ'.2 hpnp (hlang.trans (by rw [Form.lang_topTwo]))
 
 /-- **The `TL[◁#,▷#]^P` version of `lem:reduction` is false too**, by the same
-`⊤` and `(ab, ε)`: `Form.sat_abab_eq_aabb` does not need the formula to be
+`Form.topTwo` and `(ab, ε)`: `Form.sat_abab_eq_aabb` does not need the formula to be
 past-only.
 
 Source: arXiv:2506.16055v3, §4.4, `lem:reduction`, and its proof in
 Appendix C.3. -/
 theorem reduction_unsound :
-    ¬ ∀ k : ℕ, 0 < k → ∀ φ : Form Bool, φ ∈ TLCP Bool k → ∀ A : Affix Bool,
+    ¬ ∀ k : ℕ, 0 < k → ∀ φ : Form Bool, φ ∈ TLCP Bool k → φ.depth = k → ∀ A : Affix Bool,
       PnpsConstantOn φ A.middle → MinimalOneConstantOn φ A.middle →
       ∃ φ' ∈ TLCP Bool (k - 1), φ'.lang = A.restrict φ.lang ∧ PnpsConstantOn φ' A.middle :=
   fun h => by
-    obtain ⟨φ', hφ', hlang, hpnp⟩ := h 2 two_pos (.neg (.lt .one .one)) (Nat.zero_le 2)
-      Affix.startAB (fun ψ hψ => by simp [Form.pnps, Term.pnps] at hψ)
-      (fun ψ hψ => by simp [Form.minimalOne, Term.minimalOne, Term.depth] at hψ)
-    exact not_lang_eq_restrict_startAB φ' hφ' hpnp hlang
+    obtain ⟨φ', hφ', hlang, hpnp⟩ := h 2 two_pos Form.topTwo Form.depth_topTwo.le
+      Form.depth_topTwo Affix.startAB (Form.pnpsConstantOn_topTwo _)
+      (Form.minimalOneConstantOn_topTwo _)
+    exact not_lang_eq_restrict_startAB φ' hφ' hpnp (hlang.trans (by rw [Form.lang_topTwo]))
 
 /-! ## The hierarchy -/
 

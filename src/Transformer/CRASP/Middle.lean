@@ -134,7 +134,9 @@ theorem Form.sat_middle (A : Affix σ) {n : PVec σ} {u v : List σ} {χ : Form 
     omega
   have hidx : u.idxOf a < u.length := List.idxOf_lt_length_of_mem ha
   refine Form.sat_eq_of_depth_eq_zero ?_ χ hχ fun ψ hψ =>
-    hpnp ψ hψ n _ _ _ _ hv hu (prefixVec_mem_middle A hv hjv) (prefixVec_mem_middle A hu hidx)
+    hpnp ψ hψ n _ _ _ _ hv hu (by omega) (by simp only [List.length_append]; omega) (by omega)
+      (by simp only [List.length_append]; omega) (prefixVec_mem_middle A hv hjv)
+      (prefixVec_mem_middle A hu hidx)
   rw [List.append_assoc, List.append_assoc,
     show (A.pre n).length + j - 1 = (A.pre n).length + (j - 1) by omega,
     show (A.pre n).length + (u.idxOf a + 1) - 1 = (A.pre n).length + u.idxOf a by omega,

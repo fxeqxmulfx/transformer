@@ -75,7 +75,7 @@ theorem two_le_of_prefixVec_mem {w : List Bool} {i : ℕ} {n : PVec Bool}
 (Definition `def:constant`). -/
 theorem pnpsConstantOn_firstNotA :
     PnpsConstantOn Form.firstNotA (fun n => ⟨fun _ => 1, n⟩ : IntervalFamily Bool) := by
-  intro ψ hψ n w w' i i' _ _ hi hi'
+  intro ψ hψ n w w' i i' _ _ _ _ _ _ hi hi'
   simp only [Form.firstNotA, Form.pnps, Term.pnps, List.nil_append, List.append_nil,
     List.mem_singleton] at hψ
   subst hψ
@@ -110,8 +110,15 @@ theorem not_minimalOneConstantOn_firstNotA {I : IntervalFamily Bool} (hI : Accom
     rw [prefixVec, List.take_left' (by cases c <;> simp [Nat.add_comm])]
     funext d
     cases c <;> cases d <;> simp [parikh]
+  have hlen : ∀ c : Bool,
+      v false + v true ≤ (List.replicate (v c) c ++ List.replicate (v !c) (!c) ++ r).length := by
+    intro c
+    cases c
+    · simp [r]
+    · simp [r]; omega
   have := h _ (by rw [Form.minimalOne_firstNotA]; exact List.mem_singleton_self _) n _ _ _ _
-    (hpar false) (hpar true) (by rw [hpre]; exact hlo) (by rw [hpre]; exact hlo)
+    (hpar false) (hpar true) (by omega) (hlen false) (by omega) (hlen true)
+    (by rw [hpre]; exact hlo) (by rw [hpre]; exact hlo)
   rw [Form.sat_firstNotA _ (by omega), Form.sat_firstNotA _ (by omega)] at this
   simp [hp, hq, List.replicate_succ] at this
 

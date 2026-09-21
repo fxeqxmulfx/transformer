@@ -56,10 +56,10 @@ theorem Form.sat_abab_eq_aabb (φ : Form Bool) (hφ : φ.depth ≤ 1)
       χ.sat_eq_of_mem_pnps hψ hpar 4
   have e2 := Form.sat_eq_of_depth_eq_zero (w := [false, true, false, true])
     (v := [false, false, true, true]) (i := 2) (j := 3) rfl χ hχ fun ψ hψ =>
-      hχp ψ hψ _ _ _ 2 3 rfl hpar.symm (hm _ _ (Or.inl rfl)) (hm _ _ (Or.inr rfl))
+      hχp ψ hψ _ _ _ 2 3 rfl hpar.symm (by decide) (by decide) (by decide) (by decide) (hm _ _ (Or.inl rfl)) (hm _ _ (Or.inr rfl))
   have e3 := Form.sat_eq_of_depth_eq_zero (w := [false, true, false, true])
     (v := [false, false, true, true]) (i := 3) (j := 2) rfl χ hχ fun ψ hψ =>
-      (hχp ψ hψ _ _ _ 3 2 rfl rfl (hm _ _ (Or.inr (funext fun a => by cases a <;> rfl)))
+      (hχp ψ hψ _ _ _ 3 2 rfl rfl (by decide) (by decide) (by decide) (by decide) (hm _ _ (Or.inr (funext fun a => by cases a <;> rfl)))
         (hm _ _ (Or.inl rfl))).trans (χ.sat_eq_of_mem_pnps hψ hpar 2)
   show ((List.range' 1 4).filter fun j => χ.sat _ j).length =
     ((List.range' 1 4).filter fun j => χ.sat _ j).length
@@ -83,6 +83,40 @@ theorem not_lang_eq_restrict_startAB (φ : Form Bool) (hφ : φ.depth ≤ 1)
     fun ⟨_, w', hw'⟩ => by simp [Affix.startAB] at hw'
   rw [← h] at hin hout
   exact hout (show φ.sat _ 4 = true from (φ.sat_abab_eq_aabb hφ hpnp).symm.trans hin)
+
+/-- `◁#[ψ] < ◁#[ψ] + 1`: true everywhere, one counting level above `ψ`. -/
+def Form.tautOver (ψ : Form Bool) : Form Bool := .lt (.countL ψ) (.add (.countL ψ) .one)
+
+theorem Form.sat_tautOver (ψ : Form Bool) (w : List Bool) (i : ℕ) :
+    (Form.tautOver ψ).sat w i = true := by
+  simp [Form.tautOver, Form.sat, Term.val]
+
+/-- `⊤` written at depth exactly `2`, so that it is a depth-`2` formula in the
+sense of `lem:reduction`; its only minimal depth-1 subformula is itself a
+tautology, `◁#[⊤] < ◁#[⊤] + 1`. -/
+def Form.topTwo : Form Bool := Form.tautOver (Form.tautOver (.neg (.lt .one .one)))
+
+theorem Form.depth_topTwo : Form.topTwo.depth = 2 := rfl
+
+theorem Form.past_topTwo : Form.topTwo.past = true := rfl
+
+theorem Form.pnpsConstantOn_topTwo (I : IntervalFamily Bool) : PnpsConstantOn Form.topTwo I :=
+  fun ψ hψ => by simp [Form.topTwo, Form.tautOver, Form.pnps, Term.pnps] at hψ
+
+theorem Form.minimalOneConstantOn_topTwo (I : IntervalFamily Bool) :
+    MinimalOneConstantOn Form.topTwo I := by
+  intro ψ hψ
+  simp only [Form.topTwo, Form.tautOver, Form.minimalOne, Term.minimalOne, Term.depth,
+    Form.depth] at hψ
+  simp at hψ
+  subst hψ
+  intro _ _ _ _ _ _ _ _ _ _ _ _ _
+  rw [← Form.tautOver, Form.sat_tautOver, Form.sat_tautOver]
+
+theorem Form.lang_topTwo : Form.topTwo.lang = (Form.neg (.lt .one .one) : Form Bool).lang := by
+  ext w
+  simp only [Form.lang, Form.models, Form.topTwo, Form.sat_tautOver, Set.mem_ofPred_eq]
+  simp [Form.sat, Term.val]
 
 /-- The hypotheses of `Form.sat_abab_eq_aabb` and `not_lang_eq_restrict_startAB`
 are satisfiable: `⊤`, written `¬(1 < 1)`, has depth `0` and no PNPs. -/
