@@ -28,7 +28,8 @@ estimates the well-posedness proof rests on.
 
 * `W_2` is `Transformer.Wasserstein.W2`.
 
-* `e:lipinx` is in `Section6_KernelDeriv`.
+* `e:lipinx` is in `Section6_KernelDeriv`, `e:lipinmu` in
+  `Section6_KernelLip`.
 
 Source: arXiv:2305.05465v6, `e:vectorfield`, `lem: vectorfield.properties`,
 `e:bddinx`, `e:lipinx`, `e:lipinmu`.
@@ -121,21 +122,7 @@ theorem attentionKernel_norm_le (Q K V : ParamMatrix d) (R : ℝ) (hR : 0 < R)
   · rw [abs_of_pos (inv_pos.2 h), inv_mul_le_iff₀ h, mul_comm (∫ y, w y ∂μ)]
     exact hN
 
-/-- **Estimate (e:lipinmu).**  On `B(0,R)` the kernel is Lipschitz in the
-measure for `W_2`, with a constant depending only on `R`.
-
-Not proved here.
-
-Source: arXiv:2305.05465v6, `e:lipinmu`. -/
-theorem attentionKernel_lipschitz_in_measure (Q K V : ParamMatrix d) (R : ℝ) (hR : 0 < R) :
-    ∃ C : ℝ, 0 < C ∧ ∀ μ ν : Measure (EucSpace d), IsProbabilityMeasure μ →
-      IsProbabilityMeasure ν → IsCarriedBy μ R → IsCarriedBy ν R →
-        ∀ x ∈ Metric.closedBall (0 : EucSpace d) R,
-          ‖attentionKernel Q K V μ x - attentionKernel Q K V ν x‖
-            ≤ C * Wasserstein.W2 μ ν := by
-  sorry
-
-/-- The hypotheses of `e:bddinx` and `e:lipinmu` are satisfiable: the Dirac mass at
+/-- The hypotheses of `e:bddinx` are satisfiable: the Dirac mass at
 the origin is a probability measure carried by the unit ball. -/
 example : (0 : ℝ) < 1 ∧ IsProbabilityMeasure (Measure.dirac (0 : EucSpace d)) ∧
     IsCarriedBy (Measure.dirac (0 : EucSpace d)) 1 :=

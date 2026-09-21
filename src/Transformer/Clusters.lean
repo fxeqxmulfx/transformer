@@ -15,6 +15,7 @@ import Transformer.Clusters.Section5_Mix
 import Transformer.Clusters.Section6_WellPosed
 import Transformer.Clusters.Section6_Kernel
 import Transformer.Clusters.Section6_KernelDeriv
+import Transformer.Clusters.Section6_KernelLip
 import Transformer.Clusters.Section6_ContEq
 import Transformer.Clusters.Section7_HigherDim
 import Transformer.Clusters.Section7_LogSumExp
