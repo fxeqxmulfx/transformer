@@ -1,12 +1,11 @@
-import Transformer.AdamBeyond.Section5_AdamNC
-import Transformer.AMSGrad.Section1_TheoremA
+import Transformer.AdamBeyond.Section5_Lemma
 
 /-
 # Adam and beyond — §5: the regret of AdamNC
 
-Theorem 5 of arXiv:1904.09237, the lemma of its proof (appendix, §"Proof of
-Theorem 5"), Corollary 2, and the remark that `β_{1,t} = β₁/t` still gives
-`O(√T)`.
+Theorem 5 of arXiv:1904.09237 (the lemma of its proof is in
+`Section5_Lemma`), Corollary 2, and the remark that `β_{1,t} = β₁/t` still
+gives `O(√T)`.
 
 **What the source says and what is carried here.**
 
@@ -80,23 +79,6 @@ theorem adamNC_regret {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnline
       + 2 * ζ / (1 - S.β₁ 1) ^ 3 * ∑ i, S.gnorm (adamNCRule β₂) T i := by
   sorry
 
-/-- **The lemma of the proof of Theorem 5.**  Under condition 1 of Theorem 5
-(at `α_t`), with `0 ≤ β_{2,t} ≤ 1` and `0 ≤ β_{1,t} ≤ β₁ = β_{1,1} < 1`,
-
-  `Σ_{t=1}^T α_t ‖V_t^{-1/4} m_t‖² ≤ 2ζ/(1-β₁)² Σᵢ ‖g_{1:T,i}‖₂`.
-
-Source: arXiv:1904.09237, appendix, §"Proof of Theorem 5", Lemma. -/
-theorem adamNC_moment_sum {S : Setup d} (hβ₂0 : S.β₂ = 0) {β₂ : ℕ → ℝ}
-    (hβ₂ : ∀ t, 1 ≤ t → 0 ≤ β₂ t ∧ β₂ t ≤ 1) (hα : ∀ t, 1 ≤ t → 0 < S.α t)
-    (hβ₁ : ∀ t, 1 ≤ t → 0 ≤ S.β₁ t ∧ S.β₁ t ≤ S.β₁ 1) (hβ₁' : S.β₁ 1 < 1)
-    (T : ℕ) {ζ : ℝ} (hζ : 0 < ζ)
-    (h₁ : ∀ t ∈ Icc 1 T, ∀ i,
-      S.gnorm (adamNCRule β₂) t i / ζ ≤ Real.sqrt (S.vhat (adamNCRule β₂) t i) / S.α t) :
-    ∑ t ∈ Icc 1 T, S.α t *
-        ∑ i, S.m (adamNCRule β₂) t i ^ 2 / Real.sqrt (S.vhat (adamNCRule β₂) t i) ≤
-      2 * ζ / (1 - S.β₁ 1) ^ 2 * ∑ i, S.gnorm (adamNCRule β₂) T i := by
-  sorry
-
 /-- **Corollary 2**, with "`R_T ≤`" and the factor `d/α` of its second term
 restored and `ζ = α`.  For AdamNC with `β_{2,t} = 1 - 1/t`, `α_t = α/√t` and
 `β_{1,t} = β₁λ^{t-1}`, `0 ≤ β₁ < 1`, `0 ≤ λ < 1`, for every `x* ∈ F`,
@@ -129,7 +111,7 @@ theorem adamNC_regret_inv {S : Setup d} {F : Set (Vec d)} {D G : ℝ}
       S.regret (adamNCRule fun t : ℕ => 1 - 1 / (t : ℝ)) xstar T ≤ K * Real.sqrt T := by
   sorry
 
-/-- The hypotheses of Theorem 5 and its lemma are satisfiable: the zero cost on
+/-- The hypotheses of Theorem 5 are satisfiable: the zero cost on
 `[-1, 1]`, `β₂ = 0`, `β_{2,t} = 1 - 1/t`, `α = 1`, `β_{1,t} = 0`, `ζ = 1`,
 `T = 2`, `x* = 0`; the conditions hold by `adamNC_inv_cond`. -/
 example :

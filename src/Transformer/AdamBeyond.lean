@@ -45,5 +45,6 @@ import Transformer.AdamBeyond.Section4_Abel
 import Transformer.AdamBeyond.Section4_Regret
 import Transformer.AdamBeyond.Section4_Corollary
 import Transformer.AdamBeyond.Section5_AdamNC
+import Transformer.AdamBeyond.Section5_Lemma
 import Transformer.AdamBeyond.Section5_Theorem
 import Transformer.AdamBeyond.AppendixG_Auxiliary
