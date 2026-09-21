@@ -20,13 +20,12 @@ a block `|Σ_{t≤T} s_t| ≈ T/3`, so `R(T) ≈ -T + T/3 = -2T/3` for every
 `x* ∈ F`.  Numerically `R(T)/T = -0.664` at `T = 2²² - 1`.
 
 `signSetup` satisfies every hypothesis of Corollary 4.5 in both settings,
-`isOnlineConvex_sign` and `sign_hyp`; `not_cor_lower` states that
-`R(T) ≤ -T/2` for infinitely many `T` and every `x* ∈ F`.  It is not proved.
+`isOnlineConvex_sign` and `sign_hyp`; `not_cor_lower`, in
+`Section4_CounterRegret`, proves `R(T) ≤ -T/2` for infinitely many `T` and
+every `x* ∈ F`.
 
 Source: arXiv:1904.03590v4, §4, Corollary 4.5.
 -/
-
-open Filter
 
 namespace Transformer
 namespace AMSGrad
@@ -64,17 +63,6 @@ theorem sign_hyp :
       0 < signSetup.β₂ ∧ signSetup.β₂ < 1 ∧ 0 / Real.sqrt signSetup.β₂ < 1 :=
   ⟨rfl, fun _ => by simp [signSetup], fun _ => by simp [signSetup], by norm_num [signSetup],
     by norm_num [signSetup], by simp⟩
-
-/-- **Corollary 4.5 is false as stated.**  On `signSetup`, which satisfies its
-hypotheses in both settings, `R(T) ≤ -T/2` for infinitely many `T` and every
-`x* ∈ F`, the minimizer of `Σ_{t≤T} f_t` included; so `R(T)/T` does not tend
-to `0`.  Only the upper half, `cor_lambda` and `cor_inv`, is kept.
-
-Source: arXiv:1904.03590v4, §4, Corollary 4.5. -/
-theorem not_cor_lower :
-    ∃ᶠ T : ℕ in atTop, ∀ xstar ∈ Set.Icc (fun _ : Fin 1 => (-1 : ℝ)) (fun _ => 1),
-      signSetup.regret amsgradRule xstar T ≤ -((T : ℝ) / 2) := by
-  sorry
 
 end AMSGrad
 end Transformer
