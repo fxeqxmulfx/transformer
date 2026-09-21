@@ -1,62 +1,22 @@
 /-
-# GGUF tensor storage: bytes, bit fields, and IEEE floats
+# IEEE binary floating point
 
-The tensor types of the GGUF format, read from their reference implementation
-in ggml (`ggml/src/ggml-common.h` for the block layouts, `ggml/src/ggml-quants.c`
-for `dequantize_row_*`), llama.cpp master at commit `335b21f`.
+The binary interchange formats of IEEE 754-2008, §3.4: a pattern of `1 + E + M`
+bits (sign, biased exponent, mantissa) decodes to a subnormal, a normal number,
+or an infinity or NaN, which have no value in `ℝ` and decode to `none`.
+binary16 is `E = 5, M = 10`, bfloat16 `E = 8, M = 7`, binary32 `E = 8, M = 23`.
 
-A block is a fixed number of bytes (`Bytes n`); a format is a decoding of those
-bytes to real numbers.  The bit operations of the C code are written with
-their arithmetic equivalents on `ℕ`: `b & 0xF` is `b % 16`, `b >> 4` is
-`b / 16`, `b & 63` is `b % 64`, and bit `k` of a little-endian field is
-`b / 2^k % 2`.
-
-The scales of every block are IEEE binary floats (`ggml_half` is binary16), and
-`F16`, `BF16`, `F32` are tensor types of their own.  `ieee E M` decodes a bit
-pattern with `E` exponent and `M` mantissa bits exactly as `GGML_FP16_TO_FP32`
-and its siblings do, except that the infinities and NaNs have no value in `ℝ`
-and decode to `none`.
+What the limits of `Transformer.Precision` need of a format is here: its
+numbers form a finite set containing `0` (`grid_finite`, `zero_mem_grid`), no
+nonzero number is closer to `0` than the smallest subnormal (`minSub_le_abs`),
+and every number has `M + 1` significant bits (`grid_hasSignificand`).
 -/
 
-import Mathlib.Algebra.Order.Round
-import Mathlib.Basic.Real.Basic
-import Mathlib.Algebra.Order.Field.Power
+import Transformer.Precision.Accumulate
+import Mathlib.Data.Set.Finite.Lemmas
 
 namespace Transformer
-namespace GGUF
-
-/-- `n` bytes, each a number in `[0, 256)`. -/
-abbrev Bytes (n : ℕ) : Type := Fin n → Fin 256
-
-/-- The low nibble `b & 0xF`. -/
-def lo (b : ℕ) : ℕ := b % 16
-
-/-- The high nibble `b >> 4`. -/
-def hi (b : ℕ) : ℕ := b / 16
-
-/-- The byte at offset `o`, and `0` past the end. -/
-def byte {n : ℕ} (x : Bytes n) (o : ℕ) : ℕ := if h : o < n then (x ⟨o, h⟩).val else 0
-
-theorem byte_lt {n : ℕ} (x : Bytes n) (o : ℕ) : byte x o < 256 := by
-  unfold byte; split_ifs <;> omega
-
-/-- Bit `k` of the little-endian bit string starting at offset `o`: bit `k % 8`
-of byte `o + k / 8`. -/
-def bitAt {n : ℕ} (x : Bytes n) (o k : ℕ) : ℕ := byte x (o + k / 8) / 2 ^ (k % 8) % 2
-
-/-- The little-endian `uint16_t` at offset `o`. -/
-def u16 {n : ℕ} (x : Bytes n) (o : ℕ) : ℕ := byte x o + 256 * byte x (o + 1)
-
-/-- The little-endian `uint32_t` at offset `o`. -/
-def u32 {n : ℕ} (x : Bytes n) (o : ℕ) : ℕ := u16 x o + 65536 * u16 x (o + 2)
-
-theorem lo_lt (b : ℕ) : lo b < 16 := Nat.mod_lt _ (by norm_num)
-
-theorem hi_lt {b : ℕ} (hb : b < 256) : hi b < 16 := by
-  unfold hi; omega
-
-theorem bitAt_le {n : ℕ} (x : Bytes n) (o k : ℕ) : bitAt x o k ≤ 1 := by
-  unfold bitAt; omega
+namespace Precision
 
 /-- The exponent bias `2^{E-1} - 1` of an IEEE binary format. -/
 def bias (E : ℕ) : ℤ := 2 ^ (E - 1) - 1
@@ -73,10 +33,10 @@ noncomputable def ieee (E M bits : ℕ) : Option ℝ :=
   else if e = 0 then some (sgn * m * (2 : ℝ) ^ (1 - bias E - M))
   else some (sgn * (2 ^ M + m) * (2 : ℝ) ^ ((e : ℤ) - bias E - M))
 
-/-- `ggml_half`, IEEE binary16: `GGML_FP16_TO_FP32`. -/
+/-- IEEE binary16 (IEEE 754-2008, §3.6, Table 3.5). -/
 noncomputable def f16 (bits : ℕ) : Option ℝ := ieee 5 10 bits
 
-/-- `ggml_bf16_t`, bfloat16: the upper half of a binary32, `GGML_BF16_TO_FP32`. -/
+/-- bfloat16: the upper half of a binary32. -/
 noncomputable def bf16 (bits : ℕ) : Option ℝ := ieee 8 7 bits
 
 /-- IEEE binary32, `float`. -/
@@ -136,5 +96,42 @@ theorem f16_one : f16 1 = some (minSub 5 10) := by
 theorem f16_max : f16 0x7BFF = some 65504 := by
   norm_num [f16, ieee, bias]
 
-end GGUF
+/-- The numbers of the IEEE format with `E` exponent and `M` mantissa bits. -/
+def grid (E M : ℕ) : Set ℝ := {v | ∃ b < 2 ^ (1 + E + M), ieee E M b = some v}
+
+theorem zero_mem_grid {E : ℕ} (hE : 1 ≤ E) (M : ℕ) : (0 : ℝ) ∈ grid E M := by
+  refine ⟨0, by positivity, ?_⟩
+  have : (2 : ℕ) ^ E - 1 ≠ 0 := by
+    have := Nat.one_lt_two_pow_iff.2 (by omega : E ≠ 0); omega
+  simp [ieee, this.symm]
+
+theorem grid_finite (E M : ℕ) : (grid E M).Finite := by
+  refine ((Finset.range (2 ^ (1 + E + M))).image fun b => (ieee E M b).getD 0).finite_toSet.subset ?_
+  rintro v ⟨b, hb, h⟩
+  exact Finset.mem_coe.2 (Finset.mem_image.2 ⟨b, Finset.mem_range.2 hb, by simp [h]⟩)
+
+/-- Every number of the format is `± n · 2^k` with `n < 2^{M+1}`. -/
+theorem ieee_abs {E M b : ℕ} {z : ℝ} (h : ieee E M b = some z) :
+    ∃ n : ℕ, n < 2 ^ (M + 1) ∧ ∃ k : ℤ, |z| = n * (2 : ℝ) ^ k := by
+  have hsgn : |(if b / 2 ^ (E + M) % 2 = 1 then (-1 : ℝ) else 1)| = 1 := by
+    split_ifs <;> simp
+  have hm : b % 2 ^ M < 2 ^ M := Nat.mod_lt _ (by positivity)
+  unfold ieee at h
+  simp only at h
+  generalize (if b / 2 ^ (E + M) % 2 = 1 then (-1 : ℝ) else 1) = sgn at h hsgn
+  split_ifs at h <;> obtain rfl := Option.some.inj h
+  · refine ⟨b % 2 ^ M, by rw [pow_succ]; omega, 1 - bias E - M, ?_⟩
+    rw [abs_mul, abs_mul, hsgn, one_mul, abs_of_nonneg (by positivity),
+      abs_of_pos (zpow_pos (by norm_num) _)]
+  · refine ⟨2 ^ M + b % 2 ^ M, by rw [pow_succ]; omega, ((b / 2 ^ M % 2 ^ E : ℕ) : ℤ) - bias E - M, ?_⟩
+    rw [abs_mul, abs_mul, hsgn, one_mul, abs_of_nonneg (by positivity),
+      abs_of_pos (zpow_pos (by norm_num) _)]
+    push_cast; rfl
+
+/-- **An IEEE format with `M` mantissa bits has `M + 1` significant bits**, so
+`accum_stall` and `accum_le` apply to it. -/
+theorem grid_hasSignificand (E M : ℕ) : HasSignificand (M + 1) (grid E M) :=
+  fun _ ⟨_, _, h⟩ => ieee_abs h
+
+end Precision
 end Transformer
