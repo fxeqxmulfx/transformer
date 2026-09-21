@@ -27,6 +27,9 @@ makes it:
   condition 1 is stated with `α_t`, as its proof uses it, not `α_T`, and
   `0 ≤ β_{2,t} ≤ 1` is explicit; Corollary 2 gets its missing "`R_T ≤`", the
   factor `d/α`, and `ζ = α`.
+* lem:proj-lemma is proved for positive semidefinite `Q`, as stated, by the
+  variational inequality; the source's first step is not it; lem:1d-proj-prop
+  holds for every `i`, not only `i ∈ [T]`.
 
 Not transcribed, deliberately: the experiments, the commented-out section on
 the proof of Kingma & Ba, the convergence of SGD and AdaGrad, cited from
@@ -40,3 +43,4 @@ import Transformer.AdamBeyond.Section3_General
 import Transformer.AdamBeyond.Section4_AMSGrad
 import Transformer.AdamBeyond.Section5_AdamNC
 import Transformer.AdamBeyond.Section5_Theorem
+import Transformer.AdamBeyond.AppendixG_Auxiliary
