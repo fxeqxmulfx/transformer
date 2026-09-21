@@ -3,8 +3,9 @@
   potential
 
 §7 of arXiv:2305.05465v6, `sec: self-att`: the dynamics `e:Idnonresca` the
-proof of `t:boolean` runs on, the convexity of its potential `l:logsumexp`,
-and the non-collision lemma `l:distnondec` that follows from it.
+proof of `t:boolean` runs on and the convexity of its potential
+`l:logsumexp`.  The non-collision lemma `l:distnondec` that follows from it is
+in `Section7_DistNonDec`.
 
 **What the source says and what is carried here.**
 
@@ -20,12 +21,7 @@ and the non-collision lemma `l:distnondec` that follows from it.
   outright, after normalising by the two sums.  That is `sum_rpow_mul_rpow_le`
   below, Hölder's inequality for a finite sum.
 
-* `e:infdist` is the sentence "particles never collide" following
-  `l:distnondec`.  It is stated here with the conclusion of `l:distnondec` as
-  an explicit hypothesis, so that it is genuinely proved.
-
-Source: arXiv:2305.05465v6, `e:Idnonresca`, `e:logsumexpfct`, `l:logsumexp`,
-`l:distnondec`, `e:infdist`.
+Source: arXiv:2305.05465v6, `e:Idnonresca`, `e:logsumexpfct`, `l:logsumexp`.
 -/
 
 import Transformer.Clusters.Section1_Dynamics
@@ -151,46 +147,6 @@ theorem idNonrescaledDynamics_zero (d n : ℕ) :
     IdNonrescaledDynamics (n := n) (fun _ _ => (0 : EucSpace d)) := by
   intro t i
   simpa using hasDerivAt_const t (0 : EucSpace d)
-
-/-- **Lemma (l:distnondec).**  Along a solution of `e:Idnonresca`, the map
-`t ↦ ‖x_i(t) - x_j(t)‖` is non-decreasing for every pair `i, j ∈ [n]`.
-
-Not proved here.  The source's argument: `e:Idnonresca` is `ẋ_i = ∇f(x_i)` for
-the potential `e:logsumexpfct`, and the gradient of a convex function is
-monotone, so `⟨ẋ_i - ẋ_j, x_i - x_j⟩ ≥ 0`.
-
-Source: arXiv:2305.05465v6, `l:distnondec`. -/
-theorem norm_sub_monotone (X : ℝ → Idx n → EucSpace d) (hX : IdNonrescaledDynamics X)
-    (i j : Idx n) : Monotone fun t => ‖X t i - X t j‖ := by
-  sorry
-
-/-- The hypothesis of `norm_sub_monotone` is satisfiable. -/
-example : IdNonrescaledDynamics (n := n) (fun _ _ => (0 : EucSpace d)) :=
-  idNonrescaledDynamics_zero d n
-
-/-- **Equation (e:infdist).**  Particles never collide: two tokens that start
-apart stay apart, by at least their initial separation.
-
-The conclusion of `l:distnondec` is taken as an explicit hypothesis.
-
-Source: arXiv:2305.05465v6, `e:infdist`. -/
-theorem ne_of_norm_sub_monotone (X : ℝ → Idx n → EucSpace d)
-    (hmono : ∀ i j : Idx n, Monotone fun t => ‖X t i - X t j‖)
-    (i j : Idx n) (hij : X 0 i ≠ X 0 j) {t : ℝ} (ht : 0 ≤ t) : X t i ≠ X t j := by
-  intro hcontra
-  have h0 : ‖X 0 i - X 0 j‖ ≤ ‖X t i - X t j‖ := hmono i j ht
-  rw [hcontra, sub_self, norm_zero] at h0
-  exact hij (sub_eq_zero.mp (norm_le_zero_iff.mp h0))
-
-/-- The hypotheses of `ne_of_norm_sub_monotone` are satisfiable: a
-configuration whose tokens do not move has constant distances, and two of its
-tokens may start apart. -/
-example (z : EucSpace 1) (hz : z ≠ 0) :
-    (∀ i j : Idx 2, Monotone fun t : ℝ => ‖(fun _ (k : Idx 2) => if k = 0 then z else 0) t i
-        - (fun _ (k : Idx 2) => if k = 0 then z else 0) t j‖) ∧
-      (if (0 : Idx 2) = 0 then z else 0) ≠ (if (1 : Idx 2) = 0 then z else 0) := by
-  refine ⟨fun i j => monotone_const, ?_⟩
-  simpa using hz
 
 end Clusters
 end Transformer
