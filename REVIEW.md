@@ -37,6 +37,7 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - fixed `cropping_unsound` — Transformer/CRASP/TLCDepth.lean:48 — 064b44f: same, Appendix D lem:cropping, I ⊆ [0,n] hypothesis present
 - ok `pushY_unguarded_unsound` — Transformer/CRASP/YNormalFormEquiv.lean:123 — appendix 928-935 N^c rules give Y¬Q_a ↦ ¬Y Q_a; Y needs i>1 (902); disagree on 'a'. kills the proof's transform, thm:ynf proved with guards
 - issue `not_forall_single_token_convergence` — Transformer/Causal/SingleToken.lean:124 — refutes an earlier misformalization (declared so), correct; but the survey's lemma1 itself is not stated anywhere — invisible debt, needs L'(V), L(V) via generalized eigenspaces
+- issue Transformer/Causal/SequentialFlow.lean (sorried): `sequentialFlow_converges` is stated on ℝⁿ with no 2π-periodicity of E, Z; E_k = -φ_k, Z = 1 has no critical points and φ_k(t) = φ_k(0) + t diverges, so it is false as written
 - ok `not_tendsto_zero_of_tendsto_common` — Transformer/Clusters/Section7_HigherDim.lean:87 — eq:P matches; kills literal x_i(t)->(1,0) with P->I for every Q,K; rescaled reading untouched, docstring says so
 - ok `not_tendsto_id_of_tendsto_common` — Transformer/Clusters/Section7_HigherDim.lean:104 — eq:P matches; kills literal x_i(t)->(1,0) with P->I for every Q,K; rescaled reading untouched, docstring says so
 - ok `not_configHull_subset_of_preconditioner` — Transformer/FrankWolfe/Section2_HullFailure.lean:86 — the remark's own example proved: P=diag(0.6,0.7)=(I+V)^{-1}V for V=diag(3/2,7/3), unique argmax x3, (0.4,0.7)∉K
