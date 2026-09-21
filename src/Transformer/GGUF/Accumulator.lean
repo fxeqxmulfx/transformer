@@ -17,7 +17,8 @@ default, `VKQ` is the `ggml_fp16_t` array `VKQ16`, and `ggml_vec_mad_f16`
 
 That is `a ← r(a + t)` with `r` a rounding to binary16.  Once `a ≥ 2^{10} · 2^s`,
 the binary16 numbers above `a` are at least `2^s` apart, and an increment
-`0 ≤ t < 2^{s-1}` rounds back to `a` (`accum_stall`): **an accumulator stops
+`0 ≤ t < 2^{s-1}` rounds back to `a` (`Precision.accum_stall`, through
+`grid_hasSignificand`): **an accumulator stops
 counting once it is `2^{11}` times its increments**, whatever their scale.  The
 binary32 `S` keeps growing, until it is `2^{24}` times its own.  The output
 `VKQ / S` then decays like `1 / n` instead of converging: for `v ≡ 1` it should
@@ -43,6 +44,7 @@ first; that double rounding is not covered.  A new maximum rescales `VKQ16` by
 -/
 
 import Transformer.GGUF.Nearest
+import Transformer.Precision.Accumulate
 
 namespace Transformer
 namespace GGUF
@@ -67,55 +69,10 @@ theorem ieee_abs {E M b : ℕ} {z : ℝ} (h : ieee E M b = some z) :
       abs_of_pos (zpow_pos (by norm_num) _)]
     push_cast; rfl
 
-/-- **Above `2^M · 2^s`, every number of the format is a multiple of `2^s`.**
-The mantissa has `M + 1` bits, so a number that large has an exponent of at
-least `s`. -/
-theorem ieee_dvd {E M b : ℕ} {z : ℝ} (h : ieee E M b = some z) {s : ℤ}
-    (hz : (2 : ℝ) ^ M * 2 ^ s ≤ z) : ∃ j : ℤ, z = 2 ^ s * j := by
-  obtain ⟨n, hn, k, hk⟩ := ieee_abs h
-  have hz0 : 0 < z := lt_of_lt_of_le (by positivity) hz
-  rw [abs_of_pos hz0] at hk
-  subst hk
-  have hsk : s ≤ k := by
-    by_contra hlt
-    have h1 : (n : ℝ) + 1 ≤ 2 ^ (M + 1) := by exact_mod_cast hn
-    have h2 : (2 : ℝ) ^ (k + 1) ≤ 2 ^ s := zpow_le_zpow_right₀ (by norm_num) (by omega)
-    rw [zpow_add_one₀ (by norm_num)] at h2
-    have h3 : (2 : ℝ) ^ (M + 1) = 2 ^ M * 2 := pow_succ _ _
-    nlinarith [zpow_pos (show (0 : ℝ) < 2 by norm_num) k, pow_pos (show (0 : ℝ) < 2 by norm_num) M]
-  obtain ⟨j, hj⟩ : ∃ j : ℕ, k = s + j := ⟨(k - s).toNat, by omega⟩
-  refine ⟨n * 2 ^ j, ?_⟩
-  rw [hj, zpow_add₀ (by norm_num : (2 : ℝ) ≠ 0), zpow_natCast]
-  push_cast; ring
-
-/-- Past `2^M · 2^s`, the next number of the format is at least `2^s` away. -/
-theorem ieee_gap {E M : ℕ} {a z : ℝ} {s : ℤ} (ha : a ∈ grid E M) (hz : z ∈ grid E M)
-    (h : (2 : ℝ) ^ M * 2 ^ s ≤ a) (haz : a < z) : a + 2 ^ s ≤ z := by
-  obtain ⟨_, _, ha⟩ := ha
-  obtain ⟨_, _, hz⟩ := hz
-  obtain ⟨i, rfl⟩ := ieee_dvd ha h
-  obtain ⟨j, rfl⟩ := ieee_dvd hz (by linarith)
-  have hs : (0 : ℝ) < 2 ^ s := zpow_pos (by norm_num) _
-  have : i < j := by
-    have : (i : ℝ) < j := lt_of_mul_lt_mul_left haz hs.le
-    exact_mod_cast this
-  have : (i : ℝ) + 1 ≤ j := by exact_mod_cast this
-  nlinarith
-
-/-- **The accumulator stops counting.**  `a_{k+1} = r(a_k + t_k)` with `r` a
-nearest rounding to the format: once `a_m ≥ 2^M · 2^s`, increments in
-`[0, 2^{s-1})` leave it where it is.  In words: an accumulator with `M`
-mantissa bits stops moving once it is `2^{M+1}` times the increments. -/
-theorem accum_stall {E M : ℕ} {Q : ℝ → ℝ} (hQ : IsNearest (grid E M) Q) {a t : ℕ → ℝ}
-    (ha : ∀ k, a (k + 1) = Q (a k + t k)) {m : ℕ} {s : ℤ} (hm : a m ∈ grid E M)
-    (hge : (2 : ℝ) ^ M * 2 ^ s ≤ a m) (ht : ∀ k, m ≤ k → 0 ≤ t k ∧ 2 * t k < 2 ^ s) :
-    ∀ k, m ≤ k → a k = a m := by
-  intro k hk
-  induction k, hk using Nat.le_induction with
-  | base => rfl
-  | succ k hk ih =>
-    rw [ha, ih]
-    exact hQ.add_eq hm (fun z hz => ieee_gap hm hz hge) (ht k hk).1 (ht k hk).2
+/-- **An IEEE format with `M` mantissa bits has `M + 1` significant bits**, so
+`Precision.accum_stall` and `Precision.accum_le` apply to it. -/
+theorem grid_hasSignificand (E M : ℕ) : HasSignificand (M + 1) (grid E M) :=
+  fun _ ⟨_, _, h⟩ => ieee_abs h
 
 /-- **Flash attention in binary16 loses the signal.**  Values `v ≡ 1`, so the
 exact output is `1`; weights `p_k ∈ [c, 2^{s-1})` past key `m`, and a binary16
@@ -127,7 +84,7 @@ theorem fa_f16_output_le {Q : ℝ → ℝ} (hQ : IsNearest (grid 5 10) Q) {a p S
     (hm : a m ∈ grid 5 10) (hge : (2 : ℝ) ^ 10 * 2 ^ s ≤ a m) (hS0 : 0 ≤ S m) (hc : 0 < c)
     (hp : ∀ k, m ≤ k → c ≤ p k ∧ 2 * p k < 2 ^ s) {n : ℕ} (hn : m < n) :
     a n / S n ≤ a m / ((n - m) * c) := by
-  have hstall := accum_stall hQ ha hm hge
+  have hstall := accum_stall (grid_hasSignificand 5 10) hQ ha hm hge
     (fun k hk => ⟨by linarith [(hp k hk).1], (hp k hk).2⟩) n hn.le
   have hSn : ∀ j, S m + j * c ≤ S (m + j) := by
     intro j

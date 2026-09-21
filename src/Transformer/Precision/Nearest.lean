@@ -40,6 +40,13 @@ theorem IsNearest.eq_zero {G : Set ℝ} {Q : ℝ → ℝ} {σ : ℝ} (hQ : IsNea
   rw [zero_sub, abs_neg, abs_of_nonneg hx0] at h2
   linarith
 
+/-- A number of the grid rounds to itself. -/
+theorem IsNearest.eq_self {G : Set ℝ} {Q : ℝ → ℝ} (hQ : IsNearest G Q) {x : ℝ} (hx : x ∈ G) :
+    Q x = x := by
+  have := (hQ x).2 x hx
+  rw [sub_self, abs_zero] at this
+  exact sub_eq_zero.1 (abs_nonpos_iff.1 this)
+
 /-- A finite nonempty grid has a nearest rounding. -/
 theorem exists_isNearest {G : Set ℝ} (hfin : G.Finite) (hne : G.Nonempty) : ∃ Q, IsNearest G Q := by
   choose Q hQ using fun x => Set.exists_min_image G (fun z => |z - x|) hfin hne
