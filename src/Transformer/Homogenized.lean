@@ -27,6 +27,8 @@ import Transformer.Homogenized.Barycenter
 import Transformer.Homogenized.Laplace
 import Transformer.Homogenized.OverlapDrift
 import Transformer.Homogenized.Regimes
+import Transformer.Homogenized.RotationHead
+import Transformer.Homogenized.RegimeRefutation
 import Transformer.Homogenized.Simplex
 import Transformer.Homogenized.SimplexBary
 import Transformer.Homogenized.SimplexDrift

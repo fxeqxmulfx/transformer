@@ -29,7 +29,11 @@ the two deterministic limits it is too strong by a factor:
   `α = ης²/H = Θ(η)` and `t_L = 1` that is `Θ(η)` against the same `Θ(η²)`.
 
 Both errors are `Θ((t_L+1) max(η,α))`, and that is the rate stated here: the
-source's display with the leading factor `η` removed.  It is the rate the
+source's display with the leading factor `η` removed.  That the printed rate
+is false is proved, for both corollaries, in `RegimeRefutation`
+(`not_ballistic_regime_printed`, `not_modified_regime_printed`), by a simpler
+mechanism still: off the grid the piecewise-constant `X^η` lags the flow by
+`Θ(η)`, already at `t = η/2`.  It is the rate the
 source's own scaling conditions are calibrated to — for `cor:ode1`,
 `αηL = o(1)` and `η²L = o(1)` are exactly `α t_L = o(1)` and `η t_L = o(1)`,
 the two terms above.
