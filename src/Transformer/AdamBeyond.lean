@@ -17,7 +17,11 @@ makes it:
   (`1/√(3t+3) ≥ 1/√(2(3t+1))` is false at `t = 0`); the source's `C ≥ 2`
   gives zero regret at `C = 2`;
 * "`R_T/T ↛ 0`" is proved as `c T ≤ R_T` for every `T` against a fixed `x*`,
-  and Theorem 2 states it for all large `T` and every `α > 0`;
+  and Theorem 2 states it for all large `T` and every `α > 0`; its proof
+  runs the problem after a warm-up of `C` steps with `f_t = 0`, in place of
+  the source's `T'` and divergence argument, with its own constants for
+  eq:p-condition, and `v_{t+i-1} ≥ (1-β₂)β₂^{i-2}C²` as in its text, not
+  `β₂^{i-1}` as in its display;
 * Theorem 3 is run without projection from `x₁ = 0`, as its proof assumes,
   and its conclusion is `E[F(x_t)] - F(-1) ≥ δ` for every `t ≥ 1`; its lemma
   is proved with `E[T₂]` bounded with no event and `E[T₃]` by a tangent in
@@ -43,6 +47,10 @@ the literature, and the averaged variant of §4, stated with no bound.
 import Transformer.AdamBeyond.Section2_Adam
 import Transformer.AdamBeyond.Section3_Run
 import Transformer.AdamBeyond.Section3_Counter
+import Transformer.AdamBeyond.Section3_GenRun
+import Transformer.AdamBeyond.Section3_GenBlock
+import Transformer.AdamBeyond.Section3_GenStep
+import Transformer.AdamBeyond.Section3_GenRegret
 import Transformer.AdamBeyond.Section3_General
 import Transformer.AdamBeyond.Section3_Stoch
 import Transformer.AdamBeyond.Section3_StochBound
