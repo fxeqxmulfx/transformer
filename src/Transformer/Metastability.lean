@@ -22,6 +22,9 @@ import Transformer.Metastability.ExponentialFlow
 import Transformer.Metastability.Initial
 import Transformer.Metastability.InitialUniform
 import Transformer.Metastability.MeanField
+import Transformer.Metastability.MeanFieldCapExit
+import Transformer.Metastability.MeanFieldMetastability
+import Transformer.Metastability.MeanFieldStatic
 import Transformer.Metastability.OpenProblems
 import Transformer.Metastability.Staircase
 import Transformer.Metastability.StaircaseProfile

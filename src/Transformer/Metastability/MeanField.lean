@@ -1,27 +1,22 @@
 /-
-# Metastability — Mean-field regime (§5 of 2410.06833v1)
+# Metastability — Mean-field regime (§5 of 2410.06833v1), definitions
 
-Equations and statements covered:
+The objects §5 is written in:
 
 * `eq: mean.field.pde`              — mean-field continuity equation,
 * `Definition def: init_measure_MF` — `(β, ε)`-separated initial measure,
-* `Theorem thm: metastability MF`   — mean-field metastability,
-* `eq: flow.map`                    — measure pushforward by the flow,
-* `Claim claim: de sortie de cap`   — refuted in the form that leaves the cap
-  mass and the within-cap variance free, by `not_forall_cap_exit`,
-* `eq: v.small`                     — refuted in the same form, by
-  `not_forall_variance_small`.
+* the characteristic flow `Φ^t_{v[μ(t)]}` of `eq: flow.map`, as the
+  predicate `IsMFFlow` it satisfies (no ODE solver is built here, so the flow
+  is a parameter pinned down by its equation),
+* the observables of the proof of `thm: metastability MF`: the transported
+  cap `𝓑_q(t)`, its lowest coordinate `η_q(t)`, a minimiser `x(t)`, the cap
+  variance `𝖵_q(t)`, the escape window `[0, T_esc]`, and the set whose
+  infimum is `T_*(q, c)`.
 
-Three things the paper's statements name are not defined in this development
-and are therefore carried as parameters: the characteristic flow
-`Φ^t_{v[μ(t)]}` of `eq: flow.map` (no ODE solver is built here), and the two
-scalar observables `η_q(t)` and `𝖵_q(t)` of §5.  The qualitative side
-conditions "`γ(β) = Ω(1)`" and "`ε(β) ∈ (0, 1/16)` depends on `β`" are
-asymptotic in `β` and are not formalized; the quantitative parts are.
-
-The centre of the cap variance in `thm: metastability MF` is an `argmin` in the
-paper; here it is an existentially quantified point of the cap, which is
-weaker.
+The statements are `Metastability.MeanFieldMetastability` (the theorem) and
+`Metastability.MeanFieldCapExit` (`claim: de sortie de cap`, `eq: v.small`);
+`Metastability.MeanFieldStatic` is the static solution that witnesses their
+hypotheses.
 -/
 
 import Transformer.Basic
@@ -87,143 +82,93 @@ def isSeparatedMeasure
       = ((k : ℝ)⁻¹).toNNReal • ∑ q : Idx k, (ν q : Measure (SSphere d)) ∧
     8 * ε < γβ k β (αDist d k w ε) ε
 
-/-- **Theorem (thm: metastability MF).** *Mean-field metastability.*
+/-- **The characteristic flow (eq: flow.map).**  `Φ` is the flow of the
+velocity field `v[μ(t)]`: `Φ^0 = id`, and every trajectory `t ↦ Φ^t(x)`
+solves `ẋ(t) = v[μ(t)](x(t))`.  Measurability of each `Φ^t` is what the
+push-forward `(Φ^t)_# μ_0` needs.
 
-Let `β > 1`, let `ε ∈ (0, 1/16)`, and let `μ_0 = (1/k) Σ_q ν_q` be a
-`(β, ε)`-separated measure with caps `𝒮_q(ε)` around `w_1,…,w_k`.  Let `μ`
-solve `eq: mean.field.pde` from `μ_0`, and let `Φ` be the characteristic flow
-of `v[μ(t)]` (`eq: flow.map`).  Then there are `T_2 > T_1 > 0` such that:
+Source: arXiv:2410.06833v1, §5, proof of `thm: metastability MF`,
+`eq: flow.map`. -/
+def IsMFFlow (β : ℝ) (μ : ℝ → ProbSphere d) (Φ : ℝ → SSphere d → SSphere d) : Prop :=
+  (∀ t : ℝ, Measurable (Φ t)) ∧ (∀ x : SSphere d, Φ 0 x = x) ∧
+    ∀ x : SSphere d, ∀ t : ℝ,
+      HasDerivAt (fun s => (Φ s x : EucSpace d)) (MFVel d β (μ t) ((Φ t x : EucSpace d))) t
 
-1. `supp((Φ^t)_# ν_q) ⊂ 𝒮_q(2ε)` for every `q` and every `t ∈ [0, T_2]`;
+/-- The transported cap `𝓑_q(t) = Φ^t(𝒮_q(ε))`.
 
-2. the cap variance is exponentially small on `[T_1, T_2]`: some point `z` of
-   `𝒮_q(2ε)` has
-   `∫_{𝒮_q(2ε)} ‖Φ^t(x') - z‖² dμ_0(x') ≤ e^{-λ β}`.
+Source: arXiv:2410.06833v1, §5, proof of `thm: metastability MF`, step 1. -/
+def capFlowImage (Φ : ℝ → SSphere d → SSphere d) (w : SSphere d) (ε t : ℝ) :
+    Set (SSphere d) :=
+  Φ t '' sphericalCap d w ε
 
-Not proved here.
+/-- `η_q(t) = min_{x ∈ 𝓑_q(t)} ⟨x, w_q⟩`, the lowest coordinate of the
+transported cap along its centre.
 
-Source: arXiv:2410.06833v1, §5. -/
-theorem metastability_mf
-    (β ε lam : ℝ) (μ₀ : ProbSphere d) (k : ℕ) (w : Idx k → SSphere d)
-    (ν : Idx k → ProbSphere d) (Φ : ℝ → SSphere d → SSphere d)
-    (hβ : 1 < β) (hε : 0 < ε) (hε16 : ε < 1 / 16) (hd : 2 ≤ d)
-    (hlam : 0 < lam) (hk : 0 < k) :
-    (∀ q : Idx k, (ν q : Measure (SSphere d)).support ⊆ sphericalCap d (w q) ε) →
-    (μ₀ : Measure (SSphere d))
-        = ((k : ℝ)⁻¹).toNNReal • ∑ q : Idx k, (ν q : Measure (SSphere d)) →
-    8 * ε < γβ k β (αDist d k w ε) ε →
-    ∀ μ : ℝ → ProbSphere d, μ 0 = μ₀ → meanFieldPDE d β μ →
-      (∀ t : ℝ, Measurable (Φ t)) → (∀ x : SSphere d, Φ 0 x = x) →
-      (∀ x : SSphere d, ∀ t : ℝ,
-        HasDerivAt (fun s => (Φ s x : EucSpace d))
-          (MFVel d β (μ t) ((Φ t x : EucSpace d))) t) →
-        ∃ T₁ T₂ : ℝ, 0 < T₁ ∧ T₁ < T₂ ∧
-          (∀ q : Idx k, ∀ t ∈ Set.Icc (0 : ℝ) T₂,
-            (Measure.map (Φ t) (ν q : Measure (SSphere d))).support
-              ⊆ sphericalCap d (w q) (2 * ε)) ∧
-          ∀ q : Idx k, ∀ t ∈ Set.Icc T₁ T₂, ∃ z ∈ sphericalCap d (w q) (2 * ε),
-            ∫ x in sphericalCap d (w q) (2 * ε),
-                ‖(Φ t x : EucSpace d) - (z : EucSpace d)‖ ^ 2
-              ∂(μ₀ : Measure (SSphere d))
-                ≤ Real.exp (-lam * β) := by
-  sorry
+Source: arXiv:2410.06833v1, §5, proof of `thm: metastability MF`, step 1. -/
+noncomputable def capMin (Φ : ℝ → SSphere d → SSphere d) (w : SSphere d) (ε t : ℝ) : ℝ :=
+  sInf ((fun x : SSphere d => inner (𝕜 := ℝ) ((x : EucSpace d)) ((w : EucSpace d)))
+    '' capFlowImage d Φ w ε t)
 
-/-- The numeric hypotheses of `metastability_mf` are satisfiable: `β = 2`,
-`ε = 1/32`, `d = 2`, `λ = 1`, one cap.  The three structural hypotheses —
-the caps supporting `ν`, the decomposition of `μ₀` and the separation
-`8ε < γ_β` — stay inside the statement: no separated mean-field
-configuration is constructed in this development, so there is none to
-exhibit. -/
-example :
-    (1 : ℝ) < 2 ∧ (0 : ℝ) < 1 / 32 ∧ (1 : ℝ) / 32 < 1 / 16 ∧ 2 ≤ 2 ∧
-      (0 : ℝ) < 1 ∧ 0 < 1 := by
-  norm_num
+/-- `x(t) ∈ argmin_{x ∈ 𝓑_q(t)} ⟨x, w_q⟩` at every time: a point of the
+transported cap at which `η_q(t)` is attained.  The minimiser need not be
+unique; every statement below holds for each such selection.
 
-/-- The times at which the cap `q` may be left, as in
-`claim: de sortie de cap`:
+Source: arXiv:2410.06833v1, §5, proof of `thm: metastability MF`, step 1, and
+the `argmin` in the statement of `thm: metastability MF`. -/
+def IsCapArgmin (Φ : ℝ → SSphere d → SSphere d) (w : SSphere d) (ε : ℝ)
+    (x : ℝ → SSphere d) : Prop :=
+  ∀ t : ℝ, x t ∈ capFlowImage d Φ w ε t ∧
+    ∀ y ∈ capFlowImage d Φ w ε t,
+      inner (𝕜 := ℝ) ((x t : EucSpace d)) ((w : EucSpace d))
+        ≤ inner (𝕜 := ℝ) ((y : EucSpace d)) ((w : EucSpace d))
+
+/-- At a minimiser, `η_q(t) = ⟨x(t), w_q⟩`. -/
+theorem capMin_eq_of_isCapArgmin (Φ : ℝ → SSphere d → SSphere d) (w : SSphere d) (ε : ℝ)
+    (x : ℝ → SSphere d) (hx : IsCapArgmin d Φ w ε x) (t : ℝ) :
+    capMin d Φ w ε t = inner (𝕜 := ℝ) ((x t : EucSpace d)) ((w : EucSpace d)) := by
+  refine IsLeast.csInf_eq ⟨⟨x t, (hx t).1, rfl⟩, ?_⟩
+  rintro _ ⟨y, hy, rfl⟩
+  exact (hx t).2 y hy
+
+/-- `𝖵_q(t) = (1/2) ∫_{𝒮_q(2ε)} ‖Φ^t(x') - x(t)‖² dμ_0(x')`, the variance of
+the cap around the minimiser `x(t)`.
+
+Source: arXiv:2410.06833v1, §5, proof of `thm: metastability MF`, step 2. -/
+noncomputable def capVariance (μ₀ : ProbSphere d) (Φ : ℝ → SSphere d → SSphere d)
+    (w : SSphere d) (ε : ℝ) (x : ℝ → SSphere d) (t : ℝ) : ℝ :=
+  (1 / 2) * ∫ x' in sphericalCap d w (2 * ε),
+    ‖(Φ t x' : EucSpace d) - (x t : EucSpace d)‖ ^ 2 ∂(μ₀ : Measure (SSphere d))
+
+/-- The escape window `[0, T_esc]`, where
+`T_esc = min_q inf { t ≥ 0 : 𝓑_q(t) ⊄ 𝒮_q(2ε) }`: the times up to which no
+transported cap has left its double.
+
+**What the source says and what is changed here.**  The source writes the
+window through the infimum `T_esc`, which may be `+∞`.  It is written here as
+the set of times `t ≥ 0` before which every `𝓑_q(s)`, `s ≤ t`, stays in
+`𝒮_q(2ε)`.  The two agree when the escape set is open — as it is for a
+continuous flow, the caps being closed — and without that the set below may
+drop the endpoint `T_esc`; it never adds a time.
+
+Source: arXiv:2410.06833v1, §5, proof of `thm: metastability MF`, step 1. -/
+def escapeWindow (k : ℕ) (w : Idx k → SSphere d) (Φ : ℝ → SSphere d → SSphere d) (ε : ℝ) :
+    Set ℝ :=
+  { t | 0 ≤ t ∧ ∀ s ∈ Set.Icc (0 : ℝ) t, ∀ q : Idx k,
+      capFlowImage d Φ (w q) ε s ⊆ sphericalCap d (w q) (2 * ε) }
+
+/-- The times in the escape window at which the cap `q` may be left, whose
+infimum is `T_*(q, c)`:
 
   `{ t ∈ [0, T_esc] : η_q(t) 𝖵_q(t) e^{-(1 - η_q(t)) β} ≤ 2 e^{-c β} }`.
 
-`η_q` and `𝖵_q` — the cap mass and the within-cap variance — are parameters:
-neither is defined in this development. -/
-def capExitSet (β c Tesc : ℝ) (η V : ℝ → ℝ) : Set ℝ :=
-  { t | t ∈ Set.Icc (0 : ℝ) Tesc ∧
-      η t * V t * Real.exp (-(1 - η t) * β) ≤ 2 * Real.exp (-c * β) }
-
-/-- **Claim (claim: de sortie de cap) is false in the form it was carried
-here.**
-
-The paper's claim is that for every `c > 0` the set of cap-exit times is
-non-empty and its infimum `T_*(q, c)` is smaller than
-`(4 ε / k) e^{(c - 8 ε) β}`, and it is a statement about *the* cap mass
-`η_q(t)` and *the* within-cap variance `𝖵_q(t)` of the mean-field flow: the
-non-emptiness is the whole point, and it comes from the differential
-inequality §5 proves for `η_q 𝖵_q`, which says the product cannot stay above
-`2 e^{-cβ}` for longer than the stated time.
-
-Carried into Lean with `η` and `V` free — neither is defined in this
-development, as `capExitSet` records — the claim asserts that *every* pair of
-scalar functions enters the region `η V e^{-(1-η)β} ≤ 2 e^{-cβ}` before
-`T_esc`, and that is false.  At `β = 0`, `c = ε = 1`, `T_esc = 1`, one cap and
-the constants `η ≡ 1`, `V ≡ 100` the exit condition reads `100 ≤ 2` at every
-time, so the exit set is empty and the first conjunct fails.
-
-(The statement is false for a second, cheaper reason as well: `T_esc` is free,
-and a negative `T_esc` makes `Set.Icc 0 T_esc` — hence the exit set — empty
-whatever `η` and `V` are.  The witness above avoids that degeneracy: its time
-interval is `[0, 1]`.)
-
-`η_q` and `𝖵_q` are not constructed anywhere in this development — the
-characteristic flow `Φ` they would be read off is itself a parameter of
-`metastability_mf` — so there is nothing to pin them to, and the claim is
-recorded as refuted in the form it was stated, and not restated.
-
-Source: arXiv:2410.06833v1, §5, `claim: de sortie de cap`. -/
-theorem not_forall_cap_exit :
-    ¬ ∀ (β ε c Tesc : ℝ) (k : ℕ) (η V : ℝ → ℝ), 0 < c → 0 < ε → 0 < k →
-        (capExitSet β c Tesc η V).Nonempty ∧
-          sInf (capExitSet β c Tesc η V)
-            < (4 * ε / (k : ℝ)) * Real.exp ((c - 8 * ε) * β) := by
-  intro h
-  obtain ⟨⟨t, -, hle⟩, -⟩ :=
-    h 0 1 1 1 1 (fun _ => 1) (fun _ => 100) one_pos one_pos one_pos
-  norm_num at hle
-
-/-- **Equation (eq: v.small) is false in the same form.**
-
-The paper reads the within-cap variance at the cap-exit time `T_*(q, c)` and
-finds it exponentially small, `𝖵_q(T_*(q, c)) ≤ e^{-λ β}`; the bound is a
-consequence of the definition of the exit time, where `η_q 𝖵_q` has just
-fallen below `2 e^{-cβ}`, together with the lower bound on the cap mass
-`η_q` that §5 carries.
-
-With `η` and `V` free that link is gone: `η ≡ 0` makes the exit condition
-`0 ≤ 2 e^{-cβ}` hold at every time, so the exit set is all of `[0, T_esc]`
-and the non-emptiness hypothesis is met, while `V` is left free to be as large
-as one likes — wherever the infimum falls.  At `β = 0`, `c = λ = 1`,
-`T_esc = 1` and `V ≡ 2` the conclusion reads `2 ≤ e^0 = 1`.
-
-As for `claim: de sortie de cap`, the cap mass and the within-cap variance are
-not constructed here, so the statement is recorded as refuted and not
-restated.
-
-Source: arXiv:2410.06833v1, §5, `eq: v.small`. -/
-theorem not_forall_variance_small :
-    ¬ ∀ (β c lam Tesc : ℝ) (η V : ℝ → ℝ), 0 < c → 0 < lam →
-        (capExitSet β c Tesc η V).Nonempty →
-        V (sInf (capExitSet β c Tesc η V)) ≤ Real.exp (-lam * β) := by
-  intro h
-  have hset : capExitSet 0 1 1 (fun _ => (0 : ℝ)) (fun _ => (2 : ℝ))
-      = Set.Icc (0 : ℝ) 1 := by
-    ext t
-    constructor
-    · exact fun ht => ht.1
-    · exact fun ht => ⟨ht, by norm_num⟩
-  have hne : (capExitSet 0 1 1 (fun _ => (0 : ℝ)) (fun _ => (2 : ℝ))).Nonempty := by
-    rw [hset]
-    exact ⟨0, by norm_num⟩
-  have hbad := h 0 1 1 1 (fun _ => 0) (fun _ => 2) one_pos one_pos hne
-  norm_num [Real.exp_zero] at hbad
+Source: arXiv:2410.06833v1, §5, definition of `T_*(q, c)` and
+`claim: de sortie de cap`. -/
+def capExitSet (β c ε : ℝ) (k : ℕ) (w : Idx k → SSphere d) (μ₀ : ProbSphere d)
+    (Φ : ℝ → SSphere d → SSphere d) (q : Idx k) (x : ℝ → SSphere d) : Set ℝ :=
+  { t | t ∈ escapeWindow d k w Φ ε ∧
+      capMin d Φ (w q) ε t * capVariance d μ₀ Φ (w q) ε x t
+          * Real.exp (-(1 - capMin d Φ (w q) ε t) * β)
+        ≤ 2 * Real.exp (-c * β) }
 
 end Metastability
 end Transformer
