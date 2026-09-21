@@ -429,38 +429,42 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.Homogenized — arXiv:2604.01978
 
-- [ ] Transformer/Homogenized/Barycenter.lean (7): `softWeight_pos`, `softWeight_eq_attnWeight`, `softBary_dirac`, `norm_softBary_le_one`, `baryCorr_self`, `baryCorr_comm`, `normalizeLayer_smul`
-- [ ] Transformer/Homogenized/Basic.lean (12): `attnField_zero_beta`, `norm_normalizeLayer`, `normalizeLayer_of_norm_one`, `interpChain_natCast_mul`, `IsVarianceProxy.unique`, `valueMap_zero`, `attnField_zero_param`, `meanField_dirac_zero`, `fluct_dirac_zero`, `bField_dirac_zero`, `Gfield_dirac_zero`, `isVarianceProxy_dirac_zero`
-- [ ] Transformer/Homogenized/CoupledPair.lean (2): `sphHess₂_zero`, `isCoupledPair_dirac_zero`
-- [ ] Transformer/Homogenized/CoupledSystem.lean (2): `pocHess_zero`, `isPoCSystem_dirac_zero`
-- [ ] Transformer/Homogenized/Defs.lean (1): `attnWeight_pos`
-- [ ] Transformer/Homogenized/Frozen.lean (11): `hasVanishingField_dirac_zero`, `mvGenerator_of_vanishing`, `mvGenerator₂_of_vanishing`, `isMcKeanVlasovSolution_frozen`, `isCoupledPair_frozen`, `measurable_clampSphere`, `clampSphere_of_norm_eq_one`, `norm_clampSphere`, `map_clampSphere`, `isCoupledPair_uniformAmbient`, `exists_norm_eq_one`
-- [ ] Transformer/Homogenized/GaussianEnsemble.lean (9): `entryVar_zero`, `entryVar_one`, `entryVar_two`, `gaussBlock_apply`, `measurable_gaussBlock`, `map_gaussBlock`, `isGaussianHeadLaw_gaussHeadLaw`, `stdSigmaV_sq`, `isGaussianHeadLaw_stdScaling`
-- [ ] Transformer/Homogenized/GaussianInit.lean (3): `isGaussianHeadLaw_dirac_zero`, `alphaOf_gaussian`, `isDiffusiveSde_dirac_zero`
-- [ ] Transformer/Homogenized/GaussianInterp.lean (1): `gaussInterp_zero_fun`
-- [ ] Transformer/Homogenized/GaussianKernel.lean (3): `valueMap_smul`, `valueMap_integral`, `attnFieldOf_eq_valueMap_softBary`
-- [ ] Transformer/Homogenized/Generator.lean (4): `sphHess_zero`, `noiseField_one_one`, `isItoSolution_dirac_zero`, `isBallisticFlow_dirac_zero`
-- [ ] Transformer/Homogenized/GramStability.lean (1): `not_forall_overlapDrift_eq_simplexDrift`
-- [ ] Transformer/Homogenized/HansonWright.lean (2): `matOpNorm_nonneg`, `matOpNorm_zero`
-- [ ] Transformer/Homogenized/Logistic.lean (3): `logisticGenerator_one`, `logisticGenerator_neg_one`, `isLogisticSolution_one`
-- [ ] Transformer/Homogenized/LogisticLimit.lean (1): `rescaledOverlap_zero`
-- [ ] Transformer/Homogenized/McKeanVlasov.lean (2): `isWeakSpdeSolution_dirac_zero`, `isMcKeanVlasovSolution_dirac_zero`
-- [ ] Transformer/Homogenized/MeanField.lean (7): `real_inner_proj_left`, `integral_empMeasure`, `attnFieldOf_empMeasure`, `meanFieldOf_empMeasure`, `fluctOf_empMeasure`, `Gfield_eq_GfieldOf`, `inner_covKernel_proj`
-- [ ] Transformer/Homogenized/MeanFieldLipschitz.lean (7): `attnFieldOf_dirac`, `GfieldOf_dirac`, `valueMap_radMatrix`, `integral_valueMap_radLaw`, `norm_proj_sub_proj_sq`, `sqrt_integral_norm_GfieldOf_radLaw`, `not_forall_satisfying_MF_rate`
-- [ ] Transformer/Homogenized/Metastability.lean (1): `effBeta_pos`
-- [ ] Transformer/Homogenized/MvGenerator.lean (8): `isMartingaleOn_const`, `sphHess₁_zero`, `attnFieldOf_zero`, `meanFieldOf_dirac_zero`, `fluctOf_dirac_zero`, `GfieldOf_dirac_zero`, `mvGenerator_dirac_zero`, `spdeNoise_dirac_zero`
-- [ ] Transformer/Homogenized/OneDim.lean (5): `mul_self_eq_one_of_norm_eq_one`, `proj_one`, `GfieldOf_one`, `hasVanishingField_one`, `isCoupledPair_uniformAmbient_one`
-- [ ] Transformer/Homogenized/OverlapDrift.lean (2): `sphGenerator_overlap_diffusive`, `overlapDrift_self`
-- [ ] Transformer/Homogenized/OverlapObservable.lean (7): `overlapForm_apply`, `hasFDerivAt_overlap`, `fderiv_overlap`, `fderiv_fderiv_overlap`, `iteratedFDeriv_two_overlap`, `sphHess_overlap`, `sphGenerator_overlap`
-- [ ] Transformer/Homogenized/RademacherLaw.lean (7): `iIndepFun_of_const_of_ne`, `integral_fairCoin`, `radMatrix_apply`, `measurable_radMatrix`, `integral_radLaw`, `isHighOrderLaw_rademacher`, `hasHighOrderLaw_rademacher`
-- [ ] Transformer/Homogenized/RandomChain.lean (4): `iIndepFun_of_unit`, `isHighOrderLaw_dirac_zero`, `hasHighOrderLaw_dirac_zero`, `isRandomChain_dirac_zero`
-- [ ] Transformer/Homogenized/Simplex.lean (4): `attnProb_pos`, `sum_attnProb`, `isSimplexConfig_of_subsingleton`, `is`
-- [ ] Transformer/Homogenized/SimplexBary.lean (5): `attnProb_eq_softWeight`, `softBary_empMeasure`, `inner_softBary_simplex`, `baryCorr_simplex`, `baryCorr_simplex_self`
-- [ ] Transformer/Homogenized/SimplexDrift.lean (4): `feeds`, `overlapDrift_congr`, `overlapDrift_simplex`, `overlapDrift_simplex_sub_simplexDrift`
-- [ ] Transformer/Homogenized/SlowMotion.lean (1): `isLowTemperature_uniformAmbient`
-- [ ] Transformer/Homogenized/SmallBeta.lean (2): `meanOverlap_const`, `hasDerivAt_logistic`
-- [ ] Transformer/Homogenized/SoftmaxDerivatives.lean (2): `hasFDerivAt_softmaxWeight`, `fderiv_softmaxWeight`
-- [ ] Transformer/Homogenized/UniformLaw.lean (10): `measurable_radialProj`, `norm_radialProj`, `radialProj_comp_isometry`, `isOpen_puncturedBall`, `measurableSet_puncturedBall`, `ne_zero_of_mem_puncturedBall`, `measure_puncturedBall_pos`, `measure_puncturedBall_lt_top`, `uniformAmbient_apply`, `isUniformAmbient_uniformAmbient`
+- issue Transformer/Homogenized/Regimes.lean (sorried, no proved entries): `ballistic_regime` and `modified_regime` state the rate `Ce^{Ct_L}(t_L+1)max(η,α)` of cor:ode1/cor:ode2 without the printed leading `η` — weaker than printed; the docstring argues the printed rate is false but no counterexample theorem is proved. `diffusive_regime` is stated only at grid times `t = kη`.
+- issue Transformer/Homogenized/WeakError.lean (sorried, no proved entries): `weak_error_modified` restricted to grid times; the falsity of the sup-over-all-t version is argued in the docstring, not proved.
+- note whole directory: `IsItoSolution` and the martingale-problem solution concepts are weaker than the source's strong solutions; documented in their docstrings.
+
+- ok Transformer/Homogenized/Barycenter.lean (7): `softWeight_pos`, `softWeight_eq_attnWeight`, `softBary_dirac`, `norm_softBary_le_one`, `baryCorr_self`, `baryCorr_comm`, `normalizeLayer_smul`
+- ok Transformer/Homogenized/Basic.lean (12): `attnField_zero_beta`, `norm_normalizeLayer`, `normalizeLayer_of_norm_one`, `interpChain_natCast_mul`, `IsVarianceProxy.unique`, `valueMap_zero`, `attnField_zero_param`, `meanField_dirac_zero`, `fluct_dirac_zero`, `bField_dirac_zero`, `Gfield_dirac_zero`, `isVarianceProxy_dirac_zero`
+- ok Transformer/Homogenized/CoupledPair.lean (2): `sphHess₂_zero`, `isCoupledPair_dirac_zero`
+- ok Transformer/Homogenized/CoupledSystem.lean (2): `pocHess_zero`, `isPoCSystem_dirac_zero`
+- ok Transformer/Homogenized/Defs.lean (1): `attnWeight_pos`
+- ok Transformer/Homogenized/Frozen.lean (11): `hasVanishingField_dirac_zero`, `mvGenerator_of_vanishing`, `mvGenerator₂_of_vanishing`, `isMcKeanVlasovSolution_frozen`, `isCoupledPair_frozen`, `measurable_clampSphere`, `clampSphere_of_norm_eq_one`, `norm_clampSphere`, `map_clampSphere`, `isCoupledPair_uniformAmbient`, `exists_norm_eq_one`
+- ok Transformer/Homogenized/GaussianEnsemble.lean (9): `entryVar_zero`, `entryVar_one`, `entryVar_two`, `gaussBlock_apply`, `measurable_gaussBlock`, `map_gaussBlock`, `isGaussianHeadLaw_gaussHeadLaw`, `stdSigmaV_sq`, `isGaussianHeadLaw_stdScaling`
+- ok Transformer/Homogenized/GaussianInit.lean (3): `isGaussianHeadLaw_dirac_zero`, `alphaOf_gaussian`, `isDiffusiveSde_dirac_zero`
+- ok Transformer/Homogenized/GaussianInterp.lean (1): `gaussInterp_zero_fun`
+- ok Transformer/Homogenized/GaussianKernel.lean (3): `valueMap_smul`, `valueMap_integral`, `attnFieldOf_eq_valueMap_softBary`
+- ok Transformer/Homogenized/Generator.lean (4): `sphHess_zero`, `noiseField_one_one`, `isItoSolution_dirac_zero`, `isBallisticFlow_dirac_zero`
+- ok Transformer/Homogenized/GramStability.lean (1): `not_forall_overlapDrift_eq_simplexDrift` — refutation of D(R(γ))=b(γ) verified against eq:Dij_explicit_clean
+- ok Transformer/Homogenized/HansonWright.lean (2): `matOpNorm_nonneg`, `matOpNorm_zero`
+- ok Transformer/Homogenized/Logistic.lean (3): `logisticGenerator_one`, `logisticGenerator_neg_one`, `isLogisticSolution_one`
+- ok Transformer/Homogenized/LogisticLimit.lean (1): `rescaledOverlap_zero`
+- ok Transformer/Homogenized/McKeanVlasov.lean (2): `isWeakSpdeSolution_dirac_zero`, `isMcKeanVlasovSolution_dirac_zero`
+- ok Transformer/Homogenized/MeanField.lean (7): `real_inner_proj_left`, `integral_empMeasure`, `attnFieldOf_empMeasure`, `meanFieldOf_empMeasure`, `fluctOf_empMeasure`, `Gfield_eq_GfieldOf`, `inner_covKernel_proj`
+- issue Transformer/Homogenized/MeanFieldLipschitz.lean (7): `attnFieldOf_dirac`, `GfieldOf_dirac`, `valueMap_radMatrix`, `integral_valueMap_radLaw`, `norm_proj_sub_proj_sq`, `sqrt_integral_norm_GfieldOf_radLaw`, `not_forall_satisfying_MF_rate` — satisfying_MF rate refuted only via β↓0; corrected (1+β²) rate not stated
+- ok Transformer/Homogenized/Metastability.lean (1): `effBeta_pos`
+- ok Transformer/Homogenized/MvGenerator.lean (8): `isMartingaleOn_const`, `sphHess₁_zero`, `attnFieldOf_zero`, `meanFieldOf_dirac_zero`, `fluctOf_dirac_zero`, `GfieldOf_dirac_zero`, `mvGenerator_dirac_zero`, `spdeNoise_dirac_zero`
+- ok Transformer/Homogenized/OneDim.lean (5): `mul_self_eq_one_of_norm_eq_one`, `proj_one`, `GfieldOf_one`, `hasVanishingField_one`, `isCoupledPair_uniformAmbient_one`
+- ok Transformer/Homogenized/OverlapDrift.lean (2): `sphGenerator_overlap_diffusive`, `overlapDrift_self`
+- ok Transformer/Homogenized/OverlapObservable.lean (7): `overlapForm_apply`, `hasFDerivAt_overlap`, `fderiv_overlap`, `fderiv_fderiv_overlap`, `iteratedFDeriv_two_overlap`, `sphHess_overlap`, `sphGenerator_overlap`
+- ok Transformer/Homogenized/RademacherLaw.lean (7): `iIndepFun_of_const_of_ne`, `integral_fairCoin`, `radMatrix_apply`, `measurable_radMatrix`, `integral_radLaw`, `isHighOrderLaw_rademacher`, `hasHighOrderLaw_rademacher`
+- ok Transformer/Homogenized/RandomChain.lean (4): `iIndepFun_of_unit`, `isHighOrderLaw_dirac_zero`, `hasHighOrderLaw_dirac_zero`, `isRandomChain_dirac_zero`
+- ok Transformer/Homogenized/Simplex.lean (4): `attnProb_pos`, `sum_attnProb`, `isSimplexConfig_of_subsingleton`, `is`
+- ok Transformer/Homogenized/SimplexBary.lean (5): `attnProb_eq_softWeight`, `softBary_empMeasure`, `inner_softBary_simplex`, `baryCorr_simplex`, `baryCorr_simplex_self`
+- ok Transformer/Homogenized/SimplexDrift.lean (4): `feeds`, `overlapDrift_congr`, `overlapDrift_simplex`, `overlapDrift_simplex_sub_simplexDrift`
+- ok Transformer/Homogenized/SlowMotion.lean (1): `isLowTemperature_uniformAmbient`
+- ok Transformer/Homogenized/SmallBeta.lean (2): `meanOverlap_const`, `hasDerivAt_logistic`
+- ok Transformer/Homogenized/SoftmaxDerivatives.lean (2): `hasFDerivAt_softmaxWeight`, `fderiv_softmaxWeight`
+- ok Transformer/Homogenized/UniformLaw.lean (10): `measurable_radialProj`, `norm_radialProj`, `radialProj_comp_isometry`, `isOpen_puncturedBall`, `measurableSet_puncturedBall`, `ne_zero_of_mem_puncturedBall`, `measure_puncturedBall_pos`, `measure_puncturedBall_lt_top`, `uniformAmbient_apply`, `isUniformAmbient_uniformAmbient`
 
 ### Transformer.Interpolation — arXiv:2411.04551
 
