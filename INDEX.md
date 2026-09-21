@@ -2701,15 +2701,15 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`interaction_inequalities_core`](src/Transformer/Causal/InteractionWindow.lean#L50) | theorem | proved |
 | [`interaction_inequalities`](src/Transformer/Causal/InteractionWindow.lean#L243) | theorem | proved |
 
-**[Transformer.Causal.MainTheorem](src/Transformer/Causal/MainTheorem.lean)** — 271 lines
+**[Transformer.Causal.MainTheorem](src/Transformer/Causal/MainTheorem.lean)** — 276 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`single_cluster`](src/Transformer/Causal/MainTheorem.lean#L48) | theorem | sorry |
-| [`two_cluster`](src/Transformer/Causal/MainTheorem.lean#L75) | theorem | sorry |
-| [`subspace_cluster`](src/Transformer/Causal/MainTheorem.lean#L125) | theorem | sorry |
-| [`inner_mul_le_inner_of_abs_le`](src/Transformer/Causal/MainTheorem.lean#L169) | theorem | proved |
-| [`inner_mul_eq_inner_iff`](src/Transformer/Causal/MainTheorem.lean#L206) | theorem | proved |
+| [`single_cluster`](src/Transformer/Causal/MainTheorem.lean#L55) | theorem | sorry |
+| [`two_cluster`](src/Transformer/Causal/MainTheorem.lean#L83) | theorem | sorry |
+| [`subspace_cluster`](src/Transformer/Causal/MainTheorem.lean#L130) | theorem | sorry |
+| [`inner_mul_le_inner_of_abs_le`](src/Transformer/Causal/MainTheorem.lean#L174) | theorem | proved |
+| [`inner_mul_eq_inner_iff`](src/Transformer/Causal/MainTheorem.lean#L211) | theorem | proved |
 
 **[Transformer.Causal.Metastability](src/Transformer/Causal/Metastability.lean)** — 163 lines
 
@@ -6779,9 +6779,9 @@ Everything the build cannot vouch for, in one place.
 | [`uniform_cap_mass_two`](src/Transformer/Causal/CapMass.lean#L41) | theorem | `Transformer.Causal.CapMass` |
 | [`uniform_cap_mass_three`](src/Transformer/Causal/CapMass.lean#L64) | theorem | `Transformer.Causal.CapMass` |
 | [`fixed_centers`](src/Transformer/Causal/FixedCenters.lean#L108) | theorem | `Transformer.Causal.FixedCenters` |
-| [`single_cluster`](src/Transformer/Causal/MainTheorem.lean#L48) | theorem | `Transformer.Causal.MainTheorem` |
-| [`two_cluster`](src/Transformer/Causal/MainTheorem.lean#L75) | theorem | `Transformer.Causal.MainTheorem` |
-| [`subspace_cluster`](src/Transformer/Causal/MainTheorem.lean#L125) | theorem | `Transformer.Causal.MainTheorem` |
+| [`single_cluster`](src/Transformer/Causal/MainTheorem.lean#L55) | theorem | `Transformer.Causal.MainTheorem` |
+| [`two_cluster`](src/Transformer/Causal/MainTheorem.lean#L83) | theorem | `Transformer.Causal.MainTheorem` |
+| [`subspace_cluster`](src/Transformer/Causal/MainTheorem.lean#L130) | theorem | `Transformer.Causal.MainTheorem` |
 | [`lemma_meta`](src/Transformer/Causal/Metastability.lean#L62) | theorem | `Transformer.Causal.Metastability` |
 | [`sequentialFlow_converges`](src/Transformer/Causal/SequentialFlow.lean#L136) | theorem | `Transformer.Causal.SequentialFlow` |
 | [`exists_polytope_tendsto_image_tokenHull`](src/Transformer/Clusters/Section10_ProjHull.lean#L128) | theorem | `Transformer.Clusters.Section10_ProjHull` |

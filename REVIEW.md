@@ -318,7 +318,7 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - ok Transformer/Causal/InteractionPeak.lean (1): `h_pot_unimodal`
 - ok Transformer/Causal/InteractionRemark.lean (2): `g_pot_nonpos_core`, `interaction_window` — interaction_window now concludes the minus-sign form that fixed_centers uses; the printed N g form was automatic
 - ok Transformer/Causal/InteractionWindow.lean (2): `interaction_inequalities_core`, `interaction_inequalities`
-- issue Transformer/Causal/MainTheorem.lean (2): `inner_mul_le_inner_of_abs_le`, `inner_mul_eq_inner_iff` — single_cluster, two_cluster, subspace_cluster: the paper's volume measure is a free parameter σ; with σ = Dirac at the equilibrium x₂ = -x₁, single_cluster is false
+- issue [FIXED: UniformTuple σ; thm1 needs d ≥ 2 (false on 𝕊^0); thm1.5 given the paper's hypothesis on V; thm2 P_{L⊥} typo recorded] Transformer/Causal/MainTheorem.lean (2): `inner_mul_le_inner_of_abs_le`, `inner_mul_eq_inner_iff` — single_cluster, two_cluster, subspace_cluster: the paper's volume measure is a free parameter σ; with σ = Dirac at the equilibrium x₂ = -x₁, single_cluster is false
 - issue [FIXED: replaced by Causal.FixedCenters.fixed_centers — frozen θ_j, a_j, h/g conditions with the proof's sign, 0 < m, a.e. under abs.-cont. μ₀] Transformer/Causal/Metastability.lean (2): `csa_const_one`, `renyi_count` — fixed_centers_convergence is not thm:fixed_centers (no frozen θ_j or a_j, no h/g hypotheses, δ in place of εβ^{-1/2}, every solution in place of a.e.) and is false at m = 0, n ≥ 1; renyi_count proves only the packing number
 
 ### Transformer.Causal.Packing — —

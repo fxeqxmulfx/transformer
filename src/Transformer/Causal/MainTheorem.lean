@@ -10,16 +10,17 @@
 * `Lemma lemma:scalar`  — the scalar inequality the proof of `thm1` opens
                           with, and its equality cases.
 
-All three statements quantify over "almost every initial configuration", which
-is relative to a reference measure on `(𝕊^{d-1})^n`; the paper's measure is the
-uniform one, and this development does not construct it, so each statement
-carries that measure as a parameter.  None of the three is proved here —
-`thm1.5` and `thm2` are conjectures even in the paper.
+All three statements quantify over "almost every initial configuration" with
+respect to the volume measure on `(𝕊^{d-1})^n`.  Its null sets are those of
+the uniform law, which is read as every `σ` with `Perspective.UniformTuple d n σ`
+— it holds for exactly one `σ`.  None of the three is proved here — `thm1.5`
+and `thm2` are conjectures even in the paper.
 -/
 
 import Transformer.Basic
 import Transformer.Causal.Basic
 import Transformer.Perspective.Section2_FlowMap
+import Transformer.Perspective.Section3_SmallBeta
 import Mathlib.Analysis.InnerProductSpace.Projection.Basic
 import Mathlib.Basic.Real.Sign
 
@@ -42,42 +43,50 @@ For arbitrary `Q, K`, `β ≥ 0` and `V = I_d`, for almost any
 
 The leader `x_1` is a fixed point of `eq: csa`: its own row of the causal mask
 sees only itself, so the whole cloud is dragged onto where it started.
+
+*`d ≥ 2`.*  The source puts no bound on `d`, and at `d = 1` the statement is
+false: `𝕊^0 = {±1}` has no tangent directions, so no token moves, and the
+configuration `(1, -1)` has mass `1/4` under the uniform law and never reaches
+`x_1(0)`.  `2 ≤ d` is added.
+
 Not proved here.
 
-Source: arXiv:2411.04990v2, §4. -/
-theorem single_cluster
-    (σ : Measure (SphereTuple d n)) (β : ℝ) (Q K : ParamMatrix d) (hn : 1 ≤ n)
+Source: arXiv:2411.04990v2, §4, `thm1`. -/
+theorem single_cluster (hd : 2 ≤ d) (β : ℝ) (Q K : ParamMatrix d) (hn : 1 ≤ n)
     (hβ : 0 ≤ β) :
+    ∀ σ : Measure (SphereTuple d n), Perspective.UniformTuple d n σ →
     ∀ᵐ X₀ ∂σ, ∀ X : ℝ → SphereTuple d n, X 0 = X₀ →
       Causal.CSA d n β Q K (ContinuousLinearMap.id ℝ (EucSpace d)) X →
         ∀ k : Idx n,
           Filter.Tendsto (fun t : ℝ => X t k) Filter.atTop (nhds (X₀ ⟨0, hn⟩)) := by
   sorry
 
-/-- The hypotheses of `single_cluster` are satisfiable: one token and `β = 0`. -/
-example : (1 : ℕ) ≤ 1 ∧ (0 : ℝ) ≤ 0 := ⟨le_rfl, le_rfl⟩
+/-- The hypotheses of `single_cluster` are satisfiable: the circle, one token
+and `β = 0`. -/
+example : 2 ≤ 2 ∧ (1 : ℕ) ≤ 1 ∧ (0 : ℝ) ≤ 0 := ⟨le_rfl, le_rfl, le_rfl⟩
 
-/-- **Conjecture (thm1.5).**  *Two-cluster convergence (`λ_max > 0`, mult 1).*
+/-- **Conjecture (thm1.5).**  *Two-cluster convergence.*
 
-Let `λ > 0` be the largest real eigenvalue of `V` — every real eigenvalue is
-`≤ λ` — and let it be simple, its eigenspace being the line spanned by
-`ξ ∈ 𝕊^{d-1}`.  Then for arbitrary `Q, K` and almost any initialization the
-CSA dynamics satisfy
+Let `V` be diagonalizable with `d` distinct positive real eigenvalues, the
+largest `λ_max` with unit eigenvector `ξ`.  Then for arbitrary `Q, K` and
+almost any initialization the CSA dynamics satisfy
 
   `∀ k ∈ [n], lim_{t → ∞} x_k(t) ∈ {ξ, -ξ}`.
 
-The two limits are genuinely both possible: `V` fixes the line `ℝ ξ`, not a
-ray, so a token starting in the half-space `⟨x, ξ⟩ < 0` is pulled to `-ξ`.
+Diagonalizability is an eigenbasis `e` with eigenvalues `μ`: `d` linearly
+independent eigenvectors in `ℝ^d`.  `λ_max` is an eigenvalue because `ξ` is
+an eigenvector for it, and it is the largest because it bounds every `μ_i`.
 
 Not proved here.
 
-Source: arXiv:2411.04990v2, §4. -/
-theorem two_cluster
-    (σ : Measure (SphereTuple d n)) (β : ℝ) (Q K V : ParamMatrix d)
-    (lam : ℝ) (ξ : SSphere d) (hβ : 0 ≤ β) (hlam : 0 < lam)
-    (heig : V (ξ : EucSpace d) = lam • (ξ : EucSpace d))
-    (htop : ∀ (v : EucSpace d) (c : ℝ), v ≠ 0 → V v = c • v → c ≤ lam)
-    (hsimple : ∀ v : EucSpace d, V v = lam • v → ∃ c : ℝ, v = c • (ξ : EucSpace d)) :
+Source: arXiv:2411.04990v2, §4, `thm1.5`. -/
+theorem two_cluster (β : ℝ) (Q K V : ParamMatrix d)
+    (lam : ℝ) (ξ : SSphere d) (hβ : 0 ≤ β)
+    (hdiag : ∃ (e : Idx d → EucSpace d) (μ : Idx d → ℝ), LinearIndependent ℝ e ∧
+      (∀ i, V (e i) = μ i • e i) ∧ Function.Injective μ ∧ (∀ i, 0 < μ i) ∧
+      ∀ i, μ i ≤ lam)
+    (heig : V (ξ : EucSpace d) = lam • (ξ : EucSpace d)) :
+    ∀ σ : Measure (SphereTuple d n), Perspective.UniformTuple d n σ →
     ∀ᵐ X₀ ∂σ, ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Causal.CSA d n β Q K V X →
       ∀ k : Idx n,
         Filter.Tendsto (fun t : ℝ => (X t k : EucSpace d)) Filter.atTop
@@ -86,28 +95,19 @@ theorem two_cluster
             (nhds (-(ξ : EucSpace d))) := by
   sorry
 
-/-- The hypotheses of `two_cluster` are satisfiable: on the line, `V = I_1` has
-the simple eigenvalue `1` with eigenvector the single basis vector. -/
+/-- The hypotheses of `two_cluster` are satisfiable: on the line, `V = I_1` is
+diagonal with the single eigenvalue `1`, and its eigenvector is the basis
+vector. -/
 example :
-    (0 : ℝ) ≤ 0 ∧ (0 : ℝ) < 1 ∧
+    (0 : ℝ) ≤ 0 ∧
+      (∃ (e : Idx 1 → EucSpace 1) (μ : Idx 1 → ℝ), LinearIndependent ℝ e ∧
+        (∀ i, (ContinuousLinearMap.id ℝ (EucSpace 1)) (e i) = μ i • e i) ∧
+        Function.Injective μ ∧ (∀ i, 0 < μ i) ∧ ∀ i, μ i ≤ 1) ∧
       (ContinuousLinearMap.id ℝ (EucSpace 1)) (EuclideanSpace.single (0 : Fin 1) (1 : ℝ))
-        = (1 : ℝ) • EuclideanSpace.single (0 : Fin 1) (1 : ℝ) ∧
-      (∀ (v : EucSpace 1) (c : ℝ), v ≠ 0 →
-        (ContinuousLinearMap.id ℝ (EucSpace 1)) v = c • v → c ≤ 1) ∧
-      (∀ v : EucSpace 1, (ContinuousLinearMap.id ℝ (EucSpace 1)) v = (1 : ℝ) • v →
-        ∃ c : ℝ, v = c • EuclideanSpace.single (0 : Fin 1) (1 : ℝ)) := by
-  refine ⟨le_rfl, one_pos, by simp, ?_, ?_⟩
-  · intro v c hv hVv
-    rw [ContinuousLinearMap.id_apply] at hVv
-    have hc : (1 - c) • v = 0 := by rw [sub_smul, one_smul, ← hVv, sub_self]
-    rcases smul_eq_zero.mp hc with h | h
-    · exact le_of_eq (sub_eq_zero.mp h).symm
-    · exact absurd h hv
-  · intro v _
-    refine ⟨v 0, ?_⟩
-    ext i
-    fin_cases i
-    simp
+        = (1 : ℝ) • EuclideanSpace.single (0 : Fin 1) (1 : ℝ) := by
+  refine ⟨le_rfl, ⟨fun _ => EuclideanSpace.single (0 : Fin 1) (1 : ℝ), fun _ => 1,
+    linearIndependent_unique_iff.mpr (by simp), fun _ => by simp,
+    fun i j _ => Subsingleton.elim i j, fun _ => one_pos, fun _ => le_rfl⟩, by simp⟩
 
 /-- **Conjecture (thm2).**  *Single-cluster convergence with `λ_max > 0`,
 `dim L ≥ 2`.*
@@ -119,17 +119,22 @@ to it.  Then almost every initialization yields convergence of every token to
 the normalized `L`-component of `x_1(0)`, which is defined as soon as that
 component is nonzero.
 
+The source defines `ξ` in words as "the normalized `L`-component of `x_1(0)`"
+and then in symbols as `y_1 := P_{L^⊥}(x_1(0))`, `ξ := y_1/|y_1|`.  The
+symbols contradict the words and the surrounding discussion (tokens are
+attracted *into* `L`); the words are taken, `ξ` is the projection on `L`.
+
 Not proved here.
 
-Source: arXiv:2411.04990v2, §4. -/
-theorem subspace_cluster
-    (σ : Measure (SphereTuple d n)) (β : ℝ) (Q K V : ParamMatrix d)
+Source: arXiv:2411.04990v2, §4, `thm2`. -/
+theorem subspace_cluster (β : ℝ) (Q K V : ParamMatrix d)
     (lam : ℝ) (L : Submodule ℝ (EucSpace d)) (hn : 1 ≤ n)
     (hβ : 0 ≤ β) (hlam : 0 < lam)
     (heig : ∀ v ∈ L, V v = lam • v)
     (hdim : 2 ≤ Module.finrank ℝ L)
     (hinv : ∀ z ∈ Lᗮ, V z ∈ Lᗮ)
     (hdecay : ∀ z ∈ Lᗮ, z ≠ 0 → inner (𝕜 := ℝ) (V z) z < lam * ‖z‖ ^ 2) :
+    ∀ σ : Measure (SphereTuple d n), Perspective.UniformTuple d n σ →
     ∀ᵐ X₀ ∂σ, ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Causal.CSA d n β Q K V X →
       L.starProjection ((X₀ ⟨0, hn⟩ : SSphere d) : EucSpace d) ≠ 0 →
         ∀ k : Idx n,
