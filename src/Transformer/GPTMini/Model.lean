@@ -13,11 +13,10 @@ class GPTMini(nn.Module):
         return self.unembed(self.norm_final(x))
 ```
 
-We assemble the complete forward pass and prove its first universal-in-
-weights properties:
-  - well-definedness (totality),
-  - the residual stream `hidden` after each layer, which the properties of
-    `Transformer.GPTMini.Properties` are stated about.
+We assemble the complete forward pass, and the residual stream `hidden`
+after each layer, which the properties of `Transformer.GPTMini.Properties` are
+stated about.  Totality needs no theorem: `forward` is a Lean function into
+`ℝ`, defined on every input.
 
 The simplex property of the softmax output is in
 `Transformer.GPTMini.Properties.OutputSimplex`, and the growth of the stream
@@ -84,8 +83,11 @@ noncomputable def hidden
 
 /-- **Top-level forward.**
 
-Given tokens of length `T ≤ max_seq_len`, applies the stack of `n_layers`
-Pre-LN blocks and produces logits over `vocab_size`. -/
+Given tokens of any length `T`, applies the stack of `n_layers` Pre-LN blocks
+and produces logits over `vocab_size`.  The reference model caps `T` at
+`max_seq_len` because its RoPE tables have that many rows; here the rotation
+is computed from `positions` directly, so no cap is needed and none is
+imposed. -/
 noncomputable def forward
     (cfg : Config) (params : ModelParams cfg) (eps : ℝ)
     {T : ℕ} (positions : Fin T → ℝ)
@@ -93,16 +95,6 @@ noncomputable def forward
     (i : Fin T) (v : Fin cfg.vocab_size) : ℝ :=
   unembed cfg params
     (fun i => rmsNormEps eps (hidden cfg params eps positions tokens cfg.n_layers i)) i v
-
-/-- **Forward total.**  For any parameters and any token sequence
-of length `T ≤ max_seq_len`, the forward function returns a finite real. -/
-theorem forward_total
-    (cfg : Config) (params : ModelParams cfg) (eps : ℝ)
-    {T : ℕ} (positions : Fin T → ℝ)
-    (tokens : Fin T → Fin cfg.vocab_size)
-    (i : Fin T) (v : Fin cfg.vocab_size) :
-    ∃ y : ℝ, forward cfg params eps positions tokens i v = y := by
-  exact ⟨_, rfl⟩
 
 /-- The softmax probability vector at position `i`:
 

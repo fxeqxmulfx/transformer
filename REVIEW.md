@@ -406,7 +406,7 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - ok Transformer/GPTMini/Config.lean (8): `head_dim_pos`, `group_size_pos`, `n_kv_heads_mul_group_size`, `kvHead_surjective`, `kvHead_val_eq`, `kvHead_val_eq_zero`, `exists_shared_kvHead`, `cache_eq_group_size_mul`
 - ok Transformer/GPTMini/HeadLipschitz.lean (4): `attentionHead_eq`, `headLipschitz_nonneg`, `headLipschitz_mono`, `attentionHead_dist_le`
 - ok Transformer/GPTMini/MeanFieldRefutation.lean (3): `attentionHead_one`, `preLNHead_one_ne_zero`, `not_mean_field_clustering`
-- issue Transformer/GPTMini/Model.lean (1): `forward_total` — forward_total is decorative: ∃ y, f = y closed by rfl, true of every term; docstring's 'T ≤ max_seq_len' is not even a hypothesis
+- issue Transformer/GPTMini/Model.lean (1): `forward_total` — FIXED: forward_total deleted, the T ≤ max_seq_len docstring corrected. Was: forward_total is decorative: ∃ y, f = y closed by rfl, true of every term; docstring's 'T ≤ max_seq_len' is not even a hypothesis
 
 ### Transformer.GPTMini.Properties — —
 
