@@ -35,7 +35,9 @@ import Transformer.AMSGrad.Section4_MainLemma
 import Transformer.AMSGrad.Section4_Telescope
 import Transformer.AMSGrad.Section4_Terms
 import Transformer.AMSGrad.Section4_Third
+import Transformer.AMSGrad.Section4_Rate
 import Transformer.AMSGrad.Section4_Theorem
+import Transformer.AMSGrad.Section4_Corollary
 import Transformer.AMSGrad.Section4_Counter
 import Transformer.AMSGrad.Section5_AdamX
 import Transformer.AMSGrad.Section5_Theorem
