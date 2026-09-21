@@ -244,7 +244,7 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer — arXiv:2106.06981
 
-- [ ] Transformer/Basic.lean (4): `inner_proj_eq_zero`, `proj_smul_self`, `norm_proj_le`, `norm_proj_sub_proj_le`
+- ok Transformer/Basic.lean (4): `inner_proj_eq_zero`, `proj_smul_self`, `norm_proj_le`, `norm_proj_sub_proj_le` — projection API; norm_proj_sub_proj_le constants checked
 
 ### Transformer.CRASP — arXiv:2506.16055
 
@@ -372,10 +372,10 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.FrankWolfe — arXiv:2508.09628
 
-- [ ] Transformer/FrankWolfe/Section2_Derivations.lean (2): `configHull_subset_of_isHardmaxStep`, `configHull_antitone`
-- [ ] Transformer/FrankWolfe/Section2_HullFailure.lean (5): `diagTwo_apply`, `triangle_subset`, `triangle_nonneg`, `inner_single_one`, `not_configHull_subset_of_preconditioner`
-- [ ] Transformer/FrankWolfe/Section3_NegativeDefinite.lean (2): `isFrankWolfeStep_iff_isHardmaxStep`, `says`
-- [ ] Transformer/FrankWolfe/Section4_Cells.lean (5): `mem_cell_iff`, `convex_cell`, `interior_cell_inter`, `iUnion_cell`, `cell_eq_vorCell_inter`
+- ok Transformer/FrankWolfe/Section2_Derivations.lean (2): `configHull_subset_of_isHardmaxStep`, `configHull_antitone` — lem:convHullDecreases as in §2.3; singleLeader (sorried) faithful, the paper's proof gap documented
+- ok Transformer/FrankWolfe/Section2_HullFailure.lean (5): `diagTwo_apply`, `triangle_subset`, `triangle_nonneg`, `inner_single_one`, `not_configHull_subset_of_preconditioner` — the remark's counterexample, V exhibited
+- ok Transformer/FrankWolfe/Section3_NegativeDefinite.lean (2): `isFrankWolfeStep_iff_isHardmaxStep`, `says` — reparametrization; fw_cluster (sorried) matches thm: fw.cluster with γ=2/(t+2)
+- issue Transformer/FrankWolfe/Section4_Cells.lean (5): `mem_cell_iff`, `convex_cell`, `interior_cell_inter`, `iUnion_cell`, `cell_eq_vorCell_inter` — lem: cells ok. Sorried §5: (1) IsSAProcess reads eq: softmax.process literally, per target position: when x_j = x_j' (j≠j'), e.g. γ=1/2 after a swap, the constraint gives P = w_j instead of w_j + w_j', and the leftover mass may go anywhere, so first_phase/metastability quantify over non-processes (stronger than the paper, likely false). (2) metastability: radius r > 0 free instead of Cτ, and x_i^0 ∈ K dropped: stronger than lem: metastab.1, likely false for large r. (3) metastability for every β > 0 rather than β ≥ β_*
 
 ### Transformer.GPTMini — arXiv:2512.01868
 
@@ -688,10 +688,10 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.Wasserstein — —
 
-- [ ] Transformer/Wasserstein/Basic.lean (9): `transportCosts_nonneg`, `bddBelow_transportCosts`, `W2_nonneg`, `W2_le_of_coupling`, `transportCosts_nonempty`, `ae_fst_mem`, `ae_snd_mem`, `W2_self`, `norm_integral_sub_le_W2`
+- ok Transformer/Wasserstein/Basic.lean (9): `transportCosts_nonneg`, `bddBelow_transportCosts`, `W2_nonneg`, `W2_le_of_coupling`, `transportCosts_nonempty`, `ae_fst_mem`, `ae_snd_mem`, `W2_self`, `norm_integral_sub_le_W2` — W2 as inf over couplings; Lipschitz bound checked
 - ok Transformer/Wasserstein/LowerBound.lean (1): `measureReal_mul_sq_le_W2_sq`
 - ok Transformer/Wasserstein/Collapse.lean (1): `W2_sq_le_collapse`
 
 ### Transformer.XSA — arXiv:2603.09078
 
-- [ ] Transformer/XSA.lean (2): `xsa_output_orthogonal_to_value`, `xsa_equals_spherical_SA_when_V_is_identity`
+- ok Transformer/XSA.lean (2): `xsa_output_orthogonal_to_value`, `xsa_equals_spherical_SA_when_V_is_identity` — eq:sa and eq:xsa match 2603.09078 §2-3
