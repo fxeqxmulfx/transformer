@@ -45,10 +45,10 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - fixed `not_mean_field_clustering` — Transformer/GPTMini/MeanFieldRefutation.lean:85 — kills the repo's free-W₂ gpt-mini transfer, not the survey; docstring claimed W₂ inexpressible, corrected to point at thm:mfclust in MeanField.Clustering
 - fixed `not_forall_overlapDrift_eq_simplexDrift` — Transformer/Homogenized/GramStability.lean:52 — witness moved to sigma_V^2=1/d (gaussHeadLaw, sigma_A=0); gap -2g(0)/d nonzero for every law
 - fixed `not_forall_satisfying_MF_rate` — Transformer/Homogenized/MeanFieldLipschitz.lean:180 — K moved inside model data (weakest reading of O); witness sigma_A=0 admissible under ass:high_order_short
-- [ ] `not_forall_clustering_to_atom` — Transformer/Interpolation/AtomClustering.lean:102
-- [ ] `not_exists_ball_of_mass_of_dirac` — Transformer/Interpolation/BallDecomposition.lean:42
-- [ ] `not_forall_monge` — Transformer/Interpolation/Main.lean:258
-- [ ] `not_forall_wToBall` — Transformer/Interpolation/MassConcentration.lean:112
+- ok `not_forall_clustering_to_atom` — Transformer/Interpolation/AtomClustering.lean:102 — kills the repo's free-Winf form, not the paper; repaired statement is clustering_to_atom with IsWinfToDirac
+- ok `not_exists_ball_of_mass_of_dirac` — Transformer/Interpolation/BallDecomposition.lean:42 — shows the dropped a.c. hypothesis of cl: balls is necessary; restored in claim_balls
+- ok `not_forall_monge` — Transformer/Interpolation/Main.lean:258 — kills the repo's free-W2/free-constant form; repaired and proved as monge (C=1)
+- fixed `not_forall_wToBall` — Transformer/Interpolation/MassConcentration.lean — refuted only the free-W₂ strawman; replaced by `wToBall` proved for the real W₂ (C=1), and lem: mass.concentration.Q1 found false as printed (Cη rate): `not_massConcentrationQ1`, corrected to 2√η in `massConcentrationQ1_sqrt`
 - [ ] `not_forall_Hartman_Grobman` — Transformer/Interpolation/Settling.lean:271
 - [ ] `not_exists_rate_at_simplex` — Transformer/MeanField/Equiangular.lean:75
 - [ ] `not_equiangular_local_rate_zero` — Transformer/MeanField/EquiangularRate.lean:159
@@ -466,7 +466,8 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - [ ] Transformer/Interpolation/Clustering.lean (2): `le_inner_barycenter`, `barycenter_ne_zero`
 - [ ] Transformer/Interpolation/IdentityFlow.lean (2): `fullVF_eq_zero`, `identity_flow`
 - [ ] Transformer/Interpolation/Main.lean (3): `isHole_antipode_diracProb`, `monge`, `not_forall_monge`
-- [ ] Transformer/Interpolation/MassConcentration.lean (2): `dist_antipode`, `not_forall_wToBall`
+- fixed Transformer/Interpolation/MassConcentration.lean (5): `wToBall`, `measurableSet_positiveQuadrant`, `antipode_notMem_positiveQuadrant`, `one_le_dist_antipode_of_mem`, `not_massConcentrationQ1` — cl: W.to.ball and lem: mass.concentration.Q1 as printed
+- ok Transformer/Interpolation/MassConcentrationSqrt.lean (2): `diagPoint_mem_positiveQuadrant`, `massConcentrationQ1_sqrt` — paper's construction, rate 2√η, deviations in docstring
 - [ ] Transformer/Interpolation/Settling.lean (4): `neuralODESphere_iff_perceptronField`, `norm_sub_le_of_contraction`, `Hartman_Grobman`, `not_forall_Hartman_Grobman`
 - [ ] Transformer/Interpolation/Wasserstein.lean (5): `transportCosts_nonneg`, `bddBelow_transportCosts`, `W2_nonneg`, `W2_le_of_coupling`, `W2_self`
 
@@ -687,7 +688,9 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.Wasserstein — —
 
-- [ ] Transformer/Wasserstein.lean (9): `transportCosts_nonneg`, `bddBelow_transportCosts`, `W2_nonneg`, `W2_le_of_coupling`, `transportCosts_nonempty`, `ae_fst_mem`, `ae_snd_mem`, `W2_self`, `norm_integral_sub_le_W2`
+- [ ] Transformer/Wasserstein/Basic.lean (9): `transportCosts_nonneg`, `bddBelow_transportCosts`, `W2_nonneg`, `W2_le_of_coupling`, `transportCosts_nonempty`, `ae_fst_mem`, `ae_snd_mem`, `W2_self`, `norm_integral_sub_le_W2`
+- ok Transformer/Wasserstein/LowerBound.lean (1): `measureReal_mul_sq_le_W2_sq`
+- ok Transformer/Wasserstein/Collapse.lean (1): `W2_sq_le_collapse`
 
 ### Transformer.XSA — arXiv:2603.09078
 

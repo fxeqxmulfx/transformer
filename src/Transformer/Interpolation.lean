@@ -15,5 +15,6 @@ import Transformer.Interpolation.Settling
 import Transformer.Interpolation.Main
 import Transformer.Interpolation.BallTransport
 import Transformer.Interpolation.MassConcentration
+import Transformer.Interpolation.MassConcentrationSqrt
 import Transformer.Interpolation.BallDecomposition
 import Transformer.Interpolation.GenericDiscrete

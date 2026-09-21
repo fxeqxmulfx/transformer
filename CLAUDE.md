@@ -95,8 +95,9 @@ predicate only because one of its parameters is unconstrained, it is not a
 statement at all, and there are exactly two honest endings —
 
 - pin the parameter down by the property that characterizes it, and state the
-  theorem (`IsUniformOn`, `IsEnergyGradNorm`, `IsCapMin`);
-- or prove it false as written (`not_forall_wToBall`,
+  theorem (`IsUniformOn`, `IsEnergyGradNorm`, `IsCapMin`, `wToBall` once `W₂`
+  was defined);
+- or prove it false as written (`not_massConcentrationQ1`,
   `not_forall_raspGeneralizationConjecture`).
 
 ## The tree must be valid, on the three axioms and no more
