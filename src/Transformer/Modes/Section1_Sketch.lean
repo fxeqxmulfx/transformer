@@ -44,8 +44,10 @@ structure IsSlowGrowth (ω : ℝ → ℝ) : Prop where
   /-- `ω(β) ≪ log log β`. -/
   upper : ω =o[atTop] fun β => Real.log (Real.log β)
 
-/-- The window is not empty: `ω(β) = √(log log β)` sits in it. -/
-example : IsSlowGrowth fun β => Real.sqrt (Real.log (Real.log β)) where
+/-- The window is not empty: `ω(β) = √(log log β)` sits in it.
+
+Source: arXiv:2412.09080v3, `sec: sketch`, `1 ≪ ω(β) ≪ log log β`. -/
+theorem isSlowGrowth_sqrt_log_log : IsSlowGrowth fun β => Real.sqrt (Real.log (Real.log β)) where
   lower := Real.tendsto_sqrt_atTop.comp (Real.tendsto_log_atTop.comp Real.tendsto_log_atTop)
   upper := by
     have hll : Tendsto (fun β : ℝ => Real.log (Real.log β)) atTop atTop :=
@@ -165,23 +167,8 @@ theorem prop_main_tail (c : ℝ) (N : ℕ → ℕ) (B : ℕ → ℝ) (hreg : IsR
 /-- The hypotheses of the three propositions are satisfiable: the regime
 `β = n` of `IsRegime`, and the window's witness `ω(β) = √(log log β)`. -/
 example : IsRegime 1 (fun k => k + 1) (fun k => ((k + 1 : ℕ) : ℝ)) ∧
-    IsSlowGrowth (fun β => Real.sqrt (Real.log (Real.log β))) := by
-  refine ⟨⟨one_pos, fun k => by positivity, by push_cast; exact tendsto_natSucc_atTop,
-    by push_cast; exact tendsto_natSucc_atTop, ?_, ?_⟩, ?_, ?_⟩
-  · refine (isBigO_refl (fun k : ℕ => ((k + 1 : ℕ) : ℝ)) atTop).congr' ?_ (by rfl)
-    filter_upwards with k
-    rw [Real.rpow_one]
-  · refine (isBigO_refl (fun k : ℕ => ((k + 1 : ℕ) : ℝ)) atTop).congr' (by rfl) ?_
-    filter_upwards with k
-    rw [show (2 : ℝ) - 1 = 1 by norm_num, Real.rpow_one]
-  · exact Real.tendsto_sqrt_atTop.comp (Real.tendsto_log_atTop.comp Real.tendsto_log_atTop)
-  · have hll : Tendsto (fun β : ℝ => Real.log (Real.log β)) atTop atTop :=
-      Real.tendsto_log_atTop.comp Real.tendsto_log_atTop
-    have h := (isLittleO_rpow_rpow_atTop (by norm_num : (1 : ℝ) / 2 < 1)).comp_tendsto hll
-    simp only [Function.comp_def, Real.rpow_one] at h
-    refine h.congr' ?_ (by rfl)
-    filter_upwards with β
-    rw [Real.sqrt_eq_rpow]
+    IsSlowGrowth (fun β => Real.sqrt (Real.log (Real.log β))) :=
+  ⟨isRegime_succ, isSlowGrowth_sqrt_log_log⟩
 
 end Modes
 end Transformer

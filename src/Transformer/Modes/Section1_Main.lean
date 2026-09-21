@@ -53,8 +53,10 @@ structure IsRegime (c : ℝ) (N : ℕ → ℕ) (B : ℕ → ℝ) : Prop where
   /-- `β ≲ n^{2-c}`. -/
   upper : B =O[atTop] fun k => (N k : ℝ) ^ (2 - c)
 
-/-- The regime is satisfiable: `β = n` with `c = 1`. -/
-example : IsRegime 1 (fun k => k + 1) (fun k => ((k + 1 : ℕ) : ℝ)) where
+/-- The regime is satisfiable: `β = n` with `c = 1`.
+
+Source: arXiv:2412.09080v3, `thm:main-result`, the regime `n^c ≲ β ≲ n^{2-c}`. -/
+theorem isRegime_succ : IsRegime 1 (fun k => k + 1) (fun k => ((k + 1 : ℕ) : ℝ)) where
   c_pos := one_pos
   B_pos k := by positivity
   tendsto_N := by push_cast; exact tendsto_natSucc_atTop
@@ -105,18 +107,7 @@ theorem mainResult_expectedModes_compl_belt (c : ℝ) (N : ℕ → ℕ) (B : ℕ
 
 /-- The hypothesis of both points is satisfiable, by the witness of
 `IsRegime`. -/
-example : IsRegime 1 (fun k => k + 1) (fun k => ((k + 1 : ℕ) : ℝ)) := by
-  constructor
-  · exact one_pos
-  · intro k; positivity
-  · push_cast; exact tendsto_natSucc_atTop
-  · push_cast; exact tendsto_natSucc_atTop
-  · refine (isBigO_refl (fun k : ℕ => ((k + 1 : ℕ) : ℝ)) atTop).congr' ?_ (by rfl)
-    filter_upwards with k
-    rw [Real.rpow_one]
-  · refine (isBigO_refl (fun k : ℕ => ((k + 1 : ℕ) : ℝ)) atTop).congr' (by rfl) ?_
-    filter_upwards with k
-    rw [show (2 : ℝ) - 1 = 1 by norm_num, Real.rpow_one]
+example : IsRegime 1 (fun k => k + 1) (fun k => ((k + 1 : ℕ) : ℝ)) := isRegime_succ
 
 end Modes
 end Transformer

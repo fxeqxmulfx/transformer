@@ -95,24 +95,8 @@ every `T`. -/
 example : IsRegime 1 (fun k => k + 1) (fun k => ((k + 1 : ℕ) : ℝ)) ∧
     IsSlowGrowth (fun β => Real.sqrt (Real.log (Real.log β))) ∧
     ∀ k : ℕ, (0 : ℝ) ∈ intervalT (k + 1) ((k + 1 : ℕ) : ℝ)
-      (Real.sqrt (Real.log (Real.log ((k + 1 : ℕ) : ℝ)))) := by
-  refine ⟨⟨one_pos, fun k => by positivity, by push_cast; exact tendsto_natSucc_atTop,
-    by push_cast; exact tendsto_natSucc_atTop, ?_, ?_⟩, ⟨?_, ?_⟩, fun k => ?_⟩
-  · refine (isBigO_refl (fun k : ℕ => ((k + 1 : ℕ) : ℝ)) atTop).congr' ?_ (by rfl)
-    filter_upwards with k
-    rw [Real.rpow_one]
-  · refine (isBigO_refl (fun k : ℕ => ((k + 1 : ℕ) : ℝ)) atTop).congr' (by rfl) ?_
-    filter_upwards with k
-    rw [show (2 : ℝ) - 1 = 1 by norm_num, Real.rpow_one]
-  · exact Real.tendsto_sqrt_atTop.comp (Real.tendsto_log_atTop.comp Real.tendsto_log_atTop)
-  · have hll : Tendsto (fun β : ℝ => Real.log (Real.log β)) atTop atTop :=
-      Real.tendsto_log_atTop.comp Real.tendsto_log_atTop
-    have h := (isLittleO_rpow_rpow_atTop (by norm_num : (1 : ℝ) / 2 < 1)).comp_tendsto hll
-    simp only [Function.comp_def, Real.rpow_one] at h
-    refine h.congr' ?_ (by rfl)
-    filter_upwards with β
-    rw [Real.sqrt_eq_rpow]
-  · exact ⟨by simp, Real.sqrt_nonneg _⟩
+      (Real.sqrt (Real.log (Real.log ((k + 1 : ℕ) : ℝ)))) :=
+  ⟨isRegime_succ, isSlowGrowth_sqrt_log_log, fun _ => ⟨by simp, Real.sqrt_nonneg _⟩⟩
 
 /-! ### `eq:moments-p`, entrywise -/
 

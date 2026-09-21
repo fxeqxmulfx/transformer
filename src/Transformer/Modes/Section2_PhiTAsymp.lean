@@ -110,22 +110,7 @@ theorem integral_krPhi_isTheta {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hr
 example : IsRegime 1 (fun k => k + 1) (fun k => ((k + 1 : ℕ) : ℝ)) ∧
     IsSlowGrowth (fun β => Real.sqrt (Real.log (Real.log β))) ∧
     (fun k => ((k + 1 : ℕ) : ℝ)) =O[atTop] fun k => ((k + 1 : ℕ) : ℝ) ^ ((5 : ℝ) / 2) := by
-  refine ⟨⟨one_pos, fun k => by positivity, by push_cast; exact tendsto_natSucc_atTop,
-    by push_cast; exact tendsto_natSucc_atTop, ?_, ?_⟩, ⟨?_, ?_⟩, ?_⟩
-  · refine (isBigO_refl (fun k : ℕ => ((k + 1 : ℕ) : ℝ)) atTop).congr' ?_ (by rfl)
-    filter_upwards with k
-    rw [Real.rpow_one]
-  · refine (isBigO_refl (fun k : ℕ => ((k + 1 : ℕ) : ℝ)) atTop).congr' (by rfl) ?_
-    filter_upwards with k
-    rw [show (2 : ℝ) - 1 = 1 by norm_num, Real.rpow_one]
-  · exact Real.tendsto_sqrt_atTop.comp (Real.tendsto_log_atTop.comp Real.tendsto_log_atTop)
-  · have hll : Tendsto (fun β : ℝ => Real.log (Real.log β)) atTop atTop :=
-      Real.tendsto_log_atTop.comp Real.tendsto_log_atTop
-    have h := (isLittleO_rpow_rpow_atTop (by norm_num : (1 : ℝ) / 2 < 1)).comp_tendsto hll
-    simp only [Function.comp_def, Real.rpow_one] at h
-    refine h.congr' ?_ (by rfl)
-    filter_upwards with β
-    rw [Real.sqrt_eq_rpow]
+  refine ⟨isRegime_succ, isSlowGrowth_sqrt_log_log, ?_⟩
   · refine IsBigO.of_bound 1 ?_
     filter_upwards with k
     have h1 : (1 : ℝ) ≤ ((k + 1 : ℕ) : ℝ) := by push_cast; linarith [k.cast_nonneg (α := ℝ)]
