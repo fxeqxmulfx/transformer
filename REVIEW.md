@@ -512,34 +512,34 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.Modes — arXiv:2412.09080
 
-- [ ] Transformer/Modes/Growth.lean (6): `tendsto_natSucc_atTop`, `isLittleO_rpow_rpow_atTop`, `isLittleO_rpow_rpow_nat`, `isLittleO_rpow_sq_div_log_atTop`, `isLittleO_rpow_sq_div_log_nat`, `tendsto_rpow_natSucc_atTop`
-- [ ] Transformer/Modes/Section1_Belt.lean (4): `sq_mem_Icc_iff`, `setOf_sq_mem_Icc`, `belt_eq_union`, `sqrt_sub_sqrt_isTheta`
-- [ ] Transformer/Modes/Section1_KDE.lean (10): `contDiff_kde`, `kde_nonneg`, `kde_pos`, `map_gaussianSample_eval`, `modeSet_mono`, `modeCount_mono`, `expectedModes_mono`, `expectedModesReal_nonneg`, `isLocalMax_kde_one`, `one_le_modeCount_kde_one`
-- [ ] Transformer/Modes/Section1_Main.lean (1): `isRegime_succ`
-- [ ] Transformer/Modes/Section1_Mammen.lean (1): `isLittleO_mammen_mid_sqrt`
-- [ ] Transformer/Modes/Section1_Sketch.lean (3): `isSlowGrowth_sqrt_log_log`, `tendsto_exp_neg_omega`, `isLittleO_tail_sqrt`
-- [ ] Transformer/Modes/Section2_Degenerate.lean (5): `twoPoint_sum_le`, `isLocalMax_kde_twoPoint`, `deriv_deriv_kde_twoPoint`, `not_forall_modeSet_subset_upcrossingSet`, `expectedUpcrossings_le_expectedModes`
-- [ ] Transformer/Modes/Section2_Field.lean (9): `hasDerivAt_fun_sum`, `hasDerivAt_bump`, `hasDerivAt_bump_deriv`, `hasDerivAt_kde`, `hasDerivAt_deriv_kde`, `fieldF_eq`, `isUpcrossing_fieldF_iff`, `upcrossingSet_subset_modeSet`, `upcrossingCount_le_modeCount`
-- [ ] Transformer/Modes/Section2_GaussianInt.lean (1): `integral_pow_mul_exp_neg_mul_sq`
-- [ ] Transformer/Modes/Section2_Gt.lean (5): `hasDerivAt_bigG`, `fieldF_eq_sum_bigG`, `hasDerivAt_fieldF`, `fieldF_pair_eq`, `beta_mul_bigG'_eq`
-- [ ] Transformer/Modes/Section2_KacRice.lean (1): `modulusOfContinuity_const`
-- [ ] Transformer/Modes/Section2_MainForm.lean (6): `isLittleO_sqrt_window`, `expectedUpcrossingsReal_eq`, `main_eq_form_T`, `main_eq_form_T'_isLittleO`, `main_eq_form_T'`, `main_eq_form_tail`
-- [ ] Transformer/Modes/Section2_MainIntPhi.lean (2): `sq_le_phiRate`, `integral_exp_phiRate_T'`
-- [ ] Transformer/Modes/Section2_MomentsP.lean (1): `tendsto_sq_div_of_mem_intervalT`
-- [ ] Transformer/Modes/Section2_PhiT.lean (2): `quadForm_complete_square`, `krQuad_zero_eq`
-- [ ] Transformer/Modes/Section2_RandomLine.lean (8): `deriv_randomLine`, `randomLine_zero`, `map_fst_gaussianPair`, `map_snd_gaussianPair`, `memLp_fst_gaussianPair`, `memLp_snd_gaussianPair`, `gaussianPair_eq_withDensity`, `continuous_gaussianPDFReal_std`
-- [ ] Transformer/Modes/Section3_BR.lean (2): `norm_charFun_stdGauss2`, `hasIntegrableCharFun_stdGauss2`
-- [ ] Transformer/Modes/Section3_Cumulants.lean (4): `integral_sq_stdGaussian`, `isStandardized_stdGauss2`, `hasExpMoments_stdGauss2`, `isDensityOf_stdGauss2`
-- [ ] Transformer/Modes/Section3_Edgeworth.lean (1): `measurable_singleY`
-- [ ] Transformer/Modes/Section3_ErrorHigher.lean (5): `rate_base_eq`, `rate_eq`, `sq_le_of_mem_intervalT`, `rate_T`, `rate_T'`
-- [ ] Transformer/Modes/Section3_ErrorKR.lean (2): `rpow_neg_half_nonneg`, `gThreeKR_Ioi_le`
-- [ ] Transformer/Modes/Section3_ErrorThird.lean (3): `not_integrableOn_tildeY`, `eucl_whiten_bounds`, `abs_hermite_whiten_le`
-- [ ] Transformer/Modes/Section3_Hermite.lean (3): `not_exists_hermite_le_cube`, `abs_hermite_le`, `eucl_whiten_sq`
-- [ ] Transformer/Modes/Section4_ScaleSpace.lean (6): `kde_neg`, `isLocalMax_comp_neg_iff`, `modeCount_kde_Iio`, `modeCount_kde_Iio_le`, `eq_of_isLocalMax_kde_one`, `scale_space_one`
-- [ ] Transformer/Modes/Section4_Tail.lean (7): `gaussianReal_Ici_le`, `gaussianReal_Iic_le`, `countIn_eq_sum`, `measurable_countIn`, `lintegral_countIn`, `two_mul_exp_eq`, `expectedModes_compl_le`
-- [ ] Transformer/Modes/Section5_PtBdd.lean (8): `bigG_eq_gPt`, `hasDerivAt_gaussFactor`, `hasDerivAt_gPt`, `hasDerivAt_gPt1`, `hasDerivAt_gPt2`, `det_psi`, `det_psi_neg`, `phase_nondegenerate`
-- [ ] Transformer/Modes/Section5_PtBddFourier.lean (5): `tendsto_pow_mul_gaussFactor`, `tendsto_bigG`, `tendsto_fourierNu`, `not_uniform_decay`, `lintegral_pow_lt_top_of_decay`
-- [ ] Transformer/Modes/Section5_PtBddOne.lean (2): `volume_range_eq_zero`, `not_isDensityOf_one`
+- ok Transformer/Modes/Growth.lean (6): `tendsto_natSucc_atTop`, `isLittleO_rpow_rpow_atTop`, `isLittleO_rpow_rpow_nat`, `isLittleO_rpow_sq_div_log_atTop`, `isLittleO_rpow_sq_div_log_nat`, `tendsto_rpow_natSucc_atTop` — statements match thm:main-result / thm:mammen / sec: sketch; Mammen's added 0∈[a,b], a<b documented
+- ok Transformer/Modes/Section1_Belt.lean (4): `sq_mem_Icc_iff`, `setOf_sq_mem_Icc`, `belt_eq_union`, `sqrt_sub_sqrt_isTheta` — statements match thm:main-result / thm:mammen / sec: sketch; Mammen's added 0∈[a,b], a<b documented
+- ok Transformer/Modes/Section1_KDE.lean (10): `contDiff_kde`, `kde_nonneg`, `kde_pos`, `map_gaussianSample_eval`, `modeSet_mono`, `modeCount_mono`, `expectedModes_mono`, `expectedModesReal_nonneg`, `isLocalMax_kde_one`, `one_le_modeCount_kde_one` — statements match thm:main-result / thm:mammen / sec: sketch; Mammen's added 0∈[a,b], a<b documented
+- ok Transformer/Modes/Section1_Main.lean (1): `isRegime_succ` — statements match thm:main-result / thm:mammen / sec: sketch; Mammen's added 0∈[a,b], a<b documented
+- ok Transformer/Modes/Section1_Mammen.lean (1): `isLittleO_mammen_mid_sqrt` — statements match thm:main-result / thm:mammen / sec: sketch; Mammen's added 0∈[a,b], a<b documented
+- ok Transformer/Modes/Section1_Sketch.lean (3): `isSlowGrowth_sqrt_log_log`, `tendsto_exp_neg_omega`, `isLittleO_tail_sqrt` — statements match thm:main-result / thm:mammen / sec: sketch; Mammen's added 0∈[a,b], a<b documented
+- ok Transformer/Modes/Section2_Degenerate.lean (5): `twoPoint_sum_le`, `isLocalMax_kde_twoPoint`, `deriv_deriv_kde_twoPoint`, `not_forall_modeSet_subset_upcrossingSet`, `expectedUpcrossings_le_expectedModes` — matches §2 (eq:Fn, eq: Gt, thm:kac-rice items 1-4, eq:main-eq-form, lem:phi-t, lem:moments-p); corrections (mu_t2 +1/beta, n<=beta^{5/2}, pathwise mode=upcrossing refuted) documented
+- ok Transformer/Modes/Section2_Field.lean (9): `hasDerivAt_fun_sum`, `hasDerivAt_bump`, `hasDerivAt_bump_deriv`, `hasDerivAt_kde`, `hasDerivAt_deriv_kde`, `fieldF_eq`, `isUpcrossing_fieldF_iff`, `upcrossingSet_subset_modeSet`, `upcrossingCount_le_modeCount` — matches §2 (eq:Fn, eq: Gt, thm:kac-rice items 1-4, eq:main-eq-form, lem:phi-t, lem:moments-p); corrections (mu_t2 +1/beta, n<=beta^{5/2}, pathwise mode=upcrossing refuted) documented
+- ok Transformer/Modes/Section2_GaussianInt.lean (1): `integral_pow_mul_exp_neg_mul_sq` — matches §2 (eq:Fn, eq: Gt, thm:kac-rice items 1-4, eq:main-eq-form, lem:phi-t, lem:moments-p); corrections (mu_t2 +1/beta, n<=beta^{5/2}, pathwise mode=upcrossing refuted) documented
+- ok Transformer/Modes/Section2_Gt.lean (5): `hasDerivAt_bigG`, `fieldF_eq_sum_bigG`, `hasDerivAt_fieldF`, `fieldF_pair_eq`, `beta_mul_bigG'_eq` — matches §2 (eq:Fn, eq: Gt, thm:kac-rice items 1-4, eq:main-eq-form, lem:phi-t, lem:moments-p); corrections (mu_t2 +1/beta, n<=beta^{5/2}, pathwise mode=upcrossing refuted) documented
+- ok Transformer/Modes/Section2_KacRice.lean (1): `modulusOfContinuity_const` — matches §2 (eq:Fn, eq: Gt, thm:kac-rice items 1-4, eq:main-eq-form, lem:phi-t, lem:moments-p); corrections (mu_t2 +1/beta, n<=beta^{5/2}, pathwise mode=upcrossing refuted) documented
+- ok Transformer/Modes/Section2_MainForm.lean (6): `isLittleO_sqrt_window`, `expectedUpcrossingsReal_eq`, `main_eq_form_T`, `main_eq_form_T'_isLittleO`, `main_eq_form_T'`, `main_eq_form_tail` — matches §2 (eq:Fn, eq: Gt, thm:kac-rice items 1-4, eq:main-eq-form, lem:phi-t, lem:moments-p); corrections (mu_t2 +1/beta, n<=beta^{5/2}, pathwise mode=upcrossing refuted) documented
+- ok Transformer/Modes/Section2_MainIntPhi.lean (2): `sq_le_phiRate`, `integral_exp_phiRate_T'` — matches §2 (eq:Fn, eq: Gt, thm:kac-rice items 1-4, eq:main-eq-form, lem:phi-t, lem:moments-p); corrections (mu_t2 +1/beta, n<=beta^{5/2}, pathwise mode=upcrossing refuted) documented
+- ok Transformer/Modes/Section2_MomentsP.lean (1): `tendsto_sq_div_of_mem_intervalT` — matches §2 (eq:Fn, eq: Gt, thm:kac-rice items 1-4, eq:main-eq-form, lem:phi-t, lem:moments-p); corrections (mu_t2 +1/beta, n<=beta^{5/2}, pathwise mode=upcrossing refuted) documented
+- ok Transformer/Modes/Section2_PhiT.lean (2): `quadForm_complete_square`, `krQuad_zero_eq` — matches §2 (eq:Fn, eq: Gt, thm:kac-rice items 1-4, eq:main-eq-form, lem:phi-t, lem:moments-p); corrections (mu_t2 +1/beta, n<=beta^{5/2}, pathwise mode=upcrossing refuted) documented
+- ok Transformer/Modes/Section2_RandomLine.lean (8): `deriv_randomLine`, `randomLine_zero`, `map_fst_gaussianPair`, `map_snd_gaussianPair`, `memLp_fst_gaussianPair`, `memLp_snd_gaussianPair`, `gaussianPair_eq_withDensity`, `continuous_gaussianPDFReal_std` — matches §2 (eq:Fn, eq: Gt, thm:kac-rice items 1-4, eq:main-eq-form, lem:phi-t, lem:moments-p); corrections (mu_t2 +1/beta, n<=beta^{5/2}, pathwise mode=upcrossing refuted) documented
+- ok Transformer/Modes/Section3_BR.lean (2): `norm_charFun_stdGauss2`, `hasIntegrableCharFun_stdGauss2`
+- ok Transformer/Modes/Section3_Cumulants.lean (4): `integral_sq_stdGaussian`, `isStandardized_stdGauss2`, `hasExpMoments_stdGauss2`, `isDensityOf_stdGauss2`
+- ok Transformer/Modes/Section3_Edgeworth.lean (1): `measurable_singleY`
+- ok Transformer/Modes/Section3_ErrorHigher.lean (5): `rate_base_eq`, `rate_eq`, `sq_le_of_mem_intervalT`, `rate_T`, `rate_T'` — lem:error-higher is stated uniformly on T (the paper fixes t); documented
+- ok Transformer/Modes/Section3_ErrorKR.lean (2): `rpow_neg_half_nonneg`, `gThreeKR_Ioi_le`
+- ok Transformer/Modes/Section3_ErrorThird.lean (3): `not_integrableOn_tildeY`, `eucl_whiten_bounds`, `abs_hermite_whiten_le`
+- ok Transformer/Modes/Section3_Hermite.lean (3): `not_exists_hermite_le_cube`, `abs_hermite_le`, `eucl_whiten_sq`
+- ok Transformer/Modes/Section4_ScaleSpace.lean (6): `kde_neg`, `isLocalMax_comp_neg_iff`, `modeCount_kde_Iio`, `modeCount_kde_Iio_le`, `eq_of_isLocalMax_kde_one`, `scale_space_one`
+- ok Transformer/Modes/Section4_Tail.lean (7): `gaussianReal_Ici_le`, `gaussianReal_Iic_le`, `countIn_eq_sum`, `measurable_countIn`, `lintegral_countIn`, `two_mul_exp_eq`, `expectedModes_compl_le` — lem:scale-space carried as hypothesis hss
+- ok Transformer/Modes/Section5_PtBdd.lean (8): `bigG_eq_gPt`, `hasDerivAt_gaussFactor`, `hasDerivAt_gPt`, `hasDerivAt_gPt1`, `hasDerivAt_gPt2`, `det_psi`, `det_psi_neg`, `phase_nondegenerate`
+- ok Transformer/Modes/Section5_PtBddFourier.lean (5): `tendsto_pow_mul_gaussFactor`, `tendsto_bigG`, `tendsto_fourierNu`, `not_uniform_decay`, `lintegral_pow_lt_top_of_decay`
+- ok Transformer/Modes/Section5_PtBddOne.lean (2): `volume_range_eq_zero`, `not_isDensityOf_one`
 
 ### Transformer.Normalization — arXiv:2510.22026
 
