@@ -10,10 +10,8 @@
 `Theorem thm: cone-collapse` is `Perspective.hemisphere_clustering`
 (in `Perspective.Section5_ConeCollapse`) verbatim and is not restated here.
 
-Two of the three statements name objects this development does not construct —
-the uniform measure on `(𝕊^{d-1})^n` and the Wasserstein distance `W₂`, which
-Mathlib does not have — so they take those as parameters, and neither is
-proved.  What *is* proved is the deterministic core of
+`thm: clustering_finite` is read against the uniform law
+`Perspective.UniformTuple`; neither it nor `thm: mfclust` is proved.  What *is* proved is the deterministic core of
 `cor: d-ge-n`: linearly independent particles lie in a common open hemisphere,
 which is the hypothesis `thm: cone-collapse` runs on, and which `n` points in
 dimension `d ≥ n` satisfy almost surely.  The almost-sure half is not
@@ -23,6 +21,8 @@ formalized.
 import Transformer.Basic
 import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section2_FlowMap
+import Transformer.Perspective.Section2_GradientFlow
+import Transformer.Perspective.Section3_SmallBeta
 import Transformer.Perspective.Section5_HighD
 import Transformer.MeanField.Basic
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
@@ -41,26 +41,37 @@ variable (d n : ℕ)
 
 (Markdahl–Thunberg–Boumal; Criscitiello–Boumal; Geshkovski et al.)
 
-For `eq: SA` with `n ≥ 2` particles in dimension `d ≥ 3` and `β ≥ 0`, almost
-any initial `(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n` yields a solution that converges
-to a single cluster:
+For both `eq: SA` and `eq: USA` with `n ≥ 2` particles in dimension `d ≥ 3`
+and `β ≥ 0`, for almost every initial `(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n` the
+trajectories exist globally and converge to a single cluster:
 
   `lim_{t → ∞} ‖x_i(t) - x_j(t)‖ = 0`.
 
-"Almost any" is relative to the reference measure `σ` on the configuration
-space; the survey's `σ` is the uniform one, which this development does not
-construct, so it is a parameter.
+"Almost every" is with respect to the uniform law on `(𝕊^{d-1})^n`,
+`Perspective.UniformTuple`.  Against an arbitrary reference measure the claim
+is false: the Dirac mass at an antipodal pair, a stationary configuration of
+both dynamics, is a counterexample.  The two dynamics are one conjunction, as
+the source states them in one theorem; for each, global existence is the first
+half and convergence of every solution the second.
 
 Not proved here.
 
-Source: arXiv:2512.01868v4, §4. -/
-theorem global_clustering
-    (σ : Measure (SphereTuple d n)) (β : ℝ) (hd : 3 ≤ d) (hn : 2 ≤ n) (hβ : 0 ≤ β) :
-    ∀ᵐ X₀ ∂σ, ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
-      ∀ i j : Idx n,
-        Filter.Tendsto
-          (fun t : ℝ => ‖(X t i : EucSpace d) - (X t j : EucSpace d)‖)
-          Filter.atTop (nhds 0) := by
+Source: arXiv:2512.01868v4, §4, `thm:clustering_finite`. -/
+theorem global_clustering (β : ℝ) (hd : 3 ≤ d) (hn : 2 ≤ n) (hβ : 0 ≤ β) :
+    ∀ P : Measure (SphereTuple d n), Perspective.UniformTuple d n P →
+    ∀ᵐ X₀ ∂P,
+      ((∃ X : ℝ → SphereTuple d n, X 0 = X₀ ∧ Perspective.SA d n β X) ∧
+        ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
+          ∀ i j : Idx n,
+            Filter.Tendsto
+              (fun t : ℝ => ‖(X t i : EucSpace d) - (X t j : EucSpace d)‖)
+              Filter.atTop (nhds 0)) ∧
+      ((∃ X : ℝ → SphereTuple d n, X 0 = X₀ ∧ Perspective.USA d n β X) ∧
+        ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.USA d n β X →
+          ∀ i j : Idx n,
+            Filter.Tendsto
+              (fun t : ℝ => ‖(X t i : EucSpace d) - (X t j : EucSpace d)‖)
+              Filter.atTop (nhds 0)) := by
   sorry
 
 /-- The hypotheses of `global_clustering` are satisfiable: `d = 3`, `n = 2`,

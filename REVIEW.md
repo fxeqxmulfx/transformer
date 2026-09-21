@@ -492,7 +492,7 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.MeanField — arXiv:2512.01868
 
-- issue Transformer/MeanField/Clustering.lean (1): `exists_common_hemisphere_of_linearIndependent` — proved lemma ok; global_clustering (sorried) quantifies over a free reference measure σ — false as written (σ = δ at the antipodal pair, stationary for SA), should be Perspective.UniformTuple; only SA, paper also USA. meanField_exponential_rate (thm:mfclust) carries W₂ free and drops 'μ₀ has density f₀ ∈ L²' — false as written: μ₀ = ⅔δ_e + ⅓δ_{-e} has R₀ = 1/9 > 0 and is stationary for every β
+- issue [FIXED global_clustering: UniformTuple, SA and USA, global existence; mfclust pending] Transformer/MeanField/Clustering.lean (1): `exists_common_hemisphere_of_linearIndependent` — proved lemma ok; global_clustering (sorried) quantifies over a free reference measure σ — false as written (σ = δ at the antipodal pair, stationary for SA), should be Perspective.UniformTuple; only SA, paper also USA. meanField_exponential_rate (thm:mfclust) carries W₂ free and drops 'μ₀ has density f₀ ∈ L²' — false as written: μ₀ = ⅔δ_e + ⅓δ_{-e} has R₀ = 1/9 > 0 and is stationary for every β
 - ok Transformer/MeanField/Equiangular.lean (3): `equiangularSA_const_simplex`, `not_exists_rate_at_simplex`, `equiangularSA_const_one`
 - ok Transformer/MeanField/EquiangularLimit.lean (4): `tendsto_cos_of_tendsto`, `equiOutCos_seq_eq`, `equiDiag_add_equiOff_seq`, `long_context_phase_transition`
 - ok Transformer/MeanField/EquiangularPhases.lean (8): `equiDiag_eq_one_div`, `equiDiag_seq_eq`, `tendsto_log_natAdd_two`, `tendsto_ratio_natAdd`, `ratio_natAdd_mem`, `tendsto_equiDiag_of_lt`, `tendsto_equiDiag_of_eq`, `tendsto_equiDiag_of_gt`

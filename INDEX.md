@@ -4440,13 +4440,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`attentionDiscrete`](src/Transformer/MeanField/Basic.lean#L34) | def |  |
 | [`Eβ_mf`](src/Transformer/MeanField/Basic.lean#L45) | def |  |
 
-**[Transformer.MeanField.Clustering](src/Transformer/MeanField/Clustering.lean)** — 181 lines
+**[Transformer.MeanField.Clustering](src/Transformer/MeanField/Clustering.lean)** — 192 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`global_clustering`](src/Transformer/MeanField/Clustering.lean#L57) | theorem | sorry |
-| [`exists_common_hemisphere_of_linearIndependent`](src/Transformer/MeanField/Clustering.lean#L86) | theorem | proved |
-| [`meanField_exponential_rate`](src/Transformer/MeanField/Clustering.lean#L159) | theorem | sorry |
+| [`global_clustering`](src/Transformer/MeanField/Clustering.lean#L60) | theorem | sorry |
+| [`exists_common_hemisphere_of_linearIndependent`](src/Transformer/MeanField/Clustering.lean#L97) | theorem | proved |
+| [`meanField_exponential_rate`](src/Transformer/MeanField/Clustering.lean#L170) | theorem | sorry |
 
 **[Transformer.MeanField.Equiangular](src/Transformer/MeanField/Equiangular.lean)** — 137 lines
 
@@ -6888,8 +6888,8 @@ Everything the build cannot vouch for, in one place.
 | [`softAccuracy_fourier`](src/Transformer/Kinetic/SoftAccuracy.lean#L45) | theorem | `Transformer.Kinetic.SoftAccuracy` |
 | [`soft_accuracy_expansion`](src/Transformer/Kinetic/SoftAccuracy.lean#L77) | theorem | `Transformer.Kinetic.SoftAccuracy` |
 | [`soft_accuracy_uShape`](src/Transformer/Kinetic/SoftAccuracy.lean#L116) | theorem | `Transformer.Kinetic.SoftAccuracy` |
-| [`global_clustering`](src/Transformer/MeanField/Clustering.lean#L57) | theorem | `Transformer.MeanField.Clustering` |
-| [`meanField_exponential_rate`](src/Transformer/MeanField/Clustering.lean#L159) | theorem | `Transformer.MeanField.Clustering` |
+| [`global_clustering`](src/Transformer/MeanField/Clustering.lean#L60) | theorem | `Transformer.MeanField.Clustering` |
+| [`meanField_exponential_rate`](src/Transformer/MeanField/Clustering.lean#L170) | theorem | `Transformer.MeanField.Clustering` |
 | [`agazzi_merge`](src/Transformer/MeanField/Merging.lean#L91) | theorem | `Transformer.MeanField.Merging` |
 | [`mixture_separation`](src/Transformer/Metastability/Initial.lean#L89) | theorem | `Transformer.Metastability.Initial` |
 | [`concentration_unif`](src/Transformer/Metastability/InitialUniform.lean#L77) | theorem | `Transformer.Metastability.InitialUniform` |
