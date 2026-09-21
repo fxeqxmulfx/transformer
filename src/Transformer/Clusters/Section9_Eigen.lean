@@ -4,7 +4,8 @@
 
 §9 of arXiv:2305.05465v6, `sec: clustering.hyperplanes`, first subsection:
 the facts about the eigencoordinates of `e:Rres` that the proof of
-`l:3hyperplanes11` runs on — `eq:phistarvar`, `l:fj`, `e:defab`, `c:bounded`.
+`l:3hyperplanes11` runs on — `eq:phistarvar`, `e:defab`, `c:bounded`, and the
+bounds of `l:fj`.  `l:fj` itself is in `Section9_Fj`.
 
 **What the source says and what is carried here.**
 
@@ -126,35 +127,11 @@ example (f : EucSpace d →L[ℝ] ℝ) (z : EucSpace d) :
       RescaledDynamics (n := n) (1 : ParamMatrix d) 1 1 (fun _ _ => z) :=
   ⟨isEigenFunctional_one f, rescaledDynamics_one_const _ _ z⟩
 
-/-! ### `l:fj` -/
-
-/-- **Lemma (l:fj).**  If `λ_k ≥ 0` then `t ↦ max_j φ*_k(z_j(t))` is
-non-increasing on `[0,+∞)` and `t ↦ min_j φ*_k(z_j(t))` is non-decreasing
-there.
-
-Not proved here.  The source's argument: at a time `t` and an index `i`
-realizing the minimum, `eq:phistarvar` gives
-`d/dt φ*_k(z_i(t)) = λ_k Σ_j P_ij (φ*_k(z_j) - φ*_k(z_i)) ≥ 0`.
-
-Source: arXiv:2305.05465v6, `l:fj`. -/
-theorem maxCoord_antitoneOn_minCoord_monotoneOn (Q K V : ParamMatrix d)
-    (f : EucSpace d →L[ℝ] ℝ) (lam : ℝ) (hf : IsEigenFunctional V f lam) (hlam : 0 ≤ lam)
-    (Z : ℝ → Idx (m + 1) → EucSpace d) (hZ : RescaledDynamics Q K V Z) :
-    AntitoneOn (fun t => maxCoord f (Z t)) (Set.Ici 0) ∧
-      MonotoneOn (fun t => minCoord f (Z t)) (Set.Ici 0) := by
-  sorry
-
-/-- The hypotheses of `maxCoord_antitoneOn_minCoord_monotoneOn` are
-satisfiable. -/
-example (f : EucSpace d →L[ℝ] ℝ) (z : EucSpace d) :
-    IsEigenFunctional (1 : ParamMatrix d) f 1 ∧ (0 : ℝ) ≤ 1 ∧
-      RescaledDynamics (n := m + 1) (1 : ParamMatrix d) 1 1 (fun _ _ => z) :=
-  ⟨isEigenFunctional_one f, zero_le_one, rescaledDynamics_one_const _ _ z⟩
-
 /-- **Lemma (l:fj), "in particular".**  Each `t ↦ φ*_k(z_i(t))` is uniformly
 bounded on `[0,+∞)`, between the two extremes of the initial configuration.
 
-The monotonicity conclusions of `l:fj` are taken as explicit hypotheses.
+The monotonicity conclusions of `l:fj` are taken as explicit hypotheses;
+`maxCoord_antitoneOn_minCoord_monotoneOn` supplies them along `e:Rres`.
 
 Source: arXiv:2305.05465v6, `l:fj`, last sentence. -/
 theorem abs_eigenFunctional_le (f : EucSpace d →L[ℝ] ℝ) (Z : ℝ → Idx (m + 1) → EucSpace d)

@@ -10,7 +10,7 @@ produces, and the corollary `c:bounded` that reads them back on the tokens.
 * Both statements are consequences of `l:fj`, and both are proved here from
   its conclusion taken as an explicit hypothesis — the monotonicity on
   `[0,+∞)` for `e:defab`, the uniform bound on each coordinate for
-  `c:bounded`.  `l:fj` itself is in `Transformer.Clusters.Section9_Eigen`.
+  `c:bounded`.  `l:fj` itself is in `Transformer.Clusters.Section9_Fj`.
 
 * `c:bounded` assumes that `V` has only real non-negative eigenvalues.  That
   hypothesis is used twice: to put each `φ*_k` under `l:fj` (`λ_k ≥ 0`), and

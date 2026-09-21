@@ -22,6 +22,7 @@ import Transformer.Clusters.Section7_Unbounded
 import Transformer.Clusters.Section7_Symmetric
 import Transformer.Clusters.Section7_Bounded
 import Transformer.Clusters.Section9_Eigen
+import Transformer.Clusters.Section9_Fj
 import Transformer.Clusters.Section9_Limits
 import Transformer.Clusters.Section9_Growth
 import Transformer.Clusters.Section9_Hyperplanes
