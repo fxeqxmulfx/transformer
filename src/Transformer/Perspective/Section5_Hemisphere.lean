@@ -19,12 +19,12 @@ differentiable, so the conclusion is drawn from a fencing argument rather than
 from `ṙ ≥ 0`.
 
 Step 2 of the same lemma opens with `e:decompox*.step2`, the decomposition of
-`x⋆` along the particles.  It is stated in the survey for the limit `x⋆` of
-step 1, and there it is justified by `x⋆` lying in the convex hull of the
-configuration; written for an arbitrary point of the sphere it is false, which
-is what `not_step2_decomposition` records, so `step2_decomposition` carries
-that hull membership as a hypothesis.  `exists_inner_le_of_mem_convexHull` is
-the one consequence of it Appendix D uses, `e:mineqalpha`.
+`x⋆` along the particles, which the survey reads off `η x⋆` being a convex
+combination of them for some `η ∈ (0,1]`: that deduction is
+`step2_decomposition`.  That the limit `x⋆` of step 1 satisfies the cone
+condition is proved in `Perspective.Section5_HemisphereCone`.
+`exists_inner_le_of_mem_convexHull` is the one consequence of the hull
+Appendix D uses, `e:mineqalpha`.
 -/
 
 import Mathlib.Analysis.Convex.Combination
@@ -152,67 +152,47 @@ example :
 
   `x⋆ = Σ_k θ_k(t) x_k(t)`,  with `θ_k(t) ≥ 0` and `Σ_k θ_k(t) ≥ 1`.
 
-The survey states the decomposition for the limit `x⋆` of step 1 and reads it
-off the convex hull of the configuration, which is where the coefficients come
-from; that membership is the hypothesis `hhull` here.  It is also the whole
-content of the step: once `x⋆` is a convex combination of the particles the
-dynamics plays no further role, which is why neither `β` nor the equation
-`SA` appears — and, as `not_step2_decomposition` shows, without `hhull` the
-statement is false.
+The survey derives it from `x⋆` lying in the convex cone of the particles:
+"there exists some `η ∈ (0,1]` such that `η x⋆` is a convex combination of the
+points `x_1(t), …, x_n(t)`, which implies" the decomposition.  That sentence is
+the hypothesis `hcone` here, and dividing the convex weights by `η` is the
+proof.  The cone condition itself holds for the limit `x⋆` of step 1:
+`Perspective.limit_mem_cone`, and the two together are
+`Perspective.step2_decomposition_of_limit`.
 
 Source: arXiv:2312.10794v5, §6.1, `e:decompox*.step2`. -/
 theorem step2_decomposition
     (X : ℝ → SphereTuple d n) (x_star : SSphere d) (t : ℝ)
-    (hhull : ((x_star : EucSpace d)) ∈
+    (hcone : ∃ η : ℝ, η ∈ Set.Ioc (0 : ℝ) 1 ∧ η • ((x_star : EucSpace d)) ∈
       convexHull ℝ (Set.range fun k : Idx n => ((X t k : EucSpace d)))) :
     ∃ θ : Idx n → ℝ,
       (∀ k, 0 ≤ θ k) ∧ (1 ≤ ∑ k : Idx n, θ k) ∧
         ((x_star : EucSpace d) = ∑ k : Idx n, (θ k) • ((X t k : EucSpace d))) := by
   classical
+  obtain ⟨η, ⟨hη0, hη1⟩, hhull⟩ := hcone
   rw [convexHull_range_eq_exists_affineCombination] at hhull
   obtain ⟨s, w, hw0, hw1, hx⟩ := hhull
-  refine ⟨fun k => if k ∈ s then w k else 0, fun k => ?_, ?_, ?_⟩
+  refine ⟨fun k => if k ∈ s then w k / η else 0, fun k => ?_, ?_, ?_⟩
   · by_cases hk : k ∈ s
-    · simp [hk, hw0 k hk]
+    · simp only [hk, ite_true]; exact div_nonneg (hw0 k hk) hη0.le
     · simp [hk]
-  · rw [Finset.sum_ite_mem, Finset.univ_inter, hw1]
-  · rw [← hx, Finset.affineCombination_eq_linear_combination s _ w hw1,
-      ← Finset.sum_subset (Finset.subset_univ s) fun k _ hk => by simp [hk]]
-    exact Finset.sum_congr rfl fun k hk => by simp [hk]
+  · rw [Finset.sum_ite_mem, Finset.univ_inter, ← Finset.sum_div, hw1]
+    exact (one_le_div hη0).mpr hη1
+  · have hx' : η • ((x_star : EucSpace d)) = ∑ k ∈ s, w k • ((X t k : EucSpace d)) := by
+      rw [← hx, Finset.affineCombination_eq_linear_combination s _ w hw1]
+    rw [← Finset.sum_subset (Finset.subset_univ s) fun k _ hk => by simp [hk]]
+    calc ((x_star : EucSpace d)) = η⁻¹ • η • ((x_star : EucSpace d)) := by
+          rw [smul_smul, inv_mul_cancel₀ hη0.ne', one_smul]
+      _ = _ := by
+          rw [hx', Finset.smul_sum]
+          exact Finset.sum_congr rfl fun k hk => by
+            simp only [hk, ite_true, smul_smul, div_eq_inv_mul]
 
 /-- The hypothesis of `step2_decomposition` is satisfiable: a point of the
-configuration is in the convex hull of the configuration. -/
-example :
-    (((basePoint 0 : SSphere 1)) : EucSpace 1) ∈
-      convexHull ℝ (Set.range fun _ : Idx 1 => (((basePoint 0 : SSphere 1)) : EucSpace 1)) :=
-  subset_convexHull ℝ _ ⟨0, rfl⟩
-
-/-- **Without the hull membership the decomposition fails.**
-
-One particle sitting at `x` is a solution of `SA`, and the antipode `-x` is
-not a non-negative combination of it: the coefficient would have to be `-1`.
-The survey's `x⋆` is the limit of the very configuration it is decomposed
-along, and that is what excludes this. -/
-theorem not_step2_decomposition :
-    ¬ ∀ (β : ℝ) (X : ℝ → SphereTuple 1 1), Perspective.SA 1 1 β X →
-        ∀ (x_star : SSphere 1) (t : ℝ), 0 < t →
-          ∃ θ : Idx 1 → ℝ, (∀ k, 0 ≤ θ k) ∧ (1 ≤ ∑ k : Idx 1, θ k) ∧
-            ((x_star : EucSpace 1) = ∑ k : Idx 1, (θ k) • ((X t k : EucSpace 1))) := by
-  intro h
-  obtain ⟨θ, hθ0, -, hθ⟩ :=
-    h 0 (fun _ _ => basePoint 0) (Perspective.SA_const_consensus 1 1 one_pos 0 (basePoint 0))
-      (antipode 1 (basePoint 0)) 1 one_pos
-  have hx : ‖((basePoint 0 : SSphere 1) : EucSpace 1)‖ = 1 :=
-    mem_sphere_zero_iff_norm.mp (basePoint 0).2
-  have hxx : inner (𝕜 := ℝ) (((basePoint 0 : SSphere 1)) : EucSpace 1)
-      (((basePoint 0 : SSphere 1)) : EucSpace 1) = 1 := by
-    rw [real_inner_self_eq_norm_mul_norm, hx]; ring
-  rw [Fin.sum_univ_one] at hθ
-  have hinner := congrArg
-    (fun v : EucSpace 1 => inner (𝕜 := ℝ) v (((basePoint 0 : SSphere 1)) : EucSpace 1)) hθ
-  simp only [antipode, real_inner_smul_left, inner_neg_left, hxx] at hinner
-  have := hθ0 0
-  linarith
+configuration is in the convex hull of the configuration, with `η = 1`. -/
+example : ∃ η : ℝ, η ∈ Set.Ioc (0 : ℝ) 1 ∧ η • (((basePoint 0 : SSphere 1)) : EucSpace 1) ∈
+    convexHull ℝ (Set.range fun _ : Idx 1 => (((basePoint 0 : SSphere 1)) : EucSpace 1)) :=
+  ⟨1, ⟨one_pos, le_rfl⟩, by rw [one_smul]; exact subset_convexHull ℝ _ ⟨0, rfl⟩⟩
 
 /-- The hypotheses of `hemisphere_step1_monotone` are satisfiable: the
 consensus solution, with `w` the common position and `r ≡ ⟨x, x⟩ = 1`. -/
