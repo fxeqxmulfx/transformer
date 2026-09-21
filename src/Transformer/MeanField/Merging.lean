@@ -2,27 +2,25 @@
 # Mean-Field Dynamics — the pairing phase (§5 of 2512.01868v4)
 
 * `eq: init_clust`      — a discrete multi-cluster initial datum
-                          `μ_0 = Σ_j α_j δ_{x_j(0)}`,
-* `Theorem thm: agazzi_merge` (Bruno, Pasqualotto & Agazzi) — in the
-  low-temperature limit the unique closest pair merges first, on its own
-  exponentially fast timescale, while every other cluster stands still.
+                          `μ_0 = Σ_j α_j δ_{x_j(0)}`, and `eq: SA` read there
+                          (`clusterSA`);
+* the pairing dynamics of `Theorem thm: agazzi_merge` (Bruno, Pasqualotto &
+  Agazzi), in which the closest pair attends to each other and every other
+  cluster stands still (`hardmaxPair`).
 
-The initial weights `α` enter through the dynamics, not through the
-conclusion: `clusterSA` is `eq: SA` read at the measure `Σ_j α_j δ_{x_j(t)}`,
-which is the mean-field field `Perspective.vectorField` evaluated there,
-written out as a finite sum so that no probability-measure bundling is needed.
+The initial weights `α` enter through the dynamics: `clusterSA` is `eq: SA` read
+at the measure `Σ_j α_j δ_{x_j(t)}`, which is the mean-field field
+`Perspective.vectorField` evaluated there, written out as a finite sum so that
+no probability-measure bundling is needed.
 
 Self-attention is kept in `clusterSA`, as `eq: SA` has it; the `argmax` limit
 of the survey's footnote forbids it, and `hardmaxPair` — where each of the two
 merging clusters follows the *other* one — is that limit.
 
-The `β → ∞` limit is uniform on a rescaled time interval `[0, T]`, so it is
-written with a `δ`/`B` pair.  Every hypothesis that names a trajectory sits in
-the conclusion rather than among the hypotheses: solutions of `eq: SA` are not
-constructed here, so a satisfiability witness could not produce one.
-
-What `hardmaxPair` then does — the clusters outside the pair standing still,
-and the pair approaching each other without ever arriving — is proved in
+`thm: agazzi_merge`, the convergence of the first to the second as `β → ∞`, is
+false as the survey prints it: `MeanField.not_agazzi_merge`.  What
+`hardmaxPair` itself does — the clusters outside the pair standing still, and
+the pair approaching each other without ever arriving — is proved in
 `MeanField.PairMerge`.
 -/
 
@@ -74,54 +72,6 @@ def hardmaxPair (K : ℕ) (ibar jbar : Idx K) (Y : ℝ → SphereTuple d K) : Pr
       (if k = ibar then proj d ((Y s ibar : EucSpace d)) ((Y s jbar : EucSpace d))
        else if k = jbar then proj d ((Y s jbar : EucSpace d)) ((Y s ibar : EucSpace d))
        else 0) s
-
-/-- **Theorem (thm: agazzi_merge).** *The closest pair merges first.*
-
-Start from a discrete multi-cluster configuration `eq: init_clust` whose
-closest pair `(ī, j̄)` is unique, and rescale time by
-
-  `dt = e^{β (1 - ⟨x_ī(0), x_j̄(0)⟩)} ds`.
-
-Then, as `β → ∞`, the rescaled trajectories converge uniformly on any
-interval `[0, T]` on which `⟨y_ī(s), y_j̄(s)⟩ ≤ 1 - ε` to the solution of
-`hardmaxPair` started at the same configuration.
-
-Source: arXiv:2512.01868v4, §5, `thm: agazzi_merge` (Bruno, Pasqualotto &
-Agazzi). -/
-theorem agazzi_merge
-    (K : ℕ) (α : Idx K → ℝ) (X₀ : SphereTuple d K)
-    (hα : ∀ j : Idx K, 0 ≤ α j) (hsum : ∑ j : Idx K, α j = 1)
-    (ibar jbar : Idx K) (hij : ibar ≠ jbar)
-    (hmax : ∀ i j : Idx K, i ≠ j → (i, j) ≠ (ibar, jbar) → (i, j) ≠ (jbar, ibar) →
-      inner (𝕜 := ℝ) ((X₀ i : EucSpace d)) ((X₀ j : EucSpace d))
-        < inner (𝕜 := ℝ) ((X₀ ibar : EucSpace d)) ((X₀ jbar : EucSpace d)))
-    (ε T : ℝ) (hε : 0 < ε) (hT : 0 < T) :
-    ∀ Y : ℝ → SphereTuple d K, Y 0 = X₀ → hardmaxPair d K ibar jbar Y →
-      (∀ s ∈ Set.Icc (0 : ℝ) T,
-        inner (𝕜 := ℝ) ((Y s ibar : EucSpace d)) ((Y s jbar : EucSpace d)) ≤ 1 - ε) →
-      ∀ X : ℝ → ℝ → SphereTuple d K,
-        (∀ β : ℝ, 0 < β → X β 0 = X₀ ∧ clusterSA d K α β (X β)) →
-        ∀ δ : ℝ, 0 < δ → ∃ B : ℝ, ∀ β : ℝ, B < β →
-          ∀ s ∈ Set.Icc (0 : ℝ) T, ∀ k : Idx K,
-            ‖((X β (Real.exp (β * (1 - inner (𝕜 := ℝ)
-                    ((X₀ ibar : EucSpace d)) ((X₀ jbar : EucSpace d)))) * s) k : EucSpace d))
-                - ((Y s k : EucSpace d))‖ < δ := by
-  sorry
-
-/-- The hypotheses of `agazzi_merge` are satisfiable: two clusters of equal
-mass.  With `K = 2` the only pair is `(0, 1)`, so the uniqueness requirement
-is vacuous and any initial configuration will do. -/
-example (X₀ : SphereTuple d 2) :
-    (∀ j : Idx 2, 0 ≤ (fun _ : Idx 2 => (1 / 2 : ℝ)) j) ∧
-      ∑ j : Idx 2, (fun _ : Idx 2 => (1 / 2 : ℝ)) j = 1 ∧
-      (0 : Idx 2) ≠ 1 ∧
-      (∀ i j : Idx 2, i ≠ j → (i, j) ≠ (0, 1) → (i, j) ≠ (1, 0) →
-        inner (𝕜 := ℝ) ((X₀ i : EucSpace d)) ((X₀ j : EucSpace d))
-          < inner (𝕜 := ℝ) ((X₀ 0 : EucSpace d)) ((X₀ 1 : EucSpace d))) ∧
-      (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 := by
-  refine ⟨fun _ => by norm_num, by norm_num, by decide, fun i j hne h1 h2 => ?_,
-    one_pos, one_pos⟩
-  fin_cases i <;> fin_cases j <;> simp_all
 
 end MeanField
 end Transformer

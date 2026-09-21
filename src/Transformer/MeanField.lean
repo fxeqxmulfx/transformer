@@ -13,6 +13,8 @@ import Transformer.MeanField.EquiangularRate
 import Transformer.MeanField.EquiangularWeights
 import Transformer.MeanField.GlobalRate
 import Transformer.MeanField.Merging
+import Transformer.MeanField.MergingFalse
+import Transformer.MeanField.MergingPaths
 import Transformer.MeanField.Noisy
 import Transformer.MeanField.PairMerge
 import Transformer.MeanField.UniformLaw
