@@ -11,7 +11,7 @@ still read.
 | `Precision.Blind` | any finite format: past some length the head outputs `c · Σ v`, independent of the scores |
 | `Precision.Accumulate` | a sequential sum in `p` significant bits never exceeds `2^{p+1}` times its increments; a balanced tree does not stall |
 | `Precision.IEEE` | IEEE 754 binary formats: finite, contain `0`, `M + 1` significant bits |
-| `Precision.Float` | weights rounded to binary16 vanish past `2^{25} e^D` tokens |
+| `Precision.Float` | weights rounded to binary16, E5M2, E4M3 vanish past `2^{25}`, `2^{17}`, `2^{10}` times `e^D` tokens |
 | `Precision.ContextLength` | past `2^{b+1} e^D` tokens a `b`-bit head outputs `0`; below `2^{b+1} e^{-D}` it reads every token |
 -/
 

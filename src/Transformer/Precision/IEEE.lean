@@ -88,6 +88,12 @@ theorem minSub_bf16 : minSub 8 7 = 2 ^ (-133 : ℤ) := by norm_num [minSub, bias
 /-- The smallest positive binary32 number is `2^{-149}`. -/
 theorem minSub_f32 : minSub 8 23 = 2 ^ (-149 : ℤ) := by norm_num [minSub, bias]
 
+/-- The smallest positive FP8 E4M3 number is `2^{-9}`. -/
+theorem minSub_e4m3 : minSub 4 3 = 2 ^ (-9 : ℤ) := by norm_num [minSub, bias]
+
+/-- The smallest positive FP8 E5M2 number is `2^{-16}`. -/
+theorem minSub_e5m2 : minSub 5 2 = 2 ^ (-16 : ℤ) := by norm_num [minSub, bias]
+
 /-- The pattern `0x0001` is the smallest positive binary16 number. -/
 theorem f16_one : f16 1 = some (minSub 5 10) := by
   norm_num [f16, ieee, minSub, bias]
