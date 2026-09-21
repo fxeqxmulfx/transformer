@@ -78,27 +78,31 @@ noncomputable def renormalizedStep (β : ℝ) (P B : ParamMatrix d)
 
 /-! ### The hardmax limit -/
 
-/-- The leader set `𝒞_i^t` of `eq: hardmax.dynamics.V`: those particles at
-which `y ↦ ⟨B x_i^t, y⟩` is maximal over the configuration.
+/-- The leader set `𝒞_i^t` of `eq: hardmax.dynamics.V`: the points of the
+configuration at which `y ↦ ⟨B x_i^t, y⟩` is maximal.
+
+A set of points, not of indices, as in the source: tokens that coincide are one
+leader.  Counting indices instead would make `#𝒞_i^t = 1` fail as soon as two
+tokens merge, which the dynamics does on sets of positive measure.
 
 Source: arXiv:2508.09628v1, §1.2, the display under `eq: hardmax.dynamics.V`. -/
-noncomputable def leaderIdx (B : ParamMatrix d) (X : Idx n → EucSpace d) (i : Idx n) :
-    Finset (Idx n) :=
+noncomputable def leaderSet (B : ParamMatrix d) (X : Idx n → EucSpace d) (i : Idx n) :
+    Finset (EucSpace d) :=
   open Classical in
-  Finset.univ.filter fun j => ∀ k : Idx n,
-    inner (𝕜 := ℝ) (B (X i)) (X k) ≤ inner (𝕜 := ℝ) (B (X i)) (X j)
+  (Finset.univ.image X).filter fun y => ∀ k : Idx n,
+    inner (𝕜 := ℝ) (B (X i)) (X k) ≤ inner (𝕜 := ℝ) (B (X i)) y
 
 /-- **Equation (eq: hardmax.dynamics.V).**  The `β → +∞` limit of
 `eq: rescaled.Tformers`:
 
-  `x_i^{t+1} = x_i^t + P (#𝒞_i^t)^{-1} Σ_{y ∈ 𝒞_i^t} y - x_i^t)`,
+  `x_i^{t+1} = x_i^t + P ((#𝒞_i^t)^{-1} Σ_{y ∈ 𝒞_i^t} y - x_i^t)`,
 
 with `P = (I_d + V)^{-1} V`.
 
 Source: arXiv:2508.09628v1, §1.2, `eq: hardmax.dynamics.V`. -/
 noncomputable def hardmaxAverageStep (P B : ParamMatrix d)
     (X : Idx n → EucSpace d) (i : Idx n) : EucSpace d :=
-  X i + P (((leaderIdx B X i).card : ℝ)⁻¹ • (∑ j ∈ leaderIdx B X i, X j) - X i)
+  X i + P (((leaderSet B X i).card : ℝ)⁻¹ • (∑ y ∈ leaderSet B X i, y) - X i)
 
 /-- The convex hull `𝒦^t = conv{x_i^t}` of a configuration. -/
 def configHull (X : Idx n → EucSpace d) : Set (EucSpace d) :=

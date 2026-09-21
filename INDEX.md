@@ -3127,7 +3127,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 **[Transformer.FrankWolfe](src/Transformer/FrankWolfe.lean)** — 24 lines, aggregator
 
-**[Transformer.FrankWolfe.Section1_Models](src/Transformer/FrankWolfe/Section1_Models.lean)** — 161 lines
+**[Transformer.FrankWolfe.Section1_Models](src/Transformer/FrankWolfe/Section1_Models.lean)** — 165 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -3135,25 +3135,25 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`softmaxStep`](src/Transformer/FrankWolfe/Section1_Models.lean#L52) | def |  |
 | [`IsPreconditioner`](src/Transformer/FrankWolfe/Section1_Models.lean#L63) | def |  |
 | [`renormalizedStep`](src/Transformer/FrankWolfe/Section1_Models.lean#L74) | def |  |
-| [`leaderIdx`](src/Transformer/FrankWolfe/Section1_Models.lean#L85) | def |  |
-| [`hardmaxAverageStep`](src/Transformer/FrankWolfe/Section1_Models.lean#L99) | def |  |
-| [`configHull`](src/Transformer/FrankWolfe/Section1_Models.lean#L104) | def |  |
-| [`IsMaximizerOn`](src/Transformer/FrankWolfe/Section1_Models.lean#L108) | def |  |
-| [`IsHardmaxStep`](src/Transformer/FrankWolfe/Section1_Models.lean#L122) | def |  |
-| [`HardmaxFlow`](src/Transformer/FrankWolfe/Section1_Models.lean#L128) | def |  |
-| [`quadForm`](src/Transformer/FrankWolfe/Section1_Models.lean#L137) | def |  |
-| [`cell`](src/Transformer/FrankWolfe/Section1_Models.lean#L147) | def |  |
-| [`IsPosDef`](src/Transformer/FrankWolfe/Section1_Models.lean#L153) | def |  |
-| [`IsVertexList`](src/Transformer/FrankWolfe/Section1_Models.lean#L157) | def |  |
+| [`leaderSet`](src/Transformer/FrankWolfe/Section1_Models.lean#L89) | def |  |
+| [`hardmaxAverageStep`](src/Transformer/FrankWolfe/Section1_Models.lean#L103) | def |  |
+| [`configHull`](src/Transformer/FrankWolfe/Section1_Models.lean#L108) | def |  |
+| [`IsMaximizerOn`](src/Transformer/FrankWolfe/Section1_Models.lean#L112) | def |  |
+| [`IsHardmaxStep`](src/Transformer/FrankWolfe/Section1_Models.lean#L126) | def |  |
+| [`HardmaxFlow`](src/Transformer/FrankWolfe/Section1_Models.lean#L132) | def |  |
+| [`quadForm`](src/Transformer/FrankWolfe/Section1_Models.lean#L141) | def |  |
+| [`cell`](src/Transformer/FrankWolfe/Section1_Models.lean#L151) | def |  |
+| [`IsPosDef`](src/Transformer/FrankWolfe/Section1_Models.lean#L157) | def |  |
+| [`IsVertexList`](src/Transformer/FrankWolfe/Section1_Models.lean#L161) | def |  |
 
-**[Transformer.FrankWolfe.Section2_Derivations](src/Transformer/FrankWolfe/Section2_Derivations.lean)** — 118 lines
+**[Transformer.FrankWolfe.Section2_Derivations](src/Transformer/FrankWolfe/Section2_Derivations.lean)** — 125 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`AverageFlow`](src/Transformer/FrankWolfe/Section2_Derivations.lean#L32) | def |  |
-| [`singleLeader`](src/Transformer/FrankWolfe/Section2_Derivations.lean#L50) | theorem | sorry |
-| [`configHull_subset_of_isHardmaxStep`](src/Transformer/FrankWolfe/Section2_Derivations.lean#L68) | theorem | proved |
-| [`configHull_antitone`](src/Transformer/FrankWolfe/Section2_Derivations.lean#L94) | theorem | proved |
+| [`singleLeader`](src/Transformer/FrankWolfe/Section2_Derivations.lean#L56) | theorem | sorry |
+| [`configHull_subset_of_isHardmaxStep`](src/Transformer/FrankWolfe/Section2_Derivations.lean#L75) | theorem | proved |
+| [`configHull_antitone`](src/Transformer/FrankWolfe/Section2_Derivations.lean#L101) | theorem | proved |
 
 **[Transformer.FrankWolfe.Section2_HullFailure](src/Transformer/FrankWolfe/Section2_HullFailure.lean)** — 125 lines
 
@@ -6707,7 +6707,7 @@ Everything the build cannot vouch for, in one place.
 | [`norm_eigenFunctional_le`](src/Transformer/Clusters/Section9_Growth.lean#L63) | theorem | `Transformer.Clusters.Section9_Growth` |
 | [`norm_proj_le`](src/Transformer/Clusters/Section9_Growth.lean#L102) | theorem | `Transformer.Clusters.Section9_Growth` |
 | [`exists_tendsto_eigenFunctional`](src/Transformer/Clusters/Section9_Hyperplanes.lean#L134) | theorem | `Transformer.Clusters.Section9_Hyperplanes` |
-| [`singleLeader`](src/Transformer/FrankWolfe/Section2_Derivations.lean#L50) | theorem | `Transformer.FrankWolfe.Section2_Derivations` |
+| [`singleLeader`](src/Transformer/FrankWolfe/Section2_Derivations.lean#L56) | theorem | `Transformer.FrankWolfe.Section2_Derivations` |
 | [`fw_cluster`](src/Transformer/FrankWolfe/Section3_NegativeDefinite.lean#L79) | theorem | `Transformer.FrankWolfe.Section3_NegativeDefinite` |
 | [`hardmax_ode_wellposed`](src/Transformer/FrankWolfe/Section4_ODE.lean#L62) | theorem | `Transformer.FrankWolfe.Section4_ODE` |
 | [`hardmax_ode_continuous_dependence`](src/Transformer/FrankWolfe/Section4_ODE.lean#L87) | theorem | `Transformer.FrankWolfe.Section4_ODE` |
