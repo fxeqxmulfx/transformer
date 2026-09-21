@@ -191,6 +191,20 @@ omit [DecidableEq σ] in
   ext w
   simp [lang, models, closedTop, sat]
 
+omit [DecidableEq σ] in
+/-- **No closed formula has depth `0`.**  Every atom names a variable, and
+only a majority quantifier binds one; this is why `closedTop` has depth `1`,
+and why `MAJ²_0` defines no language at all. -/
+theorem not_closed_of_depth_eq_zero : ∀ φ : Maj2 σ, φ.depth = 0 → ¬ φ.Closed
+  | .sym _ v, _, h => by simpa [freeIn] using h v
+  | .lt v _, _, h => by simpa [freeIn] using h v
+  | .neg φ, hd, h => not_closed_of_depth_eq_zero φ hd fun v => by simpa [freeIn] using h v
+  | .and φ₁ φ₂, hd, h => by
+      simp only [depth, Nat.max_eq_zero_iff] at hd
+      exact not_closed_of_depth_eq_zero φ₁ hd.1 fun v => by
+        simpa [freeIn] using (Bool.or_eq_false_iff.1 (h v)).1
+  | .maj _ _ _, hd, _ => by simp [depth] at hd
+
 end Maj2
 
 /-- `MAJ²_k`, the formulas of depth at most `k` (Definition

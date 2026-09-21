@@ -213,7 +213,12 @@ proved.  The first half is not derivable from the two inclusions — they cost a
 level, and `D_k` is `TL[◁#,▷#]`-definable at depth `k`, not at `k - 1` — so it
 is exactly `lem:piecewise_testable_depth_majtwo`, the explicit `MAJ²_{k+1}`
 construction for `(2k+1)`-piecewise testable languages that sits in an
-`\iffalse` block of the source and is left out here with the rest of them. -/
+`\iffalse` block of the source and is left out here with the rest of them.
+
+The paper does not bound `k`; `0 < k` is forced, not added.  At `k = 0` the
+first half is false: no closed formula has depth `0`
+(`Maj2.not_closed_of_depth_eq_zero`), so `MAJ²_0` defines no language, not
+even `D_0 = {ε}`. -/
 theorem majTwo_depth_hierarchy (k : ℕ) (hk : 0 < k) :
     (∃ φ ∈ MajTwo Bool k, φ.Closed ∧ φ.lang = altPlusDouble k) ∧
       ∀ φ ∈ MajTwo Bool k, φ.Closed → φ.lang ≠ altPlusDouble (k + 1) := by
