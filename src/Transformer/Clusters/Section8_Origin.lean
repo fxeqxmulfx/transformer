@@ -14,9 +14,7 @@ whole configuration collapses to a single cluster at the origin.
 * `e:-Iddyn` is `eq:trans_dyn` at `V = -I_d`, and
   `transformerDynamics_neg_one_iff` proves that literally.
 
-* `l:cas1circle` is stated as the source states it, as the existence of a
-  radius.  Its proof produces the explicit bound `max{‖x_i(0)‖, √(2n)}`, which
-  is not carried: the statement is the existential.
+* `l:cas1circle` is in `Section8_Bounded`.
 
 * `l:stationary` is in `Section8_Stationary`.
 
@@ -93,20 +91,6 @@ theorem transformerDynamics_zero (Q K V : ParamMatrix d) :
   intro t i
   simpa using hasDerivAt_const t (0 : EucSpace d)
 
-/-! ### `l:cas1circle` -/
-
-/-- **Lemma (l:cas1circle).**  The trajectories of `e:-Iddyn` are uniformly
-bounded in time: there is `R > 0`, depending only on `n` and the initial
-configuration, with `‖x_i(t)‖ ≤ R` for every `i ∈ [n]` and every `t ≥ 0`.
-
-Not proved here.  The source's proof gives `R = max{‖x_i(0)‖, √(2n)}`.
-
-Source: arXiv:2305.05465v6, `l:cas1circle`. -/
-theorem exists_bound_negIdDynamics (Q K : ParamMatrix d) (hQK : IsIdentityQK Q K)
-    (X : ℝ → Idx n → EucSpace d) (hX : NegIdDynamics Q K X) :
-    ∃ R : ℝ, 0 < R ∧ ∀ (i : Idx n) (t : ℝ), 0 ≤ t → ‖X t i‖ ≤ R := by
-  sorry
-
 /-! ### `e:finiteinegral` and `t:cas-Idintro` -/
 
 /-- **Lemma (e:finiteinegral).**  The trajectories of `e:-Iddyn` satisfy
@@ -132,9 +116,8 @@ theorem negId_tendsto_zero (Q K : ParamMatrix d) (hQK : IsIdentityQK Q K)
     Tendsto (fun t => ‖X t i‖) atTop (nhds 0) := by
   sorry
 
-/-- The hypotheses shared by `exists_bound_negIdDynamics`,
-`integrableOn_sq_norm_negIdDrift` and `negId_tendsto_zero` are satisfiable:
-`Q = K = I_d` and the configuration sitting at the origin. -/
+/-- The hypotheses shared by `integrableOn_sq_norm_negIdDrift` and
+`negId_tendsto_zero` are satisfiable: `Q = K = I_d` and the configuration sitting at the origin. -/
 example : IsIdentityQK (1 : ParamMatrix d) 1 ∧
     NegIdDynamics (n := n) (1 : ParamMatrix d) 1 (fun _ _ => (0 : EucSpace d)) :=
   ⟨isIdentityQK_one d, (transformerDynamics_neg_one_iff _ _ _).mp (transformerDynamics_zero 1 1 _)⟩
