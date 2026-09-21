@@ -13,9 +13,13 @@ manifold and measuring how far it can travel:
 
 Two corrections to the statement as printed.
 
-* The sign: the paper writes `𝖤(v) - 𝖤(u)` on both sides, the opposite of
-  what (H1) asks for and of what the flow does — the energy *falls* along
-  `Ẋ = -∇𝖤(X)`, so `𝖤(u) ≥ 𝖤(v)`.
+* The sign: the lemma is printed for the *ascending* flow `Ẋ = ∇𝖤(X)`, with
+  `𝖤(v) - 𝖤(u)` on both sides, while (H1), which it serves, is written for
+  the descending flow `Ẋ = -∇𝖤(X)` of the Otto–Reznikoff framework, with
+  `𝖤(u) - 𝖤(v)`.  The two conventions differ by `𝖤 ↦ -𝖤` (the constraint
+  `𝖤 ≥ 0` is immaterial: both sides involve differences of `𝖤` only, and
+  `𝖤` is bounded on the compact `ℳ` of the paper).  It is stated here in the
+  convention of (H1).
 * The constant: the argument gives `(c/2)‖u - v‖²`, not `2c‖u - v‖²`.  The
   printed proof differentiates `√(𝖤(v) - 𝖤(X(t)))` and drops the factor `2`
   of `(√f)' = f'/(2√f)`, which is exactly the factor `4` between the two.

@@ -4680,11 +4680,11 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`inner_proj_softmax_pair`](src/Transformer/Metastability/PairVelocity.lean#L90) | theorem | proved |
 | [`inner_proj_softmax_pair_sum`](src/Transformer/Metastability/PairVelocity.lean#L233) | theorem | proved |
 
-**[Transformer.Metastability.QuantitativeInequality](src/Transformer/Metastability/QuantitativeInequality.lean)** — 201 lines
+**[Transformer.Metastability.QuantitativeInequality](src/Transformer/Metastability/QuantitativeInequality.lean)** — 205 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`quantitative_inequality`](src/Transformer/Metastability/QuantitativeInequality.lean#L52) | theorem | proved |
+| [`quantitative_inequality`](src/Transformer/Metastability/QuantitativeInequality.lean#L56) | theorem | proved |
 
 **[Transformer.Metastability.ReversePL](src/Transformer/Metastability/ReversePL.lean)** — 153 lines
 

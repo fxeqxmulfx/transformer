@@ -52,15 +52,15 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - ok `not_forall_Hartman_Grobman` — Transformer/Interpolation/Settling.lean:271 — kills the repo's former unrestricted form (every path, every omega), docstring says so; but see issue on Hartman_Grobman in section 2
 - ok `not_exists_rate_at_simplex` — Transformer/MeanField/Equiangular.lean:75 — necessity of the basin condition; paper assumes rho0 in [0,1], so no paper claim is refuted
 - ok `not_equiangular_local_rate_zero` — Transformer/MeanField/EquiangularRate.lean:159 — necessity of 1 <= n (n=0 kills the denominator); no paper claim refuted
-- [ ] `not_forall_bakry_emery` — Transformer/Metastability/BakryEmery.lean:185
-- [ ] `not_quantitative_inequality_two_mul` — Transformer/Metastability/ExponentialFlow.lean:61
-- [ ] `not_rho_diff_ineq_of_free` — Transformer/Metastability/MainTheorem.lean:159
-- [ ] `not_forall_cap_exit` — Transformer/Metastability/MeanField.lean:182
-- [ ] `not_forall_variance_small` — Transformer/Metastability/MeanField.lean:211
-- [ ] `not_forall_otto_reznikoff` — Transformer/Metastability/OttoReznikoff.lean:142
-- [ ] `not_forall_claim_one` — Transformer/Metastability/OttoReznikoff.lean:258
-- [ ] `not_forall_reverse_PL_acceleration` — Transformer/Metastability/ReversePL.lean:142
-- [ ] `not_exact_time_scale` — Transformer/Metastability/Staircase.lean:127
+- ok `not_forall_bakry_emery` — Transformer/Metastability/BakryEmery.lean:185 — kills the repo's former free gradNorm/gradHess form, docstring says so; bakry_emery restores the paper's hypotheses
+- ok `not_quantitative_inequality_two_mul` — Transformer/Metastability/ExponentialFlow.lean:61 — 2c refuted under the charitable reading (PL along the path, flow through v); ascent/descent is E -> -E; docstring's sign note corrected (paper's lemma is ascent)
+- ok `not_rho_diff_ineq_of_free` — Transformer/Metastability/MainTheorem.lean:159 — necessity of tying rho_q to the configuration (repo's free-rho_q form); no paper claim
+- issue `not_forall_cap_exit` — Transformer/Metastability/MeanField.lean:182 — refutes only the free-(eta,V) strawman; the paper's claim is dropped from the books, yet eta_q(t)=mu(t)(cap), V_q(t) are definable from a solution mu of eq: mean.field.pde
+- issue `not_forall_variance_small` — Transformer/Metastability/MeanField.lean:211 — same as not_forall_cap_exit: strawman refuted, paper's eq: v.small not on the books
+- ok `not_forall_otto_reznikoff` — Transformer/Metastability/OttoReznikoff.lean:142 — kills the repo's former free-(u,v) form; otto_reznikoff restated with the flow and H1-projection (sorried)
+- issue `not_forall_claim_one` — Transformer/Metastability/OttoReznikoff.lean:258 — refutes only the free-(Theta,r) strawman; claim: 1 dropped from the books, though expressible with hypotheses (indices of one cap, increasing angles, Theta not in slowManifold)
+- ok `not_forall_reverse_PL_acceleration` — Transformer/Metastability/ReversePL.lean:142 — necessity of hchain; the faithful reverse_PL_acceleration (with chain rule) is proved
+- issue `not_exact_time_scale` — Transformer/Metastability/Staircase.lean:127 — literal statement (u0 in [0,1], tex 1950) correctly refuted at u0=0, beta=e; but the substantive error (centre 1/(2c), not 2/c) and the corrected asymptotic lemma for u0 in (0,1] are not on the books
 - [ ] `not_forall_modeSet_subset_upcrossingSet` — Transformer/Modes/Section2_Degenerate.lean:90
 - [ ] `not_integrableOn_tildeY` — Transformer/Modes/Section3_ErrorThird.lean:44
 - [ ] `not_exists_hermite_le_cube` — Transformer/Modes/Section3_Hermite.lean:68
