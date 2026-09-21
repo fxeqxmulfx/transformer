@@ -13,6 +13,7 @@ import Transformer.Interpolation.IdentityFlow
 import Transformer.Interpolation.NeuralODE
 import Transformer.Interpolation.Settling
 import Transformer.Interpolation.Main
+import Transformer.Interpolation.HypPropagationFalse
 import Transformer.Interpolation.BallTransport
 import Transformer.Interpolation.MassConcentration
 import Transformer.Interpolation.MassConcentrationSqrt

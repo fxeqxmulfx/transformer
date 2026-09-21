@@ -5,7 +5,9 @@ Formalization of the main theorems of arXiv:2411.04551v3:
 
 * `Theorem thm: targets.atoms`  — interpolation when targets are point masses,
 * `Theorem thm: main.result`    — general interpolation,
-* `Lemma lem: hyp.propagation`  — propagation of transport maps,
+* `Lemma lem: hyp.propagation`  — propagation of transport maps: false as
+                                  written, refuted in
+                                  `Interpolation.HypPropagationFalse`,
 * `Lemma lem: monge`            — Monge-style optimal-transport identity,
                                   proved, against the `W_2` of
                                   `Transformer.Interpolation.Wasserstein`,
@@ -159,34 +161,6 @@ example :
   ⟨le_rfl, one_pos, one_pos, ⟨_, isHole_antipode_diracProb 3 1 (basePoint 2)⟩,
     ⟨_, isHole_antipode_diracProb 3 1 (basePoint 2)⟩,
     fun _ => ⟨id, measurable_id, Measure.map_id⟩⟩
-
-/-- **Lemma (lem: hyp.propagation).**  Propagation of transport maps along
-the first and last flows.
-
-If every `μ_1^i` is a measurable pushforward of `μ_0^i`, then there is a
-bijective Lipschitz `ψ : 𝕊^{d-1} → 𝕊^{d-1}` with
-`ψ_# Φ_1(μ_0^i) = Φ_3(μ_1^i)` for every `i`.
-
-Not proved here.
-
-Source: arXiv:2411.04551v3, §5. -/
-theorem hyp_propagation (Φ₁ Φ₃ : ℝ → ProbSphere d → ProbSphere d) (t : ℝ)
-    (μ₀ μ₁ : Idx N → ProbSphere d)
-    (hpush : ∀ i : Idx N, ∃ Tr : SSphere d → SSphere d, Measurable Tr ∧
-      Measure.map Tr (μ₀ i : Measure (SSphere d)) = (μ₁ i : Measure (SSphere d))) :
-    ∃ (ψ : SSphere d → SSphere d) (L : NNReal),
-      LipschitzWith L ψ ∧ Function.Bijective ψ ∧
-      ∀ i : Idx N,
-        Measure.map ψ (Φ₁ t (μ₀ i) : Measure (SSphere d))
-          = (Φ₃ t (μ₁ i) : Measure (SSphere d)) := by
-  sorry
-
-/-- The hypothesis of `hyp_propagation` is satisfiable: any family is its own
-pushforward under the identity. -/
-example (μ₀ : Idx N → ProbSphere d) :
-    ∀ i : Idx N, ∃ Tr : SSphere d → SSphere d, Measurable Tr ∧
-      Measure.map Tr (μ₀ i : Measure (SSphere d)) = (μ₀ i : Measure (SSphere d)) :=
-  fun _ => ⟨id, measurable_id, Measure.map_id⟩
 
 /-- **Lemma (lem: monge).**  Monge identity: the Wasserstein distance between
 two pushforwards of the same measure is controlled by the `L²(μ)` distance of
