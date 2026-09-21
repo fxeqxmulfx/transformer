@@ -218,29 +218,29 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.AdamBeyond — arXiv:1904.09237
 
-- [ ] Transformer/AdamBeyond/AppendixG_Auxiliary.lean (7): `of`, `psd_comm`, `psd_nonneg`, `proj_variational_psd`, `proj_lemma`, `sum_div_sqrt_partial_le`, `proj_1d`
-- [ ] Transformer/AdamBeyond/Section2_Adam.lean (8): `v_sum`, `m_sum`, `adagrad_vhat`, `gamma_succ`, `gamma_nonneg_of`, `gamma_sgd_nonneg`, `gamma_adagrad_nonneg`, `gamma_amsgrad_nonneg`
-- [ ] Transformer/AdamBeyond/Section3_Counter.lean (7): `cex_term_ge`, `cex_regret`, `half_div_sqrt_hyp`, `counter_example_epsilon`, `counter_example`, `counter_example_const`, `gamma_adam_neg`
-- [ ] Transformer/AdamBeyond/Section3_GenBlock.lean (5): `genX_succ'`, `genSlope_block`, `gen_inblock`, `genM_block_anti`, `genD_ge`
-- [ ] Transformer/AdamBeyond/Section3_GenRegret.lean (5): `gen_start`, `gen_block_regret`, `gen_regret_blocks`, `gen_regret`, `gen_constants`
-- [ ] Transformer/AdamBeyond/Section3_GenRun.lean (13): `abs_genSlope_le`, `isOnlineConvex_gen`, `genM_succ`, `genV_succ`, `genX_succ`, `genX_zero`, `genM_zero`, `genV_zero`, `genSlope_mem`, `gen_warmup`, `genX_le_one`, `neg_one_le_genX`, `gen_bounds`
-- [ ] Transformer/AdamBeyond/Section3_GenStep.lean (4): `proj_1d_of_mono`, `geom_Icc`, `gen_block_sum`, `gen_block`
-- [ ] Transformer/AdamBeyond/Section3_General.lean (1): `counter_example_gen`
-- [ ] Transformer/AdamBeyond/Section3_Run.lean (6): `adamEpsRule_zero`, `isOnlineConvex_cex`, `cex_v`, `cex_x`, `block_arith`, `cex_block`
-- [ ] Transformer/AdamBeyond/Section3_Stoch.lean (8): `exists_isBernoulliSeq`, `stoch_g`, `stoch_m_succ`, `stoch_v_succ`, `stochX_succ`, `stochX_one`, `stoch_m_eq`, `stoch_v_eq`
-- [ ] Transformer/AdamBeyond/Section3_StochBound.lean (12): `coinGrad_le`, `coinGrad_le_ind`, `coinGrad_sq_le`, `sum_pow_sub_le`, `inv_sqrt_ge`, `stoch_T1_le`, `stoch_m_le`, `stoch_v_nonneg`, `stoch_v_ge`, `stoch_v_le_ind`, `stoch_m_le_ind`, `stoch_T2_le`
-- [ ] Transformer/AdamBeyond/Section3_StochCoins.lean (11): `coin_factor`, `dependsOn_sum`, `dependsOn_comp₂`, `dependsOn_coin_mul`, `coin_measurable`, `coin_integrable`, `coin_indep`, `coin_integral_ind`, `coin_integral_ind_mul`, `coin_integral_not_mul`, `coin_integral_sum`
-- [ ] Transformer/AdamBeyond/Section3_StochMean.lean (7): `coinM_dep`, `coinV_dep`, `coinMV_dep`, `stoch_int_T1`, `stoch_int_T2`, `stoch_int_v`, `stoch_int_inv`
-- [ ] Transformer/AdamBeyond/Section3_StochStep.lean (3): `coin_step_split`, `stoch_const_le`, `stoch_step`
-- [ ] Transformer/AdamBeyond/Section3_Stochastic.lean (1): `counter_example_stochastic`
-- [ ] Transformer/AdamBeyond/Section4_AMSGrad.lean (2): `amsgrad_moment_sum`, `amsgrad_moment_sum_sqrt`
-- [ ] Transformer/AdamBeyond/Section4_Abel.lean (2): `sum_Icc_two_sub`, `abel_beta_le`
-- [ ] Transformer/AdamBeyond/Section4_Corollary.lean (3): `sum_lambda_sqrt_le`, `amsgrad_regret_lambda`, `amsgrad_regret_inv`
-- [ ] Transformer/AdamBeyond/Section4_Regret.lean (2): `amsgrad_regret_moment`, `amsgrad_regret`
-- [ ] Transformer/AdamBeyond/Section5_AdamNC.lean (4): `adamNC_vhat_succ`, `adamNC_vhat_sum`, `adamNC_vhat_inv`, `adamNC_inv_cond`
-- [ ] Transformer/AdamBeyond/Section5_Corollary.lean (4): `sqrt_mul_sqrt_vhat_inv`, `sqrt_vhat_inv_le`, `adamNC_regret_lambda`, `adamNC_regret_inv`
-- [ ] Transformer/AdamBeyond/Section5_Lemma.lean (3): `sum_geomSum_le`, `m_sq_le_gnorm`, `adamNC_moment_sum`
-- [ ] Transformer/AdamBeyond/Section5_Regret.lean (1): `adamNC_regret`
+- ok Transformer/AdamBeyond/AppendixG_Auxiliary.lean (7): `of`, `psd_comm`, `psd_nonneg`, `proj_variational_psd`, `proj_lemma`, `sum_div_sqrt_partial_le`, `proj_1d`
+- ok Transformer/AdamBeyond/Section2_Adam.lean (8): `v_sum`, `m_sum`, `adagrad_vhat`, `gamma_succ`, `gamma_nonneg_of`, `gamma_sgd_nonneg`, `gamma_adagrad_nonneg`, `gamma_amsgrad_nonneg`
+- ok Transformer/AdamBeyond/Section3_Counter.lean (7): `cex_term_ge`, `cex_regret`, `half_div_sqrt_hyp`, `counter_example_epsilon`, `counter_example`, `counter_example_const`, `gamma_adam_neg`
+- ok Transformer/AdamBeyond/Section3_GenBlock.lean (5): `genX_succ'`, `genSlope_block`, `gen_inblock`, `genM_block_anti`, `genD_ge`
+- ok Transformer/AdamBeyond/Section3_GenRegret.lean (5): `gen_start`, `gen_block_regret`, `gen_regret_blocks`, `gen_regret`, `gen_constants`
+- ok Transformer/AdamBeyond/Section3_GenRun.lean (13): `abs_genSlope_le`, `isOnlineConvex_gen`, `genM_succ`, `genV_succ`, `genX_succ`, `genX_zero`, `genM_zero`, `genV_zero`, `genSlope_mem`, `gen_warmup`, `genX_le_one`, `neg_one_le_genX`, `gen_bounds`
+- ok Transformer/AdamBeyond/Section3_GenStep.lean (4): `proj_1d_of_mono`, `geom_Icc`, `gen_block_sum`, `gen_block`
+- ok Transformer/AdamBeyond/Section3_General.lean (1): `counter_example_gen`
+- ok Transformer/AdamBeyond/Section3_Run.lean (6): `adamEpsRule_zero`, `isOnlineConvex_cex`, `cex_v`, `cex_x`, `block_arith`, `cex_block`
+- ok Transformer/AdamBeyond/Section3_Stoch.lean (8): `exists_isBernoulliSeq`, `stoch_g`, `stoch_m_succ`, `stoch_v_succ`, `stochX_succ`, `stochX_one`, `stoch_m_eq`, `stoch_v_eq`
+- ok Transformer/AdamBeyond/Section3_StochBound.lean (12): `coinGrad_le`, `coinGrad_le_ind`, `coinGrad_sq_le`, `sum_pow_sub_le`, `inv_sqrt_ge`, `stoch_T1_le`, `stoch_m_le`, `stoch_v_nonneg`, `stoch_v_ge`, `stoch_v_le_ind`, `stoch_m_le_ind`, `stoch_T2_le`
+- ok Transformer/AdamBeyond/Section3_StochCoins.lean (11): `coin_factor`, `dependsOn_sum`, `dependsOn_comp₂`, `dependsOn_coin_mul`, `coin_measurable`, `coin_integrable`, `coin_indep`, `coin_integral_ind`, `coin_integral_ind_mul`, `coin_integral_not_mul`, `coin_integral_sum`
+- ok Transformer/AdamBeyond/Section3_StochMean.lean (7): `coinM_dep`, `coinV_dep`, `coinMV_dep`, `stoch_int_T1`, `stoch_int_T2`, `stoch_int_v`, `stoch_int_inv`
+- ok Transformer/AdamBeyond/Section3_StochStep.lean (3): `coin_step_split`, `stoch_const_le`, `stoch_step`
+- ok Transformer/AdamBeyond/Section3_Stochastic.lean (1): `counter_example_stochastic`
+- ok Transformer/AdamBeyond/Section4_AMSGrad.lean (2): `amsgrad_moment_sum`, `amsgrad_moment_sum_sqrt`
+- ok Transformer/AdamBeyond/Section4_Abel.lean (2): `sum_Icc_two_sub`, `abel_beta_le`
+- issue Transformer/AdamBeyond/Section4_Corollary.lean (3): `sum_lambda_sqrt_le`, `amsgrad_regret_lambda`, `amsgrad_regret_inv` — amsgrad_regret_lambda restores a factor d/α in Corollary 1's second term; the printed β₁D²G/((1-β₁)²(1-λ)²) does not follow from Theorem 4 but is not refuted either: a statement weaker than printed under the paper's name
+- ok Transformer/AdamBeyond/Section4_Regret.lean (2): `amsgrad_regret_moment`, `amsgrad_regret`
+- ok Transformer/AdamBeyond/Section5_AdamNC.lean (4): `adamNC_vhat_succ`, `adamNC_vhat_sum`, `adamNC_vhat_inv`, `adamNC_inv_cond`
+- issue Transformer/AdamBeyond/Section5_Corollary.lean (4): `sqrt_mul_sqrt_vhat_inv`, `sqrt_vhat_inv_le`, `adamNC_regret_lambda`, `adamNC_regret_inv` — adamNC_regret_lambda restores d/α in Corollary 2's second term, as for Corollary 1; the printed constant is neither proved nor refuted
+- ok Transformer/AdamBeyond/Section5_Lemma.lean (3): `sum_geomSum_le`, `m_sq_le_gnorm`, `adamNC_moment_sum`
+- issue Transformer/AdamBeyond/Section5_Regret.lean (1): `adamNC_regret` — adamNC_regret takes condition 1 at α_t instead of the printed α_T, which is a stronger hypothesis (1/α_t ≤ 1/α_T); the printed Theorem 5 is neither proved nor refuted
 
 ### Transformer — arXiv:2106.06981
 
