@@ -6372,7 +6372,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`exists_orthogonal_pair`](src/Transformer/Perspective/Section8_CohnKumar.lean#L157) | theorem | proved |
 | [`not_cohn_kumar_dichotomy`](src/Transformer/Perspective/Section8_CohnKumar.lean#L188) | theorem | proved |
 
-**[Transformer.Perspective.Section8_General](src/Transformer/Perspective/Section8_General.lean)** — 207 lines
+**[Transformer.Perspective.Section8_General](src/Transformer/Perspective/Section8_General.lean)** — 215 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -6385,10 +6385,10 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`discreteEnergy_singleton`](src/Transformer/Perspective/Section8_General.lean#L111) | theorem | proved |
 | [`pureSA`](src/Transformer/Perspective/Section8_General.lean#L123) | def |  |
 | [`IsRescaling`](src/Transformer/Perspective/Section8_General.lean#L140) | def |  |
-| [`rescaledEquation`](src/Transformer/Perspective/Section8_General.lean#L155) | def |  |
-| [`preLimitODE`](src/Transformer/Perspective/Section8_General.lean#L171) | def |  |
-| [`activeSet`](src/Transformer/Perspective/Section8_General.lean#L186) | def |  |
-| [`limitODE`](src/Transformer/Perspective/Section8_General.lean#L198) | def |  |
+| [`rescaledEquation`](src/Transformer/Perspective/Section8_General.lean#L161) | def |  |
+| [`preLimitODE`](src/Transformer/Perspective/Section8_General.lean#L179) | def |  |
+| [`activeSet`](src/Transformer/Perspective/Section8_General.lean#L194) | def |  |
+| [`limitODE`](src/Transformer/Perspective/Section8_General.lean#L206) | def |  |
 
 **[Transformer.Perspective.Section9_Approximation](src/Transformer/Perspective/Section9_Approximation.lean)** — 141 lines
 

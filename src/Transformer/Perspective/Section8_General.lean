@@ -151,16 +151,24 @@ example (x : ℝ → Idx n → EucSpace d) : IsRescaling d n 0 x x := by
 /-- **Equation (e:Rres).** Equation satisfied by the rescaled particles:
 
   `ż_i(t) = Z_{β,i}(t)⁻¹ Σ_j exp(β ⟨Q e^{tV} z_i, K e^{tV} z_j⟩)
-                              · V (z_j(t) - z_i(t))`. -/
+                              · V (z_j(t) - z_i(t))`.
+
+The weights are read at the original particles `x_j = e^{tV} z_j`, so they
+are the attention weights of `eq: transf-1` itself; only the displacement
+`V (z_j - z_i)` is in the rescaled variables.
+
+Source: arXiv:2312.10794v5, §9.2, `e:Rres`. -/
 def rescaledEquation
     (β : ℝ) (Q K V : ParamMatrix d)
     (z : ℝ → Idx n → EucSpace d) : Prop :=
   ∀ t : ℝ, ∀ i : Idx n,
     HasDerivAt (fun s => z s i)
       ((∑ k : Idx n,
-          Real.exp (β * inner (𝕜 := ℝ) (Q (z t i)) (K (z t k))))⁻¹
+          Real.exp (β * inner (𝕜 := ℝ) (Q (NormedSpace.exp (t • V) (z t i)))
+            (K (NormedSpace.exp (t • V) (z t k)))))⁻¹
         • ∑ j : Idx n,
-            Real.exp (β * inner (𝕜 := ℝ) (Q (z t i)) (K (z t j)))
+            Real.exp (β * inner (𝕜 := ℝ) (Q (NormedSpace.exp (t • V) (z t i)))
+              (K (NormedSpace.exp (t • V) (z t j))))
             • V (z t j - z t i)) t
 
 /-! ### §9.3 — Singular dynamics in the `β → ∞` limit -/
