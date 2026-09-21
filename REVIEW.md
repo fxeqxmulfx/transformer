@@ -640,16 +640,16 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.Precision — arXiv:2410.01104
 
-- [ ] Transformer/Precision/Accumulate.lean (6): `HasSignificand.dvd`, `HasSignificand.gap`, `hasSignificand_one_pow_two`, `accum_stall`, `accum_le`, `pairwise_exact`
-- [ ] Transformer/Precision/Basic.lean (6): `softmax_denom_pos`, `softmax_nonneg`, `softmax_le`, `le_softmax`, `quantize_eq_zero`, `quantize_pos`
-- [ ] Transformer/Precision/Blind.lean (2): `IsNearest.exists_const`, `qAttn_blind`
-- [ ] Transformer/Precision/BlockScale.lean (5): `IsNearest.le_of_eq_zero`, `blockScale_eq_zero`, `blockScale_dropped_le`, `nvfp4_eq_zero`, `nvfp4_dropped_le`
-- [ ] Transformer/Precision/ContextLength.lean (7): `qAttn_eq_zero`, `qAttn_update_injective`, `quantize_bits_eq_zero`, `qAttn_bits_eq_zero`, `qAttn_bits_injective`, `exists_length_qAttn_eq_zero`, `exists_scores_qAttn_injective`
-- [ ] Transformer/Precision/Float.lean (6): `ieee_eq_zero`, `exists_isNearest_grid`, `qAttn_ieee_eq_zero`, `qAttn_f16_eq_zero`, `qAttn_e4m3_eq_zero`, `qAttn_e5m2_eq_zero`
-- [ ] Transformer/Precision/FloatSum.lean (6): `accum_softmax_le`, `accum_softmax_f32_le`, `accum_softmax_f16_le`, `accum_softmax_bf16_le`, `accum_softmax_e4m3_le`, `accum_softmax_e5m2_le`
-- [ ] Transformer/Precision/IEEE.lean (14): `minSub_pos`, `minSub_le_abs`, `minSub_f16`, `minSub_bf16`, `minSub_f32`, `minSub_e4m3`, `minSub_e5m2`, `minSub_e2m1`, `f16_one`, `f16_max`, `zero_mem_grid`, `grid_finite`, `ieee_abs`, `grid_hasSignificand`
-- [ ] Transformer/Precision/Nearest.lean (4): `IsNearest.eq_zero`, `IsNearest.eq_self`, `exists_isNearest`, `IsNearest.add_eq`
-- [ ] Transformer/Precision/Tail.lean (4): `tail_eq`, `exp_neg_eight_lt`, `tail_e4m3`, `tail_e4m3_131072`
+- ok Transformer/Precision/Accumulate.lean (6): `HasSignificand.dvd`, `HasSignificand.gap`, `hasSignificand_one_pow_two`, `accum_stall`, `accum_le`, `pairwise_exact`
+- ok Transformer/Precision/Basic.lean (6): `softmax_denom_pos`, `softmax_nonneg`, `softmax_le`, `le_softmax`, `quantize_eq_zero`, `quantize_pos`
+- ok Transformer/Precision/Blind.lean (2): `IsNearest.exists_const`, `qAttn_blind`
+- ok Transformer/Precision/BlockScale.lean (5): `IsNearest.le_of_eq_zero`, `blockScale_eq_zero`, `blockScale_dropped_le`, `nvfp4_eq_zero`, `nvfp4_dropped_le`
+- ok Transformer/Precision/ContextLength.lean (7): `qAttn_eq_zero`, `qAttn_update_injective`, `quantize_bits_eq_zero`, `qAttn_bits_eq_zero`, `qAttn_bits_injective`, `exists_length_qAttn_eq_zero`, `exists_scores_qAttn_injective`
+- ok Transformer/Precision/Float.lean (6): `ieee_eq_zero`, `exists_isNearest_grid`, `qAttn_ieee_eq_zero`, `qAttn_f16_eq_zero`, `qAttn_e4m3_eq_zero`, `qAttn_e5m2_eq_zero`
+- ok Transformer/Precision/FloatSum.lean (6): `accum_softmax_le`, `accum_softmax_f32_le`, `accum_softmax_f16_le`, `accum_softmax_bf16_le`, `accum_softmax_e4m3_le`, `accum_softmax_e5m2_le`
+- ok Transformer/Precision/IEEE.lean (14): `minSub_pos`, `minSub_le_abs`, `minSub_f16`, `minSub_bf16`, `minSub_f32`, `minSub_e4m3`, `minSub_e5m2`, `minSub_e2m1`, `f16_one`, `f16_max`, `zero_mem_grid`, `grid_finite`, `ieee_abs`, `grid_hasSignificand`
+- ok Transformer/Precision/Nearest.lean (4): `IsNearest.eq_zero`, `IsNearest.eq_self`, `exists_isNearest`, `IsNearest.add_eq`
+- ok Transformer/Precision/Tail.lean (4): `tail_eq`, `exp_neg_eight_lt`, `tail_e4m3`, `tail_e4m3_131072`
 
 ### Transformer.Quartet — arXiv:2601.22813
 
