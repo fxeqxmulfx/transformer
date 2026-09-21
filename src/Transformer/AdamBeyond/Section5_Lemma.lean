@@ -8,7 +8,7 @@ import Transformer.AMSGrad.Section1_TheoremA
 
 The lemma of the appendix, §"Proof of Theorem 5":
 `Σ_{t=1}^T α_t ‖V_t^{-1/4} m_t‖² ≤ 2ζ/(1-β₁)² Σᵢ ‖g_{1:T,i}‖₂` for AdamNC
-under condition 1 of Theorem 5 (at `α_t`, see `Section5_Theorem`).
+under condition 1 of Theorem 5 (at `α_t`, see `Section5_Regret`).
 
 **The proof carried here.**  The source bounds `m²_{t,i}` by Cauchy–Schwarz,
 `m²_{t,i} ≤ (Σ_j β₁^{t-j})(Σ_j β₁^{t-j} g²_{j,i})`, which costs a factor

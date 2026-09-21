@@ -25,8 +25,9 @@ makes it:
   gives; the `O(√T)` remark for `β_{1,t} = β₁/t` is `R_T ≤ K√T`.
 * AdamNC is the run with `β₂ = 0` and the rule `adamNCRule`; Theorem 5's
   condition 1 is stated with `α_t`, as its proof uses it, not `α_T`, and
-  `0 ≤ β_{2,t} ≤ 1` is explicit; Corollary 2 gets its missing "`R_T ≤`", the
-  factor `d/α`, and `ζ = α`.
+  Theorem 5 and its lemma drop `β₂ = 0` and `0 ≤ β_{2,t} ≤ 1`, which their
+  proofs do not use; Corollary 2 gets its missing "`R_T ≤`", the factor
+  `d/α`, and `ζ = α`.
 * lem:proj-lemma is proved for positive semidefinite `Q`, as stated, by the
   variational inequality; the source's first step is not it; lem:1d-proj-prop
   holds for every `i`, not only `i ∈ [T]`.
@@ -46,5 +47,6 @@ import Transformer.AdamBeyond.Section4_Regret
 import Transformer.AdamBeyond.Section4_Corollary
 import Transformer.AdamBeyond.Section5_AdamNC
 import Transformer.AdamBeyond.Section5_Lemma
-import Transformer.AdamBeyond.Section5_Theorem
+import Transformer.AdamBeyond.Section5_Regret
+import Transformer.AdamBeyond.Section5_Corollary
 import Transformer.AdamBeyond.AppendixG_Auxiliary
