@@ -14,6 +14,7 @@ import Transformer.Metastability.MainTheorem
 import Transformer.Metastability.CapVelocity
 import Transformer.Metastability.CapVelocityBound
 import Transformer.Metastability.PairVelocity
+import Transformer.Metastability.PairVelocitySum
 import Transformer.Metastability.CapVariance
 import Transformer.Metastability.BakryEmery
 import Transformer.Metastability.OttoAttention

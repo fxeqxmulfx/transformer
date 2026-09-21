@@ -24,7 +24,7 @@ import Transformer.Basic
 import Transformer.Perspective.Section1_IPS
 import Transformer.Metastability.Basic
 import Transformer.Metastability.CollapseODE
-import Transformer.Metastability.PairVelocity
+import Transformer.Metastability.PairVelocitySum
 import Mathlib.Analysis.InnerProductSpace.Calculus
 
 open scoped BigOperators
@@ -53,7 +53,7 @@ noncomputable def attn
 within-cap inner-product minimum `ρ_q(t)`:
 
   `ρ̇_q(t) ≥ (2/n) ρ_q(t)(1 - ρ_q(t)) e^{β(ρ_q(t) - 1)}
-                - 4 n e^{-(1-α) β}`.
+                - 2 n e^{-(1-α) β}`.
 
 `ρ_q` is not an arbitrary function: `hρq_le` and `hρq_att` say that `ρ_q(t)`
 is the minimum of `⟨x_i(t), x_j(t)⟩` over the cap `I = 𝒮_q`, and `h_far` is
@@ -81,11 +81,10 @@ because `⟨x_k, x_j⟩ ≥ ρ_q` and `⟨x_i, x_k⟩ ρ_q ≤ ρ_q` — the sec
 `ρ_q ≥ 0`.  In §2 `ρ_q ≥ 1 - δ` with `δ < 1`, so the hypothesis holds where
 the inequality is used; stated for an arbitrary minimum it has to be assumed.
 
-*The constant is `4 n`, not `2 n`.*  Each of the two velocity terms leaks at
-most `2 n e^{-(1-α)β}` — at most `n` tokens outside the cap, each with weight
-at most `e^{-(1-α)β}` against a bracket bounded below by `-2` — and there are
-two of them, `⟨v_i, x_j⟩` and `⟨x_i, v_j⟩`.  The paper counts the leakage
-once.
+*The constant is the paper's `2 n`.*  Each of the two velocity terms leaks at
+most `n e^{-(1-α)β}` — at most `n` tokens outside the cap, each with weight
+at most `e^{-(1-α)β}` against a bracket `⟨x_k, x_j - ρ_q x_i⟩ ≥ -√(1 - ρ_q²)
+≥ -1` — and there are two of them, `⟨v_i, x_j⟩` and `⟨x_i, v_j⟩`.
 
 Source: arXiv:2410.06833v1, §2, `eq: ze.equation`. -/
 theorem rho_diff_ineq
@@ -102,7 +101,7 @@ theorem rho_diff_ineq
         inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((X t k : EucSpace d)) ≤ α) :
     ∀ t : ℝ, 0 ≤ t → t ≤ Tesc →
       (2 / (n : ℝ)) * ρq t * (1 - ρq t) * Real.exp (β * (ρq t - 1))
-        - 4 * (n : ℝ) * Real.exp (-((1 - α) * β))
+        - 2 * (n : ℝ) * Real.exp (-((1 - α) * β))
       ≤ deriv ρq t := by
   intro t ht0 htT
   obtain ⟨i, hi, j, hj, hρ⟩ := hρq_att t
@@ -154,13 +153,13 @@ curve.**
 Dropping `hρq_le` and `hρq_att` from `rho_diff_ineq` makes it false: at
 `d = n = 1` the constant configuration solves `eq: SA`, and the constant
 `ρ_q ≡ 1/2` — which has nothing to do with it — has `ρ̇_q ≡ 0` while at
-`β = 2`, `α = -1` the right-hand side is `e^{-1}/2 - 4 e^{-4} > 0`, because
+`β = 2`, `α = -1` the right-hand side is `e^{-1}/2 - 2 e^{-4} > 0`, because
 `e³ > 8`. -/
 theorem not_rho_diff_ineq_of_free :
     ¬ ∀ (β α : ℝ) (X : ℝ → SphereTuple 1 1), Perspective.SA 1 1 β X →
         ∀ (ρq : ℝ → ℝ) (Tesc : ℝ), ∀ t : ℝ, 0 ≤ t → t ≤ Tesc →
           (2 / ((1 : ℕ) : ℝ)) * ρq t * (1 - ρq t) * Real.exp (β * (ρq t - 1))
-            - 4 * ((1 : ℕ) : ℝ) * Real.exp (-((1 - α) * β))
+            - 2 * ((1 : ℕ) : ℝ) * Real.exp (-((1 - α) * β))
           ≤ deriv ρq t := by
   intro h
   have hSA : Perspective.SA 1 1 2 (fun _ _ => basePoint 0) :=
@@ -188,7 +187,7 @@ example (α : ℝ) :
     ∀ t : ℝ, 0 ≤ t → t ≤ 1 →
       (2 / ((1 : ℕ) : ℝ)) * (fun _ : ℝ => (1 : ℝ)) t * (1 - (fun _ : ℝ => (1 : ℝ)) t)
           * Real.exp (2 * ((fun _ : ℝ => (1 : ℝ)) t - 1))
-        - 4 * ((1 : ℕ) : ℝ) * Real.exp (-((1 - α) * 2))
+        - 2 * ((1 : ℕ) : ℝ) * Real.exp (-((1 - α) * 2))
       ≤ deriv (fun _ : ℝ => (1 : ℝ)) t := by
   have hinner : inner (𝕜 := ℝ) ((basePoint 0 : EucSpace 1)) ((basePoint 0 : EucSpace 1))
       = (1 : ℝ) := by
