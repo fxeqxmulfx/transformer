@@ -22,3 +22,4 @@ import Transformer.Modes.Section5_Moments
 import Transformer.Modes.Section2_MomentsP
 import Transformer.Modes.Section2_PhiT
 import Transformer.Modes.Section2_PhiTAsymp
+import Transformer.Modes.Section2_MainIntPhi
