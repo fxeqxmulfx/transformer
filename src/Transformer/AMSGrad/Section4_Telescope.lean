@@ -68,23 +68,26 @@ example : (∀ t : ℕ, 1 ≤ t → (0 : ℝ) ≤ (fun _ => 0) t) ∧
     (∀ t : ℕ, 1 < t → (fun _ => (0 : ℝ)) (t - 1) ≤ (fun _ => 0) t) ∧ 1 ≤ 1 :=
   ⟨fun _ _ => le_rfl, fun _ => ⟨le_rfl, le_rfl⟩, fun _ _ => le_rfl, le_rfl⟩
 
-/-- **(eqmain2).**  Under AMSGrad with `α_t = α/√t`, `0 ≤ β_{1,t} ≤ β₁ < 1`,
-`0 ≤ β₂ ≤ 1`, and a `t₀` as in Lemma 4.3, for all `T ≥ 1` and `x* ∈ F`,
+/-- **(eqmain2), for any rule.**  With `α_t = α/√t`, `0 ≤ β_{1,t} ≤ β₁ < 1`,
+`√v̂_t/(1-β_{1,t}) ≤ G/(1-β₁)` (Lemma 4.2 for AMSGrad, Lemma 5.2 for AdamX)
+and a `t₀` past which `√(t v̂_t)/(1-β_{1,t})` does not decrease (Lemma 4.3 for
+AMSGrad), for all `T ≥ 1` and `x* ∈ F`,
 
   `Σᵢ Σ_{t=1}^T √v̂_{t,i}/(2α_t(1-β_{1,t})) ((x_{t,i} - x*ᵢ)² - (x_{t+1,i} - x*ᵢ)²)`
   `    ≤ dD²G/(2α(1-β₁)) (Σ_{t=1}^{t₀} √t + √T)`.
 
-Source: arXiv:1904.03590v4, §4, proof of Theorem 4.1, (eqmain2). -/
-theorem eqmain_le {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineConvex S F D G)
-    {α β₁ : ℝ} (hα : 0 < α) (hαt : S.α = fun t : ℕ => α / Real.sqrt t)
+Source: arXiv:1904.03590v4, §4, proof of Theorem 4.1, (eqmain2); §5, proof of
+Theorem 5.1. -/
+theorem eqmain_le_of {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineConvex S F D G)
+    {R : Rule d} {α β₁ : ℝ} (hα : 0 < α) (hαt : S.α = fun t : ℕ => α / Real.sqrt t)
     (hβ₁ : ∀ t, 1 ≤ t → 0 ≤ S.β₁ t ∧ S.β₁ t ≤ β₁) (hβ₁' : β₁ < 1)
-    (hβ₂ : 0 ≤ S.β₂) (hβ₂' : S.β₂ ≤ 1) {t₀ : ℕ}
+    (hv : ∀ t, 1 ≤ t → ∀ i, Real.sqrt (S.vhat R t i) / (1 - S.β₁ t) ≤ G / (1 - β₁)) {t₀ : ℕ}
     (ht₀ : ∀ t, t₀ < t → ∀ i : Fin d,
-      Real.sqrt (((t - 1 : ℕ) : ℝ) * S.vhat amsgradRule (t - 1) i) / (1 - S.β₁ (t - 1)) ≤
-        Real.sqrt ((t : ℝ) * S.vhat amsgradRule t i) / (1 - S.β₁ t))
+      Real.sqrt (((t - 1 : ℕ) : ℝ) * S.vhat R (t - 1) i) / (1 - S.β₁ (t - 1)) ≤
+        Real.sqrt ((t : ℝ) * S.vhat R t i) / (1 - S.β₁ t))
     {T : ℕ} (hT : 1 ≤ T) {xstar : Vec d} (hx : xstar ∈ F) :
-    ∑ i, ∑ t ∈ Icc 1 T, Real.sqrt (S.vhat amsgradRule t i) / (2 * S.α t * (1 - S.β₁ t)) *
-        ((S.x amsgradRule t i - xstar i) ^ 2 - (S.x amsgradRule (t + 1) i - xstar i) ^ 2) ≤
+    ∑ i, ∑ t ∈ Icc 1 T, Real.sqrt (S.vhat R t i) / (2 * S.α t * (1 - S.β₁ t)) *
+        ((S.x R t i - xstar i) ^ 2 - (S.x R (t + 1) i - xstar i) ^ 2) ≤
       d * D ^ 2 * G / (2 * α * (1 - β₁)) *
         (∑ t ∈ Icc (1 : ℕ) t₀, Real.sqrt t + Real.sqrt T) := by
   have hB : 0 < 1 - β₁ := by linarith
@@ -95,10 +98,10 @@ theorem eqmain_le {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineConv
     _ = _ := by rw [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]; ring
   have hG : 0 ≤ G := (abs_nonneg _).trans (hS.grad_le 0 _ hS.x₁_mem i)
   set c : ℕ → ℝ := fun t =>
-    Real.sqrt ((t : ℝ) * S.vhat amsgradRule t i) / (α * (1 - S.β₁ t)) with hc_def
-  set e : ℕ → ℝ := fun t => (S.x amsgradRule t i - xstar i) ^ 2 with he_def
-  have hterm : ∀ t ∈ Icc 1 T, Real.sqrt (S.vhat amsgradRule t i) / (2 * S.α t * (1 - S.β₁ t)) *
-      ((S.x amsgradRule t i - xstar i) ^ 2 - (S.x amsgradRule (t + 1) i - xstar i) ^ 2) =
+    Real.sqrt ((t : ℝ) * S.vhat R t i) / (α * (1 - S.β₁ t)) with hc_def
+  set e : ℕ → ℝ := fun t => (S.x R t i - xstar i) ^ 2 with he_def
+  have hterm : ∀ t ∈ Icc 1 T, Real.sqrt (S.vhat R t i) / (2 * S.α t * (1 - S.β₁ t)) *
+      ((S.x R t i - xstar i) ^ 2 - (S.x R (t + 1) i - xstar i) ^ 2) =
       c t / 2 * (e t - e (t + 1)) := by
     intro t ht
     have h0 : 0 < Real.sqrt (t : ℝ) :=
@@ -111,7 +114,7 @@ theorem eqmain_le {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineConv
     div_nonneg (Real.sqrt_nonneg _) (mul_nonneg hα.le (hb t ht).le)
   have he : ∀ t, 0 ≤ e t ∧ e t ≤ D ^ 2 := fun t => by
     refine ⟨sq_nonneg _, ?_⟩
-    have := hS.diam _ (x_mem hS amsgradRule t) _ hx i
+    have := hS.diam _ (x_mem hS R t) _ hx i
     simp only [he_def]
     rw [← sq_abs]
     exact pow_le_pow_left₀ (abs_nonneg _) this 2
@@ -119,11 +122,13 @@ theorem eqmain_le {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineConv
     simp only [hc_def, div_mul_eq_div_div_swap]
     exact div_le_div_of_nonneg_right (ht₀ t ht i) hα.le
   have hcb : ∀ t, 1 ≤ t → c t ≤ G / (α * B) * Real.sqrt t := fun t ht => by
-    simp only [hc_def]
-    rw [Real.sqrt_mul (Nat.cast_nonneg t), mul_comm (G / (α * B)), ← mul_div_assoc]
-    exact div_le_div₀ (by positivity)
-      (mul_le_mul_of_nonneg_left (vt hS hβ₂ hβ₂' t i) (Real.sqrt_nonneg _))
-      (mul_pos hα hB) (mul_le_mul_of_nonneg_left (by linarith [(hβ₁ t ht).2]) hα.le)
+    have h1 := hb t ht
+    have e : c t = Real.sqrt t / α * (Real.sqrt (S.vhat R t i) / (1 - S.β₁ t)) := by
+      simp only [hc_def]; rw [Real.sqrt_mul (Nat.cast_nonneg t)]; field_simp
+    rw [e]
+    calc _ ≤ Real.sqrt t / α * (G / B) :=
+          mul_le_mul_of_nonneg_left (hv t ht i) (div_nonneg (Real.sqrt_nonneg _) hα.le)
+      _ = _ := by field_simp
   have hab := abel_le c e hT (hc0 T hT) (he (T + 1)).1
   have htel := telescope_le hc0 he hmono hT
   have hs1 : ∑ t ∈ Icc 1 T, (if t ≤ t₀ then c t else 0) ≤
@@ -146,7 +151,39 @@ theorem eqmain_le {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineConv
   rw [e1]
   linarith
 
-/-- The hypotheses of `eqmain_le` are satisfiable: the zero cost on `[-1, 1]`,
+/-- Lemma 4.2 in the form `eqmain_le_of` takes: under AMSGrad with
+`0 ≤ β_{1,t} ≤ β₁ < 1` and `0 ≤ β₂ ≤ 1`, `√v̂_t/(1-β_{1,t}) ≤ G/(1-β₁)`.
+Source: arXiv:1904.03590v4, §4, Lemma 4.2. -/
+theorem vt_div {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineConvex S F D G)
+    {β₁ : ℝ} (hβ₁ : ∀ t, 1 ≤ t → 0 ≤ S.β₁ t ∧ S.β₁ t ≤ β₁) (hβ₁' : β₁ < 1)
+    (hβ₂ : 0 ≤ S.β₂) (hβ₂' : S.β₂ ≤ 1) (t : ℕ) (ht : 1 ≤ t) (i : Fin d) :
+    Real.sqrt (S.vhat amsgradRule t i) / (1 - S.β₁ t) ≤ G / (1 - β₁) :=
+  div_le_div₀ ((abs_nonneg _).trans (hS.grad_le 0 _ hS.x₁_mem i)) (vt hS hβ₂ hβ₂' t i)
+    (by linarith) (by linarith [(hβ₁ t ht).2])
+
+/-- **(eqmain2).**  Under AMSGrad with `α_t = α/√t`, `0 ≤ β_{1,t} ≤ β₁ < 1`,
+`0 ≤ β₂ ≤ 1`, and a `t₀` as in Lemma 4.3, for all `T ≥ 1` and `x* ∈ F`,
+
+  `Σᵢ Σ_{t=1}^T √v̂_{t,i}/(2α_t(1-β_{1,t})) ((x_{t,i} - x*ᵢ)² - (x_{t+1,i} - x*ᵢ)²)`
+  `    ≤ dD²G/(2α(1-β₁)) (Σ_{t=1}^{t₀} √t + √T)`.
+
+Source: arXiv:1904.03590v4, §4, proof of Theorem 4.1, (eqmain2). -/
+theorem eqmain_le {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineConvex S F D G)
+    {α β₁ : ℝ} (hα : 0 < α) (hαt : S.α = fun t : ℕ => α / Real.sqrt t)
+    (hβ₁ : ∀ t, 1 ≤ t → 0 ≤ S.β₁ t ∧ S.β₁ t ≤ β₁) (hβ₁' : β₁ < 1)
+    (hβ₂ : 0 ≤ S.β₂) (hβ₂' : S.β₂ ≤ 1) {t₀ : ℕ}
+    (ht₀ : ∀ t, t₀ < t → ∀ i : Fin d,
+      Real.sqrt (((t - 1 : ℕ) : ℝ) * S.vhat amsgradRule (t - 1) i) / (1 - S.β₁ (t - 1)) ≤
+        Real.sqrt ((t : ℝ) * S.vhat amsgradRule t i) / (1 - S.β₁ t))
+    {T : ℕ} (hT : 1 ≤ T) {xstar : Vec d} (hx : xstar ∈ F) :
+    ∑ i, ∑ t ∈ Icc 1 T, Real.sqrt (S.vhat amsgradRule t i) / (2 * S.α t * (1 - S.β₁ t)) *
+        ((S.x amsgradRule t i - xstar i) ^ 2 - (S.x amsgradRule (t + 1) i - xstar i) ^ 2) ≤
+      d * D ^ 2 * G / (2 * α * (1 - β₁)) *
+        (∑ t ∈ Icc (1 : ℕ) t₀, Real.sqrt t + Real.sqrt T) :=
+  eqmain_le_of hS hα hαt hβ₁ hβ₁' (fun t ht i => vt_div hS hβ₁ hβ₁' hβ₂ hβ₂' t ht i) ht₀ hT hx
+
+/-- The hypotheses of `eqmain_le`, and so of `eqmain_le_of` for AMSGrad (by
+`vt_div`), are satisfiable: the zero cost on `[-1, 1]`,
 `α = 1`, `β_{1,t} = β₁ = 0`, `β₂ = 1/2`, the `t₀` of Lemma 4.3, `T = 1`,
 `x* = 0`. -/
 example :
