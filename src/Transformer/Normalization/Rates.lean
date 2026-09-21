@@ -1,24 +1,18 @@
 /-
-# Normalization — Initial and terminal velocities (§4.2–4.3 of 2510.22026v2)
+# Normalization — Initial velocity (§4.2 of 2510.22026v2)
 
 * `Theorem thm: initial-velocity` — at a uniform initialization the attention
   vector is small, `‖A_j(0)‖ ≤ C(√(log n / n) + log n / d)` for every token at
-  once with probability `1 - n^{-c}`;
-* `Theorem thm: preln-slow (ii)` — from a local-cone initialization the
-  intra-cluster variance decays at the per-scheme rate
-  `d/dt Var(t) = -Θ(Var(t) / scale(t))`.
+  once with probability `1 - n^{-c}`.
 
-Part (i) of `thm: preln-slow`, the radial growth `r_k(t) ≥ (1 - δ) t`, is
-proved in `Normalization.Velocities`; the bound `‖A_j‖ ≤ 1` that holds at every
-configuration is there too.
+The bound `‖A_j‖ ≤ 1` that holds at every configuration is in
+`Normalization.Velocities`; the rate of `thm: preln-slow (ii)` is
+`Normalization.ClusterSpeed`.
 
-Neither statement here is proved.  The first is almost-sure with respect to the
-uniform measure on `(𝕊^{d-1})^{⊗ n}`, which is pinned down by
-`Perspective.UniformTuple`; read over an arbitrary measure the statement is
-false, and `not_forall_initial_velocity_small` proves it.  The second is
-an asymptotic two-sided bound: the `Θ(·)` is spelled out as a pair of
-constants `0 < c ≤ C` sandwiching the derivative, which is what `Θ` means, and
-neither is proved here.
+The statement is not proved.  It is almost-sure with respect to the uniform
+measure on `(𝕊^{d-1})^{⊗ n}`, which is pinned down by
+`Perspective.UniformTuple`; read over an arbitrary measure it is false, and
+`not_forall_initial_velocity_small` proves it.
 -/
 
 import Transformer.Basic
@@ -153,65 +147,6 @@ theorem not_forall_initial_velocity_small :
   have : ((2 : ℕ) : ℝ) ^ (-c) < 1 :=
     Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (neg_neg_iff_pos.mpr hc)
   linarith
-
-/-- The time scale by which `thm: preln-slow (ii)` divides the intra-cluster
-variance, one row per scheme: `1` for Post-LN, `t` for Pre-LN, Mix-LN and
-Peri-LN, the step size `α_t` for nGPT, and `√t` for CoD.
-
-Source: arXiv:2510.22026v2, §4.3, the display of `thm: preln-slow (ii)`. -/
-noncomputable def varScale (α : ℝ → ℝ) (scheme : Scheme) (t : ℝ) : ℝ :=
-  match scheme with
-  | .post => 1
-  | .pre  => t
-  | .mix  => t
-  | .peri => t
-  | .nGPT => α t
-  | .CoD  => Real.sqrt t
-
-/-- **Theorem (thm: preln-slow), (ii).** *Speed of cluster collapse.*
-
-For `V = I_d` and arbitrary `Q, K` with `‖Q^⊤ K‖_op ≤ 1`, started in a local
-cone `⟨θ_j(0), θ_k(0)⟩ ≥ 1 - δ` with `δ < 1 / (100 n² β²)`, the intra-cluster
-variance obeys
-
-  `d/dt Var(t) = -Θ(Var(t) / scale(t))`,
-
-with `scale` the per-scheme time scale of `varScale`: Post-LN clusters
-exponentially, CoD at `√t`, and Pre-LN, Mix-LN, Peri-LN polynomially, while
-nGPT controls the rate through `α_t`.
-
-`Θ(·)` is written out as a pair of absolute constants `0 < c ≤ C` that
-sandwich the derivative from both sides for all positive times; this is the
-whole content of the statement, the paper giving no explicit constants.
-Part (i) is `radialDerivative_pre_ge_of_localCone`.
-
-Not proved here.
-
-Source: arXiv:2510.22026v2, §4.3, `thm: preln-slow` (ii). -/
-theorem clustering_rate (β δ : ℝ) (α : ℝ → ℝ) (τ : ℝ) (scheme : Scheme)
-    (hδ : δ < 1 / (100 * (n : ℝ) ^ 2 * β ^ 2)) :
-    ∀ Q K : ℝ → ParamMatrix d,
-      (∀ t : ℝ, ∀ x y : EucSpace d,
-        |inner (𝕜 := ℝ) (Q t x) (K t y)| ≤ ‖x‖ * ‖y‖) →
-      ∃ c C : ℝ, 0 < c ∧ c ≤ C ∧
-        ∀ (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ),
-          (∀ j k : Idx n, 1 - δ ≤ inner (𝕜 := ℝ) (θ 0 j) (θ 0 k)) →
-          SchemeDynamics d n β Q K (idParams d) α τ scheme θ r →
-            ∀ t : ℝ, 0 < t → ∃ v : ℝ,
-              HasDerivAt (intraClusterVar d n θ) v t ∧
-              -(C * intraClusterVar d n θ t / varScale α scheme t) ≤ v ∧
-              v ≤ -(c * intraClusterVar d n θ t / varScale α scheme t) := by
-  sorry
-
-/-- The hypotheses of `clustering_rate` are satisfiable: one token, `β = 1` and
-`δ = 0`, since `0 < 1 / 100`; and `Q = K = I_d` meet the operator bound at every
-time by Cauchy–Schwarz. -/
-example :
-    (0 : ℝ) < 1 / (100 * ((1 : ℕ) : ℝ) ^ 2 * (1 : ℝ) ^ 2) ∧
-      ∀ _t : ℝ, ∀ x y : EucSpace 1,
-        |inner (𝕜 := ℝ) (ContinuousLinearMap.id ℝ (EucSpace 1) x)
-          (ContinuousLinearMap.id ℝ (EucSpace 1) y)| ≤ ‖x‖ * ‖y‖ := by
-  refine ⟨by norm_num, fun _ x y => abs_real_inner_le_norm x y⟩
 
 end Normalization
 end Transformer
