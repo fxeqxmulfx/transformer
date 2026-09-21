@@ -28,3 +28,4 @@ import Transformer.Modes.Section3_Cumulants
 import Transformer.Modes.Section3_BR
 import Transformer.Modes.Section3_Edgeworth
 import Transformer.Modes.Section3_ErrorThird
+import Transformer.Modes.Section3_ErrorHigher
