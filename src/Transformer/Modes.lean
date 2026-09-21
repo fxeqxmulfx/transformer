@@ -3,6 +3,12 @@ Formalization of:
   Geshkovski, Rigollet, Sun,
   "On the number of modes of Gaussian kernel density estimators",
   arXiv:2412.09080v3.
+
+Not transcribed, deliberately:
+* the intermediate displays of §5.4, whose exponents are unspecified `O(1)`s;
+  they are steps of the proof of `lem:error-higher`, which is stated;
+* the conjecture of §6 on `d`-dimensional KDEs, whose regime of `β` and `n`
+  the source does not give, so there is no statement to write down.
 -/
 
 import Transformer.Modes.Growth
@@ -33,3 +39,6 @@ import Transformer.Modes.Section3_ErrorKR
 import Transformer.Modes.Section4_KacRiceAppl
 import Transformer.Modes.Section4_ScaleSpace
 import Transformer.Modes.Section4_Tail
+import Transformer.Modes.Section5_PtBdd
+import Transformer.Modes.Section5_PtBddFourier
+import Transformer.Modes.Section5_PtBddOne
