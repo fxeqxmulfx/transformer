@@ -9,7 +9,10 @@ makes it:
 * `γ = β₁/√β₂ < 1` throughout, where the source has `γ ≤ 1` and divides by
   `1 - γ`; `0 < β₂ < 1` and `0 ≤ β_{1,t} ≤ β₁ < 1` are made explicit;
 * every regret bound holds for every `x* ∈ F`, not only for the minimizer;
-* Lemma 2.3's `Σ_{t≥1} αᵗ = 1/(1-α)` is false and refuted.
+* Lemma 2.3's `Σ_{t≥1} αᵗ = 1/(1-α)` is false and refuted;
+* Theorem 4.1's `t₀` is chosen before `T`, not `1 ≤ t₀ ≤ T`;
+* Corollary 4.5's `lim R(T)/T = 0` is kept as its upper half only; the lower
+  half is false, and the counterexample is stated (`not_cor_lower`).
 
 Not transcribed, deliberately: the experiments of §6.
 -/
@@ -21,3 +24,6 @@ import Transformer.AMSGrad.Section2_Proj
 import Transformer.AMSGrad.Section3_Issue
 import Transformer.AMSGrad.Section3_Example
 import Transformer.AMSGrad.Section3_Optimal
+import Transformer.AMSGrad.Section4_Lemmas
+import Transformer.AMSGrad.Section4_Theorem
+import Transformer.AMSGrad.Section4_Counter
