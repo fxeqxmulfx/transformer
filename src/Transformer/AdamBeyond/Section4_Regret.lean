@@ -7,11 +7,15 @@ import Transformer.AdamBeyond.Section4_Abel
 The proof of Theorem 4 of arXiv:1904.09237 (appendix, §"Proof of Theorem 4"):
 the bound of Lemma 3.1 of arXiv:1904.03590 (`prepare_lem`), then per coordinate
 Abel summation of the first term with the weights
-`c_t = √v̂_{t,i}/(2α_t(1-β_{1,t}))`.  Where the source bounds
-`c_t - c_{t-1}` using `1/(1-β_{1,t}) ≤ 1/(1-β₁)`, which does not bound a
-difference, `abel_beta_le` (`Section4_Abel`) uses
-`c_t - c_{t-1} ≤ (a_t - a_{t-1} + β_{1,t}a_{t-1})/(2(1-β₁))` with
-`a_t = √v̂_{t,i}/α_t`; the result is the stated bound, with room to spare.
+`c_t = √v̂_{t,i}/(2α_t(1-β_{1,t}))`.  The source splits `c_t - c_{t-1}` at
+`√v̂_{t,i}/(2α_t(1-β_{1,t-1}))`; `abel_beta_le` (`Section4_Abel`) instead
+uses `c_t - c_{t-1} ≤ (a_t - a_{t-1} + β_{1,t}a_{t-1})/(2(1-β₁))` with
+`a_t = √v̂_{t,i}/α_t`, which gives the stated bound.
+
+`amsgrad_regret_moment` is the bound before the lemma of the proof is
+applied, its third term `Σ_t α_t ‖V̂_t^{-1/4} m_t‖²/(1-β₁)`; Theorem 4 bounds
+that sum by `amsgrad_moment_sum`, the `β₁/t` remark by
+`amsgrad_moment_sum_sqrt`.
 
 Source: arXiv:1904.09237, §4, Theorem 4 (thm:amsgrad-proof); appendix,
 §"Proof of Theorem 4".
@@ -26,29 +30,28 @@ open AMSGrad
 
 variable {d : ℕ}
 
-/-- **Theorem 4.**  For AMSGrad with `α_t = α/√t`, `0 ≤ β_{1,t} ≤ β₁ = β_{1,1} < 1`,
-`0 < β₂ < 1` and `γ = β₁/√β₂ < 1`, under the standing assumptions, for every
-`x* ∈ F`,
+/-- **The proof of Theorem 4, before its lemma.**  For AMSGrad with
+`α_t = α/√t`, `0 ≤ β_{1,t} ≤ β₁ = β_{1,1} < 1` and `0 < β₂ < 1`, under the
+standing assumptions, for every `x* ∈ F`,
 
   `R_T ≤ D²√T/(α(1-β₁)) Σᵢ √v̂_{T,i} + D²/(1-β₁)² Σ_{t=1}^T Σᵢ β_{1,t}√v̂_{t,i}/α_t`
-  `     + α√(1 + log T)/((1-β₁)²(1-γ)√(1-β₂)) Σᵢ ‖g_{1:T,i}‖₂`.
+  `     + 1/(1-β₁) Σ_{t=1}^T α_t ‖V̂_t^{-1/4} m_t‖²`.
 
 Its hypotheses are witnessed after `amsgrad_moment_sum`.
-Source: arXiv:1904.09237, §4, Theorem 4 (thm:amsgrad-proof). -/
-theorem amsgrad_regret {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineConvex S F D G)
+Source: arXiv:1904.09237, appendix, §"Proof of Theorem 4". -/
+theorem amsgrad_regret_moment {S : Setup d} {F : Set (Vec d)} {D G : ℝ}
+    (hS : IsOnlineConvex S F D G)
     {α : ℝ} (hα : 0 < α) (hαt : S.α = fun t : ℕ => α / Real.sqrt t)
     (hβ₁ : ∀ t, 1 ≤ t → 0 ≤ S.β₁ t ∧ S.β₁ t ≤ S.β₁ 1) (hβ₁' : S.β₁ 1 < 1)
-    (hβ₂ : 0 < S.β₂) (hβ₂' : S.β₂ < 1) (hγ : S.β₁ 1 / Real.sqrt S.β₂ < 1)
-    (T : ℕ) {xstar : Vec d} (hxstar : xstar ∈ F) :
+    (hβ₂ : 0 < S.β₂) (hβ₂' : S.β₂ < 1) (T : ℕ) {xstar : Vec d} (hxstar : xstar ∈ F) :
     S.regret amsgradRule xstar T ≤
       D ^ 2 * Real.sqrt T / (α * (1 - S.β₁ 1)) * ∑ i, Real.sqrt (S.vhat amsgradRule T i)
       + D ^ 2 / (1 - S.β₁ 1) ^ 2 *
           ∑ t ∈ Icc 1 T, ∑ i, S.β₁ t * Real.sqrt (S.vhat amsgradRule t i) / S.α t
-      + α * Real.sqrt (1 + Real.log T) /
-          ((1 - S.β₁ 1) ^ 2 * (1 - S.β₁ 1 / Real.sqrt S.β₂) * Real.sqrt (1 - S.β₂))
-          * ∑ i, S.gnorm amsgradRule T i := by
+      + (∑ t ∈ Icc 1 T, S.α t *
+          ∑ i, S.m amsgradRule t i ^ 2 / Real.sqrt (S.vhat amsgradRule t i)) / (1 - S.β₁ 1) := by
   rcases Nat.eq_zero_or_pos T with rfl | hT
-  · simp [Setup.regret, Setup.gnorm]
+  · simp [Setup.regret]
   have hα' : ∀ t, 1 ≤ t → 0 < S.α t := fun t ht => by
     rw [hαt]; exact div_pos hα (Real.sqrt_pos.2 (by exact_mod_cast ht))
   have hB : 0 < 1 - S.β₁ 1 := by linarith
@@ -112,27 +115,46 @@ theorem amsgrad_regret {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlin
         (hβ₁ t (by have := (mem_Icc.1 ht).1; omega)).1 (div_nonneg (Real.sqrt_nonneg _) ?_)
       rw [hαt]; positivity
   have h3 : ∑ i, ∑ t ∈ Icc 1 T, S.α t / (1 - S.β₁ 1) * S.m amsgradRule t i ^ 2 /
-        Real.sqrt (S.vhat amsgradRule t i) ≤
-      α * Real.sqrt (1 + Real.log T) /
+      Real.sqrt (S.vhat amsgradRule t i) = (∑ t ∈ Icc 1 T, S.α t *
+        ∑ i, S.m amsgradRule t i ^ 2 / Real.sqrt (S.vhat amsgradRule t i)) / (1 - S.β₁ 1) := by
+    rw [sum_comm, sum_div]
+    refine sum_congr rfl fun t _ => ?_
+    rw [mul_sum, sum_div]
+    exact sum_congr rfl fun i _ => by ring
+  linarith
+
+/-- **Theorem 4.**  For AMSGrad with `α_t = α/√t`, `0 ≤ β_{1,t} ≤ β₁ = β_{1,1} < 1`,
+`0 < β₂ < 1` and `γ = β₁/√β₂ < 1`, under the standing assumptions, for every
+`x* ∈ F`,
+
+  `R_T ≤ D²√T/(α(1-β₁)) Σᵢ √v̂_{T,i} + D²/(1-β₁)² Σ_{t=1}^T Σᵢ β_{1,t}√v̂_{t,i}/α_t`
+  `     + α√(1 + log T)/((1-β₁)²(1-γ)√(1-β₂)) Σᵢ ‖g_{1:T,i}‖₂`.
+
+Its hypotheses are witnessed after `amsgrad_moment_sum`.
+Source: arXiv:1904.09237, §4, Theorem 4 (thm:amsgrad-proof). -/
+theorem amsgrad_regret {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineConvex S F D G)
+    {α : ℝ} (hα : 0 < α) (hαt : S.α = fun t : ℕ => α / Real.sqrt t)
+    (hβ₁ : ∀ t, 1 ≤ t → 0 ≤ S.β₁ t ∧ S.β₁ t ≤ S.β₁ 1) (hβ₁' : S.β₁ 1 < 1)
+    (hβ₂ : 0 < S.β₂) (hβ₂' : S.β₂ < 1) (hγ : S.β₁ 1 / Real.sqrt S.β₂ < 1)
+    (T : ℕ) {xstar : Vec d} (hxstar : xstar ∈ F) :
+    S.regret amsgradRule xstar T ≤
+      D ^ 2 * Real.sqrt T / (α * (1 - S.β₁ 1)) * ∑ i, Real.sqrt (S.vhat amsgradRule T i)
+      + D ^ 2 / (1 - S.β₁ 1) ^ 2 *
+          ∑ t ∈ Icc 1 T, ∑ i, S.β₁ t * Real.sqrt (S.vhat amsgradRule t i) / S.α t
+      + α * Real.sqrt (1 + Real.log T) /
           ((1 - S.β₁ 1) ^ 2 * (1 - S.β₁ 1 / Real.sqrt S.β₂) * Real.sqrt (1 - S.β₂))
           * ∑ i, S.gnorm amsgradRule T i := by
-    have hm := amsgrad_moment_sum hα hαt hβ₁ hβ₁' hβ₂ hβ₂' hγ T
-    have e : ∑ i, ∑ t ∈ Icc 1 T, S.α t / (1 - S.β₁ 1) * S.m amsgradRule t i ^ 2 /
-        Real.sqrt (S.vhat amsgradRule t i) = (∑ t ∈ Icc 1 T, S.α t *
-          ∑ i, S.m amsgradRule t i ^ 2 / Real.sqrt (S.vhat amsgradRule t i)) / (1 - S.β₁ 1) := by
-      rw [sum_comm, sum_div]
-      refine sum_congr rfl fun t _ => ?_
-      rw [mul_sum, sum_div]
-      exact sum_congr rfl fun i _ => by ring
-    have e' : α * Real.sqrt (1 + Real.log T) /
-          ((1 - S.β₁ 1) ^ 2 * (1 - S.β₁ 1 / Real.sqrt S.β₂) * Real.sqrt (1 - S.β₂))
-          * ∑ i, S.gnorm amsgradRule T i = (α * Real.sqrt (1 + Real.log T) /
-          ((1 - S.β₁ 1) * (1 - S.β₁ 1 / Real.sqrt S.β₂) * Real.sqrt (1 - S.β₂))
-          * ∑ i, S.gnorm amsgradRule T i) / (1 - S.β₁ 1) := by
-      generalize 1 - S.β₁ 1 = q; generalize 1 - S.β₁ 1 / Real.sqrt S.β₂ = r; ring
-    rw [e, e']
-    exact div_le_div_of_nonneg_right hm hB.le
-  linarith
+  have h := amsgrad_regret_moment hS hα hαt hβ₁ hβ₁' hβ₂ hβ₂' T hxstar
+  have hm := amsgrad_moment_sum hα hαt hβ₁ hβ₁' hβ₂ hβ₂' hγ T
+  have hB : 0 < 1 - S.β₁ 1 := by linarith
+  have e' : α * Real.sqrt (1 + Real.log T) /
+        ((1 - S.β₁ 1) ^ 2 * (1 - S.β₁ 1 / Real.sqrt S.β₂) * Real.sqrt (1 - S.β₂))
+        * ∑ i, S.gnorm amsgradRule T i = (α * Real.sqrt (1 + Real.log T) /
+        ((1 - S.β₁ 1) * (1 - S.β₁ 1 / Real.sqrt S.β₂) * Real.sqrt (1 - S.β₂))
+        * ∑ i, S.gnorm amsgradRule T i) / (1 - S.β₁ 1) := by
+    generalize 1 - S.β₁ 1 = q; generalize 1 - S.β₁ 1 / Real.sqrt S.β₂ = r; ring
+  rw [e']
+  linarith [div_le_div_of_nonneg_right hm hB.le]
 
 end AdamBeyond
 end Transformer

@@ -4,7 +4,9 @@ import Transformer.AdamBeyond.Section4_Regret
 # Adam and beyond — §4: Corollary 1 and the `β₁/t` remark
 
 Corollary 1 of arXiv:1904.09237 and the remark after it, both consequences of
-Theorem 4 (`amsgrad_regret`); the deviations are recorded in the docstring of
+Theorem 4 (`amsgrad_regret`) and, for the remark, of its proof before the
+lemma (`amsgrad_regret_moment`) with the closing remark of the appendix
+(`amsgrad_moment_sum_sqrt`); the deviations are recorded in the docstring of
 `Section4_AMSGrad`.  Their hypotheses are witnessed there.
 
 Source: arXiv:1904.09237, §4, Corollary 1 (cor:t1-cor) and the paragraph
@@ -113,7 +115,57 @@ theorem amsgrad_regret_inv {S : Setup d} {F : Set (Vec d)} {D G : ℝ}
     (hb : ∀ t, S.β₁ t = β₁ / t)
     (hβ₂ : 0 < S.β₂) (hβ₂' : S.β₂ < 1) (hγ : β₁ / Real.sqrt S.β₂ < 1) :
     ∃ K : ℝ, ∀ T : ℕ, ∀ xstar ∈ F, S.regret amsgradRule xstar T ≤ K * Real.sqrt T := by
-  sorry
+  have hS1 : S.β₁ 1 = β₁ := by rw [hb]; simp
+  have hβt : ∀ t, 1 ≤ t → 0 ≤ S.β₁ t ∧ S.β₁ t ≤ S.β₁ 1 := fun t ht => by
+    rw [hb, hS1]
+    exact ⟨by positivity, div_le_self hβ₁ (by exact_mod_cast ht)⟩
+  have hdG : 0 ≤ (d : ℝ) * G := by
+    rcases Nat.eq_zero_or_pos d with h | h
+    · simp [h]
+    · exact mul_nonneg (Nat.cast_nonneg _) ((abs_nonneg _).trans (hS.grad_le 0 _ hS.x₁_mem ⟨0, h⟩))
+  have hB : 0 < 1 - β₁ := by linarith
+  refine ⟨D ^ 2 / (α * (1 - β₁)) * (d * G) + D ^ 2 / (1 - β₁) ^ 2 * (d * G * β₁ / α * 2)
+    + 2 * α * d * G / ((1 - β₁) * (1 - β₁ / Real.sqrt S.β₂) * Real.sqrt (1 - S.β₂)) / (1 - β₁),
+    fun T xstar hx => ?_⟩
+  have h := amsgrad_regret_moment hS hα hαt hβt (hS1 ▸ hβ₁') hβ₂ hβ₂' T hx
+  have hm := amsgrad_moment_sum_sqrt hS hα hαt hβt (hS1 ▸ hβ₁') hβ₂ hβ₂' (hS1 ▸ hγ) T
+  rw [hS1] at h hm
+  have h1 : ∑ i, Real.sqrt (S.vhat amsgradRule T i) ≤ d * G := by
+    refine (sum_le_sum fun i _ => vt hS hβ₂.le hβ₂'.le T i).trans_eq ?_
+    rw [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  have h2 : ∑ t ∈ Icc 1 T, ∑ i, S.β₁ t * Real.sqrt (S.vhat amsgradRule t i) / S.α t ≤
+      d * G * β₁ / α * (2 * Real.sqrt T) := by
+    calc ∑ t ∈ Icc 1 T, ∑ i, S.β₁ t * Real.sqrt (S.vhat amsgradRule t i) / S.α t
+        ≤ ∑ t ∈ Icc 1 T, d * G * β₁ / α * (1 / Real.sqrt t) := sum_le_sum fun t ht => by
+          have ht0 : (0 : ℝ) < t := by exact_mod_cast (mem_Icc.1 ht).1
+          obtain ⟨r, hr⟩ : ∃ r, r = Real.sqrt t := ⟨_, rfl⟩
+          have hr0 : 0 < r := hr ▸ Real.sqrt_pos.2 ht0
+          have et : (t : ℝ) = r * r := hr ▸ (Real.mul_self_sqrt ht0.le).symm
+          have hc : 0 ≤ β₁ / α * (1 / r) := by positivity
+          calc ∑ i, S.β₁ t * Real.sqrt (S.vhat amsgradRule t i) / S.α t
+              = ∑ i, β₁ / α * (1 / r) * Real.sqrt (S.vhat amsgradRule t i) := by
+                refine sum_congr rfl fun i _ => ?_
+                rw [hb, hαt]; simp only; rw [← hr, et]; field_simp
+            _ ≤ ∑ _i : Fin d, β₁ / α * (1 / r) * G :=
+                sum_le_sum fun i _ => mul_le_mul_of_nonneg_left (vt hS hβ₂.le hβ₂'.le t i) hc
+            _ = _ := by rw [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul, ← hr]; ring
+      _ = d * G * β₁ / α * ∑ t ∈ Icc 1 T, 1 / Real.sqrt t := by rw [mul_sum]
+      _ ≤ _ := mul_le_mul_of_nonneg_left (sum_inv_sqrt_le T)
+          (div_nonneg (mul_nonneg hdG hβ₁) hα.le)
+  have k1 := mul_le_mul_of_nonneg_left h1 (show 0 ≤ D ^ 2 * Real.sqrt T / (α * (1 - β₁)) by
+    positivity)
+  have k2 := mul_le_mul_of_nonneg_left h2 (show 0 ≤ D ^ 2 / (1 - β₁) ^ 2 by positivity)
+  have k3 := div_le_div_of_nonneg_right hm hB.le
+  have e : (D ^ 2 / (α * (1 - β₁)) * (d * G) + D ^ 2 / (1 - β₁) ^ 2 * (d * G * β₁ / α * 2)
+      + 2 * α * d * G / ((1 - β₁) * (1 - β₁ / Real.sqrt S.β₂) * Real.sqrt (1 - S.β₂)) /
+        (1 - β₁)) * Real.sqrt T =
+      D ^ 2 * Real.sqrt T / (α * (1 - β₁)) * (d * G)
+      + D ^ 2 / (1 - β₁) ^ 2 * (d * G * β₁ / α * (2 * Real.sqrt T))
+      + 2 * α * d * G * Real.sqrt T /
+        ((1 - β₁) * (1 - β₁ / Real.sqrt S.β₂) * Real.sqrt (1 - S.β₂)) / (1 - β₁) := by
+    generalize 1 - β₁ = q; generalize 1 - β₁ / Real.sqrt S.β₂ = r; ring
+  rw [e]
+  linarith
 
 end AdamBeyond
 end Transformer

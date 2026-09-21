@@ -85,6 +85,69 @@ theorem amsgrad_moment_sum {S : Setup d} {α : ℝ} (hα : 0 < α)
         gcongr with i; exact hl i
     _ = _ := by rw [← mul_sum, add_comm (Real.log _)]; ring
 
+/-- **The closing remark of the proof of Theorem 4.**  In the lemma,
+`Σ_{t=1}^T |g_{t,i}|/√t ≤ 2G√T` may replace the harmonic bound: for AMSGrad
+with `α_t = α/√t`, `0 ≤ β_{1,t} ≤ β₁ = β_{1,1} < 1`, `0 < β₂ < 1` and
+`γ = β₁/√β₂ < 1`, under the standing assumptions,
+
+  `Σ_{t=1}^T α_t ‖V̂_t^{-1/4} m_t‖² ≤ 2αdG√T/((1-β₁)(1-γ)√(1-β₂))`.
+
+Source: arXiv:1904.09237, appendix, the closing remark of §"Proof of
+Theorem 4". -/
+theorem amsgrad_moment_sum_sqrt {S : Setup d} {F : Set (Vec d)} {D G : ℝ}
+    (hS : IsOnlineConvex S F D G) {α : ℝ} (hα : 0 < α)
+    (hαt : S.α = fun t : ℕ => α / Real.sqrt t)
+    (hβ₁ : ∀ t, 1 ≤ t → 0 ≤ S.β₁ t ∧ S.β₁ t ≤ S.β₁ 1) (hβ₁' : S.β₁ 1 < 1)
+    (hβ₂ : 0 < S.β₂) (hβ₂' : S.β₂ < 1) (hγ : S.β₁ 1 / Real.sqrt S.β₂ < 1) (T : ℕ) :
+    ∑ t ∈ Icc 1 T, S.α t * ∑ i, S.m amsgradRule t i ^ 2 / Real.sqrt (S.vhat amsgradRule t i) ≤
+      2 * α * d * G * Real.sqrt T /
+        ((1 - S.β₁ 1) * (1 - S.β₁ 1 / Real.sqrt S.β₂) * Real.sqrt (1 - S.β₂)) := by
+  have hB : 0 < 1 - S.β₁ 1 := by linarith
+  have hγ0 : 0 ≤ S.β₁ 1 / Real.sqrt S.β₂ := div_nonneg (hβ₁ 1 le_rfl).1 (Real.sqrt_nonneg _)
+  have hC : 0 < (1 - S.β₁ 1) * Real.sqrt (1 - S.β₂) :=
+    mul_pos hB (Real.sqrt_pos.2 (by linarith))
+  have hi : ∀ i, ∑ t ∈ Icc 1 T,
+      S.m amsgradRule t i ^ 2 / Real.sqrt (t * S.vhat amsgradRule t i) ≤
+      2 * G * Real.sqrt T /
+        ((1 - S.β₁ 1) * (1 - S.β₁ 1 / Real.sqrt S.β₂) * Real.sqrt (1 - S.β₂)) := by
+    intro i
+    have hG : 0 ≤ G := (abs_nonneg _).trans (hS.grad_le 0 _ hS.x₁_mem i)
+    have hg : ∑ t ∈ Icc 1 T, |S.g amsgradRule t i| / Real.sqrt t ≤ 2 * G * Real.sqrt T := by
+      calc ∑ t ∈ Icc 1 T, |S.g amsgradRule t i| / Real.sqrt t
+          ≤ ∑ t ∈ Icc 1 T, G * (1 / Real.sqrt t) := sum_le_sum fun t _ => by
+            rw [mul_one_div]
+            exact div_le_div_of_nonneg_right (hS.grad_le t _ (x_mem hS _ t) i)
+              (Real.sqrt_nonneg _)
+        _ ≤ G * (2 * Real.sqrt T) := by rw [← mul_sum]; gcongr; exact sum_inv_sqrt_le T
+        _ = _ := by ring
+    calc ∑ t ∈ Icc 1 T, S.m amsgradRule t i ^ 2 / Real.sqrt (t * S.vhat amsgradRule t i)
+        ≤ ∑ t ∈ Icc 1 T, geomSum (S.β₁ 1 / Real.sqrt S.β₂) (fun t => |S.g amsgradRule t i|) t /
+            ((1 - S.β₁ 1) * Real.sqrt (1 - S.β₂) * Real.sqrt t) :=
+          sum_le_sum fun t ht => term_le le_amsgradRule hβ₁ hβ₁' hβ₂ hβ₂' i (mem_Icc.1 ht).1
+      _ = (∑ t ∈ Icc 1 T, geomSum (S.β₁ 1 / Real.sqrt S.β₂) (fun t => |S.g amsgradRule t i|) t /
+            Real.sqrt t) / ((1 - S.β₁ 1) * Real.sqrt (1 - S.β₂)) := by
+          rw [sum_div]
+          exact sum_congr rfl fun t _ => by rw [div_div, mul_comm (Real.sqrt (t : ℝ))]
+      _ ≤ (2 * G * Real.sqrt T / (1 - S.β₁ 1 / Real.sqrt S.β₂)) /
+            ((1 - S.β₁ 1) * Real.sqrt (1 - S.β₂)) := by
+          gcongr
+          exact (sum_geomSum_div_sqrt_le hγ0 hγ (fun _ => abs_nonneg _) T).trans
+            (div_le_div_of_nonneg_right hg (by linarith))
+      _ = _ := by rw [div_div]; ring
+  calc ∑ t ∈ Icc 1 T, S.α t * ∑ i, S.m amsgradRule t i ^ 2 / Real.sqrt (S.vhat amsgradRule t i)
+      = α * ∑ i, ∑ t ∈ Icc 1 T,
+          S.m amsgradRule t i ^ 2 / Real.sqrt (t * S.vhat amsgradRule t i) := by
+        rw [sum_comm, mul_sum]
+        refine sum_congr rfl fun t _ => ?_
+        rw [mul_sum, mul_sum, hαt]
+        refine sum_congr rfl fun i _ => ?_
+        rw [Real.sqrt_mul (Nat.cast_nonneg _)]
+        ring
+    _ ≤ α * ∑ _i : Fin d, 2 * G * Real.sqrt T /
+          ((1 - S.β₁ 1) * (1 - S.β₁ 1 / Real.sqrt S.β₂) * Real.sqrt (1 - S.β₂)) := by
+        gcongr with i; exact hi i
+    _ = _ := by rw [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]; ring
+
 /-- The hypotheses of Theorem 4, its lemma, Corollary 1 and the `β₁/t` remark
 are satisfiable: the zero cost on `[-1, 1]`, `α = 1`, `β_{1,t} = 0` (`β₁ = 0`,
 `λ = 0`), `β₂ = 1/2`, `x* = 0`. -/
