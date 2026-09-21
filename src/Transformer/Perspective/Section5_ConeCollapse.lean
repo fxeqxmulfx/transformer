@@ -8,10 +8,11 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 The survey proves the lemma in two steps: step 1 produces the limit point
 `x⋆` (`eq: qual.conv`), step 2 the differential inequality
 `α̇ ≥ (1 - α)/(2 n e^{2β})` for `α(t) = min_i ⟨x_i(t), x⋆⟩`
-(`e:diffineqalpha.step2`).  Neither is proved here.  What *is* proved is
-everything after them: integrating the differential inequality gives the
-exponential rate, and that is `hemisphere_clustering` below, with the two
-steps carried as an explicit hypothesis.
+(`e:diffineqalpha.step2`).  Step 1 is unproved (`hemisphere_step1_qual_conv`);
+step 2 is proved from its limit in `Perspective.Section5_HemisphereRate`, with
+the differentiability of `α` carried.  Integrating the differential inequality
+gives the exponential rate, and that is `hemisphere_clustering` below, with
+the conclusion of the two steps carried as an explicit hypothesis.
 -/
 
 import Transformer.Perspective.Section3_Gronwall

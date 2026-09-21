@@ -37,6 +37,7 @@ import Transformer.Perspective.Section5_HighD
 import Transformer.Perspective.Section5_ConeCollapse
 import Transformer.Perspective.Section5_Hemisphere
 import Transformer.Perspective.Section5_HemisphereCone
+import Transformer.Perspective.Section5_HemisphereRate
 import Transformer.Perspective.Section5_Exceptional
 import Transformer.Perspective.Section5_HighDCurve
 import Transformer.Perspective.Section5_Vanishing
@@ -70,6 +71,7 @@ import Transformer.Perspective.Gronwall
 import Transformer.Perspective.AppendixD_Stability
 import Transformer.Perspective.AppendixD_PhaseTransition
 import Transformer.Perspective.AppendixD_Alpha
+import Transformer.Perspective.AppendixD_DotAlpha
 import Transformer.Perspective.AppendixD_AlphaDeriv
 import Transformer.Perspective.AppendixD_Product
 import Transformer.Perspective.AppendixD_Ybeta
