@@ -355,7 +355,7 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - ok Transformer/Clusters/Section6_Kernel.lean (5): `isCarriedBy_dirac`, `attentionKernel_dirac_zero`, `ae_mem_closedBall`, `integrable_attentionWeight`, `attentionKernel_norm_le`
 - ok Transformer/Clusters/Section6_KernelDeriv.lean (4): `scoreDual_apply`, `continuous_scoreDual`, `norm_scoreDual_le`, `attentionKernel_hasFDerivAt`
 - ok Transformer/Clusters/Section6_KernelLip.lean (3): `abs_exp_sub_exp_le`, `abs_inner_le_of_mem_closedBall`, `attentionKernel_lipschitz_in_measure`
-- issue Transformer/Clusters/Section6_WellPosed.lean (1): `isLocLipschitzCurve_const` — header says the rescaled well-posedness is stated independently because transformerDynamics_iff_rescaled is unproved; it is proved (stale docstring)
+- issue Transformer/Clusters/Section6_WellPosed.lean (1): `isLocLipschitzCurve_const` — FIXED: header now says the change of variables is proved and wellposed_particles is not. Was: header says the rescaled well-posedness is stated independently because transformerDynamics_iff_rescaled is unproved; it is proved (stale docstring)
 - ok Transformer/Clusters/Section7_Bounded.lean (3): `isBoundedToken_zero`, `tendsto_attention_of_tendsto_others`, `tendsto_row_isProbability`
 - ok Transformer/Clusters/Section7_DistNonDec.lean (4): `softmax_monotone`, `inner_drift_sub_nonneg`, `norm_sub_monotone`, `ne_of_norm_sub_monotone`
 - ok Transformer/Clusters/Section7_HigherDim.lean (3): `tendsto_attentionMatrix_of_tendsto_common`, `not_tendsto_zero_of_tendsto_common`, `not_tendsto_id_of_tendsto_common`

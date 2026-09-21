@@ -3049,14 +3049,14 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`abs_inner_le_of_mem_closedBall`](src/Transformer/Clusters/Section6_KernelLip.lean#L44) | theorem | proved |
 | [`attentionKernel_lipschitz_in_measure`](src/Transformer/Clusters/Section6_KernelLip.lean#L65) | theorem | proved |
 
-**[Transformer.Clusters.Section6_WellPosed](src/Transformer/Clusters/Section6_WellPosed.lean)** — 91 lines
+**[Transformer.Clusters.Section6_WellPosed](src/Transformer/Clusters/Section6_WellPosed.lean)** — 92 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`IsLocLipschitzCurve`](src/Transformer/Clusters/Section6_WellPosed.lean#L45) | def |  |
-| [`isLocLipschitzCurve_const`](src/Transformer/Clusters/Section6_WellPosed.lean#L49) | theorem | proved |
-| [`wellposed_particles`](src/Transformer/Clusters/Section6_WellPosed.lean#L60) | theorem | sorry |
-| [`wellposed_rescaled_particles`](src/Transformer/Clusters/Section6_WellPosed.lean#L71) | theorem | sorry |
+| [`IsLocLipschitzCurve`](src/Transformer/Clusters/Section6_WellPosed.lean#L46) | def |  |
+| [`isLocLipschitzCurve_const`](src/Transformer/Clusters/Section6_WellPosed.lean#L50) | theorem | proved |
+| [`wellposed_particles`](src/Transformer/Clusters/Section6_WellPosed.lean#L61) | theorem | sorry |
+| [`wellposed_rescaled_particles`](src/Transformer/Clusters/Section6_WellPosed.lean#L72) | theorem | sorry |
 
 **[Transformer.Clusters.Section7_Bounded](src/Transformer/Clusters/Section7_Bounded.lean)** — 199 lines
 
@@ -7077,8 +7077,8 @@ Everything the build cannot vouch for, in one place.
 | [`multiplicity_dist_tendsto_zero`](src/Transformer/Clusters/Section5_Mix.lean#L92) | theorem | `Transformer.Clusters.Section5_Mix` |
 | [`wellposed_contEq`](src/Transformer/Clusters/Section6_ContEq.lean#L86) | theorem | `Transformer.Clusters.Section6_ContEq` |
 | [`contEq_w2_stability`](src/Transformer/Clusters/Section6_ContEq.lean#L107) | theorem | `Transformer.Clusters.Section6_ContEq` |
-| [`wellposed_particles`](src/Transformer/Clusters/Section6_WellPosed.lean#L60) | theorem | `Transformer.Clusters.Section6_WellPosed` |
-| [`wellposed_rescaled_particles`](src/Transformer/Clusters/Section6_WellPosed.lean#L71) | theorem | `Transformer.Clusters.Section6_WellPosed` |
+| [`wellposed_particles`](src/Transformer/Clusters/Section6_WellPosed.lean#L61) | theorem | `Transformer.Clusters.Section6_WellPosed` |
+| [`wellposed_rescaled_particles`](src/Transformer/Clusters/Section6_WellPosed.lean#L72) | theorem | `Transformer.Clusters.Section6_WellPosed` |
 | [`ncard_boundedTokens_le_one`](src/Transformer/Clusters/Section7_Bounded.lean#L55) | theorem | `Transformer.Clusters.Section7_Bounded` |
 | [`tendsto_attention_of_bounded_last`](src/Transformer/Clusters/Section7_Bounded.lean#L81) | theorem | `Transformer.Clusters.Section7_Bounded` |
 | [`tendsto_attention_of_bounded_first`](src/Transformer/Clusters/Section7_Bounded.lean#L101) | theorem | `Transformer.Clusters.Section7_Bounded` |

@@ -22,8 +22,9 @@
 
 * `p:wellposednessrescaledparticles` is deduced in the source from
   `p:wellposedparticles` through the change of variables `x_i = e^{tV}z_i`.
-  It is stated here independently rather than derived, because a derivation
-  would rest on `transformerDynamics_iff_rescaled`, which is itself unproved.
+  It is stated here independently rather than derived: the change of
+  variables itself is proved (`transformerDynamics_iff_rescaled`), but
+  `wellposed_particles` is not, and nothing may rest on it.
 
 Source: arXiv:2305.05465v6, `p:wellposedparticles`,
 `p:wellposednessrescaledparticles`.
