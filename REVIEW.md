@@ -669,11 +669,11 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.RASP — arXiv:2106.06981
 
-- [ ] Transformer/RASP/Basic.lean (12): `mem_selected`, `selected_selectAll`, `card_selected_selectAll`, `selected_selectZero`, `selectorWidth_selectAll`, `aggregate_selectAll`, `aggregate_of_selected_eq_singleton`, `aggregateOne_of_selected_eq_singleton`, `aggregate_of_selected_eq_empty`, `sum_light0`, `length_eq_one_div_aggregate`, `selectorWidth_sameToken`
-- [ ] Transformer/RASP/Compilation.lean (5): `layers_lt_agg_value`, `layers_lt_agg_select`, `layers_le_heads`, `eval_eq_of_heads_eq_zero`, `not_reverse_of_heads_eq_zero`
-- [ ] Transformer/RASP/Programs.lean (5): `selected_flip`, `reverse_apply`, `reverse_reverse`, `fracVal_eq`, `fracVal_mem_Icc`
-- [ ] Transformer/RASP/SelectorWidth.lean (8): `selected_or0`, `selected_and0`, `card_selected_or0`, `sum_light0_or0`, `or0Width_eq`, `and0Width_eq`, `noBosRes_eq_selectorWidth`, `bosRes_eq`
-- [ ] Transformer/RASP/Sort.lean (12): `rankOf_lt_rankOf`, `rankOf_lt`, `rank_lt_iff`, `rank_injective`, `rank_rankEquiv_symm`, `strictMono_key_rankEquiv_symm`, `lexKey_injective`, `mem_selected_smaller`, `selectorWidth_smaller`, `selected_selNew`, `sortProg_apply`, `sortProg_keys_monotone`
+- ok Transformer/RASP/Basic.lean (12): `mem_selected`, `selected_selectAll`, `card_selected_selectAll`, `selected_selectZero`, `selectorWidth_selectAll`, `aggregate_selectAll`, `aggregate_of_selected_eq_singleton`, `aggregateOne_of_selected_eq_singleton`, `aggregate_of_selected_eq_empty`, `sum_light0`, `length_eq_one_div_aggregate`, `selectorWidth_sameToken`
+- ok Transformer/RASP/Compilation.lean (5): `layers_lt_agg_value`, `layers_lt_agg_select`, `layers_le_heads`, `eval_eq_of_heads_eq_zero`, `not_reverse_of_heads_eq_zero`
+- ok Transformer/RASP/Programs.lean (5): `selected_flip`, `reverse_apply`, `reverse_reverse`, `fracVal_eq`, `fracVal_mem_Icc`
+- ok Transformer/RASP/SelectorWidth.lean (8): `selected_or0`, `selected_and0`, `card_selected_or0`, `sum_light0_or0`, `or0Width_eq`, `and0Width_eq`, `noBosRes_eq_selectorWidth`, `bosRes_eq`
+- ok Transformer/RASP/Sort.lean (12): `rankOf_lt_rankOf`, `rankOf_lt`, `rank_lt_iff`, `rank_injective`, `rank_rankEquiv_symm`, `strictMono_key_rankEquiv_symm`, `lexKey_injective`, `mem_selected_smaller`, `selectorWidth_smaller`, `selected_selNew`, `sortProg_apply`, `sortProg_keys_monotone`
 
 ### Transformer.RASPL — arXiv:2310.16028
 
