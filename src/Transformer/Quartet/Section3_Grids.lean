@@ -22,8 +22,8 @@ either side of the argument.  Outside the range of the grid they saturate: an
 argument above the largest point rounds to it, one below the least point to
 that, which is what a floating-point cast with clipping does and what §3.3
 relies on when its rescaled entries overshoot `6`.  The bracketing statements
-below ask for a grid point on either side; `rtn_of_forall_le` is the
-saturation.
+below ask for a grid point on either side; `rtn_of_forall_le`,
+`rtn_of_le_forall` and `sr_of_forall_le` are the saturation.
 -/
 
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
@@ -145,24 +145,52 @@ example : fp4.Finite ∧ (∃ y ∈ fp4, y ≤ (-2.5 : ℝ)) ∧ ∃ y ∈ fp4, 
   ⟨by unfold fp4; apply Set.toFinite, ⟨-3, by norm_num [fp4], by norm_num⟩,
     ⟨-2, by norm_num [fp4], by norm_num⟩⟩
 
-/-- **Round-to-nearest saturates.**  Above the largest grid point `g`, both
-neighbours are `g`, and `RTN` clips to it: an E2M1 cast sends everything past
-`6` to `6`, which is the clipping §3.3 speaks of. -/
+/-- **Both neighbours saturate above the grid.**  Past the largest grid point
+`g`, the floor is `g` and there is no ceiling, so `ceilOn` falls back to `g`. -/
+theorem floorOn_ceilOn_of_forall_le {G : Set ℝ} {x g : ℝ} (hg : g ∈ G)
+    (hmax : ∀ y ∈ G, y ≤ g) (hgx : g < x) : floorOn G x = g ∧ ceilOn G x = g := by
+  refine ⟨floorOn_eq hg hgx.le fun y hy _ => hmax y hy, ?_⟩
+  rw [ceilOn, ite_eq_right fun ⟨y, hy, hxy⟩ => absurd (hmax y hy) (not_le.mpr (hgx.trans_le hxy))]
+  exact IsGreatest.csSup_eq ⟨hg, hmax⟩
+
+/-- **And below it**, onto the least grid point. -/
+theorem floorOn_ceilOn_of_le_forall {G : Set ℝ} {x g : ℝ} (hg : g ∈ G)
+    (hmin : ∀ y ∈ G, g ≤ y) (hxg : x < g) : floorOn G x = g ∧ ceilOn G x = g := by
+  refine ⟨?_, ceilOn_eq hg hxg.le fun y hy _ => hmin y hy⟩
+  rw [floorOn, ite_eq_right fun ⟨y, hy, hyx⟩ => absurd (hmin y hy) (not_le.mpr (hyx.trans_lt hxg))]
+  exact IsLeast.csInf_eq ⟨hg, hmin⟩
+
+/-- **Round-to-nearest saturates**: an E2M1 cast sends everything past `6` to
+`6`, which is the clipping of §3.3's `Q_RTN`. -/
 theorem rtn_of_forall_le {G : Set ℝ} {x g : ℝ} (hg : g ∈ G) (hmax : ∀ y ∈ G, y ≤ g)
     (hgx : g < x) : rtn G x = g := by
-  have hf : floorOn G x = g := floorOn_eq hg hgx.le fun y hy _ => hmax y hy
-  have hc : ceilOn G x = g := by
-    rw [ceilOn, ite_eq_right fun ⟨y, hy, hxy⟩ => absurd (hmax y hy) (not_le.mpr (hgx.trans_le hxy))]
-    exact IsGreatest.csSup_eq ⟨hg, hmax⟩
+  obtain ⟨hf, hc⟩ := floorOn_ceilOn_of_forall_le hg hmax hgx
   rw [rtn, hf, hc, ite_self]
 
-/-- The hypotheses of `rtn_of_forall_le` are satisfiable: `6` is the largest
-E2M1 point, and `7` lies beyond it. -/
-example : (6 : ℝ) ∈ fp4 ∧ (∀ y ∈ fp4, y ≤ (6 : ℝ)) ∧ (6 : ℝ) < 7 := by
-  refine ⟨by norm_num [fp4], ?_, by norm_num⟩
-  intro y hy
+/-- The same below the grid. -/
+theorem rtn_of_le_forall {G : Set ℝ} {x g : ℝ} (hg : g ∈ G) (hmin : ∀ y ∈ G, g ≤ y)
+    (hxg : x < g) : rtn G x = g := by
+  obtain ⟨hf, hc⟩ := floorOn_ceilOn_of_le_forall hg hmin hxg
+  rw [rtn, hf, hc, ite_self]
+
+/-- **So does stochastic rounding**, whatever the coin: both neighbours are the
+end of the grid. -/
+theorem sr_of_forall_le {G : Set ℝ} {x g u : ℝ} (hg : g ∈ G) (hmax : ∀ y ∈ G, y ≤ g)
+    (hgx : g < x) : sr G x u = g := by
+  obtain ⟨hf, hc⟩ := floorOn_ceilOn_of_forall_le hg hmax hgx
+  rw [sr, hf, hc, ite_self]
+
+/-- The E2M1 grid lies in `[-6, 6]`. -/
+theorem mem_Icc_of_mem_fp4 {y : ℝ} (hy : y ∈ fp4) : -6 ≤ y ∧ y ≤ 6 := by
   simp only [fp4, Set.mem_insert_iff, Set.mem_singleton_iff] at hy
   rcases hy with rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl <;> norm_num
+
+/-- The hypotheses of the saturation lemmas are satisfiable: `±6` are the ends
+of the E2M1 grid, and `±7` lie beyond them. -/
+example : (6 : ℝ) ∈ fp4 ∧ (∀ y ∈ fp4, y ≤ (6 : ℝ)) ∧ (6 : ℝ) < 7 ∧
+    (-6 : ℝ) ∈ fp4 ∧ (∀ y ∈ fp4, (-6 : ℝ) ≤ y) ∧ (-7 : ℝ) < -6 :=
+  ⟨by norm_num [fp4], fun _ hy => (mem_Icc_of_mem_fp4 hy).2, by norm_num,
+    by norm_num [fp4], fun _ hy => (mem_Icc_of_mem_fp4 hy).1, by norm_num⟩
 
 /-- The E4M3 grid holds both ends of its range: the group scales `448` — its
 largest element, `14·2^5` — and `0`. -/

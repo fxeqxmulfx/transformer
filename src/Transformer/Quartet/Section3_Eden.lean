@@ -16,11 +16,15 @@ the scale is right in expectation, and that is all the correction needs.
 The rotation itself, and the fact that it is invertible and leaves inner
 products alone, are `Transformer.Quartet.Hadamard`.
 
-**What the Corollary claims.**  It is stated for every `d` and every `s ≠ 0`,
-while the EDEN theorem it rests on ("Based on Theorem 2.1 of Vargaftik et
-al.") only gives unbiasedness in the limit `d → ∞`; Appendix A says as much,
-and lists the further compromises of the implementation.  The statement below
-is the paper's, at finite dimension.
+**What the Corollary claims.**  It is stated for every `d` and every `s ≠ 0`.
+Over `s` that is false (`Transformer.Quartet.not_mean_rhtInv_msEden`): a large
+clipping factor overflows the E4M3 headroom the EDEN correction needs, and a
+small one rounds every entry to `0`, which the paper's own "Guarantees"
+paragraph excludes (`Q(x) ≠ 0`).  The statement below keeps `s` between the
+non-clipping bound `6 · 16/17` and the factor the paper uses,
+`(1/0.93) · 6 · 16/17`.  Over `d` it stays the paper's: the EDEN guarantee §3.2
+quotes for the `RHT` is a limit `d → ∞`, and whether a finite `d` suffices is
+open here.
 -/
 
 import Transformer.Quartet.Section3_NVFP4
@@ -60,18 +64,29 @@ noncomputable def mean (k : ℕ)
 
 /-- **The Corollary of §3.3: `MS-EDEN` is unbiased.**  "For all `x ∈ ℝ^d` and
 scale `s ≠ 0`: `E_{ω_RHT, ω_SR} RHT⁻¹(x̂, ω_RHT) = x`", where `x̂` is the
-output of Algorithm 1.  The paper derives it from Theorem 2.1 of Vargaftik et
-al. together with the unbiasedness of stochastic rounding, and that theorem
-holds only as `d → ∞`; at the finite `d` the statement quantifies over, it is
-open here. -/
-theorem mean_rhtInv_msEden (hs : s ≠ 0) (x : Fin (2 ^ k) → Fin 16 → ℝ) (i : Fin (2 ^ k))
-    (j : Fin 16) : mean k (fun ε u => rhtInv k ε (msEden k s x ε u) i j) = x i j :=
+output of Algorithm 1.
+
+Changed from the source: `s ≠ 0` is replaced by
+`6 · 16/17 ≤ s ≤ (1/0.93) · 6 · 16/17`.  At `s = 21` the statement is false
+(`not_mean_rhtInv_msEden`: the corrected group scale saturates at `448`); for
+small `s` every entry rounds to `0` and `x̂ = 0`.  The interval runs from the
+bound under which §3.3 calls the scheme non-clipping to the factor it uses "for
+the rest of the paper".
+
+The paper derives it from Theorem 2.1 of Vargaftik et al., which §3.2 quotes as
+a limit `d → ∞`; at the finite `d` quantified over here it is open.
+
+Source: arXiv:2601.22813v2, §3.3, the Corollary after Algorithm 1. -/
+theorem mean_rhtInv_msEden (hs₀ : 6 * (16 / 17) ≤ s) (hs₁ : s ≤ 6 * (16 / 17) / 0.93)
+    (x : Fin (2 ^ k) → Fin 16 → ℝ) (i : Fin (2 ^ k)) (j : Fin 16) :
+    mean k (fun ε u => rhtInv k ε (msEden k s x ε u) i j) = x i j :=
   sorry
 
-/-- The hypothesis of the Corollary is satisfiable at the clipping factor the
+/-- The hypotheses of the Corollary are satisfiable at the clipping factor the
 paper uses, `s = 6 · (16/17) / 0.93`, the numerical minimizer of the expected
 error over `𝒩(0,1)` (§3.3). -/
-example : (6 * (16 / 17) / 0.93 : ℝ) ≠ 0 := by norm_num
+example : 6 * (16 / 17) ≤ (6 * (16 / 17) / 0.93 : ℝ) ∧
+    (6 * (16 / 17) / 0.93 : ℝ) ≤ 6 * (16 / 17) / 0.93 := ⟨by norm_num, le_rfl⟩
 
 end Quartet
 end Transformer

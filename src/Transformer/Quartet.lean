@@ -25,6 +25,7 @@ scheme built on it.
 | `Quartet.Section3_NonClipping` | why neither quantizer asks E2M1 for a value outside `[-6, 6]` |
 | `Quartet.Section3_Unbiased` | `E_ω Q_SR(x) = x`, one entry at a time |
 | `Quartet.Section3_Eden` | the EDEN correction and `MS-EDEN` |
+| `Quartet.Section3_EdenFalse` | the Corollary of §3.3 fails for large `s` |
 | `Quartet.Section4_FourOverSix` | the two-branch grid choice, unbiased branch by branch |
 | `Quartet.Section4_Witness` | the tensor that catches the bias, and its two scales |
 | `Quartet.Section4_Rounding` | what Four Over Six returns on it, coin by coin |
@@ -46,6 +47,7 @@ import Transformer.Quartet.Section3_NVFP4
 import Transformer.Quartet.Section3_NonClipping
 import Transformer.Quartet.Section3_Unbiased
 import Transformer.Quartet.Section3_Eden
+import Transformer.Quartet.Section3_EdenFalse
 import Transformer.Quartet.Section4_FourOverSix
 import Transformer.Quartet.Section4_Witness
 import Transformer.Quartet.Section4_Rounding
