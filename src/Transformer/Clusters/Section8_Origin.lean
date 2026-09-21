@@ -16,7 +16,8 @@ whole configuration collapses to a single cluster at the origin.
 
 * `l:cas1circle` is in `Section8_Bounded`.
 
-* `l:stationary` is in `Section8_Stationary`.
+* `l:stationary` is in `Section8_Stationary`, `e:finiteinegral` in
+  `Section8_Energy`.
 
 * The remark following `t:cas-Idintro` is proved here, taking the theorem's
   conclusion as an explicit hypothesis: once every token tends to `0` the
@@ -91,18 +92,7 @@ theorem transformerDynamics_zero (Q K V : ParamMatrix d) :
   intro t i
   simpa using hasDerivAt_const t (0 : EucSpace d)
 
-/-! ### `e:finiteinegral` and `t:cas-Idintro` -/
-
-/-- **Lemma (e:finiteinegral).**  The trajectories of `e:-Iddyn` satisfy
-`∫_0^{+∞} ‖ẋ_i(t)‖² dt < +∞` for every `i ∈ [n]`.
-
-Not proved here.
-
-Source: arXiv:2305.05465v6, `e:finiteinegral`. -/
-theorem integrableOn_sq_norm_negIdDrift (Q K : ParamMatrix d) (hQK : IsIdentityQK Q K)
-    (X : ℝ → Idx n → EucSpace d) (hX : NegIdDynamics Q K X) (i : Idx n) :
-    MeasureTheory.IntegrableOn (fun t => ‖negIdDrift Q K (X t) i‖ ^ 2) (Set.Ici 0) := by
-  sorry
+/-! ### `t:cas-Idintro` -/
 
 /-- **Theorem (t:cas-Idintro).**  Let `V = -I_d` and `QᵀK = I_d`.  Then for
 any initial sequence of tokens and any `i ∈ [n]`, `‖x_i(t)‖ → 0` as
@@ -116,8 +106,8 @@ theorem negId_tendsto_zero (Q K : ParamMatrix d) (hQK : IsIdentityQK Q K)
     Tendsto (fun t => ‖X t i‖) atTop (nhds 0) := by
   sorry
 
-/-- The hypotheses shared by `integrableOn_sq_norm_negIdDrift` and
-`negId_tendsto_zero` are satisfiable: `Q = K = I_d` and the configuration sitting at the origin. -/
+/-- The hypotheses of `negId_tendsto_zero` are satisfiable: `Q = K = I_d` and
+the configuration sitting at the origin. -/
 example : IsIdentityQK (1 : ParamMatrix d) 1 ∧
     NegIdDynamics (n := n) (1 : ParamMatrix d) 1 (fun _ _ => (0 : EucSpace d)) :=
   ⟨isIdentityQK_one d, (transformerDynamics_neg_one_iff _ _ _).mp (transformerDynamics_zero 1 1 _)⟩
