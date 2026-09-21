@@ -19,7 +19,10 @@ makes it:
 * "`R_T/T ↛ 0`" is proved as `c T ≤ R_T` for every `T` against a fixed `x*`,
   and Theorem 2 states it for all large `T` and every `α > 0`;
 * Theorem 3 is run without projection from `x₁ = 0`, as its proof assumes,
-  and its conclusion is `E[F(x_t)] - F(-1) ≥ δ` for every `t ≥ 1`.
+  and its conclusion is `E[F(x_t)] - F(-1) ≥ δ` for every `t ≥ 1`; its lemma
+  is proved with `E[T₂]` bounded with no event and `E[T₃]` by a tangent in
+  place of Jensen's inequality, with `a = 1 + (1+δ)C` for the source's
+  inconsistent `√(β₂(1+δ)C² + 1 - β₂)`.
 * Theorem 4 makes explicit `0 ≤ β_{1,t}`, `β₁ < 1`, `0 < β₂ < 1`, and holds
   for every `T`; Corollary 1's second term gets the factor `d/α` its proof
   gives; the `O(√T)` remark for `β_{1,t} = β₁/t` is `R_T ≤ K√T`.
@@ -41,6 +44,12 @@ import Transformer.AdamBeyond.Section2_Adam
 import Transformer.AdamBeyond.Section3_Run
 import Transformer.AdamBeyond.Section3_Counter
 import Transformer.AdamBeyond.Section3_General
+import Transformer.AdamBeyond.Section3_Stoch
+import Transformer.AdamBeyond.Section3_StochBound
+import Transformer.AdamBeyond.Section3_StochCoins
+import Transformer.AdamBeyond.Section3_StochMean
+import Transformer.AdamBeyond.Section3_StochStep
+import Transformer.AdamBeyond.Section3_Stochastic
 import Transformer.AdamBeyond.Section4_AMSGrad
 import Transformer.AdamBeyond.Section4_Abel
 import Transformer.AdamBeyond.Section4_Regret
