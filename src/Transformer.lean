@@ -62,7 +62,9 @@ Formalization of eighteen papers on the mathematics of Transformers:
    "On the Convergence of Adam and Beyond".
 
 Alongside these, `Transformer.ALM` formalizes the paraboloid-lifted lookup
-used by the append-only lookup machine (Percepta, transformer-vm).
+used by the append-only lookup machine (Percepta, transformer-vm), and
+`Transformer.Precision` bounds the context length of attention whose weights
+are stored in a quantized format.
 
 This top-level module re-exports the formalization of every section of all
 papers.  Each per-paper subdirectory mirrors the structure of the source
@@ -95,3 +97,4 @@ import Transformer.AdamBeyond
 import Transformer.XSA
 import Transformer.Quartet
 import Transformer.GPTMini
+import Transformer.Precision
