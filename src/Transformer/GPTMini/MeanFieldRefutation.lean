@@ -27,11 +27,11 @@ namespace GPTMini
 variable (cfg : Config)
 
 /-- **The head on a single token**: the causal softmax has one weight, `1`, and
-XSA leaves `(1 - (‖v‖/(‖v‖+eps))²) v`.  `CausalMHA.attentionHead`. -/
+XSA leaves `(1 - (‖v‖/max(‖v‖,eps))²) v`.  `CausalMHA.attentionHead`. -/
 theorem attentionHead_one (alpha eps : ℝ) (q k v : Fin 1 → EucSpace cfg.head_dim)
     (positions : Fin 1 → ℝ) :
     attentionHead cfg alpha eps q k v positions 0
-      = (1 - (‖v 0‖ / (‖v 0‖ + eps)) ^ 2) • v 0 := by
+      = (1 - (‖v 0‖ / max ‖v 0‖ eps) ^ 2) • v 0 := by
   have hw := causalAttnWeights_row_sum cfg alpha eps
     (fun j => applyRope cfg.head_dim cfg.rope_theta (positions j) (q j))
     (fun j => applyRope cfg.head_dim cfg.rope_theta (positions j) (k j)) 0
@@ -55,13 +55,14 @@ theorem preLNHead_one_ne_zero (alpha eps : ℝ) (heps : 0 ≤ eps) (positions : 
     set u := rmsNormEps eps (x L 0)
     have hu : u = (Real.sqrt cfg.head_dim / Real.sqrt (‖x L 0‖ ^ 2 + cfg.head_dim * eps)) •
         x L 0 := rfl
-    have ht : (‖u‖ / (‖u‖ + eps)) ^ 2 ≤ 1 := by
+    have ht : (‖u‖ / max ‖u‖ eps) ^ 2 ≤ 1 := by
       rcases (norm_nonneg u).eq_or_lt with h | h
       · rw [← h]; simp
-      · exact pow_le_one₀ (by positivity) ((div_le_one (by positivity)).2 (by linarith))
+      · exact pow_le_one₀ (by positivity)
+          ((div_le_one (lt_max_of_lt_left h)).2 (le_max_left _ _))
     rw [hx, attentionHead_one]
-    change x L 0 + (1 - (‖u‖ / (‖u‖ + eps)) ^ 2) • u ≠ 0
-    generalize (‖u‖ / (‖u‖ + eps)) ^ 2 = t at ht ⊢
+    change x L 0 + (1 - (‖u‖ / max ‖u‖ eps) ^ 2) • u ≠ 0
+    generalize (‖u‖ / max ‖u‖ eps) ^ 2 = t at ht ⊢
     rw [hu, smul_smul, ← one_smul ℝ (x L 0), smul_smul, ← add_smul, one_smul]
     refine smul_ne_zero (ne_of_gt ?_) ih
     have : 0 ≤ (1 - t) * (Real.sqrt cfg.head_dim / Real.sqrt (‖x L 0‖ ^ 2 + cfg.head_dim * eps)) :=

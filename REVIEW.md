@@ -419,7 +419,7 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.GPTMini — arXiv:2512.01868
 
-- issue Transformer/GPTMini/QKNorm.lean (5): `normL2_norm_le`, `score_bounded`, `partition_bounds`, `rmsNorm_eq_smul_normL2`, `rmsScore_eq_score` — normL2 = x/(‖x‖+eps) but F.normalize is x/max(‖x‖,eps): undocumented deviation; header's bound n⁻¹e^{±2α} should be e^{±2e^α} (AttentionBounds has it right)
+- issue Transformer/GPTMini/QKNorm.lean (5): `normL2_norm_le`, `score_bounded`, `partition_bounds`, `rmsNorm_eq_smul_normL2`, `rmsScore_eq_score` — FIXED: normL2 is now x / max(‖x‖, eps) as F.normalize, proofs adapted (QKNormLipschitz, ALMLookup, TwoTokens, MeanFieldRefutation); header bound e^{±2e^α}. Was: normL2 = x/(‖x‖+eps) but F.normalize is x/max(‖x‖,eps): undocumented deviation; header's bound n⁻¹e^{±2α} should be e^{±2e^α} (AttentionBounds has it right)
 - ok Transformer/GPTMini/QKNormLipschitz.lean (3): `normL2_lipschitz`, `abs_inner_sub_inner_le`, `score_lipschitz`
 - ok Transformer/GPTMini/RMSNorm.lean (5): `rmsNorm_norm_eq_sqrt_d`, `rmsNormEps_norm_le`, `rmsNormEps_lipschitz`, `rmsNorm_pos_homog`, `continuous_rmsNorm`
 - ok Transformer/GPTMini/ReLU2FFN.lean (12): `relu2_nonneg`, `relu2_of_pos`, `relu2_of_nonpos`, `relu2_le_sq`, `continuous_relu2`, `relu2Vec_coord_nonneg`, `relu2Vec_apply`, `relu2Vec_norm_bound`, `euclidean_norm_le_of_coord_le`, `abs_relu2_sub_le`, `relu2Vec_lipschitz`, `relu2FFN_lipschitz_on_ball`

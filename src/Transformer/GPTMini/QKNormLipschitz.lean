@@ -5,9 +5,9 @@
 ingredients, both elementary:
 
   - `normL2 eps` is Lipschitz with constant `2 / eps`.  As for `rmsNormEps`,
-    the scaling factor `1 / (‖x‖ + eps)` moves with `x`, and the second term
+    the scaling factor `1 / max(‖x‖, eps)` moves with `x`, and the second term
     of `c(x)·x - c(y)·y = c(x)·(x - y) + (c(x) - c(y))·y` is controlled by
-    `‖y‖ / (‖y‖ + eps) ≤ 1`.
+    `‖y‖ / max(‖y‖, eps) ≤ 1` and by `max` being 1-Lipschitz.
   - the inner product of two vectors of norm at most one is 1-Lipschitz in
     each argument, so the score is `e^α`-Lipschitz in the normalized `q, k`.
 
@@ -32,25 +32,25 @@ Source: `reference/model.py` (`CausalMHA.forward`, `F.normalize(·, eps=1e-6)`).
 As with `rmsNormEps_lipschitz`, small `eps` makes the normalization steep. -/
 theorem normL2_lipschitz (eps : ℝ) (heps : 0 < eps) (x y : EucSpace d_head) :
     ‖normL2 eps x - normL2 eps y‖ ≤ 2 / eps * ‖x - y‖ := by
-  have hx : (0 : ℝ) < ‖x‖ + eps := by linarith [norm_nonneg x]
-  have hy : (0 : ℝ) < ‖y‖ + eps := by linarith [norm_nonneg y]
-  have hcx : 1 / (‖x‖ + eps) ≤ 1 / eps :=
-    one_div_le_one_div_of_le heps (by linarith [norm_nonneg x])
-  have hnorm : |‖y‖ - ‖x‖| ≤ ‖x - y‖ := by
+  have hx : (0 : ℝ) < max ‖x‖ eps := lt_max_of_lt_right heps
+  have hy : (0 : ℝ) < max ‖y‖ eps := lt_max_of_lt_right heps
+  have hcx : 1 / max ‖x‖ eps ≤ 1 / eps :=
+    one_div_le_one_div_of_le heps (le_max_right _ _)
+  have hnorm : |max ‖y‖ eps - max ‖x‖ eps| ≤ ‖x - y‖ := by
+    refine (abs_max_sub_max_le_abs _ _ _).trans ?_
     rw [← norm_neg (x - y), neg_sub]
     exact abs_norm_sub_norm_le y x
-  have hcoef : |1 / (‖x‖ + eps) - 1 / (‖y‖ + eps)| * ‖y‖ ≤ 1 / eps * ‖x - y‖ := by
-    have hdiff : 1 / (‖x‖ + eps) - 1 / (‖y‖ + eps)
-        = (‖y‖ - ‖x‖) / ((‖x‖ + eps) * (‖y‖ + eps)) := by
+  have hcoef : |1 / max ‖x‖ eps - 1 / max ‖y‖ eps| * ‖y‖ ≤ 1 / eps * ‖x - y‖ := by
+    have hdiff : 1 / max ‖x‖ eps - 1 / max ‖y‖ eps
+        = (max ‖y‖ eps - max ‖x‖ eps) / (max ‖x‖ eps * max ‖y‖ eps) := by
       field_simp
-      ring
-    have hsplit : |‖y‖ - ‖x‖| / ((‖x‖ + eps) * (‖y‖ + eps)) * ‖y‖
-        = |‖y‖ - ‖x‖| * (1 / (‖x‖ + eps)) * (‖y‖ / (‖y‖ + eps)) := by
+    have hsplit : |max ‖y‖ eps - max ‖x‖ eps| / (max ‖x‖ eps * max ‖y‖ eps) * ‖y‖
+        = |max ‖y‖ eps - max ‖x‖ eps| * (1 / max ‖x‖ eps) * (‖y‖ / max ‖y‖ eps) := by
       field_simp
-    have hlast : ‖y‖ / (‖y‖ + eps) ≤ 1 := by
-      rw [div_le_one hy]; linarith
+    have hlast : ‖y‖ / max ‖y‖ eps ≤ 1 := by
+      rw [div_le_one hy]; exact le_max_left _ _
     rw [hdiff, abs_div, abs_of_pos (mul_pos hx hy), hsplit]
-    calc |‖y‖ - ‖x‖| * (1 / (‖x‖ + eps)) * (‖y‖ / (‖y‖ + eps))
+    calc |max ‖y‖ eps - max ‖x‖ eps| * (1 / max ‖x‖ eps) * (‖y‖ / max ‖y‖ eps)
         ≤ ‖x - y‖ * (1 / eps) * 1 :=
           mul_le_mul
             (mul_le_mul hnorm hcx (one_div_nonneg.mpr hx.le) (norm_nonneg _))
@@ -58,15 +58,15 @@ theorem normL2_lipschitz (eps : ℝ) (heps : 0 < eps) (x y : EucSpace d_head) :
             (mul_nonneg (norm_nonneg _) (one_div_nonneg.mpr heps.le))
       _ = 1 / eps * ‖x - y‖ := by ring
   have hdecomp : normL2 eps x - normL2 eps y
-      = (1 / (‖x‖ + eps)) • (x - y)
-        + (1 / (‖x‖ + eps) - 1 / (‖y‖ + eps)) • y := by
+      = (1 / max ‖x‖ eps) • (x - y)
+        + (1 / max ‖x‖ eps - 1 / max ‖y‖ eps) • y := by
     rw [normL2, normL2]; module
   calc ‖normL2 eps x - normL2 eps y‖
-      ≤ ‖(1 / (‖x‖ + eps)) • (x - y)‖
-        + ‖(1 / (‖x‖ + eps) - 1 / (‖y‖ + eps)) • y‖ := by
+      ≤ ‖(1 / max ‖x‖ eps) • (x - y)‖
+        + ‖(1 / max ‖x‖ eps - 1 / max ‖y‖ eps) • y‖ := by
         rw [hdecomp]; exact norm_add_le _ _
-    _ = 1 / (‖x‖ + eps) * ‖x - y‖
-        + |1 / (‖x‖ + eps) - 1 / (‖y‖ + eps)| * ‖y‖ := by
+    _ = 1 / max ‖x‖ eps * ‖x - y‖
+        + |1 / max ‖x‖ eps - 1 / max ‖y‖ eps| * ‖y‖ := by
         rw [norm_smul, norm_smul, Real.norm_eq_abs, Real.norm_eq_abs,
           abs_of_nonneg (one_div_nonneg.mpr hx.le)]
     _ ≤ 1 / eps * ‖x - y‖ + 1 / eps * ‖x - y‖ := by

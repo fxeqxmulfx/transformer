@@ -11,15 +11,19 @@ scores = (q @ k.transpose(-2, -1)) * alpha
 ```
 
 Mathematical content:
-  - `q̂ = q / ‖q‖`, `k̂ = k / ‖k‖`  (per (batch, head, position))
+  - `q̂ = q / max(‖q‖, eps)`, `k̂ = k / max(‖k‖, eps)`  (per (batch, head,
+    position)), which is `F.normalize`: the unit vector once `‖q‖ ≥ eps`
   - score(i, j) = ⟨q̂_i, k̂_j⟩ · e^{α_h}     ∈  [-e^{α_h}, e^{α_h}]
 
-After softmax across `j`, the attention weights satisfy the explicit two-
-sided bounds
+The partition function is therefore between `n e^{-e^{α_h}}` and
+`n e^{e^{α_h}}` (`partition_bounds`), and after softmax across `j` the
+attention weights satisfy the two-sided bounds
 
-  `n⁻¹ · e^{-2 α_h} ≤ a_{ij}^{(h)} ≤ n⁻¹ · e^{2 α_h}`
+  `n⁻¹ · e^{-2 e^{α_h}} ≤ a_{ij}^{(h)} ≤ n⁻¹ · e^{2 e^{α_h}}`
 
-which match exactly the partition-function bounds of §2.2 in 2312.10794v5.
+(`GPTMini.AttentionBounds`, for the causal row `i`, where `n = i + 1`), the
+analogue of the partition-function bounds of
+§2.2 in 2312.10794v5 with `e^{α_h}` in place of `β`.
 -/
 
 import Transformer.Basic
@@ -36,11 +40,15 @@ namespace GPTMini
 
 variable {d_head : ℕ}
 
-/-- L2 normalization on `EucSpace d_head` with `eps` for numerical stability:
+/-- L2 normalization on `EucSpace d_head` with `eps` for numerical stability,
+as `torch.nn.functional.normalize` computes it:
 
-  `normL2(x) = x / (‖x‖ + eps)`. -/
+  `normL2(x) = x / max(‖x‖, eps)`.
+
+So `normL2 eps x` is the unit vector `x / ‖x‖` whenever `‖x‖ ≥ eps`, and
+`x / eps` below; at `eps = 0` it is `x / ‖x‖`, and `0` at `x = 0`. -/
 noncomputable def normL2 (eps : ℝ) (x : EucSpace d_head) : EucSpace d_head :=
-  (1 / (‖x‖ + eps)) • x
+  (1 / max ‖x‖ eps) • x
 
 /-- **Almost-unit-norm property.**
 
@@ -52,15 +60,15 @@ theorem normL2_norm_le
     ‖normL2 eps x‖ ≤ 1 := by
   unfold normL2
   rw [norm_smul]
-  have hpos : 0 ≤ ‖x‖ + eps := by positivity
-  rw [Real.norm_eq_abs, abs_of_nonneg (by positivity : (0:ℝ) ≤ 1 / (‖x‖ + eps))]
+  have hpos : 0 ≤ max ‖x‖ eps := le_max_of_le_right heps
+  rw [Real.norm_eq_abs, abs_of_nonneg (by positivity : (0:ℝ) ≤ 1 / max ‖x‖ eps)]
   by_cases hx : ‖x‖ = 0
   · rw [hx]
     simp
   · have hxpos : 0 < ‖x‖ := lt_of_le_of_ne (norm_nonneg _) (Ne.symm hx)
-    have : 0 < ‖x‖ + eps := by linarith
+    have : 0 < max ‖x‖ eps := lt_max_of_lt_left hxpos
     rw [div_mul_eq_mul_div, one_mul, div_le_one this]
-    linarith
+    exact le_max_left _ _
 
 /-- Inner-product score after QK-norm with per-head temperature `e^α`. -/
 noncomputable def score
@@ -164,7 +172,7 @@ Source: `reference/model.py` (`RMSNorm`, `CausalMHA.forward`) against
 theorem rmsNorm_eq_smul_normL2 (x : EucSpace d_head) :
     rmsNorm x = Real.sqrt d_head • normL2 0 x := by
   unfold rmsNorm normL2
-  rw [add_zero]
+  rw [max_eq_left (norm_nonneg x)]
   by_cases hx : ‖x‖ = 0
   · rw [ite_eq_left hx, norm_eq_zero.mp hx, smul_zero, smul_zero]
   · rw [ite_eq_right hx, smul_smul, mul_one_div]

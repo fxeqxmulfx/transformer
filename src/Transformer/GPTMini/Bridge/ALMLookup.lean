@@ -58,7 +58,8 @@ theorem normL2_smul_of_pos {c : ℝ} (hc : 0 < c) (x : EucSpace d) :
   · simp [normL2, hx]
   · have hxn : ‖x‖ ≠ 0 := norm_ne_zero_iff.mpr hx
     unfold normL2
-    rw [add_zero, add_zero, norm_smul, Real.norm_eq_abs, abs_of_pos hc, smul_smul]
+    rw [max_eq_left (norm_nonneg _), max_eq_left (norm_nonneg _), norm_smul,
+      Real.norm_eq_abs, abs_of_pos hc, smul_smul]
     congr 1
     field_simp
 
@@ -110,7 +111,8 @@ theorem score_eq_inner_div (alpha : ℝ) (q k : EucSpace d) :
     GPTMini.score alpha 0 q k
       = Real.exp alpha * (inner (𝕜 := ℝ) q k / (‖q‖ * ‖k‖)) := by
   unfold GPTMini.score normL2
-  rw [add_zero, add_zero, real_inner_smul_left, real_inner_smul_right]
+  rw [max_eq_left (norm_nonneg _), max_eq_left (norm_nonneg _), real_inner_smul_left,
+    real_inner_smul_right]
   ring
 
 /-- **Only a constant is lost.**  For keys of a common norm `R` — the sphere

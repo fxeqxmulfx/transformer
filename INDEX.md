@@ -3458,13 +3458,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`headLipschitz_mono`](src/Transformer/GPTMini/HeadLipschitz.lean#L75) | theorem | proved |
 | [`attentionHead_dist_le`](src/Transformer/GPTMini/HeadLipschitz.lean#L99) | theorem | proved |
 
-**[Transformer.GPTMini.MeanFieldRefutation](src/Transformer/GPTMini/MeanFieldRefutation.lean)** — 126 lines
+**[Transformer.GPTMini.MeanFieldRefutation](src/Transformer/GPTMini/MeanFieldRefutation.lean)** — 127 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`attentionHead_one`](src/Transformer/GPTMini/MeanFieldRefutation.lean#L31) | theorem | proved |
 | [`preLNHead_one_ne_zero`](src/Transformer/GPTMini/MeanFieldRefutation.lean#L48) | theorem | proved |
-| [`not_mean_field_clustering`](src/Transformer/GPTMini/MeanFieldRefutation.lean#L93) | theorem | proved |
+| [`not_mean_field_clustering`](src/Transformer/GPTMini/MeanFieldRefutation.lean#L94) | theorem | proved |
 
 **[Transformer.GPTMini.Model](src/Transformer/GPTMini/Model.lean)** — 113 lines
 
@@ -3480,18 +3480,18 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 **[Transformer.GPTMini.Properties](src/Transformer/GPTMini/Properties.lean)** — 17 lines, aggregator
 
-**[Transformer.GPTMini.QKNorm](src/Transformer/GPTMini/QKNorm.lean)** — 195 lines
+**[Transformer.GPTMini.QKNorm](src/Transformer/GPTMini/QKNorm.lean)** — 203 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`normL2`](src/Transformer/GPTMini/QKNorm.lean#L42) | def |  |
-| [`normL2_norm_le`](src/Transformer/GPTMini/QKNorm.lean#L50) | theorem | proved |
-| [`score`](src/Transformer/GPTMini/QKNorm.lean#L66) | def |  |
-| [`score_bounded`](src/Transformer/GPTMini/QKNorm.lean#L75) | theorem | proved |
-| [`partition_bounds`](src/Transformer/GPTMini/QKNorm.lean#L109) | theorem | proved |
-| [`rmsScore`](src/Transformer/GPTMini/QKNorm.lean#L155) | def |  |
-| [`rmsNorm_eq_smul_normL2`](src/Transformer/GPTMini/QKNorm.lean#L164) | theorem | proved |
-| [`rmsScore_eq_score`](src/Transformer/GPTMini/QKNorm.lean#L179) | theorem | proved |
+| [`normL2`](src/Transformer/GPTMini/QKNorm.lean#L50) | def |  |
+| [`normL2_norm_le`](src/Transformer/GPTMini/QKNorm.lean#L58) | theorem | proved |
+| [`score`](src/Transformer/GPTMini/QKNorm.lean#L74) | def |  |
+| [`score_bounded`](src/Transformer/GPTMini/QKNorm.lean#L83) | theorem | proved |
+| [`partition_bounds`](src/Transformer/GPTMini/QKNorm.lean#L117) | theorem | proved |
+| [`rmsScore`](src/Transformer/GPTMini/QKNorm.lean#L163) | def |  |
+| [`rmsNorm_eq_smul_normL2`](src/Transformer/GPTMini/QKNorm.lean#L172) | theorem | proved |
+| [`rmsScore_eq_score`](src/Transformer/GPTMini/QKNorm.lean#L187) | theorem | proved |
 
 **[Transformer.GPTMini.QKNormLipschitz](src/Transformer/GPTMini/QKNormLipschitz.lean)** — 118 lines
 
@@ -3633,18 +3633,18 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer.GPTMini.Bridge`
 
-**[Transformer.GPTMini.Bridge.ALMLookup](src/Transformer/GPTMini/Bridge/ALMLookup.lean)** — 183 lines
+**[Transformer.GPTMini.Bridge.ALMLookup](src/Transformer/GPTMini/Bridge/ALMLookup.lean)** — 185 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`normL2_smul_of_pos`](src/Transformer/GPTMini/Bridge/ALMLookup.lean#L55) | theorem | proved |
-| [`score_smul_key`](src/Transformer/GPTMini/Bridge/ALMLookup.lean#L66) | theorem | proved |
-| [`score_smul_query`](src/Transformer/GPTMini/Bridge/ALMLookup.lean#L74) | theorem | proved |
-| [`qknorm_indifferent_where_lookup_is_not`](src/Transformer/GPTMini/Bridge/ALMLookup.lean#L86) | theorem | proved |
-| [`score_eq_inner_div`](src/Transformer/GPTMini/Bridge/ALMLookup.lean#L109) | theorem | proved |
-| [`score_sub_eq_const_mul_lookup_sub`](src/Transformer/GPTMini/Bridge/ALMLookup.lean#L123) | theorem | proved |
-| [`score_le_iff_lookup_le`](src/Transformer/GPTMini/Bridge/ALMLookup.lean#L136) | theorem | proved |
-| [`score_le_iff_dist_le`](src/Transformer/GPTMini/Bridge/ALMLookup.lean#L157) | theorem | proved |
+| [`score_smul_key`](src/Transformer/GPTMini/Bridge/ALMLookup.lean#L67) | theorem | proved |
+| [`score_smul_query`](src/Transformer/GPTMini/Bridge/ALMLookup.lean#L75) | theorem | proved |
+| [`qknorm_indifferent_where_lookup_is_not`](src/Transformer/GPTMini/Bridge/ALMLookup.lean#L87) | theorem | proved |
+| [`score_eq_inner_div`](src/Transformer/GPTMini/Bridge/ALMLookup.lean#L110) | theorem | proved |
+| [`score_sub_eq_const_mul_lookup_sub`](src/Transformer/GPTMini/Bridge/ALMLookup.lean#L125) | theorem | proved |
+| [`score_le_iff_lookup_le`](src/Transformer/GPTMini/Bridge/ALMLookup.lean#L138) | theorem | proved |
+| [`score_le_iff_dist_le`](src/Transformer/GPTMini/Bridge/ALMLookup.lean#L159) | theorem | proved |
 
 **[Transformer.GPTMini.Bridge.CausalConnection](src/Transformer/GPTMini/Bridge/CausalConnection.lean)** — 87 lines
 

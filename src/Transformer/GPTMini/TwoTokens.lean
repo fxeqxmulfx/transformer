@@ -86,8 +86,8 @@ theorem inner_attentionHead_one_nonneg (alpha eps : ℝ) (heps : 0 < eps)
   have hb : 0 ≤ b := causalAttnWeights_nonneg cfg alpha eps q q 1 1
   set w := normL2 eps (v 1)
   have hw : ‖w‖ ≤ 1 := normL2_norm_le eps heps.le _
-  set c := ‖v 1‖ + eps
-  have hc : 0 < c := by positivity
+  set c := max ‖v 1‖ eps
+  have hc : 0 < c := lt_max_of_lt_right heps
   have hv1 : v 1 = c • w := by
     simp only [w, normL2, smul_smul]; rw [mul_one_div_cancel hc.ne', one_smul]
   set r₀ := Real.sqrt (cfg.head_dim : ℝ) / Real.sqrt (‖u 0‖ ^ 2 + (cfg.head_dim : ℝ) * eps)
