@@ -1,5 +1,5 @@
-import Transformer.AMSGrad.Section4_MainLemma
-import Transformer.AMSGrad.Section3_Issue
+import Transformer.AMSGrad.Section4_Telescope
+import Transformer.AMSGrad.Section4_Third
 
 /-
 # AMSGrad — the corrected convergence theorem
@@ -53,7 +53,26 @@ theorem mainthm_lambda {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlin
         + α * Real.sqrt (Real.log T + 1) /
             ((1 - β₁) ^ 2 * Real.sqrt (1 - S.β₂) * (1 - β₁ / Real.sqrt S.β₂))
             * ∑ i, S.gnorm amsgradRule T i := by
-  sorry
+  have hb1 : S.β₁ 1 = β₁ := by rw [hb]; simp
+  have hβt : ∀ t, 1 ≤ t → 0 ≤ S.β₁ t ∧ S.β₁ t ≤ β₁ := fun t _ => by
+    rw [hb]
+    exact ⟨mul_nonneg hβ₁ (pow_nonneg hl.le _), mul_le_of_le_one_right hβ₁ (pow_le_one₀ hl.le hl'.le)⟩
+  obtain ⟨t₀, ht₀1, ht₀⟩ := t_0_lambda (S := S) hβ₁ hβ₁' hl hl' hb
+  have hα' : ∀ t, 1 ≤ t → 0 < S.α t := fun t ht => by
+    rw [hαt]; exact div_pos hα (Real.sqrt_pos.2 (by exact_mod_cast ht))
+  refine ⟨t₀, ht₀1, fun T hT xstar hx => ?_⟩
+  have hp := prepare_lem hS (R := amsgradRule) (fun _ _ _ => le_sup_right) hα' (by rw [hb1]; exact hβt)
+    (by rw [hb1]; exact hβ₁') hβ₂ hβ₂' hT hx
+  have h1 := eqmain_le hS hα hαt hβt hβ₁' hβ₂.le hβ₂'.le ht₀ hT hx
+  have h2 : ∑ i, ∑ t ∈ Icc 1 T, S.α t / (1 - S.β₁ 1) * S.m amsgradRule t i ^ 2 /
+      Real.sqrt (S.vhat amsgradRule t i) ≤
+      α * Real.sqrt (Real.log T + 1) /
+        ((1 - β₁) ^ 2 * Real.sqrt (1 - S.β₂) * (1 - β₁ / Real.sqrt S.β₂)) *
+          ∑ i, S.gnorm amsgradRule T i := by
+    rw [hb1]
+    exact eqsecond_le (R := amsgradRule) (fun _ _ _ => le_sup_right) hα.le hαt hβt hβ₁' hβ₂ hβ₂' hγ T
+  have h3 := eqthird_lambda_le hS hα hαt hβ₁' hl.le hl' hb hβ₂.le hβ₂'.le T hx
+  linarith
 
 /-- **Theorem 4.1, `β_{1,t} = β₁/t`.**  Under the assumptions of
 `mainthm_lambda` with `β_{1,t} = β₁/t`, there is `t₀ ≥ 1` such that for all
@@ -74,7 +93,26 @@ theorem mainthm_inv {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineCo
         + α * Real.sqrt (Real.log T + 1) /
             ((1 - β₁) ^ 2 * Real.sqrt (1 - S.β₂) * (1 - β₁ / Real.sqrt S.β₂))
             * ∑ i, S.gnorm amsgradRule T i := by
-  sorry
+  have hb1 : S.β₁ 1 = β₁ := by rw [hb]; simp
+  have hβt : ∀ t, 1 ≤ t → 0 ≤ S.β₁ t ∧ S.β₁ t ≤ β₁ := fun t ht => by
+    rw [hb]
+    exact ⟨div_nonneg hβ₁ (Nat.cast_nonneg _), div_le_self hβ₁ (by exact_mod_cast ht)⟩
+  obtain ⟨t₀, ht₀1, ht₀⟩ := t_0_inv (S := S) hβ₁ hβ₁' hb
+  have hα' : ∀ t, 1 ≤ t → 0 < S.α t := fun t ht => by
+    rw [hαt]; exact div_pos hα (Real.sqrt_pos.2 (by exact_mod_cast ht))
+  refine ⟨t₀, ht₀1, fun T hT xstar hx => ?_⟩
+  have hp := prepare_lem hS (R := amsgradRule) (fun _ _ _ => le_sup_right) hα' (by rw [hb1]; exact hβt)
+    (by rw [hb1]; exact hβ₁') hβ₂ hβ₂' hT hx
+  have h1 := eqmain_le hS hα hαt hβt hβ₁' hβ₂.le hβ₂'.le ht₀ hT hx
+  have h2 : ∑ i, ∑ t ∈ Icc 1 T, S.α t / (1 - S.β₁ 1) * S.m amsgradRule t i ^ 2 /
+      Real.sqrt (S.vhat amsgradRule t i) ≤
+      α * Real.sqrt (Real.log T + 1) /
+        ((1 - β₁) ^ 2 * Real.sqrt (1 - S.β₂) * (1 - β₁ / Real.sqrt S.β₂)) *
+          ∑ i, S.gnorm amsgradRule T i := by
+    rw [hb1]
+    exact eqsecond_le (R := amsgradRule) (fun _ _ _ => le_sup_right) hα.le hαt hβt hβ₁' hβ₂ hβ₂' hγ T
+  have h3 := eqthird_inv_le hS hα hαt hβ₁' hb hβ₂.le hβ₂'.le T hx
+  linarith
 
 /-- **Corollary 4.5, `β_{1,t} = β₁λ^{t-1}`, the upper half.**  Under the
 assumptions of `mainthm_lambda`, for every `ε > 0`, eventually
