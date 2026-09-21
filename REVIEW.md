@@ -677,14 +677,14 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.RASPL — arXiv:2310.16028
 
-- [ ] Transformer/RASPL/Attention.lean (4): `sum_oneHot_mul`, `Constructable.add`, `constructable_value`, `argmax_shift`
-- [ ] Transformer/RASPL/Conjecture.lean (2): `Realizable.of_simple`, `not_forall_raspGeneralizationConjecture`
-- [ ] Transformer/RASPL/Defs.lean (5): `mem_selected_select`, `le_of_mem_selected_select`, `self_mem_selected_select`, `selWidth_eq`, `aggrMax_of_mem`
-- [ ] Transformer/RASPL/Degree.lean (4): `dependsOn_iff`, `levelWeight_split`, `levelWeight_restrict`, `degP_restrict_lt`
-- [ ] Transformer/RASPL/Fourier.lean (15): `bitSign_false`, `bitSign_true`, `bitSign_mul_self`, `one_add_bitSign_mul`, `chi_empty`, `chi_mul_self`, `chi_mul_chi`, `sum_chi`, `sum_chi_mul_chi`, `sum_coeff_mul_chi`, `coeff_chi`, `coeff_add`, `coeff_smul`, `coeff_sum`, `eq_of_coeff_eq`
-- [ ] Transformer/RASPL/Gotu.lean (7): `andProg_apply`, `andProg_last`, `minDeg_ne_andAll`, `filter_card_zero`, `coeff_const_one`, `levelWeight_const_one_zero`, `levelWeight_const_one_of_ne`
-- [ ] Transformer/RASPL/MinDegree.lean (5): `minDeg_not_dependsOn`, `apply_update_of_not_dependsOn`, `eq_of_forall_not_dependsOn`, `minDeg_eq_of_constant`, `not_degPLt_zero`
-- [ ] Transformer/RASPL/Restrict.lean (6): `chi_update_of_notMem`, `chi_insert`, `sum_subsets_split`, `restrict_eq`, `coeff_restrict_of_mem`, `coeff_restrict_of_notMem`
+- ok Transformer/RASPL/Attention.lean (4): `sum_oneHot_mul`, `Constructable.add`, `constructable_value`, `argmax_shift`
+- ok Transformer/RASPL/Conjecture.lean (2): `Realizable.of_simple`, `not_forall_raspGeneralizationConjecture`
+- ok Transformer/RASPL/Defs.lean (5): `mem_selected_select`, `le_of_mem_selected_select`, `self_mem_selected_select`, `selWidth_eq`, `aggrMax_of_mem`
+- ok Transformer/RASPL/Degree.lean (4): `dependsOn_iff`, `levelWeight_split`, `levelWeight_restrict`, `degP_restrict_lt`
+- ok Transformer/RASPL/Fourier.lean (15): `bitSign_false`, `bitSign_true`, `bitSign_mul_self`, `one_add_bitSign_mul`, `chi_empty`, `chi_mul_self`, `chi_mul_chi`, `sum_chi`, `sum_chi_mul_chi`, `sum_coeff_mul_chi`, `coeff_chi`, `coeff_add`, `coeff_smul`, `coeff_sum`, `eq_of_coeff_eq`
+- ok Transformer/RASPL/Gotu.lean (7): `andProg_apply`, `andProg_last`, `minDeg_ne_andAll`, `filter_card_zero`, `coeff_const_one`, `levelWeight_const_one_zero`, `levelWeight_const_one_of_ne`
+- ok Transformer/RASPL/MinDegree.lean (5): `minDeg_not_dependsOn`, `apply_update_of_not_dependsOn`, `eq_of_forall_not_dependsOn`, `minDeg_eq_of_constant`, `not_degPLt_zero`
+- ok Transformer/RASPL/Restrict.lean (6): `chi_update_of_notMem`, `chi_insert`, `sum_subsets_split`, `restrict_eq`, `coeff_restrict_of_mem`, `coeff_restrict_of_notMem`
 
 ### Transformer.Wasserstein — —
 
