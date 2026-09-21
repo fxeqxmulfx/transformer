@@ -6,9 +6,8 @@ Equations and statements covered:
 * `eq: otto.gf`             — abstract gradient flow,
 * `(H1), (H2)`              — the Otto–Reznikoff hypotheses,
 * `eq: first.inequality`    — Polyak–Łojasiewicz-like bound,
-* `Theorem thm: Otto result` — restated over the gradient flow and its
-  (H1)-projection, the form that leaves both curves free being refuted by
-  `not_forall_otto_reznikoff`,
+* `Theorem thm: Otto result` — false as printed, even for the true gradient
+  flow and its (H1)-projection: refuted by `not_otto_reznikoff`,
 * `eq: otto.1, otto.2`      — the consequence of the Otto–Reznikoff theorem,
 * `Lemma lem: bakry-emery` with `ineq: Almost Hessian` — in
   `Transformer.Metastability.BakryEmery`, which proves it with the flow and
@@ -34,6 +33,7 @@ import Transformer.Perspective.Section6_Circle
 import Transformer.Metastability.Basic
 import Transformer.Metastability.MainTheorem
 import Transformer.Metastability.AngularEnergy
+import Mathlib.Analysis.Calculus.Gradient.Basic
 
 open scoped BigOperators
 open Real
@@ -75,89 +75,70 @@ def H2
     {M : Type*} [NormedAddCommGroup M] (E : M → ℝ) (𝒩 : Set M) (δ : ℝ) : Prop :=
   ∀ v₁ ∈ 𝒩, ∀ v₂ ∈ 𝒩, |E v₁ - E v₂| ≤ δ * ‖v₁ - v₂‖
 
-/-- **Theorem (thm: Otto result), eq: otto.1, eq: otto.2.**
+/-- **`thm: Otto result` is false as printed, with the true gradient.**
 
-Under hypotheses (H1) and (H2) the gradient flow is drawn into a
-`δ`-neighborhood of the slow manifold `𝒩` exponentially:
+The paper states, "verbatim" from Otto–Reznikoff: under (H1) and (H2), for
+the gradient flow `u` of `eq: otto.gf` and any `v` with `v(t) ∈ 𝒩` satisfying
+`eq: first.inequality` against `u(t)`, and every `ε ∈ (0,1)`, some `C_ε > 0`
+gives, for all `t ≥ 0`,
 
   `‖u(t) - v(t)‖ + √(𝖤(u(t)) - 𝖤(v(t)))
-        ≤ e^{-(1-ε) t} √(𝖤(u(0)) - 𝖤(v(0))) + C_ε δ`.
+        ≤ e^{-(1-ε) t} √(𝖤(u(0)) - 𝖤(v(0))) + C_ε δ`.   (`eq: otto.1`)
 
-**What the source says and what is changed here.**  `u` and `v` are not two
-arbitrary curves.  `u` is *the* gradient flow `eq: otto.gf` of `𝖤`, and `v(t)`
-is *the* point of `𝒩` that (H1) attaches to `u(t)` — the paper writes
-`v(t) ∈ 𝒩` for the projection whose existence (H1) asserts, and its proof uses
-both halves of (H1) at that point.  Carried with `u` and `v` free, as they
-were, the statement is false: `not_forall_otto_reznikoff` refutes it at
-`M = ℝ` with `𝖤 ≡ 0`, where (H1) and (H2) hold, by letting `u` sit at
-`C_ε + 1` and `v` at `0`.
+At `t = 0` the two square roots cancel and what is left is
+`‖u(0) - v(0)‖ ≤ C_ε δ` for every initial datum, which no constant can give.
+The counterexample is as honest as the setting allows: `M = ℝ`,
+`𝖤(x) = x²/2 ≥ 0` smooth, `∇𝖤(x) = x` its actual gradient, `𝒩 = {0}`,
+`δ = 1`.  (H1) holds with `v = 0` and equality on both sides, (H2) is
+trivial on a point, the flow is `u(t) = u₀ e^{-t}`, and `v ≡ 0` satisfies
+`eq: first.inequality` at every time; `u₀ = C_ε + 1` then breaks `eq: otto.1`.
 
-`gradNorm` is therefore no longer a free scalar field either: it is the norm
-of the field `gradE` that drives the flow, which is what `‖∇𝖤(u)‖` means.
+By (H1) `‖u - v‖ ≤ √(2(𝖤(u) - 𝖤(v)))`, so a version with a constant factor in
+front of the first term would survive this example; which factor the original
+has is not recoverable from this source, and the statement is therefore
+refuted rather than repaired.  `eq: otto.2` falls with it on the same flow
+(`s` small, `t - s ≈ 2`, `u₀` large) and is not stated separately.
 
-Not proved here.
-
-Source: arXiv:2410.06833v1, §3.1, `thm: Otto result`, `eq: otto.1`,
-`eq: otto.2`. -/
-theorem otto_reznikoff
-    {M : Type*} [NormedAddCommGroup M] [NormedSpace ℝ M]
-    (E : M → ℝ) (gradE : M → M)
-    (𝒩 : Set M) (δ : ℝ) (hδ : 0 < δ)
-    (h1 : H1 E (fun u => ‖gradE u‖) 𝒩) (h2 : H2 E 𝒩 δ) :
-    ∀ (ε : ℝ), 0 < ε → ε < 1 →
-      ∃ Cε : ℝ, 0 < Cε ∧
-        ∀ (u₀ : M) (u v : ℝ → M),
-          abstractGF gradE u₀ u →
-          (∀ t : ℝ, v t ∈ 𝒩 ∧
-            (1/2 : ℝ) * ‖u t - v t‖ ^ 2 ≤ E (u t) - E (v t) ∧
-            E (u t) - E (v t) ≤ (1/2 : ℝ) * ‖gradE (u t)‖ ^ 2) →
-          ∀ t : ℝ, 0 ≤ t →
-            ‖u t - v t‖ + Real.sqrt (E (u t) - E (v t))
-              ≤ Real.exp (-(1 - ε) * t)
-                  * Real.sqrt (E (u 0) - E (v 0))
-                + Cε * δ := by
-  sorry
-
-/-- The hypotheses of `otto_reznikoff` are satisfiable: `M = ℝ`, `𝖤 ≡ 0`,
-`∇𝖤 ≡ 0`, `𝒩 = ℝ` and `δ = 1`.  (H1) holds with `v = u`, and (H2) reads
-`0 ≤ ‖v₁ - v₂‖`. -/
-example :
-    H1 (fun _ : ℝ => (0 : ℝ)) (fun u : ℝ => ‖(fun _ : ℝ => (0 : ℝ)) u‖) Set.univ ∧
-      H2 (fun _ : ℝ => (0 : ℝ)) Set.univ 1 :=
-  ⟨fun u => ⟨u, Set.mem_univ u, by simp, by simp⟩,
-    fun _ _ _ _ => by simp⟩
-
-/-- **`thm: Otto result` is false over two free curves.**
-
-The theorem is about the gradient flow `u` of `eq: otto.gf` and the
-`𝒩`-projection `v` that (H1) attaches to it.  With `u` and `v` free it claims
-that *any* two curves whatever stay within `C_ε δ` of each other, and that is
-false as soon as one of them is far away: at `M = ℝ` with `𝖤 ≡ 0`,
-`∇𝖤 ≡ 0`, `𝒩 = ℝ` and `δ = 1` both hypotheses hold — (H1) with `v = u`, (H2)
-because `0 ≤ ‖v₁ - v₂‖` — and, reading the conclusion at `t = 0` with
-`u ≡ C_ε + 1` and `v ≡ 0`, both square roots vanish and it says
-`C_ε + 1 ≤ C_ε`.
-
-Source: arXiv:2410.06833v1, §3.1, `thm: Otto result`. -/
-theorem not_forall_otto_reznikoff :
-    ¬ ∀ (E : ℝ → ℝ) (gradNorm : ℝ → ℝ) (𝒩 : Set ℝ) (δ : ℝ), 0 < δ →
-        H1 E gradNorm 𝒩 → H2 E 𝒩 δ →
+Source: arXiv:2410.06833v1, §3.1, `thm: Otto result`, `eq: otto.1`, with
+(H1), (H2) and `eq: otto.gf` of the same section. -/
+theorem not_otto_reznikoff :
+    ¬ ∀ (E : ℝ → ℝ) (gradE : ℝ → ℝ) (𝒩 : Set ℝ) (δ : ℝ), 0 < δ →
+        (∀ u, 0 ≤ E u) → (∀ u, HasGradientAt E (gradE u) u) →
+        H1 E (fun u => ‖gradE u‖) 𝒩 → H2 E 𝒩 δ →
         ∀ ε : ℝ, 0 < ε → ε < 1 →
           ∃ Cε : ℝ, 0 < Cε ∧
-            ∀ u v : ℝ → ℝ, ∀ t : ℝ, 0 ≤ t →
-              ‖u t - v t‖ + Real.sqrt (E (u t) - E (v t))
-                ≤ Real.exp (-(1 - ε) * t) * Real.sqrt (E (u 0) - E (v 0))
-                  + Cε * δ := by
+            ∀ (u₀ : ℝ) (u v : ℝ → ℝ),
+              abstractGF gradE u₀ u →
+              (∀ t : ℝ, v t ∈ 𝒩 ∧
+                (1/2 : ℝ) * ‖u t - v t‖ ^ 2 ≤ E (u t) - E (v t) ∧
+                E (u t) - E (v t) ≤ (1/2 : ℝ) * ‖gradE (u t)‖ ^ 2) →
+              ∀ t : ℝ, 0 ≤ t →
+                ‖u t - v t‖ + Real.sqrt (E (u t) - E (v t))
+                  ≤ Real.exp (-(1 - ε) * t) * Real.sqrt (E (u 0) - E (v 0))
+                    + Cε * δ := by
   intro h
+  have hgrad : ∀ u : ℝ, HasGradientAt (fun x : ℝ => x ^ 2 / 2) u u := fun u => by
+    apply HasDerivAt.hasGradientAt'
+    simpa using (hasDerivAt_pow 2 u).div_const 2
+  have hH1 : ∀ u : ℝ, (1/2 : ℝ) * ‖u - 0‖ ^ 2 ≤ u ^ 2 / 2 - 0 ^ 2 / 2 ∧
+      u ^ 2 / 2 - 0 ^ 2 / 2 ≤ (1/2 : ℝ) * ‖u‖ ^ 2 := fun u => by
+    simp only [sub_zero, Real.norm_eq_abs, sq_abs]; constructor <;> linarith
   obtain ⟨C, hC, hkey⟩ :=
-    h (fun _ => 0) (fun _ => 0) Set.univ 1 one_pos
-      (fun u => ⟨u, Set.mem_univ u, by simp, by simp⟩)
-      (fun _ _ _ _ => by simp)
+    h (fun x => x ^ 2 / 2) id {0} 1 one_pos (fun u => by positivity) hgrad
+      (fun u => ⟨0, rfl, hH1 u⟩)
+      (fun v₁ h₁ v₂ h₂ => by simp_all)
       (1/2) (by norm_num) (by norm_num)
-  have hbad := hkey (fun _ => C + 1) (fun _ => 0) 0 le_rfl
-  have hnorm : ‖(C + 1 : ℝ) - 0‖ = C + 1 := by
-    rw [sub_zero, Real.norm_eq_abs, abs_of_pos (by linarith)]
-  simp only [sub_self, Real.sqrt_zero, mul_zero, add_zero, mul_one, hnorm] at hbad
+  have hflow : abstractGF id (C + 1) (fun t => (C + 1) * Real.exp (-t)) := by
+    refine ⟨by simp, fun t => ?_⟩
+    have := ((Real.hasDerivAt_exp (-t)).comp t (hasDerivAt_neg t)).const_mul (C + 1)
+    convert this using 1
+    all_goals first | rfl | (show -((C + 1) * Real.exp (-t)) = _; ring)
+  have hbad := hkey (C + 1) _ (fun _ => 0) hflow (fun t => ⟨rfl, hH1 _⟩) 0 le_rfl
+  have hnorm : ‖(C + 1) * Real.exp (-0) - 0‖ = C + 1 := by
+    rw [neg_zero, Real.exp_zero, mul_one, sub_zero, Real.norm_eq_abs,
+      abs_of_pos (by linarith)]
+  rw [hnorm] at hbad
+  simp only [mul_zero, Real.exp_zero] at hbad
   linarith
 
 /-! ### §3.2 — Application to `𝖤_β` on `𝕋^n` -/
@@ -280,7 +261,7 @@ theorem not_forall_claim_one :
 For `β > 1` and a `(β, τ)`-separated configuration meeting (eq: tau.small),
 the conclusion of `thm: Otto result` holds with `δ = e^{-λ β / 2}`: the
 angular energy along the flow approaches, at the exponential rate of
-`otto_reznikoff`, that of a point of the slow manifold, up to
+`thm: Otto result`, that of a point of the slow manifold, up to
 `C_ε e^{-λ β / 2}`.
 
 **What the source says and what is changed here.**  Four things, all of them
@@ -300,8 +281,8 @@ round: the energy of `eq: otto.gf` — the one that *falls* along its flow, as
 with the difference reversed the square roots are identically `0` below the
 slow manifold and the statement is empty.
 
-*`U` is the flow and `V` is its (H1)-projection.*  Both were free, which is
-what `not_forall_otto_reznikoff` refutes one import away.  `U` solves
+*`U` is the flow and `V` is its (H1)-projection.*  Both were free in an
+earlier version, which made the statement false for trivial reasons.  `U` solves
 `U̇ = -∇(-𝖤_β)(U) = ∇𝖤_β(U)`, whose components are `angularGrad`, from `Θ`;
 `V(t)` is a point of the slow manifold satisfying (H1) against `U(t)`.  The
 angular `USA` dynamics of the paper is this same trajectory traversed at the
@@ -314,9 +295,11 @@ one is a corollary of.
 Mathlib, and the `‖u - v‖²` of (H1) is the Euclidean one, so it is written
 out as `∑ᵢ (U t i - V t i)²`.
 
-Not proved here: it is `otto_reznikoff` applied to `-𝖤_β` on `𝕋^n`, and both
-that theorem and the verification of (H1), (H2) for `𝖤_β` — which is
-`PL_borjan` — are `sorry` here.
+Not proved here.  The paper derives it from `thm: Otto result` applied to
+`-𝖤_β` on `𝕋^n`, but that theorem is false as printed (`not_otto_reznikoff`,
+it fails at `t = 0`), so the derivation does not stand; a proof has to go
+through a corrected form of it.  The verification of (H1), (H2) for `𝖤_β` —
+`PL_borjan` — is `sorry` as well.
 
 Source: arXiv:2410.06833v1, §3.2, `eq: otto.attention`. -/
 theorem otto_attention (ε : ℝ) (hε : 0 < ε) (hε1 : ε < 1) :
