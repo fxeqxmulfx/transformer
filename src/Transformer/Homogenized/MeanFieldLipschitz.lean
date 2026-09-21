@@ -11,27 +11,28 @@ constant
 
   `C = O(β² e^{4β‖Ā‖} e^{β²dσ_A²})`,
 
-and that rate is false: `not_forall_satisfying_MF_rate` refutes it, for two
-independent reasons, both visible in the source's own proof.
+and that rate is false: `not_forall_satisfying_MF_rate` refutes it even at one
+fixed model, with the constant allowed to depend on all model data but `β`.
 
-* It carries no scale of the value matrix.  The identity the proof opens with
-  reads
+* It vanishes as `β ↓ 0`, and the left-hand side does not.  At small `β` the
+  attention is nearly uniform and `m_A[μ](x)` nearly independent of `x`, but
+  `Proj_x` still depends on `x`, and `Proj_x u - Proj_y u` is of order
+  `‖x-y‖`, not `β²‖x-y‖`.  This is what the refutation proves.
+* Read with a constant uniform over models, it fails a second time: it carries
+  no scale of the value matrix.  The identity the proof opens with reads
 
   `‖G_μ(x,·)-G_ν(y,·)‖²_{L²} = dσ_V² ‖Proj_x m_A[μ](x) - Proj_y m_A[ν](y)‖²_{L²}
     + ‖Proj_x V̄ Cov^A_μ(x) - Proj_y V̄ Cov^A_ν(y)‖²_{L²}`,
 
   whose two sides scale together under `(σ_V, V̄) ↦ (λσ_V, λV̄)`, while the
   displayed `C` mentions neither.  `lem:Kernel_regularity` of the same paper
-  does carry the factor `dσ_V²`.
-* It vanishes as `β ↓ 0`, and the left-hand side does not.  At small `β` the
-  attention is nearly uniform and `m_A[μ](x)` nearly independent of `x`, but
-  `Proj_x` still depends on `x`, and `Proj_x u - Proj_y u` is of order
-  `‖x-y‖`, not `β²‖x-y‖`.
+  does carry the factor `dσ_V²`.  This is a remark; the refutation does not
+  rest on it.
 
-The witness makes both failures at once: `d = 2`, `Ā = 0` and `A ≡ 0`, so both
-exponentials are `1` at every `β`; one Rademacher entry in `V`, by
-`isHighOrderLaw_rademacher`; and `μ = ν = δ_{e₁}`, `x = e₁`, `y = e₂`, for
-which the left-hand side is `1` and the right-hand side at most `2Kβ²`.
+The witness is `d = 2`, `Ā = 0` and `A ≡ 0`, so both exponentials are `1` at
+every `β`; one Rademacher entry in `V`, by `isHighOrderLaw_rademacher`; and
+`μ = ν = δ_{e₁}`, `x = e₁`, `y = e₂`, for which the left-hand side is `1` and
+the right-hand side at most `2Kβ²`.
 
 What survives is the qualitative statement, and it is exactly what the proof of
 `thm:PoC_wellposedness` uses of this proposition — "the coefficient `G_μ(x,·)`
@@ -161,12 +162,16 @@ theorem sqrt_integral_norm_GfieldOf_radLaw (β : ℝ) :
     norm_proj_sub_proj_sq, norm_proj_sub_proj_sq]
   norm_num
 
-/-- **The rate of `prop:satisfying_MF` is false.**  There is no universal `K`
-for which
+/-- **The rate of `prop:satisfying_MF` is false.**  Not even for one fixed
+model: there is a model `ass:high_order_short` allows for which no `K`, however
+it depends on the model data `(d, σ_V, σ_A, ρ*, Ā)`, satisfies
 
   `‖G_μ(x,·) - G_ν(y,·)‖_{L²(ρ*)} ≤ K β² e^{4β‖Ā‖} e^{β²dσ_A²} (W₂(μ,ν) + ‖x-y‖)`
 
-holds across the models `ass:high_order_short` allows.  The bound on `Ā` is
+for every `β > 0`.  This is the weakest reading of `O(·)`: the constant is
+only required not to depend on `β`, which the display does make explicit, nor
+on the points and measures the inequality is quantified over.  The bound on
+`Ā` is
 carried as an operator bound `opA`, so the refutation does not depend on which
 matrix norm `‖Ā‖` is read in.
 
@@ -178,13 +183,12 @@ while the right-hand side is at most `2Kβ²`, which is `< 1` at `β = 1/(K+2)`.
 
 Source: arXiv:2604.01978v1, `prop:satisfying_MF`. -/
 theorem not_forall_satisfying_MF_rate :
-    ¬ ∃ K : ℝ, 0 < K ∧
-      ∀ (d : ℕ) (β : ℝ), 0 < β →
-      ∀ (C σV σA : ℝ≥0) (ρ : Measure (HeadParam d)) (Ω : Type) [MeasurableSpace Ω]
+    ¬ ∀ (d : ℕ) (C σV σA : ℝ≥0) (ρ : Measure (HeadParam d)) (Ω : Type) [MeasurableSpace Ω]
         (P : Measure Ω) (Vr Wr Wr' : Ω → Matrix (Fin d) (Fin d) ℝ)
         (mV mA : Matrix (Fin d) (Fin d) ℝ),
         IsHighOrderLaw d C σV σA ρ P Vr Wr Wr' mV mA →
       ∀ opA : ℝ, (∀ v : EucSpace d, ‖Matrix.toEuclideanLin mA v‖ ≤ opA * ‖v‖) →
+      ∃ K : ℝ, 0 < K ∧ ∀ β : ℝ, 0 < β →
       ∀ (μ ν : Measure (EucSpace d)), IsProbabilityMeasure μ → IsProbabilityMeasure ν →
         μ {z : EucSpace d | ‖z‖ = 1}ᶜ = 0 → ν {z : EucSpace d | ‖z‖ = 1}ᶜ = 0 →
       ∀ x y : EucSpace d, ‖x‖ = 1 → ‖y‖ = 1 →
@@ -192,7 +196,9 @@ theorem not_forall_satisfying_MF_rate :
           K * β ^ 2 * Real.exp (4 * β * opA) *
               Real.exp (β ^ 2 * (d : ℝ) * (σA : ℝ) ^ 2) *
             (Wasserstein.W2 μ ν + ‖x - y‖) := by
-  rintro ⟨K, hK, h⟩
+  intro hall
+  obtain ⟨K, hK, h⟩ := hall 2 1 1 0 radLaw Bool fairCoin radMatrix 0 0 0 0
+    isHighOrderLaw_rademacher 0 (fun v => by simp)
   have hK2 : (0 : ℝ) < K + 2 := by linarith
   have hβ : (0 : ℝ) < 1 / (K + 2) := by positivity
   have hsph : MeasurableSet {z : EucSpace 2 | ‖z‖ = 1} :=
@@ -205,8 +211,7 @@ theorem not_forall_satisfying_MF_rate :
       {z : EucSpace 2 | ‖z‖ = 1}ᶜ = 0 := by
     rw [Measure.dirac_apply' _ hsph.compl,
       Set.indicator_of_notMem (by simp)]
-  have key := h 2 (1 / (K + 2)) hβ 1 1 0 radLaw Bool fairCoin radMatrix 0 0 0 0
-    isHighOrderLaw_rademacher 0 (fun v => by simp)
+  have key := h (1 / (K + 2)) hβ
     (Measure.dirac (EuclideanSpace.single 0 1))
     (Measure.dirac (EuclideanSpace.single 0 1)) inferInstance inferInstance hsupp hsupp
     (EuclideanSpace.single 0 1) (EuclideanSpace.single 1 1) hnorm hnorm'

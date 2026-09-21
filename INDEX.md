@@ -3951,18 +3951,18 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`covKernel`](src/Transformer/Homogenized/MeanField.lean#L135) | def |  |
 | [`inner_covKernel_proj`](src/Transformer/Homogenized/MeanField.lean#L160) | theorem | proved |
 
-**[Transformer.Homogenized.MeanFieldLipschitz](src/Transformer/Homogenized/MeanFieldLipschitz.lean)** — 237 lines
+**[Transformer.Homogenized.MeanFieldLipschitz](src/Transformer/Homogenized/MeanFieldLipschitz.lean)** — 242 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`attnFieldOf_dirac`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L58) | theorem | proved |
-| [`GfieldOf_dirac`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L66) | theorem | proved |
-| [`satisfying_MF`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L89) | theorem | sorry |
-| [`valueMap_radMatrix`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L108) | theorem | proved |
-| [`integral_valueMap_radLaw`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L118) | theorem | proved |
-| [`norm_proj_sub_proj_sq`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L126) | theorem | proved |
-| [`sqrt_integral_norm_GfieldOf_radLaw`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L147) | theorem | proved |
-| [`not_forall_satisfying_MF_rate`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L180) | theorem | proved |
+| [`attnFieldOf_dirac`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L59) | theorem | proved |
+| [`GfieldOf_dirac`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L67) | theorem | proved |
+| [`satisfying_MF`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L90) | theorem | sorry |
+| [`valueMap_radMatrix`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L109) | theorem | proved |
+| [`integral_valueMap_radLaw`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L119) | theorem | proved |
+| [`norm_proj_sub_proj_sq`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L127) | theorem | proved |
+| [`sqrt_integral_norm_GfieldOf_radLaw`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L148) | theorem | proved |
+| [`not_forall_satisfying_MF_rate`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L185) | theorem | proved |
 
 **[Transformer.Homogenized.Metastability](src/Transformer/Homogenized/Metastability.lean)** — 149 lines
 
@@ -6811,7 +6811,7 @@ Everything the build cannot vouch for, in one place.
 | [`logistic_arcsin_martingale`](src/Transformer/Homogenized/Logistic.lean#L121) | theorem | `Transformer.Homogenized.Logistic` |
 | [`logistic_limit`](src/Transformer/Homogenized/Logistic.lean#L143) | theorem | `Transformer.Homogenized.Logistic` |
 | [`large_beta_logistic_limit`](src/Transformer/Homogenized/LogisticLimit.lean#L90) | theorem | `Transformer.Homogenized.LogisticLimit` |
-| [`satisfying_MF`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L89) | theorem | `Transformer.Homogenized.MeanFieldLipschitz` |
+| [`satisfying_MF`](src/Transformer/Homogenized/MeanFieldLipschitz.lean#L90) | theorem | `Transformer.Homogenized.MeanFieldLipschitz` |
 | [`large_beta_metastability`](src/Transformer/Homogenized/Metastability.lean#L95) | theorem | `Transformer.Homogenized.Metastability` |
 | [`ito_formula_overlap`](src/Transformer/Homogenized/OverlapDrift.lean#L141) | theorem | `Transformer.Homogenized.OverlapDrift` |
 | [`propagation_of_chaos`](src/Transformer/Homogenized/PropagationChaos.lean#L62) | theorem | `Transformer.Homogenized.PropagationChaos` |
