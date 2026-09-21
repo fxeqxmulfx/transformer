@@ -334,42 +334,42 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.Clusters — arXiv:2305.05465
 
-- [ ] Transformer/Clusters/Extremum.lean (4): `antitone_sup'_of_hasDerivAt`, `le_sup'_mul_exp_of_hasDerivAt`, `le_sqrt_add_one_mul_exp`, `hasDerivAt_norm_sq_rclike`
-- [ ] Transformer/Clusters/Section10_ProjHull.lean (4): `isProjOnto_one`, `convex_image_tokenHull`, `image_tokenHull_subset`, `image_tokenHull_antitone`
-- [ ] Transformer/Clusters/Section10_Remainder.lean (3): `projScore_self`, `scoreRemainder_self`, `softmax_le_exp_neg`
-- [ ] Transformer/Clusters/Section10_Step2.lean (2): `hasDerivAt_norm_sq_proj`, `candidatesThickening_subset`
-- [ ] Transformer/Clusters/Section12_Feedforward.lean (6): `actPointwise_apply`, `actPointwise_zero`, `actPointwise_id`, `relu_zero`, `mlpRescaledDynamics_id_iff`, `mlpRescaledDynamics_const`
-- [ ] Transformer/Clusters/Section12_Generic.lean (4): `qkMatrix_one`, `sum_smul_single`, `inner_eq_sum_qkMatrix`, `attentionMatrix_congr_qkMatrix`
-- [ ] Transformer/Clusters/Section12_MultiHead.lean (2): `multiHeadTransformer_one_iff`, `multiHeadTransformer_zero`
-- [ ] Transformer/Clusters/Section1_Dynamics.lean (8): `attentionMatrix_pos`, `attentionMatrix_nonneg`, `sum_attentionMatrix`, `transformerDynamics_const`, `discreteTransformer_const`, `isPosDefOp_id`, `isPosDefQK_of_isAttentionRoot`, `isAttentionRoot_id`
-- [ ] Transformer/Clusters/Section2_LowRank.lean (3): `pi_single_one_nonneg`, `sum_pi_single_one`, `isBooleanLimit_of_isBooleanRows`
-- [ ] Transformer/Clusters/Section3_Discrete.lean (2): `discreteRescaled_const`, `discreteTransformer_iff_rescaled`
-- [ ] Transformer/Clusters/Section3_IdCase.lean (3): `attentionMatrix_expTime_one`, `rescaledDynamics_one_iff`, `rescaledDynamics_one_const`
-- [ ] Transformer/Clusters/Section3_Rescaled.lean (9): `expTime_zero`, `expTime_zero_map`, `expTime_one_apply`, `hasDerivAt_expTime`, `commute_smul_self`, `commute_expTime`, `expTime_neg_mul`, `rescaledDynamics_const`, `transformerDynamics_iff_rescaled`
-- [ ] Transformer/Clusters/Section4_Codim.lean (1): `isUnstableSplitting_one`
-- [ ] Transformer/Clusters/Section4_Hyperplanes.lean (5): `mem_affineShift_self`, `isGoodTriple_iff`, `span_singleton_eq_top`, `isGoodTripleWith_one`, `isGoodTriple_one`
-- [ ] Transformer/Clusters/Section5_Mix.lean (2): `isPosDefQK_one`, `isGoodTripleMulti_one`
-- [ ] Transformer/Clusters/Section6_ContEq.lean (1): `isContEqSolution_dirac`
-- [ ] Transformer/Clusters/Section6_Kernel.lean (5): `isCarriedBy_dirac`, `attentionKernel_dirac_zero`, `ae_mem_closedBall`, `integrable_attentionWeight`, `attentionKernel_norm_le`
-- [ ] Transformer/Clusters/Section6_KernelDeriv.lean (4): `scoreDual_apply`, `continuous_scoreDual`, `norm_scoreDual_le`, `attentionKernel_hasFDerivAt`
-- [ ] Transformer/Clusters/Section6_KernelLip.lean (3): `abs_exp_sub_exp_le`, `abs_inner_le_of_mem_closedBall`, `attentionKernel_lipschitz_in_measure`
-- [ ] Transformer/Clusters/Section6_WellPosed.lean (1): `isLocLipschitzCurve_const`
-- [ ] Transformer/Clusters/Section7_Bounded.lean (3): `isBoundedToken_zero`, `tendsto_attention_of_tendsto_others`, `tendsto_row_isProbability`
-- [ ] Transformer/Clusters/Section7_DistNonDec.lean (4): `softmax_monotone`, `inner_drift_sub_nonneg`, `norm_sub_monotone`, `ne_of_norm_sub_monotone`
-- [ ] Transformer/Clusters/Section7_HigherDim.lean (3): `tendsto_attentionMatrix_of_tendsto_common`, `not_tendsto_zero_of_tendsto_common`, `not_tendsto_id_of_tendsto_common`
-- [ ] Transformer/Clusters/Section7_LogSumExp.lean (5): `sum_rpow_mul_rpow_le`, `sum_exp_inner_pos`, `convexOn_logSumExp`, `transformerDynamics_one_iff`, `idNonrescaledDynamics_zero`
-- [ ] Transformer/Clusters/Section7_Symmetric.lean (16): `norm_unit1`, `coord_smul_unit1`, `inner_smul_unit1`, `symSign_zero`, `symSign_one`, `symSign_two`, `symDrift_zero`, `attentionMatrix_symTriple`, `sum_exp_symSign_pos`, `sum_weighted_symSign`, `drift_symTriple`, `idNonrescaledDynamics_symTriple`, `isOrderedConfig_symTriple`, `isBoundedToken_symTriple`, `symInterior_ne_first`, `symInterior_ne_last`
-- [ ] Transformer/Clusters/Section7_Unbounded.lean (3): `isOrderedConfig_subsingleton`, `idNonrescaledDynamics_single`, `exists_auxiliary_constant`
-- [ ] Transformer/Clusters/Section8_Bounded.lean (3): `mul_exp_add_one_nonneg`, `inner_negIdDrift_neg`, `exists_bound_negIdDynamics`
-- [ ] Transformer/Clusters/Section8_Energy.lean (2): `sum_exp_smul_eq_neg_smul_negIdDrift`, `integrableOn_sq_norm_negIdDrift`
-- [ ] Transformer/Clusters/Section8_Origin.lean (4): `isIdentityQK_one`, `transformerDynamics_neg_one_iff`, `transformerDynamics_zero`, `attentionMatrix_tendsto_uniform`
-- [ ] Transformer/Clusters/Section8_Polytope.lean (6): `mem_tokenHull`, `isCompact_tokenHull`, `idRescaledDynamics_const`, `tokenHull_antitone`, `mem_tokenHull_zero`, `exists_bound_idRescaled`
-- [ ] Transformer/Clusters/Section8_Stationary.lean (2): `isStationaryConfig_zero`, `eq_zero_of_isStationaryConfig`
-- [ ] Transformer/Clusters/Section9_Eigen.lean (6): `isEigenFunctional_one`, `le_maxCoord`, `minCoord_le`, `minCoord_le_maxCoord`, `hasDerivAt_eigenFunctional`, `abs_eigenFunctional_le`
-- [ ] Transformer/Clusters/Section9_Fj.lean (3): `norm_sum_attentionMatrix_smul_le`, `minCoord_eq_neg`, `maxCoord_antitoneOn_minCoord_monotoneOn`
-- [ ] Transformer/Clusters/Section9_Growth.lean (4): `isEigenFunctional_zero`, `norm_eigenFunctional_le`, `isProjContraction_zero`, `norm_proj_le`
-- [ ] Transformer/Clusters/Section9_Hyperplanes.lean (4): `apply_smul_eq`, `tendsto_infDist_affineShift`, `finrank_ker_add_one`, `dist_tendsto_zero_of_tendsto_eigenFunctional`
-- [ ] Transformer/Clusters/Section9_Limits.lean (5): `exists_tendsto_of_antitoneOn`, `exists_tendsto_of_monotoneOn`, `exists_tendsto_maxCoord_minCoord`, `bounded_of_coord_bounded`, `eq_sum_proj_single`
+- ok Transformer/Clusters/Extremum.lean (4): `antitone_sup'_of_hasDerivAt`, `le_sup'_mul_exp_of_hasDerivAt`, `le_sqrt_add_one_mul_exp`, `hasDerivAt_norm_sq_rclike`
+- ok Transformer/Clusters/Section10_ProjHull.lean (4): `isProjOnto_one`, `convex_image_tokenHull`, `image_tokenHull_subset`, `image_tokenHull_antitone`
+- issue Transformer/Clusters/Section10_Remainder.lean (3): `projScore_self`, `scoreRemainder_self`, `softmax_le_exp_neg` — exists_bound_scoreRemainder (e:boundrj) FALSE: d=2, V=diag(1,0), lam=1, F=span e1, G=span e2, A=Q=K=[[1,1/2],[1/2,1]], mu=0, constant z1=(0,1), z2=(0,2): r12=(1+a^2)-a^2 e^{2t}; paper silently uses pi_F(A e^{tV} z)=e^{lam t} pi_F(A z), needs A to respect F+G
+- issue Transformer/Clusters/Section10_Step2.lean (2): `hasDerivAt_norm_sq_proj`, `candidatesThickening_subset` — cl:gamma'12 and Step 2' faithful to the paper, but the paper's route to Step 2' goes through the false e:boundrj; truth undecided
+- ok Transformer/Clusters/Section12_Feedforward.lean (6): `actPointwise_apply`, `actPointwise_zero`, `actPointwise_id`, `relu_zero`, `mlpRescaledDynamics_id_iff`, `mlpRescaledDynamics_const`
+- ok Transformer/Clusters/Section12_Generic.lean (4): `qkMatrix_one`, `sum_smul_single`, `inner_eq_sum_qkMatrix`, `attentionMatrix_congr_qkMatrix`
+- ok Transformer/Clusters/Section12_MultiHead.lean (2): `multiHeadTransformer_one_iff`, `multiHeadTransformer_zero`
+- ok Transformer/Clusters/Section1_Dynamics.lean (8): `attentionMatrix_pos`, `attentionMatrix_nonneg`, `sum_attentionMatrix`, `transformerDynamics_const`, `discreteTransformer_const`, `isPosDefOp_id`, `isPosDefQK_of_isAttentionRoot`, `isAttentionRoot_id`
+- ok Transformer/Clusters/Section2_LowRank.lean (3): `pi_single_one_nonneg`, `sum_pi_single_one`, `isBooleanLimit_of_isBooleanRows`
+- ok Transformer/Clusters/Section3_Discrete.lean (2): `discreteRescaled_const`, `discreteTransformer_iff_rescaled`
+- ok Transformer/Clusters/Section3_IdCase.lean (3): `attentionMatrix_expTime_one`, `rescaledDynamics_one_iff`, `rescaledDynamics_one_const`
+- ok Transformer/Clusters/Section3_Rescaled.lean (9): `expTime_zero`, `expTime_zero_map`, `expTime_one_apply`, `hasDerivAt_expTime`, `commute_smul_self`, `commute_expTime`, `expTime_neg_mul`, `rescaledDynamics_const`, `transformerDynamics_iff_rescaled`
+- ok Transformer/Clusters/Section4_Codim.lean (1): `isUnstableSplitting_one`
+- ok Transformer/Clusters/Section4_Hyperplanes.lean (5): `mem_affineShift_self`, `isGoodTriple_iff`, `span_singleton_eq_top`, `isGoodTripleWith_one`, `isGoodTriple_one`
+- ok Transformer/Clusters/Section5_Mix.lean (2): `isPosDefQK_one`, `isGoodTripleMulti_one`
+- ok Transformer/Clusters/Section6_ContEq.lean (1): `isContEqSolution_dirac`
+- ok Transformer/Clusters/Section6_Kernel.lean (5): `isCarriedBy_dirac`, `attentionKernel_dirac_zero`, `ae_mem_closedBall`, `integrable_attentionWeight`, `attentionKernel_norm_le`
+- ok Transformer/Clusters/Section6_KernelDeriv.lean (4): `scoreDual_apply`, `continuous_scoreDual`, `norm_scoreDual_le`, `attentionKernel_hasFDerivAt`
+- ok Transformer/Clusters/Section6_KernelLip.lean (3): `abs_exp_sub_exp_le`, `abs_inner_le_of_mem_closedBall`, `attentionKernel_lipschitz_in_measure`
+- issue Transformer/Clusters/Section6_WellPosed.lean (1): `isLocLipschitzCurve_const` — header says the rescaled well-posedness is stated independently because transformerDynamics_iff_rescaled is unproved; it is proved (stale docstring)
+- ok Transformer/Clusters/Section7_Bounded.lean (3): `isBoundedToken_zero`, `tendsto_attention_of_tendsto_others`, `tendsto_row_isProbability`
+- ok Transformer/Clusters/Section7_DistNonDec.lean (4): `softmax_monotone`, `inner_drift_sub_nonneg`, `norm_sub_monotone`, `ne_of_norm_sub_monotone`
+- ok Transformer/Clusters/Section7_HigherDim.lean (3): `tendsto_attentionMatrix_of_tendsto_common`, `not_tendsto_zero_of_tendsto_common`, `not_tendsto_id_of_tendsto_common`
+- ok Transformer/Clusters/Section7_LogSumExp.lean (5): `sum_rpow_mul_rpow_le`, `sum_exp_inner_pos`, `convexOn_logSumExp`, `transformerDynamics_one_iff`, `idNonrescaledDynamics_zero`
+- ok Transformer/Clusters/Section7_Symmetric.lean (16): `norm_unit1`, `coord_smul_unit1`, `inner_smul_unit1`, `symSign_zero`, `symSign_one`, `symSign_two`, `symDrift_zero`, `attentionMatrix_symTriple`, `sum_exp_symSign_pos`, `sum_weighted_symSign`, `drift_symTriple`, `idNonrescaledDynamics_symTriple`, `isOrderedConfig_symTriple`, `isBoundedToken_symTriple`, `symInterior_ne_first`, `symInterior_ne_last`
+- ok Transformer/Clusters/Section7_Unbounded.lean (3): `isOrderedConfig_subsingleton`, `idNonrescaledDynamics_single`, `exists_auxiliary_constant`
+- ok Transformer/Clusters/Section8_Bounded.lean (3): `mul_exp_add_one_nonneg`, `inner_negIdDrift_neg`, `exists_bound_negIdDynamics`
+- ok Transformer/Clusters/Section8_Energy.lean (2): `sum_exp_smul_eq_neg_smul_negIdDrift`, `integrableOn_sq_norm_negIdDrift`
+- ok Transformer/Clusters/Section8_Origin.lean (4): `isIdentityQK_one`, `transformerDynamics_neg_one_iff`, `transformerDynamics_zero`, `attentionMatrix_tendsto_uniform`
+- ok Transformer/Clusters/Section8_Polytope.lean (6): `mem_tokenHull`, `isCompact_tokenHull`, `idRescaledDynamics_const`, `tokenHull_antitone`, `mem_tokenHull_zero`, `exists_bound_idRescaled`
+- ok Transformer/Clusters/Section8_Stationary.lean (2): `isStationaryConfig_zero`, `eq_zero_of_isStationaryConfig`
+- ok Transformer/Clusters/Section9_Eigen.lean (6): `isEigenFunctional_one`, `le_maxCoord`, `minCoord_le`, `minCoord_le_maxCoord`, `hasDerivAt_eigenFunctional`, `abs_eigenFunctional_le`
+- ok Transformer/Clusters/Section9_Fj.lean (3): `norm_sum_attentionMatrix_smul_le`, `minCoord_eq_neg`, `maxCoord_antitoneOn_minCoord_monotoneOn`
+- ok Transformer/Clusters/Section9_Growth.lean (4): `isEigenFunctional_zero`, `norm_eigenFunctional_le`, `isProjContraction_zero`, `norm_proj_le`
+- ok Transformer/Clusters/Section9_Hyperplanes.lean (4): `apply_smul_eq`, `tendsto_infDist_affineShift`, `finrank_ker_add_one`, `dist_tendsto_zero_of_tendsto_eigenFunctional`
+- ok Transformer/Clusters/Section9_Limits.lean (5): `exists_tendsto_of_antitoneOn`, `exists_tendsto_of_monotoneOn`, `exists_tendsto_maxCoord_minCoord`, `bounded_of_coord_bounded`, `eq_sum_proj_single`
 
 ### Transformer.FrankWolfe — arXiv:2508.09628
 
