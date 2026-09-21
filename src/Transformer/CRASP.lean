@@ -71,7 +71,8 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.PositionalReductionEquiv` | the translation preserves meaning; the paper's block size is too small |
 | `CRASP.PositionalDepth` | its reduction to `TL[◁#]`, and its hierarchy |
 | `CRASP.PositionalTransformers` | sinusoidal, RoPE and ALiBi position encodings |
-| `CRASP.PositionalHierarchy` | what they simulate, and their depth hierarchies |
+| `CRASP.PositionalHierarchy` | what they simulate |
+| `CRASP.EncodingHierarchy` | the depth hierarchy under position encodings |
 
 Two things the paper carries are deliberately absent.  `lem:bb` and
 `lem:piecewise_testable_depth_majtwo` sit inside `\iffalse` blocks in the
@@ -141,3 +142,4 @@ import Transformer.CRASP.PositionalReductionCount
 import Transformer.CRASP.PositionalReductionEquiv
 import Transformer.CRASP.PositionalDepth
 import Transformer.CRASP.PositionalHierarchy
+import Transformer.CRASP.EncodingHierarchy

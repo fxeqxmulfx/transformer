@@ -12,8 +12,8 @@ rounds the attention weight to zero and only a bounded window survives.
 Since `thm:tlclpos_depth_hierarchy` separates the depths of both fragments,
 none of the three collapses the transformer depth hierarchy — which is
 `thm:rtfr_pes_depth_hierarchy`, the statement the paper puts in the main
-text.  The three unnamed theorems of Appendix F, one per encoding, are its
-three instances.
+text, in `CRASP.EncodingHierarchy`.  The three unnamed theorems of Appendix F,
+one per encoding, are its three instances.
 
 Appendix F also carries `thm:mnf`, `thm:tlmod_to_rtfr` and
 `thm:TLCmod_to_rtfr`, the converse simulations for `MOD`.  They sit inside an
@@ -146,55 +146,6 @@ example : ∃ T : PTfr (Option Bool) 1 0 0 0, T.pe = .alibi 1 :=
   ⟨{ E := fun _ _ => 0, WQ := fun _ _ => 0, WK := fun _ _ => 0,
      WV := fun _ _ => 0, ff := fun _ _ => 0, Wout := fun _ => 0,
      pe := .alibi 1 }, rfl⟩
-
-/-- **Theorem `thm:rtfr_pes_depth_hierarchy`.**  *The depth hierarchy survives
-the position encodings.*
-
-A depth-`(k+1)` transformer can recognize `E_{k+1}` but no depth-`k` one can,
-whether the transformers use sinusoidal position embeddings, RoPE or ALiBi.
-The positive half needs no position encoding at all; the negative half is
-`thm:rtfr_eq_tlclmod`, `thm:rtfr_to_TLClmod` or `thm:rtfr_to_TLCly` followed
-by `thm:tlclpos_depth_hierarchy`, which denies `E_{k+1}` to both
-`TL[◁#, MOD]_k` and `TL[◁#, Y]_k`.
-
-The rational-angle assumption is the one under which the periodic encodings
-are simulated at all; it is vacuous for ALiBi.
-
-Only the negative half is proved here, and it is proved exactly that way: it
-is a corollary of the three simulations above.  The positive half asks for a
-depth-`(k+1)` transformer carrying the *given* encoding, which needs the
-construction of `thm:rtfr_to_TLCl` and is left open.
-
-Source: arXiv:2506.16055v3, §4.5, `thm:rtfr_pes_depth_hierarchy`, and the
-three unnamed theorems of Appendix F. -/
-theorem rtfr_pes_depth_hierarchy (k : ℕ) (hk : 0 < k)
-    (pe : PosEnc) (hpe : pe.IsStandard) (hrat : pe.RationalAngles) :
-    (∃ (p s d : ℕ) (T : PTfr (Option (Option Bool)) p s d (k + 1)),
-        T.pe = pe ∧ T.Recognizes (altPlusNeutral (k + 1))) ∧
-      ∀ (p s d : ℕ) (T : PTfr (Option (Option Bool)) p s d k),
-        T.pe = pe → ¬ T.Recognizes (altPlusNeutral (k + 1)) := by
-  refine ⟨sorry, fun p s d T hTpe hrec => (definablePos_altPlusNeutral k hk).2 ?_⟩
-  have hlang : {w : List (Option Bool) | T.Accepts (bos w)} = altPlusNeutral (k + 1) :=
-    Set.ext hrec
-  cases pe with
-  | plain => exact hpe.elim
-  | sinusoidal θ =>
-      have h := (definableMod_iff_recognizes_sinusoidal (altPlusNeutral (k + 1)) k hk).mpr
-        ⟨p, s, d, θ, T, hTpe, hrat, hrec⟩
-      obtain ⟨φ, hφ, hφlang⟩ := h
-      exact ⟨φ, TLClMod_subset_TLClPos _ _ hφ, hφlang⟩
-  | rope θ =>
-      obtain ⟨φ, hφ, hφlang⟩ := exists_mem_TLClMod_of_rope θ hrat T hTpe
-      exact ⟨φ, TLClMod_subset_TLClPos _ _ hφ, hφlang.trans hlang⟩
-  | alibi a =>
-      obtain ⟨φ, hφ, hφlang⟩ := exists_mem_TLClY_of_alibi a T hTpe
-      exact ⟨φ, TLClY_subset_TLClPos _ _ hφ, hφlang.trans hlang⟩
-
-/-- The hypotheses of `rtfr_pes_depth_hierarchy` are satisfiable: `k = 1` is
-positive, and ALiBi with slope `1` is one of the three encodings and carries
-no angles to be rational. -/
-example : 0 < 1 ∧ (PosEnc.alibi 1).IsStandard ∧ (PosEnc.alibi 1).RationalAngles :=
-  ⟨one_pos, trivial, trivial⟩
 
 end CRASP
 end Transformer

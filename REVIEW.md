@@ -292,7 +292,7 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - ok Transformer/CRASP/Positional.lean (2): `TLClMod_subset_TLClPos`, `TLClY_subset_TLClPos`
 - ok Transformer/CRASP/PositionalDepth.lean (2): `exists_form_of_formP`, `definablePos_altPlusNeutral`
 - ok Transformer/CRASP/PositionalEmbedding.lean (6): `Form.exists_formP`, `Term.exists_termP`, `DefinableL.exists_formP`, `DefinableL.definablePos`, `DefinableL.definableMod`, `DefinableL.definableY`
-- issue Transformer/CRASP/PositionalHierarchy.lean (1): `alibi_window` — rtfr_pes_depth_hierarchy: the docstring says the negative half is proved, but it calls the three sorried simulations; they should be hypotheses. 0 < k is extra
+- issue Transformer/CRASP/PositionalHierarchy.lean (1): `alibi_window` — FIXED: the paper theorem stated without 0 < k and sorried whole; the negative half for k > 0 proved in EncodingHierarchy.lean from the three simulations as hypotheses. Was: rtfr_pes_depth_hierarchy: the docstring says the negative half is proved, but it calls the three sorried simulations; they should be hypotheses. 0 < k is extra
 - ok Transformer/CRASP/PositionalReduction.lean (2): `FormP.tr_mem_TLCl`, `TermP.tr_mem`
 - ok Transformer/CRASP/PositionalReductionAtom.lean (5): `ofBool_mem_TLCl`, `sat_ofBool`, `FormP.period_pos`, `TermP.period_pos`, `FormP.atomTr_mem_TLCl`
 - ok Transformer/CRASP/PositionalReductionAtomEquiv.lean (2): `getElem?_spread_sub`, `FormP.sat_atomTr`
