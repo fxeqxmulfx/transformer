@@ -309,27 +309,27 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.Causal — arXiv:2411.04990
 
-- [ ] Transformer/Causal/Interaction.lean (7): `hasDerivAt_h_pot`, `h_pot_periodic`, `g_pot_periodic`, `h_pot_odd`, `g_pot_even`, `h_pot_nonneg`, `g_pot_nonpos`
-- [ ] Transformer/Causal/InteractionBounds.lean (6): `cos_le_quartic`, `sin_sq_lt_sq`, `exp_factor_bounds`, `h_pot_bounds`, `g_pot_lower_bound_near`, `g_pot_lower_bound_gauss`
-- [ ] Transformer/Causal/InteractionNumerics.lean (5): `exp_neg_le_four_div_sq`, `exp_neg_27_32_le_half`, `lin_lower_of_small`, `const_lower_of_small`, `quartic_exponent_le`
-- [ ] Transformer/Causal/InteractionPeak.lean (1): `h_pot_unimodal`
-- [ ] Transformer/Causal/InteractionRemark.lean (2): `g_pot_nonpos_core`, `interaction_window`
-- [ ] Transformer/Causal/InteractionWindow.lean (2): `interaction_inequalities_core`, `interaction_inequalities`
-- [ ] Transformer/Causal/MainTheorem.lean (2): `inner_mul_le_inner_of_abs_le`, `inner_mul_eq_inner_iff`
-- [ ] Transformer/Causal/Metastability.lean (2): `csa_const_one`, `renyi_count`
+- ok Transformer/Causal/Interaction.lean (7): `hasDerivAt_h_pot`, `h_pot_periodic`, `g_pot_periodic`, `h_pot_odd`, `g_pot_even`, `h_pot_nonneg`, `g_pot_nonpos`
+- ok Transformer/Causal/InteractionBounds.lean (6): `cos_le_quartic`, `sin_sq_lt_sq`, `exp_factor_bounds`, `h_pot_bounds`, `g_pot_lower_bound_near`, `g_pot_lower_bound_gauss`
+- ok Transformer/Causal/InteractionNumerics.lean (5): `exp_neg_le_four_div_sq`, `exp_neg_27_32_le_half`, `lin_lower_of_small`, `const_lower_of_small`, `quartic_exponent_le`
+- ok Transformer/Causal/InteractionPeak.lean (1): `h_pot_unimodal`
+- ok Transformer/Causal/InteractionRemark.lean (2): `g_pot_nonpos_core`, `interaction_window`
+- ok Transformer/Causal/InteractionWindow.lean (2): `interaction_inequalities_core`, `interaction_inequalities`
+- issue Transformer/Causal/MainTheorem.lean (2): `inner_mul_le_inner_of_abs_le`, `inner_mul_eq_inner_iff` — single_cluster, two_cluster, subspace_cluster: the paper's volume measure is a free parameter σ; with σ = Dirac at the equilibrium x₂ = -x₁, single_cluster is false
+- issue Transformer/Causal/Metastability.lean (2): `csa_const_one`, `renyi_count` — fixed_centers_convergence is not thm:fixed_centers (no frozen θ_j or a_j, no h/g hypotheses, δ in place of εβ^{-1/2}, every solution in place of a.e.) and is false at m = 0, n ≥ 1; renyi_count proves only the packing number
 
 ### Transformer.Causal.Packing — —
 
-- [ ] Transformer/Causal/Packing/Basic.lean (2): `volume_ball_eucSpace`, `volume_closedBall_eucSpace`
-- [ ] Transformer/Causal/Packing/Count.lean (4): `pow_sub_pow_le`, `le_pow_sub_pow`, `card_le_of_separatedOnSphere`, `card_ge_of_maximalSeparated`
-- [ ] Transformer/Causal/Packing/Lower.lean (1): `maximal_volume_ledger`
-- [ ] Transformer/Causal/Packing/Renyi.lean (2): `card_le_at_renyi_scale`, `exists_card_ge_at_renyi_scale`
-- [ ] Transformer/Causal/Packing/Upper.lean (3): `separated_volume_ledger`, `card_le_of_separated`, `exists_maximalSeparated`
+- ok Transformer/Causal/Packing/Basic.lean (2): `volume_ball_eucSpace`, `volume_closedBall_eucSpace`
+- ok Transformer/Causal/Packing/Count.lean (4): `pow_sub_pow_le`, `le_pow_sub_pow`, `card_le_of_separatedOnSphere`, `card_ge_of_maximalSeparated`
+- ok Transformer/Causal/Packing/Lower.lean (1): `maximal_volume_ledger`
+- ok Transformer/Causal/Packing/Renyi.lean (2): `card_le_at_renyi_scale`, `exists_card_ge_at_renyi_scale`
+- ok Transformer/Causal/Packing/Upper.lean (3): `separated_volume_ledger`, `card_le_of_separated`, `exists_maximalSeparated`
 
 ### Transformer.Causal — arXiv:2411.04990
 
-- [ ] Transformer/Causal/ParkingCount.lean (2): `continuous_geoDist`, `strong_renyi_expected_count`
-- [ ] Transformer/Causal/SingleToken.lean (3): `norm_eq_one_of_singleTokenODE`, `not_forall_single_token_convergence`, `single_token_convergence_trivial`
+- ok Transformer/Causal/ParkingCount.lean (2): `continuous_geoDist`, `strong_renyi_expected_count`
+- issue Transformer/Causal/SingleToken.lean (3): `norm_eq_one_of_singleTokenODE`, `not_forall_single_token_convergence`, `single_token_convergence_trivial` — lemma1 itself is not stated (see section 1)
 
 ### Transformer.Clusters — arXiv:2305.05465
 
