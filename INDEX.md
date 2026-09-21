@@ -6075,7 +6075,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`not_forall_step2_alpha_diff_ineq`](src/Transformer/Perspective/Section5_HighD.lean#L221) | theorem | proved |
 | [`wendel`](src/Transformer/Perspective/Section5_HighD.lean#L263) | theorem | sorry |
 
-**[Transformer.Perspective.Section5_HighDCurve](src/Transformer/Perspective/Section5_HighDCurve.lean)** — 196 lines
+**[Transformer.Perspective.Section5_HighDCurve](src/Transformer/Perspective/Section5_HighDCurve.lean)** — 208 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -6086,9 +6086,9 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`ybetaODE_SA_two_zero`](src/Transformer/Perspective/Section5_HighDCurve.lean#L96) | theorem | proved |
 | [`ybetaODE_USA_two_zero`](src/Transformer/Perspective/Section5_HighDCurve.lean#L108) | theorem | proved |
 | [`orthogonal_initial`](src/Transformer/Perspective/Section5_HighDCurve.lean#L120) | theorem | sorry |
-| [`phase_transition_curve`](src/Transformer/Perspective/Section5_HighDCurve.lean#L155) | theorem | sorry |
-| [`Γ`](src/Transformer/Perspective/Section5_HighDCurve.lean#L181) | def |  |
-| [`ΓInf`](src/Transformer/Perspective/Section5_HighDCurve.lean#L192) | def |  |
+| [`phase_transition_curve`](src/Transformer/Perspective/Section5_HighDCurve.lean#L162) | theorem | sorry |
+| [`Γ`](src/Transformer/Perspective/Section5_HighDCurve.lean#L193) | def |  |
+| [`ΓInf`](src/Transformer/Perspective/Section5_HighDCurve.lean#L204) | def |  |
 
 **[Transformer.Perspective.Section5_InvariantMeasure](src/Transformer/Perspective/Section5_InvariantMeasure.lean)** — 159 lines
 
@@ -7037,7 +7037,7 @@ Everything the build cannot vouch for, in one place.
 | [`hemisphere_step1_qual_conv`](src/Transformer/Perspective/Section5_HighD.lean#L183) | theorem | `Transformer.Perspective.Section5_HighD` |
 | [`wendel`](src/Transformer/Perspective/Section5_HighD.lean#L263) | theorem | `Transformer.Perspective.Section5_HighD` |
 | [`orthogonal_initial`](src/Transformer/Perspective/Section5_HighDCurve.lean#L120) | theorem | `Transformer.Perspective.Section5_HighDCurve` |
-| [`phase_transition_curve`](src/Transformer/Perspective/Section5_HighDCurve.lean#L155) | theorem | `Transformer.Perspective.Section5_HighDCurve` |
+| [`phase_transition_curve`](src/Transformer/Perspective/Section5_HighDCurve.lean#L162) | theorem | `Transformer.Perspective.Section5_HighDCurve` |
 | [`universal_approximation_discrete`](src/Transformer/Perspective/Section9_Approximation.lean#L70) | theorem | `Transformer.Perspective.Section9_Approximation` |
 | [`universal_approximation_measure`](src/Transformer/Perspective/Section9_Approximation.lean#L123) | theorem | `Transformer.Perspective.Section9_Approximation` |
 | [`strict_saddle`](src/Transformer/Perspective/StrictSaddle.lean#L82) | theorem | `Transformer.Perspective.StrictSaddle` |

@@ -18,7 +18,7 @@ import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 open scoped BigOperators
-open Real
+open Real MeasureTheory
 
 namespace Transformer
 namespace Perspective
@@ -148,26 +148,38 @@ minimum past the threshold `eq: d.large`: `e:ineqfirstpart` — the
 it deduces it from, carried as hypotheses.  The estimates themselves are not
 proved, nor is the first half, nor the assembly.
 
+The i.i.d. uniform initial sequence is every `P` with `UniformTuple d n P`,
+and "with probability at least `1 - 2n²d^{-1/64}`" is the measure of the set
+of initial sequences on which `eq: upto-t` holds.  `C = C(n, β)` and
+`λ = λ(n, β)`, as the source writes them, are chosen before `d`.  Over every
+initial sequence instead of most of them the claim is false: a constant
+consensus has `⟨x_i, x_j⟩ ≡ 1` while `γ_β(0) = 0`.
+
 Not proved here.
 
 Source: arXiv:2312.10794v5, §6.2, `thm: phase.transition.curve`, and
 Appendix D for the assembly. -/
 theorem phase_transition_curve
     (β : ℝ) (hβ : 0 ≤ β) (hn : 2 ≤ n) :
-    ∃ d_star : ℕ, n ≤ d_star ∧ ∀ d : ℕ, d_star ≤ d →
-      ∃ (C lam : ℝ), 0 < C ∧ 0 < lam ∧
-        -- with probability at least `1 - 2 n² d^{-1/64}` (under uniform init),
-        ∀ (X₀ : SphereTuple d n),
-          ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
-            ∀ γ : ℝ → ℝ, ybetaODE_SA n β γ →
-              ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx n, i ≠ j →
-                |inner (𝕜 := ℝ)
-                    ((X t i : EucSpace d)) ((X t j : EucSpace d)) - γ t|
-                  ≤ min
-                      (2 * (Real.exp (10 * max 1 β))^(n * t) *
-                          Real.sqrt (Real.log d / d))
-                      (C * Real.exp (-(lam * t))) := by
+    ∃ (C lam : ℝ), 0 < C ∧ 0 < lam ∧
+      ∃ d_star : ℕ, n ≤ d_star ∧ ∀ d : ℕ, d_star ≤ d →
+        ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+          ∀ γ : ℝ → ℝ, ybetaODE_SA n β γ →
+            1 - ENNReal.ofReal (2 * (n : ℝ) ^ 2 * (d : ℝ) ^ (-(1 / 64 : ℝ)))
+              ≤ P { X₀ : SphereTuple d n |
+                  ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
+                    ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx n, i ≠ j →
+                      |inner (𝕜 := ℝ)
+                          ((X t i : EucSpace d)) ((X t j : EucSpace d)) - γ t|
+                        ≤ min
+                            (2 * (Real.exp (10 * max 1 β)) ^ (n * t) *
+                                Real.sqrt (Real.log d / d))
+                            (C * Real.exp (-(lam * t))) } := by
   sorry
+
+/-- The hypotheses of `phase_transition_curve` are satisfiable: `β = 0`,
+`n = 2`. -/
+example : (0 : ℝ) ≤ 0 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 
 /-! ### §6.3 — Phase transition curve -/
 
