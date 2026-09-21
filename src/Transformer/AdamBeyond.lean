@@ -16,7 +16,10 @@ makes it:
   the source's constants, whose proof fails in the first block
   (`1/√(3t+3) ≥ 1/√(2(3t+1))` is false at `t = 0`); the source's `C ≥ 2`
   gives zero regret at `C = 2`;
-* "`R_T/T ↛ 0`" is proved as `c T ≤ R_T` for every `T` against a fixed `x*`.
+* "`R_T/T ↛ 0`" is proved as `c T ≤ R_T` for every `T` against a fixed `x*`,
+  and Theorem 2 states it for all large `T` and every `α > 0`;
+* Theorem 3 is run without projection from `x₁ = 0`, as its proof assumes,
+  and its conclusion is `E[F(x_t)] - F(-1) ≥ δ` for every `t ≥ 1`.
 
 Not transcribed, deliberately: the experiments, the commented-out section on
 the proof of Kingma & Ba, and the convergence of SGD and AdaGrad, cited from
@@ -26,3 +29,4 @@ the literature.
 import Transformer.AdamBeyond.Section2_Adam
 import Transformer.AdamBeyond.Section3_Run
 import Transformer.AdamBeyond.Section3_Counter
+import Transformer.AdamBeyond.Section3_General
