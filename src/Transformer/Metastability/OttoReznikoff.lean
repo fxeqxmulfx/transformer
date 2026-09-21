@@ -21,7 +21,7 @@ Equations and statements covered, here and in the modules named:
 * `Lemma lem: quantitative inequality` — in
   `Transformer.Metastability.QuantitativeInequality`, which proves it with the
   sign and the constant its argument supports,
-* `Corollary eq: otto.attention` — in `Transformer.Metastability.OttoAttention`,
+* `Corollary eq: otto.attention` — in `Transformer.Metastability.OttoCorollary`,
 * `Remark rem: sa.extension` — the extension to `SA`.
 
 `eq: hessian.lb.reverse.pl`, the acceleration of §3.3, is in

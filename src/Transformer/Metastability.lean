@@ -17,6 +17,7 @@ import Transformer.Metastability.CapVariance
 import Transformer.Metastability.BakryEmery
 import Transformer.Metastability.OttoAttention
 import Transformer.Metastability.OttoClaimOne
+import Transformer.Metastability.OttoCorollary
 import Transformer.Metastability.OttoReznikoff
 import Transformer.Metastability.ReversePL
 import Transformer.Metastability.QuantitativeInequality
