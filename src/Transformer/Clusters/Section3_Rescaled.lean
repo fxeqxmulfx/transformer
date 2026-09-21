@@ -28,6 +28,8 @@ Source: arXiv:2305.05465v6, `e:Rres`.
 
 import Transformer.Clusters.Section1_Dynamics
 import Mathlib.Analysis.SpecialFunctions.Exponential
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.Calculus.Deriv.Add
 
 open scoped BigOperators
 open Real
@@ -65,6 +67,31 @@ theorem expTime_one_apply (t : ℝ) (x : EucSpace d) :
     ← Real.exp_eq_exp_ℝ, Algebra.algebraMap_eq_smul_one]
   simp
 
+/-- `d/dt e^{tV} = V e^{tV}`. -/
+theorem hasDerivAt_expTime (V : ParamMatrix d) (t : ℝ) :
+    HasDerivAt (expTime V) (V * expTime V t) t :=
+  hasDerivAt_exp_smul_const' V t
+
+/-- Two multiples of `V` commute. -/
+theorem commute_smul_self (V : ParamMatrix d) (s t : ℝ) : Commute (s • V) (t • V) := by
+  show (s • V) * (t • V) = (t • V) * (s • V)
+  ext x; simp [smul_smul, mul_comm]
+
+/-- `V` commutes with `e^{tV}`. -/
+theorem commute_expTime (V : ParamMatrix d) (t : ℝ) : Commute V (expTime V t) := by
+  have h := (commute_smul_self V 1 t).exp_right
+  rwa [one_smul] at h
+
+/-- `e^{-tV} e^{tV} = I_d`: the flow is invertible, which is what lets
+`z_i = e^{-tV}x_i` be read off `x_i = e^{tV}z_i`. -/
+theorem expTime_neg_mul (V : ParamMatrix d) (t : ℝ) : expTime V (-t) * expTime V t = 1 := by
+  have hr : ∀ x : ParamMatrix d, x ∈ Metric.eball (0 : ParamMatrix d)
+      (NormedSpace.expSeries ℝ (ParamMatrix d)).radius := fun x =>
+    (NormedSpace.expSeries_radius_eq_top ℝ (ParamMatrix d)).symm ▸ edist_lt_top _ _
+  rw [expTime, expTime, ← NormedSpace.exp_add_of_commute_of_mem_ball
+    (commute_smul_self V (-t) t) (hr _) (hr _), show (-t) • V + t • V = 0 by ext x; simp,
+    NormedSpace.exp_zero]
+
 /-! ### `e:Rres` -/
 
 /-- **Equation (e:Rres).**  The rescaled dynamics: the tokens
@@ -94,13 +121,51 @@ theorem rescaledDynamics_const (Q K : ParamMatrix d) (Z : Idx n → EucSpace d) 
 direction is the source's "which solve (e:Rres)"; the backward one is how
 every conclusion about `z_i` is read back on `x_i`.
 
-Not proved here.
+As in the source: differentiate `x_i = e^{tV}z_i` (or `z_i = e^{-tV}x_i`) by
+the product rule, commute `V` past `e^{tV}`, and use that the rows of `eq:P`
+sum to one to trade `Σ_j P_ij V x_j - V x_i` for `Σ_j P_ij V(x_j - x_i)`.
 
 Source: arXiv:2305.05465v6, §3, `e:Rres`. -/
 theorem transformerDynamics_iff_rescaled (Q K V : ParamMatrix d)
     (X Z : ℝ → Idx n → EucSpace d) (hXZ : ∀ (t : ℝ) (i : Idx n), X t i = expTime V t (Z t i)) :
     TransformerDynamics Q K V X ↔ RescaledDynamics Q K V Z := by
-  sorry
+  have hX : ∀ t, X t = fun l => expTime V t (Z t l) := fun t => funext (hXZ t)
+  have hVc : ∀ t y, expTime V t (V y) = V (expTime V t y) := fun t y =>
+    (congrArg (fun M : ParamMatrix d => M y) (commute_expTime V t)).symm
+  constructor
+  · intro h t i
+    have hn : 0 < n := Fin.pos_iff_nonempty.mpr ⟨i⟩
+    have hZ : (fun s => Z s i) = fun s => expTime V (-s) (X s i) := by
+      funext s
+      rw [hXZ]
+      show _ = (expTime V (-s) * expTime V s) (Z s i)
+      rw [expTime_neg_mul]; rfl
+    have hE : HasDerivAt (fun s => expTime V (-s)) (-(V * expTime V (-t))) t := by
+      have := (hasDerivAt_expTime V (-t)).scomp t (hasDerivAt_neg t)
+      rw [neg_one_smul] at this
+      exact this
+    rw [hZ]
+    convert hE.clm_apply (h t i) using 1
+    have hZt : ∀ j, Z t j = expTime V (-t) (X t j) := fun j => by
+      rw [hXZ]
+      show _ = (expTime V (-t) * expTime V t) (Z t j)
+      rw [expTime_neg_mul]; rfl
+    have hP := sum_attentionMatrix hn Q K (X t) i
+    rw [← hX t]
+    simp only [hZt, ← map_sub, ← hVc, map_sum, map_smul]
+    simp only [map_sub, smul_sub, Finset.sum_sub_distrib, ← Finset.sum_smul, hP, one_smul]
+    show _ = -(V (expTime V (-t) (X t i))) + _
+    rw [← hVc]; abel
+  · intro h t i
+    have hn : 0 < n := Fin.pos_iff_nonempty.mpr ⟨i⟩
+    have := (hasDerivAt_expTime V t).clm_apply (h t i)
+    simp only [← hXZ] at this
+    convert this using 1
+    have hP := sum_attentionMatrix hn Q K (X t) i
+    show _ = V (expTime V t (Z t i)) + _
+    simp only [map_sum, map_smul, map_sub, hVc, ← hXZ, smul_sub, Finset.sum_sub_distrib,
+      ← Finset.sum_smul, hP, one_smul]
+    abel
 
 /-- The hypothesis of `transformerDynamics_iff_rescaled` is satisfiable: at
 `V = 0` the flow is the identity, so any curve is its own rescaling. -/
