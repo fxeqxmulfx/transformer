@@ -15,6 +15,7 @@ import Transformer.Metastability.CapVelocity
 import Transformer.Metastability.PairVelocity
 import Transformer.Metastability.CapVariance
 import Transformer.Metastability.BakryEmery
+import Transformer.Metastability.OttoClaimOne
 import Transformer.Metastability.OttoReznikoff
 import Transformer.Metastability.ReversePL
 import Transformer.Metastability.QuantitativeInequality
