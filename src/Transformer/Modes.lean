@@ -26,3 +26,4 @@ import Transformer.Modes.Section2_MainIntPhi
 import Transformer.Modes.Section3_Hermite
 import Transformer.Modes.Section3_Cumulants
 import Transformer.Modes.Section3_BR
+import Transformer.Modes.Section3_Edgeworth
