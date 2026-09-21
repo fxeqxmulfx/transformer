@@ -73,6 +73,26 @@ theorem kPiecewiseTestable_altPlusDouble (k : ℕ) :
   rw [altPlusDouble_succ]
   exact kPiecewiseTestable_altPlus (2 * k + 1) (by omega)
 
+/-- **`D_1 = a⁺` is not definable at depth `0`**, the case `k = 0` of the lower
+bound of `thm:TLC_depth`: a depth-0 formula without PNPs reads only the last
+letter, and `aa` and `ba` end alike. -/
+theorem not_definable_altPlus_one : ¬ Definable (altPlus false 1) 0 := by
+  rintro ⟨φ, ⟨hf, hd⟩, hL⟩
+  have e := Form.sat_eq_of_pnpFree_depth_eq_zero (w := [false, false]) (w' := [true, false])
+    (i := 2) (i' := 2) rfl φ hf (Nat.le_zero.1 hd)
+  have h1 : [false, false] ∈ φ.lang := by
+    rw [hL, altPlus_one]
+    exact ⟨2, two_pos, rfl⟩
+  have h2 : [true, false] ∈ φ.lang := by
+    change φ.sat _ 2 = true
+    rw [← e]
+    exact h1
+  rw [hL, altPlus_one] at h2
+  obtain ⟨m, -, hm⟩ := h2
+  cases m with
+  | zero => simp at hm
+  | succ m => simp [List.replicate_succ] at hm
+
 /-- **Theorem `thm:TLC_depth`.**  `D_{k+1}` is definable in `TL[◁#,▷#]_{k+1}`
 but not in `TL[◁#,▷#]_k`.
 
@@ -82,16 +102,14 @@ order: `D_{k+1}` is `(2k+1)`-piecewise testable, and
 The negative half is the one the paper derives from `lem:cropping`, which is
 false as stated; it is `not_definable_altPlus_double`, which crops frames of
 fixed Parikh vector instead. -/
-theorem definable_altPlusDouble (k : ℕ) (hk : 0 < k) :
+theorem definable_altPlusDouble (k : ℕ) :
     Definable (altPlusDouble (k + 1)) (k + 1) ∧ ¬ Definable (altPlusDouble (k + 1)) k :=
   ⟨definable_of_kPiecewiseTestable k _ (kPiecewiseTestable_altPlusDouble k), by
-    obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_lt hk
-    rw [altPlusDouble_succ, show 2 * (0 + k + 1) + 1 = 2 * k + 3 by omega, Nat.zero_add]
-    exact not_definable_altPlus_double k⟩
-
-/-- The hypothesis of `definable_altPlusDouble` is satisfiable: `D_2 = a⁺b⁺a⁺`
-separates depth `1` from depth `2`. -/
-example : 0 < 1 := Nat.one_pos
+    rcases k with _ | k
+    · rw [altPlusDouble_succ]
+      exact not_definable_altPlus_one
+    · rw [altPlusDouble_succ, show 2 * (k + 1) + 1 = 2 * k + 3 by omega]
+      exact not_definable_altPlus_double k⟩
 
 end CRASP
 end Transformer

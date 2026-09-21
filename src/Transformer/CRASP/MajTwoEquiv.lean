@@ -217,7 +217,7 @@ construction for `(2k+1)`-piecewise testable languages that sits in an
 theorem majTwo_depth_hierarchy (k : ℕ) (hk : 0 < k) :
     (∃ φ ∈ MajTwo Bool k, φ.Closed ∧ φ.lang = altPlusDouble k) ∧
       ∀ φ ∈ MajTwo Bool k, φ.Closed → φ.lang ≠ altPlusDouble (k + 1) := by
-  refine ⟨sorry, fun φ hφ hc hlang => (definable_altPlusDouble k hk).2 ?_⟩
+  refine ⟨sorry, fun φ hφ hc hlang => (definable_altPlusDouble k).2 ?_⟩
   exact hlang ▸ definable_of_closed_majTwo k φ hφ hc
 
 end CRASP
