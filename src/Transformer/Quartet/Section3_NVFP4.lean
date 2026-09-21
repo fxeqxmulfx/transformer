@@ -111,12 +111,21 @@ theorem groupScaleRTN_le {x : Fin (2 ^ k) → Fin 16 → ℝ} (hs : 0 < s) (hx :
     rw [hscale, div_le_iff₀ hpos]
     have := groupAbsMax_le_absMax x i
     linarith
+  have h0 : (0 : ℝ) ∈ fp8 := ⟨by norm_num, 0, 0, by norm_num⟩
+  have h256 : (256 : ℝ) ∈ fp8 := ⟨by norm_num, 8, 5, by norm_num⟩
+  have hfl : floorOn fp8 (groupAbsMax x i / (tensorScaleRTN s x * s)) =
+      sSup {y | y ∈ fp8 ∧ y ≤ groupAbsMax x i / (tensorScaleRTN s x * s)} :=
+    ite_eq_left ⟨0, h0, hv0⟩
+  have hce : ceilOn fp8 (groupAbsMax x i / (tensorScaleRTN s x * s)) =
+      sInf {y | y ∈ fp8 ∧ groupAbsMax x i / (tensorScaleRTN s x * s) ≤ y} :=
+    ite_eq_left ⟨256, h256, hv256⟩
   unfold groupScaleRTN rtn
+  rw [hfl, hce]
   split
-  · refine csSup_le ⟨0, ⟨by norm_num, 0, 0, by norm_num⟩, hv0⟩ ?_
+  · refine csSup_le ⟨0, h0, hv0⟩ ?_
     rintro y ⟨-, hyv⟩
     exact hyv.trans hv256
-  · refine csInf_le ⟨-448, ?_⟩ ⟨⟨by norm_num, 8, 5, by norm_num⟩, hv256⟩
+  · refine csInf_le ⟨-448, ?_⟩ ⟨h256, hv256⟩
     rintro y ⟨hy, -⟩
     exact (abs_le.mp hy.1).1
 

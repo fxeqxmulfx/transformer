@@ -21,6 +21,64 @@ namespace Quartet
 
 variable {k : ℕ} {c : ℝ}
 
+/-- **Stochastic rounding is unbiased**: averaging over a coin uniform on
+`[0,1]` returns the argument (§3.1, "`SR_FP4` … preserves its argument in
+expectation").  This is the one property the whole backward pass of the paper
+rests on. -/
+theorem integral_sr {G : Set ℝ} {x : ℝ} (hfin : G.Finite) (hlo : ∃ y ∈ G, y ≤ x)
+    (hhi : ∃ y ∈ G, x ≤ y) : ∫ u in (0 : ℝ)..1, sr G x u = x := by
+  obtain ⟨-, hfx, -, hxc⟩ := floorOn_mem_le_and_le_ceilOn_mem hfin hlo hhi
+  have hsr0 : ∀ u : ℝ, sr G x u =
+      if u * (ceilOn G x - floorOn G x) < x - floorOn G x then ceilOn G x else floorOn G x :=
+    fun _ => rfl
+  set f := floorOn G x with hfdef
+  set c := ceilOn G x with hcdef
+  rcases eq_or_lt_of_le (hfx.trans hxc) with hfc | hfc
+  · -- the two neighbours coincide, so `x` is itself a grid point
+    have hxf : x = f := le_antisymm (hfc ▸ hxc) hfx
+    have hconst : ∀ u : ℝ, sr G x u = x := by
+      intro u
+      rw [hsr0 u, ← hfc, ite_self]
+      exact hxf.symm
+    simp [hconst]
+  · -- the coin decides, with probability `(x - f)/(c - f)` of rounding up
+    set p := (x - f) / (c - f) with hpdef
+    have hcf : (0 : ℝ) < c - f := sub_pos.mpr hfc
+    have hp0 : 0 ≤ p := div_nonneg (sub_nonneg.mpr hfx) hcf.le
+    have hp1 : p ≤ 1 := (div_le_one hcf).mpr (by linarith)
+    have hiff : ∀ u : ℝ, u * (c - f) < x - f ↔ u < p := by
+      intro u
+      rw [hpdef, lt_div_iff₀ hcf]
+    have hsr : ∀ u : ℝ, sr G x u = if u < p then c else f := fun u =>
+      (hsr0 u).trans (if_congr (hiff u) rfl rfl)
+    have hanti : Antitone fun u : ℝ => if u < p then c else f := by
+      intro u v huv
+      by_cases hv : v < p
+      · simp [hv, lt_of_le_of_lt huv hv]
+      · by_cases hu : u < p <;> simp [hu, hv, hfc.le]
+    have hsplit := intervalIntegral.integral_add_adjacent_intervals
+      (a := (0 : ℝ)) (b := p) (c := (1 : ℝ)) (f := fun u => if u < p then c else f)
+      (hanti.intervalIntegrable (μ := MeasureTheory.volume))
+      (hanti.intervalIntegrable (μ := MeasureTheory.volume))
+    have hlow : ∫ u in (0 : ℝ)..p, (if u < p then c else f) = p * c := by
+      rw [intervalIntegral.integral_congr_ae (g := fun _ => c) ?_]
+      · simp
+      · filter_upwards [MeasureTheory.compl_mem_ae_iff.mpr
+          (MeasureTheory.measure_singleton (μ := MeasureTheory.volume) p)] with u hu hmem
+        rw [Set.uIoc_of_le hp0] at hmem
+        have : u < p := lt_of_le_of_ne hmem.2 hu
+        simp [this]
+    have hhigh : ∫ u in p..(1 : ℝ), (if u < p then c else f) = (1 - p) * f := by
+      rw [intervalIntegral.integral_congr (g := fun _ => f) ?_]
+      · simp
+      · intro u hu
+        rw [Set.uIcc_of_le hp1] at hu
+        simp [not_lt.mpr hu.1]
+    simp only [hsr]
+    rw [← hsplit, hlow, hhigh, hpdef]
+    field_simp
+    ring
+
 /-- The group scales of `Q_SR` are positive, so the dequantization can be
 divided by them: `RTN_FP8` keeps at least `16/17` of a normal argument. -/
 theorem groupScaleSR_pos {x : Fin (2 ^ k) → Fin 16 → ℝ} (hc : 0 < c) (hx : 0 < absMax x)

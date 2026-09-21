@@ -109,9 +109,14 @@ theorem le_rtn_fp8 {v : ℝ} (hlo : (2 : ℝ) ^ (-6 : ℤ) ≤ v) (hhi : v ≤ 4
   have hmemp : (m : ℝ) * u ∈ fp8 := by
     rw [hudef]
     exact mem_fp8 hm0 hm16 (by omega) (by rw [← hudef]; linarith)
-  have hpfl : (m : ℝ) * u ≤ floorOn fp8 v := le_csSup hbddA ⟨hmemp, hpv⟩
-  have hvce : v ≤ ceilOn fp8 v := le_csInf ⟨448, hmem448, hhi⟩ fun _ hy => hy.2
+  have hfl : floorOn fp8 v = sSup {y | y ∈ fp8 ∧ y ≤ v} :=
+    ite_eq_left ⟨_, hmemp, hpv⟩
+  have hce : ceilOn fp8 v = sInf {y | y ∈ fp8 ∧ v ≤ y} :=
+    ite_eq_left ⟨448, hmem448, hhi⟩
+  have hpfl : (m : ℝ) * u ≤ floorOn fp8 v := hfl ▸ le_csSup hbddA ⟨hmemp, hpv⟩
+  have hvce : v ≤ ceilOn fp8 v := hce ▸ le_csInf ⟨448, hmem448, hhi⟩ fun _ hy => hy.2
   have hceil : ceilOn fp8 v ≤ (m : ℝ) * u + u := by
+    rw [hce]
     rcases le_or_gt ((m : ℝ) * u + u) 448 with h | h
     · have hmem : (m : ℝ) * u + u ∈ fp8 := by
         have hrw : (m : ℝ) * u + u = ((m + 1 : ℤ) : ℝ) * 2 ^ (L - 3) := by
