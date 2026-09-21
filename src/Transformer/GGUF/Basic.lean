@@ -47,6 +47,9 @@ def bitAt {n : ℕ} (x : Bytes n) (o k : ℕ) : ℕ := byte x (o + k / 8) / 2 ^ 
 /-- The little-endian `uint16_t` at offset `o`. -/
 def u16 {n : ℕ} (x : Bytes n) (o : ℕ) : ℕ := byte x o + 256 * byte x (o + 1)
 
+/-- The little-endian `uint32_t` at offset `o`. -/
+def u32 {n : ℕ} (x : Bytes n) (o : ℕ) : ℕ := u16 x o + 65536 * u16 x (o + 2)
+
 theorem lo_lt (b : ℕ) : lo b < 16 := Nat.mod_lt _ (by norm_num)
 
 theorem hi_lt {b : ℕ} (hb : b < 256) : hi b < 16 := by
