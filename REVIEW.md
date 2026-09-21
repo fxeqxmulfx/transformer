@@ -653,19 +653,19 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.Quartet — arXiv:2601.22813
 
-- [ ] Transformer/Quartet/AppendixA_Concentration.lean (3): `meanSqErr_of_seedMean_eq`, `meanSqErr_eq`, `tendsto_meanSqErr`
-- [ ] Transformer/Quartet/Fp8Grid.lean (2): `mem_fp8`, `le_rtn_fp8`
-- [ ] Transformer/Quartet/Hadamard.lean (7): `hadamard_eq`, `hadamard_symm`, `sum_hadamard_mul`, `sum_hadamard_sum_hadamard`, `rhtInv_rht`, `sum_hadamard_mul_sum_hadamard_mul`, `sum_rht_mul_rht`
-- [ ] Transformer/Quartet/Section3_Grids.lean (6): `floorOn_mem_le_and_le_ceilOn_mem`, `floorOn_eq`, `ceilOn_eq`, `rtn_mem`, `sr_mem`, `integral_sr`
-- [ ] Transformer/Quartet/Section3_NVFP4.lean (4): `groupAbsMax_le_absMax`, `abs_le_groupAbsMax`, `groupAbsMax_nonneg`, `groupScaleRTN_le`
-- [ ] Transformer/Quartet/Section3_NonClipping.lean (3): `normal_groupScale_arg`, `abs_div_groupScaleSR_le`, `abs_div_groupScaleRTN_le`
-- [ ] Transformer/Quartet/Section3_Unbiased.lean (2): `groupScaleSR_pos`, `integral_qSRAt`
-- [ ] Transformer/Quartet/Section4_Bias.lean (10): `measurableSet_coinsUp`, `measurableSet_coinsDown`, `volume_coinsUp`, `volume_coinsDown`, `coinCube_eq_union`, `disjoint_coinsUp_coinsDown`, `eqOn_coinsUp`, `eqOn_coinsDown`, `meanGroup_q46At_biasWitness`, `exists_mean_q46At_ne`
-- [ ] Transformer/Quartet/Section4_FourOverSix.lean (1): `integral_qSRAt_four_and_six`
-- [ ] Transformer/Quartet/Section4_Rounding.lean (5): `qSRAt_biasWitness_ne`, `qSRAt_biasWitness_four`, `qSRAt_biasWitness_six`, `groupErr_biasWitness`, `q46At_biasWitness`
-- [ ] Transformer/Quartet/Section4_Witness.lean (11): `floorOn_fp4_zero`, `ceilOn_fp4_zero`, `floorOn_fp4_64_17`, `ceilOn_fp4_64_17`, `floorOn_fp4_96_17`, `ceilOn_fp4_96_17`, `rtn_fp8_448`, `absMax_biasWitness`, `groupAbsMax_biasWitness`, `tensorScaleSR_biasWitness`, `groupScaleSR_biasWitness`
-- [ ] Transformer/Quartet/SeedSums.lean (4): `sum_pi_succ`, `card_pi`, `sum_pi_sum_eq_zero`, `sum_pi_sum_sq`
-- [ ] Transformer/Quartet/Walsh.lean (5): `walsh_comm`, `walsh_congr_right`, `walsh_succ`, `sum_walsh_mul_range`, `sum_walsh_mul_fin`
+- ok Transformer/Quartet/AppendixA_Concentration.lean (3): `meanSqErr_of_seedMean_eq`, `meanSqErr_eq`, `tendsto_meanSqErr` — exact bias-variance identity; the paper's ~1/B and plateau
+- ok Transformer/Quartet/Fp8Grid.lean (2): `mem_fp8`, `le_rtn_fp8` — normal-range hypothesis 2^-6 ≤ v added, deviation documented with the subnormal counterexample
+- issue Transformer/Quartet/Hadamard.lean (7): `hadamard_eq`, `hadamard_symm`, `sum_hadamard_mul`, `sum_hadamard_sum_hadamard`, `rhtInv_rht`, `sum_hadamard_mul_sum_hadamard_mul`, `sum_rht_mul_rht` — sorried Section3_Eden.mean_rhtInv_msEden (Corollary) is faithful to the paper but likely false at finite d: EDEN Thm 2.1 is exact for Haar rotations, not for RHT; the docstring's 'only as d→∞' is imprecise. Candidate for a refutation
+- ok Transformer/Quartet/Section3_Grids.lean (6): `floorOn_mem_le_and_le_ceilOn_mem`, `floorOn_eq`, `ceilOn_eq`, `rtn_mem`, `sr_mem`, `integral_sr` — fp4/fp8 grids, RTN ties-down, SR as in §3.1
+- ok Transformer/Quartet/Section3_NVFP4.lean (4): `groupAbsMax_le_absMax`, `abs_le_groupAbsMax`, `groupAbsMax_nonneg`, `groupScaleRTN_le` — scale displays match §3.1 (l.240) and §3.3 (l.331)
+- ok Transformer/Quartet/Section3_NonClipping.lean (3): `normal_groupScale_arg`, `abs_div_groupScaleSR_le`, `abs_div_groupScaleRTN_le` — hypothesis max|x| ≤ 2^14·max_g|x| added (the paper omits it), documented
+- ok Transformer/Quartet/Section3_Unbiased.lean (2): `groupScaleSR_pos`, `integral_qSRAt` — §3.1 unbiasedness, with the same documented hypothesis
+- ok Transformer/Quartet/Section4_Bias.lean (10): `measurableSet_coinsUp`, `measurableSet_coinsDown`, `volume_coinsUp`, `volume_coinsDown`, `coinCube_eq_union`, `disjoint_coinsUp_coinsDown`, `eqOn_coinsUp`, `eqOn_coinsDown`, `meanGroup_q46At_biasWitness`, `exists_mean_q46At_ne` — refutation of unbiasedness for SR+4/6 on a model: the selection reads the realized SR errors, c enters both scales (effective block scale gmax/c)
+- ok Transformer/Quartet/Section4_FourOverSix.lean (1): `integral_qSRAt_four_and_six` — model of Cook et al. with SR, per §4.2 wording
+- ok Transformer/Quartet/Section4_Rounding.lean (5): `qSRAt_biasWitness_ne`, `qSRAt_biasWitness_four`, `qSRAt_biasWitness_six`, `groupErr_biasWitness`, `q46At_biasWitness` — computations on the witness
+- ok Transformer/Quartet/Section4_Witness.lean (11): `floorOn_fp4_zero`, `ceilOn_fp4_zero`, `floorOn_fp4_64_17`, `ceilOn_fp4_64_17`, `floorOn_fp4_96_17`, `ceilOn_fp4_96_17`, `rtn_fp8_448`, `absMax_biasWitness`, `groupAbsMax_biasWitness`, `tensorScaleSR_biasWitness`, `groupScaleSR_biasWitness` — computations on the witness
+- ok Transformer/Quartet/SeedSums.lean (4): `sum_pi_succ`, `card_pi`, `sum_pi_sum_eq_zero`, `sum_pi_sum_sq` — combinatorial support
+- ok Transformer/Quartet/Walsh.lean (5): `walsh_comm`, `walsh_congr_right`, `walsh_succ`, `sum_walsh_mul_range`, `sum_walsh_mul_fin` — Walsh orthogonality
 
 ### Transformer.RASP — arXiv:2106.06981
 
