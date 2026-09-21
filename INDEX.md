@@ -6211,7 +6211,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | --- | --- | --- |
 | [`step2_alpha_diff_ineq`](src/Transformer/Perspective/Section5_HemisphereRate.lean#L51) | theorem | proved |
 
-**[Transformer.Perspective.Section5_HighD](src/Transformer/Perspective/Section5_HighD.lean)** — 218 lines
+**[Transformer.Perspective.Section5_HighD](src/Transformer/Perspective/Section5_HighD.lean)** — 243 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -6219,8 +6219,8 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`d_infty_exponential`](src/Transformer/Perspective/Section5_HighD.lean#L102) | theorem | sorry |
 | [`IsMinInner`](src/Transformer/Perspective/Section5_HighD.lean#L127) | def |  |
 | [`step1_rhs`](src/Transformer/Perspective/Section5_HighD.lean#L145) | theorem | proved |
-| [`hemisphere_step1_qual_conv`](src/Transformer/Perspective/Section5_HighD.lean#L182) | theorem | sorry |
-| [`wendel`](src/Transformer/Perspective/Section5_HighD.lean#L207) | theorem | sorry |
+| [`hemisphere_step1_qual_conv`](src/Transformer/Perspective/Section5_HighD.lean#L198) | theorem | sorry |
+| [`wendel`](src/Transformer/Perspective/Section5_HighD.lean#L232) | theorem | sorry |
 
 **[Transformer.Perspective.Section5_HighDCurve](src/Transformer/Perspective/Section5_HighDCurve.lean)** — 208 lines
 
@@ -7195,8 +7195,8 @@ Everything the build cannot vouch for, in one place.
 | [`beta_interval`](src/Transformer/Perspective/Section4_LargeBeta.lean#L44) | theorem | `Transformer.Perspective.Section4_LargeBeta` |
 | [`boumal_clustering`](src/Transformer/Perspective/Section5_HighD.lean#L72) | theorem | `Transformer.Perspective.Section5_HighD` |
 | [`d_infty_exponential`](src/Transformer/Perspective/Section5_HighD.lean#L102) | theorem | `Transformer.Perspective.Section5_HighD` |
-| [`hemisphere_step1_qual_conv`](src/Transformer/Perspective/Section5_HighD.lean#L182) | theorem | `Transformer.Perspective.Section5_HighD` |
-| [`wendel`](src/Transformer/Perspective/Section5_HighD.lean#L207) | theorem | `Transformer.Perspective.Section5_HighD` |
+| [`hemisphere_step1_qual_conv`](src/Transformer/Perspective/Section5_HighD.lean#L198) | theorem | `Transformer.Perspective.Section5_HighD` |
+| [`wendel`](src/Transformer/Perspective/Section5_HighD.lean#L232) | theorem | `Transformer.Perspective.Section5_HighD` |
 | [`orthogonal_initial`](src/Transformer/Perspective/Section5_HighDCurve.lean#L120) | theorem | `Transformer.Perspective.Section5_HighDCurve` |
 | [`phase_transition_curve`](src/Transformer/Perspective/Section5_HighDCurve.lean#L162) | theorem | `Transformer.Perspective.Section5_HighDCurve` |
 | [`universal_approximation_discrete`](src/Transformer/Perspective/Section9_Approximation.lean#L70) | theorem | `Transformer.Perspective.Section9_Approximation` |
