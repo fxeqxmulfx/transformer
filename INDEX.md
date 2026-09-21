@@ -3407,12 +3407,12 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`xsaProjection_orthogonal`](src/Transformer/GPTMini/CausalMHA.lean#L167) | theorem | proved |
 | [`attentionHead`](src/Transformer/GPTMini/CausalMHA.lean#L183) | def |  |
 
-**[Transformer.GPTMini.ClusteringTheorem](src/Transformer/GPTMini/ClusteringTheorem.lean)** — 111 lines
+**[Transformer.GPTMini.ClusteringTheorem](src/Transformer/GPTMini/ClusteringTheorem.lean)** — 112 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`PreLNHead`](src/Transformer/GPTMini/ClusteringTheorem.lean#L71) | def |  |
-| [`layer_clustering`](src/Transformer/GPTMini/ClusteringTheorem.lean#L94) | theorem | sorry |
+| [`PreLNHead`](src/Transformer/GPTMini/ClusteringTheorem.lean#L72) | def |  |
+| [`layer_clustering`](src/Transformer/GPTMini/ClusteringTheorem.lean#L95) | theorem | sorry |
 
 **[Transformer.GPTMini.Config](src/Transformer/GPTMini/Config.lean)** — 182 lines
 
@@ -6958,7 +6958,7 @@ Everything the build cannot vouch for, in one place.
 | [`first_phase`](src/Transformer/FrankWolfe/Section5_Metastability.lean#L100) | theorem | `Transformer.FrankWolfe.Section5_Metastability` |
 | [`metastability`](src/Transformer/FrankWolfe/Section5_Metastability.lean#L184) | theorem | `Transformer.FrankWolfe.Section5_Metastability` |
 | [`softmax_collapse`](src/Transformer/FrankWolfe/Section5_Process.lean#L40) | theorem | `Transformer.FrankWolfe.Section5_Process` |
-| [`layer_clustering`](src/Transformer/GPTMini/ClusteringTheorem.lean#L94) | theorem | `Transformer.GPTMini.ClusteringTheorem` |
+| [`layer_clustering`](src/Transformer/GPTMini/ClusteringTheorem.lean#L95) | theorem | `Transformer.GPTMini.ClusteringTheorem` |
 | [`varianceProxy_gaussian`](src/Transformer/Homogenized/GaussianInit.lean#L90) | theorem | `Transformer.Homogenized.GaussianInit` |
 | [`bField_gaussian`](src/Transformer/Homogenized/GaussianInit.lean#L133) | theorem | `Transformer.Homogenized.GaussianInit` |
 | [`weak_error_centered`](src/Transformer/Homogenized/GaussianInit.lean#L158) | theorem | `Transformer.Homogenized.GaussianInit` |

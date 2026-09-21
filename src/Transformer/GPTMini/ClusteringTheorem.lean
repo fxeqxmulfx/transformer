@@ -25,10 +25,11 @@ them before they are used.
 out in `PreLNHead`: the sub-layer reads `rmsNormEps` of the stream and its
 output is added back.  `V = I_d` is imposed structurally — the value argument
 of `attentionHead` is the normalized stream itself, not a projection of it —
-rather than as a hypothesis on `AttnParams`, whose single `W_qkv` has no
-`V`-block accessor.  The one head and the absent FFN are a restriction: what
-is stated is the depth behaviour of the attention recursion, not of
-`GPTMini.forward`, whose `Block.attnSubLayer` is still a placeholder.
+rather than as a hypothesis on `AttnParams` (the `V`-block `qkvV` of `W_qkv`
+and the output map `W_o`).  The one head, the head dimension in place of
+`d_model`, and the absent FFN are a restriction: what is stated is the depth
+behaviour of the attention recursion, not of `GPTMini.forward`, whose
+`Block.attnSubLayer` runs every head of `CausalMHA` between `W_qkv` and `W_o`.
 
 *No rate is stated.*  The exponential rate of `Section5_HighD` is exponential
 in the time of the continuous dynamics, and under Pre-LN the layer index is not
