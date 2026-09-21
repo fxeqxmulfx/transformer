@@ -5879,12 +5879,12 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | --- | --- | --- |
 | [`diff_ineq_alpha`](src/Transformer/Perspective/AppendixD_AlphaDeriv.lean#L63) | theorem | proved |
 
-**[Transformer.Perspective.AppendixD_Assembly](src/Transformer/Perspective/AppendixD_Assembly.lean)** — 170 lines
+**[Transformer.Perspective.AppendixD_Assembly](src/Transformer/Perspective/AppendixD_Assembly.lean)** — 169 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`it`](src/Transformer/Perspective/AppendixD_Assembly.lean#L26) | theorem | proved |
-| [`ineq_second_part`](src/Transformer/Perspective/AppendixD_Assembly.lean#L71) | theorem | proved |
+| [`it`](src/Transformer/Perspective/AppendixD_Assembly.lean#L25) | theorem | proved |
+| [`ineq_second_part`](src/Transformer/Perspective/AppendixD_Assembly.lean#L70) | theorem | proved |
 
 **[Transformer.Perspective.AppendixD_PhaseTransition](src/Transformer/Perspective/AppendixD_PhaseTransition.lean)** — 189 lines
 
@@ -5895,13 +5895,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`exists_le_div_log`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L144) | theorem | proved |
 | [`d_star_definition`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L182) | theorem | proved |
 
-**[Transformer.Perspective.AppendixD_Product](src/Transformer/Perspective/AppendixD_Product.lean)** — 228 lines
+**[Transformer.Perspective.AppendixD_Product](src/Transformer/Perspective/AppendixD_Product.lean)** — 217 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`isMinInner_const_consensus`](src/Transformer/Perspective/AppendixD_Product.lean#L36) | theorem | proved |
-| [`product_close_to_one`](src/Transformer/Perspective/AppendixD_Product.lean#L74) | theorem | proved |
-| [`not_forall_product_close_to_one`](src/Transformer/Perspective/AppendixD_Product.lean#L190) | theorem | proved |
+| [`isMinInner_const_consensus`](src/Transformer/Perspective/AppendixD_Product.lean#L35) | theorem | proved |
+| [`product_close_to_one`](src/Transformer/Perspective/AppendixD_Product.lean#L70) | theorem | proved |
+| [`product_close_to_one_of_limit`](src/Transformer/Perspective/AppendixD_Product.lean#L182) | theorem | proved |
 
 **[Transformer.Perspective.AppendixD_Stability](src/Transformer/Perspective/AppendixD_Stability.lean)** — 168 lines
 

@@ -15,11 +15,10 @@ in `Perspective.AppendixD_Product`; the `USA` analogue `rem: usa.d` is in
 `Perspective.AppendixD_YbetaUSA`.
 
 One range to watch: `hcp` below is asked on `t ≥ 0`, which is where the survey
-puts `e:productcloseto1`, while `Perspective.product_close_to_one` proves that
-estimate only on `t ≥ 1/n` — on `[0, 1/n)` it is false, and
-`Perspective.not_forall_product_close_to_one` refutes it there.  The deduction
-below is stated at its full strength; the chain it belongs to runs on
-`t ≥ 1/n`.
+uses `e:productcloseto1`, while the survey derives that estimate by integrating
+from `1/n`, and `Perspective.product_close_to_one` proves it only on
+`t ≥ 1/n`; nothing in the derivation covers `[0, 1/n)`.  The deduction below
+is stated at its full strength; the chain it belongs to runs on `t ≥ 1/n`.
 
 The assembly of `thm: phase.transition.curve`
 out of `e:ineqfirstpart` and `e:ineqsecondpart` is not a separate statement: the

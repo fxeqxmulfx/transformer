@@ -10,9 +10,9 @@ differential inequality for `α`.
 It is the Grönwall step, and it is proved from `e:diffineqalpha`
 (`Perspective.diff_ineq_alpha`, in `Perspective.AppendixD_AlphaDeriv`) and
 from `e:1/n` (`Perspective.alpha_at_one_over_n`) carried as explicit
-hypotheses, on the time range the survey's own argument supports.
-`not_forall_product_close_to_one` shows that `e:1/n` cannot be dropped and
-that the range cannot be widened to `t ≥ 0`.
+hypotheses, on the time range the survey integrates over, `t ≥ 1/n`.
+`product_close_to_one_of_limit` is the same estimate for the survey's `x⋆`,
+the common limit of the particles, with `e:diffineqalpha` discharged.
 
 What the survey builds on top of `e:productcloseto1` is in
 `Perspective.AppendixD_Assembly`.
@@ -20,7 +20,6 @@ What the survey builds on top of `e:productcloseto1` is in
 
 import Transformer.Perspective.AppendixD_AlphaDeriv
 import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.Complex.ExponentialBounds
 
 open scoped BigOperators
 open Real
@@ -57,12 +56,9 @@ hypotheses the survey's derivation uses), and `hone` is `e:1/n`
 (`alpha_at_one_over_n`, proved).  What is proved below is the deduction, and
 its dependence is visible in its signature.
 
-*The range is `t ≥ 1/n`, not `t ≥ 0`.*  Nothing constrains `α` before time
-`1/n`, and at `t = 0` the right-hand side is `exp(1/(2 n e^{2β}))`, which is
-below `2 = max (1 - α)` as soon as `2 n e^{2β} > 1/log 2`, that is, always.
-`not_forall_product_close_to_one` refutes the wider range, and refutes the
-statement without `hone` as well: both changes are necessary, and neither
-weakens the estimate on the range where the survey uses it.
+*The range is `t ≥ 1/n`.*  The survey does not display it; it obtains the
+estimate by "integrating `e:diffineqalpha` from `1/n` to `t`", and that is the
+range on which it holds.
 
 *`γ_β(1/n)` enters only through `hγpos`, `hγle` and `hone`.*  The solution of
 `eq: ybeta` is not otherwise used, so the hypothesis `ybetaODE_SA n β γ` is
@@ -172,57 +168,50 @@ example :
   refine ⟨isMinInner_const_consensus 2 two_pos, one_pos, le_rfl, by norm_num,
     fun t _ => ⟨0, hasDerivAt_const t 1, by norm_num⟩⟩
 
-/-- **Without `e:1/n` the estimate is false, and it is false at `t = 0`.**
+/-- **Equation (e:productcloseto1) for the limit `x⋆`.**
 
-A lone particle standing still, measured against its own antipode, has
-`α ≡ -1`: it satisfies `e:diffineqalpha`, where the rate `α(1/n) (1 - α)` is
-negative and the derivative is `0`, but not `e:1/n`.  At `n = 1`, `β = 0` the
-solution of `eq: ybeta` is `γ_β(t) = 1 - e^{-2t}`, so at `t = 1/n = 1` the
-claimed bound reads
+  `1 - α(t) ≤ exp( (1 - γ_β(1/n) t) / (2 n e^{2β}) )`,  `t ≥ 1/n`,
 
-  `2 = 1 - α(1) ≤ exp(e^{-2}/2) < exp(1/2) < 2`.
-
-Since the range `t ≥ 1/n` is narrower than the survey's `t ≥ 0` and the
-differential inequality is an extra hypothesis, this refutes the survey's form
-of `e:productcloseto1` as well.
+for `α(t) = min_i ⟨x_i(t), x⋆⟩` and `x⋆` the common limit of particles that
+start in an open hemisphere — the survey's setting.  `e:diffineqalpha` is
+discharged by `diff_ineq_alpha`; `e:1/n` stays a hypothesis, `hone`, and is
+`alpha_at_one_over_n` under the high-dimensional estimates of Appendix D.  As
+in `diff_ineq_alpha`, `α` is assumed differentiable (`hdα`), and `β ≥ 0`.
 
 Source: arXiv:2312.10794v5, Appendix D, `e:productcloseto1`. -/
-theorem not_forall_product_close_to_one :
-    ¬ ∀ (d n : ℕ) (β : ℝ) (X : ℝ → SphereTuple d n) (γ α : ℝ → ℝ)
-        (x_star : SSphere d),
-        SA d n β X → ybetaODE_SA n β γ → IsMinInner d n X x_star α →
-        (∀ t : ℝ, (n : ℝ)⁻¹ ≤ t →
-          ∃ c : ℝ, HasDerivAt α c t ∧
-            ((n : ℝ) * Real.exp (2 * β))⁻¹ * α ((n : ℝ)⁻¹) * (1 - α t) ≤ c) →
-        ∀ t : ℝ, (n : ℝ)⁻¹ ≤ t →
-          1 - α t
-            ≤ Real.exp ((1 - γ ((n : ℝ)⁻¹) * t)
-                / (2 * (n : ℝ) * Real.exp (2 * β))) := by
-  intro h
+theorem product_close_to_one_of_limit (hn : 0 < n) (β : ℝ) (hβ : 0 ≤ β)
+    (X : ℝ → SphereTuple d n) (hX : SA d n β X) (w : SSphere d)
+    (hw : ∀ i : Idx n, 0 < inner (𝕜 := ℝ) ((X 0 i : EucSpace d)) ((w : EucSpace d)))
+    (x_star : SSphere d)
+    (hlim : ∀ i : Idx n, Filter.Tendsto (fun s => (X s i : EucSpace d)) Filter.atTop
+      (nhds (x_star : EucSpace d)))
+    (α : ℝ → ℝ) (hα : IsMinInner d n X x_star α) (hdα : ∀ s : ℝ, DifferentiableAt ℝ α s)
+    (γ : ℝ → ℝ) (hγpos : 0 < γ ((n : ℝ)⁻¹)) (hγle : γ ((n : ℝ)⁻¹) ≤ 1)
+    (hone : (1/2 : ℝ) * γ ((n : ℝ)⁻¹) ≤ α ((n : ℝ)⁻¹)) :
+    ∀ t : ℝ, (n : ℝ)⁻¹ ≤ t →
+      1 - α t
+        ≤ Real.exp ((1 - γ ((n : ℝ)⁻¹) * t) / (2 * (n : ℝ) * Real.exp (2 * β))) :=
+  product_close_to_one d n hn β X γ α x_star hα hγpos hγle hone
+    (diff_ineq_alpha d n hn β hβ X x_star α hX hα w hw hlim (by linarith) hdα)
+
+/-- The hypotheses of `product_close_to_one_of_limit` are satisfiable: two
+particles at rest at `basePoint 0`, their own limit and hemisphere, `α ≡ 1`,
+`γ ≡ 1`. -/
+example :
+    ∀ t : ℝ, (((2 : ℕ) : ℝ))⁻¹ ≤ t →
+      1 - (fun _ : ℝ => (1 : ℝ)) t
+        ≤ Real.exp ((1 - (fun _ : ℝ => (1 : ℝ)) ((((2 : ℕ) : ℝ))⁻¹) * t)
+          / (2 * ((2 : ℕ) : ℝ) * Real.exp (2 * (0 : ℝ)))) := by
   have hx : ‖((basePoint 0 : SSphere 1) : EucSpace 1)‖ = 1 :=
     mem_sphere_zero_iff_norm.mp (basePoint 0).2
   have hxx : inner (𝕜 := ℝ) (((basePoint 0 : SSphere 1)) : EucSpace 1)
       (((basePoint 0 : SSphere 1)) : EucSpace 1) = 1 := by
     rw [real_inner_self_eq_norm_mul_norm, hx]; ring
-  have hmin : IsMinInner 1 1 (fun _ _ => basePoint 0) (antipode 1 (basePoint 0))
-      (fun _ => -1) := by
-    have hval : inner (𝕜 := ℝ) (((basePoint 0 : SSphere 1)) : EucSpace 1)
-        ((antipode 1 (basePoint 0) : EucSpace 1)) = -1 := by
-      show inner (𝕜 := ℝ) (((basePoint 0 : SSphere 1)) : EucSpace 1)
-        (-(((basePoint 0 : SSphere 1)) : EucSpace 1)) = -1
-      rw [inner_neg_right, hxx]
-    exact fun _ => ⟨fun _ => le_of_eq hval.symm, ⟨0, hval.symm⟩⟩
-  have hineq := h 1 1 0 (fun _ _ => basePoint 0) (fun t => 1 - Real.exp (-2 * t))
-    (fun _ => -1) (antipode 1 (basePoint 0))
-    (SA_const_consensus 1 1 one_pos 0 (basePoint 0)) ybetaODE_SA_one_zero hmin
-    (fun t _ => ⟨0, hasDerivAt_const t (-1 : ℝ), by norm_num⟩) 1 (by norm_num)
-  -- `exp (1/2) < 2`, so `exp (e^{-2}/2) < 2`
-  have hhalf : Real.exp (1/2 : ℝ) < 2 := by
-    have he : Real.exp (1/2 : ℝ) * Real.exp (1/2 : ℝ) = Real.exp 1 := by
-      rw [← Real.exp_add]; norm_num
-    nlinarith [Real.exp_one_lt_d9, Real.exp_pos (1/2 : ℝ), he]
-  have hsmall : Real.exp (-2 : ℝ) < 1 := Real.exp_lt_one_iff.mpr (by norm_num)
-  have hmono : Real.exp (Real.exp (-2 : ℝ) / 2) < 2 :=
-    lt_of_le_of_lt (Real.exp_le_exp.mpr (by linarith)) hhalf
-  norm_num at hineq
-  linarith
+  exact product_close_to_one_of_limit 1 2 two_pos 0 le_rfl (fun _ _ => basePoint 0)
+    (SA_const_consensus 1 2 two_pos 0 (basePoint 0)) (basePoint 0)
+    (fun _ => by rw [hxx]; norm_num) (basePoint 0) (fun _ => tendsto_const_nhds)
+    (fun _ => 1) (isMinInner_const_consensus 2 two_pos) (fun _ => differentiableAt_const 1)
+    (fun _ => 1) one_pos le_rfl (by norm_num)
+
+end Perspective
+end Transformer
