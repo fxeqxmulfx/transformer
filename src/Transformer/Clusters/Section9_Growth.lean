@@ -31,6 +31,7 @@ Source: arXiv:2305.05465v6, `l:nottoofassst`, `r:notdiagonalizable`,
 -/
 
 import Transformer.Clusters.Section9_Limits
+import Transformer.Clusters.Section9_Fj
 
 open scoped BigOperators
 open Real Filter Topology
@@ -55,16 +56,40 @@ constant `C > 0` with
 
   `|φ*_k(e^{tV}z_i(t))| ≤ C e^{|λ_k| t}`  for all `t ≥ 0`.
 
-Not proved here.  The source's argument: `d/dt |φ*_k(x_i)|² ≤ 2|λ_k|
-max_j |φ*_k(x_j)|²` by `eq:trans_dyn` and the row sum of `eq:P`, and then
-Grönwall applied to `max_j |φ*_k(x_j)|²`.
+As in the source: `d/dt |φ*_k(x_i)|² ≤ 2|λ_k| |φ*_k(x_i)|²` at an index
+where `|φ*_k(x_i)|` is largest, by `eq:trans_dyn` and the row sum of `eq:P`,
+and Grönwall for the maximum, `le_sup'_mul_exp_of_hasDerivAt`.
 
 Source: arXiv:2305.05465v6, `l:nottoofassst`. -/
 theorem norm_eigenFunctional_le (Q K V : ParamMatrix d) {𝕜 : Type*} [RCLike 𝕜]
     (f : EucSpace d →L[ℝ] 𝕜) (lam : 𝕜) (hf : IsEigenFunctional V f lam)
     (X : ℝ → Idx n → EucSpace d) (hX : TransformerDynamics Q K V X) (i : Idx n) :
     ∃ C : ℝ, 0 < C ∧ ∀ t : ℝ, 0 ≤ t → ‖f (X t i)‖ ≤ C * Real.exp (‖lam‖ * t) := by
-  sorry
+  have : Nonempty (Idx n) := ⟨i⟩
+  set D := fun j t => ∑ k : Idx n, attentionMatrix Q K (X t) j k • (lam * f (X t k))
+  have hw : ∀ j t, HasDerivAt (fun s => f (X s j)) (D j t) t := by
+    intro j t
+    have := (f.hasFDerivAt (x := X t j)).comp_hasDerivAt t (hX t j)
+    simp only [map_sum, map_smul, show ∀ z, f (V z) = lam * f z from hf] at this
+    exact this
+  set S := Finset.univ.sup' Finset.univ_nonempty fun j => ‖f (X 0 j)‖ ^ 2
+  have hS : 0 ≤ S := (sq_nonneg _).trans (Finset.le_sup' (fun j => ‖f (X 0 j)‖ ^ 2)
+    (Finset.mem_univ i))
+  refine ⟨Real.sqrt S + 1, by positivity, fun t ht => ?_⟩
+  have h := le_sup'_mul_exp_of_hasDerivAt (fun j t => ‖f (X t j)‖ ^ 2) _ (2 * ‖lam‖)
+    (fun j t => hasDerivAt_norm_sq_rclike (hw j t)) (fun j s hj => ?_) i ht
+  · rw [mul_assoc] at h
+    exact le_sqrt_add_one_mul_exp (norm_nonneg _) hS h
+  · have hk : ∀ k, ‖lam * f (X s k)‖ ≤ ‖lam‖ * ‖f (X s j)‖ := fun k => by
+      rw [norm_mul]
+      exact mul_le_mul_of_nonneg_left
+        ((pow_le_pow_iff_left₀ (norm_nonneg _) (norm_nonneg _) two_ne_zero).1 (hj k))
+        (norm_nonneg _)
+    have hD := norm_sum_attentionMatrix_smul_le Q K (X s) j _ hk
+    have hre := RCLike.re_le_norm ((starRingEnd 𝕜) (f (X s j)) * D j s)
+    rw [norm_mul, RCLike.norm_conj] at hre
+    have := mul_le_mul_of_nonneg_left hD (norm_nonneg (f (X s j)))
+    nlinarith
 
 /-- The hypotheses of `norm_eigenFunctional_le` are satisfiable: at `V = 0`
 every functional is an eigenfunctional for `λ = 0`, and no token moves. -/
@@ -95,7 +120,7 @@ not diagonalizable: on each Jordan subspace,
 
   `∃ C > 0, ∀ t ≥ 0, ∀ i ∈ [n],  ‖π_F(e^{tV}z_i(t))‖ ≤ C e^{(|λ_k| + δ)t}`.
 
-Not proved here.  The source's argument is that of `l:nottoofassst` with
+As in the source, the argument of `l:nottoofassst` with
 `d/dt ‖π_F(x_i(t))‖²` in place of `d/dt |φ*_k(x_i(t))|²`.
 
 Source: arXiv:2305.05465v6, `e:notdi`. -/
@@ -104,7 +129,29 @@ theorem norm_proj_le (Q K V proj : ParamMatrix d) (μ : ℝ) (hμ : 0 ≤ μ)
     (hX : TransformerDynamics Q K V X) :
     ∃ C : ℝ, 0 < C ∧ ∀ t : ℝ, 0 ≤ t → ∀ i : Idx n,
       ‖proj (X t i)‖ ≤ C * Real.exp (μ * t) := by
-  sorry
+  rcases isEmpty_or_nonempty (Idx n) with hn | hn
+  · exact ⟨1, one_pos, fun _ _ i => isEmptyElim i⟩
+  set D := fun j t => ∑ k : Idx n, attentionMatrix Q K (X t) j k • proj (V (X t k))
+  have hw : ∀ j t, HasDerivAt (fun s => proj (X s j)) (D j t) t := by
+    intro j t
+    have := (proj.hasFDerivAt (x := X t j)).comp_hasDerivAt t (hX t j)
+    simp only [map_sum, map_smul] at this
+    exact this
+  set S := Finset.univ.sup' Finset.univ_nonempty fun j => ‖proj (X 0 j)‖ ^ 2
+  have hS : 0 ≤ S := (sq_nonneg _).trans (Finset.le_sup' (fun j => ‖proj (X 0 j)‖ ^ 2)
+    (Finset.mem_univ (Classical.arbitrary _)))
+  refine ⟨Real.sqrt S + 1, by positivity, fun t ht i => ?_⟩
+  have h := le_sup'_mul_exp_of_hasDerivAt (fun j t => ‖proj (X t j)‖ ^ 2) _ (2 * μ)
+    (fun j t => (hw j t).norm_sq) (fun j s hj => ?_) i ht
+  · rw [mul_assoc] at h
+    exact le_sqrt_add_one_mul_exp (norm_nonneg _) hS h
+  · have hk : ∀ k, ‖proj (V (X s k))‖ ≤ μ * ‖proj (X s j)‖ := fun k =>
+      (hπ _).trans (mul_le_mul_of_nonneg_left
+        ((pow_le_pow_iff_left₀ (norm_nonneg _) (norm_nonneg _) two_ne_zero).1 (hj k)) hμ)
+    have hD := norm_sum_attentionMatrix_smul_le Q K (X s) j _ hk
+    have hin := real_inner_le_norm (proj (X s j)) (D j s)
+    have := mul_le_mul_of_nonneg_left hD (norm_nonneg (proj (X s j)))
+    nlinarith
 
 /-- The hypotheses of `norm_proj_le` are satisfiable at `V = 0`. -/
 example (Q K proj : ParamMatrix d) (X : Idx n → EucSpace d) :

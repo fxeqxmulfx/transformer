@@ -10,7 +10,8 @@ that an argument about the extremum is `antitone_sup'_of_hasDerivAt`: the
 maximum of finitely many differentiable functions does not increase when each
 has a nonpositive derivative wherever it attains the maximum.  It is proved by
 Mathlib's fencing theorem for right slopes, since the maximum itself need not
-be differentiable.
+be differentiable.  The same lemma gives Grönwall for the maximum,
+`le_sup'_mul_exp_of_hasDerivAt`, on which `l:nottoofassst` runs.
 
 Source: arXiv:2305.05465v6, `l:fj`.
 -/
@@ -19,6 +20,7 @@ import Transformer.Clusters.Section9_Eigen
 import Mathlib.Analysis.Calculus.MeanValue
 import Mathlib.Analysis.Calculus.Deriv.Slope
 import Mathlib.Topology.Order.Lattice
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 open scoped BigOperators
 open Real Filter Topology
@@ -61,6 +63,67 @@ theorem antitone_sup'_of_hasDerivAt {ι : Type*} [Fintype ι] [Nonempty ι]
   rw [slope_def_field, div_lt_iff₀ (sub_pos.2 hxz)]
   have : M z < M x + r * (z - x) := (Finset.sup'_lt_iff _).2 fun i _ => hz i
   linarith
+
+/-- Grönwall for the maximum: if each `q_i` grows at rate at most `c q_i`
+wherever it attains the maximum, then `q_i(t) ≤ max_j q_j(0) e^{ct}` for `t ≥ 0`. -/
+theorem le_sup'_mul_exp_of_hasDerivAt {ι : Type*} [Fintype ι] [Nonempty ι]
+    (q q' : ι → ℝ → ℝ) (c : ℝ) (hq : ∀ i t, HasDerivAt (q i) (q' i t) t)
+    (hact : ∀ i t, (∀ j, q j t ≤ q i t) → q' i t ≤ c * q i t) (i : ι) {t : ℝ} (ht : 0 ≤ t) :
+    q i t ≤ (Finset.univ.sup' Finset.univ_nonempty fun j => q j 0) * Real.exp (c * t) := by
+  have hg : ∀ j s, HasDerivAt (fun s => Real.exp (-c * s) * q j s)
+      (Real.exp (-c * s) * (q' j s - c * q j s)) s := by
+    intro j s
+    have := (((hasDerivAt_id s).const_mul (-c)).exp).mul (hq j s)
+    convert this using 1
+    · rfl
+    · simp only [id, mul_one]; ring
+  have hA := antitone_sup'_of_hasDerivAt _ _ hg (fun j s hj => by
+    have hk : ∀ k, q k s ≤ q j s := fun k => le_of_mul_le_mul_left (hj k) (Real.exp_pos _)
+    exact mul_nonpos_of_nonneg_of_nonpos (Real.exp_pos _).le
+      (sub_nonpos.2 (hact j s hk))) ht
+  simp only [mul_zero, Real.exp_zero, one_mul] at hA
+  have h1 := (Finset.le_sup' (fun j => Real.exp (-c * t) * q j t) (Finset.mem_univ i)).trans hA
+  have he : Real.exp (c * t) * Real.exp (-c * t) = 1 := by
+    rw [← Real.exp_add]; simp
+  calc q i t = Real.exp (c * t) * (Real.exp (-c * t) * q i t) := by rw [← mul_assoc, he, one_mul]
+    _ ≤ _ := by rw [mul_comm _ (Real.exp _)]; exact mul_le_mul_of_nonneg_left h1 (Real.exp_pos _).le
+
+/-- Taking square roots in a bound `x² ≤ S e^{2a}`, with room to make the
+constant positive. -/
+theorem le_sqrt_add_one_mul_exp {x S a : ℝ} (hx : 0 ≤ x) (hS : 0 ≤ S)
+    (h : x ^ 2 ≤ S * Real.exp (2 * a)) : x ≤ (Real.sqrt S + 1) * Real.exp a := by
+  have hp : 0 ≤ (Real.sqrt S + 1) * Real.exp a := by positivity
+  refine (pow_le_pow_iff_left₀ hx hp two_ne_zero).1 (h.trans ?_)
+  have e2 : Real.exp (2 * a) = Real.exp a ^ 2 := by rw [sq, ← Real.exp_add]; ring_nf
+  have hs := Real.sq_sqrt hS
+  have := Real.sqrt_nonneg S
+  rw [e2, mul_pow]
+  exact mul_le_mul_of_nonneg_right (by nlinarith) (by positivity)
+
+/-- `d/dt |w(t)|² = 2 Re(conj(w) w')` for a curve in `ℝ` or `ℂ`. -/
+theorem hasDerivAt_norm_sq_rclike {𝕜 : Type*} [RCLike 𝕜] {w : ℝ → 𝕜} {w' : 𝕜} {t : ℝ}
+    (hw : HasDerivAt w w' t) :
+    HasDerivAt (fun s => ‖w s‖ ^ 2)
+      (2 * RCLike.re ((starRingEnd 𝕜) (w t) * w')) t := by
+  have hre := (RCLike.reCLM (K := 𝕜)).hasFDerivAt.comp_hasDerivAt t hw
+  have him := (RCLike.imCLM (K := 𝕜)).hasFDerivAt.comp_hasDerivAt t hw
+  simp only [Function.comp_def, RCLike.reCLM_apply, RCLike.imCLM_apply] at hre him
+  have := (hre.mul hre).add (him.mul him)
+  convert this using 1
+  · funext s; exact RCLike.norm_sq_eq_def
+  · simp only [RCLike.mul_re, RCLike.conj_re, RCLike.conj_im]; ring
+
+/-- A row of the attention matrix averages: `‖Σ_k P_jk v_k‖ ≤ max_k ‖v_k‖`. -/
+theorem norm_sum_attentionMatrix_smul_le {d n : ℕ} {E : Type*} [SeminormedAddCommGroup E] [NormedSpace ℝ E]
+    (Q K : ParamMatrix d) (Y : Idx n → EucSpace d) (j : Idx n) (v : Idx n → E) {B : ℝ}
+    (hv : ∀ k, ‖v k‖ ≤ B) : ‖∑ k : Idx n, attentionMatrix Q K Y j k • v k‖ ≤ B := by
+  refine (norm_sum_le _ _).trans ?_
+  calc ∑ k : Idx n, ‖attentionMatrix Q K Y j k • v k‖
+      ≤ ∑ k : Idx n, attentionMatrix Q K Y j k * B := by
+        refine Finset.sum_le_sum fun k _ => ?_
+        rw [norm_smul, Real.norm_of_nonneg (attentionMatrix_pos Q K Y j k).le]
+        exact mul_le_mul_of_nonneg_left (hv k) (attentionMatrix_pos Q K Y j k).le
+    _ = B := by rw [← Finset.sum_mul, sum_attentionMatrix (Fin.pos_iff_nonempty.mpr ⟨j⟩), one_mul]
 
 variable {d m : ℕ}
 
