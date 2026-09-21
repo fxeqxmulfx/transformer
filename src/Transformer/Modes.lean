@@ -31,3 +31,5 @@ import Transformer.Modes.Section3_ErrorThird
 import Transformer.Modes.Section3_ErrorHigher
 import Transformer.Modes.Section3_ErrorKR
 import Transformer.Modes.Section4_KacRiceAppl
+import Transformer.Modes.Section4_ScaleSpace
+import Transformer.Modes.Section4_Tail
