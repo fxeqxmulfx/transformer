@@ -8,6 +8,7 @@ Formalization of:
 import Transformer.Clusters.Section1_Dynamics
 import Transformer.Clusters.Section2_LowRank
 import Transformer.Clusters.Section3_Rescaled
+import Transformer.Clusters.Section3_Discrete
 import Transformer.Clusters.Section3_IdCase
 import Transformer.Clusters.Section4_Hyperplanes
 import Transformer.Clusters.Section4_Codim
