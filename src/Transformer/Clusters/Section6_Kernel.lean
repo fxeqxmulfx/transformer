@@ -74,16 +74,50 @@ theorem attentionKernel_dirac_zero (Q K V : ParamMatrix d) (x : EucSpace d) :
     attentionKernel Q K V (Measure.dirac (0 : EucSpace d)) x = 0 := by
   simp [attentionKernel]
 
+/-- A measure carried by `B̄(0,R)` puts almost every point in it. -/
+theorem ae_mem_closedBall {μ : Measure (EucSpace d)} {R : ℝ} (hsupp : IsCarriedBy μ R) :
+    ∀ᵐ y ∂μ, y ∈ Metric.closedBall (0 : EucSpace d) R :=
+  ae_iff.2 hsupp
+
+/-- The attention weight `y ↦ e^{⟨Qx, Ky⟩}` is integrable against a finite measure
+carried by a ball, on which it is bounded. -/
+theorem integrable_attentionWeight (Q K : ParamMatrix d) (R : ℝ)
+    (μ : Measure (EucSpace d)) [IsFiniteMeasure μ] (hsupp : IsCarriedBy μ R) (x : EucSpace d) :
+    Integrable (fun y => Real.exp (inner (𝕜 := ℝ) (Q x) (K y))) μ := by
+  refine Integrable.of_bound (by fun_prop) (Real.exp (‖Q x‖ * (‖K‖ * R))) ?_
+  filter_upwards [ae_mem_closedBall hsupp] with y hy
+  rw [Real.norm_of_nonneg (Real.exp_pos _).le, Real.exp_le_exp]
+  have hy' : ‖y‖ ≤ R := by simpa using hy
+  calc inner (𝕜 := ℝ) (Q x) (K y) ≤ ‖Q x‖ * ‖K y‖ := real_inner_le_norm _ _
+    _ ≤ ‖Q x‖ * (‖K‖ * R) := mul_le_mul_of_nonneg_left
+        ((K.le_opNorm y).trans (mul_le_mul_of_nonneg_left hy' (norm_nonneg _))) (norm_nonneg _)
+
 /-- **Estimate (e:bddinx).**  `‖𝒳[μ]‖_{L^∞} ≤ ‖V‖_op R`.
 
-Not proved here.
+As in the source: `‖V y‖ ≤ ‖V‖_op R` on the ball, and `𝒳[μ](x)` is an
+average of `V y` against the weights `e^{⟨Qx, Ky⟩}`.
 
 Source: arXiv:2305.05465v6, `e:bddinx`. -/
 theorem attentionKernel_norm_le (Q K V : ParamMatrix d) (R : ℝ) (hR : 0 < R)
     (μ : Measure (EucSpace d)) (hμ : IsProbabilityMeasure μ) (hsupp : IsCarriedBy μ R)
     (x : EucSpace d) :
     ‖attentionKernel Q K V μ x‖ ≤ ‖V‖ * R := by
-  sorry
+  set w := fun y => Real.exp (inner (𝕜 := ℝ) (Q x) (K y))
+  have hw := integrable_attentionWeight Q K R μ hsupp x
+  have hN : ‖∫ y, w y • V y ∂μ‖ ≤ ‖V‖ * R * ∫ y, w y ∂μ := by
+    rw [← integral_const_mul]
+    refine norm_integral_le_of_norm_le (hw.const_mul _) ?_
+    filter_upwards [ae_mem_closedBall hsupp] with y hy
+    have hy' : ‖y‖ ≤ R := by simpa using hy
+    rw [norm_smul, Real.norm_of_nonneg (Real.exp_pos _).le, mul_comm]
+    exact mul_le_mul_of_nonneg_right ((V.le_opNorm y).trans
+      (mul_le_mul_of_nonneg_left hy' (norm_nonneg _))) (Real.exp_pos _).le
+  have hVR : 0 ≤ ‖V‖ * R := mul_nonneg (norm_nonneg _) hR.le
+  rw [attentionKernel, norm_smul, Real.norm_eq_abs]
+  rcases (integral_nonneg fun y => (Real.exp_pos _).le : 0 ≤ ∫ y, w y ∂μ).eq_or_lt with h | h
+  · rw [← h]; simpa using hVR
+  · rw [abs_of_pos (inv_pos.2 h), inv_mul_le_iff₀ h, mul_comm (∫ y, w y ∂μ)]
+    exact hN
 
 /-- **Estimate (e:lipinx).**  `𝒳[μ]` is differentiable in `x` with
 `‖∇_x 𝒳[μ]‖_{L^∞} ≤ 2 ‖QᵀK‖_op ‖V‖_op R²`.
