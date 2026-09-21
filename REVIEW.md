@@ -380,49 +380,52 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.GPTMini — arXiv:2512.01868
 
-- [ ] Transformer/GPTMini/AttentionBounds.lean (6): `causalAttnWeights_zero_above`, `causalAttnWeights_nonneg`, `causalAttnWeights_bounds`, `attnOutput_norm_le`, `xsaProjection_norm_le`, `attentionHead_norm_le`
-- [ ] Transformer/GPTMini/AttentionLipschitz.lean (3): `attnOutput_dist_le`, `norm_proj_sub_proj_le`, `xsaProjection_dist_le`
-- [ ] Transformer/GPTMini/AttnSubLayerLipschitz.lean (2): `attnSubLayer_eq`, `attnSubLayer_dist_le`
-- [ ] Transformer/GPTMini/Block.lean (3): `attnSubLayer_bounded`, `ffnSubLayer_bounded`, `blockForward_growth`
-- [ ] Transformer/GPTMini/BlockLipschitz.lean (1): `ffnSubLayer_lipschitz`
+- issue Transformer/GPTMini/ClusteringTheorem.lean (sorried, no proved entries): project conjectures, not paper statements. `polynomial_rate` cites thm:preln-slow, which says only Var' = -Θ(Var/t) for continuous-time dynamics started in a narrow cone; the `C/L³` exponent, the global a.e. initial data and a `C` uniform over x₀ are all invented, and uniformity is likely false (starts near an unstable configuration linger arbitrarily long). `layer_clustering` transfers thm1 of 2411.04990 (continuous, on the sphere) to a discrete Pre-LN recursion with RoPE and XSA, with no argument that the bridges compose. The docstring's 'Block.attnSubLayer is still a placeholder' is stale.
+- issue whole directory: `reference/model.py`, cited as the source everywhere, is not in the repository.
+
+- ok Transformer/GPTMini/AttentionBounds.lean (6): `causalAttnWeights_zero_above`, `causalAttnWeights_nonneg`, `causalAttnWeights_bounds`, `attnOutput_norm_le`, `xsaProjection_norm_le`, `attentionHead_norm_le`
+- ok Transformer/GPTMini/AttentionLipschitz.lean (3): `attnOutput_dist_le`, `norm_proj_sub_proj_le`, `xsaProjection_dist_le`
+- ok Transformer/GPTMini/AttnSubLayerLipschitz.lean (2): `attnSubLayer_eq`, `attnSubLayer_dist_le`
+- ok Transformer/GPTMini/Block.lean (3): `attnSubLayer_bounded`, `ffnSubLayer_bounded`, `blockForward_growth`
+- ok Transformer/GPTMini/BlockLipschitz.lean (1): `ffnSubLayer_lipschitz`
 
 ### Transformer.GPTMini.Bridge — —
 
-- [ ] Transformer/GPTMini/Bridge/ALMLookup.lean (8): `normL2_smul_of_pos`, `score_smul_key`, `score_smul_query`, `qknorm_indifferent_where_lookup_is_not`, `score_eq_inner_div`, `score_sub_eq_const_mul_lookup_sub`, `score_le_iff_lookup_le`, `score_le_iff_dist_le`
-- [ ] Transformer/GPTMini/Bridge/CausalConnection.lean (2): `causalAttnWeights_matches_eq_csa`, `causalAttnWeights_eq_csa_coeff`
-- [ ] Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean (5): `applyRope_add`, `applyRope_smul`, `ropeIsometry_apply`, `rope_timeParam_norm_preserved`, `rope_score_relative`
-- [ ] Transformer/GPTMini/Bridge/RoPENoClustering.lean (3): `transformerODE_const_antipodalPair`, `not_rope_clustering_antipodalPair`, `not_forall_rope_clustering`
-- [ ] Transformer/GPTMini/Bridge/SphereResidence.lean (3): `rmsNorm_direction_on_sphere`, `toSphere_norm`, `token_sequence_on_sphere`
-- [ ] Transformer/GPTMini/Bridge/XSAEquivalence.lean (2): `xsaProjection_eq_sphereProj`, `attentionHead_eq_sphereProj`
+- ok Transformer/GPTMini/Bridge/ALMLookup.lean (8): `normL2_smul_of_pos`, `score_smul_key`, `score_smul_query`, `qknorm_indifferent_where_lookup_is_not`, `score_eq_inner_div`, `score_sub_eq_const_mul_lookup_sub`, `score_le_iff_lookup_le`, `score_le_iff_dist_le`
+- issue Transformer/GPTMini/Bridge/CausalConnection.lean (2): `causalAttnWeights_matches_eq_csa`, `causalAttnWeights_eq_csa_coeff` — both theorems unfold causalAttnWeights and never mention Causal.CSA; the docstring's 'puts thm1 in scope' overclaims, and RoPE makes Q,K position-dependent, so no fixed Q,K of eq: csa matches
+- issue Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean (5): `applyRope_add`, `applyRope_smul`, `ropeIsometry_apply`, `rope_timeParam_norm_preserved`, `rope_score_relative` — rope_timeParam indexes Q(t) by position, but TimeParam's t is ODE time (depth), shared by all tokens: 'RoPE attention is transformerODE at Q(t),K(t)' is false; lemmas themselves correct
+- ok Transformer/GPTMini/Bridge/RoPENoClustering.lean (3): `transformerODE_const_antipodalPair`, `not_rope_clustering_antipodalPair`, `not_forall_rope_clustering`
+- ok Transformer/GPTMini/Bridge/SphereResidence.lean (3): `rmsNorm_direction_on_sphere`, `toSphere_norm`, `token_sequence_on_sphere`
+- ok Transformer/GPTMini/Bridge/XSAEquivalence.lean (2): `xsaProjection_eq_sphereProj`, `attentionHead_eq_sphereProj`
 
 ### Transformer.GPTMini — arXiv:2512.01868
 
-- [ ] Transformer/GPTMini/CausalMHA.lean (2): `causalAttnWeights_row_sum`, `xsaProjection_orthogonal`
-- [ ] Transformer/GPTMini/Config.lean (8): `head_dim_pos`, `group_size_pos`, `n_kv_heads_mul_group_size`, `kvHead_surjective`, `kvHead_val_eq`, `kvHead_val_eq_zero`, `exists_shared_kvHead`, `cache_eq_group_size_mul`
-- [ ] Transformer/GPTMini/HeadLipschitz.lean (4): `attentionHead_eq`, `headLipschitz_nonneg`, `headLipschitz_mono`, `attentionHead_dist_le`
-- [ ] Transformer/GPTMini/MeanFieldRefutation.lean (3): `attentionHead_one`, `preLNHead_one_ne_zero`, `not_mean_field_clustering`
-- [ ] Transformer/GPTMini/Model.lean (1): `forward_total`
+- ok Transformer/GPTMini/CausalMHA.lean (2): `causalAttnWeights_row_sum`, `xsaProjection_orthogonal`
+- ok Transformer/GPTMini/Config.lean (8): `head_dim_pos`, `group_size_pos`, `n_kv_heads_mul_group_size`, `kvHead_surjective`, `kvHead_val_eq`, `kvHead_val_eq_zero`, `exists_shared_kvHead`, `cache_eq_group_size_mul`
+- ok Transformer/GPTMini/HeadLipschitz.lean (4): `attentionHead_eq`, `headLipschitz_nonneg`, `headLipschitz_mono`, `attentionHead_dist_le`
+- ok Transformer/GPTMini/MeanFieldRefutation.lean (3): `attentionHead_one`, `preLNHead_one_ne_zero`, `not_mean_field_clustering`
+- issue Transformer/GPTMini/Model.lean (1): `forward_total` — forward_total is decorative: ∃ y, f = y closed by rfl, true of every term; docstring's 'T ≤ max_seq_len' is not even a hypothesis
 
 ### Transformer.GPTMini.Properties — —
 
-- [ ] Transformer/GPTMini/Properties/Causal.lean (1): `attnOutput_causal`
-- [ ] Transformer/GPTMini/Properties/Entropy.lean (6): `entropy_le_log_card`, `log_le_entropy_of_le`, `softmaxEntropy_nonneg`, `softmaxEntropy_eq`, `softmaxEntropy_le_log_vocab`, `softmaxEntropy_lower_bound`
-- [ ] Transformer/GPTMini/Properties/Lipschitz.lean (2): `hidden_isStream`, `stream_lipschitz`
-- [ ] Transformer/GPTMini/Properties/LipschitzConstants.lean (6): `attnLipschitz_nonneg`, `ffnLipschitz_nonneg`, `one_le_perBlockLipschitz`, `perBlockLipschitz_nonneg`, `endToEndLipschitz_nonneg`, `blockForward_lipschitz`
-- [ ] Transformer/GPTMini/Properties/OutputSimplex.lean (6): `softmaxOutput_nonneg`, `softmaxOutput_denom_pos`, `softmaxOutput_pos`, `softmaxOutput_sum_one`, `softmaxOutput_le_one`, `softmaxOutput_is_distribution`
-- [ ] Transformer/GPTMini/Properties/StreamGrowth.lean (3): `blockGrowth_nonneg`, `residual_stream_linear_growth`, `final_representation_norm_le`
+- ok Transformer/GPTMini/Properties/Causal.lean (1): `attnOutput_causal`
+- issue Transformer/GPTMini/Properties/Entropy.lean (6): `entropy_le_log_card`, `log_le_entropy_of_le`, `softmaxEntropy_nonneg`, `softmaxEntropy_eq`, `softmaxEntropy_le_log_vocab`, `softmaxEntropy_lower_bound` — header promises H ≥ log V - C(L,‖W‖,α_max) via nonexistent forward_lipschitz_embedding; what is proved takes the logit bound M as hypothesis
+- ok Transformer/GPTMini/Properties/Lipschitz.lean (2): `hidden_isStream`, `stream_lipschitz`
+- ok Transformer/GPTMini/Properties/LipschitzConstants.lean (6): `attnLipschitz_nonneg`, `ffnLipschitz_nonneg`, `one_le_perBlockLipschitz`, `perBlockLipschitz_nonneg`, `endToEndLipschitz_nonneg`, `blockForward_lipschitz`
+- ok Transformer/GPTMini/Properties/OutputSimplex.lean (6): `softmaxOutput_nonneg`, `softmaxOutput_denom_pos`, `softmaxOutput_pos`, `softmaxOutput_sum_one`, `softmaxOutput_le_one`, `softmaxOutput_is_distribution`
+- ok Transformer/GPTMini/Properties/StreamGrowth.lean (3): `blockGrowth_nonneg`, `residual_stream_linear_growth`, `final_representation_norm_le`
 
 ### Transformer.GPTMini — arXiv:2512.01868
 
-- [ ] Transformer/GPTMini/QKNorm.lean (5): `normL2_norm_le`, `score_bounded`, `partition_bounds`, `rmsNorm_eq_smul_normL2`, `rmsScore_eq_score`
-- [ ] Transformer/GPTMini/QKNormLipschitz.lean (3): `normL2_lipschitz`, `abs_inner_sub_inner_le`, `score_lipschitz`
-- [ ] Transformer/GPTMini/RMSNorm.lean (5): `rmsNorm_norm_eq_sqrt_d`, `rmsNormEps_norm_le`, `rmsNormEps_lipschitz`, `rmsNorm_pos_homog`, `continuous_rmsNorm`
-- [ ] Transformer/GPTMini/ReLU2FFN.lean (12): `relu2_nonneg`, `relu2_of_pos`, `relu2_of_nonpos`, `relu2_le_sq`, `continuous_relu2`, `relu2Vec_coord_nonneg`, `relu2Vec_apply`, `relu2Vec_norm_bound`, `euclidean_norm_le_of_coord_le`, `abs_relu2_sub_le`, `relu2Vec_lipschitz`, `relu2FFN_lipschitz_on_ball`
-- [ ] Transformer/GPTMini/Reshape.lean (15): `d_model_eq`, `qkv_disjoint`, `qkvSlice_apply`, `headSlice_apply`, `headMerge_apply`, `headSlice_headMerge`, `headMerge_headSlice`, `norm_comp_injective_le`, `qkvSlice_norm_le`, `qkvV_injective`, `qkvQ_injective`, `qkvK_injective`, `headSlice_norm_le`, `headMerge_norm_sq`, `headMerge_norm_le`
-- [ ] Transformer/GPTMini/ReshapeDist.lean (3): `qkvSlice_dist_le`, `headSlice_dist_le`, `headMerge_dist_le`
-- [ ] Transformer/GPTMini/RoPE.lean (11): `ropeSplit_symm_inl_inl`, `ropeSplit_symm_inl_inr`, `applyRope_apply`, `sum_split`, `sum_split'`, `applyRope_isometry`, `ropeCoord_sub`, `applyRope_sub`, `applyRope_dist`, `ropeAngle_sub`, `applyRope_relative`
-- [ ] Transformer/GPTMini/SoftmaxStability.lean (3): `causalAttnWeights_le_mul`, `causalAttnWeights_l1_le`, `causalAttnWeights_l1_le_linear`
-- [ ] Transformer/GPTMini/TotalVariation.lean (4): `l1_le_two`, `l1_le_of_le_mul`, `exp_two_mul_sub_one_le`, `l1_le_of_le_exp`
+- issue Transformer/GPTMini/QKNorm.lean (5): `normL2_norm_le`, `score_bounded`, `partition_bounds`, `rmsNorm_eq_smul_normL2`, `rmsScore_eq_score` — normL2 = x/(‖x‖+eps) but F.normalize is x/max(‖x‖,eps): undocumented deviation; header's bound n⁻¹e^{±2α} should be e^{±2e^α} (AttentionBounds has it right)
+- ok Transformer/GPTMini/QKNormLipschitz.lean (3): `normL2_lipschitz`, `abs_inner_sub_inner_le`, `score_lipschitz`
+- ok Transformer/GPTMini/RMSNorm.lean (5): `rmsNorm_norm_eq_sqrt_d`, `rmsNormEps_norm_le`, `rmsNormEps_lipschitz`, `rmsNorm_pos_homog`, `continuous_rmsNorm`
+- ok Transformer/GPTMini/ReLU2FFN.lean (12): `relu2_nonneg`, `relu2_of_pos`, `relu2_of_nonpos`, `relu2_le_sq`, `continuous_relu2`, `relu2Vec_coord_nonneg`, `relu2Vec_apply`, `relu2Vec_norm_bound`, `euclidean_norm_le_of_coord_le`, `abs_relu2_sub_le`, `relu2Vec_lipschitz`, `relu2FFN_lipschitz_on_ball`
+- ok Transformer/GPTMini/Reshape.lean (15): `d_model_eq`, `qkv_disjoint`, `qkvSlice_apply`, `headSlice_apply`, `headMerge_apply`, `headSlice_headMerge`, `headMerge_headSlice`, `norm_comp_injective_le`, `qkvSlice_norm_le`, `qkvV_injective`, `qkvQ_injective`, `qkvK_injective`, `headSlice_norm_le`, `headMerge_norm_sq`, `headMerge_norm_le`
+- ok Transformer/GPTMini/ReshapeDist.lean (3): `qkvSlice_dist_le`, `headSlice_dist_le`, `headMerge_dist_le`
+- ok Transformer/GPTMini/RoPE.lean (11): `ropeSplit_symm_inl_inl`, `ropeSplit_symm_inl_inr`, `applyRope_apply`, `sum_split`, `sum_split'`, `applyRope_isometry`, `ropeCoord_sub`, `applyRope_sub`, `applyRope_dist`, `ropeAngle_sub`, `applyRope_relative`
+- ok Transformer/GPTMini/SoftmaxStability.lean (3): `causalAttnWeights_le_mul`, `causalAttnWeights_l1_le`, `causalAttnWeights_l1_le_linear`
+- ok Transformer/GPTMini/TotalVariation.lean (4): `l1_le_two`, `l1_le_of_le_mul`, `exp_two_mul_sub_one_le`, `l1_le_of_le_exp`
 
 ### Transformer.Homogenized — arXiv:2604.01978
 
