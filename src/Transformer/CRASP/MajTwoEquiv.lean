@@ -9,11 +9,8 @@ The two translations are depth-preserving in one direction and cost one level
 in the other, so `MAJ²_k ⊆ TL[◁#,▷#]_k ⊆ MAJ²_{k+1}` and the two logics define
 the same languages.
 
-`thm:ltc0_hierarchy` concludes from this and `thm:TLC_depth` that the circuit
-depth hierarchy for `FO[<]`-uniform `LTC⁰` is strict.  That last step is
-Theorem 3 of Behle & Lange, about circuits, which this development does not
-model; what is stated below is the half that lives in the logic — the `MAJ²`
-depth hierarchy is strict.
+`thm:ltc0_hierarchy`, which concludes from this and `thm:TLC_depth` that the
+`MAJ²` depth hierarchy is strict, is in `CRASP.MajTwoHierarchy`.
 
 Appendix E also carries a `lem:piecewise_testable_depth_majtwo` giving an
 explicit `MAJ²_{k+1}` construction for `(2k+1)`-piecewise testable languages.
@@ -201,29 +198,6 @@ example (k : ℕ) : 0 < k + 1 ∧ Definable (σ := σ) Set.univ (k + 1) ∧
   · ext w
     simp [Form.lang, Form.models, Form.sat, Term.val]
   · simp [MajTwo]
-
-/-- **Corollary `thm:ltc0_hierarchy`, logical half.**  The `MAJ²` depth
-hierarchy is strict: `D_k` is `MAJ²_k`-definable while `D_{k+1}` is not.  By
-Theorem 3 of Behle & Lange this is equivalent to the strictness of the circuit
-depth hierarchy for `FO[<]`-uniform `LTC⁰`, which is the corollary as stated in
-the paper; circuits are not modelled here.
-
-The second half is `definable_of_closed_majTwo` against `thm:TLC_depth` and is
-proved.  The first half is not derivable from the two inclusions — they cost a
-level, and `D_k` is `TL[◁#,▷#]`-definable at depth `k`, not at `k - 1` — so it
-is exactly `lem:piecewise_testable_depth_majtwo`, the explicit `MAJ²_{k+1}`
-construction for `(2k+1)`-piecewise testable languages that sits in an
-`\iffalse` block of the source and is left out here with the rest of them.
-
-The paper does not bound `k`; `0 < k` is forced, not added.  At `k = 0` the
-first half is false: no closed formula has depth `0`
-(`Maj2.not_closed_of_depth_eq_zero`), so `MAJ²_0` defines no language, not
-even `D_0 = {ε}`. -/
-theorem majTwo_depth_hierarchy (k : ℕ) (hk : 0 < k) :
-    (∃ φ ∈ MajTwo Bool k, φ.Closed ∧ φ.lang = altPlusDouble k) ∧
-      ∀ φ ∈ MajTwo Bool k, φ.Closed → φ.lang ≠ altPlusDouble (k + 1) := by
-  refine ⟨sorry, fun φ hφ hc hlang => (definable_altPlusDouble k).2 ?_⟩
-  exact hlang ▸ definable_of_closed_majTwo k φ hφ hc
 
 end CRASP
 end Transformer
