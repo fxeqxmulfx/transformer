@@ -580,63 +580,63 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.Perspective — arXiv:2312.10794
 
-- [ ] Transformer/Perspective/AppendixA_Beta0.lean (8): `hasDerivAt_E0`, `inner_proj_self`, `ne_neg_self_of_norm_eq_one`, `proj_smul`, `beta0Dynamics_smul`, `hasDerivAt_E0_ascent`, `taylor_eq`, `antipodalPair_critical_nonTrivial`
-- [ ] Transformer/Perspective/AppendixA_Hessian.lean (1): `hessian_at_critical`
-- [ ] Transformer/Perspective/AppendixA_Rotation.lean (4): `hasDerivAt_expSkew`, `expSkew_zero`, `norm_expSkew`, `exists_perturbationBy`
-- [ ] Transformer/Perspective/AppendixA_Saddle.lean (2): `with`, `yury_lemma`
-- [ ] Transformer/Perspective/AppendixB_BetaInterval.lean (6): `sq_sqrt_disc`, `cosTauStar_pos`, `cosTauStar_le_one`, `cosTauStar_quadratic`, `τ_β_star_spec`, `τ_β_star_unique`
-- [ ] Transformer/Perspective/AppendixB_ClaimYury.lean (1): `claim_yury`
-- [ ] Transformer/Perspective/AppendixB_EBeta.lean (2): `selfEnergy_one`, `singleToken_isSkew_critical_hessianNonPos`
-- [ ] Transformer/Perspective/AppendixB_Expansion.lean (1): `selfEnergy_expansion_aux`
-- [ ] Transformer/Perspective/AppendixB_HessBeta.lean (1): `secondDeriv_selfEnergy`
-- [ ] Transformer/Perspective/AppendixB_HighD.lean (1): `dr1_skew_inequality`
-- [ ] Transformer/Perspective/AppendixB_Intrinsic.lean (2): `isLittleO_selfEnergy_secondOrder`, `hessian_at_critical_intrinsic`
-- [ ] Transformer/Perspective/AppendixB_MetricGrad.lean (3): `hasDerivAt_selfEnergy`, `symmetrized_double_sum`, `metric_grad_comparison`
-- [ ] Transformer/Perspective/AppendixB_MetricHess.lean (1): `metric_hess_comparison`
-- [ ] Transformer/Perspective/AppendixB_Taylor.lean (6): `hasDerivAt_expCosLine`, `hasDerivAt_expCosLine_deriv`, `g_β_2d_symm`, `secondDeriv_torusEnergy_block`, `taylor2_inequality`, `taylor3_inequality`
-- [ ] Transformer/Perspective/AppendixC_BetaTiny.lean (3): `Etilde_eq_Etilde0_add`, `tendsto_Etilde_zero`, `eigvalBetaConst_pos`
+- ok Transformer/Perspective/AppendixA_Beta0.lean (8): `hasDerivAt_E0`, `inner_proj_self`, `ne_neg_self_of_norm_eq_one`, `proj_smul`, `beta0Dynamics_smul`, `hasDerivAt_E0_ascent`, `taylor_eq`, `antipodalPair_critical_nonTrivial` — eq:taylor as in Step 1 (nontrivial = not all equal); e:gradfl written out
+- ok Transformer/Perspective/AppendixA_Hessian.lean (1): `hessian_at_critical` — e:helpcl; criticality dropped (unused), recorded in docstring; ODE form of e^{tB}
+- ok Transformer/Perspective/AppendixA_Rotation.lean (4): `hasDerivAt_expSkew`, `expSkew_zero`, `norm_expSkew`, `exists_perturbationBy` — existence of e^{tB} curve
+- ok Transformer/Perspective/AppendixA_Saddle.lean (2): `with`, `yury_lemma` — yury_lemma: strict saddle as positive 2nd derivative along a rotation; d>=2 added and recorded (false at d=1)
+- ok Transformer/Perspective/AppendixB_BetaInterval.lean (6): `sq_sqrt_disc`, `cosTauStar_pos`, `cosTauStar_le_one`, `cosTauStar_quadratic`, `τ_β_star_spec`, `τ_β_star_unique` — checked vs App. B; hessian hypothesis along block rotations is implied by the paper's at a critical point
+- ok Transformer/Perspective/AppendixB_ClaimYury.lean (1): `claim_yury` — checked vs App. B; hessian hypothesis along block rotations is implied by the paper's at a critical point
+- ok Transformer/Perspective/AppendixB_EBeta.lean (2): `selfEnergy_one`, `singleToken_isSkew_critical_hessianNonPos` — checked vs App. B; hessian hypothesis along block rotations is implied by the paper's at a critical point
+- ok Transformer/Perspective/AppendixB_Expansion.lean (1): `selfEnergy_expansion_aux` — App. B computations; beta!=0 added, criticality dropped, both recorded
+- ok Transformer/Perspective/AppendixB_HessBeta.lean (1): `secondDeriv_selfEnergy` — App. B computations; beta!=0 added, criticality dropped, both recorded
+- ok Transformer/Perspective/AppendixB_HighD.lean (1): `dr1_skew_inequality` — App. B computations; beta!=0 added, criticality dropped, both recorded
+- ok Transformer/Perspective/AppendixB_Intrinsic.lean (2): `isLittleO_selfEnergy_secondOrder`, `hessian_at_critical_intrinsic` — App. B; O(beta) with explicit uniform constant; skew dropped in metric.hess (unused), recorded
+- ok Transformer/Perspective/AppendixB_MetricGrad.lean (3): `hasDerivAt_selfEnergy`, `symmetrized_double_sum`, `metric_grad_comparison` — App. B; O(beta) with explicit uniform constant; skew dropped in metric.hess (unused), recorded
+- ok Transformer/Perspective/AppendixB_MetricHess.lean (1): `metric_hess_comparison` — App. B; O(beta) with explicit uniform constant; skew dropped in metric.hess (unused), recorded
+- ok Transformer/Perspective/AppendixB_Taylor.lean (6): `hasDerivAt_expCosLine`, `hasDerivAt_expCosLine_deriv`, `g_β_2d_symm`, `secondDeriv_torusEnergy_block`, `taylor2_inequality`, `taylor3_inequality` — App. B; O(beta) with explicit uniform constant; skew dropped in metric.hess (unused), recorded
+- ok Transformer/Perspective/AppendixC_BetaTiny.lean (3): `Etilde_eq_Etilde0_add`, `tendsto_Etilde_zero`, `eigvalBetaConst_pos` — honest names; eigval.beta bound itself (a proof step) off the books, noted in module doc
 - issue Transformer/Perspective/AppendixD_Alpha.lean (2): `alpha_at_one_over_n`, `not_alpha_at_one_over_n_of_free` — alpha_at_one_over_n: x* chosen as x_0(1/n), not the paper's limit x*; faithful form: x* with eta x* in hull of X(1/n)
 - issue Transformer/Perspective/AppendixD_AlphaDeriv.lean (2): `diff_ineq_alpha`, `not_forall_diff_ineq_alpha` — diff_ineq_alpha: hhull near-vacuous (hull vs cone), see not_forall_diff_ineq_alpha
-- [ ] Transformer/Perspective/AppendixD_Assembly.lean (2): `it`, `ineq_second_part`
-- [ ] Transformer/Perspective/AppendixD_PhaseTransition.lean (3): `ineq_first_part`, `exists_le_div_log`, `d_star_definition`
+- ok Transformer/Perspective/AppendixD_Assembly.lean (2): `it`, `ineq_second_part` — deduction with hcp/hyb/hγle as hypotheses; constant 4 instead of 1, justified; valid for any x_star
+- ok Transformer/Perspective/AppendixD_PhaseTransition.lean (3): `ineq_first_part`, `exists_le_div_log`, `d_star_definition` — ineqfirstpart with c(β)=e^{10max(1,β)} as paper, β≥0 added; d.large stronger (hyp dropped)
 - issue Transformer/Perspective/AppendixD_Product.lean (3): `isMinInner_const_consensus`, `product_close_to_one`, `not_forall_product_close_to_one` — product_close_to_one ok as a Gronwall deduction, but not_forall_product_close_to_one is a strawman claiming to refute the survey
-- [ ] Transformer/Perspective/AppendixD_Stability.lean (3): `one_le_cBeta`, `stability_orthogonal`, `shortdist_bound`
-- [ ] Transformer/Perspective/AppendixD_Ybeta.lean (2): `ybeta_close_to_1`, `not_forall_ybeta_close_to_1`
-- [ ] Transformer/Perspective/AppendixD_YbetaUSA.lean (2): `usa_analogue`, `not_forall_usa_analogue`
-- [ ] Transformer/Perspective/Beta0Field.lean (4): `beta0Dynamics_iff`, `norm_meanTuple_le`, `meanTuple_sub`, `lipschitzOnWith_beta0Field`
-- [ ] Transformer/Perspective/Beta0Gronwall.lean (3): `proj_sub`, `norm_SA_drift_sub_beta0Field_le`, `solutions_close_at_small_beta`
-- [ ] Transformer/Perspective/DoubleSum.lean (4): `hasDerivAt_double_sum`, `const_mul_double_sum`, `double_sum_sub`, `abs_double_sum_le`
-- [ ] Transformer/Perspective/Gronwall.lean (1): `decay_of_deriv_ge`
-- [ ] Transformer/Perspective/InnerAsymptotics.lean (10): `isBigO_inner`, `isLittleO_inner`, `isBigO_inner_const_left`, `isBigO_inner_const_right`, `isLittleO_inner_const_left`, `isLittleO_inner_const_right`, `isLittleO_cube_sq`, `isLittleO_sq_id`, `isBigO_mul_const`, `isBigO_smul_const`
-- [ ] Transformer/Perspective/MinCurve.lean (1): `le_min_curve_of_deriv_nonneg`
-- [ ] Transformer/Perspective/PartitionGradient.lean (8): `hasFDerivAt_expInner`, `abs_inner_le_of_dist_le`, `integrable_expInner_ambient`, `integrable_expInner_smul`, `hasGradientAt_partitionMu`, `partitionMu_pos`, `gradient_partitionMu`, `gradient_log_partitionMu`
-- [ ] Transformer/Perspective/PeanoTaylor.lean (2): `isLittleO_secondOrder`, `eq_zero_of_isLittleO_pow`
-- [ ] Transformer/Perspective/RussianPairs.lean (2): `sum_sq_cross`, `russian_trick_pairs`
-- [ ] Transformer/Perspective/RussianTrick.lean (6): `skewPair_apply`, `skewPair_isSkew`, `skewPair_sq`, `sum_skewPair_sq`, `russian_trick`, `not_russian_trick_one`
-- [ ] Transformer/Perspective/SAField.lean (3): `SA_iff`, `norm_saAvg_le`, `saField_of_one`
-- [ ] Transformer/Perspective/SALipschitz.lean (1): `lipschitzOnWith_saField`
-- [ ] Transformer/Perspective/Section1_IPS.lean (3): `SA_const_consensus`, `partitionSA_bounds`, `SA_permutation_equivariant`
-- [ ] Transformer/Perspective/Section2_EnergyKernel.lean (10): `inner_sphere_le_one`, `eq_of_inner_sphere_eq_one`, `exp_inner_le`, `continuous_expInner_right`, `continuous_expInner_left`, `integrable_expInner`, `partitionMu_nonneg`, `partitionMu_le`, `continuous_partitionMu`, `integrable_partitionMu`
-- [ ] Transformer/Perspective/Section2_EnergyMax.lean (6): `interactionEnergy_eq_partition`, `interactionEnergy_le`, `interactionEnergy_diracProb`, `isMaxEnergy_diracProb`, `eq_dirac_of_ae_eq`, `exists_eq_dirac_of_isMaxEnergy`
-- [ ] Transformer/Perspective/Section2_FlowMap.lean (3): `continuityEquation_eq_auxCE`, `vectorField_diracProb_self`, `continuityEquation_const_diracProb`
-- [ ] Transformer/Perspective/Section2_GradientFlow.lean (6): `vectorField_eq_grad_log`, `usaVectorField_eq_grad_first_variation`, `usaVectorField_diracProb_self`, `usaContinuityEquation_const_diracProb`, `sa_is_gradient_flow`, `transformerODE_const_one`
-- [ ] Transformer/Perspective/Section2_ParticleFlow.lean (2): `hasDerivAt_fun_sum`, `usa_isGradientFlow`
-- [ ] Transformer/Perspective/Section3_Gronwall.lean (3): `const_of_SA_one`, `const_of_beta0Dynamics_one`, `distance_bound_at_time_m`
-- [ ] Transformer/Perspective/Section3_SmallBeta.lean (3): `antipodalPair_not_mem_consensusSet0`, `SA_const_antipodalPair`, `antipodalPair_not_mem_clusteringSet`
+- ok Transformer/Perspective/AppendixD_Stability.lean (3): `one_le_cBeta`, `stability_orthogonal`, `shortdist_bound` — stability.4ortho with paper's c(β); β≥0 added and justified
+- issue Transformer/Perspective/AppendixD_Ybeta.lean (2): `ybeta_close_to_1`, `not_forall_ybeta_close_to_1` — hinv ([0,1]-invariance) and hhalf (γ(ne^β/2)≥1/2) are consequences of eq:ybeta with γ(0)=0 — the paper derives hhalf in the proof; carried as hypotheses they weaken e:ybetacloseto1; prove them
+- issue Transformer/Perspective/AppendixD_YbetaUSA.lean (2): `usa_analogue`, `not_forall_usa_analogue` — hinv is a consequence of eq:ybetaUSA with γ(0)=0; carried as hypothesis it weakens rem:usa.d; prove it
+- ok Transformer/Perspective/Beta0Field.lean (4): `beta0Dynamics_iff`, `norm_meanTuple_le`, `meanTuple_sub`, `lipschitzOnWith_beta0Field` — approxsphere with uniform C hoisted (stronger); helpers
+- ok Transformer/Perspective/Beta0Gronwall.lean (3): `proj_sub`, `norm_SA_drift_sub_beta0Field_le`, `solutions_close_at_small_beta` — approxsphere with uniform C hoisted (stronger); helpers
+- ok Transformer/Perspective/DoubleSum.lean (4): `hasDerivAt_double_sum`, `const_mul_double_sum`, `double_sum_sub`, `abs_double_sum_le` — approxsphere with uniform C hoisted (stronger); helpers
+- ok Transformer/Perspective/Gronwall.lean (1): `decay_of_deriv_ge` — approxsphere with uniform C hoisted (stronger); helpers
+- ok Transformer/Perspective/InnerAsymptotics.lean (10): `isBigO_inner`, `isLittleO_inner`, `isBigO_inner_const_left`, `isBigO_inner_const_right`, `isLittleO_inner_const_left`, `isLittleO_inner_const_right`, `isLittleO_cube_sq`, `isLittleO_sq_id`, `isBigO_mul_const`, `isBigO_smul_const` — analytic helpers; MinCurve one-sided form justified
+- ok Transformer/Perspective/MinCurve.lean (1): `le_min_curve_of_deriv_nonneg` — analytic helpers; MinCurve one-sided form justified
+- ok Transformer/Perspective/PartitionGradient.lean (8): `hasFDerivAt_expInner`, `abs_inner_le_of_dist_le`, `integrable_expInner_ambient`, `integrable_expInner_smul`, `hasGradientAt_partitionMu`, `partitionMu_pos`, `gradient_partitionMu`, `gradient_log_partitionMu` — analytic helpers; MinCurve one-sided form justified
+- ok Transformer/Perspective/PeanoTaylor.lean (2): `isLittleO_secondOrder`, `eq_zero_of_isLittleO_pow` — analytic helpers; MinCurve one-sided form justified
+- ok Transformer/Perspective/RussianPairs.lean (2): `sum_sq_cross`, `russian_trick_pairs` — pair family, no hypothesis
+- issue Transformer/Perspective/RussianTrick.lean (6): `skewPair_apply`, `skewPair_isSkew`, `skewPair_sq`, `sum_skewPair_sq`, `russian_trick`, `not_russian_trick_one` — russian_trick ok (d>=2 instead of Odd d, stronger); module doc and not_russian_trick_one overclaim a refutation resting on 0⁻¹=0 (see §1)
+- ok Transformer/Perspective/SAField.lean (3): `SA_iff`, `norm_saAvg_le`, `saField_of_one`
+- ok Transformer/Perspective/SALipschitz.lean (1): `lipschitzOnWith_saField` — lip.1-3 with β≥0 added and justified
+- ok Transformer/Perspective/Section1_IPS.lean (3): `SA_const_consensus`, `partitionSA_bounds`, `SA_permutation_equivariant` — defs match §2-3; maximiser half as paper
+- ok Transformer/Perspective/Section2_EnergyKernel.lean (10): `inner_sphere_le_one`, `eq_of_inner_sphere_eq_one`, `exp_inner_le`, `continuous_expInner_right`, `continuous_expInner_left`, `integrable_expInner`, `partitionMu_nonneg`, `partitionMu_le`, `continuous_partitionMu`, `integrable_partitionMu` — defs match §2-3; maximiser half as paper
+- ok Transformer/Perspective/Section2_EnergyMax.lean (6): `interactionEnergy_eq_partition`, `interactionEnergy_le`, `interactionEnergy_diracProb`, `isMaxEnergy_diracProb`, `eq_dirac_of_ae_eq`, `exists_eq_dirac_of_isMaxEnergy` — defs match §2-3; maximiser half as paper
+- issue Transformer/Perspective/Section2_FlowMap.lean (3): `continuityEquation_eq_auxCE`, `vectorField_diracProb_self`, `continuityEquation_const_diracProb` — dissipation_softmax lacks β>0: at β=0 E≡0 but RHS≠0; min half faithful (σ_d via O(d)-invariance)
+- issue Transformer/Perspective/Section2_GradientFlow.lean (6): `vectorField_eq_grad_log`, `usaVectorField_eq_grad_first_variation`, `usaVectorField_diracProb_self`, `usaContinuityEquation_const_diracProb`, `sa_is_gradient_flow`, `transformerODE_const_one` — usa_dissipation lacks β>0 (same as dissipation_softmax); logder, XmuE, sa_is_gradient_flow faithful
+- ok Transformer/Perspective/Section2_ParticleFlow.lean (2): `hasDerivAt_fun_sum`, `usa_isGradientFlow` — e:dynonX, β≠0 included
+- issue Transformer/Perspective/Section3_Gronwall.lean (3): `const_of_SA_one`, `const_of_beta0Dynamics_one`, `distance_bound_at_time_m` — distance_bound_at_time_m carries hclose, already proved as solutions_close_at_small_beta (imported): drop C/hC/hclose
+- issue Transformer/Perspective/Section3_SmallBeta.lean (3): `antipodalPair_not_mem_consensusSet0`, `SA_const_antipodalPair`, `antipodalPair_not_mem_clusteringSet` — statements faithful; omission: the USA half of thm:beta.tiny ('resp. USA') is off the books
 - issue Transformer/Perspective/Section5_ConeCollapse.lean (1): `hemisphere_clustering` — hemisphere_clustering keeps the lemma's name but carries steps 1-2 (the whole content) as hstep and drops the hemisphere hypothesis; the actual lemma is off the books
-- [ ] Transformer/Perspective/Section5_Exceptional.lean (1): `antipodalPair_not_exponential`
+- ok Transformer/Perspective/Section5_Exceptional.lean (1): `antipodalPair_not_exponential` — antipodal pair: no exponential rate, proved
 - issue Transformer/Perspective/Section5_Hemisphere.lean (5): `step1_deriv_nonneg`, `hemisphere_step1_monotone`, `exists_inner_le_of_mem_convexHull`, `step2_decomposition`, `not_step2_decomposition` — step2_decomposition: hhull too strong (hull instead of cone); exists_inner_le_of_mem_convexHull inherits it — check e:mineqalpha usage
-- [ ] Transformer/Perspective/Section5_HighD.lean (2): `step1_rhs`, `not_forall_step2_alpha_diff_ineq`
-- [ ] Transformer/Perspective/Section5_HighDCurve.lean (4): `ybetaODE_SA_one_zero`, `hasDerivAt_tanh`, `ybetaODE_SA_two_zero`, `ybetaODE_USA_two_zero`
-- [ ] Transformer/Perspective/Section5_InvariantMeasure.lean (1): `no_smooth_invariant_measure`
-- [ ] Transformer/Perspective/Section5_Vanishing.lean (1): `ez_lemma`
-- [ ] Transformer/Perspective/Section6_Circle.lean (4): `hasDerivAt_torusEnergy`, `angularUSA_is_gradient_flow`, `h_β_neg`, `h_β_pos`
-- [ ] Transformer/Perspective/Section8_CohnKumar.lean (7): `inner_antipode`, `ne_antipode`, `discreteEnergy_pair`, `discreteEnergy_antipodal_min`, `not_sharpConfiguration_antipodal`, `exists_orthogonal_pair`, `not_cohn_kumar_dichotomy`
-- [ ] Transformer/Perspective/Section8_General.lean (5): `exp_inner_eq_exp_sqDist`, `squaredDistEnergy_eq_interactionEnergy`, `discreteEnergy_eq_sqDist`, `exp_sqDist_strictAnti`, `discreteEnergy_singleton`
-- [ ] Transformer/Perspective/Softmax.lean (4): `softmaxPartition_pos`, `softmaxWeight_nonneg`, `sum_softmaxWeight`, `sum_abs_softmaxWeight_sub_le`
-- [ ] Transformer/Perspective/SphereInvariant.lean (9): `exists_sphereMap_apply_eq`, `continuous_sphereMap`, `measurable_sphereMap`, `injective_sphereMap`, `measure_singleton_eq_of_invariant`, `norm_spherePt`, `inner_spherePt`, `infinite_sSphere`, `measure_singleton_eq_zero_of_invariant`
-- [ ] Transformer/Perspective/StrictSaddle.lean (1): `not_torusHessianNonPos_of_strictSaddle`
-- [ ] Transformer/Perspective/UniformAtomless.lean (3): `map_pair_pi`, `measure_coords_eq_eq_zero`, `measure_singleton_tuple_eq_zero`
+- issue Transformer/Perspective/Section5_HighD.lean (2): `step1_rhs`, `not_forall_step2_alpha_diff_ineq` — hemisphere_step1_qual_conv lacks β>0 (paper lem: hemisphere.clustering has β>0); USA/QKV halves of thm: boumal, thm: d.infty off the books; boumal, d.infty, wendel faithful
+- issue Transformer/Perspective/Section5_HighDCurve.lean (4): `ybetaODE_SA_one_zero`, `hasDerivAt_tanh`, `ybetaODE_SA_two_zero`, `ybetaODE_USA_two_zero` — FALSE AS WRITTEN: phase_transition_curve quantifies ∀ X₀, the probability ≥ 1-2n²d^{-1/64} is only a comment; X₀=(p,p) constant consensus gives |1-γ(0)|=1 > 2√(log d/d). Also C,λ must not depend on d. orthogonal_initial faithful
+- ok Transformer/Perspective/Section5_InvariantMeasure.lean (1): `no_smooth_invariant_measure` — boumal and existence carried as hypotheses (true, not exhibitable)
+- ok Transformer/Perspective/Section5_Vanishing.lean (1): `ez_lemma` — lem: ez.lemma faithful
+- ok Transformer/Perspective/Section6_Circle.lean (4): `hasDerivAt_torusEnergy`, `angularUSA_is_gradient_flow`, `h_β_neg`, `h_β_pos` — eq:onangles gradient flow, defs faithful
+- ok Transformer/Perspective/Section8_CohnKumar.lean (7): `inner_antipode`, `ne_antipode`, `discreteEnergy_pair`, `discreteEnergy_antipodal_min`, `not_sharpConfiguration_antipodal`, `exists_orthogonal_pair`, `not_cohn_kumar_dichotomy` — refutation checked in §1; defs as printed
+- issue Transformer/Perspective/Section8_General.lean (5): `exp_inner_eq_exp_sqDist`, `squaredDistEnergy_eq_interactionEnergy`, `discreteEnergy_eq_sqDist`, `exp_sqDist_strictAnti`, `discreteEnergy_singleton` — rescaledEquation (e:Rres) drops e^{tV}: weights are ⟨Q e^{tV} z_i, K e^{tV} z_j⟩ in the paper; the def is a copy of preLimitODE (unused, no theorem affected). Other defs, kernel rewriting faithful
+- ok Transformer/Perspective/Softmax.lean (4): `softmaxPartition_pos`, `softmaxWeight_nonneg`, `sum_softmaxWeight`, `sum_abs_softmaxWeight_sub_le` — faithful / helper
+- ok Transformer/Perspective/SphereInvariant.lean (9): `exists_sphereMap_apply_eq`, `continuous_sphereMap`, `measurable_sphereMap`, `injective_sphereMap`, `measure_singleton_eq_of_invariant`, `norm_spherePt`, `inner_spherePt`, `infinite_sSphere`, `measure_singleton_eq_zero_of_invariant` — faithful / helper
+- ok Transformer/Perspective/StrictSaddle.lean (1): `not_torusHessianNonPos_of_strictSaddle` — faithful / helper
+- ok Transformer/Perspective/UniformAtomless.lean (3): `map_pair_pi`, `measure_coords_eq_eq_zero`, `measure_singleton_tuple_eq_zero` — faithful / helper
 
 ### Transformer.Precision — arXiv:2410.01104
 
