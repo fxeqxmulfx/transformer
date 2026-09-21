@@ -112,19 +112,18 @@ theorem hemisphere_step1_monotone
 inner product with any point of the configuration's convex hull.**
 
 This is `e:mineqalpha` without the coefficients: the survey reads it off the
-decomposition `e:decompox*.step2`, `x⋆ = Σ_k θ_k x_k` with `θ_k ≥ 0` summing
-to one, and the version below is the same fact stated through the hull, where
-the convexity of a half-space replaces the computation with the `θ_k`.
+decomposition `e:decompox*.step2`, `x⋆ = Σ_k θ_k x_k`, and the version below
+is the same fact stated through the hull point `η x⋆`, where the convexity of
+a half-space replaces the computation with the `θ_k`.
 
 Source: arXiv:2312.10794v5, Appendix D, `e:mineqalpha`. -/
 theorem exists_inner_le_of_mem_convexHull (hn : 0 < n)
-    (Y : SphereTuple d n) (x_star : SSphere d)
-    (hhull : ((x_star : EucSpace d)) ∈
-      convexHull ℝ (Set.range fun k : Idx n => ((Y k : EucSpace d))))
+    (Y : SphereTuple d n) (v : EucSpace d)
+    (hhull : v ∈ convexHull ℝ (Set.range fun k : Idx n => ((Y k : EucSpace d))))
     (i : Idx n) :
     ∃ j : Idx n,
       inner (𝕜 := ℝ) ((Y i : EucSpace d)) ((Y j : EucSpace d))
-        ≤ inner (𝕜 := ℝ) ((Y i : EucSpace d)) ((x_star : EucSpace d)) := by
+        ≤ inner (𝕜 := ℝ) ((Y i : EucSpace d)) v := by
   have : Nonempty (Idx n) := ⟨⟨0, hn⟩⟩
   obtain ⟨j, -, hj⟩ := Finset.exists_min_image (Finset.univ : Finset (Idx n))
     (fun k => inner (𝕜 := ℝ) ((Y i : EucSpace d)) ((Y k : EucSpace d)))

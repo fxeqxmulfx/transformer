@@ -9,15 +9,15 @@ derivative of `α(t) = min_i ⟨x_i(t), x⋆⟩` that Appendix D integrates into
 `e:productcloseto1` (`Perspective.product_close_to_one`).
 
 The survey writes the three equations for the `x⋆` that `lem: hemisphere.clustering`
-produces, under the hemisphere assumption `𝒜`, and it imports from step 2 of
-that lemma the fact that `x⋆` is a convex combination of the particles.  With
-`x⋆` left free the inequality is false, which `not_forall_diff_ineq_alpha`
-records; the hypotheses below are exactly what the survey's own derivation
-uses.
+produces — the common limit of the particles, which start in an open
+hemisphere — and it imports from step 2 of that lemma the fact that `x⋆` lies
+in the cone of the particles.  Both are hypotheses of `diff_ineq_alpha` in
+that form: the hemisphere and the limit, from which the cone is proved
+(`Perspective.limit_mem_cone`).
 -/
 
 import Transformer.Perspective.AppendixD_Alpha
-import Transformer.Perspective.Section5_Hemisphere
+import Transformer.Perspective.Section5_HemisphereCone
 
 open scoped BigOperators
 open Real
@@ -32,21 +32,24 @@ variable (d n : ℕ)
   `α̇(t) ≥ (1/(n e^{2β})) α(1/n) (1 - α(t))`   for `t ≥ 1/n`.
 
 **What the source says and what is changed here.**  The conclusion is the
-survey's, verbatim.  Four hypotheses are added, and each of them is used in
-the survey's own derivation without appearing in the displayed equation.
+survey's, verbatim.  The hypotheses are the survey's setting, each used in its
+own derivation without appearing in the displayed equation.
 
 *`hβ : 0 ≤ β`.*  The step "`a_{ij}(t) ≥ n^{-1} e^{-2β}`" is `e^{β⟨x_i,x_j⟩} ≥
 e^{-β}` over `Z_{β,i} ≤ n e^{β}`, and both need `β ≥ 0`.
 
-*`hinit`, the hemisphere assumption.*  Appendix D runs under `𝒜`, and `x⋆` is
-the limit point of `lem: hemisphere.clustering`, around which the particles
-already sit in an open hemisphere.  It enters twice: through step 1, which
-makes `α` non-decreasing (`hemisphere_step1_monotone`) and hence `α(1/n) ≤
-α(t)`, and through `0 ≤ α(t)`, without which `⟨x_j,x⋆⟩ - ⟨x_i,x_j⟩ α(t) ≥
-α(t)(1 - ⟨x_i,x_j⟩)` points the wrong way.
+*`hw` and `hlim`: `x⋆` is the limit of `lem: hemisphere.clustering`.*  The
+particles start in the open hemisphere around some `w`, and `x⋆` is their
+common limit.  Step 2 of the lemma then puts `x⋆` in the cone of the particles
+at every time (`limit_mem_cone`), which is what `e:mineqalpha` uses: with
+`η x⋆` in the hull, `min_j ⟨x_i,x_j⟩ ≤ η α(t) ≤ α(t)`.
 
-*`hhull`.*  `e:mineqalpha` is the statement that `x⋆` is a convex combination
-of the particles — the survey takes it from step 2 of the same lemma.
+*`hpos : 0 < α(1/n)`.*  This is what the survey draws from `e:1/n`,
+`α(1/n) ≥ γ_β(1/n)/2 > 0`, which rests on the high-dimensional estimates of
+Appendix D (`Perspective.alpha_at_one_over_n`).  From it step 1, run from time
+`1/n` along `x⋆`, makes `α` non-decreasing — "we gather that `α(t) ≥ α(1/n)`
+for `t ≥ 1/n`" — and hence `0 ≤ α(t)`, without which `⟨x_j,x⋆⟩ - ⟨x_i,x_j⟩ α(t)
+≥ α(t)(1 - ⟨x_i,x_j⟩)` points the wrong way.
 
 *`hdα`, differentiability.*  `α` is a minimum of finitely many smooth curves,
 so it need not be differentiable where the minimising index changes; the
@@ -55,17 +58,16 @@ survey's `α̇` is a Dini derivative.  The statement asserts an honest
 where `α` *is* differentiable, Fermat's theorem forces its derivative to agree
 with that of the attaining curve, which is what the proof uses.
 
-With `x⋆` free the inequality is false: see `not_forall_diff_ineq_alpha`.
-
 Source: arXiv:2312.10794v5, Appendix D, `e:dotalpha`, `e:mineqalpha`,
 `e:diffineqalpha`. -/
 theorem diff_ineq_alpha (hn : 0 < n) (β : ℝ) (hβ : 0 ≤ β)
     (X : ℝ → SphereTuple d n) (x_star : SSphere d) (α : ℝ → ℝ)
     (hX : SA d n β X) (hα : IsMinInner d n X x_star α)
-    (hinit : ∀ i : Idx n,
-      0 < inner (𝕜 := ℝ) ((X 0 i : EucSpace d)) ((x_star : EucSpace d)))
-    (hhull : ∀ s : ℝ, ((x_star : EucSpace d)) ∈
-      convexHull ℝ (Set.range fun k : Idx n => ((X s k : EucSpace d))))
+    (w : SSphere d)
+    (hw : ∀ i : Idx n, 0 < inner (𝕜 := ℝ) ((X 0 i : EucSpace d)) ((w : EucSpace d)))
+    (hlim : ∀ i : Idx n, Filter.Tendsto (fun s => (X s i : EucSpace d)) Filter.atTop
+      (nhds (x_star : EucSpace d)))
+    (hpos : 0 < α ((n : ℝ)⁻¹))
     (hdα : ∀ s : ℝ, DifferentiableAt ℝ α s) :
     ∀ t : ℝ, (n : ℝ)⁻¹ ≤ t →
       ∃ c : ℝ, HasDerivAt α c t ∧
@@ -73,17 +75,18 @@ theorem diff_ineq_alpha (hn : 0 < n) (β : ℝ) (hβ : 0 ≤ β)
   have : Nonempty (Idx n) := ⟨⟨0, hn⟩⟩
   have hnR : (0 : ℝ) < n := Nat.cast_pos.mpr hn
   have hninv : (0 : ℝ) < (n : ℝ)⁻¹ := inv_pos.mpr hnR
-  have hmono : MonotoneOn α (Set.Ici (0 : ℝ)) :=
-    hemisphere_step1_monotone d n β x_star X α hX hα hinit
-  have hα0 : 0 < α 0 := by
-    obtain ⟨i, hi⟩ := (hα 0).2
-    rw [hi]; exact hinit i
+  -- step 1 from time `1/n` along `x⋆`: `α` does not decrease
+  have hmono : MonotoneOn (fun s => α (s + (n : ℝ)⁻¹)) (Set.Ici (0 : ℝ)) :=
+    hemisphere_step1_monotone d n β x_star (fun s => X (s + (n : ℝ)⁻¹))
+      (fun s => α (s + (n : ℝ)⁻¹)) (SA_shift d n β X hX _) (fun s => hα _)
+      (fun i => by rw [zero_add]; exact hpos.trans_le ((hα _).1 i))
   intro t ht
   have ht0 : (0 : ℝ) ≤ t := le_trans hninv.le ht
-  have hαt0 : 0 ≤ α t :=
-    le_trans hα0.le (hmono (Set.mem_Ici.mpr le_rfl) (Set.mem_Ici.mpr ht0) ht0)
-  have hαstep : α ((n : ℝ)⁻¹) ≤ α t :=
-    hmono (Set.mem_Ici.mpr hninv.le) (Set.mem_Ici.mpr ht0) ht
+  have hαstep : α ((n : ℝ)⁻¹) ≤ α t := by
+    have := hmono (Set.mem_Ici.mpr le_rfl) (Set.mem_Ici.mpr (sub_nonneg.mpr ht))
+      (sub_nonneg.mpr ht)
+    simpa using this
+  have hαt0 : 0 ≤ α t := hpos.le.trans hαstep
   obtain ⟨i, hi⟩ := (hα t).2
   -- `α ≤ 1` on the sphere
   have hαle : α t ≤ 1 := by
@@ -156,8 +159,14 @@ theorem diff_ineq_alpha (hn : 0 < n) (β : ℝ) (hβ : 0 ≤ β)
       (hα t).1 j
     rw [← hi]
     nlinarith [hq1 j, hαt0]
-  obtain ⟨j₀, hj₀⟩ :=
-    exists_inner_le_of_mem_convexHull d n hn (X t) x_star (hhull t) i
+  -- `e:mineqalpha`, through the cone of step 2
+  obtain ⟨η, ⟨hη0, hη1⟩, hcone⟩ := limit_mem_cone d n hn β w X hX hw x_star hlim t ht0
+  obtain ⟨j₀, hj₀'⟩ := exists_inner_le_of_mem_convexHull d n hn (X t) _ hcone i
+  have hj₀ : inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((X t j₀ : EucSpace d))
+      ≤ inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((x_star : EucSpace d)) := by
+    rw [real_inner_smul_right, ← hi] at hj₀'
+    rw [← hi]
+    nlinarith
   have hsingle :
       Real.exp (β * inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((X t j₀ : EucSpace d))) *
         (inner (𝕜 := ℝ) ((X t j₀ : EucSpace d)) ((x_star : EucSpace d))
@@ -210,73 +219,22 @@ theorem diff_ineq_alpha (hn : 0 < n) (β : ℝ) (hβ : 0 ≤ β)
         exact mul_le_mul_of_nonneg_left hsingle (inv_nonneg.mpr hZpos.le)
 
 /-- The hypotheses of `diff_ineq_alpha` are satisfiable: two particles sitting
-together at `basePoint 0`, measured against their own position, where `α ≡ 1`,
-`x⋆` is in the hull because it *is* one of the particles, and both sides of
-`e:diffineqalpha` vanish. -/
+together at `basePoint 0`, with `w = x⋆` their position, where `α ≡ 1` and both
+sides of `e:diffineqalpha` vanish. -/
 example :
     ∀ t : ℝ, (((2 : ℕ) : ℝ))⁻¹ ≤ t →
       ∃ c : ℝ, HasDerivAt (fun _ : ℝ => (1 : ℝ)) c t ∧
-        (((2 : ℕ) : ℝ) * Real.exp (2 * (0 : ℝ)))⁻¹ * 1 * (1 - 1) ≤ c :=
-  diff_ineq_alpha 1 2 two_pos 0 le_rfl (fun _ _ => basePoint 0) (basePoint 0)
+        (((2 : ℕ) : ℝ) * Real.exp (2 * (0 : ℝ)))⁻¹ * 1 * (1 - 1) ≤ c := by
+  have hx : ‖((basePoint 0 : SSphere 1) : EucSpace 1)‖ = 1 :=
+    mem_sphere_zero_iff_norm.mp (basePoint 0).2
+  have hxx : inner (𝕜 := ℝ) (((basePoint 0 : SSphere 1)) : EucSpace 1)
+      (((basePoint 0 : SSphere 1)) : EucSpace 1) = 1 := by
+    rw [real_inner_self_eq_norm_mul_norm, hx]; ring
+  exact diff_ineq_alpha 1 2 two_pos 0 le_rfl (fun _ _ => basePoint 0) (basePoint 0)
     (fun _ => 1) (SA_const_consensus 1 2 two_pos 0 (basePoint 0))
-    (by
-      have hx : ‖((basePoint 0 : SSphere 1) : EucSpace 1)‖ = 1 :=
-        mem_sphere_zero_iff_norm.mp (basePoint 0).2
-      have hxx : inner (𝕜 := ℝ) (((basePoint 0 : SSphere 1)) : EucSpace 1)
-          (((basePoint 0 : SSphere 1)) : EucSpace 1) = 1 := by
-        rw [real_inner_self_eq_norm_mul_norm, hx]; ring
-      exact fun _ => ⟨fun _ => le_of_eq hxx.symm, ⟨0, hxx.symm⟩⟩)
-    (fun _ => by
-      have hx : ‖((basePoint 0 : SSphere 1) : EucSpace 1)‖ = 1 :=
-        mem_sphere_zero_iff_norm.mp (basePoint 0).2
-      rw [real_inner_self_eq_norm_mul_norm, hx]; norm_num)
-    (fun _ => subset_convexHull ℝ _ ⟨0, rfl⟩)
+    (fun _ => ⟨fun _ => le_of_eq hxx.symm, ⟨0, hxx.symm⟩⟩) (basePoint 0)
+    (fun _ => by rw [hxx]; norm_num) (fun _ => tendsto_const_nhds) one_pos
     (fun _ => differentiableAt_const 1)
-
-/-- **With `x⋆` free the differential inequality is false.**
-
-The survey's `x⋆` is the limit point of `lem: hemisphere.clustering`, and
-`e:mineqalpha` reads it as a convex combination of the particles.  Left free
-it is any point of the sphere, and then the inequality fails at rest.
-
-One particle standing at `p = basePoint 1 ∈ 𝕊^1` is a solution of `eq: SA`
-(`SA_const_consensus`).  Measure it against `x⋆ = (p + q)/√2`, the unit vector
-half-way to the second coordinate axis: `α ≡ ⟨p, x⋆⟩ = √2/2` is constant, so
-`α̇ = 0`, while the right-hand side of `e:diffineqalpha` at `n = 1`, `β = 0` is
-
-  `α(1) (1 - α(1)) = (√2/2)(1 - √2/2) > 0`.
-
-The configuration satisfies every hypothesis of `diff_ineq_alpha` except
-`hhull`: `x⋆` is not the particle, so it is not in the hull of the
-configuration.  It also has `α > 0` throughout, so it is not positivity that
-fails.
-
-Source: arXiv:2312.10794v5, Appendix D, `e:diffineqalpha`. -/
-theorem not_forall_diff_ineq_alpha :
-    ¬ ∀ (d n : ℕ) (β : ℝ) (X : ℝ → SphereTuple d n) (x_star : SSphere d)
-        (α : ℝ → ℝ), SA d n β X → IsMinInner d n X x_star α →
-        ∀ t : ℝ, (n : ℝ)⁻¹ ≤ t →
-          ∃ c : ℝ, HasDerivAt α c t ∧
-            ((n : ℝ) * Real.exp (2 * β))⁻¹ * α ((n : ℝ)⁻¹) * (1 - α t) ≤ c := by
-  intro h
-  have hs2 : Real.sqrt 2 ^ 2 = 2 := Real.sq_sqrt (by norm_num)
-  have hs0 : 0 < Real.sqrt 2 := Real.sqrt_pos.mpr (by norm_num)
-  have hnorm : ‖((Real.sqrt 2 / 2) • (EuclideanSpace.single (0 : Fin 2) (1 : ℝ)
-      + EuclideanSpace.single (1 : Fin 2) (1 : ℝ)) : EucSpace 2)‖ = 1 := by
-    simp [EuclideanSpace.norm_eq, Fin.sum_univ_two]
-    nlinarith
-  set v : SSphere 2 := ⟨_, mem_sphere_zero_iff_norm.mpr hnorm⟩ with hvdef
-  have hval : inner (𝕜 := ℝ) (((basePoint 1 : SSphere 2)) : EucSpace 2)
-      ((v : EucSpace 2)) = Real.sqrt 2 / 2 := by
-    rw [hvdef, basePoint]
-    simp [PiLp.inner_apply]
-  have hmin : IsMinInner 2 1 (fun _ _ => basePoint 1) v (fun _ => Real.sqrt 2 / 2) :=
-    fun _ => ⟨fun _ => le_of_eq hval.symm, ⟨0, hval.symm⟩⟩
-  obtain ⟨c, hc, hle⟩ := h 2 1 0 (fun _ _ => basePoint 1) v (fun _ => Real.sqrt 2 / 2)
-    (SA_const_consensus 2 1 one_pos 0 (basePoint 1)) hmin 1 (by norm_num)
-  rw [← (hasDerivAt_const (1 : ℝ) (Real.sqrt 2 / 2)).unique hc] at hle
-  norm_num at hle
-  nlinarith
 
 end Perspective
 end Transformer
