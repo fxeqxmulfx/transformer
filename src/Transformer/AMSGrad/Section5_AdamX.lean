@@ -1,4 +1,4 @@
-import Transformer.AMSGrad.Section4_Lemmas
+import Transformer.AMSGrad.Section4_MainLemma
 
 /-
 # AdamX — the algorithm and Lemmas 5.2, 5.3
@@ -132,16 +132,6 @@ example :
     by simp [zeroSetup], by norm_num [zeroSetup], by norm_num [zeroSetup]⟩
 
 /-! ### With `β_{1,t} = 0`, AdamX is AMSGrad -/
-
-/-- `v_t ≥ 0` for every rule, when `0 ≤ β₂ ≤ 1`. -/
-theorem v_nonneg {S : Setup d} (hβ₂ : 0 ≤ S.β₂) (hβ₂' : S.β₂ ≤ 1) (R : Rule d) (n : ℕ) :
-    0 ≤ (S.state R n).v := by
-  induction n with
-  | zero => exact le_rfl
-  | succ n ih =>
-    intro i
-    change 0 ≤ S.β₂ * (S.state R n).v i + (1 - S.β₂) * grad (S.f (n + 1)) (S.state R n).x i ^ 2
-    exact add_nonneg (mul_nonneg hβ₂ (ih i)) (mul_nonneg (by linarith) (sq_nonneg _))
 
 /-- With `β_{1,t} = 0` and `0 ≤ β₂ ≤ 1`, the runs of AdamX and AMSGrad coincide.
 arXiv:1904.03590v4, §5, Algorithm 2. -/

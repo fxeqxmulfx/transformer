@@ -1,20 +1,17 @@
-import Transformer.AMSGrad.Section4_Lemmas
+import Transformer.AMSGrad.Section4_MainLemma
 import Transformer.AMSGrad.Section3_Issue
 
 /-
 # AMSGrad — the corrected convergence theorem
 
-§4 of arXiv:1904.03590v4: Lemma 4.4 (`mainlem`), Theorem 4.1
-(`mainthm_change_beta1`) and Corollary 4.5.
+§4 of arXiv:1904.03590v4: Theorem 4.1 (`mainthm_change_beta1`) and
+Corollary 4.5.  Lemma 4.4 is `Section4_MainLemma`.
 
 **What the source says and what is carried here.**
 
 * The source assumes `γ = β₁/√β₂ ≤ 1`; its bounds divide by `1 - γ`, so
   `γ < 1` is assumed instead, together with `0 ≤ β₁ < 1`, `0 < β₂ < 1` and
   `α > 0`, which the source assumes throughout.
-
-* Lemma 4.4 is stated for every rule with `v_t ≤ v̂_t`, which is all its proof
-  uses of `v̂_t`, and for every `T`: at `T = 0` both sides vanish.
 
 * Theorem 4.1 asserts "there is some `1 ≤ t₀ ≤ T` such that … for all
   `T ≥ 1`".  Its `t₀` is the `t₀` of Lemma 4.3, which does not depend on `T`;
@@ -35,28 +32,6 @@ namespace Transformer
 namespace AMSGrad
 
 variable {d : ℕ}
-
-/-- **Lemma 4.4.**  For a rule with `v_t ≤ v̂_t`, `0 ≤ β_{1,t} ≤ β₁ < 1`,
-`0 < β₂ < 1` and `γ = β₁/√β₂ < 1`,
-
-  `Σ_{t=1}^T m²_{t,i}/√(t v̂_{t,i}) ≤ √(ln T + 1)/((1-β₁)√(1-β₂)(1-γ)) ‖g_{1:T,i}‖₂`.
-
-Source: arXiv:1904.03590v4, §4, Lemma 4.4. -/
-theorem mainlem {S : Setup d} {R : Rule d} (hR : ∀ t a b, b ≤ R t a b) {β₁ : ℝ}
-    (hβ₁ : ∀ t, 1 ≤ t → 0 ≤ S.β₁ t ∧ S.β₁ t ≤ β₁) (hβ₁' : β₁ < 1)
-    (hβ₂ : 0 < S.β₂) (hβ₂' : S.β₂ < 1) (hγ : β₁ / Real.sqrt S.β₂ < 1) (T : ℕ) (i : Fin d) :
-    ∑ t ∈ Icc 1 T, S.m R t i ^ 2 / Real.sqrt (t * S.vhat R t i) ≤
-      Real.sqrt (Real.log T + 1) /
-        ((1 - β₁) * Real.sqrt (1 - S.β₂) * (1 - β₁ / Real.sqrt S.β₂)) * S.gnorm R T i := by
-  sorry
-
-/-- The hypotheses of `mainlem` are satisfiable. -/
-example :
-    let S := zeroSetup (d := 1) (fun _ => 1) (fun _ => 0) (1 / 2)
-    (∀ t (a b : Vec 1), b ≤ amsgradRule t a b) ∧ (∀ t, 1 ≤ t → 0 ≤ S.β₁ t ∧ S.β₁ t ≤ 0) ∧
-      (0 : ℝ) < 1 ∧ 0 < S.β₂ ∧ S.β₂ < 1 ∧ 0 / Real.sqrt S.β₂ < 1 :=
-  ⟨le_amsgradRule, fun _ _ => ⟨le_rfl, le_rfl⟩, one_pos, by norm_num [zeroSetup],
-    by norm_num [zeroSetup], by simp⟩
 
 /-- **Theorem 4.1, `β_{1,t} = β₁λ^{t-1}`.**  With `α_t = α/√t`, `0 ≤ β₁ < 1`,
 `0 < λ < 1`, `0 < β₂ < 1` and `γ < 1`, there is `t₀ ≥ 1` such that for all
