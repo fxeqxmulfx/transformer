@@ -493,22 +493,22 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.Metastability — arXiv:2410.06833
 
-- [ ] Transformer/Metastability/AlphaDist.lean (3): `norm_sub_le_of_mem_sphericalCap`, `αDist_le_of_orthogonal`, `isSeparated_of_near_orthogonal`
-- [ ] Transformer/Metastability/AngularEnergy.lean (5): `inner_circlePoint`, `hasDerivAt_pairFst`, `hasDerivAt_pairSnd`, `hasDerivAt_angularEβ`, `Eβ_circlePoint`
-- [ ] Transformer/Metastability/BakryEmery.lean (2): `bakry_emery`, `not_forall_bakry_emery`
-- [ ] Transformer/Metastability/CapVariance.lean (1): `variance_inequality`
-- [ ] Transformer/Metastability/CapVelocity.lean (3): `inner_proj_softmax_eq`, `cap_variance_bound`, `inner_proj_softmax_ge`
-- [ ] Transformer/Metastability/CollapseODE.lean (1): `exists_collapse_time`
-- [ ] Transformer/Metastability/ExponentialFlow.lean (2): `expFlow_spec`, `not_quantitative_inequality_two_mul`
-- [ ] Transformer/Metastability/InitialUniform.lean (1): `uniform_separated`
-- [ ] Transformer/Metastability/MainTheorem.lean (3): `rho_diff_ineq`, `not_rho_diff_ineq_of_free`, `eminem`
-- [ ] Transformer/Metastability/MeanField.lean (2): `not_forall_cap_exit`, `not_forall_variance_small`
-- [ ] Transformer/Metastability/OttoReznikoff.lean (2): `not_forall_otto_reznikoff`, `not_forall_claim_one`
-- [ ] Transformer/Metastability/PairVelocity.lean (3): `pair_sum_bound`, `inner_proj_softmax_pair`, `inner_proj_softmax_pair_sum`
-- [ ] Transformer/Metastability/QuantitativeInequality.lean (1): `quantitative_inequality`
-- [ ] Transformer/Metastability/ReversePL.lean (2): `reverse_PL_acceleration`, `not_forall_reverse_PL_acceleration`
-- [ ] Transformer/Metastability/Staircase.lean (1): `not_exact_time_scale`
-- [ ] Transformer/Metastability/StaircaseProfile.lean (2): `are`, `staircase_profile_vacuous_at_zero`
+- ok Transformer/Metastability/AlphaDist.lean (3): `norm_sub_le_of_mem_sphericalCap`, `αDist_le_of_orthogonal`, `isSeparated_of_near_orthogonal` — 4ε+4√ε replaces the proof step ε²+2ε (false: sup = sin 2θ at an orthogonal frame); deviation documented
+- ok Transformer/Metastability/AngularEnergy.lean (5): `inner_circlePoint`, `hasDerivAt_pairFst`, `hasDerivAt_pairSnd`, `hasDerivAt_angularEβ`, `Eβ_circlePoint` — angular gradient, helper
+- ok Transformer/Metastability/BakryEmery.lean (2): `bakry_emery`, `not_forall_bakry_emery` — lem: bakry-emery with gradient/flow tied to E; refutation checked in §1
+- issue Transformer/Metastability/CapVariance.lean (1): `variance_inequality` — variance_inequality weakened to 2n e^{-(1-α)β}; the paper's n is correct: outside term a_ij⟨x_j, w - η x_i⟩ ≥ -a_ij √(1-η²) ≥ -a_ij. Restore n
+- issue Transformer/Metastability/CapVelocity.lean (3): `inner_proj_softmax_eq`, `cap_variance_bound`, `inner_proj_softmax_ge` — inner_proj_softmax_ge carries 2n; -1 per outside token suffices (see CapVariance)
+- ok Transformer/Metastability/CollapseODE.lean (1): `exists_collapse_time` — lem: eminem constants exact
+- ok Transformer/Metastability/ExponentialFlow.lean (2): `expFlow_spec`, `not_quantitative_inequality_two_mul` — witness + refutation checked in §1
+- ok Transformer/Metastability/InitialUniform.lean (1): `uniform_separated` — coro: cm from concentration carried; technical.cond corrected, stronger; prop and claim faithful
+- issue Transformer/Metastability/MainTheorem.lean (3): `rho_diff_ineq`, `not_rho_diff_ineq_of_free`, `eminem` — rho_diff_ineq weakened to 4n: paper's 2n holds (<x_k, x_j - rho x_i> >= -sqrt(1-rho^2) >= -1 per term); metastability: k,w free (not the isSeparated witnesses), lambda bound eq: lambda.3 dropped, T1/T2 bounds only in a comment (MetastabilityTimes unused), USA half omitted; eminem, propagation faithful
+- issue Transformer/Metastability/MeanField.lean (2): `not_forall_cap_exit`, `not_forall_variance_small` — metastability_mf: T1 < (eps/k)e^{beta(1-alpha-8eps)} < T2 dropped; lam unbounded and fixed before T (paper: for all 0<lam<gamma, after T); centre weakened from argmin_{Phi^t(S_q(eps))}<x,w_q> to an existential point of the cap (docstring admits 'weaker'); refutations not_forall_cap_exit / not_forall_variance_small are strawmen (eta, V free), statements off the books
+- issue Transformer/Metastability/OttoReznikoff.lean (2): `not_forall_otto_reznikoff`, `not_forall_claim_one` — otto_reznikoff FALSE as written: gradE is not tied to E (NormedSpace, no HasGradientAt); M=R, E=x^2/2, N={0}, gradE u = -u satisfies H1/H2, flow u=e^t diverges. PL_borjan: kappa chosen after Theta (paper kappa(beta,n)) makes it nearly trivial; k, omega, lam free (not the hsep witnesses / eq: lambda.1-2). otto_attention: tau.small missing, k,omega free (k=0 gives N=univ where H2 fails), lam free -- likely false; not_forall_claim_one strawman
+- issue Transformer/Metastability/PairVelocity.lean (3): `pair_sum_bound`, `inner_proj_softmax_pair`, `inner_proj_softmax_pair_sum` — lemmas true but loose: bracket <x_k,x_j - rho x_i> >= -sqrt(1-rho^2) >= -1, so leakage is n e^{-(1-alpha)beta} per half; tightening gives the paper's 2n in rho_diff_ineq
+- ok Transformer/Metastability/QuantitativeInequality.lean (1): `quantitative_inequality` — c/2 correction (2c refuted in ExponentialFlow), sign convention of (H1), PL along the path and X(T)=v made explicit
+- ok Transformer/Metastability/ReversePL.lean (2): `reverse_PL_acceleration`, `not_forall_reverse_PL_acceleration` — Groenwall with the chain rule carried; refutation shows hchain necessary; witness sharp
+- issue Transformer/Metastability/Staircase.lean (1): `not_exact_time_scale` — modifiedUSA: uses the survey's angularUSA (-(1/n) sum e^{beta cos}) instead of this paper's eq: usa.angles (sum e^{beta(cos-1)}, no 1/n) -- time scale off by n e^beta, which the reparam tau_beta depends on; T_star not the infimum (any later time passes); no initial condition theta*(T*)=theta(T*); card=2 hypothesis absent; merged pair counted twice in the post-merge sum (paper: n-1 particles). isWellPrepared faithful. not_exact_time_scale: strawman noted in section 1
+- issue Transformer/Metastability/StaircaseProfile.lean (2): `are`, `staircase_profile_vacuous_at_zero` — plateau indexing shifted: paper's max over i in 1..k covers (T_1,T_2),...,(T_k,+inf); Lean covers (T_0,T_1),...,(T_{k-1},T_k), dropping the final infinite plateau (energy reaching its maximum); reparam built from theta not the modified dynamics; inherits modifiedUSA issues
 
 ### Transformer.Modes — arXiv:2412.09080
 
