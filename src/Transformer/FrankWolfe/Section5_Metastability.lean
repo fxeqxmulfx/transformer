@@ -148,8 +148,8 @@ def groupHull (X₀ : Idx n → EucSpace d) (σ : Idx n → Idx κ) (a : Idx κ)
 /-- **Theorem (lem: metastab.1) — metastability.**
 
 In the setup of `lem: first.phase`, there is `ε_* > 0` such that for
-`ε ∈ (0, ε_*)` and `γ ∈ (0,1)` with `ε/γ ≥ 2 d(𝒦)`, a configuration whose
-particles all sit within `r` of their vertex has exit time
+`ε ∈ (0, ε_*)` and `γ ∈ (0,1)` with `ε/γ ≥ 2 d(𝒦)`, a configuration in `𝒦ⁿ`
+whose particles all sit within `Cτ` of their vertex has exit time
 
   `T₂ = inf{t : x_{ji}^t ∉ conv{x_{ji}^0}_j + B(0,ε) for some i, j}`
 
@@ -159,10 +159,16 @@ obeying, for `t > 1`,
 
 Since `γ/ε ≲ 1/d(𝒦)`, the right-hand side is close to `1` up to `t ∼ e^{βc₀/2}`.
 
-**What the source says and what is changed here.**  The radius `Cτ` of the
-source is carried as a parameter `r > 0`: it is the conclusion of
-`lem: first.phase`, which supplies it, and nothing in this statement needs its
-value.
+**What the source says and what is changed here.**  "The setup of
+`lem: first.phase`" is read out in full.  `C > 1` is the universal constant of
+that lemma, quantified outermost as there; `β ≥ β_*` with `β_*` depending on
+`n`, the polytope and `γ`, as there.  `τ` is the minimum of that lemma; its
+third term, `(1-γ) min_j ‖x_j^0 - v_{σ(j)}‖`, refers to the configuration the
+first phase started from, which is not in this statement, so `τ` is any
+positive number below the first two terms: every value the source's `τ` can
+take is such a number, and this is no weaker.  The radius must not be left
+free: a particle far from its vertex but assigned to it is pulled out of its
+group's hull at once.
 
 `T₂` is not introduced as an `ℕ∞`-valued random variable.  The event
 `{T₂ ≥ t}` is the event that no particle has left its group's `ε`-neighbourhood
@@ -172,41 +178,58 @@ set, without the extra definition.
 Relabelling `x_ℓ^0` as `x_{ji}^0` is the fibre `σ⁻¹(i)`, so `conv{x_{ji}^0}_j`
 is `groupHull X₀ σ (σ i)`.
 
-`β` is quantified over all positive values; the source leaves it at the
-`β ≥ β_*` of `lem: first.phase`, and the estimate as displayed carries no other
-constraint on `β`.
-
 Not proved here.
 
 Source: arXiv:2508.09628v1, §5, `lem: metastab.1`, `eq: metastability.bound`. -/
-theorem metastability (K : Set (EucSpace d)) (v : Idx κ → EucSpace d) (c₀ : ℝ)
-    (hK : ConePolytope K v c₀) (hn : κ ≤ n) :
-    ∃ εstar > (0 : ℝ), ∀ ε ∈ Set.Ioo (0 : ℝ) εstar, ∀ γ ∈ Set.Ioo (0 : ℝ) 1,
-      2 * Metric.diam K ≤ ε / γ →
-      ∀ (β r : ℝ) (X₀ : Idx n → EucSpace d) (σ : Idx n → Idx κ)
-        (P : Measure (ℕ → Idx n → EucSpace d)),
-        0 < β → 0 < r →
-        (∀ i : Idx n, X₀ i ∈ Metric.ball (v (σ i)) r) →
-        IsSAProcess β γ X₀ P →
-        ∀ t : ℝ, 1 < t →
-          1 - Real.exp ((1 + ε / γ) * Real.log (γ / ε * t) + (1 + ε / γ) * Real.log n
-              - β * (c₀ / 2) * (ε / γ))
-            ≤ (P {x : ℕ → Idx n → EucSpace d | ∀ s : ℕ, (s : ℝ) < t → ∀ i : Idx n,
-                x s i ∈ groupHull X₀ σ (σ i) + Metric.ball (0 : EucSpace d) ε}).toReal := by
+theorem metastability :
+    ∃ C : ℝ, 1 < C ∧
+      ∀ (d κ n : ℕ) (K : Set (EucSpace d)) (v : Idx κ → EucSpace d) (c₀ : ℝ),
+        ConePolytope K v c₀ → κ ≤ n →
+        ∃ εstar > (0 : ℝ), ∀ γ ∈ Set.Ioo (0 : ℝ) 1, ∃ βstar > (0 : ℝ),
+          ∀ ε ∈ Set.Ioo (0 : ℝ) εstar, 2 * Metric.diam K ≤ ε / γ →
+          ∀ (β τ : ℝ) (X₀ : Idx n → EucSpace d) (σ : Idx n → Idx κ)
+            (P : Measure (ℕ → Idx n → EucSpace d)),
+            βstar ≤ β → 0 < τ →
+            (∀ i j : Idx κ, j ≠ i → τ * (2 * ‖v i - v j‖) ≤ c₀) →
+            τ ≤ Real.sqrt (2 * c₀) / 2 →
+            (∀ i : Idx n, X₀ i ∈ K) →
+            (∀ i : Idx n, X₀ i ∈ Metric.ball (v (σ i)) (C * τ)) →
+            IsSAProcess β γ X₀ P →
+            ∀ t : ℝ, 1 < t →
+              1 - Real.exp ((1 + ε / γ) * Real.log (γ / ε * t) + (1 + ε / γ) * Real.log n
+                  - β * (c₀ / 2) * (ε / γ))
+                ≤ (P {x : ℕ → Idx n → EucSpace d | ∀ s : ℕ, (s : ℝ) < t → ∀ i : Idx n,
+                    x s i ∈ groupHull X₀ σ (σ i) + Metric.ball (0 : EucSpace d) ε}).toReal := by
   sorry
 
-/-- The hypotheses of `metastability` are satisfiable: the witness of
-`first_phase`. -/
-example :
+/-- The hypotheses of `metastability` are satisfiable, the process included:
+one vertex `e₀` in `ℝ^1`, `𝒦 = {e₀}`, `c₀ = 1`, `γ = 1/2`, `ε = 1/4`,
+`τ = 1/2`, one particle sitting at the vertex, whose process is the point mass
+at the constant path (`isSAProcess_single`), for whatever `C > 0`. -/
+example (C : ℝ) (hC : 0 < C) :
     ConePolytope {(EuclideanSpace.single (0 : Fin 1) (1 : ℝ))}
-      (fun _ : Idx 1 => (EuclideanSpace.single (0 : Fin 1) (1 : ℝ))) 1 ∧ (1 : ℕ) ≤ 1 := by
+      (fun _ : Idx 1 => (EuclideanSpace.single (0 : Fin 1) (1 : ℝ))) 1 ∧ (1 : ℕ) ≤ 1 ∧
+    (1 / 2 : ℝ) ∈ Set.Ioo (0 : ℝ) 1 ∧
+    2 * Metric.diam {(EuclideanSpace.single (0 : Fin 1) (1 : ℝ))} ≤ (1 / 4 : ℝ) / (1 / 2) ∧
+    (0 : ℝ) < 1 / 2 ∧
+    (∀ i j : Idx 1, j ≠ i → (1 / 2 : ℝ) * (2 * ‖(EuclideanSpace.single (0 : Fin 1) (1 : ℝ)) -
+      (EuclideanSpace.single (0 : Fin 1) (1 : ℝ))‖) ≤ 1) ∧
+    (1 / 2 : ℝ) ≤ Real.sqrt (2 * 1) / 2 ∧
+    (EuclideanSpace.single (0 : Fin 1) (1 : ℝ)) ∈ Metric.ball
+      (EuclideanSpace.single (0 : Fin 1) (1 : ℝ)) (C * (1 / 2)) ∧
+    IsSAProcess 1 (1 / 2) (fun _ : Idx 1 => (EuclideanSpace.single (0 : Fin 1) (1 : ℝ)))
+      (Measure.dirac fun _ => fun _ => (EuclideanSpace.single (0 : Fin 1) (1 : ℝ))) := by
   refine ⟨⟨?_, ⟨?_, ?_⟩, fun i => ⟨0, by positivity, fun x hx y hy hxi hyi => ?_⟩,
-    fun i j => rfl, one_pos, fun i j hij => absurd (Subsingleton.elim i j) hij⟩, le_rfl⟩
+    fun i j => rfl, one_pos, fun i j hij => absurd (Subsingleton.elim i j) hij⟩, le_rfl,
+    ⟨by norm_num, by norm_num⟩, by simp, by norm_num, fun i j h => by simp,
+    ?_, Metric.mem_ball_self (by positivity), isSAProcess_single _ _ _⟩
   · rw [Set.range_const, convexHull_singleton]
   · intro a b _
     exact Subsingleton.elim a b
   · rw [Set.range_const, extremePoints_singleton]
   · exact absurd hx hxi
+  · rw [div_le_div_iff_of_pos_right two_pos, Real.le_sqrt zero_le_one (by norm_num)]
+    norm_num
 
 end FrankWolfe
 end Transformer
