@@ -191,30 +191,30 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.AMSGrad — arXiv:1904.03590
 
-- [ ] Transformer/AMSGrad/Section1_AMSGrad.lean (1): `isWeightedProj_boxProj`
-- [ ] Transformer/AMSGrad/Section1_TheoremA.lean (1): `isOnlineConvex_zero`
-- [ ] Transformer/AMSGrad/Section2_Prelim.lean (9): `fderiv_apply_eq_sum`, `convex_first_order`, `cauchy_schwarz`, `taylor_geom`, `not_taylor`, `taylor_deriv`, `harmonic_le`, `sum_inv_sqrt_le`, `sum_div_sum_le`
-- [ ] Transformer/AMSGrad/Section2_Proj.lean (4): `posDef_comm`, `posDef_nonneg`, `proj_variational`, `mcm_str`
-- [ ] Transformer/AMSGrad/Section3_Example.lean (9): `grad_linear`, `isOnlineConvex_exa`, `exa_state_one`, `exaY₁_mem`, `exa_x_two`, `exa_state_two`, `exa_x_two_lt`, `exa_sign_one`, `exa_sign_two`
-- [ ] Transformer/AMSGrad/Section3_Issue.lean (4): `le_amsgradRule`, `prepare_lem`, `abel_eq`, `abel_le`
-- [ ] Transformer/AMSGrad/Section3_Optimal.lean (5): `exaCoef_sum_le_101`, `exaCoef_sum_add_101`, `exaCoef_sum_pos`, `exa_optimal`, `not_red_ineq`
-- [ ] Transformer/AMSGrad/Section3_Step.lean (6): `v_nonneg`, `m_eq_zero`, `m_eq_zero_of_vhat`, `proj_le`, `young`, `step_ineq`
-- [ ] Transformer/AMSGrad/Section4_Corollary.lean (2): `cor_lambda`, `cor_inv`
-- [ ] Transformer/AMSGrad/Section4_Counter.lean (2): `isOnlineConvex_sign`, `sign_hyp`
-- [ ] Transformer/AMSGrad/Section4_CounterRegret.lean (5): `sum_blocks`, `sign_block_sum`, `sign_block_sign`, `sum_half_pow_le`, `not_cor_lower`
-- [ ] Transformer/AMSGrad/Section4_CounterRun.lean (8): `blockSign_sq`, `sign_vhat`, `sign_step`, `clamp_sign`, `blockSign_block`, `sign_x_mem`, `sign_block`, `sign_term`
-- [ ] Transformer/AMSGrad/Section4_Lemmas.lean (11): `state_x_mem`, `x_mem`, `v_le`, `vhat_succ`, `vhat_le_succ`, `vhat_nonneg`, `vt`, `sqrt_div_le`, `t_0_of_key`, `t_0_lambda`, `t_0_inv`
-- [ ] Transformer/AMSGrad/Section4_MainLemma.lean (5): `geomSum_nonneg`, `sum_geomSum_div_sqrt_le`, `moment_le`, `term_le`, `mainlem`
-- [ ] Transformer/AMSGrad/Section4_Rate.lean (3): `gnorm_le`, `rate_le`, `tendsto_rate`
-- [ ] Transformer/AMSGrad/Section4_Telescope.lean (4): `telescope_le`, `eqmain_le_of`, `vt_div`, `eqmain_le`
-- [ ] Transformer/AMSGrad/Section4_Terms.lean (2): `sum_sqrt_mul_pow_le`, `eqsecond_le`
-- [ ] Transformer/AMSGrad/Section4_Theorem.lean (2): `mainthm_lambda`, `mainthm_inv`
-- [ ] Transformer/AMSGrad/Section4_Third.lean (2): `eqthird_lambda_le`, `eqthird_inv_le`
-- [ ] Transformer/AMSGrad/Section5_AdamX.lean (6): `le_adamXRule`, `adamX_vhat_one`, `adamX_vhat_succ`, `vtnew`, `vt2`, `adamX_eq_amsgrad`
-- [ ] Transformer/AMSGrad/Section5_Bounds.lean (3): `vtnew_div`, `adamX_mono`, `eqthird_adamX_le`
-- [ ] Transformer/AMSGrad/Section5_Corollary.lean (3): `ge_cor`, `bound_lambda`, `bound_inv`
-- [ ] Transformer/AMSGrad/Section5_Sums.lean (2): `sum_lambda_le`, `sum_inv_le`
-- [ ] Transformer/AMSGrad/Section5_Theorem.lean (1): `mainthm2`
+- ok Transformer/AMSGrad/Section1_AMSGrad.lean (1): `isWeightedProj_boxProj`
+- ok Transformer/AMSGrad/Section1_TheoremA.lean (1): `isOnlineConvex_zero`
+- ok Transformer/AMSGrad/Section2_Prelim.lean (9): `fderiv_apply_eq_sum`, `convex_first_order`, `cauchy_schwarz`, `taylor_geom`, `not_taylor`, `taylor_deriv`, `harmonic_le`, `sum_inv_sqrt_le`, `sum_div_sum_le`
+- ok Transformer/AMSGrad/Section2_Proj.lean (4): `posDef_comm`, `posDef_nonneg`, `proj_variational`, `mcm_str`
+- ok Transformer/AMSGrad/Section3_Example.lean (9): `grad_linear`, `isOnlineConvex_exa`, `exa_state_one`, `exaY₁_mem`, `exa_x_two`, `exa_state_two`, `exa_x_two_lt`, `exa_sign_one`, `exa_sign_two`
+- ok Transformer/AMSGrad/Section3_Issue.lean (4): `le_amsgradRule`, `prepare_lem`, `abel_eq`, `abel_le`
+- ok Transformer/AMSGrad/Section3_Optimal.lean (5): `exaCoef_sum_le_101`, `exaCoef_sum_add_101`, `exaCoef_sum_pos`, `exa_optimal`, `not_red_ineq`
+- ok Transformer/AMSGrad/Section3_Step.lean (6): `v_nonneg`, `m_eq_zero`, `m_eq_zero_of_vhat`, `proj_le`, `young`, `step_ineq`
+- ok Transformer/AMSGrad/Section4_Corollary.lean (2): `cor_lambda`, `cor_inv`
+- ok Transformer/AMSGrad/Section4_Counter.lean (2): `isOnlineConvex_sign`, `sign_hyp`
+- ok Transformer/AMSGrad/Section4_CounterRegret.lean (5): `sum_blocks`, `sign_block_sum`, `sign_block_sign`, `sum_half_pow_le`, `not_cor_lower`
+- ok Transformer/AMSGrad/Section4_CounterRun.lean (8): `blockSign_sq`, `sign_vhat`, `sign_step`, `clamp_sign`, `blockSign_block`, `sign_x_mem`, `sign_block`, `sign_term`
+- ok Transformer/AMSGrad/Section4_Lemmas.lean (11): `state_x_mem`, `x_mem`, `v_le`, `vhat_succ`, `vhat_le_succ`, `vhat_nonneg`, `vt`, `sqrt_div_le`, `t_0_of_key`, `t_0_lambda`, `t_0_inv`
+- ok Transformer/AMSGrad/Section4_MainLemma.lean (5): `geomSum_nonneg`, `sum_geomSum_div_sqrt_le`, `moment_le`, `term_le`, `mainlem`
+- ok Transformer/AMSGrad/Section4_Rate.lean (3): `gnorm_le`, `rate_le`, `tendsto_rate`
+- ok Transformer/AMSGrad/Section4_Telescope.lean (4): `telescope_le`, `eqmain_le_of`, `vt_div`, `eqmain_le`
+- ok Transformer/AMSGrad/Section4_Terms.lean (2): `sum_sqrt_mul_pow_le`, `eqsecond_le`
+- ok Transformer/AMSGrad/Section4_Theorem.lean (2): `mainthm_lambda`, `mainthm_inv`
+- ok Transformer/AMSGrad/Section4_Third.lean (2): `eqthird_lambda_le`, `eqthird_inv_le`
+- ok Transformer/AMSGrad/Section5_AdamX.lean (6): `le_adamXRule`, `adamX_vhat_one`, `adamX_vhat_succ`, `vtnew`, `vt2`, `adamX_eq_amsgrad`
+- ok Transformer/AMSGrad/Section5_Bounds.lean (3): `vtnew_div`, `adamX_mono`, `eqthird_adamX_le`
+- ok Transformer/AMSGrad/Section5_Corollary.lean (3): `ge_cor`, `bound_lambda`, `bound_inv`
+- ok Transformer/AMSGrad/Section5_Sums.lean (2): `sum_lambda_le`, `sum_inv_le`
+- issue Transformer/AMSGrad/Section5_Theorem.lean (1): `mainthm2` — mainthm2 is weaker than the paper's Theorem 5.1: second term has (1-β₁)² where the paper has (1-β₁); the paper's constant is neither proved nor refuted. Under non-increasing β_{1,t}, Lemma 5.2 gives √v̂_t ≤ G and the paper's constant follows; in general it is open — either prove it under that hypothesis or refute it
 
 ### Transformer.AdamBeyond — arXiv:1904.09237
 
