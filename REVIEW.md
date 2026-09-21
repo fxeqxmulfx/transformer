@@ -10,32 +10,32 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ## 1. Refutations (78)
 
-- [ ] `not_marked_of_clearKey` — Transformer/ALM/HullClear.lean:119
-- [ ] `not_eraseStep_of_lift` — Transformer/ALM/HullLift.lean:84
-- [ ] `not_eraseStep_of_marked` — Transformer/ALM/HullMark.lean:116
-- [ ] `not_tie_three` — Transformer/ALM/HullScan.lean:71
-- [ ] `not_isBinary_odd` — Transformer/ALM/ScoreWall.lean:84
-- [ ] `not_taylor` — Transformer/AMSGrad/Section2_Prelim.lean:97
-- [ ] `not_red_ineq` — Transformer/AMSGrad/Section3_Optimal.lean:92
-- [ ] `not_cor_lower` — Transformer/AMSGrad/Section4_CounterRegret.lean:78
-- [ ] `not_altList_succ_sublist` — Transformer/CRASP/Alternating.lean:186
-- [ ] `not_altList_not_sublist_of_mem_altPlus` — Transformer/CRASP/Alternating.lean:212
-- [ ] `not_recognizes_altPlus_of_clustered` — Transformer/CRASP/Collapse.lean:141
-- [ ] `not_minimalOneConstantOn_firstNotA` — Transformer/CRASP/CroppingUnsound.lean:91
-- [ ] `cropping_oneway_unsound` — Transformer/CRASP/Depth.lean:81
-- [ ] `cropping_oneway_right_unsound` — Transformer/CRASP/Depth.lean:96
-- [ ] `reduction_past_unsound` — Transformer/CRASP/Depth.lean:117
-- [ ] `reduction_unsound` — Transformer/CRASP/Depth.lean:133
-- [ ] `not_definableL_altPlus` — Transformer/CRASP/LowerBound.lean:114
-- [ ] `not_definable_altPlus_double` — Transformer/CRASP/LowerBoundTwoSided.lean:210
-- [ ] `not_forall_closed_majTwo_of_definable` — Transformer/CRASP/MajTwoDepthOne.lean:159
-- [ ] `tr_paperBlockSize_unsound` — Transformer/CRASP/PositionalReductionEquiv.lean:148
-- [ ] `not_solvesPrediction_altPlus` — Transformer/CRASP/Prediction.lean:91
-- [ ] `not_lang_eq_restrict_startAB` — Transformer/CRASP/ReductionUnsound.lean:74
-- [ ] `nonstrict_subseq_formula_unsound` — Transformer/CRASP/Subsequence.lean:187
-- [ ] `nonstrict_twoSided_formula_unsound` — Transformer/CRASP/SubsequenceTwoSided.lean:182
-- [ ] `cropping_unsound` — Transformer/CRASP/TLCDepth.lean:48
-- [ ] `pushY_unguarded_unsound` — Transformer/CRASP/YNormalFormEquiv.lean:123
+- ok `not_marked_of_clearKey` — Transformer/ALM/HullClear.lean:119 — own ALM lemma, no paper claim
+- ok `not_eraseStep_of_lift` — Transformer/ALM/HullLift.lean:84 — own ALM lemma, no paper claim
+- ok `not_eraseStep_of_marked` — Transformer/ALM/HullMark.lean:116 — own ALM lemma, no paper claim
+- ok `not_tie_three` — Transformer/ALM/HullScan.lean:71 — own ALM lemma, no paper claim
+- ok `not_isBinary_odd` — Transformer/ALM/ScoreWall.lean:84 — own ALM lemma, no paper claim
+- ok `not_taylor` — Transformer/AMSGrad/Section2_Prelim.lean:97 — Lemma 2.3 as printed
+- ok `not_red_ineq` — Transformer/AMSGrad/Section3_Optimal.lean:92 — red inequality of §3, Example 3.2 parameters match
+- ok `not_cor_lower` — Transformer/AMSGrad/Section4_CounterRegret.lean:78 — literal lim R(T)/T=0 false (β₁=0 fits both settings); faithful upper half kept as cor_lambda/cor_inv
+- ok `not_altList_succ_sublist` — Transformer/CRASP/Alternating.lean:186 — helper lemma (block count), not a refutation
+- ok `not_altList_not_sublist_of_mem_altPlus` — Transformer/CRASP/Alternating.lean:212 — helper lemma for L_k = A_k∖B_k, not a refutation
+- ok `not_recognizes_altPlus_of_clustered` — Transformer/CRASP/Collapse.lean:141 — own conjecture (not a paper claim), paper's thm:rtfr_to_TLCl carried as hypothesis
+- fixed `not_minimalOneConstantOn_firstNotA` — Transformer/CRASP/CroppingUnsound.lean:91 — 064b44f: ConstantOn now over positions 1..|w| as in def:constant
+- fixed `cropping_oneway_unsound` — Transformer/CRASP/Depth.lean:81 — 064b44f: faithful after ConstantOn fix; kills lem:cropping_oneway (PNPs free before I)
+- fixed `cropping_oneway_right_unsound` — Transformer/CRASP/Depth.lean:96 — 064b44f: same, second half
+- fixed `reduction_past_unsound` — Transformer/CRASP/Depth.lean:117 — 064b44f: now at exact depth 2 (topTwo); literal, rests on the middle's closed lower end ℙ(λ)
+- fixed `reduction_unsound` — Transformer/CRASP/Depth.lean:133 — 064b44f: same, TLCP version (typo TLCP_k read as k-1)
+- ok `not_definableL_altPlus` — Transformer/CRASP/LowerBound.lean:114 — thm:TLCl_depth lower half, k>0 as in paper
+- ok `not_definable_altPlus_double` — Transformer/CRASP/LowerBoundTwoSided.lean:210 — thm:TLC_depth lower half; k=0 case added in 07d6b08
+- ok `not_forall_closed_majTwo_of_definable` — Transformer/CRASP/MajTwoDepthOne.lean:159 — paper: closed φ defines L(φ); TLC_0 ∋ Q_b; Maj2 syntax/semantics/depth match def:MAJtwo, def:depth_MAJtwo
+- ok `tr_paperBlockSize_unsound` — Transformer/CRASP/PositionalReductionEquiv.lean:148 — T_ρ atoms match appendix 1027-1037; at w=ε, r=M(Y+1)=2 gives T_2[Y Q_e]=⊥ but f(ε)=ee ⊨ Y Q_e; kills the proof's r, the lemma itself is proved with reach ≤ r
+- fixed `not_solvesPrediction_altPlus` — Transformer/CRASP/Prediction.lean:91 — SolvesPrediction = def:prediction_task; corollary had an added 0<k, removed, k=0 proved (522cd3f)
+- ok `not_lang_eq_restrict_startAB` — Transformer/CRASP/ReductionUnsound.lean:74 — helper for reduction refutation
+- ok `nonstrict_subseq_formula_unsound` — Transformer/CRASP/Subsequence.lean:187 — appendix 148 formula with inclusive ◁# (neurips 364) accepts 'a' for σ1=σ2=a; kills the proof's formula, lemma proved with strict count
+- ok `nonstrict_twoSided_formula_unsound` — Transformer/CRASP/SubsequenceTwoSided.lean:182 — appendix 157-162 at k=1, pattern aaa, inclusive ◁#/▷#; kills the proof's formula only
+- fixed `cropping_unsound` — Transformer/CRASP/TLCDepth.lean:48 — 064b44f: same, Appendix D lem:cropping, I ⊆ [0,n] hypothesis present
+- ok `pushY_unguarded_unsound` — Transformer/CRASP/YNormalFormEquiv.lean:123 — appendix 928-935 N^c rules give Y¬Q_a ↦ ¬Y Q_a; Y needs i>1 (902); disagree on 'a'. kills the proof's transform, thm:ynf proved with guards
 - [ ] `not_forall_single_token_convergence` — Transformer/Causal/SingleToken.lean:124
 - [ ] `not_tendsto_zero_of_tendsto_common` — Transformer/Clusters/Section7_HigherDim.lean:87
 - [ ] `not_tendsto_id_of_tendsto_common` — Transformer/Clusters/Section7_HigherDim.lean:104
