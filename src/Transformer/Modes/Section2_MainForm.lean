@@ -65,63 +65,82 @@ theorem isLittleO_sqrt_window {ω : ℝ → ℝ} (hω : IsSlowGrowth ω) {B : �
 
 /-! ### The three lines of `eq:main-eq-form` -/
 
+/-- The identity in expectation, read on the real shadows. -/
+theorem expectedUpcrossingsReal_eq {β : ℝ} {n : ℕ} {T : Set ℝ}
+    (hid : expectedUpcrossings (gaussianSample n) (fun X => fieldF β X) 0 T
+      = expectedModes β n T) :
+    expectedUpcrossingsReal β n T = expectedModesReal β n T := by
+  rw [expectedUpcrossingsReal, hid, expectedModesReal]
+
 /-- **Line 1 of `eq:main-eq-form`:** `E U₀(F_n, T) ≍ √(β log β)`, given
 `prop:main-int` point 1 and the identity in expectation.
 
 Source: arXiv:2412.09080v3, `eq:main-eq-form`. -/
 theorem main_eq_form_T (N : ℕ → ℕ) (B : ℕ → ℝ) (ω : ℝ → ℝ)
-    (hid : ∀ k, expectedUpcrossingsReal (B k) (N k) (intervalT (N k) (B k) (ω (B k)))
-      = expectedModesReal (B k) (N k) (intervalT (N k) (B k) (ω (B k))))
+    (hid : ∀ k, expectedUpcrossings (gaussianSample (N k)) (fun X => fieldF (B k) X) 0
+      (intervalT (N k) (B k) (ω (B k))) = expectedModes (B k) (N k) (intervalT (N k) (B k) (ω (B k))))
     (hint : (fun k => expectedModesReal (B k) (N k) (intervalT (N k) (B k) (ω (B k))))
       =Θ[atTop] fun k => Real.sqrt (B k * Real.log (B k))) :
     (fun k => expectedUpcrossingsReal (B k) (N k) (intervalT (N k) (B k) (ω (B k))))
       =Θ[atTop] fun k => Real.sqrt (B k * Real.log (B k)) := by
-  rw [funext hid]
+  rw [funext fun k => expectedUpcrossingsReal_eq (hid k)]
   exact hint
 
 /-- **Line 2 of `eq:main-eq-form`, in the sharper form the hypotheses give:**
-`E U₀(F_n, T') = o(e^{-ω(β)/4}√(β log β))`.  The source writes `≲`; what
-`prop:main-int` point 2 and the window give is `o`.
+`E U₀(F_n, T')` is finite and `o(e^{-ω(β)/4}√(β log β))`.  The source writes
+`≲`; what `prop:main-int` point 2 and the window give is `o`.  Finiteness is
+carried in and out, since `toReal` reads `∞` as `0`.
 
 Source: arXiv:2412.09080v3, `eq:main-eq-form`. -/
 theorem main_eq_form_T'_isLittleO (N : ℕ → ℕ) {B : ℕ → ℝ} (hB : Tendsto B atTop atTop)
     {ω : ℝ → ℝ} (hω : IsSlowGrowth ω)
-    (hid : ∀ k, expectedUpcrossingsReal (B k) (N k) (intervalT' (N k) (B k))
-      = expectedModesReal (B k) (N k) (intervalT' (N k) (B k)))
-    (hint : (fun k => expectedModesReal (B k) (N k) (intervalT' (N k) (B k))) =O[atTop]
-      fun k => Real.sqrt (B k)) :
+    (hid : ∀ k, expectedUpcrossings (gaussianSample (N k)) (fun X => fieldF (B k) X) 0
+      (intervalT' (N k) (B k)) = expectedModes (B k) (N k) (intervalT' (N k) (B k)))
+    (hint : (∀ᶠ k in atTop, expectedModes (B k) (N k) (intervalT' (N k) (B k)) ≠ ∞) ∧
+      (fun k => expectedModesReal (B k) (N k) (intervalT' (N k) (B k))) =O[atTop]
+        fun k => Real.sqrt (B k)) :
+    (∀ᶠ k in atTop, expectedUpcrossings (gaussianSample (N k)) (fun X => fieldF (B k) X) 0
+      (intervalT' (N k) (B k)) ≠ ∞) ∧
     (fun k => expectedUpcrossingsReal (B k) (N k) (intervalT' (N k) (B k))) =o[atTop]
       fun k => Real.exp (-(ω (B k)) / 4) * Real.sqrt (B k * Real.log (B k)) := by
-  rw [funext hid]
-  exact hint.trans_isLittleO (isLittleO_sqrt_window hω hB)
+  refine ⟨hint.1.mono fun k hk => (hid k).trans_ne hk, ?_⟩
+  rw [funext fun k => expectedUpcrossingsReal_eq (hid k)]
+  exact hint.2.trans_isLittleO (isLittleO_sqrt_window hω hB)
 
 /-- **Line 2 of `eq:main-eq-form`, as the source writes it:**
-`E U₀(F_n, T') ≲ e^{-ω(β)/4}√(β log β)`.
+`E U₀(F_n, T') ≲ e^{-ω(β)/4}√(β log β)`, with finiteness.
 
 Source: arXiv:2412.09080v3, `eq:main-eq-form`. -/
 theorem main_eq_form_T' (N : ℕ → ℕ) {B : ℕ → ℝ} (hB : Tendsto B atTop atTop)
     {ω : ℝ → ℝ} (hω : IsSlowGrowth ω)
-    (hid : ∀ k, expectedUpcrossingsReal (B k) (N k) (intervalT' (N k) (B k))
-      = expectedModesReal (B k) (N k) (intervalT' (N k) (B k)))
-    (hint : (fun k => expectedModesReal (B k) (N k) (intervalT' (N k) (B k))) =O[atTop]
-      fun k => Real.sqrt (B k)) :
+    (hid : ∀ k, expectedUpcrossings (gaussianSample (N k)) (fun X => fieldF (B k) X) 0
+      (intervalT' (N k) (B k)) = expectedModes (B k) (N k) (intervalT' (N k) (B k)))
+    (hint : (∀ᶠ k in atTop, expectedModes (B k) (N k) (intervalT' (N k) (B k)) ≠ ∞) ∧
+      (fun k => expectedModesReal (B k) (N k) (intervalT' (N k) (B k))) =O[atTop]
+        fun k => Real.sqrt (B k)) :
+    (∀ᶠ k in atTop, expectedUpcrossings (gaussianSample (N k)) (fun X => fieldF (B k) X) 0
+      (intervalT' (N k) (B k)) ≠ ∞) ∧
     (fun k => expectedUpcrossingsReal (B k) (N k) (intervalT' (N k) (B k))) =O[atTop]
       fun k => Real.exp (-(ω (B k)) / 4) * Real.sqrt (B k * Real.log (B k)) :=
-  (main_eq_form_T'_isLittleO N hB hω hid hint).isBigO
+  (main_eq_form_T'_isLittleO N hB hω hid hint).imp_right IsLittleO.isBigO
 
-/-- **Line 3 of `eq:main-eq-form`:** `E U₀(F_n, ℝ ∖ T) ≲ e^{ω(β)/2}√β`, given
-`prop:main-tail` and the identity in expectation.
+/-- **Line 3 of `eq:main-eq-form`:** `E U₀(F_n, ℝ ∖ T) ≲ e^{ω(β)/2}√β`, with
+finiteness, given `prop:main-tail` and the identity in expectation.
 
 Source: arXiv:2412.09080v3, `eq:main-eq-form`. -/
 theorem main_eq_form_tail (N : ℕ → ℕ) (B : ℕ → ℝ) (ω : ℝ → ℝ)
-    (hid : ∀ k, expectedUpcrossingsReal (B k) (N k) (intervalT (N k) (B k) (ω (B k)))ᶜ
-      = expectedModesReal (B k) (N k) (intervalT (N k) (B k) (ω (B k)))ᶜ)
-    (htail : (fun k => expectedModesReal (B k) (N k) (intervalT (N k) (B k) (ω (B k)))ᶜ)
-      =O[atTop] fun k => Real.exp (ω (B k) / 2) * Real.sqrt (B k)) :
+    (hid : ∀ k, expectedUpcrossings (gaussianSample (N k)) (fun X => fieldF (B k) X) 0
+      (intervalT (N k) (B k) (ω (B k)))ᶜ = expectedModes (B k) (N k) (intervalT (N k) (B k) (ω (B k)))ᶜ)
+    (htail : (∀ᶠ k in atTop, expectedModes (B k) (N k) (intervalT (N k) (B k) (ω (B k)))ᶜ ≠ ∞) ∧
+      (fun k => expectedModesReal (B k) (N k) (intervalT (N k) (B k) (ω (B k)))ᶜ)
+        =O[atTop] fun k => Real.exp (ω (B k) / 2) * Real.sqrt (B k)) :
+    (∀ᶠ k in atTop, expectedUpcrossings (gaussianSample (N k)) (fun X => fieldF (B k) X) 0
+      (intervalT (N k) (B k) (ω (B k)))ᶜ ≠ ∞) ∧
     (fun k => expectedUpcrossingsReal (B k) (N k) (intervalT (N k) (B k) (ω (B k)))ᶜ)
       =O[atTop] fun k => Real.exp (ω (B k) / 2) * Real.sqrt (B k) := by
-  rw [funext hid]
-  exact htail
+  refine ⟨htail.1.mono fun k hk => (hid k).trans_ne hk, ?_⟩
+  rw [funext fun k => expectedUpcrossingsReal_eq (hid k)]
+  exact htail.2
 
 /-- The hypotheses above are satisfiable: the regime `β = n` and the window
 `ω(β) = √(log log β)` of `Section1_Sketch.lean`, with the identity holding

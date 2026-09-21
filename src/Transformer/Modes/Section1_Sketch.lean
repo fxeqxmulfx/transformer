@@ -28,7 +28,7 @@ Source: arXiv:2412.09080v3, `sec: sketch`, `eq:T`, `eq:T'`, `prop:main-int`,
 import Transformer.Modes.Section1_Main
 
 open Filter Asymptotics
-open scoped Topology
+open scoped Topology ENNReal
 
 namespace Transformer
 namespace Modes
@@ -142,24 +142,28 @@ theorem prop_main_int_T (c : ℝ) (N : ℕ → ℕ) (B : ℕ → ℝ) (hreg : Is
   sorry
 
 /-- **Proposition (prop:main-int), point 2.**  In the same regime, the expected
-number of modes of `P̂_n` in `T'` is `O(√β)`.
+number of modes of `P̂_n` in `T'` is finite and `O(√β)`.  Finiteness is
+stated, since `expectedModesReal` reads `∞` as `0`.
 
 Not proved here.
 
 Source: arXiv:2412.09080v3, `prop:main-int`. -/
 theorem prop_main_int_T' (c : ℝ) (N : ℕ → ℕ) (B : ℕ → ℝ) (hreg : IsRegime c N B) :
+    (∀ᶠ k in atTop, expectedModes (B k) (N k) (intervalT' (N k) (B k)) ≠ ∞) ∧
     (fun k => expectedModesReal (B k) (N k) (intervalT' (N k) (B k))) =O[atTop]
       fun k => Real.sqrt (B k) := by
   sorry
 
 /-- **Proposition (prop:main-tail).**  In the same regime, the expected number
-of modes of `P̂_n` outside `T` is `O(e^{ω(β)/2}√β)`.
+of modes of `P̂_n` outside `T` is finite and `O(e^{ω(β)/2}√β)`.  Finiteness
+is stated, since `expectedModesReal` reads `∞` as `0`.
 
 Not proved here; `sec:tail` proves it by the scale-space argument.
 
 Source: arXiv:2412.09080v3, `prop:main-tail`. -/
 theorem prop_main_tail (c : ℝ) (N : ℕ → ℕ) (B : ℕ → ℝ) (hreg : IsRegime c N B)
     (ω : ℝ → ℝ) (hω : IsSlowGrowth ω) :
+    (∀ᶠ k in atTop, expectedModes (B k) (N k) (intervalT (N k) (B k) (ω (B k)))ᶜ ≠ ∞) ∧
     (fun k => expectedModesReal (B k) (N k) (intervalT (N k) (B k) (ω (B k)))ᶜ) =O[atTop]
       fun k => Real.exp (ω (B k) / 2) * Real.sqrt (B k) := by
   sorry

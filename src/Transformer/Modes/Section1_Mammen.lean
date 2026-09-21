@@ -38,7 +38,7 @@ import Transformer.Modes.Section1_KDE
 import Transformer.Modes.Growth
 
 open Filter Asymptotics
-open scoped Topology
+open scoped Topology ENNReal
 
 namespace Transformer
 namespace Modes
@@ -47,6 +47,8 @@ namespace Modes
 
 /-- **Theorem (thm:mammen), first bullet.**  If `β ≪ n^{2/5}`, the expected
 number of modes of `P̂_n` in a fixed `[a, b]` is `1{0 ∈ [a, b]} + o(1)`.
+Finiteness is stated: `expectedModesReal` reads `∞` as `0`, which for
+`0 ∉ [a, b]` would satisfy the `o(1)` vacuously.
 
 Not proved here.
 
@@ -54,6 +56,7 @@ Source: arXiv:2412.09080v3, `thm:mammen`. -/
 theorem mammen_lt (a b : ℝ) (hab : a ≤ b) (N : ℕ → ℕ) (B : ℕ → ℝ)
     (hN : Tendsto (fun k => (N k : ℝ)) atTop atTop) (hB : ∀ k, 0 < B k)
     (hreg : B =o[atTop] fun k => (N k : ℝ) ^ ((2 : ℝ) / 5)) :
+    (∀ᶠ k in atTop, expectedModes (B k) (N k) (Set.Icc a b) ≠ ∞) ∧
     (fun k => expectedModesReal (B k) (N k) (Set.Icc a b) -
         (if (0 : ℝ) ∈ Set.Icc a b then 1 else 0)) =o[atTop] fun _ => (1 : ℝ) := by
   sorry

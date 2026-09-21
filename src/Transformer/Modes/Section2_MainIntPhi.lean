@@ -176,12 +176,14 @@ theorem main_int_phi_T {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : IsR
   sorry
 
 /-- **Lemma (lem:main-int-phi), on `T'`.**  In the regime `n^c ≲ β ≲ n^{2-c}`,
-`∫_{T'} ∫_0^∞ y (det Σ_t)^{-1/2} φ(…) dy dt ≲ √β`.
+`∫_{T'} ∫_0^∞ y (det Σ_t)^{-1/2} φ(…) dy dt ≲ √β`.  Finiteness is stated,
+since `toReal` reads `∞` as `0`.
 
 Not proved here.
 
 Source: arXiv:2412.09080v3, `lem:main-int-phi`. -/
 theorem main_int_phi_T' {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : IsRegime c N B) :
+    (∀ᶠ k in atTop, proxyKR (N k) (B k) (intervalT' (N k) (B k)) ≠ ∞) ∧
     (fun k => (proxyKR (N k) (B k) (intervalT' (N k) (B k))).toReal)
       =O[atTop] fun k => Real.sqrt (B k) := by
   sorry

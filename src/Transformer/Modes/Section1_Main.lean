@@ -27,7 +27,7 @@ remark of §1.1.
 import Transformer.Modes.Section1_Mammen
 
 open Filter Asymptotics
-open scoped Topology
+open scoped Topology ENNReal
 
 namespace Transformer
 namespace Modes
@@ -94,13 +94,16 @@ def belt (n : ℕ) (β : ℝ) : Set ℝ :=
   {t : ℝ | t ^ 2 ∈ Set.Icc (2 * Real.log n - 3 * Real.log β) (2 * Real.log n - Real.log β)}
 
 /-- **Theorem (thm:main-result), point 2.**  The expected number of modes
-outside the belt is `o(√(β log β))`: almost all modes lie in it.
+outside the belt is finite and `o(√(β log β))`: almost all modes lie in it.
+Finiteness is stated, since `expectedModesReal` reads `∞` as `0` and an upper
+bound on it alone would say nothing about an infinite expectation.
 
 Not proved here.
 
 Source: arXiv:2412.09080v3, `thm:main-result`, point 2. -/
 theorem mainResult_expectedModes_compl_belt (c : ℝ) (N : ℕ → ℕ) (B : ℕ → ℝ)
     (hreg : IsRegime c N B) :
+    (∀ᶠ k in atTop, expectedModes (B k) (N k) (belt (N k) (B k))ᶜ ≠ ∞) ∧
     (fun k => expectedModesReal (B k) (N k) (belt (N k) (B k))ᶜ) =o[atTop]
       fun k => Real.sqrt (B k * Real.log (B k)) := by
   sorry
