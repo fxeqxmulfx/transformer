@@ -1,0 +1,694 @@
+# Review
+
+Audit of every proved theorem against its source: the Lean statement and the
+definitions it rests on say what the paper says — no weakened hypothesis, no
+strengthened assumption, no definition that does the work.  A refutation must
+kill the claim the paper actually makes, not a misreading of it.  The proofs
+themselves are vouched for by `lake build` and `scripts/Axioms.lean`.
+
+Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` open.
+
+## 1. Refutations (78)
+
+- [ ] `not_marked_of_clearKey` — Transformer/ALM/HullClear.lean:119
+- [ ] `not_eraseStep_of_lift` — Transformer/ALM/HullLift.lean:84
+- [ ] `not_eraseStep_of_marked` — Transformer/ALM/HullMark.lean:116
+- [ ] `not_tie_three` — Transformer/ALM/HullScan.lean:71
+- [ ] `not_isBinary_odd` — Transformer/ALM/ScoreWall.lean:84
+- [ ] `not_taylor` — Transformer/AMSGrad/Section2_Prelim.lean:97
+- [ ] `not_red_ineq` — Transformer/AMSGrad/Section3_Optimal.lean:92
+- [ ] `not_cor_lower` — Transformer/AMSGrad/Section4_CounterRegret.lean:78
+- [ ] `not_altList_succ_sublist` — Transformer/CRASP/Alternating.lean:186
+- [ ] `not_altList_not_sublist_of_mem_altPlus` — Transformer/CRASP/Alternating.lean:212
+- [ ] `not_recognizes_altPlus_of_clustered` — Transformer/CRASP/Collapse.lean:141
+- [ ] `not_minimalOneConstantOn_firstNotA` — Transformer/CRASP/CroppingUnsound.lean:91
+- [ ] `cropping_oneway_unsound` — Transformer/CRASP/Depth.lean:81
+- [ ] `cropping_oneway_right_unsound` — Transformer/CRASP/Depth.lean:96
+- [ ] `reduction_past_unsound` — Transformer/CRASP/Depth.lean:117
+- [ ] `reduction_unsound` — Transformer/CRASP/Depth.lean:133
+- [ ] `not_definableL_altPlus` — Transformer/CRASP/LowerBound.lean:114
+- [ ] `not_definable_altPlus_double` — Transformer/CRASP/LowerBoundTwoSided.lean:210
+- [ ] `not_forall_closed_majTwo_of_definable` — Transformer/CRASP/MajTwoDepthOne.lean:159
+- [ ] `tr_paperBlockSize_unsound` — Transformer/CRASP/PositionalReductionEquiv.lean:148
+- [ ] `not_solvesPrediction_altPlus` — Transformer/CRASP/Prediction.lean:91
+- [ ] `not_lang_eq_restrict_startAB` — Transformer/CRASP/ReductionUnsound.lean:74
+- [ ] `nonstrict_subseq_formula_unsound` — Transformer/CRASP/Subsequence.lean:187
+- [ ] `nonstrict_twoSided_formula_unsound` — Transformer/CRASP/SubsequenceTwoSided.lean:182
+- [ ] `cropping_unsound` — Transformer/CRASP/TLCDepth.lean:48
+- [ ] `pushY_unguarded_unsound` — Transformer/CRASP/YNormalFormEquiv.lean:123
+- [ ] `not_forall_single_token_convergence` — Transformer/Causal/SingleToken.lean:124
+- [ ] `not_tendsto_zero_of_tendsto_common` — Transformer/Clusters/Section7_HigherDim.lean:87
+- [ ] `not_tendsto_id_of_tendsto_common` — Transformer/Clusters/Section7_HigherDim.lean:104
+- [ ] `not_configHull_subset_of_preconditioner` — Transformer/FrankWolfe/Section2_HullFailure.lean:86
+- [ ] `not_rope_clustering_antipodalPair` — Transformer/GPTMini/Bridge/RoPENoClustering.lean:72
+- [ ] `not_forall_rope_clustering` — Transformer/GPTMini/Bridge/RoPENoClustering.lean:118
+- [ ] `not_mean_field_clustering` — Transformer/GPTMini/MeanFieldRefutation.lean:85
+- [ ] `not_forall_overlapDrift_eq_simplexDrift` — Transformer/Homogenized/GramStability.lean:52
+- [ ] `not_forall_satisfying_MF_rate` — Transformer/Homogenized/MeanFieldLipschitz.lean:180
+- [ ] `not_forall_clustering_to_atom` — Transformer/Interpolation/AtomClustering.lean:102
+- [ ] `not_exists_ball_of_mass_of_dirac` — Transformer/Interpolation/BallDecomposition.lean:42
+- [ ] `not_forall_monge` — Transformer/Interpolation/Main.lean:258
+- [ ] `not_forall_wToBall` — Transformer/Interpolation/MassConcentration.lean:112
+- [ ] `not_forall_Hartman_Grobman` — Transformer/Interpolation/Settling.lean:271
+- [ ] `not_exists_rate_at_simplex` — Transformer/MeanField/Equiangular.lean:75
+- [ ] `not_equiangular_local_rate_zero` — Transformer/MeanField/EquiangularRate.lean:159
+- [ ] `not_forall_bakry_emery` — Transformer/Metastability/BakryEmery.lean:185
+- [ ] `not_quantitative_inequality_two_mul` — Transformer/Metastability/ExponentialFlow.lean:61
+- [ ] `not_rho_diff_ineq_of_free` — Transformer/Metastability/MainTheorem.lean:159
+- [ ] `not_forall_cap_exit` — Transformer/Metastability/MeanField.lean:182
+- [ ] `not_forall_variance_small` — Transformer/Metastability/MeanField.lean:211
+- [ ] `not_forall_otto_reznikoff` — Transformer/Metastability/OttoReznikoff.lean:142
+- [ ] `not_forall_claim_one` — Transformer/Metastability/OttoReznikoff.lean:258
+- [ ] `not_forall_reverse_PL_acceleration` — Transformer/Metastability/ReversePL.lean:142
+- [ ] `not_exact_time_scale` — Transformer/Metastability/Staircase.lean:127
+- [ ] `not_forall_modeSet_subset_upcrossingSet` — Transformer/Modes/Section2_Degenerate.lean:90
+- [ ] `not_integrableOn_tildeY` — Transformer/Modes/Section3_ErrorThird.lean:44
+- [ ] `not_exists_hermite_le_cube` — Transformer/Modes/Section3_Hermite.lean:68
+- [ ] `not_uniform_decay` — Transformer/Modes/Section5_PtBddFourier.lean:104
+- [ ] `not_isDensityOf_one` — Transformer/Modes/Section5_PtBddOne.lean:64
+- [ ] `not_synchronizes_const` — Transformer/Normalization/ClusteringLine.lean:51
+- [ ] `not_clusters_from_uniform_one` — Transformer/Normalization/ClusteringLine.lean:67
+- [ ] `not_clusters_or_stalls_from_gaussian_one` — Transformer/Normalization/ClusteringLine.lean:155
+- [ ] `not_unconditional_synchronization_one` — Transformer/Normalization/ClusteringLine.lean:172
+- [ ] `not_ae_gaussian_pair` — Transformer/Normalization/Line.lean:154
+- [ ] `not_forall_initial_velocity_small` — Transformer/Normalization/Rates.lean:122
+- [ ] `not_isAnalyticOnSphere_relu` — Transformer/Perceptron/Analytic.lean:142
+- [ ] `not_subsingleton_sphereHyperplane_iff` — Transformer/Perceptron/Hyperplane.lean:99
+- [ ] `not_alpha_at_one_over_n_of_free` — Transformer/Perspective/AppendixD_Alpha.lean:115
+- [ ] `not_forall_diff_ineq_alpha` — Transformer/Perspective/AppendixD_AlphaDeriv.lean:255
+- [ ] `not_forall_product_close_to_one` — Transformer/Perspective/AppendixD_Product.lean:190
+- [ ] `not_forall_ybeta_close_to_1` — Transformer/Perspective/AppendixD_Ybeta.lean:214
+- [ ] `not_forall_usa_analogue` — Transformer/Perspective/AppendixD_YbetaUSA.lean:182
+- [ ] `not_russian_trick_one` — Transformer/Perspective/RussianTrick.lean:150
+- [ ] `not_step2_decomposition` — Transformer/Perspective/Section5_Hemisphere.lean:196
+- [ ] `not_forall_step2_alpha_diff_ineq` — Transformer/Perspective/Section5_HighD.lean:221
+- [ ] `not_sharpConfiguration_antipodal` — Transformer/Perspective/Section8_CohnKumar.lean:138
+- [ ] `not_cohn_kumar_dichotomy` — Transformer/Perspective/Section8_CohnKumar.lean:188
+- [ ] `not_torusHessianNonPos_of_strictSaddle` — Transformer/Perspective/StrictSaddle.lean:60
+- [ ] `not_reverse_of_heads_eq_zero` — Transformer/RASP/Compilation.lean:157
+- [ ] `not_forall_raspGeneralizationConjecture` — Transformer/RASPL/Conjecture.lean:141
+- [ ] `not_degPLt_zero` — Transformer/RASPL/MinDegree.lean:94
+
+## 2. Proved theorems, by module (511 modules, 2420 theorems)
+
+
+### Transformer.ALM — —
+
+- [ ] Transformer/ALM/Basic.lean (6): `score_self`, `score_gap`, `score_lt_of_ne`, `score_isGreatest`, `norm_sq_eq_sum`, `one_le_dist_sq_of_int`
+- [ ] Transformer/ALM/BinSearch.lean (11): `bsearch_zero`, `bsearch_succ`, `bcount_zero`, `bcount_succ`, `le_bsearch`, `bsearch_le`, `bsearch_congr`, `bsearch_lt`, `bsearch_ge_of_lt`, `bcount_le_log`, `hull_bsearch_isGreatest`
+- [ ] Transformer/ALM/BuildFinger.lean (13): `one_le_stepCost`, `searchCost_ge`, `searchCost_le`, `portCost_le_buildCost`, `portCost_le`, `searchCost_of_all_ends`, `portCost_of_all_ends`, `portPrices_nonempty`, `portPrices_ge`, `portPrices_le`, `portPrices_ratio`, `portCost_moves_on_the_paraboloid`, `stress_port_ratio`
+- [ ] Transformer/ALM/BuildOrder.lean (10): `buildPrices_nonempty`, `buildPrices_ge`, `buildPrices_le`, `buildPrices_spread`, `buildPrices_ratio`, `buildPrices_nontrivial`, `log_two_stress`, `stress_spread_le`, `stress_le`, `buildPrices_paraboloid`
+- [ ] Transformer/ALM/ClearKey.lean (5): `dot_marked`, `cleared_lt_live`, `marked_sup'_eq_live`, `unit_gap_unstorable_abs`, `the_marker_costs_the_grid`
+- [ ] Transformer/ALM/ClearQuery.lean (8): `dot_marked_query`, `abs_dot_le_clearBound`, `marked_sup'_eq_live_at_query`, `pos_of_margin`, `marker_vanishes_at_zero_ordinate`, `live_lt_cleared_of_added_marker`, `the_section_4b_head_is_guarded`, `the_top_of_the_range_is_not_guarded`
+- [ ] Transformer/ALM/CrossFilter.lean (5): `sign_of_error_lt`, `cross_filter_sound`, `crossProdTerms_sum`, `cross_sign_eq`, `cross_paths_agree`
+- [ ] Transformer/ALM/CumSum.lean (3): `recip_isBinary_iff`, `round_trip_drift`, `affine_drift`
+- [ ] Transformer/ALM/Dense.lean (4): `unpack_packed`, `packed_lt_buffer`, `rowFold_congr`, `apply_eq_rowMajor`
+- [ ] Transformer/ALM/DensePad.lean (8): `blockCount_eq_ceilDiv`, `writeAt_lt_rows`, `dropped_ge_rows`, `writeAt_chunkOf`, `chunkOf_writeAt`, `rows_le_blockCount_mul`, `chunkOf_mem`, `blocks_of_buffer`
+- [ ] Transformer/ALM/DotError.lean (4): `abs_add_le_dotTerms`, `dot_error_le`, `cmp_of_dot_guard`, `dotTerms_markKey_self`
+- [ ] Transformer/ALM/DriftMargin.lean (6): `qScore_intCast`, `qScore_drift`, `order_survives_drift`, `winner_survives_drift`, `lookup_survives_drift`, `symmetric_tie_broken_by_drift`
+- [ ] Transformer/ALM/Duality.lean (12): `dot_eq_mul_lineEval`, `dot_le_dot_iff_of_pos`, `dot_le_dot_iff_of_neg`, `dot_of_snd_eq_zero`, `dot_le_dot_iff_of_snd_eq_zero`, `isGreatest_dot_iff_of_pos`, `isGreatest_dot_iff_of_neg`, `dot_lift`, `dot_lift_int`, `liftQuery_snd`, `liftQuery_snd_pos`, `lookup_reduces_to_upper_envelope`
+- [ ] Transformer/ALM/Envelope.lean (5): `lineEval_interX`, `lineEval_le_of_slope_eq`, `dominated_iff_le_at_interX`, `interX_le_interX_iff`, `sup'_erase_of_le`
+- [ ] Transformer/ALM/ExactDot.lean (4): `crossTerms_sum`, `crossTerms_sum_lineEval`, `dot_cmp_eq`, `dot_cmp_tie`
+- [ ] Transformer/ALM/Expansion.lean (4): `grow_sum`, `sum_filter_ne_zero`, `push_sum`, `expansion_sum`
+- [ ] Transformer/ALM/ExpansionSign.lean (3): `expansion_nil_sum`, `sign_of_top`, `expansion_sign_eq`
+- [ ] Transformer/ALM/FloatGrid.lean (5): `fp_eval_exact_of_grid`, `fp_exact_of_grid`, `roundScore_grid`, `fp_walk_collects_of_grid`, `fp_walk_trichotomy_of_grid`
+- [ ] Transformer/ALM/FloatHead.lean (6): `hullIndex_ans_one`, `embInt_one_apply`, `fpProbe_key_eq`, `fp_head_output`, `half_le_key_dist_mid`, `fp_head_output_of_int`
+- [ ] Transformer/ALM/FloatHeadTie.lean (2): `fp_head_tie_resolves`, `fp_head_tie_resolves_latest`
+- [ ] Transformer/ALM/FloatHull.lean (6): `cmp_of_sep`, `isect_liftKey_error`, `fp_no_spurious_erase`, `fp_query_branch`, `lineEval_eq_at_midpoint`, `fp_longDouble`
+- [ ] Transformer/ALM/FloatIndex.lean (7): `fpSearch_eq`, `fpSearch_eq_of_bounded`, `fpProbe_le`, `fpProbe_eq_hullProbe`, `fp_hullIndex_key`, `fp_hullIndex_isGreatest`, `fp_hullIndex_longDouble`
+- [ ] Transformer/ALM/FloatLattice.lean (3): `fpSearch_isGreatest_of_int`, `sortedKey_int`, `fpProbe_mem_argmaxSet_of_int`
+- [ ] Transformer/ALM/FloatResolve.lean (3): `fp_query_resolve`, `fp_query_resolveLatest`, `fp_query_cost_total`
+- [ ] Transformer/ALM/FloatTie.lean (5): `dot_liftQuery`, `fp_tie_sound`, `lineEval_liftKey_int`, `fp_tie_no_false_positive`, `fp_tie_no_false_negative`
+- [ ] Transformer/ALM/FloatWalk.lean (5): `fpProbe_mem_fpTieSet`, `fpTieSet_nonempty`, `fp_walk_sound`, `fp_walk_collects`, `fp_walk_trichotomy`
+- [ ] Transformer/ALM/GateGrid.lean (7): `gate_eq_ite`, `relu_isBinary`, `abs_gate_le`, `isBinary_gate`, `isBinary_add`, `the_ffn_wall`, `isBinary_gate_of_wall`
+- [ ] Transformer/ALM/GeneralPosition.lean (3): `lt_max_of_lt_at_interX`, `erase_preserves_tieSet`, `liftKey_not_concurrent`
+- [ ] Transformer/ALM/GridWitness.lean (14): `gridRatio_nonneg`, `offGrid_iff_one_lt_gridRatio`, `foldr_max_nonneg`, `foldr_max_append`, `le_foldr_max`, `foldr_max_le`, `runCount_append`, `runWorst_append`, `clean_merge`, `clean_iff_forall`, `clean_iff_worst_le_one`, `strict_guard_of_worst_lt_one`, `binade_of_worst_le_half`, `run_retrieval_of_worst_lt_one`
+- [ ] Transformer/ALM/GuardSep.lean (8): `ulpOf_succ_exp`, `ulpOf_lt_one_iff`, `isExp_two_mul`, `clean_strict_at_every_scale`, `scaled_unit_sep`, `cmp_of_guard`, `retrieval_survives_the_guard`, `guard_le_no_inversion`
+- [ ] Transformer/ALM/Hull.lean (9): `score_eq_lineEval`, `sScore_eq_lineEval`, `interX_liftKey`, `liftKey_not_dominated`, `le_of_step_lt`, `hslope_liftKey`, `hbp_liftKey`, `hull_isGreatest`, `hull_isGreatest_score`
+- [ ] Transformer/ALM/HullBranch.lean (7): `planar_bsearch_of_pos`, `planar_bsearch_of_neg`, `dot_le_dot_iff_of_snd_eq_zero_neg`, `planar_argmax_of_snd_eq_zero`, `planar_argmax_of_snd_eq_zero_neg`, `planar_argmax_unique_of_snd_eq_zero`, `planar_argmax_unique_of_snd_eq_zero_neg`
+- [ ] Transformer/ALM/HullBuild.lean (7): `foldl_stepState_count`, `pops_add_size`, `pops_le_length`, `buildCost_le`, `hullIndex_build_paid`, `hullAns_eq_bfAns`, `hullIndex_agrees_with_bruteForce`
+- [ ] Transformer/ALM/HullCache.lean (5): `isChain_append_singleton_congr`, `breakTo_none`, `cacheOk_splice`, `cacheOk_splice_dropped`, `the_two_line_cache`
+- [ ] Transformer/ALM/HullClear.lean (7): `clearKey_fst`, `clearKey_zero`, `lineEval_clearKey_le`, `sq_sub_le_of_le`, `eraseStep_of_clearKey`, `not_marked_of_clearKey`, `clear_bracket_of_shipped`
+- [ ] Transformer/ALM/HullCost.lean (4): `hullProbe_mem_argmaxSet`, `hullQuery_cost_total`, `argmaxSet_trichotomy`, `hullQuery_collects`
+- [ ] Transformer/ALM/HullCover.lean (5): `foldl_stepState_pops_of_no_erase`, `runState_of_no_erase`, `buildCost_of_no_erase`, `hull_covers_every_key`, `build_isGreatest_score`
+- [ ] Transformer/ALM/HullErase.lean (6): `sup'_erase_of_slope_eq`, `exists_ge_of_interX_le`, `sup'_erase_of_interX_le`, `erase_preserves_isGreatest`, `erase_slope_eq_preserves_isGreatest`, `erase_interX_le_preserves_isGreatest`
+- [ ] Transformer/ALM/HullHead.lean (3): `score_eq_of_mem_argmaxSet`, `argmaxTie_head_resolves`, `hullTie_head_resolves`
+- [ ] Transformer/ALM/HullHeadLatest.lean (1): `argmaxTie_head_resolves_latest`
+- [ ] Transformer/ALM/HullIndex.lean (8): `hullProbe_le`, `hullProbe_isGreatest`, `hullIdx_spec`, `hullIdx_isGreatest`, `hullProbe_cost`, `hullIdx_isGreatest_score`, `hullAns_isGreatest`, `hullIndex_query_paid`
+- [ ] Transformer/ALM/HullLift.lean (7): `liftKey_injective`, `lineEval_liftKey_self`, `lineEval_liftKey_lt_of_ne`, `not_eraseStep_of_lift`, `erasesTo_eq_of_lift`, `build_eq_of_lift`, `build_card_eq_keyCard`
+- [ ] Transformer/ALM/HullLines.lean (7): `bsearch_lines_isGreatest`, `lineEval_neg`, `interX_neg`, `dot_neg`, `parabLine_interX`, `parabLine_slope`, `parabLine_bp`
+- [ ] Transformer/ALM/HullLower.lean (5): `lineEval_neg_liftKey`, `neg_liftKey_dominated`, `eraseStep_neg_liftKey`, `lower_envelope_eq_extremes`, `lower_two_lines_suffice`
+- [ ] Transformer/ALM/HullMark.lean (10): `markKey_zero`, `markKey_fst`, `lineEval_markKey_self`, `lineEval_markKey_lt`, `Marked.subset`, `not_eraseStep_of_marked`, `erasesTo_eq_of_marked`, `build_eq_of_marked`, `build_card_eq_of_marked`, `marked_sep_of_shipped`
+- [ ] Transformer/ALM/HullMono.lean (4): `lineEval_le_of_interX_le`, `interX_lt_interX_iff`, `interX_lt_interX_widen_left`, `cached_lt_iff`
+- [ ] Transformer/ALM/HullNear.lean (9): `lineEval_markKey_eq`, `lineEval_markKey_lt_of_gap`, `sq_dist_gap_of_near_int`, `lineEval_markKey_lt_of_near`, `abs_lt_abs_of_near`, `Marked.offset_mem`, `isGreatest_of_near`, `the_shipped_window`, `the_window_is_needed`
+- [ ] Transformer/ALM/HullPrune.lean (4): `eraseStep_of_slope_eq`, `eraseStep_of_interX_le`, `erases_preserves_isGreatest`, `build_isGreatest_of_inserted`
+- [ ] Transformer/ALM/HullResolve.lean (8): `merge_empty_left`, `scanCombined_count`, `scanBest_eq`, `scanCombined_resolveAverage`, `scanCombined_resolveLatest`, `scanCombined_comm`, `scanCombined_resolveLatest_of_ne`, `tie_resolve`
+- [ ] Transformer/ALM/HullScan.lean (12): `lineEval_liftKey`, `tie_iff_midpoint`, `not_tie_three`, `tie_adjacent`, `mem_argmaxSet`, `argmaxSet_tie`, `argmaxSet_card_le_two`, `argmaxSet_adjacent`, `scan_left_step`, `scan_right_step`, `scan_merge_count_le_one`, `argmaxSet_eq_pair`
+- [ ] Transformer/ALM/HullSep.lean (5): `sq_dist_gap_of_sep`, `lineEval_markKey_lt_of_sep`, `nearest_fails_of_close`, `nearest_fails_of_close'`, `the_shipped_separation_floor`
+- [ ] Transformer/ALM/HullSpace.lean (5): `lineEval_liftKey_le_sq`, `envelope_le_sq`, `envelope_eq_sq_of_mem`, `lineEval_midpoint_gt`, `card_le_of_envelope_eq`
+- [ ] Transformer/ALM/HullSplice.lean (7): `breakOrd_pre`, `breakOrd_post`, `breakOrd_append_cons_cons`, `breakOrd_append_cons`, `breakOrd_splice`, `breakOrd_splice_dropped`, `the_two_line_order`
+- [ ] Transformer/ALM/HullTwin.lean (5): `lineEval_markKey_sub_twin`, `twin_later_wins`, `twin_not_greatest`, `the_measured_twins_are_invisible`, `the_longest_run_is_covered_too`
+- [ ] Transformer/ALM/HullValue.lean (4): `argmaxSet_resolve`, `argmaxSet_resolveLatest`, `hullQuery_resolve`, `hullQuery_resolveLatest`
+- [ ] Transformer/ALM/HullWall.lean (5): `markKey_eq_liftKey_of_wall`, `marks_tie_past_the_wall`, `lifted_of_marked_of_wall`, `the_shipped_spread_is_under_two`, `the_wasm_heads_are_past_the_wall`
+- [ ] Transformer/ALM/IntGrid.lean (6): `step_add_one_le`, `key_add_one_le`, `mid_add_one_le`, `mid_half_int`, `half_int_le_of_lt_add_half`, `le_half_int_of_lt_add_half`
+- [ ] Transformer/ALM/KeyOrder.lean (10): `mem_keySet`, `keyCard_pos`, `keyCard_le`, `sortedKey_of_le`, `sortedKey_of_ge`, `sortedKey_lt_succ`, `exists_sortedKey_eq`, `exists_eq_sortedKey`, `keyCard_eq_of_injective`, `exists_bound_sortedKey`
+- [ ] Transformer/ALM/LatestClose.lean (2): `invLogPos_step_le`, `past_the_window_rounding_decides`
+- [ ] Transformer/ALM/LatestWindow.lean (10): `log_shift_pos`, `invLogPos_zero`, `invLogPos_lt_invLogPos`, `invLogPos_nonneg`, `invLogPos_lt`, `writeScore_eq`, `latest_wins`, `one_le_sScore_sub`, `distinct_keys_keep_their_order`, `released_alpha_below_half`
+- [ ] Transformer/ALM/Lattice.lean (4): `geom_pos_le`, `geom_sq_le`, `sum_exp_gap_le`, `softmax_winner_lengthfree`
+- [ ] Transformer/ALM/LiftCompare.lean (12): `the_abscissa_and_its_half_are_both_storable`, `the_section_4b_key`, `lt_of_int_lt`, `lt_iff`, `dot_markKey_upper`, `dot_markKey_lower`, `upper_lt_iff`, `lower_lt_iff`, `sq_dist_le`, `sq_dist_fits`, `the_shipped_spread`, `the_section_4b_query`
+- [ ] Transformer/ALM/LiftResidual.lean (10): `upper_sub`, `lower_sub`, `int_lt_of_drift`, `upper_lt_of_sq_lt`, `upper_lt_iff_of_sq_eq`, `upper_near_lt_iff`, `lower_near_lt_iff`, `the_shipped_window`, `above`, `the_section_4a_query`
+- [ ] Transformer/ALM/LookupIndex.lean (2): `reduce_iff`, `bfAns_isGreatest`
+- [ ] Transformer/ALM/MarkedPosition.lean (3): `markKey_not_concurrent`, `marked_not_concurrent`, `marked_erase_preserves_tieSet`
+- [ ] Transformer/ALM/OrthVectors.lean (11): `bit_nonneg`, `bit_sq`, `one_sub_bit_sq`, `ip_nonneg`, `orth_iff`, `inner_kvec_qvec`, `norm_sq_kvec`, `score_qvec_kvec`, `score_qvec_le`, `score_qvec_eq_iff_orth`, `argmax_decides_ov`
+- [ ] Transformer/ALM/PlanarHead.lean (2): `planarAns_isGreatest`, `planar_head_argmax`
+- [ ] Transformer/ALM/Query.lean (6): `lineEval_sub`, `lineEval_le_iff_interX_le`, `lineEval_le_iff_le_interX`, `lineEval_mono_right`, `lineEval_anti_right`, `lowerBound_isGreatest`
+- [ ] Transformer/ALM/QueryScale.lean (13): `scaleQuery_one`, `dot_scaleQuery_int`, `dot_smul_query`, `order_scale_invariant`, `maximizers_scale_invariant`, `gridScale_nonneg`, `gridScale_eq_zero_iff`, `gridScale_scaleQuery`, `onTheGrid_scaleQuery`, `onTheGrid_preserves_order`, `onTheGrid_score_isInt`, `dot_liftQuery_eq_qScore`, `rounded_normalization_keeps_the_winner`
+- [ ] Transformer/ALM/SAHead.lean (7): `must`, `inner_packBlocks`, `fstBlockLin_packBlocks`, `sndBlockLin_packBlocks`, `inner_liftQueryVec_liftKeyVec`, `inner_queryProj_keyProj`, `SAOutput_eq_softmax_head`
+- [ ] Transformer/ALM/SAHeadValue.lean (2): `SAOutput_close_of_mass`, `sa_head_output_at_index`
+- [ ] Transformer/ALM/ScalarInt.lean (1): `softmax_winner_scalar_int`
+- [ ] Transformer/ALM/ScalarSharp.lean (4): `the`, `sum_exp_sq_gap_le`, `softmax_winner_scalar_int_sharp`, `scalar_int_sharp_lt`
+- [ ] Transformer/ALM/ScoreGap.lean (7): `keyGap_scale_free`, `keyGap_self`, `one_le_keyGap`, `one_le_keyGap_iff`, `retrieval_of_keyGap`, `rounding_decides_below`, `keyGap_writeScore`
+- [ ] Transformer/ALM/ScoreGuard.lean (6): `ulpOf_pos`, `isExp_unique`, `isExp_mul`, `clean_at_every_scale`, `dirty_at_every_scale`, `guard_iff_below_wall`
+- [ ] Transformer/ALM/ScoreWall.lean (11): `isBinary_intCast`, `isBinary_even`, `not_isBinary_odd`, `two_le_dist_of_isBinary`, `unit_gap_unstorable`, `key_coord_unstorable`, `sScore_eq_iScore`, `minimal_margin_unstorable`, `the_wall`, `the_first_unstorable_key`, `the_missing_unit`
+- [ ] Transformer/ALM/Softmax.lean (3): `softmax_winner_ge`, `softmax_winner_sharp`, `softmax_winner_ge'`
+- [ ] Transformer/ALM/SoftmaxIndex.lean (8): `NNIndex.ans_eq_of_query_mem`, `hullIndex_ans_eq`, `score_gap_one_of_int`, `softmax_at_index_ge`, `softmax_at_hullIndex_int`, `score_embInt_int`, `one_le_score_gap_int`, `softmax_at_index_ge_of_untied`
+- [ ] Transformer/ALM/SoftmaxLatest.lean (1): `softmax_head_resolves_latest`
+- [ ] Transformer/ALM/SoftmaxLatestMass.lean (2): `softmax_head_resolves_latest_of_gap`, `softmax_head_resolves_latest_of_int`
+- [ ] Transformer/ALM/SoftmaxMass.lean (3): `softmax_tie_mass`, `softmax_tie_mass_ge`, `softmax_head_resolves_average_of_gap`
+- [ ] Transformer/ALM/SoftmaxTie.lean (4): `dist_weighted_sum_le_of_level`, `softmax_weight_eq_of_score_eq`, `softmax_output_close_level`, `softmax_head_resolves_average`
+- [ ] Transformer/ALM/SoftmaxTieInt.lean (3): `sScore_tie_gap_one`, `softmax_tie_mass_int`, `softmax_head_resolves_average_of_int`
+- [ ] Transformer/ALM/SoftmaxValue.lean (6): `dist_weighted_sum_le`, `softmax_weight_nonneg`, `softmax_weight_sum`, `softmax_output_close`, `head_output_at_index`, `head_output_at_index_untied`
+- [ ] Transformer/ALM/SparseHead.lean (6): `sparseFold_eq_rowFold`, `firstMax_lt`, `firstMax_le`, `firstMax_first`, `firstMax_congr`, `firstMax_sparse_eq`
+- [ ] Transformer/ALM/SparseSoftmax.lean (7): `sparseWeight_nonneg`, `sparseWeight_sum`, `dist_weighted_sum_sub_le`, `sparse_total_variation`, `sparse_softmax_output_close`, `softmax_mass_outside_le`, `sparse_softmax_output_close_of_gap`
+- [ ] Transformer/ALM/Theta.lean (4): `sqNorm_zero`, `sqNorm_cast`, `theta1_le`, `box_sum_le`
+- [ ] Transformer/ALM/TieBreak.lean (5): `sScore_eq_iff`, `sScore_lt_of_ne`, `argmax_unique_of_query_mem`, `resolve_eq_of_single`, `merge_comm`
+- [ ] Transformer/ALM/TieHyperplane.lean (6): `score_eq_iff_norm_eq`, `score_eq_iff_inner_eq_zero`, `score_midpoint_eq`, `exists_score_ne`, `tie_eq_of_query_mem`, `score_eq_iff_int_one`
+- [ ] Transformer/ALM/TieMeasure.lean (6): `tieLocus_eq_bisector`, `tieLocus_ne_top`, `volume_tieLocus`, `volume_tie_locus_family`, `ae_no_tie`, `ae_argmax_unique`
+- [ ] Transformer/ALM/TieSet.lean (6): `mem_tieSet`, `tieSet_subset`, `eq_interX_of_lineEval_eq`, `concurrent_iff_collinear`, `interX_eq_of_concurrent`, `erase_keeps_the_value_and_drops_the_winner`
+- [ ] Transformer/ALM/TreeBalance.lean (8): `toList_rotateLeft`, `toList_rotateRight`, `toList_paint`, `toList_run`, `toList_of_stepAt`, `toList_of_rebalances`, `lowerBound_eq_find_of_rebalances`, `the_rotation_moves_the_depth`
+- [ ] Transformer/ALM/TreeQuery.lean (6): `lowerBound_nil`, `lbCount_nil`, `lowerBound_eq_find`, `lbCount_le_depth`, `lbCount_le_two_log`, `log_succ_bound`
+- [ ] Transformer/ALM/VectorInt.lean (6): `embInt_apply`, `score_gap_int`, `sum_exp_lattice_le`, `softmax_winner_int_sharp`, `score_embInt_one`, `softmax_winner_int_sharp_one`
+
+### Transformer.AMSGrad — arXiv:1904.03590
+
+- [ ] Transformer/AMSGrad/Section1_AMSGrad.lean (1): `isWeightedProj_boxProj`
+- [ ] Transformer/AMSGrad/Section1_TheoremA.lean (1): `isOnlineConvex_zero`
+- [ ] Transformer/AMSGrad/Section2_Prelim.lean (9): `fderiv_apply_eq_sum`, `convex_first_order`, `cauchy_schwarz`, `taylor_geom`, `not_taylor`, `taylor_deriv`, `harmonic_le`, `sum_inv_sqrt_le`, `sum_div_sum_le`
+- [ ] Transformer/AMSGrad/Section2_Proj.lean (4): `posDef_comm`, `posDef_nonneg`, `proj_variational`, `mcm_str`
+- [ ] Transformer/AMSGrad/Section3_Example.lean (9): `grad_linear`, `isOnlineConvex_exa`, `exa_state_one`, `exaY₁_mem`, `exa_x_two`, `exa_state_two`, `exa_x_two_lt`, `exa_sign_one`, `exa_sign_two`
+- [ ] Transformer/AMSGrad/Section3_Issue.lean (4): `le_amsgradRule`, `prepare_lem`, `abel_eq`, `abel_le`
+- [ ] Transformer/AMSGrad/Section3_Optimal.lean (5): `exaCoef_sum_le_101`, `exaCoef_sum_add_101`, `exaCoef_sum_pos`, `exa_optimal`, `not_red_ineq`
+- [ ] Transformer/AMSGrad/Section3_Step.lean (6): `v_nonneg`, `m_eq_zero`, `m_eq_zero_of_vhat`, `proj_le`, `young`, `step_ineq`
+- [ ] Transformer/AMSGrad/Section4_Corollary.lean (2): `cor_lambda`, `cor_inv`
+- [ ] Transformer/AMSGrad/Section4_Counter.lean (2): `isOnlineConvex_sign`, `sign_hyp`
+- [ ] Transformer/AMSGrad/Section4_CounterRegret.lean (5): `sum_blocks`, `sign_block_sum`, `sign_block_sign`, `sum_half_pow_le`, `not_cor_lower`
+- [ ] Transformer/AMSGrad/Section4_CounterRun.lean (8): `blockSign_sq`, `sign_vhat`, `sign_step`, `clamp_sign`, `blockSign_block`, `sign_x_mem`, `sign_block`, `sign_term`
+- [ ] Transformer/AMSGrad/Section4_Lemmas.lean (11): `state_x_mem`, `x_mem`, `v_le`, `vhat_succ`, `vhat_le_succ`, `vhat_nonneg`, `vt`, `sqrt_div_le`, `t_0_of_key`, `t_0_lambda`, `t_0_inv`
+- [ ] Transformer/AMSGrad/Section4_MainLemma.lean (5): `geomSum_nonneg`, `sum_geomSum_div_sqrt_le`, `moment_le`, `term_le`, `mainlem`
+- [ ] Transformer/AMSGrad/Section4_Rate.lean (3): `gnorm_le`, `rate_le`, `tendsto_rate`
+- [ ] Transformer/AMSGrad/Section4_Telescope.lean (4): `telescope_le`, `eqmain_le_of`, `vt_div`, `eqmain_le`
+- [ ] Transformer/AMSGrad/Section4_Terms.lean (2): `sum_sqrt_mul_pow_le`, `eqsecond_le`
+- [ ] Transformer/AMSGrad/Section4_Theorem.lean (2): `mainthm_lambda`, `mainthm_inv`
+- [ ] Transformer/AMSGrad/Section4_Third.lean (2): `eqthird_lambda_le`, `eqthird_inv_le`
+- [ ] Transformer/AMSGrad/Section5_AdamX.lean (6): `le_adamXRule`, `adamX_vhat_one`, `adamX_vhat_succ`, `vtnew`, `vt2`, `adamX_eq_amsgrad`
+- [ ] Transformer/AMSGrad/Section5_Bounds.lean (3): `vtnew_div`, `adamX_mono`, `eqthird_adamX_le`
+- [ ] Transformer/AMSGrad/Section5_Corollary.lean (3): `ge_cor`, `bound_lambda`, `bound_inv`
+- [ ] Transformer/AMSGrad/Section5_Sums.lean (2): `sum_lambda_le`, `sum_inv_le`
+- [ ] Transformer/AMSGrad/Section5_Theorem.lean (1): `mainthm2`
+
+### Transformer.AdamBeyond — arXiv:1904.09237
+
+- [ ] Transformer/AdamBeyond/AppendixG_Auxiliary.lean (7): `of`, `psd_comm`, `psd_nonneg`, `proj_variational_psd`, `proj_lemma`, `sum_div_sqrt_partial_le`, `proj_1d`
+- [ ] Transformer/AdamBeyond/Section2_Adam.lean (8): `v_sum`, `m_sum`, `adagrad_vhat`, `gamma_succ`, `gamma_nonneg_of`, `gamma_sgd_nonneg`, `gamma_adagrad_nonneg`, `gamma_amsgrad_nonneg`
+- [ ] Transformer/AdamBeyond/Section3_Counter.lean (7): `cex_term_ge`, `cex_regret`, `half_div_sqrt_hyp`, `counter_example_epsilon`, `counter_example`, `counter_example_const`, `gamma_adam_neg`
+- [ ] Transformer/AdamBeyond/Section3_GenBlock.lean (5): `genX_succ'`, `genSlope_block`, `gen_inblock`, `genM_block_anti`, `genD_ge`
+- [ ] Transformer/AdamBeyond/Section3_GenRegret.lean (5): `gen_start`, `gen_block_regret`, `gen_regret_blocks`, `gen_regret`, `gen_constants`
+- [ ] Transformer/AdamBeyond/Section3_GenRun.lean (13): `abs_genSlope_le`, `isOnlineConvex_gen`, `genM_succ`, `genV_succ`, `genX_succ`, `genX_zero`, `genM_zero`, `genV_zero`, `genSlope_mem`, `gen_warmup`, `genX_le_one`, `neg_one_le_genX`, `gen_bounds`
+- [ ] Transformer/AdamBeyond/Section3_GenStep.lean (4): `proj_1d_of_mono`, `geom_Icc`, `gen_block_sum`, `gen_block`
+- [ ] Transformer/AdamBeyond/Section3_General.lean (1): `counter_example_gen`
+- [ ] Transformer/AdamBeyond/Section3_Run.lean (6): `adamEpsRule_zero`, `isOnlineConvex_cex`, `cex_v`, `cex_x`, `block_arith`, `cex_block`
+- [ ] Transformer/AdamBeyond/Section3_Stoch.lean (8): `exists_isBernoulliSeq`, `stoch_g`, `stoch_m_succ`, `stoch_v_succ`, `stochX_succ`, `stochX_one`, `stoch_m_eq`, `stoch_v_eq`
+- [ ] Transformer/AdamBeyond/Section3_StochBound.lean (12): `coinGrad_le`, `coinGrad_le_ind`, `coinGrad_sq_le`, `sum_pow_sub_le`, `inv_sqrt_ge`, `stoch_T1_le`, `stoch_m_le`, `stoch_v_nonneg`, `stoch_v_ge`, `stoch_v_le_ind`, `stoch_m_le_ind`, `stoch_T2_le`
+- [ ] Transformer/AdamBeyond/Section3_StochCoins.lean (11): `coin_factor`, `dependsOn_sum`, `dependsOn_comp₂`, `dependsOn_coin_mul`, `coin_measurable`, `coin_integrable`, `coin_indep`, `coin_integral_ind`, `coin_integral_ind_mul`, `coin_integral_not_mul`, `coin_integral_sum`
+- [ ] Transformer/AdamBeyond/Section3_StochMean.lean (7): `coinM_dep`, `coinV_dep`, `coinMV_dep`, `stoch_int_T1`, `stoch_int_T2`, `stoch_int_v`, `stoch_int_inv`
+- [ ] Transformer/AdamBeyond/Section3_StochStep.lean (3): `coin_step_split`, `stoch_const_le`, `stoch_step`
+- [ ] Transformer/AdamBeyond/Section3_Stochastic.lean (1): `counter_example_stochastic`
+- [ ] Transformer/AdamBeyond/Section4_AMSGrad.lean (2): `amsgrad_moment_sum`, `amsgrad_moment_sum_sqrt`
+- [ ] Transformer/AdamBeyond/Section4_Abel.lean (2): `sum_Icc_two_sub`, `abel_beta_le`
+- [ ] Transformer/AdamBeyond/Section4_Corollary.lean (3): `sum_lambda_sqrt_le`, `amsgrad_regret_lambda`, `amsgrad_regret_inv`
+- [ ] Transformer/AdamBeyond/Section4_Regret.lean (2): `amsgrad_regret_moment`, `amsgrad_regret`
+- [ ] Transformer/AdamBeyond/Section5_AdamNC.lean (4): `adamNC_vhat_succ`, `adamNC_vhat_sum`, `adamNC_vhat_inv`, `adamNC_inv_cond`
+- [ ] Transformer/AdamBeyond/Section5_Corollary.lean (4): `sqrt_mul_sqrt_vhat_inv`, `sqrt_vhat_inv_le`, `adamNC_regret_lambda`, `adamNC_regret_inv`
+- [ ] Transformer/AdamBeyond/Section5_Lemma.lean (3): `sum_geomSum_le`, `m_sq_le_gnorm`, `adamNC_moment_sum`
+- [ ] Transformer/AdamBeyond/Section5_Regret.lean (1): `adamNC_regret`
+
+### Transformer — arXiv:2106.06981
+
+- [ ] Transformer/Basic.lean (4): `inner_proj_eq_zero`, `proj_smul_self`, `norm_proj_le`, `norm_proj_sub_proj_le`
+
+### Transformer.CRASP — arXiv:2506.16055
+
+- [ ] Transformer/CRASP/Affine.lean (3): `countP_bool_eq`, `Term.val_affine`, `Form.sat_eq_of_count_eq`
+- [ ] Transformer/CRASP/Alternating.lean (15): `altList_succ`, `length_altList`, `altList_not_succ`, `altPlus_one`, `sublist_of_ne_cons`, `sublist_of_ne_replicate`, `altList_sublist_succ`, `altList_succ_of_both`, `altList_sublist_of_mem_altPlus`, `not_altList_succ_sublist`, `not_altList_not_sublist_of_mem_altPlus`, `cons_mem_altPlus_same`, `cons_mem_altPlus_flip`, `mem_altPlus_of_sublist`, `altPlus_eq`
+- [ ] Transformer/CRASP/Basic.lean (18): `val_ofPos`, `depth_ofPos`, `past_ofPos`, `val_nsmul`, `depth_nsmul`, `past_nsmul`, `sat_or`, `depth_or`, `past_or`, `sat_le`, `depth_le`, `sat_isZero`, `depth_isZero`, `past_isZero`, `sat_atEnd`, `depth_atEnd`, `pnpFree_atEnd`, `dyck_mem`
+- [ ] Transformer/CRASP/Blocks.lean (7): `altList_sublist_of_le`, `altList_not_sublist_iff`, `eq_of_mem_altPlus`, `take_mem_altPlus`, `getElem?_of_mem_altPlus`, `append_mem_altPlus`, `mem_altPlus_three`
+- [ ] Transformer/CRASP/BoundedExists.lean (16): `countP_range'_add`, `val_countL_succ`, `val_countL_pos_iff`, `val_countR_eq_succ`, `val_countR_pos_iff`, `depth_exAt`, `depth_exBefore`, `past_exAt`, `past_exBefore`, `pnpFree_exAt`, `pnpFree_exBefore`, `depth_exAfter`, `pnpFree_exAfter`, `sat_exAt`, `sat_exBefore`, `sat_exAfter`
+- [ ] Transformer/CRASP/Collapse.lean (2): `exists_mem_TLCl_of_clustered`, `not_recognizes_altPlus_of_clustered`
+- [ ] Transformer/CRASP/Commutative.lean (4): `Term.val_countL_length_eq`, `Form.sat_length_eq_of_depth_le_one`, `Term.val_length_eq_of_depth_le_one`, `commutativeOnMiddle_of_mem_TLCP_one`
+- [ ] Transformer/CRASP/Conjunctions.lean (10): `Form.sat_all`, `Form.depth_all_le`, `Form.past_all`, `Form.pnpFree_all`, `Form.past_any`, `Form.pnpFree_any`, `Form.sat_onStr`, `Form.depth_onStr`, `Form.past_onStr`, `Form.pnpFree_onStr`
+- [ ] Transformer/CRASP/ConstantLayer.lean (5): `layer_of_const`, `act_add_of_const`, `layer_eq_of_fields`, `act_eq_of_fields`, `out_collapse`
+- [ ] Transformer/CRASP/CroppingUnsound.lean (6): `Form.sat_firstNotA`, `Form.minimalOne_firstNotA`, `accommodating_one`, `two_le_of_prefixVec_mem`, `pnpsConstantOn_firstNotA`, `not_minimalOneConstantOn_firstNotA`
+- [ ] Transformer/CRASP/Defs.lean (2): `sat_eq`, `depth_eq`
+- [ ] Transformer/CRASP/Depth.lean (5): `cropping_oneway_unsound`, `cropping_oneway_right_unsound`, `reduction_past_unsound`, `reduction_unsound`, `definableL_altPlus`
+- [ ] Transformer/CRASP/DepthZero.lean (5): `Form.exists_eq_pnp_of_mem_pnps`, `Term.exists_eq_pnp_of_mem_pnps`, `Term.val_eq_of_depth_eq_zero`, `Form.sat_eq_of_depth_eq_zero`, `Form.sat_eq_of_mem_pnps`
+- [ ] Transformer/CRASP/Extensions.lean (5): `Form.depth_toX`, `Term.depth_toX`, `Form.sat_toX`, `Term.val_toX`, `Form.lang_toX`
+- [ ] Transformer/CRASP/ExtensionsCounts.lean (10): `filter_range'_congr`, `length_filter_range'_strictL`, `length_filter_range'_strictR`, `length_filter_range'_all`, `covers_countL`, `covers_countR`, `exists_sat_neg_or`, `covers_countAll`, `covers_countLStrict`, `covers_countRStrict`
+- [ ] Transformer/CRASP/ExtensionsElim.lean (5): `FormX.depth_elim_le`, `TermX.depth_pieces_le`, `FormX.sat_elim`, `TermX.covers_pieces`, `exists_form_of_formX`
+- [ ] Transformer/CRASP/ExtensionsPieces.lean (14): `Form.sat_topAt`, `Form.depth_topAt`, `Form.sat_pos`, `Form.depth_pos`, `Form.sat_any`, `Form.depth_any_le`, `Term.val_addNat`, `Term.depth_addNat`, `sat_ltPieces`, `depth_ltPieces_le`, `covers_condPieces`, `depth_condPieces_le`, `covers_addPieces`, `depth_addPieces_le`
+- [ ] Transformer/CRASP/FiniteFunction.lean (9): `depth_ite_neg`, `past_ite_neg`, `pnpFree_ite_neg`, `sat_ite_neg`, `sat_bitsFormula`, `depth_bitsFormula_le`, `past_bitsFormula`, `pnpFree_bitsFormula`, `finite_function`
+- [ ] Transformer/CRASP/Fixed.lean (12): `ext`, `m_zero`, `val_zero`, `le_clamp`, `clamp_lt`, `clamp_eq_self`, `m_round`, `val_round`, `val_round_le`, `le_val_round`, `round_val`, `eq_of_abs_val_sub_lt`
+- [ ] Transformer/CRASP/FixedBits.lean (4): `bit_succ`, `emod_pow_eq_of_parity`, `ext_of_bit`, `bit_zero`
+- [ ] Transformer/CRASP/Frame.lean (8): `getElem?_frame`, `getElem?_frame_outside`, `Form.sat_eq_of_pnpFree_depth_eq_zero`, `length_eq_of_count`, `Form.constOnMiddle_of_depth_eq_zero`, `exists_middle`, `Form.mem_TLC_of_mem_countSubs`, `Term.mem_TLC_of_mem_countSubs`
+- [ ] Transformer/CRASP/FrameAffine.lean (2): `Term.val_affine_frame`, `Form.sat_eq_of_take_count_eq`
+- [ ] Transformer/CRASP/FrameBox.lean (5): `exists_half_mul_le`, `exists_box_lt`, `ConstOnBox.mono`, `ConstOnBox.neg`, `ConstOnBox.and`
+- [ ] Transformer/CRASP/FrameCount.lean (6): `Term.val_countR_add_val_countL`, `Term.val_countL_add`, `Term.val_countL_middle`, `Term.val_countL_outside`, `Term.val_eq_of_constOnMiddle`, `Form.sat_eq_of_constOnMiddle`
+- [ ] Transformer/CRASP/FrameShrink.lean (2): `Form.exists_constOnBox`, `exists_constOnBox_list`
+- [ ] Transformer/CRASP/Indicator.lean (10): `ite_mem_TLCl`, `lt_add_one_mem_TLCl`, `ltIndR_mem_TLCl`, `ltInd_mem_TLCl`, `ltSum_mem_TLCl`, `sat_ite`, `_root_.Transformer.CRASP.Term.val_sum`, `sat_ltIndR`, `sat_ltInd`, `sat_ltSum`
+- [ ] Transformer/CRASP/Locality.lean (4): `Form.mem_TLCl_of_mem_countSubs`, `Term.mem_TLCl_of_mem_countSubs`, `Form.sat_append`, `Term.val_append`
+- [ ] Transformer/CRASP/LowerBound.lean (3): `exists_constOnStrip_altPlus`, `exists_models_iff_altPlus`, `not_definableL_altPlus`
+- [ ] Transformer/CRASP/LowerBoundTwoSided.lean (5): `ConstOnBox.constOnMiddle`, `replicate_append_mem_altPlus`, `exists_constOnMiddle_altPlus`, `exists_models_iff_altPlusDouble`, `not_definable_altPlus_double`
+- [ ] Transformer/CRASP/MajTwo.lean (7): `sat_top`, `sat_ex`, `sat_all`, `depth_ex`, `closed_closedTop`, `depth_closedTop`, `lang_closedTop`
+- [ ] Transformer/CRASP/MajTwoCount.lean (13): `sum_Ico_boole_eq_length_filter`, `sum_Icc_le`, `sum_Icc_ge`, `sum_Icc_eq`, `_root_.Transformer.CRASP.Var.other_ne`, `_root_.Transformer.CRASP.Var.ne_other`, `sat_topv`, `mass_append`, `mass_map_neg`, `mass_replicate_topv`, `mass_replicate_lt`, `sat_majList`, `sat_cmpList`
+- [ ] Transformer/CRASP/MajTwoDepthOne.lean (6): `swapPos_one`, `swapPos_two`, `getElem?_swapPos`, `sat_swap_of_depth_eq_zero`, `sat_eq_of_closed_depth_le_one`, `not_forall_closed_majTwo_of_definable`
+- [ ] Transformer/CRASP/MajTwoEquiv.lean (3): `exists_majTwo_of_mem_TLC`, `exists_closed_majTwo`, `exists_closed_majTwo_of_definable`
+- [ ] Transformer/CRASP/MajTwoOfTLC.lean (7): `Form.freeIn_toMaj`, `Maj2.depth_majList_le`, `Form.depth_toMaj_le`, `Term.depth_toMajs_le`, `Term.val_eq_ones`, `Form.sat_toMaj`, `Term.mass_toMajs`
+- [ ] Transformer/CRASP/Middle.lean (7): `countP_range'_eq_countP`, `getElem?_length_sub_one_append`, `parikh_append`, `perm_of_parikh_eq`, `parikh_eq_of_parikh_append_eq`, `prefixVec_mem_middle`, `Form.sat_middle`
+- [ ] Transformer/CRASP/NeutralLetter.lean (4): `map_some_sublist_iff`, `PT.width_mapSome`, `PT.lang_mapSome`, `KPiecewiseTestable.preimage_reduceOption`
+- [ ] Transformer/CRASP/Parikh.lean (1): `accommodating_trivial`
+- [ ] Transformer/CRASP/PiecewiseTestable.lean (7): `kPiecewiseTestable_altPlus`, `PT.depth_toForm_le`, `PT.past_toForm`, `PT.pnpFree_toForm`, `PT.lang_toForm`, `definableL_of_kPiecewiseTestable`, `definable_of_kPiecewiseTestable`
+- [ ] Transformer/CRASP/Positional.lean (2): `TLClMod_subset_TLClPos`, `TLClY_subset_TLClPos`
+- [ ] Transformer/CRASP/PositionalDepth.lean (2): `exists_form_of_formP`, `definablePos_altPlusNeutral`
+- [ ] Transformer/CRASP/PositionalEmbedding.lean (6): `Form.exists_formP`, `Term.exists_termP`, `DefinableL.exists_formP`, `DefinableL.definablePos`, `DefinableL.definableMod`, `DefinableL.definableY`
+- [ ] Transformer/CRASP/PositionalHierarchy.lean (1): `alibi_window`
+- [ ] Transformer/CRASP/PositionalReduction.lean (2): `FormP.tr_mem_TLCl`, `TermP.tr_mem`
+- [ ] Transformer/CRASP/PositionalReductionAtom.lean (5): `ofBool_mem_TLCl`, `sat_ofBool`, `FormP.period_pos`, `TermP.period_pos`, `FormP.atomTr_mem_TLCl`
+- [ ] Transformer/CRASP/PositionalReductionAtomEquiv.lean (2): `getElem?_spread_sub`, `FormP.sat_atomTr`
+- [ ] Transformer/CRASP/PositionalReductionCount.lean (3): `sum_map_ite_eq_countP`, `TermP.val_countL_blockEnd`, `TermP.val_countL_spread`
+- [ ] Transformer/CRASP/PositionalReductionEquiv.lean (4): `FormP.sat_tr`, `TermP.val_tr`, `FormP.models_spread_iff`, `tr_paperBlockSize_unsound`
+- [ ] Transformer/CRASP/Prediction.lean (4): `predictAltPlus_mem`, `solvesPrediction_predictAltPlus`, `not_solvesPrediction_altPlus`, `prediction_task_depth`
+- [ ] Transformer/CRASP/ReductionUnsound.lean (2): `Form.sat_abab_eq_aabb`, `not_lang_eq_restrict_startAB`
+- [ ] Transformer/CRASP/Shrink.lean (3): `exists_strip_lt`, `Form.exists_constOnStrip`, `exists_constOnStrip_list`
+- [ ] Transformer/CRASP/Spread.lean (8): `spread_nil`, `reduceOption_spread`, `length_spread`, `getElem?_flatMap_block`, `getElem?_spread`, `FormP.sat_append`, `TermP.val_append`, `FormP.sat_spread_of_le`
+- [ ] Transformer/CRASP/Strip.lean (6): `getElem?_append_length_add`, `ConstOnStrip.mono`, `ConstOnStrip.append`, `ConstOnStrip.neg`, `ConstOnStrip.and`, `Form.constOnStrip_of_depth_eq_zero`
+- [ ] Transformer/CRASP/Subsequence.lean (12): `sublist_snoc_snoc`, `sublist_snoc_take`, `depth_subseqStrict`, `depth_subseqAt`, `past_subseqStrict`, `past_subseqAt`, `pnpFree_subseqStrict`, `pnpFree_subseqAt`, `sat_subseqStrict`, `sat_subseqAt`, `lang_subseqAt`, `nonstrict_subseq_formula_unsound`
+- [ ] Transformer/CRASP/SubsequenceTwoSided.lean (9): `cons_sublist_drop`, `append_cons_sublist_iff`, `depth_subseqAfter`, `pnpFree_subseqAfter`, `depth_subseqTwoSided_le`, `pnpFree_subseqTwoSided`, `sat_subseqAfter`, `lang_subseqTwoSided`, `nonstrict_twoSided_formula_unsound`
+- [ ] Transformer/CRASP/TLCDepth.lean (4): `cropping_unsound`, `altPlusDouble_succ`, `kPiecewiseTestable_altPlusDouble`, `definable_altPlusDouble`
+- [ ] Transformer/CRASP/Transformers.lean (4): `self_mem_masked`, `length_bos`, `definableL_iff_recognizes`, `rtfr_depth_hierarchy`
+- [ ] Transformer/CRASP/YNormalForm.lean (7): `FormP.prevN_succ'`, `FormP.depth_prevN`, `YAtomic.prevN`, `FormP.depth_pushY`, `TermP.depth_pushY`, `FormP.yNormal_pushY`, `TermP.yNormalT_pushY`
+- [ ] Transformer/CRASP/YNormalFormEquiv.lean (7): `FormP.sat_prevN`, `FormP.sat_guard`, `length_filter_range'_delay`, `FormP.sat_pushY`, `TermP.val_pushY`, `exists_yNormal`, `pushY_unguarded_unsound`
+
+### Transformer.Causal — arXiv:2411.04990
+
+- [ ] Transformer/Causal/Interaction.lean (7): `hasDerivAt_h_pot`, `h_pot_periodic`, `g_pot_periodic`, `h_pot_odd`, `g_pot_even`, `h_pot_nonneg`, `g_pot_nonpos`
+- [ ] Transformer/Causal/InteractionBounds.lean (6): `cos_le_quartic`, `sin_sq_lt_sq`, `exp_factor_bounds`, `h_pot_bounds`, `g_pot_lower_bound_near`, `g_pot_lower_bound_gauss`
+- [ ] Transformer/Causal/InteractionNumerics.lean (5): `exp_neg_le_four_div_sq`, `exp_neg_27_32_le_half`, `lin_lower_of_small`, `const_lower_of_small`, `quartic_exponent_le`
+- [ ] Transformer/Causal/InteractionPeak.lean (1): `h_pot_unimodal`
+- [ ] Transformer/Causal/InteractionRemark.lean (2): `g_pot_nonpos_core`, `interaction_window`
+- [ ] Transformer/Causal/InteractionWindow.lean (2): `interaction_inequalities_core`, `interaction_inequalities`
+- [ ] Transformer/Causal/MainTheorem.lean (2): `inner_mul_le_inner_of_abs_le`, `inner_mul_eq_inner_iff`
+- [ ] Transformer/Causal/Metastability.lean (2): `csa_const_one`, `renyi_count`
+
+### Transformer.Causal.Packing — —
+
+- [ ] Transformer/Causal/Packing/Basic.lean (2): `volume_ball_eucSpace`, `volume_closedBall_eucSpace`
+- [ ] Transformer/Causal/Packing/Count.lean (4): `pow_sub_pow_le`, `le_pow_sub_pow`, `card_le_of_separatedOnSphere`, `card_ge_of_maximalSeparated`
+- [ ] Transformer/Causal/Packing/Lower.lean (1): `maximal_volume_ledger`
+- [ ] Transformer/Causal/Packing/Renyi.lean (2): `card_le_at_renyi_scale`, `exists_card_ge_at_renyi_scale`
+- [ ] Transformer/Causal/Packing/Upper.lean (3): `separated_volume_ledger`, `card_le_of_separated`, `exists_maximalSeparated`
+
+### Transformer.Causal — arXiv:2411.04990
+
+- [ ] Transformer/Causal/ParkingCount.lean (2): `continuous_geoDist`, `strong_renyi_expected_count`
+- [ ] Transformer/Causal/SingleToken.lean (3): `norm_eq_one_of_singleTokenODE`, `not_forall_single_token_convergence`, `single_token_convergence_trivial`
+
+### Transformer.Clusters — arXiv:2305.05465
+
+- [ ] Transformer/Clusters/Extremum.lean (4): `antitone_sup'_of_hasDerivAt`, `le_sup'_mul_exp_of_hasDerivAt`, `le_sqrt_add_one_mul_exp`, `hasDerivAt_norm_sq_rclike`
+- [ ] Transformer/Clusters/Section10_ProjHull.lean (4): `isProjOnto_one`, `convex_image_tokenHull`, `image_tokenHull_subset`, `image_tokenHull_antitone`
+- [ ] Transformer/Clusters/Section10_Remainder.lean (3): `projScore_self`, `scoreRemainder_self`, `softmax_le_exp_neg`
+- [ ] Transformer/Clusters/Section10_Step2.lean (2): `hasDerivAt_norm_sq_proj`, `candidatesThickening_subset`
+- [ ] Transformer/Clusters/Section12_Feedforward.lean (6): `actPointwise_apply`, `actPointwise_zero`, `actPointwise_id`, `relu_zero`, `mlpRescaledDynamics_id_iff`, `mlpRescaledDynamics_const`
+- [ ] Transformer/Clusters/Section12_Generic.lean (4): `qkMatrix_one`, `sum_smul_single`, `inner_eq_sum_qkMatrix`, `attentionMatrix_congr_qkMatrix`
+- [ ] Transformer/Clusters/Section12_MultiHead.lean (2): `multiHeadTransformer_one_iff`, `multiHeadTransformer_zero`
+- [ ] Transformer/Clusters/Section1_Dynamics.lean (8): `attentionMatrix_pos`, `attentionMatrix_nonneg`, `sum_attentionMatrix`, `transformerDynamics_const`, `discreteTransformer_const`, `isPosDefOp_id`, `isPosDefQK_of_isAttentionRoot`, `isAttentionRoot_id`
+- [ ] Transformer/Clusters/Section2_LowRank.lean (3): `pi_single_one_nonneg`, `sum_pi_single_one`, `isBooleanLimit_of_isBooleanRows`
+- [ ] Transformer/Clusters/Section3_Discrete.lean (2): `discreteRescaled_const`, `discreteTransformer_iff_rescaled`
+- [ ] Transformer/Clusters/Section3_IdCase.lean (3): `attentionMatrix_expTime_one`, `rescaledDynamics_one_iff`, `rescaledDynamics_one_const`
+- [ ] Transformer/Clusters/Section3_Rescaled.lean (9): `expTime_zero`, `expTime_zero_map`, `expTime_one_apply`, `hasDerivAt_expTime`, `commute_smul_self`, `commute_expTime`, `expTime_neg_mul`, `rescaledDynamics_const`, `transformerDynamics_iff_rescaled`
+- [ ] Transformer/Clusters/Section4_Codim.lean (1): `isUnstableSplitting_one`
+- [ ] Transformer/Clusters/Section4_Hyperplanes.lean (5): `mem_affineShift_self`, `isGoodTriple_iff`, `span_singleton_eq_top`, `isGoodTripleWith_one`, `isGoodTriple_one`
+- [ ] Transformer/Clusters/Section5_Mix.lean (2): `isPosDefQK_one`, `isGoodTripleMulti_one`
+- [ ] Transformer/Clusters/Section6_ContEq.lean (1): `isContEqSolution_dirac`
+- [ ] Transformer/Clusters/Section6_Kernel.lean (5): `isCarriedBy_dirac`, `attentionKernel_dirac_zero`, `ae_mem_closedBall`, `integrable_attentionWeight`, `attentionKernel_norm_le`
+- [ ] Transformer/Clusters/Section6_KernelDeriv.lean (4): `scoreDual_apply`, `continuous_scoreDual`, `norm_scoreDual_le`, `attentionKernel_hasFDerivAt`
+- [ ] Transformer/Clusters/Section6_KernelLip.lean (3): `abs_exp_sub_exp_le`, `abs_inner_le_of_mem_closedBall`, `attentionKernel_lipschitz_in_measure`
+- [ ] Transformer/Clusters/Section6_WellPosed.lean (1): `isLocLipschitzCurve_const`
+- [ ] Transformer/Clusters/Section7_Bounded.lean (3): `isBoundedToken_zero`, `tendsto_attention_of_tendsto_others`, `tendsto_row_isProbability`
+- [ ] Transformer/Clusters/Section7_DistNonDec.lean (4): `softmax_monotone`, `inner_drift_sub_nonneg`, `norm_sub_monotone`, `ne_of_norm_sub_monotone`
+- [ ] Transformer/Clusters/Section7_HigherDim.lean (3): `tendsto_attentionMatrix_of_tendsto_common`, `not_tendsto_zero_of_tendsto_common`, `not_tendsto_id_of_tendsto_common`
+- [ ] Transformer/Clusters/Section7_LogSumExp.lean (5): `sum_rpow_mul_rpow_le`, `sum_exp_inner_pos`, `convexOn_logSumExp`, `transformerDynamics_one_iff`, `idNonrescaledDynamics_zero`
+- [ ] Transformer/Clusters/Section7_Symmetric.lean (16): `norm_unit1`, `coord_smul_unit1`, `inner_smul_unit1`, `symSign_zero`, `symSign_one`, `symSign_two`, `symDrift_zero`, `attentionMatrix_symTriple`, `sum_exp_symSign_pos`, `sum_weighted_symSign`, `drift_symTriple`, `idNonrescaledDynamics_symTriple`, `isOrderedConfig_symTriple`, `isBoundedToken_symTriple`, `symInterior_ne_first`, `symInterior_ne_last`
+- [ ] Transformer/Clusters/Section7_Unbounded.lean (3): `isOrderedConfig_subsingleton`, `idNonrescaledDynamics_single`, `exists_auxiliary_constant`
+- [ ] Transformer/Clusters/Section8_Bounded.lean (3): `mul_exp_add_one_nonneg`, `inner_negIdDrift_neg`, `exists_bound_negIdDynamics`
+- [ ] Transformer/Clusters/Section8_Energy.lean (2): `sum_exp_smul_eq_neg_smul_negIdDrift`, `integrableOn_sq_norm_negIdDrift`
+- [ ] Transformer/Clusters/Section8_Origin.lean (4): `isIdentityQK_one`, `transformerDynamics_neg_one_iff`, `transformerDynamics_zero`, `attentionMatrix_tendsto_uniform`
+- [ ] Transformer/Clusters/Section8_Polytope.lean (6): `mem_tokenHull`, `isCompact_tokenHull`, `idRescaledDynamics_const`, `tokenHull_antitone`, `mem_tokenHull_zero`, `exists_bound_idRescaled`
+- [ ] Transformer/Clusters/Section8_Stationary.lean (2): `isStationaryConfig_zero`, `eq_zero_of_isStationaryConfig`
+- [ ] Transformer/Clusters/Section9_Eigen.lean (6): `isEigenFunctional_one`, `le_maxCoord`, `minCoord_le`, `minCoord_le_maxCoord`, `hasDerivAt_eigenFunctional`, `abs_eigenFunctional_le`
+- [ ] Transformer/Clusters/Section9_Fj.lean (3): `norm_sum_attentionMatrix_smul_le`, `minCoord_eq_neg`, `maxCoord_antitoneOn_minCoord_monotoneOn`
+- [ ] Transformer/Clusters/Section9_Growth.lean (4): `isEigenFunctional_zero`, `norm_eigenFunctional_le`, `isProjContraction_zero`, `norm_proj_le`
+- [ ] Transformer/Clusters/Section9_Hyperplanes.lean (4): `apply_smul_eq`, `tendsto_infDist_affineShift`, `finrank_ker_add_one`, `dist_tendsto_zero_of_tendsto_eigenFunctional`
+- [ ] Transformer/Clusters/Section9_Limits.lean (5): `exists_tendsto_of_antitoneOn`, `exists_tendsto_of_monotoneOn`, `exists_tendsto_maxCoord_minCoord`, `bounded_of_coord_bounded`, `eq_sum_proj_single`
+
+### Transformer.FrankWolfe — arXiv:2508.09628
+
+- [ ] Transformer/FrankWolfe/Section2_Derivations.lean (2): `configHull_subset_of_isHardmaxStep`, `configHull_antitone`
+- [ ] Transformer/FrankWolfe/Section2_HullFailure.lean (5): `diagTwo_apply`, `triangle_subset`, `triangle_nonneg`, `inner_single_one`, `not_configHull_subset_of_preconditioner`
+- [ ] Transformer/FrankWolfe/Section3_NegativeDefinite.lean (2): `isFrankWolfeStep_iff_isHardmaxStep`, `says`
+- [ ] Transformer/FrankWolfe/Section4_Cells.lean (5): `mem_cell_iff`, `convex_cell`, `interior_cell_inter`, `iUnion_cell`, `cell_eq_vorCell_inter`
+
+### Transformer.GPTMini — arXiv:2512.01868
+
+- [ ] Transformer/GPTMini/AttentionBounds.lean (6): `causalAttnWeights_zero_above`, `causalAttnWeights_nonneg`, `causalAttnWeights_bounds`, `attnOutput_norm_le`, `xsaProjection_norm_le`, `attentionHead_norm_le`
+- [ ] Transformer/GPTMini/AttentionLipschitz.lean (3): `attnOutput_dist_le`, `norm_proj_sub_proj_le`, `xsaProjection_dist_le`
+- [ ] Transformer/GPTMini/AttnSubLayerLipschitz.lean (2): `attnSubLayer_eq`, `attnSubLayer_dist_le`
+- [ ] Transformer/GPTMini/Block.lean (3): `attnSubLayer_bounded`, `ffnSubLayer_bounded`, `blockForward_growth`
+- [ ] Transformer/GPTMini/BlockLipschitz.lean (1): `ffnSubLayer_lipschitz`
+
+### Transformer.GPTMini.Bridge — —
+
+- [ ] Transformer/GPTMini/Bridge/ALMLookup.lean (8): `normL2_smul_of_pos`, `score_smul_key`, `score_smul_query`, `qknorm_indifferent_where_lookup_is_not`, `score_eq_inner_div`, `score_sub_eq_const_mul_lookup_sub`, `score_le_iff_lookup_le`, `score_le_iff_dist_le`
+- [ ] Transformer/GPTMini/Bridge/CausalConnection.lean (2): `causalAttnWeights_matches_eq_csa`, `causalAttnWeights_eq_csa_coeff`
+- [ ] Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean (5): `applyRope_add`, `applyRope_smul`, `ropeIsometry_apply`, `rope_timeParam_norm_preserved`, `rope_score_relative`
+- [ ] Transformer/GPTMini/Bridge/RoPENoClustering.lean (3): `transformerODE_const_antipodalPair`, `not_rope_clustering_antipodalPair`, `not_forall_rope_clustering`
+- [ ] Transformer/GPTMini/Bridge/SphereResidence.lean (3): `rmsNorm_direction_on_sphere`, `toSphere_norm`, `token_sequence_on_sphere`
+- [ ] Transformer/GPTMini/Bridge/XSAEquivalence.lean (2): `xsaProjection_eq_sphereProj`, `attentionHead_eq_sphereProj`
+
+### Transformer.GPTMini — arXiv:2512.01868
+
+- [ ] Transformer/GPTMini/CausalMHA.lean (2): `causalAttnWeights_row_sum`, `xsaProjection_orthogonal`
+- [ ] Transformer/GPTMini/Config.lean (8): `head_dim_pos`, `group_size_pos`, `n_kv_heads_mul_group_size`, `kvHead_surjective`, `kvHead_val_eq`, `kvHead_val_eq_zero`, `exists_shared_kvHead`, `cache_eq_group_size_mul`
+- [ ] Transformer/GPTMini/HeadLipschitz.lean (4): `attentionHead_eq`, `headLipschitz_nonneg`, `headLipschitz_mono`, `attentionHead_dist_le`
+- [ ] Transformer/GPTMini/MeanFieldRefutation.lean (3): `attentionHead_one`, `preLNHead_one_ne_zero`, `not_mean_field_clustering`
+- [ ] Transformer/GPTMini/Model.lean (1): `forward_total`
+
+### Transformer.GPTMini.Properties — —
+
+- [ ] Transformer/GPTMini/Properties/Causal.lean (1): `attnOutput_causal`
+- [ ] Transformer/GPTMini/Properties/Entropy.lean (6): `entropy_le_log_card`, `log_le_entropy_of_le`, `softmaxEntropy_nonneg`, `softmaxEntropy_eq`, `softmaxEntropy_le_log_vocab`, `softmaxEntropy_lower_bound`
+- [ ] Transformer/GPTMini/Properties/Lipschitz.lean (2): `hidden_isStream`, `stream_lipschitz`
+- [ ] Transformer/GPTMini/Properties/LipschitzConstants.lean (6): `attnLipschitz_nonneg`, `ffnLipschitz_nonneg`, `one_le_perBlockLipschitz`, `perBlockLipschitz_nonneg`, `endToEndLipschitz_nonneg`, `blockForward_lipschitz`
+- [ ] Transformer/GPTMini/Properties/OutputSimplex.lean (6): `softmaxOutput_nonneg`, `softmaxOutput_denom_pos`, `softmaxOutput_pos`, `softmaxOutput_sum_one`, `softmaxOutput_le_one`, `softmaxOutput_is_distribution`
+- [ ] Transformer/GPTMini/Properties/StreamGrowth.lean (3): `blockGrowth_nonneg`, `residual_stream_linear_growth`, `final_representation_norm_le`
+
+### Transformer.GPTMini — arXiv:2512.01868
+
+- [ ] Transformer/GPTMini/QKNorm.lean (5): `normL2_norm_le`, `score_bounded`, `partition_bounds`, `rmsNorm_eq_smul_normL2`, `rmsScore_eq_score`
+- [ ] Transformer/GPTMini/QKNormLipschitz.lean (3): `normL2_lipschitz`, `abs_inner_sub_inner_le`, `score_lipschitz`
+- [ ] Transformer/GPTMini/RMSNorm.lean (5): `rmsNorm_norm_eq_sqrt_d`, `rmsNormEps_norm_le`, `rmsNormEps_lipschitz`, `rmsNorm_pos_homog`, `continuous_rmsNorm`
+- [ ] Transformer/GPTMini/ReLU2FFN.lean (12): `relu2_nonneg`, `relu2_of_pos`, `relu2_of_nonpos`, `relu2_le_sq`, `continuous_relu2`, `relu2Vec_coord_nonneg`, `relu2Vec_apply`, `relu2Vec_norm_bound`, `euclidean_norm_le_of_coord_le`, `abs_relu2_sub_le`, `relu2Vec_lipschitz`, `relu2FFN_lipschitz_on_ball`
+- [ ] Transformer/GPTMini/Reshape.lean (15): `d_model_eq`, `qkv_disjoint`, `qkvSlice_apply`, `headSlice_apply`, `headMerge_apply`, `headSlice_headMerge`, `headMerge_headSlice`, `norm_comp_injective_le`, `qkvSlice_norm_le`, `qkvV_injective`, `qkvQ_injective`, `qkvK_injective`, `headSlice_norm_le`, `headMerge_norm_sq`, `headMerge_norm_le`
+- [ ] Transformer/GPTMini/ReshapeDist.lean (3): `qkvSlice_dist_le`, `headSlice_dist_le`, `headMerge_dist_le`
+- [ ] Transformer/GPTMini/RoPE.lean (11): `ropeSplit_symm_inl_inl`, `ropeSplit_symm_inl_inr`, `applyRope_apply`, `sum_split`, `sum_split'`, `applyRope_isometry`, `ropeCoord_sub`, `applyRope_sub`, `applyRope_dist`, `ropeAngle_sub`, `applyRope_relative`
+- [ ] Transformer/GPTMini/SoftmaxStability.lean (3): `causalAttnWeights_le_mul`, `causalAttnWeights_l1_le`, `causalAttnWeights_l1_le_linear`
+- [ ] Transformer/GPTMini/TotalVariation.lean (4): `l1_le_two`, `l1_le_of_le_mul`, `exp_two_mul_sub_one_le`, `l1_le_of_le_exp`
+
+### Transformer.Homogenized — arXiv:2604.01978
+
+- [ ] Transformer/Homogenized/Barycenter.lean (7): `softWeight_pos`, `softWeight_eq_attnWeight`, `softBary_dirac`, `norm_softBary_le_one`, `baryCorr_self`, `baryCorr_comm`, `normalizeLayer_smul`
+- [ ] Transformer/Homogenized/Basic.lean (12): `attnField_zero_beta`, `norm_normalizeLayer`, `normalizeLayer_of_norm_one`, `interpChain_natCast_mul`, `IsVarianceProxy.unique`, `valueMap_zero`, `attnField_zero_param`, `meanField_dirac_zero`, `fluct_dirac_zero`, `bField_dirac_zero`, `Gfield_dirac_zero`, `isVarianceProxy_dirac_zero`
+- [ ] Transformer/Homogenized/CoupledPair.lean (2): `sphHess₂_zero`, `isCoupledPair_dirac_zero`
+- [ ] Transformer/Homogenized/CoupledSystem.lean (2): `pocHess_zero`, `isPoCSystem_dirac_zero`
+- [ ] Transformer/Homogenized/Defs.lean (1): `attnWeight_pos`
+- [ ] Transformer/Homogenized/Frozen.lean (11): `hasVanishingField_dirac_zero`, `mvGenerator_of_vanishing`, `mvGenerator₂_of_vanishing`, `isMcKeanVlasovSolution_frozen`, `isCoupledPair_frozen`, `measurable_clampSphere`, `clampSphere_of_norm_eq_one`, `norm_clampSphere`, `map_clampSphere`, `isCoupledPair_uniformAmbient`, `exists_norm_eq_one`
+- [ ] Transformer/Homogenized/GaussianEnsemble.lean (9): `entryVar_zero`, `entryVar_one`, `entryVar_two`, `gaussBlock_apply`, `measurable_gaussBlock`, `map_gaussBlock`, `isGaussianHeadLaw_gaussHeadLaw`, `stdSigmaV_sq`, `isGaussianHeadLaw_stdScaling`
+- [ ] Transformer/Homogenized/GaussianInit.lean (3): `isGaussianHeadLaw_dirac_zero`, `alphaOf_gaussian`, `isDiffusiveSde_dirac_zero`
+- [ ] Transformer/Homogenized/GaussianInterp.lean (1): `gaussInterp_zero_fun`
+- [ ] Transformer/Homogenized/GaussianKernel.lean (3): `valueMap_smul`, `valueMap_integral`, `attnFieldOf_eq_valueMap_softBary`
+- [ ] Transformer/Homogenized/Generator.lean (4): `sphHess_zero`, `noiseField_one_one`, `isItoSolution_dirac_zero`, `isBallisticFlow_dirac_zero`
+- [ ] Transformer/Homogenized/GramStability.lean (1): `not_forall_overlapDrift_eq_simplexDrift`
+- [ ] Transformer/Homogenized/HansonWright.lean (2): `matOpNorm_nonneg`, `matOpNorm_zero`
+- [ ] Transformer/Homogenized/Logistic.lean (3): `logisticGenerator_one`, `logisticGenerator_neg_one`, `isLogisticSolution_one`
+- [ ] Transformer/Homogenized/LogisticLimit.lean (1): `rescaledOverlap_zero`
+- [ ] Transformer/Homogenized/McKeanVlasov.lean (2): `isWeakSpdeSolution_dirac_zero`, `isMcKeanVlasovSolution_dirac_zero`
+- [ ] Transformer/Homogenized/MeanField.lean (7): `real_inner_proj_left`, `integral_empMeasure`, `attnFieldOf_empMeasure`, `meanFieldOf_empMeasure`, `fluctOf_empMeasure`, `Gfield_eq_GfieldOf`, `inner_covKernel_proj`
+- [ ] Transformer/Homogenized/MeanFieldLipschitz.lean (7): `attnFieldOf_dirac`, `GfieldOf_dirac`, `valueMap_radMatrix`, `integral_valueMap_radLaw`, `norm_proj_sub_proj_sq`, `sqrt_integral_norm_GfieldOf_radLaw`, `not_forall_satisfying_MF_rate`
+- [ ] Transformer/Homogenized/Metastability.lean (1): `effBeta_pos`
+- [ ] Transformer/Homogenized/MvGenerator.lean (8): `isMartingaleOn_const`, `sphHess₁_zero`, `attnFieldOf_zero`, `meanFieldOf_dirac_zero`, `fluctOf_dirac_zero`, `GfieldOf_dirac_zero`, `mvGenerator_dirac_zero`, `spdeNoise_dirac_zero`
+- [ ] Transformer/Homogenized/OneDim.lean (5): `mul_self_eq_one_of_norm_eq_one`, `proj_one`, `GfieldOf_one`, `hasVanishingField_one`, `isCoupledPair_uniformAmbient_one`
+- [ ] Transformer/Homogenized/OverlapDrift.lean (2): `sphGenerator_overlap_diffusive`, `overlapDrift_self`
+- [ ] Transformer/Homogenized/OverlapObservable.lean (7): `overlapForm_apply`, `hasFDerivAt_overlap`, `fderiv_overlap`, `fderiv_fderiv_overlap`, `iteratedFDeriv_two_overlap`, `sphHess_overlap`, `sphGenerator_overlap`
+- [ ] Transformer/Homogenized/RademacherLaw.lean (7): `iIndepFun_of_const_of_ne`, `integral_fairCoin`, `radMatrix_apply`, `measurable_radMatrix`, `integral_radLaw`, `isHighOrderLaw_rademacher`, `hasHighOrderLaw_rademacher`
+- [ ] Transformer/Homogenized/RandomChain.lean (4): `iIndepFun_of_unit`, `isHighOrderLaw_dirac_zero`, `hasHighOrderLaw_dirac_zero`, `isRandomChain_dirac_zero`
+- [ ] Transformer/Homogenized/Simplex.lean (4): `attnProb_pos`, `sum_attnProb`, `isSimplexConfig_of_subsingleton`, `is`
+- [ ] Transformer/Homogenized/SimplexBary.lean (5): `attnProb_eq_softWeight`, `softBary_empMeasure`, `inner_softBary_simplex`, `baryCorr_simplex`, `baryCorr_simplex_self`
+- [ ] Transformer/Homogenized/SimplexDrift.lean (4): `feeds`, `overlapDrift_congr`, `overlapDrift_simplex`, `overlapDrift_simplex_sub_simplexDrift`
+- [ ] Transformer/Homogenized/SlowMotion.lean (1): `isLowTemperature_uniformAmbient`
+- [ ] Transformer/Homogenized/SmallBeta.lean (2): `meanOverlap_const`, `hasDerivAt_logistic`
+- [ ] Transformer/Homogenized/SoftmaxDerivatives.lean (2): `hasFDerivAt_softmaxWeight`, `fderiv_softmaxWeight`
+- [ ] Transformer/Homogenized/UniformLaw.lean (10): `measurable_radialProj`, `norm_radialProj`, `radialProj_comp_isometry`, `isOpen_puncturedBall`, `measurableSet_puncturedBall`, `ne_zero_of_mem_puncturedBall`, `measure_puncturedBall_pos`, `measure_puncturedBall_lt_top`, `uniformAmbient_apply`, `isUniformAmbient_uniformAmbient`
+
+### Transformer.Interpolation — arXiv:2411.04551
+
+- [ ] Transformer/Interpolation/AtomClustering.lean (4): `fullVF_diracProb_self`, `cauchyPB_const_diracProb`, `not_forall_clustering_to_atom`, `exists_dirac_close_of_diam_tendsto`
+- [ ] Transformer/Interpolation/BallDecomposition.lean (1): `not_exists_ball_of_mass_of_dirac`
+- [ ] Transformer/Interpolation/Basic.lean (3): `eq_of_mem_support_dirac`, `antipode_ne`, `basePoint_mem_positiveQuadrant`
+- [ ] Transformer/Interpolation/Clustering.lean (2): `le_inner_barycenter`, `barycenter_ne_zero`
+- [ ] Transformer/Interpolation/IdentityFlow.lean (2): `fullVF_eq_zero`, `identity_flow`
+- [ ] Transformer/Interpolation/Main.lean (3): `isHole_antipode_diracProb`, `monge`, `not_forall_monge`
+- [ ] Transformer/Interpolation/MassConcentration.lean (2): `dist_antipode`, `not_forall_wToBall`
+- [ ] Transformer/Interpolation/Settling.lean (4): `neuralODESphere_iff_perceptronField`, `norm_sub_le_of_contraction`, `Hartman_Grobman`, `not_forall_Hartman_Grobman`
+- [ ] Transformer/Interpolation/Wasserstein.lean (5): `transportCosts_nonneg`, `bddBelow_transportCosts`, `W2_nonneg`, `W2_le_of_coupling`, `W2_self`
+
+### Transformer.Kinetic — arXiv:2605.09213
+
+- [ ] Transformer/Kinetic/Accuracy.lean (2): `here`, `acc_def`
+- [ ] Transformer/Kinetic/Codewords.lean (8): `torusDist_comm`, `torusDist_nonneg`, `torusDist_triangle`, `torusDist_le_abs`, `coe_add_int_mul_period`, `two_pi_div_le_torusDist_codeword`, `exists_codeword_close`, `isNearestCodeword_iff`
+- [ ] Transformer/Kinetic/Correlations.lean (1): `torusConv_const`
+- [ ] Transformer/Kinetic/Defs.lean (4): `hasDerivAt_wBeta`, `wBeta_periodic`, `wBetaDeriv_periodic`, `graphon_of_le`
+- [ ] Transformer/Kinetic/Hardy.lean (2): `besselI_succ_zero`, `hardyProfile_zero`
+- [ ] Transformer/Kinetic/MeanField.lean (1): `periodic_deriv`
+
+### Transformer.MeanField — arXiv:2512.01868
+
+- [ ] Transformer/MeanField/Clustering.lean (1): `exists_common_hemisphere_of_linearIndependent`
+- [ ] Transformer/MeanField/Equiangular.lean (3): `equiangularSA_const_simplex`, `not_exists_rate_at_simplex`, `equiangularSA_const_one`
+- [ ] Transformer/MeanField/EquiangularLimit.lean (4): `tendsto_cos_of_tendsto`, `equiOutCos_seq_eq`, `equiDiag_add_equiOff_seq`, `long_context_phase_transition`
+- [ ] Transformer/MeanField/EquiangularPhases.lean (8): `equiDiag_eq_one_div`, `equiDiag_seq_eq`, `tendsto_log_natAdd_two`, `tendsto_ratio_natAdd`, `ratio_natAdd_mem`, `tendsto_equiDiag_of_lt`, `tendsto_equiDiag_of_eq`, `tendsto_equiDiag_of_gt`
+- [ ] Transformer/MeanField/EquiangularRate.lean (2): `equiangular_local_rate`, `not_equiangular_local_rate_zero`
+- [ ] Transformer/MeanField/EquiangularWeights.lean (13): `equiNorm_pos`, `sum_exp_equiGram`, `sum_equiWeight`, `equiWeight_self`, `equiWeight_of_ne`, `sum_equiWeight_mul_equiGram`, `equiOutInner_eq`, `equiDiag_pos`, `equiOff_pos`, `equiDiag_add_equiOff`, `sum_equiWeight_sq`, `sum_equiWeight_mul`, `equiOutCos_of_ne`
+- [ ] Transformer/MeanField/Noisy.lean (1): `inner_noisyDrift_eq_zero`
+- [ ] Transformer/MeanField/PairMerge.lean (4): `hardmaxPair_const`, `hardmaxPair_stationary`, `hardmaxPair_inner_hasDerivAt`, `hardmaxPair_eq_of_eq`
+
+### Transformer.Metastability — arXiv:2410.06833
+
+- [ ] Transformer/Metastability/AlphaDist.lean (3): `norm_sub_le_of_mem_sphericalCap`, `αDist_le_of_orthogonal`, `isSeparated_of_near_orthogonal`
+- [ ] Transformer/Metastability/AngularEnergy.lean (5): `inner_circlePoint`, `hasDerivAt_pairFst`, `hasDerivAt_pairSnd`, `hasDerivAt_angularEβ`, `Eβ_circlePoint`
+- [ ] Transformer/Metastability/BakryEmery.lean (2): `bakry_emery`, `not_forall_bakry_emery`
+- [ ] Transformer/Metastability/CapVariance.lean (1): `variance_inequality`
+- [ ] Transformer/Metastability/CapVelocity.lean (3): `inner_proj_softmax_eq`, `cap_variance_bound`, `inner_proj_softmax_ge`
+- [ ] Transformer/Metastability/CollapseODE.lean (1): `exists_collapse_time`
+- [ ] Transformer/Metastability/ExponentialFlow.lean (2): `expFlow_spec`, `not_quantitative_inequality_two_mul`
+- [ ] Transformer/Metastability/InitialUniform.lean (1): `uniform_separated`
+- [ ] Transformer/Metastability/MainTheorem.lean (3): `rho_diff_ineq`, `not_rho_diff_ineq_of_free`, `eminem`
+- [ ] Transformer/Metastability/MeanField.lean (2): `not_forall_cap_exit`, `not_forall_variance_small`
+- [ ] Transformer/Metastability/OttoReznikoff.lean (2): `not_forall_otto_reznikoff`, `not_forall_claim_one`
+- [ ] Transformer/Metastability/PairVelocity.lean (3): `pair_sum_bound`, `inner_proj_softmax_pair`, `inner_proj_softmax_pair_sum`
+- [ ] Transformer/Metastability/QuantitativeInequality.lean (1): `quantitative_inequality`
+- [ ] Transformer/Metastability/ReversePL.lean (2): `reverse_PL_acceleration`, `not_forall_reverse_PL_acceleration`
+- [ ] Transformer/Metastability/Staircase.lean (1): `not_exact_time_scale`
+- [ ] Transformer/Metastability/StaircaseProfile.lean (2): `are`, `staircase_profile_vacuous_at_zero`
+
+### Transformer.Modes — arXiv:2412.09080
+
+- [ ] Transformer/Modes/Growth.lean (6): `tendsto_natSucc_atTop`, `isLittleO_rpow_rpow_atTop`, `isLittleO_rpow_rpow_nat`, `isLittleO_rpow_sq_div_log_atTop`, `isLittleO_rpow_sq_div_log_nat`, `tendsto_rpow_natSucc_atTop`
+- [ ] Transformer/Modes/Section1_Belt.lean (4): `sq_mem_Icc_iff`, `setOf_sq_mem_Icc`, `belt_eq_union`, `sqrt_sub_sqrt_isTheta`
+- [ ] Transformer/Modes/Section1_KDE.lean (10): `contDiff_kde`, `kde_nonneg`, `kde_pos`, `map_gaussianSample_eval`, `modeSet_mono`, `modeCount_mono`, `expectedModes_mono`, `expectedModesReal_nonneg`, `isLocalMax_kde_one`, `one_le_modeCount_kde_one`
+- [ ] Transformer/Modes/Section1_Main.lean (1): `isRegime_succ`
+- [ ] Transformer/Modes/Section1_Mammen.lean (1): `isLittleO_mammen_mid_sqrt`
+- [ ] Transformer/Modes/Section1_Sketch.lean (3): `isSlowGrowth_sqrt_log_log`, `tendsto_exp_neg_omega`, `isLittleO_tail_sqrt`
+- [ ] Transformer/Modes/Section2_Degenerate.lean (5): `twoPoint_sum_le`, `isLocalMax_kde_twoPoint`, `deriv_deriv_kde_twoPoint`, `not_forall_modeSet_subset_upcrossingSet`, `expectedUpcrossings_le_expectedModes`
+- [ ] Transformer/Modes/Section2_Field.lean (9): `hasDerivAt_fun_sum`, `hasDerivAt_bump`, `hasDerivAt_bump_deriv`, `hasDerivAt_kde`, `hasDerivAt_deriv_kde`, `fieldF_eq`, `isUpcrossing_fieldF_iff`, `upcrossingSet_subset_modeSet`, `upcrossingCount_le_modeCount`
+- [ ] Transformer/Modes/Section2_GaussianInt.lean (1): `integral_pow_mul_exp_neg_mul_sq`
+- [ ] Transformer/Modes/Section2_Gt.lean (5): `hasDerivAt_bigG`, `fieldF_eq_sum_bigG`, `hasDerivAt_fieldF`, `fieldF_pair_eq`, `beta_mul_bigG'_eq`
+- [ ] Transformer/Modes/Section2_KacRice.lean (1): `modulusOfContinuity_const`
+- [ ] Transformer/Modes/Section2_MainForm.lean (6): `isLittleO_sqrt_window`, `expectedUpcrossingsReal_eq`, `main_eq_form_T`, `main_eq_form_T'_isLittleO`, `main_eq_form_T'`, `main_eq_form_tail`
+- [ ] Transformer/Modes/Section2_MainIntPhi.lean (2): `sq_le_phiRate`, `integral_exp_phiRate_T'`
+- [ ] Transformer/Modes/Section2_MomentsP.lean (1): `tendsto_sq_div_of_mem_intervalT`
+- [ ] Transformer/Modes/Section2_PhiT.lean (2): `quadForm_complete_square`, `krQuad_zero_eq`
+- [ ] Transformer/Modes/Section2_RandomLine.lean (8): `deriv_randomLine`, `randomLine_zero`, `map_fst_gaussianPair`, `map_snd_gaussianPair`, `memLp_fst_gaussianPair`, `memLp_snd_gaussianPair`, `gaussianPair_eq_withDensity`, `continuous_gaussianPDFReal_std`
+- [ ] Transformer/Modes/Section3_BR.lean (2): `norm_charFun_stdGauss2`, `hasIntegrableCharFun_stdGauss2`
+- [ ] Transformer/Modes/Section3_Cumulants.lean (4): `integral_sq_stdGaussian`, `isStandardized_stdGauss2`, `hasExpMoments_stdGauss2`, `isDensityOf_stdGauss2`
+- [ ] Transformer/Modes/Section3_Edgeworth.lean (1): `measurable_singleY`
+- [ ] Transformer/Modes/Section3_ErrorHigher.lean (5): `rate_base_eq`, `rate_eq`, `sq_le_of_mem_intervalT`, `rate_T`, `rate_T'`
+- [ ] Transformer/Modes/Section3_ErrorKR.lean (2): `rpow_neg_half_nonneg`, `gThreeKR_Ioi_le`
+- [ ] Transformer/Modes/Section3_ErrorThird.lean (3): `not_integrableOn_tildeY`, `eucl_whiten_bounds`, `abs_hermite_whiten_le`
+- [ ] Transformer/Modes/Section3_Hermite.lean (3): `not_exists_hermite_le_cube`, `abs_hermite_le`, `eucl_whiten_sq`
+- [ ] Transformer/Modes/Section4_ScaleSpace.lean (6): `kde_neg`, `isLocalMax_comp_neg_iff`, `modeCount_kde_Iio`, `modeCount_kde_Iio_le`, `eq_of_isLocalMax_kde_one`, `scale_space_one`
+- [ ] Transformer/Modes/Section4_Tail.lean (7): `gaussianReal_Ici_le`, `gaussianReal_Iic_le`, `countIn_eq_sum`, `measurable_countIn`, `lintegral_countIn`, `two_mul_exp_eq`, `expectedModes_compl_le`
+- [ ] Transformer/Modes/Section5_PtBdd.lean (8): `bigG_eq_gPt`, `hasDerivAt_gaussFactor`, `hasDerivAt_gPt`, `hasDerivAt_gPt1`, `hasDerivAt_gPt2`, `det_psi`, `det_psi_neg`, `phase_nondegenerate`
+- [ ] Transformer/Modes/Section5_PtBddFourier.lean (5): `tendsto_pow_mul_gaussFactor`, `tendsto_bigG`, `tendsto_fourierNu`, `not_uniform_decay`, `lintegral_pow_lt_top_of_decay`
+- [ ] Transformer/Modes/Section5_PtBddOne.lean (2): `volume_range_eq_zero`, `not_isDensityOf_one`
+
+### Transformer.Normalization — arXiv:2510.22026
+
+- [ ] Transformer/Normalization/ClusteringLine.lean (9): `proj_one_eq_zero`, `na_const_one`, `not_synchronizes_const`, `not_clusters_from_uniform_one`, `ne_zero_of_pos_neg`, `two_le_exp_one`, `pre_line_counter`, `not_clusters_or_stalls_from_gaussian_one`, `not_unconditional_synchronization_one`
+- [ ] Transformer/Normalization/Convergence.lean (3): `hasDerivAt_energy`, `proj_smul`, `na_velocity_eq_energyGrad`
+- [ ] Transformer/Normalization/Line.lean (10): `stdGaussian_one_singleton`, `stdGaussian_one_pos`, `sph0_coord`, `sq_coord_of_norm_one`, `sph0_cases`, `sph0_ne`, `uniform_sph0_pos`, `uniformSph0_invariant`, `uniformTuple_sph0`, `not_ae_gaussian_pair`
+- [ ] Transformer/Normalization/Lojasiewicz.lean (1): `na_time_change`
+- [ ] Transformer/Normalization/Radial.lean (3): `inner_attentionVec_self`, `inner_attentionVec_self_lower_bound`, `radialDerivative_pre_lower_bound`
+- [ ] Transformer/Normalization/Rates.lean (1): `not_forall_initial_velocity_small`
+- [ ] Transformer/Normalization/Symmetric.lean (6): `partition_symmetricInit`, `inner_attentionVec_symmetricInit`, `hasDerivAt_similarity_symmetricInit`, `thm_symmetric_post`, `thm_symmetric_pre`, `returns`
+- [ ] Transformer/Normalization/UnstableProduct.lean (1): `unstable_mul_of_posDef`
+- [ ] Transformer/Normalization/Velocities.lean (2): `norm_attentionVec_le_one`, `radialDerivative_pre_ge_of_localCone`
+
+### Transformer.Perceptron — arXiv:2601.21366
+
+- [ ] Transformer/Perceptron/Analytic.lean (6): `norm_greatCircle`, `inner_greatCircle`, `analyticOnNhd_greatCircle`, `hasDerivAt_reluSq`, `analyticOnNhd_potential_greatCircle`, `not_isAnalyticOnSphere_relu`
+- [ ] Transformer/Perceptron/Atomicity.lean (4): `isFinitelyAtomic_diracProb`, `norm_secondAxis`, `norm_basePoint_one`, `inner_basePoint_secondAxis`
+- [ ] Transformer/Perceptron/Atoms.lean (11): `coe_atomicProb`, `isFinitelyAtomic_atomicProb`, `coe_circlePoint`, `inner_basePoint_circlePoint`, `hasDerivAt_circlePoint`, `hasDerivAt_circleVel`, `inner_circlePoint`, `inner_circleVel`, `hasDerivAt_inner_circlePoint`, `hasDerivAt_inner_circleVel`, `isAtomicOnCircle_atomicProb`
+- [ ] Transformer/Perceptron/Basic.lean (5): `drift_zero`, `hasGradientAt_potential`, `proj_gradient_potential`, `isStationary_diracProb_of_radial`, `isStationary_diracProb`
+- [ ] Transformer/Perceptron/Bias.lean (7): `biasedPotential_zero`, `biasedDrift_zero`, `biasedEnergyGrad_zero`, `isBiasedStationary_zero_iff`, `isBiasedAnalyticOnSphere_zero_iff`, `hasGradientAt_biasedPotential`, `proj_gradient_biasedPotential`
+- [ ] Transformer/Perceptron/BiasedAtomicity.lean (3): `hasTransverseHyperplane_zero`, `basePoint_ne_zero`, `single_neg_basePoint_ne_zero`
+- [ ] Transformer/Perceptron/CircleDeriv.lean (3): `hasDerivAt_potential_circlePoint`, `deriv_potential_circlePoint`, `secondDeriv_potential_circlePoint`
+- [ ] Transformer/Perceptron/Dirac.lean (8): `interactionEnergy_of_dirac`, `energy_of_dirac`, `potential_pin`, `drift_pin`, `isStationary_pin`, `isStationary_relu_pin`, `isStationary_linear_pin`, `isStrictSOPD_pin`
+- [ ] Transformer/Perceptron/GeneralAtomicity.lean (1): `isSymmetric_bijective_id`
+- [ ] Transformer/Perceptron/GeneralAttention.lean (11): `potential_smul`, `proj_smul_right`, `drift_smul`, `interactionEnergyMap_smul_id`, `energyMap_smul_id`, `energyGradMap_smul_id`, `isStationaryMap_smul_id_iff`, `energyMap_id_eq`, `isStationaryMap_id_iff`, `isStrictSOPDMap_id_iff`, `isSOPDMap_id_iff`
+- [ ] Transformer/Perceptron/Geodesic.lean (6): `sphereExp_zero`, `norm_sphereExp`, `inner_sphereExp_smul`, `isGradientField_zero`, `inner_isGradientField`, `IsSOPD_of_IsStrictSOPD`
+- [ ] Transformer/Perceptron/HigherDim.lean (1): `mutuallySingular_of_measure_support_eq_zero`
+- [ ] Transformer/Perceptron/Hyperplane.lean (3): `exists_unit_inner_eq_zero`, `smul_eq_of_inner_eq_norm`, `not_subsingleton_sphereHyperplane_iff`
+- [ ] Transformer/Perceptron/Kernel.lean (13): `hasDerivAt_kernelK`, `deriv_kernelK`, `hasDerivAt_deriv_kernelK`, `deriv2_kernelK`, `cosArg_mem_Ioo`, `cos_thetaC`, `thetaC_pos`, `thetaC_lt_pi_div_two`, `thetaC_le_pi`, `quadratic_cos_thetaC`, `kernelK2_neg`, `strictConcaveOn_kernelK`, `tendsto_thetaC_nhdsWithin_zero`
+- [ ] Transformer/Perceptron/KernelSup.lean (4): `two_mul_le_exp`, `abs_kernelK2_le`, `abs_kernelK2_zero`, `isGreatest_abs_kernelK2`
+- [ ] Transformer/Perceptron/MinMax.lean (6): `continuous_of_hasDerivAt`, `continuous_potential`, `integrable_potential`, `energy_diracProb`, `isMaxEnergy_diracProb_of_isMaxOn`, `exists_isMaxOn_potential_of_isMaxEnergy`
+- [ ] Transformer/Perceptron/Normalized.lean (8): `energyGrad_eq_attentionGrad_add_drift`, `attentionWeight_pos`, `proj_integral_expInner_smul`, `proj_gradient_attentionWeight`, `proj_inv_smul_gradient_attentionWeight`, `attentionGrad_diracProb`, `isNormalizedStationary_diracProb_of_radial`, `isNormalizedStationary_relu_pin`
+- [ ] Transformer/Perceptron/NormalizedMap.lean (7): `energyGradMap_eq_attentionGradMap_add_drift`, `attentionWeightMap_smul_id`, `attentionGradMap_smul_id`, `normalizedField_smul_id`, `isNormalizedStationaryMap_smul_id_iff`, `isNormalizedStationaryMap_id_iff`, `isNormalizedStationaryMap_relu_pin`
+- [ ] Transformer/Perceptron/Piecewise.lean (2): `isPiecewisePolynomial_relu`, `lipschitzWith_relu`
+- [ ] Transformer/Perceptron/SignedGram.lean (4): `sum_single_neuron`, `signedGram_single`, `isNonDegenerate_single`, `isNonDegenerate_pin`
+- [ ] Transformer/Perceptron/StrictSOPD.lean (1): `secondDeriv_ge_iff_simplified`
+- [ ] Transformer/Perceptron/Transform.lean (9): `attentionTransformMap_smul_id`, `coe_antipodeMap`, `measurable_antipodeMap`, `coe_antipode`, `attentionTransformMap_antipode`, `attentionTransform_antipode`, `even_attentionTransformMap_iff`, `even_attentionTransform_iff`, `isPolyOfDegreeLE_const`
+
+### Transformer.Perspective — arXiv:2312.10794
+
+- [ ] Transformer/Perspective/AppendixA_Beta0.lean (8): `hasDerivAt_E0`, `inner_proj_self`, `ne_neg_self_of_norm_eq_one`, `proj_smul`, `beta0Dynamics_smul`, `hasDerivAt_E0_ascent`, `taylor_eq`, `antipodalPair_critical_nonTrivial`
+- [ ] Transformer/Perspective/AppendixA_Hessian.lean (1): `hessian_at_critical`
+- [ ] Transformer/Perspective/AppendixA_Rotation.lean (4): `hasDerivAt_expSkew`, `expSkew_zero`, `norm_expSkew`, `exists_perturbationBy`
+- [ ] Transformer/Perspective/AppendixA_Saddle.lean (2): `with`, `yury_lemma`
+- [ ] Transformer/Perspective/AppendixB_BetaInterval.lean (6): `sq_sqrt_disc`, `cosTauStar_pos`, `cosTauStar_le_one`, `cosTauStar_quadratic`, `τ_β_star_spec`, `τ_β_star_unique`
+- [ ] Transformer/Perspective/AppendixB_ClaimYury.lean (1): `claim_yury`
+- [ ] Transformer/Perspective/AppendixB_EBeta.lean (2): `selfEnergy_one`, `singleToken_isSkew_critical_hessianNonPos`
+- [ ] Transformer/Perspective/AppendixB_Expansion.lean (1): `selfEnergy_expansion_aux`
+- [ ] Transformer/Perspective/AppendixB_HessBeta.lean (1): `secondDeriv_selfEnergy`
+- [ ] Transformer/Perspective/AppendixB_HighD.lean (1): `dr1_skew_inequality`
+- [ ] Transformer/Perspective/AppendixB_Intrinsic.lean (2): `isLittleO_selfEnergy_secondOrder`, `hessian_at_critical_intrinsic`
+- [ ] Transformer/Perspective/AppendixB_MetricGrad.lean (3): `hasDerivAt_selfEnergy`, `symmetrized_double_sum`, `metric_grad_comparison`
+- [ ] Transformer/Perspective/AppendixB_MetricHess.lean (1): `metric_hess_comparison`
+- [ ] Transformer/Perspective/AppendixB_Taylor.lean (6): `hasDerivAt_expCosLine`, `hasDerivAt_expCosLine_deriv`, `g_β_2d_symm`, `secondDeriv_torusEnergy_block`, `taylor2_inequality`, `taylor3_inequality`
+- [ ] Transformer/Perspective/AppendixC_BetaTiny.lean (3): `Etilde_eq_Etilde0_add`, `tendsto_Etilde_zero`, `eigvalBetaConst_pos`
+- [ ] Transformer/Perspective/AppendixD_Alpha.lean (2): `alpha_at_one_over_n`, `not_alpha_at_one_over_n_of_free`
+- [ ] Transformer/Perspective/AppendixD_AlphaDeriv.lean (2): `diff_ineq_alpha`, `not_forall_diff_ineq_alpha`
+- [ ] Transformer/Perspective/AppendixD_Assembly.lean (2): `it`, `ineq_second_part`
+- [ ] Transformer/Perspective/AppendixD_PhaseTransition.lean (3): `ineq_first_part`, `exists_le_div_log`, `d_star_definition`
+- [ ] Transformer/Perspective/AppendixD_Product.lean (3): `isMinInner_const_consensus`, `product_close_to_one`, `not_forall_product_close_to_one`
+- [ ] Transformer/Perspective/AppendixD_Stability.lean (3): `one_le_cBeta`, `stability_orthogonal`, `shortdist_bound`
+- [ ] Transformer/Perspective/AppendixD_Ybeta.lean (2): `ybeta_close_to_1`, `not_forall_ybeta_close_to_1`
+- [ ] Transformer/Perspective/AppendixD_YbetaUSA.lean (2): `usa_analogue`, `not_forall_usa_analogue`
+- [ ] Transformer/Perspective/Beta0Field.lean (4): `beta0Dynamics_iff`, `norm_meanTuple_le`, `meanTuple_sub`, `lipschitzOnWith_beta0Field`
+- [ ] Transformer/Perspective/Beta0Gronwall.lean (3): `proj_sub`, `norm_SA_drift_sub_beta0Field_le`, `solutions_close_at_small_beta`
+- [ ] Transformer/Perspective/DoubleSum.lean (4): `hasDerivAt_double_sum`, `const_mul_double_sum`, `double_sum_sub`, `abs_double_sum_le`
+- [ ] Transformer/Perspective/Gronwall.lean (1): `decay_of_deriv_ge`
+- [ ] Transformer/Perspective/InnerAsymptotics.lean (10): `isBigO_inner`, `isLittleO_inner`, `isBigO_inner_const_left`, `isBigO_inner_const_right`, `isLittleO_inner_const_left`, `isLittleO_inner_const_right`, `isLittleO_cube_sq`, `isLittleO_sq_id`, `isBigO_mul_const`, `isBigO_smul_const`
+- [ ] Transformer/Perspective/MinCurve.lean (1): `le_min_curve_of_deriv_nonneg`
+- [ ] Transformer/Perspective/PartitionGradient.lean (8): `hasFDerivAt_expInner`, `abs_inner_le_of_dist_le`, `integrable_expInner_ambient`, `integrable_expInner_smul`, `hasGradientAt_partitionMu`, `partitionMu_pos`, `gradient_partitionMu`, `gradient_log_partitionMu`
+- [ ] Transformer/Perspective/PeanoTaylor.lean (2): `isLittleO_secondOrder`, `eq_zero_of_isLittleO_pow`
+- [ ] Transformer/Perspective/RussianPairs.lean (2): `sum_sq_cross`, `russian_trick_pairs`
+- [ ] Transformer/Perspective/RussianTrick.lean (6): `skewPair_apply`, `skewPair_isSkew`, `skewPair_sq`, `sum_skewPair_sq`, `russian_trick`, `not_russian_trick_one`
+- [ ] Transformer/Perspective/SAField.lean (3): `SA_iff`, `norm_saAvg_le`, `saField_of_one`
+- [ ] Transformer/Perspective/SALipschitz.lean (1): `lipschitzOnWith_saField`
+- [ ] Transformer/Perspective/Section1_IPS.lean (3): `SA_const_consensus`, `partitionSA_bounds`, `SA_permutation_equivariant`
+- [ ] Transformer/Perspective/Section2_EnergyKernel.lean (10): `inner_sphere_le_one`, `eq_of_inner_sphere_eq_one`, `exp_inner_le`, `continuous_expInner_right`, `continuous_expInner_left`, `integrable_expInner`, `partitionMu_nonneg`, `partitionMu_le`, `continuous_partitionMu`, `integrable_partitionMu`
+- [ ] Transformer/Perspective/Section2_EnergyMax.lean (6): `interactionEnergy_eq_partition`, `interactionEnergy_le`, `interactionEnergy_diracProb`, `isMaxEnergy_diracProb`, `eq_dirac_of_ae_eq`, `exists_eq_dirac_of_isMaxEnergy`
+- [ ] Transformer/Perspective/Section2_FlowMap.lean (3): `continuityEquation_eq_auxCE`, `vectorField_diracProb_self`, `continuityEquation_const_diracProb`
+- [ ] Transformer/Perspective/Section2_GradientFlow.lean (6): `vectorField_eq_grad_log`, `usaVectorField_eq_grad_first_variation`, `usaVectorField_diracProb_self`, `usaContinuityEquation_const_diracProb`, `sa_is_gradient_flow`, `transformerODE_const_one`
+- [ ] Transformer/Perspective/Section2_ParticleFlow.lean (2): `hasDerivAt_fun_sum`, `usa_isGradientFlow`
+- [ ] Transformer/Perspective/Section3_Gronwall.lean (3): `const_of_SA_one`, `const_of_beta0Dynamics_one`, `distance_bound_at_time_m`
+- [ ] Transformer/Perspective/Section3_SmallBeta.lean (3): `antipodalPair_not_mem_consensusSet0`, `SA_const_antipodalPair`, `antipodalPair_not_mem_clusteringSet`
+- [ ] Transformer/Perspective/Section5_ConeCollapse.lean (1): `hemisphere_clustering`
+- [ ] Transformer/Perspective/Section5_Exceptional.lean (1): `antipodalPair_not_exponential`
+- [ ] Transformer/Perspective/Section5_Hemisphere.lean (5): `step1_deriv_nonneg`, `hemisphere_step1_monotone`, `exists_inner_le_of_mem_convexHull`, `step2_decomposition`, `not_step2_decomposition`
+- [ ] Transformer/Perspective/Section5_HighD.lean (2): `step1_rhs`, `not_forall_step2_alpha_diff_ineq`
+- [ ] Transformer/Perspective/Section5_HighDCurve.lean (4): `ybetaODE_SA_one_zero`, `hasDerivAt_tanh`, `ybetaODE_SA_two_zero`, `ybetaODE_USA_two_zero`
+- [ ] Transformer/Perspective/Section5_InvariantMeasure.lean (1): `no_smooth_invariant_measure`
+- [ ] Transformer/Perspective/Section5_Vanishing.lean (1): `ez_lemma`
+- [ ] Transformer/Perspective/Section6_Circle.lean (4): `hasDerivAt_torusEnergy`, `angularUSA_is_gradient_flow`, `h_β_neg`, `h_β_pos`
+- [ ] Transformer/Perspective/Section8_CohnKumar.lean (7): `inner_antipode`, `ne_antipode`, `discreteEnergy_pair`, `discreteEnergy_antipodal_min`, `not_sharpConfiguration_antipodal`, `exists_orthogonal_pair`, `not_cohn_kumar_dichotomy`
+- [ ] Transformer/Perspective/Section8_General.lean (5): `exp_inner_eq_exp_sqDist`, `squaredDistEnergy_eq_interactionEnergy`, `discreteEnergy_eq_sqDist`, `exp_sqDist_strictAnti`, `discreteEnergy_singleton`
+- [ ] Transformer/Perspective/Softmax.lean (4): `softmaxPartition_pos`, `softmaxWeight_nonneg`, `sum_softmaxWeight`, `sum_abs_softmaxWeight_sub_le`
+- [ ] Transformer/Perspective/SphereInvariant.lean (9): `exists_sphereMap_apply_eq`, `continuous_sphereMap`, `measurable_sphereMap`, `injective_sphereMap`, `measure_singleton_eq_of_invariant`, `norm_spherePt`, `inner_spherePt`, `infinite_sSphere`, `measure_singleton_eq_zero_of_invariant`
+- [ ] Transformer/Perspective/StrictSaddle.lean (1): `not_torusHessianNonPos_of_strictSaddle`
+- [ ] Transformer/Perspective/UniformAtomless.lean (3): `map_pair_pi`, `measure_coords_eq_eq_zero`, `measure_singleton_tuple_eq_zero`
+
+### Transformer.Precision — arXiv:2410.01104
+
+- [ ] Transformer/Precision/Accumulate.lean (6): `HasSignificand.dvd`, `HasSignificand.gap`, `hasSignificand_one_pow_two`, `accum_stall`, `accum_le`, `pairwise_exact`
+- [ ] Transformer/Precision/Basic.lean (6): `softmax_denom_pos`, `softmax_nonneg`, `softmax_le`, `le_softmax`, `quantize_eq_zero`, `quantize_pos`
+- [ ] Transformer/Precision/Blind.lean (2): `IsNearest.exists_const`, `qAttn_blind`
+- [ ] Transformer/Precision/BlockScale.lean (5): `IsNearest.le_of_eq_zero`, `blockScale_eq_zero`, `blockScale_dropped_le`, `nvfp4_eq_zero`, `nvfp4_dropped_le`
+- [ ] Transformer/Precision/ContextLength.lean (7): `qAttn_eq_zero`, `qAttn_update_injective`, `quantize_bits_eq_zero`, `qAttn_bits_eq_zero`, `qAttn_bits_injective`, `exists_length_qAttn_eq_zero`, `exists_scores_qAttn_injective`
+- [ ] Transformer/Precision/Float.lean (6): `ieee_eq_zero`, `exists_isNearest_grid`, `qAttn_ieee_eq_zero`, `qAttn_f16_eq_zero`, `qAttn_e4m3_eq_zero`, `qAttn_e5m2_eq_zero`
+- [ ] Transformer/Precision/FloatSum.lean (6): `accum_softmax_le`, `accum_softmax_f32_le`, `accum_softmax_f16_le`, `accum_softmax_bf16_le`, `accum_softmax_e4m3_le`, `accum_softmax_e5m2_le`
+- [ ] Transformer/Precision/IEEE.lean (14): `minSub_pos`, `minSub_le_abs`, `minSub_f16`, `minSub_bf16`, `minSub_f32`, `minSub_e4m3`, `minSub_e5m2`, `minSub_e2m1`, `f16_one`, `f16_max`, `zero_mem_grid`, `grid_finite`, `ieee_abs`, `grid_hasSignificand`
+- [ ] Transformer/Precision/Nearest.lean (4): `IsNearest.eq_zero`, `IsNearest.eq_self`, `exists_isNearest`, `IsNearest.add_eq`
+- [ ] Transformer/Precision/Tail.lean (4): `tail_eq`, `exp_neg_eight_lt`, `tail_e4m3`, `tail_e4m3_131072`
+
+### Transformer.Quartet — arXiv:2601.22813
+
+- [ ] Transformer/Quartet/AppendixA_Concentration.lean (3): `meanSqErr_of_seedMean_eq`, `meanSqErr_eq`, `tendsto_meanSqErr`
+- [ ] Transformer/Quartet/Fp8Grid.lean (2): `mem_fp8`, `le_rtn_fp8`
+- [ ] Transformer/Quartet/Hadamard.lean (7): `hadamard_eq`, `hadamard_symm`, `sum_hadamard_mul`, `sum_hadamard_sum_hadamard`, `rhtInv_rht`, `sum_hadamard_mul_sum_hadamard_mul`, `sum_rht_mul_rht`
+- [ ] Transformer/Quartet/Section3_Grids.lean (6): `floorOn_mem_le_and_le_ceilOn_mem`, `floorOn_eq`, `ceilOn_eq`, `rtn_mem`, `sr_mem`, `integral_sr`
+- [ ] Transformer/Quartet/Section3_NVFP4.lean (4): `groupAbsMax_le_absMax`, `abs_le_groupAbsMax`, `groupAbsMax_nonneg`, `groupScaleRTN_le`
+- [ ] Transformer/Quartet/Section3_NonClipping.lean (3): `normal_groupScale_arg`, `abs_div_groupScaleSR_le`, `abs_div_groupScaleRTN_le`
+- [ ] Transformer/Quartet/Section3_Unbiased.lean (2): `groupScaleSR_pos`, `integral_qSRAt`
+- [ ] Transformer/Quartet/Section4_Bias.lean (10): `measurableSet_coinsUp`, `measurableSet_coinsDown`, `volume_coinsUp`, `volume_coinsDown`, `coinCube_eq_union`, `disjoint_coinsUp_coinsDown`, `eqOn_coinsUp`, `eqOn_coinsDown`, `meanGroup_q46At_biasWitness`, `exists_mean_q46At_ne`
+- [ ] Transformer/Quartet/Section4_FourOverSix.lean (1): `integral_qSRAt_four_and_six`
+- [ ] Transformer/Quartet/Section4_Rounding.lean (5): `qSRAt_biasWitness_ne`, `qSRAt_biasWitness_four`, `qSRAt_biasWitness_six`, `groupErr_biasWitness`, `q46At_biasWitness`
+- [ ] Transformer/Quartet/Section4_Witness.lean (11): `floorOn_fp4_zero`, `ceilOn_fp4_zero`, `floorOn_fp4_64_17`, `ceilOn_fp4_64_17`, `floorOn_fp4_96_17`, `ceilOn_fp4_96_17`, `rtn_fp8_448`, `absMax_biasWitness`, `groupAbsMax_biasWitness`, `tensorScaleSR_biasWitness`, `groupScaleSR_biasWitness`
+- [ ] Transformer/Quartet/SeedSums.lean (4): `sum_pi_succ`, `card_pi`, `sum_pi_sum_eq_zero`, `sum_pi_sum_sq`
+- [ ] Transformer/Quartet/Walsh.lean (5): `walsh_comm`, `walsh_congr_right`, `walsh_succ`, `sum_walsh_mul_range`, `sum_walsh_mul_fin`
+
+### Transformer.RASP — arXiv:2106.06981
+
+- [ ] Transformer/RASP/Basic.lean (12): `mem_selected`, `selected_selectAll`, `card_selected_selectAll`, `selected_selectZero`, `selectorWidth_selectAll`, `aggregate_selectAll`, `aggregate_of_selected_eq_singleton`, `aggregateOne_of_selected_eq_singleton`, `aggregate_of_selected_eq_empty`, `sum_light0`, `length_eq_one_div_aggregate`, `selectorWidth_sameToken`
+- [ ] Transformer/RASP/Compilation.lean (5): `layers_lt_agg_value`, `layers_lt_agg_select`, `layers_le_heads`, `eval_eq_of_heads_eq_zero`, `not_reverse_of_heads_eq_zero`
+- [ ] Transformer/RASP/Programs.lean (5): `selected_flip`, `reverse_apply`, `reverse_reverse`, `fracVal_eq`, `fracVal_mem_Icc`
+- [ ] Transformer/RASP/SelectorWidth.lean (8): `selected_or0`, `selected_and0`, `card_selected_or0`, `sum_light0_or0`, `or0Width_eq`, `and0Width_eq`, `noBosRes_eq_selectorWidth`, `bosRes_eq`
+- [ ] Transformer/RASP/Sort.lean (12): `rankOf_lt_rankOf`, `rankOf_lt`, `rank_lt_iff`, `rank_injective`, `rank_rankEquiv_symm`, `strictMono_key_rankEquiv_symm`, `lexKey_injective`, `mem_selected_smaller`, `selectorWidth_smaller`, `selected_selNew`, `sortProg_apply`, `sortProg_keys_monotone`
+
+### Transformer.RASPL — arXiv:2310.16028
+
+- [ ] Transformer/RASPL/Attention.lean (4): `sum_oneHot_mul`, `Constructable.add`, `constructable_value`, `argmax_shift`
+- [ ] Transformer/RASPL/Conjecture.lean (2): `Realizable.of_simple`, `not_forall_raspGeneralizationConjecture`
+- [ ] Transformer/RASPL/Defs.lean (5): `mem_selected_select`, `le_of_mem_selected_select`, `self_mem_selected_select`, `selWidth_eq`, `aggrMax_of_mem`
+- [ ] Transformer/RASPL/Degree.lean (4): `dependsOn_iff`, `levelWeight_split`, `levelWeight_restrict`, `degP_restrict_lt`
+- [ ] Transformer/RASPL/Fourier.lean (15): `bitSign_false`, `bitSign_true`, `bitSign_mul_self`, `one_add_bitSign_mul`, `chi_empty`, `chi_mul_self`, `chi_mul_chi`, `sum_chi`, `sum_chi_mul_chi`, `sum_coeff_mul_chi`, `coeff_chi`, `coeff_add`, `coeff_smul`, `coeff_sum`, `eq_of_coeff_eq`
+- [ ] Transformer/RASPL/Gotu.lean (7): `andProg_apply`, `andProg_last`, `minDeg_ne_andAll`, `filter_card_zero`, `coeff_const_one`, `levelWeight_const_one_zero`, `levelWeight_const_one_of_ne`
+- [ ] Transformer/RASPL/MinDegree.lean (5): `minDeg_not_dependsOn`, `apply_update_of_not_dependsOn`, `eq_of_forall_not_dependsOn`, `minDeg_eq_of_constant`, `not_degPLt_zero`
+- [ ] Transformer/RASPL/Restrict.lean (6): `chi_update_of_notMem`, `chi_insert`, `sum_subsets_split`, `restrict_eq`, `coeff_restrict_of_mem`, `coeff_restrict_of_notMem`
+
+### Transformer.Wasserstein — —
+
+- [ ] Transformer/Wasserstein.lean (9): `transportCosts_nonneg`, `bddBelow_transportCosts`, `W2_nonneg`, `W2_le_of_coupling`, `transportCosts_nonempty`, `ae_fst_mem`, `ae_snd_mem`, `W2_self`, `norm_integral_sub_le_W2`
+
+### Transformer.XSA — arXiv:2603.09078
+
+- [ ] Transformer/XSA.lean (2): `xsa_output_orthogonal_to_value`, `xsa_equals_spherical_SA_when_V_is_identity`
