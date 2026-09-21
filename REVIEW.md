@@ -36,15 +36,15 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - ok `nonstrict_twoSided_formula_unsound` — Transformer/CRASP/SubsequenceTwoSided.lean:182 — appendix 157-162 at k=1, pattern aaa, inclusive ◁#/▷#; kills the proof's formula only
 - fixed `cropping_unsound` — Transformer/CRASP/TLCDepth.lean:48 — 064b44f: same, Appendix D lem:cropping, I ⊆ [0,n] hypothesis present
 - ok `pushY_unguarded_unsound` — Transformer/CRASP/YNormalFormEquiv.lean:123 — appendix 928-935 N^c rules give Y¬Q_a ↦ ¬Y Q_a; Y needs i>1 (902); disagree on 'a'. kills the proof's transform, thm:ynf proved with guards
-- [ ] `not_forall_single_token_convergence` — Transformer/Causal/SingleToken.lean:124
-- [ ] `not_tendsto_zero_of_tendsto_common` — Transformer/Clusters/Section7_HigherDim.lean:87
-- [ ] `not_tendsto_id_of_tendsto_common` — Transformer/Clusters/Section7_HigherDim.lean:104
-- [ ] `not_configHull_subset_of_preconditioner` — Transformer/FrankWolfe/Section2_HullFailure.lean:86
-- [ ] `not_rope_clustering_antipodalPair` — Transformer/GPTMini/Bridge/RoPENoClustering.lean:72
-- [ ] `not_forall_rope_clustering` — Transformer/GPTMini/Bridge/RoPENoClustering.lean:118
-- [ ] `not_mean_field_clustering` — Transformer/GPTMini/MeanFieldRefutation.lean:85
-- [ ] `not_forall_overlapDrift_eq_simplexDrift` — Transformer/Homogenized/GramStability.lean:52
-- [ ] `not_forall_satisfying_MF_rate` — Transformer/Homogenized/MeanFieldLipschitz.lean:180
+- issue `not_forall_single_token_convergence` — Transformer/Causal/SingleToken.lean:124 — refutes an earlier misformalization (declared so), correct; but the survey's lemma1 itself is not stated anywhere — invisible debt, needs L'(V), L(V) via generalized eigenspaces
+- ok `not_tendsto_zero_of_tendsto_common` — Transformer/Clusters/Section7_HigherDim.lean:87 — eq:P matches; kills literal x_i(t)->(1,0) with P->I for every Q,K; rescaled reading untouched, docstring says so
+- ok `not_tendsto_id_of_tendsto_common` — Transformer/Clusters/Section7_HigherDim.lean:104 — eq:P matches; kills literal x_i(t)->(1,0) with P->I for every Q,K; rescaled reading untouched, docstring says so
+- ok `not_configHull_subset_of_preconditioner` — Transformer/FrankWolfe/Section2_HullFailure.lean:86 — the remark's own example proved: P=diag(0.6,0.7)=(I+V)^{-1}V for V=diag(3/2,7/3), unique argmax x3, (0.4,0.7)∉K
+- ok `not_rope_clustering_antipodalPair` — Transformer/GPTMini/Bridge/RoPENoClustering.lean:72 — kills the repo's former ∀X₀ rope_clustering, not a paper claim; declared as such; paper's a.e. statement not touched
+- ok `not_forall_rope_clustering` — Transformer/GPTMini/Bridge/RoPENoClustering.lean:118 — kills the repo's former ∀X₀ rope_clustering, not a paper claim; declared as such; paper's a.e. statement not touched
+- fixed `not_mean_field_clustering` — Transformer/GPTMini/MeanFieldRefutation.lean:85 — kills the repo's free-W₂ gpt-mini transfer, not the survey; docstring claimed W₂ inexpressible, corrected to point at thm:mfclust in MeanField.Clustering
+- fixed `not_forall_overlapDrift_eq_simplexDrift` — Transformer/Homogenized/GramStability.lean:52 — witness moved to sigma_V^2=1/d (gaussHeadLaw, sigma_A=0); gap -2g(0)/d nonzero for every law
+- fixed `not_forall_satisfying_MF_rate` — Transformer/Homogenized/MeanFieldLipschitz.lean:180 — K moved inside model data (weakest reading of O); witness sigma_A=0 admissible under ass:high_order_short
 - [ ] `not_forall_clustering_to_atom` — Transformer/Interpolation/AtomClustering.lean:102
 - [ ] `not_exists_ball_of_mass_of_dirac` — Transformer/Interpolation/BallDecomposition.lean:42
 - [ ] `not_forall_monge` — Transformer/Interpolation/Main.lean:258
