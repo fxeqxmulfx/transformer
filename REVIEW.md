@@ -61,33 +61,33 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - issue `not_forall_claim_one` — Transformer/Metastability/OttoReznikoff.lean:258 — refutes only the free-(Theta,r) strawman; claim: 1 dropped from the books, though expressible with hypotheses (indices of one cap, increasing angles, Theta not in slowManifold)
 - ok `not_forall_reverse_PL_acceleration` — Transformer/Metastability/ReversePL.lean:142 — necessity of hchain; the faithful reverse_PL_acceleration (with chain rule) is proved
 - issue `not_exact_time_scale` — Transformer/Metastability/Staircase.lean:127 — literal statement (u0 in [0,1], tex 1950) correctly refuted at u0=0, beta=e; but the substantive error (centre 1/(2c), not 2/c) and the corrected asymptotic lemma for u0 in (0,1] are not on the books
-- [ ] `not_forall_modeSet_subset_upcrossingSet` — Transformer/Modes/Section2_Degenerate.lean:90
-- [ ] `not_integrableOn_tildeY` — Transformer/Modes/Section3_ErrorThird.lean:44
-- [ ] `not_exists_hermite_le_cube` — Transformer/Modes/Section3_Hermite.lean:68
-- [ ] `not_uniform_decay` — Transformer/Modes/Section5_PtBddFourier.lean:104
-- [ ] `not_isDensityOf_one` — Transformer/Modes/Section5_PtBddOne.lean:64
-- [ ] `not_synchronizes_const` — Transformer/Normalization/ClusteringLine.lean:51
-- [ ] `not_clusters_from_uniform_one` — Transformer/Normalization/ClusteringLine.lean:67
-- [ ] `not_clusters_or_stalls_from_gaussian_one` — Transformer/Normalization/ClusteringLine.lean:155
-- [ ] `not_unconditional_synchronization_one` — Transformer/Normalization/ClusteringLine.lean:172
-- [ ] `not_ae_gaussian_pair` — Transformer/Normalization/Line.lean:154
-- [ ] `not_forall_initial_velocity_small` — Transformer/Normalization/Rates.lean:122
-- [ ] `not_isAnalyticOnSphere_relu` — Transformer/Perceptron/Analytic.lean:142
-- [ ] `not_subsingleton_sphereHyperplane_iff` — Transformer/Perceptron/Hyperplane.lean:99
-- [ ] `not_alpha_at_one_over_n_of_free` — Transformer/Perspective/AppendixD_Alpha.lean:115
-- [ ] `not_forall_diff_ineq_alpha` — Transformer/Perspective/AppendixD_AlphaDeriv.lean:255
-- [ ] `not_forall_product_close_to_one` — Transformer/Perspective/AppendixD_Product.lean:190
-- [ ] `not_forall_ybeta_close_to_1` — Transformer/Perspective/AppendixD_Ybeta.lean:214
-- [ ] `not_forall_usa_analogue` — Transformer/Perspective/AppendixD_YbetaUSA.lean:182
-- [ ] `not_russian_trick_one` — Transformer/Perspective/RussianTrick.lean:150
-- [ ] `not_step2_decomposition` — Transformer/Perspective/Section5_Hemisphere.lean:196
-- [ ] `not_forall_step2_alpha_diff_ineq` — Transformer/Perspective/Section5_HighD.lean:221
-- [ ] `not_sharpConfiguration_antipodal` — Transformer/Perspective/Section8_CohnKumar.lean:138
-- [ ] `not_cohn_kumar_dichotomy` — Transformer/Perspective/Section8_CohnKumar.lean:188
-- [ ] `not_torusHessianNonPos_of_strictSaddle` — Transformer/Perspective/StrictSaddle.lean:60
-- [ ] `not_reverse_of_heads_eq_zero` — Transformer/RASP/Compilation.lean:157
-- [ ] `not_forall_raspGeneralizationConjecture` — Transformer/RASPL/Conjecture.lean:141
-- [ ] `not_degPLt_zero` — Transformer/RASPL/MinDegree.lean:94
+- ok `not_forall_modeSet_subset_upcrossingSet` — Transformer/Modes/Section2_Degenerate.lean:90 — tex 562 'i.e. t is a mode' read pathwise; mode = local max; (-1,1), beta=1 degenerate max; expectation identity kept sorried
+- ok `not_integrableOn_tildeY` — Transformer/Modes/Section3_ErrorThird.lean:44 — a paper claim (tex 773 divergence), proved, not a refutation
+- ok `not_exists_hermite_le_cube` — Transformer/Modes/Section3_Hermite.lean:68 — tex ~826 'Trivially |H^(k,3-k)(x)| <~ ||x||^3' for all x; H^(3,0)(e,0)=e^3-3e; corrected 3(|x|+|x|^3) proved
+- ok `not_uniform_decay` — Transformer/Modes/Section5_PtBddFourier.lean:104 — tex: 'implicit constant depends only on beta' after a wlog t=0 reduction; G,G' match eq: Gt; refutes the t-uniform reading; fixed-t uniform_decay kept sorried
+- ok `not_isDensityOf_one` — Transformer/Modes/Section5_PtBddOne.lean:64 — paper's own remark (n=1 no continuous density), proved stronger; not a refutation
+- ok `not_synchronizes_const` — Transformer/Normalization/ClusteringLine.lean:51 — helper, not a refutation
+- ok `not_clusters_from_uniform_one` — Transformer/Normalization/ClusteringLine.lean:67 — tex 421-437 states thm:convergence/corollary for every d (S^{d-1}); at d=1 tangent space 0; Q=K=V=I, n=2; corrected d>=2 forms kept
+- ok `not_clusters_or_stalls_from_gaussian_one` — Transformer/Normalization/ClusteringLine.lean:155 — tex 421-437 states thm:convergence/corollary for every d (S^{d-1}); at d=1 tangent space 0; Q=K=V=I, n=2; corrected d>=2 forms kept
+- ok `not_unconditional_synchronization_one` — Transformer/Normalization/ClusteringLine.lean:172 — tex 421-437 states thm:convergence/corollary for every d (S^{d-1}); at d=1 tangent space 0; Q=K=V=I, n=2; corrected d>=2 forms kept
+- ok `not_ae_gaussian_pair` — Transformer/Normalization/Line.lean:154 — helper, not a refutation
+- ok `not_forall_initial_velocity_small` — Transformer/Normalization/Rates.lean:122 — kills the repo's former free-sigma form; faithful initial_velocity_small against UniformTuple kept sorried
+- ok `not_isAnalyticOnSphere_relu` — Transformer/Perceptron/Analytic.lean:142 — satisfiability witness for thm:circle / thm:any.d(i) hypotheses, not a refutation
+- ok `not_subsingleton_sphereHyperplane_iff` — Transformer/Perceptron/Hyperplane.lean:99 — the paper's own equivalence (rem: ext (i)), proved with a!=0, d>=2 added; deviation recorded; not a refutation
+- issue `not_alpha_at_one_over_n_of_free` — Transformer/Perspective/AppendixD_Alpha.lean:115 — strawman: tex 1885 pins x* as the common limit (in the cone of x_i(1/n), e:decompox*.step2); docstring's 'never says which x*' is wrong; alpha_at_one_over_n proves it for x*=x_0(1/n) instead — a different statement under the paper's name
+- issue `not_forall_diff_ineq_alpha` — Transformer/Perspective/AppendixD_AlphaDeriv.lean:255 — shows necessity of hhull, but hhull (x* in convex hull of X(s) for all s) is the wrong hypothesis: paper has the cone (eta x*); on the sphere hull membership forces x* = particles, near-vacuous
+- issue `not_forall_product_close_to_one` — Transformer/Perspective/AppendixD_Product.lean:190 — strawman: x* = antipode of a lone particle, whereas the paper's x* is the particles' limit (there alpha=1 and the bound holds); its docstring's claim to refute the survey's form is false
+- issue `not_forall_ybeta_close_to_1` — Transformer/Perspective/AppendixD_Ybeta.lean:214 — tex 1869 'for any t>=0'; ybetaODE_SA = eq: ybeta with gamma(0)=0; n=1,beta=0 closed form; (also fails at n=2, beta=0: 1 > e^{2/3}/2); BUT the Lean witness is n=1 while thm: phase.transition.curve fixes n>=2 (tex 749-856): move the witness to n=2, gamma=tanh
+- ok `not_forall_usa_analogue` — Transformer/Perspective/AppendixD_YbetaUSA.lean:182 — necessity of n>=2 (paper's standing assumption); refutes no paper claim
+- issue `not_russian_trick_one` — Transformer/Perspective/RussianTrick.lean:150 — rests on Lean's 0⁻¹ = 0: on paper 1/(d-1) is undefined at d=1, and the cleared form -(d-1)I = sum B_j^2 holds at d=1; the survey's standing assumption is d>=2; docstring overclaims a refutation — reword as a d>=2 remark (russian_trick itself ok)
+- issue `not_step2_decomposition` — Transformer/Perspective/Section5_Hemisphere.lean:196 — strawman (free x*); and step2_decomposition's hhull (x* in convex HULL) is stronger than tex 967 (eta x* in hull, eta in (0,1], i.e. the cone) and fails for any x* on the sphere off the particles
+- issue `not_forall_step2_alpha_diff_ineq` — Transformer/Perspective/Section5_HighD.lean:221 — strawman (x* = antipode, n=1, d=1 outside d,n>=2); the faithful step 2 (x* the limit under the hemisphere hypothesis) is not on the books — hemisphere_clustering carries it as hstep
+- ok `not_sharpConfiguration_antipodal` — Transformer/Perspective/Section8_CohnKumar.lean:138 — helper
+- ok `not_cohn_kumar_dichotomy` — Transformer/Perspective/Section8_CohnKumar.lean:188 — tex 1387-1392: m>1 clause printed; n=2 antipodal pair minimises H_beta (2e^beta+2e^{beta<u,v>}); a 600-cell has 120 points so excepting any one finset is stronger; design clause untouched so free sigma harmless
+- ok `not_torusHessianNonPos_of_strictSaddle` — Transformer/Perspective/StrictSaddle.lean:60 — definitional helper, not a refutation
+- ok `not_reverse_of_heads_eq_zero` — Transformer/RASP/Compilation.lean:157 — a positive result (one head is necessary for reverse), not a refutation; indices-dependence handled (indices const per position)
+- ok `not_forall_raspGeneralizationConjecture` — Transformer/RASPL/Conjecture.lean:141 — meta: justifies keeping the empirical conjecture a predicate of LengthGeneralizes; the paper claims nothing about all predicates
+- ok `not_degPLt_zero` — Transformer/RASPL/MinDegree.lean:94 — helper, not a refutation: weights are sums of squares
 
 ## 2. Proved theorems, by module (511 modules, 2420 theorems)
 
@@ -595,11 +595,11 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - [ ] Transformer/Perspective/AppendixB_MetricHess.lean (1): `metric_hess_comparison`
 - [ ] Transformer/Perspective/AppendixB_Taylor.lean (6): `hasDerivAt_expCosLine`, `hasDerivAt_expCosLine_deriv`, `g_β_2d_symm`, `secondDeriv_torusEnergy_block`, `taylor2_inequality`, `taylor3_inequality`
 - [ ] Transformer/Perspective/AppendixC_BetaTiny.lean (3): `Etilde_eq_Etilde0_add`, `tendsto_Etilde_zero`, `eigvalBetaConst_pos`
-- [ ] Transformer/Perspective/AppendixD_Alpha.lean (2): `alpha_at_one_over_n`, `not_alpha_at_one_over_n_of_free`
-- [ ] Transformer/Perspective/AppendixD_AlphaDeriv.lean (2): `diff_ineq_alpha`, `not_forall_diff_ineq_alpha`
+- issue Transformer/Perspective/AppendixD_Alpha.lean (2): `alpha_at_one_over_n`, `not_alpha_at_one_over_n_of_free` — alpha_at_one_over_n: x* chosen as x_0(1/n), not the paper's limit x*; faithful form: x* with eta x* in hull of X(1/n)
+- issue Transformer/Perspective/AppendixD_AlphaDeriv.lean (2): `diff_ineq_alpha`, `not_forall_diff_ineq_alpha` — diff_ineq_alpha: hhull near-vacuous (hull vs cone), see not_forall_diff_ineq_alpha
 - [ ] Transformer/Perspective/AppendixD_Assembly.lean (2): `it`, `ineq_second_part`
 - [ ] Transformer/Perspective/AppendixD_PhaseTransition.lean (3): `ineq_first_part`, `exists_le_div_log`, `d_star_definition`
-- [ ] Transformer/Perspective/AppendixD_Product.lean (3): `isMinInner_const_consensus`, `product_close_to_one`, `not_forall_product_close_to_one`
+- issue Transformer/Perspective/AppendixD_Product.lean (3): `isMinInner_const_consensus`, `product_close_to_one`, `not_forall_product_close_to_one` — product_close_to_one ok as a Gronwall deduction, but not_forall_product_close_to_one is a strawman claiming to refute the survey
 - [ ] Transformer/Perspective/AppendixD_Stability.lean (3): `one_le_cBeta`, `stability_orthogonal`, `shortdist_bound`
 - [ ] Transformer/Perspective/AppendixD_Ybeta.lean (2): `ybeta_close_to_1`, `not_forall_ybeta_close_to_1`
 - [ ] Transformer/Perspective/AppendixD_YbetaUSA.lean (2): `usa_analogue`, `not_forall_usa_analogue`
@@ -623,9 +623,9 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - [ ] Transformer/Perspective/Section2_ParticleFlow.lean (2): `hasDerivAt_fun_sum`, `usa_isGradientFlow`
 - [ ] Transformer/Perspective/Section3_Gronwall.lean (3): `const_of_SA_one`, `const_of_beta0Dynamics_one`, `distance_bound_at_time_m`
 - [ ] Transformer/Perspective/Section3_SmallBeta.lean (3): `antipodalPair_not_mem_consensusSet0`, `SA_const_antipodalPair`, `antipodalPair_not_mem_clusteringSet`
-- [ ] Transformer/Perspective/Section5_ConeCollapse.lean (1): `hemisphere_clustering`
+- issue Transformer/Perspective/Section5_ConeCollapse.lean (1): `hemisphere_clustering` — hemisphere_clustering keeps the lemma's name but carries steps 1-2 (the whole content) as hstep and drops the hemisphere hypothesis; the actual lemma is off the books
 - [ ] Transformer/Perspective/Section5_Exceptional.lean (1): `antipodalPair_not_exponential`
-- [ ] Transformer/Perspective/Section5_Hemisphere.lean (5): `step1_deriv_nonneg`, `hemisphere_step1_monotone`, `exists_inner_le_of_mem_convexHull`, `step2_decomposition`, `not_step2_decomposition`
+- issue Transformer/Perspective/Section5_Hemisphere.lean (5): `step1_deriv_nonneg`, `hemisphere_step1_monotone`, `exists_inner_le_of_mem_convexHull`, `step2_decomposition`, `not_step2_decomposition` — step2_decomposition: hhull too strong (hull instead of cone); exists_inner_le_of_mem_convexHull inherits it — check e:mineqalpha usage
 - [ ] Transformer/Perspective/Section5_HighD.lean (2): `step1_rhs`, `not_forall_step2_alpha_diff_ineq`
 - [ ] Transformer/Perspective/Section5_HighDCurve.lean (4): `ybetaODE_SA_one_zero`, `hasDerivAt_tanh`, `ybetaODE_SA_two_zero`, `ybetaODE_USA_two_zero`
 - [ ] Transformer/Perspective/Section5_InvariantMeasure.lean (1): `no_smooth_invariant_measure`
