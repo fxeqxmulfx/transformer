@@ -23,11 +23,10 @@ twice — once as the first member of a pair and once as the second — so
 
   `Σ_k B_k² = -2c² I`,   and `c = √((d-1)/2)` gives `-(d-1) I`.
 
-Nothing here needs `d` odd; it needs `d ≥ 2`, and that is a genuine
-restriction rather than a convenience: `not_russian_trick_one` refutes the
-paper's statement at the odd dimension `d = 1`, where `(d-1)⁻¹` is `0⁻¹ = 0`
-and the right-hand side `-x` is not.  So the hypothesis `Odd d` is replaced by
-`2 ≤ d`, which covers every odd `d` for which the claim is true.
+Nothing here needs `d` odd; it needs `d ≥ 2`, which is also where the
+statement makes sense: at the odd dimension `d = 1` the factor `1/(d-1)` of the
+paper is undefined, and the only skew matrix of `ℝ^1` is `0` anyway.  So the hypothesis `Odd d` is replaced by `2 ≤ d`, which
+covers every odd `d` at which the identity is meaningful.
 -/
 
 import Transformer.Basic
@@ -107,9 +106,10 @@ directions along which `𝖤_0` can be increased.
 Deviation from the source: the paper states this in odd dimension, because its
 own construction — the canonical symplectic form with the `k`-th `2×2` block
 removed — needs `d-1` even.  The construction used here, the cycle of rank-two
-generators described at the head of this file, needs only `d ≥ 2`, and `d ≥ 2`
-cannot be dropped: `not_russian_trick_one` refutes the statement at the odd
-dimension `d = 1`.
+generators described at the head of this file, needs only `d ≥ 2`.  The one
+odd dimension this leaves out is `d = 1`, where `1/(d-1)` is undefined on
+paper; in Lean it would read `0⁻¹ = 0`, and the statement would fail for that
+reason alone, which says nothing about the survey.
 
 Source: arXiv:2312.10794v5, Appendix A, `e:russiantrick`. -/
 theorem russian_trick (hd : 2 ≤ d) :
@@ -138,24 +138,6 @@ theorem russian_trick (hd : 2 ≤ d) :
 
 /-- The hypothesis of `russian_trick` is satisfiable: `d = 2`. -/
 example : 2 ≤ 2 := le_refl 2
-
-/-- **The paper's hypothesis is not enough.**  `Odd d` admits `d = 1`, and
-there the claim fails for *every* family of matrices, skew or not: the scalar
-`(d-1)⁻¹` is `0⁻¹ = 0`, so the left-hand side is `0` whatever the `B_k` are,
-while `-x` is not.
-
-This is why `russian_trick` is stated with `2 ≤ d`.
-
-Source: arXiv:2312.10794v5, Appendix A, `e:russiantrick`. -/
-theorem not_russian_trick_one :
-    ¬ ∃ B : Idx 1 → ParamMatrix 1,
-        (∀ k : Idx 1, IsSkew 1 (B k)) ∧
-        ∀ x : EucSpace 1, ((((1 : ℕ) : ℝ) - 1)⁻¹) • ∑ k : Idx 1, B k (B k x) = -x := by
-  rintro ⟨B, -, h⟩
-  have hx := h (EuclideanSpace.single (0 : Idx 1) (1 : ℝ))
-  rw [show (((1 : ℕ) : ℝ) - 1)⁻¹ = 0 by norm_num, zero_smul] at hx
-  have := congrArg (fun y : EucSpace 1 => y 0) hx
-  simp at this
 
 end Perspective
 end Transformer
