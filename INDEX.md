@@ -20,7 +20,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`Transformer.Causal.Packing`](#transformercausalpacking) | — | 5 | 12 | 0 | 0 | 0 |
 | [`Transformer.Clusters`](#transformerclusters) | arXiv:2305.05465 | 37 | 174 | 29 | 0 | 0 |
 | [`Transformer.FrankWolfe`](#transformerfrankwolfe) | arXiv:2508.09628 | 11 | 27 | 13 | 0 | 0 |
-| [`Transformer.GPTMini`](#transformergptmini) | arXiv:2512.01868 | 23 | 96 | 2 | 0 | 0 |
+| [`Transformer.GPTMini`](#transformergptmini) | — | 23 | 96 | 2 | 0 | 0 |
 | [`Transformer.GPTMini.Bridge`](#transformergptminibridge) | — | 6 | 23 | 0 | 0 | 0 |
 | [`Transformer.GPTMini.Properties`](#transformergptminiproperties) | — | 6 | 24 | 0 | 0 | 0 |
 | [`Transformer.Homogenized`](#transformerhomogenized) | arXiv:2604.01978 | 40 | 174 | 34 | 0 | 0 |
@@ -3419,13 +3419,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`headLipschitz_mono`](src/Transformer/GPTMini/HeadLipschitz.lean#L75) | theorem | proved |
 | [`attentionHead_dist_le`](src/Transformer/GPTMini/HeadLipschitz.lean#L99) | theorem | proved |
 
-**[Transformer.GPTMini.MeanFieldRefutation](src/Transformer/GPTMini/MeanFieldRefutation.lean)** — 118 lines
+**[Transformer.GPTMini.MeanFieldRefutation](src/Transformer/GPTMini/MeanFieldRefutation.lean)** — 126 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`attentionHead_one`](src/Transformer/GPTMini/MeanFieldRefutation.lean#L25) | theorem | proved |
-| [`preLNHead_one_ne_zero`](src/Transformer/GPTMini/MeanFieldRefutation.lean#L42) | theorem | proved |
-| [`not_mean_field_clustering`](src/Transformer/GPTMini/MeanFieldRefutation.lean#L85) | theorem | proved |
+| [`attentionHead_one`](src/Transformer/GPTMini/MeanFieldRefutation.lean#L31) | theorem | proved |
+| [`preLNHead_one_ne_zero`](src/Transformer/GPTMini/MeanFieldRefutation.lean#L48) | theorem | proved |
+| [`not_mean_field_clustering`](src/Transformer/GPTMini/MeanFieldRefutation.lean#L93) | theorem | proved |
 
 **[Transformer.GPTMini.Model](src/Transformer/GPTMini/Model.lean)** — 121 lines
 

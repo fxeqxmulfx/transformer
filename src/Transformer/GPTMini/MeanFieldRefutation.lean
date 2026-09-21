@@ -8,7 +8,13 @@ only rescales the stream by a factor `≥ 1` (`attentionHead_one`,
 `preLNHead_one_ne_zero`), so the trajectory from any `x₀ ≠ 0` is admissible,
 and `W₂ ≡ 1` never tends to `0`.
 
-Source: arXiv:2512.01868v4, §2 (mean-field clustering).
+What is refuted is this development's own transfer of the survey's mean-field
+clustering to the discrete pre-LN `gpt-mini` layer, not a claim of the survey.
+The survey's statement, `thm:mfclust`, is about the continuity equation
+`eq:continuity`; it is stated with `Transformer.Wasserstein.W2` in
+`Transformer.MeanField.Clustering`.
+
+Source: arXiv:2512.01868v4, `sec:clustering`, `thm:mfclust` (the claim transferred).
 -/
 
 import Transformer.GPTMini.ClusteringTheorem
@@ -80,8 +86,10 @@ the default config, the trajectory from any `x₀ ≠ 0` stays away from the ori
 (`preLNHead_one_ne_zero`), so the hypotheses hold on the complement of a
 Lebesgue-null set, while `W₂ ≡ 1` never tends to `0`.
 
-The claim is one about the Wasserstein distance; it is not expressible until
-Mathlib has one.  Source: arXiv:2512.01868v4, §2 (mean-field clustering). -/
+The survey's own `thm:mfclust` is not touched: it is about the continuity
+equation, and is stated in `Transformer.MeanField.Clustering`.
+
+Source: arXiv:2512.01868v4, `thm:mfclust` (the claim transferred). -/
 theorem not_mean_field_clustering :
     ¬ ∀ (cfg : Config)
       (W₂ : Measure (EucSpace cfg.head_dim) → Measure (EucSpace cfg.head_dim) → ℝ)
