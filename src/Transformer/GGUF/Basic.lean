@@ -29,27 +29,31 @@ namespace GGUF
 abbrev Bytes (n : ℕ) : Type := Fin n → Fin 256
 
 /-- The low nibble `b & 0xF`. -/
-def lo (b : Fin 256) : ℕ := b.val % 16
+def lo (b : ℕ) : ℕ := b % 16
 
 /-- The high nibble `b >> 4`. -/
-def hi (b : Fin 256) : ℕ := b.val / 16
+def hi (b : ℕ) : ℕ := b / 16
 
-/-- Bit `k` of the little-endian bit string `x`: bit `k % 8` of byte `k / 8`. -/
-def bitAt {n : ℕ} (x : Bytes n) (k : ℕ) : ℕ :=
-  if h : k / 8 < n then (x ⟨k / 8, h⟩).val / 2 ^ (k % 8) % 2 else 0
+/-- The byte at offset `o`, and `0` past the end. -/
+def byte {n : ℕ} (x : Bytes n) (o : ℕ) : ℕ := if h : o < n then (x ⟨o, h⟩).val else 0
 
-/-- The little-endian `uint16_t` stored at bytes `2k, 2k+1` from offset `o`. -/
-def u16 {n : ℕ} (x : Bytes n) (o : ℕ) : ℕ :=
-  (if h : o < n then (x ⟨o, h⟩).val else 0) +
-    256 * (if h : o + 1 < n then (x ⟨o + 1, h⟩).val else 0)
+theorem byte_lt {n : ℕ} (x : Bytes n) (o : ℕ) : byte x o < 256 := by
+  unfold byte; split_ifs <;> omega
 
-theorem lo_lt (b : Fin 256) : lo b < 16 := Nat.mod_lt _ (by norm_num)
+/-- Bit `k` of the little-endian bit string starting at offset `o`: bit `k % 8`
+of byte `o + k / 8`. -/
+def bitAt {n : ℕ} (x : Bytes n) (o k : ℕ) : ℕ := byte x (o + k / 8) / 2 ^ (k % 8) % 2
 
-theorem hi_lt (b : Fin 256) : hi b < 16 := by
+/-- The little-endian `uint16_t` at offset `o`. -/
+def u16 {n : ℕ} (x : Bytes n) (o : ℕ) : ℕ := byte x o + 256 * byte x (o + 1)
+
+theorem lo_lt (b : ℕ) : lo b < 16 := Nat.mod_lt _ (by norm_num)
+
+theorem hi_lt {b : ℕ} (hb : b < 256) : hi b < 16 := by
   unfold hi; omega
 
-theorem bitAt_le {n : ℕ} (x : Bytes n) (k : ℕ) : bitAt x k ≤ 1 := by
-  unfold bitAt; split_ifs <;> omega
+theorem bitAt_le {n : ℕ} (x : Bytes n) (o k : ℕ) : bitAt x o k ≤ 1 := by
+  unfold bitAt; omega
 
 /-- The exponent bias `2^{E-1} - 1` of an IEEE binary format. -/
 def bias (E : ℕ) : ℤ := 2 ^ (E - 1) - 1
