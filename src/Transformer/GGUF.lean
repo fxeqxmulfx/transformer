@@ -16,13 +16,16 @@ The tensor types llama.cpp stores model weights in, decoded from their bytes as
 | `GGUF.IQ2` | `IQ2_XXS`, `IQ2_XS` |
 | `GGUF.IQ3` | `IQ3_XXS` |
 | `GGUF.IQ1` | `IQ1_S` |
+| `GGUF.FP4` | the 4-bit floats `MXFP4`, `NVFP4`; the dead zone of the `MXFP4` quantizer |
 
 The symmetric integer formats (`Q4_0`, `Q5_0`, `Q8_0`, `Q3_K`, `Q6_K`) have
 `0` among their levels, so small weights vanish: in `Q8_0` everything below
 `amax/254` of its block (`exists_Q8_0`).  The affine ones (`Q4_1`, `Q5_1`,
 `Q2_K`, `Q4_K`, `Q5_K`) have `0` as a level only when the min lines up with it.  The codebook formats (`IQ4_NL`, `IQ2_XXS`, `IQ2_XS`,
 `IQ3_XXS`, `IQ1_S`) have no level `0`: in a block with a nonzero scale, no
-weight is stored as `0` (`IQ4_NL_ne_zero`, `IQ2_XXS_ne_zero`, …).
+weight is stored as `0` (`IQ4_NL_ne_zero`, `IQ2_XXS_ne_zero`, …).  The 4-bit
+floats (`MXFP4`, `NVFP4`) have `0` as a level, and `MXFP4`'s power-of-two scale
+loses everything below `amax/32` of its block (`mxfp4_dead_zone`).
 -/
 
 import Transformer.GGUF.Basic
@@ -34,3 +37,4 @@ import Transformer.GGUF.IQ4
 import Transformer.GGUF.IQ2
 import Transformer.GGUF.IQ3
 import Transformer.GGUF.IQ1
+import Transformer.GGUF.FP4
