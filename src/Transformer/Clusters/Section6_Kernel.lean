@@ -28,6 +28,8 @@ estimates the well-posedness proof rests on.
 
 * `W_2` is `Transformer.Wasserstein.W2`.
 
+* `e:lipinx` is in `Section6_KernelDeriv`.
+
 Source: arXiv:2305.05465v6, `e:vectorfield`, `lem: vectorfield.properties`,
 `e:bddinx`, `e:lipinx`, `e:lipinmu`.
 -/
@@ -119,20 +121,6 @@ theorem attentionKernel_norm_le (Q K V : ParamMatrix d) (R : ℝ) (hR : 0 < R)
   · rw [abs_of_pos (inv_pos.2 h), inv_mul_le_iff₀ h, mul_comm (∫ y, w y ∂μ)]
     exact hN
 
-/-- **Estimate (e:lipinx).**  `𝒳[μ]` is differentiable in `x` with
-`‖∇_x 𝒳[μ]‖_{L^∞} ≤ 2 ‖QᵀK‖_op ‖V‖_op R²`.
-
-Not proved here.
-
-Source: arXiv:2305.05465v6, `e:lipinx`. -/
-theorem attentionKernel_hasFDerivAt (Q K V : ParamMatrix d) (R : ℝ) (hR : 0 < R)
-    (μ : Measure (EucSpace d)) (hμ : IsProbabilityMeasure μ) (hsupp : IsCarriedBy μ R)
-    (x : EucSpace d) :
-    ∃ D : EucSpace d →L[ℝ] EucSpace d,
-      HasFDerivAt (attentionKernel Q K V μ) D x ∧
-        ‖D‖ ≤ 2 * ‖(ContinuousLinearMap.adjoint Q).comp K‖ * ‖V‖ * R ^ 2 := by
-  sorry
-
 /-- **Estimate (e:lipinmu).**  On `B(0,R)` the kernel is Lipschitz in the
 measure for `W_2`, with a constant depending only on `R`.
 
@@ -147,7 +135,7 @@ theorem attentionKernel_lipschitz_in_measure (Q K V : ParamMatrix d) (R : ℝ) (
             ≤ C * Wasserstein.W2 μ ν := by
   sorry
 
-/-- The hypotheses of the three estimates are satisfiable: the Dirac mass at
+/-- The hypotheses of `e:bddinx` and `e:lipinmu` are satisfiable: the Dirac mass at
 the origin is a probability measure carried by the unit ball. -/
 example : (0 : ℝ) < 1 ∧ IsProbabilityMeasure (Measure.dirac (0 : EucSpace d)) ∧
     IsCarriedBy (Measure.dirac (0 : EucSpace d)) 1 :=
