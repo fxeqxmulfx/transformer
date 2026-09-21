@@ -42,3 +42,5 @@ import Transformer.AMSGrad.Section4_Counter
 import Transformer.AMSGrad.Section5_AdamX
 import Transformer.AMSGrad.Section5_Bounds
 import Transformer.AMSGrad.Section5_Theorem
+import Transformer.AMSGrad.Section5_Sums
+import Transformer.AMSGrad.Section5_Corollary
