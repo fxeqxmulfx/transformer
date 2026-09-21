@@ -482,14 +482,14 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 
 ### Transformer.MeanField — arXiv:2512.01868
 
-- [ ] Transformer/MeanField/Clustering.lean (1): `exists_common_hemisphere_of_linearIndependent`
-- [ ] Transformer/MeanField/Equiangular.lean (3): `equiangularSA_const_simplex`, `not_exists_rate_at_simplex`, `equiangularSA_const_one`
-- [ ] Transformer/MeanField/EquiangularLimit.lean (4): `tendsto_cos_of_tendsto`, `equiOutCos_seq_eq`, `equiDiag_add_equiOff_seq`, `long_context_phase_transition`
-- [ ] Transformer/MeanField/EquiangularPhases.lean (8): `equiDiag_eq_one_div`, `equiDiag_seq_eq`, `tendsto_log_natAdd_two`, `tendsto_ratio_natAdd`, `ratio_natAdd_mem`, `tendsto_equiDiag_of_lt`, `tendsto_equiDiag_of_eq`, `tendsto_equiDiag_of_gt`
-- [ ] Transformer/MeanField/EquiangularRate.lean (2): `equiangular_local_rate`, `not_equiangular_local_rate_zero`
-- [ ] Transformer/MeanField/EquiangularWeights.lean (13): `equiNorm_pos`, `sum_exp_equiGram`, `sum_equiWeight`, `equiWeight_self`, `equiWeight_of_ne`, `sum_equiWeight_mul_equiGram`, `equiOutInner_eq`, `equiDiag_pos`, `equiOff_pos`, `equiDiag_add_equiOff`, `sum_equiWeight_sq`, `sum_equiWeight_mul`, `equiOutCos_of_ne`
-- [ ] Transformer/MeanField/Noisy.lean (1): `inner_noisyDrift_eq_zero`
-- [ ] Transformer/MeanField/PairMerge.lean (4): `hardmaxPair_const`, `hardmaxPair_stationary`, `hardmaxPair_inner_hasDerivAt`, `hardmaxPair_eq_of_eq`
+- issue Transformer/MeanField/Clustering.lean (1): `exists_common_hemisphere_of_linearIndependent` — proved lemma ok; global_clustering (sorried) quantifies over a free reference measure σ — false as written (σ = δ at the antipodal pair, stationary for SA), should be Perspective.UniformTuple; only SA, paper also USA. meanField_exponential_rate (thm:mfclust) carries W₂ free and drops 'μ₀ has density f₀ ∈ L²' — false as written: μ₀ = ⅔δ_e + ⅓δ_{-e} has R₀ = 1/9 > 0 and is stationary for every β
+- ok Transformer/MeanField/Equiangular.lean (3): `equiangularSA_const_simplex`, `not_exists_rate_at_simplex`, `equiangularSA_const_one`
+- ok Transformer/MeanField/EquiangularLimit.lean (4): `tendsto_cos_of_tendsto`, `equiOutCos_seq_eq`, `equiDiag_add_equiOff_seq`, `long_context_phase_transition`
+- ok Transformer/MeanField/EquiangularPhases.lean (8): `equiDiag_eq_one_div`, `equiDiag_seq_eq`, `tendsto_log_natAdd_two`, `tendsto_ratio_natAdd`, `ratio_natAdd_mem`, `tendsto_equiDiag_of_lt`, `tendsto_equiDiag_of_eq`, `tendsto_equiDiag_of_gt`
+- ok Transformer/MeanField/EquiangularRate.lean (2): `equiangular_local_rate`, `not_equiangular_local_rate_zero`
+- ok Transformer/MeanField/EquiangularWeights.lean (13): `equiNorm_pos`, `sum_exp_equiGram`, `sum_equiWeight`, `equiWeight_self`, `equiWeight_of_ne`, `sum_equiWeight_mul_equiGram`, `equiOutInner_eq`, `equiDiag_pos`, `equiOff_pos`, `equiDiag_add_equiOff`, `sum_equiWeight_sq`, `sum_equiWeight_mul`, `equiOutCos_of_ne`
+- issue Transformer/MeanField/Noisy.lean (1): `inner_noisyDrift_eq_zero` — inner_noisyDrift_eq_zero ok; fokkerPlanck (a def, no theorem uses it) silently differs from the printed eq:Fokker: sign of the Laplacian (the source's printed sign is backward heat) and drift Perspective.vectorField (normalized SA) instead of the source's unnormalized ∫e^{β⟨·,y⟩}y dμ_t; deviation undocumented
+- issue Transformer/MeanField/PairMerge.lean (4): `hardmaxPair_const`, `hardmaxPair_stationary`, `hardmaxPair_inner_hasDerivAt`, `hardmaxPair_eq_of_eq` — proved lemmas ok (hardmaxPair_eq_of_eq documents the source's 'merge in finite rescaled time' as wrong). Merging.agazzi_merge (sorried) likely false: clusterSA keeps self-attention, so the pair's rescaled speed is (α_j̄/α_ī)·e^{β(ρ(s)-ρ(0))}, which has mass-ratio factor and diverges once ρ rises — the β→∞ limit is not hardmaxPair; the survey's paraphrase of Bruno–Pasqualotto–Agazzi needs the original statement
 
 ### Transformer.Metastability — arXiv:2410.06833
 
