@@ -121,11 +121,14 @@ dissipates at rate
 — the same identity as `eq: dissipation.softmax` with the partition-function
 weight `Z_{β,μ}` removed, which is precisely what the normalisation costs.
 
+*`β > 0` is a hypothesis*, the survey's standing assumption: at `β = 0` the
+energy is Lean's junk value `(2·0)⁻¹ ∫∫ 1 = 0`, as for `dissipation_softmax`.
+
 Not proved here: as for `dissipation_softmax`, differentiating the energy
 along the flow is not formalized.
 
 Source: arXiv:2312.10794v5, §3.3, `lem: dissipation`. -/
-theorem usa_dissipation (β : ℝ) (μ : ℝ → ProbSphere d)
+theorem usa_dissipation (β : ℝ) (hβ : 0 < β) (μ : ℝ → ProbSphere d)
     (hCE : usaContinuityEquation d β μ) :
     ∀ t : ℝ,
       HasDerivAt (fun s => interactionEnergy d β (μ s))
@@ -160,8 +163,10 @@ theorem usaContinuityEquation_const_diracProb (β : ℝ) (x : SSphere d) :
   rw [hrhs]
   exact hasDerivAt_const t _
 
-example : usaContinuityEquation 1 1 (fun _ => diracProb 1 (basePoint 0)) :=
-  usaContinuityEquation_const_diracProb 1 1 (basePoint 0)
+/-- The hypotheses of `usa_dissipation` are satisfiable: `β = 1` and the
+constant curve at a Dirac mass. -/
+example : (0 : ℝ) < 1 ∧ usaContinuityEquation 1 1 (fun _ => diracProb 1 (basePoint 0)) :=
+  ⟨one_pos, usaContinuityEquation_const_diracProb 1 1 (basePoint 0)⟩
 
 /-! ### §3.4 — `SA` is a gradient flow for a modified metric -/
 

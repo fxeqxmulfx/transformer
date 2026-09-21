@@ -152,11 +152,17 @@ noncomputable def interactionEnergy
 
 In particular the interaction energy is non-decreasing along `SA`.
 
+*`β > 0` is a hypothesis.*  It is the survey's standing assumption (§1,
+`β > 0` a fixed number intrinsic to the model), and without it the statement
+is about Lean's junk value: `𝖤_0 = (2·0)⁻¹ ∫∫ 1 = 0` is constant, while the
+right-hand side is `∫ ‖Proj_x(∫ y dμ)‖² dμ`, which a moving curve keeps
+nonzero.
+
 Not proved here: differentiating the energy under the integral sign along a
 solution of the continuity equation is not formalized.
 
 Source: arXiv:2312.10794v5, §3.2, `eq: dissipation.softmax`. -/
-theorem dissipation_softmax (β : ℝ) (μ : ℝ → ProbSphere d)
+theorem dissipation_softmax (β : ℝ) (hβ : 0 < β) (μ : ℝ → ProbSphere d)
     (hCE : continuityEquation d β μ) :
     ∀ t : ℝ,
       HasDerivAt (fun s => interactionEnergy d β (μ s))
@@ -196,10 +202,10 @@ theorem continuityEquation_const_diracProb (β : ℝ) (x : SSphere d) :
   rw [hrhs]
   exact hasDerivAt_const t _
 
-/-- The hypothesis of `dissipation_softmax` is satisfiable: the constant curve
-at a Dirac mass solves the continuity equation. -/
-example : continuityEquation 1 1 (fun _ => diracProb 1 (basePoint 0)) :=
-  continuityEquation_const_diracProb 1 1 (basePoint 0)
+/-- The hypotheses of `dissipation_softmax` are satisfiable: `β = 1`, and the
+constant curve at a Dirac mass solves the continuity equation. -/
+example : (0 : ℝ) < 1 ∧ continuityEquation 1 1 (fun _ => diracProb 1 (basePoint 0)) :=
+  ⟨one_pos, continuityEquation_const_diracProb 1 1 (basePoint 0)⟩
 
 /-- A linear isometry of the ambient space, restricted to the unit sphere:
 the action of `O(d)` on `𝕊^{d-1}` that the uniform measure `σ_d` — and only

@@ -6159,7 +6159,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`eq_dirac_of_ae_eq`](src/Transformer/Perspective/Section2_EnergyMax.lean#L82) | theorem | proved |
 | [`exists_eq_dirac_of_isMaxEnergy`](src/Transformer/Perspective/Section2_EnergyMax.lean#L99) | theorem | proved |
 
-**[Transformer.Perspective.Section2_FlowMap](src/Transformer/Perspective/Section2_FlowMap.lean)** — 245 lines
+**[Transformer.Perspective.Section2_FlowMap](src/Transformer/Perspective/Section2_FlowMap.lean)** — 251 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -6175,13 +6175,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`continuityEquation`](src/Transformer/Perspective/Section2_FlowMap.lean#L125) | def |  |
 | [`continuityEquation_eq_auxCE`](src/Transformer/Perspective/Section2_FlowMap.lean#L134) | theorem | proved |
 | [`interactionEnergy`](src/Transformer/Perspective/Section2_FlowMap.lean#L142) | def |  |
-| [`dissipation_softmax`](src/Transformer/Perspective/Section2_FlowMap.lean#L159) | theorem | sorry |
-| [`vectorField_diracProb_self`](src/Transformer/Perspective/Section2_FlowMap.lean#L175) | theorem | proved |
-| [`continuityEquation_const_diracProb`](src/Transformer/Perspective/Section2_FlowMap.lean#L186) | theorem | proved |
-| [`sphereMap`](src/Transformer/Perspective/Section2_FlowMap.lean#L207) | def |  |
-| [`existence_uniqueness_energy_min`](src/Transformer/Perspective/Section2_FlowMap.lean#L230) | theorem | sorry |
+| [`dissipation_softmax`](src/Transformer/Perspective/Section2_FlowMap.lean#L165) | theorem | sorry |
+| [`vectorField_diracProb_self`](src/Transformer/Perspective/Section2_FlowMap.lean#L181) | theorem | proved |
+| [`continuityEquation_const_diracProb`](src/Transformer/Perspective/Section2_FlowMap.lean#L192) | theorem | proved |
+| [`sphereMap`](src/Transformer/Perspective/Section2_FlowMap.lean#L213) | def |  |
+| [`existence_uniqueness_energy_min`](src/Transformer/Perspective/Section2_FlowMap.lean#L236) | theorem | sorry |
 
-**[Transformer.Perspective.Section2_GradientFlow](src/Transformer/Perspective/Section2_GradientFlow.lean)** — 393 lines
+**[Transformer.Perspective.Section2_GradientFlow](src/Transformer/Perspective/Section2_GradientFlow.lean)** — 398 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -6191,15 +6191,15 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`usaContinuityEquation`](src/Transformer/Perspective/Section2_GradientFlow.lean#L82) | def |  |
 | [`usaVectorField_eq_grad_first_variation`](src/Transformer/Perspective/Section2_GradientFlow.lean#L93) | theorem | proved |
 | [`aggregationEquation`](src/Transformer/Perspective/Section2_GradientFlow.lean#L112) | def |  |
-| [`usa_dissipation`](src/Transformer/Perspective/Section2_GradientFlow.lean#L128) | theorem | sorry |
-| [`usaVectorField_diracProb_self`](src/Transformer/Perspective/Section2_GradientFlow.lean#L140) | theorem | proved |
-| [`usaContinuityEquation_const_diracProb`](src/Transformer/Perspective/Section2_GradientFlow.lean#L150) | theorem | proved |
-| [`particleEnergy`](src/Transformer/Perspective/Section2_GradientFlow.lean#L170) | def |  |
-| [`particlePartition`](src/Transformer/Perspective/Section2_GradientFlow.lean#L177) | def |  |
-| [`modifiedMetric`](src/Transformer/Perspective/Section2_GradientFlow.lean#L184) | def |  |
-| [`sa_is_gradient_flow`](src/Transformer/Perspective/Section2_GradientFlow.lean#L213) | theorem | proved |
-| [`transformerODE_const_one`](src/Transformer/Perspective/Section2_GradientFlow.lean#L353) | theorem | proved |
-| [`conteqFirstRewriting`](src/Transformer/Perspective/Section2_GradientFlow.lean#L388) | def |  |
+| [`usa_dissipation`](src/Transformer/Perspective/Section2_GradientFlow.lean#L131) | theorem | sorry |
+| [`usaVectorField_diracProb_self`](src/Transformer/Perspective/Section2_GradientFlow.lean#L143) | theorem | proved |
+| [`usaContinuityEquation_const_diracProb`](src/Transformer/Perspective/Section2_GradientFlow.lean#L153) | theorem | proved |
+| [`particleEnergy`](src/Transformer/Perspective/Section2_GradientFlow.lean#L175) | def |  |
+| [`particlePartition`](src/Transformer/Perspective/Section2_GradientFlow.lean#L182) | def |  |
+| [`modifiedMetric`](src/Transformer/Perspective/Section2_GradientFlow.lean#L189) | def |  |
+| [`sa_is_gradient_flow`](src/Transformer/Perspective/Section2_GradientFlow.lean#L218) | theorem | proved |
+| [`transformerODE_const_one`](src/Transformer/Perspective/Section2_GradientFlow.lean#L358) | theorem | proved |
+| [`conteqFirstRewriting`](src/Transformer/Perspective/Section2_GradientFlow.lean#L393) | def |  |
 
 **[Transformer.Perspective.Section2_ParticleFlow](src/Transformer/Perspective/Section2_ParticleFlow.lean)** — 241 lines
 
@@ -7258,9 +7258,9 @@ Everything the build cannot vouch for, in one place.
 | [`no_saddle_convergence`](src/Transformer/Perspective/AppendixA_Saddle.lean#L134) | theorem | `Transformer.Perspective.AppendixA_Saddle` |
 | [`almost_sure_consensus_beta0`](src/Transformer/Perspective/AppendixA_Saddle.lean#L163) | theorem | `Transformer.Perspective.AppendixA_Saddle` |
 | [`almost_orthogonal`](src/Transformer/Perspective/AppendixD_PhaseTransition.lean#L48) | theorem | `Transformer.Perspective.AppendixD_PhaseTransition` |
-| [`dissipation_softmax`](src/Transformer/Perspective/Section2_FlowMap.lean#L159) | theorem | `Transformer.Perspective.Section2_FlowMap` |
-| [`existence_uniqueness_energy_min`](src/Transformer/Perspective/Section2_FlowMap.lean#L230) | theorem | `Transformer.Perspective.Section2_FlowMap` |
-| [`usa_dissipation`](src/Transformer/Perspective/Section2_GradientFlow.lean#L128) | theorem | `Transformer.Perspective.Section2_GradientFlow` |
+| [`dissipation_softmax`](src/Transformer/Perspective/Section2_FlowMap.lean#L165) | theorem | `Transformer.Perspective.Section2_FlowMap` |
+| [`existence_uniqueness_energy_min`](src/Transformer/Perspective/Section2_FlowMap.lean#L236) | theorem | `Transformer.Perspective.Section2_FlowMap` |
+| [`usa_dissipation`](src/Transformer/Perspective/Section2_GradientFlow.lean#L131) | theorem | `Transformer.Perspective.Section2_GradientFlow` |
 | [`beta0_consensus`](src/Transformer/Perspective/Section3_SmallBeta.lean#L83) | theorem | `Transformer.Perspective.Section3_SmallBeta` |
 | [`clustering_probability_small_beta`](src/Transformer/Perspective/Section3_SmallBeta.lean#L216) | theorem | `Transformer.Perspective.Section3_SmallBeta` |
 | [`sset0_probability_tendsto_one`](src/Transformer/Perspective/Section3_SmallBeta.lean#L253) | theorem | `Transformer.Perspective.Section3_SmallBeta` |
