@@ -1,5 +1,5 @@
 /-
-# §6.1 — Cone collapse, deduced from its two steps
+# §6.1 — Cone collapse: the last step of its proof
 
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*, §6.1,
@@ -8,15 +8,17 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 The survey proves the lemma in two steps: step 1 produces the limit point
 `x⋆` (`eq: qual.conv`), step 2 the differential inequality
 `α̇ ≥ (1 - α)/(2 n e^{2β})` for `α(t) = min_i ⟨x_i(t), x⋆⟩`
-(`e:diffineqalpha.step2`).  Step 1 is unproved (`hemisphere_step1_qual_conv`);
-step 2 is proved from its limit in `Perspective.Section5_HemisphereRate`, with
-the differentiability of `α` carried.  Integrating the differential inequality
-gives the exponential rate, and that is `hemisphere_clustering` below, with
-the conclusion of the two steps carried as an explicit hypothesis.
+(`e:diffineqalpha.step2`).  The lemma itself is `cone_collapse`
+(`Perspective.Section5_ExpRate`), unproved; step 2 is proved from the limit in
+`Perspective.Section5_HemisphereRate`, with the differentiability of `α`
+carried.  Integrating the differential inequality gives the exponential rate,
+and that is `exp_rate_of_diffineqalpha` below — the last step of the proof,
+not the lemma: the conclusion of the two steps is its hypothesis.
 -/
 
 import Transformer.Perspective.Section3_Gronwall
 import Transformer.Perspective.Section5_HighD
+import Transformer.Perspective.Section5_ExpRate
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
 
 open scoped BigOperators
@@ -29,31 +31,24 @@ open Perspective
 
 variable (d n : ℕ)
 
-/-- **Lemma (lem: hemisphere.clustering) — *Cone collapse.*
+/-- **The last step of the proof of `lem: hemisphere.clustering`.**
 
-Let `β > 0` and `(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n` be such that there exists
-`w ∈ 𝕊^{d-1}` with `⟨x_i(0), w⟩ > 0` for all `i`.  Then the unique solution
-of `SA` converges exponentially to a common point `x⋆`:
+If every `SA` solution from `X₀` satisfies `e:diffineqalpha.step2` past some
+`t₀` — `α̇ ≥ (1 - α)/(2 n e^{2β})` for `α(t) = min_i ⟨x_i(t), x⋆⟩` — then it
+converges to `x⋆` exponentially: `‖x_i(t) - x⋆‖ ≤ C e^{-λ t}`.  This is not
+the lemma (`cone_collapse`): the hemisphere hypothesis, and steps 1 and 2 that
+turn it into the differential inequality, are what `hstep` stands for.
 
-  `‖x_i(t) - x⋆‖ ≤ C e^{-λ t}`.
-
-**What the source says and what is changed here.**  The hemisphere hypothesis
-is what steps 1 and 2 of the survey's proof consume: step 1 turns it into the
-limit point `x⋆`, step 2 into the differential inequality
-`e:diffineqalpha.step2` for `α(t) = min_i ⟨x_i(t), x⋆⟩` valid from some time
-`t₀` on.  Both are unproved here, so their joint conclusion is carried as the
-hypothesis `hstep`, and with it in hand the hemisphere hypothesis is no longer
-needed — it has already done its work — so it is not a binder below.
-
-Everything else is proved: with `λ₀ = 1/(2 n e^{2β})`, the function
+The proof: with `λ₀ = 1/(2 n e^{2β})`, the function
 `(1 - α(t)) e^{λ₀ t}` has non-positive derivative past `t₀`, hence
 `1 - α(t) ≤ 2 e^{λ₀(t₁ - t)}` for `t₁ = max(t₀, 0)`, and
 `‖x_i(t) - x⋆‖² = 2 - 2⟨x_i(t), x⋆⟩ ≤ 2(1 - α(t))` turns that into the rate
 `C = 2 e^{λ₀ t₁/2}`, `λ = λ₀/2`.  Before `t₁` the crude bound
 `‖x_i(t) - x⋆‖ ≤ 2` is already below `C e^{-λ t}`.
 
-Source: arXiv:2312.10794v5, §6.1, `lem: hemisphere.clustering`. -/
-theorem hemisphere_clustering
+Source: arXiv:2312.10794v5, §6.1, proof of `lem: hemisphere.clustering`,
+from `e:diffineqalpha.step2` to the end. -/
+theorem exp_rate_of_diffineqalpha
     (β : ℝ) (X₀ : SphereTuple d n) (x_star : SSphere d) (t₀ : ℝ)
     (hstep : ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
       ∃ α : ℝ → ℝ, IsMinInner d n X x_star α ∧
@@ -158,7 +153,7 @@ theorem hemisphere_clustering
     nlinarith [hle2, norm_nonneg ((X t i : EucSpace d) - (x_star : EucSpace d)),
       Real.exp_pos (lam0 / 2 * (t₁ - t))]
 
-/-- The hypothesis of `hemisphere_clustering` is satisfiable, and by a genuine
+/-- The hypothesis of `exp_rate_of_diffineqalpha` is satisfiable, and by a genuine
 solution: at `n = 1` a lone token stands still (`const_of_SA_one`), so every
 solution from `X₀` sits at `x⋆ = X₀ 0` for all time, `α ≡ 1` is the minimum
 `min_i ⟨x_i(t), x⋆⟩`, and the differential inequality reads `0 ≤ 0`. -/

@@ -7,8 +7,8 @@
 
 `Theorem thm: mfclust` is in `MeanField.GlobalRate`.
 
-`Theorem thm: cone-collapse` is `Perspective.hemisphere_clustering`
-(in `Perspective.Section5_ConeCollapse`) verbatim and is not restated here.
+`Theorem thm: cone-collapse` is `Perspective.cone_collapse`
+(in `Perspective.Section5_ExpRate`) verbatim and is not restated here.
 
 `thm: clustering_finite` is read against the uniform law
 `Perspective.UniformTuple`, and is not proved.  What *is* proved is the deterministic core of
@@ -89,8 +89,8 @@ because a vector of the span orthogonal to every `x_i` is orthogonal to itself;
 the span has dimension `n`, so the map is onto, and the preimage of the
 all-ones vector is the required `w` up to normalization.
 
-This is the hypothesis `thm: cone-collapse` runs on — the one steps 1 and 2 of
-`Perspective.hemisphere_clustering` consume — so `cor: d-ge-n` follows from it
+This is the hypothesis `thm: cone-collapse` (`Perspective.cone_collapse`) runs
+on — so `cor: d-ge-n` follows from it
 together with the fact that `n` i.i.d. uniform points in dimension `d ≥ n` are
 almost surely independent, which is not formalized.
 Source: arXiv:2512.01868v4, §4. -/

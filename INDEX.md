@@ -6283,11 +6283,11 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | --- | --- | --- |
 | [`beta_interval`](src/Transformer/Perspective/Section4_LargeBeta.lean#L45) | theorem | sorry |
 
-**[Transformer.Perspective.Section5_ConeCollapse](src/Transformer/Perspective/Section5_ConeCollapse.lean)** — 184 lines
+**[Transformer.Perspective.Section5_ConeCollapse](src/Transformer/Perspective/Section5_ConeCollapse.lean)** — 179 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`hemisphere_clustering`](src/Transformer/Perspective/Section5_ConeCollapse.lean#L56) | theorem | proved |
+| [`exp_rate_of_diffineqalpha`](src/Transformer/Perspective/Section5_ConeCollapse.lean#L51) | theorem | proved |
 
 **[Transformer.Perspective.Section5_Exceptional](src/Transformer/Perspective/Section5_Exceptional.lean)** — 79 lines
 
@@ -6295,13 +6295,14 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | --- | --- | --- |
 | [`antipodalPair_not_exponential`](src/Transformer/Perspective/Section5_Exceptional.lean#L38) | theorem | proved |
 
-**[Transformer.Perspective.Section5_ExpRate](src/Transformer/Perspective/Section5_ExpRate.lean)** — 95 lines
+**[Transformer.Perspective.Section5_ExpRate](src/Transformer/Perspective/Section5_ExpRate.lean)** — 140 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`usaQKV`](src/Transformer/Perspective/Section5_ExpRate.lean#L34) | def |  |
-| [`ExpConvergent`](src/Transformer/Perspective/Section5_ExpRate.lean#L48) | def |  |
-| [`d_infty_exponential`](src/Transformer/Perspective/Section5_ExpRate.lean#L77) | theorem | sorry |
+| [`usaQKV`](src/Transformer/Perspective/Section5_ExpRate.lean#L35) | def |  |
+| [`ExpConvergent`](src/Transformer/Perspective/Section5_ExpRate.lean#L49) | def |  |
+| [`cone_collapse`](src/Transformer/Perspective/Section5_ExpRate.lean#L77) | theorem | sorry |
+| [`d_infty_exponential`](src/Transformer/Perspective/Section5_ExpRate.lean#L122) | theorem | sorry |
 
 **[Transformer.Perspective.Section5_Hemisphere](src/Transformer/Perspective/Section5_Hemisphere.lean)** — 214 lines
 
@@ -6328,15 +6329,14 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | --- | --- | --- |
 | [`step2_alpha_diff_ineq`](src/Transformer/Perspective/Section5_HemisphereRate.lean#L51) | theorem | proved |
 
-**[Transformer.Perspective.Section5_HighD](src/Transformer/Perspective/Section5_HighD.lean)** — 209 lines
+**[Transformer.Perspective.Section5_HighD](src/Transformer/Perspective/Section5_HighD.lean)** — 172 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`boumal_clustering`](src/Transformer/Perspective/Section5_HighD.lean#L73) | theorem | sorry |
-| [`IsMinInner`](src/Transformer/Perspective/Section5_HighD.lean#L93) | def |  |
-| [`step1_rhs`](src/Transformer/Perspective/Section5_HighD.lean#L111) | theorem | proved |
-| [`hemisphere_step1_qual_conv`](src/Transformer/Perspective/Section5_HighD.lean#L164) | theorem | sorry |
-| [`wendel`](src/Transformer/Perspective/Section5_HighD.lean#L198) | theorem | sorry |
+| [`boumal_clustering`](src/Transformer/Perspective/Section5_HighD.lean#L75) | theorem | sorry |
+| [`IsMinInner`](src/Transformer/Perspective/Section5_HighD.lean#L95) | def |  |
+| [`step1_rhs`](src/Transformer/Perspective/Section5_HighD.lean#L113) | theorem | proved |
+| [`wendel`](src/Transformer/Perspective/Section5_HighD.lean#L161) | theorem | sorry |
 
 **[Transformer.Perspective.Section5_HighDCurve](src/Transformer/Perspective/Section5_HighDCurve.lean)** — 208 lines
 
@@ -7312,10 +7312,10 @@ Everything the build cannot vouch for, in one place.
 | [`beta_tiny`](src/Transformer/Perspective/Section3_SmallBeta.lean#L297) | theorem | `Transformer.Perspective.Section3_SmallBeta` |
 | [`beta_tiny_circle`](src/Transformer/Perspective/Section3_SmallBeta.lean#L314) | theorem | `Transformer.Perspective.Section3_SmallBeta` |
 | [`beta_interval`](src/Transformer/Perspective/Section4_LargeBeta.lean#L45) | theorem | `Transformer.Perspective.Section4_LargeBeta` |
-| [`d_infty_exponential`](src/Transformer/Perspective/Section5_ExpRate.lean#L77) | theorem | `Transformer.Perspective.Section5_ExpRate` |
-| [`boumal_clustering`](src/Transformer/Perspective/Section5_HighD.lean#L73) | theorem | `Transformer.Perspective.Section5_HighD` |
-| [`hemisphere_step1_qual_conv`](src/Transformer/Perspective/Section5_HighD.lean#L164) | theorem | `Transformer.Perspective.Section5_HighD` |
-| [`wendel`](src/Transformer/Perspective/Section5_HighD.lean#L198) | theorem | `Transformer.Perspective.Section5_HighD` |
+| [`cone_collapse`](src/Transformer/Perspective/Section5_ExpRate.lean#L77) | theorem | `Transformer.Perspective.Section5_ExpRate` |
+| [`d_infty_exponential`](src/Transformer/Perspective/Section5_ExpRate.lean#L122) | theorem | `Transformer.Perspective.Section5_ExpRate` |
+| [`boumal_clustering`](src/Transformer/Perspective/Section5_HighD.lean#L75) | theorem | `Transformer.Perspective.Section5_HighD` |
+| [`wendel`](src/Transformer/Perspective/Section5_HighD.lean#L161) | theorem | `Transformer.Perspective.Section5_HighD` |
 | [`orthogonal_initial`](src/Transformer/Perspective/Section5_HighDCurve.lean#L120) | theorem | `Transformer.Perspective.Section5_HighDCurve` |
 | [`phase_transition_curve`](src/Transformer/Perspective/Section5_HighDCurve.lean#L162) | theorem | `Transformer.Perspective.Section5_HighDCurve` |
 | [`universal_approximation_discrete`](src/Transformer/Perspective/Section9_Approximation.lean#L70) | theorem | `Transformer.Perspective.Section9_Approximation` |

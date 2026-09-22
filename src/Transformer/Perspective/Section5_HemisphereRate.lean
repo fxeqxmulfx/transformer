@@ -10,7 +10,7 @@ of particles starting in an open hemisphere.  The cone of step 2 is
 `Perspective.limit_mem_cone`, and the estimate shared with Appendix D is
 `Perspective.dot_alpha_ge`; what is left here is the survey's choice of `t₀`,
 past which `α ≥ 1/2`.  The integration of the inequality into the exponential
-rate is `Perspective.hemisphere_clustering`.
+rate is `Perspective.exp_rate_of_diffineqalpha`.
 -/
 
 import Transformer.Perspective.AppendixD_DotAlpha

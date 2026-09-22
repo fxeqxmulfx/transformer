@@ -60,7 +60,7 @@ theorem toSphere_norm
 
 Given a sequence of non-zero tokens `(x_i)_{i ∈ [n]}`, the directions
 `(toSphere d (x_i))_{i ∈ [n]}` are points on `𝕊^{d-1}`.  This is the input
-type expected by `Section1_IPS.SA`, `Section5_ConeCollapse.hemisphere_clustering`,
+type expected by `Section1_IPS.SA`, `Section5_ExpRate.cone_collapse`,
 and `Causal.MainTheorem.thm1`. -/
 theorem token_sequence_on_sphere
     {d n : ℕ} (hd : 0 < d) (x : Fin n → EucSpace d)

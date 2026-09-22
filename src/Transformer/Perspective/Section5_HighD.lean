@@ -9,7 +9,7 @@ This file formalizes §6 of the survey:
 * `Theorem thm: boumal`            — clustering for `d ≥ 3`, any `β ≥ 0`,
 * `Theorem thm: d.infty`, `eq: expconvtocons` — the exponential rate when
   `d ≥ n` — are `Perspective.Section5_ExpRate`,
-* `eq: therighthandside`, `eq: qual.conv`,
+* `eq: therighthandside`,
 * `e:dotalpha.step2`, `e:mineqalpha.step2`, `e:diffineqalpha.step2` — in
   `Perspective.Section5_HemisphereRate`, for the limit `x⋆` of step 1,
 * `Theorem r:wendel` — Wendel's hemisphere probability.
@@ -17,9 +17,11 @@ This file formalizes §6 of the survey:
 The remark following `thm: boumal` — no smooth invariant measure — is
 `Perspective.Section5_InvariantMeasure`.
 
-`Lemma lem: hemisphere.clustering` — *cone collapse* — is
-`Perspective.Section5_ConeCollapse`, where it is proved from the two steps of
-its own proof.  Steps 1 and 2 — that `min_i ⟨x_i(t), w⟩` does not decrease, and
+`Lemma lem: hemisphere.clustering` — *cone collapse* — is `cone_collapse`, in
+`Perspective.Section5_ExpRate`; its step 1, `eq: qual.conv`, is the
+qualitative half of its conclusion and is not stated apart.  The last step of
+its proof, integrating `e:diffineqalpha.step2` into the rate, is proved in
+`Perspective.Section5_ConeCollapse`.  Steps 1 and 2 — that `min_i ⟨x_i(t), w⟩` does not decrease, and
 the decomposition `e:decompox*.step2` of `x⋆` along the particles — are
 `Perspective.Section5_Hemisphere`, which needs the one-sided calculus of
 `Perspective.MinCurve`.
@@ -141,45 +143,6 @@ theorem step1_rhs
     ring
   refine (HasDerivAt.inner ℝ (hX t i) (hasDerivAt_const t w)).congr_deriv ?_
   rw [inner_zero_right, zero_add, key]
-
-/-- **Equation (eq: qual.conv).** *Qualitative convergence at step 1.*
-
-  `lim_{t→∞} x_i(t) = x⋆`  for all `i`,
-
-for particles starting in an open hemisphere, as in
-`lem: hemisphere.clustering`.
-
-**What the source says and what is changed here.**  The lemma assumes
-`β > 0`; no sign of `β` is assumed here.  Step 1 uses `β` only through the
-weights `a_{ij} = e^{β⟨x_i,x_j⟩} > 0`, positive at every real `β`, and through
-the bound `|⟨ẍ_i, w⟩| = O(e^{2|β|})` fed to `lem: ez.lemma`, so its argument
-does not see the sign.  If that reading is wrong the statement is false at
-some `β ≤ 0`, and the refutation, not a hypothesis added after the fact, is
-the honest ending.
-
-Not proved here.
-
-Source: arXiv:2312.10794v5, §6.1, proof of `lem: hemisphere.clustering`,
-step 1, `eq: qual.conv`. -/
-theorem hemisphere_step1_qual_conv
-    (β : ℝ) (X₀ : SphereTuple d n)
-    (hX₀ : ∃ w : SSphere d, ∀ i : Idx n,
-              0 < inner (𝕜 := ℝ) ((X₀ i : EucSpace d)) ((w : EucSpace d))) :
-    ∃ x_star : SSphere d,
-      ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
-        ∀ i : Idx n,
-          Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
-            Filter.atTop (nhds 0) := by
-  sorry
-
-/-- The hypothesis of `hemisphere_step1_qual_conv` is satisfiable: one
-particle at `basePoint 0`, in the hemisphere around itself. -/
-example : ∃ w : SSphere 1, ∀ i : Idx 1,
-    0 < inner (𝕜 := ℝ) (((fun _ => basePoint 0 : SphereTuple 1 1) i : EucSpace 1))
-      ((w : EucSpace 1)) := by
-  refine ⟨basePoint 0, fun _ => ?_⟩
-  rw [real_inner_self_eq_norm_mul_norm, mem_sphere_zero_iff_norm.mp (basePoint 0).2]
-  norm_num
 
 /-- **Theorem (r:wendel) — Wendel's theorem.**
 
