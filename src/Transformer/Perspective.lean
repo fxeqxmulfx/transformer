@@ -22,7 +22,13 @@ independent and lie in an open hemisphere.  `SphereMoments` and
 `PositiveDefinite` make the kernel `e^{β x·y}` positive definite on the
 moments of a measure: a probability measure on the sphere is determined by its
 moments, hence by its partition function
-`Z_{β,μ}`, `β > 0`.
+`Z_{β,μ}`, `β > 0`.  `InjectedFlow`, `InjectedSpread`, `InjectedAttention` and
+`InjectedConsensus` are not in the survey: the flow
+`ẋ_i = Proj_{x_i}(Σ_j a_ij x_j + z_i)`, with constant vectors `z_i` mixed back
+into the drive, does not collapse when two of the `z_i` are linearly
+independent, uniformly in weights of bounded row sums — for softmax attention,
+in `β`, `Q` and `K` — while at `z = 0` softmax attention with constant `Q`,
+`K` collapses from any open hemisphere (§6.1).
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -59,6 +65,10 @@ import Transformer.Perspective.Section5_HighD
 import Transformer.Perspective.SphereHyperplane
 import Transformer.Perspective.UniformHemisphere
 import Transformer.Perspective.Section5_ExpRate
+import Transformer.Perspective.InjectedFlow
+import Transformer.Perspective.InjectedSpread
+import Transformer.Perspective.InjectedAttention
+import Transformer.Perspective.InjectedConsensus
 import Transformer.Perspective.Section5_ConeCollapse
 import Transformer.Perspective.Section5_Hemisphere
 import Transformer.Perspective.Section5_HemisphereCone

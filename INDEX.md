@@ -6401,7 +6401,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer.Perspective`
 
-**[Transformer.Perspective](src/Transformer/Perspective.lean)** — 114 lines, aggregator
+**[Transformer.Perspective](src/Transformer/Perspective.lean)** — 115 lines, aggregator
 
 **[Transformer.Perspective.AppendixA_Beta0](src/Transformer/Perspective/AppendixA_Beta0.lean)** — 280 lines
 
