@@ -181,10 +181,8 @@ example (a : Idx d → EucSpace d) (x : SSphere d) :
 energy has a unique global minimizer `μ⋆`, and `μ⋆` is invariant under every
 rotation fixing every `a_j` with `ω_j ≠ 0`.
 
-Not proved here.  Even for `ω = 0` this is
-`Perspective.existence_uniqueness_energy_min`, which rests on the positive
-definiteness of the kernel `e^{β⟨x,y⟫}` on the sphere — its Funk–Hecke
-expansion in Gegenbauer polynomials — and Mathlib has neither.
+Not proved yet.  At `ω = 0` this is
+`Perspective.existence_uniqueness_energy_min`.
 
 Source: arXiv:2601.21366v2, `prop: min.max` (ii). -/
 theorem existsUnique_min_energy (hd : 2 ≤ d) (β : ℝ) (hβ : 0 < β) (φ σ : ℝ → ℝ)

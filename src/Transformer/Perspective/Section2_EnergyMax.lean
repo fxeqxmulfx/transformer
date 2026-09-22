@@ -6,10 +6,9 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 `prop: existence.uniqueness.energy`.
 
 That proposition has two halves.  The minimiser half — `σ_d` is the unique
-global minimiser of `𝖤_β` — stays in `Perspective.Section2_FlowMap` as
-`existence_uniqueness_energy_min`, unproved: it rests on the positive
-definiteness of the kernel `exp(β⟨x, y⟩)` on the sphere, i.e. on its
-Funk–Hecke expansion in Gegenbauer polynomials, and Mathlib has neither.
+global minimiser of `𝖤_β` — is `existence_uniqueness_energy_min`, in
+`Perspective.Section2_EnergyMin`: it rests on the positive definiteness of the
+kernel `exp(β⟨x, y⟩)` on the sphere (`Perspective.PositiveDefinite`).
 
 The maximiser half is elementary, and is proved here.  On the sphere
 `⟨x, x'⟩ ≤ 1`, with equality exactly at `x = x'`, so

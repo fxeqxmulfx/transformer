@@ -14,13 +14,15 @@ Main objects:
 * `eq: partition.function` — the partition function `Z_{β,μ}(x)`,
 * `eq: conteqSd`           — the continuity equation,
 * `eq: CE`                 — its form for an arbitrary velocity field,
-* `eq: interaction.energy` — the interaction energy `𝖤_β[μ]`,
-* `Proposition prop: existence.uniqueness.energy`, minimiser half.
+* `eq: interaction.energy` — the interaction energy `𝖤_β[μ]`.
 
-Its maximiser half — every global maximiser of `𝖤_β` is a Dirac mass — is
-proved in `Perspective.Section2_EnergyMax`, on the analytic groundwork of
-`Perspective.Section2_EnergyKernel`.  Its dissipation along `SA`,
-`eq: dissipation.softmax`, is proved in `Perspective.Section2_Dissipation`.
+`prop: existence.uniqueness.energy` is proved in two halves: the minimiser in
+`Perspective.Section2_EnergyMin`, on the strict convexity of
+`Perspective.Section2_EnergyConvex`, and the maximiser — every global
+maximiser of `𝖤_β` is a Dirac mass — in `Perspective.Section2_EnergyMax`, on
+the analytic groundwork of `Perspective.Section2_EnergyKernel`.  The
+dissipation of `𝖤_β` along `SA`, `eq: dissipation.softmax`, is proved in
+`Perspective.Section2_Dissipation`.
 
 For the integrals over `SSphere d` we equip the sphere with its induced Borel
 measurable space (it is a metric subspace of `ℝ^d`).
@@ -184,38 +186,6 @@ def sphereMap (U : EucSpace d ≃ₗᵢ[ℝ] EucSpace d) (x : SSphere d) : SSphe
   ⟨U (x : EucSpace d), by
     rw [mem_sphere_zero_iff_norm, LinearIsometryEquiv.norm_map]
     exact mem_sphere_zero_iff_norm.mp x.2⟩
-
-/-- **Proposition (prop: existence.uniqueness.energy), first half.**  For
-`β > 0` and `d ≥ 2`, `𝖤_β` has a unique global minimiser over
-`𝒫(𝕊^{d-1})`, and that minimiser is the uniform measure `σ_d` on the sphere.
-
-The minimiser is pinned down here by rotation invariance rather than by
-name — a probability measure on `𝕊^{d-1}` invariant under every linear
-isometry of `ℝ^d` *is* `σ_d` — so that no Haar-measure machinery is needed to
-state the proposition.
-
-Not proved here: the minimiser rests on the positive definiteness of the
-kernel `exp(β⟨x, y⟩)` on the sphere, i.e. on its Funk–Hecke expansion in
-Gegenbauer polynomials, and Mathlib has neither.
-
-The second half of the proposition — every global maximiser is a Dirac mass
-`δ_{x⋆}` — is proved, in `Perspective.Section2_EnergyMax`, as
-`exists_eq_dirac_of_isMaxEnergy`.
-
-Source: arXiv:2312.10794v5, §3.2, `prop: existence.uniqueness.energy`. -/
-theorem existence_uniqueness_energy_min (β : ℝ) (hβ : 0 < β) (hd : 2 ≤ d) :
-    (∃! μ₀ : ProbSphere d, ∀ μ : ProbSphere d,
-        interactionEnergy d β μ₀ ≤ interactionEnergy d β μ) ∧
-    (∀ μ₀ : ProbSphere d,
-        (∀ μ : ProbSphere d, interactionEnergy d β μ₀ ≤ interactionEnergy d β μ) →
-        ∀ U : EucSpace d ≃ₗᵢ[ℝ] EucSpace d,
-          (μ₀ : Measure (SSphere d)).map (sphereMap d U)
-            = (μ₀ : Measure (SSphere d))) := by
-  sorry
-
-/-- The hypotheses of `existence_uniqueness_energy_min` are satisfiable:
-`β = 1` and `d = 2`. -/
-example : (0 : ℝ) < 1 ∧ 2 ≤ 2 := ⟨one_pos, le_rfl⟩
 
 end Perspective
 end Transformer

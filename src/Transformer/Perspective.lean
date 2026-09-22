@@ -41,6 +41,8 @@ import Transformer.Perspective.PositiveDefinite
 import Transformer.Perspective.Section2_EnergyDerivative
 import Transformer.Perspective.Section2_Dissipation
 import Transformer.Perspective.Section2_EnergyMax
+import Transformer.Perspective.Section2_EnergyConvex
+import Transformer.Perspective.Section2_EnergyMin
 import Transformer.Perspective.PartitionGradient
 import Transformer.Perspective.Section2_GradientFlow
 import Transformer.Perspective.Section2_ParticleFlow
