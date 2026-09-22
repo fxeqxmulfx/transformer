@@ -33,6 +33,11 @@ in `β`, `Q` and `K` — while at `z = 0` softmax attention with constant `Q`,
 only: along `ẋ_i = Proj_{x_i}(v_i(t))`, if two drive differences `v_k - v_l`,
 `v_m - v_p` stay near two independent vectors while the tokens are close, the
 tokens do not stay close through any window of positive length.
+`BlockDrive` and `BlockSpread` apply it to a residual block — several heads
+with any values, a feed-forward term Lipschitz on the sphere, an injection
+`z_i(t)` — and to a stack of different blocks: if two differences of
+injections `z_k - z_l`, `z_m - z_p` are independent in every block, one `δ`
+works for the whole stack.
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -77,6 +82,8 @@ import Transformer.Perspective.InjectedAttention
 import Transformer.Perspective.InjectedConsensus
 import Transformer.Perspective.DrivenFlow
 import Transformer.Perspective.DrivenSpread
+import Transformer.Perspective.BlockDrive
+import Transformer.Perspective.BlockSpread
 import Transformer.Perspective.Section5_ConeCollapse
 import Transformer.Perspective.Section5_Hemisphere
 import Transformer.Perspective.Section5_HemisphereCone
