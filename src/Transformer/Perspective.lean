@@ -40,7 +40,12 @@ injections `z_k - z_l`, `z_m - z_p` are independent in every block, one `δ`
 works for the whole stack.  `BlockConsensus` shows that differences are what
 counts: when all `z_i - z_{i₀}` are collinear, a block with a rank-one value
 holds every token at one point, so two independent injections alone — the
-hypothesis for `V = I_d` — do not rule collapse out.
+hypothesis for `V = I_d` — do not rule collapse out.  `RawStream` and
+`RawGrowth` drop the sphere: behind the RMS norm of a pre-norm block the
+directions follow the sphere model with the drive of each token divided by its
+length, and for `mix[0] = 1 + c > 1` the stream outgrows its drive, so every
+direction stays within `2 M / (c ‖x_i(t₀)‖)` of where it was at `t₀` and
+`blockDrive_spread` fails before the norm.
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -88,6 +93,8 @@ import Transformer.Perspective.DrivenSpread
 import Transformer.Perspective.BlockDrive
 import Transformer.Perspective.BlockSpread
 import Transformer.Perspective.BlockConsensus
+import Transformer.Perspective.RawStream
+import Transformer.Perspective.RawGrowth
 import Transformer.Perspective.Section5_ConeCollapse
 import Transformer.Perspective.Section5_Hemisphere
 import Transformer.Perspective.Section5_HemisphereCone
