@@ -13,6 +13,7 @@ representation, and the expansion that turns the U-shape of the correction
 import Transformer.Kinetic.Accuracy
 import Transformer.Kinetic.Correlations
 import Transformer.Kinetic.Hardy
+import Transformer.Kinetic.PeriodicGaussian
 
 open scoped BigOperators
 open Real MeasureTheory ProbabilityTheory
@@ -39,21 +40,50 @@ accuracy is
 
   `𝒜_N(t,σ₀) = (√(π/2)/M) Σ_{n∈ℤ} e^{-π²n²/(2M²)} E[e^{in(θ_N(t)-θ_{i_*}(0))}]`.
 
-Not proved here.
+**What the source says and what is changed here.**  The source takes the
+`θ_i(t)` to be random variables; that is the hypothesis `hϑ`, that each is
+measurable.  Without it the identity is false: for a non-measurable
+`D = θ_N(t) - θ_{i_*}(0)` with values in `{0, π}` the left side and every odd
+Fourier coefficient integrate to `0` by convention, while the even ones do not.
 
 Source: arXiv:2605.09213v1, `eq:Acc-soft-Fourier`. -/
 theorem softAccuracy_fourier (P : Measure Ω) (hP : IsProbabilityMeasure P) (M : ℝ) (hM : 0 < M)
-    (N : ℕ) (hN : 0 < N) (ϑ : Ω → ℝ → Idx N → ℝ) (t σ₀ : ℝ) :
+    (N : ℕ) (hN : 0 < N) (ϑ : Ω → ℝ → Idx N → ℝ) (hϑ : ∀ s j, Measurable fun ω => ϑ ω s j)
+    (t σ₀ : ℝ) :
     (softAccuracy P M N hN ϑ t σ₀ : ℂ) =
       (Real.sqrt (π / 2) / M : ℝ) • ∑' n : ℤ,
         (Real.exp (-(π ^ 2 / (2 * M ^ 2)) * (n : ℝ) ^ 2) : ℝ) •
           ∫ ω, Complex.exp ((n : ℂ) *
             ((ϑ ω t (lastIdx N hN) - ϑ ω 0 (sourceIdx N hN σ₀) : ℝ) : ℂ) * Complex.I) ∂P := by
-  sorry
+  set D : Ω → ℝ := fun ω => ϑ ω t (lastIdx N hN) - ϑ ω 0 (sourceIdx N hN σ₀)
+  have hD : Measurable D := (hϑ _ _).sub (hϑ _ _)
+  set e : ℤ → ℝ := fun n => Real.exp (-(π ^ 2 / (2 * M ^ 2)) * (n : ℝ) ^ 2)
+  set F : ℤ → Ω → ℂ := fun n ω => e n • Complex.exp ((n : ℂ) * (D ω : ℂ) * Complex.I)
+  have hnorm : ∀ n ω, ‖F n ω‖ = e n := fun n ω => by
+    simp only [F, e, norm_smul, Real.norm_of_nonneg (Real.exp_pos _).le]
+    rw [show (n : ℂ) * (D ω : ℂ) * Complex.I = ((n * D ω : ℝ) : ℂ) * Complex.I by push_cast; ring,
+      Complex.norm_exp_ofReal_mul_I, mul_one]
+  have hint : ∀ n, Integrable (F n) P := fun n =>
+    Integrable.of_bound ((by fun_prop : Continuous fun x : ℝ =>
+      e n • Complex.exp ((n : ℂ) * (x : ℂ) * Complex.I)).measurable.comp hD).aestronglyMeasurable
+      (e n) (ae_of_all _ fun ω => (hnorm n ω).le)
+  have hsum : Summable fun n => ∫ ω, ‖F n ω‖ ∂P := by
+    simp only [hnorm, integral_const, probReal_univ, one_smul]
+    exact summable_exp_neg_mul_int_sq (by positivity)
+  unfold softAccuracy
+  rw [← integral_complex_ofReal]
+  simp_rw [tsum_periodicGaussian_eq hM]
+  rw [integral_smul]
+  change _ • ∫ ω, ∑' n, F n ω ∂P = _
+  rw [← integral_tsum_of_summable_integral_norm hint hsum]
+  congr 1
+  exact tsum_congr fun n => integral_smul _ _
 
-/-- The hypotheses of `softAccuracy_fourier` are satisfiable. -/
-example : IsProbabilityMeasure (Measure.dirac () : Measure Unit) ∧ (0 : ℝ) < 2 ∧ 0 < 1 :=
-  ⟨inferInstance, by norm_num, by norm_num⟩
+/-- The hypotheses of `softAccuracy_fourier` are satisfiable: one prompt, a
+constant trajectory. -/
+example : IsProbabilityMeasure (Measure.dirac () : Measure Unit) ∧ (0 : ℝ) < 2 ∧ 0 < 1 ∧
+    ∀ (s : ℝ) (j : Idx 1), Measurable fun _ : Unit => (fun (_ : ℝ) (_ : Idx 1) => (0 : ℝ)) s j :=
+  ⟨inferInstance, by norm_num, by norm_num, fun _ _ => measurable_const⟩
 
 /-- **Equation (eq:soft-accuracy-expansion).**  From `th:lost` and the Fourier
 representation, the soft accuracy expands as
