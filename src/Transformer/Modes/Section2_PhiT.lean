@@ -24,7 +24,8 @@ completed.
   `A = μ₁²/a`, `α = a/D`, `δ = μ₂ - bμ₁/a`: `quadForm_complete_square`, proved
   for every symmetric `Σ` with `a ≠ 0`, `D ≠ 0`.  `phiA`, `phiAlpha` and
   `phiDelta` are these three for `Σ_t`, `μ_t`.  The asymptotics the source
-  gives them, with their corrections, are in `Section2_PhiTAsymp.lean`.
+  gives them, with their corrections, are in `Section2_PhiTAsymp.lean` and
+  `Section2_PhiTDelta.lean`.
 
 Source: arXiv:2412.09080v3, `eq:Yi`, `eq:qt`, `eq:approx`, `lem:phi-t`.
 -/

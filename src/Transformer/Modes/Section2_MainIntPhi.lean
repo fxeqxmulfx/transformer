@@ -14,7 +14,7 @@ bounds `eq:int-phi-b` its proof reduces to.
   source states it "for any measurable `S ⊂ ℝ`", but derives it from
   `lem:phi-t`, which holds only on `T`, and only with `n ≲ β^{5/2}`
   (`integral_krPhi_isTheta`).  Without that hypothesis it fails for `S` a small
-  interval around `0`, for the reason given in `Section2_PhiTAsymp.lean`.
+  interval around `0`, for the reason given in `Section2_PhiTDelta.lean`.
 
 * `lem:main-int-phi` is stated as the source has it.  Its proof goes through
   `eq:int-phi-final`, so for `c < 2/5` the source's proof does not cover it.
@@ -120,7 +120,7 @@ theorem sq_le_phiRate {n : ℕ} {β t : ℝ} (hn : 1 ≤ n) (hβ : 1 ≤ β)
   · exact absurd ht (Set.notMem_empty t)
 
 /-- The hypotheses of `sq_le_phiRate` are satisfiable: `n = β = 1`, `t = 0`.
-Those of the regime theorems below are witnessed in `Section2_PhiTAsymp.lean`. -/
+Those of the regime theorems below are witnessed in `Section2_PhiTDelta.lean`. -/
 example : 1 ≤ 1 ∧ (1 : ℝ) ≤ 1 ∧ (0 : ℝ) ∈ intervalT' 1 1 := by
   refine ⟨le_rfl, le_rfl, ?_⟩
   unfold intervalT'

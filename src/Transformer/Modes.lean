@@ -31,7 +31,10 @@ import Transformer.Modes.Section5_CovAsymp
 import Transformer.Modes.Section2_MomentsP
 import Transformer.Modes.Section2_MomentsPCov
 import Transformer.Modes.Section2_PhiT
+import Transformer.Modes.Section2_PhiTQuot
+import Transformer.Modes.Section2_PhiTUniform
 import Transformer.Modes.Section2_PhiTAsymp
+import Transformer.Modes.Section2_PhiTDelta
 import Transformer.Modes.Section2_MainIntPhi
 import Transformer.Modes.Section3_Hermite
 import Transformer.Modes.Section3_Cumulants
