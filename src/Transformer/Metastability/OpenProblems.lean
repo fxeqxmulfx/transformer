@@ -23,6 +23,7 @@ written in, not statements themselves.
 
 import Transformer.Basic
 import Transformer.Metastability.Basic
+import Transformer.Metastability.EnergyScale
 import Transformer.Metastability.MainTheorem
 import Transformer.Metastability.InitialUniform
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
@@ -99,15 +100,29 @@ example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 
 `X β` is the solution of `SA` at inverse temperature `β`, and `τ β` the
 reparametrization at that temperature.  The profile asks for jump times
-`0 = T_0 < T_1 < ⋯ < T_k` (with `T_{k+1} = +∞`, which is why only the
-indices `i < k` carry a strict inequality) and a piecewise-constant
-`φ_∞ ∈ L^∞(ℝ_{≥0}; [0,1])` such that
+`0 = T_0 < T_1 < ⋯ < T_k < T_{k+1} = +∞` and a piecewise-constant
+`φ_∞ ∈ L^∞(ℝ_{≥0}; [0,1])`, constant on each `[T_i, T_{i+1})`, such that
 
-  `φ_β(t) := 𝖤_β(x_1(τ_β(t)),…,x_n(τ_β(t)))`
+  `φ_β(t) := 2β 𝖤_β(x_1(τ_β(t)),…,x_n(τ_β(t)))`
 
-converges to `φ_∞` uniformly on each `(T_i, T_{i+1})`, `i < k`, as
+converges to `φ_∞` uniformly on each `(T_i, T_{i+1})`, `i ∈ {0,…,k}`, as
 `β → ∞`.  The uniform convergence is written out with an `ε`/`B` pair so
-that the threshold `B` is common to all plateaux.
+that the threshold `B` is common to all plateaux; `T_{k+1} = +∞` is encoded
+by dropping the upper bound when `i = k`.
+
+**What the source says and what is changed here.**
+
+* The source defines `φ_β` with `𝖤_β` itself, whose printed normalization
+  `1/(2β e^β n²)` makes it at most `1/(2β)`: then every family converges to
+  `φ_∞ ≡ 0` and the problem is empty (`printed_staircase_trivial`).  The
+  factor `2β` gives the energy the maximum `1` that the section's figure
+  assigns to the last step.
+* The source asks for uniform convergence on `(T_i, T_{i+1})` for
+  `i ∈ {0,…,k-1}` only, leaving out the last plateau `(T_k, +∞)`.  Then a
+  time change slow enough — `τ_β(t) = t e^{-β²}` — keeps every trajectory at
+  its initial energy on the bounded window `[0, T_k]`, and the question is
+  again empty.  `thm: staircase`, the one case the source proves, quantifies
+  over the last plateau (`i ∈ {1,…,k}` there), and so does this profile.
 
 Source: arXiv:2410.06833v1, §6, `conj: saddle-to-saddle`. -/
 def HasStaircaseProfile
@@ -116,11 +131,11 @@ def HasStaircaseProfile
     1 ≤ k ∧ k ≤ n ∧ T 0 = 0 ∧
     (∀ i : ℕ, i < k → T i < T (i + 1)) ∧
     (∀ t : ℝ, φ t ∈ Set.Icc (0 : ℝ) 1) ∧
-    (∀ i : ℕ, i < k → ∀ s t : ℝ, s ∈ Set.Ico (T i) (T (i + 1)) →
-      t ∈ Set.Ico (T i) (T (i + 1)) → φ s = φ t) ∧
+    (∀ i : ℕ, i ≤ k → ∀ s t : ℝ, T i ≤ s → T i ≤ t →
+      (i < k → s < T (i + 1)) → (i < k → t < T (i + 1)) → φ s = φ t) ∧
     ∀ ε : ℝ, 0 < ε → ∃ B : ℝ, ∀ β : ℝ, B < β →
-      ∀ i : ℕ, i < k → ∀ t : ℝ, t ∈ Set.Ioo (T i) (T (i + 1)) →
-        |Eβ d n β (X β (τ β t)) - φ t| < ε
+      ∀ i : ℕ, i ≤ k → ∀ t : ℝ, T i < t → (i < k → t < T (i + 1)) →
+        |2 * β * Eβ d n β (X β (τ β t)) - φ t| < ε
 
 /-- **Problem (conj: saddle-to-saddle).** *Staircase profile of the energy.*
 
@@ -133,13 +148,21 @@ The survey answers this affirmatively only for the modified `USA` dynamics on
 the circle (`Metastability.staircase_profile`); in the
 generality below it is open.
 
+**What the source says and what is changed here.**  The source asks only
+for `τ_β ∈ 𝒞⁰(ℝ_{≥0}; ℝ_{≥0})`.  Read literally, `τ_β ≡ 0` is admitted, the
+energy along it is the constant `2β 𝖤_β(X₀)`, which converges as `β → ∞`,
+and the question is empty.  A reparametrization of time is meant: here
+`τ_β(0) = 0`, `τ_β` is strictly increasing on `ℝ_{≥0}` and unbounded, so
+that the whole trajectory is traversed.
+
 Source: arXiv:2410.06833v1, §6, `conj: saddle-to-saddle`. -/
 theorem saddle_to_saddle (hd : 2 ≤ d) (hn : 2 ≤ n) :
     ∀ (X₀ : SphereTuple d n) (X : ℝ → ℝ → SphereTuple d n),
       (∀ β : ℝ, 1 < β → X β 0 = X₀ ∧ Perspective.SA d n β (X β)) →
       ∃ τ : ℝ → ℝ → ℝ,
         (∀ β : ℝ, 1 < β → Continuous (τ β)) ∧
-        (∀ β t : ℝ, 0 ≤ t → 0 ≤ τ β t) ∧
+        (∀ β : ℝ, 1 < β → τ β 0 = 0 ∧ StrictMonoOn (τ β) (Set.Ici 0) ∧
+          Filter.Tendsto (τ β) Filter.atTop Filter.atTop) ∧
         HasStaircaseProfile d n X τ := by
   sorry
 
