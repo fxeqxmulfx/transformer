@@ -11,7 +11,7 @@
 All three bound the probability of an event under the *uniform* measure on
 `𝕊^{d-1}`, which this development does not construct.  It is pinned down
 instead of built: `IsUniformFamily` asks for a probability measure on each
-sphere invariant under every linear isometry of `ℝ^d`, and such a measure is
+nonempty sphere invariant under every linear isometry of `ℝ^d`, and such a measure is
 unique, so quantifying over all families satisfying it is not a strengthening.
 This is `Perspective.UniformTuple`'s device, one sphere at a time.
 
@@ -45,9 +45,28 @@ def IsUniformOn (d : ℕ) (ν : Measure (SSphere d)) : Prop :=
     ∀ U : EucSpace d ≃ₗᵢ[ℝ] EucSpace d,
       ν.map (Perspective.sphereMap d U) = ν
 
-/-- The same, dimension by dimension: a uniform law on every sphere at once. -/
+/-- The same, dimension by dimension: a uniform law on every sphere
+`𝕊^{d-1}`, `d ≥ 1`, at once.
+
+`d ≥ 1` is not a restriction of the survey's family but the condition for it
+to exist: `𝕊^{-1} ⊆ ℝ^0` is empty and carries no probability measure
+(`not_isUniformOn_zero`), so a family asked to be uniform in every `d ∈ ℕ`
+does not exist, and every statement quantified over such families was
+vacuously true. -/
 def IsUniformFamily (σ : ∀ d : ℕ, Measure (SSphere d)) : Prop :=
-  ∀ d : ℕ, IsUniformOn d (σ d)
+  ∀ d : ℕ, 1 ≤ d → IsUniformOn d (σ d)
+
+/-- `𝕊^{-1}` carries no uniform law: it is empty, and the empty space carries
+no probability measure.  This is why `IsUniformFamily` starts at `d = 1`. -/
+theorem not_isUniformOn_zero (ν : Measure (SSphere 0)) : ¬ IsUniformOn 0 ν := by
+  rintro ⟨hν, -⟩
+  have h1 := hν.measure_univ
+  have : (Set.univ : Set (SSphere 0)) = ∅ := by
+    ext x
+    have hx : ‖(x : EucSpace 0)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
+    simp [Subsingleton.elim (x : EucSpace 0) 0] at hx
+  rw [this, measure_empty] at h1
+  exact zero_ne_one h1
 
 /-- The law of `n` i.i.d. draws from a measure `ν` on `𝕊^{d-1}`. -/
 noncomputable def iidSphere (d n : ℕ) (ν : Measure (SSphere d)) :
@@ -152,7 +171,7 @@ theorem uniform_separated (n : ℕ)
     refine isSeparated_of_near_orthogonal d n β ε hε X w hw hclose ?_
     rw [← hargs, h12]
     exact hcond
-  have : IsProbabilityMeasure (σ d) := (hσ d).1
+  have : IsProbabilityMeasure (σ d) := (hσ d (by omega)).1
   have : IsProbabilityMeasure (iidSphere d n (σ d)) := by
     unfold iidSphere; infer_instance
   exact (hd₀ d ((le_max_left d₀ 381).trans hd)).trans (measureReal_mono hsub)
@@ -165,8 +184,8 @@ example : ∀ σ : ∀ d : ℕ, Measure (SSphere d), IsUniformFamily σ →
       1 - 2 * ((0 : ℕ) : ℝ)^2 * (d : ℝ) ^ (-(1 : ℝ) / 64)
         ≤ (iidSphere d 0 (σ d)).real (nearOrthogonal d 0) := by
   intro σ hσ
-  refine ⟨1, one_pos, fun d _ => ?_⟩
-  have : IsProbabilityMeasure (σ d) := (hσ d).1
+  refine ⟨1, one_pos, fun d hd => ?_⟩
+  have : IsProbabilityMeasure (σ d) := (hσ d hd).1
   have : IsProbabilityMeasure (iidSphere d 0 (σ d)) := by
     unfold iidSphere; infer_instance
   have huniv : nearOrthogonal d 0 = Set.univ :=
