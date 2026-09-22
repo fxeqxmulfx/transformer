@@ -12,6 +12,7 @@ other, one interior minimum.
 -/
 
 import Transformer.Kinetic.Defs
+import Transformer.Kinetic.FourierDecay
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 
@@ -109,19 +110,6 @@ noncomputable def softCorrection (β lam M t σ₀ : ℝ) : ℝ :=
   ∑' n : ℕ, Real.exp (-(π ^ 2 / (2 * M ^ 2)) * ((n : ℝ) + 1) ^ 2) *
     hardyProfile lam (aCoeff β (n + 1)) t 1 σ₀
 
-/-- The footnote of `thm:U-shape`: since `w_β` is smooth, `a_n → 0`, which is
-what makes the smallness condition `eq:affine-smallness` non-empty for `t > 0`.
-
-Not proved here.
-
-Source: arXiv:2605.09213v1, `thm:U-shape`, footnote. -/
-theorem aCoeff_tendsto_zero (β : ℝ) (hβ : 0 < β) :
-    Filter.Tendsto (aCoeff β) Filter.atTop (nhds 0) := by
-  sorry
-
-/-- The hypothesis of `aCoeff_tendsto_zero` is satisfiable. -/
-example : (0 : ℝ) < 1 := by norm_num
-
 /-- **Theorem (thm:U-shape), Lost in the middle.**  Let `λ > 0` and assume
 `eq:affine-smallness`,
 
@@ -143,8 +131,7 @@ the smallness condition as a condition "for `t > 0`".
 
 The supremum of `eq:affine-smallness` is written pointwise, as `t a_n ≤ …` for
 every `n ≥ 1`.  For `t ≥ 0` that is equivalent to `t sup_{n≥1} a_n ≤ …`, and it
-avoids the junk value `iSup` takes on an unbounded family — boundedness being
-`aCoeff_tendsto_zero`, which is not proved here.
+does not lean on the family being bounded, which `aCoeff_tendsto_zero` proves.
 
 Not proved here.
 
@@ -161,19 +148,25 @@ theorem u_shape (β lam M t : ℝ) (hβ : 0 < β) (hlam : 0 < lam) (hM : 0 < M)
         ∀ σ₀ ∈ Set.Ioo (0 : ℝ) 1, softCorrection β lam M t s ≤ softCorrection β lam M t σ₀) := by
   sorry
 
-/-- The hypotheses of `u_shape` are satisfiable.  The positivity binders are
-witnessed by `β = λ = M = t = 1`.  The smallness condition
-`eq:affine-smallness` is a constraint on `t`, not an impossibility: its
-threshold `min{3 - √3, 2(1 - e^{-λ})}` is positive, which is what is checked
-here, and the family `a_n` it bounds tends to `0` by the source's own footnote,
-`aCoeff_tendsto_zero`.  Exhibiting a concrete `t > 0` that satisfies it means
-bounding `a_n = n² I_n(β)` uniformly, which is that unproved footnote. -/
-example : (0 : ℝ) < 1 ∧ 0 < 3 - Real.sqrt 3 ∧ 0 < 2 * (1 - Real.exp (-(1 : ℝ))) := by
-  refine ⟨by norm_num, ?_, ?_⟩
-  · nlinarith [Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0),
-      Real.sqrt_nonneg 3]
-  · have : Real.exp (-(1 : ℝ)) < 1 := by simp
-    linarith
+/-- The hypotheses of `u_shape` are satisfiable, at `β = λ = M = 1`: the
+family `a_n` tends to `0` (`aCoeff_tendsto_zero`), so it is bounded above by
+some `B`, and `t = m / (|B| + 1)` meets `eq:affine-smallness`, `m` being its
+positive threshold. -/
+example : ∃ t : ℝ, 0 < t ∧ ∀ n : ℕ, 1 ≤ n →
+    t * aCoeff 1 n ≤ min (3 - Real.sqrt 3) (2 * (1 - Real.exp (-(1 : ℝ)))) := by
+  set m := min (3 - Real.sqrt 3) (2 * (1 - Real.exp (-(1 : ℝ))))
+  have hm : 0 < m := by
+    refine lt_min ?_ ?_
+    · nlinarith [Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0), Real.sqrt_nonneg 3]
+    · have : Real.exp (-(1 : ℝ)) < 1 := by simp
+      linarith
+  obtain ⟨B, hB⟩ := (aCoeff_tendsto_zero 1).bddAbove_range
+  have hB1 : 0 < |B| + 1 := by positivity
+  refine ⟨m / (|B| + 1), div_pos hm hB1, fun n _ => ?_⟩
+  have ha : aCoeff 1 n ≤ |B| + 1 := (hB ⟨n, rfl⟩).trans ((le_abs_self B).trans (by linarith))
+  calc m / (|B| + 1) * aCoeff 1 n ≤ m / (|B| + 1) * (|B| + 1) :=
+        mul_le_mul_of_nonneg_left ha (div_pos hm hB1).le
+    _ = m := div_mul_cancel₀ m hB1.ne'
 
 end Kinetic
 end Transformer

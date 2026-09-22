@@ -487,7 +487,7 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - ok Transformer/Kinetic/Codewords.lean (8): `torusDist_comm`, `torusDist_nonneg`, `torusDist_triangle`, `torusDist_le_abs`, `coe_add_int_mul_period`, `two_pi_div_le_torusDist_codeword`, `exists_codeword_close`, `isNearestCodeword_iff`
 - ok Transformer/Kinetic/Correlations.lean (1): `torusConv_const`
 - ok Transformer/Kinetic/Defs.lean (4): `hasDerivAt_wBeta`, `wBeta_periodic`, `wBetaDeriv_periodic`, `graphon_of_le`
-- issue Transformer/Kinetic/Hardy.lean (2): `besselI_succ_zero`, `hardyProfile_zero` — u_shape faithful to thm:U-shape, but its satisfiability example does not exhibit a t meeting eq:affine-smallness (needs sup a_n < ∞, i.e. aCoeff_tendsto_zero, sorried)
+- issue Transformer/Kinetic/Hardy.lean (2): `besselI_succ_zero`, `hardyProfile_zero` — u_shape faithful to thm:U-shape, but its satisfiability example does not exhibit a t meeting eq:affine-smallness (needs sup a_n < ∞, i.e. aCoeff_tendsto_zero, sorried) — FIXED: aCoeff_tendsto_zero proved (Kinetic/FourierDecay, three integrations by parts, |a_n| ≤ C/n, at every β); the u_shape example now exhibits t = m/(|B|+1) meeting eq:affine-smallness
 - ok Transformer/Kinetic/MeanField.lean (1): `periodic_deriv`
 
 ### Transformer.MeanField — arXiv:2512.01868
