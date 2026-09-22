@@ -159,12 +159,18 @@ theorem isDensityOf_scaledSum_iff {β : ℝ} (hβ : 0 < β) (t : ℝ) {n : ℕ} 
     exact e.measurable.aemeasurable
   change _ ↔ IsDensityOf γn (sumGG' n β t) fun z => c * q (e z)
   constructor
-  · rintro ⟨hq0, hq⟩
-    refine ⟨fun z => mul_nonneg hc.le (hq0 _), ?_⟩
+  · rintro ⟨hqm, hq0, hq⟩
+    refine ⟨(hqm.comp e.measurable).const_mul c, fun z => mul_nonneg hc.le (hq0 _), ?_⟩
     rw [hpush, ← hwd] at hq
     simpa [MeasurableEquiv.map_symm_map] using congrArg (Measure.map e.symm) hq
-  · rintro ⟨hp0, hp⟩
-    refine ⟨fun w => ?_, by rw [hpush, hp, hwd]⟩
+  · rintro ⟨hpm, hp0, hp⟩
+    have hqm : Measurable q := by
+      have h1 : Measurable fun z => c⁻¹ * (c * q (e z)) := hpm.const_mul c⁻¹
+      simp only [← mul_assoc, inv_mul_cancel₀ hc.ne', one_mul] at h1
+      have h2 : ((fun z => q (e z)) ∘ e.symm) = q := by
+        funext w; simp only [Function.comp_apply, e.apply_symm_apply]
+      exact h2 ▸ h1.comp e.symm.measurable
+    refine ⟨hqm, fun w => ?_, by rw [hpush, hp, hwd]⟩
     have := hp0 (e.symm w)
     rw [e.apply_symm_apply] at this
     exact (mul_nonneg_iff_of_pos_left hc).1 this

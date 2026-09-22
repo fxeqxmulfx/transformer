@@ -5742,7 +5742,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`norm_charFun_stdGauss2`](src/Transformer/Modes/Section3_BR.lean#L72) | theorem | proved |
 | [`hasIntegrableCharFun_stdGauss2`](src/Transformer/Modes/Section3_BR.lean#L87) | theorem | proved |
 
-**[Transformer.Modes.Section3_ChangeOfVar](src/Transformer/Modes/Section3_ChangeOfVar.lean)** — 178 lines
+**[Transformer.Modes.Section3_ChangeOfVar](src/Transformer/Modes/Section3_ChangeOfVar.lean)** — 184 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -5762,22 +5762,22 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`integral_hermite3_eq`](src/Transformer/Modes/Section3_CumulantMoment.lean#L44) | theorem | proved |
 | [`cumulant_three_eq_integral_hermite`](src/Transformer/Modes/Section3_CumulantMoment.lean#L104) | theorem | proved |
 
-**[Transformer.Modes.Section3_Cumulants](src/Transformer/Modes/Section3_Cumulants.lean)** — 163 lines
+**[Transformer.Modes.Section3_Cumulants](src/Transformer/Modes/Section3_Cumulants.lean)** — 168 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`IsDensityOf`](src/Transformer/Modes/Section3_Cumulants.lean#L42) | structure |  |
-| [`IsStandardized`](src/Transformer/Modes/Section3_Cumulants.lean#L50) | structure |  |
-| [`HasExpMoments`](src/Transformer/Modes/Section3_Cumulants.lean#L61) | def |  |
-| [`cumulantOf`](src/Transformer/Modes/Section3_Cumulants.lean#L67) | def |  |
-| [`psiOf`](src/Transformer/Modes/Section3_Cumulants.lean#L74) | def |  |
-| [`scaledSum`](src/Transformer/Modes/Section3_Cumulants.lean#L79) | def |  |
-| [`integral_density_mul_hermite`](src/Transformer/Modes/Section3_Cumulants.lean#L87) | theorem | sorry |
-| [`stdGauss2`](src/Transformer/Modes/Section3_Cumulants.lean#L96) | abbrev |  |
-| [`integral_sq_stdGaussian`](src/Transformer/Modes/Section3_Cumulants.lean#L100) | theorem | proved |
-| [`isStandardized_stdGauss2`](src/Transformer/Modes/Section3_Cumulants.lean#L106) | theorem | proved |
-| [`hasExpMoments_stdGauss2`](src/Transformer/Modes/Section3_Cumulants.lean#L129) | theorem | proved |
-| [`isDensityOf_stdGauss2`](src/Transformer/Modes/Section3_Cumulants.lean#L137) | theorem | proved |
+| [`IsDensityOf`](src/Transformer/Modes/Section3_Cumulants.lean#L46) | structure |  |
+| [`IsStandardized`](src/Transformer/Modes/Section3_Cumulants.lean#L55) | structure |  |
+| [`HasExpMoments`](src/Transformer/Modes/Section3_Cumulants.lean#L66) | def |  |
+| [`cumulantOf`](src/Transformer/Modes/Section3_Cumulants.lean#L72) | def |  |
+| [`psiOf`](src/Transformer/Modes/Section3_Cumulants.lean#L79) | def |  |
+| [`scaledSum`](src/Transformer/Modes/Section3_Cumulants.lean#L84) | def |  |
+| [`integral_density_mul_hermite`](src/Transformer/Modes/Section3_Cumulants.lean#L92) | theorem | sorry |
+| [`stdGauss2`](src/Transformer/Modes/Section3_Cumulants.lean#L101) | abbrev |  |
+| [`integral_sq_stdGaussian`](src/Transformer/Modes/Section3_Cumulants.lean#L105) | theorem | proved |
+| [`isStandardized_stdGauss2`](src/Transformer/Modes/Section3_Cumulants.lean#L111) | theorem | proved |
+| [`hasExpMoments_stdGauss2`](src/Transformer/Modes/Section3_Cumulants.lean#L134) | theorem | proved |
+| [`isDensityOf_stdGauss2`](src/Transformer/Modes/Section3_Cumulants.lean#L142) | theorem | proved |
 
 **[Transformer.Modes.Section3_Edgeworth](src/Transformer/Modes/Section3_Edgeworth.lean)** — 93 lines
 
@@ -8315,7 +8315,7 @@ Everything the build cannot vouch for, in one place.
 | [`integral_krPhi_isTheta`](src/Transformer/Modes/Section2_PhiTDelta.lean#L109) | theorem | `Transformer.Modes.Section2_PhiTDelta` |
 | [`edgeworth_two`](src/Transformer/Modes/Section3_BR.lean#L49) | theorem | `Transformer.Modes.Section3_BR` |
 | [`edgeworth_three`](src/Transformer/Modes/Section3_BR.lean#L61) | theorem | `Transformer.Modes.Section3_BR` |
-| [`integral_density_mul_hermite`](src/Transformer/Modes/Section3_Cumulants.lean#L87) | theorem | `Transformer.Modes.Section3_Cumulants` |
+| [`integral_density_mul_hermite`](src/Transformer/Modes/Section3_Cumulants.lean#L92) | theorem | `Transformer.Modes.Section3_Cumulants` |
 | [`abs_cumulantOf_le`](src/Transformer/Modes/Section3_Edgeworth.lean#L69) | theorem | `Transformer.Modes.Section3_Edgeworth` |
 | [`etaMoment_le`](src/Transformer/Modes/Section3_Edgeworth.lean#L76) | theorem | `Transformer.Modes.Section3_Edgeworth` |
 | [`error_higher_two`](src/Transformer/Modes/Section3_ErrorHigher.lean#L52) | theorem | `Transformer.Modes.Section3_ErrorHigher` |

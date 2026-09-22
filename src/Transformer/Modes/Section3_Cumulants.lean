@@ -13,7 +13,11 @@ identity for `|α| = 3`.  Everything here is stated for an arbitrary law `μ` on
 **What the source says and what is carried here.**
 
 * A density is a continuous function: "`q` is the density of `S`" is
-  `IsDensityOf`, nonnegativity together with `Law(S) = q · Lebesgue`.
+  `IsDensityOf`, measurability and nonnegativity together with
+  `Law(S) = q · Lebesgue`.  Only measurability is asked for — a density is
+  measurable by definition, and without it `∫ q H^α` is not a statement about
+  `q` — and only measurability is used; continuity of `q_t` is proved in §5
+  and is nowhere needed here.
 
 * `κ^α` is "the `α`-th mixed derivative at `0` of `log 𝔼 e^{⟨u, Y⟩}`":
   `cumulantOf`, with the partial derivatives taken one variable at a time.
@@ -36,11 +40,12 @@ open scoped ENNReal
 namespace Transformer
 namespace Modes
 
-/-- `q` is a density of the law of `S` under `P`: it is nonnegative and
-`Law(S) = q · Lebesgue`.  arXiv:2412.09080v3, §3 ("the density `q_t` of
+/-- `q` is a density of the law of `S` under `P`: it is measurable, nonnegative
+and `Law(S) = q · Lebesgue`.  arXiv:2412.09080v3, §3 ("the density `q_t` of
 `n^{-1/2} Σ Yᵢ(t)`"). -/
 structure IsDensityOf {Ω : Type*} [MeasurableSpace Ω] (P : Measure Ω) (S : Ω → ℝ × ℝ)
     (q : ℝ × ℝ → ℝ) : Prop where
+  measurable : Measurable q
   nonneg : ∀ x, 0 ≤ q x
   map_eq : P.map S = volume.withDensity (fun x => ENNReal.ofReal (q x))
 
@@ -136,7 +141,7 @@ theorem hasExpMoments_stdGauss2 : HasExpMoments stdGauss2 := by
 arXiv:2412.09080v3, §3.1. -/
 theorem isDensityOf_stdGauss2 :
     IsDensityOf (Measure.pi fun _ : Fin 1 => stdGauss2) (scaledSum 1) phi2 := by
-  refine ⟨fun x => by unfold phi2; positivity, ?_⟩
+  refine ⟨by unfold phi2; fun_prop, fun x => by unfold phi2; positivity, ?_⟩
   have hS : scaledSum 1 = Function.eval 0 := by
     funext X; simp [scaledSum]
   rw [hS, (measurePreserving_eval (μ := fun _ : Fin 1 => stdGauss2) 0).map_eq, stdGauss2,
