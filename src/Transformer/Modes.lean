@@ -26,7 +26,10 @@ import Transformer.Modes.Section2_Gt
 import Transformer.Modes.Section2_GaussianInt
 import Transformer.Modes.Section5_GaussMoments
 import Transformer.Modes.Section5_Moments
+import Transformer.Modes.Section5_MomentsAsymp
+import Transformer.Modes.Section5_CovAsymp
 import Transformer.Modes.Section2_MomentsP
+import Transformer.Modes.Section2_MomentsPCov
 import Transformer.Modes.Section2_PhiT
 import Transformer.Modes.Section2_PhiTAsymp
 import Transformer.Modes.Section2_MainIntPhi

@@ -14,6 +14,8 @@
 
 * The entries of `Σ_t` are `Var G = E G² - (E G)²`, `Cov(G, G') = E GG' - E G·E G'`
   and `Var G' = E G'² - (E G')²`, the moments of `Section5_Moments.lean`.
+  They are stated and proved in `Section2_MomentsPCov.lean`; this file has
+  the two entries of `μ_t`.
 
 * **The second entry of `μ_t` is corrected.**  The source writes
   `μ_{t,2} ~ n^{1/2}β^{-3/2}e^{-t²/2}(1 - t²)`.  At `t = ±1` the right side is
@@ -26,7 +28,7 @@
 Source: arXiv:2412.09080v3, `lem:moments-p`, `eq:moments-p`; §5.2.
 -/
 
-import Transformer.Modes.Section5_Moments
+import Transformer.Modes.Section5_MomentsAsymp
 import Transformer.Modes.Section1_Sketch
 
 open Real Filter Asymptotics
@@ -105,14 +107,19 @@ noncomputable def momentScale (β t : ℝ) : ℝ := β ^ (-(3 : ℝ) / 2) * Real
 
 /-- **Lemma (lem:moments-p), `μ_{t,1}`.**  `√n E G(t) ~ n^{1/2}β^{-3/2}e^{-t²/2} t`.
 
-Not proved here.
-
 Source: arXiv:2412.09080v3, `lem:moments-p`, `eq:moments-p`. -/
 theorem moments_p_mean_fst {N : ℕ → ℕ} {B t : ℕ → ℝ} (hB : Tendsto B atTop atTop)
     (ht : Tendsto (fun k => t k ^ 2 / B k) atTop (𝓝 0)) :
     (fun k => Real.sqrt (N k) * meanG (B k) (t k))
       ~[atTop] fun k => Real.sqrt (N k) * momentScale (B k) (t k) * t k := by
-  sorry
+  have hp := (tendsto_inv_atTop_zero.comp hB).prodMk_nhds ht
+  have hF := (show ContinuousAt (fun p : ℝ × ℝ => Real.exp (p.2 * (1 / (1 + p.1)) / 2)
+      * (1 / (1 + p.1)) * √(1 / (1 + p.1))) (0, 0) by fun_prop (disch := norm_num)).tendsto.comp hp
+  refine isEquivalent_of_eq_mul (F := fun k => Real.exp (t k ^ 2 / B k * (1 / (1 + (B k)⁻¹)) / 2)
+    * (1 / (1 + (B k)⁻¹)) * √(1 / (1 + (B k)⁻¹))) (by simpa [Function.comp_def] using hF) ?_
+  filter_upwards [hB.eventually_gt_atTop 0] with k hk
+  rw [meanG_eq_mul hk, momentScale]
+  ring
 
 /-- **Lemma (lem:moments-p), `μ_{t,2}`, corrected.**
 `√n E G'(t) ~ n^{1/2}β^{-3/2}e^{-t²/2}(1 - t² + 1/β)`.
@@ -121,49 +128,21 @@ The source writes `1 - t²` in place of `1 - t² + 1/β`, which is false at
 `t = ±1`: the right side vanishes and `E G'(±1) > 0`.  See the module
 docstring.
 
-Not proved here.
-
 Source: arXiv:2412.09080v3, `lem:moments-p`, `eq:moments-p`; the correction is
 read off the closed form of `E G'` in §5.2. -/
 theorem moments_p_mean_snd {N : ℕ → ℕ} {B t : ℕ → ℝ} (hB : Tendsto B atTop atTop)
     (ht : Tendsto (fun k => t k ^ 2 / B k) atTop (𝓝 0)) :
     (fun k => Real.sqrt (N k) * meanG' (B k) (t k))
       ~[atTop] fun k => Real.sqrt (N k) * momentScale (B k) (t k) * (1 - t k ^ 2 + (B k)⁻¹) := by
-  sorry
-
-/-- **Lemma (lem:moments-p), `Σ_{t,11}`.**  `Var G(t) ~ 2^{-5/2}β^{-3/2}e^{-t²/2} · 2`.
-
-Not proved here.
-
-Source: arXiv:2412.09080v3, `lem:moments-p`, `eq:moments-p`. -/
-theorem moments_p_var_fst {B t : ℕ → ℝ} (hB : Tendsto B atTop atTop)
-    (ht : Tendsto (fun k => t k ^ 2 / B k) atTop (𝓝 0)) :
-    (fun k => sqMeanG (B k) (t k) - meanG (B k) (t k) ^ 2)
-      ~[atTop] fun k => 2 ^ (-(5 : ℝ) / 2) * momentScale (B k) (t k) * 2 := by
-  sorry
-
-/-- **Lemma (lem:moments-p), `Σ_{t,12}`.**
-`Cov(G(t), G'(t)) ~ 2^{-5/2}β^{-3/2}e^{-t²/2} · (-t)`.
-
-Not proved here.
-
-Source: arXiv:2412.09080v3, `lem:moments-p`, `eq:moments-p`. -/
-theorem moments_p_cov {B t : ℕ → ℝ} (hB : Tendsto B atTop atTop)
-    (ht : Tendsto (fun k => t k ^ 2 / B k) atTop (𝓝 0)) :
-    (fun k => mulMeanGG' (B k) (t k) - meanG (B k) (t k) * meanG' (B k) (t k))
-      ~[atTop] fun k => 2 ^ (-(5 : ℝ) / 2) * momentScale (B k) (t k) * (-t k) := by
-  sorry
-
-/-- **Lemma (lem:moments-p), `Σ_{t,22}`.**  `Var G'(t) ~ 2^{-5/2}β^{-3/2}e^{-t²/2} · 3β`.
-
-Not proved here.
-
-Source: arXiv:2412.09080v3, `lem:moments-p`, `eq:moments-p`. -/
-theorem moments_p_var_snd {B t : ℕ → ℝ} (hB : Tendsto B atTop atTop)
-    (ht : Tendsto (fun k => t k ^ 2 / B k) atTop (𝓝 0)) :
-    (fun k => sqMeanG' (B k) (t k) - meanG' (B k) (t k) ^ 2)
-      ~[atTop] fun k => 2 ^ (-(5 : ℝ) / 2) * momentScale (B k) (t k) * (3 * B k) := by
-  sorry
+  have hp := (tendsto_inv_atTop_zero.comp hB).prodMk_nhds ht
+  have hF := (show ContinuousAt (fun p : ℝ × ℝ => Real.exp (p.2 * (1 / (1 + p.1)) / 2)
+      * (1 / (1 + p.1)) ^ 2 * √(1 / (1 + p.1))) (0, 0) by
+        fun_prop (disch := norm_num)).tendsto.comp hp
+  refine isEquivalent_of_eq_mul (F := fun k => Real.exp (t k ^ 2 / B k * (1 / (1 + (B k)⁻¹)) / 2)
+    * (1 / (1 + (B k)⁻¹)) ^ 2 * √(1 / (1 + (B k)⁻¹))) (by simpa [Function.comp_def] using hF) ?_
+  filter_upwards [hB.eventually_gt_atTop 0] with k hk
+  rw [meanG'_eq_mul hk, momentScale]
+  ring
 
 /-- The hypotheses of `eq:moments-p` are satisfiable: `β_k = k + 1`, `t_k = 0`. -/
 example : Tendsto (fun k : ℕ => (k : ℝ) + 1) atTop atTop ∧
