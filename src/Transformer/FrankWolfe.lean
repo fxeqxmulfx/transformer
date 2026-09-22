@@ -18,6 +18,8 @@ import Transformer.FrankWolfe.Section2_HullFailure
 import Transformer.FrankWolfe.Section3_NegativeDefinite
 import Transformer.FrankWolfe.Section4_Cells
 import Transformer.FrankWolfe.Section4_Polytope
+import Transformer.FrankWolfe.Section4_Faces
+import Transformer.FrankWolfe.Section4_ExpFast
 import Transformer.FrankWolfe.Section4_VertexGenericity
 import Transformer.FrankWolfe.Section4_ODE
 import Transformer.FrankWolfe.Section5_Process
