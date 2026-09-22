@@ -24,14 +24,14 @@ and the parity argument both cases share, are defined and proved here.
   `Metastability.IsUniformOn` uses for rotation invariance.
 
 * Injectivity is proved through the positive-definiteness of the kernel
-  `e^{β x·y}` (`SphereMoments`), not through the source's Funk–Hecke
-  computation, which needs spherical harmonics.
+  `e^{β x·y}` (`Perspective.SphereMoments`), not through the source's
+  Funk–Hecke computation, which needs spherical harmonics.
 
 Source: arXiv:2601.21366v2, `lem: quadpol`, `rem: general-attention`.
 -/
 
 import Transformer.Perceptron.Basic
-import Transformer.Perceptron.SphereMoments
+import Transformer.Perspective.SphereMoments
 import Transformer.Perspective.SphereInvariant
 
 open scoped BigOperators
@@ -119,9 +119,9 @@ theorem attentionTransform_neg (β : ℝ) (μ : Perspective.ProbSphere d) (x : S
 /-- **Lemma (lem: quadpol), injectivity.**  For `β ≠ 0` the map `μ ↦ f^μ` is
 injective on `𝒫(𝕊^{d-1})`.
 
-The source states `β > 0`, and that case is `eq_of_integral_exp_inner_eq`.
-`β < 0` is added: there `f^μ(x)` is `f^μ(-x)` at `-β > 0`
-(`attentionTransform_neg`), and `x ↦ -x` is onto.
+The source states `β > 0`, and that case is
+`Perspective.eq_of_integral_exp_inner_eq`.  `β < 0` is added: there `f^μ(x)`
+is `f^μ(-x)` at `-β > 0` (`attentionTransform_neg`), and `x ↦ -x` is onto.
 
 Source: arXiv:2601.21366v2, `lem: quadpol`. -/
 theorem injective_attentionTransform (β : ℝ) (hβ : β ≠ 0) :
@@ -129,12 +129,12 @@ theorem injective_attentionTransform (β : ℝ) (hβ : β ≠ 0) :
   intro μ₁ μ₂ h
   refine ProbabilityMeasure.toMeasure_injective ?_
   rcases hβ.lt_or_gt with hβ | hβ
-  · refine eq_of_integral_exp_inner_eq (-β) (neg_pos.2 hβ) _ _ fun x => ?_
+  · refine Perspective.eq_of_integral_exp_inner_eq (-β) (neg_pos.2 hβ) _ _ fun x => ?_
     have := (attentionTransform_neg β μ₁ x).trans
       ((congrFun h _).trans (attentionTransform_neg β μ₂ x).symm)
     unfold attentionTransform at this
     exact this
-  · refine eq_of_integral_exp_inner_eq β hβ _ _ fun x => ?_
+  · refine Perspective.eq_of_integral_exp_inner_eq β hβ _ _ fun x => ?_
     have := congrFun h x
     unfold attentionTransform at this
     exact this

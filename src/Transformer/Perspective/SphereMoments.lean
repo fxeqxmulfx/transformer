@@ -1,8 +1,8 @@
 /-
 # Moments on the sphere, and the exponential kernel that sees them
 
-The injectivity of `μ ↦ f^μ` in `lem: quadpol`, at the level of measures
-(`eq_of_integral_exp_inner_eq`), and the two facts it rests on.
+Two facts about measures on `𝕊^{d-1}`, and the positive definiteness of the
+kernel `e^{β x·y}` they combine into.
 
 * A finite measure on `𝕊^{d-1}` is determined by its moments
   `m_I(μ) = ∫ x_{I 0} ⋯ x_{I (k-1)} dμ(x)` (`measure_eq_of_integral_mono_eq`):
@@ -11,14 +11,18 @@ The injectivity of `μ ↦ f^μ` in `lem: quadpol`, at the level of measures
   determined by its integrals against a dense algebra.
 * `∫∫ e^{β x·y} db(y) da(x) = Σ_k β^k/k! Σ_I m_I(a) m_I(b)`
   (`hasSum_integral_exp_inner`), the two-measure form of the expansion
-  `Perspective.hasSum_interactionEnergy` runs on.
+  `hasSum_interactionEnergy` runs on.
 
 For `β > 0` every coefficient `β^k/k!` is positive, so the kernel is positive
 definite: `T(a, b) = ∫∫ e^{β x·y} db da` satisfies
 `T(μ₁,μ₁) - T(μ₁,μ₂) - T(μ₂,μ₁) + T(μ₂,μ₂) = Σ_k β^k/k! Σ_I (m_I(μ₁) - m_I(μ₂))²`.
-`f^{μ₁} = f^{μ₂}` makes the left side vanish, hence every moment agrees.
+If `∫ e^{β x·y} dμ₁(y) = ∫ e^{β x·y} dμ₂(y)` on the sphere — `Z_{β,μ₁} = Z_{β,μ₂}`
+in the notation of `eq: partition.function` — the left side vanishes, hence
+every moment agrees and `μ₁ = μ₂` (`eq_of_integral_exp_inner_eq`).
 
-The source proves injectivity through the Funk–Hecke formula instead: the
+That last statement is the injectivity of `μ ↦ f^μ` in `lem: quadpol` of
+arXiv:2601.21366v2, at the level of measures (`Perceptron.Transform` reads it
+off).  The source proves it through the Funk–Hecke formula instead: the
 spherical-harmonic coefficients of `f^ν` are `λ_j(β) m_{jℓ}(ν)` with
 `λ_j(β) > 0`.  Both routes end in the same Stone–Weierstrass step; this one
 needs no spherical harmonics, which Mathlib does not have.
@@ -33,7 +37,7 @@ open scoped BigOperators Nat BoundedContinuousFunction
 open Real MeasureTheory
 
 namespace Transformer
-namespace Perceptron
+namespace Perspective
 
 variable {d : ℕ}
 
@@ -49,7 +53,7 @@ noncomputable def coordBCF (i : Fin d) : SSphere d →ᵇ ℝ :=
 /-- A product of coordinates is a monomial `x ↦ x_{I 0} ⋯ x_{I (k-1)}`. -/
 theorem exists_mono_of_mem_closure {g : SSphere d →ᵇ ℝ}
     (hg : g ∈ Submonoid.closure (Set.range coordBCF ∪ star (Set.range coordBCF))) :
-    ∃ k, ∃ I : Fin k → Fin d, ∀ x : SSphere d, g x = Perspective.mono I (x : EucSpace d) := by
+    ∃ k, ∃ I : Fin k → Fin d, ∀ x : SSphere d, g x = mono I (x : EucSpace d) := by
   induction hg using Submonoid.closure_induction with
   | mem g hg =>
     obtain ⟨i, rfl⟩ : ∃ i, coordBCF (d := d) i = g := by
@@ -57,14 +61,14 @@ theorem exists_mono_of_mem_closure {g : SSphere d →ᵇ ℝ}
       · exact hg
       · obtain ⟨i, hi⟩ := Set.mem_star.1 hg
         exact ⟨i, by rw [hi]; ext x; simp⟩
-    exact ⟨1, fun _ => i, fun x => by simp [Perspective.mono]⟩
-  | one => exact ⟨0, Fin.elim0, fun x => by simp [Perspective.mono]⟩
+    exact ⟨1, fun _ => i, fun x => by simp [mono]⟩
+  | one => exact ⟨0, Fin.elim0, fun x => by simp [mono]⟩
   | mul f g _ _ hf hg =>
     obtain ⟨k, I, hI⟩ := hf
     obtain ⟨l, J, hJ⟩ := hg
     refine ⟨k + l, Fin.append I J, fun x => ?_⟩
-    rw [BoundedContinuousFunction.mul_apply, hI, hJ, Perspective.mono, Perspective.mono,
-      Perspective.mono, Fin.prod_univ_add]
+    rw [BoundedContinuousFunction.mul_apply, hI, hJ, mono, mono,
+      mono, Fin.prod_univ_add]
     simp [Fin.append_left, Fin.append_right]
 
 /-- **A finite measure on `𝕊^{d-1}` is determined by its moments.**  If
@@ -79,8 +83,8 @@ hypothesis of Mathlib's Stone–Weierstrass uniqueness theorem for finite measur
 Source: arXiv:2601.21366v2, proof of `lem: quadpol` (injectivity). -/
 theorem measure_eq_of_integral_mono_eq (μ₁ μ₂ : Measure (SSphere d))
     [IsFiniteMeasure μ₁] [IsFiniteMeasure μ₂]
-    (h : ∀ k (I : Fin k → Fin d), ∫ x, Perspective.mono I (x : EucSpace d) ∂μ₁ =
-      ∫ x, Perspective.mono I (x : EucSpace d) ∂μ₂) : μ₁ = μ₂ := by
+    (h : ∀ k (I : Fin k → Fin d), ∫ x, mono I (x : EucSpace d) ∂μ₁ =
+      ∫ x, mono I (x : EucSpace d) ∂μ₂) : μ₁ = μ₂ := by
   refine ext_of_forall_mem_subalgebra_integral_eq_of_pseudoEMetric_complete_countable
     (A := StarAlgebra.adjoin ℝ (Set.range (coordBCF (d := d)))) ?_ ?_
   · intro x y hxy
@@ -114,52 +118,52 @@ theorem measure_eq_of_integral_mono_eq (μ₁ μ₂ : Measure (SSphere d))
 /-- The hypothesis of `measure_eq_of_integral_mono_eq` is satisfiable: a
 measure and itself. -/
 example : ∀ k (I : Fin k → Fin 1),
-    ∫ x, Perspective.mono I (x : EucSpace 1) ∂(0 : Measure (SSphere 1)) =
-      ∫ x, Perspective.mono I (x : EucSpace 1) ∂(0 : Measure (SSphere 1)) :=
+    ∫ x, mono I (x : EucSpace 1) ∂(0 : Measure (SSphere 1)) =
+      ∫ x, mono I (x : EucSpace 1) ∂(0 : Measure (SSphere 1)) :=
   fun _ _ => rfl
 
 /-! ### The kernel `e^{β x·y}` in moments -/
 
 /-- `∫∫ (x·y)^k da(x) db(y) = Σ_I m_I(a) m_I(b)`, the two-measure form of
-`Perspective.integral_prod_inner_pow`. -/
+`integral_prod_inner_pow`. -/
 theorem integral_prod_inner_pow_eq_sum (k : ℕ) (a b : Measure (SSphere d))
     [IsFiniteMeasure a] [IsFiniteMeasure b] :
     ∫ p : SSphere d × SSphere d, inner (𝕜 := ℝ) (p.1 : EucSpace d) (p.2 : EucSpace d) ^ k
         ∂a.prod b =
-      ∑ I : Fin k → Fin d, (∫ x : SSphere d, Perspective.mono I (x : EucSpace d) ∂a) *
-        ∫ y : SSphere d, Perspective.mono I (y : EucSpace d) ∂b := by
-  simp_rw [Perspective.inner_pow_eq_sum_mono]
+      ∑ I : Fin k → Fin d, (∫ x : SSphere d, mono I (x : EucSpace d) ∂a) *
+        ∫ y : SSphere d, mono I (y : EucSpace d) ∂b := by
+  simp_rw [inner_pow_eq_sum_mono]
   rw [integral_finsetSum _ fun I _ =>
-    (Perspective.integrable_mono I a).mul_prod (Perspective.integrable_mono I b)]
+    (integrable_mono I a).mul_prod (integrable_mono I b)]
   exact Finset.sum_congr rfl fun I _ =>
-    integral_prod_mul (fun x : SSphere d => Perspective.mono I (x : EucSpace d))
-      (fun y : SSphere d => Perspective.mono I (y : EucSpace d))
+    integral_prod_mul (fun x : SSphere d => mono I (x : EucSpace d))
+      (fun y : SSphere d => mono I (y : EucSpace d))
 
 /-- **`∫∫ e^{β x·y} db(y) da(x) = Σ_k β^k/k! Σ_I m_I(a) m_I(b)`**, for
 probability measures `a`, `b` on the sphere. -/
 theorem hasSum_integral_exp_inner (β : ℝ) (a b : Measure (SSphere d))
     [IsProbabilityMeasure a] [IsProbabilityMeasure b] :
     HasSum (fun k : ℕ => β ^ k / k ! * ∑ I : Fin k → Fin d,
-        (∫ x : SSphere d, Perspective.mono I (x : EucSpace d) ∂a) *
-          ∫ y : SSphere d, Perspective.mono I (y : EucSpace d) ∂b)
+        (∫ x : SSphere d, mono I (x : EucSpace d) ∂a) *
+          ∫ y : SSphere d, mono I (y : EucSpace d) ∂b)
       (∫ x : SSphere d, ∫ y : SSphere d,
         exp (β * inner (𝕜 := ℝ) (x : EucSpace d) (y : EucSpace d)) ∂b ∂a) := by
-  have hK := Perspective.continuous_inner_sphere (d := d)
-  have h := Perspective.hasSum_integral_of_abs_le (a.prod b)
+  have hK := continuous_inner_sphere (d := d)
+  have h := hasSum_integral_of_abs_le (a.prod b)
     (F := fun k p => β ^ k / k ! * inner (𝕜 := ℝ) (p.1 : EucSpace d) (p.2 : EucSpace d) ^ k)
     (G := fun p => exp (β * inner (𝕜 := ℝ) (p.1 : EucSpace d) (p.2 : EucSpace d)))
     (u := fun k => |β| ^ k / k !) (fun k => continuous_const.mul (hK.pow k))
     (Real.summable_pow_div_factorial |β|) (fun k p => ?_)
-    (fun p => Perspective.hasSum_exp_mul β _)
+    (fun p => hasSum_exp_mul β _)
   · have hint : Integrable (fun p : SSphere d × SSphere d =>
         exp (β * inner (𝕜 := ℝ) (p.1 : EucSpace d) (p.2 : EucSpace d))) (a.prod b) :=
-      Perspective.integrable_of_continuous_compact (continuous_const.mul hK).rexp _
+      integrable_of_continuous_compact (continuous_const.mul hK).rexp _
     rw [← integral_prod _ hint]
     convert h using 2 with k
     rw [integral_const_mul, integral_prod_inner_pow_eq_sum]
   · rw [abs_mul, abs_pow, abs_div, abs_pow, Nat.abs_cast]
     refine mul_le_of_le_one_right (by positivity) (pow_le_one₀ (abs_nonneg _) ?_)
-    exact Perspective.abs_inner_sphere_le_one p.1 p.2
+    exact abs_inner_sphere_le_one p.1 p.2
 
 /-! ### Injectivity -/
 
@@ -189,8 +193,8 @@ theorem eq_of_integral_exp_inner_eq (β : ℝ) (hβ : 0 < β) (μ₁ μ₂ : Mea
   rw [sub_self] at h3
   -- the terms of `T(μ₁,μ₁) - T(μ₁,μ₂) - T(μ₂,μ₁) + T(μ₂,μ₂)`
   have h4 : HasSum (fun k : ℕ => β ^ k / k ! * ∑ I : Fin k → Fin d,
-      ((∫ x, Perspective.mono I (x : EucSpace d) ∂μ₁) -
-        ∫ x, Perspective.mono I (x : EucSpace d) ∂μ₂) ^ 2) 0 := by
+      ((∫ x, mono I (x : EucSpace d) ∂μ₁) -
+        ∫ x, mono I (x : EucSpace d) ∂μ₂) ^ 2) 0 := by
     convert h3 using 1
     funext k
     simp only [← mul_sub, ← Finset.sum_sub_distrib]
@@ -214,5 +218,5 @@ example : (0 : ℝ) < 1 ∧
           ∂Measure.dirac (⟨EuclideanSpace.single 0 1, by simp⟩ : SSphere 1) :=
   ⟨one_pos, inferInstance, fun _ => rfl⟩
 
-end Perceptron
+end Perspective
 end Transformer

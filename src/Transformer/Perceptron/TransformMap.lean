@@ -24,9 +24,9 @@ antipodally symmetric.
   positive maximum of `f_{μ₁} - f_{μ₂}` the left side is `≤ 0`
   (`le_zero_of_secondDiff_ge`), so `f_{μ₁} = f_{μ₂}` on the closed unit ball.
   The ball contains `r (Bᵀ)⁻¹ 𝕊^{d-1}` for some `r > 0`, where `f_B^μ` is the
-  isotropic transform at `β = r`, and `eq_of_integral_exp_inner_eq` finishes:
-  the analytic continuation is not needed.  The second differences are
-  `TransformExt`, the maximum principle `SecondDiff`.
+  isotropic transform at `β = r`, and `Perspective.eq_of_integral_exp_inner_eq`
+  finishes: the analytic continuation is not needed.  The second differences
+  are `TransformExt`, the maximum principle `SecondDiff`.
 
 Source: arXiv:2601.21366v2, `rem: general-attention`.
 -/
@@ -75,7 +75,7 @@ theorem injective_attentionTransformMap (B : EucSpace d →ₗ[ℝ] EucSpace d)
   obtain ⟨δ, hδ, hδD⟩ := Metric.continuousAt_iff.1
     (D.continuous_of_finiteDimensional.continuousAt (x := 0)) 1 one_pos
   refine ProbabilityMeasure.toMeasure_injective
-    (eq_of_integral_exp_inner_eq (δ / 2) (by positivity) _ _ fun u => ?_)
+    (Perspective.eq_of_integral_exp_inner_eq (δ / 2) (by positivity) _ _ fun u => ?_)
   have hu : ‖D ((δ / 2) • (u : EucSpace d))‖ ≤ 1 := by
     have := @hδD ((δ / 2) • (u : EucSpace d)) (by
       rw [dist_zero_right, norm_smul, Real.norm_eq_abs, abs_of_pos (by positivity),
