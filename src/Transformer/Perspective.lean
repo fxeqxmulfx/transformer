@@ -80,7 +80,14 @@ ungauged stream (`ungauged_eq_gaugeStack_add_skip`), so freezing survives it
 with one extra term, damped by the depth the skip jumps (`rawStack_frozen_skip`)
 — which covers the first ten layers of the record, its layer-6 skip merged with
 the MLP step after it, but not the last layer and the step after the loop, which
-add several earlier states in one step.
+add several earlier states in one step.  `RawStackDense`, `RawStackDenseGronwall`
+and `RawStackDenseFrozen` take them all: any number of skips per step, onto any
+depth, the current one included, so that a gain below `1 + c`, of any sign, is
+taken at `1 + c` with the difference carried by a skip onto the state being
+updated (`ungauged_rec_dense`); freezing then survives every update of the record
+at the cost of a product `Π_{j<k} (1 + V_{j,i})` of damped skip weights
+(`rawStack_frozen_dense`) — with the bound on the blocks' outputs, from layer 4
+on, a property of the trajectory rather than of the weights.
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -135,6 +142,9 @@ import Transformer.Perspective.RawStackFrozen
 import Transformer.Perspective.RawStackSkip
 import Transformer.Perspective.RawStackSkipDamp
 import Transformer.Perspective.RawStackSkipFrozen
+import Transformer.Perspective.RawStackDense
+import Transformer.Perspective.RawStackDenseGronwall
+import Transformer.Perspective.RawStackDenseFrozen
 import Transformer.Perspective.BlockMLP
 import Transformer.Perspective.BlockMLPSpread
 import Transformer.Perspective.XSAProj

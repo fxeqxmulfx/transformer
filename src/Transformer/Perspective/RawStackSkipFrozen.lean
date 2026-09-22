@@ -23,17 +23,19 @@ the depth the skip jumps, and every direction of the stack stays within
 of the direction it started with (`rawStack_frozen_skip`), at every depth and
 whatever the blocks compute.
 
-Of the record this covers the first ten layers, with their one skip, once the
-skip's own step, of gain `1`, is merged with the MLP step after it into one step
-of gain `resid_lambdas_mlp[6]` and gate `resid_lambdas_mlp[6] * skip_gate_out`;
-the state between the two is the one depth it does not see.  It does not cover
-the last layer and the step after the loop, which add `cache[0]`, `cache[7]`,
-`cache[9]` and `cache[3]` under per-token coefficients, several in one step, and
-feed `mu[0] * cache[0] + mu[1] * cache[7] + mu[2] * x` into the values of the
-last attention, across tokens (`GPT.forward_mudd`).  Nor does it cover a skip at
-every layer: `le_abs_skipWeight` of `Perspective.RawStackSkipDamp` shows their
-rescaled gates do not shrink with depth, so the sum this proof takes over one
-skip does not converge over infinitely many.
+Of the record this covers the updates of the first ten layers, with their one
+skip, once the skip's own step, of gain `1`, is merged with the MLP step after
+it into one step of gain `resid_lambdas_mlp[6]` and gate
+`resid_lambdas_mlp[6] * skip_gate_out`; the state between the two is the one
+depth it does not see.  The last layer and the step after the loop add
+`cache[0]`, `cache[7]`, `cache[9]` and `cache[3]` under per-token coefficients
+(`GPT.forward_mudd`), several in one step; `Perspective.RawStackDenseFrozen`
+takes them, and the layer-`6` skip as a step of its own, and says what `M` is
+for the record.  A skip at every layer is out of reach here:
+`le_abs_skipWeight` of `Perspective.RawStackSkipDamp` shows their rescaled
+gates do not shrink with depth, so the sum this proof takes over one skip does
+not converge over infinitely many; `rawStack_frozen_dense` takes any finite
+number of skips, at the cost of a product.
 -/
 
 import Transformer.Perspective.RawStackFrozen
