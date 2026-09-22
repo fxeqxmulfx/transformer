@@ -2901,14 +2901,14 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`idCase_tendsto_zero_or_frontier_generic`](src/Transformer/Clusters/Section12_Generic.lean#L101) | theorem | sorry |
 | [`multiplicity_dist_tendsto_zero_generic`](src/Transformer/Clusters/Section12_Generic.lean#L124) | theorem | sorry |
 
-**[Transformer.Clusters.Section12_MultiHead](src/Transformer/Clusters/Section12_MultiHead.lean)** — 126 lines
+**[Transformer.Clusters.Section12_MultiHead](src/Transformer/Clusters/Section12_MultiHead.lean)** — 127 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`MultiHeadTransformer`](src/Transformer/Clusters/Section12_MultiHead.lean#L60) | def |  |
 | [`multiHeadTransformer_one_iff`](src/Transformer/Clusters/Section12_MultiHead.lean#L71) | theorem | proved |
 | [`multiHeadTransformer_zero`](src/Transformer/Clusters/Section12_MultiHead.lean#L79) | theorem | proved |
-| [`multiHead_tendsto_isBooleanLimit`](src/Transformer/Clusters/Section12_MultiHead.lean#L99) | theorem | sorry |
+| [`multiHead_tendsto_isBooleanLimit`](src/Transformer/Clusters/Section12_MultiHead.lean#L100) | theorem | sorry |
 
 **[Transformer.Clusters.Section1_Dynamics](src/Transformer/Clusters/Section1_Dynamics.lean)** — 184 lines
 
@@ -2929,7 +2929,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`isPosDefQK_of_isAttentionRoot`](src/Transformer/Clusters/Section1_Dynamics.lean#L157) | theorem | proved |
 | [`isAttentionRoot_id`](src/Transformer/Clusters/Section1_Dynamics.lean#L173) | theorem | proved |
 
-**[Transformer.Clusters.Section2_LowRank](src/Transformer/Clusters/Section2_LowRank.lean)** — 150 lines
+**[Transformer.Clusters.Section2_LowRank](src/Transformer/Clusters/Section2_LowRank.lean)** — 156 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -2938,8 +2938,8 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`pi_single_one_nonneg`](src/Transformer/Clusters/Section2_LowRank.lean#L69) | theorem | proved |
 | [`sum_pi_single_one`](src/Transformer/Clusters/Section2_LowRank.lean#L76) | theorem | proved |
 | [`isBooleanLimit_of_isBooleanRows`](src/Transformer/Clusters/Section2_LowRank.lean#L82) | theorem | proved |
-| [`boolean_tendsto_isBooleanLimit`](src/Transformer/Clusters/Section2_LowRank.lean#L99) | theorem | sorry |
-| [`boolean_tendsto_isBooleanRows_ae`](src/Transformer/Clusters/Section2_LowRank.lean#L131) | theorem | sorry |
+| [`boolean_tendsto_isBooleanLimit`](src/Transformer/Clusters/Section2_LowRank.lean#L102) | theorem | sorry |
+| [`boolean_tendsto_isBooleanRows_ae`](src/Transformer/Clusters/Section2_LowRank.lean#L137) | theorem | sorry |
 
 **[Transformer.Clusters.Section3_Discrete](src/Transformer/Clusters/Section3_Discrete.lean)** — 117 lines
 
@@ -7374,9 +7374,9 @@ Everything the build cannot vouch for, in one place.
 | [`mlpRelu_dist_tendsto_zero`](src/Transformer/Clusters/Section12_Feedforward.lean#L147) | theorem | `Transformer.Clusters.Section12_Feedforward` |
 | [`idCase_tendsto_zero_or_frontier_generic`](src/Transformer/Clusters/Section12_Generic.lean#L101) | theorem | `Transformer.Clusters.Section12_Generic` |
 | [`multiplicity_dist_tendsto_zero_generic`](src/Transformer/Clusters/Section12_Generic.lean#L124) | theorem | `Transformer.Clusters.Section12_Generic` |
-| [`multiHead_tendsto_isBooleanLimit`](src/Transformer/Clusters/Section12_MultiHead.lean#L99) | theorem | `Transformer.Clusters.Section12_MultiHead` |
-| [`boolean_tendsto_isBooleanLimit`](src/Transformer/Clusters/Section2_LowRank.lean#L99) | theorem | `Transformer.Clusters.Section2_LowRank` |
-| [`boolean_tendsto_isBooleanRows_ae`](src/Transformer/Clusters/Section2_LowRank.lean#L131) | theorem | `Transformer.Clusters.Section2_LowRank` |
+| [`multiHead_tendsto_isBooleanLimit`](src/Transformer/Clusters/Section12_MultiHead.lean#L100) | theorem | `Transformer.Clusters.Section12_MultiHead` |
+| [`boolean_tendsto_isBooleanLimit`](src/Transformer/Clusters/Section2_LowRank.lean#L102) | theorem | `Transformer.Clusters.Section2_LowRank` |
+| [`boolean_tendsto_isBooleanRows_ae`](src/Transformer/Clusters/Section2_LowRank.lean#L137) | theorem | `Transformer.Clusters.Section2_LowRank` |
 | [`idCase_tendsto_zero_or_frontier`](src/Transformer/Clusters/Section3_IdCase.lean#L114) | theorem | `Transformer.Clusters.Section3_IdCase` |
 | [`codim_dist_tendsto_zero`](src/Transformer/Clusters/Section4_Codim.lean#L78) | theorem | `Transformer.Clusters.Section4_Codim` |
 | [`good_dist_tendsto_zero`](src/Transformer/Clusters/Section4_Hyperplanes.lean#L137) | theorem | `Transformer.Clusters.Section4_Hyperplanes` |

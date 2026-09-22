@@ -93,14 +93,15 @@ Open: "Proofs regarding clustering or convergence of the self-attention matrix
 for such dynamics is an open problem.  Preliminary numerical investigations
 seem to indicate that interesting clustering phenomena also occur in this
 context."  The hypotheses are `t:boolean`'s, one copy per head; the source
-states none.
+states none.  `0 < n` is added, as for `t:boolean`: at `n = 0` no matrix is
+in `𝒫`.
 
 Source: arXiv:2305.05465v6, `sec:conclusion`; `t:boolean`, `e:star`. -/
 theorem multiHead_tendsto_isBooleanLimit {H : ℕ} (Δt : ℝ) (hΔt : 0 < Δt)
     (Q K V : Idx H → ParamMatrix 1) (hV : ∀ h : Idx H, IsPosDefOp (V h))
     (hQK : ∀ h : Idx H, IsPosDefQK (Q h) (K h))
     (X : ℕ → Idx n → EucSpace 1) (hX : MultiHeadTransformer Δt Q K V X)
-    (hdist : ∀ i j : Idx n, i ≠ j → X 0 i ≠ X 0 j) (h : Idx H) :
+    (hdist : ∀ i j : Idx n, i ≠ j → X 0 i ≠ X 0 j) (hn : 0 < n) (h : Idx H) :
     ∃ P : Idx n → Idx n → ℝ, IsBooleanLimit P ∧
       ∀ i j : Idx n,
         Tendsto (fun k => attentionMatrix (Q h) (K h) (X k) i j) atTop (nhds (P i j)) := by
@@ -117,10 +118,10 @@ example {H : ℕ} :
         ((fun _ => 1 : Idx H → ParamMatrix 1) h)) ∧
       MultiHeadTransformer (H := H) (n := 1) 1 (fun _ => 1) (fun _ => 1) (fun _ => 1)
         (fun _ _ => (0 : EucSpace 1)) ∧
-      ∀ i j : Idx 1, i ≠ j →
-        (fun _ _ => (0 : EucSpace 1)) 0 i ≠ (fun _ _ => (0 : EucSpace 1)) 0 j :=
+      (∀ i j : Idx 1, i ≠ j →
+        (fun _ _ => (0 : EucSpace 1)) 0 i ≠ (fun _ _ => (0 : EucSpace 1)) 0 j) ∧ 0 < 1 :=
   ⟨one_pos, fun _ => isPosDefOp_id 1, fun _ => isPosDefQK_of_isAttentionRoot (isAttentionRoot_id 1),
-    multiHeadTransformer_zero 1 _ _ _, fun i j hij => absurd (Subsingleton.elim i j) hij⟩
+    multiHeadTransformer_zero 1 _ _ _, fun i j hij => absurd (Subsingleton.elim i j) hij, one_pos⟩
 
 end Clusters
 end Transformer

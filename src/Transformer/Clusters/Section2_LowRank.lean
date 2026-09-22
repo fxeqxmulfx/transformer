@@ -93,12 +93,15 @@ theorem isBooleanLimit_of_isBooleanRows {P : Idx n → Idx n → ℝ} (h : IsBoo
 initial sequence of pairwise distinct tokens, the self-attention matrix `P(t)`
 converges as `t → +∞` to a matrix of `𝒫`.
 
+The source leaves `n ≥ 1` implicit; at `n = 0` there is no index, so no
+matrix is in `𝒫` and the statement is false as written.  `0 < n` is added.
+
 Not proved here.
 
 Source: arXiv:2305.05465v6, `t:boolean`. -/
 theorem boolean_tendsto_isBooleanLimit (Q K V : ParamMatrix 1) (hV : IsPosDefOp V)
     (hQK : IsPosDefQK Q K) (X : ℝ → Idx n → EucSpace 1) (hX : TransformerDynamics Q K V X)
-    (hdist : ∀ i j : Idx n, i ≠ j → X 0 i ≠ X 0 j) :
+    (hdist : ∀ i j : Idx n, i ≠ j → X 0 i ≠ X 0 j) (hn : 0 < n) :
     ∃ P : Idx n → Idx n → ℝ, IsBooleanLimit P ∧
       ∀ i j : Idx n,
         Tendsto (fun t => attentionMatrix Q K (X t) i j) atTop (nhds (P i j)) := by
@@ -115,9 +118,9 @@ example :
       TransformerDynamics (n := 1) (ContinuousLinearMap.id ℝ (EucSpace 1))
         (ContinuousLinearMap.id ℝ (EucSpace 1)) (ContinuousLinearMap.id ℝ (EucSpace 1))
         (fun _ _ => 0) ∧
-      ∀ i j : Idx 1, i ≠ j → (0 : EucSpace 1) ≠ 0 := by
+      (∀ i j : Idx 1, i ≠ j → (0 : EucSpace 1) ≠ 0) ∧ 0 < 1 := by
   refine ⟨isPosDefOp_id 1, isPosDefQK_of_isAttentionRoot (isAttentionRoot_id 1), ?_,
-    fun i j hij => absurd (Subsingleton.elim i j) hij⟩
+    fun i j hij => absurd (Subsingleton.elim i j) hij, one_pos⟩
   intro t i
   simpa using hasDerivAt_const t (0 : EucSpace 1)
 
@@ -125,11 +128,14 @@ example :
 of initial sequences, the limit matrix has every row equal to `e_a` or `e_b`,
 hence rank at most two.
 
+As for `t:boolean`, `0 < n` is added: at `n = 0` no matrix has the form
+`IsBooleanRows` asks for, and the null set can only be empty.
+
 Not proved here.
 
 Source: arXiv:2305.05465v6, §2, the paragraph after `t:boolean`. -/
 theorem boolean_tendsto_isBooleanRows_ae (Q K V : ParamMatrix 1) (hV : IsPosDefOp V)
-    (hQK : IsPosDefQK Q K) :
+    (hQK : IsPosDefQK Q K) (hn : 0 < n) :
     ∃ N : Set (Idx n → ℝ), volume N = 0 ∧
       ∀ X : ℝ → Idx n → EucSpace 1, TransformerDynamics Q K V X →
         (∀ i j : Idx n, i ≠ j → X 0 i ≠ X 0 j) → (fun i => X 0 i 0) ∉ N →
@@ -143,8 +149,8 @@ theorem boolean_tendsto_isBooleanRows_ae (Q K V : ParamMatrix 1) (hV : IsPosDefO
 example :
     IsPosDefOp (ContinuousLinearMap.id ℝ (EucSpace 1)) ∧
       IsPosDefQK (ContinuousLinearMap.id ℝ (EucSpace 1))
-        (ContinuousLinearMap.id ℝ (EucSpace 1)) :=
-  ⟨isPosDefOp_id 1, isPosDefQK_of_isAttentionRoot (isAttentionRoot_id 1)⟩
+        (ContinuousLinearMap.id ℝ (EucSpace 1)) ∧ 0 < 1 :=
+  ⟨isPosDefOp_id 1, isPosDefQK_of_isAttentionRoot (isAttentionRoot_id 1), one_pos⟩
 
 end Clusters
 end Transformer
