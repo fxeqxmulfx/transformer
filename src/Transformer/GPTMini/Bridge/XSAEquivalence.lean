@@ -63,7 +63,8 @@ operation the canonical dynamics `Perspective.Section1_IPS.SA` and
 not an approximation of that projection: at `V = I_d` it *is* that projection.
 
 What is still missing before the clustering theorems apply is the multi-head
-and time-varying-`Q, K` setting; that is `Bridge.RoPEAsTimeVarying`.
+setting and RoPE, whose pair-dependent keys (`Bridge.RoPEAsTimeVarying`) no
+paper's dynamics covers.
 
 Source: `reference/model.py` (`CausalMHA.forward`, XSA branch); the canonical
 projection is arXiv:2312.10794v5, `eq: transformerSd.QKV`. -/

@@ -41,8 +41,8 @@ The architecture is:
 
 The bridges are the connection to `Transformer.Section1_IPS …
 Transformer.MeanField`: `Bridge.SphereResidence` puts the tokens on the sphere
-those theorems live on, `Bridge.RoPEAsTimeVarying` reads RoPE as the
-time-varying `Q, K` they already allow, `Bridge.CausalConnection` matches the
+those theorems live on, `Bridge.RoPEAsTimeVarying` shows RoPE is a
+pair-dependent key matrix `R(p_j - p_i) K`, which those setups do not allow, `Bridge.CausalConnection` matches the
 mask with `Transformer.Causal.CSA`, and `Bridge.XSAEquivalence` identifies the
 XSA output at `V = I` with the spherical projection.  `ClusteringTheorem`
 assembles them into the statement that the representations cluster to one

@@ -3406,7 +3406,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | --- | --- | --- |
 | [`ffnSubLayer_lipschitz`](src/Transformer/GPTMini/BlockLipschitz.lean#L39) | theorem | proved |
 
-**[Transformer.GPTMini.Bridge](src/Transformer/GPTMini/Bridge.lean)** — 38 lines, aggregator
+**[Transformer.GPTMini.Bridge](src/Transformer/GPTMini/Bridge.lean)** — 39 lines, aggregator
 
 **[Transformer.GPTMini.CausalMHA](src/Transformer/GPTMini/CausalMHA.lean)** — 194 lines
 
@@ -3420,12 +3420,12 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`xsaProjection_orthogonal`](src/Transformer/GPTMini/CausalMHA.lean#L167) | theorem | proved |
 | [`attentionHead`](src/Transformer/GPTMini/CausalMHA.lean#L183) | def |  |
 
-**[Transformer.GPTMini.ClusteringTheorem](src/Transformer/GPTMini/ClusteringTheorem.lean)** — 112 lines
+**[Transformer.GPTMini.ClusteringTheorem](src/Transformer/GPTMini/ClusteringTheorem.lean)** — 113 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`PreLNHead`](src/Transformer/GPTMini/ClusteringTheorem.lean#L72) | def |  |
-| [`layer_clustering`](src/Transformer/GPTMini/ClusteringTheorem.lean#L95) | theorem | sorry |
+| [`PreLNHead`](src/Transformer/GPTMini/ClusteringTheorem.lean#L73) | def |  |
+| [`layer_clustering`](src/Transformer/GPTMini/ClusteringTheorem.lean#L96) | theorem | sorry |
 
 **[Transformer.GPTMini.Config](src/Transformer/GPTMini/Config.lean)** — 182 lines
 
@@ -3655,25 +3655,25 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`normL2_of_norm_eq_one`](src/Transformer/GPTMini/Bridge/CausalConnection.lean#L98) | theorem | proved |
 | [`csa_of_causalAttn`](src/Transformer/GPTMini/Bridge/CausalConnection.lean#L112) | theorem | proved |
 
-**[Transformer.GPTMini.Bridge.RoPEAsTimeVarying](src/Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean)** — 107 lines
+**[Transformer.GPTMini.Bridge.RoPEAsTimeVarying](src/Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean)** — 114 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`applyRope_add`](src/Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean#L38) | theorem | proved |
-| [`applyRope_smul`](src/Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean#L46) | theorem | proved |
-| [`ropeIsometry`](src/Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean#L57) | def |  |
-| [`ropeIsometry_apply`](src/Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean#L64) | theorem | proved |
-| [`rope_timeParam`](src/Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean#L73) | def |  |
-| [`rope_timeParam_norm_preserved`](src/Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean#L84) | theorem | proved |
-| [`rope_score_relative`](src/Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean#L98) | theorem | proved |
+| [`applyRope_add`](src/Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean#L42) | theorem | proved |
+| [`applyRope_smul`](src/Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean#L50) | theorem | proved |
+| [`ropeIsometry`](src/Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean#L61) | def |  |
+| [`ropeIsometry_apply`](src/Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean#L68) | theorem | proved |
+| [`ropeRotated`](src/Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean#L79) | def |  |
+| [`ropeRotated_norm`](src/Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean#L92) | theorem | proved |
+| [`rope_score_relative`](src/Transformer/GPTMini/Bridge/RoPEAsTimeVarying.lean#L105) | theorem | proved |
 
-**[Transformer.GPTMini.Bridge.RoPENoClustering](src/Transformer/GPTMini/Bridge/RoPENoClustering.lean)** — 146 lines
+**[Transformer.GPTMini.Bridge.RoPENoClustering](src/Transformer/GPTMini/Bridge/RoPENoClustering.lean)** — 149 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`transformerODE_const_antipodalPair`](src/Transformer/GPTMini/Bridge/RoPENoClustering.lean#L51) | theorem | proved |
-| [`not_rope_clustering_antipodalPair`](src/Transformer/GPTMini/Bridge/RoPENoClustering.lean#L72) | theorem | proved |
-| [`not_forall_rope_clustering`](src/Transformer/GPTMini/Bridge/RoPENoClustering.lean#L118) | theorem | proved |
+| [`transformerODE_const_antipodalPair`](src/Transformer/GPTMini/Bridge/RoPENoClustering.lean#L54) | theorem | proved |
+| [`not_rope_clustering_antipodalPair`](src/Transformer/GPTMini/Bridge/RoPENoClustering.lean#L75) | theorem | proved |
+| [`not_forall_rope_clustering`](src/Transformer/GPTMini/Bridge/RoPENoClustering.lean#L121) | theorem | proved |
 
 **[Transformer.GPTMini.Bridge.SphereResidence](src/Transformer/GPTMini/Bridge/SphereResidence.lean)** — 114 lines
 
@@ -3686,12 +3686,12 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`toSphere_eq`](src/Transformer/GPTMini/Bridge/SphereResidence.lean#L74) | theorem | proved |
 | [`norm_inv_smul_sub_le`](src/Transformer/GPTMini/Bridge/SphereResidence.lean#L88) | theorem | proved |
 
-**[Transformer.GPTMini.Bridge.XSAEquivalence](src/Transformer/GPTMini/Bridge/XSAEquivalence.lean)** — 98 lines
+**[Transformer.GPTMini.Bridge.XSAEquivalence](src/Transformer/GPTMini/Bridge/XSAEquivalence.lean)** — 99 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`xsaProjection_eq_sphereProj`](src/Transformer/GPTMini/Bridge/XSAEquivalence.lean#L41) | theorem | proved |
-| [`attentionHead_eq_sphereProj`](src/Transformer/GPTMini/Bridge/XSAEquivalence.lean#L70) | theorem | proved |
+| [`attentionHead_eq_sphereProj`](src/Transformer/GPTMini/Bridge/XSAEquivalence.lean#L71) | theorem | proved |
 
 ### `Transformer.GPTMini.Properties`
 
@@ -7111,7 +7111,7 @@ Everything the build cannot vouch for, in one place.
 | [`first_phase`](src/Transformer/FrankWolfe/Section5_Metastability.lean#L100) | theorem | `Transformer.FrankWolfe.Section5_Metastability` |
 | [`metastability`](src/Transformer/FrankWolfe/Section5_Metastability.lean#L184) | theorem | `Transformer.FrankWolfe.Section5_Metastability` |
 | [`softmax_collapse`](src/Transformer/FrankWolfe/Section5_Process.lean#L40) | theorem | `Transformer.FrankWolfe.Section5_Process` |
-| [`layer_clustering`](src/Transformer/GPTMini/ClusteringTheorem.lean#L95) | theorem | `Transformer.GPTMini.ClusteringTheorem` |
+| [`layer_clustering`](src/Transformer/GPTMini/ClusteringTheorem.lean#L96) | theorem | `Transformer.GPTMini.ClusteringTheorem` |
 | [`varianceProxy_gaussian`](src/Transformer/Homogenized/GaussianInit.lean#L90) | theorem | `Transformer.Homogenized.GaussianInit` |
 | [`bField_gaussian`](src/Transformer/Homogenized/GaussianInit.lean#L133) | theorem | `Transformer.Homogenized.GaussianInit` |
 | [`weak_error_centered`](src/Transformer/Homogenized/GaussianInit.lean#L158) | theorem | `Transformer.Homogenized.GaussianInit` |

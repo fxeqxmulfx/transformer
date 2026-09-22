@@ -1,23 +1,27 @@
 /-
-# Bridge: RoPE = time-varying `Q, K` in `Transformer.Perspective.Section1_IPS`
+# Bridge: RoPE is a relative, pair-dependent key matrix — not a depth-varying one
 
-The Lean type `Transformer.Basic.TimeParam d := ℝ → ParamMatrix d` already
-allows time-varying parameter matrices.  RoPE, which rotates `Q` and `K` by a
-position-dependent orthogonal matrix `R(t)`, is a *specific* instance of this
-generality, and this file exhibits it as one:
+RoPE rotates the query of the token at position `p_i` by `R(p_i)` and the key
+of the token at `p_j` by `R(p_j)`, both orthogonal.  This file bundles the
+rotation and reads off what that does to the score:
 
   - `ropeIsometry` bundles `GPTMini.applyRope` as a linear isometry — the
     rotation is linear, and `applyRope_isometry` says it preserves the norm;
-  - `rope_timeParam Q θ t = R(t) ∘ Q` is then a genuine `TimeParam`, whose
-    operator norm does not depend on the position (`rope_timeParam_norm_preserved`);
-  - `rope_score_relative` is what makes this parametrization worth the trouble:
-    the attention score of two tokens is a function of their *relative*
-    position only.
+  - `ropeRotated Q θ p = R(p) ∘ Q` is the family of rotated projections,
+    indexed by the *position* `p`, and its operator norm does not depend on
+    `p` (`ropeRotated_norm`);
+  - `rope_score_relative`: `⟨R(p_i) Q x, R(p_j) K y⟩ = ⟨Q x, R(p_j - p_i) K y⟩`,
+    so the pair `(i, j)` sees the key matrix `R(p_j - p_i) K`.
 
-What this file proves is the parametrization, not the dynamics.  The file used
-to carry `rope_clustering` as well, the claim that the resulting RoPE-attention
-dynamics send *every* initial sequence to a common point; that claim is false,
-and `Bridge.RoPENoClustering` refutes it.
+What RoPE is *not* is an instance of the time-varying `Q(t), K(t)` of
+`Perspective.transformerODE` (`eq: transformerSd.QKV`).  There `t` is the
+depth, one clock shared by every token; here `p` is a token's own position,
+different for each token and fixed in depth.  The honest reading of RoPE
+attention is a depth-constant key matrix that depends on the *pair* of tokens,
+`K_{ij} = R(p_j - p_i) K`, which none of the survey's dynamics allow.  The
+file used to name `ropeRotated` a `TimeParam` and claim the RoPE head is
+`transformerODE` at `Q(t) = R(t) Q`, `K(t) = R(t) K`; that identification
+conflates the two clocks and is withdrawn.
 -/
 
 import Transformer.Basic
@@ -64,26 +68,30 @@ noncomputable def ropeIsometry (d_head : ℕ) (theta t : ℝ) :
 @[simp] theorem ropeIsometry_apply (d_head : ℕ) (theta t : ℝ) (x : EucSpace d_head) :
     ropeIsometry d_head theta t x = applyRope d_head theta t x := rfl
 
-/-- **RoPE as a `TimeParam`.**
+/-- **The RoPE-rotated projections, indexed by position.**
 
-Given a constant matrix `Q : ParamMatrix d`, the position-dependent
-"RoPE-rotated" Q-projection `t ↦ R(t) ∘ Q` is a `TimeParam d`, so that
-RoPE attention is the `Perspective.transformerODE` of `eq: transformerSd.QKV`
-at those particular `Q(t), K(t)`. -/
-noncomputable def rope_timeParam
+Given a constant matrix `Q : ParamMatrix d`, `p ↦ R(p) ∘ Q` is the projection
+a token at position `p` is read through.  The index is the token's position,
+not the depth: see the module header for why this family is not the
+`Q(t)` of `Perspective.transformerODE`.
+
+Source: `reference/model.py` (`apply_rope`); Su et al., *RoFormer*, eq. (14). -/
+noncomputable def ropeRotated
     {d_head : ℕ} (Q : ParamMatrix d_head) (theta : ℝ) :
-    Transformer.TimeParam d_head :=
+    ℝ → ParamMatrix d_head :=
   fun t => (ropeIsometry d_head theta t).toContinuousLinearMap.comp Q
 
 /-- **Isometry preservation.**
 
 For any constant `Q` and position `t`, the operator norm of `R(t) ∘ Q` equals
-that of `Q`, because `R(t)` is an isometry.  This is what keeps a RoPE
-`TimeParam` bounded uniformly in the position — the hypothesis under which
-the time-varying results of `Perspective.Section1_IPS` are stated. -/
-theorem rope_timeParam_norm_preserved
+that of `Q`, because `R(t)` is an isometry: the rotated projections are
+bounded uniformly in the position.
+
+Source: `reference/model.py` (`apply_rope`); norm preservation is
+`GPTMini.applyRope_isometry`. -/
+theorem ropeRotated_norm
     {d_head : ℕ} (Q : ParamMatrix d_head) (theta : ℝ) (t : ℝ) :
-    ‖rope_timeParam Q theta t‖ = ‖Q‖ :=
+    ‖ropeRotated Q theta t‖ = ‖Q‖ :=
   LinearIsometry.norm_toContinuousLinearMap_comp (ropeIsometry d_head theta t)
 
 /-- **The RoPE attention score is relative.**
@@ -91,14 +99,13 @@ theorem rope_timeParam_norm_preserved
   `⟨R(t) Q x, R(s) K y⟩ = ⟨Q x, R(s - t) K y⟩`:
 
 the score of a token at position `t` against a token at position `s` depends
-on `s - t` and not on `t` and `s` separately.  This is the property that
-`rope_timeParam` is built for, and it is `GPTMini.applyRope_relative` read
-through the parametrization.  Source: `reference/model.py` (`apply_rope`);
+on `s - t` and not on `t` and `s` separately: the pair sees the key matrix
+`R(s - t) K`.  It is `GPTMini.applyRope_relative` read through `ropeRotated`.  Source: `reference/model.py` (`apply_rope`);
 Su et al., *RoFormer*, eq. (14). -/
 theorem rope_score_relative
     {d_head : ℕ} (Q K : ParamMatrix d_head) (theta : ℝ) (t s : ℝ)
     (x y : EucSpace d_head) :
-    inner (𝕜 := ℝ) (rope_timeParam Q theta t x) (rope_timeParam K theta s y)
+    inner (𝕜 := ℝ) (ropeRotated Q theta t x) (ropeRotated K theta s y)
       = inner (𝕜 := ℝ) (Q x) (applyRope d_head theta (s - t) (K y)) :=
   applyRope_relative d_head theta t s (Q x) (K y)
 

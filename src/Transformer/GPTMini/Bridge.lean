@@ -12,9 +12,10 @@ The bridges enable the following inferential chain:
   spherical IPS with QK-normed scores
    ↓ `Bridge.XSAEquivalence`    (XSA at V=I → spherical projection)
   spherical SA from `Section1_IPS`
-   ↓ `Bridge.RoPEAsTimeVarying` (RoPE = time-varying Q, K)
-  time-varying-Q,K spherical SA, `V = I_d`  (`Bridge.RoPENoClustering`: this
-  chain clusters almost every initial sequence, never every one)
+   ✗ `Bridge.RoPEAsTimeVarying` (RoPE = pair-dependent keys R(p_j - p_i) K,
+     not the depth-varying Q(t), K(t) of the survey: the chain breaks here
+     unless RoPE is off; `Bridge.RoPENoClustering`: even the misread chain
+     clusters almost every initial sequence, never every one)
    ↓ `Bridge.CausalConnection`  (mask matches eq: csa)
   causal SA from `Causal.Basic`
    ↓ `Causal.MainTheorem.thm1`  (clustering, modulo extension)

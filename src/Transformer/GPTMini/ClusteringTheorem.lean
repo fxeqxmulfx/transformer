@@ -10,7 +10,8 @@ The capstone statement of the development:
 The chain of bridges that is supposed to prove it:
 
   1. `Bridge.SphereResidence`     — the RMSNorm direction lies on the sphere,
-  2. `Bridge.RoPEAsTimeVarying`   — RoPE is a time-varying `Q, K`,
+  2. `Bridge.RoPEAsTimeVarying`   — RoPE is a pair-dependent key `R(p_j - p_i) K`,
+     which no paper's dynamics covers: this link is missing, not proved,
   3. `Bridge.CausalConnection`    — the causal mask matches `eq: csa`,
   4. `Bridge.XSAEquivalence`      — XSA at `V = I` is the spherical projection,
   5. `Causal.MainTheorem`         — clustering for causal SA with `V = I`,
