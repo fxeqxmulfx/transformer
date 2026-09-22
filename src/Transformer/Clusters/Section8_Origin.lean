@@ -19,6 +19,9 @@ whole configuration collapses to a single cluster at the origin.
 * `l:stationary` is in `Section8_Stationary`, `e:finiteinegral` in
   `Section8_Energy`.
 
+* `t:cas-Idintro` is proved in `Section8_Convergence`, as
+  `negId_tendsto_zero`.
+
 * The remark following `t:cas-Idintro` is proved here, taking the theorem's
   conclusion as an explicit hypothesis: once every token tends to `0` the
   attention matrix tends to the uniform one by
@@ -91,26 +94,6 @@ theorem transformerDynamics_zero (Q K V : ParamMatrix d) :
     TransformerDynamics (n := n) Q K V (fun _ _ => (0 : EucSpace d)) := by
   intro t i
   simpa using hasDerivAt_const t (0 : EucSpace d)
-
-/-! ### `t:cas-Idintro` -/
-
-/-- **Theorem (t:cas-Idintro).**  Let `V = -I_d` and `QᵀK = I_d`.  Then for
-any initial sequence of tokens and any `i ∈ [n]`, `‖x_i(t)‖ → 0` as
-`t → +∞`.
-
-Not proved here.
-
-Source: arXiv:2305.05465v6, `t:cas-Idintro`. -/
-theorem negId_tendsto_zero (Q K : ParamMatrix d) (hQK : IsIdentityQK Q K)
-    (X : ℝ → Idx n → EucSpace d) (hX : NegIdDynamics Q K X) (i : Idx n) :
-    Tendsto (fun t => ‖X t i‖) atTop (nhds 0) := by
-  sorry
-
-/-- The hypotheses of `negId_tendsto_zero` are satisfiable: `Q = K = I_d` and
-the configuration sitting at the origin. -/
-example : IsIdentityQK (1 : ParamMatrix d) 1 ∧
-    NegIdDynamics (n := n) (1 : ParamMatrix d) 1 (fun _ _ => (0 : EucSpace d)) :=
-  ⟨isIdentityQK_one d, (transformerDynamics_neg_one_iff _ _ _).mp (transformerDynamics_zero 1 1 _)⟩
 
 /-- **The remark following (t:cas-Idintro).**  In the setting of
 `t:cas-Idintro` the self-attention matrix `P(t)` of `eq:P` converges, as
