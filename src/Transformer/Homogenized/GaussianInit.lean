@@ -14,7 +14,10 @@ to `e^{C t_L α}` and `max(1,α)` to `max(η,α)`.
 
 The limiting object of `cor:weak_error_centered` is `eq:Diffusive_gaussian_case`,
 which is `eq: first.sde` read under `b_{ρ*} ≡ 0`; it is therefore carried here
-as `IsFirstSde`, and `bField_gaussian` is what identifies the two.
+as `IsFirstSde`, and `bField_gaussian` is what identifies the two.  Consequence
+(ii), `b_{ρ*}[μ] ≡ 0`, is proved in `Homogenized.GaussianDrift`
+(`meanFieldOf_gaussian`, `bField_gaussian`), downstream of the invariance of
+the head law that it rests on.
 
 Source: arXiv:2604.01978v1, §2.3.3, `eq: tformers.at.initialization`,
 `cor:weak_error_centered`.
@@ -121,24 +124,6 @@ theorem alphaOf_gaussian {d H : ℕ} (η s : ℝ) (σV : ℝ≥0)
 
 /-- The hypothesis of `alphaOf_gaussian` is satisfiable: `σ_V = 0`, `s = 0`. -/
 example (d : ℕ) : (0 : ℝ) ^ 2 = ((0 : ℝ≥0) : ℝ) ^ 2 * ((d : ℝ) - 1) := by simp
-
-/-- **Consequence (ii) of (G).**  Because `V` is centered and independent of
-`A`, the drift of `eq: first.sde` vanishes identically:
-`b_{ρ*}[μ] ≡ 0`.  The diffusive regime `αηL = Θ(1)` is therefore driven
-entirely by the random fluctuations, and the ballistic regime is static.
-
-Not proved here.
-
-Source: arXiv:2604.01978v1, §2.3.3, item (ii). -/
-theorem bField_gaussian {d n : ℕ} (β : ℝ) (σV σA : ℝ≥0)
-    (ρ : Measure (HeadParam d)) (hρ : IsGaussianHeadLaw d σV σA ρ)
-    (x : Idx n → EucSpace d) (i : Idx n) :
-    bField β ρ x i = 0 := by
-  sorry
-
-/-- The hypothesis of `bField_gaussian` is satisfiable. -/
-example (d : ℕ) : IsGaussianHeadLaw d 0 0 (Measure.dirac (0 : HeadParam d)) :=
-  isGaussianHeadLaw_dirac_zero d
 
 /-- **Corollary (cor:weak_error_centered).**  Under
 `eq: tformers.at.initialization`, for any `φ ∈ C⁴((𝕊^{d-1})^n)`,

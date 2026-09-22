@@ -40,9 +40,9 @@ namespace Homogenized
 
   `𝒟_ij = ∫_Θ ⟨G_i,G_j⟩ ρ*(dθ) - (R_ij/2) ∫_Θ (‖G_i‖² + ‖G_j‖²) ρ*(dθ)`.
 
-The vanishing of the drift `b_{ρ*}` — which under (G) is `bField_gaussian`,
-still unproved — is taken as the hypothesis `hb`, so that this identity is
-proved outright and its dependence is legible in its signature.
+The vanishing of the drift `b_{ρ*}` — which under (G) is `bField_gaussian` —
+is taken as the hypothesis `hb`, so that this identity holds for every head law
+whose drift vanishes, and that dependence is legible in its signature.
 
 Source: arXiv:2604.01978v1, `eq:drift_Dij_clean`. -/
 theorem sphGenerator_overlap_diffusive {d n : ℕ} (β : ℝ) (ρ : Measure (HeadParam d))

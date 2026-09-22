@@ -34,6 +34,7 @@ import Transformer.Homogenized.Simplex
 import Transformer.Homogenized.SimplexBary
 import Transformer.Homogenized.HeadConj
 import Transformer.Homogenized.HeadLawRotation
+import Transformer.Homogenized.GaussianDrift
 import Transformer.Homogenized.SimplexDrift
 import Transformer.Homogenized.SimplexWellDefined
 import Transformer.Homogenized.GramStability

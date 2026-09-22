@@ -15,6 +15,7 @@ together with `σ_V² = 1/d`, which is the lemma itself.
 -/
 
 import Transformer.Homogenized.Barycenter
+import Transformer.Homogenized.GaussianDrift
 import Transformer.Homogenized.GaussianEnsemble
 
 open scoped BigOperators ENNReal NNReal
@@ -74,10 +75,10 @@ example {d : ℕ} (β : ℝ) (θ : HeadParam d) (x z : EucSpace d) :
 
 * The source states the lemma at the empirical measure `μ_X`; it is carried
   here at a general measure on `ℝ^d`, which is where `covKernel` of
-  `eq:covariance_kernel` lives and where `thm:large_beta_meta` uses it.  At
-  `μ = μ_X` the first clause is `bField_gaussian`, §2.3.3 item (ii); it is not
-  a consequence of that theorem at a general `μ`, so it is restated and the
-  two clauses stay one lemma, as in the source.
+  `eq:covariance_kernel` lives and where `thm:large_beta_meta` uses it.  The
+  first clause is §2.3.3 item (ii) at a general `μ`, proved as
+  `meanFieldOf_gaussian`; the two clauses stay one lemma, as in the source,
+  and only the kernel identity is open.
 * The source's display carries the two projections,
   `K[μ](x_i,x_j) = (1/d) Proj_{x_i} E⟨m,m⟩ I_d Proj_{x_j}`, because its `K` is
   the kernel as `eq:cross_variation_kernel` sandwiches it.  Written without
@@ -87,7 +88,7 @@ example {d : ℕ} (β : ℝ) (θ : HeadParam d) (x z : EucSpace d) :
 * `σ_V² = 1/d` is the standard scaling the source substitutes silently at the
   last line of the proof; it is a hypothesis here.
 
-Not proved here.
+The kernel identity is not proved here.
 
 Source: arXiv:2604.01978v1, `lem:lemma_app`. -/
 theorem gaussian_drift_and_kernel {d : ℕ} (β : ℝ) (σV σA : ℝ≥0)
@@ -96,6 +97,7 @@ theorem gaussian_drift_and_kernel {d : ℕ} (β : ℝ) (σV σA : ℝ≥0)
     (∀ z : EucSpace d, meanFieldOf β ρ μ z = 0) ∧
       ∀ x y v : EucSpace d,
         covKernel β ρ μ x y v = ((1 / (d : ℝ)) * baryCorr β ρ μ x y) • v := by
+  refine ⟨meanFieldOf_gaussian β hρ μ, ?_⟩
   sorry
 
 /-- The hypotheses of `gaussian_drift_and_kernel` are satisfiable in every
