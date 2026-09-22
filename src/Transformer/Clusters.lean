@@ -40,6 +40,7 @@ import Transformer.Clusters.Section7_BoundedXN
 import Transformer.Clusters.Section7_BoundedOtherMean
 import Transformer.Clusters.Section7_BoundedOtherEscape
 import Transformer.Clusters.Section7_BoundedOther
+import Transformer.Clusters.Section7_Boolean
 import Transformer.Clusters.Section9_Eigen
 import Transformer.Clusters.Extremum
 import Transformer.Clusters.Section9_Fj
