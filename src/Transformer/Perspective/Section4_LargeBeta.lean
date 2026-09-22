@@ -30,7 +30,8 @@ Fix `d, n ≥ 2`.  There exists a constant `C = C(d) > 0` (depending only on
 for both `SA` and `USA`:
 
 For Lebesgue-almost any initial sequence `X₀ ∈ (𝕊^{d-1})^n`, there exists
-`x⋆ ∈ 𝕊^{d-1}` such that `lim_{t→∞} x_i(t) = x⋆` for all `i ∈ [n]`.
+`x⋆ ∈ 𝕊^{d-1}` such that `lim_{t→∞} x_i(t) = x⋆` for all `i ∈ [n]`, for the
+solution of `SA` and for that of `USA` (`clusteringSetUSA`).
 
 *Almost any* is not *any*: `antipodalPair_not_mem_clusteringSet` exhibits, for
 every `β`, an initial sequence outside `𝒮_β` — an antipodal pair is stationary
@@ -45,7 +46,7 @@ theorem beta_interval
     (hd : 2 ≤ d) (hn : 2 ≤ n) :
     ∃ C : ℝ, 0 < C ∧ ∀ β : ℝ, C * (n : ℝ)^2 ≤ β →
       ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-        ∀ᵐ X₀ ∂P, X₀ ∈ clusteringSet d n β := by
+        ∀ᵐ X₀ ∂P, X₀ ∈ clusteringSet d n β ∧ X₀ ∈ clusteringSetUSA d n β := by
   sorry
 
 /-- The hypotheses of `beta_interval` are satisfiable: `d = n = 2`. -/

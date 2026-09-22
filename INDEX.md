@@ -6255,32 +6255,33 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`const_of_beta0Dynamics_one`](src/Transformer/Perspective/Section3_Gronwall.lean#L75) | theorem | proved |
 | [`distance_bound_at_time_m`](src/Transformer/Perspective/Section3_Gronwall.lean#L119) | theorem | proved |
 
-**[Transformer.Perspective.Section3_SmallBeta](src/Transformer/Perspective/Section3_SmallBeta.lean)** — 309 lines
+**[Transformer.Perspective.Section3_SmallBeta](src/Transformer/Perspective/Section3_SmallBeta.lean)** — 324 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`beta0Dynamics`](src/Transformer/Perspective/Section3_SmallBeta.lean#L37) | def |  |
-| [`UniformTuple`](src/Transformer/Perspective/Section3_SmallBeta.lean#L51) | def |  |
-| [`consensusSet0`](src/Transformer/Perspective/Section3_SmallBeta.lean#L58) | def |  |
-| [`beta0_consensus`](src/Transformer/Perspective/Section3_SmallBeta.lean#L83) | theorem | sorry |
-| [`antipode`](src/Transformer/Perspective/Section3_SmallBeta.lean#L92) | def |  |
-| [`antipodalPair`](src/Transformer/Perspective/Section3_SmallBeta.lean#L98) | def |  |
-| [`antipodalPair_not_mem_consensusSet0`](src/Transformer/Perspective/Section3_SmallBeta.lean#L111) | theorem | proved |
-| [`clusteringSet`](src/Transformer/Perspective/Section3_SmallBeta.lean#L138) | def |  |
-| [`SA_const_antipodalPair`](src/Transformer/Perspective/Section3_SmallBeta.lean#L154) | theorem | proved |
-| [`antipodalPair_not_mem_clusteringSet`](src/Transformer/Perspective/Section3_SmallBeta.lean#L180) | theorem | proved |
-| [`clustering_probability_small_beta`](src/Transformer/Perspective/Section3_SmallBeta.lean#L216) | theorem | sorry |
-| [`alphaClustered`](src/Transformer/Perspective/Section3_SmallBeta.lean#L230) | def |  |
-| [`Sset0`](src/Transformer/Perspective/Section3_SmallBeta.lean#L240) | def |  |
-| [`sset0_probability_tendsto_one`](src/Transformer/Perspective/Section3_SmallBeta.lean#L253) | theorem | sorry |
-| [`beta_tiny`](src/Transformer/Perspective/Section3_SmallBeta.lean#L283) | theorem | sorry |
-| [`beta_tiny_circle`](src/Transformer/Perspective/Section3_SmallBeta.lean#L299) | theorem | sorry |
+| [`beta0Dynamics`](src/Transformer/Perspective/Section3_SmallBeta.lean#L38) | def |  |
+| [`UniformTuple`](src/Transformer/Perspective/Section3_SmallBeta.lean#L52) | def |  |
+| [`consensusSet0`](src/Transformer/Perspective/Section3_SmallBeta.lean#L59) | def |  |
+| [`beta0_consensus`](src/Transformer/Perspective/Section3_SmallBeta.lean#L84) | theorem | sorry |
+| [`antipode`](src/Transformer/Perspective/Section3_SmallBeta.lean#L93) | def |  |
+| [`antipodalPair`](src/Transformer/Perspective/Section3_SmallBeta.lean#L99) | def |  |
+| [`antipodalPair_not_mem_consensusSet0`](src/Transformer/Perspective/Section3_SmallBeta.lean#L112) | theorem | proved |
+| [`clusteringSet`](src/Transformer/Perspective/Section3_SmallBeta.lean#L139) | def |  |
+| [`clusteringSetUSA`](src/Transformer/Perspective/Section3_SmallBeta.lean#L151) | def |  |
+| [`SA_const_antipodalPair`](src/Transformer/Perspective/Section3_SmallBeta.lean#L167) | theorem | proved |
+| [`antipodalPair_not_mem_clusteringSet`](src/Transformer/Perspective/Section3_SmallBeta.lean#L193) | theorem | proved |
+| [`clustering_probability_small_beta`](src/Transformer/Perspective/Section3_SmallBeta.lean#L229) | theorem | sorry |
+| [`alphaClustered`](src/Transformer/Perspective/Section3_SmallBeta.lean#L243) | def |  |
+| [`Sset0`](src/Transformer/Perspective/Section3_SmallBeta.lean#L253) | def |  |
+| [`sset0_probability_tendsto_one`](src/Transformer/Perspective/Section3_SmallBeta.lean#L266) | theorem | sorry |
+| [`beta_tiny`](src/Transformer/Perspective/Section3_SmallBeta.lean#L297) | theorem | sorry |
+| [`beta_tiny_circle`](src/Transformer/Perspective/Section3_SmallBeta.lean#L314) | theorem | sorry |
 
-**[Transformer.Perspective.Section4_LargeBeta](src/Transformer/Perspective/Section4_LargeBeta.lean)** — 55 lines
+**[Transformer.Perspective.Section4_LargeBeta](src/Transformer/Perspective/Section4_LargeBeta.lean)** — 56 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`beta_interval`](src/Transformer/Perspective/Section4_LargeBeta.lean#L44) | theorem | sorry |
+| [`beta_interval`](src/Transformer/Perspective/Section4_LargeBeta.lean#L45) | theorem | sorry |
 
 **[Transformer.Perspective.Section5_ConeCollapse](src/Transformer/Perspective/Section5_ConeCollapse.lean)** — 184 lines
 
@@ -7298,12 +7299,12 @@ Everything the build cannot vouch for, in one place.
 | [`dissipation_softmax`](src/Transformer/Perspective/Section2_FlowMap.lean#L165) | theorem | `Transformer.Perspective.Section2_FlowMap` |
 | [`existence_uniqueness_energy_min`](src/Transformer/Perspective/Section2_FlowMap.lean#L236) | theorem | `Transformer.Perspective.Section2_FlowMap` |
 | [`usa_dissipation`](src/Transformer/Perspective/Section2_GradientFlow.lean#L131) | theorem | `Transformer.Perspective.Section2_GradientFlow` |
-| [`beta0_consensus`](src/Transformer/Perspective/Section3_SmallBeta.lean#L83) | theorem | `Transformer.Perspective.Section3_SmallBeta` |
-| [`clustering_probability_small_beta`](src/Transformer/Perspective/Section3_SmallBeta.lean#L216) | theorem | `Transformer.Perspective.Section3_SmallBeta` |
-| [`sset0_probability_tendsto_one`](src/Transformer/Perspective/Section3_SmallBeta.lean#L253) | theorem | `Transformer.Perspective.Section3_SmallBeta` |
-| [`beta_tiny`](src/Transformer/Perspective/Section3_SmallBeta.lean#L283) | theorem | `Transformer.Perspective.Section3_SmallBeta` |
-| [`beta_tiny_circle`](src/Transformer/Perspective/Section3_SmallBeta.lean#L299) | theorem | `Transformer.Perspective.Section3_SmallBeta` |
-| [`beta_interval`](src/Transformer/Perspective/Section4_LargeBeta.lean#L44) | theorem | `Transformer.Perspective.Section4_LargeBeta` |
+| [`beta0_consensus`](src/Transformer/Perspective/Section3_SmallBeta.lean#L84) | theorem | `Transformer.Perspective.Section3_SmallBeta` |
+| [`clustering_probability_small_beta`](src/Transformer/Perspective/Section3_SmallBeta.lean#L229) | theorem | `Transformer.Perspective.Section3_SmallBeta` |
+| [`sset0_probability_tendsto_one`](src/Transformer/Perspective/Section3_SmallBeta.lean#L266) | theorem | `Transformer.Perspective.Section3_SmallBeta` |
+| [`beta_tiny`](src/Transformer/Perspective/Section3_SmallBeta.lean#L297) | theorem | `Transformer.Perspective.Section3_SmallBeta` |
+| [`beta_tiny_circle`](src/Transformer/Perspective/Section3_SmallBeta.lean#L314) | theorem | `Transformer.Perspective.Section3_SmallBeta` |
+| [`beta_interval`](src/Transformer/Perspective/Section4_LargeBeta.lean#L45) | theorem | `Transformer.Perspective.Section4_LargeBeta` |
 | [`boumal_clustering`](src/Transformer/Perspective/Section5_HighD.lean#L72) | theorem | `Transformer.Perspective.Section5_HighD` |
 | [`d_infty_exponential`](src/Transformer/Perspective/Section5_HighD.lean#L102) | theorem | `Transformer.Perspective.Section5_HighD` |
 | [`hemisphere_step1_qual_conv`](src/Transformer/Perspective/Section5_HighD.lean#L198) | theorem | `Transformer.Perspective.Section5_HighD` |

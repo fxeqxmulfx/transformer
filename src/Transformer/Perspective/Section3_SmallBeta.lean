@@ -18,6 +18,7 @@ This file formalizes §4 of the survey:
 import Transformer.Basic
 import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section2_FlowMap
+import Transformer.Perspective.Section2_GradientFlow
 import Mathlib.MeasureTheory.Constructions.Pi
 
 open scoped BigOperators
@@ -139,6 +140,18 @@ def clusteringSet
     (β : ℝ) : Set (SphereTuple d n) :=
   { X₀ | ∃ x_star : SSphere d, ∀ X : ℝ → SphereTuple d n,
             X 0 = X₀ → Perspective.SA d n β X →
+              ∀ i : Idx n,
+                Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
+                  Filter.atTop (nhds 0) }
+
+/-- The `USA` counterpart of `clusteringSet`: the initial sequences for which
+the solution to the Cauchy problem for `USA` converges to a single cluster.
+
+Source: arXiv:2312.10794v5, §4, `thm: beta.tiny` ("resp. for `USA`"). -/
+def clusteringSetUSA
+    (β : ℝ) : Set (SphereTuple d n) :=
+  { X₀ | ∃ x_star : SSphere d, ∀ X : ℝ → SphereTuple d n,
+            X 0 = X₀ → Perspective.USA d n β X →
               ∀ i : Idx n,
                 Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
                   Filter.atTop (nhds 0) }
@@ -268,7 +281,8 @@ Fix `d, n ≥ 2`.  There is a numerical constant `C > 0` such that whenever
 
 For Lebesgue-almost any `(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n`, there exists
 `x⋆ ∈ 𝕊^{d-1}` with `lim_{t→∞} x_i(t) = x⋆` for the unique solution of `SA`
-(resp. `USA`) starting from `X₀` — that is, `𝒮_β` is co-null.
+(resp. `USA`) starting from `X₀` — that is, `𝒮_β` is co-null, and so is its
+`USA` counterpart `clusteringSetUSA`; both are concluded.
 
 Moreover, when `d = 2` one can take `β ≤ 1` (`beta_tiny_circle`).
 
@@ -283,7 +297,7 @@ Source: arXiv:2312.10794v5, §4, `thm: beta.tiny`. -/
 theorem beta_tiny (hd : 2 ≤ d) (hn : 2 ≤ n) :
     ∃ C : ℝ, 0 < C ∧ ∀ β : ℝ, 0 ≤ β → β ≤ C / n →
       ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-        ∀ᵐ X₀ ∂P, X₀ ∈ clusteringSet d n β := by
+        ∀ᵐ X₀ ∂P, X₀ ∈ clusteringSet d n β ∧ X₀ ∈ clusteringSetUSA d n β := by
   sorry
 
 /-- The hypotheses of `beta_tiny` are satisfiable: `d = n = 2`. -/
@@ -291,7 +305,8 @@ example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 
 /-- *d = 2 improvement of `thm: beta.tiny` (Criscitiello-Boumal 2024).*
 
-When `d = 2`, the constant in `beta_tiny` can be taken so that `β ≤ 1`.
+When `d = 2`, the constant in `beta_tiny` can be taken so that `β ≤ 1`, for
+`SA` and for `USA` ("the same conclusion holds").
 
 Not proved here.
 
@@ -299,7 +314,7 @@ Source: arXiv:2312.10794v5, §4, remark after `thm: beta.tiny`. -/
 theorem beta_tiny_circle (hn : 2 ≤ n) :
     ∀ β : ℝ, 0 ≤ β → β ≤ 1 →
       ∀ P : Measure (SphereTuple 2 n), UniformTuple 2 n P →
-        ∀ᵐ X₀ ∂P, X₀ ∈ clusteringSet 2 n β := by
+        ∀ᵐ X₀ ∂P, X₀ ∈ clusteringSet 2 n β ∧ X₀ ∈ clusteringSetUSA 2 n β := by
   sorry
 
 /-- The hypothesis of `beta_tiny_circle` is satisfiable: `n = 2`. -/
