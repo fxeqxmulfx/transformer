@@ -10,12 +10,8 @@ that need not become a standard basis row.
 * `l:onlyone` is proved in `Transformer.Clusters.Section7_OnlyOne`, as
   `ncard_boundedTokens_le_one`.
 
-* `l:boundedxn`'s second sentence says "if `x_1(t)` is bounded then
-  `P_11(t) → 1` and `P_{1j}(t) → 0` for any `j ∈ [n-1]`".  As written it is
-  false: `1 ∈ [n-1]` whenever `n ≥ 2`, so it asks for `P_11(t) → 0` and
-  `P_11(t) → 1` at once.  The range is a copy of the first sentence's, where
-  `[n-1] = [n] \ {n}` is correct; symmetrically it must be `[n] \ {1}`, and
-  that is how it is carried.  Nothing else is changed.
+* `l:boundedxn` is proved in `Transformer.Clusters.Section7_BoundedXN`, with
+  the range of its second sentence corrected.
 
 * `l:boundedother` is carried over `j ∈ [n-1]`, as stated.  The remaining
   entry of the row then converges too, by the row sum — that is
@@ -29,7 +25,7 @@ that need not become a standard basis row.
   exactly that configuration, from a solution of the scalar equation
   `symDrift` it reduces to.
 
-Source: arXiv:2305.05465v6, `l:boundedxn`, `l:boundedother`, and
+Source: arXiv:2305.05465v6, `l:boundedother`, and
 the proof of `t:boolean` in §7.
 -/
 
@@ -42,58 +38,6 @@ namespace Transformer
 namespace Clusters
 
 variable {d n m : ℕ}
-
-/-- The configuration pinned at the origin solves `e:Idnonresca`, and with one
-token it is ordered and bounded; this witnesses the hypotheses of
-both halves of `l:boundedxn`. -/
-theorem isBoundedToken_zero (i : Idx n) :
-    IsBoundedToken (fun _ _ => (0 : EucSpace 1)) i :=
-  ⟨0, fun _ _ => by simp⟩
-
-/-! ### `l:boundedxn` -/
-
-/-- **Lemma (l:boundedxn), the largest token.**  If `x_n(t)` stays bounded
-then `P_nn(t) → 1` and `P_nj(t) → 0` for every `j ∈ [n-1]`.
-
-Not proved here.
-
-Source: arXiv:2305.05465v6, `l:boundedxn`. -/
-theorem tendsto_attention_of_bounded_last (X : ℝ → Idx (m + 1) → EucSpace 1)
-    (hX : IdNonrescaledDynamics X) (hord : IsOrderedConfig (X 0))
-    (hb : IsBoundedToken X (Fin.last m)) :
-    Tendsto (fun t => attentionMatrix (1 : ParamMatrix 1) 1 (X t) (Fin.last m) (Fin.last m))
-        atTop (nhds 1) ∧
-      ∀ j : Idx (m + 1), j ≠ Fin.last m →
-        Tendsto (fun t => attentionMatrix (1 : ParamMatrix 1) 1 (X t) (Fin.last m) j)
-          atTop (nhds 0) := by
-  sorry
-
-/-- **Lemma (l:boundedxn), the smallest token.**  If `x_1(t)` stays bounded
-then `P_11(t) → 1` and `P_{1j}(t) → 0` for every `j ∈ [n] \ {1}`.
-
-The source writes `j ∈ [n-1]` here, copying the range of its first sentence;
-that range contains `j = 1` and would contradict `P_11(t) → 1`.  The
-symmetric range is `[n] \ {1}`, and that is what is stated.
-
-Not proved here.
-
-Source: arXiv:2305.05465v6, `l:boundedxn`, second sentence, corrected. -/
-theorem tendsto_attention_of_bounded_first (X : ℝ → Idx (m + 1) → EucSpace 1)
-    (hX : IdNonrescaledDynamics X) (hord : IsOrderedConfig (X 0))
-    (hb : IsBoundedToken X 0) :
-    Tendsto (fun t => attentionMatrix (1 : ParamMatrix 1) 1 (X t) 0 0) atTop (nhds 1) ∧
-      ∀ j : Idx (m + 1), j ≠ 0 →
-        Tendsto (fun t => attentionMatrix (1 : ParamMatrix 1) 1 (X t) 0 j) atTop (nhds 0) := by
-  sorry
-
-/-- The hypotheses of both halves of `l:boundedxn` are satisfiable. -/
-example :
-    IdNonrescaledDynamics (n := 1) (fun _ _ => (0 : EucSpace 1)) ∧
-      IsOrderedConfig (n := 1) (fun _ => (0 : EucSpace 1)) ∧
-      IsBoundedToken (fun _ _ => (0 : EucSpace 1)) (Fin.last 0) ∧
-      IsBoundedToken (fun _ _ => (0 : EucSpace 1)) (0 : Idx 1) :=
-  ⟨idNonrescaledDynamics_zero 1 1, isOrderedConfig_subsingleton _,
-    isBoundedToken_zero _, isBoundedToken_zero _⟩
 
 /-! ### `l:boundedother` -/
 

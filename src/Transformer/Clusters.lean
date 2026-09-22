@@ -34,6 +34,9 @@ import Transformer.Clusters.Section7_OnlyOneCore
 import Transformer.Clusters.Section7_OnlyOneSpread
 import Transformer.Clusters.Section7_OnlyOne
 import Transformer.Clusters.Section7_Bounded
+import Transformer.Clusters.Section7_BoundedXNCore
+import Transformer.Clusters.Section7_BoundedXNLimit
+import Transformer.Clusters.Section7_BoundedXN
 import Transformer.Clusters.Section9_Eigen
 import Transformer.Clusters.Extremum
 import Transformer.Clusters.Section9_Fj
