@@ -26,6 +26,9 @@ import Transformer.Metastability.QuantitativeInequality
 import Transformer.Metastability.ExponentialFlow
 import Transformer.Metastability.Initial
 import Transformer.Metastability.InitialUniform
+import Transformer.Metastability.UniformCap
+import Transformer.Metastability.NotSeparated
+import Transformer.Metastability.LowDimDecay
 import Transformer.Metastability.CircleWitness
 import Transformer.Metastability.MeanField
 import Transformer.Metastability.MeanFieldCapExit

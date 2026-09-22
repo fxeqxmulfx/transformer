@@ -6,7 +6,8 @@
                                            approximation of a uniform sample,
 * `Corollary coro: cm`, `eq: technical.cond` — uniform points are
                                            `(β, ε)`-separated,
-* the low-dimensional bound on the probability of being `(β, ε)`-separated.
+* the low-dimensional bound on the probability of being `(β, ε)`-separated,
+  proved in `Metastability.LowDimDecay`.
 
 All three bound the probability of an event under the *uniform* measure on
 `𝕊^{d-1}`, which this development does not construct.  It is pinned down
@@ -17,7 +18,7 @@ This is `Perspective.UniformTuple`'s device, one sphere at a time.
 
 `coro: cm` is proved, from `prop: concentration unif` carried as an explicit
 hypothesis and from `Metastability.AlphaDist`, whose `α(ε)` estimate corrects
-the one the source's proof uses.  The other two are not proved.
+the one the source's proof uses.  `prop: concentration unif` is not proved.
 -/
 
 import Transformer.Basic
@@ -192,27 +193,6 @@ example : ∀ σ : ∀ d : ℕ, Measure (SSphere d), IsUniformFamily σ →
     Set.eq_univ_of_forall fun _ => ⟨Fin.elim0, fun i => i.elim0, fun i => i.elim0⟩
   rw [huniv]
   simp
-
-/-- **Low-dimensional bound.**
-
-For `d = 2`, `n ≥ 2` and `0 < ε < 1/16`, the probability that an i.i.d.
-uniform sample on `𝕊^1` is `(β, ε)`-separated decays exponentially in `n`:
-there is `c ∈ (0, 1)`, depending on `β` and `ε` alone, with
-
-  `ℙ((x_1,…,x_n) is (β, ε)-separated) ≤ c^n`.
-
-Not proved here.
-
-Source: arXiv:2410.06833v1, §4. -/
-theorem low_dim_decay (β ε : ℝ) (hε : 0 < ε) (hε16 : ε < 1 / 16) :
-    ∀ σ : ∀ d : ℕ, Measure (SSphere d), IsUniformFamily σ →
-      ∃ c : ℝ, 0 < c ∧ c < 1 ∧
-        ∀ n : ℕ, 2 ≤ n →
-          (iidSphere 2 n (σ 2)).real { X | isSeparated 2 n β ε X } ≤ c ^ n := by
-  sorry
-
-/-- The hypotheses of `low_dim_decay` are satisfiable: `ε = 1/32`. -/
-example : (0 : ℝ) < 1 / 32 ∧ (1 : ℝ) / 32 < 1 / 16 := by norm_num
 
 end Metastability
 end Transformer
