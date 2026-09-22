@@ -217,7 +217,7 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - ok Transformer/AMSGrad/Section5_Bounds.lean (3): `vtnew_div`, `adamX_mono`, `eqthird_adamX_le`
 - ok Transformer/AMSGrad/Section5_Corollary.lean (3): `ge_cor`, `bound_lambda`, `bound_inv`
 - ok Transformer/AMSGrad/Section5_Sums.lean (2): `sum_lambda_le`, `sum_inv_le`
-- issue Transformer/AMSGrad/Section5_Theorem.lean (1): `mainthm2` — mainthm2 is weaker than the paper's Theorem 5.1: second term has (1-β₁)² where the paper has (1-β₁); the paper's constant is neither proved nor refuted. Under non-increasing β_{1,t}, Lemma 5.2 gives √v̂_t ≤ G and the paper's constant follows; in general it is open — either prove it under that hypothesis or refute it
+- issue Transformer/AMSGrad/Section5_Theorem.lean (1): `mainthm2` — mainthm2 is weaker than the paper's Theorem 5.1: second term has (1-β₁)² where the paper has (1-β₁); the paper's constant is neither proved nor refuted. Lemma 5.2 gives √v̂_t ≤ G, but the paper's constant follows from it only for constant β₁; a non-increasing β_{1,t} is not enough on its own. In general it is open — either prove it for constant β₁ or refute it
 
 ### Transformer.AdamBeyond — arXiv:1904.09237
 
