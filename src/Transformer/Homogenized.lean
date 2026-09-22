@@ -32,6 +32,8 @@ import Transformer.Homogenized.RegimeRefutation
 import Transformer.Homogenized.WeakErrorRefutation
 import Transformer.Homogenized.Simplex
 import Transformer.Homogenized.SimplexBary
+import Transformer.Homogenized.HeadConj
+import Transformer.Homogenized.HeadLawRotation
 import Transformer.Homogenized.SimplexDrift
 import Transformer.Homogenized.GramStability
 import Transformer.Homogenized.SmallBeta

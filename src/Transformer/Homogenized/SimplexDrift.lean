@@ -5,9 +5,10 @@ Formalization of `lem:drift_on_simplex_selfcontained` of arXiv:2604.01978v1,
 *Homogenized Transformers*.  It has two halves.
 
 * The drift `𝒟_ij(X)` of `eq:Dij_explicit_clean` depends on `X` only through
-  its Gram matrix.  The content is that `s_{μ_X}` does (`baryCorr_of_gram`, an
-  orthogonal-invariance statement about the Gaussian law of `A = W W'ᵀ`); the
-  rest is the substitution `overlapDrift_congr`.
+  its Gram matrix (`overlapDrift_of_gram`).  The content is that `s_{μ_X}` does
+  (`baryCorr_of_gram`, from the orthogonal invariance of the Gaussian law of
+  `A = W W'ᵀ`, `HeadLawRotation.lean`); the rest is the substitution
+  `overlapDrift_congr`.
 
 * On a simplex configuration with overlap `γ`, the two statistics collapse to
   `γ + (1-γ)f(γ)` and `γ + (1-γ)g(γ)` — that is `SimplexBary.lean` — and the
@@ -32,6 +33,7 @@ Source: arXiv:2604.01978v1, `lem:drift_on_simplex_selfcontained`.
 -/
 
 import Transformer.Homogenized.OverlapDrift
+import Transformer.Homogenized.HeadLawRotation
 import Transformer.Homogenized.SimplexBary
 
 open scoped BigOperators NNReal
@@ -43,39 +45,43 @@ namespace Homogenized
 /-! ### The drift is a function of the Gram matrix -/
 
 /-- **Lemma (lem:drift_on_simplex_selfcontained), first half.**  Two
-configurations of unit tokens with the same Gram matrix give the same value to
+configurations with the same Gram matrix give the same value to
 `s_{μ_X}(x_i, x_j)`.
 
-Two configurations with the same Gram matrix differ by an orthogonal `O`, and
-`⟨A x_i, x_j⟩ = ⟨Oᵀ A O x̃_i, x̃_j⟩` has the same law as `⟨A x̃_i, x̃_j⟩` because
-the law of `A = W W'ᵀ` is orthogonally invariant.  That invariance is what is
-unproved here; `overlapDrift_congr` is the substitution it feeds.
+Two configurations with the same Gram matrix differ by an orthogonal `O`
+(`exists_linearIsometryEquiv_of_inner_eq`), rotating the tokens by `O` is
+conjugating `A` by `O` (`softBary_conjMat`), and the law of the head is invariant
+under that conjugation (`measurePreserving_conjHead`).
 
-Not proved here.
+**What the source says and what is changed.**  The source states the lemma for
+configurations on the sphere.  The proof never uses `‖x_k‖ = 1`, and the
+hypothesis is dropped: the statement here is the source's for unit tokens and
+holds for every configuration.
 
 Source: arXiv:2604.01978v1, proof of `lem:drift_on_simplex_selfcontained`. -/
 theorem baryCorr_of_gram {d n : ℕ} (β : ℝ) (σV σA : ℝ≥0) (ρ : Measure (HeadParam d))
     (hρ : IsGaussianHeadLaw d σV σA ρ) (X Y : Idx n → EucSpace d)
-    (hX : ∀ k : Idx n, ‖X k‖ = 1) (hY : ∀ k : Idx n, ‖Y k‖ = 1)
     (hgram : ∀ k l : Idx n, inner (𝕜 := ℝ) (X k) (X l) = inner (𝕜 := ℝ) (Y k) (Y l))
     (i j : Idx n) :
     baryCorr β ρ (empMeasure X) (X i) (X j) = baryCorr β ρ (empMeasure Y) (Y i) (Y j) := by
-  sorry
+  obtain ⟨O, hO⟩ := exists_linearIsometryEquiv_of_inner_eq hgram
+  obtain rfl : Y = fun k => O (X k) := funext fun k => (hO k).symm
+  refine ((measurePreserving_conjHead hρ O).integral_comp' _).symm.trans
+    (integral_congr_ae (ae_of_all _ fun θ => ?_))
+  dsimp only
+  rw [conjHead_apply, ← O.inner_map_map, softBary_conjMat, softBary_conjMat]
 
 /-- The hypotheses of `baryCorr_of_gram` are satisfiable: the degenerate head
-law `ρ* = δ_0` and one orthonormal pair compared with itself. -/
-example :
+law `ρ* = δ_0` and a configuration compared with itself. -/
+example (X : Idx 2 → EucSpace 2) :
     IsGaussianHeadLaw 2 0 0 (Measure.dirac (0 : HeadParam 2)) ∧
-      ∀ k : Idx 2, ‖(EuclideanSpace.single k (1 : ℝ) : EucSpace 2)‖ = 1 := by
-  refine ⟨isGaussianHeadLaw_dirac_zero 2, fun k => by simp [PiLp.norm_single]⟩
+      ∀ k l : Idx 2, inner (𝕜 := ℝ) (X k) (X l) = inner (𝕜 := ℝ) (X k) (X l) :=
+  ⟨isGaussianHeadLaw_dirac_zero 2, fun _ _ => rfl⟩
 
 /-- **Lemma (lem:drift_on_simplex_selfcontained), the substitution.**  Once the
 three values of `s_{μ_X}` and the overlap `R_ij` agree, the drifts agree: this
-is the "and hence `𝒟_ij(X)`" of the statement.
-
-The three equalities are taken as hypotheses rather than read off
-`baryCorr_of_gram`, which is not proved here; that keeps the dependence
-legible in the signature.
+is the "and hence `𝒟_ij(X)`" of the statement.  `overlapDrift_of_gram` feeds it
+`baryCorr_of_gram`.
 
 Source: arXiv:2604.01978v1, `lem:drift_on_simplex_selfcontained`. -/
 theorem overlapDrift_congr {d n : ℕ} (β : ℝ) (ρ : Measure (HeadParam d))
@@ -92,6 +98,19 @@ example {d n : ℕ} (β : ℝ) (ρ : Measure (HeadParam d)) (X : Idx n → EucSp
     inner (𝕜 := ℝ) (X i) (X j) = inner (𝕜 := ℝ) (X i) (X j) ∧
       baryCorr β ρ (empMeasure X) (X i) (X j) = baryCorr β ρ (empMeasure X) (X i) (X j) :=
   ⟨rfl, rfl⟩
+
+/-- **Lemma (lem:drift_on_simplex_selfcontained), first half, the drift.**
+Under (G), `𝒟_ij(X)` depends on `X` only through its Gram matrix.  As in
+`baryCorr_of_gram`, the source's unit-norm hypothesis is not needed.
+
+Source: arXiv:2604.01978v1, `lem:drift_on_simplex_selfcontained`. -/
+theorem overlapDrift_of_gram {d n : ℕ} (β : ℝ) (σV σA : ℝ≥0) (ρ : Measure (HeadParam d))
+    (hρ : IsGaussianHeadLaw d σV σA ρ) (X Y : Idx n → EucSpace d)
+    (hgram : ∀ k l : Idx n, inner (𝕜 := ℝ) (X k) (X l) = inner (𝕜 := ℝ) (Y k) (Y l))
+    (i j : Idx n) :
+    overlapDrift β ρ X i j = overlapDrift β ρ Y i j :=
+  overlapDrift_congr β ρ X Y i j (hgram i j) (baryCorr_of_gram β σV σA ρ hρ X Y hgram i j)
+    (baryCorr_of_gram β σV σA ρ hρ X Y hgram i i) (baryCorr_of_gram β σV σA ρ hρ X Y hgram j j)
 
 /-! ### The drift on the simplex line -/
 
