@@ -15,6 +15,7 @@ import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section2_GradientFlow
 import Transformer.Perspective.Section3_SmallBeta
 import Transformer.Perspective.ConeFields
+import Transformer.Perspective.UniformHemisphere
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -145,20 +146,27 @@ surely there exist `x⋆ ∈ 𝕊^{d-1}` and constants `C, λ > 0` such that
 for the solution of `SA`, of `USA`, and — for arbitrary `d × d` matrices `Q`
 and `K` — of `eq: transformerSd.QKV` with `V = I_d` and of its `USA` analogue
 `usaQKV`.  `x⋆`, `C` and `λ` depend on the dynamics; the null set does not
-depend on `Q, K`, which is how "almost surely … arbitrary `Q, K`" reads: the
-proof needs of `X₀` only that it lie in an open hemisphere, and concludes by
-`cone_collapse`.
+depend on `Q, K`, which is how "almost surely … arbitrary `Q, K`" reads.
+
+The proof is the survey's: almost surely the initial points lie in an open
+hemisphere (`ae_exists_openHemisphere` — they are almost surely linearly
+independent, and independent points lie in one), and `cone_collapse` applies
+to every such initial sequence.
+
+**What the source says and what is changed here.**  The survey assumes
+`n ≥ 1` and `β > 0`.  Neither is used and both are dropped, as in
+`cone_collapse`: the theorem holds for every real `β`, and for `n = 0` the
+uniform law, a probability measure on the sphere, supplies the point `x⋆`.
+Solutions are taken on all of `ℝ` and "the unique solution" is "every
+solution through `X₀`", as in `cone_collapse`.
 
 *Almost surely* is part of the statement and not a turn of phrase: for `n = 2`
 the antipodal pair admits no such rate for `SA` at any `β`
 (`antipodalPair_not_exponential`), so the `∀ X₀` reading is false.  The
 initial sequence is drawn from the uniform law `UniformTuple` of §4.
 
-Not proved here.
-
 Source: arXiv:2312.10794v5, §6.1, `thm: d.infty`, `eq: expconvtocons`. -/
-theorem d_infty_exponential
-    (hn : 1 ≤ n) (β : ℝ) (hβ : 0 < β) (hdn : n ≤ d) :
+theorem d_infty_exponential (β : ℝ) (hdn : n ≤ d) :
     ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
       ∀ᵐ X₀ ∂P,
         ExpConvergent d n (Perspective.SA d n β) X₀ ∧
@@ -168,11 +176,13 @@ theorem d_infty_exponential
               (transformerODE d n β (fun _ => Q) (fun _ => K) (fun _ => ContinuousLinearMap.id ℝ _))
               X₀ ∧
             ExpConvergent d n (usaQKV d n β Q K) X₀ := by
-  sorry
+  intro P hP
+  filter_upwards [ae_exists_openHemisphere d hdn P hP] with X₀ hX₀
+  exact cone_collapse d n β X₀ hX₀
 
-/-- The hypotheses of `d_infty_exponential` are satisfiable: `d = n = 1`,
-`β = 1`. -/
-example : 1 ≤ 1 ∧ (0 : ℝ) < 1 ∧ 1 ≤ 1 := ⟨le_rfl, one_pos, le_rfl⟩
+/-- The hypothesis of `d_infty_exponential` is satisfiable: `d = n = 1`; the
+uniform law is quantified over. -/
+example : 1 ≤ 1 := le_rfl
 
 end Perspective
 end Transformer

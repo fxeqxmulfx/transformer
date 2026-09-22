@@ -15,7 +15,10 @@ expansion runs on; neither mentions the survey.  `MaxCurve`, `ConeChart`,
 `ConeWidth` and `ConeLimit` are the proof of cone collapse (§6.1) for any flow
 `ẋ_i = Proj_{x_i}(Σ_j a_ij x_j)` with weights in `[m, M]`, `m > 0`, through
 the chart `x ↦ x / ⟨x, w⟩` of a hemisphere, and `ConeFields` puts the
-attention dynamics in that form.
+attention dynamics in that form.  `SphereHyperplane` and `UniformHemisphere`
+are the footnote to `thm: d.infty`: a rotation-invariant law does not charge
+great spheres, so `n ≤ d` uniform points are almost surely linearly
+independent and lie in an open hemisphere.
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -47,6 +50,8 @@ import Transformer.Perspective.ConeWidth
 import Transformer.Perspective.ConeLimit
 import Transformer.Perspective.ConeFields
 import Transformer.Perspective.Section5_HighD
+import Transformer.Perspective.SphereHyperplane
+import Transformer.Perspective.UniformHemisphere
 import Transformer.Perspective.Section5_ExpRate
 import Transformer.Perspective.Section5_ConeCollapse
 import Transformer.Perspective.Section5_Hemisphere
