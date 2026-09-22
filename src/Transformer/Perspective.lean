@@ -87,7 +87,13 @@ taken at `1 + c` with the difference carried by a skip onto the state being
 updated (`ungauged_rec_dense`); freezing then survives every update of the record
 at the cost of a product `Π_{j<k} (1 + V_{j,i})` of damped skip weights
 (`rawStack_frozen_dense`) — with the bound on the blocks' outputs, from layer 4
-on, a property of the trajectory rather than of the weights.
+on, a property of the trajectory rather than of the weights.  `PerturbGronwall`
+turns from the stream to its copy with rounded weights: a stack and a perturbed
+copy of it stay within `‖y_0 − x_0‖ Π_{j<N} L_j + Σ_{m<N} η_m Π_{m<j<N} L_j` of
+each other, with `L_j` the spreading of each step along the two trajectories
+and `η_m` the error it makes (`norm_sub_le_perturbBound`) — a bound that a linear
+stack attains (`norm_sub_linearStack`) and that does not ask whether the steps
+share their weights.
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -145,6 +151,7 @@ import Transformer.Perspective.RawStackSkipFrozen
 import Transformer.Perspective.RawStackDense
 import Transformer.Perspective.RawStackDenseGronwall
 import Transformer.Perspective.RawStackDenseFrozen
+import Transformer.Perspective.PerturbGronwall
 import Transformer.Perspective.BlockMLP
 import Transformer.Perspective.BlockMLPSpread
 import Transformer.Perspective.XSAProj
