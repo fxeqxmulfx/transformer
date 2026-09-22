@@ -25,6 +25,9 @@ import Transformer.FrankWolfe.Section4_ExpFast
 import Transformer.FrankWolfe.Section4_Edges
 import Transformer.FrankWolfe.Section4_VertexGenericity
 import Transformer.FrankWolfe.Section4_ODE
+import Transformer.FrankWolfe.Section4_ODESolution
+import Transformer.FrankWolfe.Section4_ODEUnique
+import Transformer.FrankWolfe.Section4_ODEWellPosed
 import Transformer.FrankWolfe.Section5_Process
 import Transformer.FrankWolfe.Section5_Contraction
 import Transformer.FrankWolfe.Section5_Collapse

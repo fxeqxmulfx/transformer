@@ -9,7 +9,7 @@ bound on the duality gap is `prop: trash`; under genericity assumptions on the
 initial polytope (`GenericPolytope`, here) the dynamics is instead solved
 exactly (`thm: exp.fast.polytope`, in `Section4_ExpFast.lean`), and the same
 geometry gives well-posedness of the singular ODE `eq: hardmax.ode`
-(`thm: ode`, in `Section4_ODE.lean`).
+(`thm: ode`, in `Section4_ODEWellPosed.lean`).
 -/
 
 import Transformer.FrankWolfe.Section4_Cells
