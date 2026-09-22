@@ -19,12 +19,17 @@ keys that product is at least one, and the shipped offset stays under
 same margin `Transformer.ALM.HullMark` needs for a different reason.
 
 `marked_not_concurrent` is the statement over the family `Marked A s` the
-container actually holds, and `marked_erase_preserves_tieSet` is the payoff:
-the erase inside `add_line` drops a line that is a maximizer at no query, so
-the tie set the payload merge walks is preserved and the hull head answers what
-the brute head answers.  That is the disagreement of
-`three_collinear_keys_are_where_the_hull_head_stops_being_exact` ruled out on
-the machine's own keys rather than sampled away.
+container actually holds.  `marked_breakpoints_ordered` is the stronger fact
+beneath it: on that family the breakpoint test of `add_line` never fires at
+all, because the middle of any three marked keys is strictly ahead of both
+others at its own key.  So the erase that could drop a tied winner never runs
+on the machine's keys, and the disagreement of
+`three_collinear_keys_are_where_the_hull_head_stops_being_exact` is ruled out
+rather than sampled away.
+
+An earlier `marked_erase_preserves_tieSet` took the test firing as a hypothesis
+next to `Marked A s`; the two are contradictory, so it held vacuously and is
+replaced by `marked_breakpoints_ordered`.
 
 Source: `todo3.md` §3a; `transformer_vm/graph/core.py` lines 293-319;
 `vm-rs/alm-hull/tests/differential.rs`.
@@ -32,6 +37,7 @@ Source: `todo3.md` §3a; `transformer_vm/graph/core.py` lines 293-319;
 
 import Transformer.ALM.GeneralPosition
 import Transformer.ALM.HullMark
+import Transformer.ALM.HullMono
 
 namespace Transformer
 namespace ALM
@@ -110,19 +116,80 @@ theorem marked_not_concurrent {A : ℝ} {s : Finset (ℝ × ℝ)} (hA : A < 1) (
     linarith
   exact markKey_not_concurrent hA hδ₁' hδ₂ hδ₃' hs₁₂ hs₂₃
 
-/-- **So the erase preserves the payload and not only the value.**  On the
-family the compiler emits, the line `add_line`'s breakpoint test rejects is a
-maximizer at no query at all, so the tie set `HullHalf::query` merges over is
-unchanged and the hull head returns what the brute head returns.
+/-- **On the family the compiler emits, the breakpoint test never fires.**
+For three members of `Marked A s` in increasing slope, the middle one is kept:
+`interX l₁ l₂ < interX l₂ l₃`.  At its own key `k₂` the middle line is
+strictly ahead of both others (`lineEval_markKey_lt`), and a line strictly
+ahead of both neighbours somewhere is ahead of them at their crossing.
 
-`Transformer.ALM.TieSet.erase_drops_the_winner` is the failure this rules out,
-and `vm-rs/alm-hull/tests/differential.rs` exhibits it on three collinear keys
-— keys no compiled head holds. -/
-theorem marked_erase_preserves_tieSet {A : ℝ} {s : Finset (ℝ × ℝ)} (hA : A < 1)
+So `add_line` erases nothing from a marked family, and the question of what an
+erase does to the tie set the payload merge walks never arises on it.
+
+Source: `todo3.md` §3a; `hull2d_cht.h`, lines 122-192, the breakpoint test. -/
+theorem marked_breakpoints_ordered {A : ℝ} {s : Finset (ℝ × ℝ)} (hA : A < 1)
     (hs : Marked A s) {l₁ l₂ l₃ : ℝ × ℝ} (h₁ : l₁ ∈ s) (h₂ : l₂ ∈ s) (h₃ : l₃ ∈ s)
-    (h₁₂ : l₁.1 < l₂.1) (h₂₃ : l₂.1 < l₃.1) (hfire : interX l₂ l₃ ≤ interX l₁ l₂) (x : ℝ) :
-    tieSet (s.erase l₂) x = tieSet s x :=
-  erase_preserves_tieSet h₁ h₃ h₁₂ h₂₃ hfire (marked_not_concurrent hA hs h₁ h₂ h₃ h₁₂ h₂₃) x
+    (h₁₂ : l₁.1 < l₂.1) (h₂₃ : l₂.1 < l₃.1) : interX l₁ l₂ < interX l₂ l₃ := by
+  obtain ⟨z₁, δ₁, hδ₁, hδ₁', rfl⟩ := hs.perturbed l₁ h₁
+  obtain ⟨z₂, δ₂, hδ₂, hδ₂', rfl⟩ := hs.perturbed l₂ h₂
+  obtain ⟨z₃, δ₃, hδ₃, hδ₃', rfl⟩ := hs.perturbed l₃ h₃
+  have h₁₂' := h₁₂
+  have h₂₃' := h₂₃
+  rw [markKey_fst, markKey_fst] at h₁₂' h₂₃'
+  have hz₁₂ : z₁ < z₂ := by exact_mod_cast (by linarith : (z₁ : ℝ) < z₂)
+  have hz₂₃ : z₂ < z₃ := by exact_mod_cast (by linarith : (z₂ : ℝ) < z₃)
+  have hs₁₂ : (1 : ℝ) ≤ (z₂ : ℝ) - (z₁ : ℝ) := by
+    have : (z₁ : ℝ) + 1 ≤ (z₂ : ℝ) := by exact_mod_cast Int.add_one_le_iff.mpr hz₁₂
+    linarith
+  have hs₂₃ : (1 : ℝ) ≤ (z₃ : ℝ) - (z₂ : ℝ) := by
+    have : (z₂ : ℝ) + 1 ≤ (z₃ : ℝ) := by exact_mod_cast Int.add_one_le_iff.mpr hz₂₃
+    linarith
+  set l₁ := markKey δ₁ (z₁ : ℝ)
+  set l₂ := markKey δ₂ (z₂ : ℝ)
+  set l₃ := markKey δ₃ (z₃ : ℝ)
+  set x₀ : ℝ := (z₂ : ℝ)
+  have e₁ : lineEval l₁ x₀ < lineEval l₂ x₀ :=
+    lineEval_markKey_lt (by nlinarith) (by linarith)
+  have e₃ : lineEval l₃ x₀ < lineEval l₂ x₀ :=
+    lineEval_markKey_lt (by nlinarith) (by linarith)
+  refine (interX_lt_interX_iff h₁₂ h₂₃).mpr ?_
+  set m := interX l₁ l₃
+  have hm : lineEval l₁ m = lineEval l₃ m := lineEval_interX l₁ l₃ (h₁₂.trans h₂₃).ne
+  have lin : ∀ (l : ℝ × ℝ) (x y : ℝ), lineEval l y = lineEval l x + l.1 * (y - x) := by
+    intro l x y; unfold lineEval; ring
+  rcases le_total x₀ m with hx | hx
+  · rw [lin l₁ x₀ m, lin l₂ x₀ m]
+    nlinarith
+  · rw [hm, lin l₃ x₀ m, lin l₂ x₀ m]
+    nlinarith
+
+/-- The hypotheses of `marked_not_concurrent` and `marked_breakpoints_ordered`
+are satisfiable, at the shipped spread and with three different offsets: the
+keys `0, 1, 2` raised by `0, 0.4, 0.2`. -/
+example :
+    ¬ Concurrent (markKey 0 ((0 : ℤ) : ℝ)) (markKey 0.4 ((1 : ℤ) : ℝ)) (markKey 0.2 ((2 : ℤ) : ℝ)) ∧
+      interX (markKey 0 ((0 : ℤ) : ℝ)) (markKey 0.4 ((1 : ℤ) : ℝ))
+        < interX (markKey 0.4 ((1 : ℤ) : ℝ)) (markKey 0.2 ((2 : ℤ) : ℝ)) := by
+  have hs : Marked 0.4 ({markKey 0 ((0 : ℤ) : ℝ), markKey 0.4 ((1 : ℤ) : ℝ),
+      markKey 0.2 ((2 : ℤ) : ℝ)} : Finset (ℝ × ℝ)) := by
+    constructor
+    · intro l hl
+      simp only [Finset.mem_insert, Finset.mem_singleton] at hl
+      rcases hl with rfl | rfl | rfl
+      exacts [⟨0, 0, le_rfl, by norm_num, rfl⟩, ⟨1, 0.4, by norm_num, le_rfl, rfl⟩,
+        ⟨2, 0.2, by norm_num, by norm_num, rfl⟩]
+    · intro l hl l' hl' hf
+      simp only [Finset.mem_insert, Finset.mem_singleton] at hl hl'
+      rcases hl with rfl | rfl | rfl <;> rcases hl' with rfl | rfl | rfl <;>
+        first | rfl | (exfalso; simp only [markKey_fst] at hf; norm_num at hf)
+  have hlt : ∀ a b : ℤ, a < b → ∀ δ δ' : ℝ,
+      (markKey δ (a : ℝ)).1 < (markKey δ' (b : ℝ)).1 := fun a b h _ _ => by
+    rw [markKey_fst, markKey_fst]
+    have : (a : ℝ) < b := by exact_mod_cast h
+    linarith
+  exact ⟨marked_not_concurrent (by norm_num) hs (by simp) (by simp) (by simp)
+      (hlt 0 1 (by norm_num) _ _) (hlt 1 2 (by norm_num) _ _),
+    marked_breakpoints_ordered (by norm_num) hs (by simp) (by simp) (by simp)
+      (hlt 0 1 (by norm_num) _ _) (hlt 1 2 (by norm_num) _ _)⟩
 
 end ALM
 end Transformer

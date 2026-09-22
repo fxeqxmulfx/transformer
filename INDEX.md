@@ -645,7 +645,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`build_card_eq_of_marked`](src/Transformer/ALM/HullMark.lean#L171) | theorem | proved |
 | [`marked_sep_of_shipped`](src/Transformer/ALM/HullMark.lean#L198) | theorem | proved |
 
-**[Transformer.ALM.HullMono](src/Transformer/ALM/HullMono.lean)** — 129 lines
+**[Transformer.ALM.HullMono](src/Transformer/ALM/HullMono.lean)** — 128 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -766,15 +766,15 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`hullQuery_resolve`](src/Transformer/ALM/HullValue.lean#L110) | theorem | proved |
 | [`hullQuery_resolveLatest`](src/Transformer/ALM/HullValue.lean#L129) | theorem | proved |
 
-**[Transformer.ALM.HullWall](src/Transformer/ALM/HullWall.lean)** — 170 lines
+**[Transformer.ALM.HullWall](src/Transformer/ALM/HullWall.lean)** — 182 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`markKey_eq_liftKey_of_wall`](src/Transformer/ALM/HullWall.lean#L49) | theorem | proved |
 | [`marks_tie_past_the_wall`](src/Transformer/ALM/HullWall.lean#L93) | theorem | proved |
-| [`lifted_of_marked_of_wall`](src/Transformer/ALM/HullWall.lean#L122) | theorem | proved |
-| [`the_shipped_spread_is_under_two`](src/Transformer/ALM/HullWall.lean#L155) | theorem | proved |
-| [`the_wasm_heads_are_past_the_wall`](src/Transformer/ALM/HullWall.lean#L165) | theorem | proved |
+| [`lifted_of_marked_of_wall`](src/Transformer/ALM/HullWall.lean#L125) | theorem | proved |
+| [`the_shipped_spread_is_under_two`](src/Transformer/ALM/HullWall.lean#L167) | theorem | proved |
+| [`the_wasm_heads_are_past_the_wall`](src/Transformer/ALM/HullWall.lean#L177) | theorem | proved |
 
 **[Transformer.ALM.IntGrid](src/Transformer/ALM/IntGrid.lean)** — 94 lines
 
@@ -830,7 +830,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`distinct_keys_keep_their_order`](src/Transformer/ALM/LatestWindow.lean#L151) | theorem | proved |
 | [`released_alpha_below_half`](src/Transformer/ALM/LatestWindow.lean#L183) | lemma | proved |
 
-**[Transformer.ALM.Lattice](src/Transformer/ALM/Lattice.lean)** — 188 lines
+**[Transformer.ALM.Lattice](src/Transformer/ALM/Lattice.lean)** — 199 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -883,13 +883,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`bfAns_isGreatest`](src/Transformer/ALM/LookupIndex.lean#L80) | lemma | proved |
 | [`bruteForce`](src/Transformer/ALM/LookupIndex.lean#L86) | def |  |
 
-**[Transformer.ALM.MarkedPosition](src/Transformer/ALM/MarkedPosition.lean)** — 128 lines
+**[Transformer.ALM.MarkedPosition](src/Transformer/ALM/MarkedPosition.lean)** — 195 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`markKey_not_concurrent`](src/Transformer/ALM/MarkedPosition.lean#L55) | theorem | proved |
-| [`marked_not_concurrent`](src/Transformer/ALM/MarkedPosition.lean#L96) | theorem | proved |
-| [`marked_erase_preserves_tieSet`](src/Transformer/ALM/MarkedPosition.lean#L121) | theorem | proved |
+| [`markKey_not_concurrent`](src/Transformer/ALM/MarkedPosition.lean#L61) | theorem | proved |
+| [`marked_not_concurrent`](src/Transformer/ALM/MarkedPosition.lean#L102) | theorem | proved |
+| [`marked_breakpoints_ordered`](src/Transformer/ALM/MarkedPosition.lean#L129) | theorem | proved |
 
 **[Transformer.ALM.OrthVectors](src/Transformer/ALM/OrthVectors.lean)** — 166 lines
 
@@ -982,7 +982,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`SAOutput_close_of_mass`](src/Transformer/ALM/SAHeadValue.lean#L34) | theorem | proved |
 | [`sa_head_output_at_index`](src/Transformer/ALM/SAHeadValue.lean#L60) | theorem | proved |
 
-**[Transformer.ALM.ScalarInt](src/Transformer/ALM/ScalarInt.lean)** — 90 lines
+**[Transformer.ALM.ScalarInt](src/Transformer/ALM/ScalarInt.lean)** — 99 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -1041,7 +1041,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`the_first_unstorable_key`](src/Transformer/ALM/ScoreWall.lean#L177) | theorem | proved |
 | [`the_missing_unit`](src/Transformer/ALM/ScoreWall.lean#L187) | theorem | proved |
 
-**[Transformer.ALM.Softmax](src/Transformer/ALM/Softmax.lean)** — 141 lines
+**[Transformer.ALM.Softmax](src/Transformer/ALM/Softmax.lean)** — 158 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
