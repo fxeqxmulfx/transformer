@@ -15,6 +15,10 @@ import Transformer.Perceptron.Atoms
 import Transformer.Perceptron.Bound
 import Transformer.Perceptron.MinMax
 import Transformer.Perceptron.Minimizer
+import Transformer.Perceptron.GeodesicCurve
+import Transformer.Perceptron.FirstVariation
+import Transformer.Perceptron.MixDirac
+import Transformer.Perceptron.MinStationary
 import Transformer.Perceptron.Kernel
 import Transformer.Perceptron.KernelAsymp
 import Transformer.Perceptron.KernelHess

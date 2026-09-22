@@ -49,6 +49,22 @@ theorem energy_eq_interactionEnergy_add (β : ℝ) (φ : ℝ → ℝ) (ω : Idx 
       ∫ x, (2 : ℝ)⁻¹ * potential φ ω a (x : EucSpace d) ∂(μ : Measure (SSphere d)) := by
   rw [energy, integral_const_mul]
 
+/-- **`E_{β,ϑ}` is continuous** on `𝒫(𝕊^{d-1})`, for the topology of weak
+convergence, whenever `φ` is: `𝖤_β` is (`Perspective.continuous_interactionEnergy`),
+and `μ ↦ ∫ v_ϑ dμ` integrates a continuous function on a compact space.
+
+Source: arXiv:2601.21366v2, proof of `prop: min.max`, "continuity of the
+integrands". -/
+theorem continuous_energy (β : ℝ) {φ : ℝ → ℝ} (hφ : Continuous φ) (ω : Idx d → ℝ)
+    (a : Idx d → EucSpace d) : Continuous (energy β φ ω a) :=
+  (Perspective.continuous_interactionEnergy β).add (continuous_const.mul
+    (ProbabilityMeasure.continuous_integral_continuousMap
+      (⟨fun x : SSphere d => potential φ ω a (x : EucSpace d),
+        (continuous_potential hφ ω a).comp continuous_subtype_val⟩ : C(SSphere d, ℝ))))
+
+/-- The hypothesis of `continuous_energy` is satisfiable: `φ = 0`. -/
+example : Continuous (fun _ : ℝ => (0 : ℝ)) := continuous_const
+
 /-- **`v_ϑ(Ux) = v_ϑ(x)`** for every linear isometry `U` fixing every `a_j`
 with `ω_j ≠ 0`: `a_j · Ux = Ua_j · Ux = a_j · x`, and a neuron with `ω_j = 0`
 does not contribute.

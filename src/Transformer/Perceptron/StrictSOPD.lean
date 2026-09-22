@@ -42,6 +42,7 @@ Source: arXiv:2601.21366v2, `rem:strictSOPD-perceptron`, `eq:strictSOPD-sufficie
 import Transformer.Perceptron.KernelSup
 import Transformer.Perceptron.CircleDeriv
 import Transformer.Perceptron.Geodesic
+import Transformer.Perceptron.MinStationary
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -59,17 +60,36 @@ a global minimum at `t = 0`, so the second derivative there is non-negative.
 The minimizer is quantified over inside the conclusion; see the module
 docstring.  Note that `β > 0` is not decoration: at `β = 0` the prefactor
 `(2β)⁻¹` annihilates the interaction energy while `energyGrad` keeps
-`∫ e^{β x·y} Proj_x y dμ(y)`, and the statement is false.
+`∫ e^{β x·y} Proj_x y dμ(y)`, and the statement is false.  The proof uses
+only `β ≠ 0`.
 
-Not proved here.
+The source's "it is clear" is carried in two halves.  Stationarity is
+`isStationary_of_isMin` (`MinStationary`), which needs no continuity of `σ`,
+unlike the source's `eq: steady.state`.  The second-order half is the source's
+commented-out proof: `J(t) = E[ν t]` is minimal at `t = 0` and continuous there
+(`continuous_energy`, `tendsto_geodesic`), so `J''(0) ≥ 0` whenever it exists
+(`nonneg_of_hasDerivAt_deriv_of_isMin`).
 
-Source: arXiv:2601.21366v2, `rem:strictSOPD-perceptron`. -/
+Source: arXiv:2601.21366v2, `rem:strictSOPD-perceptron`, and the proof of
+`prop: min.max`. -/
 theorem isSOPD_of_isMin (d : ℕ) (β : ℝ) (hβ : 0 < β) (φ σ : ℝ → ℝ)
     (hφ : ∀ s : ℝ, HasDerivAt φ (2 * σ s) s) (ω : Idx d → ℝ) (a : Idx d → EucSpace d) :
     ∀ μ : Perspective.ProbSphere d,
       (∀ ν : Perspective.ProbSphere d, energy β φ ω a μ ≤ energy β φ ω a ν) →
         IsSOPD β φ σ ω a μ := by
-  sorry
+  intro μ hμ
+  refine ⟨isStationary_of_isMin hβ.ne' hφ ω a hμ, fun ξ _ ν hν H hH => ?_⟩
+  have h0 := geodesic_zero hν
+  refine nonneg_of_hasDerivAt_deriv_of_isMin (J := fun t => energy β φ ω a (ν t))
+    (fun t => ?_) ?_ hH
+  · show energy β φ ω a (ν 0) ≤ energy β φ ω a (ν t)
+    rw [h0]
+    exact hμ (ν t)
+  · show Filter.Tendsto (fun t => energy β φ ω a (ν t)) (nhds 0)
+      (nhds (energy β φ ω a (ν 0)))
+    rw [h0]
+    exact ((continuous_energy β (continuous_of_hasDerivAt hφ) ω a).tendsto μ).comp
+      (tendsto_geodesic hν)
 
 /-- The hypotheses of `isSOPD_of_isMin` are satisfiable: `β = 1` and the
 quadratic primitive `φ(s) = s²` of `2σ` for the linear `σ(s) = s`. -/
