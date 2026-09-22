@@ -17,12 +17,17 @@ channel of a parameter-golf block.
   stream keeps all its directions `δ`-close at all times `t ≥ 0`
   (`not_rawStream_spread`).
 
+A `mix[0]` that differs from channel to channel is a different matter, and not
+an open one: its linear part turns the directions by itself, so no such gain is
+a change of variable (`not_channelGain_gauge` of `Perspective.RawStack`), while a
+gain that is scalar — or one gate per token — is one at every depth
+(`normalize_rawStack`).
+
 Left open: `c ≤ 0` (`mix[0] ≤ 1`), where growth no longer outpaces the drive
 but the tokens have different norms, so the part of the drive they share no
-longer cancels in a difference; a `mix[0]` that differs from channel to
-channel, whose linear part turns the directions by itself; and the U-Net skips
-of the decoder half, `x ← x + skip_weights ⊙ skip`, which add an earlier state
-of the stream rather than a bounded drive.
+longer cancels in a difference; and the U-Net skips of the decoder half,
+`x ← x + skip_weights ⊙ skip`, which add an earlier state of the stream rather
+than a bounded drive.
 -/
 
 import Transformer.Perspective.RawStream

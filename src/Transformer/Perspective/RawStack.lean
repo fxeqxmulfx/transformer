@@ -114,5 +114,81 @@ example : (∀ (_ : ℕ) (_ : Idx 1), (0 : ℝ) < 1) ∧
       = (1 : ℝ) • (fun _ (_ : Idx 1) => (basePoint 0 : EucSpace 1)) k i + 0 :=
   ⟨fun _ _ => one_pos, fun _ _ => by simp⟩
 
+/-- **A gain that differs from channel to channel is not a gauge.**  The claim
+refuted: `normalize_rawStack` for a per-channel gain — that a stack whose
+blocks do nothing but rescale each channel by a positive factor,
+`x_{k+1} = A x_k` with `A e_p = a_p e_p`, `a_p > 0`, and no output at all, keeps
+the direction it started with.  It fails in `ℝ²` already, at `a = (2, 1)` and
+`x_k = 2^k e₀ + e₁`: the direction at depth `1` is not the direction at depth
+`0`, and deeper in the stack it turns all the way onto `e₀`.
+
+So `mix[0] ⊙ x` of parameter-golf
+(github.com/openai/parameter-golf, `records/track_10min_16mb/`
+`2026-04-29_SmearGateBOSFix_3Seed_1.06141/train_gpt.py`, `Block.forward`) is
+not a change of variable, while the scalar `resid_lambdas` of modded-nanogpt is
+one whatever it does (`normalize_rawStack`) — and a gain per token is one too.
+A gain that is not a multiple of the identity has an effect on the directions
+that no amount of scalar gain can imitate.
+
+Source: none — posed here; it refutes the extension of `normalize_rawStack` to
+a gain acting channel by channel. -/
+theorem not_channelGain_gauge :
+    ¬ ∀ (e : ℕ) (A : EucSpace e →L[ℝ] EucSpace e) (a : Idx e → ℝ) (x : ℕ → EucSpace e),
+      (∀ p, 0 < a p) →
+      (∀ p, A (EuclideanSpace.single p 1) = a p • EuclideanSpace.single p 1) →
+      (∀ k, x (k + 1) = A (x k)) → (∀ k, x k ≠ 0) →
+      ∀ k, ‖x k‖⁻¹ • x k = ‖x 0‖⁻¹ • x 0 := by
+  intro h
+  have huu : inner (𝕜 := ℝ) (EuclideanSpace.single (0 : Fin 2) (1 : ℝ))
+      (EuclideanSpace.single (0 : Fin 2) (1 : ℝ)) = 1 := by simp
+  have hww : inner (𝕜 := ℝ) (EuclideanSpace.single (1 : Fin 2) (1 : ℝ))
+      (EuclideanSpace.single (1 : Fin 2) (1 : ℝ)) = 1 := by simp
+  have huw : inner (𝕜 := ℝ) (EuclideanSpace.single (0 : Fin 2) (1 : ℝ))
+      (EuclideanSpace.single (1 : Fin 2) (1 : ℝ)) = 0 := by
+    simp [EuclideanSpace.inner_single_left]
+  have hwu : inner (𝕜 := ℝ) (EuclideanSpace.single (1 : Fin 2) (1 : ℝ))
+      (EuclideanSpace.single (0 : Fin 2) (1 : ℝ)) = 0 := by
+    simp [EuclideanSpace.inner_single_left]
+  have hiu : ∀ c : ℝ, inner (𝕜 := ℝ) (EuclideanSpace.single (0 : Fin 2) (1 : ℝ))
+      (c • EuclideanSpace.single (0 : Fin 2) (1 : ℝ)
+        + EuclideanSpace.single (1 : Fin 2) (1 : ℝ)) = c := fun c => by
+    rw [inner_add_right, real_inner_smul_right, huu, huw, mul_one, add_zero]
+  have hiw : ∀ c : ℝ, inner (𝕜 := ℝ) (EuclideanSpace.single (1 : Fin 2) (1 : ℝ))
+      (c • EuclideanSpace.single (0 : Fin 2) (1 : ℝ)
+        + EuclideanSpace.single (1 : Fin 2) (1 : ℝ)) = 1 := fun c => by
+    rw [inner_add_right, real_inner_smul_right, hwu, hww, mul_zero, zero_add]
+  have hne : ∀ k : ℕ, (2 : ℝ) ^ k • (EuclideanSpace.single (0 : Fin 2) (1 : ℝ))
+      + EuclideanSpace.single (1 : Fin 2) (1 : ℝ) ≠ 0 := fun k hk => by
+    have h1 := congrArg (inner (𝕜 := ℝ) (EuclideanSpace.single (1 : Fin 2) (1 : ℝ))) hk
+    rw [hiw, inner_zero_right] at h1
+    exact one_ne_zero h1
+  have key := h 2
+    (ContinuousLinearMap.id ℝ (EucSpace 2)
+      + (innerSL ℝ (EuclideanSpace.single (0 : Fin 2) (1 : ℝ))).smulRight
+        (EuclideanSpace.single (0 : Fin 2) (1 : ℝ)))
+    ![2, 1]
+    (fun k => (2 : ℝ) ^ k • EuclideanSpace.single (0 : Fin 2) (1 : ℝ)
+      + EuclideanSpace.single (1 : Fin 2) (1 : ℝ))
+    (fun p => by fin_cases p <;> norm_num)
+    (fun p => by fin_cases p <;> simp [two_smul, EuclideanSpace.inner_single_left])
+    (fun k => by
+      simp only [add_apply, ContinuousLinearMap.id_apply,
+        ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, hiu, pow_succ]
+      module)
+    hne 1
+  have hpar : ∀ c₁ c₀ : ℝ, c₁ • ((2 : ℝ) • EuclideanSpace.single (0 : Fin 2) (1 : ℝ)
+      + EuclideanSpace.single (1 : Fin 2) (1 : ℝ))
+      = c₀ • ((1 : ℝ) • EuclideanSpace.single (0 : Fin 2) (1 : ℝ)
+        + EuclideanSpace.single (1 : Fin 2) (1 : ℝ)) → c₁ = 0 := fun c₁ c₀ hc => by
+    have h0 := congrArg (inner (𝕜 := ℝ) (EuclideanSpace.single (0 : Fin 2) (1 : ℝ))) hc
+    have h1 := congrArg (inner (𝕜 := ℝ) (EuclideanSpace.single (1 : Fin 2) (1 : ℝ))) hc
+    rw [real_inner_smul_right, real_inner_smul_right, hiu, hiu] at h0
+    rw [real_inner_smul_right, real_inner_smul_right, hiw, hiw] at h1
+    linarith
+  rw [pow_one, pow_zero] at key
+  exact hne 1 (by
+    rw [pow_one]
+    exact norm_eq_zero.mp (inv_eq_zero.mp (hpar _ _ key)))
+
 end Perspective
 end Transformer
