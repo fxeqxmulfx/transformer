@@ -21,6 +21,7 @@ import Transformer.FrankWolfe.Section4_Cells
 import Transformer.FrankWolfe.Section4_Polytope
 import Transformer.FrankWolfe.Section4_Faces
 import Transformer.FrankWolfe.Section4_ExpFast
+import Transformer.FrankWolfe.Section4_Edges
 import Transformer.FrankWolfe.Section4_VertexGenericity
 import Transformer.FrankWolfe.Section4_ODE
 import Transformer.FrankWolfe.Section5_Process

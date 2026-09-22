@@ -12,6 +12,7 @@ condition on the edges at that vertex.
 -/
 
 import Transformer.FrankWolfe.Section4_Polytope
+import Transformer.FrankWolfe.Section4_Edges
 import Mathlib.Probability.Distributions.Gaussian.Multivariate
 import Mathlib.Geometry.Euclidean.Angle.Unoriented.Affine
 
@@ -100,7 +101,13 @@ so the equivalence is false as written.  The strict condition characterizes
 which is the hypothesis `thm: exp.fast.polytope` actually needs, and that is
 what is stated here.
 
-Not proved here.
+The hypothesis `v_i ≠ 0` is the source's, implicitly: `ℋ(v_i)` is a
+hyperplane only when its normal `a_{v_i} = B v_i` is nonzero, which under
+`B ≻ 0` is `v_i ≠ 0`.
+
+The proof: the left side says that `⟨B v_i, ·⟩` is strictly larger at `v_i`
+than at every other vertex; `w = 0` is automatic from `B ≻ 0`; and a vertex
+beating its neighbours beats every vertex (`lt_of_forall_isExtreme_segment`).
 
 Source: arXiv:2508.09628v1, §4, `prop: polytope.condition`,
 `eq: cond.hyperplane`. -/
@@ -110,7 +117,30 @@ theorem tangent_hyperplane_condition (B : ParamMatrix d) (hB : IsPosDef B)
     (v i ∈ cell B (configHull v) v i ∧ ∀ j : Idx κ, j ≠ i → v i ∉ cell B (configHull v) v j)
       ↔ ∀ w ∈ insert (0 : EucSpace d) (neigh v i),
           inner (𝕜 := ℝ) (B (v i)) (w - v i) < 0 := by
-  sorry
+  have hvK : ∀ j, v j ∈ configHull v := fun j => subset_convexHull ℝ _ (Set.mem_range_self j)
+  constructor
+  · rintro ⟨hi, hj⟩ w hw
+    rcases hw with rfl | ⟨⟨j, rfl⟩, hne, -⟩
+    · rw [zero_sub, inner_neg_right, neg_lt_zero]
+      exact hB.2 _ hvi
+    · have hji : j ≠ i := fun h => hne (congrArg v h)
+      have hnot := hj j hji
+      simp only [cell, Set.mem_sep_iff, not_and, not_forall, not_le] at hnot
+      obtain ⟨y, hy, hlt⟩ := hnot (hvK i)
+      rw [inner_sub_right, sub_neg]
+      exact hlt.trans_le (hi.2 y hy)
+  · intro h
+    have hlt : ∀ x ∈ configHull v, x ≠ v i →
+        inner (𝕜 := ℝ) (B (v i)) x < inner (𝕜 := ℝ) (B (v i)) (v i) :=
+      lt_of_forall_isExtreme_segment (Set.finite_range v) hv.2.subset (Set.mem_range_self i)
+        (innerSL ℝ (B (v i))) fun w hw hwi hseg => by
+          have := h w (Set.mem_insert_of_mem _ ⟨hw, hwi, hseg⟩)
+          rwa [inner_sub_right, sub_neg] at this
+    refine ⟨⟨hvK i, fun y hy => ?_⟩, fun j hji hj => ?_⟩
+    · rcases eq_or_ne y (v i) with rfl | hyi
+      · exact le_rfl
+      · exact (hlt y hy hyi).le
+    · exact (hj.2 (v i) (hvK i)).not_gt (hlt _ (hvK j) (hv.1.ne hji))
 
 /-- **Remark (prop: polytope.condition) — the angle condition.**
 
@@ -123,7 +153,8 @@ For `B = I_d` the tangent-hyperplane condition is the angle condition
 with `v_i ∉ 𝒞_j(v)` for `j ≠ i`, and `v_i ≠ 0` is required — at `v_i = 0` the
 angle `∠_{v_i}(w, 0)` is not defined by a nonzero pair.
 
-Not proved here.
+The proof is `tangent_hyperplane_condition` at `B = I_d`: the angle at `v_i` is
+acute iff `⟨w - v_i, -v_i⟩ > 0`, and the condition at `w = 0` holds.
 
 Source: arXiv:2508.09628v1, §4, `prop: polytope.condition`,
 `eq: cond.angle`. -/
@@ -133,7 +164,19 @@ theorem angle_condition (v : Idx κ → EucSpace d) (hv : IsVertexList (configHu
         ∀ j : Idx κ, j ≠ i →
           v i ∉ cell (ContinuousLinearMap.id ℝ (EucSpace d)) (configHull v) v j)
       ↔ ∀ w ∈ neigh v i, EuclideanGeometry.angle w (v i) (0 : EucSpace d) < π / 2 := by
-  sorry
+  have hid : IsPosDef (ContinuousLinearMap.id ℝ (EucSpace d)) :=
+    ⟨fun x y => rfl, fun x hx => real_inner_self_pos.mpr hx⟩
+  have hacute : ∀ x y : EucSpace d,
+      InnerProductGeometry.angle x y < π / 2 ↔ 0 < inner (𝕜 := ℝ) x y := fun x y => by
+    rw [← not_le, ← InnerProductGeometry.inner_nonpos_iff_pi_div_two_le_angle, not_le]
+  rw [tangent_hyperplane_condition _ hid v hv i hvi, Set.forall_mem_insert]
+  have h0 : inner (𝕜 := ℝ) (ContinuousLinearMap.id ℝ (EucSpace d) (v i)) (0 - v i) < 0 := by
+    rw [zero_sub, inner_neg_right, neg_lt_zero]
+    exact hid.2 _ hvi
+  simp only [h0, true_and]
+  refine forall₂_congr fun w _ => ?_
+  rw [EuclideanGeometry.angle, hacute, vsub_eq_sub, vsub_eq_sub, zero_sub, inner_neg_right,
+    neg_pos, ContinuousLinearMap.id_apply, real_inner_comm]
 
 /-- The hypotheses shared by `tangent_hyperplane_condition` and
 `angle_condition` are satisfiable: `d = 1`, a single vertex `v ≡ e₀ ≠ 0`,
