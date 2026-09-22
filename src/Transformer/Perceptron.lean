@@ -15,6 +15,7 @@ import Transformer.Perceptron.Atoms
 import Transformer.Perceptron.Bound
 import Transformer.Perceptron.MinMax
 import Transformer.Perceptron.Kernel
+import Transformer.Perceptron.KernelAsymp
 import Transformer.Perceptron.KernelSup
 import Transformer.Perceptron.CircleDeriv
 import Transformer.Perceptron.StrictSOPD

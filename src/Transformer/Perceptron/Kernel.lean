@@ -18,7 +18,8 @@ bounds the proof of `thm: bound` runs on.
   `β cos²θ + cos θ - β > 0` strictly inside the window.
 
 * `θ_c(β) = β^{-1/2} + O(β^{-3/2})` is carried with the constant and the
-  threshold quantified first, as everywhere in this formalization.
+  threshold quantified first, as everywhere in this formalization; it is
+  proved in `KernelAsymp.lean` with the constant `3` from `β = 1` on.
 
 * `sup_{|θ| ≤ λθ_c} K_β''(θ)` and `max_{θ ∈ [θ_c, π]} K_β''(θ)` are carried as
   bounds valid at every such `θ`: a supremum bounded above is exactly that,
@@ -201,18 +202,6 @@ theorem tendsto_thetaC_nhdsWithin_zero :
   rw [show thetaC = fun β : ℝ => Real.arccos ((Real.sqrt (1 + 4 * β ^ 2) - 1) / (2 * β))
     from rfl]
   simpa [thetaC, Real.arccos_zero] using hfrac.arccos
-
-/-- **Lemma (lem: concavity), the large-`β` expansion.**
-`θ_c(β) = β^{-1/2} + O(β^{-3/2})` as `β → ∞`, written with `β^{-1/2} = 1/√β`
-and `β^{-3/2} = 1/(β√β)` so that no real power is needed.
-
-Not proved here.
-
-Source: arXiv:2601.21366v2, `lem: concavity`. -/
-theorem thetaC_asymptotics :
-    ∃ C β₀ : ℝ, 0 < C ∧ 0 < β₀ ∧ ∀ β : ℝ, β₀ ≤ β →
-      |thetaC β - 1 / Real.sqrt β| ≤ C / (β * Real.sqrt β) := by
-  sorry
 
 /-! ### The two Hessian bounds -/
 
