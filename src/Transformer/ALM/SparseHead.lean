@@ -137,11 +137,14 @@ theorem firstMax_first (f : ℕ → ℝ) {n j : ℕ} (hj : j < firstMax f n) :
     · rw [ite_eq_right ‹_›]
       exact ih hj
 
-/-- Both hypotheses are satisfiable at a head with a genuine tie in it: rows
-`0` and `2` score `1` and row `1` scores `0`, so the scan keeps row `0`, and
-there is no earlier row to score below it. -/
-example : firstMax (fun i => if i = 1 then (0 : ℝ) else 1) 3 = 0 := by
-  norm_num [firstMax]
+/-- The hypothesis of `firstMax_first` is satisfiable, at a head with a
+genuine tie in it: rows `1` and `2` score `1` and row `0` scores `0`, so the
+scan keeps row `1`, and row `0` is an earlier row below it. -/
+example : (fun i : ℕ => if i = 0 then (0 : ℝ) else 1) 0
+    < (fun i : ℕ => if i = 0 then (0 : ℝ) else 1)
+      (firstMax (fun i => if i = 0 then (0 : ℝ) else 1) 3) :=
+  firstMax_first (fun i : ℕ => if i = 0 then (0 : ℝ) else 1) (n := 3) (j := 0)
+    (by norm_num [firstMax])
 
 /-! ### Which makes the compressed head the same head -/
 

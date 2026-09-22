@@ -104,7 +104,10 @@ offsets are the same only because the wall forces them to be, and the same two
 writes below the wall are two distinct points. -/
 example : markKey 0 (134217728 : ℝ) = markKey 0 (134217728 : ℝ) ∧
     markKey 0 (3 : ℝ) ≠ markKey 0.5 (3 : ℝ) := by
-  refine ⟨rfl, ?_⟩
+  refine ⟨marks_tie_past_the_wall (p := 53) (δ := 0) (δ' := 0)
+    ⟨-134217728, 27, by norm_num, by norm_num⟩ ⟨-134217728, 27, by norm_num, by norm_num⟩
+    ⟨-134217728, 27, by norm_num, by norm_num⟩ (by norm_num) (by norm_num)
+    le_rfl (by norm_num) le_rfl (by norm_num), ?_⟩
   unfold markKey
   norm_num
 
@@ -136,16 +139,25 @@ theorem lifted_of_marked_of_wall {A : ℝ} {s : Finset (ℝ × ℝ)} (hA : A < 2
     linarith
   · linarith
 
-/-- The hypotheses are satisfiable: the one-line family `{liftKey 2^27}`, whose
-only offset is already zero. -/
-example : Marked 0 ({markKey 0 ((134217728 : ℤ) : ℝ)} : Finset (ℝ × ℝ)) := by
-  constructor
+/-- The hypotheses are satisfiable, all four at once: the one-line family
+`{markKey 0 2^27}` is marked with `A = 0`, its intercept `-2^54` and the
+square it is checked against are doubles, and `2^54` clears the wall. -/
+example : Lifted ({markKey 0 ((134217728 : ℤ) : ℝ)} : Finset (ℝ × ℝ)) := by
+  refine lifted_of_marked_of_wall (A := 0) (by norm_num) ⟨?_, ?_⟩ ?_ ?_ ?_
   · intro l hl
     simp only [Finset.mem_singleton] at hl
     exact ⟨134217728, 0, le_refl 0, le_refl 0, hl⟩
   · intro l hl l' hl' _
     simp only [Finset.mem_singleton] at hl hl'
     rw [hl, hl']
+  all_goals
+    intro l hl
+    simp only [Finset.mem_singleton] at hl
+    subst hl
+    unfold markKey
+  · exact ⟨-134217728, 27, by norm_num, by norm_num⟩
+  · exact ⟨-134217728, 27, by norm_num, by norm_num⟩
+  · norm_num
 
 /-! ### And which heads are past it -/
 

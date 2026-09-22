@@ -198,14 +198,21 @@ example : (0 : ℝ) < 14142135623.730951 ∧
   rw [Ne, Prod.ext_iff]
   norm_num [scaleQuery]
 
-/-- And the rounded division that still lands on the right key: the query `0`
-over the keys `{0, 1}`, where `1` wins and a drift of `10⁻⁹` against keys
-bounded by `100` is well inside the margin.  These are the hypotheses of
-`rounded_normalization_keeps_the_winner`. -/
-example : |(0 : ℝ) - ((1 : ℤ) : ℝ)| ≤ 1 ∧ (1 : ℤ) ∈ ({0, 1} : Finset ℤ) ∧
-    (∀ k ∈ ({0, 1} : Finset ℤ), |(k : ℝ)| ≤ 100) ∧ 4 * 100 * (1e-9 : ℝ) < 1 := by
-  refine ⟨by norm_num, by decide, fun k hk => ?_, by norm_num⟩
-  fin_cases hk <;> norm_num
+/-- And the rounded division that still lands on the right key: the query
+`1 + 10⁻⁹`, rounded from `q₀ = 1`, over the keys `{0, 1}`, where `1` wins and
+a drift of `10⁻⁹` against keys bounded by `1` is well inside the margin.  Every
+hypothesis of `rounded_normalization_keeps_the_winner` is discharged at the
+same `ε`. -/
+example : ∀ k ∈ ({0, 1} : Finset ℤ), k ≠ 1 →
+    dot (liftQuery (1 + 1e-9)) (liftKey (k : ℝ))
+      < dot (liftQuery (1 + 1e-9)) (liftKey ((1 : ℤ) : ℝ)) :=
+  rounded_normalization_keeps_the_winner (q₀ := 1) (K := 1) (ε := 1e-9)
+    (by norm_num [abs_of_pos]) (by decide)
+    (fun k hk => by fin_cases hk <;> norm_num) (by norm_num)
+    (fun k hk hne => by
+      fin_cases hk
+      · norm_num [sScore]
+      · exact absurd rfl hne)
 
 end ALM
 end Transformer

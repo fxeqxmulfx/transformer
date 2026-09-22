@@ -86,5 +86,14 @@ theorem softmax_winner_scalar_int {n : ℕ} (β : ℝ) (hβ : 0 < β)
   have := softmax_winner_lengthfree β hβ (fun j => sScore (K i₀) (K j)) i₀ g 2 hgap hg1 hM
   simpa using this
 
+/-- The hypotheses are satisfiable: the keys `0, 1, 2`, which are distinct,
+at `β = 1`. -/
+example : let K : Fin 3 → ℤ := fun j => (j.val : ℤ)
+    1 / (1 + 2 * (Real.exp (-1) / (1 - Real.exp (-1))))
+      ≤ Real.exp (1 * sScore (K 0) (K 0)) / ∑ j, Real.exp (1 * sScore (K 0) (K j)) := by
+  intro K
+  have hK : Function.Injective K := fun a b h => Fin.ext (by simpa [K] using h)
+  exact softmax_winner_scalar_int 1 one_pos K hK 0
+
 end ALM
 end Transformer

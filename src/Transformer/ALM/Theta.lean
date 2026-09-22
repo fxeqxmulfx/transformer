@@ -140,5 +140,10 @@ example : ∑ x ∈ Fintype.piFinset (fun _ : Fin 0 => Finset.Icc (-(3 : ℤ)) (
     (1 / 2 : ℝ) ^ (sqNorm x) = 1 := by
   simp [sqNorm]
 
+/-- And the bound applies in the plane, at `r = 1/2`, on the box `[-3, 3]²`. -/
+example : ∑ x ∈ Fintype.piFinset (fun _ : Fin 2 => Finset.Icc (-(3 : ℤ)) (3 : ℤ)),
+    (1 / 2 : ℝ) ^ (sqNorm x) ≤ (1 + 2 * ((1 / 2) / (1 - (1 / 2) ^ 3))) ^ 2 :=
+  box_sum_le (by norm_num) (by norm_num) 3
+
 end ALM
 end Transformer

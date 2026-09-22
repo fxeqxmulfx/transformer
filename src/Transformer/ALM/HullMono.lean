@@ -104,10 +104,9 @@ theorem cached_lt_iff {a b c : HullNode} (hab : Cached a b) (hbc : Cached b c)
 parabolic lift at `k = 0, 1, 2, 3`, where no key is ever redundant and every
 breakpoint test passes. -/
 example :
-    interX ((0 : ℝ), (0 : ℝ)) ((2 : ℝ), (-1 : ℝ)) < interX ((0 : ℝ), (0 : ℝ)) ((6 : ℝ), (-9 : ℝ)) ∧
-      interX ((2 : ℝ), (-1 : ℝ)) ((4 : ℝ), (-4 : ℝ))
-        < interX ((4 : ℝ), (-4 : ℝ)) ((6 : ℝ), (-9 : ℝ)) := by
-  norm_num [interX]
+    interX ((0 : ℝ), (0 : ℝ)) ((4 : ℝ), (-4 : ℝ)) < interX ((4 : ℝ), (-4 : ℝ)) ((6 : ℝ), (-9 : ℝ)) :=
+  interX_lt_interX_widen_left (B := ((2 : ℝ), (-1 : ℝ))) (by norm_num) (by norm_num)
+    (by norm_num) (by norm_num [interX]) (by norm_num [interX])
 
 /-- The crossing hypothesis of `lineEval_le_of_interX_le`, at the pair the
 example above starts from. -/

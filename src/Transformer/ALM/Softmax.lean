@@ -137,5 +137,22 @@ theorem softmax_winner_ge' {n : ℕ} (β : ℝ) (s : Fin n → ℝ) (i₀ : Fin 
   rw [le_div_iff₀ (by linarith)]
   nlinarith [sq_nonneg c]
 
+/-- The hypotheses of the three bounds are satisfiable, with a real gap: two
+scores `1` and `0` at `β = 1`, the winner ahead by `δ = 1`, and `c = e⁻¹`,
+the tail exactly. -/
+example :
+    1 - (((2 : ℕ) : ℝ) - 1) * Real.exp (-(1 * 1))
+        ≤ Real.exp (1 * ![(1 : ℝ), 0] 0) / ∑ j, Real.exp (1 * ![(1 : ℝ), 0] j) ∧
+      1 / (1 + Real.exp (-1))
+        ≤ Real.exp (1 * ![(1 : ℝ), 0] 0) / ∑ j, Real.exp (1 * ![(1 : ℝ), 0] j) ∧
+      1 - Real.exp (-1)
+        ≤ Real.exp (1 * ![(1 : ℝ), 0] 0) / ∑ j, Real.exp (1 * ![(1 : ℝ), 0] j) := by
+  have hc : ∑ j ∈ Finset.univ.erase (0 : Fin 2),
+      Real.exp (1 * (![(1 : ℝ), 0] j - ![(1 : ℝ), 0] 0)) ≤ Real.exp (-1) := by
+    rw [show Finset.univ.erase (0 : Fin 2) = {1} from by decide]
+    norm_num
+  exact ⟨softmax_winner_ge 1 zero_le_one _ 0 1 (fun j hj => by fin_cases j <;> simp_all),
+    softmax_winner_sharp 1 _ 0 _ hc, softmax_winner_ge' 1 _ 0 _ (Real.exp_pos _).le hc⟩
+
 end ALM
 end Transformer

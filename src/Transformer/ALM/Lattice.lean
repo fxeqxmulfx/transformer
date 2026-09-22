@@ -184,5 +184,16 @@ theorem softmax_winner_lengthfree {n : ℕ} (β : ℝ) (hβ : 0 < β)
       ≤ Real.exp (β * s i₀) / ∑ j, Real.exp (β * s j) :=
   softmax_winner_sharp β s i₀ _ (sum_exp_gap_le β hβ s i₀ g M hgap hg1 hM)
 
+/-- The hypotheses are satisfiable: scores `1, 0`, the loser behind by the
+integer `g = 1`, at most `M = 1` loser per value of `g`, and `β = 1`. -/
+example :
+    1 / (1 + ((1 : ℕ) : ℝ) * (Real.exp (-1) / (1 - Real.exp (-1))))
+      ≤ Real.exp (1 * ![(1 : ℝ), 0] 0) / ∑ j, Real.exp (1 * ![(1 : ℝ), 0] j) :=
+  softmax_winner_lengthfree 1 one_pos _ 0 ![0, 1] 1
+    (fun j hj => by fin_cases j <;> simp_all) (fun j hj => by fin_cases j <;> simp_all)
+    (fun t => by
+      rw [show Finset.univ.erase (0 : Fin 2) = {1} from by decide]
+      exact (Finset.card_filter_le _ _).trans (by simp))
+
 end ALM
 end Transformer

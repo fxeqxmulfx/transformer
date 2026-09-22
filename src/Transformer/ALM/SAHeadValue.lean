@@ -43,11 +43,19 @@ theorem SAOutput_close_of_mass [Nonempty (Idx n)] (β : ℝ) (q k : Idx n → Eu
   exact softmax_output_close β (fun j => score (q i) (k j))
     (fun j => Vm (residual (q j) (k j))) i₀ C ε hC hw
 
-/-- The hypotheses are satisfiable: at `ε = 1` the weight bound is free, and a
-single stored slot has no spread around itself. -/
-example (β : ℝ) (q k : Idx 2 → EucSpace m) :
-    1 - 1 ≤ Real.exp (β * score (q 0) (k 0)) / ∑ l, Real.exp (β * score (q 0) (k l)) := by
-  simpa using softmax_weight_nonneg β (fun j => score (q 0) (k j)) 0
+/-- The hypotheses are satisfiable, for any two slots and any value map: at
+`ε = 1` the weight bound is free, and the total spread of the values around
+the winner's bounds each one of them. -/
+example (β : ℝ) (q k : Idx 2 → EucSpace m) (Vm : ParamMatrix ((m + 1) + (m + 1))) :
+    ‖XSA.SAOutput ((m + 1) + (m + 1)) 2 (β • queryProj) keyProj Vm
+          (fun j => residual (q j) (k j)) 1
+        - Vm (residual (q 0) (k 0))‖
+      ≤ 1 * ∑ j, ‖Vm (residual (q j) (k j)) - Vm (residual (q 0) (k 0))‖ :=
+  SAOutput_close_of_mass β q k Vm 1 (fun j => by fin_cases j <;> decide) 0 _ 1
+    (fun j => Finset.single_le_sum
+      (f := fun j => ‖Vm (residual (q j) (k j)) - Vm (residual (q 0) (k 0))‖)
+      (fun _ _ => norm_nonneg _) (Finset.mem_univ j))
+    (by simpa using softmax_weight_nonneg β (fun j => score (q 1) (k j)) 0)
 
 /-- **The index's answer, returned by an ordinary attention head.**  This is
 `head_output_at_index` with the hand-written sum replaced by

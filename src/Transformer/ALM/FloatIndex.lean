@@ -173,8 +173,25 @@ theorem fp_hullIndex_longDouble (F : FPArith) [Nonempty (Fin n)] (K : Fin n → 
   rw [hval] at h1
   linarith [hsep j hj]
 
-/-- The accuracy hypothesis is satisfiable: exact arithmetic has `u = 0`. -/
-example : exactArith.u ≤ 1 / 2 ^ (60 : ℕ) := by norm_num [exactArith]
+/-- The hypotheses are satisfiable: exact arithmetic has `u = 0`, the keys
+`0, 1` are far below `2^56`, and the query `2` is `3/2` from their only
+breakpoint. -/
+example : fpProbe exactArith (fun j : Fin 2 => (j : ℝ)) 2
+    = hullProbe (fun j : Fin 2 => (j : ℝ)) 2 := by
+  have hK : StrictMono (sortedKey (fun j : Fin 2 => (j : ℝ))) :=
+    strictMono_nat_of_lt_succ (sortedKey_lt_succ _)
+  have hb : ∀ j ≤ keyCard (fun j : Fin 2 => (j : ℝ)) - 1,
+      |sortedKey (fun j : Fin 2 => (j : ℝ)) j| ≤ 1 := fun j hj => by
+    obtain ⟨i, hi⟩ := exists_eq_sortedKey _ hj
+    rw [← hi]
+    fin_cases i <;> norm_num
+  refine fp_hullIndex_longDouble exactArith _ 2 (by norm_num [exactArith])
+    (fun j hj => (hb j hj).trans (by norm_num)) (fun j hj => ?_)
+  have h1 := hb j (by omega)
+  have h2 := hb (j + 1) (by omega)
+  rw [abs_le] at h1 h2
+  rw [abs_of_pos (by linarith)]
+  linarith
 
 end ALM
 end Transformer

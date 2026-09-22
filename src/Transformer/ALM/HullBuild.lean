@@ -102,7 +102,8 @@ theorem buildCost_le (ps : List ℕ) (n : ℕ) (h : ps.length ≤ n) :
 
 /-- The hypothesis is satisfiable: a build of three keys into a hull of size
 three or more. -/
-example : ([0, 0, 2] : List ℕ).length ≤ 3 := by norm_num
+example : buildCost [0, 0, 2] 3 ≤ 3 * 3 * (Nat.log 2 3 + 1) :=
+  buildCost_le [0, 0, 2] 3 (by norm_num)
 
 /-- **The declared price covers it.**  `hullIndex.build` is no longer a number
 chosen to make an inequality go through: every build of at most `n` keys fits

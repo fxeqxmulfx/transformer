@@ -350,7 +350,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`lineEval_eq_at_midpoint`](src/Transformer/ALM/FloatHull.lean#L141) | theorem | proved |
 | [`fp_longDouble`](src/Transformer/ALM/FloatHull.lean#L158) | theorem | proved |
 
-**[Transformer.ALM.FloatIndex](src/Transformer/ALM/FloatIndex.lean)** — 180 lines
+**[Transformer.ALM.FloatIndex](src/Transformer/ALM/FloatIndex.lean)** — 197 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -487,7 +487,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`planar_argmax_unique_of_snd_eq_zero`](src/Transformer/ALM/HullBranch.lean#L96) | theorem | proved |
 | [`planar_argmax_unique_of_snd_eq_zero_neg`](src/Transformer/ALM/HullBranch.lean#L107) | theorem | proved |
 
-**[Transformer.ALM.HullBuild](src/Transformer/ALM/HullBuild.lean)** — 161 lines
+**[Transformer.ALM.HullBuild](src/Transformer/ALM/HullBuild.lean)** — 162 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -498,9 +498,9 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`pops_le_length`](src/Transformer/ALM/HullBuild.lean#L72) | theorem | proved |
 | [`buildCost`](src/Transformer/ALM/HullBuild.lean#L86) | def |  |
 | [`buildCost_le`](src/Transformer/ALM/HullBuild.lean#L91) | theorem | proved |
-| [`hullIndex_build_paid`](src/Transformer/ALM/HullBuild.lean#L110) | theorem | proved |
-| [`hullAns_eq_bfAns`](src/Transformer/ALM/HullBuild.lean#L134) | theorem | proved |
-| [`hullIndex_agrees_with_bruteForce`](src/Transformer/ALM/HullBuild.lean#L144) | theorem | proved |
+| [`hullIndex_build_paid`](src/Transformer/ALM/HullBuild.lean#L111) | theorem | proved |
+| [`hullAns_eq_bfAns`](src/Transformer/ALM/HullBuild.lean#L135) | theorem | proved |
+| [`hullIndex_agrees_with_bruteForce`](src/Transformer/ALM/HullBuild.lean#L145) | theorem | proved |
 
 **[Transformer.ALM.HullCache](src/Transformer/ALM/HullCache.lean)** — 202 lines
 
@@ -933,7 +933,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`lineEval_anti_right`](src/Transformer/ALM/Query.lean#L80) | theorem | proved |
 | [`lowerBound_isGreatest`](src/Transformer/ALM/Query.lean#L107) | theorem | proved |
 
-**[Transformer.ALM.QueryScale](src/Transformer/ALM/QueryScale.lean)** — 211 lines
+**[Transformer.ALM.QueryScale](src/Transformer/ALM/QueryScale.lean)** — 218 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -975,12 +975,12 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`inner_queryProj_keyProj`](src/Transformer/ALM/SAHead.lean#L131) | theorem | proved |
 | [`SAOutput_eq_softmax_head`](src/Transformer/ALM/SAHead.lean#L150) | theorem | proved |
 
-**[Transformer.ALM.SAHeadValue](src/Transformer/ALM/SAHeadValue.lean)** — 91 lines
+**[Transformer.ALM.SAHeadValue](src/Transformer/ALM/SAHeadValue.lean)** — 99 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`SAOutput_close_of_mass`](src/Transformer/ALM/SAHeadValue.lean#L34) | theorem | proved |
-| [`sa_head_output_at_index`](src/Transformer/ALM/SAHeadValue.lean#L60) | theorem | proved |
+| [`sa_head_output_at_index`](src/Transformer/ALM/SAHeadValue.lean#L68) | theorem | proved |
 
 **[Transformer.ALM.ScalarInt](src/Transformer/ALM/ScalarInt.lean)** — 99 lines
 
@@ -1111,7 +1111,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`head_output_at_index`](src/Transformer/ALM/SoftmaxValue.lean#L119) | theorem | proved |
 | [`head_output_at_index_untied`](src/Transformer/ALM/SoftmaxValue.lean#L145) | theorem | proved |
 
-**[Transformer.ALM.SparseHead](src/Transformer/ALM/SparseHead.lean)** — 184 lines
+**[Transformer.ALM.SparseHead](src/Transformer/ALM/SparseHead.lean)** — 187 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -1121,8 +1121,8 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`firstMax_lt`](src/Transformer/ALM/SparseHead.lean#L96) | theorem | proved |
 | [`firstMax_le`](src/Transformer/ALM/SparseHead.lean#L111) | theorem | proved |
 | [`firstMax_first`](src/Transformer/ALM/SparseHead.lean#L128) | theorem | proved |
-| [`firstMax_congr`](src/Transformer/ALM/SparseHead.lean#L150) | theorem | proved |
-| [`firstMax_sparse_eq`](src/Transformer/ALM/SparseHead.lean#L167) | theorem | proved |
+| [`firstMax_congr`](src/Transformer/ALM/SparseHead.lean#L153) | theorem | proved |
+| [`firstMax_sparse_eq`](src/Transformer/ALM/SparseHead.lean#L170) | theorem | proved |
 
 **[Transformer.ALM.SparseSoftmax](src/Transformer/ALM/SparseSoftmax.lean)** — 229 lines
 
@@ -1137,7 +1137,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`softmax_mass_outside_le`](src/Transformer/ALM/SparseSoftmax.lean#L171) | theorem | proved |
 | [`sparse_softmax_output_close_of_gap`](src/Transformer/ALM/SparseSoftmax.lean#L202) | theorem | proved |
 
-**[Transformer.ALM.Theta](src/Transformer/ALM/Theta.lean)** — 144 lines
+**[Transformer.ALM.Theta](src/Transformer/ALM/Theta.lean)** — 149 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
