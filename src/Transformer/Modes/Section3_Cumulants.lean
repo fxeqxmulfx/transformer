@@ -28,8 +28,9 @@ identity for `|α| = 3`.  Everything here is stated for an arbitrary law `μ` on
   third cumulant of the normalized sum, which is `n^{-1/2} κ_t^α`, not `κ_t^α`
   (cumulants are additive over independent summands and homogeneous of
   degree three).  `cumulant_three_eq_integral_hermite` carries the first
-  equality as written; `integral_density_mul_hermite` carries the second with
-  the factor `n^{-1/2}` restored.
+  equality as written; `integral_density_mul_hermite`, in
+  `Section3_ScaledSumDensity.lean`, carries the second with the factor
+  `n^{-1/2}` restored.
 
 Source: arXiv:2412.09080v3, §3.1, `eq:psi` and the display after it.
 -/
@@ -83,18 +84,6 @@ noncomputable def psiOf (μ : Measure (ℝ × ℝ)) (x : ℝ × ℝ) : ℝ :=
 /-- The normalized sum `n^{-1/2} (X₁ + ⋯ + Xₙ)`.  arXiv:2412.09080v3, §3. -/
 noncomputable def scaledSum (n : ℕ) (X : Fin n → ℝ × ℝ) : ℝ × ℝ :=
   (Real.sqrt n)⁻¹ • ∑ i, X i
-
-/-- The second equality of the moment identity, corrected: if `q` is the
-density of `n^{-1/2} Σ Xᵢ` for `X₁, …, Xₙ` i.i.d. of law `μ`, then
-`𝔼_{Z ~ N(0,I₂)}[(q/φ)(Z) H^α(Z)] = ∫ q H^α = n^{-1/2} κ^α` for `|α| = 3`.
-arXiv:2412.09080v3, §3.1, the display after `eq:psi`, which states it without
-the factor `n^{-1/2}` (see the module docstring). -/
-theorem integral_density_mul_hermite (μ : Measure (ℝ × ℝ)) [IsProbabilityMeasure μ]
-    (hμ : IsStandardized μ) (hexp : HasExpMoments μ) (n : ℕ) (hn : 1 ≤ n)
-    (q : ℝ × ℝ → ℝ) (hq : IsDensityOf (Measure.pi fun _ : Fin n => μ) (scaledSum n) q)
-    (k : ℕ) (hk : k ≤ 3) :
-    ∫ x, q x * hermite3 k x = (Real.sqrt n)⁻¹ * cumulantOf μ k (3 - k) := by
-  sorry
 
 /-- The standard normal law `N(0, I₂)` on `ℝ²`, whose density is `φ`.
 arXiv:2412.09080v3, §3.1. -/
@@ -156,13 +145,6 @@ theorem isDensityOf_stdGauss2 :
   rw [mul_mul_mul_comm, ← Real.exp_add, ← mul_inv, ← Real.sqrt_mul (by positivity),
     Real.sqrt_mul_self (by positivity)]
   ring_nf
-
-/-- The hypotheses of `integral_density_mul_hermite` are satisfiable. -/
-example : IsProbabilityMeasure stdGauss2 ∧ IsStandardized stdGauss2 ∧
-    HasExpMoments stdGauss2 ∧ 1 ≤ 1 ∧
-    IsDensityOf (Measure.pi fun _ : Fin 1 => stdGauss2) (scaledSum 1) phi2 ∧ (0 : ℕ) ≤ 3 :=
-  ⟨inferInstance, isStandardized_stdGauss2, hasExpMoments_stdGauss2, le_rfl,
-    isDensityOf_stdGauss2, by norm_num⟩
 
 end Modes
 end Transformer

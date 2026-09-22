@@ -36,18 +36,21 @@ namespace Modes
 
 variable {μ : Measure (ℝ × ℝ)} {ε : ℝ}
 
-/-- **The third Hermite integrals of a standardized law are its third
-moments.**  `H^{(k,3-k)}` is `x₁^k x₂^{3-k}` plus a multiple of a single
-coordinate, and a standardized law has mean `0`.
+/-- **The third Hermite integrals of a centred law are its third moments.**
+`H^{(k,3-k)}` is `x₁^k x₂^{3-k}` plus a multiple of a single coordinate, so
+only the centring of the law enters; the unit variances and the zero covariance
+of `IsStandardized` play no part at order three.  Stated for a centred law
+because the law of a normalized sum is one, and proving it standardized would
+be extra work for nothing (`Section3_ScaledSumDensity.lean`).
 
 Source: arXiv:2412.09080v3, §3.1, the display after `eq:psi`. -/
-theorem integral_hermite3_eq (hE : HasExpMomentsOn μ ε) (hε : 0 < ε) (hμ : IsStandardized μ)
-    (k : ℕ) (hk : k ≤ 3) :
+theorem integral_hermite3_eq_of_centred (hE : HasExpMomentsOn μ ε) (hε : 0 < ε)
+    (hm1 : ∫ x, x.1 ∂μ = 0) (hm2 : ∫ x, x.2 ∂μ = 0) (k : ℕ) (hk : k ≤ 3) :
     ∫ x, hermite3 k x ∂μ = ∫ x, x.1 ^ k * x.2 ^ (3 - k) ∂μ := by
   have hint : ∀ i j : ℕ, Integrable (fun x : ℝ × ℝ => x.1 ^ i * x.2 ^ j) μ :=
     fun i j => integrable_pow_mul_pow hE hε i j
-  have hfst : ∫ x : ℝ × ℝ, x.1 ^ 1 * x.2 ^ 0 ∂μ = 0 := by simpa using hμ.mean_fst
-  have hsnd : ∫ x : ℝ × ℝ, x.1 ^ 0 * x.2 ^ 1 ∂μ = 0 := by simpa using hμ.mean_snd
+  have hfst : ∫ x : ℝ × ℝ, x.1 ^ 1 * x.2 ^ 0 ∂μ = 0 := by simpa using hm1
+  have hsnd : ∫ x : ℝ × ℝ, x.1 ^ 0 * x.2 ^ 1 ∂μ = 0 := by simpa using hm2
   interval_cases k
   · have h : (fun x : ℝ × ℝ => hermite3 0 x)
         = fun x : ℝ × ℝ => x.1 ^ 0 * x.2 ^ 3 - 3 * (x.1 ^ 0 * x.2 ^ 1) := by
@@ -77,6 +80,21 @@ theorem integral_hermite3_eq (hE : HasExpMomentsOn μ ε) (hε : 0 < ε) (hμ : 
       ring
     rw [h, integral_sub (hint 3 0) ((hint 1 0).const_mul 3), integral_const_mul, hfst]
     ring
+
+/-- The hypotheses of `integral_hermite3_eq_of_centred` are satisfiable. -/
+example : HasExpMomentsOn stdGauss2 1 ∧ (0 : ℝ) < 1 ∧ ∫ x, x.1 ∂stdGauss2 = 0 ∧
+    ∫ x, x.2 ∂stdGauss2 = 0 ∧ (0 : ℕ) ≤ 3 :=
+  ⟨hasExpMomentsOn_stdGauss2, one_pos, isStandardized_stdGauss2.mean_fst,
+    isStandardized_stdGauss2.mean_snd, by norm_num⟩
+
+/-- **The third Hermite integrals of a standardized law are its third
+moments**, the form the source states.
+
+Source: arXiv:2412.09080v3, §3.1, the display after `eq:psi`. -/
+theorem integral_hermite3_eq (hE : HasExpMomentsOn μ ε) (hε : 0 < ε) (hμ : IsStandardized μ)
+    (k : ℕ) (hk : k ≤ 3) :
+    ∫ x, hermite3 k x ∂μ = ∫ x, x.1 ^ k * x.2 ^ (3 - k) ∂μ :=
+  integral_hermite3_eq_of_centred hE hε hμ.mean_fst hμ.mean_snd k hk
 
 /-- The hypotheses of `integral_hermite3_eq` are satisfiable. -/
 example : HasExpMomentsOn stdGauss2 1 ∧ (0 : ℝ) < 1 ∧ IsStandardized stdGauss2 ∧ (0 : ℕ) ≤ 3 :=
