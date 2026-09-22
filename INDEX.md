@@ -3356,7 +3356,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer.GPTMini`
 
-**[Transformer.GPTMini](src/Transformer/GPTMini.lean)** — 77 lines, aggregator
+**[Transformer.GPTMini](src/Transformer/GPTMini.lean)** — 82 lines, aggregator
 
 **[Transformer.GPTMini.AttentionBounds](src/Transformer/GPTMini/AttentionBounds.lean)** — 211 lines
 

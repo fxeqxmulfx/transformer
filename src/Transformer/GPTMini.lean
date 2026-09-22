@@ -4,6 +4,11 @@
 Top-level module re-exporting the formalization of the `gpt-mini`
 transformer architecture defined in `reference/model.py`.
 
+That file is no longer in the tree; every citation of `reference/model.py`
+in `Transformer.GPTMini` refers to its last version, commit `f11b6e2`:
+
+  `git show f11b6e27d3cfe6813a2876bdeec38565fc54258c:reference/model.py`
+
 The architecture is:
   - Pre-LN with RMSNorm (no trainable scale)
   - Multi-head causal attention with QK-norm and learnable per-head α
