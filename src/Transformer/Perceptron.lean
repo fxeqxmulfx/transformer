@@ -20,6 +20,7 @@ import Transformer.Perceptron.KernelHess
 import Transformer.Perceptron.KernelSup
 import Transformer.Perceptron.CircleDeriv
 import Transformer.Perceptron.StrictSOPD
+import Transformer.Perceptron.SphereMoments
 import Transformer.Perceptron.Transform
 import Transformer.Perceptron.TransformPoly
 import Transformer.Perceptron.Hyperplane

@@ -14,14 +14,23 @@ symmetric.  Part (i) of the lemma, on polynomial transforms, is
   strictly increasing in `μ({1})`, and `𝕊^{-1} = ∅`, where `𝒫(𝕊^{-1})` is
   empty).  Dropping a hypothesis only strengthens a statement.
 
+* The source's `β > 0` is relaxed to `β ≠ 0` in injectivity and in the parity
+  characterization: `f^μ` at `-β` is `f^μ` at `β` read at the antipode
+  (`attentionTransform_neg`).  At `β = 0` both fail once `d ≥ 1`: `f^μ ≡ 1`.
+
 * "`μ(A) = μ(-A)` for every Borel `A`" is the pushforward equality
   `μ ∘ (-id)^{-1} = μ`, the tree's idiom for an invariance — the same one
   `Metastability.IsUniformOn` uses for rotation invariance.
+
+* Injectivity is proved through the positive-definiteness of the kernel
+  `e^{β x·y}` (`SphereMoments`), not through the source's Funk–Hecke
+  computation, which needs spherical harmonics.
 
 Source: arXiv:2601.21366v2, `lem: quadpol`, `rem: general-attention`.
 -/
 
 import Transformer.Perceptron.Basic
+import Transformer.Perceptron.SphereMoments
 import Transformer.Perspective.SphereInvariant
 
 open scoped BigOperators
@@ -98,20 +107,39 @@ theorem attentionTransform_antipode (β : ℝ) (μ : Perspective.ProbSphere d) (
   rw [← attentionTransformMap_smul_id, ← attentionTransformMap_smul_id]
   exact attentionTransformMap_antipode _ μ x
 
+/-- **`f^μ` at `-β` is `f^μ` at `β` read at the antipode:**
+`∫ e^{-β x·y} dμ(y) = ∫ e^{β (-x)·y} dμ(y)`. -/
+theorem attentionTransform_neg (β : ℝ) (μ : Perspective.ProbSphere d) (x : SSphere d) :
+    attentionTransform (-β) μ x = attentionTransform β μ (antipodeMap d x) := by
+  simp [attentionTransform, inner_neg_left]
+
 /-! ### Injectivity -/
 
-/-- **Lemma (lem: quadpol), injectivity.**  For `β > 0` the map `μ ↦ f^μ` is
+/-- **Lemma (lem: quadpol), injectivity.**  For `β ≠ 0` the map `μ ↦ f^μ` is
 injective on `𝒫(𝕊^{d-1})`.
 
-Not proved here.
+The source states `β > 0`, and that case is `eq_of_integral_exp_inner_eq`.
+`β < 0` is added: there `f^μ(x)` is `f^μ(-x)` at `-β > 0`
+(`attentionTransform_neg`), and `x ↦ -x` is onto.
 
 Source: arXiv:2601.21366v2, `lem: quadpol`. -/
-theorem injective_attentionTransform (β : ℝ) (hβ : 0 < β) :
+theorem injective_attentionTransform (β : ℝ) (hβ : β ≠ 0) :
     Function.Injective (attentionTransform (d := d) β) := by
-  sorry
+  intro μ₁ μ₂ h
+  refine ProbabilityMeasure.toMeasure_injective ?_
+  rcases hβ.lt_or_gt with hβ | hβ
+  · refine eq_of_integral_exp_inner_eq (-β) (neg_pos.2 hβ) _ _ fun x => ?_
+    have := (attentionTransform_neg β μ₁ x).trans
+      ((congrFun h _).trans (attentionTransform_neg β μ₂ x).symm)
+    unfold attentionTransform at this
+    exact this
+  · refine eq_of_integral_exp_inner_eq β hβ _ _ fun x => ?_
+    have := congrFun h x
+    unfold attentionTransform at this
+    exact this
 
 /-- The hypothesis of `injective_attentionTransform` is satisfiable: `β = 1`. -/
-example : (0 : ℝ) < 1 := one_pos
+example : (1 : ℝ) ≠ 0 := one_ne_zero
 
 /-- **Remark (rem: general-attention), injectivity.**  For a symmetric
 invertible `B` the map `μ ↦ f_B^μ` is injective on `𝒫(𝕊^{d-1})`.
@@ -154,29 +182,24 @@ theorem even_attentionTransformMap_iff (B : EucSpace d →ₗ[ℝ] EucSpace d)
     have hμ : antipode μ = μ := ProbabilityMeasure.toMeasure_injective (by simpa using h)
     rw [← attentionTransformMap_antipode B μ x, hμ]
 
-/-- **Lemma (lem: quadpol) (ii).**  `f^μ` is even if and only if
+/-- **Lemma (lem: quadpol) (ii).**  For `β ≠ 0`, `f^μ` is even if and only if
 `μ(A) = μ(-A)` for every Borel `A`.
 
-Proved, from the injectivity of `μ ↦ f^μ` taken as an explicit hypothesis —
-that is `injective_attentionTransform`, which is not proved here.
+The source states `β > 0`; `β < 0` comes with `injective_attentionTransform`.
 
 Source: arXiv:2601.21366v2, `lem: quadpol` (ii). -/
-theorem even_attentionTransform_iff (β : ℝ)
-    (hinj : Function.Injective (attentionTransform (d := d) β))
-    (μ : Perspective.ProbSphere d) :
+theorem even_attentionTransform_iff (β : ℝ) (hβ : β ≠ 0) (μ : Perspective.ProbSphere d) :
     (∀ x : SSphere d, attentionTransform β μ (antipodeMap d x) = attentionTransform β μ x)
       ↔ (μ : Measure (SSphere d)).map (antipodeMap d) = (μ : Measure (SSphere d)) := by
   have hinj' : Function.Injective (attentionTransformMap (β • LinearMap.id (M := EucSpace d))) := by
     intro μ₁ μ₂ h
-    exact hinj (by
+    exact injective_attentionTransform β hβ (by
       rw [← attentionTransformMap_smul_id, ← attentionTransformMap_smul_id, h])
   have := even_attentionTransformMap_iff (β • LinearMap.id (M := EucSpace d)) hinj' μ
   rwa [attentionTransformMap_smul_id] at this
 
-/-- The hypothesis of `even_attentionTransform_iff` is satisfiable: at `β = 1`
-it is `injective_attentionTransform 1 one_pos`. -/
-example : Function.Injective (attentionTransform (d := d) 1) :=
-  injective_attentionTransform 1 one_pos
+/-- The hypothesis of `even_attentionTransform_iff` is satisfiable: `β = 1`. -/
+example : (1 : ℝ) ≠ 0 := one_ne_zero
 
 end Perceptron
 end Transformer
