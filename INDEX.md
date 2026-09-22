@@ -914,13 +914,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`score_qvec_eq_iff_orth`](src/Transformer/ALM/OrthVectors.lean#L123) | theorem | proved |
 | [`argmax_decides_ov`](src/Transformer/ALM/OrthVectors.lean#L135) | theorem | proved |
 
-**[Transformer.ALM.PlanarHead](src/Transformer/ALM/PlanarHead.lean)** — 116 lines
+**[Transformer.ALM.PlanarHead](src/Transformer/ALM/PlanarHead.lean)** — 136 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`planarAns`](src/Transformer/ALM/PlanarHead.lean#L46) | def |  |
-| [`planarAns_isGreatest`](src/Transformer/ALM/PlanarHead.lean#L63) | theorem | proved |
-| [`planar_head_argmax`](src/Transformer/ALM/PlanarHead.lean#L89) | theorem | proved |
+| [`planarAns`](src/Transformer/ALM/PlanarHead.lean#L53) | def |  |
+| [`planarAns_isGreatest`](src/Transformer/ALM/PlanarHead.lean#L69) | theorem | proved |
+| [`planar_head_argmax`](src/Transformer/ALM/PlanarHead.lean#L100) | theorem | proved |
 
 **[Transformer.ALM.Query](src/Transformer/ALM/Query.lean)** — 142 lines
 
