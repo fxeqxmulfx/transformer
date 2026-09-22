@@ -91,6 +91,13 @@ theorem hasDerivAt_hardmaxSol (X₀ w : Idx n → EucSpace d) (i : Idx n) (t : �
   simp only [hardmaxSol]
   module
 
+/-- The curve is linear in its data: two curves differ by the curve of the
+differences. -/
+theorem hardmaxSol_sub (X₀ Y₀ w w' : Idx n → EucSpace d) (t : ℝ) (i : Idx n) :
+    hardmaxSol X₀ w t i - hardmaxSol Y₀ w' t i = hardmaxSol (X₀ - Y₀) (w - w') t i := by
+  simp only [hardmaxSol, Pi.sub_apply]
+  module
+
 /-- For `t ≥ 0` the weight `e^{-t}` of the initial position lies in `(0, 1]`. -/
 theorem exp_neg_mem_Ioc {t : ℝ} (ht : 0 ≤ t) : Real.exp (-t) ∈ Ioc 0 1 :=
   ⟨exp_pos _, exp_le_one_iff.2 (neg_nonpos.2 ht)⟩
