@@ -22,9 +22,9 @@ format sums `2^K` increments `2^s` exactly in a balanced tree
 (`pairwise_exact`), whatever `K`, as long as `2^{s+K}` is a number of the
 format.  What is fundamental is the cap on the sequential sum.
 
-Round-to-nearest is IEEE 754-2008, §4.3.1; the analysis of recursive summation
-is Higham, *Accuracy and Stability of Numerical Algorithms*, 2nd ed., §4.2 and
-§4.3 (pairwise summation).  The cap `accum_le` in this form is this
+Round-to-nearest is IEEE 754-2008, §4.3.1; recursive and pairwise summation
+are Higham, *Accuracy and Stability of Numerical Algorithms*, 2nd ed., §4.1,
+and their error analysis is §4.2.  The cap `accum_le` in this form is this
 repository's own statement.
 -/
 
