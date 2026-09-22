@@ -45,6 +45,7 @@ import Transformer.Modes.Section3_LogDeriv
 import Transformer.Modes.Section3_PowDeriv
 import Transformer.Modes.Section3_ScalarMGF
 import Transformer.Modes.Section3_ScaledSumMGF
+import Transformer.Modes.Section3_ScaledSumCube
 import Transformer.Modes.Section3_CumulantMoment
 import Transformer.Modes.Section3_BR
 import Transformer.Modes.Section3_Edgeworth
