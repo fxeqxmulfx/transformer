@@ -7047,12 +7047,12 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`eq_of_hasSum_sq_moment_sub_nonpos`](src/Transformer/Perspective/PositiveDefinite.lean#L92) | theorem | proved |
 | [`eq_of_integral_exp_inner_eq`](src/Transformer/Perspective/PositiveDefinite.lean#L126) | theorem | proved |
 
-**[Transformer.Perspective.RawGrowth](src/Transformer/Perspective/RawGrowth.lean)** — 182 lines
+**[Transformer.Perspective.RawGrowth](src/Transformer/Perspective/RawGrowth.lean)** — 189 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`rawStream_frozen`](src/Transformer/Perspective/RawGrowth.lean#L54) | theorem | proved |
-| [`not_rawStream_spread`](src/Transformer/Perspective/RawGrowth.lean#L125) | theorem | proved |
+| [`rawStream_frozen`](src/Transformer/Perspective/RawGrowth.lean#L61) | theorem | proved |
+| [`not_rawStream_spread`](src/Transformer/Perspective/RawGrowth.lean#L132) | theorem | proved |
 
 **[Transformer.Perspective.RawStack](src/Transformer/Perspective/RawStack.lean)** — 194 lines
 

@@ -25,9 +25,16 @@ gain that is scalar — or one gate per token — is one at every depth
 
 Left open: `c ≤ 0` (`mix[0] ≤ 1`), where growth no longer outpaces the drive
 but the tokens have different norms, so the part of the drive they share no
-longer cancels in a difference; and the U-Net skips of the decoder half,
-`x ← x + skip_weights ⊙ skip`, which add an earlier state of the stream rather
-than a bounded drive.
+longer cancels in a difference.
+
+The U-Net skip of the decoder half, `x ← x + skip_weights ⊙ skip`, which adds
+an earlier state of the stream rather than a bounded drive, is no longer open
+as a question of the gauge: it is gauge-covariant (`ungauged_rec_skip` of
+`Perspective.RawStackSkip`), with its gate divided by the gain accumulated over
+the depth it jumps.  What stays open is freezing through it, and for a reason
+that is now proved rather than guessed: at a fixed gap the rescaled gates do
+not shrink with depth (`le_abs_skipWeight` of `Perspective.RawStackSkipDamp`),
+so they are not summable the way the block outputs are.
 -/
 
 import Transformer.Perspective.RawStream
