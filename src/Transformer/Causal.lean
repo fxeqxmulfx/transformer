@@ -18,4 +18,8 @@ import Transformer.Causal.Metastability
 import Transformer.Causal.FixedCenters
 import Transformer.Causal.SequentialFlow
 import Transformer.Causal.ParkingCount
+import Transformer.Causal.CapCone
+import Transformer.Causal.CapPolar
+import Transformer.Causal.CapHalfPlane
+import Transformer.Causal.CapSpace
 import Transformer.Causal.CapMass
