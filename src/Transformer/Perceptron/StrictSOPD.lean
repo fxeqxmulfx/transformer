@@ -27,9 +27,9 @@ a stationary measure a *strict* SOPD critical point.
 
 * The remark's first sentence, "it is clear that the minimizer `μ⋆` is SOPD",
   is `isSOPD_of_isMin`.  The minimizer is quantified over inside the
-  conclusion, as in `thm: any.d`: `existsUnique_min_energy` asserts that one
-  exists but is itself unproved, so a hypothesis naming it would be one nobody
-  could discharge.
+  conclusion, as in `thm: any.d`; for `d ≥ 1` there is exactly one
+  (`existsUnique_min_energy`, in `Minimizer`), so the statement is about `μ⋆`
+  and nothing else.
 
 * The remark's last paragraph — the analogue for `d ≥ 3`, with
   `λ_min(∇²v_ϑ)` in place of `∂_θ²(v_ϑ ∘ x)` and an unspecified constant

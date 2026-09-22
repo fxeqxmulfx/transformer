@@ -1,10 +1,10 @@
 /-
 # Perceptrons and attention's mean-field landscape — the extremal points
 
-Formalization of `prop: min.max` of arXiv:2601.21366v2: the global maximizers
-of the coupled energy are exactly the Dirac masses at the maximizers of the
-perceptron potential, and the global minimizer is unique and inherits the
-symmetries of the weights.
+Formalization of `prop: min.max` (i) of arXiv:2601.21366v2: the global
+maximizers of the coupled energy are exactly the Dirac masses at the maximizers
+of the perceptron potential.  Part (ii), the unique minimizer and its
+symmetries, is `Minimizer`.
 
 **What the source says and what is carried here.**
 
@@ -174,33 +174,6 @@ example (a : Idx d → EucSpace d) (x : SSphere d) :
         ≤ energy 1 (fun _ : ℝ => (0 : ℝ)) (0 : Idx d → ℝ) a (Perspective.diracProb d x) :=
   isMaxEnergy_diracProb_of_isMaxOn 1 one_pos _ 0
     (fun s => by simpa using hasDerivAt_const s (0 : ℝ)) 0 a x (fun _ => by simp [potential])
-
-/-! ### The minimizer -/
-
-/-- **Proposition (prop: min.max) (ii).**  For `d ≥ 2` and `β > 0`, the coupled
-energy has a unique global minimizer `μ⋆`, and `μ⋆` is invariant under every
-rotation fixing every `a_j` with `ω_j ≠ 0`.
-
-Not proved yet.  At `ω = 0` this is
-`Perspective.existence_uniqueness_energy_min`.
-
-Source: arXiv:2601.21366v2, `prop: min.max` (ii). -/
-theorem existsUnique_min_energy (hd : 2 ≤ d) (β : ℝ) (hβ : 0 < β) (φ σ : ℝ → ℝ)
-    (hφ : ∀ s : ℝ, HasDerivAt φ (2 * σ s) s) (ω : Idx d → ℝ) (a : Idx d → EucSpace d) :
-    (∃! μ₀ : Perspective.ProbSphere d,
-      ∀ μ : Perspective.ProbSphere d, energy β φ ω a μ₀ ≤ energy β φ ω a μ) ∧
-    (∀ μ₀ : Perspective.ProbSphere d,
-      (∀ μ : Perspective.ProbSphere d, energy β φ ω a μ₀ ≤ energy β φ ω a μ) →
-      ∀ U : EucSpace d ≃ₗᵢ[ℝ] EucSpace d, (∀ j : Idx d, ω j ≠ 0 → U (a j) = a j) →
-        (μ₀ : Measure (SSphere d)).map (Perspective.sphereMap d U)
-          = (μ₀ : Measure (SSphere d))) := by
-  sorry
-
-/-- The hypotheses of `existsUnique_min_energy` are satisfiable: `d = 2`,
-`β = 1`, and `σ = 0` with the primitive `φ = 0`. -/
-example : 2 ≤ 2 ∧ (0 : ℝ) < 1 ∧
-    ∀ s : ℝ, HasDerivAt (fun _ : ℝ => (0 : ℝ)) (2 * (0 : ℝ → ℝ) s) s :=
-  ⟨le_rfl, one_pos, fun s => by simpa using hasDerivAt_const s (0 : ℝ)⟩
 
 end Perceptron
 end Transformer

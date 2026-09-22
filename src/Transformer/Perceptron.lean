@@ -14,6 +14,7 @@ import Transformer.Perceptron.HigherDim
 import Transformer.Perceptron.Atoms
 import Transformer.Perceptron.Bound
 import Transformer.Perceptron.MinMax
+import Transformer.Perceptron.Minimizer
 import Transformer.Perceptron.Kernel
 import Transformer.Perceptron.KernelAsymp
 import Transformer.Perceptron.KernelHess

@@ -12,7 +12,7 @@ again a minimiser, hence the minimiser itself, which is unique
 (`Section2_EnergyConvex`): `map_sphereMap_eq_of_isMin`.
 
 `V = 0` is the minimiser half of the proposition
-(`existence_uniqueness_energy_min`).  `Perceptron.MinMax` takes the
+(`existence_uniqueness_energy_min`).  `Perceptron.Minimizer` takes the
 perceptron's potential for `V`.
 -/
 
