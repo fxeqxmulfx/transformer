@@ -22,6 +22,8 @@ import Transformer.Clusters.Section7_HigherDim
 import Transformer.Clusters.Section7_LogSumExp
 import Transformer.Clusters.Section7_DistNonDec
 import Transformer.Clusters.Section7_Unbounded
+import Transformer.Clusters.Section7_Drift
+import Transformer.Clusters.Section7_Auxiliary
 import Transformer.Clusters.Section7_Symmetric
 import Transformer.Clusters.Section7_Bounded
 import Transformer.Clusters.Section9_Eigen

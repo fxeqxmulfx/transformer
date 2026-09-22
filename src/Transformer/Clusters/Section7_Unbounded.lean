@@ -15,7 +15,8 @@ self-attention matrix becomes a standard basis row.
 * `l:auxiliary` names `A` as "the unique positive real number satisfying
   `A² = n² exp(-A²)`".  Its existence is proved — `exists_auxiliary_constant`
   — and `A` is then carried as a hypothesis, as the lemma states it.
-  Uniqueness is not used by the lemma and is not carried.
+  Uniqueness is not used by the lemma and is not carried.  The lemma itself
+  is proved in `Section7_Auxiliary.lean`.
 
 * "converges with doubly exponential rate" in `l:unboundedparticles` is read
   as a bound `|P_ij(t) - δ| ≤ exp(-c e^t)` valid eventually, for some `c > 0`:
@@ -98,51 +99,6 @@ theorem exists_auxiliary_constant (n : ℕ) (hn : 0 < n) :
   have hsq : Real.sqrt u ^ 2 = u := Real.sq_sqrt hupos.le
   rw [hsq, ← hug]
   rw [mul_assoc, ← Real.exp_add, add_neg_cancel, Real.exp_zero, mul_one]
-
-/-- **Lemma (l:auxiliary), the largest token.**  Let `A > 0` satisfy
-`A² = n² exp(-A²)`.  If `x_n(t₀) > A` for some `t₀ ≥ 0`, then there is
-`c₁ > 0` with `x_n(t) ≥ c₁ e^t` for every sufficiently large `t`.
-
-Not proved here.
-
-Source: arXiv:2305.05465v6, `l:auxiliary`. -/
-theorem exists_exp_lower_bound_last (A : ℝ) (hA : 0 < A)
-    (hAeq : A ^ 2 = ((m + 1 : ℕ) : ℝ) ^ 2 * Real.exp (-A ^ 2))
-    (X : ℝ → Idx (m + 1) → EucSpace 1) (hX : IdNonrescaledDynamics X)
-    (hord : IsOrderedConfig (X 0)) (t₀ : ℝ) (ht₀ : 0 ≤ t₀)
-    (hlast : A < X t₀ (Fin.last m) 0) :
-    ∃ c : ℝ, 0 < c ∧ ∀ᶠ t in atTop, c * Real.exp t ≤ X t (Fin.last m) 0 := by
-  sorry
-
-/-- **Lemma (l:auxiliary), the smallest token.**  Symmetrically, if
-`x_1(t₀) < -A` for some `t₀ ≥ 0` then `x_1(t) ≤ -c₁ e^t` for every
-sufficiently large `t`.
-
-Not proved here.
-
-Source: arXiv:2305.05465v6, `l:auxiliary`. -/
-theorem exists_exp_upper_bound_first (A : ℝ) (hA : 0 < A)
-    (hAeq : A ^ 2 = ((m + 1 : ℕ) : ℝ) ^ 2 * Real.exp (-A ^ 2))
-    (X : ℝ → Idx (m + 1) → EucSpace 1) (hX : IdNonrescaledDynamics X)
-    (hord : IsOrderedConfig (X 0)) (t₀ : ℝ) (ht₀ : 0 ≤ t₀)
-    (hfirst : X t₀ 0 0 < -A) :
-    ∃ c : ℝ, 0 < c ∧ ∀ᶠ t in atTop, X t 0 0 ≤ -(c * Real.exp t) := by
-  sorry
-
-/-- The hypotheses of `exists_exp_lower_bound_last` are satisfiable at
-`m = 0`: the one-token solution `x(t) = e^t (A+1)` starts above `A`, and the
-constant `A` itself exists by `exists_auxiliary_constant`. -/
-example : ∃ A : ℝ, 0 < A ∧ A ^ 2 = ((0 + 1 : ℕ) : ℝ) ^ 2 * Real.exp (-A ^ 2) ∧
-    IdNonrescaledDynamics (n := 1)
-        (fun t _ => Real.exp t • (EuclideanSpace.single 0 (A + 1) : EucSpace 1)) ∧
-      IsOrderedConfig (n := 1)
-        (fun _ => Real.exp 0 • (EuclideanSpace.single 0 (A + 1) : EucSpace 1)) ∧
-      (0 : ℝ) ≤ 0 ∧
-      A < (Real.exp 0 • (EuclideanSpace.single 0 (A + 1) : EucSpace 1)) 0 := by
-  obtain ⟨A, hA, hAeq⟩ := exists_auxiliary_constant 1 one_pos
-  refine ⟨A, hA, by simpa using hAeq, idNonrescaledDynamics_single _,
-    isOrderedConfig_subsingleton _, le_rfl, ?_⟩
-  simp
 
 /-! ### `l:unboundedparticles` and `l:exactasymptotic` -/
 
