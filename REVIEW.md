@@ -243,7 +243,7 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - ok Transformer/AdamBeyond/Section5_AdamNC.lean (4): `adamNC_vhat_succ`, `adamNC_vhat_sum`, `adamNC_vhat_inv`, `adamNC_inv_cond`
 - issue Transformer/AdamBeyond/Section5_Corollary.lean (4): `sqrt_mul_sqrt_vhat_inv`, `sqrt_vhat_inv_le`, `adamNC_regret_lambda`, `adamNC_regret_inv` — adamNC_regret_lambda restores d/α in Corollary 2's second term, as for Corollary 1; the printed constant is neither proved nor refuted
 - ok Transformer/AdamBeyond/Section5_Lemma.lean (3): `sum_geomSum_le`, `m_sq_le_gnorm`, `adamNC_moment_sum`
-- issue Transformer/AdamBeyond/Section5_Regret.lean (1): `adamNC_regret` — adamNC_regret takes condition 1 at α_t instead of the printed α_T, which is a stronger hypothesis (1/α_t ≤ 1/α_T); the printed Theorem 5 is neither proved nor refuted
+- issue Transformer/AdamBeyond/Section5_Regret.lean (1): `adamNC_regret` — adamNC_regret takes condition 1 at α_t instead of the printed α_T, which is a stronger hypothesis (1/α_t ≤ 1/α_T); the printed Theorem 5 is neither proved nor refuted. Searched for a refutation (1D, β₁ = 0, linear losses, hill-climbing over g_t, β₂ₜ, α, x₁): regret / printed bound stayed ≤ 0.66 up to T = 30, the printed bound being always ≥ 2D‖g_{1:T}‖; no counterexample in sight, and the appendix's telescoping genuinely needs the α_t form. Left open
 
 ### Transformer — arXiv:2106.06981
 
