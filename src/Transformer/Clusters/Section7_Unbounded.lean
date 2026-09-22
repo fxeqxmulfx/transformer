@@ -28,7 +28,8 @@ self-attention matrix becomes a standard basis row.
   attention weight is `1` and the equation is `ẋ = x`.
 
 Source: arXiv:2305.05465v6, `l:auxiliary`, `l:unboundedparticles`,
-`l:exactasymptotic`.
+`l:exactasymptotic`; the first two lemmas are proved in
+`Section7_Auxiliary.lean` and `Section7_UnboundedParticles.lean`.
 -/
 
 import Transformer.Clusters.Section7_LogSumExp
@@ -109,25 +110,17 @@ Source: arXiv:2305.05465v6, `l:unboundedparticles`, `l:onlyone`. -/
 def IsBoundedToken (X : ℝ → Idx n → EucSpace 1) (i : Idx n) : Prop :=
   ∃ R : ℝ, ∀ t : ℝ, 0 ≤ t → |X t i 0| ≤ R
 
-/-- **Lemma (l:unboundedparticles).**  If `x_i(t)` is not uniformly bounded,
-then it converges to `+∞` or to `-∞`; in the first case `P_ij(t) → δ_{nj}`, in
-the second `P_ij(t) → δ_{1j}`, both with doubly exponential rate.
-
-Not proved here.
-
-Source: arXiv:2305.05465v6, `l:unboundedparticles`. -/
-theorem unbounded_tendsto_atTop_or_atBot (X : ℝ → Idx (m + 1) → EucSpace 1)
-    (hX : IdNonrescaledDynamics X) (hord : IsOrderedConfig (X 0)) (i : Idx (m + 1))
-    (hub : ¬ IsBoundedToken X i) :
-    (Tendsto (fun t => X t i 0) atTop atTop ∧
-        ∃ c : ℝ, 0 < c ∧ ∀ᶠ t in atTop, ∀ j : Idx (m + 1),
-          |attentionMatrix (1 : ParamMatrix 1) 1 (X t) i j
-              - (if j = Fin.last m then 1 else 0)| ≤ Real.exp (-(c * Real.exp t))) ∨
-      (Tendsto (fun t => X t i 0) atTop atBot ∧
-        ∃ c : ℝ, 0 < c ∧ ∀ᶠ t in atTop, ∀ j : Idx (m + 1),
-          |attentionMatrix (1 : ParamMatrix 1) 1 (X t) i j
-              - (if j = 0 then 1 else 0)| ≤ Real.exp (-(c * Real.exp t))) := by
-  sorry
+/-- The one-token solution `x(t) = e^t` is not uniformly bounded. -/
+theorem not_isBoundedToken_exp :
+    ¬ IsBoundedToken
+      (fun t (_ : Idx 1) => Real.exp t • (EuclideanSpace.single 0 (1 : ℝ) : EucSpace 1)) 0 := by
+  rintro ⟨R, hR⟩
+  have h1 := hR (|R| + 1) (by positivity)
+  have h2 : Real.exp (|R| + 1) ≤ R := by
+    simpa [abs_of_pos (Real.exp_pos (|R| + 1))] using h1
+  have h3 : |R| + 1 + 1 ≤ Real.exp (|R| + 1) := Real.add_one_le_exp _
+  have h4 : R ≤ |R| := le_abs_self R
+  linarith
 
 /-- **Lemma (l:exactasymptotic).**  A token that is not uniformly bounded has
 an exact exponential asymptotic: there is `γ_i ≠ 0` with
@@ -142,24 +135,16 @@ theorem exists_exp_asymptotic (X : ℝ → Idx (m + 1) → EucSpace 1)
     ∃ γ : ℝ, γ ≠ 0 ∧ Tendsto (fun t => X t i 0 / Real.exp t) atTop (nhds γ) := by
   sorry
 
-/-- The hypotheses shared by `unbounded_tendsto_atTop_or_atBot` and
-`exists_exp_asymptotic` are satisfiable at `m = 0`: the one-token solution
-`x(t) = e^t` is not uniformly bounded. -/
+/-- The hypotheses of `exists_exp_asymptotic` are satisfiable at `m = 0`: the
+one-token solution `x(t) = e^t` is not uniformly bounded. -/
 example :
     IdNonrescaledDynamics (n := 1)
         (fun t _ => Real.exp t • (EuclideanSpace.single 0 (1 : ℝ) : EucSpace 1)) ∧
       IsOrderedConfig (n := 1)
         (fun _ => Real.exp 0 • (EuclideanSpace.single 0 (1 : ℝ) : EucSpace 1)) ∧
       ¬ IsBoundedToken
-        (fun t (_ : Idx 1) => Real.exp t • (EuclideanSpace.single 0 (1 : ℝ) : EucSpace 1)) 0 := by
-  refine ⟨idNonrescaledDynamics_single _, isOrderedConfig_subsingleton _, ?_⟩
-  rintro ⟨R, hR⟩
-  have h1 := hR (|R| + 1) (by positivity)
-  have h2 : Real.exp (|R| + 1) ≤ R := by
-    simpa [abs_of_pos (Real.exp_pos (|R| + 1))] using h1
-  have h3 : |R| + 1 + 1 ≤ Real.exp (|R| + 1) := Real.add_one_le_exp _
-  have h4 : R ≤ |R| := le_abs_self R
-  linarith
+        (fun t (_ : Idx 1) => Real.exp t • (EuclideanSpace.single 0 (1 : ℝ) : EucSpace 1)) 0 :=
+  ⟨idNonrescaledDynamics_single _, isOrderedConfig_subsingleton _, not_isBoundedToken_exp⟩
 
 end Clusters
 end Transformer
