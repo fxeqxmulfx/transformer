@@ -13,6 +13,7 @@ import Transformer.Clusters.Section3_IdCase
 import Transformer.Clusters.Section4_Hyperplanes
 import Transformer.Clusters.Section4_Codim
 import Transformer.Clusters.Section5_Mix
+import Transformer.Clusters.Section6_Field
 import Transformer.Clusters.Section6_WellPosed
 import Transformer.Clusters.Section6_Kernel
 import Transformer.Clusters.Section6_KernelDeriv
