@@ -19,9 +19,10 @@ What falls under this form: softmax attention, causal or not, with any `β`,
 `Q`, `K`, rotary embedding or normalised queries and keys (they change `a`
 only, and every row still sums to one); several heads, with the output map and
 any gain on the attention absorbed into `V_h`; a feed-forward term that is
-Lipschitz on the sphere; a residual weight `mix[0] ≠ 1`, as the token-wise
-linear term `(mix[0] - 1) ⊙ x_i` inside `G`.  Every one of `a`, `V`, `G`, `z`
-is a function of time, so the blocks of a stack may all differ.
+Lipschitz on the sphere (that of parameter-golf is, `Perspective.BlockMLP`);
+a residual weight `mix[0] ≠ 1`, as the token-wise linear term
+`(mix[0] - 1) ⊙ x_i` inside `G`.  Every one of `a`, `V`, `G`, `z` is a
+function of time, so the blocks of a stack may all differ.
 -/
 
 import Transformer.Perspective.DrivenSpread

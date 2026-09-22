@@ -45,7 +45,11 @@ hypothesis for `V = I_d` — do not rule collapse out.  `RawStream` and
 directions follow the sphere model with the drive of each token divided by its
 length, and for `mix[0] = 1 + c > 1` the stream outgrows its drive, so every
 direction stays within `2 M / (c ‖x_i(t₀)‖)` of where it was at `t₀` and
-`blockDrive_spread` fails before the norm.
+`blockDrive_spread` fails before the norm.  `BlockMLP` and `BlockMLPSpread`
+take in the feed-forward term of parameter-golf, `W₂ σ(W₁ x)²` with a leaky
+ReLU `σ`: on the sphere it is bounded and Lipschitz with constants read off
+the weights, so `blockDrive_spread` holds for a block with that term, with
+nothing assumed of it but bounds on `‖W₁‖` and `‖W₂‖`.
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -95,6 +99,8 @@ import Transformer.Perspective.BlockSpread
 import Transformer.Perspective.BlockConsensus
 import Transformer.Perspective.RawStream
 import Transformer.Perspective.RawGrowth
+import Transformer.Perspective.BlockMLP
+import Transformer.Perspective.BlockMLPSpread
 import Transformer.Perspective.Section5_ConeCollapse
 import Transformer.Perspective.Section5_Hemisphere
 import Transformer.Perspective.Section5_HemisphereCone
