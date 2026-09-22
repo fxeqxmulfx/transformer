@@ -18,7 +18,10 @@ injection `z^{(b)}_i = mix^{(b)}[1] ⊙ x0_i`, whose differences
 `mix^{(b)}[1] ⊙ (x0_k - x0_l)` stay independent when the embedding
 differences are and `mix^{(b)}[1]` has no zero entry.  What the model still
 leaves out: time is continuous, the tokens live on the sphere instead of being
-RMS-normalised in `ℝ^d`, and the attention reads `x` rather than `x_in`.
+RMS-normalised in `ℝ^d`, and the attention reads `x` rather than `x_in`.  The
+second is taken up in `Perspective.RawStream` and `Perspective.RawGrowth`:
+before the norm, with `mix[0] > 1` in every channel, every direction freezes
+and the conclusion fails (`not_rawStream_spread`).
 -/
 
 import Transformer.Perspective.BlockDrive

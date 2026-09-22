@@ -6739,12 +6739,12 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`norm_blockDrive_le`](src/Transformer/Perspective/BlockDrive.lean#L94) | theorem | proved |
 | [`norm_blockDrive_sub_sub_le`](src/Transformer/Perspective/BlockDrive.lean#L121) | theorem | proved |
 
-**[Transformer.Perspective.BlockSpread](src/Transformer/Perspective/BlockSpread.lean)** — 174 lines
+**[Transformer.Perspective.BlockSpread](src/Transformer/Perspective/BlockSpread.lean)** — 177 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`blockDrive_spread`](src/Transformer/Perspective/BlockSpread.lean#L46) | theorem | proved |
-| [`blockDrive_stack`](src/Transformer/Perspective/BlockSpread.lean#L79) | theorem | proved |
+| [`blockDrive_spread`](src/Transformer/Perspective/BlockSpread.lean#L49) | theorem | proved |
+| [`blockDrive_stack`](src/Transformer/Perspective/BlockSpread.lean#L82) | theorem | proved |
 
 **[Transformer.Perspective.ConeChart](src/Transformer/Perspective/ConeChart.lean)** — 170 lines
 
@@ -6819,18 +6819,18 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | --- | --- | --- |
 | [`decay_of_deriv_ge`](src/Transformer/Perspective/Gronwall.lean#L30) | theorem | proved |
 
-**[Transformer.Perspective.InjectedAttention](src/Transformer/Perspective/InjectedAttention.lean)** — 158 lines
+**[Transformer.Perspective.InjectedAttention](src/Transformer/Perspective/InjectedAttention.lean)** — 164 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`injectedODE`](src/Transformer/Perspective/InjectedAttention.lean#L48) | def |  |
-| [`injectedODE_zero_iff`](src/Transformer/Perspective/InjectedAttention.lean#L63) | theorem | proved |
-| [`expConvergent_injectedODE_zero`](src/Transformer/Perspective/InjectedAttention.lean#L76) | theorem | proved |
-| [`sum_abs_attention`](src/Transformer/Perspective/InjectedAttention.lean#L97) | theorem | proved |
-| [`sum_attention`](src/Transformer/Perspective/InjectedAttention.lean#L109) | theorem | proved |
-| [`injectedODE.isInjectedFlow`](src/Transformer/Perspective/InjectedAttention.lean#L120) | theorem | proved |
-| [`injectedODE_const`](src/Transformer/Perspective/InjectedAttention.lean#L130) | theorem | proved |
-| [`injectedODE_consensus`](src/Transformer/Perspective/InjectedAttention.lean#L147) | theorem | proved |
+| [`injectedODE`](src/Transformer/Perspective/InjectedAttention.lean#L54) | def |  |
+| [`injectedODE_zero_iff`](src/Transformer/Perspective/InjectedAttention.lean#L69) | theorem | proved |
+| [`expConvergent_injectedODE_zero`](src/Transformer/Perspective/InjectedAttention.lean#L82) | theorem | proved |
+| [`sum_abs_attention`](src/Transformer/Perspective/InjectedAttention.lean#L103) | theorem | proved |
+| [`sum_attention`](src/Transformer/Perspective/InjectedAttention.lean#L115) | theorem | proved |
+| [`injectedODE.isInjectedFlow`](src/Transformer/Perspective/InjectedAttention.lean#L126) | theorem | proved |
+| [`injectedODE_const`](src/Transformer/Perspective/InjectedAttention.lean#L136) | theorem | proved |
+| [`injectedODE_consensus`](src/Transformer/Perspective/InjectedAttention.lean#L153) | theorem | proved |
 
 **[Transformer.Perspective.InjectedConsensus](src/Transformer/Perspective/InjectedConsensus.lean)** — 108 lines
 

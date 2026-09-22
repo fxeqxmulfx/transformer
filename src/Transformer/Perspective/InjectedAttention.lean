@@ -21,9 +21,15 @@ The model is the residual mix of a block in parameter-golf
 `records/track_10min_16mb/2026-04-29_SmearGateBOSFix_3Seed_1.06141/train_gpt.py`,
 `Block.forward`): `x_in = mix[0] * x + mix[1] * x0` adds the embedding `x0` of
 every token back in before every block, the injection `z_i = mix[1] ⊙ x0_i`.
-What the model leaves out: the MLP, the RMS norm (the sphere stands in for it),
-`mix[0] ≠ 1`, `attn_scale`, `V ≠ I_d`, and a `mix[1]` that changes from block
-to block — `z` is constant in time, as for one block applied again and again.
+What this model leaves out: the MLP, the RMS norm (the sphere stands in for
+it), `mix[0] ≠ 1`, `attn_scale`, `V ≠ I_d`, and a `mix[1]` that changes from
+block to block — `z` is constant in time, as for one block applied again and
+again.  `Perspective.BlockDrive` and `Perspective.BlockSpread` take in all of
+these but the norm, for a stack of different blocks, at the price of two
+independent differences `z_k - z_l` in place of two independent injections,
+a price `Perspective.BlockConsensus` shows cannot be avoided.
+`Perspective.RawStream` and `Perspective.RawGrowth` take in the norm, and for
+`mix[0] > 1` in every channel the conclusion does not survive it.
 -/
 
 import Transformer.Perspective.InjectedSpread
