@@ -22,17 +22,13 @@ open Real
 namespace Transformer
 namespace Perceptron
 
-/-- **Lemma (lem: concavity), the large-`β` expansion.**
-`θ_c(β) = β^{-1/2} + O(β^{-3/2})` as `β → ∞`, written with `β^{-1/2} = 1/√β`
-and `β^{-3/2} = 1/(β√β)` so that no real power is needed.  The constant is
-`3`, from `β = 1` on.
+/-- **`β²θ_c(β)²` is `β + O(1)`.**  `β - 1 ≤ β²θ_c² ≤ β + 3` for every
+`β > 0`: the quantitative form of `θ_c² = 1/β + O(β^{-2})` that both the
+expansion of `θ_c` and the Hessian bound `eq:kernel-hess-bound-lambda` rest on.
 
-Source: arXiv:2601.21366v2, `lem: concavity`. -/
-theorem thetaC_asymptotics :
-    ∃ C β₀ : ℝ, 0 < C ∧ 0 < β₀ ∧ ∀ β : ℝ, β₀ ≤ β →
-      |thetaC β - 1 / Real.sqrt β| ≤ C / (β * Real.sqrt β) := by
-  refine ⟨3, 1, by norm_num, one_pos, fun β hβ1 => ?_⟩
-  have hβ : 0 < β := by linarith
+Source: arXiv:2601.21366v2, proof of `lem: concavity`. -/
+theorem sq_mul_sq_thetaC_mem (β : ℝ) (hβ : 0 < β) :
+    β - 1 ≤ β ^ 2 * thetaC β ^ 2 ∧ β ^ 2 * thetaC β ^ 2 ≤ β + 3 := by
   have hθ0 := thetaC_pos β hβ
   have hθ1 := thetaC_lt_pi_div_two β hβ
   have hq := quadratic_cos_thetaC β hβ
@@ -46,13 +42,12 @@ theorem thetaC_asymptotics :
   have hS0 : 0 ≤ Real.sin θ := Real.sin_nonneg_of_nonneg_of_le_pi hθ0.le (by linarith [pi_pos])
   have hSge := Real.sin_gt_sub_cube hθ0
   have hθ2 : θ ^ 2 ≤ 5 / 2 := by nlinarith [pi_lt_d2]
-  -- the lower bound `β²θ² ≥ β - 1`
-  have hlow : β - 1 ≤ β ^ 2 * θ ^ 2 := by
+  constructor
+  · -- the lower bound, from `β(1 - cos θ) ≤ 1` and `sin θ ≤ θ`
     have h1 : β * (1 - Real.cos θ) ≤ 1 := by nlinarith [Real.sin_sq_add_cos_sq θ]
     have h2 : Real.sin θ ^ 2 ≤ θ ^ 2 := pow_le_pow_left₀ hS0 hSle 2
     nlinarith
-  -- the upper bound `β²θ² ≤ β + 3`
-  have hup : β ^ 2 * θ ^ 2 ≤ β + 3 := by
+  · -- the upper bound, from `θ - θ³/6 < sin θ`
     have hf : 0 < 1 - θ ^ 2 / 6 := by linarith
     have h1 : θ * (1 - θ ^ 2 / 6) ≤ Real.sin θ := by linarith
     have h2 : (θ * (1 - θ ^ 2 / 6)) ^ 2 ≤ Real.sin θ ^ 2 :=
@@ -60,6 +55,25 @@ theorem thetaC_asymptotics :
     have h3 : β * θ ^ 2 * (1 - θ ^ 2 / 3) ≤ 1 := by nlinarith [sq_nonneg (θ ^ 2)]
     have h4 : β * θ ^ 2 ≤ 3 := by nlinarith
     nlinarith
+
+/-- `sq_mul_sq_thetaC_mem` needs `β > 0`, satisfied by `β = 1`. -/
+example : 1 - 1 ≤ (1 : ℝ) ^ 2 * thetaC 1 ^ 2 ∧ (1 : ℝ) ^ 2 * thetaC 1 ^ 2 ≤ 1 + 3 :=
+  sq_mul_sq_thetaC_mem 1 one_pos
+
+/-- **Lemma (lem: concavity), the large-`β` expansion.**
+`θ_c(β) = β^{-1/2} + O(β^{-3/2})` as `β → ∞`, written with `β^{-1/2} = 1/√β`
+and `β^{-3/2} = 1/(β√β)` so that no real power is needed.  The constant is
+`3`, from `β = 1` on.
+
+Source: arXiv:2601.21366v2, `lem: concavity`. -/
+theorem thetaC_asymptotics :
+    ∃ C β₀ : ℝ, 0 < C ∧ 0 < β₀ ∧ ∀ β : ℝ, β₀ ≤ β →
+      |thetaC β - 1 / Real.sqrt β| ≤ C / (β * Real.sqrt β) := by
+  refine ⟨3, 1, by norm_num, one_pos, fun β hβ1 => ?_⟩
+  have hβ : 0 < β := by linarith
+  have hθ0 := thetaC_pos β hβ
+  obtain ⟨hlow, hup⟩ := sq_mul_sq_thetaC_mem β hβ
+  set θ := thetaC β
   -- from `θ²` to `θ`
   have hs0 : 0 < Real.sqrt β := Real.sqrt_pos.mpr hβ
   have hs : Real.sqrt β ^ 2 = β := Real.sq_sqrt hβ.le

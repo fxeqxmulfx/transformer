@@ -24,7 +24,7 @@ bounds the proof of `thm: bound` runs on.
 * `sup_{|θ| ≤ λθ_c} K_β''(θ)` and `max_{θ ∈ [θ_c, π]} K_β''(θ)` are carried as
   bounds valid at every such `θ`: a supremum bounded above is exactly that,
   and no junk value of `sSup` on an unbounded family can make the statement
-  true by accident.
+  true by accident.  Both are proved in `KernelHess.lean`.
 
 Source: arXiv:2601.21366v2, `lem: concavity`, `eq: K''`, `eq: theta_c`.
 -/
@@ -202,35 +202,6 @@ theorem tendsto_thetaC_nhdsWithin_zero :
   rw [show thetaC = fun β : ℝ => Real.arccos ((Real.sqrt (1 + 4 * β ^ 2) - 1) / (2 * β))
     from rfl]
   simpa [thetaC, Real.arccos_zero] using hfrac.arccos
-
-/-! ### The two Hessian bounds -/
-
-/-- **`eq:kernel-hess-bound-lambda`.**  For every `λ ∈ (0,1)` there is `β₀(λ)`
-with `K_β''(θ) ≤ -e^{-λ²/2}((1-λ²)/2) β e^β` for every `β ≥ β₀(λ)` and every
-`|θ| ≤ λ θ_c(β)`.
-
-Not proved here.
-
-Source: arXiv:2601.21366v2, `eq:kernel-hess-bound-lambda`. -/
-theorem kernelK2_le_of_abs_le_lambda_thetaC (lam : ℝ) (hlam : lam ∈ Set.Ioo (0 : ℝ) 1) :
-    ∃ β₀ : ℝ, 0 < β₀ ∧ ∀ β : ℝ, β₀ ≤ β → ∀ θ : ℝ, |θ| ≤ lam * thetaC β →
-      kernelK2 β θ ≤ -Real.exp (-lam ^ 2 / 2) * ((1 - lam ^ 2) / 2) * β * Real.exp β := by
-  sorry
-
-/-- The hypothesis of `kernelK2_le_of_abs_le_lambda_thetaC` is satisfiable:
-`λ = 1/2`. -/
-example : (1 : ℝ) / 2 ∈ Set.Ioo (0 : ℝ) 1 := ⟨by norm_num, by norm_num⟩
-
-/-- **`eq:kernel-hess-bound-max`.**  There is `β₁` with
-`K_β''(θ) ≤ 2β e^{β - 3/2}` for every `β ≥ β₁` and every `θ ∈ [θ_c(β), π]`.
-
-Not proved here.
-
-Source: arXiv:2601.21366v2, `eq:kernel-hess-bound-max`. -/
-theorem kernelK2_le_of_thetaC_le :
-    ∃ β₁ : ℝ, 0 < β₁ ∧ ∀ β : ℝ, β₁ ≤ β → ∀ θ ∈ Set.Icc (thetaC β) π,
-      kernelK2 β θ ≤ 2 * β * Real.exp (β - 3 / 2) := by
-  sorry
 
 end Perceptron
 end Transformer
