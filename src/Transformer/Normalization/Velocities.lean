@@ -4,10 +4,15 @@
 * `Theorem thm: initial-velocity`  — uniform bound on `‖A_j(0)‖` for random
                                       directional init (the deterministic
                                       part, `‖A_j‖ ≤ 1`, is proved),
-* `Theorem thm: preln-slow`        — radial growth `r_k(t) ≥ (1 - δ) t`
-                                      (proved, as a velocity bound) and
-                                      `d/dt Var(t)` rates for each scheme
-                                      (asymptotic, not formalized).
+* `Theorem thm: preln-slow` (i)    — the Pre-LN radial velocity is at least
+                                      `1 - δ` at every configuration in the
+                                      local cone.
+
+Part (i) of `thm: preln-slow` is `r_k(t) ≥ (1 - δ) t` for all `t`, which
+integrates this bound only once the local cone is known to hold along the
+whole trajectory; that invariance is not stated here.  Part (ii), the
+per-scheme rates of `d/dt Var(t)`, is `Normalization.ClusterSpeed`: refuted as
+printed, and stated there with the cone narrowed.
 -/
 
 import Transformer.Basic
@@ -90,8 +95,9 @@ because `⟨θ_k, A_k⟩` is the average of the scores `⟨θ_k, θ_j⟩` agains
 positive attention weights, and every score is at least `1 - δ`.  Integrating
 this is the paper's `r_k(t) ≥ (1 - δ) t`.
 
-The rest of `thm: preln-slow` -- the per-scheme rates `d/dt Var(t)` of
-`intraClusterVar` -- is asymptotic (`-Θ(·)`) and is not formalized.
+The paper states this for Pre-LN and Peri-LN; only the Pre-LN velocity is
+here, pointwise in time.  Part (ii), the per-scheme rates `d/dt Var(t)` of
+`intraClusterVar`, is `Normalization.ClusterSpeed`.
 Source: arXiv:2510.22026v2, §4.3. -/
 theorem radialDerivative_pre_ge_of_localCone
     (β δ : ℝ) (θ : ℝ → Idx n → EucSpace d) (t τ : ℝ)

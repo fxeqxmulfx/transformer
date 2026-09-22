@@ -5499,13 +5499,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | --- | --- | --- |
 | [`unstable_mul_of_posDef`](src/Transformer/Normalization/UnstableProduct.lean#L44) | theorem | proved |
 
-**[Transformer.Normalization.Velocities](src/Transformer/Normalization/Velocities.lean)** — 128 lines
+**[Transformer.Normalization.Velocities](src/Transformer/Normalization/Velocities.lean)** — 134 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`norm_attentionVec_le_one`](src/Transformer/Normalization/Velocities.lean#L40) | theorem | proved |
-| [`intraClusterVar`](src/Transformer/Normalization/Velocities.lean#L77) | def |  |
-| [`radialDerivative_pre_ge_of_localCone`](src/Transformer/Normalization/Velocities.lean#L96) | theorem | proved |
+| [`norm_attentionVec_le_one`](src/Transformer/Normalization/Velocities.lean#L45) | theorem | proved |
+| [`intraClusterVar`](src/Transformer/Normalization/Velocities.lean#L82) | def |  |
+| [`radialDerivative_pre_ge_of_localCone`](src/Transformer/Normalization/Velocities.lean#L102) | theorem | proved |
 
 ### `Transformer.Perceptron`
 
