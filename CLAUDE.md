@@ -6,6 +6,21 @@ conclusion. Every difference is either fixed or recorded in the docstring (see
 **When the paper is wrong**). A proof closing is not evidence that the
 statement is the paper's.
 
+# When the paper is wrong
+
+A proof that will not go through is evidence about the paper, not only about
+the proof. Decide which, and never let a bad statement sit under a `sorry` that
+will never close.
+
+- **Fixable** — a missing hypothesis, a wrong constant, an index off by one:
+  fix it. State the corrected theorem, and record in its docstring what the
+  source says and what was changed, so the deviation is auditable.
+- **Not fixable** — the statement is false as written: refute it. A proved
+  counterexample theorem, a docstring naming the claim it kills, and move on.
+
+Never weaken a statement until it becomes provable and keep the paper's name on
+it; that is a third, silent way of lying about what is proved.
+
 # Why
 
 The number in `INDEX.md` is the only honest account of what this repository
@@ -128,21 +143,6 @@ Three numbers, to be read before every commit, next to `scripts/index.py`:
 
 Current: 218 `sorry` · 0 resting on a sorry · 0 extra axioms. Every proved
 declaration in the tree is proved, on those three axioms and nothing else.
-
-## When the paper is wrong
-
-A proof that will not go through is evidence about the paper, not only about
-the proof. Decide which, and never let a bad statement sit under a `sorry` that
-will never close.
-
-- **Fixable** — a missing hypothesis, a wrong constant, an index off by one:
-  fix it. State the corrected theorem, and record in its docstring what the
-  source says and what was changed, so the deviation is auditable.
-- **Not fixable** — the statement is false as written: refute it. A proved
-  counterexample theorem, a docstring naming the claim it kills, and move on.
-
-Never weaken a statement until it becomes provable and keep the paper's name on
-it; that is a third, silent way of lying about what is proved.
 
 ## No decorative proofs
 
