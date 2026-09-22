@@ -5,9 +5,10 @@ Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
 *Attention's forward pass and Frank-Wolfe*, §5, up to the Gumbel trick.
 
 At finite `β` the hardmax step is replaced by a softmax one, `eq: softmax.ODE`,
-which collapses everything to a single point (`prop: origin`); the Gumbel trick
+whose weights are the attention scores (`attWeight`); the Gumbel trick
 rewrites the same step as a Markov chain `eq: softmax.process`, whose jump
-probabilities are the attention scores.
+probabilities are those scores.  That `eq: softmax.ODE` itself collapses to a
+single point (`prop: origin`) is `Section5_Collapse`.
 -/
 
 import Transformer.FrankWolfe.Section1_Models
@@ -23,31 +24,6 @@ namespace FrankWolfe
 
 variable {d n : ℕ}
 
-/-- **Proposition (prop: origin).**
-
-Let `β > 0`.  There is `γ_* ∈ (0,1)` such that for every `γ ∈ (0, γ_*)` and
-every initial configuration, particles following `eq: softmax.ODE` — that is
-`x_i^{t+1} = softmaxStep β γ (x^t) i`, the model `(SA_β)` with `V^t = γ I_d`
-and `B^t ≡ I_d` — all converge to one point `x_*` of `conv{x_i^0}`.
-
-So the hardmax dynamics, whose particles stop at the vertices, is only an
-approximation of `(SA_β)` on finite time horizons.
-
-Not proved here; the source defers to Geshkovski-Karagodin-Polyanskiy-Rigollet,
-`Proposition 2.1`.
-
-Source: arXiv:2508.09628v1, §5, `prop: origin`. -/
-theorem softmax_collapse (β : ℝ) (hβ : 0 < β) :
-    ∃ γstar ∈ Set.Ioo (0 : ℝ) 1, ∀ γ ∈ Set.Ioo (0 : ℝ) γstar,
-      ∀ (X₀ : Idx n → EucSpace d) (x : ℕ → Idx n → EucSpace d),
-        x 0 = X₀ → (∀ (t : ℕ) (i : Idx n), x (t + 1) i = softmaxStep β γ (x t) i) →
-        ∃ xstar ∈ configHull X₀, ∀ i : Idx n,
-          Filter.Tendsto (fun t => x t i) Filter.atTop (nhds xstar) := by
-  sorry
-
-/-- The hypothesis of `softmax_collapse` is satisfiable: `β = 1`. -/
-example : (0 : ℝ) < 1 := one_pos
-
 /-- The attention score particle `i` gives particle `j` at inverse temperature
 `β`, for the key-query matrix `B = I_d`:
 `e^{β⟨x_i, x_j⟩} / Σ_k e^{β⟨x_i, x_k⟩}`.
@@ -56,6 +32,22 @@ Source: arXiv:2508.09628v1, §5, `eq: softmax.process`. -/
 noncomputable def attWeight (β : ℝ) (X : Idx n → EucSpace d) (i j : Idx n) : ℝ :=
   Real.exp (β * inner (𝕜 := ℝ) (X i) (X j)) /
     ∑ k : Idx n, Real.exp (β * inner (𝕜 := ℝ) (X i) (X k))
+
+theorem attWeight_pos (β : ℝ) (X : Idx n → EucSpace d) (i j : Idx n) :
+    0 < attWeight β X i j :=
+  div_pos (Real.exp_pos _) (Finset.sum_pos (fun _ _ => Real.exp_pos _) ⟨i, Finset.mem_univ i⟩)
+
+/-- The scores of one particle are a probability vector. -/
+theorem sum_attWeight (β : ℝ) (X : Idx n → EucSpace d) (i : Idx n) :
+    ∑ j : Idx n, attWeight β X i j = 1 := by
+  unfold attWeight
+  rw [← Finset.sum_div]
+  exact div_self (Finset.sum_pos (fun _ _ => Real.exp_pos _) ⟨i, Finset.mem_univ i⟩).ne'
+
+theorem attWeight_le_one (β : ℝ) (X : Idx n → EucSpace d) (i j : Idx n) :
+    attWeight β X i j ≤ 1 :=
+  (Finset.single_le_sum (f := attWeight β X i) (fun k _ => (attWeight_pos β X i k).le)
+    (Finset.mem_univ j)).trans_eq (sum_attWeight β X i)
 
 /-- **The self-attention process `eq: softmax.process` (SA_ℙ).**
 

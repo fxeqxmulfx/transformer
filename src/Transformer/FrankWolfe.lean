@@ -8,7 +8,8 @@ The self-attention layer is read as a Frank-Wolfe step for the quadratic
 module per section of the manuscript: §1 the models, §2 the derivations and
 the counterexample to hull shrinkage for a general value matrix, §3 the
 negative-definite regime, §4 the cells, the polytope solution, the vertex
-genericity and the singular ODE, §5 finite `β` and dynamic metastability.
+genericity and the singular ODE, §5 finite `β`, the collapse of softmax
+attention and dynamic metastability.
 Everything lives in the namespace `Transformer.FrankWolfe`.
 -/
 
@@ -25,4 +26,6 @@ import Transformer.FrankWolfe.Section4_Edges
 import Transformer.FrankWolfe.Section4_VertexGenericity
 import Transformer.FrankWolfe.Section4_ODE
 import Transformer.FrankWolfe.Section5_Process
+import Transformer.FrankWolfe.Section5_Contraction
+import Transformer.FrankWolfe.Section5_Collapse
 import Transformer.FrankWolfe.Section5_Metastability
