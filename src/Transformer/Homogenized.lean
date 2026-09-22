@@ -48,3 +48,5 @@ import Transformer.Homogenized.HansonWright
 import Transformer.Homogenized.GaussianInterp
 import Transformer.Homogenized.SoftmaxDerivatives
 import Transformer.Homogenized.SoftmaxSmooth
+import Transformer.Homogenized.LinearFormMoments
+import Transformer.Homogenized.GaussianMoments
