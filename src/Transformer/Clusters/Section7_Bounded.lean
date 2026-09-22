@@ -13,20 +13,13 @@ that need not become a standard basis row.
 * `l:boundedxn` is proved in `Transformer.Clusters.Section7_BoundedXN`, with
   the range of its second sentence corrected.
 
-* `l:boundedother` is carried over `j ∈ [n-1]`, as stated.  The remaining
-  entry of the row then converges too, by the row sum — that is
-  `tendsto_attention_of_tendsto_others` — and the limit row is again a
-  probability vector, which is the last sentence of the proof of `t:boolean`;
-  both are proved here, with the convergence of the other entries taken as an
-  explicit hypothesis.
+* `l:boundedother` is proved in `Transformer.Clusters.Section7_BoundedOther`,
+  for every `j ∈ [n]`.  Stated over `j ∈ [n-1]`, the remaining entry would
+  converge by the row sum — that is `tendsto_attention_of_tendsto_others` —
+  and the limit row is a probability vector, which is the last sentence of the
+  proof of `t:boolean` (`tendsto_row_isProbability`).
 
-* The hypotheses of `l:boundedother` need three ordered tokens, one of them
-  interior and bounded.  `Transformer.Clusters.Section7_Symmetric` supplies
-  exactly that configuration, from a solution of the scalar equation
-  `symDrift` it reduces to.
-
-Source: arXiv:2305.05465v6, `l:boundedother`, and
-the proof of `t:boolean` in §7.
+Source: arXiv:2305.05465v6, the proof of `t:boolean` in §7.
 -/
 
 import Transformer.Clusters.Section7_OnlyOne
@@ -38,37 +31,6 @@ namespace Transformer
 namespace Clusters
 
 variable {d n m : ℕ}
-
-/-! ### `l:boundedother` -/
-
-/-- **Lemma (l:boundedother).**  If the bounded token is interior,
-`i₀ ∉ {1,n}`, then each entry `P_{i₀ j}(t)`, `j ∈ [n-1]`, converges to some
-`α_j ∈ [0,1]`.
-
-Not proved here.
-
-Source: arXiv:2305.05465v6, `l:boundedother`. -/
-theorem exists_tendsto_attention_of_bounded_interior (X : ℝ → Idx (m + 1) → EucSpace 1)
-    (hX : IdNonrescaledDynamics X) (hord : IsOrderedConfig (X 0)) (i₀ : Idx (m + 1))
-    (hfirst : i₀ ≠ 0) (hlast : i₀ ≠ Fin.last m) (hb : IsBoundedToken X i₀)
-    (j : Idx (m + 1)) (hj : j ≠ Fin.last m) :
-    ∃ α ∈ Set.Icc (0 : ℝ) 1,
-      Tendsto (fun t => attentionMatrix (1 : ParamMatrix 1) 1 (X t) i₀ j) atTop (nhds α) := by
-  sorry
-
-/-- The hypotheses of `exists_tendsto_attention_of_bounded_interior` are
-satisfiable: the symmetric triple `(-u, 0, u)` of
-`Transformer.Clusters.Section7_Symmetric` is ordered as soon as `u(0) > 0`,
-and its interior token sits at the origin for all time, so it is the bounded
-one.  The solution `u` of the scalar equation is the hypothesis; no solution
-of `e:Idnonresca` with three distinct tokens is available in closed form. -/
-example (u : ℝ → ℝ) (hu : ∀ t : ℝ, HasDerivAt u (symDrift (u t)) t) (hu0 : 0 < u 0) :
-    IdNonrescaledDynamics (fun t => symTriple (u t)) ∧
-      IsOrderedConfig (symTriple (u 0)) ∧
-      (1 : Idx 3) ≠ 0 ∧ (1 : Idx 3) ≠ Fin.last 2 ∧
-      IsBoundedToken (fun t => symTriple (u t)) 1 ∧ (0 : Idx 3) ≠ Fin.last 2 :=
-  ⟨idNonrescaledDynamics_symTriple u hu, isOrderedConfig_symTriple hu0,
-    symInterior_ne_first, symInterior_ne_last, isBoundedToken_symTriple u, by decide⟩
 
 /-! ### The row of `l:boundedother` is a probability vector -/
 
