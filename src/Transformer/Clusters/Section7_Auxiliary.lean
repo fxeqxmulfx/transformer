@@ -1,23 +1,25 @@
 /-
 # The emergence of clusters in self-attention dynamics — `l:auxiliary`
 
-§7 of arXiv:2305.05465v6: in `d = 1`, the largest token, once above the
-constant `A` of `A² = n² e^{-A²}`, grows at least like `c e^t`; the smallest,
-once below `-A`, decreases at least like `-c e^t`.
+§7 of arXiv:2305.05465v6: in `d = 1`, a token that is once above the constant
+`A` of `A² = n² e^{-A²}` grows at least like `c e^t`; a token once below `-A`
+decreases at least like `-c e^t`.
 
-The proof is the source's, on the scalar curve `a(t) = x_N(t)`
-(`exp_le_of_isMax`): `e:pypyly` gives a positive speed above `A`, a barrier
-turns it into linear growth, and then `(log a)' ≥ 1 - n/a²` has an integrable
-defect.  The smallest token is the largest one of `-x`, which solves the same
-equation: the scores `x_i x_l` are unchanged by `x ↦ -x`.  This is the
-source's involution, without the relabelling `i ↦ n + 1 - i`.
+The proof is the source's, on the scalar curve `a(t) = x_i(t)`
+(`exp_le_of_auxiliary_lt`): `e:pypyly` gives a positive speed above `A`, a
+barrier turns it into linear growth, and then `(log a)' ≥ 1 - n/a²` has an
+integrable defect.  A token below `-A` is a token above `A` of `-x`, which
+solves the same equation: the scores `x_i x_l` are unchanged by `x ↦ -x`.
+This is the source's involution, without the relabelling `i ↦ n + 1 - i`.
 
-* The source's proof of `e:papala` uses the gap `c` of `e:infdist`; the proof
-  here does not need it — `a - n/a` is a lower bound on the drift for any
-  largest token.  The statements are the source's.
-
-* The conclusion is proved for every `t ≥ t₀`, and stated, as in the source,
-  for every sufficiently large `t`.
+**Deviation from the source, a strengthening.**  `l:auxiliary` is stated for
+the extreme tokens `x_n` and `x_1`, under the ordering of §7 and with
+`t₀ ≥ 0`.  None of this is needed: both drift bounds (`sub_le_drift`,
+`div_sub_le_drift`) hold for any token with `x_i > 0`, since the weight of the
+largest coordinate is at least `1/n` whichever token looks at it.  The lemma is
+therefore stated here for every token `i` and every `t₀`, which is also the
+form in which `l:unboundedparticles` uses it.  The conclusion is proved for
+every `t ≥ t₀` and stated, as in the source, for every sufficiently large `t`.
 
 Source: arXiv:2305.05465v6, `l:auxiliary`.
 -/
@@ -34,20 +36,20 @@ namespace Clusters
 variable {m : ℕ}
 
 /-- **`l:auxiliary` for a scalar curve.**  If `a(t) = x_N(t)` follows the
-drift of `e:Idnonresca`, stays the largest coordinate from `t₀` on and starts
-above `A`, then `a(t) ≥ c e^t` for every `t ≥ t₀`.
+drift of `e:Idnonresca` and starts above `A` at `t₀`, then `a(t) ≥ c e^t` for
+every `t ≥ t₀`.
 
 The proof follows the source: `e:pypyly` at `B = a(t₀) > A` gives a positive
 speed `g`, a barrier gives the linear growth `a(t) ≥ B + (g/2)(t - t₀)`, and
 then `(log a)' ≥ 1 - n/a²` is integrable, so `log a(t) - t` is bounded below.
 
 Source: arXiv:2305.05465v6, `l:auxiliary`. -/
-theorem exp_le_of_isMax (A : ℝ) (hA : 0 < A)
+theorem exp_le_of_auxiliary_lt (A : ℝ) (hA : 0 < A)
     (hAeq : A ^ 2 = ((m + 1 : ℕ) : ℝ) ^ 2 * Real.exp (-A ^ 2))
     (x : ℝ → Idx (m + 1) → ℝ) (N : Idx (m + 1))
     (hder : ∀ t, HasDerivAt (fun s => x s N)
       (∑ j, Perspective.softmaxWeight (fun l => x t N * x t l) j * x t j) t)
-    (t₀ : ℝ) (hmax : ∀ t, t₀ ≤ t → ∀ j, x t j ≤ x t N) (hstart : A < x t₀ N) :
+    (t₀ : ℝ) (hstart : A < x t₀ N) :
     ∃ c : ℝ, 0 < c ∧ ∀ t, t₀ ≤ t → c * Real.exp t ≤ x t N := by
   set a : ℝ → ℝ := fun s => x s N with ha_def
   set D : ℝ → ℝ := fun t =>
@@ -83,7 +85,7 @@ theorem exp_le_of_isMax (A : ℝ) (hA : 0 < A)
     have hBa : B ≤ a y := by
       rw [← hLa]; simp only [L]; nlinarith
     have hpos : 0 < a y := hB.trans_le hBa
-    have hd := div_sub_le_drift (x y) N hpos (hmax y hy)
+    have hd := div_sub_le_drift (x y) N hpos
     have h1 : B / ((m : ℝ) + 1) ≤ a y / ((m : ℝ) + 1) :=
       div_le_div_of_nonneg_right hBa (by positivity)
     have h2 : Real.exp (-a y ^ 2) / a y ≤ Real.exp (-B ^ 2) / B :=
@@ -117,7 +119,7 @@ theorem exp_le_of_isMax (A : ℝ) (hA : 0 < A)
       have hLy := hLpos y hy'
       have hay := hlin y hy'
       have hpos : 0 < a y := hLy.trans_le hay
-      have hd := sub_le_drift (x y) N hpos (hmax y hy')
+      have hd := sub_le_drift (x y) N hpos
       have h1 : 1 - (m + 1) / a y ^ 2 ≤ D y / a y := by
         rw [le_div_iff₀ hpos]
         have : (1 - ((m : ℝ) + 1) / a y ^ 2) * a y = a y - (m + 1) / a y := by
@@ -139,8 +141,8 @@ theorem exp_le_of_isMax (A : ℝ) (hA : 0 < A)
     _ ≤ Real.exp (Real.log (a t)) := Real.exp_le_exp.2 hlog
     _ = a t := Real.exp_log hpos
 
-/-- The hypotheses of `exp_le_of_isMax` are satisfiable at `m = 0`: the curve
-`x(t) = e^t (A + 1)`, which is its own largest coordinate, with `t₀ = 0`. -/
+/-- The hypotheses of `exp_le_of_auxiliary_lt` are satisfiable at `m = 0`: the
+curve `x(t) = e^t (A + 1)`, with `t₀ = 0`. -/
 example : ∃ A : ℝ, 0 < A ∧ A ^ 2 = ((0 + 1 : ℕ) : ℝ) ^ 2 * Real.exp (-A ^ 2) ∧
     (∀ t, HasDerivAt (fun s => Real.exp s * (A + 1))
       (∑ j : Idx 1, Perspective.softmaxWeight
@@ -152,79 +154,64 @@ example : ∃ A : ℝ, 0 < A ∧ A ^ 2 = ((0 + 1 : ℕ) : ℝ) ^ 2 * Real.exp (-
   rw [← Finset.sum_mul, Perspective.sum_softmaxWeight one_pos, one_mul]
   exact (Real.hasDerivAt_exp t).mul_const _
 
-/-- **Lemma (l:auxiliary), the largest token.**  Let `A > 0` satisfy
-`A² = n² exp(-A²)`.  If `x_n(t₀) > A` for some `t₀ ≥ 0`, then there is
-`c₁ > 0` with `x_n(t) ≥ c₁ e^t` for every sufficiently large `t`.
+/-- **Lemma (l:auxiliary), above `A`.**  Let `A > 0` satisfy
+`A² = n² exp(-A²)`.  If `x_i(t₀) > A`, then there is `c₁ > 0` with
+`x_i(t) ≥ c₁ e^t` for every sufficiently large `t`.
+
+The source states this for `i = n` and `t₀ ≥ 0`, under the ordering of §7;
+see the module docstring for why neither is needed.
 
 Source: arXiv:2305.05465v6, `l:auxiliary`. -/
-theorem exists_exp_lower_bound_last (A : ℝ) (hA : 0 < A)
+theorem exists_exp_lower_bound (A : ℝ) (hA : 0 < A)
     (hAeq : A ^ 2 = ((m + 1 : ℕ) : ℝ) ^ 2 * Real.exp (-A ^ 2))
     (X : ℝ → Idx (m + 1) → EucSpace 1) (hX : IdNonrescaledDynamics X)
-    (hord : IsOrderedConfig (X 0)) (t₀ : ℝ) (ht₀ : 0 ≤ t₀)
-    (hlast : A < X t₀ (Fin.last m) 0) :
-    ∃ c : ℝ, 0 < c ∧ ∀ᶠ t in atTop, c * Real.exp t ≤ X t (Fin.last m) 0 := by
-  have hmax : ∀ t, t₀ ≤ t → ∀ j, X t j 0 ≤ X t (Fin.last m) 0 := by
-    intro t ht j
-    rcases (Fin.le_last j).lt_or_eq with h | h
-    · exact (isOrderedConfig_of_nonneg X hX hord t (ht₀.trans ht) j _ h).le
-    · rw [h]
-  obtain ⟨c, hc, hle⟩ := exp_le_of_isMax A hA hAeq (fun t j => X t j 0) (Fin.last m)
-    (fun t => hasDerivAt_coord X hX t _) t₀ hmax hlast
+    (i : Idx (m + 1)) (t₀ : ℝ) (hi : A < X t₀ i 0) :
+    ∃ c : ℝ, 0 < c ∧ ∀ᶠ t in atTop, c * Real.exp t ≤ X t i 0 := by
+  obtain ⟨c, hc, hle⟩ := exp_le_of_auxiliary_lt A hA hAeq (fun t j => X t j 0) i
+    (fun t => hasDerivAt_coord X hX t _) t₀ hi
   exact ⟨c, hc, eventually_atTop.2 ⟨t₀, hle⟩⟩
 
-/-- **Lemma (l:auxiliary), the smallest token.**  Symmetrically, if
-`x_1(t₀) < -A` for some `t₀ ≥ 0` then `x_1(t) ≤ -c₁ e^t` for every
-sufficiently large `t`.
+/-- **Lemma (l:auxiliary), below `-A`.**  Symmetrically, if `x_i(t₀) < -A`
+then `x_i(t) ≤ -c₁ e^t` for every sufficiently large `t`.
+
+The source states this for `i = 1` and `t₀ ≥ 0`, under the ordering of §7;
+see the module docstring for why neither is needed.
 
 Source: arXiv:2305.05465v6, `l:auxiliary`. -/
-theorem exists_exp_upper_bound_first (A : ℝ) (hA : 0 < A)
+theorem exists_exp_upper_bound (A : ℝ) (hA : 0 < A)
     (hAeq : A ^ 2 = ((m + 1 : ℕ) : ℝ) ^ 2 * Real.exp (-A ^ 2))
     (X : ℝ → Idx (m + 1) → EucSpace 1) (hX : IdNonrescaledDynamics X)
-    (hord : IsOrderedConfig (X 0)) (t₀ : ℝ) (ht₀ : 0 ≤ t₀)
-    (hfirst : X t₀ 0 0 < -A) :
-    ∃ c : ℝ, 0 < c ∧ ∀ᶠ t in atTop, X t 0 0 ≤ -(c * Real.exp t) := by
-  -- the smallest token is the largest one of `-x`, with the same scores
-  have hder : ∀ t, HasDerivAt (fun s => -X s 0 0)
-      (∑ j, Perspective.softmaxWeight (fun l => -X t 0 0 * -X t l 0) j * -X t j 0) t := by
+    (i : Idx (m + 1)) (t₀ : ℝ) (hi : X t₀ i 0 < -A) :
+    ∃ c : ℝ, 0 < c ∧ ∀ᶠ t in atTop, X t i 0 ≤ -(c * Real.exp t) := by
+  -- a token of `-x`, with the same scores
+  have hder : ∀ t, HasDerivAt (fun s => -X s i 0)
+      (∑ j, Perspective.softmaxWeight (fun l => -X t i 0 * -X t l 0) j * -X t j 0) t := by
     intro t
-    convert (hasDerivAt_coord X hX t 0).fun_neg using 1
+    convert (hasDerivAt_coord X hX t i).fun_neg using 1
     simp only [mul_neg, neg_mul, neg_neg, Finset.sum_neg_distrib]
-  have hmax : ∀ t, t₀ ≤ t → ∀ j, -X t j 0 ≤ -X t 0 0 := by
-    intro t ht j
-    rcases (Fin.zero_le j).lt_or_eq with h | h
-    · exact neg_le_neg (isOrderedConfig_of_nonneg X hX hord t (ht₀.trans ht) _ j h).le
-    · rw [← h]
-  obtain ⟨c, hc, hle⟩ := exp_le_of_isMax A hA hAeq (fun t j => -X t j 0) 0 hder t₀ hmax
+  obtain ⟨c, hc, hle⟩ := exp_le_of_auxiliary_lt A hA hAeq (fun t j => -X t j 0) i hder t₀
     (by linarith)
   exact ⟨c, hc, eventually_atTop.2 ⟨t₀, fun t ht => by linarith [hle t ht]⟩⟩
 
-/-- The hypotheses of `exists_exp_lower_bound_last` are satisfiable at
+/-- The hypotheses of `exists_exp_lower_bound` are satisfiable at
 `m = 0`: the one-token solution `x(t) = e^t (A+1)` starts above `A`, and the
 constant `A` itself exists by `exists_auxiliary_constant`. -/
 example : ∃ A : ℝ, 0 < A ∧ A ^ 2 = ((0 + 1 : ℕ) : ℝ) ^ 2 * Real.exp (-A ^ 2) ∧
     IdNonrescaledDynamics (n := 1)
         (fun t _ => Real.exp t • (EuclideanSpace.single 0 (A + 1) : EucSpace 1)) ∧
-      IsOrderedConfig (n := 1)
-        (fun _ => Real.exp 0 • (EuclideanSpace.single 0 (A + 1) : EucSpace 1)) ∧
-      (0 : ℝ) ≤ 0 ∧
       A < (Real.exp 0 • (EuclideanSpace.single 0 (A + 1) : EucSpace 1)) 0 := by
   obtain ⟨A, hA, hAeq⟩ := exists_auxiliary_constant 1 one_pos
-  refine ⟨A, hA, by simpa using hAeq, idNonrescaledDynamics_single _,
-    isOrderedConfig_subsingleton _, le_rfl, ?_⟩
+  refine ⟨A, hA, by simpa using hAeq, idNonrescaledDynamics_single _, ?_⟩
   simp
 
-/-- The hypotheses of `exists_exp_upper_bound_first` are satisfiable at
+/-- The hypotheses of `exists_exp_upper_bound` are satisfiable at
 `m = 0`: the one-token solution `x(t) = -e^t (A+1)` starts below `-A`. -/
 example : ∃ A : ℝ, 0 < A ∧ A ^ 2 = ((0 + 1 : ℕ) : ℝ) ^ 2 * Real.exp (-A ^ 2) ∧
     IdNonrescaledDynamics (n := 1)
         (fun t _ => Real.exp t • (EuclideanSpace.single 0 (-(A + 1)) : EucSpace 1)) ∧
-      IsOrderedConfig (n := 1)
-        (fun _ => Real.exp 0 • (EuclideanSpace.single 0 (-(A + 1)) : EucSpace 1)) ∧
-      (0 : ℝ) ≤ 0 ∧
       (Real.exp 0 • (EuclideanSpace.single 0 (-(A + 1)) : EucSpace 1)) 0 < -A := by
   obtain ⟨A, hA, hAeq⟩ := exists_auxiliary_constant 1 one_pos
-  refine ⟨A, hA, by simpa using hAeq, idNonrescaledDynamics_single _,
-    isOrderedConfig_subsingleton _, le_rfl, ?_⟩
+  refine ⟨A, hA, by simpa using hAeq, idNonrescaledDynamics_single _, ?_⟩
   simp
 
 end Clusters

@@ -47,10 +47,10 @@ theorem softmaxWeight_le_exp (y : Idx (m + 1) → ℝ) (N j : Idx (m + 1)) :
     div_mul_eq_mul_div, le_div_iff₀ (Real.exp_pos _)]
   exact mul_le_mul_of_nonneg_left hZ (Real.exp_pos _).le
 
-/-- The drift of the largest token, near its value: with `a = y_N > 0` the
-largest score, `Σ_j P_Nj y_j ≥ a - n/a`. -/
-theorem sub_le_drift (y : Idx (m + 1) → ℝ) (N : Idx (m + 1)) (ha : 0 < y N)
-    (hmax : ∀ j, y j ≤ y N) :
+/-- The drift of a positive token, near its value: with `a = y_N > 0`,
+`Σ_j P_Nj y_j ≥ a - n/a`.  The token need not be the largest: the terms with
+`y_j > a` only help. -/
+theorem sub_le_drift (y : Idx (m + 1) → ℝ) (N : Idx (m + 1)) (ha : 0 < y N) :
     y N - (m + 1) / y N ≤
       ∑ j, Perspective.softmaxWeight (fun l => y N * y l) j * y j := by
   have hs := Perspective.sum_softmaxWeight (Nat.succ_pos m) (fun l => y N * y l)
@@ -59,9 +59,13 @@ theorem sub_le_drift (y : Idx (m + 1) → ℝ) (N : Idx (m + 1)) (ha : 0 < y N)
     simp only [mul_sub, Finset.sum_sub_distrib, ← Finset.sum_mul, hs]
     ring
   have hj : ∀ j, -(1 / y N) ≤
-      Perspective.softmaxWeight (fun l => y N * y l) j * (y j - y N) := fun j =>
-    (neg_inv_le_exp_mul_mul ha (y j - y N)).trans
-      (mul_le_mul_of_nonpos_right (softmaxWeight_le_exp y N j) (sub_nonpos.2 (hmax j)))
+      Perspective.softmaxWeight (fun l => y N * y l) j * (y j - y N) := by
+    intro j
+    rcases le_or_gt (y j) (y N) with h | h
+    · exact (neg_inv_le_exp_mul_mul ha (y j - y N)).trans
+        (mul_le_mul_of_nonpos_right (softmaxWeight_le_exp y N j) (sub_nonpos.2 h))
+    · exact (neg_nonpos.2 (by positivity)).trans
+        (mul_nonneg (Perspective.softmaxWeight_nonneg _ _) (sub_nonneg.2 h.le))
   have hsum := Finset.sum_le_sum fun j (_ : j ∈ Finset.univ) => hj j
   simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul] at hsum
   push_cast at hsum
@@ -69,23 +73,24 @@ theorem sub_le_drift (y : Idx (m + 1) → ℝ) (N : Idx (m + 1)) (ha : 0 < y N)
   have : ((m : ℝ) + 1) * -(1 / y N) = -((m + 1) / y N) := by ring
   linarith
 
-/-- The drift of the largest token, far from its value (`e:pypyly`): with
-`a = y_N > 0` the largest score, `Σ_j P_Nj y_j ≥ a/n - n e^{-a²}/a`. -/
-theorem div_sub_le_drift (y : Idx (m + 1) → ℝ) (N : Idx (m + 1)) (ha : 0 < y N)
-    (hmax : ∀ j, y j ≤ y N) :
+/-- The drift of a positive token, far from its value (`e:pypyly`,
+`e:lowerboundxi`): with `a = y_N > 0`, `Σ_j P_Nj y_j ≥ a/n - n e^{-a²}/a`.
+The weight of the largest coordinate `y_M ≥ a` is at least `1/n`. -/
+theorem div_sub_le_drift (y : Idx (m + 1) → ℝ) (N : Idx (m + 1)) (ha : 0 < y N) :
     y N / (m + 1) - (m + 1) * (Real.exp (-y N ^ 2) / y N) ≤
       ∑ j, Perspective.softmaxWeight (fun l => y N * y l) j * y j := by
   set p := Perspective.softmaxWeight (fun l => y N * y l)
   set ε := Real.exp (-y N ^ 2) / y N
   have hε : 0 ≤ ε := by positivity
-  -- `P_NN ≥ 1/n`
-  have hpN : 1 / ((m : ℝ) + 1) ≤ p N := by
-    have hZ : ∑ k : Idx (m + 1), Real.exp (y N * y k) ≤ ((m : ℝ) + 1) * Real.exp (y N * y N) := by
-      have : ∑ k : Idx (m + 1), Real.exp (y N * y k) ≤ ∑ _k : Idx (m + 1), Real.exp (y N * y N) :=
+  -- the largest coordinate `y_M` has `P_NM ≥ 1/n`
+  obtain ⟨M, hmax⟩ := Finite.exists_max y
+  have hpN : 1 / ((m : ℝ) + 1) ≤ p M := by
+    have hZ : ∑ k : Idx (m + 1), Real.exp (y N * y k) ≤ ((m : ℝ) + 1) * Real.exp (y N * y M) := by
+      have : ∑ k : Idx (m + 1), Real.exp (y N * y k) ≤ ∑ _k : Idx (m + 1), Real.exp (y N * y M) :=
         Finset.sum_le_sum fun k _ => Real.exp_le_exp.2 (mul_le_mul_of_nonneg_left (hmax k) ha.le)
       simpa using this
     have hZ0 := Perspective.softmaxPartition_pos (Nat.succ_pos m) (fun l => y N * y l)
-    show 1 / ((m : ℝ) + 1) ≤ Real.exp (y N * y N) / ∑ k : Idx (m + 1), Real.exp (y N * y k)
+    show 1 / ((m : ℝ) + 1) ≤ Real.exp (y N * y M) / ∑ k : Idx (m + 1), Real.exp (y N * y k)
     rw [div_le_div_iff₀ (by positivity) hZ0]
     linarith
   -- every other term is at least `-ε`
@@ -100,29 +105,30 @@ theorem div_sub_le_drift (y : Idx (m + 1) → ℝ) (N : Idx (m + 1)) (ha : 0 < y
           mul_le_mul_of_nonneg_left (neg_inv_le_exp_mul_mul ha _) (Real.exp_pos _).le
         _ = Real.exp (y N * (y j - y N)) * y j := by rw [h1]; ring
         _ ≤ p j * y j := mul_le_mul_of_nonpos_right (softmaxWeight_le_exp y N j) h.le
-  rw [← Finset.add_sum_erase _ _ (Finset.mem_univ N)]
-  have hsum : -(((m : ℝ) + 1) * ε) ≤ ∑ j ∈ Finset.univ.erase N, p j * y j := by
-    have hc : ((Finset.univ.erase N).card : ℝ) ≤ (m : ℝ) + 1 := by
-      have := Finset.card_erase_le (s := (Finset.univ : Finset (Idx (m + 1)))) (a := N)
+  rw [← Finset.add_sum_erase _ _ (Finset.mem_univ M)]
+  have hsum : -(((m : ℝ) + 1) * ε) ≤ ∑ j ∈ Finset.univ.erase M, p j * y j := by
+    have hc : ((Finset.univ.erase M).card : ℝ) ≤ (m : ℝ) + 1 := by
+      have := Finset.card_erase_le (s := (Finset.univ : Finset (Idx (m + 1)))) (a := M)
       simp only [Finset.card_univ, Fintype.card_fin] at this
       exact_mod_cast this
-    calc -(((m : ℝ) + 1) * ε) ≤ -(((Finset.univ.erase N).card : ℝ) * ε) := by
+    calc -(((m : ℝ) + 1) * ε) ≤ -(((Finset.univ.erase M).card : ℝ) * ε) := by
           have := mul_le_mul_of_nonneg_right hc hε
           linarith
-      _ = ∑ _j ∈ Finset.univ.erase N, -ε := by simp
+      _ = ∑ _j ∈ Finset.univ.erase M, -ε := by simp
       _ ≤ _ := Finset.sum_le_sum fun j _ => hj j
-  have h1 : y N / ((m : ℝ) + 1) ≤ p N * y N := by
-    rw [div_eq_mul_one_div, mul_comm]
-    exact mul_le_mul_of_nonneg_right hpN ha.le
+  have h1 : y N / ((m : ℝ) + 1) ≤ p M * y M := by
+    have h2 : y N / ((m : ℝ) + 1) ≤ y M * (1 / ((m : ℝ) + 1)) := by
+      rw [mul_one_div]; exact div_le_div_of_nonneg_right (hmax N) (by positivity)
+    have h3 := mul_le_mul_of_nonneg_left hpN (ha.le.trans (hmax N))
+    linarith [mul_comm (p M) (y M)]
   linarith
 
 /-- The hypothesis of `neg_inv_le_exp_mul_mul` is satisfiable, at `a = 1`. -/
 example : -(1 / 1 : ℝ) ≤ Real.exp (1 * 0) * 0 := neg_inv_le_exp_mul_mul one_pos 0
 
-/-- The hypotheses of `sub_le_drift` and `div_sub_le_drift` are satisfiable:
+/-- The hypothesis of `sub_le_drift` and `div_sub_le_drift` is satisfiable:
 a single positive score. -/
-example : ∃ (y : Idx 1 → ℝ) (N : Idx 1), 0 < y N ∧ ∀ j, y j ≤ y N :=
-  ⟨fun _ => 1, 0, one_pos, fun _ => le_rfl⟩
+example : ∃ (y : Idx 1 → ℝ) (N : Idx 1), 0 < y N := ⟨fun _ => 1, 0, one_pos⟩
 
 /-! ### From `EucSpace 1` to the line -/
 

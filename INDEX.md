@@ -3058,13 +3058,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`wellposed_particles`](src/Transformer/Clusters/Section6_WellPosed.lean#L61) | theorem | sorry |
 | [`wellposed_rescaled_particles`](src/Transformer/Clusters/Section6_WellPosed.lean#L72) | theorem | sorry |
 
-**[Transformer.Clusters.Section7_Auxiliary](src/Transformer/Clusters/Section7_Auxiliary.lean)** — 231 lines
+**[Transformer.Clusters.Section7_Auxiliary](src/Transformer/Clusters/Section7_Auxiliary.lean)** — 218 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`exp_le_of_isMax`](src/Transformer/Clusters/Section7_Auxiliary.lean#L45) | theorem | proved |
-| [`exists_exp_lower_bound_last`](src/Transformer/Clusters/Section7_Auxiliary.lean#L160) | theorem | proved |
-| [`exists_exp_upper_bound_first`](src/Transformer/Clusters/Section7_Auxiliary.lean#L180) | theorem | proved |
+| [`exp_le_of_auxiliary_lt`](src/Transformer/Clusters/Section7_Auxiliary.lean#L47) | theorem | proved |
+| [`exists_exp_lower_bound`](src/Transformer/Clusters/Section7_Auxiliary.lean#L165) | theorem | proved |
+| [`exists_exp_upper_bound`](src/Transformer/Clusters/Section7_Auxiliary.lean#L181) | theorem | proved |
 
 **[Transformer.Clusters.Section7_Bounded](src/Transformer/Clusters/Section7_Bounded.lean)** — 199 lines
 
@@ -3087,17 +3087,17 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`norm_sub_monotone`](src/Transformer/Clusters/Section7_DistNonDec.lean#L85) | theorem | proved |
 | [`ne_of_norm_sub_monotone`](src/Transformer/Clusters/Section7_DistNonDec.lean#L110) | theorem | proved |
 
-**[Transformer.Clusters.Section7_Drift](src/Transformer/Clusters/Section7_Drift.lean)** — 171 lines
+**[Transformer.Clusters.Section7_Drift](src/Transformer/Clusters/Section7_Drift.lean)** — 177 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`neg_inv_le_exp_mul_mul`](src/Transformer/Clusters/Section7_Drift.lean#L29) | theorem | proved |
 | [`softmaxWeight_le_exp`](src/Transformer/Clusters/Section7_Drift.lean#L40) | theorem | proved |
-| [`sub_le_drift`](src/Transformer/Clusters/Section7_Drift.lean#L52) | theorem | proved |
-| [`div_sub_le_drift`](src/Transformer/Clusters/Section7_Drift.lean#L74) | theorem | proved |
-| [`hasDerivAt_coord`](src/Transformer/Clusters/Section7_Drift.lean#L129) | theorem | proved |
-| [`norm_eq_abs_coord`](src/Transformer/Clusters/Section7_Drift.lean#L142) | theorem | proved |
-| [`isOrderedConfig_of_nonneg`](src/Transformer/Clusters/Section7_Drift.lean#L145) | theorem | proved |
+| [`sub_le_drift`](src/Transformer/Clusters/Section7_Drift.lean#L53) | theorem | proved |
+| [`div_sub_le_drift`](src/Transformer/Clusters/Section7_Drift.lean#L79) | theorem | proved |
+| [`hasDerivAt_coord`](src/Transformer/Clusters/Section7_Drift.lean#L135) | theorem | proved |
+| [`norm_eq_abs_coord`](src/Transformer/Clusters/Section7_Drift.lean#L148) | theorem | proved |
+| [`isOrderedConfig_of_nonneg`](src/Transformer/Clusters/Section7_Drift.lean#L151) | theorem | proved |
 
 **[Transformer.Clusters.Section7_HigherDim](src/Transformer/Clusters/Section7_HigherDim.lean)** — 130 lines
 
