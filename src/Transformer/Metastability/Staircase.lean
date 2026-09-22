@@ -1,22 +1,44 @@
 /-
-# Metastability — Beyond metastability: the staircase profile (§6 of 2410.06833v1)
+# Metastability — Beyond metastability: the staircase setting (§6 of 2410.06833v1)
 
-Equations and statements covered:
+Equations and definitions covered:
 
-* `Problem conj: saddle-to-saddle` — the staircase open problem,
 * `Definition d: init_s1`         — well-prepared configurations on `𝕊^1`,
+* `eq: usa.angles`                — `USA` on the circle, `Θ̇ = ∇𝖤_β(Θ)`,
 * `Definition def: modified USA`  — modified `USA` enforcing collisions,
-* `compt: reparam`                — time-reparametrization `τ_β`,
-* `compt: derivative`             — derivative of the reparametrized angle,
-* `Lemma lem: exact time scale of clustering`.
+* `compt: reparam`                — the time-reparametrization `τ_β`.
 
-`Theorem thm: staircase` itself is `Metastability.StaircaseProfile`.
+`Theorem thm: staircase` is `Metastability.StaircaseProfile`, and
+`lem: exact time scale of clustering` is `Metastability.StaircaseTimeScale`.
+
+**What the source says and what is changed here.**
+
+* `eq: usa.angles` is `Θ̇ = ∇𝖤_β(Θ)` with the printed
+  `𝖤_β = (1/(2β e^β n²)) Σ_i Σ_j e^{β cos(θ_i - θ_j)}`, whose gradient is
+  `θ̇_i = (1/n²) Σ_j e^{β(cos(θ_j - θ_i) - 1)} sin(θ_j - θ_i)`; the display
+  "in other words" below it drops the `1/n²`, and `compt: derivative` in the
+  proof of `thm: staircase` keeps it.  `usaVel` is the gradient, with `1/n²`.
+* `def: modified USA` counts indices `i` with "`∃ j`" close to them; `j = i`
+  is always close, and `j ≠ i` is meant.
+* `compt: reparam` takes a `max` of `e^{β(1 - cos(θ_i - θ_j))}` over the pairs
+  farther apart than `1/√(β log β)`.  The proof then plugs it into
+  `compt: derivative` and obtains `e^{β(cos(θ̃_j - θ̃_i) - cos(θ̃_1 - θ̃_2))}`
+  with `(1, 2)` the *closest* such pair (the display before
+  `compt: derivative` is an `argmax` of `cos`); that identity holds for the
+  `min`, not the `max`, and at the reparametrized configuration
+  `θ̃ = θ ∘ τ_β`, not at `θ(t)`.  `staircaseReparam` is stated with the `min`
+  along `θ̃`.  Where no pair is farther apart than the radius the `min` is
+  over nothing; there the rate is `0` and the clock stops.
+* `τ_β` is only asked to be continuous, and its rate jumps whenever a pair
+  crosses the radius; a derivative has no jumps (Darboux), so the
+  differential form is read in integral form, `τ_β(t) = ∫_0^t τ̇_β`.
 -/
 
 import Transformer.Basic
 import Transformer.Perspective.Section6_Circle
 import Transformer.Metastability.Basic
 import Transformer.Metastability.MainTheorem
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 
 open scoped BigOperators
 open Real
@@ -49,112 +71,94 @@ def isWellPrepared (β : ℝ) (θ : Angles (n + 2)) : Prop :=
       ∀ k : Idx (n + 2), (i : ℕ) < k →
         Real.cos (θ k - θ i) + c * Real.log β / β < Real.cos (θ i - θ 0)
 
+/-- **The velocity of `eq: usa.angles`**, for the particles of `S`:
+
+  `θ̇_i = (1/|S|²) Σ_{j ∈ S} e^{β(cos(θ_j - θ_i) - 1)} sin(θ_j - θ_i)`,
+
+the gradient of the printed `𝖤_β` of the `|S|` particles of `S`.
+
+Source: arXiv:2410.06833v1, §3, `eq: usa.angles`. -/
+noncomputable def usaVel {N : ℕ} (S : Finset (Idx N)) (β : ℝ) (θ : Angles N) (i : Idx N) : ℝ :=
+  (1 / (S.card : ℝ) ^ 2) *
+    ∑ j ∈ S, Real.exp (β * (Real.cos (θ j - θ i) - 1)) * Real.sin (θ j - θ i)
+
+/-- The collision radius `1/√(β log β)` of §6. -/
+noncomputable def collisionRadius (β : ℝ) : ℝ := 1 / Real.sqrt (β * Real.log β)
+
+/-- The times at which two distinct particles are within the collision radius.
+
+Source: arXiv:2410.06833v1, §6, `def: modified USA` (the set whose infimum
+is `T_*`). -/
+def collisionTimes {N : ℕ} (β : ℝ) (θ : ℝ → Angles N) : Set ℝ :=
+  { t | 0 ≤ t ∧ ∃ i j : Idx N, i ≠ j ∧ |θ t i - θ t j| ≤ collisionRadius β }
+
 /-- **Definition (def: modified USA).** *Modified `USA` enforcing collisions.*
 
-`θ` solves `eq: usa.angles`; at the time `T_*` at which its first two particles
-come within `1 / √(β log β)` of each other they are forced to merge, and from
-`T_*` onwards the surviving particles — the indices `i ≥ 1`, the merged pair
-being counted twice through `j = 0` and `j = 1` — again solve `eq: usa.angles`.
+`θ` solves `eq: usa.angles`.  If no two particles ever come within
+`1/√(β log β)`, the modified dynamics `θ̄` is `θ`.  Otherwise `T_*` is the
+infimum of the times at which two do; exactly the indices `0` and `1` (the
+source's `1` and `2`, "without loss of generality") are then within the
+radius of another particle; `θ̄ = θ` before `T_*`; from `T_*` on the first
+particle is glued to the second, and the others — the indices `i ≥ 1` —
+solve `eq: usa.angles` among themselves, started from `θ(T_*)`.
+
+At `T_*` the velocity of a surviving particle jumps, since one particle has
+left the system; the equation after `T_*` is therefore one-sided there.
 
 Source: arXiv:2410.06833v1, §6, `def: modified USA`. -/
 def modifiedUSA
-    (β : ℝ) (θ θstar : ℝ → Angles (n + 2)) (T_star : ℝ) : Prop :=
-  angularUSA (n + 2) β θ ∧
-  (∀ t : ℝ, t < T_star → θstar t = θ t) ∧
-  |θ T_star 0 - θ T_star 1| ≤ 1 / Real.sqrt (β * Real.log β) ∧
-  (∀ t : ℝ, T_star ≤ t → θstar t 0 = θstar t 1) ∧
-  ∀ t : ℝ, T_star ≤ t → ∀ i : Idx (n + 2), 1 ≤ (i : ℕ) →
-    HasDerivAt (fun s => θstar s i)
-      (-(1 / ((n : ℝ) + 2)) *
-        ∑ j : Idx (n + 2),
-          Real.exp (β * Real.cos (θstar t i - θstar t j)) *
-            Real.sin (θstar t i - θstar t j)) t
+    (β : ℝ) (θ θbar : ℝ → Angles (n + 2)) (T_star : ℝ) : Prop :=
+  (∀ t : ℝ, ∀ i : Idx (n + 2),
+    HasDerivAt (fun s => θ s i) (usaVel Finset.univ β (θ t) i) t) ∧
+  ((collisionTimes β θ = ∅ ∧ θbar = θ) ∨
+   (IsGLB (collisionTimes β θ) T_star ∧
+    { i : Idx (n + 2) | ∃ j : Idx (n + 2), j ≠ i ∧
+        |θ T_star i - θ T_star j| ≤ collisionRadius β } = {0, 1} ∧
+    (∀ t : ℝ, t < T_star → θbar t = θ t) ∧
+    (∀ i : Idx (n + 2), 1 ≤ (i : ℕ) → θbar T_star i = θ T_star i) ∧
+    (∀ t : ℝ, T_star ≤ t → θbar t 0 = θbar t 1) ∧
+    ∀ t : ℝ, T_star ≤ t → ∀ i : Idx (n + 2), 1 ≤ (i : ℕ) →
+      HasDerivWithinAt (fun s => θbar s i)
+        (usaVel (Finset.univ.filter fun j : Idx (n + 2) => 1 ≤ (j : ℕ)) β (θbar t) i)
+        (Set.Ici T_star) t))
+
+/-- The rates `e^{β(1 - cos(θ_i - θ_j))}` of the pairs of `θ` farther apart
+than the collision radius.
+
+Source: arXiv:2410.06833v1, §6, `compt: reparam`. -/
+def farRates {N : ℕ} (β : ℝ) (θ : Angles N) : Set ℝ :=
+  { r | ∃ p : Idx N × Idx N, collisionRadius β < |θ p.1 - θ p.2| ∧
+      r = Real.exp (β * (1 - Real.cos (θ p.1 - θ p.2))) }
 
 /-- **Time reparametrization (compt: reparam).**
 
-  `τ̇_β(t) = log β · max_{(i,j): |θ_i - θ_j| > 1/√(β log β)}
-                exp(β (1 - cos(θ_i(t) - θ_j(t))))`,    `τ_β(0) = 0`.
+  `τ̇_β(t) = log β · min_{(i,j): |θ̃_i - θ̃_j| > 1/√(β log β)}
+                e^{β (1 - cos(θ̃_i(t) - θ̃_j(t)))}`,   `τ_β(0) = 0`,
 
-The maximum is carried by a separate function `m`, specified by `IsGreatest`
-over the values of the admissible pairs, rather than by a `Finset.max'` whose
-nonemptiness proof would have to live inside the statement.
+with `θ̃ = θ̄ ∘ τ_β`, in integral form; the rate `m` is the least element of
+`farRates` at `θ̃(t)`, and `0` when there is none (see the module header for
+the `min`, the `θ̃` and the integral form).
 
 Source: arXiv:2410.06833v1, §6, `compt: reparam`, `compt: derivative`. -/
 def staircaseReparam
-    (β : ℝ) (θ : ℝ → Angles (n + 2)) (τ m : ℝ → ℝ) : Prop :=
-  τ 0 = 0 ∧
-  (∀ t : ℝ, IsGreatest
-    { r : ℝ | ∃ p : Idx (n + 2) × Idx (n + 2),
-        1 / Real.sqrt (β * Real.log β) < |θ t p.1 - θ t p.2| ∧
-        r = Real.exp (β * (1 - Real.cos (θ t p.1 - θ t p.2))) } (m t)) ∧
-  ∀ t : ℝ, HasDerivAt τ (Real.log β * m t) t
+    (β : ℝ) (θbar : ℝ → Angles (n + 2)) (τ m : ℝ → ℝ) : Prop :=
+  (∀ t : ℝ, 0 ≤ t → (farRates β (θbar (τ t))).Nonempty →
+    IsLeast (farRates β (θbar (τ t))) (m t)) ∧
+  (∀ t : ℝ, 0 ≤ t → farRates β (θbar (τ t)) = ∅ → m t = 0) ∧
+  ∀ t : ℝ, 0 ≤ t → τ t = ∫ s in (0 : ℝ)..t, Real.log β * m s
 
-/-- **Lemma (lem: exact time scale of clustering) is false as stated.**
+/-- **The normalized energy on the circle**, `2β 𝖤_β`:
 
-For the scalar Cauchy problem
+  `(1/n²) Σ_i Σ_j e^{β(cos(θ_i - θ_j) - 1)} ∈ (0, 1]`.
 
-  `u̇(t) = -c log β · sin(u(t)) + c(β)`,   `u(0) = u_0`,
+The printed `𝖤_β` is at most `1/(2β)` and makes `thm: staircase` empty
+(`Metastability.EnergyScale`); this is the normalization whose maximum is
+the `1` of the staircase figure.
 
-with `u_0 ∈ [0, 1]`, `β ≥ e`, `c > 0`, `K > 0`, `κ > log β / β` and
-`|c(β)| ≤ K e^{-κ β} log β`, the survey claims that the times
-
-  `t(β) = inf { t ≥ 0 : u(t) ≤ √(log β / β) }`,
-  `T(β) = inf { t ≥ 0 : u(t) ≤ 1/√(β log β) }`
-
-satisfy
-
-  `|t(β) - 2/c| ≤ (2 log tan(u_0 / 2) + log log β) / (c log β)`,
-  `T(β) - t(β) ≤ (2 log log β) / (c log β) + O(1 / (β² log β))`.
-
-**The first inequality is false, at `u_0 = 0`, which the source's `u_0 ∈ [0,1]`
-admits.**  The equilibrium `u ≡ 0` solves the Cauchy problem with `c(β) = 0`,
-it is already below the threshold at `t = 0`, so `t(β) = 0` and the left-hand
-side is `2/c > 0`; the right-hand side is `2 log tan(0) / (c log β)`, which is
-`-∞` on paper and `0` in Lean, where `log 0 = 0`.  Either way the inequality
-fails, and it fails at `β = e` and at every larger `β`.
-
-Two further things are wrong with it, and neither is repaired by excluding
-`u_0 = 0`.  *The centre is wrong.*  Separating variables in
-`u̇ = -c log β sin u` gives `log tan(u(t)/2) = log tan(u_0/2) - c t log β`, so
-the crossing of `√(log β / β)` happens at `1/(2c) + O(1/log β)`, not at `2/c`;
-the survey's own proof writes `v̇ = u̇/(2 sin u)` for `v = log tan(u/2)`, whose
-derivative is `u̇ / sin u`, and even its own display then gives `1/c` rather
-than the `2/c` it reports.  *And the claim is asymptotic* — the source reads
-"as `β → +∞`" — while the inequality is stated at a fixed `β`; a faithful
-formalization is a statement about the family `β ↦ t(β)`, not this one.
-
-Source: arXiv:2410.06833v1, §6, `lem: exact time scale of clustering`. -/
-theorem not_exact_time_scale :
-    ¬ ∀ (c K κ u₀ β : ℝ), Real.exp 1 ≤ β → 0 < c → 0 < K →
-        Real.log β / β < κ → 0 ≤ u₀ → u₀ ≤ 1 →
-        ∀ (u : ℝ → ℝ) (cβ : ℝ), |cβ| ≤ K * Real.exp (-(κ * β)) * Real.log β →
-          (∀ t : ℝ, HasDerivAt u (-c * Real.log β * Real.sin (u t) + cβ) t) →
-          u 0 = u₀ →
-          |sInf { t : ℝ | 0 ≤ t ∧ u t ≤ Real.sqrt (Real.log β / β) } - 2 / c|
-              ≤ (2 * Real.log (Real.tan (u₀ / 2)) + Real.log (Real.log β))
-                  / (c * Real.log β)
-            ∧ sInf { t : ℝ | 0 ≤ t ∧ u t ≤ 1 / Real.sqrt (β * Real.log β) }
-                - sInf { t : ℝ | 0 ≤ t ∧ u t ≤ Real.sqrt (Real.log β / β) }
-              ≤ (2 * Real.log (Real.log β)) / (c * Real.log β) := by
-  intro h
-  have hone : Real.log (Real.exp 1) = 1 := Real.log_exp 1
-  have hκ : Real.log (Real.exp 1) / Real.exp 1 < 1 := by
-    rw [hone, div_lt_one (Real.exp_pos 1)]
-    linarith [Real.add_one_le_exp (1 : ℝ)]
-  have hbound : |(0 : ℝ)| ≤ 1 * Real.exp (-(1 * Real.exp 1)) * Real.log (Real.exp 1) := by
-    rw [abs_zero, hone]
-    positivity
-  have hode : ∀ t : ℝ, HasDerivAt (fun _ : ℝ => (0 : ℝ))
-      (-1 * Real.log (Real.exp 1) * Real.sin ((fun _ : ℝ => (0 : ℝ)) t) + 0) t :=
-    fun t => by simpa using hasDerivAt_const t (0 : ℝ)
-  have key := (h 1 1 1 0 (Real.exp 1) le_rfl one_pos one_pos hκ le_rfl zero_le_one
-    (fun _ => 0) 0 hbound hode rfl).1
-  have hset : { t : ℝ | 0 ≤ t ∧ (fun _ : ℝ => (0 : ℝ)) t
-        ≤ Real.sqrt (Real.log (Real.exp 1) / Real.exp 1) } = Set.Ici (0 : ℝ) := by
-    ext t
-    simp [Real.sqrt_nonneg]
-  rw [hset, csInf_Ici, hone, Real.log_one] at key
-  norm_num at key
+Source: arXiv:2410.06833v1, §3 (`𝖤_β` below `eq: usa.angles`) and §6. -/
+noncomputable def circleEnergy {N : ℕ} (β : ℝ) (θ : Angles N) : ℝ :=
+  (1 / (N : ℝ) ^ 2) *
+    ∑ i : Idx N, ∑ j : Idx N, Real.exp (β * (Real.cos (θ i - θ j) - 1))
 
 end Metastability
 end Transformer

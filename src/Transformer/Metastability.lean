@@ -35,3 +35,4 @@ import Transformer.Metastability.EnergyScale
 import Transformer.Metastability.OpenProblems
 import Transformer.Metastability.Staircase
 import Transformer.Metastability.StaircaseProfile
+import Transformer.Metastability.StaircaseTimeScale

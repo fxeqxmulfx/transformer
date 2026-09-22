@@ -20,7 +20,8 @@ The normalization the section means is the one whose maximum is `1`:
 
   `2β 𝖤_β(x) = (1/n²) Σ_i Σ_j e^{β(⟨x_i, x_j⟩ - 1)} ∈ (0, 1]`,
 
-which is what `HasStaircaseProfile` is stated with.
+which is what `HasStaircaseProfile` and `staircase_profile` (through
+`circleEnergy`) are stated with.
 -/
 
 import Transformer.Metastability.Basic
