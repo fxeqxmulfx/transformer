@@ -8,6 +8,7 @@ still read.
 | --- | --- |
 | `Precision.Basic` | softmax dispersion under bounded scores, the fixed-point rounding and its dead zone |
 | `Precision.Nearest` | round-to-nearest in any format: the dead zone and absorption |
+| `Precision.Significand` | a format with `p` significant bits: past `2^{p-1} · 2^s` its numbers are `2^s` apart |
 | `Precision.Blind` | any finite format: past some length the head outputs `c · Σ v`, independent of the scores |
 | `Precision.Accumulate` | a sequential sum in `p` significant bits never exceeds `2^{p+1}` times its increments; a balanced tree does not stall |
 | `Precision.IEEE` | IEEE 754 binary formats: finite, contain `0`, `M + 1` significant bits |
@@ -21,6 +22,7 @@ still read.
 import Transformer.Precision.Basic
 import Transformer.Precision.ContextLength
 import Transformer.Precision.Nearest
+import Transformer.Precision.Significand
 import Transformer.Precision.Blind
 import Transformer.Precision.Accumulate
 import Transformer.Precision.IEEE
