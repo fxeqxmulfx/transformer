@@ -7,8 +7,8 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 This file formalizes §6 of the survey:
 
 * `Theorem thm: boumal`            — clustering for `d ≥ 3`, any `β ≥ 0`,
-* `Theorem thm: d.infty`           — exponential rate when `d ≥ n`,
-* `eq: expconvtocons`              — explicit convergence rate,
+* `Theorem thm: d.infty`, `eq: expconvtocons` — the exponential rate when
+  `d ≥ n` — are `Perspective.Section5_ExpRate`,
 * `eq: therighthandside`, `eq: qual.conv`,
 * `e:dotalpha.step2`, `e:mineqalpha.step2`, `e:diffineqalpha.step2` — in
   `Perspective.Section5_HemisphereRate`, for the limit `x⋆` of step 1,
@@ -57,7 +57,8 @@ variable (d n : ℕ)
 
 For `n ≥ 2`, `d ≥ 3` and `β ≥ 0`, the conclusion of `thm: beta.tiny` holds for
 both `SA` and `USA`: Lebesgue-almost every initial sequence converges to a
-single cluster `x⋆`, that is, lies in `𝒮_β = clusteringSet`.
+single cluster `x⋆`, that is, lies in `𝒮_β = clusteringSet` and in its `USA`
+counterpart `clusteringSetUSA`.
 
 *Almost every* is not *every*, and the difference is not decoration: at every
 `β` and every `d`, `antipodalPair_not_mem_clusteringSet` exhibits an initial
@@ -72,47 +73,12 @@ Source: arXiv:2312.10794v5, §6.1, `thm: boumal`. -/
 theorem boumal_clustering
     (hd : 3 ≤ d) (hn : 2 ≤ n) (β : ℝ) (hβ : 0 ≤ β) :
     ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-      ∀ᵐ X₀ ∂P, X₀ ∈ clusteringSet d n β := by
+      ∀ᵐ X₀ ∂P, X₀ ∈ clusteringSet d n β ∧ X₀ ∈ clusteringSetUSA d n β := by
   sorry
 
 /-- The hypotheses of `boumal_clustering` are satisfiable: `d = 3`, `n = 2`,
 `β = 0`. -/
 example : 3 ≤ 3 ∧ 2 ≤ 2 ∧ (0 : ℝ) ≤ 0 := ⟨le_rfl, le_rfl, le_rfl⟩
-
-/-! ### §6.1 — Exponential rate when `d ≥ n` -/
-
-/-- **Theorem (thm: d.infty), eq: expconvtocons.** *Exponential clustering when
-`d ≥ n`.*
-
-For `n ≥ 1`, `β > 0` and `d ≥ n`, if the initial points
-`(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n` are uniformly distributed, then almost
-surely there exist `x⋆ ∈ 𝕊^{d-1}` and constants `C, lam > 0` such that
-
-  `‖x_i(t) - x⋆‖ ≤ C e^{-λ t}`  for all `i` and `t ≥ 0`.
-
-*Almost surely* is part of the statement and not a turn of phrase: for `n = 2`
-the antipodal pair admits no such rate at any `β`
-(`antipodalPair_not_exponential`), so the `∀ X₀` reading is false.  As in
-`boumal_clustering`, the initial sequence is drawn from the uniform law
-`UniformTuple` of §4.
-
-Not proved here.
-
-Source: arXiv:2312.10794v5, §6.1, `thm: d.infty`, `eq: expconvtocons`. -/
-theorem d_infty_exponential
-    (hn : 1 ≤ n) (β : ℝ) (hβ : 0 < β) (hdn : n ≤ d) :
-    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-      ∀ᵐ X₀ ∂P,
-        ∃ (x_star : SSphere d) (C lam : ℝ),
-          0 < C ∧ 0 < lam ∧
-          ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
-            ∀ i : Idx n, ∀ t : ℝ, 0 ≤ t →
-              ‖((X t i : EucSpace d)) - x_star‖ ≤ C * Real.exp (-(lam * t)) := by
-  sorry
-
-/-- The hypotheses of `d_infty_exponential` are satisfiable: `d = n = 1`,
-`β = 1`. -/
-example : 1 ≤ 1 ∧ (0 : ℝ) < 1 ∧ 1 ≤ 1 := ⟨le_rfl, one_pos, le_rfl⟩
 
 /-- `r t = min_i ⟨x_i(t), w⟩`, the smallest coordinate of the configuration
 along a fixed direction `w`, written as a specification: `r t` is a lower
