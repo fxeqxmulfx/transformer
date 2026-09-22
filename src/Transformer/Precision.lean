@@ -10,7 +10,7 @@ still read.
 | `Precision.Nearest` | round-to-nearest in any format: the dead zone and absorption |
 | `Precision.Significand` | a format with `p` significant bits: past `2^{p-1} · 2^s` its numbers are `2^s` apart |
 | `Precision.Blind` | any finite format: past some length the head outputs `c · Σ v`, independent of the scores |
-| `Precision.Accumulate` | a sequential sum in `p` significant bits never exceeds `2^{p+1}` times its increments; a balanced tree does not stall |
+| `Precision.Accumulate` | past `2^{p-1} · 2^s` an accumulator in `p` significant bits absorbs increments below `2^{s-1}`, of either sign strictly past it; a sequential sum never exceeds `2^{p+1}` times its increments; a balanced tree does not stall |
 | `Precision.IEEE` | IEEE 754 binary formats: finite, contain `0`, `M + 1` significant bits |
 | `Precision.Float` | weights rounded to binary16, E5M2, E4M3 vanish past `2^{25}`, `2^{17}`, `2^{10}` times `e^D` tokens |
 | `Precision.FloatSum` | the sequential online-softmax sum is wrong past `2^{M+2} e^D` keys: binary32 `2^{25}`, binary16 `2^{12}`, bfloat16 `2^9`, E4M3 `2^5`, E5M2 `2^4` |

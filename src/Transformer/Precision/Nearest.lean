@@ -9,7 +9,9 @@ format:
 * *the dead zone* — if no point of `G` other than `0` is closer to `0` than
   `σ`, then `[0, σ/2)` rounds to `0` (`IsNearest.eq_zero`);
 * *absorption* — if the next point of `G` above `a` is `g` away, then `a + t`
-  rounds back to `a` for `0 ≤ t < g/2` (`IsNearest.add_eq`).
+  rounds back to `a` for `0 ≤ t < g/2` (`IsNearest.add_eq`); if every other
+  point of `G` is `g` away, for `|t| < g/2` of either sign
+  (`IsNearest.add_eq_of_abs`).
 
 The first bounds how small a stored weight can be, the second how small an
 increment an accumulator can still take.
@@ -78,6 +80,27 @@ example : (∃ Q, IsNearest {0, 1} Q) ∧ (0 : ℝ) ∈ ({0, 1} : Set ℝ) ∧
     (∀ z ∈ ({0, 1} : Set ℝ), 0 < z → 0 + 1 ≤ z) ∧ (0 : ℝ) ≤ 1 / 4 ∧ 2 * (1 / 4 : ℝ) < 1 :=
   ⟨exists_isNearest (Set.toFinite _) ⟨0, by simp⟩, by simp,
     by rintro z (rfl | rfl) h <;> first | exact absurd h (lt_irrefl _) | norm_num, by norm_num, by norm_num⟩
+
+/-- **Absorption on both sides.**  If every other grid point is at least `g`
+away from `a`, rounding `a + t` to nearest returns `a` for `|t| < g/2`, whatever
+the sign of `t`. -/
+theorem IsNearest.add_eq_of_abs {G : Set ℝ} {Q : ℝ → ℝ} (hQ : IsNearest G Q) {a g t : ℝ}
+    (ha : a ∈ G) (hg : ∀ z ∈ G, z ≠ a → g ≤ |z - a|) (ht : 2 * |t| < g) : Q (a + t) = a := by
+  have h1 := (hQ (a + t)).2 a ha
+  rw [show a - (a + t) = -t by ring, abs_neg] at h1
+  by_contra hne
+  have h2 := hg _ (hQ (a + t)).1 hne
+  have h3 := abs_add_le (Q (a + t) - (a + t)) t
+  rw [show Q (a + t) - (a + t) + t = Q (a + t) - a by ring] at h3
+  linarith
+
+/-- The hypotheses of `IsNearest.add_eq_of_abs` are satisfiable: the grid
+`{0, 1}`, `a = 1`, gap `1`, increment `-1/4`. -/
+example : (∃ Q, IsNearest {0, 1} Q) ∧ (1 : ℝ) ∈ ({0, 1} : Set ℝ) ∧
+    (∀ z ∈ ({0, 1} : Set ℝ), z ≠ 1 → 1 ≤ |z - 1|) ∧ 2 * |(-1 / 4 : ℝ)| < 1 :=
+  ⟨exists_isNearest (Set.toFinite _) ⟨0, by simp⟩, by simp,
+    by rintro z (rfl | rfl) h <;> first | exact absurd rfl h | norm_num,
+    by rw [abs_of_neg (by norm_num)]; norm_num⟩
 
 end Precision
 end Transformer

@@ -139,7 +139,7 @@ theorem ieee_abs {E M b : ℕ} {z : ℝ} (h : ieee E M b = some z) :
     push_cast; rfl
 
 /-- **An IEEE format with `M` mantissa bits has `M + 1` significant bits**, so
-`accum_stall` and `accum_le` apply to it. -/
+`accum_stall`, `accum_stall_abs` and `accum_le` apply to it. -/
 theorem grid_hasSignificand (E M : ℕ) : HasSignificand (M + 1) (grid E M) :=
   fun _ ⟨_, _, h⟩ => ieee_abs h
 
