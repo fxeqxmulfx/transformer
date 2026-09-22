@@ -28,8 +28,9 @@ self-attention matrix becomes a standard basis row.
   attention weight is `1` and the equation is `ẋ = x`.
 
 Source: arXiv:2305.05465v6, `l:auxiliary`, `l:unboundedparticles`,
-`l:exactasymptotic`; the first two lemmas are proved in
-`Section7_Auxiliary.lean` and `Section7_UnboundedParticles.lean`.
+`l:exactasymptotic`; the lemmas themselves are proved in
+`Section7_Auxiliary.lean`, `Section7_UnboundedParticles.lean` and
+`Section7_ExactAsymptotic.lean`.
 -/
 
 import Transformer.Clusters.Section7_LogSumExp
@@ -121,30 +122,6 @@ theorem not_isBoundedToken_exp :
   have h3 : |R| + 1 + 1 ≤ Real.exp (|R| + 1) := Real.add_one_le_exp _
   have h4 : R ≤ |R| := le_abs_self R
   linarith
-
-/-- **Lemma (l:exactasymptotic).**  A token that is not uniformly bounded has
-an exact exponential asymptotic: there is `γ_i ≠ 0` with
-`x_i(t) = γ_i e^t + o(e^t)` as `t → +∞`.
-
-Not proved here.
-
-Source: arXiv:2305.05465v6, `l:exactasymptotic`. -/
-theorem exists_exp_asymptotic (X : ℝ → Idx (m + 1) → EucSpace 1)
-    (hX : IdNonrescaledDynamics X) (hord : IsOrderedConfig (X 0)) (i : Idx (m + 1))
-    (hub : ¬ IsBoundedToken X i) :
-    ∃ γ : ℝ, γ ≠ 0 ∧ Tendsto (fun t => X t i 0 / Real.exp t) atTop (nhds γ) := by
-  sorry
-
-/-- The hypotheses of `exists_exp_asymptotic` are satisfiable at `m = 0`: the
-one-token solution `x(t) = e^t` is not uniformly bounded. -/
-example :
-    IdNonrescaledDynamics (n := 1)
-        (fun t _ => Real.exp t • (EuclideanSpace.single 0 (1 : ℝ) : EucSpace 1)) ∧
-      IsOrderedConfig (n := 1)
-        (fun _ => Real.exp 0 • (EuclideanSpace.single 0 (1 : ℝ) : EucSpace 1)) ∧
-      ¬ IsBoundedToken
-        (fun t (_ : Idx 1) => Real.exp t • (EuclideanSpace.single 0 (1 : ℝ) : EucSpace 1)) 0 :=
-  ⟨idNonrescaledDynamics_single _, isOrderedConfig_subsingleton _, not_isBoundedToken_exp⟩
 
 end Clusters
 end Transformer

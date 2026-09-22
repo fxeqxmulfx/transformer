@@ -25,6 +25,8 @@ import Transformer.Clusters.Section7_Unbounded
 import Transformer.Clusters.Section7_Drift
 import Transformer.Clusters.Section7_Auxiliary
 import Transformer.Clusters.Section7_UnboundedParticles
+import Transformer.Clusters.Section7_DriftAverage
+import Transformer.Clusters.Section7_ExactAsymptotic
 import Transformer.Clusters.Section7_Symmetric
 import Transformer.Clusters.Section7_Bounded
 import Transformer.Clusters.Section9_Eigen
