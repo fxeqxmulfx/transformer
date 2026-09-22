@@ -25,7 +25,8 @@ bounds `eq:int-phi-b` its proof reduces to.
   `∫_T e^{-C β^{-3/2} n t² e^{-t²/2}} dt ≍ √(log β)` and
   `∫_{T'} e^{-C β^{-3/2} n t² e^{-t²/2}} dt ≲ 1`.  This form needs neither the
   moments nor `A_t`: `phiA_isTheta` is what ties it to `A_t`.  The bound on
-  `T'` is proved: on `T'` the exponent is at least `C t²`.
+  `T'` is proved here: on `T'` the exponent is at least `C t²`.  The bound on
+  `T` is proved in `Section2_IntPhiB.lean`.
 
 Source: arXiv:2412.09080v3, §2.3 (`sec: 2.3`), `eq:int-phi-final`,
 `lem:main-int-phi`, `eq:int-phi-b`.
@@ -75,18 +76,6 @@ theorem int_phi_final {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : IsRe
   sorry
 
 /-! ### `eq:int-phi-b` -/
-
-/-- **Equation (eq:int-phi-b), on `T`.**  For every `C > 0`,
-`∫_T e^{-C β^{-3/2} n t² e^{-t²/2}} dt ≍ √(log β)`.
-
-Not proved here.
-
-Source: arXiv:2412.09080v3, `eq:int-phi-b`, proof of `lem:main-int-phi`. -/
-theorem integral_exp_phiRate_T {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : IsRegime c N B)
-    {ω : ℝ → ℝ} (hω : IsSlowGrowth ω) {C : ℝ} (hC : 0 < C) :
-    (fun k => ∫ t in intervalT (N k) (B k) (ω (B k)), Real.exp (-C * phiRate (N k) (B k) t))
-      =Θ[atTop] fun k => Real.sqrt (Real.log (B k)) := by
-  sorry
 
 /-- On `T'`, `β^{-3/2} n t² e^{-t²/2} ≥ t²`: there `e^{-t²/2} ≥ β^{3/2}/n`. -/
 theorem sq_le_phiRate {n : ℕ} {β t : ℝ} (hn : 1 ≤ n) (hβ : 1 ≤ β)

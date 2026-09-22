@@ -36,6 +36,7 @@ import Transformer.Modes.Section2_PhiTUniform
 import Transformer.Modes.Section2_PhiTAsymp
 import Transformer.Modes.Section2_PhiTDelta
 import Transformer.Modes.Section2_MainIntPhi
+import Transformer.Modes.Section2_IntPhiB
 import Transformer.Modes.Section3_Hermite
 import Transformer.Modes.Section3_Cumulants
 import Transformer.Modes.Section3_BR
