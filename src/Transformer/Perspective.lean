@@ -64,7 +64,17 @@ the scalar residual gains of modded-nanogpt, is its gauge `∏_{j<k} λ_{j,i}`
 times the same stack with the gains divided out, so the directions never see
 them (`normalize_rawStack`), and in `RawStackFrozen` gains above `1 + c` freeze
 every direction within `2 M / (c ‖x_{0,i}‖)` of its start, at every depth and
-whatever the blocks compute (`rawStack_frozen`).
+whatever the blocks compute (`rawStack_frozen`) — a bound that the record's own
+gains make empty (`lt_rawStack_frozen_bound`), which is what the exactness of
+the factorisation is worth.  `RawStackSkip` adds the one update left over, the
+skip that adds an earlier state of the stream instead of a bounded output: it is
+gauge-covariant too (`ungauged_rec_skip`), with its gate divided by the gain
+accumulated over the depth it jumps, and `RawStackSkipDamp` reads that division
+from both sides — exponential in the depth skipped (`abs_skipWeight_le`), but
+bounded below by the same exponential (`le_abs_skipWeight`), so skips at a fixed
+distance keep one weight at every depth and `rawStack_frozen` does not reach
+them; at the record's own gains more than three quarters of the gate survives
+(`lt_inv_pow_record`).
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -116,6 +126,8 @@ import Transformer.Perspective.RawStream
 import Transformer.Perspective.RawGrowth
 import Transformer.Perspective.RawStack
 import Transformer.Perspective.RawStackFrozen
+import Transformer.Perspective.RawStackSkip
+import Transformer.Perspective.RawStackSkipDamp
 import Transformer.Perspective.BlockMLP
 import Transformer.Perspective.BlockMLPSpread
 import Transformer.Perspective.XSAProj
