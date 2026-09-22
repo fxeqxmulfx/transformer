@@ -11,7 +11,10 @@ differentiation of `Z_{β,μ}` under the integral sign that §3.3 rests on, and
 `RussianTrick` is the linear-algebra identity `e:russiantrick` of Appendix A
 with the rank-two construction that proves it.  `InnerAsymptotics` and
 `PeanoTaylor` are the two ledgers of real analysis Appendix B's second-order
-expansion runs on; neither mentions the survey.
+expansion runs on; neither mentions the survey.  `MaxCurve`, `ConeChart`,
+`ConeWidth` and `ConeLimit` are the proof of cone collapse (§6.1) for any flow
+`ẋ_i = Proj_{x_i}(Σ_j a_ij x_j)` with weights in `[m, M]`, `m > 0`, through
+the chart `x ↦ x / ⟨x, w⟩` of a hemisphere.
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -37,6 +40,10 @@ import Transformer.Perspective.SALipschitz
 import Transformer.Perspective.Section3_Gronwall
 import Transformer.Perspective.Section4_LargeBeta
 import Transformer.Perspective.MinCurve
+import Transformer.Perspective.MaxCurve
+import Transformer.Perspective.ConeChart
+import Transformer.Perspective.ConeWidth
+import Transformer.Perspective.ConeLimit
 import Transformer.Perspective.Section5_HighD
 import Transformer.Perspective.Section5_ExpRate
 import Transformer.Perspective.Section5_ConeCollapse
