@@ -62,13 +62,6 @@ noncomputable def etaMoment (β t : ℝ) (s : ℕ) : ℝ := ∫ z, eucl z ^ s �
 noncomputable def sumGG' (n : ℕ) (β t : ℝ) (X : Fin n → ℝ) : ℝ × ℝ :=
   ((Real.sqrt n)⁻¹ * ∑ i, bigG β t (X i), (Real.sqrt n)⁻¹ * ∑ i, bigG' β t (X i))
 
-/-- **`Y(t)` is standardized**: mean `0` and covariance `I₂`, "by
-construction".  arXiv:2412.09080v3, after `eq:Yi`.  It needs `Σ_t` to be
-positive definite, which holds for `β > 0` since `1`, `G` and `G'` are linearly
-independent functions of `X`. -/
-theorem isStandardized_lawY {β : ℝ} (hβ : 0 < β) (t : ℝ) : IsStandardized (lawY β t) := by
-  sorry
-
 /-- **Equation (eq:qt)**, as the change of variables it is:
 `p_t(x, y) = (det Σ_t)^{-1/2} q_t(Σ_t^{-1/2}[(x, y) - μ_t])`, in the form
 "`q` is a density of `n^{-1/2} Σ Yᵢ(t)` iff this `p` is a density of
@@ -100,8 +93,7 @@ theorem etaMoment_le {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : IsReg
       etaMoment (B k) t s ≤ C * (B k * Real.exp (t ^ 2)) ^ (((s : ℝ) - 2) / 4) := by
   sorry
 
-/-- The hypotheses of `isStandardized_lawY` and `isDensityOf_scaledSum_iff`
-are satisfiable. -/
+/-- The hypotheses of `isDensityOf_scaledSum_iff` are satisfiable. -/
 example : (0 : ℝ) < 1 ∧ 1 ≤ 1 := ⟨one_pos, le_rfl⟩
 
 /-- The hypotheses of `abs_cumulantOf_le` are satisfiable, and so are those

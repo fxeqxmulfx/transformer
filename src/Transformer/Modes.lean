@@ -40,6 +40,8 @@ import Transformer.Modes.Section3_Hermite
 import Transformer.Modes.Section3_Cumulants
 import Transformer.Modes.Section3_BR
 import Transformer.Modes.Section3_Edgeworth
+import Transformer.Modes.Section3_SigmaPos
+import Transformer.Modes.Section3_Standardized
 import Transformer.Modes.Section3_ErrorThird
 import Transformer.Modes.Section3_ErrorHigher
 import Transformer.Modes.Section3_ErrorKR
