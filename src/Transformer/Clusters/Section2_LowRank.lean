@@ -31,6 +31,9 @@ Boolean matrix of low rank, `t:boolean`.
   where a map is multiplication by a scalar and positive definiteness is
   positivity of that scalar.
 
+* `t:boolean` itself, `boolean_tendsto_isBooleanLimit`, is proved in
+  `Transformer.Clusters.Section7_BooleanGeneral`, after the lemmas of §7.
+
 Source: arXiv:2305.05465v6, `t:boolean`, `e:star`.
 -/
 
@@ -87,42 +90,26 @@ theorem isBooleanLimit_of_isBooleanRows {P : Idx n → Idx n → ℝ} (h : IsBoo
     rcases h a with hh | hh <;> rw [hh] <;> exact pi_single_one_nonneg _ j
   · rcases h a with hh | hh <;> rw [hh] <;> exact sum_pi_single_one _
 
+/-- A basis row, relabelled, is the basis row of the relabelled index. -/
+theorem pi_single_one_comp_perm (σ : Equiv.Perm (Idx n)) (c j : Idx n) :
+    (Pi.single c (1 : ℝ) : Idx n → ℝ) (σ j) = (Pi.single (σ.symm c) (1 : ℝ) : Idx n → ℝ) j := by
+  simp only [Pi.single_apply, ← Equiv.eq_symm_apply]
+
+/-- `𝒫` is closed under relabelling the tokens: the figure's permutation
+matrices. -/
+theorem isBooleanLimit_comp_perm {P : Idx n → Idx n → ℝ} (σ : Equiv.Perm (Idx n))
+    (h : IsBooleanLimit P) : IsBooleanLimit (fun i j => P (σ i) (σ j)) := by
+  obtain ⟨a, b, i₀, hrow, hnn, hsum⟩ := h
+  refine ⟨σ.symm a, σ.symm b, σ.symm i₀, fun i hi => ?_, fun j => by simpa using hnn (σ j), ?_⟩
+  · have hi' : σ i ≠ i₀ := fun h => hi (by rw [← h, Equiv.symm_apply_apply])
+    rcases hrow (σ i) hi' with h | h
+    · exact Or.inl (funext fun j => by simp only [h, pi_single_one_comp_perm])
+    · exact Or.inr (funext fun j => by simp only [h, pi_single_one_comp_perm])
+  · simp only [Equiv.apply_symm_apply]
+    rw [Equiv.sum_comp σ (fun j => P i₀ j)]
+    exact hsum
+
 /-! ### `t:boolean` -/
-
-/-- **Theorem (t:boolean).**  Let `d = 1`, `V > 0` and `QK > 0`.  For any
-initial sequence of pairwise distinct tokens, the self-attention matrix `P(t)`
-converges as `t → +∞` to a matrix of `𝒫`.
-
-The source leaves `n ≥ 1` implicit; at `n = 0` there is no index, so no
-matrix is in `𝒫` and the statement is false as written.  `0 < n` is added.
-
-Not proved here.
-
-Source: arXiv:2305.05465v6, `t:boolean`. -/
-theorem boolean_tendsto_isBooleanLimit (Q K V : ParamMatrix 1) (hV : IsPosDefOp V)
-    (hQK : IsPosDefQK Q K) (X : ℝ → Idx n → EucSpace 1) (hX : TransformerDynamics Q K V X)
-    (hdist : ∀ i j : Idx n, i ≠ j → X 0 i ≠ X 0 j) (hn : 0 < n) :
-    ∃ P : Idx n → Idx n → ℝ, IsBooleanLimit P ∧
-      ∀ i j : Idx n,
-        Tendsto (fun t => attentionMatrix Q K (X t) i j) atTop (nhds (P i j)) := by
-  sorry
-
-/-- The hypotheses of `boolean_tendsto_isBooleanLimit` are satisfiable: with a
-single token, `Q = K = V = I_1` and the token pinned at the origin, the
-distinctness condition is vacuous and the constant curve solves
-`eq:trans_dyn` because `V 0 = 0`. -/
-example :
-    IsPosDefOp (ContinuousLinearMap.id ℝ (EucSpace 1)) ∧
-      IsPosDefQK (ContinuousLinearMap.id ℝ (EucSpace 1))
-        (ContinuousLinearMap.id ℝ (EucSpace 1)) ∧
-      TransformerDynamics (n := 1) (ContinuousLinearMap.id ℝ (EucSpace 1))
-        (ContinuousLinearMap.id ℝ (EucSpace 1)) (ContinuousLinearMap.id ℝ (EucSpace 1))
-        (fun _ _ => 0) ∧
-      (∀ i j : Idx 1, i ≠ j → (0 : EucSpace 1) ≠ 0) ∧ 0 < 1 := by
-  refine ⟨isPosDefOp_id 1, isPosDefQK_of_isAttentionRoot (isAttentionRoot_id 1), ?_,
-    fun i j hij => absurd (Subsingleton.elim i j) hij, one_pos⟩
-  intro t i
-  simpa using hasDerivAt_const t (0 : EucSpace 1)
 
 /-- **The genericity claim after `t:boolean`.**  Outside a Lebesgue-null set
 of initial sequences, the limit matrix has every row equal to `e_a` or `e_b`,
