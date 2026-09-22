@@ -18,9 +18,10 @@ the chart `x ↦ x / ⟨x, w⟩` of a hemisphere, and `ConeFields` puts the
 attention dynamics in that form.  `SphereHyperplane` and `UniformHemisphere`
 are the footnote to `thm: d.infty`: a rotation-invariant law does not charge
 great spheres, so `n ≤ d` uniform points are almost surely linearly
-independent and lie in an open hemisphere.  `SphereMoments` is the positive
-definiteness of the kernel `e^{β x·y}` on the moments of a measure: a
-probability measure on the sphere is determined by its partition function
+independent and lie in an open hemisphere.  `SphereMoments` and
+`PositiveDefinite` make the kernel `e^{β x·y}` positive definite on the
+moments of a measure: a probability measure on the sphere is determined by its
+moments, hence by its partition function
 `Z_{β,μ}`, `β > 0`.
 -/
 
@@ -30,6 +31,7 @@ import Transformer.Perspective.Section2_EnergyKernel
 import Transformer.Perspective.Section2_EnergyMoments
 import Transformer.Perspective.Section2_EnergySeries
 import Transformer.Perspective.SphereMoments
+import Transformer.Perspective.PositiveDefinite
 import Transformer.Perspective.Section2_EnergyDerivative
 import Transformer.Perspective.Section2_Dissipation
 import Transformer.Perspective.Section2_EnergyMax

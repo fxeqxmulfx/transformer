@@ -24,14 +24,14 @@ and the parity argument both cases share, are defined and proved here.
   `Metastability.IsUniformOn` uses for rotation invariance.
 
 * Injectivity is proved through the positive-definiteness of the kernel
-  `e^{β x·y}` (`Perspective.SphereMoments`), not through the source's
+  `e^{β x·y}` (`Perspective.PositiveDefinite`), not through the source's
   Funk–Hecke computation, which needs spherical harmonics.
 
 Source: arXiv:2601.21366v2, `lem: quadpol`, `rem: general-attention`.
 -/
 
 import Transformer.Perceptron.Basic
-import Transformer.Perspective.SphereMoments
+import Transformer.Perspective.PositiveDefinite
 import Transformer.Perspective.SphereInvariant
 
 open scoped BigOperators
