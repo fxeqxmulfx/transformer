@@ -7,8 +7,8 @@ that need not become a standard basis row.
 
 **What the source says and what is carried here.**
 
-* `l:onlyone` states `#ℬ ∈ {0,1}` for `ℬ = {i ∈ [n] : x_i ∈ L^∞([0,+∞))}`.
-  For a cardinality that is `#ℬ ≤ 1`, which is what is carried.
+* `l:onlyone` is proved in `Transformer.Clusters.Section7_OnlyOne`, as
+  `ncard_boundedTokens_le_one`.
 
 * `l:boundedxn`'s second sentence says "if `x_1(t)` is bounded then
   `P_11(t) → 1` and `P_{1j}(t) → 0` for any `j ∈ [n-1]`".  As written it is
@@ -29,12 +29,11 @@ that need not become a standard basis row.
   exactly that configuration, from a solution of the scalar equation
   `symDrift` it reduces to.
 
-Source: arXiv:2305.05465v6, `l:onlyone`, `l:boundedxn`, `l:boundedother`, and
+Source: arXiv:2305.05465v6, `l:boundedxn`, `l:boundedother`, and
 the proof of `t:boolean` in §7.
 -/
 
-import Transformer.Clusters.Section7_Symmetric
-import Mathlib.Data.Set.Card
+import Transformer.Clusters.Section7_OnlyOne
 
 open scoped BigOperators
 open Real Filter Topology
@@ -44,31 +43,12 @@ namespace Clusters
 
 variable {d n m : ℕ}
 
-/-! ### `l:onlyone` -/
-
-/-- **Lemma (l:onlyone).**  At most one token stays uniformly bounded:
-`#ℬ ∈ {0,1}` for `ℬ = {i ∈ [n] : x_i ∈ L^∞([0,+∞))}`.
-
-Not proved here.
-
-Source: arXiv:2305.05465v6, `l:onlyone`. -/
-theorem ncard_boundedTokens_le_one (X : ℝ → Idx (m + 1) → EucSpace 1)
-    (hX : IdNonrescaledDynamics X) (hord : IsOrderedConfig (X 0)) :
-    {i : Idx (m + 1) | IsBoundedToken X i}.ncard ≤ 1 := by
-  sorry
-
 /-- The configuration pinned at the origin solves `e:Idnonresca`, and with one
 token it is ordered and bounded; this witnesses the hypotheses of
-`ncard_boundedTokens_le_one` and of both halves of `l:boundedxn`. -/
+both halves of `l:boundedxn`. -/
 theorem isBoundedToken_zero (i : Idx n) :
     IsBoundedToken (fun _ _ => (0 : EucSpace 1)) i :=
   ⟨0, fun _ _ => by simp⟩
-
-/-- The hypotheses of `ncard_boundedTokens_le_one` are satisfiable. -/
-example :
-    IdNonrescaledDynamics (n := 1) (fun _ _ => (0 : EucSpace 1)) ∧
-      IsOrderedConfig (n := 1) (fun _ => (0 : EucSpace 1)) :=
-  ⟨idNonrescaledDynamics_zero 1 1, isOrderedConfig_subsingleton _⟩
 
 /-! ### `l:boundedxn` -/
 
