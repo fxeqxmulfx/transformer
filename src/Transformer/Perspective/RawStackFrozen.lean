@@ -17,10 +17,14 @@ them, as in the model — and `Σ_{j≥1} (1+c)^{-j} = 1/c` replaces Gronwall.  
 `resid_lambdas` of modded-nanogpt at `1.1^{1/2}` this is `c = 1.1^{1/2} - 1`,
 and a stack of any depth moves a direction by at most `2 M / (c ‖x_{0,i}‖)`.
 
-The bound says nothing when the stream starts short: the model starts at
-`norm(x)`, of RMS norm `1`, against blocks whose output is of the same order,
-and `2 M / (c ‖x_{0,i}‖)` is then larger than the sphere.  What it rules out is
-a stack that starts long and is asked to turn.
+Then the constants are read back against the record, and they are not in this
+regime: the bound exceeds `40` once the blocks may output as much as the stream
+they start from (`lt_rawStack_frozen_bound`), while the directions live on a
+sphere of diameter `2`, and the gauge the whole stack accumulates at
+initialisation is a factor under `3` (`gainProd_lt_three`).  What the theorem
+rules out is a stack that starts long and is asked to turn; what the record has
+is the exact factorisation of `Perspective.RawStack`, which needs no constants
+at all.
 -/
 
 import Transformer.Perspective.RawStack
@@ -130,6 +134,52 @@ example : (0 : ℝ) < 1 ∧ (0 : ℝ) ≤ 0 ∧ (∀ (_ : ℕ) (_ : Idx 1), (1 :
   ⟨one_pos, le_rfl, fun _ _ => by norm_num,
     fun k _ => by simp [smul_smul, pow_succ, mul_comm],
     fun _ _ => by simp, fun _ => by simp [basePoint]⟩
+
+/-- **At the record's own gains the bound of `rawStack_frozen` is empty.**  A
+gain of `1.1^{1/2}` per sublayer is `1 + c` with `(1 + c)^2 = 11/10`, so
+`c < 1/20`, and the bound `2 M / (c ‖x_{0,i}‖)` then exceeds `40` as soon as the
+blocks may output as much as the stream they start from (`‖x_{0,i}‖ ≤ M`, which
+is the model's own scale: a pre-norm block reads `norm(x)` and adds something of
+that size).  The directions live on a sphere of diameter `2`, so a bound above
+`40` rules nothing out.
+
+Source: `nn.Parameter(torch.full((num_layers, 2), 1.1**0.5))` (modded-nanogpt,
+`train_gpt.py`, `GPT.__init__`), read against `rawStack_frozen`. -/
+theorem lt_rawStack_frozen_bound {c M r : ℝ} (hc : 0 < c) (hsq : (1 + c) ^ 2 = 11 / 10)
+    (hr : 0 < r) (hM : r ≤ M) : 40 < 2 * M / (c * r) := by
+  have hclt : c < 1 / 20 := by nlinarith [sq_nonneg c]
+  have hcr : 0 < c * r := mul_pos hc hr
+  have h1 : (40 : ℝ) < 2 * r / (c * r) := by
+    rw [lt_div_iff₀ hcr]
+    nlinarith [mul_pos hr (sub_pos.mpr hclt)]
+  exact h1.trans_le (by gcongr)
+
+/-- **And the gauge the record accumulates is a factor under `3`.**  Eleven
+layers of two sublayers each, at `1.1^{1/2}` per sublayer, is
+`Λ_{22} = (11/10)^{11} < 3`.  So the regime of `rawStack_frozen` — a gauge large
+enough that the steps `g_{k,i} / Λ_{k+1,i}` the directions see are spent — is
+not the one the record is in at initialisation.  `resid_lambdas` is trained, and
+where training takes it this says nothing.
+
+Source: `num_layers=11` and
+`nn.Parameter(torch.full((num_layers, 2), 1.1**0.5))` (modded-nanogpt,
+`train_gpt.py`), read against `pow_le_gainProd`. -/
+theorem gainProd_lt_three {c : ℝ} (hsq : (1 + c) ^ 2 = 11 / 10) (i : Idx n) :
+    gainProd (fun _ _ => 1 + c) 22 i < 3 := by
+  have h22 : (1 + c) ^ 22 = (11 / 10 : ℝ) ^ 11 := by
+    rw [← hsq, ← pow_mul]
+  rw [gainProd, Finset.prod_const, Finset.card_range, h22]
+  norm_num
+
+/-- The hypotheses of `lt_rawStack_frozen_bound` and `gainProd_lt_three` are
+satisfiable, at the record's own gain `c = (11/10)^{1/2} - 1` and a stream and
+blocks of the same size. -/
+example : ∃ c : ℝ, 0 < c ∧ (1 + c) ^ 2 = 11 / 10 ∧ (0 : ℝ) < 1 ∧ (1 : ℝ) ≤ 1 := by
+  refine ⟨Real.sqrt (11 / 10) - 1, ?_, ?_, one_pos, le_rfl⟩
+  · have h : (1 : ℝ) < Real.sqrt (11 / 10) := (Real.lt_sqrt zero_le_one).mpr (by norm_num)
+    linarith
+  · have h : (1 : ℝ) + (Real.sqrt (11 / 10) - 1) = Real.sqrt (11 / 10) := by ring
+    rw [h, Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 11 / 10)]
 
 
 end Perspective
