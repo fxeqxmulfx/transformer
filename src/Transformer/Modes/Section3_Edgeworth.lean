@@ -62,20 +62,6 @@ noncomputable def etaMoment (β t : ℝ) (s : ℕ) : ℝ := ∫ z, eucl z ^ s �
 noncomputable def sumGG' (n : ℕ) (β t : ℝ) (X : Fin n → ℝ) : ℝ × ℝ :=
   ((Real.sqrt n)⁻¹ * ∑ i, bigG β t (X i), (Real.sqrt n)⁻¹ * ∑ i, bigG' β t (X i))
 
-/-- **Equation (eq:qt)**, as the change of variables it is:
-`p_t(x, y) = (det Σ_t)^{-1/2} q_t(Σ_t^{-1/2}[(x, y) - μ_t])`, in the form
-"`q` is a density of `n^{-1/2} Σ Yᵢ(t)` iff this `p` is a density of
-`n^{-1/2} Σ (Gᵢ, Gᵢ')`".  arXiv:2412.09080v3, `eq:qt`; see the module
-docstring for why it is an equivalence. -/
-theorem isDensityOf_scaledSum_iff {β : ℝ} (hβ : 0 < β) (t : ℝ) {n : ℕ} (hn : 1 ≤ n)
-    (q : ℝ × ℝ → ℝ) :
-    IsDensityOf (Measure.pi fun _ : Fin n => lawY β t) (scaledSum n) q ↔
-      IsDensityOf (Measure.pi fun _ : Fin n => gaussianReal 0 1) (sumGG' n β t)
-        (fun z => sigmaDet β t ^ (-(1 : ℝ) / 2) *
-          q (whiten (sigmaFst β t) (sigmaCov β t) (sigmaSnd β t)
-            (z.1 - muFst n β t, z.2 - muSnd n β t))) := by
-  sorry
-
 /-- **Lemma (lem:eta), cumulants.**  A cumulant of order `s = a + b ≥ 3` is
 `O(η_s)`, with a constant depending on `(a, b)` only.
 arXiv:2412.09080v3, `lem:eta` and its proof in §5 ("cumulants of order `s` are
@@ -92,9 +78,6 @@ theorem etaMoment_le {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : IsReg
     ∃ C : ℝ, ∀ᶠ k in atTop, ∀ t ∈ intervalT (N k) (B k) (ω (B k)),
       etaMoment (B k) t s ≤ C * (B k * Real.exp (t ^ 2)) ^ (((s : ℝ) - 2) / 4) := by
   sorry
-
-/-- The hypotheses of `isDensityOf_scaledSum_iff` are satisfiable. -/
-example : (0 : ℝ) < 1 ∧ 1 ≤ 1 := ⟨one_pos, le_rfl⟩
 
 /-- The hypotheses of `abs_cumulantOf_le` are satisfiable, and so are those
 of the implication it asserts. -/
