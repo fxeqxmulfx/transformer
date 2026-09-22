@@ -16,6 +16,7 @@ import Transformer.FrankWolfe.Section1_Models
 import Transformer.FrankWolfe.Section2_Derivations
 import Transformer.FrankWolfe.Section2_HullFailure
 import Transformer.FrankWolfe.Section3_NegativeDefinite
+import Transformer.FrankWolfe.Section3_FWClusterFalse
 import Transformer.FrankWolfe.Section4_Cells
 import Transformer.FrankWolfe.Section4_Polytope
 import Transformer.FrankWolfe.Section4_Faces
