@@ -41,7 +41,7 @@ Source: arXiv:2601.21366v2, `rem:piecewise-poly`, `rem:genericity-vacuity`.
 -/
 
 import Transformer.Perceptron.HigherDim
-import Transformer.Perceptron.Transform
+import Transformer.Perceptron.TransformPoly
 
 open scoped BigOperators ENNReal NNReal
 open Real MeasureTheory

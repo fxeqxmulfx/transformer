@@ -21,6 +21,7 @@ import Transformer.Perceptron.KernelSup
 import Transformer.Perceptron.CircleDeriv
 import Transformer.Perceptron.StrictSOPD
 import Transformer.Perceptron.Transform
+import Transformer.Perceptron.TransformPoly
 import Transformer.Perceptron.Hyperplane
 import Transformer.Perceptron.Bias
 import Transformer.Perceptron.BiasedAtomicity
