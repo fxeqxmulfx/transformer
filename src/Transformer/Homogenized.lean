@@ -35,6 +35,7 @@ import Transformer.Homogenized.SimplexBary
 import Transformer.Homogenized.HeadConj
 import Transformer.Homogenized.HeadLawRotation
 import Transformer.Homogenized.SimplexDrift
+import Transformer.Homogenized.SimplexWellDefined
 import Transformer.Homogenized.GramStability
 import Transformer.Homogenized.SmallBeta
 import Transformer.Homogenized.RademacherLaw

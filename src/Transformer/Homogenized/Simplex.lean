@@ -46,6 +46,25 @@ theorem sum_attnProb {d n : ℕ} (β : ℝ) (A : Matrix (Fin d) (Fin d) ℝ)
   exact div_self (ne_of_gt
     (Finset.sum_pos (fun _ _ => attnWeight_pos _ _ _ _) ⟨i, Finset.mem_univ i⟩))
 
+/-- Attention probabilities are nonnegative. -/
+theorem attnProb_nonneg {d n : ℕ} (β : ℝ) (A : Matrix (Fin d) (Fin d) ℝ)
+    (x : Idx n → EucSpace d) (i k : Idx n) : 0 ≤ attnProb β A x i k :=
+  div_nonneg (attnWeight_pos _ _ _ _).le
+    (Finset.sum_nonneg fun _ _ => (attnWeight_pos _ _ _ _).le)
+
+/-- The attention probabilities of a token sum to at most one (to zero when there
+are no tokens). -/
+theorem sum_attnProb_le_one {d n : ℕ} (β : ℝ) (A : Matrix (Fin d) (Fin d) ℝ)
+    (x : Idx n → EucSpace d) (i : Idx n) : ∑ k : Idx n, attnProb β A x i k ≤ 1 := by
+  simp only [attnProb, ← Finset.sum_div]
+  exact div_self_le_one _
+
+/-- An attention probability is at most one. -/
+theorem attnProb_le_one {d n : ℕ} (β : ℝ) (A : Matrix (Fin d) (Fin d) ℝ)
+    (x : Idx n → EucSpace d) (i k : Idx n) : attnProb β A x i k ≤ 1 :=
+  (Finset.single_le_sum (fun l _ => attnProb_nonneg β A x i l) (Finset.mem_univ k)).trans
+    (sum_attnProb_le_one β A x i)
+
 /-- A simplex configuration: unit tokens with a common pairwise overlap `γ`. -/
 def IsSimplexConfig {d n : ℕ} (γ : ℝ) (x : Idx n → EucSpace d) : Prop :=
   (∀ i : Idx n, ‖x i‖ = 1) ∧ ∀ i j : Idx n, i ≠ j → inner (𝕜 := ℝ) (x i) (x j) = γ
@@ -64,33 +83,6 @@ Source: arXiv:2604.01978v1, `eq:Phi_def_selfcontained`. -/
 noncomputable def simplexDrift (f g : ℝ → ℝ) (γ : ℝ) : ℝ :=
   γ + (1 - γ) * g γ - γ * (γ + (1 - γ) * f γ)
 
-/-- **Theorem (thm:clustering_random_init), first half.**  The two expectations
-of `eq:f_g_def_selfcontained`,
-
-  `f(γ) = 𝔼 Σ_k (π^A_{i→k}(γ))²`,  `g(γ) = 𝔼 Σ_k π^A_{i→k}(γ) π^A_{j→k}(γ)`,
-
-are well defined: they depend on neither the simplex configuration realizing
-the overlap `γ` nor on the choice of indices, and they take values in `[0,1]`.
-
-The expectation is over `A ∼ ρ*`, which is read off the head `θ = (V, A)`.
-
-Not proved here.
-
-Source: arXiv:2604.01978v1, `eq:f_g_def_selfcontained`. -/
-theorem simplex_overlap_wellDefined {d n : ℕ} (hd : 2 ≤ d) (hn : 2 ≤ n) (β : ℝ)
-    (σV σA : ℝ≥0) (ρ : Measure (HeadParam d)) (hρ : IsGaussianHeadLaw d σV σA ρ) :
-    ∃ f g : ℝ → ℝ,
-      (∀ γ : ℝ, f γ ∈ Set.Icc (0 : ℝ) 1) ∧ (∀ γ : ℝ, g γ ∈ Set.Icc (0 : ℝ) 1) ∧
-      (∀ (γ : ℝ) (x : Idx n → EucSpace d), IsSimplexConfig γ x → ∀ i : Idx n,
-        (∫ θ, ∑ k : Idx n, attnProb β θ.2 x i k ^ 2 ∂ρ) = f γ) ∧
-      (∀ (γ : ℝ) (x : Idx n → EucSpace d), IsSimplexConfig γ x → ∀ i j : Idx n, i ≠ j →
-        (∫ θ, ∑ k : Idx n, attnProb β θ.2 x i k * attnProb β θ.2 x j k ∂ρ) = g γ) := by
-  sorry
-
-/-- The hypotheses of `simplex_overlap_wellDefined` are satisfiable. -/
-example : 2 ≤ 2 ∧ 2 ≤ 2 ∧ IsGaussianHeadLaw 2 0 0 (Measure.dirac (0 : HeadParam 2)) :=
-  ⟨le_rfl, le_rfl, isGaussianHeadLaw_dirac_zero 2⟩
-
 /-- **Theorem (thm:clustering_random_init), second half.**  Fix `d, n ≥ 2` and
 `β > 0`, start from a simplex configuration with overlap
 `γ₀ ∈ (-1/(n-1), 1)`, and let `γ` solve `γ̇ = b(γ)`, `γ(0) = γ₀`.  Then, with
@@ -107,9 +99,7 @@ produced before `d, n, β, σ_A` are chosen, with `C = K(1 + dσ_A⁴β²n)`.  T
 the content of the `O(·)`, and it is stronger than an unquantified `∃ C`.
 
 The functions `f` and `g` are taken as explicit hypotheses, in the form
-`simplex_overlap_wellDefined` produces them, rather than used from it: that
-theorem is not proved here, and a result resting on it would not be proved
-either.
+`simplex_overlap_wellDefined` (`SimplexWellDefined.lean`) produces them.
 
 The initial configuration is deterministic, as in the source, where `X(0)` is
 given.
