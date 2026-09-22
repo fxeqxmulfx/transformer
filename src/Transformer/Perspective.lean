@@ -37,7 +37,10 @@ tokens do not stay close through any window of positive length.
 with any values, a feed-forward term Lipschitz on the sphere, an injection
 `z_i(t)` — and to a stack of different blocks: if two differences of
 injections `z_k - z_l`, `z_m - z_p` are independent in every block, one `δ`
-works for the whole stack.
+works for the whole stack.  `BlockConsensus` shows that differences are what
+counts: when all `z_i - z_{i₀}` are collinear, a block with a rank-one value
+holds every token at one point, so two independent injections alone — the
+hypothesis for `V = I_d` — do not rule collapse out.
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -84,6 +87,7 @@ import Transformer.Perspective.DrivenFlow
 import Transformer.Perspective.DrivenSpread
 import Transformer.Perspective.BlockDrive
 import Transformer.Perspective.BlockSpread
+import Transformer.Perspective.BlockConsensus
 import Transformer.Perspective.Section5_ConeCollapse
 import Transformer.Perspective.Section5_Hemisphere
 import Transformer.Perspective.Section5_HemisphereCone

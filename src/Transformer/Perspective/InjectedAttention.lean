@@ -101,6 +101,18 @@ theorem sum_abs_attention (β : ℝ) (Q K : TimeParam d) (X : ℝ → SphereTupl
   simp only [attention, abs_div, Real.abs_exp, abs_of_pos hZ, ← Finset.sum_div]
   exact div_self hZ.ne'
 
+/-- **The rows of the attention matrix sum to one:** `Σ_j A_ij(t) = 1` for the
+attention matrix `eq:P`, for every `β`, `Q`, `K` and every configuration.
+
+Source: arXiv:2312.10794v5, §2.2, after `eq:P`: "The `n × n` stochastic matrix
+`A(t)` (rows are probability vectors)". -/
+theorem sum_attention (β : ℝ) (Q K : TimeParam d) (X : ℝ → SphereTuple d n) (t : ℝ)
+    (i : Idx n) : ∑ j, attention d n β Q K X t i j = 1 := by
+  have hZ : 0 < partitionQKV d n β Q K X t i :=
+    Finset.sum_pos (fun k _ => Real.exp_pos _) ⟨i, Finset.mem_univ i⟩
+  simp only [attention, ← Finset.sum_div]
+  exact div_self hZ.ne'
+
 /-- **Softmax attention with injection is an injected flow**, with the
 attention matrix `eq:P` as its weights.
 
