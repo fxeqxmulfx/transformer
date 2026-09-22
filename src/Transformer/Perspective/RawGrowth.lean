@@ -77,9 +77,7 @@ theorem rawStream_frozen {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] 
   have hxt : x t = Real.exp (c * (t - t₀)) • (x t₀ + (Real.exp (-c * (t - t₀)) • x t - x t₀)) := by
     rw [add_sub_cancel, smul_smul, ← Real.exp_add,
       show c * (t - t₀) + -c * (t - t₀) = 0 by ring, Real.exp_zero, one_smul]
-  have hscale : ∀ (k : ℝ) (w : E), 0 < k → ‖k • w‖⁻¹ • (k • w) = ‖w‖⁻¹ • w := fun k w hk => by
-    rw [norm_smul, Real.norm_of_nonneg hk.le, smul_smul, mul_inv_rev, inv_mul_cancel_right₀ hk.ne']
-  rw [hxt, hscale _ _ (Real.exp_pos _), norm_sub_rev]
+  rw [hxt, normalize_smul_of_pos (Real.exp_pos _), norm_sub_rev]
   calc _ ≤ 2 * ‖x t₀ - (x t₀ + (Real.exp (-c * (t - t₀)) • x t - x t₀))‖ / ‖x t₀‖ :=
         norm_normalize_sub_le_div h0
     _ = 2 * ‖Real.exp (-c * (t - t₀)) • x t - x t₀‖ / ‖x t₀‖ := by

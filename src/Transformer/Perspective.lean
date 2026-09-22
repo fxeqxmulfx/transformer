@@ -58,7 +58,13 @@ into a factor on the row — needs only to be bounded.  That is the block of the
 record, XSA on every layer under a sigmoid gate, with softmax rows, values and
 output maps carrying `attn_scale` and the grouping of queries, and the
 leaky-ReLU² feed-forward term: it does not collapse either
-(`gatedXSA_block_spread`).
+(`gatedXSA_block_spread`).  `RawStack` leaves continuous time behind: a stack
+`x_{k+1,i} = λ_{k,i} x_{k,i} + g_{k,i}` of blocks that are all different, with
+the scalar residual gains of modded-nanogpt, is its gauge `∏_{j<k} λ_{j,i}`
+times the same stack with the gains divided out, so the directions never see
+them (`normalize_rawStack`), and in `RawStackFrozen` gains above `1 + c` freeze
+every direction within `2 M / (c ‖x_{0,i}‖)` of its start, at every depth and
+whatever the blocks compute (`rawStack_frozen`).
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -108,6 +114,8 @@ import Transformer.Perspective.BlockSpread
 import Transformer.Perspective.BlockConsensus
 import Transformer.Perspective.RawStream
 import Transformer.Perspective.RawGrowth
+import Transformer.Perspective.RawStack
+import Transformer.Perspective.RawStackFrozen
 import Transformer.Perspective.BlockMLP
 import Transformer.Perspective.BlockMLPSpread
 import Transformer.Perspective.XSAProj

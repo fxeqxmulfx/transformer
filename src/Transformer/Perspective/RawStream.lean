@@ -62,6 +62,17 @@ theorem norm_normalize_sub_le_div {E : Type*} [NormedAddCommGroup E] [NormedSpac
 /-- The hypothesis of `norm_normalize_sub_le_div` is satisfiable: `u = 1` in `ℝ`. -/
 example : (1 : ℝ) ≠ 0 := one_ne_zero
 
+/-- **The scale of a vector is not its direction:** `‖k x‖⁻¹ • (k x) = ‖x‖⁻¹ • x`
+for every `k > 0`.
+
+Source: none — posed here; what the RMS norm of a pre-norm block discards. -/
+theorem normalize_smul_of_pos {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] {k : ℝ}
+    (hk : 0 < k) (w : E) : ‖k • w‖⁻¹ • (k • w) = ‖w‖⁻¹ • w := by
+  rw [norm_smul, Real.norm_of_nonneg hk.le, smul_smul, mul_inv_rev, inv_mul_cancel_right₀ hk.ne']
+
+/-- The hypothesis of `normalize_smul_of_pos` is satisfiable: `k = 1`. -/
+example : (0 : ℝ) < 1 := one_pos
+
 /-- **The direction of a moving vector moves on the sphere:** if `ẋ = v` and
 `x ≠ 0`, then `y = x / ‖x‖` has `ẏ = Proj_y(v / ‖x‖)`.
 
