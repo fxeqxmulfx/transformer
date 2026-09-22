@@ -9,7 +9,10 @@ The survey proves the lemma in two steps: step 1 produces the limit point
 `x⋆` (`eq: qual.conv`), step 2 the differential inequality
 `α̇ ≥ (1 - α)/(2 n e^{2β})` for `α(t) = min_i ⟨x_i(t), x⋆⟩`
 (`e:diffineqalpha.step2`).  The lemma itself is `cone_collapse`
-(`Perspective.Section5_ExpRate`), unproved; step 2 is proved from the limit in
+(`Perspective.Section5_ExpRate`), proved there by another route: the chart
+`x ↦ x / ⟨x, w⟩` of the hemisphere (`Perspective.ConeLimit`), which needs
+neither `x⋆` in advance nor the differential inequality.  The survey's route
+is kept as well: step 2 is proved from the limit in
 `Perspective.Section5_HemisphereRate`, with the differentiability of `α`
 carried.  Integrating the differential inequality gives the exponential rate,
 and that is `exp_rate_of_diffineqalpha` below — the last step of the proof,

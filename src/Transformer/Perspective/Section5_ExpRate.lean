@@ -14,6 +14,7 @@ parameters", which the survey does not write out and which is `usaQKV` here.
 import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section2_GradientFlow
 import Transformer.Perspective.Section3_SmallBeta
+import Transformer.Perspective.ConeFields
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -54,27 +55,40 @@ def ExpConvergent (dyn : (ℝ → SphereTuple d n) → Prop) (X₀ : SphereTuple
 
 /-- **Lemma (lem: hemisphere.clustering).** *Cone collapse.*
 
-Let `β > 0` and let `(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n` lie in an open
-hemisphere: `⟨x_i(0), w⟩ > 0` for some `w ∈ 𝕊^{d-1}` and every `i`.  Then
-there are `x⋆ ∈ 𝕊^{d-1}` and `C, λ > 0` with `‖x_i(t) - x⋆‖ ≤ C e^{-λ t}`
-for all `i` and `t ≥ 0`, for the solution of `SA` and of `USA`, and — for
-arbitrary `d × d` matrices `Q, K` — of `eq: transformerSd.QKV` with `V = I_d`
-and of `usaQKV`.
+Let `(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n` lie in an open hemisphere:
+`⟨x_i(0), w⟩ > 0` for some `w ∈ 𝕊^{d-1}` and every `i`.  Then there are
+`x⋆ ∈ 𝕊^{d-1}` and `C, λ > 0` with `‖x_i(t) - x⋆‖ ≤ C e^{-λ t}` for all `i`
+and `t ≥ 0`, for the solution of `SA` and of `USA`, and — for arbitrary
+`d × d` matrices `Q, K` — of `eq: transformerSd.QKV` with `V = I_d` and of
+`usaQKV`.
 
-`d ≥ 2` is the survey's "which holds for any `n ≥ 1` and `d ≥ 2`" before the
-lemma; `n = 0` is trivially included.  The proof's first step,
-`eq: qual.conv` (`x_i(t) → x⋆`), is the qualitative half of the conclusion
-and is not stated apart; its last step, the integration of
-`e:diffineqalpha.step2` into the rate, is `exp_rate_of_diffineqalpha`
-(`Perspective.Section5_ConeCollapse`), and `e:diffineqalpha.step2` itself,
-for the `SA` limit `x⋆`, is `step2_alpha_diff_ineq`.
+**What the source says and what is changed here.**  The survey assumes
+`β > 0`, and states the lemma for `n ≥ 1` and `d ≥ 2` ("which holds for any
+`n ≥ 1` and `d ≥ 2`").  None of them is used, and all are dropped: the proof
+needs of the weights `a_ij = c_i e^{β⟨Q x_i, K x_j⟩}` only that they lie in
+some `[m, M]` with `m > 0`, which holds for every real `β` — on the sphere
+they lie in `[e^{-2L}/n, e^{2L}/n]`, `L = |β| ‖Q‖ ‖K‖`
+(`softmaxNorm_bounds`, `usaNorm_bounds`) — and `n = 0` is vacuous.  A
+solution is one on all of `ℝ`, as `SA`, `USA`, `transformerODE` and `usaQKV`
+are defined, where the survey's Cauchy problem is posed on `ℝ_{≥0}`; the
+survey's "the unique solution" is `ExpConvergent`'s "every solution through
+`X₀`", and uniqueness is how one `x⋆` serves them all
+(`expLimit_of_attnField`).
 
-Not proved here.
+The proof is not the survey's.  The survey first obtains `x⋆` qualitatively
+(`eq: qual.conv`), then integrates `α̇ ≥ (1 - α)/(2 n e^{2β})` for
+`α(t) = min_i ⟨x_i(t), x⋆⟩` (`e:diffineqalpha.step2`; its integration is
+`exp_rate_of_diffineqalpha`).  Here the chart `y = x / ⟨x, w⟩` of the
+hemisphere makes the flow a consensus dynamics
+`ẏ_i = Σ_j b_ij (y_j - y_i)`, `b_ij ≥ m r₀`, whose width decays like
+`e^{-2 m r₀ t}` (`Perspective.ConeWidth`); the `y_i` converge at that rate to
+some `y⋆`, and `x⋆ = y⋆ / ‖y⋆‖` (`Perspective.ConeLimit`).
+`Perspective.ConeFields` puts the four dynamics in that form.
 
 Source: arXiv:2312.10794v5, §6.1, `lem: hemisphere.clustering`; restated as
 `thm:cone-collapse` in arXiv:2512.01868v4, §4 (`SA` and `USA`, `n ≥ 1`,
 `d ≥ 2`, `β > 0`). -/
-theorem cone_collapse (hd : 2 ≤ d) (β : ℝ) (hβ : 0 < β) (X₀ : SphereTuple d n)
+theorem cone_collapse (β : ℝ) (X₀ : SphereTuple d n)
     (hX₀ : ∃ w : SSphere d, ∀ i : Idx n,
               0 < inner (𝕜 := ℝ) ((X₀ i : EucSpace d)) ((w : EucSpace d))) :
     ExpConvergent d n (Perspective.SA d n β) X₀ ∧
@@ -84,14 +98,38 @@ theorem cone_collapse (hd : 2 ≤ d) (β : ℝ) (hβ : 0 < β) (X₀ : SphereTup
           (transformerODE d n β (fun _ => Q) (fun _ => K) (fun _ => ContinuousLinearMap.id ℝ _))
           X₀ ∧
         ExpConvergent d n (usaQKV d n β Q K) X₀ := by
-  sorry
+  obtain ⟨w, hw⟩ := hX₀
+  rcases Nat.eq_zero_or_pos n with rfl | hn
+  · have h0 : ∀ dyn, ExpConvergent d 0 dyn X₀ := fun _ =>
+      ⟨w, 1, 1, one_pos, one_pos, fun _ _ _ i => i.elim0⟩
+    exact ⟨h0 _, h0 _, fun _ _ => ⟨h0 _, h0 _⟩⟩
+  have hn' : (0 : ℝ) < n := Nat.cast_pos.mpr hn
+  have hsoft : ∀ (Q K : ParamMatrix d) (dyn : (ℝ → SphereTuple d n) → Prop),
+      (∀ X, dyn X → ∀ (t : ℝ) (i : Idx n), HasDerivAt (fun s => (X s i : EucSpace d))
+        (attnField β Q K (softmaxNorm β Q K) (fun j => (X t j : EucSpace d)) i) t) →
+      ExpConvergent d n dyn X₀ := fun Q K _ hdyn =>
+    expLimit_of_attnField hdyn contDiff_softmaxNorm (div_pos (exp_pos _) hn')
+      (fun _ hY i j => softmaxNorm_bounds hY i j) hn w hw
+  have husa : ∀ (Q K : ParamMatrix d) (dyn : (ℝ → SphereTuple d n) → Prop),
+      (∀ X, dyn X → ∀ (t : ℝ) (i : Idx n), HasDerivAt (fun s => (X s i : EucSpace d))
+        (attnField β Q K (fun _ _ => (n : ℝ)⁻¹) (fun j => (X t j : EucSpace d)) i) t) →
+      ExpConvergent d n dyn X₀ := fun Q K _ hdyn =>
+    expLimit_of_attnField hdyn (fun _ => contDiff_const) (div_pos (exp_pos _) hn')
+      (fun _ hY i j => usaNorm_bounds hY i j) hn w hw
+  set I := ContinuousLinearMap.id ℝ (EucSpace d)
+  refine ⟨hsoft I I _ fun X hX t i => (hX t i).congr_deriv ?_,
+    husa I I _ fun X hX t i => (hX t i).congr_deriv ?_,
+    fun Q K => ⟨hsoft Q K _ fun X hX t i => (hX t i).congr_deriv ?_,
+      husa Q K _ fun X hX t i => (hX t i).congr_deriv ?_⟩⟩
+  all_goals simp only [attnField, softmaxNorm, attnExp, partitionSA, partitionQKV, I,
+    ContinuousLinearMap.id_apply]
 
-/-- The hypotheses of `cone_collapse` are satisfiable: `d = 2`, `β = 1`, one
-particle at `basePoint 1`, in the hemisphere around itself. -/
-example : 2 ≤ 2 ∧ (0 : ℝ) < 1 ∧ ∃ w : SSphere 2, ∀ i : Idx 1,
+/-- The hypothesis of `cone_collapse` is satisfiable: one particle at
+`basePoint 1`, in the hemisphere around itself. -/
+example : ∃ w : SSphere 2, ∀ i : Idx 1,
     0 < inner (𝕜 := ℝ) (((fun _ => basePoint 1 : SphereTuple 2 1) i : EucSpace 2))
       ((w : EucSpace 2)) := by
-  refine ⟨le_rfl, one_pos, basePoint 1, fun _ => ?_⟩
+  refine ⟨basePoint 1, fun _ => ?_⟩
   rw [real_inner_self_eq_norm_mul_norm, mem_sphere_zero_iff_norm.mp (basePoint 1).2]
   norm_num
 

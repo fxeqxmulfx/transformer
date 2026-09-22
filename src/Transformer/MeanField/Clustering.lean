@@ -8,7 +8,9 @@
 `Theorem thm: mfclust` is in `MeanField.GlobalRate`.
 
 `Theorem thm: cone-collapse` is `Perspective.cone_collapse`
-(in `Perspective.Section5_ExpRate`) verbatim and is not restated here.
+(in `Perspective.Section5_ExpRate`), proved there for every real `β` and all
+`d`, `n` — the source assumes `β > 0`, `d ≥ 2`, `n ≥ 1` — and for the `Q, K`
+variants as well; it is not restated here.
 
 `thm: clustering_finite` is read against the uniform law
 `Perspective.UniformTuple`, and is not proved.  What *is* proved is the deterministic core of

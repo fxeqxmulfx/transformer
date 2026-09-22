@@ -18,11 +18,14 @@ The remark following `thm: boumal` — no smooth invariant measure — is
 `Perspective.Section5_InvariantMeasure`.
 
 `Lemma lem: hemisphere.clustering` — *cone collapse* — is `cone_collapse`, in
-`Perspective.Section5_ExpRate`; its step 1, `eq: qual.conv`, is the
-qualitative half of its conclusion and is not stated apart.  The last step of
-its proof, integrating `e:diffineqalpha.step2` into the rate, is proved in
-`Perspective.Section5_ConeCollapse`.  Steps 1 and 2 — that `min_i ⟨x_i(t), w⟩` does not decrease, and
-the decomposition `e:decompox*.step2` of `x⋆` along the particles — are
+`Perspective.Section5_ExpRate`, proved through the chart `x ↦ x / ⟨x, w⟩` of
+the hemisphere (`Perspective.ConeLimit`); its step 1, `eq: qual.conv`, is the
+qualitative half of its conclusion and is not stated apart.  Along the
+survey's own route, the last step of its proof, integrating
+`e:diffineqalpha.step2` into the rate, is proved in
+`Perspective.Section5_ConeCollapse`.  Steps 1 and 2 — that
+`min_i ⟨x_i(t), w⟩` does not decrease, and the decomposition
+`e:decompox*.step2` of `x⋆` along the particles — are
 `Perspective.Section5_Hemisphere`, which needs the one-sided calculus of
 `Perspective.MinCurve`.
 
