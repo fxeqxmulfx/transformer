@@ -50,3 +50,6 @@ import Transformer.Homogenized.SoftmaxDerivatives
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
+import Transformer.Homogenized.AttnAverage
+import Transformer.Homogenized.GaussianEntries
+import Transformer.Homogenized.GaussianVariance

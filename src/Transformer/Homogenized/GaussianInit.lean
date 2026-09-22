@@ -14,10 +14,11 @@ to `e^{C t_L α}` and `max(1,α)` to `max(η,α)`.
 
 The limiting object of `cor:weak_error_centered` is `eq:Diffusive_gaussian_case`,
 which is `eq: first.sde` read under `b_{ρ*} ≡ 0`; it is therefore carried here
-as `IsFirstSde`, and `bField_gaussian` is what identifies the two.  Consequence
-(ii), `b_{ρ*}[μ] ≡ 0`, is proved in `Homogenized.GaussianDrift`
-(`meanFieldOf_gaussian`, `bField_gaussian`), downstream of the invariance of
-the head law that it rests on.
+as `IsFirstSde`, and `bField_gaussian` is what identifies the two.  Both
+consequences are proved downstream, where the facts about the head law they
+rest on live: (i), `ς² = σ_V²(d-1)`, in `Homogenized.GaussianVariance`
+(`varianceProxy_gaussian`, `alphaOf_gaussian`), and (ii), `b_{ρ*}[μ] ≡ 0`, in
+`Homogenized.GaussianDrift` (`meanFieldOf_gaussian`, `bField_gaussian`).
 
 Source: arXiv:2604.01978v1, §2.3.3, `eq: tformers.at.initialization`,
 `cor:weak_error_centered`.
@@ -79,51 +80,6 @@ theorem isGaussianHeadLaw_dirac_zero (d : ℕ) :
   · intro i j; simp [gaussianReal_zero_var]
   · simp
     rfl
-
-/-- **Consequence (i) of (G).**  Under `eq: tformers.at.initialization` the
-variance proxy `ς` — the upper bound of `eq: defining.alpha`, which
-`eq:Alpha_Sec2` turns into `α = ης²/H` — is explicit: `ς² = σ_V²(d-1)`.
-
-The source states this consequence as `α = (η/H)σ_V²(d-1)`; dividing by the
-definition of `α` is what isolates `ς`, and `alphaOf_gaussian` puts it back.
-
-Not proved here.
-
-Source: arXiv:2604.01978v1, §2.3.3, item (i). -/
-theorem varianceProxy_gaussian {d n : ℕ} (β : ℝ) (σV σA : ℝ≥0)
-    (ρ : Measure (HeadParam d)) (hρ : IsGaussianHeadLaw d σV σA ρ)
-    (s : ℝ) (hs : IsVarianceProxy d n β ρ s) :
-    s ^ 2 = (σV : ℝ) ^ 2 * ((d : ℝ) - 1) := by
-  sorry
-
-/-- The hypotheses of `varianceProxy_gaussian` are satisfiable at the
-degenerate law `ρ* = δ_0`, whose variance proxy is `0`. -/
-example (d n : ℕ) (β : ℝ) :
-    IsGaussianHeadLaw (d + 1) 0 0 (Measure.dirac (0 : HeadParam (d + 1))) ∧
-      IsVarianceProxy (d + 1) (n + 1) β (Measure.dirac (0 : HeadParam (d + 1))) 0 :=
-  ⟨isGaussianHeadLaw_dirac_zero _,
-    isVarianceProxy_dirac_zero d n β (fun _ => (basePoint d : EucSpace (d + 1)))
-      (fun _ => by simp [basePoint, PiLp.norm_single])⟩
-
-/-- **Consequence (i) of (G), the scaling parameter.**  With
-`ς² = σ_V²(d-1)`, the scaling parameter of `eq:Alpha_Sec2` is
-
-  `α = (η/H) σ_V²(d-1)`,
-
-which is what suggests the standard choice `σ_V² = 1/d`.
-
-The identification `ς² = σ_V²(d-1)` is `varianceProxy_gaussian`, which is not
-proved here; it is taken as an explicit hypothesis rather than used, so that
-this computation is genuinely proved.
-
-Source: arXiv:2604.01978v1, §2.3.3, item (i). -/
-theorem alphaOf_gaussian {d H : ℕ} (η s : ℝ) (σV : ℝ≥0)
-    (hs : s ^ 2 = (σV : ℝ) ^ 2 * ((d : ℝ) - 1)) :
-    alphaOf η s H = η * ((σV : ℝ) ^ 2 * ((d : ℝ) - 1)) / (H : ℝ) := by
-  rw [alphaOf, hs]
-
-/-- The hypothesis of `alphaOf_gaussian` is satisfiable: `σ_V = 0`, `s = 0`. -/
-example (d : ℕ) : (0 : ℝ) ^ 2 = ((0 : ℝ≥0) : ℝ) ^ 2 * ((d : ℝ) - 1) := by simp
 
 /-- **Corollary (cor:weak_error_centered).**  Under
 `eq: tformers.at.initialization`, for any `φ ∈ C⁴((𝕊^{d-1})^n)`,
