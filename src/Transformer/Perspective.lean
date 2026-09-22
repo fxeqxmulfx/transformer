@@ -49,7 +49,16 @@ direction stays within `2 M / (c ‖x_i(t₀)‖)` of where it was at `t₀` and
 take in the feed-forward term of parameter-golf, `W₂ σ(W₁ x)²` with a leaky
 ReLU `σ`: on the sphere it is bounded and Lipschitz with constants read off
 the weights, so `blockDrive_spread` holds for a block with that term, with
-nothing assumed of it but bounds on `‖W₁‖` and `‖W₂‖`.
+nothing assumed of it but bounds on `‖W₁‖` and `‖W₂‖`.  `XSAProj`, `BlockXSA`,
+`BlockXSASpread` and `BlockXSARecord` make the heads exclusive (`eq:xsa`,
+arXiv:2603.09078v1): a head with its own value projected away is `O(ε)` by
+itself on a cluster, not only in a difference, so the rows of a head no longer
+need one common sum and a gate per head and token — which the projection turns
+into a factor on the row — needs only to be bounded.  That is the block of the
+record, XSA on every layer under a sigmoid gate, with softmax rows, values and
+output maps carrying `attn_scale` and the grouping of queries, and the
+leaky-ReLU² feed-forward term: it does not collapse either
+(`gatedXSA_block_spread`).
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -101,6 +110,10 @@ import Transformer.Perspective.RawStream
 import Transformer.Perspective.RawGrowth
 import Transformer.Perspective.BlockMLP
 import Transformer.Perspective.BlockMLPSpread
+import Transformer.Perspective.XSAProj
+import Transformer.Perspective.BlockXSA
+import Transformer.Perspective.BlockXSASpread
+import Transformer.Perspective.BlockXSARecord
 import Transformer.Perspective.Section5_ConeCollapse
 import Transformer.Perspective.Section5_Hemisphere
 import Transformer.Perspective.Section5_HemisphereCone

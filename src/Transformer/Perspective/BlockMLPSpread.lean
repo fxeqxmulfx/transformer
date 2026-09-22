@@ -17,7 +17,9 @@ so what `blockDrive_spread` assumes of the feed-forward term becomes
 The attention of the record is not of this form: every layer runs XSA
 (`XSA_LAST_N = 11`), and the run enables a sigmoid gate on the output of every
 head (`SPARSE_ATTN_GATE_ENABLED=1`), so the rows of a head act differently on
-different tokens.
+different tokens.  It is a drive of `Perspective.BlockXSA` instead, where the
+projection of `eq:xsa` makes the common row sum unnecessary and the gate a
+factor on the row (`gatedXSA_block_spread`).
 -/
 
 import Transformer.Perspective.BlockMLP
