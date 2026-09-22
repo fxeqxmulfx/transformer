@@ -9,7 +9,8 @@ Continues `Perspective.Section2_FlowMap`:
 * `eq: logder`             — logarithmic-derivative form of `𝒳[μ]`,
 * `USA`                    — the unnormalised `SA` model, and its vector field,
 * `eq: pde.nosoftmaxZ`     — continuity equation for `USA`,
-* `e:XmuE`, `eq: aggregation.eq`, `Lemma lem: dissipation`,
+* `e:XmuE`, `eq: aggregation.eq` (`lem: dissipation` is in
+  `Perspective.Section2_Dissipation`),
 * §3.4 — `SA` is a gradient flow for a modified metric;
         `e:scalarproduct`, `eq: first.rewriting`.
 
@@ -113,29 +114,6 @@ def aggregationEquation (β : ℝ) (μ : ℝ → ProbSphere d) : Prop :=
   auxCE d μ (fun t x =>
     proj d x (gradient (fun z => β⁻¹ * partitionMu d β (μ t) z) x))
 
-/-- **Lemma (lem: dissipation).**  Along `USA` the interaction energy
-dissipates at rate
-
-  `d/dt 𝖤_β[μ(t)] = ∫ ‖𝒳^{USA}[μ(t)](x)‖² dμ(t,x)`
-
-— the same identity as `eq: dissipation.softmax` with the partition-function
-weight `Z_{β,μ}` removed, which is precisely what the normalisation costs.
-
-*`β > 0` is a hypothesis*, the survey's standing assumption: at `β = 0` the
-energy is Lean's junk value `(2·0)⁻¹ ∫∫ 1 = 0`, as for `dissipation_softmax`.
-
-Not proved here: as for `dissipation_softmax`, differentiating the energy
-along the flow is not formalized.
-
-Source: arXiv:2312.10794v5, §3.3, `lem: dissipation`. -/
-theorem usa_dissipation (β : ℝ) (hβ : 0 < β) (μ : ℝ → ProbSphere d)
-    (hCE : usaContinuityEquation d β μ) :
-    ∀ t : ℝ,
-      HasDerivAt (fun s => interactionEnergy d β (μ s))
-        (∫ x, ‖usaVectorField d β (μ t) (x : EucSpace d)‖ ^ 2
-          ∂(μ t : Measure (SSphere d))) t := by
-  sorry
-
 /-- A Dirac mass is a stationary point of the `USA` vector field too: the only
 point `δ_x` sees is `x`, so the integral is a multiple of `x` and `Proj_x`
 kills it.  Dropping the partition function changes the length of the velocity,
@@ -149,7 +127,7 @@ theorem usaVectorField_diracProb_self (β : ℝ) (x : SSphere d) :
   exact proj_smul_self hx _
 
 /-- The constant curve at a Dirac mass solves `eq: pde.nosoftmaxZ`, so the
-hypothesis of `usa_dissipation` is satisfiable. -/
+hypothesis of `usa_dissipation` (in `Section2_Dissipation`) is satisfiable. -/
 theorem usaContinuityEquation_const_diracProb (β : ℝ) (x : SSphere d) :
     usaContinuityEquation d β (fun _ => diracProb d x) := by
   intro φ _ t
@@ -162,11 +140,6 @@ theorem usaContinuityEquation_const_diracProb (β : ℝ) (x : SSphere d) :
     rw [hμ, integral_dirac, usaVectorField_diracProb_self, inner_zero_right]
   rw [hrhs]
   exact hasDerivAt_const t _
-
-/-- The hypotheses of `usa_dissipation` are satisfiable: `β = 1` and the
-constant curve at a Dirac mass. -/
-example : (0 : ℝ) < 1 ∧ usaContinuityEquation 1 1 (fun _ => diracProb 1 (basePoint 0)) :=
-  ⟨one_pos, usaContinuityEquation_const_diracProb 1 1 (basePoint 0)⟩
 
 /-! ### §3.4 — `SA` is a gradient flow for a modified metric -/
 

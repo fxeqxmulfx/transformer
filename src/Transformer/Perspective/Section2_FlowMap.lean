@@ -15,12 +15,12 @@ Main objects:
 * `eq: conteqSd`           — the continuity equation,
 * `eq: CE`                 — its form for an arbitrary velocity field,
 * `eq: interaction.energy` — the interaction energy `𝖤_β[μ]`,
-* `eq: dissipation.softmax`— its dissipation along `SA`,
 * `Proposition prop: existence.uniqueness.energy`, minimiser half.
 
 Its maximiser half — every global maximiser of `𝖤_β` is a Dirac mass — is
 proved in `Perspective.Section2_EnergyMax`, on the analytic groundwork of
-`Perspective.Section2_EnergyKernel`.
+`Perspective.Section2_EnergyKernel`.  Its dissipation along `SA`,
+`eq: dissipation.softmax`, is proved in `Perspective.Section2_Dissipation`.
 
 For the integrals over `SSphere d` we equip the sphere with its induced Borel
 measurable space (it is a metric subspace of `ℝ^d`).
@@ -146,38 +146,13 @@ noncomputable def interactionEnergy
       Real.exp (β * inner (𝕜 := ℝ) (x : EucSpace d) (x' : EucSpace d))
         ∂(μ : Measure (SSphere d)) ∂(μ : Measure (SSphere d))
 
-/-- **Equation (eq: dissipation.softmax).** Energy-dissipation identity:
-
-  `d/dt 𝖤_β[μ(t)] = ∫ ‖𝒳[μ(t)](x)‖² Z_{β,μ(t)}(x) dμ(t,x)`.
-
-In particular the interaction energy is non-decreasing along `SA`.
-
-*`β > 0` is a hypothesis.*  It is the survey's standing assumption (§1,
-`β > 0` a fixed number intrinsic to the model), and without it the statement
-is about Lean's junk value: `𝖤_0 = (2·0)⁻¹ ∫∫ 1 = 0` is constant, while the
-right-hand side is `∫ ‖Proj_x(∫ y dμ)‖² dμ`, which a moving curve keeps
-nonzero.
-
-Not proved here: differentiating the energy under the integral sign along a
-solution of the continuity equation is not formalized.
-
-Source: arXiv:2312.10794v5, §3.2, `eq: dissipation.softmax`. -/
-theorem dissipation_softmax (β : ℝ) (hβ : 0 < β) (μ : ℝ → ProbSphere d)
-    (hCE : continuityEquation d β μ) :
-    ∀ t : ℝ,
-      HasDerivAt (fun s => interactionEnergy d β (μ s))
-        (∫ x, ‖vectorField d β (μ t) (x : EucSpace d)‖ ^ 2
-              * partitionMu d β (μ t) (x : EucSpace d)
-          ∂(μ t : Measure (SSphere d))) t := by
-  sorry
-
 /-- **A Dirac mass is a stationary solution of `eq: conteqSd`.**
 
 `𝒳[δ_x](x)` is a multiple of `x` — the only point the measure sees is `x`
 itself — and `Proj_x` kills the radial direction, so the velocity vanishes
 `δ_x`-almost everywhere and the mass does not move.  This is what makes the
-hypothesis of `dissipation_softmax` satisfiable, and satisfiable by something
-other than a contradiction. -/
+hypothesis of `dissipation_softmax` (in `Section2_Dissipation`) satisfiable,
+and satisfiable by something other than a contradiction. -/
 theorem vectorField_diracProb_self (β : ℝ) (x : SSphere d) :
     vectorField d β (diracProb d x) (x : EucSpace d) = 0 := by
   have hx : ‖(x : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
@@ -201,11 +176,6 @@ theorem continuityEquation_const_diracProb (β : ℝ) (x : SSphere d) :
     rw [hμ, integral_dirac, vectorField_diracProb_self, inner_zero_right]
   rw [hrhs]
   exact hasDerivAt_const t _
-
-/-- The hypotheses of `dissipation_softmax` are satisfiable: `β = 1`, and the
-constant curve at a Dirac mass solves the continuity equation. -/
-example : (0 : ℝ) < 1 ∧ continuityEquation 1 1 (fun _ => diracProb 1 (basePoint 0)) :=
-  ⟨one_pos, continuityEquation_const_diracProb 1 1 (basePoint 0)⟩
 
 /-- A linear isometry of the ambient space, restricted to the unit sphere:
 the action of `O(d)` on `𝕊^{d-1}` that the uniform measure `σ_d` — and only

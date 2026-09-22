@@ -17,6 +17,10 @@ expansion runs on; neither mentions the survey.
 import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section2_FlowMap
 import Transformer.Perspective.Section2_EnergyKernel
+import Transformer.Perspective.Section2_EnergyMoments
+import Transformer.Perspective.Section2_EnergySeries
+import Transformer.Perspective.Section2_EnergyDerivative
+import Transformer.Perspective.Section2_Dissipation
 import Transformer.Perspective.Section2_EnergyMax
 import Transformer.Perspective.PartitionGradient
 import Transformer.Perspective.Section2_GradientFlow
