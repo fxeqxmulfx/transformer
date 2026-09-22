@@ -168,16 +168,17 @@ theorem lt_rawStack_frozen_bound {c M r : ℝ} (hc : 0 < c) (hsq : (1 + c) ^ 2 =
     nlinarith [mul_pos hr (sub_pos.mpr hclt)]
   exact h1.trans_le (by gcongr)
 
-/-- **And the gauge the record accumulates is a factor under `3`.**  Eleven
-layers of two sublayers each, at `1.1^{1/2}` per sublayer, is
-`Λ_{22} = (11/10)^{11} < 3`.  So the regime of `rawStack_frozen` — a gauge large
-enough that the steps `g_{k,i} / Λ_{k+1,i}` the directions see are spent — is
-not the one the record is in at initialisation.  `resid_lambdas` is trained, and
-where training takes it this says nothing.
+/-- **And the gauge the record accumulates is a factor under `3`.**  Twenty-two
+sublayers at `1.1^{1/2}` each is `Λ_{22} = (11/10)^{11} < 3`, and the record's
+own gauge is smaller still: the step of its layer-6 skip has gain `1`, so it is
+`(11/10)^{21/2}`.  So the regime of `rawStack_frozen` — a gauge large enough
+that the steps `g_{k,i} / Λ_{k+1,i}` the directions see are spent — is not the
+one the record is in at initialisation.  `resid_lambdas` is trained, and where
+training takes it this says nothing.
 
-Source: `num_layers=11` and
-`nn.Parameter(torch.full((num_layers, 2), 1.1**0.5))` (modded-nanogpt,
-`train_gpt.py`), read against `pow_le_gainProd`. -/
+Source: `num_layers=11`, `nn.Parameter(torch.full((num_layers, 2), 1.1**0.5))`
+and `x = x + skip_gate_out * cache[3]` (modded-nanogpt, `train_gpt.py`), read
+against `pow_le_gainProd`. -/
 theorem gainProd_lt_three {c : ℝ} (hsq : (1 + c) ^ 2 = 11 / 10) (i : Idx n) :
     gainProd (fun _ _ => 1 + c) 22 i < 3 := by
   have h22 : (1 + c) ^ 22 = (11 / 10 : ℝ) ^ 11 := by

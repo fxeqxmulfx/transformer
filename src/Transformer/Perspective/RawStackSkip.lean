@@ -8,11 +8,14 @@ attention at layer `6` and adds an earlier state of the stream instead,
   `skip_gate_out = torch.sigmoid(skip_lambda) * post_skip_gate`
   `x = x + skip_gate_out * cache[3]`,
 
-where `cache[3]` is the snapshot of the residual stream at layer `3` and the
-gate is one scalar per token (`gate[..., 28:29]` of `unpack_post_mudd_gate`).
-That is the one update of the model `Perspective.RawStack` does not cover: it
-adds not a bounded output of a block but the stream itself, at an earlier
-depth.
+where `cache[3]` is the snapshot of the residual stream at the end of layer `3`,
+after its MLP — the state at depth `8`, counting sublayers — and the gate is one
+scalar per token (`gate[..., 28:29]` of `unpack_post_mudd_gate`).  That is the
+first update the model `Perspective.RawStack` does not cover: it adds not a
+bounded output of a block but the stream itself, at an earlier depth.  It is
+not the only one: the last layer and the step after the loop add `cache[0]`,
+`cache[7]`, `cache[9]` and `cache[3]` under per-token coefficients computed
+from the stream (`GPT.forward_mudd`), several of them in one step.
 
 In the gauge it is still exact.  Write `y_{k,i} = x_{k,i} / Λ_{k,i}` for the
 stream with its gains divided out (`ungauged`, which is `gaugeStack` when there

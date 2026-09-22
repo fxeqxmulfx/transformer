@@ -22,9 +22,10 @@ directions see — has no route to them.  The block outputs `g_{k,i}` are damped
 by `Λ_{k+1,i}⁻¹` and a skip is not, which is the sense in which a skip is not a
 bounded drive.
 
-And at the record's own gains neither bound bites: the skip jumps six sublayers
-at `1.1^{1/2}`, so more than three quarters of its gate survives
-(`lt_inv_pow_record`).
+And at the record's own gains neither bound bites.  The skip reads `cache[3]`,
+the state at depth `8`, and takes the step at depth `12` at gain `1`, so four
+sublayers at `1.1^{1/2}` lie between them and `100/121` of its gate survives
+(`gainProd_div_record`).
 -/
 
 import Transformer.Perspective.RawStackSkip
@@ -91,10 +92,9 @@ theorem abs_skipWeight_le {lam s : ℕ → Idx n → ℝ} {c : ℝ} (hc : 0 ≤ 
   exact mul_le_mul_of_nonneg_left (gainProd_div_le hc hlam hm i) (abs_nonneg _)
 
 /-- The hypotheses of `pow_mul_gainProd_le`, `gainProd_div_le` and
-`abs_skipWeight_le` are satisfiable: `c = 0`, gains `1`, and the depths of the
-record's own skip — the snapshot of layer `3` is sublayer `6`, the skip is the
-attention sublayer of layer `6`. -/
-example : (0 : ℝ) ≤ 0 ∧ (∀ (_ : ℕ) (_ : Idx 1), (1 : ℝ) + 0 ≤ 1) ∧ 6 ≤ 12 + 1 :=
+`abs_skipWeight_le` are satisfiable: `c = 0`, gains `1`, and the depths `8` and
+`12` of the record's own skip, `cache[3]` and the step that adds it. -/
+example : (0 : ℝ) ≤ 0 ∧ (∀ (_ : ℕ) (_ : Idx 1), (1 : ℝ) + 0 ≤ 1) ∧ 8 ≤ 12 + 1 :=
   ⟨le_rfl, fun _ _ => by norm_num, by norm_num⟩
 
 /-- **Gains below `1 + C` accumulate at most geometrically:**
@@ -147,34 +147,54 @@ theorem le_abs_skipWeight {lam s : ℕ → Idx n → ℝ} {C : ℝ} (hC : 0 ≤ 
   exact mul_le_mul_of_nonneg_left (le_gainProd_div hC hpos hlam hm i) (abs_nonneg _)
 
 /-- The hypotheses of `gainProd_le_pow_mul`, `le_gainProd_div` and
-`le_abs_skipWeight` are satisfiable: `C = 0` and gains `1`. -/
+`le_abs_skipWeight` are satisfiable: `C = 0`, gains `1`, and the depths `8` and
+`12` of the record's skip. -/
 example : (0 : ℝ) ≤ 0 ∧ (∀ (_ : ℕ) (_ : Idx 1), (0 : ℝ) < 1) ∧
-    (∀ (_ : ℕ) (_ : Idx 1), (1 : ℝ) ≤ 1 + 0) ∧ 6 ≤ 12 + 1 :=
+    (∀ (_ : ℕ) (_ : Idx 1), (1 : ℝ) ≤ 1 + 0) ∧ 8 ≤ 12 + 1 :=
   ⟨le_rfl, fun _ _ => one_pos, fun _ _ => by norm_num, by norm_num⟩
 
 /-- **At the record's own gains the damping is weak.**  The skip of
-modded-nanogpt jumps from the snapshot of layer `3` to the attention sublayer
-of layer `6`, six sublayers at `1.1^{1/2}` each, so the gauge divides its gate
-by `(11/10)^3` and more than three quarters of it survives.  Exponential
-damping in the depth skipped is what `gainProd_div_le` gives; at these
-constants the exponent is not yet doing anything.
+modded-nanogpt reads `cache[3]`, written at the end of loop iteration `3`, after
+its MLP: the state at depth `8`.  It takes the place of the attention sublayer
+of layer `6`, the step at depth `12`, and carries no `resid_lambdas`: that step
+has gain `1`.  So its gate is multiplied by
+`Λ_{8,i} / Λ_{13,i} = (λ_{8,i} λ_{9,i} λ_{10,i} λ_{11,i})⁻¹`, at the initial
+gains `1.1^{1/2}` that is `(11/10)^{-2} = 100/121`, and more than four fifths of
+the gate survives: the exponent of `gainProd_div_le` is not yet doing anything.
 
-Source: `x = x + skip_gate_out * cache[3]` at `i == 6` and
-`nn.Parameter(torch.full((num_layers, 2), 1.1**0.5))` (modded-nanogpt,
-`train_gpt.py`), read against `gainProd_div_le`. -/
-theorem lt_inv_pow_record {c : ℝ} (hsq : (1 + c) ^ 2 = 11 / 10) :
-    3 / 4 < ((1 + c)⁻¹) ^ 6 := by
-  have h6 : ((1 + c)⁻¹) ^ 6 = (((11 : ℝ) / 10) ^ 3)⁻¹ := by
-    rw [inv_pow, show (6 : ℕ) = 2 * 3 from rfl, pow_mul, hsq]
-  rw [h6]
+This corrects `lt_inv_pow_record`, which took the snapshot for the state at
+depth `6` and all six steps from there for gains `1.1^{1/2}`, and concluded
+`3/4 < (11/10)^{-3}`.
+
+Source: `x = x + skip_gate_out * cache[3]` at `i == 6`, `cache_layers = [3, 7]`
+and `torch.full((num_layers, 2), 1.1**0.5)` (modded-nanogpt, `train_gpt.py`,
+`GPT.forward`, `GPT.init_attn`, `GPT.init_misc`), read against `gainProd_div_le`. -/
+theorem gainProd_div_record {lam : ℕ → Idx n → ℝ} {c : ℝ} (hsq : (1 + c) ^ 2 = 11 / 10)
+    (hpos : ∀ j i, 0 < lam j i) (hlam : ∀ j i, 8 ≤ j → j < 12 → lam j i = 1 + c)
+    (h12 : ∀ i, lam 12 i = 1) (i : Idx n) :
+    gainProd lam 8 i / gainProd lam 13 i = 100 / 121 := by
+  have h4 : (1 + c) ^ 4 = 121 / 100 := by
+    rw [show (4 : ℕ) = 2 * 2 from rfl, pow_mul, hsq]
+    norm_num
+  have hsplit : gainProd lam 13 i = gainProd lam 8 i * (1 + c) ^ 4 := by
+    rw [show (13 : ℕ) = 8 + 5 from rfl, gainProd, gainProd, Finset.prod_range_add]
+    congr 1
+    simp only [Finset.prod_range_succ, Finset.prod_range_zero, one_mul, Nat.reduceAdd]
+    rw [hlam 8 i (by norm_num) (by norm_num), hlam 9 i (by norm_num) (by norm_num),
+      hlam 10 i (by norm_num) (by norm_num), hlam 11 i (by norm_num) (by norm_num), h12 i]
+    ring
+  rw [hsplit, div_mul_eq_div_div, div_self (gainProd_pos hpos 8 i).ne', h4]
   norm_num
 
-/-- The hypothesis of `lt_inv_pow_record` is satisfiable, at the record's own
-gain `c = (11/10)^{1/2} - 1`. -/
-example : ∃ c : ℝ, (1 + c) ^ 2 = 11 / 10 := by
-  refine ⟨Real.sqrt (11 / 10) - 1, ?_⟩
-  have h : (1 : ℝ) + (Real.sqrt (11 / 10) - 1) = Real.sqrt (11 / 10) := by ring
-  rw [h, Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 11 / 10)]
+/-- The hypotheses of `gainProd_div_record` are satisfiable, at the record's own
+gains: `c = (11/10)^{1/2} - 1`, gain `1` at depth `12` and `1.1^{1/2}` elsewhere. -/
+example : ∃ (c : ℝ) (lam : ℕ → Idx 1 → ℝ), (1 + c) ^ 2 = 11 / 10 ∧ (∀ j i, 0 < lam j i) ∧
+    (∀ j i, 8 ≤ j → j < 12 → lam j i = 1 + c) ∧ ∀ i, lam 12 i = 1 := by
+  refine ⟨Real.sqrt (11 / 10) - 1, fun j _ => if j = 12 then 1 else Real.sqrt (11 / 10),
+    ?_, fun j _ => ?_, fun j _ _ hj => by simp [Nat.ne_of_lt hj], fun _ => by simp⟩
+  · rw [add_sub_cancel, Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 11 / 10)]
+  · dsimp only
+    split_ifs <;> positivity
 
 end Perspective
 end Transformer

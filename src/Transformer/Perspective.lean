@@ -66,19 +66,21 @@ them (`normalize_rawStack`), and in `RawStackFrozen` gains above `1 + c` freeze
 every direction within `2 M / (c ‖x_{0,i}‖)` of its start, at every depth and
 whatever the blocks compute (`rawStack_frozen`) — a bound that the record's own
 gains make empty (`lt_rawStack_frozen_bound`), which is what the exactness of
-the factorisation is worth.  `RawStackSkip` adds the one update left over, the
+the factorisation is worth.  `RawStackSkip` adds the first update left over, the
 skip that adds an earlier state of the stream instead of a bounded output: it is
 gauge-covariant too (`ungauged_rec_skip`), with its gate divided by the gain
 accumulated over the depth it jumps, and `RawStackSkipDamp` reads that division
 from both sides — exponential in the depth skipped (`abs_skipWeight_le`), but
 bounded below by the same exponential (`le_abs_skipWeight`), so skips at a fixed
 distance keep one weight at every depth and `rawStack_frozen` does not reach
-them; at the record's own gains more than three quarters of the gate survives
-(`lt_inv_pow_record`).  One skip, though, it does reach: `RawStackSkipFrozen`
-shows that a single skip is one fixed displacement of the ungauged stream
-(`ungauged_eq_gaugeStack_add_skip`), so freezing survives it with one extra
-term, damped by the depth the skip jumps (`rawStack_frozen_skip`) — which is the
-architecture of the record, its layer-6 skip included.
+them; at initialisation `100/121` of the gate of the record's layer-6 skip
+survives (`gainProd_div_record`).  One skip, though, it does reach:
+`RawStackSkipFrozen` shows that a single skip is one fixed displacement of the
+ungauged stream (`ungauged_eq_gaugeStack_add_skip`), so freezing survives it
+with one extra term, damped by the depth the skip jumps (`rawStack_frozen_skip`)
+— which covers the first ten layers of the record, its layer-6 skip merged with
+the MLP step after it, but not the last layer and the step after the loop, which
+add several earlier states in one step.
 -/
 
 import Transformer.Perspective.Section1_IPS

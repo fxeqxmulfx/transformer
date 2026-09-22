@@ -6617,7 +6617,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer.Perspective`
 
-**[Transformer.Perspective](src/Transformer/Perspective.lean)** — 185 lines, aggregator
+**[Transformer.Perspective](src/Transformer/Perspective.lean)** — 187 lines, aggregator
 
 **[Transformer.Perspective.AppendixA_Beta0](src/Transformer/Perspective/AppendixA_Beta0.lean)** — 280 lines
 
@@ -7122,7 +7122,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`normalize_rawStack`](src/Transformer/Perspective/RawStack.lean#L111) | theorem | proved |
 | [`not_channelGain_gauge`](src/Transformer/Perspective/RawStack.lean#L143) | theorem | proved |
 
-**[Transformer.Perspective.RawStackFrozen](src/Transformer/Perspective/RawStackFrozen.lean)** — 199 lines
+**[Transformer.Perspective.RawStackFrozen](src/Transformer/Perspective/RawStackFrozen.lean)** — 200 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -7130,37 +7130,37 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`norm_gaugeStack_sub_le`](src/Transformer/Perspective/RawStackFrozen.lean#L63) | theorem | proved |
 | [`rawStack_frozen`](src/Transformer/Perspective/RawStackFrozen.lean#L120) | theorem | proved |
 | [`lt_rawStack_frozen_bound`](src/Transformer/Perspective/RawStackFrozen.lean#L162) | theorem | proved |
-| [`gainProd_lt_three`](src/Transformer/Perspective/RawStackFrozen.lean#L181) | theorem | proved |
+| [`gainProd_lt_three`](src/Transformer/Perspective/RawStackFrozen.lean#L182) | theorem | proved |
 
-**[Transformer.Perspective.RawStackSkip](src/Transformer/Perspective/RawStackSkip.lean)** — 135 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`ungauged`](src/Transformer/Perspective/RawStackSkip.lean#L46) | def |  |
-| [`normalize_ungauged`](src/Transformer/Perspective/RawStackSkip.lean#L53) | theorem | proved |
-| [`ungauged_eq_gaugeStack`](src/Transformer/Perspective/RawStackSkip.lean#L63) | theorem | proved |
-| [`ungauged_step`](src/Transformer/Perspective/RawStackSkip.lean#L82) | theorem | proved |
-| [`ungauged_rec_skip`](src/Transformer/Perspective/RawStackSkip.lean#L106) | theorem | proved |
-
-**[Transformer.Perspective.RawStackSkipDamp](src/Transformer/Perspective/RawStackSkipDamp.lean)** — 180 lines
+**[Transformer.Perspective.RawStackSkip](src/Transformer/Perspective/RawStackSkip.lean)** — 138 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`pow_mul_gainProd_le`](src/Transformer/Perspective/RawStackSkipDamp.lean#L44) | theorem | proved |
-| [`gainProd_div_le`](src/Transformer/Perspective/RawStackSkipDamp.lean#L66) | theorem | proved |
-| [`abs_skipWeight_le`](src/Transformer/Perspective/RawStackSkipDamp.lean#L82) | theorem | proved |
+| [`ungauged`](src/Transformer/Perspective/RawStackSkip.lean#L49) | def |  |
+| [`normalize_ungauged`](src/Transformer/Perspective/RawStackSkip.lean#L56) | theorem | proved |
+| [`ungauged_eq_gaugeStack`](src/Transformer/Perspective/RawStackSkip.lean#L66) | theorem | proved |
+| [`ungauged_step`](src/Transformer/Perspective/RawStackSkip.lean#L85) | theorem | proved |
+| [`ungauged_rec_skip`](src/Transformer/Perspective/RawStackSkip.lean#L109) | theorem | proved |
+
+**[Transformer.Perspective.RawStackSkipDamp](src/Transformer/Perspective/RawStackSkipDamp.lean)** — 200 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`pow_mul_gainProd_le`](src/Transformer/Perspective/RawStackSkipDamp.lean#L45) | theorem | proved |
+| [`gainProd_div_le`](src/Transformer/Perspective/RawStackSkipDamp.lean#L67) | theorem | proved |
+| [`abs_skipWeight_le`](src/Transformer/Perspective/RawStackSkipDamp.lean#L83) | theorem | proved |
 | [`gainProd_le_pow_mul`](src/Transformer/Perspective/RawStackSkipDamp.lean#L104) | theorem | proved |
 | [`le_gainProd_div`](src/Transformer/Perspective/RawStackSkipDamp.lean#L123) | theorem | proved |
 | [`le_abs_skipWeight`](src/Transformer/Perspective/RawStackSkipDamp.lean#L140) | theorem | proved |
-| [`lt_inv_pow_record`](src/Transformer/Perspective/RawStackSkipDamp.lean#L165) | theorem | proved |
+| [`gainProd_div_record`](src/Transformer/Perspective/RawStackSkipDamp.lean#L172) | theorem | proved |
 
-**[Transformer.Perspective.RawStackSkipFrozen](src/Transformer/Perspective/RawStackSkipFrozen.lean)** — 186 lines
+**[Transformer.Perspective.RawStackSkipFrozen](src/Transformer/Perspective/RawStackSkipFrozen.lean)** — 193 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`ungauged_eq_gaugeStack_of_le`](src/Transformer/Perspective/RawStackSkipFrozen.lean#L50) | theorem | proved |
-| [`ungauged_eq_gaugeStack_add_skip`](src/Transformer/Perspective/RawStackSkipFrozen.lean#L70) | theorem | proved |
-| [`rawStack_frozen_skip`](src/Transformer/Perspective/RawStackSkipFrozen.lean#L106) | theorem | proved |
+| [`ungauged_eq_gaugeStack_of_le`](src/Transformer/Perspective/RawStackSkipFrozen.lean#L56) | theorem | proved |
+| [`ungauged_eq_gaugeStack_add_skip`](src/Transformer/Perspective/RawStackSkipFrozen.lean#L76) | theorem | proved |
+| [`rawStack_frozen_skip`](src/Transformer/Perspective/RawStackSkipFrozen.lean#L113) | theorem | proved |
 
 **[Transformer.Perspective.RawStream](src/Transformer/Perspective/RawStream.lean)** — 122 lines
 

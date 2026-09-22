@@ -4,11 +4,11 @@
 **Not a statement of any paper.**  `rawStack_frozen` of
 `Perspective.RawStackFrozen` freezes the directions of a stack whose gains
 exceed `1 + c` and whose blocks output at most `M`, and it needs every update to
-be `x_{k+1,i} = λ_{k,i} x_{k,i} + g_{k,i}`.  Modded-nanogpt has one update that
-is not of that form: at layer `6` it adds the snapshot of layer `3` instead of a
-block output (`x = x + skip_gate_out * cache[3]`, `train_gpt.py`,
-`GPT.forward`).  That is one skip in twenty-two sublayers, and the question this
-module answers is what it costs.
+be `x_{k+1,i} = λ_{k,i} x_{k,i} + g_{k,i}`.  The first update of modded-nanogpt
+not of that form is at layer `6`, which adds the snapshot `cache[3]` of the end
+of layer `3` instead of a block output (`x = x + skip_gate_out * cache[3]`,
+`train_gpt.py`, `GPT.forward`), and the question this module answers is what
+one skip costs.
 
 It costs one term.  A stack with a single skip — `hx` at every depth but `K`,
 `hxK` at `K`, reading depth `m ≤ K` with a gate `s_i` per token — is, in the
@@ -23,9 +23,15 @@ the depth the skip jumps, and every direction of the stack stays within
 of the direction it started with (`rawStack_frozen_skip`), at every depth and
 whatever the blocks compute.
 
-That is the whole architecture of the record, its one skip included, and not a
-model of it with the skip dropped.  What it does not cover is a skip at every
-layer: `le_abs_skipWeight` of `Perspective.RawStackSkipDamp` shows their
+Of the record this covers the first ten layers, with their one skip, once the
+skip's own step, of gain `1`, is merged with the MLP step after it into one step
+of gain `resid_lambdas_mlp[6]` and gate `resid_lambdas_mlp[6] * skip_gate_out`;
+the state between the two is the one depth it does not see.  It does not cover
+the last layer and the step after the loop, which add `cache[0]`, `cache[7]`,
+`cache[9]` and `cache[3]` under per-token coefficients, several in one step, and
+feed `mu[0] * cache[0] + mu[1] * cache[7] + mu[2] * x` into the values of the
+last attention, across tokens (`GPT.forward_mudd`).  Nor does it cover a skip at
+every layer: `le_abs_skipWeight` of `Perspective.RawStackSkipDamp` shows their
 rescaled gates do not shrink with depth, so the sum this proof takes over one
 skip does not converge over infinitely many.
 -/
@@ -101,8 +107,9 @@ of the direction it started with.  The skip costs exactly one term, damped by
 the gain accumulated over the depth it jumps (`abs_skipWeight_le`), and at
 `s = 0` the bound is `rawStack_frozen`'s.
 
-Source: none — posed here; the residual stack of modded-nanogpt with its layer-6
-skip (`train_gpt.py`, `GPT.forward`). -/
+Source: none — posed here; the first ten layers of modded-nanogpt with their
+layer-6 skip (`train_gpt.py`, `GPT.forward`), the skip's step of gain `1` merged
+with the MLP step after it. -/
 theorem rawStack_frozen_skip {lam : ℕ → Idx n → ℝ} {s : Idx n → ℝ}
     {x g : ℕ → Idx n → EucSpace d} {c M : ℝ} {K m : ℕ} (hc : 0 < c) (hM : 0 ≤ M)
     (hlam : ∀ j i, 1 + c ≤ lam j i) (hmK : m ≤ K)
