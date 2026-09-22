@@ -73,6 +73,24 @@ example : (∀ (_ : ℕ) (_ : Idx 1), (0 : ℝ) < 1) ∧
       = (1 : ℝ) • (fun _ (_ : Idx 1) => (basePoint 0 : EucSpace 1)) k i + 0 :=
   ⟨fun _ _ => one_pos, fun _ _ => by simp⟩
 
+/-- **One step of the ungauged stream.**  Whatever the `k`-th block adds to the
+stream, the ungauged stream moves by that much divided by the gauge it is added
+behind — the gains themselves disappear from the recursion.
+
+Source: none — posed here; the residual update `x ← λ x + (anything)` of
+modded-nanogpt (`train_gpt.py`, `GPT.forward`), divided by `Λ_{k+1,i}`. -/
+theorem ungauged_step {lam : ℕ → Idx n → ℝ} {x : ℕ → Idx n → EucSpace d} {v : EucSpace d}
+    {k : ℕ} {i : Idx n} (hlam : ∀ j i, 0 < lam j i)
+    (hx : x (k + 1) i = lam k i • x k i + v) :
+    ungauged lam x (k + 1) i = ungauged lam x k i + (gainProd lam (k + 1) i)⁻¹ • v := by
+  have hkne : gainProd lam k i ≠ 0 := (gainProd_pos hlam k i).ne'
+  have hlne : lam k i ≠ 0 := (hlam k i).ne'
+  have hstep : gainProd lam k i * lam k i = gainProd lam (k + 1) i :=
+    (Finset.prod_range_succ (fun j => lam j i) k).symm
+  have h1 : (gainProd lam (k + 1) i)⁻¹ * lam k i = (gainProd lam k i)⁻¹ := by
+    rw [← hstep]; field_simp
+  simp only [ungauged, hx, smul_add, smul_smul, h1]
+
 /-- **A skip is gauge-covariant.**  If
 
   `x_{k+1,i} = λ_{k,i} x_{k,i} + s_{k,i} x_{m(k),i} + g_{k,i}`
@@ -93,17 +111,13 @@ theorem ungauged_rec_skip {lam s : ℕ → Idx n → ℝ} {x g : ℕ → Idx n �
       = ungauged lam x k i
         + (s k i * gainProd lam (m k) i / gainProd lam (k + 1) i) • ungauged lam x (m k) i
         + (gainProd lam (k + 1) i)⁻¹ • g k i := by
-  have hkne : gainProd lam k i ≠ 0 := (gainProd_pos hlam k i).ne'
   have hmne : gainProd lam (m k) i ≠ 0 := (gainProd_pos hlam (m k) i).ne'
-  have hlne : lam k i ≠ 0 := (hlam k i).ne'
-  have hstep : gainProd lam k i * lam k i = gainProd lam (k + 1) i :=
-    (Finset.prod_range_succ (fun j => lam j i) k).symm
-  have h1 : (gainProd lam (k + 1) i)⁻¹ * lam k i = (gainProd lam k i)⁻¹ := by
-    rw [← hstep]; field_simp
+  have hkne : gainProd lam (k + 1) i ≠ 0 := (gainProd_pos hlam (k + 1) i).ne'
   have h2 : s k i * gainProd lam (m k) i / gainProd lam (k + 1) i * (gainProd lam (m k) i)⁻¹
       = (gainProd lam (k + 1) i)⁻¹ * s k i := by
-    rw [← hstep]; field_simp
-  simp only [ungauged, hx k i, smul_add, smul_smul, h1, h2]
+    field_simp
+  rw [ungauged_step hlam (by rw [hx k i, add_assoc]), smul_add, ← add_assoc]
+  simp only [ungauged, smul_smul, h2]
 
 /-- The hypotheses of `ungauged_rec_skip` are satisfiable, and not only at
 `s = 0`: gains `1`, a skip of weight `1` onto the state it is at, no output,

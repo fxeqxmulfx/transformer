@@ -56,6 +56,14 @@ noncomputable def gaugeStack (lam : ℕ → Idx n → ℝ) (x₀ : Idx n → Euc
     (g : ℕ → Idx n → EucSpace d) (k : ℕ) (i : Idx n) : EucSpace d :=
   x₀ i + ∑ j ∈ Finset.range k, (gainProd lam (j + 1) i)⁻¹ • g j i
 
+/-- **One step of the gauge stack:** the `k`-th block enters it divided by the
+gauge it is added behind. -/
+theorem gaugeStack_succ (lam : ℕ → Idx n → ℝ) (x₀ : Idx n → EucSpace d)
+    (g : ℕ → Idx n → EucSpace d) (k : ℕ) (i : Idx n) :
+    gaugeStack lam x₀ g (k + 1) i
+      = gaugeStack lam x₀ g k i + (gainProd lam (k + 1) i)⁻¹ • g k i := by
+  rw [gaugeStack, gaugeStack, Finset.sum_range_succ, add_assoc]
+
 /-- **Positive gains, positive gauge.**
 
 Source: none — posed here; `resid_lambdas` of modded-nanogpt starts at
@@ -92,7 +100,7 @@ theorem rawStack_eq_gauge {lam : ℕ → Idx n → ℝ} {x g : ℕ → Idx n →
               (gaugeStack lam (x 0) g k i + (gainProd lam (k + 1) i)⁻¹ • g k i) := by
             rw [smul_add, smul_smul, mul_inv_cancel₀ hne, one_smul]
         _ = gainProd lam (k + 1) i • gaugeStack lam (x 0) g (k + 1) i := by
-            rw [gaugeStack, gaugeStack, Finset.sum_range_succ, add_assoc]
+            rw [gaugeStack_succ]
 
 /-- **The gains are invisible behind the norm.**  The direction of the stack at
 depth `k` is the direction of the same stack with its gains divided out — for

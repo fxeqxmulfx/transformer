@@ -74,7 +74,11 @@ from both sides — exponential in the depth skipped (`abs_skipWeight_le`), but
 bounded below by the same exponential (`le_abs_skipWeight`), so skips at a fixed
 distance keep one weight at every depth and `rawStack_frozen` does not reach
 them; at the record's own gains more than three quarters of the gate survives
-(`lt_inv_pow_record`).
+(`lt_inv_pow_record`).  One skip, though, it does reach: `RawStackSkipFrozen`
+shows that a single skip is one fixed displacement of the ungauged stream
+(`ungauged_eq_gaugeStack_add_skip`), so freezing survives it with one extra
+term, damped by the depth the skip jumps (`rawStack_frozen_skip`) — which is the
+architecture of the record, its layer-6 skip included.
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -128,6 +132,7 @@ import Transformer.Perspective.RawStack
 import Transformer.Perspective.RawStackFrozen
 import Transformer.Perspective.RawStackSkip
 import Transformer.Perspective.RawStackSkipDamp
+import Transformer.Perspective.RawStackSkipFrozen
 import Transformer.Perspective.BlockMLP
 import Transformer.Perspective.BlockMLPSpread
 import Transformer.Perspective.XSAProj

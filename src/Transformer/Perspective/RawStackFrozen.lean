@@ -7,8 +7,8 @@ with the gains divided out, and the directions are those of the second
 (`normalize_rawStack`).  Here the gains are read: at `λ ≥ 1 + c`, `c > 0`, the
 gauge grows at least as `(1 + c)^k` (`pow_le_gainProd`), so the steps
 `g_{k,i} / Λ_{k+1,i}` the directions do see are summable whatever the blocks
-compute, and the whole stack moves each direction by at most
-`2 M / (c ‖x_{0,i}‖)` (`rawStack_frozen`).
+compute (`norm_gaugeStack_sub_le`), and the whole stack moves each direction by
+at most `2 M / (c ‖x_{0,i}‖)` (`rawStack_frozen`).
 
 That is `rawStream_frozen` of `Perspective.RawGrowth` without its continuous
 time, and without what continuous time forced: the gain is now per block and
@@ -54,6 +54,56 @@ theorem pow_le_gainProd {lam : ℕ → Idx n → ℝ} {c : ℝ} (hc : 0 ≤ c)
 example : (0 : ℝ) ≤ 0 ∧ ∀ (_ : ℕ) (_ : Idx 1), (1 : ℝ) + 0 ≤ 1 :=
   ⟨le_rfl, fun _ _ => by norm_num⟩
 
+/-- **The gauge stack stays within `M / c` of where it starts.**  The steps it
+takes are `g_{j,i} / Λ_{j+1,i}`, the gauge is at least `(1 + c)^{j+1}`, and
+`Σ_{j≥1} (1+c)^{-j} = 1/c`: whatever the blocks compute, the whole stack of any
+depth moves the ungauged stream by at most `M / c`.
+
+Source: none — posed here; the summable part of `rawStack_frozen`. -/
+theorem norm_gaugeStack_sub_le {lam : ℕ → Idx n → ℝ} {x₀ : Idx n → EucSpace d}
+    {g : ℕ → Idx n → EucSpace d} {c M : ℝ} (hc : 0 < c) (hM : 0 ≤ M)
+    (hlam : ∀ j i, 1 + c ≤ lam j i) (hg : ∀ j i, ‖g j i‖ ≤ M) (k : ℕ) (i : Idx n) :
+    ‖gaugeStack lam x₀ g k i - x₀ i‖ ≤ M / c := by
+  have hpos : ∀ (j : ℕ) (i : Idx n), 0 < lam j i := fun j i =>
+    lt_of_lt_of_le (by linarith) (hlam j i)
+  have hr0 : (0 : ℝ) ≤ (1 + c)⁻¹ := by positivity
+  have hr1 : (1 + c)⁻¹ < 1 := inv_lt_one_of_one_lt₀ (by linarith)
+  have hgeom : ∑ j ∈ Finset.range k, ((1 + c)⁻¹) ^ (j + 1) ≤ 1 / c := by
+    have hshift : ∑ j ∈ Finset.range k, ((1 + c)⁻¹) ^ (j + 1)
+        = (1 + c)⁻¹ * ∑ j ∈ Finset.range k, ((1 + c)⁻¹) ^ j := by
+      rw [Finset.mul_sum]
+      exact Finset.sum_congr rfl fun j _ => by ring
+    have hbase : ∑ j ∈ Finset.range k, ((1 + c)⁻¹) ^ j ≤ 1 / (1 - (1 + c)⁻¹) := by
+      rw [Finset.range_eq_Ico]
+      simpa using geom_sum_Ico_le_of_lt_one hr0 hr1 (m := 0) (n := k)
+    have hmono : (1 + c)⁻¹ * ∑ j ∈ Finset.range k, ((1 + c)⁻¹) ^ j
+        ≤ (1 + c)⁻¹ * (1 / (1 - (1 + c)⁻¹)) := by gcongr
+    rw [hshift]
+    refine hmono.trans_eq ?_
+    field_simp
+    rw [show (1 : ℝ) + c - 1 = c by ring, div_self hc.ne']
+  have hgauge : gaugeStack lam x₀ g k i - x₀ i
+      = ∑ j ∈ Finset.range k, (gainProd lam (j + 1) i)⁻¹ • g j i := by
+    rw [gaugeStack, add_sub_cancel_left]
+  have hterm : ∀ j ∈ Finset.range k, ‖(gainProd lam (j + 1) i)⁻¹ • g j i‖
+      ≤ M * ((1 + c)⁻¹) ^ (j + 1) := fun j _ => by
+    have hpow : (0 : ℝ) < (1 + c) ^ (j + 1) := by positivity
+    have hle : (1 + c) ^ (j + 1) ≤ gainProd lam (j + 1) i :=
+      pow_le_gainProd hc.le hlam (j + 1) i
+    have hinv : (gainProd lam (j + 1) i)⁻¹ ≤ ((1 + c)⁻¹) ^ (j + 1) := by
+      rw [inv_pow]
+      exact inv_anti₀ hpow hle
+    rw [norm_smul, Real.norm_of_nonneg (inv_nonneg.2 (gainProd_pos hpos (j + 1) i).le),
+      mul_comm]
+    exact mul_le_mul (hg j i) hinv (inv_nonneg.2 (gainProd_pos hpos (j + 1) i).le) hM
+  rw [hgauge]
+  calc ‖∑ j ∈ Finset.range k, (gainProd lam (j + 1) i)⁻¹ • g j i‖
+      ≤ ∑ j ∈ Finset.range k, ‖(gainProd lam (j + 1) i)⁻¹ • g j i‖ := norm_sum_le _ _
+    _ ≤ ∑ j ∈ Finset.range k, M * ((1 + c)⁻¹) ^ (j + 1) := Finset.sum_le_sum hterm
+    _ = M * ∑ j ∈ Finset.range k, ((1 + c)⁻¹) ^ (j + 1) := by rw [Finset.mul_sum]
+    _ ≤ M * (1 / c) := mul_le_mul_of_nonneg_left hgeom hM
+    _ = M / c := by ring
+
 /-- **A stack of growing blocks freezes its own directions.**  Let every gain
 be at least `1 + c` with `c > 0` and every block output be at most `M`:
 `x_{k+1,i} = λ_{k,i} x_{k,i} + g_{k,i}`, `λ_{k,i} ≥ 1 + c`, `‖g_{k,i}‖ ≤ M`.
@@ -75,45 +125,8 @@ theorem rawStack_frozen {lam : ℕ → Idx n → ℝ} {x g : ℕ → Idx n → E
   have hpos : ∀ (j : ℕ) (i : Idx n), 0 < lam j i := fun j i =>
     lt_of_lt_of_le (by linarith) (hlam j i)
   have hx0 : 0 < ‖x 0 i‖ := norm_pos_iff.2 (h0 i)
-  have hc1 : (0 : ℝ) < 1 + c := by linarith
-  have hr0 : (0 : ℝ) ≤ (1 + c)⁻¹ := by positivity
-  have hr1 : (1 + c)⁻¹ < 1 := inv_lt_one_of_one_lt₀ (by linarith)
-  have hgeom : ∑ j ∈ Finset.range k, ((1 + c)⁻¹) ^ (j + 1) ≤ 1 / c := by
-    have hshift : ∑ j ∈ Finset.range k, ((1 + c)⁻¹) ^ (j + 1)
-        = (1 + c)⁻¹ * ∑ j ∈ Finset.range k, ((1 + c)⁻¹) ^ j := by
-      rw [Finset.mul_sum]
-      exact Finset.sum_congr rfl fun j _ => by ring
-    have hbase : ∑ j ∈ Finset.range k, ((1 + c)⁻¹) ^ j ≤ 1 / (1 - (1 + c)⁻¹) := by
-      rw [Finset.range_eq_Ico]
-      simpa using geom_sum_Ico_le_of_lt_one hr0 hr1 (m := 0) (n := k)
-    have hmono : (1 + c)⁻¹ * ∑ j ∈ Finset.range k, ((1 + c)⁻¹) ^ j
-        ≤ (1 + c)⁻¹ * (1 / (1 - (1 + c)⁻¹)) := by gcongr
-    rw [hshift]
-    refine hmono.trans_eq ?_
-    field_simp
-    rw [show (1 : ℝ) + c - 1 = c by ring, div_self hc.ne']
-  have hsum : ‖gaugeStack lam (x 0) g k i - x 0 i‖ ≤ M / c := by
-    have hgauge : gaugeStack lam (x 0) g k i - x 0 i
-        = ∑ j ∈ Finset.range k, (gainProd lam (j + 1) i)⁻¹ • g j i := by
-      rw [gaugeStack, add_sub_cancel_left]
-    have hterm : ∀ j ∈ Finset.range k, ‖(gainProd lam (j + 1) i)⁻¹ • g j i‖
-        ≤ M * ((1 + c)⁻¹) ^ (j + 1) := fun j _ => by
-      have hpow : (0 : ℝ) < (1 + c) ^ (j + 1) := by positivity
-      have hle : (1 + c) ^ (j + 1) ≤ gainProd lam (j + 1) i :=
-        pow_le_gainProd hc.le hlam (j + 1) i
-      have hinv : (gainProd lam (j + 1) i)⁻¹ ≤ ((1 + c)⁻¹) ^ (j + 1) := by
-        rw [inv_pow]
-        exact inv_anti₀ hpow hle
-      rw [norm_smul, Real.norm_of_nonneg (inv_nonneg.2 (gainProd_pos hpos (j + 1) i).le),
-        mul_comm]
-      exact mul_le_mul (hg j i) hinv (inv_nonneg.2 (gainProd_pos hpos (j + 1) i).le) hM
-    rw [hgauge]
-    calc ‖∑ j ∈ Finset.range k, (gainProd lam (j + 1) i)⁻¹ • g j i‖
-        ≤ ∑ j ∈ Finset.range k, ‖(gainProd lam (j + 1) i)⁻¹ • g j i‖ := norm_sum_le _ _
-      _ ≤ ∑ j ∈ Finset.range k, M * ((1 + c)⁻¹) ^ (j + 1) := Finset.sum_le_sum hterm
-      _ = M * ∑ j ∈ Finset.range k, ((1 + c)⁻¹) ^ (j + 1) := by rw [Finset.mul_sum]
-      _ ≤ M * (1 / c) := mul_le_mul_of_nonneg_left hgeom hM
-      _ = M / c := by ring
+  have hsum : ‖gaugeStack lam (x 0) g k i - x 0 i‖ ≤ M / c :=
+    norm_gaugeStack_sub_le hc hM hlam hg k i
   rw [normalize_rawStack hpos hx k i, norm_sub_rev]
   calc ‖‖x 0 i‖⁻¹ • x 0 i - ‖gaugeStack lam (x 0) g k i‖⁻¹ • gaugeStack lam (x 0) g k i‖
       ≤ 2 * ‖x 0 i - gaugeStack lam (x 0) g k i‖ / ‖x 0 i‖ := norm_normalize_sub_le_div (h0 i)
@@ -123,8 +136,9 @@ theorem rawStack_frozen {lam : ℕ → Idx n → ℝ} {x g : ℕ → Idx n → E
         exact hsum
     _ = 2 * M / (c * ‖x 0 i‖) := by field_simp
 
-/-- The hypotheses of `rawStack_frozen` are satisfiable: gains `2` (so `c = 1`),
-no block output (`M = 0`) and the stack `x_k = 2^k e₀`. -/
+/-- The hypotheses of `norm_gaugeStack_sub_le` and `rawStack_frozen` are
+satisfiable: gains `2` (so `c = 1`), no block output (`M = 0`) and the stack
+`x_k = 2^k e₀`. -/
 example : (0 : ℝ) < 1 ∧ (0 : ℝ) ≤ 0 ∧ (∀ (_ : ℕ) (_ : Idx 1), (1 : ℝ) + 1 ≤ 2) ∧
     (∀ (k : ℕ) (i : Idx 1),
       (fun k (_ : Idx 1) => (2 : ℝ) ^ k • (basePoint 0 : EucSpace 1)) (k + 1) i
@@ -180,7 +194,6 @@ example : ∃ c : ℝ, 0 < c ∧ (1 + c) ^ 2 = 11 / 10 ∧ (0 : ℝ) < 1 ∧ (1 
     linarith
   · have h : (1 : ℝ) + (Real.sqrt (11 / 10) - 1) = Real.sqrt (11 / 10) := by ring
     rw [h, Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 11 / 10)]
-
 
 end Perspective
 end Transformer
