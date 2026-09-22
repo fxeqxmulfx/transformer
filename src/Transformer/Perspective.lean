@@ -28,7 +28,11 @@ moments, hence by its partition function
 into the drive, does not collapse when two of the `z_i` are linearly
 independent, uniformly in weights of bounded row sums — for softmax attention,
 in `β`, `Q` and `K` — while at `z = 0` softmax attention with constant `Q`,
-`K` collapses from any open hemisphere (§6.1).
+`K` collapses from any open hemisphere (§6.1).  `DrivenFlow` and
+`DrivenSpread` let the drive be anything and ask for it on one window of time
+only: along `ẋ_i = Proj_{x_i}(v_i(t))`, if two drive differences `v_k - v_l`,
+`v_m - v_p` stay near two independent vectors while the tokens are close, the
+tokens do not stay close through any window of positive length.
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -71,6 +75,8 @@ import Transformer.Perspective.InjectedFlow
 import Transformer.Perspective.InjectedSpread
 import Transformer.Perspective.InjectedAttention
 import Transformer.Perspective.InjectedConsensus
+import Transformer.Perspective.DrivenFlow
+import Transformer.Perspective.DrivenSpread
 import Transformer.Perspective.Section5_ConeCollapse
 import Transformer.Perspective.Section5_Hemisphere
 import Transformer.Perspective.Section5_HemisphereCone
