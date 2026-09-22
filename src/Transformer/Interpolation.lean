@@ -14,6 +14,8 @@ import Transformer.Interpolation.SeparationFalse
 import Transformer.Interpolation.IdentityFlow
 import Transformer.Interpolation.NeuralODE
 import Transformer.Interpolation.Settling
+import Transformer.Interpolation.SeparationField
+import Transformer.Interpolation.HartmanGrobman
 import Transformer.Interpolation.Main
 import Transformer.Interpolation.HypPropagationFalse
 import Transformer.Interpolation.BallTransport

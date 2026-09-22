@@ -174,9 +174,10 @@ example :
 
 The exponential settling of the perceptron-only flow onto its attractor is
 `Transformer.Interpolation.Hartman_Grobman`, in
-`Transformer.Interpolation.Settling`, together with the Gronwall estimate it
-rests on and the refutation of the form it had here — which quantified over
-every path on the sphere, and was false.
+`Transformer.Interpolation.HartmanGrobman`, proved for the flow
+`eq: neural.ode.separation` of Step 2.  The refutation of the form it had
+here — which quantified over every path on the sphere, and was false — is in
+`Transformer.Interpolation.Settling`.
 -/
 
 end Interpolation

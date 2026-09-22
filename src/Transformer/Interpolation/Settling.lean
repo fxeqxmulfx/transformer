@@ -1,24 +1,21 @@
 /-
 # Measure-to-measure interpolation — Exponential settling near the attractor
 
-`eq: Hartman.Grobman` of §4 of arXiv:2411.04551v3: while the parameters are
-frozen, the perceptron-only flow on the sphere settles onto its attractor
-`ω_+` at an exponential rate,
+`eq: Hartman.Grobman` of §4 of arXiv:2411.04551v3 asserts that, while the
+parameters are frozen, the perceptron-only flow on the sphere settles onto its
+attractor `ω_+` at an exponential rate,
 
-  `d_g(x(t), ω_+) ≤ K e^{-λ t}`,   `t ≥ 0`,
+  `d_g(x(t), ω_+) ≤ K e^{-λ t}`,   `t ≥ 0`.
 
-with `λ > 0` and `K ≥ 1` depending on `x_0`, `ε` and `γ` alone.
+It is proved, for the flow `eq: neural.ode.separation` of Step 2 and every
+start in `𝒮_+`, as `Interpolation.Hartman_Grobman` in
+`Interpolation.HartmanGrobman`.  This file holds what that proof and the rest
+of §4 share: the perceptron field `perceptronField`, and the Gronwall estimate
+`norm_sub_le_of_contraction` — a field pointing back towards `w` at a linear
+rate brings the path to `w` at that rate — whose hypothesis
+`Interpolation.Hartman_Grobman` verifies.
 
-**What the source says and what is changed here.**  The paper reads the rate
-off the Hartman-Grobman linearization at a hyperbolic sink of the frozen
-field.  The linearization is not formalized; its consequence is, and it is
-carried as an explicit hypothesis — that along the trajectory the field points
-back towards `ω_+` at a linear rate, `⟨F(x(t)), x(t) - ω_+⟩ ≤ -λ ‖x(t) -
-ω_+‖²`.  Granted that, the exponential bound is Gronwall's, and it is proved
-below.  Nothing else of the statement is weakened: the conclusion is the
-paper's, with `K = max(1, ‖x_0 - ω_+‖)` exhibited.
-
-The form the statement had before — for *every* path `x : ℝ → 𝕊^{d-1}` and
+The form the statement once had — for *every* path `x : ℝ → 𝕊^{d-1}` and
 *every* `ω_+` — is false, and `not_forall_Hartman_Grobman` refutes it: a path
 standing still at the antipode of `ω_+` keeps the distance `2`, which no
 `K e^{-λ t}` can dominate for all `t`.
@@ -31,7 +28,6 @@ import Transformer.Interpolation.NeuralODE
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
 open scoped BigOperators
 open Real
@@ -156,110 +152,6 @@ example :
     rw [sub_zero, inner_neg_left, real_inner_smul_left, real_inner_smul_right,
       real_inner_self_eq_norm_sq, he, norm_smul, he]
     simp [sq]
-
-/-- **Equation (eq: Hartman.Grobman).** *Exponential settling near the
-attractor.*
-
-With the parameters frozen, a trajectory of the perceptron-only flow that the
-field pushes back towards `ω_+` at the linear rate `λ` satisfies
-
-  `‖x(t) - ω_+‖ ≤ K e^{-λ t}`   for `t ≥ 0`,   `K = max(1, ‖x(0) - ω_+‖) ≥ 1`.
-
-The linear rate is the hypothesis `hcontr`; the paper obtains it from the
-Hartman-Grobman linearization at the hyperbolic sink `ω_+`, which is not
-formalized here and is therefore carried as an explicit hypothesis rather
-than used silently.  See the header for what this changes.
-
-Source: arXiv:2411.04551v3, §4, `eq: Hartman.Grobman`. -/
-theorem Hartman_Grobman
-    (W U : ParamMatrix d) (b : EucSpace d)
-    (x : ℝ → EucSpace d) (ω_plus : EucSpace d) (lam : ℝ) (hlam : 0 < lam)
-    (hflow : ∀ t : ℝ, 0 ≤ t → HasDerivAt x (perceptronField d W U b (x t)) t)
-    (hcontr : ∀ t : ℝ, 0 ≤ t →
-      inner (𝕜 := ℝ) (perceptronField d W U b (x t)) (x t - ω_plus)
-        ≤ -(lam * ‖x t - ω_plus‖ ^ 2)) :
-    ∃ K : ℝ, 1 ≤ K ∧ 0 < lam ∧
-      ∀ t : ℝ, 0 ≤ t → ‖x t - ω_plus‖ ≤ K * Real.exp (-(lam * t)) := by
-  refine ⟨max 1 ‖x 0 - ω_plus‖, le_max_left _ _, hlam, fun t ht => ?_⟩
-  refine le_trans
-    (norm_sub_le_of_contraction d x (fun s => perceptronField d W U b (x s)) ω_plus lam
-      hflow hcontr t ht) ?_
-  gcongr
-  exact le_max_right _ _
-
-/-- The hypotheses of `Hartman_Grobman` are satisfiable, and by a trajectory
-that genuinely moves.  In `ℝ^1` with `𝐔 = 0`, `b = e_1` and `𝐖 = Id` the
-perceptron field is `F(s e_1) = (1 - s²) e_1`, whose solution started at the
-origin is `x(t) = tanh(t) e_1`; it settles onto `ω_+ = e_1`, and does so at
-the rate `λ = 1` because `⟨F(x(t)), x(t) - e_1⟩ = -(1 - T)²(1 + T)` with
-`T = tanh t ≥ 0`. -/
-example :
-    ∃ (W U : ParamMatrix 1) (b ω_plus : EucSpace 1) (x : ℝ → EucSpace 1) (lam : ℝ),
-      0 < lam ∧ x 0 ≠ ω_plus ∧
-      (∀ t : ℝ, 0 ≤ t → HasDerivAt x (perceptronField 1 W U b (x t)) t) ∧
-      (∀ t : ℝ, 0 ≤ t →
-        inner (𝕜 := ℝ) (perceptronField 1 W U b (x t)) (x t - ω_plus)
-          ≤ -(lam * ‖x t - ω_plus‖ ^ 2)) := by
-  have he : ‖((basePoint 0 : SSphere 1) : EucSpace 1)‖ = 1 :=
-    mem_sphere_zero_iff_norm.mp (basePoint 0).2
-  have htanh : ∀ t : ℝ, HasDerivAt Real.tanh (1 - Real.tanh t ^ 2) t := by
-    intro t
-    have hcosh : Real.cosh t ≠ 0 := ne_of_gt (Real.cosh_pos t)
-    have hfun : Real.tanh = fun s : ℝ => Real.sinh s / Real.cosh s :=
-      funext Real.tanh_eq_sinh_div_cosh
-    have h : HasDerivAt Real.tanh
-        ((Real.cosh t * Real.cosh t - Real.sinh t * Real.sinh t) / Real.cosh t ^ 2) t := by
-      rw [hfun]
-      exact (Real.hasDerivAt_sinh t).div (Real.hasDerivAt_cosh t) hcosh
-    refine h.congr_deriv ?_
-    rw [Real.tanh_eq_sinh_div_cosh]
-    field_simp
-  have hfield : ∀ T : ℝ,
-      perceptronField 1 (ContinuousLinearMap.id ℝ (EucSpace 1)) 0
-          ((basePoint 0 : SSphere 1) : EucSpace 1)
-          (T • ((basePoint 0 : SSphere 1) : EucSpace 1))
-        = (1 - T ^ 2) • ((basePoint 0 : SSphere 1) : EucSpace 1) := by
-    intro T
-    have hrelu : (EuclideanSpace.equiv (Fin 1) ℝ).symm
-        (fun k => max ((EuclideanSpace.equiv (Fin 1) ℝ
-          (((0 : ParamMatrix 1)) (T • ((basePoint 0 : SSphere 1) : EucSpace 1))
-            + ((basePoint 0 : SSphere 1) : EucSpace 1))) k) 0)
-          = ((basePoint 0 : SSphere 1) : EucSpace 1) := by
-      ext k
-      fin_cases k
-      simp [basePoint]
-    rw [perceptronField, hrelu, ContinuousLinearMap.coe_id', id_eq, proj,
-      real_inner_smul_left, real_inner_self_eq_norm_sq, he]
-    module
-  refine ⟨ContinuousLinearMap.id ℝ (EucSpace 1), 0,
-    ((basePoint 0 : SSphere 1) : EucSpace 1), ((basePoint 0 : SSphere 1) : EucSpace 1),
-    fun t => Real.tanh t • ((basePoint 0 : SSphere 1) : EucSpace 1), 1,
-    one_pos, ?_, ?_, ?_⟩
-  · show Real.tanh 0 • ((basePoint 0 : SSphere 1) : EucSpace 1)
-        ≠ ((basePoint 0 : SSphere 1) : EucSpace 1)
-    rw [Real.tanh_zero, zero_smul]
-    intro h
-    rw [← h, norm_zero] at he
-    norm_num at he
-  · intro t _
-    rw [hfield]
-    exact (htanh t).smul_const _
-  · intro t ht
-    have hT0 : 0 ≤ Real.tanh t := by
-      rw [Real.tanh_eq_sinh_div_cosh]
-      exact div_nonneg (Real.sinh_nonneg_iff.mpr ht) (Real.cosh_pos t).le
-    have hT1 : Real.tanh t < 1 := Real.tanh_lt_one t
-    have hsub : Real.tanh t • ((basePoint 0 : SSphere 1) : EucSpace 1)
-        - ((basePoint 0 : SSphere 1) : EucSpace 1)
-        = (Real.tanh t - 1) • ((basePoint 0 : SSphere 1) : EucSpace 1) := by
-      module
-    rw [hfield, hsub, real_inner_smul_left, real_inner_smul_right,
-      real_inner_self_eq_norm_sq, he, norm_smul, Real.norm_eq_abs, he]
-    have habs : |Real.tanh t - 1| = 1 - Real.tanh t := by
-      rw [abs_of_nonpos (by linarith)]
-      ring
-    rw [habs]
-    nlinarith [sq_nonneg (1 - Real.tanh t)]
 
 /-- **The form `eq: Hartman.Grobman` had before is false.**
 
