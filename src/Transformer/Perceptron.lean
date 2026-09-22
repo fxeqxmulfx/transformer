@@ -23,6 +23,9 @@ import Transformer.Perceptron.StrictSOPD
 import Transformer.Perceptron.SphereMoments
 import Transformer.Perceptron.Transform
 import Transformer.Perceptron.TransformPoly
+import Transformer.Perceptron.SecondDiff
+import Transformer.Perceptron.TransformExt
+import Transformer.Perceptron.TransformMap
 import Transformer.Perceptron.Hyperplane
 import Transformer.Perceptron.Bias
 import Transformer.Perceptron.BiasedAtomicity

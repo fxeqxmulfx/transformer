@@ -1,11 +1,12 @@
 /-
 # Perceptrons and attention's mean-field landscape — the exponential transform
 
-Formalization of `lem: quadpol` and `rem: general-attention` of
-arXiv:2601.21366v2: the map `μ ↦ f^μ`, `f^μ(x) = ∫ e^{β x·y} dμ(y)`, is
-injective on `𝒫(𝕊^{d-1})`, and `f^μ` is even exactly when `μ` is antipodally
-symmetric.  Part (i) of the lemma, on polynomial transforms, is
-`TransformPoly`.
+Formalization of `lem: quadpol` of arXiv:2601.21366v2: the map `μ ↦ f^μ`,
+`f^μ(x) = ∫ e^{β x·y} dμ(y)`, is injective on `𝒫(𝕊^{d-1})`, and `f^μ` is even
+exactly when `μ` is antipodally symmetric.  Part (i) of the lemma, on
+polynomial transforms, is `TransformPoly`.  The general attention matrix of
+`rem: general-attention` is `TransformMap`; the transform `f_B^μ` it studies,
+and the parity argument both cases share, are defined and proved here.
 
 **What the source says and what is carried here.**
 
@@ -141,33 +142,27 @@ theorem injective_attentionTransform (β : ℝ) (hβ : β ≠ 0) :
 /-- The hypothesis of `injective_attentionTransform` is satisfiable: `β = 1`. -/
 example : (1 : ℝ) ≠ 0 := one_ne_zero
 
-/-- **Remark (rem: general-attention), injectivity.**  For a symmetric
-invertible `B` the map `μ ↦ f_B^μ` is injective on `𝒫(𝕊^{d-1})`.
+/-- `μ ↦ f_B^μ` is injective at `B = β · id`, `β ≠ 0`: it is `μ ↦ f^μ`. -/
+theorem injective_attentionTransformMap_smul_id (β : ℝ) (hβ : β ≠ 0) :
+    Function.Injective (attentionTransformMap (β • LinearMap.id (M := EucSpace d))) := by
+  intro μ₁ μ₂ h
+  exact injective_attentionTransform β hβ (by
+    rw [← attentionTransformMap_smul_id, ← attentionTransformMap_smul_id, h])
 
-Not proved here.
-
-Source: arXiv:2601.21366v2, `rem: general-attention`. -/
-theorem injective_attentionTransformMap (B : EucSpace d →ₗ[ℝ] EucSpace d)
-    (hsymm : B.IsSymmetric) (hB : Function.Bijective B) :
-    Function.Injective (attentionTransformMap B) := by
-  sorry
-
-/-- The hypotheses of `injective_attentionTransformMap` are satisfiable:
-`B = id`, for which `f_B = f^μ` at `β = 1`. -/
-example : (LinearMap.id (R := ℝ) (M := EucSpace d)).IsSymmetric ∧
-    Function.Bijective (LinearMap.id (R := ℝ) (M := EucSpace d)) :=
-  ⟨fun _ _ => rfl, Function.bijective_id⟩
+/-- The hypothesis of `injective_attentionTransformMap_smul_id` is satisfiable:
+`β = 1`. -/
+example : (1 : ℝ) ≠ 0 := one_ne_zero
 
 /-! ### Parity -/
 
-/-- **Lemma (lem: quadpol) (ii), for a general attention matrix.**  `f_B^μ` is
-even if and only if `μ(A) = μ(-A)` for every Borel `A`.
-
-Proved, from the injectivity of `μ ↦ f_B^μ` taken as an explicit hypothesis —
-that is `injective_attentionTransformMap`, which is not proved here.
+/-- **The parity argument of `lem: quadpol` (ii)**, for any `B` whose transform
+is injective: `f_B^μ` is even if and only if `μ(A) = μ(-A)` for every Borel
+`A`.  Injectivity holds for `B = β · id`, `β ≠ 0`
+(`injective_attentionTransformMap_smul_id`), and for every invertible `B`
+(`injective_attentionTransformMap`, in `TransformMap`).
 
 Source: arXiv:2601.21366v2, `lem: quadpol` (ii), `rem: general-attention`. -/
-theorem even_attentionTransformMap_iff (B : EucSpace d →ₗ[ℝ] EucSpace d)
+theorem even_attentionTransformMap_iff_of_injective (B : EucSpace d →ₗ[ℝ] EucSpace d)
     (hinj : Function.Injective (attentionTransformMap B)) (μ : Perspective.ProbSphere d) :
     (∀ x : SSphere d, attentionTransformMap B μ (antipodeMap d x)
         = attentionTransformMap B μ x)
@@ -182,6 +177,11 @@ theorem even_attentionTransformMap_iff (B : EucSpace d →ₗ[ℝ] EucSpace d)
     have hμ : antipode μ = μ := ProbabilityMeasure.toMeasure_injective (by simpa using h)
     rw [← attentionTransformMap_antipode B μ x, hμ]
 
+/-- The hypothesis of `even_attentionTransformMap_iff_of_injective` is
+satisfiable: `B = id`. -/
+example : Function.Injective (attentionTransformMap (d := d) ((1 : ℝ) • LinearMap.id)) :=
+  injective_attentionTransformMap_smul_id 1 one_ne_zero
+
 /-- **Lemma (lem: quadpol) (ii).**  For `β ≠ 0`, `f^μ` is even if and only if
 `μ(A) = μ(-A)` for every Borel `A`.
 
@@ -191,11 +191,8 @@ Source: arXiv:2601.21366v2, `lem: quadpol` (ii). -/
 theorem even_attentionTransform_iff (β : ℝ) (hβ : β ≠ 0) (μ : Perspective.ProbSphere d) :
     (∀ x : SSphere d, attentionTransform β μ (antipodeMap d x) = attentionTransform β μ x)
       ↔ (μ : Measure (SSphere d)).map (antipodeMap d) = (μ : Measure (SSphere d)) := by
-  have hinj' : Function.Injective (attentionTransformMap (β • LinearMap.id (M := EucSpace d))) := by
-    intro μ₁ μ₂ h
-    exact injective_attentionTransform β hβ (by
-      rw [← attentionTransformMap_smul_id, ← attentionTransformMap_smul_id, h])
-  have := even_attentionTransformMap_iff (β • LinearMap.id (M := EucSpace d)) hinj' μ
+  have := even_attentionTransformMap_iff_of_injective (β • LinearMap.id (M := EucSpace d))
+    (injective_attentionTransformMap_smul_id β hβ) μ
   rwa [attentionTransformMap_smul_id] at this
 
 /-- The hypothesis of `even_attentionTransform_iff` is satisfiable: `β = 1`. -/
