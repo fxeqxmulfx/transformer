@@ -79,14 +79,6 @@ noncomputable def psiOf (μ : Measure (ℝ × ℝ)) (x : ℝ × ℝ) : ℝ :=
 noncomputable def scaledSum (n : ℕ) (X : Fin n → ℝ × ℝ) : ℝ × ℝ :=
   (Real.sqrt n)⁻¹ • ∑ i, X i
 
-/-- The first equality of the moment identity: for `|α| = 3` and a
-standardized law, `κ^α = 𝔼[H^α(Y)]`.  arXiv:2412.09080v3, §3.1, the display
-after `eq:psi`. -/
-theorem cumulant_three_eq_integral_hermite (μ : Measure (ℝ × ℝ)) [IsProbabilityMeasure μ]
-    (hμ : IsStandardized μ) (hexp : HasExpMoments μ) (k : ℕ) (hk : k ≤ 3) :
-    cumulantOf μ k (3 - k) = ∫ x, hermite3 k x ∂μ := by
-  sorry
-
 /-- The second equality of the moment identity, corrected: if `q` is the
 density of `n^{-1/2} Σ Xᵢ` for `X₁, …, Xₙ` i.i.d. of law `μ`, then
 `𝔼_{Z ~ N(0,I₂)}[(q/φ)(Z) H^α(Z)] = ∫ q H^α = n^{-1/2} κ^α` for `|α| = 3`.
@@ -159,11 +151,6 @@ theorem isDensityOf_stdGauss2 :
   rw [mul_mul_mul_comm, ← Real.exp_add, ← mul_inv, ← Real.sqrt_mul (by positivity),
     Real.sqrt_mul_self (by positivity)]
   ring_nf
-
-/-- The hypotheses of `cumulant_three_eq_integral_hermite` are satisfiable. -/
-example : IsProbabilityMeasure stdGauss2 ∧ IsStandardized stdGauss2 ∧
-    HasExpMoments stdGauss2 ∧ (0 : ℕ) ≤ 3 :=
-  ⟨inferInstance, isStandardized_stdGauss2, hasExpMoments_stdGauss2, by norm_num⟩
 
 /-- The hypotheses of `integral_density_mul_hermite` are satisfiable. -/
 example : IsProbabilityMeasure stdGauss2 ∧ IsStandardized stdGauss2 ∧

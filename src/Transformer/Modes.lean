@@ -39,6 +39,10 @@ import Transformer.Modes.Section2_MainIntPhi
 import Transformer.Modes.Section2_IntPhiB
 import Transformer.Modes.Section3_Hermite
 import Transformer.Modes.Section3_Cumulants
+import Transformer.Modes.Section3_ExpMoments
+import Transformer.Modes.Section3_MixedMoments
+import Transformer.Modes.Section3_LogDeriv
+import Transformer.Modes.Section3_CumulantMoment
 import Transformer.Modes.Section3_BR
 import Transformer.Modes.Section3_Edgeworth
 import Transformer.Modes.Section3_SigmaPos
