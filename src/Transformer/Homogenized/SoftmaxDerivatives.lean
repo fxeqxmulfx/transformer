@@ -17,9 +17,10 @@ softmax in this tree, not one per paper.
   multi-index `r_1, …, r_k` is free on the left-hand side and summed over on
   the right, and the `r_q'` of the indicator `1_{r_q = r_{q'} ∀ (q,q') ∈ I}` is
   bound by nothing.  What the claim is *for* — the only thing the source ever
-  uses it for, two displays later — is that each partial derivative is a
-  bounded function of the scores, with a bound depending on the order alone.
-  That is what `softmax_is_smooth` states.
+  uses it for, two displays later in `eq:pi_derivative_bound` — is that each
+  partial derivative of `χ_j` is `χ_j` times a bounded function of the scores,
+  with a bound depending on the order alone: `|∂^k χ_j| ≤ C_k χ_j`.  That is
+  what `softmax_is_smooth` states, and proves, in `SoftmaxSmooth.lean`.
 
 * The induction the source proves the claim by,
 
@@ -120,32 +121,47 @@ theorem fderiv_softmaxWeight (hm : 0 < m) (u : Idx m → ℝ) (j r : Idx m) :
 /-- The hypothesis of `fderiv_softmaxWeight` is satisfiable. -/
 example : 0 < 1 := one_pos
 
-/-- **Claim (claim:softmax_is_smooth).**  The softmax is `C^∞`, and for every
-order `k` there is a constant `C_k` bounding every `k`-th partial derivative of
-every weight, at every vector of scores and for every number of scores:
+/-- A softmax weight is at most `1`. -/
+theorem softmaxWeight_le_one (hm : 0 < m) (u : Idx m → ℝ) (j : Idx m) :
+    Perspective.softmaxWeight u j ≤ 1 := by
+  rw [← Perspective.sum_softmaxWeight hm u]
+  exact Finset.single_le_sum (fun k _ => Perspective.softmaxWeight_nonneg u k)
+    (Finset.mem_univ j)
 
-  `|∂^k χ_j / ∂z_{r_1} … ∂z_{r_k} (z)| ≤ C_k`.
+/-- The hypothesis of `softmaxWeight_le_one` is satisfiable. -/
+example : 0 < 1 := one_pos
 
-This is what the claim's displayed formula is for — the derivative is `χ_j`
-times a polynomial in the weights with coefficients depending on `k` alone, and
-the weights lie in `[0,1]` — and, unlike that display, it is a statement; see
-the module docstring.
+/-- A softmax weight is a smooth function of the scores. -/
+theorem contDiff_softmaxWeight (hm : 0 < m) (j : Idx m) :
+    ContDiff ℝ (⊤ : ℕ∞) (fun v : Idx m → ℝ => Perspective.softmaxWeight v j) := by
+  simp only [Perspective.softmaxWeight]
+  exact ContDiff.div (by fun_prop) (by fun_prop)
+    fun v => (Perspective.softmaxPartition_pos hm v).ne'
 
-Not proved here.
+/-- The hypothesis of `contDiff_softmaxWeight` is satisfiable. -/
+example : 0 < 1 := one_pos
 
-Source: arXiv:2604.01978v1, `claim:softmax_is_smooth`. -/
-theorem softmax_is_smooth :
-    ∃ C : ℕ → ℝ, (∀ k : ℕ, 0 < C k) ∧
-      ∀ (n : ℕ), 0 < n →
-        (∀ j : Idx n,
-          ContDiff ℝ (⊤ : ℕ∞) (fun v : Idx n → ℝ => Perspective.softmaxWeight v j)) ∧
-        ∀ (k : ℕ) (j : Idx n) (r : Fin k → Idx n) (u : Idx n → ℝ),
-          |iteratedFDeriv ℝ k (fun v : Idx n → ℝ => Perspective.softmaxWeight v j) u
-            (fun i => Pi.single (r i) (1 : ℝ))| ≤ C k := by
-  sorry
+/-- The monomial `χ_{a_1} ⋯ χ_{a_p}` in the softmax weights. -/
+noncomputable def softmaxMonomial {p : ℕ} (a : Fin p → Idx m) (v : Idx m → ℝ) : ℝ :=
+  ∏ i, Perspective.softmaxWeight v (a i)
 
-/-- The quantifiers of `softmax_is_smooth` are not empty: there is a positive
-number of scores. -/
+/-- A monomial in the softmax weights is smooth. -/
+theorem contDiff_softmaxMonomial (hm : 0 < m) {p : ℕ} (a : Fin p → Idx m) :
+    ContDiff ℝ (⊤ : ℕ∞) (softmaxMonomial a) :=
+  contDiff_prod fun i _ => contDiff_softmaxWeight hm (a i)
+
+/-- The hypothesis of `contDiff_softmaxMonomial` is satisfiable. -/
+example : 0 < 1 := one_pos
+
+/-- A monomial in the softmax weights lies in `[0,1]`. -/
+theorem abs_softmaxMonomial_le_one (hm : 0 < m) {p : ℕ} (a : Fin p → Idx m)
+    (v : Idx m → ℝ) : |softmaxMonomial a v| ≤ 1 := by
+  rw [softmaxMonomial,
+    abs_of_nonneg (Finset.prod_nonneg fun i _ => Perspective.softmaxWeight_nonneg v (a i))]
+  exact Finset.prod_le_one₀ (fun i _ => Perspective.softmaxWeight_nonneg v (a i))
+    fun i _ => softmaxWeight_le_one hm v (a i)
+
+/-- The hypothesis of `abs_softmaxMonomial_le_one` is satisfiable. -/
 example : 0 < 1 := one_pos
 
 end Homogenized

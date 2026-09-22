@@ -43,3 +43,4 @@ import Transformer.Homogenized.SphereSde
 import Transformer.Homogenized.HansonWright
 import Transformer.Homogenized.GaussianInterp
 import Transformer.Homogenized.SoftmaxDerivatives
+import Transformer.Homogenized.SoftmaxSmooth
