@@ -25,7 +25,7 @@ The scalars `s_μ(x)` and `s_μ(x,x')` of `eq:s_mu_defs_clean` are
 -/
 
 import Transformer.Homogenized.OverlapObservable
-import Transformer.Homogenized.GaussianKernel
+import Transformer.Homogenized.GaussianOverlapMoments
 
 open scoped BigOperators NNReal
 open Real MeasureTheory
@@ -127,15 +127,13 @@ the equation, applied to the observable `φ(X) = ⟨x_i, x_j⟩`, is
   drift is a statement about the generator; the martingale part is identified
   separately, through its integrand, by `fderiv_overlap`.  See the module
   docstring.
-* `σ_V² = 1/d` is an explicit hypothesis, as in `gaussian_drift_and_kernel`:
+* `σ_V² = 1/d` is an explicit hypothesis, as in `gaussian_drift_and_kernel_empMeasure`:
   the Gaussian identity `E[VᵀMV] = (1/d)Tr(M) I_d` the proof turns on is the
   one of `lem:lemma_app`, and it is that normalization of `σ_V` and no other.
 * The source fixes `i, j ∈ [n]²`; the statement here is for all `i, j`,
   including `i = j`, where it degenerates correctly — `overlapDrift_self`.
 * The tokens are unit vectors, which is where `Tr(Proj_{x_i}) = d - 1` and
   `eq:trace_proj_proj_clean` come from.
-
-Not proved here.
 
 Source: arXiv:2604.01978v1, `lem:Ito_formula`. -/
 theorem ito_formula_overlap {d n : ℕ} (β : ℝ) (σV σA : ℝ≥0)
@@ -145,7 +143,23 @@ theorem ito_formula_overlap {d n : ℕ} (β : ℝ) (σV σA : ℝ≥0)
     sphGenerator ρ (bField β ρ) (noiseField β 1 1 ρ)
         (fun y : Idx n → EucSpace d => inner (𝕜 := ℝ) (y i) (y j)) X
       = overlapDrift β ρ X i j := by
-  sorry
+  have h1 := integrable_inner_Gfield_cross_gaussian β hρ hX i j
+  have hi := integrable_inner_Gfield_cross_gaussian β hρ hX i i
+  have hj := integrable_inner_Gfield_cross_gaussian β hρ hX j j
+  have hi' : Integrable (fun θ => ‖Gfield β ρ X θ i‖ ^ 2) ρ := by
+    simpa only [real_inner_self_eq_norm_sq] using hi
+  have hj' : Integrable (fun θ => ‖Gfield β ρ X θ j‖ ^ 2) ρ := by
+    simpa only [real_inner_self_eq_norm_sq] using hj
+  have h2 : Integrable (fun θ => ‖Gfield β ρ X θ i‖ ^ 2 + ‖Gfield β ρ X θ j‖ ^ 2) ρ :=
+    hi'.add hj'
+  rw [sphGenerator_overlap_diffusive β ρ X i j
+    (fun k => bField_gaussian β σV σA ρ hρ X k) h1 h2]
+  rw [integral_inner_Gfield_cross_gaussian β hρ hX i j]
+  rw [integral_add hi' hj', integral_norm_Gfield_sq_baryCorr_gaussian β hρ hX i,
+    integral_norm_Gfield_sq_baryCorr_gaussian β hρ hX j]
+  rw [hσ]
+  unfold overlapDrift
+  ring
 
 /-- The hypotheses of `ito_formula_overlap` are satisfiable: the Gaussian
 ensemble at the normalization `σ_V² = 1/d` of `lem:lemma_app`, on a

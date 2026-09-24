@@ -3,7 +3,8 @@
 
 Formalization of `lem:lemma_app` of arXiv:2604.01978v1, *Homogenized
 Transformers*, §5: under `eq: tformers.at.initialization` the drift vanishes
-and the covariance kernel `eq:covariance_kernel` collapses to a scalar,
+and, at the empirical token measure `μ_X`, the covariance kernel
+`eq:covariance_kernel` collapses to a scalar,
 
   `K[μ](x,y) = (1/d) E_A⟨m_{β,A}[μ](x), m_{β,A}[μ](y)⟩ I_d`.
 
@@ -17,6 +18,10 @@ together with `σ_V² = 1/d`, which is the lemma itself.
 import Transformer.Homogenized.Barycenter
 import Transformer.Homogenized.GaussianDrift
 import Transformer.Homogenized.GaussianEnsemble
+import Transformer.Homogenized.GaussianCrossMoments
+import Transformer.Homogenized.GaussianMatrixKernel
+import Transformer.Homogenized.SimplexBary
+import Transformer.Homogenized.AttnAverage
 
 open scoped BigOperators ENNReal NNReal
 open Real MeasureTheory
@@ -66,46 +71,88 @@ example {d : ℕ} (β : ℝ) (θ : HeadParam d) (x z : EucSpace d) :
 
 /-! ### The kernel -/
 
-/-- **Lemma (lem:lemma_app).**  Under `eq: tformers.at.initialization`,
-`b_{ρ*}[μ] ≡ 0` and
+/-- The scalar mixed-moment computation in the proof of `lem:lemma_app`, at
+the empirical measure of unit tokens.  The two softmax barycenters depend on
+the query/key matrix but not on the Gaussian value matrix; their norms are at
+most one, so `integral_gaussian_value_cross` applies.
 
-  `K[μ](x,y) = (1/d) E_A⟨m_{β,A}[μ](x), m_{β,A}[μ](y)⟩ I_d`.
+Source: arXiv:2604.01978v1, proof of `lem:lemma_app`. -/
+theorem gaussian_value_cross_empMeasure {d n : ℕ} (β : ℝ) {σV σA : ℝ≥0}
+    {ρ : Measure (HeadParam d)} (hρ : IsGaussianHeadLaw d σV σA ρ)
+    {x : Idx n → EucSpace d} (hx : ∀ k, ‖x k‖ = 1)
+    (i j : Idx n) (u v : EucSpace d) :
+    ∫ θ, inner (𝕜 := ℝ) u (valueMap θ (softBary β θ.2 (empMeasure x) (x i))) *
+        inner (𝕜 := ℝ) v (valueMap θ (softBary β θ.2 (empMeasure x) (x j))) ∂ρ =
+      (σV : ℝ) ^ 2 * inner (𝕜 := ℝ) u v *
+        baryCorr β ρ (empMeasure x) (x i) (x j) := by
+  simpa only [valueMap, baryCorr, softBary_empMeasure] using
+    (integral_gaussian_value_cross hρ
+      (measurable_sum_attnProb_smul β x i)
+      (measurable_sum_attnProb_smul β x j)
+      (fun A => norm_sum_attnProb_smul_le β A hx i)
+      (fun A => norm_sum_attnProb_smul_le β A hx j) u v)
 
-**What the source says and what is written here.**
+/-- The empirical mixed-moment hypotheses are satisfiable: one unit token
+and a Gaussian head law at the standard value-matrix scaling. -/
+example (d : ℕ) (σA : ℝ≥0) :
+    IsGaussianHeadLaw (d + 1) (stdSigmaV (d + 1)) σA
+      (gaussHeadLaw (d + 1) (stdSigmaV (d + 1)) σA) ∧
+      ∀ _k : Idx 1, ‖((basePoint d : SSphere (d + 1)) : EucSpace (d + 1))‖ = 1 :=
+  ⟨isGaussianHeadLaw_gaussHeadLaw _ _ _, fun _ => by simp [basePoint, PiLp.norm_single]⟩
 
-* The source states the lemma at the empirical measure `μ_X`; it is carried
-  here at a general measure on `ℝ^d`, which is where `covKernel` of
-  `eq:covariance_kernel` lives and where `thm:large_beta_meta` uses it.  The
-  first clause is §2.3.3 item (ii) at a general `μ`, proved as
-  `meanFieldOf_gaussian`; the two clauses stay one lemma, as in the source,
-  and only the kernel identity is open.
-* The source's display carries the two projections,
-  `K[μ](x_i,x_j) = (1/d) Proj_{x_i} E⟨m,m⟩ I_d Proj_{x_j}`, because its `K` is
-  the kernel as `eq:cross_variation_kernel` sandwiches it.  Written without
-  them the identity is the stronger one — `K[μ](x,y)` is a multiple of the
-  identity matrix — and the sandwiched display follows by applying `Proj_x` to
-  both sides at `v = Proj_y v'`.
-* `σ_V² = 1/d` is the standard scaling the source substitutes silently at the
-  last line of the proof; it is a hypothesis here.
+/-- The covariance kernel at an empirical measure of unit tokens is a scalar
+multiple of the identity.  This is the unprojected matrix equality underlying
+the displayed formula of `lem:lemma_app`; the source sandwiches it between
+the two tangent projections.
 
-The kernel identity is not proved here.
+Source: arXiv:2604.01978v1, proof of `lem:lemma_app`. -/
+theorem gaussian_covKernel_empMeasure {d n : ℕ} (β : ℝ) {σV σA : ℝ≥0}
+    {ρ : Measure (HeadParam d)} (hρ : IsGaussianHeadLaw d σV σA ρ)
+    {x : Idx n → EucSpace d} (hx : ∀ k, ‖x k‖ = 1)
+    (i j : Idx n) (v : EucSpace d) :
+    covKernel β ρ (empMeasure x) (x i) (x j) v =
+      ((σV : ℝ) ^ 2 * baryCorr β ρ (empMeasure x) (x i) (x j)) • v := by
+  simpa only [covKernel, fluctOf_empMeasure, fluct, meanField_gaussian β hρ,
+    sub_zero, attnField_self_eq_valueMap, valueMap, baryCorr, softBary_empMeasure] using
+    (integral_gaussian_value_matrix_cross hρ
+      (measurable_sum_attnProb_smul β x i)
+      (measurable_sum_attnProb_smul β x j)
+      (fun A => norm_sum_attnProb_smul_le β A hx i)
+      (fun A => norm_sum_attnProb_smul_le β A hx j) v)
+
+/-- **Lemma (lem:lemma_app), at the empirical token measure of the source.**
+The Gaussian drift vanishes, and the covariance kernel is the scalar
+`(1/d) s_{μ_X}(x_i,x_j)` times the identity.  The projections in the source's
+display are applied to this matrix when forming the noise cross-variation.
+
+The source explicitly says `μ = μ_X`.  An earlier formalization additionally
+asserted this kernel identity for an arbitrary measure, which is stronger than
+the cited lemma and is not needed to formalize it.  This theorem states and
+proves the source's empirical-measure claim.
 
 Source: arXiv:2604.01978v1, `lem:lemma_app`. -/
-theorem gaussian_drift_and_kernel {d : ℕ} (β : ℝ) (σV σA : ℝ≥0)
+theorem gaussian_drift_and_kernel_empMeasure {d n : ℕ} (β : ℝ) (σV σA : ℝ≥0)
     (ρ : Measure (HeadParam d)) (hρ : IsGaussianHeadLaw d σV σA ρ)
-    (hσ : ((σV : ℝ)) ^ 2 = 1 / (d : ℝ)) (μ : Measure (EucSpace d)) :
-    (∀ z : EucSpace d, meanFieldOf β ρ μ z = 0) ∧
-      ∀ x y v : EucSpace d,
-        covKernel β ρ μ x y v = ((1 / (d : ℝ)) * baryCorr β ρ μ x y) • v := by
-  refine ⟨meanFieldOf_gaussian β hρ μ, ?_⟩
-  sorry
+    (hσ : (σV : ℝ) ^ 2 = 1 / (d : ℝ))
+    {x : Idx n → EucSpace d} (hx : ∀ k, ‖x k‖ = 1)
+    (i j : Idx n) :
+    (∀ z : EucSpace d, meanFieldOf β ρ (empMeasure x) z = 0) ∧
+      ∀ v : EucSpace d,
+        covKernel β ρ (empMeasure x) (x i) (x j) v =
+          ((1 / (d : ℝ)) * baryCorr β ρ (empMeasure x) (x i) (x j)) • v := by
+  refine ⟨meanFieldOf_gaussian β hρ (empMeasure x), ?_⟩
+  intro v
+  rw [gaussian_covKernel_empMeasure β hρ hx i j v, hσ]
 
-/-- The hypotheses of `gaussian_drift_and_kernel` are satisfiable in every
-dimension: the Gaussian ensemble at the standard scaling `σ_V² = 1/d`. -/
+/-- The empirical lemma's hypotheses hold at the standard Gaussian scaling
+and one unit token. -/
 example (d : ℕ) (σA : ℝ≥0) :
-    IsGaussianHeadLaw d (stdSigmaV d) σA (gaussHeadLaw d (stdSigmaV d) σA) ∧
-      ((stdSigmaV d : ℝ)) ^ 2 = 1 / (d : ℝ) :=
-  ⟨isGaussianHeadLaw_gaussHeadLaw d _ _, stdSigmaV_sq d⟩
+    IsGaussianHeadLaw (d + 1) (stdSigmaV (d + 1)) σA
+      (gaussHeadLaw (d + 1) (stdSigmaV (d + 1)) σA) ∧
+      (stdSigmaV (d + 1) : ℝ) ^ 2 = 1 / ((d + 1 : ℕ) : ℝ) ∧
+      ∀ _k : Idx 1, ‖((basePoint d : SSphere (d + 1)) : EucSpace (d + 1))‖ = 1 :=
+  ⟨isGaussianHeadLaw_gaussHeadLaw _ _ _, stdSigmaV_sq _,
+    fun _ => by simp [basePoint, PiLp.norm_single]⟩
 
 end Homogenized
 end Transformer

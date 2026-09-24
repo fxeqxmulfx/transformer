@@ -47,14 +47,14 @@ attention average of the tokens.
 
 Source: arXiv:2604.01978v1, proof of `lem:drift_on_simplex_selfcontained`. -/
 theorem softBary_empMeasure {d n : ℕ} (β : ℝ) (A : Matrix (Fin d) (Fin d) ℝ)
-    (x : Idx (n + 1) → EucSpace d) (i : Idx (n + 1)) :
-    softBary β A (empMeasure x) (x i) = ∑ k : Idx (n + 1), attnProb β A x i k • x k := by
-  have hW : (0 : ℝ) < ∑ l : Idx (n + 1), softWeight β A (x i) (x l) :=
+    (x : Idx n → EucSpace d) (i : Idx n) :
+    softBary β A (empMeasure x) (x i) = ∑ k : Idx n, attnProb β A x i k • x k := by
+  have hW : (0 : ℝ) < ∑ l : Idx n, softWeight β A (x i) (x l) :=
     Finset.sum_pos (fun l _ => softWeight_pos _ _ _ _) ⟨i, Finset.mem_univ i⟩
-  have hn : ((n + 1 : ℕ) : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.succ_ne_zero n)
-  have hrhs : ∑ k : Idx (n + 1), attnProb β A x i k • x k
-      = (∑ l : Idx (n + 1), softWeight β A (x i) (x l))⁻¹ •
-          ∑ k : Idx (n + 1), softWeight β A (x i) (x k) • x k := by
+  have hn : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.ne_of_gt i.pos)
+  have hrhs : ∑ k : Idx n, attnProb β A x i k • x k
+      = (∑ l : Idx n, softWeight β A (x i) (x l))⁻¹ •
+          ∑ k : Idx n, softWeight β A (x i) (x k) • x k := by
     rw [Finset.smul_sum]
     exact Finset.sum_congr rfl fun k _ => by
       rw [attnProb_eq_softWeight, div_eq_inv_mul, smul_smul]

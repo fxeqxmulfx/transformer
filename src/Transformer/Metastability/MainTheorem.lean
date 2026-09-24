@@ -25,6 +25,7 @@ import Transformer.Perspective.Section1_IPS
 import Transformer.Metastability.Basic
 import Transformer.Metastability.CollapseODE
 import Transformer.Metastability.PairVelocitySum
+import Transformer.Metastability.Propagation
 import Mathlib.Analysis.InnerProductSpace.Calculus
 
 open scoped BigOperators
@@ -241,33 +242,6 @@ example : (1 : ℝ) < 2 ∧ (0 : ℝ) < 1 ∧ (0 < (1 : ℝ) ∧ (1 : ℝ) ≤ 1
         Real.exp (2 * ((fun _ : ℝ => (1 : ℝ)) t - 1))) t := by
   refine ⟨by norm_num, by norm_num, ⟨by norm_num, le_rfl⟩, rfl, fun t => ?_⟩
   simpa using hasDerivAt_const t (1 : ℝ)
-
-/-- **Lemma (lem:collapsetime) — *Propagation.*
-
-Fix `β > 1`, and let `δ ∈ (0, 1)`, `α ∈ (-1, 1)` satisfy
-
-  `(1/n) δ (1 - δ) e^{-δ β} > n e^{-(1-α) β}`.
-
-If `⟨x_i(0), x_j(0)⟩ ≥ 1 - δ` for all `(i, j) ∈ I²` and
-`⟨x_i(t), x_k(t)⟩ ≤ α` for all `i ∈ I`, `k ∈ I^c`, `t ∈ [0, T]`, then
-
-  `⟨x_i(t), x_j(t)⟩ ≥ 1 - δ`  for all `(i, j) ∈ I²` and `t ∈ [0, T]`. -/
-lemma propagation
-    (β : ℝ) (hβ : 1 < β) (δ α : ℝ)
-    (X : ℝ → SphereTuple d n) (hX : Perspective.SA d n β X)
-    (I : Finset (Idx n)) (T : ℝ) (hT : 0 ≤ T)
-    (h_cond : (1 / (n : ℝ)) * δ * (1 - δ) * Real.exp (-(δ * β))
-                > (n : ℝ) * Real.exp (-((1 - α) * β)))
-    (h_init : ∀ i ∈ I, ∀ j ∈ I,
-                1 - δ ≤ inner (𝕜 := ℝ)
-                          ((X 0 i : EucSpace d)) ((X 0 j : EucSpace d)))
-    (h_far  : ∀ i ∈ I, ∀ k ∈ Iᶜ, ∀ t : ℝ, 0 ≤ t → t ≤ T →
-                inner (𝕜 := ℝ)
-                  ((X t i : EucSpace d)) ((X t k : EucSpace d)) ≤ α) :
-    ∀ i ∈ I, ∀ j ∈ I, ∀ t : ℝ, 0 ≤ t → t ≤ T →
-      1 - δ ≤ inner (𝕜 := ℝ)
-                  ((X t i : EucSpace d)) ((X t j : EucSpace d)) := by
-  sorry
 
 /-- **Theorem (thm: metastability).** *Dynamic metastability.*
 

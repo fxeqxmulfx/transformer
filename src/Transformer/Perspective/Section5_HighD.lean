@@ -44,6 +44,7 @@ import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section3_SmallBeta
 import Transformer.Perspective.Section5_Exceptional
 import Transformer.Perspective.Section5_Vanishing
+import Transformer.Perspective.UniformHemisphere
 import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 import Mathlib.Analysis.InnerProductSpace.Calculus
@@ -147,6 +148,38 @@ theorem step1_rhs
   refine (HasDerivAt.inner ℝ (hX t i) (hasDerivAt_const t w)).congr_deriv ?_
   rw [inner_zero_right, zero_add, key]
 
+/-- **The full-dimensional case of Wendel's formula.** When `n = d ≥ 1`, the
+uniform sample lies in an open hemisphere almost surely by
+`ae_exists_openHemisphere`; the binomial sum in `r:wendel` is then `2^(d-1)`.
+
+Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962). -/
+theorem wendel_full_dimension (hd : 1 ≤ d) :
+    ∀ P : Measure (SphereTuple d d), UniformTuple d d P →
+      (P { X₀ : SphereTuple d d | ∃ w : SSphere d, ∀ i : Idx d,
+            0 < inner (𝕜 := ℝ) ((X₀ i : EucSpace d)) ((w : EucSpace d)) }).toReal
+        = (∑ k ∈ Finset.range d, ((d - 1).choose k : ℝ)) / 2 ^ (d - 1) := by
+  intro P hP
+  have hprob : IsProbabilityMeasure P := by
+    obtain ⟨σ, hσ, -, rfl⟩ := hP
+    let _ : IsProbabilityMeasure σ := hσ
+    infer_instance
+  have hae := ae_exists_openHemisphere d (le_refl d) P hP
+  have hevent : P { X₀ : SphereTuple d d | ∃ w : SSphere d, ∀ i : Idx d,
+      0 < inner (𝕜 := ℝ) ((X₀ i : EucSpace d)) ((w : EucSpace d)) } = 1 := by
+    calc
+      _ = P Set.univ := measure_congr (by
+        filter_upwards [hae] with X hX
+        exact propext ⟨fun _ => Set.mem_univ X, fun _ => hX⟩)
+      _ = 1 := measure_univ
+  rw [hevent, ENNReal.toReal_one]
+  have hsum : (∑ k ∈ Finset.range d, (((d - 1).choose k : ℕ) : ℝ)) =
+      2 ^ (d - 1) := by
+    have h := Nat.sum_range_choose (d - 1)
+    have hd' : d - 1 + 1 = d := by omega
+    rw [hd'] at h
+    exact_mod_cast h
+  rw [hsum, div_self (by positivity : (2 : ℝ) ^ (d - 1) ≠ 0)]
+
 /-- **Theorem (r:wendel) — Wendel's theorem.**
 
 Let `1 ≤ d ≤ n` and let `x_1,…,x_n` be i.i.d. uniformly distributed points on
@@ -158,7 +191,8 @@ equals
 The event is the one `lem: hemisphere.clustering` needs, written on the
 initial sequence itself; the law is the uniform `UniformTuple` of §4.
 
-Not proved here: Wendel's counting argument is not formalized.
+The boundary case `d = n` is `wendel_full_dimension`, proved above. The strict
+case `d < n` still needs Wendel's counting argument and is not proved here.
 
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962). -/
 theorem wendel (hd : 1 ≤ d) (hdn : d ≤ n) :
@@ -166,9 +200,13 @@ theorem wendel (hd : 1 ≤ d) (hdn : d ≤ n) :
       (P { X₀ : SphereTuple d n | ∃ w : SSphere d, ∀ i : Idx n,
             0 < inner (𝕜 := ℝ) ((X₀ i : EucSpace d)) ((w : EucSpace d)) }).toReal
         = (∑ k ∈ Finset.range d, ((n - 1).choose k : ℝ)) / 2 ^ (n - 1) := by
-  sorry
+  by_cases hdn' : d = n
+  · subst n
+    exact wendel_full_dimension d hd
+  · sorry
 
-/-- The hypotheses of `wendel` are satisfiable: `d = n = 1`. -/
+/-- The dimension hypotheses of `wendel` and `wendel_full_dimension` are
+satisfiable: `d = n = 1`; `UniformTuple` is quantified over. -/
 example : 1 ≤ 1 ∧ 1 ≤ 1 := ⟨le_rfl, le_rfl⟩
 
 end Perspective

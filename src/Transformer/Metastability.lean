@@ -25,6 +25,12 @@ import Transformer.Metastability.ReversePL
 import Transformer.Metastability.QuantitativeInequality
 import Transformer.Metastability.ExponentialFlow
 import Transformer.Metastability.Initial
+import Transformer.Metastability.InitialCapGeometry
+import Transformer.Metastability.InitialMixtureBound
+import Transformer.Metastability.InitialScale
+import Transformer.Metastability.GaussianTail
+import Transformer.Metastability.GaussianMixtureTail
+import Transformer.Metastability.InitialCounterexample
 import Transformer.Metastability.InitialUniform
 import Transformer.Metastability.UniformCap
 import Transformer.Metastability.NotSeparated
