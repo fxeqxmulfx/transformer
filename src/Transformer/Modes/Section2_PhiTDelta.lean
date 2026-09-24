@@ -25,6 +25,7 @@ Source: arXiv:2412.09080v3, `lem:phi-t`, `eq:phi-t`.
 -/
 
 import Transformer.Modes.Section2_PhiTAsymp
+import Transformer.Modes.Section2_GaussianShiftBounds
 
 open Real Filter Asymptotics MeasureTheory
 open scoped Topology
@@ -103,8 +104,6 @@ theorem phiAlpha_mul_phiDelta_sq_le {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ
 uniformly on `T`.  Without `n ≲ β^{5/2}` it fails at `t = 0`; see the module
 docstring.
 
-Not proved here.
-
 Source: arXiv:2412.09080v3, `lem:phi-t`, `eq:phi-t`. -/
 theorem integral_krPhi_isTheta {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : IsRegime c N B)
     {ω : ℝ → ℝ} (hω : IsSlowGrowth ω)
@@ -114,7 +113,62 @@ theorem integral_krPhi_isTheta {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hr
           ≤ ∫ y in Set.Ioi (0 : ℝ), y * krPhi (N k) (B k) t 0 y ∧
         ∫ y in Set.Ioi (0 : ℝ), y * krPhi (N k) (B k) t 0 y
           ≤ C₂ * ((phiAlpha (B k) t)⁻¹ * Real.exp (-phiA (N k) (B k) t / 2)) := by
-  sorry
+  obtain ⟨C, hC⟩ := phiAlpha_mul_phiDelta_sq_le hreg hω hN
+  obtain ⟨L, U, hL, -, hα⟩ := phiAlpha_isTheta hreg hω
+  let D₁ : ℝ := (2 * Real.pi)⁻¹ * Real.exp (-C) / 2
+  let D₂ : ℝ := (2 * Real.pi)⁻¹ * Real.exp (C / 2) * 2
+  refine ⟨D₁, D₂, by dsimp [D₁]; positivity, by dsimp [D₂]; positivity, ?_⟩
+  filter_upwards [hC, hα] with k hCk hαk t ht
+  let a := phiAlpha (B k) t
+  let d := phiDelta (N k) (B k) t
+  let A := phiA (N k) (B k) t
+  have ha : 0 < a := by
+    have hβ := hreg.B_pos k
+    have hp : 0 < B k ^ ((1 : ℝ) / 2) * Real.exp (t ^ 2 / 2) := by positivity
+    exact lt_of_lt_of_le (mul_pos hL hp) (hαk t ht).1
+  have hF : sigmaFst (B k) t ≠ 0 := by
+    intro h
+    simp [a, phiAlpha, h] at ha
+  have hD : sigmaDet (B k) t ≠ 0 := by
+    intro h
+    simp [a, phiAlpha, h] at ha
+  have hquad (y : ℝ) : krQuad (N k) (B k) t 0 y = A + a * (y - d) ^ 2 :=
+    krQuad_zero_eq hF hD y
+  have hI : (∫ y in Set.Ioi (0 : ℝ), y * krPhi (N k) (B k) t 0 y) =
+      ((2 * Real.pi)⁻¹ * Real.exp (-A / 2)) *
+        (∫ y in Set.Ioi (0 : ℝ), y * Real.exp (-(a / 2) * (y - d) ^ 2)) := by
+    calc
+      _ = ∫ y in Set.Ioi (0 : ℝ),
+          ((2 * Real.pi)⁻¹ * Real.exp (-A / 2)) *
+            (y * Real.exp (-(a / 2) * (y - d) ^ 2)) := by
+          apply setIntegral_congr_fun measurableSet_Ioi
+          intro y hy
+          change y * ((2 * Real.pi)⁻¹ * Real.exp (-krQuad (N k) (B k) t 0 y / 2)) = _
+          rw [hquad y]
+          rw [show -(A + a * (y - d) ^ 2) / 2 = -A / 2 + -(a / 2) * (y - d) ^ 2 by ring,
+            Real.exp_add]
+          ring
+      _ = _ := integral_const_mul _ _
+  have hb := integral_mul_exp_neg_shift_sq_bounds ha (hCk t ht)
+  have hcoeff : 0 ≤ (2 * Real.pi)⁻¹ * Real.exp (-A / 2) := by positivity
+  constructor
+  · change D₁ * (a⁻¹ * Real.exp (-A / 2)) ≤ _
+    have h := mul_le_mul_of_nonneg_left hb.1 hcoeff
+    rw [hI]
+    calc
+      D₁ * (a⁻¹ * Real.exp (-A / 2))
+          = ((2 * Real.pi)⁻¹ * Real.exp (-A / 2)) * (Real.exp (-C) * (2 * a)⁻¹) := by
+              dsimp [D₁]
+              field_simp [ha.ne']
+      _ ≤ _ := h
+  · change _ ≤ D₂ * (a⁻¹ * Real.exp (-A / 2))
+    have h := mul_le_mul_of_nonneg_left hb.2 hcoeff
+    rw [hI]
+    calc
+      _ ≤ ((2 * Real.pi)⁻¹ * Real.exp (-A / 2)) * (Real.exp (C / 2) * (a / 2)⁻¹) := h
+      _ = D₂ * (a⁻¹ * Real.exp (-A / 2)) := by
+          dsimp [D₂]
+          field_simp [ha.ne']
 
 /-- The hypotheses above are satisfiable: `β = n`, `ω(β) = √(log log β)`, and
 `n ≤ n^{5/2}`. -/

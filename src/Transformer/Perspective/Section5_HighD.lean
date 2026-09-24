@@ -44,7 +44,12 @@ import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section3_SmallBeta
 import Transformer.Perspective.Section5_Exceptional
 import Transformer.Perspective.Section5_Vanishing
-import Transformer.Perspective.UniformHemisphere
+import Transformer.Perspective.WendelGeneralPosition
+import Transformer.Perspective.WendelCircuitFormula
+import Transformer.Perspective.WendelCountGeneralPosition
+import Transformer.Perspective.WendelConvexHull
+import Transformer.Perspective.WendelOneDim
+import Transformer.Perspective.WendelSignAverage
 import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 import Mathlib.Analysis.InnerProductSpace.Calculus
@@ -191,8 +196,22 @@ equals
 The event is the one `lem: hemisphere.clustering` needs, written on the
 initial sequence itself; the law is the uniform `UniformTuple` of §4.
 
-The boundary case `d = n` is `wendel_full_dimension`, proved above. The strict
-case `d < n` still needs Wendel's counting argument and is not proved here.
+The boundary case `d = n` is `wendel_full_dimension`, proved above; the case
+`d = 1` is `wendel_one_dim`, and `n = d + 1` is `wendel_circuit`. For the
+remaining case `1 < d` and `d + 1 < n`,
+`ae_linearGeneralPosition` supplies the almost-sure nondegeneracy needed by
+Wendel's counting argument, while `measure_hemisphereEvent_flipSigns` supplies
+the independent-sign symmetry. The hemisphere event is the avoidance of the
+origin by the sample convex hull (`exists_openHemisphere_iff_zero_notMem_convexHull`).
+`strictSignCount_generalPosition` proves the deterministic sign-pattern count,
+and `wendel_of_ae_sign_count` converts it to the probability formula. At `n = d + 1`,
+`exists_full_support_relation` and `relation_eq_smul_of_full_support` give the
+unique minimal dependence used by `hemisphereSignCount_circuit`. For larger
+samples, `hemisphereSignCount_snoc` gives the extension recurrence directly
+for the hemisphere count above. `strictSignCount_snoc_dimRecurrence` identifies
+the hyperplane correction with a sign count in one lower dimension, and
+`linearGeneralPosition_projectedEuclidean` transfers nondegeneracy to the
+projected family. Pascal's identity completes the count induction.
 
 Source: arXiv:2312.10794v5, §6.1, `r:wendel` (Wendel 1962). -/
 theorem wendel (hd : 1 ≤ d) (hdn : d ≤ n) :
@@ -200,10 +219,22 @@ theorem wendel (hd : 1 ≤ d) (hdn : d ≤ n) :
       (P { X₀ : SphereTuple d n | ∃ w : SSphere d, ∀ i : Idx n,
             0 < inner (𝕜 := ℝ) ((X₀ i : EucSpace d)) ((w : EucSpace d)) }).toReal
         = (∑ k ∈ Finset.range d, ((n - 1).choose k : ℝ)) / 2 ^ (n - 1) := by
-  by_cases hdn' : d = n
-  · subst n
-    exact wendel_full_dimension d hd
-  · sorry
+  by_cases hd1 : d = 1
+  · subst d
+    exact wendel_one_dim n hdn
+  · by_cases hdn' : d = n
+    · subst n
+      exact wendel_full_dimension d hd
+    · by_cases hnext : n = d + 1
+      · subst n
+        exact wendel_circuit d hd
+      · intro P hP
+        have hn : 1 ≤ n := by omega
+        apply wendel_of_ae_sign_count d n hn P hP
+        filter_upwards [ae_linearGeneralPosition d n P hP] with X hX
+        rw [← strictSignCount_eq_hemisphereSignCount d n hn X]
+        exact strictSignCount_generalPosition n d hd hdn
+          (fun i => (X i : EucSpace d)) hX
 
 /-- The dimension hypotheses of `wendel` and `wendel_full_dimension` are
 satisfiable: `d = n = 1`; `UniformTuple` is quantified over. -/

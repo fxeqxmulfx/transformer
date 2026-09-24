@@ -46,7 +46,13 @@ theorem integral_pow_mul_exp_neg_mul_sq {α : ℝ} (hα : 0 < α) (m : ℕ) :
   rw [heq, h]
   ring
 
-/-- The hypothesis of `integral_pow_mul_exp_neg_mul_sq` is satisfiable. -/
+/-- The first one-sided Gaussian moment is `1/(2α)`. -/
+theorem integral_mul_exp_neg_mul_sq {α : ℝ} (hα : 0 < α) :
+    (∫ u in Set.Ioi (0 : ℝ), u * Real.exp (-α * u ^ 2)) = (2 * α)⁻¹ := by
+  simpa [Real.Gamma_one, Real.rpow_neg_one, mul_inv_rev, mul_comm] using
+    integral_pow_mul_exp_neg_mul_sq hα 1
+
+/-- The positivity hypothesis of both one-sided Gaussian moment formulas is satisfiable. -/
 example : (0 : ℝ) < 1 := one_pos
 
 /-- `|v|ⁿe^{-v²/2}` is integrable on the line. -/
