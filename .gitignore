@@ -7,15 +7,33 @@ build/
 *.hash
 
 # ── Papers ───────────────────────────────────────────────────────────────
-# arXiv sources for the formalized manuscripts (~13 MB of LaTeX + figures).
-# Fetch them from arXiv rather than tracking them here:
-#   2312.10794  A mathematical perspective on Transformers
-#   2410.06833  Dynamic metastability in the self-attention model
-#   2411.04551  Measure-to-measure interpolation using Transformers
-#   2411.04990  Clustering in Causal Attention Masking
-#   2510.22026  Normalization in Attention Dynamics
-#   2512.01868  The Mean-Field Dynamics of Transformers
-#   2603.09078  Exclusive self-attention (XSA)
+# arXiv sources for the formalized manuscripts (~90 MB of LaTeX + figures).
+# Fetch them from arXiv rather than tracking them here, at the version the
+# docstrings cite, each into papers/arXiv-<id>/:
+#   1904.03590v4  On the Convergence Proof of AMSGrad and a New Version
+#   1904.09237    On the Convergence of Adam and Beyond
+#   2106.06981v2  Thinking Like Transformers
+#   2305.05465v6  The emergence of clusters in self-attention dynamics
+#   2310.16028v1  What Algorithms can Transformers Learn?
+#                 A Study in Length Generalization
+#   2312.10794v5  A mathematical perspective on Transformers
+#   2410.06833v1  Dynamic metastability in the self-attention model
+#   2411.04551v3  Measure-to-measure interpolation using Transformers
+#   2411.04990v2  Clustering in Causal Attention Masking
+#   2412.09080v3  On the number of modes of Gaussian kernel
+#                 density estimators
+#   2506.16055v3  Knee-Deep in C-RASP: A Transformer Depth Hierarchy
+#   2508.09628v1  Attention's forward pass and Frank-Wolfe
+#   2510.22026v2  Normalization in Attention Dynamics
+#   2512.01868v4  The Mean-Field Dynamics of Transformers
+#   2601.21366v2  Perceptrons and localization of attention's
+#                 mean-field landscape
+#   2601.22813v2  Quartet II: Accurate LLM Pre-Training in NVFP4
+#                 by Improved Unbiased Gradient Estimation
+#   2603.09078v1  Exclusive Self Attention
+#   2604.01978v1  Homogenized Transformers
+#   2605.09213v1  Kinetic theory for Transformers
+#                 and the lost-in-the-middle phenomenon
 /papers/
 
 # ── Python ───────────────────────────────────────────────────────────────
