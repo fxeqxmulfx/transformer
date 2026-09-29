@@ -4,15 +4,19 @@
 Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 *A mathematical perspective on Transformers*.
 
-The original §10 is a brief survey of known results on universal
-approximation.  Two of them are recorded here as `Prop`-valued definitions,
-written out in full so that what is *not* proved is visible: the class of
-approximating networks (`discreteLayer`, `vectorFieldQKV`), the sense of
-approximation (uniform on a compact set; bounded-Lipschitz on measures) and
-the quantifier order are all part of the statement.
+Section 10 of the survey is a short review: it states no theorem.  Of the approximation results it
+cites, two had been written here as sorried theorems of the survey, and neither is one:
 
-Neither is a theorem: the proofs are Yun et al. and Furuya et al.
-respectively, and neither is available here.
+* for discrete-time Transformers (Yun et al.), `universal_approximation_discrete` claimed uniform
+  approximation of *every* continuous sequence-to-sequence map on a compact set by residual
+  attention-plus-feed-forward layers.  Such layers are permutation-equivariant, so the claim is false
+  as soon as there are two tokens: `not_universal_approximation_discrete`.  The cited theorem uses
+  positional encodings, which this layer does not have.
+* for measure-to-measure flow maps, `universal_approximation_measure`: refuted in
+  `Transformer.Perspective.Section9_ApproximationMeasure`.
+
+The false statements are deleted and the counterexamples kept: nothing in the survey is left
+unproved here.
 -/
 
 import Transformer.Basic
@@ -41,8 +45,7 @@ self-attention followed by a one-hidden-layer feed-forward map,
 
   `x_i ↦ x_i + Z_{β,i}(x)⁻¹ Σ_j exp(β ⟨Q x_i, K x_j⟩) V x_j + w σ(a x_i + b)`.
 
-This is the discrete-time counterpart of `fullTransformer` at one head, and
-the class of maps the approximation result below composes. -/
+This is the discrete-time counterpart of `fullTransformer` at one head. -/
 noncomputable def discreteLayer
     (β : ℝ) (Q K V : ParamMatrix d) (σ : ℝ → ℝ)
     (w a : ParamMatrix d) (b : EucSpace d)
@@ -53,89 +56,80 @@ noncomputable def discreteLayer
     + w (EuclideanSpace.equiv _ ℝ |>.symm
           (fun k => σ ((EuclideanSpace.equiv _ ℝ (a (x i) + b)) k)))
 
-/-- *Universal approximation (Yun et al.).*  Discrete-time Transformers with
-translation parameters approximate an arbitrary continuous sequence-to-sequence
-map uniformly on compacta, as the number of layers tends to `+∞`.
+/-- **A block commutes with permutations of the tokens.**  Renaming the tokens by `τ` renames the
+outputs by `τ`: the attention weights of token `i` are a sum over all tokens, which does not see
+their order, and the feed-forward part acts on each token alone.  A stack of such blocks therefore
+carries no information on the position of a token. -/
+theorem discreteLayer_comp_perm (β : ℝ) (Q K V : ParamMatrix d) (σ : ℝ → ℝ)
+    (w a : ParamMatrix d) (b : EucSpace d) (x : Idx n → EucSpace d) (τ : Equiv.Perm (Idx n))
+    (i : Idx n) :
+    discreteLayer d n β Q K V σ w a b (x ∘ τ) i = discreteLayer d n β Q K V σ w a b x (τ i) := by
+  unfold discreteLayer discretePartition
+  simp only [Function.comp_apply]
+  rw [Equiv.sum_comp τ (fun j => Real.exp (β * inner (𝕜 := ℝ) (Q (x (τ i))) (K (x j)))),
+    Equiv.sum_comp τ (fun j => Real.exp (β * inner (𝕜 := ℝ) (Q (x (τ i))) (K (x j))) • V (x j))]
 
-The network is presented as a recursion (`x (k+1) = discreteLayer … (x k)`)
-rather than as a composition, so that the depth `L` and the per-layer
-parameters `Q, K, V, w, a, b` are the existential witnesses and the initial
-sequence ranges over the compact set.
+/-- **Discrete-time universal approximation, as formerly stated, is false.**
 
-Not proved here: the proof is Yun, Bhojanapalli, Rawat, Reddi, Kumar, *Are
-Transformers universal approximators of sequence-to-sequence functions?*,
-ICLR 2020.
+The claim was: for every continuous sequence-to-sequence map `f`, every compact `S` and every
+`ε > 0`, some stack of residual attention-plus-feed-forward blocks (`discreteLayer`, any continuous
+activation, per-layer parameters, any depth) moves each `x₀ ∈ S` to within `ε` of `f x₀`.  It fails
+with two tokens on the line: blocks are permutation-equivariant (`discreteLayer_comp_perm`), so the
+stack sends the swapped sequence `y ∘ τ` to the swap of the image of `y`, while the constant map
+`f ≡ (0, 1)` asks for the same output at `y = (0, 1)` and at `(1, 0)`.  Both cannot be within
+`1/2` of it.
 
-Source: arXiv:2312.10794v5, §10. -/
-theorem universal_approximation_discrete (β : ℝ)
-    (f : (Idx n → EucSpace d) → (Idx n → EucSpace d)) (hf : Continuous f)
-    (S : Set (Idx n → EucSpace d)) (hS : IsCompact S) (ε : ℝ) (hε : 0 < ε) :
-    ∃ (L : ℕ) (Q K V w a : ℕ → ParamMatrix d) (b : ℕ → EucSpace d) (σ : ℝ → ℝ),
-    Continuous σ ∧
-    ∀ x₀ ∈ S, ∀ x : ℕ → Idx n → EucSpace d,
-      x 0 = x₀ →
-      (∀ k : ℕ,
-        x (k + 1) = discreteLayer d n β (Q k) (K k) (V k) σ (w k) (a k) (b k) (x k)) →
-      ∀ i : Idx n, ‖x L i - f x₀ i‖ < ε := by
-  sorry
+The survey states no such theorem: §10 only says that universal approximation "has been shown to
+hold" for discrete-time Transformers "making use of a variant of the architecture with translation
+parameters".  The translation parameters are positional encodings, which break the symmetry; this
+layer has none.
 
-/-- The hypotheses of `universal_approximation_discrete` are satisfiable, and
-not by an empty compactum: the identity on one token of `ℝ¹`, approximated on
-the one-point set `{0}` to within `1`. -/
-example :
-    Continuous (id : (Idx 1 → EucSpace 1) → (Idx 1 → EucSpace 1)) ∧
-      IsCompact ({0} : Set (Idx 1 → EucSpace 1)) ∧ (0 : ℝ) < 1 :=
-  ⟨continuous_id, isCompact_singleton, one_pos⟩
-
-/-! ### Measure-to-measure flow maps -/
-
-/-- The mean-field vector field of `eq: SA.QKV`, i.e. `eq: vfSd` with general
-time-dependent `Q, K, V`:
-
-  `𝒳_t[μ](x) = Proj_x ( (∫ exp(β ⟨Q_t x, K_t y⟩) dμ(y))⁻¹
-                          ∫ exp(β ⟨Q_t x, K_t y⟩) V_t y dμ(y) )`.
-
-`vectorField` is this one at `Q = K = V = I_d`. -/
-noncomputable def vectorFieldQKV
-    (β : ℝ) (Q K V : TimeParam d) (t : ℝ) (μ : ProbSphere d) (x : EucSpace d) :
-    EucSpace d :=
-  proj d x
-    ((∫ y, Real.exp (β * inner (𝕜 := ℝ) (Q t x) (K t (y : EucSpace d)))
-        ∂(μ : Measure (SSphere d)))⁻¹ •
-      ∫ y, Real.exp (β * inner (𝕜 := ℝ) (Q t x) (K t (y : EucSpace d)))
-            • V t (y : EucSpace d) ∂(μ : Measure (SSphere d)))
-
-/-- *Measure-to-measure universal approximation* (Agrachev–Sarychev,
-Furuya–de Hoop–Peyré et al.).  The time-`T` flow maps of the mean-field
-Transformer dynamics approximate an arbitrary continuous self-map of
-`𝒫(𝕊^{d-1})`.
-
-Closeness of measures is the bounded-Lipschitz (Dudley) distance, spelled out
-by testing against `1`-Lipschitz functions bounded by `1`; it metrizes the weak
-topology, which is the one `Continuous Φ` refers to.  The flow map is presented
-through `auxCE`: `m` is any solution of the continuity equation driven by
-`vectorFieldQKV` with `m 0 = μ`, and it is `m T` that must be close to `Φ μ`.
-
-Not proved here: neither the approximation result nor well-posedness of the
-continuity equation is established.
-
-Source: arXiv:2312.10794v5, §10. -/
-theorem universal_approximation_measure (β : ℝ) (Φ : ProbSphere d → ProbSphere d)
-    (hΦ : Continuous Φ) (ε : ℝ) (hε : 0 < ε) :
-    ∃ (T : ℝ) (Q K V : TimeParam d), 0 < T ∧
-    ∀ (μ : ProbSphere d) (m : ℝ → ProbSphere d),
-      m 0 = μ →
-      auxCE d m (fun t x => vectorFieldQKV d β Q K V t (m t) x) →
-      ∀ φ : EucSpace d → ℝ, LipschitzWith 1 φ → (∀ x : EucSpace d, |φ x| ≤ 1) →
-        |(∫ x, φ (x : EucSpace d) ∂(m T : Measure (SSphere d)))
-            - ∫ x, φ (x : EucSpace d) ∂((Φ μ : ProbSphere d) : Measure (SSphere d))|
-          < ε := by
-  sorry
-
-/-- The hypotheses of `universal_approximation_measure` are satisfiable: the
-identity self-map of `𝒫(𝕊^{d-1})`, to within `1`. -/
-example : Continuous (id : ProbSphere 1 → ProbSphere 1) ∧ (0 : ℝ) < 1 :=
-  ⟨continuous_id, one_pos⟩
+Source: arXiv:2312.10794v5, §10, the paragraph citing Yun et al. -/
+theorem not_universal_approximation_discrete :
+    ¬ ∀ (d n : ℕ) (β : ℝ) (f : (Idx n → EucSpace d) → (Idx n → EucSpace d)), Continuous f →
+      ∀ (S : Set (Idx n → EucSpace d)), IsCompact S → ∀ ε : ℝ, 0 < ε →
+      ∃ (L : ℕ) (Q K V w a : ℕ → ParamMatrix d) (b : ℕ → EucSpace d) (σ : ℝ → ℝ),
+      Continuous σ ∧
+      ∀ x₀ ∈ S, ∀ x : ℕ → Idx n → EucSpace d,
+        x 0 = x₀ →
+        (∀ k : ℕ,
+          x (k + 1) = discreteLayer d n β (Q k) (K k) (V k) σ (w k) (a k) (b k) (x k)) →
+        ∀ i : Idx n, ‖x L i - f x₀ i‖ < ε := by
+  intro h
+  set u : EucSpace 1 := EuclideanSpace.single 0 1 with hu
+  have hu1 : ‖u‖ = 1 := by simp [hu]
+  set y : Idx 2 → EucSpace 1 := ![0, u] with hy
+  set τ : Equiv.Perm (Idx 2) := Equiv.swap 0 1 with hτ
+  have hS : IsCompact ({y, y ∘ τ} : Set (Idx 2 → EucSpace 1)) :=
+    ((Set.finite_singleton _).insert _).isCompact
+  obtain ⟨L, Q, K, V, w, a, b, σ, -, hall⟩ :=
+    h 1 2 0 (fun _ => y) continuous_const {y, y ∘ τ} hS (1 / 2) (by norm_num)
+  let orb : (Idx 2 → EucSpace 1) → ℕ → Idx 2 → EucSpace 1 := fun x₀ k =>
+    Nat.rec (motive := fun _ => Idx 2 → EucSpace 1) x₀
+      (fun k xk => discreteLayer 1 2 0 (Q k) (K k) (V k) σ (w k) (a k) (b k) xk) k
+  have hperm : ∀ k, orb (y ∘ τ) k = orb y k ∘ τ := by
+    intro k
+    induction k with
+    | zero => rfl
+    | succ k ih =>
+      show discreteLayer 1 2 0 (Q k) (K k) (V k) σ (w k) (a k) (b k) (orb (y ∘ τ) k) = _
+      rw [ih]
+      funext i
+      exact discreteLayer_comp_perm 1 2 0 _ _ _ σ _ _ _ _ τ i
+  have h1 := hall y (Or.inl rfl) (orb y) rfl (fun k => rfl)
+  have h2 := hall (y ∘ τ) (Or.inr rfl) (orb (y ∘ τ)) rfl (fun k => rfl)
+  have h1' := h1 1
+  have h2' := h2 0
+  rw [hperm L] at h2'
+  simp only [Function.comp_apply, hτ, hy, Equiv.swap_apply_left, Matrix.cons_val_zero,
+    Matrix.cons_val_one, sub_zero] at h1' h2'
+  have hsum : ‖u‖ < 1 := by
+    calc ‖u‖ = ‖(u - orb y L 1) + (orb y L 1 - 0)‖ := by congr 1; abel
+      _ ≤ ‖u - orb y L 1‖ + ‖orb y L 1 - 0‖ := norm_add_le _ _
+      _ = ‖orb y L 1 - u‖ + ‖orb y L 1 - 0‖ := by rw [norm_sub_rev]
+      _ < 1 / 2 + 1 / 2 := add_lt_add h1' (by simpa using h2')
+      _ = 1 := by norm_num
+  exact absurd hu1 (ne_of_lt hsum)
 
 end Perspective
 end Transformer

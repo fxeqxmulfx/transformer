@@ -170,6 +170,7 @@ import Transformer.Perspective.Section7_BBGKY
 import Transformer.Perspective.Section8_General
 import Transformer.Perspective.Section8_CohnKumar
 import Transformer.Perspective.Section9_Approximation
+import Transformer.Perspective.Section9_ApproximationMeasure
 import Transformer.Perspective.RussianTrick
 import Transformer.Perspective.RussianPairs
 import Transformer.Perspective.AppendixA_Beta0
