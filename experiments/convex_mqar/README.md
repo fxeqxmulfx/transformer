@@ -204,3 +204,18 @@ Lean proof. `RopeSoftmaxRecall` shares its codes, metric, positions, mask, null
 slot, and decoder; it is a control with fixed features. These standalone
 variants are not connected to the `benchmark` command yet. Existing benchmark
 results use the original unrotated convex construction.
+
+## Zoology reference modules
+
+`zoology_config.py`, `zoology_data.py`, and `zoology_model.py` contain the
+reference components ported from Zoology's `iclr24` Figure 2 experiment,
+commit `de4e258784224e09909c257ff3ea040f089ed660`. The generator preserves
+the source's random draws, zero fillers, distinct values, query positions,
+and train/test seeds. A separate validation split at data seed + 20 is added.
+
+The model preserves the two attention blocks, Identity state mixer, LayerNorm,
+biases, dropout, initialization, and tied readout. Causal SDPA replaces the
+source's explicit softmax. `positions="learned"` selects the original learned
+position embeddings; `positions="rope"` is an extension. The configurations
+record these choices explicitly. These components are not connected to the
+benchmark command, and training results for this model are pending.
