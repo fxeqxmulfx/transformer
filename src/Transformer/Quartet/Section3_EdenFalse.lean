@@ -16,8 +16,9 @@ rotation is `±(1/4, …, 1/4)` for every sign seed, so at `s = 21` the entries
 round to `±6`, `S = 7/2`, the scale saturates at `448 < 7/2 · 256`, and the
 estimate is exactly half the input: `MS-EDEN` returns `x/2` in expectation.
 
-The statement the paper means, at its own clipping factor, is
-`Transformer.Quartet.mean_rhtInv_msEden`.
+Inside the window of clipping factors the paper uses, `6 · 16/17 ≤ s ≤ (1/0.93) · 6 · 16/17`,
+the Corollary fails too, at every dimension: `Transformer.Quartet.not_mean_rhtInv_msEden_window`
+(`Section3_EdenBias`).
 -/
 
 import Transformer.Quartet.Section3_Eden

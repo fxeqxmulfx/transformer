@@ -141,5 +141,41 @@ also the smallest group scale the bound holds for. -/
 example : (2 : ℝ) ^ (-6 : ℤ) ≤ 2 ^ (-6 : ℤ) ∧ (2 : ℝ) ^ (-6 : ℤ) ≤ 448 := by
   norm_num
 
+/-- **The E4M3 grid is finite**: its points are the integer multiples of `2^{-9}` of absolute
+value at most `448`.  Integrating a stochastic rounding onto it (`integral_sr`) needs this. -/
+theorem fp8_finite : fp8.Finite := by
+  have hsub : fp8 ⊆ (fun n : ℤ => (n : ℝ) / 512) '' (Finset.Icc (-229376 : ℤ) 229376 : Set ℤ) := by
+    rintro x ⟨hx448, m, e, hm, he, habs⟩
+    obtain ⟨e', he'⟩ : ∃ e' : ℕ, (e' : ℤ) = e + 9 := ⟨(e + 9).toNat, by omega⟩
+    have hpow : (2 : ℝ) ^ e = 2 ^ e' / 512 := by
+      rw [show e = (e' : ℤ) - 9 by omega, zpow_sub₀ (by norm_num : (2 : ℝ) ≠ 0)]
+      simp
+      norm_num
+    have hN : |x| = ((m * 2 ^ e' : ℕ) : ℝ) / 512 := by
+      rw [habs, hpow]; push_cast; ring
+    have hle : ((m * 2 ^ e' : ℕ) : ℝ) ≤ 229376 := by
+      have := hx448
+      rw [hN, div_le_iff₀ (by norm_num)] at this
+      linarith
+    have hle' : ((m * 2 ^ e' : ℕ) : ℤ) ≤ 229376 := by exact_mod_cast hle
+    rcases abs_choice x with h | h
+    · refine ⟨((m * 2 ^ e' : ℕ) : ℤ), ?_, ?_⟩
+      · simp only [Finset.coe_Icc, Set.mem_Icc]
+        exact ⟨by omega, hle'⟩
+      · simp only [Int.cast_natCast]
+        rw [← hN, h]
+    · refine ⟨-((m * 2 ^ e' : ℕ) : ℤ), ?_, ?_⟩
+      · simp only [Finset.coe_Icc, Set.mem_Icc]
+        exact ⟨by omega, by omega⟩
+      · simp only [Int.cast_neg, Int.cast_natCast]
+        rw [neg_div, ← hN]
+        linarith
+  exact ((Finset.Icc (-229376 : ℤ) 229376).finite_toSet.image _).subset hsub
+
+/-- `fp8` is a finite set with the two points `0` and `448` the stochastic roundings of
+`MS-EDEN` are bracketed by. -/
+example : fp8.Finite ∧ (0 : ℝ) ∈ fp8 ∧ (448 : ℝ) ∈ fp8 :=
+  ⟨fp8_finite, ⟨by norm_num, 0, 0, by norm_num⟩, ⟨by norm_num, 14, 5, by norm_num⟩⟩
+
 end Quartet
 end Transformer

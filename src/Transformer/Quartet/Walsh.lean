@@ -40,6 +40,15 @@ theorem walsh_comm (n a b : ℕ) : walsh n a b = walsh n b a := by
   ext t
   simp [Bool.and_comm]
 
+/-- On no bits the character is `1`. -/
+theorem walsh_zero_bits (a b : ℕ) : walsh 0 a b = 1 := by simp [walsh]
+
+/-- The row `a = 0` of the characters is constant `1`. -/
+theorem walsh_zero_left (n b : ℕ) : walsh n 0 b = 1 := by simp [walsh]
+
+/-- And so is the column `b = 0`. -/
+theorem walsh_zero_right (n a : ℕ) : walsh n a 0 = 1 := by simp [walsh]
+
 /-- The character reads only the bits below `n`. -/
 theorem walsh_congr_right {n a b b' : ℕ} (h : ∀ t < n, b.testBit t = b'.testBit t) :
     walsh n a b = walsh n a b' := by

@@ -58,6 +58,11 @@ theorem hadamard_eq (i i' : Fin (2 ^ k)) (j j' : Fin 16) :
   unfold hadamard walsh
   rw [pow_add]
 
+/-- The first row of the Hadamard matrix is flat: every entry is `1/√(2^{k+4})`. -/
+theorem hadamard_zero_row (i' : Fin (2 ^ k)) (j' : Fin 16) :
+    hadamard k 0 i' 0 j' = 1 / Real.sqrt (2 ^ (k + 4)) := by
+  rw [hadamard_eq, Fin.val_zero, Fin.val_zero, walsh_zero_left, walsh_zero_left, one_mul]
+
 /-- And so it is symmetric. -/
 theorem hadamard_symm (i i' : Fin (2 ^ k)) (j j' : Fin 16) :
     hadamard k i i' j j' = hadamard k i' i j' j := by
