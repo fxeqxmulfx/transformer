@@ -189,3 +189,18 @@ not isolate a causal effect of RoPE. The convex construction uses no RoPE.
 `reports/rope_sanity.json` records the completed small-vocabulary GPU control:
 the trained RoPE Transformer and the convex mechanism both answered all 1024
 test queries correctly. This is a sanity check, not the full 8192-token result.
+
+## Standalone RoPE recall variant
+
+`convex_rope.py` defines `RopeConvexRecall` with fixed binary codes and a
+calibrated weight per active rotary pair. It uses the same interleaved
+frequencies and rotations as `RotaryAttention`, at the actual token positions.
+The default width 64, vocabulary 8192, base 10000, and maximum length 512 meet
+the bounded-angle routing margin. Unsupported margins are rejected.
+
+The tests check rotations, an independent quadratic program, causal recall,
+and the margin bounds. This RoPE extension is not covered by the existing
+Lean proof. `RopeSoftmaxRecall` shares its codes, metric, positions, mask, null
+slot, and decoder; it is a control with fixed features. These standalone
+variants are not connected to the `benchmark` command yet. Existing benchmark
+results use the original unrotated convex construction.
