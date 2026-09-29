@@ -8,24 +8,19 @@ Formalization of the main theorems of arXiv:2411.04551v3:
 * `Lemma lem: hyp.propagation`  — propagation of transport maps: false as
                                   written, refuted in
                                   `Interpolation.HypPropagationFalse`,
-* `Lemma lem: monge`            — Monge-style optimal-transport identity,
-                                  proved, against the `W_2` of
-                                  `Transformer.Interpolation.Wasserstein`,
+* `Lemma lem: monge`            — Monge-style optimal-transport identity, proved in
+                                  `Transformer.Interpolation.Monge`,
 * `Lemma lem: univ.approx`      — universal `L²`-map approximation.
 
-All but `lem: monge` assert the existence of a parameter curve, or of a map,
-with no construction available here, so they are not proved: each is a theorem
-closed by `sorry`.  The weakenings are the ones already used in
-`Transformer.Interpolation.Clustering` and `…Disentanglement`: `conv_g` is
-replaced by the support, and the switch and norm bounds written `O(·)` in the
-paper carry an explicit constant as a parameter, whose uniformity in `d`, `N`
-and the data is not expressible one statement at a time.
+All but `lem: monge` assert the existence of a parameter curve, or of a map, with no
+construction available here, so they are not proved: each is a theorem closed by `sorry`.
 
-`W_2` was a parameter too — Mathlib has no Wasserstein distance — and that is
-what `lem: monge` could not survive, being a defining property of the distance
-rather than a claim about the flow: see `not_forall_monge`.  The distance is
-now defined in `Transformer.Interpolation.Wasserstein` and `lem: monge` is
-proved against it.
+The two theorems carry the manuscript's standing assumption that the input measures are pairwise
+distinct and so are the targets; without it two equal inputs, which the well-posed Cauchy problem
+sends to the same solution, could not be matched to different targets.  The `O(d · N)` switch bound
+belongs to `thm: targets.atoms` only: for general targets the source says the number of switches
+can be exponential in `d`, and `thm: main.result` states piecewise-constant parameters and nothing
+more.  `lem: univ.approx` is about the perceptron part `eq: neural.pde.sphere` alone.
 
 The transport maps of `thm: main.result` are required to be measurable rather
 than to lie in `L²(𝕊^{d-1}; 𝕊^{d-1})`; on a sphere of finite measure and with
@@ -35,6 +30,7 @@ values in a bounded set the two agree, which is not proved here.
 import Transformer.Basic
 import Transformer.Perspective.Section2_FlowMap
 import Transformer.Interpolation.Basic
+import Transformer.Interpolation.BallTransport
 import Transformer.Interpolation.Clustering
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.NeuralODE
@@ -77,8 +73,8 @@ The `L^∞` norm of `θ` is measured coordinate by coordinate, as the sum of the
 operator norms of the four matrices and of `‖b‖`; `Params d` carries no norm of
 its own.
 
-**What the source says and what is changed here.**  Two repairs, neither of
-them a weakening.
+**What the source says and what is changed here.**  Four repairs, none of
+them a weakening of what the paper proves.
 
 *`W_2` is `Interpolation.W2`.*  It was a free function of two measures, of
 which nothing was assumed — see `not_forall_monge` for what that costs.
@@ -92,15 +88,35 @@ as `Cnorm` was, it allowed a constant chosen after the data, which is weaker
 than the paper.  Both now stand outside every other quantifier, so `d` and `N`
 are bound here rather than taken from the section.
 
+*The standing assumption of §1 is written in.*  Before the theorem the source
+fixes `μ_0^i ≢ μ_0^j` and `μ_1^i ≢ μ_1^j` for `i ≠ j`, "for simplicity"; the
+targets `δ_{x^i}` are pairwise distinct exactly when the `x^i` are.  The
+statement had neither.  Without distinct inputs it fails: the Cauchy problem has
+a unique solution, so equal inputs `μ_0^1 = μ_0^2` end at the same measure and
+cannot both come within `ε` of different targets.  The footnote which says the
+assumption can be removed (`appendix: technical`) concerns the targets and the
+hole, not the inputs.
+
+*The norm bound is asked for `ε < 1`.*  The `O(·)` in `log(1/ε)` is an
+asymptotic as `ε ↓ 0`.  As an inequality for every `ε > 0` it cannot hold: at
+`ε > e^{d N / T}` the right-hand side `Cnorm · ((d N)/T + log(1/ε))` is negative
+for `Cnorm > 0`, and a norm is not.  The other conclusions hold for every
+`ε > 0`.
+
+*`N ≥ 1`.*  The index set of the source is `⟦1, N⟧`.  `PiecewiseConstant` counts
+pieces, and `[0, T]` has at least one, so at `N = 0` the bound `K ≤ C · d · N = 0`
+was false whatever `C`.
+
 Not proved here.
 
 Source: arXiv:2411.04551v3, §1, `thm: targets.atoms`. -/
 theorem targets_atoms :
     ∃ C Cnorm : ℝ, ∀ (d N : ℕ) (μ₀ : Idx N → ProbSphere d) (xtarget : Idx N → SSphere d)
-      (T ε : ℝ), 3 ≤ d → 0 < T → 0 < ε → (∃ w₀ : SSphere d, IsHole d N μ₀ w₀) →
+      (T ε : ℝ), 3 ≤ d → 1 ≤ N → 0 < T → 0 < ε → Function.Injective μ₀ →
+      Function.Injective xtarget → (∃ w₀ : SSphere d, IsHole d N μ₀ w₀) →
       ∃ (θ : TimeParams d) (K : ℕ) (μ : Idx N → ℝ → ProbSphere d),
         (K : ℝ) ≤ C * (d * N) ∧ PiecewiseConstant d θ T K ∧
-        (∀ s ∈ Set.Icc (0 : ℝ) T,
+        (ε < 1 → ∀ s ∈ Set.Icc (0 : ℝ) T,
           ‖(θ s).V‖ + ‖(θ s).B‖ + ‖(θ s).W‖ + ‖(θ s).U‖ + ‖(θ s).b‖
             ≤ Cnorm * ((d * N : ℝ) / T + Real.log (1 / ε))) ∧
         (∀ i : Idx N, μ i 0 = μ₀ i ∧ cauchyPB d θ (μ i)) ∧
@@ -112,9 +128,12 @@ theorem targets_atoms :
 asked of a nonempty class of data: `d = 3`, `T = ε = 1`, and a one-element
 family of Dirac masses on `𝕊^2`, whose hole is the antipode. -/
 example :
-    3 ≤ 3 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧
+    3 ≤ 3 ∧ 1 ≤ 1 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧
+      Function.Injective (fun _ : Idx 1 => diracProb 3 (basePoint 2)) ∧
+      Function.Injective (fun _ : Idx 1 => basePoint 2 : Idx 1 → SSphere 3) ∧
       ∃ w₀ : SSphere 3, IsHole 3 1 (fun _ : Idx 1 => diracProb 3 (basePoint 2)) w₀ :=
-  ⟨le_rfl, one_pos, one_pos, _, isHole_antipode_diracProb 3 1 (basePoint 2)⟩
+  ⟨le_rfl, le_rfl, one_pos, one_pos, Function.injective_of_subsingleton _,
+    Function.injective_of_subsingleton _, _, isHole_antipode_diracProb 3 1 (basePoint 2)⟩
 
 /-- **Theorem (thm: main.result).**  *General interpolation.*
 
@@ -125,27 +144,43 @@ For `d ≥ 3` and data `(μ_0^i, μ_1^i)_{i=1}^N` such that
 * each `μ_1^i` is the pushforward of `μ_0^i` under a measurable
   `𝖳^i : 𝕊^{d-1} → 𝕊^{d-1}`,
 
-for any `T, ε > 0` there is a piecewise-constant `θ` with `O(d · N)` switches
-such that `W_2(μ^i(T), μ_1^i) ≤ ε` for every `i`.
+for any `T, ε > 0` there is a piecewise-constant `θ` such that
+`W_2(μ^i(T), μ_1^i) ≤ ε` for every `i`.
 
-**What the source says and what is changed here.**  As in `targets_atoms`:
-`W_2` is `Interpolation.W2` rather than a free function, and the `O(d · N)`
-constant is quantified before the data, which is what `O(·)` asserts and what
-a universally quantified binder denied (`C = 0` forced `K = 0`).
+**What the source says and what is changed here.**  Three repairs, none of
+them a weakening of what the paper proves.
+
+*`W_2` is `Interpolation.W2`* rather than a free function; see `targets_atoms`.
+
+*There is no bound on the number of switches.*  The theorem says only that `θ`
+"can be chosen piecewise constant".  The `O(d · N)` bound is that of
+`thm: targets.atoms`, where the targets are atoms; the source states for the
+general case that the number of switches "can be exponential in `d`" (§1.3,
+`rem: nb.disc.clustering`), because it depends on the packing numbers of the
+supports and, through the simple function approximating each `𝖳^i`, on `ε`.  The
+former statement asked `K ≤ C · d · N` with `C` before the data — a bound the
+paper proves for another theorem and disclaims for this one — and it is removed
+with `C`.
+
+*The standing assumption of §1 is written in:* `μ_0^i ≢ μ_0^j` and
+`μ_1^i ≢ μ_1^j` for `i ≠ j`, as in `targets_atoms`, where the reason is given.
+The source's footnote says the assumption on the targets, like the two holes,
+can be removed at the price of technicalities (`appendix: technical`); the one
+on the inputs cannot.
 
 Not proved here.
 
 Source: arXiv:2411.04551v3, §1, `thm: main.result`. -/
-theorem main_result :
-    ∃ C : ℝ, ∀ (d N : ℕ) (μ₀ μ₁ : Idx N → ProbSphere d) (T ε : ℝ),
-      3 ≤ d → 0 < T → 0 < ε →
-      (∃ w₀ : SSphere d, IsHole d N μ₀ w₀) → (∃ w₁ : SSphere d, IsHole d N μ₁ w₁) →
-      (∀ i : Idx N, ∃ Tr : SSphere d → SSphere d, Measurable Tr ∧
-        Measure.map Tr (μ₀ i : Measure (SSphere d)) = (μ₁ i : Measure (SSphere d))) →
-      ∃ (θ : TimeParams d) (K : ℕ) (μ : Idx N → ℝ → ProbSphere d),
-        (K : ℝ) ≤ C * (d * N) ∧ PiecewiseConstant d θ T K ∧
-        (∀ i : Idx N, μ i 0 = μ₀ i ∧ cauchyPB d θ (μ i)) ∧
-        ∀ i : Idx N, W2 d (μ i T : Measure (SSphere d)) (μ₁ i : Measure (SSphere d)) ≤ ε := by
+theorem main_result (μ₀ μ₁ : Idx N → ProbSphere d) (T ε : ℝ)
+    (hd : 3 ≤ d) (hT : 0 < T) (hε : 0 < ε)
+    (hinj₀ : Function.Injective μ₀) (hinj₁ : Function.Injective μ₁)
+    (hhole₀ : ∃ w₀ : SSphere d, IsHole d N μ₀ w₀) (hhole₁ : ∃ w₁ : SSphere d, IsHole d N μ₁ w₁)
+    (htrans : ∀ i : Idx N, ∃ Tr : SSphere d → SSphere d, Measurable Tr ∧
+      Measure.map Tr (μ₀ i : Measure (SSphere d)) = (μ₁ i : Measure (SSphere d))) :
+    ∃ (θ : TimeParams d) (K : ℕ) (μ : Idx N → ℝ → ProbSphere d),
+      PiecewiseConstant d θ T K ∧
+      (∀ i : Idx N, μ i 0 = μ₀ i ∧ cauchyPB d θ (μ i)) ∧
+      ∀ i : Idx N, W2 d (μ i T : Measure (SSphere d)) (μ₁ i : Measure (SSphere d)) ≤ ε := by
   sorry
 
 /-- The conditions inside `main_result` are satisfiable: `d = 3`, `T = ε = 1`,
@@ -153,119 +188,62 @@ and the same one-element family of Dirac masses on both sides, which is its own
 pushforward under the identity and has the antipode as a hole. -/
 example :
     3 ≤ 3 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧
+      Function.Injective (fun _ : Idx 1 => diracProb 3 (basePoint 2)) ∧
+      Function.Injective (fun _ : Idx 1 => diracProb 3 (basePoint 2)) ∧
       (∃ w₀ : SSphere 3, IsHole 3 1 (fun _ : Idx 1 => diracProb 3 (basePoint 2)) w₀) ∧
       (∃ w₁ : SSphere 3, IsHole 3 1 (fun _ : Idx 1 => diracProb 3 (basePoint 2)) w₁) ∧
       ∀ i : Idx 1, ∃ Tr : SSphere 3 → SSphere 3, Measurable Tr ∧
         Measure.map Tr ((fun _ : Idx 1 => diracProb 3 (basePoint 2)) i : Measure (SSphere 3))
           = ((fun _ : Idx 1 => diracProb 3 (basePoint 2)) i : Measure (SSphere 3)) :=
-  ⟨le_rfl, one_pos, one_pos, ⟨_, isHole_antipode_diracProb 3 1 (basePoint 2)⟩,
+  ⟨le_rfl, one_pos, one_pos, Function.injective_of_subsingleton _,
+    Function.injective_of_subsingleton _, ⟨_, isHole_antipode_diracProb 3 1 (basePoint 2)⟩,
     ⟨_, isHole_antipode_diracProb 3 1 (basePoint 2)⟩,
     fun _ => ⟨id, measurable_id, Measure.map_id⟩⟩
 
-/-- **Lemma (lem: monge).**  Monge identity: the Wasserstein distance between
-two pushforwards of the same measure is controlled by the `L²(μ)` distance of
-the maps,
-
-  `W_2(S_# μ, ψ_# μ) ≤ ‖S - ψ‖_{L²(μ)}`,
-
-which is how `W_2((Φ^{2T/3}_{θ_2})_# Φ^{T/3}_{θ_1}(μ_0^i), Φ_3^{T/3}(μ_1^i))`
-is bounded in the proof — `μ` being `Φ^{T/3}_{θ_1}(μ_0^i)` and `ψ` the map of
-`lem: hyp.propagation`.
-
-**What the source says and what is changed here.**  Two things, and both are
-what makes this a theorem rather than a request.
-
-*`W_2` is `Interpolation.W2`, not a parameter.*  Carried as a free function,
-as it was here, the inequality is false: `not_forall_monge` refutes it below.
-That is not an accident of the constant — the statement *is* a defining
-property of the 2-Wasserstein distance, so asking it of an arbitrary function
-of two measures asks for something no hypothesis in the binders supplies.  The
-distance is therefore defined, in `Interpolation.Wasserstein`, as the infimum
-of the quadratic transport cost over couplings, and the lemma is proved: the
-map `x ↦ (S x, ψ x)` pushes `μ` to a coupling of `S_# μ` and `ψ_# μ` whose
-cost is exactly the `L²(μ)` distance of the two maps.
-
-*The constant is `1`.*  The paper writes `≲`; the proof gives `1`, which is
-the sharp value, so nothing is lost by writing it.  Carried as a parameter, as
-`Cst` was here, it was again a free variable in the direction that makes the
-claim false.
-
-*The paper's bijectivity of `S` is dropped.*  `lem: monge` assumes the first
-map invertible; the proof uses nothing of it, so the hypothesis goes and the
-statement is the stronger one.
-
-Source: arXiv:2411.04551v3, §5, `lem: monge`. -/
-theorem monge (μ : ProbSphere d) (S ψ : SSphere d → SSphere d)
-    (hS : Measurable S) (hψ : Measurable ψ) :
-    W2 d (Measure.map S (μ : Measure (SSphere d))) (Measure.map ψ (μ : Measure (SSphere d)))
-      ≤ Real.sqrt
-          (∫ x, ‖(S x : EucSpace d) - (ψ x : EucSpace d)‖ ^ 2 ∂(μ : Measure (SSphere d))) := by
-  have hpair : Measurable (fun x : SSphere d => (S x, ψ x)) := hS.prodMk hψ
-  set γ : Measure (SSphere d × SSphere d) :=
-    Measure.map (fun x : SSphere d => (S x, ψ x)) (μ : Measure (SSphere d)) with hγdef
-  have hcoup : IsCoupling d (Measure.map S (μ : Measure (SSphere d)))
-      (Measure.map ψ (μ : Measure (SSphere d))) γ := by
-    constructor <;>
-      rw [hγdef, Measure.map_map (by fun_prop) hpair] <;> rfl
-  have hmeasf : AEStronglyMeasurable (fun p : SSphere d × SSphere d => dist p.1 p.2 ^ 2) γ := by
-    fun_prop
-  have hcost : ∫ p, dist p.1 p.2 ^ 2 ∂γ
-      = ∫ x, ‖(S x : EucSpace d) - (ψ x : EucSpace d)‖ ^ 2 ∂(μ : Measure (SSphere d)) := by
-    rw [hγdef, integral_map hpair.aemeasurable hmeasf]
-    exact integral_congr_ae (Filter.Eventually.of_forall fun x => by
-      simp only [Subtype.dist_eq, dist_eq_norm])
-  have := W2_le_of_coupling d _ _ γ hcoup
-  rwa [hcost] at this
-
-/-- The hypotheses of `monge` are satisfiable: the identity is measurable. -/
-example : Measurable (id : SSphere d → SSphere d) ∧ Measurable (id : SSphere d → SSphere d) :=
-  ⟨measurable_id, measurable_id⟩
-
-/-- **`lem: monge` is false for a free `W_2` and a free constant.**
-
-Read with `W₂` and `Cst` as universally quantified binders, as the statement
-stood here before, the lemma claims an inequality about a function of two
-measures of which nothing is assumed.  `W₂ ≡ 1` and `Cst = 0` with `S = ψ`
-give `1 ≤ 0`.  This is what `monge` above repairs by defining `W_2`.
-
-Source: arXiv:2411.04551v3, §5, `lem: monge`. -/
-theorem not_forall_monge :
-    ¬ ∀ (d : ℕ) (W₂ : Measure (SSphere d) → Measure (SSphere d) → ℝ)
-        (μ : ProbSphere d) (S ψ : SSphere d → SSphere d) (Cst : ℝ),
-        Measurable S → Measurable ψ →
-        W₂ (Measure.map S (μ : Measure (SSphere d))) (Measure.map ψ (μ : Measure (SSphere d)))
-          ≤ Cst * Real.sqrt
-              (∫ x, ‖(S x : EucSpace d) - (ψ x : EucSpace d)‖ ^ 2
-                ∂(μ : Measure (SSphere d))) := by
-  intro h
-  have := h 1 (fun _ _ => 1) (diracProb 1 (basePoint 0)) id id 0 measurable_id measurable_id
-  norm_num at this
-
 /-- **Lemma (lem: univ.approx).** *Universal approximation of `L²` maps.*
 
-For any measurable `f : 𝕊^{d-1} → 𝕊^{d-1}` and any `ε > 0` there is a
-piecewise-constant `θ` whose time-`T` flow map approximates `f` to within `ε`
-in `L²(μ)`.  The flow map is the endpoint map of the characteristics of
-`eq: cauchy.pb`: for each `x` a curve started at `x` and driven by `eq: vf`
-along the solution `μ(·)`.
+Let `d ≥ 3`, `T, ε > 0` and `μ ∈ 𝒫(𝕊^{d-1})`.  For every measurable
+`ψ : 𝕊^{d-1} → 𝕊^{d-1}` there are piecewise-constant `(𝐖, 𝐔, b)` on `[0, T]`
+with finitely many switches such that the time-`T` map `φ^T` of the flow of
+`eq: neural.ode.sphere` is Lipschitz-continuous and invertible, the solution of
+`eq: neural.pde.sphere` from `μ` satisfies `μ(T) = φ^T_# μ`, and
+
+  `‖ψ - φ^T‖_{L²(μ)} ≤ ε`.
+
+**What the source says and what is changed here.**  The lemma is about the
+perceptron part `eq: neural.pde.sphere` alone — `𝐕 ≡ 𝐁 ≡ 0`, `neuralParams` —
+whose flow map is the one the proof of `thm: main.result` composes and inverts.
+The former statement allowed the full vector field of `eq: vf`, attention
+included, and asked neither for a Lipschitz nor an invertible map nor for
+`μ(T) = φ^T_# μ`: a weaker claim under the source's name.  Three further points.
+`d ≥ 3` is the standing dimension of every result the lemma serves, and it is
+needed: on the circle a flow map is a homeomorphism, and no homeomorphism
+approximates in `L²` of the uniform measure a map that wraps the circle three
+times, `ψ(θ) = 3θ`; on `𝕊^0` every tangent projection vanishes and the flow is
+the identity.  `T` is the time of `Φ^T_{θ_ε}` in the source, which does not
+quantify it; every `T > 0` is asked.  The conclusion is `‖·‖_{L²(μ)} ≤ ε`, not
+its square.  "The solution" is read as in `two_balls`: one exists and every
+solution satisfies `μ(T) = φ^T_# μ`.
 
 Not proved here.
 
-Source: arXiv:2411.04551v3, §5. -/
-theorem univ_approx (μ : ProbSphere d) (f : SSphere d → SSphere d) (T ε : ℝ)
-    (hT : 0 < T) (hε : 0 < ε) (hf : Measurable f) :
-    ∃ (θ : TimeParams d) (K : ℕ) (μt : ℝ → ProbSphere d) (Φ : SSphere d → SSphere d),
-      PiecewiseConstant d θ T K ∧ μt 0 = μ ∧ cauchyPB d θ μt ∧ Measurable Φ ∧
-      (∀ x : SSphere d, ∃ γ : ℝ → EucSpace d,
-        γ 0 = (x : EucSpace d) ∧ γ T = (Φ x : EucSpace d) ∧
-        IsCharacteristic d θ μt γ) ∧
-      ∫ x, ‖(Φ x : EucSpace d) - (f x : EucSpace d)‖ ^ 2 ∂(μ : Measure (SSphere d)) ≤ ε := by
+Source: arXiv:2411.04551v3, §5, `lem: univ.approx`. -/
+theorem univ_approx (μ : ProbSphere d) (ψ : SSphere d → SSphere d) (T ε : ℝ)
+    (hd : 3 ≤ d) (hT : 0 < T) (hε : 0 < ε) (hψ : Measurable ψ) :
+    ∃ (W U : ℝ → ParamMatrix d) (b : ℝ → EucSpace d) (K : ℕ) (φ : ℝ → SSphere d → SSphere d),
+      PiecewiseConstant d (neuralParams d W U b) T K ∧ IsNeuralFlow d W U b φ ∧
+      (∃ L : NNReal, LipschitzWith L (φ T)) ∧ Function.Bijective (φ T) ∧
+      (∃ μt : ℝ → ProbSphere d, μt 0 = μ ∧ cauchyPB d (neuralParams d W U b) μt) ∧
+      (∀ μt : ℝ → ProbSphere d, μt 0 = μ → cauchyPB d (neuralParams d W U b) μt →
+        (μt T : Measure (SSphere d)) = Measure.map (φ T) (μ : Measure (SSphere d))) ∧
+      Real.sqrt (∫ x, ‖(φ T x : EucSpace d) - (ψ x : EucSpace d)‖ ^ 2
+        ∂(μ : Measure (SSphere d))) ≤ ε := by
   sorry
 
-/-- The hypotheses of `univ_approx` are satisfiable: `T = ε = 1` and the
+/-- The hypotheses of `univ_approx` are satisfiable: `d = 3`, `T = ε = 1` and the
 identity map, which is measurable. -/
-example : (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧ Measurable (id : SSphere d → SSphere d) :=
-  ⟨one_pos, one_pos, measurable_id⟩
+example : 3 ≤ 3 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧ Measurable (id : SSphere 3 → SSphere 3) :=
+  ⟨le_rfl, one_pos, one_pos, measurable_id⟩
 
 end Interpolation
 end Transformer

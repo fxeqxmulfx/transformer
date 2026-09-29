@@ -22,6 +22,7 @@ what makes the drift of `eq: average.vf` point into the hemisphere.
 import Transformer.Basic
 import Transformer.Perspective.Section2_FlowMap
 import Transformer.Interpolation.Basic
+import Transformer.Interpolation.AtomlessSphere
 import Transformer.Interpolation.Wasserstein
 import Mathlib.MeasureTheory.Function.L2Space
 import Mathlib.MeasureTheory.Measure.Support
@@ -167,24 +168,33 @@ theorem compression
           (convG d (ν T : Measure (SSphere d)).support)) := by
   sorry
 
-/-- The hypotheses of `compression` are satisfiable — but only on an empty
-family of initial measures, `N = 0`, where the atomlessness, disjointness and
-target conditions have nothing to check.  A witness with `N ≥ 1` would need
-an atomless probability measure on the sphere, and none is shown atomless in
-this development. -/
-example (μ₀ : Idx 0 → ProbSphere 1) (x : Idx 0 → Idx 1 → SSphere 1)
-    (α : Idx 0 → Idx 1 → ℝ) :
+/-- The hypotheses of `compression` are satisfiable by a nondegenerate family, `N = 2` on the
+circle: two diffuse initial measures supported in opposite caps, with disjoint geodesic convex
+hulls (`exists_two_diffuse_separated`), and for each one target atom of weight `1` at a point of
+its own support, hence of its hull.  The two atoms are distinct because the hulls are disjoint. -/
+example : ∃ (μ₀ : Idx 2 → ProbSphere 2) (x : Idx 2 → Idx 1 → SSphere 2) (α : Idx 2 → Idx 1 → ℝ),
     1 ≤ 1 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧
-      (∀ i : Idx 0, ∀ y : SSphere 1, (μ₀ i : Measure (SSphere 1)) {y} = 0) ∧
-      (∀ i j : Idx 0, i ≠ j →
-        Disjoint (convG 1 (μ₀ i : Measure (SSphere 1)).support)
-          (convG 1 (μ₀ j : Measure (SSphere 1)).support)) ∧
-      (∀ i : Idx 0, ∀ k : Idx 1, 0 ≤ α i k) ∧
-      (∀ i : Idx 0, ∑ k : Idx 1, α i k = 1) ∧
-      (∀ i : Idx 0, ∀ k : Idx 1, x i k ∈ convG 1 (μ₀ i : Measure (SSphere 1)).support) ∧
-      Function.Injective fun p : Idx 0 × Idx 1 => x p.1 p.2 :=
-  ⟨le_rfl, one_pos, one_pos, fun i => i.elim0, fun i => i.elim0, fun i => i.elim0,
-    fun i => i.elim0, fun i => i.elim0, fun p => p.1.elim0⟩
+      (∀ i : Idx 2, ∀ y : SSphere 2, (μ₀ i : Measure (SSphere 2)) {y} = 0) ∧
+      (∀ i j : Idx 2, i ≠ j →
+        Disjoint (convG 2 (μ₀ i : Measure (SSphere 2)).support)
+          (convG 2 (μ₀ j : Measure (SSphere 2)).support)) ∧
+      (∀ i : Idx 2, ∀ k : Idx 1, 0 ≤ α i k) ∧
+      (∀ i : Idx 2, ∑ k : Idx 1, α i k = 1) ∧
+      (∀ i : Idx 2, ∀ k : Idx 1, x i k ∈ convG 2 (μ₀ i : Measure (SSphere 2)).support) ∧
+      Function.Injective fun p : Idx 2 × Idx 1 => x p.1 p.2 := by
+  obtain ⟨μ, hatom, hdisj⟩ := exists_two_diffuse_separated 2 le_rfl
+  have hsupp : ∀ i : Idx 2, ∃ p, p ∈ (μ i : Measure (SSphere 2)).support := fun i =>
+    Measure.nonempty_support (IsProbabilityMeasure.ne_zero _)
+  choose p hp using hsupp
+  refine ⟨μ, fun i _ => p i, fun _ _ => 1, le_rfl, one_pos, one_pos, hatom, hdisj,
+    fun _ _ => zero_le_one, fun i => by simp, fun i k => subset_convG 2 _ (hp i), ?_⟩
+  rintro ⟨i, k⟩ ⟨j, l⟩ h
+  have hkl : k = l := Subsingleton.elim k l
+  by_cases hij : i = j
+  · rw [hij, hkl]
+  · have h' : p j = p i := h.symm
+    exact absurd (h' ▸ subset_convG 2 _ (hp j))
+      (Set.disjoint_left.mp (hdisj i j hij) (subset_convG 2 _ (hp i)))
 
 end Interpolation
 end Transformer

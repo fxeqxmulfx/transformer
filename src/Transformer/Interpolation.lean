@@ -6,6 +6,7 @@ Formalization of:
 
 import Transformer.Interpolation.Basic
 import Transformer.Interpolation.Wasserstein
+import Transformer.Interpolation.AtomlessSphere
 import Transformer.Interpolation.Clustering
 import Transformer.Interpolation.AtomClustering
 import Transformer.Interpolation.Disentanglement
@@ -17,6 +18,7 @@ import Transformer.Interpolation.Settling
 import Transformer.Interpolation.SeparationField
 import Transformer.Interpolation.HartmanGrobman
 import Transformer.Interpolation.Main
+import Transformer.Interpolation.Monge
 import Transformer.Interpolation.HypPropagationFalse
 import Transformer.Interpolation.BallTransport
 import Transformer.Interpolation.BallTransportFalse
