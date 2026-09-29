@@ -4,8 +4,9 @@
 Top-level module re-exporting the formalization of the `gpt-mini`
 transformer architecture defined in `reference/model.py`.
 
-That file is no longer in the tree; every citation of `reference/model.py`
-in `Transformer.GPTMini` refers to its last version, commit `f11b6e2`:
+The source is restored byte for byte at `experiments/gpt_mini.py`; every citation
+of `reference/model.py` in `Transformer.GPTMini` refers to its last version,
+commit `f11b6e2`:
 
   `git show f11b6e27d3cfe6813a2876bdeec38565fc54258c:reference/model.py`
 
@@ -43,6 +44,7 @@ The architecture is:
 | `GPTMini.ClusteringTheorem` | and what those setups would then say about its layers |
 | `GPTMini.TwoTokens` | two tokens under the Pre-LN head: a ray, a monotone inner product, bounded steps |
 | `GPTMini.RateRefutation` | and why no depth rate is uniform in the initial stream |
+| `GPTMini.Convex` | a causal sparsemax replacement, its stack, and the remaining FFN training obstruction |
 
 The bridges are the connection to `Transformer.Section1_IPS …
 Transformer.MeanField`: `Bridge.SphereResidence` puts the tokens on the sphere
@@ -80,3 +82,4 @@ import Transformer.GPTMini.ClusteringTheorem
 import Transformer.GPTMini.TwoTokens
 import Transformer.GPTMini.RateRefutation
 import Transformer.GPTMini.MeanFieldRefutation
+import Transformer.GPTMini.Convex
