@@ -1,0 +1,88 @@
+{
+  "time_unix": 1790720032.3392684,
+  "device": "cpu",
+  "source_sha256": "3c7a04d82d46611ad7afec2fc78adde01dabc9f321fbec9ffb8c92a39a9a8867",
+  "source_unchanged": true,
+  "datasets": [
+    {
+      "directory": "test-62342558ab8269db",
+      "split": "test",
+      "length": 64,
+      "sequences": 3000,
+      "queries": 48000,
+      "raw_labels": "passed",
+      "unique_keys_and_queries": "passed",
+      "causal_prefix_and_fillers": "passed"
+    },
+    {
+      "directory": "train-c68f58e835e3a193",
+      "split": "train",
+      "length": 64,
+      "sequences": 100000,
+      "queries": 1600000,
+      "raw_labels": "passed",
+      "unique_keys_and_queries": "passed",
+      "causal_prefix_and_fillers": "passed"
+    },
+    {
+      "directory": "validation-dcac5674013136b9",
+      "split": "validation",
+      "length": 64,
+      "sequences": 3000,
+      "queries": 48000,
+      "raw_labels": "passed",
+      "unique_keys_and_queries": "passed",
+      "causal_prefix_and_fillers": "passed"
+    }
+  ],
+  "sequences_checked": 106000,
+  "queries_checked": 1696000,
+  "checkpoints": [
+    {
+      "run": "n64-d64-lr0.0001",
+      "completed_epoch_snapshot": 64,
+      "optimizer_steps": 100032,
+      "finite_model_and_optimizer": "passed"
+    },
+    {
+      "run": "n64-d64-lr0.00046415888",
+      "completed_epoch_snapshot": 64,
+      "optimizer_steps": 100032,
+      "finite_model_and_optimizer": "passed"
+    },
+    {
+      "run": "n64-d64-lr0.0021544347",
+      "completed_epoch_snapshot": 64,
+      "optimizer_steps": 100032,
+      "finite_model_and_optimizer": "passed"
+    },
+    {
+      "run": "n64-d64-lr0.01",
+      "completed_epoch_snapshot": 47,
+      "optimizer_steps": 73461,
+      "finite_model_and_optimizer": "passed"
+    }
+  ],
+  "run_status_snapshot": {
+    "event": "training",
+    "length": 64,
+    "width": 64,
+    "learning_rate": 0.01,
+    "epoch": 48,
+    "epochs": 64,
+    "step": 201,
+    "steps_per_epoch": 1563,
+    "loss": 5.98524284362793,
+    "examples_per_second": 13140.557580912428,
+    "time_unix": 1790720031.7462204
+  },
+  "scope": "Read-only snapshot; no CUDA kernels, writes to the run, or stop signals",
+  "fingerprinted_files": [
+    "rope.py",
+    "engine.py",
+    "data.py",
+    "convex.py",
+    "config.py",
+    "certify.py"
+  ]
+}

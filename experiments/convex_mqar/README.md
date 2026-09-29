@@ -123,6 +123,36 @@ different inductive biases, not equal model classes or equal supervision.
 
 ## Checks and reports
 
+Run the unit and integration tests on CPU, without sharing the active GPU:
+
+```sh
+CUDA_VISIBLE_DEVICES="" OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
+  uv run --no-sync --project experiments/convex_mqar python -m unittest discover \
+  -s experiments/convex_mqar/tests -t experiments/convex_mqar -v
+```
+
+The tests compare attention with explicit causal softmax and RoPE with rotation
+matrices; check simplex optimality against KKT conditions and an independent QP;
+and verify raw MQAR labels, gradients, CPU BF16, optimizer coverage, warmup,
+partial batches, validation selection, and exact checkpoint resume. A small
+CPU benchmark also checks that both models share the test and that test results
+do not choose a checkpoint or learning rate. These tests do not exercise CUDA
+kernels or prove that no bugs remain.
+
+Audit completed data caches and checkpoint snapshots of a running experiment
+without changing that experiment:
+
+```sh
+CUDA_VISIBLE_DEVICES="" OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
+  PYTHONPATH=experiments/convex_mqar \
+  uv run --no-sync --project experiments/convex_mqar python -m tests.audit_running \
+  --run experiments/convex_mqar/runs/full --data experiments/convex_mqar/data
+```
+
+It verifies the original source fingerprint, every cached raw query label,
+and finite model/AdamW state and step counts. `reports/running_audit.json` is a
+snapshot of the active run at the time of this check.
+
 `check` verifies raw MQAR labels, causal RoPE behavior, positional-logit
 selection, finite gradients, CPU/GPU simplex agreement, exact recall, and
 abstention at first occurrences. `sanity` tests whether the baseline learns a
