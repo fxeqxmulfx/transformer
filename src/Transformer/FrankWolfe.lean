@@ -29,6 +29,10 @@ import Transformer.FrankWolfe.Section4_ODESolution
 import Transformer.FrankWolfe.Section4_ODEUnique
 import Transformer.FrankWolfe.Section4_ODEWellPosed
 import Transformer.FrankWolfe.Section5_Process
+import Transformer.FrankWolfe.Section5_Transition
+import Transformer.FrankWolfe.Section5_TransitionAS
+import Transformer.FrankWolfe.Section5_MetaWeights
 import Transformer.FrankWolfe.Section5_Contraction
 import Transformer.FrankWolfe.Section5_Collapse
 import Transformer.FrankWolfe.Section5_Metastability
+import Transformer.FrankWolfe.Section5_MetaLevel
