@@ -1,5 +1,5 @@
 /-
-Formalization of eighteen papers on the mathematics of Transformers:
+Formalization of twenty-one papers on the mathematics of Transformers:
 
 1. Weiss, Goldberg, Yahav — arXiv:2106.06981v2
    "Thinking Like Transformers".
@@ -61,18 +61,26 @@ Formalization of eighteen papers on the mathematics of Transformers:
 19. Reddi, Kale, Kumar — arXiv:1904.09237
    "On the Convergence of Adam and Beyond".
 
+20. Ergen, Neyshabur, Mehta — arXiv:2211.11052v1
+   "Convexifying Transformers: Improving optimization and understanding of
+   transformer networks".
+
+21. Arora, Eyuboglu, Timalsina, Johnson, Poli, Zou, Rudra, Ré —
+   arXiv:2312.04927v1
+   "Zoology: Measuring and Improving Recall in Efficient Language Models".
+
 Alongside these, `Transformer.ALM` formalizes the paraboloid-lifted lookup
 used by the append-only lookup machine (Percepta, transformer-vm), and
 `Transformer.Precision` proves the limits finite precision puts on attention:
 finite formats blind a head past a finite length, and a sequential sum in `p`
 significant bits is capped at `2^{p+1}` times its increments.
 
-This top-level module re-exports the formalization of every section of all
-papers.  Each per-paper subdirectory mirrors the structure of the source
-manuscript, with one file per section.  Statements that have full proofs in
-the paper are spelled out (modulo `sorry` for analytic machinery that is
-beyond the scope of this formalization); definitions and equation displays
-are translated directly.
+This top-level module re-exports all included formalizations. Per-paper
+subdirectories follow the manuscript sections, splitting larger arguments
+into additional modules. Some analytic proofs still use `sorry`.
+The Zoology development is partial; its aggregator records the remaining
+source claims and resource gaps. `Transformer.ConvexRecall` is a new
+cross-paper construction with explicit changes to the original models.
 -/
 
 import Transformer.Basic
@@ -100,3 +108,6 @@ import Transformer.XSA
 import Transformer.Quartet
 import Transformer.GPTMini
 import Transformer.Precision
+import Transformer.Convexifying
+import Transformer.Zoology
+import Transformer.ConvexRecall
