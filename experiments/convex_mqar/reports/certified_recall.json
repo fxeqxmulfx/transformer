@@ -1,0 +1,85 @@
+{
+  "scope": "Recall comparison; not end-to-end GPT training parity",
+  "seed": 0,
+  "vocabulary": 8192,
+  "metric_bits": 13,
+  "alpha": 0.1,
+  "metric": [
+    1.0000000000000266,
+    1.0,
+    1.0000000000000118,
+    1.0,
+    1.0000000000000138,
+    1.0,
+    1.0000000000000133,
+    1.0000000000000138,
+    1.0,
+    1.0000000000000153,
+    1.0,
+    1.0000000000000069,
+    1.0
+  ],
+  "training": {
+    "solver": "SLSQP (convex QP)",
+    "iterations": 4,
+    "calibration_pairs": 13,
+    "objective": 3.250000000000287,
+    "certified_global_minimum": 3.25,
+    "raw_metric_max_error": 2.6645352591003757e-14,
+    "lower_bound_repair": 1.2656542480726785e-14
+  },
+  "results": [
+    {
+      "length": 64,
+      "pairs": 16,
+      "sequences": 3000,
+      "query_count": 48000,
+      "convex_correct": 48000,
+      "softmax_correct": 48000,
+      "convex_accuracy": 1.0,
+      "softmax_accuracy": 1.0,
+      "first_key_count": 48000,
+      "first_keys_abstained": 48000,
+      "largest_weight_error": 3.552713678800501e-15
+    },
+    {
+      "length": 128,
+      "pairs": 32,
+      "sequences": 3000,
+      "query_count": 96000,
+      "convex_correct": 96000,
+      "softmax_correct": 96000,
+      "convex_accuracy": 1.0,
+      "softmax_accuracy": 1.0,
+      "first_key_count": 96000,
+      "first_keys_abstained": 96000,
+      "largest_weight_error": 3.552713678800501e-15
+    },
+    {
+      "length": 256,
+      "pairs": 64,
+      "sequences": 3000,
+      "query_count": 192000,
+      "convex_correct": 192000,
+      "softmax_correct": 192000,
+      "convex_accuracy": 1.0,
+      "softmax_accuracy": 1.0,
+      "first_key_count": 192000,
+      "first_keys_abstained": 192000,
+      "largest_weight_error": 4.6629367034256575e-15
+    },
+    {
+      "length": 512,
+      "pairs": 128,
+      "sequences": 3000,
+      "query_count": 384000,
+      "convex_correct": 384000,
+      "softmax_correct": 384000,
+      "convex_accuracy": 1.0,
+      "softmax_accuracy": 1.0,
+      "first_key_count": 384000,
+      "first_keys_abstained": 384000,
+      "largest_weight_error": 4.6629367034256575e-15
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "config": {
+    "seed": 0,
+    "vocab": 16,
+    "lengths": [
+      8
+    ],
+    "widths": [
+      32
+    ],
+    "learning_rates": [
+      0.003
+    ],
+    "train_examples": 2048,
+    "validation_examples": 512,
+    "test_examples": 512,
+    "epochs": 128,
+    "layers": 2,
+    "heads": 1,
+    "mlp_ratio": 4,
+    "weight_decay": 0.1,
+    "warmup_fraction": 0.1,
+    "alpha": 0.1,
+    "rope_base": 10000.0,
+    "device": "cuda",
+    "precision": "bf16"
+  },
+  "environment": {
+    "python": "3.14.7",
+    "torch": "2.14.0+cu130",
+    "cuda": "13.0",
+    "numpy": "2.5.3",
+    "device": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "precision": "bf16",
+    "rope_base": 10000.0,
+    "source_sha256": "3c7a04d82d46611ad7afec2fc78adde01dabc9f321fbec9ffb8c92a39a9a8867"
+  },
+  "convex_training": {
+    "solver": "SLSQP (convex QP)",
+    "iterations": 3,
+    "calibration_pairs": 4,
+    "objective": 1.0000000000000007,
+    "certified_global_minimum": 1.0,
+    "raw_metric_max_error": 8.881784197001252e-16,
+    "lower_bound_repair": 5.551115123125783e-16,
+    "seconds": 0.001542609003081452
+  },
+  "results": [
+    {
+      "length": 8,
+      "pairs": 2,
+      "width": 32,
+      "splits": {
+        "train": "d84ca440f193105d",
+        "validation": "867e41361c813dda",
+        "test": "09617aa8a5554e36"
+      },
+      "selected_run": {
+        "width": 32,
+        "length": 8,
+        "learning_rate": 0.003,
+        "epochs_completed": 128,
+        "best_epoch": 128,
+        "validation": {
+          "accuracy": 1.0,
+          "correct": 1024,
+          "query_count": 1024,
+          "loss": 0.00025702081620693207,
+          "seconds": 0.011517989994899835,
+          "queries_per_second": 88904.40089402987
+        },
+        "training_seconds": 17.156358412001282,
+        "parameters": 25728,
+        "batch_size": 64
+      },
+      "rope": {
+        "accuracy": 1.0,
+        "correct": 1024,
+        "query_count": 1024,
+        "loss": 0.000272863544523716,
+        "seconds": 0.011936146998777986,
+        "queries_per_second": 85789.8281668981
+      },
+      "convex": {
+        "accuracy": 1.0,
+        "correct": 1024,
+        "query_count": 1024,
+        "loss": null,
+        "seconds": 0.2305461420037318,
+        "queries_per_second": 4441.627134161389
+      },
+      "accuracy_difference": 0.0,
+      "convex_metric_parameters": 4
+    }
+  ],
+  "scope": "Same MQAR test; different inductive biases and matching calibration",
+  "selection": "Validation accuracy then validation loss; test never selects a run"
+}
