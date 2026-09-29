@@ -8,6 +8,9 @@ examples behind these rules.
 - Formalize the manuscripts under `papers/` in Lean files under `src/`. The
   papers are gitignored; `INDEX.md` is the generated inventory of declarations
   and proof debt.
+- The papers and reference source files for this project are available locally
+  under `papers/`. Search and read those local files when checking a statement
+  or proof; do not browse the web for their contents.
 - Recheck every theorem against its paper before calling it complete or making
   a requested commit: hypotheses, quantifiers, constants, indices, and
   conclusion. A closing Lean proof does not establish fidelity to the paper.
