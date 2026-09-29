@@ -65,7 +65,8 @@ def audit(run, data):
     config_json = json.loads((run / "config.json").read_text())
     environment = json.loads((run / "environment.json").read_text())
     config = Config(**config_json)
-    names = ("rope.py", "engine.py", "data.py", "convex.py", "config.py", "certify.py")
+    names = environment.get("fingerprinted_files", (
+        "rope.py", "engine.py", "data.py", "convex.py", "config.py", "certify.py"))
     source_hash = hashlib.sha256(b"".join(Path(benchmark.__file__).with_name(name).read_bytes()
                                          for name in names)).hexdigest()
     assert source_hash == environment["source_sha256"], "Benchmark source changed during the run"

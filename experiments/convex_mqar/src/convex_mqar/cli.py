@@ -16,6 +16,7 @@ def main():
     benchmark.add_argument("--device", choices=("cuda", "cpu"), default="cuda")
     benchmark.add_argument("--output", type=Path)
     benchmark.add_argument("--data-root", type=Path, default=Path("data"))
+    benchmark.add_argument("--compile", action="store_true", help="Compile training loss with TorchInductor")
     commands.add_parser("certify", help="Reproduce the construction's numerical recall checks")
     args, extra = parser.parse_known_args()
     if args.command == "certify":
@@ -33,4 +34,4 @@ def main():
     from .config import profile
     config = replace(profile(args.profile), device=args.device,
                      precision="bf16" if args.device == "cuda" else "fp32")
-    run(config, args.output or Path("runs") / args.profile, args.data_root)
+    run(config, args.output or Path("runs") / args.profile, args.data_root, compiled=args.compile)

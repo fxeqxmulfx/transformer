@@ -1,10 +1,8 @@
 """Common-test comparison; hyperparameters are selected only on validation."""
 
 import fcntl
-import hashlib
 import json
 from pathlib import Path
-import platform
 import time
 
 import numpy as np
@@ -15,9 +13,10 @@ from .convex import ConvexRecall
 from .data import load_split, validate_batch
 from .engine import evaluate, train_run, write_json
 from .rope import RopeTransformer
+from .runtime import record_execution
 
 
-def run(config, output, data_root):
+def run(config, output, data_root, compiled=False):
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
     with (output / ".lock").open("w") as lock:
@@ -25,10 +24,10 @@ def run(config, output, data_root):
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
             raise RuntimeError("Another process is already using this run directory") from None
-        return run_locked(config, output, data_root)
+        return run_locked(config, output, data_root, compiled)
 
 
-def run_locked(config, output, data_root):
+def run_locked(config, output, data_root, compiled=False):
     torch.set_num_threads(6)
     if config.device == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA is required; this benchmark does not silently switch to CPU")
@@ -37,14 +36,7 @@ def run_locked(config, output, data_root):
     if metadata_path.exists() and json.loads(metadata_path.read_text()) != serialized_config:
         raise RuntimeError("The output directory belongs to a different configuration")
     write_json(metadata_path, serialized_config)
-    environment = {"python": platform.python_version(), "torch": torch.__version__,
-                   "cuda": torch.version.cuda, "numpy": np.__version__,
-                   "device": torch.cuda.get_device_name() if config.device == "cuda" else "cpu",
-                   "precision": config.precision, "rope_base": config.rope_base}
-    source_files = ("rope.py", "engine.py", "data.py", "convex.py", "config.py", "certify.py")
-    environment["source_sha256"] = hashlib.sha256(b"".join(
-        Path(__file__).with_name(name).read_bytes() for name in source_files)).hexdigest()
-    write_json(output / "environment.json", environment)
+    environment, history = record_execution(output, config, compiled)
     print(json.dumps({"event": "start", "config": serialized_config,
                       "environment": environment}), flush=True)
     calibration_started = time.perf_counter()
@@ -52,11 +44,18 @@ def run_locked(config, output, data_root):
     metric, calibration = train_metric(bits, np.random.default_rng(config.seed))
     calibration["seconds"] = time.perf_counter() - calibration_started
     convex = ConvexRecall(config.vocab, metric).to(config.device)
-    report = {"config": serialized_config, "environment": environment,
-              "convex_training": calibration, "results": [],
-              "scope": "Same MQAR test; different inductive biases and matching calibration",
-              "selection": "Validation accuracy then validation loss; test never selects a run"}
+    comparison_path = output / "comparison.json"
+    report = json.loads(comparison_path.read_text()) if comparison_path.exists() else {
+        "config": serialized_config, "results": [],
+        "scope": "Same MQAR test; different inductive biases and matching calibration",
+        "selection": "Validation accuracy then validation loss; test never selects a run"}
+    if report["config"] != serialized_config:
+        raise RuntimeError("Existing comparisons belong to a different configuration")
+    report.update(environment=environment, execution_history=history, convex_training=calibration)
+    completed = {(row["length"], row["width"]) for row in report["results"]}
     for length in config.lengths:
+        if all((length, width) in completed for width in config.widths):
+            continue
         data = {}
         identities = {}
         for split in ("train", "validation", "test"):
@@ -67,12 +66,14 @@ def run_locked(config, output, data_root):
         if len(set(identities.values())) != 3:
             raise AssertionError("Data splits are not distinct")
         for width in config.widths:
+            if (length, width) in completed:
+                continue
             candidates = []
             for learning_rate in config.learning_rates:
                 directory = output / f"n{length}-d{width}-lr{learning_rate:.8g}"
-                result, checkpoint = train_run(config, length, width, learning_rate,
-                                              data["train"], data["validation"],
-                                              directory, output / "status.json")
+                arguments = (config, length, width, learning_rate, data["train"],
+                             data["validation"], directory, output / "status.json")
+                result, checkpoint = train_run(*arguments, compiled=True) if compiled else train_run(*arguments)
                 candidates.append((result, checkpoint))
             selected, checkpoint = max(candidates, key=lambda item: (
                 item[0]["validation"]["accuracy"], -item[0]["validation"]["loss"]))
@@ -95,5 +96,6 @@ def run_locked(config, output, data_root):
         del data
         if config.device == "cuda":
             torch.cuda.empty_cache()
+    write_json(comparison_path, report)
     write_json(output / "status.json", {"event": "complete", "time_unix": time.time()})
     return report

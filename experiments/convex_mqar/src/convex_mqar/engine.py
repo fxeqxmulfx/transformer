@@ -1,6 +1,5 @@
 """Training, validation selection, resumable checkpoints, and progress logs."""
 
-from contextlib import nullcontext
 import json
 import math
 from pathlib import Path
@@ -9,20 +8,9 @@ import time
 import torch
 from torch.nn import functional as F
 
+from .kernels import autocast, loss_for
 from .rope import RopeTransformer
-
-
-def write_json(path, value):
-    path = Path(path)
-    temporary = path.with_suffix(".tmp")
-    temporary.write_text(json.dumps(value, indent=2) + "\n")
-    temporary.replace(path)
-
-
-def autocast(config):
-    if config.device == "cuda" and config.precision == "bf16":
-        return torch.autocast("cuda", dtype=torch.bfloat16)
-    return nullcontext()
+from .runtime import write_json
 
 
 def synchronize(device):
@@ -67,7 +55,7 @@ def optimizer_for(model, learning_rate, weight_decay):
 
 
 def train_run(config, length, width, learning_rate, train_data, validation_data,
-              directory, status_path):
+              directory, status_path, compiled=False):
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=True)
     result_path = directory / "result.json"
@@ -86,6 +74,7 @@ def train_run(config, length, width, learning_rate, train_data, validation_data,
     training_seconds = 0.0
     best_validation = {"accuracy": -1.0, "loss": math.inf}
     best_epoch = -1
+    execution_segments = []
     if current_path.exists():
         state = torch.load(current_path, map_location=config.device, weights_only=False)
         model.load_state_dict(state["model"])
@@ -93,8 +82,21 @@ def train_run(config, length, width, learning_rate, train_data, validation_data,
         next_epoch = state["next_epoch"]
         best_validation, best_epoch = state["best_validation"], state["best_epoch"]
         training_seconds = state["training_seconds"]
+        execution_segments = state.get("execution_segments", [])
+        if not execution_segments and next_epoch:
+            execution_segments = [{"first_epoch": 1, "last_epoch": next_epoch,
+                                   "compiled_loss": False}]
+    objective = loss_for(model, config, compiled)
+    if compiled and next_epoch < config.epochs:
+        write_json(status_path, {"event": "compilation_pending", "length": length,
+                                 "width": width, "learning_rate": learning_rate,
+                                 "next_epoch": next_epoch + 1, "compiled_loss": True,
+                                 "time_unix": time.time()})
     tokens, positions, labels = train_data
     for epoch in range(next_epoch, config.epochs):
+        if not execution_segments or execution_segments[-1]["compiled_loss"] != compiled:
+            execution_segments.append({"first_epoch": epoch + 1, "compiled_loss": compiled})
+        execution_segments[-1]["last_epoch"] = epoch + 1
         model.train()
         generator = torch.Generator(device=config.device).manual_seed(config.seed + epoch)
         order = torch.randperm(len(tokens), generator=generator, device=config.device)
@@ -108,9 +110,7 @@ def train_run(config, length, width, learning_rate, train_data, validation_data,
                 group["lr"] = scheduled_lr
             indices = order[start:start + batch_size]
             optimizer.zero_grad(set_to_none=True)
-            with autocast(config):
-                logits = model(tokens[indices], positions[indices])
-                loss = F.cross_entropy(logits.flatten(0, 1), labels[indices].flatten())
+            loss = objective(tokens[indices], positions[indices], labels[indices])
             if not torch.isfinite(loss):
                 raise RuntimeError(f"Nonfinite loss at epoch {epoch + 1}, step {step + 1}")
             loss.backward()
@@ -121,6 +121,7 @@ def train_run(config, length, width, learning_rate, train_data, validation_data,
                 status = {"event": "training", "length": length, "width": width,
                           "learning_rate": learning_rate, "epoch": epoch + 1,
                           "epochs": config.epochs, "step": step + 1,
+                          "compiled_loss": compiled,
                           "steps_per_epoch": steps_per_epoch, "loss": loss.item(),
                           "examples_per_second": (start + indices.numel()) / elapsed,
                           "time_unix": time.time()}
@@ -139,20 +140,22 @@ def train_run(config, length, width, learning_rate, train_data, validation_data,
                         "train_loss": loss_sum.item() / len(tokens),
                         "validation": validation, "best_epoch": best_epoch,
                         "training_seconds": training_seconds}
+        epoch_result["compiled_loss"] = compiled
         with (directory / "epochs.jsonl").open("a") as stream:
             stream.write(json.dumps(epoch_result) + "\n")
         print(json.dumps(epoch_result), flush=True)
         write_json(status_path, epoch_result | {"time_unix": time.time()})
         torch.save({"model": model.state_dict(), "optimizer": optimizer.state_dict(),
                     "next_epoch": epoch + 1, "best_validation": best_validation,
-                    "best_epoch": best_epoch, "training_seconds": training_seconds},
+                    "best_epoch": best_epoch, "training_seconds": training_seconds,
+                    "execution_segments": execution_segments},
                    current_path.with_suffix(".tmp"))
         current_path.with_suffix(".tmp").replace(current_path)
     result = {"width": width, "length": length, "learning_rate": learning_rate,
               "epochs_completed": config.epochs, "best_epoch": best_epoch,
               "validation": best_validation, "training_seconds": training_seconds,
               "parameters": sum(p.numel() for p in model.parameters()),
-              "batch_size": batch_size}
+              "batch_size": batch_size, "execution_segments": execution_segments}
     write_json(result_path, result)
     del optimizer, model
     if config.device == "cuda":

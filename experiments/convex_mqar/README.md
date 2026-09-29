@@ -22,6 +22,22 @@ runs and skips completed ones. A directory lock prevents concurrent use of the
 same checkpoints. `runs/full/status.json` and each run's `epochs.jsonl` show
 progress; `runs/full/comparison.json` contains completed comparisons.
 
+Add `--compile` to compile the training loss with TorchInductor:
+
+```sh
+uv run --no-sync --project experiments/convex_mqar convex-mqar benchmark \
+  --profile full --compile --output experiments/convex_mqar/runs/full \
+  --data-root experiments/convex_mqar/data
+```
+
+This resumes ordinary model/AdamW checkpoints. Batch sizes, data order, learning
+rates, and the epoch budget stay the same. BF16 fusion can change rounding;
+compiled training is not promised to reproduce eager weights bit for bit.
+Compilation is lazy and its first-step cost is included in training time.
+`execution_history.json` preserves source fingerprints and execution changes;
+`execution_segments` in checkpoints/results records the eager and compiled
+epochs. Completed test comparisons are preserved when resuming.
+
 Profiles:
 
 | Profile | Purpose | Vocabulary | Training examples | Epochs | Widths |

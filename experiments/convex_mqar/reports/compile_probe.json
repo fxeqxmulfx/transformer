@@ -1,0 +1,21 @@
+{
+  "loss_difference": 0.000232696533203125,
+  "relative_gradient_difference": 0.003579892518354392,
+  "length": 128,
+  "width": 64,
+  "batch": 64,
+  "vocab": 8192,
+  "eager_seconds_per_step": [
+    0.016081629175096167,
+    0.01615919922496687,
+    0.016142906324967045
+  ],
+  "compiled_seconds_per_step": [
+    0.0078925563249868,
+    0.007956480424945766,
+    0.00794384335003997
+  ],
+  "median_speedup": 2.03212797806314,
+  "scope": "Isolated synthetic copy; shared GPU contention; active run unchanged",
+  "allocated_MiB": 233.24365234375
+}

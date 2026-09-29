@@ -1,0 +1,71 @@
+{
+  "length": 128,
+  "width": 64,
+  "learning_rate": 0.00046415888336127773,
+  "eager_epochs": [
+    {
+      "epoch": 20,
+      "training_seconds": 12.097215499001322
+    },
+    {
+      "epoch": 21,
+      "training_seconds": 12.068700375006301
+    },
+    {
+      "epoch": 22,
+      "training_seconds": 12.069657824999013
+    },
+    {
+      "epoch": 23,
+      "training_seconds": 12.12454399499984
+    },
+    {
+      "epoch": 24,
+      "training_seconds": 12.103219374999753
+    }
+  ],
+  "compiled_epochs": [
+    {
+      "epoch": 26,
+      "training_seconds": 5.816071093999199
+    },
+    {
+      "epoch": 27,
+      "training_seconds": 5.80618362200039
+    },
+    {
+      "epoch": 28,
+      "training_seconds": 5.853573550994042
+    },
+    {
+      "epoch": 29,
+      "training_seconds": 5.847213855005975
+    },
+    {
+      "epoch": 30,
+      "training_seconds": 5.8405489470023895
+    }
+  ],
+  "median_speedup": 2.071246317558919,
+  "scope": "Actual resumed GPU run; first compilation epoch excluded; same statistical configuration",
+  "restart": {
+    "pid": 235577,
+    "status": {
+      "event": "training",
+      "length": 128,
+      "width": 64,
+      "learning_rate": 0.00046415888336127773,
+      "epoch": 25,
+      "epochs": 64,
+      "step": 201,
+      "steps_per_epoch": 1563,
+      "loss": 6.124415397644043,
+      "examples_per_second": 8251.951418618095,
+      "time_unix": 1790721261.0078351
+    },
+    "checkpoint": "experiments/convex_mqar/runs/full/n128-d64-lr0.00046415888/current.pt",
+    "completed_epoch": 24,
+    "next_epoch": 25,
+    "reason": "Resume remaining jobs with compiled loss; statistical config unchanged"
+  }
+}
