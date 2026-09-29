@@ -23,3 +23,4 @@ import Transformer.Causal.CapPolar
 import Transformer.Causal.CapHalfPlane
 import Transformer.Causal.CapSpace
 import Transformer.Causal.CapMass
+import Transformer.Causal.UniformAtoms
