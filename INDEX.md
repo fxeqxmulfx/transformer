@@ -1835,12 +1835,12 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | --- | --- | --- |
 | [`counter_example_stochastic`](src/Transformer/AdamBeyond/Section3_Stochastic.lean#L34) | theorem | proved |
 
-**[Transformer.AdamBeyond.Section4_AMSGrad](src/Transformer/AdamBeyond/Section4_AMSGrad.lean)** — 168 lines
+**[Transformer.AdamBeyond.Section4_AMSGrad](src/Transformer/AdamBeyond/Section4_AMSGrad.lean)** — 171 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`amsgrad_moment_sum`](src/Transformer/AdamBeyond/Section4_AMSGrad.lean#L64) | theorem | proved |
-| [`amsgrad_moment_sum_sqrt`](src/Transformer/AdamBeyond/Section4_AMSGrad.lean#L97) | theorem | proved |
+| [`amsgrad_moment_sum`](src/Transformer/AdamBeyond/Section4_AMSGrad.lean#L67) | theorem | proved |
+| [`amsgrad_moment_sum_sqrt`](src/Transformer/AdamBeyond/Section4_AMSGrad.lean#L100) | theorem | proved |
 
 **[Transformer.AdamBeyond.Section4_Abel](src/Transformer/AdamBeyond/Section4_Abel.lean)** — 112 lines
 

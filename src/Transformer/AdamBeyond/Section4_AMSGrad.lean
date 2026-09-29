@@ -12,9 +12,12 @@ remark that `β_{1,t} = β₁/t` still gives `O(√T)`.  Theorem 4 is proved in
 **What the source says and what is carried here.**
 
 * This is the revised Theorem 4: its second term carries `D²/(1-β₁)²`, where
-  the first version, quoted by arXiv:1904.03590 as its Theorem A
-  (`Transformer.AMSGrad.theorem_A`), had `D²/(2(1-β₁))`; the footnote of the
-  appendix records the missing factor `2/(1-β₁)`.  The hypotheses the source
+  the first version, quoted by arXiv:1904.03590 as its Theorem A, had
+  `D²/(2(1-β₁))`; the footnote of the appendix records the missing factor
+  `2/(1-β₁)`.  `Transformer.AMSGrad.theorem_A` now proves the first version as
+  printed; `Transformer.AMSGrad.regret_general_schedule` proves it with `D²/(1-β₁)`,
+  which implies this one, and `Transformer.AMSGrad.theorem_A_antitone` proves the
+  printed `D²/(2(1-β₁))` for a non-increasing `β_{1,t}`.  The hypotheses the source
   leaves implicit are made explicit, as in Theorem A: `0 ≤ β_{1,t}`,
   `β₁ < 1` and `0 < β₂ < 1`, without which `1/(1-β₁)` and `√(1-β₂)` are not
   bounds, and `α > 0`.  The source restricts to `T ≥ 1`; at `T = 0` both sides
