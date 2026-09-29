@@ -11,9 +11,10 @@ representation, and the expansion that turns the U-shape of the correction
 -/
 
 import Transformer.Kinetic.Accuracy
-import Transformer.Kinetic.Correlations
 import Transformer.Kinetic.Hardy
 import Transformer.Kinetic.PeriodicGaussian
+import Transformer.Kinetic.UniformPrompt
+import Mathlib.Probability.Independence.Basic
 
 open scoped BigOperators
 open Real MeasureTheory ProbabilityTheory
@@ -86,7 +87,7 @@ example : IsProbabilityMeasure (Measure.dirac () : Measure Unit) ∧ (0 : ℝ) <
   ⟨inferInstance, by norm_num, by norm_num, fun _ _ => measurable_const⟩
 
 /-- **Equation (eq:soft-accuracy-expansion).**  From `th:lost` and the Fourier
-representation, the soft accuracy expands as
+representation, for iid uniformly distributed prompts the soft accuracy expands as
 
   `𝒜_N(t,σ₀) = √(π/2)/M + (√(2π)/(MN)) 𝒮_t(σ₀) + O(N^{-1-ζ} σ₀^{-2} M^C e^{Ct})`.
 
@@ -94,26 +95,46 @@ The leading term is the accuracy of a uniformly distributed answer; all the
 positional information sits in the `N⁻¹` correction `𝒮_t`, which is
 `softCorrection`.
 
+**What the source says and what is changed here.**  The source derives the
+expansion "in the specific case of iid uniformly distributed prompts, thus
+satisfying `eq:init-conv` with `f_∘ ≡ 1`": there `f ≡ 1`, the cross-correlation
+equation becomes the Volterra-Hardy equation, and `𝒮_t` is the sum of its
+solutions.  This statement used to take an arbitrary profile `f₀` and a solution
+`f` of `eq:mfl-lambda` — a binder the conclusion never used — with prompts
+satisfying `eq:init-conv` at rate `N^{-δ}`.  Both are beyond the source, and the
+statement was false with them:
+
+* for a profile other than `f_∘ ≡ 1` the leading term is not `𝒮_t`, which is computed
+  for `f ≡ 1`: the mean term `E[e^{inθ_N(t)}] E[e^{-inθ_{i_*}(0)}]` that
+  `eq:Acc-soft-Fourier` splits off from the covariance is then in general of order
+  one, while the printed leading term does not depend on `f_∘` at all;
+* even for `f_∘ ≡ 1`, `eq:init-conv` only puts `E[e^{inθ⁰}]` within `C N^{-δ}` of
+  `0`, so that mean term is only `O(N^{-2δ})`, which for `δ < 1/2` is larger than
+  `N^{-1-ζ}`.
+
+The prompts are now exactly iid and uniform on `𝕋` (`IsUniformPrompt` and
+independence), the source's case, where the mean term is `0` for every `n ≠ 0`.
+`eq:init-conv` then holds for every `δ > 0`, so `ζ` is any number `< 1`, and the
+constants `δ`, `γ`, `C` of `eq:init-conv` no longer appear.
+
 **How the two constants are quantified.**  The expansion is read off `th:lost`,
-whose `≲_{ζ,φ}` lets the implicit prefactor depend on `ζ` and on the data of
-`eq:init-conv`; the exponent `C` of `M^C e^{Ct}` is explicit and is a constant
-of the model alone, uniform in the vocabulary size `M`.  So the prefactor `K`
-is quantified after `ζ` and that data and before `M`, and `C` outside all of
-them — see the same discussion at `lost_correlations`.
+whose `≲_{ζ,φ}` lets the implicit prefactor depend on `ζ`; the exponent `C` of
+`M^C e^{Ct}` is explicit and is a constant of the model alone, uniform in the
+vocabulary size `M`.  So the prefactor `K` is quantified after `ζ` and before `M`,
+and `C` outside both — see the same discussion at `lost_correlations`.
 
 Not proved here.
 
 Source: arXiv:2605.09213v1, `eq:soft-accuracy-expansion`. -/
-theorem soft_accuracy_expansion (lam β : ℝ) (f₀ : ℝ → ℝ → ℝ) (f : ℝ → ℝ → ℝ → ℝ)
-    (hf : IsDensitySolution lam β f₀ f) :
-    ∃ C : ℝ, 0 < C ∧ ∀ δ ζ Cγ γ : ℝ, 0 < δ → ζ ≤ δ → ζ < 1 →
+theorem soft_accuracy_expansion (lam β : ℝ) :
+    ∃ C : ℝ, 0 < C ∧ ∀ ζ : ℝ, ζ < 1 →
       ∃ K : ℝ, 0 < K ∧
         ∀ M : ℝ, 2 ≤ M →
         ∀ (P : Measure Ω), IsProbabilityMeasure P →
         ∀ (N : ℕ) (hN : 0 < N) (ϑ : Ω → ℝ → Idx N → ℝ),
           (∀ ω, IsGPTFlow lam β N (ϑ ω)) →
           iIndepFun (fun (j : Idx N) (ω : Ω) => ϑ ω 0 j) P →
-          InitConvD P N (fun ω => ϑ ω 0) f₀ δ γ Cγ →
+          IsUniformPrompt P N (fun ω => ϑ ω 0) →
         ∀ t ∈ Set.Ici (0 : ℝ), ∀ σ₀ ∈ Set.Ioo (0 : ℝ) 1,
           |softAccuracy P M N hN ϑ t σ₀ -
               (Real.sqrt (π / 2) / M +
@@ -121,36 +142,51 @@ theorem soft_accuracy_expansion (lam β : ℝ) (f₀ : ℝ → ℝ → ℝ) (f :
             ≤ K * (N : ℝ) ^ (-(1 + ζ)) * σ₀⁻¹ ^ 2 * M ^ C * Real.exp (C * t) := by
   sorry
 
-/-- The hypotheses of `soft_accuracy_expansion` are satisfiable: its binder
-hypothesis is that `f` solves `eq:mfl-lambda`, witnessed by the stationary
-uniform profile being a possible datum, and the conditions quantified inside
-are the source's, with `M ≥ 2` a vocabulary of at least two words. -/
-example : (2 : ℝ) ≤ 2 ∧ (0 : ℝ) < 1 ∧ (1 : ℝ) / 2 ≤ 1 ∧ (1 : ℝ) / 2 < 1 := by norm_num
+/-- The prompt hypotheses of `soft_accuracy_expansion` and `soft_accuracy_uShape` are
+satisfiable: one token, uniformly distributed on `𝕋` — the uniform law of one period of
+`ℝ` — that never moves. -/
+example (lam β : ℝ) : ∃ P : Measure ℝ, IsProbabilityMeasure P ∧
+    ∃ (N : ℕ) (_ : 0 < N) (ϑ : ℝ → ℝ → Idx N → ℝ), (∀ ω, IsGPTFlow lam β N (ϑ ω)) ∧
+      iIndepFun (fun (j : Idx N) (ω : ℝ) => ϑ ω 0 j) P ∧ IsUniformPrompt P N (fun ω => ϑ ω 0) := by
+  obtain ⟨P, hP, hU⟩ := exists_isUniformPrompt
+  refine ⟨P, hP, 1, one_pos, fun ω _ _ => ω, fun ω t j => ?_, iIndepFun.of_subsingleton, hU⟩
+  have h0 : gptField lam β 1 (fun _ => ω) j = 0 := by
+    fin_cases j
+    simp [gptField, alibiZ]
+  rw [h0]
+  exact hasDerivAt_const t ω
 
 /-- **Theorem (thm:U-shape), the consequence for the accuracy.**  In the
-homogeneous baseline `f_∘ ≡ 1`, and under the smallness condition
-`eq:affine-smallness`, the soft accuracy `σ₀ ↦ 𝒜_N(t,σ₀)` is U-shaped with an
-interior minimum, for all `N` large enough.
+homogeneous baseline `f_∘ ≡ 1` — iid uniformly distributed prompts — and under the
+smallness condition `eq:affine-smallness`, the soft accuracy `σ₀ ↦ 𝒜_N(t,σ₀)` is
+U-shaped with an interior minimum, for all `N` large enough.
 
-**What the source says and what is changed here.**  The source says "unique
-interior minimum".  Uniqueness of the minimizer is false at finite `N`: the
-source position is `i_* = ⌊σ₀N⌋`, so `σ₀ ↦ 𝒜_N(t,σ₀)` is constant on each of
-the `N` intervals `[i/N, (i+1)/N)` and its minimum is attained on a whole
-interval, never at one point.  What survives the discretization, and is what
-U-shaped means, is stated instead: the minimum over `(0,1)` is attained at an
-interior position and is strictly better than every position near either end.
+**What the source says and what is changed here.**
+
+* The source says "unique interior minimum".  Uniqueness of the minimizer is false at
+  finite `N`: the source position is `i_* = ⌊σ₀N⌋`, so `σ₀ ↦ 𝒜_N(t,σ₀)` is constant on
+  each of the `N` intervals `[i/N, (i+1)/N)` and its minimum is attained on a whole
+  interval, never at one point.  What survives the discretization, and is what U-shaped
+  means, is stated instead: the minimum over `(0,1)` is attained at an interior position
+  and is strictly better than every position near either end.
+* The source's "in the case `f_∘ ≡ 1`" is the hypothesis `IsUniformPrompt`.  This
+  statement used to carry no assumption on the law of the prompts, and was false without
+  it: if every `θ_j(0)` is the constant `0` then nothing moves (`w_β'(0) = 0`), `𝒜_N` does
+  not depend on `σ₀` and no position is strictly better than one near an end.  It also
+  carried a solution `f` of `eq:mfl-lambda` for `f_∘ ≡ 1` that the conclusion never used;
+  that binder is gone.
 
 Not proved here.
 
 Source: arXiv:2605.09213v1, `thm:U-shape`, final sentence. -/
 theorem soft_accuracy_uShape (lam β : ℝ) (hβ : 0 < β) (hlam : 0 < lam) (M : ℝ) (hM : 2 ≤ M)
-    (f : ℝ → ℝ → ℝ → ℝ) (hf : IsDensitySolution lam β (fun _ _ => 1) f)
     (P : Measure Ω) (hP : IsProbabilityMeasure P) (t : ℝ) (ht : 0 < t)
     (hsmall : ∀ n : ℕ, 1 ≤ n →
       t * aCoeff β n ≤ min (3 - Real.sqrt 3) (2 * (1 - Real.exp (-lam)))) :
     ∃ N₀ : ℕ, ∀ N : ℕ, N₀ ≤ N → ∀ hN : 0 < N, ∀ ϑ : Ω → ℝ → Idx N → ℝ,
       (∀ ω, IsGPTFlow lam β N (ϑ ω)) →
       iIndepFun (fun (j : Idx N) (ω : Ω) => ϑ ω 0 j) P →
+      IsUniformPrompt P N (fun ω => ϑ ω 0) →
       ∃ s ∈ Set.Ioo (0 : ℝ) 1,
         (∀ σ₀ ∈ Set.Ioo (0 : ℝ) 1,
           softAccuracy P M N hN ϑ t s ≤ softAccuracy P M N hN ϑ t σ₀) ∧
@@ -158,12 +194,12 @@ theorem soft_accuracy_uShape (lam β : ℝ) (hβ : 0 < β) (hlam : 0 < lam) (M :
           softAccuracy P M N hN ϑ t s < softAccuracy P M N hN ϑ t σ₀ := by
   sorry
 
-/-- The hypotheses of `soft_accuracy_uShape` that do not require solving the
-mean-field equation are satisfiable: `β = λ = t = 1`, `M = 2`, and the
-smallness threshold is positive, as for `u_shape`. -/
-example : (0 : ℝ) < 1 ∧ (2 : ℝ) ≤ 2 ∧ 0 < 3 - Real.sqrt 3 := by
-  refine ⟨by norm_num, by norm_num, ?_⟩
-  nlinarith [Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0), Real.sqrt_nonneg 3]
+/-- The parameter hypotheses of `soft_accuracy_uShape` are satisfiable, at `β = λ = 1`,
+`M = 2`: a positive `t` meets `eq:affine-smallness`, as for `u_shape`.  The prompt
+hypotheses are witnessed by the example above. -/
+example : (0 : ℝ) < 1 ∧ (2 : ℝ) ≤ 2 ∧ ∃ t : ℝ, 0 < t ∧ ∀ n : ℕ, 1 ≤ n →
+    t * aCoeff 1 n ≤ min (3 - Real.sqrt 3) (2 * (1 - Real.exp (-(1 : ℝ)))) :=
+  ⟨one_pos, le_rfl, exists_affine_smallness 1 1 one_pos⟩
 
 end Kinetic
 end Transformer

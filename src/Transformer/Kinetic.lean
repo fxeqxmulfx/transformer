@@ -17,9 +17,12 @@ minimum in the middle.
 import Transformer.Kinetic.Defs
 import Transformer.Kinetic.FourierDecay
 import Transformer.Kinetic.Hardy
+import Transformer.Kinetic.Riemann
 import Transformer.Kinetic.MeanField
 import Transformer.Kinetic.Fluctuations
 import Transformer.Kinetic.Codewords
 import Transformer.Kinetic.Accuracy
+import Transformer.Kinetic.CorrelationEquations
 import Transformer.Kinetic.Correlations
+import Transformer.Kinetic.UniformPrompt
 import Transformer.Kinetic.SoftAccuracy

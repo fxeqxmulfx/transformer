@@ -148,25 +148,31 @@ theorem u_shape (β lam M t : ℝ) (hβ : 0 < β) (hlam : 0 < lam) (hM : 0 < M)
         ∀ σ₀ ∈ Set.Ioo (0 : ℝ) 1, softCorrection β lam M t s ≤ softCorrection β lam M t σ₀) := by
   sorry
 
-/-- The hypotheses of `u_shape` are satisfiable, at `β = λ = M = 1`: the
-family `a_n` tends to `0` (`aCoeff_tendsto_zero`), so it is bounded above by
-some `B`, and `t = m / (|B| + 1)` meets `eq:affine-smallness`, `m` being its
-positive threshold. -/
-example : ∃ t : ℝ, 0 < t ∧ ∀ n : ℕ, 1 ≤ n →
-    t * aCoeff 1 n ≤ min (3 - Real.sqrt 3) (2 * (1 - Real.exp (-(1 : ℝ)))) := by
-  set m := min (3 - Real.sqrt 3) (2 * (1 - Real.exp (-(1 : ℝ))))
+/-- The smallness condition `eq:affine-smallness` is met by some `t > 0`, at every `β` and every
+`λ > 0`: the family `a_n` tends to `0` (`aCoeff_tendsto_zero`), so it is bounded above by some
+`B`, and `t = m / (|B| + 1)` works, `m` being the positive threshold.  This is what makes the
+hypotheses of `u_shape` satisfiable. -/
+theorem exists_affine_smallness (β lam : ℝ) (hlam : 0 < lam) :
+    ∃ t : ℝ, 0 < t ∧ ∀ n : ℕ, 1 ≤ n →
+      t * aCoeff β n ≤ min (3 - Real.sqrt 3) (2 * (1 - Real.exp (-lam))) := by
+  set m := min (3 - Real.sqrt 3) (2 * (1 - Real.exp (-lam)))
   have hm : 0 < m := by
     refine lt_min ?_ ?_
     · nlinarith [Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0), Real.sqrt_nonneg 3]
-    · have : Real.exp (-(1 : ℝ)) < 1 := by simp
+    · have : Real.exp (-lam) < 1 := Real.exp_lt_one_iff.2 (by linarith)
       linarith
-  obtain ⟨B, hB⟩ := (aCoeff_tendsto_zero 1).bddAbove_range
+  obtain ⟨B, hB⟩ := (aCoeff_tendsto_zero β).bddAbove_range
   have hB1 : 0 < |B| + 1 := by positivity
   refine ⟨m / (|B| + 1), div_pos hm hB1, fun n _ => ?_⟩
-  have ha : aCoeff 1 n ≤ |B| + 1 := (hB ⟨n, rfl⟩).trans ((le_abs_self B).trans (by linarith))
-  calc m / (|B| + 1) * aCoeff 1 n ≤ m / (|B| + 1) * (|B| + 1) :=
+  have ha : aCoeff β n ≤ |B| + 1 := (hB ⟨n, rfl⟩).trans ((le_abs_self B).trans (by linarith))
+  calc m / (|B| + 1) * aCoeff β n ≤ m / (|B| + 1) * (|B| + 1) :=
         mul_le_mul_of_nonneg_left ha (div_pos hm hB1).le
     _ = m := div_mul_cancel₀ m hB1.ne'
+
+/-- The hypotheses of `u_shape` are satisfiable, at `β = λ = M = 1`. -/
+example : (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧ ∃ t : ℝ, 0 < t ∧ ∀ n : ℕ, 1 ≤ n →
+    t * aCoeff 1 n ≤ min (3 - Real.sqrt 3) (2 * (1 - Real.exp (-(1 : ℝ)))) :=
+  ⟨one_pos, one_pos, one_pos, exists_affine_smallness 1 1 one_pos⟩
 
 end Kinetic
 end Transformer
