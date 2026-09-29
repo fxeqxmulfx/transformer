@@ -16,9 +16,9 @@ count is where unproved is recorded.  Nothing in this development may be built
 on them, which is what the `sorry` says.
 
 What stays a `Prop`-valued definition is what is a genuine predicate of its
-arguments — `IsMetastable`, `HasStaircaseProfile`, `IsGradientReparam`,
-`IsEnergyGradNorm` — and those are the vocabulary the three statements are
-written in, not statements themselves.
+arguments — `IsMetastable` (`Metastability.IsMetastable`), `HasStaircaseProfile`,
+`IsGradientReparam`, `IsEnergyGradNorm` — and those are the vocabulary the
+three statements are written in, not statements themselves.
 -/
 
 import Transformer.Basic
@@ -26,6 +26,9 @@ import Transformer.Metastability.Basic
 import Transformer.Metastability.EnergyScale
 import Transformer.Metastability.MainTheorem
 import Transformer.Metastability.InitialUniform
+import Transformer.Metastability.IsMetastable
+import Transformer.Metastability.EnergyLevel
+import Transformer.Metastability.DirectProofWitness
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 open scoped BigOperators
@@ -36,43 +39,15 @@ namespace Metastability
 
 variable (d n : ℕ)
 
-/-- The conclusion of `thm: metastability`, detached from its hypotheses.
-
-`X₀` is *metastable at inverse temperature `β`* if there are caps
-`𝒮_1(ε),…,𝒮_k(ε)` and times `0 < T₁ < T₂` such that every solution of `SA`
-started at `X₀`
-
-1. stays in the doubled caps up to `T₂`, and
-2. has exponentially small within-cap spread on `[T₁, T₂]`.
-
-This is exactly the conclusion of `Metastability.metastability`, with the
-cap data `k, w, ε` and the rate `λ` existentially quantified: under an
-assumption phrased on the energy alone no cap structure is handed to us,
-so the caps have to be part of what is asserted.
-
-Source: arXiv:2410.06833v1, §2, `thm: metastability`. -/
-def IsMetastable (β : ℝ) (X₀ : SphereTuple d n) : Prop :=
-  ∃ (ε : ℝ) (k : ℕ) (w : Idx k → SSphere d) (lam T₁ T₂ : ℝ),
-    0 < ε ∧ ε < 1 / 16 ∧ k ≤ n ∧ 0 < lam ∧ 0 < T₁ ∧ T₁ < T₂ ∧
-    ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
-      (∀ i : Idx n, ∀ q : Idx k,
-        X₀ i ∈ sphericalCap d (w q) ε →
-        ∀ t : ℝ, 0 ≤ t → t ≤ T₂ → X t i ∈ sphericalCap d (w q) (2 * ε)) ∧
-      ∀ q : Idx k, ∀ t : ℝ, T₁ ≤ t → t ≤ T₂ → ∀ i j : Idx n,
-        X t i ∈ sphericalCap d (w q) (2 * ε) →
-        X t j ∈ sphericalCap d (w q) (2 * ε) →
-          ‖((X t i : EucSpace d)) - ((X t j : EucSpace d))‖ ^ 2
-            ≤ 2 * Real.exp (-(lam * β))
-
 /-- **Problem (sec: energy.levels).** *Metastability from an energy level.*
 
-Fix `d, n ≥ 2` and `β > 0`, and let `U_1,…,U_n` be i.i.d. uniform on
-`𝕊^{d-1}`.  Can one find `1 > c₂ > c₁ > 0`, depending on `β`, such that
-every `(x_1,…,x_n) ∈ (𝕊^{d-1})^n` with
+Fix `d, n ≥ 2`, and let `U_1,…,U_n` be i.i.d. uniform on `𝕊^{d-1}`.  Can one
+find `1 > c₂ > c₁ > 0`, depending on `β`, such that every
+`(x_1,…,x_n) ∈ (𝕊^{d-1})^n` with
 
   `c₂ ≥ 𝖤_β(x_1,…,x_n) - 𝔼[𝖤_β(U_1,…,U_n)] ≥ c₁`
 
-is metastable in the sense of `thm: metastability`?
+is metastable in the sense of `thm: metastability` (`IsMetastable`)?
 
 The uniform measure is not constructed in this development: it is pinned down
 by `Metastability.IsUniformOn` — a rotation-invariant probability measure, of
@@ -81,20 +56,49 @@ the `n`-fold product `iidSphere d n ν`, exactly as in `InitialUniform`.
 
 Not proved here; the survey leaves it open.
 
+**What the source says and what is changed here.**
+
+* *`IsMetastable`.*  The source asks for "metastability, as stated in
+  `thm: metastability`".  The earlier predicate kept only the conclusion of the
+  theorem and admitted `k = 0` caps, for which it held for every configuration;
+  it is now the theorem with its hypotheses (a nonempty cover of the initial
+  configuration by caps, `γ(β) > 0`, the bounds of `eq: lambda.3`) and its
+  conclusion, see `IsMetastable`.
+* *The window is nonempty.*  The source does not say how large the window
+  `[c₁, c₂]` is, and read literally the question is answered by an empty
+  window: `printed_energy_level_trivial` gives, for `β > 1/2`, a `c₁ ≥ 1/(2β)`
+  with no configuration in it.  A nonempty window is required here.  That does
+  not make the window large: the remark of the source that "any configuration
+  which breaks the symmetry of uniformly distributed random points will lead to
+  metastability" would ask for more, and the source gives no size to encode.
+  A window of configurations with strongly clustered tokens is not excluded by
+  the statement.
+* *Large `β`.*  The source fixes `β > 0`.  `thm: metastability` needs `β > 1`,
+  and `γ(β) > 0` forces `β > (1/2) log(32 n²)` (as `α ≥ -1` and `ε < 1/16`),
+  so below that no configuration is metastable in the sense of `IsMetastable`
+  and no nonempty window can work.  The statement is for `β ≥ β₀`, some `β₀`;
+  the regime of the source is the low temperature limit `β → +∞`.
+
 Source: arXiv:2410.06833v1, §4, `sec: energy.levels`. -/
 theorem energy_level_metastability (hd : 2 ≤ d) (hn : 2 ≤ n) :
-    ∀ ν : Measure (SSphere d), IsUniformOn d ν → ∀ β : ℝ, 0 < β →
-      ∃ c₁ c₂ : ℝ, 0 < c₁ ∧ c₁ < c₂ ∧ c₂ < 1 ∧
-        ∀ X₀ : SphereTuple d n,
-          c₁ ≤ Eβ d n β X₀ - ∫ U, Eβ d n β U ∂(iidSphere d n ν) →
-          Eβ d n β X₀ - ∫ U, Eβ d n β U ∂(iidSphere d n ν) ≤ c₂ →
-            IsMetastable d n β X₀ := by
+    ∀ ν : Measure (SSphere d), IsUniformOn d ν →
+      ∃ β₀ : ℝ, ∀ β : ℝ, β₀ ≤ β →
+        ∃ c₁ c₂ : ℝ, 0 < c₁ ∧ c₁ < c₂ ∧ c₂ < 1 ∧
+          (∃ X₀ : SphereTuple d n,
+            c₁ ≤ Eβ d n β X₀ - ∫ U, Eβ d n β U ∂(iidSphere d n ν) ∧
+            Eβ d n β X₀ - ∫ U, Eβ d n β U ∂(iidSphere d n ν) ≤ c₂) ∧
+          ∀ X₀ : SphereTuple d n,
+            c₁ ≤ Eβ d n β X₀ - ∫ U, Eβ d n β U ∂(iidSphere d n ν) →
+            Eβ d n β X₀ - ∫ U, Eβ d n β U ∂(iidSphere d n ν) ≤ c₂ →
+              IsMetastable d n β X₀ := by
   sorry
 
-/-- The hypotheses of `energy_level_metastability` are satisfiable: `d = n = 2`.
-The uniformity of `ν` stays inside the statement — no rotation-invariant
-measure on `𝕊^{d-1}` is constructed here, so there is none to exhibit. -/
-example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
+/-- The hypotheses of `energy_level_metastability` are satisfiable: `d = n = 2`,
+and `IsMetastable` is satisfiable there (`isMetastable_basePoint`).  The
+uniformity of `ν` stays inside the statement — no rotation-invariant measure on
+`𝕊^{d-1}` is constructed here, so there is none to exhibit. -/
+example : 2 ≤ 2 ∧ 2 ≤ 2 ∧ IsMetastable 2 2 10000 (fun _ : Idx 2 => basePoint 1) :=
+  ⟨le_rfl, le_rfl, isMetastable_basePoint 1⟩
 
 /-- The **staircase profile** of `conj: saddle-to-saddle`.
 

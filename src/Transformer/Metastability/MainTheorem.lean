@@ -4,7 +4,9 @@
 This file formalizes §2 of arXiv:2410.06833v1.
 
 Equations covered:
-* `thm: metastability`         — main metastability theorem,
+* `thm: metastability`         — main metastability theorem, proved in
+  `Metastability.DirectProof` (with the parameter conditions of `eq: lambda.3` and the
+  three-phase collapse of `Metastability.CollapseTime`),
 * `eq: lambda.1, lambda.2, lambda.3`  — admissible decay rates `λ(β)`,
 * `eq: stick`                   — particles within a cap are exponentially close,
 * `eq: comparison`              — Cauchy-problem comparison for `ρ_q(t)`,
@@ -242,42 +244,6 @@ example : (1 : ℝ) < 2 ∧ (0 : ℝ) < 1 ∧ (0 < (1 : ℝ) ∧ (1 : ℝ) ≤ 1
         Real.exp (2 * ((fun _ : ℝ => (1 : ℝ)) t - 1))) t := by
   refine ⟨by norm_num, by norm_num, ⟨by norm_num, le_rfl⟩, rfl, fun t => ?_⟩
   simpa using hasDerivAt_const t (1 : ℝ)
-
-/-- **Theorem (thm: metastability).** *Dynamic metastability.*
-
-Suppose `d, n ≥ 2`, `β > 1`.  Take a `(β, ε)`-separated initial configuration
-`(x_i(0))_{i=1}^n` with `ε = ε(β) ∈ (0, 1/16)`, and any `λ = λ(β)`
-satisfying `0 < lam < 1 - α - O_{β,n}(1/β)` and `λ(β) = Ω(1)`.
-
-Then there exist `T₂ > T₁ > 0` (as in `MetastabilityTimes`) such that
-
-1. if `x_i(0) ∈ 𝒮_q(ε)`, then `x_i(t) ∈ 𝒮_q(2ε)` for all `t ∈ [0, T₂]`;
-2. for all `q ∈ [k]`, `t ∈ [T₁, T₂]`,
-
-   `max_{x_i(t), x_j(t) ∈ 𝒮_q(2ε)} ‖x_i(t) - x_j(t)‖² ≤ 2 e^{-λ β}`. -/
-theorem metastability
-    (β ε : ℝ) (hβ : 1 < β) (hε : 0 < ε ∧ ε < 1/16) (hd : 2 ≤ d) (hn : 2 ≤ n)
-    (X₀ : SphereTuple d n) (hX₀ : isSeparated d n β ε X₀)
-    (k : ℕ) (hk : k ≤ n) (w : Idx k → SSphere d)
-    (lam : ℝ) (hlam : 0 < lam) :
-    ∃ T₁ T₂ : ℝ,
-      -- T₁, T₂ satisfy the explicit bounds in `MetastabilityTimes`
-      0 < T₁ ∧ T₁ < T₂ ∧
-      ∀ X : ℝ → SphereTuple d n,
-        X 0 = X₀ → Perspective.SA d n β X →
-        -- (1) staying in safety caps
-        (∀ i : Idx n, ∀ q : Idx k,
-          (X₀ i) ∈ sphericalCap d (w q) ε →
-          ∀ t : ℝ, 0 ≤ t → t ≤ T₂ →
-            (X t i) ∈ sphericalCap d (w q) (2 * ε)) ∧
-        -- (2) cap collapse: pairwise within-cap distance is exp small
-        ∀ q : Idx k, ∀ t : ℝ, T₁ ≤ t → t ≤ T₂ →
-          ∀ i j : Idx n,
-            (X t i) ∈ sphericalCap d (w q) (2 * ε) →
-            (X t j) ∈ sphericalCap d (w q) (2 * ε) →
-              ‖((X t i : EucSpace d)) - ((X t j : EucSpace d))‖^2
-                ≤ 2 * Real.exp (-(lam * β)) := by
-  sorry
 
 end Metastability
 end Transformer
