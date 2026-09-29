@@ -35,6 +35,7 @@ import Transformer.Modes.Section2_PhiTQuot
 import Transformer.Modes.Section2_PhiTUniform
 import Transformer.Modes.Section2_PhiTAsymp
 import Transformer.Modes.Section2_PhiTDelta
+import Transformer.Modes.Section2_IntPhiFinal
 import Transformer.Modes.Section2_MainIntPhi
 import Transformer.Modes.Section2_IntPhiB
 import Transformer.Modes.Section3_Hermite
@@ -62,4 +63,7 @@ import Transformer.Modes.Section4_ScaleSpace
 import Transformer.Modes.Section4_Tail
 import Transformer.Modes.Section5_PtBdd
 import Transformer.Modes.Section5_PtBddFourier
+import Transformer.Modes.Section5_PtBddFejer
+import Transformer.Modes.Section5_PtBddSmallBall
+import Transformer.Modes.Section5_PtBddDecayFalse
 import Transformer.Modes.Section5_PtBddOne

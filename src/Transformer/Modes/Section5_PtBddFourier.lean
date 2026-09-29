@@ -13,17 +13,31 @@ for `n > 4`.
 **What the source says and what is carried here.**
 
 * `eq:uniform-decay`, `|𝓕ν_t(ξ)| ≲ (1 + ‖ξ‖)^{-1/2}` "where the implicit
-  constant depends only on `β`", is stated for each fixed `t`, with a constant
-  depending on `β` and `t`: `uniform_decay`.  The source reduces to `t = 0`
-  "by translation invariance of the standard Gaussian", but translating
-  `Z ~ N(t, 1)` moves the amplitude `e^{-x²/2}`, not the phase `φ_θ`, so the
-  reduction does not hold; and no constant is uniform in `t`, since
-  `ν_t → δ₀` as `t → ∞` and `𝓕δ₀ ≡ 1`.  That is proved, `not_uniform_decay`.
-  Only a fixed `t` is used afterwards.
+  constant depends only on `β`", is false as printed, in two ways.
+
+  - The constant cannot be uniform in `t`, since `ν_t → δ₀` as `t → ∞` and
+    `𝓕δ₀ ≡ 1`: `not_uniform_decay`.  The source reduces to `t = 0` "by
+    translation invariance of the standard Gaussian", but translating
+    `Z ~ N(t, 1)` moves the amplitude `e^{-x²/2}`, not the phase `φ_θ`, so the
+    reduction does not hold.
+  - It is false for every `β > 2` and every `t`, even at fixed `t`:
+    `not_uniform_decay_of_two_lt` (`Section5_PtBddDecayFalse.lean`).  The source
+    bounds the tail `∫_{|x|≥R} e^{-x²/2}` "as `R` is fixed" by `(1 + ρ)^{-1/2}`
+    "whenever `ρ` is large enough", which is false for a fixed `R`; and the tail
+    does not oscillate, because `(G, G')(t) → 0` as `|X| → ∞`, so it carries mass
+    `≈ ρ^{-1/β}` of `ν_t` in a ball of radius `1/ρ` around `0`.
+
+  `uniform_decay` is therefore stated for `0 < β < 2` and a fixed `t`, with a
+  constant depending on both.  The borderline `β = 2` is not claimed.  This is
+  what the source's stationary-phase argument would give once the tail is
+  repaired (the tail mass `ρ^{-1/β}` is negligible against `ρ^{-1/2}` exactly for
+  `β < 2`); it is not proved here.
 
 * "`∫|𝓕ν_t|ⁿ ≲ ∫_{‖ξ‖≤1} 1 + ∫_{‖ξ‖>1} |ξ|^{-n/2}`, which is finite as long
   as `n > 4`" is proved, for any function with the decay of
-  `eq:uniform-decay`: `lintegral_pow_lt_top_of_decay`.
+  `eq:uniform-decay`: `lintegral_pow_lt_top_of_decay`.  For `β > 2` the decay
+  is not available, so this route to a continuous density of `μ_t = ν_t^{*n}` is
+  closed there.
 
 Source: arXiv:2412.09080v3, §5.5, `eq:uniform-decay`.
 -/
@@ -40,16 +54,21 @@ noncomputable def fourierNu (β t : ℝ) (ξ : ℝ × ℝ) : ℂ :=
   ∫ x, Complex.exp (-(Complex.I * ((ξ.1 * bigG β t x + ξ.2 * bigG' β t x : ℝ) : ℂ)))
     ∂gaussianReal 0 1
 
-/-- **Equation (eq:uniform-decay)**, for a fixed `t`:
+/-- **Equation (eq:uniform-decay)**, for a fixed `t` and `0 < β < 2`:
 `|𝓕ν_t(ξ)| ≲ (1 + ‖ξ‖)^{-1/2}` for all `ξ ∈ ℝ²`.
 
-Not proved here.  The constant depends on `t`; see the module docstring and
-`not_uniform_decay`.
+Not proved here.  The source states it for every `β`, with a constant depending
+only on `β`; that is false — the constant depends on `t` (`not_uniform_decay`),
+and the estimate fails for every `β > 2` (`not_uniform_decay_of_two_lt`).  The
+hypothesis `β < 2` is the correction; see the module docstring.
 
 Source: arXiv:2412.09080v3, §5.5, `eq:uniform-decay`. -/
-theorem uniform_decay {β : ℝ} (hβ : 0 < β) (t : ℝ) :
+theorem uniform_decay {β : ℝ} (hβ : 0 < β) (hβ2 : β < 2) (t : ℝ) :
     ∃ C : ℝ, ∀ ξ : ℝ × ℝ, ‖fourierNu β t ξ‖ ≤ C / Real.sqrt (1 + ‖ξ‖) := by
   sorry
+
+/-- The hypotheses of `uniform_decay` are satisfiable: `β = 1`. -/
+example : (0 : ℝ) < 1 ∧ (1 : ℝ) < 2 := ⟨one_pos, one_lt_two⟩
 
 /-! ### The constant of `eq:uniform-decay` cannot be uniform in `t` -/
 
@@ -118,8 +137,7 @@ theorem not_uniform_decay {β : ℝ} (hβ : 0 < β) :
   rw [norm_one] at h
   exact hlt.not_ge (le_of_tendsto' h fun t => hC t ξ)
 
-/-- The hypothesis of `uniform_decay`, `tendsto_fourierNu` and
-`not_uniform_decay` is satisfiable. -/
+/-- The hypothesis of `tendsto_fourierNu` and `not_uniform_decay` is satisfiable. -/
 example : (0 : ℝ) < 1 := one_pos
 
 /-! ### Integrability of `|𝓕ν_t|ⁿ` -/

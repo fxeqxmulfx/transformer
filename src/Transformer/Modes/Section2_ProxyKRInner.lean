@@ -17,29 +17,33 @@ open scoped ENNReal
 namespace Transformer
 namespace Modes
 
-/-- The first moment of the Gaussian proxy is integrable over `y > 0` when
-its completed-square curvature is positive.
+/-- Completing the square in the first-moment integrand:
+`y φ(Σ_t^{-1/2}[(0,y) - μ_t]) = (2π)⁻¹ e^{-A_t/2} · y e^{-α_t (y-δ_t)²/2}`.
 
-Source: arXiv:2412.09080v3, `lem:phi-t`. -/
-theorem integrableOn_mul_krPhi {n : ℕ} {β t : ℝ} (hα : 0 < phiAlpha β t) :
-    IntegrableOn (fun y : ℝ => y * krPhi n β t 0 y) (Set.Ioi 0) := by
+Source: arXiv:2412.09080v3, `lem:phi-t`, first display. -/
+theorem mul_krPhi_eq {n : ℕ} {β t : ℝ} (hα : 0 < phiAlpha β t) (y : ℝ) :
+    y * krPhi n β t 0 y = ((2 * Real.pi)⁻¹ * Real.exp (-phiA n β t / 2)) *
+      (y * Real.exp (-(phiAlpha β t / 2) * (y - phiDelta n β t) ^ 2)) := by
   have hF : sigmaFst β t ≠ 0 := by
     intro h
     simp [phiAlpha, h] at hα
   have hD : sigmaDet β t ≠ 0 := by
     intro h
     simp [phiAlpha, h] at hα
-  have heq : (fun y : ℝ => y * krPhi n β t 0 y) =
-      (fun y => ((2 * Real.pi)⁻¹ * Real.exp (-phiA n β t / 2)) *
-        (y * Real.exp (-(phiAlpha β t / 2) * (y - phiDelta n β t) ^ 2))) := by
-    funext y
-    change y * ((2 * Real.pi)⁻¹ * Real.exp (-krQuad n β t 0 y / 2)) = _
-    rw [krQuad_zero_eq hF hD y,
-      show -(phiA n β t + phiAlpha β t * (y - phiDelta n β t) ^ 2) / 2 =
-        -phiA n β t / 2 + -(phiAlpha β t / 2) * (y - phiDelta n β t) ^ 2 by ring,
-      Real.exp_add]
-    ring
-  rw [heq]
+  change y * ((2 * Real.pi)⁻¹ * Real.exp (-krQuad n β t 0 y / 2)) = _
+  rw [krQuad_zero_eq hF hD y,
+    show -(phiA n β t + phiAlpha β t * (y - phiDelta n β t) ^ 2) / 2 =
+      -phiA n β t / 2 + -(phiAlpha β t / 2) * (y - phiDelta n β t) ^ 2 by ring,
+    Real.exp_add]
+  ring
+
+/-- The first moment of the Gaussian proxy is integrable over `y > 0` when
+its completed-square curvature is positive.
+
+Source: arXiv:2412.09080v3, `lem:phi-t`. -/
+theorem integrableOn_mul_krPhi {n : ℕ} {β t : ℝ} (hα : 0 < phiAlpha β t) :
+    IntegrableOn (fun y : ℝ => y * krPhi n β t 0 y) (Set.Ioi 0) := by
+  simp_rw [mul_krPhi_eq hα]
   exact (integrableOn_mul_exp_neg_shift_sq hα).const_mul _
 
 /-- The `lintegral` in the proxy Kac–Rice expression is the `ofReal` of the
@@ -78,6 +82,36 @@ theorem lintegral_det_krPhi_eq {n : ℕ} {β t : ℝ}
   simp_rw [heq]
   rw [lintegral_const_mul' _ _ (ENNReal.ofReal_ne_top)]
   rw [lintegral_krPhi_eq_ofReal_integral hα]
+
+/-- **The inner integral is at most `α_t⁻¹ e^{-A_t/2}(1 + 3|δ_t|√α_t)`.**  Unlike
+the second display of `lem:phi-t`, no bound on `α_t δ_t²` is needed: the shift
+enters linearly.
+
+Source: arXiv:2412.09080v3, `lem:phi-t`, second display, without `n ≲ β^{5/2}`. -/
+theorem integral_mul_krPhi_le {n : ℕ} {β t : ℝ} (hα : 0 < phiAlpha β t) :
+    ∫ y in Set.Ioi (0 : ℝ), y * krPhi n β t 0 y ≤
+      Real.exp (-phiA n β t / 2) *
+        ((phiAlpha β t)⁻¹ * (1 + 3 * (|phiDelta n β t| * Real.sqrt (phiAlpha β t)))) := by
+  simp_rw [mul_krPhi_eq hα]
+  rw [integral_const_mul]
+  have h := integral_mul_exp_neg_shift_sq_le hα (δ := phiDelta n β t)
+  have hpi : (2 * Real.pi)⁻¹ ≤ 1 := by
+    rw [inv_le_one₀ (by positivity)]
+    linarith [Real.two_le_pi]
+  have hX : 0 ≤ Real.exp (-phiA n β t / 2) *
+      ((phiAlpha β t)⁻¹ * (1 + 3 * (|phiDelta n β t| * Real.sqrt (phiAlpha β t)))) := by
+    positivity
+  calc ((2 * Real.pi)⁻¹ * Real.exp (-phiA n β t / 2)) *
+        (∫ y in Set.Ioi (0 : ℝ), y * Real.exp (-(phiAlpha β t / 2) * (y - phiDelta n β t) ^ 2))
+      ≤ ((2 * Real.pi)⁻¹ * Real.exp (-phiA n β t / 2)) *
+        ((phiAlpha β t)⁻¹ * (1 + 3 * (|phiDelta n β t| * Real.sqrt (phiAlpha β t)))) :=
+        mul_le_mul_of_nonneg_left h (by positivity)
+    _ = (2 * Real.pi)⁻¹ * (Real.exp (-phiA n β t / 2) *
+        ((phiAlpha β t)⁻¹ * (1 + 3 * (|phiDelta n β t| * Real.sqrt (phiAlpha β t))))) := by ring
+    _ ≤ 1 * (Real.exp (-phiA n β t / 2) *
+        ((phiAlpha β t)⁻¹ * (1 + 3 * (|phiDelta n β t| * Real.sqrt (phiAlpha β t))))) :=
+        mul_le_mul_of_nonneg_right hpi hX
+    _ = _ := one_mul _
 
 /-- The curvature and determinant hypotheses are simultaneously satisfiable
 along the `β = n` regime. -/
