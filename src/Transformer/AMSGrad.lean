@@ -10,6 +10,14 @@ makes it:
   `1 - γ`; `0 < β₂ < 1` and `0 ≤ β_{1,t} ≤ β₁ < 1` are made explicit;
 * every regret bound holds for every `x* ∈ F`, not only for the minimizer;
 * Lemma 2.3's `Σ_{t≥1} αᵗ = 1/(1-α)` is false and refuted;
+* Theorem A is proved with its printed constants using a schedule-free
+  projection potential and a Young bound on `g_t - m_{t-1}`
+  (`Section4_TheoremAProof`). Its assumptions on losses, steps, and
+  first-moment coefficients are needed only for `1 ≤ t ≤ T`; the proof
+  extends those data after `T` (`Section4_TheoremAFinite`). The
+  original telescoping step is still false, even on an admissible AMSGrad
+  run with the best comparator (`not_abel_printed_actual_run`); the earlier
+  Abel-based bounds and special cases remain as audits of that route;
 * Theorem 4.1's `t₀` is chosen before `T`, not `1 ≤ t₀ ≤ T`;
 * Corollary 4.5's `lim R(T)/T = 0` is kept as its upper half only; the lower
   half is false, refuted by a proved counterexample (`not_cor_lower`);
@@ -34,6 +42,20 @@ import Transformer.AMSGrad.Section4_Lemmas
 import Transformer.AMSGrad.Section4_MainLemma
 import Transformer.AMSGrad.Section4_Telescope
 import Transformer.AMSGrad.Section4_Terms
+import Transformer.AMSGrad.Section4_TheoremAAbel
+import Transformer.AMSGrad.Section4_TheoremAAbelFalse
+import Transformer.AMSGrad.Section4_TheoremAActualAbelFalse
+import Transformer.AMSGrad.Section4_TheoremAReduce
+import Transformer.AMSGrad.Section4_TheoremAGeneral
+import Transformer.AMSGrad.Section4_TheoremAAntitone
+import Transformer.AMSGrad.Section4_TheoremASparse
+import Transformer.AMSGrad.Section4_TheoremABump
+import Transformer.AMSGrad.Section4_TheoremAAlternateStep
+import Transformer.AMSGrad.Section4_TheoremAEnergyBounds
+import Transformer.AMSGrad.Section4_TheoremAEnergyBudget
+import Transformer.AMSGrad.Section4_TheoremAPotential
+import Transformer.AMSGrad.Section4_TheoremAProof
+import Transformer.AMSGrad.Section4_TheoremAFinite
 import Transformer.AMSGrad.Section4_Third
 import Transformer.AMSGrad.Section4_Rate
 import Transformer.AMSGrad.Section4_Theorem

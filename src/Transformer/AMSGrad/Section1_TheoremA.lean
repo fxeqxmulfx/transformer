@@ -4,12 +4,10 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.Calculus.FDeriv.Const
 
 /-
-# AMSGrad — the standing assumptions, and Theorem A
+# AMSGrad — standing assumptions for Theorem A
 
 §1 of arXiv:1904.03590v4: the assumptions every convergence theorem of the
-paper is made under, and Theorem A, Reddi et al.'s bound on the regret of
-AMSGrad (Theorem 4 of arXiv:1904.09237v1), whose proof the paper shows to be
-flawed.
+paper is made under. Theorem A itself is proved in `Section4_TheoremAFinite`.
 
 **What the source says and what is carried here.**
 
@@ -18,13 +16,9 @@ flawed.
   most `D`, and each `f_t` is convex and differentiable with
   `‖∇f_t(x)‖_∞ ≤ G` on `F`.  `isOnlineConvex_zero` witnesses them.
 
-* Theorem A is stated as Reddi et al. state it, with the corrections of the
-  module docstring of `Section1_AMSGrad` (`γ < 1`, `0 < β₂ < 1`) and with the
-  implicit `0 ≤ β_{1,t}` and `β₁ < 1`, without which `1/(1 - β₁)` is not a
-  bound.  The paper does not show the statement false, only its proof: §3
-  exhibits the step that fails, and Reddi et al.'s revision proves a bound
-  "with a constant factor missing".  It is unproved here, and so is its
-  negation.
+* The theorem's printed constants are established by an alternative proof in
+  `Section4_TheoremAFinite`. The invalid telescoping step identified by the
+  paper remains invalid, even on an admissible run.
 
 Source: arXiv:1904.03590v4, §1, Theorem A.
 -/
@@ -72,41 +66,6 @@ theorem isOnlineConvex_zero (α β₁ : ℕ → ℝ) (β₂ : ℝ) :
     rw [abs_le]; constructor <;> linarith
   grad_le t x _ i := by simp [zeroSetup, grad]
 
-/-- **Theorem A** (Reddi et al., Theorem 4; "problematic").  For AMSGrad with
-`α_t = α/√t`, `0 ≤ β_{1,t} ≤ β₁ = β_{1,1} < 1`, `0 < β₂ < 1` and
-`γ = β₁/√β₂ < 1`, under the standing assumptions,
-
-  `R(T) ≤ D²√T/(α(1-β₁)) Σᵢ √v̂_{T,i} + D²/(2(1-β₁)) Σᵢ Σ_{t=1}^T β_{1,t}√v̂_{t,i}/α_t`
-  `      + α√(1 + ln T)/((1-β₁)²(1-γ)√(1-β₂)) Σᵢ ‖g_{1:T,i}‖₂`.
-
-Not proved here; see the module docstring.
-
-Source: arXiv:1904.03590v4, §1, Theorem A. -/
-theorem theorem_A {S : Setup d} {F : Set (Vec d)} {D G : ℝ} (hS : IsOnlineConvex S F D G)
-    {α : ℝ} (hα : 0 < α) (hαt : S.α = fun t : ℕ => α / Real.sqrt t)
-    (hβ₁ : ∀ t, 1 ≤ t → 0 ≤ S.β₁ t ∧ S.β₁ t ≤ S.β₁ 1) (hβ₁' : S.β₁ 1 < 1)
-    (hβ₂ : 0 < S.β₂) (hβ₂' : S.β₂ < 1) (hγ : S.β₁ 1 / Real.sqrt S.β₂ < 1)
-    {T : ℕ} (hT : 1 ≤ T) {xstar : Vec d} (hxstar : xstar ∈ F) :
-    S.regret amsgradRule xstar T ≤
-      D ^ 2 * Real.sqrt T / (α * (1 - S.β₁ 1)) * ∑ i, Real.sqrt (S.vhat amsgradRule T i)
-      + D ^ 2 / (2 * (1 - S.β₁ 1)) *
-          ∑ i, ∑ t ∈ Icc 1 T, S.β₁ t * Real.sqrt (S.vhat amsgradRule t i) / S.α t
-      + α * Real.sqrt (1 + Real.log T) /
-          ((1 - S.β₁ 1) ^ 2 * (1 - S.β₁ 1 / Real.sqrt S.β₂) * Real.sqrt (1 - S.β₂))
-          * ∑ i, S.gnorm amsgradRule T i := by
-  sorry
-
-/-- The hypotheses of `theorem_A` are satisfiable: the zero cost on `[-1, 1]`,
-`α = 1`, `β_{1,t} = 0`, `β₂ = 1/2`, `T = 1`, `x* = 0`. -/
-example :
-    let S := zeroSetup (d := 1) (fun t : ℕ => 1 / Real.sqrt t) (fun _ => 0) (1 / 2)
-    IsOnlineConvex S (Set.Icc (fun _ => -1) (fun _ => 1)) 2 0 ∧ (0 : ℝ) < 1 ∧
-      S.α = (fun t : ℕ => 1 / Real.sqrt t) ∧ (∀ t, 1 ≤ t → 0 ≤ S.β₁ t ∧ S.β₁ t ≤ S.β₁ 1) ∧
-      S.β₁ 1 < 1 ∧ 0 < S.β₂ ∧ S.β₂ < 1 ∧ S.β₁ 1 / Real.sqrt S.β₂ < 1 ∧ 1 ≤ 1 ∧
-      (0 : Vec 1) ∈ Set.Icc (fun _ => -1) (fun _ => 1) :=
-  ⟨isOnlineConvex_zero _ _ _, one_pos, rfl, fun _ _ => ⟨le_rfl, le_rfl⟩,
-    by simp [zeroSetup], by norm_num [zeroSetup], by norm_num [zeroSetup],
-    by simp [zeroSetup], le_rfl, fun _ => by norm_num, fun _ => by norm_num⟩
 
 end AMSGrad
 end Transformer

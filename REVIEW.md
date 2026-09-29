@@ -212,6 +212,20 @@ Marks: `ok` checked and faithful · `fixed` corrected in a commit · `issue` ope
 - ok Transformer/AMSGrad/Section4_Telescope.lean (4): `telescope_le`, `eqmain_le_of`, `vt_div`, `eqmain_le`
 - ok Transformer/AMSGrad/Section4_Terms.lean (2): `sum_sqrt_mul_pow_le`, `eqsecond_le`
 - ok Transformer/AMSGrad/Section4_Theorem.lean (2): `mainthm_lambda`, `mainthm_inv`
+- ok Transformer/AMSGrad/Section4_TheoremAFinite.lean (3): `finiteSetup_state_eq`, `finiteSetup_online`, `theorem_A` — the printed constants hold with assumptions on `f_t`, `α_t`, and `β₁,t` only through `T`; `γ < 1` is required because the source divides by `1−γ`. The proof uses a schedule-free projection potential and a Young bound on `g_t−m_{t−1}`. `#print axioms` shows only `propext`, `Classical.choice`, and `Quot.sound`.
+- ok Transformer/AMSGrad/Section4_TheoremAGeneral.lean (1): `regret_general_schedule` — the Abel-based second term has `D²/(1−β₁)`, twice the printed coefficient; retained as an audit of the old proof route. The full printed result is `theorem_A` in `Section4_TheoremAFinite`.
+- ok Transformer/AMSGrad/Section4_TheoremAAntitone.lean (1): `theorem_A_antitone` — earlier special-case proof via Abel summation for non-increasing `β₁,t`; the full theorem now has a different proof.
+- ok Transformer/AMSGrad/Section4_TheoremASparse.lean (2): `abel_printed_of_sparse`, `theorem_A_sparse` — earlier special-case Abel proof under a coordinatewise weighted-mass bound that permits upward jumps.
+- ok Transformer/AMSGrad/Section4_TheoremAAlternateStep.lean (3): the projection bound on `m_t`, zero-gradient handling, and the Young correction preserve the printed schedule coefficient.
+- ok Transformer/AMSGrad/Section4_TheoremAEnergyBounds.lean (5): current-gradient energy and shifted previous-moment energy are controlled by Lemma 4.4 and the harmonic estimate.
+- ok Transformer/AMSGrad/Section4_TheoremAEnergyBudget.lean (1): the combined energies fit inside the printed gradient-norm term for every bounded schedule.
+- ok Transformer/AMSGrad/Section4_TheoremAPotential.lean (2): the schedule-free potential and diameter correction fit the printed first and second terms.
+- ok Transformer/AMSGrad/Section4_TheoremAProof.lean (1): `theorem_A_global` proves the printed constants under a globally bounded first-moment schedule.
+- ok Transformer/AMSGrad/Section4_TheoremABump.lean (2): `isOnlineConvex_bump`, `theorem_A_bump` — an actual nonzero-gradient AMSGrad run witnesses the assumptions with `β₁,₂ = 0 < β₁,₃ = 1/2`; the special-case result remains valid alongside the full Theorem A.
+- ok Transformer/AMSGrad/Section4_TheoremAAbel.lean (4): `sum_mul_sub_le`, `abel_general`, `abel_antitone`, `not_abel_printed` — scalar estimates, no paper claim; `not_abel_printed` refutes the scalar inequality with the printed constants, not the paper's Theorem A
+- ok Transformer/AMSGrad/Section4_TheoremAAbelFalse.lean (1): `not_abel_printed_initial_max` strengthens the scalar counterexample to `β₁ = β_{1,1}` and strictly increasing weights `a_t = t`; this still does not refute Theorem A because the squared iterate distances are not realized by an AMSGrad run
+- ok Transformer/AMSGrad/Section4_TheoremAActualMoments.lean, Section4_TheoremAActualRun.lean, Section4_TheoremAActualAbelFalse.lean: `not_abel_printed_actual_run` refutes the same scalar bound with `β₁ = β₁,1 = 1/2` on an admissible one-dimensional AMSGrad run at `T = 16`; `v̂_t = 1`, `a_t = √t/100`, the iterates alternate between `-1` and `1`, and `flip_best_comparator` proves `-1` minimizes the total cost. This refutes the original proof step while leaving the regret bound intact, as now proved by `theorem_A`.
+- ok Transformer/AMSGrad/Section4_TheoremAReduce.lean (2): `sqrt_vhat_div_mono`, `regret_le_of_abel`
 - ok Transformer/AMSGrad/Section4_Third.lean (2): `eqthird_lambda_le`, `eqthird_inv_le`
 - ok Transformer/AMSGrad/Section5_AdamX.lean (6): `le_adamXRule`, `adamX_vhat_one`, `adamX_vhat_succ`, `vtnew`, `vt2`, `adamX_eq_amsgrad`
 - ok Transformer/AMSGrad/Section5_Bounds.lean (3): `vtnew_div`, `adamX_mono`, `eqthird_adamX_le`
