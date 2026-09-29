@@ -1,0 +1,75 @@
+{
+  "length": 64,
+  "width": 64,
+  "learning_rate": 0.00046415888336127773,
+  "checkpoint": "experiments/convex_mqar/runs/full/n64-d64-lr0.00046415888/best.pt",
+  "splits": {
+    "train": {
+      "sequences": 3000,
+      "queries": 48000,
+      "accuracy": 0.333,
+      "loss": 3.7502173563639323,
+      "prediction_is_a_prefix_value": 0.841625,
+      "accuracy_with_oracle_candidate_values": 0.3698958333333333,
+      "layer1_previous_key_mean_mass": 0.2637505626678467,
+      "layer1_previous_key_top_attention": 0.6428958333333333,
+      "layer2_matching_value_mean_mass": 2.444747796592613e-06,
+      "layer2_matching_value_top_attention": 0.0,
+      "layer2_matching_key_mean_mass": 0.010788369715213776,
+      "accuracy_by_value_query_distance": {
+        "0-15": {
+          "queries": 6244,
+          "accuracy": 0.17937219730941703
+        },
+        "16-31": {
+          "queries": 17957,
+          "accuracy": 0.285014200590299
+        },
+        "32-47": {
+          "queries": 17848,
+          "accuracy": 0.3847489914836396
+        },
+        "48-63": {
+          "queries": 5951,
+          "accuracy": 0.4837842379432028
+        }
+      },
+      "identity": "c68f58e835e3a193"
+    },
+    "validation": {
+      "sequences": 3000,
+      "queries": 48000,
+      "accuracy": 0.251375,
+      "loss": 5.0633756612141925,
+      "prediction_is_a_prefix_value": 0.7786875,
+      "accuracy_with_oracle_candidate_values": 0.29510416666666667,
+      "layer1_previous_key_mean_mass": 0.26353761259714764,
+      "layer1_previous_key_top_attention": 0.6424375,
+      "layer2_matching_value_mean_mass": 2.948249486507848e-06,
+      "layer2_matching_value_top_attention": 0.0,
+      "layer2_matching_key_mean_mass": 0.010860177973906199,
+      "accuracy_by_value_query_distance": {
+        "0-15": {
+          "queries": 6040,
+          "accuracy": 0.1228476821192053
+        },
+        "16-31": {
+          "queries": 18264,
+          "accuracy": 0.21260402978537013
+        },
+        "32-47": {
+          "queries": 17767,
+          "accuracy": 0.2908763437834187
+        },
+        "48-63": {
+          "queries": 5929,
+          "accuracy": 0.38336987687637036
+        }
+      },
+      "identity": "dcac5674013136b9"
+    }
+  },
+  "scope": "Read-only train/validation diagnostics; no test-based selection or retraining",
+  "candidate_control": "Oracle restricts readout candidates; not a standalone model",
+  "causal_scope": "Association of errors with routing; no causal attribution to RoPE"
+}

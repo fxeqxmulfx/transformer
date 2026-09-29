@@ -180,6 +180,12 @@ Its softmax control is a **constructed dot-product head**, not the trained
 RoPE Transformer. It must not be used as the requested empirical comparison.
 The trained comparison is produced by `benchmark`.
 
+`reports/baseline_diagnostic.json` examines the best width-64 checkpoint on
+3000 training sequences and the full validation split. It records dictionary
+candidate and reconstructed attention controls. Restricting readout to known
+values is an oracle diagnostic, not an alternative model. The observations do
+not isolate a causal effect of RoPE. The convex construction uses no RoPE.
+
 `reports/rope_sanity.json` records the completed small-vocabulary GPU control:
 the trained RoPE Transformer and the convex mechanism both answered all 1024
 test queries correctly. This is a sanity check, not the full 8192-token result.
