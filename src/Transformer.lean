@@ -1,5 +1,5 @@
 /-
-Formalization of twenty-three papers on the mathematics of Transformers:
+Formalization of twenty-four papers on the mathematics of Transformers:
 
 1. Weiss, Goldberg, Yahav — arXiv:2106.06981v2
    "Thinking Like Transformers".
@@ -69,11 +69,14 @@ Formalization of twenty-three papers on the mathematics of Transformers:
    arXiv:2312.04927v1
    "Zoology: Measuring and Improving Recall in Efficient Language Models".
 
-22. Gomes, Zhang, Belilovsky, Wolf, Hosseini — arXiv:2405.16397v3
-   "AdaFisher: Adaptive Second Order Optimization via Fisher Information".
-
-23. Liu et al. — arXiv:2502.16982
+22. Liu et al. — arXiv:2502.16982
    "Muon is Scalable for LLM Training".
+
+23. Modoranu et al. — arXiv:2602.02016v2
+   "DASH: Faster Shampoo via Batched Block Preconditioning and Efficient Inverse-Root Solvers".
+
+24. Gomes, Zhang, Belilovsky, Wolf, Hosseini — arXiv:2405.16397v3
+   "AdaFisher: Adaptive Second Order Optimization via Fisher Information".
 
 Alongside these, `Transformer.ALM` formalizes the paraboloid-lifted lookup
 used by the append-only lookup machine (Percepta, transformer-vm), and
@@ -117,6 +120,7 @@ import Transformer.Precision
 import Transformer.Convexifying
 import Transformer.Zoology
 import Transformer.ConvexRecall
-import Transformer.AdaFisher
 import Transformer.Muon
+import Transformer.DASH
+import Transformer.AdaFisher
 import Transformer.Optimization
