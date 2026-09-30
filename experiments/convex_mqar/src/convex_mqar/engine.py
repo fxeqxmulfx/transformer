@@ -55,16 +55,27 @@ def optimizer_for(model, learning_rate, weight_decay):
 
 
 def train_run(config, length, width, learning_rate, train_data, validation_data,
-              directory, status_path, compiled=False):
+              directory, status_path, compiled=False, model_factory=None):
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=True)
     result_path = directory / "result.json"
     best_path, current_path = directory / "best.pt", directory / "current.pt"
+    model_spec = {"class": "convex_mqar.rope.RopeTransformer" if model_factory is None else
+                  f"{model_factory.__module__}.{model_factory.__qualname__}"}
+    spec_path = directory / "model.json"
+    if spec_path.exists():
+        if json.loads(spec_path.read_text()) != model_spec:
+            raise RuntimeError("The checkpoints belong to a different model class")
+    elif model_factory is not None and (current_path.exists() or result_path.exists()):
+        raise RuntimeError("Cannot reuse untagged checkpoints for a different model class")
     if result_path.exists():
         return json.loads(result_path.read_text()), best_path
+    if not spec_path.exists():
+        write_json(spec_path, model_spec)
     torch.manual_seed(config.seed)
-    model = RopeTransformer(config.vocab, width, config.layers, config.heads,
-                            config.mlp_ratio, config.rope_base).to(config.device)
+    factory = RopeTransformer if model_factory is None else model_factory
+    model = factory(config.vocab, width, config.layers, config.heads,
+                    config.mlp_ratio, config.rope_base).to(config.device)
     optimizer = optimizer_for(model, learning_rate, config.weight_decay)
     batch_size = config.batch_size(length, width)
     steps_per_epoch = math.ceil(len(train_data[0]) / batch_size)

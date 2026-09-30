@@ -22,15 +22,16 @@ def write_json(path, value):
     temporary.replace(path)
 
 
-def record_execution(output, config, compiled):
+def record_execution(output, config, compiled, extra_files=()):
+    fingerprinted_files = (*FINGERPRINTED_FILES, *extra_files)
     environment = {"python": platform.python_version(), "torch": torch.__version__,
                    "cuda": torch.version.cuda, "numpy": np.__version__,
                    "device": torch.cuda.get_device_name() if config.device == "cuda" else "cpu",
                    "precision": config.precision, "rope_base": config.rope_base,
                    "compiled_loss": compiled, "compile_backend": "inductor" if compiled else None,
-                   "fingerprinted_files": list(FINGERPRINTED_FILES)}
+                   "fingerprinted_files": list(fingerprinted_files)}
     environment["source_sha256"] = hashlib.sha256(b"".join(
-        Path(__file__).with_name(name).read_bytes() for name in FINGERPRINTED_FILES)).hexdigest()
+        Path(__file__).with_name(name).read_bytes() for name in fingerprinted_files)).hexdigest()
     history_path = output / "execution_history.json"
     history = json.loads(history_path.read_text()) if history_path.exists() else []
     environment_path = output / "environment.json"

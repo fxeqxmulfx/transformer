@@ -51,6 +51,104 @@ The full profile runs **16 training jobs**: four lengths and four learning rates
 Training this grid on a laptop GPU is a long-running experiment. Data and
 checkpoints are ignored by Git. Final summaries can be copied into `reports/`.
 
+## Replace only attention normalization
+
+The matched experiment trains the existing RoPE Transformer with **causal
+sparsemax in place of softmax**:
+
+```sh
+uv run --no-sync --project experiments/convex_mqar python -m convex_mqar.attention_ablation \
+  --profile full --device cuda --compile \
+  --output experiments/convex_mqar/runs/sparsemax \
+  --baseline experiments/convex_mqar/runs/full \
+  --data-root experiments/convex_mqar/data
+```
+
+`SparsemaxTransformer` preserves all initialized parameter values, their names,
+the RNG state, RoPE, Q/K/V projections, MLPs, normalization, and tied vocabulary
+readout. Both width-64 models have 623,872 trainable parameters. All layers
+are trained with the same cached splits, batch order, optimizer, learning-rate
+grid, warmup, and epoch budget. There is no prescribed key/value parser,
+fixed token encoder, value-copy decoder, or additional matching supervision.
+The Zoology reference modules are not used by this experiment.
+
+Given scaled scores `z = RoPE(Q) RoPE(K)^T / sqrt(head_width)`, each row solves
+
+\[
+\min_{a\geq 0,\ \sum_j a_j=1,\ a_j=0\ (j>i)}
+\frac12\sum_j a_j^2-\sum_j a_j z_j.
+\]
+
+This is simplex projection, with the same minimizer as the row objective in
+`Transformer.GPTMini.Convex.Basic`. It is a new attention replacement motivated
+by the simplex construction of arXiv:2211.11052v1 §3.1, rather than an
+implementation of the paper's full training reformulation. The inference
+program is convex for fixed scores; end-to-end Transformer training remains
+nonconvex. Unlike softmax, sparsemax can assign exactly zero weight to a token.
+
+Softmax uses fused SDPA; sparsemax forms explicit FP32 scores and computes
+projection thresholds in FP32, with a support-based backward pass. Their
+numerical kernels differ, so timing is not an isolated comparison of
+normalization cost. Initial weights and the training budget match; compiled
+BF16 training is not promised to be bitwise identical to earlier eager runs.
+
+The new sweep starts from the common initialization. Completed ordinary test
+results are reused after checking the configuration and split identities.
+The ordinary process must release its run lock before this command starts;
+GPU jobs are not overlapped. If an ordinary length is unfinished, its comparison
+is temporarily recorded as `null`; the ordinary saved checkpoints are resumed
+after the sparsemax sweep to finish that comparison. Each model selects its
+checkpoint and learning rate on validation, then evaluates the held-out test.
+
+`runs/sparsemax/status.json`, `epochs.jsonl`, and `comparison.json` record progress.
+`baseline.json` preserves the ordinary report and its execution history.
+Source fingerprints include the new attention and experiment modules. A model
+class tag prevents accidental reuse of ordinary checkpoints for sparsemax,
+despite their compatible parameter names and shapes.
+
+### First epoch reaching 99% validation accuracy
+
+The target is **at least 99% recall accuracy on validation**, measured after
+each epoch on 3000 sequences. For each model and length, select the learning
+rate with the earliest observed crossing; ties use measured training seconds,
+then the smaller LR. Reaching the target in any epoch qualifies, even if
+accuracy falls later.
+
+Results for seed 0, width 64, four learning rates, and 64 epochs per run:
+
+| Attention with RoPE | Length | LR | First epoch at 99% | Validation accuracy at that epoch | Training seconds to that epoch |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Softmax | 64 | — | Not reached in 64 epochs | — | — |
+| Sparsemax | 64 | 0.01 | 1 | 99.8021% | 3.92 |
+| Softmax | 128 | 0.01 | 18 | 99.7073% | 107.66 |
+| Sparsemax | 128 | 0.0021544347 | 3 | 99.5375% | 20.72 |
+| Softmax | 256 | 0.0021544347 | 5 | 99.9599% | 71.35 |
+| Sparsemax | 256 | 0.00046415888 | 6 | 99.9526% | 112.31 |
+
+These are validation milestones. Validation examples never enter gradient
+updates; validation is used to select checkpoints and learning rates. The
+held-out **test** is evaluated separately, after selecting the checkpoint and
+LR by peak validation accuracy, then loss. The first epoch reaching 99% on
+test was not measured.
+
+The table comes from the `99` entries of the exporter with `--selection first99`:
+
+```sh
+uv run --no-sync --project experiments/convex_mqar python -m convex_mqar.validation_milestones \
+  --softmax experiments/convex_mqar/runs/full \
+  --sparsemax experiments/convex_mqar/runs/sparsemax \
+  --lengths 64 128 256 \
+  --selection first99 \
+  --output experiments/convex_mqar/reports/validation_first99
+```
+
+This reads existing epoch logs on CPU. Epochs are numbered from 1; crossings
+are observed after an epoch, with no interpolation within it. Times are
+cumulative measured training-loop seconds for the selected LR, including lazy
+compilation. They exclude validation, checkpoint writing, setup, pauses,
+discarded partial epochs, and the other LR candidates. Compilation warmup
+differs across runs, so these times are not an isolated kernel benchmark.
+
 ## Data and evaluation
 
 Local source: `papers/arXiv-2312.04927v1/Sections/appendix/mqar_framework.tex`,
