@@ -1,0 +1,12 @@
+{
+  "repository": "https://github.com/openai/grok",
+  "commit": "3d64b1d8c1d595dd8ebdb7771998823f1b14c7b3",
+  "files": {
+    "LICENSE": "893951b3bf94db8df1b13e05da5cdeb499400960e4d44a3962a8b33ed0b4f28e",
+    "README.md": "019344cffbdd5fc035b8818d8e7685523292f7cf3516105e68159221e379e8c0",
+    "grok/transformer.py": "8ef4a14f0dd31a1aa8e07d941e1a371c0c13b076355957fa3d9e537462472074",
+    "grok/training.py": "1ef287a8cf0559c5d71ec1cb2fe0f5f870233e4e3c6ba8c9a6063c552577330d",
+    "grok/data.py": "4ee6beef95fb97f13dde5d1673b97a3cb35f26343887a43efcd7fdb33f87372d",
+    "scripts/train.py": "70c63da7512d5116aaa98981efe93bca51d5fce706e9e71a715981b4825f3ed1"
+  }
+}
