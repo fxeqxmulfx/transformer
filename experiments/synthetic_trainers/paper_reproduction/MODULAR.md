@@ -1,7 +1,8 @@
 # Modular division and delayed generalization
 
 The local source is *Convexifying Transformers*, arXiv:2211.11052v1,
-Section 4, Figures 6–10. Its standard transformer fits mod-97 training data
+Section 4, the figures labeled `fig:grokking_p97_L1` and `fig:grokking_p97_L12`.
+Its standard transformer fits mod-97 training data
 around 1,000 updates and generalizes after more than 100,000. This trainer
 reproduces that arithmetic setting and measures the delay to generalization.
 It does not implement the paper's convex architecture or claim its speedup.
@@ -48,3 +49,17 @@ and matrix initialization standard deviation 0.02. `--optimizer amsgradw`
 uses the repository's raw AMSGrad update, betas (0.9, 0.999), no bias correction,
 and decoupled decay. These are explicitly labeled adaptations. Comparisons
 must retain identical data, observation points, budgets, and failed runs.
+
+For all three controls across seeds 0/1/2, run the serial confirmation campaign:
+
+```bash
+.venv/bin/python -m experiments.synthetic_trainers.reproduction \
+  --output experiments/runs/paper_reproduction/mod97-confirmation
+```
+
+The campaign freezes nine recipes before training. `--resume` skips verified
+completed runs and continues checkpoints; source hashes and configuration must
+match. `--adopt-completed` can incorporate an existing complete matching run
+without retraining it. It rejects unfinished runs, different sources/configs,
+and unrelated files in the directory. Fixed budgets cannot change on campaign
+resume. Individual exploratory budget extensions use the separate trainer CLI.
