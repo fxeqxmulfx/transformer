@@ -1,5 +1,5 @@
 /-
-Formalization of twenty-four papers on the mathematics of Transformers:
+Formalization of twenty-five papers on the mathematics of Transformers:
 
 1. Weiss, Goldberg, Yahav — arXiv:2106.06981v2
    "Thinking Like Transformers".
@@ -78,6 +78,10 @@ Formalization of twenty-four papers on the mathematics of Transformers:
 24. Gomes, Zhang, Belilovsky, Wolf, Hosseini — arXiv:2405.16397v3
    "AdaFisher: Adaptive Second Order Optimization via Fisher Information".
 
+25. Xu, Zhi, Jiang — arXiv:2603.22095v2
+   "Input Convex Encoder-Only Transformer for Computationally Efficient
+   Model Predictive Control in Building Demand Response".
+
 Alongside these, `Transformer.ALM` formalizes the paraboloid-lifted lookup
 used by the append-only lookup machine (Percepta, transformer-vm), and
 `Transformer.Precision` proves the limits finite precision puts on attention:
@@ -125,3 +129,4 @@ import Transformer.Muon
 import Transformer.DASH
 import Transformer.AdaFisher
 import Transformer.Optimization
+import Transformer.ICEoT
