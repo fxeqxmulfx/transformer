@@ -1,0 +1,15 @@
+Source: Bochao Kong, classical-complex-wpt
+https://github.com/BochaoKong/classical-complex-wpt
+Revision: b4a7273fe5c9752753c52e10494097569089642d
+License: Apache-2.0 (LICENSE is copied verbatim)
+
+Only definitions and proofs needed for preparation and analytic division
+are retained.
+The coefficient field is changed from complex to real. Norm identities are
+adapted to real scalars and sequence summability proofs made explicit where
+needed. The files are split into the Transformer.AnalyticPreparation namespace.
+Mathlib 4.34 adaptations replace Finset.prod_le_one by prod_le_one₀ and
+ deprecated dif_pos/dif_neg by dite_eq_left/dite_eq_right.
+The finite-variable division adapter and its function-germ uniqueness are
+adapted from LocalComplexGeometry; see its NOTICE. Unrelated generic
+product-indexed interfaces and preparation uniqueness are omitted.

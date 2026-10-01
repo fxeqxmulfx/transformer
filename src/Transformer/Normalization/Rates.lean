@@ -9,7 +9,8 @@ The bound `‖A_j‖ ≤ 1` that holds at every configuration is in
 `Normalization.Velocities`; the rate of `thm: preln-slow (ii)` is
 `Normalization.ClusterSpeed`.
 
-The statement is not proved.  It is almost-sure with respect to the uniform
+The statement is proved with `c = 1` and `C = 128`. It is a high-probability
+bound with respect to the uniform
 measure on `(𝕊^{d-1})^{⊗ n}`, which is pinned down by
 `Perspective.UniformTuple`; read over an arbitrary measure it is false, and
 `not_forall_initial_velocity_small` proves it.
@@ -18,6 +19,7 @@ measure on `(𝕊^{d-1})^{⊗ n}`, which is pinned down by
 import Transformer.Basic
 import Transformer.Normalization.Basic
 import Transformer.Normalization.Velocities
+import Transformer.Normalization.InitialNumeratorTail
 import Transformer.Perspective.Section3_SmallBeta
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 import Mathlib.Analysis.Normed.Lp.MeasurableSpace
@@ -60,7 +62,11 @@ the bound hold everywhere as soon as `n ≥ 2`.  The source's probability is
 `1 - n^{-C}`, with the `c` it introduces left unused; it is read as
 `1 - n^{-c}`, the reading in which both constants are used.
 
-Not proved here.
+The proof takes `c = 1` and `C = 128`. Conditioning on the query token,
+the other tilted vectors are independent, bounded by `3`, and have mean
+norm at most `2/d`. Bounded-difference concentration and a union bound
+control all numerators. The denominator is at least `n/3`; this replaces
+the Appendix B estimates `n-1+e` and `n-1+e^{-1}`, which omit the other scores.
 
 Source: arXiv:2510.22026v2, §4.2, `thm: initial-velocity`. -/
 theorem initial_velocity_small :
@@ -75,20 +81,47 @@ theorem initial_velocity_small :
           ≤ σ { Θ : SphereTuple d n | ∀ j : Idx n,
               ‖attentionVec d n 1 Q K V (tupleCoe Θ) j‖
                 ≤ C * (Real.sqrt (Real.log n / n) + Real.log n / d) } := by
-  sorry
+  refine ⟨1, 128, by norm_num, by norm_num, ?_⟩
+  intro d n σ hσ Q K V hQK hV hsize hdim
+  obtain ⟨μ, hμprob, hμ, rfl⟩ := hσ
+  let := hμprob
+  rw [Real.rpow_neg_one]
+  by_cases hn : n ≤ 1
+  · rcases Nat.le_one_iff_eq_zero_or_eq_one.mp hn with rfl | rfl <;> simp
+  have hn2 : 2 ≤ n := by omega
+  have hnR : (2 : ℝ) ≤ n := by exact_mod_cast hn2
+  have hd : 0 < d := by
+    by_contra hd
+    have hd0 : d = 0 := by omega
+    subst d
+    simp only [Nat.cast_zero, Real.sqrt_zero, Real.exp_zero] at hsize
+    have hlog : (1 : ℝ) / 2 < Real.log n := by
+      linarith [Real.log_two_gt_d9, Real.log_le_log (by norm_num : (0 : ℝ) < 2) hnR]
+    nlinarith
+  obtain ⟨m, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : n ≠ 0)
+  have hm : 0 < m := by omega
+  apply (measure_pi_all_initialNumerator_le hd hm μ hμ Q K hQK).trans
+  apply measure_mono
+  intro Θ hΘ j
+  exact (norm_attentionVec_le_initialNumerator (by omega) Q K V hQK hV Θ j).trans
+    ((mul_le_mul_of_nonneg_left (hΘ j) (by positivity)).trans
+      (initialThreshold_rate hd hn2 hdim))
 
 /-- The hypotheses `initial_velocity_small` carries under its quantifiers are
-satisfiable: `Q = K = V = I_d` meet the two operator bounds by Cauchy–Schwarz,
+satisfiable: the two-point uniform law gives `UniformTuple`, while
+`Q = K = V = I_d` meet the two operator bounds by Cauchy–Schwarz,
 and `n = 2`, `d = 1` meet `n log n ≤ e^{√d}` and `d ≤ n log n`, since
 `1 ≤ 2 log 2 ≈ 1.386 ≤ e`. -/
 example :
+    Perspective.UniformTuple 1 2 (Measure.pi (fun _ : Fin 2 => oneDimUniform)) ∧
     (∀ x y : EucSpace 1,
         |inner (𝕜 := ℝ) (ContinuousLinearMap.id ℝ (EucSpace 1) x)
           (ContinuousLinearMap.id ℝ (EucSpace 1) y)| ≤ ‖x‖ * ‖y‖) ∧
       ‖ContinuousLinearMap.id ℝ (EucSpace 1)‖ ≤ 1 ∧
       ((2 : ℕ) : ℝ) * Real.log ((2 : ℕ) : ℝ) ≤ Real.exp (Real.sqrt ((1 : ℕ) : ℝ)) ∧
       ((1 : ℕ) : ℝ) ≤ ((2 : ℕ) : ℝ) * Real.log ((2 : ℕ) : ℝ) := by
-  refine ⟨fun x y => abs_real_inner_le_norm x y, ContinuousLinearMap.norm_id_le, ?_, ?_⟩
+  refine ⟨⟨oneDimUniform, inferInstance, oneDimUniform_invariant, rfl⟩,
+    fun x y => abs_real_inner_le_norm x y, ContinuousLinearMap.norm_id_le, ?_, ?_⟩
   · have h1 : Real.log 2 < 0.6931471808 := Real.log_two_lt_d9
     have h2 : (2.7182818283 : ℝ) < Real.exp 1 := Real.exp_one_gt_d9
     push_cast

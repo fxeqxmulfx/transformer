@@ -1,0 +1,13 @@
+Adapted source: https://github.com/leanprover/hex-real-roots-mathlib
+Pinned revision: 53ce31466dc5ff520463249d470119c1e0006e22
+Original files: HexRealRootsMathlib/Sign.lean, SturmChainDefs.lean,
+SturmTheorem.lean.
+Original copyright: Copyright (c) 2026 Lean FRO, LLC.
+Original authors: Kim Morrison.
+License: Apache License 2.0; see LICENSE in this directory.
+
+The three-file abstract Sturm theorem closure is copied under
+src/Transformer/Sturm, with project namespaces, split modules, auxiliary
+paper citations, and the current Mathlib sign import. No executable,
+integer-arithmetic certificate infrastructure, or package dependency is added.
+The signed Euclidean-chain construction and its applications are project work.

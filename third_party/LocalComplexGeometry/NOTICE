@@ -1,0 +1,28 @@
+Source: Bochao Kong, LocalComplexGeometry (nullstellensatz repository)
+https://github.com/BochaoKong/nullstellensatz
+Revision: 029697242294aea7989bf5d391199696a43490df
+License: Apache-2.0 (LICENSE is copied verbatim)
+
+Only the dependency closure needed for actual analytic division, analytic
+germ rings, Rückert's Noetherian theorem, and a prepared quotient's finite
+power basis is retained. The coefficient field is changed from complex to
+real. The real preparation proof is independently attributed in
+third_party/classical-complex-wpt/NOTICE.
+
+Adapted source areas: WPTBridge/DivisionCore.lean, WPTBridge/Division.lean,
+WPTBridge/DivisionUniqueness.lean, Germs/Basic.lean, Germs/Ring.lean,
+Germs/Coordinates.lean, WPTBridge/GermDivision.lean,
+Algebra/NoetherianByRemainder.lean, WPTBridge/Preparation.lean,
+WPTBridge/PreparedAssociate.lean,
+Noetherian/Ruckert.lean, and FiniteProjection/PreparedQuotient.lean.
+
+The modules are split into Transformer.AnalyticPreparation and
+Transformer.RealAnalyticGerms. Unused hypotheses and unrelated interfaces
+are removed. Mathlib 4.34 adaptations include LinearEquiv.ofLinearMap.
+New modules add nonlinear analytic pullbacks, finite equation bases, monic
+analytic representative relations, exact-degree characteristic-polynomial
+relations for fiber values, and concrete joint witnesses.
+
+Complex Nullstellensatz, complex geometric finite projections, surjectivity
+of projections, and claims requiring existence of complex roots are not
+copied or asserted over the real field. No package dependency is added.

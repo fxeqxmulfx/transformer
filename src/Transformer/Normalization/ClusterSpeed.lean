@@ -25,29 +25,19 @@ Theorem 4.3; Table 2.
 import Transformer.Basic
 import Transformer.Normalization.Basic
 import Transformer.Normalization.Velocities
+import Transformer.Normalization.ClusterCounterexample
+import Transformer.Normalization.ClusterWeights
+import Transformer.Normalization.ClusterSpeedBounds
+import Transformer.Normalization.ClusterVariance
 
 open scoped BigOperators
 open Real
+open Set
 
 namespace Transformer
 namespace Normalization
 
 variable (d n : ℕ)
-
-/-- The time scale by which `thm: preln-slow (ii)` divides the intra-cluster
-variance, one row per scheme: `1` for Post-LN, `t` for Pre-LN, Mix-LN and
-Peri-LN, `√t` for CoD, and for nGPT `α_t⁻¹` — the source prints `α_t`, against
-its Table 2 and its Remark (see the module docstring).
-
-Source: arXiv:2510.22026v2, §4.3, the display of `thm: preln-slow (ii)`. -/
-noncomputable def varScale (α : ℝ → ℝ) (scheme : Scheme) (t : ℝ) : ℝ :=
-  match scheme with
-  | .post => 1
-  | .pre  => t
-  | .mix  => t
-  | .peri => t
-  | .nGPT => (α t)⁻¹
-  | .CoD  => Real.sqrt t
 
 /-- **Theorem (thm: preln-slow), (ii).** *Speed of cluster collapse.*
 
@@ -58,15 +48,15 @@ scale of `varScale`.
 
 `Θ` is asymptotic in `t`, as in the source's Remark ("as `t → ∞`"): two
 constants `0 < c ≤ C`, fixed with the parameters, sandwich the derivative from
-some time on.  That time depends on the solution: for Pre-LN
-`s_j(t) = r_j(t) ∈ [r_j(0) + (1 - δ)t, r_j(0) + t]`, which is `≍ t` only once
+some time on. That time depends on the solution: the invariant initial cap
+gives, for Pre-LN, `s_j(t) = r_j(t) ∈ [r_j(0) + (1 - 4δ)t, r_j(0) + t]`, which is `≍ t` only once
 `t ≳ r_j(0)`.  The radii start positive, being norms, and `α_t > 0`.
 
 What is changed: `δ < 1/(100 n²)` is added and the nGPT scale is `α_t⁻¹` (see
 the module docstring); without the first the statement is false
 (`not_clustering_rate`).  Part (i) is `radialDerivative_pre_ge_of_localCone`.
 
-Not proved here.
+The proof establishes the uniform constants `c = 1/9` and `C = 4`.
 
 Source: arXiv:2510.22026v2, §4.3, `thm: preln-slow` (ii). -/
 theorem clustering_rate (β δ : ℝ) (α : ℝ → ℝ) (τ : ℝ) (scheme : Scheme)
@@ -84,7 +74,56 @@ theorem clustering_rate (β δ : ℝ) (α : ℝ → ℝ) (τ : ℝ) (scheme : Sc
               HasDerivAt (intraClusterVar d n θ) v t ∧
               -(C * intraClusterVar d n θ t / varScale α scheme t) ≤ v ∧
               v ≤ -(c * intraClusterVar d n θ t / varScale α scheme t) := by
-  sorry
+  intro Q K hQK
+  refine ⟨1 / 9, 4, by norm_num, by norm_num, ?_⟩
+  intro θ r hunit hr hcone hdyn
+  by_cases hn : 2 ≤ n
+  · have hn0 : 0 < n := by omega
+    let j₀ : Idx n := ⟨0, hn0⟩
+    have hδ0 : 0 ≤ δ := by
+      have h := hcone j₀ j₀
+      rw [real_inner_self_eq_norm_sq, hunit j₀, one_pow] at h
+      linarith
+    have hn' : (2 : ℝ) ≤ n := by exact_mod_cast hn
+    have hden : (100 : ℝ) ≤ 100 * (n : ℝ) ^ 2 := by nlinarith
+    have hδsmall : δ < 1 / 100 :=
+      hδ₁.trans_le (one_div_le_one_div_of_le (by norm_num) hden)
+    have hinv := scheme_cluster_invariant hn0 β δ τ hδ0 (by linarith) Q K α θ r scheme
+      hα hunit hr hcone hdyn
+    have hu : ∀ t, 0 ≤ t → ∀ j, ‖θ t j‖ = 1 := fun t ht => (hinv t ht).1
+    have hp : ∀ t, 0 ≤ t → ∀ j k, (7 / 8 : ℝ) ≤ inner (𝕜 := ℝ) (θ t j) (θ t k) := by
+      intro t ht j k
+      have h := (hinv t ht).2.1 j k
+      linarith
+    obtain ⟨T, hT, hs⟩ := eventual_inverse_speed_bounds β τ Q K α θ r scheme hα hr hu hp
+      (fun t ht => (hinv t ht).2.2) hdyn
+    refine ⟨T, ?_⟩
+    intro t ht
+    have htpos : 0 < t := by linarith
+    have ht0 : 0 ≤ t := htpos.le
+    obtain ⟨hscale, hspeed⟩ := hs t ht
+    let v : Idx n → EucSpace d := fun j =>
+      (speedFactor d n β Q K (idParams d) α θ r τ scheme t j)⁻¹ •
+        proj d (θ t j) (attentionVec d n β (Q t) (K t) (idParams d t) (θ t) j)
+    have hv := (hasDerivWithinAt_intraClusterVar hn0 θ v (Set.Ici 0) t
+      (fun j => (hdyn t ht0 j).1)).hasDerivAt (Ici_mem_nhds htpos)
+    refine ⟨_, hv, ?_⟩
+    have hpoint := variance_decay_of_uniform_weights hn0 β (varScale α scheme t)⁻¹
+      (inv_nonneg.mpr hscale.le) (Q t) (K t) (θ t)
+      (fun j => (speedFactor d n β Q K (idParams d) α θ r τ scheme t j)⁻¹)
+      (hu t ht0) (fun j k => (by norm_num : (3 / 4 : ℝ) ≤ 7 / 8).trans (hp t ht0 j k))
+      hspeed (attentionWeight_close_to_uniform hn β δ hδ0 hδ (Q t) (K t) (θ t)
+        (hQK t) (hu t ht0) (hinv t ht0).2.1)
+    change -(4 * (varScale α scheme t)⁻¹ * intraClusterVar d n θ t) ≤ _ ∧
+      _ ≤ -((1 / 9 : ℝ) * (varScale α scheme t)⁻¹ * intraClusterVar d n θ t) at hpoint
+    simpa only [v, idParams, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using hpoint
+  · have hzero : intraClusterVar d n θ = fun _ => 0 := by
+      have hnle : n ≤ 1 := by omega
+      interval_cases n <;> funext t <;> simp [intraClusterVar]
+    refine ⟨1, fun t _ => ⟨0, ?_, ?_⟩⟩
+    · rw [hzero]
+      exact hasDerivAt_const t 0
+    · simp [hzero]
 
 /-- The hypotheses of `clustering_rate` are satisfiable: one token, `β = 1`,
 `δ = 0` and `α ≡ 1`; `Q = K = I_d` meet the operator bound by Cauchy–Schwarz. -/
@@ -94,85 +133,6 @@ example :
       ∀ _t : ℝ, ∀ x y : EucSpace 1,
         |inner (𝕜 := ℝ) (idParams 1 _t x) (idParams 1 _t y)| ≤ ‖x‖ * ‖y‖ :=
   ⟨by norm_num, by norm_num, fun _ => one_pos, fun _ x y => abs_real_inner_le_norm x y⟩
-
-/-- With `Q = K = V = I_d`, tokens on one line `ℝ u` have attention vectors on
-that line. -/
-theorem attentionVec_id_smul (β : ℝ) (u : EucSpace d) (s : Idx n → ℝ) (j : Idx n) :
-    ∃ c : ℝ, attentionVec d n β (ContinuousLinearMap.id ℝ _) (ContinuousLinearMap.id ℝ _)
-      (ContinuousLinearMap.id ℝ _) (fun k => s k • u) j = c • u := by
-  simp only [attentionVec, ContinuousLinearMap.id_apply]
-  simp_rw [smul_smul]
-  rw [← Finset.sum_smul, smul_smul]
-  exact ⟨_, rfl⟩
-
-/-- The tangent projection at `±u` kills the line `ℝ u`. -/
-theorem proj_smul_self (u : EucSpace d) (hu : ‖u‖ = 1) (s c : ℝ) (hs : s ^ 2 = 1) :
-    proj d (s • u) (c • u) = 0 := by
-  unfold proj
-  rw [inner_smul_left, inner_smul_right, real_inner_self_eq_norm_sq, hu, smul_smul]
-  simp only [conj_trivial, one_pow, mul_one]
-  rw [show s * c * s = c * s ^ 2 by ring, hs, mul_one, sub_self]
-
-/-- The signs `±1` of the antipodal pair. -/
-def pairSign : Idx 2 → ℝ := ![1, -1]
-
-theorem pairSign_sq (j : Idx 2) : pairSign j ^ 2 = 1 := by
-  fin_cases j <;> simp [pairSign]
-
-/-- **`thm: preln-slow (ii)` is false under the source's hypotheses.**
-
-At `β = 1/100`, `n = 2` the condition `δ < 1/(100 n² β²)` admits `δ = 5/2`,
-which every pair of unit vectors meets.  The antipodal pair `u, -u` with unit
-radii is then a stationary Post-LN solution, `Var ≡ 1`, and no `c > 0` gives
-`Var' ≤ -c Var` at any time.  In every dimension `d ≥ 1`, for every `α, τ`.
-
-Source: arXiv:2510.22026v2, §4.3, `thm: preln-slow` (ii). -/
-theorem not_clustering_rate (hd : 0 < d) (α : ℝ → ℝ) (τ : ℝ) :
-    ¬ ∀ β δ : ℝ, δ < 1 / (100 * ((2 : ℕ) : ℝ) ^ 2 * β ^ 2) →
-      ∀ Q K : ℝ → ParamMatrix d,
-        (∀ t : ℝ, ∀ x y : EucSpace d,
-          |inner (𝕜 := ℝ) (Q t x) (K t y)| ≤ ‖x‖ * ‖y‖) →
-        ∃ c C : ℝ, 0 < c ∧ c ≤ C ∧
-          ∀ (θ : ℝ → Idx 2 → EucSpace d) (r : ℝ → Idx 2 → ℝ),
-            (∀ j : Idx 2, ‖θ 0 j‖ = 1) → (∀ j : Idx 2, 0 < r 0 j) →
-            (∀ j k : Idx 2, 1 - δ ≤ inner (𝕜 := ℝ) (θ 0 j) (θ 0 k)) →
-            SchemeDynamics d 2 β Q K (idParams d) α τ .post θ r →
-              ∃ T₀ : ℝ, ∀ t : ℝ, T₀ ≤ t → ∃ v : ℝ,
-                HasDerivAt (intraClusterVar d 2 θ) v t ∧
-                -(C * intraClusterVar d 2 θ t / varScale α .post t) ≤ v ∧
-                v ≤ -(c * intraClusterVar d 2 θ t / varScale α .post t) := by
-  intro h
-  set u : EucSpace d := EuclideanSpace.single (⟨0, hd⟩ : Fin d) (1 : ℝ) with hu_def
-  have hu : ‖u‖ = 1 := by simp [hu_def]
-  obtain ⟨c, C, hc, -, hall⟩ := h (1 / 100) (5 / 2) (by norm_num) (idParams d) (idParams d)
-    (fun _ x y => abs_real_inner_le_norm x y)
-  have hvar : intraClusterVar d 2 (fun _ k => pairSign k • u) = fun _ => 1 := by
-    funext t
-    simp [intraClusterVar, Fin.sum_univ_two, pairSign, hu]
-    norm_num
-  have hdyn : SchemeDynamics d 2 (1 / 100) (idParams d) (idParams d) (idParams d) α τ .post
-      (fun _ k => pairSign k • u) (fun _ _ => 1) := by
-    refine fun t _ j => ⟨?_, (hasDerivAt_const t (1 : ℝ)).hasDerivWithinAt⟩
-    obtain ⟨a, ha⟩ := attentionVec_id_smul d 2 (1 / 100) u pairSign j
-    have hzero : proj d (pairSign j • u) (attentionVec d 2 (1 / 100) (idParams d t)
-        (idParams d t) (idParams d t) (fun k => pairSign k • u) j) = 0 := by
-      rw [show idParams d t = ContinuousLinearMap.id ℝ (EucSpace d) from rfl, ha]
-      exact proj_smul_self d u hu _ a (pairSign_sq j)
-    rw [hzero, smul_zero]
-    exact (hasDerivAt_const t _).hasDerivWithinAt
-  obtain ⟨T₀, hT⟩ := hall (fun _ k => pairSign k • u) (fun _ _ => 1)
-    (fun j => by fin_cases j <;> simp [pairSign, hu])
-    (fun _ => one_pos)
-    (fun j k => by
-      fin_cases j <;> fin_cases k <;>
-        simp [pairSign, hu] <;>
-        norm_num)
-    hdyn
-  obtain ⟨v, hv, -, hle⟩ := hT T₀ le_rfl
-  rw [hvar] at hv hle
-  have hv0 : v = 0 := hv.unique (hasDerivAt_const T₀ (1 : ℝ))
-  simp only [varScale, hv0] at hle
-  linarith
 
 end Normalization
 end Transformer

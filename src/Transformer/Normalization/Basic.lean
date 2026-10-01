@@ -101,6 +101,21 @@ noncomputable def radialDerivative
 noncomputable def idParams (d : ℕ) : ℝ → ParamMatrix d :=
   fun _ => ContinuousLinearMap.id ℝ (EucSpace d)
 
+/-- The variance time scale in `thm: preln-slow (ii)`: `1` for Post-LN,
+`t` for Pre-LN, Mix-LN and Peri-LN, `√t` for CoD, and `α_t⁻¹` for nGPT.
+The source prints `α_t` for nGPT, but Table 2 and the subsequent Remark give
+the inverse scale, so that the variance derivative is proportional to
+`-α_t Var`. Source: arXiv:2510.22026v2, §4.3, `thm: preln-slow (ii)` and
+Table 2; supplement, Appendix C. -/
+noncomputable def varScale (α : ℝ → ℝ) (scheme : Scheme) (t : ℝ) : ℝ :=
+  match scheme with
+  | .post => 1
+  | .pre  => t
+  | .mix  => t
+  | .peri => t
+  | .nGPT => (α t)⁻¹
+  | .CoD  => Real.sqrt t
+
 /-- **The dynamics of one normalization scheme.**
 
 `θ` follows `eq: NA` with the speed-regulation factor `s_j(t)` of `scheme`,

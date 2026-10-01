@@ -40,7 +40,8 @@ against positive weights summing to `Z_j`, so with unit-norm tokens and
 whatever `Q`, `K` and `β` are.  This is the deterministic bound under the
 norm hypotheses of `thm: initial-velocity`; the theorem's point is the much
 sharper `C (√(log n / n) + log n / d)`, which holds only with high probability
-over an i.i.d. uniform directional initialization, and that is not formalized.
+over an i.i.d. uniform directional initialization, is proved in
+`Normalization.Rates.initial_velocity_small`.
 Source: arXiv:2510.22026v2, §4.2. -/
 theorem norm_attentionVec_le_one
     (β : ℝ) (Q K V : ParamMatrix d) (hV : ‖V‖ ≤ 1)
