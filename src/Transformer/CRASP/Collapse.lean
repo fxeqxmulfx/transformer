@@ -65,20 +65,19 @@ compute one vector whatever the prefix length
 (`RTfr.layer_of_const`), and `RTfr.collapse` is the depth-`L` transformer that
 reads the output off that vector.
 
-What the conjecture still needs is `thm:rtfr_to_TLCl`, the depth-`k`
-equivalence `exists_mem_TLCl_of_rtfr`, which is unproved here; it is therefore
-carried as the explicit hypothesis `hequiv`, for the depth `L` and the shape
-`p, s, d` of `T` alone, rather than used.
+Over the finite alphabet of Section 2.3, the proved reverse simulation
+`exists_mem_TLCl_of_rtfr` applies to the collapsed model. The former
+signature carried that simulation as an explicit premise; it is now proved
+and the premise is removed.
 
 Source: none — posed here; it joins `thm:transformer_equivalence`
 (arXiv:2506.16055v3, Appendix B) with the clustering theorems of
 arXiv:2312.10794v5, §§3–5. -/
-theorem exists_mem_TLCl_of_clustered {p s d L M : ℕ} (T : RTfr (Option σ) p s d (L + M))
-    (hequiv : ∀ T' : RTfr (Option σ) p s d L,
-      ∃ φ ∈ TLCl σ L, φ.lang = {w : List σ | T'.Accepts (bos w)})
+theorem exists_mem_TLCl_of_clustered [Fintype σ] {p s d L M : ℕ}
+    (T : RTfr (Option σ) p s d (L + M))
     {ε : ℝ} (hε : ε < 2⁻¹ ^ s) (hT : T.Clustered L ε) :
     ∃ φ ∈ TLCl σ L, φ.lang = {w : List σ | T.Accepts (bos w)} := by
-  obtain ⟨φ, hφ, hlang⟩ := hequiv (T.collapse : RTfr (Option σ) p s d L)
+  obtain ⟨φ, hφ, hlang⟩ := exists_mem_TLCl_of_rtfr (T.collapse : RTfr (Option σ) p s d L)
   refine ⟨φ, hφ, hlang.trans ?_⟩
   ext w
   have hconst : ∀ i j : Fin (bos w).length,
@@ -91,13 +90,12 @@ theorem exists_mem_TLCl_of_clustered {p s d L M : ℕ} (T : RTfr (Option σ) p s
 
 /-- The hypotheses of `exists_mem_TLCl_of_clustered` are satisfiable: a
 transformer whose embedding is `0` is a single point at layer `0`. -/
-example {p s d M : ℕ} (T : RTfr (Option σ) p s d (0 + M)) (hE : T.E = fun _ _ => 0) :
+example {p s d M : ℕ} (T : RTfr (Option Bool) p s d (0 + M)) (hE : T.E = fun _ _ => 0) :
     (0 : ℝ) < 2⁻¹ ^ s ∧ T.Clustered 0 0 := by
   refine ⟨by positivity, fun w i j c => ?_⟩
   simp [RTfr.act, hE]
 
-/-- And the equivalence hypothesis is satisfiable too — not by an empty class
-of transformers, but by a degenerate one: at model dimension `0` every
+/-- The reverse simulation also holds at dimension `0`: every
 activation is the empty tuple, so the output does not depend on the input and
 the language recognized is `∅` or every string.  Both are defined at every
 depth, by `1 < 1` and its negation. -/
@@ -135,17 +133,13 @@ recognize `L_{L+1}`,** however many layers sit above the collapse.  This is
 the lower half of `thm:rtfr_depth_hierarchy` with the depth of the transformer
 replaced by the depth at which it collapses.
 
-As there, the unproved depth-`L` equivalence `thm:rtfr_to_TLCl` is carried as
-a hypothesis; the depth hierarchy `definableL_altPlus` it is played against is
-proved. -/
+Both the reverse simulation and the depth hierarchy used here are proved. -/
 theorem not_recognizes_altPlus_of_clustered {p s d L M : ℕ} (hL : 0 < L)
     (T : RTfr (Option Bool) p s d (L + M))
-    (hequiv : ∀ T' : RTfr (Option Bool) p s d L,
-      ∃ φ ∈ TLCl Bool L, φ.lang = {w : List Bool | T'.Accepts (bos w)})
     {ε : ℝ} (hε : ε < 2⁻¹ ^ s) (hT : T.Clustered L ε) :
     ¬ T.Recognizes (altPlus false (L + 1)) := by
   intro hrec
-  obtain ⟨φ, hφ, hlang⟩ := exists_mem_TLCl_of_clustered T hequiv hε hT
+  obtain ⟨φ, hφ, hlang⟩ := exists_mem_TLCl_of_clustered T hε hT
   exact (definableL_altPlus L hL).2 ⟨φ, hφ, hlang.trans (Set.ext hrec)⟩
 
 /-- The hypotheses of `not_recognizes_altPlus_of_clustered` are satisfiable: a

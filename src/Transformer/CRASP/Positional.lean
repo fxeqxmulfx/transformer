@@ -13,7 +13,10 @@ and `Y φ` holds at `i` when `i > 1` and `φ` holds at `i − 1`.  The paper not
 it is the logic `C-RASP[local, periodic]` of Huang et al. (2025).  Its two
 sublogics `TL[◁#, MOD]` and `TL[◁#, Y]` are the `MOD`-only and `Y`-only
 fragments, which are what the sinusoidal/RoPE and the ALiBi transformers of
-Appendix F simulate; those transformers are not yet formalized.
+Appendix F simulate. The models and reverse simulations are formalized in
+`PositionalTransformers`, `PeriodicEncodingsToLogic` and `AlibiToLogic`.
+The unrestricted natural modulus below also admits `MOD_0^r`; the original
+sinusoidal equivalence for that enlarged syntax is refuted in `ZeroModulus`.
 
 The separating language is `E_k`, the language `altPlus` of
 `Transformer.CRASP.PiecewiseTestable` with a neutral letter `e` allowed to be

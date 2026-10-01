@@ -51,6 +51,28 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.FixedBits` | the bits of a fixed-precision number, and that `p + 2` of them determine it |
 | `CRASP.Conjunctions` | the conjunction of a list, and the depth-`0` test that a position carries a letter |
 | `CRASP.Transformers` | future-masked rounded transformers and the equivalence with `TL[◁#]` |
+| `CRASP.TransformerModel` | the rounded model and BOS recognition semantics |
+| `CRASP.FixedFinite` | enumeration of fixed-precision states and exact rounding cells |
+| `CRASP.FormulaBounds` | Boolean closure of the bounded past-counting fragment |
+| `CRASP.LinearCounts` | signed weighted past counts, compared in the original syntax |
+| `CRASP.RoundedCounts` | quotient cells and zero tests expressed by count comparisons |
+| `CRASP.StateCounts` | sums of functions of finitely many definable states |
+| `CRASP.TransformerPrefix` | constant BOS states and the split of a masked prefix |
+| `CRASP.TransformerStates` | depth-zero formulas for the embedding states |
+| `CRASP.TransformerStateSums` | weighted counts equal the attention sums |
+| `CRASP.AttentionKernel` | attention evaluated from integer state counts |
+| `CRASP.AttentionFormulas` | temporal cell tests for rounded attention coordinates |
+| `CRASP.TransformerNextState` | the depth-preserving layer induction |
+| `CRASP.TransformerToLogic` | the complete reverse simulation at the same depth |
+| `CRASP.FixedSign`, `CRASP.FixedTail` | Boolean storage, exact integer projections, and tail rounding |
+| `CRASP.Subformulas`, `CRASP.TermAffine` | finite syntax and signed contributions for the forward simulation |
+| `CRASP.TemporalProgram` | named Boolean memory and scratch features of the actual compiled model |
+| `CRASP.TemporalProgramBounds`, `CRASP.TemporalProgramSources` | syntax-derived precision makes every projected contribution exact |
+| `CRASP.TemporalProgramAttention`, `CRASP.TemporalProgramState` | uniform averages, residual memory, and cleared scratch features |
+| `CRASP.TemporalProgramEvaluate`, `CRASP.TemporalProgramCorrect` | Boolean evaluation and the initial truth invariant |
+| `CRASP.TemporalProgramComparison`, `CRASP.TemporalProgramInduction` | counting comparisons and complete recognition correctness |
+| `CRASP.LogicToTransformer` | the complete forward simulation at the same depth |
+| `CRASP.FiniteAlphabet` | a natural-token parity counterexample to omitting the paper's finite alphabet |
 | `CRASP.FiniteFunction` | `lem:finite_function`: postcomposing a definable map with any `g : 𝔽 → 𝔽` |
 | `CRASP.ConstantLayer` | above a constant activation a layer computes one vector, and the collapsed transformer |
 | `CRASP.Collapse` | a conjecture, in no paper: collapse after `L` layers caps the depth at `L` |
@@ -58,7 +80,20 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.MajTwoDepthOne` | why its closed depth-`1` formulas cannot read the last symbol |
 | `CRASP.MajTwoCount` | majorities over lists of formulas, and the masks that turn them into counts |
 | `CRASP.MajTwoOfTLC` | `TL[◁#, ▷#]` inside `MAJ²`: a comparison is one majority, at the same depth |
+| `CRASP.BooleanFormula` | finite Boolean functions of temporal formulas, without increasing depth |
+| `CRASP.ExtensionsPnpFree` | sugar elimination stays in the PNP-free fragment |
+| `CRASP.MajTwoFree` | satisfaction depends only on free variables |
+| `CRASP.MajTwoRect` | binary formulas as signed sums of unary rectangles and order regions |
+| `CRASP.MajTwoRectBounds` | normalization preserves the unary depth and fragment bounds |
+| `CRASP.MajTwoRectCount` | order regions counted with strict counts and a position indicator |
+| `CRASP.MajTwoRectCountSemantics` | these counts equal the actual rectangle masses |
+| `CRASP.MajTwoRectMajority` | a majority becomes a temporal comparison of positive and negative masses |
+| `CRASP.MajTwoRectMajorityBounds` | the majority translation costs one level |
+| `CRASP.MajTwoRectDiagonal` | unary formulas recovered by reading a binary representation on the diagonal |
+| `CRASP.MajTwoTranslation` | the induction constructing a representation for every `MAJ²` formula |
+| `CRASP.MajTwoToTemporal` | the reverse formula translation and language inclusion |
 | `CRASP.MajTwoEquiv` | its translations to and from `TL[◁#, ▷#]` |
+| `CRASP.MajTwoPiecewise` | closed tests for Boolean combinations of subsequence patterns |
 | `CRASP.MajTwoHierarchy` | its depth hierarchy, the logical half of `LTC⁰` |
 | `CRASP.Positional` | `TL[◁#]^pos`, the extension by `MOD` and `Y` |
 | `CRASP.PositionalEmbedding` | `TL[◁#]` inside `TL[◁#]^pos` and both its fragments, at the same depth |
@@ -72,6 +107,21 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.PositionalReductionEquiv` | the translation preserves meaning; the paper's block size is too small |
 | `CRASP.PositionalDepth` | its reduction to `TL[◁#]`, and its hierarchy |
 | `CRASP.PositionalTransformers` | sinusoidal, RoPE and ALiBi position encodings |
+| `CRASP.PositionalSubstitution`, `CRASP.PositionalSubstitutionSemantics` | substitute positional state predicates into ordinary count formulas |
+| `CRASP.PositionalBoolean`, `CRASP.CountCells` | finite disjunctions and exact rounded quotient cells |
+| `CRASP.PositionalStateCounts`, `CRASP.PositionalNextState`, `CRASP.PositionalStateInduction` | finite positional tables and their same-depth layer induction |
+| `CRASP.PositionalPrefix`, `CRASP.PrefixSums`, `CRASP.PositionalPeriod` | BOS sums and a common period for rational rotations |
+| `CRASP.PeriodicAttention`, `CRASP.PeriodicAttentionStep`, `CRASP.PeriodicInitial` | exact attention and initial letter/residue predicates |
+| `CRASP.PeriodicToLogic`, `CRASP.PeriodicEncodingsToLogic` | reverse simulations for sinusoidal embeddings and RoPE |
+| `CRASP.StatePermutation`, `CRASP.PeriodicInitialWord`, `CRASP.PeriodicOutputPermutation` | swapping equal-residue sources preserves depth-one output |
+| `CRASP.ZeroModulus` | counterexample to the former sinusoidal equivalence admitting modulus zero |
+| `CRASP.AlibiTails`, `CRASP.AlibiTables`, `CRASP.AlibiStateSums`, `CRASP.AlibiAttention` | stabilized rounded coefficients and exact integer attention sums |
+| `CRASP.FiniteTailSums`, `CRASP.WindowTailSums`, `CRASP.AlibiWindowCorrections` | stable-state counts plus the finite recent-window correction |
+| `CRASP.PreviousPredicates`, `CRASP.WindowPredicates`, `CRASP.WindowCountCells` | recent-state profiles and corrected quotient predicates |
+| `CRASP.AlibiWindowCells`, `CRASP.AlibiProfiles`, `CRASP.AlibiNextState`, `CRASP.AlibiStateInduction` | same-depth state predicates for every ALiBi layer |
+| `CRASP.AlibiToLogic` | the complete ALiBi reverse simulation, for every real slope |
+| `CRASP.NeutralEncodings`, `CRASP.SinusoidalLift`, `CRASP.SinusoidalLiftStep`, `CRASP.SinusoidalLiftCorrect` | ordinary recognizers inside the three zero-parameter encoding families |
+| `CRASP.EncodingUpperBounds`, `CRASP.EncodingLowerBounds` | all three positional hierarchy bounds, including depth zero |
 | `CRASP.PositionalHierarchy` | what they simulate |
 | `CRASP.EncodingHierarchy` | the depth hierarchy under position encodings |
 
@@ -122,6 +172,7 @@ import Transformer.CRASP.Fixed
 import Transformer.CRASP.FixedBits
 import Transformer.CRASP.Conjunctions
 import Transformer.CRASP.Transformers
+import Transformer.CRASP.FiniteAlphabet
 import Transformer.CRASP.FiniteFunction
 import Transformer.CRASP.ConstantLayer
 import Transformer.CRASP.Collapse

@@ -7,8 +7,8 @@ arXiv:2506.16055v3, "Knee-Deep in C-RASP: A Transformer Depth Hierarchy"
 
 Each of the three encodings is simulated by one of the two fragments of
 `TL[◁#]^pos`: the periodic ones — sinusoidal and RoPE — by `TL[◁#, MOD]`,
-and ALiBi by `TL[◁#, Y]`, because past a fixed distance `Δ_a` the linear bias
-rounds the attention weight to zero and only a bounded window survives.
+and ALiBi by `TL[◁#, Y]`. Its rounded coefficients are eventually constant;
+state counts describe this tail and `Y` corrects a bounded recent window.
 Since `thm:tlclpos_depth_hierarchy` separates the depths of both fragments,
 none of the three collapses the transformer depth hierarchy — which is
 `thm:rtfr_pes_depth_hierarchy`, the statement the paper puts in the main
@@ -22,14 +22,13 @@ Appendix F also carries `thm:mnf`, `thm:tlmod_to_rtfr` and
 -/
 
 import Transformer.CRASP.PositionalTransformers
+import Transformer.CRASP.PeriodicEncodingsToLogic
+import Transformer.CRASP.ZeroModulus
+import Transformer.CRASP.AlibiToLogic
 import Transformer.CRASP.PositionalDepth
 
 namespace Transformer
 namespace CRASP
-
-universe u
-
-variable {σ : Type u}
 
 /-- The three position encodings named in `thm:rtfr_pes_depth_hierarchy`. -/
 def PosEnc.IsStandard : PosEnc → Prop
@@ -81,71 +80,11 @@ theorem alibi_window (p s : ℕ) (a : ℝ) (ha : 0 < a) :
 /-- The hypothesis of `alibi_window` is satisfiable: `a = 1` is a slope. -/
 example : (0 : ℝ) < 1 := one_pos
 
-variable [DecidableEq σ]
-
-/-- **Theorem `thm:rtfr_eq_tlclmod`.**  *Sinusoidal encodings are `MOD`.*
-
-A language `L` is defined by a `TL[◁#, MOD]` formula of depth `k ≥ 1` exactly
-when `⊲ · L` is recognized by a depth-`k` transformer with sinusoidal
-position encoding.  The angles are assumed rational, so that the encoding is
-periodic in the position; that is what `MOD` can express.
-
-Source: arXiv:2506.16055v3, Appendix F, `thm:rtfr_eq_tlclmod`. -/
-theorem definableMod_iff_recognizes_sinusoidal (L : Set (List σ)) (k : ℕ) (hk : 1 ≤ k) :
-    DefinableMod L k ↔
-      ∃ (p s d : ℕ) (θ : ℕ → ℝ) (T : PTfr (Option σ) p s d k),
-        T.pe = .sinusoidal θ ∧ (PosEnc.sinusoidal θ).RationalAngles ∧ T.Recognizes L :=
-  sorry
-
-/-- The hypothesis of `definableMod_iff_recognizes_sinusoidal` is satisfiable:
-depth `1` is a depth. -/
-example : 1 ≤ 1 := le_rfl
-
-/-- **Proposition `thm:rtfr_to_TLClmod`.**  *RoPE is `MOD` too.*
-
-A depth-`k` transformer with RoPE, at rational angles, is simulated by a
-depth-`k` formula of `TL[◁#, MOD]`: the rotations `R(θ)^i` and `R(θ)^j` are
-periodic in the position, hence computable in fixed precision from `MOD`
-predicates by `lem:finite_function`, and the rest is `thm:rtfr_to_TLCl`.
-
-Source: arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLClmod`. -/
-theorem exists_mem_TLClMod_of_rope {p s d k : ℕ} (θ : ℕ → ℝ)
-    (hθ : (PosEnc.rope θ).RationalAngles) (T : PTfr (Option σ) p s d k)
-    (hT : T.pe = .rope θ) :
-    ∃ φ ∈ TLClMod σ k, φ.lang = {w : List σ | T.Accepts (bos w)} :=
-  sorry
-
-/-- The hypotheses of `exists_mem_TLClMod_of_rope` are satisfiable: the zero
-transformer with all angles `0` uses RoPE at rational angles. -/
-example :
-    ∃ (θ : ℕ → ℝ) (T : PTfr (Option Bool) 1 0 0 0),
-      (PosEnc.rope θ).RationalAngles ∧ T.pe = .rope θ := by
-  refine ⟨fun _ => 0,
-    { E := fun _ _ => 0, WQ := fun _ _ => 0, WK := fun _ _ => 0,
-      WV := fun _ _ => 0, ff := fun _ _ => 0, Wout := fun _ => 0,
-      pe := .rope fun _ => 0 },
-    ⟨fun _ => 0, fun c => ?_⟩, rfl⟩
-  simp
-
-/-- **Proposition `thm:rtfr_to_TLCly`.**  *ALiBi is `Y`.*
-
-A depth-`k` transformer with ALiBi is simulated by a depth-`k` formula of
-`TL[◁#, Y]`.  For slope `0` this is `thm:rtfr_to_TLCl`; for a positive slope
-`lem:alibi_window` confines the attention to the window
-`[i - Δ_a, i]`, whose keys are read off by `Δ_a` nested applications of `Y`.
-
-Source: arXiv:2506.16055v3, Appendix F, `thm:rtfr_to_TLCly`. -/
-theorem exists_mem_TLClY_of_alibi {p s d k : ℕ} (a : ℝ)
-    (T : PTfr (Option σ) p s d k) (hT : T.pe = .alibi a) :
-    ∃ φ ∈ TLClY σ k, φ.lang = {w : List σ | T.Accepts (bos w)} :=
-  sorry
-
-/-- The hypothesis of `exists_mem_TLClY_of_alibi` is satisfiable: the zero
-transformer with slope `1` uses ALiBi. -/
-example : ∃ T : PTfr (Option Bool) 1 0 0 0, T.pe = .alibi 1 :=
-  ⟨{ E := fun _ _ => 0, WQ := fun _ _ => 0, WK := fun _ _ => 0,
-     WV := fun _ _ => 0, ff := fun _ _ => 0, Wout := fun _ => 0,
-     pe := .alibi 1 }, rfl⟩
+/- The former unrestricted sinusoidal equivalence admitted `MOD_0^r` and
+was false. `sinusoidal_equivalence_zero_modulus_counterexample` proves the
+counterexample. The reverse simulation is proved in
+`exists_mem_TLClMod_of_sinusoidal`; the paper's forward periodic equivalence
+needs a syntax requiring positive moduli. -/
 
 end CRASP
 end Transformer
