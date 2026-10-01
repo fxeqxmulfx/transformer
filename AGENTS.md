@@ -42,6 +42,14 @@ examples behind these rules.
   declarations depending on `sorryAx`) and extra `axiom` must both be zero;
   only `propext`, `Classical.choice`, and `Quot.sound` are accepted. Carry an
   unproved premise as an explicit hypothesis rather than hiding a dependency.
+- Checking every external-library declaration used by a proof is mandatory,
+  including declarations from Mathlib. Inspect its statement, hypotheses,
+  relevant definitions, typeclass assumptions, and transitive proof
+  dependencies. Verify that it expresses the intended mathematical claim and
+  contains no placeholders, vacuous reformulations, or hidden unproved claims.
+  Audit its transitive axioms with `#print axioms` and the full-tree audit;
+  only `propext`, `Classical.choice`, and `Quot.sound` are accepted. Successful
+  import, compilation, or a library's own claim of verification is insufficient.
 - The `sorry` count must not increase except when adding a new paper's
   statements under `src/` and importing its aggregator from
   `src/Transformer.lean` in the same change. Vacuous statements and
@@ -69,6 +77,16 @@ examples behind these rules.
   a lemma is hard to name or may already exist. Do not grep Mathlib sources
   first. `.discrtree/`, `discrtree.toml`, and the discrtree skill belong to a
   separate line of work; do not stage them for Lean changes.
+- Search [Reservoir](https://reservoir.lean-lang.org/) for Lean packages when
+  useful results are unavailable in the current dependencies. Additional
+  packages needed for proofs may be installed. Check compatibility with the
+  project's Lean and Mathlib versions. The mandatory checks for every imported
+  result and its proof dependencies apply before using a package's results.
+- Keep external dependencies to a minimum. When practical, prefer copying only
+  the necessary definitions and proofs into this repository over adding a whole
+  package. Preserve source attribution and license notices. Copied code must
+  pass the same statement, definition, assumption, and proof-dependency checks
+  as imported library results.
 
 ## Checks and workflow
 
