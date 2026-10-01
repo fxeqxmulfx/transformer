@@ -73,3 +73,13 @@ resume. Individual exploratory budget extensions use the separate trainer CLI.
 `--train-fraction`, `--weight-decay`, and `--learning-rate` select a fresh,
 explicit campaign protocol for calibration of details missing from the paper;
 they cannot change an existing campaign on resume.
+
+Paper reports also distinguish the first train threshold crossing from a
+two-observation train fit. A separate memorization-phase diagnostic requires
+two consecutive observations with train accuracy at least 99% and held-out
+accuracy at most 10% before held-out onset. The 10% ceiling is an explicitly
+chosen conservative diagnostic for mod 97, whose answer chance is 1/97; the
+paper does not prescribe it. Reports retain later collapses, the fraction of
+observations at target after confirmation, and final scores. A transient fit
+or two early held-out successes alone do not establish persistent performance.
+`--data-seed` permits an independent split for confirmation after calibration.

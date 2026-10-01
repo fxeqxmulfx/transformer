@@ -72,7 +72,8 @@ def modular_figures(report, directory, plt):
                 if event:
                     axes[0, column].axvline(event, color=color, linestyle=":", alpha=.4, linewidth=.7)
         axes[0, column].axhline(.99, color="grey", linestyle=":", linewidth=.8)
-        axes[0, column].set(ylim=(-.02, 1.025), ylabel="Complete RHS accuracy", title=f"{key[0]} / {key[1]}\n{len(runs)} initialization seeds")
+        seed_label = "seed" if len(runs) == 1 else "seeds"
+        axes[0, column].set(ylim=(-.02, 1.025), ylabel="Complete RHS accuracy", title=f"{key[0]} / {key[1]}\n{len(runs)} initialization {seed_label}")
         axes[0, column].legend(fontsize=8)
         axes[1, column].set(ylabel="Cross entropy per RHS token (nats)", xlabel="Updates")
         for row in (0, 1):

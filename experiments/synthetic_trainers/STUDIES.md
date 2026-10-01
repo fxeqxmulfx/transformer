@@ -320,6 +320,17 @@ diagnostic are needed before claiming the paper's prolonged grokking pattern.
 Initialization/data confirmations and GPTMini optimizer controls remain part
 of the active reproduction loop.
 
+Reports now retain a second train-fit event requiring the same two-observation
+streak as held-out confirmation. For the 50% calibration, this train event is
+3,000/3,250 rather than the transient first crossing at 1,250, giving a lag
+of 1,000 updates to the first sustained held-out onset. An additional explicit
+diagnostic asks for consecutive train≥99% / held-out≤10% observations before
+that onset. The 50% / weight-decay-1 run has no such plateau. Reports also keep
+the observed target fraction and worst held-out score after confirmation;
+initial success does not imply persistence. The 10% ceiling is a conservative
+mod-97 diagnostic, not a parameter recovered from the paper. Regularization
+calibration and independent-split confirmations remain necessary.
+
 ## Double descent is a separate observation
 
 Double descent is a descent, ascent, and second descent in held-out error as

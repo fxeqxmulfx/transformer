@@ -3,12 +3,14 @@
 import argparse
 from collections import defaultdict
 import csv
+import hashlib
 import json
 from pathlib import Path
 import shutil
 import statistics
 
 from .runtime import write_json
+from .paper_phases import diagnose
 
 
 def moments(values):
@@ -78,6 +80,7 @@ def modular_summary(reports, planned):
         groups[config["model"], config["optimizer"]].append(report)
     aggregates = []
     for (model, optimizer), group in sorted(groups.items()):
+        phases = [diagnose(row) for row in group]
         aggregates.append({"model": model, "optimizer": optimizer, "runs": len(group),
             "confirmed_delayed_runs": sum(row["transition"]["delayed_generalization"] for row in group),
             "final_heldout_target_runs": sum(row["final"]["heldout"]["accuracy"] >= row["plan"]["config"]["target"] for row in group),
@@ -86,7 +89,10 @@ def modular_summary(reports, planned):
             "heldout_onset_step": moments([row["transition"]["heldout_onset_step"] for row in group if row["transition"]["heldout_onset_step"] is not None]),
             "training_seconds": moments([row["training_seconds"] for row in group]),
             "heldout_accuracy": moments([row["final"]["heldout"]["accuracy"] for row in group]),
-            "heldout_loss": moments([row["final"]["heldout"]["loss"] for row in group])})
+            "heldout_loss": moments([row["final"]["heldout"]["loss"] for row in group]),
+            "plateau_then_generalization_runs": sum(row["observed_plateau_then_generalization"] for row in phases),
+            "lag_after_sustained_train_fit": moments([row["lag_after_sustained_train_fit"] for row in phases if row["lag_after_sustained_train_fit"] is not None]),
+            "phase_diagnostics": [{"seed": report["plan"]["config"]["seed"], **phase} for report, phase in zip(group, phases)]})
     return {"complete": len(reports) == planned and all(row["plan"]["status"] == "complete" for row in reports),
             "completed_runs": len(reports), "planned_runs": planned, "aggregates": aggregates,
             "training_seconds": sum(row["training_seconds"] for row in reports),
@@ -115,8 +121,13 @@ def export_csv(kind, report, path):
     else:
         for row in report["runs"]:
             config = row["plan"]["config"]
+            phase = diagnose(row)
             rows.append({**{key: config[key] for key in ("model", "optimizer", "seed", "width", "layers", "steps")},
                          "parameters": row["plan"]["parameters"], "training_seconds": row["training_seconds"],
+                         "sustained_train_fit_step": phase["sustained_train_fit"]["onset"] if phase["sustained_train_fit"] else None,
+                         "lag_after_sustained_train_fit": phase["lag_after_sustained_train_fit"],
+                         "plateau_then_generalization": phase["observed_plateau_then_generalization"],
+                         "heldout_target_observation_fraction": phase["fraction_observations_at_target_after_confirmation"],
                          **{key: row["transition"][key] for key in ("train_fit_step", "heldout_onset_step", "lag_steps", "delayed_generalization")},
                          **{f"final_{split}_{key}": value for split in ("train", "heldout") for key, value in row["final"][split].items()}})
     with path.open("w", newline="") as stream:
@@ -129,6 +140,9 @@ def save(kind, directory, archive=None):
     directory = Path(directory)
     report = json.loads((directory / "measurements.json").read_text()) if kind == "rff" else load_modular(directory)
     summary = rff_summary(report) if kind == "rff" else {key: value for key, value in report.items() if key != "runs"}
+    directory_source = Path(__file__).parent
+    summary["analysis_source_hashes"] = {name: hashlib.sha256((directory_source / name).read_bytes()).hexdigest()
+                                         for name in ("paper_report.py", "paper_phases.py", "paper_plots.py")}
     if kind == "modular" and (directory / "campaign.json").exists():
         write_json(directory / "measurements.json", report)
     write_json(directory / "summary.json", summary)
