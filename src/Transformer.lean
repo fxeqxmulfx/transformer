@@ -112,6 +112,7 @@ import Transformer.Perceptron
 import Transformer.Clusters
 import Transformer.Modes
 import Transformer.AMSGrad
+import Transformer.AMSGradW
 import Transformer.AdamBeyond
 import Transformer.XSA
 import Transformer.Quartet
