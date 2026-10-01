@@ -1,0 +1,2 @@
+delayed_generalization,final_heldout_EOS_accuracy,final_heldout_accuracy,final_heldout_answer_accuracy,final_heldout_examples,final_heldout_loss,final_train_EOS_accuracy,final_train_accuracy,final_train_answer_accuracy,final_train_examples,final_train_loss,heldout_onset_step,lag_steps,layers,model,optimizer,parameters,seed,steps,train_fit_step,training_seconds,width
+False,1.0,0.01785234899328859,0.01785234899328859,7450,3.5495559262269296,1.0,1.0,1.0,1862,0.01326046952883744,,,2,reference,adamw,455424,0,150000,500,1662.6685125400836,128

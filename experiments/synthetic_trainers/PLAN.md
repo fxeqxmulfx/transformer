@@ -55,8 +55,13 @@ completed 123 fits and reproduced both sample-wise and model-wise
 classification-error double descent in all three data/feature seeds, with the
 peak at n=d=1000. Missing paper details and numerical differences are explicit
 in [STUDIES.md](STUDIES.md#reproduced-random-feature-double-descent-2026-10-02).
-The modular division reference is running its fixed 150,000-update budget;
-passing its CPU tests or reaching train accuracy does not complete grokking.
+The first modular reference completed 150,000 updates at 20% train, fitted
+train, and reached only 1.79% final held-out accuracy; its
+[negative result](baselines/mod97_fraction20_reference_20261002/summary.json)
+is retained. Calibration at 50% train is running the same full budget.
+Its early held-out success needs separation from transient train fits and
+later collapses. Passing CPU tests or a finite curve witness does not complete
+the grokking reproduction.
 
 Freeze the data, targets, evaluation cadence, grid, and budget before each
 confirmation experiment. Separate exploratory calibration from repetitions,

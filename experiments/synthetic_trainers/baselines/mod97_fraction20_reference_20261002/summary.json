@@ -1,0 +1,38 @@
+{
+  "complete": true,
+  "completed_runs": 1,
+  "planned_runs": 1,
+  "aggregates": [
+    {
+      "model": "reference",
+      "optimizer": "adamw",
+      "runs": 1,
+      "confirmed_delayed_runs": 0,
+      "final_heldout_target_runs": 0,
+      "lag_steps": null,
+      "train_fit_step": {
+        "mean": 500,
+        "std": 0,
+        "support": 1
+      },
+      "heldout_onset_step": null,
+      "training_seconds": {
+        "mean": 1662.6685125400836,
+        "std": 0,
+        "support": 1
+      },
+      "heldout_accuracy": {
+        "mean": 0.01785234899328859,
+        "std": 0,
+        "support": 1
+      },
+      "heldout_loss": {
+        "mean": 3.5495559262269296,
+        "std": 0,
+        "support": 1
+      }
+    }
+  ],
+  "training_seconds": 1662.6685125400836,
+  "statistical_scope": "initialization_seeds_on_one_exhaustive_two_way_split; no_length_transfer_or_causal_claim"
+}

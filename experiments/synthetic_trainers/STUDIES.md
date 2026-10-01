@@ -291,6 +291,35 @@ Because features are frozen, this control demonstrates double descent without
 learning new feature representations; it does not establish a causal link to
 grokking in GPTMini.
 
+## Modular-division calibration (2026-10-02)
+
+The first author-reference run used the default 20% train fraction: 1,862
+training equations, 7,450 exhaustive held-out equations, 455,424 parameters,
+two layers, width 128, four heads, AdamW betas (0.9, 0.98), learning rate 0.001,
+weight decay 1, and 150,000 updates. Train first reached 99% at update 500 and
+ended at 100%, but final held-out accuracy was 1.785%; its maximum across all
+601 observations was 2.148%. No held-out transition reached the fixed target.
+The measured training/wall budgets were 1,662.67 / 1,690.07 seconds.
+
+The [complete negative archive](baselines/mod97_fraction20_reference_20261002/measurements.json)
+retains the original source/data hashes and every observation, with
+[CSV](baselines/mod97_fraction20_reference_20261002/metrics.csv) and
+[curves](baselines/mod97_fraction20_reference_20261002/plots/modular-generalization.png).
+There is a finite held-out CE double-descent witness, but no error witness
+and no algorithmic generalization. Later confidence losses and recovery must
+therefore not be interpreted as understanding. One unsuccessful initialization
+at an explicitly chosen, undisclosed paper train fraction does not refute the
+paper's experiment.
+
+A second calibration changes only the train fraction to 50% (4,656 train /
+4,656 held-out equations) and retains the complete 150,000-update budget.
+Its early held-out target onset is update 4,000, confirmed at 4,250. The first
+train target crossing at 1,250 is transient, and later joint train/held-out
+collapses occur. The complete trajectory and a sustained memorization-phase
+diagnostic are needed before claiming the paper's prolonged grokking pattern.
+Initialization/data confirmations and GPTMini optimizer controls remain part
+of the active reproduction loop.
+
 ## Double descent is a separate observation
 
 Double descent is a descent, ascent, and second descent in held-out error as
