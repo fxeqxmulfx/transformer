@@ -1,0 +1,277 @@
+{
+  "status": "complete",
+  "started_utc": "2026-10-01T21:47:52Z",
+  "phase": "all",
+  "device": "cuda",
+  "torch": "2.14.0+cu130",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "calculated_copy_diversity": {
+    "max_length": 32,
+    "alphabet": 2,
+    "motif_length": 4,
+    "events": 6960,
+    "minimum_event_probability": 0.001953125,
+    "failure_probability": 0.05,
+    "required_rows": 12118,
+    "rounded_rows": 16384,
+    "rounded_union_failure_bound": 0.0007710860197388804,
+    "scope": "specified_finite_motif_coverage; not_RASP_diversity_or_EMC"
+  },
+  "model_parameter_counts": [
+    {
+      "width": 64,
+      "layers": 2,
+      "heads": 8,
+      "parameters": 100752
+    },
+    {
+      "width": 64,
+      "layers": 6,
+      "heads": 8,
+      "parameters": 297392
+    },
+    {
+      "width": 512,
+      "layers": 2,
+      "heads": 8,
+      "parameters": 6310928
+    },
+    {
+      "width": 512,
+      "layers": 6,
+      "heads": 8,
+      "parameters": 18893872
+    }
+  ],
+  "parity_task": {
+    "task": "parity",
+    "length": 16,
+    "min_length": null,
+    "symbols": 2,
+    "pairs": 8,
+    "queries": 4,
+    "hops": 2,
+    "blocks": 3,
+    "query_gap": 0,
+    "alpha": 0.1,
+    "neutral_fraction": 0.25,
+    "max_neutral_gap": null,
+    "max_balance": 8,
+    "bracket_types": 2,
+    "unique": false,
+    "histogram_bos": true,
+    "number_limit": 512,
+    "scratchpad": "none",
+    "addition_order": "forward",
+    "index_hints": false,
+    "carry_sampling": "balanced",
+    "carry_length": null,
+    "and_shift": true,
+    "and_region": "early",
+    "formula_depth": 2,
+    "formula_seed": 0
+  },
+  "copy_task": {
+    "task": "copy",
+    "length": 32,
+    "min_length": 1,
+    "symbols": 2,
+    "pairs": 8,
+    "queries": 4,
+    "hops": 2,
+    "blocks": 3,
+    "query_gap": 0,
+    "alpha": 0.1,
+    "neutral_fraction": 0.25,
+    "max_neutral_gap": null,
+    "max_balance": 8,
+    "bracket_types": 2,
+    "unique": false,
+    "histogram_bos": true,
+    "number_limit": 512,
+    "scratchpad": "none",
+    "addition_order": "forward",
+    "index_hints": false,
+    "carry_sampling": "balanced",
+    "carry_length": null,
+    "and_shift": true,
+    "and_region": "early",
+    "formula_depth": 2,
+    "formula_seed": 0
+  },
+  "model_template": {
+    "width": 64,
+    "layers": 2,
+    "heads": 8,
+    "ff_multiplier": 4,
+    "rope_theta": 10000.0,
+    "init_std": 0.02
+  },
+  "dd_training": {
+    "steps": 3000,
+    "batch_size": 64,
+    "eval_every": 500,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.1,
+    "grad_clip": null,
+    "seed": 0,
+    "data_seed": 1,
+    "train_examples": 64,
+    "validation_examples": 128,
+    "test_examples": 256,
+    "eval_lengths": [
+      32,
+      64
+    ],
+    "device": "cuda",
+    "cpu_threads": 1,
+    "target": 0.95,
+    "target_metric": "sequence_accuracy",
+    "stop_at_target": false,
+    "study": "double_descent",
+    "label_noise": 0.2,
+    "noise_seed": 2,
+    "split_policy": "independent",
+    "fit_epsilon": 0.01,
+    "fit_metric": "example_error",
+    "generalization_patience": 2,
+    "curve_tolerance": 0.02,
+    "optimizer": "amsgradw",
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "optimizer_epsilon": 1e-08
+  },
+  "copy_training": {
+    "steps": 5000,
+    "batch_size": 64,
+    "eval_every": 1000,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.1,
+    "grad_clip": null,
+    "seed": 0,
+    "data_seed": 1,
+    "train_examples": 16384,
+    "validation_examples": 64,
+    "test_examples": 128,
+    "eval_lengths": [
+      64,
+      128
+    ],
+    "device": "cuda",
+    "cpu_threads": 1,
+    "target": 0.95,
+    "target_metric": "sequence_accuracy",
+    "stop_at_target": false,
+    "study": "double_descent",
+    "label_noise": 0,
+    "noise_seed": 2,
+    "split_policy": "independent",
+    "fit_epsilon": 0.01,
+    "fit_metric": "example_error",
+    "generalization_patience": 2,
+    "curve_tolerance": 0.02,
+    "optimizer": "amsgradw",
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "optimizer_epsilon": 1e-08
+  },
+  "calibration_grid": {
+    "widths": [
+      64
+    ],
+    "layer_counts": [
+      2
+    ],
+    "sample_sizes": [
+      64,
+      256,
+      1024,
+      4096,
+      16384
+    ],
+    "noise_rates": [
+      0.2
+    ],
+    "model_seeds": [
+      0
+    ],
+    "data_seeds": [
+      1
+    ],
+    "epochs": null
+  },
+  "copy_grid": {
+    "widths": [
+      64,
+      512
+    ],
+    "layer_counts": [
+      2,
+      6
+    ],
+    "sample_sizes": [
+      16384
+    ],
+    "noise_rates": [
+      0
+    ],
+    "model_seeds": [
+      0
+    ],
+    "data_seeds": [
+      1
+    ],
+    "epochs": null
+  },
+  "width_grid": {
+    "widths": [
+      16,
+      32,
+      64,
+      128,
+      256,
+      512
+    ],
+    "layers": 2,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "N_rule": "train_only_calibration_geometric_midpoint"
+  },
+  "sources": {
+    "dd_EMC": "src/Transformer/DoubleDescent/Section2_EffectiveComplexity.lean",
+    "no_parameter_EMC_identity": "src/Transformer/DoubleDescent/AppendixD_Interpolation.lean",
+    "RASP_layers": "src/Transformer/RASP/Compilation.lean",
+    "rounded_depth_hierarchy": "src/Transformer/CRASP/Transformers.lean",
+    "paper_copy_size": "papers/arXiv-2310.16028v1/appendix.tex, Table 1"
+  },
+  "scope": "empirical_scaling; RASP_does_not_fix_embedding_width; no_theorem_guarantees_GPTMini_DD",
+  "sample_choice": {
+    "chosen_sample_size": 512,
+    "largest_observed_fitted_pool": 256,
+    "first_observed_unfitted_above": 1024,
+    "fitted_sample_sizes": [
+      64,
+      256
+    ],
+    "unfitted_sample_sizes": [
+      1024,
+      4096,
+      16384
+    ],
+    "nonmonotone_fit": false,
+    "rule": "geometric_midpoint_of_observed_bracket; otherwise_largest_fit_or_smallest_unfit",
+    "scope": "finite_train_fit_calibration; not_population_EMC"
+  },
+  "actual_copy_motif_coverage": {
+    "events": 6960,
+    "observed_events": 6960,
+    "missing_events": 0,
+    "rows": 16384,
+    "fingerprint": "9782ec07d85e703a7179b2d89a7fd363cc6c0a1afafb22832528045d0dfbe71f"
+  },
+  "elapsed_seconds": 3260.9059663980006,
+  "finished_utc": "2026-10-01T22:42:13Z"
+}

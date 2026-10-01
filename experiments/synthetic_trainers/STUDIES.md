@@ -122,6 +122,131 @@ PNG/PDF plots display initialization-seed means and sample SD. A finite witness
 or a positive delay is a candidate effect, without statistical significance or
 causal attribution. Test scores never alter the frozen plan.
 
+## Measured AMSGradW baseline (2026-10-02)
+
+The [archived measurements](baselines/amsgradw_softmax_20261002/measurements.json)
+contain all 61 runs and source/data hashes; [CSV](baselines/amsgradw_softmax_20261002/metrics.csv)
+and [plots](baselines/amsgradw_softmax_20261002/plots/transition-curves.png)
+are retained outside the ignored checkpoint directories. There were 97,000
+updates, 948.17 seconds of training updates, and 1,235.11 seconds of total run
+wall time on an RTX 3050 Laptop GPU. These are measured budgets, not estimates.
+
+| Long phase, final checkpoint | Train accuracy | ID test accuracy, mean ± sample SD | OOD 16 / 32 accuracy |
+| --- | ---: | ---: | ---: |
+| Copy, alphabet 8 | 100% | 3.39% ± 0.45% | 0% / 0% |
+| Direct eight-bit parity | 100% | 40.63% ± 4.75% | 51.56% / 51.04% |
+| Running eight-bit parity | 100% | 96.35% ± 4.30% | 0% / 0% |
+
+Running parity has a finite epoch-error descent/ascent/descent witness in all
+three initialization seeds. However, its novel ID accuracy already reached the
+threshold at the first observed train fit (step 250, confirmed at 500). The
+later dip and recovery therefore do not demonstrate a delayed memorization-to-
+algorithm transition. No run confirmed delayed length/position transfer.
+The suite's only positive ID lag was 100 updates on blocks in one seed; its
+OOD scores remained low. Of the 37 short suite runs, 35 reached more than 99%
+train accuracy. Shifted/random-position AND reached 100% ID and OOD accuracy
+with zero measured lag. MQAR fitted train but had 0% ID test accuracy at this
+small finite-pool budget.
+
+The width sweep used a requested noise rate of 20%; its fixed pool actually
+contained 16 changed labels out of 64 (25%). Widths 16/32/64/128 gave mean clean
+ID CE 1.275/1.621/2.203/1.602 nats per target. The last width fitted train in
+only two of three seeds. Neither mean loss nor mean error has a complete
+four-point double-descent witness. An individual seed's witness does not
+establish a repeated size effect, and an unfitted last point confounds a
+capacity interpretation. The random control learned a mean net coding gain of
+103.80 bits relative to its 128-bit reference, without algorithmic transfer.
+
+## Theory-guided data and model scaling
+
+The local theorem statements constrain which quantities can be used in an
+experiment:
+
+- [EMC](../../src/Transformer/DoubleDescent/Section2_EffectiveComplexity.lean)
+  is defined through expected IID train risk for a particular training
+  procedure. It is not parameter count. The paper's heuristic fit tolerance is
+  0.1; these experiments use a stricter 0.01 complete-example error. A single
+  nested pool and finite budget measure an observed frontier, not population EMC.
+- [Fixed-feature interpolation](../../src/Transformer/DoubleDescent/AppendixD_Interpolation.lean)
+  requires `n ≤ d` when a linear design can fit every real label vector.
+  This does not identify GPT parameters or embedding width with `d` for a
+  jointly trained nonlinear classifier. The [formal counterexample](../../src/Transformer/DoubleDescent/Section2_Hypothesis.lean)
+  also rules out a general test-risk ordering from EMC alone.
+- [RASP compilation counts](../../src/Transformer/RASP/Compilation.lean) bound
+  program aggregation heads and layers; the paper gives no quantitative
+  embedding-width bound. [C-RASP's depth hierarchy](../../src/Transformer/CRASP/Transformers.lean)
+  uses future-masked rounded fixed-precision transformers with its specified
+  positional restrictions. GPTMini's float32/RoPE model differs, so this is
+  motivation for a depth ablation rather than a hard lower bound for GPTMini.
+- The RASP-L [experiment table](../../papers/arXiv-2310.16028v1/appendix.tex),
+  Table 1, uses width 512, six layers, and eight heads for binary copy, with
+  100,000 AdamW updates and fresh online examples. These are empirical
+  reference sizes, not necessary/sufficient learning bounds. The corrected
+  [convexification width results](../../src/Transformer/Convexifying/Section3_Corrected.lean)
+  concern heads in a simplex-attention model (`h ≥ n` / `h ≥ n*c` with the
+  stated loss assumptions), not softmax GPTMini embedding width.
+
+For binary copy with uniform lengths 1–32, define the finite coverage property
+as observing every four-bit word at every valid position of every length. There
+are `M = 16 * sum(length - 3, length=4..32) = 6960` such events. A particular
+event has probability at least `q = 1/(32*16) = 1/512` in the first row of each
+independent generator pair. Counting only those rows gives the conservative
+union bound `P(any event missing) ≤ M*(1-q)^(N/2)`. For failure probability 0.05,
+`N ≥ 2*ceil(log(M/0.05)/(-log(1-q))) = 12118`; use 16,384 rows, with a bound
+of 0.0007711. This specific local coverage is weaker than the RASP-L Diversity
+conjecture and gives no training, double-descent, or generalization guarantee.
+The sampled pool actually covers all 6,960 events.
+
+For vocabulary 38 and FFN multiplier four, GPTMini's parameter count is
+`38*w + L*(12*w^2 + H)`, counting tied weights once. Holding `H=8`, the paired
+copy configurations `(w,L)=(64,2),(64,6),(512,2),(512,6)` have respectively
+100,752 / 297,392 / 6,310,928 / 18,893,872 parameters. They share the same
+16,384-example pool, batch 64, 5,000 updates, raw AMSGradW, learning rate 0.0001,
+and one model/data seed. Width and depth are therefore compared independently;
+their single-seed results remain exploratory. This finite-pool budget is shorter
+than the RASP-L paper's online training experiment.
+
+Noisy 16-bit direct parity is first calibrated at N=64/256/1024/4096/16384 with
+width 64, depth two, eight heads, 3,000 updates, batch 64, and learning rate
+0.0003. Only N=64 and 256 have final error below 0.01. The next width sweep uses
+N=512, the geometric midpoint of the fitted/unfitted bracket; test scores do not
+choose it. Widths 16/32/64/128/256/512 are repeated over three initializations
+with the same data and noise assignment. Equal updates do not give equal
+epochs across the calibration's different sample counts.
+
+The [completed scaling archive](baselines/amsgradw_softmax_scaling_20261002/measurements.json)
+contains 27 runs and 89,000 updates: 2,646.53 seconds of training updates,
+3,257.10 seconds of total run wall time, and peak CUDA allocation 1,659,151,872
+bytes. All width runs share identical split fingerprints and realized noise
+105/512 = 20.51%. At widths 16/32/64/128/256/512, final train fit occurred in
+0/3, 3/3, 3/3, 3/3, 3/3, and 2/3 runs. Mean clean ID CE was respectively
+0.366/1.163/1.431/1.734/1.766/1.822 nats per target. Mean ID accuracy stayed
+between 50.52% and 52.86%. There is no mean size-double-descent witness in
+either error or loss at margin 0.02; the two individual error witnesses do
+not align across seeds or beat their first minima. The largest model's seed-2
+train accuracy was 95.51%, so that run also remains an optimization failure.
+
+| Binary copy, final checkpoint | Parameters | Teacher-forced train | ID test | Novel ID validation | Update seconds |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Width 64, depth 2 | 100,752 | 94.19% | 96.09% | 97.14% | 73.32 |
+| Width 64, depth 6 | 297,392 | 100% | 100% | 100% | 172.21 |
+| Width 512, depth 2 | 6,310,928 | 100% | 100% | 100% | 383.59 |
+| Width 512, depth 6 | 18,893,872 | 100% | 100% | 100% | 1,119.80 |
+
+All four models have 0% complete-answer test accuracy at lengths 64 and 128.
+The [copy figure](baselines/amsgradw_softmax_scaling_20261002/plots/copy-scaling.png)
+also retains OOD token scores: zero complete answers does not mean zero correct
+tokens. Independent sampling gives 46 train-overlapping rows among 128 ID
+test rows; the separate novel-ID validation column excludes all train inputs
+and has support 35. Enlarging the data and model solves same-length-distribution
+copy here, but these 5,000-step, single-seed measurements do not demonstrate
+length extrapolation, delayed generalization, or a necessary size threshold.
+
+The selected existing Lean resource/interpolation/capacity/depth theorems were
+checked with `#print axioms`; their dependencies use only `propext`,
+`Classical.choice`, and `Quot.sound`. No Lean sources are changed by these
+experiments.
+
 ## Double descent is a separate observation
 
 Double descent is a descent, ascent, and second descent in held-out error as

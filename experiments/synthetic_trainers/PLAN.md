@@ -16,8 +16,50 @@ generation and scratchpad controls. Calibrated
 difficulty ranges, evaluation targets, and architecture ablations remain open.
 Memorization and double-descent profiles, a uniform random sequence control,
 fixed noise, paired capacity/data-size sweeps, and delayed-transfer diagnostics
-are also implemented; see [STUDIES.md](STUDIES.md). Their empirical effects still
-need calibration and sustained training.
+are also implemented; see [STUDIES.md](STUDIES.md). A 61-run AMSGradW/softmax
+baseline is saved under [baselines/](baselines/amsgradw_softmax_20261002/metrics.csv).
+It did not demonstrate delayed algorithmic length transfer. The subsequent
+[27-run data/width/depth study](baselines/amsgradw_softmax_scaling_20261002/metrics.csv)
+is complete: larger models solve ID copy but still fail length transfer;
+no repeated mean size-double-descent effect appears on direct parity. The
+paper reproduction loop below is now running separate reference protocols.
+
+## Paper reproduction loop
+
+The requested next objective is to reproduce grokking and double-descent effects
+from the local papers through existing or additional trainers. The baseline
+and scaling measurements remain part of this work. Increasing model size alone
+does not count as a reproduction.
+
+For grokking, use the modular division mod 97 experiment in
+[Convexifying Transformers](../../papers/arXiv-2211.11052v1/arxiv.tex), Section 4,
+as an initial reference: its standard transformer fits train around 1,000 updates
+but generalizes after more than 100,000 updates. Recover missing implementation
+details from the authors' published reference code, preserve attribution and
+licenses, and record every difference from the paper. Add a complete, oracle
+checked modular arithmetic corpus with disjoint splits. Compare the reference
+transformer with GPTMini and the requested raw AMSGradW optimizer; label those
+architecture/optimizer substitutions as adaptations. Use sufficient budgets to
+observe the reported delay, rather than stopping when train has been fitted.
+
+For double descent, reproduce an interpolation transition and both descending
+branches of held-out risk from [Deep Double Descent](../../papers/arXiv-1912.02292v1/paper.txt).
+Its random-feature case study supplies a simpler fixed-feature reference with
+a measurable linear interpolation threshold. Its CNN and translation results
+use different data and model families; synthetic GPTMini analogues should not
+be described as exact numerical reproductions of those experiments. Check the
+published protocols and reference implementations before freezing the plan.
+
+Freeze the data, targets, evaluation cadence, grid, and budget before each
+confirmation experiment. Separate exploratory calibration from repetitions,
+use several initialization seeds, and retain per-seed fit failures as well as
+mean curves. Record final and selected scores, complete histories, source/data
+hashes, compute/memory, and the exact source figure or section being compared.
+A finite curve witness alone is insufficient evidence of a robust reproduction;
+report repeatability, the interpolation region, and the size of each effect.
+Do not infer a universal data count from GPT parameter count or call an
+unconfirmed run successful. Continue the reproduction loop while useful
+experiments remain, and document failures and remaining uncertainty explicitly.
 
 ## Trainer design
 

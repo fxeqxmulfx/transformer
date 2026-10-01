@@ -269,3 +269,28 @@ short throughput pilot is stored in the separate `_pilot` run directory.
 To preserve a completed future baseline outside the ignored run directory,
 add `--archive <fresh-directory>` to `baseline_report`. `baseline_plots` accepts
 either the original run directory or its compact archive.
+
+## Data and model scaling
+
+The scaling protocol calculates a finite local-motif coverage bound for binary
+copy, calibrates the noisy parity train-fit frontier, and selects the next
+sample count from train scores alone. It then runs three initialization seeds
+over six widths and a paired width/depth copy ablation, including width 512
+and depth six. Its 27-run measured archive is
+[baselines/amsgradw_softmax_scaling_20261002](baselines/amsgradw_softmax_scaling_20261002).
+See [STUDIES.md](STUDIES.md#theory-guided-data-and-model-scaling) for theory,
+assumptions, actual noise, overlap, and final measurements.
+
+```bash
+.venv/bin/python -m experiments.synthetic_trainers.scaling \
+  --device cuda --output experiments/runs/synthetic/scaling
+.venv/bin/python -m experiments.synthetic_trainers.scaling_report \
+  experiments/runs/synthetic/scaling --archive <fresh-archive-directory>
+MPLCONFIGDIR=/tmp/synthetic-trainer-mpl python3 \
+  -m experiments.synthetic_trainers.scaling_plots <fresh-archive-directory>
+```
+
+The archive preserves separate sample/depth groups, final and selected scores,
+novel-input validation, failed fits, paired-pool checks, histories, and source
+hashes. Coverage is for the specified four-bit motif events; it does not
+identify population EMC or guarantee GPTMini generalization.
