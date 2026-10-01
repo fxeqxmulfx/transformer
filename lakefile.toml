@@ -12,6 +12,13 @@ srcDir = "src"
 leanOptions = { autoImplicit = false, relaxedAutoImplicit = false }
 
 [[lean_lib]]
+name = "PFR"
+srcDir = "third_party/Entropy"
+roots = ["PFR.ForMathlib.Entropy.Basic"]
+globs = ["PFR.+"]
+leanOptions = { autoImplicit = false, relaxedAutoImplicit = false }
+
+[[lean_lib]]
 name = "Stochastic"
 srcDir = "third_party/Stochastic"
 roots = ["BrownianMotion.Gaussian.BrownianMotion", "KolmogorovExtension4.KolmogorovExtension"]
