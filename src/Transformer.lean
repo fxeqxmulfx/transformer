@@ -1,5 +1,5 @@
 /-
-Formalization of twenty-seven papers on the mathematics of Transformers:
+Formalization of twenty-eight papers on the mathematics of Transformers:
 
 1. Weiss, Goldberg, Yahav — arXiv:2106.06981v2
    "Thinking Like Transformers".
@@ -89,6 +89,10 @@ Formalization of twenty-seven papers on the mathematics of Transformers:
    "Heavy-Tailed Class Imbalance and Why Adam Outperforms Gradient Descent
    on Language Models".
 
+28. Sreckovic, Geiping, Orvieto — arXiv:2506.12543v1
+   "Is your batch size the problem? Revisiting the Adam-SGD gap in language
+   modeling".
+
 Alongside these, `Transformer.ALM` formalizes the paraboloid-lifted lookup
 used by the append-only lookup machine (Percepta, transformer-vm), and
 `Transformer.Precision` proves the limits finite precision puts on attention:
@@ -140,3 +144,4 @@ import Transformer.ICEoT
 import Transformer.OptimizerBenchmark
 import Transformer.Magma
 import Transformer.Imbalance
+import Transformer.BatchSize

@@ -10,3 +10,10 @@ rev = "v4.34.0"
 name = "Transformer"
 srcDir = "src"
 leanOptions = { autoImplicit = false, relaxedAutoImplicit = false }
+
+[[lean_lib]]
+name = "Stochastic"
+srcDir = "third_party/Stochastic"
+roots = ["BrownianMotion.Gaussian.BrownianMotion", "KolmogorovExtension4.KolmogorovExtension"]
+globs = ["BrownianMotion.+", "KolmogorovExtension4.+"]
+leanOptions = { autoImplicit = false, relaxedAutoImplicit = false }
