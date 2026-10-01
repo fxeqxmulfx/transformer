@@ -70,3 +70,6 @@ match. `--adopt-completed` can incorporate an existing complete matching run
 without retraining it. It rejects unfinished runs, different sources/configs,
 and unrelated files in the directory. Fixed budgets cannot change on campaign
 resume. Individual exploratory budget extensions use the separate trainer CLI.
+`--train-fraction`, `--weight-decay`, and `--learning-rate` select a fresh,
+explicit campaign protocol for calibration of details missing from the paper;
+they cannot change an existing campaign on resume.

@@ -115,10 +115,15 @@ def main(argv=None):
     parser.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2])
     parser.add_argument("--steps", type=int, default=150000)
     parser.add_argument("--eval-every", type=int, default=250)
+    parser.add_argument("--train-fraction", type=float, default=.2)
+    parser.add_argument("--weight-decay", type=float, default=1.)
+    parser.add_argument("--learning-rate", type=float, default=.001)
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--adopt-completed", action="store_true")
     args = parser.parse_args(argv)
-    base = RunConfig(device=args.device, steps=args.steps, eval_every=args.eval_every)
+    base = RunConfig(device=args.device, steps=args.steps, eval_every=args.eval_every,
+                     train_fraction=args.train_fraction, weight_decay=args.weight_decay,
+                     learning_rate=args.learning_rate)
     run_campaign(args.output, base, args.seeds, resume=args.resume, adopt_completed=args.adopt_completed,
                  progress=lambda row: print(json.dumps(row), flush=True))
 
