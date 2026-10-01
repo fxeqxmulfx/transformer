@@ -11,7 +11,7 @@ from experiments.gpt_mini import GPTMini
 from .data import build_split
 from .metrics import evaluate, masked_loss, validation_rank
 from .records import collate
-from .runtime import optimizer_for, source_hashes, synchronize, write_json
+from .runtime import optimizer_description, optimizer_for, source_hashes, synchronize, write_json
 from .vocabulary import IGNORE
 
 
@@ -54,7 +54,13 @@ def train_run(spec, model_spec, config, output, model_factory=None, progress=Non
     factory = model_factory or GPTMini
     maximum = max(item.context_length for item in (spec, *eval_specs.values()))
     vocab_size = max(item.vocab_size for item in (spec, *eval_specs.values()))
-    model = factory(model_spec.reference_config(vocab_size, maximum)).to(device=device, dtype=torch.float32)
+    model = factory(model_spec.reference_config(vocab_size, maximum))
+    if model_spec.init_std is not None:
+        with torch.no_grad():
+            for parameter in model.parameters():
+                if parameter.ndim == 2:
+                    torch.nn.init.normal_(parameter, mean=0.0, std=model_spec.init_std)
+    model = model.to(device=device, dtype=torch.float32)
     optimizer = optimizer_for(model, config)
     study = None
     if config.study != "standard":
@@ -69,7 +75,8 @@ def train_run(spec, model_spec, config, output, model_factory=None, progress=Non
     validation.save(directory / "data" / "validation")
     provenance = {"task": asdict(spec), "model": asdict(model_spec), "training": asdict(config),
                   "factory": f"{factory.__module__}.{factory.__qualname__}",
-                  "torch_version": torch.__version__, "source_hashes": source_hashes(factory)}
+                  "torch_version": torch.__version__, "source_hashes": source_hashes(factory, optimizer),
+                  "optimizer": optimizer_description(config)}
     provenance["vocab_size"] = vocab_size
     provenance["context_length"] = maximum
     provenance["parameter_storage_bits"] = sum(p.numel() * p.element_size() * 8 for p in model.parameters())
@@ -136,7 +143,8 @@ def train_run(spec, model_spec, config, output, model_factory=None, progress=Non
         if not torch.isfinite(loss):
             raise RuntimeError(f"Nonfinite training loss at step {step}")
         loss.backward()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), config.grad_clip, error_if_nonfinite=True)
+        torch.nn.utils.clip_grad_norm_(model.parameters(), config.grad_clip if config.grad_clip is not None else float("inf"),
+                                       error_if_nonfinite=True)
         optimizer.step()
         synchronize(device)
         training_seconds += time.perf_counter() - step_started

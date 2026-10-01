@@ -225,3 +225,47 @@ Study tests additionally cover fixed corruption in all formats, causal shifts,
 entropy references, whole-sequence clipping and normalized mixtures, prefix
 extraction, finite double-descent witnesses, novel-input transfer lags, final
 checkpoint reloads, and paired sweeps with complete epochs.
+
+## AMSGradW + softmax baseline
+
+The fixed baseline protocol runs the 37 variants, three-seed delayed
+generalization probes, a noisy parity capacity grid, and a random-sequence
+memorization control. It reuses `GPTMini` and the raw, unguarded AMSGrad update
+from the existing optimizer benchmark with decoupled weight decay. Its moments
+have **no bias correction**; `torch.optim.AdamW(amsgrad=True)` is a different
+optimizer. Matrices use normal initialization with standard deviation 0.02.
+The usual training CLI retains AdamW and constructor initialization as defaults.
+
+```bash
+.venv/bin/python -m experiments.synthetic_trainers.baseline \
+  --device cuda --output experiments/runs/synthetic/amsgradw-softmax-baseline
+.venv/bin/python -m experiments.synthetic_trainers.baseline_report \
+  experiments/runs/synthetic/amsgradw-softmax-baseline
+MPLCONFIGDIR=/tmp/synthetic-trainer-mpl python3 \
+  -m experiments.synthetic_trainers.baseline_plots \
+  experiments/runs/synthetic/amsgradw-softmax-baseline
+```
+
+Each output must be fresh. `--phase suite|transitions|capacity|control` selects a
+phase; the manifest freezes every recipe before the first update. Reports
+include both final and validation-selected checkpoints. See
+[STUDIES.md](STUDIES.md#amsgradwsoftmax-baseline-protocol) for budgets and
+interpretation. The plot command requires Matplotlib in the chosen Python
+environment. The standard train/sweep CLI also accepts `--optimizer amsgradw`,
+`--init-std 0.02`, and `--no-grad-clip` for individual comparisons.
+
+The measured 2026-10-02 baseline is preserved in
+[baselines/amsgradw_softmax_20261002](baselines/amsgradw_softmax_20261002):
+[scalar measurements](baselines/amsgradw_softmax_20261002/metrics.csv),
+[compact report and curves](baselines/amsgradw_softmax_20261002/measurements.json),
+[suite figure](baselines/amsgradw_softmax_20261002/plots/suite-accuracy.png), and
+[three-seed learning curves](baselines/amsgradw_softmax_20261002/plots/transition-curves.png).
+The original checkpoints, complete corpora, and reports remain under
+`experiments/runs/synthetic/amsgradw_softmax_20261002` (gitignored).
+The archive retains hardware metadata, every recipe, source hashes, split
+fingerprints, and observation curves, with PNG/PDF exports. An independent
+short throughput pilot is stored in the separate `_pilot` run directory.
+
+To preserve a completed future baseline outside the ignored run directory,
+add `--archive <fresh-directory>` to `baseline_report`. `baseline_plots` accepts
+either the original run directory or its compact archive.

@@ -70,26 +70,31 @@ def increase_witness(points, tolerance=0.0):
 def delayed_generalization(history, config, *, random_control=False):
     observed_fit = next((row for row in history if fit_value(row["train"], config.fit_metric) < config.fit_epsilon), None)
     clean_fit = next((row for row in history if fit_value(row["train_clean"], config.fit_metric) < config.fit_epsilon), None)
-    start = confirmation = None
-    streak = 0
-    for row in history:
-        probes = row.get("validation_ood_novel", row["validation_ood"])
-        validation = row.get("validation_novel", row["validation"])
-        qualifies = (not random_control and config.target is not None and probes
-                     and validation is not None and validation[config.target_metric] >= config.target
-                     and all(probe is not None and probe[config.target_metric] >= config.target for probe in probes.values()))
-        if qualifies:
-            streak += 1
-            if streak == 1:
-                start = row
-            if streak >= config.generalization_patience:
-                confirmation = row
-                break
-        else:
-            streak, start = 0, None
-    if confirmation is None:
-        start = None
+
+    def onset(require_transfer):
+        start, streak = None, 0
+        for row in history:
+            probes = row.get("validation_ood_novel", row["validation_ood"])
+            validation = row.get("validation_novel", row["validation"])
+            qualifies = (not random_control and config.target is not None and validation is not None
+                         and validation[config.target_metric] >= config.target)
+            if require_transfer:
+                qualifies = qualifies and bool(probes) and all(
+                    probe is not None and probe[config.target_metric] >= config.target for probe in probes.values())
+            if qualifies:
+                streak += 1
+                if streak == 1:
+                    start = row
+                if streak >= config.generalization_patience:
+                    return start, row
+            else:
+                streak, start = 0, None
+        return None, None
+
+    start, confirmation = onset(True)
+    id_start, id_confirmation = onset(False)
     lag = start["step"] - clean_fit["step"] if start and clean_fit else None
+    id_lag = id_start["step"] - clean_fit["step"] if id_start and clean_fit else None
     # Whole-input separation is necessary to call this an algorithmic-transfer
     # candidate; causal prefix overlap alone is normal for language tasks.
     return {"observed_train_fit_step": observed_fit["step"] if observed_fit else None,
@@ -100,6 +105,12 @@ def delayed_generalization(history, config, *, random_control=False):
             "lag_epochs": start["epochs_seen"] - clean_fit["epochs_seen"] if start and clean_fit else None,
             "lag_training_seconds": start["training_seconds"] - clean_fit["training_seconds"] if start and clean_fit else None,
             "delayed_transfer_candidate": lag is not None and lag > 0,
+            "id_generalization_step": id_start["step"] if id_start else None,
+            "id_confirmed_at_step": id_confirmation["step"] if id_confirmation else None,
+            "id_lag_steps": id_lag,
+            "id_lag_epochs": id_start["epochs_seen"] - clean_fit["epochs_seen"] if id_start and clean_fit else None,
+            "id_lag_training_seconds": id_start["training_seconds"] - clean_fit["training_seconds"] if id_start and clean_fit else None,
+            "delayed_id_generalization_candidate": id_lag is not None and id_lag > 0,
             "criterion": {"fit_metric": config.fit_metric, "fit_epsilon": config.fit_epsilon,
                           "validation_target": config.target, "target_metric": config.target_metric,
                           "consecutive_observations": config.generalization_patience,

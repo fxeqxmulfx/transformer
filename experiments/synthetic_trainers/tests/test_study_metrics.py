@@ -162,6 +162,27 @@ class StudyMetricsTests(unittest.TestCase):
         self.assertEqual(report["lag_epochs"], 2.5)
         self.assertTrue(report["delayed_transfer_candidate"])
 
+    def test_id_generalization_is_separate_from_length_transfer(self):
+        history = self.history()
+        for row in history:
+            row["validation_novel"] = {**row["validation"], "sequence_accuracy": float(row["step"] >= 20)}
+            row["validation_ood"] = {"length-8": {**row["validation"], "sequence_accuracy": 0.5}}
+        report = delayed_generalization(history, TrainConfig(study="memorization", target=0.9))
+        self.assertEqual(report["id_generalization_step"], 20)
+        self.assertEqual(report["id_confirmed_at_step"], 30)
+        self.assertEqual(report["id_lag_steps"], 15)
+        self.assertTrue(report["delayed_id_generalization_candidate"])
+        self.assertIsNone(report["generalization_step"])
+        self.assertFalse(report["delayed_transfer_candidate"])
+
+    def test_id_generalization_requires_novel_inputs_and_excludes_random_control(self):
+        history = self.history()
+        config = TrainConfig(study="memorization", target=0.9)
+        self.assertIsNone(delayed_generalization(history, config, random_control=True)["id_generalization_step"])
+        for row in history:
+            row["validation_novel"] = None
+        self.assertIsNone(delayed_generalization(history, config)["id_generalization_step"])
+
     def test_absent_ood_or_incomplete_budget_cannot_confirm_transition(self):
         config = TrainConfig(study="memorization", target=0.9)
         self.assertIsNone(delayed_generalization(self.history()[:-1], config)["generalization_step"])

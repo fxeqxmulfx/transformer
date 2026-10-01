@@ -62,9 +62,15 @@ def main(argv=None):
         command.add_argument("--layers", type=int, default=2)
         command.add_argument("--heads", type=int, default=4)
         command.add_argument("--ff-multiplier", type=int, default=4)
+        command.add_argument("--init-std", type=float, help="Normal initialization for matrices; 0.02 matches optimizer benchmark")
+        command.add_argument("--optimizer", choices=("adamw", "amsgradw"), default="adamw")
+        command.add_argument("--beta1", type=float, default=0.9)
+        command.add_argument("--beta2", type=float, default=0.999)
+        command.add_argument("--optimizer-epsilon", type=float, default=1e-8)
         command.add_argument("--learning-rate", type=float, default=0.001)
         command.add_argument("--weight-decay", type=float, default=0.01)
         command.add_argument("--grad-clip", type=float, default=1.0)
+        command.add_argument("--no-grad-clip", dest="grad_clip", action="store_const", const=None)
         command.add_argument("--device", default="cpu")
         command.add_argument("--cpu-threads", type=int, default=1)
         command.add_argument("--target", type=float, default=0.95)
@@ -106,7 +112,7 @@ def main(argv=None):
             return
         from .training import train_run
 
-        model_spec = ModelSpec(args.width, args.layers, args.heads, args.ff_multiplier)
+        model_spec = ModelSpec(args.width, args.layers, args.heads, args.ff_multiplier, init_std=args.init_std)
         config = TrainConfig(
             steps=args.steps, batch_size=args.batch_size, eval_every=args.eval_every,
             learning_rate=args.learning_rate, weight_decay=args.weight_decay, grad_clip=args.grad_clip,
@@ -118,6 +124,7 @@ def main(argv=None):
             study=args.study, label_noise=args.label_noise, noise_seed=args.noise_seed,
             split_policy=args.split_policy, fit_epsilon=args.fit_epsilon, fit_metric=args.fit_metric,
             generalization_patience=args.generalization_patience, curve_tolerance=args.curve_tolerance,
+            optimizer=args.optimizer, beta1=args.beta1, beta2=args.beta2, optimizer_epsilon=args.optimizer_epsilon,
         )
         if not args.seeds or min(args.seeds) < 0 or len(set(args.seeds)) != len(args.seeds):
             raise ValueError("Model seeds must be distinct and nonnegative")

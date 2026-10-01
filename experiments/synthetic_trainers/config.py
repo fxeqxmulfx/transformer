@@ -11,6 +11,7 @@ class ModelSpec:
     heads: int = 4
     ff_multiplier: int = 4
     rope_theta: float = 10_000.0
+    init_std: float | None = None
 
     def __post_init__(self):
         if min(self.width, self.layers, self.heads, self.ff_multiplier) < 1:
@@ -19,6 +20,8 @@ class ModelSpec:
             raise ValueError("RoPE needs an even integer head dimension")
         if not math.isfinite(self.rope_theta) or self.rope_theta <= 0:
             raise ValueError("rope_theta must be finite and positive")
+        if self.init_std is not None and (not math.isfinite(self.init_std) or self.init_std <= 0):
+            raise ValueError("init_std must be finite and positive or None")
 
     def reference_config(self, vocab_size, max_length):
         from experiments.gpt_mini import Config
@@ -35,7 +38,7 @@ class TrainConfig:
     eval_every: int = 20
     learning_rate: float = 0.001
     weight_decay: float = 0.01
-    grad_clip: float = 1.0
+    grad_clip: float | None = 1.0
     seed: int = 0
     data_seed: int = 0
     train_examples: int = 512
@@ -55,6 +58,10 @@ class TrainConfig:
     fit_metric: str = "example_error"
     generalization_patience: int = 2
     curve_tolerance: float = 0.001
+    optimizer: str = "adamw"
+    beta1: float = 0.9
+    beta2: float = 0.999
+    optimizer_epsilon: float = 1e-8
 
     def __post_init__(self):
         if min(self.steps, self.batch_size, self.eval_every, self.train_examples,
@@ -66,8 +73,8 @@ class TrainConfig:
             raise ValueError("learning_rate must be finite and positive")
         if not math.isfinite(self.weight_decay) or self.weight_decay < 0:
             raise ValueError("weight_decay must be finite and nonnegative")
-        if not math.isfinite(self.grad_clip) or self.grad_clip <= 0:
-            raise ValueError("grad_clip must be finite and positive")
+        if self.grad_clip is not None and (not math.isfinite(self.grad_clip) or self.grad_clip <= 0):
+            raise ValueError("grad_clip must be finite and positive or None")
         if self.target is not None and (not math.isfinite(self.target) or not 0 <= self.target <= 1):
             raise ValueError("target must be in [0, 1] or None")
         if self.target_metric not in ("token_accuracy", "sequence_accuracy", "balanced_accuracy", "final_answer_accuracy"):
@@ -92,3 +99,9 @@ class TrainConfig:
             raise ValueError("Unknown interpolation metric")
         if not math.isfinite(self.curve_tolerance) or self.curve_tolerance < 0:
             raise ValueError("curve_tolerance must be finite and nonnegative")
+        if self.optimizer not in ("adamw", "amsgradw"):
+            raise ValueError("Unknown optimizer")
+        if any(not math.isfinite(beta) or not 0 <= beta < 1 for beta in (self.beta1, self.beta2)):
+            raise ValueError("Optimizer betas must be finite and in [0, 1)")
+        if not math.isfinite(self.optimizer_epsilon) or self.optimizer_epsilon <= 0:
+            raise ValueError("Optimizer epsilon must be finite and positive")

@@ -38,9 +38,89 @@ delayed generalization, without claiming an abrupt phase transition. Its times
 are limited by evaluation frequency and budget. Predefine thresholds and probes
 before comparing architectures.
 
+`id_generalization_step` records the separate, weaker event where novel ID
+validation reaches the same threshold for the same patience, irrespective of
+OOD scores. Its lag after clean train fit is `id_lag_steps` / `id_lag_epochs` /
+`id_lag_training_seconds`. Positive lag is a
+`delayed_id_generalization_candidate`. This distinguishes ordinary delayed ID
+generalization from algorithmic length/position transfer; both events are
+disabled for the random-sequence control. A positive sampled lag alone does not
+establish an abrupt grokking transition.
+
 This follows the measurable grokking lag discussed in the local
 [convex-transformer paper](../../papers/arXiv-2211.11052v1/arxiv.tex), Sections 1
 and 4 (algorithmic datasets), with stronger transfer probes added for this suite.
+
+## AMSGradW/softmax baseline protocol
+
+The baseline command in [README.md](README.md#amsgradw--softmax-baseline) measures
+the existing causal softmax `GPTMini`: RMSNorm, QK normalization, learned head
+temperatures, XSA, RoPE, ReLU-squared FFNs, and tied embeddings. It uses float32,
+two layers, four heads, width 64, and FFN width 256. Capacity probes change model
+width to 16, 32, 64, or 128 while retaining four heads and FFN multiplier four.
+Parameter counts vary with vocabulary and width and are recorded per run.
+
+The optimizer is the raw AMSGradW recurrence defined in
+[AMSGradW/Basic.lean](../../src/Transformer/AMSGradW/Basic.lean), implemented by
+the existing [`CoordinateOptimizer`](../optimizer_benchmark/coordinate.py):
+
+```text
+m = 0.9*m + 0.1*g
+v = 0.999*v + 0.001*g^2
+maximum = max(maximum, v)
+x = (1 - lr*decay)*x - lr*m/(sqrt(maximum) + 1e-8)
+```
+
+There is no bias correction, learning-rate schedule, guard/fallback, or gradient
+clipping. Constant `lr=0.001` and `decay=0.1` apply to every trainable parameter
+with a gradient, including head temperatures; tied weights are updated once.
+Decay stays out of the gradient moments. All matrix parameters are initialized
+with `Normal(0, 0.02)`, matching the existing optimizer benchmark's initialization;
+one-dimensional temperatures retain the `GPTMini` constructor values. This
+stochastic training experiment does not satisfy or invoke the formal full-gradient
+convergence theorem's sufficient assumptions.
+
+| Phase | Runs | Updates/run | Train / validation / test | Model seeds |
+| --- | ---: | ---: | --- | --- |
+| Suite calibration | 37 | 1,000 | 128 / 32 / 64 | 0 |
+| Copy, direct parity, running parity | 9 | 5,000 | 64 / 64 / 128 | 0, 1, 2 |
+| Direct parity, four widths, 20% label noise | 12 | 1,000 | 64 / 64 / 128 | 0, 1, 2 |
+| IID random-sequence control | 3 | 1,000 | 8 / 64 / 128 | 0, 1, 2 |
+
+Batch size is 32; observations occur every 100 updates (250 in the long phase),
+including step zero and the final step. All runs complete their budgets.
+Data seed is 1, and the noise seed is 2. Initialization-seed repetitions share
+one frozen data pool; their sample SD does not estimate variation across data
+seeds. The capacity phase measures a sampled size curve at fixed update count,
+not equal compute or a converged capacity frontier.
+
+Suite input lengths are 8--16, with Dyck lengths 12--16; MQAR/lookup use length
+24, four records, two queries, and two lookup hops; addition uses 2--4 decimal
+digits. Main OOD lengths are twice and four times the training maximum, with
+the existing hard-carry and position-shift probes included. MQAR/lookup OOD
+retains association counts, measuring spacing transfer. Other tasks increase
+problem size. The symbol alphabet is 64, and atomic-number limit is 128.
+
+Long copy probes use lengths 4--8 and alphabet size 8. Direct/running parity use
+exactly eight bits. Both have OOD lengths 16 and 32, with disjoint unique ID
+train/validation/test pools. The parity split partitions all 256 eight-bit
+inputs into 64/64/128. The suite uses independent sampling and reports duplicate
+inputs, overlap, and novel validation support; ID tests can include training
+inputs there. Shifted AND has especially small finite support. Empty novel
+validation cannot certify either delayed-generalization event.
+
+The random control has eight IID sequences, eight symbols per sequence, and
+alphabet size four: a 128-bit uniform-reference entropy. Shared prefixes impose
+an empirical causal-conflict floor, reported with measured coding gains. These
+gains measure memorization on this finite pool, rather than reusable algorithms.
+
+Both delayed-generalization criteria use complete-example accuracy at least
+0.95 for two consecutive observations, with train error strictly below 0.01.
+The finite double-descent detector uses a 0.02 absolute margin in the respective
+loss/error units. `summary.json` and `metrics.csv` preserve actual measurements;
+PNG/PDF plots display initialization-seed means and sample SD. A finite witness
+or a positive delay is a candidate effect, without statistical significance or
+causal attribution. Test scores never alter the frozen plan.
 
 ## Double descent is a separate observation
 
