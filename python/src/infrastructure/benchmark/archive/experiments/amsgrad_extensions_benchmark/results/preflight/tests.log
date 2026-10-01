@@ -1,0 +1,18 @@
+test_updates_all_states_windows_graph_stability_and_reload (experiments.amsgrad_extensions_benchmark.tests.test_cuda.CudaTests.test_updates_all_states_windows_graph_stability_and_reload) ... ok
+test_check_accepts_preserves_and_rejects_halves_zero_step (experiments.amsgrad_extensions_benchmark.tests.test_rules.RuleTests.test_check_accepts_preserves_and_rejects_halves_zero_step) ... ok
+test_decay_is_absent_from_moments_and_uses_old_weight (experiments.amsgrad_extensions_benchmark.tests.test_rules.RuleTests.test_decay_is_absent_from_moments_and_uses_old_weight) ... ok
+test_factor_gradients_match_reverse_ad (experiments.amsgrad_extensions_benchmark.tests.test_rules.RuleTests.test_factor_gradients_match_reverse_ad) ... ok
+test_full_proposal_matches_independent_autograd_factor_step (experiments.amsgrad_extensions_benchmark.tests.test_rules.RuleTests.test_full_proposal_matches_independent_autograd_factor_step) ... ok
+test_global_guard_certificate_includes_auxiliary_parameters (experiments.amsgrad_extensions_benchmark.tests.test_rules.RuleTests.test_global_guard_certificate_includes_auxiliary_parameters) ... ok
+test_inverse_softplus_is_stable_without_clamping_gains (experiments.amsgrad_extensions_benchmark.tests.test_rules.RuleTests.test_inverse_softplus_is_stable_without_clamping_gains) ... ok
+test_lean_counterexample_and_guarded_repair (experiments.amsgrad_extensions_benchmark.tests.test_rules.RuleTests.test_lean_counterexample_and_guarded_repair) ... ok
+test_shifted_quadratic_converges_to_weighted_equilibrium (experiments.amsgrad_extensions_benchmark.tests.test_rules.RuleTests.test_shifted_quadratic_converges_to_weighted_equilibrium) ... ok
+test_storage_repair_preserves_weight_columns_and_row_ratios (experiments.amsgrad_extensions_benchmark.tests.test_rules.RuleTests.test_storage_repair_preserves_weight_columns_and_row_ratios) ... ok
+test_tied_embedding_is_auxiliary_and_buffers_are_distinct (experiments.amsgrad_extensions_benchmark.tests.test_rules.RuleTests.test_tied_embedding_is_auxiliary_and_buffers_are_distinct) ... ok
+test_zero_decay_matches_existing_amsgrad (experiments.amsgrad_extensions_benchmark.tests.test_rules.RuleTests.test_zero_decay_matches_existing_amsgrad) ... ok
+test_screening_and_final_checkpoint_contract_on_both_attentions (experiments.amsgrad_extensions_benchmark.tests.test_training.TrainingTests.test_screening_and_final_checkpoint_contract_on_both_attentions) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 62.703s
+
+OK

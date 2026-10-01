@@ -1,0 +1,21 @@
+test_stopping (unittest.loader._FailedTest.test_stopping) ... ERROR
+
+======================================================================
+ERROR: test_stopping (unittest.loader._FailedTest.test_stopping)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_stopping
+Traceback (most recent call last):
+  File "/home/misha/.local/share/uv/python/cpython-3.14.7-linux-x86_64-gnu/lib/python3.14/unittest/loader.py", line 433, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/home/misha/.local/share/uv/python/cpython-3.14.7-linux-x86_64-gnu/lib/python3.14/unittest/loader.py", line 374, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/home/misha/lean_projects/transformer/experiments/patience_benchmark/tests/test_stopping.py", line 6, in <module>
+    from experiments.patience_benchmark.stopping import StopConfig, EarlyStopper, choose_best_step
+ModuleNotFoundError: No module named 'experiments.patience_benchmark.stopping'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

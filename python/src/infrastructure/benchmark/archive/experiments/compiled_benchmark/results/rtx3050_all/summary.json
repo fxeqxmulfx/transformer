@@ -1,0 +1,100 @@
+{
+  "winners": {
+    "softmax": {
+      "attention": "softmax",
+      "method": "adafisher",
+      "lr": 0.001,
+      "complete": true,
+      "usable_seeds": 3,
+      "expected_seeds": 3,
+      "test_loss_mean": 1.65175699028894,
+      "test_loss_std": 0.009442503336000727,
+      "test_ppl": 5.216136481892054,
+      "validation_loss_mean": 1.5093201360983544,
+      "actual_steps_mean": 20000,
+      "best_step_mean": 19500,
+      "train_seconds_mean": 247.30163758493532,
+      "total_seconds_mean": 252.02866141699874,
+      "optimizer_ms_mean": 3.5017321857849755,
+      "peak_memory_mib": 101.6064453125,
+      "recovered_runs": 0,
+      "capped_runs": 3,
+      "stop_reasons": {
+        "max_steps": 3
+      }
+    },
+    "sparsemax": {
+      "attention": "sparsemax",
+      "method": "adagrad",
+      "lr": 0.03,
+      "complete": true,
+      "usable_seeds": 3,
+      "expected_seeds": 3,
+      "test_loss_mean": 1.691251244528559,
+      "test_loss_std": 0.0276201187852686,
+      "test_ppl": 5.426266044885486,
+      "validation_loss_mean": 1.497582652766815,
+      "actual_steps_mean": 17333.333333333332,
+      "best_step_mean": 16000,
+      "train_seconds_mean": 83.94860731951,
+      "total_seconds_mean": 87.81661115632839,
+      "optimizer_ms_mean": 0.22222578327164547,
+      "peak_memory_mib": 101.86376953125,
+      "recovered_runs": 0,
+      "capped_runs": 1,
+      "stop_reasons": {
+        "max_steps": 1,
+        "patience": 2
+      }
+    }
+  },
+  "methods": [
+    {
+      "attention": "softmax",
+      "method": "adafisher",
+      "lr": 0.001,
+      "complete": true,
+      "usable_seeds": 3,
+      "expected_seeds": 3,
+      "test_loss_mean": 1.65175699028894,
+      "test_loss_std": 0.009442503336000727,
+      "test_ppl": 5.216136481892054,
+      "validation_loss_mean": 1.5093201360983544,
+      "actual_steps_mean": 20000,
+      "best_step_mean": 19500,
+      "train_seconds_mean": 247.30163758493532,
+      "total_seconds_mean": 252.02866141699874,
+      "optimizer_ms_mean": 3.5017321857849755,
+      "peak_memory_mib": 101.6064453125,
+      "recovered_runs": 0,
+      "capped_runs": 3,
+      "stop_reasons": {
+        "max_steps": 3
+      }
+    },
+    {
+      "attention": "sparsemax",
+      "method": "adagrad",
+      "lr": 0.03,
+      "complete": true,
+      "usable_seeds": 3,
+      "expected_seeds": 3,
+      "test_loss_mean": 1.691251244528559,
+      "test_loss_std": 0.0276201187852686,
+      "test_ppl": 5.426266044885486,
+      "validation_loss_mean": 1.497582652766815,
+      "actual_steps_mean": 17333.333333333332,
+      "best_step_mean": 16000,
+      "train_seconds_mean": 83.94860731951,
+      "total_seconds_mean": 87.81661115632839,
+      "optimizer_ms_mean": 0.22222578327164547,
+      "peak_memory_mib": 101.86376953125,
+      "recovered_runs": 0,
+      "capped_runs": 1,
+      "stop_reasons": {
+        "max_steps": 1,
+        "patience": 2
+      }
+    }
+  ]
+}

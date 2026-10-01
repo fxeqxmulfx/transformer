@@ -1,0 +1,28 @@
+{
+  "winners": {},
+  "methods": [
+    {
+      "attention": "sparsemax",
+      "method": "adagrad",
+      "lr": 0.03,
+      "complete": false,
+      "usable_seeds": 1,
+      "expected_seeds": 3,
+      "test_loss_mean": 1.6669066962363663,
+      "test_loss_std": 0.0,
+      "test_ppl": 5.295761037169716,
+      "validation_loss_mean": 1.510951711170709,
+      "actual_steps_mean": 16000,
+      "best_step_mean": 14000,
+      "train_seconds_mean": 159.8761747177341,
+      "total_seconds_mean": 166.48601624500589,
+      "optimizer_ms_mean": 0.8098485421650111,
+      "peak_memory_mib": 149.56005859375,
+      "recovered_runs": 0,
+      "capped_runs": 0,
+      "stop_reasons": {
+        "patience": 1
+      }
+    }
+  ]
+}

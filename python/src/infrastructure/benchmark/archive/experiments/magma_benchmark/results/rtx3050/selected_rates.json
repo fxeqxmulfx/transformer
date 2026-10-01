@@ -1,0 +1,18 @@
+{
+  "softmax": {
+    "rmsprop": 0.0001,
+    "magma_rmsprop": 0.0003,
+    "magma_adam": 0.0009,
+    "magma_adamw": 0.003,
+    "magma_muon": 0.03,
+    "magma_sgd": 0.3
+  },
+  "sparsemax": {
+    "rmsprop": 0.0003,
+    "magma_rmsprop": 0.0003,
+    "magma_adam": 0.0009,
+    "magma_adamw": 0.003,
+    "magma_muon": 0.03,
+    "magma_sgd": 0.3
+  }
+}

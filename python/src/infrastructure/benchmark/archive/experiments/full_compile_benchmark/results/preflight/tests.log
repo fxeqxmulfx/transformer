@@ -1,0 +1,9 @@
+test_compiled_windows_validation_restore_and_steady_graphs (experiments.full_compile_benchmark.tests.test_integration.IntegrationTests.test_compiled_windows_validation_restore_and_steady_graphs) ... ok
+test_functional_projection_values_and_reverse_ad_match_the_original (experiments.full_compile_benchmark.tests.test_integration.ProjectionTests.test_functional_projection_values_and_reverse_ad_match_the_original) ... ok
+test_all_24_updates_and_states_match_eager_on_both_attentions (experiments.full_compile_benchmark.tests.test_step.FullStepTests.test_all_24_updates_and_states_match_eager_on_both_attentions) ... ok
+test_precomputed_masks_preserve_the_original_generator_stream (experiments.full_compile_benchmark.tests.test_step.MaskTests.test_precomputed_masks_preserve_the_original_generator_stream) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 352.257s
+
+OK

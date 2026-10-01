@@ -1,0 +1,86 @@
+{
+  "unique_runs": 72,
+  "screen_runs": 36,
+  "final_runs": 36,
+  "failed_runs": 0,
+  "complete_method_groups": 12,
+  "paired_initialization_and_batches": true,
+  "paired_mask_streams": true,
+  "validation_only_selection": true,
+  "frozen_baseline_unchanged": true,
+  "raw_sha256": "56ae93f2305935ae5ddc65ff53c0ab657fb5508bf096b4299584809b5d75ee18",
+  "checkpoint_checks": [
+    {
+      "method": "magma_muon",
+      "attention": "softmax",
+      "test_loss": 1.749890963601464,
+      "checkpoint_sha256": "ace9d60571e5a9218aedbe01a80ae011947b359eb95c85d300639c64a39c7f02"
+    },
+    {
+      "method": "rmsprop",
+      "attention": "sparsemax",
+      "test_loss": 1.8113586215556832,
+      "checkpoint_sha256": "abe942a0eb02fc34633b2e78d04733970ca7629780791120d07306837b06182f"
+    },
+    {
+      "method": "magma_muon",
+      "attention": "sparsemax",
+      "test_loss": 1.7885296511732205,
+      "checkpoint_sha256": "778a0c3aefe944876309a004d9fb5d154dd090f9c474f8b6a1fe52d7cd601e56"
+    },
+    {
+      "method": "magma_adam",
+      "attention": "sparsemax",
+      "test_loss": 1.8090870766360505,
+      "checkpoint_sha256": "1518f33aa6547773b78094c8b5b03bb0ba575bb67c3544a7454d7a5c67cb7bba"
+    },
+    {
+      "method": "magma_adamw",
+      "attention": "sparsemax",
+      "test_loss": 1.8047822411380596,
+      "checkpoint_sha256": "1468ceea434ad16ca24035b79981c372197709edffeee3962b96683cc6ede58e"
+    },
+    {
+      "method": "magma_sgd",
+      "attention": "sparsemax",
+      "test_loss": 1.9382928263579937,
+      "checkpoint_sha256": "99e597fee30a5106982029cca1ee9ac89c3719bf8fdc0e7ade2ade269d2946ab"
+    },
+    {
+      "method": "magma_adamw",
+      "attention": "softmax",
+      "test_loss": 1.7703347277285448,
+      "checkpoint_sha256": "85edd32ba1578f67ce772aa753184b9a6d810fb171799aaa3e7490f8b0fd38f1"
+    },
+    {
+      "method": "magma_sgd",
+      "attention": "softmax",
+      "test_loss": 1.9305089168789467,
+      "checkpoint_sha256": "15a436d376e2d3a055770f85386a6077f5936be10fd1f00b29ca69bac64d6d27"
+    },
+    {
+      "method": "magma_rmsprop",
+      "attention": "sparsemax",
+      "test_loss": 1.8569082266701349,
+      "checkpoint_sha256": "cd039dfabe793cf92c4c729f71364826c0be9e6feccae64d80607a13875ef14e"
+    },
+    {
+      "method": "magma_rmsprop",
+      "attention": "softmax",
+      "test_loss": 1.844730346539538,
+      "checkpoint_sha256": "24731fb5f26cd61284e34b7f08ed7e5a419d532fd2686769672c13cdffb40ace"
+    },
+    {
+      "method": "magma_adam",
+      "attention": "softmax",
+      "test_loss": 1.791909359079004,
+      "checkpoint_sha256": "c17e4b2a1e7947fa54fda61427dd40820b94587f298ed28f8163a42c5fc6d232"
+    },
+    {
+      "method": "rmsprop",
+      "attention": "softmax",
+      "test_loss": 1.8291590238411308,
+      "checkpoint_sha256": "036d4e8dbb5efd37bca736336ee71fdfbac4a4279480ef260dc5b99d8c8a5c3d"
+    }
+  ]
+}

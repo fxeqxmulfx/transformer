@@ -1,0 +1,1004 @@
+[
+  {
+    "id": "softmax:rmsprop:0x1.3a92a30553261p-12:0:calibration:12",
+    "attention": "softmax",
+    "method": "rmsprop",
+    "lr": 0.0003,
+    "seed": 0,
+    "phase": "calibration",
+    "steps": 12,
+    "tokens_seen": 24576,
+    "initial_sha256": "d2245e53744f39425ad16aa86c8e10953e0b3f282eaeb921b292e6207164f160",
+    "batch_sha256": "7c74d515bfd0d35ef3e525fb6cb7fcadadc14b5544ca961aa63ff22523ff7a2d",
+    "status": "ok",
+    "validation_loss": null,
+    "test_loss": null,
+    "test_ppl": null,
+    "curves": [],
+    "completed_steps": 12,
+    "train_seconds": 0.11097060900647193,
+    "optimizer_ms": 0.28620800375938416,
+    "peak_memory_mib": 143.13720703125,
+    "peak_reserved_mib": 158.0,
+    "guard_acceptance": null,
+    "total_seconds": 0.11919690800277749,
+    "final_sha256": "01e473077149b76cd7d4eed1d0ffb9c190c2f410852752b330d965b62e9b8035",
+    "magma": null
+  },
+  {
+    "id": "softmax:magma_rmsprop:0x1.0624dd2f1a9fcp-10:0:calibration:12",
+    "attention": "softmax",
+    "method": "magma_rmsprop",
+    "lr": 0.001,
+    "seed": 0,
+    "phase": "calibration",
+    "steps": 12,
+    "tokens_seen": 24576,
+    "initial_sha256": "d2245e53744f39425ad16aa86c8e10953e0b3f282eaeb921b292e6207164f160",
+    "batch_sha256": "7c74d515bfd0d35ef3e525fb6cb7fcadadc14b5544ca961aa63ff22523ff7a2d",
+    "status": "ok",
+    "validation_loss": null,
+    "test_loss": null,
+    "test_ppl": null,
+    "curves": [],
+    "completed_steps": 12,
+    "train_seconds": 0.11659739999595331,
+    "optimizer_ms": 1.9331413110097249,
+    "peak_memory_mib": 143.14892578125,
+    "peak_reserved_mib": 158.0,
+    "guard_acceptance": null,
+    "total_seconds": 0.12485334600205533,
+    "final_sha256": "be6cdedd3b6603d15d07553740868b7575e7de882c8535c0d5c571e1486b43b2",
+    "magma": {
+      "blocks": {
+        "blocks.0.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 6,
+          "survival_fraction": 0.5,
+          "mean_damping": 0.5288031101226807,
+          "mean_cosine": 0.44200293223063153,
+          "final_damping": 0.5346155166625977
+        },
+        "blocks.0.attn.proj.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.523336927096049,
+          "mean_cosine": 0.3478609323501587,
+          "final_damping": 0.5263185501098633
+        },
+        "blocks.0.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 4,
+          "survival_fraction": 0.3333333333333333,
+          "mean_damping": 0.5236086845397949,
+          "mean_cosine": 0.3377118508021037,
+          "final_damping": 0.5241854190826416
+        },
+        "blocks.0.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.521976908047994,
+          "mean_cosine": 0.3139153520266215,
+          "final_damping": 0.5224679708480835
+        },
+        "blocks.1.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.5188806056976318,
+          "mean_cosine": 0.26241791248321533,
+          "final_damping": 0.5181863903999329
+        },
+        "blocks.1.attn.proj.weight": {
+          "draws": 12,
+          "kept": 3,
+          "survival_fraction": 0.25,
+          "mean_damping": 0.5172882874806722,
+          "mean_cosine": 0.2329554557800293,
+          "final_damping": 0.5154017806053162
+        },
+        "blocks.1.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 8,
+          "survival_fraction": 0.6666666666666666,
+          "mean_damping": 0.523953358332316,
+          "mean_cosine": 0.31938918431599933,
+          "final_damping": 0.5206121206283569
+        },
+        "blocks.1.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.5265407164891561,
+          "mean_cosine": 0.3583076000213623,
+          "final_damping": 0.5236017107963562
+        }
+      },
+      "mask_draws": 96,
+      "survival_fraction": 0.46875
+    }
+  },
+  {
+    "id": "softmax:magma_adam:0x1.89374bc6a7efap-9:0:calibration:12",
+    "attention": "softmax",
+    "method": "magma_adam",
+    "lr": 0.003,
+    "seed": 0,
+    "phase": "calibration",
+    "steps": 12,
+    "tokens_seen": 24576,
+    "initial_sha256": "d2245e53744f39425ad16aa86c8e10953e0b3f282eaeb921b292e6207164f160",
+    "batch_sha256": "7c74d515bfd0d35ef3e525fb6cb7fcadadc14b5544ca961aa63ff22523ff7a2d",
+    "status": "ok",
+    "validation_loss": null,
+    "test_loss": null,
+    "test_ppl": null,
+    "curves": [],
+    "completed_steps": 12,
+    "train_seconds": 0.1178952039917931,
+    "optimizer_ms": 2.321834683418274,
+    "peak_memory_mib": 144.681640625,
+    "peak_reserved_mib": 160.0,
+    "guard_acceptance": null,
+    "total_seconds": 0.12608268199983286,
+    "final_sha256": "2a3d854c5eb57e95c1feb571e7dd615c22124dcf9286e8ca13e6111d1800562a",
+    "magma": {
+      "blocks": {
+        "blocks.0.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 6,
+          "survival_fraction": 0.5,
+          "mean_damping": 0.5301841497421265,
+          "mean_cosine": 0.4806034564971924,
+          "final_damping": 0.5392791628837585
+        },
+        "blocks.0.attn.proj.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.5289278030395508,
+          "mean_cosine": 0.44416805108388263,
+          "final_damping": 0.5348901748657227
+        },
+        "blocks.0.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 4,
+          "survival_fraction": 0.3333333333333333,
+          "mean_damping": 0.5287905136744181,
+          "mean_cosine": 0.4460461537043254,
+          "final_damping": 0.5353711843490601
+        },
+        "blocks.0.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.523791233698527,
+          "mean_cosine": 0.37319167455037433,
+          "final_damping": 0.5300275087356567
+        },
+        "blocks.1.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.5237623850504557,
+          "mean_cosine": 0.3352771997451782,
+          "final_damping": 0.523780882358551
+        },
+        "blocks.1.attn.proj.weight": {
+          "draws": 12,
+          "kept": 3,
+          "survival_fraction": 0.25,
+          "mean_damping": 0.524081309636434,
+          "mean_cosine": 0.3600779374440511,
+          "final_damping": 0.5274693965911865
+        },
+        "blocks.1.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 8,
+          "survival_fraction": 0.6666666666666666,
+          "mean_damping": 0.5276945034662882,
+          "mean_cosine": 0.4289994239807129,
+          "final_damping": 0.5340051651000977
+        },
+        "blocks.1.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.5275634527206421,
+          "mean_cosine": 0.4431663751602173,
+          "final_damping": 0.5365227460861206
+        }
+      },
+      "mask_draws": 96,
+      "survival_fraction": 0.46875
+    }
+  },
+  {
+    "id": "softmax:magma_adamw:0x1.89374bc6a7efap-9:0:calibration:12",
+    "attention": "softmax",
+    "method": "magma_adamw",
+    "lr": 0.003,
+    "seed": 0,
+    "phase": "calibration",
+    "steps": 12,
+    "tokens_seen": 24576,
+    "initial_sha256": "d2245e53744f39425ad16aa86c8e10953e0b3f282eaeb921b292e6207164f160",
+    "batch_sha256": "7c74d515bfd0d35ef3e525fb6cb7fcadadc14b5544ca961aa63ff22523ff7a2d",
+    "status": "ok",
+    "validation_loss": null,
+    "test_loss": null,
+    "test_ppl": null,
+    "curves": [],
+    "completed_steps": 12,
+    "train_seconds": 0.12455952099116985,
+    "optimizer_ms": 2.858240008354187,
+    "peak_memory_mib": 144.681640625,
+    "peak_reserved_mib": 160.0,
+    "guard_acceptance": null,
+    "total_seconds": 0.13325838099990506,
+    "final_sha256": "32bbe5ba621065a9bbb7899c9581d4b46e0508aeb01e52dbf68d26f8c300f73c",
+    "magma": {
+      "blocks": {
+        "blocks.0.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 6,
+          "survival_fraction": 0.5,
+          "mean_damping": 0.528443972269694,
+          "mean_cosine": 0.4739926258722941,
+          "final_damping": 0.5404124855995178
+        },
+        "blocks.0.attn.proj.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.5279751221338908,
+          "mean_cosine": 0.4677385091781616,
+          "final_damping": 0.5399907827377319
+        },
+        "blocks.0.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 4,
+          "survival_fraction": 0.3333333333333333,
+          "mean_damping": 0.5320493380228678,
+          "mean_cosine": 0.5147461096445719,
+          "final_damping": 0.5423235893249512
+        },
+        "blocks.0.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.5263371070226034,
+          "mean_cosine": 0.4205114046732585,
+          "final_damping": 0.534324049949646
+        },
+        "blocks.1.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.5323510964711508,
+          "mean_cosine": 0.5221517086029053,
+          "final_damping": 0.543134868144989
+        },
+        "blocks.1.attn.proj.weight": {
+          "draws": 12,
+          "kept": 3,
+          "survival_fraction": 0.25,
+          "mean_damping": 0.5288236141204834,
+          "mean_cosine": 0.47386205196380615,
+          "final_damping": 0.5398155450820923
+        },
+        "blocks.1.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 8,
+          "survival_fraction": 0.6666666666666666,
+          "mean_damping": 0.5330631732940674,
+          "mean_cosine": 0.5371132294336954,
+          "final_damping": 0.5446078777313232
+        },
+        "blocks.1.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.5313560962677002,
+          "mean_cosine": 0.5204654534657797,
+          "final_damping": 0.5440890192985535
+        }
+      },
+      "mask_draws": 96,
+      "survival_fraction": 0.46875
+    }
+  },
+  {
+    "id": "softmax:magma_muon:0x1.eb851eb851eb8p-6:0:calibration:12",
+    "attention": "softmax",
+    "method": "magma_muon",
+    "lr": 0.03,
+    "seed": 0,
+    "phase": "calibration",
+    "steps": 12,
+    "tokens_seen": 24576,
+    "initial_sha256": "d2245e53744f39425ad16aa86c8e10953e0b3f282eaeb921b292e6207164f160",
+    "batch_sha256": "7c74d515bfd0d35ef3e525fb6cb7fcadadc14b5544ca961aa63ff22523ff7a2d",
+    "status": "ok",
+    "validation_loss": null,
+    "test_loss": null,
+    "test_ppl": null,
+    "curves": [],
+    "completed_steps": 12,
+    "train_seconds": 0.18786701999488287,
+    "optimizer_ms": 7.612672130266826,
+    "peak_memory_mib": 141.681640625,
+    "peak_reserved_mib": 158.0,
+    "guard_acceptance": null,
+    "total_seconds": 0.19574427099723835,
+    "final_sha256": "fef20a78a467e1c191b2a8ea3c4c92f6d8df0bd7b19532697fb66d42dec43902",
+    "magma": {
+      "blocks": {
+        "blocks.0.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 6,
+          "survival_fraction": 0.5,
+          "mean_damping": 0.5214056968688965,
+          "mean_cosine": 0.3059694568316142,
+          "final_damping": 0.5218067765235901
+        },
+        "blocks.0.attn.proj.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.5215266545613607,
+          "mean_cosine": 0.28978367646535236,
+          "final_damping": 0.5189077258110046
+        },
+        "blocks.0.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 4,
+          "survival_fraction": 0.3333333333333333,
+          "mean_damping": 0.525148073832194,
+          "mean_cosine": 0.34375282128651935,
+          "final_damping": 0.5230690836906433
+        },
+        "blocks.0.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.521431048711141,
+          "mean_cosine": 0.26541783412297565,
+          "final_damping": 0.5149311423301697
+        },
+        "blocks.1.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.521834929784139,
+          "mean_cosine": 0.28089775641759235,
+          "final_damping": 0.5169948935508728
+        },
+        "blocks.1.attn.proj.weight": {
+          "draws": 12,
+          "kept": 3,
+          "survival_fraction": 0.25,
+          "mean_damping": 0.520291805267334,
+          "mean_cosine": 0.23981247345606485,
+          "final_damping": 0.5121713280677795
+        },
+        "blocks.1.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 8,
+          "survival_fraction": 0.6666666666666666,
+          "mean_damping": 0.528101921081543,
+          "mean_cosine": 0.3873823881149292,
+          "final_damping": 0.526332676410675
+        },
+        "blocks.1.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.5280364354451498,
+          "mean_cosine": 0.37993542353312176,
+          "final_damping": 0.5251203775405884
+        }
+      },
+      "mask_draws": 96,
+      "survival_fraction": 0.46875
+    }
+  },
+  {
+    "id": "softmax:magma_sgd:0x1.3333333333333p-2:0:calibration:12",
+    "attention": "softmax",
+    "method": "magma_sgd",
+    "lr": 0.3,
+    "seed": 0,
+    "phase": "calibration",
+    "steps": 12,
+    "tokens_seen": 24576,
+    "initial_sha256": "d2245e53744f39425ad16aa86c8e10953e0b3f282eaeb921b292e6207164f160",
+    "batch_sha256": "7c74d515bfd0d35ef3e525fb6cb7fcadadc14b5544ca961aa63ff22523ff7a2d",
+    "status": "ok",
+    "validation_loss": null,
+    "test_loss": null,
+    "test_ppl": null,
+    "curves": [],
+    "completed_steps": 12,
+    "train_seconds": 0.11615527799585834,
+    "optimizer_ms": 2.089301347732544,
+    "peak_memory_mib": 146.181640625,
+    "peak_reserved_mib": 164.0,
+    "guard_acceptance": null,
+    "total_seconds": 0.12514266099606175,
+    "final_sha256": "e64f09a4afe993ebbc8c562d0c167b9cf501657ee2dea602318e7de76f009183",
+    "magma": {
+      "blocks": {
+        "blocks.0.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 6,
+          "survival_fraction": 0.5,
+          "mean_damping": 0.5358416239420573,
+          "mean_cosine": 0.5760530233383179,
+          "final_damping": 0.547239363193512
+        },
+        "blocks.0.attn.proj.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.5353252490361532,
+          "mean_cosine": 0.5626063744227091,
+          "final_damping": 0.545680820941925
+        },
+        "blocks.0.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 4,
+          "survival_fraction": 0.3333333333333333,
+          "mean_damping": 0.5361534754435221,
+          "mean_cosine": 0.5642687082290649,
+          "final_damping": 0.544762909412384
+        },
+        "blocks.0.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.5338604847590128,
+          "mean_cosine": 0.5245683590571085,
+          "final_damping": 0.5413693785667419
+        },
+        "blocks.1.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.5353167057037354,
+          "mean_cosine": 0.5645542939503988,
+          "final_damping": 0.5460514426231384
+        },
+        "blocks.1.attn.proj.weight": {
+          "draws": 12,
+          "kept": 3,
+          "survival_fraction": 0.25,
+          "mean_damping": 0.5339728593826294,
+          "mean_cosine": 0.5426545143127441,
+          "final_damping": 0.5442323088645935
+        },
+        "blocks.1.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 8,
+          "survival_fraction": 0.6666666666666666,
+          "mean_damping": 0.5368384122848511,
+          "mean_cosine": 0.5815885861714681,
+          "final_damping": 0.5467543005943298
+        },
+        "blocks.1.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.5359097719192505,
+          "mean_cosine": 0.5875691970189413,
+          "final_damping": 0.5489606261253357
+        }
+      },
+      "mask_draws": 96,
+      "survival_fraction": 0.46875
+    }
+  },
+  {
+    "id": "sparsemax:rmsprop:0x1.3a92a30553261p-12:0:calibration:12",
+    "attention": "sparsemax",
+    "method": "rmsprop",
+    "lr": 0.0003,
+    "seed": 0,
+    "phase": "calibration",
+    "steps": 12,
+    "tokens_seen": 24576,
+    "initial_sha256": "d2245e53744f39425ad16aa86c8e10953e0b3f282eaeb921b292e6207164f160",
+    "batch_sha256": "7c74d515bfd0d35ef3e525fb6cb7fcadadc14b5544ca961aa63ff22523ff7a2d",
+    "status": "ok",
+    "validation_loss": null,
+    "test_loss": null,
+    "test_ppl": null,
+    "curves": [],
+    "completed_steps": 12,
+    "train_seconds": 0.11075335800705943,
+    "optimizer_ms": 0.44541867077350616,
+    "peak_memory_mib": 143.6552734375,
+    "peak_reserved_mib": 158.0,
+    "guard_acceptance": null,
+    "total_seconds": 0.1196310670056846,
+    "final_sha256": "ada9f91825a6343671149262b4e7b4e5f4661527d92bd43ed6829ca2451be685",
+    "magma": null
+  },
+  {
+    "id": "sparsemax:magma_rmsprop:0x1.0624dd2f1a9fcp-10:0:calibration:12",
+    "attention": "sparsemax",
+    "method": "magma_rmsprop",
+    "lr": 0.001,
+    "seed": 0,
+    "phase": "calibration",
+    "steps": 12,
+    "tokens_seen": 24576,
+    "initial_sha256": "d2245e53744f39425ad16aa86c8e10953e0b3f282eaeb921b292e6207164f160",
+    "batch_sha256": "7c74d515bfd0d35ef3e525fb6cb7fcadadc14b5544ca961aa63ff22523ff7a2d",
+    "status": "ok",
+    "validation_loss": null,
+    "test_loss": null,
+    "test_ppl": null,
+    "curves": [],
+    "completed_steps": 12,
+    "train_seconds": 0.1401886199892033,
+    "optimizer_ms": 2.4271359741687775,
+    "peak_memory_mib": 143.6669921875,
+    "peak_reserved_mib": 158.0,
+    "guard_acceptance": null,
+    "total_seconds": 0.14829668599850265,
+    "final_sha256": "d063f4e64ddc26dcf7e46a655f67288600d6751f37b54ae81da56d036cc024fb",
+    "magma": {
+      "blocks": {
+        "blocks.0.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 6,
+          "survival_fraction": 0.5,
+          "mean_damping": 0.5303779443105062,
+          "mean_cosine": 0.49825183550516766,
+          "final_damping": 0.541875422000885
+        },
+        "blocks.0.attn.proj.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.529160221417745,
+          "mean_cosine": 0.4739003578821818,
+          "final_damping": 0.5394248962402344
+        },
+        "blocks.0.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 4,
+          "survival_fraction": 0.3333333333333333,
+          "mean_damping": 0.5286978880564371,
+          "mean_cosine": 0.4621230363845825,
+          "final_damping": 0.5380736589431763
+        },
+        "blocks.0.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.5251245498657227,
+          "mean_cosine": 0.41089097658793133,
+          "final_damping": 0.5344198346138
+        },
+        "blocks.1.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.5275395711263021,
+          "mean_cosine": 0.4320504665374756,
+          "final_damping": 0.534661054611206
+        },
+        "blocks.1.attn.proj.weight": {
+          "draws": 12,
+          "kept": 3,
+          "survival_fraction": 0.25,
+          "mean_damping": 0.5246590375900269,
+          "mean_cosine": 0.36492947737375897,
+          "final_damping": 0.52741539478302
+        },
+        "blocks.1.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 8,
+          "survival_fraction": 0.6666666666666666,
+          "mean_damping": 0.527654767036438,
+          "mean_cosine": 0.40317944685618085,
+          "final_damping": 0.5296722650527954
+        },
+        "blocks.1.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.5277109146118164,
+          "mean_cosine": 0.38917311032613117,
+          "final_damping": 0.5272558927536011
+        }
+      },
+      "mask_draws": 96,
+      "survival_fraction": 0.46875
+    }
+  },
+  {
+    "id": "sparsemax:magma_adam:0x1.89374bc6a7efap-9:0:calibration:12",
+    "attention": "sparsemax",
+    "method": "magma_adam",
+    "lr": 0.003,
+    "seed": 0,
+    "phase": "calibration",
+    "steps": 12,
+    "tokens_seen": 24576,
+    "initial_sha256": "d2245e53744f39425ad16aa86c8e10953e0b3f282eaeb921b292e6207164f160",
+    "batch_sha256": "7c74d515bfd0d35ef3e525fb6cb7fcadadc14b5544ca961aa63ff22523ff7a2d",
+    "status": "ok",
+    "validation_loss": null,
+    "test_loss": null,
+    "test_ppl": null,
+    "curves": [],
+    "completed_steps": 12,
+    "train_seconds": 0.1411858600040432,
+    "optimizer_ms": 2.5179306666056314,
+    "peak_memory_mib": 145.19970703125,
+    "peak_reserved_mib": 162.0,
+    "guard_acceptance": null,
+    "total_seconds": 0.15003181500651408,
+    "final_sha256": "a00d5c4f283f390c6f9311554cf9cbc872f5c3e3df1330f23f4a723889cfbbef",
+    "magma": {
+      "blocks": {
+        "blocks.0.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 6,
+          "survival_fraction": 0.5,
+          "mean_damping": 0.5280278523763021,
+          "mean_cosine": 0.4520924886067708,
+          "final_damping": 0.5374307036399841
+        },
+        "blocks.0.attn.proj.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.5273414850234985,
+          "mean_cosine": 0.42511316140492755,
+          "final_damping": 0.5338233709335327
+        },
+        "blocks.0.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 4,
+          "survival_fraction": 0.3333333333333333,
+          "mean_damping": 0.5263683001200358,
+          "mean_cosine": 0.42907925446828205,
+          "final_damping": 0.535759449005127
+        },
+        "blocks.0.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.5204606056213379,
+          "mean_cosine": 0.32547134160995483,
+          "final_damping": 0.5264688730239868
+        },
+        "blocks.1.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.5238497257232666,
+          "mean_cosine": 0.35762520631154376,
+          "final_damping": 0.527312159538269
+        },
+        "blocks.1.attn.proj.weight": {
+          "draws": 12,
+          "kept": 3,
+          "survival_fraction": 0.25,
+          "mean_damping": 0.5212310949961344,
+          "mean_cosine": 0.3307851552963257,
+          "final_damping": 0.5262932777404785
+        },
+        "blocks.1.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 8,
+          "survival_fraction": 0.6666666666666666,
+          "mean_damping": 0.5289833545684814,
+          "mean_cosine": 0.4549526373545329,
+          "final_damping": 0.5365254878997803
+        },
+        "blocks.1.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.5279948711395264,
+          "mean_cosine": 0.4506170352300008,
+          "final_damping": 0.5371482968330383
+        }
+      },
+      "mask_draws": 96,
+      "survival_fraction": 0.46875
+    }
+  },
+  {
+    "id": "sparsemax:magma_adamw:0x1.89374bc6a7efap-9:0:calibration:12",
+    "attention": "sparsemax",
+    "method": "magma_adamw",
+    "lr": 0.003,
+    "seed": 0,
+    "phase": "calibration",
+    "steps": 12,
+    "tokens_seen": 24576,
+    "initial_sha256": "d2245e53744f39425ad16aa86c8e10953e0b3f282eaeb921b292e6207164f160",
+    "batch_sha256": "7c74d515bfd0d35ef3e525fb6cb7fcadadc14b5544ca961aa63ff22523ff7a2d",
+    "status": "ok",
+    "validation_loss": null,
+    "test_loss": null,
+    "test_ppl": null,
+    "curves": [],
+    "completed_steps": 12,
+    "train_seconds": 0.14266440300707472,
+    "optimizer_ms": 2.7760639985402427,
+    "peak_memory_mib": 145.19970703125,
+    "peak_reserved_mib": 160.0,
+    "guard_acceptance": null,
+    "total_seconds": 0.1507902150042355,
+    "final_sha256": "af4f47d9ec3ef045e25d9063e22f7be449f8bfb14de6f05f56cbe937f307d2ac",
+    "magma": {
+      "blocks": {
+        "blocks.0.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 6,
+          "survival_fraction": 0.5,
+          "mean_damping": 0.5291034777959188,
+          "mean_cosine": 0.4861183563868205,
+          "final_damping": 0.5415402054786682
+        },
+        "blocks.0.attn.proj.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.5331907669703165,
+          "mean_cosine": 0.554984450340271,
+          "final_damping": 0.5473552346229553
+        },
+        "blocks.0.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 4,
+          "survival_fraction": 0.3333333333333333,
+          "mean_damping": 0.5331753889719645,
+          "mean_cosine": 0.5535381237665812,
+          "final_damping": 0.547151505947113
+        },
+        "blocks.0.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.5270193815231323,
+          "mean_cosine": 0.4326198101043701,
+          "final_damping": 0.5352731347084045
+        },
+        "blocks.1.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.5313815275828043,
+          "mean_cosine": 0.5329266389211019,
+          "final_damping": 0.5461179614067078
+        },
+        "blocks.1.attn.proj.weight": {
+          "draws": 12,
+          "kept": 3,
+          "survival_fraction": 0.25,
+          "mean_damping": 0.5303761959075928,
+          "mean_cosine": 0.5138390064239502,
+          "final_damping": 0.5441710948944092
+        },
+        "blocks.1.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 8,
+          "survival_fraction": 0.6666666666666666,
+          "mean_damping": 0.5360546906789144,
+          "mean_cosine": 0.6138567527135214,
+          "final_damping": 0.5530534982681274
+        },
+        "blocks.1.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.532485842704773,
+          "mean_cosine": 0.5272070169448853,
+          "final_damping": 0.5435744524002075
+        }
+      },
+      "mask_draws": 96,
+      "survival_fraction": 0.46875
+    }
+  },
+  {
+    "id": "sparsemax:magma_muon:0x1.eb851eb851eb8p-6:0:calibration:12",
+    "attention": "sparsemax",
+    "method": "magma_muon",
+    "lr": 0.03,
+    "seed": 0,
+    "phase": "calibration",
+    "steps": 12,
+    "tokens_seen": 24576,
+    "initial_sha256": "d2245e53744f39425ad16aa86c8e10953e0b3f282eaeb921b292e6207164f160",
+    "batch_sha256": "7c74d515bfd0d35ef3e525fb6cb7fcadadc14b5544ca961aa63ff22523ff7a2d",
+    "status": "ok",
+    "validation_loss": null,
+    "test_loss": null,
+    "test_ppl": null,
+    "curves": [],
+    "completed_steps": 12,
+    "train_seconds": 0.19440540100913495,
+    "optimizer_ms": 7.045034646987915,
+    "peak_memory_mib": 142.19970703125,
+    "peak_reserved_mib": 156.0,
+    "guard_acceptance": null,
+    "total_seconds": 0.2024105230011628,
+    "final_sha256": "e7f316a049f52580af3737274b279314c5f482bf92c453cb151b552691385814",
+    "magma": {
+      "blocks": {
+        "blocks.0.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 6,
+          "survival_fraction": 0.5,
+          "mean_damping": 0.5242229302724203,
+          "mean_cosine": 0.351823369661967,
+          "final_damping": 0.5258035063743591
+        },
+        "blocks.0.attn.proj.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.5257404645284017,
+          "mean_cosine": 0.34541090329488117,
+          "final_damping": 0.5225962996482849
+        },
+        "blocks.0.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 4,
+          "survival_fraction": 0.3333333333333333,
+          "mean_damping": 0.5284231901168823,
+          "mean_cosine": 0.4029855728149414,
+          "final_damping": 0.5286069512367249
+        },
+        "blocks.0.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.5246891180674235,
+          "mean_cosine": 0.3014443914095561,
+          "final_damping": 0.5165541172027588
+        },
+        "blocks.1.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.5255421797434489,
+          "mean_cosine": 0.35777465502421063,
+          "final_damping": 0.524933934211731
+        },
+        "blocks.1.attn.proj.weight": {
+          "draws": 12,
+          "kept": 3,
+          "survival_fraction": 0.25,
+          "mean_damping": 0.5250473817189535,
+          "mean_cosine": 0.29631789525349933,
+          "final_damping": 0.5151584148406982
+        },
+        "blocks.1.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 8,
+          "survival_fraction": 0.6666666666666666,
+          "mean_damping": 0.5331834157307943,
+          "mean_cosine": 0.46341602007548016,
+          "final_damping": 0.5320633053779602
+        },
+        "blocks.1.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.5313383738199869,
+          "mean_cosine": 0.4208340247472127,
+          "final_damping": 0.5273730754852295
+        }
+      },
+      "mask_draws": 96,
+      "survival_fraction": 0.46875
+    }
+  },
+  {
+    "id": "sparsemax:magma_sgd:0x1.3333333333333p-2:0:calibration:12",
+    "attention": "sparsemax",
+    "method": "magma_sgd",
+    "lr": 0.3,
+    "seed": 0,
+    "phase": "calibration",
+    "steps": 12,
+    "tokens_seen": 24576,
+    "initial_sha256": "d2245e53744f39425ad16aa86c8e10953e0b3f282eaeb921b292e6207164f160",
+    "batch_sha256": "7c74d515bfd0d35ef3e525fb6cb7fcadadc14b5544ca961aa63ff22523ff7a2d",
+    "status": "ok",
+    "validation_loss": null,
+    "test_loss": null,
+    "test_ppl": null,
+    "curves": [],
+    "completed_steps": 12,
+    "train_seconds": 0.13360469499457395,
+    "optimizer_ms": 2.1336746911207833,
+    "peak_memory_mib": 146.69970703125,
+    "peak_reserved_mib": 164.0,
+    "guard_acceptance": null,
+    "total_seconds": 0.14182035499834456,
+    "final_sha256": "4318eb66f8dcccf513992bcd36db5b2d632234e7a44389cf308c4e53ef92e06a",
+    "magma": {
+      "blocks": {
+        "blocks.0.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 6,
+          "survival_fraction": 0.5,
+          "mean_damping": 0.5333900054295858,
+          "mean_cosine": 0.5310551722844442,
+          "final_damping": 0.5432588458061218
+        },
+        "blocks.0.attn.proj.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.5352698961893717,
+          "mean_cosine": 0.568443775177002,
+          "final_damping": 0.5468424558639526
+        },
+        "blocks.0.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 4,
+          "survival_fraction": 0.3333333333333333,
+          "mean_damping": 0.5364811420440674,
+          "mean_cosine": 0.5979894002278646,
+          "final_damping": 0.5500795841217041
+        },
+        "blocks.0.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 7,
+          "survival_fraction": 0.5833333333333334,
+          "mean_damping": 0.5335572957992554,
+          "mean_cosine": 0.5360283851623535,
+          "final_damping": 0.5437288880348206
+        },
+        "blocks.1.attn.qkv.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.5338024298350016,
+          "mean_cosine": 0.5419084231058756,
+          "final_damping": 0.5444539785385132
+        },
+        "blocks.1.attn.proj.weight": {
+          "draws": 12,
+          "kept": 3,
+          "survival_fraction": 0.25,
+          "mean_damping": 0.5325047175089518,
+          "mean_cosine": 0.509294867515564,
+          "final_damping": 0.5406906604766846
+        },
+        "blocks.1.ffn.w_in.weight": {
+          "draws": 12,
+          "kept": 8,
+          "survival_fraction": 0.6666666666666666,
+          "mean_damping": 0.5372862815856934,
+          "mean_cosine": 0.6059337059656779,
+          "final_damping": 0.5502137541770935
+        },
+        "blocks.1.ffn.w_out.weight": {
+          "draws": 12,
+          "kept": 5,
+          "survival_fraction": 0.4166666666666667,
+          "mean_damping": 0.53415314356486,
+          "mean_cosine": 0.5369674364725748,
+          "final_damping": 0.5430360436439514
+        }
+      },
+      "mask_draws": 96,
+      "survival_fraction": 0.46875
+    }
+  }
+]

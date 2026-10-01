@@ -1,0 +1,21 @@
+test_optimizer (unittest.loader._FailedTest.test_optimizer) ... ERROR
+
+======================================================================
+ERROR: test_optimizer (unittest.loader._FailedTest.test_optimizer)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_optimizer
+Traceback (most recent call last):
+  File "/home/misha/.local/share/uv/python/cpython-3.14.7-linux-x86_64-gnu/lib/python3.14/unittest/loader.py", line 433, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/home/misha/.local/share/uv/python/cpython-3.14.7-linux-x86_64-gnu/lib/python3.14/unittest/loader.py", line 374, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/home/misha/lean_projects/transformer/experiments/magma_benchmark/tests/test_optimizer.py", line 13, in <module>
+    from experiments.magma_benchmark.optimizer import MagmaOptimizer, RMSPropOptimizer, cosine
+ModuleNotFoundError: No module named 'experiments.magma_benchmark.optimizer'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

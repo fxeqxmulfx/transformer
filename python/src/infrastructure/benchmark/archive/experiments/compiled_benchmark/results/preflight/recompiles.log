@@ -1,0 +1,178 @@
+V1001 14:12:15.806000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/1] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/experiments/gpt_mini.py:190
+V1001 14:12:15.806000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/1] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:15.806000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/1] [__recompiles]     - 0/0: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:16.159000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/2] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/experiments/gpt_mini.py:190
+V1001 14:12:16.159000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/2] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:16.159000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/2] [__recompiles]     - 0/1: tensor 'tokens' size mismatch at index 0. expected 32, actual 7
+V1001 14:12:16.159000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/2] [__recompiles]     - 0/0: GLOBAL_STATE changed: grad_mode 
+softmax adamw: FX 1 -> 1 (200 steps), eval -> 3 -> 3; CUDA nodes 2 -> 2 -> 3 -> 4; stable=True
+V1001 14:12:23.137000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/1] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/experiments/gpt_mini.py:190
+V1001 14:12:23.137000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/1] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:23.137000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/1] [__recompiles]     - 0/0: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:23.497000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/2] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/experiments/gpt_mini.py:190
+V1001 14:12:23.497000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/2] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:23.497000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/2] [__recompiles]     - 0/1: tensor 'tokens' size mismatch at index 0. expected 32, actual 7
+V1001 14:12:23.497000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/2] [__recompiles]     - 0/0: GLOBAL_STATE changed: grad_mode 
+softmax magma_muon: FX 1 -> 1 (200 steps), eval -> 3 -> 3; CUDA nodes 2 -> 2 -> 3 -> 4; stable=True
+V1001 14:12:33.357000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/1] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/.venv/lib/python3.14/site-packages/torch/nn/modules/linear.py:130
+V1001 14:12:33.357000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/1] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:33.357000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/1] [__recompiles]     - 3/0: tensor 'self._parameters['weight']' size mismatch at index 0. expected 384, actual 128. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+V1001 14:12:33.408000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/1] [__recompiles] Recompiling function capture in /home/misha/lean_projects/transformer/experiments/optimizer_benchmark/fisher.py:32
+V1001 14:12:33.408000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/1] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:33.408000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/1] [__recompiles]     - 4/0: tensor 'output' size mismatch at index 2. expected 384, actual 128
+V1001 14:12:33.660000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/2] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/.venv/lib/python3.14/site-packages/torch/nn/modules/linear.py:130
+V1001 14:12:33.660000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/2] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:33.660000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/2] [__recompiles]     - 3/1: tensor 'self._parameters['weight']' size mismatch at index 0. expected 128, actual 512. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+V1001 14:12:33.660000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/2] [__recompiles]     - 3/0: tensor 'self._parameters['weight']' size mismatch at index 0. expected 384, actual 512. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+V1001 14:12:33.712000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/2] [__recompiles] Recompiling function capture in /home/misha/lean_projects/transformer/experiments/optimizer_benchmark/fisher.py:32
+V1001 14:12:33.712000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/2] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:33.712000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/2] [__recompiles]     - 4/1: tensor 'output' size mismatch at index 2. expected 128, actual 512
+V1001 14:12:33.712000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/2] [__recompiles]     - 4/0: tensor 'output' size mismatch at index 2. expected 384, actual 512
+V1001 14:12:33.877000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/3] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/.venv/lib/python3.14/site-packages/torch/nn/modules/linear.py:130
+V1001 14:12:33.877000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/3] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:33.877000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/3] [__recompiles]     - 3/2: tensor 'input' size mismatch at index 2. expected 128, actual 512
+V1001 14:12:33.877000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/3] [__recompiles]     - 3/1: tensor 'self._parameters['weight']' size mismatch at index 1. expected 128, actual 512. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+V1001 14:12:33.877000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/3] [__recompiles]     - 3/0: tensor 'self._parameters['weight']' size mismatch at index 0. expected 384, actual 128. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+V1001 14:12:33.927000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/3] [__recompiles] Recompiling function capture in /home/misha/lean_projects/transformer/experiments/optimizer_benchmark/fisher.py:32
+V1001 14:12:33.927000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/3] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:33.927000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/3] [__recompiles]     - 4/2: tensor 'inputs[0]' size mismatch at index 2. expected 128, actual 512
+V1001 14:12:33.927000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/3] [__recompiles]     - 4/1: tensor 'inputs[0]' size mismatch at index 2. expected 128, actual 512
+V1001 14:12:33.927000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/3] [__recompiles]     - 4/0: tensor 'output' size mismatch at index 2. expected 384, actual 128
+V1001 14:12:34.373000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/4] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/.venv/lib/python3.14/site-packages/torch/nn/modules/linear.py:130
+V1001 14:12:34.373000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/4] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:34.373000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/4] [__recompiles]     - 3/3: tensor 'input' size mismatch at index 2. expected 512, actual 128
+V1001 14:12:34.373000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/4] [__recompiles]     - 3/2: tensor 'self._parameters['weight']' size mismatch at index 0. expected 512, actual 65. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+V1001 14:12:34.373000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/4] [__recompiles]     - 3/1: tensor 'self._parameters['weight']' size mismatch at index 0. expected 128, actual 65. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+V1001 14:12:34.373000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/4] [__recompiles]     - 3/0: tensor 'self._parameters['weight']' size mismatch at index 0. expected 384, actual 65. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+V1001 14:12:34.430000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/4] [__recompiles] Recompiling function capture in /home/misha/lean_projects/transformer/experiments/optimizer_benchmark/fisher.py:32
+V1001 14:12:34.430000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/4] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:34.430000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/4] [__recompiles]     - 4/3: tensor 'inputs[0]' size mismatch at index 2. expected 512, actual 128
+V1001 14:12:34.430000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/4] [__recompiles]     - 4/2: tensor 'output' size mismatch at index 2. expected 512, actual 65
+V1001 14:12:34.430000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/4] [__recompiles]     - 4/1: tensor 'output' size mismatch at index 2. expected 128, actual 65
+V1001 14:12:34.430000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/4] [__recompiles]     - 4/0: tensor 'output' size mismatch at index 2. expected 384, actual 65
+V1001 14:12:37.421000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [1/1] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/experiments/gpt_mini.py:168
+V1001 14:12:37.421000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [1/1] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:37.421000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [1/1] [__recompiles]     - 1/0: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:37.660000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [10/1] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/experiments/gpt_mini.py:55
+V1001 14:12:37.660000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [10/1] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:37.660000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [10/1] [__recompiles]     - 10/0: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:37.708000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/5] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/.venv/lib/python3.14/site-packages/torch/nn/modules/linear.py:130
+V1001 14:12:37.708000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/5] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:37.708000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/5] [__recompiles]     - 3/4: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:37.708000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/5] [__recompiles]     - 3/3: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:37.708000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/5] [__recompiles]     - 3/2: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:37.708000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/5] [__recompiles]     - 3/1: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:37.708000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/5] [__recompiles]     - 3/0: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:37.760000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/5] [__recompiles] Recompiling function capture in /home/misha/lean_projects/transformer/experiments/optimizer_benchmark/fisher.py:32
+V1001 14:12:37.760000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/5] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:37.760000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/5] [__recompiles]     - 4/4: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:37.760000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/5] [__recompiles]     - 4/3: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:37.760000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/5] [__recompiles]     - 4/2: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:37.760000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/5] [__recompiles]     - 4/1: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:37.760000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/5] [__recompiles]     - 4/0: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:37.798000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [1/2] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/experiments/gpt_mini.py:168
+V1001 14:12:37.798000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [1/2] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:37.798000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [1/2] [__recompiles]     - 1/1: tensor 'x' size mismatch at index 0. expected 32, actual 7
+V1001 14:12:37.798000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [1/2] [__recompiles]     - 1/0: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:38.060000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [10/2] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/experiments/gpt_mini.py:55
+V1001 14:12:38.060000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [10/2] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:38.060000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [10/2] [__recompiles]     - 10/1: tensor 'x' size mismatch at index 0. expected 32, actual 7
+V1001 14:12:38.060000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [10/2] [__recompiles]     - 10/0: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:38.115000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/6] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/.venv/lib/python3.14/site-packages/torch/nn/modules/linear.py:130
+V1001 14:12:38.115000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/6] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:38.115000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/6] [__recompiles]     - 3/5: tensor 'input' size mismatch at index 0. expected 32, actual 7
+V1001 14:12:38.115000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/6] [__recompiles]     - 3/4: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:38.115000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/6] [__recompiles]     - 3/3: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:38.115000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/6] [__recompiles]     - 3/2: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:38.115000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/6] [__recompiles]     - 3/1: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:38.115000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/6] [__recompiles]     - 3/0: GLOBAL_STATE changed: grad_mode 
+softmax adafisher: FX 16 -> 16 (200 steps), eval -> 22 -> 22; CUDA nodes 47 -> 47 -> 51 -> 91; stable=True
+V1001 14:12:53.582000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/1] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/experiments/gpt_mini.py:190
+V1001 14:12:53.582000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/1] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:53.582000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/1] [__recompiles]     - 0/0: GLOBAL_STATE changed: grad_mode 
+V1001 14:12:53.952000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/2] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/experiments/gpt_mini.py:190
+V1001 14:12:53.952000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/2] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:12:53.952000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/2] [__recompiles]     - 0/1: tensor 'tokens' size mismatch at index 0. expected 32, actual 7
+V1001 14:12:53.952000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/2] [__recompiles]     - 0/0: GLOBAL_STATE changed: grad_mode 
+sparsemax adamw: FX 1 -> 1 (200 steps), eval -> 3 -> 3; CUDA nodes 2 -> 2 -> 3 -> 4; stable=True
+V1001 14:13:02.466000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/1] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/experiments/gpt_mini.py:190
+V1001 14:13:02.466000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/1] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:13:02.466000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/1] [__recompiles]     - 0/0: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:02.837000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/2] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/experiments/gpt_mini.py:190
+V1001 14:13:02.837000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/2] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:13:02.837000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/2] [__recompiles]     - 0/1: tensor 'tokens' size mismatch at index 0. expected 32, actual 7
+V1001 14:13:02.837000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [0/2] [__recompiles]     - 0/0: GLOBAL_STATE changed: grad_mode 
+sparsemax magma_muon: FX 1 -> 1 (200 steps), eval -> 3 -> 3; CUDA nodes 2 -> 2 -> 3 -> 4; stable=True
+V1001 14:13:13.377000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/1] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/.venv/lib/python3.14/site-packages/torch/nn/modules/linear.py:130
+V1001 14:13:13.377000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/1] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:13:13.377000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/1] [__recompiles]     - 3/0: tensor 'self._parameters['weight']' size mismatch at index 0. expected 384, actual 128. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+V1001 14:13:13.431000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/1] [__recompiles] Recompiling function capture in /home/misha/lean_projects/transformer/experiments/optimizer_benchmark/fisher.py:32
+V1001 14:13:13.431000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/1] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:13:13.431000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/1] [__recompiles]     - 4/0: tensor 'output' size mismatch at index 2. expected 384, actual 128
+V1001 14:13:13.687000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/2] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/.venv/lib/python3.14/site-packages/torch/nn/modules/linear.py:130
+V1001 14:13:13.687000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/2] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:13:13.687000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/2] [__recompiles]     - 3/1: tensor 'self._parameters['weight']' size mismatch at index 0. expected 128, actual 512. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+V1001 14:13:13.687000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/2] [__recompiles]     - 3/0: tensor 'self._parameters['weight']' size mismatch at index 0. expected 384, actual 512. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+V1001 14:13:13.744000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/2] [__recompiles] Recompiling function capture in /home/misha/lean_projects/transformer/experiments/optimizer_benchmark/fisher.py:32
+V1001 14:13:13.744000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/2] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:13:13.744000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/2] [__recompiles]     - 4/1: tensor 'output' size mismatch at index 2. expected 128, actual 512
+V1001 14:13:13.744000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/2] [__recompiles]     - 4/0: tensor 'output' size mismatch at index 2. expected 384, actual 512
+V1001 14:13:13.906000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/3] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/.venv/lib/python3.14/site-packages/torch/nn/modules/linear.py:130
+V1001 14:13:13.906000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/3] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:13:13.906000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/3] [__recompiles]     - 3/2: tensor 'input' size mismatch at index 2. expected 128, actual 512
+V1001 14:13:13.906000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/3] [__recompiles]     - 3/1: tensor 'self._parameters['weight']' size mismatch at index 1. expected 128, actual 512. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+V1001 14:13:13.906000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/3] [__recompiles]     - 3/0: tensor 'self._parameters['weight']' size mismatch at index 0. expected 384, actual 128. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+V1001 14:13:13.957000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/3] [__recompiles] Recompiling function capture in /home/misha/lean_projects/transformer/experiments/optimizer_benchmark/fisher.py:32
+V1001 14:13:13.957000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/3] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:13:13.957000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/3] [__recompiles]     - 4/2: tensor 'inputs[0]' size mismatch at index 2. expected 128, actual 512
+V1001 14:13:13.957000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/3] [__recompiles]     - 4/1: tensor 'inputs[0]' size mismatch at index 2. expected 128, actual 512
+V1001 14:13:13.957000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/3] [__recompiles]     - 4/0: tensor 'output' size mismatch at index 2. expected 384, actual 128
+V1001 14:13:14.166000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/4] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/.venv/lib/python3.14/site-packages/torch/nn/modules/linear.py:130
+V1001 14:13:14.166000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/4] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:13:14.166000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/4] [__recompiles]     - 3/3: tensor 'input' size mismatch at index 2. expected 512, actual 128
+V1001 14:13:14.166000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/4] [__recompiles]     - 3/2: tensor 'self._parameters['weight']' size mismatch at index 0. expected 512, actual 65. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+V1001 14:13:14.166000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/4] [__recompiles]     - 3/1: tensor 'self._parameters['weight']' size mismatch at index 0. expected 128, actual 65. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+V1001 14:13:14.166000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/4] [__recompiles]     - 3/0: tensor 'self._parameters['weight']' size mismatch at index 0. expected 384, actual 65. Guard failed on a parameter, consider using torch._dynamo.config.force_parameter_static_shapes = False to allow dynamism on parameters.
+V1001 14:13:14.219000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/4] [__recompiles] Recompiling function capture in /home/misha/lean_projects/transformer/experiments/optimizer_benchmark/fisher.py:32
+V1001 14:13:14.219000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/4] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:13:14.219000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/4] [__recompiles]     - 4/3: tensor 'inputs[0]' size mismatch at index 2. expected 512, actual 128
+V1001 14:13:14.219000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/4] [__recompiles]     - 4/2: tensor 'output' size mismatch at index 2. expected 512, actual 65
+V1001 14:13:14.219000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/4] [__recompiles]     - 4/1: tensor 'output' size mismatch at index 2. expected 128, actual 65
+V1001 14:13:14.219000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/4] [__recompiles]     - 4/0: tensor 'output' size mismatch at index 2. expected 384, actual 65
+V1001 14:13:17.059000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [1/1] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/experiments/gpt_mini.py:168
+V1001 14:13:17.059000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [1/1] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:13:17.059000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [1/1] [__recompiles]     - 1/0: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.294000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [10/1] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/experiments/gpt_mini.py:55
+V1001 14:13:17.294000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [10/1] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:13:17.294000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [10/1] [__recompiles]     - 10/0: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.343000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/5] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/.venv/lib/python3.14/site-packages/torch/nn/modules/linear.py:130
+V1001 14:13:17.343000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/5] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:13:17.343000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/5] [__recompiles]     - 3/4: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.343000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/5] [__recompiles]     - 3/3: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.343000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/5] [__recompiles]     - 3/2: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.343000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/5] [__recompiles]     - 3/1: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.343000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/5] [__recompiles]     - 3/0: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.393000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/5] [__recompiles] Recompiling function capture in /home/misha/lean_projects/transformer/experiments/optimizer_benchmark/fisher.py:32
+V1001 14:13:17.393000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/5] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:13:17.393000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/5] [__recompiles]     - 4/4: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.393000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/5] [__recompiles]     - 4/3: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.393000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/5] [__recompiles]     - 4/2: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.393000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/5] [__recompiles]     - 4/1: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.393000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [4/5] [__recompiles]     - 4/0: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.430000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [1/2] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/experiments/gpt_mini.py:168
+V1001 14:13:17.430000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [1/2] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:13:17.430000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [1/2] [__recompiles]     - 1/1: tensor 'x' size mismatch at index 0. expected 32, actual 7
+V1001 14:13:17.430000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [1/2] [__recompiles]     - 1/0: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.712000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [10/2] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/experiments/gpt_mini.py:55
+V1001 14:13:17.712000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [10/2] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:13:17.712000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [10/2] [__recompiles]     - 10/1: tensor 'x' size mismatch at index 0. expected 32, actual 7
+V1001 14:13:17.712000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [10/2] [__recompiles]     - 10/0: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.762000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/6] [__recompiles] Recompiling function forward in /home/misha/lean_projects/transformer/.venv/lib/python3.14/site-packages/torch/nn/modules/linear.py:130
+V1001 14:13:17.762000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/6] [__recompiles]     triggered by the following guard failure(s):
+V1001 14:13:17.762000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/6] [__recompiles]     - 3/5: tensor 'input' size mismatch at index 0. expected 32, actual 7
+V1001 14:13:17.762000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/6] [__recompiles]     - 3/4: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.762000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/6] [__recompiles]     - 3/3: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.762000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/6] [__recompiles]     - 3/2: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.762000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/6] [__recompiles]     - 3/1: GLOBAL_STATE changed: grad_mode 
+V1001 14:13:17.762000 1204615 .venv/lib/python3.14/site-packages/torch/_dynamo/guards.py:5621] [3/6] [__recompiles]     - 3/0: GLOBAL_STATE changed: grad_mode 
+sparsemax adafisher: FX 16 -> 16 (200 steps), eval -> 22 -> 22; CUDA nodes 47 -> 47 -> 51 -> 91; stable=True

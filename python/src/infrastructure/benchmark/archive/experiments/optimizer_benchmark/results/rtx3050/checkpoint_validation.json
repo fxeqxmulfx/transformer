@@ -1,0 +1,49 @@
+{
+  "status": "ok",
+  "winners": [
+    {
+      "attention": "softmax",
+      "method": "adamw",
+      "seed": 0,
+      "recorded_test_loss": 1.763584701941016,
+      "reloaded_test_loss": 1.763584701941016,
+      "checkpoint": "experiments/runs/optimizer_benchmark/rtx3050/softmax_adamw_seed0.pt",
+      "checkpoint_sha256": "bea5cff480e949b4cda6d5f9a197b23c881079688ccd9f546c341a5505c7a9ce"
+    },
+    {
+      "attention": "sparsemax",
+      "method": "adamw",
+      "seed": 0,
+      "recorded_test_loss": 1.7937966137611223,
+      "reloaded_test_loss": 1.7937966137611223,
+      "checkpoint": "experiments/runs/optimizer_benchmark/rtx3050/sparsemax_adamw_seed0.pt",
+      "checkpoint_sha256": "3e19056ce1831585d16066c353fc2e3db7b041ec499baddf62fbb6d35fa25f73"
+    }
+  ],
+  "guarded_gradient_fallback_checks": [
+    {
+      "attention": "softmax",
+      "method": "muon_guarded",
+      "seed": 0,
+      "identical_to_sgd": true
+    },
+    {
+      "attention": "softmax",
+      "method": "dash_ndb_guarded",
+      "seed": 0,
+      "identical_to_sgd": true
+    },
+    {
+      "attention": "sparsemax",
+      "method": "muon_guarded",
+      "seed": 0,
+      "identical_to_sgd": true
+    },
+    {
+      "attention": "sparsemax",
+      "method": "dash_ndb_guarded",
+      "seed": 0,
+      "identical_to_sgd": true
+    }
+  ]
+}

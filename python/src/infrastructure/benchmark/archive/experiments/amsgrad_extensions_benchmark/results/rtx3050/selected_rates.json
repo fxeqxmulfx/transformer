@@ -1,0 +1,12 @@
+{
+  "softmax": {
+    "amsgradw": 0.0003,
+    "amsgradmd": 0.0003,
+    "amsgradmd_guarded": 0.1
+  },
+  "sparsemax": {
+    "amsgradw": 0.0003,
+    "amsgradmd": 0.0003,
+    "amsgradmd_guarded": 0.1
+  }
+}

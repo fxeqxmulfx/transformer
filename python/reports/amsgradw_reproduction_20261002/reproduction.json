@@ -1,0 +1,177 @@
+{
+  "all_six_exactly_reproduced": true,
+  "checks": [
+    {
+      "checkpoint_file_hash_equal": true,
+      "curve_decisions_equal": true,
+      "curve_length_equal": true,
+      "curve_max_abs_delta": 0.0,
+      "exact_training_reproduction": true,
+      "hashes_equal": {
+        "batch_plan_sha256": true,
+        "batch_sha256": true,
+        "best_model_sha256": true,
+        "initial_sha256": true
+      },
+      "id": "softmax:amsgradw:0",
+      "losses_equal": true,
+      "new_actual_steps": 14250,
+      "new_best_step": 12250,
+      "new_test_loss": 1.6234006126219862,
+      "new_validation_loss": 1.4887075851212686,
+      "old_actual_steps": 14250,
+      "old_best_step": 12250,
+      "old_test_loss": 1.6234006126219862,
+      "old_validation_loss": 1.4887075851212686,
+      "selection_equal": true,
+      "test_loss_abs_delta": 0.0,
+      "validation_loss_abs_delta": 0.0
+    },
+    {
+      "checkpoint_file_hash_equal": true,
+      "curve_decisions_equal": true,
+      "curve_length_equal": true,
+      "curve_max_abs_delta": 0.0,
+      "exact_training_reproduction": true,
+      "hashes_equal": {
+        "batch_plan_sha256": true,
+        "batch_sha256": true,
+        "best_model_sha256": true,
+        "initial_sha256": true
+      },
+      "id": "softmax:amsgradw:1",
+      "losses_equal": true,
+      "new_actual_steps": 17250,
+      "new_best_step": 15250,
+      "new_test_loss": 1.6260903639853617,
+      "new_validation_loss": 1.4820258121950345,
+      "old_actual_steps": 17250,
+      "old_best_step": 15250,
+      "old_test_loss": 1.6260903639853617,
+      "old_validation_loss": 1.4820258121950345,
+      "selection_equal": true,
+      "test_loss_abs_delta": 0.0,
+      "validation_loss_abs_delta": 0.0
+    },
+    {
+      "checkpoint_file_hash_equal": true,
+      "curve_decisions_equal": true,
+      "curve_length_equal": true,
+      "curve_max_abs_delta": 0.0,
+      "exact_training_reproduction": true,
+      "hashes_equal": {
+        "batch_plan_sha256": true,
+        "batch_sha256": true,
+        "best_model_sha256": true,
+        "initial_sha256": true
+      },
+      "id": "softmax:amsgradw:2",
+      "losses_equal": true,
+      "new_actual_steps": 10500,
+      "new_best_step": 8500,
+      "new_test_loss": 1.6266331634346298,
+      "new_validation_loss": 1.489986450335462,
+      "old_actual_steps": 10500,
+      "old_best_step": 8500,
+      "old_test_loss": 1.6266331634346298,
+      "old_validation_loss": 1.489986450335462,
+      "selection_equal": true,
+      "test_loss_abs_delta": 0.0,
+      "validation_loss_abs_delta": 0.0
+    },
+    {
+      "checkpoint_file_hash_equal": true,
+      "curve_decisions_equal": true,
+      "curve_length_equal": true,
+      "curve_max_abs_delta": 0.0,
+      "exact_training_reproduction": true,
+      "hashes_equal": {
+        "batch_plan_sha256": true,
+        "batch_sha256": true,
+        "best_model_sha256": true,
+        "initial_sha256": true
+      },
+      "id": "sparsemax:amsgradw:0",
+      "losses_equal": true,
+      "new_actual_steps": 11000,
+      "new_best_step": 9000,
+      "new_test_loss": 1.6561256872936998,
+      "new_validation_loss": 1.50576183086969,
+      "old_actual_steps": 11000,
+      "old_best_step": 9000,
+      "old_test_loss": 1.6561256872936998,
+      "old_validation_loss": 1.50576183086969,
+      "selection_equal": true,
+      "test_loss_abs_delta": 0.0,
+      "validation_loss_abs_delta": 0.0
+    },
+    {
+      "checkpoint_file_hash_equal": true,
+      "curve_decisions_equal": true,
+      "curve_length_equal": true,
+      "curve_max_abs_delta": 0.0,
+      "exact_training_reproduction": true,
+      "hashes_equal": {
+        "batch_plan_sha256": true,
+        "batch_sha256": true,
+        "best_model_sha256": true,
+        "initial_sha256": true
+      },
+      "id": "sparsemax:amsgradw:1",
+      "losses_equal": true,
+      "new_actual_steps": 15250,
+      "new_best_step": 13250,
+      "new_test_loss": 1.622563498986438,
+      "new_validation_loss": 1.4974049897746842,
+      "old_actual_steps": 15250,
+      "old_best_step": 13250,
+      "old_test_loss": 1.622563498986438,
+      "old_validation_loss": 1.4974049897746842,
+      "selection_equal": true,
+      "test_loss_abs_delta": 0.0,
+      "validation_loss_abs_delta": 0.0
+    },
+    {
+      "checkpoint_file_hash_equal": true,
+      "curve_decisions_equal": true,
+      "curve_length_equal": true,
+      "curve_max_abs_delta": 0.0,
+      "exact_training_reproduction": true,
+      "hashes_equal": {
+        "batch_plan_sha256": true,
+        "batch_sha256": true,
+        "best_model_sha256": true,
+        "initial_sha256": true
+      },
+      "id": "sparsemax:amsgradw:2",
+      "losses_equal": true,
+      "new_actual_steps": 14250,
+      "new_best_step": 12250,
+      "new_test_loss": 1.6381170226840558,
+      "new_validation_loss": 1.4940594783743542,
+      "old_actual_steps": 14250,
+      "old_best_step": 12250,
+      "old_test_loss": 1.6381170226840558,
+      "old_validation_loss": 1.4940594783743542,
+      "selection_equal": true,
+      "test_loss_abs_delta": 0.0,
+      "validation_loss_abs_delta": 0.0
+    }
+  ],
+  "new_raw_sha256": "b99968bcb07242357d8f3c0cda79fa5dd35f27054b743451b3b2123c32cc522a",
+  "new_results": "/home/misha/lean_projects/transformer/python/results/amsgradw_reproduction_20261002",
+  "old_raw_sha256": "d68761cff1b4947afdc93beea587c32319442772a0b55a5bb5e08932fbacafcb",
+  "old_results": "/home/misha/lean_projects/transformer/python/src/infrastructure/benchmark/archive/experiments/amsgrad_extensions_benchmark/results/rtx3050",
+  "scope": "six fresh AMSGradW training runs; both attentions, seeds 0/1/2",
+  "settings_and_data_equal": true,
+  "test_loss_means": {
+    "softmax": {
+      "new_test_loss_mean": 1.625374713347326,
+      "old_test_loss_mean": 1.625374713347326
+    },
+    "sparsemax": {
+      "new_test_loss_mean": 1.6389354029880645,
+      "old_test_loss_mean": 1.6389354029880645
+    }
+  }
+}

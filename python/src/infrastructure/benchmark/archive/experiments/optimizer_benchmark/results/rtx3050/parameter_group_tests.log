@@ -1,0 +1,9 @@
+test_actual_hybrid_guard_rejects_joint_candidate_and_preserves_state (experiments.test_optimizer_parameter_groups.MuonParameterGroupTests.test_actual_hybrid_guard_rejects_joint_candidate_and_preserves_state) ... ok
+test_actual_model_routes_hidden_matrices_and_unique_auxiliary_weights (experiments.test_optimizer_parameter_groups.MuonParameterGroupTests.test_actual_model_routes_hidden_matrices_and_unique_auxiliary_weights) ... ok
+test_auxiliary_updates_match_independent_torch_adamw_with_zero_decay (experiments.test_optimizer_parameter_groups.MuonParameterGroupTests.test_auxiliary_updates_match_independent_torch_adamw_with_zero_decay) ... ok
+test_matrix_updates_match_independent_scalar_nesterov_and_polynomial (experiments.test_optimizer_parameter_groups.MuonParameterGroupTests.test_matrix_updates_match_independent_scalar_nesterov_and_polynomial) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.951s
+
+OK

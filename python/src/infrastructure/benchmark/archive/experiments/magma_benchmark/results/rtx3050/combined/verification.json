@@ -1,0 +1,13 @@
+{
+  "combined_runs": 288,
+  "combined_final_runs": 144,
+  "complete_groups": 48,
+  "exact_binary64_mean_checks": 48,
+  "sample_sd_checks": 48,
+  "winners_checked": true,
+  "final_mask_survival_range": [
+    0.494375,
+    0.49825
+  ],
+  "raw_sha256": "56ae93f2305935ae5ddc65ff53c0ab657fb5508bf096b4299584809b5d75ee18"
+}

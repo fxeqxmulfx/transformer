@@ -1,0 +1,239 @@
+{
+  "protocol": {
+    "config": {
+      "vocab_size": 65,
+      "n_layers": 2,
+      "n_heads": 4,
+      "d_model": 128,
+      "d_ff": 512,
+      "max_seq_len": 64,
+      "rope_theta": 10000.0
+    },
+    "batch": 32,
+    "screen_steps": 250,
+    "final_steps": 1000,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "attention": [
+      "softmax",
+      "sparsemax"
+    ],
+    "methods": [
+      {
+        "name": "sgd",
+        "rates": [
+          0.1,
+          0.3,
+          1.0
+        ],
+        "scope": "reference baseline; SGD rule formalized"
+      },
+      {
+        "name": "adagrad",
+        "rates": [
+          0.03,
+          0.1,
+          0.3
+        ],
+        "scope": "AdaGrad rule and monotone metric formalized"
+      },
+      {
+        "name": "adam",
+        "rates": [
+          0.0003,
+          0.001,
+          0.003
+        ],
+        "scope": "paper Adam without debiasing; counterexamples formalized"
+      },
+      {
+        "name": "adamw",
+        "rates": [
+          0.0003,
+          0.001,
+          0.003
+        ],
+        "scope": "practical bias-corrected reference; decay 0.01"
+      },
+      {
+        "name": "amsgrad",
+        "rates": [
+          0.0003,
+          0.001,
+          0.003
+        ],
+        "scope": "constant-momentum deterministic convergence extension"
+      },
+      {
+        "name": "amsgrad_inverse",
+        "rates": [
+          0.003,
+          0.01,
+          0.03
+        ],
+        "scope": "source inverse-momentum regret and offline convergence"
+      },
+      {
+        "name": "amsgrad_geometric",
+        "rates": [
+          0.003,
+          0.01,
+          0.03
+        ],
+        "scope": "source geometric-momentum regret and offline convergence"
+      },
+      {
+        "name": "adamx",
+        "rates": [
+          0.003,
+          0.01,
+          0.03
+        ],
+        "scope": "AdamX regret bound; inverse momentum"
+      },
+      {
+        "name": "adamnc",
+        "rates": [
+          0.01,
+          0.03,
+          0.1
+        ],
+        "scope": "AdamNC regret bound; inverse momentum and second-moment averaging"
+      },
+      {
+        "name": "muon",
+        "rates": [
+          0.003,
+          0.01,
+          0.03
+        ],
+        "scope": "paper finite Newton-Schulz recipe; unguarded training can cycle"
+      },
+      {
+        "name": "muon_guarded",
+        "rates": [
+          0.1,
+          0.3,
+          1.0
+        ],
+        "scope": "formalized global direction safeguard"
+      },
+      {
+        "name": "dash_evd",
+        "rates": [
+          0.0003,
+          0.001,
+          0.003
+        ],
+        "scope": "exact regularized spectral inverse-root specification"
+      },
+      {
+        "name": "dash_ndb",
+        "rates": [
+          0.0003,
+          0.001,
+          0.003
+        ],
+        "scope": "corrected finite chained NDB solver"
+      },
+      {
+        "name": "dash_cn",
+        "rates": [
+          0.0003,
+          0.001,
+          0.003
+        ],
+        "scope": "corrected finite fourth-root coupled Newton solver"
+      },
+      {
+        "name": "dash_chebyshev",
+        "rates": [
+          0.0003,
+          0.001,
+          0.003
+        ],
+        "scope": "corrected cosine fit, sample guard and Clenshaw scaling"
+      },
+      {
+        "name": "dash_ndb_guarded",
+        "rates": [
+          0.1,
+          0.3,
+          1.0
+        ],
+        "scope": "finite NDB/grafting with formalized global training safeguard"
+      },
+      {
+        "name": "adafisher",
+        "rates": [
+          1e-05,
+          0.0001,
+          0.001
+        ],
+        "scope": "corrected factors, bias correction and deterministic convergence"
+      },
+      {
+        "name": "adafisherw",
+        "rates": [
+          1e-05,
+          0.0001,
+          0.001
+        ],
+        "scope": "formalized decoupled-decay update; general convergence not proved"
+      }
+    ],
+    "data_sha256": "53493bf304b639aba6a47400da75c58ce32372b378fd2cd9d16ee987aeb12e4e",
+    "data_boundaries": [
+      1003853,
+      1059623,
+      1115393
+    ],
+    "characters": "\n !$&',-.3:;?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+    "source_hashes": {
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/__init__.py": "350183f29d81e839357d0299c03b16a9bf715077096e02dcb974c1c3f52ae82e",
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/attention.py": "6882c25343074fabced1fb009206abd92a97e227d5567afb814a55b5a23e0701",
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/common.py": "b3d57ccafe3350631acc31ac000d3b55627d2ed8c4c87b1c30173cfe66fa834d",
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/coordinate.py": "4446687f796f85090acb7ac37834f5c7e31a11f34912cc08ffa28c81683dc85f",
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/data.py": "b497162a9831c390956fd417fccad642cb19276b7f91d3143c1db98f116059f1",
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/fisher.py": "d5b3d5a676955e98a4406543d5a1cceabfa4ba304fe49993d09d46eccad7fece",
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/matrix.py": "3c39943d1486460c1f5a798456ba02ec40245bbfb5645654be20ad5a9831b21e",
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/registry.py": "c98eedcdd130580dcfab4114478e4b41bc5e59d8aec1f77e0639202cb3fc8264",
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/report.py": "d16bd30b8b975db12c63f6d2a92f7e8a016d52330e831169f597048b5e0a6a3c",
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/roots.py": "bd3d428e961a7bdfab0ea66d70880d2d34de2c1f1ac39373ac66e3212f893ce6",
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/runner.py": "e91dca59ebab31dbc881afe9e3cce6dee78a5cf2d07872d2d38e12f54152a7e9",
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/storage.py": "c3e4f4c3c932d142bd4e517c50fa2af6ed780fef2a4c83367238078654a1b7eb",
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/tests/__init__.py": "cc0b4384f9fbca36b47d789ba0273e564298ad142af79663c2be4261ffc40203",
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/tests/test_coordinate.py": "3037c882871cc7f25ca05c2dd31850f9c94512005652f46f51e95cc07a8a49e2",
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/tests/test_fisher.py": "3e03b5a81728e13672355c5c27b2e64d00d4ae0795f27722eb9db4643c0a31a8",
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/tests/test_matrix.py": "14af5d6db15b022dc46b0ea77a5814a6d544abdb60be820af140fdbba8a01b92",
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/tests/test_protocol.py": "9dbfddedbcf033b1d9289b4a50db4c34e9033038a54a1099250b6af4578c7065",
+      "/home/misha/lean_projects/transformer/experiments/optimizer_benchmark/tests/test_storage.py": "1dd44bae1153895e968dab2f6de00bb7ff5da9306aab5d813ce0aa711ec64a25",
+      "experiments/gpt_mini.py": "7df779bcdc019a6054ed7a6b93469b821b8dec9fc96d84a1420ec387d28f5ee4"
+    },
+    "initialization": "Normal(0,0.02) unique matrices",
+    "dtype": "float32",
+    "tf32": false,
+    "deterministic_algorithms": true
+  },
+  "protocol_sha256": "fc869c251fd27756f74ac20ed501811b8ea34cc8effa85fe90bb47afe730535a",
+  "tests": {
+    "tests": 38,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "log_sha256": "a671cc5ea980f4fa7c2906585a3e855050153db51d77a24f739672113dd01d3f"
+  },
+  "environment": {
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "gpu_total_bytes": 3952934912,
+    "torch": "2.14.0+cu130",
+    "cuda": "13.0",
+    "python": "3.14.7",
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "git_head": "394772bbac526db9bf0587c2654e7e75fcd0faca"
+  },
+  "created_utc": "2026-09-30T22:45:30.520531+00:00"
+}

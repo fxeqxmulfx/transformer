@@ -1,0 +1,11 @@
+{
+  "baseline": {
+    "directory": "experiments/optimizer_benchmark/results/rtx3050",
+    "raw_sha256": "01b42cb9e0e42c2ac04173d9c2c723eb75c2bf8cd4e7c9a7654ab19fb74f6f47",
+    "protocol_sha256": "566657d26031eb933ac6f3ea1897691c4077ce77e03f37956f39760d72b8e801",
+    "metadata_sha256": "28c5fdd4fdac472d35d3469ca14223523f8c6eb6a8843efee6b03457e29de4a4"
+  },
+  "followup_protocol_sha256": "c2aab044822615d425c60681dcb33ebe24e6a82192dd578f46a84263bc090992",
+  "followup_raw": "experiments/magma_benchmark/results/rtx3050/runs.jsonl",
+  "note": "Old rows retain original session timing; no measured source was edited."
+}

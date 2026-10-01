@@ -1,0 +1,114 @@
+{
+  "status": "ok",
+  "raw_runs": 216,
+  "screen_runs": 108,
+  "final_runs": 108,
+  "complete_attention_method_groups": 36,
+  "failed_runs": 0,
+  "unique_trainable_parameters": 401544,
+  "checks": [
+    "source/data/protocol hashes",
+    "unique run IDs",
+    "complete budgets and seeds",
+    "identical initial weights and batches",
+    "validation-only LR selection",
+    "test separation",
+    "independent means and sample SD",
+    "CSV agreement",
+    "36 retained seed-0 checkpoints",
+    "41 pre-training CPU/CUDA tests"
+  ],
+  "protocol_sha256": "566657d26031eb933ac6f3ea1897691c4077ce77e03f37956f39760d72b8e801",
+  "driver_source_sha256": "921151e9e69d02035b8878eb5ef6cd2743306ec0512aa22dba9efa829eb62e0e",
+  "raw_sha256": "01b42cb9e0e42c2ac04173d9c2c723eb75c2bf8cd4e7c9a7654ab19fb74f6f47",
+  "training_seconds_total": 2529.0766508222696,
+  "peak_memory_mib": 232.76171875,
+  "winners": {
+    "softmax": {
+      "attention": "softmax",
+      "method": "adamw",
+      "lr": 0.001,
+      "successful_seeds": 3,
+      "expected_seeds": 3,
+      "complete": true,
+      "test_loss_mean": 1.7601256226380118,
+      "test_loss_std": 0.013410071906957708,
+      "test_ppl": 5.8131676139864465,
+      "validation_loss_mean": 1.6664583576259329,
+      "train_seconds_mean": 8.246693604036409,
+      "optimizer_ms_mean": 1.006702026506265,
+      "peak_memory_mib": 144.9111328125,
+      "guard_acceptance_mean": null
+    },
+    "sparsemax": {
+      "attention": "sparsemax",
+      "method": "adamw",
+      "lr": 0.001,
+      "successful_seeds": 3,
+      "expected_seeds": 3,
+      "complete": true,
+      "test_loss_mean": 1.7899338101410016,
+      "test_loss_std": 0.006315197904298488,
+      "test_ppl": 5.989056038488783,
+      "validation_loss_mean": 1.6848473415674035,
+      "train_seconds_mean": 9.632265195653114,
+      "optimizer_ms_mean": 0.8992252163092295,
+      "peak_memory_mib": 145.42919921875,
+      "guard_acceptance_mean": null
+    }
+  },
+  "post_run_parameter_group_audit": {
+    "status": "ok",
+    "tests": 4,
+    "artifact": "parameter_group_audit.json"
+  },
+  "checkpoint_validation": {
+    "status": "ok",
+    "winners": [
+      {
+        "attention": "softmax",
+        "method": "adamw",
+        "seed": 0,
+        "recorded_test_loss": 1.763584701941016,
+        "reloaded_test_loss": 1.763584701941016,
+        "checkpoint": "experiments/runs/optimizer_benchmark/rtx3050/softmax_adamw_seed0.pt",
+        "checkpoint_sha256": "bea5cff480e949b4cda6d5f9a197b23c881079688ccd9f546c341a5505c7a9ce"
+      },
+      {
+        "attention": "sparsemax",
+        "method": "adamw",
+        "seed": 0,
+        "recorded_test_loss": 1.7937966137611223,
+        "reloaded_test_loss": 1.7937966137611223,
+        "checkpoint": "experiments/runs/optimizer_benchmark/rtx3050/sparsemax_adamw_seed0.pt",
+        "checkpoint_sha256": "3e19056ce1831585d16066c353fc2e3db7b041ec499baddf62fbb6d35fa25f73"
+      }
+    ],
+    "guarded_gradient_fallback_checks": [
+      {
+        "attention": "softmax",
+        "method": "muon_guarded",
+        "seed": 0,
+        "identical_to_sgd": true
+      },
+      {
+        "attention": "softmax",
+        "method": "dash_ndb_guarded",
+        "seed": 0,
+        "identical_to_sgd": true
+      },
+      {
+        "attention": "sparsemax",
+        "method": "muon_guarded",
+        "seed": 0,
+        "identical_to_sgd": true
+      },
+      {
+        "attention": "sparsemax",
+        "method": "dash_ndb_guarded",
+        "seed": 0,
+        "identical_to_sgd": true
+      }
+    ]
+  }
+}

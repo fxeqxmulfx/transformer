@@ -1,0 +1,230 @@
+[
+  {
+    "attention": "softmax",
+    "method": "adamw",
+    "compiled": false,
+    "mode": "eager",
+    "measured_steps": 200,
+    "warmup_steps": 20,
+    "cold_first_step_seconds": 0.6143612250016304,
+    "warmed_ms_per_step": 9.455001695023384,
+    "first_loss": 4.2182512283325195,
+    "final_train_loss": 1.8904756307601929,
+    "peak_memory_mib": 143.97607421875,
+    "cuda_graphs": null,
+    "compile_settings": null
+  },
+  {
+    "attention": "softmax",
+    "method": "adamw",
+    "compiled": true,
+    "mode": "reduce-overhead",
+    "measured_steps": 200,
+    "warmup_steps": 20,
+    "cold_first_step_seconds": 10.84239337699546,
+    "warmed_ms_per_step": 4.6694780200050445,
+    "first_loss": 4.2182512283325195,
+    "final_train_loss": 1.890475869178772,
+    "peak_memory_mib": 95.78955078125,
+    "cuda_graphs": {
+      "recorded_graph_nodes": 2
+    },
+    "compile_settings": {
+      "backend": "inductor",
+      "mode": "reduce-overhead",
+      "fullgraph": true,
+      "dynamic": false,
+      "step_marked": true
+    }
+  },
+  {
+    "attention": "softmax",
+    "method": "magma_muon",
+    "compiled": false,
+    "mode": "eager",
+    "measured_steps": 200,
+    "warmup_steps": 20,
+    "cold_first_step_seconds": 0.025362832006067038,
+    "warmed_ms_per_step": 14.514589155005524,
+    "first_loss": 4.2182512283325195,
+    "final_train_loss": 1.7937428951263428,
+    "peak_memory_mib": 142.5283203125,
+    "cuda_graphs": null,
+    "compile_settings": null
+  },
+  {
+    "attention": "softmax",
+    "method": "magma_muon",
+    "compiled": true,
+    "mode": "reduce-overhead",
+    "measured_steps": 200,
+    "warmup_steps": 20,
+    "cold_first_step_seconds": 0.339391325993347,
+    "warmed_ms_per_step": 9.914411094941897,
+    "first_loss": 4.2182512283325195,
+    "final_train_loss": 1.7937384843826294,
+    "peak_memory_mib": 109.208984375,
+    "cuda_graphs": {
+      "recorded_graph_nodes": 4
+    },
+    "compile_settings": {
+      "backend": "inductor",
+      "mode": "reduce-overhead",
+      "fullgraph": true,
+      "dynamic": false,
+      "step_marked": true
+    }
+  },
+  {
+    "attention": "softmax",
+    "method": "adafisher",
+    "compiled": false,
+    "mode": "eager",
+    "measured_steps": 200,
+    "warmup_steps": 20,
+    "cold_first_step_seconds": 0.04248638899298385,
+    "warmed_ms_per_step": 12.35039520994178,
+    "first_loss": 4.2182512283325195,
+    "final_train_loss": 2.289153575897217,
+    "peak_memory_mib": 144.0185546875,
+    "cuda_graphs": null,
+    "compile_settings": null
+  },
+  {
+    "attention": "softmax",
+    "method": "adafisher",
+    "compiled": true,
+    "mode": "reduce-overhead",
+    "measured_steps": 200,
+    "warmup_steps": 20,
+    "cold_first_step_seconds": 6.991941308995592,
+    "warmed_ms_per_step": 11.690084020010545,
+    "first_loss": 4.2182512283325195,
+    "final_train_loss": 2.289153575897217,
+    "peak_memory_mib": 111.74951171875,
+    "cuda_graphs": {
+      "recorded_graph_nodes": 51
+    },
+    "compile_settings": {
+      "backend": "inductor",
+      "mode": "reduce-overhead",
+      "fullgraph": false,
+      "dynamic": false,
+      "step_marked": true
+    }
+  },
+  {
+    "attention": "sparsemax",
+    "method": "adamw",
+    "compiled": false,
+    "mode": "eager",
+    "measured_steps": 200,
+    "warmup_steps": 20,
+    "cold_first_step_seconds": 0.07249729199975263,
+    "warmed_ms_per_step": 9.95840435003629,
+    "first_loss": 4.200982570648193,
+    "final_train_loss": 1.932441234588623,
+    "peak_memory_mib": 149.1396484375,
+    "cuda_graphs": null,
+    "compile_settings": null
+  },
+  {
+    "attention": "sparsemax",
+    "method": "adamw",
+    "compiled": true,
+    "mode": "reduce-overhead",
+    "measured_steps": 200,
+    "warmup_steps": 20,
+    "cold_first_step_seconds": 7.177068938995944,
+    "warmed_ms_per_step": 4.912428354946314,
+    "first_loss": 4.200982570648193,
+    "final_train_loss": 1.9235913753509521,
+    "peak_memory_mib": 114.3212890625,
+    "cuda_graphs": {
+      "recorded_graph_nodes": 53
+    },
+    "compile_settings": {
+      "backend": "inductor",
+      "mode": "reduce-overhead",
+      "fullgraph": true,
+      "dynamic": false,
+      "step_marked": true
+    }
+  },
+  {
+    "attention": "sparsemax",
+    "method": "magma_muon",
+    "compiled": false,
+    "mode": "eager",
+    "measured_steps": 200,
+    "warmup_steps": 20,
+    "cold_first_step_seconds": 0.020330530998762697,
+    "warmed_ms_per_step": 16.807929315036745,
+    "first_loss": 4.200982570648193,
+    "final_train_loss": 1.850013256072998,
+    "peak_memory_mib": 147.69189453125,
+    "cuda_graphs": null,
+    "compile_settings": null
+  },
+  {
+    "attention": "sparsemax",
+    "method": "magma_muon",
+    "compiled": true,
+    "mode": "reduce-overhead",
+    "measured_steps": 200,
+    "warmup_steps": 20,
+    "cold_first_step_seconds": 1.9638465489988448,
+    "warmed_ms_per_step": 11.600036765012192,
+    "first_loss": 4.200982570648193,
+    "final_train_loss": 1.836317539215088,
+    "peak_memory_mib": 113.8544921875,
+    "cuda_graphs": {
+      "recorded_graph_nodes": 55
+    },
+    "compile_settings": {
+      "backend": "inductor",
+      "mode": "reduce-overhead",
+      "fullgraph": true,
+      "dynamic": false,
+      "step_marked": true
+    }
+  },
+  {
+    "attention": "sparsemax",
+    "method": "adafisher",
+    "compiled": false,
+    "mode": "eager",
+    "measured_steps": 200,
+    "warmup_steps": 20,
+    "cold_first_step_seconds": 0.0359646199940471,
+    "warmed_ms_per_step": 20.075800030026585,
+    "first_loss": 4.200982570648193,
+    "final_train_loss": 2.323610305786133,
+    "peak_memory_mib": 149.18212890625,
+    "cuda_graphs": null,
+    "compile_settings": null
+  },
+  {
+    "attention": "sparsemax",
+    "method": "adafisher",
+    "compiled": true,
+    "mode": "reduce-overhead",
+    "measured_steps": 200,
+    "warmup_steps": 20,
+    "cold_first_step_seconds": 20.541057935988647,
+    "warmed_ms_per_step": 13.890205009956844,
+    "first_loss": 4.200982570648193,
+    "final_train_loss": 2.3253064155578613,
+    "peak_memory_mib": 116.39501953125,
+    "cuda_graphs": {
+      "recorded_graph_nodes": 102
+    },
+    "compile_settings": {
+      "backend": "inductor",
+      "mode": "reduce-overhead",
+      "fullgraph": false,
+      "dynamic": false,
+      "step_marked": true
+    }
+  }
+]

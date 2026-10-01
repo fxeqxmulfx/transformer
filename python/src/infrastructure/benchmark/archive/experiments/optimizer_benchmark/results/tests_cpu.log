@@ -1,0 +1,46 @@
+test_adagrad_accumulated_gradient_formula (test_coordinate.CoordinateTests.test_adagrad_accumulated_gradient_formula) ... ok
+test_adamnc_second_moment_is_the_true_mean (test_coordinate.CoordinateTests.test_adamnc_second_moment_is_the_true_mean) ... ok
+test_adamw_agrees_with_independent_torch_implementation (test_coordinate.CoordinateTests.test_adamw_agrees_with_independent_torch_implementation) ... ok
+test_adamx_time_varying_momentum_changes_history (test_coordinate.CoordinateTests.test_adamx_time_varying_momentum_changes_history) ... ok
+test_amsgrad_retains_the_previous_maximum (test_coordinate.CoordinateTests.test_amsgrad_retains_the_previous_maximum) ... ok
+test_constant_adamx_equals_amsgrad (test_coordinate.CoordinateTests.test_constant_adamx_equals_amsgrad) ... ok
+test_sgd_actual_subtraction (test_coordinate.CoordinateTests.test_sgd_actual_subtraction) ... ok
+test_zero_gradient_does_not_create_nan (test_coordinate.CoordinateTests.test_zero_gradient_does_not_create_nan) ... ok
+test_duplicate_tied_parameters_are_rejected (test_coordinate.GuardTests.test_duplicate_tied_parameters_are_rejected) ... ok
+test_joint_norm_and_alignment (test_coordinate.GuardTests.test_joint_norm_and_alignment) ... ok
+test_rejection_keeps_updated_optimizer_state (test_coordinate.GuardTests.test_rejection_keeps_updated_optimizer_state) ... ok
+test_actual_fc_measurements_and_first_bias_corrected_update (test_fisher.FisherTests.test_actual_fc_measurements_and_first_bias_corrected_update) ... ok
+test_constant_factor_and_extreme_range_are_defined (test_fisher.FisherTests.test_constant_factor_and_extreme_range_are_defined) ... ok
+test_source_identity_fallback_leaves_damping (test_fisher.FisherTests.test_source_identity_fallback_leaves_damping) ... ok
+test_validation_does_not_overwrite_training_factors (test_fisher.FisherTests.test_validation_does_not_overwrite_training_factors) ... ok
+test_muon_zero_and_positive_scale_invariance (test_matrix.MatrixTests.test_muon_zero_and_positive_scale_invariance) ... ok
+test_residual_blocks_cover_every_parameter_and_vector (test_matrix.MatrixTests.test_residual_blocks_cover_every_parameter_and_vector) ... ok
+test_scalar_grafting_cancels_finite_positive_root (test_matrix.MatrixTests.test_scalar_grafting_cancels_finite_positive_root) ... ok
+test_actual_chebyshev_fit_targets_original_regularized_scale (test_matrix.RootTests.test_actual_chebyshev_fit_targets_original_regularized_scale) ... ok
+test_all_spectral_roots_match_closed_form (test_matrix.RootTests.test_all_spectral_roots_match_closed_form) ... ok
+test_batch_roots_preserve_independent_scaling (test_matrix.RootTests.test_batch_roots_preserve_independent_scaling) ... ok
+test_increasing_solver_budget_reduces_inverse_residual (test_matrix.RootTests.test_increasing_solver_budget_reduces_inverse_residual) ... ok
+test_missed_top_eigenvalue_triggers_safe_scale (test_matrix.RootTests.test_missed_top_eigenvalue_triggers_safe_scale) ... ok
+test_root_output_rescaling (test_matrix.RootTests.test_root_output_rescaling) ... ok
+test_sample_guard_and_polynomial_reproduction (test_matrix.RootTests.test_sample_guard_and_polynomial_reproduction) ... ok
+test_actual_models_ignore_future_tokens (test_protocol.AttentionTests.test_actual_models_ignore_future_tokens) ... ok
+test_causal_mask_and_nonempty_domain (test_protocol.AttentionTests.test_causal_mask_and_nonempty_domain) ... ok
+test_models_have_identical_initial_weights_and_tying (test_protocol.AttentionTests.test_models_have_identical_initial_weights_and_tying) ... ok
+test_sparsemax_gradient_matches_finite_differences (test_protocol.AttentionTests.test_sparsemax_gradient_matches_finite_differences) ... ok
+test_sparsemax_large_translation_preserves_unit_mass (test_protocol.AttentionTests.test_sparsemax_large_translation_preserves_unit_mass) ... ok
+test_sparsemax_nonfinite_scores_signal_numerical_failure (test_protocol.AttentionTests.test_sparsemax_nonfinite_scores_signal_numerical_failure) ... ok
+test_sparsemax_solves_simplex_projection (test_protocol.AttentionTests.test_sparsemax_solves_simplex_projection) ... ok
+test_disjoint_splits_and_next_token_boundaries (test_protocol.ProtocolTests.test_disjoint_splits_and_next_token_boundaries) ... ok
+test_every_method_has_the_same_tuning_budget (test_protocol.ProtocolTests.test_every_method_has_the_same_tuning_budget) ... ok
+test_every_optimizer_on_both_actual_models_cpu (test_protocol.ProtocolTests.test_every_optimizer_on_both_actual_models_cpu) ... ok
+test_every_optimizer_on_both_actual_models_cuda (test_protocol.ProtocolTests.test_every_optimizer_on_both_actual_models_cuda) ... skipped 'CUDA smoke is an explicit second phase'
+test_frozen_minibatch_plan (test_protocol.ProtocolTests.test_frozen_minibatch_plan) ... ok
+test_nonfinite_evaluation_is_rejected_before_persistence (test_protocol.ProtocolTests.test_nonfinite_evaluation_is_rejected_before_persistence) ... ok
+test_test_loss_cannot_select_a_learning_rate (test_protocol.ProtocolTests.test_test_loss_cannot_select_a_learning_rate) ... ok
+test_json_roundtrip_and_nonfinite_rejection (test_storage.StorageTests.test_json_roundtrip_and_nonfinite_rejection) ... ok
+test_only_complete_three_seed_methods_can_win (test_storage.StorageTests.test_only_complete_three_seed_methods_can_win) ... ok
+
+----------------------------------------------------------------------
+Ran 41 tests in 1.108s
+
+OK (skipped=1)

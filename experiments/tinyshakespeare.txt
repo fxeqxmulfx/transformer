@@ -1,0 +1,1 @@
+../python/src/infrastructure/benchmark/data/tinyshakespeare.txt

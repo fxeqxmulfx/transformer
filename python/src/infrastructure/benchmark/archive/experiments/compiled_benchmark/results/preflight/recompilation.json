@@ -1,0 +1,752 @@
+[
+  {
+    "attention": "softmax",
+    "method": "adamw",
+    "warmup_20": {
+      "unique_fx_graphs": 1,
+      "traced_calls": 133,
+      "dynamo_frames": {},
+      "graph_breaks": {},
+      "recorded_graph_nodes": 2
+    },
+    "train_200_after_warmup": {
+      "unique_fx_graphs": 1,
+      "traced_calls": 133,
+      "dynamo_frames": {},
+      "graph_breaks": {},
+      "recorded_graph_nodes": 2
+    },
+    "first_validation": {
+      "unique_fx_graphs": 3,
+      "traced_calls": 399,
+      "dynamo_frames": {},
+      "graph_breaks": {},
+      "recorded_graph_nodes": 3
+    },
+    "cycles": [
+      {
+        "cycle": 2,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 399,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 3
+        },
+        "after_validation": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 399,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        }
+      },
+      {
+        "cycle": 3,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 399,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        },
+        "after_validation": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 399,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        }
+      },
+      {
+        "cycle": 4,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 399,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        },
+        "after_validation": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 399,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        }
+      },
+      {
+        "cycle": 5,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 399,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        },
+        "after_validation": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 399,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        }
+      }
+    ],
+    "final": {
+      "unique_fx_graphs": 3,
+      "traced_calls": 399,
+      "dynamo_frames": {},
+      "graph_breaks": {},
+      "recorded_graph_nodes": 4
+    },
+    "steady_no_new_traces": true,
+    "steady_no_new_graph_records": true,
+    "steady_no_new_traces_or_graph_records": true
+  },
+  {
+    "attention": "softmax",
+    "method": "magma_muon",
+    "warmup_20": {
+      "unique_fx_graphs": 1,
+      "traced_calls": 133,
+      "dynamo_frames": {},
+      "graph_breaks": {},
+      "recorded_graph_nodes": 2
+    },
+    "train_200_after_warmup": {
+      "unique_fx_graphs": 1,
+      "traced_calls": 133,
+      "dynamo_frames": {},
+      "graph_breaks": {},
+      "recorded_graph_nodes": 2
+    },
+    "first_validation": {
+      "unique_fx_graphs": 3,
+      "traced_calls": 399,
+      "dynamo_frames": {},
+      "graph_breaks": {},
+      "recorded_graph_nodes": 3
+    },
+    "cycles": [
+      {
+        "cycle": 2,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 399,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 3
+        },
+        "after_validation": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 399,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        }
+      },
+      {
+        "cycle": 3,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 399,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        },
+        "after_validation": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 399,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        }
+      },
+      {
+        "cycle": 4,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 399,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        },
+        "after_validation": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 399,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        }
+      },
+      {
+        "cycle": 5,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 399,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        },
+        "after_validation": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 399,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        }
+      }
+    ],
+    "final": {
+      "unique_fx_graphs": 3,
+      "traced_calls": 399,
+      "dynamo_frames": {},
+      "graph_breaks": {},
+      "recorded_graph_nodes": 4
+    },
+    "steady_no_new_traces": true,
+    "steady_no_new_graph_records": true,
+    "steady_no_new_traces_or_graph_records": true
+  },
+  {
+    "attention": "softmax",
+    "method": "adafisher",
+    "warmup_20": {
+      "unique_fx_graphs": 16,
+      "traced_calls": 96,
+      "dynamo_frames": {
+        "total": 19,
+        "ok": 18
+      },
+      "graph_breaks": {
+        "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+      },
+      "recorded_graph_nodes": 47
+    },
+    "train_200_after_warmup": {
+      "unique_fx_graphs": 16,
+      "traced_calls": 96,
+      "dynamo_frames": {
+        "total": 19,
+        "ok": 18
+      },
+      "graph_breaks": {
+        "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+      },
+      "recorded_graph_nodes": 47
+    },
+    "first_validation": {
+      "unique_fx_graphs": 22,
+      "traced_calls": 228,
+      "dynamo_frames": {
+        "total": 26,
+        "ok": 25
+      },
+      "graph_breaks": {
+        "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+      },
+      "recorded_graph_nodes": 51
+    },
+    "cycles": [
+      {
+        "cycle": 2,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 22,
+          "traced_calls": 228,
+          "dynamo_frames": {
+            "total": 26,
+            "ok": 25
+          },
+          "graph_breaks": {
+            "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+          },
+          "recorded_graph_nodes": 87
+        },
+        "after_validation": {
+          "unique_fx_graphs": 22,
+          "traced_calls": 228,
+          "dynamo_frames": {
+            "total": 26,
+            "ok": 25
+          },
+          "graph_breaks": {
+            "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+          },
+          "recorded_graph_nodes": 91
+        }
+      },
+      {
+        "cycle": 3,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 22,
+          "traced_calls": 228,
+          "dynamo_frames": {
+            "total": 26,
+            "ok": 25
+          },
+          "graph_breaks": {
+            "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+          },
+          "recorded_graph_nodes": 91
+        },
+        "after_validation": {
+          "unique_fx_graphs": 22,
+          "traced_calls": 228,
+          "dynamo_frames": {
+            "total": 26,
+            "ok": 25
+          },
+          "graph_breaks": {
+            "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+          },
+          "recorded_graph_nodes": 91
+        }
+      },
+      {
+        "cycle": 4,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 22,
+          "traced_calls": 228,
+          "dynamo_frames": {
+            "total": 26,
+            "ok": 25
+          },
+          "graph_breaks": {
+            "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+          },
+          "recorded_graph_nodes": 91
+        },
+        "after_validation": {
+          "unique_fx_graphs": 22,
+          "traced_calls": 228,
+          "dynamo_frames": {
+            "total": 26,
+            "ok": 25
+          },
+          "graph_breaks": {
+            "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+          },
+          "recorded_graph_nodes": 91
+        }
+      },
+      {
+        "cycle": 5,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 22,
+          "traced_calls": 228,
+          "dynamo_frames": {
+            "total": 26,
+            "ok": 25
+          },
+          "graph_breaks": {
+            "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+          },
+          "recorded_graph_nodes": 91
+        },
+        "after_validation": {
+          "unique_fx_graphs": 22,
+          "traced_calls": 228,
+          "dynamo_frames": {
+            "total": 26,
+            "ok": 25
+          },
+          "graph_breaks": {
+            "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+          },
+          "recorded_graph_nodes": 91
+        }
+      }
+    ],
+    "final": {
+      "unique_fx_graphs": 22,
+      "traced_calls": 228,
+      "dynamo_frames": {
+        "total": 26,
+        "ok": 25
+      },
+      "graph_breaks": {
+        "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+      },
+      "recorded_graph_nodes": 91
+    },
+    "steady_no_new_traces": true,
+    "steady_no_new_graph_records": true,
+    "steady_no_new_traces_or_graph_records": true
+  },
+  {
+    "attention": "sparsemax",
+    "method": "adamw",
+    "warmup_20": {
+      "unique_fx_graphs": 1,
+      "traced_calls": 135,
+      "dynamo_frames": {},
+      "graph_breaks": {},
+      "recorded_graph_nodes": 2
+    },
+    "train_200_after_warmup": {
+      "unique_fx_graphs": 1,
+      "traced_calls": 135,
+      "dynamo_frames": {},
+      "graph_breaks": {},
+      "recorded_graph_nodes": 2
+    },
+    "first_validation": {
+      "unique_fx_graphs": 3,
+      "traced_calls": 489,
+      "dynamo_frames": {},
+      "graph_breaks": {},
+      "recorded_graph_nodes": 3
+    },
+    "cycles": [
+      {
+        "cycle": 2,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 489,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 3
+        },
+        "after_validation": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 489,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        }
+      },
+      {
+        "cycle": 3,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 489,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        },
+        "after_validation": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 489,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        }
+      },
+      {
+        "cycle": 4,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 489,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        },
+        "after_validation": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 489,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        }
+      },
+      {
+        "cycle": 5,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 489,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        },
+        "after_validation": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 489,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        }
+      }
+    ],
+    "final": {
+      "unique_fx_graphs": 3,
+      "traced_calls": 489,
+      "dynamo_frames": {},
+      "graph_breaks": {},
+      "recorded_graph_nodes": 4
+    },
+    "steady_no_new_traces": true,
+    "steady_no_new_graph_records": true,
+    "steady_no_new_traces_or_graph_records": true
+  },
+  {
+    "attention": "sparsemax",
+    "method": "magma_muon",
+    "warmup_20": {
+      "unique_fx_graphs": 1,
+      "traced_calls": 135,
+      "dynamo_frames": {},
+      "graph_breaks": {},
+      "recorded_graph_nodes": 2
+    },
+    "train_200_after_warmup": {
+      "unique_fx_graphs": 1,
+      "traced_calls": 135,
+      "dynamo_frames": {},
+      "graph_breaks": {},
+      "recorded_graph_nodes": 2
+    },
+    "first_validation": {
+      "unique_fx_graphs": 3,
+      "traced_calls": 489,
+      "dynamo_frames": {},
+      "graph_breaks": {},
+      "recorded_graph_nodes": 3
+    },
+    "cycles": [
+      {
+        "cycle": 2,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 489,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 3
+        },
+        "after_validation": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 489,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        }
+      },
+      {
+        "cycle": 3,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 489,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        },
+        "after_validation": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 489,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        }
+      },
+      {
+        "cycle": 4,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 489,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        },
+        "after_validation": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 489,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        }
+      },
+      {
+        "cycle": 5,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 489,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        },
+        "after_validation": {
+          "unique_fx_graphs": 3,
+          "traced_calls": 489,
+          "dynamo_frames": {},
+          "graph_breaks": {},
+          "recorded_graph_nodes": 4
+        }
+      }
+    ],
+    "final": {
+      "unique_fx_graphs": 3,
+      "traced_calls": 489,
+      "dynamo_frames": {},
+      "graph_breaks": {},
+      "recorded_graph_nodes": 4
+    },
+    "steady_no_new_traces": true,
+    "steady_no_new_graph_records": true,
+    "steady_no_new_traces_or_graph_records": true
+  },
+  {
+    "attention": "sparsemax",
+    "method": "adafisher",
+    "warmup_20": {
+      "unique_fx_graphs": 16,
+      "traced_calls": 97,
+      "dynamo_frames": {
+        "total": 19,
+        "ok": 18
+      },
+      "graph_breaks": {
+        "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+      },
+      "recorded_graph_nodes": 47
+    },
+    "train_200_after_warmup": {
+      "unique_fx_graphs": 16,
+      "traced_calls": 97,
+      "dynamo_frames": {
+        "total": 19,
+        "ok": 18
+      },
+      "graph_breaks": {
+        "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+      },
+      "recorded_graph_nodes": 47
+    },
+    "first_validation": {
+      "unique_fx_graphs": 22,
+      "traced_calls": 273,
+      "dynamo_frames": {
+        "total": 26,
+        "ok": 25
+      },
+      "graph_breaks": {
+        "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+      },
+      "recorded_graph_nodes": 51
+    },
+    "cycles": [
+      {
+        "cycle": 2,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 22,
+          "traced_calls": 273,
+          "dynamo_frames": {
+            "total": 26,
+            "ok": 25
+          },
+          "graph_breaks": {
+            "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+          },
+          "recorded_graph_nodes": 87
+        },
+        "after_validation": {
+          "unique_fx_graphs": 22,
+          "traced_calls": 273,
+          "dynamo_frames": {
+            "total": 26,
+            "ok": 25
+          },
+          "graph_breaks": {
+            "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+          },
+          "recorded_graph_nodes": 91
+        }
+      },
+      {
+        "cycle": 3,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 22,
+          "traced_calls": 273,
+          "dynamo_frames": {
+            "total": 26,
+            "ok": 25
+          },
+          "graph_breaks": {
+            "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+          },
+          "recorded_graph_nodes": 91
+        },
+        "after_validation": {
+          "unique_fx_graphs": 22,
+          "traced_calls": 273,
+          "dynamo_frames": {
+            "total": 26,
+            "ok": 25
+          },
+          "graph_breaks": {
+            "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+          },
+          "recorded_graph_nodes": 91
+        }
+      },
+      {
+        "cycle": 4,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 22,
+          "traced_calls": 273,
+          "dynamo_frames": {
+            "total": 26,
+            "ok": 25
+          },
+          "graph_breaks": {
+            "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+          },
+          "recorded_graph_nodes": 91
+        },
+        "after_validation": {
+          "unique_fx_graphs": 22,
+          "traced_calls": 273,
+          "dynamo_frames": {
+            "total": 26,
+            "ok": 25
+          },
+          "graph_breaks": {
+            "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+          },
+          "recorded_graph_nodes": 91
+        }
+      },
+      {
+        "cycle": 5,
+        "after_250_train_steps": {
+          "unique_fx_graphs": 22,
+          "traced_calls": 273,
+          "dynamo_frames": {
+            "total": 26,
+            "ok": 25
+          },
+          "graph_breaks": {
+            "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+          },
+          "recorded_graph_nodes": 91
+        },
+        "after_validation": {
+          "unique_fx_graphs": 22,
+          "traced_calls": 273,
+          "dynamo_frames": {
+            "total": 26,
+            "ok": 25
+          },
+          "graph_breaks": {
+            "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+          },
+          "recorded_graph_nodes": 91
+        }
+      }
+    ],
+    "final": {
+      "unique_fx_graphs": 22,
+      "traced_calls": 273,
+      "dynamo_frames": {
+        "total": 26,
+        "ok": 25
+      },
+      "graph_breaks": {
+        "HOP: Unsafe side effect\n  Explanation: Mutating a variable from outside the scope of this HOP is not supported.\n  Hint: If the HOP is activation checkpointing (torch.utils.checkpoint.checkpoint), this points to a side effect in forward method. Eager activation checkpointing replays that side-effect while recomputing the forward in the backward. If you are ok with side-effect not replayed in the backward, try setting `torch._dynamo.config.skip_fwd_side_effects_in_bwd_under_checkpoint = True`\n\n  Developer debug context: Attempted to mutate ConstDictVariable()\n\n For more details about this graph break, please visit: https://meta-pytorch.github.io/compile-graph-break-site/gb/gb0067.html": 6
+      },
+      "recorded_graph_nodes": 91
+    },
+    "steady_no_new_traces": true,
+    "steady_no_new_graph_records": true,
+    "steady_no_new_traces_or_graph_records": true
+  }
+]

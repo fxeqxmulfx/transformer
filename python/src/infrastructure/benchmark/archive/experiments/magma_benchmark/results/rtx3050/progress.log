@@ -1,0 +1,159 @@
+2026-10-01T08:08:09+00:00 All 60 CPU/CUDA tests passed before training
+2026-10-01T08:08:10+00:00 calibration softmax rmsprop: ok, 143 MiB, 9.2 ms/step
+2026-10-01T08:08:10+00:00 calibration softmax magma_rmsprop: ok, 143 MiB, 9.7 ms/step
+2026-10-01T08:08:10+00:00 calibration softmax magma_adam: ok, 145 MiB, 9.8 ms/step
+2026-10-01T08:08:11+00:00 calibration softmax magma_adamw: ok, 145 MiB, 10.4 ms/step
+2026-10-01T08:08:11+00:00 calibration softmax magma_muon: ok, 142 MiB, 15.7 ms/step
+2026-10-01T08:08:11+00:00 calibration softmax magma_sgd: ok, 146 MiB, 9.7 ms/step
+2026-10-01T08:08:11+00:00 calibration sparsemax rmsprop: ok, 144 MiB, 9.2 ms/step
+2026-10-01T08:08:12+00:00 calibration sparsemax magma_rmsprop: ok, 144 MiB, 11.7 ms/step
+2026-10-01T08:08:12+00:00 calibration sparsemax magma_adam: ok, 145 MiB, 11.8 ms/step
+2026-10-01T08:08:12+00:00 calibration sparsemax magma_adamw: ok, 145 MiB, 11.9 ms/step
+2026-10-01T08:08:12+00:00 calibration sparsemax magma_muon: ok, 142 MiB, 16.2 ms/step
+2026-10-01T08:08:13+00:00 calibration sparsemax magma_sgd: ok, 147 MiB, 11.1 ms/step
+2026-10-01T08:09:25+00:00 All 60 CPU/CUDA tests passed before training
+2026-10-01T08:09:26+00:00 screen 1/36 START sparsemax magma_sgd lr=0.1 seed=0
+2026-10-01T08:09:29+00:00 screen 1/36 END sparsemax magma_sgd: ok, val=2.3030656886839838, train=2.9s
+2026-10-01T08:09:29+00:00 screen 2/36 START sparsemax rmsprop lr=0.0003 seed=0
+2026-10-01T08:09:31+00:00 screen 2/36 END sparsemax rmsprop: ok, val=2.05524935979657, train=2.3s
+2026-10-01T08:09:31+00:00 screen 3/36 START sparsemax magma_sgd lr=1 seed=0
+2026-10-01T08:09:34+00:00 screen 3/36 END sparsemax magma_sgd: ok, val=22.451860289896672, train=2.6s
+2026-10-01T08:09:34+00:00 screen 4/36 START softmax magma_adam lr=0.009 seed=0
+2026-10-01T08:09:37+00:00 screen 4/36 END softmax magma_adam: ok, val=2.2923190163963834, train=2.4s
+2026-10-01T08:09:37+00:00 screen 5/36 START sparsemax magma_muon lr=0.01 seed=0
+2026-10-01T08:09:41+00:00 screen 5/36 END sparsemax magma_muon: ok, val=1.9609491324178387, train=3.9s
+2026-10-01T08:09:41+00:00 screen 6/36 START sparsemax rmsprop lr=0.0001 seed=0
+2026-10-01T08:09:44+00:00 screen 6/36 END sparsemax rmsprop: ok, val=2.0553135483191016, train=2.4s
+2026-10-01T08:09:44+00:00 screen 7/36 START softmax magma_adam lr=0.003 seed=0
+2026-10-01T08:09:47+00:00 screen 7/36 END softmax magma_adam: ok, val=2.020257084843212, train=2.4s
+2026-10-01T08:09:47+00:00 screen 8/36 START softmax magma_rmsprop lr=0.0003 seed=0
+2026-10-01T08:09:49+00:00 screen 8/36 END softmax magma_rmsprop: ok, val=2.0293157951976895, train=2.5s
+2026-10-01T08:09:49+00:00 screen 9/36 START sparsemax rmsprop lr=0.001 seed=0
+2026-10-01T08:09:52+00:00 screen 9/36 END sparsemax rmsprop: ok, val=2.198637269257678, train=2.4s
+2026-10-01T08:09:52+00:00 screen 10/36 START sparsemax magma_rmsprop lr=0.003 seed=0
+2026-10-01T08:09:55+00:00 screen 10/36 END sparsemax magma_rmsprop: ok, val=2.4726481213224742, train=2.9s
+2026-10-01T08:09:55+00:00 screen 11/36 START sparsemax magma_rmsprop lr=0.001 seed=0
+2026-10-01T08:10:00+00:00 screen 11/36 END sparsemax magma_rmsprop: ok, val=2.1495769163497416, train=4.1s
+2026-10-01T08:10:00+00:00 screen 12/36 START softmax magma_muon lr=0.03 seed=0
+2026-10-01T08:10:04+00:00 screen 12/36 END softmax magma_muon: ok, val=1.8591521621161022, train=3.9s
+2026-10-01T08:10:04+00:00 screen 13/36 START sparsemax magma_muon lr=0.03 seed=0
+2026-10-01T08:10:09+00:00 screen 13/36 END sparsemax magma_muon: ok, val=1.915161973710175, train=4.3s
+2026-10-01T08:10:09+00:00 screen 14/36 START sparsemax magma_adam lr=0.003 seed=0
+2026-10-01T08:10:12+00:00 screen 14/36 END sparsemax magma_adam: ok, val=2.042979121071326, train=3.0s
+2026-10-01T08:10:12+00:00 screen 15/36 START sparsemax magma_adamw lr=0.003 seed=0
+2026-10-01T08:10:15+00:00 screen 15/36 END sparsemax magma_adamw: ok, val=1.9402936022262485, train=2.9s
+2026-10-01T08:10:15+00:00 screen 16/36 START softmax magma_muon lr=0.01 seed=0
+2026-10-01T08:10:19+00:00 screen 16/36 END softmax magma_muon: ok, val=1.8970528218283582, train=3.6s
+2026-10-01T08:10:19+00:00 screen 17/36 START sparsemax magma_adam lr=0.0009 seed=0
+2026-10-01T08:10:22+00:00 screen 17/36 END sparsemax magma_adam: ok, val=1.9743149206641073, train=2.7s
+2026-10-01T08:10:22+00:00 screen 18/36 START softmax magma_muon lr=0.1 seed=0
+2026-10-01T08:10:26+00:00 screen 18/36 END softmax magma_muon: ok, val=1.9067595839911022, train=3.7s
+2026-10-01T08:10:26+00:00 screen 19/36 START softmax rmsprop lr=0.0001 seed=0
+2026-10-01T08:10:28+00:00 screen 19/36 END softmax rmsprop: ok, val=2.0484142631942452, train=2.2s
+2026-10-01T08:10:28+00:00 screen 20/36 START softmax magma_sgd lr=0.1 seed=0
+2026-10-01T08:10:31+00:00 screen 20/36 END softmax magma_sgd: ok, val=2.2938564576456657, train=2.4s
+2026-10-01T08:10:31+00:00 screen 21/36 START softmax magma_sgd lr=1 seed=0
+2026-10-01T08:10:34+00:00 screen 21/36 END softmax magma_sgd: ok, val=59.48647836538461, train=2.4s
+2026-10-01T08:10:34+00:00 screen 22/36 START softmax magma_rmsprop lr=0.001 seed=0
+2026-10-01T08:10:36+00:00 screen 22/36 END softmax magma_rmsprop: ok, val=2.1752807757337114, train=2.3s
+2026-10-01T08:10:36+00:00 screen 23/36 START softmax magma_adam lr=0.0009 seed=0
+2026-10-01T08:10:39+00:00 screen 23/36 END softmax magma_adam: ok, val=1.9252795143871986, train=2.4s
+2026-10-01T08:10:39+00:00 screen 24/36 START sparsemax magma_sgd lr=0.3 seed=0
+2026-10-01T08:10:42+00:00 screen 24/36 END sparsemax magma_sgd: ok, val=2.17106899957843, train=2.7s
+2026-10-01T08:10:42+00:00 screen 25/36 START softmax magma_adamw lr=0.009 seed=0
+2026-10-01T08:10:45+00:00 screen 25/36 END softmax magma_adamw: ok, val=1.9447879200003588, train=2.6s
+2026-10-01T08:10:45+00:00 screen 26/36 START softmax magma_sgd lr=0.3 seed=0
+2026-10-01T08:10:47+00:00 screen 26/36 END softmax magma_sgd: ok, val=2.208107879323335, train=2.3s
+2026-10-01T08:10:47+00:00 screen 27/36 START softmax magma_adamw lr=0.0009 seed=0
+2026-10-01T08:10:50+00:00 screen 27/36 END softmax magma_adamw: ok, val=2.016331354047072, train=2.5s
+2026-10-01T08:10:50+00:00 screen 28/36 START sparsemax magma_adamw lr=0.0009 seed=0
+2026-10-01T08:10:53+00:00 screen 28/36 END sparsemax magma_adamw: ok, val=2.054081493075488, train=2.8s
+2026-10-01T08:10:53+00:00 screen 29/36 START softmax magma_rmsprop lr=0.003 seed=0
+2026-10-01T08:10:56+00:00 screen 29/36 END softmax magma_rmsprop: ok, val=2.496679855679535, train=2.4s
+2026-10-01T08:10:56+00:00 screen 30/36 START softmax rmsprop lr=0.0003 seed=0
+2026-10-01T08:10:58+00:00 screen 30/36 END softmax rmsprop: ok, val=2.0693747589426663, train=1.9s
+2026-10-01T08:10:58+00:00 screen 31/36 START sparsemax magma_rmsprop lr=0.0003 seed=0
+2026-10-01T08:11:01+00:00 screen 31/36 END sparsemax magma_rmsprop: ok, val=2.04208748923651, train=2.7s
+2026-10-01T08:11:01+00:00 screen 32/36 START softmax magma_adamw lr=0.003 seed=0
+2026-10-01T08:11:04+00:00 screen 32/36 END softmax magma_adamw: ok, val=1.9052700739092996, train=2.5s
+2026-10-01T08:11:04+00:00 screen 33/36 START sparsemax magma_adamw lr=0.009 seed=0
+2026-10-01T08:11:07+00:00 screen 33/36 END sparsemax magma_adamw: ok, val=1.9965908606755884, train=2.8s
+2026-10-01T08:11:07+00:00 screen 34/36 START sparsemax magma_muon lr=0.1 seed=0
+2026-10-01T08:11:11+00:00 screen 34/36 END sparsemax magma_muon: ok, val=1.9339130108173077, train=3.9s
+2026-10-01T08:11:11+00:00 screen 35/36 START sparsemax magma_adam lr=0.009 seed=0
+2026-10-01T08:11:14+00:00 screen 35/36 END sparsemax magma_adam: ok, val=2.376016084690729, train=2.7s
+2026-10-01T08:11:14+00:00 screen 36/36 START softmax rmsprop lr=0.001 seed=0
+2026-10-01T08:11:16+00:00 screen 36/36 END softmax rmsprop: ok, val=2.2504172253964554, train=2.1s
+2026-10-01T08:11:16+00:00 final 1/36 START sparsemax magma_adam lr=0.0009 seed=1
+2026-10-01T08:11:29+00:00 final 1/36 END sparsemax magma_adam: ok, val=1.6919846474508466, train=11.3s
+2026-10-01T08:11:29+00:00 final 2/36 START sparsemax magma_adamw lr=0.003 seed=1
+2026-10-01T08:11:41+00:00 final 2/36 END sparsemax magma_adamw: ok, val=1.675830582663605, train=11.5s
+2026-10-01T08:11:41+00:00 final 3/36 START sparsemax magma_rmsprop lr=0.0003 seed=1
+2026-10-01T08:11:53+00:00 final 3/36 END sparsemax magma_rmsprop: ok, val=1.808328586933123, train=11.4s
+2026-10-01T08:11:53+00:00 final 4/36 START softmax magma_muon lr=0.03 seed=0
+2026-10-01T08:12:08+00:00 final 4/36 END softmax magma_muon: ok, val=1.6370266586986941, train=14.2s
+2026-10-01T08:12:08+00:00 final 5/36 START sparsemax magma_muon lr=0.03 seed=1
+2026-10-01T08:12:24+00:00 final 5/36 END sparsemax magma_muon: ok, val=1.6791371324716562, train=15.7s
+2026-10-01T08:12:24+00:00 final 6/36 START softmax magma_adam lr=0.0009 seed=2
+2026-10-01T08:12:34+00:00 final 6/36 END softmax magma_adam: ok, val=1.6720727511032578, train=9.5s
+2026-10-01T08:12:34+00:00 final 7/36 START softmax rmsprop lr=0.0001 seed=2
+2026-10-01T08:12:43+00:00 final 7/36 END softmax rmsprop: ok, val=1.767181922045422, train=7.9s
+2026-10-01T08:12:43+00:00 final 8/36 START sparsemax magma_rmsprop lr=0.0003 seed=2
+2026-10-01T08:12:55+00:00 final 8/36 END sparsemax magma_rmsprop: ok, val=1.7962960419507032, train=11.3s
+2026-10-01T08:12:55+00:00 final 9/36 START sparsemax magma_muon lr=0.03 seed=2
+2026-10-01T08:13:12+00:00 final 9/36 END sparsemax magma_muon: ok, val=1.6941777085874712, train=16.2s
+2026-10-01T08:13:12+00:00 final 10/36 START softmax magma_adamw lr=0.003 seed=2
+2026-10-01T08:13:22+00:00 final 10/36 END softmax magma_adamw: ok, val=1.6626806248206085, train=10.0s
+2026-10-01T08:13:22+00:00 final 11/36 START sparsemax rmsprop lr=0.0003 seed=0
+2026-10-01T08:13:33+00:00 final 11/36 END sparsemax rmsprop: ok, val=1.7378544944298937, train=9.3s
+2026-10-01T08:13:33+00:00 final 12/36 START softmax magma_sgd lr=0.3 seed=1
+2026-10-01T08:13:42+00:00 final 12/36 END softmax magma_sgd: ok, val=1.8777291334044919, train=9.3s
+2026-10-01T08:13:42+00:00 final 13/36 START softmax magma_muon lr=0.03 seed=2
+2026-10-01T08:13:58+00:00 final 13/36 END softmax magma_muon: ok, val=1.644232030577282, train=14.7s
+2026-10-01T08:13:58+00:00 final 14/36 START sparsemax magma_muon lr=0.03 seed=0
+2026-10-01T08:14:14+00:00 final 14/36 END sparsemax magma_muon: ok, val=1.678452641764136, train=15.8s
+2026-10-01T08:14:14+00:00 final 15/36 START softmax rmsprop lr=0.0001 seed=1
+2026-10-01T08:14:23+00:00 final 15/36 END softmax rmsprop: ok, val=1.7705205661147387, train=8.0s
+2026-10-01T08:14:23+00:00 final 16/36 START sparsemax rmsprop lr=0.0003 seed=1
+2026-10-01T08:14:33+00:00 final 16/36 END sparsemax rmsprop: ok, val=1.7436631352701637, train=9.3s
+2026-10-01T08:14:33+00:00 final 17/36 START sparsemax magma_adam lr=0.0009 seed=0
+2026-10-01T08:14:45+00:00 final 17/36 END sparsemax magma_adam: ok, val=1.7059687757875288, train=10.9s
+2026-10-01T08:14:45+00:00 final 18/36 START sparsemax magma_adamw lr=0.003 seed=0
+2026-10-01T08:14:57+00:00 final 18/36 END sparsemax magma_adamw: ok, val=1.6794570940370264, train=11.6s
+2026-10-01T08:14:57+00:00 final 19/36 START sparsemax magma_adam lr=0.0009 seed=2
+2026-10-01T08:15:09+00:00 final 19/36 END sparsemax magma_adam: ok, val=1.7020450070859645, train=11.6s
+2026-10-01T08:15:09+00:00 final 20/36 START sparsemax magma_sgd lr=0.3 seed=0
+2026-10-01T08:15:22+00:00 final 20/36 END sparsemax magma_sgd: ok, val=1.8679307133951637, train=11.4s
+2026-10-01T08:15:22+00:00 final 21/36 START softmax magma_rmsprop lr=0.0003 seed=1
+2026-10-01T08:15:32+00:00 final 21/36 END softmax magma_rmsprop: ok, val=1.8107978829560132, train=9.5s
+2026-10-01T08:15:32+00:00 final 22/36 START softmax magma_rmsprop lr=0.0003 seed=2
+2026-10-01T08:15:42+00:00 final 22/36 END softmax magma_rmsprop: ok, val=1.804990223163031, train=9.5s
+2026-10-01T08:15:42+00:00 final 23/36 START softmax magma_adamw lr=0.003 seed=0
+2026-10-01T08:15:52+00:00 final 23/36 END softmax magma_adamw: ok, val=1.6617536752834385, train=10.0s
+2026-10-01T08:15:52+00:00 final 24/36 START softmax magma_sgd lr=0.3 seed=0
+2026-10-01T08:16:02+00:00 final 24/36 END softmax magma_sgd: ok, val=1.8623994286380596, train=9.4s
+2026-10-01T08:16:02+00:00 final 25/36 START sparsemax magma_adamw lr=0.003 seed=2
+2026-10-01T08:16:15+00:00 final 25/36 END sparsemax magma_adamw: ok, val=1.6807473113698335, train=11.8s
+2026-10-01T08:16:15+00:00 final 26/36 START softmax magma_adam lr=0.0009 seed=1
+2026-10-01T08:16:25+00:00 final 26/36 END softmax magma_adam: ok, val=1.655839081336108, train=9.8s
+2026-10-01T08:16:25+00:00 final 27/36 START sparsemax magma_rmsprop lr=0.0003 seed=0
+2026-10-01T08:16:37+00:00 final 27/36 END sparsemax magma_rmsprop: ok, val=1.791387301772388, train=11.0s
+2026-10-01T08:16:37+00:00 final 28/36 START softmax magma_rmsprop lr=0.0003 seed=0
+2026-10-01T08:16:48+00:00 final 28/36 END softmax magma_rmsprop: ok, val=1.7928447175929247, train=9.9s
+2026-10-01T08:16:48+00:00 final 29/36 START softmax magma_adamw lr=0.003 seed=1
+2026-10-01T08:16:58+00:00 final 29/36 END softmax magma_adamw: ok, val=1.6566725510817308, train=10.3s
+2026-10-01T08:16:58+00:00 final 30/36 START sparsemax magma_sgd lr=0.3 seed=1
+2026-10-01T08:17:11+00:00 final 30/36 END sparsemax magma_sgd: ok, val=1.869720984545422, train=11.4s
+2026-10-01T08:17:11+00:00 final 31/36 START softmax magma_adam lr=0.0009 seed=0
+2026-10-01T08:17:21+00:00 final 31/36 END softmax magma_adam: ok, val=1.6778508393279994, train=9.9s
+2026-10-01T08:17:21+00:00 final 32/36 START sparsemax magma_sgd lr=0.3 seed=2
+2026-10-01T08:17:33+00:00 final 32/36 END sparsemax magma_sgd: ok, val=1.8577105832017795, train=10.7s
+2026-10-01T08:17:33+00:00 final 33/36 START softmax magma_sgd lr=0.3 seed=2
+2026-10-01T08:17:42+00:00 final 33/36 END softmax magma_sgd: ok, val=1.8814058183391935, train=9.2s
+2026-10-01T08:17:42+00:00 final 34/36 START sparsemax rmsprop lr=0.0003 seed=2
+2026-10-01T08:17:52+00:00 final 34/36 END sparsemax rmsprop: ok, val=1.7290655720795063, train=9.2s
+2026-10-01T08:17:52+00:00 final 35/36 START softmax rmsprop lr=0.0001 seed=0
+2026-10-01T08:18:01+00:00 final 35/36 END softmax rmsprop: ok, val=1.7636979428279276, train=7.8s
+2026-10-01T08:18:01+00:00 final 36/36 START softmax magma_muon lr=0.03 seed=1
+2026-10-01T08:18:16+00:00 final 36/36 END softmax magma_muon: ok, val=1.6455256115007892, train=15.1s
+2026-10-01T08:18:18+00:00 COMPLETE: raw results, checkpoints, audits, and all-method rankings saved

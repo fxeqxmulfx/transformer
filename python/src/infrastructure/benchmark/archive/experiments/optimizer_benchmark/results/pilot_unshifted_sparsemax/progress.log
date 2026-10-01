@@ -1,0 +1,177 @@
+2026-09-30T22:45:30+00:00 All 38 CPU/CUDA tests passed
+2026-09-30T22:45:30+00:00 calibration softmax sgd: ok, 9.8 ms/step, 145 MiB
+2026-09-30T22:45:30+00:00 calibration softmax adagrad: ok, 7.9 ms/step, 145 MiB
+2026-09-30T22:45:31+00:00 calibration softmax adam: ok, 8.0 ms/step, 145 MiB
+2026-09-30T22:45:31+00:00 calibration softmax adamw: ok, 8.2 ms/step, 145 MiB
+2026-09-30T22:45:31+00:00 calibration softmax amsgrad: ok, 8.2 ms/step, 145 MiB
+2026-09-30T22:45:31+00:00 calibration softmax amsgrad_inverse: ok, 8.0 ms/step, 145 MiB
+2026-09-30T22:45:32+00:00 calibration softmax amsgrad_geometric: ok, 8.0 ms/step, 145 MiB
+2026-09-30T22:45:32+00:00 calibration softmax adamx: ok, 8.0 ms/step, 145 MiB
+2026-09-30T22:45:32+00:00 calibration softmax adamnc: ok, 7.8 ms/step, 145 MiB
+2026-09-30T22:45:32+00:00 calibration softmax muon: ok, 12.9 ms/step, 142 MiB
+2026-09-30T22:45:33+00:00 calibration softmax muon_guarded: ok, 14.0 ms/step, 142 MiB
+2026-09-30T22:45:33+00:00 calibration softmax dash_evd: ok, 52.5 ms/step, 233 MiB
+2026-09-30T22:45:34+00:00 calibration softmax dash_ndb: ok, 37.9 ms/step, 146 MiB
+2026-09-30T22:45:34+00:00 calibration softmax dash_cn: ok, 35.5 ms/step, 146 MiB
+2026-09-30T22:45:35+00:00 calibration softmax dash_chebyshev: ok, 66.1 ms/step, 146 MiB
+2026-09-30T22:45:36+00:00 calibration softmax dash_ndb_guarded: ok, 38.6 ms/step, 146 MiB
+2026-09-30T22:45:36+00:00 calibration softmax adafisher: ok, 12.1 ms/step, 142 MiB
+2026-09-30T22:45:37+00:00 calibration softmax adafisherw: ok, 12.2 ms/step, 142 MiB
+2026-09-30T22:45:37+00:00 calibration sparsemax sgd: ok, 9.3 ms/step, 145 MiB
+2026-09-30T22:45:37+00:00 calibration sparsemax adagrad: ok, 9.8 ms/step, 145 MiB
+2026-09-30T22:45:37+00:00 calibration sparsemax adam: ok, 10.0 ms/step, 145 MiB
+2026-09-30T22:45:37+00:00 calibration sparsemax adamw: ok, 10.2 ms/step, 145 MiB
+2026-09-30T22:45:38+00:00 calibration sparsemax amsgrad: ok, 9.9 ms/step, 145 MiB
+2026-09-30T22:45:38+00:00 calibration sparsemax amsgrad_inverse: ok, 9.9 ms/step, 145 MiB
+2026-09-30T22:45:38+00:00 calibration sparsemax amsgrad_geometric: ok, 10.0 ms/step, 145 MiB
+2026-09-30T22:45:38+00:00 calibration sparsemax adamx: ok, 9.9 ms/step, 145 MiB
+2026-09-30T22:45:39+00:00 calibration sparsemax adamnc: ok, 9.8 ms/step, 145 MiB
+2026-09-30T22:45:39+00:00 calibration sparsemax muon: ok, 14.7 ms/step, 142 MiB
+2026-09-30T22:45:39+00:00 calibration sparsemax muon_guarded: ok, 15.7 ms/step, 142 MiB
+2026-09-30T22:45:40+00:00 calibration sparsemax dash_evd: ok, 27.2 ms/step, 233 MiB
+2026-09-30T22:45:40+00:00 calibration sparsemax dash_ndb: ok, 38.9 ms/step, 147 MiB
+2026-09-30T22:45:41+00:00 calibration sparsemax dash_cn: ok, 36.6 ms/step, 147 MiB
+2026-09-30T22:45:42+00:00 calibration sparsemax dash_chebyshev: ok, 67.3 ms/step, 147 MiB
+2026-09-30T22:45:42+00:00 calibration sparsemax dash_ndb_guarded: ok, 40.0 ms/step, 147 MiB
+2026-09-30T22:45:43+00:00 calibration sparsemax adafisher: ok, 13.9 ms/step, 142 MiB
+2026-09-30T22:45:43+00:00 calibration sparsemax adafisherw: ok, 13.9 ms/step, 142 MiB
+2026-09-30T22:48:49+00:00 All 38 CPU/CUDA tests passed
+2026-09-30T22:48:49+00:00 screen 1/108 START softmax adamw lr=0.001 seed=0
+2026-09-30T22:48:52+00:00 screen 1/108 END softmax adamw: ok, val=1.9182843669273824, train=2.0s
+2026-09-30T22:48:52+00:00 screen 2/108 START sparsemax adafisher lr=1e-05 seed=0
+2026-09-30T22:48:55+00:00 screen 2/108 END sparsemax adafisher: ok, val=3.925657357742537, train=3.3s
+2026-09-30T22:48:55+00:00 screen 3/108 START sparsemax adamw lr=0.003 seed=0
+2026-09-30T22:48:58+00:00 screen 3/108 END sparsemax adamw: ok, val=2.0231080082609787, train=2.4s
+2026-09-30T22:48:58+00:00 screen 4/108 START sparsemax dash_evd lr=0.0003 seed=0
+2026-09-30T22:49:05+00:00 screen 4/108 END sparsemax dash_evd: ok, val=2.1864371053386913, train=6.8s
+2026-09-30T22:49:05+00:00 screen 5/108 START softmax amsgrad_inverse lr=0.003 seed=0
+2026-09-30T22:49:07+00:00 screen 5/108 END softmax amsgrad_inverse: ok, val=2.3417837009364235, train=2.0s
+2026-09-30T22:49:07+00:00 screen 6/108 START sparsemax amsgrad lr=0.003 seed=0
+2026-09-30T22:49:10+00:00 screen 6/108 END sparsemax amsgrad: ok, val=2.094600988447187, train=2.4s
+2026-09-30T22:49:10+00:00 screen 7/108 START softmax sgd lr=1 seed=0
+2026-09-30T22:49:12+00:00 screen 7/108 END softmax sgd: ok, val=9.535541941733639, train=1.9s
+2026-09-30T22:49:12+00:00 screen 8/108 START sparsemax adamx lr=0.03 seed=0
+2026-09-30T22:49:15+00:00 screen 8/108 END sparsemax adamx: ok, val=3.068629583452928, train=2.4s
+2026-09-30T22:49:15+00:00 screen 9/108 START sparsemax dash_chebyshev lr=0.001 seed=0
+2026-09-30T22:49:32+00:00 screen 9/108 END sparsemax dash_chebyshev: ok, val=2.0373313719862227, train=16.7s
+2026-09-30T22:49:32+00:00 screen 10/108 START softmax adagrad lr=0.1 seed=0
+2026-09-30T22:49:34+00:00 screen 10/108 END softmax adagrad: ok, val=2.605458939527124, train=1.9s
+2026-09-30T22:49:34+00:00 screen 11/108 START softmax dash_cn lr=0.0003 seed=0
+2026-09-30T22:49:43+00:00 screen 11/108 END softmax dash_cn: ok, val=2.14306472445465, train=8.7s
+2026-09-30T22:49:43+00:00 screen 12/108 START sparsemax adamx lr=0.003 seed=0
+2026-09-30T22:49:46+00:00 screen 12/108 END sparsemax adamx: ok, val=2.3000882101661166, train=2.3s
+2026-09-30T22:49:46+00:00 screen 13/108 START softmax sgd lr=0.3 seed=0
+2026-09-30T22:49:48+00:00 screen 13/108 END softmax sgd: ok, val=2.3040269748762197, train=1.8s
+2026-09-30T22:49:48+00:00 screen 14/108 START sparsemax dash_cn lr=0.003 seed=0
+2026-09-30T22:49:57+00:00 screen 14/108 END sparsemax dash_cn: ok, val=2.115097869277411, train=9.1s
+2026-09-30T22:49:57+00:00 screen 15/108 START sparsemax adafisherw lr=0.001 seed=0
+2026-09-30T22:50:01+00:00 screen 15/108 END sparsemax adafisherw: ok, val=2.2846981009166907, train=3.4s
+2026-09-30T22:50:01+00:00 screen 16/108 START softmax dash_cn lr=0.001 seed=0
+2026-09-30T22:50:10+00:00 screen 16/108 END softmax dash_cn: ok, val=1.9890309102773394, train=8.8s
+2026-09-30T22:50:10+00:00 screen 17/108 START softmax adafisherw lr=0.001 seed=0
+2026-09-30T22:50:13+00:00 screen 17/108 END softmax adafisherw: ok, val=2.221900142840485, train=3.0s
+2026-09-30T22:50:13+00:00 screen 18/108 START sparsemax dash_cn lr=0.0003 seed=0
+2026-09-30T22:50:23+00:00 screen 18/108 END sparsemax dash_cn: ok, val=2.1850210336538463, train=9.1s
+2026-09-30T22:50:23+00:00 screen 19/108 START softmax muon lr=0.003 seed=0
+2026-09-30T22:50:26+00:00 screen 19/108 END softmax muon: ok, val=2.0766384330600602, train=3.1s
+2026-09-30T22:50:26+00:00 screen 20/108 START softmax amsgrad_inverse lr=0.01 seed=0
+2026-09-30T22:50:28+00:00 screen 20/108 END softmax amsgrad_inverse: ok, val=2.902521179409443, train=2.0s
+2026-09-30T22:50:28+00:00 screen 21/108 START softmax adam lr=0.003 seed=0
+2026-09-30T22:50:31+00:00 screen 21/108 END softmax adam: ok, val=2.1233644540219574, train=2.0s
+2026-09-30T22:50:31+00:00 screen 22/108 START softmax muon_guarded lr=0.1 seed=0
+2026-09-30T22:50:34+00:00 screen 22/108 END softmax muon_guarded: ok, val=2.139756913300086, train=3.3s
+2026-09-30T22:50:34+00:00 screen 23/108 START softmax adamnc lr=0.01 seed=0
+2026-09-30T22:50:36+00:00 screen 23/108 END softmax adamnc: ok, val=2.0120628172987227, train=2.0s
+2026-09-30T22:50:36+00:00 screen 24/108 START softmax dash_chebyshev lr=0.0003 seed=0
+2026-09-30T22:50:53+00:00 screen 24/108 END softmax dash_chebyshev: ok, val=2.1430491678476606, train=16.3s
+2026-09-30T22:50:53+00:00 screen 25/108 START sparsemax adagrad lr=0.3 seed=0
+2026-09-30T22:50:56+00:00 screen 25/108 END sparsemax adagrad: ok, val=3.0159899495909874, train=2.4s
+2026-09-30T22:50:56+00:00 screen 26/108 START sparsemax adam lr=0.003 seed=0
+2026-09-30T22:50:58+00:00 screen 26/108 END sparsemax adam: ok, val=2.080994703465844, train=2.4s
+2026-09-30T22:50:58+00:00 screen 27/108 START sparsemax muon lr=0.01 seed=0
+2026-09-30T22:51:02+00:00 screen 27/108 END sparsemax muon: ok, val=1.9824023942038604, train=3.5s
+2026-09-30T22:51:02+00:00 screen 28/108 START softmax adamx lr=0.01 seed=0
+2026-09-30T22:51:05+00:00 screen 28/108 END softmax adamx: ok, val=2.3927325698729907, train=2.0s
+2026-09-30T22:51:05+00:00 screen 29/108 START sparsemax adafisherw lr=0.0001 seed=0
+2026-09-30T22:51:08+00:00 screen 29/108 END sparsemax adafisherw: ok, val=2.9813701923076925, train=3.4s
+2026-09-30T22:51:08+00:00 screen 30/108 START softmax dash_evd lr=0.001 seed=0
+2026-09-30T22:51:15+00:00 screen 30/108 END softmax dash_evd: ok, val=1.9890407207502152, train=6.4s
+2026-09-30T22:51:15+00:00 screen 31/108 START softmax muon_guarded lr=1 seed=0
+2026-09-30T22:51:18+00:00 screen 31/108 END softmax muon_guarded: ok, val=9.535541941733639, train=3.4s
+2026-09-30T22:51:18+00:00 screen 32/108 START sparsemax sgd lr=1 seed=0
+2026-09-30T22:51:21+00:00 screen 32/108 END sparsemax sgd: ok, val=25.297507355051664, train=2.2s
+2026-09-30T22:51:21+00:00 screen 33/108 START sparsemax dash_cn lr=0.001 seed=0
+2026-09-30T22:51:30+00:00 screen 33/108 END sparsemax dash_cn: ok, val=2.0234809463798795, train=9.1s
+2026-09-30T22:51:30+00:00 screen 34/108 START sparsemax dash_chebyshev lr=0.0003 seed=0
+2026-09-30T22:51:47+00:00 screen 34/108 END sparsemax dash_chebyshev: ok, val=2.1747395179301807, train=16.7s
+2026-09-30T22:51:47+00:00 screen 35/108 START sparsemax sgd lr=0.1 seed=0
+2026-09-30T22:51:50+00:00 screen 35/108 END sparsemax sgd: ok, val=2.173642286613806, train=2.2s
+2026-09-30T22:51:50+00:00 screen 36/108 START sparsemax amsgrad_inverse lr=0.03 seed=0
+2026-09-30T22:51:53+00:00 screen 36/108 END sparsemax amsgrad_inverse: ok, val=3.2784015992752584, train=2.3s
+2026-09-30T22:51:53+00:00 screen 37/108 START softmax muon_guarded lr=0.3 seed=0
+2026-09-30T22:51:56+00:00 screen 37/108 END softmax muon_guarded: ok, val=2.3040269748762197, train=3.2s
+2026-09-30T22:51:56+00:00 screen 38/108 START sparsemax muon_guarded lr=1 seed=0
+2026-09-30T22:52:00+00:00 screen 38/108 END sparsemax muon_guarded: ok, val=25.297507355051664, train=3.6s
+2026-09-30T22:52:00+00:00 screen 39/108 START softmax adagrad lr=0.03 seed=0
+2026-09-30T22:52:02+00:00 screen 39/108 END softmax adagrad: ok, val=2.1851306306508325, train=1.9s
+2026-09-30T22:52:02+00:00 screen 40/108 START sparsemax amsgrad lr=0.001 seed=0
+2026-09-30T22:52:05+00:00 screen 40/108 END sparsemax amsgrad: ok, val=2.0389735049960533, train=2.3s
+2026-09-30T22:52:05+00:00 screen 41/108 START softmax amsgrad_geometric lr=0.03 seed=0
+2026-09-30T22:52:07+00:00 screen 41/108 END softmax amsgrad_geometric: ok, val=2.378107116909443, train=1.9s
+2026-09-30T22:52:07+00:00 screen 42/108 START sparsemax adafisher lr=0.001 seed=0
+2026-09-30T22:52:11+00:00 screen 42/108 END sparsemax adafisher: ok, val=2.280656466391002, train=3.4s
+2026-09-30T22:52:11+00:00 screen 43/108 START softmax dash_chebyshev lr=0.001 seed=0
+2026-09-30T22:52:27+00:00 screen 43/108 END softmax dash_chebyshev: ok, val=1.9891712000394661, train=16.3s
+2026-09-30T22:52:27+00:00 screen 44/108 START softmax adafisher lr=0.0001 seed=0
+2026-09-30T22:52:30+00:00 screen 44/108 END softmax adafisher: ok, val=2.901094176054822, train=2.8s
+2026-09-30T22:52:30+00:00 screen 45/108 START softmax dash_evd lr=0.0003 seed=0
+2026-09-30T22:52:37+00:00 screen 45/108 END softmax dash_evd: ok, val=2.143049728446111, train=6.3s
+2026-09-30T22:52:37+00:00 screen 46/108 START sparsemax adam lr=0.0003 seed=0
+2026-09-30T22:52:39+00:00 screen 46/108 END sparsemax adam: ok, val=1.983647203062213, train=2.3s
+2026-09-30T22:52:39+00:00 screen 47/108 START sparsemax dash_ndb_guarded lr=0.1 seed=0
+2026-09-30T22:52:50+00:00 screen 47/108 END sparsemax dash_ndb_guarded: ok, val=2.173642286613806, train=9.8s
+2026-09-30T22:52:50+00:00 screen 48/108 START softmax dash_cn lr=0.003 seed=0
+2026-09-30T22:52:58+00:00 screen 48/108 END softmax dash_cn: ok, val=2.2035455889871556, train=8.7s
+2026-09-30T22:52:58+00:00 screen 49/108 START softmax adamw lr=0.0003 seed=0
+2026-09-30T22:53:01+00:00 screen 49/108 END softmax adamw: ok, val=2.0727696030066016, train=2.0s
+2026-09-30T22:53:01+00:00 screen 50/108 START sparsemax adamnc lr=0.1 seed=0
+2026-09-30T22:53:03+00:00 screen 50/108 END sparsemax adamnc: ok, val=2.422898652769805, train=2.3s
+2026-09-30T22:53:03+00:00 screen 51/108 START sparsemax muon lr=0.003 seed=0
+2026-09-30T22:53:07+00:00 screen 51/108 END sparsemax muon: ok, val=2.159938177202928, train=3.4s
+2026-09-30T22:53:07+00:00 screen 52/108 START sparsemax adamx lr=0.01 seed=0
+2026-09-30T22:53:10+00:00 screen 52/108 END sparsemax adamx: ok, val=2.6545676440513777, train=2.4s
+2026-09-30T22:53:10+00:00 screen 53/108 START sparsemax dash_ndb lr=0.001 seed=0
+2026-09-30T22:53:20+00:00 screen 53/108 END sparsemax dash_ndb: ok, val=2.0274220936333953, train=9.6s
+2026-09-30T22:53:20+00:00 screen 54/108 START softmax dash_evd lr=0.003 seed=0
+2026-09-30T22:53:26+00:00 screen 54/108 END softmax dash_evd: ok, val=2.2023938394715126, train=6.3s
+2026-09-30T22:53:26+00:00 screen 55/108 START softmax amsgrad_geometric lr=0.003 seed=0
+2026-09-30T22:53:29+00:00 screen 55/108 END softmax amsgrad_geometric: ok, val=2.1539529478508896, train=2.0s
+2026-09-30T22:53:29+00:00 screen 56/108 START softmax muon lr=0.03 seed=0
+2026-09-30T22:53:32+00:00 screen 56/108 END softmax muon: ok, val=1.9055336953304391, train=3.1s
+2026-09-30T22:53:32+00:00 screen 57/108 START softmax adamw lr=0.003 seed=0
+2026-09-30T22:53:34+00:00 screen 57/108 END softmax adamw: ok, val=1.9620589771993397, train=2.1s
+2026-09-30T22:53:34+00:00 screen 58/108 START softmax amsgrad lr=0.001 seed=0
+2026-09-30T22:53:36+00:00 screen 58/108 END softmax amsgrad: ok, val=2.052654209421642, train=2.0s
+2026-09-30T22:53:36+00:00 screen 59/108 START sparsemax dash_evd lr=0.003 seed=0
+2026-09-30T22:53:44+00:00 screen 59/108 END sparsemax dash_evd: ok, val=2.1118503224562284, train=6.8s
+2026-09-30T22:53:44+00:00 screen 60/108 START softmax adamnc lr=0.03 seed=0
+2026-09-30T22:53:46+00:00 screen 60/108 END softmax adamnc: ok, val=2.184314259157936, train=1.9s
+2026-09-30T22:53:46+00:00 screen 61/108 START softmax amsgrad_inverse lr=0.03 seed=0
+2026-09-30T22:53:48+00:00 screen 61/108 END softmax amsgrad_inverse: ok, val=3.2168016400868256, train=2.0s
+2026-09-30T22:53:48+00:00 screen 62/108 START sparsemax amsgrad_geometric lr=0.03 seed=0
+2026-09-30T22:53:51+00:00 screen 62/108 END sparsemax amsgrad_geometric: ok, val=2.7267508610792195, train=2.4s
+2026-09-30T22:53:51+00:00 screen 63/108 START softmax amsgrad lr=0.003 seed=0
+2026-09-30T22:53:53+00:00 screen 63/108 END softmax amsgrad: ok, val=2.107334141342566, train=1.9s
+2026-09-30T22:53:53+00:00 screen 64/108 START sparsemax sgd lr=0.3 seed=0
+2026-09-30T22:53:55+00:00 screen 64/108 END sparsemax sgd: ok, val=2.083537437885692, train=2.2s
+2026-09-30T22:53:55+00:00 screen 65/108 START sparsemax adagrad lr=0.03 seed=0
+2026-09-30T22:53:58+00:00 screen 65/108 END sparsemax adagrad: ok, val=2.1727948019069316, train=2.3s
+2026-09-30T22:53:58+00:00 screen 66/108 START sparsemax muon_guarded lr=0.1 seed=0
+2026-09-30T22:54:02+00:00 screen 66/108 END sparsemax muon_guarded: ok, val=2.173642286613806, train=3.6s
+2026-09-30T22:54:02+00:00 screen 67/108 START sparsemax adam lr=0.001 seed=0
+2026-09-30T22:54:04+00:00 screen 67/108 END sparsemax adam: ok, val=2.044431071056975, train=2.3s
+2026-09-30T22:54:04+00:00 screen 68/108 START sparsemax dash_evd lr=0.001 seed=0
+2026-09-30T22:54:12+00:00 screen 68/108 END sparsemax dash_evd: ok, val=2.031372911210175, train=6.8s
+2026-09-30T22:54:12+00:00 screen 69/108 START sparsemax dash_chebyshev lr=0.003 seed=0
+2026-09-30T22:54:29+00:00 screen 69/108 END sparsemax dash_chebyshev: ok, val=2.1320688661559988, train=16.8s
+2026-09-30T22:54:29+00:00 screen 70/108 START sparsemax dash_ndb lr=0.0003 seed=0

@@ -1,0 +1,17 @@
+{
+  "torch": "2.14.0+cu130",
+  "cuda": "13.0",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "config": {
+    "vocab_size": 65,
+    "n_layers": 2,
+    "n_heads": 4,
+    "d_model": 128,
+    "d_ff": 512,
+    "max_seq_len": 64,
+    "rope_theta": 10000.0
+  },
+  "batch": 32,
+  "dtype": "float32",
+  "tf32": false
+}

@@ -1,0 +1,29 @@
+{
+  "status": "ok",
+  "post_run_tests": 4,
+  "test_source": "experiments/test_optimizer_parameter_groups.py",
+  "test_source_sha256": "a84d4b72bbf83e1f3104b4842557268a895c0913d6bd13c0127d588a855dce54",
+  "test_log_sha256": "529bc612abf953371ed50359d2e806e9d3031788b94a70547a83f9a952ac4247",
+  "muon_hidden_matrix_tensors": 8,
+  "muon_hidden_matrix_parameters": 393216,
+  "muon_auxiliary_tensors": 3,
+  "muon_auxiliary_parameters": 8328,
+  "muon_auxiliary_lr_ratio": 0.05,
+  "muon_auxiliary_rule": "bias-corrected Adam; equivalent to AdamW with zero decay",
+  "muon_auxiliary_betas": [
+    0.9,
+    0.999
+  ],
+  "muon_momentum": 0.95,
+  "muon_ns_steps": 5,
+  "muon_decay": 0.0,
+  "muon_auxiliary_lr_selected": 0.0015,
+  "paper_muon_shared_lr_recommendation": true,
+  "dash_vector_extension": "reshape temperature vector to a column and apply matrix inverse-fourth-root rule",
+  "paper_dash_normalization_vector_rule": "inverse-square-root preconditioner, or Adam in DASH-A",
+  "reference_sources": [
+    "papers/arXiv-2502.16982/2-analysis.tex, section 2.2",
+    "papers/arXiv-2602.02016/dash.tex, section 4 and Appendix A experiments"
+  ],
+  "benchmark_implementations_changed": false
+}

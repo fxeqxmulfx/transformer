@@ -1,0 +1,6 @@
+test_stopping_curves_and_checkpoint_replay_on_fisher_and_magma (experiments.full_compile_benchmark.tests.test_training.TrainingTests.test_stopping_curves_and_checkpoint_replay_on_fisher_and_magma) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 49.507s
+
+OK

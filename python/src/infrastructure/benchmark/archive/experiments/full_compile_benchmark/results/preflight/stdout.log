@@ -1,0 +1,31 @@
+W1001 15:14:34.416000 1685322 .venv/lib/python3.14/site-packages/torch/_inductor/utils.py:1806] [0/0] Not enough SMs to use max_autotune_gemm mode
+Tests=4 failures=0 errors=0 skipped=0
+
+W1001 15:29:52.740000 1688837 torch/_inductor/utils.py:1806] [1/0] Not enough SMs to use max_autotune_gemm mode
+tests 1 errors 0 failures 0
+
+softmax adamw compiled=False: 8.201 ms cold=0.51s FX=0 CUDA_nodes=0
+W1001 15:37:50.676000 1690066 .venv/lib/python3.14/site-packages/torch/_inductor/utils.py:1806] [0/0] Not enough SMs to use max_autotune_gemm mode
+softmax adamw compiled=True: 4.171 ms cold=15.20s FX=1 CUDA_nodes=1
+softmax magma_muon compiled=False: 15.132 ms cold=0.02s FX=0 CUDA_nodes=0
+softmax magma_muon compiled=True: 5.041 ms cold=20.66s FX=1 CUDA_nodes=1
+softmax dash_ndb_guarded compiled=False: 39.843 ms cold=0.12s FX=0 CUDA_nodes=0
+softmax dash_ndb_guarded compiled=True: 14.600 ms cold=27.08s FX=1 CUDA_nodes=1
+softmax dash_evd compiled=False: 26.590 ms cold=0.06s FX=0 CUDA_nodes=0
+softmax dash_evd compiled=True: 15.251 ms cold=13.13s FX=1 CUDA_nodes=2
+softmax dash_chebyshev compiled=False: 68.527 ms cold=0.07s FX=0 CUDA_nodes=0
+softmax dash_chebyshev compiled=True: 25.450 ms cold=67.97s FX=1 CUDA_nodes=1
+softmax adafisher compiled=False: 12.264 ms cold=0.02s FX=0 CUDA_nodes=0
+softmax adafisher compiled=True: 4.434 ms cold=16.04s FX=1 CUDA_nodes=1
+sparsemax adamw compiled=False: 9.885 ms cold=0.04s FX=0 CUDA_nodes=0
+sparsemax adamw compiled=True: 4.291 ms cold=13.44s FX=1 CUDA_nodes=1
+sparsemax magma_muon compiled=False: 17.377 ms cold=0.02s FX=0 CUDA_nodes=0
+sparsemax magma_muon compiled=True: 5.161 ms cold=16.21s FX=1 CUDA_nodes=1
+sparsemax dash_ndb_guarded compiled=False: 41.619 ms cold=0.04s FX=0 CUDA_nodes=0
+sparsemax dash_ndb_guarded compiled=True: 14.854 ms cold=27.98s FX=1 CUDA_nodes=1
+sparsemax dash_evd compiled=False: 28.360 ms cold=0.03s FX=0 CUDA_nodes=0
+sparsemax dash_evd compiled=True: 15.621 ms cold=14.65s FX=1 CUDA_nodes=2
+sparsemax dash_chebyshev compiled=False: 69.534 ms cold=0.09s FX=0 CUDA_nodes=0
+sparsemax dash_chebyshev compiled=True: 25.567 ms cold=70.68s FX=1 CUDA_nodes=1
+sparsemax adafisher compiled=False: 13.742 ms cold=0.02s FX=0 CUDA_nodes=0
+sparsemax adafisher compiled=True: 4.632 ms cold=19.58s FX=1 CUDA_nodes=1

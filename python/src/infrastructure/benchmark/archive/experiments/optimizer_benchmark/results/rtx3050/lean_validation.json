@@ -1,0 +1,29 @@
+{
+  "stage": "Completed optimizer-benchmark Lean audit, before the Magma paper formalization",
+  "verified_utc": "2026-10-01T05:51:04.033996+00:00",
+  "new_proved_theorems": 16,
+  "logged_final_losses_encoded": 108,
+  "methods_per_attention": 18,
+  "extractor_check": "Verified 108 exact loss encodings; raw log SHA256 01b42cb9e0e42c2ac04173d9c2c723eb75c2bf8cd4e7c9a7654ab19fb74f6f47",
+  "full_build": "passed; 169 pre-existing sorry warnings, no other warnings",
+  "axiom_audit": {
+    "self_sorry": 169,
+    "rests": 0,
+    "extra_axioms": 0
+  },
+  "formal_scope": "Exact encoded-log arithmetic, conditional real-arithmetic batch trajectory identity, and genuine quadratic decay counterexamples; no GPU execution or causal training proof",
+  "sources_sha256": {
+    "src/Transformer/OptimizerBenchmark/AdamWAnalysis.lean": "d3fe4983f0c0ace9c6230eb0c220b24eb40b0d1c6e98c4f3aec04f809e494c85",
+    "src/Transformer/OptimizerBenchmark/Basic.lean": "cdfe1be170c805834efb6277056b6314eff5ee67e6b398867d8aa2008f5806c0",
+    "src/Transformer/OptimizerBenchmark/GuardFallback.lean": "8be1e7af9bf4f06d7a8a4612e0d0e2aa763b198ecac08adb30524cbd2a969582",
+    "src/Transformer/OptimizerBenchmark/Ranking.lean": "57864e7e802189aa3d244ffac049f69e772ff16046713b60c6c0db67118d0a84",
+    "src/Transformer/OptimizerBenchmark.lean": "0bbaa60f35c8878358506fd4ddb1805ac631b55bb8fdf8c91c62395fda030294",
+    "scripts/optimizer_benchmark_data.py": "dee2aa54caf7bade45fd3c944abd4d9681f22395ceab920a56b2f91140f912d3"
+  },
+  "runs_sha256": "01b42cb9e0e42c2ac04173d9c2c723eb75c2bf8cd4e7c9a7654ab19fb74f6f47",
+  "audit_logs_sha256": {
+    "lean_build.log": "1db20aa547fe91edf47cb069f9a00809d8363e1ffa1c95aa98ac2fd7b204a95a",
+    "lean_axioms.log": "d8529822d28e5b55ec7e3ca36e6110b51782a59de2f29dd7d95ccce074a01db3",
+    "lean_index.log": "7d7f498b8ed27a6639489719a392cb1db7ba1fa8681a2ced69832f768904f43f"
+  }
+}

@@ -1,0 +1,3 @@
+attention,method,lr,complete,usable_seeds,expected_seeds,test_loss_mean,test_loss_std,test_ppl,validation_loss_mean,actual_steps_mean,best_step_mean,train_seconds_mean,total_seconds_mean,optimizer_ms_mean,peak_memory_mib,recovered_runs,capped_runs,stop_reasons
+softmax,adafisher,0.001,True,3,3,1.65175699028894,0.009442503336000727,5.216136481892054,1.5093201360983544,20000,19500,247.30163758493532,252.02866141699874,3.5017321857849755,101.6064453125,0,3,{'max_steps': 3}
+sparsemax,adagrad,0.03,True,3,3,1.691251244528559,0.0276201187852686,5.426266044885486,1.497582652766815,17333.333333333332,16000,83.94860731951,87.81661115632839,0.22222578327164547,101.86376953125,0,1,"{'max_steps': 1, 'patience': 2}"

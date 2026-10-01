@@ -1,0 +1,11 @@
+test_compiled_fisher_factors_are_fresh_and_match_eager (experiments.compiled_benchmark.tests.test_backend.CompileTests.test_compiled_fisher_factors_are_fresh_and_match_eager) ... ok
+test_compiled_losses_gradients_and_muon_routing_match_eager (experiments.compiled_benchmark.tests.test_backend.CompileTests.test_compiled_losses_gradients_and_muon_routing_match_eager) ... ok
+test_cuda_graphs_are_recorded_and_replayed_across_train_eval (experiments.compiled_benchmark.tests.test_backend.CompileTests.test_cuda_graphs_are_recorded_and_replayed_across_train_eval) ... ok
+test_capture_projection_matches_values_jacobian_and_large_translations (experiments.compiled_benchmark.tests.test_backend.ProjectionTests.test_capture_projection_matches_values_jacobian_and_large_translations) ... ok
+test_nonfinite_or_empty_rows_propagate_nonfinite_loss_without_bad_gather (experiments.compiled_benchmark.tests.test_backend.ProjectionTests.test_nonfinite_or_empty_rows_propagate_nonfinite_loss_without_bad_gather) ... ok
+test_best_restore_and_fresh_compiled_checkpoint_reload (experiments.compiled_benchmark.tests.test_training.CompiledTrainingTests.test_best_restore_and_fresh_compiled_checkpoint_reload) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 32.418s
+
+OK

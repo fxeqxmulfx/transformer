@@ -1,0 +1,1014 @@
+2026-10-01T09:19:41+00:00 All 80 CPU/CUDA tests passed before training
+2026-10-01T09:19:41+00:00 run 1/144 START sparsemax:adagrad:0 lr=0.03
+2026-10-01T09:19:42+00:00 compiler sparsemax adagrad seed=0 FX=2 CUDA_nodes=1
+2026-10-01T09:19:42+00:00 check sparsemax adagrad seed=0 step=0 val=4.200711623672503 best=4.200711623672503 bad=0/8
+2026-10-01T09:19:45+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:19:45+00:00 check sparsemax adagrad seed=0 step=250 val=2.2204294128067597 best=2.2204294128067597 bad=0/8
+2026-10-01T09:19:46+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:19:46+00:00 check sparsemax adagrad seed=0 step=500 val=1.9865159254807692 best=1.9865159254807692 bad=0/8
+2026-10-01T09:19:47+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:19:47+00:00 check sparsemax adagrad seed=0 step=750 val=1.8684851452622704 best=1.8684851452622704 bad=0/8
+2026-10-01T09:19:49+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:19:49+00:00 check sparsemax adagrad seed=0 step=1000 val=1.776894150043054 best=1.776894150043054 bad=0/8
+2026-10-01T09:19:50+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:19:50+00:00 check sparsemax adagrad seed=0 step=1250 val=1.7311476347230195 best=1.7311476347230195 bad=0/8
+2026-10-01T09:19:51+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:19:51+00:00 check sparsemax adagrad seed=0 step=1500 val=1.711123898984644 best=1.711123898984644 bad=0/8
+2026-10-01T09:19:52+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:19:52+00:00 check sparsemax adagrad seed=0 step=1750 val=1.680478784712256 best=1.680478784712256 bad=0/8
+2026-10-01T09:19:53+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:19:53+00:00 check sparsemax adagrad seed=0 step=2000 val=1.641437026854908 best=1.641437026854908 bad=0/8
+2026-10-01T09:19:55+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:19:55+00:00 check sparsemax adagrad seed=0 step=2250 val=1.6327642885332951 best=1.6327642885332951 bad=0/8
+2026-10-01T09:19:56+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:19:56+00:00 check sparsemax adagrad seed=0 step=2500 val=1.6203865550552525 best=1.6203865550552525 bad=0/8
+2026-10-01T09:19:57+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:19:57+00:00 check sparsemax adagrad seed=0 step=2750 val=1.605526771939581 best=1.605526771939581 bad=0/8
+2026-10-01T09:19:58+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:19:58+00:00 check sparsemax adagrad seed=0 step=3000 val=1.5977301088457951 best=1.5977301088457951 bad=0/8
+2026-10-01T09:19:59+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:19:59+00:00 check sparsemax adagrad seed=0 step=3250 val=1.5878679207627726 best=1.5878679207627726 bad=0/8
+2026-10-01T09:20:01+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:01+00:00 check sparsemax adagrad seed=0 step=3500 val=1.5734924947079507 best=1.5734924947079507 bad=0/8
+2026-10-01T09:20:02+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:02+00:00 check sparsemax adagrad seed=0 step=3750 val=1.5760816186495408 best=1.5734924947079507 bad=1/8
+2026-10-01T09:20:03+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:03+00:00 check sparsemax adagrad seed=0 step=4000 val=1.5604974021867823 best=1.5604974021867823 bad=0/8
+2026-10-01T09:20:04+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:04+00:00 check sparsemax adagrad seed=0 step=4250 val=1.5562484863841848 best=1.5562484863841848 bad=0/8
+2026-10-01T09:20:05+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:05+00:00 check sparsemax adagrad seed=0 step=4500 val=1.5509097671946757 best=1.5509097671946757 bad=0/8
+2026-10-01T09:20:07+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:07+00:00 check sparsemax adagrad seed=0 step=4750 val=1.5559023168412744 best=1.5509097671946757 bad=1/8
+2026-10-01T09:20:08+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:08+00:00 check sparsemax adagrad seed=0 step=5000 val=1.5431590731737945 best=1.5431590731737945 bad=0/8
+2026-10-01T09:20:09+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:09+00:00 check sparsemax adagrad seed=0 step=5250 val=1.5444606426252152 best=1.5431590731737945 bad=1/8
+2026-10-01T09:20:10+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:10+00:00 check sparsemax adagrad seed=0 step=5500 val=1.5392655767885333 best=1.5392655767885333 bad=0/8
+2026-10-01T09:20:11+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:12+00:00 check sparsemax adagrad seed=0 step=5750 val=1.5305313127870264 best=1.5305313127870264 bad=0/8
+2026-10-01T09:20:13+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:13+00:00 check sparsemax adagrad seed=0 step=6000 val=1.53317915941626 best=1.5305313127870264 bad=1/8
+2026-10-01T09:20:14+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:14+00:00 check sparsemax adagrad seed=0 step=6250 val=1.5265420942164178 best=1.5265420942164178 bad=0/8
+2026-10-01T09:20:15+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:15+00:00 check sparsemax adagrad seed=0 step=6500 val=1.5249460704291045 best=1.5249460704291045 bad=0/8
+2026-10-01T09:20:16+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:16+00:00 check sparsemax adagrad seed=0 step=6750 val=1.526713777491748 best=1.5249460704291045 bad=1/8
+2026-10-01T09:20:18+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:18+00:00 check sparsemax adagrad seed=0 step=7000 val=1.52133665730841 best=1.52133665730841 bad=0/8
+2026-10-01T09:20:19+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:19+00:00 check sparsemax adagrad seed=0 step=7250 val=1.5230362516593714 best=1.52133665730841 bad=1/8
+2026-10-01T09:20:20+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:20+00:00 check sparsemax adagrad seed=0 step=7500 val=1.5168951759382177 best=1.5168951759382177 bad=0/8
+2026-10-01T09:20:21+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:21+00:00 check sparsemax adagrad seed=0 step=7750 val=1.5161547655353043 best=1.5161547655353043 bad=0/8
+2026-10-01T09:20:23+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:23+00:00 check sparsemax adagrad seed=0 step=8000 val=1.5102837581174655 best=1.5102837581174655 bad=0/8
+2026-10-01T09:20:24+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:24+00:00 check sparsemax adagrad seed=0 step=8250 val=1.517959612245264 best=1.5102837581174655 bad=1/8
+2026-10-01T09:20:25+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:25+00:00 check sparsemax adagrad seed=0 step=8500 val=1.5113306757229477 best=1.5102837581174655 bad=2/8
+2026-10-01T09:20:27+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:27+00:00 check sparsemax adagrad seed=0 step=8750 val=1.5048488962937716 best=1.5048488962937716 bad=0/8
+2026-10-01T09:20:28+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:28+00:00 check sparsemax adagrad seed=0 step=9000 val=1.505653915668054 best=1.5048488962937716 bad=1/8
+2026-10-01T09:20:29+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:29+00:00 check sparsemax adagrad seed=0 step=9250 val=1.509476496349383 best=1.5048488962937716 bad=2/8
+2026-10-01T09:20:31+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:31+00:00 check sparsemax adagrad seed=0 step=9500 val=1.5096173467099598 best=1.5048488962937716 bad=3/8
+2026-10-01T09:20:32+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:32+00:00 check sparsemax adagrad seed=0 step=9750 val=1.5021325165040185 best=1.5021325165040185 bad=0/8
+2026-10-01T09:20:33+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:33+00:00 check sparsemax adagrad seed=0 step=10000 val=1.5000812867752584 best=1.5000812867752584 bad=0/8
+2026-10-01T09:20:34+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:34+00:00 check sparsemax adagrad seed=0 step=10250 val=1.5013244138382607 best=1.5000812867752584 bad=1/8
+2026-10-01T09:20:36+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:36+00:00 check sparsemax adagrad seed=0 step=10500 val=1.5023896910429821 best=1.5000812867752584 bad=2/8
+2026-10-01T09:20:37+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:37+00:00 check sparsemax adagrad seed=0 step=10750 val=1.4953906193940154 best=1.4953906193940154 bad=0/8
+2026-10-01T09:20:38+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:38+00:00 check sparsemax adagrad seed=0 step=11000 val=1.4996692469144661 best=1.4953906193940154 bad=1/8
+2026-10-01T09:20:39+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:39+00:00 check sparsemax adagrad seed=0 step=11250 val=1.496874943940155 best=1.4953906193940154 bad=2/8
+2026-10-01T09:20:40+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:40+00:00 check sparsemax adagrad seed=0 step=11500 val=1.4951527855015787 best=1.4951527855015787 bad=0/8
+2026-10-01T09:20:42+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:42+00:00 check sparsemax adagrad seed=0 step=11750 val=1.4957013310849598 best=1.4951527855015787 bad=1/8
+2026-10-01T09:20:43+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:43+00:00 check sparsemax adagrad seed=0 step=12000 val=1.4965399863662456 best=1.4951527855015787 bad=2/8
+2026-10-01T09:20:44+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:44+00:00 check sparsemax adagrad seed=0 step=12250 val=1.4967266656501148 best=1.4951527855015787 bad=3/8
+2026-10-01T09:20:45+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:45+00:00 check sparsemax adagrad seed=0 step=12500 val=1.498349878462256 best=1.4951527855015787 bad=4/8
+2026-10-01T09:20:47+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:47+00:00 check sparsemax adagrad seed=0 step=12750 val=1.4968050092835103 best=1.4951527855015787 bad=5/8
+2026-10-01T09:20:48+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:48+00:00 check sparsemax adagrad seed=0 step=13000 val=1.500571950568671 best=1.4951527855015787 bad=6/8
+2026-10-01T09:20:49+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:49+00:00 check sparsemax adagrad seed=0 step=13250 val=1.4937515696756603 best=1.4937515696756603 bad=0/8
+2026-10-01T09:20:50+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:50+00:00 check sparsemax adagrad seed=0 step=13500 val=1.494511180575488 best=1.4937515696756603 bad=1/8
+2026-10-01T09:20:51+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:51+00:00 check sparsemax adagrad seed=0 step=13750 val=1.4958877300696038 best=1.4937515696756603 bad=2/8
+2026-10-01T09:20:53+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:53+00:00 check sparsemax adagrad seed=0 step=14000 val=1.4920603843014495 best=1.4920603843014495 bad=0/8
+2026-10-01T09:20:54+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:54+00:00 check sparsemax adagrad seed=0 step=14250 val=1.4916623594019087 best=1.4916623594019087 bad=0/8
+2026-10-01T09:20:55+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:55+00:00 check sparsemax adagrad seed=0 step=14500 val=1.4914060257606199 best=1.4914060257606199 bad=0/8
+2026-10-01T09:20:56+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:56+00:00 check sparsemax adagrad seed=0 step=14750 val=1.493315844530353 best=1.4914060257606199 bad=1/8
+2026-10-01T09:20:57+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:57+00:00 check sparsemax adagrad seed=0 step=15000 val=1.4933225717117538 best=1.4914060257606199 bad=2/8
+2026-10-01T09:20:59+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:20:59+00:00 check sparsemax adagrad seed=0 step=15250 val=1.4983711812033582 best=1.4914060257606199 bad=3/8
+2026-10-01T09:21:00+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:00+00:00 check sparsemax adagrad seed=0 step=15500 val=1.493852617546283 best=1.4914060257606199 bad=4/8
+2026-10-01T09:21:01+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:01+00:00 check sparsemax adagrad seed=0 step=15750 val=1.4959222068742823 best=1.4914060257606199 bad=5/8
+2026-10-01T09:21:02+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:02+00:00 check sparsemax adagrad seed=0 step=16000 val=1.4965146192863805 best=1.4914060257606199 bad=6/8
+2026-10-01T09:21:03+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:03+00:00 check sparsemax adagrad seed=0 step=16250 val=1.4905347156196183 best=1.4905347156196183 bad=0/8
+2026-10-01T09:21:05+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:05+00:00 check sparsemax adagrad seed=0 step=16500 val=1.4977491972230195 best=1.4905347156196183 bad=1/8
+2026-10-01T09:21:06+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:06+00:00 check sparsemax adagrad seed=0 step=16750 val=1.4954919475638633 best=1.4905347156196183 bad=2/8
+2026-10-01T09:21:07+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:07+00:00 check sparsemax adagrad seed=0 step=17000 val=1.496610341471728 best=1.4905347156196183 bad=3/8
+2026-10-01T09:21:08+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:08+00:00 check sparsemax adagrad seed=0 step=17250 val=1.4911963619402986 best=1.4905347156196183 bad=4/8
+2026-10-01T09:21:10+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:10+00:00 check sparsemax adagrad seed=0 step=17500 val=1.4961186966310276 best=1.4905347156196183 bad=5/8
+2026-10-01T09:21:11+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:11+00:00 check sparsemax adagrad seed=0 step=17750 val=1.492032214229334 best=1.4905347156196183 bad=6/8
+2026-10-01T09:21:12+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:12+00:00 check sparsemax adagrad seed=0 step=18000 val=1.4893015391791045 best=1.4893015391791045 bad=0/8
+2026-10-01T09:21:13+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:13+00:00 check sparsemax adagrad seed=0 step=18250 val=1.4878512709888059 best=1.4878512709888059 bad=0/8
+2026-10-01T09:21:14+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:14+00:00 check sparsemax adagrad seed=0 step=18500 val=1.4971916820644375 best=1.4878512709888059 bad=1/8
+2026-10-01T09:21:16+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:16+00:00 check sparsemax adagrad seed=0 step=18750 val=1.4942503621465988 best=1.4878512709888059 bad=2/8
+2026-10-01T09:21:17+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:17+00:00 check sparsemax adagrad seed=0 step=19000 val=1.4899750982168485 best=1.4878512709888059 bad=3/8
+2026-10-01T09:21:18+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:18+00:00 check sparsemax adagrad seed=0 step=19250 val=1.4932383417946327 best=1.4878512709888059 bad=4/8
+2026-10-01T09:21:19+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:19+00:00 check sparsemax adagrad seed=0 step=19500 val=1.4873070700434128 best=1.4873070700434128 bad=0/8
+2026-10-01T09:21:20+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:20+00:00 check sparsemax adagrad seed=0 step=19750 val=1.4934530510010047 best=1.4873070700434128 bad=1/8
+2026-10-01T09:21:22+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:22+00:00 check sparsemax adagrad seed=0 step=20000 val=1.4872971194209241 best=1.4872971194209241 bad=2/8
+2026-10-01T09:21:22+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:22+00:00 compiler sparsemax adagrad seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:21:22+00:00 run 1/144 END sparsemax:adagrad:0: ok stop=max_steps updates=20000 best=20000 test=1.6988763644966274
+2026-10-01T09:21:22+00:00 run 2/144 START sparsemax:adagrad:1 lr=0.03
+2026-10-01T09:21:23+00:00 compiler sparsemax adagrad seed=1 FX=2 CUDA_nodes=1
+2026-10-01T09:21:23+00:00 check sparsemax adagrad seed=1 step=0 val=4.17812399092279 best=4.17812399092279 bad=0/8
+2026-10-01T09:21:26+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:26+00:00 check sparsemax adagrad seed=1 step=250 val=2.128158551817236 best=2.128158551817236 bad=0/8
+2026-10-01T09:21:27+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:27+00:00 check sparsemax adagrad seed=1 step=500 val=1.9527245925570464 best=1.9527245925570464 bad=0/8
+2026-10-01T09:21:29+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:29+00:00 check sparsemax adagrad seed=1 step=750 val=1.8426524883844002 best=1.8426524883844002 bad=0/8
+2026-10-01T09:21:30+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:30+00:00 check sparsemax adagrad seed=1 step=1000 val=1.7698022993506028 best=1.7698022993506028 bad=0/8
+2026-10-01T09:21:31+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:31+00:00 check sparsemax adagrad seed=1 step=1250 val=1.7219721797413174 best=1.7219721797413174 bad=0/8
+2026-10-01T09:21:32+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:32+00:00 check sparsemax adagrad seed=1 step=1500 val=1.6937387600010763 best=1.6937387600010763 bad=0/8
+2026-10-01T09:21:33+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:33+00:00 check sparsemax adagrad seed=1 step=1750 val=1.659136381269733 best=1.659136381269733 bad=0/8
+2026-10-01T09:21:35+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:35+00:00 check sparsemax adagrad seed=1 step=2000 val=1.6423861200308554 best=1.6423861200308554 bad=0/8
+2026-10-01T09:21:36+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:36+00:00 check sparsemax adagrad seed=1 step=2250 val=1.6294662878516073 best=1.6294662878516073 bad=0/8
+2026-10-01T09:21:37+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:37+00:00 check sparsemax adagrad seed=1 step=2500 val=1.612397606693097 best=1.612397606693097 bad=0/8
+2026-10-01T09:21:38+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:38+00:00 check sparsemax adagrad seed=1 step=2750 val=1.6016343967512199 best=1.6016343967512199 bad=0/8
+2026-10-01T09:21:39+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:39+00:00 check sparsemax adagrad seed=1 step=3000 val=1.5860564870210248 best=1.5860564870210248 bad=0/8
+2026-10-01T09:21:41+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:41+00:00 check sparsemax adagrad seed=1 step=3250 val=1.5899255973737083 best=1.5860564870210248 bad=1/8
+2026-10-01T09:21:42+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:42+00:00 check sparsemax adagrad seed=1 step=3500 val=1.5787228782469862 best=1.5787228782469862 bad=0/8
+2026-10-01T09:21:43+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:43+00:00 check sparsemax adagrad seed=1 step=3750 val=1.5693023015929966 best=1.5693023015929966 bad=0/8
+2026-10-01T09:21:44+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:44+00:00 check sparsemax adagrad seed=1 step=4000 val=1.5647243145002152 best=1.5647243145002152 bad=0/8
+2026-10-01T09:21:46+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:46+00:00 check sparsemax adagrad seed=1 step=4250 val=1.5620156429391503 best=1.5620156429391503 bad=0/8
+2026-10-01T09:21:47+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:47+00:00 check sparsemax adagrad seed=1 step=4500 val=1.5598756985056688 best=1.5598756985056688 bad=0/8
+2026-10-01T09:21:48+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:48+00:00 check sparsemax adagrad seed=1 step=4750 val=1.5587214262970006 best=1.5587214262970006 bad=0/8
+2026-10-01T09:21:49+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:49+00:00 check sparsemax adagrad seed=1 step=5000 val=1.5500432221404994 best=1.5500432221404994 bad=0/8
+2026-10-01T09:21:51+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:51+00:00 check sparsemax adagrad seed=1 step=5250 val=1.5475227715090414 best=1.5475227715090414 bad=0/8
+2026-10-01T09:21:52+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:52+00:00 check sparsemax adagrad seed=1 step=5500 val=1.551221880381745 best=1.5475227715090414 bad=1/8
+2026-10-01T09:21:53+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:53+00:00 check sparsemax adagrad seed=1 step=5750 val=1.543525704560132 best=1.543525704560132 bad=0/8
+2026-10-01T09:21:54+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:54+00:00 check sparsemax adagrad seed=1 step=6000 val=1.5367205999748852 best=1.5367205999748852 bad=0/8
+2026-10-01T09:21:56+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:56+00:00 check sparsemax adagrad seed=1 step=6250 val=1.5443552501166045 best=1.5367205999748852 bad=1/8
+2026-10-01T09:21:57+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:57+00:00 check sparsemax adagrad seed=1 step=6500 val=1.535796032981128 best=1.535796032981128 bad=0/8
+2026-10-01T09:21:58+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:58+00:00 check sparsemax adagrad seed=1 step=6750 val=1.532363348521814 best=1.532363348521814 bad=0/8
+2026-10-01T09:21:59+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:21:59+00:00 check sparsemax adagrad seed=1 step=7000 val=1.5286847014925373 best=1.5286847014925373 bad=0/8
+2026-10-01T09:22:01+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:01+00:00 check sparsemax adagrad seed=1 step=7250 val=1.5314403231737945 best=1.5286847014925373 bad=1/8
+2026-10-01T09:22:02+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:02+00:00 check sparsemax adagrad seed=1 step=7500 val=1.5228841893297933 best=1.5228841893297933 bad=0/8
+2026-10-01T09:22:03+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:03+00:00 check sparsemax adagrad seed=1 step=7750 val=1.529072635619977 best=1.5228841893297933 bad=1/8
+2026-10-01T09:22:04+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:04+00:00 check sparsemax adagrad seed=1 step=8000 val=1.5228012207591848 best=1.5228012207591848 bad=2/8
+2026-10-01T09:22:05+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:05+00:00 check sparsemax adagrad seed=1 step=8250 val=1.5160132144266647 best=1.5160132144266647 bad=0/8
+2026-10-01T09:22:07+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:07+00:00 check sparsemax adagrad seed=1 step=8500 val=1.5215580936961826 best=1.5160132144266647 bad=1/8
+2026-10-01T09:22:08+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:08+00:00 check sparsemax adagrad seed=1 step=8750 val=1.5267661934468284 best=1.5160132144266647 bad=2/8
+2026-10-01T09:22:09+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:09+00:00 check sparsemax adagrad seed=1 step=9000 val=1.519610854979908 best=1.5160132144266647 bad=3/8
+2026-10-01T09:22:10+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:10+00:00 check sparsemax adagrad seed=1 step=9250 val=1.5216951600172215 best=1.5160132144266647 bad=4/8
+2026-10-01T09:22:12+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:12+00:00 check sparsemax adagrad seed=1 step=9500 val=1.5163630278595006 best=1.5160132144266647 bad=5/8
+2026-10-01T09:22:13+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:13+00:00 check sparsemax adagrad seed=1 step=9750 val=1.509864570626435 best=1.509864570626435 bad=0/8
+2026-10-01T09:22:14+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:14+00:00 check sparsemax adagrad seed=1 step=10000 val=1.5150509471871412 best=1.509864570626435 bad=1/8
+2026-10-01T09:22:15+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:15+00:00 check sparsemax adagrad seed=1 step=10250 val=1.5176937484303243 best=1.509864570626435 bad=2/8
+2026-10-01T09:22:16+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:16+00:00 check sparsemax adagrad seed=1 step=10500 val=1.5128912416582951 best=1.509864570626435 bad=3/8
+2026-10-01T09:22:18+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:18+00:00 check sparsemax adagrad seed=1 step=10750 val=1.512424683598235 best=1.509864570626435 bad=4/8
+2026-10-01T09:22:19+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:19+00:00 check sparsemax adagrad seed=1 step=11000 val=1.5152624329524254 best=1.509864570626435 bad=5/8
+2026-10-01T09:22:20+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:20+00:00 check sparsemax adagrad seed=1 step=11250 val=1.5086711966758755 best=1.5086711966758755 bad=0/8
+2026-10-01T09:22:21+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:21+00:00 check sparsemax adagrad seed=1 step=11500 val=1.5112776991694172 best=1.5086711966758755 bad=1/8
+2026-10-01T09:22:22+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:22+00:00 check sparsemax adagrad seed=1 step=11750 val=1.5120820177956371 best=1.5086711966758755 bad=2/8
+2026-10-01T09:22:24+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:24+00:00 check sparsemax adagrad seed=1 step=12000 val=1.5100173337040759 best=1.5086711966758755 bad=3/8
+2026-10-01T09:22:25+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:25+00:00 check sparsemax adagrad seed=1 step=12250 val=1.5076818805611367 best=1.5076818805611367 bad=0/8
+2026-10-01T09:22:26+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:26+00:00 check sparsemax adagrad seed=1 step=12500 val=1.5078445942612657 best=1.5076818805611367 bad=1/8
+2026-10-01T09:22:27+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:27+00:00 check sparsemax adagrad seed=1 step=12750 val=1.505722588978186 best=1.505722588978186 bad=0/8
+2026-10-01T09:22:29+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:29+00:00 check sparsemax adagrad seed=1 step=13000 val=1.5055155880005022 best=1.5055155880005022 bad=0/8
+2026-10-01T09:22:30+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:30+00:00 check sparsemax adagrad seed=1 step=13250 val=1.5076497862998708 best=1.5055155880005022 bad=1/8
+2026-10-01T09:22:31+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:31+00:00 check sparsemax adagrad seed=1 step=13500 val=1.5075165040183698 best=1.5055155880005022 bad=2/8
+2026-10-01T09:22:32+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:32+00:00 check sparsemax adagrad seed=1 step=13750 val=1.5079020556023968 best=1.5055155880005022 bad=3/8
+2026-10-01T09:22:33+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:34+00:00 check sparsemax adagrad seed=1 step=14000 val=1.5049433571326063 best=1.5049433571326063 bad=0/8
+2026-10-01T09:22:35+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:35+00:00 check sparsemax adagrad seed=1 step=14250 val=1.5067519878821038 best=1.5049433571326063 bad=1/8
+2026-10-01T09:22:36+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:36+00:00 check sparsemax adagrad seed=1 step=14500 val=1.507094513535089 best=1.5049433571326063 bad=2/8
+2026-10-01T09:22:37+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:37+00:00 check sparsemax adagrad seed=1 step=14750 val=1.5102257361778846 best=1.5049433571326063 bad=3/8
+2026-10-01T09:22:38+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:38+00:00 check sparsemax adagrad seed=1 step=15000 val=1.5041047018513203 best=1.5041047018513203 bad=0/8
+2026-10-01T09:22:40+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:40+00:00 check sparsemax adagrad seed=1 step=15250 val=1.4998668578681114 best=1.4998668578681114 bad=0/8
+2026-10-01T09:22:41+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:41+00:00 check sparsemax adagrad seed=1 step=15500 val=1.505947669255884 best=1.4998668578681114 bad=1/8
+2026-10-01T09:22:42+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:42+00:00 check sparsemax adagrad seed=1 step=15750 val=1.5090968310490815 best=1.4998668578681114 bad=2/8
+2026-10-01T09:22:43+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:43+00:00 check sparsemax adagrad seed=1 step=16000 val=1.507369206775617 best=1.4998668578681114 bad=3/8
+2026-10-01T09:22:44+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:44+00:00 check sparsemax adagrad seed=1 step=16250 val=1.5079635812822905 best=1.4998668578681114 bad=4/8
+2026-10-01T09:22:46+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:46+00:00 check sparsemax adagrad seed=1 step=16500 val=1.5067462417479909 best=1.4998668578681114 bad=5/8
+2026-10-01T09:22:47+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:47+00:00 check sparsemax adagrad seed=1 step=16750 val=1.5031750894715126 best=1.4998668578681114 bad=6/8
+2026-10-01T09:22:48+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:48+00:00 check sparsemax adagrad seed=1 step=17000 val=1.5093027108298651 best=1.4998668578681114 bad=7/8
+2026-10-01T09:22:49+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:49+00:00 check sparsemax adagrad seed=1 step=17250 val=1.5101147376847732 best=1.4998668578681114 bad=8/8
+2026-10-01T09:22:49+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:49+00:00 compiler sparsemax adagrad seed=1 FX=3 CUDA_nodes=4
+2026-10-01T09:22:50+00:00 run 2/144 END sparsemax:adagrad:1: ok stop=patience updates=17250 best=15250 test=1.7142577844700775
+2026-10-01T09:22:50+00:00 run 3/144 START sparsemax:adagrad:2 lr=0.03
+2026-10-01T09:22:51+00:00 compiler sparsemax adagrad seed=2 FX=2 CUDA_nodes=1
+2026-10-01T09:22:51+00:00 check sparsemax adagrad seed=2 step=0 val=4.188594848772962 best=4.188594848772962 bad=0/8
+2026-10-01T09:22:54+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:22:54+00:00 check sparsemax adagrad seed=2 step=250 val=2.1599711123618683 best=2.1599711123618683 bad=0/8
+2026-10-01T09:22:55+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:22:55+00:00 check sparsemax adagrad seed=2 step=500 val=1.9545957300337256 best=1.9545957300337256 bad=0/8
+2026-10-01T09:22:56+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:22:56+00:00 check sparsemax adagrad seed=2 step=750 val=1.8507735978311568 best=1.8507735978311568 bad=0/8
+2026-10-01T09:22:58+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:22:58+00:00 check sparsemax adagrad seed=2 step=1000 val=1.7877959679517077 best=1.7877959679517077 bad=0/8
+2026-10-01T09:22:59+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:22:59+00:00 check sparsemax adagrad seed=2 step=1250 val=1.749405205044489 best=1.749405205044489 bad=0/8
+2026-10-01T09:23:00+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:00+00:00 check sparsemax adagrad seed=2 step=1500 val=1.7136514972463404 best=1.7136514972463404 bad=0/8
+2026-10-01T09:23:01+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:01+00:00 check sparsemax adagrad seed=2 step=1750 val=1.6861478365384615 best=1.6861478365384615 bad=0/8
+2026-10-01T09:23:02+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:03+00:00 check sparsemax adagrad seed=2 step=2000 val=1.656597711188648 best=1.656597711188648 bad=0/8
+2026-10-01T09:23:04+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:04+00:00 check sparsemax adagrad seed=2 step=2250 val=1.6423695823765787 best=1.6423695823765787 bad=0/8
+2026-10-01T09:23:05+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:05+00:00 check sparsemax adagrad seed=2 step=2500 val=1.6211726542318456 best=1.6211726542318456 bad=0/8
+2026-10-01T09:23:06+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:06+00:00 check sparsemax adagrad seed=2 step=2750 val=1.6091385676036882 best=1.6091385676036882 bad=0/8
+2026-10-01T09:23:07+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:07+00:00 check sparsemax adagrad seed=2 step=3000 val=1.5998331939311854 best=1.5998331939311854 bad=0/8
+2026-10-01T09:23:09+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:09+00:00 check sparsemax adagrad seed=2 step=3250 val=1.5909915753264925 best=1.5909915753264925 bad=0/8
+2026-10-01T09:23:10+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:10+00:00 check sparsemax adagrad seed=2 step=3500 val=1.5825070579344862 best=1.5825070579344862 bad=0/8
+2026-10-01T09:23:11+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:11+00:00 check sparsemax adagrad seed=2 step=3750 val=1.582148975674512 best=1.582148975674512 bad=0/8
+2026-10-01T09:23:12+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:12+00:00 check sparsemax adagrad seed=2 step=4000 val=1.5685726827102469 best=1.5685726827102469 bad=0/8
+2026-10-01T09:23:14+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:14+00:00 check sparsemax adagrad seed=2 step=4250 val=1.5620824943043197 best=1.5620824943043197 bad=0/8
+2026-10-01T09:23:15+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:15+00:00 check sparsemax adagrad seed=2 step=4500 val=1.562213394042408 best=1.5620824943043197 bad=1/8
+2026-10-01T09:23:16+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:16+00:00 check sparsemax adagrad seed=2 step=4750 val=1.5660376565190872 best=1.5620824943043197 bad=2/8
+2026-10-01T09:23:17+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:17+00:00 check sparsemax adagrad seed=2 step=5000 val=1.5594661813379018 best=1.5594661813379018 bad=0/8
+2026-10-01T09:23:19+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:19+00:00 check sparsemax adagrad seed=2 step=5250 val=1.5556316879395091 best=1.5556316879395091 bad=0/8
+2026-10-01T09:23:20+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:20+00:00 check sparsemax adagrad seed=2 step=5500 val=1.5443743104639065 best=1.5443743104639065 bad=0/8
+2026-10-01T09:23:21+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:21+00:00 check sparsemax adagrad seed=2 step=5750 val=1.5520598349149684 best=1.5443743104639065 bad=1/8
+2026-10-01T09:23:22+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:22+00:00 check sparsemax adagrad seed=2 step=6000 val=1.536292723207879 best=1.536292723207879 bad=0/8
+2026-10-01T09:23:24+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:24+00:00 check sparsemax adagrad seed=2 step=6250 val=1.5356414479585248 best=1.5356414479585248 bad=0/8
+2026-10-01T09:23:25+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:25+00:00 check sparsemax adagrad seed=2 step=6500 val=1.5341593658061854 best=1.5341593658061854 bad=0/8
+2026-10-01T09:23:26+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:26+00:00 check sparsemax adagrad seed=2 step=6750 val=1.5353942240420493 best=1.5341593658061854 bad=1/8
+2026-10-01T09:23:27+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:27+00:00 check sparsemax adagrad seed=2 step=7000 val=1.5396062804965558 best=1.5341593658061854 bad=2/8
+2026-10-01T09:23:29+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:29+00:00 check sparsemax adagrad seed=2 step=7250 val=1.5301332878874856 best=1.5301332878874856 bad=0/8
+2026-10-01T09:23:30+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:30+00:00 check sparsemax adagrad seed=2 step=7500 val=1.5254817222481343 best=1.5254817222481343 bad=0/8
+2026-10-01T09:23:31+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:31+00:00 check sparsemax adagrad seed=2 step=7750 val=1.5259010498887773 best=1.5254817222481343 bad=1/8
+2026-10-01T09:23:32+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:32+00:00 check sparsemax adagrad seed=2 step=8000 val=1.519233432073407 best=1.519233432073407 bad=0/8
+2026-10-01T09:23:34+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:34+00:00 check sparsemax adagrad seed=2 step=8250 val=1.5203319247362945 best=1.519233432073407 bad=1/8
+2026-10-01T09:23:35+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:35+00:00 check sparsemax adagrad seed=2 step=8500 val=1.5208373042390213 best=1.519233432073407 bad=2/8
+2026-10-01T09:23:36+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:36+00:00 check sparsemax adagrad seed=2 step=8750 val=1.5195463861581515 best=1.519233432073407 bad=3/8
+2026-10-01T09:23:37+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:37+00:00 check sparsemax adagrad seed=2 step=9000 val=1.5195646056077785 best=1.519233432073407 bad=4/8
+2026-10-01T09:23:38+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:38+00:00 check sparsemax adagrad seed=2 step=9250 val=1.517716592817164 best=1.517716592817164 bad=0/8
+2026-10-01T09:23:40+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:40+00:00 check sparsemax adagrad seed=2 step=9500 val=1.5217128188683984 best=1.517716592817164 bad=1/8
+2026-10-01T09:23:41+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:41+00:00 check sparsemax adagrad seed=2 step=9750 val=1.5188896450739093 best=1.517716592817164 bad=2/8
+2026-10-01T09:23:42+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:42+00:00 check sparsemax adagrad seed=2 step=10000 val=1.5141827203376148 best=1.5141827203376148 bad=0/8
+2026-10-01T09:23:43+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:43+00:00 check sparsemax adagrad seed=2 step=10250 val=1.5199626305073193 best=1.5141827203376148 bad=1/8
+2026-10-01T09:23:45+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:45+00:00 check sparsemax adagrad seed=2 step=10500 val=1.5127606222194316 best=1.5127606222194316 bad=0/8
+2026-10-01T09:23:46+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:46+00:00 check sparsemax adagrad seed=2 step=10750 val=1.516084130130597 best=1.5127606222194316 bad=1/8
+2026-10-01T09:23:47+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:47+00:00 check sparsemax adagrad seed=2 step=11000 val=1.5135199528200345 best=1.5127606222194316 bad=2/8
+2026-10-01T09:23:48+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:48+00:00 check sparsemax adagrad seed=2 step=11250 val=1.5158673186800373 best=1.5127606222194316 bad=3/8
+2026-10-01T09:23:50+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:50+00:00 check sparsemax adagrad seed=2 step=11500 val=1.5157033436333955 best=1.5127606222194316 bad=4/8
+2026-10-01T09:23:51+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:51+00:00 check sparsemax adagrad seed=2 step=11750 val=1.5112620024128158 best=1.5112620024128158 bad=0/8
+2026-10-01T09:23:52+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:52+00:00 check sparsemax adagrad seed=2 step=12000 val=1.5123417150276264 best=1.5112620024128158 bad=1/8
+2026-10-01T09:23:53+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:53+00:00 check sparsemax adagrad seed=2 step=12250 val=1.5086648899433124 best=1.5086648899433124 bad=0/8
+2026-10-01T09:23:55+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:55+00:00 check sparsemax adagrad seed=2 step=12500 val=1.5143937856540615 best=1.5086648899433124 bad=1/8
+2026-10-01T09:23:56+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:56+00:00 check sparsemax adagrad seed=2 step=12750 val=1.5055839810114093 best=1.5055839810114093 bad=0/8
+2026-10-01T09:23:57+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:57+00:00 check sparsemax adagrad seed=2 step=13000 val=1.5076056391719288 best=1.5055839810114093 bad=1/8
+2026-10-01T09:23:58+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:23:58+00:00 check sparsemax adagrad seed=2 step=13250 val=1.5068444866263633 best=1.5055839810114093 bad=2/8
+2026-10-01T09:24:00+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:24:00+00:00 check sparsemax adagrad seed=2 step=13500 val=1.5100379356971154 best=1.5055839810114093 bad=3/8
+2026-10-01T09:24:01+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:24:01+00:00 check sparsemax adagrad seed=2 step=13750 val=1.5128120571272246 best=1.5055839810114093 bad=4/8
+2026-10-01T09:24:02+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:24:02+00:00 check sparsemax adagrad seed=2 step=14000 val=1.510297773078717 best=1.5055839810114093 bad=5/8
+2026-10-01T09:24:03+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:24:03+00:00 check sparsemax adagrad seed=2 step=14250 val=1.5144271412618397 best=1.5055839810114093 bad=6/8
+2026-10-01T09:24:04+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:24:04+00:00 check sparsemax adagrad seed=2 step=14500 val=1.5123998771168197 best=1.5055839810114093 bad=7/8
+2026-10-01T09:24:06+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:24:06+00:00 check sparsemax adagrad seed=2 step=14750 val=1.5112528926880022 best=1.5055839810114093 bad=8/8
+2026-10-01T09:24:06+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:24:06+00:00 compiler sparsemax adagrad seed=2 FX=3 CUDA_nodes=4
+2026-10-01T09:24:06+00:00 run 3/144 END sparsemax:adagrad:2: ok stop=patience updates=14750 best=12750 test=1.6606195846189724
+2026-10-01T09:24:06+00:00 run 4/144 START softmax:adafisher:0 lr=0.001
+2026-10-01T09:24:07+00:00 compiler softmax adafisher seed=0 FX=2 CUDA_nodes=1
+2026-10-01T09:24:07+00:00 check softmax adafisher seed=0 step=0 val=4.208107879323335 best=4.208107879323335 bad=0/8
+2026-10-01T09:24:13+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=52
+2026-10-01T09:24:13+00:00 check softmax adafisher seed=0 step=250 val=2.2242877316392797 best=2.2242877316392797 bad=0/8
+2026-10-01T09:24:16+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:24:16+00:00 check softmax adafisher seed=0 step=500 val=1.9886746499623278 best=1.9886746499623278 bad=0/8
+2026-10-01T09:24:19+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:24:19+00:00 check softmax adafisher seed=0 step=750 val=1.8974403355069605 best=1.8974403355069605 bad=0/8
+2026-10-01T09:24:23+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:24:23+00:00 check softmax adafisher seed=0 step=1000 val=1.8460457908025976 best=1.8460457908025976 bad=0/8
+2026-10-01T09:24:26+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:24:26+00:00 check softmax adafisher seed=0 step=1250 val=1.80959595987909 best=1.80959595987909 bad=0/8
+2026-10-01T09:24:29+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:24:29+00:00 check softmax adafisher seed=0 step=1500 val=1.7763639640589122 best=1.7763639640589122 bad=0/8
+2026-10-01T09:24:32+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:24:32+00:00 check softmax adafisher seed=0 step=1750 val=1.7593125213027412 best=1.7593125213027412 bad=0/8
+2026-10-01T09:24:35+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:24:35+00:00 check softmax adafisher seed=0 step=2000 val=1.7220224934522101 best=1.7220224934522101 bad=0/8
+2026-10-01T09:24:38+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:24:38+00:00 check softmax adafisher seed=0 step=2250 val=1.7115863927059414 best=1.7115863927059414 bad=0/8
+2026-10-01T09:24:41+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:24:41+00:00 check softmax adafisher seed=0 step=2500 val=1.692545245900904 best=1.692545245900904 bad=0/8
+2026-10-01T09:24:44+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:24:44+00:00 check softmax adafisher seed=0 step=2750 val=1.67333816195465 best=1.67333816195465 bad=0/8
+2026-10-01T09:24:47+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:24:47+00:00 check softmax adafisher seed=0 step=3000 val=1.6735782382408868 best=1.67333816195465 bad=1/8
+2026-10-01T09:24:50+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:24:50+00:00 check softmax adafisher seed=0 step=3250 val=1.6538971683051091 best=1.6538971683051091 bad=0/8
+2026-10-01T09:24:53+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:24:53+00:00 check softmax adafisher seed=0 step=3500 val=1.6487867528343858 best=1.6487867528343858 bad=0/8
+2026-10-01T09:24:56+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:24:56+00:00 check softmax adafisher seed=0 step=3750 val=1.6452932434432406 best=1.6452932434432406 bad=0/8
+2026-10-01T09:25:00+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:00+00:00 check softmax adafisher seed=0 step=4000 val=1.6292435901173221 best=1.6292435901173221 bad=0/8
+2026-10-01T09:25:03+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:03+00:00 check softmax adafisher seed=0 step=4250 val=1.621058852746484 best=1.621058852746484 bad=0/8
+2026-10-01T09:25:06+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:06+00:00 check softmax adafisher seed=0 step=4500 val=1.616321235245049 best=1.616321235245049 bad=0/8
+2026-10-01T09:25:09+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:09+00:00 check softmax adafisher seed=0 step=4750 val=1.6182592240868972 best=1.616321235245049 bad=1/8
+2026-10-01T09:25:12+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:12+00:00 check softmax adafisher seed=0 step=5000 val=1.608749932728186 best=1.608749932728186 bad=0/8
+2026-10-01T09:25:15+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:15+00:00 check softmax adafisher seed=0 step=5250 val=1.603911547655353 best=1.603911547655353 bad=0/8
+2026-10-01T09:25:18+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:18+00:00 check softmax adafisher seed=0 step=5500 val=1.6005015674332663 best=1.6005015674332663 bad=0/8
+2026-10-01T09:25:21+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:21+00:00 check softmax adafisher seed=0 step=5750 val=1.591465281016791 best=1.591465281016791 bad=0/8
+2026-10-01T09:25:25+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:25+00:00 check softmax adafisher seed=0 step=6000 val=1.588452204497345 best=1.588452204497345 bad=0/8
+2026-10-01T09:25:28+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:28+00:00 check softmax adafisher seed=0 step=6250 val=1.5828654204936854 best=1.5828654204936854 bad=0/8
+2026-10-01T09:25:31+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:31+00:00 check softmax adafisher seed=0 step=6500 val=1.5829569381906572 best=1.5828654204936854 bad=1/8
+2026-10-01T09:25:34+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:34+00:00 check softmax adafisher seed=0 step=6750 val=1.5810667403666763 best=1.5810667403666763 bad=0/8
+2026-10-01T09:25:37+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:37+00:00 check softmax adafisher seed=0 step=7000 val=1.5833600084762485 best=1.5810667403666763 bad=1/8
+2026-10-01T09:25:40+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:40+00:00 check softmax adafisher seed=0 step=7250 val=1.5734180752637055 best=1.5734180752637055 bad=0/8
+2026-10-01T09:25:44+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:44+00:00 check softmax adafisher seed=0 step=7500 val=1.5747821514423077 best=1.5734180752637055 bad=1/8
+2026-10-01T09:25:48+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:48+00:00 check softmax adafisher seed=0 step=7750 val=1.5702365389100172 best=1.5702365389100172 bad=0/8
+2026-10-01T09:25:52+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:52+00:00 check softmax adafisher seed=0 step=8000 val=1.5635753679768227 best=1.5635753679768227 bad=0/8
+2026-10-01T09:25:56+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:25:56+00:00 check softmax adafisher seed=0 step=8250 val=1.5699486716059128 best=1.5635753679768227 bad=1/8
+2026-10-01T09:26:00+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:00+00:00 check softmax adafisher seed=0 step=8500 val=1.5600922296570034 best=1.5600922296570034 bad=0/8
+2026-10-01T09:26:03+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:03+00:00 check softmax adafisher seed=0 step=8750 val=1.5588925489738805 best=1.5588925489738805 bad=0/8
+2026-10-01T09:26:07+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:07+00:00 check softmax adafisher seed=0 step=9000 val=1.5575989680503732 best=1.5575989680503732 bad=0/8
+2026-10-01T09:26:11+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:11+00:00 check softmax adafisher seed=0 step=9250 val=1.5645683279814868 best=1.5575989680503732 bad=1/8
+2026-10-01T09:26:15+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:15+00:00 check softmax adafisher seed=0 step=9500 val=1.5627805795242538 best=1.5575989680503732 bad=2/8
+2026-10-01T09:26:19+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:19+00:00 check softmax adafisher seed=0 step=9750 val=1.5582625764656286 best=1.5575989680503732 bad=3/8
+2026-10-01T09:26:22+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:22+00:00 check softmax adafisher seed=0 step=10000 val=1.5578914602916907 best=1.5575989680503732 bad=4/8
+2026-10-01T09:26:25+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:25+00:00 check softmax adafisher seed=0 step=10250 val=1.551103313809558 best=1.551103313809558 bad=0/8
+2026-10-01T09:26:28+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:28+00:00 check softmax adafisher seed=0 step=10500 val=1.5466588892975028 best=1.5466588892975028 bad=0/8
+2026-10-01T09:26:31+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:31+00:00 check softmax adafisher seed=0 step=10750 val=1.539154297996197 best=1.539154297996197 bad=0/8
+2026-10-01T09:26:34+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:34+00:00 check softmax adafisher seed=0 step=11000 val=1.5426092662439006 best=1.539154297996197 bad=1/8
+2026-10-01T09:26:37+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:37+00:00 check softmax adafisher seed=0 step=11250 val=1.5440550496465988 best=1.539154297996197 bad=2/8
+2026-10-01T09:26:40+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:40+00:00 check softmax adafisher seed=0 step=11500 val=1.5400397632480625 best=1.539154297996197 bad=3/8
+2026-10-01T09:26:43+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:43+00:00 check softmax adafisher seed=0 step=11750 val=1.5441261055001436 best=1.539154297996197 bad=4/8
+2026-10-01T09:26:46+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:46+00:00 check softmax adafisher seed=0 step=12000 val=1.5428525659712256 best=1.539154297996197 bad=5/8
+2026-10-01T09:26:49+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:49+00:00 check softmax adafisher seed=0 step=12250 val=1.5384473833506744 best=1.5384473833506744 bad=0/8
+2026-10-01T09:26:52+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:52+00:00 check softmax adafisher seed=0 step=12500 val=1.5377808317935562 best=1.5377808317935562 bad=0/8
+2026-10-01T09:26:55+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:55+00:00 check softmax adafisher seed=0 step=12750 val=1.5443876246770953 best=1.5377808317935562 bad=1/8
+2026-10-01T09:26:59+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:26:59+00:00 check softmax adafisher seed=0 step=13000 val=1.5387604775850316 best=1.5377808317935562 bad=2/8
+2026-10-01T09:27:02+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:02+00:00 check softmax adafisher seed=0 step=13250 val=1.5386274756027554 best=1.5377808317935562 bad=3/8
+2026-10-01T09:27:05+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:05+00:00 check softmax adafisher seed=0 step=13500 val=1.5312480379054247 best=1.5312480379054247 bad=0/8
+2026-10-01T09:27:09+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:09+00:00 check softmax adafisher seed=0 step=13750 val=1.529321681481415 best=1.529321681481415 bad=0/8
+2026-10-01T09:27:12+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:12+00:00 check softmax adafisher seed=0 step=14000 val=1.529556572231989 best=1.529321681481415 bad=1/8
+2026-10-01T09:27:16+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:16+00:00 check softmax adafisher seed=0 step=14250 val=1.530751347678674 best=1.529321681481415 bad=2/8
+2026-10-01T09:27:19+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:19+00:00 check softmax adafisher seed=0 step=14500 val=1.5301108639494834 best=1.529321681481415 bad=3/8
+2026-10-01T09:27:22+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:22+00:00 check softmax adafisher seed=0 step=14750 val=1.5335860137413893 best=1.529321681481415 bad=4/8
+2026-10-01T09:27:25+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:25+00:00 check softmax adafisher seed=0 step=15000 val=1.527398828797718 best=1.527398828797718 bad=0/8
+2026-10-01T09:27:28+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:28+00:00 check softmax adafisher seed=0 step=15250 val=1.5296796235917767 best=1.527398828797718 bad=1/8
+2026-10-01T09:27:31+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:31+00:00 check softmax adafisher seed=0 step=15500 val=1.5277562103096298 best=1.527398828797718 bad=2/8
+2026-10-01T09:27:34+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:34+00:00 check softmax adafisher seed=0 step=15750 val=1.5323367200954363 best=1.527398828797718 bad=3/8
+2026-10-01T09:27:37+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:37+00:00 check softmax adafisher seed=0 step=16000 val=1.5337997419004736 best=1.527398828797718 bad=4/8
+2026-10-01T09:27:40+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:40+00:00 check softmax adafisher seed=0 step=16250 val=1.5297876789430254 best=1.527398828797718 bad=5/8
+2026-10-01T09:27:43+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:43+00:00 check softmax adafisher seed=0 step=16500 val=1.5224928916116534 best=1.5224928916116534 bad=0/8
+2026-10-01T09:27:46+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:46+00:00 check softmax adafisher seed=0 step=16750 val=1.5240561203896383 best=1.5224928916116534 bad=1/8
+2026-10-01T09:27:49+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:49+00:00 check softmax adafisher seed=0 step=17000 val=1.5304710484536452 best=1.5224928916116534 bad=2/8
+2026-10-01T09:27:52+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:52+00:00 check softmax adafisher seed=0 step=17250 val=1.5257286658653846 best=1.5224928916116534 bad=3/8
+2026-10-01T09:27:55+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:55+00:00 check softmax adafisher seed=0 step=17500 val=1.5308853307082377 best=1.5224928916116534 bad=4/8
+2026-10-01T09:27:59+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:27:59+00:00 check softmax adafisher seed=0 step=17750 val=1.5272057026316734 best=1.5224928916116534 bad=5/8
+2026-10-01T09:28:02+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:28:02+00:00 check softmax adafisher seed=0 step=18000 val=1.514770227513275 best=1.514770227513275 bad=0/8
+2026-10-01T09:28:05+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:28:05+00:00 check softmax adafisher seed=0 step=18250 val=1.5200084594306114 best=1.514770227513275 bad=1/8
+2026-10-01T09:28:08+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:28:08+00:00 check softmax adafisher seed=0 step=18500 val=1.526177004475818 best=1.514770227513275 bad=2/8
+2026-10-01T09:28:11+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:28:11+00:00 check softmax adafisher seed=0 step=18750 val=1.5218648811979765 best=1.514770227513275 bad=3/8
+2026-10-01T09:28:14+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:28:14+00:00 check softmax adafisher seed=0 step=19000 val=1.520113011041547 best=1.514770227513275 bad=4/8
+2026-10-01T09:28:17+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:28:17+00:00 check softmax adafisher seed=0 step=19250 val=1.516909751497919 best=1.514770227513275 bad=5/8
+2026-10-01T09:28:20+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:28:20+00:00 check softmax adafisher seed=0 step=19500 val=1.513905644553674 best=1.513905644553674 bad=0/8
+2026-10-01T09:28:22+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:28:22+00:00 check softmax adafisher seed=0 step=19750 val=1.5160778233980339 best=1.513905644553674 bad=1/8
+2026-10-01T09:28:26+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:28:26+00:00 check softmax adafisher seed=0 step=20000 val=1.5141810385422647 best=1.513905644553674 bad=2/8
+2026-10-01T09:28:26+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:28:26+00:00 compiler softmax adafisher seed=0 FX=24 CUDA_nodes=92
+2026-10-01T09:28:26+00:00 run 4/144 END softmax:adafisher:0: ok stop=max_steps updates=20000 best=19500 test=1.6443538205905568
+2026-10-01T09:28:26+00:00 run 5/144 START softmax:adafisher:1 lr=0.001
+2026-10-01T09:28:27+00:00 compiler softmax adafisher seed=1 FX=2 CUDA_nodes=1
+2026-10-01T09:28:27+00:00 check softmax adafisher seed=1 step=0 val=4.165836513795207 best=4.165836513795207 bad=0/8
+2026-10-01T09:28:32+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=52
+2026-10-01T09:28:32+00:00 check softmax adafisher seed=1 step=250 val=2.1927958334080797 best=2.1927958334080797 bad=0/8
+2026-10-01T09:28:36+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:28:36+00:00 check softmax adafisher seed=1 step=500 val=1.9873017443581371 best=1.9873017443581371 bad=0/8
+2026-10-01T09:28:39+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:28:39+00:00 check softmax adafisher seed=1 step=750 val=1.9028195579344862 best=1.9028195579344862 bad=0/8
+2026-10-01T09:28:42+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:28:42+00:00 check softmax adafisher seed=1 step=1000 val=1.8331387122380884 best=1.8331387122380884 bad=0/8
+2026-10-01T09:28:45+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:28:45+00:00 check softmax adafisher seed=1 step=1250 val=1.8004198041493256 best=1.8004198041493256 bad=0/8
+2026-10-01T09:28:48+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:28:48+00:00 check softmax adafisher seed=1 step=1500 val=1.7675990072922647 best=1.7675990072922647 bad=0/8
+2026-10-01T09:28:51+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:28:51+00:00 check softmax adafisher seed=1 step=1750 val=1.7363825030496556 best=1.7363825030496556 bad=0/8
+2026-10-01T09:28:54+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:28:54+00:00 check softmax adafisher seed=1 step=2000 val=1.7186549785627152 best=1.7186549785627152 bad=0/8
+2026-10-01T09:28:57+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:28:57+00:00 check softmax adafisher seed=1 step=2250 val=1.7086449326384903 best=1.7086449326384903 bad=0/8
+2026-10-01T09:29:00+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:00+00:00 check softmax adafisher seed=1 step=2500 val=1.6933543296139495 best=1.6933543296139495 bad=0/8
+2026-10-01T09:29:03+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:03+00:00 check softmax adafisher seed=1 step=2750 val=1.6837741225513059 best=1.6837741225513059 bad=0/8
+2026-10-01T09:29:06+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:06+00:00 check softmax adafisher seed=1 step=3000 val=1.6662128155048077 best=1.6662128155048077 bad=0/8
+2026-10-01T09:29:09+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:09+00:00 check softmax adafisher seed=1 step=3250 val=1.6667378159532864 best=1.6662128155048077 bad=1/8
+2026-10-01T09:29:12+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:12+00:00 check softmax adafisher seed=1 step=3500 val=1.6551125457448335 best=1.6551125457448335 bad=0/8
+2026-10-01T09:29:15+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:15+00:00 check softmax adafisher seed=1 step=3750 val=1.6448945177956371 best=1.6448945177956371 bad=0/8
+2026-10-01T09:29:18+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:18+00:00 check softmax adafisher seed=1 step=4000 val=1.6315867514889495 best=1.6315867514889495 bad=0/8
+2026-10-01T09:29:21+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:21+00:00 check softmax adafisher seed=1 step=4250 val=1.6331404500932836 best=1.6315867514889495 bad=1/8
+2026-10-01T09:29:24+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:24+00:00 check softmax adafisher seed=1 step=4500 val=1.6279752361240671 best=1.6279752361240671 bad=0/8
+2026-10-01T09:29:27+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:27+00:00 check softmax adafisher seed=1 step=4750 val=1.6259789450434128 best=1.6259789450434128 bad=0/8
+2026-10-01T09:29:30+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:30+00:00 check softmax adafisher seed=1 step=5000 val=1.6188157581981917 best=1.6188157581981917 bad=0/8
+2026-10-01T09:29:33+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:33+00:00 check softmax adafisher seed=1 step=5250 val=1.6128896719826349 best=1.6128896719826349 bad=0/8
+2026-10-01T09:29:36+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:36+00:00 check softmax adafisher seed=1 step=5500 val=1.6067225284335533 best=1.6067225284335533 bad=0/8
+2026-10-01T09:29:39+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:39+00:00 check softmax adafisher seed=1 step=5750 val=1.6098397361150976 best=1.6067225284335533 bad=1/8
+2026-10-01T09:29:43+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:43+00:00 check softmax adafisher seed=1 step=6000 val=1.5973602540183698 best=1.5973602540183698 bad=0/8
+2026-10-01T09:29:46+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:46+00:00 check softmax adafisher seed=1 step=6250 val=1.605332244277411 best=1.5973602540183698 bad=1/8
+2026-10-01T09:29:49+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:49+00:00 check softmax adafisher seed=1 step=6500 val=1.5991271201833381 best=1.5973602540183698 bad=2/8
+2026-10-01T09:29:52+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:52+00:00 check softmax adafisher seed=1 step=6750 val=1.5847338951277268 best=1.5847338951277268 bad=0/8
+2026-10-01T09:29:55+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:55+00:00 check softmax adafisher seed=1 step=7000 val=1.5756561244259473 best=1.5756561244259473 bad=0/8
+2026-10-01T09:29:58+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:29:58+00:00 check softmax adafisher seed=1 step=7250 val=1.5792819350513059 best=1.5756561244259473 bad=1/8
+2026-10-01T09:30:01+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:01+00:00 check softmax adafisher seed=1 step=7500 val=1.5749780806006028 best=1.5749780806006028 bad=0/8
+2026-10-01T09:30:04+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:04+00:00 check softmax adafisher seed=1 step=7750 val=1.576212238088404 best=1.5749780806006028 bad=1/8
+2026-10-01T09:30:07+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:07+00:00 check softmax adafisher seed=1 step=8000 val=1.5723902180055254 best=1.5723902180055254 bad=0/8
+2026-10-01T09:30:10+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:10+00:00 check softmax adafisher seed=1 step=8250 val=1.564296718032434 best=1.564296718032434 bad=0/8
+2026-10-01T09:30:13+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:13+00:00 check softmax adafisher seed=1 step=8500 val=1.566538411084601 best=1.564296718032434 bad=1/8
+2026-10-01T09:30:16+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:16+00:00 check softmax adafisher seed=1 step=8750 val=1.5708482919686424 best=1.564296718032434 bad=2/8
+2026-10-01T09:30:19+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:19+00:00 check softmax adafisher seed=1 step=9000 val=1.5598009987621986 best=1.5598009987621986 bad=0/8
+2026-10-01T09:30:22+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:22+00:00 check softmax adafisher seed=1 step=9250 val=1.5656577109195609 best=1.5598009987621986 bad=1/8
+2026-10-01T09:30:26+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:26+00:00 check softmax adafisher seed=1 step=9500 val=1.5550476845041619 best=1.5550476845041619 bad=0/8
+2026-10-01T09:30:29+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:29+00:00 check softmax adafisher seed=1 step=9750 val=1.5474354583004448 best=1.5474354583004448 bad=0/8
+2026-10-01T09:30:33+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:33+00:00 check softmax adafisher seed=1 step=10000 val=1.5504146186136625 best=1.5474354583004448 bad=1/8
+2026-10-01T09:30:36+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:36+00:00 check softmax adafisher seed=1 step=10250 val=1.5574202772944172 best=1.5474354583004448 bad=2/8
+2026-10-01T09:30:39+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:39+00:00 check softmax adafisher seed=1 step=10500 val=1.552235162080224 best=1.5474354583004448 bad=3/8
+2026-10-01T09:30:42+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:42+00:00 check softmax adafisher seed=1 step=10750 val=1.5532204138561998 best=1.5474354583004448 bad=4/8
+2026-10-01T09:30:45+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:45+00:00 check softmax adafisher seed=1 step=11000 val=1.5489985469288174 best=1.5474354583004448 bad=5/8
+2026-10-01T09:30:48+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:48+00:00 check softmax adafisher seed=1 step=11250 val=1.5495976865223162 best=1.5474354583004448 bad=6/8
+2026-10-01T09:30:51+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:51+00:00 check softmax adafisher seed=1 step=11500 val=1.5447452864882318 best=1.5447452864882318 bad=0/8
+2026-10-01T09:30:54+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:54+00:00 check softmax adafisher seed=1 step=11750 val=1.546558121726105 best=1.5447452864882318 bad=1/8
+2026-10-01T09:30:57+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:30:57+00:00 check softmax adafisher seed=1 step=12000 val=1.5450443657613375 best=1.5447452864882318 bad=2/8
+2026-10-01T09:31:00+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:00+00:00 check softmax adafisher seed=1 step=12250 val=1.541737115205224 best=1.541737115205224 bad=0/8
+2026-10-01T09:31:03+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:03+00:00 check softmax adafisher seed=1 step=12500 val=1.5383775888436424 best=1.5383775888436424 bad=0/8
+2026-10-01T09:31:06+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:06+00:00 check softmax adafisher seed=1 step=12750 val=1.5447402411021813 best=1.5383775888436424 bad=1/8
+2026-10-01T09:31:09+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:09+00:00 check softmax adafisher seed=1 step=13000 val=1.5362104553853329 best=1.5362104553853329 bad=0/8
+2026-10-01T09:31:12+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:12+00:00 check softmax adafisher seed=1 step=13250 val=1.5376150348019517 best=1.5362104553853329 bad=1/8
+2026-10-01T09:31:15+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:15+00:00 check softmax adafisher seed=1 step=13500 val=1.530445961673005 best=1.530445961673005 bad=0/8
+2026-10-01T09:31:18+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:18+00:00 check softmax adafisher seed=1 step=13750 val=1.5312662573550517 best=1.530445961673005 bad=1/8
+2026-10-01T09:31:21+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:21+00:00 check softmax adafisher seed=1 step=14000 val=1.5308557591399972 best=1.530445961673005 bad=2/8
+2026-10-01T09:31:24+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:24+00:00 check softmax adafisher seed=1 step=14250 val=1.5328590577012773 best=1.530445961673005 bad=3/8
+2026-10-01T09:31:27+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:27+00:00 check softmax adafisher seed=1 step=14500 val=1.5375079604979909 best=1.530445961673005 bad=4/8
+2026-10-01T09:31:30+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:30+00:00 check softmax adafisher seed=1 step=14750 val=1.525488449429535 best=1.525488449429535 bad=0/8
+2026-10-01T09:31:33+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:33+00:00 check softmax adafisher seed=1 step=15000 val=1.5244901637395953 best=1.5244901637395953 bad=0/8
+2026-10-01T09:31:36+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:36+00:00 check softmax adafisher seed=1 step=15250 val=1.5241128809827067 best=1.5241128809827067 bad=0/8
+2026-10-01T09:31:39+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:39+00:00 check softmax adafisher seed=1 step=15500 val=1.5285556236994116 best=1.5241128809827067 bad=1/8
+2026-10-01T09:31:42+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:42+00:00 check softmax adafisher seed=1 step=15750 val=1.5254012763705511 best=1.5241128809827067 bad=2/8
+2026-10-01T09:31:45+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:45+00:00 check softmax adafisher seed=1 step=16000 val=1.52661300992035 best=1.5241128809827067 bad=3/8
+2026-10-01T09:31:48+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:48+00:00 check softmax adafisher seed=1 step=16250 val=1.527079988429248 best=1.5241128809827067 bad=4/8
+2026-10-01T09:31:51+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:51+00:00 check softmax adafisher seed=1 step=16500 val=1.5287200191948909 best=1.5241128809827067 bad=5/8
+2026-10-01T09:31:54+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:54+00:00 check softmax adafisher seed=1 step=16750 val=1.5237372800211682 best=1.5237372800211682 bad=0/8
+2026-10-01T09:31:58+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:31:58+00:00 check softmax adafisher seed=1 step=17000 val=1.5222588417587544 best=1.5222588417587544 bad=0/8
+2026-10-01T09:32:02+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:32:02+00:00 check softmax adafisher seed=1 step=17250 val=1.5235777897621268 best=1.5222588417587544 bad=1/8
+2026-10-01T09:32:05+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:32:05+00:00 check softmax adafisher seed=1 step=17500 val=1.5245683672233783 best=1.5222588417587544 bad=2/8
+2026-10-01T09:32:08+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:32:08+00:00 check softmax adafisher seed=1 step=17750 val=1.525420336717853 best=1.5222588417587544 bad=3/8
+2026-10-01T09:32:11+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:32:11+00:00 check softmax adafisher seed=1 step=18000 val=1.51889525105841 best=1.51889525105841 bad=0/8
+2026-10-01T09:32:14+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:32:14+00:00 check softmax adafisher seed=1 step=18250 val=1.5182514037385189 best=1.5182514037385189 bad=0/8
+2026-10-01T09:32:17+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:32:17+00:00 check softmax adafisher seed=1 step=18500 val=1.5170605524809846 best=1.5170605524809846 bad=0/8
+2026-10-01T09:32:20+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:32:20+00:00 check softmax adafisher seed=1 step=18750 val=1.5194674819263059 best=1.5170605524809846 bad=1/8
+2026-10-01T09:32:23+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:32:23+00:00 check softmax adafisher seed=1 step=19000 val=1.5141894475190154 best=1.5141894475190154 bad=0/8
+2026-10-01T09:32:26+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:32:26+00:00 check softmax adafisher seed=1 step=19250 val=1.518608084502368 best=1.5141894475190154 bad=1/8
+2026-10-01T09:32:29+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:32:29+00:00 check softmax adafisher seed=1 step=19500 val=1.5078963094682836 best=1.5078963094682836 bad=0/8
+2026-10-01T09:32:32+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:32:32+00:00 check softmax adafisher seed=1 step=19750 val=1.5137394271132318 best=1.5078963094682836 bad=1/8
+2026-10-01T09:32:35+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:32:35+00:00 check softmax adafisher seed=1 step=20000 val=1.519448701878229 best=1.5078963094682836 bad=2/8
+2026-10-01T09:32:35+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:32:35+00:00 compiler softmax adafisher seed=1 FX=24 CUDA_nodes=92
+2026-10-01T09:32:36+00:00 run 5/144 END softmax:adafisher:1: ok stop=max_steps updates=20000 best=19500 test=1.648526354854334
+2026-10-01T09:32:36+00:00 run 6/144 START softmax:adafisher:2 lr=0.001
+2026-10-01T09:32:37+00:00 compiler softmax adafisher seed=2 FX=2 CUDA_nodes=1
+2026-10-01T09:32:37+00:00 check softmax adafisher seed=2 step=0 val=4.185370847086682 best=4.185370847086682 bad=0/8
+2026-10-01T09:32:42+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=52
+2026-10-01T09:32:42+00:00 check softmax adafisher seed=2 step=250 val=2.1911593063827497 best=2.1911593063827497 bad=0/8
+2026-10-01T09:32:46+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:32:46+00:00 check softmax adafisher seed=2 step=500 val=1.9833612978526838 best=1.9833612978526838 bad=0/8
+2026-10-01T09:32:49+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:32:49+00:00 check softmax adafisher seed=2 step=750 val=1.8799861027644231 best=1.8799861027644231 bad=0/8
+2026-10-01T09:32:52+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:32:52+00:00 check softmax adafisher seed=2 step=1000 val=1.8320782001201923 best=1.8320782001201923 bad=0/8
+2026-10-01T09:32:55+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:32:55+00:00 check softmax adafisher seed=2 step=1250 val=1.7983523170655138 best=1.7983523170655138 bad=0/8
+2026-10-01T09:32:58+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:32:58+00:00 check softmax adafisher seed=2 step=1500 val=1.7737299922413174 best=1.7737299922413174 bad=0/8
+2026-10-01T09:33:01+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:01+00:00 check softmax adafisher seed=2 step=1750 val=1.738233599131745 best=1.738233599131745 bad=0/8
+2026-10-01T09:33:04+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:04+00:00 check softmax adafisher seed=2 step=2000 val=1.7183369790919203 best=1.7183369790919203 bad=0/8
+2026-10-01T09:33:07+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:07+00:00 check softmax adafisher seed=2 step=2250 val=1.6935344218660304 best=1.6935344218660304 bad=0/8
+2026-10-01T09:33:10+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:10+00:00 check softmax adafisher seed=2 step=2500 val=1.6829620956963978 best=1.6829620956963978 bad=0/8
+2026-10-01T09:33:13+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:13+00:00 check softmax adafisher seed=2 step=2750 val=1.672193560069245 best=1.672193560069245 bad=0/8
+2026-10-01T09:33:16+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:16+00:00 check softmax adafisher seed=2 step=3000 val=1.6586440356809702 best=1.6586440356809702 bad=0/8
+2026-10-01T09:33:20+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:20+00:00 check softmax adafisher seed=2 step=3250 val=1.6470446931508325 best=1.6470446931508325 bad=0/8
+2026-10-01T09:33:23+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:23+00:00 check softmax adafisher seed=2 step=3500 val=1.640781406967566 best=1.640781406967566 bad=0/8
+2026-10-01T09:33:26+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:26+00:00 check softmax adafisher seed=2 step=3750 val=1.635859913174512 best=1.635859913174512 bad=0/8
+2026-10-01T09:33:29+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:29+00:00 check softmax adafisher seed=2 step=4000 val=1.6180687607634903 best=1.6180687607634903 bad=0/8
+2026-10-01T09:33:32+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:32+00:00 check softmax adafisher seed=2 step=4250 val=1.6140410010494404 best=1.6140410010494404 bad=0/8
+2026-10-01T09:33:35+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:35+00:00 check softmax adafisher seed=2 step=4500 val=1.6142025935526694 best=1.6140410010494404 bad=1/8
+2026-10-01T09:33:38+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:38+00:00 check softmax adafisher seed=2 step=4750 val=1.6097541047018513 best=1.6097541047018513 bad=0/8
+2026-10-01T09:33:41+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:41+00:00 check softmax adafisher seed=2 step=5000 val=1.6090086489128874 best=1.6090086489128874 bad=0/8
+2026-10-01T09:33:44+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:44+00:00 check softmax adafisher seed=2 step=5250 val=1.6002271544919633 best=1.6002271544919633 bad=0/8
+2026-10-01T09:33:47+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:47+00:00 check softmax adafisher seed=2 step=5500 val=1.5975934629735935 best=1.5975934629735935 bad=0/8
+2026-10-01T09:33:50+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:50+00:00 check softmax adafisher seed=2 step=5750 val=1.5991800967368686 best=1.5975934629735935 bad=1/8
+2026-10-01T09:33:54+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:54+00:00 check softmax adafisher seed=2 step=6000 val=1.580457369851464 best=1.580457369851464 bad=0/8
+2026-10-01T09:33:57+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:33:57+00:00 check softmax adafisher seed=2 step=6250 val=1.5825733487012055 best=1.580457369851464 bad=1/8
+2026-10-01T09:34:00+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:00+00:00 check softmax adafisher seed=2 step=6500 val=1.5772733108047503 best=1.5772733108047503 bad=0/8
+2026-10-01T09:34:03+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:03+00:00 check softmax adafisher seed=2 step=6750 val=1.5761526745030856 best=1.5761526745030856 bad=0/8
+2026-10-01T09:34:06+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:06+00:00 check softmax adafisher seed=2 step=7000 val=1.5809864346387055 best=1.5761526745030856 bad=1/8
+2026-10-01T09:34:08+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:08+00:00 check softmax adafisher seed=2 step=7250 val=1.5699963224741675 best=1.5699963224741675 bad=0/8
+2026-10-01T09:34:11+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:11+00:00 check softmax adafisher seed=2 step=7500 val=1.5671543686316016 best=1.5671543686316016 bad=0/8
+2026-10-01T09:34:15+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:15+00:00 check softmax adafisher seed=2 step=7750 val=1.5611116779384329 best=1.5611116779384329 bad=0/8
+2026-10-01T09:34:18+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:18+00:00 check softmax adafisher seed=2 step=8000 val=1.5648800207197187 best=1.5611116779384329 bad=1/8
+2026-10-01T09:34:21+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:21+00:00 check softmax adafisher seed=2 step=8250 val=1.5614783093247704 best=1.5611116779384329 bad=2/8
+2026-10-01T09:34:24+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:24+00:00 check softmax adafisher seed=2 step=8500 val=1.5545543578681114 best=1.5545543578681114 bad=0/8
+2026-10-01T09:34:27+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:27+00:00 check softmax adafisher seed=2 step=8750 val=1.5591438372291189 best=1.5545543578681114 bad=1/8
+2026-10-01T09:34:30+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:30+00:00 check softmax adafisher seed=2 step=9000 val=1.5601061044686424 best=1.5545543578681114 bad=2/8
+2026-10-01T09:34:33+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:33+00:00 check softmax adafisher seed=2 step=9250 val=1.56101063006781 best=1.5545543578681114 bad=3/8
+2026-10-01T09:34:35+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:36+00:00 check softmax adafisher seed=2 step=9500 val=1.5525186847463404 best=1.5525186847463404 bad=0/8
+2026-10-01T09:34:39+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:39+00:00 check softmax adafisher seed=2 step=9750 val=1.5511260180467854 best=1.5511260180467854 bad=0/8
+2026-10-01T09:34:42+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:42+00:00 check softmax adafisher seed=2 step=10000 val=1.5527953400814438 best=1.5511260180467854 bad=1/8
+2026-10-01T09:34:45+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:45+00:00 check softmax adafisher seed=2 step=10250 val=1.5523178503516073 best=1.5511260180467854 bad=2/8
+2026-10-01T09:34:48+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:48+00:00 check softmax adafisher seed=2 step=10500 val=1.5525074727773394 best=1.5511260180467854 bad=3/8
+2026-10-01T09:34:51+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:51+00:00 check softmax adafisher seed=2 step=10750 val=1.5445339408725602 best=1.5445339408725602 bad=0/8
+2026-10-01T09:34:54+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:54+00:00 check softmax adafisher seed=2 step=11000 val=1.5501051682692308 best=1.5445339408725602 bad=1/8
+2026-10-01T09:34:57+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:34:57+00:00 check softmax adafisher seed=2 step=11250 val=1.5539508736366245 best=1.5445339408725602 bad=2/8
+2026-10-01T09:35:00+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:00+00:00 check softmax adafisher seed=2 step=11500 val=1.5531705205941446 best=1.5445339408725602 bad=3/8
+2026-10-01T09:35:03+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:03+00:00 check softmax adafisher seed=2 step=11750 val=1.5434465200290615 best=1.5434465200290615 bad=0/8
+2026-10-01T09:35:06+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:06+00:00 check softmax adafisher seed=2 step=12000 val=1.5534513804176233 best=1.5434465200290615 bad=1/8
+2026-10-01T09:35:09+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:09+00:00 check softmax adafisher seed=2 step=12250 val=1.5412657920583381 best=1.5412657920583381 bad=0/8
+2026-10-01T09:35:12+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:12+00:00 check softmax adafisher seed=2 step=12500 val=1.552823229854334 best=1.5412657920583381 bad=1/8
+2026-10-01T09:35:15+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:15+00:00 check softmax adafisher seed=2 step=12750 val=1.5379606437464122 best=1.5379606437464122 bad=0/8
+2026-10-01T09:35:18+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:18+00:00 check softmax adafisher seed=2 step=13000 val=1.5338579039896671 best=1.5338579039896671 bad=0/8
+2026-10-01T09:35:21+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:21+00:00 check softmax adafisher seed=2 step=13250 val=1.530137492375861 best=1.530137492375861 bad=0/8
+2026-10-01T09:35:24+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:24+00:00 check softmax adafisher seed=2 step=13500 val=1.5360955327030712 best=1.530137492375861 bad=1/8
+2026-10-01T09:35:27+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:27+00:00 check softmax adafisher seed=2 step=13750 val=1.541232016001722 best=1.530137492375861 bad=2/8
+2026-10-01T09:35:30+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:30+00:00 check softmax adafisher seed=2 step=14000 val=1.538526567881745 best=1.530137492375861 bad=3/8
+2026-10-01T09:35:33+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:33+00:00 check softmax adafisher seed=2 step=14250 val=1.5443988366460963 best=1.530137492375861 bad=4/8
+2026-10-01T09:35:36+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:36+00:00 check softmax adafisher seed=2 step=14500 val=1.5344218660304247 best=1.530137492375861 bad=5/8
+2026-10-01T09:35:39+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:39+00:00 check softmax adafisher seed=2 step=14750 val=1.5337850261911596 best=1.530137492375861 bad=6/8
+2026-10-01T09:35:42+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:42+00:00 check softmax adafisher seed=2 step=15000 val=1.5336702436585103 best=1.530137492375861 bad=7/8
+2026-10-01T09:35:45+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:45+00:00 check softmax adafisher seed=2 step=15250 val=1.529389233594647 best=1.529389233594647 bad=0/8
+2026-10-01T09:35:49+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:49+00:00 check softmax adafisher seed=2 step=15500 val=1.527162816850244 best=1.527162816850244 bad=0/8
+2026-10-01T09:35:52+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:52+00:00 check softmax adafisher seed=2 step=15750 val=1.5368128184199197 best=1.527162816850244 bad=1/8
+2026-10-01T09:35:55+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:55+00:00 check softmax adafisher seed=2 step=16000 val=1.5264245086915185 best=1.5264245086915185 bad=0/8
+2026-10-01T09:35:58+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:35:58+00:00 check softmax adafisher seed=2 step=16250 val=1.524653858487012 best=1.524653858487012 bad=0/8
+2026-10-01T09:36:01+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:36:01+00:00 check softmax adafisher seed=2 step=16500 val=1.5238649563181688 best=1.5238649563181688 bad=0/8
+2026-10-01T09:36:04+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:36:04+00:00 check softmax adafisher seed=2 step=16750 val=1.5300546639548651 best=1.5238649563181688 bad=1/8
+2026-10-01T09:36:07+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:36:07+00:00 check softmax adafisher seed=2 step=17000 val=1.5212190717835103 best=1.5212190717835103 bad=0/8
+2026-10-01T09:36:10+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:36:10+00:00 check softmax adafisher seed=2 step=17250 val=1.5237189204219288 best=1.5212190717835103 bad=1/8
+2026-10-01T09:36:13+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:36:13+00:00 check softmax adafisher seed=2 step=17500 val=1.5243434270952927 best=1.5212190717835103 bad=2/8
+2026-10-01T09:36:16+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:36:16+00:00 check softmax adafisher seed=2 step=17750 val=1.5246221846745838 best=1.5212190717835103 bad=3/8
+2026-10-01T09:36:19+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:36:19+00:00 check softmax adafisher seed=2 step=18000 val=1.5223362043448623 best=1.5212190717835103 bad=4/8
+2026-10-01T09:36:22+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:36:22+00:00 check softmax adafisher seed=2 step=18250 val=1.5183723528541189 best=1.5183723528541189 bad=0/8
+2026-10-01T09:36:25+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:36:25+00:00 check softmax adafisher seed=2 step=18500 val=1.5176543663892077 best=1.5176543663892077 bad=0/8
+2026-10-01T09:36:28+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:36:28+00:00 check softmax adafisher seed=2 step=18750 val=1.5228928786057692 best=1.5176543663892077 bad=1/8
+2026-10-01T09:36:31+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:36:31+00:00 check softmax adafisher seed=2 step=19000 val=1.520776199007965 best=1.5176543663892077 bad=2/8
+2026-10-01T09:36:34+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:36:34+00:00 check softmax adafisher seed=2 step=19250 val=1.5158603111994116 best=1.5158603111994116 bad=0/8
+2026-10-01T09:36:38+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:36:38+00:00 check softmax adafisher seed=2 step=19500 val=1.5061584542731057 best=1.5061584542731057 bad=0/8
+2026-10-01T09:36:41+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:36:41+00:00 check softmax adafisher seed=2 step=19750 val=1.5136714545511625 best=1.5061584542731057 bad=1/8
+2026-10-01T09:36:44+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:36:44+00:00 check softmax adafisher seed=2 step=20000 val=1.51481843897998 best=1.5061584542731057 bad=2/8
+2026-10-01T09:36:44+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:36:44+00:00 compiler softmax adafisher seed=2 FX=24 CUDA_nodes=92
+2026-10-01T09:36:45+00:00 run 6/144 END softmax:adafisher:2: ok stop=max_steps updates=20000 best=19500 test=1.6623907954219288
+2026-10-01T09:36:45+00:00 run 7/144 START softmax:dash_ndb_guarded:0 lr=0.1
+2026-10-01T09:36:45+00:00 compiler softmax dash_ndb_guarded seed=0 FX=2 CUDA_nodes=1
+2026-10-01T09:36:45+00:00 check softmax dash_ndb_guarded seed=0 step=0 val=4.208107879323335 best=4.208107879323335 bad=0/8
+2026-10-01T09:36:55+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:36:55+00:00 check softmax dash_ndb_guarded seed=0 step=250 val=2.139756913300086 best=2.139756913300086 bad=0/8
+2026-10-01T09:37:04+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:37:05+00:00 check softmax dash_ndb_guarded seed=0 step=500 val=2.0267059291134473 best=2.0267059291134473 bad=0/8
+2026-10-01T09:37:15+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:37:15+00:00 check softmax dash_ndb_guarded seed=0 step=750 val=1.8794566175283438 best=1.8794566175283438 bad=0/8
+2026-10-01T09:37:25+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:37:25+00:00 check softmax dash_ndb_guarded seed=0 step=1000 val=1.8090035474669919 best=1.8090035474669919 bad=0/8
+2026-10-01T09:37:35+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:37:35+00:00 check softmax dash_ndb_guarded seed=0 step=1250 val=1.7652150623833955 best=1.7652150623833955 bad=0/8
+2026-10-01T09:37:46+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:37:46+00:00 check softmax dash_ndb_guarded seed=0 step=1500 val=1.73334994573407 best=1.73334994573407 bad=0/8
+2026-10-01T09:37:57+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:37:57+00:00 check softmax dash_ndb_guarded seed=0 step=1750 val=1.6944474965915615 best=1.6944474965915615 bad=0/8
+2026-10-01T09:38:06+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:38:06+00:00 check softmax dash_ndb_guarded seed=0 step=2000 val=1.6565970104405856 best=1.6565970104405856 bad=0/8
+2026-10-01T09:38:16+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:38:16+00:00 check softmax dash_ndb_guarded seed=0 step=2250 val=1.6384288555719002 best=1.6384288555719002 bad=0/8
+2026-10-01T09:38:24+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:38:24+00:00 check softmax dash_ndb_guarded seed=0 step=2500 val=1.6311447196110793 best=1.6311447196110793 bad=0/8
+2026-10-01T09:38:33+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:38:33+00:00 check softmax dash_ndb_guarded seed=0 step=2750 val=1.6149574393656716 best=1.6149574393656716 bad=0/8
+2026-10-01T09:38:41+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:38:41+00:00 check softmax dash_ndb_guarded seed=0 step=3000 val=1.6029802534801951 best=1.6029802534801951 bad=0/8
+2026-10-01T09:38:51+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:38:51+00:00 check softmax dash_ndb_guarded seed=0 step=3250 val=1.5980244230320753 best=1.5980244230320753 bad=0/8
+2026-10-01T09:39:02+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:39:02+00:00 check softmax dash_ndb_guarded seed=0 step=3500 val=1.5881033721117968 best=1.5881033721117968 bad=0/8
+2026-10-01T09:39:19+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:39:19+00:00 check softmax dash_ndb_guarded seed=0 step=3750 val=1.5843015335731199 best=1.5843015335731199 bad=0/8
+2026-10-01T09:39:33+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:39:33+00:00 check softmax dash_ndb_guarded seed=0 step=4000 val=1.5664592265535304 best=1.5664592265535304 bad=0/8
+2026-10-01T09:39:42+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:39:42+00:00 check softmax dash_ndb_guarded seed=0 step=4250 val=1.5609873652321327 best=1.5609873652321327 bad=0/8
+2026-10-01T09:39:51+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:39:51+00:00 check softmax dash_ndb_guarded seed=0 step=4500 val=1.5507247697061568 best=1.5507247697061568 bad=0/8
+2026-10-01T09:40:00+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:40:00+00:00 check softmax dash_ndb_guarded seed=0 step=4750 val=1.5660605009059272 best=1.5507247697061568 bad=1/8
+2026-10-01T09:40:09+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:40:09+00:00 check softmax dash_ndb_guarded seed=0 step=5000 val=1.5537361644302525 best=1.5507247697061568 bad=2/8
+2026-10-01T09:40:20+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:40:20+00:00 check softmax dash_ndb_guarded seed=0 step=5250 val=1.5497947368775116 best=1.5497947368775116 bad=0/8
+2026-10-01T09:40:30+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:40:30+00:00 check softmax dash_ndb_guarded seed=0 step=5500 val=1.54675236908905 best=1.54675236908905 bad=0/8
+2026-10-01T09:40:38+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:40:38+00:00 check softmax dash_ndb_guarded seed=0 step=5750 val=1.5350612285627152 best=1.5350612285627152 bad=0/8
+2026-10-01T09:40:47+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:40:47+00:00 check softmax dash_ndb_guarded seed=0 step=6000 val=1.5373666896885763 best=1.5350612285627152 bad=1/8
+2026-10-01T09:40:55+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:40:55+00:00 check softmax dash_ndb_guarded seed=0 step=6250 val=1.5329795863680395 best=1.5329795863680395 bad=0/8
+2026-10-01T09:41:04+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:41:04+00:00 check softmax dash_ndb_guarded seed=0 step=6500 val=1.5276419883754306 best=1.5276419883754306 bad=0/8
+2026-10-01T09:41:13+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:41:13+00:00 check softmax dash_ndb_guarded seed=0 step=6750 val=1.5338904186997704 best=1.5276419883754306 bad=1/8
+2026-10-01T09:41:21+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:41:21+00:00 check softmax dash_ndb_guarded seed=0 step=7000 val=1.5272938567379448 best=1.5272938567379448 bad=0/8
+2026-10-01T09:41:30+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:41:30+00:00 check softmax dash_ndb_guarded seed=0 step=7250 val=1.5275937769087256 best=1.5272938567379448 bad=1/8
+2026-10-01T09:41:38+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:41:38+00:00 check softmax dash_ndb_guarded seed=0 step=7500 val=1.524262000170422 best=1.524262000170422 bad=0/8
+2026-10-01T09:41:47+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:41:47+00:00 check softmax dash_ndb_guarded seed=0 step=7750 val=1.5231839693509615 best=1.5231839693509615 bad=0/8
+2026-10-01T09:41:56+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:41:56+00:00 check softmax dash_ndb_guarded seed=0 step=8000 val=1.5164635151316734 best=1.5164635151316734 bad=0/8
+2026-10-01T09:42:04+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:42:04+00:00 check softmax dash_ndb_guarded seed=0 step=8250 val=1.519561522316303 best=1.5164635151316734 bad=1/8
+2026-10-01T09:42:13+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:42:13+00:00 check softmax dash_ndb_guarded seed=0 step=8500 val=1.5193602674727325 best=1.5164635151316734 bad=2/8
+2026-10-01T09:42:22+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:42:22+00:00 check softmax dash_ndb_guarded seed=0 step=8750 val=1.5080075882606199 best=1.5080075882606199 bad=0/8
+2026-10-01T09:42:33+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:42:33+00:00 check softmax dash_ndb_guarded seed=0 step=9000 val=1.5048526803333093 best=1.5048526803333093 bad=0/8
+2026-10-01T09:42:42+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:42:42+00:00 check softmax dash_ndb_guarded seed=0 step=9250 val=1.5159603780227469 best=1.5048526803333093 bad=1/8
+2026-10-01T09:42:51+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:42:51+00:00 check softmax dash_ndb_guarded seed=0 step=9500 val=1.5194118425301377 best=1.5048526803333093 bad=2/8
+2026-10-01T09:43:00+00:00 compiler softmax dash_ndb_guarded seed=0 FX=3 CUDA_nodes=4
+2026-10-01T09:43:00+00:00 check softmax dash_ndb_guarded seed=0 step=9750 val=1.5090805736940298 best=1.5048526803333093 bad=3/8

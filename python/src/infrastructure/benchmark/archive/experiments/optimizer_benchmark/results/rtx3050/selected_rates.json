@@ -1,0 +1,42 @@
+{
+  "softmax": {
+    "sgd": 0.1,
+    "adagrad": 0.03,
+    "adam": 0.0003,
+    "adamw": 0.001,
+    "amsgrad": 0.0003,
+    "amsgrad_inverse": 0.003,
+    "amsgrad_geometric": 0.003,
+    "adamx": 0.003,
+    "adamnc": 0.01,
+    "muon": 0.03,
+    "muon_guarded": 0.1,
+    "dash_evd": 0.001,
+    "dash_ndb": 0.001,
+    "dash_cn": 0.001,
+    "dash_chebyshev": 0.001,
+    "dash_ndb_guarded": 0.1,
+    "adafisher": 0.001,
+    "adafisherw": 0.001
+  },
+  "sparsemax": {
+    "sgd": 0.3,
+    "adagrad": 0.03,
+    "adam": 0.0003,
+    "adamw": 0.001,
+    "amsgrad": 0.0003,
+    "amsgrad_inverse": 0.003,
+    "amsgrad_geometric": 0.003,
+    "adamx": 0.003,
+    "adamnc": 0.01,
+    "muon": 0.03,
+    "muon_guarded": 0.3,
+    "dash_evd": 0.001,
+    "dash_ndb": 0.001,
+    "dash_cn": 0.001,
+    "dash_chebyshev": 0.001,
+    "dash_ndb_guarded": 0.3,
+    "adafisher": 0.001,
+    "adafisherw": 0.001
+  }
+}

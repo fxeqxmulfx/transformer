@@ -1,0 +1,163 @@
+{
+  "protocol": {
+    "batch": 32,
+    "screen_steps": 250,
+    "final_steps": 1000,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "attention": [
+      "softmax",
+      "sparsemax"
+    ],
+    "initialization": "Normal(0,0.02) unique matrices",
+    "dtype": "float32",
+    "tf32": false,
+    "deterministic_algorithms": true,
+    "config": {
+      "vocab_size": 65,
+      "n_layers": 2,
+      "n_heads": 4,
+      "d_model": 128,
+      "d_ff": 512,
+      "max_seq_len": 64,
+      "rope_theta": 10000.0
+    },
+    "data_sha256": "53493bf304b639aba6a47400da75c58ce32372b378fd2cd9d16ee987aeb12e4e",
+    "data_boundaries": [
+      1003853,
+      1059623,
+      1115393
+    ],
+    "characters": "\n !$&',-.3:;?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+    "methods": [
+      {
+        "name": "rmsprop",
+        "rates": [
+          0.0001,
+          0.0003,
+          0.001
+        ],
+        "scope": "dense raw-variance RMSProp control"
+      },
+      {
+        "name": "magma_rmsprop",
+        "rates": [
+          0.0003,
+          0.001,
+          0.003
+        ],
+        "scope": "Algorithm 1 with raw-variance RMSProp"
+      },
+      {
+        "name": "magma_adam",
+        "rates": [
+          0.0009,
+          0.003,
+          0.009
+        ],
+        "scope": "Algorithm 1 with frozen raw-moment Adam"
+      },
+      {
+        "name": "magma_adamw",
+        "rates": [
+          0.0009,
+          0.003,
+          0.009
+        ],
+        "scope": "Algorithm 1 with frozen bias-corrected AdamW"
+      },
+      {
+        "name": "magma_muon",
+        "rates": [
+          0.01,
+          0.03,
+          0.1
+        ],
+        "scope": "Algorithm 1 with frozen Muon/auxiliary-Adam hybrid"
+      },
+      {
+        "name": "magma_sgd",
+        "rates": [
+          0.1,
+          0.3,
+          1.0
+        ],
+        "scope": "Algorithm 1 with frozen SGD and dense scoring EMA"
+      }
+    ],
+    "source_hashes": {
+      "experiments/optimizer_benchmark/__init__.py": "350183f29d81e839357d0299c03b16a9bf715077096e02dcb974c1c3f52ae82e",
+      "experiments/optimizer_benchmark/attention.py": "11416591081b0b54ec2e904434ba16a92556707e40db14ac5f299fd5ad70f9fa",
+      "experiments/optimizer_benchmark/common.py": "b3d57ccafe3350631acc31ac000d3b55627d2ed8c4c87b1c30173cfe66fa834d",
+      "experiments/optimizer_benchmark/coordinate.py": "4446687f796f85090acb7ac37834f5c7e31a11f34912cc08ffa28c81683dc85f",
+      "experiments/optimizer_benchmark/data.py": "b497162a9831c390956fd417fccad642cb19276b7f91d3143c1db98f116059f1",
+      "experiments/optimizer_benchmark/fisher.py": "d5b3d5a676955e98a4406543d5a1cceabfa4ba304fe49993d09d46eccad7fece",
+      "experiments/optimizer_benchmark/matrix.py": "3c39943d1486460c1f5a798456ba02ec40245bbfb5645654be20ad5a9831b21e",
+      "experiments/optimizer_benchmark/registry.py": "c98eedcdd130580dcfab4114478e4b41bc5e59d8aec1f77e0639202cb3fc8264",
+      "experiments/optimizer_benchmark/report.py": "d16bd30b8b975db12c63f6d2a92f7e8a016d52330e831169f597048b5e0a6a3c",
+      "experiments/optimizer_benchmark/roots.py": "bd3d428e961a7bdfab0ea66d70880d2d34de2c1f1ac39373ac66e3212f893ce6",
+      "experiments/optimizer_benchmark/runner.py": "b314df5abb9dcbaa96a05cf5b666ca19f4fa86a87119b85c6089d327a9faeb26",
+      "experiments/optimizer_benchmark/storage.py": "c3e4f4c3c932d142bd4e517c50fa2af6ed780fef2a4c83367238078654a1b7eb",
+      "experiments/optimizer_benchmark/tests/__init__.py": "cc0b4384f9fbca36b47d789ba0273e564298ad142af79663c2be4261ffc40203",
+      "experiments/optimizer_benchmark/tests/test_coordinate.py": "3037c882871cc7f25ca05c2dd31850f9c94512005652f46f51e95cc07a8a49e2",
+      "experiments/optimizer_benchmark/tests/test_fisher.py": "3e03b5a81728e13672355c5c27b2e64d00d4ae0795f27722eb9db4643c0a31a8",
+      "experiments/optimizer_benchmark/tests/test_matrix.py": "14af5d6db15b022dc46b0ea77a5814a6d544abdb60be820af140fdbba8a01b92",
+      "experiments/optimizer_benchmark/tests/test_protocol.py": "08d41e2753f197fadde4287a1f3b4822bd4720a15a45aecc5a99f5779197c3f4",
+      "experiments/optimizer_benchmark/tests/test_storage.py": "1dd44bae1153895e968dab2f6de00bb7ff5da9306aab5d813ce0aa711ec64a25",
+      "experiments/magma_benchmark/__init__.py": "e54121ea947b05eb37ce3abef317fda7b8d745c13a8ca0004a67277df2be5b29",
+      "experiments/magma_benchmark/__main__.py": "a99f3f05ffcc54366e53bc95ee8120ef717cefdf88ce90d84d26d193a484eab9",
+      "experiments/magma_benchmark/optimizer.py": "cd2a9c9d05a8b19885c17d2ab3877dd60b4b8dbbcbf1350ef3215863c55280d8",
+      "experiments/magma_benchmark/protocol.py": "c5de6444e550640f3cc3b1cbb6946619782d4d3ce8918f89c11a92fc3602b3d7",
+      "experiments/magma_benchmark/registry.py": "db95ddaf7a37c7798da675c2afff463e2ed4994c5b6f1563531fe750ecf901ac",
+      "experiments/magma_benchmark/report.py": "c6df1a52ae24af706bc55ec5e2c11c22b2cb4bf96197f15fd2df339c7ef1e5fe",
+      "experiments/magma_benchmark/runner.py": "4db88130d02ee1133adf1cc51c32aac1542868915a11a561896d799899d5084c",
+      "experiments/magma_benchmark/tests/__init__.py": "f480de5f4b30dac1f1ae5163cda32803d82a4d7114ddf7af67c92c4a9fc006db",
+      "experiments/magma_benchmark/tests/test_optimizer.py": "beec141302fdb1bda0e8d96375bffcdf318965a4359882cac68d5611b50c3184",
+      "experiments/magma_benchmark/tests/test_protocol.py": "93e6e727489fb81f6590adaf9a2b401b7c4e64fd021a335bd4e2b2d1eb639ffb",
+      "experiments/magma_benchmark/training.py": "e0f4e41d7d1fcecd80f4cfa5ac4c4ef8f6c848abbd45781739985210f59f411e",
+      "experiments/magma_benchmark/validation.py": "8553809cb238a506aff2d0d68b9e172fd35b3f31b4450ea9b01096a9b09ab6fe",
+      "experiments/gpt_mini.py": "7df779bcdc019a6054ed7a6b93469b821b8dec9fc96d84a1420ec387d28f5ee4",
+      "experiments/test_optimizer_parameter_groups.py": "a84d4b72bbf83e1f3104b4842557268a895c0913d6bd13c0127d588a855dce54",
+      "scripts/optimizer_benchmark_data.py": "dee2aa54caf7bade45fd3c944abd4d9681f22395ceab920a56b2f91140f912d3"
+    },
+    "baseline": {
+      "directory": "experiments/optimizer_benchmark/results/rtx3050",
+      "raw_sha256": "01b42cb9e0e42c2ac04173d9c2c723eb75c2bf8cd4e7c9a7654ab19fb74f6f47",
+      "protocol_sha256": "566657d26031eb933ac6f3ea1897691c4077ce77e03f37956f39760d72b8e801",
+      "metadata_sha256": "28c5fdd4fdac472d35d3469ca14223523f8c6eb6a8843efee6b03457e29de4a4"
+    },
+    "recipe": {
+      "algorithm": "Algorithm 1; s*m, no 1/p",
+      "p": 0.5,
+      "tau": 2.0,
+      "scale_beta": 0.9,
+      "initial_scale": 0.5,
+      "zero_cosine": 0.0,
+      "mask_seed": "20000+model_seed",
+      "blocks": "whole attention/FFN matrices; fused QKV is one block"
+    }
+  },
+  "protocol_sha256": "c2aab044822615d425c60681dcb33ebe24e6a82192dd578f46a84263bc090992",
+  "tests": {
+    "tests": 60,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "log": "experiments/magma_benchmark/results/rtx3050/tests_20261001T080806.log",
+    "log_sha256": "fb94dbd51c346f9bde94ad7c6318087a8ee0c54344a00a9db7535b9b085dccab"
+  },
+  "created_utc": "2026-10-01T08:08:09.994316+00:00",
+  "environment": {
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "gpu_total_bytes": 3952934912,
+    "torch": "2.14.0+cu130",
+    "cuda": "13.0",
+    "python": "3.14.7",
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "git_head": "394772bbac526db9bf0587c2654e7e75fcd0faca",
+    "nvidia_smi": "NVIDIA GeForce RTX 3050 Laptop GPU, 610.57.04, 4096 MiB"
+  }
+}

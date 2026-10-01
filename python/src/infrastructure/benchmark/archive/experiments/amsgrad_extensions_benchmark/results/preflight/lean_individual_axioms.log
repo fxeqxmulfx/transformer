@@ -1,0 +1,15 @@
+'Transformer.AMSGradW.trainingRun_convergence' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Transformer.AMSGradW.trainingRun_minimum_convergence' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Transformer.AMSGradW.original_stationarity_counterexample' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Transformer.MagnitudeDirection.safeguardedAMSGradMD_convergence' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Transformer.MagnitudeDirection.safeguardedAMSGradMD_minimum_convergence' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Transformer.MagnitudeDirection.originalAMSGradMD_training_counterexample' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Transformer.MagnitudeDirection.safeguardedAMSGradMD_repairs_component' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

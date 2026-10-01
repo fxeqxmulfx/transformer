@@ -1,0 +1,1149 @@
+{
+  "protocol": {
+    "config": {
+      "vocab_size": 65,
+      "n_layers": 2,
+      "n_heads": 4,
+      "d_model": 128,
+      "d_ff": 512,
+      "max_seq_len": 64,
+      "rope_theta": 10000.0
+    },
+    "batch": 32,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "attention": [
+      "softmax",
+      "sparsemax"
+    ],
+    "methods": [
+      {
+        "name": "sgd",
+        "rates": [
+          0.1,
+          0.3,
+          1.0
+        ],
+        "scope": "reference baseline; SGD rule formalized"
+      },
+      {
+        "name": "adagrad",
+        "rates": [
+          0.03,
+          0.1,
+          0.3
+        ],
+        "scope": "AdaGrad rule and monotone metric formalized"
+      },
+      {
+        "name": "adam",
+        "rates": [
+          0.0003,
+          0.001,
+          0.003
+        ],
+        "scope": "paper Adam without debiasing; counterexamples formalized"
+      },
+      {
+        "name": "adamw",
+        "rates": [
+          0.0003,
+          0.001,
+          0.003
+        ],
+        "scope": "practical bias-corrected reference; decay 0.01"
+      },
+      {
+        "name": "amsgrad",
+        "rates": [
+          0.0003,
+          0.001,
+          0.003
+        ],
+        "scope": "constant-momentum deterministic convergence extension"
+      },
+      {
+        "name": "amsgrad_inverse",
+        "rates": [
+          0.003,
+          0.01,
+          0.03
+        ],
+        "scope": "source inverse-momentum regret and offline convergence"
+      },
+      {
+        "name": "amsgrad_geometric",
+        "rates": [
+          0.003,
+          0.01,
+          0.03
+        ],
+        "scope": "source geometric-momentum regret and offline convergence"
+      },
+      {
+        "name": "adamx",
+        "rates": [
+          0.003,
+          0.01,
+          0.03
+        ],
+        "scope": "AdamX regret bound; inverse momentum"
+      },
+      {
+        "name": "adamnc",
+        "rates": [
+          0.01,
+          0.03,
+          0.1
+        ],
+        "scope": "AdamNC regret bound; inverse momentum and second-moment averaging"
+      },
+      {
+        "name": "muon",
+        "rates": [
+          0.003,
+          0.01,
+          0.03
+        ],
+        "scope": "paper finite Newton-Schulz recipe; unguarded training can cycle"
+      },
+      {
+        "name": "muon_guarded",
+        "rates": [
+          0.1,
+          0.3,
+          1.0
+        ],
+        "scope": "formalized global direction safeguard"
+      },
+      {
+        "name": "dash_evd",
+        "rates": [
+          0.0003,
+          0.001,
+          0.003
+        ],
+        "scope": "exact regularized spectral inverse-root specification"
+      },
+      {
+        "name": "dash_ndb",
+        "rates": [
+          0.0003,
+          0.001,
+          0.003
+        ],
+        "scope": "corrected finite chained NDB solver"
+      },
+      {
+        "name": "dash_cn",
+        "rates": [
+          0.0003,
+          0.001,
+          0.003
+        ],
+        "scope": "corrected finite fourth-root coupled Newton solver"
+      },
+      {
+        "name": "dash_chebyshev",
+        "rates": [
+          0.0003,
+          0.001,
+          0.003
+        ],
+        "scope": "corrected cosine fit, sample guard and Clenshaw scaling"
+      },
+      {
+        "name": "dash_ndb_guarded",
+        "rates": [
+          0.1,
+          0.3,
+          1.0
+        ],
+        "scope": "finite NDB/grafting with formalized global training safeguard"
+      },
+      {
+        "name": "adafisher",
+        "rates": [
+          1e-05,
+          0.0001,
+          0.001
+        ],
+        "scope": "corrected factors, bias correction and deterministic convergence"
+      },
+      {
+        "name": "adafisherw",
+        "rates": [
+          1e-05,
+          0.0001,
+          0.001
+        ],
+        "scope": "formalized decoupled-decay update; general convergence not proved"
+      },
+      {
+        "name": "rmsprop",
+        "rates": [
+          0.0001,
+          0.0003,
+          0.001
+        ],
+        "scope": "dense raw-variance RMSProp control"
+      },
+      {
+        "name": "magma_rmsprop",
+        "rates": [
+          0.0003,
+          0.001,
+          0.003
+        ],
+        "scope": "Algorithm 1 with raw-variance RMSProp"
+      },
+      {
+        "name": "magma_adam",
+        "rates": [
+          0.0009,
+          0.003,
+          0.009
+        ],
+        "scope": "Algorithm 1 with frozen raw-moment Adam"
+      },
+      {
+        "name": "magma_adamw",
+        "rates": [
+          0.0009,
+          0.003,
+          0.009
+        ],
+        "scope": "Algorithm 1 with frozen bias-corrected AdamW"
+      },
+      {
+        "name": "magma_muon",
+        "rates": [
+          0.01,
+          0.03,
+          0.1
+        ],
+        "scope": "Algorithm 1 with frozen Muon/auxiliary-Adam hybrid"
+      },
+      {
+        "name": "magma_sgd",
+        "rates": [
+          0.1,
+          0.3,
+          1.0
+        ],
+        "scope": "Algorithm 1 with frozen SGD and dense scoring EMA"
+      }
+    ],
+    "selected_rates": {
+      "softmax": {
+        "sgd": 0.1,
+        "adagrad": 0.03,
+        "adam": 0.0003,
+        "adamw": 0.001,
+        "amsgrad": 0.0003,
+        "amsgrad_inverse": 0.003,
+        "amsgrad_geometric": 0.003,
+        "adamx": 0.003,
+        "adamnc": 0.01,
+        "muon": 0.03,
+        "muon_guarded": 0.1,
+        "dash_evd": 0.001,
+        "dash_ndb": 0.001,
+        "dash_cn": 0.001,
+        "dash_chebyshev": 0.001,
+        "dash_ndb_guarded": 0.1,
+        "adafisher": 0.001,
+        "adafisherw": 0.001,
+        "rmsprop": 0.0001,
+        "magma_rmsprop": 0.0003,
+        "magma_adam": 0.0009,
+        "magma_adamw": 0.003,
+        "magma_muon": 0.03,
+        "magma_sgd": 0.3
+      },
+      "sparsemax": {
+        "sgd": 0.3,
+        "adagrad": 0.03,
+        "adam": 0.0003,
+        "adamw": 0.001,
+        "amsgrad": 0.0003,
+        "amsgrad_inverse": 0.003,
+        "amsgrad_geometric": 0.003,
+        "adamx": 0.003,
+        "adamnc": 0.01,
+        "muon": 0.03,
+        "muon_guarded": 0.3,
+        "dash_evd": 0.001,
+        "dash_ndb": 0.001,
+        "dash_cn": 0.001,
+        "dash_chebyshev": 0.001,
+        "dash_ndb_guarded": 0.3,
+        "adafisher": 0.001,
+        "adafisherw": 0.001,
+        "rmsprop": 0.0003,
+        "magma_rmsprop": 0.0003,
+        "magma_adam": 0.0009,
+        "magma_adamw": 0.003,
+        "magma_muon": 0.03,
+        "magma_sgd": 0.3
+      }
+    },
+    "stopping": {
+      "every": 250,
+      "patience": 8,
+      "min_delta": 0.0001,
+      "min_steps": 1000,
+      "max_steps": 20000,
+      "divergence_delta": 0.1,
+      "divergence_patience": 3
+    },
+    "data_sha256": "53493bf304b639aba6a47400da75c58ce32372b378fd2cd9d16ee987aeb12e4e",
+    "data_boundaries": [
+      1003853,
+      1059623,
+      1115393
+    ],
+    "characters": "\n !$&',-.3:;?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+    "initialization": "Normal(0,0.02) unique matrices",
+    "dtype": "float32",
+    "tf32": false,
+    "deterministic_algorithms": true,
+    "compile": true,
+    "cuda_graphs": true,
+    "compiler": {
+      "backend": "inductor",
+      "mode": "reduce-overhead",
+      "dynamic": false,
+      "fullgraph": "false for AdaFisher/AdaFisherW hooks; true for all other methods",
+      "in_place": true,
+      "step_marked": true,
+      "reset_between_models": true,
+      "sparsemax": "identical finite-row projection/Jacobian; invalid rows signal NaN",
+      "optimizer_compiled": false,
+      "timing": "train seconds include cold backward/forward compilation; cold first forwards recorded separately"
+    },
+    "preflight_artifacts": {
+      "experiments/compiled_benchmark/results/preflight/tests.log": "3eac09bdfd1dd8ccf791262027eb584b92e63646046a02cda92574b1f3ead6ae",
+      "experiments/compiled_benchmark/results/preflight/throughput.json": "4abc04e5677563b44243d5192c86e3f695457acae0e83766024c71bb6087e6c1",
+      "experiments/compiled_benchmark/results/preflight/environment.json": "2d0c12a0ac1251247cc019773339d83c0c60b98e6da712fcaca496902de31e9e",
+      "experiments/compiled_benchmark/results/preflight/recompilation.json": "4338f9ae26a9d10eca280b383c48b4e3c404da296f7b1bfba8ec5e44b0d64e21",
+      "experiments/compiled_benchmark/results/preflight/recompiles.log": "5accf5ad81ae46662900db24a69ad93192eb9b54e8cef3cb0558b321c5a7ac87"
+    },
+    "selection": "exact best validation checkpoint; test once after stopping",
+    "source_hashes": {
+      "experiments/optimizer_benchmark/__init__.py": "350183f29d81e839357d0299c03b16a9bf715077096e02dcb974c1c3f52ae82e",
+      "experiments/optimizer_benchmark/attention.py": "11416591081b0b54ec2e904434ba16a92556707e40db14ac5f299fd5ad70f9fa",
+      "experiments/optimizer_benchmark/common.py": "b3d57ccafe3350631acc31ac000d3b55627d2ed8c4c87b1c30173cfe66fa834d",
+      "experiments/optimizer_benchmark/coordinate.py": "4446687f796f85090acb7ac37834f5c7e31a11f34912cc08ffa28c81683dc85f",
+      "experiments/optimizer_benchmark/data.py": "b497162a9831c390956fd417fccad642cb19276b7f91d3143c1db98f116059f1",
+      "experiments/optimizer_benchmark/fisher.py": "d5b3d5a676955e98a4406543d5a1cceabfa4ba304fe49993d09d46eccad7fece",
+      "experiments/optimizer_benchmark/matrix.py": "3c39943d1486460c1f5a798456ba02ec40245bbfb5645654be20ad5a9831b21e",
+      "experiments/optimizer_benchmark/registry.py": "c98eedcdd130580dcfab4114478e4b41bc5e59d8aec1f77e0639202cb3fc8264",
+      "experiments/optimizer_benchmark/report.py": "d16bd30b8b975db12c63f6d2a92f7e8a016d52330e831169f597048b5e0a6a3c",
+      "experiments/optimizer_benchmark/roots.py": "bd3d428e961a7bdfab0ea66d70880d2d34de2c1f1ac39373ac66e3212f893ce6",
+      "experiments/optimizer_benchmark/runner.py": "b314df5abb9dcbaa96a05cf5b666ca19f4fa86a87119b85c6089d327a9faeb26",
+      "experiments/optimizer_benchmark/storage.py": "c3e4f4c3c932d142bd4e517c50fa2af6ed780fef2a4c83367238078654a1b7eb",
+      "experiments/optimizer_benchmark/tests/__init__.py": "cc0b4384f9fbca36b47d789ba0273e564298ad142af79663c2be4261ffc40203",
+      "experiments/optimizer_benchmark/tests/test_coordinate.py": "3037c882871cc7f25ca05c2dd31850f9c94512005652f46f51e95cc07a8a49e2",
+      "experiments/optimizer_benchmark/tests/test_fisher.py": "3e03b5a81728e13672355c5c27b2e64d00d4ae0795f27722eb9db4643c0a31a8",
+      "experiments/optimizer_benchmark/tests/test_matrix.py": "14af5d6db15b022dc46b0ea77a5814a6d544abdb60be820af140fdbba8a01b92",
+      "experiments/optimizer_benchmark/tests/test_protocol.py": "08d41e2753f197fadde4287a1f3b4822bd4720a15a45aecc5a99f5779197c3f4",
+      "experiments/optimizer_benchmark/tests/test_storage.py": "1dd44bae1153895e968dab2f6de00bb7ff5da9306aab5d813ce0aa711ec64a25",
+      "experiments/magma_benchmark/__init__.py": "e54121ea947b05eb37ce3abef317fda7b8d745c13a8ca0004a67277df2be5b29",
+      "experiments/magma_benchmark/__main__.py": "a99f3f05ffcc54366e53bc95ee8120ef717cefdf88ce90d84d26d193a484eab9",
+      "experiments/magma_benchmark/optimizer.py": "cd2a9c9d05a8b19885c17d2ab3877dd60b4b8dbbcbf1350ef3215863c55280d8",
+      "experiments/magma_benchmark/protocol.py": "c5de6444e550640f3cc3b1cbb6946619782d4d3ce8918f89c11a92fc3602b3d7",
+      "experiments/magma_benchmark/registry.py": "db95ddaf7a37c7798da675c2afff463e2ed4994c5b6f1563531fe750ecf901ac",
+      "experiments/magma_benchmark/report.py": "c6df1a52ae24af706bc55ec5e2c11c22b2cb4bf96197f15fd2df339c7ef1e5fe",
+      "experiments/magma_benchmark/runner.py": "4db88130d02ee1133adf1cc51c32aac1542868915a11a561896d799899d5084c",
+      "experiments/magma_benchmark/tests/__init__.py": "f480de5f4b30dac1f1ae5163cda32803d82a4d7114ddf7af67c92c4a9fc006db",
+      "experiments/magma_benchmark/tests/test_optimizer.py": "beec141302fdb1bda0e8d96375bffcdf318965a4359882cac68d5611b50c3184",
+      "experiments/magma_benchmark/tests/test_protocol.py": "93e6e727489fb81f6590adaf9a2b401b7c4e64fd021a335bd4e2b2d1eb639ffb",
+      "experiments/magma_benchmark/training.py": "e0f4e41d7d1fcecd80f4cfa5ac4c4ef8f6c848abbd45781739985210f59f411e",
+      "experiments/magma_benchmark/validation.py": "8553809cb238a506aff2d0d68b9e172fd35b3f31b4450ea9b01096a9b09ab6fe",
+      "experiments/gpt_mini.py": "7df779bcdc019a6054ed7a6b93469b821b8dec9fc96d84a1420ec387d28f5ee4",
+      "experiments/test_optimizer_parameter_groups.py": "a84d4b72bbf83e1f3104b4842557268a895c0913d6bd13c0127d588a855dce54",
+      "scripts/optimizer_benchmark_data.py": "dee2aa54caf7bade45fd3c944abd4d9681f22395ceab920a56b2f91140f912d3",
+      "experiments/patience_benchmark/__init__.py": "e42aeaee63106728ea741afaf9b66f387eb1c72d0fefe1f240062128e93538e4",
+      "experiments/patience_benchmark/__main__.py": "eefe8582049ea79f32740133156ee597c8dc4d4447bfe20b013fdbe4869a5846",
+      "experiments/patience_benchmark/protocol.py": "e2696542da1e6da6204896573a158baa2770c58d93c255f63926f52b397f179d",
+      "experiments/patience_benchmark/registry.py": "61dad6a237a67484c09a9c39e77f37e815d9b667c3941aab6801c6d72b70f728",
+      "experiments/patience_benchmark/report.py": "92f0eed9b98d58adbda901b2379c4fad5767d92421735e5633df78e2743e1a06",
+      "experiments/patience_benchmark/runner.py": "f6d0041392eb2836a6ace0b446966d29ab8eda1604fed2a0f19d0fba9616e8e3",
+      "experiments/patience_benchmark/stopping.py": "d5ccffa410e232de9571652cdc62786279844d5db66ba12dccf5efeba14e49e8",
+      "experiments/patience_benchmark/storage.py": "95307f861e2916d95477e1a60dba1c474d752939bd87573c4f4e2b5dbbd5a7db",
+      "experiments/patience_benchmark/tests/__init__.py": "803970037416eb5f358614b4f82b328dbd4ead887828dc6d90c9e39f0ab2e04a",
+      "experiments/patience_benchmark/tests/test_stopping.py": "d7e45e4c219a911b4ec239233843fec8a3d14201c43b203c679788fdb7598385",
+      "experiments/patience_benchmark/tests/test_training.py": "13f53c0dce90fd65f3b9faff29b403dd372c4c197ae77ff04abdcf26026cf0d0",
+      "experiments/patience_benchmark/training.py": "6776a682c14ea1e3a11bec64e7b603bb64f6d6e9ae0011d1fcdfd30722d4e9d8",
+      "experiments/patience_benchmark/validation.py": "f7713bf6731de809741e1cad4190ff94a07ce1292535394cc6533d0e3c9d5e78",
+      "experiments/compiled_benchmark/__init__.py": "821d6c129dc301c6598fe1e2e82d87ff75b3e97548f8ab1a8df2f9ac7cdb69a3",
+      "experiments/compiled_benchmark/__main__.py": "6a3b5f89bbed84d3f1e05c87ce63a72911c3395d8ef5c33f9c1cb1635a5ba528",
+      "experiments/compiled_benchmark/backend.py": "845eaa7f82e64b7706baac50fc6bb3ab4a55ec490688596209e8095f1992fa0c",
+      "experiments/compiled_benchmark/preflight.py": "c818a32b3a37e40f7a830e28c0820c32bbe76bc4a3de8adacb4c9158fd6cbf53",
+      "experiments/compiled_benchmark/probe.py": "df81dbd73e17f5dc50738833a823743c45200622a05680a0adb4d6fd66670490",
+      "experiments/compiled_benchmark/protocol.py": "dcfd4b5f769c7b6fdaf679cfe1a7a1aa91abe5e418c1a9fbd5b01bd323d6db80",
+      "experiments/compiled_benchmark/report.py": "e1fd8f44b78ade0212c58b8b54af89be2ab39c7e9a2352ca516901e9eb5a42e7",
+      "experiments/compiled_benchmark/runner.py": "f2f188c7f130b4ac2cf7db2f65f2970320c1ee33e310ed49dfeb8c3df865b785",
+      "experiments/compiled_benchmark/telemetry.py": "beeca0afae5ef63f65e4298fee94f00e5c9c962b0d17edc98be1f348307d0036",
+      "experiments/compiled_benchmark/tests/__init__.py": "4d9417f34deed2ca3a0f34c387d023d97440f52bc78ff0d990f1b1eace4de8d1",
+      "experiments/compiled_benchmark/tests/test_backend.py": "dfec087536163de8ce908c31d2ff16e0133a6204be1ee33e7d122d1ed9a4fc2f",
+      "experiments/compiled_benchmark/tests/test_training.py": "1b7c2e3a87c9f6534dd26d7ccfcfb22fafbfeda47c64f7803b5f69b21429a9bd",
+      "experiments/compiled_benchmark/training.py": "7a5127f7620f521690003e667cc67bcb9b64c1291cf5b224999d1e5a3b7e9177",
+      "experiments/compiled_benchmark/validation.py": "6a5250e7e4db180e6717f68bcb7ac424f7fce268459504def760f0119f1f1546"
+    },
+    "prior_artifacts": {
+      "experiments/optimizer_benchmark/results/rtx3050/metadata.json": "28c5fdd4fdac472d35d3469ca14223523f8c6eb6a8843efee6b03457e29de4a4",
+      "experiments/optimizer_benchmark/results/rtx3050/runs.jsonl": "01b42cb9e0e42c2ac04173d9c2c723eb75c2bf8cd4e7c9a7654ab19fb74f6f47",
+      "experiments/optimizer_benchmark/results/rtx3050/selected_rates.json": "e6b5a50d96b216d60ef1e4ae4d9074b7786cd7f348080d346f2543e8ee607ed1",
+      "experiments/magma_benchmark/results/rtx3050/metadata.json": "470968298449a834c20c664a271343f987d6db0c7277e365a882b1da6b8feb21",
+      "experiments/magma_benchmark/results/rtx3050/runs.jsonl": "56ae93f2305935ae5ddc65ff53c0ab657fb5508bf096b4299584809b5d75ee18",
+      "experiments/magma_benchmark/results/rtx3050/selected_rates.json": "dfca9f84b913967216fc0cc83f0baeed66889ad2389f696be0edead86478da00"
+    },
+    "job_order": [
+      [
+        "sparsemax",
+        "adagrad",
+        0
+      ],
+      [
+        "sparsemax",
+        "adagrad",
+        1
+      ],
+      [
+        "sparsemax",
+        "adagrad",
+        2
+      ],
+      [
+        "softmax",
+        "adafisher",
+        0
+      ],
+      [
+        "softmax",
+        "adafisher",
+        1
+      ],
+      [
+        "softmax",
+        "adafisher",
+        2
+      ],
+      [
+        "softmax",
+        "dash_ndb_guarded",
+        0
+      ],
+      [
+        "softmax",
+        "dash_ndb_guarded",
+        1
+      ],
+      [
+        "softmax",
+        "dash_ndb_guarded",
+        2
+      ],
+      [
+        "sparsemax",
+        "magma_muon",
+        0
+      ],
+      [
+        "sparsemax",
+        "magma_muon",
+        1
+      ],
+      [
+        "sparsemax",
+        "magma_muon",
+        2
+      ],
+      [
+        "softmax",
+        "dash_chebyshev",
+        0
+      ],
+      [
+        "softmax",
+        "dash_chebyshev",
+        1
+      ],
+      [
+        "softmax",
+        "dash_chebyshev",
+        2
+      ],
+      [
+        "sparsemax",
+        "magma_adam",
+        0
+      ],
+      [
+        "sparsemax",
+        "magma_adam",
+        1
+      ],
+      [
+        "sparsemax",
+        "magma_adam",
+        2
+      ],
+      [
+        "sparsemax",
+        "dash_ndb",
+        0
+      ],
+      [
+        "sparsemax",
+        "dash_ndb",
+        1
+      ],
+      [
+        "sparsemax",
+        "dash_ndb",
+        2
+      ],
+      [
+        "softmax",
+        "amsgrad_inverse",
+        0
+      ],
+      [
+        "softmax",
+        "amsgrad_inverse",
+        1
+      ],
+      [
+        "softmax",
+        "amsgrad_inverse",
+        2
+      ],
+      [
+        "softmax",
+        "amsgrad",
+        0
+      ],
+      [
+        "softmax",
+        "amsgrad",
+        1
+      ],
+      [
+        "softmax",
+        "amsgrad",
+        2
+      ],
+      [
+        "sparsemax",
+        "rmsprop",
+        0
+      ],
+      [
+        "sparsemax",
+        "rmsprop",
+        1
+      ],
+      [
+        "sparsemax",
+        "rmsprop",
+        2
+      ],
+      [
+        "sparsemax",
+        "muon_guarded",
+        0
+      ],
+      [
+        "sparsemax",
+        "muon_guarded",
+        1
+      ],
+      [
+        "sparsemax",
+        "muon_guarded",
+        2
+      ],
+      [
+        "sparsemax",
+        "magma_adamw",
+        0
+      ],
+      [
+        "sparsemax",
+        "magma_adamw",
+        1
+      ],
+      [
+        "sparsemax",
+        "magma_adamw",
+        2
+      ],
+      [
+        "softmax",
+        "amsgrad_geometric",
+        0
+      ],
+      [
+        "softmax",
+        "amsgrad_geometric",
+        1
+      ],
+      [
+        "softmax",
+        "amsgrad_geometric",
+        2
+      ],
+      [
+        "sparsemax",
+        "adamw",
+        0
+      ],
+      [
+        "sparsemax",
+        "adamw",
+        1
+      ],
+      [
+        "sparsemax",
+        "adamw",
+        2
+      ],
+      [
+        "softmax",
+        "adamnc",
+        0
+      ],
+      [
+        "softmax",
+        "adamnc",
+        1
+      ],
+      [
+        "softmax",
+        "adamnc",
+        2
+      ],
+      [
+        "sparsemax",
+        "magma_sgd",
+        0
+      ],
+      [
+        "sparsemax",
+        "magma_sgd",
+        1
+      ],
+      [
+        "sparsemax",
+        "magma_sgd",
+        2
+      ],
+      [
+        "softmax",
+        "magma_adam",
+        0
+      ],
+      [
+        "softmax",
+        "magma_adam",
+        1
+      ],
+      [
+        "softmax",
+        "magma_adam",
+        2
+      ],
+      [
+        "softmax",
+        "adagrad",
+        0
+      ],
+      [
+        "softmax",
+        "adagrad",
+        1
+      ],
+      [
+        "softmax",
+        "adagrad",
+        2
+      ],
+      [
+        "sparsemax",
+        "dash_chebyshev",
+        0
+      ],
+      [
+        "sparsemax",
+        "dash_chebyshev",
+        1
+      ],
+      [
+        "sparsemax",
+        "dash_chebyshev",
+        2
+      ],
+      [
+        "softmax",
+        "adamx",
+        0
+      ],
+      [
+        "softmax",
+        "adamx",
+        1
+      ],
+      [
+        "softmax",
+        "adamx",
+        2
+      ],
+      [
+        "softmax",
+        "adafisherw",
+        0
+      ],
+      [
+        "softmax",
+        "adafisherw",
+        1
+      ],
+      [
+        "softmax",
+        "adafisherw",
+        2
+      ],
+      [
+        "sparsemax",
+        "amsgrad",
+        0
+      ],
+      [
+        "sparsemax",
+        "amsgrad",
+        1
+      ],
+      [
+        "sparsemax",
+        "amsgrad",
+        2
+      ],
+      [
+        "softmax",
+        "magma_rmsprop",
+        0
+      ],
+      [
+        "softmax",
+        "magma_rmsprop",
+        1
+      ],
+      [
+        "softmax",
+        "magma_rmsprop",
+        2
+      ],
+      [
+        "sparsemax",
+        "dash_evd",
+        0
+      ],
+      [
+        "sparsemax",
+        "dash_evd",
+        1
+      ],
+      [
+        "sparsemax",
+        "dash_evd",
+        2
+      ],
+      [
+        "sparsemax",
+        "sgd",
+        0
+      ],
+      [
+        "sparsemax",
+        "sgd",
+        1
+      ],
+      [
+        "sparsemax",
+        "sgd",
+        2
+      ],
+      [
+        "softmax",
+        "magma_muon",
+        0
+      ],
+      [
+        "softmax",
+        "magma_muon",
+        1
+      ],
+      [
+        "softmax",
+        "magma_muon",
+        2
+      ],
+      [
+        "softmax",
+        "magma_adamw",
+        0
+      ],
+      [
+        "softmax",
+        "magma_adamw",
+        1
+      ],
+      [
+        "softmax",
+        "magma_adamw",
+        2
+      ],
+      [
+        "sparsemax",
+        "dash_cn",
+        0
+      ],
+      [
+        "sparsemax",
+        "dash_cn",
+        1
+      ],
+      [
+        "sparsemax",
+        "dash_cn",
+        2
+      ],
+      [
+        "sparsemax",
+        "amsgrad_geometric",
+        0
+      ],
+      [
+        "sparsemax",
+        "amsgrad_geometric",
+        1
+      ],
+      [
+        "sparsemax",
+        "amsgrad_geometric",
+        2
+      ],
+      [
+        "softmax",
+        "dash_ndb",
+        0
+      ],
+      [
+        "softmax",
+        "dash_ndb",
+        1
+      ],
+      [
+        "softmax",
+        "dash_ndb",
+        2
+      ],
+      [
+        "sparsemax",
+        "adafisher",
+        0
+      ],
+      [
+        "sparsemax",
+        "adafisher",
+        1
+      ],
+      [
+        "sparsemax",
+        "adafisher",
+        2
+      ],
+      [
+        "sparsemax",
+        "magma_rmsprop",
+        0
+      ],
+      [
+        "sparsemax",
+        "magma_rmsprop",
+        1
+      ],
+      [
+        "sparsemax",
+        "magma_rmsprop",
+        2
+      ],
+      [
+        "softmax",
+        "sgd",
+        0
+      ],
+      [
+        "softmax",
+        "sgd",
+        1
+      ],
+      [
+        "softmax",
+        "sgd",
+        2
+      ],
+      [
+        "sparsemax",
+        "adamx",
+        0
+      ],
+      [
+        "sparsemax",
+        "adamx",
+        1
+      ],
+      [
+        "sparsemax",
+        "adamx",
+        2
+      ],
+      [
+        "softmax",
+        "muon",
+        0
+      ],
+      [
+        "softmax",
+        "muon",
+        1
+      ],
+      [
+        "softmax",
+        "muon",
+        2
+      ],
+      [
+        "softmax",
+        "dash_cn",
+        0
+      ],
+      [
+        "softmax",
+        "dash_cn",
+        1
+      ],
+      [
+        "softmax",
+        "dash_cn",
+        2
+      ],
+      [
+        "sparsemax",
+        "dash_ndb_guarded",
+        0
+      ],
+      [
+        "sparsemax",
+        "dash_ndb_guarded",
+        1
+      ],
+      [
+        "sparsemax",
+        "dash_ndb_guarded",
+        2
+      ],
+      [
+        "softmax",
+        "magma_sgd",
+        0
+      ],
+      [
+        "softmax",
+        "magma_sgd",
+        1
+      ],
+      [
+        "softmax",
+        "magma_sgd",
+        2
+      ],
+      [
+        "sparsemax",
+        "muon",
+        0
+      ],
+      [
+        "sparsemax",
+        "muon",
+        1
+      ],
+      [
+        "sparsemax",
+        "muon",
+        2
+      ],
+      [
+        "softmax",
+        "rmsprop",
+        0
+      ],
+      [
+        "softmax",
+        "rmsprop",
+        1
+      ],
+      [
+        "softmax",
+        "rmsprop",
+        2
+      ],
+      [
+        "softmax",
+        "dash_evd",
+        0
+      ],
+      [
+        "softmax",
+        "dash_evd",
+        1
+      ],
+      [
+        "softmax",
+        "dash_evd",
+        2
+      ],
+      [
+        "softmax",
+        "adamw",
+        0
+      ],
+      [
+        "softmax",
+        "adamw",
+        1
+      ],
+      [
+        "softmax",
+        "adamw",
+        2
+      ],
+      [
+        "softmax",
+        "muon_guarded",
+        0
+      ],
+      [
+        "softmax",
+        "muon_guarded",
+        1
+      ],
+      [
+        "softmax",
+        "muon_guarded",
+        2
+      ],
+      [
+        "sparsemax",
+        "amsgrad_inverse",
+        0
+      ],
+      [
+        "sparsemax",
+        "amsgrad_inverse",
+        1
+      ],
+      [
+        "sparsemax",
+        "amsgrad_inverse",
+        2
+      ],
+      [
+        "sparsemax",
+        "adamnc",
+        0
+      ],
+      [
+        "sparsemax",
+        "adamnc",
+        1
+      ],
+      [
+        "sparsemax",
+        "adamnc",
+        2
+      ],
+      [
+        "sparsemax",
+        "adam",
+        0
+      ],
+      [
+        "sparsemax",
+        "adam",
+        1
+      ],
+      [
+        "sparsemax",
+        "adam",
+        2
+      ],
+      [
+        "softmax",
+        "adam",
+        0
+      ],
+      [
+        "softmax",
+        "adam",
+        1
+      ],
+      [
+        "softmax",
+        "adam",
+        2
+      ],
+      [
+        "sparsemax",
+        "adafisherw",
+        0
+      ],
+      [
+        "sparsemax",
+        "adafisherw",
+        1
+      ],
+      [
+        "sparsemax",
+        "adafisherw",
+        2
+      ]
+    ]
+  },
+  "protocol_sha256": "8ab343ffcedf0561894a6fe6618d8194d231e81a7cc623668eaddc73db1aa702",
+  "tests": {
+    "tests": 80,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "log": "experiments/compiled_benchmark/results/rtx3050_all/tests_20261001T091912.log",
+    "log_sha256": "acfadcb5bff1ee5f8d2abdd7084f6535f1d59c8188faf5d4fd01e88262a7e73a"
+  },
+  "created_utc": "2026-10-01T09:19:41.579468+00:00",
+  "environment": {
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "gpu_total_bytes": 3952934912,
+    "torch": "2.14.0+cu130",
+    "cuda": "13.0",
+    "python": "3.14.7",
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "git_head": "394772bbac526db9bf0587c2654e7e75fcd0faca",
+    "nvidia_smi": "NVIDIA GeForce RTX 3050 Laptop GPU, 610.57.04, 4096 MiB"
+  }
+}
