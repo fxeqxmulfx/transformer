@@ -1,5 +1,5 @@
 /-
-Formalization of thirty papers on the mathematics of Transformers:
+Formalization of thirty-one papers on the mathematics of Transformers:
 
 1. Weiss, Goldberg, Yahav — arXiv:2106.06981v2
    "Thinking Like Transformers".
@@ -100,6 +100,10 @@ Formalization of thirty papers on the mathematics of Transformers:
    arXiv:2505.24832v3
    "How much do language models memorize?".
 
+31. Hägele, Hernández-Cano, Kosson, Jaggi — arXiv:2606.25971v2
+   "Improving Neural Network Training by Decoupling the Magnitude and
+   Direction of Weight Vectors".
+
 Alongside these, `Transformer.ALM` formalizes the paraboloid-lifted lookup
 used by the append-only lookup machine (Percepta, transformer-vm), and
 `Transformer.Precision` proves the limits finite precision puts on attention:
@@ -154,3 +158,4 @@ import Transformer.Imbalance
 import Transformer.BatchSize
 import Transformer.DoubleDescent
 import Transformer.Memorization
+import Transformer.MagnitudeDirection
