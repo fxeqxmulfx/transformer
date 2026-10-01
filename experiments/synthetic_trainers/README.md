@@ -294,3 +294,34 @@ The archive preserves separate sample/depth groups, final and selected scores,
 novel-input validation, failed fits, paired-pool checks, histories, and source
 hashes. Coverage is for the specified four-bit motif events; it does not
 identify population EMC or guarantee GPTMini generalization.
+
+## Paper reproduction protocols
+
+[Modular division](paper_reproduction/MODULAR.md) adds the complete mod-97
+author corpus, a licensed author-reference transformer, GPTMini controls, and
+exact checkpoint continuation. The fixed campaign has nine paired model/optimizer
+and initialization-seed recipes, each with 150,000 updates. Its reference
+protocol and every adaptation are recorded separately.
+
+[Random Fourier features](paper_reproduction/RANDOM_FEATURES.md) reproduce
+the fixed-feature Fashion-MNIST case from *Deep Double Descent*, Appendix C.
+The measured [123-fit archive](baselines/fashion_rff_20261002/summary.json)
+has both sample-wise and width-wise classification-error double descent in
+all three seeds, with the peak at n=d=1000. See
+[STUDIES.md](STUDIES.md#reproduced-random-feature-double-descent-2026-10-02)
+for actual values and the source's undisclosed numerical details.
+
+```bash
+.venv/bin/python -m experiments.synthetic_trainers.paper_report rff \
+  experiments/runs/paper_reproduction/fashion-rff \
+  --archive experiments/synthetic_trainers/baselines/my-fashion-rff
+MPLCONFIGDIR=/tmp/synthetic-trainer-mpl python3 \
+  -m experiments.synthetic_trainers.paper_plots rff \
+  experiments/synthetic_trainers/baselines/my-fashion-rff
+```
+
+For the modular campaign, replace `rff` with `modular` and use its directory.
+Archive destinations must be fresh; incomplete campaigns cannot be archived.
+CSV, full histories, source/data fingerprints, fit delays, final scores, and
+descriptive seed summaries are retained. Plotting accepts the complete archive
+and exports standalone PNG/PDF figures without loading model checkpoints.

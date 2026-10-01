@@ -247,6 +247,50 @@ checked with `#print axioms`; their dependencies use only `propext`,
 `Classical.choice`, and `Quot.sound`. No Lean sources are changed by these
 experiments.
 
+## Reproduced random-feature double descent (2026-10-02)
+
+The local source is *Deep Double Descent*, arXiv:1912.02292v1,
+[Appendix C](../../papers/arXiv-1912.02292v1/rffs.tex), Figures 14–15. The
+[new trainer](paper_reproduction/RANDOM_FEATURES.md) uses the specified frozen
+Gaussian first layer with variance 1/d, exp(-i*x) activation, Fashion-MNIST,
+and zero-initialized complex MSE head. QR computes the minimum-norm
+gradient-flow limit. All 123 planned fits completed over three paired
+independent data/feature seeds and all 10,000 official test images.
+
+| Slice, mean test classification error ± sample SD | Initial point | First minimum | Peak at n=d=1000 | Last point |
+| --- | ---: | ---: | ---: | ---: |
+| Samples n, fixed d=1000 | 34.45% ± 1.18% at n=100 | 31.28% ± 0.28% at n=300 | 86.45% ± 2.25% | 21.28% ± 0.32% at n=2000 |
+| Width d, fixed n=1000 | 24.07% ± 0.09% at d=100 | 21.51% ± 0.19% at d=300 | 86.45% ± 2.25% | 32.42% ± 0.29% at d=2000 |
+
+Both complete classification-error descent/ascent/descent shapes occur in all
+three seeds, at margin 0.02, and each seed's global peak is exactly n=d=1000.
+The mean rise from the first minimum is 55.17 / 64.93 percentage points; the
+second descent is 65.17 / 54.02 points. The sample-wise last point improves on
+its first minimum; the model-wise last point does not. The generic earliest
+four-point witness can select a point before the actual interpolation peak,
+so [summary.json](baselines/fashion_rff_20261002/summary.json) separately retains
+the global peak, both branches, and per-seed interpolation points.
+
+Every n≤d fit has MSE below 4.36e-25; the maximum normal-equation residual
+over all fits is 7.62e-10. The campaign took 33.74 seconds wall time, including
+19.62 seconds of QR fitting on the RTX 3050 Laptop GPU. The
+[archive](baselines/fashion_rff_20261002/measurements.json) preserves all
+dataset checksums, source hashes, nested training indices, feature fingerprints,
+and numerical residuals. [CSV](baselines/fashion_rff_20261002/metrics.csv) and
+[PNG/PDF figures](baselines/fashion_rff_20261002/plots/random-feature-slices.png)
+are independent of the ignored fitted heads.
+
+This reproduces the published qualitative interpolation effect. The paper
+does not disclose pixel normalization, seeds, finite gradient-flow time, or
+the complex classification rule. This run records uint8/255, float64/complex128,
+argmax of the real part, and the infinite-time limit; its numerical values
+differ from Figure 15. Full complex test MSE has an interpolation spike and
+recovery, but no complete first-descent/ascent/second-descent witness at the
+chosen margin. Classification error and MSE are therefore reported separately.
+Because features are frozen, this control demonstrates double descent without
+learning new feature representations; it does not establish a causal link to
+grokking in GPTMini.
+
 ## Double descent is a separate observation
 
 Double descent is a descent, ascent, and second descent in held-out error as

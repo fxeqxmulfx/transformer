@@ -1,0 +1,385 @@
+{
+  "complete": true,
+  "completed_runs": 123,
+  "planned_runs": 123,
+  "elapsed_seconds": 33.74306529099704,
+  "fitting_seconds": 19.617074076872086,
+  "maximum_interpolation_MSE_at_or_above_width": 4.354787169943569e-25,
+  "maximum_normal_equation_residual": 7.617323433933576e-10,
+  "source": "papers/arXiv-1912.02292v1/paper.txt, Appendix C, Figures 14\u201315",
+  "undisclosed_paper_details": [
+    "pixel_normalization",
+    "exact_data/feature_seeds",
+    "finite_gradient_flow_time",
+    "complex_prediction_classification_rule"
+  ],
+  "statistical_scope": "three_paired_independent_data_and_feature_seeds; sample_SD_not_confidence_intervals",
+  "curves": [
+    {
+      "axis": "samples",
+      "fixed": {
+        "width": 1000
+      },
+      "mean_error_curve": {
+        "initial": {
+          "x": 100,
+          "error": 0.34450000000000003,
+          "std": 0.011769027147559829,
+          "runs": 3,
+          "interpolated_runs": 3
+        },
+        "first_minimum": {
+          "x": 300,
+          "error": 0.3128,
+          "std": 0.002816025568065743,
+          "runs": 3,
+          "interpolated_runs": 3
+        },
+        "peak": {
+          "x": 1000,
+          "error": 0.8645,
+          "std": 0.022479546258765987,
+          "runs": 3,
+          "interpolated_runs": 3
+        },
+        "final": {
+          "x": 2000,
+          "error": 0.21276666666666666,
+          "std": 0.0032331615074619006,
+          "runs": 3,
+          "interpolated_runs": 0
+        },
+        "full_error_double_descent": true,
+        "margin": 0.02,
+        "peak_on_interpolation_boundary": true,
+        "peak_rise": 0.5517000000000001,
+        "second_descent": 0.6517333333333334,
+        "second_descent_beats_first_minimum": true,
+        "scope": "posthoc_description_of_all_frozen_grid_points; not_significance_or_hyperparameter_selection"
+      },
+      "by_seed": [
+        {
+          "seed": 0,
+          "error_curve": {
+            "initial": {
+              "x": 100,
+              "error": 0.331,
+              "train_MSE": 1.1598622200358647e-30
+            },
+            "first_minimum": {
+              "x": 400,
+              "error": 0.3068,
+              "train_MSE": 3.3094345720255043e-29
+            },
+            "peak": {
+              "x": 1000,
+              "error": 0.8608,
+              "train_MSE": 1.8117183340940305e-25
+            },
+            "final": {
+              "x": 2000,
+              "error": 0.2109,
+              "train_MSE": 0.013269872207906108
+            },
+            "full_error_double_descent": true,
+            "margin": 0.02,
+            "peak_on_interpolation_boundary": true,
+            "peak_rise": 0.554,
+            "second_descent": 0.6499,
+            "second_descent_beats_first_minimum": true,
+            "scope": "posthoc_description_of_all_frozen_grid_points; not_significance_or_hyperparameter_selection"
+          },
+          "interpolated_points": [
+            100,
+            200,
+            300,
+            400,
+            500,
+            600,
+            700,
+            800,
+            900,
+            950,
+            975,
+            1000
+          ]
+        },
+        {
+          "seed": 1,
+          "error_curve": {
+            "initial": {
+              "x": 100,
+              "error": 0.3526,
+              "train_MSE": 1.4916901148964082e-30
+            },
+            "first_minimum": {
+              "x": 300,
+              "error": 0.3135,
+              "train_MSE": 1.3372041409428112e-29
+            },
+            "peak": {
+              "x": 1000,
+              "error": 0.8886000000000001,
+              "train_MSE": 4.354787169943569e-25
+            },
+            "final": {
+              "x": 2000,
+              "error": 0.2165,
+              "train_MSE": 0.012977709563603407
+            },
+            "full_error_double_descent": true,
+            "margin": 0.02,
+            "peak_on_interpolation_boundary": true,
+            "peak_rise": 0.5751000000000001,
+            "second_descent": 0.6721,
+            "second_descent_beats_first_minimum": true,
+            "scope": "posthoc_description_of_all_frozen_grid_points; not_significance_or_hyperparameter_selection"
+          },
+          "interpolated_points": [
+            100,
+            200,
+            300,
+            400,
+            500,
+            600,
+            700,
+            800,
+            900,
+            950,
+            975,
+            1000
+          ]
+        },
+        {
+          "seed": 2,
+          "error_curve": {
+            "initial": {
+              "x": 100,
+              "error": 0.34990000000000004,
+              "train_MSE": 1.9202151381985158e-30
+            },
+            "first_minimum": {
+              "x": 300,
+              "error": 0.30970000000000003,
+              "train_MSE": 1.2864495042737315e-29
+            },
+            "peak": {
+              "x": 1000,
+              "error": 0.8441000000000001,
+              "train_MSE": 6.076932189454285e-26
+            },
+            "final": {
+              "x": 2000,
+              "error": 0.2109,
+              "train_MSE": 0.012872688320712906
+            },
+            "full_error_double_descent": true,
+            "margin": 0.02,
+            "peak_on_interpolation_boundary": true,
+            "peak_rise": 0.5344,
+            "second_descent": 0.6332000000000001,
+            "second_descent_beats_first_minimum": true,
+            "scope": "posthoc_description_of_all_frozen_grid_points; not_significance_or_hyperparameter_selection"
+          },
+          "interpolated_points": [
+            100,
+            200,
+            300,
+            400,
+            500,
+            600,
+            700,
+            800,
+            900,
+            950,
+            975,
+            1000
+          ]
+        }
+      ],
+      "repeated_full_error_double_descent": 3,
+      "peak_on_boundary_runs": 3,
+      "mean_MSE_four_point_witness": null
+    },
+    {
+      "axis": "width",
+      "fixed": {
+        "samples": 1000
+      },
+      "mean_error_curve": {
+        "initial": {
+          "x": 100,
+          "error": 0.2407,
+          "std": 0.000916515138991164,
+          "runs": 3,
+          "interpolated_runs": 0
+        },
+        "first_minimum": {
+          "x": 300,
+          "error": 0.21513333333333334,
+          "std": 0.0018929694486000928,
+          "runs": 3,
+          "interpolated_runs": 0
+        },
+        "peak": {
+          "x": 1000,
+          "error": 0.8645,
+          "std": 0.022479546258765987,
+          "runs": 3,
+          "interpolated_runs": 3
+        },
+        "final": {
+          "x": 2000,
+          "error": 0.3242333333333334,
+          "std": 0.00291433239925259,
+          "runs": 3,
+          "interpolated_runs": 3
+        },
+        "full_error_double_descent": true,
+        "margin": 0.02,
+        "peak_on_interpolation_boundary": true,
+        "peak_rise": 0.6493666666666666,
+        "second_descent": 0.5402666666666667,
+        "second_descent_beats_first_minimum": false,
+        "scope": "posthoc_description_of_all_frozen_grid_points; not_significance_or_hyperparameter_selection"
+      },
+      "by_seed": [
+        {
+          "seed": 0,
+          "error_curve": {
+            "initial": {
+              "x": 100,
+              "error": 0.2417,
+              "train_MSE": 0.03942693413574547
+            },
+            "first_minimum": {
+              "x": 300,
+              "error": 0.21430000000000002,
+              "train_MSE": 0.024677082787854687
+            },
+            "peak": {
+              "x": 1000,
+              "error": 0.8608,
+              "train_MSE": 1.8117183340940305e-25
+            },
+            "final": {
+              "x": 2000,
+              "error": 0.3255,
+              "train_MSE": 7.456764494853344e-28
+            },
+            "full_error_double_descent": true,
+            "margin": 0.02,
+            "peak_on_interpolation_boundary": true,
+            "peak_rise": 0.6465,
+            "second_descent": 0.5353,
+            "second_descent_beats_first_minimum": false,
+            "scope": "posthoc_description_of_all_frozen_grid_points; not_significance_or_hyperparameter_selection"
+          },
+          "interpolated_points": [
+            1000,
+            1025,
+            1050,
+            1100,
+            1200,
+            1300,
+            1400,
+            1500,
+            1750,
+            2000
+          ]
+        },
+        {
+          "seed": 1,
+          "error_curve": {
+            "initial": {
+              "x": 100,
+              "error": 0.2399,
+              "train_MSE": 0.03834404678303121
+            },
+            "first_minimum": {
+              "x": 200,
+              "error": 0.21530000000000002,
+              "train_MSE": 0.028344948283553117
+            },
+            "peak": {
+              "x": 1000,
+              "error": 0.8886000000000001,
+              "train_MSE": 4.354787169943569e-25
+            },
+            "final": {
+              "x": 2000,
+              "error": 0.32630000000000003,
+              "train_MSE": 4.452740600719616e-28
+            },
+            "full_error_double_descent": true,
+            "margin": 0.02,
+            "peak_on_interpolation_boundary": true,
+            "peak_rise": 0.6733,
+            "second_descent": 0.5623,
+            "second_descent_beats_first_minimum": false,
+            "scope": "posthoc_description_of_all_frozen_grid_points; not_significance_or_hyperparameter_selection"
+          },
+          "interpolated_points": [
+            1000,
+            1025,
+            1050,
+            1100,
+            1200,
+            1300,
+            1400,
+            1500,
+            1750,
+            2000
+          ]
+        },
+        {
+          "seed": 2,
+          "error_curve": {
+            "initial": {
+              "x": 100,
+              "error": 0.24050000000000002,
+              "train_MSE": 0.03815519571579762
+            },
+            "first_minimum": {
+              "x": 200,
+              "error": 0.21250000000000002,
+              "train_MSE": 0.028599873154388354
+            },
+            "peak": {
+              "x": 1000,
+              "error": 0.8441000000000001,
+              "train_MSE": 6.076932189454285e-26
+            },
+            "final": {
+              "x": 2000,
+              "error": 0.3209,
+              "train_MSE": 5.4969485118983355e-28
+            },
+            "full_error_double_descent": true,
+            "margin": 0.02,
+            "peak_on_interpolation_boundary": true,
+            "peak_rise": 0.6316,
+            "second_descent": 0.5232000000000001,
+            "second_descent_beats_first_minimum": false,
+            "scope": "posthoc_description_of_all_frozen_grid_points; not_significance_or_hyperparameter_selection"
+          },
+          "interpolated_points": [
+            1000,
+            1025,
+            1050,
+            1100,
+            1200,
+            1300,
+            1400,
+            1500,
+            1750,
+            2000
+          ]
+        }
+      ],
+      "repeated_full_error_double_descent": 3,
+      "peak_on_boundary_runs": 3,
+      "mean_MSE_four_point_witness": null
+    }
+  ]
+}

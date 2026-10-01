@@ -1,0 +1,90 @@
+{
+  "status": "complete",
+  "source": "papers/arXiv-1912.02292v1/paper.txt, Appendix C, Figures 14\u201315",
+  "scope": "random_feature_case_study_reproduction; not_CNN_or_translation_reproduction",
+  "architecture": "frozen_complex_exp(-i*x)_features; zero_initialized_complex_linear_MSE_head",
+  "feature_weight_variance": "1/feature_width",
+  "solver": "zero_initialization_gradient_flow_limit_by_QR",
+  "dtype": "float64/complex128",
+  "pixel_normalization": "uint8/255",
+  "prediction_rule": "argmax_real_part; full_complex_MSE_reported",
+  "undisclosed_paper_details": [
+    "pixel_normalization",
+    "exact_data/feature_seeds",
+    "finite_gradient_flow_time",
+    "complex_prediction_classification_rule"
+  ],
+  "grid": [
+    100,
+    200,
+    300,
+    400,
+    500,
+    600,
+    700,
+    800,
+    900,
+    950,
+    975,
+    1000,
+    1025,
+    1050,
+    1100,
+    1200,
+    1300,
+    1400,
+    1500,
+    1750,
+    2000
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "planned_runs": 123,
+  "data_sampling": "nested_uniform_without_replacement; independent_official_test_set",
+  "curve_tolerance": 0.02,
+  "dataset": {
+    "source": "https://github.com/zalandoresearch/fashion-mnist",
+    "files": {
+      "train-images-idx3-ubyte.gz": {
+        "url": "https://raw.githubusercontent.com/zalandoresearch/fashion-mnist/master/data/fashion/train-images-idx3-ubyte.gz",
+        "md5": "8d4fb7e6c68d591d4c3dfef9ec88bf0d",
+        "sha256": "3aede38d61863908ad78613f6a32ed271626dd12800ba2636569512369268a84",
+        "bytes": 26421880
+      },
+      "train-labels-idx1-ubyte.gz": {
+        "url": "https://raw.githubusercontent.com/zalandoresearch/fashion-mnist/master/data/fashion/train-labels-idx1-ubyte.gz",
+        "md5": "25c81989df183df01b3e8a0aad5dffbe",
+        "sha256": "a04f17134ac03560a47e3764e11b92fc97de4d1bfaf8ba1a3aa29af54cc90845",
+        "bytes": 29515
+      },
+      "t10k-images-idx3-ubyte.gz": {
+        "url": "https://raw.githubusercontent.com/zalandoresearch/fashion-mnist/master/data/fashion/t10k-images-idx3-ubyte.gz",
+        "md5": "bef4ecab320f06d8554ea6380940ec79",
+        "sha256": "346e55b948d973a97e58d2351dde16a484bd415d4595297633bb08f03db6a073",
+        "bytes": 4422102
+      },
+      "t10k-labels-idx1-ubyte.gz": {
+        "url": "https://raw.githubusercontent.com/zalandoresearch/fashion-mnist/master/data/fashion/t10k-labels-idx1-ubyte.gz",
+        "md5": "bb300cfdad3c16e7a12a480ee83cd310",
+        "sha256": "67da17c76eaffca5446c3361aaab5c3cd6d1c2608764d35dfb1850b086bf8dd5",
+        "bytes": 5148
+      }
+    }
+  },
+  "torch": "2.14.0+cu130",
+  "device": "cuda",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "source_hashes": {
+    "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/paper_reproduction/__init__.py": "d03f895c1e2a50aa167e24d1e42a7d7c9e1b13b7ef284dc701287b023b05a5ae",
+    "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/paper_reproduction/fashion_data.py": "0d7b8037a34eafdb1ea9db4267959ca02e57f2dc4f328ff582f406c6001f37a2",
+    "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/paper_reproduction/grokking.py": "d03b8b01ad2d139851ae721daae8d834f9ce74755914b1e1f5b03b74af5841cd",
+    "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/paper_reproduction/modular_data.py": "6f0c32a923b466fac7fb2678d0bc9e3af9517d4edf720631609a0cf957601d79",
+    "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/paper_reproduction/random_features.py": "ae93bf75f2aff03e0c8c7f41da8c146763a195b1d7ed66cc68b1919a87bfdacc",
+    "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/paper_reproduction/reference_transformer.py": "f31ab6d7998a42f8e459b74f2cc0ed66be55f4dfcc036c857ecd9a1bdf8e9f11",
+    "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/paper_reproduction/rff_experiment.py": "4e7b182331261b546096af48bd873a590faa7daf06f9a6780c7eb26aee71ab5c"
+  },
+  "elapsed_seconds": 33.74306529099704
+}

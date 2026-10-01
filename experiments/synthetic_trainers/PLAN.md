@@ -50,6 +50,14 @@ use different data and model families; synthetic GPTMini analogues should not
 be described as exact numerical reproductions of those experiments. Check the
 published protocols and reference implementations before freezing the plan.
 
+The [random-feature confirmation](baselines/fashion_rff_20261002/summary.json)
+completed 123 fits and reproduced both sample-wise and model-wise
+classification-error double descent in all three data/feature seeds, with the
+peak at n=d=1000. Missing paper details and numerical differences are explicit
+in [STUDIES.md](STUDIES.md#reproduced-random-feature-double-descent-2026-10-02).
+The modular division reference is running its fixed 150,000-update budget;
+passing its CPU tests or reaching train accuracy does not complete grokking.
+
 Freeze the data, targets, evaluation cadence, grid, and budget before each
 confirmation experiment. Separate exploratory calibration from repetitions,
 use several initialization seeds, and retain per-seed fit failures as well as
