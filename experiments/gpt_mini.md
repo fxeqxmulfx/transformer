@@ -22,3 +22,11 @@ parameterizations or penalties are not excluded by that counterexample.
 
 The restored Python file contains the historical architecture. The
 replacement is currently defined in Lean.
+
+## Synthetic trainers
+
+The [synthetic trainer suite](synthetic_trainers/README.md) includes MQAR,
+composed lookup, prefix languages, and RASP-family sequence and arithmetic tasks
+with free generation. The [plan](synthetic_trainers/PLAN.md) records the goal of
+evaluating mini GPT architecture changes by quality at a fixed budget and time
+to reach a predefined quality target.
