@@ -99,6 +99,8 @@ examples behind these rules.
 - Search `src/` for forbidden constructs such as `native_decide`, `axiom`,
   and disabled linter options. Fix Mathlib deprecations in the change that
   updates Mathlib.
-- Make commits only when explicitly requested. For a requested commit, keep
-  one logical change per commit and recheck its theorem statements against
-  the papers first.
+- Commit completed, verified logical changes regularly during task work.
+  Do not wait until an entire long-running experiment campaign is finished.
+  Keep one logical change per commit, run the checks appropriate to that
+  change, and recheck any changed theorem statements against the papers first.
+  Leave unfinished work and unrelated changes out of each commit.
