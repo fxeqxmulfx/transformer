@@ -16,6 +16,13 @@ trains in float32. AdamW uses the author's betas (0.9, 0.98), epsilon 1e-8,
 all-parameter weight decay, and ten-update warmup to a constant learning rate.
 No gradient clipping or learning-rate annealing is used.
 
+The native PyTorch AdamW implementation was independently compared with the
+pinned author's `CustomAdamW` in its zero-noise, `to_zero` mode over 20 updates,
+including warmup. Parameters matched in float32 and float64; the source hash
+and settings are saved in [reference-optimizer-check.json](reference-optimizer-check.json).
+This checks the update recurrence, without claiming bitwise reproduction of
+an entire GPU training run across library versions.
+
 Every equation is `EOS a / b = c EOS`, where `b` is nonzero and `c = a/b`
 in the prime field. Both `c` and EOS are supervised. Causal masking prevents
 the teacher-forced answer from entering its own prediction. The complete

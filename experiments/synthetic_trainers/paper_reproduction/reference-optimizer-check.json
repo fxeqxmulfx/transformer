@@ -1,0 +1,34 @@
+{
+  "source_commit": "3d64b1d8c1d595dd8ebdb7771998823f1b14c7b3",
+  "source_file": "grok/training.py",
+  "source_sha256": "1ef287a8cf0559c5d71ec1cb2fe0f5f870233e4e3c6ba8c9a6063c552577330d",
+  "reference_class": "CustomAdamW",
+  "settings": {
+    "betas": [
+      0.9,
+      0.98
+    ],
+    "epsilon": 1e-08,
+    "weight_decay": 1.0,
+    "noise_factor": 0.0,
+    "weight_decay_form": "to_zero",
+    "warmup_steps": 10,
+    "learning_rate": 0.001
+  },
+  "torch": "2.14.0+cu130",
+  "comparisons": [
+    {
+      "dtype": "torch.float32",
+      "updates": 20,
+      "maximum_parameter_difference": 0.0,
+      "tolerance": 1e-06
+    },
+    {
+      "dtype": "torch.float64",
+      "updates": 20,
+      "maximum_parameter_difference": 0.0,
+      "tolerance": 1e-14
+    }
+  ],
+  "scope": "independent_numeric_comparison_of_pinned_author_and_native_AdamW; not_bitwise_training_reproduction"
+}
