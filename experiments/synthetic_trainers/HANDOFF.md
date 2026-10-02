@@ -374,6 +374,17 @@ It is not a scientific plan, launch or demonstrated stability result. The
 complete parent negative archive is now verified and its figures reviewed;
 the prospective lower-rate freeze is the next scientific action.
 
+The [lower-rate scientific plan](protocols/adamw_stability_20261002/lower-rate-protocol.md)
+is now prospectively frozen at 2026-10-02T19:11:49.393424+00:00 from `bee6e44`.
+It changes only learning rate to 0.0003; all 31 training/analysis/manuscript
+fingerprints, corpus, environment, instrumentation and criteria match the
+complete quarter-split parent. Actual `--check-only` passes; four isolated
+changed manifests are rejected, and the pinned archive worker imports without
+PyTorch. Scientific GPU training has not yet started at this freeze record.
+Launch the strict `run_lower_rate` module after committing the verified
+manifest, then attach the NoTorch worker to its actual process. Preserve the
+whole result before applying the unchanged six-case gate.
+
 The [complementary-trainer preparation](protocols/adamw_stability_20261002/complementary-preparation.md)
 also verifies seven existing AdamW CPU paths for MQAR, one/two-hop lookup,
 copy, direct/running parity and C-RASP counting. Final and selected checkpoint

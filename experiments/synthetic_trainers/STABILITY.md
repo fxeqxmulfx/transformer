@@ -335,6 +335,10 @@ now verifies all 150,000 updates and 601 canonical observations, with final
 accuracy is 48.9206% at 139,000. Both processes finish with code 0. Six-case
 confirmation and architecture selection remain closed; the prepared single-
 field lower-rate control is the next calibration, with unchanged criteria.
+The [lower-rate plan](protocols/adamw_stability_20261002/lower-rate-protocol.md)
+is now frozen before scientific training: only learning rate 0.0003 differs;
+the real launcher and four negative manifest checks pass. The same full
+budget, source/environment/corpus fingerprints and every gate remain fixed.
 Any subsequent
 fraction, decay, schedule, or model intervention needs a fresh frozen plan; a
 negative result does not justify relaxing the success criterion.

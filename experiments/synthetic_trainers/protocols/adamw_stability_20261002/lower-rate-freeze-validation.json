@@ -1,0 +1,47 @@
+{
+  "recorded_at_utc": "2026-10-02T19:11:49.400419+00:00",
+  "scientific_training_started": false,
+  "frozen_utc": "2026-10-02T19:11:49.393424+00:00",
+  "source_commit": "bee6e44ad67b6c46096bb03ff4ba0f4421ccaef6",
+  "planned_runs": 1,
+  "budget": 150000,
+  "changed_fields": [
+    "learning_rate"
+  ],
+  "training_analysis_environment_manuscripts_corpus_and_criterion_match_parent": true,
+  "parent_complete_phase_eligible_negative_archive_verified": true,
+  "prepared_configuration_matches_exactly": true,
+  "CPU_smoke_verified": true,
+  "independent_confirmation_eligible": false,
+  "launcher_and_archive_worker_sha256_pinned": true,
+  "scope": "prospective_single_calibration_freeze; no_scientific_outcome_yet",
+  "checked_at_utc": "2026-10-02T19:14:11.981896+00:00",
+  "real_launcher_check_only_passed": true,
+  "archive_worker_imports_without_torch": true,
+  "negative_checks": [
+    {
+      "case": "changed_rate",
+      "isolated_manifest_copies": true,
+      "rejected": true,
+      "reason": "The intervention must change only learning rate to 0.0003"
+    },
+    {
+      "case": "changed_optimizer",
+      "isolated_manifest_copies": true,
+      "rejected": true,
+      "reason": "The intervention must change only learning rate to 0.0003"
+    },
+    {
+      "case": "relaxed_tail",
+      "isolated_manifest_copies": true,
+      "rejected": true,
+      "reason": "Lower-rate recipe count or criterion changed"
+    },
+    {
+      "case": "wrong_corpus_support",
+      "isolated_manifest_copies": true,
+      "rejected": true,
+      "reason": "Lower-rate corpus differs from the parent control"
+    }
+  ]
+}
