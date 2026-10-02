@@ -1,0 +1,54 @@
+{
+  "recorded_at_utc": "2026-10-02T19:00:56.957412+00:00",
+  "complete_archive_and_comparison_verified": true,
+  "torch_imported": false,
+  "completed_updates": 150000,
+  "canonical_observations": 601,
+  "neighbor_observations": 1200,
+  "diagnostic_observations": 1800,
+  "gradient_observations": 150000,
+  "raw_measurement_and_all_log_bytes_match": true,
+  "nested_individual_archive_files_identical": 15,
+  "frozen_fingerprints_unchanged": 31,
+  "earlier_phase_and_failure_prefixes_verify_and_match_final": true,
+  "three_png_figures_visually_reviewed": true,
+  "labels_and_curves_readable": true,
+  "three_corresponding_pdf_headers_valid": true,
+  "first_heldout_target": 20000,
+  "long_confirmation": {
+    "onset": 20000,
+    "confirmed": 24750,
+    "training_seconds": 678.9633863702984,
+    "wall_seconds": 830.9522754510035
+  },
+  "plateau": {
+    "start": 4500,
+    "end": 11500,
+    "observations": 29
+  },
+  "tail_passes": 198,
+  "tail_observations": 201,
+  "tail_failure_steps": [
+    115000,
+    119250,
+    139000
+  ],
+  "tail_minimum_heldout": 0.4892055267702936,
+  "independent_confirmation_gate": false,
+  "checkpoint_sha256": "01721201737f7bb736cde6d3f45adc31ec18f9977729a9add42b996c1d2b0ca8",
+  "processes": {
+    "trainer": {
+      "pid": 123201,
+      "session_id": 61726,
+      "exit_code": 0,
+      "terminal_handle_consumed": true
+    },
+    "archive_worker": {
+      "pid": 123310,
+      "session_id": 95343,
+      "exit_code": 0,
+      "terminal_handle_consumed": true
+    }
+  },
+  "scope": "complete_negative_persistence_calibration_with_observed_delayed_generalization; no_repeatability_architecture_transfer_or_causal_claim"
+}

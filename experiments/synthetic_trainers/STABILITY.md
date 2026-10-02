@@ -319,7 +319,7 @@ prospective scientific plan. The ordinary CSV-verifier repair is now complete.
 The [25% scientific plan](protocols/adamw_stability_20261002/fraction25-protocol.md)
 has now been frozen after the complete parent result, changing only the training
 fraction and recording the two analysis-only repairs. Its gates remain unchanged.
-It is now running with an archive worker. The
+Its full budget and archives have completed. The
 [verified positive phase prefix](protocols/adamw_stability_20261002/first-long-confirmation-fraction25.md)
 preserves all 100 canonical and 24,750 gradient observations: a qualifying
 plateau at 4,500–11,500, first held-out target at 20,000 and 20 consecutive
@@ -328,9 +328,13 @@ does not yet establish final-tail persistence or independent repeatability.
 The [first quarter-split final-window failure](protocols/adamw_stability_20261002/first-tail-failure-fraction25.md)
 is now verified at 115,000: train / held-out 92.7461%/91.6271%, with EOS 100%
 and failures at both immediate neighbors. This refutes the frozen persistence
-gate despite the observed delayed generalization. Finish the whole budget
-and archive every subsequent observation before the next calibration; six-case
-confirmation and architecture selection remain closed.
+gate despite the observed delayed generalization. The
+[complete quarter-split archive](protocols/adamw_stability_20261002/fraction25-result.md)
+now verifies all 150,000 updates and 601 canonical observations, with final
+100%/100% and three failed final-window points. The minimum final-window canonical held-out
+accuracy is 48.9206% at 139,000. Both processes finish with code 0. Six-case
+confirmation and architecture selection remain closed; the prepared single-
+field lower-rate control is the next calibration, with unchanged criteria.
 Any subsequent
 fraction, decay, schedule, or model intervention needs a fresh frozen plan; a
 negative result does not justify relaxing the success criterion.

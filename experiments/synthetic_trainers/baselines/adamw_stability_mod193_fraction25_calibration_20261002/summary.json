@@ -1,0 +1,90 @@
+{
+  "optimizers": [
+    "adamw"
+  ],
+  "optimizer_label": "AdamW",
+  "complete_stage": true,
+  "planned_runs": 1,
+  "completed_runs": 1,
+  "total_updates": 150000,
+  "total_canonical_observations": 601,
+  "stable_grokking_calibration_recipes": [],
+  "ready_to_freeze_independent_confirmation": false,
+  "independent_confirmation_complete": false,
+  "criterion": {
+    "target": 0.99,
+    "heldout_ceiling": 0.1,
+    "plateau_steps": 1000,
+    "plateau_observations": 5,
+    "confirmation_observations": 20,
+    "tail_steps": 50000
+  },
+  "environment": {
+    "python": "3.12.13",
+    "torch": "2.14.0+cu126",
+    "numpy": "2.5.3",
+    "cuda": "12.6",
+    "device": "cuda",
+    "gpu": "NVIDIA GeForce GTX 1050",
+    "compute_capability": [
+      6,
+      1
+    ],
+    "gpu_memory_bytes": 2088894464,
+    "cuda_arches": [
+      "sm_50",
+      "sm_60",
+      "sm_70",
+      "sm_75",
+      "sm_80",
+      "sm_86",
+      "sm_90"
+    ],
+    "cudnn": 91002,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "threads": 1,
+    "driver": "580.178.04"
+  },
+  "rows": [
+    {
+      "name": "adamw-mod193-fraction25-lr001",
+      "changed_mechanism": "training_fraction_only_against_completed_mod193_half_split",
+      "learning_rate": 0.001,
+      "batch_policy": "short_final",
+      "model_seed": 0,
+      "data_seed": 0,
+      "steps": 150000,
+      "parameters": 436104,
+      "epochs_seen": 7894.773747841105,
+      "training_seconds": 4193.8834143664135,
+      "diagnostic_seconds": 44.97881961967505,
+      "wall_seconds": 5106.132396332003,
+      "peak_cuda_allocated_bytes": 119654400,
+      "final_train_accuracy": 1.0,
+      "final_heldout_accuracy": 1.0,
+      "final_heldout_answer_loss": 1.0219776678781912e-07,
+      "final_heldout_EOS_loss": 0.0,
+      "legacy_plateau_then_generalization": true,
+      "restricted_epoch_error_double_descent": false,
+      "long_confirmation_support": 1,
+      "long_confirmation_onset": 20000,
+      "long_confirmation_step": 24750,
+      "long_confirmation_training_seconds": 678.9633863702984,
+      "long_confirmation_wall_seconds": 830.9522754510035,
+      "tail_failures": 3,
+      "tail_minimum_heldout_accuracy": 0.4892055267702936,
+      "persistent_final_performance": false,
+      "stable_grokking": false,
+      "later_heldout_failures": 5,
+      "optimizer": "adamw"
+    }
+  ],
+  "statistical_scope": "one_initialization_and_one_calibration_split_per_recipe; no_mean_SD_or_universal_speedup",
+  "timing_scope": "first_20_observation_joint_target_confirmation; retain_tail_and_phase_failures; no_stopping_or_interpolation",
+  "next_action": "preserve_negative_results_and_freeze_one_justified_mechanism_change_without_relaxing_criteria",
+  "plots_included": true,
+  "analysis_source_hashes": {
+    "stability_comparison.py": "0b45b441866bfddb8132163674d543dec53118627fb01e59ff7a791490e522b6",
+    "stability_comparison_plots.py": "0eeca8180f0553845c406dd8391293116d0cad3192f88af273f1f9facb2ba80c"
+  }
+}

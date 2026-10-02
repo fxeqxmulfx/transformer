@@ -322,11 +322,12 @@ environment, papers, instrumentation and all phase/persistence gates. It records
 the two verified analysis-only repairs. The real launcher check and isolated
 negative manifest tests are recorded in the
 [freeze validation](protocols/adamw_stability_20261002/fraction25-freeze-validation.json).
-Scientific training is now live: trainer PID 123201/session 61726 runs the
-strict `run_fraction25` launcher. Archive worker PID 123310/session 95343
-has no PyTorch imported and waits for the full budget, checks all immutable
-fingerprints, creates both complete archives with PNG/PDF figures, and verifies
-them offline with the ordinary tools. Actual commands, state and fingerprints
+Scientific training has completed: trainer PID 123201/session 61726 and
+archive worker PID 123310/session 95343 both exit with code 0; terminal
+handles are consumed and must not be restarted or polled. The worker has no
+PyTorch imported, checks all immutable fingerprints, creates both complete
+archives with PNG/PDF figures, and verifies them offline with the ordinary
+tools. Actual commands, state and fingerprints
 are recorded in the
 [launch validation](protocols/adamw_stability_20261002/fraction25-launch-validation.json).
 Driver output is `experiments/runs/adamw_stability_20261002/fraction25-driver.log`;
@@ -351,9 +352,16 @@ and both immediate neighbors fail on full batches. The observed memorization
 and generalization phases remain valid, but this single final-window failure
 refutes the unchanged persistence gate and prevents independent confirmation.
 Existing offline verification and four repaired-hash semantic corruptions pass;
-all 31 frozen files remain unchanged. The trainer and archive worker continue
-the whole budget. Preserve and commit the full negative result and curves
-before selecting the next calibration; no criterion is relaxed.
+all 31 frozen files remain unchanged. The trainer and archive worker continued
+the whole budget in that earlier inspection. The
+[complete quarter-split result](protocols/adamw_stability_20261002/fraction25-result.md)
+is now verified: all 150,000 updates and 601 canonical observations, final
+100%/100%, but three final-window failures at 115,000/119,250/139,000. The
+worst final-window canonical held-out accuracy is 48.9206% at 139,000. The observed phase
+passes, persistent performance fails and the six-case gate stays closed.
+All 1,200 neighbors, 1,800 tensor samples, 150,000 gradient records, source
+bytes and nested archive copies verify without PyTorch; all three PNG/PDF
+pairs are retained, with readable PNGs reviewed. No criterion is relaxed.
 
 The [lower-rate CPU preparation](protocols/adamw_stability_20261002/lower-rate-preparation.md)
 checks learning rate 0.0003 as the only field change from the quarter-split
@@ -362,8 +370,9 @@ parent. Complete corpus, initial CPU state, parameters, exposure and all
 the next full batch and portable analysis without PyTorch. CUDA is hidden from
 the CPU process and no CUDA context is created. This preparation overlapped
 the parent's final training portion, which matters for descriptive timing.
-It is not a scientific plan, launch or demonstrated stability result. Finish
-and review the full parent negative archive before the prospective freeze.
+It is not a scientific plan, launch or demonstrated stability result. The
+complete parent negative archive is now verified and its figures reviewed;
+the prospective lower-rate freeze is the next scientific action.
 
 The [complementary-trainer preparation](protocols/adamw_stability_20261002/complementary-preparation.md)
 also verifies seven existing AdamW CPU paths for MQAR, one/two-hop lookup,
