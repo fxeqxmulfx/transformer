@@ -256,11 +256,13 @@ Fresh modular training rebuilds its complete oracle corpus and uses the tracked,
 licensed reference model; these missing historical weights/data do not block
 the current calibration. Timing comparisons use paired controls on this GPU.
 
-Finish and archive all four calibration trajectories, diagnose neighbor/tail
-effects and norm changes, and select a passing recipe before confirmation.
-Any new fraction, decay, schedule, or model control gets a separately frozen
-plan. If all four fail, preserve that result and freeze a justified controlled
-follow-up without relaxing the success criterion.
+The four original raw calibrations and the midpoint learning-rate control are
+complete and negative; their full archives, curves and diagnoses are preserved.
+The current user-selected AdamW/raw AMSGradW pair is frozen and running. Finish
+both complete budgets, preserve each outcome and every dense gradient record,
+and apply the unchanged criterion to the primary AdamW recipe. Any subsequent
+fraction, decay, schedule, or model intervention needs a fresh frozen plan; a
+negative result does not justify relaxing the success criterion.
 
 Independent confirmation will exclude calibration model/data seed 0: use model
 seeds 4/5/6 crossed with data seeds 2/3 in a new frozen plan. Require stable
