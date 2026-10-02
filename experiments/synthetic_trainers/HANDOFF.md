@@ -272,6 +272,16 @@ The earlier long target streak and fewer sampled failures in this one paired
 calibration do not certify persistence or a repeatable speedup. Finish the
 remaining 0.0001 control before selecting a recipe or adaptation.
 
+The measured `short-lr0001` prefix through update 15,000 contains the required
+low-held-out memorization plateau: train accuracy remains at least 99% and
+held-out at most 10% over updates 1,000–15,000 (57 consecutive canonical
+observations). At 15,000, train/held-out accuracy is 100%/5.7345%.
+No held-out 99% event has occurred in that prefix, and its final-tail window
+has not begun. This is an observed phase, not a completed or stable-grokking
+result. The [recorded prefix](protocols/amsgradw_stability_20261002/short-lr0001-prefix.json)
+retains all 61 canonical observations, the unchanged criterion, and corpus/
+manifest fingerprints. Finish the same 150,000-update budget before selection.
+
 A read-only [fraction-control corpus inspection](protocols/amsgradw_stability_20261002/candidate-corpus-coverage.md)
 finds all 97 answer classes and legal operand classes in the 50%, 20%, 10%,
 and 5% pools on calibration data seed 0. Counts, oracle answers, and nested
