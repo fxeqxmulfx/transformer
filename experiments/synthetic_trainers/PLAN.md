@@ -65,6 +65,23 @@ does not pass the sustained memorization-phase diagnostic. Calibration at
 weight decay 0.1 is now running the same fixed budget. Passing CPU tests or
 a finite curve witness does not complete the grokking reproduction.
 
+The next confirmation manifest is frozen under
+`experiments/runs/paper_reproduction/mod97_fraction50_wd01_confirmation_20261002`:
+data seed 1, initialization seeds 1/2/3, train fraction 50%, weight decay 0.1,
+and 150,000 updates each for reference/AdamW, GPTMini/AdamW, and
+GPTMini/raw AMSGradW. Calibration seed 0/data seed 0 is excluded. Start this
+serial nine-run campaign only after the full calibration completes with a
+measured memorization plateau followed by generalization and a final held-out
+target. If that condition fails, preserve the failure and recalibrate instead.
+The frozen manifest resumes with:
+
+```bash
+.venv/bin/python -m experiments.synthetic_trainers.reproduction \
+  --output experiments/runs/paper_reproduction/mod97_fraction50_wd01_confirmation_20261002 \
+  --train-fraction 0.5 --weight-decay 0.1 --data-seed 1 \
+  --seeds 1 2 3 --steps 150000 --resume
+```
+
 Freeze the data, targets, evaluation cadence, grid, and budget before each
 confirmation experiment. Separate exploratory calibration from repetitions,
 use several initialization seeds, and retain per-seed fit failures as well as
