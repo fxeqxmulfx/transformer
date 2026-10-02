@@ -1,0 +1,231 @@
+{
+  "recipe": "adamw-mod193-fraction25-lr001",
+  "through_update": 24750,
+  "full_frozen_budget": 150000,
+  "config": {
+    "model": "gptmini",
+    "optimizer": "adamw",
+    "prime": 193,
+    "train_fraction": 0.25,
+    "data_seed": 0,
+    "seed": 0,
+    "width": 128,
+    "layers": 2,
+    "heads": 4,
+    "steps": 150000,
+    "batch_size": 512,
+    "batch_policy": "short_final",
+    "eval_every": 250,
+    "learning_rate": 0.001,
+    "weight_decay": 0.1,
+    "warmup_steps": 10,
+    "target": 0.99,
+    "patience": 2,
+    "device": "cuda"
+  },
+  "criterion": {
+    "target": 0.99,
+    "heldout_ceiling": 0.1,
+    "plateau_steps": 1000,
+    "plateau_observations": 5,
+    "confirmation_observations": 20,
+    "tail_steps": 50000
+  },
+  "assessment": {
+    "criterion": {
+      "target": 0.99,
+      "heldout_ceiling": 0.1,
+      "plateau_steps": 1000,
+      "plateau_observations": 5,
+      "confirmation_observations": 20,
+      "tail_steps": 50000
+    },
+    "complete_canonical_history": false,
+    "plateau": {
+      "start": 4500,
+      "end": 11500,
+      "observations": 29
+    },
+    "long_confirmation": {
+      "onset": 20000,
+      "confirmed": 24750,
+      "training_seconds": 678.9633863702984,
+      "wall_seconds": 830.9522754510035
+    },
+    "tail_start_step": 100000,
+    "tail_observations": 0,
+    "tail_failures": [],
+    "tail_minimum_heldout_accuracy": null,
+    "persistent_final_performance": false,
+    "stable_grokking": false,
+    "legacy_phase_diagnostics": {
+      "sustained_train_fit": {
+        "onset": 1000,
+        "confirmed": 1250
+      },
+      "sustained_heldout_target": {
+        "onset": 20000,
+        "confirmed": 20250
+      },
+      "time_to_sustained_train_fit": {
+        "onset": {
+          "training_seconds": 30.72686034092476,
+          "wall_seconds": 39.11592970300262
+        },
+        "confirmed": {
+          "training_seconds": 38.31924771585909,
+          "wall_seconds": 48.244775514998764
+        }
+      },
+      "time_to_sustained_heldout_target": {
+        "onset": {
+          "training_seconds": 545.1230832701913,
+          "wall_seconds": 667.9192607869991
+        },
+        "confirmed": {
+          "training_seconds": 551.5302812922455,
+          "wall_seconds": 675.8318815410021
+        }
+      },
+      "lag_after_sustained_train_fit": 19000,
+      "memorization_plateau": {
+        "start_step": 4500,
+        "end_step": 11500,
+        "span_steps": 7000,
+        "observations": 29,
+        "minimum_train_accuracy": 0.9939550949913645,
+        "maximum_heldout_accuracy": 0.09697035118019574
+      },
+      "heldout_ceiling": 0.1,
+      "train_target": 0.99,
+      "patience": 2,
+      "fit_to_heldout_onset_ratio": 20.0,
+      "observed_plateau_then_generalization": true,
+      "epoch_error_curve_before_generalization": {
+        "initial": {
+          "step": 0,
+          "error": 1.0
+        },
+        "first_minimum": {
+          "step": 750,
+          "error": 0.9763960852043754
+        },
+        "peak": {
+          "step": 1000,
+          "error": 0.9774395509499136
+        },
+        "final": {
+          "step": 24750,
+          "error": 0.000503742084053016
+        },
+        "first_descent": 0.023603914795624625,
+        "peak_rise": 0.0010434657455382634,
+        "second_descent": 0.9769358088658606,
+        "margin": 0.02,
+        "full_error_double_descent": false,
+        "selection": "minimum_before_sustained_train_fit; peak_while_train_fitted_before_heldout_target; final_observation",
+        "scope": "posthoc_synthetic_epoch_error_description; no_CIFAR_numerical_reproduction_or_causal_claim"
+      },
+      "both_epoch_error_double_descent_and_grokking": false,
+      "final_heldout_target": true,
+      "observations_after_confirmation": 19,
+      "fraction_observations_at_target_after_confirmation": 1.0,
+      "minimum_heldout_accuracy_after_confirmation": 0.9990644789867588,
+      "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+    },
+    "scope": "finite_scheduled_observations; no_guarantee_between_observations_or_beyond_budget"
+  },
+  "first_canonical_heldout_target": {
+    "step": 20000,
+    "epochs_seen": 1052.6632124352332,
+    "training_seconds": 545.1230832701913,
+    "wall_seconds": 667.9192607869991,
+    "last_batch_size": 512,
+    "train": {
+      "accuracy": 1.0,
+      "answer_accuracy": 1.0,
+      "EOS_accuracy": 1.0,
+      "loss": 0.00016088201960955708,
+      "answer_loss": 0.00031430639418257025,
+      "EOS_loss": 7.457642083435073e-06,
+      "examples": 9264
+    },
+    "heldout": {
+      "accuracy": 0.9958621185952792,
+      "answer_accuracy": 0.9958621185952792,
+      "EOS_accuracy": 1.0,
+      "loss": 0.008507781983211114,
+      "answer_loss": 0.017008103528925927,
+      "EOS_loss": 7.460376415114848e-06,
+      "examples": 27792
+    }
+  },
+  "first_canonical_train_target": {
+    "step": 1000,
+    "epochs_seen": 52.66321243523316,
+    "training_seconds": 30.72686034092476,
+    "wall_seconds": 39.11592970300262,
+    "last_batch_size": 512,
+    "train": {
+      "accuracy": 0.9902849740932642,
+      "answer_accuracy": 0.9902849740932642,
+      "EOS_accuracy": 1.0,
+      "loss": 0.07816599798428991,
+      "answer_loss": 0.156209803615827,
+      "EOS_loss": 0.00012219243951138616,
+      "examples": 9264
+    },
+    "heldout": {
+      "accuracy": 0.022560449050086355,
+      "answer_accuracy": 0.022560449050086355,
+      "EOS_accuracy": 0.9999640184225677,
+      "loss": 3.1108256204415135,
+      "answer_loss": 6.22132392141005,
+      "EOS_loss": 0.0003273154939452447,
+      "examples": 27792
+    }
+  },
+  "history_observations": 100,
+  "gradient_observations": 24750,
+  "largest_observed_gradient": {
+    "step": 14550,
+    "batch_size": 512,
+    "epoch_tail": false,
+    "learning_rate": 0.001,
+    "gradient_l2": 575.4625854492188
+  },
+  "frozen_source_and_paper_hashes": {
+    "experiments/gpt_mini.py": "7df779bcdc019a6054ed7a6b93469b821b8dec9fc96d84a1420ec387d28f5ee4",
+    "experiments/optimizer_benchmark/common.py": "b3d57ccafe3350631acc31ac000d3b55627d2ed8c4c87b1c30173cfe66fa834d",
+    "experiments/optimizer_benchmark/coordinate.py": "4446687f796f85090acb7ac37834f5c7e31a11f34912cc08ffa28c81683dc85f",
+    "experiments/synthetic_trainers/curves.py": "8fe1edf584db9d05e11d5ea26ca5d4a016746bafde3a88a684031830f3f30e6b",
+    "experiments/synthetic_trainers/paper_phases.py": "acaf5eb3aa9999d8c3cdec8e6ab258f95da4e045c2dbb6f115b58f5c42165586",
+    "experiments/synthetic_trainers/paper_reproduction/__init__.py": "d03f895c1e2a50aa167e24d1e42a7d7c9e1b13b7ef284dc701287b023b05a5ae",
+    "experiments/synthetic_trainers/paper_reproduction/batches.py": "d1d15a822691c9eebd587f74559cf63e3f140e198ae52c6e633a7851623faccd",
+    "experiments/synthetic_trainers/paper_reproduction/diagnostics.py": "b704474b037ff5c1029e8acaf7bee53f4eb23d9d784e2366eacddee30e146c6f",
+    "experiments/synthetic_trainers/paper_reproduction/fashion_data.py": "0d7b8037a34eafdb1ea9db4267959ca02e57f2dc4f328ff582f406c6001f37a2",
+    "experiments/synthetic_trainers/paper_reproduction/grokking.py": "189c55580e7b27344662325cbbb5abad475ddfc09353d4fb8487a257321d22e8",
+    "experiments/synthetic_trainers/paper_reproduction/modular_data.py": "6f0c32a923b466fac7fb2678d0bc9e3af9517d4edf720631609a0cf957601d79",
+    "experiments/synthetic_trainers/paper_reproduction/provenance.py": "eaf50a0cc28a2936e093bd7ca89c281215d10c7b200d3df98f5e6aea10a67004",
+    "experiments/synthetic_trainers/paper_reproduction/random_features.py": "ae93bf75f2aff03e0c8c7f41da8c146763a195b1d7ed66cc68b1919a87bfdacc",
+    "experiments/synthetic_trainers/paper_reproduction/reference_transformer.py": "f31ab6d7998a42f8e459b74f2cc0ed66be55f4dfcc036c857ecd9a1bdf8e9f11",
+    "experiments/synthetic_trainers/paper_reproduction/rff_experiment.py": "4e7b182331261b546096af48bd873a590faa7daf06f9a6780c7eb26aee71ab5c",
+    "experiments/synthetic_trainers/persistence.py": "08726b52640d2c4fc60a82c355e8d50a469177b91fc1dd7058d581f87ff1577f",
+    "experiments/synthetic_trainers/runtime.py": "a7b52640d190c3cbb0405125c58d1593c5e700301a8a6126fdc78110ee98643d",
+    "experiments/synthetic_trainers/stability.py": "6aac13ffd95219d43566cc8bed4786c90fbdec916e5c89ac8cb69e7d0700d69e",
+    "experiments/synthetic_trainers/stability_protocol.py": "de0bf31606757f566b11b746981609c3c9f0a4291e0c3af7ebb84022f3877b3d",
+    "experiments/synthetic_trainers/confirmation_layout.py": "e2827fb9a08b0e3c785c78d3fe16a0884ed109789e7014f7c19d2bba0792e151",
+    "experiments/synthetic_trainers/confirmation_protocol.py": "7281e1dc5ff82ea251d9c341c3916b9c3fad4c1dd31ca230d5ffc99c2e9e54c0",
+    "experiments/synthetic_trainers/confirmation_report.py": "332f512ed8aa0c25c4fd2cd5dfb0936c415c0311ed67626901d19e51e9532f2c",
+    "experiments/synthetic_trainers/stability_analysis.py": "e1cbf175cfa0269719d8c074238ace71584e5e1afaed6bd6269cb27e1232db9f",
+    "experiments/synthetic_trainers/stability_comparison.py": "0b45b441866bfddb8132163674d543dec53118627fb01e59ff7a791490e522b6",
+    "experiments/synthetic_trainers/stability_comparison_plots.py": "0eeca8180f0553845c406dd8391293116d0cad3192f88af273f1f9facb2ba80c",
+    "experiments/synthetic_trainers/stability_confirmation.py": "bdf86a92147ccce637be8dc5490934c7d7ca43db3999e515b280de03b6e1e495",
+    "experiments/synthetic_trainers/stability_integrity.py": "cf2e99858de8a4fc2cd8989ddd52bcadb11e31193b2a14b1053853dca1266e5e",
+    "experiments/synthetic_trainers/stability_plots.py": "7502b7383aae64bc5c46d4ea529fcc688b779469157cf2c9d862dc841efa3c03",
+    "experiments/synthetic_trainers/stability_report.py": "9d009ed5004dccb80a9d4ab6777d13337afae6e0750b1b7bb471d1d6c4fd52a3",
+    "papers/arXiv-2211.11052v1/arxiv.tex": "80db7319f40cf0536c41665a42aac9ba97489ec30cbbaa4541bec3753cc164ab",
+    "papers/arXiv-1912.02292v1/rffs.tex": "a3047fd84e9b78c58dbf7953b93dd55a397392cf2fc1fce4671455dc4782807f"
+  },
+  "scope": "complete_canonical_and_gradient_prefix_through_first_long_confirmation; observed_delayed_generalization; incomplete_budget_and_unresolved_persistence_and_repeatability"
+}

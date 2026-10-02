@@ -1,0 +1,31 @@
+{
+  "source": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/first-long-confirmation-fraction25",
+  "source_artifact_manifest_sha256": "8f2784196b48910623aa1b9a8f6eec9d537396a328c6367dda3627b08648607d",
+  "renderer_sha256": "5dace5f64d1d18b3a5115491a75575b53fbc1533d323b964f99006bfccf5d6d2",
+  "verification": {
+    "verified": true,
+    "through_update": 24750,
+    "history_observations": 100,
+    "gradient_observations": 24750,
+    "plateau": {
+      "start": 4500,
+      "end": 11500,
+      "observations": 29
+    },
+    "first_heldout_target": 20000,
+    "long_confirmation": {
+      "onset": 20000,
+      "confirmed": 24750,
+      "training_seconds": 678.9633863702984,
+      "wall_seconds": 830.9522754510035
+    },
+    "phase_observed": true,
+    "full_budget_complete": false,
+    "stable_grokking": false
+  },
+  "matplotlib": "3.11.2",
+  "canonical_observations": 100,
+  "all_points_included": true,
+  "smoothing": false,
+  "scope": "partial_ordered_phase_history; no_persistence_or_repeatability_claim"
+}

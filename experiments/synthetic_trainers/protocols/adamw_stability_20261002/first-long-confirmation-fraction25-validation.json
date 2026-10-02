@@ -1,0 +1,85 @@
+{
+  "recorded_at_utc": "2026-10-02T17:44:55.001930+00:00",
+  "verified": true,
+  "through_update": 24750,
+  "history_observations": 100,
+  "gradient_observations": 24750,
+  "plateau": {
+    "start": 4500,
+    "end": 11500,
+    "observations": 29
+  },
+  "first_heldout_target": 20000,
+  "long_confirmation": {
+    "onset": 20000,
+    "confirmed": 24750,
+    "training_seconds": 678.9633863702984,
+    "wall_seconds": 830.9522754510035
+  },
+  "phase_observed": true,
+  "full_budget_complete": false,
+  "stable_grokking": false,
+  "torch_imported": false,
+  "archive": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/first-long-confirmation-fraction25",
+  "original_prefix_lines_match": true,
+  "original_prefix_sha256": {
+    "history.jsonl": "31036c31c284772cd2a7dbad4c494e6a2b7b2d3743a723770c13a8c2c8a4c87a",
+    "gradients.jsonl": "94710d712c480abd8b014568821123b34bddaba2f8990fb1e5214ff9c5a5cf23"
+  },
+  "frozen_fingerprints": {
+    "checked_files": 31,
+    "all_unchanged": true
+  },
+  "every_observation_and_exposure_validated": true,
+  "every_gradient_batch_rate_and_finiteness_validated": true,
+  "verifier_sha256": "2728f8867b21edc12ce0fdd7033f0d14cf0f962f2e389d2ba58a95801a1e6b99",
+  "scope": "observed_ordered_phases_under_unchanged_gate; final_tail_and_repeatability_unresolved; finish_frozen_budget",
+  "negative_integrity_checks": [
+    {
+      "case": "missing_canonical",
+      "rejected": true,
+      "recomputed_artifact_hashes": true,
+      "reason": "Phase prefix observations are missing, duplicated, or out of order"
+    },
+    {
+      "case": "missing_gradient",
+      "rejected": true,
+      "recomputed_artifact_hashes": true,
+      "reason": "Phase prefix observations are missing, duplicated, or out of order"
+    },
+    {
+      "case": "wrong_exhaustive_support",
+      "rejected": true,
+      "recomputed_artifact_hashes": true,
+      "reason": "Observation lacks the exhaustive split"
+    },
+    {
+      "case": "negative_gradient",
+      "rejected": true,
+      "recomputed_artifact_hashes": true,
+      "reason": "Phase prefix gradient has invalid exposure, rate, or norm"
+    },
+    {
+      "case": "relaxed_criterion",
+      "rejected": true,
+      "recomputed_artifact_hashes": true,
+      "reason": "Phase prefix differs from the full frozen recipe or criterion"
+    },
+    {
+      "case": "absent_actual_plateau",
+      "rejected": true,
+      "recomputed_artifact_hashes": true,
+      "reason": "The prefix must show ordered phases without claiming full persistence"
+    }
+  ],
+  "negative_checks_utc": "2026-10-02T17:46:44.088005+00:00",
+  "figure_validation": {
+    "recorded_at_utc": "2026-10-02T17:48:51.257822+00:00",
+    "png_visually_reviewed": true,
+    "labels_and_all_100_observations_readable": true,
+    "pdf_header_valid": true,
+    "artifact_hashes_verified": true,
+    "provenance_matches_exact_source_prefix_and_renderer": true,
+    "scope": "partial_history_explicitly_labelled"
+  }
+}

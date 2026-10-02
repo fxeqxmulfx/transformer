@@ -199,9 +199,9 @@ archive worker PID 117200/session 10373 and queued task worker
 PID 117203/session 46645 have completed with exit code 0. Their terminal
 handles are consumed. The original GPU trainer was not restarted.
 The adapter SHA256 and exact worker source snapshots are preserved separately;
-the mod-193 launcher's frozen checks pass through the adapter. Use the repair's
-offline command for dense archives until both frozen campaigns finish, then
-The [ordinary-verifier repair](protocols/adamw_stability_20261002/production-csv-repair.md)
+the mod-193 launcher's frozen checks passed through the adapter. Both frozen
+campaigns have finished. The
+[ordinary-verifier repair](protocols/adamw_stability_20261002/production-csv-repair.md)
 is now verified after both frozen campaigns: all 235 CPU tests pass without
 skips, and both verification paths return identical complete archive results.
 Future plans use the new analysis SHA256; historical strict launchers require
@@ -312,9 +312,9 @@ After the absent pre-target phase was established, a separate
 checked exhaustive nested splits, identical CPU initial model states and
 unchanged 436,104 parameters. A real 20-update full-width CPU smoke checks
 the 48-example tail / next 512-example batch and verifies its portable archive
-without PyTorch. This is preparation only; no new scientific plan is frozen
-or launched. The current full budget, archive and ordinary CSV-verifier repair
-are complete. The [25% scientific plan](protocols/adamw_stability_20261002/fraction25-protocol.md)
+without PyTorch. Those smoke measurements are preparation only. The parent
+full budget, archive and ordinary CSV-verifier repair are complete. The
+[25% scientific plan](protocols/adamw_stability_20261002/fraction25-protocol.md)
 is now prospectively frozen at 2026-10-02T17:26:11.071473+00:00 from `5bdc43d`.
 Its [manifest](protocols/adamw_stability_20261002/fraction25-plan.json) changes
 only the training fraction, with unchanged task/model/optimizer sources,
@@ -331,10 +331,17 @@ are recorded in the
 [launch validation](protocols/adamw_stability_20261002/fraction25-launch-validation.json).
 Driver output is `experiments/runs/adamw_stability_20261002/fraction25-driver.log`;
 worker metadata is `experiments/runs/adamw_stability_20261002/bootstrap/fraction25-archive-worker.json`.
-Check these actual processes before restart. An early prefix has the required
-memorization plateau at 1,000–3,000 (nine observations), but no held-out target
-or long confirmation yet. This is incomplete calibration evidence; finish all
-150,000 updates before applying the unchanged six-case confirmation gate.
+Check these actual processes before restart. The
+[verified phase prefix](protocols/adamw_stability_20261002/first-long-confirmation-fraction25.md)
+now preserves all 100 canonical and 24,750 gradient observations through the
+first long confirmation. The longest qualifying memorization plateau spans
+4,500–11,500 (29 observations), followed by first held-out 99% at 20,000 and
+20 consecutive joint target observations through 24,750. Standalone PNG/PDF
+figures show every canonical point. Six corrupted copies are rejected offline,
+including absent actual memorization after recomputing its assessment; all
+31 frozen files remain unchanged. This is observed delayed generalization in
+one incomplete calibration. Finish all 150,000 updates and score the unchanged
+100,000–150,000 persistence window before applying the six-case confirmation gate.
 
 The [complementary-trainer preparation](protocols/adamw_stability_20261002/complementary-preparation.md)
 also verifies seven existing AdamW CPU paths for MQAR, one/two-hop lookup,
