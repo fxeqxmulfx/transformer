@@ -60,6 +60,17 @@ softmax/sparsemax tensors and RNG, original corpus fingerprints, and finite
 forward/backward on eight real training equations. No GPU context is created.
 All 39 source fingerprints of the still-running stage remain unchanged.
 
+The complete [paired protocol](attention-pair-protocol.md), serial driver,
+portable archive worker and comparison are now prepared. Four additional tests
+pass, including twelve invalid manifest variants and rejection of forged
+recovery metrics after rehashing. A real full-width CPU pair completes 20+20
+updates, runs sparsemax first, retains both negative outcomes, and verifies
+without importing Torch. All six original PNG and actual PDF figures were
+reviewed; the [receipt](attention-pair-preparation-validation.json) retains the
+43 pinned pipeline sources. There are fifteen distinct adapter/trainer/protocol
+tests in total. This remains pipeline evidence; the scientific manifest and
+sparsemax run have not started.
+
 Finish, verify, review and commit the current 300,000-update result before
 scientific sparsemax training. Freeze a paired softmax/sparsemax comparison
 with the same native AdamW, corpus, seeds, rate, decay, warmup, batching,

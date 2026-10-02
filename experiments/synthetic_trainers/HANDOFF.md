@@ -139,7 +139,7 @@ Main entry points are `paper_reproduction/grokking.py`, `reproduction.py`,
 `paper_plots.py`; the model is [gpt_mini.py](../gpt_mini.py).
 
 No Lean source changed in this experimental campaign. The current generated
-[INDEX.md](../../INDEX.md) records 1,762 modules, 7,090 theorems, and 158
+[INDEX.md](../../INDEX.md) records 1,766 modules, 7,099 theorems, and 157
 `sorry` globally; RASP, RASP-L, and C-RASP rows each record zero `sorry`.
 This index is not a new full-tree axiom audit. Follow the Lean build, paper
 fidelity, external-dependency audit, and index requirements for future proofs.
@@ -481,8 +481,13 @@ The live check at 2026-10-02T21:36:45 UTC reaches 183,250 with train/held-out
 the first sampled recovery is 154,250. This makes four post-long-confirmation
 episodes, retaining the original three and the new 250-update recovery.
 The final sampled target streak spans 154,250–183,250. The new 250,000–300,000
-tail has not started; this incomplete prefix does not certify persistence or
-independent confirmation. Keep all 39 sources immutable.
+tail has not started at that earlier check. The later actual check at
+2026-10-02T22:30:09 UTC reaches 285,000 with train/held-out 100%/100%, but
+two new canonical failures occur within the frozen final window, at 274,000
+and 275,500. The latter has held-out accuracy 81.7681% and first sampled
+recovery at 275,750. Six post-long-onset episodes are now observed. These
+final-window failures already rule out persistence even if the run rebounds;
+finish and retain the remaining budget. Keep all 39 sources immutable.
 Driver output is `experiments/runs/adamw_stability_20261002/budget300k-driver.log`;
 worker metadata is `experiments/runs/adamw_stability_20261002/bootstrap/budget300k-archive-worker.json`.
 Check actual processes/state before any restart. Wait for all 300,000 updates,
@@ -504,6 +509,15 @@ rejected before loading, and factory/source patches restore after exceptions.
 The actual 436,104-parameter mod-193 initial tensors and RNG match for both
 normalizers, with finite CPU forward/backward and all 39 live hashes unchanged;
 see the [receipt](protocols/adamw_stability_20261002/sparsemax-training-validation.json).
+The [complete paired pipeline](protocols/adamw_stability_20261002/attention-pair-protocol.md)
+now passes four additional tests and twelve invalid manifest variants. A real
+20+20-update full-width CPU pair retains its negative outcomes, verifies
+without Torch and has all six original PNG and actual PDF figures reviewed;
+see the [receipt](protocols/adamw_stability_20261002/attention-pair-preparation-validation.json).
+Its scientific order is sparsemax first, then a fresh softmax control, with
+both full 300,000-update configurations frozen before either case. The serial
+driver, per-case archive worker, recovery comparison and all 43 source
+fingerprints are ready; the scientific manifest remains unfrozen.
 Scientific sparsemax training has not started. Complete and archive the current
 run first. A user-directed exploratory pair may be measured before the all-six
 benchmark gate opens; that does not certify repeatability or an architecture

@@ -383,6 +383,11 @@ The 21:36:45 UTC check reaches 183,250 at 100%/100%, after a fourth sampled
 episode at 154,000 (held-out 96.1464%) and first recovery at 154,250. The new
 final window is unobserved. Additional episodes and their recovery durations
 remain measurements, even when the strict final-tail criterion eventually passes.
+At the later 22:30:09 UTC check the run reaches 285,000 at 100%/100%, with
+new final-window failures at 274,000 and 275,500. The latter is held-out
+81.7681%, recovering at the next canonical observation, 275,750. There are
+six observed post-long-onset episodes. Persistence now fails regardless of
+later recovery; the remaining budget and full negative archive are still due.
 
 The user requested sparsemax after the current run and pointed to its existing
 Lean formalization. The [CPU preparation](protocols/adamw_stability_20261002/sparsemax-preparation.md)
@@ -395,6 +400,14 @@ the benchmark gate. If the all-six benchmark requirement has not passed, label
 the user-directed experiment exploratory and make no repeatable architecture
 improvement claim. Lean's convex row inference does not establish convex joint
 training or numerical correctness of the Python implementation.
+The [paired pipeline](protocols/adamw_stability_20261002/attention-pair-protocol.md)
+is prepared and tested with a real negative full-width CPU pair, portable
+verification and reviewed PNG/actual PDF figures. Sparsemax runs first and
+a fresh softmax control follows; both full budgets are frozen together before
+training. All 43 source fingerprints and the reference/proof provenance are
+checked, recovery metrics are derived from full histories, and failed timing
+support remains zero. No scientific pair manifest or normalizer run has
+started; finish/review/commit the current 300,000-update result first.
 The [harder-task summary](protocols/adamw_stability_20261002/harder-task-results.md)
 keeps the three complete single-case AdamW outcomes and their task/exposure
 differences together; it does not average interventions or form ineligible ratios.
