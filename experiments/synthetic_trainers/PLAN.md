@@ -87,15 +87,14 @@ failure as well as early success. The frozen manifest resumes with:
   --seeds 1 2 3 --steps 150000 --resume
 ```
 
-Two of nine runs are complete. The
-[first independent reference](baselines/mod97_fraction50_wd01_confirmation_reference_seed1_20261002/summary.json)
-has a measured memorization plateau, a 34,000-update lag, and 100% final
-train/held-out accuracy; later collapses are retained. The
-[second reference seed](baselines/mod97_fraction50_wd01_confirmation_reference_seed2_20261002/summary.json)
-has a 37,250-update lag and also ends at 100% on both splits. Initialization
-seed 3 is now training on the same confirmation split. Full-budget results for
-the remaining seven recipes are required before judging the complete campaign
-or GPTMini.
+Three of nine runs are complete. All reference/AdamW seeds have a measured
+memorization plateau followed by generalization and 100% final train/held-out
+accuracy. The lags are 34,000, 37,250, and 61,500 updates, with complete
+[per-seed archives](STUDIES.md#independent-modular-confirmation-in-progress).
+Later collapses and earlier-than-paper timing remain explicit. GPTMini/AdamW
+seed 1 is now training on the same confirmation split. Full-budget results
+for all six GPTMini recipes are required before judging the complete campaign
+or the model/optimizer adaptations.
 
 Freeze the data, targets, evaluation cadence, grid, and budget before each
 confirmation experiment. Separate exploratory calibration from repetitions,

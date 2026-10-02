@@ -370,36 +370,39 @@ the requested mini GPT optimizer/architecture combination.
 
 ## Independent modular confirmation (in progress)
 
-The first of nine frozen confirmation runs completed all 150,000 updates:
-reference/AdamW, initialization seed 1, independent data seed 1. Sustained
-train fit starts at 750 and held-out onset at 34,750, confirmed at 35,000;
-the lag is 34,000 updates. Its longest memorization plateau spans
-9,250–18,750, with train at least 99.76% and held-out at most 3.33%.
-Final train and held-out accuracies are both 100%. Target confirmation costs
-386.24 training / 393.52 wall seconds; the full run costs 1,648.23 / 1,675.41.
+The reference/AdamW arm completed all 150,000 updates for initialization
+seeds 1/2/3 on independent data seed 1. All three have a consecutive
+train≥99% / held-out≤10% plateau followed by generalization and 100% final
+train/held-out accuracy. Calibration seed 0/data seed 0 is excluded.
+Each linked archive retains all 601 observations, the source/split hashes,
+CSV, and standalone PNG/PDF curves.
 
-The [complete individual archive](baselines/mod97_fraction50_wd01_confirmation_reference_seed1_20261002/measurements.json)
-retains all 601 observations, the frozen source/split hashes, and
-[PNG/PDF curves](baselines/mod97_fraction50_wd01_confirmation_reference_seed1_20261002/plots/modular-generalization.png).
-After confirmation, 96.75% of 461 scheduled observations meet the target;
-the worst held-out score is 26.42%, and a late dip to 83.83% at update
-145,750 recovers before the final observation. This independent run confirms
-the qualitative phase sequence for one initialization on the new split;
-it does not establish uninterrupted performance or the nine-run campaign's
-repeatability. Remaining seeds and GPTMini optimizer controls are pending in
-the running serial campaign.
+| Seed / archive | Sustained train fit | Held-out onset | Lag | Confirmation (training / wall seconds) | Later observations at target | Worst later held-out |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| [1](baselines/mod97_fraction50_wd01_confirmation_reference_seed1_20261002/measurements.json) | 750 | 34,750 | 34,000 | 386.24 / 393.52 | 96.75% (461 observations) | 26.42% |
+| [2](baselines/mod97_fraction50_wd01_confirmation_reference_seed2_20261002/measurements.json) | 750 | 38,000 | 37,250 | 419.11 / 425.84 | 97.32% (448 observations) | 24.66% |
+| [3](baselines/mod97_fraction50_wd01_confirmation_reference_seed3_20261002/measurements.json) | 1,000 | 62,500 | 61,500 | 690.30 / 701.17 | 97.71% (350 observations) | 44.87% |
 
-The second reference initialization also completed the full budget and ends
-at 100% train/held-out accuracy. Its onset/confirmation are 38,000/38,250,
-with a 37,250-update lag after train fit at 750. The longest consecutive
-memorization plateau is 750–6,250 (23 observations): train at least 99.76%,
-held-out at most 1.91%. Confirmation costs 419.11 training / 425.84 wall
-seconds; full-run costs are 1,646.32 / 1,672.39 seconds. After confirmation,
-97.32% of 448 observations meet the target; the worst held-out score is 24.66%.
-The [complete second archive](baselines/mod97_fraction50_wd01_confirmation_reference_seed2_20261002/measurements.json)
-and [curves](baselines/mod97_fraction50_wd01_confirmation_reference_seed2_20261002/plots/modular-generalization.png)
-retain these collapses. Two of nine confirmation recipes are complete;
-reference seed 3 and all GPTMini controls remain required.
+The mean lag is 44,250±15,027 updates; confirmation costs
+498.55±166.87 training / 506.84±169.07 wall seconds. These are means and
+sample SD across three initializations on one confirmation split, rather than
+confidence intervals or independent-split variability. Longest memorization
+plateaus span 9,250–18,750, 750–6,250, and 29,750–46,500, respectively.
+Full-run training time averages 1,648.44±2.24 seconds. All later collapses
+remain in the curves; repeated phase sequences do not imply uninterrupted
+performance or an identified internal algorithm.
+
+This confirms the qualitative memorization-then-generalization sequence in
+3/3 independent reference initializations. Our predefined 99% onsets are
+34,750–62,500. For comparison with the manuscript's wording about perfect
+generalization, the first observed 100% held-out scores are 36,000, 40,250,
+and 64,000 (descriptive observations, not new stopping criteria). Both sets
+of timings are earlier than the reported >100,000 updates; train fraction
+and regularization were chosen explicitly because their exact values are
+undisclosed. Three of
+nine confirmation recipes are complete. The six GPTMini/AdamW and
+GPTMini/raw AMSGradW controls remain required before comparing the requested
+model/optimizer combination or declaring the campaign complete.
 
 ## Double descent is a separate observation
 
