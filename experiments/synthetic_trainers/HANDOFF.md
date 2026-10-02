@@ -308,6 +308,24 @@ batching, 150,000-update budget, diagnostics, and unchanged phase/persistence
 criterion. Freeze its fresh manifest before training. Independent confirmation
 and architecture/complementary comparisons remain pending.
 
+The [midpoint protocol](protocols/amsgradw_stability_20261002/midpoint-protocol.md)
+and [single-recipe plan](protocols/amsgradw_stability_20261002/midpoint-plan.json)
+are now frozen at 2026-10-02 11:41:05 UTC. Only `learning_rate` differs from the
+original short-final control. All 19 training/protocol source hashes, both
+manuscripts, corpus fingerprints, environment, instrumentation and criterion
+match the completed parent grid. The custom launcher's check-only validation
+passed before launch. Its launch/resume command is:
+
+```bash
+.venv/bin/python -u -m experiments.synthetic_trainers.protocols.amsgradw_stability_20261002.run_midpoint
+```
+
+Live output will be under
+`experiments/runs/amsgradw_stability_20261002/calibration_midpoint_lr0002/`.
+Check its actual state/process before restarting. The default four-recipe CLI
+must not be used to resume this custom stage. No scientific independent
+confirmation or architecture run has started.
+
 A read-only [fraction-control corpus inspection](protocols/amsgradw_stability_20261002/candidate-corpus-coverage.md)
 finds all 97 answer classes and legal operand classes in the 50%, 20%, 10%,
 and 5% pools on calibration data seed 0. Counts, oracle answers, and nested
