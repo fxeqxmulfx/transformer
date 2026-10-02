@@ -62,18 +62,23 @@ is retained. The 50% / weight-decay-1 calibration also completed the full
 budget: early held-out success was unstable, and final accuracy was 60.59%.
 Its [complete history](baselines/mod97_fraction50_wd1_reference_20261002/summary.json)
 does not pass the sustained memorization-phase diagnostic. Calibration at
-weight decay 0.1 is now running the same fixed budget. Passing CPU tests or
-a finite curve witness does not complete the grokking reproduction.
+weight decay 0.1 completed the same fixed budget with a measured memorization
+plateau, a 30,750-update lag, and 100% final train/held-out accuracy; its
+[complete archive](baselines/mod97_fraction50_wd01_reference_20261002/summary.json)
+also retains rare later collapses. Its held-out onset at 31,500 differs from
+the paper's reported >100,000 updates. Passing one exploratory calibration
+does not complete the grokking reproduction.
 
-The next confirmation manifest is frozen under
+The running confirmation manifest was frozen before calibration completed under
 `experiments/runs/paper_reproduction/mod97_fraction50_wd01_confirmation_20261002`:
 data seed 1, initialization seeds 1/2/3, train fraction 50%, weight decay 0.1,
 and 150,000 updates each for reference/AdamW, GPTMini/AdamW, and
-GPTMini/raw AMSGradW. Calibration seed 0/data seed 0 is excluded. Start this
-serial nine-run campaign only after the full calibration completes with a
-measured memorization plateau followed by generalization and a final held-out
-target. If that condition fails, preserve the failure and recalibrate instead.
-The frozen manifest resumes with:
+GPTMini/raw AMSGradW. Calibration seed 0/data seed 0 is excluded. The completed
+calibration passed the predeclared launch condition: a measured memorization
+plateau followed by generalization and a final held-out target. Source hashes,
+the full budget, exhaustive split, and independent confirmation seeds were
+checked before launching the serial nine-run campaign. Retain every final
+failure as well as early success. The frozen manifest resumes with:
 
 ```bash
 .venv/bin/python -m experiments.synthetic_trainers.reproduction \

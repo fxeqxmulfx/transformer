@@ -340,10 +340,33 @@ worst held-out accuracy was 0.859%. This transient success does not reproduce
 the paper's prolonged, stable memorization-to-generalization pattern.
 
 A third fixed-budget calibration keeps 50% train and changes weight decay
-from 1 to 0.1. It uses the same model/data seed and 150,000 updates. Unlike
-the preceding run, its early curve exhibits near-perfect train accuracy and
-low held-out accuracy for a sustained interval. The full final trajectory and
-independent-split/model-seed confirmations are still required.
+from 1 to 0.1. It completed 150,000 updates using the same model/data seed.
+Sustained train fit starts at update 750, confirmed at 1,000; held-out onset
+is 31,500, confirmed at 31,750. The lag is 30,750 updates, and the onset/fit
+ratio is 42. The longest consecutive memorization plateau spans updates
+8,500–14,750 (26 observations): train is at least 99.10% while held-out is
+at most 4.40%. Final train and held-out accuracies are both 100%, with final
+held-out CE 5.408e-6. Training/wall budgets are 1,659.15 / 1,686.32 seconds.
+
+The [complete calibration archive](baselines/mod97_fraction50_wd01_reference_20261002/measurements.json)
+retains all 601 observations and original source/data hashes, with
+[CSV](baselines/mod97_fraction50_wd01_reference_20261002/metrics.csv) and
+[curves](baselines/mod97_fraction50_wd01_reference_20261002/plots/modular-generalization.png).
+Of 474 observations after held-out confirmation, 97.26% meet the target;
+the worst held-out accuracy is 11.51%. This run shows a prolonged
+memorization phase followed by generalization to unseen equations, with rare
+later collapses. Its 31,500-update onset differs from the paper's >100,000;
+the train fraction and regularization were explicitly chosen because the
+manuscript does not specify them. This is an exploratory qualitative result,
+not an exact numerical reproduction or evidence of repeatability.
+
+Before this calibration completed, a separate nine-run confirmation was
+frozen: data seed 1, initialization seeds 1/2/3, and the same full budget for
+reference/AdamW, GPTMini/AdamW, and GPTMini/raw AMSGradW. It is now running
+after checks of the calibration condition, source hashes, exhaustive split,
+and independence from calibration seed 0/data seed 0. Its complete trajectories
+and failures are required before drawing conclusions about reproducibility or
+the requested mini GPT optimizer/architecture combination.
 
 ## Double descent is a separate observation
 

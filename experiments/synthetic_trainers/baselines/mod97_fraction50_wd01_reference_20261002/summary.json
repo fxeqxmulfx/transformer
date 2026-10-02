@@ -1,0 +1,89 @@
+{
+  "complete": true,
+  "completed_runs": 1,
+  "planned_runs": 1,
+  "aggregates": [
+    {
+      "model": "reference",
+      "optimizer": "adamw",
+      "runs": 1,
+      "confirmed_delayed_runs": 1,
+      "final_heldout_target_runs": 1,
+      "lag_steps": {
+        "mean": 30750,
+        "std": 0,
+        "support": 1
+      },
+      "train_fit_step": {
+        "mean": 750,
+        "std": 0,
+        "support": 1
+      },
+      "heldout_onset_step": {
+        "mean": 31500,
+        "std": 0,
+        "support": 1
+      },
+      "training_seconds": {
+        "mean": 1659.1512878528447,
+        "std": 0,
+        "support": 1
+      },
+      "heldout_accuracy": {
+        "mean": 1.0,
+        "std": 0,
+        "support": 1
+      },
+      "heldout_loss": {
+        "mean": 5.408365463860384e-06,
+        "std": 0,
+        "support": 1
+      },
+      "plateau_then_generalization_runs": 1,
+      "lag_after_sustained_train_fit": {
+        "mean": 30750,
+        "std": 0,
+        "support": 1
+      },
+      "phase_diagnostics": [
+        {
+          "seed": 0,
+          "sustained_train_fit": {
+            "onset": 750,
+            "confirmed": 1000
+          },
+          "sustained_heldout_target": {
+            "onset": 31500,
+            "confirmed": 31750
+          },
+          "lag_after_sustained_train_fit": 30750,
+          "memorization_plateau": {
+            "start_step": 8500,
+            "end_step": 14750,
+            "span_steps": 6250,
+            "observations": 26,
+            "minimum_train_accuracy": 0.990979381443299,
+            "maximum_heldout_accuracy": 0.04402920962199313
+          },
+          "heldout_ceiling": 0.1,
+          "train_target": 0.99,
+          "patience": 2,
+          "fit_to_heldout_onset_ratio": 42.0,
+          "observed_plateau_then_generalization": true,
+          "final_heldout_target": true,
+          "observations_after_confirmation": 474,
+          "fraction_observations_at_target_after_confirmation": 0.9725738396624473,
+          "minimum_heldout_accuracy_after_confirmation": 0.11512027491408934,
+          "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+        }
+      ]
+    }
+  ],
+  "training_seconds": 1659.1512878528447,
+  "statistical_scope": "initialization_seeds_on_one_exhaustive_two_way_split; no_length_transfer_or_causal_claim",
+  "analysis_source_hashes": {
+    "paper_report.py": "21290747e194e3c9616f0437c6636ced920cdb660b273784b69833adb2508209",
+    "paper_phases.py": "9b69c022661203c6fcbfceff349583c13071602357427b8ad74b5eb36983bcd0",
+    "paper_plots.py": "21e28943866e737e956dd3cadba066e6dce01d36167d65e16c50554344e90449"
+  }
+}
