@@ -389,6 +389,18 @@ it does not establish uninterrupted performance or the nine-run campaign's
 repeatability. Remaining seeds and GPTMini optimizer controls are pending in
 the running serial campaign.
 
+The second reference initialization also completed the full budget and ends
+at 100% train/held-out accuracy. Its onset/confirmation are 38,000/38,250,
+with a 37,250-update lag after train fit at 750. The longest consecutive
+memorization plateau is 750–6,250 (23 observations): train at least 99.76%,
+held-out at most 1.91%. Confirmation costs 419.11 training / 425.84 wall
+seconds; full-run costs are 1,646.32 / 1,672.39 seconds. After confirmation,
+97.32% of 448 observations meet the target; the worst held-out score is 24.66%.
+The [complete second archive](baselines/mod97_fraction50_wd01_confirmation_reference_seed2_20261002/measurements.json)
+and [curves](baselines/mod97_fraction50_wd01_confirmation_reference_seed2_20261002/plots/modular-generalization.png)
+retain these collapses. Two of nine confirmation recipes are complete;
+reference seed 3 and all GPTMini controls remain required.
+
 ## Double descent is a separate observation
 
 Double descent is a descent, ascent, and second descent in held-out error as
