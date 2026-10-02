@@ -1,0 +1,19 @@
+{
+  "recorded_at_utc": "2026-10-02T13:56:31.859655+00:00",
+  "full_cpu_suite_tests": 230,
+  "full_cpu_suite_passed": true,
+  "full_suite_log": "experiments/runs/adamw_stability_20261002/bootstrap/tests-architecture-metrics.log",
+  "final_affected_tests": 7,
+  "final_affected_tests_passed": true,
+  "affected_test_log": "experiments/runs/adamw_stability_20261002/bootstrap/architecture-metrics-tests-with-real-pair.log",
+  "real_complete_paired_CPU_archives_preserve_quality_exposure_costs_and_negative_timing": true,
+  "real_six_case_negative_AdamW_confirmation_cannot_select_architecture": true,
+  "candidate_persistent_generalization_without_plateau_kept_separate_from_grokking": true,
+  "late_failures_missing_events_incomplete_histories_and_invalid_costs_do_not_certify_speed": true,
+  "task_optimizer_seed_training_and_criterion_changes_rejected": true,
+  "current_frozen_training_and_analysis_hashes_unchanged": true,
+  "analysis_imported_without_torch": true,
+  "production_sha256": "7af2b4476b2aee4a01ecdec0118057e2a565efdcc4aad06713be024c0d14fb68",
+  "test_sha256": "7a27b9936441f2fcb2f8d60e85eff9b4b17f821e1adfcf7a26a53bf7cc0c6e64",
+  "scope": "later_architecture_metric_preparation_only; no_scientific_architecture_selected_compared_or_benchmark_success"
+}

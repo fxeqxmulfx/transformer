@@ -232,6 +232,18 @@ tuning as calibration and choose fresh confirmation IDs. Freeze all paired contr
 corpus fingerprints before training, retain the same optimizer and scoring
 protocol, and specify how common parameter initialization and execution order
 are paired. Any optimizer change is an explicitly separate intervention.
+The [portable architecture metrics](architecture_metrics.py) now enforce the
+all-case AdamW benchmark gate, unchanged task/data/seeds/optimizer/training and
+scoring, and explicit architecture configuration differences. They retain
+observed long-confirmation timing while leaving eligible timing and speed ratios
+empty for failed pairs. Full quality, exposure, parameter counts, measured costs
+and peak memory remain available for every complete pair. Candidate persistence
+without a plateau is labeled separately from grokking. This preparation passed
+the 230-test full CPU suite and seven final affected checks, including real
+complete negative paired archives and a real six-case negative confirmation.
+No scientific architecture has been selected or compared. See the
+[verification metadata](protocols/adamw_stability_20261002/architecture-metrics-validation.json).
+
 The later complementary-task plan must likewise freeze its metrics and support;
 novel-ID and length-transfer outcomes remain separate, and empty novel support
 cannot certify transfer. No scientific architecture comparison has started.

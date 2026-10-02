@@ -493,7 +493,15 @@ these complete histories. The [architecture comparison gates](STABILITY.md#archi
 retain the all-six stable-grokking requirement for the unchanged benchmark,
 while allowing a candidate's rapid persistent generalization to be compared
 without falsely labeling it grokking. No architecture has been selected or
-scientifically compared. Keep the active goal running, retain failures, archive
+scientifically compared. The portable [architecture metric rules](architecture_metrics.py)
+are now prepared: complete persistent candidates without a memorization plateau
+retain their own label; failed pairs retain observed timings but cannot certify
+speed ratios; task/data/seeds/optimizer/training changes are rejected. The full
+CPU suite passed 230 tests before the final real-pair integration check; all
+seven affected checks then passed. The current frozen training and analysis
+source hashes are unchanged. This is pipeline preparation, not benchmark or
+architecture success. See the [validation](protocols/adamw_stability_20261002/architecture-metrics-validation.json).
+Keep the active goal running, retain failures, archive
 each verified completed result, and commit logical changes during the loop.
 
 ## Proposed sequence, now being activated
