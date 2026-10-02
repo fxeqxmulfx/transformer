@@ -109,3 +109,5 @@ first GPTMini/AdamW transition, without changing any frozen training recipe.
 It describes a synthetic analogue of *Deep Double Descent*, Section 6's
 epoch-wise effect; that paper uses noisy CIFAR data and CNN/ResNet models.
 Coexisting finite curves do not establish that grokking causes double descent.
+Current modular figures show accuracy, classification error, and cross entropy
+separately. Dotted train/held-out markers both require sustained observations.

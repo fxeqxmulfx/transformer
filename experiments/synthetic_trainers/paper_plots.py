@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 import statistics
 
+from .paper_phases import diagnose
+
 
 def export(figure, directory, name):
     directory.mkdir(parents=True, exist_ok=True)
@@ -47,7 +49,8 @@ def modular_figures(report, directory, plt):
     for row in report.get("runs", [report]):
         config = row["plan"]["config"]
         grouped[config["model"], config["optimizer"]].append(row)
-    figure, axes = plt.subplots(2, len(grouped), squeeze=False, figsize=(5 * len(grouped), 7), constrained_layout=True)
+    figure, axes = plt.subplots(3, len(grouped), squeeze=False, figsize=(5 * len(grouped), 10.2), constrained_layout=True)
+    panels = ((0, "accuracy", False), (1, "accuracy", True), (2, "loss", False))
     order = sorted(grouped, key=lambda pair: (pair[0] != "reference", pair[1] != "adamw"))
     for column, key in enumerate(order):
         runs = grouped[key]
@@ -56,27 +59,33 @@ def modular_figures(report, directory, plt):
         lookup = [{point["step"]: point for point in history} for history in histories]
         for split, color, style in (("train", "#0072b2", "--"), ("heldout", "#d55e00", "-")):
             for history in histories:
-                for row, metric in ((0, "accuracy"), (1, "loss")):
-                    axes[row, column].plot([point["step"] for point in history], [point[split][metric] for point in history],
+                for row, metric, error in panels:
+                    values = [1 - point[split][metric] if error else point[split][metric] for point in history]
+                    axes[row, column].plot([point["step"] for point in history], values,
                                            color=color, linestyle=style, alpha=.2, linewidth=.7)
-            for row, metric in ((0, "accuracy"), (1, "loss")):
-                values = [[table[step][split][metric] for table in lookup] for step in common]
+            for row, metric, error in panels:
+                values = [[1 - table[step][split][metric] if error else table[step][split][metric]
+                           for table in lookup] for step in common]
                 means = [statistics.mean(points) for points in values]
                 deviations = [statistics.stdev(points) if len(points) > 1 else 0 for points in values]
                 axes[row, column].plot(common, means, color=color, linestyle=style, label=split.capitalize())
                 axes[row, column].fill_between(common, [mean - sd for mean, sd in zip(means, deviations)],
                                                [mean + sd for mean, sd in zip(means, deviations)], color=color, alpha=.1)
         for run in runs:
-            for field, color in (("train_fit_step", "#0072b2"), ("heldout_onset_step", "#d55e00")):
-                event = run["transition"][field]
-                if event:
-                    axes[0, column].axvline(event, color=color, linestyle=":", alpha=.4, linewidth=.7)
+            phase = diagnose(run)
+            for field, color in (("sustained_train_fit", "#0072b2"), ("sustained_heldout_target", "#d55e00")):
+                event = phase[field]
+                if event and event["onset"]:
+                    for row in (0, 1):
+                        axes[row, column].axvline(event["onset"], color=color, linestyle=":", alpha=.4, linewidth=.7)
         axes[0, column].axhline(.99, color="grey", linestyle=":", linewidth=.8)
         seed_label = "seed" if len(runs) == 1 else "seeds"
         axes[0, column].set(ylim=(-.02, 1.025), ylabel="Complete RHS accuracy", title=f"{key[0]} / {key[1]}\n{len(runs)} initialization {seed_label}")
         axes[0, column].legend(fontsize=8)
-        axes[1, column].set(ylabel="Cross entropy per RHS token (nats)", xlabel="Updates")
-        for row in (0, 1):
+        axes[1, column].set(ylim=(-.02, 1.025), ylabel="Complete RHS error", xlabel="Updates")
+        axes[1, column].axhline(.01, color="grey", linestyle=":", linewidth=.8)
+        axes[2, column].set(ylabel="Cross entropy per RHS token (nats)", xlabel="Updates")
+        for row in (0, 1, 2):
             axes[row, column].set_xscale("log")
             axes[row, column].grid(alpha=.2)
     first = next(iter(grouped.values()))[0]["plan"]
