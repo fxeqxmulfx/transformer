@@ -201,7 +201,7 @@ After a checkpointed interruption, continue the identical manifest with:
   --output experiments/runs/amsgradw_stability_20261002/calibration --resume
 ```
 
-The archive/diagnostic and complete-comparison tools are now verified with 215
+The archive/diagnostic and complete-comparison tools are now verified with 218
 passing CPU tests, actual rendered PNG/PDF archives, deletion of original run
 paths, and offline verification without PyTorch. The comparison builder requires
 all four frozen complete runs, retains failures and missing timing support, and
@@ -237,6 +237,18 @@ before the first held-out target crossing. All observed training batches contain
 512 examples. The final 50,000-update persistence window has not begun; an early
 confirmation is not a completed calibration or stable-grokking success. Continue
 the full 150,000-update budget and retain later failures.
+
+The independent-confirmation driver and portable report are prepared and tested;
+no scientific confirmation plan or run has started. See the commands in
+[STABILITY.md](STABILITY.md) and
+[verification metadata](protocols/amsgradw_stability_20261002/confirmation-driver-validation.json).
+The driver rejects incomplete/negative calibration, excludes current and
+historical calibration seeds, freezes all six crossed cases before training,
+and retains failed targets. Tests include continuation after interruption,
+immutable-plan/source checks, complete real CPU negative repeats, offline
+archives and rendered curves. The small pipeline smoke uses an explicitly
+hypothetical passing calibration fixture; it is not evidence of a learning
+effect. All actual eight-update CPU repeats in that smoke fail, as retained.
 
 Confirmation and architecture comparisons require separately frozen plans after
 these complete histories. Keep the active goal running, retain failures, archive

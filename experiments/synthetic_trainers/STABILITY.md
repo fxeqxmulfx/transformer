@@ -118,6 +118,56 @@ events stay empty with support zero; early long confirmations remain visible
 alongside persistence and phase failures. Calibration does not finish independent
 confirmation even if a recipe passes its gate.
 
+## Independent confirmation driver
+
+The [confirmation driver](stability_confirmation.py) requires a complete,
+verified calibration comparison and a recipe that passes stable grokking.
+Replace `PASSING_RECIPE` below only after the complete calibration comparison.
+A negative or incomplete grid cannot launch this stage. The driver retains the
+selected training protocol, criterion, instrumentation, sources, environment,
+and manuscripts. It freezes model seeds 4/5/6 crossed with data seeds 2/3 before
+the first update. Calibration seed 0 and the historical model seeds 1/2/3/data
+seed 1 are excluded; new split fingerprints must differ from each other and
+from calibration.
+
+```bash
+.venv/bin/python -m experiments.synthetic_trainers.stability_confirmation \
+  --calibration experiments/synthetic_trainers/baselines/amsgradw_stability_calibration_20261002 \
+  --recipe PASSING_RECIPE \
+  --output experiments/runs/amsgradw_stability_20261002/confirmation --plan-only
+.venv/bin/python -m experiments.synthetic_trainers.stability_confirmation \
+  --output experiments/runs/amsgradw_stability_20261002/confirmation --resume
+```
+
+The immutable root plan contains all six recipes and both corpus fingerprints;
+each case has its own matching immutable plan. The complete calibration evidence
+is copied unchanged. Resume checks every source, environment, manuscript, root
+and case plan. A serial lock prevents duplicate execution. After a checkpointed
+interruption, use the same `--resume` command. Completed cases are verified and
+retained without further training. Target failures complete their budgets and do
+not skip the remaining repetitions.
+
+Each completed case produces a portable, verified archive with all histories,
+neighbor/moment diagnostics, CSV and PNG/PDF curves under `confirmation/archives/`.
+Curate and commit each completed result regularly. Once all six are complete:
+
+```bash
+.venv/bin/python -m experiments.synthetic_trainers.confirmation_report \
+  experiments/runs/amsgradw_stability_20261002/confirmation \
+  --archive experiments/synthetic_trainers/baselines/amsgradw_independent_confirmation_20261002
+python3 -m experiments.synthetic_trainers.confirmation_report \
+  experiments/synthetic_trainers/baselines/amsgradw_independent_confirmation_20261002 --verify
+```
+
+Verification needs neither PyTorch nor original runs/checkpoints/manuscripts.
+The report includes the unchanged calibration evidence, every repetition,
+per-run timing support, descriptive timing means/sample SD, complete curves,
+and an all-cases benchmark gate. Crossed seeds/splits are not independent IID
+replicates; sample SD is not a confidence interval. All six must pass before
+the architecture comparison is ready. If confirmation fails, retain the failures,
+continue justified calibration, and use fresh confirmation seeds/splits after
+that calibration; do not tune against and reuse the failed confirmation cases.
+
 ## Environment and next decisions
 
 The restored environment initially had Python 3.12.13 and PyTorch 2.7.1+cu118.

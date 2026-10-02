@@ -37,6 +37,12 @@ def analysis_hashes():
             for name in names}
 
 
+def run_scope(manifest, summary):
+    if manifest["stage"] == "independent_confirmation_case":
+        summary["scope"] = "one_completed_independent_confirmation_run; cohort_success_requires_all_frozen_repetitions"
+    return summary
+
+
 def csv_rows(path, rows):
     if not rows:
         path.write_text("")
@@ -80,7 +86,7 @@ def save_run(directory, name, destination, *, render=True):
     diagnostics, probes = (parse_rows(blobs[key]) for key in ("diagnostics.jsonl", "probes.jsonl"))
     assessment = validate_report(report, recipe, manifest)
     validate_logs(report, diagnostics, probes, manifest)
-    summary = {**summarize(report, assessment, probes, diagnostics, name),
+    summary = {**run_scope(manifest, summarize(report, assessment, probes, diagnostics, name)),
                "analysis_source_hashes": analysis_hashes(), "plots_included": render}
     destination.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix=destination.name + "-", dir=destination.parent) as temporary:
@@ -118,7 +124,7 @@ def verify_archive(directory):
     probes = parse_rows((directory / "probes.jsonl").read_bytes())
     assessment = validate_report(report, recipe, manifest)
     validate_logs(report, diagnostics, probes, manifest)
-    derived = summarize(report, assessment, probes, diagnostics, summary["name"])
+    derived = run_scope(manifest, summarize(report, assessment, probes, diagnostics, summary["name"]))
     if any(summary.get(key) != value for key, value in derived.items()):
         raise ValueError("Archive summary differs from measured histories")
     verify_csv(directory / "metrics.csv", observation_rows(report["history"]))

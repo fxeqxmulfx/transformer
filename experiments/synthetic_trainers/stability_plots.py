@@ -53,8 +53,9 @@ def render_run(report, probes, diagnostics, summary, directory):
                     config["steps"], color="grey", alpha=.055)
         if index != 4:
             axis.legend(fontsize=8)
+    kind = "confirmation" if summary["scope"].startswith("one_completed_independent_confirmation_run") else "calibration"
     figure.suptitle(f"{summary['name']}: raw AMSGradW / GPTMini, lr={config['learning_rate']:g}, {config['batch_policy']}\n"
-                   f"Complete {config['steps']:,}-update calibration; gray band is prospectively scored final tail", fontsize=12)
+                   f"Complete {config['steps']:,}-update {kind}; gray band is prospectively scored final tail", fontsize=12)
     export(figure, directory, "stability-overview")
     plt.close(figure)
 

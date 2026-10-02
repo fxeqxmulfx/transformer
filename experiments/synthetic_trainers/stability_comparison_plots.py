@@ -5,7 +5,7 @@ import json
 from .stability_plots import export
 
 
-def render_comparison(directory, summary):
+def render_comparison(directory, summary, *, title=None, filename="calibration-comparison"):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -32,7 +32,7 @@ def render_comparison(directory, summary):
             axis.set_xlabel("Updates")
         for axis in axes[:, column]:
             axis.grid(alpha=.2)
-    figure.suptitle("Raw AMSGradW / unchanged GPTMini: paired calibration controls\n"
+    figure.suptitle(title or "Raw AMSGradW / unchanged GPTMini: paired calibration controls\n"
                    "One initialization and one common split per recipe; all complete budgets and failures", fontsize=12)
-    export(figure, directory / "plots", "calibration-comparison")
+    export(figure, directory / "plots", filename)
     plt.close(figure)
