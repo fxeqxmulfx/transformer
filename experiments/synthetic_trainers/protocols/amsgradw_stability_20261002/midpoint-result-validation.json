@@ -1,0 +1,23 @@
+{
+  "recorded_at_utc": "2026-10-02T13:09:00.436989+00:00",
+  "archive": "experiments/synthetic_trainers/baselines/amsgradw_stability_short_lr0002_seed0_data0_20261002",
+  "comparison_archive": "experiments/synthetic_trainers/baselines/amsgradw_stability_midpoint_calibration_20261002",
+  "offline_verification_passed": true,
+  "torch_imported": false,
+  "frozen_training_sources_match": true,
+  "frozen_source_count": 19,
+  "plots_visually_inspected": [
+    "plots/stability-overview.png",
+    "plots/collapse-neighbors.png",
+    "experiments/synthetic_trainers/baselines/amsgradw_stability_midpoint_calibration_20261002/plots/calibration-comparison.png"
+  ],
+  "canonical_observations": 601,
+  "neighbor_observations": 1200,
+  "diagnostic_observations": 1800,
+  "completed_updates": 150000,
+  "stable_grokking": false,
+  "tail_failure_count": 150,
+  "artifact_manifest_sha256": "86e4d6e15e7200de135e578c2da2dd4710bcfa0f7496fc28b1a7bd29f4ef1255",
+  "comparison_artifact_manifest_sha256": "ba94f362304d5ea5488c1cd2455b6297e4b214e1ecf9c1ac42aece9fc61f1d4f",
+  "scope": "fifth_complete_exploratory_calibration; negative; no_independent_confirmation; user_selected_AdamW_for_next_primary_benchmark"
+}

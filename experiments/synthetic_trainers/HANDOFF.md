@@ -72,8 +72,8 @@ are not three independent data splits, and sample SD is not a confidence
 interval. First-target timing does not imply persistent convergence.
 Modular peak CUDA allocation was not measured; model size/device were recorded.
 
-The requested optimizer is the repository's raw AMSGradW, not bias-corrected
-PyTorch AdamW with `amsgrad=True`: betas (0.9, 0.999), a maximum second moment,
+The original campaign used the repository's raw AMSGradW, distinct from
+bias-corrected PyTorch AdamW with `amsgrad=True`: betas (0.9, 0.999), a maximum second moment,
 no bias correction, epsilon 1e-8, and decoupled decay on all trainable parameters.
 The reference uses AdamW betas (0.9, 0.98). Its update was independently
 matched against the pinned author's optimizer over 20 warmup updates.
@@ -148,6 +148,12 @@ changes and forbids subagents. No new approval is needed for already authorized
 reversible work or regular commits.
 
 ## Active follow-up bootstrap (2026-10-02)
+
+The user explicitly selected AdamW as the primary optimizer for the continuing
+benchmark on 2026-10-02. Raw AMSGradW remains a paired control, with every
+completed negative result retained. Phase, persistence, independent-confirmation,
+architecture and complementary-task requirements are unchanged. Historical
+AdamW has fewer sampled failures but is not yet a verified stable benchmark.
 
 The follow-up goal from the startup message is active, without subagents.
 Read [STABILITY.md](STABILITY.md) for its prospectively specified criteria,
@@ -317,7 +323,7 @@ ratios at regressions are 4.94% / 18.24% / 1.61% / 0.86%, in attention
 projection or QKV weights. Temperatures are similar within each selected pair;
 the 250-update gaps leave unmeasured dynamics. These associations do not prove
 cause or select an intervention. All eight rows reproduce exactly from the
-verified complete comparison without importing PyTorch. The running midpoint
+verified complete comparison without importing PyTorch. The completed midpoint
 plan and success criterion are unchanged.
 
 The [midpoint protocol](protocols/amsgradw_stability_20261002/midpoint-protocol.md)
@@ -332,23 +338,25 @@ passed before launch. Its launch/resume command is:
 .venv/bin/python -u -m experiments.synthetic_trainers.protocols.amsgradw_stability_20261002.run_midpoint
 ```
 
-The CUDA trainer is now live (initial PID 98387, launcher session 52847).
-At launch validation, its canonical update 4,250 has train/held-out accuracy
-100%/50.2577%; this is an incomplete prefix, not a passing result. See the
-[launch validation](protocols/amsgradw_stability_20261002/midpoint-launch-validation.json).
-The serial archive worker is live (PID 98517, session 18237); after the full
-budget it checks the frozen fingerprints, creates the individual and
-single-recipe comparison archives, and verifies them without PyTorch.
-Its metadata is `experiments/runs/amsgradw_stability_20261002/bootstrap/midpoint-archive-worker.json`.
-Inspect the process before relying on the metadata; avoid a second writer to
-the same archive destinations. After completion, review the curves, commit
-the measured result, and apply the unchanged independent-confirmation gate.
+The midpoint trainer (initial PID 98387, session 52847) and archive worker
+(PID 98517, session 18237) both completed with exit code 0. No job remains in
+this stage. The complete individual and single-recipe comparison archives
+were verified without PyTorch, all three distinct PNG figures were visually
+inspected, and the frozen 19 sources and both manuscripts still match.
+See the [complete measured result](protocols/amsgradw_stability_20261002/midpoint-result.md)
+and [verification metadata](protocols/amsgradw_stability_20261002/midpoint-result-validation.json).
+The full run has no required memorization plateau and 150/201 tail failures;
+all canonical observations from 112,750 through 150,000 fail. Final train /
+held-out accuracy is 100% / 88.6598%. The full budget costs 4,318.45 training /
+4,543.32 wall seconds, with complete 601/1,200/1,800 histories. It is ineligible
+for independent confirmation. The historical launch validation and prefix
+inspections below remain preserved partial evidence, superseded by this result.
 
-Live output is under
+Raw output is under
 `experiments/runs/amsgradw_stability_20261002/calibration_midpoint_lr0002/`.
-Check its actual state/process before restarting. The default four-recipe CLI
-must not be used to resume this custom stage. No scientific independent
-confirmation or architecture run has started.
+After instrumentation changes, preserve this completed manifest and use a
+fresh plan for new work; strict resume requires the original source version.
+No scientific independent confirmation or architecture run has started.
 
 The midpoint's first canonical held-out 99% crossing occurs at 93,250:
 train/held-out accuracy is 100%/99.0120% (46 incorrect held-out equations).
@@ -357,8 +365,8 @@ retains all 374 canonical observations and unchanged plan/source/manuscript
 fingerprints. No required low-held-out memorization plateau occurs before
 that first crossing, so the recipe is ineligible under the frozen phase gate
 regardless of later persistence. Long joint confirmation and final-tail
-persistence are still unmeasured at that prefix. Finish the same full budget,
-then verify and review its archives before selecting another justified control.
+persistence were unmeasured at that historical prefix. The complete archive
+now records long confirmation followed by a failed final tail.
 
 The later [first tail collapse](protocols/amsgradw_stability_20261002/midpoint-first-tail-collapse.md)
 is recorded at 112,750 after long joint confirmation over 95,750–100,500.
@@ -368,14 +376,14 @@ EOS 100%. Scores are still high at the previous after-probe 112,501, but are
 low at 112,749; the raw second-moment norm rises from 0.00257 to 23.78 between
 them. This indicates large unprobed gradients under the frozen raw recurrence,
 without identifying a trigger or causal direction. Complete source samples
-and the calculation's assumptions are retained. Final persistence also fails;
-finish the full budget and review the complete outcome before the next plan.
+and the calculation's assumptions are retained. The now-complete budget
+confirms that final persistence fails; the complete outcome is preserved.
 
 A read-only [fraction-control corpus inspection](protocols/amsgradw_stability_20261002/candidate-corpus-coverage.md)
 finds all 97 answer classes and legal operand classes in the 50%, 20%, 10%,
 and 5% pools on calibration data seed 0. Counts, oracle answers, and nested
 split fingerprints are verified. This is finite data coverage, not a learning
-result; no fraction recipe has been selected or launched. The next rate control
+result; no fraction recipe has been selected or launched. The next paired optimizer control
 retains the 50% split. Retain the historical 20% reference control's full-budget
 negative result.
 
@@ -401,14 +409,14 @@ each verified completed result, and commit logical changes during the loop.
 
 ## Proposed sequence, now being activated
 
-1. Investigate late raw-AMSGradW collapses in fresh instrumented calibration
-   runs. Log gradient norms, parameter/moment norms, learned temperatures,
+1. Use AdamW as the primary optimizer following the user's explicit switch.
+   Investigate instability in fresh paired AdamW/raw-AMSGradW calibration runs. Log gradient norms, parameter/moment norms, learned temperatures,
    numeric-answer/EOS losses, and batch sizes. Check sensitivity to the short
    last epoch batch (48 versus 512 examples) and observation cadence; these
    are hypotheses to test, not established causes.
-2. Calibrate raw AMSGradW stability with learning rates 0.0003 and 0.0001
-   against 0.001, initially holding decay 0.1, model, data, and full budgets
-   fixed. Change one mechanism at a time. Any fraction/decay/schedule/model
+2. The raw AMSGradW rate/sampling calibrations are complete and negative.
+   Freeze a paired AdamW/raw-AMSGradW comparison at learning rate 0.001,
+   holding decay 0.1, model, data, and full budgets fixed. Change one mechanism at a time. Any fraction/decay/schedule/model
    change is a separately labeled adaptation, with a fresh frozen plan.
 3. Before confirmation, define both phase and persistence targets. Require a
    low held-out memorization plateau followed by sustained generalization;
@@ -436,7 +444,7 @@ Start a new loop. Read AGENTS.md and experiments/synthetic_trainers/HANDOFF.md,
 then PLAN.md, STUDIES.md, and the recorded modular/random-feature protocols.
 
 Create an active goal: establish a repeatable, stable grokking benchmark for
-the repository's raw AMSGradW + softmax GPTMini, then evaluate a targeted
+AdamW + softmax GPTMini (the user-selected primary optimizer), then evaluate a targeted
 architecture improvement for better quality at the same budget or less
 measured time to the predefined target.
 
@@ -447,8 +455,8 @@ local paper/data/checkpoint resources needed for the next action and run
 appropriate checks. Work directly in one session without subagents.
 
 Investigate instability with controlled diagnostics, then calibrate one
-mechanism at a time. Preserve raw AMSGradW semantics unless an optimizer
-change is explicitly labeled as a separate control. Freeze new data, seeds,
+mechanism at a time. Preserve the historical raw AMSGradW negatives and use
+raw AMSGradW as a paired optimizer control. Freeze new data, seeds,
 targets, observation cadence, full budgets, and source hashes before each
 confirmation. Separate calibration from independent repetitions; retain all
 failures and complete histories. Compare paired controls on this GPU.

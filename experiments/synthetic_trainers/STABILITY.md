@@ -1,9 +1,15 @@
-# Raw AMSGradW stability and architecture follow-up
+# Optimizer stability and architecture follow-up
 
 This loop starts on 2026-10-02 from the completed nine-run modular campaign.
 The local manuscript is *Convexifying Transformers*, arXiv:2211.11052v1,
 Section 4. The experiment retains its mod-97 division task and explicitly
-different GPTMini architecture and raw AMSGradW optimizer. The double-descent
+different GPTMini architecture. The original calibrations used raw AMSGradW.
+On 2026-10-02 the user explicitly selected AdamW as the primary optimizer for
+the continuing benchmark; raw AMSGradW remains a paired control. The existing
+phase and persistence criteria, six independent confirmations, architecture
+comparison and complementary mechanics remain required. Historical AdamW is
+less often below target, but still fails the stronger persistence criterion;
+its stability remains to be tested. The double-descent
 control remains the completed *Deep Double Descent* Appendix C random-feature
 archive; rerunning it is not needed to inspect the modular instability.
 
