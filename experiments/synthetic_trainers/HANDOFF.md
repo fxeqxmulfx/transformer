@@ -184,6 +184,21 @@ Only a passing primary AdamW calibration permits new independent confirmation;
 architecture and complementary mechanics remain pending. This paragraph records
 preparation, not a scientific result; inspect actual process/state for progress.
 
+The optimizer-pair trainer is now live (initial PID 112572, session 92762).
+At launch validation its latest canonical update is 5750, with train /
+held-out accuracy 100.000000% / 100.000000%. This is an incomplete prefix, not verified
+persistence or a stable benchmark. The serial archive worker is live (PID
+112672, session 78057), with no PyTorch imported. It waits for each complete
+budget, checks immutable fingerprints, preserves all dense and sampled logs,
+creates PNG/PDF archives, and verifies them with system Python. Inspect actual
+processes before restart; avoid a second archive writer. Driver output is
+`experiments/runs/adamw_stability_20261002/optimizer-pair-driver.log`;
+worker metadata is under `experiments/runs/adamw_stability_20261002/bootstrap/optimizer-pair-archive-worker.json`.
+See the [launch validation](protocols/adamw_stability_20261002/launch-validation.json).
+After each full result, review figures, commit the verified archive and measured
+outcome, and apply the unchanged gate. No scientific independent confirmation
+or architecture run has started.
+
 The follow-up goal from the startup message is active, without subagents.
 Read [STABILITY.md](STABILITY.md) for its prospectively specified criteria,
 four paired calibration recipes, and independent-confirmation gate.

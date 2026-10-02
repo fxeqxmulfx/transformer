@@ -1,0 +1,23 @@
+{
+  "recorded_at_utc": "2026-10-02T13:26:04.303710+00:00",
+  "trainer_pid": 112572,
+  "trainer_session": 92762,
+  "trainer_command": ".venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_optimizer_pair",
+  "archive_worker_pid": 112672,
+  "archive_worker_session": 78057,
+  "archive_worker_command": ".venv/bin/python -u experiments/runs/adamw_stability_20261002/bootstrap/archive-optimizer-pair-worker.py",
+  "archive_worker_sha256": "5de4d88442edd5966359710ab2a5d335da92f7020d6d3f47d76c5d3aae55772c",
+  "frozen_plan_matches": true,
+  "all_training_analysis_paper_environment_and_launcher_checks_passed": true,
+  "current_recipe": "adamw-short-lr001",
+  "latest_canonical_step": 5750,
+  "latest_train_accuracy": 1.0,
+  "latest_heldout_accuracy": 1.0,
+  "required_plateau_in_prefix": null,
+  "first_canonical_heldout_target_step": 1250,
+  "long_confirmation_in_prefix": null,
+  "complete_budget": false,
+  "stable_grokking": false,
+  "gradient_trace_enabled": true,
+  "scope": "live_launch_validation_and_partial_prefix_only; no_persistence_or_independent_confirmation_success"
+}
