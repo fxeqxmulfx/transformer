@@ -179,9 +179,9 @@ The four-run calibration plan was frozen at 2026-10-02 06:04:54 UTC after
 208 CPU tests passed on the upgraded environment. Sources and split fingerprints
 were rechecked before launch. The serial driver is running under process 87620
 (initial launch PID); inspect the actual process state before any restart.
-The first `short-lr001` and `wrap-lr001` runs have completed and their full
-portable archives are verified. The driver has continued to `short-lr0003`;
-two of four calibration budgets are complete. Inspect the live history for
+The first `short-lr001`, `wrap-lr001`, and `short-lr0003` runs have completed
+and their full portable archives are verified. The driver has continued to
+`short-lr0001`; three of four calibration budgets are complete. Inspect the live history for
 its current update.
 
 All four fresh calibrations finish 150,000 updates each (600,000 total), with
@@ -249,21 +249,28 @@ and three recover by the next update. Categories can overlap. All batches
 contain 512 examples, so post-confirmation instability also occurs with full
 batches; its cause remains unresolved. An earlier long target streak in this
 single paired calibration does not certify persistence or a repeatable speedup.
-Both completed controls fail stable grokking. The `short-lr0003` control is now
-running, and `short-lr0001` remains queued; retain both complete budgets.
+All three completed controls fail stable grokking. The `short-lr0001` control
+is now running; retain its complete budget before assembling the comparison.
 
-The running `short-lr0003` prefix through update 72,500 has its first long
-joint confirmation at 3,000–7,750, costing 240.46 training / 252.06 wall seconds.
-It has no required low-held-out memorization plateau. Six canonical held-out
-target failures occur after legacy confirmation at 3,250; all fail numeric
-answers, none fails EOS, and both immediate neighbors also fail in every case.
-At that recorded prefix, the final-tail window had not begun. A subsequent
-canonical observation at update 103,000 fails the frozen final-tail criterion:
-train accuracy is 46.7998%, held-out accuracy is 40.5498%, and held-out accuracy
-at the immediate neighbors is 40.8935% / 38.8316%. Numeric answers fail while
-EOS accuracy remains 100% throughout the three observations. Thus this lower
-rate also fails persistence; its full 150,000-update budget must still finish
-and be archived. Early target timing does not certify stable grokking.
+The completed `short-lr0003` control fails the prospective criterion: no required
+memorization plateau and 2/201 final-tail target failures, at 103,000 and 134,500.
+Its tail minimum is 40.5498% held-out accuracy; final train/held-out accuracy
+rebounds to 100%/100%. First long joint confirmation is 3,000–7,750, costing
+240.46 training / 252.06 wall seconds. The full budget costs 4,560.76 training /
+4,785.06 wall seconds, with the same 119,166,464-byte peak CUDA allocation.
+All 601 canonical, 1,200 neighbor, and 1,800 diagnostic observations are
+verified and archived with standalone PNG/PDF curves. It consumes 69,840,000
+examples, matching the original short-tail control at equal updates.
+See the [measured result](protocols/amsgradw_stability_20261002/short-lr0003-result.md)
+and [portable archive](baselines/amsgradw_stability_short_lr0003_seed0_data0_20261002).
+
+After legacy confirmation at 3,250, nine canonical held-out target failures
+occur. All fail numeric answers, none fails EOS, and both immediate neighbors
+also fail in every case. At update 103,000, train accuracy is 46.7998%; held-out
+accuracy before, at, and after the update is 40.8935% / 40.5498% / 38.8316%.
+The earlier long target streak and fewer sampled failures in this one paired
+calibration do not certify persistence or a repeatable speedup. Finish the
+remaining 0.0001 control before selecting a recipe or adaptation.
 
 A read-only [fraction-control corpus inspection](protocols/amsgradw_stability_20261002/candidate-corpus-coverage.md)
 finds all 97 answer classes and legal operand classes in the 50%, 20%, 10%,
