@@ -1,0 +1,9 @@
+{
+  "files": {
+    "recovery.png": "20de5a24efe9bf2910b4c938f035fac361d07833c1521dcc6bdbf32ddab95448",
+    "recovery-metrics.json": "40b295428651584aa9ed2923e619343df2e311531f872a96a1a60387b8dfea0b",
+    "windows.csv": "b43a4b1677f632f50d64e7c25880554a77483fdd16e0af636f228fbb7c60f828",
+    "provenance.json": "11b884401657e7de5aa8331852f48907ca4f37d655c784bd653fd4d184828b2c",
+    "recovery.pdf": "32c9c11c34aec248deb4809552499a018c6070e60d10f32dc97071b9cad53288"
+  }
+}

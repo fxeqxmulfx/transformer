@@ -1,0 +1,10 @@
+{
+  "archive": "experiments/synthetic_trainers/baselines/adamw_stability_mod193_fraction25_lr0003_seed0_data0_20261002",
+  "measurement_sha256": "00a23b206b1b59c31df7fc5be92ace5d822ee28809d1c36e6410becf198723a0",
+  "archive_artifact_manifest_sha256": "b5a42c9b1f116dce336062d9d9db1187c20440611b3512319b01f7ea63567963",
+  "metric_source_sha256": "4f3ebe8784a8a1e6e7da5b2b792ac2ce355df37f1c2341b936b62171d3f78e2b",
+  "plot_source_sha256": "c3e6d7b03f7fae09c53e360f7ccc6a1ef46e0be51c555ee4ed1b07ae33957f22",
+  "window_steps": 10000,
+  "canonical_observations": 601,
+  "scope": "complete_unsmoothed_history; sampled_descriptive_metrics; no_future_stability_claim"
+}

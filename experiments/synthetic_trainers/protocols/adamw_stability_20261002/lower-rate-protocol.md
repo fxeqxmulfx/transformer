@@ -46,10 +46,13 @@ figures and verify/commit both complete archives after termination. Never
 restart on an observation timeout or mutate frozen files during this stage.
 
 The verified manifest is committed as `ed83c85`. Scientific trainer PID
-126400/session 93469 and NoTorch archive worker PID 126478/session 19327 are
-live, as recorded in the [launch receipt](lower-rate-launch-validation.json).
-This is one incomplete calibration; the whole-budget and six-case requirements
-remain pending. Driver output and worker metadata are under
+126400/session 93469 and NoTorch archive worker PID 126478/session 19327 have
+completed, following the [launch receipt](lower-rate-launch-validation.json).
+The [full result](lower-rate-result.md) preserves all 150,000 updates, the
+required delayed-generalization phase, eight failing tail observations and
+final 100% accuracy. Its strict persistence gate fails; six-case confirmation
+remains closed. Both complete archives verify and their PNG/PDF were reviewed.
+Driver output and worker metadata are under
 `experiments/runs/adamw_stability_20261002/lower-rate-driver.log` and
 `experiments/runs/adamw_stability_20261002/bootstrap/lower-rate-archive-worker.json`.
 
@@ -65,8 +68,12 @@ prefix never opens the full-budget or independent-confirmation gate.
 The [first confirmed phase](first-long-confirmation-lower-rate.md) is now
 observed and archived through 100,500, including 403 canonical evaluations and
 100,500 gradient records. Earlier exporter guard tests used this stage before
-that phase existed. Later held-out 97.4813% at 105,250 already refutes the
-final-window gate; preserve the valid phase and finish the whole negative budget.
+that phase existed. Later held-out 97.4813% at 105,250 refutes the original
+final-window gate; the complete negative budget and valid positive phase are
+both preserved. The new [recovery metrics](recovery-metrics.md) describe three
+failure episodes and their recoveries without changing the original gate.
+The user's subsequent 300,000-update cap requires a new frozen extension,
+retaining this complete result and fixing its own 250,000–300,000 tail window.
 
 This is a *Convexifying Transformers*, Section 4 adaptation with explicit
 fractions, rates and stronger persistence choices. It measures fixed-length

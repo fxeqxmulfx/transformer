@@ -387,7 +387,7 @@ complete quarter-split parent. Actual `--check-only` passes; four isolated
 changed manifests are rejected, and the pinned archive worker imports without
 PyTorch. Scientific GPU training had not started at that freeze record.
 After manifest commit `ed83c85`, the actual trainer PID 126400/session 93469
-and archive worker PID 126478/session 19327 are now running. Their commands,
+and archive worker PID 126478/session 19327 launched. Their commands,
 state, optimizer and all immutable fingerprints are verified in the
 [launch receipt](protocols/adamw_stability_20261002/lower-rate-launch-validation.json).
 At 2026-10-02T19:26:27+00:00, the incomplete history reaches update 13,250:
@@ -402,12 +402,10 @@ this partial phase is not a stability or repeatability result.
 
 Driver output is `experiments/runs/adamw_stability_20261002/lower-rate-driver.log`;
 worker metadata is `experiments/runs/adamw_stability_20261002/bootstrap/lower-rate-archive-worker.json`.
-Check these actual processes/state before any restart. The worker has no
-PyTorch imported and waits for the full budget before archiving and verifying
-both complete results. Preserve every observation, review the figures and
-commit the verified whole result before applying the unchanged six-case gate.
-Keep all 31 core fingerprints and both pinned launcher/worker files immutable
-until this stage and its archive worker finish.
+Both processes have now completed and their sessions were consumed. The worker
+archived and verified the full budget without importing PyTorch. The complete
+negative result below preserves every observation and the original frozen files.
+Do not resume or rerun this historical 150,000-update stage.
 The [phase-prefix exporter](protocols/adamw_stability_20261002/record_phase_prefix.py)
 is verified outside that frozen source list: real parent replay matches all
 five previously archived prefix files byte for byte, an existing destination
@@ -429,7 +427,35 @@ has only three passing tail points. Later canonical held-out 97.4813% at
 105,250 already refutes persistence, with train and EOS 100%; the validated
 later point is retained separately beside the prefix audit. Finish the full
 budget and retain all failures; independent confirmation remains closed.
-Both scientific processes remain active.
+The full result has since completed, as recorded below.
+
+The [complete lower-rate result](protocols/adamw_stability_20261002/lower-rate-result.md)
+now verifies 150,000 updates, all 601 canonical/1,200 neighbor/1,800 diagnostic
+observations and all 150,000 gradient norms. Final train/held-out is 100%/100%,
+but eight of 201 final-window observations fail; both frozen gates are negative.
+Every failed point has numeric-answer failures at both immediate neighbors and
+EOS 100%. All canonical failure batches are full; neighbor 110,751 is the
+48-example epoch tail. All original files and nested archive copies match,
+the local checkpoint and 31 core fingerprints match, and both actual processes
+are terminal. All original PNG and actual PDF figures were visually reviewed.
+
+The user requested additional [frequency and recovery metrics](protocols/adamw_stability_20261002/recovery-metrics.md).
+Thirteen affected/persistence tests pass; four historical complete archives keep
+their original gates and tail supports. The new full lower-rate report counts
+three episodes, recovering after 500/250/1,250 sampled updates. Fixed 10,000-
+update tail windows have onset counts 2/1/0/0/0 and failed fractions
+7.5%/12.5%/0%/0%/0%, with supports 40/40/40/40/41. Its final 153 joint targets
+span 112,000–150,000 (38,000 updates). Separate recovery PNG/PDF and CSV were
+reviewed and hashed. These descriptive metrics do not change the strict gate.
+
+The user then specified a maximum total budget of 300,000 training updates per
+run. Preserve the negative original 150,000-update stage and prepare a new
+frozen extension before any additional updates. Change only total steps;
+restore weights, native AdamW buffers/steps and shuffle/cursor state. Freeze
+the new 250,000–300,000 final window and the 10,000-update recovery metric width
+and source hash. This remains exploratory calibration. Fresh six-case full-
+budget confirmation, architecture controls and scientific complementary tasks
+remain outstanding; no architecture has been selected.
 
 The [complementary-trainer preparation](protocols/adamw_stability_20261002/complementary-preparation.md)
 also verifies seven existing AdamW CPU paths for MQAR, one/two-hop lookup,

@@ -340,7 +340,7 @@ is now frozen before scientific training: only learning rate 0.0003 differs;
 the real launcher and four negative manifest checks pass. The same full
 budget, source/environment/corpus fingerprints and every gate remain fixed.
 After manifest commit `ed83c85`, trainer PID 126400/session 93469 and NoTorch
-archive worker PID 126478/session 19327 are live; their actual launch is
+archive worker PID 126478/session 19327 launched; their actual launch is
 [verified](protocols/adamw_stability_20261002/lower-rate-launch-validation.json).
 At update 13,250, the incomplete history has train/held-out 99.9028%/0.8096%
 and a qualifying plateau from 4,500–13,250, but no held-out target or long
@@ -351,8 +351,20 @@ now verifies a qualifying plateau at 4,500–27,250, first held-out 99% at
 95,750 and twenty consecutive joint targets through 100,500. It retains all
 403 canonical / 100,500 gradient observations, with PNG/PDF figures reviewed.
 The three prefix tail points pass, but later held-out 97.4813% at 105,250
-already refutes persistence, with train/EOS 100%. The whole budget remains
-pending; this valid phase and negative persistence do not open confirmation.
+already refutes persistence, with train/EOS 100%. The whole budget is now
+complete; this valid phase and negative persistence do not open confirmation.
+The [complete lower-rate result](protocols/adamw_stability_20261002/lower-rate-result.md)
+preserves all 150,000 updates, eight failed tail observations and final 100%/100%.
+Both scientific processes are terminal; all full archives verify without PyTorch,
+and their PNG and actual PDF figures were reviewed. The additional
+[frequency/recovery metrics](protocols/adamw_stability_20261002/recovery-metrics.md)
+count three episodes and a final 38,000-update sampled joint-target span.
+Fixed 10,000-update tail windows show onset counts 2/1/0/0/0 and failed fractions
+7.5%/12.5%/0%/0%/0%, retaining exact supports and the original strict gate.
+The user requested a maximum of 300,000 training updates per run. A new frozen
+budget extension must preserve this original negative result, restore the full
+native optimizer/sampling checkpoint, change only steps and score the fixed
+250,000–300,000 final window. Pin the new metric hash and width before training.
 The [harder-task summary](protocols/adamw_stability_20261002/harder-task-results.md)
 keeps the three complete single-case AdamW outcomes and their task/exposure
 differences together; it does not average interventions or form ineligible ratios.
