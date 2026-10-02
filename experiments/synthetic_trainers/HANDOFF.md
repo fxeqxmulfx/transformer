@@ -231,6 +231,15 @@ mod-97 budgets and their complete verified comparison before starting:
 
 Use `--check-only` to verify the new manifest before parent completion.
 Live output will be under `experiments/runs/adamw_stability_20261002/calibration_mod193_lr001/`.
+The serial queue worker is live (PID 115191, session 18664); its actual command
+and unchanged manifest were checked. It waits for the complete verified
+mod-97 comparison, then executes the frozen mod-193 launcher and creates both
+full-budget portable archives with offline verification. No second GPU trainer
+or scientific mod-193 state/history exists yet. See the
+[queue validation](protocols/adamw_stability_20261002/larger-modulus-queue-validation.json)
+and `experiments/runs/adamw_stability_20261002/bootstrap/queued-mod193-worker.json`.
+Check actual process/state before restart; the driver log will be
+`experiments/runs/adamw_stability_20261002/mod193-driver.log`.
 This user-directed harder-task adaptation supersedes the earlier tentative
 train-fraction idea; no fraction intervention is selected. The historical
 prefix inspections above remain partial evidence with their original labels.

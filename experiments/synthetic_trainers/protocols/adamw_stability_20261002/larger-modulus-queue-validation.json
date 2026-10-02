@@ -1,0 +1,14 @@
+{
+  "recorded_at_utc": "2026-10-02T13:46:21.824080+00:00",
+  "queue_worker_pid": 115191,
+  "queue_worker_session": 18664,
+  "actual_worker_command": ".venv/bin/python -u experiments/runs/adamw_stability_20261002/bootstrap/queued-mod193-worker.py",
+  "worker_sha256": "3b7d5a8b6b00a56cae8e536bc1bc214d2406667cbc4dc37afe8527c2c9657c65",
+  "status": "queued_after_complete_verified_mod97_optimizer_pair",
+  "scientific_mod193_training_started": false,
+  "parent_trainer_pid": 112572,
+  "parent_trainer_session": 92762,
+  "parent_archive_worker_pid": 112672,
+  "parent_archive_worker_session": 78057,
+  "scope": "live_serial_queue_verified; no_mod193_learning_result"
+}
