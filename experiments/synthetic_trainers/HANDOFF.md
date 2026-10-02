@@ -408,6 +408,13 @@ both complete results. Preserve every observation, review the figures and
 commit the verified whole result before applying the unchanged six-case gate.
 Keep all 31 core fingerprints and both pinned launcher/worker files immutable
 until this stage and its archive worker finish.
+The [phase-prefix exporter](protocols/adamw_stability_20261002/record_phase_prefix.py)
+is verified outside that frozen source list: real parent replay matches all
+five previously archived prefix files byte for byte, an existing destination
+is rejected, and the actual unconfirmed lower-rate stage creates no positive
+archive. It imports no PyTorch and reuses the unchanged semantic verifier.
+Use it after the first ordered-phase long confirmation, preserve exact source
+lines, and plot/review the explicitly partial result in a fresh destination.
 
 The [complementary-trainer preparation](protocols/adamw_stability_20261002/complementary-preparation.md)
 also verifies seven existing AdamW CPU paths for MQAR, one/two-hop lookup,

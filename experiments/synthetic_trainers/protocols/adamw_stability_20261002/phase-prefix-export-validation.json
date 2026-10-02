@@ -1,0 +1,37 @@
+{
+  "recorded_at_utc": "2026-10-02T19:48:42.957442+00:00",
+  "verifier_result": {
+    "verified": true,
+    "through_update": 24750,
+    "history_observations": 100,
+    "gradient_observations": 24750,
+    "plateau": {
+      "start": 4500,
+      "end": 11500,
+      "observations": 29
+    },
+    "first_heldout_target": 20000,
+    "long_confirmation": {
+      "onset": 20000,
+      "confirmed": 24750,
+      "training_seconds": 678.9633863702984,
+      "wall_seconds": 830.9522754510035
+    },
+    "phase_observed": true,
+    "full_budget_complete": false,
+    "stable_grokking": false
+  },
+  "real_parent_export_matches_existing_prefix_bytes": {
+    "artifact-hashes.json": true,
+    "summary.json": true,
+    "gradients.jsonl": true,
+    "history.jsonl": true,
+    "plan.json": true
+  },
+  "existing_destination_rejected": true,
+  "actual_live_unconfirmed_calibration_rejected": true,
+  "failed_export_creates_no_destination": true,
+  "torch_imported": false,
+  "exporter_sha256": "b9d58f54dfd7d0e9d62be0d3127f8bd069958ee79cbf7a93ce9a4bed1fcea604",
+  "scope": "real_historical_positive_prefix_replay_and_real_unconfirmed_stage_guard; no_new_scientific_confirmation"
+}

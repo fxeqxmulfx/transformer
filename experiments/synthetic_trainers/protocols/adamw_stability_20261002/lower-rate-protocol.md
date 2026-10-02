@@ -53,6 +53,16 @@ remain pending. Driver output and worker metadata are under
 `experiments/runs/adamw_stability_20261002/lower-rate-driver.log` and
 `experiments/runs/adamw_stability_20261002/bootstrap/lower-rate-archive-worker.json`.
 
+If ordered phases are observed before completion, preserve the first long
+confirmation with `record_phase_prefix` and review `plot_phase_prefix` output
+in a separate fresh directory. The
+[export validation](phase-prefix-export-validation.json) reproduces all five
+existing quarter-split prefix files byte for byte, rejects overwrites and
+rejects the actual unconfirmed lower-rate stage without creating a destination.
+This NoTorch exporter is outside the frozen training/analysis source list;
+it reuses the existing unchanged semantic prefix verifier. A saved phase
+prefix never opens the full-budget or independent-confirmation gate.
+
 This is a *Convexifying Transformers*, Section 4 adaptation with explicit
 fractions, rates and stronger persistence choices. It measures fixed-length
 novel operand-pair generalization; it does not establish length transfer,
