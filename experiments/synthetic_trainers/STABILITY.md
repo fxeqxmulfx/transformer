@@ -73,6 +73,30 @@ Use the same command with `--resume` after a checkpointed interruption.
 `--plan-only` freezes without starting training; executing that plan requires
 `--resume`. Every scheduled budget completes regardless of target crossings.
 
+After each complete run, archive it separately before the next campaign result
+is available. The archive contains its unchanged measurements, all diagnostic
+and neighbor logs, canonical/neighbor/diagnostic CSV, an assessment and collapse
+neighborhood report, standalone PNG/PDF curves, and artifact checksums. Example:
+
+```bash
+.venv/bin/python -m experiments.synthetic_trainers.stability_report \\
+  experiments/runs/amsgradw_stability_20261002/calibration \\
+  --run short-lr001 \\
+  --archive experiments/synthetic_trainers/baselines/amsgradw_stability_short_lr001_seed0_data0_20261002
+python3 -m experiments.synthetic_trainers.stability_report \\
+  experiments/synthetic_trainers/baselines/amsgradw_stability_short_lr001_seed0_data0_20261002 --verify
+```
+
+The destination must be fresh. Verification checks the budget, exact scheduled
+supports, exhaustive split scoring, declared batch exposure and warmup, metric
+and norm consistency, checksums, derived assessment, and CSV rows. It runs
+without PyTorch or the original data/checkpoints. A default complete run has
+601 canonical observations, 1,200 neighbor probes, and 1,800 diagnostic records.
+Checkpoint hashes are recorded, with weights/optimizer kept as local resources.
+Single completed calibrations do not complete the four-run stage or certify
+independent confirmation. Neighbor categories can overlap and describe observed
+associations; they do not establish the cause of a collapse.
+
 ## Environment and next decisions
 
 The restored environment initially had Python 3.12.13 and PyTorch 2.7.1+cu118.

@@ -1,0 +1,19 @@
+{
+  "tests": {
+    "count": 212,
+    "status": "passed",
+    "seconds": 25.896,
+    "command": ".venv/bin/python -m unittest discover -s experiments/synthetic_trainers/tests"
+  },
+  "archive_smoke": {
+    "status": "passed",
+    "cpu_updates": 6,
+    "png_and_pdf_rendered": true,
+    "offline_verified_without_torch": true,
+    "original_paths_deleted_in_test": true,
+    "rejects_missing_diagnostics_and_changed_batch_moments_temperature_probes": true,
+    "rejects_csv_disagreeing_with_json_even_after_checksums_are_recomputed": true
+  },
+  "torch": "2.14.0+cu126",
+  "scope": "verified_archive_tooling; no_complete_stability_calibration_yet"
+}
