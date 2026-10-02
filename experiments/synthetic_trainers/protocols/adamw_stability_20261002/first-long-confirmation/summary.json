@@ -1,0 +1,237 @@
+{
+  "recorded_at_utc": "2026-10-02T13:31:04.257129+00:00",
+  "scope": "historical_partial_AdamW_calibration_prefix_only; not_complete_budget_persistence_or_independent_confirmation",
+  "through_update": 6000,
+  "full_frozen_budget": 150000,
+  "config": {
+    "model": "gptmini",
+    "optimizer": "adamw",
+    "prime": 97,
+    "train_fraction": 0.5,
+    "data_seed": 0,
+    "seed": 0,
+    "width": 128,
+    "layers": 2,
+    "heads": 4,
+    "steps": 150000,
+    "batch_size": 512,
+    "batch_policy": "short_final",
+    "eval_every": 250,
+    "learning_rate": 0.001,
+    "weight_decay": 0.1,
+    "warmup_steps": 10,
+    "target": 0.99,
+    "patience": 2,
+    "device": "cuda"
+  },
+  "criterion": {
+    "target": 0.99,
+    "heldout_ceiling": 0.1,
+    "plateau_steps": 1000,
+    "plateau_observations": 5,
+    "confirmation_observations": 20,
+    "tail_steps": 50000
+  },
+  "frozen_plan_sha256": "1688ce20d913a85df1530403061028f2f054ac1906108d51e8c98caf32c86588",
+  "source_commit": "08ed18cc860d4324bbb086430f160498adb79e29",
+  "training_and_protocol_source_hashes": {
+    "experiments/gpt_mini.py": "7df779bcdc019a6054ed7a6b93469b821b8dec9fc96d84a1420ec387d28f5ee4",
+    "experiments/optimizer_benchmark/common.py": "b3d57ccafe3350631acc31ac000d3b55627d2ed8c4c87b1c30173cfe66fa834d",
+    "experiments/optimizer_benchmark/coordinate.py": "4446687f796f85090acb7ac37834f5c7e31a11f34912cc08ffa28c81683dc85f",
+    "experiments/synthetic_trainers/curves.py": "8fe1edf584db9d05e11d5ea26ca5d4a016746bafde3a88a684031830f3f30e6b",
+    "experiments/synthetic_trainers/paper_phases.py": "acaf5eb3aa9999d8c3cdec8e6ab258f95da4e045c2dbb6f115b58f5c42165586",
+    "experiments/synthetic_trainers/paper_reproduction/__init__.py": "d03f895c1e2a50aa167e24d1e42a7d7c9e1b13b7ef284dc701287b023b05a5ae",
+    "experiments/synthetic_trainers/paper_reproduction/batches.py": "d1d15a822691c9eebd587f74559cf63e3f140e198ae52c6e633a7851623faccd",
+    "experiments/synthetic_trainers/paper_reproduction/diagnostics.py": "b704474b037ff5c1029e8acaf7bee53f4eb23d9d784e2366eacddee30e146c6f",
+    "experiments/synthetic_trainers/paper_reproduction/fashion_data.py": "0d7b8037a34eafdb1ea9db4267959ca02e57f2dc4f328ff582f406c6001f37a2",
+    "experiments/synthetic_trainers/paper_reproduction/grokking.py": "189c55580e7b27344662325cbbb5abad475ddfc09353d4fb8487a257321d22e8",
+    "experiments/synthetic_trainers/paper_reproduction/modular_data.py": "6f0c32a923b466fac7fb2678d0bc9e3af9517d4edf720631609a0cf957601d79",
+    "experiments/synthetic_trainers/paper_reproduction/provenance.py": "eaf50a0cc28a2936e093bd7ca89c281215d10c7b200d3df98f5e6aea10a67004",
+    "experiments/synthetic_trainers/paper_reproduction/random_features.py": "ae93bf75f2aff03e0c8c7f41da8c146763a195b1d7ed66cc68b1919a87bfdacc",
+    "experiments/synthetic_trainers/paper_reproduction/reference_transformer.py": "f31ab6d7998a42f8e459b74f2cc0ed66be55f4dfcc036c857ecd9a1bdf8e9f11",
+    "experiments/synthetic_trainers/paper_reproduction/rff_experiment.py": "4e7b182331261b546096af48bd873a590faa7daf06f9a6780c7eb26aee71ab5c",
+    "experiments/synthetic_trainers/persistence.py": "08726b52640d2c4fc60a82c355e8d50a469177b91fc1dd7058d581f87ff1577f",
+    "experiments/synthetic_trainers/runtime.py": "a7b52640d190c3cbb0405125c58d1593c5e700301a8a6126fdc78110ee98643d",
+    "experiments/synthetic_trainers/stability.py": "6aac13ffd95219d43566cc8bed4786c90fbdec916e5c89ac8cb69e7d0700d69e",
+    "experiments/synthetic_trainers/stability_protocol.py": "de0bf31606757f566b11b746981609c3c9f0a4291e0c3af7ebb84022f3877b3d"
+  },
+  "analysis_and_confirmation_source_hashes": {
+    "experiments/gpt_mini.py": "7df779bcdc019a6054ed7a6b93469b821b8dec9fc96d84a1420ec387d28f5ee4",
+    "experiments/optimizer_benchmark/common.py": "b3d57ccafe3350631acc31ac000d3b55627d2ed8c4c87b1c30173cfe66fa834d",
+    "experiments/optimizer_benchmark/coordinate.py": "4446687f796f85090acb7ac37834f5c7e31a11f34912cc08ffa28c81683dc85f",
+    "experiments/synthetic_trainers/confirmation_layout.py": "e2827fb9a08b0e3c785c78d3fe16a0884ed109789e7014f7c19d2bba0792e151",
+    "experiments/synthetic_trainers/confirmation_protocol.py": "7281e1dc5ff82ea251d9c341c3916b9c3fad4c1dd31ca230d5ffc99c2e9e54c0",
+    "experiments/synthetic_trainers/confirmation_report.py": "332f512ed8aa0c25c4fd2cd5dfb0936c415c0311ed67626901d19e51e9532f2c",
+    "experiments/synthetic_trainers/curves.py": "8fe1edf584db9d05e11d5ea26ca5d4a016746bafde3a88a684031830f3f30e6b",
+    "experiments/synthetic_trainers/paper_phases.py": "acaf5eb3aa9999d8c3cdec8e6ab258f95da4e045c2dbb6f115b58f5c42165586",
+    "experiments/synthetic_trainers/paper_reproduction/__init__.py": "d03f895c1e2a50aa167e24d1e42a7d7c9e1b13b7ef284dc701287b023b05a5ae",
+    "experiments/synthetic_trainers/paper_reproduction/batches.py": "d1d15a822691c9eebd587f74559cf63e3f140e198ae52c6e633a7851623faccd",
+    "experiments/synthetic_trainers/paper_reproduction/diagnostics.py": "b704474b037ff5c1029e8acaf7bee53f4eb23d9d784e2366eacddee30e146c6f",
+    "experiments/synthetic_trainers/paper_reproduction/fashion_data.py": "0d7b8037a34eafdb1ea9db4267959ca02e57f2dc4f328ff582f406c6001f37a2",
+    "experiments/synthetic_trainers/paper_reproduction/grokking.py": "189c55580e7b27344662325cbbb5abad475ddfc09353d4fb8487a257321d22e8",
+    "experiments/synthetic_trainers/paper_reproduction/modular_data.py": "6f0c32a923b466fac7fb2678d0bc9e3af9517d4edf720631609a0cf957601d79",
+    "experiments/synthetic_trainers/paper_reproduction/provenance.py": "eaf50a0cc28a2936e093bd7ca89c281215d10c7b200d3df98f5e6aea10a67004",
+    "experiments/synthetic_trainers/paper_reproduction/random_features.py": "ae93bf75f2aff03e0c8c7f41da8c146763a195b1d7ed66cc68b1919a87bfdacc",
+    "experiments/synthetic_trainers/paper_reproduction/reference_transformer.py": "f31ab6d7998a42f8e459b74f2cc0ed66be55f4dfcc036c857ecd9a1bdf8e9f11",
+    "experiments/synthetic_trainers/paper_reproduction/rff_experiment.py": "4e7b182331261b546096af48bd873a590faa7daf06f9a6780c7eb26aee71ab5c",
+    "experiments/synthetic_trainers/persistence.py": "08726b52640d2c4fc60a82c355e8d50a469177b91fc1dd7058d581f87ff1577f",
+    "experiments/synthetic_trainers/runtime.py": "a7b52640d190c3cbb0405125c58d1593c5e700301a8a6126fdc78110ee98643d",
+    "experiments/synthetic_trainers/stability.py": "6aac13ffd95219d43566cc8bed4786c90fbdec916e5c89ac8cb69e7d0700d69e",
+    "experiments/synthetic_trainers/stability_analysis.py": "e1cbf175cfa0269719d8c074238ace71584e5e1afaed6bd6269cb27e1232db9f",
+    "experiments/synthetic_trainers/stability_comparison.py": "0b45b441866bfddb8132163674d543dec53118627fb01e59ff7a791490e522b6",
+    "experiments/synthetic_trainers/stability_comparison_plots.py": "fc532c7ecdf501bdea190036a9b85297724a2b1b1843dac4e0a338f2b34fd90f",
+    "experiments/synthetic_trainers/stability_confirmation.py": "bdf86a92147ccce637be8dc5490934c7d7ca43db3999e515b280de03b6e1e495",
+    "experiments/synthetic_trainers/stability_integrity.py": "cf2e99858de8a4fc2cd8989ddd52bcadb11e31193b2a14b1053853dca1266e5e",
+    "experiments/synthetic_trainers/stability_plots.py": "7502b7383aae64bc5c46d4ea529fcc688b779469157cf2c9d862dc841efa3c03",
+    "experiments/synthetic_trainers/stability_protocol.py": "de0bf31606757f566b11b746981609c3c9f0a4291e0c3af7ebb84022f3877b3d",
+    "experiments/synthetic_trainers/stability_report.py": "30743167ae5aab7e58c7d0bdbb6b1ed8a544e9ce0aa2a6cfe8ed65ad65d68345"
+  },
+  "paper_hashes": {
+    "papers/arXiv-2211.11052v1/arxiv.tex": "80db7319f40cf0536c41665a42aac9ba97489ec30cbbaa4541bec3753cc164ab",
+    "papers/arXiv-1912.02292v1/rffs.tex": "a3047fd84e9b78c58dbf7953b93dd55a397392cf2fc1fce4671455dc4782807f"
+  },
+  "corpus": {
+    "prime": 97,
+    "domain_size": 9312,
+    "train_examples": 4656,
+    "heldout_examples": 4656,
+    "train_fraction": 0.5,
+    "data_seed": 0,
+    "vocab_size": 239,
+    "train_fingerprint": "53e9d2fb9336a74529e88bf582a2fb37483c1f7e79ab8f1fd670de565baf0eef",
+    "heldout_fingerprint": "1f679f635bd75862e28f1f6dec8cc121a2963f2fa258a0d8d291df0c8b9acc7d",
+    "split_policy": "exhaustive_disjoint_two_way_author_protocol",
+    "prompt_tokens": 5,
+    "supervised_targets": 2,
+    "scope": "all_unseen_operand_pairs_in_fixed_prime_field; no_length_OOD"
+  },
+  "history_observations": 25,
+  "gradient_observations": 6000,
+  "first_canonical_heldout_target": {
+    "step": 1250,
+    "epochs_seen": 125.0,
+    "training_seconds": 38.382150139997975,
+    "wall_seconds": 42.866108217000146,
+    "last_batch_size": 48,
+    "train": {
+      "accuracy": 1.0,
+      "answer_accuracy": 1.0,
+      "EOS_accuracy": 1.0,
+      "loss": 0.01977000818219791,
+      "answer_loss": 0.039475424592847266,
+      "EOS_loss": 6.459103865209723e-05,
+      "examples": 4656
+    },
+    "heldout": {
+      "accuracy": 1.0,
+      "answer_accuracy": 1.0,
+      "EOS_accuracy": 1.0,
+      "loss": 0.02544669187355697,
+      "answer_loss": 0.0508287231537075,
+      "EOS_loss": 6.466072302350064e-05,
+      "examples": 4656
+    }
+  },
+  "assessment": {
+    "criterion": {
+      "target": 0.99,
+      "heldout_ceiling": 0.1,
+      "plateau_steps": 1000,
+      "plateau_observations": 5,
+      "confirmation_observations": 20,
+      "tail_steps": 50000
+    },
+    "complete_canonical_history": false,
+    "plateau": null,
+    "long_confirmation": {
+      "onset": 1250,
+      "confirmed": 6000,
+      "training_seconds": 181.81148112790834,
+      "wall_seconds": 194.90670331100046
+    },
+    "tail_start_step": 100000,
+    "tail_observations": 0,
+    "tail_failures": [],
+    "tail_minimum_heldout_accuracy": null,
+    "persistent_final_performance": false,
+    "stable_grokking": false,
+    "legacy_phase_diagnostics": {
+      "sustained_train_fit": {
+        "onset": 1000,
+        "confirmed": 1250
+      },
+      "sustained_heldout_target": {
+        "onset": 1250,
+        "confirmed": 1500
+      },
+      "time_to_sustained_train_fit": {
+        "onset": {
+          "training_seconds": 30.626538112981507,
+          "wall_seconds": 34.64103030399929
+        },
+        "confirmed": {
+          "training_seconds": 38.382150139997975,
+          "wall_seconds": 42.866108217000146
+        }
+      },
+      "time_to_sustained_heldout_target": {
+        "onset": {
+          "training_seconds": 38.382150139997975,
+          "wall_seconds": 42.866108217000146
+        },
+        "confirmed": {
+          "training_seconds": 46.02612663898617,
+          "wall_seconds": 50.958021571001154
+        }
+      },
+      "lag_after_sustained_train_fit": 250,
+      "memorization_plateau": null,
+      "heldout_ceiling": 0.1,
+      "train_target": 0.99,
+      "patience": 2,
+      "fit_to_heldout_onset_ratio": 1.25,
+      "observed_plateau_then_generalization": false,
+      "epoch_error_curve_before_generalization": {
+        "initial": {
+          "step": 0,
+          "error": 1.0
+        },
+        "first_minimum": {
+          "step": 750,
+          "error": 0.8816580756013745
+        },
+        "peak": {
+          "step": 1000,
+          "error": 0.02577319587628868
+        },
+        "final": {
+          "step": 6000,
+          "error": 0.0
+        },
+        "first_descent": 0.11834192439862545,
+        "peak_rise": -0.8558848797250859,
+        "second_descent": 0.02577319587628868,
+        "margin": 0.02,
+        "full_error_double_descent": false,
+        "selection": "minimum_before_sustained_train_fit; peak_while_train_fitted_before_heldout_target; final_observation",
+        "scope": "posthoc_synthetic_epoch_error_description; no_CIFAR_numerical_reproduction_or_causal_claim"
+      },
+      "both_epoch_error_double_descent_and_grokking": false,
+      "final_heldout_target": true,
+      "observations_after_confirmation": 19,
+      "fraction_observations_at_target_after_confirmation": 1.0,
+      "minimum_heldout_accuracy_after_confirmation": 1.0,
+      "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+    },
+    "scope": "finite_scheduled_observations; no_guarantee_between_observations_or_beyond_budget"
+  },
+  "largest_observed_gradient": {
+    "step": 3793,
+    "batch_size": 512,
+    "epoch_tail": false,
+    "learning_rate": 0.001,
+    "gradient_l2": 28.459228515625
+  },
+  "interpretation": "rapid_generalization_without_required_memorization_plateau; phase_ineligible_regardless_of_later_persistence; complete_both_frozen_budgets_before_next_calibration_selection",
+  "next_possible_intervention": "a_separately_frozen_train_fraction_control_can_test_a_longer_memorization_phase; not_selected_or_launched_here"
+}

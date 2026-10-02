@@ -195,6 +195,15 @@ processes before restart; avoid a second archive writer. Driver output is
 `experiments/runs/adamw_stability_20261002/optimizer-pair-driver.log`;
 worker metadata is under `experiments/runs/adamw_stability_20261002/bootstrap/optimizer-pair-archive-worker.json`.
 See the [launch validation](protocols/adamw_stability_20261002/launch-validation.json).
+The [early AdamW prefix](protocols/adamw_stability_20261002/first-long-confirmation.md)
+now preserves all 25 canonical and 6,000 gradient observations through update
+6,000. First held-out target is 1,250; long confirmation spans 1,250–6,000 and
+costs 181.81 training / 194.91 wall seconds. There is no required low-held-out
+memorization plateau, so this 50% recipe is phase-ineligible regardless of later
+persistence. It is rapid generalization, with tail stability still unmeasured.
+The prefix reproduces offline without PyTorch and exactly matches the original
+bytes. Complete both unchanged budgets before selecting another justified
+calibration; no train-fraction control has been selected or launched here.
 After each full result, review figures, commit the verified archive and measured
 outcome, and apply the unchanged gate. No scientific independent confirmation
 or architecture run has started.

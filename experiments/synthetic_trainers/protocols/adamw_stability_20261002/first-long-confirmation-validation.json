@@ -1,0 +1,13 @@
+{
+  "recorded_at_utc": "2026-10-02T13:32:34.551197+00:00",
+  "verified": true,
+  "through_update": 6000,
+  "history_observations": 25,
+  "gradient_observations": 6000,
+  "phase_eligible": false,
+  "torch_imported": false,
+  "original_prefix_bytes_match": true,
+  "artifact_manifest_sha256": "a1219de1fd649187f3f7c9923b8bfd191ff02cc259f4f9327159f5aa418f7447",
+  "verifier_sha256": "9558ddda8c648192ee7da549ec8012c36c82000b7dc9beaa54e5925906d03d5d",
+  "scope": "partial_prefix_phase_failure_and_long_confirmation_only; no_tail_or_repeatability_claim"
+}
