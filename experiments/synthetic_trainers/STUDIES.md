@@ -368,6 +368,27 @@ and independence from calibration seed 0/data seed 0. Its complete trajectories
 and failures are required before drawing conclusions about reproducibility or
 the requested mini GPT optimizer/architecture combination.
 
+## Independent modular confirmation (in progress)
+
+The first of nine frozen confirmation runs completed all 150,000 updates:
+reference/AdamW, initialization seed 1, independent data seed 1. Sustained
+train fit starts at 750 and held-out onset at 34,750, confirmed at 35,000;
+the lag is 34,000 updates. Its longest memorization plateau spans
+9,250–18,750, with train at least 99.76% and held-out at most 3.33%.
+Final train and held-out accuracies are both 100%. Target confirmation costs
+386.24 training / 393.52 wall seconds; the full run costs 1,648.23 / 1,675.41.
+
+The [complete individual archive](baselines/mod97_fraction50_wd01_confirmation_reference_seed1_20261002/measurements.json)
+retains all 601 observations, the frozen source/split hashes, and
+[PNG/PDF curves](baselines/mod97_fraction50_wd01_confirmation_reference_seed1_20261002/plots/modular-generalization.png).
+After confirmation, 96.75% of 461 scheduled observations meet the target;
+the worst held-out score is 26.42%, and a late dip to 83.83% at update
+145,750 recovers before the final observation. This independent run confirms
+the qualitative phase sequence for one initialization on the new split;
+it does not establish uninterrupted performance or the nine-run campaign's
+repeatability. Remaining seeds and GPTMini optimizer controls are pending in
+the running serial campaign.
+
 ## Double descent is a separate observation
 
 Double descent is a descent, ascent, and second descent in held-out error as

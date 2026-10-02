@@ -1,0 +1,129 @@
+{
+  "complete": true,
+  "completed_runs": 1,
+  "planned_runs": 1,
+  "aggregates": [
+    {
+      "model": "reference",
+      "optimizer": "adamw",
+      "runs": 1,
+      "confirmed_delayed_runs": 1,
+      "final_heldout_target_runs": 1,
+      "lag_steps": {
+        "mean": 34000,
+        "std": 0,
+        "support": 1
+      },
+      "train_fit_step": {
+        "mean": 750,
+        "std": 0,
+        "support": 1
+      },
+      "heldout_onset_step": {
+        "mean": 34750,
+        "std": 0,
+        "support": 1
+      },
+      "heldout_target_onset_training_seconds": {
+        "mean": 383.48173281596974,
+        "std": 0,
+        "support": 1
+      },
+      "heldout_target_confirmed_training_seconds": {
+        "mean": 386.23779444796673,
+        "std": 0,
+        "support": 1
+      },
+      "heldout_target_onset_wall_seconds": {
+        "mean": 390.71846677600115,
+        "std": 0,
+        "support": 1
+      },
+      "heldout_target_confirmed_wall_seconds": {
+        "mean": 393.51703412199276,
+        "std": 0,
+        "support": 1
+      },
+      "training_seconds": {
+        "mean": 1648.232061338902,
+        "std": 0,
+        "support": 1
+      },
+      "heldout_accuracy": {
+        "mean": 1.0,
+        "std": 0,
+        "support": 1
+      },
+      "heldout_loss": {
+        "mean": 0.0001730895009135053,
+        "std": 0,
+        "support": 1
+      },
+      "plateau_then_generalization_runs": 1,
+      "lag_after_sustained_train_fit": {
+        "mean": 34000,
+        "std": 0,
+        "support": 1
+      },
+      "phase_diagnostics": [
+        {
+          "seed": 1,
+          "sustained_train_fit": {
+            "onset": 750,
+            "confirmed": 1000
+          },
+          "sustained_heldout_target": {
+            "onset": 34750,
+            "confirmed": 35000
+          },
+          "time_to_sustained_train_fit": {
+            "onset": {
+              "training_seconds": 8.798974126984831,
+              "wall_seconds": 10.189716011998826
+            },
+            "confirmed": {
+              "training_seconds": 11.573337362991879,
+              "wall_seconds": 13.005897772003664
+            }
+          },
+          "time_to_sustained_heldout_target": {
+            "onset": {
+              "training_seconds": 383.48173281596974,
+              "wall_seconds": 390.71846677600115
+            },
+            "confirmed": {
+              "training_seconds": 386.23779444796673,
+              "wall_seconds": 393.51703412199276
+            }
+          },
+          "lag_after_sustained_train_fit": 34000,
+          "memorization_plateau": {
+            "start_step": 9250,
+            "end_step": 18750,
+            "span_steps": 9500,
+            "observations": 39,
+            "minimum_train_accuracy": 0.9976374570446735,
+            "maximum_heldout_accuracy": 0.03329037800687285
+          },
+          "heldout_ceiling": 0.1,
+          "train_target": 0.99,
+          "patience": 2,
+          "fit_to_heldout_onset_ratio": 46.333333333333336,
+          "observed_plateau_then_generalization": true,
+          "final_heldout_target": true,
+          "observations_after_confirmation": 461,
+          "fraction_observations_at_target_after_confirmation": 0.9674620390455532,
+          "minimum_heldout_accuracy_after_confirmation": 0.26417525773195877,
+          "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+        }
+      ]
+    }
+  ],
+  "training_seconds": 1648.232061338902,
+  "statistical_scope": "initialization_seeds_on_one_exhaustive_two_way_split; no_length_transfer_or_causal_claim",
+  "analysis_source_hashes": {
+    "paper_report.py": "45711c4d16414c6846410cadfced6f73a8fb94f713549364ff52b6b938852812",
+    "paper_phases.py": "12dd2643926960abcce600879a6284d13e09fcce6bd9c658180836776b6fc746",
+    "paper_plots.py": "21e28943866e737e956dd3cadba066e6dce01d36167d65e16c50554344e90449"
+  }
+}

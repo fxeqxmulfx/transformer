@@ -87,6 +87,13 @@ failure as well as early success. The frozen manifest resumes with:
   --seeds 1 2 3 --steps 150000 --resume
 ```
 
+One of nine runs is complete. The
+[first independent reference](baselines/mod97_fraction50_wd01_confirmation_reference_seed1_20261002/summary.json)
+has a measured memorization plateau, a 34,000-update lag, and 100% final
+train/held-out accuracy; later collapses are retained. Initialization seed 2
+is now training on the same confirmation split. Full-budget results for the
+remaining eight recipes are required before judging repeatability or GPTMini.
+
 Freeze the data, targets, evaluation cadence, grid, and budget before each
 confirmation experiment. Separate exploratory calibration from repetitions,
 use several initialization seeds, and retain per-seed fit failures as well as
