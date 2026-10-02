@@ -542,6 +542,21 @@ improvement. Keep accuracy, loss, episode frequency/recovery, actual time and
 memory, and retain every failure. The six-case requirement for an improvement
 claim and scientific complementary tasks remain outstanding.
 
+While that immutable pair runs, a separate
+[conditional fixed-schedule preparation](protocols/adamw_stability_20261002/schedule-preparation.md)
+is verified with five CPU checks. It retains the original constant native-AdamW
+trajectory exactly and supports a prospective cosine reduction after 150,000,
+ending at 250,000 with a fixed 0.1 rate factor over the final window. Tagged
+native continuation preserves buffers, sampling and actual recorded rates;
+portable scheduled archives retain all original non-rate checks and reject
+forged rates after rehashing. The actual scientific initial tensors/RNG match
+on CPU, with 436,104 parameters and all current 43 Python/nine Lean sources
+unchanged. This is preparation only: no scientific schedule is selected,
+frozen or launched. Finish/review/commit the current pair first; use the
+unchanged independent gate if its fresh softmax control passes. A further
+schedule adaptation is conditional on the complete results and still needs a
+frozen scientific launcher and full paired archive/recovery/curve validation.
+
 ```bash
 cat experiments/runs/adamw_stability_20261002/attention_mod193_fraction25_lr0003_budget300k/state.json
 cat experiments/runs/adamw_stability_20261002/bootstrap/attention-pair-archive-worker.json

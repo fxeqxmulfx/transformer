@@ -419,6 +419,15 @@ fingerprints and real commands. Sparsemax reaches 3,750 with train/held-out
 99.9028%/0.7376%, but the full budget and both persistence outcomes remain
 unobserved. The fresh softmax control follows automatically. Preserve all
 pinned sources and every failure; review/commit each complete archived case.
+The [conditional scheduling implementation](protocols/adamw_stability_20261002/schedule-preparation.md)
+is separately prepared on CPU while this pair remains immutable. Five affected
+checks pass: original constant trajectories and native continuation are exact;
+scheduled archives verify without Torch and reject forged rates/missing buffers.
+The proposed fixed reduction starts after 150,000 and ends at 250,000, without
+using target observations. It changes only the declared schedule field in a
+future pair, retains every existing criterion and cap, and is not scientifically
+selected or launched. Complete the current pair first and require a separately
+frozen full-budget protocol for any later intervention.
 The [harder-task summary](protocols/adamw_stability_20261002/harder-task-results.md)
 keeps the three complete single-case AdamW outcomes and their task/exposure
 differences together; it does not average interventions or form ineligible ratios.
