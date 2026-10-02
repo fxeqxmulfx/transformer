@@ -252,6 +252,14 @@ single paired calibration does not certify persistence or a repeatable speedup.
 Both completed controls fail stable grokking. The `short-lr0003` control is now
 running, and `short-lr0001` remains queued; retain both complete budgets.
 
+The running `short-lr0003` prefix through update 72,500 has its first long
+joint confirmation at 3,000–7,750, costing 240.46 training / 252.06 wall seconds.
+It has no required low-held-out memorization plateau. Six canonical held-out
+target failures occur after legacy confirmation at 3,250; all fail numeric
+answers, none fails EOS, and both immediate neighbors also fail in every case.
+The final-tail window has not begun. This early timing and incomplete trajectory
+do not certify persistence; finish its fixed 150,000 updates.
+
 The independent-confirmation driver and portable report are prepared and tested;
 no scientific confirmation plan or run has started. See the commands in
 [STABILITY.md](STABILITY.md) and
