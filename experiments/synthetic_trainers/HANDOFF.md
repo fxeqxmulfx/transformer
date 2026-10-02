@@ -308,6 +308,18 @@ batching, 150,000-update budget, diagnostics, and unchanged phase/persistence
 criterion. Its fresh manifest was frozen before training. Independent confirmation
 and architecture/complementary comparisons remain pending.
 
+A reproducible post hoc [tensor inspection](protocols/amsgradw_stability_20261002/collapse-tensor-inspection.md)
+selects each completed recipe's worst final-tail held-out observation and the
+latest earlier observation with train accuracy at least 99%. Tied embeddings
+have the largest gradient at both selected fit and regression points, so their
+dominance alone does not distinguish failure. The largest tensor update/weight
+ratios at regressions are 4.94% / 18.24% / 1.61% / 0.86%, in attention
+projection or QKV weights. Temperatures are similar within each selected pair;
+the 250-update gaps leave unmeasured dynamics. These associations do not prove
+cause or select an intervention. All eight rows reproduce exactly from the
+verified complete comparison without importing PyTorch. The running midpoint
+plan and success criterion are unchanged.
+
 The [midpoint protocol](protocols/amsgradw_stability_20261002/midpoint-protocol.md)
 and [single-recipe plan](protocols/amsgradw_stability_20261002/midpoint-plan.json)
 are now frozen at 2026-10-02 11:41:05 UTC. Only `learning_rate` differs from the

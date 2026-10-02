@@ -1,0 +1,13 @@
+{
+  "recorded_at_utc": "2026-10-02T11:53:35.773961+00:00",
+  "scope": "post_hoc_tensor_inspection_of_four_complete_negative_calibrations",
+  "source_comparison_verified": true,
+  "recomputed_json_exact_match": true,
+  "torch_imported": false,
+  "completed_cases": 4,
+  "selected_observations": 8,
+  "gradient_aggregate_and_share_identities_checked": true,
+  "analysis_sha256": "279b71b1047cce6946e1e9d2d9fc381e159849c90aea76fa98cf3c9530caf34c",
+  "result_sha256": "e581138b2eb46b803023009b6c5669fff8df49f1c68a2a1e3ca857f0e827b075",
+  "check": "System Python invoked inspect on the complete comparison, compared all returned data with the saved JSON, and asserted torch absent from sys.modules."
+}
