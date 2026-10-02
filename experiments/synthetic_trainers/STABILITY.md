@@ -370,6 +370,12 @@ is now frozen with those settings, only total steps changed, the complete
 native checkpoint preserved, 39 source fingerprints pinned and actual launcher
 validation passed. Eight isolated negative fixtures are rejected. Additional
 whole-history recovery windows retain the interval before the new final tail.
+After manifest commit `3cf14e2`, the actual trainer PID 135520/session 64768
+and NoTorch archive worker PID 135597/session 37682 are running. Their
+[launch receipt](protocols/adamw_stability_20261002/budget300k-launch-validation.json)
+checks all 39 sources, exact original prefixes, native extension metadata and
+real first update 150,001 with unchanged rate. Finish the whole 300,000-update
+budget before scoring persistence and opening independent confirmation.
 The [harder-task summary](protocols/adamw_stability_20261002/harder-task-results.md)
 keeps the three complete single-case AdamW outcomes and their task/exposure
 differences together; it does not average interventions or form ineligible ratios.

@@ -1,0 +1,81 @@
+{
+  "recorded_at_utc": "2026-10-02T21:22:12.875676+00:00",
+  "manifest_commit": "3cf14e2",
+  "source_commit": "5c744d818b134393cf5e6fa2f611b2aa61a991bd",
+  "trainer_pid": 135520,
+  "trainer_session": 64768,
+  "trainer_command": [
+    ".venv/bin/python",
+    "-u",
+    "-m",
+    "experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_budget_extension"
+  ],
+  "archive_worker_pid": 135597,
+  "archive_worker_session": 37682,
+  "archive_worker_command": [
+    ".venv/bin/python",
+    "-u",
+    "-m",
+    "experiments.synthetic_trainers.protocols.adamw_stability_20261002.archive_budget_extension",
+    "--trainer-pid",
+    "135520"
+  ],
+  "stage_status": "running",
+  "worker_status": "waiting_for_complete_300000_update_budget",
+  "worker_imports_torch": false,
+  "unique_immutable_files_checked": 39,
+  "all_immutable_hashes_match": true,
+  "original_run_and_every_log_prefix_preserved": true,
+  "original_native_checkpoint_sha256": "875efd8e6c1a07bc250f932391ca8c41ddcf026a2f14eb76093e5ee777a58794",
+  "actual_child_budget_extension": [
+    {
+      "old_steps": 150000,
+      "new_steps": 300000,
+      "scope": "posthoc_budget_extension"
+    }
+  ],
+  "first_additional_update": {
+    "step": 150001,
+    "batch_size": 512,
+    "epoch_tail": false,
+    "learning_rate": 0.0003,
+    "gradient_l2": 1.1181197123733e-06
+  },
+  "first_additional_canonical_observation": {
+    "step": 150250,
+    "epochs_seen": 7907.939550949914,
+    "training_seconds": 4116.624891467109,
+    "wall_seconds": 5031.122398858002,
+    "last_batch_size": 512,
+    "train": {
+      "accuracy": 1.0,
+      "answer_accuracy": 1.0,
+      "EOS_accuracy": 1.0,
+      "loss": 3.88227968445105e-08,
+      "answer_loss": 7.759412162962948e-08,
+      "EOS_loss": 5.147205632355522e-11,
+      "examples": 9264
+    },
+    "heldout": {
+      "accuracy": 1.0,
+      "answer_accuracy": 1.0,
+      "EOS_accuracy": 1.0,
+      "loss": 4.674734748088037e-08,
+      "answer_loss": 9.342177621095608e-08,
+      "EOS_loss": 7.291874620270541e-11,
+      "examples": 27792
+    }
+  },
+  "latest_observed_canonical_step": 155500,
+  "total_update_limit": 300000,
+  "final_window": [
+    250000,
+    300000
+  ],
+  "observed_extension_peak_cuda_bytes": {
+    "peak_cuda_allocated_bytes": 122238464,
+    "peak_cuda_reserved_bytes": 146800640
+  },
+  "independent_confirmation_eligible": false,
+  "scope": "actual_running_exploratory_continuation; full_budget_and_confirmation_pending; no_completed_stability_or_repeatability_claim"
+}

@@ -51,6 +51,15 @@ recovery metrics. Review all standalone PNG/PDF and commit the full result.
 Keep all 39 pinned sources immutable until trainer and archive worker finish.
 Do not restart on a monitoring timeout or extend beyond the user's cap.
 
+The manifest is committed as `3cf14e2`. Actual trainer PID 135520/session
+64768 and NoTorch archive worker PID 135597/session 37682 are running. The
+[launch receipt](budget300k-launch-validation.json) verifies their commands,
+all 39 hashes, original log prefixes and actual first additional step 150,001
+at rate 0.0003. First added canonical evaluation is 150,250. The full budget
+and independent confirmations remain pending. Monitor
+`experiments/runs/adamw_stability_20261002/budget300k-driver.log` and
+`experiments/runs/adamw_stability_20261002/bootstrap/budget300k-archive-worker.json`.
+
 Only a full passing calibration permits six fresh 300,000-update cases:
 model seeds 4/5/6 crossed with data seeds 2/3. All must pass before architecture
 selection, paired architecture controls and the outstanding complementary tasks.

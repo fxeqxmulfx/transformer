@@ -468,8 +468,19 @@ Three extra series tests pass; five complete historical cases retain every
 post-onset observation and failure. The new total budget is 300,000 updates,
 with final tail 250,000–300,000 and fixed 10,000-update recovery windows across
 the whole post-generalization history. Original completed archives stay intact.
-The freeze precedes scientific extension updates; record the actual launch
-and terminal/active state next. Keep every pinned source immutable during this stage.
+The manifest was committed as `3cf14e2` before launch. Trainer PID 135520 /
+session 64768 and NoTorch archive worker PID 135597 / session 37682 are now
+running, as recorded in the [launch receipt](protocols/adamw_stability_20261002/budget300k-launch-validation.json).
+The actual first added update is 150,001 at rate 0.0003; the first added
+canonical evaluation is 150,250. Both commands, every original prefix, the
+new child budget-extension metadata and all 39 immutable hashes match.
+The latest live check at 151,250 has train/held-out 100%/100%, with no newly
+observed failure. This incomplete prefix does not certify the full 300,000-
+update window or independent confirmation. Keep all 39 sources immutable.
+Driver output is `experiments/runs/adamw_stability_20261002/budget300k-driver.log`;
+worker metadata is `experiments/runs/adamw_stability_20261002/bootstrap/budget300k-archive-worker.json`.
+Check actual processes/state before any restart. Wait for all 300,000 updates,
+verify/review/commit full archives and metrics, then apply the unchanged gate.
 
 ```bash
 .venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_budget_extension
