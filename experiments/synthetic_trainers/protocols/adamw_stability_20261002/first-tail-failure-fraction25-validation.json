@@ -1,0 +1,54 @@
+{
+  "recorded_at_utc": "2026-10-02T18:36:43.867821+00:00",
+  "verified": true,
+  "through_update": 115000,
+  "history_observations": 461,
+  "gradient_interval_observations": 252,
+  "full_tensor_samples": 5,
+  "first_final_tail_failure": 115000,
+  "frozen_persistence_ruled_out": true,
+  "complete_budget": false,
+  "causal_trigger_identified": false,
+  "torch_imported": false,
+  "archive": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/first-tail-failure-fraction25",
+  "original_prefix_and_gradient_interval_bytes_match": true,
+  "original_exhaustive_and_tensor_samples_match": true,
+  "frozen_fingerprints": {
+    "checked_files": 31,
+    "all_unchanged": true
+  },
+  "verifier_sha256": "f6d04d77cef1c8dc88f9e593e9e38aebfaa665593444d2956330622d36103cf7",
+  "phase_eligible_prefix": true,
+  "scope": "one_observed_final_tail_failure_refutes_unchanged_all_observations_rule; preserve_complete_budget_and_future_failures",
+  "negative_integrity_checks": [
+    {
+      "case": "missing_canonical",
+      "rejected": true,
+      "recomputed_artifact_hashes": true,
+      "derived_summary_recomputed": false,
+      "reason": "Final-tail prefix coverage or frozen budget differs"
+    },
+    {
+      "case": "missing_gradient",
+      "rejected": true,
+      "recomputed_artifact_hashes": true,
+      "derived_summary_recomputed": false,
+      "reason": "Final-tail prefix coverage or frozen budget differs"
+    },
+    {
+      "case": "wrong_exhaustive_support",
+      "rejected": true,
+      "recomputed_artifact_hashes": true,
+      "derived_summary_recomputed": false,
+      "reason": "Observation lacks the exhaustive split"
+    },
+    {
+      "case": "negative_native_second_moment",
+      "rejected": true,
+      "recomputed_artifact_hashes": true,
+      "derived_summary_recomputed": true,
+      "reason": "Invalid or incomplete native AdamW diagnostic norms"
+    }
+  ],
+  "negative_checks_utc": "2026-10-02T18:38:18.764784+00:00"
+}

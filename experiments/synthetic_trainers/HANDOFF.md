@@ -343,6 +343,18 @@ including absent actual memorization after recomputing its assessment; all
 one incomplete calibration. Finish all 150,000 updates and score the unchanged
 100,000–150,000 persistence window before applying the six-case confirmation gate.
 
+The [quarter-split final-tail failure](protocols/adamw_stability_20261002/first-tail-failure-fraction25.md)
+now preserves all 461 canonical observations through 115,000, five exhaustive/
+full-tensor samples and 252 gradient records around the first failed final-window
+evaluation. Train / held-out accuracy is 92.7461%/91.6271%; EOS remains 100%
+and both immediate neighbors fail on full batches. The observed memorization
+and generalization phases remain valid, but this single final-window failure
+refutes the unchanged persistence gate and prevents independent confirmation.
+Existing offline verification and four repaired-hash semantic corruptions pass;
+all 31 frozen files remain unchanged. The trainer and archive worker continue
+the whole budget. Preserve and commit the full negative result and curves
+before selecting the next calibration; no criterion is relaxed.
+
 The [complementary-trainer preparation](protocols/adamw_stability_20261002/complementary-preparation.md)
 also verifies seven existing AdamW CPU paths for MQAR, one/two-hop lookup,
 copy, direct/running parity and C-RASP counting. Final and selected checkpoint

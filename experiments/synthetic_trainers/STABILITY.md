@@ -325,6 +325,12 @@ preserves all 100 canonical and 24,750 gradient observations: a qualifying
 plateau at 4,500–11,500, first held-out target at 20,000 and 20 consecutive
 joint target observations through 24,750. This observed delayed generalization
 does not yet establish final-tail persistence or independent repeatability.
+The [first quarter-split final-window failure](protocols/adamw_stability_20261002/first-tail-failure-fraction25.md)
+is now verified at 115,000: train / held-out 92.7461%/91.6271%, with EOS 100%
+and failures at both immediate neighbors. This refutes the frozen persistence
+gate despite the observed delayed generalization. Finish the whole budget
+and archive every subsequent observation before the next calibration; six-case
+confirmation and architecture selection remain closed.
 Any subsequent
 fraction, decay, schedule, or model intervention needs a fresh frozen plan; a
 negative result does not justify relaxing the success criterion.
