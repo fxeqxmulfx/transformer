@@ -1,0 +1,21 @@
+{
+  "recorded_at_utc": "2026-10-02T16:14:14.488207+00:00",
+  "verified": true,
+  "through_update": 40000,
+  "history_observations": 161,
+  "gradient_observations": 40000,
+  "phase_eligible": false,
+  "torch_imported": false,
+  "archive": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/first-target-mod193",
+  "original_prefix_lines_match": true,
+  "frozen_fingerprints": {
+    "checked_files": 31,
+    "all_unchanged": true
+  },
+  "every_observation_and_exposure_validated": true,
+  "every_gradient_batch_rate_and_finiteness_validated": true,
+  "standalone_existing_verifier": "verify_first_confirmation.verify",
+  "verifier_sha256": "9558ddda8c648192ee7da549ec8012c36c82000b7dc9beaa54e5925906d03d5d",
+  "supporting_train_fit_and_low_heldout_observations_before_first_target": 0,
+  "scope": "absent_required_pre_target_phase_is_fixed; final_tail_persistence_unresolved; finish_frozen_budget"
+}

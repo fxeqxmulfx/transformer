@@ -271,6 +271,13 @@ training completes. Do not start a second GPU trainer. See the
 and `experiments/runs/adamw_stability_20261002/bootstrap/queued-mod193-worker.json`.
 Check actual process/state before restart; the driver log will be
 `experiments/runs/adamw_stability_20261002/mod193-driver.log`.
+The [first-target prefix](protocols/adamw_stability_20261002/first-target-mod193.md)
+now preserves all 161 canonical / 40,000 gradient observations through update
+40,000, where train/held-out accuracy is 99.5952%/99.3253%. First train 99%
+is at 39,500 with held-out already 98.5320%; zero pre-target observations meet
+the required memorization condition. The recipe is phase-ineligible regardless
+of future persistence. Finish its full budget and retain the final-tail outcome;
+this prefix does not open independent confirmation.
 This user-directed harder-task adaptation supersedes the earlier tentative
 train-fraction idea; no fraction intervention is selected. The historical
 prefix inspections above remain partial evidence with their original labels.

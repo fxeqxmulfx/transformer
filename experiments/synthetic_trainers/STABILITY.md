@@ -69,6 +69,10 @@ and worst held-out 58.1400%. The
 [verified complete pair](protocols/adamw_stability_20261002/optimizer-pair-result.md)
 retains all 300,000 updates; neither recipe opens independent confirmation.
 The user-directed frozen mod-193 AdamW adaptation is now running.
+Its [first target at 40,000](protocols/adamw_stability_20261002/first-target-mod193.md)
+has no required pre-target memorization plateau, ruling out stable-grokking
+eligibility while leaving final-tail persistence unresolved. Its full budget
+continues unchanged; slower generalization alone does not satisfy the phase gate.
 The first complete dense archive also exposed quadratic CSV verification.
 Its [runtime execution repair](protocols/adamw_stability_20261002/csv-verification-repair.md)
 passes all 235 CPU tests and preserves frozen sources, criteria and complete
