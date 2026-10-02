@@ -179,8 +179,9 @@ The four-run calibration plan was frozen at 2026-10-02 06:04:54 UTC after
 208 CPU tests passed on the upgraded environment. Sources and split fingerprints
 were rechecked before launch. The serial driver is running under process 87620
 (initial launch PID); inspect the actual process state before any restart.
-The first `short-lr001` run was observed at update 1,250 of 150,000 with a
-48-example tail batch; no calibration outcome is complete yet.
+The first `short-lr001` run has completed and its full portable archive is
+verified. The driver has continued to `wrap-lr001`; one of four calibration
+budgets is complete. Inspect the live history for its current update.
 
 All four fresh calibrations finish 150,000 updates each (600,000 total), with
 one mechanism changed at a time: unchanged learning rate 0.001, full-batch
@@ -207,22 +208,27 @@ all four frozen complete runs, retains failures and missing timing support, and
 rejects mixed plans. It does not imply independent confirmation. Use the per-run archive commands in
 [STABILITY.md](STABILITY.md) immediately after each full-budget result.
 
-A provisional prefix assessment through update 38,250 of `short-lr001` finds
-32 canonical held-out failures after legacy confirmation at update 6,000.
-Every supported failure is below 99% at both immediate neighbor updates;
-all 32 fail numeric answers and none fails EOS. This does not identify the
-cause or exclude a longer-lasting batch-size effect. The independently frozen
-full-batch control has not yet run. Retain the full budget and final-tail test;
-this partial trajectory is not a completed calibration or successful benchmark.
+The completed `short-lr001` unchanged-rate control is a negative result:
+there is no required low-held-out memorization plateau, and 10 of its 201
+final-tail observations fail the joint 99% criterion. The lowest tail held-out
+accuracy is 58.14%. Final train/held-out accuracy is 100%/99.9785% (one incorrect
+held-out equation); the rebound does not pass persistence. First long joint
+confirmation is 52,750–57,500, costing 1,720.56 training / 1,808.46 wall seconds.
+The complete budget costs 4,481.67 training / 4,708.09 wall seconds and peaks
+at 119,166,464 allocated CUDA bytes. All 601 canonical observations, 1,200
+neighbor probes, and 1,800 diagnostic records are archived with PNG/PDF curves.
+See the [measured result](protocols/amsgradw_stability_20261002/short-lr001-result.md)
+and [portable archive](baselines/amsgradw_stability_short_lr001_seed0_data0_20261002).
 
-By update 116,250, the unchanged-rate `short-lr001` control has already failed
-the prospectively required final-tail criterion: joint target failures are
-recorded at 102,250, 107,250, and 112,250 within the final 50,000-update window.
-It also has no required low-held-out memorization plateau before first target
-crossing. Its first 20-observation joint confirmation is 52,750–57,500, costing
-1,720.56 training / 1,808.46 wall seconds. None of this ends its budget; retain
-all remaining observations and archive after update 150,000. The other three
-frozen calibrations still await their serial execution.
+After legacy held-out confirmation at update 6,000, 64 canonical observations
+fail the target. All fail numeric answers, none fails EOS, and 63 remain below
+99% at both immediate neighbors. The remaining failure crosses down from 99%
+before the canonical observation and stays below it afterward. No failure is
+isolated to its canonical update or recovers at the next update. This weakens
+a one-update observation artifact explanation without identifying a cause or
+excluding a longer-lasting batch-size effect. The full-batch control is now
+running; both lower-rate controls remain queued. Finish all three complete
+budgets before selecting or rejecting a calibration recipe.
 
 Confirmation and architecture comparisons require separately frozen plans after
 these complete histories. Keep the active goal running, retain failures, archive

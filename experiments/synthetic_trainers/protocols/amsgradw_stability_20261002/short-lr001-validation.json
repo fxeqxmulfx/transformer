@@ -1,0 +1,30 @@
+{
+  "recorded_at_utc": "2026-10-02T07:28:23.613686+00:00",
+  "archive": "experiments/synthetic_trainers/baselines/amsgradw_stability_short_lr001_seed0_data0_20261002",
+  "verification_command": "python3 -m experiments.synthetic_trainers.stability_report experiments/synthetic_trainers/baselines/amsgradw_stability_short_lr001_seed0_data0_20261002 --verify",
+  "offline_verification_passed": true,
+  "torch_imported": false,
+  "plots_visually_inspected": [
+    "plots/stability-overview.png",
+    "plots/collapse-neighbors.png"
+  ],
+  "canonical_observations": 601,
+  "neighbor_observations": 1200,
+  "diagnostic_observations": 1800,
+  "completed_updates": 150000,
+  "stable_grokking": false,
+  "tail_failures": [
+    102250,
+    107250,
+    112250,
+    117250,
+    123000,
+    128000,
+    132500,
+    137750,
+    143750,
+    148500
+  ],
+  "artifact_manifest_sha256": "904d137924ac073e2e437e722461fc57fd5971bf8b3568ab5fede6ca4c3df7c3",
+  "scope": "first_complete_exploratory_calibration; remaining_three_required; not_independent_confirmation"
+}
