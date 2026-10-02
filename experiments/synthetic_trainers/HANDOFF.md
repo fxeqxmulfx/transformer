@@ -187,8 +187,8 @@ preparation, not a scientific result; inspect actual process/state for progress.
 The optimizer-pair trainer is now live (initial PID 112572, session 92762).
 At launch validation its latest canonical update is 5750, with train /
 held-out accuracy 100.000000% / 100.000000%. This is an incomplete prefix, not verified
-persistence or a stable benchmark. The serial archive worker is live (PID
-112672, session 78057), with no PyTorch imported. It waits for each complete
+persistence or a stable benchmark. At launch the serial archive worker was live
+(PID 112672, session 78057), with no PyTorch imported. It waits for each complete
 budget, checks immutable fingerprints, preserves all dense and sampled logs,
 creates PNG/PDF archives, and verifies them with system Python. Inspect actual
 processes before restart; avoid a second archive writer. Driver output is
@@ -217,13 +217,20 @@ The [first final-tail failure](protocols/adamw_stability_20261002/first-tail-fai
 is now preserved at update 104,000: exhaustive train/held-out accuracy
 90.0129%/87.9940%. Both immediate neighbors also fail; EOS stays 100%.
 This observed final-window failure rules out the frozen persistence criterion,
-irrespective of later recovery. Its portable prefix verifies without PyTorch;
-the complete 150,000-update outcome is still pending. Finish both budgets and
-then run the already frozen mod-193 adaptation; no independent confirmation
-is eligible from this mod-97 primary recipe.
+irrespective of later recovery. Its portable prefix verifies without PyTorch.
+The [full primary result](protocols/adamw_stability_20261002/adamw-result.md)
+is now complete and archived: 150,000 updates, all 601 canonical/1,200 neighbor/
+1,800 tensor/150,000 gradient observations, with final train/held-out 100%.
+Seven of 201 final-window observations fail; worst held-out is 43.9003%
+at 129,000. Phase and persistence both fail. Full costs are 4,022.04 training /
+4,284.18 wall seconds, with 44.04 diagnostic seconds. Both PNG/PDF curve pairs
+were reviewed and the archive verified without PyTorch; original bytes and
+frozen fingerprints agree. The raw AMSGradW case is running. Finish it and
+the complete comparison, then run the already frozen mod-193 adaptation;
+no independent confirmation is eligible from this mod-97 primary recipe.
 The prefix reproduces offline without PyTorch and exactly matches the original
-bytes. Complete both unchanged budgets before selecting another justified
-calibration; no train-fraction control has been selected or launched here.
+bytes. Finish the unchanged raw control before starting the already selected
+mod-193 calibration; no train-fraction control has been selected or launched here.
 After each full result, review figures, commit the verified archive and measured
 outcome, and apply the unchanged gate. No scientific independent confirmation
 or architecture run has started.
@@ -246,17 +253,19 @@ No scientific mod-193 training has started. The launcher requires both current
 mod-97 budgets and their complete verified comparison before starting:
 
 ```bash
-.venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_larger_modulus
+.venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.csv_verification \
+  module experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_larger_modulus
 ```
 
 Use `--check-only` to verify the new manifest before parent completion.
 Live output will be under `experiments/runs/adamw_stability_20261002/calibration_mod193_lr001/`.
-The serial queue worker is live (PID 115191, session 18664); its actual command
+The replacement serial queue worker is live (PID 117203, session 46645); its actual command
 and unchanged manifest were checked. It waits for the complete verified
 mod-97 comparison, then executes the frozen mod-193 launcher and creates both
 full-budget portable archives with offline verification. No second GPU trainer
 or scientific mod-193 state/history exists yet. See the
-[queue validation](protocols/adamw_stability_20261002/larger-modulus-queue-validation.json)
+[original queue validation](protocols/adamw_stability_20261002/larger-modulus-queue-validation.json),
+[runtime-repair validation](protocols/adamw_stability_20261002/csv-verification-repair-validation.json)
 and `experiments/runs/adamw_stability_20261002/bootstrap/queued-mod193-worker.json`.
 Check actual process/state before restart; the driver log will be
 `experiments/runs/adamw_stability_20261002/mod193-driver.log`.

@@ -1,0 +1,103 @@
+{
+  "recorded_at_utc": "2026-10-02T14:54:32.255448+00:00",
+  "archive": "experiments/synthetic_trainers/baselines/adamw_stability_adamw_short_lr001_seed0_data0_20261002",
+  "complete_budget": 150000,
+  "offline_verification_passed": true,
+  "torch_imported": false,
+  "original_plan_and_measurement_bytes_match": true,
+  "original_dense_and_sampled_log_bytes_match": true,
+  "frozen_fingerprints": {
+    "checked_files": 31,
+    "all_unchanged": true
+  },
+  "counts": {
+    "canonical_observations": 601,
+    "neighbor_observations": 1200,
+    "diagnostic_observations": 1800,
+    "gradient_trace_observations": 150000,
+    "final_tail_observations": 201,
+    "final_tail_failures": 7
+  },
+  "assessment": {
+    "criterion": {
+      "target": 0.99,
+      "heldout_ceiling": 0.1,
+      "plateau_steps": 1000,
+      "plateau_observations": 5,
+      "confirmation_observations": 20,
+      "tail_steps": 50000
+    },
+    "complete_canonical_history": true,
+    "plateau": null,
+    "long_confirmation": {
+      "onset": 1250,
+      "confirmed": 6000,
+      "training_seconds": 181.81148112790834,
+      "wall_seconds": 194.90670331100046
+    },
+    "tail_start_step": 100000,
+    "tail_observations": 201,
+    "tail_failures": [
+      104000,
+      108000,
+      125250,
+      129000,
+      141000,
+      143750,
+      146500
+    ],
+    "tail_minimum_heldout_accuracy": 0.43900343642611683,
+    "persistent_final_performance": false,
+    "stable_grokking": false,
+    "scope": "finite_scheduled_observations; no_guarantee_between_observations_or_beyond_budget"
+  },
+  "exposure": 69840000,
+  "parameters": 423816,
+  "costs": {
+    "training_seconds": 4022.03635329138,
+    "wall_seconds": 4284.183930950003,
+    "diagnostic_seconds": 44.03830631849996,
+    "peak_cuda_allocated_bytes": 117470208,
+    "peak_cuda_reserved_bytes": 144703488
+  },
+  "collapse_counts": {
+    "confirmed_step": 1500,
+    "failures_after_confirmation": 13,
+    "numeric_answer_failures": 13,
+    "EOS_failures": 0,
+    "isolated_at_canonical_observation": 0,
+    "still_below_target_both_neighbors": 12,
+    "recovered_by_next_update": 0,
+    "missing_neighbor_support": 0,
+    "scope": "observed_immediate_neighbors_of_canonical_failures_after_legacy_confirmation; categories_may_overlap; no_causal_claim"
+  },
+  "gradient_trace": {
+    "observations": 150000,
+    "maximum_gradient_l2": 160.78579711914062,
+    "maximum_step": 133040,
+    "maximum_batch_size": 48,
+    "scope": "every_pre_update_gradient_norm; no_causal_claim"
+  },
+  "timing_outcome": {
+    "complete_budget": true,
+    "phase_label": "does_not_meet_complete_persistent_target",
+    "memorization_plateau": null,
+    "persistent_final_performance": false,
+    "stable_grokking": false,
+    "tail_failures": 7,
+    "observed_target_training_seconds": 181.81148112790834,
+    "observed_target_wall_seconds": 194.90670331100046,
+    "eligible_target_training_seconds": null,
+    "eligible_target_wall_seconds": null,
+    "eligible_timing_support": 0,
+    "timing_scope": "first_long_joint_confirmation_with_complete_final_tail; no_between_sample_or_beyond_budget_guarantee"
+  },
+  "figures_inspected": [
+    "plots/stability-overview.png",
+    "plots/collapse-neighbors.png"
+  ],
+  "standalone_png_pdf_pairs_present": true,
+  "artifact_manifest_sha256": "fdd1fbe57e87f65984b6c934c2918e9b3d7f6d07fa2f849813d95641a7aced0f",
+  "csv_runtime_adapter_sha256": "eb712251a35f23d1daab19b35822f9428f9bd5b13ea5e1d8c9e2840d38354946",
+  "scope": "one_complete_exploratory_AdamW_calibration; negative_phase_and_persistence; not_independent_confirmation_or_architecture_success"
+}

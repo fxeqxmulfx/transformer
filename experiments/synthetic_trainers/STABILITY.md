@@ -57,12 +57,13 @@ original canonical/neighbor/full-tensor histories. Diagnostic logging cost is
 recorded separately. Fresh paired timing avoids mixing instrumentation versions.
 Only a passing **primary AdamW** recipe can enter the unchanged independent
 confirmation gate; all six new cases must pass before architecture comparison.
-The [first primary final-tail failure](protocols/adamw_stability_20261002/first-tail-failure.md)
-has now been observed at update 104,000, with train/held-out
-90.0129%/87.9940% and failing immediate neighbors. The frozen final window
-starts at 100,000, so this recipe cannot pass persistence even if it recovers.
-Complete its remaining budget and the scheduled raw control; retain the full
-outcomes and then execute the separately frozen mod-193 task adaptation.
+The [complete primary result](protocols/adamw_stability_20261002/adamw-result.md)
+has now finished all 150,000 updates and verified its full archive: final
+train/held-out is 100%, but seven of 201 final-window observations fail,
+with worst held-out 43.9003% at 129,000. The required memorization phase
+is absent. Its observed long confirmation at 6,000 remains visible, while
+eligible persistent timing has support zero. Finish the running raw control,
+retain the full comparison, then execute the separately frozen mod-193 adaptation.
 The first complete dense archive also exposed quadratic CSV verification.
 Its [runtime execution repair](protocols/adamw_stability_20261002/csv-verification-repair.md)
 passes all 235 CPU tests and preserves frozen sources, criteria and complete
@@ -283,9 +284,11 @@ the current calibration. Timing comparisons use paired controls on this GPU.
 
 The four original raw calibrations and the midpoint learning-rate control are
 complete and negative; their full archives, curves and diagnoses are preserved.
-The current user-selected AdamW/raw AMSGradW pair is frozen and running. Finish
-both complete budgets, preserve each outcome and every dense gradient record,
-and apply the unchanged criterion to the primary AdamW recipe. Any subsequent
+The current user-selected AdamW/raw AMSGradW pair is frozen. Primary AdamW
+completed its full negative phase/persistence result; the raw control is running.
+Finish its complete budget, preserve every dense gradient record, verify the
+complete pair, and execute the user-directed frozen mod-193 AdamW adaptation.
+Any subsequent
 fraction, decay, schedule, or model intervention needs a fresh frozen plan; a
 negative result does not justify relaxing the success criterion.
 
