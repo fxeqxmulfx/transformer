@@ -350,6 +350,16 @@ Check its actual state/process before restarting. The default four-recipe CLI
 must not be used to resume this custom stage. No scientific independent
 confirmation or architecture run has started.
 
+The midpoint's first canonical held-out 99% crossing occurs at 93,250:
+train/held-out accuracy is 100%/99.0120% (46 incorrect held-out equations).
+Its [recorded prefix](protocols/amsgradw_stability_20261002/midpoint-first-target.md)
+retains all 374 canonical observations and unchanged plan/source/manuscript
+fingerprints. No required low-held-out memorization plateau occurs before
+that first crossing, so the recipe is ineligible under the frozen phase gate
+regardless of later persistence. Long joint confirmation and final-tail
+persistence are still unmeasured at that prefix. Finish the same full budget,
+then verify and review its archives before selecting another justified control.
+
 A read-only [fraction-control corpus inspection](protocols/amsgradw_stability_20261002/candidate-corpus-coverage.md)
 finds all 97 answer classes and legal operand classes in the 50%, 20%, 10%,
 and 5% pools on calibration data seed 0. Counts, oracle answers, and nested
