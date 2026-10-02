@@ -416,6 +416,21 @@ archive. It imports no PyTorch and reuses the unchanged semantic verifier.
 Use it after the first ordered-phase long confirmation, preserve exact source
 lines, and plot/review the explicitly partial result in a fresh destination.
 
+The [lower-rate confirmed phase](protocols/adamw_stability_20261002/first-long-confirmation-lower-rate.md)
+now preserves all 403 canonical / 100,500 gradient observations through the
+first twenty joint targets at 95,750–100,500. First train 99% is at 1,250;
+the longest qualifying plateau is 4,500–27,250 (92 points), and first held-out
+99% is 95,750. Observed confirmation costs are 2,765.91 training / 3,375.93
+wall seconds. The exact prefix verifies without PyTorch; all 31 core hashes,
+both launchers and original lines match. Both standalone PNG and the actual
+PDF were visually reviewed, with every point, rate/seeds and explicit partial
+scope shown. Historical quarter-split figure bytes remain unchanged. The prefix
+has only three passing tail points. Later canonical held-out 97.4813% at
+105,250 already refutes persistence, with train and EOS 100%; the validated
+later point is retained separately beside the prefix audit. Finish the full
+budget and retain all failures; independent confirmation remains closed.
+Both scientific processes remain active.
+
 The [complementary-trainer preparation](protocols/adamw_stability_20261002/complementary-preparation.md)
 also verifies seven existing AdamW CPU paths for MQAR, one/two-hop lookup,
 copy, direct/running parity and C-RASP counting. Final and selected checkpoint

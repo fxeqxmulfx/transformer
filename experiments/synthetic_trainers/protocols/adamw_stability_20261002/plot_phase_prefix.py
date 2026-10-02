@@ -41,7 +41,8 @@ def render(source, destination):
         axis.grid(alpha=.2)
         axis.legend(fontsize=8, loc="best")
     config = summary["config"]
-    figure.suptitle(f"AdamW / GPTMini, mod {config['prime']}, {config['train_fraction']:.0%} train, seeds 0/0\n"
+    figure.suptitle(f"AdamW / GPTMini, mod {config['prime']}, {config['train_fraction']:.0%} train, "
+                   f"lr {config['learning_rate']:g}, seeds {config['seed']}/{config['data_seed']}\n"
                    f"All {len(history)} canonical observations through update {verification['through_update']:,}\n"
                    "Partial calibration: final-tail persistence and independent repeatability unresolved",
                    fontsize=11)

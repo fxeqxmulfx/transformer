@@ -62,6 +62,11 @@ rejects the actual unconfirmed lower-rate stage without creating a destination.
 This NoTorch exporter is outside the frozen training/analysis source list;
 it reuses the existing unchanged semantic prefix verifier. A saved phase
 prefix never opens the full-budget or independent-confirmation gate.
+The [first confirmed phase](first-long-confirmation-lower-rate.md) is now
+observed and archived through 100,500, including 403 canonical evaluations and
+100,500 gradient records. Earlier exporter guard tests used this stage before
+that phase existed. Later held-out 97.4813% at 105,250 already refutes the
+final-window gate; preserve the valid phase and finish the whole negative budget.
 
 This is a *Convexifying Transformers*, Section 4 adaptation with explicit
 fractions, rates and stronger persistence choices. It measures fixed-length

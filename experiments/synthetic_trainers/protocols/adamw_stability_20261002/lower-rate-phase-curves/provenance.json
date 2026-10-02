@@ -1,0 +1,31 @@
+{
+  "source": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/first-long-confirmation-lower-rate",
+  "source_artifact_manifest_sha256": "41f0ada844725e70851b716e98733b06f0b6b5a6464d2ee7094733a9885bf314",
+  "renderer_sha256": "f13705c2b921ac783753f9ab828f430ffe5683f5c770bf7b40f133d719b73a06",
+  "verification": {
+    "verified": true,
+    "through_update": 100500,
+    "history_observations": 403,
+    "gradient_observations": 100500,
+    "plateau": {
+      "start": 4500,
+      "end": 27250,
+      "observations": 92
+    },
+    "first_heldout_target": 95750,
+    "long_confirmation": {
+      "onset": 95750,
+      "confirmed": 100500,
+      "training_seconds": 2765.905410835039,
+      "wall_seconds": 3375.932801064999
+    },
+    "phase_observed": true,
+    "full_budget_complete": false,
+    "stable_grokking": false
+  },
+  "matplotlib": "3.11.2",
+  "canonical_observations": 403,
+  "all_points_included": true,
+  "smoothing": false,
+  "scope": "partial_ordered_phase_history; no_persistence_or_repeatability_claim"
+}

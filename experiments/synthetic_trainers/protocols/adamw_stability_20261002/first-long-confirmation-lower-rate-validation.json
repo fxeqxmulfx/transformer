@@ -1,0 +1,70 @@
+{
+  "recorded_at_utc": "2026-10-02T20:18:44.137219+00:00",
+  "verified": true,
+  "through_update": 100500,
+  "history_observations": 403,
+  "gradient_observations": 100500,
+  "plateau": {
+    "start": 4500,
+    "end": 27250,
+    "observations": 92
+  },
+  "first_heldout_target": 95750,
+  "long_confirmation": {
+    "onset": 95750,
+    "confirmed": 100500,
+    "training_seconds": 2765.905410835039,
+    "wall_seconds": 3375.932801064999
+  },
+  "phase_observed": true,
+  "full_budget_complete": false,
+  "stable_grokking": false,
+  "offline_verifier_torch_imported": false,
+  "archive": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/first-long-confirmation-lower-rate",
+  "original_prefix_lines_match": {
+    "history.jsonl": true,
+    "gradients.jsonl": true
+  },
+  "frozen_core_files_unchanged": 31,
+  "both_pinned_launchers_unchanged": true,
+  "exporter_sha256": "b9d58f54dfd7d0e9d62be0d3127f8bd069958ee79cbf7a93ce9a4bed1fcea604",
+  "verifier_sha256": "2728f8867b21edc12ce0fdd7033f0d14cf0f962f2e389d2ba58a95801a1e6b99",
+  "figure_validation": {
+    "all_403_points_included_without_smoothing": true,
+    "png_visually_reviewed": true,
+    "pdf_header_valid": true,
+    "artifact_hashes_verified": true,
+    "source_and_current_renderer_provenance_verified": true,
+    "learning_rate_and_actual_seed_ids_shown": true,
+    "historical_quarter_phase_figure_bytes_preserved": true,
+    "pdf_visually_reviewed": true,
+    "pdf_review_method": "single-page pdftoppm raster at 90 dpi"
+  },
+  "scope": "observed_ordered_phase_prefix_before_later_tail_failure; full_budget_incomplete_and_repeatability_unestablished; persistence_refuted_by_separate_later_observation",
+  "later_observed_tail_failure_outside_prefix": {
+    "step": 105250,
+    "epochs_seen": 5539.4974093264245,
+    "training_seconds": 2886.650765542079,
+    "wall_seconds": 3524.9634832879965,
+    "last_batch_size": 512,
+    "train": {
+      "accuracy": 1.0,
+      "answer_accuracy": 1.0,
+      "EOS_accuracy": 1.0,
+      "loss": 0.00029776080061934106,
+      "answer_loss": 0.0005950656555036472,
+      "EOS_loss": 4.559456611089591e-07,
+      "examples": 9264
+    },
+    "heldout": {
+      "accuracy": 0.9748128957973518,
+      "answer_accuracy": 0.9748128957973518,
+      "EOS_accuracy": 1.0,
+      "loss": 0.04123103299495058,
+      "answer_loss": 0.0824617378726799,
+      "EOS_loss": 3.276366564673504e-07,
+      "examples": 27792
+    }
+  },
+  "later_sample_refutes_full_persistence": true
+}
