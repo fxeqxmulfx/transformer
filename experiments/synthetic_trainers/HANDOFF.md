@@ -294,6 +294,18 @@ result. The [recorded prefix](protocols/amsgradw_stability_20261002/short-lr0001
 retains all 61 canonical observations, the unchanged criterion, and corpus/
 manifest fingerprints. Finish the same 150,000-update budget before selection.
 
+The later canonical observation at update 100,000 fails the frozen final-tail
+target: train accuracy is 100%, held-out accuracy is 40.9579%, and EOS remains
+100%. Immediate held-out neighbors are 40.9149% / 40.8505%. Its prefix through
+100,000 contains the memorization plateau over 1,000–61,250 (242 observations),
+but no held-out 99% crossing or long joint confirmation. This is incomplete
+generalization, not a collapse after an earlier confirmed target. The tail
+failure prevents this recipe from passing the existing 150,000-update criterion
+even if it reaches the target later. Thus every recipe in the original grid
+is ineligible for independent confirmation. The fourth full budget, its archive,
+and the complete comparison still remain required; finish them before selecting
+a justified fresh controlled follow-up with the unchanged success criterion.
+
 A read-only [fraction-control corpus inspection](protocols/amsgradw_stability_20261002/candidate-corpus-coverage.md)
 finds all 97 answer classes and legal operand classes in the 50%, 20%, 10%,
 and 5% pools on calibration data seed 0. Counts, oracle answers, and nested
