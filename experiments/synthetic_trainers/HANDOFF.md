@@ -195,6 +195,18 @@ neighbor probes, and checkpoints are under
 `experiments/runs/amsgradw_stability_20261002/calibration/`; the driver log is
 `experiments/runs/amsgradw_stability_20261002/calibration-driver.log`.
 
+A serial archive worker is also live (PID 96589, launcher session 73894).
+It waits for all four budgets to complete, checks the unchanged frozen plan,
+sources and manuscripts, then creates the fourth individual archive and the
+complete calibration comparison at the destinations in [STABILITY.md](STABILITY.md).
+It also verifies both without PyTorch. Inspect its actual process before
+relying on the local metadata at
+`experiments/runs/amsgradw_stability_20261002/bootstrap/final-archive-worker.json`.
+After it finishes, visually inspect the new figures, review the full comparison,
+and commit the verified archives and measured handoff. If training exits before
+completion, the worker stops and the frozen trainer needs separate inspection.
+Avoid a concurrent manual archive writer for the same destinations.
+
 After a checkpointed interruption, continue the identical manifest with:
 
 ```bash
