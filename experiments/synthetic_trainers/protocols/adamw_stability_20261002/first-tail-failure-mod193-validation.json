@@ -1,0 +1,50 @@
+{
+  "recorded_at_utc": "2026-10-02T16:47:01.067427+00:00",
+  "verified": true,
+  "through_update": 102750,
+  "history_observations": 412,
+  "gradient_interval_observations": 252,
+  "full_tensor_samples": 5,
+  "first_final_tail_failure": 102750,
+  "frozen_persistence_ruled_out": true,
+  "complete_budget": false,
+  "causal_trigger_identified": false,
+  "torch_imported": false,
+  "original_prefix_and_gradient_lines_match": true,
+  "original_observations_and_full_tensor_samples_match": true,
+  "frozen_fingerprints": {
+    "checked_files": 31,
+    "all_unchanged": true
+  },
+  "offline_verifier": "verify_first_tail_failure.verify",
+  "offline_verifier_sha256": "f6d04d77cef1c8dc88f9e593e9e38aebfaa665593444d2956330622d36103cf7",
+  "negative_checks": [
+    {
+      "case": "missing_gradient",
+      "repaired_hashes": true,
+      "rejected": true,
+      "reason": "Final-tail prefix coverage or frozen budget differs"
+    },
+    {
+      "case": "wrong_mod193_tail_size",
+      "repaired_hashes": true,
+      "rejected": true,
+      "reason": "Gradient interval has an invalid norm, rate or batch"
+    },
+    {
+      "case": "negative_native_second_moment",
+      "repaired_hashes": true,
+      "summary_recomputed_to_reach_semantic_guard": true,
+      "rejected": true,
+      "reason": "Invalid or incomplete native AdamW diagnostic norms"
+    },
+    {
+      "case": "wrong_exhaustive_support",
+      "repaired_hashes": true,
+      "rejected": true,
+      "reason": "Observation lacks the exhaustive split"
+    }
+  ],
+  "artifact_manifest_sha256": "dcc2f419c881455fbffffb018100148c6b22bef47b86c87534aee8040aeff95e",
+  "scope": "first_observed_final_tail_failure_with_complete_canonical_prefix; partial_budget_and_no_causal_claim"
+}

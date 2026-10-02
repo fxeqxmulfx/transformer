@@ -278,6 +278,13 @@ is at 39,500 with held-out already 98.5320%; zero pre-target observations meet
 the required memorization condition. The recipe is phase-ineligible regardless
 of future persistence. Finish its full budget and retain the final-tail outcome;
 this prefix does not open independent confirmation.
+The [first final-window failure](protocols/adamw_stability_20261002/first-tail-failure-mod193.md)
+is now preserved at 102,750: train/held-out 95.1749%/94.6082%, with both
+immediate neighbors below target and EOS 100%. The canonical failure follows
+a full 512-example batch. Its complete 412-point prefix and 252-gradient /
+five-tensor neighborhood verify offline with semantic corruption checks.
+The recipe now fails both phase and persistence regardless of later recovery.
+Its full budget continues; preserve the complete result before the next freeze.
 At selection time, this user-directed harder-task adaptation superseded the
 earlier tentative train-fraction idea. Its historical prefix inspections
 remain partial evidence with their original labels.

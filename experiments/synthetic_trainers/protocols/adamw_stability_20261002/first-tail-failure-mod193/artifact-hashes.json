@@ -1,0 +1,10 @@
+{
+  "files": {
+    "summary.json": "5b6263249dc7e1c0ded73e22dfe00987be320122d7f15c0a244ca60efc8962ec",
+    "history.jsonl": "1735746aefbda9fe36f2e7fe205458a970964176618a5d4d214a698fda96f5b1",
+    "plan.json": "4eb535c85002f2ec8f75904163d791619323e2a85770c9eb0c597d6055138329",
+    "diagnostics.json": "b131c6ff3fc48dfc62be799c6ce9d45ae2e53dc3c3ef754c1087c232ac958308",
+    "gradients.jsonl": "402ab8129b7a0da2a0bbea578e8923f13353ad1c6e6d8f14afa0365b622715de",
+    "observations.json": "910dd96d42f8e746db75790f451fa2afe0e38c267ee28adf89fe35c1a6132259"
+  }
+}
