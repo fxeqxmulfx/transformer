@@ -14,6 +14,7 @@ Everything lives in the namespace `Transformer.FrankWolfe`.
 -/
 
 import Transformer.FrankWolfe.Section1_Models
+import Transformer.FrankWolfe.Section2_LinearBranches
 import Transformer.FrankWolfe.Section2_Derivations
 import Transformer.FrankWolfe.Section2_HullFailure
 import Transformer.FrankWolfe.Section3_NegativeDefinite
