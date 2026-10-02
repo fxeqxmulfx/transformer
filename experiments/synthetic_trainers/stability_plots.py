@@ -34,7 +34,8 @@ def render_run(report, probes, diagnostics, summary, directory, *, gradients=())
                            s=5, alpha=.5, label=label, color=color)
     axes[1, 0].set_yscale("symlog", linthresh=1e-8)
     axes[1, 0].set(ylabel="Pre-update joint gradient L2" + (" (every update)" if gradients else ""))
-    for key, color in (("parameter_l2", "#0072b2"), ("update_l2", "#d55e00"), ("maximum_l2", "#009e73")):
+    moment_key = "maximum_l2" if config["optimizer"] == "amsgradw" else "exp_avg_sq_l2"
+    for key, color in (("parameter_l2", "#0072b2"), ("update_l2", "#d55e00"), (moment_key, "#009e73")):
         selected = [p for p in metrics if p[key] > 0]
         axes[1, 1].plot([p["step"] for p in selected], [p[key] for p in selected], label=key, color=color, linewidth=1)
     axes[1, 1].set(yscale="log", ylabel="Post-update joint L2 norms")
@@ -56,8 +57,10 @@ def render_run(report, probes, diagnostics, summary, directory, *, gradients=())
         if index != 4:
             axis.legend(fontsize=8)
     kind = "confirmation" if summary["scope"].startswith("one_completed_independent_confirmation_run") else "calibration"
-    figure.suptitle(f"{summary['name']}: raw AMSGradW / GPTMini, lr={config['learning_rate']:g}, {config['batch_policy']}\n"
-                   f"Complete {config['steps']:,}-update {kind}; gray band is prospectively scored final tail", fontsize=12)
+    optimizer = {"amsgradw": "raw AMSGradW", "adamw": "AdamW"}.get(config["optimizer"], config["optimizer"])
+    figure.suptitle(f"{summary['name']}: {optimizer} / GPTMini\n"
+                   f"lr={config['learning_rate']:g}, {config['batch_policy']}; complete {config['steps']:,}-update {kind}\n"
+                   "Gray band: prospectively scored final tail", fontsize=12)
     export(figure, directory, "stability-overview")
     plt.close(figure)
 

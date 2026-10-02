@@ -32,7 +32,7 @@ def render_comparison(directory, summary, *, title=None, filename="calibration-c
             axis.set_xlabel("Updates")
         for axis in axes[:, column]:
             axis.grid(alpha=.2)
-    figure.suptitle(title or "Raw AMSGradW / unchanged GPTMini: paired calibration controls\n"
+    figure.suptitle(title or f"{summary.get('optimizer_label', 'Raw AMSGradW')} / unchanged GPTMini: paired calibration controls\n"
                    "One initialization and one common split per recipe; all complete budgets and failures", fontsize=12)
     export(figure, directory / "plots", filename)
     plt.close(figure)

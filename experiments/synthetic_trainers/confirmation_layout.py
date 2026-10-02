@@ -34,8 +34,8 @@ def selected_recipe(calibration, name):
         raise ValueError("Confirmation requires a passing recipe from a complete calibration comparison")
     manifest = json.loads((calibration / "plan.json").read_text())
     recipe = next(row for row in manifest["recipes"] if row["name"] == name)
-    if recipe["config"]["model"] != "gptmini" or recipe["config"]["optimizer"] != "amsgradw":
-        raise ValueError("Confirmation must retain raw AMSGradW and GPTMini")
+    if recipe["config"]["model"] != "gptmini" or recipe["config"]["optimizer"] not in ("amsgradw", "adamw"):
+        raise ValueError("Confirmation requires GPTMini with raw AMSGradW or AdamW")
     return manifest, recipe
 
 

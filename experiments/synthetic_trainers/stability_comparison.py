@@ -14,6 +14,16 @@ import tempfile
 from .stability_report import csv_rows, verify_archive, verify_csv, write_json
 
 
+def optimizer_metadata(manifest):
+    """Label optimizer comparisons while preserving historical raw-only reports."""
+    optimizers = list(dict.fromkeys(row["config"]["optimizer"] for row in manifest["recipes"]))
+    if optimizers == ["amsgradw"]:
+        return {}
+    labels = {"amsgradw": "raw AMSGradW", "adamw": "AdamW"}
+    return {"optimizers": optimizers,
+            "optimizer_label": " / ".join(labels.get(name, name) for name in optimizers)}
+
+
 def comparison_rows(manifest, summaries):
     rows = []
     for recipe in manifest["recipes"]:
@@ -44,7 +54,8 @@ def comparison_rows(manifest, summaries):
             "tail_minimum_heldout_accuracy": assessment["tail_minimum_heldout_accuracy"],
             "persistent_final_performance": assessment["persistent_final_performance"],
             "stable_grokking": assessment["stable_grokking"],
-            "later_heldout_failures": summary["collapse_diagnostics"]["failures_after_confirmation"]})
+            "later_heldout_failures": summary["collapse_diagnostics"]["failures_after_confirmation"],
+            **({"optimizer": config["optimizer"]} if optimizer_metadata(manifest) else {})})
     return rows
 
 
@@ -58,7 +69,8 @@ def comparison_summary(manifest, summaries):
             raise ValueError("Comparison recipe or complete history differs")
     rows = comparison_rows(manifest, summaries)
     eligible = [row["name"] for row in rows if row["stable_grokking"]]
-    return {"complete_stage": True, "planned_runs": len(planned), "completed_runs": len(planned),
+    return {**optimizer_metadata(manifest),
+            "complete_stage": True, "planned_runs": len(planned), "completed_runs": len(planned),
             "total_updates": sum(row["steps"] for row in rows),
             "total_canonical_observations": sum(summary["canonical_observations"] for summary in summaries.values()),
             "stable_grokking_calibration_recipes": eligible,
@@ -72,9 +84,13 @@ def comparison_summary(manifest, summaries):
 
 
 def markdown_report(summary):
-    lines = ["# Complete raw AMSGradW stability calibration", "",
+    optimizer = summary.get("optimizer_label", "raw AMSGradW")
+    exposure = ("CSV retains actual exposure, losses, optimizer identities, phase flags, costs and memory."
+                if "optimizer_label" in summary else
+                "The sampling control consumes more examples at equal updates. CSV retains actual exposure, losses, phase flags, costs and memory.")
+    lines = [f"# Complete {optimizer} stability calibration", "",
         "Source setting: *Convexifying Transformers*, arXiv:2211.11052v1, Section 4.",
-        "These GPTMini/raw AMSGradW experiments and stronger persistence targets are explicit adaptations.", "",
+        f"These GPTMini/{optimizer} experiments and stronger persistence targets are explicit adaptations.", "",
         f"All {summary['completed_runs']} frozen runs completed {summary['total_updates']:,} updates and "
         f"{summary['total_canonical_observations']:,} canonical observations. No failed target is omitted.", "",
         "| Recipe | Final train / held-out | Long confirmation, training s | Tail failures | Persistent tail | Stable grokking |",
@@ -87,7 +103,7 @@ def markdown_report(summary):
             f"{row['persistent_final_performance']} | {row['stable_grokking']} |")
     lines.extend(["", "Each recipe is one initialization on one common calibration split. These are not independent confirmations.",
         "Timing is measured at the first 20-observation joint target confirmation; it does not imply subsequent persistence.",
-        "The sampling control consumes more examples at equal updates. CSV retains actual exposure, losses, phase flags, costs and memory.",
+        exposure,
         "Only recipes meeting the complete phase and final-tail criterion can enter a new independent confirmation plan.",
         "Neighbor/gradient associations do not establish a cause, an internal algorithm, or causality between grokking and double descent.", "",
         "Eligible calibration recipes: " + (", ".join(summary["stable_grokking_calibration_recipes"]) or "None") + ".", "",

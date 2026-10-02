@@ -1,7 +1,7 @@
 """Describe observed collapse neighborhoods without asserting their cause.
 
 Setting: Convexifying Transformers, Section 4. The gradient/moment/cadence
-comparisons are explicit diagnostics of the raw AMSGradW GPTMini adaptation.
+comparisons are explicit diagnostics of the optimizer/GPTMini adaptations.
 """
 
 import math
@@ -11,15 +11,17 @@ from .paper_phases import diagnose
 
 def diagnostic_metrics(row):
     parameters = list(row["parameters"].values())
-    keys = ("parameter_l2", "parameter_before_l2", "gradient_l2", "update_l2", "m_l2", "v_l2", "maximum_l2")
+    raw = not parameters or "m_l2" in parameters[0]
+    keys = ("parameter_l2", "parameter_before_l2", "gradient_l2", "update_l2") + (
+        ("m_l2", "v_l2", "maximum_l2") if raw else ("exp_avg_l2", "exp_avg_sq_l2"))
     joint = {key: math.sqrt(sum(norms[key] ** 2 for norms in parameters)) for key in keys}
     temperatures = [value for values in row["temperatures"].values() for value in values["inverse_temperature"]]
     return {"step": row["step"], "batch_size": row["batch_size"], "epoch_tail": row["epoch_tail"],
             "epoch_wraps_in_batch": row["epoch_wraps_in_batch"], "learning_rate": row["learning_rate"],
             "answer_loss": row["answer_loss"], "EOS_loss": row["EOS_loss"], **joint,
             "joint_relative_update": joint["update_l2"] / joint["parameter_before_l2"] if joint["parameter_before_l2"] else None,
-            "maximum_buffer_min": min(norms["maximum_min"] for norms in parameters) if parameters else None,
-            "maximum_buffer_max": max(norms["maximum_max"] for norms in parameters) if parameters else None,
+            **({"maximum_buffer_min": min(norms["maximum_min"] for norms in parameters) if parameters else None,
+                "maximum_buffer_max": max(norms["maximum_max"] for norms in parameters) if parameters else None} if raw else {}),
             "temperature_min": min(temperatures) if temperatures else None,
             "temperature_max": max(temperatures) if temperatures else None}
 

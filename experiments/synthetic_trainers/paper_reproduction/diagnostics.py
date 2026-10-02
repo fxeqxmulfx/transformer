@@ -1,4 +1,4 @@
-"""Read-only diagnostics for raw AMSGradW collapse investigations.
+"""Read-only diagnostics for optimizer stability investigations.
 
 The Section 4 modular task in Convexifying Transformers is unchanged. These
 measurements are additional experimental diagnostics, not paper hyperparameters.
@@ -58,7 +58,7 @@ def before_update(model, output, targets):
 
 @torch.no_grad()
 def after_update(model, optimizer, before, losses, gradient_norm):
-    """Read parameter, gradient, actual update and raw moment norms per tensor."""
+    """Read parameter, gradient, actual update and stored moment norms per tensor."""
     tensors, names, keys, temperatures = [], [], [], {}
     for name, parameter in model.named_parameters():
         state = optimizer.state.get(parameter, {})
@@ -82,6 +82,9 @@ def after_update(model, optimizer, before, losses, gradient_norm):
     scalars = iter(torch.stack(tensors).cpu().tolist())
     parameters = {name: {key: next(scalars) for key in fields}
                   for name, fields in zip(names, keys)}
+    moment_scope = ("raw_buffers_without_bias_correction_for_AMSGradW; actual_parameter_updates"
+                    if any("maximum" in state for state in optimizer.state.values()) else
+                    "AdamW_exp_avg_and_exp_avg_sq_before_bias_correction; actual_parameter_updates")
     return {"gradient_l2": float(gradient_norm), "answer_loss": losses[0], "EOS_loss": losses[1],
             "parameters": parameters, "temperatures": temperatures,
-            "moment_scope": "raw_buffers_without_bias_correction_for_AMSGradW; actual_parameter_updates"}
+            "moment_scope": moment_scope}

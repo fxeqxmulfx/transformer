@@ -1,0 +1,26 @@
+{
+  "recorded_at_utc": "2026-10-02T13:17:57.832981+00:00",
+  "cpu_tests": 224,
+  "cpu_tests_passed": true,
+  "full_test_log": "/tmp/transformer-adamw-stability-tests-v2.log",
+  "final_affected_tests": 3,
+  "final_affected_tests_passed": true,
+  "final_test_log": "/tmp/transformer-adamw-stability-final-targeted.log",
+  "legacy_comparison_archives_verified_without_torch": [
+    "amsgradw_stability_calibration_20261002",
+    "amsgradw_stability_midpoint_calibration_20261002"
+  ],
+  "optimizer_semantics": "AdamW_betas_0.9_0.98_bias_correction_without_maximum; raw_AMSGradW_betas_0.9_0.999_without_bias_correction_with_maximum",
+  "native_moment_norms_independently_matched_to_checkpoint_buffers": true,
+  "negative_AdamW_calibration_gate_verified": true,
+  "all_six_real_negative_AdamW_CPU_repeats_retained": true,
+  "optimizer_change_within_confirmation_rejected": true,
+  "dense_traces_verified_for_all_cases": true,
+  "portable_AdamW_and_mixed_optimizer_archives_verified_without_torch": true,
+  "optimizer_figure_titles_and_dense_gradient_panels_visually_inspected": true,
+  "plot_smoke_paths": [
+    "/tmp/transformer-adamw-title-review-20261002/stability-overview.png",
+    "/tmp/transformer-adamw-plots-v2-20261002/comparison/plots/calibration-comparison.png"
+  ],
+  "scope": "implementation_and_orchestration_checks_only; hypothetical_passing_calibration_is_not_scientific_evidence; no_scientific_confirmation_started"
+}

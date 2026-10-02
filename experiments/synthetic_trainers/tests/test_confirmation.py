@@ -24,13 +24,15 @@ from experiments.synthetic_trainers.stability_protocol import calibration_recipe
 from experiments.synthetic_trainers.stability_report import save_run, verify_archive
 
 
-def calibration_fixture(root, *, hypothetical_passing=False):
+def calibration_fixture(root, *, hypothetical_passing=False, optimizer="amsgradw", trace_gradients=False):
     config = RunConfig(model="gptmini", optimizer="amsgradw", prime=7, train_fraction=.5,
         width=8, heads=1, layers=1, steps=8, eval_every=1, batch_size=8, device="cpu")
     criterion = PersistenceConfig(plateau_steps=1, plateau_observations=2,
                                  confirmation_observations=2, tail_steps=2)
     recipes = calibration_recipes(config)
-    plan = freeze_calibration(root / "raw", recipes, DiagnosticsConfig(1, True), criterion)
+    for recipe in recipes:
+        recipe["config"]["optimizer"] = optimizer
+    plan = freeze_calibration(root / "raw", recipes, DiagnosticsConfig(1, True, trace_gradients), criterion)
     run_stage(root / "raw", plan)
     if hypothetical_passing:
         # Hypothetical accuracy fixture tests orchestration, not a learning effect.

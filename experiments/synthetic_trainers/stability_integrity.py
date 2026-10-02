@@ -95,8 +95,11 @@ def validate_logs(report, diagnostics, probes, manifest, gradients=()):
                                 batches["examples_seen"], abs_tol=1e-7):
                 raise ValueError("Observed example exposure differs from the declared policy")
     parameter_names = set(diagnostics[0]["parameters"]) if diagnostics else set()
-    required_norms = {"parameter_l2", "parameter_before_l2", "gradient_l2", "update_l2",
-                      "m_l2", "v_l2", "maximum_l2", "maximum_min", "maximum_max"}
+    required_norms = {"parameter_l2", "parameter_before_l2", "gradient_l2", "update_l2"}
+    if config["optimizer"] == "amsgradw":
+        required_norms |= {"m_l2", "v_l2", "maximum_l2", "maximum_min", "maximum_max"}
+    else:
+        required_norms |= {"exp_avg_l2", "exp_avg_sq_l2"}
     for row in diagnostics:
         expected = expected_batches(config, row["step"])
         for key in ("batch_size", "cursor_before", "cursor_after", "epoch_tail", "epoch_wraps_in_batch"):
@@ -105,9 +108,9 @@ def validate_logs(report, diagnostics, probes, manifest, gradients=()):
         if set(row["parameters"]) != parameter_names:
             raise ValueError("Diagnostic parameter support changed")
         if not parameter_names or any(not required_norms <= norms.keys() for norms in row["parameters"].values()):
-            raise ValueError("Diagnostic raw moment or parameter norms are missing")
+            raise ValueError("Diagnostic optimizer moment or parameter norms are missing")
         for norms in row["parameters"].values():
-            if not 0 <= norms["maximum_min"] <= norms["maximum_max"]:
+            if config["optimizer"] == "amsgradw" and not 0 <= norms["maximum_min"] <= norms["maximum_max"]:
                 raise ValueError("Invalid maximum second-moment range")
         rate = config["learning_rate"]
         if config["warmup_steps"]:

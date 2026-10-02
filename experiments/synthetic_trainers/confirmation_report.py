@@ -8,7 +8,7 @@ import statistics
 import tempfile
 
 from .confirmation_layout import case_manifest, validate_plan
-from .stability_comparison import comparison_rows, hashes
+from .stability_comparison import comparison_rows, hashes, optimizer_metadata
 from .stability_report import csv_rows, verify_archive, verify_csv, write_json
 
 
@@ -30,7 +30,8 @@ def derive(plan, calibration, runs):
             raise ValueError("Confirmation run differs from the frozen recipe")
     rows = comparison_rows(plan, runs)
     successes = sum(row["stable_grokking"] for row in rows)
-    return {"complete_confirmation_budget": True, "planned_runs": plan["planned_runs"],
+    return {**optimizer_metadata(plan),
+            "complete_confirmation_budget": True, "planned_runs": plan["planned_runs"],
             "task_prime": plan["recipes"][0]["config"]["prime"],
             "completed_runs": len(rows), "model_seeds": plan["model_seeds"], "data_seeds": plan["data_seeds"],
             "total_updates": sum(row["steps"] for row in rows),
@@ -47,7 +48,8 @@ def derive(plan, calibration, runs):
 
 
 def markdown_report(summary):
-    lines = ["# Independent raw AMSGradW / GPTMini confirmation", "",
+    optimizer = summary.get("optimizer_label", "raw AMSGradW")
+    lines = [f"# Independent {optimizer} / GPTMini confirmation", "",
         f"Setting: mod-{summary['task_prime']} division, adapting *Convexifying Transformers*, Section 4.",
         f"All {summary['completed_runs']} prospectively frozen repeats completed {summary['total_updates']:,} updates.",
         f"Stable grokking: {summary['stable_grokking_runs']}/{summary['planned_runs']}. "
@@ -104,7 +106,7 @@ def assemble(directory, destination, *, render=True):
         if render:
             from .stability_comparison_plots import render_comparison
             render_comparison(output, summary, filename="confirmation-comparison", title=
-                "Raw AMSGradW / unchanged GPTMini: independent frozen confirmation\n"
+                f"{summary.get('optimizer_label', 'Raw AMSGradW')} / unchanged GPTMini: independent frozen confirmation\n"
                 "New initializations crossed with new splits; all complete budgets and failures")
         write_json(output / "artifact-hashes.json", {"files": hashes(output)})
         verify_confirmation(output)
