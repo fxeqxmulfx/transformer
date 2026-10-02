@@ -46,7 +46,11 @@ at 38. Its portable archive verifies without PyTorch. It is implementation
 evidence only, not a scientific stability or grokking result. The current
 GPU optimizer pair continues without a second GPU trainer.
 
-Freeze the new manifest before scientific training. The custom launcher
+The [new immutable manifest](larger-modulus-plan.json) was frozen at
+2026-10-02T13:42:36.938813+00:00 from source commit `6e172bb`
+before scientific training. The [freeze validation](larger-modulus-freeze-validation.json)
+records unchanged criterion, instrumentation, environment, source and local
+paper fingerprints. The custom launcher
 requires the complete verified parent mod-97 optimizer comparison before
 starting, so both original 150,000-update budgets and failures remain intact:
 

@@ -208,6 +208,33 @@ After each full result, review figures, commit the verified archive and measured
 outcome, and apply the unchanged gate. No scientific independent confirmation
 or architecture run has started.
 
+The user next requested a harder task. The separately frozen
+[mod-193 adaptation](protocols/adamw_stability_20261002/larger-modulus-protocol.md)
+changes only `prime` in the primary AdamW configuration, retaining the model
+block dimensions, 50% split, seeds, rate/decay, full 150,000-update budget,
+instrumentation and unchanged phase/persistence criterion. Its 37,056 legal
+pairs give exhaustive 18,528/18,528 splits. Vocabulary growth changes total
+parameters to 436,104 (blocks remain 393,224); short tails become 96 and
+full-budget exposure becomes 75,113,536 examples. These derived changes are
+reported explicitly, not treated as isolated arithmetic difficulty.
+The complete oracle corpus and both split class coverages are checked; a real
+38-update full-width CPU smoke and portable archive verification passed.
+
+Its [manifest](protocols/adamw_stability_20261002/larger-modulus-plan.json) was
+frozen at 2026-10-02T13:42:36.938813+00:00 from `6e172bb`.
+No scientific mod-193 training has started. The launcher requires both current
+mod-97 budgets and their complete verified comparison before starting:
+
+```bash
+.venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_larger_modulus
+```
+
+Use `--check-only` to verify the new manifest before parent completion.
+Live output will be under `experiments/runs/adamw_stability_20261002/calibration_mod193_lr001/`.
+This user-directed harder-task adaptation supersedes the earlier tentative
+train-fraction idea; no fraction intervention is selected. The historical
+prefix inspections above remain partial evidence with their original labels.
+
 The follow-up goal from the startup message is active, without subagents.
 Read [STABILITY.md](STABILITY.md) for its prospectively specified criteria,
 four paired calibration recipes, and independent-confirmation gate.

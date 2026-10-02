@@ -1,0 +1,19 @@
+{
+  "recorded_at_utc": "2026-10-02T13:42:36.946404+00:00",
+  "frozen_utc": "2026-10-02T13:42:36.938813+00:00",
+  "source_commit": "6e172bb5105cf1c1507ab0e7c6b84ef2c9cca9e7",
+  "only_changed_config_field": "prime",
+  "new_prime": 193,
+  "unchanged_criterion_and_instrumentation": true,
+  "parent_training_analysis_paper_environment_fingerprints_match": true,
+  "finite_exhaustive_corpus_and_full_width_CPU_smoke_passed": true,
+  "scientific_training_started": false,
+  "execution_gate": "both_parent_optimizer_budgets_and_complete_portable_comparison_verified_before_mod193_training",
+  "scope": "prospective_task_adaptation_freeze; no_training_result",
+  "check_only_passed": true,
+  "complete_parent_required_before_launch_verified": true,
+  "rejected_launch_exit_code": 1,
+  "rejected_launch_reason": "complete_parent_comparison_not_yet_available",
+  "no_training_state_or_history_created_by_rejected_launch": true,
+  "gate_check_recorded_at_utc": "2026-10-02T13:44:40.233832+00:00"
+}
