@@ -1,0 +1,16 @@
+{
+  "tests": {
+    "count": 215,
+    "status": "passed",
+    "seconds": 29.501,
+    "command": ".venv/bin/python -m unittest discover -s experiments/synthetic_trainers/tests"
+  },
+  "comparison": {
+    "rejects_incomplete_duplicate_or_mixed_plans": true,
+    "retains_all_failed_targets_and_missing_timing_support": true,
+    "offline_verification_after_deleting_source_and_individual_paths": true,
+    "rejects_inconsistent_csv_after_recomputed_checksums": true,
+    "png_and_pdf_smoke_rendered_and_visually_inspected": true
+  },
+  "scope": "verified_comparison_tooling; long_calibration_remains_in_progress"
+}

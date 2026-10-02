@@ -97,6 +97,27 @@ Single completed calibrations do not complete the four-run stage or certify
 independent confirmation. Neighbor categories can overlap and describe observed
 associations; they do not establish the cause of a collapse.
 
+Once all four individual archives are complete, assemble their comparison:
+
+```bash
+.venv/bin/python -m experiments.synthetic_trainers.stability_comparison \\
+  experiments/synthetic_trainers/baselines/amsgradw_stability_short_lr001_seed0_data0_20261002 \\
+  experiments/synthetic_trainers/baselines/amsgradw_stability_wrap_lr001_seed0_data0_20261002 \\
+  experiments/synthetic_trainers/baselines/amsgradw_stability_short_lr0003_seed0_data0_20261002 \\
+  experiments/synthetic_trainers/baselines/amsgradw_stability_short_lr0001_seed0_data0_20261002 \\
+  --archive experiments/synthetic_trainers/baselines/amsgradw_stability_calibration_20261002
+```
+
+`stability_comparison <combined-archive> --verify` works without PyTorch or any
+original run paths. It requires every frozen recipe exactly once and identical
+frozen plans, and retains the individual artifacts without regenerating them.
+The combined archive adds complete per-recipe curves, comparison CSV, measured
+prose, a separate confirmation-readiness flag, and checksums including the nested
+archives' manifests. No mean is taken across distinct mechanisms. Missing target
+events stay empty with support zero; early long confirmations remain visible
+alongside persistence and phase failures. Calibration does not finish independent
+confirmation even if a recipe passes its gate.
+
 ## Environment and next decisions
 
 The restored environment initially had Python 3.12.13 and PyTorch 2.7.1+cu118.

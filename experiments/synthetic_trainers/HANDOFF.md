@@ -200,9 +200,11 @@ After a checkpointed interruption, continue the identical manifest with:
   --output experiments/runs/amsgradw_stability_20261002/calibration --resume
 ```
 
-The archive/diagnostic reporting tools are now verified with 212 passing CPU
-tests, an actual rendered PNG/PDF archive, deletion of original run paths, and
-offline verification without PyTorch. Use the per-run archive commands in
+The archive/diagnostic and complete-comparison tools are now verified with 215
+passing CPU tests, actual rendered PNG/PDF archives, deletion of original run
+paths, and offline verification without PyTorch. The comparison builder requires
+all four frozen complete runs, retains failures and missing timing support, and
+rejects mixed plans. It does not imply independent confirmation. Use the per-run archive commands in
 [STABILITY.md](STABILITY.md) immediately after each full-budget result.
 
 A provisional prefix assessment through update 38,250 of `short-lr001` finds
