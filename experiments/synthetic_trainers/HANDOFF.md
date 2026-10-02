@@ -215,6 +215,15 @@ cause or exclude a longer-lasting batch-size effect. The independently frozen
 full-batch control has not yet run. Retain the full budget and final-tail test;
 this partial trajectory is not a completed calibration or successful benchmark.
 
+By update 116,250, the unchanged-rate `short-lr001` control has already failed
+the prospectively required final-tail criterion: joint target failures are
+recorded at 102,250, 107,250, and 112,250 within the final 50,000-update window.
+It also has no required low-held-out memorization plateau before first target
+crossing. Its first 20-observation joint confirmation is 52,750–57,500, costing
+1,720.56 training / 1,808.46 wall seconds. None of this ends its budget; retain
+all remaining observations and archive after update 150,000. The other three
+frozen calibrations still await their serial execution.
+
 Confirmation and architecture comparisons require separately frozen plans after
 these complete histories. Keep the active goal running, retain failures, archive
 each verified completed result, and commit logical changes during the loop.
