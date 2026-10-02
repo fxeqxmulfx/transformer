@@ -14,6 +14,18 @@ def sustained_onset(history, split, target, patience):
     return None
 
 
+def event_times(history, event):
+    """Read measured cumulative costs at the scheduled event observations."""
+    if event is None:
+        return None
+    by_step = {point["step"]: point for point in history}
+    keys = ("training_seconds", "wall_seconds")
+    if any(key not in by_step[step] for step in event.values() for key in keys):
+        return None
+    return {name: {key: by_step[step][key] for key in keys}
+            for name, step in event.items()}
+
+
 def diagnose(report, heldout_ceiling=.1):
     config, history = report["plan"]["config"], report["history"]
     target, patience = config["target"], config["patience"]
@@ -40,6 +52,8 @@ def diagnose(report, heldout_ceiling=.1):
     after = [point for point in history if heldout and point["step"] >= heldout["confirmed"]]
     final_target = history[-1]["heldout"]["accuracy"] >= target
     return {"sustained_train_fit": train, "sustained_heldout_target": heldout,
+            "time_to_sustained_train_fit": event_times(history, train),
+            "time_to_sustained_heldout_target": event_times(history, heldout),
             "lag_after_sustained_train_fit": lag,
             "memorization_plateau": plateau,
             "heldout_ceiling": heldout_ceiling, "train_target": target, "patience": patience,

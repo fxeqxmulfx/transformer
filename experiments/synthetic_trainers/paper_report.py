@@ -87,6 +87,10 @@ def modular_summary(reports, planned):
             "lag_steps": moments([row["transition"]["lag_steps"] for row in group if row["transition"]["lag_steps"] is not None]),
             "train_fit_step": moments([row["transition"]["train_fit_step"] for row in group if row["transition"]["train_fit_step"] is not None]),
             "heldout_onset_step": moments([row["transition"]["heldout_onset_step"] for row in group if row["transition"]["heldout_onset_step"] is not None]),
+            "heldout_target_onset_training_seconds": moments([phase["time_to_sustained_heldout_target"]["onset"]["training_seconds"] for phase in phases if phase["time_to_sustained_heldout_target"] is not None]),
+            "heldout_target_confirmed_training_seconds": moments([phase["time_to_sustained_heldout_target"]["confirmed"]["training_seconds"] for phase in phases if phase["time_to_sustained_heldout_target"] is not None]),
+            "heldout_target_onset_wall_seconds": moments([phase["time_to_sustained_heldout_target"]["onset"]["wall_seconds"] for phase in phases if phase["time_to_sustained_heldout_target"] is not None]),
+            "heldout_target_confirmed_wall_seconds": moments([phase["time_to_sustained_heldout_target"]["confirmed"]["wall_seconds"] for phase in phases if phase["time_to_sustained_heldout_target"] is not None]),
             "training_seconds": moments([row["training_seconds"] for row in group]),
             "heldout_accuracy": moments([row["final"]["heldout"]["accuracy"] for row in group]),
             "heldout_loss": moments([row["final"]["heldout"]["loss"] for row in group]),
@@ -122,16 +126,19 @@ def export_csv(kind, report, path):
         for row in report["runs"]:
             config = row["plan"]["config"]
             phase = diagnose(row)
+            heldout_times = phase["time_to_sustained_heldout_target"]
             rows.append({**{key: config[key] for key in ("model", "optimizer", "seed", "width", "layers", "steps")},
                          "parameters": row["plan"]["parameters"], "training_seconds": row["training_seconds"],
                          "sustained_train_fit_step": phase["sustained_train_fit"]["onset"] if phase["sustained_train_fit"] else None,
                          "lag_after_sustained_train_fit": phase["lag_after_sustained_train_fit"],
                          "plateau_then_generalization": phase["observed_plateau_then_generalization"],
                          "heldout_target_observation_fraction": phase["fraction_observations_at_target_after_confirmation"],
+                         **{f"heldout_target_{event}_{clock}": heldout_times[event][clock] if heldout_times else None
+                            for event in ("onset", "confirmed") for clock in ("training_seconds", "wall_seconds")},
                          **{key: row["transition"][key] for key in ("train_fit_step", "heldout_onset_step", "lag_steps", "delayed_generalization")},
                          **{f"final_{split}_{key}": value for split in ("train", "heldout") for key, value in row["final"][split].items()}})
     with path.open("w", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=sorted({key for row in rows for key in row}))
+        writer = csv.DictWriter(stream, fieldnames=sorted({key for row in rows for key in row}), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 

@@ -323,5 +323,9 @@ MPLCONFIGDIR=/tmp/synthetic-trainer-mpl python3 \
 For the modular campaign, replace `rff` with `modular` and use its directory.
 Archive destinations must be fresh; incomplete campaigns cannot be archived.
 CSV, full histories, source/data fingerprints, fit delays, final scores, and
-descriptive seed summaries are retained. Plotting accepts the complete archive
+descriptive seed summaries are retained. Modular reports include measured
+training/wall seconds at target onset and confirmation, with the number of
+successful runs contributing to each timing mean. Unreached targets remain
+missing, and final scores and later failures accompany the timing comparison.
+Plotting accepts the complete archive
 and exports standalone PNG/PDF figures without loading model checkpoints.

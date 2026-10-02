@@ -83,3 +83,12 @@ paper does not prescribe it. Reports retain later collapses, the fraction of
 observations at target after confirmation, and final scores. A transient fit
 or two early held-out successes alone do not establish persistent performance.
 `--data-seed` permits an independent split for confirmation after calibration.
+
+Reports record cumulative training and wall seconds at both the observed
+sustained-target onset and its confirmation. These are scheduled observations,
+without interpolation between evaluations. Training time excludes evaluation
+and checkpoint writing; wall time includes those costs. Aggregate time-to-target
+means include only runs reaching the target and report their support; failures
+remain missing rather than becoming zero cost. Final accuracy and later
+collapses must accompany timing comparisons. Historical archives retain their
+original analysis; new reports include these measurements.
