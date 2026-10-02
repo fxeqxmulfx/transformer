@@ -63,6 +63,13 @@ has now been observed at update 104,000, with train/held-out
 starts at 100,000, so this recipe cannot pass persistence even if it recovers.
 Complete its remaining budget and the scheduled raw control; retain the full
 outcomes and then execute the separately frozen mod-193 task adaptation.
+The first complete dense archive also exposed quadratic CSV verification.
+Its [runtime execution repair](protocols/adamw_stability_20261002/csv-verification-repair.md)
+passes all 235 CPU tests and preserves frozen sources, criteria and complete
+comparison semantics. Dense archives currently use its offline verification
+command; the additional runtime SHA256 and exact worker sources are retained.
+Training continues unchanged, and the queued mod-193 launcher still checks
+the original manifests and every frozen fingerprint.
 
 ```bash
 .venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_optimizer_pair

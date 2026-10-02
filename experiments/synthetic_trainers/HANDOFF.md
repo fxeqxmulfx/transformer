@@ -194,6 +194,18 @@ creates PNG/PDF archives, and verifies them with system Python. Inspect actual
 processes before restart; avoid a second archive writer. Driver output is
 `experiments/runs/adamw_stability_20261002/optimizer-pair-driver.log`;
 worker metadata is under `experiments/runs/adamw_stability_20261002/bootstrap/optimizer-pair-archive-worker.json`.
+The first full dense archive exposed a quadratic CSV column-union loop.
+The [verified runtime repair](protocols/adamw_stability_20261002/csv-verification-repair.md)
+preserves every frozen file and scientific check, while computing the identical
+columns once. All 235 CPU tests pass; original staged and final AdamW summaries
+and measurement files agree. Original non-training workers 112672/115191 were
+deliberately stopped, with terminal sessions 78057/18664 (exit 143). Replacement
+archive worker PID 117200/session 10373 and queued task worker PID 117203/session
+46645 are live. The GPU trainer PID 112572/session 92762 was not restarted.
+The adapter SHA256 and exact worker source snapshots are preserved separately;
+the mod-193 launcher's frozen checks pass through the adapter. Use the repair's
+offline command for dense archives until both frozen campaigns finish, then
+apply the identical optimization to the ordinary verifier for new plans.
 See the [launch validation](protocols/adamw_stability_20261002/launch-validation.json).
 The [early AdamW prefix](protocols/adamw_stability_20261002/first-long-confirmation.md)
 now preserves all 25 canonical and 6,000 gradient observations through update

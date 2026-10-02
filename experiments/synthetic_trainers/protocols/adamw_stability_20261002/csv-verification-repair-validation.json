@@ -1,0 +1,120 @@
+{
+  "recorded_at_utc": "2026-10-02T14:48:40.303976+00:00",
+  "reason": "original_verify_csv_recomputed_union_of_all_columns_for_each_row; quadratic_on_150000_trace_records",
+  "scope": "post_freeze_CSV_execution_repair_only; original_frozen_source_files_and_scientific_criteria_unchanged",
+  "csv_adapter_sha256": "eb712251a35f23d1daab19b35822f9428f9bd5b13ea5e1d8c9e2840d38354946",
+  "frozen_report_sha256": "30743167ae5aab7e58c7d0bdbb6b1ed8a544e9ce0aa2a6cfe8ed65ad65d68345",
+  "affected_pure_tests": {
+    "tests": 4,
+    "passed": 4,
+    "seconds": 0.917,
+    "real_150000_row_table_traversals": 2,
+    "small_real_archive_result_equal_to_original": true
+  },
+  "full_cpu_suite": {
+    "tests": 235,
+    "passed": 235,
+    "seconds": 34.481,
+    "log": "experiments/runs/adamw_stability_20261002/bootstrap/tests-csv-runtime-repair.log",
+    "log_sha256": "83e198236008dba45196d568c084cabe326d3272c37061d94e19a495d85c51b2"
+  },
+  "mod193_wrapped_launcher_check_only_passed": true,
+  "full_old_staging_and_final_archive_verification": {
+    "passed": true,
+    "torch_imported": false,
+    "summaries_identical": true,
+    "unchanged_measurement_files": [
+      "plan.json",
+      "measurements.json",
+      "summary.json",
+      "diagnostics.jsonl",
+      "probes.jsonl",
+      "gradients.jsonl",
+      "metrics.csv",
+      "neighbor-metrics.csv",
+      "diagnostic-metrics.csv",
+      "gradient-metrics.csv"
+    ],
+    "seconds_for_both_archives": 3.858447525999509,
+    "old_staging_manifest_sha256": "032054f0f360d4a4eef082707210c2ae6c81ef9618e68323b21b9292bc6b22bd",
+    "final_manifest_sha256": "fdd1fbe57e87f65984b6c934c2918e9b3d7f6d07fa2f849813d95641a7aced0f"
+  },
+  "frozen_plans": {
+    "optimizer-pair-plan.json": {
+      "checked_files": 31,
+      "all_original_fingerprints_unchanged": true
+    },
+    "larger-modulus-plan.json": {
+      "checked_files": 31,
+      "all_original_fingerprints_unchanged": true
+    }
+  },
+  "old_workers_stop": {
+    "recorded_at_utc": "2026-10-02T14:44:35.578048+00:00",
+    "reason": "quadratic_CSV_column_union_recomputed_for_every_row",
+    "workers_signalled": [
+      {
+        "pid": 115191,
+        "command": ".venv/bin/python -u experiments/runs/adamw_stability_20261002/bootstrap/queued-mod193-worker.py ",
+        "worker_sha256": "3b7d5a8b6b00a56cae8e536bc1bc214d2406667cbc4dc37afe8527c2c9657c65",
+        "children_terminated": []
+      },
+      {
+        "pid": 112672,
+        "command": ".venv/bin/python -u experiments/runs/adamw_stability_20261002/bootstrap/archive-optimizer-pair-worker.py ",
+        "worker_sha256": "5de4d88442edd5966359710ab2a5d335da92f7020d6d3f47d76c5d3aae55772c",
+        "children_terminated": []
+      }
+    ],
+    "gpu_trainer_pid": 112572,
+    "gpu_trainer_untouched": true
+  },
+  "worker_source_snapshots": {
+    "archive-optimizer-pair-worker-v2.py": {
+      "actual_source": "experiments/runs/adamw_stability_20261002/bootstrap/archive-optimizer-pair-worker-v2.py",
+      "snapshot": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/csv-repair-workers/archive-optimizer-pair-worker-v2.py",
+      "sha256": "1c275938a5f3a81adfae5507fc1c68b4be2898fe43b0d5361d0b44abf65a59a6"
+    },
+    "queued-mod193-worker-v2.py": {
+      "actual_source": "experiments/runs/adamw_stability_20261002/bootstrap/queued-mod193-worker-v2.py",
+      "snapshot": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/csv-repair-workers/queued-mod193-worker-v2.py",
+      "sha256": "0a5fe38507f34b3ec5af226f443b332c9ea2ed615ebce5ff0f6a26e3f09b1d7a"
+    }
+  },
+  "live_worker_states": {
+    "optimizer-pair-archive-worker.json": {
+      "recorded_at_utc": "2026-10-02T14:45:14.224347+00:00",
+      "pid": 117200,
+      "status": "individual_archive_ready_for_visual_review_and_commit",
+      "completed_archives": [
+        "experiments/synthetic_trainers/baselines/adamw_stability_adamw_short_lr001_seed0_data0_20261002"
+      ],
+      "torch_imported": false,
+      "worker_sha256": "1c275938a5f3a81adfae5507fc1c68b4be2898fe43b0d5361d0b44abf65a59a6",
+      "csv_runtime_adapter_sha256": "eb712251a35f23d1daab19b35822f9428f9bd5b13ea5e1d8c9e2840d38354946",
+      "csv_execution": "unchanged_table_comparison_with_columns_computed_once",
+      "recipe": "adamw-short-lr001",
+      "stable_grokking": false,
+      "tail_failures": 7,
+      "gradient_trace_observations": 150000,
+      "offline_verification_passed": true,
+      "exec_session": 10373,
+      "actual_command": ".venv/bin/python -u experiments/runs/adamw_stability_20261002/bootstrap/archive-optimizer-pair-worker-v2.py "
+    },
+    "queued-mod193-worker.json": {
+      "recorded_at_utc": "2026-10-02T14:44:55.535856+00:00",
+      "pid": 117203,
+      "status": "queued_after_complete_verified_mod97_optimizer_pair",
+      "torch_imported": false,
+      "worker_sha256": "0a5fe38507f34b3ec5af226f443b332c9ea2ed615ebce5ff0f6a26e3f09b1d7a",
+      "csv_runtime_adapter_sha256": "eb712251a35f23d1daab19b35822f9428f9bd5b13ea5e1d8c9e2840d38354946",
+      "csv_execution": "unchanged_table_comparison_with_columns_computed_once",
+      "parent_trainer_pid": 112572,
+      "parent_archive": "experiments/synthetic_trainers/baselines/adamw_stability_optimizer_pair_lr001_20261002",
+      "scientific_training_started": false,
+      "exec_session": 46645,
+      "actual_command": ".venv/bin/python -u experiments/runs/adamw_stability_20261002/bootstrap/queued-mod193-worker-v2.py "
+    }
+  },
+  "gpu_trainer_not_restarted": true
+}
