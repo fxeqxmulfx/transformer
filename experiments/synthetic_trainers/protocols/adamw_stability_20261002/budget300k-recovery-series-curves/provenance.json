@@ -1,0 +1,10 @@
+{
+  "archive": "experiments/synthetic_trainers/baselines/adamw_stability_mod193_fraction25_lr0003_budget300k_seed0_data0_20261002",
+  "measurement_sha256": "f98b4460ac27cdce645dee887a589e18548f7016363a77075783a2cf41dfbb8f",
+  "archive_artifact_manifest_sha256": "f512283373278bc38aa121dd024874cfcba3bfccd9f006bb7a1b088940c34d57",
+  "series_source_sha256": "09736cbc0009f583b7a56457cc410b3e8ef36275892f9dc44d22439ff983220a",
+  "plot_source_sha256": "d273e9bb9d3c4adf550aa116d51cda54aeaf3409e4c75951a296b4a96f7e4f16",
+  "window_steps": 10000,
+  "scope": "fixed_grid_descriptive_post_long_onset_windows; partial_width_and_incomplete_windows_excluded_from_rates_and_changes",
+  "leading_partial_window_retained": true
+}

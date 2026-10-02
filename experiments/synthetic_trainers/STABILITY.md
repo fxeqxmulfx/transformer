@@ -374,20 +374,20 @@ native checkpoint preserved, 39 source fingerprints pinned and actual launcher
 validation passed. Eight isolated negative fixtures are rejected. Additional
 whole-history recovery windows retain the interval before the new final tail.
 After manifest commit `3cf14e2`, the actual trainer PID 135520/session 64768
-and NoTorch archive worker PID 135597/session 37682 are running. Their
+and NoTorch archive worker PID 135597/session 37682 were launched. Their
 [launch receipt](protocols/adamw_stability_20261002/budget300k-launch-validation.json)
 checks all 39 sources, exact original prefixes, native extension metadata and
-real first update 150,001 with unchanged rate. Finish the whole 300,000-update
-budget before scoring persistence and opening independent confirmation.
-The 21:36:45 UTC check reaches 183,250 at 100%/100%, after a fourth sampled
-episode at 154,000 (held-out 96.1464%) and first recovery at 154,250. The new
-final window is unobserved. Additional episodes and their recovery durations
-remain measurements, even when the strict final-tail criterion eventually passes.
-At the later 22:30:09 UTC check the run reaches 285,000 at 100%/100%, with
-new final-window failures at 274,000 and 275,500. The latter is held-out
-81.7681%, recovering at the next canonical observation, 275,750. There are
-six observed post-long-onset episodes. Persistence now fails regardless of
-later recovery; the remaining budget and full negative archive are still due.
+real first update 150,001 with unchanged rate. The
+[complete result](protocols/adamw_stability_20261002/budget300k-result.md)
+now verifies all 300,000 updates, every original prefix and all 1,201 canonical
+observations. Final train/held-out is 100%/100%, but the frozen final window
+has failures at 274,000 and 275,500, minimum held-out 49.1796%. Six observed
+episodes all recover; the final sampled target span is 24,250 updates.
+Tail failures are 2/201 compared with the original 8/201, but the minimum
+accuracy is worse and whole-history onset frequency is nonmonotonic. Both
+processes are terminal with code zero, archives verify without Torch, all
+five PNG/actual PDF figures were reviewed, and the frozen persistence and
+stable-grokking gates remain false. No independent-confirmation plan is opened.
 
 The user requested sparsemax after the current run and pointed to its existing
 Lean formalization. The [CPU preparation](protocols/adamw_stability_20261002/sparsemax-preparation.md)
@@ -407,7 +407,7 @@ a fresh softmax control follows; both full budgets are frozen together before
 training. All 43 source fingerprints and the reference/proof provenance are
 checked, recovery metrics are derived from full histories, and failed timing
 support remains zero. No scientific pair manifest or normalizer run has
-started; finish/review/commit the current 300,000-update result first.
+started; commit the complete reviewed 300,000-update result before freezing it.
 The [harder-task summary](protocols/adamw_stability_20261002/harder-task-results.md)
 keeps the three complete single-case AdamW outcomes and their task/exposure
 differences together; it does not average interventions or form ineligible ratios.

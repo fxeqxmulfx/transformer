@@ -1,0 +1,6 @@
+start,stop,stop_inclusive,observations,expected_observations,complete_window,failed_observations,failure_fraction,new_episode_onsets,episode_onsets_per_10000_updates
+250000,260000,False,40,40,True,0,0.0,0,0.0
+260000,270000,False,40,40,True,0,0.0,0,0.0
+270000,280000,False,40,40,True,2,0.05,2,2.0
+280000,290000,False,40,40,True,0,0.0,0,0.0
+290000,300000,True,41,41,True,0,0.0,0,0.0

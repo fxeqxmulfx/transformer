@@ -470,28 +470,29 @@ post-onset observation and failure. The new total budget is 300,000 updates,
 with final tail 250,000–300,000 and fixed 10,000-update recovery windows across
 the whole post-generalization history. Original completed archives stay intact.
 The manifest was committed as `3cf14e2` before launch. Trainer PID 135520 /
-session 64768 and NoTorch archive worker PID 135597 / session 37682 are now
-running, as recorded in the [launch receipt](protocols/adamw_stability_20261002/budget300k-launch-validation.json).
+session 64768 and NoTorch archive worker PID 135597 / session 37682 were
+launched as recorded in the [launch receipt](protocols/adamw_stability_20261002/budget300k-launch-validation.json).
 The actual first added update is 150,001 at rate 0.0003; the first added
 canonical evaluation is 150,250. Both commands, every original prefix, the
 new child budget-extension metadata and all 39 immutable hashes match.
-The live check at 2026-10-02T21:36:45 UTC reaches 183,250 with train/held-out
-100%/100%. An additional canonical failure occurs at 154,000: train/held-out
-97.0531%/96.1464%, EOS 100%, batch 512. Both immediate neighbors fail too;
-the first sampled recovery is 154,250. This makes four post-long-confirmation
-episodes, retaining the original three and the new 250-update recovery.
-The final sampled target streak spans 154,250–183,250. The new 250,000–300,000
-tail has not started at that earlier check. The later actual check at
-2026-10-02T22:30:09 UTC reaches 285,000 with train/held-out 100%/100%, but
-two new canonical failures occur within the frozen final window, at 274,000
-and 275,500. The latter has held-out accuracy 81.7681% and first sampled
-recovery at 275,750. Six post-long-onset episodes are now observed. These
-final-window failures already rule out persistence even if the run rebounds;
-finish and retain the remaining budget. Keep all 39 sources immutable.
+The [complete 300,000-update result](protocols/adamw_stability_20261002/budget300k-result.md)
+now retains 1,201 canonical, 2,400 neighboring, 3,600 diagnostic and 300,000
+gradient observations. Final train/held-out is 100%/100%, but two of the 201
+frozen final-window points fail, at 274,000 and 275,500. Worst canonical
+held-out is 49.1796% at 274,000; the latter failure is 81.7681%. Both recover
+at the next canonical observation. Six post-long-onset episodes are observed;
+the final target streak is 275,750–300,000, spanning 24,250 updates. Tail
+failure support declines from the original 8/201 to 2/201, but the minimum
+accuracy is worse and whole-history onset rates are nonmonotonic. Persistence
+and stable-grokking eligibility remain false; independent confirmation is closed.
+Both scientific processes finish with code zero and their sessions are consumed.
+All original prefixes/nested archives and 39 source files match; verification
+without Torch and all five original PNG/actual PDF reviews are retained in
+the [receipt](protocols/adamw_stability_20261002/budget300k-result-validation.json).
 Driver output is `experiments/runs/adamw_stability_20261002/budget300k-driver.log`;
 worker metadata is `experiments/runs/adamw_stability_20261002/bootstrap/budget300k-archive-worker.json`.
-Check actual processes/state before any restart. Wait for all 300,000 updates,
-verify/review/commit full archives and metrics, then apply the unchanged gate.
+The trainer and worker are terminal; do not restart this completed run.
+Freeze the user-directed normalizer pair after committing the complete result.
 
 The next user-directed normalizer candidate is **sparsemax**, with a paired
 softmax control preserving AdamW, corpus, seeds, the total 300,000-update cap,
@@ -518,8 +519,9 @@ Its scientific order is sparsemax first, then a fresh softmax control, with
 both full 300,000-update configurations frozen before either case. The serial
 driver, per-case archive worker, recovery comparison and all 43 source
 fingerprints are ready; the scientific manifest remains unfrozen.
-Scientific sparsemax training has not started. Complete and archive the current
-run first. A user-directed exploratory pair may be measured before the all-six
+Scientific sparsemax training has not started. The preceding run and archive
+are now complete and reviewed. Commit this result, freeze/commit the new
+manifest, then start sparsemax. A user-directed exploratory pair may be measured before the all-six
 benchmark gate opens; that does not certify repeatability or an architecture
 improvement. Keep accuracy, loss, episode frequency/recovery, actual time and
 memory, and retain every failure. The six-case requirement for an improvement
