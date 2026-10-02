@@ -1,0 +1,23 @@
+{
+  "tests": {
+    "count": 208,
+    "status": "passed",
+    "seconds": 26.433,
+    "command": ".venv/bin/python -m unittest discover -s experiments/synthetic_trainers/tests"
+  },
+  "oracle_check": {
+    "variants": 37,
+    "examples_each": 128,
+    "status": "passed",
+    "command": ".venv/bin/python -m experiments.synthetic_trainers check --examples 128"
+  },
+  "gpu_smoke": {
+    "updates": 20,
+    "status": "passed",
+    "parameters": 423816,
+    "peak_cuda_allocated_bytes": 119166464,
+    "training_seconds": 0.6892458079983044
+  },
+  "torch": "2.14.0+cu126",
+  "scope": "bootstrap_checks; no_complete_stability_outcome"
+}

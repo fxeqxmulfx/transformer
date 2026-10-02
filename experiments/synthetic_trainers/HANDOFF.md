@@ -175,13 +175,34 @@ retrospectively; the old frozen successes remain unchanged. See the
 [baseline assessment](protocols/amsgradw_stability_20261002/historical-persistence.json)
 and [restored environment](protocols/amsgradw_stability_20261002/environment.json).
 
-The first stage will run four fresh, full 150,000-update calibrations with
+The four-run calibration plan was frozen at 2026-10-02 06:04:54 UTC after
+208 CPU tests passed on the upgraded environment. Sources and split fingerprints
+were rechecked before launch. The serial driver is running under process 87620
+(initial launch PID); inspect the actual process state before any restart.
+The first `short-lr001` run was observed at update 1,250 of 150,000 with a
+48-example tail batch; no calibration outcome is complete yet.
+
+All four fresh calibrations finish 150,000 updates each (600,000 total), with
 one mechanism changed at a time: unchanged learning rate 0.001, full-batch
 sampling at 0.001, and short-tail learning rates 0.0003/0.0001. All use
-initialization/data seed 0, the 50% split, and decay 0.1. Confirmation and
-architecture comparisons require separately frozen plans after these complete
-histories. Keep the active goal running, retain failures, archive each verified
-completed result, and commit logical changes during the loop.
+initialization/data seed 0, the 50% split, and decay 0.1. The immutable
+[frozen plan](protocols/amsgradw_stability_20261002/calibration-plan.json) records
+source commit `ff1d122`, all recipes, prospective targets, environment, and
+source/data/manuscript hashes. Live state, complete histories, diagnostics,
+neighbor probes, and checkpoints are under
+`experiments/runs/amsgradw_stability_20261002/calibration/`; the driver log is
+`experiments/runs/amsgradw_stability_20261002/calibration-driver.log`.
+
+After a checkpointed interruption, continue the identical manifest with:
+
+```bash
+.venv/bin/python -m experiments.synthetic_trainers.stability \
+  --output experiments/runs/amsgradw_stability_20261002/calibration --resume
+```
+
+Confirmation and architecture comparisons require separately frozen plans after
+these complete histories. Keep the active goal running, retain failures, archive
+each verified completed result, and commit logical changes during the loop.
 
 ## Proposed sequence, now being activated
 
