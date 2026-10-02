@@ -260,6 +260,14 @@ answers, none fails EOS, and both immediate neighbors also fail in every case.
 The final-tail window has not begun. This early timing and incomplete trajectory
 do not certify persistence; finish its fixed 150,000 updates.
 
+A read-only [fraction-control corpus inspection](protocols/amsgradw_stability_20261002/candidate-corpus-coverage.md)
+finds all 97 answer classes and legal operand classes in the 50%, 20%, 10%,
+and 5% pools on calibration data seed 0. Counts, oracle answers, and nested
+split fingerprints are verified. This is finite data coverage, not a learning
+result; no fraction recipe has been selected or launched. Finish the complete
+current grid before choosing any adaptation, and retain the historical 20%
+reference control's full-budget negative result.
+
 The independent-confirmation driver and portable report are prepared and tested;
 no scientific confirmation plan or run has started. See the commands in
 [STABILITY.md](STABILITY.md) and
