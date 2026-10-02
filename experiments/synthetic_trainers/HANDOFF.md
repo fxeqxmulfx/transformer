@@ -179,9 +179,10 @@ The four-run calibration plan was frozen at 2026-10-02 06:04:54 UTC after
 208 CPU tests passed on the upgraded environment. Sources and split fingerprints
 were rechecked before launch. The serial driver is running under process 87620
 (initial launch PID); inspect the actual process state before any restart.
-The first `short-lr001` run has completed and its full portable archive is
-verified. The driver has continued to `wrap-lr001`; one of four calibration
-budgets is complete. Inspect the live history for its current update.
+The first `short-lr001` and `wrap-lr001` runs have completed and their full
+portable archives are verified. The driver has continued to `short-lr0003`;
+two of four calibration budgets are complete. Inspect the live history for
+its current update.
 
 All four fresh calibrations finish 150,000 updates each (600,000 total), with
 one mechanism changed at a time: unchanged learning rate 0.001, full-batch
@@ -226,26 +227,30 @@ fail the target. All fail numeric answers, none fails EOS, and 63 remain below
 before the canonical observation and stays below it afterward. No failure is
 isolated to its canonical update or recovers at the next update. This weakens
 a one-update observation artifact explanation without identifying a cause or
-excluding a longer-lasting batch-size effect. The full-batch control is now
-running; both lower-rate controls remain queued. Finish all three complete
-budgets before selecting or rejecting a calibration recipe.
+excluding a longer-lasting batch-size effect. Finish both lower-rate controls
+before selecting or rejecting a calibration recipe.
 
-At the observed `wrap-lr001` prefix through update 29,750, its first long joint
-confirmation is 24,250–29,000, costing 854.82 training / 898.16 wall seconds
-(one initialization/split). It has no required low-held-out memorization plateau
-before the first held-out target crossing. All observed training batches contain
-512 examples. The final 50,000-update persistence window has not begun; an early
-confirmation is not a completed calibration or stable-grokking success. Continue
-the full 150,000-update budget and retain later failures.
+The completed `wrap-lr001` control also fails the prospective criterion: no
+required memorization plateau and 26/201 final-tail target failures. Its tail
+minimum is 1.9759% held-out accuracy at update 110,500; final train/held-out
+accuracy rebounds to 100%/100%. First long confirmation is 24,250–29,000,
+costing 854.82 training / 898.16 wall seconds. The full budget costs 4,530.51
+training / 4,754.69 wall seconds, with the same 119,166,464-byte peak CUDA
+allocation. All 601 canonical, 1,200 neighbor, and 1,800 diagnostic observations
+are verified and archived with standalone PNG/PDF curves. It consumes 76,800,000
+examples versus 69,840,000 for the original short-tail control at equal updates.
+See the [measured result](protocols/amsgradw_stability_20261002/wrap-lr001-result.md)
+and [portable archive](baselines/amsgradw_stability_wrap_lr001_seed0_data0_20261002).
 
-Through update 75,250, the full-batch control has ten canonical held-out target
-failures after legacy confirmation at 24,500. All ten fail numeric answers,
-none fails EOS, and both immediate neighbors also fail in all ten cases.
-Full 512-example batches therefore also exhibit post-confirmation instability;
-this does not identify its cause. By update 110,750, joint target failures at
-103,750, 110,500, and 110,750 also violate the prospectively required final-tail
-criterion. Keep the full budget and archive all remaining observations; both
-lower-rate calibrations remain queued.
+After legacy confirmation at 24,500, the wrap control has 40 canonical held-out
+target failures. All fail numeric answers, none fails EOS; 37 stay below target
+at both immediate neighbors, two are isolated at the canonical observation,
+and three recover by the next update. Categories can overlap. All batches
+contain 512 examples, so post-confirmation instability also occurs with full
+batches; its cause remains unresolved. An earlier long target streak in this
+single paired calibration does not certify persistence or a repeatable speedup.
+Both completed controls fail stable grokking. The `short-lr0003` control is now
+running, and `short-lr0001` remains queued; retain both complete budgets.
 
 The independent-confirmation driver and portable report are prepared and tested;
 no scientific confirmation plan or run has started. See the commands in
