@@ -87,15 +87,18 @@ failure as well as early success. The frozen manifest resumes with:
   --seeds 1 2 3 --steps 150000 --resume
 ```
 
-Four of nine runs are complete. All reference/AdamW seeds have a measured
+Five of nine runs are complete. All reference/AdamW seeds have a measured
 memorization plateau followed by generalization and 100% final train/held-out
 accuracy. The lags are 34,000, 37,250, and 61,500 updates, with complete
 [per-seed archives](STUDIES.md#independent-modular-confirmation-in-progress).
 Later collapses and earlier-than-paper timing remain explicit. The
 [first GPTMini/AdamW run](baselines/mod97_fraction50_wd01_confirmation_gptmini_adamw_seed1_20261002/summary.json)
 also completed the full budget with a 39,500-update lag, 100% final train/held-out
-accuracy, and the restricted epoch-error double-descent shape. GPTMini/AdamW
-seed 2 is now training. Full-budget results for the remaining five recipes are
+accuracy, and the restricted epoch-error double-descent shape. The
+[second GPTMini/AdamW run](baselines/mod97_fraction50_wd01_confirmation_gptmini_adamw_seed2_20261002/summary.json)
+ends at 100% on both splits after early generalization, without a low held-out
+memorization plateau. GPTMini/AdamW seed 3 is now training. Full-budget results
+for the remaining four recipes are
 required before judging the complete campaign or the requested raw AMSGradW
 adaptation.
 

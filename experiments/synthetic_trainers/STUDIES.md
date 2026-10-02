@@ -419,9 +419,22 @@ percentage points and recovery is 93.15. This run shows finite error
 double descent together with the memorization-then-generalization diagnostic. The
 synthetic adaptation and post hoc selection rule are explicit; coexistence
 does not identify causality, and one seed does not establish repeatability.
-Four of nine confirmation recipes are complete. The remaining GPTMini/AdamW
-seeds and all raw AMSGradW controls remain required before comparing the
-requested combination or declaring the campaign complete.
+
+GPTMini/AdamW seed 2 completed the same full budget with 100% final
+train/held-out accuracy. Sustained train fit starts at 1,000 and held-out onset
+at 1,250, confirmed at 1,500: a 250-update lag and 15.13 training / 15.44 wall
+seconds to confirmation. There is no consecutive low held-out memorization
+plateau and no restricted pre-generalization error double-descent shape.
+This is rapid generalization, rather than the prolonged sequence of seed 1.
+After confirmation, 97.98% of 595 observations meet the target; the worst
+held-out accuracy is 27.26%. Full-run costs are 1,515.02 / 1,543.90 seconds.
+The [complete second GPTMini archive](baselines/mod97_fraction50_wd01_confirmation_gptmini_adamw_seed2_20261002/measurements.json)
+and [curves](baselines/mod97_fraction50_wd01_confirmation_gptmini_adamw_seed2_20261002/plots/modular-generalization.png)
+retain all later collapses. The large seed dependence must accompany any
+time-to-target comparison: seed 1 takes 504.44 training seconds, while seed 2
+takes 15.13. Five of nine recipes are complete; GPTMini/AdamW seed 3 and all
+raw AMSGradW controls remain required before comparing the requested
+combination or declaring the campaign complete.
 
 ## Double descent is a separate observation
 
