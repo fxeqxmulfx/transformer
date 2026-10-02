@@ -1,0 +1,74 @@
+{
+  "status": "complete",
+  "config": {
+    "model": "gptmini",
+    "optimizer": "adamw",
+    "prime": 97,
+    "train_fraction": 0.5,
+    "data_seed": 1,
+    "seed": 3,
+    "width": 128,
+    "layers": 2,
+    "heads": 4,
+    "steps": 150000,
+    "batch_size": 512,
+    "eval_every": 250,
+    "learning_rate": 0.001,
+    "weight_decay": 0.1,
+    "warmup_steps": 10,
+    "target": 0.99,
+    "patience": 2,
+    "device": "cuda"
+  },
+  "corpus": {
+    "prime": 97,
+    "domain_size": 9312,
+    "train_examples": 4656,
+    "heldout_examples": 4656,
+    "train_fraction": 0.5,
+    "data_seed": 1,
+    "vocab_size": 239,
+    "train_fingerprint": "ee3506fe908abba46d259aa0f889acf6a0aa3fc5040ab62f46d966216ff2aa62",
+    "heldout_fingerprint": "b69fde22ceee4d5bc3c56298a91eacb9548d0851b74c1108d3faf1ebe92ff412",
+    "split_policy": "exhaustive_disjoint_two_way_author_protocol",
+    "prompt_tokens": 5,
+    "supervised_targets": 2,
+    "scope": "all_unseen_operand_pairs_in_fixed_prime_field; no_length_OOD"
+  },
+  "parameters": 423816,
+  "dtype": "float32",
+  "torch": "2.14.0+cu130",
+  "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+  "source_hashes": {
+    "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/paper_reproduction/__init__.py": "d03f895c1e2a50aa167e24d1e42a7d7c9e1b13b7ef284dc701287b023b05a5ae",
+    "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/paper_reproduction/fashion_data.py": "0d7b8037a34eafdb1ea9db4267959ca02e57f2dc4f328ff582f406c6001f37a2",
+    "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/paper_reproduction/grokking.py": "d03b8b01ad2d139851ae721daae8d834f9ce74755914b1e1f5b03b74af5841cd",
+    "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/paper_reproduction/modular_data.py": "6f0c32a923b466fac7fb2678d0bc9e3af9517d4edf720631609a0cf957601d79",
+    "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/paper_reproduction/random_features.py": "ae93bf75f2aff03e0c8c7f41da8c146763a195b1d7ed66cc68b1919a87bfdacc",
+    "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/paper_reproduction/reference_transformer.py": "f31ab6d7998a42f8e459b74f2cc0ed66be55f4dfcc036c857ecd9a1bdf8e9f11",
+    "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/paper_reproduction/rff_experiment.py": "4e7b182331261b546096af48bd873a590faa7daf06f9a6780c7eb26aee71ab5c",
+    "experiments/gpt_mini.py": "7df779bcdc019a6054ed7a6b93469b821b8dec9fc96d84a1420ec387d28f5ee4",
+    "experiments/optimizer_benchmark/common.py": "b3d57ccafe3350631acc31ac000d3b55627d2ed8c4c87b1c30173cfe66fa834d",
+    "experiments/optimizer_benchmark/coordinate.py": "4446687f796f85090acb7ac37834f5c7e31a11f34912cc08ffa28c81683dc85f"
+  },
+  "source_commit": "3d64b1d8c1d595dd8ebdb7771998823f1b14c7b3",
+  "source_section": "papers/arXiv-2211.11052v1/arxiv.tex, Section 4, mod-97 experiments",
+  "optimizer": {
+    "name": "adamw",
+    "betas": [
+      0.9,
+      0.98
+    ],
+    "epsilon": 1e-08,
+    "decay_scope": "all_trainable_parameters",
+    "bias_correction": true,
+    "gradient_clipping": null
+  },
+  "deviations": [
+    "fixed_full_budget_instead_of_test_target_stopping",
+    "separate_batch_shuffle_rng",
+    "exact_paper_train_fraction_and_regularization_not_disclosed_in_local_manuscript"
+  ],
+  "scope": "explicit_model/optimizer_adaptation",
+  "budget_extensions": []
+}

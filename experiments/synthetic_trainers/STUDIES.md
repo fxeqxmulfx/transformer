@@ -432,9 +432,30 @@ The [complete second GPTMini archive](baselines/mod97_fraction50_wd01_confirmati
 and [curves](baselines/mod97_fraction50_wd01_confirmation_gptmini_adamw_seed2_20261002/plots/modular-generalization.png)
 retain all later collapses. The large seed dependence must accompany any
 time-to-target comparison: seed 1 takes 504.44 training seconds, while seed 2
-takes 15.13. Five of nine recipes are complete; GPTMini/AdamW seed 3 and all
-raw AMSGradW controls remain required before comparing the requested
-combination or declaring the campaign complete.
+takes 15.13.
+
+GPTMini/AdamW seed 3 completed the full budget with 99.87% train / 99.57%
+held-out final accuracy (6 and 20 incorrect equations, respectively). Train
+fit starts at 500, held-out onset at 1,000, and confirmation at 1,250 costs
+12.64 training / 12.90 wall seconds. The 500-update gap has no low held-out
+memorization plateau or restricted epoch-error double-descent shape. After
+confirmation, 97.32% of 596 observations meet the target; worst held-out
+accuracy is 88.25%. Full-run costs are 1,518.54 / 1,547.43 seconds. The
+[complete third GPTMini archive](baselines/mod97_fraction50_wd01_confirmation_gptmini_adamw_seed3_20261002/measurements.json)
+and [curves](baselines/mod97_fraction50_wd01_confirmation_gptmini_adamw_seed3_20261002/plots/modular-generalization.png)
+retain the final errors and all earlier observations.
+
+All three GPTMini/AdamW seeds meet the frozen 99% final target, with mean
+held-out accuracy 99.8568±0.2480%. Only 1/3 has the prolonged memorization
+sequence and restricted epoch-error shape; 2/3 generalize early. Mean
+confirmation time is 177.40±283.23 training / 180.82±288.64 wall seconds,
+compared with 498.55±166.87 / 506.84±169.07 for the reference. The observed
+ratio of mean training costs is about 2.81, with large per-seed variation;
+these are sample SD, not confidence intervals or evidence of universal speedup.
+Architecture, parameter count, and initialization differ as documented, so
+this comparison does not isolate the cause. Six of nine recipes are complete;
+the three GPTMini/raw AMSGradW runs remain required before comparing the
+requested optimizer or declaring the campaign complete.
 
 ## Double descent is a separate observation
 

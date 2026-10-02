@@ -87,7 +87,7 @@ failure as well as early success. The frozen manifest resumes with:
   --seeds 1 2 3 --steps 150000 --resume
 ```
 
-Five of nine runs are complete. All reference/AdamW seeds have a measured
+Six of nine runs are complete. All reference/AdamW seeds have a measured
 memorization plateau followed by generalization and 100% final train/held-out
 accuracy. The lags are 34,000, 37,250, and 61,500 updates, with complete
 [per-seed archives](STUDIES.md#independent-modular-confirmation-in-progress).
@@ -97,10 +97,15 @@ also completed the full budget with a 39,500-update lag, 100% final train/held-o
 accuracy, and the restricted epoch-error double-descent shape. The
 [second GPTMini/AdamW run](baselines/mod97_fraction50_wd01_confirmation_gptmini_adamw_seed2_20261002/summary.json)
 ends at 100% on both splits after early generalization, without a low held-out
-memorization plateau. GPTMini/AdamW seed 3 is now training. Full-budget results
-for the remaining four recipes are
-required before judging the complete campaign or the requested raw AMSGradW
-adaptation.
+memorization plateau. The
+[third GPTMini/AdamW run](baselines/mod97_fraction50_wd01_confirmation_gptmini_adamw_seed3_20261002/summary.json)
+also generalizes early and ends at 99.57% held-out. All three reach the frozen
+99% final target, but only one has the prolonged phase sequence and restricted
+epoch-error shape. Mean confirmation time is 177±283 training seconds versus
+499±167 for the reference; per-seed variation and architecture/initialization
+differences accompany this descriptive comparison. Raw AMSGradW seed 1 is now
+training. Full-budget results for its three seeds are required before judging
+the complete campaign or the requested optimizer adaptation.
 
 Freeze the data, targets, evaluation cadence, grid, and budget before each
 confirmation experiment. Separate exploratory calibration from repetitions,
