@@ -1,0 +1,110 @@
+{
+  "recorded_at_utc": "2026-10-02T16:03:21.764940+00:00",
+  "archive": "experiments/synthetic_trainers/baselines/adamw_stability_raw_amsgradw_short_lr001_seed0_data0_20261002",
+  "name": "amsgradw-short-lr001",
+  "counts": {
+    "canonical_observations": 601,
+    "neighbor_observations": 1200,
+    "diagnostic_observations": 1800,
+    "gradient_trace_observations": 150000,
+    "final_tail_observations": 201,
+    "final_tail_failures": 10
+  },
+  "original_plan_and_measurement_bytes_match": true,
+  "original_dense_and_sampled_log_bytes_match": true,
+  "original_checkpoint_sha256_matches": true,
+  "comparison_nested_files_byte_identical": true,
+  "timing_outcome": {
+    "complete_budget": true,
+    "phase_label": "does_not_meet_complete_persistent_target",
+    "memorization_plateau": null,
+    "persistent_final_performance": false,
+    "stable_grokking": false,
+    "tail_failures": 10,
+    "observed_target_training_seconds": 1595.8051482094088,
+    "observed_target_wall_seconds": 1692.865818237995,
+    "eligible_target_training_seconds": null,
+    "eligible_target_wall_seconds": null,
+    "eligible_timing_support": 0,
+    "timing_scope": "first_long_joint_confirmation_with_complete_final_tail; no_between_sample_or_beyond_budget_guarantee"
+  },
+  "artifact_manifest_sha256": "b4e3a0198f9f9e417351402472a1d5b55af02de9bfefcc04d8feca03e7c52e0a",
+  "complete_budget": 150000,
+  "offline_verification_passed": true,
+  "torch_imported": false,
+  "frozen_fingerprints": {
+    "checked_files": 31,
+    "all_unchanged": true,
+    "launcher_unchanged": true
+  },
+  "assessment": {
+    "criterion": {
+      "target": 0.99,
+      "heldout_ceiling": 0.1,
+      "plateau_steps": 1000,
+      "plateau_observations": 5,
+      "confirmation_observations": 20,
+      "tail_steps": 50000
+    },
+    "complete_canonical_history": true,
+    "plateau": null,
+    "long_confirmation": {
+      "onset": 52750,
+      "confirmed": 57500,
+      "training_seconds": 1595.8051482094088,
+      "wall_seconds": 1692.865818237995
+    },
+    "tail_start_step": 100000,
+    "tail_observations": 201,
+    "tail_failures": [
+      102250,
+      107250,
+      112250,
+      117250,
+      123000,
+      128000,
+      132500,
+      137750,
+      143750,
+      148500
+    ],
+    "tail_minimum_heldout_accuracy": 0.5814003436426117,
+    "persistent_final_performance": false,
+    "stable_grokking": false,
+    "scope": "finite_scheduled_observations; no_guarantee_between_observations_or_beyond_budget"
+  },
+  "exposure": 69840000,
+  "parameters": 423816,
+  "costs": {
+    "training_seconds": 4256.08183495346,
+    "wall_seconds": 4511.303003200999,
+    "diagnostic_seconds": 41.616588138575025,
+    "peak_cuda_allocated_bytes": 119166464,
+    "peak_cuda_reserved_bytes": 146800640
+  },
+  "collapse_counts": {
+    "confirmed_step": 6000,
+    "failures_after_confirmation": 64,
+    "numeric_answer_failures": 64,
+    "EOS_failures": 0,
+    "isolated_at_canonical_observation": 0,
+    "still_below_target_both_neighbors": 63,
+    "recovered_by_next_update": 0,
+    "missing_neighbor_support": 0,
+    "scope": "observed_immediate_neighbors_of_canonical_failures_after_legacy_confirmation; categories_may_overlap; no_causal_claim"
+  },
+  "gradient_trace": {
+    "observations": 150000,
+    "maximum_gradient_l2": 56.1920280456543,
+    "maximum_step": 74350,
+    "maximum_batch_size": 48,
+    "scope": "every_pre_update_gradient_norm; no_causal_claim"
+  },
+  "figures_inspected": [
+    "plots/stability-overview.png",
+    "plots/collapse-neighbors.png"
+  ],
+  "standalone_png_pdf_pairs_present": true,
+  "csv_runtime_adapter_sha256": "eb712251a35f23d1daab19b35822f9428f9bd5b13ea5e1d8c9e2840d38354946",
+  "scope": "one_complete_exploratory_raw_AMSGradW_control; negative_phase_and_persistence; not_independent_confirmation_or_architecture_success"
+}
