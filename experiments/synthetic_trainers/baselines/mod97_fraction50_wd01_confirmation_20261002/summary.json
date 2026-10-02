@@ -1,0 +1,864 @@
+{
+  "complete": true,
+  "completed_runs": 9,
+  "planned_runs": 9,
+  "aggregates": [
+    {
+      "model": "gptmini",
+      "optimizer": "adamw",
+      "runs": 3,
+      "confirmed_delayed_runs": 3,
+      "final_heldout_target_runs": 3,
+      "lag_steps": {
+        "mean": 13416.666666666666,
+        "std": 22589.175136187096,
+        "support": 3
+      },
+      "train_fit_step": {
+        "mean": 3916.6666666666665,
+        "std": 5490.522136676377,
+        "support": 3
+      },
+      "heldout_onset_step": {
+        "mean": 17333.333333333332,
+        "std": 28073.935123764415,
+        "support": 3
+      },
+      "heldout_target_onset_training_seconds": {
+        "mean": 174.87992251067772,
+        "std": 283.2271175072865,
+        "support": 3
+      },
+      "heldout_target_confirmed_training_seconds": {
+        "mean": 177.4015284410125,
+        "std": 283.22501823973323,
+        "support": 3
+      },
+      "heldout_target_onset_wall_seconds": {
+        "mean": 178.24751766533396,
+        "std": 288.6421230724321,
+        "support": 3
+      },
+      "heldout_target_confirmed_wall_seconds": {
+        "mean": 180.81665301533454,
+        "std": 288.63992097634207,
+        "support": 3
+      },
+      "training_seconds": {
+        "mean": 1515.9981666059514,
+        "std": 2.220468209540526,
+        "support": 3
+      },
+      "heldout_accuracy": {
+        "mean": 0.9985681557846506,
+        "std": 0.002480026929508693,
+        "support": 3
+      },
+      "heldout_loss": {
+        "mean": 0.002594424580203609,
+        "std": 0.004493561230435041,
+        "support": 3
+      },
+      "plateau_then_generalization_runs": 1,
+      "epoch_error_double_descent_runs": 1,
+      "both_epoch_error_double_descent_and_grokking_runs": 1,
+      "lag_after_sustained_train_fit": {
+        "mean": 13416.666666666666,
+        "std": 22589.175136187096,
+        "support": 3
+      },
+      "phase_diagnostics": [
+        {
+          "seed": 1,
+          "sustained_train_fit": {
+            "onset": 10250,
+            "confirmed": 10500
+          },
+          "sustained_heldout_target": {
+            "onset": 49750,
+            "confirmed": 50000
+          },
+          "time_to_sustained_train_fit": {
+            "onset": {
+              "training_seconds": 103.45663797602174,
+              "wall_seconds": 105.51374547698651
+            },
+            "confirmed": {
+              "training_seconds": 105.9651834040269,
+              "wall_seconds": 108.06957153799885
+            }
+          },
+          "time_to_sustained_heldout_target": {
+            "onset": {
+              "training_seconds": 501.91926128501655,
+              "wall_seconds": 511.5395043669996
+            },
+            "confirmed": {
+              "training_seconds": 504.4384370560292,
+              "wall_seconds": 514.1060905019986
+            }
+          },
+          "lag_after_sustained_train_fit": 39500,
+          "memorization_plateau": {
+            "start_step": 21750,
+            "end_step": 28500,
+            "span_steps": 6750,
+            "observations": 28,
+            "minimum_train_accuracy": 0.998926116838488,
+            "maximum_heldout_accuracy": 0.09664948453608248
+          },
+          "heldout_ceiling": 0.1,
+          "train_target": 0.99,
+          "patience": 2,
+          "fit_to_heldout_onset_ratio": 4.853658536585366,
+          "observed_plateau_then_generalization": true,
+          "epoch_error_curve_before_generalization": {
+            "initial": {
+              "step": 0,
+              "error": 1.0
+            },
+            "first_minimum": {
+              "step": 2000,
+              "error": 0.23045532646048106
+            },
+            "peak": {
+              "step": 28250,
+              "error": 0.9314862542955327
+            },
+            "final": {
+              "step": 150000,
+              "error": 0.0
+            },
+            "first_descent": 0.7695446735395189,
+            "peak_rise": 0.7010309278350516,
+            "second_descent": 0.9314862542955327,
+            "margin": 0.02,
+            "full_error_double_descent": true,
+            "selection": "minimum_before_sustained_train_fit; peak_while_train_fitted_before_heldout_target; final_observation",
+            "scope": "posthoc_synthetic_epoch_error_description; no_CIFAR_numerical_reproduction_or_causal_claim"
+          },
+          "both_epoch_error_double_descent_and_grokking": true,
+          "final_heldout_target": true,
+          "observations_after_confirmation": 401,
+          "fraction_observations_at_target_after_confirmation": 0.972568578553616,
+          "minimum_heldout_accuracy_after_confirmation": 0.4639175257731959,
+          "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+        },
+        {
+          "seed": 2,
+          "sustained_train_fit": {
+            "onset": 1000,
+            "confirmed": 1250
+          },
+          "sustained_heldout_target": {
+            "onset": 1250,
+            "confirmed": 1500
+          },
+          "time_to_sustained_train_fit": {
+            "onset": {
+              "training_seconds": 10.084635384002468,
+              "wall_seconds": 10.302335075000883
+            },
+            "confirmed": {
+              "training_seconds": 12.606552452998585,
+              "wall_seconds": 12.871922717997222
+            }
+          },
+          "time_to_sustained_heldout_target": {
+            "onset": {
+              "training_seconds": 12.606552452998585,
+              "wall_seconds": 12.871922717997222
+            },
+            "confirmed": {
+              "training_seconds": 15.130575454997597,
+              "wall_seconds": 15.443597000994487
+            }
+          },
+          "lag_after_sustained_train_fit": 250,
+          "memorization_plateau": null,
+          "heldout_ceiling": 0.1,
+          "train_target": 0.99,
+          "patience": 2,
+          "fit_to_heldout_onset_ratio": 1.25,
+          "observed_plateau_then_generalization": false,
+          "epoch_error_curve_before_generalization": {
+            "initial": {
+              "step": 0,
+              "error": 1.0
+            },
+            "first_minimum": {
+              "step": 750,
+              "error": 0.7087628865979381
+            },
+            "peak": {
+              "step": 1000,
+              "error": 0.07001718213058417
+            },
+            "final": {
+              "step": 150000,
+              "error": 0.0
+            },
+            "first_descent": 0.29123711340206193,
+            "peak_rise": -0.6387457044673539,
+            "second_descent": 0.07001718213058417,
+            "margin": 0.02,
+            "full_error_double_descent": false,
+            "selection": "minimum_before_sustained_train_fit; peak_while_train_fitted_before_heldout_target; final_observation",
+            "scope": "posthoc_synthetic_epoch_error_description; no_CIFAR_numerical_reproduction_or_causal_claim"
+          },
+          "both_epoch_error_double_descent_and_grokking": false,
+          "final_heldout_target": true,
+          "observations_after_confirmation": 595,
+          "fraction_observations_at_target_after_confirmation": 0.9798319327731092,
+          "minimum_heldout_accuracy_after_confirmation": 0.27255154639175255,
+          "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+        },
+        {
+          "seed": 3,
+          "sustained_train_fit": {
+            "onset": 500,
+            "confirmed": 750
+          },
+          "sustained_heldout_target": {
+            "onset": 1000,
+            "confirmed": 1250
+          },
+          "time_to_sustained_train_fit": {
+            "onset": {
+              "training_seconds": 5.063985207016231,
+              "wall_seconds": 5.186050407006405
+            },
+            "confirmed": {
+              "training_seconds": 7.590733027012902,
+              "wall_seconds": 7.7604235550097656
+            }
+          },
+          "time_to_sustained_heldout_target": {
+            "onset": {
+              "training_seconds": 10.113953794018016,
+              "wall_seconds": 10.331125911005074
+            },
+            "confirmed": {
+              "training_seconds": 12.63557281201065,
+              "wall_seconds": 12.900271543010604
+            }
+          },
+          "lag_after_sustained_train_fit": 500,
+          "memorization_plateau": null,
+          "heldout_ceiling": 0.1,
+          "train_target": 0.99,
+          "patience": 2,
+          "fit_to_heldout_onset_ratio": 2.0,
+          "observed_plateau_then_generalization": false,
+          "epoch_error_curve_before_generalization": {
+            "initial": {
+              "step": 0,
+              "error": 1.0
+            },
+            "first_minimum": {
+              "step": 250,
+              "error": 0.9836769759450171
+            },
+            "peak": {
+              "step": 500,
+              "error": 0.23367697594501713
+            },
+            "final": {
+              "step": 150000,
+              "error": 0.004295532646048095
+            },
+            "first_descent": 0.01632302405498287,
+            "peak_rise": -0.75,
+            "second_descent": 0.22938144329896903,
+            "margin": 0.02,
+            "full_error_double_descent": false,
+            "selection": "minimum_before_sustained_train_fit; peak_while_train_fitted_before_heldout_target; final_observation",
+            "scope": "posthoc_synthetic_epoch_error_description; no_CIFAR_numerical_reproduction_or_causal_claim"
+          },
+          "both_epoch_error_double_descent_and_grokking": false,
+          "final_heldout_target": true,
+          "observations_after_confirmation": 596,
+          "fraction_observations_at_target_after_confirmation": 0.9731543624161074,
+          "minimum_heldout_accuracy_after_confirmation": 0.8825171821305842,
+          "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+        }
+      ]
+    },
+    {
+      "model": "gptmini",
+      "optimizer": "amsgradw",
+      "runs": 3,
+      "confirmed_delayed_runs": 3,
+      "final_heldout_target_runs": 2,
+      "lag_steps": {
+        "mean": 29250,
+        "std": 9762.812094883318,
+        "support": 3
+      },
+      "train_fit_step": {
+        "mean": 5166.666666666667,
+        "std": 2254.624876411447,
+        "support": 3
+      },
+      "heldout_onset_step": {
+        "mean": 34416.666666666664,
+        "std": 11635.971525116987,
+        "support": 3
+      },
+      "heldout_target_onset_training_seconds": {
+        "mean": 371.85617331025423,
+        "std": 125.70135276595065,
+        "support": 3
+      },
+      "heldout_target_confirmed_training_seconds": {
+        "mean": 374.55956607859116,
+        "std": 125.70900798474237,
+        "support": 3
+      },
+      "heldout_target_onset_wall_seconds": {
+        "mean": 378.4876324133268,
+        "std": 127.94431136627423,
+        "support": 3
+      },
+      "heldout_target_confirmed_wall_seconds": {
+        "mean": 381.23849787467043,
+        "std": 127.95201952670982,
+        "support": 3
+      },
+      "training_seconds": {
+        "mean": 1620.32047488099,
+        "std": 0.09631196862462403,
+        "support": 3
+      },
+      "heldout_accuracy": {
+        "mean": 0.9917668957617412,
+        "std": 0.01426015484467505,
+        "support": 3
+      },
+      "heldout_loss": {
+        "mean": 0.017517459180893084,
+        "std": 0.016952150867331928,
+        "support": 3
+      },
+      "plateau_then_generalization_runs": 0,
+      "epoch_error_double_descent_runs": 3,
+      "both_epoch_error_double_descent_and_grokking_runs": 0,
+      "lag_after_sustained_train_fit": {
+        "mean": 29250,
+        "std": 9762.812094883318,
+        "support": 3
+      },
+      "phase_diagnostics": [
+        {
+          "seed": 1,
+          "sustained_train_fit": {
+            "onset": 3000,
+            "confirmed": 3250
+          },
+          "sustained_heldout_target": {
+            "onset": 21000,
+            "confirmed": 21250
+          },
+          "time_to_sustained_train_fit": {
+            "onset": {
+              "training_seconds": 32.44767483504256,
+              "wall_seconds": 33.04251878900686
+            },
+            "confirmed": {
+              "training_seconds": 35.137808076047804,
+              "wall_seconds": 35.78004407798289
+            }
+          },
+          "time_to_sustained_heldout_target": {
+            "onset": {
+              "training_seconds": 226.9213520080957,
+              "wall_seconds": 230.9663877589919
+            },
+            "confirmed": {
+              "training_seconds": 229.61586955210078,
+              "wall_seconds": 233.7083103680052
+            }
+          },
+          "lag_after_sustained_train_fit": 18000,
+          "memorization_plateau": null,
+          "heldout_ceiling": 0.1,
+          "train_target": 0.99,
+          "patience": 2,
+          "fit_to_heldout_onset_ratio": 7.0,
+          "observed_plateau_then_generalization": false,
+          "epoch_error_curve_before_generalization": {
+            "initial": {
+              "step": 0,
+              "error": 1.0
+            },
+            "first_minimum": {
+              "step": 1250,
+              "error": 0.5966494845360825
+            },
+            "peak": {
+              "step": 3000,
+              "error": 0.7018900343642611
+            },
+            "final": {
+              "step": 150000,
+              "error": 0.0
+            },
+            "first_descent": 0.40335051546391754,
+            "peak_rise": 0.10524054982817865,
+            "second_descent": 0.7018900343642611,
+            "margin": 0.02,
+            "full_error_double_descent": true,
+            "selection": "minimum_before_sustained_train_fit; peak_while_train_fitted_before_heldout_target; final_observation",
+            "scope": "posthoc_synthetic_epoch_error_description; no_CIFAR_numerical_reproduction_or_causal_claim"
+          },
+          "both_epoch_error_double_descent_and_grokking": false,
+          "final_heldout_target": true,
+          "observations_after_confirmation": 516,
+          "fraction_observations_at_target_after_confirmation": 0.9011627906976745,
+          "minimum_heldout_accuracy_after_confirmation": 0.0,
+          "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+        },
+        {
+          "seed": 2,
+          "sustained_train_fit": {
+            "onset": 5000,
+            "confirmed": 5250
+          },
+          "sustained_heldout_target": {
+            "onset": 40500,
+            "confirmed": 40750
+          },
+          "time_to_sustained_train_fit": {
+            "onset": {
+              "training_seconds": 54.06275370600633,
+              "wall_seconds": 55.03883913101163
+            },
+            "confirmed": {
+              "training_seconds": 56.75385050999466,
+              "wall_seconds": 57.78635895700427
+            }
+          },
+          "time_to_sustained_heldout_target": {
+            "onset": {
+              "training_seconds": 437.5226084597234,
+              "wall_seconds": 445.3302642290073
+            },
+            "confirmed": {
+              "training_seconds": 440.23080286671757,
+              "wall_seconds": 448.0860681080085
+            }
+          },
+          "lag_after_sustained_train_fit": 35500,
+          "memorization_plateau": null,
+          "heldout_ceiling": 0.1,
+          "train_target": 0.99,
+          "patience": 2,
+          "fit_to_heldout_onset_ratio": 8.1,
+          "observed_plateau_then_generalization": false,
+          "epoch_error_curve_before_generalization": {
+            "initial": {
+              "step": 0,
+              "error": 1.0
+            },
+            "first_minimum": {
+              "step": 1250,
+              "error": 0.7504295532646048
+            },
+            "peak": {
+              "step": 13750,
+              "error": 0.8906786941580755
+            },
+            "final": {
+              "step": 150000,
+              "error": 0.024699312714776656
+            },
+            "first_descent": 0.2495704467353952,
+            "peak_rise": 0.14024914089347074,
+            "second_descent": 0.8659793814432989,
+            "margin": 0.02,
+            "full_error_double_descent": true,
+            "selection": "minimum_before_sustained_train_fit; peak_while_train_fitted_before_heldout_target; final_observation",
+            "scope": "posthoc_synthetic_epoch_error_description; no_CIFAR_numerical_reproduction_or_causal_claim"
+          },
+          "both_epoch_error_double_descent_and_grokking": false,
+          "final_heldout_target": false,
+          "observations_after_confirmation": 438,
+          "fraction_observations_at_target_after_confirmation": 0.3744292237442922,
+          "minimum_heldout_accuracy_after_confirmation": 0.043170103092783504,
+          "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+        },
+        {
+          "seed": 3,
+          "sustained_train_fit": {
+            "onset": 7500,
+            "confirmed": 7750
+          },
+          "sustained_heldout_target": {
+            "onset": 41750,
+            "confirmed": 42000
+          },
+          "time_to_sustained_train_fit": {
+            "onset": {
+              "training_seconds": 81.26117981804418,
+              "wall_seconds": 82.72433237897349
+            },
+            "confirmed": {
+              "training_seconds": 83.95534684404265,
+              "wall_seconds": 85.46593784197466
+            }
+          },
+          "time_to_sustained_heldout_target": {
+            "onset": {
+              "training_seconds": 451.1245594629436,
+              "wall_seconds": 459.1662452519813
+            },
+            "confirmed": {
+              "training_seconds": 453.83202581695514,
+              "wall_seconds": 461.9211151479976
+            }
+          },
+          "lag_after_sustained_train_fit": 34250,
+          "memorization_plateau": null,
+          "heldout_ceiling": 0.1,
+          "train_target": 0.99,
+          "patience": 2,
+          "fit_to_heldout_onset_ratio": 5.566666666666666,
+          "observed_plateau_then_generalization": false,
+          "epoch_error_curve_before_generalization": {
+            "initial": {
+              "step": 0,
+              "error": 1.0
+            },
+            "first_minimum": {
+              "step": 1750,
+              "error": 0.7190721649484536
+            },
+            "peak": {
+              "step": 9500,
+              "error": 0.805627147766323
+            },
+            "final": {
+              "step": 150000,
+              "error": 0.0
+            },
+            "first_descent": 0.2809278350515464,
+            "peak_rise": 0.08655498281786944,
+            "second_descent": 0.805627147766323,
+            "margin": 0.02,
+            "full_error_double_descent": true,
+            "selection": "minimum_before_sustained_train_fit; peak_while_train_fitted_before_heldout_target; final_observation",
+            "scope": "posthoc_synthetic_epoch_error_description; no_CIFAR_numerical_reproduction_or_causal_claim"
+          },
+          "both_epoch_error_double_descent_and_grokking": false,
+          "final_heldout_target": true,
+          "observations_after_confirmation": 433,
+          "fraction_observations_at_target_after_confirmation": 0.9330254041570438,
+          "minimum_heldout_accuracy_after_confirmation": 0.01718213058419244,
+          "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+        }
+      ]
+    },
+    {
+      "model": "reference",
+      "optimizer": "adamw",
+      "runs": 3,
+      "confirmed_delayed_runs": 3,
+      "final_heldout_target_runs": 3,
+      "lag_steps": {
+        "mean": 44250,
+        "std": 15027.058927148719,
+        "support": 3
+      },
+      "train_fit_step": {
+        "mean": 833.3333333333334,
+        "std": 144.33756729740645,
+        "support": 3
+      },
+      "heldout_onset_step": {
+        "mean": 45083.333333333336,
+        "std": 15170.558108828209,
+        "support": 3
+      },
+      "heldout_target_onset_training_seconds": {
+        "mean": 495.7851766112969,
+        "std": 166.8179135775402,
+        "support": 3
+      },
+      "heldout_target_confirmed_training_seconds": {
+        "mean": 498.54885003929184,
+        "std": 166.8747423733509,
+        "support": 3
+      },
+      "heldout_target_onset_wall_seconds": {
+        "mean": 504.0368059610046,
+        "std": 169.00877365351758,
+        "support": 3
+      },
+      "heldout_target_confirmed_wall_seconds": {
+        "mean": 506.84292408166704,
+        "std": 169.06550983495893,
+        "support": 3
+      },
+      "training_seconds": {
+        "mean": 1648.4449817632074,
+        "std": 2.240554777710833,
+        "support": 3
+      },
+      "heldout_accuracy": {
+        "mean": 1.0,
+        "std": 0.0,
+        "support": 3
+      },
+      "heldout_loss": {
+        "mean": 0.0001770393753619379,
+        "std": 0.00017857467061423914,
+        "support": 3
+      },
+      "plateau_then_generalization_runs": 3,
+      "epoch_error_double_descent_runs": 0,
+      "both_epoch_error_double_descent_and_grokking_runs": 0,
+      "lag_after_sustained_train_fit": {
+        "mean": 44250,
+        "std": 15027.058927148719,
+        "support": 3
+      },
+      "phase_diagnostics": [
+        {
+          "seed": 1,
+          "sustained_train_fit": {
+            "onset": 750,
+            "confirmed": 1000
+          },
+          "sustained_heldout_target": {
+            "onset": 34750,
+            "confirmed": 35000
+          },
+          "time_to_sustained_train_fit": {
+            "onset": {
+              "training_seconds": 8.798974126984831,
+              "wall_seconds": 10.189716011998826
+            },
+            "confirmed": {
+              "training_seconds": 11.573337362991879,
+              "wall_seconds": 13.005897772003664
+            }
+          },
+          "time_to_sustained_heldout_target": {
+            "onset": {
+              "training_seconds": 383.48173281596974,
+              "wall_seconds": 390.71846677600115
+            },
+            "confirmed": {
+              "training_seconds": 386.23779444796673,
+              "wall_seconds": 393.51703412199276
+            }
+          },
+          "lag_after_sustained_train_fit": 34000,
+          "memorization_plateau": {
+            "start_step": 9250,
+            "end_step": 18750,
+            "span_steps": 9500,
+            "observations": 39,
+            "minimum_train_accuracy": 0.9976374570446735,
+            "maximum_heldout_accuracy": 0.03329037800687285
+          },
+          "heldout_ceiling": 0.1,
+          "train_target": 0.99,
+          "patience": 2,
+          "fit_to_heldout_onset_ratio": 46.333333333333336,
+          "observed_plateau_then_generalization": true,
+          "epoch_error_curve_before_generalization": {
+            "initial": {
+              "step": 0,
+              "error": 1.0
+            },
+            "first_minimum": {
+              "step": 500,
+              "error": 0.9853951890034365
+            },
+            "peak": {
+              "step": 750,
+              "error": 0.9856099656357389
+            },
+            "final": {
+              "step": 150000,
+              "error": 0.0
+            },
+            "first_descent": 0.014604810996563522,
+            "peak_rise": 0.00021477663230240474,
+            "second_descent": 0.9856099656357389,
+            "margin": 0.02,
+            "full_error_double_descent": false,
+            "selection": "minimum_before_sustained_train_fit; peak_while_train_fitted_before_heldout_target; final_observation",
+            "scope": "posthoc_synthetic_epoch_error_description; no_CIFAR_numerical_reproduction_or_causal_claim"
+          },
+          "both_epoch_error_double_descent_and_grokking": false,
+          "final_heldout_target": true,
+          "observations_after_confirmation": 461,
+          "fraction_observations_at_target_after_confirmation": 0.9674620390455532,
+          "minimum_heldout_accuracy_after_confirmation": 0.26417525773195877,
+          "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+        },
+        {
+          "seed": 2,
+          "sustained_train_fit": {
+            "onset": 750,
+            "confirmed": 1000
+          },
+          "sustained_heldout_target": {
+            "onset": 38000,
+            "confirmed": 38250
+          },
+          "time_to_sustained_train_fit": {
+            "onset": {
+              "training_seconds": 8.057308833987918,
+              "wall_seconds": 8.326894313999219
+            },
+            "confirmed": {
+              "training_seconds": 10.792437198993866,
+              "wall_seconds": 11.104482009002822
+            }
+          },
+          "time_to_sustained_heldout_target": {
+            "onset": {
+              "training_seconds": 416.4039922679076,
+              "wall_seconds": 423.098079221003
+            },
+            "confirmed": {
+              "training_seconds": 419.1062593519018,
+              "wall_seconds": 425.84295243400265
+            }
+          },
+          "lag_after_sustained_train_fit": 37250,
+          "memorization_plateau": {
+            "start_step": 750,
+            "end_step": 6250,
+            "span_steps": 5500,
+            "observations": 23,
+            "minimum_train_accuracy": 0.9976374570446735,
+            "maximum_heldout_accuracy": 0.01911512027491409
+          },
+          "heldout_ceiling": 0.1,
+          "train_target": 0.99,
+          "patience": 2,
+          "fit_to_heldout_onset_ratio": 50.666666666666664,
+          "observed_plateau_then_generalization": true,
+          "epoch_error_curve_before_generalization": {
+            "initial": {
+              "step": 0,
+              "error": 1.0
+            },
+            "first_minimum": {
+              "step": 500,
+              "error": 0.9838917525773196
+            },
+            "peak": {
+              "step": 1000,
+              "error": 0.9834621993127147
+            },
+            "final": {
+              "step": 150000,
+              "error": 0.0
+            },
+            "first_descent": 0.016108247422680355,
+            "peak_rise": -0.0004295532646049205,
+            "second_descent": 0.9834621993127147,
+            "margin": 0.02,
+            "full_error_double_descent": false,
+            "selection": "minimum_before_sustained_train_fit; peak_while_train_fitted_before_heldout_target; final_observation",
+            "scope": "posthoc_synthetic_epoch_error_description; no_CIFAR_numerical_reproduction_or_causal_claim"
+          },
+          "both_epoch_error_double_descent_and_grokking": false,
+          "final_heldout_target": true,
+          "observations_after_confirmation": 448,
+          "fraction_observations_at_target_after_confirmation": 0.9732142857142857,
+          "minimum_heldout_accuracy_after_confirmation": 0.24656357388316152,
+          "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+        },
+        {
+          "seed": 3,
+          "sustained_train_fit": {
+            "onset": 1000,
+            "confirmed": 1250
+          },
+          "sustained_heldout_target": {
+            "onset": 62500,
+            "confirmed": 62750
+          },
+          "time_to_sustained_train_fit": {
+            "onset": {
+              "training_seconds": 11.040093430012348,
+              "wall_seconds": 11.241312568003195
+            },
+            "confirmed": {
+              "training_seconds": 13.756477998016635,
+              "wall_seconds": 14.000119821997941
+            }
+          },
+          "time_to_sustained_heldout_target": {
+            "onset": {
+              "training_seconds": 687.4698047500133,
+              "wall_seconds": 698.2938718860096
+            },
+            "confirmed": {
+              "training_seconds": 690.3024963180069,
+              "wall_seconds": 701.1687856890057
+            }
+          },
+          "lag_after_sustained_train_fit": 61500,
+          "memorization_plateau": {
+            "start_step": 29750,
+            "end_step": 46500,
+            "span_steps": 16750,
+            "observations": 68,
+            "minimum_train_accuracy": 0.9957044673539519,
+            "maximum_heldout_accuracy": 0.09879725085910653
+          },
+          "heldout_ceiling": 0.1,
+          "train_target": 0.99,
+          "patience": 2,
+          "fit_to_heldout_onset_ratio": 62.5,
+          "observed_plateau_then_generalization": true,
+          "epoch_error_curve_before_generalization": {
+            "initial": {
+              "step": 0,
+              "error": 1.0
+            },
+            "first_minimum": {
+              "step": 750,
+              "error": 0.9828178694158075
+            },
+            "peak": {
+              "step": 6000,
+              "error": 0.9845360824742269
+            },
+            "final": {
+              "step": 150000,
+              "error": 0.0
+            },
+            "first_descent": 0.01718213058419249,
+            "peak_rise": 0.001718213058419349,
+            "second_descent": 0.9845360824742269,
+            "margin": 0.02,
+            "full_error_double_descent": false,
+            "selection": "minimum_before_sustained_train_fit; peak_while_train_fitted_before_heldout_target; final_observation",
+            "scope": "posthoc_synthetic_epoch_error_description; no_CIFAR_numerical_reproduction_or_causal_claim"
+          },
+          "both_epoch_error_double_descent_and_grokking": false,
+          "final_heldout_target": true,
+          "observations_after_confirmation": 350,
+          "fraction_observations_at_target_after_confirmation": 0.9771428571428571,
+          "minimum_heldout_accuracy_after_confirmation": 0.4486683848797251,
+          "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+        }
+      ]
+    }
+  ],
+  "training_seconds": 14354.290869750446,
+  "statistical_scope": "initialization_seeds_on_one_exhaustive_two_way_split; no_length_transfer_or_causal_claim",
+  "analysis_source_hashes": {
+    "paper_report.py": "d28e40131236333f8a466df0ace78a0ed635810c7306b7eedb60da4bdfff4ce6",
+    "paper_phases.py": "acaf5eb3aa9999d8c3cdec8e6ab258f95da4e045c2dbb6f115b58f5c42165586",
+    "paper_plots.py": "0a04ad7557493a0d7dc8ac91d7f14f1f3fb230e9abe43b7598324413bccc8595"
+  }
+}

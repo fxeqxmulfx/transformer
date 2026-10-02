@@ -22,7 +22,8 @@ It did not demonstrate delayed algorithmic length transfer. The subsequent
 [27-run data/width/depth study](baselines/amsgradw_softmax_scaling_20261002/metrics.csv)
 is complete: larger models solve ID copy but still fail length transfer;
 no repeated mean size-double-descent effect appears on direct parity. The
-paper reproduction loop below is now running separate reference protocols.
+paper reproduction campaign below is complete, with reference protocols and
+explicit GPTMini adaptations reported separately.
 
 ## Paper reproduction loop
 
@@ -69,7 +70,7 @@ also retains rare later collapses. Its held-out onset at 31,500 differs from
 the paper's reported >100,000 updates. Passing one exploratory calibration
 does not complete the grokking reproduction.
 
-The running confirmation manifest was frozen before calibration completed under
+The confirmation manifest was frozen before calibration completed under
 `experiments/runs/paper_reproduction/mod97_fraction50_wd01_confirmation_20261002`:
 data seed 1, initialization seeds 1/2/3, train fraction 50%, weight decay 0.1,
 and 150,000 updates each for reference/AdamW, GPTMini/AdamW, and
@@ -87,10 +88,13 @@ failure as well as early success. The frozen manifest resumes with:
   --seeds 1 2 3 --steps 150000 --resume
 ```
 
-Eight of nine runs are complete. All reference/AdamW seeds have a measured
+All nine runs completed their frozen budgets: 1,350,000 updates and 5,409
+observations. The [combined archive](baselines/mod97_fraction50_wd01_confirmation_20261002/summary.json)
+retains every seed, the failed final target, and unified accuracy/error/CE
+curves. All reference/AdamW seeds have a measured
 memorization plateau followed by generalization and 100% final train/held-out
 accuracy. The lags are 34,000, 37,250, and 61,500 updates, with complete
-[per-seed archives](STUDIES.md#independent-modular-confirmation-in-progress).
+[per-seed archives](STUDIES.md#independent-modular-confirmation-2026-10-02).
 Later collapses and earlier-than-paper timing remain explicit. The
 [first GPTMini/AdamW run](baselines/mod97_fraction50_wd01_confirmation_gptmini_adamw_seed1_20261002/summary.json)
 also completed the full budget with a 39,500-update lag, 100% final train/held-out
@@ -114,9 +118,20 @@ held-out score of 0%. The
 also has the restricted error shape without a low held-out plateau, but ends
 at 97.53% held-out and fails the frozen 99% final target. Its 35,500-update
 lag and 440.23 training seconds to confirmation accompany only 37.44% of
-438 later observations at target, with a worst score of 4.32%. Raw AMSGradW
-seed 3 is now training; its full-budget result remains required before
-judging repeatability or the complete campaign.
+438 later observations at target, with a worst score of 4.32%. The
+[third raw AMSGradW run](baselines/mod97_fraction50_wd01_confirmation_gptmini_amsgradw_seed3_20261002/summary.json)
+ends at 100% held-out, with a 34,250-update lag and 453.83 training seconds
+to confirmation. Only 93.30% of 433 later observations retain the target;
+the worst score is 1.72%. All three raw AMSGradW seeds have the restricted
+epoch-error shape and delayed threshold crossings, but none has the stronger
+low held-out plateau. Their final target is met in 2/3 seeds, versus 3/3 for
+both AdamW arms. Mean confirmation costs are 374.56±125.71 training seconds
+for raw AMSGradW, 177.40±283.23 for GPTMini/AdamW, and 498.55±166.87 for the
+reference. These descriptive means and sample SD on one paired split do not
+establish a universal speedup or persistent convergence. The selected reference
+effects and these optimizer/architecture adaptations are fully measured;
+exact manuscript timings and a causal account remain unestablished.
+See [HANDOFF.md](HANDOFF.md) for portable artifacts and proposed follow-up work.
 
 Freeze the data, targets, evaluation cadence, grid, and budget before each
 confirmation experiment. Separate exploratory calibration from repetitions,

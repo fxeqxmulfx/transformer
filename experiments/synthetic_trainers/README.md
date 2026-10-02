@@ -303,6 +303,17 @@ exact checkpoint continuation. The fixed campaign has nine paired model/optimize
 and initialization-seed recipes, each with 150,000 updates. Its reference
 protocol and every adaptation are recorded separately.
 
+The [completed nine-run archive](baselines/mod97_fraction50_wd01_confirmation_20261002/summary.json)
+contains all 150,000-update histories and
+[combined accuracy/error/CE curves](baselines/mod97_fraction50_wd01_confirmation_20261002/plots/modular-generalization.png).
+The reference has a memorization plateau followed by generalization in 3/3
+initializations. GPTMini/AdamW has both that diagnostic and restricted epoch-error
+double descent in 1/3; raw AMSGradW has the error shape in 3/3, no low held-out
+plateau, and a failed final 99% target in one seed. See
+[STUDIES.md](STUDIES.md#independent-modular-confirmation-2026-10-02) for timing,
+late collapses, source differences, and statistical scope.
+[HANDOFF.md](HANDOFF.md) records migration instructions and proposed next work.
+
 [Random Fourier features](paper_reproduction/RANDOM_FEATURES.md) reproduce
 the fixed-feature Fashion-MNIST case from *Deep Double Descent*, Appendix C.
 The measured [123-fit archive](baselines/fashion_rff_20261002/summary.json)

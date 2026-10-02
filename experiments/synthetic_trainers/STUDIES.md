@@ -323,8 +323,8 @@ It ended at 67.20% train / 60.59% held-out accuracy, with training/wall budgets
 retains every successful and failed checkpoint, with
 [CSV](baselines/mod97_fraction50_wd1_reference_20261002/metrics.csv) and
 [curves](baselines/mod97_fraction50_wd1_reference_20261002/plots/modular-generalization.png).
-Initialization/data confirmations and GPTMini optimizer controls remain part
-of the active reproduction loop.
+The independent confirmation split and GPTMini optimizer controls subsequently
+completed their full budgets; their results are reported below.
 
 Reports now retain a second train-fit event requiring the same two-observation
 streak as held-out confirmation. For the 50% calibration, this train event is
@@ -362,13 +362,12 @@ not an exact numerical reproduction or evidence of repeatability.
 
 Before this calibration completed, a separate nine-run confirmation was
 frozen: data seed 1, initialization seeds 1/2/3, and the same full budget for
-reference/AdamW, GPTMini/AdamW, and GPTMini/raw AMSGradW. It is now running
+reference/AdamW, GPTMini/AdamW, and GPTMini/raw AMSGradW. All nine runs completed
 after checks of the calibration condition, source hashes, exhaustive split,
-and independence from calibration seed 0/data seed 0. Its complete trajectories
-and failures are required before drawing conclusions about reproducibility or
-the requested mini GPT optimizer/architecture combination.
+and independence from calibration seed 0/data seed 0. Every trajectory and
+final failure is retained in the confirmation below.
 
-## Independent modular confirmation (in progress)
+## Independent modular confirmation (2026-10-02)
 
 The reference/AdamW arm completed all 150,000 updates for initialization
 seeds 1/2/3 on independent data seed 1. All three have a consecutive
@@ -494,11 +493,58 @@ and 2.47% finally. The rise is 14.02 percentage points and recovery is 86.60;
 finite error double descent does not require attaining the final 99% target.
 Only 164 of 438 observations after confirmation (37.44%) retain that target,
 with a worst held-out accuracy of 4.32% at 90,000. Numeric-answer accuracy is
-also 4.32% there, while EOS is 99.98%. Both completed AMSGradW seeds show
-the restricted error shape without the stronger memorization plateau, and
-their final target outcomes differ. Eight of nine recipes are complete;
-raw AMSGradW seed 3 remains required before judging optimizer repeatability
-or declaring the campaign complete.
+also 4.32% there, while EOS is 99.98%. Its final failure remains part of the
+optimizer comparison.
+
+GPTMini/raw AMSGradW seed 3 completed 150,000 updates with 100% final
+train/held-out accuracy and held-out CE 0.006271. Train fit starts at 7,500,
+held-out onset at 41,750, and confirmation at 42,000: a 34,250-update lag
+and 453.83 training / 461.92 wall seconds to confirmation. Full-budget costs
+are 1,620.37 / 1,649.22 seconds. Its
+[complete archive](baselines/mod97_fraction50_wd01_confirmation_gptmini_amsgradw_seed3_20261002/measurements.json)
+and [curves](baselines/mod97_fraction50_wd01_confirmation_gptmini_amsgradw_seed3_20261002/plots/modular-generalization.png)
+show no consecutive low held-out plateau. Restricted error falls from 100%
+initially to 71.91% at 1,750, rises to 80.56% at 9,500, and ends at 0%:
+an 8.66-percentage-point rise and 80.56-point recovery. After confirmation,
+404/433 observations (93.30%) retain the target; the worst is 1.72% at
+70,750, also 1.72% for the numeric answer while EOS stays 100%.
+
+All nine runs are complete. The
+[self-contained combined archive](baselines/mod97_fraction50_wd01_confirmation_20261002/measurements.json),
+[summary](baselines/mod97_fraction50_wd01_confirmation_20261002/summary.json),
+[CSV](baselines/mod97_fraction50_wd01_confirmation_20261002/metrics.csv), and
+[combined curves](baselines/mod97_fraction50_wd01_confirmation_20261002/plots/modular-generalization.png)
+contain 1,350,000 updates and 5,409 observations on the same exhaustive
+4,656/4,656 split. Total measured training time is 14,354.29 seconds;
+the sum of run wall times is 14,606.78 seconds. Calibration runs are excluded.
+
+| Model / optimizer | Plateau then generalization | Restricted epoch-error double descent | Both diagnostics | Final held-out ≥99% | Final held-out mean ± sample SD | Confirmation training seconds ± sample SD |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Author reference / AdamW | 3/3 | 0/3 | 0/3 | 3/3 | 100.0000±0.0000% | 498.55±166.87 |
+| GPTMini / AdamW | 1/3 | 1/3 | 1/3 | 3/3 | 99.8568±0.2480% | 177.40±283.23 |
+| GPTMini / raw AMSGradW | 0/3 | 3/3 | 0/3 | 2/3 | 99.1767±1.4260% | 374.56±125.71 |
+
+Every run reaches the sustained held-out target at some point, so all timing
+means have support three; the failed AMSGradW final target is still retained.
+Raw AMSGradW's mean lag is 29,250±9,763 updates and mean full-budget training
+time is 1,620.32±0.10 seconds. Mean confirmation wall costs are
+506.84±169.07 / 180.82±288.64 / 381.24±127.95 seconds for reference AdamW,
+GPTMini AdamW, and raw AMSGradW, respectively. All three raw AMSGradW seeds
+have error rises of 8.66–14.02 percentage points followed by recovery. Their
+low-accuracy late collapses and seed-2 final failure distinguish early success
+from persistence. Means on three initializations of one split are descriptive;
+the paired experiment does not establish an expected universal speedup.
+
+The reference grokking sequence repeats in 3/3 initializations, with timings
+earlier than the manuscript. Joint grokking/error double descent occurs in
+one GPTMini/AdamW seed; raw AMSGradW has delayed threshold crossings and
+error double descent in 3/3, without the stronger low held-out plateau.
+These results separate the two observable effects, without proving an internal
+algorithm or that one causes the other. The epoch comparison remains a post hoc
+synthetic adaptation of Section 6's noisy CIFAR experiment, rather than its
+numerical reproduction. The random-feature reference reproduces both model-
+and sample-wise classification-error shapes independently of hidden-feature
+learning. Protocol differences and negative results remain part of this record.
 
 ## Double descent is a separate observation
 
