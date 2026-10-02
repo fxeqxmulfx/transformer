@@ -1,0 +1,18 @@
+{
+  "recorded_at_utc": "2026-10-02T16:37:43.883299+00:00",
+  "artifact_hashes_verified": true,
+  "current_helper_executable_AST_matches_executed_snapshot": true,
+  "current_helper_sha256": "20fb29604b008aaf1c58dc4ece9de48a95153f4d17261a668120afb4885d9377",
+  "executed_snapshot_sha256": "c406708f1e37326bcc32acdff8b337a0e7d39d3a53c185fb31928a9c1a26ac31",
+  "snapshot_docstring_erratum": "CUDA_context_came_from_an_accelerator_health_check_inference; checkpoint_CUDA_RNG_explanation_was_incorrect",
+  "full_CPU_smoke_passed": true,
+  "portable_archive_verification_passed_without_torch": true,
+  "scientific_plan_frozen": false,
+  "scientific_training_started": false,
+  "frozen_fingerprints": {
+    "checked_files": 31,
+    "all_unchanged": true
+  },
+  "retained_initial_smoke": "experiments/runs/adamw_stability_20261002/bootstrap/fraction25_cpu_preparation_cuda_rng_check/portable",
+  "scope": "preparation_only; no_success_criterion_change_or_scientific_learning_claim"
+}

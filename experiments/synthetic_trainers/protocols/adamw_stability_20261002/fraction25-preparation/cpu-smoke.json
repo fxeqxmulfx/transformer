@@ -1,0 +1,30 @@
+{
+  "recorded_at_utc": "2026-10-02T16:33:27.575604+00:00",
+  "updates": 20,
+  "canonical_steps": [
+    0,
+    19,
+    20
+  ],
+  "dense_gradients": 20,
+  "device": "cpu",
+  "short_tail": {
+    "step": 19,
+    "batch_size": 48,
+    "epoch_tail": true,
+    "learning_rate": 0.001,
+    "gradient_l2": 4.92147970199585
+  },
+  "next_full_batch": {
+    "step": 20,
+    "batch_size": 512,
+    "epoch_tail": false,
+    "learning_rate": 0.001,
+    "gradient_l2": 4.741685390472412
+  },
+  "parameters": 436104,
+  "portable_archive_verified_without_torch": true,
+  "cuda_context_created": false,
+  "archive": "experiments/runs/adamw_stability_20261002/bootstrap/fraction25_cpu_preparation/portable",
+  "scope": "implementation_smoke_only; no_learning_or_stability_claim"
+}

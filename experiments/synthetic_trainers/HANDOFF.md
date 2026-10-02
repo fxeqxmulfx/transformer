@@ -229,8 +229,8 @@ verifies both original archives and byte-identical nested copies without
 PyTorch. Both have empty eligible persistent-target timing support. Original
 curves and reviewed standalone PNG/PDF figures with readable update ticks
 retain all observations. Neither recipe permits independent confirmation.
-The separately frozen mod-193 adaptation is now running; no train-fraction
-control has been selected or launched here.
+The separately frozen mod-193 adaptation is now running; no scientific
+train-fraction control has been frozen or launched here.
 After each full result, review figures, commit the verified archive and measured
 outcome, and apply the unchanged gate. No scientific independent confirmation
 or architecture run has started.
@@ -278,9 +278,19 @@ is at 39,500 with held-out already 98.5320%; zero pre-target observations meet
 the required memorization condition. The recipe is phase-ineligible regardless
 of future persistence. Finish its full budget and retain the final-tail outcome;
 this prefix does not open independent confirmation.
-This user-directed harder-task adaptation supersedes the earlier tentative
-train-fraction idea; no fraction intervention is selected. The historical
-prefix inspections above remain partial evidence with their original labels.
+At selection time, this user-directed harder-task adaptation superseded the
+earlier tentative train-fraction idea. Its historical prefix inspections
+remain partial evidence with their original labels.
+
+After the absent pre-target phase was established, a separate
+[25% fraction preparation](protocols/adamw_stability_20261002/fraction25-preparation.md)
+checked exhaustive nested splits, identical CPU initial model states and
+unchanged 436,104 parameters. A real 20-update full-width CPU smoke checks
+the 48-example tail / next 512-example batch and verifies its portable archive
+without PyTorch. This is preparation only; no new scientific plan is frozen
+or launched. Finish the current budget and archive, repair the ordinary CSV
+verifier after the frozen campaigns, then prospectively freeze any fraction
+intervention with unchanged criteria. The original stage fingerprints are intact.
 
 The [complementary-trainer preparation](protocols/adamw_stability_20261002/complementary-preparation.md)
 also verifies seven existing AdamW CPU paths for MQAR, one/two-hop lookup,

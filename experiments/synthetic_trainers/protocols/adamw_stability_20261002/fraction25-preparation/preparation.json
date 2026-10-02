@@ -1,0 +1,162 @@
+{
+  "recorded_at_utc": "2026-10-02T16:32:56.404874+00:00",
+  "parent_manifest_sha256": "4eb535c85002f2ec8f75904163d791619323e2a85770c9eb0c597d6055138329",
+  "candidate_scientific_configuration": {
+    "model": "gptmini",
+    "optimizer": "adamw",
+    "prime": 193,
+    "train_fraction": 0.25,
+    "data_seed": 0,
+    "seed": 0,
+    "width": 128,
+    "layers": 2,
+    "heads": 4,
+    "steps": 150000,
+    "batch_size": 512,
+    "batch_policy": "short_final",
+    "eval_every": 250,
+    "learning_rate": 0.001,
+    "weight_decay": 0.1,
+    "warmup_steps": 10,
+    "target": 0.99,
+    "patience": 2,
+    "device": "cuda"
+  },
+  "changed_fields": [
+    "train_fraction"
+  ],
+  "corpora": [
+    {
+      "prime": 193,
+      "domain_size": 37056,
+      "train_examples": 18528,
+      "heldout_examples": 18528,
+      "train_fraction": 0.5,
+      "data_seed": 0,
+      "vocab_size": 335,
+      "train_fingerprint": "73a7da79010e541b76f02e1e7e7865584d1da5249f06ddf23ce4ea3846cb5bbb",
+      "heldout_fingerprint": "9ed8d056d80705c33c11922be847aa523a791540eae06656bbdc0a08aa6189b1",
+      "split_policy": "exhaustive_disjoint_two_way_author_protocol",
+      "prompt_tokens": 5,
+      "supervised_targets": 2,
+      "scope": "all_unseen_operand_pairs_in_fixed_prime_field; no_length_OOD"
+    },
+    {
+      "prime": 193,
+      "domain_size": 37056,
+      "train_examples": 9264,
+      "heldout_examples": 27792,
+      "train_fraction": 0.25,
+      "data_seed": 0,
+      "vocab_size": 335,
+      "train_fingerprint": "5a0b7e90d546dfbad53ea44b64e2c3d1fb52af3a9a5640eff40f3d0ba3028ad8",
+      "heldout_fingerprint": "bba4c2d1ddcc6a23833b1831a59eb6db04371f20dc7054aa145e22d1e602afa4",
+      "split_policy": "exhaustive_disjoint_two_way_author_protocol",
+      "prompt_tokens": 5,
+      "supervised_targets": 2,
+      "scope": "all_unseen_operand_pairs_in_fixed_prime_field; no_length_OOD"
+    }
+  ],
+  "split_class_coverage": {
+    "0.5": {
+      "train": {
+        "numerator": {
+          "classes": 193,
+          "minimum": 74,
+          "maximum": 115
+        },
+        "denominator": {
+          "classes": 192,
+          "minimum": 76,
+          "maximum": 116
+        },
+        "answer": {
+          "classes": 193,
+          "minimum": 79,
+          "maximum": 115
+        }
+      },
+      "heldout": {
+        "numerator": {
+          "classes": 193,
+          "minimum": 77,
+          "maximum": 118
+        },
+        "denominator": {
+          "classes": 192,
+          "minimum": 77,
+          "maximum": 117
+        },
+        "answer": {
+          "classes": 193,
+          "minimum": 77,
+          "maximum": 113
+        }
+      }
+    },
+    "0.25": {
+      "train": {
+        "numerator": {
+          "classes": 193,
+          "minimum": 29,
+          "maximum": 63
+        },
+        "denominator": {
+          "classes": 192,
+          "minimum": 33,
+          "maximum": 65
+        },
+        "answer": {
+          "classes": 193,
+          "minimum": 31,
+          "maximum": 68
+        }
+      },
+      "heldout": {
+        "numerator": {
+          "classes": 193,
+          "minimum": 129,
+          "maximum": 163
+        },
+        "denominator": {
+          "classes": 192,
+          "minimum": 128,
+          "maximum": 160
+        },
+        "answer": {
+          "classes": 193,
+          "minimum": 124,
+          "maximum": 161
+        }
+      }
+    }
+  },
+  "complete_domain_oracles_verified": true,
+  "nested_train_and_common_heldout_verified": true,
+  "common_initial_state_verified": true,
+  "common_initial_state_cpu_sha256": "51aa47c632822ea9fe3e916ec865161498a860ebea89b897308b1374c221f1c7",
+  "parameters_both_models": 436104,
+  "budget_exposure": {
+    "0.5": {
+      "batch_size": 512,
+      "cursor_before": 512,
+      "cursor_after": 1024,
+      "epoch_tail": false,
+      "epoch_wraps_in_batch": 0,
+      "examples_seen": 75113536
+    },
+    "0.25": {
+      "batch_size": 512,
+      "cursor_before": 6656,
+      "cursor_after": 7168,
+      "epoch_tail": false,
+      "epoch_wraps_in_batch": 0,
+      "examples_seen": 73137184
+    }
+  },
+  "frozen_fingerprints": {
+    "checked_files": 31,
+    "all_unchanged": true
+  },
+  "scope": "CPU_preparation_only; scientific_plan_not_frozen_or_launched"
+}
