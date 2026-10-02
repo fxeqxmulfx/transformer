@@ -475,9 +475,30 @@ diagnostic. After confirmation, 465 of 516 observations (90.12%) retain the
 (73,750), numeric-answer accuracy is also 0% while EOS accuracy is 99.72%;
 the collapse is not an EOS-only scoring artifact. These later collapses
 remain separate from the pre-generalization error diagnostic and their cause
-is not identified. Seven of nine recipes are complete; raw AMSGradW seeds
-2/3 remain required before judging optimizer repeatability or declaring the
-campaign complete.
+is not identified.
+
+GPTMini/raw AMSGradW seed 2 completed the same full budget with 100% final
+train / 97.53% held-out accuracy and held-out CE 0.037016. The 115 incorrect
+held-out equations mean that this run fails the frozen 99% final target,
+despite reaching it earlier. Sustained train fit starts at 5,000, held-out
+onset at 40,500, and confirmation at 40,750: a 35,500-update lag and
+440.23 training / 448.09 wall seconds to confirmation. Full-budget costs
+are 1,620.38 / 1,649.26 seconds. There is no consecutive low held-out
+memorization plateau before generalization.
+
+The [complete second AMSGradW archive](baselines/mod97_fraction50_wd01_confirmation_gptmini_amsgradw_seed2_20261002/measurements.json)
+and [curves](baselines/mod97_fraction50_wd01_confirmation_gptmini_amsgradw_seed2_20261002/plots/modular-generalization.png)
+retain the failed final score. The restricted error shape goes from 100%
+initial error to 75.04% at 1,250, then 89.07% at 13,750 while train is fitted,
+and 2.47% finally. The rise is 14.02 percentage points and recovery is 86.60;
+finite error double descent does not require attaining the final 99% target.
+Only 164 of 438 observations after confirmation (37.44%) retain that target,
+with a worst held-out accuracy of 4.32% at 90,000. Numeric-answer accuracy is
+also 4.32% there, while EOS is 99.98%. Both completed AMSGradW seeds show
+the restricted error shape without the stronger memorization plateau, and
+their final target outcomes differ. Eight of nine recipes are complete;
+raw AMSGradW seed 3 remains required before judging optimizer repeatability
+or declaring the campaign complete.
 
 ## Double descent is a separate observation
 

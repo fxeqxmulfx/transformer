@@ -87,7 +87,7 @@ failure as well as early success. The frozen manifest resumes with:
   --seeds 1 2 3 --steps 150000 --resume
 ```
 
-Seven of nine runs are complete. All reference/AdamW seeds have a measured
+Eight of nine runs are complete. All reference/AdamW seeds have a measured
 memorization plateau followed by generalization and 100% final train/held-out
 accuracy. The lags are 34,000, 37,250, and 61,500 updates, with complete
 [per-seed archives](STUDIES.md#independent-modular-confirmation-in-progress).
@@ -109,9 +109,14 @@ completed the full budget with 100% final train/held-out accuracy, an
 18,000-update lag, and the restricted epoch-error shape. It has no consecutive
 low held-out memorization plateau. Confirmation costs 229.62 training seconds,
 but only 90.12% of 516 later observations retain the target, with a worst
-held-out score of 0%. Raw AMSGradW seed 2 is now training; the two remaining
-full-budget results are required before judging its repeatability or the
-complete campaign.
+held-out score of 0%. The
+[second raw AMSGradW run](baselines/mod97_fraction50_wd01_confirmation_gptmini_amsgradw_seed2_20261002/summary.json)
+also has the restricted error shape without a low held-out plateau, but ends
+at 97.53% held-out and fails the frozen 99% final target. Its 35,500-update
+lag and 440.23 training seconds to confirmation accompany only 37.44% of
+438 later observations at target, with a worst score of 4.32%. Raw AMSGradW
+seed 3 is now training; its full-budget result remains required before
+judging repeatability or the complete campaign.
 
 Freeze the data, targets, evaluation cadence, grid, and budget before each
 confirmation experiment. Separate exploratory calibration from repetitions,
