@@ -87,8 +87,12 @@ or two early held-out successes alone do not establish persistent performance.
 Reports record cumulative training and wall seconds at both the observed
 sustained-target onset and its confirmation. These are scheduled observations,
 without interpolation between evaluations. Training time excludes evaluation
-and checkpoint writing; wall time includes those costs. Aggregate time-to-target
+and checkpoint writing. The wall timestamp is taken at the start of the current
+evaluation; it includes setup and earlier evaluation/checkpoint costs, rather
+than the current evaluation's completion. Aggregate time-to-target
 means include only runs reaching the target and report their support; failures
 remain missing rather than becoming zero cost. Final accuracy and later
 collapses must accompany timing comparisons. Historical archives retain their
 original analysis; new reports include these measurements.
+The modular trainer records model size and device, but does not measure peak
+CUDA allocation; memory comparisons require separate measurements.
