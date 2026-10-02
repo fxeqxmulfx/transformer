@@ -79,11 +79,11 @@ and neighbor logs, canonical/neighbor/diagnostic CSV, an assessment and collapse
 neighborhood report, standalone PNG/PDF curves, and artifact checksums. Example:
 
 ```bash
-.venv/bin/python -m experiments.synthetic_trainers.stability_report \\
-  experiments/runs/amsgradw_stability_20261002/calibration \\
-  --run short-lr001 \\
+.venv/bin/python -m experiments.synthetic_trainers.stability_report \
+  experiments/runs/amsgradw_stability_20261002/calibration \
+  --run short-lr001 \
   --archive experiments/synthetic_trainers/baselines/amsgradw_stability_short_lr001_seed0_data0_20261002
-python3 -m experiments.synthetic_trainers.stability_report \\
+python3 -m experiments.synthetic_trainers.stability_report \
   experiments/synthetic_trainers/baselines/amsgradw_stability_short_lr001_seed0_data0_20261002 --verify
 ```
 
@@ -100,11 +100,11 @@ associations; they do not establish the cause of a collapse.
 Once all four individual archives are complete, assemble their comparison:
 
 ```bash
-.venv/bin/python -m experiments.synthetic_trainers.stability_comparison \\
-  experiments/synthetic_trainers/baselines/amsgradw_stability_short_lr001_seed0_data0_20261002 \\
-  experiments/synthetic_trainers/baselines/amsgradw_stability_wrap_lr001_seed0_data0_20261002 \\
-  experiments/synthetic_trainers/baselines/amsgradw_stability_short_lr0003_seed0_data0_20261002 \\
-  experiments/synthetic_trainers/baselines/amsgradw_stability_short_lr0001_seed0_data0_20261002 \\
+.venv/bin/python -m experiments.synthetic_trainers.stability_comparison \
+  experiments/synthetic_trainers/baselines/amsgradw_stability_short_lr001_seed0_data0_20261002 \
+  experiments/synthetic_trainers/baselines/amsgradw_stability_wrap_lr001_seed0_data0_20261002 \
+  experiments/synthetic_trainers/baselines/amsgradw_stability_short_lr0003_seed0_data0_20261002 \
+  experiments/synthetic_trainers/baselines/amsgradw_stability_short_lr0001_seed0_data0_20261002 \
   --archive experiments/synthetic_trainers/baselines/amsgradw_stability_calibration_20261002
 ```
 
