@@ -230,6 +230,14 @@ excluding a longer-lasting batch-size effect. The full-batch control is now
 running; both lower-rate controls remain queued. Finish all three complete
 budgets before selecting or rejecting a calibration recipe.
 
+At the observed `wrap-lr001` prefix through update 29,750, its first long joint
+confirmation is 24,250–29,000, costing 854.82 training / 898.16 wall seconds
+(one initialization/split). It has no required low-held-out memorization plateau
+before the first held-out target crossing. All observed training batches contain
+512 examples. The final 50,000-update persistence window has not begun; an early
+confirmation is not a completed calibration or stable-grokking success. Continue
+the full 150,000-update budget and retain later failures.
+
 Confirmation and architecture comparisons require separately frozen plans after
 these complete histories. Keep the active goal running, retain failures, archive
 each verified completed result, and commit logical changes during the loop.
