@@ -518,10 +518,14 @@ see the [receipt](protocols/adamw_stability_20261002/attention-pair-preparation-
 Its scientific order is sparsemax first, then a fresh softmax control, with
 both full 300,000-update configurations frozen before either case. The serial
 driver, per-case archive worker, recovery comparison and all 43 source
-fingerprints are ready; the scientific manifest remains unfrozen.
-Scientific sparsemax training has not started. The preceding run and archive
-are now complete and reviewed. Commit this result, freeze/commit the new
-manifest, then start sparsemax. A user-directed exploratory pair may be measured before the all-six
+fingerprints are ready. The [scientific manifest](protocols/adamw_stability_20261002/attention-pair-plan.json)
+is now frozen at 2026-10-02T22:47:04.605873 UTC after complete reference-result
+commit `8785c6b`. Both full budgets, sources, nine Lean fingerprints and the
+byte-exact complete reference copy are checked. The actual launcher passes;
+eighteen isolated negative scientific fixtures are rejected before training,
+as retained in the [manifest receipt](protocols/adamw_stability_20261002/attention-pair-manifest-validation.json).
+Scientific sparsemax training has not started. Commit this frozen manifest,
+then start sparsemax and its NoTorch archive worker. A user-directed exploratory pair may be measured before the all-six
 benchmark gate opens; that does not certify repeatability or an architecture
 improvement. Keep accuracy, loss, episode frequency/recovery, actual time and
 memory, and retain every failure. The six-case requirement for an improvement

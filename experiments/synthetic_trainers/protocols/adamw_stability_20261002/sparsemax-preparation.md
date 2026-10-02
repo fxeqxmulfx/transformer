@@ -71,6 +71,15 @@ reviewed; the [receipt](attention-pair-preparation-validation.json) retains the
 tests in total. This remains pipeline evidence; the scientific manifest and
 sparsemax run have not started.
 
+After the complete 300,000-update reference was verified, its five original
+PNG/actual PDF figures reviewed and result committed as `8785c6b`, the actual
+[scientific manifest](attention-pair-plan.json) was frozen at
+2026-10-02T22:47:04.605873 UTC. Its real launcher check passes; eighteen
+scientific negative fixtures are rejected before training. The
+[manifest receipt](attention-pair-manifest-validation.json) checks the full
+byte-exact reference copy, all 43 Python/nine Lean sources and two fresh full
+budgets. Commit that manifest before scientific sparsemax begins.
+
 Finish, verify, review and commit the current 300,000-update result before
 scientific sparsemax training. Freeze a paired softmax/sparsemax comparison
 with the same native AdamW, corpus, seeds, rate, decay, warmup, batching,

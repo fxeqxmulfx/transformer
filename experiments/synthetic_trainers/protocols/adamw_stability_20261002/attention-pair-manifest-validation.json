@@ -1,0 +1,124 @@
+{
+  "recorded_at_utc": "2026-10-02T22:48:40.781786+00:00",
+  "frozen_utc": "2026-10-02T22:47:04.605873+00:00",
+  "implementation_and_complete_reference_result_commit": "8785c6b3be4d87d56cf92169284be0b33e2c6a47",
+  "planned_runs": 2,
+  "full_updates_per_run": 300000,
+  "maximum_updates_per_run": 300000,
+  "execution_order": [
+    "adamw-sparsemax",
+    "adamw-softmax"
+  ],
+  "only_configuration_difference": "attention_normalization",
+  "negative_manifest_fixtures": [
+    {
+      "case": "additional learning-rate intervention",
+      "rejected": true,
+      "error": "Only attention normalization may differ"
+    },
+    {
+      "case": "dropped control",
+      "rejected": true,
+      "error": "The paired control and candidate must both remain frozen"
+    },
+    {
+      "case": "wrong normalizer label",
+      "rejected": true,
+      "error": "Only attention normalization may differ"
+    },
+    {
+      "case": "changed frequency width",
+      "rejected": true,
+      "error": "The additional recovery metric uses a fixed 10,000-update grid"
+    },
+    {
+      "case": "changed persistence window",
+      "rejected": true,
+      "error": "The final persistence window changed"
+    },
+    {
+      "case": "raised user cap",
+      "rejected": true,
+      "error": "Normalizer pair must retain two full exploratory cases and the user cap"
+    },
+    {
+      "case": "repeatable improvement claim",
+      "rejected": true,
+      "error": "Normalizer pair must retain two full exploratory cases and the user cap"
+    },
+    {
+      "case": "missing projection training fingerprint",
+      "rejected": true,
+      "error": "Both normalizer paths must pin the tagged factory and projection"
+    },
+    {
+      "case": "missing portable-report fingerprint",
+      "rejected": true,
+      "error": "Every normalizer/training/analysis source must remain pinned"
+    },
+    {
+      "case": "relaxed timing rule",
+      "rejected": true,
+      "error": "The prospective quality/time comparison rule changed"
+    },
+    {
+      "case": "reversed execution order",
+      "rejected": true,
+      "error": "The user-directed candidate runs first, followed by its fresh paired control"
+    },
+    {
+      "case": "incomplete scientific reference",
+      "rejected": true,
+      "error": "Scientific pair requires the complete verified reference"
+    },
+    {
+      "case": "false independent confirmation",
+      "rejected": true,
+      "error": "The exploratory reference is not the independent-confirmation gate"
+    },
+    {
+      "case": "changed complete reference corpus",
+      "rejected": true,
+      "error": "Scientific pair changed reference corpus"
+    },
+    {
+      "case": "changed original native training source",
+      "rejected": true,
+      "error": "The original model, optimizer or core training source changed"
+    },
+    {
+      "case": "altered full reference fingerprint",
+      "rejected": true,
+      "error": "Complete reference evidence changed"
+    },
+    {
+      "case": "changed actual projection source pin",
+      "rejected": true,
+      "error": "Frozen normalizer sources changed"
+    },
+    {
+      "case": "actual expected/live plan mismatch",
+      "rejected": true,
+      "error": "Frozen normalizer plan changed"
+    }
+  ],
+  "negative_fixture_count": 18,
+  "all_negative_fixtures_rejected_before_training": true,
+  "scientific_training_started": false,
+  "both_scientific_cases_unstarted": true,
+  "frozen_plan_sha256": "261aba71d67b68c4856fb1aa2dba5a3b1c97e3f3a85b3fc29324f0abb14ec94f",
+  "source_fingerprints": 43,
+  "training_source_fingerprints": 17,
+  "Lean_specification_fingerprints": 9,
+  "complete_reference_result_reviewed_and_committed": true,
+  "reference_result_validation_sha256": "6919dc311db3164c0b6d83532cf5900d3589c333c71bcdeec240ff681cd378ad",
+  "complete_reference_artifacts_copied_byte_exact": true,
+  "campaign_architecture_claim_allowed": false,
+  "independent_confirmation_complete": false,
+  "copied_reference_files_byte_exact": 22,
+  "actual_scientific_launcher_check_only": {
+    "command": ".venv/bin/python -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_attention_pair --check-only",
+    "exit_code": 0,
+    "both_fresh_full_budgets_verified": true
+  }
+}

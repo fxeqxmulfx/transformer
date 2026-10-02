@@ -406,8 +406,12 @@ verification and reviewed PNG/actual PDF figures. Sparsemax runs first and
 a fresh softmax control follows; both full budgets are frozen together before
 training. All 43 source fingerprints and the reference/proof provenance are
 checked, recovery metrics are derived from full histories, and failed timing
-support remains zero. No scientific pair manifest or normalizer run has
-started; commit the complete reviewed 300,000-update result before freezing it.
+support remains zero. After complete reference-result commit `8785c6b`, the
+[scientific manifest](protocols/adamw_stability_20261002/attention-pair-plan.json)
+is frozen at 22:47:04 UTC, with both fresh full budgets and unchanged criteria.
+The real launcher and eighteen negative scientific fixtures pass; all 43
+Python/nine Lean sources match and the complete reference copy is byte exact.
+Commit the manifest before starting either scientific normalizer run.
 The [harder-task summary](protocols/adamw_stability_20261002/harder-task-results.md)
 keeps the three complete single-case AdamW outcomes and their task/exposure
 differences together; it does not average interventions or form ineligible ratios.
