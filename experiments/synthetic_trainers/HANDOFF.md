@@ -8,8 +8,8 @@ Read [AGENTS.md](../../AGENTS.md), [PLAN.md](PLAN.md), and
 
 All scheduled training in the reproduction campaign has finished. The serial
 driver completed with exit code 0; there is no training job to resume.
-The current reproduction campaign is finished. The startup message below
-describes a separate proposed follow-up loop, which has not been started.
+The previous reproduction campaign is finished. A separate follow-up goal
+is now active; its calibration bootstrap is described below.
 The nine modular runs each completed 150,000 updates, with 601 observations:
 1,350,000 updates and 5,409 observations in total. Source hashes, recipes,
 budgets, all histories, final observations, and paired split fingerprints were
@@ -147,7 +147,43 @@ fidelity, external-dependency audit, and index requirements for future proofs.
 changes and forbids subagents. No new approval is needed for already authorized
 reversible work or regular commits.
 
-## What I would do next
+## Active follow-up bootstrap (2026-10-02)
+
+The follow-up goal from the startup message is active, without subagents.
+Read [STABILITY.md](STABILITY.md) for its prospectively specified criteria,
+four paired calibration recipes, and independent-confirmation gate.
+The restored checkout has a GTX 1050 (Pascal, 2 GiB), Python 3.12.13,
+PyTorch 2.14.0+cu126, NumPy 2.5.3, and Matplotlib 3.11.2. The preexisting
+PyTorch 2.7.1+cu118 was upgraded before calibration. A real 20-update GPU
+smoke run passed with peak allocation 119,166,464 bytes.
+
+Local manuscripts and tracked complete archives are present. Historical model
+checkpoints, Fashion-MNIST IDX data, and the temporary author-source cache
+were not transferred. Fresh modular training uses the complete oracle corpus
+and tracked licensed reference code; these missing historical resources do
+not prevent it. Historical timing is descriptive, with paired controls on
+this GPU required for new comparisons.
+
+Read-only gradient/moment/update/temperature diagnostics, neighbor probes,
+portable fingerprints, and an explicitly labeled full-batch epoch-wrap control
+are verified and committed as `a0dcee2`. CPU checks preserve exact model,
+optimizer buffers, canonical scores, and checkpoint continuation. The stronger
+criterion requires a memorization plateau, 20 consecutive joint 99% scores,
+and joint 99% throughout the last 50,000 updates. None of the nine historical
+runs satisfies that prospective persistence criterion when assessed
+retrospectively; the old frozen successes remain unchanged. See the
+[baseline assessment](protocols/amsgradw_stability_20261002/historical-persistence.json)
+and [restored environment](protocols/amsgradw_stability_20261002/environment.json).
+
+The first stage will run four fresh, full 150,000-update calibrations with
+one mechanism changed at a time: unchanged learning rate 0.001, full-batch
+sampling at 0.001, and short-tail learning rates 0.0003/0.0001. All use
+initialization/data seed 0, the 50% split, and decay 0.1. Confirmation and
+architecture comparisons require separately frozen plans after these complete
+histories. Keep the active goal running, retain failures, archive each verified
+completed result, and commit logical changes during the loop.
+
+## Proposed sequence, now being activated
 
 1. Investigate late raw-AMSGradW collapses in fresh instrumented calibration
    runs. Log gradient norms, parameter/moment norms, learned temperatures,
@@ -172,7 +208,8 @@ reversible work or regular commits.
    longer-input success separate; better ID fitting alone did not solve length
    transfer in the completed scaling study.
 
-These are proposed follow-up experiments; they have not been launched.
+The follow-up goal is active. Calibration launch and measured progress are
+recorded in the active bootstrap section; later stages await its results.
 
 ## Ready-to-send message for a new loop
 
