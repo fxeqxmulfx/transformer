@@ -319,6 +319,9 @@ prospective scientific plan. The ordinary CSV-verifier repair is now complete.
 The [25% scientific plan](protocols/adamw_stability_20261002/fraction25-protocol.md)
 has now been frozen after the complete parent result, changing only the training
 fraction and recording the two analysis-only repairs. Its gates remain unchanged.
+It is now running with an archive worker; the initial prefix has the required
+memorization plateau at 1,000–3,000, without a held-out target yet. This partial
+phase observation does not establish persistent generalization or repeatability.
 Any subsequent
 fraction, decay, schedule, or model intervention needs a fresh frozen plan; a
 negative result does not justify relaxing the success criterion.

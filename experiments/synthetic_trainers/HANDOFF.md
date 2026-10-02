@@ -322,9 +322,19 @@ environment, papers, instrumentation and all phase/persistence gates. It records
 the two verified analysis-only repairs. The real launcher check and isolated
 negative manifest tests are recorded in the
 [freeze validation](protocols/adamw_stability_20261002/fraction25-freeze-validation.json).
-Scientific training has not yet started in this preparation record. Launch from
-the root with `run_fraction25` as documented in its protocol; preserve the full
-150,000-update result before applying the unchanged six-case confirmation gate.
+Scientific training is now live: trainer PID 123201/session 61726 runs the
+strict `run_fraction25` launcher. Archive worker PID 123310/session 95343
+has no PyTorch imported and waits for the full budget, checks all immutable
+fingerprints, creates both complete archives with PNG/PDF figures, and verifies
+them offline with the ordinary tools. Actual commands, state and fingerprints
+are recorded in the
+[launch validation](protocols/adamw_stability_20261002/fraction25-launch-validation.json).
+Driver output is `experiments/runs/adamw_stability_20261002/fraction25-driver.log`;
+worker metadata is `experiments/runs/adamw_stability_20261002/bootstrap/fraction25-archive-worker.json`.
+Check these actual processes before restart. An early prefix has the required
+memorization plateau at 1,000–3,000 (nine observations), but no held-out target
+or long confirmation yet. This is incomplete calibration evidence; finish all
+150,000 updates before applying the unchanged six-case confirmation gate.
 
 The [complementary-trainer preparation](protocols/adamw_stability_20261002/complementary-preparation.md)
 also verifies seven existing AdamW CPU paths for MQAR, one/two-hop lookup,

@@ -1,0 +1,30 @@
+{
+  "recorded_at_utc": "2026-10-02T17:34:21.771370+00:00",
+  "scientific_training_started": true,
+  "trainer_pid": 123201,
+  "trainer_session": 61726,
+  "actual_trainer_command": ".venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_fraction25",
+  "worker_pid": 123310,
+  "worker_session": 95343,
+  "actual_worker_command": ".venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.archive_fraction25 --trainer-pid 123201",
+  "worker_torch_imported": false,
+  "worker_sha256": "8d0a54b7b1724198f70e1a56a21247f4b9a4f67ebbfc9304e6e9b4646ce11ef3",
+  "frozen_fingerprints": {
+    "checked_files": 31,
+    "all_unchanged": true,
+    "live_plan_bytes_match": true
+  },
+  "initial_scientific_prefix": {
+    "latest_step": 7750,
+    "canonical_observations": 32,
+    "train_accuracy": 0.9958981001727115,
+    "heldout_accuracy": 0.06937248128957973,
+    "observed_memorization_plateau": {
+      "start": 4500,
+      "end": 7750,
+      "observations": 14
+    },
+    "long_confirmation": null
+  },
+  "scope": "incomplete_calibration_prefix; no_full_budget_persistence_or_independent_confirmation_claim"
+}
