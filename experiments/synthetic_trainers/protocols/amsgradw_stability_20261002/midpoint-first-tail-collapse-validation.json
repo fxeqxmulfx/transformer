@@ -1,0 +1,11 @@
+{
+  "recorded_at_utc": "2026-10-02T12:45:32.287104+00:00",
+  "raw_prefix_fingerprints_match": true,
+  "all_six_raw_score_and_diagnostic_records_match": true,
+  "derived_diagnostics_recomputed_exactly": true,
+  "partial_assessment_recomputed_exactly": true,
+  "real_arithmetic_estimate_recomputed": true,
+  "torch_imported": false,
+  "scope": "incomplete_calibration; approximate_recurrence_inference_not_a_certified_floating_point_bound_or_causal_claim",
+  "record_sha256": "28aad48198047ae598887d80d8e328037c963fdf8c20a62b0e0eb8010dd124ca"
+}

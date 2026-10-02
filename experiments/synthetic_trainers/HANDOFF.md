@@ -360,6 +360,17 @@ regardless of later persistence. Long joint confirmation and final-tail
 persistence are still unmeasured at that prefix. Finish the same full budget,
 then verify and review its archives before selecting another justified control.
 
+The later [first tail collapse](protocols/amsgradw_stability_20261002/midpoint-first-tail-collapse.md)
+is recorded at 112,750 after long joint confirmation over 95,750–100,500.
+The first 51 final-tail observations pass; the next falls to train/held-out
+1.2672%/0.7947%. Both immediate neighbors have the same low accuracies, with
+EOS 100%. Scores are still high at the previous after-probe 112,501, but are
+low at 112,749; the raw second-moment norm rises from 0.00257 to 23.78 between
+them. This indicates large unprobed gradients under the frozen raw recurrence,
+without identifying a trigger or causal direction. Complete source samples
+and the calculation's assumptions are retained. Final persistence also fails;
+finish the full budget and review the complete outcome before the next plan.
+
 A read-only [fraction-control corpus inspection](protocols/amsgradw_stability_20261002/candidate-corpus-coverage.md)
 finds all 97 answer classes and legal operand classes in the 50%, 20%, 10%,
 and 5% pools on calibration data seed 0. Counts, oracle answers, and nested
