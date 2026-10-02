@@ -68,20 +68,25 @@ also fails the required phase and persistence, with ten failing tail observation
 and worst held-out 58.1400%. The
 [verified complete pair](protocols/adamw_stability_20261002/optimizer-pair-result.md)
 retains all 300,000 updates; neither recipe opens independent confirmation.
-The user-directed frozen mod-193 AdamW adaptation is now running.
+The user-directed frozen mod-193 AdamW adaptation is now complete.
 Its [first target at 40,000](protocols/adamw_stability_20261002/first-target-mod193.md)
 has no required pre-target memorization plateau, ruling out stable-grokking
 eligibility. Its [first final-window failure at 102,750](protocols/adamw_stability_20261002/first-tail-failure-mod193.md)
 also rules out persistence: train/held-out 95.1749%/94.6082%, with failing
-immediate neighbors and EOS 100%. Its full budget continues unchanged;
-slower generalization alone does not satisfy either gate.
+immediate neighbors and EOS 100%. The
+[complete result](protocols/adamw_stability_20261002/larger-modulus-result.md)
+retains all 150,000 updates and seven final-window failures, with worst held-out
+79.8953% and final 100%. Neither gate passes; eligible timing support is zero.
+Slower generalization alone does not satisfy either gate.
 The first complete dense archive also exposed quadratic CSV verification.
 Its [runtime execution repair](protocols/adamw_stability_20261002/csv-verification-repair.md)
 passes all 235 CPU tests and preserves frozen sources, criteria and complete
 comparison semantics. Dense archives currently use its offline verification
 command; the additional runtime SHA256 and exact worker sources are retained.
-Training continues unchanged, and the live mod-193 launcher still checks
-the original manifests and every frozen fingerprint.
+Both frozen campaigns and their archive workers have now completed, with
+the original manifests and every frozen fingerprint checked. The runtime
+adapter can now be replaced by the identical ordinary-verifier optimization
+before a new plan is frozen.
 
 ```bash
 .venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_optimizer_pair
@@ -305,8 +310,9 @@ complete and negative; their full archives, curves and diagnoses are preserved.
 The user-selected AdamW/raw AMSGradW pair completed both full negative
 phase/persistence results. All dense gradient records and the complete pair
 are verified and preserved. The user-directed frozen mod-193 AdamW adaptation
-is running under the unchanged criteria; preserve its complete budget and
-archive before considering a further intervention.
+also completed its full negative phase/persistence result. The prepared 25%
+fraction control has CPU implementation checks only; it still needs a new
+prospective scientific plan after the ordinary CSV-verifier repair.
 Any subsequent
 fraction, decay, schedule, or model intervention needs a fresh frozen plan; a
 negative result does not justify relaxing the success criterion.

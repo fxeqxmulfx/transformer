@@ -1,0 +1,25 @@
+{
+  "files": {
+    "REPORT.md": "f9dcd46d0657b2aee77d77177c2cda4d3f64a472bbfe128b694f86d6b8d0eb28",
+    "comparison.csv": "0e4ca2efdbcafb08c1e54cba345452dd03a67bd4cfe5a26cffd6d756c31e4f36",
+    "plan.json": "4eb535c85002f2ec8f75904163d791619323e2a85770c9eb0c597d6055138329",
+    "plots/calibration-comparison.pdf": "0f02fe7c52597886a852280bf5cc1d9720640074708ac06db4a9e7dddfe86c74",
+    "plots/calibration-comparison.png": "9c24be87275ed355d88a537a30e37716dd515e329f87bbacf8a4bba67d783b2a",
+    "runs/adamw-mod193-lr001/artifact-hashes.json": "9b55b3deb89dd11a64a7a212d48a9a7d458bda597d0b53e1e872ef8c11b2aae1",
+    "runs/adamw-mod193-lr001/diagnostic-metrics.csv": "72c9b24733514a938fc74a0c266537c01f5016d0c26e84687c25f48b94c84d7b",
+    "runs/adamw-mod193-lr001/diagnostics.jsonl": "443fefbbc01f40b8c1a74415537313caa0eea69461451343fc84b31f60ed6b34",
+    "runs/adamw-mod193-lr001/gradient-metrics.csv": "df4e3f1eaf2c4f8597619ea4d91eb503338fa1389b7fc741c8eef981c8dda09f",
+    "runs/adamw-mod193-lr001/gradients.jsonl": "6a3fbfd85383f9e9fa06cfca7bb3e8a5cd732598510fda77a5dc1772b7c2ce6d",
+    "runs/adamw-mod193-lr001/measurements.json": "b9417e3d3cf7c67d58e3693332dfac1f427c503cba6acb17274fcef8b9cdb781",
+    "runs/adamw-mod193-lr001/metrics.csv": "63dea8700a9e2e7a387b6397f34407ac21bb08149a745f9e633689607b421216",
+    "runs/adamw-mod193-lr001/neighbor-metrics.csv": "8bc0bbef242736c1e6f36fda27d2e938beeef09f5e752b7f119b1010270f0e0c",
+    "runs/adamw-mod193-lr001/plan.json": "4eb535c85002f2ec8f75904163d791619323e2a85770c9eb0c597d6055138329",
+    "runs/adamw-mod193-lr001/plots/collapse-neighbors.pdf": "58838d33253fb3cfa5c763f0442d12e447848a4895679fa5f0aaaef29225f08e",
+    "runs/adamw-mod193-lr001/plots/collapse-neighbors.png": "63a9e6b4262898a90186e9d31cfa3d8d2e973b5545b8158de2716388d79e7709",
+    "runs/adamw-mod193-lr001/plots/stability-overview.pdf": "aaeafd0ee4c97c58998c02f206338b0a5464f9c12c3abd699804c68960b39446",
+    "runs/adamw-mod193-lr001/plots/stability-overview.png": "b096e229e6127dd3a616a3bf5ce247b33c23e10ce09ad63255bf64f4a642345a",
+    "runs/adamw-mod193-lr001/probes.jsonl": "d967070c7e4774a6b7d6cf40f6a911267e8716e2abbdd5e6eec987045f0308a3",
+    "runs/adamw-mod193-lr001/summary.json": "4820eb8e36c6711a6aeb68cc14abf226c3bd6639d940e93a75119da1c35fb995",
+    "summary.json": "cc96671bf607ff780888424f309e8027d19d1d56dccfcb44cdc94ecd11cc30ee"
+  }
+}

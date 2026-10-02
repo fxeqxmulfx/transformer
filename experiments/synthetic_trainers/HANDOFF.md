@@ -195,8 +195,9 @@ preserves every frozen file and scientific check, while computing the identical
 columns once. All 235 CPU tests pass; original staged and final AdamW summaries
 and measurement files agree. Original non-training workers 112672/115191 were
 deliberately stopped, with terminal sessions 78057/18664 (exit 143). Replacement
-archive worker PID 117200/session 10373 has completed; queued task worker
-PID 117203/session 46645 is live. The original GPU trainer was not restarted.
+archive worker PID 117200/session 10373 and queued task worker
+PID 117203/session 46645 have completed with exit code 0. Their terminal
+handles are consumed. The original GPU trainer was not restarted.
 The adapter SHA256 and exact worker source snapshots are preserved separately;
 the mod-193 launcher's frozen checks pass through the adapter. Use the repair's
 offline command for dense archives until both frozen campaigns finish, then
@@ -229,7 +230,7 @@ verifies both original archives and byte-identical nested copies without
 PyTorch. Both have empty eligible persistent-target timing support. Original
 curves and reviewed standalone PNG/PDF figures with readable update ticks
 retain all observations. Neither recipe permits independent confirmation.
-The separately frozen mod-193 adaptation is now running; no scientific
+The separately frozen mod-193 adaptation is now complete; no scientific
 train-fraction control has been frozen or launched here.
 After each full result, review figures, commit the verified archive and measured
 outcome, and apply the unchanged gate. No scientific independent confirmation
@@ -259,13 +260,13 @@ after both mod-97 budgets and their complete verified comparison:
 
 Use `--check-only` to verify the new manifest before parent completion.
 Live output will be under `experiments/runs/adamw_stability_20261002/calibration_mod193_lr001/`.
-The replacement serial queue worker is live (PID 117203, session 46645);
-its child trainer PID 119293 executes the unchanged launcher through the
-verified CSV adapter. Actual command, scientific state/history and frozen
-fingerprints are checked in the
+The replacement serial queue worker (PID 117203, session 46645) and child
+trainer PID 119293 have completed. They executed the unchanged launcher
+through the verified CSV adapter. Original command, scientific state/history
+and frozen fingerprints are checked in the
 [launch validation](protocols/adamw_stability_20261002/larger-modulus-launch-validation.json).
-The worker will create and verify both full-budget portable archives after
-training completes. Do not start a second GPU trainer. See the
+The worker created and verified both full-budget portable archives. Both
+processes are terminal; do not restart or poll their consumed handles. See the
 [original queue validation](protocols/adamw_stability_20261002/larger-modulus-queue-validation.json),
 [runtime-repair validation](protocols/adamw_stability_20261002/csv-verification-repair-validation.json)
 and `experiments/runs/adamw_stability_20261002/bootstrap/queued-mod193-worker.json`.
@@ -284,7 +285,17 @@ immediate neighbors below target and EOS 100%. The canonical failure follows
 a full 512-example batch. Its complete 412-point prefix and 252-gradient /
 five-tensor neighborhood verify offline with semantic corruption checks.
 The recipe now fails both phase and persistence regardless of later recovery.
-Its full budget continues; preserve the complete result before the next freeze.
+The [complete mod-193 result](protocols/adamw_stability_20261002/larger-modulus-result.md)
+now preserves the whole 150,000-update budget and all dense/sampled logs.
+Final train/held-out is 100%/100%, but seven of 201 tail observations fail,
+with worst held-out 79.8953% at 148,000. First long confirmation is
+52,250–57,000, with 1,436.21 training / 1,779.09 wall seconds; eligible timing
+support is zero. Complete costs are 3,750.27 training / 4,648.78 wall seconds.
+Both archives verify without PyTorch; source/checkpoint bytes, all 31 frozen
+fingerprints and earlier prefixes agree. All three PNG/PDF figure pairs were
+reviewed; the original comparison has overlapping ticks and is preserved
+for a readable sidecar after the analysis-only fix. No current scientific
+trainer remains in this completed stage; the next intervention is not yet frozen.
 At selection time, this user-directed harder-task adaptation superseded the
 earlier tentative train-fraction idea. Its historical prefix inspections
 remain partial evidence with their original labels.
@@ -295,8 +306,8 @@ checked exhaustive nested splits, identical CPU initial model states and
 unchanged 436,104 parameters. A real 20-update full-width CPU smoke checks
 the 48-example tail / next 512-example batch and verifies its portable archive
 without PyTorch. This is preparation only; no new scientific plan is frozen
-or launched. Finish the current budget and archive, repair the ordinary CSV
-verifier after the frozen campaigns, then prospectively freeze any fraction
+or launched. The current full budget and archive are complete. Repair the ordinary
+CSV verifier after these frozen campaigns, then prospectively freeze any fraction
 intervention with unchanged criteria. The original stage fingerprints are intact.
 
 The [complementary-trainer preparation](protocols/adamw_stability_20261002/complementary-preparation.md)
