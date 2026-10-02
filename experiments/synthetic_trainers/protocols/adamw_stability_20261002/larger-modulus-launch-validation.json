@@ -1,0 +1,28 @@
+{
+  "recorded_at_utc": "2026-10-02T16:06:01.656932+00:00",
+  "scientific_training_started": true,
+  "launch_utc": "2026-10-02T15:50:59.797959+00:00",
+  "trainer_pid": 119293,
+  "actual_trainer_command": "/home/misha/lean_projects/transformer/.venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.csv_verification module experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_larger_modulus",
+  "serial_worker_pid": 117203,
+  "serial_worker_session": 46645,
+  "parent_completed_runs": 2,
+  "parent_archive_verification_passed": true,
+  "configuration_differences_against_primary_mod97": [
+    "prime"
+  ],
+  "frozen_fingerprints": {
+    "checked_files": 31,
+    "all_unchanged": true,
+    "launcher_unchanged": true,
+    "live_plan_bytes_match": true
+  },
+  "csv_runtime_adapter_sha256": "eb712251a35f23d1daab19b35822f9428f9bd5b13ea5e1d8c9e2840d38354946",
+  "initial_scientific_prefix": {
+    "canonical_observations": 114,
+    "latest_step": 28250,
+    "train_accuracy": 0.8833117443868739,
+    "heldout_accuracy": 0.8240500863557858
+  },
+  "scope": "incomplete_scientific_prefix; no_full_budget_persistence_or_independent_confirmation_claim"
+}

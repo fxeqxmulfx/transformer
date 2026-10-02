@@ -62,14 +62,19 @@ has now finished all 150,000 updates and verified its full archive: final
 train/held-out is 100%, but seven of 201 final-window observations fail,
 with worst held-out 43.9003% at 129,000. The required memorization phase
 is absent. Its observed long confirmation at 6,000 remains visible, while
-eligible persistent timing has support zero. Finish the running raw control,
-retain the full comparison, then execute the separately frozen mod-193 adaptation.
+eligible persistent timing has support zero. The
+[complete raw control](protocols/adamw_stability_20261002/raw-amsgradw-result.md)
+also fails the required phase and persistence, with ten failing tail observations
+and worst held-out 58.1400%. The
+[verified complete pair](protocols/adamw_stability_20261002/optimizer-pair-result.md)
+retains all 300,000 updates; neither recipe opens independent confirmation.
+The user-directed frozen mod-193 AdamW adaptation is now running.
 The first complete dense archive also exposed quadratic CSV verification.
 Its [runtime execution repair](protocols/adamw_stability_20261002/csv-verification-repair.md)
 passes all 235 CPU tests and preserves frozen sources, criteria and complete
 comparison semantics. Dense archives currently use its offline verification
 command; the additional runtime SHA256 and exact worker sources are retained.
-Training continues unchanged, and the queued mod-193 launcher still checks
+Training continues unchanged, and the live mod-193 launcher still checks
 the original manifests and every frozen fingerprint.
 
 ```bash
@@ -291,10 +296,11 @@ the current calibration. Timing comparisons use paired controls on this GPU.
 
 The four original raw calibrations and the midpoint learning-rate control are
 complete and negative; their full archives, curves and diagnoses are preserved.
-The current user-selected AdamW/raw AMSGradW pair is frozen. Primary AdamW
-completed its full negative phase/persistence result; the raw control is running.
-Finish its complete budget, preserve every dense gradient record, verify the
-complete pair, and execute the user-directed frozen mod-193 AdamW adaptation.
+The user-selected AdamW/raw AMSGradW pair completed both full negative
+phase/persistence results. All dense gradient records and the complete pair
+are verified and preserved. The user-directed frozen mod-193 AdamW adaptation
+is running under the unchanged criteria; preserve its complete budget and
+archive before considering a further intervention.
 Any subsequent
 fraction, decay, schedule, or model intervention needs a fresh frozen plan; a
 negative result does not justify relaxing the success criterion.

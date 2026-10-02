@@ -55,8 +55,9 @@ buffer, learning rate 0.001 and all-parameter decay 0.1. The separately
 original frozen files and identical verification outcomes; it changes only
 how often the common CSV column set is computed.
 
-The paired raw AMSGradW control is now running its own full budget. Finish
-and archive it, verify the complete comparison, then execute the already
-frozen mod-193 AdamW task adaptation requested by the user. This mod-97
-primary recipe cannot launch independent confirmation; no scientific
-architecture comparison or complementary-task campaign has begun.
+The [paired raw AMSGradW control](raw-amsgradw-result.md) also completed its
+full budget with negative phase/persistence results. The
+[complete optimizer comparison](optimizer-pair-result.md) is verified, and
+the already frozen mod-193 AdamW task adaptation requested by the user is
+now running. This mod-97 primary recipe cannot launch independent confirmation;
+no scientific architecture comparison or complementary-task campaign has begun.

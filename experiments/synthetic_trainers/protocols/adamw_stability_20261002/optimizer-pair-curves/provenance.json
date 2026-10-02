@@ -1,0 +1,13 @@
+{
+  "source_archive": "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/baselines/adamw_stability_optimizer_pair_lr001_20261002",
+  "source_measurement_sha256": {
+    "adamw-short-lr001": "b2bbb236d73dca702400ae4e44f5c623afe00a04ddb73fd9bfd8448ef09fe67b",
+    "amsgradw-short-lr001": "ff8728228e7ca0efcb780ac75ca5ca0f8a81f972e819534afee2cc4e773ad479"
+  },
+  "canonical_observations_rendered": {
+    "adamw-short-lr001": 601,
+    "amsgradw-short-lr001": 601
+  },
+  "script_sha256": "9dbe7d54d227a49b6a5edf7b2e48bea6bdc937aff262b4c92a2f980325e9f80b",
+  "scope": "same_complete_curves; update_labels_in_thousands; no_change_to_frozen_archives"
+}

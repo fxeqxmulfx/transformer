@@ -6,8 +6,8 @@ Read [AGENTS.md](../../AGENTS.md), [PLAN.md](PLAN.md), and
 
 ## Current state
 
-All scheduled training in the reproduction campaign has finished. The serial
-driver completed with exit code 0; there is no training job to resume.
+All scheduled training in the previous reproduction campaign has finished. Its
+serial driver completed with exit code 0; that campaign has no job to resume.
 The previous reproduction campaign is finished. A separate follow-up goal
 is now active; its calibration bootstrap is described below.
 The nine modular runs each completed 150,000 updates, with 601 observations:
@@ -155,7 +155,7 @@ completed negative result retained. Phase, persistence, independent-confirmation
 architecture and complementary-task requirements are unchanged. Historical
 AdamW has fewer sampled failures but is not yet a verified stable benchmark.
 
-The next scientific stage is the prospectively frozen
+The completed scientific stage is the prospectively frozen
 [AdamW/raw AMSGradW optimizer pair](protocols/adamw_stability_20261002/optimizer-pair-protocol.md).
 Both recipes retain learning rate 0.001, the same GPTMini model/data/seeds,
 short-final batches, decay 0.1, and 150,000-update budgets. Only optimizer
@@ -181,17 +181,12 @@ Add `--check-only` for verification. Live data will be under
 Do not use the default raw four-recipe CLI for this custom pair. Archive and
 commit each full result independently, then assemble the complete comparison.
 Only a passing primary AdamW calibration permits new independent confirmation;
-architecture and complementary mechanics remain pending. This paragraph records
-preparation, not a scientific result; inspect actual process/state for progress.
+architecture and scientific complementary mechanics remain pending.
 
-The optimizer-pair trainer is now live (initial PID 112572, session 92762).
-At launch validation its latest canonical update is 5750, with train /
-held-out accuracy 100.000000% / 100.000000%. This is an incomplete prefix, not verified
-persistence or a stable benchmark. At launch the serial archive worker was live
-(PID 112672, session 78057), with no PyTorch imported. It waits for each complete
-budget, checks immutable fingerprints, preserves all dense and sampled logs,
-creates PNG/PDF archives, and verifies them with system Python. Inspect actual
-processes before restart; avoid a second archive writer. Driver output is
+The optimizer-pair trainer (initial PID 112572, session 92762) and replacement
+archive worker (PID 117200, session 10373) finished with exit code 0. Both
+terminal handles were consumed; do not restart or poll them. The complete
+pair preserves 300,000 updates and 1,202 canonical observations. Driver output is
 `experiments/runs/adamw_stability_20261002/optimizer-pair-driver.log`;
 worker metadata is under `experiments/runs/adamw_stability_20261002/bootstrap/optimizer-pair-archive-worker.json`.
 The first full dense archive exposed a quadratic CSV column-union loop.
@@ -200,8 +195,8 @@ preserves every frozen file and scientific check, while computing the identical
 columns once. All 235 CPU tests pass; original staged and final AdamW summaries
 and measurement files agree. Original non-training workers 112672/115191 were
 deliberately stopped, with terminal sessions 78057/18664 (exit 143). Replacement
-archive worker PID 117200/session 10373 and queued task worker PID 117203/session
-46645 are live. The GPU trainer PID 112572/session 92762 was not restarted.
+archive worker PID 117200/session 10373 has completed; queued task worker
+PID 117203/session 46645 is live. The original GPU trainer was not restarted.
 The adapter SHA256 and exact worker source snapshots are preserved separately;
 the mod-193 launcher's frozen checks pass through the adapter. Use the repair's
 offline command for dense archives until both frozen campaigns finish, then
@@ -225,12 +220,17 @@ Seven of 201 final-window observations fail; worst held-out is 43.9003%
 at 129,000. Phase and persistence both fail. Full costs are 4,022.04 training /
 4,284.18 wall seconds, with 44.04 diagnostic seconds. Both PNG/PDF curve pairs
 were reviewed and the archive verified without PyTorch; original bytes and
-frozen fingerprints agree. The raw AMSGradW case is running. Finish it and
-the complete comparison, then run the already frozen mod-193 adaptation;
-no independent confirmation is eligible from this mod-97 primary recipe.
-The prefix reproduces offline without PyTorch and exactly matches the original
-bytes. Finish the unchanged raw control before starting the already selected
-mod-193 calibration; no train-fraction control has been selected or launched here.
+frozen fingerprints agree. The
+[complete raw control](protocols/adamw_stability_20261002/raw-amsgradw-result.md)
+also finished: final train/held-out 100%/99.9785%, absent required plateau,
+ten final-window failures and worst held-out 58.1400%. The
+[complete optimizer comparison](protocols/adamw_stability_20261002/optimizer-pair-result.md)
+verifies both original archives and byte-identical nested copies without
+PyTorch. Both have empty eligible persistent-target timing support. Original
+curves and reviewed standalone PNG/PDF figures with readable update ticks
+retain all observations. Neither recipe permits independent confirmation.
+The separately frozen mod-193 adaptation is now running; no train-fraction
+control has been selected or launched here.
 After each full result, review figures, commit the verified archive and measured
 outcome, and apply the unchanged gate. No scientific independent confirmation
 or architecture run has started.
@@ -249,8 +249,8 @@ The complete oracle corpus and both split class coverages are checked; a real
 
 Its [manifest](protocols/adamw_stability_20261002/larger-modulus-plan.json) was
 frozen at 2026-10-02T13:42:36.938813+00:00 from `6e172bb`.
-No scientific mod-193 training has started. The launcher requires both current
-mod-97 budgets and their complete verified comparison before starting:
+Scientific mod-193 training started at 2026-10-02T15:50:59.797959+00:00,
+after both mod-97 budgets and their complete verified comparison:
 
 ```bash
 .venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.csv_verification \
@@ -259,11 +259,13 @@ mod-97 budgets and their complete verified comparison before starting:
 
 Use `--check-only` to verify the new manifest before parent completion.
 Live output will be under `experiments/runs/adamw_stability_20261002/calibration_mod193_lr001/`.
-The replacement serial queue worker is live (PID 117203, session 46645); its actual command
-and unchanged manifest were checked. It waits for the complete verified
-mod-97 comparison, then executes the frozen mod-193 launcher and creates both
-full-budget portable archives with offline verification. No second GPU trainer
-or scientific mod-193 state/history exists yet. See the
+The replacement serial queue worker is live (PID 117203, session 46645);
+its child trainer PID 119293 executes the unchanged launcher through the
+verified CSV adapter. Actual command, scientific state/history and frozen
+fingerprints are checked in the
+[launch validation](protocols/adamw_stability_20261002/larger-modulus-launch-validation.json).
+The worker will create and verify both full-budget portable archives after
+training completes. Do not start a second GPU trainer. See the
 [original queue validation](protocols/adamw_stability_20261002/larger-modulus-queue-validation.json),
 [runtime-repair validation](protocols/adamw_stability_20261002/csv-verification-repair-validation.json)
 and `experiments/runs/adamw_stability_20261002/bootstrap/queued-mod193-worker.json`.

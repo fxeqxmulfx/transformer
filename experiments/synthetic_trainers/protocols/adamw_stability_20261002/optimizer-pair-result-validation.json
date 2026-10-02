@@ -1,0 +1,95 @@
+{
+  "recorded_at_utc": "2026-10-02T16:03:21.769639+00:00",
+  "archive": "experiments/synthetic_trainers/baselines/adamw_stability_optimizer_pair_lr001_20261002",
+  "offline_verification_passed": true,
+  "torch_imported": false,
+  "complete_stage": true,
+  "completed_runs": 2,
+  "total_updates": 300000,
+  "total_canonical_observations": 1202,
+  "frozen_fingerprints": {
+    "checked_files": 31,
+    "all_unchanged": true,
+    "launcher_unchanged": true
+  },
+  "configuration_differences": [
+    "optimizer"
+  ],
+  "individuals": [
+    {
+      "archive": "experiments/synthetic_trainers/baselines/adamw_stability_adamw_short_lr001_seed0_data0_20261002",
+      "name": "adamw-short-lr001",
+      "counts": {
+        "canonical_observations": 601,
+        "neighbor_observations": 1200,
+        "diagnostic_observations": 1800,
+        "gradient_trace_observations": 150000,
+        "final_tail_observations": 201,
+        "final_tail_failures": 7
+      },
+      "original_plan_and_measurement_bytes_match": true,
+      "original_dense_and_sampled_log_bytes_match": true,
+      "original_checkpoint_sha256_matches": true,
+      "comparison_nested_files_byte_identical": true,
+      "timing_outcome": {
+        "complete_budget": true,
+        "phase_label": "does_not_meet_complete_persistent_target",
+        "memorization_plateau": null,
+        "persistent_final_performance": false,
+        "stable_grokking": false,
+        "tail_failures": 7,
+        "observed_target_training_seconds": 181.81148112790834,
+        "observed_target_wall_seconds": 194.90670331100046,
+        "eligible_target_training_seconds": null,
+        "eligible_target_wall_seconds": null,
+        "eligible_timing_support": 0,
+        "timing_scope": "first_long_joint_confirmation_with_complete_final_tail; no_between_sample_or_beyond_budget_guarantee"
+      },
+      "artifact_manifest_sha256": "fdd1fbe57e87f65984b6c934c2918e9b3d7f6d07fa2f849813d95641a7aced0f"
+    },
+    {
+      "archive": "experiments/synthetic_trainers/baselines/adamw_stability_raw_amsgradw_short_lr001_seed0_data0_20261002",
+      "name": "amsgradw-short-lr001",
+      "counts": {
+        "canonical_observations": 601,
+        "neighbor_observations": 1200,
+        "diagnostic_observations": 1800,
+        "gradient_trace_observations": 150000,
+        "final_tail_observations": 201,
+        "final_tail_failures": 10
+      },
+      "original_plan_and_measurement_bytes_match": true,
+      "original_dense_and_sampled_log_bytes_match": true,
+      "original_checkpoint_sha256_matches": true,
+      "comparison_nested_files_byte_identical": true,
+      "timing_outcome": {
+        "complete_budget": true,
+        "phase_label": "does_not_meet_complete_persistent_target",
+        "memorization_plateau": null,
+        "persistent_final_performance": false,
+        "stable_grokking": false,
+        "tail_failures": 10,
+        "observed_target_training_seconds": 1595.8051482094088,
+        "observed_target_wall_seconds": 1692.865818237995,
+        "eligible_target_training_seconds": null,
+        "eligible_target_wall_seconds": null,
+        "eligible_timing_support": 0,
+        "timing_scope": "first_long_joint_confirmation_with_complete_final_tail; no_between_sample_or_beyond_budget_guarantee"
+      },
+      "artifact_manifest_sha256": "b4e3a0198f9f9e417351402472a1d5b55af02de9bfefcc04d8feca03e7c52e0a"
+    }
+  ],
+  "stable_grokking_calibration_recipes": [],
+  "ready_to_freeze_independent_confirmation": false,
+  "figures_inspected": [
+    "plots/calibration-comparison.png",
+    "../../protocols/adamw_stability_20261002/optimizer-pair-curves/optimizer-pair.png"
+  ],
+  "sidecar_complete_data_and_artifact_hashes_verified": true,
+  "sidecar_display_floor_nats": 1e-12,
+  "sidecar_artifact_manifest_sha256": "4d34da6dd262116217adc0c96658c8061ef387332f45b1ea20ebd14b9303d4e3",
+  "comparison_artifact_manifest_sha256": "a898d797d3a9874fbb2d95b516c56710543db14ebdaf7a5acf01f7accf8b8767",
+  "csv_runtime_adapter_sha256": "eb712251a35f23d1daab19b35822f9428f9bd5b13ea5e1d8c9e2840d38354946",
+  "scope": "one_initialization_and_one_calibration_split_per_recipe; no_mean_SD_or_universal_speedup",
+  "timing_scope": "descriptive_single_pair_on_GTX1050; CPU_archiving_and_tests_overlap_portions_of_control; no_persistent_target_speedup"
+}
