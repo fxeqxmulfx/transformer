@@ -78,7 +78,13 @@ PNG/actual PDF figures reviewed and result committed as `8785c6b`, the actual
 scientific negative fixtures are rejected before training. The
 [manifest receipt](attention-pair-manifest-validation.json) checks the full
 byte-exact reference copy, all 43 Python/nine Lean sources and two fresh full
-budgets. Commit that manifest before scientific sparsemax begins.
+budgets. After manifest commit `a76e0b6`, scientific trainer PID 139507/session
+47567 and NoTorch archive worker PID 139645/session 69196 are live. The
+[actual launch](attention-pair-launch-validation.json) verifies the fresh
+case, original native warmup, source/proof fingerprints and real commands.
+The 3,750-update prefix is train/held-out 99.9028%/0.7376%; it is incomplete
+scientific evidence and does not establish an improvement. Finish both full
+budgets, retaining all outcomes and immutable sources.
 
 Finish, verify, review and commit the current 300,000-update result before
 scientific sparsemax training. Freeze a paired softmax/sparsemax comparison

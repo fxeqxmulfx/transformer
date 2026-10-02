@@ -524,15 +524,28 @@ commit `8785c6b`. Both full budgets, sources, nine Lean fingerprints and the
 byte-exact complete reference copy are checked. The actual launcher passes;
 eighteen isolated negative scientific fixtures are rejected before training,
 as retained in the [manifest receipt](protocols/adamw_stability_20261002/attention-pair-manifest-validation.json).
-Scientific sparsemax training has not started. Commit this frozen manifest,
-then start sparsemax and its NoTorch archive worker. A user-directed exploratory pair may be measured before the all-six
+The manifest was committed as `a76e0b6` before scientific launch. Trainer PID
+139507/session 47567 and NoTorch archive worker PID 139645/session 69196 are
+now genuinely live. The [launch receipt](protocols/adamw_stability_20261002/attention-pair-launch-validation.json)
+checks the real case's 436,104 parameters, native AdamW, all seventeen training
+fingerprints, original corpus/instrumentation, fresh step-one warmup, empty
+budget-extension history, all 43 Python/nine Lean sources and both commands.
+At 3,750, train/held-out is 99.9028%/0.7376%, with finite gradients. This is
+an incomplete scientific prefix, not a phase/persistence or improvement result.
+The fresh softmax case has not started and will run automatically after the
+whole sparsemax budget. Keep every frozen source immutable while either process
+is active. Inspect state/processes before any restart and review/commit each
+complete archived case while the serial driver proceeds.
+A user-directed exploratory pair may be measured before the all-six
 benchmark gate opens; that does not certify repeatability or an architecture
 improvement. Keep accuracy, loss, episode frequency/recovery, actual time and
 memory, and retain every failure. The six-case requirement for an improvement
 claim and scientific complementary tasks remain outstanding.
 
 ```bash
-.venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_budget_extension
+cat experiments/runs/adamw_stability_20261002/attention_mod193_fraction25_lr0003_budget300k/state.json
+cat experiments/runs/adamw_stability_20261002/bootstrap/attention-pair-archive-worker.json
+tail -n 3 experiments/runs/adamw_stability_20261002/attention-pair-driver.log
 ```
 
 The [complementary-trainer preparation](protocols/adamw_stability_20261002/complementary-preparation.md)

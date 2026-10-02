@@ -411,7 +411,14 @@ support remains zero. After complete reference-result commit `8785c6b`, the
 is frozen at 22:47:04 UTC, with both fresh full budgets and unchanged criteria.
 The real launcher and eighteen negative scientific fixtures pass; all 43
 Python/nine Lean sources match and the complete reference copy is byte exact.
-Commit the manifest before starting either scientific normalizer run.
+After manifest commit `a76e0b6`, actual trainer PID 139507/session 47567 and
+NoTorch archive worker PID 139645/session 69196 are running. The
+[launch receipt](protocols/adamw_stability_20261002/attention-pair-launch-validation.json)
+verifies fresh native warmup, parameters, all source/corpus/instrumentation
+fingerprints and real commands. Sparsemax reaches 3,750 with train/held-out
+99.9028%/0.7376%, but the full budget and both persistence outcomes remain
+unobserved. The fresh softmax control follows automatically. Preserve all
+pinned sources and every failure; review/commit each complete archived case.
 The [harder-task summary](protocols/adamw_stability_20261002/harder-task-results.md)
 keeps the three complete single-case AdamW outcomes and their task/exposure
 differences together; it does not average interventions or form ineligible ratios.
