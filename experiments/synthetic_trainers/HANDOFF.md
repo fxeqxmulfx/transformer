@@ -177,12 +177,11 @@ and [restored environment](protocols/amsgradw_stability_20261002/environment.jso
 
 The four-run calibration plan was frozen at 2026-10-02 06:04:54 UTC after
 208 CPU tests passed on the upgraded environment. Sources and split fingerprints
-were rechecked before launch. The serial driver is running under process 87620
-(initial launch PID); inspect the actual process state before any restart.
-The first `short-lr001`, `wrap-lr001`, and `short-lr0003` runs have completed
-and their full portable archives are verified. The driver has continued to
-`short-lr0001`; three of four calibration budgets are complete. Inspect the live history for
-its current update.
+were rechecked before launch. All four budgets have now completed. The serial
+driver (initial PID 87620) and archive worker (PID 96589) both exited with code
+0; their absence was checked. All four individual portable archives and the
+complete comparison are verified without PyTorch, and the new figures have
+been visually inspected. No job remains in this original four-recipe stage.
 
 All four fresh calibrations finish 150,000 updates each (600,000 total), with
 one mechanism changed at a time: unchanged learning rate 0.001, full-batch
@@ -195,19 +194,19 @@ neighbor probes, and checkpoints are under
 `experiments/runs/amsgradw_stability_20261002/calibration/`; the driver log is
 `experiments/runs/amsgradw_stability_20261002/calibration-driver.log`.
 
-A serial archive worker is also live (PID 96589, launcher session 73894).
-It waits for all four budgets to complete, checks the unchanged frozen plan,
-sources and manuscripts, then creates the fourth individual archive and the
-complete calibration comparison at the destinations in [STABILITY.md](STABILITY.md).
-It also verifies both without PyTorch. Inspect its actual process before
-relying on the local metadata at
+The archive worker completed the fourth individual archive and the complete
+[calibration comparison](baselines/amsgradw_stability_calibration_20261002/REPORT.md).
+The comparison retains all 600,000 updates, 2,404 canonical observations,
+4,800 neighbor probes, and 7,200 diagnostic records. All four recipes fail the
+unchanged criterion; the eligible calibration list is empty. Long-confirmation
+timing is retained where observed, with null timing and support zero for the
+lowest rate. See the [comparison verification](protocols/amsgradw_stability_20261002/calibration-result-validation.json).
+The worker metadata is under
 `experiments/runs/amsgradw_stability_20261002/bootstrap/final-archive-worker.json`.
-After it finishes, visually inspect the new figures, review the full comparison,
-and commit the verified archives and measured handoff. If training exits before
-completion, the worker stops and the frozen trainer needs separate inspection.
-Avoid a concurrent manual archive writer for the same destinations.
 
-After a checkpointed interruption, continue the identical manifest with:
+For an interrupted original four-recipe stage, the identical manifest can be
+continued with the command below; completed budgets are checked and skipped.
+It is not the resume command for a custom follow-up recipe:
 
 ```bash
 .venv/bin/python -m experiments.synthetic_trainers.stability \
@@ -239,8 +238,8 @@ fail the target. All fail numeric answers, none fails EOS, and 63 remain below
 before the canonical observation and stays below it afterward. No failure is
 isolated to its canonical update or recovers at the next update. This weakens
 a one-update observation artifact explanation without identifying a cause or
-excluding a longer-lasting batch-size effect. Finish both lower-rate controls
-before selecting or rejecting a calibration recipe.
+excluding a longer-lasting batch-size effect. Both lower-rate controls are now
+complete and included in the comparison.
 
 The completed `wrap-lr001` control also fails the prospective criterion: no
 required memorization plateau and 26/201 final-tail target failures. Its tail
@@ -261,8 +260,8 @@ and three recover by the next update. Categories can overlap. All batches
 contain 512 examples, so post-confirmation instability also occurs with full
 batches; its cause remains unresolved. An earlier long target streak in this
 single paired calibration does not certify persistence or a repeatable speedup.
-All three completed controls fail stable grokking. The `short-lr0001` control
-is now running; retain its complete budget before assembling the comparison.
+The full-batch control also fails stable grokking; no recipe was selected from
+its earlier target streak.
 
 The completed `short-lr0003` control fails the prospective criterion: no required
 memorization plateau and 2/201 final-tail target failures, at 103,000 and 134,500.
@@ -281,38 +280,41 @@ occur. All fail numeric answers, none fails EOS, and both immediate neighbors
 also fail in every case. At update 103,000, train accuracy is 46.7998%; held-out
 accuracy before, at, and after the update is 40.8935% / 40.5498% / 38.8316%.
 The earlier long target streak and fewer sampled failures in this one paired
-calibration do not certify persistence or a repeatable speedup. Finish the
-remaining 0.0001 control before selecting a recipe or adaptation.
+calibration do not certify persistence or a repeatable speedup.
 
-The measured `short-lr0001` prefix through update 15,000 contains the required
-low-held-out memorization plateau: train accuracy remains at least 99% and
-held-out at most 10% over updates 1,000–15,000 (57 consecutive canonical
-observations). At 15,000, train/held-out accuracy is 100%/5.7345%.
-No held-out 99% event has occurred in that prefix, and its final-tail window
-has not begun. This is an observed phase, not a completed or stable-grokking
-result. The [recorded prefix](protocols/amsgradw_stability_20261002/short-lr0001-prefix.json)
-retains all 61 canonical observations, the unchanged criterion, and corpus/
-manifest fingerprints. Finish the same 150,000-update budget before selection.
+The completed `short-lr0001` control has the required memorization plateau
+at updates 1,000–61,250 (242 observations), but never reaches held-out 99% or
+long joint confirmation. Its maximum canonical held-out accuracy is 67.1607%
+at 149,750. All 201 final-tail observations fail; final train/held-out accuracy
+regresses to 31.2715%/17.5258%. The immediate pre-final probe at 149,999 already
+fails after a full 512-example batch, so the regression is not confined to the
+last 48-example batch or final observation. No after-budget probe was measured;
+the cause remains unresolved. Numeric answers fail; EOS stays above 99% in
+the final tail. The full budget costs 4,523.19 training / 4,747.52 wall seconds,
+with the same 119,166,464-byte peak CUDA allocation and complete 601/1,200/1,800
+canonical/neighbor/diagnostic histories. Its empty post-confirmation plot means
+no prior target confirmation, not an absence of failures. See the
+[measured result](protocols/amsgradw_stability_20261002/short-lr0001-result.md) and
+[portable archive](baselines/amsgradw_stability_short_lr0001_seed0_data0_20261002).
+The [15,000-update prefix](protocols/amsgradw_stability_20261002/short-lr0001-prefix.json)
+is retained as a historical partial observation, superseded by the full result.
 
-The later canonical observation at update 100,000 fails the frozen final-tail
-target: train accuracy is 100%, held-out accuracy is 40.9579%, and EOS remains
-100%. Immediate held-out neighbors are 40.9149% / 40.8505%. Its prefix through
-100,000 contains the memorization plateau over 1,000–61,250 (242 observations),
-but no held-out 99% crossing or long joint confirmation. This is incomplete
-generalization, not a collapse after an earlier confirmed target. The tail
-failure prevents this recipe from passing the existing 150,000-update criterion
-even if it reaches the target later. Thus every recipe in the original grid
-is ineligible for independent confirmation. The fourth full budget, its archive,
-and the complete comparison still remain required; finish them before selecting
-a justified fresh controlled follow-up with the unchanged success criterion.
+The complete original grid is negative. The next controlled calibration changes
+only the learning rate to 0.0002, between 0.0001 (memorization plateau without
+99% generalization) and 0.0003 (early generalization without the plateau and
+with late failures). This is a testable interpolation, not a monotonicity or
+stability guarantee. Preserve the 50% split, seeds 0/0, decay 0.1, short-final
+batching, 150,000-update budget, diagnostics, and unchanged phase/persistence
+criterion. Freeze its fresh manifest before training. Independent confirmation
+and architecture/complementary comparisons remain pending.
 
 A read-only [fraction-control corpus inspection](protocols/amsgradw_stability_20261002/candidate-corpus-coverage.md)
 finds all 97 answer classes and legal operand classes in the 50%, 20%, 10%,
 and 5% pools on calibration data seed 0. Counts, oracle answers, and nested
 split fingerprints are verified. This is finite data coverage, not a learning
-result; no fraction recipe has been selected or launched. Finish the complete
-current grid before choosing any adaptation, and retain the historical 20%
-reference control's full-budget negative result.
+result; no fraction recipe has been selected or launched. The next rate control
+retains the 50% split. Retain the historical 20% reference control's full-budget
+negative result.
 
 The independent-confirmation driver and portable report are prepared and tested;
 no scientific confirmation plan or run has started. See the commands in

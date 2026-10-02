@@ -1,0 +1,19 @@
+{
+  "recorded_at_utc": "2026-10-02T11:34:13.375307+00:00",
+  "archive": "experiments/synthetic_trainers/baselines/amsgradw_stability_calibration_20261002",
+  "offline_verification_passed": true,
+  "torch_imported": false,
+  "verification": "final-archive worker session 73894 invoked verify_comparison with system Python; exit code 0",
+  "plots_visually_inspected": [
+    "plots/calibration-comparison.png"
+  ],
+  "completed_runs": 4,
+  "total_updates": 600000,
+  "canonical_observations": 2404,
+  "neighbor_observations": 4800,
+  "diagnostic_observations": 7200,
+  "stable_grokking_recipes": [],
+  "ready_to_freeze_independent_confirmation": false,
+  "artifact_manifest_sha256": "66030082dde384353ad7c1359dc3d86767a523fc48b49ade8029a6f95ce0b25a",
+  "scope": "all_four_complete_frozen_calibrations; no_independent_confirmation"
+}
