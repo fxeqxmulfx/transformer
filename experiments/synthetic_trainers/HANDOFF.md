@@ -353,6 +353,15 @@ label those differences. No production source changed, no architecture was
 selected and no scientific complementary campaign began. The current frozen
 GPU/queued source fingerprints remain unchanged.
 
+The [prefix-counting oracle audit](protocols/adamw_stability_20261002/complementary-preparation.md)
+now independently checks all 2,187 length-seven words and 15,309 inclusive
+prefix labels for the prepared C-RASP program, plus 128 length-fifteen words.
+Equal-frequency words with distinct final labels explicitly witness order
+sensitivity. All 15 existing prefix-program tests pass without PyTorch;
+the audit replays exactly in JSON normal form and rejects a constant oracle.
+This finite preparation audit records the additional C-RASP manuscript hash;
+it is not scientific training, transfer evidence or a change to the modular gate.
+
 The follow-up goal from the startup message is active, without subagents.
 Read [STABILITY.md](STABILITY.md) for its prospectively specified criteria,
 four paired calibration recipes, and independent-confirmation gate.

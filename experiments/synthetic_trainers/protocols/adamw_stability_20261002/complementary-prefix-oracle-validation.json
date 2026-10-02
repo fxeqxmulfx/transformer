@@ -1,0 +1,15 @@
+{
+  "recorded_at_utc": "2026-10-02T18:14:04.093210+00:00",
+  "exact_replay_in_json_normal_form_except_timestamp": true,
+  "negative_constant_oracle_rejected": true,
+  "negative_rejection_reason": "The prepared counting oracle differs from independent point semantics",
+  "torch_imported": false,
+  "frozen_fraction25_fingerprints_unchanged": 31,
+  "prefix_program_tests": {
+    "passed": 15,
+    "failed": 0,
+    "torch_imported": false
+  },
+  "audit_sha256": "6d319571239dc19deb5636ad0ceeb101d51b6afc751da47db4cbd02732a47623",
+  "scope": "finite_oracle_semantics_and_order_sensitive_witness; no_scientific_training_or_gate_change"
+}

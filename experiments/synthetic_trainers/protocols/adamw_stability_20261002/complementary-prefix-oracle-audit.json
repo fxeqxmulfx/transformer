@@ -1,0 +1,243 @@
+{
+  "recorded_at_utc": "2026-10-02T18:12:20.047950+00:00",
+  "verified": true,
+  "program": {
+    "count_depth": 2,
+    "formula_seed": 0,
+    "ast": {
+      "op": "not",
+      "args": [
+        {
+          "op": "lt",
+          "args": [
+            {
+              "op": "count",
+              "args": [
+                {
+                  "op": "not",
+                  "args": [
+                    {
+                      "op": "lt",
+                      "args": [
+                        {
+                          "op": "count",
+                          "args": [
+                            {
+                              "op": "sym",
+                              "args": [],
+                              "value": 10
+                            }
+                          ],
+                          "value": null
+                        },
+                        {
+                          "op": "add",
+                          "args": [
+                            {
+                              "op": "count",
+                              "args": [
+                                {
+                                  "op": "not",
+                                  "args": [
+                                    {
+                                      "op": "sym",
+                                      "args": [],
+                                      "value": 10
+                                    }
+                                  ],
+                                  "value": null
+                                }
+                              ],
+                              "value": null
+                            },
+                            {
+                              "op": "const",
+                              "args": [],
+                              "value": 1
+                            }
+                          ],
+                          "value": null
+                        }
+                      ],
+                      "value": null
+                    }
+                  ],
+                  "value": null
+                }
+              ],
+              "value": null
+            },
+            {
+              "op": "add",
+              "args": [
+                {
+                  "op": "add",
+                  "args": [
+                    {
+                      "op": "count",
+                      "args": [
+                        {
+                          "op": "not",
+                          "args": [
+                            {
+                              "op": "lt",
+                              "args": [
+                                {
+                                  "op": "count",
+                                  "args": [
+                                    {
+                                      "op": "sym",
+                                      "args": [],
+                                      "value": 23
+                                    }
+                                  ],
+                                  "value": null
+                                },
+                                {
+                                  "op": "add",
+                                  "args": [
+                                    {
+                                      "op": "add",
+                                      "args": [
+                                        {
+                                          "op": "count",
+                                          "args": [
+                                            {
+                                              "op": "not",
+                                              "args": [
+                                                {
+                                                  "op": "sym",
+                                                  "args": [],
+                                                  "value": 23
+                                                }
+                                              ],
+                                              "value": null
+                                            }
+                                          ],
+                                          "value": null
+                                        },
+                                        {
+                                          "op": "count",
+                                          "args": [
+                                            {
+                                              "op": "sym",
+                                              "args": [],
+                                              "value": 23
+                                            }
+                                          ],
+                                          "value": null
+                                        }
+                                      ],
+                                      "value": null
+                                    },
+                                    {
+                                      "op": "const",
+                                      "args": [],
+                                      "value": -2
+                                    }
+                                  ],
+                                  "value": null
+                                }
+                              ],
+                              "value": null
+                            }
+                          ],
+                          "value": null
+                        }
+                      ],
+                      "value": null
+                    },
+                    {
+                      "op": "count",
+                      "args": [
+                        {
+                          "op": "sym",
+                          "args": [],
+                          "value": 23
+                        }
+                      ],
+                      "value": null
+                    }
+                  ],
+                  "value": null
+                },
+                {
+                  "op": "const",
+                  "args": [],
+                  "value": -2
+                }
+              ],
+              "value": null
+            }
+          ],
+          "value": null
+        }
+      ],
+      "value": null
+    },
+    "expression": "not(lt(count(not(lt(count(b), add(count(not(b)), 1)))), add(add(count(not(lt(count(c), add(add(count(not(c)), count(c)), -2)))), count(c)), -2)))"
+  },
+  "checked_support": {
+    "short_words": 2187,
+    "short_prefix_labels": 15309,
+    "long_words": 128,
+    "long_prefix_labels": 1920
+  },
+  "short_support": "all_3_to_the_7_words; all_inclusive_prefix_labels",
+  "long_support": "128_diagnostic_words_of_length_15; seed_713; not_training_or_confirmation_seeds",
+  "same_histogram_order_witness": {
+    "word_length": 7,
+    "input_length_with_BOS": 8,
+    "histogram": [
+      3,
+      3,
+      1
+    ],
+    "word_a": [
+      "a",
+      "a",
+      "a",
+      "b",
+      "b",
+      "b",
+      "c"
+    ],
+    "word_b": [
+      "a",
+      "a",
+      "b",
+      "b",
+      "b",
+      "a",
+      "c"
+    ],
+    "labels_a": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false
+    ],
+    "labels_b": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "torch_imported": false,
+  "source_hashes": {
+    "experiments/synthetic_trainers/crasp.py": "7125fa2f1020741da45050ca578b624210ce462a7b983c2c3b625b7be2bc4d1c",
+    "experiments/synthetic_trainers/vocabulary.py": "d6485085fbc8456e949e58aefd0e3bb42a677437abd726ec77b5950518f5fee1",
+    "experiments/synthetic_trainers/tests/test_prefix_programs.py": "fc50353eaeec871650d686c4a6241abfec9429058288e801602710f99229f642",
+    "papers/arXiv-2506.16055v3/neurips2025.tex": "dd38c10023c17c8f21d1b4cc2ca5b1f24e36c83a0980a82a912e7c0da7bf3b5d"
+  },
+  "auditor_sha256": "18c336cb3a9e311e656abc210c6fd2400765cb3bfbd2af984778d6e225e25c75",
+  "paper_scope": "Section_2.3_past_counting_semantics; integer_negation_and_constants_are_derived_operations",
+  "scope": "finite_oracle_and_order_identifiability_checks; no_learning_depth_lower_bound_or_transfer_claim"
+}

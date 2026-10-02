@@ -57,3 +57,30 @@ The MQAR/lookup probes above do not increase association count or composition
 depth. Those harder mechanisms need separately frozen data settings. Scientific
 task difficulties, targets, budgets, selection rules, seeds/splits and paired
 execution remain to be chosen after the unchanged benchmark gate passes.
+
+The [prefix-oracle audit](complementary-prefix-oracle-audit.json) checks the
+same depth-2, program-seed-0 C-RASP formula against the existing independent
+point-semantics oracle. All 2,187 words of length seven (input length eight
+including BOS), with 15,309 inclusive prefix labels, agree. A separate bank
+of 128 words of length fifteen contributes 1,920 checked prefix labels;
+diagnostic RNG seed 713 is unrelated to scientific model/data seeds. The
+local manuscript *Knee-Deep in C-RASP*, Section 2.3, explicitly includes the
+current position in past counts and permits derived integer operations.
+The audit records its manuscript, implementation and independent-oracle hashes.
+
+Order-sensitive support is explicit: `aaabbbc` and `aabbbac` each contain
+three `a`, three `b` and one `c`, but the last truth values differ. Their
+first six labels are true; the last is false and true, respectively. Thus
+the formula is not a function of the final symbol histogram alone. The
+supervised outputs are Boolean predicates at every inclusive prefix;
+sequence accuracy requires the whole labelled sequence. This is a finite
+oracle check, not evidence of a trained algorithm, a depth lower bound or
+length transfer. The later scientific plan must include the C-RASP manuscript
+hash and separate novel support. At fixed input length eight there are only
+2,187 possible words, so a large training pool can exhaust ID novelty.
+
+Recompute this audit without PyTorch into a fresh file:
+
+```bash
+python3 -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.audit_prefix_counting --output /tmp/complementary-prefix-oracle-audit.json
+```
