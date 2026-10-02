@@ -94,8 +94,36 @@ means include only runs reaching the target and report their support; failures
 remain missing rather than becoming zero cost. Final accuracy and later
 collapses must accompany timing comparisons. Historical archives retain their
 original analysis; new reports include these measurements.
-The modular trainer records model size and device, but does not measure peak
-CUDA allocation; memory comparisons require separate measurements.
+Historical modular archives record model size and device without peak CUDA
+allocation. Fresh runs also record peak allocated/reserved CUDA bytes, Python
+version, and portable source fingerprints. Resume checks the frozen sources and
+instrumentation as well as the configuration.
+
+`--diagnostics-every 250 --eval-neighbors` enables a read-only calibration
+probe. It records gradient, parameter, raw moment, and actual update norms per
+tensor, learned inverse temperatures, batch size, epoch cursor, and separate
+numeric-answer/EOS losses. Additional exhaustive evaluations one update before
+and after each regular observation go to `probes.jsonl`; they do not enter the
+canonical history or change target events. This is relevant to the 50% split:
+4,656 equations give nine batches of 512 and a last batch of 48, so the old
+250-update cadence always observes an epoch tail. Whether that alignment
+explains any collapse remains an experimental question.
+
+Diagnostic work is timed separately from training. It still changes execution
+overhead and peak allocation, so instrumented calibration is not adopted into
+an uninstrumented timing campaign. CPU tests compare model weights, complete
+optimizer buffers, batch RNG/cursors, and canonical scores exactly with probes
+enabled/disabled and across checkpoint resume. Diagnostic logs after the saved
+checkpoint are discarded on resume.
+
+`--batch-policy wrap_epoch` is a separate sampling control. It keeps the same
+stream of shuffled epochs and fills every update batch across epoch boundaries.
+The default `short_final` retains the original short tail exactly. The wrap
+control has more examples seen at equal updates; actual exposure is recorded
+in `epochs_seen` rather than presented as equal-example training. Its sampling
+adaptation is included in the frozen recipe and deviations. Tests independently
+check the legacy shuffled batches, stream equivalence, multiple-epoch wraps,
+and exact continuation of the full-batch control.
 
 A post hoc error diagnostic selects the best held-out score before sustained
 train fit, the worst score while train remains fitted before held-out target

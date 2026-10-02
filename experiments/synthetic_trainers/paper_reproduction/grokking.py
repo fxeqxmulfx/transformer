@@ -8,9 +8,9 @@ explicit fixed budget and checkpoints rather than test-dependent stopping.
 
 import argparse
 from dataclasses import asdict, dataclass
-import hashlib
 import json
 from pathlib import Path
+import platform
 import time
 
 import torch
@@ -22,6 +22,10 @@ from ..curves import curve_witness
 from ..runtime import synchronize, write_json
 from .modular_data import make_corpus
 from .reference_transformer import Transformer
+from .batches import next_batch
+from .diagnostics import (DiagnosticsConfig, after_update, append_json, before_update,
+                          truncate_to_checkpoint)
+from .provenance import source_hashes
 
 
 @dataclass(frozen=True)
@@ -37,6 +41,7 @@ class RunConfig:
     heads: int = 4
     steps: int = 150000
     batch_size: int = 512
+    batch_policy: str = "short_final"
     eval_every: int = 250
     learning_rate: float = .001
     weight_decay: float = 1.0
@@ -48,6 +53,8 @@ class RunConfig:
     def __post_init__(self):
         if self.model not in ("reference", "gptmini") or self.optimizer not in ("adamw", "amsgradw"):
             raise ValueError("Unknown model or optimizer")
+        if self.batch_policy not in ("short_final", "wrap_epoch"):
+            raise ValueError("Unknown batch policy")
         if min(self.width, self.layers, self.heads, self.steps, self.batch_size, self.eval_every, self.patience) < 1:
             raise ValueError("Dimensions and training counts must be positive")
         if self.width % self.heads or self.width % 2 or (self.model == "gptmini" and self.width // self.heads % 2):
@@ -90,6 +97,7 @@ def make_optimizer(model, config):
 def evaluate(model, rows, batch_size=1024):
     model.eval()
     correct, answers, stops, loss = 0, 0, 0, 0.0
+    answer_loss, stop_loss = 0.0, 0.0
     for start in range(0, len(rows), batch_size):
         batch = rows[start:start + batch_size]
         output = logits(model, batch[:, :-1])[:, 4:, :]
@@ -99,8 +107,11 @@ def evaluate(model, rows, batch_size=1024):
         answers += (predicted[:, 0] == target[:, 0]).sum().item()
         stops += (predicted[:, 1] == target[:, 1]).sum().item()
         loss += F.cross_entropy(output.reshape(-1, output.shape[-1]), target.reshape(-1), reduction="sum").item()
+        answer_loss += F.cross_entropy(output[:, 0], target[:, 0], reduction="sum").item()
+        stop_loss += F.cross_entropy(output[:, 1], target[:, 1], reduction="sum").item()
     return {"accuracy": correct / len(rows), "answer_accuracy": answers / len(rows),
-            "EOS_accuracy": stops / len(rows), "loss": loss / (2 * len(rows)), "examples": len(rows)}
+            "EOS_accuracy": stops / len(rows), "loss": loss / (2 * len(rows)),
+            "answer_loss": answer_loss / len(rows), "EOS_loss": stop_loss / len(rows), "examples": len(rows)}
 
 
 def transition(history, config):
@@ -118,7 +129,7 @@ def transition(history, config):
             "scope": "two_way_exhaustive_fixed_prime_arithmetic; no_length_transfer_or_causal_claim"}
 
 
-def train(config, directory, *, resume=False, progress=None):
+def train(config, directory, *, resume=False, progress=None, diagnostics=DiagnosticsConfig()):
     torch.set_num_threads(1)
     directory = Path(directory)
     checkpoint_path = directory / "checkpoint.pt"
@@ -128,6 +139,8 @@ def train(config, directory, *, resume=False, progress=None):
         raise FileNotFoundError("No resumable checkpoint")
     if config.device.startswith("cuda") and not torch.cuda.is_available():
         raise ValueError("CUDA requested but unavailable")
+    if config.device.startswith("cuda"):
+        torch.cuda.reset_peak_memory_stats(config.device)
     directory.mkdir(parents=True, exist_ok=True)
     started = time.perf_counter()
     corpus = make_corpus(config.prime, config.train_fraction, config.data_seed)
@@ -139,13 +152,14 @@ def train(config, directory, *, resume=False, progress=None):
     permutation = torch.randperm(len(train_rows), generator=generator)
     cursor, completed, seen, training_seconds, previous_wall = 0, 0, 0, 0.0, 0.0
     history = []
-    paths = list(Path(__file__).parent.glob("*.py")) + [Path("experiments/gpt_mini.py"),
-        Path("experiments/optimizer_benchmark/coordinate.py"), Path("experiments/optimizer_benchmark/common.py")]
+    diagnostic_seconds, segment_diagnostic_seconds, last_batch_size = 0.0, 0.0, None
     plan = {"status": "running", "config": asdict(config), "corpus": corpus.summary(),
             "parameters": sum(parameter.numel() for parameter in model.parameters()),
             "dtype": "float32", "torch": torch.__version__,
             "gpu": torch.cuda.get_device_name(config.device) if config.device.startswith("cuda") else None,
-            "source_hashes": {str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in sorted(paths)},
+            "source_hashes": source_hashes(), "python": platform.python_version(),
+            "instrumentation": asdict(diagnostics),
+            "batch_policy": config.batch_policy,
             "source_commit": "3d64b1d8c1d595dd8ebdb7771998823f1b14c7b3",
             "source_section": "papers/arXiv-2211.11052v1/arxiv.tex, Section 4, mod-97 experiments",
             "optimizer": {"name": config.optimizer, "betas": [.9, .98 if config.optimizer == "adamw" else .999],
@@ -155,11 +169,15 @@ def train(config, directory, *, resume=False, progress=None):
                            "exact_paper_train_fraction_and_regularization_not_disclosed_in_local_manuscript"],
             "scope": "author_model_reference_protocol" if config.model == "reference" and config.optimizer == "adamw" else "explicit_model/optimizer_adaptation",
             "budget_extensions": []}
+    if config.batch_policy == "wrap_epoch":
+        plan["deviations"].append("full_batches_across_shuffled_epochs; more_examples_at_fixed_updates")
     if resume:
         saved_plan = json.loads((directory / "plan.json").read_text())
         old_config = saved_plan["config"]
-        if any(old_config[key] != value for key, value in asdict(config).items() if key != "steps") or config.steps < old_config["steps"]:
+        if any(old_config.get(key) != value for key, value in asdict(config).items() if key != "steps") or config.steps < old_config["steps"]:
             raise ValueError("Resume may only extend the original update budget")
+        if saved_plan["source_hashes"] != plan["source_hashes"] or saved_plan.get("instrumentation", asdict(DiagnosticsConfig())) != asdict(diagnostics):
+            raise ValueError("Resume sources or instrumentation differ from the frozen plan")
         checkpoint = torch.load(checkpoint_path, map_location=config.device, weights_only=True)
         model.load_state_dict(checkpoint["model"])
         optimizer.load_state_dict(checkpoint["optimizer"])
@@ -167,6 +185,8 @@ def train(config, directory, *, resume=False, progress=None):
             optimizer.steps = checkpoint["optimizer_steps"]
         completed, seen = checkpoint["step"], checkpoint["examples_seen"]
         training_seconds, previous_wall = checkpoint["training_seconds"], checkpoint["wall_seconds"]
+        diagnostic_seconds = checkpoint.get("diagnostic_seconds", 0.0)
+        last_batch_size = checkpoint.get("last_batch_size")
         generator.set_state(checkpoint["batch_generator_state"].cpu())
         permutation, cursor = checkpoint["permutation"].cpu(), checkpoint["cursor"]
         history = [json.loads(line) for line in (directory / "history.jsonl").read_text().splitlines()]
@@ -177,27 +197,32 @@ def train(config, directory, *, resume=False, progress=None):
     write_json(directory / "plan.json", plan)
     history_path = directory / "history.jsonl"
     history_path.write_text("".join(json.dumps(point) + "\n" for point in history))
+    diagnostic_path, probe_path = directory / "diagnostics.jsonl", directory / "probes.jsonl"
+    if diagnostics.every or diagnostics.eval_neighbors:
+        truncate_to_checkpoint(diagnostic_path, completed)
+        truncate_to_checkpoint(probe_path, completed)
 
-    def observe(step):
+    def observe(step, *, probe=False):
         row = {"step": step, "epochs_seen": seen / len(train_rows), "training_seconds": training_seconds,
                "wall_seconds": previous_wall + time.perf_counter() - started,
+               "last_batch_size": last_batch_size,
                "train": evaluate(model, train_rows), "heldout": evaluate(model, heldout_rows)}
-        history.append(row)
-        with history_path.open("a") as stream:
-            stream.write(json.dumps(row) + "\n")
+        if probe:
+            append_json(probe_path, row)
+        else:
+            history.append(row)
+            append_json(history_path, row)
         if progress:
-            progress(row)
+            progress({"diagnostic_probe": True, **row} if probe else row)
 
     if not history:
         observe(0)
     synchronize(config.device)
     segment_started = time.perf_counter()
     for step in range(completed + 1, config.steps + 1):
-        if cursor == len(train_rows):
-            permutation = torch.randperm(len(train_rows), generator=generator)
-            cursor = 0
-        selected = permutation[cursor:cursor + config.batch_size].to(config.device)
-        cursor += len(selected)
+        selected, permutation, cursor, batch_metadata = next_batch(
+            permutation, cursor, generator, config.batch_size, config.batch_policy)
+        selected = selected.to(config.device)
         batch = train_rows[selected]
         model.train()
         optimizer.zero_grad(set_to_none=True)
@@ -206,17 +231,36 @@ def train(config, directory, *, resume=False, progress=None):
         output = logits(model, batch[:, :-1])[:, 4:, :]
         loss = F.cross_entropy(output.reshape(-1, output.shape[-1]), batch[:, 5:].reshape(-1))
         loss.backward()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), float("inf"), error_if_nonfinite=True)
+        gradient_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), float("inf"), error_if_nonfinite=True)
+        sampled = diagnostics.sample_update(step, config.eval_every)
+        if sampled:
+            synchronize(config.device)
+            diagnostic_started = time.perf_counter()
+            before, component_losses = before_update(model, output, batch[:, 5:])
+            segment_diagnostic_seconds += time.perf_counter() - diagnostic_started
         optimizer.step()
         seen += len(batch)
-        if step % config.eval_every == 0 or step == config.steps:
+        last_batch_size = len(batch)
+        if sampled:
             synchronize(config.device)
-            training_seconds += time.perf_counter() - segment_started
-            observe(step)
-            if step % 5000 == 0 or step == config.steps:
+            diagnostic_started = time.perf_counter()
+            measurements = after_update(model, optimizer, before, component_losses, gradient_norm)
+            append_json(diagnostic_path, {"step": step, "batch_size": len(batch),
+                **batch_metadata,
+                "learning_rate": optimizer.param_groups[0]["lr"], **measurements})
+            segment_diagnostic_seconds += time.perf_counter() - diagnostic_started
+        canonical = step % config.eval_every == 0 or step == config.steps
+        if canonical or diagnostics.probe(step, config.eval_every):
+            synchronize(config.device)
+            training_seconds += time.perf_counter() - segment_started - segment_diagnostic_seconds
+            diagnostic_seconds += segment_diagnostic_seconds
+            segment_diagnostic_seconds = 0.0
+            observe(step, probe=not canonical)
+            if canonical and (step % 5000 == 0 or step == config.steps):
                 torch.save({"model": model.state_dict(), "optimizer": optimizer.state_dict(), "step": step,
                     "optimizer_steps": optimizer.steps if isinstance(optimizer, CoordinateOptimizer) else None,
                     "examples_seen": seen, "training_seconds": training_seconds,
+                    "diagnostic_seconds": diagnostic_seconds, "last_batch_size": last_batch_size,
                     "wall_seconds": previous_wall + time.perf_counter() - started,
                     "batch_generator_state": generator.get_state(), "permutation": permutation, "cursor": cursor}, checkpoint_path)
             synchronize(config.device)
@@ -224,6 +268,9 @@ def train(config, directory, *, resume=False, progress=None):
     plan["status"] = "complete"
     write_json(directory / "plan.json", plan)
     report = {"plan": plan, "completed_steps": config.steps, "training_seconds": training_seconds,
+              "diagnostic_seconds": diagnostic_seconds,
+              "peak_cuda_allocated_bytes": torch.cuda.max_memory_allocated(config.device) if config.device.startswith("cuda") else None,
+              "peak_cuda_reserved_bytes": torch.cuda.max_memory_reserved(config.device) if config.device.startswith("cuda") else None,
               "wall_seconds": previous_wall + time.perf_counter() - started, "transition": transition(history, config),
               "epoch_loss_witness": curve_witness([(point["step"], point["heldout"]["loss"]) for point in history], .02),
               "epoch_error_witness": curve_witness([(point["step"], 1 - point["heldout"]["accuracy"]) for point in history], .02),
@@ -246,14 +293,20 @@ def main(argv=None):
     parser.add_argument("--heads", type=int, default=4)
     parser.add_argument("--steps", type=int, default=150000)
     parser.add_argument("--batch-size", type=int, default=512)
+    parser.add_argument("--batch-policy", choices=("short_final", "wrap_epoch"), default="short_final")
     parser.add_argument("--eval-every", type=int, default=250)
     parser.add_argument("--learning-rate", type=float, default=.001)
     parser.add_argument("--weight-decay", type=float, default=1.0)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--diagnostics-every", type=int, default=0)
+    parser.add_argument("--eval-neighbors", action="store_true")
     args = parser.parse_args(argv)
-    config = RunConfig(**{key: value for key, value in vars(args).items() if key not in ("output", "resume")})
-    report = train(config, args.output, resume=args.resume, progress=lambda row: print(json.dumps(row), flush=True))
+    config = RunConfig(**{key: value for key, value in vars(args).items()
+                         if key not in ("output", "resume", "diagnostics_every", "eval_neighbors")})
+    report = train(config, args.output, resume=args.resume,
+                   diagnostics=DiagnosticsConfig(args.diagnostics_every, args.eval_neighbors),
+                   progress=lambda row: print(json.dumps(row), flush=True))
     print(json.dumps({"status": report["plan"]["status"], "transition": report["transition"]}), flush=True)
 
 

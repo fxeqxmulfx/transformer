@@ -3,13 +3,14 @@
 import argparse
 from dataclasses import asdict, replace
 from datetime import datetime, timezone
-import hashlib
 import json
 from pathlib import Path
 import time
 
 from .paper_reproduction.grokking import RunConfig, train
+from .paper_reproduction.diagnostics import DiagnosticsConfig
 from .paper_reproduction.modular_data import make_corpus
+from .paper_reproduction.provenance import source_hashes
 from .runtime import write_json
 
 
@@ -24,18 +25,13 @@ def recipes(base, seeds):
             for model, optimizer in PAIRS for seed in seeds]
 
 
-def source_hashes():
-    directory = Path(__file__).parent
-    paths = list((directory / "paper_reproduction").glob("*.py")) + [Path("experiments/gpt_mini.py"),
-        Path("experiments/optimizer_benchmark/coordinate.py"), Path("experiments/optimizer_benchmark/common.py")]
-    return {str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in sorted(paths)}
-
-
 def validate_run(plan, recipe, hashes):
     if plan["config"] != recipe["config"]:
         raise ValueError("Existing run configuration differs from the frozen recipe")
     if plan["source_hashes"] != hashes:
         raise ValueError("Existing run sources differ from the frozen confirmation protocol")
+    if plan.get("instrumentation", asdict(DiagnosticsConfig())) != asdict(DiagnosticsConfig()):
+        raise ValueError("Instrumented calibration cannot be adopted as an uninstrumented control")
 
 
 def run_campaign(directory, base, seeds=(0, 1, 2), *, resume=False, adopt_completed=False, progress=None):
