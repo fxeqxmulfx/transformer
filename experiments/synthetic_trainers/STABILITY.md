@@ -346,6 +346,9 @@ At update 13,250, the incomplete history has train/held-out 99.9028%/0.8096%
 and a qualifying plateau from 4,500–13,250, but no held-out target or long
 confirmation. Finish the full budget and keep all pinned sources immutable;
 this partial observation does not open independent confirmation.
+The [harder-task summary](protocols/adamw_stability_20261002/harder-task-results.md)
+keeps the three complete single-case AdamW outcomes and their task/exposure
+differences together; it does not average interventions or form ineligible ratios.
 Any subsequent
 fraction, decay, schedule, or model intervention needs a fresh frozen plan; a
 negative result does not justify relaxing the success criterion.

@@ -362,6 +362,11 @@ passes, persistent performance fails and the six-case gate stays closed.
 All 1,200 neighbors, 1,800 tensor samples, 150,000 gradient records, source
 bytes and nested archive copies verify without PyTorch; all three PNG/PDF
 pairs are retained, with readable PNGs reviewed. No criterion is relaxed.
+The [harder-task summary](protocols/adamw_stability_20261002/harder-task-results.md)
+compares all three complete primary AdamW calibrations, retaining the different
+phase outcomes, every persistence failure and derived task/exposure changes.
+Its offline audit verifies 450,000 updates and 1,803 canonical observations;
+the three cases have zero eligible stable-target timing support.
 
 The [lower-rate CPU preparation](protocols/adamw_stability_20261002/lower-rate-preparation.md)
 checks learning rate 0.0003 as the only field change from the quarter-split
