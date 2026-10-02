@@ -9,9 +9,10 @@ def render_comparison(directory, summary, *, title=None, filename="calibration-c
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    from matplotlib.ticker import FuncFormatter
 
     rows = summary["rows"]
-    figure, axes = plt.subplots(3, len(rows), figsize=(4 * len(rows), 9), squeeze=False, constrained_layout=True)
+    figure, axes = plt.subplots(3, len(rows), figsize=(max(7, 4 * len(rows)), 9), squeeze=False, constrained_layout=True)
     for column, row in enumerate(rows):
         report = json.loads((directory / "runs" / row["name"] / "measurements.json").read_text())
         history = report["history"]
@@ -29,10 +30,13 @@ def render_comparison(directory, summary, *, title=None, filename="calibration-c
         axes[2, column].set(ylim=(-.02, 1.025), xlabel="Measured training seconds", ylabel="Held-out complete RHS accuracy")
         for axis in axes[:2, column]:
             axis.axvspan(max(0, row["steps"] - summary["criterion"]["tail_steps"]), row["steps"], color="grey", alpha=.08)
-            axis.set_xlabel("Updates")
+            axis.set_xlim(0, row["steps"])
+            axis.xaxis.set_major_formatter(FuncFormatter(lambda value, position: f"{value / 1000:g}"))
+            axis.set_xlabel("Updates (thousands)")
         for axis in axes[:, column]:
             axis.grid(alpha=.2)
-    figure.suptitle(title or f"{summary.get('optimizer_label', 'Raw AMSGradW')} / unchanged GPTMini: paired calibration controls\n"
-                   "One initialization and one common split per recipe; all complete budgets and failures", fontsize=12)
+    figure.suptitle(title or f"Complete {summary.get('optimizer_label', 'Raw AMSGradW')} / GPTMini calibration\n"
+                   "One initialization and calibration split per recipe\n"
+                   "All budgets and observations retained", fontsize=12)
     export(figure, directory / "plots", filename)
     plt.close(figure)

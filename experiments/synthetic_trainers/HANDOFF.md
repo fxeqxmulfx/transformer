@@ -298,7 +298,10 @@ support is zero. Complete costs are 3,750.27 training / 4,648.78 wall seconds.
 Both archives verify without PyTorch; source/checkpoint bytes, all 31 frozen
 fingerprints and earlier prefixes agree. All three PNG/PDF figure pairs were
 reviewed; the original comparison has overlapping ticks and is preserved
-for a readable sidecar after the analysis-only fix. No current scientific
+alongside a reviewed [readable PNG/PDF sidecar](protocols/adamw_stability_20261002/larger-modulus-curves/mod193-calibration.png)
+with all 601 points and verified provenance. The standard renderer now uses
+thousands for update labels and a wider single-case layout; its three comparison
+tests pass. Future plans record its new analysis hash. No current scientific
 trainer remains in this completed stage; the next intervention is not yet frozen.
 At selection time, this user-directed harder-task adaptation superseded the
 earlier tentative train-fraction idea. Its historical prefix inspections

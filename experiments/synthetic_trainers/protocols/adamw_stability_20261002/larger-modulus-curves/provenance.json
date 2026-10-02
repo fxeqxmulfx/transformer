@@ -1,0 +1,9 @@
+{
+  "recorded_at_utc": "2026-10-02T17:20:53.596133+00:00",
+  "source_archive": "experiments/synthetic_trainers/baselines/adamw_stability_mod193_calibration_20261002",
+  "source_measurements_sha256": "b9417e3d3cf7c67d58e3693332dfac1f427c503cba6acb17274fcef8b9cdb781",
+  "canonical_observations_rendered": 601,
+  "renderer_sha256": "0eeca8180f0553845c406dd8391293116d0cad3192f88af273f1f9facb2ba80c",
+  "display_change": "update_labels_in_thousands_and_wider_single_case_layout; underlying_x_values_and_all_observations_unchanged",
+  "scope": "readable_sidecar; original_frozen_archive_unchanged"
+}

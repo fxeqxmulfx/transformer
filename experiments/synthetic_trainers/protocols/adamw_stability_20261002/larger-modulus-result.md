@@ -50,7 +50,11 @@ seconds. Peak CUDA allocation/reservation are 119,638,016/161,480,704 bytes.
 Final held-out answer/EOS cross-entropies are 8.73021e-6/1.24241e-8 nats.
 The reviewed overview and neighbor plots retain all scheduled data. The
 original stage-comparison figure has overlapping update labels and is preserved
-unchanged; generate a readable sidecar after the analysis-only plot correction.
+unchanged. A reviewed [readable PNG](larger-modulus-curves/mod193-calibration.png)
+and [PDF](larger-modulus-curves/mod193-calibration.pdf) use the same 601 observations,
+labels in thousands and a wider single-case layout. The
+[plot validation](comparison-plot-validation.json) checks input/artifact hashes
+and three passing comparison tests. Future plans record the corrected renderer.
 
 This adapts *Convexifying Transformers*, Section 4. Only the prime changes
 relative to primary mod-97, but vocabulary, total parameters, common-seed

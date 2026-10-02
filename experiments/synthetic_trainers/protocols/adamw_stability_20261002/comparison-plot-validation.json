@@ -1,0 +1,15 @@
+{
+  "recorded_at_utc": "2026-10-02T17:23:40.816612+00:00",
+  "complete_data_and_artifact_hashes_verified": true,
+  "canonical_observations": 601,
+  "figure_inspected": "larger-modulus-curves/mod193-calibration.png",
+  "PNG_PDF_present": true,
+  "comparison_tests": {
+    "tests": 3,
+    "seconds": 2.173,
+    "failures": 0,
+    "errors": 0
+  },
+  "renderer_sha256": "0eeca8180f0553845c406dd8391293116d0cad3192f88af273f1f9facb2ba80c",
+  "scope": "labels_layout_and_neutral_calibration_title_only; all_data_and_original_archives_unchanged"
+}
