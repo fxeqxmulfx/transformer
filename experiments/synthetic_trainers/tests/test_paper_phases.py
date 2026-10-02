@@ -12,6 +12,33 @@ def report(points):
 
 
 class PaperPhaseTests(unittest.TestCase):
+    def test_error_double_descent_can_coincide_with_delayed_generalization(self):
+        measured = report(((0, 0, 0), (1, .5, .6), (2, 1, .01),
+                           (3, 1, .02), (4, 1, 1), (5, 1, 1), (6, 1, 1)))
+        phase = diagnose(measured)
+        curve = phase["epoch_error_curve_before_generalization"]
+        self.assertEqual([curve[name]["step"] for name in ("initial", "first_minimum", "peak", "final")], [0, 1, 2, 6])
+        self.assertAlmostEqual(curve["first_descent"], .6)
+        self.assertAlmostEqual(curve["peak_rise"], .59)
+        self.assertAlmostEqual(curve["second_descent"], .99)
+        self.assertTrue(phase["both_epoch_error_double_descent_and_grokking"])
+
+    def test_late_instability_cannot_become_an_overfitting_peak_before_generalization(self):
+        measured = report(((0, 0, 0), (1, .5, .6), (2, 1, .6), (3, 1, .6),
+                           (4, 1, 1), (5, 1, 1), (6, 1, .01), (7, 1, 1)))
+        phase = diagnose(measured)
+        curve = phase["epoch_error_curve_before_generalization"]
+        self.assertLess(curve["peak"]["step"], phase["sustained_heldout_target"]["onset"])
+        self.assertFalse(curve["full_error_double_descent"])
+        self.assertFalse(phase["both_epoch_error_double_descent_and_grokking"])
+
+    def test_error_recovery_without_the_generalization_target_is_not_grokking(self):
+        measured = report(((0, 0, 0), (1, .5, .6), (2, 1, .01),
+                           (3, 1, .01), (4, 1, .1), (5, 1, .1)))
+        phase = diagnose(measured)
+        self.assertTrue(phase["epoch_error_curve_before_generalization"]["full_error_double_descent"])
+        self.assertFalse(phase["both_epoch_error_double_descent_and_grokking"])
+
     def test_target_cost_uses_observed_onset_and_confirmation_and_keeps_failures_missing(self):
         measured = report(((0, 0, 0), (10, 1, .01), (30, 1, .02),
                            (50, 1, 1), (80, 1, .9), (100, 1, 1), (140, 1, 1)))

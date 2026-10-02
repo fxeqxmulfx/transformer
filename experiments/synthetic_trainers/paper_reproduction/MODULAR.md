@@ -96,3 +96,16 @@ collapses must accompany timing comparisons. Historical archives retain their
 original analysis; new reports include these measurements.
 The modular trainer records model size and device, but does not measure peak
 CUDA allocation; memory comparisons require separate measurements.
+
+A post hoc error diagnostic selects the best held-out score before sustained
+train fit, the worst score while train remains fitted before held-out target
+onset, and the final score. It requires four ordered observations and error
+descent/ascent/recovery each greater than 0.02, matching the existing finite
+curve margin. Reports count that shape and its coexistence with the grokking
+diagnostic separately. Peaks after the first held-out onset are excluded;
+later collapses retain their separate measurements. A negative result leaves
+other curve shapes unclassified. This analysis was added after observing the
+first GPTMini/AdamW transition, without changing any frozen training recipe.
+It describes a synthetic analogue of *Deep Double Descent*, Section 6's
+epoch-wise effect; that paper uses noisy CIFAR data and CNN/ResNet models.
+Coexisting finite curves do not establish that grokking causes double descent.

@@ -95,6 +95,8 @@ def modular_summary(reports, planned):
             "heldout_accuracy": moments([row["final"]["heldout"]["accuracy"] for row in group]),
             "heldout_loss": moments([row["final"]["heldout"]["loss"] for row in group]),
             "plateau_then_generalization_runs": sum(row["observed_plateau_then_generalization"] for row in phases),
+            "epoch_error_double_descent_runs": sum(bool(row["epoch_error_curve_before_generalization"] and row["epoch_error_curve_before_generalization"]["full_error_double_descent"]) for row in phases),
+            "both_epoch_error_double_descent_and_grokking_runs": sum(row["both_epoch_error_double_descent_and_grokking"] for row in phases),
             "lag_after_sustained_train_fit": moments([row["lag_after_sustained_train_fit"] for row in phases if row["lag_after_sustained_train_fit"] is not None]),
             "phase_diagnostics": [{"seed": report["plan"]["config"]["seed"], **phase} for report, phase in zip(group, phases)]})
     return {"complete": len(reports) == planned and all(row["plan"]["status"] == "complete" for row in reports),
@@ -132,6 +134,8 @@ def export_csv(kind, report, path):
                          "sustained_train_fit_step": phase["sustained_train_fit"]["onset"] if phase["sustained_train_fit"] else None,
                          "lag_after_sustained_train_fit": phase["lag_after_sustained_train_fit"],
                          "plateau_then_generalization": phase["observed_plateau_then_generalization"],
+                         "epoch_error_double_descent": bool(phase["epoch_error_curve_before_generalization"] and phase["epoch_error_curve_before_generalization"]["full_error_double_descent"]),
+                         "both_epoch_error_double_descent_and_grokking": phase["both_epoch_error_double_descent_and_grokking"],
                          "heldout_target_observation_fraction": phase["fraction_observations_at_target_after_confirmation"],
                          **{f"heldout_target_{event}_{clock}": heldout_times[event][clock] if heldout_times else None
                             for event in ("onset", "confirmed") for clock in ("training_seconds", "wall_seconds")},

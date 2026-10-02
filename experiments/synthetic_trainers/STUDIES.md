@@ -414,6 +414,18 @@ also discusses linear-model examples and noise absorption among interpolating
 solutions. Section 6 describes an epoch-wise second descent after overfitting.
 The mechanisms behind deep-network double descent remain open in that paper.
 
+Modular reports now also describe early held-out improvement before sustained
+train fit, worsening while train is fitted before the first held-out target
+onset, and final recovery. Each error difference must exceed the existing
+0.02 margin at four ordered observations. This restricted, post hoc diagnostic
+was added after the first GPTMini/AdamW transition; the nine training recipes
+remain frozen. It reports error double descent and coexistence with the
+memorization-then-generalization diagnostic separately, and excludes later
+collapses from its overfitting peak. It is a synthetic analogue of Section 6,
+whose source experiments use label noise on CIFAR and CNN/ResNet models.
+Coexistence does not identify a causal mechanism; a negative diagnostic leaves
+other epoch-error shapes unclassified.
+
 Both study profiles run the full budget; `--stop-at-target` is rejected. Each
 observation records train fit and held-out risk. After training, the clean tests
 evaluate both `final.pt` (`test_final`) and the validation-selected `best.pt`
