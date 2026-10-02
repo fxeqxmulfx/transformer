@@ -355,6 +355,16 @@ all 31 frozen files remain unchanged. The trainer and archive worker continue
 the whole budget. Preserve and commit the full negative result and curves
 before selecting the next calibration; no criterion is relaxed.
 
+The [lower-rate CPU preparation](protocols/adamw_stability_20261002/lower-rate-preparation.md)
+checks learning rate 0.0003 as the only field change from the quarter-split
+parent. Complete corpus, initial CPU state, parameters, exposure and all
+31 frozen files match; 20 full-width updates verify warmup, the 48-example tail,
+the next full batch and portable analysis without PyTorch. CUDA is hidden from
+the CPU process and no CUDA context is created. This preparation overlapped
+the parent's final training portion, which matters for descriptive timing.
+It is not a scientific plan, launch or demonstrated stability result. Finish
+and review the full parent negative archive before the prospective freeze.
+
 The [complementary-trainer preparation](protocols/adamw_stability_20261002/complementary-preparation.md)
 also verifies seven existing AdamW CPU paths for MQAR, one/two-hop lookup,
 copy, direct/running parity and C-RASP counting. Final and selected checkpoint

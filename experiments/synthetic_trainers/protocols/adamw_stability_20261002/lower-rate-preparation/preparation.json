@@ -1,0 +1,60 @@
+{
+  "recorded_at_utc": "2026-10-02T18:48:01.596012+00:00",
+  "parent_manifest_sha256": "d8688493f1dbcbf4a3a95f018d35b6bebde7e5b0bd1308707e3585a365a0717c",
+  "candidate_scientific_configuration": {
+    "model": "gptmini",
+    "optimizer": "adamw",
+    "prime": 193,
+    "train_fraction": 0.25,
+    "data_seed": 0,
+    "seed": 0,
+    "width": 128,
+    "layers": 2,
+    "heads": 4,
+    "steps": 150000,
+    "batch_size": 512,
+    "batch_policy": "short_final",
+    "eval_every": 250,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.1,
+    "warmup_steps": 10,
+    "target": 0.99,
+    "patience": 2,
+    "device": "cuda"
+  },
+  "changed_fields": [
+    "learning_rate"
+  ],
+  "corpus": {
+    "prime": 193,
+    "domain_size": 37056,
+    "train_examples": 9264,
+    "heldout_examples": 27792,
+    "train_fraction": 0.25,
+    "data_seed": 0,
+    "vocab_size": 335,
+    "train_fingerprint": "5a0b7e90d546dfbad53ea44b64e2c3d1fb52af3a9a5640eff40f3d0ba3028ad8",
+    "heldout_fingerprint": "bba4c2d1ddcc6a23833b1831a59eb6db04371f20dc7054aa145e22d1e602afa4",
+    "split_policy": "exhaustive_disjoint_two_way_author_protocol",
+    "prompt_tokens": 5,
+    "supervised_targets": 2,
+    "scope": "all_unseen_operand_pairs_in_fixed_prime_field; no_length_OOD"
+  },
+  "identical_complete_corpus_verified": true,
+  "common_initial_state_verified": true,
+  "common_initial_state_cpu_sha256": "51aa47c632822ea9fe3e916ec865161498a860ebea89b897308b1374c221f1c7",
+  "parameters_both_models": 436104,
+  "budget_exposure": {
+    "batch_size": 512,
+    "cursor_before": 6656,
+    "cursor_after": 7168,
+    "epoch_tail": false,
+    "epoch_wraps_in_batch": 0,
+    "examples_seen": 73137184
+  },
+  "frozen_fingerprints": {
+    "checked_files": 31,
+    "all_unchanged": true
+  },
+  "scope": "CPU_preparation_only; scientific_plan_not_frozen_or_launched"
+}

@@ -1,0 +1,43 @@
+{
+  "recorded_at_utc": "2026-10-02T18:48:31.351157+00:00",
+  "updates": 20,
+  "canonical_steps": [
+    0,
+    19,
+    20
+  ],
+  "dense_gradients": 20,
+  "device": "cpu",
+  "warmup_rates": {
+    "1": 0.0,
+    "2": 2.9999999999999997e-05,
+    "3": 5.9999999999999995e-05,
+    "4": 8.999999999999999e-05,
+    "5": 0.00011999999999999999,
+    "6": 0.00015,
+    "7": 0.00017999999999999998,
+    "8": 0.00020999999999999998,
+    "9": 0.00023999999999999998,
+    "10": 0.00027,
+    "11": 0.0003
+  },
+  "short_tail": {
+    "step": 19,
+    "batch_size": 48,
+    "epoch_tail": true,
+    "learning_rate": 0.0003,
+    "gradient_l2": 5.441751003265381
+  },
+  "next_full_batch": {
+    "step": 20,
+    "batch_size": 512,
+    "epoch_tail": false,
+    "learning_rate": 0.0003,
+    "gradient_l2": 5.334883689880371
+  },
+  "parameters": 436104,
+  "portable_archive_verified_without_torch": true,
+  "cuda_context_created": false,
+  "archive": "experiments/runs/adamw_stability_20261002/bootstrap/lower_rate_cpu_preparation/portable",
+  "scope": "implementation_smoke_only; no_learning_or_stability_claim"
+}
