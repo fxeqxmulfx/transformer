@@ -40,7 +40,34 @@ criterion. Reference/AdamW seeds 1/2/3 each have three failing tail observations
 GPTMini/AdamW has 6/3/4; GPTMini/raw AMSGradW has 16/148/13. These new criteria
 do not alter the historical frozen targets or their recorded successes.
 
-## Frozen calibration
+## Current primary optimizer pair
+
+The user-selected primary optimizer is AdamW. The prospective
+[optimizer-pair protocol](protocols/adamw_stability_20261002/optimizer-pair-protocol.md)
+and [frozen plan](protocols/adamw_stability_20261002/optimizer-pair-plan.json)
+retain learning rate 0.001, model/data seeds 0/0, the 50% split, decay 0.1,
+short-final batching, the original model, 150,000 updates each and all criteria
+above. AdamW runs first and raw AMSGradW second; optimizer selection is their
+only configuration difference. Native AdamW uses betas (0.9, 0.98), bias
+correction and no maximum buffer. The pair does not isolate those components.
+
+Both controls now record the already-computed gradient norm on every update;
+complete archives must retain all 150,000 trace records, their CSV and the
+original canonical/neighbor/full-tensor histories. Diagnostic logging cost is
+recorded separately. Fresh paired timing avoids mixing instrumentation versions.
+Only a passing **primary AdamW** recipe can enter the unchanged independent
+confirmation gate; all six new cases must pass before architecture comparison.
+
+```bash
+.venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_optimizer_pair
+```
+
+The custom launcher checks the committed manifest, training and analysis sources,
+criterion, environment, local manuscripts and its own SHA256. Its `--check-only`
+mode verifies without training. The default CLI below describes the completed
+historical raw grid and must not reconstruct the new optimizer pair.
+
+## Original frozen raw AMSGradW calibration
 
 Four exploratory runs share data seed 0, initialization seed 0, the exhaustive
 4,656/4,656 split, width 128, two layers, four heads, 423,816 parameters,

@@ -1,0 +1,38 @@
+{
+  "recorded_at_utc": "2026-10-02T13:21:44.782112+00:00",
+  "cpu_tests_passed": 224,
+  "cuda_equivalence_smoke": {
+    "gpu": "NVIDIA GeForce GTX 1050",
+    "torch": "2.14.0+cu126",
+    "results": [
+      {
+        "optimizer": "adamw",
+        "updates_per_run": 20,
+        "exact_model_optimizer_cursor_rng_and_scores": true,
+        "trace_records": 20,
+        "moment_key": "exp_avg_sq_l2",
+        "moment_norm_at_step20": 0.895252644860112,
+        "peak_cuda_allocated_bytes": 117470208
+      },
+      {
+        "optimizer": "amsgradw",
+        "updates_per_run": 20,
+        "exact_model_optimizer_cursor_rng_and_scores": true,
+        "trace_records": 20,
+        "moment_key": "maximum_l2",
+        "moment_norm_at_step20": 0.023810482329588146,
+        "peak_cuda_allocated_bytes": 119166464
+      }
+    ],
+    "scope": "instrumentation_equivalence_only; not_stability_or_timing_evidence"
+  },
+  "source_commit": "08ed18cc860d4324bbb086430f160498adb79e29",
+  "training_and_protocol_source_count": 19,
+  "analysis_and_confirmation_source_count": 29,
+  "paired_only_config_difference": "optimizer",
+  "canonical_observations_per_complete_run": 601,
+  "expected_dense_gradient_records_per_complete_run": 150000,
+  "criterion_unchanged": true,
+  "scientific_training_started": false,
+  "scope": "prospective_plan_and_instrumentation_validation; no_stability_success"
+}

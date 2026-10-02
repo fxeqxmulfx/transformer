@@ -155,6 +155,35 @@ completed negative result retained. Phase, persistence, independent-confirmation
 architecture and complementary-task requirements are unchanged. Historical
 AdamW has fewer sampled failures but is not yet a verified stable benchmark.
 
+The next scientific stage is the prospectively frozen
+[AdamW/raw AMSGradW optimizer pair](protocols/adamw_stability_20261002/optimizer-pair-protocol.md).
+Both recipes retain learning rate 0.001, the same GPTMini model/data/seeds,
+short-final batches, decay 0.1, and 150,000-update budgets. Only optimizer
+selection differs. AdamW (betas 0.9/0.98, bias correction, no maximum buffer)
+is primary and runs first; raw AMSGradW is the paired control. This compares
+whole optimizers, not individual update components. Both record every gradient
+norm; no clipping is introduced. The new native moment diagnostics and unchanged
+six-case gate are verified with 224 passing CPU tests and exact real GPU
+instrumentation-equivalence checks. Old raw archives still verify offline.
+
+The pair was frozen at 2026-10-02T13:21:44.775126+00:00 from source commit
+`08ed18c` before scientific training. The immutable
+[plan](protocols/adamw_stability_20261002/optimizer-pair-plan.json) includes both
+recipes, criterion, sources, analysis/confirmation sources, environment, local
+papers, split fingerprints and launcher SHA256. Launch/resume from the root:
+
+```bash
+.venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_optimizer_pair
+```
+
+Add `--check-only` for verification. Live data will be under
+`experiments/runs/adamw_stability_20261002/calibration_optimizer_pair_lr001/`.
+Do not use the default raw four-recipe CLI for this custom pair. Archive and
+commit each full result independently, then assemble the complete comparison.
+Only a passing primary AdamW calibration permits new independent confirmation;
+architecture and complementary mechanics remain pending. This paragraph records
+preparation, not a scientific result; inspect actual process/state for progress.
+
 The follow-up goal from the startup message is active, without subagents.
 Read [STABILITY.md](STABILITY.md) for its prospectively specified criteria,
 four paired calibration recipes, and independent-confirmation gate.
