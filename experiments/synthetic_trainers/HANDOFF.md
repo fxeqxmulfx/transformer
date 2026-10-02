@@ -457,6 +457,24 @@ and source hash. This remains exploratory calibration. Fresh six-case full-
 budget confirmation, architecture controls and scientific complementary tasks
 remain outstanding; no architecture has been selected.
 
+The [300,000-update continuation](protocols/adamw_stability_20261002/budget300k-protocol.md)
+is now frozen at 2026-10-02T21:15:19.158465+00:00 from implementation commit
+`5c744d8`. The actual launcher check passes; eight isolated negative fixtures
+are rejected. All original checkpoint/log copies match, native steps are
+150,000, and the 39 core/manuscript/extension/recovery files are pinned.
+The full-width CPU continuation matches an uninterrupted run in weights,
+moments, native steps, sampling state, canonical metrics and dense diagnostics.
+Three extra series tests pass; five complete historical cases retain every
+post-onset observation and failure. The new total budget is 300,000 updates,
+with final tail 250,000–300,000 and fixed 10,000-update recovery windows across
+the whole post-generalization history. Original completed archives stay intact.
+The freeze precedes scientific extension updates; record the actual launch
+and terminal/active state next. Keep every pinned source immutable during this stage.
+
+```bash
+.venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_budget_extension
+```
+
 The [complementary-trainer preparation](protocols/adamw_stability_20261002/complementary-preparation.md)
 also verifies seven existing AdamW CPU paths for MQAR, one/two-hop lookup,
 copy, direct/running parity and C-RASP counting. Final and selected checkpoint

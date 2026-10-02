@@ -1,0 +1,57 @@
+{
+  "recorded_at_utc": "2026-10-02T21:17:02.086669+00:00",
+  "actual_frozen_guard_passed_without_torch": true,
+  "archive_worker_imports_without_torch": true,
+  "negative_checks": [
+    {
+      "case": "changed_rate",
+      "rejected": true,
+      "reason": "The continuation may only extend total steps from 150,000 to 300,000",
+      "isolated_copies": true
+    },
+    {
+      "case": "budget_above_cap",
+      "rejected": true,
+      "reason": "The continuation may only extend total steps from 150,000 to 300,000",
+      "isolated_copies": true
+    },
+    {
+      "case": "changed_user_cap",
+      "rejected": true,
+      "reason": "Budget extension changed the criterion, recipe count or user cap",
+      "isolated_copies": true
+    },
+    {
+      "case": "relaxed_tail",
+      "rejected": true,
+      "reason": "Budget extension changed the criterion, recipe count or user cap",
+      "isolated_copies": true
+    },
+    {
+      "case": "wrong_corpus_support",
+      "rejected": true,
+      "reason": "Budget extension changed parent corpus",
+      "isolated_copies": true
+    },
+    {
+      "case": "unpinned_recovery_series",
+      "rejected": true,
+      "reason": "All recovery analysis sources must remain pinned",
+      "isolated_copies": true
+    },
+    {
+      "case": "changed_copied_native_checkpoint",
+      "rejected": true,
+      "reason": "Initial continuation copy changed: checkpoint.pt",
+      "isolated_copies": true
+    },
+    {
+      "case": "omitted_original_canonical_observation",
+      "rejected": true,
+      "reason": "Continuation changed or omitted original history.jsonl observations",
+      "isolated_copies": true
+    }
+  ],
+  "original_frozen_manifest_unchanged": true,
+  "scientific_training_started": false
+}

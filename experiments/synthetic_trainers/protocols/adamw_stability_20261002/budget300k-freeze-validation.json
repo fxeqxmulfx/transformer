@@ -1,0 +1,32 @@
+{
+  "recorded_at_utc": "2026-10-02T21:15:19.374104+00:00",
+  "frozen_utc": "2026-10-02T21:15:19.158465+00:00",
+  "source_commit": "5c744d818b134393cf5e6fa2f611b2aa61a991bd",
+  "scientific_training_started": false,
+  "completed_parent_updates": 150000,
+  "new_total_steps": 300000,
+  "additional_updates": 150000,
+  "changed_configuration_fields": [
+    "steps"
+  ],
+  "all_original_checkpoint_and_log_copies_byte_identical": true,
+  "native_optimizer_steps_verified": 150000,
+  "original_exposure_and_cursor_verified": true,
+  "original_sampling_permutation_verified": true,
+  "original_checkpoint_sha256": "875efd8e6c1a07bc250f932391ca8c41ddcf026a2f14eb76093e5ee777a58794",
+  "same_environment_training_analysis_corpus_instrumentation_and_criterion": true,
+  "CPU_exact_continuation_oracle_passed": true,
+  "recovery_window_steps": 10000,
+  "final_window": [
+    250000,
+    300000
+  ],
+  "independent_confirmation_eligible_before_extension": false,
+  "scope": "additional_scientific_updates_not_started; actual_guard_checks_required_before_launch",
+  "checked_at_utc": "2026-10-02T21:19:00.907718+00:00",
+  "real_launcher_check_only_passed": true,
+  "pure_guard_and_archive_worker_import_without_torch": true,
+  "negative_isolated_guard_checks_passed": 8,
+  "unique_immutable_core_manuscript_extension_and_recovery_files": 39,
+  "original_150000_update_archive_and_source_resources_unchanged": true
+}

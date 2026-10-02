@@ -365,6 +365,11 @@ The user requested a maximum of 300,000 training updates per run. A new frozen
 budget extension must preserve this original negative result, restore the full
 native optimizer/sampling checkpoint, change only steps and score the fixed
 250,000–300,000 final window. Pin the new metric hash and width before training.
+The [prospective continuation](protocols/adamw_stability_20261002/budget300k-protocol.md)
+is now frozen with those settings, only total steps changed, the complete
+native checkpoint preserved, 39 source fingerprints pinned and actual launcher
+validation passed. Eight isolated negative fixtures are rejected. Additional
+whole-history recovery windows retain the interval before the new final tail.
 The [harder-task summary](protocols/adamw_stability_20261002/harder-task-results.md)
 keeps the three complete single-case AdamW outcomes and their task/exposure
 differences together; it does not average interventions or form ineligible ratios.
