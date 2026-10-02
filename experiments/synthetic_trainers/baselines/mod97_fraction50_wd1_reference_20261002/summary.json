@@ -1,0 +1,82 @@
+{
+  "complete": true,
+  "completed_runs": 1,
+  "planned_runs": 1,
+  "aggregates": [
+    {
+      "model": "reference",
+      "optimizer": "adamw",
+      "runs": 1,
+      "confirmed_delayed_runs": 1,
+      "final_heldout_target_runs": 0,
+      "lag_steps": {
+        "mean": 2750,
+        "std": 0,
+        "support": 1
+      },
+      "train_fit_step": {
+        "mean": 1250,
+        "std": 0,
+        "support": 1
+      },
+      "heldout_onset_step": {
+        "mean": 4000,
+        "std": 0,
+        "support": 1
+      },
+      "training_seconds": {
+        "mean": 1653.8613229672337,
+        "std": 0,
+        "support": 1
+      },
+      "heldout_accuracy": {
+        "mean": 0.6058848797250859,
+        "std": 0,
+        "support": 1
+      },
+      "heldout_loss": {
+        "mean": 0.5441245639447084,
+        "std": 0,
+        "support": 1
+      },
+      "plateau_then_generalization_runs": 0,
+      "lag_after_sustained_train_fit": {
+        "mean": 1000,
+        "std": 0,
+        "support": 1
+      },
+      "phase_diagnostics": [
+        {
+          "seed": 0,
+          "sustained_train_fit": {
+            "onset": 3000,
+            "confirmed": 3250
+          },
+          "sustained_heldout_target": {
+            "onset": 4000,
+            "confirmed": 4250
+          },
+          "lag_after_sustained_train_fit": 1000,
+          "memorization_plateau": null,
+          "heldout_ceiling": 0.1,
+          "train_target": 0.99,
+          "patience": 2,
+          "fit_to_heldout_onset_ratio": 1.3333333333333333,
+          "observed_plateau_then_generalization": false,
+          "final_heldout_target": false,
+          "observations_after_confirmation": 584,
+          "fraction_observations_at_target_after_confirmation": 0.3373287671232877,
+          "minimum_heldout_accuracy_after_confirmation": 0.00859106529209622,
+          "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+        }
+      ]
+    }
+  ],
+  "training_seconds": 1653.8613229672337,
+  "statistical_scope": "initialization_seeds_on_one_exhaustive_two_way_split; no_length_transfer_or_causal_claim",
+  "analysis_source_hashes": {
+    "paper_report.py": "21290747e194e3c9616f0437c6636ced920cdb660b273784b69833adb2508209",
+    "paper_phases.py": "9b69c022661203c6fcbfceff349583c13071602357427b8ad74b5eb36983bcd0",
+    "paper_plots.py": "21e28943866e737e956dd3cadba066e6dce01d36167d65e16c50554344e90449"
+  }
+}

@@ -311,12 +311,18 @@ therefore not be interpreted as understanding. One unsuccessful initialization
 at an explicitly chosen, undisclosed paper train fraction does not refute the
 paper's experiment.
 
-A second calibration changes only the train fraction to 50% (4,656 train /
-4,656 held-out equations) and retains the complete 150,000-update budget.
+A second calibration changed only the train fraction to 50% (4,656 train /
+4,656 held-out equations) and completed the full 150,000-update budget.
 Its early held-out target onset is update 4,000, confirmed at 4,250. The first
 train target crossing at 1,250 is transient, and later joint train/held-out
 collapses occur. The complete trajectory and a sustained memorization-phase
 diagnostic are needed before claiming the paper's prolonged grokking pattern.
+It ended at 67.20% train / 60.59% held-out accuracy, with training/wall budgets
+1,653.86 / 1,681.04 seconds. Its
+[complete archive](baselines/mod97_fraction50_wd1_reference_20261002/measurements.json)
+retains every successful and failed checkpoint, with
+[CSV](baselines/mod97_fraction50_wd1_reference_20261002/metrics.csv) and
+[curves](baselines/mod97_fraction50_wd1_reference_20261002/plots/modular-generalization.png).
 Initialization/data confirmations and GPTMini optimizer controls remain part
 of the active reproduction loop.
 
@@ -328,8 +334,16 @@ diagnostic asks for consecutive train≥99% / held-out≤10% observations before
 that onset. The 50% / weight-decay-1 run has no such plateau. Reports also keep
 the observed target fraction and worst held-out score after confirmation;
 initial success does not imply persistence. The 10% ceiling is a conservative
-mod-97 diagnostic, not a parameter recovered from the paper. Regularization
-calibration and independent-split confirmations remain necessary.
+mod-97 diagnostic, not a parameter recovered from the paper. Only 33.73% of
+scheduled observations after held-out confirmation met the target, and the
+worst held-out accuracy was 0.859%. This transient success does not reproduce
+the paper's prolonged, stable memorization-to-generalization pattern.
+
+A third fixed-budget calibration keeps 50% train and changes weight decay
+from 1 to 0.1. It uses the same model/data seed and 150,000 updates. Unlike
+the preceding run, its early curve exhibits near-perfect train accuracy and
+low held-out accuracy for a sustained interval. The full final trajectory and
+independent-split/model-seed confirmations are still required.
 
 ## Double descent is a separate observation
 

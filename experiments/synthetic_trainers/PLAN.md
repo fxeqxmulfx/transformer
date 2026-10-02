@@ -58,10 +58,12 @@ in [STUDIES.md](STUDIES.md#reproduced-random-feature-double-descent-2026-10-02).
 The first modular reference completed 150,000 updates at 20% train, fitted
 train, and reached only 1.79% final held-out accuracy; its
 [negative result](baselines/mod97_fraction20_reference_20261002/summary.json)
-is retained. Calibration at 50% train is running the same full budget.
-Its early held-out success needs separation from transient train fits and
-later collapses. Passing CPU tests or a finite curve witness does not complete
-the grokking reproduction.
+is retained. The 50% / weight-decay-1 calibration also completed the full
+budget: early held-out success was unstable, and final accuracy was 60.59%.
+Its [complete history](baselines/mod97_fraction50_wd1_reference_20261002/summary.json)
+does not pass the sustained memorization-phase diagnostic. Calibration at
+weight decay 0.1 is now running the same fixed budget. Passing CPU tests or
+a finite curve witness does not complete the grokking reproduction.
 
 Freeze the data, targets, evaluation cadence, grid, and budget before each
 confirmation experiment. Separate exploratory calibration from repetitions,
