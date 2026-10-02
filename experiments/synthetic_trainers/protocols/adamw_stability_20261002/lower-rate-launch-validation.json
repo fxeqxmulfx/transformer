@@ -1,0 +1,51 @@
+{
+  "recorded_at_utc": "2026-10-02T19:22:18.818563+00:00",
+  "scientific_training_started": true,
+  "processes": [
+    {
+      "pid": 126400,
+      "session_id": 93469,
+      "command": [
+        ".venv/bin/python",
+        "-u",
+        "-m",
+        "experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_lower_rate"
+      ],
+      "live": true
+    },
+    {
+      "pid": 126478,
+      "session_id": 19327,
+      "command": [
+        ".venv/bin/python",
+        "-u",
+        "-m",
+        "experiments.synthetic_trainers.protocols.adamw_stability_20261002.archive_lower_rate",
+        "--trainer-pid",
+        "126400"
+      ],
+      "live": true
+    }
+  ],
+  "state": "running",
+  "recipe": "adamw-mod193-fraction25-lr0003",
+  "configuration_corpus_sources_instrumentation_and_environment_match_freeze": true,
+  "parameters": 436104,
+  "native_optimizer": {
+    "name": "adamw",
+    "betas": [
+      0.9,
+      0.98
+    ],
+    "epsilon": 1e-08,
+    "decay_scope": "all_trainable_parameters",
+    "bias_correction": true,
+    "gradient_clipping": null
+  },
+  "core_frozen_files_unchanged": 31,
+  "launcher_and_worker_sha256_match_freeze": true,
+  "archive_worker_torch_imported": false,
+  "all_confirmation_and_persistence_gates_unchanged": true,
+  "independent_confirmation_started": false,
+  "scope": "one_full_budget_calibration_in_progress; no_success_or_repeatability_claim"
+}

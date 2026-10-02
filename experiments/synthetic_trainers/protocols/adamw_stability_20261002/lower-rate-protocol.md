@@ -45,6 +45,14 @@ NoTorch archive worker with `--trainer-pid`. Review full standalone PNG/PDF
 figures and verify/commit both complete archives after termination. Never
 restart on an observation timeout or mutate frozen files during this stage.
 
+The verified manifest is committed as `ed83c85`. Scientific trainer PID
+126400/session 93469 and NoTorch archive worker PID 126478/session 19327 are
+live, as recorded in the [launch receipt](lower-rate-launch-validation.json).
+This is one incomplete calibration; the whole-budget and six-case requirements
+remain pending. Driver output and worker metadata are under
+`experiments/runs/adamw_stability_20261002/lower-rate-driver.log` and
+`experiments/runs/adamw_stability_20261002/bootstrap/lower-rate-archive-worker.json`.
+
 This is a *Convexifying Transformers*, Section 4 adaptation with explicit
 fractions, rates and stronger persistence choices. It measures fixed-length
 novel operand-pair generalization; it does not establish length transfer,

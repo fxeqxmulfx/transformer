@@ -234,8 +234,8 @@ verifies both original archives and byte-identical nested copies without
 PyTorch. Both have empty eligible persistent-target timing support. Original
 curves and reviewed standalone PNG/PDF figures with readable update ticks
 retain all observations. Neither recipe permits independent confirmation.
-The separately frozen mod-193 adaptation is now complete; no scientific
-train-fraction control has been frozen or launched here.
+The separately frozen mod-193 adaptation is now complete; the later
+train-fraction control and lower-rate calibration are recorded below.
 After each full result, review figures, commit the verified archive and measured
 outcome, and apply the unchanged gate. No scientific independent confirmation
 or architecture run has started.
@@ -301,8 +301,8 @@ reviewed; the original comparison has overlapping ticks and is preserved
 alongside a reviewed [readable PNG/PDF sidecar](protocols/adamw_stability_20261002/larger-modulus-curves/mod193-calibration.png)
 with all 601 points and verified provenance. The standard renderer now uses
 thousands for update labels and a wider single-case layout; its three comparison
-tests pass. Future plans record its new analysis hash. No current scientific
-trainer remains in this completed stage; the next intervention is not yet frozen.
+tests pass. Future plans record its new analysis hash. No scientific
+trainer remains in this completed stage; the later interventions are below.
 At selection time, this user-directed harder-task adaptation superseded the
 earlier tentative train-fraction idea. Its historical prefix inspections
 remain partial evidence with their original labels.
@@ -371,8 +371,8 @@ the next full batch and portable analysis without PyTorch. CUDA is hidden from
 the CPU process and no CUDA context is created. This preparation overlapped
 the parent's final training portion, which matters for descriptive timing.
 It is not a scientific plan, launch or demonstrated stability result. The
-complete parent negative archive is now verified and its figures reviewed;
-the prospective lower-rate freeze is the next scientific action.
+complete parent negative archive is verified and its figures reviewed;
+the subsequent scientific freeze and launch are recorded below.
 
 The [lower-rate scientific plan](protocols/adamw_stability_20261002/lower-rate-protocol.md)
 is now prospectively frozen at 2026-10-02T19:11:49.393424+00:00 from `bee6e44`.
@@ -380,10 +380,29 @@ It changes only learning rate to 0.0003; all 31 training/analysis/manuscript
 fingerprints, corpus, environment, instrumentation and criteria match the
 complete quarter-split parent. Actual `--check-only` passes; four isolated
 changed manifests are rejected, and the pinned archive worker imports without
-PyTorch. Scientific GPU training has not yet started at this freeze record.
-Launch the strict `run_lower_rate` module after committing the verified
-manifest, then attach the NoTorch worker to its actual process. Preserve the
-whole result before applying the unchanged six-case gate.
+PyTorch. Scientific GPU training had not started at that freeze record.
+After manifest commit `ed83c85`, the actual trainer PID 126400/session 93469
+and archive worker PID 126478/session 19327 are now running. Their commands,
+state, optimizer and all immutable fingerprints are verified in the
+[launch receipt](protocols/adamw_stability_20261002/lower-rate-launch-validation.json).
+At 2026-10-02T19:26:27+00:00, the incomplete history reaches update 13,250:
+train/held-out accuracy 99.9028%/0.8096%, with a qualifying memorization plateau
+from 4,500 through 13,250 (36 canonical observations). Neither held-out 99%
+nor long confirmation has occurred. Keep the full 150,000-update budget;
+this partial phase is not a stability or repeatability result.
+
+```bash
+.venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_lower_rate
+```
+
+Driver output is `experiments/runs/adamw_stability_20261002/lower-rate-driver.log`;
+worker metadata is `experiments/runs/adamw_stability_20261002/bootstrap/lower-rate-archive-worker.json`.
+Check these actual processes/state before any restart. The worker has no
+PyTorch imported and waits for the full budget before archiving and verifying
+both complete results. Preserve every observation, review the figures and
+commit the verified whole result before applying the unchanged six-case gate.
+Keep all 31 core fingerprints and both pinned launcher/worker files immutable
+until this stage and its archive worker finish.
 
 The [complementary-trainer preparation](protocols/adamw_stability_20261002/complementary-preparation.md)
 also verifies seven existing AdamW CPU paths for MQAR, one/two-hop lookup,

@@ -313,9 +313,9 @@ complete and negative; their full archives, curves and diagnoses are preserved.
 The user-selected AdamW/raw AMSGradW pair completed both full negative
 phase/persistence results. All dense gradient records and the complete pair
 are verified and preserved. The user-directed frozen mod-193 AdamW adaptation
-also completed its full negative phase/persistence result. The prepared 25%
-fraction control has CPU implementation checks only; it still needs a new
-prospective scientific plan. The ordinary CSV-verifier repair is now complete.
+also completed its full negative phase/persistence result. The later 25%
+fraction control and lower-rate follow-up are recorded below. The ordinary
+CSV-verifier repair is complete.
 The [25% scientific plan](protocols/adamw_stability_20261002/fraction25-protocol.md)
 has now been frozen after the complete parent result, changing only the training
 fraction and recording the two analysis-only repairs. Its gates remain unchanged.
@@ -339,6 +339,13 @@ The [lower-rate plan](protocols/adamw_stability_20261002/lower-rate-protocol.md)
 is now frozen before scientific training: only learning rate 0.0003 differs;
 the real launcher and four negative manifest checks pass. The same full
 budget, source/environment/corpus fingerprints and every gate remain fixed.
+After manifest commit `ed83c85`, trainer PID 126400/session 93469 and NoTorch
+archive worker PID 126478/session 19327 are live; their actual launch is
+[verified](protocols/adamw_stability_20261002/lower-rate-launch-validation.json).
+At update 13,250, the incomplete history has train/held-out 99.9028%/0.8096%
+and a qualifying plateau from 4,500–13,250, but no held-out target or long
+confirmation. Finish the full budget and keep all pinned sources immutable;
+this partial observation does not open independent confirmation.
 Any subsequent
 fraction, decay, schedule, or model intervention needs a fresh frozen plan; a
 negative result does not justify relaxing the success criterion.
