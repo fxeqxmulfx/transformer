@@ -1,0 +1,9 @@
+{
+  "recorded_at_utc": "2026-10-02T13:39:00.471134+00:00",
+  "verified": true,
+  "torch_imported": false,
+  "consecutive_gradient_records": 252,
+  "complete_source_tensor_samples": 5,
+  "canonical_history_prefix_observations": 76,
+  "scope": "early_regression_only; no_final_tail_decision; no_cause_identified"
+}
