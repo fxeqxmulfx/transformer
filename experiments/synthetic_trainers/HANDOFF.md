@@ -305,7 +305,7 @@ only the learning rate to 0.0002, between 0.0001 (memorization plateau without
 with late failures). This is a testable interpolation, not a monotonicity or
 stability guarantee. Preserve the 50% split, seeds 0/0, decay 0.1, short-final
 batching, 150,000-update budget, diagnostics, and unchanged phase/persistence
-criterion. Freeze its fresh manifest before training. Independent confirmation
+criterion. Its fresh manifest was frozen before training. Independent confirmation
 and architecture/complementary comparisons remain pending.
 
 The [midpoint protocol](protocols/amsgradw_stability_20261002/midpoint-protocol.md)
@@ -320,7 +320,19 @@ passed before launch. Its launch/resume command is:
 .venv/bin/python -u -m experiments.synthetic_trainers.protocols.amsgradw_stability_20261002.run_midpoint
 ```
 
-Live output will be under
+The CUDA trainer is now live (initial PID 98387, launcher session 52847).
+At launch validation, its canonical update 4,250 has train/held-out accuracy
+100%/50.2577%; this is an incomplete prefix, not a passing result. See the
+[launch validation](protocols/amsgradw_stability_20261002/midpoint-launch-validation.json).
+The serial archive worker is live (PID 98517, session 18237); after the full
+budget it checks the frozen fingerprints, creates the individual and
+single-recipe comparison archives, and verifies them without PyTorch.
+Its metadata is `experiments/runs/amsgradw_stability_20261002/bootstrap/midpoint-archive-worker.json`.
+Inspect the process before relying on the metadata; avoid a second writer to
+the same archive destinations. After completion, review the curves, commit
+the measured result, and apply the unchanged independent-confirmation gate.
+
+Live output is under
 `experiments/runs/amsgradw_stability_20261002/calibration_midpoint_lr0002/`.
 Check its actual state/process before restarting. The default four-recipe CLI
 must not be used to resume this custom stage. No scientific independent

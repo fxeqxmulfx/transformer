@@ -1,0 +1,54 @@
+{
+  "recorded_at_utc": "2026-10-02T11:44:43.700190+00:00",
+  "scope": "midpoint_exploratory_calibration_launch; incomplete_budget; no_independent_confirmation",
+  "plan_sha256": "9a8feb00868e6dc6493a5a3b9b3205c7307f9dcec4c06cf72e2c654c6a6c0b0f",
+  "changed_config_fields": [
+    "learning_rate"
+  ],
+  "criterion_unchanged": true,
+  "training_source_hashes_unchanged": 19,
+  "paper_hashes_unchanged": 2,
+  "check_only_validation_passed": true,
+  "trainer_pid_at_recording": 98387,
+  "launcher_session": 52847,
+  "archive_worker_pid_at_recording": 98517,
+  "archive_worker_session": 18237,
+  "live_state": {
+    "status": "running",
+    "planned_runs": 1,
+    "completed_runs": 0,
+    "current_run": "short-lr0002",
+    "runs": []
+  },
+  "canonical_observations_at_recording": 18,
+  "last_canonical_observation_at_recording": {
+    "step": 4250,
+    "epochs_seen": 425.0,
+    "training_seconds": 121.82112923903333,
+    "wall_seconds": 129.85956747999808,
+    "last_batch_size": 48,
+    "train": {
+      "accuracy": 1.0,
+      "answer_accuracy": 1.0,
+      "EOS_accuracy": 1.0,
+      "loss": 0.014318821868535989,
+      "answer_loss": 0.0272411370195474,
+      "EOS_loss": 0.0013965069223515357,
+      "examples": 4656
+    },
+    "heldout": {
+      "accuracy": 0.5025773195876289,
+      "answer_accuracy": 0.5025773195876289,
+      "EOS_accuracy": 1.0,
+      "loss": 0.817733489361006,
+      "answer_loss": 1.6340670372612287,
+      "EOS_loss": 0.0013999659376046092,
+      "examples": 4656
+    }
+  },
+  "prior_complete_core_suite": {
+    "passed_tests": 218,
+    "log": "experiments/runs/amsgradw_stability_20261002/bootstrap/tests-confirmation-final.log"
+  },
+  "validation": "Custom launcher check-only passed before launch; actual CUDA training and exhaustive observations are live; frozen source/paper fingerprints and worker process rechecked."
+}
