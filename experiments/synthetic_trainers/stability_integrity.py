@@ -72,10 +72,11 @@ def validate_observation(point, manifest, config):
         raise ValueError("Invalid measured cost")
 
 
-def validate_logs(report, diagnostics, probes, manifest):
+def validate_logs(report, diagnostics, probes, manifest, gradients=()):
     config, instrumentation = report["plan"]["config"], manifest["instrumentation"]
     budget, cadence, every = config["steps"], config["eval_every"], instrumentation["every"]
     neighbors = instrumentation["eval_neighbors"]
+    validate_gradient_trace(report, diagnostics, gradients, manifest)
     expected_diagnostics = [step for step in range(1, budget + 1)
         if every and step % every == 0 or neighbors and step % cadence in (1, cadence - 1)]
     expected_probes = [step for step in range(1, budget)
@@ -126,3 +127,24 @@ def validate_logs(report, diagnostics, probes, manifest):
             for logarithm, temperature in zip(values["log_alpha"], values["inverse_temperature"]):
                 if not math.isfinite(logarithm) or not math.isclose(math.exp(logarithm), temperature, rel_tol=1e-6):
                     raise ValueError("Invalid inverse-temperature diagnostic")
+
+
+def validate_gradient_trace(report, diagnostics, gradients, manifest):
+    """Check every recorded update and agreement with full tensor diagnostics."""
+    config = report["plan"]["config"]
+    enabled = manifest["instrumentation"].get("trace_gradients", False)
+    expected = list(range(1, config["steps"] + 1)) if enabled else []
+    if [row["step"] for row in gradients] != expected:
+        raise ValueError("Gradient trace is missing, duplicated, or undeclared")
+    sampled = {row["step"]: row["gradient_l2"] for row in diagnostics}
+    for row in gradients:
+        batch = expected_batches(config, row["step"])
+        if row["batch_size"] != batch["batch_size"] or row["epoch_tail"] != batch["epoch_tail"]:
+            raise ValueError("Gradient trace batch differs from the frozen policy")
+        rate = config["learning_rate"]
+        if config["warmup_steps"]:
+            rate *= min(1, (row["step"] - 1) / config["warmup_steps"])
+        if row["learning_rate"] != rate or not math.isfinite(row["gradient_l2"]) or row["gradient_l2"] < 0:
+            raise ValueError("Gradient trace has an invalid norm or learning rate")
+        if row["step"] in sampled and row["gradient_l2"] != sampled[row["step"]]:
+            raise ValueError("Gradient trace disagrees with tensor diagnostics")

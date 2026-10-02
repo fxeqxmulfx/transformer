@@ -1,0 +1,42 @@
+{
+  "cuda": "NVIDIA GeForce GTX 1050",
+  "results": [
+    {
+      "optimizer": "amsgradw",
+      "identical_weights_moments_scores_cursor_rng": true,
+      "updates_per_run": 20,
+      "trace_records": 20,
+      "peak_cuda_allocated_bytes": 119166464,
+      "plain_diagnostic_seconds": 0.06605317199864658,
+      "traced_diagnostic_seconds": 0.027809982995677274
+    },
+    {
+      "optimizer": "adamw",
+      "identical_weights_moments_scores_cursor_rng": true,
+      "updates_per_run": 20,
+      "trace_records": 20,
+      "peak_cuda_allocated_bytes": 117470208,
+      "plain_diagnostic_seconds": 0.026165958002820844,
+      "traced_diagnostic_seconds": 0.025467746003414504
+    }
+  ],
+  "render_archive": "/tmp/transformer-gradient-trace-gpu-20261002/render_archive",
+  "scope": "instrumentation_equivalence_smoke_only; no_stability_claim_or_timing_comparison",
+  "cpu_tests": 221,
+  "cpu_tests_passed": true,
+  "test_log": "/tmp/transformer-gradient-trace-tests.log",
+  "legacy_comparison_archives": [
+    {
+      "archive": "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/baselines/amsgradw_stability_calibration_20261002",
+      "completed_runs": 4,
+      "verified": true
+    },
+    {
+      "archive": "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/baselines/amsgradw_stability_midpoint_calibration_20261002",
+      "completed_runs": 1,
+      "verified": true
+    }
+  ],
+  "offline_verification_without_torch": true,
+  "dense_overview_visually_inspected": true
+}

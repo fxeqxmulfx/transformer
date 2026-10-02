@@ -24,7 +24,7 @@ from .modular_data import make_corpus
 from .reference_transformer import Transformer
 from .batches import next_batch
 from .diagnostics import (DiagnosticsConfig, after_update, append_json, before_update,
-                          truncate_to_checkpoint)
+                          prepare_gradient_trace, truncate_to_checkpoint)
 from .provenance import source_hashes
 
 
@@ -198,6 +198,9 @@ def train(config, directory, *, resume=False, progress=None, diagnostics=Diagnos
     history_path = directory / "history.jsonl"
     history_path.write_text("".join(json.dumps(point) + "\n" for point in history))
     diagnostic_path, probe_path = directory / "diagnostics.jsonl", directory / "probes.jsonl"
+    gradient_path = directory / "gradients.jsonl"
+    if diagnostics.trace_gradients:
+        prepare_gradient_trace(gradient_path, completed)
     if diagnostics.every or diagnostics.eval_neighbors:
         truncate_to_checkpoint(diagnostic_path, completed)
         truncate_to_checkpoint(probe_path, completed)
@@ -241,6 +244,14 @@ def train(config, directory, *, resume=False, progress=None, diagnostics=Diagnos
         optimizer.step()
         seen += len(batch)
         last_batch_size = len(batch)
+        if diagnostics.trace_gradients:
+            synchronize(config.device)
+            diagnostic_started = time.perf_counter()
+            append_json(gradient_path, {"step": step, "batch_size": len(batch),
+                "epoch_tail": batch_metadata["epoch_tail"],
+                "learning_rate": optimizer.param_groups[0]["lr"],
+                "gradient_l2": float(gradient_norm)})
+            segment_diagnostic_seconds += time.perf_counter() - diagnostic_started
         if sampled:
             synchronize(config.device)
             diagnostic_started = time.perf_counter()

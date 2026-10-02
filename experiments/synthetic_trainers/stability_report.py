@@ -68,6 +68,16 @@ def verify_csv(path, rows):
         raise ValueError(f"Archive {path.name} differs from measured rows")
 
 
+def gradient_scope(gradients):
+    if not gradients:
+        return {}
+    maximum = max(gradients, key=lambda row: row["gradient_l2"])
+    return {"gradient_trace": {"observations": len(gradients),
+            "maximum_gradient_l2": maximum["gradient_l2"], "maximum_step": maximum["step"],
+            "maximum_batch_size": maximum["batch_size"],
+            "scope": "every_pre_update_gradient_norm; no_causal_claim"}}
+
+
 def save_run(directory, name, destination, *, render=True):
     directory, destination = Path(directory), Path(destination)
     if destination.exists():
@@ -82,12 +92,17 @@ def save_run(directory, name, destination, *, render=True):
     for filename in ("diagnostics.jsonl", "probes.jsonl"):
         path = source / filename
         blobs[filename] = path.read_bytes() if path.exists() else b""
+    if manifest["instrumentation"].get("trace_gradients", False):
+        blobs["gradients.jsonl"] = (source / "gradients.jsonl").read_bytes()
+    elif (source / "gradients.jsonl").exists():
+        raise ValueError("Undeclared gradient trace")
     report = json.loads(blobs["measurements.json"])
     diagnostics, probes = (parse_rows(blobs[key]) for key in ("diagnostics.jsonl", "probes.jsonl"))
+    gradients = parse_rows(blobs.get("gradients.jsonl", b""))
     assessment = validate_report(report, recipe, manifest)
-    validate_logs(report, diagnostics, probes, manifest)
+    validate_logs(report, diagnostics, probes, manifest, gradients)
     summary = {**run_scope(manifest, summarize(report, assessment, probes, diagnostics, name)),
-               "analysis_source_hashes": analysis_hashes(), "plots_included": render}
+               **gradient_scope(gradients), "analysis_source_hashes": analysis_hashes(), "plots_included": render}
     destination.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix=destination.name + "-", dir=destination.parent) as temporary:
         output = Path(temporary) / "archive"
@@ -98,9 +113,11 @@ def save_run(directory, name, destination, *, render=True):
         csv_rows(output / "metrics.csv", observation_rows(report["history"]))
         csv_rows(output / "neighbor-metrics.csv", observation_rows(probes))
         csv_rows(output / "diagnostic-metrics.csv", [diagnostic_metrics(row) for row in diagnostics])
+        if gradients:
+            csv_rows(output / "gradient-metrics.csv", gradients)
         if render:
             from .stability_plots import render_run
-            render_run(report, probes, diagnostics, summary, output / "plots")
+            render_run(report, probes, diagnostics, summary, output / "plots", gradients=gradients)
         checkpoint = source / "checkpoint.pt"
         hashes = {"files": file_hashes(output), "raw_checkpoint_sha256":
                   hashlib.sha256(checkpoint.read_bytes()).hexdigest() if checkpoint.exists() else None,
@@ -122,14 +139,24 @@ def verify_archive(directory):
     recipe = next(row for row in manifest["recipes"] if row["name"] == summary["name"])
     diagnostics = parse_rows((directory / "diagnostics.jsonl").read_bytes())
     probes = parse_rows((directory / "probes.jsonl").read_bytes())
+    gradient_path = directory / "gradients.jsonl"
+    if manifest["instrumentation"].get("trace_gradients", False):
+        gradients = parse_rows(gradient_path.read_bytes())
+    else:
+        if gradient_path.exists():
+            raise ValueError("Undeclared gradient trace")
+        gradients = []
     assessment = validate_report(report, recipe, manifest)
-    validate_logs(report, diagnostics, probes, manifest)
-    derived = run_scope(manifest, summarize(report, assessment, probes, diagnostics, summary["name"]))
+    validate_logs(report, diagnostics, probes, manifest, gradients)
+    derived = {**run_scope(manifest, summarize(report, assessment, probes, diagnostics, summary["name"])),
+               **gradient_scope(gradients)}
     if any(summary.get(key) != value for key, value in derived.items()):
         raise ValueError("Archive summary differs from measured histories")
     verify_csv(directory / "metrics.csv", observation_rows(report["history"]))
     verify_csv(directory / "neighbor-metrics.csv", observation_rows(probes))
     verify_csv(directory / "diagnostic-metrics.csv", [diagnostic_metrics(row) for row in diagnostics])
+    if gradients:
+        verify_csv(directory / "gradient-metrics.csv", gradients)
     if summary["plots_included"] and any(not (directory / "plots" / f"{name}.{extension}").exists()
             for name in ("stability-overview", "collapse-neighbors") for extension in ("png", "pdf")):
         raise ValueError("Archive lacks its declared standalone curves")

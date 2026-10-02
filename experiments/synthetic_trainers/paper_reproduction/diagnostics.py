@@ -15,6 +15,7 @@ import torch.nn.functional as F
 class DiagnosticsConfig:
     every: int = 0
     eval_neighbors: bool = False
+    trace_gradients: bool = False
 
     def __post_init__(self):
         if self.every < 0:
@@ -36,6 +37,15 @@ def append_json(path, row):
 def truncate_to_checkpoint(path, completed):
     rows = [json.loads(line) for line in path.read_text().splitlines()] if path.exists() else []
     path.write_text("".join(json.dumps(row) + "\n" for row in rows if row["step"] <= completed))
+
+
+def prepare_gradient_trace(path, completed):
+    """Discard uncheckpointed updates, retaining every completed gradient norm."""
+    rows = [json.loads(line) for line in path.read_text().splitlines()] if path.exists() else []
+    rows = [row for row in rows if row["step"] <= completed]
+    if [row["step"] for row in rows] != list(range(1, completed + 1)):
+        raise ValueError("Checkpointed gradient trace is missing or duplicated")
+    path.write_text("".join(json.dumps(row) + "\n" for row in rows))
 
 
 @torch.no_grad()

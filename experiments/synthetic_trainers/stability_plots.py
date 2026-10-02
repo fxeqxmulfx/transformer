@@ -9,7 +9,7 @@ def export(figure, directory, name):
         figure.savefig(directory / f"{name}.{extension}", dpi=180, bbox_inches="tight")
 
 
-def render_run(report, probes, diagnostics, summary, directory):
+def render_run(report, probes, diagnostics, summary, directory, *, gradients=()):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -27,11 +27,13 @@ def render_run(report, probes, diagnostics, summary, directory):
         axes[0, 1].plot(xs, [max(1e-12, p["heldout"][metric]) for p in history], label=metric, color=color)
     axes[0, 1].set(yscale="log", ylabel="Held-out CE (display floor 1e-12 nats)")
     metrics = [diagnostic_metrics(row) for row in diagnostics]
+    gradient_points = gradients or metrics
     for tail, color, label in ((False, "#0072b2", "ordinary/full batches"), (True, "#d55e00", "epoch tails")):
-        selected = [row for row in metrics if row["epoch_tail"] == tail and row["gradient_l2"] > 0]
+        selected = [row for row in gradient_points if row["epoch_tail"] == tail]
         axes[1, 0].scatter([p["step"] for p in selected], [p["gradient_l2"] for p in selected],
                            s=5, alpha=.5, label=label, color=color)
-    axes[1, 0].set(yscale="log", ylabel="Pre-update joint gradient L2")
+    axes[1, 0].set_yscale("symlog", linthresh=1e-8)
+    axes[1, 0].set(ylabel="Pre-update joint gradient L2" + (" (every update)" if gradients else ""))
     for key, color in (("parameter_l2", "#0072b2"), ("update_l2", "#d55e00"), ("maximum_l2", "#009e73")):
         selected = [p for p in metrics if p[key] > 0]
         axes[1, 1].plot([p["step"] for p in selected], [p[key] for p in selected], label=key, color=color, linewidth=1)
