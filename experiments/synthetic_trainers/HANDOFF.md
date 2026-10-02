@@ -273,6 +273,16 @@ This user-directed harder-task adaptation supersedes the earlier tentative
 train-fraction idea; no fraction intervention is selected. The historical
 prefix inspections above remain partial evidence with their original labels.
 
+The [complementary-trainer preparation](protocols/adamw_stability_20261002/complementary-preparation.md)
+also verifies seven existing AdamW CPU paths for MQAR, one/two-hop lookup,
+copy, direct/running parity and C-RASP counting. Final and selected checkpoint
+reloads reproduce all ID/longer-input metrics, with separate novel-input support.
+The general trainer's matrices-only decay and absent warmup differ from the
+modular primary protocol; a later scientific plan must explicitly resolve or
+label those differences. No production source changed, no architecture was
+selected and no scientific complementary campaign began. The current frozen
+GPU/queued source fingerprints remain unchanged.
+
 The follow-up goal from the startup message is active, without subagents.
 Read [STABILITY.md](STABILITY.md) for its prospectively specified criteria,
 four paired calibration recipes, and independent-confirmation gate.

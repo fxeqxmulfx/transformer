@@ -1,0 +1,769 @@
+{
+  "recorded_at_utc": "2026-10-02T15:13:39.909108+00:00",
+  "scope": "CPU_implementation_smokes_only; not_frozen_scientific_architecture_selection_or_confirmation",
+  "cpu_only": true,
+  "scientific_architecture_experiment_launched": false,
+  "native_AdamW_scope": "matrices; differs_from_modular_all_parameter_decay",
+  "warmup_scope": "constant_learning_rate; differs_from_modular_ten_update_warmup",
+  "novel_ID_meaning": "unseen_complete_inputs_at_training_lengths; not_unseen_token_identifiers",
+  "learning_or_grokking_claim": false,
+  "model": {
+    "width": 8,
+    "layers": 1,
+    "heads": 1,
+    "ff_multiplier": 4,
+    "rope_theta": 10000.0,
+    "init_std": 0.02
+  },
+  "cases": [
+    {
+      "name": "mqar-none",
+      "task": {
+        "task": "mqar",
+        "length": 24,
+        "min_length": null,
+        "symbols": 8,
+        "pairs": 4,
+        "queries": 2,
+        "hops": 2,
+        "blocks": 3,
+        "query_gap": 0,
+        "alpha": 0.1,
+        "neutral_fraction": 0.25,
+        "max_neutral_gap": null,
+        "max_balance": 8,
+        "bracket_types": 2,
+        "unique": false,
+        "histogram_bos": true,
+        "number_limit": 512,
+        "scratchpad": "none",
+        "addition_order": "forward",
+        "index_hints": false,
+        "carry_sampling": "balanced",
+        "carry_length": null,
+        "and_shift": true,
+        "and_region": "early",
+        "formula_depth": 2,
+        "formula_seed": 0
+      },
+      "config": {
+        "steps": 2,
+        "batch_size": 2,
+        "eval_every": 1,
+        "learning_rate": 0.001,
+        "weight_decay": 0.1,
+        "grad_clip": null,
+        "seed": 0,
+        "data_seed": 0,
+        "train_examples": 4,
+        "validation_examples": 4,
+        "test_examples": 4,
+        "eval_lengths": [
+          48
+        ],
+        "device": "cpu",
+        "cpu_threads": 1,
+        "target": 1.0,
+        "target_metric": "sequence_accuracy",
+        "stop_at_target": false,
+        "study": "double_descent",
+        "label_noise": 0.0,
+        "noise_seed": 0,
+        "split_policy": "disjoint",
+        "fit_epsilon": 0.01,
+        "fit_metric": "example_error",
+        "generalization_patience": 2,
+        "curve_tolerance": 0.001,
+        "optimizer": "adamw",
+        "beta1": 0.9,
+        "beta2": 0.98,
+        "optimizer_epsilon": 1e-08
+      },
+      "optimizer": {
+        "name": "adamw",
+        "betas": [
+          0.9,
+          0.98
+        ],
+        "epsilon": 1e-08,
+        "bias_correction": true,
+        "maximum_second_moment": false,
+        "decoupled_decay": true,
+        "decay_scope": "matrices",
+        "gradient_clip": null
+      },
+      "parameters": 1185,
+      "canonical_observations": 3,
+      "steps_completed": 2,
+      "examples_seen": 4,
+      "novel_ID_validation_examples": 4,
+      "novel_length_probe_examples": {
+        "length-48": 4
+      },
+      "split_fingerprints": {
+        "train": "39647b1e738be9dbf99633b82f0ff581a596b14f2586456ea7be813880f036c1",
+        "validation": "9e37bbdfb92961837591c43e690ba6ed370abaf40574caf24648f5e23e96268a",
+        "train_clean": "39647b1e738be9dbf99633b82f0ff581a596b14f2586456ea7be813880f036c1",
+        "in_distribution": "25ea8dd2a0e86263e225b0f305536e6bbbe07102106c1c848c5cddcd86e2a917",
+        "length-48": "538a1d3fcf3b337457bfd83c34a9388bd9a6d5de9ae6e973913c9d05cc922da0"
+      },
+      "final_and_selected_checkpoints_reloaded_and_all_metrics_equal": true,
+      "generative": false,
+      "final_test_splits": [
+        "in_distribution",
+        "length-48"
+      ],
+      "selected_test_splits": [
+        "in_distribution",
+        "length-48"
+      ],
+      "result_path": "/home/misha/lean_projects/transformer/experiments/runs/adamw_stability_20261002/bootstrap/complementary_cpu_preparation/mqar-none/result.json",
+      "history_sha256": "3fb7941d7691765925ceaa17f869637c5faf2f088fd72be4f8c0fc179e8b24e7"
+    },
+    {
+      "name": "lookup-hops1",
+      "task": {
+        "task": "lookup",
+        "length": 24,
+        "min_length": null,
+        "symbols": 8,
+        "pairs": 4,
+        "queries": 2,
+        "hops": 1,
+        "blocks": 3,
+        "query_gap": 0,
+        "alpha": 0.1,
+        "neutral_fraction": 0.25,
+        "max_neutral_gap": null,
+        "max_balance": 8,
+        "bracket_types": 2,
+        "unique": false,
+        "histogram_bos": true,
+        "number_limit": 512,
+        "scratchpad": "none",
+        "addition_order": "forward",
+        "index_hints": false,
+        "carry_sampling": "balanced",
+        "carry_length": null,
+        "and_shift": true,
+        "and_region": "early",
+        "formula_depth": 2,
+        "formula_seed": 0
+      },
+      "config": {
+        "steps": 2,
+        "batch_size": 2,
+        "eval_every": 1,
+        "learning_rate": 0.001,
+        "weight_decay": 0.1,
+        "grad_clip": null,
+        "seed": 0,
+        "data_seed": 0,
+        "train_examples": 4,
+        "validation_examples": 4,
+        "test_examples": 4,
+        "eval_lengths": [
+          48
+        ],
+        "device": "cpu",
+        "cpu_threads": 1,
+        "target": 1.0,
+        "target_metric": "sequence_accuracy",
+        "stop_at_target": false,
+        "study": "double_descent",
+        "label_noise": 0.0,
+        "noise_seed": 0,
+        "split_policy": "disjoint",
+        "fit_epsilon": 0.01,
+        "fit_metric": "example_error",
+        "generalization_patience": 2,
+        "curve_tolerance": 0.001,
+        "optimizer": "adamw",
+        "beta1": 0.9,
+        "beta2": 0.98,
+        "optimizer_epsilon": 1e-08
+      },
+      "optimizer": {
+        "name": "adamw",
+        "betas": [
+          0.9,
+          0.98
+        ],
+        "epsilon": 1e-08,
+        "bias_correction": true,
+        "maximum_second_moment": false,
+        "decoupled_decay": true,
+        "decay_scope": "matrices",
+        "gradient_clip": null
+      },
+      "parameters": 1121,
+      "canonical_observations": 3,
+      "steps_completed": 2,
+      "examples_seen": 4,
+      "novel_ID_validation_examples": 4,
+      "novel_length_probe_examples": {
+        "length-48": 4
+      },
+      "split_fingerprints": {
+        "train": "583c1df0b2324a1f8ef6b540e9c89efd0067d62e92829d0a031301e9bb40d667",
+        "validation": "2a214a2bda024a277ff817bcbabf3ff2b09c2e652799e92e3190a1d76f495a71",
+        "train_clean": "583c1df0b2324a1f8ef6b540e9c89efd0067d62e92829d0a031301e9bb40d667",
+        "in_distribution": "47600bed5ab5ef89d25b4d55f5b67767bc570996b56efde67bddc5264ce04084",
+        "length-48": "24514a47b4b982e8a70df34d4f3539029488070af176e2092ce284de897567cb"
+      },
+      "final_and_selected_checkpoints_reloaded_and_all_metrics_equal": true,
+      "generative": false,
+      "final_test_splits": [
+        "in_distribution",
+        "length-48"
+      ],
+      "selected_test_splits": [
+        "in_distribution",
+        "length-48"
+      ],
+      "result_path": "/home/misha/lean_projects/transformer/experiments/runs/adamw_stability_20261002/bootstrap/complementary_cpu_preparation/lookup-hops1/result.json",
+      "history_sha256": "04a9840fa4563a40103a45e53dcbefad4f779c9c02236b1e8b4ddd123ccb0957"
+    },
+    {
+      "name": "lookup-hops2",
+      "task": {
+        "task": "lookup",
+        "length": 24,
+        "min_length": null,
+        "symbols": 8,
+        "pairs": 4,
+        "queries": 2,
+        "hops": 2,
+        "blocks": 3,
+        "query_gap": 0,
+        "alpha": 0.1,
+        "neutral_fraction": 0.25,
+        "max_neutral_gap": null,
+        "max_balance": 8,
+        "bracket_types": 2,
+        "unique": false,
+        "histogram_bos": true,
+        "number_limit": 512,
+        "scratchpad": "none",
+        "addition_order": "forward",
+        "index_hints": false,
+        "carry_sampling": "balanced",
+        "carry_length": null,
+        "and_shift": true,
+        "and_region": "early",
+        "formula_depth": 2,
+        "formula_seed": 0
+      },
+      "config": {
+        "steps": 2,
+        "batch_size": 2,
+        "eval_every": 1,
+        "learning_rate": 0.001,
+        "weight_decay": 0.1,
+        "grad_clip": null,
+        "seed": 0,
+        "data_seed": 0,
+        "train_examples": 4,
+        "validation_examples": 4,
+        "test_examples": 4,
+        "eval_lengths": [
+          48
+        ],
+        "device": "cpu",
+        "cpu_threads": 1,
+        "target": 1.0,
+        "target_metric": "sequence_accuracy",
+        "stop_at_target": false,
+        "study": "double_descent",
+        "label_noise": 0.0,
+        "noise_seed": 0,
+        "split_policy": "disjoint",
+        "fit_epsilon": 0.01,
+        "fit_metric": "example_error",
+        "generalization_patience": 2,
+        "curve_tolerance": 0.001,
+        "optimizer": "adamw",
+        "beta1": 0.9,
+        "beta2": 0.98,
+        "optimizer_epsilon": 1e-08
+      },
+      "optimizer": {
+        "name": "adamw",
+        "betas": [
+          0.9,
+          0.98
+        ],
+        "epsilon": 1e-08,
+        "bias_correction": true,
+        "maximum_second_moment": false,
+        "decoupled_decay": true,
+        "decay_scope": "matrices",
+        "gradient_clip": null
+      },
+      "parameters": 1121,
+      "canonical_observations": 3,
+      "steps_completed": 2,
+      "examples_seen": 4,
+      "novel_ID_validation_examples": 4,
+      "novel_length_probe_examples": {
+        "length-48": 4
+      },
+      "split_fingerprints": {
+        "train": "d2efbf4444cea8448d372afd0e7553d5d8e44fee1118db82d5b2068a07844070",
+        "validation": "22caf005ac031baedc912e07fa8c379e59f7c0af8987487be085e6ea7c08c1de",
+        "train_clean": "d2efbf4444cea8448d372afd0e7553d5d8e44fee1118db82d5b2068a07844070",
+        "in_distribution": "cbbd5ea99c49885c4b66b893ed69fef5f877c069b5cb30faf39596f6d9a37c63",
+        "length-48": "831d4ca1e201d3fd4af2bb2412711c6eb7c449732f18962620d1b192fa73ab97"
+      },
+      "final_and_selected_checkpoints_reloaded_and_all_metrics_equal": true,
+      "generative": false,
+      "final_test_splits": [
+        "in_distribution",
+        "length-48"
+      ],
+      "selected_test_splits": [
+        "in_distribution",
+        "length-48"
+      ],
+      "result_path": "/home/misha/lean_projects/transformer/experiments/runs/adamw_stability_20261002/bootstrap/complementary_cpu_preparation/lookup-hops2/result.json",
+      "history_sha256": "7e614d42bdc953ce73d047a5472f19fbe3f90650d9ce03232215d9a005503ddd"
+    },
+    {
+      "name": "copy-none",
+      "task": {
+        "task": "copy",
+        "length": 4,
+        "min_length": null,
+        "symbols": 8,
+        "pairs": 8,
+        "queries": 4,
+        "hops": 2,
+        "blocks": 3,
+        "query_gap": 0,
+        "alpha": 0.1,
+        "neutral_fraction": 0.25,
+        "max_neutral_gap": null,
+        "max_balance": 8,
+        "bracket_types": 2,
+        "unique": false,
+        "histogram_bos": true,
+        "number_limit": 32,
+        "scratchpad": "none",
+        "addition_order": "forward",
+        "index_hints": false,
+        "carry_sampling": "balanced",
+        "carry_length": null,
+        "and_shift": true,
+        "and_region": "early",
+        "formula_depth": 2,
+        "formula_seed": 0
+      },
+      "config": {
+        "steps": 2,
+        "batch_size": 2,
+        "eval_every": 1,
+        "learning_rate": 0.001,
+        "weight_decay": 0.1,
+        "grad_clip": null,
+        "seed": 0,
+        "data_seed": 0,
+        "train_examples": 4,
+        "validation_examples": 4,
+        "test_examples": 4,
+        "eval_lengths": [
+          8
+        ],
+        "device": "cpu",
+        "cpu_threads": 1,
+        "target": 1.0,
+        "target_metric": "sequence_accuracy",
+        "stop_at_target": false,
+        "study": "double_descent",
+        "label_noise": 0.0,
+        "noise_seed": 0,
+        "split_policy": "disjoint",
+        "fit_epsilon": 0.01,
+        "fit_metric": "example_error",
+        "generalization_patience": 2,
+        "curve_tolerance": 0.001,
+        "optimizer": "adamw",
+        "beta1": 0.9,
+        "beta2": 0.98,
+        "optimizer_epsilon": 1e-08
+      },
+      "optimizer": {
+        "name": "adamw",
+        "betas": [
+          0.9,
+          0.98
+        ],
+        "epsilon": 1e-08,
+        "bias_correction": true,
+        "maximum_second_moment": false,
+        "decoupled_decay": true,
+        "decay_scope": "matrices",
+        "gradient_clip": null
+      },
+      "parameters": 1121,
+      "canonical_observations": 3,
+      "steps_completed": 2,
+      "examples_seen": 4,
+      "novel_ID_validation_examples": 4,
+      "novel_length_probe_examples": {
+        "length-8": 4
+      },
+      "split_fingerprints": {
+        "train": "c4f0e226c04c04ea45ddb47de91c7c2e10660c06735b275353817a4d944d769f",
+        "validation": "d834a24ab99a825c0b4af3b65e5cb8783411defa5fc35676498238fda62b366f",
+        "train_clean": "c4f0e226c04c04ea45ddb47de91c7c2e10660c06735b275353817a4d944d769f",
+        "in_distribution": "d346f43d6c9eed4e6312b931ab046d6bc5c6d7d841b207a5e5a39a53ad47cd66",
+        "length-8": "c89190ce976685266d2f011da6e2f414c99308737b25e9b507f00f761f4ff4d7"
+      },
+      "final_and_selected_checkpoints_reloaded_and_all_metrics_equal": true,
+      "generative": true,
+      "final_test_splits": [
+        "in_distribution",
+        "length-8"
+      ],
+      "selected_test_splits": [
+        "in_distribution",
+        "length-8"
+      ],
+      "result_path": "/home/misha/lean_projects/transformer/experiments/runs/adamw_stability_20261002/bootstrap/complementary_cpu_preparation/copy-none/result.json",
+      "history_sha256": "fb86242a7a41bd22c6d579a49eb67ed15fcc3f18fea45ba75abff021d5a59e1e"
+    },
+    {
+      "name": "parity-none",
+      "task": {
+        "task": "parity",
+        "length": 4,
+        "min_length": null,
+        "symbols": 32,
+        "pairs": 8,
+        "queries": 4,
+        "hops": 2,
+        "blocks": 3,
+        "query_gap": 0,
+        "alpha": 0.1,
+        "neutral_fraction": 0.25,
+        "max_neutral_gap": null,
+        "max_balance": 8,
+        "bracket_types": 2,
+        "unique": false,
+        "histogram_bos": true,
+        "number_limit": 32,
+        "scratchpad": "none",
+        "addition_order": "forward",
+        "index_hints": false,
+        "carry_sampling": "balanced",
+        "carry_length": null,
+        "and_shift": true,
+        "and_region": "early",
+        "formula_depth": 2,
+        "formula_seed": 0
+      },
+      "config": {
+        "steps": 2,
+        "batch_size": 2,
+        "eval_every": 1,
+        "learning_rate": 0.001,
+        "weight_decay": 0.1,
+        "grad_clip": null,
+        "seed": 0,
+        "data_seed": 0,
+        "train_examples": 4,
+        "validation_examples": 4,
+        "test_examples": 4,
+        "eval_lengths": [
+          8
+        ],
+        "device": "cpu",
+        "cpu_threads": 1,
+        "target": 1.0,
+        "target_metric": "sequence_accuracy",
+        "stop_at_target": false,
+        "study": "double_descent",
+        "label_noise": 0.0,
+        "noise_seed": 0,
+        "split_policy": "disjoint",
+        "fit_epsilon": 0.01,
+        "fit_metric": "example_error",
+        "generalization_patience": 2,
+        "curve_tolerance": 0.001,
+        "optimizer": "adamw",
+        "beta1": 0.9,
+        "beta2": 0.98,
+        "optimizer_epsilon": 1e-08
+      },
+      "optimizer": {
+        "name": "adamw",
+        "betas": [
+          0.9,
+          0.98
+        ],
+        "epsilon": 1e-08,
+        "bias_correction": true,
+        "maximum_second_moment": false,
+        "decoupled_decay": true,
+        "decay_scope": "matrices",
+        "gradient_clip": null
+      },
+      "parameters": 1313,
+      "canonical_observations": 3,
+      "steps_completed": 2,
+      "examples_seen": 4,
+      "novel_ID_validation_examples": 4,
+      "novel_length_probe_examples": {
+        "length-8": 4
+      },
+      "split_fingerprints": {
+        "train": "8d32832dc0158d8e46858ea27cc1cba9704229c198978badb6b0d655a9d69c0a",
+        "validation": "9e667a3385029a4ddc290559d43036e02efcc3a76eec3f77ba72e1747fb7e22e",
+        "train_clean": "8d32832dc0158d8e46858ea27cc1cba9704229c198978badb6b0d655a9d69c0a",
+        "in_distribution": "a53e2a1c83416b73dea5c968bc45262df1ad99f5ec49decd0ed5d5b99270b99c",
+        "length-8": "f9dfb2e0f3df8ba5cb5eeb865a5d711f51dc6696f1348f9f1bbc9a3398ed2922"
+      },
+      "final_and_selected_checkpoints_reloaded_and_all_metrics_equal": true,
+      "generative": true,
+      "final_test_splits": [
+        "in_distribution",
+        "length-8"
+      ],
+      "selected_test_splits": [
+        "in_distribution",
+        "length-8"
+      ],
+      "result_path": "/home/misha/lean_projects/transformer/experiments/runs/adamw_stability_20261002/bootstrap/complementary_cpu_preparation/parity-none/result.json",
+      "history_sha256": "55a33b4a63342c5606bb905dadd955d920b75955bc7a0f305f32f975a7e4501b"
+    },
+    {
+      "name": "parity-running",
+      "task": {
+        "task": "parity",
+        "length": 4,
+        "min_length": null,
+        "symbols": 32,
+        "pairs": 8,
+        "queries": 4,
+        "hops": 2,
+        "blocks": 3,
+        "query_gap": 0,
+        "alpha": 0.1,
+        "neutral_fraction": 0.25,
+        "max_neutral_gap": null,
+        "max_balance": 8,
+        "bracket_types": 2,
+        "unique": false,
+        "histogram_bos": true,
+        "number_limit": 32,
+        "scratchpad": "running",
+        "addition_order": "forward",
+        "index_hints": false,
+        "carry_sampling": "balanced",
+        "carry_length": null,
+        "and_shift": true,
+        "and_region": "early",
+        "formula_depth": 2,
+        "formula_seed": 0
+      },
+      "config": {
+        "steps": 2,
+        "batch_size": 2,
+        "eval_every": 1,
+        "learning_rate": 0.001,
+        "weight_decay": 0.1,
+        "grad_clip": null,
+        "seed": 0,
+        "data_seed": 0,
+        "train_examples": 4,
+        "validation_examples": 4,
+        "test_examples": 4,
+        "eval_lengths": [
+          8
+        ],
+        "device": "cpu",
+        "cpu_threads": 1,
+        "target": 1.0,
+        "target_metric": "sequence_accuracy",
+        "stop_at_target": false,
+        "study": "double_descent",
+        "label_noise": 0.0,
+        "noise_seed": 0,
+        "split_policy": "disjoint",
+        "fit_epsilon": 0.01,
+        "fit_metric": "example_error",
+        "generalization_patience": 2,
+        "curve_tolerance": 0.001,
+        "optimizer": "adamw",
+        "beta1": 0.9,
+        "beta2": 0.98,
+        "optimizer_epsilon": 1e-08
+      },
+      "optimizer": {
+        "name": "adamw",
+        "betas": [
+          0.9,
+          0.98
+        ],
+        "epsilon": 1e-08,
+        "bias_correction": true,
+        "maximum_second_moment": false,
+        "decoupled_decay": true,
+        "decay_scope": "matrices",
+        "gradient_clip": null
+      },
+      "parameters": 1313,
+      "canonical_observations": 3,
+      "steps_completed": 2,
+      "examples_seen": 4,
+      "novel_ID_validation_examples": 4,
+      "novel_length_probe_examples": {
+        "length-8": 4
+      },
+      "split_fingerprints": {
+        "train": "0a11bebd86d03b54ce71fcb09d73b40a1efd2b73035c523e71fea826d24aa01a",
+        "validation": "e5c90a4e5de307464a7d3c6a61e2c1f191083d9c5c2267e1e6cbcd9a56109d92",
+        "train_clean": "0a11bebd86d03b54ce71fcb09d73b40a1efd2b73035c523e71fea826d24aa01a",
+        "in_distribution": "c856868ab4de39f86788fe73e2a7fcc422ac76c542949e44b0f8d61e14234f35",
+        "length-8": "c53d46bec6e3ff49d878c3db1e4eb56ce6425cfd227a33f01732bb490b0ead7b"
+      },
+      "final_and_selected_checkpoints_reloaded_and_all_metrics_equal": true,
+      "generative": true,
+      "final_test_splits": [
+        "in_distribution",
+        "length-8"
+      ],
+      "selected_test_splits": [
+        "in_distribution",
+        "length-8"
+      ],
+      "result_path": "/home/misha/lean_projects/transformer/experiments/runs/adamw_stability_20261002/bootstrap/complementary_cpu_preparation/parity-running/result.json",
+      "history_sha256": "6af97e03bad4f8322ebec9019240048d474e42b4b62ad0021a362b9c7ed983e2"
+    },
+    {
+      "name": "crasp-none",
+      "task": {
+        "task": "crasp",
+        "length": 8,
+        "min_length": null,
+        "symbols": 32,
+        "pairs": 8,
+        "queries": 4,
+        "hops": 2,
+        "blocks": 3,
+        "query_gap": 0,
+        "alpha": 0.1,
+        "neutral_fraction": 0.25,
+        "max_neutral_gap": null,
+        "max_balance": 8,
+        "bracket_types": 2,
+        "unique": false,
+        "histogram_bos": true,
+        "number_limit": 512,
+        "scratchpad": "none",
+        "addition_order": "forward",
+        "index_hints": false,
+        "carry_sampling": "balanced",
+        "carry_length": null,
+        "and_shift": true,
+        "and_region": "early",
+        "formula_depth": 2,
+        "formula_seed": 0
+      },
+      "config": {
+        "steps": 2,
+        "batch_size": 2,
+        "eval_every": 1,
+        "learning_rate": 0.001,
+        "weight_decay": 0.1,
+        "grad_clip": null,
+        "seed": 0,
+        "data_seed": 0,
+        "train_examples": 4,
+        "validation_examples": 4,
+        "test_examples": 4,
+        "eval_lengths": [
+          16
+        ],
+        "device": "cpu",
+        "cpu_threads": 1,
+        "target": 1.0,
+        "target_metric": "sequence_accuracy",
+        "stop_at_target": false,
+        "study": "double_descent",
+        "label_noise": 0.0,
+        "noise_seed": 0,
+        "split_policy": "disjoint",
+        "fit_epsilon": 0.01,
+        "fit_metric": "example_error",
+        "generalization_patience": 2,
+        "curve_tolerance": 0.001,
+        "optimizer": "adamw",
+        "beta1": 0.9,
+        "beta2": 0.98,
+        "optimizer_epsilon": 1e-08
+      },
+      "optimizer": {
+        "name": "adamw",
+        "betas": [
+          0.9,
+          0.98
+        ],
+        "epsilon": 1e-08,
+        "bias_correction": true,
+        "maximum_second_moment": false,
+        "decoupled_decay": true,
+        "decay_scope": "matrices",
+        "gradient_clip": null
+      },
+      "parameters": 1057,
+      "canonical_observations": 3,
+      "steps_completed": 2,
+      "examples_seen": 4,
+      "novel_ID_validation_examples": 4,
+      "novel_length_probe_examples": {
+        "length-16": 4
+      },
+      "split_fingerprints": {
+        "train": "c3794da4f2a164ec91981666b74db3b629d00b77573a671e2b34bab6fdb69800",
+        "validation": "381f564d876d71c4ac378c4783e061e9904a9bdfb6e38020771eaac95abf947b",
+        "train_clean": "c3794da4f2a164ec91981666b74db3b629d00b77573a671e2b34bab6fdb69800",
+        "in_distribution": "791c62bbcec9002a95456080b7b8c89653ff31ada47555082d41ec4993888026",
+        "length-16": "5ba1dedeb2d8ec76319f6e64ccda580a0081dc816ef09f9075550fd376a72c2c"
+      },
+      "final_and_selected_checkpoints_reloaded_and_all_metrics_equal": true,
+      "generative": false,
+      "final_test_splits": [
+        "in_distribution",
+        "length-16"
+      ],
+      "selected_test_splits": [
+        "in_distribution",
+        "length-16"
+      ],
+      "result_path": "/home/misha/lean_projects/transformer/experiments/runs/adamw_stability_20261002/bootstrap/complementary_cpu_preparation/crasp-none/result.json",
+      "history_sha256": "f1c0add5e12d1e8e8899557585d844e5d4792c30c213faaacba512011d2097e9"
+    }
+  ],
+  "source_hashes": {
+    "experiments/synthetic_trainers/config.py": "f0dfb859e32ed2fc5192cbf8305d74f4245f7e08db2c7581958232f6a56c683e",
+    "experiments/synthetic_trainers/runtime.py": "a7b52640d190c3cbb0405125c58d1593c5e700301a8a6126fdc78110ee98643d",
+    "experiments/synthetic_trainers/training.py": "66df67c3c870faf17a61b8e95ba75de0dec639ca4b91278a0d74d0d424a5986c",
+    "experiments/synthetic_trainers/cli.py": "9e319197ce964c2593432f495f5e4c4adf1cba91470a1a7e7646127f76a54c5f",
+    "experiments/synthetic_trainers/studies.py": "5a58291a946d5a1f03ee0a7939accd945b73349d8ce0a8e0452db320300c4f0e",
+    "experiments/synthetic_trainers/corpus.py": "d523087fe9bdade3343c1194ab4c79338c395ac2c021d2add1f1c396cdb10b9b",
+    "experiments/synthetic_trainers/specs.py": "aa25f588d4e37417b343e6692425a6bd2cd11b0c03b28d2e563bc82f356e1d03",
+    "experiments/synthetic_trainers/metrics.py": "0c68755f965158a51728ec63696d4305b0f157a898506877d710444f82583bdf"
+  },
+  "frozen_live_and_queued_fingerprints": {
+    "optimizer-pair-plan.json": {
+      "checked_files": 31,
+      "all_unchanged": true
+    },
+    "larger-modulus-plan.json": {
+      "checked_files": 31,
+      "all_unchanged": true
+    }
+  },
+  "probe_script_sha256": "00a577ca907b12ac42bd7ca1942bc7ff547b3eb8e4bd042cd5c99179aa0cd1b7"
+}

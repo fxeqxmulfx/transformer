@@ -261,6 +261,13 @@ No scientific architecture has been selected or compared. See the
 The later complementary-task plan must likewise freeze its metrics and support;
 novel-ID and length-transfer outcomes remain separate, and empty novel support
 cannot certify transfer. No scientific architecture comparison has started.
+The [existing-trainer audit](protocols/adamw_stability_20261002/complementary-preparation.md)
+now verifies seven real CPU AdamW implementation paths and separate final/
+selected metrics. General AdamW currently decays matrices only and has no
+warmup; these differ from the modular primary. Freeze and document any task-
+specific protocol adaptation or verify matching options before the later
+scientific comparison. Its two-update probes provide implementation evidence
+only, and do not open the modular independent-confirmation or architecture gate.
 
 ## Environment and next decisions
 

@@ -1,0 +1,59 @@
+# Existing complementary trainers: AdamW and transfer preparation
+
+The continuing objective includes MQAR, copy/parity, lookup/composition and
+prefix counting after an independently repeatable modular benchmark and a
+targeted architecture comparison. No scientific architecture has been selected
+or tested. The current GPU optimizer control and frozen mod-193 queue continue.
+
+The existing common trainer already supports native AdamW. Its defaults differ
+from the modular manuscript adaptation and must not be silently reused as the
+same optimizer protocol:
+
+| Control | General trainer default | Current modular primary |
+| --- | --- | --- |
+| Betas | (0.9, 0.999), configurable | (0.9, 0.98) |
+| Epsilon | 1e-8, configurable | 1e-8 |
+| Weight decay | 0.01, matrices only | 0.1, all trainable parameters |
+| Gradient clipping | Norm 1.0, can disable | Disabled |
+| Warmup | Constant learning rate | Ten updates |
+| Matrix initialization | Constructor default, std configurable | Normal std 0.02 |
+
+The CLI can set betas, epsilon, decay amount, clipping and matrix initialization.
+The existing general AdamW factory still decays only matrices, and its loop
+has no warmup option. A later frozen complementary protocol must explicitly
+document these differences, or add and verify matching options after the live
+frozen campaigns finish. Preserve identical optimizer settings within each
+architecture pair. No production source or current frozen plan changed here.
+
+The study profile already retains both final and validation-selected checkpoint
+test scores. Novel ID means complete inputs absent from training, evaluated
+at training lengths; it does not mean unseen token identifiers. Longer inputs
+are separate probes, each with its own novelty support. Zero novel support
+cannot certify transfer. Generative tasks use free rollout metrics; teacher
+forcing is a separate train/diagnostic measure. These are the existing rules
+in [STUDIES.md](../../STUDIES.md).
+
+Seven real [CPU implementation probes](complementary-preparation/validation.json)
+completed two updates each at width 8, one layer, one head, betas (0.9, 0.98),
+matrix decay 0.1, no clipping and no warmup. Their disjoint train/validation/test
+pools each have four examples. Every ID and longer-input metric exactly matched
+independent reloads of both final and selected checkpoints, excluding measured
+generation time. All have four novel ID validation examples and four novel
+longer-input probe examples. Complete [results](complementary-preparation/results.json),
+[three-point histories](complementary-preparation/histories.json), source hashes
+and the exact executed [probe snapshot](complementary-preparation/probe-snapshot.py)
+are retained with checksums. They are implementation checks, not learning,
+grokking, stability, architecture-improvement or algorithmic-transfer evidence.
+
+| Probe | Train / longer length | What grows |
+| --- | --- | --- |
+| MQAR | 24 / 48 | Spacing with four associations and two queries fixed |
+| Lookup, one and two hops | 24 / 48 | Spacing with association/query counts and hop depth fixed |
+| Copy | 4 / 8 | Input and complete generated answer |
+| Direct/running-state parity | 4 / 8 | Input, and running answer for the scratchpad control |
+| C-RASP depth 2 | 8 / 16 | Prefix horizon with the counting formula depth fixed |
+
+The MQAR/lookup probes above do not increase association count or composition
+depth. Those harder mechanisms need separately frozen data settings. Scientific
+task difficulties, targets, budgets, selection rules, seeds/splits and paired
+execution remain to be chosen after the unchanged benchmark gate passes.
