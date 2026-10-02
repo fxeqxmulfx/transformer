@@ -453,9 +453,31 @@ compared with 498.55±166.87 / 506.84±169.07 for the reference. The observed
 ratio of mean training costs is about 2.81, with large per-seed variation;
 these are sample SD, not confidence intervals or evidence of universal speedup.
 Architecture, parameter count, and initialization differ as documented, so
-this comparison does not isolate the cause. Six of nine recipes are complete;
-the three GPTMini/raw AMSGradW runs remain required before comparing the
-requested optimizer or declaring the campaign complete.
+this comparison does not isolate the cause.
+
+GPTMini/raw AMSGradW seed 1 completed 150,000 updates with 100% final
+train/held-out accuracy and held-out CE 0.009266. Sustained train fit starts
+at 3,000, held-out onset at 21,000, and confirmation at 21,250: an
+18,000-update lag and 229.62 training / 233.71 wall seconds to confirmation.
+Full-budget costs are 1,620.21 / 1,649.05 seconds. There is no consecutive
+train≥99% / held-out≤10% memorization plateau before generalization; the
+held-out split is already partially generalized while train fits. Retain
+that distinction from the stronger plateau diagnostic used for the reference.
+
+The [complete first AMSGradW archive](baselines/mod97_fraction50_wd01_confirmation_gptmini_amsgradw_seed1_20261002/measurements.json)
+and [accuracy/error/CE curves](baselines/mod97_fraction50_wd01_confirmation_gptmini_amsgradw_seed1_20261002/plots/modular-generalization.png)
+show the restricted epoch-error shape: 100% initial error falls to 59.66% at
+1,250, rises to 70.19% at 3,000 while train is fitted, and ends at 0%.
+The overfitting rise is 10.52 percentage points and recovery is 70.19.
+This error shape alone does not satisfy the plateau-then-generalization
+diagnostic. After confirmation, 465 of 516 observations (90.12%) retain the
+99% target, with a worst held-out accuracy of 0%. At that worst observation
+(73,750), numeric-answer accuracy is also 0% while EOS accuracy is 99.72%;
+the collapse is not an EOS-only scoring artifact. These later collapses
+remain separate from the pre-generalization error diagnostic and their cause
+is not identified. Seven of nine recipes are complete; raw AMSGradW seeds
+2/3 remain required before judging optimizer repeatability or declaring the
+campaign complete.
 
 ## Double descent is a separate observation
 
