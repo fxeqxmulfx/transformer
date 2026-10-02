@@ -1,0 +1,127 @@
+[
+  {
+    "step": 103750,
+    "epochs_seen": 10375.0,
+    "training_seconds": 2839.9833959871794,
+    "wall_seconds": 3023.213387061998,
+    "last_batch_size": 48,
+    "train": {
+      "accuracy": 1.0,
+      "answer_accuracy": 1.0,
+      "EOS_accuracy": 1.0,
+      "loss": 4.2772977625914366e-07,
+      "answer_loss": 8.266045548113005e-07,
+      "EOS_loss": 2.885499419089902e-08,
+      "examples": 4656
+    },
+    "heldout": {
+      "accuracy": 1.0,
+      "answer_accuracy": 1.0,
+      "EOS_accuracy": 1.0,
+      "loss": 4.468682451398493e-07,
+      "answer_loss": 8.646510622449719e-07,
+      "EOS_loss": 2.9085424518638934e-08,
+      "examples": 4656
+    }
+  },
+  {
+    "step": 103751,
+    "epochs_seen": 10375.109965635738,
+    "training_seconds": 2840.00533717719,
+    "wall_seconds": 3023.355835102,
+    "last_batch_size": 512,
+    "train": {
+      "accuracy": 1.0,
+      "answer_accuracy": 1.0,
+      "EOS_accuracy": 1.0,
+      "loss": 4.2310836176864827e-07,
+      "answer_loss": 8.231736907633053e-07,
+      "EOS_loss": 2.3043029257903456e-08,
+      "examples": 4656
+    },
+    "heldout": {
+      "accuracy": 1.0,
+      "answer_accuracy": 1.0,
+      "EOS_accuracy": 1.0,
+      "loss": 4.4217002679092997e-07,
+      "answer_loss": 8.609897803708821e-07,
+      "EOS_loss": 2.3350269694890005e-08,
+      "examples": 4656
+    }
+  },
+  {
+    "step": 103999,
+    "epochs_seen": 10399.98969072165,
+    "training_seconds": 2846.320779380174,
+    "wall_seconds": 3029.8522232330033,
+    "last_batch_size": 512,
+    "train": {
+      "accuracy": 0.895618556701031,
+      "answer_accuracy": 0.895618556701031,
+      "EOS_accuracy": 1.0,
+      "loss": 0.1969127196216911,
+      "answer_loss": 0.3938253212630544,
+      "EOS_loss": 1.1920928173725289e-07,
+      "examples": 4656
+    },
+    "heldout": {
+      "accuracy": 0.8762886597938144,
+      "answer_accuracy": 0.8762886597938144,
+      "EOS_accuracy": 1.0,
+      "loss": 0.21690913492052005,
+      "answer_loss": 0.4338181518607123,
+      "EOS_loss": 1.1920928173725289e-07,
+      "examples": 4656
+    }
+  },
+  {
+    "step": 104000,
+    "epochs_seen": 10400.0,
+    "training_seconds": 2846.3383978441743,
+    "wall_seconds": 3029.9930752659966,
+    "last_batch_size": 48,
+    "train": {
+      "accuracy": 0.9001288659793815,
+      "answer_accuracy": 0.9001288659793815,
+      "EOS_accuracy": 1.0,
+      "loss": 0.18608859314541637,
+      "answer_loss": 0.3721770683105049,
+      "EOS_loss": 1.1920928173725289e-07,
+      "examples": 4656
+    },
+    "heldout": {
+      "accuracy": 0.8799398625429553,
+      "answer_accuracy": 0.8799398625429553,
+      "EOS_accuracy": 1.0,
+      "loss": 0.20497609495706984,
+      "answer_loss": 0.4099520719338119,
+      "EOS_loss": 1.1920928173725289e-07,
+      "examples": 4656
+    }
+  },
+  {
+    "step": 104001,
+    "epochs_seen": 10400.109965635738,
+    "training_seconds": 2846.360275377174,
+    "wall_seconds": 3030.1350418070033,
+    "last_batch_size": 512,
+    "train": {
+      "accuracy": 0.9082903780068728,
+      "answer_accuracy": 0.9082903780068728,
+      "EOS_accuracy": 1.0,
+      "loss": 0.1752259870575056,
+      "answer_loss": 0.3504518561346834,
+      "EOS_loss": 1.1920928173725289e-07,
+      "examples": 4656
+    },
+    "heldout": {
+      "accuracy": 0.8906786941580757,
+      "answer_accuracy": 0.8906786941580757,
+      "EOS_accuracy": 1.0,
+      "loss": 0.1933619459879767,
+      "answer_loss": 0.38672377399562563,
+      "EOS_loss": 1.1920928173725289e-07,
+      "examples": 4656
+    }
+  }
+]

@@ -200,7 +200,15 @@ now preserves all 25 canonical and 6,000 gradient observations through update
 6,000. First held-out target is 1,250; long confirmation spans 1,250–6,000 and
 costs 181.81 training / 194.91 wall seconds. There is no required low-held-out
 memorization plateau, so this 50% recipe is phase-ineligible regardless of later
-persistence. It is rapid generalization, with tail stability still unmeasured.
+persistence. It is rapid generalization, with persistence tracked separately.
+The [first final-tail failure](protocols/adamw_stability_20261002/first-tail-failure.md)
+is now preserved at update 104,000: exhaustive train/held-out accuracy
+90.0129%/87.9940%. Both immediate neighbors also fail; EOS stays 100%.
+This observed final-window failure rules out the frozen persistence criterion,
+irrespective of later recovery. Its portable prefix verifies without PyTorch;
+the complete 150,000-update outcome is still pending. Finish both budgets and
+then run the already frozen mod-193 adaptation; no independent confirmation
+is eligible from this mod-97 primary recipe.
 The prefix reproduces offline without PyTorch and exactly matches the original
 bytes. Complete both unchanged budgets before selecting another justified
 calibration; no train-fraction control has been selected or launched here.

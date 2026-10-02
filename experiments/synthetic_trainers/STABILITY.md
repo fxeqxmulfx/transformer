@@ -57,6 +57,12 @@ original canonical/neighbor/full-tensor histories. Diagnostic logging cost is
 recorded separately. Fresh paired timing avoids mixing instrumentation versions.
 Only a passing **primary AdamW** recipe can enter the unchanged independent
 confirmation gate; all six new cases must pass before architecture comparison.
+The [first primary final-tail failure](protocols/adamw_stability_20261002/first-tail-failure.md)
+has now been observed at update 104,000, with train/held-out
+90.0129%/87.9940% and failing immediate neighbors. The frozen final window
+starts at 100,000, so this recipe cannot pass persistence even if it recovers.
+Complete its remaining budget and the scheduled raw control; retain the full
+outcomes and then execute the separately frozen mod-193 task adaptation.
 
 ```bash
 .venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_optimizer_pair
