@@ -1,0 +1,153 @@
+{
+  "recorded_at_utc": "2026-10-02T13:37:35.704893+00:00",
+  "source_hashes": {
+    "experiments/synthetic_trainers/paper_reproduction/modular_data.py": "6f0c32a923b466fac7fb2678d0bc9e3af9517d4edf720631609a0cf957601d79",
+    "experiments/synthetic_trainers/paper_reproduction/grokking.py": "189c55580e7b27344662325cbbb5abad475ddfc09353d4fb8487a257321d22e8",
+    "experiments/gpt_mini.py": "7df779bcdc019a6054ed7a6b93469b821b8dec9fc96d84a1420ec387d28f5ee4"
+  },
+  "candidates": [
+    {
+      "prime": 97,
+      "domain_size": 9312,
+      "train_examples": 4656,
+      "heldout_examples": 4656,
+      "train_fraction": 0.5,
+      "data_seed": 0,
+      "vocab_size": 239,
+      "train_fingerprint": "53e9d2fb9336a74529e88bf582a2fb37483c1f7e79ab8f1fd670de565baf0eef",
+      "heldout_fingerprint": "1f679f635bd75862e28f1f6dec8cc121a2963f2fa258a0d8d291df0c8b9acc7d",
+      "split_policy": "exhaustive_disjoint_two_way_author_protocol",
+      "prompt_tokens": 5,
+      "supervised_targets": 2,
+      "scope": "all_unseen_operand_pairs_in_fixed_prime_field; no_length_OOD",
+      "parameters": 423816,
+      "parameter_groups": {
+        "embedding": 30592,
+        "transformer_blocks": 393224
+      },
+      "full_batches_per_epoch": 9,
+      "final_batch_size": 48,
+      "finite_complete_domain_oracle_checked": true,
+      "all_operand_and_answer_classes_present": true,
+      "unique_pairs_and_disjoint_exhaustive_split_checked": true,
+      "corpus_bytes": 521472,
+      "budget_exposure": {
+        "batch_size": 48,
+        "cursor_before": 4608,
+        "cursor_after": 4656,
+        "epoch_tail": true,
+        "epoch_wraps_in_batch": 0,
+        "examples_seen": 69840000
+      },
+      "split_class_coverage": {
+        "train": {
+          "numerator": {
+            "classes": 97,
+            "minimum_examples_per_class": 35,
+            "maximum_examples_per_class": 61
+          },
+          "denominator": {
+            "classes": 96,
+            "minimum_examples_per_class": 36,
+            "maximum_examples_per_class": 61
+          },
+          "answer": {
+            "classes": 97,
+            "minimum_examples_per_class": 38,
+            "maximum_examples_per_class": 59
+          }
+        },
+        "heldout": {
+          "numerator": {
+            "classes": 97,
+            "minimum_examples_per_class": 35,
+            "maximum_examples_per_class": 61
+          },
+          "denominator": {
+            "classes": 96,
+            "minimum_examples_per_class": 36,
+            "maximum_examples_per_class": 61
+          },
+          "answer": {
+            "classes": 97,
+            "minimum_examples_per_class": 37,
+            "maximum_examples_per_class": 58
+          }
+        }
+      }
+    },
+    {
+      "prime": 193,
+      "domain_size": 37056,
+      "train_examples": 18528,
+      "heldout_examples": 18528,
+      "train_fraction": 0.5,
+      "data_seed": 0,
+      "vocab_size": 335,
+      "train_fingerprint": "73a7da79010e541b76f02e1e7e7865584d1da5249f06ddf23ce4ea3846cb5bbb",
+      "heldout_fingerprint": "9ed8d056d80705c33c11922be847aa523a791540eae06656bbdc0a08aa6189b1",
+      "split_policy": "exhaustive_disjoint_two_way_author_protocol",
+      "prompt_tokens": 5,
+      "supervised_targets": 2,
+      "scope": "all_unseen_operand_pairs_in_fixed_prime_field; no_length_OOD",
+      "parameters": 436104,
+      "parameter_groups": {
+        "embedding": 42880,
+        "transformer_blocks": 393224
+      },
+      "full_batches_per_epoch": 36,
+      "final_batch_size": 96,
+      "finite_complete_domain_oracle_checked": true,
+      "all_operand_and_answer_classes_present": true,
+      "unique_pairs_and_disjoint_exhaustive_split_checked": true,
+      "corpus_bytes": 2075136,
+      "budget_exposure": {
+        "batch_size": 512,
+        "cursor_before": 512,
+        "cursor_after": 1024,
+        "epoch_tail": false,
+        "epoch_wraps_in_batch": 0,
+        "examples_seen": 75113536
+      },
+      "split_class_coverage": {
+        "train": {
+          "numerator": {
+            "classes": 193,
+            "minimum_examples_per_class": 74,
+            "maximum_examples_per_class": 115
+          },
+          "denominator": {
+            "classes": 192,
+            "minimum_examples_per_class": 76,
+            "maximum_examples_per_class": 116
+          },
+          "answer": {
+            "classes": 193,
+            "minimum_examples_per_class": 79,
+            "maximum_examples_per_class": 115
+          }
+        },
+        "heldout": {
+          "numerator": {
+            "classes": 193,
+            "minimum_examples_per_class": 77,
+            "maximum_examples_per_class": 118
+          },
+          "denominator": {
+            "classes": 192,
+            "minimum_examples_per_class": 77,
+            "maximum_examples_per_class": 117
+          },
+          "answer": {
+            "classes": 193,
+            "minimum_examples_per_class": 77,
+            "maximum_examples_per_class": 113
+          }
+        }
+      }
+    }
+  ],
+  "domain_ratio_193_to_97": 3.979381443298969,
+  "additional_embedding_parameters": 12288,
+  "scope": "finite_corpus_and_model_capacity_inspection_only; no_training_or_grokking_success; larger_modulus_is_a_task_adaptation_with_derived_vocab_exposure_changes"
+}

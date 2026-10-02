@@ -1,0 +1,40 @@
+{
+  "recorded_at_utc": "2026-10-02T13:39:41.530507+00:00",
+  "updates": 38,
+  "device": "cpu",
+  "parameters": 436104,
+  "corpus": {
+    "prime": 193,
+    "domain_size": 37056,
+    "train_examples": 18528,
+    "heldout_examples": 18528,
+    "train_fraction": 0.5,
+    "data_seed": 0,
+    "vocab_size": 335,
+    "train_fingerprint": "73a7da79010e541b76f02e1e7e7865584d1da5249f06ddf23ce4ea3846cb5bbb",
+    "heldout_fingerprint": "9ed8d056d80705c33c11922be847aa523a791540eae06656bbdc0a08aa6189b1",
+    "split_policy": "exhaustive_disjoint_two_way_author_protocol",
+    "prompt_tokens": 5,
+    "supervised_targets": 2,
+    "scope": "all_unseen_operand_pairs_in_fixed_prime_field; no_length_OOD"
+  },
+  "canonical_observations": 3,
+  "dense_gradients": 38,
+  "short_epoch_tail_at_step37": {
+    "step": 37,
+    "batch_size": 96,
+    "epoch_tail": true,
+    "learning_rate": 0.001,
+    "gradient_l2": 1.5102260112762451
+  },
+  "next_full_batch_at_step38": {
+    "step": 38,
+    "batch_size": 512,
+    "epoch_tail": false,
+    "learning_rate": 0.001,
+    "gradient_l2": 1.2766847610473633
+  },
+  "portable_archive": "experiments/runs/adamw_stability_20261002/bootstrap/mod193_cpu_smoke/portable",
+  "scope": "real_CPU_pipeline_and_exhaustive_oracle_smoke_only; no_scientific_stability_or_grokking_claim",
+  "portable_archive_verified_without_torch": true
+}
