@@ -85,8 +85,11 @@ comparison semantics. Dense archives currently use its offline verification
 command; the additional runtime SHA256 and exact worker sources are retained.
 Both frozen campaigns and their archive workers have now completed, with
 the original manifests and every frozen fingerprint checked. The runtime
-adapter can now be replaced by the identical ordinary-verifier optimization
-before a new plan is frozen.
+adapter's identical optimization is now applied to the
+[ordinary verifier](protocols/adamw_stability_20261002/production-csv-repair.md).
+All 235 CPU tests pass without skips, and three full dense archives / both
+comparisons return identical results through both paths. New plans must record
+the new analysis hash; historical strict launchers pin their old source version.
 
 ```bash
 .venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_optimizer_pair
@@ -312,7 +315,7 @@ phase/persistence results. All dense gradient records and the complete pair
 are verified and preserved. The user-directed frozen mod-193 AdamW adaptation
 also completed its full negative phase/persistence result. The prepared 25%
 fraction control has CPU implementation checks only; it still needs a new
-prospective scientific plan after the ordinary CSV-verifier repair.
+prospective scientific plan. The ordinary CSV-verifier repair is now complete.
 Any subsequent
 fraction, decay, schedule, or model intervention needs a fresh frozen plan; a
 negative result does not justify relaxing the success criterion.

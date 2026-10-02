@@ -201,7 +201,11 @@ handles are consumed. The original GPU trainer was not restarted.
 The adapter SHA256 and exact worker source snapshots are preserved separately;
 the mod-193 launcher's frozen checks pass through the adapter. Use the repair's
 offline command for dense archives until both frozen campaigns finish, then
-apply the identical optimization to the ordinary verifier for new plans.
+The [ordinary-verifier repair](protocols/adamw_stability_20261002/production-csv-repair.md)
+is now verified after both frozen campaigns: all 235 CPU tests pass without
+skips, and both verification paths return identical complete archive results.
+Future plans use the new analysis SHA256; historical strict launchers require
+their recorded source version. Completed archives verify with current ordinary tools.
 See the [launch validation](protocols/adamw_stability_20261002/launch-validation.json).
 The [early AdamW prefix](protocols/adamw_stability_20261002/first-long-confirmation.md)
 now preserves all 25 canonical and 6,000 gradient observations through update
@@ -306,8 +310,8 @@ checked exhaustive nested splits, identical CPU initial model states and
 unchanged 436,104 parameters. A real 20-update full-width CPU smoke checks
 the 48-example tail / next 512-example batch and verifies its portable archive
 without PyTorch. This is preparation only; no new scientific plan is frozen
-or launched. The current full budget and archive are complete. Repair the ordinary
-CSV verifier after these frozen campaigns, then prospectively freeze any fraction
+or launched. The current full budget, archive and ordinary CSV-verifier repair
+are complete. Prospectively freeze any fraction
 intervention with unchanged criteria. The original stage fingerprints are intact.
 
 The [complementary-trainer preparation](protocols/adamw_stability_20261002/complementary-preparation.md)

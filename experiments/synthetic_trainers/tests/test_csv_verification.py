@@ -40,9 +40,11 @@ class CsvVerificationTests(unittest.TestCase):
             rows = CountedRows({"step": step, "gradient_l2": step / 1000, "epoch_tail": False}
                                for step in range(1, 150001))
             stability_report.csv_rows(path, rows)
-            rows.traversals = 0
-            verify_csv(path, rows)
-            self.assertEqual(rows.traversals, 2)
+            for function in (stability_report.verify_csv, verify_csv):
+                with self.subTest(function=function.__module__):
+                    rows.traversals = 0
+                    function(path, rows)
+                    self.assertEqual(rows.traversals, 2)
 
     def test_original_function_restored_on_exception(self):
         original = stability_report.verify_csv

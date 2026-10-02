@@ -1,0 +1,36 @@
+{
+  "recorded_at_utc": "2026-10-02T17:17:54.190578+00:00",
+  "parent_scientific_budgets_and_archive_workers_terminal": true,
+  "production_change": {
+    "experiments/synthetic_trainers/stability_report.py": {
+      "before": "30743167ae5aab7e58c7d0bdbb6b1ed8a544e9ce0aa2a6cfe8ed65ad65d68345",
+      "after": "9d009ed5004dccb80a9d4ab6777d13337afae6e0750b1b7bb471d1d6c4fd52a3"
+    }
+  },
+  "unchanged_other_frozen_files": 30,
+  "training_source_hashes_unchanged": true,
+  "CPU_tests": {
+    "tests": 235,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 40.339,
+    "GPU_visibility_disabled_for_CPU_suite": true
+  },
+  "real_150000_row_traversal_regression_checked_for_both_ordinary_and_adapter_verifiers": true,
+  "offline_archive_and_comparison_results_match_adapter": true,
+  "offline_elapsed_seconds": 25.672096406997298,
+  "offline_torch_imported": false,
+  "individual_archives": [
+    "adamw_stability_adamw_short_lr001_seed0_data0_20261002",
+    "adamw_stability_raw_amsgradw_short_lr001_seed0_data0_20261002",
+    "adamw_stability_mod193_lr001_seed0_data0_20261002"
+  ],
+  "comparisons": [
+    "adamw_stability_optimizer_pair_lr001_20261002",
+    "adamw_stability_mod193_calibration_20261002"
+  ],
+  "completed_archives_unchanged": true,
+  "historical_runtime_adapter_retained": true,
+  "scope": "analysis_only; identical_column_union_and_complete_cell_comparison; no_training_criterion_data_or_historical_measurement_change"
+}

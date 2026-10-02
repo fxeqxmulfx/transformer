@@ -62,8 +62,9 @@ def observation_rows(observations):
 def verify_csv(path, rows):
     with path.open() as stream:
         actual = list(csv.DictReader(stream))
-    expected = [{key: "" if row.get(key) is None else str(row[key]) for key in
-                 sorted({key for row in rows for key in row})} for row in rows]
+    columns = sorted({key for row in rows for key in row})
+    expected = [{key: "" if row.get(key) is None else str(row[key]) for key in columns}
+                for row in rows]
     if actual != expected:
         raise ValueError(f"Archive {path.name} differs from measured rows")
 
