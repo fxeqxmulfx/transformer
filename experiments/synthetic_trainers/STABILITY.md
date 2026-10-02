@@ -56,7 +56,9 @@ complete archives must retain all 150,000 trace records, their CSV and the
 original canonical/neighbor/full-tensor histories. Diagnostic logging cost is
 recorded separately. Fresh paired timing avoids mixing instrumentation versions.
 Only a passing **primary AdamW** recipe can enter the unchanged independent
-confirmation gate; all six new cases must pass before architecture comparison.
+confirmation gate; all six new cases must pass before claiming a repeatable
+architecture improvement. The later user-directed sparsemax exploration is
+recorded below and does not open that gate.
 The [complete primary result](protocols/adamw_stability_20261002/adamw-result.md)
 has now finished all 150,000 updates and verified its full archive: final
 train/held-out is 100%, but seven of 201 final-window observations fail,
@@ -274,7 +276,8 @@ and peak memory remain available for every complete pair. Candidate persistence
 without a plateau is labeled separately from grokking. This preparation passed
 the 230-test full CPU suite and seven final affected checks, including real
 complete negative paired archives and a real six-case negative confirmation.
-No scientific architecture has been selected or compared. See the
+The user has subsequently selected sparsemax for the next exploratory pair;
+no scientific architecture comparison has started. See the
 [verification metadata](protocols/adamw_stability_20261002/architecture-metrics-validation.json).
 
 The later complementary-task plan must likewise freeze its metrics and support;
@@ -376,6 +379,22 @@ and NoTorch archive worker PID 135597/session 37682 are running. Their
 checks all 39 sources, exact original prefixes, native extension metadata and
 real first update 150,001 with unchanged rate. Finish the whole 300,000-update
 budget before scoring persistence and opening independent confirmation.
+The 21:36:45 UTC check reaches 183,250 at 100%/100%, after a fourth sampled
+episode at 154,000 (held-out 96.1464%) and first recovery at 154,250. The new
+final window is unobserved. Additional episodes and their recovery durations
+remain measurements, even when the strict final-tail criterion eventually passes.
+
+The user requested sparsemax after the current run and pointed to its existing
+Lean formalization. The [CPU preparation](protocols/adamw_stability_20261002/sparsemax-preparation.md)
+implements that causal Euclidean-simplex projection with original QK/RoPE/
+temperature/XSA operations and unchanged parameters. Compare a separately
+frozen softmax/sparsemax pair with identical native AdamW, corpus, seeds,
+training settings and at most 300,000 total updates per run. Retain complete
+quality, losses, frequency/recovery, timing and memory outcomes regardless of
+the benchmark gate. If the all-six benchmark requirement has not passed, label
+the user-directed experiment exploratory and make no repeatable architecture
+improvement claim. Lean's convex row inference does not establish convex joint
+training or numerical correctness of the Python implementation.
 The [harder-task summary](protocols/adamw_stability_20261002/harder-task-results.md)
 keeps the three complete single-case AdamW outcomes and their task/exposure
 differences together; it does not average interventions or form ineligible ratios.

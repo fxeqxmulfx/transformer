@@ -455,7 +455,8 @@ restore weights, native AdamW buffers/steps and shuffle/cursor state. Freeze
 the new 250,000–300,000 final window and the 10,000-update recovery metric width
 and source hash. This remains exploratory calibration. Fresh six-case full-
 budget confirmation, architecture controls and scientific complementary tasks
-remain outstanding; no architecture has been selected.
+remain outstanding. The user has since requested sparsemax after this run;
+its preparation and Lean specification are recorded below.
 
 The [300,000-update continuation](protocols/adamw_stability_20261002/budget300k-protocol.md)
 is now frozen at 2026-10-02T21:15:19.158465+00:00 from implementation commit
@@ -474,13 +475,34 @@ running, as recorded in the [launch receipt](protocols/adamw_stability_20261002/
 The actual first added update is 150,001 at rate 0.0003; the first added
 canonical evaluation is 150,250. Both commands, every original prefix, the
 new child budget-extension metadata and all 39 immutable hashes match.
-The latest live check at 151,250 has train/held-out 100%/100%, with no newly
-observed failure. This incomplete prefix does not certify the full 300,000-
-update window or independent confirmation. Keep all 39 sources immutable.
+The live check at 2026-10-02T21:36:45 UTC reaches 183,250 with train/held-out
+100%/100%. An additional canonical failure occurs at 154,000: train/held-out
+97.0531%/96.1464%, EOS 100%, batch 512. Both immediate neighbors fail too;
+the first sampled recovery is 154,250. This makes four post-long-confirmation
+episodes, retaining the original three and the new 250-update recovery.
+The final sampled target streak spans 154,250–183,250. The new 250,000–300,000
+tail has not started; this incomplete prefix does not certify persistence or
+independent confirmation. Keep all 39 sources immutable.
 Driver output is `experiments/runs/adamw_stability_20261002/budget300k-driver.log`;
 worker metadata is `experiments/runs/adamw_stability_20261002/bootstrap/budget300k-archive-worker.json`.
 Check actual processes/state before any restart. Wait for all 300,000 updates,
 verify/review/commit full archives and metrics, then apply the unchanged gate.
+
+The next user-directed normalizer candidate is **sparsemax**, with a paired
+softmax control preserving AdamW, corpus, seeds, the total 300,000-update cap,
+QK normalization, learned temperatures, RoPE and XSA. The
+[preparation](protocols/adamw_stability_20261002/sparsemax-preparation.md)
+uses the exact causal-simplex projection already formalized in
+[Lean](../../src/Transformer/GPTMini/Convex/Attention.lean).
+Six independent CPU checks pass, including exhaustive simplex-face KKT
+solutions, finite-difference derivatives, causal prefixes, parameter/RNG
+preservation and exact restoration of original softmax outputs/gradients.
+Scientific sparsemax training has not started. Complete and archive the current
+run first. A user-directed exploratory pair may be measured before the all-six
+benchmark gate opens; that does not certify repeatability or an architecture
+improvement. Keep accuracy, loss, episode frequency/recovery, actual time and
+memory, and retain every failure. The six-case requirement for an improvement
+claim and scientific complementary tasks remain outstanding.
 
 ```bash
 .venv/bin/python -u -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_budget_extension
@@ -753,8 +775,9 @@ Confirmation and architecture comparisons require separately frozen plans after
 these complete histories. The [architecture comparison gates](STABILITY.md#architecture-comparison-gates)
 retain the all-six stable-grokking requirement for the unchanged benchmark,
 while allowing a candidate's rapid persistent generalization to be compared
-without falsely labeling it grokking. No architecture has been selected or
-scientifically compared. The portable [architecture metric rules](architecture_metrics.py)
+without falsely labeling it grokking. The user has now selected sparsemax for
+the next exploratory pair; no scientific architecture comparison has started.
+The portable [architecture metric rules](architecture_metrics.py)
 are now prepared: complete persistent candidates without a memorization plateau
 retain their own label; failed pairs retain observed timings but cannot certify
 speed ratios; task/data/seeds/optimizer/training changes are rejected. The full

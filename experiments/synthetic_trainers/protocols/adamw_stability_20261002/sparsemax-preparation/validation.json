@@ -1,0 +1,104 @@
+{
+  "recorded_at_utc": "2026-10-02T21:41:20.209338+00:00",
+  "scope": "CPU implementation and existing real-valued Lean specification; no scientific sparsemax training",
+  "lean_audit": {
+    "command": "lake env lean experiments/synthetic_trainers/protocols/adamw_stability_20261002/sparsemax-preparation/lean-audit.lean",
+    "exit_code": 0,
+    "audited_theorems": 24,
+    "allowed_transitive_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "sorryAx_dependencies": 0,
+    "Lean_sources_changed": false,
+    "declarations": [
+      "Transformer.GPTMini.Convex.simplexOn_closed",
+      "Transformer.GPTMini.Convex.simplexOn_compact",
+      "Transformer.GPTMini.Convex.routingObjective_continuous",
+      "Transformer.GPTMini.Convex.routing_minimum_exists",
+      "Transformer.GPTMini.Convex.routing_midpoint_identity",
+      "Transformer.GPTMini.Convex.routing_minimizers_eq",
+      "Transformer.GPTMini.Convex.routing_minimum_unique",
+      "Transformer.GPTMini.Convex.sparseWeights_spec",
+      "Transformer.GPTMini.Convex.routing_projection_identity",
+      "Transformer.GPTMini.Convex.attentionWeights_mem",
+      "Transformer.GPTMini.Convex.attentionWeights_nonneg",
+      "Transformer.GPTMini.Convex.attentionWeights_row_sum",
+      "Transformer.GPTMini.Convex.attentionWeights_zero_above",
+      "Transformer.GPTMini.Convex.attentionObjective_convex",
+      "Transformer.GPTMini.Convex.attentionWeights_projection_min",
+      "Transformer.GPTMini.Convex.attentionOutput_norm_le",
+      "Transformer.GPTMini.Convex.attentionHead_norm_le",
+      "Transformer.GPTMini.Convex.attnSubLayer_bounded",
+      "Transformer.GPTMini.Convex.blockForward_growth",
+      "Transformer.GPTMini.Convex.oneNeuron_formula",
+      "Transformer.GPTMini.Convex.oneNeuron_endpoints",
+      "Transformer.GPTMini.Convex.oneNeuron_midpoint",
+      "Transformer.GPTMini.Convex.oneNeuronCE_jensen_violation",
+      "Transformer.GPTMini.Convex.oneNeuronCE_not_convex"
+    ]
+  },
+  "CPU_tests": {
+    "command": "CUDA_VISIBLE_DEVICES='' .venv/bin/python -m unittest experiments.synthetic_trainers.tests.test_sparsemax_attention",
+    "tests_passed": 6,
+    "exit_code": 0,
+    "elapsed_seconds": 1.395,
+    "scope": "full functional implementation tested before a documentation-only module docstring update; no GPU scientific run"
+  },
+  "projection_specification": {
+    "allowed_positions": "j <= i",
+    "weights_nonnegative": true,
+    "row_sum": 1,
+    "Lean_objective": "sum(a^2)/4 - sum(a*s)/2",
+    "squared_projection_identity": "4 * objective = sum((a-s)^2) - sum(s^2)",
+    "additional_score_scaling": null,
+    "implementation_bridge": "exhaustive independent simplex-face KKT oracle and finite-difference gradients; not a Lean verification of floating-point code"
+  },
+  "preserved_operations": [
+    "QK normalization with eps 1e-6",
+    "RoPE",
+    "learned per-head exp(log_alpha)",
+    "value mixture",
+    "epsilon-regularized XSA",
+    "output projection",
+    "FFN",
+    "residuals",
+    "RMSNorm",
+    "tied embeddings"
+  ],
+  "next_scientific_pair": {
+    "normalizers": [
+      "softmax",
+      "sparsemax"
+    ],
+    "optimizer": "native PyTorch AdamW",
+    "maximum_total_updates_per_run": 300000,
+    "same_corpus_and_seeds": true,
+    "current_run_must_finish_and_be_archived_first": true,
+    "scope_before_all_six_benchmark_confirmations": "user-directed exploratory comparison; no repeatable improvement claim"
+  },
+  "current_budget_stage": {
+    "plan_sha256": "24907608e884e236c5b18562800cc388742bcc9b59d0763f34064b1b48b786c9",
+    "immutable_files_verified": 39,
+    "all_frozen_hashes_match": true,
+    "trainer_pid": 135520,
+    "worker_pid": 135597
+  },
+  "source_hashes": {
+    "src/Transformer/GPTMini/Convex.lean": "e19dbe13d646242942b2aa80a449e198244538144639dfa76c156c4a55fd8692",
+    "src/Transformer/ConvexRecall/Simplex.lean": "bc7c93bc09a98c0d222ba019ecacb737a4707e2afa8a7cca24ce033d5fb2ae30",
+    "src/Transformer/GPTMini/Convex/Attention.lean": "ec71529343792265e49fa94cf6309c35dc03f417ced6be39b591a02788fa0a8f",
+    "src/Transformer/GPTMini/Convex/Basic.lean": "e7b3d87fb04ef2c9e7ff2a45668c7ed466493c8b9120a055c3d932321c97c0bd",
+    "src/Transformer/GPTMini/Convex/Model.lean": "8688be6740a583f761959e8a87a02843660dbc7a5c5e68aee60855abb4fda845",
+    "src/Transformer/GPTMini/Convex/TrainingBoundary.lean": "57ea1f40b903e46981972fc4eff7cd41c8b79683670d35ae9ef4928f58e5aba7",
+    "src/Transformer/GPTMini/QKNorm.lean": "2fd2f89d1fd164d5c09be80966889dbfa9ece2ff7160f429a8db260a1d03aebe",
+    "src/Transformer/GPTMini/RoPE.lean": "65d2b6b05b199779074a0152817950a4b881453c8841e37d21d194b8bfb89cf4",
+    "src/Transformer/GPTMini/CausalMHA.lean": "96809c3fc5c215d00e996376b371a56303f957f05c45f26c34225cc3df3e772d",
+    "experiments/synthetic_trainers/sparsemax_attention.py": "a64a6e153771d75499811c8a4895d895235564e78500d01e37697e64eb4ec399",
+    "experiments/synthetic_trainers/tests/test_sparsemax_attention.py": "c84a92433ebc7764aa08780f8f844275b131707eeaf2532d6a6d9cb9c5c90c84",
+    "experiments/convex_mqar/src/convex_mqar/sparse_attention.py": "13f32712b8078aa10a52bf63b6e8563412302d4cd289e34f70259d2fe53033e4",
+    "experiments/synthetic_trainers/protocols/adamw_stability_20261002/sparsemax-preparation/lean-audit.lean": "6b326a0f1638c33bb99bbe24cd2eda99fcfaaa5c37a2e21b267e0a82d7100b65",
+    "experiments/synthetic_trainers/protocols/adamw_stability_20261002/sparsemax-preparation/lean-axioms.txt": "f791a7261fbf2e91f734d0bf2ef5225858a7e9017e877f5403695bab891ceb25"
+  }
+}
