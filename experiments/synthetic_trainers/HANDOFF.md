@@ -497,6 +497,13 @@ uses the exact causal-simplex projection already formalized in
 Six independent CPU checks pass, including exhaustive simplex-face KKT
 solutions, finite-difference derivatives, causal prefixes, parameter/RNG
 preservation and exact restoration of original softmax outputs/gradients.
+The [tagged training adapter](attention_training.py) passes five further CPU
+checks: original softmax optimization is exact, sparsemax resume preserves
+native buffers/sampling/warmup, wrong-normalizer/ordinary-core resumes are
+rejected before loading, and factory/source patches restore after exceptions.
+The actual 436,104-parameter mod-193 initial tensors and RNG match for both
+normalizers, with finite CPU forward/backward and all 39 live hashes unchanged;
+see the [receipt](protocols/adamw_stability_20261002/sparsemax-training-validation.json).
 Scientific sparsemax training has not started. Complete and archive the current
 run first. A user-directed exploratory pair may be measured before the all-six
 benchmark gate opens; that does not certify repeatability or an architecture

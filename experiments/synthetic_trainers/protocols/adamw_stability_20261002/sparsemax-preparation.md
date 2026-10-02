@@ -43,6 +43,23 @@ derivatives, causal prefix/future behavior, optimizer bindings, and exact
 original outputs/all parameter gradients when softmax is restored. These
 checks are implementation evidence, not learning or stability results.
 
+The [tagged trainer](../../attention_training.py) reuses the unchanged modular
+training loop, factory initialization, native optimizer, sampling, diagnostics
+and checkpoint format. Its config records `attention_normalization` before
+resume validation, and both paths pin the adapter and factory source hashes.
+Five additional CPU checks pass: the full-width softmax trajectory matches the
+original trainer exactly; sparsemax resumed from 10 to 20 updates matches an
+uninterrupted run in model/native buffers, sampling and dense diagnostics;
+cross-normalizer and ordinary-core resume fail before checkpoint loading;
+exceptions restore the original functions; invalid normalizers/optimizers and
+budgets above 300,000 are rejected. This tiny resume is a pipeline fixture,
+not a scientific budget extension. The
+[training receipt](sparsemax-training-validation.json) also checks the exact
+mod-193 scientific initialization on CPU: 436,104 parameters, identical initial
+softmax/sparsemax tensors and RNG, original corpus fingerprints, and finite
+forward/backward on eight real training equations. No GPU context is created.
+All 39 source fingerprints of the still-running stage remain unchanged.
+
 Finish, verify, review and commit the current 300,000-update result before
 scientific sparsemax training. Freeze a paired softmax/sparsemax comparison
 with the same native AdamW, corpus, seeds, rate, decay, warmup, batching,

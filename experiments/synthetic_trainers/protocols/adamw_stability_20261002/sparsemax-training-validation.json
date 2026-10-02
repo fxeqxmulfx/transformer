@@ -1,0 +1,143 @@
+{
+  "recorded_at_utc": "2026-10-02T21:46:13.765233+00:00",
+  "scope": "CPU implementation fixture and exact prospective model initialization; not a scientific learning run",
+  "CPU_test_command": "CUDA_VISIBLE_DEVICES='' .venv/bin/python -m unittest experiments.synthetic_trainers.tests.test_attention_training",
+  "CPU_tests_passed": 5,
+  "CPU_tests_elapsed_seconds": 2.902,
+  "CPU_tests_exit_code": 0,
+  "checks": [
+    "full-width 20-update softmax weights, native optimizer buffers, sampling and dense diagnostics equal original trainer",
+    "full-width sparsemax 10-to-20 update resume equals uninterrupted run in weights, native buffers, sampling and dense diagnostics",
+    "cross-normalizer resume rejected before checkpoint load without file mutation",
+    "ordinary core resume rejects augmented sources before checkpoint load",
+    "scoped factory and source functions restored after exception",
+    "unknown normalizers, non-primary optimizers and budgets above 300000 rejected"
+  ],
+  "scientific_configuration_cpu_initialization": {
+    "softmax": {
+      "model": "gptmini",
+      "optimizer": "adamw",
+      "prime": 193,
+      "train_fraction": 0.25,
+      "data_seed": 0,
+      "seed": 0,
+      "width": 128,
+      "layers": 2,
+      "heads": 4,
+      "steps": 300000,
+      "batch_size": 512,
+      "batch_policy": "short_final",
+      "eval_every": 250,
+      "learning_rate": 0.0003,
+      "weight_decay": 0.1,
+      "warmup_steps": 10,
+      "target": 0.99,
+      "patience": 2,
+      "device": "cpu",
+      "attention_normalization": "softmax"
+    },
+    "sparsemax": {
+      "model": "gptmini",
+      "optimizer": "adamw",
+      "prime": 193,
+      "train_fraction": 0.25,
+      "data_seed": 0,
+      "seed": 0,
+      "width": 128,
+      "layers": 2,
+      "heads": 4,
+      "steps": 300000,
+      "batch_size": 512,
+      "batch_policy": "short_final",
+      "eval_every": 250,
+      "learning_rate": 0.0003,
+      "weight_decay": 0.1,
+      "warmup_steps": 10,
+      "target": 0.99,
+      "patience": 2,
+      "device": "cpu",
+      "attention_normalization": "sparsemax"
+    }
+  },
+  "corpus": {
+    "prime": 193,
+    "domain_size": 37056,
+    "train_examples": 9264,
+    "heldout_examples": 27792,
+    "train_fraction": 0.25,
+    "data_seed": 0,
+    "vocab_size": 335,
+    "train_fingerprint": "5a0b7e90d546dfbad53ea44b64e2c3d1fb52af3a9a5640eff40f3d0ba3028ad8",
+    "heldout_fingerprint": "bba4c2d1ddcc6a23833b1831a59eb6db04371f20dc7054aa145e22d1e602afa4",
+    "split_policy": "exhaustive_disjoint_two_way_author_protocol",
+    "prompt_tokens": 5,
+    "supervised_targets": 2,
+    "scope": "all_unseen_operand_pairs_in_fixed_prime_field; no_length_OOD"
+  },
+  "parameter_count": 436104,
+  "initial_softmax_sparsemax_tensors_exactly_equal": true,
+  "post_initialization_rng_exactly_equal": true,
+  "only_pair_config_difference": "attention_normalization",
+  "original_AdamW_betas_and_all_parameter_decay_verified": true,
+  "paired_first_8_examples_forward_backward": {
+    "softmax": {
+      "logits_shape": [
+        8,
+        2,
+        335
+      ],
+      "loss": 5.796558380126953,
+      "gradient_l2": 8.686657905578613,
+      "parameters": 436104,
+      "all_parameter_gradients_finite": true,
+      "optimizer_betas": [
+        0.9,
+        0.98
+      ],
+      "optimizer_weight_decay": 0.1
+    },
+    "sparsemax": {
+      "logits_shape": [
+        8,
+        2,
+        335
+      ],
+      "loss": 5.790986061096191,
+      "gradient_l2": 12.535633087158203,
+      "parameters": 436104,
+      "all_parameter_gradients_finite": true,
+      "optimizer_betas": [
+        0.9,
+        0.98
+      ],
+      "optimizer_weight_decay": 0.1
+    }
+  },
+  "GPU_context_initialized": false,
+  "current_frozen_sources_verified": 39,
+  "all_current_frozen_sources_match": true,
+  "scientific_sparsemax_started": false,
+  "new_source_hashes": {
+    "experiments/synthetic_trainers/attention_training.py": "2da87ae5a3f1df611664a704034128865e3e474e6c64e94b91e13093b6bd4b3d",
+    "experiments/synthetic_trainers/tests/test_attention_training.py": "f3a6686f41cb63878cdb17aba8877af1845dca40c8a9827a9462ce7fba47d55b"
+  },
+  "training_source_hashes": {
+    "experiments/gpt_mini.py": "7df779bcdc019a6054ed7a6b93469b821b8dec9fc96d84a1420ec387d28f5ee4",
+    "experiments/optimizer_benchmark/common.py": "b3d57ccafe3350631acc31ac000d3b55627d2ed8c4c87b1c30173cfe66fa834d",
+    "experiments/optimizer_benchmark/coordinate.py": "4446687f796f85090acb7ac37834f5c7e31a11f34912cc08ffa28c81683dc85f",
+    "experiments/synthetic_trainers/attention_training.py": "2da87ae5a3f1df611664a704034128865e3e474e6c64e94b91e13093b6bd4b3d",
+    "experiments/synthetic_trainers/curves.py": "8fe1edf584db9d05e11d5ea26ca5d4a016746bafde3a88a684031830f3f30e6b",
+    "experiments/synthetic_trainers/paper_reproduction/__init__.py": "d03f895c1e2a50aa167e24d1e42a7d7c9e1b13b7ef284dc701287b023b05a5ae",
+    "experiments/synthetic_trainers/paper_reproduction/batches.py": "d1d15a822691c9eebd587f74559cf63e3f140e198ae52c6e633a7851623faccd",
+    "experiments/synthetic_trainers/paper_reproduction/diagnostics.py": "b704474b037ff5c1029e8acaf7bee53f4eb23d9d784e2366eacddee30e146c6f",
+    "experiments/synthetic_trainers/paper_reproduction/fashion_data.py": "0d7b8037a34eafdb1ea9db4267959ca02e57f2dc4f328ff582f406c6001f37a2",
+    "experiments/synthetic_trainers/paper_reproduction/grokking.py": "189c55580e7b27344662325cbbb5abad475ddfc09353d4fb8487a257321d22e8",
+    "experiments/synthetic_trainers/paper_reproduction/modular_data.py": "6f0c32a923b466fac7fb2678d0bc9e3af9517d4edf720631609a0cf957601d79",
+    "experiments/synthetic_trainers/paper_reproduction/provenance.py": "eaf50a0cc28a2936e093bd7ca89c281215d10c7b200d3df98f5e6aea10a67004",
+    "experiments/synthetic_trainers/paper_reproduction/random_features.py": "ae93bf75f2aff03e0c8c7f41da8c146763a195b1d7ed66cc68b1919a87bfdacc",
+    "experiments/synthetic_trainers/paper_reproduction/reference_transformer.py": "f31ab6d7998a42f8e459b74f2cc0ed66be55f4dfcc036c857ecd9a1bdf8e9f11",
+    "experiments/synthetic_trainers/paper_reproduction/rff_experiment.py": "4e7b182331261b546096af48bd873a590faa7daf06f9a6780c7eb26aee71ab5c",
+    "experiments/synthetic_trainers/runtime.py": "a7b52640d190c3cbb0405125c58d1593c5e700301a8a6126fdc78110ee98643d",
+    "experiments/synthetic_trainers/sparsemax_attention.py": "a64a6e153771d75499811c8a4895d895235564e78500d01e37697e64eb4ec399"
+  }
+}
