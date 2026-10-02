@@ -316,6 +316,9 @@ are verified and preserved. The user-directed frozen mod-193 AdamW adaptation
 also completed its full negative phase/persistence result. The prepared 25%
 fraction control has CPU implementation checks only; it still needs a new
 prospective scientific plan. The ordinary CSV-verifier repair is now complete.
+The [25% scientific plan](protocols/adamw_stability_20261002/fraction25-protocol.md)
+has now been frozen after the complete parent result, changing only the training
+fraction and recording the two analysis-only repairs. Its gates remain unchanged.
 Any subsequent
 fraction, decay, schedule, or model intervention needs a fresh frozen plan; a
 negative result does not justify relaxing the success criterion.

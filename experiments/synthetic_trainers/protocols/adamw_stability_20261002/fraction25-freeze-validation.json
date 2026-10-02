@@ -1,0 +1,54 @@
+{
+  "recorded_at_utc": "2026-10-02T17:26:11.081717+00:00",
+  "scientific_training_started": false,
+  "frozen_utc": "2026-10-02T17:26:11.071473+00:00",
+  "source_commit": "5bdc43d69e92f10c573a57fd0aa3adac4bf4c01b",
+  "planned_runs": 1,
+  "budget": 150000,
+  "changed_fields": [
+    "train_fraction"
+  ],
+  "training_sources_environment_manuscripts_and_criterion_match_parent": true,
+  "parent_complete_negative_archive_verified": true,
+  "analysis_only_changes_since_parent": {
+    "experiments/synthetic_trainers/stability_comparison_plots.py": {
+      "before": "fc532c7ecdf501bdea190036a9b85297724a2b1b1843dac4e0a338f2b34fd90f",
+      "after": "0eeca8180f0553845c406dd8391293116d0cad3192f88af273f1f9facb2ba80c"
+    },
+    "experiments/synthetic_trainers/stability_report.py": {
+      "before": "30743167ae5aab7e58c7d0bdbb6b1ed8a544e9ce0aa2a6cfe8ed65ad65d68345",
+      "after": "9d009ed5004dccb80a9d4ab6777d13337afae6e0750b1b7bb471d1d6c4fd52a3"
+    }
+  },
+  "prepared_configuration_matches_exactly": true,
+  "CPU_smoke_verified": true,
+  "independent_confirmation_eligible": false,
+  "scope": "prospective_single_calibration_freeze; no_scientific_outcome_yet",
+  "real_launcher_check_only_passed": true,
+  "negative_checks": [
+    {
+      "case": "changed_fraction",
+      "isolated_manifest_copies": true,
+      "rejected": true,
+      "reason": "The intervention must change only the training fraction to 25%"
+    },
+    {
+      "case": "changed_optimizer",
+      "isolated_manifest_copies": true,
+      "rejected": true,
+      "reason": "The intervention must change only the training fraction to 25%"
+    },
+    {
+      "case": "relaxed_tail",
+      "isolated_manifest_copies": true,
+      "rejected": true,
+      "reason": "Fraction recipe count or criterion changed"
+    },
+    {
+      "case": "wrong_corpus_support",
+      "isolated_manifest_copies": true,
+      "rejected": true,
+      "reason": "Frozen stability corpus changed"
+    }
+  ]
+}

@@ -314,8 +314,17 @@ unchanged 436,104 parameters. A real 20-update full-width CPU smoke checks
 the 48-example tail / next 512-example batch and verifies its portable archive
 without PyTorch. This is preparation only; no new scientific plan is frozen
 or launched. The current full budget, archive and ordinary CSV-verifier repair
-are complete. Prospectively freeze any fraction
-intervention with unchanged criteria. The original stage fingerprints are intact.
+are complete. The [25% scientific plan](protocols/adamw_stability_20261002/fraction25-protocol.md)
+is now prospectively frozen at 2026-10-02T17:26:11.071473+00:00 from `5bdc43d`.
+Its [manifest](protocols/adamw_stability_20261002/fraction25-plan.json) changes
+only the training fraction, with unchanged task/model/optimizer sources,
+environment, papers, instrumentation and all phase/persistence gates. It records
+the two verified analysis-only repairs. The real launcher check and isolated
+negative manifest tests are recorded in the
+[freeze validation](protocols/adamw_stability_20261002/fraction25-freeze-validation.json).
+Scientific training has not yet started in this preparation record. Launch from
+the root with `run_fraction25` as documented in its protocol; preserve the full
+150,000-update result before applying the unchanged six-case confirmation gate.
 
 The [complementary-trainer preparation](protocols/adamw_stability_20261002/complementary-preparation.md)
 also verifies seven existing AdamW CPU paths for MQAR, one/two-hop lookup,
