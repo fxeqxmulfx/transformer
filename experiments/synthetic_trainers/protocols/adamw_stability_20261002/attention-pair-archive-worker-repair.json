@@ -1,0 +1,42 @@
+{
+  "recorded_at_utc": "2026-10-02T23:48:15.868814+00:00",
+  "reason": "System Python 3.14 lacks matplotlib; the unchanged portable worker uses the existing training venv without importing Torch.",
+  "original_worker_pid": 139645,
+  "original_worker_session": 69196,
+  "original_worker_terminal_exit_code": 143,
+  "original_worker_terminal_session_consumed": true,
+  "original_worker_retired": true,
+  "replacement_worker_pid": 145323,
+  "replacement_worker_session": 25387,
+  "replacement_worker_command": [
+    ".venv/bin/python",
+    "-u",
+    "-m",
+    "experiments.synthetic_trainers.protocols.adamw_stability_20261002.archive_attention_pair",
+    "--trainer-pid",
+    "139507"
+  ],
+  "replacement_worker_status": "waiting_for_complete_normalizer_case",
+  "replacement_worker_imported_Torch": false,
+  "plotting_dependencies": {
+    "matplotlib": "3.11.2",
+    "torch_imported": false
+  },
+  "replacement_worker_sha256": "fbbf7ea8fb3f393673b45a07da8842373ba0efc978bc6b51974261d62a0efb61",
+  "worker_source_unchanged": true,
+  "previous_worker_log_preserved_by_append": true,
+  "trainer_pid": 139507,
+  "trainer_session": 47567,
+  "trainer_command": [
+    ".venv/bin/python",
+    "-u",
+    "-m",
+    "experiments.synthetic_trainers.protocols.adamw_stability_20261002.run_attention_pair"
+  ],
+  "GPU_trainer_restarted": false,
+  "all_43_frozen_Python_sources_unchanged": true,
+  "all_9_frozen_Lean_sources_unchanged": true,
+  "source_plan_sha256": "261aba71d67b68c4856fb1aa2dba5a3b1c97e3f3a85b3fc29324f0abb14ec94f",
+  "system_python_has_Torch": false,
+  "system_python_has_matplotlib": false
+}

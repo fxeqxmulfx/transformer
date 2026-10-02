@@ -525,8 +525,14 @@ byte-exact complete reference copy are checked. The actual launcher passes;
 eighteen isolated negative scientific fixtures are rejected before training,
 as retained in the [manifest receipt](protocols/adamw_stability_20261002/attention-pair-manifest-validation.json).
 The manifest was committed as `a76e0b6` before scientific launch. Trainer PID
-139507/session 47567 and NoTorch archive worker PID 139645/session 69196 are
-now genuinely live. The [launch receipt](protocols/adamw_stability_20261002/attention-pair-launch-validation.json)
+139507/session 47567 remains live. The initial NoTorch archive worker PID
+139645/session 69196 was retired because its system Python lacks matplotlib;
+its terminal exit 143 was consumed. The unchanged worker now runs in the
+existing venv as PID 145323/session 25387, with matplotlib 3.11.2 and no Torch
+import. The original log is preserved by append. The GPU trainer was not
+restarted; all 43 Python/nine Lean fingerprints still match. See the
+[worker repair receipt](protocols/adamw_stability_20261002/attention-pair-archive-worker-repair.json).
+The [launch receipt](protocols/adamw_stability_20261002/attention-pair-launch-validation.json)
 checks the real case's 436,104 parameters, native AdamW, all seventeen training
 fingerprints, original corpus/instrumentation, fresh step-one warmup, empty
 budget-extension history, all 43 Python/nine Lean sources and both commands.
