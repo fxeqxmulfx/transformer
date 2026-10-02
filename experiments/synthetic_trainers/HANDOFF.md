@@ -238,6 +238,15 @@ before the first held-out target crossing. All observed training batches contain
 confirmation is not a completed calibration or stable-grokking success. Continue
 the full 150,000-update budget and retain later failures.
 
+Through update 75,250, the full-batch control has ten canonical held-out target
+failures after legacy confirmation at 24,500. All ten fail numeric answers,
+none fails EOS, and both immediate neighbors also fail in all ten cases.
+Full 512-example batches therefore also exhibit post-confirmation instability;
+this does not identify its cause. By update 110,750, joint target failures at
+103,750, 110,500, and 110,750 also violate the prospectively required final-tail
+criterion. Keep the full budget and archive all remaining observations; both
+lower-rate calibrations remain queued.
+
 The independent-confirmation driver and portable report are prepared and tested;
 no scientific confirmation plan or run has started. See the commands in
 [STABILITY.md](STABILITY.md) and
