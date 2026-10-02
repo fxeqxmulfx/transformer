@@ -257,8 +257,13 @@ joint confirmation at 3,000–7,750, costing 240.46 training / 252.06 wall secon
 It has no required low-held-out memorization plateau. Six canonical held-out
 target failures occur after legacy confirmation at 3,250; all fail numeric
 answers, none fails EOS, and both immediate neighbors also fail in every case.
-The final-tail window has not begun. This early timing and incomplete trajectory
-do not certify persistence; finish its fixed 150,000 updates.
+At that recorded prefix, the final-tail window had not begun. A subsequent
+canonical observation at update 103,000 fails the frozen final-tail criterion:
+train accuracy is 46.7998%, held-out accuracy is 40.5498%, and held-out accuracy
+at the immediate neighbors is 40.8935% / 38.8316%. Numeric answers fail while
+EOS accuracy remains 100% throughout the three observations. Thus this lower
+rate also fails persistence; its full 150,000-update budget must still finish
+and be archived. Early target timing does not certify stable grokking.
 
 A read-only [fraction-control corpus inspection](protocols/amsgradw_stability_20261002/candidate-corpus-coverage.md)
 finds all 97 answer classes and legal operand classes in the 50%, 20%, 10%,
