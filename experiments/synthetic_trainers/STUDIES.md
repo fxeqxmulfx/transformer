@@ -399,10 +399,29 @@ generalization, the first observed 100% held-out scores are 36,000, 40,250,
 and 64,000 (descriptive observations, not new stopping criteria). Both sets
 of timings are earlier than the reported >100,000 updates; train fraction
 and regularization were chosen explicitly because their exact values are
-undisclosed. Three of
-nine confirmation recipes are complete. The six GPTMini/AdamW and
-GPTMini/raw AMSGradW controls remain required before comparing the requested
-model/optimizer combination or declaring the campaign complete.
+undisclosed.
+
+GPTMini/AdamW seed 1 also completed 150,000 updates, with 423,816 parameters
+and the explicitly different matrix initialization. Sustained train fit starts
+at 10,250 and held-out onset at 49,750, confirmed at 50,000: a 39,500-update
+lag. Its 21,750–28,500 memorization plateau keeps train at least 99.89% and
+held-out at most 9.66%. Final train/held-out accuracies are 100%, with held-out
+CE 3.576e-8. Confirmation costs 504.44 training / 514.11 wall seconds; the full
+budget costs 1,514.44 / 1,543.37 seconds. After confirmation, 97.26% of 401
+observations meet the target; the worst held-out accuracy is 46.39%.
+
+The [complete GPTMini archive](baselines/mod97_fraction50_wd01_confirmation_gptmini_adamw_seed1_20261002/measurements.json)
+and [accuracy/error/CE curves](baselines/mod97_fraction50_wd01_confirmation_gptmini_adamw_seed1_20261002/plots/modular-generalization.png)
+also show the restricted epoch-error double-descent shape: held-out error
+falls from 100% initially to 23.05% at update 2,000, rises to 93.15% at
+28,250 while train is fitted, and ends at 0%. The overfitting rise is 70.10
+percentage points and recovery is 93.15. This run shows finite error
+double descent together with the memorization-then-generalization diagnostic. The
+synthetic adaptation and post hoc selection rule are explicit; coexistence
+does not identify causality, and one seed does not establish repeatability.
+Four of nine confirmation recipes are complete. The remaining GPTMini/AdamW
+seeds and all raw AMSGradW controls remain required before comparing the
+requested combination or declaring the campaign complete.
 
 ## Double descent is a separate observation
 
