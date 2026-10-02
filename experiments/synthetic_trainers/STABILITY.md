@@ -168,6 +168,41 @@ the architecture comparison is ready. If confirmation fails, retain the failures
 continue justified calibration, and use fresh confirmation seeds/splits after
 that calibration; do not tune against and reuse the failed confirmation cases.
 
+## Architecture comparison gates
+
+The unchanged-model benchmark must first pass stable grokking in every frozen
+independent-confirmation case. Preparing the later protocol does not open that
+gate, select an architecture, or authorize a claim that the benchmark is stable.
+
+For a modular architecture candidate, retain complete-budget accuracy, the
+first long joint 99% confirmation, the unchanged final-tail assessment, and
+the memorization-phase label as separate outcomes. A candidate can reduce the
+delay by generalizing rapidly and persistently without a memorization plateau.
+Such a result is eligible for the quality/time comparison and is labeled rapid
+persistent generalization; it is not labeled stable grokking. Candidate timing
+eligibility requires a complete budget/history, a long joint confirmation,
+and a passing final tail. First-target timing is not time to permanent convergence.
+
+The comparison plan must freeze its primary quality metric, target, cadence,
+full budget, selection rule, and improvement rule before the first comparison
+update. Retain observed first-long-confirmation times even when a run later
+fails. Eligible comparison timing is null with support zero when the complete
+budget, long confirmation, or final-tail gate fails; absent target events also
+remain null. Do not form speed ratios for ineligible pairs or silently restrict
+a claim to successful pairs. Report every pair's final quality and observed training
+and wall times, together with persistence, exposure, parameter count, and peak
+memory. Do not average different interventions into a seed statistic.
+
+After exploratory architecture selection, use model seeds and data splits held
+out from candidate selection. Treat failed confirmation cases used for further
+tuning as calibration and choose fresh confirmation IDs. Freeze all paired controls/candidates and
+corpus fingerprints before training, retain the same optimizer and scoring
+protocol, and specify how common parameter initialization and execution order
+are paired. Any optimizer change is an explicitly separate intervention.
+The later complementary-task plan must likewise freeze its metrics and support;
+novel-ID and length-transfer outcomes remain separate, and empty novel support
+cannot certify transfer. No scientific architecture comparison has started.
+
 ## Environment and next decisions
 
 The restored environment initially had Python 3.12.13 and PyTorch 2.7.1+cu118.

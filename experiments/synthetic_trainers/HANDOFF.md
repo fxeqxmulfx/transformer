@@ -303,7 +303,11 @@ hypothetical passing calibration fixture; it is not evidence of a learning
 effect. All actual eight-update CPU repeats in that smoke fail, as retained.
 
 Confirmation and architecture comparisons require separately frozen plans after
-these complete histories. Keep the active goal running, retain failures, archive
+these complete histories. The [architecture comparison gates](STABILITY.md#architecture-comparison-gates)
+retain the all-six stable-grokking requirement for the unchanged benchmark,
+while allowing a candidate's rapid persistent generalization to be compared
+without falsely labeling it grokking. No architecture has been selected or
+scientifically compared. Keep the active goal running, retain failures, archive
 each verified completed result, and commit logical changes during the loop.
 
 ## Proposed sequence, now being activated
