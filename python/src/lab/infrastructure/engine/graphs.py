@@ -2,8 +2,8 @@
 
 Each batch size that recurs (the full batch, and a short epoch tail) gets one
 captured update: gather the batch through a static index, forward, backward,
-the gradient norm, the capturable optimizer step, and the norm appended to a
-device trace. Each observed split gets one captured evaluation over all its
+the gradient norm and any clipping, the capturable optimizer step, and the
+norm appended to a device trace. Each observed split gets one captured evaluation over all its
 chunks. Between replays the host only copies indices on the device and sets
 the rate tensor; it waits for the device at observations and when it stages
 a new index tensor of the sampler.
@@ -15,8 +15,11 @@ the last bits: a CudaGraph run reproduces these operations issued eagerly,
 not an Eager run.
 """
 
+import math
+
 import torch
 
+from ...domain.optimizers import clipping
 from ..benchmarks.samplers import gather
 from ..optim import build_optimizer
 from . import measure
@@ -29,6 +32,7 @@ class GraphStepper:
     def __init__(self, experiment, task, model, clock):
         self.task, self.model, self.clock = task, model, clock
         self.observed, self.batch, self.device = experiment.benchmark.observed, experiment.evaluate.batch, task.device
+        self.clip = clipping(experiment.optimizer)
         self.rate = torch.zeros((), device=self.device)
         self.optimizer = build_optimizer(experiment.optimizer, model, self.rate, experiment.budget.updates,
                                          experiment.seeds.model)
@@ -93,6 +97,8 @@ class GraphStepper:
         self.task.loss(output, targets).backward()
         norm = torch.nn.utils.get_total_norm([parameter.grad for parameter in self.parameters
                                               if parameter.grad is not None])
+        if math.isfinite(self.clip):
+            torch.nn.utils.clip_grads_with_norm_(self.parameters, self.clip, norm)
         return output, targets, norm
 
     def capture_update(self, size):

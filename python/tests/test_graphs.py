@@ -12,8 +12,8 @@ import unittest
 import torch
 
 from lab.domain.model import Softmax, Sparsemax
-from lab.domain.optimizers import (SGD, AdaFisher, AdamNC, AdamW, AdamX, AMSGradMD, AMSGradW, Chebyshev, Dash,
-                                   Guarded, Magma, Muon)
+from lab.domain.optimizers import (SGD, AdaFisher, AdamNC, AdamW, AdamX, AMSGradMD, AMSGradW, Chebyshev, Clipped,
+                                   Dash, Guarded, Magma, Muon)
 from lab.domain.spec import describe, substitute, swap
 from lab.domain.training import Checkpoint, Cosine, CudaGraph, Diagnostics, Evaluate
 from lab.infrastructure.engine.graphs import GraphStepper
@@ -55,6 +55,8 @@ def experiments():
             "sparsemax-cosine": sparse,
             "amsgradw": swap(swap(base, "diagnostics", TRACE), "optimizer",
                              AMSGradW(lr=1e-3, betas=(0.9, 0.999), weight_decay=1.0)),
+            "amsgradw-clipped": swap(swap(base, "diagnostics", TRACE), "optimizer",
+                                     Clipped(AMSGradW(lr=1e-3, betas=(0.9, 0.999), weight_decay=1.0), norm=0.01)),
             "sgd": swap(gradients, "optimizer", SGD(lr=0.1, weight_decay=0.01)),
             "adamx": swap(swap(base, "diagnostics", TRACE), "optimizer", AdamX(lr=1e-2)),
             "adamnc": swap(gradients, "optimizer", AdamNC(lr=3e-2)),

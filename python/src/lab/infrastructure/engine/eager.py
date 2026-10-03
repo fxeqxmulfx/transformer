@@ -2,6 +2,7 @@
 
 import torch
 
+from ...domain.optimizers import clipping
 from ..benchmarks.samplers import gather
 from ..optim import build_optimizer
 from . import measure
@@ -11,7 +12,7 @@ from .loop import evaluate
 class EagerStepper:
     def __init__(self, experiment, task, model, clock):
         self.task, self.model, self.clock = task, model, clock
-        self.batch = experiment.evaluate.batch
+        self.batch, self.clip = experiment.evaluate.batch, clipping(experiment.optimizer)
         self.optimizer = build_optimizer(experiment.optimizer, model, None, experiment.budget.updates,
                                          experiment.seeds.model)
         self.norms = []
@@ -33,7 +34,7 @@ class EagerStepper:
             group["lr"] = rate
         output, targets = self.task.forward(self.model, batch)
         self.task.loss(output, targets).backward()
-        norm = torch.nn.utils.clip_grad_norm_(self.model.parameters(), float("inf"))
+        norm = torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.clip)
         if sampled:
             with self.clock.diagnosing():
                 before = measure.before_update(self.model, self.task, output, targets)

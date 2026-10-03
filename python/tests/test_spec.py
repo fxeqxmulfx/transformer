@@ -1,10 +1,12 @@
+import math
 import unittest
 
 from lab.domain.experiment import differences, grid, require_continuation
 from lab.domain.model import Norm, Sparsemax, Softmax
+from lab.domain.optimizers import clipping
 from lab.domain.spec import describe, fingerprint, substitute, swap, walk
 from lab.domain.training import Budget, CudaGraph
-from lab.dsl import EVD, GELU, SGD, AMSGradMD, Dash, Eager, Guarded, LayerNorm, Magma, RMSNorm, Seeds
+from lab.dsl import EVD, GELU, SGD, AMSGradMD, Clipped, Dash, Eager, Guarded, LayerNorm, Magma, RMSNorm, Seeds
 
 from examples import gptmini, modular, reference
 
@@ -50,6 +52,17 @@ class SpecTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "eigendecomposition"):
             swap(evd, "execution", CudaGraph())
         self.assertEqual(swap(evd, "execution", Eager()).execution, Eager())
+
+    def test_clipping_wraps_the_whole_rule(self):
+        clipped = Clipped(Magma(Guarded(SGD(lr=0.1))), norm=0.5)
+        self.assertEqual((clipped.lr, clipping(clipped), clipping(clipped.base)), (0.1, 0.5, math.inf))
+        self.assertEqual(swap(self.base, "optimizer", clipped).optimizer, clipped)
+        for nested in (Guarded(Clipped(SGD(lr=0.1))), Clipped(Clipped(SGD(lr=0.1)))):
+            with self.subTest(optimizer=nested), self.assertRaisesRegex(ValueError, "Clipped outermost"):
+                swap(self.base, "optimizer", nested)
+        for norm in (0.0, math.inf):
+            with self.subTest(norm=norm), self.assertRaisesRegex(ValueError, "clipping norm"):
+                Clipped(SGD(lr=0.1), norm=norm)
 
     def test_magma_damps_directions_which_amsgradmd_does_not_compute(self):
         for spec in (AMSGradMD(lr=1e-3), Guarded(AMSGradMD(lr=0.3, direction_rate=3e-4), sigma=0.25)):

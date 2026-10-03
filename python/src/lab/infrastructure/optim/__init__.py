@@ -72,8 +72,11 @@ def build_optimizer(spec, model, rate=None, updates=None, seed=None):
     optimizer keeps all its state there and reads the rate from `rate` when an
     update runs, so a captured update replays with whatever `rate` holds.
     `updates` and `seed`, the run's budget and model seed, are what MAGMA
-    draws its masks for and from.
+    draws its masks for and from. A stepper clips the gradient
+    (`optimizers.clipping`) before the optimizer steps.
     """
+    if isinstance(spec, optimizers.Clipped):
+        spec = spec.base
     if isinstance(spec, optimizers.AdamW):
         return adamw(spec, model, rate)
     return rule(spec, model, rate, updates, seed)

@@ -11,7 +11,7 @@ import re
 
 from .benchmarks import Benchmark
 from .model import Transformer
-from .optimizers import EVD, Optimizer
+from .optimizers import EVD, Clipped, Optimizer
 from .spec import Spec, describe, require, require_kind, swap, walk
 from .stopping import EarlyStopping
 from .training import Budget, Checkpoint, CudaGraph, Diagnostics, Evaluate, Execution, Schedule, Seeds
@@ -48,6 +48,8 @@ class Experiment(Spec):
         require(not (isinstance(self.execution, CudaGraph)
                      and any(isinstance(block, EVD) for _, block in walk(self.optimizer))),
                 "torch cannot capture an eigendecomposition: run Dash with EVD under Eager()")
+        require(not any(isinstance(block, Clipped) for path, block in walk(self.optimizer) if path),
+                "Clipping acts on the gradient before the whole rule: write Clipped outermost")
         if self.stopping is not None:
             require_kind(self.stopping, EarlyStopping, "stopping")
             require(self.benchmark.selection is not None,

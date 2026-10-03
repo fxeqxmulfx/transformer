@@ -295,6 +295,35 @@ class Magma(Optimizer):
         return self.base.lr
 
 
+@dataclass(frozen=True)
+class Clipped(Optimizer):
+    """Another rule, on the gradient rescaled to a global norm of at most `norm`.
+
+    Source: norm clipping, arXiv:1211.5063, Section 3.2 and Algorithm 1 (not
+    in `papers/`), as torch's `clip_grad_norm_` computes it and the
+    historical synthetic trainer applied it (`grad_clip`): the gradient g of
+    all trainable parameters, as one vector, is multiplied by
+    min(1, norm / (|g| + 1e-6)), where the paper rescales by norm / |g| only
+    when |g| >= norm. It acts before the rule and every stage of it, so it is
+    written outermost. The recorded gradient norm is |g| before clipping.
+    """
+    base: Optimizer
+    norm: float = 1.0
+
+    def check(self):
+        require_kind(self.base, Optimizer, "base")
+        require(math.isfinite(self.norm) and self.norm > 0, "The clipping norm is finite and positive")
+
+    @property
+    def lr(self):
+        return self.base.lr
+
+
+def clipping(optimizer):
+    """The global gradient norm an experiment's `optimizer` clips to: infinite unless it is `Clipped`."""
+    return optimizer.norm if isinstance(optimizer, Clipped) else math.inf
+
+
 def bases(stage):
     """The optimizers a stage is built on, from its own base inward."""
     while isinstance(stage, (Guarded, Magma)):
