@@ -16,8 +16,9 @@ from .domain.optimizers import (EVD, SGD, AdaFisher, AdaGrad, Adam, AdamNC, Adam
                                 Chebyshev, Clipped, Constant, CoupledNewton, Dash, Geometric, Guarded, Inverse,
                                 InverseSqrt, Magma, Muon, NewtonDB, RMSProp)
 from .domain.spec import describe, fingerprint, substitute, swap, walk
+from .domain.memorization import Memorization
 from .domain.stopping import EarlyStopping
-from .domain.synthetic import Memorization, Synthetic
+from .domain.synthetic import Synthetic
 from .domain.tasks import CRASP, MQAR, AlternatingBlocks, Dyck, Lookup, TypedDyck
 from .domain.training import Budget, Checkpoint, Cosine, CudaGraph, Diagnostics, Eager, Evaluate, Schedule, Seeds
 

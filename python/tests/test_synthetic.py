@@ -18,7 +18,8 @@ import unittest
 
 from lab.domain.generative import (Addition, BooleanAnd, Copy, Count, DoubleHistogram, Histogram, Mode,
                                    MostFrequent, Parity, RandomLM, Reverse, Sort)
-from lab.domain.synthetic import Memorization, Synthetic
+from lab.domain.memorization import Memorization
+from lab.domain.synthetic import Synthetic
 from lab.domain.tasks import CRASP, MQAR, AlternatingBlocks, Dyck, Lookup, TypedDyck
 from lab.infrastructure.benchmarks.synthetic.splits import benchmark_splits
 
