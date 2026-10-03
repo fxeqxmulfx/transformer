@@ -16,7 +16,7 @@ import torch.nn.functional as F
 
 from lab.domain.benchmarks import ModularDivision
 from lab.domain.model import Softmax, Sparsemax
-from lab.domain.spec import substitute
+from lab.domain.spec import substitute, swap
 from lab.infrastructure.benchmarks.modular import make_corpus
 from lab.infrastructure.nn import build_model
 from lab.infrastructure.nn.legacy import import_state, rename
@@ -93,15 +93,11 @@ class LegacyModelTests(unittest.TestCase):
             import_state({"decoder.extra": torch.zeros(1)})
 
 
-def recall_model(name):
-    """A convex MQAR model of the recall fixture in the DSL, and its configuration."""
-    run = RECALL["runs"][name]
-    config = run["config"]
-    spec = rope(width=config["widths"][0], depth=config["layers"], heads=config["heads"],
-                context=config["lengths"][0])
-    if run["attention"] == "sparsemax":
-        spec = substitute(spec, Softmax, Sparsemax())
-    return spec, config
+def recall_model(config, length, width, attention):
+    """The model of the convex MQAR trainer in the DSL, at one length and width of its configuration."""
+    spec = rope(width=width, depth=config["layers"], heads=config["heads"], context=length)
+    spec = swap(swap(spec, "block.ffn.multiplier", config["mlp_ratio"]), "positions.theta", config["rope_base"])
+    return substitute(spec, Softmax, Sparsemax()) if attention == "sparsemax" else spec
 
 
 class LegacyRecallModelTests(unittest.TestCase):
@@ -111,9 +107,8 @@ class LegacyRecallModelTests(unittest.TestCase):
     def test_initialization_forward_and_gradients_on_cpu(self):
         for name, expected in RECALL["models"].items():
             with self.subTest(model=name):
-                spec, config = recall_model(name)
-                self.assertEqual((spec.block.ffn.multiplier, spec.positions.theta),
-                                 (config["mlp_ratio"], config["rope_base"]))
+                run = RECALL["runs"][name]
+                spec = recall_model(run["config"], expected["length"], expected["width"], run["attention"])
                 model = build_model(spec, expected["vocab"], seed=expected["seed"])
                 self.assertEqual({key: sha(value) for key, value in model.named_parameters()},
                                  dict(renamed(expected["parameters"])))

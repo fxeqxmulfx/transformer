@@ -22,24 +22,29 @@ from test_engine import Interrupted, sha, train
 from test_nn import RECALL, recall_model, renamed
 
 
-def experiment(name):
-    """A fixture run in the DSL: an epoch is observed after its last update, with the run's batch."""
-    golden = RECALL["runs"][name]
-    model, config = recall_model(name)
-    epoch = math.ceil(config["train_examples"] / golden["batch"])
+def recipe(config, length, width, rate, attention, batch):
+    """`train_run` of a configuration in the DSL, at one length, width and rate: each epoch observed after its end."""
+    epoch = math.ceil(config["train_examples"] / batch)
     updates = epoch * config["epochs"]
     return Experiment(
-        model=model,
-        benchmark=AssociativeRecall(length=config["lengths"][0], vocab=config["vocab"], alpha=config["alpha"],
+        model=recall_model(config, length, width, attention),
+        benchmark=AssociativeRecall(length=length, vocab=config["vocab"], alpha=config["alpha"],
                                     train=config["train_examples"], validation=config["validation_examples"],
                                     test=config["test_examples"]),
-        optimizer=AdamW(lr=config["learning_rates"][0], betas=(0.9, 0.999), weight_decay=config["weight_decay"],
-                        decay="matrices"),
+        optimizer=AdamW(lr=rate, betas=(0.9, 0.999), weight_decay=config["weight_decay"], decay="matrices"),
         schedule=Schedule(warmup=max(1, int(config["warmup_fraction"] * updates)), inclusive=True),
-        budget=Budget(updates=updates, batch=golden["batch"]),
+        budget=Budget(updates=updates, batch=batch),
         seeds=Seeds(model=config["seed"], data=config["seed"], batches=config["seed"]),
-        evaluate=Evaluate(every=epoch, batch=golden["batch"]),
+        evaluate=Evaluate(every=epoch, batch=batch),
         execution=Eager(device="cpu"))
+
+
+def experiment(name):
+    """A fixture run in the DSL, with the batch it trained on."""
+    golden = RECALL["runs"][name]
+    config = golden["config"]
+    return recipe(config, config["lengths"][0], config["widths"][0], config["learning_rates"][0],
+                  golden["attention"], golden["batch"])
 
 
 def metrics(golden):

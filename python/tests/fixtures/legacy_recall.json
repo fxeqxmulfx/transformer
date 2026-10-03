@@ -2,7 +2,8 @@
  "source": {
   "commit": "3bae214",
   "trainer": "experiments/convex_mqar/src/convex_mqar/engine.py (train_run, evaluate) and data.py (load_split), on the CPU in float32 with one thread",
-  "fields": "SHA-256 hashes of each split's tokens, query positions and labels; each model's initial parameters, and the logits, mean loss and gradients of a random batch; each epoch's validation metrics and best epoch, the test metrics of the best model, the validation milestones without their times, and the initial, best and final parameters. Times and the mean training loss of an epoch are left out."
+  "fields": "SHA-256 hashes of each split's tokens, query positions and labels; each model's initial parameters, and the logits, mean loss and gradients of a random batch; each epoch's validation metrics and best epoch, the test metrics of the best model, the validation milestones without their times, and the initial, best and final parameters. Times and the mean training loss of an epoch are left out.",
+  "profiles": "experiments/convex_mqar/src/convex_mqar/config.py: `profile` and `Config.batch_size` at each length and width of the profile"
  },
  "models": {
   "softmax": {
@@ -1440,6 +1441,99 @@
      "final_norm.bias": "0f9235dbb1ca0b8d70e3b0b74c2af2af5f66d6ad852746050b381c8a4563e1bc"
     }
    }
+  }
+ },
+ "profiles": {
+  "full": {
+   "config": {
+    "seed": 0,
+    "vocab": 8192,
+    "lengths": [
+     64,
+     128,
+     256,
+     512
+    ],
+    "widths": [
+     64
+    ],
+    "learning_rates": [
+     0.0001,
+     0.00046415888336127773,
+     0.002154434690031882,
+     0.01
+    ],
+    "train_examples": 100000,
+    "validation_examples": 3000,
+    "test_examples": 3000,
+    "epochs": 64,
+    "layers": 2,
+    "heads": 1,
+    "mlp_ratio": 4,
+    "weight_decay": 0.1,
+    "warmup_fraction": 0.1,
+    "alpha": 0.1,
+    "rope_base": 10000.0,
+    "device": "cuda",
+    "precision": "bf16"
+   },
+   "batches": [
+    {
+     "length": 64,
+     "width": 64,
+     "batch": 64
+    },
+    {
+     "length": 128,
+     "width": 64,
+     "batch": 64
+    },
+    {
+     "length": 256,
+     "width": 64,
+     "batch": 16
+    },
+    {
+     "length": 512,
+     "width": 64,
+     "batch": 8
+    }
+   ]
+  },
+  "sanity": {
+   "config": {
+    "seed": 0,
+    "vocab": 16,
+    "lengths": [
+     8
+    ],
+    "widths": [
+     32
+    ],
+    "learning_rates": [
+     0.003
+    ],
+    "train_examples": 2048,
+    "validation_examples": 512,
+    "test_examples": 512,
+    "epochs": 128,
+    "layers": 2,
+    "heads": 1,
+    "mlp_ratio": 4,
+    "weight_decay": 0.1,
+    "warmup_fraction": 0.1,
+    "alpha": 0.1,
+    "rope_base": 10000.0,
+    "device": "cuda",
+    "precision": "bf16"
+   },
+   "batches": [
+    {
+     "length": 8,
+     "width": 32,
+     "batch": 64
+    }
+   ]
   }
  }
 }
