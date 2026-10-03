@@ -463,3 +463,12 @@ counting with independently frozen seeds, pools, targets, and budgets. Report
 novel-ID and length transfer separately. Preserve all curves, negative results,
 source/data hashes, and full reports. Commit verified logical changes during
 the loop and update the handoff with measured outcomes and the next action.
+
+The opt-in [complementary native adapter](protocols/adamw_stability_20261002/complementary-preparation.md#explicit-native-adamw-adapter)
+is now prepared with the primary AdamW semantics, complete-rate records and the
+300,000-update cap. Four tests and eight real short CPU fixtures pass, including
+independent final/selected checkpoint reloads and portable archive verification.
+All test sequence accuracies are zero; implementation agreement supplies no
+scientific learning or transfer evidence. The generic defaults and all active
+modular/prepared confirmation source fingerprints remain unchanged. Scientific
+complementary selection still follows the all-six and architecture gates.

@@ -1,0 +1,147 @@
+{
+  "reviewed_utc": "2026-10-03T01:15:17.795839+00:00",
+  "base_commit": "81a3e8d",
+  "scope": "explicit_CPU_implementation_preparation_only",
+  "scientific_run": false,
+  "scientific_complementary_plan_selected": false,
+  "scientific_architecture_selected": false,
+  "maximum_total_updates_per_future_run": 300000,
+  "targeted_tests": {
+    "command": ".venv/bin/python -m unittest experiments.synthetic_trainers.tests.test_complementary_training -v",
+    "passed": 4,
+    "seconds": 3.125,
+    "terminal_session": 36421,
+    "terminal_session_consumed_exit_code": 0
+  },
+  "actual_archived_CPU_cases": 8,
+  "actual_archived_CPU_updates": 128,
+  "canonical_observations_per_case": 5,
+  "all_final_and_selected_test_sequence_accuracies_zero": true,
+  "both_native_schedules_independently_match_parameters_and_all_optimizer_state": true,
+  "all_final_and_selected_predictions_reproduced_by_independent_reload": true,
+  "all_native_optimizer_checkpoints_reloaded_on_CPU": true,
+  "all_positive_novel_ID_and_length_support_kept_separate": true,
+  "portable_verification": {
+    "CPU_cases": 8,
+    "completed_updates": 128,
+    "torch_imported": false,
+    "scientific_run": false,
+    "prediction_verification": "recorded_independent_CPU_reloads; not_recomputed_here"
+  },
+  "portable_command": "python3 -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.verify_complementary_native experiments/synthetic_trainers/protocols/adamw_stability_20261002/complementary-native-preparation",
+  "archive_artifact_hash_manifest_sha256": "b65ebe28096861b11b863bc2f032f5c08d5b3d9377d1fb187b42070f837ae6e5",
+  "archive_validation_sha256": "a2f308dd6779b5223d6d335a957d5e965fa3403178dcc4840ddc307d291643c3",
+  "repository_source_snapshots": 82,
+  "all_native_and_repository_source_fingerprints": 83,
+  "source_snapshots_exclude_venv": true,
+  "all_executed_sources_still_match": true,
+  "native_rate_anchors": {
+    "mqar-none": {
+      "1": 0.0,
+      "2": 2.9999999999999997e-05,
+      "11": 0.0003,
+      "12": 0.0003,
+      "13": 0.0003,
+      "15": 0.0003,
+      "16": 0.0003
+    },
+    "lookup-hops1": {
+      "1": 0.0,
+      "2": 2.9999999999999997e-05,
+      "11": 0.0003,
+      "12": 0.0003,
+      "13": 0.0003,
+      "15": 0.0003,
+      "16": 0.0003
+    },
+    "lookup-hops2": {
+      "1": 0.0,
+      "2": 2.9999999999999997e-05,
+      "11": 0.0003,
+      "12": 0.0003,
+      "13": 0.0003,
+      "15": 0.0003,
+      "16": 0.0003
+    },
+    "copy-none": {
+      "1": 0.0,
+      "2": 2.9999999999999997e-05,
+      "11": 0.0003,
+      "12": 0.0003,
+      "13": 0.0003,
+      "15": 0.0003,
+      "16": 0.0003
+    },
+    "parity-none": {
+      "1": 0.0,
+      "2": 2.9999999999999997e-05,
+      "11": 0.0003,
+      "12": 0.0003,
+      "13": 0.0003,
+      "15": 0.0003,
+      "16": 0.0003
+    },
+    "parity-running": {
+      "1": 0.0,
+      "2": 2.9999999999999997e-05,
+      "11": 0.0003,
+      "12": 0.0003,
+      "13": 0.0003,
+      "15": 0.0003,
+      "16": 0.0003
+    },
+    "crasp-none": {
+      "1": 0.0,
+      "2": 2.9999999999999997e-05,
+      "11": 0.0003,
+      "12": 0.0003,
+      "13": 0.0003,
+      "15": 0.0003,
+      "16": 0.0003
+    },
+    "copy-cosine-tail": {
+      "1": 0.0,
+      "2": 2.9999999999999997e-05,
+      "11": 0.0003,
+      "12": 0.0002604594154601839,
+      "13": 0.000165,
+      "15": 2.9999999999999997e-05,
+      "16": 2.9999999999999997e-05
+    }
+  },
+  "unchanged_frozen_sources": [
+    {
+      "plan": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/attention-pair-plan.json",
+      "plan_sha256": "261aba71d67b68c4856fb1aa2dba5a3b1c97e3f3a85b3fc29324f0abb14ec94f",
+      "Python_sources": 43,
+      "all_pinned_sources_unchanged": true,
+      "current_source_map_matches": false
+    },
+    {
+      "plan": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/scheduled-pair-preparation/pair/plan.json",
+      "plan_sha256": "3eb176a7e2520233b1a30354dafccad14d1712cc24b604b6923655616582be2f",
+      "Python_sources": 55,
+      "all_pinned_sources_unchanged": true,
+      "current_source_map_matches": true
+    },
+    {
+      "plan": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/tagged-confirmation-preparation/normalizer/plan.json",
+      "plan_sha256": "88aeeca4392100c6366f3a02d3d45781b7b3cbabe7931975e8bec6ff46cd7e59",
+      "Python_sources": 62,
+      "all_pinned_sources_unchanged": true,
+      "current_source_map_matches": true
+    },
+    {
+      "plan": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/tagged-confirmation-preparation/schedule/plan.json",
+      "plan_sha256": "280389f343fa6e9dc3cc7e09128da6efb710bc783c24864232dde54d5c2280c5",
+      "Python_sources": 62,
+      "all_pinned_sources_unchanged": true,
+      "current_source_map_matches": true
+    }
+  ],
+  "unchanged_Lean_sources": 9,
+  "active_modular_trainer_restarted": false,
+  "active_modular_manifest_or_reference_changed": false,
+  "no_Lean_source_changed": true,
+  "next_scientific_action": "complete_review_archive_and_commit_both_current_normalizer_budgets_before_primary_confirmation_or_conditional_schedule_selection"
+}

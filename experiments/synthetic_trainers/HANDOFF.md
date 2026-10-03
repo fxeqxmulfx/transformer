@@ -611,6 +611,23 @@ label those differences. No production source changed, no architecture was
 selected and no scientific complementary campaign began. The current frozen
 GPU/queued source fingerprints remain unchanged.
 
+The separate [native complementary adapter](protocols/adamw_stability_20261002/complementary-preparation.md#explicit-native-adamw-adapter)
+now resolves the optimizer differences through an opt-in path: native AdamW,
+all-parameter decay, betas (0.9, 0.98), epsilon 1e-8, no clipping, explicit
+matrix std 0.02, ten-update warmup and constant/fixed-cosine rate schedules.
+Every run is capped at 300,000 updates and retains clean disjoint study pools,
+both model checkpoints, CPU optimizer state and every applied group rate.
+Four targeted tests pass in 3.125 seconds; actual parameters/moments exactly
+match an independent native loop for both schedules. Eight real CPU fixtures
+finish 128 updates with separate four-example ID/length novel support and
+independently reproduced final/selected checkpoint predictions. All final and
+selected test sequence accuracies are zero; these are implementation checks.
+The full archives verify without Torch and retain source snapshots/raw data.
+See the [receipt](protocols/adamw_stability_20261002/complementary-native-preparation-validation.json).
+The active 43 Python/nine Lean, prepared 55 and both 62-source manifests remain
+unchanged. No scientific complementary campaign or architecture is selected;
+the current sparsemax-first pair and all-six primary gate still come first.
+
 The [prefix-counting oracle audit](protocols/adamw_stability_20261002/complementary-preparation.md)
 now independently checks all 2,187 length-seven words and 15,309 inclusive
 prefix labels for the prepared C-RASP program, plus 128 length-fifteen words.

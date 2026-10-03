@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "name": "validation",
+  "spec": {
+    "task": "crasp",
+    "length": 8,
+    "min_length": null,
+    "formula_depth": 2,
+    "formula_seed": 0
+  },
+  "seed": 0,
+  "count": 4,
+  "fingerprint": "381f564d876d71c4ac378c4783e061e9904a9bdfb6e38020771eaac95abf947b"
+}

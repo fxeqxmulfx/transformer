@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "name": "train",
+  "spec": {
+    "task": "crasp",
+    "length": 8,
+    "min_length": null,
+    "formula_depth": 2,
+    "formula_seed": 0
+  },
+  "seed": 0,
+  "count": 4,
+  "fingerprint": "c3794da4f2a164ec91981666b74db3b629d00b77573a671e2b34bab6fdb69800"
+}

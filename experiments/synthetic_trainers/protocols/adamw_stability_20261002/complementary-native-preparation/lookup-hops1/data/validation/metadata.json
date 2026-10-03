@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "name": "validation",
+  "spec": {
+    "task": "lookup",
+    "length": 24,
+    "min_length": null,
+    "symbols": 8,
+    "pairs": 4,
+    "queries": 2,
+    "query_gap": 0,
+    "hops": 1
+  },
+  "seed": 0,
+  "count": 4,
+  "fingerprint": "2a214a2bda024a277ff817bcbabf3ff2b09c2e652799e92e3190a1d76f495a71"
+}
