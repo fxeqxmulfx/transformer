@@ -25,7 +25,8 @@ from unittest import mock
 
 from lab.domain.spec import swap
 from lab.domain.training import Checkpoint
-from lab.dsl import SGD, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradW, Geometric, Inverse, InverseSqrt, RMSProp
+from lab.dsl import (SGD, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradW, Geometric, Guarded, Inverse, InverseSqrt,
+                     Muon, RMSProp)
 from lab.infrastructure.optim import coordinate
 from lab.infrastructure.store import RunDirectory
 
@@ -44,6 +45,8 @@ EXACT = {
     "adamx": lambda rate: AdamX(lr=rate),
     "adamnc": lambda rate: AdamNC(lr=rate),
     "rmsprop": lambda rate: RMSProp(lr=rate),
+    "muon": lambda rate: Muon(lr=rate),
+    "muon_guarded": lambda rate: Guarded(Muon(lr=rate)),
 }
 CLOSE = {
     "adam": lambda rate: Adam(lr=rate),
@@ -67,8 +70,18 @@ class ZooTests(unittest.TestCase):
         for name in EXACT:
             golden, experiment = recipe(name, EXACT)
             with self.subTest(recipe=name), tempfile.TemporaryDirectory() as root:
-                train(experiment, root)
+                result = train(experiment, root)
                 reproduces(self, golden, root)
+                if golden["guard_acceptance"] is not None:
+                    self.assertEqual(result["optimizer"]["guard"]["acceptance"], golden["guard_acceptance"])
+
+    def test_a_guard_applies_the_directions_it_accepts(self):
+        golden = FIXTURE["runs"]["sgd"]
+        experiment = swap(historical(golden), "optimizer", Guarded(SGD(lr=golden["config"]["rate"])))
+        with tempfile.TemporaryDirectory() as root:
+            result = train(experiment, root)
+            reproduces(self, golden, root)
+            self.assertEqual(result["optimizer"], {"guard": {"updates": 40, "accepted": 40, "acceptance": 1.0}})
 
     def test_an_interrupted_run_resumes_onto_the_same_records(self):
         golden, experiment = recipe("adamnc", EXACT)

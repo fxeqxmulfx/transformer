@@ -4,7 +4,12 @@ A port of `optimizer_benchmark.common.DirectionOptimizer`, with its
 arithmetic: one group of all trainable parameters in `parameters()` order,
 state created at the first update, and the update
 `parameter.add_(direction, alpha=-lr)`. SGD is its plainest rule; the
-adaptive ones are in `.coordinate`.
+adaptive ones are in `.coordinate`, the matrix ones in `.matrix`.
+
+Stages (`.stages`) see the directions of all parameters together and return
+the ones applied, as the descent guard does. A stage keeps its state
+in the optimizer's `state` under its name, beside the rule's per-parameter
+state, so checkpoints and graph warm-ups carry it like any other.
 
 The capturable form reads the rate from a one-element device tensor when the
 update runs, so a captured update replays with whatever the tensor holds; it
@@ -22,9 +27,14 @@ class DirectionOptimizer(torch.optim.Optimizer):
         parameters = [parameter for parameter in model.parameters() if parameter.requires_grad]
         super().__init__(parameters, {"lr": 0.0 if rate is None else rate})
         self.capturable = rate is not None
+        self.stages = []
 
     def direction(self, parameter, state):
         raise NotImplementedError
+
+    def report(self):
+        """What each stage counted, by its name."""
+        return {stage.name: stage.report(self.state[stage.name]) for stage in self.stages}
 
     @torch.no_grad()
     def step(self, closure=None):
@@ -32,6 +42,8 @@ class DirectionOptimizer(torch.optim.Optimizer):
             raise ValueError("A direction optimizer updates on the gradients in place")
         parameters = [parameter for parameter in self.param_groups[0]["params"] if parameter.grad is not None]
         directions = [self.direction(parameter, self.state[parameter]) for parameter in parameters]
+        for stage in self.stages:
+            directions = stage(self, parameters, directions)
         rate = self.param_groups[0]["lr"]
         for parameter, direction in zip(parameters, directions, strict=True):
             if self.capturable:

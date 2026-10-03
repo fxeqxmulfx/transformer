@@ -212,3 +212,46 @@ class RMSProp(Optimizer):
     def check(self):
         check_rate(self.lr)
         require(0 <= self.beta2 < 1 and self.eps > 0, "RMSProp needs beta2 in [0, 1) and a positive epsilon")
+
+
+@dataclass(frozen=True)
+class Muon(Optimizer):
+    """Muon on the hidden matrices, bias-corrected Adam on every other parameter.
+
+    Source: arXiv:2502.16982, Sections 2.1-2.2; `Transformer.Muon.muonStep`
+    without decay. A matrix of the blocks moves by 0.2 sqrt(max(a, b)) times
+    five Newton-Schulz steps (3.4445, -4.775, 2.0315) on the Frobenius-
+    normalized Nesterov input mu M + g, after M <- mu M + g. The embedding, a
+    readout and the vectors move by Adam with bias correction (0.9, 0.999,
+    1e-8) at `auxiliary` times the rate, as the optimizer benchmark ran them.
+    """
+    lr: float
+    momentum: float = 0.95
+    auxiliary: float = 0.05
+
+    def check(self):
+        check_rate(self.lr)
+        require(0 <= self.momentum < 1 and self.auxiliary > 0,
+                "Muon needs a momentum in [0, 1) and a positive auxiliary rate")
+
+
+@dataclass(frozen=True)
+class Guarded(Optimizer):
+    """The descent guard over another rule, on the joint parameter vector.
+
+    Source: `Transformer.Optimization.descentGuard`: the rule's direction d is
+    kept when <g, d> >= sigma |g|^2 and |d| <= |g|, and the gradient g is used
+    otherwise. The rule's state advances either way, so a rule whose every
+    direction is rejected trains as SGD
+    (`Transformer.OptimizerBenchmark.guardedBatchRun_eq_sgd`).
+    """
+    base: Optimizer
+    sigma: float = 0.5
+
+    def check(self):
+        require_kind(self.base, Optimizer, "base")
+        require(0 < self.sigma <= 1, "The guard's sigma lies in (0, 1]")
+
+    @property
+    def lr(self):
+        return self.base.lr

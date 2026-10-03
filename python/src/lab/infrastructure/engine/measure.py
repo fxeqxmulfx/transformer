@@ -7,7 +7,7 @@ buffers, which never had one.
 
 import torch
 
-MOMENTS = ("m", "v", "maximum", "exp_avg", "exp_avg_sq")
+MOMENTS = ("m", "v", "maximum", "momentum", "exp_avg", "exp_avg_sq")
 
 
 def moment_scope(optimizer):

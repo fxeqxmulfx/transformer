@@ -11,7 +11,7 @@ historical optimizer zoo.
 import torch
 
 from ...domain import optimizers
-from . import coordinate, direction
+from . import coordinate, direction, matrix, stages
 
 
 def parameter_groups(spec, model):
@@ -31,10 +31,24 @@ def adamw(spec, model, rate=None):
                              foreach=True, capturable=True)
 
 
+def guarded(spec, model, rate=None):
+    optimizer = build_optimizer(spec.base, model, rate)
+    if not isinstance(optimizer, direction.DirectionOptimizer):
+        raise NotImplementedError(f"The guard needs a direction rule, not {spec.base!r}")
+    optimizer.stages.append(stages.Guard(spec.sigma, optimizer))
+    return optimizer
+
+
+def report(optimizer):
+    """What the optimizer's stages counted; nothing for a native optimizer."""
+    return optimizer.report() if isinstance(optimizer, direction.DirectionOptimizer) else {}
+
+
 OPTIMIZERS = {optimizers.AdamW: adamw, optimizers.SGD: direction.SGD, optimizers.AMSGradW: coordinate.AMSGradW,
               optimizers.Adam: coordinate.Adam, optimizers.AdamX: coordinate.AdamX,
               optimizers.AdaGrad: coordinate.AdaGrad, optimizers.AdamNC: coordinate.AdamNC,
-              optimizers.RMSProp: coordinate.RMSProp}
+              optimizers.RMSProp: coordinate.RMSProp, optimizers.Muon: matrix.Muon,
+              optimizers.Guarded: guarded}
 
 
 def build_optimizer(spec, model, rate=None):

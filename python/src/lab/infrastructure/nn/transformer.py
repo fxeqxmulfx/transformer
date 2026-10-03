@@ -86,6 +86,10 @@ class Transformer(nn.Module):
             self.register_buffer("cos", cos, persistent=False)
             self.register_buffer("sin", sin, persistent=False)
 
+    def hidden_matrices(self):
+        """The matrices of the blocks, attention and feed-forward weights, in parameter order."""
+        return [parameter for parameter in self.blocks.parameters() if parameter.ndim == 2]
+
     def forward(self, tokens):
         length = tokens.shape[-1]
         if length > self.context:

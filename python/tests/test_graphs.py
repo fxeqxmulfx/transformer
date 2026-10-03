@@ -12,7 +12,7 @@ import unittest
 import torch
 
 from lab.domain.model import Softmax, Sparsemax
-from lab.domain.optimizers import SGD, AdamNC, AdamX, AMSGradW
+from lab.domain.optimizers import SGD, AdamNC, AdamX, AMSGradW, Guarded, Muon
 from lab.domain.spec import describe, substitute, swap
 from lab.domain.training import Checkpoint, Cosine, CudaGraph, Diagnostics, Evaluate
 from lab.infrastructure.engine.graphs import GraphStepper
@@ -57,6 +57,7 @@ def experiments():
             "sgd": swap(gradients, "optimizer", SGD(lr=0.1, weight_decay=0.01)),
             "adamx": swap(swap(base, "diagnostics", TRACE), "optimizer", AdamX(lr=1e-2)),
             "adamnc": swap(gradients, "optimizer", AdamNC(lr=3e-2)),
+            "muon-guarded": swap(swap(base, "diagnostics", TRACE), "optimizer", Guarded(Muon(lr=3e-2))),
             "text": swap(swap(text(TEXT["runs"]["sparsemax"]), "execution", CudaGraph()), "diagnostics", TRACE)}
 
 
@@ -105,7 +106,7 @@ class GraphTests(unittest.TestCase):
                 self.assertEqual(json.dumps(records(replayed)), json.dumps(records(issued)))
 
     def test_an_interrupted_graph_run_resumes_onto_the_same_records(self):
-        for name, interrupted in (("sampled", 21), ("text", 25), ("adamx", 21)):
+        for name, interrupted in (("sampled", 21), ("text", 25), ("adamx", 21), ("muon-guarded", 21)):
             experiment = swap(experiments()[name], "checkpoint", Checkpoint(every=10))
 
             def interrupt(row):

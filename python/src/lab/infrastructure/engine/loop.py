@@ -10,6 +10,7 @@ decides how updates and evaluations reach the device:
     stepper.step(parts, rate, sampled)   one update: (batch size, measurements or None)
     stepper.gradient_norms()             the norms of the updates since the last call
     stepper.evaluate(split)              the metrics of the named split
+    stepper.optimizer                    whose stages report at the end of the run
 
 A stepper may return gradient norms late; the loop collects them before each
 observation and each sampled update, and stops at the first that is not
@@ -32,6 +33,7 @@ from ...domain.stopping import Selection
 from ...domain.training import rate
 from ..benchmarks import build_task
 from ..nn import build_model
+from ..optim import report
 
 
 class Clock:
@@ -223,6 +225,9 @@ class Training:
                   "training_seconds": self.clock.training, "diagnostic_seconds": self.clock.diagnostics,
                   "wall_seconds": self.clock.wall(), **memory, **self.task.analyze(self.history),
                   "final": self.history[-1]}
+        stages = report(self.stepper.optimizer)
+        if stages:
+            result["optimizer"] = stages
         if self.selection is not None:
             result["best"] = self.select()
         self.run.finish(result)
