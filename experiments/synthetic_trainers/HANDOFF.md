@@ -664,6 +664,20 @@ control. The pair and scientific goal remain incomplete. Complete, review and
 commit that full control/pair, consume both live handles, then follow its
 unchanged primary confirmation or conditional schedule gate.
 
+The fresh softmax control's [phase/recovery witness](protocols/adamw_stability_20261002/softmax-first-long-and-recovery.md)
+preserves its first 424 canonical observations through 105,750. The required
+4,500–27,250 memorization plateau is followed by twenty joint targets over
+95,750–100,500. Its first sampled failure episode at 105,250/105,500 has minimum
+held-out 97.481290%, recovering canonically at 105,750 after 500 sampled updates;
+neighbor 105,749 already passes, so the actual first recovery time is unmeasured.
+All 424 non-time canonical records match the frozen same-seed/split reference
+prefix exactly; this observed metric A/A check is not independent confirmation
+or a claim about tensors/unobserved dynamics. A second capture reproduces all
+eight core files byte-for-byte, with independent NoTorch artifact/phase checks.
+The prefix contains zero final-window observations and cannot decide final
+persistence. All source/proof/audit hashes match; the original full budget,
+live trainer/worker and next-stage gates remain unchanged.
+
 The [full architecture-cohort pipeline](protocols/adamw_stability_20261002/architecture-cohort-preparation.md)
 is separately prepared, preserving the selected native AdamW schedule and all
 six primary-confirmation gates. Two real CPU six-pair cohorts finish 24 cases /

@@ -524,6 +524,19 @@ is running automatically under the original trainer/archive-worker handles.
 The pair, all-six primary gate and subsequent scientific studies remain
 incomplete. No criterion is relaxed or future update budget enlarged.
 
+The fresh control's [captured phase and first recovery](protocols/adamw_stability_20261002/softmax-first-long-and-recovery.md)
+retain all 424 canonical observations through 105,750: the qualifying plateau
+is 4,500–27,250 and long joint confirmation is 95,750–100,500. Failures at
+105,250/105,500 recover at canonical 105,750, with minimum held-out 97.481290%
+and 500 sampled updates until recovery. An earlier passing neighbor means
+the exact physical recovery time is unobserved. All non-time canonical metrics
+match the immutable same-seed/split reference prefix; this is an A/A metric
+check, with no independent-repeat or tensor-identity claim. A fresh capture
+replays eight core files exactly and an independent NoTorch verifier recomputes
+the saved phase/episode. Zero final-window observations are available in this
+prefix; recovery alone neither rejects nor certifies future final persistence.
+Both scientific budgets and all gates remain unchanged.
+
 The [full native paired-cohort preparation](protocols/adamw_stability_20261002/architecture-cohort-preparation.md)
 now executes all twelve held-out control/candidate cases with unchanged selected
 rates, common parameter initialization, alternating order and full-budget native

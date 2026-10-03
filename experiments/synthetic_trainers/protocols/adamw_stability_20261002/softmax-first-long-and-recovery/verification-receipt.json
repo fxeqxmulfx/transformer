@@ -1,0 +1,31 @@
+{
+  "verified_utc": "2026-10-03T03:31:12.010780+00:00",
+  "capture_command": [
+    "python3",
+    "-m",
+    "experiments.synthetic_trainers.protocols.adamw_stability_20261002.softmax_long_recovery_capture",
+    "/tmp/softmax-first-long-and-recovery-replay-20261003-review"
+  ],
+  "capture_exit_code": 0,
+  "verification_command": [
+    "python3",
+    "experiments/synthetic_trainers/protocols/adamw_stability_20261002/softmax-first-long-and-recovery/verify-snapshot.py",
+    "experiments/synthetic_trainers/protocols/adamw_stability_20261002/softmax-first-long-and-recovery",
+    "/tmp/softmax-first-long-and-recovery-replay-20261003-review"
+  ],
+  "verification_exit_code": 0,
+  "verification_snapshot_sha256": "9f02ea775466ee42ad0887b48bf692cc99ddf2ddf38cfce5ee5ce8c3021e721b",
+  "result": {
+    "offline_artifact_hashes_valid": true,
+    "independent_phase_and_episode_recomputation_passed": true,
+    "canonical_observations": 424,
+    "replay_byte_exact_core_files": 8,
+    "A_A_observed_non_time_metrics_exact": true,
+    "first_sampled_recovery": 105750,
+    "sampled_recovery_updates": 500,
+    "actual_first_between_evaluation_recovery_time_known": false,
+    "final_window_observations": 0,
+    "scientific_run_complete": false,
+    "Torch_imported": false
+  }
+}

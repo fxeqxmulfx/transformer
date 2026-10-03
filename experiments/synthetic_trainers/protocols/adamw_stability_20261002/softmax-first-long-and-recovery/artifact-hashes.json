@@ -1,0 +1,15 @@
+{
+  "files": {
+    "assessment.json": "cdf198c54f03a3a3a8b107f04626f2fba55e161f887d6f615962d4f88ecf2747",
+    "boundary-triplets.json": "fbda032b2cb5a22d30a07cc0755ba12b606d9f5c91d11d80c05b342d36209145",
+    "canonical-prefix.jsonl": "75e3fbca6c77d24b36ebcdf2d3ea0b494a5783d357689416d941e1f073159d16",
+    "capture-snapshot.py": "a34aa20cee32a05c58f4536dc00cd93e1dc2cb2502b70f7d1496b3e272e6e442",
+    "captured-native-case-plan.json": "719560fa0d6248f5df93788292f8bc6d66eb7682091ad7ee437e80690b0832f4",
+    "frozen-root-plan.json": "261aba71d67b68c4856fb1aa2dba5a3b1c97e3f3a85b3fc29324f0abb14ec94f",
+    "recovery-metrics.json": "810906f24c874f0bb4fbf25ab99e0633571b90b72f7d7a9c31ac32dce5c4232a",
+    "reference-non-time-prefix.jsonl": "024f1f7acdb2fe2953be106db802694c6b213485034b15ab4a22d18a7d875561",
+    "validation.json": "c8f48ecac7a76405ce3ad1e948ede0cf2462500b970e391460392e61f97d0abb",
+    "verification-receipt.json": "eccea34b162a3034a15ad00b324f79da49af02b792ccccb7c87ab6bf8d93fbf2",
+    "verify-snapshot.py": "9f02ea775466ee42ad0887b48bf692cc99ddf2ddf38cfce5ee5ce8c3021e721b"
+  }
+}
