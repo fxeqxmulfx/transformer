@@ -28,7 +28,7 @@ interpreting the parent's descriptive costs. No causal timing ratio is inferred.
 [Validation](lower-rate-preparation-validation.json) checks all artifact hashes,
 the exact executed source snapshot, scientific configuration, original history
 bytes, portable measurements and unchanged frozen sources. The
-[helper](prepare_lower_rate.py) records these checks with explicit preparation
+helper (`prepare_lower_rate.py`) records these checks with explicit preparation
 scope. This is an adaptation of *Convexifying Transformers*, Section 4; its
 learning rate and stronger phase/persistence criterion are study choices.
 

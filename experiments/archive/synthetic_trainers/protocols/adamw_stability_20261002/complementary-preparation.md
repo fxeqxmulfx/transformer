@@ -42,7 +42,7 @@ independent reloads of both final and selected checkpoints, excluding measured
 generation time. All have four novel ID validation examples and four novel
 longer-input probe examples. Complete [results](complementary-preparation/results.json),
 [three-point histories](complementary-preparation/histories.json), source hashes
-and the exact executed [probe snapshot](complementary-preparation/probe-snapshot.py)
+and the exact executed probe snapshot (`complementary-preparation/probe-snapshot.py`)
 are retained with checksums. They are implementation checks, not learning,
 grokking, stability, architecture-improvement or algorithmic-transfer evidence.
 

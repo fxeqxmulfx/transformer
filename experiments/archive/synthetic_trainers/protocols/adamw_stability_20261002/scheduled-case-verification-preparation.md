@@ -1,6 +1,6 @@
 # Portable completed schedule-case verification
 
-The read-only [verification program](verify_scheduled_case.py) checks a
+The read-only verification program (`verify_scheduled_case.py`) checks a
 completed constant or cosine-tail case against its full archive using system
 Python. It imports no Torch and loads no checkpoint tensors. Scientific cases
 must match the exact committed prospective plan, retain all 300,000 updates

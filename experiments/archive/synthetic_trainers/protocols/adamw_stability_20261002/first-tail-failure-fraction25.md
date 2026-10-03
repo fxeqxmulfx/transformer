@@ -20,7 +20,7 @@ The [portable bundle](first-tail-failure-fraction25/summary.json) preserves
 the unchanged frozen plan and all 461 canonical observations from zero
 through 115,000, five exhaustive observations with full tensor diagnostics,
 and all 252 gradient records from 114,750 through 115,001. The existing
-[offline verifier](verify_first_tail_failure.py) recomputes assessment,
+offline verifier (`verify_first_tail_failure.py`) recomputes assessment,
 coverage, exhaustive support, batch/exposure arithmetic, native AdamW buffers,
 sampled/dense agreement and artifact hashes without PyTorch or original runs.
 [Validation](first-tail-failure-fraction25-validation.json) checks original

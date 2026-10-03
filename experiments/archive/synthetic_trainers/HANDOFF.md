@@ -502,7 +502,7 @@ Both processes have now completed and their sessions were consumed. The worker
 archived and verified the full budget without importing PyTorch. The complete
 negative result below preserves every observation and the original frozen files.
 Do not resume or rerun this historical 150,000-update stage.
-The [phase-prefix exporter](protocols/adamw_stability_20261002/record_phase_prefix.py)
+The phase-prefix exporter (`protocols/adamw_stability_20261002/record_phase_prefix.py`)
 is verified outside that frozen source list: real parent replay matches all
 five previously archived prefix files byte for byte, an existing destination
 is rejected, and the actual unconfirmed lower-rate stage creates no positive

@@ -1,6 +1,6 @@
 # Completed native schedule checkpoint inspection
 
-The read-only [audit program](audit_scheduled_checkpoint.py) is prepared for
+The read-only audit program (`audit_scheduled_checkpoint.py`) is prepared for
 both full scientific schedule cases. It checks the complete frozen case,
 loads the actual checkpoint on CPU, restores the native AdamW class, and
 verifies all model/state tensors, state counts/shapes/steps, one-time coverage

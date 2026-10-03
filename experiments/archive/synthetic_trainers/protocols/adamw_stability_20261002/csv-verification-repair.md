@@ -6,7 +6,7 @@ recomputed for every row. At 150,000 rows this performs 22.5 billion row
 visits, before accounting for individual keys. The archive worker
 remained live inside this verification; it had not published a finished archive.
 
-The [runtime adapter](csv_verification.py) computes the same sorted column
+The runtime adapter (`csv_verification.py`) computes the same sorted column
 union once, then performs the unchanged complete-table string comparison.
 All original history, diagnostic, criterion, checksum, summary and CSV checks
 still execute. No frozen source file, model, optimizer, batch policy, scoring
@@ -27,8 +27,8 @@ The original non-training workers were deliberately stopped for this known
 performance defect: archive PID 112672 and queued PID 115191 exited with 143.
 The GPU trainer PID 112572/session 92762 continued without a restart. Replacement
 archive PID 117200/session 10373 and queue PID 117203/session 46645 are live;
-their exact [source snapshots](csv-repair-workers/archive-optimizer-pair-worker-v2.py)
-and [queue snapshot](csv-repair-workers/queued-mod193-worker-v2.py) are retained.
+their exact source snapshots (`csv-repair-workers/archive-optimizer-pair-worker-v2.py`)
+and queue snapshot (`csv-repair-workers/queued-mod193-worker-v2.py`) are retained.
 Recheck actual process state before any restart.
 
 The queue uses the adapter only for CSV verification before invoking the

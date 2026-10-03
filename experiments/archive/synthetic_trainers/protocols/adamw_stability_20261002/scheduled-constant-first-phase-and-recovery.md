@@ -24,7 +24,7 @@ full softmax reference with the same initialization/data seeds. This A/A
 observation is neither independent confirmation nor parameter-tensor identity.
 
 An actual fresh execution of the saved capture program reproduces eight core
-files byte for byte. The [standard-library verifier](verify_scheduled_constant_phase.py)
+files byte for byte. The standard-library verifier (`verify_scheduled_constant_phase.py`)
 independently checks artifact hashes, phases, failures and recovery against the
 unchanged 99% / twenty-observation / final-50,000-update criterion, without
 Torch or updates. The actual [PNG](scheduled-constant-first-phase-and-recovery/constant-phase-and-recovery.png)

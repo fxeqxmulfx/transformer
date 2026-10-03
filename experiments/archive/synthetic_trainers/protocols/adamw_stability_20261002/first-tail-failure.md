@@ -12,7 +12,7 @@ The [portable source bundle](first-tail-failure/summary.json) retains the
 unchanged frozen plan, every canonical observation from zero through 104,000
 (417 total), five complete exhaustive observations and full tensor diagnostics,
 and every gradient norm from 103,750 through 104,001 (252 total). The
-[offline verifier](verify_first_tail_failure.py) checks artifact hashes,
+offline verifier (`verify_first_tail_failure.py`) checks artifact hashes,
 criterion, exact coverage, exhaustive scoring, batch exposure, native AdamW
 moment norms, dense/sampled agreement and the derived partial assessment.
 It needs neither PyTorch nor the original run. Source-byte equivalence and

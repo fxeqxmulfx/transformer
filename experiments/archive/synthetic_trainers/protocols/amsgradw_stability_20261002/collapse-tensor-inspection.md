@@ -51,7 +51,7 @@ clipping, schedule, fraction, or architecture intervention. The running
 
 The [inspection JSON](collapse-tensor-inspection.json) retains all per-tensor
 norms, derived shares/ratios, selection rules, source archive fingerprints,
-and the analysis SHA256. The [script](inspect_collapse_tensors.py) validates
+and the analysis SHA256. The script (`inspect_collapse_tensors.py`) validates
 the complete source comparison before analysis and checks the aggregate
 gradient and share identities. It runs without PyTorch:
 

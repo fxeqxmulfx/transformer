@@ -9306,17 +9306,17 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`train_certificate`](src/Transformer/GPTMini/Sparsemax/Certificate/Counts.lean#L28) | theorem | proved |
 | [`heldout_certificate`](src/Transformer/GPTMini/Sparsemax/Certificate/Counts.lean#L37) | theorem | proved |
 
-**[Transformer.GPTMini.Sparsemax.Certificate.HeldoutFirst](src/Transformer/GPTMini/Sparsemax/Certificate/HeldoutFirst.lean)** — 133 lines
+**[Transformer.GPTMini.Sparsemax.Certificate.HeldoutFirst](src/Transformer/GPTMini/Sparsemax/Certificate/HeldoutFirst.lean)** — 136 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`heldoutFirstPredictions`](src/Transformer/GPTMini/Sparsemax/Certificate/HeldoutFirst.lean#L22) | def |  |
+| [`heldoutFirstPredictions`](src/Transformer/GPTMini/Sparsemax/Certificate/HeldoutFirst.lean#L25) | def |  |
 
-**[Transformer.GPTMini.Sparsemax.Certificate.HeldoutLast](src/Transformer/GPTMini/Sparsemax/Certificate/HeldoutLast.lean)** — 133 lines
+**[Transformer.GPTMini.Sparsemax.Certificate.HeldoutLast](src/Transformer/GPTMini/Sparsemax/Certificate/HeldoutLast.lean)** — 136 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`heldoutLastPredictions`](src/Transformer/GPTMini/Sparsemax/Certificate/HeldoutLast.lean#L22) | def |  |
+| [`heldoutLastPredictions`](src/Transformer/GPTMini/Sparsemax/Certificate/HeldoutLast.lean#L25) | def |  |
 
 **[Transformer.GPTMini.Sparsemax.Certificate.Results](src/Transformer/GPTMini/Sparsemax/Certificate/Results.lean)** — 49 lines
 
@@ -9327,11 +9327,11 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`heldout_percentage_rounding_interval`](src/Transformer/GPTMini/Sparsemax/Certificate/Results.lean#L37) | theorem | proved |
 | [`heldout_accuracy_below_target`](src/Transformer/GPTMini/Sparsemax/Certificate/Results.lean#L45) | theorem | proved |
 
-**[Transformer.GPTMini.Sparsemax.Certificate.Train](src/Transformer/GPTMini/Sparsemax/Certificate/Train.lean)** — 97 lines
+**[Transformer.GPTMini.Sparsemax.Certificate.Train](src/Transformer/GPTMini/Sparsemax/Certificate/Train.lean)** — 100 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`trainPredictions`](src/Transformer/GPTMini/Sparsemax/Certificate/Train.lean#L22) | def |  |
+| [`trainPredictions`](src/Transformer/GPTMini/Sparsemax/Certificate/Train.lean#L25) | def |  |
 
 ### `Transformer.GlobalFlow`
 

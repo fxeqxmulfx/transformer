@@ -5,7 +5,7 @@ whether later recovery and decreasing failure frequency should be measured.
 The complete 150,000-update lower-rate calibration is preserved separately.
 The scientific continuation changes only total steps from 150,000 to 300,000.
 
-[prepare_budget_extension.py](prepare_budget_extension.py) tests the existing
+`prepare_budget_extension.py` tests the existing
 core resume path on CPU with CUDA hidden and the full width-128/two-layer model.
 Its smaller mod-7 corpus and batch four keep this an implementation oracle.
 Twenty updates followed by exact checkpoint restoration and twenty more match

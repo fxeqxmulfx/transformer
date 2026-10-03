@@ -11,7 +11,7 @@ The [portable bundle](first-tail-failure-mod193/summary.json) preserves the
 unchanged frozen plan and every canonical observation from zero through
 102,750 (412 total), five exhaustive observations and full tensor diagnostics,
 and all 252 gradient records from 102,500 through 102,751. The existing
-[offline verifier](verify_first_tail_failure.py) checks the hashes, complete
+offline verifier (`verify_first_tail_failure.py`) checks the hashes, complete
 prefix coverage, exhaustive support, modular batch/exposure arithmetic,
 native AdamW buffers, sampled/dense agreement and partial assessment without
 PyTorch or original run paths. The
