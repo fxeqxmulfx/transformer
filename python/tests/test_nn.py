@@ -33,7 +33,8 @@ def sha(tensor):
 
 
 def renamed(hashes):
-    return {rename(name): value for name, value in hashes.items()}
+    """Historical names mapped to current ones, in the historical order."""
+    return [(rename(name), value) for name, value in hashes.items()]
 
 
 class LegacyModelTests(unittest.TestCase):
@@ -43,13 +44,13 @@ class LegacyModelTests(unittest.TestCase):
     def measure(self, name, device):
         expected = FIXTURE["models"][name]
         model = build_model(SPECS[name], expected["vocab"], seed=0)
-        parameters = {key: sha(value) for key, value in model.named_parameters()}
+        parameters = [(key, sha(value)) for key, value in model.named_parameters()]
         model = model.to(device)
         batch = torch.tensor(make_corpus(ModularDivision(prime=11, train_fraction=.2), 0).train, device=device)
         output = model(batch[:, :-1])
         loss = F.cross_entropy(output[:, 4:].reshape(-1, output.shape[-1]), batch[:, 5:].reshape(-1))
         loss.backward()
-        gradients = {key: sha(value.grad) for key, value in model.named_parameters()}
+        gradients = [(key, sha(value.grad)) for key, value in model.named_parameters()]
         return parameters, sha(output), loss.item().hex(), gradients
 
     def test_initialization_forward_and_gradients_on_cpu(self):

@@ -104,9 +104,10 @@ class Attention(nn.Module):
     def __init__(self, spec, width):
         super().__init__()
         head = width // spec.heads
+        # Scores draw no random numbers; built first, their parameters come first, as in GPTMini.
+        self.scores = scores_module(spec.scores, spec.heads, head)
         self.projections = PROJECTIONS[type(spec.projections)](width, spec.heads, spec.projections.bias)
         self.output = nn.Linear(width, width, bias=spec.output_bias)
-        self.scores = scores_module(spec.scores, spec.heads, head)
         self.weights = WEIGHTS[type(spec.weights)]
         self.exclusive = None if spec.exclusive is None else spec.exclusive.eps
 
