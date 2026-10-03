@@ -1,0 +1,11 @@
+{
+  "files": {
+    "audit-snapshot.py": "20544ed2d117b4d8e5f97afaa53d22a946249a984bc22b92e861a6710e302cbf",
+    "constant-native-CPU-audit.json": "0a0f5c1841ba0de98aa186db7751e9a0fba2bc00a31051caf799441a7aa8e58f",
+    "cosine-native-CPU-audit.json": "d5aa7c229512fac38beb40e9ef28cc041412bf4643e3dd4ade09d6912196019d",
+    "live-case-rejection.stderr": "0cee8965bf17cf6df843193730929785a185220954a8a719e47ba95047ef8223",
+    "targeted-tests.log": "b91a25f7afbc1d24ddd7ead3ba44bf6aa37627908986ae17c732b644e63f12ff",
+    "test-snapshot.py": "26d688b3dee783a2672f22d1c593c76d32a54d3bc39ca8292a6d08be650c813b",
+    "validation.json": "b1fc785bd99100d4125ff206dc2d48bbe81b02e66923d3af43b7dec6f2e024de"
+  }
+}

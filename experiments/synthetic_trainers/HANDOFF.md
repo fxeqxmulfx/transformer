@@ -37,6 +37,15 @@ joint training nor optimizer/generalization guarantees. The
 [one-neuron CE counterexample](../../src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L60)
 has its stated FFN scope, not a proved full-GPT training result.
 
+A separate [native schedule checkpoint audit](protocols/adamw_stability_20261002/scheduled-checkpoint-audit-preparation.md)
+now verifies the two previously completed 40-update CPU checkpoints without
+updates, including eleven finite native states and distinct exact final rates.
+Four additional targeted tests pass in 6.934 seconds; the actual incomplete
+live scientific case is rejected without creating a receipt. Script/test
+snapshots and actual audit outputs are retained. These four checks extend the
+inspection tools; the archived full 288-test suite remains separate. No frozen
+training/proof/paper/audit source changes and no benchmark gate opens.
+
 ## Completed reproduction campaign
 
 All scheduled training in the previous reproduction campaign has finished. Its

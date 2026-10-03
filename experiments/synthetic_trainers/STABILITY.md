@@ -588,6 +588,14 @@ These prefixes certify no persistence or independent benchmark. Finish/review/
 commit both full cases and pair, then consume both terminal handles before
 the unchanged six-case confirmation or further adaptation gate.
 
+The [read-only native schedule audit](protocols/adamw_stability_20261002/scheduled-checkpoint-audit-preparation.md)
+is independently exercised on both existing full-width 40-update CPU cases,
+checking all eleven model/moment states and the exact final constant/cosine
+rate without updates. Four targeted tests pass in 6.934 seconds and reject
+forged state, incomplete execution and receipt overwrites; the actual live
+scientific prefix is also rejected. The prior full 288-test result remains
+separate. All 55/nine/paper/audit pins are intact; this preparation opens no gate.
+
 The [full native paired-cohort preparation](protocols/adamw_stability_20261002/architecture-cohort-preparation.md)
 now executes all twelve held-out control/candidate cases with unchanged selected
 rates, common parameter initialization, alternating order and full-budget native

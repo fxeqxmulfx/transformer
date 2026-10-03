@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/protocols/adamw_stability_20261002/audit_scheduled_checkpoint.py", line 112, in <module>
+    main()
+  File "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/protocols/adamw_stability_20261002/audit_scheduled_checkpoint.py", line 105, in main
+    result = audit(args.stage, args.case, archive=args.archive)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/protocols/adamw_stability_20261002/audit_scheduled_checkpoint.py", line 29, in audit
+    raise ValueError("A checkpoint audit requires the complete frozen case")
+ValueError: A checkpoint audit requires the complete frozen case

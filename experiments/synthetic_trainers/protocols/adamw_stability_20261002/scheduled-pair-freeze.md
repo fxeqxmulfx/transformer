@@ -66,3 +66,10 @@ review actual PNG/PDF files and native state before choosing the next gate.
 Consume each real terminal session exactly once when finished. Keep the
 scientific goal active throughout live GPU work; do not restart a healthy
 process because a wait yields or intermediate evidence is incomplete.
+
+The [completed-checkpoint CPU inspection](scheduled-checkpoint-audit-preparation.md)
+is separately prepared and verified on both existing full-width CPU cases,
+with four targeted tests and preserved snapshots. It uses each case's exact
+last scheduled rate and performs no updates. The incomplete live scientific
+case is explicitly rejected. Use it only after a full case/archive is ready;
+it changes none of the 55 frozen training/protocol sources or scientific gates.

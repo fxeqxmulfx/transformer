@@ -1,0 +1,79 @@
+{
+  "recorded_at_utc": "2026-10-03T05:44:14.782828+00:00",
+  "scope": "read_only_native_checkpoint_audit_preparation; no_scientific_learning_result",
+  "actual_targeted_tests": 4,
+  "targeted_test_seconds": 6.934,
+  "test_fixture_updates_in_final_test_run": 24,
+  "previous_full_width_CPU_cases_inspected": 2,
+  "previous_full_width_CPU_case_updates": 40,
+  "new_optimizer_updates_by_checkpoint_inspections": 0,
+  "all_actual_native_states_finite": true,
+  "final_constant_and_cosine_native_rates_distinguished": true,
+  "wrong_native_rate_or_step_or_nonfinite_model_or_moment_rejected": true,
+  "incomplete_case_rejected": true,
+  "existing_receipt_preserved": true,
+  "all_55_Python_17_training_9_Lean_2_papers_and_audit_pins_unchanged": true,
+  "audit_program_sha256": "20544ed2d117b4d8e5f97afaa53d22a946249a984bc22b92e861a6710e302cbf",
+  "test_program_sha256": "26d688b3dee783a2672f22d1c593c76d32a54d3bc39ca8292a6d08be650c813b",
+  "scientific_pair_still_in_progress": true,
+  "scientific_gate_opened": false,
+  "CPU_state_receipts": {
+    "constant": {
+      "name": "adamw-constant",
+      "scientific_run": false,
+      "completed_updates": 40,
+      "parameters": 412296,
+      "native_state_count": 11,
+      "all_native_steps": [
+        40
+      ],
+      "actual_native_class": "torch.optim.AdamW",
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "learning_rate_schedule": "constant",
+      "learning_rate": 0.0003,
+      "all_model_and_native_tensors_finite": true,
+      "all_trainable_parameters_in_one_group_once": true,
+      "maximum_second_moment_buffers_absent": true,
+      "optimizer_updates_performed": 0,
+      "GPU_context_initialized": false,
+      "checkpoint_sha256": "db44bc377c7a690aa759bc82379a4db97f691f93f9b7f5b6b9719a241a431ea2",
+      "executed_audit_script_sha256": "20544ed2d117b4d8e5f97afaa53d22a946249a984bc22b92e861a6710e302cbf",
+      "scope": "finite_completed_checkpoint_state_only; no_learning_or_stability_claim"
+    },
+    "cosine": {
+      "name": "adamw-cosine-tail",
+      "scientific_run": false,
+      "completed_updates": 40,
+      "parameters": 412296,
+      "native_state_count": 11,
+      "all_native_steps": [
+        40
+      ],
+      "actual_native_class": "torch.optim.AdamW",
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "learning_rate_schedule": "cosine_tail",
+      "learning_rate": 2.9999999999999997e-05,
+      "all_model_and_native_tensors_finite": true,
+      "all_trainable_parameters_in_one_group_once": true,
+      "maximum_second_moment_buffers_absent": true,
+      "optimizer_updates_performed": 0,
+      "GPU_context_initialized": false,
+      "checkpoint_sha256": "8c9026199ab9b2d69e51c12e81d0811a41b7c3b0ec5071d500d3875ecb3be946",
+      "executed_audit_script_sha256": "20544ed2d117b4d8e5f97afaa53d22a946249a984bc22b92e861a6710e302cbf",
+      "scope": "finite_completed_checkpoint_state_only; no_learning_or_stability_claim"
+    }
+  },
+  "actual_live_scientific_incomplete_case_rejected": true,
+  "actual_live_case_rejection_recorded_at_utc": "2026-10-03T05:45:27.340387+00:00",
+  "actual_live_case_rejection_exit_code": 1
+}

@@ -1,0 +1,27 @@
+{
+  "name": "adamw-constant",
+  "scientific_run": false,
+  "completed_updates": 40,
+  "parameters": 412296,
+  "native_state_count": 11,
+  "all_native_steps": [
+    40
+  ],
+  "actual_native_class": "torch.optim.AdamW",
+  "betas": [
+    0.9,
+    0.98
+  ],
+  "epsilon": 1e-08,
+  "weight_decay": 0.1,
+  "learning_rate_schedule": "constant",
+  "learning_rate": 0.0003,
+  "all_model_and_native_tensors_finite": true,
+  "all_trainable_parameters_in_one_group_once": true,
+  "maximum_second_moment_buffers_absent": true,
+  "optimizer_updates_performed": 0,
+  "GPU_context_initialized": false,
+  "checkpoint_sha256": "db44bc377c7a690aa759bc82379a4db97f691f93f9b7f5b6b9719a241a431ea2",
+  "executed_audit_script_sha256": "20544ed2d117b4d8e5f97afaa53d22a946249a984bc22b92e861a6710e302cbf",
+  "scope": "finite_completed_checkpoint_state_only; no_learning_or_stability_claim"
+}

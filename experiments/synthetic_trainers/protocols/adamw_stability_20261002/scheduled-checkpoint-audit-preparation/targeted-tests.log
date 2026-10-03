@@ -1,0 +1,9 @@
+test_both_actual_native_checkpoints_use_their_final_rate (experiments.synthetic_trainers.tests.test_scheduled_checkpoint_audit.ScheduledCheckpointAuditTests.test_both_actual_native_checkpoints_use_their_final_rate) ... ok
+test_cli_preserves_an_existing_receipt (experiments.synthetic_trainers.tests.test_scheduled_checkpoint_audit.ScheduledCheckpointAuditTests.test_cli_preserves_an_existing_receipt) ... ok
+test_incomplete_case_is_rejected (experiments.synthetic_trainers.tests.test_scheduled_checkpoint_audit.ScheduledCheckpointAuditTests.test_incomplete_case_is_rejected) ... ok
+test_native_state_forgery_is_rejected (experiments.synthetic_trainers.tests.test_scheduled_checkpoint_audit.ScheduledCheckpointAuditTests.test_native_state_forgery_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 6.934s
+
+OK
