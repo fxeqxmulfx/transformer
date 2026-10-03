@@ -721,18 +721,32 @@ pair before GPU updates: fresh constant softmax first, then fixed cosine
 150k–250k to 10% rate. This result claims no scientific schedule execution or
 repeatable architecture improvement.
 
+The [conditional schedule scientific freeze](protocols/adamw_stability_20261002/scheduled-pair-freeze.md)
+now follows committed pair result `8c6f1ad`. At 2026-10-03 05:08:56.498006 UTC,
+the actual freezer fixes two fresh full 300,000-update softmax cases, constant
+first and cosine-tail second. The candidate reduces rate 0.0003 to 0.00003
+over 150k–250k, holding every other config field and the strict 201-observation
+final window unchanged. All 64 reference artifacts are copied byte-exactly;
+55 Python/seventeen native training/nine Lean/paper/audit pins remain immutable.
+The [plan](protocols/adamw_stability_20261002/scheduled-pair-plan.json) and
+[freeze receipt](protocols/adamw_stability_20261002/scheduled-pair-freeze-validation.json)
+are produced before any scientific update. Commit them, then run the actual
+launcher check and start trainer/venv archive worker. Raw stage is
+`experiments/runs/adamw_stability_20261002/schedule_mod193_fraction25_lr0003_budget300k`.
+No schedule outcome, stable benchmark or independent confirmation is known.
+
 The [full architecture-cohort pipeline](protocols/adamw_stability_20261002/architecture-cohort-preparation.md)
 is separately prepared, preserving the selected native AdamW schedule and all
 six primary-confirmation gates. Two real CPU six-pair cohorts finish 24 cases /
 720 updates; all native checkpoints reload finitely, every negative case remains,
 and their portable reports verify without Torch. Four PNGs/actual PDFs are
 reviewed and explicitly marked CPU fixtures. Four targeted checks and the
-entire current 284-test CPU suite pass; the final integrated run costs 90.639
+then-current 284-test CPU suite pass; that integrated run costs 90.639
 seconds, with its full log and source fingerprints retained. Actual scientific
 CLI guards reject both negative six-case references and CPU plans. The new
 70-source/nineteen-training-source prototype leaves active 43/nine and prepared
 55/both 62/66-source sets/audit unchanged. No scientific architecture is selected
-or launched; finish the primary control/pair before any new scientific freeze.
+or launched; its scientific gate still requires all six fresh benchmark cases.
 
 ```bash
 cat experiments/runs/adamw_stability_20261002/attention_mod193_fraction25_lr0003_budget300k/state.json

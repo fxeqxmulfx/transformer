@@ -1,0 +1,38 @@
+{
+  "recorded_at_utc": "2026-10-03T05:10:08.784846+00:00",
+  "frozen_at_utc": "2026-10-03T05:08:56.498006+00:00",
+  "base_commit": "8c6f1adef5521b4f1d90ef19fed3fa9f57f6ea19",
+  "scientific_training_started": false,
+  "previous_full_normalizer_pair_reviewed_and_committed": true,
+  "previous_trainer_and_worker_terminal_results_consumed": true,
+  "planned_runs": 2,
+  "updates_per_run": 300000,
+  "execution_order": [
+    "adamw-constant",
+    "adamw-cosine-tail"
+  ],
+  "only_changed_config_field": "learning_rate_schedule",
+  "source_count": 55,
+  "native_training_source_count": 17,
+  "Lean_source_count": 9,
+  "all_sources_unchanged": true,
+  "frozen_reference_preserved_byte_for_byte": true,
+  "manifest_sha256": "59bbe9418cc4edeed257e4ad89c3d3ef75f361667347841f0a232bb05bf5388e",
+  "raw_stage_manifest_sha256": "59bbe9418cc4edeed257e4ad89c3d3ef75f361667347841f0a232bb05bf5388e",
+  "reference_artifact_count": 64,
+  "final_window": [
+    250000,
+    300000
+  ],
+  "criterion": {
+    "target": 0.99,
+    "heldout_ceiling": 0.1,
+    "plateau_steps": 1000,
+    "plateau_observations": 5,
+    "confirmation_observations": 20,
+    "tail_steps": 50000
+  },
+  "Torch_imported_for_portable_validation": false,
+  "independent_confirmation_complete": false,
+  "campaign_architecture_claim_allowed": false
+}

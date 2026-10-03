@@ -569,6 +569,15 @@ ratios are null. Neither improvement rule passes. After committing this reviewed
 result, the conditional fixed-schedule pair can be frozen separately; the
 primary all-six gate and later scientific architecture/complementary work remain.
 
+The [conditional fixed-schedule scientific freeze](protocols/adamw_stability_20261002/scheduled-pair-freeze.md)
+now follows committed complete pair `8c6f1ad`. It fixes fresh constant and
+cosine-tail softmax cases, each 300,000 updates, at 2026-10-03 05:08:56 UTC.
+Only the rate schedule changes: 150k–250k reduction to 10%, with the original
+strict tail and complete instrumentation. The prospective plan/reference and
+all 55 Python/seventeen native training/nine Lean/paper/audit pins verify.
+At freeze no optimizer update has started; commit the manifest before the
+actual launch/check. No scientific schedule outcome or benchmark gate is opened.
+
 The [full native paired-cohort preparation](protocols/adamw_stability_20261002/architecture-cohort-preparation.md)
 now executes all twelve held-out control/candidate cases with unchanged selected
 rates, common parameter initialization, alternating order and full-budget native
