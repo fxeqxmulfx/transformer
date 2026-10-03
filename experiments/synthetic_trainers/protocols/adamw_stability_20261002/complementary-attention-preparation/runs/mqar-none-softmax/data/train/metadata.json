@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "name": "train",
+  "spec": {
+    "task": "mqar",
+    "length": 24,
+    "min_length": null,
+    "symbols": 8,
+    "pairs": 4,
+    "queries": 2,
+    "query_gap": 0,
+    "alpha": 0.1
+  },
+  "seed": 0,
+  "count": 4,
+  "fingerprint": "39647b1e738be9dbf99633b82f0ff581a596b14f2586456ea7be813880f036c1"
+}

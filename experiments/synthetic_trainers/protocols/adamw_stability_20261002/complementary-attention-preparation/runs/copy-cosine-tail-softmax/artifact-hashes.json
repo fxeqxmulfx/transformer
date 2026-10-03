@@ -1,0 +1,24 @@
+{
+  "files": {
+    "best.pt": "61537cc927c612cf4df032ecdfd74d1aa3f901f57e437624538311643bbca67b",
+    "config.json": "4e640baf303143f74aebacd8a9dd20fee58fdc84e84a9833c19b913cbbaba53e",
+    "data/in_distribution/examples.jsonl": "911e72d529e934126492299fec3369be4eb0530e6f06a3a63428085320d35e60",
+    "data/in_distribution/metadata.json": "3f13bcf50189d0b087366f778e2db5d76f30165d8d3e6f1f5f99795972d7071a",
+    "data/length-8/examples.jsonl": "8f2e6a6c93d9a3524fa9c9b0804050aa139dc3f3363fd7d0bea1664687c9866b",
+    "data/length-8/metadata.json": "edf2d255b176ea30bb33cf3ee32d086e6c134fe71e8b72481a69e396e9743961",
+    "data/train/examples.jsonl": "c067a599e2dfbbc425fee45e514306f8142bb28b7e19c18cae83bd7b6e420834",
+    "data/train/metadata.json": "da588f07b18e5fe4dfde7c1f685c780948c2d0ba009c202d8412e794592a0b65",
+    "data/train_clean/examples.jsonl": "c067a599e2dfbbc425fee45e514306f8142bb28b7e19c18cae83bd7b6e420834",
+    "data/train_clean/metadata.json": "da588f07b18e5fe4dfde7c1f685c780948c2d0ba009c202d8412e794592a0b65",
+    "data/validation/examples.jsonl": "1b31d2869636fd5fbe49430e1abb9cc24ff123c70e0d27cd0d220ced8f1d56e1",
+    "data/validation/metadata.json": "9628518e3d7bc5425f1d800792992df2af8c76b38369ce3bc00928b1d0d70c26",
+    "data/validation_probes/length-8/examples.jsonl": "d14b5b7bb20bd6ce378845a9a4348f2847a15d3e8305c055c4c622faa47cff04",
+    "data/validation_probes/length-8/metadata.json": "69c75f0b435177069a554b6f011754229de59519601308c39f52dd62ddeb3b5d",
+    "final.pt": "187d1201a7374eef3dc3f5e9612e09ec5c8e0553151342e65600f61054d7fcf2",
+    "history.jsonl": "7237d6f29fc271c39c05a33d45655b282e99a73c18b286899b7761804b6d6a19",
+    "optimizer-audit.json": "6164794dab9e75fe14a6f2385507149542f7ce24dd04339462a95d2176362fc4",
+    "optimizer-final.pt": "ff642ded1a3c03aa3b2db02b12373abe527e7f58ef414ba25593618d57493e7a",
+    "result.json": "17b2acef284aa7c02c0022e4879587b31f642df198b71addc59d20488416563c",
+    "update-rates.jsonl": "b32e8e64fcb1b70849d1645d60fe55b9db37b0901e6645ef43211eb4bb6b5874"
+  }
+}

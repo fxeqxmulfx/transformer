@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "name": "train",
+  "spec": {
+    "task": "copy",
+    "length": 4,
+    "min_length": null,
+    "symbols": 8,
+    "unique": false
+  },
+  "seed": 0,
+  "count": 4,
+  "fingerprint": "c4f0e226c04c04ea45ddb47de91c7c2e10660c06735b275353817a4d944d769f"
+}

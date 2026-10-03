@@ -724,6 +724,25 @@ The active 43 Python/nine Lean, prepared 55 and both 62-source manifests remain
 unchanged. No scientific complementary campaign or architecture is selected;
 the current sparsemax-first pair and all-six primary gate still come first.
 
+The [paired complementary normalizer bridge](protocols/adamw_stability_20261002/complementary-attention-preparation.md)
+now keeps that native optimizer path while changing only softmax/sparsemax.
+Four targeted checks pass in 3.669 seconds; the final entire 288-test CPU suite
+passes in 90.250 seconds without failures/errors/skips. Actual scientific-shape
+initial tensors/RNG and constant/cosine softmax parent updates remain exact.
+Eight real CPU pairs retain sixteen complete cases, 256 updates/eighty canonical
+observations, finite actual native-state reloads and independently reproduced
+final/selected ID/length predictions. All final/selected sequence accuracies are
+zero, with four novel ID and four longer-input validation examples per case.
+The portable archive verifies without Torch and retains both model checkpoints,
+native states, raw pools, full histories/rates and ninety-four repository source
+snapshots. Both PNGs and actual PDFs are reviewed and marked CPU fixtures.
+An initial sixteen-update CPU preparation stopped on tuple/list audit comparison;
+its raw case/checkpoint/program remain under the ignored bootstrap directory.
+This fresh-run bridge adds no resume and cannot overwrite an interrupted case.
+All active 43/nine and prepared 55/both 62/66/70-source sets/audit remain intact.
+No scientific complementary task/architecture is selected; finish/review the
+current control/pair, then the unchanged benchmark and architecture stages.
+
 The [prefix-counting oracle audit](protocols/adamw_stability_20261002/complementary-preparation.md)
 now independently checks all 2,187 length-seven words and 15,309 inclusive
 prefix labels for the prepared C-RASP program, plus 128 length-fifteen words.

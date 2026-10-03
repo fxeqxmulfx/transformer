@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "name": "test",
+  "spec": {
+    "task": "copy",
+    "length": 4,
+    "min_length": null,
+    "symbols": 8,
+    "unique": false
+  },
+  "seed": 0,
+  "count": 4,
+  "fingerprint": "d346f43d6c9eed4e6312b931ab046d6bc5c6d7d841b207a5e5a39a53ad47cd66"
+}

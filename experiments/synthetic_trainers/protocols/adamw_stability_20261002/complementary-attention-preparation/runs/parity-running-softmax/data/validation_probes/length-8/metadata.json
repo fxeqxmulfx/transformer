@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "name": "validation",
+  "spec": {
+    "task": "parity",
+    "length": 8,
+    "min_length": null,
+    "scratchpad": "running",
+    "index_hints": false
+  },
+  "seed": 0,
+  "count": 4,
+  "fingerprint": "1e07bc0125eee67ee91a4ea405a4076cf85a3efd9a1fd9a7fb23c6cde1146b67"
+}

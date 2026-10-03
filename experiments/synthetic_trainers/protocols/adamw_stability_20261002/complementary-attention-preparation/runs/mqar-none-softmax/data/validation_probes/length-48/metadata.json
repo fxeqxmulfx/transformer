@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "name": "validation",
+  "spec": {
+    "task": "mqar",
+    "length": 48,
+    "min_length": null,
+    "symbols": 8,
+    "pairs": 4,
+    "queries": 2,
+    "query_gap": 0,
+    "alpha": 0.1
+  },
+  "seed": 0,
+  "count": 4,
+  "fingerprint": "6f955bd84c858e7027101277b67d6a8f7afce4ce6df247db358db2310a745641"
+}

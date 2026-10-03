@@ -150,3 +150,13 @@ confirmation fixtures. No scientific complementary plan or architecture is
 selected, frozen or launched. Complete the current sparsemax-first GPU pair,
 retain and review both outcomes, and follow the unchanged primary benchmark
 gate before selecting scientific follow-up tasks.
+
+## Explicit paired normalizer bridge
+
+The separate [normalizer bridge](complementary-attention-preparation.md) now
+preserves this native adapter while changing only softmax/sparsemax. Four targeted
+checks and the final integrated 288-test CPU suite pass. Eight actual negative
+CPU pairs retain sixteen complete cases / 256 updates, independent checkpoint
+predictions/native state reloads, separate novel-ID/length support and two
+reviewed PNG/actual PDF figures. Scientific tasks/architecture remain unselected
+and all benchmark gates stay intact.

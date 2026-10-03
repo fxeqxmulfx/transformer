@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "name": "test",
+  "spec": {
+    "task": "crasp",
+    "length": 16,
+    "min_length": null,
+    "formula_depth": 2,
+    "formula_seed": 0
+  },
+  "seed": 0,
+  "count": 4,
+  "fingerprint": "5ba1dedeb2d8ec76319f6e64ccda580a0081dc816ef09f9075550fd376a72c2c"
+}

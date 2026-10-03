@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "name": "test",
+  "spec": {
+    "task": "mqar",
+    "length": 24,
+    "min_length": null,
+    "symbols": 8,
+    "pairs": 4,
+    "queries": 2,
+    "query_gap": 0,
+    "alpha": 0.1
+  },
+  "seed": 0,
+  "count": 4,
+  "fingerprint": "25ea8dd2a0e86263e225b0f305536e6bbbe07102106c1c848c5cddcd86e2a917"
+}

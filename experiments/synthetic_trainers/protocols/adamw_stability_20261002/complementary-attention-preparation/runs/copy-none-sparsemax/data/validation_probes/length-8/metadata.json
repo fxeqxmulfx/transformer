@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "name": "validation",
+  "spec": {
+    "task": "copy",
+    "length": 8,
+    "min_length": null,
+    "symbols": 8,
+    "unique": false
+  },
+  "seed": 0,
+  "count": 4,
+  "fingerprint": "174a9c4a586582099beeea8b721714ef9b1f0f2c59902c9609cf6e0222f8b000"
+}

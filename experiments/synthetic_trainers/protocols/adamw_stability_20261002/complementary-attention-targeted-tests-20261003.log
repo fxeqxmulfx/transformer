@@ -1,0 +1,9 @@
+test_both_factories_preserve_real_scientific_shape_initialization_and_rng (experiments.synthetic_trainers.tests.test_complementary_attention.ComplementaryAttentionTests.test_both_factories_preserve_real_scientific_shape_initialization_and_rng) ... ok
+test_complete_real_pair_and_rehashed_tag_or_config_forgeries (experiments.synthetic_trainers.tests.test_complementary_attention.ComplementaryAttentionTests.test_complete_real_pair_and_rehashed_tag_or_config_forgeries) ... ok
+test_invalid_or_interrupted_run_never_overwrites_and_restores_optimizer (experiments.synthetic_trainers.tests.test_complementary_attention.ComplementaryAttentionTests.test_invalid_or_interrupted_run_never_overwrites_and_restores_optimizer) ... ok
+test_softmax_retains_exact_native_updates_moments_sampling_and_scores (experiments.synthetic_trainers.tests.test_complementary_attention.ComplementaryAttentionTests.test_softmax_retains_exact_native_updates_moments_sampling_and_scores) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 3.669s
+
+OK

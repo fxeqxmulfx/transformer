@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "name": "train",
+  "spec": {
+    "task": "parity",
+    "length": 4,
+    "min_length": null,
+    "scratchpad": "running",
+    "index_hints": false
+  },
+  "seed": 0,
+  "count": 4,
+  "fingerprint": "0a11bebd86d03b54ce71fcb09d73b40a1efd2b73035c523e71fea826d24aa01a"
+}

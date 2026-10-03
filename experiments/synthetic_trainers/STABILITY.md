@@ -547,3 +547,15 @@ CPU suite pass; actual scientific CLI guards reject negative benchmarks/CPU
 plans. No scientific architecture selection or benchmark gate is opened.
 All existing frozen source/proof sets are intact; the live scientific softmax
 control and complete paired review remain the immediate next action.
+
+The [complementary normalizer bridge](protocols/adamw_stability_20261002/complementary-attention-preparation.md)
+separately preserves the native task adapter while changing only attention
+normalization. Four targeted checks and the latest full 288-test CPU suite pass;
+the final integrated run costs 90.250 seconds. Eight actual CPU pairs complete
+sixteen cases / 256 updates, with independently reloaded final/selected model
+predictions and native optimizer states. All final/selected ID/length sequence
+accuracies remain zero, explicitly labelled execution fixtures. The NoTorch
+archive preserves every case and separate novel support; both PNG/actual PDFs
+are reviewed. Frozen source/proof/audit sets remain unchanged. No scientific
+task difficulty, seed cohort or architecture is selected by this preparation;
+the incomplete primary control/pair and all-six benchmark requirements remain.

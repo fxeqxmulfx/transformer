@@ -1,0 +1,787 @@
+{
+  "task": "lookup",
+  "family": "lookup",
+  "provenance": {
+    "task": {
+      "task": "lookup",
+      "length": 24,
+      "min_length": null,
+      "symbols": 8,
+      "pairs": 4,
+      "queries": 2,
+      "hops": 2,
+      "blocks": 3,
+      "query_gap": 0,
+      "alpha": 0.1,
+      "neutral_fraction": 0.25,
+      "max_neutral_gap": null,
+      "max_balance": 8,
+      "bracket_types": 2,
+      "unique": false,
+      "histogram_bos": true,
+      "number_limit": 512,
+      "scratchpad": "none",
+      "addition_order": "forward",
+      "index_hints": false,
+      "carry_sampling": "balanced",
+      "carry_length": null,
+      "and_shift": true,
+      "and_region": "early",
+      "formula_depth": 2,
+      "formula_seed": 0
+    },
+    "model": {
+      "width": 8,
+      "layers": 1,
+      "heads": 1,
+      "ff_multiplier": 4,
+      "rope_theta": 10000.0,
+      "init_std": 0.02
+    },
+    "training": {
+      "steps": 16,
+      "batch_size": 2,
+      "eval_every": 4,
+      "learning_rate": 0.0003,
+      "weight_decay": 0.1,
+      "grad_clip": null,
+      "seed": 0,
+      "data_seed": 0,
+      "train_examples": 4,
+      "validation_examples": 4,
+      "test_examples": 4,
+      "eval_lengths": [
+        48
+      ],
+      "device": "cpu",
+      "cpu_threads": 1,
+      "target": 1.0,
+      "target_metric": "sequence_accuracy",
+      "stop_at_target": false,
+      "study": "double_descent",
+      "label_noise": 0.0,
+      "noise_seed": 0,
+      "split_policy": "disjoint",
+      "fit_epsilon": 0.01,
+      "fit_metric": "example_error",
+      "generalization_patience": 2,
+      "curve_tolerance": 0.001,
+      "optimizer": "adamw",
+      "beta1": 0.9,
+      "beta2": 0.98,
+      "optimizer_epsilon": 1e-08,
+      "warmup_steps": 10,
+      "learning_rate_schedule": "constant",
+      "anneal_start": 150000,
+      "anneal_end": 250000,
+      "final_rate_factor": 0.1,
+      "decay_scope": "all_trainable_parameters"
+    },
+    "factory": "experiments.synthetic_trainers.complementary_attention.softmax_model",
+    "torch_version": "2.14.0+cu126",
+    "source_hashes": {
+      "/home/misha/lean_projects/transformer/.venv/lib/python3.12/site-packages/torch/optim/adamw.py": "39c5eaa04f83632285b114fd093eeb0006866e4adf59ad50cc28de12e63a8459",
+      "/home/misha/lean_projects/transformer/experiments/gpt_mini.py": "7df779bcdc019a6054ed7a6b93469b821b8dec9fc96d84a1420ec387d28f5ee4",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/__init__.py": "141de5f5fd44460ed77caaeb8ac9f771143d27d4fe01efd2190b6cb409ef235f",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/__main__.py": "3129adff95e0f38b87ab34cddfc27082c7892bcaec267ff5d40f160fdf55b44a",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/architecture_cohort_layout.py": "af419fc4cbc095078112d1cfbbccaaf40fade3a164add148c38a65e6d5746f30",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/architecture_cohort_plots.py": "4f703f754519674ce4abbac63a977edd635721bcd15d2430d4fe6903985350d2",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/architecture_cohort_protocol.py": "62b616ddebcefacdb8e475623fbb3d435794a3d09e42c0931a1eb75920c4d4a7",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/architecture_cohort_report.py": "23dcc22dcc7fdae8b3e3ff4586a54dd972de54a62b7557d838b54243ff1e338f",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/architecture_metrics.py": "7af2b4476b2aee4a01ecdec0118057e2a565efdcc4aad06713be024c0d14fb68",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/architecture_report.py": "2b881b71eab64ea0c7bc63203725d4809e58f5ee980df89611e6ee906553faf6",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/architecture_training.py": "cf4c07f28577d277349e06f48151aa428c4f1bd9031e92cb46b177a464878910",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/arithmetic.py": "da95732016b215a9164f731113612c250e6a169c7f8943d309b035f34e22dbf6",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/attention_layout.py": "c2d356341667be64af70160a81f535e9b5a3338b1ec2ba9465a852beddf9a982",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/attention_plots.py": "04c83a14e0b022ae20d4071a65acaab534e75d5a0e108207f3e210d4df377466",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/attention_protocol.py": "1468c543566e50ba5c0284b4387b63bacc026242835b5bd0ef0fcfebf678536f",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/attention_report.py": "4023dea09f0531e3a49d84635ea9d304feaa04171a1b41f6d78d10be3bd53fc9",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/attention_training.py": "2da87ae5a3f1df611664a704034128865e3e474e6c64e94b91e13093b6bd4b3d",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/baseline.py": "4ab162e0d28b6b0ff2e476225f6abf014d8c55930c3cb3125dd8a794dac4dd52",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/baseline_plots.py": "bbc8062390cccaab8a39fa177ba806894ff9f839f01f523e195d607cfeb7283a",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/baseline_recipes.py": "4b12527d2783c66a863a1e92d5a6fd3eda85f99ee246f00d998c99cf628440cf",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/baseline_report.py": "c9acadc3c88e01a45a749cbd0916d315813c57d851f1f3619509e1a93e9519a7",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/cli.py": "9e319197ce964c2593432f495f5e4c4adf1cba91470a1a7e7646127f76a54c5f",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/complementary_attention.py": "7616119146c3de40787c26a53fe03827e6ae0df201cd5fbc8b0ff720d1e8d4f7",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/complementary_attention_plots.py": "447673f995d68cb685a2d8f3559ced4e53d6d08cf9572652c4289f14d02c6ec5",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/complementary_attention_report.py": "c2ab11e946c10c4bc2086ef739ec43d9c8bca161962345881059aee8fb8f60d1",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/complementary_config.py": "667002466a03ca3487d9ae2626e574d0b72790392b9ab92f8e3d7d77b9e19530",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/complementary_report.py": "44ca7a4a4081bfc4aa5f211175df2b615d8fa78a9a8060462f6c2ef6eff4d1f6",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/complementary_training.py": "9475282b6d37e19c5634ae53bce78b4b754fb30066711fbcd73488fa5a40d5ce",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/compression.py": "8e7fc85ed111e574c3f29f6507dedb877dda8138c0f7acfd9df778ef86da2af4",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/config.py": "f0dfb859e32ed2fc5192cbf8305d74f4245f7e08db2c7581958232f6a56c683e",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/confirmation_layout.py": "e2827fb9a08b0e3c785c78d3fe16a0884ed109789e7014f7c19d2bba0792e151",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/confirmation_protocol.py": "7281e1dc5ff82ea251d9c341c3916b9c3fad4c1dd31ca230d5ffc99c2e9e54c0",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/confirmation_report.py": "332f512ed8aa0c25c4fd2cd5dfb0936c415c0311ed67626901d19e51e9532f2c",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/corpus.py": "d523087fe9bdade3343c1194ab4c79338c395ac2c021d2add1f1c396cdb10b9b",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/crasp.py": "7125fa2f1020741da45050ca578b624210ce462a7b983c2c3b625b7be2bc4d1c",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/curves.py": "8fe1edf584db9d05e11d5ea26ca5d4a016746bafde3a88a684031830f3f30e6b",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/data.py": "325af9053ac8b093b4c6bf700980eabe1c53d16a0895784349f7ac47cbbece09",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/generation.py": "e9c56c3e4071db778dd8fa6874246908b248098b972e7d7926cfe56ac723d954",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/generation_metrics.py": "0aaa75ecb985714d3d51755d1d505b945112fa3d38405b947b10b71691245fb9",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/label_noise.py": "797648a01f3d5d35ea15affe6faf52da632281f0b7d18b422111a10fbe104553",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/lookup.py": "803d78b80266a7921919fd33ce74c195c150ea491198cc4e72c921b7c22793e0",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/metrics.py": "0c68755f965158a51728ec63696d4305b0f157a898506877d710444f82583bdf",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/oracles.py": "05c5310ab8998e4c04e3ebd359120c9cb06a763556ae05881ff29eac7fa161e9",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/paper_phases.py": "acaf5eb3aa9999d8c3cdec8e6ab258f95da4e045c2dbb6f115b58f5c42165586",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/paper_plots.py": "0a04ad7557493a0d7dc8ac91d7f14f1f3fb230e9abe43b7598324413bccc8595",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/paper_report.py": "d28e40131236333f8a466df0ace78a0ed635810c7306b7eedb60da4bdfff4ce6",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/persistence.py": "08726b52640d2c4fc60a82c355e8d50a469177b91fc1dd7058d581f87ff1577f",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/plots.py": "ea9faac3e85ac04b92f29486ed01c1b8a6ef6c165a1649e6236e30782cc35144",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/prefixes.py": "8c299979aa142b82d9eca89cb679d030fb6580d7e5edcec19123a4ffc8936cef",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/random_control.py": "ba1e9591ead91728cf68b596e6b6865ccd94c8458ebdb12055c3624b6f6d5d11",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/records.py": "67e15b1f0ad913280821ef5a9f8af596a84f0e1edff295704ef6f5a20744d258",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/reproduction.py": "ee0cc3e1d35f665a11e48aaa681b57089a9566d5f19c0b009035572b610273f3",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/runtime.py": "a7b52640d190c3cbb0405125c58d1593c5e700301a8a6126fdc78110ee98643d",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/sampling.py": "9a380f1a18f11ea1db38303ae2698dd61c2d1c0ab532a41feb83e1adba426f37",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/scaling.py": "eff2fa4558667d778f1df79e147bc766951df37e78dc4baf43d2359c4cd1b2d9",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/scaling_calculations.py": "e70657bb10b10ed779f07ebfe54ae8e4235d1a7e883d52453afa12947eb59a50",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/scaling_plots.py": "2a2058128a07fb5d1ce0afcbbc7dcd18b0f54920a7a4f8a53fc34505faa51a21",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/scaling_report.py": "bf5cdf99483ed45d4488c2be1733af963bc9b03a2f1141e7c49eaa03b36abcc9",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/scheduled_integrity.py": "0198318cdd4e304749eecd51f19f4420ac8e978aed160e3bf2d73cf3709e356f",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/scheduled_layout.py": "78673c62af19bac5fa8fb1350695749e7e3f4711393b6a7e30f5bd8d3ad2df59",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/scheduled_pair_report.py": "1d0f97422a3ffba35579b59683e358da057d7352d7065c6b0789da7477fd9554",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/scheduled_plots.py": "55e3bb926dca699b389510346d6e01c05ca30c38e98a83c205c4a2338ef40dcf",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/scheduled_protocol.py": "fddd94e7ae6e555c374f738ef3b6aec7f5f56079b9f1b6f321aad6fba6d2f4e7",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/scheduled_rates.py": "f5de20d9d21095d9577f54fc7da4c0f6b655fbbdac07414af286dfebb2ecf2e3",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/scheduled_report.py": "e006b4e2909cb8c10d3f1f7367eaa2e56af81554f82fba5a6bed040090305f06",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/scheduled_training.py": "bc4c72e497df5673bf7e3a6064555748d654741ec32014bcdcecb91809f138f4",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/sequence_oracles.py": "2f86e661df6f73e3c077e41435530b63422d107af1f4246d687d1403015e0490",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/sequences.py": "2b5c4f7c2cacd91d09c8b5d6f40de5eca6fdfb9e4a5661a37be2673aefd5557c",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/sparsemax_attention.py": "a64a6e153771d75499811c8a4895d895235564e78500d01e37697e64eb4ec399",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/specs.py": "aa25f588d4e37417b343e6692425a6bd2cd11b0c03b28d2e563bc82f356e1d03",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/stability.py": "6aac13ffd95219d43566cc8bed4786c90fbdec916e5c89ac8cb69e7d0700d69e",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/stability_analysis.py": "e1cbf175cfa0269719d8c074238ace71584e5e1afaed6bd6269cb27e1232db9f",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/stability_comparison.py": "0b45b441866bfddb8132163674d543dec53118627fb01e59ff7a791490e522b6",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/stability_comparison_plots.py": "0eeca8180f0553845c406dd8391293116d0cad3192f88af273f1f9facb2ba80c",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/stability_confirmation.py": "bdf86a92147ccce637be8dc5490934c7d7ca43db3999e515b280de03b6e1e495",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/stability_integrity.py": "cf2e99858de8a4fc2cd8989ddd52bcadb11e31193b2a14b1053853dca1266e5e",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/stability_plots.py": "7502b7383aae64bc5c46d4ea529fcc688b779469157cf2c9d862dc841efa3c03",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/stability_protocol.py": "de0bf31606757f566b11b746981609c3c9f0a4291e0c3af7ebb84022f3877b3d",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/stability_recovery.py": "4f3ebe8784a8a1e6e7da5b2b792ac2ce355df37f1c2341b936b62171d3f78e2b",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/stability_recovery_series.py": "09736cbc0009f583b7a56457cc410b3e8ef36275892f9dc44d22439ff983220a",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/stability_report.py": "9d009ed5004dccb80a9d4ab6777d13337afae6e0750b1b7bb471d1d6c4fd52a3",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/studies.py": "5a58291a946d5a1f03ee0a7939accd945b73349d8ce0a8e0452db320300c4f0e",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/suite.py": "0a3e5095ae1f71a70489431b8d7414da0dee6591fe3ef7a678074729f879840c",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/sweeps.py": "3f6d0d66c0af8fdb62109904c8e3cde2890617a8e4b7cd5f39f3eda4a35b60b4",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/tagged_confirmation_layout.py": "f24f08806de9935b9e28e421856e3eba9aecbfb643d5faa7afd52f1b2ede23cb",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/tagged_confirmation_plots.py": "9bc9aae583ea978cff27c38714358dd8fea4a66290da41a34404ad3b85aa3cf7",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/tagged_confirmation_protocol.py": "e3dec0063550ec94331f228ae254382ae51a43b7a4f01c7047267ea5ecd637b8",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/tagged_confirmation_report.py": "59e2d286ad65721c01956d2d0ee8f0c14179a6dfb2085a7e7c2b98e749f27681",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/task_validation.py": "8d8917d8eb2f9d66ec76e58ab79839ef4c3a0719938cc9d70d877f37f03e556d",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/training.py": "66df67c3c870faf17a61b8e95ba75de0dec639ca4b91278a0d74d0d424a5986c",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/typed_dyck.py": "6f9f11b8eed8441a5ce6420392751c3a560beda015031ed54d91cc83a28bb9a0",
+      "/home/misha/lean_projects/transformer/experiments/synthetic_trainers/vocabulary.py": "d6485085fbc8456e949e58aefd0e3bb42a677437abd726ec77b5950518f5fee1"
+    },
+    "optimizer": {
+      "name": "adamw",
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "bias_correction": true,
+      "maximum_second_moment": false,
+      "decoupled_decay": true,
+      "decay_scope": "all_trainable_parameters",
+      "gradient_clip": null,
+      "warmup_steps": 10,
+      "learning_rate_schedule": "constant",
+      "rate_convention": "next_update_after_completed_steps"
+    },
+    "vocab_size": 44,
+    "context_length": 48,
+    "parameter_storage_bits": 35872,
+    "parameter_dtypes": [
+      "torch.float32"
+    ],
+    "noise": {
+      "kernel": "uniform_incorrect_label",
+      "rate": 0.0,
+      "seed": 0,
+      "eligible_targets": 8,
+      "changed_targets": 0,
+      "realized_rate": 0.0,
+      "assignment": "fixed_causal_input_or_prompt_position"
+    },
+    "evaluation_specs": {
+      "length-48": {
+        "task": "lookup",
+        "length": 48,
+        "min_length": null,
+        "symbols": 8,
+        "pairs": 4,
+        "queries": 2,
+        "hops": 2,
+        "blocks": 3,
+        "query_gap": 0,
+        "alpha": 0.1,
+        "neutral_fraction": 0.25,
+        "max_neutral_gap": null,
+        "max_balance": 8,
+        "bracket_types": 2,
+        "unique": false,
+        "histogram_bos": true,
+        "number_limit": 512,
+        "scratchpad": "none",
+        "addition_order": "forward",
+        "index_hints": false,
+        "carry_sampling": "balanced",
+        "carry_length": null,
+        "and_shift": true,
+        "and_region": "early",
+        "formula_depth": 2,
+        "formula_seed": 0
+      }
+    }
+  },
+  "variant": "lookup",
+  "parameters": 1121,
+  "steps_completed": 16,
+  "examples_seen": 32,
+  "supervised_tokens_seen": 64,
+  "padded_tokens_processed": 768,
+  "setup_seconds": 0.01593285299895797,
+  "training_seconds": 0.07319130595715251,
+  "training_wall_seconds": 0.14649882599769626,
+  "total_wall_seconds": 0.17522006999934092,
+  "peak_cuda_bytes": null,
+  "target": 1.0,
+  "target_metric": "sequence_accuracy",
+  "target_reached": false,
+  "time_to_target": null,
+  "best_step": 16,
+  "validation_best": {
+    "loss": 3.745511054992676,
+    "example_loss": 3.745511054992676,
+    "token_accuracy": 0.0,
+    "sequence_accuracy": 0.0,
+    "balanced_accuracy": 0.0,
+    "transition_accuracy": 0.0,
+    "target_count": 8,
+    "correct": 0,
+    "example_count": 4,
+    "exact": 0,
+    "transition_count": 8,
+    "classes": {
+      "37": {
+        "name": "id_1",
+        "count": 2,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      "39": {
+        "name": "id_3",
+        "count": 2,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      "40": {
+        "name": "id_4",
+        "count": 2,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      "41": {
+        "name": "id_5",
+        "count": 2,
+        "correct": 0,
+        "accuracy": 0.0
+      }
+    }
+  },
+  "validation_final": {
+    "loss": 3.745511054992676,
+    "example_loss": 3.745511054992676,
+    "token_accuracy": 0.0,
+    "sequence_accuracy": 0.0,
+    "balanced_accuracy": 0.0,
+    "transition_accuracy": 0.0,
+    "target_count": 8,
+    "correct": 0,
+    "example_count": 4,
+    "exact": 0,
+    "transition_count": 8,
+    "classes": {
+      "37": {
+        "name": "id_1",
+        "count": 2,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      "39": {
+        "name": "id_3",
+        "count": 2,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      "40": {
+        "name": "id_4",
+        "count": 2,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      "41": {
+        "name": "id_5",
+        "count": 2,
+        "correct": 0,
+        "accuracy": 0.0
+      }
+    }
+  },
+  "test": {
+    "in_distribution": {
+      "loss": 3.7428499460220337,
+      "example_loss": 3.7428499460220337,
+      "token_accuracy": 0.125,
+      "sequence_accuracy": 0.0,
+      "balanced_accuracy": 0.14285714285714285,
+      "transition_accuracy": 0.125,
+      "target_count": 8,
+      "correct": 1,
+      "example_count": 4,
+      "exact": 0,
+      "transition_count": 8,
+      "classes": {
+        "37": {
+          "name": "id_1",
+          "count": 1,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "38": {
+          "name": "id_2",
+          "count": 1,
+          "correct": 1,
+          "accuracy": 1.0
+        },
+        "39": {
+          "name": "id_3",
+          "count": 1,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "40": {
+          "name": "id_4",
+          "count": 1,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "41": {
+          "name": "id_5",
+          "count": 1,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "42": {
+          "name": "id_6",
+          "count": 1,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "43": {
+          "name": "id_7",
+          "count": 2,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "length-48": {
+      "loss": 3.723295211791992,
+      "example_loss": 3.723295211791992,
+      "token_accuracy": 0.0,
+      "sequence_accuracy": 0.0,
+      "balanced_accuracy": 0.0,
+      "transition_accuracy": 0.0,
+      "target_count": 8,
+      "correct": 0,
+      "example_count": 4,
+      "exact": 0,
+      "transition_count": 8,
+      "classes": {
+        "37": {
+          "name": "id_1",
+          "count": 1,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "38": {
+          "name": "id_2",
+          "count": 3,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "41": {
+          "name": "id_5",
+          "count": 1,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "42": {
+          "name": "id_6",
+          "count": 2,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "43": {
+          "name": "id_7",
+          "count": 1,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      }
+    }
+  },
+  "split_fingerprints": {
+    "train": "d2efbf4444cea8448d372afd0e7553d5d8e44fee1118db82d5b2068a07844070",
+    "validation": "22caf005ac031baedc912e07fa8c379e59f7c0af8987487be085e6ea7c08c1de",
+    "train_clean": "d2efbf4444cea8448d372afd0e7553d5d8e44fee1118db82d5b2068a07844070",
+    "in_distribution": "cbbd5ea99c49885c4b66b893ed69fef5f877c069b5cb30faf39596f6d9a37c63",
+    "length-48": "831d4ca1e201d3fd4af2bb2412711c6eb7c449732f18962620d1b192fa73ab97"
+  },
+  "test_final": {
+    "in_distribution": {
+      "loss": 3.7428499460220337,
+      "example_loss": 3.7428499460220337,
+      "token_accuracy": 0.125,
+      "sequence_accuracy": 0.0,
+      "balanced_accuracy": 0.14285714285714285,
+      "transition_accuracy": 0.125,
+      "target_count": 8,
+      "correct": 1,
+      "example_count": 4,
+      "exact": 0,
+      "transition_count": 8,
+      "classes": {
+        "37": {
+          "name": "id_1",
+          "count": 1,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "38": {
+          "name": "id_2",
+          "count": 1,
+          "correct": 1,
+          "accuracy": 1.0
+        },
+        "39": {
+          "name": "id_3",
+          "count": 1,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "40": {
+          "name": "id_4",
+          "count": 1,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "41": {
+          "name": "id_5",
+          "count": 1,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "42": {
+          "name": "id_6",
+          "count": 1,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "43": {
+          "name": "id_7",
+          "count": 2,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      }
+    },
+    "length-48": {
+      "loss": 3.723295211791992,
+      "example_loss": 3.723295211791992,
+      "token_accuracy": 0.0,
+      "sequence_accuracy": 0.0,
+      "balanced_accuracy": 0.0,
+      "transition_accuracy": 0.0,
+      "target_count": 8,
+      "correct": 0,
+      "example_count": 4,
+      "exact": 0,
+      "transition_count": 8,
+      "classes": {
+        "37": {
+          "name": "id_1",
+          "count": 1,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "38": {
+          "name": "id_2",
+          "count": 3,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "41": {
+          "name": "id_5",
+          "count": 1,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "42": {
+          "name": "id_6",
+          "count": 2,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        "43": {
+          "name": "id_7",
+          "count": 1,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      }
+    }
+  },
+  "study": {
+    "profile": "double_descent",
+    "noise": {
+      "kernel": "uniform_incorrect_label",
+      "rate": 0.0,
+      "seed": 0,
+      "eligible_targets": 8,
+      "changed_targets": 0,
+      "realized_rate": 0.0,
+      "assignment": "fixed_causal_input_or_prompt_position"
+    },
+    "corpus": {
+      "splits": {
+        "train": {
+          "examples": 4,
+          "unique_inputs": 4,
+          "duplicate_rows": 0
+        },
+        "validation": {
+          "examples": 4,
+          "unique_inputs": 4,
+          "duplicate_rows": 0
+        },
+        "test": {
+          "examples": 4,
+          "unique_inputs": 4,
+          "duplicate_rows": 0
+        }
+      },
+      "overlaps": {
+        "train/validation": {
+          "unique_inputs": 0,
+          "rows_in_first": 0,
+          "rows_in_second": 0
+        },
+        "train/test": {
+          "unique_inputs": 0,
+          "rows_in_first": 0,
+          "rows_in_second": 0
+        },
+        "validation/test": {
+          "unique_inputs": 0,
+          "rows_in_first": 0,
+          "rows_in_second": 0
+        }
+      },
+      "identity": "raw_prompt_or_prefix_input; random_lm_full_payload"
+    },
+    "causal_contexts": {
+      "supervised_contexts": 8,
+      "conflicting_contexts": 0,
+      "empirical_min_token_error": 0.0,
+      "empirical_min_token_loss_nats": 0.0,
+      "scope": "any deterministic causal predictor on these observed contexts"
+    },
+    "generalization_transition": {
+      "observed_train_fit_step": null,
+      "clean_train_fit_step": null,
+      "generalization_step": null,
+      "confirmed_at_step": null,
+      "lag_steps": null,
+      "lag_epochs": null,
+      "lag_training_seconds": null,
+      "delayed_transfer_candidate": false,
+      "id_generalization_step": null,
+      "id_confirmed_at_step": null,
+      "id_lag_steps": null,
+      "id_lag_epochs": null,
+      "id_lag_training_seconds": null,
+      "delayed_id_generalization_candidate": false,
+      "criterion": {
+        "fit_metric": "example_error",
+        "fit_epsilon": 0.01,
+        "validation_target": 1.0,
+        "target_metric": "sequence_accuracy",
+        "consecutive_observations": 2,
+        "requires_all_ood_probes": true,
+        "requires_novel_inputs": true
+      },
+      "scope": "scheduled_validation_observations; transfer_evidence_not_proof_of_understanding",
+      "train_validation_overlap_inputs": 0,
+      "novel_validation_examples": 4,
+      "novel_probe_examples": {
+        "length-48": 4
+      },
+      "probe_input_overlap": {
+        "length-48": 0
+      }
+    },
+    "epoch_double_descent": {
+      "validation_example_loss": null,
+      "validation_error": null,
+      "validation_novel_error": null,
+      "length-48/example_loss": null,
+      "length-48/error": null,
+      "length-48/novel_error": null
+    },
+    "peak_transition_alignment": {},
+    "interpolation": {
+      "metric": "example_error",
+      "epsilon": 0.01,
+      "first_observed_step": null,
+      "final_value": 1.0,
+      "final_fitted": false,
+      "scope": "finite_pool_observed_fit; not_parameter_count_or_population_EMC"
+    },
+    "data_scope": "synthetic_algorithmic_pool_with_paired_generators",
+    "final_checkpoint": {
+      "loss_membership_auc": 0.1875,
+      "nonmember_examples": 4,
+      "member_examples": 4,
+      "membership_scope": "clean_answer_mean_loss; excludes_exact_input_overlap; validation_not_test",
+      "clean_answer_entropy_given_input_bits": 0,
+      "compression_scope": "deterministic_oracle_answers; task_accuracy_is_not_a_capacity_in_bits"
+    },
+    "best_checkpoint": {
+      "loss_membership_auc": 0.1875,
+      "nonmember_examples": 4,
+      "member_examples": 4,
+      "membership_scope": "clean_answer_mean_loss; excludes_exact_input_overlap; validation_not_test",
+      "clean_answer_entropy_given_input_bits": 0,
+      "compression_scope": "deterministic_oracle_answers; task_accuracy_is_not_a_capacity_in_bits"
+    },
+    "validation_probe_fingerprints": {
+      "length-48": "87e45a813ddaec5a3d2b9e0720fb12552bb5bac94152813591d59f8207b2cc0e"
+    }
+  },
+  "complementary_protocol": {
+    "config": {
+      "steps": 16,
+      "batch_size": 2,
+      "eval_every": 4,
+      "learning_rate": 0.0003,
+      "weight_decay": 0.1,
+      "grad_clip": null,
+      "seed": 0,
+      "data_seed": 0,
+      "train_examples": 4,
+      "validation_examples": 4,
+      "test_examples": 4,
+      "eval_lengths": [
+        48
+      ],
+      "device": "cpu",
+      "cpu_threads": 1,
+      "target": 1.0,
+      "target_metric": "sequence_accuracy",
+      "stop_at_target": false,
+      "study": "double_descent",
+      "label_noise": 0.0,
+      "noise_seed": 0,
+      "split_policy": "disjoint",
+      "fit_epsilon": 0.01,
+      "fit_metric": "example_error",
+      "generalization_patience": 2,
+      "curve_tolerance": 0.001,
+      "optimizer": "adamw",
+      "beta1": 0.9,
+      "beta2": 0.98,
+      "optimizer_epsilon": 1e-08,
+      "warmup_steps": 10,
+      "learning_rate_schedule": "constant",
+      "anneal_start": 150000,
+      "anneal_end": 250000,
+      "final_rate_factor": 0.1,
+      "decay_scope": "all_trainable_parameters"
+    },
+    "optimizer_audit": {
+      "native_class": "torch.optim.adamw.AdamW",
+      "completed_updates": 16,
+      "parameter_tensors": 6,
+      "parameter_scalars": 1121,
+      "state_steps": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "state_keys": [
+        [
+          "exp_avg",
+          "exp_avg_sq",
+          "step"
+        ],
+        [
+          "exp_avg",
+          "exp_avg_sq",
+          "step"
+        ],
+        [
+          "exp_avg",
+          "exp_avg_sq",
+          "step"
+        ],
+        [
+          "exp_avg",
+          "exp_avg_sq",
+          "step"
+        ],
+        [
+          "exp_avg",
+          "exp_avg_sq",
+          "step"
+        ],
+        [
+          "exp_avg",
+          "exp_avg_sq",
+          "step"
+        ]
+      ],
+      "all_state_tensors_finite": true,
+      "groups": [
+        {
+          "lr": 0.0003,
+          "weight_decay": 0.1,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "eps": 1e-08,
+          "amsgrad": false,
+          "parameter_tensors": 6,
+          "parameter_scalars": 1121
+        }
+      ]
+    },
+    "scope": "explicit_complementary_task_adaptation; scientific_gate_is_external"
+  },
+  "complementary_attention": {
+    "attention_normalization": "softmax",
+    "factory": "experiments.synthetic_trainers.complementary_attention.softmax_model",
+    "changed_fields": [
+      "attention_normalization"
+    ],
+    "score_scale": "original_GPTMini_scores",
+    "joint_training_convexity_claim": false,
+    "scientific_benchmark_and_architecture_gates_are_external": true
+  }
+}

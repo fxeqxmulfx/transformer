@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "name": "test",
+  "spec": {
+    "task": "lookup",
+    "length": 48,
+    "min_length": null,
+    "symbols": 8,
+    "pairs": 4,
+    "queries": 2,
+    "query_gap": 0,
+    "hops": 2
+  },
+  "seed": 0,
+  "count": 4,
+  "fingerprint": "831d4ca1e201d3fd4af2bb2412711c6eb7c449732f18962620d1b192fa73ab97"
+}

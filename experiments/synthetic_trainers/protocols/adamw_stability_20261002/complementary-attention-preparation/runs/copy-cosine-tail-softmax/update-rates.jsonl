@@ -1,0 +1,16 @@
+{"step": 1, "learning_rates": [0.0], "weight_decays": [0.1]}
+{"step": 2, "learning_rates": [2.9999999999999997e-05], "weight_decays": [0.1]}
+{"step": 3, "learning_rates": [5.9999999999999995e-05], "weight_decays": [0.1]}
+{"step": 4, "learning_rates": [8.999999999999999e-05], "weight_decays": [0.1]}
+{"step": 5, "learning_rates": [0.00011999999999999999], "weight_decays": [0.1]}
+{"step": 6, "learning_rates": [0.00015], "weight_decays": [0.1]}
+{"step": 7, "learning_rates": [0.00017999999999999998], "weight_decays": [0.1]}
+{"step": 8, "learning_rates": [0.00020999999999999998], "weight_decays": [0.1]}
+{"step": 9, "learning_rates": [0.00023999999999999998], "weight_decays": [0.1]}
+{"step": 10, "learning_rates": [0.00027], "weight_decays": [0.1]}
+{"step": 11, "learning_rates": [0.0003], "weight_decays": [0.1]}
+{"step": 12, "learning_rates": [0.0002604594154601839], "weight_decays": [0.1]}
+{"step": 13, "learning_rates": [0.000165], "weight_decays": [0.1]}
+{"step": 14, "learning_rates": [6.954058453981609e-05], "weight_decays": [0.1]}
+{"step": 15, "learning_rates": [2.9999999999999997e-05], "weight_decays": [0.1]}
+{"step": 16, "learning_rates": [2.9999999999999997e-05], "weight_decays": [0.1]}

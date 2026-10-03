@@ -1,0 +1,24 @@
+{
+  "files": {
+    "best.pt": "61f7da45b9c2ce689721b99909306ee64339635b4e2940fccf59ca55312bb1d6",
+    "config.json": "c0a622feff72bb3837c412b15fe97b88a5fb218e01256d2d79365fa377ba269d",
+    "data/in_distribution/examples.jsonl": "7aa490c828169e9cfdd0bfde1d42aaffd3824fd55a246ea8370feab703945411",
+    "data/in_distribution/metadata.json": "cb4cffe186b85a1624292d99f8d275c1b32bfafedc4c3807a75d184a06852b50",
+    "data/length-48/examples.jsonl": "559a8072b7c53f20c41736ecedd024a4c0238e29efe2c5645630036fda52f75e",
+    "data/length-48/metadata.json": "0d431fe620b014ac9e6f4955b7473b2c870959059622883879fc3b9d28430e61",
+    "data/train/examples.jsonl": "87c513f35c762b7735873a330b8d2eb60e5a2fcf9a5455c82c8252917ba429ed",
+    "data/train/metadata.json": "f040136770ee341417ad959dfc58138aee9ab40b7ea7657676538481c51a2527",
+    "data/train_clean/examples.jsonl": "87c513f35c762b7735873a330b8d2eb60e5a2fcf9a5455c82c8252917ba429ed",
+    "data/train_clean/metadata.json": "f040136770ee341417ad959dfc58138aee9ab40b7ea7657676538481c51a2527",
+    "data/validation/examples.jsonl": "683bb66a41fb26ee9a4c58ae7cdbc4ad0b3fb3e38dd33f04954c20d5e6c0a967",
+    "data/validation/metadata.json": "56bf40f5dc38b0cdd058cee334542e4374e5d8d23284eb7c4f0de42c344e5faf",
+    "data/validation_probes/length-48/examples.jsonl": "bf7d91b0a8edc2c162cba9ba978ba783bb2d272cf84a3a99db5a618447b3d926",
+    "data/validation_probes/length-48/metadata.json": "54ddb43279d7c8a48c5c99b7b233a08b76a9e5c687ca92c4d5eced9f30f94cba",
+    "final.pt": "ecee8b9b1c84e1c832673a1178aa0363f0501b197feb4a0157412ff3bc2fdeac",
+    "history.jsonl": "f9c2d3ee6009fadbcf582a162731a2f25703a62972e3e7d01e925fc0aa50acb9",
+    "optimizer-audit.json": "df3ab5bf315c91e6fa4b55fc62651f189f5a739bdc10acf08ae54e9b7a900d52",
+    "optimizer-final.pt": "df63e54d24216cb5105d24f7f57154b776842c895de8feee02f00ecf87199255",
+    "result.json": "e9edda698831226819204b6386caf7fcc7aa1c78e95b62a65c2141ea5d619392",
+    "update-rates.jsonl": "936a5ed3410cd124aed65aa88ffe19e3da213e57543fd9553d5e14b0e5ed3f30"
+  }
+}
