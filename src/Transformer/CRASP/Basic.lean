@@ -151,20 +151,20 @@ end Form
 
 section Dyck
 
-/-- The parenthesis alphabet of Example 2.3: `false` is `(` and `true` is `)`. -/
+/-- The parenthesis alphabet of Example 2.2: `false` is `(` and `true` is `)`. -/
 abbrev Paren : Type := Bool
 
-/-- `◁#[Q_(] = ◁#[Q_)]`: every prefix counted at the current position has as
-many left as right parentheses (Example 2.3). -/
+/-- `◁#[Q_(] = ◁#[Q_)]`: the prefix up to the current position has as many
+left as right parentheses (Example 2.2). -/
 def balance : Form Paren :=
   Form.eq (.countL (.sym false)) (.countL (.sym true))
 
 /-- `◁#[◁#[Q_(] < ◁#[Q_)]] = 0`: no prefix has more right than left
-parentheses (Example 2.3). -/
+parentheses (Example 2.2). -/
 def matched : Form Paren :=
   .isZero (.countL (.lt (.countL (.sym false)) (.countL (.sym true))))
 
-/-- The Dyck formula of Example 2.3. -/
+/-- The Dyck formula of Example 2.2. -/
 def dyck : Form Paren := .and balance matched
 
 /-- It is a formula of the past-only fragment, of depth `2`. -/
