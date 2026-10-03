@@ -22,6 +22,7 @@ from lab.domain.memorization import Memorization
 from lab.domain.synthetic import Synthetic
 from lab.domain.tasks import CRASP, MQAR, AlternatingBlocks, Dyck, Lookup, TypedDyck
 from lab.infrastructure.benchmarks.synthetic.splits import benchmark_splits
+from lab.infrastructure.benchmarks.synthetic.vocabulary import IGNORE
 
 FIXTURE = json.loads((Path(__file__).parent / "fixtures" / "legacy_splits.json").read_text())
 TASKS = {"mqar": MQAR, "lookup": Lookup, "dyck": Dyck, "blocks": AlternatingBlocks, "dyck2": TypedDyck,
@@ -107,6 +108,36 @@ class SyntheticSpecTests(unittest.TestCase):
         self.assertEqual(Synthetic(task=Parity(scratchpad="running"), length=8).rank(metrics), (0.25, 0.75, -2.0))
         with self.assertRaisesRegex(ValueError, "generated answers only"):
             Synthetic(task=Dyck(), length=16, metric="final_answer_accuracy")
+
+
+class RewriteTests(unittest.TestCase):
+    def test_a_query_is_answered_with_the_latest_write_of_its_key(self):
+        task = MQAR(symbols=8, pairs=12, queries=4, overwrites=6)
+        splits, _ = benchmark_splits(Synthetic(task=task, length=40, train=64, validation=8, test=8), 0)
+        answered = rewritten = 0
+        for example in splits["train"].examples:
+            writes = [tuple(example.tokens[position:position + 2]) for position in range(1, 25, 2)]
+            latest = dict(writes)
+            self.assertEqual(len(latest), 6)
+            current = {}
+            for key, value in writes:
+                self.assertNotEqual(current.get(key), value)
+                current[key] = value
+            for position, target in enumerate(example.targets):
+                if target != IGNORE:
+                    query = example.tokens[position]
+                    self.assertEqual(target, latest[query])
+                    answered += 1
+                    rewritten += sum(key == query for key, _ in writes) > 1
+        self.assertEqual(answered, 4 * 64)
+        self.assertGreater(rewritten, answered // 2)
+
+    def test_rewrites_leave_a_distinct_key_for_every_query(self):
+        MQAR(symbols=4, pairs=8, queries=4, overwrites=4)
+        for invalid in ({"pairs": 8, "overwrites": 8}, {"pairs": 8, "queries": 5, "overwrites": 4},
+                        {"symbols": 4, "pairs": 8, "overwrites": 3}):
+            with self.subTest(task=invalid), self.assertRaises(ValueError):
+                MQAR(**invalid)
 
 
 if __name__ == "__main__":

@@ -68,15 +68,31 @@ class MQAR(Task):
     position^-alpha. A recurring key is supervised with its value. The
     procedure has no BOS and recurs every key: `queries` = `pairs` and
     `query_gap` = 0.
+
+    `overwrites` extends the procedure: that many of the `pairs` writes
+    rebind a key already written, each to a value other than its current
+    one, and a query is supervised with the latest value of its key. The
+    writes are a uniformly random order of `pairs - overwrites` distinct
+    keys, once each, and `overwrites` more drawn uniformly from them; the
+    queries are distinct among them. The latest write is the rule that
+    settles the ambiguity of the unrestricted setup of Zoology
+    (`Transformer.Zoology.unrestricted_mqar_ambiguous`), and the one a
+    recency-ordered head keeps only within a window of positions
+    (`Transformer.ALM.latest_wins`,
+    `Transformer.ALM.past_the_window_rounding_decides`).
     """
     symbols: int = 32
     pairs: int = 8
     queries: int = 4
     query_gap: int = 0
     alpha: float = 0.1
+    overwrites: int = 0
 
     def check(self):
-        require(1 <= self.queries <= self.pairs <= self.symbols, "Require 1 <= queries <= pairs <= symbols")
+        require(0 <= self.overwrites < self.pairs, "Require 0 <= overwrites < pairs")
+        require(1 <= self.queries <= self.pairs - self.overwrites <= self.symbols,
+                "Require 1 <= queries <= pairs - overwrites <= symbols")
+        require(self.overwrites == 0 or self.symbols >= 2, "A rewrite needs a second value")
         require(self.query_gap >= 0, "query_gap must be nonnegative")
         require(math.isfinite(self.alpha) and self.alpha >= 0, "alpha must be finite and nonnegative")
 

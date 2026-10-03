@@ -2,7 +2,8 @@
 
 A port of `experiments/synthetic_trainers/lookup.py` and of the oracles of
 `oracles.py`; composed lookup is the experimental extension of
-`experiments/archive/synthetic_trainers/TASKS.md`.
+`experiments/archive/synthetic_trainers/TASKS.md`, and the rewrites of MQAR
+extend the port (`lab.domain.tasks.MQAR`).
 """
 
 from .base import Generator
@@ -19,24 +20,42 @@ class MQAR(Generator):
 
     def controls(self):
         task = self.task
+        # A split without rewrites keeps the historical seed and fingerprint.
+        overwrites = {"overwrites": task.overwrites} if task.overwrites else {}
         return {"symbols": task.symbols, "pairs": task.pairs, "queries": task.queries,
-                "query_gap": task.query_gap, "alpha": float(task.alpha)}
+                "query_gap": task.query_gap, "alpha": float(task.alpha), **overwrites}
 
     def pair(self, rng, length):
         return self.sample(rng, length), self.sample(rng, length)
 
     def sample(self, rng, length):
+        """Without rewrites, every draw is the historical one, in the historical order."""
         task = self.task
-        keys = rng.sample(range(IDENTITY_BASE, IDENTITY_BASE + task.symbols), task.pairs)
-        values = [rng.randrange(IDENTITY_BASE + task.symbols, self.vocab) for _ in keys]
+        distinct = rng.sample(range(IDENTITY_BASE, IDENTITY_BASE + task.symbols), task.pairs - task.overwrites)
+        keys = distinct + [rng.choice(distinct) for _ in range(task.overwrites)]
+        if task.overwrites:
+            rng.shuffle(keys)
+        values, current = [], {}
+        for key in keys:
+            # A rewrite draws uniformly among the values other than its key's current one.
+            value = rng.randrange(IDENTITY_BASE + task.symbols, self.vocab - (key in current))
+            if key in current and value >= current[key]:
+                value += 1
+            current[key] = value
+            values.append(value)
         tokens = [BOS] + [rng.randrange(IDENTITY_BASE + task.symbols, self.vocab) for _ in range(length - 1)]
         for row, (key, value) in enumerate(zip(keys, values)):
             tokens[1 + 2 * row:3 + 2 * row] = [key, value]
         end = 1 + 2 * task.pairs
         positions = weighted_positions(range(end + task.query_gap, length), task.queries, task.alpha, rng)
-        for position, key in zip(positions, rng.sample(keys, task.queries)):
+        for position, key in zip(positions, rng.sample(distinct, task.queries)):
             tokens[position] = key
         return self.example(tokens)
+
+    def writes(self, tokens):
+        """The key and value of every write, in order."""
+        end = 1 + 2 * self.task.pairs
+        return [tuple(tokens[position:position + 2]) for position in range(1, end, 2)]
 
     def targets(self, tokens):
         task = self.task
@@ -45,13 +64,12 @@ class MQAR(Generator):
         if not tokens or tokens[0] != BOS or len(tokens) < end:
             raise ValueError("Incomplete MQAR prefix")
         table = {}
-        for position in range(1, end, 2):
-            key, value = tokens[position:position + 2]
+        for key, value in self.writes(tokens):
             if not IDENTITY_BASE <= key < IDENTITY_BASE + task.symbols:
                 raise ValueError("Invalid MQAR key")
             if not IDENTITY_BASE + task.symbols <= value < self.vocab:
                 raise ValueError("Invalid MQAR value")
-            if key in table:
+            if key in table and not task.overwrites:
                 raise ValueError("Duplicate MQAR key")
             table[key] = value
         seen = set()
@@ -67,8 +85,16 @@ class MQAR(Generator):
         return targets
 
     def check(self, example, expected):
-        if sum(target != IGNORE for target in expected) != self.task.queries:
+        task = self.task
+        if sum(target != IGNORE for target in expected) != task.queries:
             raise ValueError("Wrong number of supervised queries")
+        current = {}
+        for key, value in self.writes(example.tokens):
+            if current.get(key) == value:
+                raise ValueError("A rewrite must change its key's value")
+            current[key] = value
+        if len(current) != task.pairs - task.overwrites:
+            raise ValueError("The writes must bind pairs - overwrites distinct keys")
 
     def content(self, example, target):
         return range(IDENTITY_BASE + self.task.symbols, self.vocab)
