@@ -25,6 +25,29 @@ def transition(history, target=.99, patience=2):
             "scope": "two_way_exhaustive_fixed_prime_arithmetic; no_length_transfer_or_causal_claim"}
 
 
+def milestones(history, split, percents=(50, 75, 90, 95, 99)):
+    """The first observation whose accuracy on `split` reaches each percentage, and whether it held.
+
+    A port of `summarize_epochs` of the convex MQAR comparison
+    (`experiments/convex_mqar/src/convex_mqar/milestones.py`) at the
+    resolution of observations, without times: a percentage is reached when
+    100 correct >= percent queries; a crossing records the observation before
+    it and whether every later observation reached the percentage too. A
+    percentage never reached is None.
+    """
+    found = {}
+    for percent in percents:
+        reached = [100 * row[split]["correct"] >= percent * row[split]["queries"] for row in history]
+        first = next((index for index, hit in enumerate(reached) if hit), None)
+        previous = history[first - 1] if first else None
+        found[str(percent)] = None if first is None else {
+            "step": history[first]["step"], "accuracy": history[first][split]["accuracy"],
+            "previous_step": None if previous is None else previous["step"],
+            "previous_accuracy": None if previous is None else previous[split]["accuracy"],
+            "sustained_to_end": all(reached[first:])}
+    return found
+
+
 def curve_witness(points, tolerance=0.0):
     """Descent, ascent, descent at strictly increasing x: a double-descent witness.
 

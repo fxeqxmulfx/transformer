@@ -62,6 +62,46 @@ class EpochSampler:
         self.permutation, self.cursor = checkpoint["permutation"].cpu(), checkpoint["cursor"]
 
 
+class ReseededEpochSampler:
+    """Batches drawn from shuffled epochs of `size` rows, epoch e shuffled by a generator seeded `seed + e`.
+
+    A port of the epoch loop of the convex MQAR `train_run`: every epoch draws
+    its permutation on the training device from a new generator, and ends
+    with its remainder as a smaller batch.
+    """
+    traced = ("epoch_tail",)
+
+    def __init__(self, size, batch, seed, device):
+        self.size, self.batch, self.seed, self.device = size, batch, seed, device
+        self.epoch, self.cursor = 0, 0
+        self.permutation = self.draw()
+
+    def draw(self):
+        generator = torch.Generator(device=self.device).manual_seed(self.seed + self.epoch)
+        return torch.randperm(self.size, generator=generator, device=self.device).cpu()
+
+    def sizes(self):
+        """The full batch and an epoch's remainder."""
+        return sorted({min(self.batch, self.size), self.size % self.batch} - {0})
+
+    def next(self):
+        if self.cursor == self.size:
+            self.epoch, self.cursor = self.epoch + 1, 0
+            self.permutation = self.draw()
+        start = self.cursor
+        self.cursor = min(start + self.batch, self.size)
+        return [(self.permutation, start, self.cursor - start)], {
+            "epoch": self.epoch, "cursor_before": start, "cursor_after": self.cursor,
+            "epoch_tail": self.cursor == self.size}
+
+    def state(self):
+        return {"epoch": self.epoch, "cursor": self.cursor}
+
+    def restore(self, checkpoint):
+        self.epoch, self.cursor = checkpoint["epoch"], checkpoint["cursor"]
+        self.permutation = self.draw()
+
+
 class WindowSampler:
     """`batch` uniform window starts below `high` per update, `block` updates at a time.
 

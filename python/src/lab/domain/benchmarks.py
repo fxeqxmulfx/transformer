@@ -112,3 +112,59 @@ class TinyShakespeare(Benchmark):
     @property
     def final(self):
         return ("test",)
+
+
+@dataclass(frozen=True)
+class AssociativeRecall(Benchmark):
+    """Multi-query associative recall (MQAR), as the convex MQAR comparison generated it.
+
+    Source: the MQAR data procedure of Zoology (arXiv:2312.04927v1, Procedure
+    1 of its appendix, as `experiments/convex_mqar` cites it; not in
+    `papers/`), with the choices it leaves open made by `certify.make_example`:
+    a sequence of `length` tokens opens with length // 4 adjacent key-value
+    pairs, distinct keys from the first half of the `vocab` tokens and values
+    from the second; each key recurs once, at distinct later positions p
+    drawn with weights p^-alpha; every other token is a random value. The
+    model reads the whole sequence and is scored on the value it predicts at
+    each recurring key. Each split is drawn by its own generator, seeded by
+    the data seed, the length and the split.
+
+    Batches walk shuffled epochs of the training sequences, each shuffled on
+    the training device by a generator seeded with the batch seed plus the
+    epoch, and an epoch ends with its remainder as a smaller batch.
+    Validation selects the best observation by accuracy, then loss, and the
+    test split is evaluated once, on its model. The historical trainer
+    observed after each epoch alone; here the initial model is observed too,
+    and is the best if no later observation ranks higher.
+    """
+    length: int
+    vocab: int
+    alpha: float
+    train: int
+    validation: int
+    test: int
+
+    def check(self):
+        require(self.length >= 4, "A sequence holds at least one key-value pair and its query")
+        require(self.length // 4 <= self.vocab // 2, "Distinct keys need length / 4 tokens in half the vocabulary")
+        require(math.isfinite(self.alpha), "The position exponent must be finite")
+        require(min(self.train, self.validation, self.test) >= 1, "Every split must be nonempty")
+
+    @property
+    def context(self):
+        return self.length
+
+    @property
+    def observed(self):
+        return ("validation",)
+
+    @property
+    def selection(self):
+        return "validation"
+
+    def rank(self, metrics):
+        return (metrics["accuracy"], -metrics["loss"])
+
+    @property
+    def final(self):
+        return ("test",)

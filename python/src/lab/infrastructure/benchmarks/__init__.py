@@ -18,13 +18,15 @@ measures a model at an observation beyond its splits' metrics, and
 history of observations.
 """
 
-from ...domain.benchmarks import ModularDivision, TinyShakespeare
+from ...domain.benchmarks import AssociativeRecall, ModularDivision, TinyShakespeare
 from ...domain.synthetic import Synthetic
 from .modular import ModularTask
+from .recall import RecallTask
 from .synthetic.training import SyntheticTask
 from .text import TextTask
 
-TASKS = {ModularDivision: ModularTask, TinyShakespeare: TextTask, Synthetic: SyntheticTask}
+TASKS = {ModularDivision: ModularTask, TinyShakespeare: TextTask, Synthetic: SyntheticTask,
+         AssociativeRecall: RecallTask}
 
 
 def build_task(spec, data_seed, device):

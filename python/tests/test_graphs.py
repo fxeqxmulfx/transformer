@@ -24,6 +24,7 @@ from examples import gptmini, modular, reference
 from test_engine import TRACE, Interrupted, sha, untimed
 from test_memorization_training import FIXTURE as MEMORIZATION
 from test_memorization_training import study
+from test_recall import experiment as recall
 from test_synthetic_training import FIXTURE as SYNTHETIC
 from test_synthetic_training import experiment as synthetic
 from test_text import FIXTURE as TEXT
@@ -84,11 +85,13 @@ def experiments():
             # and splits with nothing else.
             "study-noise": graphed(study(MEMORIZATION["runs"]["parity-running-noise-adamw-clipped"])),
             "study-control": graphed(study(MEMORIZATION["runs"]["random-lm-amsgradw"])),
-            "study-novel": graphed(study(MEMORIZATION["runs"]["boolean-and-amsgradw"]))}
+            "study-novel": graphed(study(MEMORIZATION["runs"]["boolean-and-amsgradw"])),
+            # Fused attention; epochs of four updates, the last of 8 rows, observed every five updates.
+            "recall": graphed(swap(recall("softmax"), "evaluate.every", 5))}
 
 
 SIZES = {"reference-wrap": [8], "text": [8], "synthetic": [4, 8], "generated": [4, 8], "study-noise": [4, 8],
-         "study-control": [4, 8], "study-novel": [4, 8]}
+         "study-control": [4, 8], "study-novel": [4, 8], "recall": [8, 64]}
 
 
 def train(experiment, root, stepper, progress=lambda row: None):
@@ -135,7 +138,8 @@ class GraphTests(unittest.TestCase):
     def test_an_interrupted_graph_run_resumes_onto_the_same_records(self):
         for name, interrupted in (("sampled", 21), ("text", 25), ("adamx", 21), ("muon-guarded", 21),
                                   ("adafisherw", 21), ("magma-adamw", 21), ("amsgradmd-guarded", 21),
-                                  ("synthetic", 21), ("generated", 21), ("study-noise", 21), ("study-control", 21)):
+                                  ("synthetic", 21), ("generated", 21), ("study-noise", 21), ("study-control", 21),
+                                  ("recall", 16)):
             experiment = swap(experiments()[name], "checkpoint", Checkpoint(every=10))
 
             def interrupt(row):

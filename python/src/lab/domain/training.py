@@ -20,9 +20,15 @@ class Cosine(Spec):
 
 @dataclass(frozen=True)
 class Schedule(Spec):
-    """Linear warmup over `warmup` updates, then constant or annealed."""
+    """Linear warmup over `warmup` updates, then constant or annealed.
+
+    An update's warmup factor is min(1, k / warmup), where k counts the
+    updates completed before it, so that the first rate is zero; or, with
+    `inclusive`, the update itself too, as the convex MQAR trainer counted.
+    """
     warmup: int = 0
     anneal: Cosine | None = None
+    inclusive: bool = False
 
     def check(self):
         require(self.warmup >= 0, "Warmup must be nonnegative")
@@ -36,13 +42,15 @@ def rate(lr, schedule, completed):
 
     The float operations are those of the historical trainers, so the value is
     bit-identical: `paper_reproduction.grokking.learning_rate` without
-    annealing and `scheduled_rates.expected_rate` with it.
+    annealing, `scheduled_rates.expected_rate` with it, and the convex MQAR
+    `train_run` with an inclusive warmup.
     """
     if type(completed) is not int or completed < 0:
         raise TypeError("Completed update count must be a nonnegative integer")
     initial = lr
     if schedule.warmup:
-        initial *= min(1, completed / max(1, schedule.warmup))
+        counted = completed + 1 if schedule.inclusive else completed
+        initial *= min(1, counted / max(1, schedule.warmup))
     anneal = schedule.anneal
     if anneal is None or completed <= anneal.start:
         return initial
