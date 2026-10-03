@@ -74,6 +74,11 @@ modular division run also gets the analyses of the historical stability
 protocols, read from its records: its phases, whether its success
 persisted, its failures and recoveries after generalizing, the probes and
 diagnostics around each held-out failure, and its largest gradients.
+Experiments that differ in `optimizer.lr` alone form a group; once each of
+its runs has trained the budget its file sets, the report names the run
+each policy of the convex MQAR comparison selects on the selection split:
+the best observation (`best`), the earliest observation at 99% accuracy
+(`first99`), and the earliest one that held to the end (`stable99`).
 
 `Eager()` issues every update kernel by kernel with the native optimizer and
 reproduces the historical modular trainer record for record

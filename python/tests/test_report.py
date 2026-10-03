@@ -1,9 +1,9 @@
-"""Reading a study's runs back: their state, and the stability analyses of a modular run's records.
+"""Reading a study's runs back: their state, the stability analyses of a modular run, the rate selection.
 
-The records are those of the archived stability run of case `grokking` in
-`fixtures/legacy_stability.json` and `fixtures/legacy_collapse.json`,
-written into a run directory as training writes them; the report must read
-them as the historical analyses did.
+The modular records are those of the archived stability run of case
+`grokking` in `fixtures/legacy_stability.json` and
+`fixtures/legacy_collapse.json`, written into a run directory as training
+writes them; the report must read them as the historical analyses did.
 """
 
 import tempfile
@@ -20,6 +20,9 @@ from test_collapse import CASES as COLLAPSE
 from test_stability import CASES as STABILITY, archived
 
 EXPERIMENT = modular(gptmini(), prime=193)
+RECALL = swap(swap(swap(EXPERIMENT, "benchmark", AssociativeRecall(length=16, vocab=64, alpha=.1, train=8,
+                                                                    validation=8, test=8)),
+                    "budget.updates", 500), "evaluate.every", 250)
 FINISHED = {"updates": 150000, "stop": {"step": 150000, "reason": "budget"}}
 
 
@@ -37,18 +40,21 @@ class ReportTests(unittest.TestCase):
         self.addCleanup(directory.cleanup)
         self.runs = RunDirectories(directory.name)
 
-    def write(self, label, experiment, rows, result=None):
+    def write(self, label, experiment, rows, result=None, streams=True):
         run = self.runs.open("stability", label)
         run.begin(describe(experiment), {"engine": {}}, "")
-        for stream, records in (("history", rows), ("probes", COLLAPSE["grokking"]["probes"]),
-                                ("diagnostics", COLLAPSE["grokking"]["diagnostics"])):
+        for stream, records in (("history", rows), ("probes", COLLAPSE["grokking"]["probes"] if streams else ()),
+                                ("diagnostics", COLLAPSE["grokking"]["diagnostics"] if streams else ())):
             for row in records:
                 run.record(stream, row)
         if result is not None:
             run.finish(result)
 
-    def report(self, experiments):
+    def document(self, experiments):
         return report_study(Study("stability", "", experiments), [], self.runs)
+
+    def report(self, experiments):
+        return self.document(experiments)["runs"]
 
     def test_a_finished_modular_run_reads_as_the_stability_analyses_read_it(self):
         self.write("grokking", EXPERIMENT, history(), FINISHED)
@@ -90,10 +96,34 @@ class ReportTests(unittest.TestCase):
                          STABILITY["grokking"]["persistence"])
 
     def test_other_benchmarks_have_no_stability_analyses(self):
-        recall = swap(EXPERIMENT, "benchmark", AssociativeRecall(length=16, vocab=64, alpha=.1, train=8,
-                                                                 validation=8, test=8))
-        self.write("recall", recall, [{"step": 0, "validation": {"accuracy": 0.0, "loss": 4.0}}])
-        self.assertEqual(set(self.report({"recall": recall})["recall"]), {"status", "budget", "latest", "result"})
+        self.write("recall", RECALL, [{"step": 0, "validation": {"accuracy": 0.0, "loss": 4.0}}], streams=False)
+        self.assertEqual(set(self.report({"recall": RECALL})["recall"]), {"status", "budget", "latest", "result"})
+
+    def test_finished_runs_that_differ_in_their_rate_alone_are_calibrated(self):
+        # Rate 1e-2 crosses 99% first and falls back; 1e-3 crosses later, holds, and has the best observation
+        # at accuracy 1; 1e-4 has the lowest loss but never crosses.
+        for name, lr, accuracies, best in (("fast", 1e-2, (0, 1, .5), (1, .3)), ("slow", 1e-3, (0, .5, 1), (1, .2)),
+                                           ("calm", 1e-4, (0, .9, .98), (.98, .1))):
+            rows = [{"step": step, "training_seconds": step / 100, "wall_seconds": step / 50,
+                     "validation": {"accuracy": accuracy, "loss": 1 - accuracy}}
+                    for step, accuracy in zip((0, 250, 500), accuracies, strict=True)]
+            crossing = next((row for row in rows if row["validation"]["accuracy"] >= .99), None)
+            result = {"updates": 500, "stop": {"step": 500, "reason": "budget"}, "final": rows[-1],
+                      "best": {"step": 500, "validation": {"accuracy": best[0], "loss": best[1]}},
+                      "milestones": {"99": None if crossing is None else {
+                          "step": crossing["step"], "sustained_to_end": rows[-1]["validation"]["accuracy"] >= .99}}}
+            self.write(name, swap(RECALL, "optimizer.lr", lr), rows, result, streams=False)
+        experiments = {name: swap(RECALL, "optimizer.lr", lr)
+                       for name, lr in (("fast", 1e-2), ("slow", 1e-3), ("calm", 1e-4), ("next", 3e-4))}
+        experiments["seeded"] = swap(experiments["slow"], "seeds.model", 1)
+        self.assertEqual(self.document(experiments)["rate_selection"],
+                         [{"labels": ["fast", "slow", "calm", "next"], "incomplete": ["next"]}])
+        del experiments["next"]
+        selected = self.document(experiments)["rate_selection"]
+        self.assertEqual(selected, [{"labels": ["fast", "slow", "calm"], "selected": {
+            "best": {"status": "selected", "label": "slow", "lr": 1e-3},
+            "first99": {"status": "selected", "label": "fast", "lr": 1e-2},
+            "stable99": {"status": "selected", "label": "slow", "lr": 1e-3}}}])
 
 
 if __name__ == "__main__":

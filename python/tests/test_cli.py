@@ -69,7 +69,9 @@ class CliTests(unittest.TestCase):
     def test_report_reads_the_runs_back_as_json(self):
         path = self.file(PAIR)
         self.output("run", path, "softmax")
-        reports = json.loads(self.output("report", path))
+        document = json.loads(self.output("report", path))
+        self.assertEqual(document["rate_selection"], [])
+        reports = document["runs"]
         self.assertEqual(reports["sparsemax"], {"status": "not_started"})
         softmax = reports["softmax"]
         self.assertEqual((softmax["status"], softmax["budget"], softmax["latest"]), ("finished", 20,
