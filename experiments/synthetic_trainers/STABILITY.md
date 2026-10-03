@@ -426,8 +426,15 @@ scheduled archives verify without Torch and reject forged rates/missing buffers.
 The proposed fixed reduction starts after 150,000 and ends at 250,000, without
 using target observations. It changes only the declared schedule field in a
 future pair, retains every existing criterion and cap, and is not scientifically
-selected or launched. Complete the current pair first and require a separately
-frozen full-budget protocol for any later intervention.
+selected or launched. The complete paired preparation now also passes four
+additional protocol tests and reruns both affected archive tests. Its actual
+full-width CPU cases finish 40 updates each, retain both negative outcomes and
+verify portably without Torch; all six PNG and actual PDF figures are inspected.
+See the [paired validation](protocols/adamw_stability_20261002/schedule-pair-preparation-validation.json).
+The future scientific freezer requires both full normalizer budgets to be
+reviewed and committed, with terminal sessions consumed. A passing primary
+softmax control enters six independent confirmations; scheduling remains
+conditional on failure and a separately committed 300,000-update paired plan.
 The [harder-task summary](protocols/adamw_stability_20261002/harder-task-results.md)
 keeps the three complete single-case AdamW outcomes and their task/exposure
 differences together; it does not average interventions or form ineligible ratios.

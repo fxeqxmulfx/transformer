@@ -559,9 +559,21 @@ forged rates after rehashing. The actual scientific initial tensors/RNG match
 on CPU, with 436,104 parameters and all current 43 Python/nine Lean sources
 unchanged. This is preparation only: no scientific schedule is selected,
 frozen or launched. Finish/review/commit the current pair first; use the
-unchanged independent gate if its fresh softmax control passes. A further
-schedule adaptation is conditional on the complete results and still needs a
-frozen scientific launcher and full paired archive/recovery/curve validation.
+unchanged independent gate if its fresh softmax control passes.
+The conditional paired launcher/archive/recovery pipeline is now implemented
+and validated: four additional protocol tests plus the two affected archive
+tests pass (six tests, 5.403 seconds). A real full-width CPU pair completes
+40 updates per case, archives both negatives, verifies without Torch and
+retains actual rates. All six original PNG figures and six actual PDF renders
+are inspected. See the [paired receipt](protocols/adamw_stability_20261002/schedule-pair-preparation-validation.json).
+The actual scientific freezer rejects the incomplete live normalizer pair
+before schedule selection or GPU initialization. A future scientific pair
+requires both complete reviewed/committed normalizer results, a failed primary
+softmax criterion, then a separately committed full-budget manifest. A passing
+primary control instead enters six independent confirmations. Run any future
+plotting archive worker with `.venv/bin/python`; the system Python remains
+useful for verification without Torch. The current pair's frozen 43 Python
+and nine Lean sources remain unchanged.
 
 ```bash
 cat experiments/runs/adamw_stability_20261002/attention_mod193_fraction25_lr0003_budget300k/state.json

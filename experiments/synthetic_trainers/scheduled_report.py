@@ -4,6 +4,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from . import stability_report as original
+from . import stability_comparison as comparison
 from .attention_layout import digest
 from .scheduled_integrity import validate_logs
 
@@ -27,3 +28,13 @@ def save_run(directory, name, destination, *, render=True):
 def verify_archive(directory):
     with patch.object(original, "validate_logs", validate_logs):
         return original.verify_archive(directory)
+
+
+def assemble(paths, destination, *, render=True):
+    with patch.object(comparison, "verify_archive", verify_archive):
+        return comparison.assemble(paths, destination, render=render)
+
+
+def verify_comparison(directory):
+    with patch.object(comparison, "verify_archive", verify_archive):
+        return comparison.verify_comparison(directory)

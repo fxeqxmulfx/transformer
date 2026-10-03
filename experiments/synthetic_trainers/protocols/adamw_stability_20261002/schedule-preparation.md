@@ -68,9 +68,42 @@ The tiny CPU extension is implementation evidence, not a scientific extension.
 The actual mod-193 scientific initialization is also checked on CPU: 436,104
 parameters, identical initial tensors and RNG in both tagged paths. Every
 current 43 Python/nine Lean normalizer fingerprint remains unchanged. These
-checks are not evidence of improved learning or stability. A future scientific
-launcher, immutable paired manifest, all case/archive guards, recovery/time
-comparison, and complete-budget curve review are still required before launch.
+checks are not evidence of improved learning or stability.
+
+The [paired protocol](../../scheduled_protocol.py), prospective scientific
+freezer, serial launcher and NoTorch archive worker are now implemented. The
+freezer requires both full normalizer budgets, portable verification, actual
+PNG/PDF review, consumed terminal sessions and a committed result receipt.
+A passing primary softmax control goes to independent confirmation instead.
+The conditional scientific pair is constant first, then cosine, each fresh
+and capped at 300,000 total updates. It retains the full normalizer reference
+byte for byte, all 55 implementation fingerprints, seventeen trainer sources,
+nine Lean fingerprints and every frozen phase/persistence rule. The launcher
+also requires its prospective manifest to be committed before training.
+
+Four additional paired CPU tests pass. Completed cases are not retrained;
+changed sources or plans fail before training; an error before the second
+case retains the first complete archive. Rehashed derived recovery forgery
+is rejected. The passing-reference selection gate is checked before CUDA
+initialization. The two affected portable archive tests also pass again:
+six tests in 5.403 seconds, as recorded in the
+[paired validation](schedule-pair-preparation-validation.json).
+
+The [actual full-width CPU fixture](scheduled-pair-preparation/validation.json)
+completed both 40-update budgets, with all histories, gradient records, native
+diagnostics and neighboring probes. Its mod-7 vocabulary has 412,296 model
+parameters; the separate scientific mod-193 initialization above has 436,104.
+Both real negative CPU outcomes remain visible and have no scientific
+eligibility. The standalone archives and combined pair verify without Torch.
+All six original PNG figures and all six rendered actual PDFs were inspected.
+The paired figure includes the actual optimizer-group rate at every update,
+whole post-onset rates, episode durations and unavailable-onset annotations.
+These CPU fixtures do not measure scientific stability or speed.
+
+The actual scientific freezer also refuses the current incomplete normalizer
+pair before selecting a schedule, creating a manifest or initializing CUDA.
+No scientific schedule is selected, frozen or started. Finish, verify, review
+and commit both live normalizer results before considering this adaptation.
 The all-six independent benchmark and later architecture/complementary gates
 remain unchanged. Do not replace them with this preparation or the current
 single exploratory normalizer pair.

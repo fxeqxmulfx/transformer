@@ -1,0 +1,301 @@
+{
+  "complete_pair": true,
+  "scientific_run": false,
+  "scope": "CPU_schedule_pair_fixture; no_learning_result",
+  "cases": {
+    "adamw-constant": {
+      "name": "adamw-constant",
+      "complete_budget": true,
+      "phase_label": "does_not_meet_complete_persistent_target",
+      "memorization_plateau": null,
+      "persistent_final_performance": false,
+      "stable_grokking": false,
+      "tail_failures": 3,
+      "observed_target_training_seconds": null,
+      "observed_target_wall_seconds": null,
+      "eligible_target_training_seconds": null,
+      "eligible_target_wall_seconds": null,
+      "eligible_timing_support": 0,
+      "timing_scope": "first_long_joint_confirmation_with_complete_final_tail; no_between_sample_or_beyond_budget_guarantee",
+      "parameters": 412296,
+      "config": {
+        "model": "gptmini",
+        "optimizer": "adamw",
+        "prime": 7,
+        "train_fraction": 0.5,
+        "data_seed": 0,
+        "seed": 0,
+        "width": 128,
+        "layers": 2,
+        "heads": 4,
+        "steps": 40,
+        "batch_size": 4,
+        "batch_policy": "short_final",
+        "eval_every": 5,
+        "learning_rate": 0.0003,
+        "weight_decay": 0.1,
+        "warmup_steps": 10,
+        "target": 0.99,
+        "patience": 2,
+        "device": "cpu",
+        "learning_rate_schedule": "constant",
+        "anneal_start": 20,
+        "anneal_end": 30,
+        "final_rate_factor": 0.1
+      },
+      "final_train_accuracy": 0.5238095238095238,
+      "final_heldout_accuracy": 0.23809523809523808,
+      "final_heldout_answer_loss": 3.545639401390439,
+      "final_heldout_EOS_loss": 1.246144794282459,
+      "epochs_seen": 6.761904761904762,
+      "training_seconds": 0.3355605900142109,
+      "wall_seconds": 2.0102659549884265,
+      "diagnostic_seconds": 0.05088800302473828,
+      "peak_cuda_allocated_bytes": null,
+      "peak_cuda_reserved_bytes": null
+    },
+    "adamw-cosine-tail": {
+      "name": "adamw-cosine-tail",
+      "complete_budget": true,
+      "phase_label": "does_not_meet_complete_persistent_target",
+      "memorization_plateau": null,
+      "persistent_final_performance": false,
+      "stable_grokking": false,
+      "tail_failures": 3,
+      "observed_target_training_seconds": null,
+      "observed_target_wall_seconds": null,
+      "eligible_target_training_seconds": null,
+      "eligible_target_wall_seconds": null,
+      "eligible_timing_support": 0,
+      "timing_scope": "first_long_joint_confirmation_with_complete_final_tail; no_between_sample_or_beyond_budget_guarantee",
+      "parameters": 412296,
+      "config": {
+        "model": "gptmini",
+        "optimizer": "adamw",
+        "prime": 7,
+        "train_fraction": 0.5,
+        "data_seed": 0,
+        "seed": 0,
+        "width": 128,
+        "layers": 2,
+        "heads": 4,
+        "steps": 40,
+        "batch_size": 4,
+        "batch_policy": "short_final",
+        "eval_every": 5,
+        "learning_rate": 0.0003,
+        "weight_decay": 0.1,
+        "warmup_steps": 10,
+        "target": 0.99,
+        "patience": 2,
+        "device": "cpu",
+        "learning_rate_schedule": "cosine_tail",
+        "anneal_start": 20,
+        "anneal_end": 30,
+        "final_rate_factor": 0.1
+      },
+      "final_train_accuracy": 0.38095238095238093,
+      "final_heldout_accuracy": 0.0,
+      "final_heldout_answer_loss": 3.940703619094122,
+      "final_heldout_EOS_loss": 1.7520434061686199,
+      "epochs_seen": 6.761904761904762,
+      "training_seconds": 0.3798600441077724,
+      "wall_seconds": 0.674078031006502,
+      "diagnostic_seconds": 0.05413001288252417,
+      "peak_cuda_allocated_bytes": null,
+      "peak_cuda_reserved_bytes": null
+    }
+  },
+  "eligible_pair_support": 0,
+  "control_to_candidate_training_time_ratio": null,
+  "control_to_candidate_wall_time_ratio": null,
+  "eligible_scientific_calibration_recipes": [],
+  "final_heldout_accuracy_difference": -0.23809523809523808,
+  "campaign_architecture_claim_allowed": false,
+  "independent_confirmation_complete": false,
+  "all_failures_retained": true,
+  "recovery": {
+    "adamw-constant": {
+      "tail_and_episodes": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "criterion": {
+          "target": 0.99,
+          "heldout_ceiling": 0.1,
+          "plateau_steps": 5,
+          "plateau_observations": 2,
+          "confirmation_observations": 2,
+          "tail_steps": 10
+        },
+        "complete_budget": true,
+        "long_confirmation": null,
+        "frozen_persistent_final_performance": false,
+        "frozen_stable_grokking": false,
+        "metrics": {
+          "joint": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          },
+          "heldout": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          }
+        },
+        "scope": "descriptive_canonical_frequency_and_recovery; no_changed_gate_or_monotone_statistical_or_future_stability_claim"
+      },
+      "whole_post_onset_series": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "long_confirmation": null,
+        "scope": "fixed_grid_descriptive_post_long_onset_windows; partial_width_and_incomplete_windows_excluded_from_rates_and_changes",
+        "metrics": null
+      }
+    },
+    "adamw-cosine-tail": {
+      "tail_and_episodes": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "criterion": {
+          "target": 0.99,
+          "heldout_ceiling": 0.1,
+          "plateau_steps": 5,
+          "plateau_observations": 2,
+          "confirmation_observations": 2,
+          "tail_steps": 10
+        },
+        "complete_budget": true,
+        "long_confirmation": null,
+        "frozen_persistent_final_performance": false,
+        "frozen_stable_grokking": false,
+        "metrics": {
+          "joint": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          },
+          "heldout": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          }
+        },
+        "scope": "descriptive_canonical_frequency_and_recovery; no_changed_gate_or_monotone_statistical_or_future_stability_claim"
+      },
+      "whole_post_onset_series": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "long_confirmation": null,
+        "scope": "fixed_grid_descriptive_post_long_onset_windows; partial_width_and_incomplete_windows_excluded_from_rates_and_changes",
+        "metrics": null
+      }
+    }
+  },
+  "interpretation": "fixed_optimizer_schedule_adaptation; changing_LR_also_changes_per_update_decoupled_decay; no_isolated_cause_or_architecture_claim",
+  "statistical_scope": "one_frozen_initialization_and_split; new_six_case_confirmation_required_for_every_selected_recipe"
+}
