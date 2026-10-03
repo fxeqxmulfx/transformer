@@ -6,13 +6,14 @@ left for the schedule to set before each update, and PyTorch's default
 implementation (foreach on CUDA, a loop over tensors on the CPU). Every other
 rule is a direction optimizer (`.direction`), with the arithmetic of the
 historical optimizer zoo, and so is AdamW under a stage (`.stages`), which
-transforms the directions of a rule.
+transforms the directions of a rule. AMSGradMD (`.magnitude`) writes new
+values instead, and carries its own guard.
 """
 
 import torch
 
 from ...domain import optimizers
-from . import coordinate, direction, fisher, matrix, stages
+from . import coordinate, direction, fisher, magnitude, matrix, stages
 
 
 def parameter_groups(spec, model):
@@ -35,11 +36,14 @@ def adamw(spec, model, rate=None):
 RULES = {optimizers.SGD: direction.SGD, optimizers.AdamW: coordinate.AdamW, optimizers.AMSGradW: coordinate.AMSGradW,
          optimizers.Adam: coordinate.Adam, optimizers.AdamX: coordinate.AdamX, optimizers.AdaGrad: coordinate.AdaGrad,
          optimizers.AdamNC: coordinate.AdamNC, optimizers.RMSProp: coordinate.RMSProp, optimizers.Muon: matrix.Muon,
-         optimizers.Dash: matrix.Dash, optimizers.AdaFisher: fisher.AdaFisher}
+         optimizers.Dash: matrix.Dash, optimizers.AdaFisher: fisher.AdaFisher,
+         optimizers.AMSGradMD: magnitude.AMSGradMD}
 
 
 def rule(spec, model, rate, updates, seed):
-    """The direction optimizer of `spec`, with the stages it names applied innermost first."""
+    """The optimizer of `spec`, with the stages it names applied innermost first."""
+    if isinstance(spec, optimizers.Guarded) and isinstance(spec.base, optimizers.AMSGradMD):
+        return magnitude.AMSGradMD(spec.base, model, rate, spec.sigma)
     if isinstance(spec, optimizers.Guarded):
         optimizer = rule(spec.base, model, rate, updates, seed)
         optimizer.stages.append(stages.Guard(spec.sigma, optimizer))
@@ -57,8 +61,8 @@ def rule(spec, model, rate, updates, seed):
 
 
 def report(optimizer):
-    """What the optimizer's stages counted; nothing for a native optimizer."""
-    return optimizer.report() if isinstance(optimizer, direction.DirectionOptimizer) else {}
+    """What the optimizer and its stages counted; nothing for a native optimizer."""
+    return optimizer.report() if hasattr(optimizer, "report") else {}
 
 
 def build_optimizer(spec, model, rate=None, updates=None, seed=None):

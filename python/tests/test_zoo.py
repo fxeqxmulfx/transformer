@@ -1,4 +1,4 @@
-"""The direction optimizers reproduce the historical optimizer zoo on the CPU.
+"""The optimizers reproduce the historical optimizer zoo on the CPU.
 
 Golden records: the `runs` of `fixtures/legacy_zoo.json`, written by the
 `train_one` of the all24 benchmark and of the AMSGrad extensions with the step
@@ -14,11 +14,14 @@ the exception. It is averaged as the modular trainer averaged it,
 MAGMA over Adam and over AdamW's direction reproduce their runs bit for bit,
 and under their own they part in the last bits, which Adam's normalization
 amplifies to 3.1e-5 relative over 40 updates (AMSGrad 1.3e-5, MAGMA over
-AdamW 8.7e-8). The zoo's bias-corrected AdamW is PyTorch's, within 9e-8. They
-are held to a relative 1e-4 of every observation, with the same decisions;
-MAGMA over Adam, run at three times Adam's rate, amplifies its last bits to
-2.2e-3 and is held to 3e-3. A rule under stages reports what they counted,
-the guard's acceptance and MAGMA's masks and scales, as its run did.
+AdamW 8.7e-8). The zoo's bias-corrected AdamW is PyTorch's, within 9e-8, and
+the AMSGradW of the extensions, which subtracts its decay apart from the step,
+is lab's within 1.1e-5. They are held to a relative 1e-4 of every
+observation, with the same decisions; MAGMA over Adam, run at three times
+Adam's rate, amplifies its last bits to 2.2e-3 and is held to 3e-3. A rule
+under stages reports what they counted, the guard's acceptance and MAGMA's
+masks and scales, and AMSGradMD the factorizations it ends with and its
+guard's counts, as its run did.
 """
 
 import json
@@ -31,8 +34,8 @@ import torch
 
 from lab.domain.spec import swap
 from lab.domain.training import Checkpoint
-from lab.dsl import (EVD, SGD, AdaFisher, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradW, Chebyshev, CoupledNewton,
-                     Dash, Geometric, Guarded, Inverse, InverseSqrt, Magma, Muon, NewtonDB, RMSProp)
+from lab.dsl import (EVD, SGD, AdaFisher, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradMD, AMSGradW, Chebyshev,
+                     CoupledNewton, Dash, Geometric, Guarded, Inverse, InverseSqrt, Magma, Muon, NewtonDB, RMSProp)
 from lab.infrastructure.nn import build_model
 from lab.infrastructure.nn.legacy import rename
 from lab.infrastructure.optim import build_optimizer, coordinate
@@ -65,6 +68,8 @@ EXACT = {
     "magma_rmsprop": lambda rate: Magma(RMSProp(lr=rate)),
     "magma_muon": lambda rate: Magma(Muon(lr=rate)),
     "magma_sgd": lambda rate: Magma(SGD(lr=rate)),
+    "amsgradmd": lambda rate: AMSGradMD(lr=rate),
+    "amsgradmd_guarded": lambda rate: Guarded(AMSGradMD(lr=rate, direction_rate=3e-4), sigma=0.25),
 }
 CLOSE = {
     "adam": lambda rate: Adam(lr=rate),
@@ -72,6 +77,7 @@ CLOSE = {
     "adamw": lambda rate: AdamW(lr=rate, betas=BETAS, weight_decay=0.01),
     "magma_adam": lambda rate: Magma(Adam(lr=rate)),
     "magma_adamw": lambda rate: Magma(AdamW(lr=rate, betas=BETAS, weight_decay=0.01)),
+    "amsgradw": lambda rate: AMSGradW(lr=rate, betas=BETAS, weight_decay=0.01),
 }
 # Relative distances other than 1e-4 that a rule of other arithmetic keeps from its run.
 TOLERANCE = {"magma_adam": 3e-3}
@@ -83,12 +89,20 @@ def recipe(name, recipes):
 
 
 def stages_agree(test, golden, result):
-    """The guard's acceptance and MAGMA's report are the run's."""
+    """The guard's acceptance, MAGMA's report and the factorizations AMSGradMD ends with are the run's."""
     if golden["guard_acceptance"] is not None:
         test.assertEqual(result["optimizer"]["guard"]["acceptance"], golden["guard_acceptance"])
     if golden["magma"] is not None:
         blocks = {rename(name): block for name, block in golden["magma"]["blocks"].items()}
         test.assertEqual(result["optimizer"]["magma"], {**golden["magma"], "blocks": blocks})
+    diagnostics = golden["optimizer_diagnostics"]
+    if diagnostics is not None and diagnostics["md_names"]:
+        matrices = {rename(name): matrix for name, matrix in diagnostics["matrices"].items()}
+        test.assertEqual(result["optimizer"]["magnitude"], matrices)
+        if diagnostics["accepted_steps"] is not None:
+            guard = result["optimizer"]["guard"]
+            test.assertEqual((guard["accepted"], guard["halved"]),
+                             (diagnostics["accepted_steps"], diagnostics["halved_matrix_steps"]))
 
 
 def historical_average(m, gradient, beta):
@@ -117,6 +131,12 @@ class ZooTests(unittest.TestCase):
         model = build_model(historical(FIXTURE["runs"]["dash_evd"]).model, 65, 0)
         with self.assertRaisesRegex(ValueError, "eigendecomposition"):
             build_optimizer(Dash(lr=1e-3, solver=EVD()), model, rate=torch.zeros(()))
+
+    def test_only_a_guarded_magnitude_direction_rule_moves_its_directions_at_a_rate_of_their_own(self):
+        model = build_model(historical(FIXTURE["runs"]["amsgradmd"]).model, 65, 0)
+        with self.assertRaisesRegex(ValueError, "direction_rate"):
+            build_optimizer(AMSGradMD(lr=0.3, direction_rate=3e-4), model)
+        build_optimizer(Guarded(AMSGradMD(lr=0.3, direction_rate=3e-4), sigma=0.25), model)
 
     def test_an_interrupted_run_resumes_onto_the_same_records(self):
         golden, experiment = recipe("adamnc", EXACT)

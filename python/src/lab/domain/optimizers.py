@@ -243,7 +243,8 @@ class Guarded(Optimizer):
     kept when <g, d> >= sigma |g|^2 and |d| <= |g|, and the gradient g is used
     otherwise. The rule's state advances either way, so a rule whose every
     direction is rejected trains as SGD
-    (`Transformer.OptimizerBenchmark.guardedBatchRun_eq_sgd`).
+    (`Transformer.OptimizerBenchmark.guardedBatchRun_eq_sgd`). Over
+    `AMSGradMD`, which writes new values, d is their displacement over lr.
     """
     base: Optimizer
     sigma: float = 0.5
@@ -283,6 +284,8 @@ class Magma(Optimizer):
     def check(self):
         require_kind(self.base, Optimizer, "base")
         require(not any(isinstance(base, Magma) for base in bases(self)), "MAGMA applies once")
+        require(not any(isinstance(base, AMSGradMD) for base in bases(self)),
+                "MAGMA damps the directions of a rule, and AMSGradMD writes new values")
         require(math.isfinite(self.tau) and self.tau > 0, "MAGMA's temperature is finite and positive")
         require(0 < self.survival <= 1, "MAGMA's survival probability lies in (0, 1]")
         require(self.seed is None or self.seed >= 0, "Seeds are nonnegative")
@@ -403,3 +406,42 @@ class AdaFisher(Optimizer):
         check_rate(self.lr)
         require(0 <= self.beta < 1 and 0 < self.gamma <= 1 and self.damping > 0 and self.weight_decay >= 0,
                 "AdaFisher needs beta in [0, 1), gamma in (0, 1], a positive damping and a nonnegative decay")
+
+
+@dataclass(frozen=True)
+class AMSGradMD(Optimizer):
+    """AMSGrad on the magnitude-direction factorization of the hidden matrices.
+
+    Source: arXiv:2606.25971v2, Section 3.1 and Appendix A, Algorithm 2, with
+    AMSGrad as arXiv:1904.03590v4, Algorithm 1 states it;
+    `Transformer.MagnitudeDirection.amsgradMDProposal`. A hidden matrix W, a
+    weight of the blocks, is stored as softplus(r)_i D_ij softplus(c)_j, with
+    raw gains starting at softplus^-1(1) and D on the sphere of radius |W_0|.
+    An update moves D at `lr`, and r and c at `gain_rate`, each by an AMSGrad
+    of its own on the gradients at the old factors, projects D back onto the
+    sphere (`matrixProject`, zero at zero) and writes W fused from the three;
+    every other parameter moves by AMSGrad at `auxiliary_rate`.
+
+    Under `Guarded`, the benchmark's extension `checkedProposal`, which the
+    manuscript does not have, D may move at a `direction_rate` of its own: the
+    proposal's displacement over `lr` is the direction the guard checks, with
+    every value finite and no matrix zero, and a rejected proposal becomes a
+    gradient step at `lr`, halved for a matrix it would zero, with the row
+    gains rebalanced onto the sphere (`rebalanceStorage`). The manuscript is
+    not among papers/.
+    """
+    lr: float
+    direction_rate: float | None = None
+    gain_rate: float = 1e-3
+    auxiliary_rate: float = 3e-4
+    betas: tuple[float, float] = (0.9, 0.999)
+    eps: float = 1e-8
+
+    def check(self):
+        for rate in (self.lr, self.gain_rate, self.auxiliary_rate):
+            check_rate(rate)
+        if self.direction_rate is not None:
+            check_rate(self.direction_rate)
+        require(len(self.betas) == 2 and 0 <= self.betas[0] < 1 and 0 <= self.betas[1] <= 1,
+                "AMSGradMD needs beta1 in [0, 1) and beta2 in [0, 1]")
+        require(self.eps > 0, "Epsilon must be positive")

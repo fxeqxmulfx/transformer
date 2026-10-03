@@ -12,8 +12,8 @@ import unittest
 import torch
 
 from lab.domain.model import Softmax, Sparsemax
-from lab.domain.optimizers import (SGD, AdaFisher, AdamNC, AdamW, AdamX, AMSGradW, Chebyshev, Dash, Guarded, Magma,
-                                   Muon)
+from lab.domain.optimizers import (SGD, AdaFisher, AdamNC, AdamW, AdamX, AMSGradMD, AMSGradW, Chebyshev, Dash,
+                                   Guarded, Magma, Muon)
 from lab.domain.spec import describe, substitute, swap
 from lab.domain.training import Checkpoint, Cosine, CudaGraph, Diagnostics, Evaluate
 from lab.infrastructure.engine.graphs import GraphStepper
@@ -63,6 +63,9 @@ def experiments():
             "adafisherw": swap(swap(base, "diagnostics", TRACE), "optimizer", AdaFisher(lr=1e-3, weight_decay=0.01)),
             "magma-adamw": swap(swap(base, "diagnostics", TRACE), "optimizer",
                                 Magma(AdamW(lr=1e-3, betas=(0.9, 0.999), weight_decay=0.01))),
+            "amsgradmd": swap(gradients, "optimizer", AMSGradMD(lr=3e-3)),
+            "amsgradmd-guarded": swap(swap(base, "diagnostics", TRACE), "optimizer",
+                                      Guarded(AMSGradMD(lr=0.3, direction_rate=3e-4), sigma=0.25)),
             "text": swap(swap(text(TEXT["runs"]["sparsemax"]), "execution", CudaGraph()), "diagnostics", TRACE)}
 
 
@@ -112,7 +115,7 @@ class GraphTests(unittest.TestCase):
 
     def test_an_interrupted_graph_run_resumes_onto_the_same_records(self):
         for name, interrupted in (("sampled", 21), ("text", 25), ("adamx", 21), ("muon-guarded", 21),
-                                  ("adafisherw", 21), ("magma-adamw", 21)):
+                                  ("adafisherw", 21), ("magma-adamw", 21), ("amsgradmd-guarded", 21)):
             experiment = swap(experiments()[name], "checkpoint", Checkpoint(every=10))
 
             def interrupt(row):
