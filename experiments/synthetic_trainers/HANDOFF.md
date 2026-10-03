@@ -1,10 +1,43 @@
 # Synthetic trainer and paper reproduction handoff
 
-State recorded on 2026-10-02. Run commands from the repository root.
+State updated on 2026-10-03 (UTC). Run commands from the repository root.
 Read [AGENTS.md](../../AGENTS.md), [PLAN.md](PLAN.md), and
 [STUDIES.md](STUDIES.md) before continuing.
 
 ## Current state
+
+The active follow-up uses **native AdamW as primary**, following the user's
+switch. The complete sparsemax-first/softmax pair finishes 300,000 updates
+per case and is reviewed/committed at `8c6f1ad`: final held-out is 34.056563%
+for sparsemax and 100% for softmax, but strict final-window failures are
+201/201 and 2/201. All six sampled softmax episodes recover; finite onset
+frequencies are nonmonotone. Neither case opens the stable benchmark gate.
+See the [full comparison](protocols/adamw_stability_20261002/attention-pair-result.md).
+
+The [conditional schedule pair](protocols/adamw_stability_20261002/scheduled-pair-freeze.md)
+is now frozen at `d8ccb18` and launched at `22b060f`. Trainer **PID 168237 /
+session 11503** and venv archive worker **PID 168332 / session 60201** are live;
+constant softmax runs first, cosine-tail follows automatically. Both full
+budgets remain 300,000 updates. Keep its **55 Python / seventeen training /
+nine Lean / two paper / audit pins immutable**, retain every failure and
+complete/review/commit both cases and pair. Consume each real terminal result
+exactly once after completion; do not poll the retired normalizer sessions.
+The scientific goal stays active during healthy GPU execution. A passing
+recipe still requires all six fresh crossed confirmations before scientific
+architecture and complementary studies. Preparation fixtures open no gate.
+
+The latest complete CPU suite passes **288 tests in 90.250 seconds** after the
+complementary normalizer bridge; its [full log](protocols/adamw_stability_20261002/complementary-attention-full-CPU-suite-20261003-final.log)
+and [source receipt](protocols/adamw_stability_20261002/complementary-attention-preparation-validation.json)
+remain archived. Subsequent result/freeze/launch changes add read-only evidence,
+portable full-archive checks and documentation. No Lean source changes occur.
+Lean's [projection theorem](../../src/Transformer/GPTMini/Convex/Attention.lean#L96)
+holds for fixed scores at the original scale; it establishes neither convex
+joint training nor optimizer/generalization guarantees. The
+[one-neuron CE counterexample](../../src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L60)
+has its stated FFN scope, not a proved full-GPT training result.
+
+## Completed reproduction campaign
 
 All scheduled training in the previous reproduction campaign has finished. Its
 serial driver completed with exit code 0; that campaign has no job to resume.
@@ -19,7 +52,7 @@ The suite has 17 algorithmic tasks and 37 variants inspired by MQAR, RASP,
 RASP-L, and C-RASP, plus a separate random-sequence memorization control.
 Memorization/double-descent profiles, fixed label noise, paired size/data
 sweeps, free answer generation, and novel-ID/length-transfer diagnostics exist.
-The full CPU suite passed 191 tests. Checks cover arithmetic oracles, causal
+That historical CPU suite passed 191 tests. Checks cover arithmetic oracles, causal
 masking for both models, exact optimizer continuation, independent least-squares
 solutions, campaign integrity, failed targets, phase diagnostics, and archives.
 
