@@ -611,6 +611,17 @@ This is implementation preparation: no scientific architecture campaign is
 selected, frozen or launched, and both negative CPU confirmation references
 are rejected by the actual all-six scientific benchmark gate.
 
+After both new native adapters, the entire current synthetic-trainer CPU suite
+passes 280 tests in 68.501 seconds. CUDA is hidden only from the test subprocess;
+the live scientific trainer/archive worker continue unchanged. The complete
+[log](protocols/adamw_stability_20261002/full-CPU-suite-20261003.log) has all 280
+passing status lines and no failures, errors or skips. The
+[receipt](protocols/adamw_stability_20261002/full-CPU-suite-validation-20261003.json)
+pins the current production/driver and test files, with active 43/nine Lean,
+prepared 55, both 62 and new 66-source sets/audit unchanged. This supersedes
+earlier CPU-suite counts as the current test result. It supplies no new GPU
+learning outcome, benchmark qualification or Lean full-tree audit.
+
 ```bash
 cat experiments/runs/adamw_stability_20261002/attention_mod193_fraction25_lr0003_budget300k/state.json
 cat experiments/runs/adamw_stability_20261002/bootstrap/attention-pair-archive-worker.json

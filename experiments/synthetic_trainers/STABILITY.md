@@ -483,3 +483,10 @@ All test sequence accuracies are zero; implementation agreement supplies no
 scientific learning or transfer evidence. The generic defaults and all active
 modular/prepared confirmation source fingerprints remain unchanged. Scientific
 complementary selection still follows the all-six and architecture gates.
+
+The entire current synthetic-trainer CPU suite subsequently passes 280 tests
+in 68.501 seconds, with CUDA hidden only from that test subprocess. The
+[complete log and source receipt](protocols/adamw_stability_20261002/full-CPU-suite-validation-20261003.json)
+retain every passing test and unchanged active/prepared source set. This is
+the current integrated CPU check, not a GPU learning or architecture result;
+all scientific gates and the 300,000-update cap remain unchanged.
