@@ -1,0 +1,16 @@
+{
+  "files": {
+    "diagnostic-metrics.csv": "3eedd83cb35d378a30c48f1f899da2f6d421794fc4d7cff8d7a09f26ab3ea42a",
+    "diagnostics.jsonl": "0b4a73b127309a915ba629d1ce5151e65ed95b784da6745c0c0930069c84753b",
+    "gradient-metrics.csv": "b211ec01862212e2337062bed012f4aa256c4b5a97fb56f42c6945d531591519",
+    "gradients.jsonl": "064b06934231965642ae77f3c541d1a6d2bc3437e7e7b4653e38eb729e4033c7",
+    "measurements.json": "f14dc5fb10ffa0f5afd99ac465f3b79f26736f1edafc4373bdd6c7345015fe1a",
+    "metrics.csv": "974de101c79abfd0e3cf29256e999d701fbf635e1b3b26f815392925df44dc1b",
+    "neighbor-metrics.csv": "e61d593c3d395f5f33ec7f1007dd17d93fca66ce2e5f2cfa0deeae32c4a831b8",
+    "plan.json": "3e4bac1be6a4ee924ac8d9135bff413f9df2ed94feaf9f138a4ff0e3dd2eb96e",
+    "probes.jsonl": "2efbac456fb845a1f49bcec054be0aed8a373451cab960e557bf7413309cbb37",
+    "summary.json": "0c1baee1a8a3cf6e36e3fe0b01b0a9a742a5383574c5170a199e21d3ac6bb0cd"
+  },
+  "raw_checkpoint_sha256": "04d28971fc3ebad2f2fe5c68442031623388037757ec8cae3812a81ad68bb00e",
+  "checkpoint_scope": "weights_and_optimizer_are_local_resources; not_part_of_this_portable_archive"
+}

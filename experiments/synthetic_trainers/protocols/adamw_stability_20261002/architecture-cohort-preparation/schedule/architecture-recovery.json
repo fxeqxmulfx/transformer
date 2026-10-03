@@ -1,0 +1,1084 @@
+{
+  "recovery": {
+    "seed-7-data-4-softmax": {
+      "tail_and_episodes": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "criterion": {
+          "target": 0.99,
+          "heldout_ceiling": 0.1,
+          "plateau_steps": 5,
+          "plateau_observations": 2,
+          "confirmation_observations": 2,
+          "tail_steps": 10
+        },
+        "complete_budget": true,
+        "long_confirmation": null,
+        "frozen_persistent_final_performance": false,
+        "frozen_stable_grokking": false,
+        "metrics": {
+          "joint": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          },
+          "heldout": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          }
+        },
+        "scope": "descriptive_canonical_frequency_and_recovery; no_changed_gate_or_monotone_statistical_or_future_stability_claim"
+      },
+      "whole_post_onset_series": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "long_confirmation": null,
+        "scope": "fixed_grid_descriptive_post_long_onset_windows; partial_width_and_incomplete_windows_excluded_from_rates_and_changes",
+        "metrics": null
+      }
+    },
+    "seed-7-data-4-sparsemax": {
+      "tail_and_episodes": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "criterion": {
+          "target": 0.99,
+          "heldout_ceiling": 0.1,
+          "plateau_steps": 5,
+          "plateau_observations": 2,
+          "confirmation_observations": 2,
+          "tail_steps": 10
+        },
+        "complete_budget": true,
+        "long_confirmation": null,
+        "frozen_persistent_final_performance": false,
+        "frozen_stable_grokking": false,
+        "metrics": {
+          "joint": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          },
+          "heldout": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          }
+        },
+        "scope": "descriptive_canonical_frequency_and_recovery; no_changed_gate_or_monotone_statistical_or_future_stability_claim"
+      },
+      "whole_post_onset_series": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "long_confirmation": null,
+        "scope": "fixed_grid_descriptive_post_long_onset_windows; partial_width_and_incomplete_windows_excluded_from_rates_and_changes",
+        "metrics": null
+      }
+    },
+    "seed-8-data-4-sparsemax": {
+      "tail_and_episodes": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "criterion": {
+          "target": 0.99,
+          "heldout_ceiling": 0.1,
+          "plateau_steps": 5,
+          "plateau_observations": 2,
+          "confirmation_observations": 2,
+          "tail_steps": 10
+        },
+        "complete_budget": true,
+        "long_confirmation": null,
+        "frozen_persistent_final_performance": false,
+        "frozen_stable_grokking": false,
+        "metrics": {
+          "joint": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          },
+          "heldout": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          }
+        },
+        "scope": "descriptive_canonical_frequency_and_recovery; no_changed_gate_or_monotone_statistical_or_future_stability_claim"
+      },
+      "whole_post_onset_series": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "long_confirmation": null,
+        "scope": "fixed_grid_descriptive_post_long_onset_windows; partial_width_and_incomplete_windows_excluded_from_rates_and_changes",
+        "metrics": null
+      }
+    },
+    "seed-8-data-4-softmax": {
+      "tail_and_episodes": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "criterion": {
+          "target": 0.99,
+          "heldout_ceiling": 0.1,
+          "plateau_steps": 5,
+          "plateau_observations": 2,
+          "confirmation_observations": 2,
+          "tail_steps": 10
+        },
+        "complete_budget": true,
+        "long_confirmation": null,
+        "frozen_persistent_final_performance": false,
+        "frozen_stable_grokking": false,
+        "metrics": {
+          "joint": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          },
+          "heldout": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          }
+        },
+        "scope": "descriptive_canonical_frequency_and_recovery; no_changed_gate_or_monotone_statistical_or_future_stability_claim"
+      },
+      "whole_post_onset_series": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "long_confirmation": null,
+        "scope": "fixed_grid_descriptive_post_long_onset_windows; partial_width_and_incomplete_windows_excluded_from_rates_and_changes",
+        "metrics": null
+      }
+    },
+    "seed-9-data-4-softmax": {
+      "tail_and_episodes": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "criterion": {
+          "target": 0.99,
+          "heldout_ceiling": 0.1,
+          "plateau_steps": 5,
+          "plateau_observations": 2,
+          "confirmation_observations": 2,
+          "tail_steps": 10
+        },
+        "complete_budget": true,
+        "long_confirmation": null,
+        "frozen_persistent_final_performance": false,
+        "frozen_stable_grokking": false,
+        "metrics": {
+          "joint": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          },
+          "heldout": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          }
+        },
+        "scope": "descriptive_canonical_frequency_and_recovery; no_changed_gate_or_monotone_statistical_or_future_stability_claim"
+      },
+      "whole_post_onset_series": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "long_confirmation": null,
+        "scope": "fixed_grid_descriptive_post_long_onset_windows; partial_width_and_incomplete_windows_excluded_from_rates_and_changes",
+        "metrics": null
+      }
+    },
+    "seed-9-data-4-sparsemax": {
+      "tail_and_episodes": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "criterion": {
+          "target": 0.99,
+          "heldout_ceiling": 0.1,
+          "plateau_steps": 5,
+          "plateau_observations": 2,
+          "confirmation_observations": 2,
+          "tail_steps": 10
+        },
+        "complete_budget": true,
+        "long_confirmation": null,
+        "frozen_persistent_final_performance": false,
+        "frozen_stable_grokking": false,
+        "metrics": {
+          "joint": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          },
+          "heldout": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          }
+        },
+        "scope": "descriptive_canonical_frequency_and_recovery; no_changed_gate_or_monotone_statistical_or_future_stability_claim"
+      },
+      "whole_post_onset_series": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "long_confirmation": null,
+        "scope": "fixed_grid_descriptive_post_long_onset_windows; partial_width_and_incomplete_windows_excluded_from_rates_and_changes",
+        "metrics": null
+      }
+    },
+    "seed-7-data-5-sparsemax": {
+      "tail_and_episodes": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "criterion": {
+          "target": 0.99,
+          "heldout_ceiling": 0.1,
+          "plateau_steps": 5,
+          "plateau_observations": 2,
+          "confirmation_observations": 2,
+          "tail_steps": 10
+        },
+        "complete_budget": true,
+        "long_confirmation": null,
+        "frozen_persistent_final_performance": false,
+        "frozen_stable_grokking": false,
+        "metrics": {
+          "joint": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          },
+          "heldout": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          }
+        },
+        "scope": "descriptive_canonical_frequency_and_recovery; no_changed_gate_or_monotone_statistical_or_future_stability_claim"
+      },
+      "whole_post_onset_series": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "long_confirmation": null,
+        "scope": "fixed_grid_descriptive_post_long_onset_windows; partial_width_and_incomplete_windows_excluded_from_rates_and_changes",
+        "metrics": null
+      }
+    },
+    "seed-7-data-5-softmax": {
+      "tail_and_episodes": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "criterion": {
+          "target": 0.99,
+          "heldout_ceiling": 0.1,
+          "plateau_steps": 5,
+          "plateau_observations": 2,
+          "confirmation_observations": 2,
+          "tail_steps": 10
+        },
+        "complete_budget": true,
+        "long_confirmation": null,
+        "frozen_persistent_final_performance": false,
+        "frozen_stable_grokking": false,
+        "metrics": {
+          "joint": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          },
+          "heldout": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          }
+        },
+        "scope": "descriptive_canonical_frequency_and_recovery; no_changed_gate_or_monotone_statistical_or_future_stability_claim"
+      },
+      "whole_post_onset_series": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "long_confirmation": null,
+        "scope": "fixed_grid_descriptive_post_long_onset_windows; partial_width_and_incomplete_windows_excluded_from_rates_and_changes",
+        "metrics": null
+      }
+    },
+    "seed-8-data-5-softmax": {
+      "tail_and_episodes": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "criterion": {
+          "target": 0.99,
+          "heldout_ceiling": 0.1,
+          "plateau_steps": 5,
+          "plateau_observations": 2,
+          "confirmation_observations": 2,
+          "tail_steps": 10
+        },
+        "complete_budget": true,
+        "long_confirmation": null,
+        "frozen_persistent_final_performance": false,
+        "frozen_stable_grokking": false,
+        "metrics": {
+          "joint": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          },
+          "heldout": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          }
+        },
+        "scope": "descriptive_canonical_frequency_and_recovery; no_changed_gate_or_monotone_statistical_or_future_stability_claim"
+      },
+      "whole_post_onset_series": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "long_confirmation": null,
+        "scope": "fixed_grid_descriptive_post_long_onset_windows; partial_width_and_incomplete_windows_excluded_from_rates_and_changes",
+        "metrics": null
+      }
+    },
+    "seed-8-data-5-sparsemax": {
+      "tail_and_episodes": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "criterion": {
+          "target": 0.99,
+          "heldout_ceiling": 0.1,
+          "plateau_steps": 5,
+          "plateau_observations": 2,
+          "confirmation_observations": 2,
+          "tail_steps": 10
+        },
+        "complete_budget": true,
+        "long_confirmation": null,
+        "frozen_persistent_final_performance": false,
+        "frozen_stable_grokking": false,
+        "metrics": {
+          "joint": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          },
+          "heldout": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          }
+        },
+        "scope": "descriptive_canonical_frequency_and_recovery; no_changed_gate_or_monotone_statistical_or_future_stability_claim"
+      },
+      "whole_post_onset_series": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "long_confirmation": null,
+        "scope": "fixed_grid_descriptive_post_long_onset_windows; partial_width_and_incomplete_windows_excluded_from_rates_and_changes",
+        "metrics": null
+      }
+    },
+    "seed-9-data-5-sparsemax": {
+      "tail_and_episodes": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "criterion": {
+          "target": 0.99,
+          "heldout_ceiling": 0.1,
+          "plateau_steps": 5,
+          "plateau_observations": 2,
+          "confirmation_observations": 2,
+          "tail_steps": 10
+        },
+        "complete_budget": true,
+        "long_confirmation": null,
+        "frozen_persistent_final_performance": false,
+        "frozen_stable_grokking": false,
+        "metrics": {
+          "joint": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          },
+          "heldout": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          }
+        },
+        "scope": "descriptive_canonical_frequency_and_recovery; no_changed_gate_or_monotone_statistical_or_future_stability_claim"
+      },
+      "whole_post_onset_series": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "long_confirmation": null,
+        "scope": "fixed_grid_descriptive_post_long_onset_windows; partial_width_and_incomplete_windows_excluded_from_rates_and_changes",
+        "metrics": null
+      }
+    },
+    "seed-9-data-5-softmax": {
+      "tail_and_episodes": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "criterion": {
+          "target": 0.99,
+          "heldout_ceiling": 0.1,
+          "plateau_steps": 5,
+          "plateau_observations": 2,
+          "confirmation_observations": 2,
+          "tail_steps": 10
+        },
+        "complete_budget": true,
+        "long_confirmation": null,
+        "frozen_persistent_final_performance": false,
+        "frozen_stable_grokking": false,
+        "metrics": {
+          "joint": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          },
+          "heldout": {
+            "post_long_onset_observations": 0,
+            "post_long_onset_failed_observations": 0,
+            "post_long_onset_failure_fraction": null,
+            "episodes_after_long_onset": [],
+            "episode_count": null,
+            "last_failed_observation": 40,
+            "updates_since_last_failed_observation": 0,
+            "final_target_streak": {
+              "start": null,
+              "end": null,
+              "observations": 0,
+              "sampled_span_steps": 0
+            },
+            "fixed_tail_windows": [
+              {
+                "start": 30,
+                "stop": 40,
+                "stop_inclusive": true,
+                "observations": 3,
+                "expected_observations": 3,
+                "complete_window": true,
+                "failed_observations": 3,
+                "failure_fraction": 1.0,
+                "new_episode_onsets": null,
+                "episode_onsets_per_10000_updates": null
+              }
+            ],
+            "adjacent_complete_window_changes": []
+          }
+        },
+        "scope": "descriptive_canonical_frequency_and_recovery; no_changed_gate_or_monotone_statistical_or_future_stability_claim"
+      },
+      "whole_post_onset_series": {
+        "through_update": 40,
+        "frozen_budget": 40,
+        "window_steps": 10000,
+        "long_confirmation": null,
+        "scope": "fixed_grid_descriptive_post_long_onset_windows; partial_width_and_incomplete_windows_excluded_from_rates_and_changes",
+        "metrics": null
+      }
+    }
+  }
+}

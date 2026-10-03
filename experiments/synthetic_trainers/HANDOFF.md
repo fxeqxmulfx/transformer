@@ -664,6 +664,19 @@ control. The pair and scientific goal remain incomplete. Complete, review and
 commit that full control/pair, consume both live handles, then follow its
 unchanged primary confirmation or conditional schedule gate.
 
+The [full architecture-cohort pipeline](protocols/adamw_stability_20261002/architecture-cohort-preparation.md)
+is separately prepared, preserving the selected native AdamW schedule and all
+six primary-confirmation gates. Two real CPU six-pair cohorts finish 24 cases /
+720 updates; all native checkpoints reload finitely, every negative case remains,
+and their portable reports verify without Torch. Four PNGs/actual PDFs are
+reviewed and explicitly marked CPU fixtures. Four targeted checks and the
+entire current 284-test CPU suite pass; the final integrated run costs 90.639
+seconds, with its full log and source fingerprints retained. Actual scientific
+CLI guards reject both negative six-case references and CPU plans. The new
+70-source/nineteen-training-source prototype leaves active 43/nine and prepared
+55/both 62/66-source sets/audit unchanged. No scientific architecture is selected
+or launched; finish the primary control/pair before any new scientific freeze.
+
 ```bash
 cat experiments/runs/adamw_stability_20261002/attention_mod193_fraction25_lr0003_budget300k/state.json
 cat experiments/runs/adamw_stability_20261002/bootstrap/attention-pair-archive-worker.json

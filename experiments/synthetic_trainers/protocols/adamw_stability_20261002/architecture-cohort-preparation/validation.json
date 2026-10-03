@@ -1,0 +1,14 @@
+{
+  "recorded_utc": "2026-10-03T03:00:31.170649+00:00",
+  "CPU_fixture": true,
+  "scientific_run": false,
+  "scientific_architecture_selected": false,
+  "complete_CPU_cohorts": 2,
+  "complete_CPU_pairs": 12,
+  "complete_CPU_runs": 24,
+  "total_CPU_updates": 720,
+  "all_native_checkpoints_independently_loaded_and_finite": true,
+  "audit_optimizer_updates_performed": 0,
+  "CUDA_initialized": false,
+  "scope": "real_CPU_pipeline_preparation; no_scientific_learning_architecture_or_benchmark_claim"
+}

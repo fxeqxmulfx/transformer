@@ -523,3 +523,14 @@ both PNG/actual PDF figures are verified and reviewed. Fresh paired softmax
 is running automatically under the original trainer/archive-worker handles.
 The pair, all-six primary gate and subsequent scientific studies remain
 incomplete. No criterion is relaxed or future update budget enlarged.
+
+The [full native paired-cohort preparation](protocols/adamw_stability_20261002/architecture-cohort-preparation.md)
+now executes all twelve held-out control/candidate cases with unchanged selected
+rates, common parameter initialization, alternating order and full-budget native
+continuation. Two actual negative CPU cohorts retain 24 completed cases / 720
+updates, independent finite checkpoint audits, portable all-case outcomes and
+four reviewed PNG/actual PDFs. Four targeted tests and the final entire 284-test
+CPU suite pass; actual scientific CLI guards reject negative benchmarks/CPU
+plans. No scientific architecture selection or benchmark gate is opened.
+All existing frozen source/proof sets are intact; the live scientific softmax
+control and complete paired review remain the immediate next action.

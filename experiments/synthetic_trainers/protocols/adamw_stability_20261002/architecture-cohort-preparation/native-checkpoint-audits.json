@@ -1,0 +1,390 @@
+{
+  "normalizer": {
+    "seed-7-data-4-softmax": {
+      "checkpoint_sha256": "cde49e7ab65a57247d06c78518147370f28738d6b3190eedbb167f5ad1eacca6",
+      "completed_updates": 20,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 0.0003,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-7-data-4-sparsemax": {
+      "checkpoint_sha256": "2ab96b144090b06fa3294c45819feb4238a2b87ab5b5c85f6cdcb24c3479635b",
+      "completed_updates": 20,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 0.0003,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-8-data-4-sparsemax": {
+      "checkpoint_sha256": "caf27a7c963b2e95a19d24498ba59a13e6c06e0a1b50c2df394b35de9e36c62f",
+      "completed_updates": 20,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 0.0003,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-8-data-4-softmax": {
+      "checkpoint_sha256": "8bd2efd2e7ada78c6a2ea1aa6c62f93027164e005faf586dec87f2215b9f2d24",
+      "completed_updates": 20,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 0.0003,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-9-data-4-softmax": {
+      "checkpoint_sha256": "04d28971fc3ebad2f2fe5c68442031623388037757ec8cae3812a81ad68bb00e",
+      "completed_updates": 20,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 0.0003,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-9-data-4-sparsemax": {
+      "checkpoint_sha256": "9c1d9273387c8600ba297b8c3939d42490522a8483e9e97a63ceccbf45a9a19d",
+      "completed_updates": 20,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 0.0003,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-7-data-5-sparsemax": {
+      "checkpoint_sha256": "ea82f9ef69d236104f084a5157ffcfffa2ca68668b417a291e7b5eefb3aadc21",
+      "completed_updates": 20,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 0.0003,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-7-data-5-softmax": {
+      "checkpoint_sha256": "d0e3a6765791f93391a4d62eede2189615fd4192ad2eef36de18c27a4f7328a0",
+      "completed_updates": 20,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 0.0003,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-8-data-5-softmax": {
+      "checkpoint_sha256": "06e0ba80f668ee834b9286876183e6f26c3bdacfd34cc75e4464ef461cf5ebef",
+      "completed_updates": 20,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 0.0003,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-8-data-5-sparsemax": {
+      "checkpoint_sha256": "7f81aa48443e08c67188bd72f075837ec5ab04686034d588da3a8be0762f4edb",
+      "completed_updates": 20,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 0.0003,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-9-data-5-sparsemax": {
+      "checkpoint_sha256": "d5023791d8d893fbcf05f07eb474f9d565de6762b7a7f85782d8a490023561ee",
+      "completed_updates": 20,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 0.0003,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-9-data-5-softmax": {
+      "checkpoint_sha256": "a14832784cb77ed1140861c20f1276b9d2aaa5f76e617db91d0079f2e7be7b28",
+      "completed_updates": 20,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 0.0003,
+      "audit_optimizer_updates_performed": 0
+    }
+  },
+  "schedule": {
+    "seed-7-data-4-softmax": {
+      "checkpoint_sha256": "478baa46b38b51858fe6ba5e3bb4e95ca19deb7f507d5c3c366f728363d159bd",
+      "completed_updates": 40,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 2.9999999999999997e-05,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-7-data-4-sparsemax": {
+      "checkpoint_sha256": "d54bc113fa3c820f1660483417d072a03469bf9181d3a05ddabc7647c1df5efb",
+      "completed_updates": 40,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 2.9999999999999997e-05,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-8-data-4-sparsemax": {
+      "checkpoint_sha256": "08681aa83262fab55eb09f2d3ccfbb5345c3ffdb1f274d12b8fc36efadba64ef",
+      "completed_updates": 40,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 2.9999999999999997e-05,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-8-data-4-softmax": {
+      "checkpoint_sha256": "e60bacccd3f467242f53b7f155acce712eac7874df93a79f26331db1c8e64295",
+      "completed_updates": 40,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 2.9999999999999997e-05,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-9-data-4-softmax": {
+      "checkpoint_sha256": "a5afcdd562dd9321815aea20f96b2d4b45c597d19e6dba2d94b955257e528247",
+      "completed_updates": 40,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 2.9999999999999997e-05,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-9-data-4-sparsemax": {
+      "checkpoint_sha256": "6fd2497175069ed79c0c2870394be7b4c389463ed4ad25e87664e9f036d45949",
+      "completed_updates": 40,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 2.9999999999999997e-05,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-7-data-5-sparsemax": {
+      "checkpoint_sha256": "8a09b534eb4f803ae725878dc35781d029459ff24f77eadab2808d46a68d9f46",
+      "completed_updates": 40,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 2.9999999999999997e-05,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-7-data-5-softmax": {
+      "checkpoint_sha256": "d125b515bad3f3c79121398bfc4d4aa0f78c2afbdd920b5c20783f2cca23f1b1",
+      "completed_updates": 40,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 2.9999999999999997e-05,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-8-data-5-softmax": {
+      "checkpoint_sha256": "9626e7c19708143d3439183b5ef76656fefb524714dd3cd5b5201235449b6ed8",
+      "completed_updates": 40,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 2.9999999999999997e-05,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-8-data-5-sparsemax": {
+      "checkpoint_sha256": "13405f5fa87f2bc8d5d038695dfb81bf18d8317620173991444de8577cc5402f",
+      "completed_updates": 40,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 2.9999999999999997e-05,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-9-data-5-sparsemax": {
+      "checkpoint_sha256": "06823ef3d013bc32d6a300424f5a5d769b2f5431ddc336c2532b13ef5c7f7c1e",
+      "completed_updates": 40,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 2.9999999999999997e-05,
+      "audit_optimizer_updates_performed": 0
+    },
+    "seed-9-data-5-softmax": {
+      "checkpoint_sha256": "6a0c3e8a10ea2e91716947a8093e1f95c7318b9f2fe6885a67ec570279040d9d",
+      "completed_updates": 40,
+      "parameters": 412296,
+      "native_states": 11,
+      "native_model_and_moments_finite": true,
+      "maximum_buffer_absent": true,
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "final_actual_rate": 2.9999999999999997e-05,
+      "audit_optimizer_updates_performed": 0
+    }
+  }
+}
