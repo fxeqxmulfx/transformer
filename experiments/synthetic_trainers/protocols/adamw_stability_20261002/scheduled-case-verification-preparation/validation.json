@@ -1,0 +1,89 @@
+{
+  "recorded_at_utc": "2026-10-03T06:01:58.832784+00:00",
+  "scope": "completed_CPU_archive_verification_preparation; no_scientific_learning_result",
+  "actual_completed_CPU_cases_verified": 2,
+  "updates_per_existing_CPU_case": 40,
+  "new_optimizer_updates": 0,
+  "Torch_imported": false,
+  "GPU_context_created": false,
+  "actual_fresh_snapshot_replays": 2,
+  "six_core_files_byte_exact_on_fresh_replay": true,
+  "actual_rejections": [
+    {
+      "case": "constant-existing-receipt",
+      "exception": "A complete case receipt requires a fresh destination",
+      "receipt_preserved": true
+    },
+    {
+      "case": "cosine-existing-receipt",
+      "exception": "A complete case receipt requires a fresh destination",
+      "receipt_preserved": true
+    },
+    {
+      "case": "actual-live-incomplete-scientific-case",
+      "exception": "Portable verification requires the complete frozen case",
+      "no_output_created": true
+    },
+    {
+      "case": "changed-scientific-plan",
+      "exception": "Scientific verification requires the exact committed prospective plan",
+      "no_output_created": true
+    },
+    {
+      "case": "changed-raw-canonical",
+      "exception": "Raw canonical JSONL differs from the complete measurements",
+      "no_output_created": true
+    },
+    {
+      "case": "changed-raw-gradients",
+      "exception": "Raw neighboring/tensor/gradient log bytes differ",
+      "no_output_created": true
+    },
+    {
+      "case": "changed-raw-recovery",
+      "exception": "Saved recovery derivation differs from the complete observations",
+      "no_output_created": true
+    },
+    {
+      "case": "changed-raw-checkpoint",
+      "exception": "Actual raw checkpoint fingerprint differs from its complete archive",
+      "no_output_created": true
+    }
+  ],
+  "case_receipts": {
+    "constant": {
+      "completed_updates": 40,
+      "parameters": 412296,
+      "scientific_run": false,
+      "Torch_imported": false,
+      "observation_counts": {
+        "canonical": 9,
+        "probes.jsonl": 16,
+        "diagnostics.jsonl": 24,
+        "gradients.jsonl": 40
+      },
+      "stable_grokking": false,
+      "fresh_replay_three_core_files_byte_exact": true,
+      "checkpoint_sha256": "db44bc377c7a690aa759bc82379a4db97f691f93f9b7f5b6b9719a241a431ea2"
+    },
+    "cosine": {
+      "completed_updates": 40,
+      "parameters": 412296,
+      "scientific_run": false,
+      "Torch_imported": false,
+      "observation_counts": {
+        "canonical": 9,
+        "probes.jsonl": 16,
+        "diagnostics.jsonl": 24,
+        "gradients.jsonl": 40
+      },
+      "stable_grokking": false,
+      "fresh_replay_three_core_files_byte_exact": true,
+      "checkpoint_sha256": "8c9026199ab9b2d69e51c12e81d0811a41b7c3b0ec5071d500d3875ecb3be946"
+    }
+  },
+  "verification_program_sha256": "c04b5ef2ec1982fa7a5400b808cc3890b058776a7e578957021a50ccdd0745ab",
+  "verification_exercise_sha256": "028fd1a1df09ccd108fc6701eb6a441b275f63f742f6bf2fda37a573c2c819e2",
+  "scientific_pair_still_in_progress": true,
+  "scientific_gate_opened": false
+}

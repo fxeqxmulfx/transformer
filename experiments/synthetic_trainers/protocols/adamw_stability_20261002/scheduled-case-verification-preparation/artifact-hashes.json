@@ -1,0 +1,18 @@
+{
+  "files": {
+    "constant/artifact-hashes.json": "bb0fe943d5673d3e5e3265a0c424a8793ce9c1116aec86a56821e525cc16cd42",
+    "constant/recovery-metrics.json": "9f5133f7dd241fefd23a8502f173d4351b79740705d3db69696cc82fff9d33ac",
+    "constant/recovery-series.json": "3d4bf231f836553de45c2ee07ebd31b4f26ae6ffcc2e1e2ef14b562caf822f0f",
+    "constant/validation.json": "d20b1a4f7c04161ff03347a51027518a59c2ecf712bc9105b59cf30593c39633",
+    "constant/verification-snapshot.py": "c04b5ef2ec1982fa7a5400b808cc3890b058776a7e578957021a50ccdd0745ab",
+    "constant-replay.stdout": "f0e728551e8350c8284aa3d6794b9a4327a1f332bdc51156b03ad507584e88aa",
+    "cosine/artifact-hashes.json": "a6f6b7aeb643d6865149a240df4d9c2f24b3285fc50d639a1af40e0e264402ad",
+    "cosine/recovery-metrics.json": "9f5133f7dd241fefd23a8502f173d4351b79740705d3db69696cc82fff9d33ac",
+    "cosine/recovery-series.json": "3d4bf231f836553de45c2ee07ebd31b4f26ae6ffcc2e1e2ef14b562caf822f0f",
+    "cosine/validation.json": "32a94f5179b6537659b5001c60a3bd444ff14be8f10a3022d96f1790f5aa362e",
+    "cosine/verification-snapshot.py": "c04b5ef2ec1982fa7a5400b808cc3890b058776a7e578957021a50ccdd0745ab",
+    "cosine-replay.stdout": "ee0791b841608244412706ba4d8f94e57fdd06d78616716a61afe86d2902ea59",
+    "validation.json": "2b6126966390cf98885b455136f60dc358f7adc4a191128d25242a0decc704e0",
+    "verification-exercise-snapshot.py": "028fd1a1df09ccd108fc6701eb6a441b275f63f742f6bf2fda37a573c2c819e2"
+  }
+}

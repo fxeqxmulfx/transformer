@@ -1,0 +1,107 @@
+{
+  "recorded_at_utc": "2026-10-03T06:01:58.362519+00:00",
+  "scope": "complete_CPU_case_verification_fixture; no_learning_result",
+  "name": "adamw-constant",
+  "scientific_run": false,
+  "archive": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/scheduled-pair-preparation/adamw-constant",
+  "completed_updates": 40,
+  "parameters": 412296,
+  "offline_verification_passed": true,
+  "Torch_imported": false,
+  "full_raw_logs_and_measurement_bytes_match_archive": true,
+  "observation_counts": {
+    "canonical": 9,
+    "probes.jsonl": 16,
+    "diagnostics.jsonl": 24,
+    "gradients.jsonl": 40
+  },
+  "all_55_Python_17_training_9_Lean_2_papers_and_audit_unchanged": true,
+  "checkpoint_sha256": "db44bc377c7a690aa759bc82379a4db97f691f93f9b7f5b6b9719a241a431ea2",
+  "archive_artifact_manifest_sha256": "53e6f626a86291a07275b5289e7d6adcf9d8d4d66e487ded571b358680f156fd",
+  "observed_peaks": {},
+  "peak_memory_checked_against_recorded_segments": false,
+  "assessment": {
+    "criterion": {
+      "target": 0.99,
+      "heldout_ceiling": 0.1,
+      "plateau_steps": 5,
+      "plateau_observations": 2,
+      "confirmation_observations": 2,
+      "tail_steps": 10
+    },
+    "complete_canonical_history": true,
+    "plateau": null,
+    "long_confirmation": null,
+    "tail_start_step": 30,
+    "tail_observations": 3,
+    "tail_failures": [
+      30,
+      35,
+      40
+    ],
+    "tail_minimum_heldout_accuracy": 0.047619047619047616,
+    "persistent_final_performance": false,
+    "stable_grokking": false,
+    "legacy_phase_diagnostics": {
+      "sustained_train_fit": null,
+      "sustained_heldout_target": null,
+      "time_to_sustained_train_fit": null,
+      "time_to_sustained_heldout_target": null,
+      "lag_after_sustained_train_fit": null,
+      "memorization_plateau": null,
+      "heldout_ceiling": 0.1,
+      "train_target": 0.99,
+      "patience": 2,
+      "fit_to_heldout_onset_ratio": null,
+      "observed_plateau_then_generalization": false,
+      "epoch_error_curve_before_generalization": null,
+      "both_epoch_error_double_descent_and_grokking": false,
+      "final_heldout_target": false,
+      "observations_after_confirmation": 0,
+      "fraction_observations_at_target_after_confirmation": null,
+      "minimum_heldout_accuracy_after_confirmation": null,
+      "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+    },
+    "scope": "finite_scheduled_observations; no_guarantee_between_observations_or_beyond_budget"
+  },
+  "gradient_trace": {
+    "observations": 40,
+    "maximum_gradient_l2": 21.917415618896484,
+    "maximum_step": 6,
+    "maximum_batch_size": 1,
+    "scope": "every_pre_update_gradient_norm; no_causal_claim"
+  },
+  "final": {
+    "step": 40,
+    "epochs_seen": 6.761904761904762,
+    "training_seconds": 0.3355605900142109,
+    "wall_seconds": 1.994432257997687,
+    "last_batch_size": 4,
+    "train": {
+      "accuracy": 0.5238095238095238,
+      "answer_accuracy": 0.5238095238095238,
+      "EOS_accuracy": 1.0,
+      "loss": 2.1076990763346353,
+      "answer_loss": 2.9727318173363093,
+      "EOS_loss": 1.242666516985212,
+      "examples": 21
+    },
+    "heldout": {
+      "accuracy": 0.23809523809523808,
+      "answer_accuracy": 0.23809523809523808,
+      "EOS_accuracy": 1.0,
+      "loss": 2.3958921886625744,
+      "answer_loss": 3.545639401390439,
+      "EOS_loss": 1.246144794282459,
+      "examples": 21
+    }
+  },
+  "training_seconds": 0.3355605900142109,
+  "wall_seconds": 2.0102659549884265,
+  "diagnostic_seconds": 0.05088800302473828,
+  "native_optimizer_CPU_audit": null,
+  "PNG_figures_visually_reviewed": false,
+  "PDF_figures_visually_reviewed": false,
+  "full_pair_complete": true,
+  "independent_confirmation_gate_opened_by_this_case": false
+}

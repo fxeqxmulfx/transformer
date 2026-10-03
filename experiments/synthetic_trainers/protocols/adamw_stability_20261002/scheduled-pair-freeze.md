@@ -73,3 +73,10 @@ with four targeted tests and preserved snapshots. It uses each case's exact
 last scheduled rate and performs no updates. The incomplete live scientific
 case is explicitly rejected. Use it only after a full case/archive is ready;
 it changes none of the 55 frozen training/protocol sources or scientific gates.
+
+The [portable completed-case verifier](scheduled-case-verification-preparation.md)
+is also exercised on both existing CPU archives, with exact saved-program
+replays and actual guards against incomplete/altered evidence or overwrites.
+It imports no Torch and leaves native-state/visual checks external. Use it
+only after the corresponding full archive is ready; all frozen sources and
+scientific gates remain intact.

@@ -46,6 +46,14 @@ snapshots and actual audit outputs are retained. These four checks extend the
 inspection tools; the archived full 288-test suite remains separate. No frozen
 training/proof/paper/audit source changes and no benchmark gate opens.
 
+The separate [portable completed-case verification](protocols/adamw_stability_20261002/scheduled-case-verification-preparation.md)
+now checks both existing full-width CPU case archives with system Python,
+without Torch, updates or checkpoint tensor loads. Two actual snapshot replays
+preserve six core files byte for byte; eight rejection checks preserve existing
+receipts and reject incomplete execution, changed plans/raw bytes. Scientific
+native-state and visual reviews remain separate. This helper lies outside the
+55 frozen training/protocol sources and opens no gate.
+
 ## Completed reproduction campaign
 
 All scheduled training in the previous reproduction campaign has finished. Its

@@ -1,0 +1,107 @@
+{
+  "recorded_at_utc": "2026-10-03T06:01:58.553468+00:00",
+  "scope": "complete_CPU_case_verification_fixture; no_learning_result",
+  "name": "adamw-cosine-tail",
+  "scientific_run": false,
+  "archive": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/scheduled-pair-preparation/adamw-cosine-tail",
+  "completed_updates": 40,
+  "parameters": 412296,
+  "offline_verification_passed": true,
+  "Torch_imported": false,
+  "full_raw_logs_and_measurement_bytes_match_archive": true,
+  "observation_counts": {
+    "canonical": 9,
+    "probes.jsonl": 16,
+    "diagnostics.jsonl": 24,
+    "gradients.jsonl": 40
+  },
+  "all_55_Python_17_training_9_Lean_2_papers_and_audit_unchanged": true,
+  "checkpoint_sha256": "8c9026199ab9b2d69e51c12e81d0811a41b7c3b0ec5071d500d3875ecb3be946",
+  "archive_artifact_manifest_sha256": "08f9c5b7e87f25a1e65548f7f0f4821c1cf10e2770acb07c10d84ee38e3b07d0",
+  "observed_peaks": {},
+  "peak_memory_checked_against_recorded_segments": false,
+  "assessment": {
+    "criterion": {
+      "target": 0.99,
+      "heldout_ceiling": 0.1,
+      "plateau_steps": 5,
+      "plateau_observations": 2,
+      "confirmation_observations": 2,
+      "tail_steps": 10
+    },
+    "complete_canonical_history": true,
+    "plateau": null,
+    "long_confirmation": null,
+    "tail_start_step": 30,
+    "tail_observations": 3,
+    "tail_failures": [
+      30,
+      35,
+      40
+    ],
+    "tail_minimum_heldout_accuracy": 0.0,
+    "persistent_final_performance": false,
+    "stable_grokking": false,
+    "legacy_phase_diagnostics": {
+      "sustained_train_fit": null,
+      "sustained_heldout_target": null,
+      "time_to_sustained_train_fit": null,
+      "time_to_sustained_heldout_target": null,
+      "lag_after_sustained_train_fit": null,
+      "memorization_plateau": null,
+      "heldout_ceiling": 0.1,
+      "train_target": 0.99,
+      "patience": 2,
+      "fit_to_heldout_onset_ratio": null,
+      "observed_plateau_then_generalization": false,
+      "epoch_error_curve_before_generalization": null,
+      "both_epoch_error_double_descent_and_grokking": false,
+      "final_heldout_target": false,
+      "observations_after_confirmation": 0,
+      "fraction_observations_at_target_after_confirmation": null,
+      "minimum_heldout_accuracy_after_confirmation": null,
+      "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+    },
+    "scope": "finite_scheduled_observations; no_guarantee_between_observations_or_beyond_budget"
+  },
+  "gradient_trace": {
+    "observations": 40,
+    "maximum_gradient_l2": 21.917415618896484,
+    "maximum_step": 6,
+    "maximum_batch_size": 1,
+    "scope": "every_pre_update_gradient_norm; no_causal_claim"
+  },
+  "final": {
+    "step": 40,
+    "epochs_seen": 6.761904761904762,
+    "training_seconds": 0.3798600441077724,
+    "wall_seconds": 0.6593645520042628,
+    "last_batch_size": 4,
+    "train": {
+      "accuracy": 0.38095238095238093,
+      "answer_accuracy": 0.38095238095238093,
+      "EOS_accuracy": 1.0,
+      "loss": 2.594128199986049,
+      "answer_loss": 3.4424598330543157,
+      "EOS_loss": 1.7457969302222842,
+      "examples": 21
+    },
+    "heldout": {
+      "accuracy": 0.0,
+      "answer_accuracy": 0.0,
+      "EOS_accuracy": 1.0,
+      "loss": 2.8463732401529946,
+      "answer_loss": 3.940703619094122,
+      "EOS_loss": 1.7520434061686199,
+      "examples": 21
+    }
+  },
+  "training_seconds": 0.3798600441077724,
+  "wall_seconds": 0.674078031006502,
+  "diagnostic_seconds": 0.05413001288252417,
+  "native_optimizer_CPU_audit": null,
+  "PNG_figures_visually_reviewed": false,
+  "PDF_figures_visually_reviewed": false,
+  "full_pair_complete": true,
+  "independent_confirmation_gate_opened_by_this_case": false
+}

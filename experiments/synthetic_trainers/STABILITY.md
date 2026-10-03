@@ -596,6 +596,13 @@ forged state, incomplete execution and receipt overwrites; the actual live
 scientific prefix is also rejected. The prior full 288-test result remains
 separate. All 55/nine/paper/audit pins are intact; this preparation opens no gate.
 
+The [portable complete-case verifier](protocols/adamw_stability_20261002/scheduled-case-verification-preparation.md)
+independently matches both existing 40-update CPU cases to their raw bytes and
+archives without Torch. Two saved-program replays preserve six core files;
+eight actual rejection checks protect existing receipts and reject incomplete
+cases, changed prospective plans and altered raw evidence. Native-state and
+actual PNG/PDF review remain separate. No scientific updates or gates change.
+
 The [full native paired-cohort preparation](protocols/adamw_stability_20261002/architecture-cohort-preparation.md)
 now executes all twelve held-out control/candidate cases with unchanged selected
 rates, common parameter initialization, alternating order and full-budget native
