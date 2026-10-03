@@ -1,0 +1,42 @@
+{
+  "recorded_at_utc": "2026-10-03T05:15:24.133488+00:00",
+  "frozen_manifest_commit": "d8ccb187247861fc2e8bd86ef344a9b1c9a48056",
+  "plan_sha256": "59bbe9418cc4edeed257e4ad89c3d3ef75f361667347841f0a232bb05bf5388e",
+  "actual_prelaunch_check_exit_code": 0,
+  "prelaunch_check_terminal_session": 26391,
+  "trainer": {
+    "pid": 168237,
+    "session_id": 11503,
+    "live_on_actual_poll": true,
+    "log": "experiments/runs/adamw_stability_20261002/scheduled-pair-driver.log"
+  },
+  "archive_worker": {
+    "pid": 168332,
+    "session_id": 60201,
+    "live_on_actual_poll": true,
+    "log": "experiments/runs/adamw_stability_20261002/scheduled-pair-archive-worker.log",
+    "uses_venv_python_with_matplotlib": true,
+    "Torch_imported": false,
+    "script_sha256": "d48a3be58304eec80379b9c7aeb67084ee0e4cc4a78753f27f2b9214f1e1a5fa"
+  },
+  "current_case": "adamw-constant",
+  "completed_cases": 0,
+  "planned_runs": 2,
+  "maximum_updates_per_run": 300000,
+  "parameters": 436104,
+  "captured_canonical_prefix_steps": 3500,
+  "captured_canonical_observations": 15,
+  "captured_prefix_non_time_metrics_equal_same_seed_normalizer_control": true,
+  "captured_first_eleven_update_rates_match_exact_native_warmup": true,
+  "all_55_Python_17_training_9_Lean_2_paper_and_audit_pins_match": true,
+  "full_scientific_pair_complete": false,
+  "independent_confirmation_complete": false,
+  "campaign_architecture_claim_allowed": false,
+  "evidence_sha256": {
+    "archive-worker.json": "e30201fa4e00d14355c844bf875030734b33232b286470808a050ccf2d042c86",
+    "canonical-prefix.jsonl": "c8d3ac689e1fd333bb6beeb7213d38a952f95b8a88c555010f4ccd8b1dab14d9",
+    "first-eleven-update-rates.json": "9f146ab23707c1cf29bd263afc96750d7403986c70956bb336f5f7f70096feb0",
+    "native-case-plan.json": "cc8e30fab73f6e0bb66ac9c971881c8ff5d30502891d0064232670298e123892",
+    "reference-non-time-prefix.jsonl": "fac3668e65ff45b36c113526fb43622425cebc53a4a586a2326d5488319d1203"
+  }
+}

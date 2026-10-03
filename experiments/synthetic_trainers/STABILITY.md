@@ -578,6 +578,16 @@ all 55 Python/seventeen native training/nine Lean/paper/audit pins verify.
 At freeze no optimizer update has started; commit the manifest before the
 actual launch/check. No scientific schedule outcome or benchmark gate is opened.
 
+After manifest commit `d8ccb18`, the actual preflight exits 0 and both
+[scientific processes launch](protocols/adamw_stability_20261002/scheduled-pair-launch-validation.json):
+trainer PID 168237/session 11503 and venv archive worker PID 168332/session
+60201, both actually polled live. The captured constant prefix through 3,500
+has fifteen same-seed A/A canonical matches and exact eleven-update warmup;
+all 55/nine/paper/audit pins remain intact. The paired cosine budget is queued.
+These prefixes certify no persistence or independent benchmark. Finish/review/
+commit both full cases and pair, then consume both terminal handles before
+the unchanged six-case confirmation or further adaptation gate.
+
 The [full native paired-cohort preparation](protocols/adamw_stability_20261002/architecture-cohort-preparation.md)
 now executes all twelve held-out control/candidate cases with unchanged selected
 rates, common parameter initialization, alternating order and full-budget native

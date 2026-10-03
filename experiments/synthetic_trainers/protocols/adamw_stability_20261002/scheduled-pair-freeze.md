@@ -46,3 +46,23 @@ The failed historical and normalizer evidence remains intact. This freeze
 certifies neither stable grokking nor an architecture improvement. A complete
 passing scheduled recipe must enter all six fresh crossed confirmations before
 scientific architecture or complementary studies. No schedule outcome is known.
+
+The manifest is subsequently committed at `d8ccb18`. The actual launcher's
+preflight session 26391 terminates with code 0 before training. The
+[launch receipt](scheduled-pair-launch-validation.json) and
+[captured evidence](scheduled-pair-launch-evidence/native-case-plan.json)
+record trainer **PID 168237/session 11503** and venv plotting archive worker
+**PID 168332/session 60201**. Both are actually polled live. The captured
+constant prefix through 3,500 has fifteen non-time observations equal to the
+frozen same-seed normalizer control. Its first eleven applied rates match
+native warmup exactly, starting at zero and reaching 0.0003 at update 11.
+All source/proof/paper/audit pins remain unchanged. This prefix does not
+establish persistence; no cosine case or independent confirmation is complete.
+
+Logs are `experiments/runs/adamw_stability_20261002/scheduled-pair-driver.log`
+and `experiments/runs/adamw_stability_20261002/scheduled-pair-archive-worker.log`.
+The worker archives each full case for review/commit, then the whole pair;
+review actual PNG/PDF files and native state before choosing the next gate.
+Consume each real terminal session exactly once when finished. Keep the
+scientific goal active throughout live GPU work; do not restart a healthy
+process because a wait yields or intermediate evidence is incomplete.

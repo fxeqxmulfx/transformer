@@ -1,0 +1,10 @@
+{
+  "recorded_at_utc": "2026-10-03T05:12:36.777014+00:00",
+  "pid": 168332,
+  "trainer_pid": 168237,
+  "status": "waiting_for_complete_schedule_case",
+  "torch_imported": false,
+  "worker_sha256": "d48a3be58304eec80379b9c7aeb67084ee0e4cc4a78753f27f2b9214f1e1a5fa",
+  "name": "adamw-constant",
+  "completed_archives": 0
+}

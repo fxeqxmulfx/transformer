@@ -735,6 +735,24 @@ launcher check and start trainer/venv archive worker. Raw stage is
 `experiments/runs/adamw_stability_20261002/schedule_mod193_fraction25_lr0003_budget300k`.
 No schedule outcome, stable benchmark or independent confirmation is known.
 
+The manifest is now committed at `d8ccb18` and the actual preflight session
+26391 terminates with code 0. The [live launch receipt](protocols/adamw_stability_20261002/scheduled-pair-launch-validation.json)
+records trainer **PID 168237/session 11503**, venv archive worker
+**PID 168332/session 60201**, both polled live. The constant case's captured
+3,500-update prefix has fifteen non-time canonical observations equal to its
+frozen same-seed control and eleven exact native warmup rates; this is an
+observed A/A check, not independent evidence. All 55 Python/seventeen training/
+nine Lean/two paper/audit pins match. The cosine case follows automatically.
+Keep the goal active, complete both full budgets, review/commit each complete
+archive then the pair, and consume both actual terminal handles before any
+next scientific freeze. Do not reuse consumed normalizer handles 47567/25387.
+
+```bash
+cat experiments/runs/adamw_stability_20261002/schedule_mod193_fraction25_lr0003_budget300k/state.json
+cat experiments/runs/adamw_stability_20261002/bootstrap/scheduled-pair-archive-worker.json
+tail -n 3 experiments/runs/adamw_stability_20261002/scheduled-pair-driver.log
+```
+
 The [full architecture-cohort pipeline](protocols/adamw_stability_20261002/architecture-cohort-preparation.md)
 is separately prepared, preserving the selected native AdamW schedule and all
 six primary-confirmation gates. Two real CPU six-pair cohorts finish 24 cases /
