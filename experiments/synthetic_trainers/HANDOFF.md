@@ -622,7 +622,7 @@ prepared 55, both 62 and new 66-source sets/audit unchanged. This supersedes
 earlier CPU-suite counts as the current test result. It supplies no new GPU
 learning outcome, benchmark qualification or Lean full-tree audit.
 
-The active sparsemax candidate now has a
+The sparsemax candidate's recorded prefix has a
 [first final-window violation](protocols/adamw_stability_20261002/sparsemax-first-tail-witness.md)
 at the frozen 250,000 boundary: train 100%, held-out 2.723805%, EOS 100%.
 Both actual immediate neighbors remain low, all three batches are 512, and
@@ -632,8 +632,8 @@ byte-for-byte without Torch. No long joint confirmation has occurred; this is
 low generalization, not a collapse after confirmation, so episode counts remain
 unavailable. The first of all 201 required final-window observations fails;
 later improvement cannot make this candidate pass that unchanged criterion.
-The full 300,000-update run continues, followed by its fresh softmax control.
-Do not stop, relax the tail or declare the pair complete from this prefix.
+The complete outcome below supersedes this partial prefix. Its fresh softmax
+control remains required; do not relax the tail or declare the pair complete.
 All 43 Python/nine Lean/audit fingerprints remain unchanged.
 
 A read-only [frozen-checkpoint CPU routing diagnostic](protocols/adamw_stability_20261002/sparsemax-routing-gradient-probe.md)
@@ -646,7 +646,23 @@ poor generalization or imply joint-training convexity from the Lean row theorem.
 The exhaustive canonical held-out accuracy at the captured checkpoint is
 6.789724%. The 436,104-parameter count includes tied weights once. The ignored
 snapshot path/hash and transfer requirements are recorded in the diagnostic;
-all frozen Python/Lean/audit sources remain intact. Finish both full budgets.
+all frozen Python/Lean/audit sources remain intact.
+
+The [complete sparsemax result](protocols/adamw_stability_20261002/attention-sparsemax-result.md)
+now retains all 300,000 updates, 1,201 canonical / 2,400 neighboring /
+3,600 tensor-diagnostic / 300,000 gradient observations and full raw/CSV files.
+Final train/held-out is 100%/34.056563%, with EOS 100%. Its 825-observation
+memorization plateau is 49,750–255,750; no first held-out 99% or long joint
+confirmation occurs. All 201 final-window observations fail; fixed 10,000-update
+bins have 40/40, 40/40, 40/40, 40/40 and 41/41 failures, with post-onset episode
+rates unavailable. System Python verifies the archive without Torch, actual
+checkpoint/native moments are finite at 300,000, and both PNG/actual PDF
+figures are reviewed. All frozen sources/audit match.
+Original trainer PID 139507/session 47567 and replacement archive worker
+PID 145323/session 25387 continue with the automatically started fresh softmax
+control. The pair and scientific goal remain incomplete. Complete, review and
+commit that full control/pair, consume both live handles, then follow its
+unchanged primary confirmation or conditional schedule gate.
 
 ```bash
 cat experiments/runs/adamw_stability_20261002/attention_mod193_fraction25_lr0003_budget300k/state.json

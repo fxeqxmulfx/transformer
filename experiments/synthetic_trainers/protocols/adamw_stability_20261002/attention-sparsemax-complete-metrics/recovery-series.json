@@ -1,0 +1,8 @@
+{
+  "through_update": 300000,
+  "frozen_budget": 300000,
+  "window_steps": 10000,
+  "long_confirmation": null,
+  "scope": "fixed_grid_descriptive_post_long_onset_windows; partial_width_and_incomplete_windows_excluded_from_rates_and_changes",
+  "metrics": null
+}

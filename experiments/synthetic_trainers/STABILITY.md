@@ -497,10 +497,10 @@ at 250,000 has train 100%/held-out 2.723805%, with EOS 100% and similarly low
 immediate neighbors. Its entire canonical prefix and actual diagnostics are
 preserved/replayed without Torch. The all-201-observations final-tail condition
 already fails; no first long joint confirmation precedes it, so this is not a
-post-confirmation collapse or a measured zero episode rate. Complete the full
-budget and automatically queued primary softmax control before the next
-scientific freeze. The candidate's later behavior and the control remain to
-be measured; the original criteria and source fingerprints are unchanged.
+post-confirmation collapse or a measured zero episode rate. The complete
+candidate result below supersedes that partial prefix; complete the fresh
+primary softmax control before the next scientific freeze. All original
+criteria and source fingerprints remain unchanged.
 
 The [saved-checkpoint routing diagnostic](protocols/adamw_stability_20261002/sparsemax-routing-gradient-probe.md)
 at 280,000 performs only CPU forward/backward on two training batches with
@@ -512,3 +512,14 @@ This is not a causal explanation, a trained softmax comparison or a proof of
 joint-training stability. No optimizer updates are added and all frozen
 sources/proof provenance remain unchanged. Retain the strict tail failure,
 finish both 300,000-update scientific budgets and review their complete result.
+
+The [complete sparsemax candidate](protocols/adamw_stability_20261002/attention-sparsemax-result.md)
+finishes all 300,000 updates with train/held-out 100%/34.056563%, EOS 100%,
+the required 49,750–255,750 memorization plateau and no held-out 99% crossing
+or long joint confirmation. All 201 frozen final-window observations fail;
+post-confirmation episodes/recovery rates are unavailable. Complete histories,
+actual batch exposure, source/audit provenance, native final CPU state and
+both PNG/actual PDF figures are verified and reviewed. Fresh paired softmax
+is running automatically under the original trainer/archive-worker handles.
+The pair, all-six primary gate and subsequent scientific studies remain
+incomplete. No criterion is relaxed or future update budget enlarged.

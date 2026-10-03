@@ -1,0 +1,25 @@
+{
+  "name": "adamw-sparsemax",
+  "completed_updates": 300000,
+  "parameters": 436104,
+  "native_state_count": 11,
+  "all_native_steps": [
+    300000
+  ],
+  "all_model_and_native_tensors_finite": true,
+  "maximum_second_moment_buffers_absent": true,
+  "actual_native_class": "torch.optim.AdamW",
+  "betas": [
+    0.9,
+    0.98
+  ],
+  "epsilon": 1e-08,
+  "weight_decay": 0.1,
+  "amsgrad": false,
+  "learning_rate": 0.0003,
+  "all_trainable_parameters_in_one_group_once": true,
+  "optimizer_updates_performed": 0,
+  "GPU_context_initialized": false,
+  "checkpoint_sha256": "c3f296b2f9ffd388451f4beefb358b184ad32da404658424c6685c9a935ac601",
+  "executed_audit_script_sha256": "eb5f8873f84fb9070000be6845aa603623090f072e1331a607fa29491c030d32"
+}

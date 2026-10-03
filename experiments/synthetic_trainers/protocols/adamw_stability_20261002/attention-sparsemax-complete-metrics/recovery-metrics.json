@@ -1,0 +1,218 @@
+{
+  "through_update": 300000,
+  "frozen_budget": 300000,
+  "window_steps": 10000,
+  "criterion": {
+    "target": 0.99,
+    "heldout_ceiling": 0.1,
+    "plateau_steps": 1000,
+    "plateau_observations": 5,
+    "confirmation_observations": 20,
+    "tail_steps": 50000
+  },
+  "complete_budget": true,
+  "long_confirmation": null,
+  "frozen_persistent_final_performance": false,
+  "frozen_stable_grokking": false,
+  "metrics": {
+    "joint": {
+      "post_long_onset_observations": 0,
+      "post_long_onset_failed_observations": 0,
+      "post_long_onset_failure_fraction": null,
+      "episodes_after_long_onset": [],
+      "episode_count": null,
+      "last_failed_observation": 300000,
+      "updates_since_last_failed_observation": 0,
+      "final_target_streak": {
+        "start": null,
+        "end": null,
+        "observations": 0,
+        "sampled_span_steps": 0
+      },
+      "fixed_tail_windows": [
+        {
+          "start": 250000,
+          "stop": 260000,
+          "stop_inclusive": false,
+          "observations": 40,
+          "expected_observations": 40,
+          "complete_window": true,
+          "failed_observations": 40,
+          "failure_fraction": 1.0,
+          "new_episode_onsets": null,
+          "episode_onsets_per_10000_updates": null
+        },
+        {
+          "start": 260000,
+          "stop": 270000,
+          "stop_inclusive": false,
+          "observations": 40,
+          "expected_observations": 40,
+          "complete_window": true,
+          "failed_observations": 40,
+          "failure_fraction": 1.0,
+          "new_episode_onsets": null,
+          "episode_onsets_per_10000_updates": null
+        },
+        {
+          "start": 270000,
+          "stop": 280000,
+          "stop_inclusive": false,
+          "observations": 40,
+          "expected_observations": 40,
+          "complete_window": true,
+          "failed_observations": 40,
+          "failure_fraction": 1.0,
+          "new_episode_onsets": null,
+          "episode_onsets_per_10000_updates": null
+        },
+        {
+          "start": 280000,
+          "stop": 290000,
+          "stop_inclusive": false,
+          "observations": 40,
+          "expected_observations": 40,
+          "complete_window": true,
+          "failed_observations": 40,
+          "failure_fraction": 1.0,
+          "new_episode_onsets": null,
+          "episode_onsets_per_10000_updates": null
+        },
+        {
+          "start": 290000,
+          "stop": 300000,
+          "stop_inclusive": true,
+          "observations": 41,
+          "expected_observations": 41,
+          "complete_window": true,
+          "failed_observations": 41,
+          "failure_fraction": 1.0,
+          "new_episode_onsets": null,
+          "episode_onsets_per_10000_updates": null
+        }
+      ],
+      "adjacent_complete_window_changes": [
+        {
+          "previous_start": 250000,
+          "current_start": 260000,
+          "failure_fraction_change": 0.0
+        },
+        {
+          "previous_start": 260000,
+          "current_start": 270000,
+          "failure_fraction_change": 0.0
+        },
+        {
+          "previous_start": 270000,
+          "current_start": 280000,
+          "failure_fraction_change": 0.0
+        },
+        {
+          "previous_start": 280000,
+          "current_start": 290000,
+          "failure_fraction_change": 0.0
+        }
+      ]
+    },
+    "heldout": {
+      "post_long_onset_observations": 0,
+      "post_long_onset_failed_observations": 0,
+      "post_long_onset_failure_fraction": null,
+      "episodes_after_long_onset": [],
+      "episode_count": null,
+      "last_failed_observation": 300000,
+      "updates_since_last_failed_observation": 0,
+      "final_target_streak": {
+        "start": null,
+        "end": null,
+        "observations": 0,
+        "sampled_span_steps": 0
+      },
+      "fixed_tail_windows": [
+        {
+          "start": 250000,
+          "stop": 260000,
+          "stop_inclusive": false,
+          "observations": 40,
+          "expected_observations": 40,
+          "complete_window": true,
+          "failed_observations": 40,
+          "failure_fraction": 1.0,
+          "new_episode_onsets": null,
+          "episode_onsets_per_10000_updates": null
+        },
+        {
+          "start": 260000,
+          "stop": 270000,
+          "stop_inclusive": false,
+          "observations": 40,
+          "expected_observations": 40,
+          "complete_window": true,
+          "failed_observations": 40,
+          "failure_fraction": 1.0,
+          "new_episode_onsets": null,
+          "episode_onsets_per_10000_updates": null
+        },
+        {
+          "start": 270000,
+          "stop": 280000,
+          "stop_inclusive": false,
+          "observations": 40,
+          "expected_observations": 40,
+          "complete_window": true,
+          "failed_observations": 40,
+          "failure_fraction": 1.0,
+          "new_episode_onsets": null,
+          "episode_onsets_per_10000_updates": null
+        },
+        {
+          "start": 280000,
+          "stop": 290000,
+          "stop_inclusive": false,
+          "observations": 40,
+          "expected_observations": 40,
+          "complete_window": true,
+          "failed_observations": 40,
+          "failure_fraction": 1.0,
+          "new_episode_onsets": null,
+          "episode_onsets_per_10000_updates": null
+        },
+        {
+          "start": 290000,
+          "stop": 300000,
+          "stop_inclusive": true,
+          "observations": 41,
+          "expected_observations": 41,
+          "complete_window": true,
+          "failed_observations": 41,
+          "failure_fraction": 1.0,
+          "new_episode_onsets": null,
+          "episode_onsets_per_10000_updates": null
+        }
+      ],
+      "adjacent_complete_window_changes": [
+        {
+          "previous_start": 250000,
+          "current_start": 260000,
+          "failure_fraction_change": 0.0
+        },
+        {
+          "previous_start": 260000,
+          "current_start": 270000,
+          "failure_fraction_change": 0.0
+        },
+        {
+          "previous_start": 270000,
+          "current_start": 280000,
+          "failure_fraction_change": 0.0
+        },
+        {
+          "previous_start": 280000,
+          "current_start": 290000,
+          "failure_fraction_change": 0.0
+        }
+      ]
+    }
+  },
+  "scope": "descriptive_canonical_frequency_and_recovery; no_changed_gate_or_monotone_statistical_or_future_stability_claim"
+}

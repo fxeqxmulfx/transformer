@@ -1,0 +1,10 @@
+{
+  "files": {
+    "native-audit-snapshot.py": "eb5f8873f84fb9070000be6845aa603623090f072e1331a607fa29491c030d32",
+    "native-optimizer-CPU-audit.json": "c6b90125d0d9a04b183acd4c82720c6ea485f5ed1f415054fdacf5a966b8228c",
+    "recovery-metrics.json": "a24d072e15fd5a1a2998c98b64e5872a734413f1aea794c28ab601767c3482ae",
+    "recovery-series.json": "9e36b10eeccda0455e67aedf68ade8677123ade0ddfe5673205467a7abd9eef4",
+    "validation.json": "44f78a519d49ffc1f02636bb572c0761aebe421e63b639d43954ad125cbf271c",
+    "verification-snapshot.py": "d52c2e89f0049a82896a080bf538f0a55946dcef7bad67d0debbd9c7dc14633c"
+  }
+}
