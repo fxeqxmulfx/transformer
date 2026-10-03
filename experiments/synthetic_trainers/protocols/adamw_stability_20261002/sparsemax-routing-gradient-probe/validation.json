@@ -1,0 +1,24 @@
+{
+  "reviewed_utc": "2026-10-03T02:14:51.023142+00:00",
+  "scope": "read_only_frozen_checkpoint_CPU_routing_gradient_diagnostic",
+  "scientific_training_run_complete": false,
+  "checkpoint_step": 280000,
+  "checkpoint_sha256": "cf729a88c7f5cb49d25e3f7e012aa4c0c84f90a890687f8b92fac4a29366d0e6",
+  "parameters": 436104,
+  "optimizer_updates_performed": 0,
+  "CUDA_initialized": false,
+  "native_state_steps_match_checkpoint": true,
+  "independent_saved_checkpoint_replay_equal_except_local_path": true,
+  "instrumented_and_uninstrumented_logits_loss_accuracy_all_parameter_gradients_exactly_match": true,
+  "complete_canonical_280000_point_retained": true,
+  "all_43_Python_17_training_9_Lean_and_audit_unchanged": true,
+  "derivative_scope": "two_selected_train_batches_at_fixed_step_280000_weights",
+  "generalization_causal_claim": false,
+  "full_budget_and_paired_control_still_required": true,
+  "terminal_CPU_sessions": {
+    "59696": 0,
+    "87041": 0,
+    "75993": 0
+  },
+  "new_unit_tests_added": 0
+}

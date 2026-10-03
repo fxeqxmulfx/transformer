@@ -1,0 +1,25 @@
+{
+  "step": 280000,
+  "epochs_seen": 14736.884283246978,
+  "training_seconds": 8192.342676825952,
+  "wall_seconds": 11675.688296333989,
+  "last_batch_size": 512,
+  "train": {
+    "accuracy": 0.9994602763385146,
+    "answer_accuracy": 0.9994602763385146,
+    "EOS_accuracy": 1.0,
+    "loss": 0.00142318499505774,
+    "answer_loss": 0.0028462443853220186,
+    "EOS_loss": 1.2556604799568007e-07,
+    "examples": 9264
+  },
+  "heldout": {
+    "accuracy": 0.0678972366148532,
+    "answer_accuracy": 0.0678972366148532,
+    "EOS_accuracy": 1.0,
+    "loss": 4.101993685971064,
+    "answer_loss": 8.203987371942128,
+    "EOS_loss": 1.2421488802880954e-07,
+    "examples": 27792
+  }
+}

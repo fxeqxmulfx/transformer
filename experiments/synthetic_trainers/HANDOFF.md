@@ -636,6 +636,18 @@ The full 300,000-update run continues, followed by its fresh softmax control.
 Do not stop, relax the tail or declare the pair complete from this prefix.
 All 43 Python/nine Lean/audit fingerprints remain unchanged.
 
+A read-only [frozen-checkpoint CPU routing diagnostic](protocols/adamw_stability_20261002/sparsemax-routing-gradient-probe.md)
+at sparsemax update 280,000 retains the actual train-batch support and Q/K/V
+derivatives without any optimizer update. Instrumented/ordinary logits and
+all parameter gradients agree exactly; a saved-checkpoint replay agrees.
+Singleton supervised-row fractions are about 37% in layer 0 and 4% in layer 1,
+but aggregate Q/K gradients are nonzero. This does not identify a cause of
+poor generalization or imply joint-training convexity from the Lean row theorem.
+The exhaustive canonical held-out accuracy at the captured checkpoint is
+6.789724%. The 436,104-parameter count includes tied weights once. The ignored
+snapshot path/hash and transfer requirements are recorded in the diagnostic;
+all frozen Python/Lean/audit sources remain intact. Finish both full budgets.
+
 ```bash
 cat experiments/runs/adamw_stability_20261002/attention_mod193_fraction25_lr0003_budget300k/state.json
 cat experiments/runs/adamw_stability_20261002/bootstrap/attention-pair-archive-worker.json

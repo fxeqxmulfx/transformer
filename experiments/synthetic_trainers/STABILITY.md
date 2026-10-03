@@ -501,3 +501,14 @@ post-confirmation collapse or a measured zero episode rate. Complete the full
 budget and automatically queued primary softmax control before the next
 scientific freeze. The candidate's later behavior and the control remain to
 be measured; the original criteria and source fingerprints are unchanged.
+
+The [saved-checkpoint routing diagnostic](protocols/adamw_stability_20261002/sparsemax-routing-gradient-probe.md)
+at 280,000 performs only CPU forward/backward on two training batches with
+fixed native weights. Supervised sparsemax rows have singleton fractions
+approximately 37%/4% by layer, with zero singleton score derivatives, while
+aggregate Q/K/V derivatives remain nonzero. Instrumented and ordinary logits
+and all gradients match; the saved-checkpoint replay reproduces them exactly.
+This is not a causal explanation, a trained softmax comparison or a proof of
+joint-training stability. No optimizer updates are added and all frozen
+sources/proof provenance remain unchanged. Retain the strict tail failure,
+finish both 300,000-update scientific budgets and review their complete result.
