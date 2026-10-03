@@ -75,8 +75,9 @@ cycle on 2026-10-03; resume it only after an explicit instruction to continue.
   `Transformer`. Every module must be reachable from `src/Transformer.lean`
   so that `lake build` covers it.
 - Python experiments live in `python/` (the `lab` package, see
-  `python/README.md`); `experiments/` holds the experiment files and the
-  records of past runs. `./make.py` runs every task, Lean and Python.
+  `python/README.md`); `experiments/` holds a folder per experiment, its
+  `experiment.py` beside a `README.md`, and in `archive/` the records of
+  past runs. `./make.py` runs every task, Lean and Python.
 - Read `INDEX.md` to locate declarations. Regenerate it with
   `python3 scripts/index.py` after any change under `src/`, and include it in
   the same requested commit as the source change. Do not edit it by hand.
