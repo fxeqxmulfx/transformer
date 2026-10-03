@@ -27,7 +27,7 @@ class EagerStepper:
         """Nothing to prepare: every update is issued as it comes."""
 
     def step(self, parts, rate, sampled):
-        batch = self.task.inputs(gather(parts).to(self.task.device))
+        batch = self.task.inputs(gather(parts))
         self.model.train()
         self.optimizer.zero_grad(set_to_none=True)
         for group in self.optimizer.param_groups:

@@ -8,6 +8,8 @@ from .generative import RandomLM
 from .spec import Spec, require, require_kind
 from .tasks import Problem, Task
 
+METRICS = ("token_accuracy", "sequence_accuracy", "balanced_accuracy")
+
 
 @dataclass(frozen=True)
 class Memorization(Spec):
@@ -47,6 +49,13 @@ class Synthetic(Benchmark):
     task may add its own (`Task.transfers`). Without `min_length` every
     problem has length `length`, as with `min_length=length`, but the splits
     are seeded differently, as they were.
+
+    Validation is observed; the best observation has the highest sequence
+    accuracy, then balanced accuracy, then the lowest loss (`validation_rank`
+    of `experiments/synthetic_trainers/metrics.py`), and the test splits,
+    `test` and `test/<name>` of each held-out distribution, are evaluated
+    once, on its model. The run reports the first observation whose
+    validation `metric` reaches `target`.
     """
     task: Task
     length: int
@@ -56,6 +65,8 @@ class Synthetic(Benchmark):
     test: int = 128
     ood: tuple[int, ...] = ()
     study: Memorization | None = None
+    target: float | None = 0.95
+    metric: str = "sequence_accuracy"
 
     def check(self):
         require_kind(self.task, Task, "task")
@@ -63,6 +74,8 @@ class Synthetic(Benchmark):
         require(min(self.train, self.validation, self.test) >= 1, "Every split holds an example")
         require(len(set(self.ood)) == len(self.ood) and all(length > self.length for length in self.ood),
                 "OOD lengths are distinct and exceed the training maximum")
+        require(self.target is None or 0 <= self.target <= 1, "The target is an accuracy, or None")
+        require(self.metric in METRICS, f"The target metric is one of {', '.join(METRICS)}")
         for problem in (self.problem, *self.probes.values()):
             problem.task.check_lengths(problem.minimum, problem.length)
         if self.study is not None:
@@ -85,3 +98,18 @@ class Synthetic(Benchmark):
     @property
     def context(self):
         return max(problem.task.context(problem.length) for problem in (self.problem, *self.probes.values()))
+
+    @property
+    def observed(self):
+        return ("validation",)
+
+    @property
+    def selection(self):
+        return "validation"
+
+    @property
+    def final(self):
+        return ("test", *(f"test/{name}" for name in self.probes))
+
+    def rank(self, metrics):
+        return metrics["sequence_accuracy"], metrics["balanced_accuracy"], -metrics["loss"]

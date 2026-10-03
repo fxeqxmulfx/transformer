@@ -50,7 +50,7 @@ class TextTask:
         return WindowSampler(len(self.train) - self.window, batch, seed)
 
     def inputs(self, starts):
-        return windows(self.train, starts, self.window)
+        return windows(self.train, starts.to(self.device), self.window)
 
     def progress(self, seen):
         return {"tokens_seen": seen * self.window}

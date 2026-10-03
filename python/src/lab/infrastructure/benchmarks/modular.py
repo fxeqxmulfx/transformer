@@ -105,8 +105,8 @@ class ModularTask:
         return EpochSampler(len(self.corpus.train), batch, self.spec.tail == "wrap", seed)
 
     def inputs(self, indices):
-        """The training rows at `indices`, a device tensor."""
-        return self.splits["train"].index_select(0, indices)
+        """The training rows at `indices`."""
+        return self.splits["train"].index_select(0, indices.to(self.device))
 
     def progress(self, seen):
         return {"epochs_seen": seen / len(self.corpus.train)}

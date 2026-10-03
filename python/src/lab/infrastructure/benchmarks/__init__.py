@@ -2,20 +2,24 @@
 
 A task is built for one device and holds there the rows of the splits it
 evaluates (`splits`). It draws training batches with `sampler(batch, seed)`,
-whose indices `inputs` turns into a batch; `forward` maps a batch to the
-supervised logits and their targets, `loss` to the training loss, and
-`position_losses` to the mean loss at each supervised position, named by
-`components`. Exhaustive evaluation adds each chunk of a split's rows into
+whose indices `inputs` turns into a batch: host indices for an update issued
+eagerly, or the device index that a captured update reads without
+synchronizing. `forward` maps a batch to the supervised logits and their
+targets, `loss` to the training loss, and `position_losses` to the mean loss
+at each supervised position, named by `components`. Exhaustive evaluation
+adds each chunk of a split's rows, `splits[name][start:stop]`, into
 `accumulator()` with `accumulate`, and `metrics` reads the totals.
 `progress` states how much training data a number of examples is, and
 `analyze` summarizes the history of observations.
 """
 
-from ...domain import benchmarks
+from ...domain.benchmarks import ModularDivision, TinyShakespeare
+from ...domain.synthetic import Synthetic
 from .modular import ModularTask
+from .synthetic.training import SyntheticTask
 from .text import TextTask
 
-TASKS = {benchmarks.ModularDivision: ModularTask, benchmarks.TinyShakespeare: TextTask}
+TASKS = {ModularDivision: ModularTask, TinyShakespeare: TextTask, Synthetic: SyntheticTask}
 
 
 def build_task(spec, data_seed, device):
