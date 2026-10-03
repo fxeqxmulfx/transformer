@@ -2,6 +2,8 @@
 
 import math
 
+from .phases import sustained
+
 
 def transition(history, target=.99, patience=2):
     """First train fit and first sustained held-out success.
@@ -12,12 +14,8 @@ def transition(history, target=.99, patience=2):
     with held-out accuracy at least `target`.
     """
     fit = next((point["step"] for point in history if point["train"]["accuracy"] >= target), None)
-    confirmed, onset = None, None
-    for start in range(len(history) - patience + 1):
-        streak = history[start:start + patience]
-        if all(point["heldout"]["accuracy"] >= target for point in streak):
-            onset, confirmed = streak[0]["step"], streak[-1]["step"]
-            break
+    event = sustained(history, "heldout", target, patience)
+    onset, confirmed = (event["onset"], event["confirmed"]) if event else (None, None)
     return {"train_fit_step": fit, "heldout_onset_step": onset, "heldout_confirmed_step": confirmed,
             "lag_steps": onset - fit if fit is not None and onset is not None else None,
             "delayed_generalization": fit is not None and onset is not None and onset > fit,
