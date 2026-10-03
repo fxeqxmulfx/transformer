@@ -520,9 +520,9 @@ or long joint confirmation. All 201 frozen final-window observations fail;
 post-confirmation episodes/recovery rates are unavailable. Complete histories,
 actual batch exposure, source/audit provenance, native final CPU state and
 both PNG/actual PDF figures are verified and reviewed. Fresh paired softmax
-is running automatically under the original trainer/archive-worker handles.
-The pair, all-six primary gate and subsequent scientific studies remain
-incomplete. No criterion is relaxed or future update budget enlarged.
+now completes its full budget as recorded below. Both original terminal
+handles are consumed with exit code 0. The all-six primary gate and subsequent
+scientific studies remain incomplete. No criterion or budget is changed.
 
 The fresh control's [captured phase and first recovery](protocols/adamw_stability_20261002/softmax-first-long-and-recovery.md)
 retain all 424 canonical observations through 105,750: the qualifying plateau
@@ -547,6 +547,18 @@ failing after-probe 275,751 remain explicit; EOS stays 100% and no cause or
 continuous recovery is inferred. Nine witness files replay byte-exactly with
 independent NoTorch episode/bin recomputation; all source/proof/audit hashes
 remain intact. Complete, review and commit both budgets before any new freeze.
+
+The [complete fresh softmax control](protocols/adamw_stability_20261002/attention-softmax-result.md)
+finishes all 300,000 updates at 100%/100% train/held-out. Its full final window
+still has the two failures at 274,000/275,500, so persistence and stable
+grokking remain false. All six sampled episodes recover; the final joint
+streak has 98 observations. Tail bins have 0/40, 0/40, 2/40, 0/40 and 0/41
+failures, with nonmonotone episode frequency. All 1,201 non-time canonical
+records match the frozen same-seed/split reference, an observed A/A check
+rather than independent evidence. Full raw archives, source/audit pins,
+native final CPU state and both PNG/actual PDFs verify. Both scientific runs
+and processes are complete; the paired comparison's separate reviewed commit
+is required before selecting the prepared conditional schedule.
 
 The [full native paired-cohort preparation](protocols/adamw_stability_20261002/architecture-cohort-preparation.md)
 now executes all twelve held-out control/candidate cases with unchanged selected

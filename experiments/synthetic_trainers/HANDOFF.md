@@ -659,10 +659,10 @@ rates unavailable. System Python verifies the archive without Torch, actual
 checkpoint/native moments are finite at 300,000, and both PNG/actual PDF
 figures are reviewed. All frozen sources/audit match.
 Original trainer PID 139507/session 47567 and replacement archive worker
-PID 145323/session 25387 continue with the automatically started fresh softmax
-control. The pair and scientific goal remain incomplete. Complete, review and
-commit that full control/pair, consume both live handles, then follow its
-unchanged primary confirmation or conditional schedule gate.
+PID 145323/session 25387 are retained as provenance. Both now terminate with
+consumed exit code 0; the fresh control's complete result is recorded below.
+The scientific goal remains incomplete and the unchanged primary confirmation
+or conditional schedule gate still applies after the whole pair's review.
 
 The fresh softmax control's [phase/recovery witness](protocols/adamw_stability_20261002/softmax-first-long-and-recovery.md)
 preserves its first 424 canonical observations through 105,750. The required
@@ -695,6 +695,20 @@ Nine core files replay byte-exactly with independent NoTorch episode/bin checks.
 All frozen sources/proofs/audit remain intact. Finish/review/commit the full
 control/pair and consume both handles before the prepared conditional schedule;
 this incomplete negative prefix opens no scientific stage.
+
+The [complete fresh softmax control](protocols/adamw_stability_20261002/attention-softmax-result.md)
+now finishes all 300,000 updates with 100%/100% final train/held-out, but the
+two late failures remain in its full 201-observation final window. All six
+sampled post-confirmation episodes recover; the final streak contains 98
+canonical targets over 275,750–300,000. Full tail-bin failures are 0/40, 0/40,
+2/40, 0/40 and 0/41, with nonmonotone onsets. Every one of 1,201 non-time
+canonical observations matches the frozen same-seed/split reference; this
+is not independent confirmation. Raw histories/CSV bytes, source/audit pins,
+native final CPU state and both PNG/actual PDFs verify. Training/wall times
+are 7,466.26/9,260.63 seconds. The whole pair is now complete and visually
+reviewed; commit its separate full comparison/terminal receipt before the
+prepared conditional schedule freeze. No stable benchmark or eligible timing
+comparison is established.
 
 The [full architecture-cohort pipeline](protocols/adamw_stability_20261002/architecture-cohort-preparation.md)
 is separately prepared, preserving the selected native AdamW schedule and all

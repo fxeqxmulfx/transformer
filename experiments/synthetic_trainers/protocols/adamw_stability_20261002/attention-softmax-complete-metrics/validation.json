@@ -1,0 +1,203 @@
+{
+  "recorded_at_utc": "2026-10-03T04:57:45.342556+00:00",
+  "scope": "one_complete_exploratory_normalizer_case; full_paired_comparison_reviewed_separately",
+  "name": "adamw-softmax",
+  "archive": "experiments/synthetic_trainers/baselines/adamw_attention_adamw-softmax_mod193_fraction25_lr0003_budget300k_seed0_data0_20261002",
+  "completed_updates": 300000,
+  "offline_verification_passed": true,
+  "Torch_imported": false,
+  "full_raw_logs_and_measurement_bytes_match_archive": true,
+  "observation_counts": {
+    "canonical": 1201,
+    "probes.jsonl": 2400,
+    "diagnostics.jsonl": 3600,
+    "gradients.jsonl": 300000
+  },
+  "all_43_Python_17_training_9_Lean_2_papers_and_audit_unchanged": true,
+  "parameters": 436104,
+  "checkpoint_sha256": "516bf695bb98cefeef080ce3bc8e5e24ecb53bb3a861e94600c9351eccbbb0bb",
+  "archive_artifact_manifest_sha256": "7043cc1914cae125ad357ebb8dba28205939c7bb0ab05e24863dc9f373f32572",
+  "peak_memory_includes_all_recorded_canonical_segment_peaks": true,
+  "observed_peaks": {
+    "peak_cuda_allocated_bytes": 120240128,
+    "peak_cuda_reserved_bytes": 140509184
+  },
+  "assessment": {
+    "criterion": {
+      "target": 0.99,
+      "heldout_ceiling": 0.1,
+      "plateau_steps": 1000,
+      "plateau_observations": 5,
+      "confirmation_observations": 20,
+      "tail_steps": 50000
+    },
+    "complete_canonical_history": true,
+    "plateau": {
+      "start": 4500,
+      "end": 27250,
+      "observations": 92
+    },
+    "long_confirmation": {
+      "onset": 95750,
+      "confirmed": 100500,
+      "training_seconds": 2491.8255679934227,
+      "wall_seconds": 3092.4105534289993
+    },
+    "tail_start_step": 250000,
+    "tail_observations": 201,
+    "tail_failures": [
+      274000,
+      275500
+    ],
+    "tail_minimum_heldout_accuracy": 0.49179620034542315,
+    "persistent_final_performance": false,
+    "stable_grokking": false,
+    "legacy_phase_diagnostics": {
+      "sustained_train_fit": {
+        "onset": 1250,
+        "confirmed": 1500
+      },
+      "sustained_heldout_target": {
+        "onset": 95750,
+        "confirmed": 96000
+      },
+      "time_to_sustained_train_fit": {
+        "onset": {
+          "training_seconds": 31.249056362605188,
+          "wall_seconds": 38.89456430400605
+        },
+        "confirmed": {
+          "training_seconds": 37.26794115152734,
+          "wall_seconds": 46.40866276000452
+        }
+      },
+      "time_to_sustained_heldout_target": {
+        "onset": {
+          "training_seconds": 2373.2717859414406,
+          "wall_seconds": 2945.4402047660114
+        },
+        "confirmed": {
+          "training_seconds": 2379.5346928174113,
+          "wall_seconds": 2953.1986559869983
+        }
+      },
+      "lag_after_sustained_train_fit": 94500,
+      "memorization_plateau": {
+        "start_step": 4500,
+        "end_step": 27250,
+        "span_steps": 22750,
+        "observations": 92,
+        "minimum_train_accuracy": 0.9902849740932642,
+        "maximum_heldout_accuracy": 0.008995394358088658
+      },
+      "heldout_ceiling": 0.1,
+      "train_target": 0.99,
+      "patience": 2,
+      "fit_to_heldout_onset_ratio": 76.6,
+      "observed_plateau_then_generalization": true,
+      "epoch_error_curve_before_generalization": {
+        "initial": {
+          "step": 0,
+          "error": 1.0
+        },
+        "first_minimum": {
+          "step": 1000,
+          "error": 0.9906088082901554
+        },
+        "peak": {
+          "step": 10500,
+          "error": 0.9925877950489349
+        },
+        "final": {
+          "step": 300000,
+          "error": 0.0
+        },
+        "first_descent": 0.009391191709844593,
+        "peak_rise": 0.0019789867587794996,
+        "second_descent": 0.9925877950489349,
+        "margin": 0.02,
+        "full_error_double_descent": false,
+        "selection": "minimum_before_sustained_train_fit; peak_while_train_fitted_before_heldout_target; final_observation",
+        "scope": "posthoc_synthetic_epoch_error_description; no_CIFAR_numerical_reproduction_or_causal_claim"
+      },
+      "both_epoch_error_double_descent_and_grokking": false,
+      "final_heldout_target": true,
+      "observations_after_confirmation": 817,
+      "fraction_observations_at_target_after_confirmation": 0.9865361077111383,
+      "minimum_heldout_accuracy_after_confirmation": 0.49179620034542315,
+      "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+    },
+    "scope": "finite_scheduled_observations; no_guarantee_between_observations_or_beyond_budget"
+  },
+  "gradient_trace": {
+    "observations": 300000,
+    "maximum_gradient_l2": 1727.98095703125,
+    "maximum_step": 178641,
+    "maximum_batch_size": 512,
+    "scope": "every_pre_update_gradient_norm; no_causal_claim"
+  },
+  "final": {
+    "step": 300000,
+    "epochs_seen": 15789.497409326425,
+    "training_seconds": 7466.25834126769,
+    "wall_seconds": 9260.14519661601,
+    "last_batch_size": 512,
+    "train": {
+      "accuracy": 1.0,
+      "answer_accuracy": 1.0,
+      "EOS_accuracy": 1.0,
+      "loss": 5.8375742264262404e-08,
+      "answer_loss": 1.1660993636519811e-07,
+      "EOS_loss": 1.4154815488977686e-10,
+      "examples": 9264
+    },
+    "heldout": {
+      "accuracy": 1.0,
+      "answer_accuracy": 1.0,
+      "EOS_accuracy": 1.0,
+      "loss": 6.353152687179931e-08,
+      "answer_loss": 1.2687003352088038e-07,
+      "EOS_loss": 1.9302020942368068e-10,
+      "examples": 27792
+    }
+  },
+  "training_seconds": 7466.25834126769,
+  "wall_seconds": 9260.629807288002,
+  "diagnostic_seconds": 85.34714923110732,
+  "native_optimizer_CPU_audit": {
+    "name": "adamw-softmax",
+    "completed_updates": 300000,
+    "parameters": 436104,
+    "native_state_count": 11,
+    "all_native_steps": [
+      300000
+    ],
+    "all_model_and_native_tensors_finite": true,
+    "maximum_second_moment_buffers_absent": true,
+    "actual_native_class": "torch.optim.AdamW",
+    "betas": [
+      0.9,
+      0.98
+    ],
+    "epsilon": 1e-08,
+    "weight_decay": 0.1,
+    "amsgrad": false,
+    "learning_rate": 0.0003,
+    "all_trainable_parameters_in_one_group_once": true,
+    "optimizer_updates_performed": 0,
+    "GPU_context_initialized": false,
+    "checkpoint_sha256": "516bf695bb98cefeef080ce3bc8e5e24ecb53bb3a861e94600c9351eccbbb0bb",
+    "executed_audit_script_sha256": "eb5f8873f84fb9070000be6845aa603623090f072e1331a607fa29491c030d32"
+  },
+  "PNG_figures_visually_reviewed": true,
+  "PDF_figures_visually_reviewed": true,
+  "full_pair_complete": true,
+  "independent_confirmation_gate_opened_by_this_case": false,
+  "review_recorded_at_utc": "2026-10-03T05:00:25.909048+00:00",
+  "visually_reviewed_figure_sha256": {
+    "plots/collapse-neighbors.pdf": "7904fe44d7fe1a3a757d7e089e6d91f867d5b888a95c9e82553a3d6a612bf29a",
+    "plots/collapse-neighbors.png": "cf893efdc379a00044e977cabd4e8392df43d762df36938b486c1d44a8eb4a2c",
+    "plots/stability-overview.pdf": "3a144ad8be200f285aec100145e9b34d0bee6455f969e2d18305ac8bff82b58d",
+    "plots/stability-overview.png": "4a8873a459f267e2cdbf06b71bce4d6d1c62db49f0eaac02708b22637300828b"
+  }
+}
