@@ -71,10 +71,10 @@ version and device, as recorded in each segment.
 reproduces the historical modular trainer record for record
 (`tests/test_engine.py`). `CudaGraph()` captures one update per recurring
 batch size and one evaluation per split, and replays them; sampled updates
-run the same operations eagerly. Its optimizer is the capturable AdamW, which
-rounds differently from the native one in the last bits, so a CudaGraph run
-equals its own operations issued eagerly (`tests/test_graphs.py`), not an
-Eager run. On the GTX 1050 it trains the mod-97 models 1.4-2.2 times faster.
+run the same operations eagerly. The optimizer runs in its capturable form,
+which reads the rate from a device tensor and rounds differently from the
+native form in the last bits, so a CudaGraph run equals its own operations
+issued eagerly (`tests/test_graphs.py`), not an Eager run. On the GTX 1050 it trains the mod-97 models 1.4-2.2 times faster.
 
 ## Layout
 
