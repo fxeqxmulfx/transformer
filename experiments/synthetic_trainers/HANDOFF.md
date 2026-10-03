@@ -14,6 +14,13 @@ for sparsemax and 100% for softmax, but strict final-window failures are
 frequencies are nonmonotone. Neither case opens the stable benchmark gate.
 See the [full comparison](protocols/adamw_stability_20261002/attention-pair-result.md).
 
+The active task is **prime-field division `x/y mod 193`, with `y != 0`**,
+adapted from the mod-97 division experiment in the local manuscript's Section 4.
+The [corpus implementation](paper_reproduction/modular_data.py) exhausts 37,056
+unique operand pairs: 9,264 train and 27,792 held-out. Both the numeric answer
+and EOS are scored. All decoded pairs pass the independent inverse oracle and
+match the frozen data fingerprints; inspection performs no updates and imports no Torch.
+
 The [conditional schedule pair](protocols/adamw_stability_20261002/scheduled-pair-freeze.md)
 is now frozen at `d8ccb18` and launched at `22b060f`. Trainer **PID 168237 /
 session 11503** and venv archive worker **PID 168332 / session 60201** are live;
