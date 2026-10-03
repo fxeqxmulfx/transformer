@@ -1,8 +1,25 @@
 # Synthetic trainer and paper reproduction handoff
 
 State updated on 2026-10-03 (UTC). Run commands from the repository root.
-Read [AGENTS.md](../../AGENTS.md), [PLAN.md](PLAN.md), and
+Read [AGENTS.md](../../AGENTS.md), the root
+[EXPERIMENT_PLAN.md](../../EXPERIMENT_PLAN.md), [PLAN.md](PLAN.md), and
 [STUDIES.md](STUDIES.md) before continuing.
+
+## User-requested pause (2026-10-03)
+
+The experimental cycle is paused by explicit user instruction. The project-wide
+plan above covers runtime profiling, fixed-checkpoint diagnostics, crossed
+forward/backward normalizer interventions and subsequent Lean proofs. Resume
+only when the user asks to continue; the historical active-work instructions
+below do not override this pause.
+
+Trainer PID 168237/session 11503 and archive worker PID 168332/session 60201
+are stopped with `SIGSTOP`; both were verified in process state `T`. The constant
+case has canonical observations through 288,000 and complete gradient records
+through 288,250. Its durable checkpoint is at 285,000; the root plan records
+its hash and resumption precautions. Cosine has not started. Preserve all
+partial artifacts and frozen sources. The incomplete constant case already
+has final-window failures at 274,000 and 275,500; no stable gate is open.
 
 ## Current state
 
@@ -35,13 +52,13 @@ The new modules are outside the nine frozen Lean pins; full-tree audit remains
 
 The [conditional schedule pair](protocols/adamw_stability_20261002/scheduled-pair-freeze.md)
 is now frozen at `d8ccb18` and launched at `22b060f`. Trainer **PID 168237 /
-session 11503** and venv archive worker **PID 168332 / session 60201** are live;
-constant softmax runs first, cosine-tail follows automatically. Both full
+session 11503** and venv archive worker **PID 168332 / session 60201** are paused;
+after explicit resumption, constant softmax runs first and cosine-tail follows. Both full
 budgets remain 300,000 updates. Keep its **55 Python / seventeen training /
 nine Lean / two paper / audit pins immutable**, retain every failure and
 complete/review/commit both cases and pair. Consume each real terminal result
 exactly once after completion; do not poll the retired normalizer sessions.
-The scientific goal stays active during healthy GPU execution. A passing
+The scientific goal is paused by the user. A passing
 recipe still requires all six fresh crossed confirmations before scientific
 architecture and complementary studies. Preparation fixtures open no gate.
 
@@ -51,7 +68,7 @@ checks at 95,750–100,500, and first sampled failure/recovery at
 105,250–105,750 (500 updates; minimum canonical held-out 97.481290%). All
 424 non-time canonical records match the same-seed historical softmax control.
 Eight core files replay exactly; independent NoTorch checks and actual PNG/PDF
-reviews pass. Both full budgets remain live; this prefix opens no stable gate.
+reviews pass. Both full budgets are incomplete and paused; this prefix opens no stable gate.
 
 The latest complete CPU suite passes **288 tests in 90.250 seconds** after the
 complementary normalizer bridge; its [full log](protocols/adamw_stability_20261002/complementary-attention-full-CPU-suite-20261003-final.log)

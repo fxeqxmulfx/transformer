@@ -3,6 +3,10 @@
 Repository instructions for Codex. `CLAUDE.md` contains the fuller rationale and
 examples behind these rules.
 
+The current experimental research plan and paused execution state are in the
+root [EXPERIMENT_PLAN.md](EXPERIMENT_PLAN.md). The user paused the experimental
+cycle on 2026-10-03; resume it only after an explicit instruction to continue.
+
 ## Paper fidelity
 
 - Formalize the manuscripts under `papers/` in Lean files under `src/`. The
