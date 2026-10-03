@@ -86,13 +86,13 @@ class MQAR(Task):
 class Lookup(Task):
     """Composed lookup: each query is answered with the end of a path of `hops` links from it.
 
-    The experimental extension of MQAR in `experiments/synthetic_trainers/
-    TASKS.md`, motivated by repeated select and aggregate in RASP
-    (arXiv:2106.06981v2, Sections 3.1 and 4). After BOS the input lists
-    `pairs` key/value records of one cyclic permutation of `pairs` identities,
-    out of `symbols`, then `queries` distinct starts; the end of each path is
-    supervised at its start. Every link of a path precedes its query, and no
-    path repeats a vertex.
+    The experimental extension of MQAR in
+    `experiments/archive/synthetic_trainers/TASKS.md`, motivated by repeated
+    select and aggregate in RASP (arXiv:2106.06981v2, Sections 3.1 and 4).
+    After BOS the input lists `pairs` key/value records of one cyclic
+    permutation of `pairs` identities, out of `symbols`, then `queries`
+    distinct starts; the end of each path is supervised at its start. Every
+    link of a path precedes its query, and no path repeats a vertex.
     """
     symbols: int = 32
     pairs: int = 8

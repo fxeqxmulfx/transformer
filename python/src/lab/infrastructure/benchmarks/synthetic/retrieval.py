@@ -1,7 +1,8 @@
 """Associative recall, and lookup composed over several hops.
 
 A port of `experiments/synthetic_trainers/lookup.py` and of the oracles of
-`oracles.py`; composed lookup is the experimental extension of `TASKS.md`.
+`oracles.py`; composed lookup is the experimental extension of
+`experiments/archive/synthetic_trainers/TASKS.md`.
 """
 
 from .base import Generator
