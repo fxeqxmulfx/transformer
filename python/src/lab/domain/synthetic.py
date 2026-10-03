@@ -8,7 +8,7 @@ from .generative import RandomLM
 from .spec import Spec, require, require_kind
 from .tasks import Problem, Task
 
-METRICS = ("token_accuracy", "sequence_accuracy", "balanced_accuracy")
+METRICS = ("token_accuracy", "sequence_accuracy", "balanced_accuracy", "final_answer_accuracy")
 
 
 @dataclass(frozen=True)
@@ -50,9 +50,17 @@ class Synthetic(Benchmark):
     problem has length `length`, as with `min_length=length`, but the splits
     are seeded differently, as they were.
 
+    A generative task is scored on free generation (`evaluate` of
+    `experiments/synthetic_trainers/metrics.py`): each answer is generated
+    greedily from its prompt alone, until EOS or a limit set by the prompt,
+    and the accuracies score what was generated; the loss stays that of
+    teacher forcing, whose own metrics are reported as `teacher_forced`. Its
+    final answer accuracy scores the final answer alone (`Task.final_token`).
+
     Validation is observed; the best observation has the highest sequence
-    accuracy, then balanced accuracy, then the lowest loss (`validation_rank`
-    of `experiments/synthetic_trainers/metrics.py`), and the test splits,
+    accuracy, then balanced accuracy, then the lowest loss, after the final
+    answer accuracy when that is the target `metric` (`validation_rank` of
+    the same module), and the test splits,
     `test` and `test/<name>` of each held-out distribution, are evaluated
     once, on its model. The run reports the first observation whose
     validation `metric` reaches `target`.
@@ -76,6 +84,8 @@ class Synthetic(Benchmark):
                 "OOD lengths are distinct and exceed the training maximum")
         require(self.target is None or 0 <= self.target <= 1, "The target is an accuracy, or None")
         require(self.metric in METRICS, f"The target metric is one of {', '.join(METRICS)}")
+        require(self.metric != "final_answer_accuracy" or self.task.generative,
+                "The final answer accuracy scores generated answers only")
         for problem in (self.problem, *self.probes.values()):
             problem.task.check_lengths(problem.minimum, problem.length)
         if self.study is not None:
@@ -112,4 +122,5 @@ class Synthetic(Benchmark):
         return ("test", *(f"test/{name}" for name in self.probes))
 
     def rank(self, metrics):
-        return metrics["sequence_accuracy"], metrics["balanced_accuracy"], -metrics["loss"]
+        rank = metrics["sequence_accuracy"], metrics["balanced_accuracy"], -metrics["loss"]
+        return (metrics["final_answer_accuracy"], *rank) if self.metric == "final_answer_accuracy" else rank

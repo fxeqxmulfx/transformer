@@ -85,12 +85,12 @@ class NonfiniteGradient(FloatingPointError):
 
 
 @torch.no_grad()
-def evaluate(task, model, rows, batch):
-    """The metrics of one split, evaluated exhaustively in chunks of `batch` rows."""
+def evaluate(task, model, rows, batch, static=False):
+    """The metrics of one split, evaluated exhaustively in chunks of `batch` rows, `static` or not."""
     model.eval()
     sums = task.accumulator()
     for start in range(0, len(rows), batch):
-        task.accumulate(model, rows[start:start + batch], sums)
+        task.accumulate(model, rows[start:start + batch], sums, static)
     return task.metrics(sums.tolist(), len(rows))
 
 

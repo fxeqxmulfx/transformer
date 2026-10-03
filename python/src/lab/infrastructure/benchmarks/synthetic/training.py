@@ -1,12 +1,14 @@
-"""Training and teacher-forced evaluation on the splits of a synthetic benchmark.
+"""Training and evaluation on the splits of a synthetic benchmark.
 
 Ports of `experiments/synthetic_trainers/training.py` (`train_run`) and
-`metrics.py` (`masked_loss`, `Metrics`). The training loss is the mean cross
-entropy over the supervised positions: written with `ignore_index` it has the
-gradient of the historical `masked_loss`, which selected them first, and it
-can be captured. Evaluation selects them through indices computed on the host
-(`Rows`), so every metric adds the float32 values the historical evaluation
-added, in its order, and its totals are bit-identical.
+`metrics.py` (`masked_loss`, `Metrics`, `evaluate`). The training loss is the
+mean cross entropy over the supervised positions: written with `ignore_index`
+it has the gradient of the historical `masked_loss`, which selected them
+first, and it can be captured. Evaluation selects them through indices
+computed on the host (`Rows`), so every metric adds the float32 values the
+historical evaluation added, in its order, and its totals are bit-identical.
+A split of generated answers is also scored on free generation
+(`generation`), as `evaluate` scored it.
 """
 
 import math
@@ -16,12 +18,15 @@ from torch.nn import functional as F
 
 from ..samplers import EpochSampler
 from . import generator
+from .generation import TOTALS, rollout, score, static_rollout
 from .rows import Rows
 from .splits import benchmark_splits
 from .vocabulary import IGNORE
 
-# Totals of an evaluation, before the per-class counts and correct predictions.
-LOSS, EXAMPLE_LOSS, TARGETS, CORRECT, EXACT, TRANSITIONS, TRANSITION_CORRECT, CLASSES = range(8)
+# Totals of teacher forcing, then those of free generation from GENERATED, before the count of each label, its
+# correct predictions, and its correct generated tokens.
+LOSS, EXAMPLE_LOSS, TARGETS, CORRECT, EXACT, TRANSITIONS, TRANSITION_CORRECT, GENERATED = range(8)
+CLASSES = GENERATED + TOTALS
 
 
 class SyntheticTask:
@@ -33,8 +38,6 @@ class SyntheticTask:
     components = ("loss",)
 
     def __init__(self, spec, data_seed, device):
-        if spec.task.generative:
-            raise NotImplementedError("Free generation of a generated answer is not ported yet")
         if spec.study is not None:
             raise NotImplementedError("The observations of a memorization study are not ported yet")
         self.spec, self.device = spec, device
@@ -55,7 +58,7 @@ class SyntheticTask:
         return {"examples_seen": seen, "epochs_seen": seen / len(self.splits["train"])}
 
     def accumulator(self):
-        return torch.zeros(CLASSES + 2 * self.vocab, dtype=torch.float64, device=self.device)
+        return torch.zeros(CLASSES + 3 * self.vocab, dtype=torch.float64, device=self.device)
 
     @staticmethod
     def forward(model, batch):
@@ -70,12 +73,15 @@ class SyntheticTask:
     def position_losses(output, targets):
         return SyntheticTask.loss(output, targets).reshape(1)
 
-    @staticmethod
-    def accumulate(model, chunk, sums):
+    def accumulate(self, model, chunk, sums, static):
         """Add a chunk's losses and counts to the float64 `sums`, as `Metrics.add` added them.
 
         Each example's loss is added position by position, as `scatter_add_`
         added it; the zero at an unsupervised position leaves it unchanged.
+        Generated answers are generated from their prompts, by
+        `static_rollout` when `static` and otherwise by `rollout`, and scored
+        as `GenerationMetrics.add` scored them; their tokens are the
+        supervised targets, whose counts they share.
         """
         tokens, targets, changes = chunk.rows.unbind(1)
         logits = model(tokens)
@@ -87,28 +93,50 @@ class SyntheticTask:
             example = example + column
         correct = logits.argmax(-1) == targets
         labels = targets.flatten().index_select(0, chunk.supervised)
-        sums[:CLASSES].add_(torch.stack([
+        sums[:GENERATED].add_(torch.stack([
             supervised.mean().double() * len(chunk.supervised), (example / valid.sum(1)).sum().double(),
             valid.sum().double(), (correct & valid).sum().double(), (correct | ~valid).all(dim=1).sum().double(),
             changes.sum().double(), (correct & changes).sum().double()]))
-        counts, right = sums[CLASSES:].view(2, -1).unbind(0)
+        counts, right, written = sums[CLASSES:].view(3, -1).unbind(0)
         counts.index_add_(0, labels, torch.ones_like(labels, dtype=sums.dtype))
         right.index_add_(0, labels, correct.flatten().index_select(0, chunk.supervised).to(sums.dtype))
+        if chunk.answers is not None:
+            generate = static_rollout if static else rollout
+            totals, generated = score(chunk.answers, *generate(model, chunk.answers), self.spec.task.final_token)
+            sums[GENERATED:CLASSES].add_(totals)
+            written.index_add_(0, chunk.answers.answers.clamp(min=0).flatten(), generated.flatten().to(sums.dtype))
 
     def metrics(self, sums, examples):
-        """`Metrics.report`, with a loss that is not finite reported as None, which no selection ranks."""
-        totals, counts, right = sums[:CLASSES], sums[CLASSES:CLASSES + self.vocab], sums[CLASSES + self.vocab:]
-        classes = {str(label): {"name": self.generator.token_name(label), "count": int(count),
-                                "correct": int(correct), "accuracy": correct / count}
-                   for label, (count, correct) in enumerate(zip(counts, right)) if count}
+        """`Metrics.report`, or for generated answers the report of `evaluate`.
+
+        That is the report of `GenerationMetrics`, with the loss and example
+        loss of teacher forcing, and its whole report as `teacher_forced`. A
+        loss that is not finite is reported as None, which no selection ranks.
+        """
+        totals, vocab = sums[:CLASSES], self.vocab
+        counts, right, written = (sums[CLASSES + kind * vocab:CLASSES + (kind + 1) * vocab] for kind in range(3))
         loss = totals[LOSS] / totals[TARGETS]
-        return {"loss": loss if math.isfinite(loss) else None, "example_loss": totals[EXAMPLE_LOSS] / examples,
-                "token_accuracy": totals[CORRECT] / totals[TARGETS], "sequence_accuracy": totals[EXACT] / examples,
+        teacher = {"loss": loss if math.isfinite(loss) else None, "example_loss": totals[EXAMPLE_LOSS] / examples,
+                   **self.accuracy(totals, counts, examples, totals[CORRECT], totals[EXACT],
+                                   totals[TRANSITION_CORRECT], right)}
+        if not self.spec.task.generative:
+            return teacher
+        correct, exact, final, ended, generated, extra, transition_correct = totals[GENERATED:CLASSES]
+        return {**self.accuracy(totals, counts, examples, correct, exact, transition_correct, written),
+                "final_answer_accuracy": final / examples, "eos_rate": ended / examples,
+                "generated_tokens": int(generated), "extra_tokens": int(extra), "loss": teacher["loss"],
+                "example_loss": teacher["example_loss"], "teacher_forced": teacher}
+
+    def accuracy(self, totals, counts, examples, correct, exact, transition_correct, right):
+        """The accuracies of predictions with `correct` tokens, `exact` examples, and `right` tokens of each label."""
+        classes = {str(label): {"name": self.generator.token_name(label), "count": int(count),
+                                "correct": int(hit), "accuracy": hit / count}
+                   for label, (count, hit) in enumerate(zip(counts, right)) if count}
+        return {"token_accuracy": correct / totals[TARGETS], "sequence_accuracy": exact / examples,
                 "balanced_accuracy": sum(item["accuracy"] for item in classes.values()) / len(classes),
-                "transition_accuracy": (totals[TRANSITION_CORRECT] / totals[TRANSITIONS]
-                                        if totals[TRANSITIONS] else None),
-                "target_count": int(totals[TARGETS]), "correct": int(totals[CORRECT]), "example_count": examples,
-                "exact": int(totals[EXACT]), "transition_count": int(totals[TRANSITIONS]), "classes": classes}
+                "transition_accuracy": transition_correct / totals[TRANSITIONS] if totals[TRANSITIONS] else None,
+                "target_count": int(totals[TARGETS]), "correct": int(correct), "example_count": examples,
+                "exact": int(exact), "transition_count": int(totals[TRANSITIONS]), "classes": classes}
 
     def analyze(self, history):
         """The splits' fingerprints, and the first observation whose validation `metric` reaches `target`."""

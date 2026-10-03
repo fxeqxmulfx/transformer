@@ -6,7 +6,8 @@ the gradient norm and any clipping, the capturable optimizer step, and the
 norm appended to a device trace. Each observed split gets one captured evaluation over all its
 chunks. Between replays the host only copies indices on the device and sets
 the rate tensor; it waits for the device at observations and when it stages
-a new index tensor of the sampler.
+a new index tensor of the sampler. Every evaluation, captured or not, is
+static (`benchmarks`), so all of them compute alike.
 
 Sampled updates, and batches of any other size, run the same operations
 eagerly, so measurements see what a replay would leave. Only the capturable
@@ -79,7 +80,7 @@ class GraphStepper:
                 self.forward_backward(index)
                 self.optimizer.step()
         for name in self.observed:
-            evaluate(self.task, self.model, self.task.splits[name], self.batch)
+            evaluate(self.task, self.model, self.task.splits[name], self.batch, static=True)
         with torch.no_grad():
             for parameter, value in zip(self.parameters, parameters, strict=True):
                 parameter.copy_(value)
@@ -124,7 +125,7 @@ class GraphStepper:
         with torch.cuda.graph(graph):
             sums.zero_()
             for start in range(0, len(rows), self.batch):
-                self.task.accumulate(self.model, rows[start:start + self.batch], sums)
+                self.task.accumulate(self.model, rows[start:start + self.batch], sums, static=True)
         return graph, sums
 
     def step(self, parts, rate, sampled):
@@ -191,7 +192,7 @@ class GraphStepper:
 
     def evaluate(self, split):
         if split not in self.evaluations:
-            return evaluate(self.task, self.model, self.task.splits[split], self.batch)
+            return evaluate(self.task, self.model, self.task.splits[split], self.batch, static=True)
         graph, sums = self.evaluations[split]
         graph.replay()
         return self.task.metrics(sums.tolist(), len(self.task.splits[split]))

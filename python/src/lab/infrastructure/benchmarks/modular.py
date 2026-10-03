@@ -131,8 +131,8 @@ class ModularTask:
         return losses.reshape(-1, targets.shape[-1]).mean(dim=0)
 
     @staticmethod
-    def accumulate(model, chunk, sums):
-        """Add a chunk's match counts and summed losses to the float64 `sums`.
+    def accumulate(model, chunk, sums, static):
+        """Add a chunk's match counts and summed losses to the float64 `sums`; static either way.
 
         Each chunk's float32 loss sums are added in float64, as the historical
         evaluation added each `.item()` to a Python float, so the totals are

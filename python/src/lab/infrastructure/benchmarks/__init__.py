@@ -8,7 +8,9 @@ synchronizing. `forward` maps a batch to the supervised logits and their
 targets, `loss` to the training loss, and `position_losses` to the mean loss
 at each supervised position, named by `components`. Exhaustive evaluation
 adds each chunk of a split's rows, `splits[name][start:stop]`, into
-`accumulator()` with `accumulate`, and `metrics` reads the totals.
+`accumulator()` with `accumulate`, and `metrics` reads the totals. A
+`static` evaluation fixes all its shapes in advance and never waits on the
+device, so a captured evaluation can replay it.
 `progress` states how much training data a number of examples is, and
 `analyze` summarizes the history of observations.
 """

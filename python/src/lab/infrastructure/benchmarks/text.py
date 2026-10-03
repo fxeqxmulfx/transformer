@@ -72,8 +72,8 @@ class TextTask:
         return TextTask.loss(output, targets).reshape(1)
 
     @staticmethod
-    def accumulate(model, chunk, sums):
-        """Add a chunk's summed cross entropy to the float32 total, as the historical evaluation did."""
+    def accumulate(model, chunk, sums, static):
+        """Add a chunk's summed cross entropy to the float32 total, as the historical evaluation did; static either way."""
         output, targets = TextTask.forward(model, chunk)
         sums.add_(F.cross_entropy(output.flatten(0, 1), targets.flatten(), reduction="sum"))
 

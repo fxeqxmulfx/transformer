@@ -99,6 +99,14 @@ class SyntheticSpecTests(unittest.TestCase):
                          ["length-8", "hard-carry-length-4", "hard-carry-length-8"])
         self.assertEqual(Synthetic(task=Parity(scratchpad="ones", hints=True), length=8, ood=(16,)).context, 67)
 
+    def test_the_final_answer_ranks_first_when_it_is_the_target(self):
+        metrics = {"final_answer_accuracy": 0.5, "sequence_accuracy": 0.25, "balanced_accuracy": 0.75, "loss": 2.0}
+        final = Synthetic(task=Parity(scratchpad="running"), length=8, metric="final_answer_accuracy")
+        self.assertEqual(final.rank(metrics), (0.5, 0.25, 0.75, -2.0))
+        self.assertEqual(Synthetic(task=Parity(scratchpad="running"), length=8).rank(metrics), (0.25, 0.75, -2.0))
+        with self.assertRaisesRegex(ValueError, "generated answers only"):
+            Synthetic(task=Dyck(), length=16, metric="final_answer_accuracy")
+
 
 if __name__ == "__main__":
     unittest.main()

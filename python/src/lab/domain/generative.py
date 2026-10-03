@@ -84,12 +84,13 @@ class Mode(Task):
     a number token, then the symbol: by increasing count, ties by first
     occurrence ("counts", Section 5), or by first occurrence ("itemized").
     The paper's second scratchpad (`app:modescratch`) takes the order of
-    "itemized" but writes each symbol before its count.
+    "itemized" but writes each symbol before its count. The final answer is
+    the most frequent symbol.
     """
     symbols: int = 32
     scratchpad: str = "none"
     number_limit: int = 512
-    generative = True
+    generative = final_token = True
 
     @property
     def uses_numbers(self):
@@ -264,13 +265,13 @@ class Parity(Task):
     `scratchpad` writes the running parity, from even, after every bit
     ("running") or after every one ("ones"); `hints` precede every bit, and
     its scratchpad entry, with an index token. The paper's scratchpad is
-    "ones" with `hints`.
+    "ones" with `hints`. The final answer is the parity of all the bits.
     """
     scratchpad: str = "none"
     hints: bool = False
     symbols: int = 32
     number_limit: int = 512
-    generative = True
+    generative = final_token = True
 
     @property
     def uses_numbers(self):

@@ -17,8 +17,14 @@ from .spec import Spec, require
 
 @dataclass(frozen=True)
 class Task(Spec, kind=True):
-    """An algorithmic problem family, sampled at the problem lengths its benchmark sets."""
+    """An algorithmic problem family, sampled at the problem lengths its benchmark sets.
+
+    A `generative` task's answer is generated after its prompt; with
+    `final_token`, the answer ends with its final answer, the token before
+    EOS, which a scratchpad may precede.
+    """
     generative = False
+    final_token = False
     uses_numbers = False
 
     def context(self, length):

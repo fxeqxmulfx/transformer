@@ -72,10 +72,12 @@ def experiments():
                                       Guarded(AMSGradMD(lr=0.3, direction_rate=3e-4), sigma=0.25)),
             "text": swap(swap(text(TEXT["runs"]["sparsemax"]), "execution", CudaGraph()), "diagnostics", TRACE),
             "synthetic": swap(swap(synthetic(SYNTHETIC["runs"]["crasp-amsgradw-clipped"]), "execution", CudaGraph()),
-                              "diagnostics", TRACE)}
+                              "diagnostics", TRACE),
+            "generated": swap(swap(synthetic(SYNTHETIC["runs"]["parity-running-amsgradw-clipped"]), "execution",
+                                   CudaGraph()), "diagnostics", TRACE)}
 
 
-SIZES = {"reference-wrap": [8], "text": [8], "synthetic": [4, 8]}
+SIZES = {"reference-wrap": [8], "text": [8], "synthetic": [4, 8], "generated": [4, 8]}
 
 
 def train(experiment, root, stepper, progress=lambda row: None):
@@ -122,7 +124,7 @@ class GraphTests(unittest.TestCase):
     def test_an_interrupted_graph_run_resumes_onto_the_same_records(self):
         for name, interrupted in (("sampled", 21), ("text", 25), ("adamx", 21), ("muon-guarded", 21),
                                   ("adafisherw", 21), ("magma-adamw", 21), ("amsgradmd-guarded", 21),
-                                  ("synthetic", 21)):
+                                  ("synthetic", 21), ("generated", 21)):
             experiment = swap(experiments()[name], "checkpoint", Checkpoint(every=10))
 
             def interrupt(row):
