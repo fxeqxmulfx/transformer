@@ -19,7 +19,9 @@ formalization and the lab cite as GPTMini.
 The records also kept the scripts that prepared, ran, checked and plotted
 their experiments, and the source snapshots those froze: 270 `.py` files,
 removed on 2026-10-03. Read one with `git show a64c896:<path>`, at its path
-here. Links to them in the records were made plain names.
+here. Links to them in the records were made plain names. The sparsemax
+generalization inspector, which no commit had held, was recorded in
+`441f47b` before it was removed; read it there.
 
 ## Old paths
 

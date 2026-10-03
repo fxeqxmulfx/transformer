@@ -102,13 +102,14 @@ gradients on fixed train and held-out batches. Instrumented logits, losses
 and every parameter gradient must match ordinary execution exactly.
 
 A preliminary CPU inspection already finished; its observations are under
-`experiments/archive/synthetic_trainers/runs/adamw_stability_20261002/bootstrap/sparsemax-generalization-inspection-20261003/`.
-The inspector remains an uncommitted work item, now at
-`experiments/archive/synthetic_trainers/protocols/adamw_stability_20261002/inspect_sparsemax_generalization.py`;
-it imports the removed synthetic trainers and reads `experiments/runs/`, so it
-no longer runs as it is. Review the source, independently
-check the observations, archive them and commit before treating them as final.
-No intervention training has started.
+`experiments/archive/synthetic_trainers/runs/adamw_stability_20261002/bootstrap/sparsemax-generalization-inspection-20261003/`
+(not tracked). The inspector that wrote them is in commit `441f47b`, at
+`experiments/archive/synthetic_trainers/protocols/adamw_stability_20261002/inspect_sparsemax_generalization.py`,
+and left the tree with the other archive scripts; its SHA256 is the
+`program_sha256` the observations record. It imports the removed synthetic
+trainers and reads `experiments/runs/`, so it does not run as it is. Review
+the source, independently check the observations, and archive them before
+treating them as final. No intervention training has started.
 
 ## 3. Separate forward routing from backward sensitivity
 
