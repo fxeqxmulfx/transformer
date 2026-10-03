@@ -27,32 +27,26 @@ establish a possible obstruction and exact table counts; they do not establish
 the cause of this model's generalization gap or verify its PyTorch trajectory.
 See [the proof and certificate report](experiments/synthetic_trainers/protocols/adamw_stability_20261002/sparsemax-mechanism-and-final-certificate.md).
 
-## Paused execution and resumption
+## Abandoned schedule pair
 
-The frozen constant/cosine schedule pair is incomplete. Trainer PID 168237
-(session 11503) and archive worker PID 168332 (session 60201) were both stopped
-with `SIGSTOP`; both were verified in process state `T` at 07:48:53 UTC.
-Their live state is retained. No new training or automatic continuation is
-authorized while this pause remains in force.
+The frozen constant/cosine schedule pair is incomplete and will not be
+resumed. Trainer PID 168237 (session 11503) and archive worker PID 168332
+(session 60201), stopped with `SIGSTOP` at 07:48:53 UTC, were terminated with
+`SIGKILL` at 08:03 UTC on 2026-10-03 by the user's decision, before the Python
+code moved out of `experiments/`. Neither process ran again after the pause,
+so the raw state below is exactly the paused state.
 
 The constant case's last canonical observation is update 288,000 and its last
 complete gradient record is 288,250. Its latest canonical train and held-out
 accuracies are 100%, but failures at 274,000 and 275,500 already violate the
 strict final-window condition. Only 153 of 201 final-window checks exist.
 The durable checkpoint is update 285,000, SHA-256
-`14706a5662e124119fef1caf882c6adae1ba8b8a8dfd7ed5cf14e6080a371380`.
-The cosine case has not started. Raw state is under
+`14706a5662e124119fef1caf882c6adae1ba8b8a8dfd7ed5cf14e6080a371380`,
+rechecked after termination. The cosine case never started. Raw state is under
 `experiments/runs/adamw_stability_20261002/schedule_mod193_fraction25_lr0003_budget300k/`.
-
-After explicit resumption, first verify process identities, checkpoints and
-all 55 Python, seventeen native training, nine Lean, paper and audit pins.
-If both stopped processes still exist, continue the existing trainer and
-worker rather than launching duplicates. Record the pause interval: process
-timers include suspension, so affected time measurements must be identified
-before comparing runtime. If the processes have disappeared, preserve the
-partial histories before the existing checkpoint-resume path truncates them;
-resume from the verified durable checkpoint. Finish both original 300,000-update
-budgets with their frozen configuration, then archive, verify, review and commit.
+The incomplete pair supports no conclusion about either schedule. Its frozen
+plan pins sources at their `experiments/` paths; replaying it requires a
+checkout of commit `698d904`.
 
 ## 1. Measure acceleration before choosing a new recipe
 
@@ -68,7 +62,7 @@ trace every update, and performs exhaustive canonical and neighboring
 evaluations. Evaluation currently uses batch 1,024. Measure training,
 evaluation, diagnostics and checkpoint overhead separately.
 
-After the original GPU pair finishes, benchmark isolated softmax and sparsemax
+Benchmark isolated softmax and sparsemax
 copies with training batches 512, 1,024, 2,048 and 4,096, subject to available
 memory. Keep LR at 0.0003 initially. Start every benchmark from the same saved
 model and optimizer state; use warmup and synchronized timings. Record update

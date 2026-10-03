@@ -13,13 +13,14 @@ forward/backward normalizer interventions and subsequent Lean proofs. Resume
 only when the user asks to continue; the historical active-work instructions
 below do not override this pause.
 
-Trainer PID 168237/session 11503 and archive worker PID 168332/session 60201
-are stopped with `SIGSTOP`; both were verified in process state `T`. The constant
-case has canonical observations through 288,000 and complete gradient records
-through 288,250. Its durable checkpoint is at 285,000; the root plan records
-its hash and resumption precautions. Cosine has not started. Preserve all
-partial artifacts and frozen sources. The incomplete constant case already
-has final-window failures at 274,000 and 275,500; no stable gate is open.
+Trainer PID 168237/session 11503 and archive worker PID 168332/session 60201,
+stopped with `SIGSTOP`, were terminated with `SIGKILL` on 2026-10-03 by the
+user's decision; the schedule pair is abandoned and will not be resumed. The
+constant case has canonical observations through 288,000 and complete gradient
+records through 288,250. Its durable checkpoint is at 285,000; the root plan
+records its hash. Cosine never started. The partial raw state is retained.
+The incomplete constant case already has final-window failures at 274,000 and
+275,500; no stable gate is open.
 
 ## Current state
 
@@ -51,13 +52,13 @@ The new modules are outside the nine frozen Lean pins; full-tree audit remains
 157 `sorry`, zero resting on `sorry`, and zero extra axioms.
 
 The [conditional schedule pair](protocols/adamw_stability_20261002/scheduled-pair-freeze.md)
-is now frozen at `d8ccb18` and launched at `22b060f`. Trainer **PID 168237 /
-session 11503** and venv archive worker **PID 168332 / session 60201** are paused;
-after explicit resumption, constant softmax runs first and cosine-tail follows. Both full
-budgets remain 300,000 updates. Keep its **55 Python / seventeen training /
-nine Lean / two paper / audit pins immutable**, retain every failure and
-complete/review/commit both cases and pair. Consume each real terminal result
-exactly once after completion; do not poll the retired normalizer sessions.
+was frozen at `d8ccb18` and launched at `22b060f`. Trainer **PID 168237 /
+session 11503** and venv archive worker **PID 168332 / session 60201** were
+paused and then terminated on 2026-10-03; the pair is abandoned with the
+constant case incomplete and cosine-tail never started. Its **55 Python /
+seventeen training / nine Lean / two paper / audit pins** refer to paths at
+commit `698d904`; the code has since moved, so replaying the pair requires
+that checkout.
 The scientific goal is paused by the user. A passing
 recipe still requires all six fresh crossed confirmations before scientific
 architecture and complementary studies. Preparation fixtures open no gate.
@@ -68,7 +69,7 @@ checks at 95,750–100,500, and first sampled failure/recovery at
 105,250–105,750 (500 updates; minimum canonical held-out 97.481290%). All
 424 non-time canonical records match the same-seed historical softmax control.
 Eight core files replay exactly; independent NoTorch checks and actual PNG/PDF
-reviews pass. Both full budgets are incomplete and paused; this prefix opens no stable gate.
+reviews pass. Both full budgets are incomplete and abandoned; this prefix opens no stable gate.
 
 The latest complete CPU suite passes **288 tests in 90.250 seconds** after the
 complementary normalizer bridge; its [full log](protocols/adamw_stability_20261002/complementary-attention-full-CPU-suite-20261003-final.log)
