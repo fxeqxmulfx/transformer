@@ -1,8 +1,9 @@
 """Transformer experiments composed from swappable blocks.
 
-An experiment file under `experiments/` composes a model and the conditions
-of its benchmark run in the language of `lab.dsl`; `lab run <file>` trains
-every experiment it defines. The package is layered by dependency:
+An experiment is a folder under `experiments/` whose `experiment.py` composes
+a model and the conditions of its benchmark runs in the language of
+`lab.dsl`; `lab run <experiment>` trains every run it defines. The package is
+layered by dependency:
 
 - `lab.domain`: the language itself and pure rules (schedules, cadences,
   continuation, analysis); no PyTorch, NumPy or filesystem;

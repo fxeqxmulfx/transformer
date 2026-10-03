@@ -4,23 +4,23 @@
     ./make.py <task> [arguments]
 
 Lean
-    lean                    build the tree (lake build)
-    audit                   axioms of every Transformer.* declaration; `rests` must be 0
-    index                   regenerate INDEX.md from src/ and the build
-    forbidden               search src/ for native_decide, axioms and disabled linters
+    lean                          build the tree (lake build)
+    audit                         axioms of every Transformer.* declaration; `rests` must be 0
+    index                         regenerate INDEX.md from src/ and the build
+    forbidden                     search src/ for native_decide, axioms and disabled linters
 
-Python (the uv project in python/)
-    setup                   install the locked environment
-    test [pattern ...]      run the test suite, optionally only tests matching patterns
-    blocks                  list the experiment language
-    check <file>            load an experiment file and list its experiments
-    show <file> <label>     print one experiment's description
-    run <file> [labels]     train an experiment file's experiments, or the labeled ones
-    report <file> [labels]  print what the runs recorded and what their records say, as JSON
+Python (the uv project in python/; an experiment is a folder under experiments/)
+    setup                         install the locked environment
+    test [pattern ...]            run the test suite, optionally only tests matching patterns
+    blocks                        list the experiment language
+    check <experiment>            load an experiment and list its runs
+    show <experiment> <label>     print one run's description
+    run <experiment> [labels]     train an experiment's runs, or the labeled ones
+    report <experiment> [labels]  print what the runs recorded and what their records say, as JSON
 
 Together
-    verify                  lean, audit, index, forbidden and test: the checks before a commit
-    clean                   remove Python bytecode caches
+    verify                        lean, audit, index, forbidden and test: the checks before a commit
+    clean                         remove Python bytecode caches
 
 Only the standard library is used, so this runs before any setup.
 """
@@ -43,7 +43,7 @@ def execute(command, cwd=ROOT):
 
 
 def lab(*arguments):
-    """The lab command line, run from the repository root so file paths resolve here."""
+    """The lab command line, run from the repository root so experiment paths resolve here."""
     execute(["uv", "run", "--locked", "--project", str(PYTHON), "lab", *arguments])
 
 
@@ -100,20 +100,20 @@ def main():
     command.set_defaults(handler=test)
     tasks.add_parser("blocks").set_defaults(handler=lambda _: lab("blocks"))
     command = tasks.add_parser("check")
-    command.add_argument("file")
-    command.set_defaults(handler=lambda arguments: lab("check", arguments.file))
+    command.add_argument("experiment")
+    command.set_defaults(handler=lambda arguments: lab("check", arguments.experiment))
     command = tasks.add_parser("show")
-    command.add_argument("file")
+    command.add_argument("experiment")
     command.add_argument("label")
-    command.set_defaults(handler=lambda arguments: lab("show", arguments.file, arguments.label))
+    command.set_defaults(handler=lambda arguments: lab("show", arguments.experiment, arguments.label))
     command = tasks.add_parser("run")
-    command.add_argument("file")
+    command.add_argument("experiment")
     command.add_argument("labels", nargs="*")
-    command.set_defaults(handler=lambda arguments: lab("run", arguments.file, *arguments.labels))
+    command.set_defaults(handler=lambda arguments: lab("run", arguments.experiment, *arguments.labels))
     command = tasks.add_parser("report")
-    command.add_argument("file")
+    command.add_argument("experiment")
     command.add_argument("labels", nargs="*")
-    command.set_defaults(handler=lambda arguments: lab("report", arguments.file, *arguments.labels))
+    command.set_defaults(handler=lambda arguments: lab("report", arguments.experiment, *arguments.labels))
     arguments = parser.parse_args()
     try:
         arguments.handler(arguments)

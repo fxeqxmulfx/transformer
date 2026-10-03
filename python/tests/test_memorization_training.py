@@ -61,7 +61,7 @@ def fingerprints(golden):
 
 class HistoricalStudyTests(unittest.TestCase):
     def assert_reproduces(self, golden, root):
-        run = RunDirectory(Path(root) / "historical" / "run")
+        run = RunDirectory(Path(root) / "run")
         self.assertEqual([{key: value for key, value in row.items() if key not in UNCOMPARED}
                           for row in run.records("history")], [observation(row) for row in golden["history"]])
         result = run.result()
@@ -102,7 +102,7 @@ class HistoricalStudyTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as root:
             with self.assertRaises(Interrupted):
                 train(resumable, root, interrupt)
-            self.assertEqual(RunDirectory(Path(root) / "historical" / "run").checkpoint("cpu")["best"]["step"], 20)
+            self.assertEqual(RunDirectory(Path(root) / "run").checkpoint("cpu")["best"]["step"], 20)
             train(resumable, root)
             self.assert_reproduces(golden, root)
 

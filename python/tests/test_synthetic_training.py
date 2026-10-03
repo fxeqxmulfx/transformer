@@ -76,7 +76,7 @@ def untimed(hit):
 
 class HistoricalTrainingTests(unittest.TestCase):
     def assert_reproduces(self, golden, root):
-        run = RunDirectory(Path(root) / "historical" / "run")
+        run = RunDirectory(Path(root) / "run")
         self.assertEqual([{key: row[key] for key in ("step", "examples_seen", "validation")}
                           for row in run.records("history")], golden["history"])
         result = run.result()
@@ -110,7 +110,7 @@ class HistoricalTrainingTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as root:
             with self.assertRaises(Interrupted):
                 train(resumable, root, interrupt)
-            self.assertEqual(RunDirectory(Path(root) / "historical" / "run").checkpoint("cpu")["best"]["step"], 20)
+            self.assertEqual(RunDirectory(Path(root) / "run").checkpoint("cpu")["best"]["step"], 20)
             train(resumable, root)
             self.assert_reproduces(golden, root)
 

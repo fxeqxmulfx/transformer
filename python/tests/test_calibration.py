@@ -1,10 +1,10 @@
-"""The learning rates the convex MQAR comparison selected, chosen again over its experiment file.
+"""The learning rates the convex MQAR comparison selected, chosen again over its experiment.
 
 Golden records: `fixtures/legacy_rates.json`, what
 `validation_milestones.build_report` of `experiments/convex_mqar` selected
 under each policy from the archived summaries of its 24 runs, and what it
 read of each. The runs are matched to the labels of
-`experiments/mqar_sparsemax.py`, whose epochs set the observed updates.
+`experiments/mqar_sparsemax`, whose epochs set the observed updates.
 """
 
 import json
@@ -18,7 +18,7 @@ from lab.infrastructure.loader import load
 from test_experiments import EXPERIMENTS
 
 LEGACY = json.loads((Path(__file__).parent / "fixtures" / "legacy_rates.json").read_text())
-STUDY = load(EXPERIMENTS / "mqar_sparsemax.py")
+STUDY = load(EXPERIMENTS / "mqar_sparsemax")
 
 
 def label(run):

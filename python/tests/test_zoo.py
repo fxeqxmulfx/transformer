@@ -148,7 +148,7 @@ class ZooTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as root:
             with self.assertRaises(Interrupted):
                 train(swap(experiment, "checkpoint", Checkpoint(every=10)), root, interrupt)
-            run = RunDirectory(Path(root) / "historical" / "run")
+            run = RunDirectory(Path(root) / "run")
             self.assertEqual(run.checkpoint("cpu")["optimizer"]["state"][0]["step"].item(), 20)
             train(swap(experiment, "checkpoint", Checkpoint(every=10)), root)
             reproduces(self, golden, root)
@@ -167,7 +167,7 @@ class ZooTests(unittest.TestCase):
             golden, experiment = recipe(name, CLOSE)
             with self.subTest(recipe=name), tempfile.TemporaryDirectory() as root:
                 result = train(experiment, root)
-                history = RunDirectory(Path(root) / "historical" / "run").records("history")
+                history = RunDirectory(Path(root) / "run").records("history")
                 self.assertEqual([row["step"] for row in history], [check["step"] for check in golden["curves"]])
                 tolerance = TOLERANCE.get(name, 1e-4)
                 for row, check in zip(history, golden["curves"], strict=True):

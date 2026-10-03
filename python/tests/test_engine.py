@@ -87,7 +87,7 @@ class Interrupted(Exception):
 
 class HistoricalRunTests(unittest.TestCase):
     def assert_reproduces(self, golden, root):
-        run = RunDirectory(Path(root) / "historical" / "run")
+        run = RunDirectory(Path(root) / "run")
         self.assertEqual(untimed(run.records("history")), golden["history"])
         self.assertEqual(untimed(run.records("probes")), golden["probes"])
         self.assertEqual(run.records("gradients"), golden["gradients"])
@@ -123,7 +123,7 @@ class HistoricalRunTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as root:
             with self.assertRaises(Interrupted):
                 train(experiment, root, interrupt)
-            self.assertEqual(RunDirectory(Path(root) / "historical" / "run").checkpoint("cpu")["step"], 20)
+            self.assertEqual(RunDirectory(Path(root) / "run").checkpoint("cpu")["step"], 20)
             train(experiment, root)
             self.assert_reproduces(FIXTURE["runs"]["gptmini"], root)
 
@@ -134,7 +134,7 @@ class HistoricalRunTests(unittest.TestCase):
             self.assertEqual(first["final"]["step"], 20)
             train(experiment, root)
             self.assert_reproduces(FIXTURE["runs"]["gptmini"], root)
-            run = RunDirectory(Path(root) / "historical" / "run")
+            run = RunDirectory(Path(root) / "run")
             self.assertEqual([segment["updates"] for segment in run.manifest()["segments"]], [20, 30])
             self.assertEqual(train(experiment, root), run.result())
             self.assertEqual(len(run.manifest()["segments"]), 2)

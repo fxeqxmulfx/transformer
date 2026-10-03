@@ -68,7 +68,7 @@ class WindowSamplerTests(unittest.TestCase):
 
 def reproduces(test, golden, root):
     """The run under `root` makes the golden observations, decisions and best model, bit for bit."""
-    run = RunDirectory(Path(root) / "historical" / "run")
+    run = RunDirectory(Path(root) / "run")
     test.assertEqual([(row["step"], row["validation"]["loss"]) for row in run.records("history")],
                      [(check["step"], check["validation_loss"]) for check in golden["curves"]])
     result = run.result()
@@ -101,7 +101,7 @@ class HistoricalTextTests(unittest.TestCase):
         for name, golden in FIXTURE["cuda_runs"].items():
             with self.subTest(run=name), tempfile.TemporaryDirectory() as root:
                 result = train(historical(golden, device="cuda"), root)
-                history = RunDirectory(Path(root) / "historical" / "run").records("history")
+                history = RunDirectory(Path(root) / "run").records("history")
                 self.assertEqual([row["step"] for row in history], [check["step"] for check in golden["curves"]])
                 self.assertEqual(history[0]["validation"]["loss"], golden["curves"][0]["validation_loss"])
                 for row, check in zip(history, golden["curves"], strict=True):
@@ -121,7 +121,7 @@ class HistoricalTextTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as root:
             with self.assertRaises(Interrupted):
                 train(experiment, root, interrupt)
-            self.assertEqual(RunDirectory(Path(root) / "historical" / "run").checkpoint("cpu")["step"], 20)
+            self.assertEqual(RunDirectory(Path(root) / "run").checkpoint("cpu")["step"], 20)
             train(experiment, root)
             self.assert_reproduces(golden, root)
 

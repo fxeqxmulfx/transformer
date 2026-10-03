@@ -1,11 +1,12 @@
-"""The experiment files of the repository stay valid as the language changes.
+"""The experiments of the repository stay valid as the language changes.
 
-A file written from archived runs trains their recipes: `synthetic_amsgradw.py`
-those of `fixtures/legacy_baseline.json`, the manifest of the archived
-AMSGradW/softmax baseline of the synthetic suite, `synthetic_scaling.py`
-those of `fixtures/legacy_scaling.json`, the configurations its archived
-sweeps recorded, and `mqar_sparsemax.py` the `full` and `sanity` profiles of
-the convex MQAR comparison recorded in `fixtures/legacy_recall.json`.
+An experiment written from archived runs trains their recipes:
+`synthetic_amsgradw` those of `fixtures/legacy_baseline.json`, the manifest of
+the archived AMSGradW/softmax baseline of the synthetic suite,
+`synthetic_scaling` those of `fixtures/legacy_scaling.json`, the
+configurations its archived sweeps recorded, and `mqar_sparsemax` the `full`
+and `sanity` profiles of the convex MQAR comparison recorded in
+`fixtures/legacy_recall.json`.
 """
 
 import itertools
@@ -26,16 +27,16 @@ EXPERIMENTS = Path(__file__).resolve().parents[2] / "experiments"
 FIXTURES = Path(__file__).parent / "fixtures"
 
 
-def experiment_files():
-    """The files under experiments/ written in the experiment language."""
-    return sorted(path for path in EXPERIMENTS.glob("*.py") if "from lab.dsl import" in path.read_text())
+def experiment_folders():
+    """The experiments under experiments/: the folders holding an `experiment.py`."""
+    return sorted(path.parent for path in EXPERIMENTS.glob("*/experiment.py"))
 
 
-class ExperimentFileTests(unittest.TestCase):
-    def test_every_experiment_file_describes_its_experiments(self):
-        files = experiment_files()
-        self.assertTrue(files)
-        for path in files:
+class ExperimentFolderTests(unittest.TestCase):
+    def test_every_experiment_describes_its_runs(self):
+        folders = experiment_folders()
+        self.assertTrue(folders)
+        for path in folders:
             with self.subTest(path.name):
                 rows = survey(load(path))
                 self.assertEqual(len({row["fingerprint"] for row in rows}), len(rows))
@@ -58,9 +59,9 @@ def scaling(name):
             "dd-widths": f"widths-width{width}-seed{seed}", "copy-scaling": f"copy-width{width}-depth{layers}"}[phase]
 
 
-# Each file written from archived runs, the fixture of their recipes, and the label the file gives a run.
-ARCHIVED = {"synthetic_amsgradw.py": ("legacy_baseline.json", baseline),
-            "synthetic_scaling.py": ("legacy_scaling.json", scaling)}
+# Each experiment written from archived runs, the fixture of their recipes, and the label it gives a run.
+ARCHIVED = {"synthetic_amsgradw": ("legacy_baseline.json", baseline),
+            "synthetic_scaling": ("legacy_scaling.json", scaling)}
 
 
 def recall():
@@ -76,7 +77,7 @@ def recall():
 
 
 class ArchivedRecipeTests(unittest.TestCase):
-    def test_files_written_from_archived_runs_train_their_recipes(self):
+    def test_experiments_written_from_archived_runs_train_their_recipes(self):
         for name, (fixture, label) in ARCHIVED.items():
             with self.subTest(name):
                 recipes = json.loads((FIXTURES / fixture).read_text())["recipes"]
@@ -84,8 +85,8 @@ class ArchivedRecipeTests(unittest.TestCase):
                                  {label(recipe["name"]): swap(study(recipe), "execution", CudaGraph())
                                   for recipe in recipes})
 
-    def test_the_recall_file_trains_the_archived_profiles(self):
-        self.assertEqual(load(EXPERIMENTS / "mqar_sparsemax.py").experiments, recall())
+    def test_the_recall_experiment_trains_the_archived_profiles(self):
+        self.assertEqual(load(EXPERIMENTS / "mqar_sparsemax").experiments, recall())
 
 
 if __name__ == "__main__":

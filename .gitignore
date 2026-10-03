@@ -60,3 +60,4 @@ venv/
 
 # ── Experiments ──────────────────────────────────────────────────────────
 /experiments/runs/
+/experiments/*/runs/

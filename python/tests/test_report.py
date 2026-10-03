@@ -41,7 +41,7 @@ class ReportTests(unittest.TestCase):
         self.runs = RunDirectories(directory.name)
 
     def write(self, label, experiment, rows, result=None, streams=True):
-        run = self.runs.open("stability", label)
+        run = self.runs.open(label)
         run.begin(describe(experiment), {"engine": {}}, "")
         for stream, records in (("history", rows), ("probes", COLLAPSE["grokking"]["probes"] if streams else ()),
                                 ("diagnostics", COLLAPSE["grokking"]["diagnostics"] if streams else ())):

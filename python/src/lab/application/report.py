@@ -88,7 +88,7 @@ def report_study(study, labels, runs: Runs):
     reports, candidates = {}, {}
     chosen = study.select(labels)
     for label, experiment in chosen:
-        run = runs.open(study.name, label)
+        run = runs.open(label)
         stored = run.description()
         if stored is None:
             reports[label] = {"status": "not_started"}

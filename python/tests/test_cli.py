@@ -31,43 +31,47 @@ class CliTests(unittest.TestCase):
             self.assertEqual(main(list(arguments)), 0)
         return stream.getvalue()
 
-    def file(self, text):
+    def experiment(self, text):
+        """An experiment folder `pair` whose `experiment.py` is `text`."""
         directory = tempfile.TemporaryDirectory()
         self.addCleanup(directory.cleanup)
-        path = Path(directory.name) / "pair.py"
-        path.write_text(text)
-        return str(path)
+        folder = Path(directory.name) / "pair"
+        folder.mkdir()
+        (folder / "experiment.py").write_text(text)
+        return str(folder)
 
     def test_check_lists_experiments_and_their_differences(self):
-        lines = self.output("check", self.file(PAIR)).splitlines()
+        lines = self.output("check", self.experiment(PAIR)).splitlines()
         self.assertEqual([line.split()[0] for line in lines], ["softmax", "sparsemax"])
         self.assertEqual(lines[0].split()[-1], "-")
         self.assertEqual(lines[1].split()[-1], "model.block.attention.weights")
 
     def test_show_prints_the_full_description(self):
-        description = json.loads(self.output("show", self.file(PAIR), "sparsemax"))
+        description = json.loads(self.output("show", self.experiment(PAIR), "sparsemax"))
         self.assertEqual(description["model"]["block"]["attention"]["weights"], {"type": "Sparsemax"})
         with self.assertRaisesRegex(KeyError, "defines no cosine"):
-            self.output("show", self.file(PAIR), "cosine")
+            self.output("show", self.experiment(PAIR), "cosine")
 
-    def test_files_must_define_labeled_experiments(self):
+    def test_an_experiment_is_a_folder_that_defines_labeled_runs(self):
+        with self.assertRaisesRegex(FileNotFoundError, "holds no experiment.py"):
+            self.output("check", str(Path(self.experiment(PAIR)).parent))
         with self.assertRaisesRegex(LookupError, "no `experiments`"):
-            self.output("check", self.file("x = 1\n"))
+            self.output("check", self.experiment("x = 1\n"))
         with self.assertRaisesRegex(ValueError, "Label 'Soft max'"):
-            self.output("check", self.file(PAIR + "experiments = {'Soft max': base}\n"))
+            self.output("check", self.experiment(PAIR + "experiments = {'Soft max': base}\n"))
 
-    def test_run_trains_each_experiment_once(self):
-        path = self.file(PAIR)
+    def test_run_trains_each_run_once_in_the_experiment_folder(self):
+        path = self.experiment(PAIR)
         lines = self.output("run", path, "softmax").splitlines()
         self.assertEqual([line.split()[:3] for line in lines[:3]],
                          [["softmax", "step", "0"], ["softmax", "step", "10"], ["softmax", "step", "20"]])
         self.assertEqual(lines[-1].split()[:4], ["softmax", "finished", "20", "updates"])
-        self.assertTrue((Path(path).parent / "runs" / "pair" / "softmax" / "checkpoint.pt").exists())
-        self.assertFalse((Path(path).parent / "runs" / "pair" / "sparsemax").exists())
-        self.assertEqual(self.output("run", path, "softmax").splitlines(), lines[-1:])
+        self.assertTrue((Path(path) / "runs" / "softmax" / "checkpoint.pt").exists())
+        self.assertFalse((Path(path) / "runs" / "sparsemax").exists())
+        self.assertEqual(self.output("run", str(Path(path) / "experiment.py"), "softmax").splitlines(), lines[-1:])
 
     def test_report_reads_the_runs_back_as_json(self):
-        path = self.file(PAIR)
+        path = self.experiment(PAIR)
         self.output("run", path, "softmax")
         document = json.loads(self.output("report", path))
         self.assertEqual(document["rate_selection"], [])

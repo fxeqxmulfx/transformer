@@ -43,8 +43,10 @@ class Run(Protocol):
 
 
 class Runs(Protocol):
-    def open(self, study: str, label: str) -> Run:
-        """The run of one labeled experiment of a study."""
+    """The runs of one study."""
+
+    def open(self, label: str) -> Run:
+        """The run of one labeled experiment."""
 
 
 class Trainer(Protocol):

@@ -29,8 +29,8 @@ class FakeRuns:
     def __init__(self):
         self.runs = {}
 
-    def open(self, study, label):
-        return self.runs.setdefault((study, label), FakeRun())
+    def open(self, label):
+        return self.runs.setdefault(label, FakeRun())
 
 
 class FakeTrainer:

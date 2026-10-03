@@ -1,4 +1,4 @@
-"""Run directories: one per labeled experiment, at `runs/<file stem>/<label>/` beside the file.
+"""Run directories: one per labeled experiment, at `runs/<label>/` in the folder of its experiment.
 
     experiment.json    the description, and one segment per training session
     experiment.py      the experiment file as of the latest session
@@ -95,8 +95,10 @@ class RunDirectory:
 
 
 class RunDirectories:
+    """The runs of one study, a directory per label under `root`."""
+
     def __init__(self, root):
         self.root = Path(root)
 
-    def open(self, study, label):
-        return RunDirectory(self.root / study / label)
+    def open(self, label):
+        return RunDirectory(self.root / label)

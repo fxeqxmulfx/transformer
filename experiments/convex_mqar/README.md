@@ -5,7 +5,7 @@
 > The trained Transformers of the comparison, with softmax and sparsemax
 > attention, and its learning-rate selection are ported to
 > [`python/src/lab`](../../python/src/lab), as
-> [`experiments/mqar_sparsemax.py`](../mqar_sparsemax.py); the convex
+> [`experiments/mqar_sparsemax`](../mqar_sparsemax); the convex
 > construction and its certificate, the Zoology models and the diagnostics
 > are not. The commands below are how the reports kept here were produced.
 

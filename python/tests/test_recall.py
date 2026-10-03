@@ -83,7 +83,7 @@ class HistoricalRecallTests(unittest.TestCase):
     def assert_reproduces(self, name, root):
         golden = RECALL["runs"][name]
         epoch = experiment(name).evaluate.every
-        run = RunDirectory(Path(root) / "historical" / "run")
+        run = RunDirectory(Path(root) / "run")
         history = run.records("history")
         self.assertEqual([(row["step"], row["epochs_seen"], row["validation"]) for row in history[1:]],
                          [(row["epoch"] * epoch, row["epoch"], metrics(row["validation"]))
@@ -113,7 +113,7 @@ class HistoricalRecallTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as root:
             with self.assertRaises(Interrupted):
                 train(resumable, root, interrupt)
-            self.assertEqual(RunDirectory(Path(root) / "historical" / "run").checkpoint("cpu")["step"], 8)
+            self.assertEqual(RunDirectory(Path(root) / "run").checkpoint("cpu")["step"], 8)
             train(resumable, root)
             self.assert_reproduces("softmax", root)
 
@@ -130,14 +130,14 @@ class HistoricalRecallTests(unittest.TestCase):
             train(resumable, straight)
             with self.assertRaises(Interrupted):
                 train(resumable, resumed, interrupt)
-            checkpoint = RunDirectory(resumed / "historical" / "run").checkpoint("cpu")
+            checkpoint = RunDirectory(resumed / "run").checkpoint("cpu")
             self.assertEqual((checkpoint["step"], checkpoint["epoch"], checkpoint["cursor"]), (4, 1, 64))
             train(resumable, resumed)
-            records = [RunDirectory(path / "historical" / "run").records("history") for path in (straight, resumed)]
+            records = [RunDirectory(path / "run").records("history") for path in (straight, resumed)]
             self.assertEqual(*[[{key: value for key, value in row.items() if key not in ("training_seconds",
                                                                                        "wall_seconds")}
                                 for row in rows] for rows in records])
-            self.assertEqual(*[parameters(RunDirectory(path / "historical" / "run").checkpoint("cpu")["model"])
+            self.assertEqual(*[parameters(RunDirectory(path / "run").checkpoint("cpu")["model"])
                                for path in (straight, resumed)])
 
     def test_a_sequence_holds_distinct_keys_and_their_queries(self):

@@ -10,7 +10,7 @@ from .ports import Runs, Trainer
 
 @dataclass(frozen=True)
 class Study:
-    """The experiments one file defines; its name is the file's stem."""
+    """The experiments one folder defines; its name is the folder's."""
     name: str
     source: str
     experiments: dict[str, Experiment]
@@ -58,7 +58,7 @@ def run_study(study, labels, runs: Runs, trainer: Trainer, progress: Callable[[s
     """
     sessions = []
     for label, experiment in study.select(labels):
-        run = runs.open(study.name, label)
+        run = runs.open(label)
         stored = run.description()
         if stored is not None:
             require_continuation(stored, experiment)

@@ -1,9 +1,11 @@
 # lab
 
 Transformer experiments composed from swappable blocks. An experiment is a
-file under `experiments/` that writes, in the language of `lab.dsl`, a model
-and the conditions of its benchmark run. Variants are new values derived from
-a base by replacing blocks; nothing is configured on the command line.
+folder under `experiments/`: its `experiment.py` writes, in the language of
+`lab.dsl`, a model and the conditions of its benchmark runs, and its
+`README.md` says what it asks and what its runs found. Variants are new values
+derived from a base by replacing blocks; nothing is configured on the command
+line.
 
 ```python
 from lab.dsl import *
@@ -43,15 +45,15 @@ Run from the repository root through `make.py`, or from here with `uv run`:
 ```bash
 uv sync --locked
 uv run --locked lab blocks
-uv run --locked lab check ../experiments/<name>.py
-uv run --locked lab show ../experiments/<name>.py <label>
-uv run --locked lab run ../experiments/<name>.py [label ...]
-uv run --locked lab report ../experiments/<name>.py [label ...]
+uv run --locked lab check ../experiments/<name>
+uv run --locked lab show ../experiments/<name> <label>
+uv run --locked lab run ../experiments/<name> [label ...]
+uv run --locked lab report ../experiments/<name> [label ...]
 uv run --locked python -m unittest discover -s tests
 ```
 
-`lab run` trains every experiment of the file, or the labeled ones, into
-`runs/<file stem>/<label>/` beside the file:
+`lab run` trains every run of the experiment, or the labeled ones, into
+`runs/<label>/` in its folder:
 
 ```
 experiment.json    the description, and one segment per training session
@@ -63,8 +65,8 @@ checkpoint.pt      model, optimizer and sampler state at the last checkpoint
 result.json        the summary, written when the budget is reached
 ```
 
-Running the file again continues each unfinished run from its checkpoint and
-skips finished ones. A run continues only the same experiment (raising
+Running the experiment again continues each unfinished run from its checkpoint
+and skips finished ones. A run continues only the same experiment (raising
 `budget.updates` extends it) under the same engine: lab sources, PyTorch
 version and device, as recorded in each segment.
 
@@ -75,7 +77,7 @@ protocols, read from its records: its phases, whether its success
 persisted, its failures and recoveries after generalizing, the probes and
 diagnostics around each held-out failure, and its largest gradients.
 Experiments that differ in `optimizer.lr` alone form a group; once each of
-its runs has trained the budget its file sets, the report names the run
+its runs has trained the budget its experiment sets, the report names the run
 each policy of the convex MQAR comparison selects on the selection split:
 the best observation (`best`), the earliest observation at 99% accuracy
 (`first99`), and the earliest one that held to the end (`stable99`).
