@@ -36,31 +36,28 @@ class Answers(NamedTuple):
 
 class Chunk(NamedTuple):
     """Consecutive rows (tokens, targets, changes on the second axis), the flat indices of their
-    supervised positions in row-major order, and their `Answers`, or None for prefix rows."""
+    supervised positions in row-major order, and their `Answers`, or None for rows not generated."""
     rows: torch.Tensor
     supervised: torch.Tensor
     answers: Answers | None
 
 
-def answers(examples, device):
-    """The `Answers` of generated-answer examples, padded with PAD and IGNORE."""
-    prompts = tuple(example.prompt for example in examples)
-    limits = tuple(example.generation_limit for example in examples)
+def answers(prompts, limits, expected, device):
+    """The `Answers` of prompts generating at most `limits` tokens, scored on `expected`, padded with PAD and IGNORE."""
+    prompts, limits = tuple(prompts), tuple(limits)
     widths = tuple(max(len(prompt) + min(step, limit - 1) for prompt, limit in zip(prompts, limits))
                    for step in range(max(limits)))
-    context = torch.full((len(examples), widths[-1]), PAD, dtype=torch.long)
-    expected = torch.full((len(examples), max(len(example.answer) for example in examples)), IGNORE,
-                          dtype=torch.long)
-    changes = torch.zeros_like(expected, dtype=torch.bool)
-    for row, example in enumerate(examples):
-        answer = example.answer
-        context[row, :len(example.prompt)] = torch.tensor(example.prompt)
-        expected[row, :len(answer)] = torch.tensor(answer)
+    context = torch.full((len(prompts), widths[-1]), PAD, dtype=torch.long)
+    reference = torch.full((len(prompts), max(map(len, expected))), IGNORE, dtype=torch.long)
+    changes = torch.zeros_like(reference, dtype=torch.bool)
+    for row, (prompt, answer) in enumerate(zip(prompts, expected, strict=True)):
+        context[row, :len(prompt)] = torch.tensor(prompt)
+        reference[row, :len(answer)] = torch.tensor(answer)
         changes[row, :len(answer)] = torch.tensor([index == 0 or token != answer[index - 1]
                                                    for index, token in enumerate(answer)])
     lengths = torch.tensor([len(prompt) for prompt in prompts])
     return Answers(prompts, limits, widths, *(tensor.to(device) for tensor in
-                                              (context, lengths, torch.tensor(limits), expected, changes)))
+                                              (context, lengths, torch.tensor(limits), reference, changes)))
 
 
 class Rows:
@@ -68,11 +65,13 @@ class Rows:
 
     Each slice is cut once, on the host, and kept, so the chunks an evaluation
     reads are the same tensors every time it runs: a captured evaluation
-    replays on them.
+    replays on them. Without `generate`, generated answers are scored by
+    teacher forcing alone, as the historical trainer scored a training split.
     """
 
-    def __init__(self, examples, device):
+    def __init__(self, examples, device, generate=True):
         self.examples = examples
+        self.generates = generate and bool(examples[0].prompt)
         self.lengths = [len(example.tokens) for example in examples]
         self.host = torch.zeros(len(examples), 3, max(self.lengths), dtype=torch.long)
         self.host[:, 0], self.host[:, 1] = PAD, IGNORE
@@ -94,8 +93,11 @@ class Rows:
             width = max(self.lengths[start:stop])
             supervised = (self.host[start:stop, 1, :width] != IGNORE).flatten().nonzero().flatten()
             examples = self.examples[start:stop]
+            generated = None if not self.generates else answers(
+                [example.prompt for example in examples], [example.generation_limit for example in examples],
+                [example.answer for example in examples], self.rows.device)
             self.chunks[start, stop] = Chunk(self.rows[start:stop, :, :width], supervised.to(self.rows.device),
-                                             answers(examples, self.rows.device) if examples[0].prompt else None)
+                                             generated)
         return self.chunks[start, stop]
 
     def select(self, indices):

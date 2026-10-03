@@ -13,6 +13,8 @@ import hashlib
 import json
 import random
 
+import torch
+
 from .records import example_from_targets, generation_example
 
 
@@ -62,3 +64,27 @@ def noisy_split(clean, rate, seed):
         "realized_rate": changed / eligible if eligible else 0.0,
         "assignment": "fixed_causal_input_or_prompt_position",
     }
+
+
+@torch.no_grad()
+def noise_fit(model, observed, clean, batch):
+    """How often the model predicts the observed label, and the oracle's, where noise changed it.
+
+    A port of `noise_fit_metrics`: the model reads the observed rows, the
+    corrupted answers before a position included, in chunks of `batch`; the
+    clean rows (`Rows`) hold the oracle's labels. Unlike the historical one, it
+    does not refuse logits that are not finite.
+    """
+    model.eval()
+    count = noisy_correct = clean_correct = 0
+    for start in range(0, len(clean), batch):
+        tokens, labels, _ = observed[start:start + batch].rows.unbind(1)
+        targets = clean[start:start + batch].rows[:, 1]
+        changed = labels != targets
+        predictions = model(tokens).argmax(-1)
+        count += int(changed.sum())
+        noisy_correct += int(((predictions == labels) & changed).sum())
+        clean_correct += int(((predictions == targets) & changed).sum())
+    return {"corrupted_targets": count, "observed_label_accuracy": noisy_correct / count if count else None,
+            "clean_label_accuracy": clean_correct / count if count else None,
+            "conditioning": "observed_inputs_and_preceding_corrupted_answers"}
