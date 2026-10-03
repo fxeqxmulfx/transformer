@@ -27,8 +27,8 @@ import torch
 
 from lab.domain.spec import swap
 from lab.domain.training import Checkpoint
-from lab.dsl import (EVD, SGD, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradW, Chebyshev, CoupledNewton, Dash,
-                     Geometric, Guarded, Inverse, InverseSqrt, Muon, NewtonDB, RMSProp)
+from lab.dsl import (EVD, SGD, AdaFisher, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradW, Chebyshev, CoupledNewton,
+                     Dash, Geometric, Guarded, Inverse, InverseSqrt, Muon, NewtonDB, RMSProp)
 from lab.infrastructure.nn import build_model
 from lab.infrastructure.optim import build_optimizer, coordinate
 from lab.infrastructure.store import RunDirectory
@@ -55,6 +55,8 @@ EXACT = {
     "dash_cn": lambda rate: Dash(lr=rate, solver=CoupledNewton()),
     "dash_chebyshev": lambda rate: Dash(lr=rate, solver=Chebyshev()),
     "dash_ndb_guarded": lambda rate: Guarded(Dash(lr=rate)),
+    "adafisher": lambda rate: AdaFisher(lr=rate),
+    "adafisherw": lambda rate: AdaFisher(lr=rate, weight_decay=0.01),
 }
 CLOSE = {
     "adam": lambda rate: Adam(lr=rate),

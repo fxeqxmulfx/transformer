@@ -332,3 +332,32 @@ class Dash(Optimizer):
                 "Dash needs a positive block size, beta in [0, 1) and a positive epsilon")
         require(len(self.graft_betas) == 2 and all(0 <= beta < 1 for beta in self.graft_betas),
                 "Dash needs two graft betas in [0, 1)")
+
+
+@dataclass(frozen=True)
+class AdaFisher(Optimizer):
+    """Momentum preconditioned by a damped Kronecker-factored Fisher diagonal.
+
+    Source: arXiv:2405.16397v3, Sections 3.2-3.3 and Algorithm 1, as
+    corrected in `Transformer.AdaFisher.factorEMA`, `minMaxDiagonal`,
+    `fisherDiagonal`, `correctedMomentum` and `parameterStep`. For a linear
+    weight, h and s are the squared inputs and squared output gradients of the
+    batch summed over positions, H <- gamma h + (1 - gamma) H and likewise S,
+    f = minmax(S) minmax(H)^T + damping, and after m <- beta m + (1 - beta) g
+    the weight moves by lr (m / (1 - beta^t) / f + weight_decay x): AdaFisherW
+    when `weight_decay` is positive. A weight shared with a linear layer, as a
+    tied embedding is with the readout, takes that layer's factors. Every other
+    parameter, a temperature or an untied embedding, takes ones, as the
+    benchmark did: they normalize to zero, and f is the damping. The manuscript
+    is not among papers/.
+    """
+    lr: float
+    beta: float = 0.9
+    gamma: float = 0.8
+    damping: float = 1e-3
+    weight_decay: float = 0.0
+
+    def check(self):
+        check_rate(self.lr)
+        require(0 <= self.beta < 1 and 0 < self.gamma <= 1 and self.damping > 0 and self.weight_decay >= 0,
+                "AdaFisher needs beta in [0, 1), gamma in (0, 1], a positive damping and a nonnegative decay")

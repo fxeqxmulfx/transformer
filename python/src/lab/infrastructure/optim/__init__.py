@@ -11,7 +11,7 @@ historical optimizer zoo.
 import torch
 
 from ...domain import optimizers
-from . import coordinate, direction, matrix, stages
+from . import coordinate, direction, fisher, matrix, stages
 
 
 def parameter_groups(spec, model):
@@ -48,7 +48,7 @@ OPTIMIZERS = {optimizers.AdamW: adamw, optimizers.SGD: direction.SGD, optimizers
               optimizers.Adam: coordinate.Adam, optimizers.AdamX: coordinate.AdamX,
               optimizers.AdaGrad: coordinate.AdaGrad, optimizers.AdamNC: coordinate.AdamNC,
               optimizers.RMSProp: coordinate.RMSProp, optimizers.Muon: matrix.Muon, optimizers.Dash: matrix.Dash,
-              optimizers.Guarded: guarded}
+              optimizers.AdaFisher: fisher.AdaFisher, optimizers.Guarded: guarded}
 
 
 def build_optimizer(spec, model, rate=None):
