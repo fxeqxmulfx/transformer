@@ -13,7 +13,10 @@ import hashlib
 import itertools
 
 import numpy as np
+import torch
+from torch.nn import functional as F
 
+from ...domain.analysis import curve_witness, transition
 from ...domain.benchmarks import is_prime
 
 OPERATORS = ("+", "-", "*", "/", "**2+", "**3+", "x**2+y**2_mod_97",
@@ -76,3 +79,71 @@ def make_corpus(spec, data_seed):
     np.random.RandomState(data_seed).shuffle(rows)
     count = round(len(rows) * spec.train_fraction)
     return Corpus(spec.prime, rows[:count], rows[count:], vocabulary(spec.prime), data_seed)
+
+
+class ModularTask:
+    """Training and evaluation on the division corpus, as `paper_reproduction.grokking` did them.
+
+    A row is EOS, x, '/', y, '=', answer, EOS. The model reads the first six
+    tokens; its outputs at positions 4 and 5 predict the answer and the final
+    EOS, the two supervised targets.
+    """
+    components = ("answer_loss", "EOS_loss")
+    sums = 6
+
+    def __init__(self, spec, data_seed):
+        self.corpus = make_corpus(spec, data_seed)
+        self.vocab = len(self.corpus.tokens)
+        self.splits = {"train": self.corpus.train, "heldout": self.corpus.heldout}
+
+    def summary(self):
+        return self.corpus.summary()
+
+    @staticmethod
+    def forward(model, batch):
+        """Logits at the supervised positions, and their targets."""
+        return model(batch[:, :-1])[:, 4:, :], batch[:, 5:]
+
+    @staticmethod
+    def loss(output, targets):
+        return F.cross_entropy(output.reshape(-1, output.shape[-1]), targets.reshape(-1))
+
+    @staticmethod
+    def position_losses(output, targets):
+        """The mean loss at each supervised position: answer, then EOS."""
+        losses = F.cross_entropy(output.reshape(-1, output.shape[-1]), targets.reshape(-1), reduction="none")
+        return losses.reshape(-1, targets.shape[-1]).mean(dim=0)
+
+    @staticmethod
+    def accumulate(model, chunk, sums):
+        """Add a chunk's match counts and summed losses to the float64 `sums`.
+
+        Each chunk's float32 loss sums are added in float64, as the historical
+        evaluation added each `.item()` to a Python float, so the totals are
+        bit-identical however the chunks are issued.
+        """
+        output, target = ModularTask.forward(model, chunk)
+        predicted = output.argmax(dim=-1)
+        counts = torch.stack([(predicted == target).all(dim=1).sum(), (predicted[:, 0] == target[:, 0]).sum(),
+                              (predicted[:, 1] == target[:, 1]).sum()])
+        losses = torch.stack([
+            F.cross_entropy(output.reshape(-1, output.shape[-1]), target.reshape(-1), reduction="sum"),
+            F.cross_entropy(output[:, 0], target[:, 0], reduction="sum"),
+            F.cross_entropy(output[:, 1], target[:, 1], reduction="sum")])
+        sums.add_(torch.cat([counts.double(), losses.double()]))
+
+    @staticmethod
+    def metrics(sums, examples):
+        correct, answers, stops, loss, answer_loss, stop_loss = sums
+        return {"accuracy": correct / examples, "answer_accuracy": answers / examples,
+                "EOS_accuracy": stops / examples, "loss": loss / (2 * examples),
+                "answer_loss": answer_loss / examples, "EOS_loss": stop_loss / examples, "examples": examples}
+
+    @staticmethod
+    def analyze(history):
+        """The grokking transition and double-descent witnesses of the held-out curves."""
+        return {"transition": transition(history),
+                "epoch_loss_witness": curve_witness([(point["step"], point["heldout"]["loss"])
+                                                     for point in history], .02),
+                "epoch_error_witness": curve_witness([(point["step"], 1 - point["heldout"]["accuracy"])
+                                                      for point in history], .02)}

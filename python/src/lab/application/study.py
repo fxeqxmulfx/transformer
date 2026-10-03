@@ -36,22 +36,44 @@ def survey(study):
             for label, experiment in study.experiments.items()]
 
 
+def finished(run, experiment):
+    """Whether the run has already reached this experiment's budget."""
+    result = run.result()
+    return result is not None and result["updates"] == experiment.budget.updates
+
+
+def require_same_engine(stored, current):
+    """A run continues only under the code, framework and device that began it."""
+    changed = differences(stored["engine"], current["engine"])
+    if changed:
+        raise ValueError("The run was trained by another engine; changed: " + ", ".join(changed)
+                         + ". Restore that engine, or train the experiment under a new label.")
+
+
 def run_study(study, labels, runs: Runs, trainer: Trainer, progress: Callable[[str, dict], None]):
-    """Train the chosen experiments one after another.
+    """Train the chosen experiments one after another; a finished run is not trained again.
 
     Every compatibility check runs before the first update, so a changed
-    experiment cannot meet an old run directory halfway through a study.
+    experiment or engine cannot meet an old run directory halfway through a study.
     """
-    chosen = study.select(labels)
-    opened = []
-    for label, experiment in chosen:
+    sessions = []
+    for label, experiment in study.select(labels):
         run = runs.open(study.name, label)
         stored = run.description()
         if stored is not None:
             require_continuation(stored, experiment)
-        opened.append((label, experiment, run))
+            if finished(run, experiment):
+                sessions.append((label, experiment, run, None))
+                continue
+        provenance = trainer.provenance(experiment)
+        if stored is not None:
+            require_same_engine(run.provenance(), provenance)
+        sessions.append((label, experiment, run, provenance))
     results = {}
-    for label, experiment, run in opened:
-        run.begin(describe(experiment), study.source)
+    for label, experiment, run, provenance in sessions:
+        if provenance is None:
+            results[label] = run.result()
+            continue
+        run.begin(describe(experiment), provenance, study.source)
         results[label] = trainer.train(experiment, run, lambda row, label=label: progress(label, row))
     return results

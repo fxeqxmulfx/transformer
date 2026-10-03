@@ -56,6 +56,16 @@ class CliTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Label 'Soft max'"):
             self.output("check", self.file(PAIR + "experiments = {'Soft max': base}\n"))
 
+    def test_run_trains_each_experiment_once(self):
+        path = self.file(PAIR)
+        lines = self.output("run", path, "softmax").splitlines()
+        self.assertEqual([line.split()[:3] for line in lines[:3]],
+                         [["softmax", "step", "0"], ["softmax", "step", "10"], ["softmax", "step", "20"]])
+        self.assertEqual(lines[-1].split()[:4], ["softmax", "finished", "20", "updates"])
+        self.assertTrue((Path(path).parent / "runs" / "pair" / "softmax" / "checkpoint.pt").exists())
+        self.assertFalse((Path(path).parent / "runs" / "pair" / "sparsemax").exists())
+        self.assertEqual(self.output("run", path, "softmax").splitlines(), lines[-1:])
+
     def test_blocks_lists_every_slot(self):
         listing = self.output("blocks")
         for word in ("Weights:", "Sparsemax()", "CudaGraph(device='cuda', threads=1)", "Composites:"):

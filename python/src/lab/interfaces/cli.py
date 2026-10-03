@@ -6,15 +6,20 @@ setting of a run is written in its experiment file.
     lab blocks                     the language: slots, blocks, defaults
     lab check <file>               load a file; list its experiments and how they differ
     lab show <file> <label>        the full description of one experiment
+    lab run <file> [label ...]     train the experiments, or the chosen ones
+
+A run lives in `runs/<file stem>/<label>/` beside its file. Running a file
+again continues each unfinished run from its last checkpoint and skips the
+finished ones; raising `budget.updates` extends a finished run.
 """
 
 import argparse
 import json
 
 from .. import dsl
-from ..application.study import survey
+from ..application.study import run_study, survey
 from ..domain.spec import blocks_of, composites, describe, kinds, signature
-from ..infrastructure.loader import load
+from ..infrastructure.loader import load, runs_root
 
 
 def summary(cls):
@@ -47,6 +52,28 @@ def show(arguments):
     print(json.dumps(describe(experiment), indent=2))
 
 
+def metrics(row):
+    return "  ".join(f"{name} loss {values['loss']:.4f}"
+                     + (f" accuracy {values['accuracy']:.4f}" if "accuracy" in values else "")
+                     for name, values in row.items() if isinstance(values, dict))
+
+
+def report(label, row):
+    kind = "probe" if row.get("diagnostic_probe") else "step"
+    print(f"{label} {kind} {row['step']}  {metrics(row)}  {row['wall_seconds']:.0f}s", flush=True)
+
+
+def run(arguments):
+    # Only training needs PyTorch, which the engine and the store load.
+    from ..infrastructure.engine import Engine
+    from ..infrastructure.store import RunDirectories
+
+    study = load(arguments.file)
+    results = run_study(study, arguments.labels, RunDirectories(runs_root(arguments.file)), Engine(), report)
+    for label, result in results.items():
+        print(f"{label} finished {result['updates']} updates  {metrics(result['final'])}")
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="lab", description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -59,6 +86,10 @@ def main(argv=None):
     command.add_argument("file")
     command.add_argument("label")
     command.set_defaults(handler=show)
+    command = commands.add_parser("run", help="train an experiment file's experiments")
+    command.add_argument("file")
+    command.add_argument("labels", nargs="*", metavar="label")
+    command.set_defaults(handler=run)
     arguments = parser.parse_args(argv)
     arguments.handler(arguments)
     return 0

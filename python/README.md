@@ -45,8 +45,28 @@ uv sync --locked
 uv run --locked lab blocks
 uv run --locked lab check ../experiments/<name>.py
 uv run --locked lab show ../experiments/<name>.py <label>
+uv run --locked lab run ../experiments/<name>.py [label ...]
 uv run --locked python -m unittest discover -s tests
 ```
+
+`lab run` trains every experiment of the file, or the labeled ones, into
+`runs/<file stem>/<label>/` beside the file:
+
+```
+experiment.json    the description, and one segment per training session
+experiment.py      the experiment file as of the latest session
+history.jsonl      canonical observations; probes.jsonl, their neighbors
+diagnostics.jsonl  sampled per-tensor measurements
+gradients.jsonl    the gradient norm of every update
+checkpoint.pt      model, optimizer and sampler state at the last checkpoint
+result.json        the summary, written when the budget is reached
+```
+
+Running the file again continues each unfinished run from its checkpoint and
+skips finished ones. A run continues only the same experiment (raising
+`budget.updates` extends it) under the same engine: lab sources, PyTorch
+version and device, as recorded in each segment. The eager engine reproduces
+the historical modular trainer record for record (`tests/test_engine.py`).
 
 ## Layout
 

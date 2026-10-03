@@ -15,6 +15,7 @@ Python (the uv project in python/)
     blocks                list the experiment language
     check <file>          load an experiment file and list its experiments
     show <file> <label>   print one experiment's description
+    run <file> [labels]   train an experiment file's experiments, or the labeled ones
 
 Together
     verify                lean, audit, index, forbidden and test: the checks before a commit
@@ -104,6 +105,10 @@ def main():
     command.add_argument("file")
     command.add_argument("label")
     command.set_defaults(handler=lambda arguments: lab("show", arguments.file, arguments.label))
+    command = tasks.add_parser("run")
+    command.add_argument("file")
+    command.add_argument("labels", nargs="*")
+    command.set_defaults(handler=lambda arguments: lab("run", arguments.file, *arguments.labels))
     arguments = parser.parse_args()
     try:
         arguments.handler(arguments)
