@@ -1,0 +1,27 @@
+[project]
+name = "lab"
+version = "0.1.0"
+description = "Transformer experiments composed from swappable blocks, trained eagerly or under CUDA graphs"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "numpy>=2.5.3",
+    "torch==2.14.0",
+]
+
+[project.scripts]
+lab = "lab.interfaces.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.12,<0.13"]
+build-backend = "uv_build"
+
+# The PyPI wheel of torch 2.14 is built for CUDA 13, which no longer supports
+# Pascal GPUs (compute capability 6.1); the CUDA 12.6 build still does.
+[tool.uv.sources]
+torch = { index = "pytorch-cu126" }
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
