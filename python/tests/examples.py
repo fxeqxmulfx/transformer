@@ -1,8 +1,8 @@
-"""The two historical models and a modular-division run, written in the DSL."""
+"""The historical models and a modular-division run, written in the DSL."""
 
-from lab.dsl import (FFN, XSA, AdamW, Attention, Block, Budget, Eager, Evaluate, Experiment, FusedQKV,
+from lab.dsl import (FFN, GELU, XSA, AdamW, Attention, Block, Budget, Eager, Evaluate, Experiment, FusedQKV,
                      LayerNorm, ModularDivision, Normal, PerHeadQKV, PostNorm, PreNorm, QKNorm, ReLU,
-                     ReLU2, RMSNorm, RoPE, ScaledDot, Schedule, Seeds, Sinusoidal, Softmax, Tied,
+                     ReLU2, RMSNorm, RoPE, ScaledDot, ScaledResidual, Schedule, Seeds, Sinusoidal, Softmax, Tied,
                      TorchDefault, Transformer, Untied)
 
 
@@ -22,6 +22,16 @@ def reference(width=128, depth=2, heads=4):
     block = Block(attention=attention, ffn=FFN(activation=ReLU()), norm=LayerNorm(), residual=PostNorm())
     return Transformer(width=width, depth=depth, block=block, positions=Sinusoidal(), readout=Untied(),
                        final_norm=None, init=TorchDefault(), context=50)
+
+
+def rope(width=64, depth=2, heads=1, context=64):
+    """`RopeTransformer` of `experiments/convex_mqar/src/convex_mqar/rope.py`, of mlp ratio 4 and RoPE base 1e4."""
+    attention = Attention(heads=heads, projections=FusedQKV(), scores=ScaledDot(), weights=Softmax(fused=True),
+                          exclusive=None)
+    block = Block(attention=attention, ffn=FFN(activation=GELU(tanh=True), bias=True), norm=LayerNorm(),
+                  residual=PreNorm())
+    return Transformer(width=width, depth=depth, block=block, positions=RoPE(interleaved=True), readout=Tied(),
+                       final_norm=LayerNorm(), init=ScaledResidual(0.02), context=context)
 
 
 def modular(model, *, prime=97, updates=150_000, batch=512, every=250, lr=1e-3, decay=1.0,

@@ -2,12 +2,16 @@
 
 Structural choices have no defaults, so an experiment file states its whole
 architecture; only numerical constants (epsilons, RoPE base) default to their
-standard values. Two historical models are compositions of these blocks:
+standard values. Three historical models are compositions of these blocks:
 
 - GPTMini (`experiments/gpt_mini.py`): PreNorm, parameter-free RMSNorm,
   FusedQKV, QKNorm, Softmax, XSA, ReLU2, RoPE, Tied, final RMSNorm, Normal(0.02);
 - the openai/grok reference: PostNorm, LayerNorm, PerHeadQKV, ScaledDot,
-  Softmax, ReLU, Sinusoidal, Untied, no final norm, TorchDefault.
+  Softmax, ReLU, Sinusoidal, Untied, no final norm, TorchDefault;
+- the RoPE transformer of the convex MQAR comparison
+  (`experiments/convex_mqar/src/convex_mqar/rope.py`): PreNorm, LayerNorm,
+  FusedQKV, ScaledDot, fused Softmax, GELU(tanh) with biases, interleaved
+  RoPE, Tied, final LayerNorm, ScaledResidual(0.02).
 """
 
 from dataclasses import dataclass
@@ -47,8 +51,13 @@ class Positions(Spec, kind=True):
 
 @dataclass(frozen=True)
 class RoPE(Positions):
-    """Rotate queries and keys by position inside every attention layer."""
+    """Rotate queries and keys by position inside every attention layer.
+
+    A head's channel i is paired with channel i + head/2 (the two halves), or
+    with `interleaved` channel 2i with channel 2i + 1.
+    """
     theta: float = 10_000.0
+    interleaved: bool = False
 
     def check(self):
         require(self.theta > 1, "RoPE base must exceed one")
@@ -111,7 +120,13 @@ class Weights(Spec, kind=True):
 
 @dataclass(frozen=True)
 class Softmax(Weights):
-    """exp(s) / sum exp(s) over the visible prefix."""
+    """exp(s) / sum exp(s) over the visible prefix.
+
+    `fused` computes the attention it weights by PyTorch's fused scaled
+    dot-product attention: the same function, rounded otherwise. It needs
+    ScaledDot scores, whose scale the kernel applies itself.
+    """
+    fused: bool = False
 
 
 @dataclass(frozen=True)
@@ -145,6 +160,8 @@ class Attention(Spec):
         require_kind(self.weights, Weights, "weights")
         if self.exclusive is not None:
             require_kind(self.exclusive, XSA, "exclusive")
+        if isinstance(self.weights, Softmax) and self.weights.fused:
+            require(isinstance(self.scores, ScaledDot), "Fused softmax attention needs ScaledDot scores")
 
 
 @dataclass(frozen=True)
@@ -164,7 +181,8 @@ class ReLU2(Activation):
 
 @dataclass(frozen=True)
 class GELU(Activation):
-    """x Phi(x), the exact erf form."""
+    """x Phi(x), the exact erf form; `tanh` its tanh approximation."""
+    tanh: bool = False
 
 
 @dataclass(frozen=True)
@@ -238,6 +256,24 @@ class TorchDefault(Init):
 @dataclass(frozen=True)
 class Normal(Init):
     """After the defaults, redraw every matrix (ndim >= 2) from N(0, std^2) in parameter order."""
+    std: float = 0.02
+
+    def check(self):
+        require(self.std > 0, "Initialization scale must be positive")
+
+
+@dataclass(frozen=True)
+class ScaledResidual(Init):
+    """Normal matrices, zero biases, and the writes into the residual stream scaled by depth.
+
+    After the defaults, every matrix (ndim >= 2) is redrawn from N(0, std^2)
+    in parameter order and every bias of a linear map is set to zero; then,
+    block by block, the two matrices that write into the residual stream (the
+    attention output, then the feed-forward output) are redrawn at
+    std / sqrt(2 depth). A tied readout draws no matrix of its own. The
+    scaling is GPT-2's, by 1 / sqrt(N) for N residual layers (Radford et al.
+    2019, Section 2.3; not in `papers/`).
+    """
     std: float = 0.02
 
     def check(self):

@@ -3,8 +3,11 @@
 Modules are constructed in the order of the historical models, so a seeded
 build consumes the same random draws: embedding, then per block attention
 and feed-forward, then the readout. Parameters are registered in that order
-too, which keeps optimizer state dictionaries index-compatible.
+too, which keeps optimizer state dictionaries index-compatible with GPTMini
+and the openai/grok reference.
 """
+
+from functools import partial
 
 import torch
 from torch import nn
@@ -33,7 +36,14 @@ def norm_module(spec, width):
     raise NotImplementedError(f"No builder for {spec!r}")
 
 
-ACTIVATIONS = {model.ReLU: F.relu, model.ReLU2: lambda x: F.relu(x).square(), model.GELU: F.gelu}
+def activation(spec):
+    if isinstance(spec, model.GELU):
+        return partial(F.gelu, approximate="tanh" if spec.tanh else "none")
+    if isinstance(spec, model.ReLU2):
+        return lambda x: F.relu(x).square()
+    if isinstance(spec, model.ReLU):
+        return F.relu
+    raise NotImplementedError(f"No builder for {spec!r}")
 
 
 class FeedForward(nn.Module):
@@ -41,7 +51,7 @@ class FeedForward(nn.Module):
         super().__init__()
         self.input = nn.Linear(width, spec.multiplier * width, bias=spec.bias)
         self.output = nn.Linear(spec.multiplier * width, width, bias=spec.bias)
-        self.activation = ACTIVATIONS[type(spec.activation)]
+        self.activation = activation(spec.activation)
 
     def forward(self, x):
         return self.output(self.activation(self.input(x)))
@@ -72,8 +82,12 @@ class Transformer(nn.Module):
         self.blocks = nn.ModuleList(Block(spec.block, spec.width) for _ in range(spec.depth))
         self.final_norm = None if spec.final_norm is None else norm_module(spec.final_norm, spec.width)
         bias = isinstance(spec.readout, model.Untied) and spec.readout.bias
-        # A tied readout still draws its own matrix first, as GPTMini did.
-        self.readout = nn.Linear(spec.width, vocab, bias=bias)
+        if isinstance(spec.readout, model.Tied) and isinstance(spec.init, model.ScaledResidual):
+            # The convex MQAR model multiplied by its embedding and built no readout.
+            self.readout = nn.utils.skip_init(nn.Linear, spec.width, vocab, bias=False)
+        else:
+            # A tied readout still draws its own matrix first, as GPTMini did.
+            self.readout = nn.Linear(spec.width, vocab, bias=bias)
         if isinstance(spec.readout, model.Tied):
             self.readout.weight = self.embed.weight
         self.sinusoid = isinstance(spec.positions, model.Sinusoidal)
@@ -82,6 +96,7 @@ class Transformer(nn.Module):
             self.register_buffer("positions", sinusoid_table(spec.context, spec.width, spec.positions.base),
                                  persistent=False)
         if self.rotary:
+            self.interleaved = spec.positions.interleaved
             cos, sin = rope_tables(spec.head_width, spec.context, spec.positions.theta)
             self.register_buffer("cos", cos, persistent=False)
             self.register_buffer("sin", sin, persistent=False)
@@ -90,16 +105,19 @@ class Transformer(nn.Module):
         """The matrices of the blocks, attention and feed-forward weights, in parameter order."""
         return [parameter for parameter in self.blocks.parameters() if parameter.ndim == 2]
 
-    def forward(self, tokens):
+    def forward(self, tokens, positions=None):
+        """Logits at every position, or at the (batch, count) `positions` alone."""
         length = tokens.shape[-1]
         if length > self.context:
             raise ValueError(f"Input of {length} tokens exceeds the context of {self.context}")
         x = self.embed(tokens)
         if self.sinusoid:
             x = x + self.positions[:length]
-        rotary = (self.cos[:length], self.sin[:length]) if self.rotary else None
+        rotary = (self.cos[:length], self.sin[:length], self.interleaved) if self.rotary else None
         for block in self.blocks:
             x = block(x, rotary)
         if self.final_norm is not None:
             x = self.final_norm(x)
+        if positions is not None:
+            x = x.gather(1, positions[..., None].expand(-1, -1, x.shape[-1]))
         return self.readout(x)

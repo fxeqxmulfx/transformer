@@ -3,7 +3,9 @@
 Projections yield head groups: FusedQKV one group holding every head on a
 batch axis, PerHeadQKV one group per head. Scores, weights and XSA act on the
 last two axes, so one code path serves both; each group reproduces the
-operations of its historical source, which keeps both models bit-identical.
+operations of its historical source, which keeps the historical models
+bit-identical. Fused softmax attention leaves scores and weights to PyTorch's
+kernel, as the convex MQAR `RotaryAttention` did.
 """
 
 import math
@@ -65,6 +67,12 @@ class ScaledDotScores(nn.Module):
             q, k = rotate(q, *rotary), rotate(k, *rotary)
         return torch.matmul(q, k.transpose(-2, -1)) / self.scale
 
+    def attend(self, q, k, v, rotary):
+        """Causal softmax attention by the fused kernel, at its default scale 1 / sqrt(head width)."""
+        if rotary is not None:
+            q, k = rotate(q, *rotary), rotate(k, *rotary)
+        return F.scaled_dot_product_attention(q, k, v, dropout_p=0.0, is_causal=True)
+
 
 class QKNormScores(nn.Module):
     def __init__(self, heads, head, eps):
@@ -108,13 +116,17 @@ class Attention(nn.Module):
         self.scores = scores_module(spec.scores, spec.heads, head)
         self.projections = PROJECTIONS[type(spec.projections)](width, spec.heads, spec.projections.bias)
         self.output = nn.Linear(width, width, bias=spec.output_bias)
+        self.fused = isinstance(spec.weights, model.Softmax) and spec.weights.fused
         self.weights = WEIGHTS[type(spec.weights)]
         self.exclusive = None if spec.exclusive is None else spec.exclusive.eps
 
     def forward(self, x, rotary):
         outputs = []
         for q, k, v, index in self.projections(x):
-            y = self.weights(self.scores(q, k, rotary, index)) @ v
+            if self.fused:
+                y = self.scores.attend(q, k, v, rotary)
+            else:
+                y = self.weights(self.scores(q, k, rotary, index)) @ v
             if self.exclusive is not None:
                 v_hat = F.normalize(v, dim=-1, eps=self.exclusive)
                 y = y - (y * v_hat).sum(dim=-1, keepdim=True) * v_hat

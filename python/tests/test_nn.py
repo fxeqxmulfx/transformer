@@ -1,8 +1,9 @@
 """The built models are the historical models, bit for bit.
 
-Golden values: `fixtures/legacy_modular.json`, produced by the historical
-code itself (its `source` field names the commit). CPU values hold for this
-torch build; CUDA values also need the GPU the fixture names.
+Golden values: `fixtures/legacy_modular.json` and `fixtures/legacy_recall.json`,
+produced by the historical code itself (each `source` field names the
+commit). CPU values hold for this torch build; CUDA values also need the GPU
+the fixture names.
 """
 
 import hashlib
@@ -20,9 +21,10 @@ from lab.infrastructure.benchmarks.modular import make_corpus
 from lab.infrastructure.nn import build_model
 from lab.infrastructure.nn.legacy import import_state, rename
 
-from examples import gptmini, reference
+from examples import gptmini, reference, rope
 
 FIXTURE = json.loads((Path(__file__).parent / "fixtures" / "legacy_modular.json").read_text())
+RECALL = json.loads((Path(__file__).parent / "fixtures" / "legacy_recall.json").read_text())
 SPECS = {"gptmini": gptmini(width=32, depth=2, heads=4),
          "gptmini-sparsemax": substitute(gptmini(width=32, depth=2, heads=4), Softmax, Sparsemax()),
          "reference": reference(width=32, depth=2, heads=4)}
@@ -89,6 +91,44 @@ class LegacyModelTests(unittest.TestCase):
         self.assertTrue(all(current[key].shape == value.shape for key, value in imported.items()))
         with self.assertRaisesRegex(KeyError, "decoder.extra"):
             import_state({"decoder.extra": torch.zeros(1)})
+
+
+def recall_model(name):
+    """A convex MQAR model of the recall fixture in the DSL, and its configuration."""
+    run = RECALL["runs"][name]
+    config = run["config"]
+    spec = rope(width=config["widths"][0], depth=config["layers"], heads=config["heads"],
+                context=config["lengths"][0])
+    if run["attention"] == "sparsemax":
+        spec = substitute(spec, Softmax, Sparsemax())
+    return spec, config
+
+
+class LegacyRecallModelTests(unittest.TestCase):
+    def setUp(self):
+        torch.set_num_threads(1)
+
+    def test_initialization_forward_and_gradients_on_cpu(self):
+        for name, expected in RECALL["models"].items():
+            with self.subTest(model=name):
+                spec, config = recall_model(name)
+                self.assertEqual((spec.block.ffn.multiplier, spec.positions.theta),
+                                 (config["mlp_ratio"], config["rope_base"]))
+                model = build_model(spec, expected["vocab"], seed=expected["seed"])
+                self.assertEqual({key: sha(value) for key, value in model.named_parameters()},
+                                 dict(renamed(expected["parameters"])))
+                # The batch the fixture drew: tokens, query positions and labels.
+                generator = torch.Generator().manual_seed(7)
+                length, vocab = expected["length"], expected["vocab"]
+                tokens = torch.randint(vocab, (8, length), generator=generator)
+                positions = torch.randint(length, (8, length // 4), generator=generator)
+                labels = torch.randint(vocab, (8, length // 4), generator=generator)
+                logits = model(tokens, positions)
+                loss = F.cross_entropy(logits.flatten(0, 1), labels.flatten())
+                loss.backward()
+                self.assertEqual((sha(logits), loss.item().hex()), (expected["logits"], expected["loss"]))
+                self.assertEqual({key: sha(value.grad) for key, value in model.named_parameters()},
+                                 dict(renamed(expected["gradients"])))
 
 
 class CorpusTests(unittest.TestCase):

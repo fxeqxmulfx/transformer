@@ -17,14 +17,24 @@ def sinusoid_table(context, width, base):
 
 
 def rope_tables(head_width, context, theta):
-    """`experiments/gpt_mini.py` `rope_tables`: cos and sin of shape (context, head_width / 2)."""
+    """`experiments/gpt_mini.py` `rope_tables`: cos and sin of shape (context, head_width / 2).
+
+    The frequencies equal those of the convex MQAR `RotaryAttention`, bit for bit.
+    """
     half = head_width // 2
     inverse = theta ** (-torch.arange(half, dtype=torch.float32) / half)
     angles = torch.outer(torch.arange(context, dtype=torch.float32), inverse)
     return angles.cos(), angles.sin()
 
 
-def rotate(x, cos, sin):
-    """Rotate the two halves of the last axis; cos and sin broadcast over leading axes."""
+def rotate(x, cos, sin, interleaved):
+    """Rotate pairs of the last axis; cos and sin broadcast over leading axes.
+
+    The pairs are the two halves (GPTMini), or interleaved even and odd
+    channels (the convex MQAR `RotaryAttention.rotate`).
+    """
+    if interleaved:
+        even, odd = x[..., 0::2], x[..., 1::2]
+        return torch.stack((even * cos - odd * sin, even * sin + odd * cos), dim=-1).flatten(-2)
     first, second = x.chunk(2, dim=-1)
     return torch.cat([first * cos - second * sin, first * sin + second * cos], dim=-1)

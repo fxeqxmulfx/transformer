@@ -8,7 +8,7 @@ from lab.domain.spec import describe, fingerprint, substitute, swap, walk
 from lab.domain.training import Budget, CudaGraph
 from lab.dsl import EVD, GELU, SGD, AMSGradMD, Clipped, Dash, Eager, Guarded, LayerNorm, Magma, RMSNorm, Seeds
 
-from examples import gptmini, modular, reference
+from examples import gptmini, modular, reference, rope
 
 
 class SpecTests(unittest.TestCase):
@@ -72,7 +72,7 @@ class SpecTests(unittest.TestCase):
 
     def test_description_identifies_every_field(self):
         description = describe(self.base)
-        self.assertEqual(description["model"]["block"]["attention"]["weights"], {"type": "Softmax"})
+        self.assertEqual(description["model"]["block"]["attention"]["weights"], {"type": "Softmax", "fused": False})
         self.assertEqual(description["optimizer"]["betas"], [0.9, 0.98])
         variants = [self.base, swap(self.base, "seeds", Seeds(model=1)),
                     swap(self.base, "optimizer.eps", 1e-7), swap(self.base, "execution", CudaGraph())]
@@ -107,6 +107,9 @@ class SpecTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "even head width"):
             gptmini(width=12, heads=4)
         reference(width=12, heads=4)
+        self.assertEqual(rope(width=32, heads=2, context=18).head_width, 16)
+        with self.assertRaisesRegex(ValueError, "Fused softmax attention needs ScaledDot scores"):
+            swap(gptmini(), "block.attention.weights", Softmax(fused=True))
 
 
 if __name__ == "__main__":

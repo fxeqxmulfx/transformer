@@ -1,8 +1,9 @@
 """Parameter names of the historical models, mapped to the modules built here.
 
 `rename` turns a state dictionary of `experiments/gpt_mini.py` GPTMini (also
-after `sparsemax_attention.replace_attention`) or of the openai/grok
-reference `Transformer` into one that `nn.Transformer` loads. Buffers that a
+after `sparsemax_attention.replace_attention`), of the openai/grok reference
+`Transformer`, or of the convex MQAR `RopeTransformer` (also as
+`SparsemaxTransformer`) into one that `nn.Transformer` loads. Buffers that a
 spec determines (position tables, the causal mask) are dropped.
 """
 
@@ -30,7 +31,15 @@ RULES = [
     (r"decoder\.blocks\.(\d+)\.ffn\.ffn\.2\.", r"blocks.\1.ffn.output."),
     (r"decoder\.blocks\.(\d+)\.ffn_norm\.", r"blocks.\1.ffn_norm."),
     (r"linear\.", "readout."),
+    # convex MQAR RopeTransformer
+    (r"blocks\.(\d+)\.norm1\.", r"blocks.\1.attention_norm."),
+    (r"blocks\.(\d+)\.norm2\.", r"blocks.\1.ffn_norm."),
+    (r"blocks\.(\d+)\.attention\.qkv\.", r"blocks.\1.attention.projections.qkv."),
+    (r"blocks\.(\d+)\.mlp\.0\.", r"blocks.\1.ffn.input."),
+    (r"blocks\.(\d+)\.mlp\.2\.", r"blocks.\1.ffn.output."),
 ]
+# Names a historical model shares with the current one.
+CURRENT = re.compile(r"embed\.weight$|blocks\.\d+\.attention\.output\.|final_norm\.")
 DERIVED = {"position_encoding", "self_attn_mask"}
 
 
@@ -39,7 +48,7 @@ def rename(name):
         renamed, count = re.subn("^" + pattern, replacement, name)
         if count:
             return renamed
-    if name == "embed.weight":
+    if CURRENT.match(name):
         return name
     raise KeyError(f"No current name for historical parameter {name}")
 
