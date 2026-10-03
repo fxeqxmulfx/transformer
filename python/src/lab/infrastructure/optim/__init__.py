@@ -47,7 +47,7 @@ def report(optimizer):
 OPTIMIZERS = {optimizers.AdamW: adamw, optimizers.SGD: direction.SGD, optimizers.AMSGradW: coordinate.AMSGradW,
               optimizers.Adam: coordinate.Adam, optimizers.AdamX: coordinate.AdamX,
               optimizers.AdaGrad: coordinate.AdaGrad, optimizers.AdamNC: coordinate.AdamNC,
-              optimizers.RMSProp: coordinate.RMSProp, optimizers.Muon: matrix.Muon,
+              optimizers.RMSProp: coordinate.RMSProp, optimizers.Muon: matrix.Muon, optimizers.Dash: matrix.Dash,
               optimizers.Guarded: guarded}
 
 

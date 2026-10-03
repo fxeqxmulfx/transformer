@@ -32,6 +32,10 @@ class DirectionOptimizer(torch.optim.Optimizer):
     def direction(self, parameter, state):
         raise NotImplementedError
 
+    def directions(self, parameters):
+        """The direction of every parameter, before any parameter moves."""
+        return [self.direction(parameter, self.state[parameter]) for parameter in parameters]
+
     def report(self):
         """What each stage counted, by its name."""
         return {stage.name: stage.report(self.state[stage.name]) for stage in self.stages}
@@ -41,7 +45,7 @@ class DirectionOptimizer(torch.optim.Optimizer):
         if closure is not None:
             raise ValueError("A direction optimizer updates on the gradients in place")
         parameters = [parameter for parameter in self.param_groups[0]["params"] if parameter.grad is not None]
-        directions = [self.direction(parameter, self.state[parameter]) for parameter in parameters]
+        directions = self.directions(parameters)
         for stage in self.stages:
             directions = stage(self, parameters, directions)
         rate = self.param_groups[0]["lr"]

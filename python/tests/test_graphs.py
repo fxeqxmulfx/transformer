@@ -12,7 +12,7 @@ import unittest
 import torch
 
 from lab.domain.model import Softmax, Sparsemax
-from lab.domain.optimizers import SGD, AdamNC, AdamX, AMSGradW, Guarded, Muon
+from lab.domain.optimizers import SGD, AdamNC, AdamX, AMSGradW, Chebyshev, Dash, Guarded, Muon
 from lab.domain.spec import describe, substitute, swap
 from lab.domain.training import Checkpoint, Cosine, CudaGraph, Diagnostics, Evaluate
 from lab.infrastructure.engine.graphs import GraphStepper
@@ -58,6 +58,7 @@ def experiments():
             "adamx": swap(swap(base, "diagnostics", TRACE), "optimizer", AdamX(lr=1e-2)),
             "adamnc": swap(gradients, "optimizer", AdamNC(lr=3e-2)),
             "muon-guarded": swap(swap(base, "diagnostics", TRACE), "optimizer", Guarded(Muon(lr=3e-2))),
+            "dash-chebyshev": swap(gradients, "optimizer", Dash(lr=1e-3, solver=Chebyshev())),
             "text": swap(swap(text(TEXT["runs"]["sparsemax"]), "execution", CudaGraph()), "diagnostics", TRACE)}
 
 

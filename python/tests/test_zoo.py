@@ -23,11 +23,14 @@ import tempfile
 import unittest
 from unittest import mock
 
+import torch
+
 from lab.domain.spec import swap
 from lab.domain.training import Checkpoint
-from lab.dsl import (SGD, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradW, Geometric, Guarded, Inverse, InverseSqrt,
-                     Muon, RMSProp)
-from lab.infrastructure.optim import coordinate
+from lab.dsl import (EVD, SGD, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradW, Chebyshev, CoupledNewton, Dash,
+                     Geometric, Guarded, Inverse, InverseSqrt, Muon, NewtonDB, RMSProp)
+from lab.infrastructure.nn import build_model
+from lab.infrastructure.optim import build_optimizer, coordinate
 from lab.infrastructure.store import RunDirectory
 
 from test_engine import Interrupted, train
@@ -47,6 +50,11 @@ EXACT = {
     "rmsprop": lambda rate: RMSProp(lr=rate),
     "muon": lambda rate: Muon(lr=rate),
     "muon_guarded": lambda rate: Guarded(Muon(lr=rate)),
+    "dash_evd": lambda rate: Dash(lr=rate, solver=EVD()),
+    "dash_ndb": lambda rate: Dash(lr=rate, solver=NewtonDB()),
+    "dash_cn": lambda rate: Dash(lr=rate, solver=CoupledNewton()),
+    "dash_chebyshev": lambda rate: Dash(lr=rate, solver=Chebyshev()),
+    "dash_ndb_guarded": lambda rate: Guarded(Dash(lr=rate)),
 }
 CLOSE = {
     "adam": lambda rate: Adam(lr=rate),
@@ -82,6 +90,11 @@ class ZooTests(unittest.TestCase):
             result = train(experiment, root)
             reproduces(self, golden, root)
             self.assertEqual(result["optimizer"], {"guard": {"updates": 40, "accepted": 40, "acceptance": 1.0}})
+
+    def test_an_eigendecomposition_is_refused_a_graph(self):
+        model = build_model(historical(FIXTURE["runs"]["dash_evd"]).model, 65, 0)
+        with self.assertRaisesRegex(ValueError, "eigendecomposition"):
+            build_optimizer(Dash(lr=1e-3, solver=EVD()), model, rate=torch.zeros(()))
 
     def test_an_interrupted_run_resumes_onto_the_same_records(self):
         golden, experiment = recipe("adamnc", EXACT)

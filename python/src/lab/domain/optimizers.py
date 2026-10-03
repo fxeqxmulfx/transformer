@@ -255,3 +255,80 @@ class Guarded(Optimizer):
     @property
     def lr(self):
         return self.base.lr
+
+
+@dataclass(frozen=True)
+class InverseRoot(Spec, kind=True):
+    """A solver for (A + eps I)^(-1/4) of every Shampoo history A of a batch."""
+
+
+@dataclass(frozen=True)
+class EVD(InverseRoot):
+    """The root from an eigendecomposition; torch cannot capture it in a CUDA graph."""
+
+
+@dataclass(frozen=True)
+class NewtonDB(InverseRoot):
+    """Two chained Newton-Denman-Beavers square roots of `steps` iterations each.
+
+    `Transformer.DASH.countedBatchPiInverseFourth`, on the matrix scaled by a
+    guarded estimate from three power iterations of the ones vector.
+    """
+    steps: int = 6
+
+    def check(self):
+        require(self.steps >= 1, "A Newton solver takes at least one step")
+
+
+@dataclass(frozen=True)
+class CoupledNewton(InverseRoot):
+    """`steps` coupled Newton iterations for the inverse fourth root.
+
+    `Transformer.DASH.countedBatchPiCnFour`, on the matrix scaled as for `NewtonDB`.
+    """
+    steps: int = 8
+
+    def check(self):
+        require(self.steps >= 1, "A Newton solver takes at least one step")
+
+
+@dataclass(frozen=True)
+class Chebyshev(InverseRoot):
+    """The cosine fit of degree `degree` on `samples` nodes, evaluated by Clenshaw.
+
+    `Transformer.DASH.countedBatchPiPower`, on the matrix scaled as for
+    `NewtonDB`; fewer samples than degree + 1 are raised to degree + 1.
+    """
+    degree: int = 60
+    samples: int = 1000
+
+    def check(self):
+        require(self.degree >= 0 and self.samples >= 1, "A cosine fit needs a degree and samples")
+
+
+@dataclass(frozen=True)
+class Dash(Optimizer):
+    """Blocked Shampoo with Adam grafting, batched over the blocks of one shape.
+
+    Source: arXiv:2602.02016v2, Sections 2-4; `Transformer.DASH.leftEma`,
+    `rightEma`, `preconditionedGradient` and `graft`. Every parameter is cut
+    into blocks of at most `block` x `block`, a vector as one column. Per block
+    G, L <- b L + (1 - b) G G^T and R <- b R + (1 - b) G^T G, and the
+    direction is (L + eps I)^(-1/4) G (R + eps I)^(-1/4) rescaled to the
+    Frobenius norm of Adam's m / (sqrt(v) + eps) under `graft_betas`, and zero
+    where the Shampoo direction is zero.
+    """
+    lr: float
+    solver: InverseRoot = NewtonDB()
+    block: int = 32
+    beta: float = 0.99
+    graft_betas: tuple[float, float] = (0.9, 0.999)
+    eps: float = 1e-4
+
+    def check(self):
+        check_rate(self.lr)
+        require_kind(self.solver, InverseRoot, "solver")
+        require(self.block >= 1 and 0 <= self.beta < 1 and self.eps > 0,
+                "Dash needs a positive block size, beta in [0, 1) and a positive epsilon")
+        require(len(self.graft_betas) == 2 and all(0 <= beta < 1 for beta in self.graft_betas),
+                "Dash needs two graft betas in [0, 1)")
