@@ -72,7 +72,9 @@ wrong**), and move to the next one.
 
 ## Layout
 
-`src/` Lean (lakefile `srcDir`) · `papers/` gitignored.
+`src/` Lean (lakefile `srcDir`) · `papers/` gitignored · `python/` the experiment
+lab (`python/README.md`) · `experiments/` experiment files and the records of
+past runs · `./make.py` every task of both, Lean and Python.
 
 Paper formalizations mirror the manuscript (`Section*_*.lean`). Everything else:
 subject dir layered **by import depth, never by declaration kind** —

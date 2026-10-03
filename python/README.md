@@ -102,3 +102,30 @@ infrastructure/  PyTorch builders and engines, data, storage
 interfaces/      the command line
 dsl.py           the words an experiment file imports
 ```
+
+## Ports
+
+The lab replaces three earlier codebases, removed from the tree once what
+the experiments need was ported and checked against their recorded outputs
+(`tests/fixtures/legacy_*.json`). Docstrings cite them by module or path;
+read a cited source with `git show <commit>:<path>`:
+
+| Cited as | Path | Last in |
+| --- | --- | --- |
+| `gpt_mini.*` | `legacy/gpt_mini/src/` | `2aec5b9` |
+| `optimizer_benchmark.*`, `full_compile_benchmark.*`, `magma_benchmark.*`, `amsgrad_extensions_benchmark.*` | `legacy/gpt_mini/src/infrastructure/benchmark/` (as measured: its `archive/experiments/`) | `2aec5b9` |
+| the synthetic trainers' modules, `paper_reproduction.*` | `experiments/synthetic_trainers/` | `5d64147` |
+| the convex MQAR comparison's modules | `experiments/convex_mqar/src/convex_mqar/` | `9416d03` |
+
+Their records stay under `experiments/`: the plans and results of the
+TinyShakespeare benchmarks (`*_benchmark/`), the plans, protocols and
+baselines of the synthetic trainers, and the convex MQAR reports.
+`experiments/gpt_mini.py` stays as well; the Lean formalization and the lab
+cite it as the reference GPTMini.
+
+Not ported: the complementary-attention study of the synthetic trainers,
+and the reports, plots, layouts and integrity checks of their protocols;
+the sweep summaries; the convex construction of the MQAR comparison and its
+certificate, its Zoology models and diagnostics, and its BF16 and fused
+AdamW training; TorchInductor compilation, wherever it was used (the lab
+accelerates with CUDA graphs).
