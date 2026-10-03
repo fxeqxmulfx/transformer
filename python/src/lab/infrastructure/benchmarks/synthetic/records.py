@@ -5,6 +5,7 @@ historical ones, which a split's fingerprint hashes.
 """
 
 from dataclasses import dataclass
+from itertools import compress
 
 from .vocabulary import EOS, IGNORE, SEP
 
@@ -29,9 +30,9 @@ class Example:
     def __post_init__(self):
         if not self.tokens or not len(self.tokens) == len(self.targets) == len(self.changes):
             raise ValueError("Example fields must have the same nonzero length")
-        if all(target == IGNORE for target in self.targets):
+        if self.targets.count(IGNORE) == len(self.targets):
             raise ValueError("An example needs at least one supervised answer")
-        if any(change and target == IGNORE for change, target in zip(self.changes, self.targets)):
+        if IGNORE in compress(self.targets, self.changes):
             raise ValueError("A change must be at a supervised position")
         if bool(self.prompt) != bool(self.answer):
             raise ValueError("Generation requires both a prompt and an answer")

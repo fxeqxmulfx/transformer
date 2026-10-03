@@ -56,7 +56,7 @@ class Generator:
         size = self.size(example)
         if example.task != self.name or not self.minimum <= size <= self.length:
             raise ValueError("Example task or length does not match the specification")
-        if any(not 0 <= token < self.vocab for token in example.tokens):
+        if min(example.tokens) < 0 or max(example.tokens) >= self.vocab:
             raise ValueError("Input token is outside the vocabulary")
         expected = self.targets(example.tokens)
         if tuple(expected) != example.targets:

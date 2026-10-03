@@ -6,7 +6,7 @@ seed and the split's name: a smaller split is a prefix of a larger one, and
 the formats of one problem share their problems.
 """
 
-from dataclasses import asdict, dataclass, replace
+from dataclasses import dataclass, replace
 import hashlib
 from itertools import islice
 import json
@@ -31,7 +31,7 @@ class Split:
     @property
     def fingerprint(self):
         payload = {"version": GENERATOR_VERSION, "name": self.name, "spec": self.generator.identity(),
-                   "seed": self.seed, "examples": [asdict(example) for example in self.examples]}
+                   "seed": self.seed, "examples": [vars(example) for example in self.examples]}
         return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
 
 

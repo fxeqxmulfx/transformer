@@ -30,7 +30,8 @@ class MQAR(Generator):
 
     def sample(self, rng, length):
         """Without rewrites, every draw is the historical one, in the historical order."""
-        task = self.task
+        task, vocab = self.task, self.vocab
+        first_value = IDENTITY_BASE + task.symbols
         distinct = rng.sample(range(IDENTITY_BASE, IDENTITY_BASE + task.symbols), task.pairs - task.overwrites)
         keys = distinct + [rng.choice(distinct) for _ in range(task.overwrites)]
         if task.overwrites:
@@ -38,12 +39,12 @@ class MQAR(Generator):
         values, current = [], {}
         for key in keys:
             # A rewrite draws uniformly among the values other than its key's current one.
-            value = rng.randrange(IDENTITY_BASE + task.symbols, self.vocab - (key in current))
+            value = rng.randrange(first_value, vocab - (key in current))
             if key in current and value >= current[key]:
                 value += 1
             current[key] = value
             values.append(value)
-        tokens = [BOS] + [rng.randrange(IDENTITY_BASE + task.symbols, self.vocab) for _ in range(length - 1)]
+        tokens = [BOS] + [rng.randrange(first_value, vocab) for _ in range(length - 1)]
         for row, (key, value) in enumerate(zip(keys, values)):
             tokens[1 + 2 * row:3 + 2 * row] = [key, value]
         end = 1 + 2 * task.pairs
@@ -58,16 +59,17 @@ class MQAR(Generator):
         return [tuple(tokens[position:position + 2]) for position in range(1, end, 2)]
 
     def targets(self, tokens):
-        task = self.task
+        task, vocab = self.task, self.vocab
+        first_value = IDENTITY_BASE + task.symbols
         targets = [IGNORE] * len(tokens)
         end = 1 + 2 * task.pairs
         if not tokens or tokens[0] != BOS or len(tokens) < end:
             raise ValueError("Incomplete MQAR prefix")
         table = {}
         for key, value in self.writes(tokens):
-            if not IDENTITY_BASE <= key < IDENTITY_BASE + task.symbols:
+            if not IDENTITY_BASE <= key < first_value:
                 raise ValueError("Invalid MQAR key")
-            if not IDENTITY_BASE + task.symbols <= value < self.vocab:
+            if not first_value <= value < vocab:
                 raise ValueError("Invalid MQAR value")
             if key in table and not task.overwrites:
                 raise ValueError("Duplicate MQAR key")
@@ -75,18 +77,18 @@ class MQAR(Generator):
         seen = set()
         for position in range(end, len(tokens)):
             token = tokens[position]
-            if IDENTITY_BASE <= token < IDENTITY_BASE + task.symbols:
+            if IDENTITY_BASE <= token < first_value:
                 if position < end + task.query_gap or token not in table or token in seen:
                     raise ValueError("MQAR query must repeat one distinct prior key")
                 targets[position] = table[token]
                 seen.add(token)
-            elif not IDENTITY_BASE + task.symbols <= token < self.vocab:
+            elif not first_value <= token < vocab:
                 raise ValueError("MQAR fillers must be value tokens")
         return targets
 
     def check(self, example, expected):
         task = self.task
-        if sum(target != IGNORE for target in expected) != task.queries:
+        if len(expected) - expected.count(IGNORE) != task.queries:
             raise ValueError("Wrong number of supervised queries")
         current = {}
         for key, value in self.writes(example.tokens):

@@ -10,6 +10,8 @@ A chunk of generated-answer rows also holds what their free generation
 reads and is scored on (`generation`).
 """
 
+from array import array
+from itertools import chain, repeat
 from typing import NamedTuple
 
 import torch
@@ -73,11 +75,16 @@ class Rows:
         self.examples = examples
         self.generates = generate and bool(examples[0].prompt)
         self.lengths = [len(example.tokens) for example in examples]
-        self.host = torch.zeros(len(examples), 3, max(self.lengths), dtype=torch.long)
-        self.host[:, 0], self.host[:, 1] = PAD, IGNORE
-        for row, example in enumerate(examples):
-            fields = torch.tensor([example.tokens, example.targets, example.changes])
-            self.host[row, :, :fields.shape[1]] = fields
+        width = max(self.lengths)
+
+        def padded(example):
+            pad = width - len(example.tokens)
+            return chain(example.tokens, repeat(PAD, pad), example.targets, repeat(IGNORE, pad),
+                         example.changes, repeat(0, pad))
+
+        # One buffer of 64-bit integers, filled without a tensor per example.
+        values = array("q", chain.from_iterable(map(padded, examples)))
+        self.host = torch.frombuffer(values, dtype=torch.long).view(len(examples), 3, width)
         self.rows = self.host.to(device)
         self.chunks = {}
 

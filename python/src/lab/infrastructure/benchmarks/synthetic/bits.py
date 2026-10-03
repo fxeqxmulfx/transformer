@@ -37,7 +37,7 @@ class Bits(Answered):
                 raise ValueError("Bit hints must form a contiguous ascending interval")
         else:
             hints, bits = (), body
-        if any(x not in (ZERO, ONE) for x in bits):
+        if not {ZERO, ONE}.issuperset(bits):
             raise ValueError("Invalid bit input")
         return bits, hints
 
