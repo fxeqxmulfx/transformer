@@ -537,6 +537,17 @@ the saved phase/episode. Zero final-window observations are available in this
 prefix; recovery alone neither rejects nor certifies future final persistence.
 Both scientific budgets and all gates remain unchanged.
 
+The [actual late softmax failures/recoveries](protocols/adamw_stability_20261002/softmax-late-tail-recoveries.md)
+preserve the complete prefix through 280,000. Held-out falls to 49.179620% at
+274,000 and 81.768135% at 275,500, recovering on the next canonical observation
+after 250 updates each. Two frozen final-window failures already rule out the
+strict final criterion. Complete 10k bins have 0, 0 and 2 failures/onsets;
+frequencies do not decrease monotonically. Short/full-batch neighbors and the
+failing after-probe 275,751 remain explicit; EOS stays 100% and no cause or
+continuous recovery is inferred. Nine witness files replay byte-exactly with
+independent NoTorch episode/bin recomputation; all source/proof/audit hashes
+remain intact. Complete, review and commit both budgets before any new freeze.
+
 The [full native paired-cohort preparation](protocols/adamw_stability_20261002/architecture-cohort-preparation.md)
 now executes all twelve held-out control/candidate cases with unchanged selected
 rates, common parameter initialization, alternating order and full-budget native

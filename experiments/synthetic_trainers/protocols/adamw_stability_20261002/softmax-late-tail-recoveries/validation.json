@@ -1,0 +1,20 @@
+{
+  "captured_utc": "2026-10-03T04:46:17.667823+00:00",
+  "scope": "partial_actual_softmax_late_tail_failures_and_recoveries; full_budget_continues",
+  "through_step": 280000,
+  "canonical_observations": 1121,
+  "final_window_observations": 121,
+  "full_budget_complete": false,
+  "frozen_final_window": [
+    250000,
+    300000
+  ],
+  "cannot_meet_frozen_all_observations_final_tail": true,
+  "observed_non_time_metric_A_A_matches_frozen_reference_prefix": true,
+  "parameter_tensor_or_unobserved_trajectory_identity_claimed": false,
+  "all_43_Python_17_native_9_Lean_2_papers_and_audit_unchanged": true,
+  "optimizer_updates_performed": 0,
+  "Torch_imported": false,
+  "scientific_confirmation_schedule_or_architecture_selected": false,
+  "goal_complete": false
+}

@@ -678,6 +678,24 @@ The prefix contains zero final-window observations and cannot decide final
 persistence. All source/proof/audit hashes match; the original full budget,
 live trainer/worker and next-stage gates remain unchanged.
 
+The [fresh softmax late-tail witness](protocols/adamw_stability_20261002/softmax-late-tail-recoveries.md)
+now retains 1,121 canonical observations through 280,000. Actual failures at
+274,000/275,500 have held-out 49.179620%/81.768135%, recovering canonically at
+274,250/275,750 after 250 sampled updates each. The frozen final criterion is
+now impossible to pass; the full 300,000-update budget still continues. The first
+failure follows a failing 48-example before-probe and remains after full batches;
+the second is canonical batch 48 with a passing full-batch before-probe and
+failing full-batch after-probe. Probe 275,751 fails again after sampled recovery.
+EOS remains 100%; these observations do not identify a cause or continuous
+between-evaluation stability. Complete 10k tail bins have 0/40, 0/40 and 2/40
+failures / 0, 0 and 2 episode onsets, following eleven quiet complete bins.
+Observed frequencies do not decrease monotonically. All six sampled episodes
+so far recover; all 1,121 non-time metrics match the pinned same-seed reference.
+Nine core files replay byte-exactly with independent NoTorch episode/bin checks.
+All frozen sources/proofs/audit remain intact. Finish/review/commit the full
+control/pair and consume both handles before the prepared conditional schedule;
+this incomplete negative prefix opens no scientific stage.
+
 The [full architecture-cohort pipeline](protocols/adamw_stability_20261002/architecture-cohort-preparation.md)
 is separately prepared, preserving the selected native AdamW schedule and all
 six primary-confirmation gates. Two real CPU six-pair cohorts finish 24 cases /

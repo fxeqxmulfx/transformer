@@ -1,0 +1,40 @@
+{
+  "verified_utc": "2026-10-03T04:50:02.743249+00:00",
+  "command": [
+    "python3",
+    "experiments/synthetic_trainers/protocols/adamw_stability_20261002/softmax-late-tail-recoveries/verify-snapshot.py",
+    "experiments/synthetic_trainers/protocols/adamw_stability_20261002/softmax-late-tail-recoveries",
+    "/tmp/softmax-late-tail-recoveries-replay-20261003"
+  ],
+  "exit_code": 0,
+  "verifier_sha256": "d531121aba7d69175313bb94a0ca82464dcaf3bff2210ca43670ac23a3a0a684",
+  "result": {
+    "artifact_hashes_valid": true,
+    "independent_episode_and_bin_recomputation_passed": true,
+    "canonical_observations": 1121,
+    "tail_observations": 121,
+    "tail_failures": [
+      274000,
+      275500
+    ],
+    "complete_10k_tail_bin_failed_observations": [
+      0,
+      0,
+      2
+    ],
+    "total_sampled_recovered_episodes": 6,
+    "replay_byte_exact_core_files": 9,
+    "recovery_time_and_continuity_between_evaluations_known": false,
+    "Torch_imported": false,
+    "scientific_run_complete": false
+  },
+  "actual_capture_terminal_sessions": [
+    80688,
+    76009
+  ],
+  "capture_terminal_sessions_consumed": true,
+  "capture_terminal_exit_codes": [
+    0,
+    0
+  ]
+}
