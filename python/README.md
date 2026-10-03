@@ -46,6 +46,7 @@ uv run --locked lab blocks
 uv run --locked lab check ../experiments/<name>.py
 uv run --locked lab show ../experiments/<name>.py <label>
 uv run --locked lab run ../experiments/<name>.py [label ...]
+uv run --locked lab report ../experiments/<name>.py [label ...]
 uv run --locked python -m unittest discover -s tests
 ```
 
@@ -66,6 +67,13 @@ Running the file again continues each unfinished run from its checkpoint and
 skips finished ones. A run continues only the same experiment (raising
 `budget.updates` extends it) under the same engine: lab sources, PyTorch
 version and device, as recorded in each segment.
+
+`lab report` prints, as JSON, each chosen run's state (not started,
+unfinished, finished or stopped), its latest observation and its result. A
+modular division run also gets the analyses of the historical stability
+protocols, read from its records: its phases, whether its success
+persisted, its failures and recoveries after generalizing, the probes and
+diagnostics around each held-out failure, and its largest gradients.
 
 `Eager()` issues every update kernel by kernel with the native optimizer and
 reproduces the historical modular trainer record for record

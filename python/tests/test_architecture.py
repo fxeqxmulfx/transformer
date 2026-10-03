@@ -56,7 +56,7 @@ class ArchitectureTests(unittest.TestCase):
                         self.assertIn(name.split(".")[0], sys.stdlib_module_names)
 
     def test_language_and_use_cases_load_without_torch(self):
-        code = ("import sys, lab.dsl, lab.application.study; "
+        code = ("import sys, lab.dsl, lab.application.study, lab.application.report; "
                 "assert not {'torch', 'numpy'} & set(sys.modules), sorted(sys.modules)")
         subprocess.run([sys.executable, "-c", code], check=True)
 

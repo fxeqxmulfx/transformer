@@ -66,6 +66,17 @@ class CliTests(unittest.TestCase):
         self.assertFalse((Path(path).parent / "runs" / "pair" / "sparsemax").exists())
         self.assertEqual(self.output("run", path, "softmax").splitlines(), lines[-1:])
 
+    def test_report_reads_the_runs_back_as_json(self):
+        path = self.file(PAIR)
+        self.output("run", path, "softmax")
+        reports = json.loads(self.output("report", path))
+        self.assertEqual(reports["sparsemax"], {"status": "not_started"})
+        softmax = reports["softmax"]
+        self.assertEqual((softmax["status"], softmax["budget"], softmax["latest"]), ("finished", 20,
+                                                                                     softmax["result"]["final"]))
+        self.assertTrue(softmax["persistence"]["complete_canonical_history"])
+        self.assertIn("not_applicable", softmax["recovery"])
+
     def test_blocks_lists_every_slot(self):
         listing = self.output("blocks")
         for word in ("Weights:", "Sparsemax()", "CudaGraph(device='cuda', threads=1)", "Composites:"):

@@ -7,6 +7,7 @@ setting of a run is written in its experiment file.
     lab check <file>               load a file; list its experiments and how they differ
     lab show <file> <label>        the full description of one experiment
     lab run <file> [label ...]     train the experiments, or the chosen ones
+    lab report <file> [label ...]  what the runs recorded and what their records say, as JSON
 
 A run lives in `runs/<file stem>/<label>/` beside its file. Running a file
 again continues each unfinished run from its last checkpoint and skips the
@@ -17,6 +18,7 @@ import argparse
 import json
 
 from .. import dsl
+from ..application.report import report_study
 from ..application.study import run_study, survey
 from ..domain.spec import blocks_of, composites, describe, kinds, signature
 from ..infrastructure.loader import load, runs_root
@@ -63,7 +65,7 @@ def metrics(row):
                      for name, values in row.items() if isinstance(values, dict) and "loss" in values)
 
 
-def report(label, row):
+def progress(label, row):
     kind = "probe" if row.get("diagnostic_probe") else "step"
     print(f"{label} {kind} {row['step']}  {metrics(row)}  {row['wall_seconds']:.0f}s", flush=True)
 
@@ -74,7 +76,7 @@ def run(arguments):
     from ..infrastructure.store import RunDirectories
 
     study = load(arguments.file)
-    results = run_study(study, arguments.labels, RunDirectories(runs_root(arguments.file)), Engine(), report)
+    results = run_study(study, arguments.labels, RunDirectories(runs_root(arguments.file)), Engine(), progress)
     for label, result in results.items():
         stop = result["stop"]
         ending = (f"finished {result['updates']} updates" if stop["reason"] == "budget"
@@ -82,6 +84,14 @@ def run(arguments):
         print(f"{label} {ending}  {metrics(result['final'])}")
         if "best" in result:
             print(f"{label} best at update {result['best']['step']}  {metrics(result['best'])}")
+
+
+def report(arguments):
+    from ..infrastructure.store import RunDirectories
+
+    study = load(arguments.file)
+    reports = report_study(study, arguments.labels, RunDirectories(runs_root(arguments.file)))
+    print(json.dumps(reports, indent=2, allow_nan=False))
 
 
 def main(argv=None):
@@ -100,6 +110,10 @@ def main(argv=None):
     command.add_argument("file")
     command.add_argument("labels", nargs="*", metavar="label")
     command.set_defaults(handler=run)
+    command = commands.add_parser("report", help="print what an experiment file's runs recorded, as JSON")
+    command.add_argument("file")
+    command.add_argument("labels", nargs="*", metavar="label")
+    command.set_defaults(handler=report)
     arguments = parser.parse_args(argv)
     arguments.handler(arguments)
     return 0

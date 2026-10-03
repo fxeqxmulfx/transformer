@@ -4,22 +4,23 @@
     ./make.py <task> [arguments]
 
 Lean
-    lean                  build the tree (lake build)
-    audit                 axioms of every Transformer.* declaration; `rests` must be 0
-    index                 regenerate INDEX.md from src/ and the build
-    forbidden             search src/ for native_decide, axioms and disabled linters
+    lean                    build the tree (lake build)
+    audit                   axioms of every Transformer.* declaration; `rests` must be 0
+    index                   regenerate INDEX.md from src/ and the build
+    forbidden               search src/ for native_decide, axioms and disabled linters
 
 Python (the uv project in python/)
-    setup                 install the locked environment
-    test [pattern ...]    run the test suite, optionally only tests matching patterns
-    blocks                list the experiment language
-    check <file>          load an experiment file and list its experiments
-    show <file> <label>   print one experiment's description
-    run <file> [labels]   train an experiment file's experiments, or the labeled ones
+    setup                   install the locked environment
+    test [pattern ...]      run the test suite, optionally only tests matching patterns
+    blocks                  list the experiment language
+    check <file>            load an experiment file and list its experiments
+    show <file> <label>     print one experiment's description
+    run <file> [labels]     train an experiment file's experiments, or the labeled ones
+    report <file> [labels]  print what the runs recorded and what their records say, as JSON
 
 Together
-    verify                lean, audit, index, forbidden and test: the checks before a commit
-    clean                 remove Python bytecode caches
+    verify                  lean, audit, index, forbidden and test: the checks before a commit
+    clean                   remove Python bytecode caches
 
 Only the standard library is used, so this runs before any setup.
 """
@@ -109,6 +110,10 @@ def main():
     command.add_argument("file")
     command.add_argument("labels", nargs="*")
     command.set_defaults(handler=lambda arguments: lab("run", arguments.file, *arguments.labels))
+    command = tasks.add_parser("report")
+    command.add_argument("file")
+    command.add_argument("labels", nargs="*")
+    command.set_defaults(handler=lambda arguments: lab("report", arguments.file, *arguments.labels))
     arguments = parser.parse_args()
     try:
         arguments.handler(arguments)
