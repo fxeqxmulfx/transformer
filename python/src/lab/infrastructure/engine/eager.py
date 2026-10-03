@@ -9,9 +9,9 @@ from .sampler import gather
 
 
 class EagerStepper:
-    def __init__(self, experiment, task, model, rows, clock):
-        self.task, self.model, self.clock = task, model, clock
-        self.rows, self.batch = rows["train"], experiment.evaluate.batch
+    def __init__(self, experiment, task, model, splits, clock):
+        self.task, self.model, self.clock, self.splits = task, model, clock, splits
+        self.rows, self.batch = splits["train"], experiment.evaluate.batch
         self.optimizer = build_optimizer(experiment.optimizer, model)
         self.norms = []
 
@@ -47,5 +47,5 @@ class EagerStepper:
         norms, self.norms = self.norms, []
         return norms
 
-    def evaluate(self, rows):
-        return evaluate(self.task, self.model, rows, self.batch)
+    def evaluate(self, split):
+        return evaluate(self.task, self.model, self.splits[split], self.batch)

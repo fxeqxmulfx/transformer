@@ -65,8 +65,16 @@ result.json        the summary, written when the budget is reached
 Running the file again continues each unfinished run from its checkpoint and
 skips finished ones. A run continues only the same experiment (raising
 `budget.updates` extends it) under the same engine: lab sources, PyTorch
-version and device, as recorded in each segment. The eager engine reproduces
-the historical modular trainer record for record (`tests/test_engine.py`).
+version and device, as recorded in each segment.
+
+`Eager()` issues every update kernel by kernel with the native optimizer and
+reproduces the historical modular trainer record for record
+(`tests/test_engine.py`). `CudaGraph()` captures one update per recurring
+batch size and one evaluation per split, and replays them; sampled updates
+run the same operations eagerly. Its optimizer is the capturable AdamW, which
+rounds differently from the native one in the last bits, so a CudaGraph run
+equals its own operations issued eagerly (`tests/test_graphs.py`), not an
+Eager run. On the GTX 1050 it trains the mod-97 models 1.4-2.2 times faster.
 
 ## Layout
 

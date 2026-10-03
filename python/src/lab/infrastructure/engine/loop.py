@@ -4,15 +4,19 @@ The order of operations is that of `paper_reproduction.grokking.train`, so the
 historical configurations reproduce its records bit for bit. A stepper only
 decides how updates and evaluations reach the device:
 
-    stepper = Stepper(experiment, task, model, rows, clock)
+    stepper = Stepper(experiment, task, model, splits, clock)
     stepper.state_dict(), stepper.load_state_dict(state)   the optimizer state
     stepper.prepare()                    once any checkpoint is loaded
     stepper.step(parts, rate, sampled)   one update: (batch size, measurements or None)
     stepper.gradient_norms()             the norms of the updates since the last call
-    stepper.evaluate(rows)               the metrics of one split
+    stepper.evaluate(split)              the metrics of the named split
+
+A stepper may return gradient norms late; the loop collects them before each
+observation and stops at the first that is not finite.
 """
 
 from contextlib import contextmanager
+import math
 import time
 
 import torch
@@ -90,10 +94,10 @@ class Training:
         self.clock = Clock(self.device)
         self.task = build_task(experiment.benchmark, experiment.seeds.data)
         self.model = build_model(experiment.model, self.task.vocab, experiment.seeds.model).to(self.device)
-        self.rows = {name: torch.tensor(split, dtype=torch.long, device=self.device)
-                     for name, split in self.task.splits.items()}
-        self.stepper = stepper(experiment, self.task, self.model, self.rows, self.clock)
-        self.sampler = EpochSampler(len(self.rows["train"]), experiment.budget, experiment.seeds.batch_seed)
+        self.splits = {name: torch.tensor(rows, dtype=torch.long, device=self.device)
+                       for name, rows in self.task.splits.items()}
+        self.stepper = stepper(experiment, self.task, self.model, self.splits, self.clock)
+        self.sampler = EpochSampler(len(self.splits["train"]), experiment.budget, experiment.seeds.batch_seed)
         self.completed, self.seen, self.last_batch_size = 0, 0, None
         checkpoint = run.checkpoint(self.device)
         if checkpoint is not None:
@@ -113,10 +117,9 @@ class Training:
         self.stepper.prepare()
 
     def observe(self, step, probe):
-        row = {"step": step, "epochs_seen": self.seen / len(self.rows["train"]),
+        row = {"step": step, "epochs_seen": self.seen / len(self.splits["train"]),
                "training_seconds": self.clock.training, "wall_seconds": self.clock.wall(),
-               "last_batch_size": self.last_batch_size,
-               **{name: self.stepper.evaluate(rows) for name, rows in self.rows.items()}}
+               "last_batch_size": self.last_batch_size, **{name: self.stepper.evaluate(name) for name in self.splits}}
         if probe:
             self.run.record("probes", row)
         else:
@@ -125,10 +128,11 @@ class Training:
         self.progress({"diagnostic_probe": True, **row} if probe else row)
 
     def flush(self):
-        """Record the gradient norms of the updates since the last flush."""
-        norms = self.stepper.gradient_norms()
-        if self.experiment.diagnostics.gradients:
-            for row, norm in zip(self.trace, norms, strict=True):
+        """Check, and record if traced, the gradient norms of the updates since the last flush."""
+        for row, norm in zip(self.trace, self.stepper.gradient_norms(), strict=True):
+            if not math.isfinite(norm):
+                raise FloatingPointError(f"The gradient norm of update {row['step']} is {norm}")
+            if self.experiment.diagnostics.gradients:
                 self.run.record("gradients", {**row, "gradient_l2": norm})
         self.trace = []
 
@@ -150,9 +154,8 @@ class Training:
             size, measurements = self.stepper.step(parts, learning_rate, sampled)
             self.seen += size
             self.last_batch_size = size
-            if experiment.diagnostics.gradients:
-                self.trace.append({"step": step, "batch_size": size, "epoch_tail": place["epoch_tail"],
-                                   "learning_rate": learning_rate})
+            self.trace.append({"step": step, "batch_size": size, "epoch_tail": place["epoch_tail"],
+                               "learning_rate": learning_rate})
             if sampled:
                 with self.clock.diagnosing():
                     self.run.record("diagnostics", {"step": step, "batch_size": size, **place,

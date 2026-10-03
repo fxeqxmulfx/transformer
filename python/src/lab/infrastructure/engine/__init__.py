@@ -3,9 +3,10 @@
 from ...domain import training
 from ..provenance import provenance
 from .eager import EagerStepper
+from .graphs import GraphStepper
 from .loop import Training
 
-STEPPERS = {training.Eager: EagerStepper}
+STEPPERS = {training.Eager: EagerStepper, training.CudaGraph: GraphStepper}
 
 
 class Engine:
