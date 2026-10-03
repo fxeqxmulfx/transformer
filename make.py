@@ -20,6 +20,7 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
 
 Together
     verify                        lean, audit, index, forbidden and test: the checks before a commit
+    papers [--dry-run]            fetch every cited arXiv paper missing from papers/
     clean                         remove Python bytecode caches
 
 Only the standard library is used, so this runs before any setup.
@@ -83,6 +84,10 @@ def verify(arguments):
     test(argparse.Namespace(patterns=[]))
 
 
+def papers(arguments):
+    execute([sys.executable, "scripts/papers.py", *(["--dry-run"] if arguments.dry_run else [])])
+
+
 def clean(_):
     for directory in (PYTHON, ROOT / "experiments", ROOT / "scripts"):
         for cache in directory.rglob("__pycache__"):
@@ -95,6 +100,9 @@ def main():
     tasks = parser.add_subparsers(required=True, metavar="task")
     for task in (lean, audit, index, forbidden, setup, verify, clean):
         tasks.add_parser(task.__name__).set_defaults(handler=task)
+    command = tasks.add_parser("papers")
+    command.add_argument("--dry-run", action="store_true")
+    command.set_defaults(handler=papers)
     command = tasks.add_parser("test")
     command.add_argument("patterns", nargs="*")
     command.set_defaults(handler=test)

@@ -13,8 +13,9 @@ cycle on 2026-10-03; resume it only after an explicit instruction to continue.
   papers are gitignored; `INDEX.md` is the generated inventory of declarations
   and proof debt.
 - The papers and reference source files for this project are available locally
-  under `papers/`. Search and read those local files when checking a statement
-  or proof; do not browse the web for their contents.
+  under `papers/`; `./make.py papers` fetches any cited arXiv paper missing
+  there. Search and read those local files when checking a statement or
+  proof; do not browse the web for their contents.
 - Recheck every theorem against its paper before calling it complete or making
   a requested commit: hypotheses, quantifiers, constants, indices, and
   conclusion. A closing Lean proof does not establish fidelity to the paper.

@@ -72,8 +72,9 @@ wrong**), and move to the next one.
 
 ## Layout
 
-`src/` Lean (lakefile `srcDir`) · `papers/` gitignored · `python/` the experiment
-lab (`python/README.md`) · `experiments/` a folder per experiment, its
+`src/` Lean (lakefile `srcDir`) · `papers/` gitignored, the cited arXiv
+sources, which `./make.py papers` fetches · `python/` the experiment lab
+(`python/README.md`) · `experiments/` a folder per experiment, its
 `experiment.py` beside a `README.md`, and in `archive/` the records of past
 runs · `./make.py` every task of both, Lean and Python.
 
