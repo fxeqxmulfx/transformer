@@ -18,8 +18,8 @@ finite: the run fails, or, under a stopping policy, ends there.
 
 When the benchmark has a selection split, the model of the best observation
 travels in every checkpoint. At the end of a run it is restored, its selection
-loss is evaluated again and must be the one observed, and the benchmark's
-final splits are evaluated once, on it.
+split is evaluated again and must measure what was observed, and the
+benchmark's final splits are evaluated once, on it.
 """
 
 from contextlib import contextmanager
@@ -112,7 +112,7 @@ class Training:
         self.sampler = self.task.sampler(experiment.budget.batch, experiment.seeds.batch_seed)
         self.completed, self.seen, self.last_batch_size = 0, 0, None
         selection = experiment.benchmark.selection
-        self.selection = None if selection is None else Selection(experiment.stopping)
+        self.selection = None if selection is None else Selection(experiment.stopping, experiment.benchmark.rank)
         self.best = None
         checkpoint = run.checkpoint(self.device)
         if checkpoint is not None:
@@ -128,7 +128,7 @@ class Training:
         self.history = run.records("history")
         if self.selection is not None:
             for row in self.history:
-                self.selection.observe(row["step"], row[selection]["loss"])
+                self.selection.observe(row["step"], row[selection])
             if self.selection.step != (None if self.best is None else self.best["step"]):
                 raise ValueError("The checkpointed best model is not the best observation of the history")
         if experiment.diagnostics.gradients and (
@@ -148,7 +148,7 @@ class Training:
             self.history.append(row)
             self.run.record("history", row)
             selection = self.experiment.benchmark.selection
-            if self.selection is not None and self.selection.observe(step, row[selection]["loss"]):
+            if self.selection is not None and self.selection.observe(step, row[selection]):
                 self.best = {"step": step, "model": {name: value.detach().cpu().clone()
                                                      for name, value in self.model.state_dict().items()}}
         self.progress({"diagnostic_probe": True, **row} if probe else row)

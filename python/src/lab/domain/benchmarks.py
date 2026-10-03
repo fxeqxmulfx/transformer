@@ -22,8 +22,12 @@ class Benchmark(Spec, kind=True):
 
     @property
     def selection(self):
-        """The observed split whose loss selects the best observation, if any."""
+        """The observed split whose metrics select the best observation, if any."""
         return None
+
+    def rank(self, metrics):
+        """How an observation of the selection split ranks; the first of the highest rank is the best."""
+        return -metrics["loss"]
 
     @property
     def final(self):
