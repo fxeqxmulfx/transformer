@@ -16,6 +16,7 @@ import torch
 
 from lab.domain.model import Normal, TorchDefault
 from lab.domain.spec import swap
+from lab.domain.tasks import AlternatingBlocks
 from lab.dsl import (AdamW, AMSGradW, Budget, Checkpoint, Clipped, Eager, Evaluate, Experiment, Schedule, Seeds,
                      Synthetic)
 from lab.infrastructure.benchmarks import build_task
@@ -120,6 +121,28 @@ class HistoricalTrainingTests(unittest.TestCase):
                 benchmark = experiment(golden).benchmark
                 task = build_task(benchmark, golden["training"]["data_seed"], "cpu")
                 self.assertEqual((task.vocab, benchmark.context), (golden["vocab_size"], golden["context_length"]))
+
+
+class SelectTests(unittest.TestCase):
+    def test_the_selected_held_out_split_selects_and_decides_the_target(self):
+        benchmark = Synthetic(task=AlternatingBlocks(blocks=2), length=12, ood=(24,), train=32, validation=16,
+                              test=8, target=0.5, metric="token_accuracy", select="length-24")
+        run = Experiment(model=swap(gptmini(16, 1, 2), "context", benchmark.context), benchmark=benchmark,
+                         optimizer=AdamW(lr=1e-2, betas=(0.9, 0.98), weight_decay=0.0), schedule=Schedule(),
+                         budget=Budget(updates=6, batch=8),
+                         seeds=Seeds(), evaluate=Evaluate(every=2, batch=8), execution=Eager(device="cpu"))
+        with tempfile.TemporaryDirectory() as root:
+            result = train(run, root)
+            history = RunDirectory(Path(root) / "run").records("history")
+        selected = [row["validation/length-24"] for row in history]
+        self.assertTrue(all("validation" in row for row in history))
+        best = max(range(len(history)), key=lambda index: (benchmark.rank(selected[index]), -index))
+        self.assertEqual((result["best"]["step"], result["best"]["validation/length-24"]),
+                         (history[best]["step"], selected[best]))
+        task = build_task(benchmark, 0, "cpu")
+        rows = [{**row, "validation": {"token_accuracy": 1.0}, "validation/length-24": {"token_accuracy": accuracy}}
+                for row, accuracy in zip(history, (0.25, 0.75, 0.5, 1.0))]
+        self.assertEqual(task.analyze(rows)["time_to_target"]["step"], history[1]["step"])
 
 
 class RowsTests(unittest.TestCase):

@@ -153,14 +153,14 @@ class SyntheticTask:
         return {} if self.measures is None else {"memorization": self.measures.inspect(model, batch)}
 
     def analyze(self, history):
-        """The splits' fingerprints, the first observation whose validation `metric` reaches `target`, and the
+        """The splits' fingerprints, the first observation whose selection `metric` reaches `target`, and the
         report of a study."""
         spec = self.spec
         hit = None if spec.target is None else next(
-            (row for row in history if row["validation"][spec.metric] >= spec.target), None)
+            (row for row in history if row[spec.selection][spec.metric] >= spec.target), None)
         found = {"split_fingerprints": self.fingerprints, "time_to_target": None if hit is None else {
             **{key: hit[key] for key in ("step", "training_seconds", "wall_seconds", "examples_seen")},
-            "value": hit["validation"][spec.metric]}}
+            "value": hit[spec.selection][spec.metric]}}
         if self.measures is not None:
             found["memorization"] = self.measures.report(history)
         return found

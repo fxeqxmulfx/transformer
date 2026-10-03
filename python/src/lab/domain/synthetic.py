@@ -39,6 +39,13 @@ class Synthetic(Benchmark):
     once, on its model. The run reports the first observation whose
     validation `metric` reaches `target`.
 
+    `select` extends the suite: the held-out distribution of that name is
+    observed too, by its own validation split (`validation/<name>`, at the
+    size of validation), which selects the best observation and decides the
+    target in place of validation. A bound that holds at every length, such
+    as that of depth (`Transformer.CRASP.not_recognizes_altPlusNeutral_rope`),
+    shows only there: at the training lengths the language is finite.
+
     A `study` (`Memorization`) also observes the training split by teacher
     forcing alone, with its observed labels (`train`) and the oracle's
     (`train_clean`), each held-out distribution at the size of validation
@@ -57,6 +64,7 @@ class Synthetic(Benchmark):
     study: Memorization | None = None
     target: float | None = 0.95
     metric: str = "sequence_accuracy"
+    select: str | None = None
 
     def check(self):
         require_kind(self.task, Task, "task")
@@ -68,6 +76,7 @@ class Synthetic(Benchmark):
         require(self.metric in METRICS, f"The target metric is one of {', '.join(METRICS)}")
         require(self.metric != "final_answer_accuracy" or self.task.generative,
                 "The final answer accuracy scores generated answers only")
+        require(self.select is None or self.select in self.probes, "select names a held-out distribution")
         for problem in (self.problem, *self.probes.values()):
             problem.task.check_lengths(problem.minimum, problem.length)
         if self.study is not None:
@@ -94,13 +103,13 @@ class Synthetic(Benchmark):
     @property
     def observed(self):
         if self.study is None:
-            return ("validation",)
+            return ("validation", *(() if self.select is None else (self.selection,)))
         return ("validation", "validation/novel", "train", "train_clean",
                 *(f"validation/{name}{novel}" for name in self.probes for novel in ("", "/novel")))
 
     @property
     def selection(self):
-        return "validation"
+        return "validation" if self.select is None else f"validation/{self.select}"
 
     @property
     def final(self):

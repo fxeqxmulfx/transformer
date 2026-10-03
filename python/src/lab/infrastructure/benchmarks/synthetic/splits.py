@@ -88,7 +88,8 @@ def benchmark_splits(benchmark, seed):
     `train`, `validation` and `test` sample the training distribution, and
     `test/P` each held-out distribution P. A study adds `train_clean`, the
     training rows with the oracle's labels, whose noisy copy `train` is, and
-    `validation/P` (`training.train_run` and `studies.py`).
+    `validation/P` (`training.train_run` and `studies.py`); `select` adds
+    `validation/P` of the selected P alone.
     """
     study = benchmark.study
     source = generator(benchmark.problem)
@@ -103,7 +104,7 @@ def benchmark_splits(benchmark, seed):
         splits["train_clean"] = clean
     for name, problem in benchmark.probes.items():
         held_out = generator(problem)
-        if study is not None:
+        if study is not None or name == benchmark.select:
             splits[f"validation/{name}"] = build_split(held_out, "validation", seed, benchmark.validation)
         splits[f"test/{name}"] = build_split(held_out, "test", seed, benchmark.test)
     return splits, noise

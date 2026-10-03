@@ -19,6 +19,7 @@ import unittest
 from lab.domain.generative import (Addition, BooleanAnd, Copy, Count, DoubleHistogram, Histogram, Mode,
                                    MostFrequent, Parity, RandomLM, Reverse, Sort)
 from lab.domain.memorization import Memorization
+from lab.domain.spec import swap
 from lab.domain.synthetic import Synthetic
 from lab.domain.tasks import CRASP, MQAR, AlternatingBlocks, Dyck, Lookup, TypedDyck
 from lab.infrastructure.benchmarks.synthetic.splits import benchmark_splits
@@ -100,6 +101,19 @@ class SyntheticSpecTests(unittest.TestCase):
         self.assertEqual(list(Synthetic(task=Addition(), length=4, ood=(8,)).probes),
                          ["length-8", "hard-carry-length-4", "hard-carry-length-8"])
         self.assertEqual(Synthetic(task=Parity(scratchpad="ones", hints=True), length=8, ood=(16,)).context, 67)
+
+    def test_a_selected_held_out_distribution_is_validated_at_the_size_of_validation(self):
+        base = Synthetic(task=AlternatingBlocks(), length=16, ood=(32,), train=8, validation=8, test=4)
+        selected = swap(base, "select", "length-32")
+        self.assertEqual((selected.observed, selected.selection),
+                         (("validation", "validation/length-32"), "validation/length-32"))
+        splits, _ = benchmark_splits(selected, 0)
+        studied, _ = benchmark_splits(swap(base, "study", Memorization()), 0)
+        self.assertEqual(len(splits["validation/length-32"].examples), 8)
+        self.assertEqual(splits["validation/length-32"].fingerprint, studied["validation/length-32"].fingerprint)
+        self.assertEqual(set(splits) - set(benchmark_splits(base, 0)[0]), {"validation/length-32"})
+        with self.assertRaisesRegex(ValueError, "select names a held-out distribution"):
+            swap(base, "select", "length-64")
 
     def test_the_final_answer_ranks_first_when_it_is_the_target(self):
         metrics = {"final_answer_accuracy": 0.5, "sequence_accuracy": 0.25, "balanced_accuracy": 0.75, "loss": 2.0}
