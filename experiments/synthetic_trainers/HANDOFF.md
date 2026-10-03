@@ -26,6 +26,14 @@ The scientific goal stays active during healthy GPU execution. A passing
 recipe still requires all six fresh crossed confirmations before scientific
 architecture and complementary studies. Preparation fixtures open no gate.
 
+The [actual constant-control phase/recovery prefix](protocols/adamw_stability_20261002/scheduled-constant-first-phase-and-recovery.md)
+through 105,750 now preserves its 4,500–27,250 plateau, twenty joint target
+checks at 95,750–100,500, and first sampled failure/recovery at
+105,250–105,750 (500 updates; minimum canonical held-out 97.481290%). All
+424 non-time canonical records match the same-seed historical softmax control.
+Eight core files replay exactly; independent NoTorch checks and actual PNG/PDF
+reviews pass. Both full budgets remain live; this prefix opens no stable gate.
+
 The latest complete CPU suite passes **288 tests in 90.250 seconds** after the
 complementary normalizer bridge; its [full log](protocols/adamw_stability_20261002/complementary-attention-full-CPU-suite-20261003-final.log)
 and [source receipt](protocols/adamw_stability_20261002/complementary-attention-preparation-validation.json)

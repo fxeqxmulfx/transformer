@@ -1,0 +1,18 @@
+{
+  "files": {
+    "assessment.json": "c74fe687e2995a06ec7cc149c127ee8c863f1191b4135013c0d5be99768c1815",
+    "boundary-triplets.json": "68264b8685122764d3c42d4b15f85ec7bb2045bcfa387231a0883dbe5fe29e12",
+    "canonical-prefix.jsonl": "fed25b77c7ffd69b2165393fd46230267f2c1bce3431648fc42cf64c6d5ffac9",
+    "capture-snapshot.py": "51ec715c59087b40112ab82e8af42982cd7985ed63e8d613b7d54130d386ae0f",
+    "captured-native-case-plan.json": "cc8e30fab73f6e0bb66ac9c971881c8ff5d30502891d0064232670298e123892",
+    "constant-phase-and-recovery.pdf": "f11e300afece3658891030fb66c9344c6c14d3ae8bd5ff99d30ac5041cb298b7",
+    "constant-phase-and-recovery.png": "6f5656ac62f4da52f51ee4b5b0eae271c6a851a2d0c154335e5a9cfc8e523780",
+    "frozen-root-plan.json": "59bbe9418cc4edeed257e4ad89c3d3ef75f361667347841f0a232bb05bf5388e",
+    "plot-snapshot.py": "ceeb478a3e1d088a927bae65022e1173eac5fc8245bac041177e905428dee85a",
+    "recovery-metrics.json": "bd46ddc5bf340ea43f46b65f8f9352ac967376444abed2abd60f6fb8a8f5077b",
+    "reference-non-time-prefix.jsonl": "024f1f7acdb2fe2953be106db802694c6b213485034b15ab4a22d18a7d875561",
+    "validation.json": "e1bd3fa40f49f9d01e4307d9c928493c70e8227cb0a1e175798b15b9fbdabe11",
+    "verification-receipt.json": "a3c367c96bd0cd401c69aacb7021e27e5799f7837500a120b6aa344ddc63beae",
+    "verify-snapshot.py": "c9deaac673dca7135272a2963f0d48f4db17e4f21755a584b0e4ba5d6200bf4a"
+  }
+}

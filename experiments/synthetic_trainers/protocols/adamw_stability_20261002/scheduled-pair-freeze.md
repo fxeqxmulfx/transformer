@@ -80,3 +80,10 @@ replays and actual guards against incomplete/altered evidence or overwrites.
 It imports no Torch and leaves native-state/visual checks external. Use it
 only after the corresponding full archive is ready; all frozen sources and
 scientific gates remain intact.
+
+The live constant case now has a [captured phase/recovery prefix](scheduled-constant-first-phase-and-recovery.md)
+through 105,750: long confirmation at 100,500 and first sampled recovery in
+500 updates. Its 424 non-time canonical records equal the same-seed reference;
+independent NoTorch recomputation, eight-file fresh replay and actual PNG/PDF
+review pass. The original full budgets and final-window/independent gates
+remain unchanged. This is measured constant-control evidence, not a cosine result.

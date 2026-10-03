@@ -603,6 +603,14 @@ eight actual rejection checks protect existing receipts and reject incomplete
 cases, changed prospective plans and altered raw evidence. Native-state and
 actual PNG/PDF review remain separate. No scientific updates or gates change.
 
+The [actual constant-control phase/recovery witness](protocols/adamw_stability_20261002/scheduled-constant-first-phase-and-recovery.md)
+preserves 424 canonical records through 105,750, the 95,750–100,500 long
+confirmation and a first 500-update sampled recovery after a 97.481290%
+held-out failure. All non-time canonical records match the same-seed reference;
+eight core files replay exactly, an independent standard-library verifier
+passes and actual PNG/PDF figures are reviewed. No final-window observations,
+independent repeat or scientific gate is established by this partial witness.
+
 The [full native paired-cohort preparation](protocols/adamw_stability_20261002/architecture-cohort-preparation.md)
 now executes all twelve held-out control/candidate cases with unchanged selected
 rates, common parameter initialization, alternating order and full-budget native

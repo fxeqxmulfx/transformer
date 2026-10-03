@@ -1,0 +1,104 @@
+{
+  "criterion": {
+    "target": 0.99,
+    "heldout_ceiling": 0.1,
+    "plateau_steps": 1000,
+    "plateau_observations": 5,
+    "confirmation_observations": 20,
+    "tail_steps": 50000
+  },
+  "complete_canonical_history": false,
+  "plateau": {
+    "start": 4500,
+    "end": 27250,
+    "observations": 92
+  },
+  "long_confirmation": {
+    "onset": 95750,
+    "confirmed": 100500,
+    "training_seconds": 2617.537914346074,
+    "wall_seconds": 3223.6080597679975
+  },
+  "tail_start_step": 250000,
+  "tail_observations": 0,
+  "tail_failures": [],
+  "tail_minimum_heldout_accuracy": null,
+  "persistent_final_performance": false,
+  "stable_grokking": false,
+  "legacy_phase_diagnostics": {
+    "sustained_train_fit": {
+      "onset": 1250,
+      "confirmed": 1500
+    },
+    "sustained_heldout_target": {
+      "onset": 95750,
+      "confirmed": 96000
+    },
+    "time_to_sustained_train_fit": {
+      "onset": {
+        "training_seconds": 32.11925397388404,
+        "wall_seconds": 41.23177375498926
+      },
+      "confirmed": {
+        "training_seconds": 38.632981475791894,
+        "wall_seconds": 49.233900398990954
+      }
+    },
+    "time_to_sustained_heldout_target": {
+      "onset": {
+        "training_seconds": 2498.226915166335,
+        "wall_seconds": 3075.878785159992
+      },
+      "confirmed": {
+        "training_seconds": 2504.5919405064487,
+        "wall_seconds": 3083.740331312001
+      }
+    },
+    "lag_after_sustained_train_fit": 94500,
+    "memorization_plateau": {
+      "start_step": 4500,
+      "end_step": 27250,
+      "span_steps": 22750,
+      "observations": 92,
+      "minimum_train_accuracy": 0.9902849740932642,
+      "maximum_heldout_accuracy": 0.008995394358088658
+    },
+    "heldout_ceiling": 0.1,
+    "train_target": 0.99,
+    "patience": 2,
+    "fit_to_heldout_onset_ratio": 76.6,
+    "observed_plateau_then_generalization": true,
+    "epoch_error_curve_before_generalization": {
+      "initial": {
+        "step": 0,
+        "error": 1.0
+      },
+      "first_minimum": {
+        "step": 1000,
+        "error": 0.9906088082901554
+      },
+      "peak": {
+        "step": 10500,
+        "error": 0.9925877950489349
+      },
+      "final": {
+        "step": 105750,
+        "error": 0.00877950489349455
+      },
+      "first_descent": 0.009391191709844593,
+      "peak_rise": 0.0019789867587794996,
+      "second_descent": 0.9838082901554404,
+      "margin": 0.02,
+      "full_error_double_descent": false,
+      "selection": "minimum_before_sustained_train_fit; peak_while_train_fitted_before_heldout_target; final_observation",
+      "scope": "posthoc_synthetic_epoch_error_description; no_CIFAR_numerical_reproduction_or_causal_claim"
+    },
+    "both_epoch_error_double_descent_and_grokking": false,
+    "final_heldout_target": true,
+    "observations_after_confirmation": 40,
+    "fraction_observations_at_target_after_confirmation": 0.95,
+    "minimum_heldout_accuracy_after_confirmation": 0.9748128957973518,
+    "scope": "scheduled_descriptive_diagnostic; near_chance_ceiling_is_explicit; no_causal_or_asymptotic_claim"
+  },
+  "scope": "finite_scheduled_observations; no_guarantee_between_observations_or_beyond_budget"
+}
