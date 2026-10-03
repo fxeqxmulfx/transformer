@@ -1,1 +1,1 @@
-../python/src/infrastructure/benchmark/archive/experiments/compare_optimizers.py
+../legacy/gpt_mini/src/infrastructure/benchmark/archive/experiments/compare_optimizers.py

@@ -24,7 +24,7 @@ without loading PyTorch or NumPy.
 
 ## Install and test
 
-Run from this directory, `python/`:
+Run from this directory, `legacy/gpt_mini/`:
 
 ```bash
 uv sync --locked

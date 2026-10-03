@@ -1,1 +1,1 @@
-../python/src/infrastructure/benchmark/data/tinyshakespeare.txt
+../legacy/gpt_mini/src/infrastructure/benchmark/data/tinyshakespeare.txt
