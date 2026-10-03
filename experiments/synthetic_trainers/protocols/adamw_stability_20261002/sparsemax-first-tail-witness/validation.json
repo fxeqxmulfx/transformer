@@ -1,0 +1,29 @@
+{
+  "captured_utc": "2026-10-03T01:49:00.130289+00:00",
+  "scope": "partial_scientific_first_tail_violation; complete_budget_still_running",
+  "scientific_run": true,
+  "complete_run": false,
+  "case": "adamw-sparsemax",
+  "boundary_step": 250000,
+  "declared_total_updates": 300000,
+  "entire_canonical_prefix_observations": 1001,
+  "required_final_window": [
+    250000,
+    300000
+  ],
+  "criterion_target": 0.99,
+  "first_tail_heldout_accuracy": 0.02723805411629246,
+  "first_tail_train_accuracy": 1.0,
+  "first_tail_EOS_accuracy": 1.0,
+  "cannot_meet_frozen_all_observations_final_tail": true,
+  "first_long_confirmation": null,
+  "post_confirmation_instability_episode_count": null,
+  "all_43_Python_and_9_Lean_and_audit_unchanged": true,
+  "paired_softmax_control_not_completed": true,
+  "full_budget_continues_unchanged": true,
+  "Torch_imported": false,
+  "offline_prefix_assessment_reproduced": true,
+  "all_raw_witness_bytes_reproduced_by_independent_capture": true,
+  "actual_capture_script_sha256": "657183fe8e085c62ed1d10a8c442ecd19bf8669b7b66441fd6081f3c96edb73d",
+  "offline_verification_scope": "stored_complete_prefix_and_boundary_triplet; not_completed_scientific_budget"
+}

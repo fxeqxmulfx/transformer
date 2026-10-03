@@ -1,0 +1,11 @@
+{
+  "files": {
+    "assessment.json": "61bff05618b153ed7c5d1796d4c194f557b2ef286fa5bfb73380e28cea2964d3",
+    "boundary-witness.json": "5bc1f2fc3c5af5939fd7f3df66a26d7ce3edb2e2b6a882df42fa852c03a39a82",
+    "canonical-prefix.jsonl": "59ddc0a0cb3567538aeff386f09900b8f4bc62df0b64866dbc47e0508c39608b",
+    "captured-native-case-plan.json": "d1dd8609f125e4514925b514be1bfacf5b05b33638fced72a14230fa2d6e1522",
+    "frozen-root-plan.json": "261aba71d67b68c4856fb1aa2dba5a3b1c97e3f3a85b3fc29324f0abb14ec94f",
+    "probe-snapshot.py": "657183fe8e085c62ed1d10a8c442ecd19bf8669b7b66441fd6081f3c96edb73d",
+    "validation.json": "c0c32658a53fe7b72ab550f982f1bdc48df04005af301d2183334b9914272a80"
+  }
+}

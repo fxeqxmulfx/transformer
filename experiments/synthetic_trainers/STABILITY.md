@@ -490,3 +490,14 @@ in 68.501 seconds, with CUDA hidden only from that test subprocess. The
 retain every passing test and unchanged active/prepared source set. This is
 the current integrated CPU check, not a GPU learning or architecture result;
 all scientific gates and the 300,000-update cap remain unchanged.
+
+The actual sparsemax candidate's
+[first frozen tail observation](protocols/adamw_stability_20261002/sparsemax-first-tail-witness.md)
+at 250,000 has train 100%/held-out 2.723805%, with EOS 100% and similarly low
+immediate neighbors. Its entire canonical prefix and actual diagnostics are
+preserved/replayed without Torch. The all-201-observations final-tail condition
+already fails; no first long joint confirmation precedes it, so this is not a
+post-confirmation collapse or a measured zero episode rate. Complete the full
+budget and automatically queued primary softmax control before the next
+scientific freeze. The candidate's later behavior and the control remain to
+be measured; the original criteria and source fingerprints are unchanged.

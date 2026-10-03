@@ -622,6 +622,20 @@ prepared 55, both 62 and new 66-source sets/audit unchanged. This supersedes
 earlier CPU-suite counts as the current test result. It supplies no new GPU
 learning outcome, benchmark qualification or Lean full-tree audit.
 
+The active sparsemax candidate now has a
+[first final-window violation](protocols/adamw_stability_20261002/sparsemax-first-tail-witness.md)
+at the frozen 250,000 boundary: train 100%, held-out 2.723805%, EOS 100%.
+Both actual immediate neighbors remain low, all three batches are 512, and
+rates remain 0.0003. Its full 1,001-point canonical prefix, neighboring scores,
+gradients/tensor diagnostics and frozen plans are retained and reproduce
+byte-for-byte without Torch. No long joint confirmation has occurred; this is
+low generalization, not a collapse after confirmation, so episode counts remain
+unavailable. The first of all 201 required final-window observations fails;
+later improvement cannot make this candidate pass that unchanged criterion.
+The full 300,000-update run continues, followed by its fresh softmax control.
+Do not stop, relax the tail or declare the pair complete from this prefix.
+All 43 Python/nine Lean/audit fingerprints remain unchanged.
+
 ```bash
 cat experiments/runs/adamw_stability_20261002/attention_mod193_fraction25_lr0003_budget300k/state.json
 cat experiments/runs/adamw_stability_20261002/bootstrap/attention-pair-archive-worker.json
