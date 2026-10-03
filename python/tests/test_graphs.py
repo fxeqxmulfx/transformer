@@ -19,7 +19,9 @@ from lab.infrastructure.engine.loop import Training
 from lab.infrastructure.store import STREAMS, RunDirectory
 
 from examples import gptmini, modular, reference
-from test_engine import TRACE, Interrupted, digest, untimed
+from test_engine import TRACE, Interrupted, sha, untimed
+from test_text import FIXTURE as TEXT
+from test_text import historical as text
 
 
 class Issued(GraphStepper):
@@ -51,7 +53,11 @@ def experiments():
             "sparsemax-cosine": sparse,
             "amsgradw": swap(swap(base, "diagnostics", TRACE), "optimizer",
                              AMSGradW(lr=1e-3, betas=(0.9, 0.999), weight_decay=1.0)),
-            "sgd": swap(gradients, "optimizer", SGD(lr=0.1, weight_decay=0.01))}
+            "sgd": swap(gradients, "optimizer", SGD(lr=0.1, weight_decay=0.01)),
+            "text": swap(swap(text(TEXT["runs"]["sparsemax"]), "execution", CudaGraph()), "diagnostics", TRACE)}
+
+
+SIZES = {"reference-wrap": [8], "text": [8]}
 
 
 def train(experiment, root, stepper, progress=lambda row: None):
@@ -63,10 +69,23 @@ def train(experiment, root, stepper, progress=lambda row: None):
     return training.stepper
 
 
+def summary(value):
+    """Tensors as hashes; timings and memory peaks left out."""
+    if torch.is_tensor(value):
+        return sha(value) if value.ndim else value.item()
+    if isinstance(value, dict):
+        return {str(key): summary(item) for key, item in value.items()
+                if key not in ("training_seconds", "diagnostic_seconds", "wall_seconds",
+                               "peak_cuda_allocated_bytes", "peak_cuda_reserved_bytes")}
+    if isinstance(value, (list, tuple)):
+        return [summary(item) for item in value]
+    return value
+
+
 def records(root):
     run = RunDirectory(root)
     return {**{stream: untimed(run.records(stream)) for stream in STREAMS},
-            "checkpoint": digest(run.checkpoint("cpu"))}
+            "result": summary(run.result()), "checkpoint": summary(run.checkpoint("cpu"))}
 
 
 @unittest.skipUnless(torch.cuda.is_available(), "needs CUDA")
@@ -79,23 +98,24 @@ class GraphTests(unittest.TestCase):
                 train(experiment, issued, Issued)
                 sampled = len(RunDirectory(replayed).records("diagnostics"))
                 self.assertEqual(stepper.issued, sampled)
-                self.assertEqual(sorted(stepper.updates), [8] if experiment.benchmark.tail == "wrap" else [6, 8])
+                self.assertEqual(sorted(stepper.updates), SIZES.get(name, [6, 8]))
                 self.assertEqual(json.dumps(records(replayed)), json.dumps(records(issued)))
 
     def test_an_interrupted_graph_run_resumes_onto_the_same_records(self):
-        experiment = swap(experiments()["sampled"], "checkpoint", Checkpoint(every=10))
+        for name, interrupted in (("sampled", 21), ("text", 25)):
+            experiment = swap(experiments()[name], "checkpoint", Checkpoint(every=10))
 
-        def interrupt(row):
-            if row["step"] == 21:
-                raise Interrupted
+            def interrupt(row):
+                if row["step"] == interrupted:
+                    raise Interrupted
 
-        with tempfile.TemporaryDirectory() as root:
-            straight, resumed = Path(root) / "straight", Path(root) / "resumed"
-            train(experiment, straight, GraphStepper)
-            with self.assertRaises(Interrupted):
-                train(experiment, resumed, GraphStepper, interrupt)
-            train(experiment, resumed, GraphStepper)
-            self.assertEqual(json.dumps(records(resumed)), json.dumps(records(straight)))
+            with self.subTest(experiment=name), tempfile.TemporaryDirectory() as root:
+                straight, resumed = Path(root) / "straight", Path(root) / "resumed"
+                train(experiment, straight, GraphStepper)
+                with self.assertRaises(Interrupted):
+                    train(experiment, resumed, GraphStepper, interrupt)
+                train(experiment, resumed, GraphStepper)
+                self.assertEqual(json.dumps(records(resumed)), json.dumps(records(straight)))
 
 
 if __name__ == "__main__":
