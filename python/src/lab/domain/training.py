@@ -78,18 +78,12 @@ def rate(lr, schedule, completed):
 
 @dataclass(frozen=True)
 class Budget(Spec):
-    """`updates` optimizer steps on batches of `batch` training examples.
-
-    Batches walk shuffled epochs. With tail "short" an epoch ends with its
-    remainder as a smaller batch; with "wrap" a batch fills across epochs.
-    """
+    """`updates` optimizer steps on batches of `batch` training examples, drawn as the benchmark draws them."""
     updates: int
     batch: int
-    tail: str = "short"
 
     def check(self):
         require(self.updates >= 1 and self.batch >= 1, "Updates and batch size must be positive")
-        require(self.tail in ("short", "wrap"), "Batch tail policy is 'short' or 'wrap'")
 
 
 @dataclass(frozen=True)

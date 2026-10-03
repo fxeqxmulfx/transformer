@@ -35,7 +35,7 @@ def historical(name, device="cpu"):
         model = substitute(model, Softmax, Sparsemax())
     experiment = modular(model, prime=11, updates=30, batch=8, every=10, execution=Eager(device=device))
     if name == "gptmini-wrap":
-        return swap(experiment, "budget.tail", "wrap")
+        return swap(experiment, "benchmark.tail", "wrap")
     if name == "gptmini-cosine":
         return swap(swap(experiment, "schedule.anneal", Cosine(start=15, end=25, final=.1)),
                     "diagnostics", Diagnostics(gradients=True))

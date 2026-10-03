@@ -1,23 +1,40 @@
-"""Batches drawn from shuffled epochs of the training split.
+"""Training batches as slices of index tensors, drawn on the host.
 
-A port of `paper_reproduction.batches.next_batch`: one generator draws every
-permutation, in the same order, so a run walks the historical batch sequence.
-With tail "short" an epoch ends with its remainder as a smaller batch; with
-"wrap" a batch fills up from the next permutation.
+`next()` returns a batch as (indices, start, count) slices and its place in
+the sampling order; `gather` joins the slices. A sampler draws its indices
+in tensors that recur rarely, such as an epoch's permutation, so a graph
+stepper uploads each tensor once and copies batches out of it on the device.
+`sizes()` are the batch sizes that recur, and `traced` the keys of a batch's
+place that the gradient trace records.
 """
 
 import torch
 
 
 class EpochSampler:
-    def __init__(self, size, budget, seed):
-        self.batch, self.wrap = budget.batch, budget.tail == "wrap"
+    """Batches drawn from shuffled epochs of `size` training rows.
+
+    A port of `paper_reproduction.batches.next_batch`: one generator draws every
+    permutation, in the same order, so a run walks the historical batch
+    sequence. Without `wrap` an epoch ends with its remainder as a smaller
+    batch; with it a batch fills up from the next permutation.
+    """
+    traced = ("epoch_tail",)
+
+    def __init__(self, size, batch, wrap, seed):
+        self.batch, self.wrap = batch, wrap
         self.generator = torch.Generator().manual_seed(seed)
         self.permutation = torch.randperm(size, generator=self.generator)
         self.cursor = 0
 
+    def sizes(self):
+        """The full batch and, with short tails, an epoch's remainder."""
+        size = len(self.permutation)
+        if self.wrap:
+            return [self.batch]
+        return sorted({min(self.batch, size), size % self.batch} - {0})
+
     def next(self):
-        """The next batch as (permutation, start, count) slices, and its place in the epochs."""
         size = len(self.permutation)
         if self.cursor == size:
             self.permutation = torch.randperm(size, generator=self.generator)
@@ -46,5 +63,5 @@ class EpochSampler:
 
 
 def gather(parts):
-    """A batch's training-row indices, on the host."""
-    return torch.cat([permutation[start:start + count] for permutation, start, count in parts])
+    """A batch's indices, on the host."""
+    return torch.cat([indices[start:start + count] for indices, start, count in parts])

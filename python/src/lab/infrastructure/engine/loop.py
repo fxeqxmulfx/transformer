@@ -4,9 +4,9 @@ The order of operations is that of `paper_reproduction.grokking.train`, so the
 historical configurations reproduce its records bit for bit. A stepper only
 decides how updates and evaluations reach the device:
 
-    stepper = Stepper(experiment, task, model, splits, clock)
+    stepper = Stepper(experiment, task, model, clock)
     stepper.state_dict(), stepper.load_state_dict(state)   the optimizer state
-    stepper.prepare()                    once any checkpoint is loaded
+    stepper.prepare(sizes)               once any checkpoint is loaded; sizes recur
     stepper.step(parts, rate, sampled)   one update: (batch size, measurements or None)
     stepper.gradient_norms()             the norms of the updates since the last call
     stepper.evaluate(split)              the metrics of the named split
@@ -25,7 +25,6 @@ from ...domain import cadence
 from ...domain.training import rate
 from ..benchmarks import build_task
 from ..nn import build_model
-from .sampler import EpochSampler
 
 
 class Clock:
@@ -74,7 +73,7 @@ class Clock:
 def evaluate(task, model, rows, batch):
     """The metrics of one split, evaluated exhaustively in chunks of `batch` rows."""
     model.eval()
-    sums = torch.zeros(task.sums, dtype=torch.float64, device=rows.device)
+    sums = task.accumulator()
     for start in range(0, len(rows), batch):
         task.accumulate(model, rows[start:start + batch], sums)
     return task.metrics(sums.tolist(), len(rows))
@@ -92,12 +91,10 @@ class Training:
         if self.device.type == "cuda":
             torch.cuda.reset_peak_memory_stats(self.device)
         self.clock = Clock(self.device)
-        self.task = build_task(experiment.benchmark, experiment.seeds.data)
+        self.task = build_task(experiment.benchmark, experiment.seeds.data, self.device)
         self.model = build_model(experiment.model, self.task.vocab, experiment.seeds.model).to(self.device)
-        self.splits = {name: torch.tensor(rows, dtype=torch.long, device=self.device)
-                       for name, rows in self.task.splits.items()}
-        self.stepper = stepper(experiment, self.task, self.model, self.splits, self.clock)
-        self.sampler = EpochSampler(len(self.splits["train"]), experiment.budget, experiment.seeds.batch_seed)
+        self.stepper = stepper(experiment, self.task, self.model, self.clock)
+        self.sampler = self.task.sampler(experiment.budget.batch, experiment.seeds.batch_seed)
         self.completed, self.seen, self.last_batch_size = 0, 0, None
         checkpoint = run.checkpoint(self.device)
         if checkpoint is not None:
@@ -114,12 +111,13 @@ class Training:
                 [row["step"] for row in run.records("gradients")] != list(range(1, self.completed + 1))):
             raise ValueError("The gradient trace does not cover every checkpointed update")
         self.trace = []
-        self.stepper.prepare()
+        self.stepper.prepare(self.sampler.sizes())
 
     def observe(self, step, probe):
-        row = {"step": step, "epochs_seen": self.seen / len(self.splits["train"]),
+        row = {"step": step, **self.task.progress(self.seen),
                "training_seconds": self.clock.training, "wall_seconds": self.clock.wall(),
-               "last_batch_size": self.last_batch_size, **{name: self.stepper.evaluate(name) for name in self.splits}}
+               "last_batch_size": self.last_batch_size,
+               **{name: self.stepper.evaluate(name) for name in self.experiment.benchmark.observed}}
         if probe:
             self.run.record("probes", row)
         else:
@@ -154,7 +152,7 @@ class Training:
             size, measurements = self.stepper.step(parts, learning_rate, sampled)
             self.seen += size
             self.last_batch_size = size
-            self.trace.append({"step": step, "batch_size": size, "epoch_tail": place["epoch_tail"],
+            self.trace.append({"step": step, "batch_size": size, **{key: place[key] for key in self.sampler.traced},
                                "learning_rate": learning_rate})
             if sampled:
                 with self.clock.diagnosing():

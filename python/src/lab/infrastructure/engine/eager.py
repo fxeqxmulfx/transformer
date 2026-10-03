@@ -2,16 +2,16 @@
 
 import torch
 
+from ..benchmarks.samplers import gather
 from ..optim import build_optimizer
 from . import measure
 from .loop import evaluate
-from .sampler import gather
 
 
 class EagerStepper:
-    def __init__(self, experiment, task, model, splits, clock):
-        self.task, self.model, self.clock, self.splits = task, model, clock, splits
-        self.rows, self.batch = splits["train"], experiment.evaluate.batch
+    def __init__(self, experiment, task, model, clock):
+        self.task, self.model, self.clock = task, model, clock
+        self.batch = experiment.evaluate.batch
         self.optimizer = build_optimizer(experiment.optimizer, model)
         self.norms = []
 
@@ -21,11 +21,11 @@ class EagerStepper:
     def load_state_dict(self, state):
         self.optimizer.load_state_dict(state)
 
-    def prepare(self):
+    def prepare(self, sizes):
         """Nothing to prepare: every update is issued as it comes."""
 
     def step(self, parts, rate, sampled):
-        batch = self.rows[gather(parts).to(self.rows.device)]
+        batch = self.task.inputs(gather(parts).to(self.task.device))
         self.model.train()
         self.optimizer.zero_grad(set_to_none=True)
         for group in self.optimizer.param_groups:
@@ -48,4 +48,4 @@ class EagerStepper:
         return norms
 
     def evaluate(self, split):
-        return evaluate(self.task, self.model, self.splits[split], self.batch)
+        return evaluate(self.task, self.model, self.task.splits[split], self.batch)

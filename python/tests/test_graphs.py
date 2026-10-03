@@ -25,7 +25,7 @@ from test_engine import TRACE, Interrupted, digest, untimed
 class Issued(GraphStepper):
     """Every operation issued eagerly."""
 
-    def prepare(self):
+    def prepare(self, sizes):
         pass
 
 
@@ -46,7 +46,7 @@ def experiments():
     gradients = swap(base, "diagnostics", Diagnostics(gradients=True))
     sparse = substitute(swap(gradients, "schedule.anneal", Cosine(start=15, end=25, final=.1)), Softmax, Sparsemax())
     return {"replayed": gradients, "sampled": swap(base, "diagnostics", TRACE),
-            "reference-wrap": swap(swap(swap(gradients, "model", reference(32, 2, 4)), "budget.tail", "wrap"),
+            "reference-wrap": swap(swap(swap(gradients, "model", reference(32, 2, 4)), "benchmark.tail", "wrap"),
                                    "evaluate", Evaluate(every=10, batch=16)),
             "sparsemax-cosine": sparse}
 
@@ -76,7 +76,7 @@ class GraphTests(unittest.TestCase):
                 train(experiment, issued, Issued)
                 sampled = len(RunDirectory(replayed).records("diagnostics"))
                 self.assertEqual(stepper.issued, sampled)
-                self.assertEqual(sorted(stepper.updates), [8] if experiment.budget.tail == "wrap" else [6, 8])
+                self.assertEqual(sorted(stepper.updates), [8] if experiment.benchmark.tail == "wrap" else [6, 8])
                 self.assertEqual(json.dumps(records(replayed)), json.dumps(records(issued)))
 
     def test_an_interrupted_graph_run_resumes_onto_the_same_records(self):

@@ -18,6 +18,7 @@ from torch.nn import functional as F
 
 from ...domain.analysis import curve_witness, transition
 from ...domain.benchmarks import is_prime
+from .samplers import EpochSampler
 
 OPERATORS = ("+", "-", "*", "/", "**2+", "**3+", "x**2+y**2_mod_97",
              "x**2+y**2+x*y_mod_97", "x**2+y**2+x*y+x_mod_97", "x**3+x*y_mod_97",
@@ -89,15 +90,30 @@ class ModularTask:
     EOS, the two supervised targets.
     """
     components = ("answer_loss", "EOS_loss")
-    sums = 6
 
-    def __init__(self, spec, data_seed):
+    def __init__(self, spec, data_seed, device):
+        self.spec, self.device = spec, device
         self.corpus = make_corpus(spec, data_seed)
         self.vocab = len(self.corpus.tokens)
-        self.splits = {"train": self.corpus.train, "heldout": self.corpus.heldout}
+        self.splits = {"train": torch.tensor(self.corpus.train, dtype=torch.long, device=device),
+                       "heldout": torch.tensor(self.corpus.heldout, dtype=torch.long, device=device)}
 
     def summary(self):
         return self.corpus.summary()
+
+    def sampler(self, batch, seed):
+        return EpochSampler(len(self.corpus.train), batch, self.spec.tail == "wrap", seed)
+
+    def inputs(self, indices):
+        """The training rows at `indices`, a device tensor."""
+        return self.splits["train"].index_select(0, indices)
+
+    def progress(self, seen):
+        return {"epochs_seen": seen / len(self.corpus.train)}
+
+    def accumulator(self):
+        """Evaluation sums: three match counts and three summed losses."""
+        return torch.zeros(6, dtype=torch.float64, device=self.device)
 
     @staticmethod
     def forward(model, batch):
