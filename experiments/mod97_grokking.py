@@ -3,9 +3,9 @@
 The 2026-10-02 runs of `paper_reproduction.grokking`, in the experiment
 language. Three calibrations of the reference on seeds 0/0 vary the train
 fraction and the weight decay. The confirmation repeats the calibration that
-passed its launch condition (50% train, weight decay 0.1) for both models, on
-data seed 1 with initialization seeds 1, 2 and 3. The historical confirmation
-had a third arm, GPTMini under raw AMSGradW, which the language cannot state yet.
+passed its launch condition (50% train, weight decay 0.1) in three arms: the
+reference and GPTMini under AdamW, and GPTMini under raw AMSGradW with betas
+(0.9, 0.999), on data seed 1 with initialization seeds 1, 2 and 3.
 
 Eager execution issues the updates as the historical trainer did.
 """
@@ -40,13 +40,16 @@ calibration = Experiment(
 
 half = swap(calibration, "benchmark.train_fraction", 0.5)
 passed = swap(half, "optimizer.weight_decay", 0.1)
+confirmation = swap(passed, "seeds.data", 1)
 
 experiments = {
     "fraction20-wd1": calibration,
     "fraction50-wd1": half,
     "fraction50-wd01": passed,
-    **grid(swap(passed, "seeds.data", 1), {
-        "model": {"reference": reference, "gptmini": gptmini},
-        "seeds.model": {"seed1": 1, "seed2": 2, "seed3": 3},
-    }),
+    **grid({
+        "reference-adamw": confirmation,
+        "gptmini-adamw": swap(confirmation, "model", gptmini),
+        "gptmini-amsgradw": swap(swap(confirmation, "model", gptmini), "optimizer",
+                                 AMSGradW(lr=1e-3, betas=(0.9, 0.999), weight_decay=0.1)),
+    }, {"seeds.model": {"seed1": 1, "seed2": 2, "seed3": 3}}),
 }

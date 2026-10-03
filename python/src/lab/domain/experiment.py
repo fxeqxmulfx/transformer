@@ -59,10 +59,12 @@ def study(experiments):
 def grid(base, axes):
     """Every combination of the alternatives on each axis.
 
-    `axes` maps a dotted path to {label: value}. A variant's label joins its
-    alternatives' labels with '-' in axis order.
+    `base` is one experiment, or labeled experiments that each take every
+    combination. `axes` maps a dotted path to {label: value}. A variant's
+    label joins its base's label and its alternatives' labels with '-', in
+    axis order.
     """
-    variants = {"": base}
+    variants = dict(base) if isinstance(base, Mapping) else {"": base}
     for path, options in axes.items():
         require(isinstance(options, Mapping) and options, f"Axis {path} needs labeled alternatives")
         variants = {f"{label}-{option}" if label else option: swap(experiment, path, value)

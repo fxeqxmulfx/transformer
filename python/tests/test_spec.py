@@ -54,6 +54,12 @@ class SpecTests(unittest.TestCase):
         self.assertEqual(variants["sparse-s1"].seeds.batch_seed, 10_001)
         self.assertEqual(variants["sparse-s1"].model.block.attention.weights, Sparsemax())
 
+    def test_grid_crosses_labeled_bases(self):
+        arms = {"soft": self.base, "sparse": substitute(self.base, Softmax, Sparsemax())}
+        variants = grid(arms, {"seeds.model": {"s0": 0, "s1": 1}})
+        self.assertEqual(list(variants), ["soft-s0", "soft-s1", "sparse-s0", "sparse-s1"])
+        self.assertEqual(variants["sparse-s1"], swap(arms["sparse"], "seeds.model", 1))
+
     def test_continuation_allows_only_a_larger_budget(self):
         stored = describe(self.base)
         require_continuation(stored, swap(self.base, "budget", Budget(updates=300_000, batch=512)))
