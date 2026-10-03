@@ -1,8 +1,9 @@
 """A memorization control: uniform independent symbols after a prompt that states their count.
 
 A port of `experiments/synthetic_trainers/random_control.py`. Source:
-arXiv:2505.24832v3, Section 3.2 (not in `papers/`). Given the lengths, a
-split holds sum(length) log2(symbols) bits; no oracle can answer a prompt.
+arXiv:2505.24832v3, Section 3.2, whose sequences have one length and no
+prompt. Given the lengths, a split holds sum(length) log2(symbols) bits; no
+oracle can answer a prompt.
 """
 
 from .base import Answered

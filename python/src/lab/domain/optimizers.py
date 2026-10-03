@@ -203,7 +203,8 @@ class RMSProp(Optimizer):
 
     v <- b2 v + (1 - b2) g^2 and x <- x - lr g / (sqrt(v) + eps): the dense
     baseline of arXiv:2602.15322v1, Section 2, as its benchmark ran it. The
-    manuscript is not among papers/; the rule is the benchmark's.
+    paper gives the preconditioner only as approximately diag(v)^(-1/2);
+    where eps enters is the benchmark's.
     """
     lr: float
     beta2: float = 0.999
@@ -267,14 +268,14 @@ class Magma(Optimizer):
     `Transformer.Magma.cosine`, `damping` and `algorithmDisplacement`. After
     the base computes every direction, each hidden matrix W, a weight of the
     blocks, updates its scale s <- 0.9 s + 0.1 sigmoid(cos(m, g) / tau) from
-    0.5, where m is the base's raw first moment of W when it keeps one (Muon's
-    momentum, the m of the Adam family and of AdaFisher) and otherwise an EMA
-    m <- 0.9 m + 0.1 g that MAGMA keeps, and cos is zero at a zero vector. W
-    then moves by s times its direction with probability `survival`, and stays
-    otherwise: without the 1 / survival of Section 5's analysis. The masks
-    come from a CPU generator seeded by `seed`, or by the model seed + 20000
-    when it is None, the benchmark's convention. The manuscript is not among
-    papers/.
+    0.5, a start the paper leaves open, where m is the base's raw first moment
+    of W when it keeps one (Muon's momentum, the m of the Adam family and of
+    AdaFisher) and otherwise an EMA m <- 0.9 m + 0.1 g that MAGMA keeps, and
+    cos is zero at a zero vector. W then moves by s times its direction with
+    probability `survival`, and stays otherwise: without the 1 / survival of
+    Section 5's analysis. The masks come from a CPU generator seeded by
+    `seed`, or by the model seed + 20000 when it is None, the benchmark's
+    convention.
     """
     base: Optimizer
     tau: float = 2.0
@@ -299,13 +300,13 @@ class Magma(Optimizer):
 class Clipped(Optimizer):
     """Another rule, on the gradient rescaled to a global norm of at most `norm`.
 
-    Source: norm clipping, arXiv:1211.5063, Section 3.2 and Algorithm 1 (not
-    in `papers/`), as torch's `clip_grad_norm_` computes it and the
-    historical synthetic trainer applied it (`grad_clip`): the gradient g of
-    all trainable parameters, as one vector, is multiplied by
-    min(1, norm / (|g| + 1e-6)), where the paper rescales by norm / |g| only
-    when |g| >= norm. It acts before the rule and every stage of it, so it is
-    written outermost. The recorded gradient norm is |g| before clipping.
+    Source: norm clipping, arXiv:1211.5063, Section 3.2 and Algorithm 1, as
+    torch's `clip_grad_norm_` computes it and the historical synthetic
+    trainer applied it (`grad_clip`): the gradient g of all trainable
+    parameters, as one vector, is multiplied by min(1, norm / (|g| + 1e-6)),
+    where the paper rescales by norm / |g| only when |g| >= norm. It acts
+    before the rule and every stage of it, so it is written outermost. The
+    recorded gradient norm is |g| before clipping.
     """
     base: Optimizer
     norm: float = 1.0
@@ -421,9 +422,11 @@ class AdaFisher(Optimizer):
     the weight moves by lr (m / (1 - beta^t) / f + weight_decay x): AdaFisherW
     when `weight_decay` is positive. A weight shared with a linear layer, as a
     tied embedding is with the readout, takes that layer's factors. Every other
-    parameter, a temperature or an untied embedding, takes ones, as the
-    benchmark did: they normalize to zero, and f is the damping. The manuscript
-    is not among papers/.
+    parameter, a temperature, an untied embedding or a normalization's scale
+    or shift, takes ones, as the benchmark did: they normalize to zero, and f
+    is the damping. Appendix A.3 gives such layers identity factors too,
+    except a normalization layer, which has factors of its own (Proposition
+    3.1).
     """
     lr: float
     beta: float = 0.9
@@ -445,19 +448,22 @@ class AMSGradMD(Optimizer):
     AMSGrad as arXiv:1904.03590v4, Algorithm 1 states it;
     `Transformer.MagnitudeDirection.amsgradMDProposal`. A hidden matrix W, a
     weight of the blocks, is stored as softplus(r)_i D_ij softplus(c)_j, with
-    raw gains starting at softplus^-1(1) and D on the sphere of radius |W_0|.
-    An update moves D at `lr`, and r and c at `gain_rate`, each by an AMSGrad
-    of its own on the gradients at the old factors, projects D back onto the
-    sphere (`matrixProject`, zero at zero) and writes W fused from the three;
-    every other parameter moves by AMSGrad at `auxiliary_rate`.
+    raw gains starting at softplus^-1(1) and D on the sphere of radius |W_0|,
+    the paper's start (Sections 4.1.1 and 4.1.3). An update moves D at `lr`,
+    and r and c at `gain_rate`, each by an AMSGrad of its own on the
+    gradients at the old factors, projects D back onto the sphere
+    (`matrixProject`, zero at zero) and writes W fused from the three; every
+    other parameter moves by AMSGrad at `auxiliary_rate`. Algorithm 2 leaves
+    the direction's rule open but steps the gains by Adam, and the paper's
+    runs step the other parameters by Adam too (Appendix B): AMSGrad in its
+    place is the benchmark's.
 
     Under `Guarded`, the benchmark's extension `checkedProposal`, which the
     manuscript does not have, D may move at a `direction_rate` of its own: the
     proposal's displacement over `lr` is the direction the guard checks, with
     every value finite and no matrix zero, and a rejected proposal becomes a
     gradient step at `lr`, halved for a matrix it would zero, with the row
-    gains rebalanced onto the sphere (`rebalanceStorage`). The manuscript is
-    not among papers/.
+    gains rebalanced onto the sphere (`rebalanceStorage`).
     """
     lr: float
     direction_rate: float | None = None

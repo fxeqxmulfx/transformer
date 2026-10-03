@@ -327,9 +327,9 @@ class BooleanAnd(Task):
 class RandomLM(Task):
     """A control: independent uniform symbols after a prompt that only states their count.
 
-    Source: arXiv:2505.24832v3, Section 3.2 (not in `papers/`). The answer
-    has no algorithm to find; fitting it measures memorization, of
-    entropy problem length x log2(symbols) bits per example.
+    Source: arXiv:2505.24832v3, Section 3.2, whose sequences have one length
+    and no prompt. The answer has no algorithm to find; fitting it measures
+    memorization, of entropy problem length x log2(symbols) bits per example.
     """
     symbols: int = 32
     number_limit: int = 512

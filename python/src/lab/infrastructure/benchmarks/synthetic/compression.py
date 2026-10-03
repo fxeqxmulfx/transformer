@@ -1,10 +1,14 @@
 """Code lengths under a model: compression of random answers, membership, and extraction of their suffixes.
 
 A port of `experiments/synthetic_trainers/compression.py`, after
-arXiv:2505.24832v3, Sections 2.3, 3.2 and 4 (not in `papers/`): whole-answer
-likelihoods compared with the uniform code that random answers have. They
-are proxies on a finite split, not measurements of mutual information. A
-code length that is not finite is None here; the historical one raised.
+arXiv:2505.24832v3, Sections 2.3, 3.2, 4 and 5: whole-answer likelihoods as
+code lengths, compared with the uniform code that random answers have,
+loss-based membership, and greedy extraction from true prefixes. They are
+proxies on a finite split, not measurements of mutual information. Where
+Section 2.3 codes with the larger of two likelihoods, the equal mixture
+here is a code itself, at most a bit longer; where Section 5 scores
+membership by F1 at a loss cutoff, here it is the AUC. A code length that
+is not finite is None here; the historical one raised.
 """
 
 import math

@@ -59,13 +59,15 @@ def check_retrieval(task, minimum, required):
 class MQAR(Task):
     """Multi-query associative recall: each query is answered with the value bound to its key.
 
-    Source: the MQAR task of Zoology (arXiv:2312.04927v1, not in `papers/`)
-    as `experiments/convex_mqar` samples it. After BOS the input binds
-    `pairs` distinct keys, out of `symbols` key tokens, to values out of
-    `symbols` value tokens; the rest of the input is random values, among
-    which `queries` of the keys recur, at least `query_gap` tokens after the
-    bindings, at positions drawn without replacement with weight
-    position^-alpha. A recurring key is supervised with its value.
+    Source: the MQAR data procedure of Zoology (arXiv:2312.04927v1, Appendix
+    E.1, Procedure 1), as the synthetic trainers adapted it. After BOS the
+    input binds `pairs` distinct keys, out of `symbols` key tokens, to values
+    out of `symbols` value tokens; the rest of the input is random values,
+    among which `queries` of the keys recur, at least `query_gap` tokens after
+    the bindings, at positions drawn without replacement with weight
+    position^-alpha. A recurring key is supervised with its value. The
+    procedure has no BOS and recurs every key: `queries` = `pairs` and
+    `query_gap` = 0.
     """
     symbols: int = 32
     pairs: int = 8

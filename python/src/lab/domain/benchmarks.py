@@ -118,16 +118,15 @@ class TinyShakespeare(Benchmark):
 class AssociativeRecall(Benchmark):
     """Multi-query associative recall (MQAR), as the convex MQAR comparison generated it.
 
-    Source: the MQAR data procedure of Zoology (arXiv:2312.04927v1, Procedure
-    1 of its appendix, as `experiments/convex_mqar` cites it; not in
-    `papers/`), with the choices it leaves open made by `certify.make_example`:
-    a sequence of `length` tokens opens with length // 4 adjacent key-value
-    pairs, distinct keys from the first half of the `vocab` tokens and values
-    from the second; each key recurs once, at distinct later positions p
-    drawn with weights p^-alpha; every other token is a random value. The
-    model reads the whole sequence and is scored on the value it predicts at
-    each recurring key. Each split is drawn by its own generator, seeded by
-    the data seed, the length and the split.
+    Source: the MQAR data procedure of Zoology (arXiv:2312.04927v1, Appendix
+    E.1, Procedure 1), with the choices it leaves open made by
+    `certify.make_example`: a sequence of `length` tokens opens with
+    length // 4 adjacent key-value pairs, distinct keys from the first half of
+    the `vocab` tokens and values from the second; each key recurs once, at
+    distinct later positions p drawn with weights p^-alpha; every other token
+    is a random value. The model reads the whole sequence and is scored on the
+    value it predicts at each recurring key. Each split is drawn by its own
+    generator, seeded by the data seed, the length and the split.
 
     Batches walk shuffled epochs of the training sequences, each shuffled on
     the training device by a generator seeded with the batch seed plus the
