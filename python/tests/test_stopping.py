@@ -10,6 +10,8 @@ import math
 from pathlib import Path
 import unittest
 
+from examples import gptmini, modular
+from lab.dsl import Parity, Solved, Synthetic, TinyShakespeare, swap
 from lab.domain.stopping import EarlyStopping, Selection
 
 FIXTURE = json.loads((Path(__file__).parent / "fixtures" / "legacy_text.json").read_text())
@@ -73,6 +75,22 @@ class SelectionTests(unittest.TestCase):
         selection = Selection(EarlyStopping(after=1000), by_loss)
         self.assertEqual(losses(selection, [(0, 1.0), (10, math.nan)]), [True, False])
         self.assertEqual((selection.step, selection.stop), (0, (10, "nonfinite_selection")))
+
+    def test_solved_stops_at_the_first_observation_that_reaches_the_target(self):
+        benchmark = Synthetic(task=Parity(scratchpad="running"), length=8, target=0.9)
+        selection = Selection(Solved(), benchmark.rank, benchmark.solved)
+        for step, accuracy, loss in ((0, 0.25, 2.0), (10, 0.875, 0.5), (20, 0.9, 0.6)):
+            self.assertIsNone(selection.stop)
+            selection.observe(step, {"sequence_accuracy": accuracy, "balanced_accuracy": accuracy, "loss": loss})
+        self.assertEqual((selection.step, selection.stop), (20, (20, "solved")))
+        selection = Selection(Solved(), benchmark.rank, benchmark.solved)
+        self.assertEqual(losses(selection, [(0, math.nan)]), [False])
+        self.assertEqual(selection.stop, (0, "nonfinite_selection"))
+
+    def test_only_a_benchmark_with_a_target_stops_when_solved(self):
+        text = swap(modular(gptmini()), "benchmark", TinyShakespeare(window=50))
+        with self.assertRaisesRegex(ValueError, "TinyShakespeare sets no target"):
+            swap(text, "stopping", Solved())
 
     def test_policies_are_checked(self):
         for fields in ({"patience": 0}, {"divergence_patience": 0}, {"after": -1}, {"min_delta": -1e-4},

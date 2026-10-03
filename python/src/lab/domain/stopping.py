@@ -1,4 +1,4 @@
-"""Selection of the best observation, and early stopping on it."""
+"""Selection of the best observation, and the policies that stop a run on it."""
 
 from dataclasses import dataclass
 import math
@@ -7,7 +7,12 @@ from .spec import Spec, require
 
 
 @dataclass(frozen=True)
-class EarlyStopping(Spec):
+class Stopping(Spec, kind=True):
+    """When a run ends before its budget, judged at each observation of the selection split."""
+
+
+@dataclass(frozen=True)
+class EarlyStopping(Stopping):
     """Stop when the benchmark's selection loss stops improving or diverges.
 
     The policy of the historical text benchmarks (`gpt_mini.domain.stopping`):
@@ -30,18 +35,30 @@ class EarlyStopping(Spec):
         require(math.isfinite(self.divergence) and self.divergence > 0, "Divergence margin must be positive")
 
 
+@dataclass(frozen=True)
+class Solved(Stopping):
+    """Stop at the first observation at which the benchmark counts its task solved.
+
+    A benchmark with a target solves its task when the selection split's
+    target metric reaches it (`Benchmark.solved`); a nonfinite selection loss
+    or gradient stops the run at once, as under `EarlyStopping`. A run that
+    should end as soon as it passes spends no updates past its pass.
+    """
+
+
 class Selection:
     """The best observation of the selection split so far, and why the run stops, if it does.
 
     A port of `gpt_mini.domain.stopping.EarlyStopper`, which kept the
     observation of the lowest loss. Here the best is the first observation of
-    the highest `rank` of its metrics (`Benchmark.rank`), and the policy
-    watches the loss. Without a policy only the best observation is kept; an
-    observation whose loss is not finite (None) is never the best.
+    the highest `rank` of its metrics (`Benchmark.rank`); `EarlyStopping`
+    watches the loss, and `Solved` asks `solved` of the metrics. Without a
+    policy only the best observation is kept; an observation whose loss is
+    not finite (None) is never the best.
     """
 
-    def __init__(self, policy, rank):
-        self.policy, self.ranking = policy, rank
+    def __init__(self, policy, rank, solved=None):
+        self.policy, self.ranking, self.solved = policy, rank, solved
         self.rank = self.step = self.lowest = self.anchor = None
         self.bad = self.divergent = 0
         self.stop = None
@@ -58,6 +75,10 @@ class Selection:
         if new_best:
             self.rank, self.step = rank, step
         if policy is None:
+            return new_best
+        if isinstance(policy, Solved):
+            if self.solved(metrics):
+                self.stop = (step, "solved")
             return new_best
         self.lowest = loss if self.lowest is None else min(self.lowest, loss)
         if self.anchor is None or loss < self.anchor - policy.min_delta:

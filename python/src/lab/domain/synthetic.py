@@ -113,3 +113,10 @@ class Synthetic(Benchmark):
     def rank(self, metrics):
         rank = metrics["sequence_accuracy"], metrics["balanced_accuracy"], -metrics["loss"]
         return (metrics["final_answer_accuracy"], *rank) if self.metric == "final_answer_accuracy" else rank
+
+    @property
+    def targeted(self):
+        return self.target is not None
+
+    def solved(self, metrics):
+        return metrics[self.metric] >= self.target

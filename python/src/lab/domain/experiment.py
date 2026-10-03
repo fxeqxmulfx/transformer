@@ -13,7 +13,7 @@ from .benchmarks import Benchmark
 from .model import Transformer
 from .optimizers import EVD, Clipped, Optimizer
 from .spec import Spec, describe, require, require_kind, swap, walk
-from .stopping import EarlyStopping
+from .stopping import Solved, Stopping
 from .training import Budget, Checkpoint, CudaGraph, Diagnostics, Evaluate, Execution, Schedule, Seeds
 
 LABEL = re.compile(r"[a-z0-9][a-z0-9._-]*")
@@ -32,7 +32,7 @@ class Experiment(Spec):
     execution: Execution
     diagnostics: Diagnostics = Diagnostics()
     checkpoint: Checkpoint = Checkpoint()
-    stopping: EarlyStopping | None = None
+    stopping: Stopping | None = None
 
     def check(self):
         for name, kind in (("model", Transformer), ("benchmark", Benchmark), ("optimizer", Optimizer),
@@ -51,9 +51,11 @@ class Experiment(Spec):
         require(not any(isinstance(block, Clipped) for path, block in walk(self.optimizer) if path),
                 "Clipping acts on the gradient before the whole rule: write Clipped outermost")
         if self.stopping is not None:
-            require_kind(self.stopping, EarlyStopping, "stopping")
+            require_kind(self.stopping, Stopping, "stopping")
             require(self.benchmark.selection is not None,
                     f"{type(self.benchmark).__name__} has no selection split to stop on")
+            require(not isinstance(self.stopping, Solved) or self.benchmark.targeted,
+                    f"{type(self.benchmark).__name__} sets no target to stop at")
 
 
 def study(experiments):

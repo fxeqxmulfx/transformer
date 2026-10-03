@@ -118,7 +118,8 @@ class Training:
         self.sampler = self.task.sampler(experiment.budget.batch, experiment.seeds.batch_seed)
         self.completed, self.seen, self.last_batch_size = 0, 0, None
         selection = experiment.benchmark.selection
-        self.selection = None if selection is None else Selection(experiment.stopping, experiment.benchmark.rank)
+        self.selection = None if selection is None else Selection(experiment.stopping, experiment.benchmark.rank,
+                                                                  experiment.benchmark.solved)
         self.best = None
         checkpoint = run.checkpoint(self.device)
         if checkpoint is not None:

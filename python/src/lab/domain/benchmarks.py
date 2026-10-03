@@ -30,6 +30,15 @@ class Benchmark(Spec, kind=True):
         return -metrics["loss"]
 
     @property
+    def targeted(self):
+        """Whether the benchmark sets a target that an observation of its selection split can reach."""
+        return False
+
+    def solved(self, metrics):
+        """Whether an observation of the selection split reaches the target."""
+        raise NotImplementedError(f"{type(self).__name__} sets no target")
+
+    @property
     def final(self):
         """The splits evaluated once, on the model of the best observation."""
         return ()
