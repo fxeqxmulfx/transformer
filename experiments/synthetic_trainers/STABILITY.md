@@ -524,6 +524,19 @@ now completes its full budget as recorded below. Both original terminal
 handles are consumed with exit code 0. The all-six primary gate and subsequent
 scientific studies remain incomplete. No criterion or budget is changed.
 
+The user-requested [sparsemax saturation proof and final accuracy certificate](protocols/adamw_stability_20261002/sparsemax-mechanism-and-final-certificate.md)
+now connect the existing projection to a zero real score derivative under
+strict unit gaps and exhibit a wrong stationary row with positive outer loss.
+Lean checks all actual final CPU predictions: train 9,264/9,264 and held-out
+9,465/27,792, with EOS correct everywhere. Independent NoTorch inspection
+verifies complete disjoint coverage, corpus fingerprints and every Lean record.
+Two final-checkpoint train-batch probes observe strict-gap singleton rows with
+exactly zero implemented score derivatives, while total Q/K gradients remain
+nonzero. The mechanism is established; causation of the exact held-out score
+and full PyTorch execution are not proved. New modules preserve the nine frozen
+Lean specifications; full-tree debt stays 157, with zero resting on `sorry` and
+zero extra axioms. The active schedule budgets and scientific gates remain unchanged.
+
 The fresh control's [captured phase and first recovery](protocols/adamw_stability_20261002/softmax-first-long-and-recovery.md)
 retain all 424 canonical observations through 105,750: the qualifying plateau
 is 4,500–27,250 and long joint confirmation is 95,750–100,500. Failures at

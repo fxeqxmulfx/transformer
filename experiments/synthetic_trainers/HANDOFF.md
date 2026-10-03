@@ -21,6 +21,18 @@ unique operand pairs: 9,264 train and 27,792 held-out. Both the numeric answer
 and EOS are scored. All decoded pairs pass the independent inverse oracle and
 match the frozen data fingerprints; inspection performs no updates and imports no Torch.
 
+The requested [Lean saturation mechanism and final accuracy certificate](protocols/adamw_stability_20261002/sparsemax-mechanism-and-final-certificate.md)
+now use the existing causal `sparseWeights`. A strict original-scale unit gap
+makes the row locally constant with zero Fréchet derivative; a concrete wrong
+route has positive outer loss and zero score derivative. All 37,056 actual
+final CPU prediction records are exported and checked by Lean: train 9,264/9,264,
+held-out 9,465/27,792, and EOS correct everywhere. The final CPU probes also
+observe strict-gap saturation, while total Q/K gradients remain nonzero.
+The exact fraction 9,465/27,792 (reported as 34.056563%) is certified for the supplied table;
+its causal explanation and full PyTorch execution are not formally established.
+The new modules are outside the nine frozen Lean pins; full-tree audit remains
+157 `sorry`, zero resting on `sorry`, and zero extra axioms.
+
 The [conditional schedule pair](protocols/adamw_stability_20261002/scheduled-pair-freeze.md)
 is now frozen at `d8ccb18` and launched at `22b060f`. Trainer **PID 168237 /
 session 11503** and venv archive worker **PID 168332 / session 60201** are live;
@@ -45,7 +57,8 @@ The latest complete CPU suite passes **288 tests in 90.250 seconds** after the
 complementary normalizer bridge; its [full log](protocols/adamw_stability_20261002/complementary-attention-full-CPU-suite-20261003-final.log)
 and [source receipt](protocols/adamw_stability_20261002/complementary-attention-preparation-validation.json)
 remain archived. Subsequent result/freeze/launch changes add read-only evidence,
-portable full-archive checks and documentation. No Lean source changes occur.
+portable full-archive checks and documentation. The new saturation/certificate
+modules above preserve all nine frozen Lean specification sources.
 Lean's [projection theorem](../../src/Transformer/GPTMini/Convex/Attention.lean#L96)
 holds for fixed scores at the original scale; it establishes neither convex
 joint training nor optimizer/generalization guarantees. The

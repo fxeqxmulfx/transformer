@@ -1,0 +1,28 @@
+{
+  "recorded_at_utc": "2026-10-03T07:23:53.253173+00:00",
+  "scope": "independent_supplied_table_coverage_corpus_and_serialization_check",
+  "checkpoint_sha256": "c3f296b2f9ffd388451f4beefb358b184ad32da404658424c6685c9a935ac601",
+  "partitions": {
+    "train": {
+      "rows": 9264,
+      "correct_complete_RHS": 9264,
+      "CSV_sha256": "85a1ba18e80d6b54b41f38a6387a04f2001c50863bed897aa4118c3d3915e82d",
+      "corpus_fingerprint": "5a0b7e90d546dfbad53ea44b64e2c3d1fb52af3a9a5640eff40f3d0ba3028ad8",
+      "Lean_packing_matches_every_CSV_record": true,
+      "distinct_inputs": 9264
+    },
+    "heldout": {
+      "rows": 27792,
+      "correct_complete_RHS": 9465,
+      "CSV_sha256": "0861dd669f55d44cfa30f687721d665b5eefa68bd8e39a62866e9959c052fe49",
+      "corpus_fingerprint": "bba4c2d1ddcc6a23833b1831a59eb6db04371f20dc7054aa145e22d1e602afa4",
+      "Lean_packing_matches_every_CSV_record": true,
+      "distinct_inputs": 27792
+    }
+  },
+  "exhaustive_disjoint_prime_field_domain_checked": true,
+  "inverse_oracle_agrees_with_multiplication_predicate_on_every_record": true,
+  "Torch_imported": false,
+  "optimizer_updates_performed": 0,
+  "program_sha256": "28c1abe45339d143106d49c142b33aaa0a08f61d1f6a90c09fca1bf86f238e3f"
+}

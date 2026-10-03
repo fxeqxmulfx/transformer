@@ -1,0 +1,252 @@
+⚠ [3352/3413] Replayed Transformer.Perspective.Section3_SmallBeta
+warning: src/Transformer/Perspective/Section3_SmallBeta.lean:84:8: declaration uses `sorry`
+warning: src/Transformer/Perspective/Section3_SmallBeta.lean:229:8: declaration uses `sorry`
+warning: src/Transformer/Perspective/Section3_SmallBeta.lean:266:8: declaration uses `sorry`
+warning: src/Transformer/Perspective/Section3_SmallBeta.lean:297:8: declaration uses `sorry`
+warning: src/Transformer/Perspective/Section3_SmallBeta.lean:314:8: declaration uses `sorry`
+⚠ [3385/3413] Replayed Transformer.Perspective.Section4_LargeBeta
+warning: src/Transformer/Perspective/Section4_LargeBeta.lean:45:8: declaration uses `sorry`
+⚠ [3519/3631] Replayed Transformer.Perspective.Section5_HighD
+warning: src/Transformer/Perspective/Section5_HighD.lean:84:8: declaration uses `sorry`
+⚠ [3556/3631] Replayed Transformer.Perspective.Section5_HighDCurve
+warning: src/Transformer/Perspective/Section5_HighDCurve.lean:120:8: declaration uses `sorry`
+warning: src/Transformer/Perspective/Section5_HighDCurve.lean:162:8: declaration uses `sorry`
+⚠ [3568/3631] Replayed Transformer.Perspective.AppendixA_Saddle
+warning: src/Transformer/Perspective/AppendixA_Saddle.lean:134:8: declaration uses `sorry`
+warning: src/Transformer/Perspective/AppendixA_Saddle.lean:163:8: declaration uses `sorry`
+⚠ [3571/3631] Replayed Transformer.Perspective.StrictSaddle
+warning: src/Transformer/Perspective/StrictSaddle.lean:82:8: declaration uses `sorry`
+⚠ [3585/3631] Replayed Transformer.Perspective.AppendixD_PhaseTransition
+warning: src/Transformer/Perspective/AppendixD_PhaseTransition.lean:48:8: declaration uses `sorry`
+⚠ [3624/3631] Replayed Transformer.Metastability.OttoAttention
+warning: src/Transformer/Metastability/OttoAttention.lean:78:8: declaration uses `sorry`
+⚠ [3625/3631] Replayed Transformer.Metastability.OttoClaimOne
+warning: src/Transformer/Metastability/OttoClaimOne.lean:53:8: declaration uses `sorry`
+⚠ [3626/3631] Replayed Transformer.Metastability.OttoCorollary
+warning: src/Transformer/Metastability/OttoCorollary.lean:70:8: declaration uses `sorry`
+⚠ [3714/3827] Replayed Transformer.Metastability.InitialUniform
+warning: src/Transformer/Metastability/InitialUniform.lean:97:8: declaration uses `sorry`
+⚠ [3725/3827] Replayed Transformer.Metastability.MeanFieldCapExit
+warning: src/Transformer/Metastability/MeanFieldCapExit.lean:37:8: declaration uses `sorry`
+warning: src/Transformer/Metastability/MeanFieldCapExit.lean:67:8: declaration uses `sorry`
+⚠ [3726/3827] Replayed Transformer.Metastability.MeanFieldMetastability
+warning: src/Transformer/Metastability/MeanFieldMetastability.lean:52:8: declaration uses `sorry`
+⚠ [3729/3827] Replayed Transformer.Metastability.OpenProblems
+warning: src/Transformer/Metastability/OpenProblems.lean:83:8: declaration uses `sorry`
+warning: src/Transformer/Metastability/OpenProblems.lean:163:8: declaration uses `sorry`
+warning: src/Transformer/Metastability/OpenProblems.lean:220:8: declaration uses `sorry`
+⚠ [3731/3827] Replayed Transformer.Metastability.StaircaseProfile
+warning: src/Transformer/Metastability/StaircaseProfile.lean:89:8: declaration uses `sorry`
+⚠ [3747/3827] Replayed Transformer.Interpolation.Clustering
+warning: src/Transformer/Interpolation/Clustering.lean:148:8: declaration uses `sorry`
+⚠ [3748/3827] Replayed Transformer.Interpolation.AtomClustering
+warning: src/Transformer/Interpolation/AtomClustering.lean:196:8: declaration uses `sorry`
+⚠ [3749/3827] Replayed Transformer.Interpolation.Disentanglement
+warning: src/Transformer/Interpolation/Disentanglement.lean:62:8: declaration uses `sorry`
+warning: src/Transformer/Interpolation/Disentanglement.lean:110:8: declaration uses `sorry`
+⚠ [3751/3827] Replayed Transformer.Interpolation.Perturbation
+warning: src/Transformer/Interpolation/Perturbation.lean:50:8: declaration uses `sorry`
+warning: src/Transformer/Interpolation/Perturbation.lean:119:8: declaration uses `sorry`
+⚠ [3756/3827] Replayed Transformer.Interpolation.NeuralODE
+warning: src/Transformer/Interpolation/NeuralODE.lean:77:8: declaration uses `sorry`
+warning: src/Transformer/Interpolation/NeuralODE.lean:130:8: declaration uses `sorry`
+⚠ [3760/3827] Replayed Transformer.Interpolation.BallTransport
+warning: src/Transformer/Interpolation/BallTransport.lean:95:8: declaration uses `sorry`
+warning: src/Transformer/Interpolation/BallTransport.lean:141:8: declaration uses `sorry`
+⚠ [3761/3827] Replayed Transformer.Interpolation.Main
+warning: src/Transformer/Interpolation/Main.lean:113:8: declaration uses `sorry`
+warning: src/Transformer/Interpolation/Main.lean:174:8: declaration uses `sorry`
+warning: src/Transformer/Interpolation/Main.lean:231:8: declaration uses `sorry`
+⚠ [3764/3827] Replayed Transformer.Interpolation.BallDecomposition
+warning: src/Transformer/Interpolation/BallDecomposition.lean:91:8: declaration uses `sorry`
+⚠ [3765/3827] Replayed Transformer.Interpolation.GenericDiscrete
+warning: src/Transformer/Interpolation/GenericDiscrete.lean:65:8: declaration uses `sorry`
+⚠ [3770/3827] Replayed Transformer.Causal.MainTheorem
+warning: src/Transformer/Causal/MainTheorem.lean:55:8: declaration uses `sorry`
+warning: src/Transformer/Causal/MainTheorem.lean:83:8: declaration uses `sorry`
+warning: src/Transformer/Causal/MainTheorem.lean:130:8: declaration uses `sorry`
+⚠ [3784/3827] Replayed Transformer.Causal.Metastability
+warning: src/Transformer/Causal/Metastability.lean:62:8: declaration uses `sorry`
+⚠ [3785/3827] Replayed Transformer.Causal.FixedCenters
+warning: src/Transformer/Causal/FixedCenters.lean:108:8: declaration uses `sorry`
+⚠ [3786/3827] Replayed Transformer.Causal.SequentialFlow
+warning: src/Transformer/Causal/SequentialFlow.lean:136:8: declaration uses `sorry`
+⚠ [3804/3827] Replayed Transformer.Normalization.Clustering
+warning: src/Transformer/Normalization/Clustering.lean:83:8: declaration uses `sorry`
+warning: src/Transformer/Normalization/Clustering.lean:114:8: declaration uses `sorry`
+warning: src/Transformer/Normalization/Clustering.lean:142:8: declaration uses `sorry`
+⚠ [4014/4124] Replayed Transformer.Normalization.Lojasiewicz
+warning: src/Transformer/Normalization/Lojasiewicz.lean:111:8: declaration uses `sorry`
+⚠ [4033/4124] Replayed Transformer.MeanField.Clustering
+warning: src/Transformer/MeanField/Clustering.lean:61:8: declaration uses `sorry`
+⚠ [4039/4124] Replayed Transformer.MeanField.GlobalRate
+warning: src/Transformer/MeanField/GlobalRate.lean:52:8: declaration uses `sorry`
+⚠ [4066/4124] Replayed Transformer.FrankWolfe.Section4_VertexGenericity
+warning: src/Transformer/FrankWolfe/Section4_VertexGenericity.lean:47:8: declaration uses `sorry`
+⚠ [4077/4124] Replayed Transformer.FrankWolfe.Section5_Metastability
+warning: src/Transformer/FrankWolfe/Section5_Metastability.lean:100:8: declaration uses `sorry`
+warning: src/Transformer/FrankWolfe/Section5_Metastability.lean:197:8: declaration uses `sorry`
+⚠ [4082/4124] Replayed Transformer.Kinetic.Hardy
+warning: src/Transformer/Kinetic/Hardy.lean:90:8: declaration uses `sorry`
+warning: src/Transformer/Kinetic/Hardy.lean:139:8: declaration uses `sorry`
+⚠ [4084/4124] Replayed Transformer.Kinetic.MeanField
+warning: src/Transformer/Kinetic/MeanField.lean:143:8: declaration uses `sorry`
+⚠ [4101/4124] Replayed Transformer.Kinetic.Fluctuations
+warning: src/Transformer/Kinetic/Fluctuations.lean:75:8: declaration uses `sorry`
+warning: src/Transformer/Kinetic/Fluctuations.lean:133:8: declaration uses `sorry`
+⚠ [4105/4124] Replayed Transformer.Kinetic.Correlations
+warning: src/Transformer/Kinetic/Correlations.lean:89:8: declaration uses `sorry`
+⚠ [4180/4419] Replayed Transformer.Kinetic.SoftAccuracy
+warning: src/Transformer/Kinetic/SoftAccuracy.lean:129:8: declaration uses `sorry`
+warning: src/Transformer/Kinetic/SoftAccuracy.lean:182:8: declaration uses `sorry`
+⚠ [4190/4419] Replayed Transformer.Homogenized.WellPosed
+warning: src/Transformer/Homogenized/WellPosed.lean:74:8: declaration uses `sorry`
+warning: src/Transformer/Homogenized/WellPosed.lean:105:8: declaration uses `sorry`
+warning: src/Transformer/Homogenized/WellPosed.lean:123:8: declaration uses `sorry`
+warning: src/Transformer/Homogenized/WellPosed.lean:152:8: declaration uses `sorry`
+⚠ [4196/4419] Replayed Transformer.Homogenized.WeakError
+warning: src/Transformer/Homogenized/WeakError.lean:62:8: declaration uses `sorry`
+warning: src/Transformer/Homogenized/WeakError.lean:115:8: declaration uses `sorry`
+warning: src/Transformer/Homogenized/WeakError.lean:172:8: declaration uses `sorry`
+⚠ [4197/4419] Replayed Transformer.Homogenized.GaussianInit
+warning: src/Transformer/Homogenized/GaussianInit.lean:99:8: declaration uses `sorry`
+⚠ [4199/4419] Replayed Transformer.Homogenized.Metastability
+warning: src/Transformer/Homogenized/Metastability.lean:95:8: declaration uses `sorry`
+⚠ [4200/4419] Replayed Transformer.Homogenized.Logistic
+warning: src/Transformer/Homogenized/Logistic.lean:102:8: declaration uses `sorry`
+warning: src/Transformer/Homogenized/Logistic.lean:121:8: declaration uses `sorry`
+warning: src/Transformer/Homogenized/Logistic.lean:143:8: declaration uses `sorry`
+⚠ [4201/4419] Replayed Transformer.Homogenized.LogisticLimit
+warning: src/Transformer/Homogenized/LogisticLimit.lean:90:8: declaration uses `sorry`
+⚠ [4213/4419] Replayed Transformer.Homogenized.Simplex
+warning: src/Transformer/Homogenized/Simplex.lean:116:8: declaration uses `sorry`
+⚠ [4217/4419] Replayed Transformer.Homogenized.Kernel
+warning: src/Transformer/Homogenized/Kernel.lean:76:8: declaration uses `sorry`
+⚠ [4218/4419] Replayed Transformer.Homogenized.Laplace
+warning: src/Transformer/Homogenized/Laplace.lean:55:8: declaration uses `sorry`
+warning: src/Transformer/Homogenized/Laplace.lean:84:8: declaration uses `sorry`
+⚠ [4223/4419] Replayed Transformer.Homogenized.Regimes
+warning: src/Transformer/Homogenized/Regimes.lean:69:8: declaration uses `sorry`
+warning: src/Transformer/Homogenized/Regimes.lean:114:8: declaration uses `sorry`
+warning: src/Transformer/Homogenized/Regimes.lean:154:8: declaration uses `sorry`
+⚠ [4228/4419] Replayed Transformer.Homogenized.GramStability
+warning: src/Transformer/Homogenized/GramStability.lean:145:8: declaration uses `sorry`
+⚠ [4229/4419] Replayed Transformer.Homogenized.SmallBeta
+warning: src/Transformer/Homogenized/SmallBeta.lean:86:8: declaration uses `sorry`
+⚠ [4231/4419] Replayed Transformer.Homogenized.MeanFieldLipschitz
+warning: src/Transformer/Homogenized/MeanFieldLipschitz.lean:90:8: declaration uses `sorry`
+⚠ [4233/4419] Replayed Transformer.Homogenized.PropagationChaos
+warning: src/Transformer/Homogenized/PropagationChaos.lean:62:8: declaration uses `sorry`
+⚠ [4234/4419] Replayed Transformer.Homogenized.SphereSde
+warning: src/Transformer/Homogenized/SphereSde.lean:63:8: declaration uses `sorry`
+⚠ [4235/4419] Replayed Transformer.Homogenized.HansonWright
+warning: src/Transformer/Homogenized/HansonWright.lean:73:8: declaration uses `sorry`
+⚠ [4236/4419] Replayed Transformer.Homogenized.GaussianInterp
+warning: src/Transformer/Homogenized/GaussianInterp.lean:79:8: declaration uses `sorry`
+⚠ [4244/4419] Replayed Transformer.Perceptron.Atomicity
+warning: src/Transformer/Perceptron/Atomicity.lean:87:8: declaration uses `sorry`
+warning: src/Transformer/Perceptron/Atomicity.lean:122:8: declaration uses `sorry`
+⚠ [4245/4419] Replayed Transformer.Perceptron.HigherDim
+warning: src/Transformer/Perceptron/HigherDim.lean:78:8: declaration uses `sorry`
+warning: src/Transformer/Perceptron/HigherDim.lean:119:8: declaration uses `sorry`
+warning: src/Transformer/Perceptron/HigherDim.lean:144:8: declaration uses `sorry`
+⚠ [4247/4419] Replayed Transformer.Perceptron.Bound
+warning: src/Transformer/Perceptron/Bound.lean:78:8: declaration uses `sorry`
+warning: src/Transformer/Perceptron/Bound.lean:142:8: declaration uses `sorry`
+warning: src/Transformer/Perceptron/Bound.lean:174:8: declaration uses `sorry`
+⚠ [4259/4419] Replayed Transformer.Perceptron.StrictSOPD
+warning: src/Transformer/Perceptron/StrictSOPD.lean:112:8: declaration uses `sorry`
+⚠ [4261/4419] Replayed Transformer.Perceptron.TransformPoly
+warning: src/Transformer/Perceptron/TransformPoly.lean:71:8: declaration uses `sorry`
+⚠ [4267/4419] Replayed Transformer.Perceptron.BiasedAtomicity
+warning: src/Transformer/Perceptron/BiasedAtomicity.lean:69:8: declaration uses `sorry`
+warning: src/Transformer/Perceptron/BiasedAtomicity.lean:105:8: declaration uses `sorry`
+⚠ [4269/4419] Replayed Transformer.Perceptron.GeneralAtomicity
+warning: src/Transformer/Perceptron/GeneralAtomicity.lean:51:8: declaration uses `sorry`
+warning: src/Transformer/Perceptron/GeneralAtomicity.lean:84:8: declaration uses `sorry`
+warning: src/Transformer/Perceptron/GeneralAtomicity.lean:117:8: declaration uses `sorry`
+⚠ [4270/4419] Replayed Transformer.Perceptron.Piecewise
+warning: src/Transformer/Perceptron/Piecewise.lean:97:8: declaration uses `sorry`
+warning: src/Transformer/Perceptron/Piecewise.lean:129:8: declaration uses `sorry`
+warning: src/Transformer/Perceptron/Piecewise.lean:165:8: declaration uses `sorry`
+⚠ [4274/4419] Replayed Transformer.Perceptron.NormalizedAtomicity
+warning: src/Transformer/Perceptron/NormalizedAtomicity.lean:60:8: declaration uses `sorry`
+warning: src/Transformer/Perceptron/NormalizedAtomicity.lean:88:8: declaration uses `sorry`
+warning: src/Transformer/Perceptron/NormalizedAtomicity.lean:116:8: declaration uses `sorry`
+warning: src/Transformer/Perceptron/NormalizedAtomicity.lean:147:8: declaration uses `sorry`
+⚠ [4277/4419] Replayed Transformer.Clusters.Section2_LowRank
+warning: src/Transformer/Clusters/Section2_LowRank.lean:124:8: declaration uses `sorry`
+⚠ [4280/4419] Replayed Transformer.Clusters.Section3_IdCase
+warning: src/Transformer/Clusters/Section3_IdCase.lean:114:8: declaration uses `sorry`
+⚠ [4281/4419] Replayed Transformer.Clusters.Section4_Hyperplanes
+warning: src/Transformer/Clusters/Section4_Hyperplanes.lean:137:8: declaration uses `sorry`
+⚠ [4282/4419] Replayed Transformer.Clusters.Section4_Codim
+warning: src/Transformer/Clusters/Section4_Codim.lean:78:8: declaration uses `sorry`
+⚠ [4283/4419] Replayed Transformer.Clusters.Section5_Mix
+warning: src/Transformer/Clusters/Section5_Mix.lean:92:8: declaration uses `sorry`
+⚠ [4289/4419] Replayed Transformer.Clusters.Section6_ContEq
+warning: src/Transformer/Clusters/Section6_ContEq.lean:86:8: declaration uses `sorry`
+warning: src/Transformer/Clusters/Section6_ContEq.lean:107:8: declaration uses `sorry`
+⚠ [4320/4419] Replayed Transformer.Clusters.Section9_Hyperplanes
+warning: src/Transformer/Clusters/Section9_Hyperplanes.lean:134:8: declaration uses `sorry`
+⚠ [4321/4419] Replayed Transformer.Clusters.Section8_Polytope
+warning: src/Transformer/Clusters/Section8_Polytope.lean:164:8: declaration uses `sorry`
+⚠ [4327/4419] Replayed Transformer.Clusters.Section10_ProjHull
+warning: src/Transformer/Clusters/Section10_ProjHull.lean:128:8: declaration uses `sorry`
+⚠ [4331/4419] Replayed Transformer.Clusters.Section10_Step2
+warning: src/Transformer/Clusters/Section10_Step2.lean:109:8: declaration uses `sorry`
+warning: src/Transformer/Clusters/Section10_Step2.lean:131:8: declaration uses `sorry`
+⚠ [4332/4419] Replayed Transformer.Clusters.Section12_MultiHead
+warning: src/Transformer/Clusters/Section12_MultiHead.lean:100:8: declaration uses `sorry`
+⚠ [4333/4419] Replayed Transformer.Clusters.Section12_Generic
+warning: src/Transformer/Clusters/Section12_Generic.lean:101:8: declaration uses `sorry`
+warning: src/Transformer/Clusters/Section12_Generic.lean:124:8: declaration uses `sorry`
+⚠ [4334/4419] Replayed Transformer.Clusters.Section12_Feedforward
+warning: src/Transformer/Clusters/Section12_Feedforward.lean:147:8: declaration uses `sorry`
+⚠ [4338/4419] Replayed Transformer.Modes.Section1_Mammen
+warning: src/Transformer/Modes/Section1_Mammen.lean:56:8: declaration uses `sorry`
+warning: src/Transformer/Modes/Section1_Mammen.lean:81:8: declaration uses `sorry`
+warning: src/Transformer/Modes/Section1_Mammen.lean:106:8: declaration uses `sorry`
+warning: src/Transformer/Modes/Section1_Mammen.lean:160:8: declaration uses `sorry`
+⚠ [4339/4419] Replayed Transformer.Modes.Section1_Main
+warning: src/Transformer/Modes/Section1_Main.lean:82:8: declaration uses `sorry`
+warning: src/Transformer/Modes/Section1_Main.lean:104:8: declaration uses `sorry`
+⚠ [4341/4419] Replayed Transformer.Modes.Section1_Sketch
+warning: src/Transformer/Modes/Section1_Sketch.lean:138:8: declaration uses `sorry`
+warning: src/Transformer/Modes/Section1_Sketch.lean:151:8: declaration uses `sorry`
+warning: src/Transformer/Modes/Section1_Sketch.lean:164:8: declaration uses `sorry`
+⚠ [4342/4419] Replayed Transformer.Modes.Section2_KacRice
+warning: src/Transformer/Modes/Section2_KacRice.lean:115:8: declaration uses `sorry`
+⚠ [4346/4419] Replayed Transformer.Modes.Section2_Degenerate
+warning: src/Transformer/Modes/Section2_Degenerate.lean:119:8: declaration uses `sorry`
+⚠ [4371/4419] Replayed Transformer.Modes.Section2_MainIntPhi
+warning: src/Transformer/Modes/Section2_MainIntPhi.lean:103:8: declaration uses `sorry`
+⚠ [4379/4419] Replayed Transformer.Modes.Section3_BR
+warning: src/Transformer/Modes/Section3_BR.lean:49:8: declaration uses `sorry`
+warning: src/Transformer/Modes/Section3_BR.lean:61:8: declaration uses `sorry`
+⚠ [4380/4419] Replayed Transformer.Modes.Section4_KacRiceAppl
+warning: src/Transformer/Modes/Section4_KacRiceAppl.lean:39:8: declaration uses `sorry`
+warning: src/Transformer/Modes/Section4_KacRiceAppl.lean:54:8: declaration uses `sorry`
+⚠ [4381/4419] Replayed Transformer.Modes.Section4_ScaleSpace
+warning: src/Transformer/Modes/Section4_ScaleSpace.lean:44:8: declaration uses `sorry`
+⚠ [4384/4419] Replayed Transformer.Modes.Section5_PtBddFourier
+warning: src/Transformer/Modes/Section5_PtBddFourier.lean:66:8: declaration uses `sorry`
+⚠ [4408/4585] Replayed Transformer.Modes.Section3_Edgeworth
+warning: src/Transformer/Modes/Section3_Edgeworth.lean:69:8: declaration uses `sorry`
+warning: src/Transformer/Modes/Section3_Edgeworth.lean:76:8: declaration uses `sorry`
+⚠ [4412/4585] Replayed Transformer.Modes.Section3_ErrorThird
+warning: src/Transformer/Modes/Section3_ErrorThird.lean:142:8: declaration uses `sorry`
+warning: src/Transformer/Modes/Section3_ErrorThird.lean:155:8: declaration uses `sorry`
+⚠ [4413/4585] Replayed Transformer.Modes.Section3_ErrorHigher
+warning: src/Transformer/Modes/Section3_ErrorHigher.lean:52:8: declaration uses `sorry`
+warning: src/Transformer/Modes/Section3_ErrorHigher.lean:70:8: declaration uses `sorry`
+⚠ [4414/4585] Replayed Transformer.Modes.Section3_ErrorKR
+warning: src/Transformer/Modes/Section3_ErrorKR.lean:74:8: declaration uses `sorry`
+warning: src/Transformer/Modes/Section3_ErrorKR.lean:90:8: declaration uses `sorry`
+warning: src/Transformer/Modes/Section3_ErrorKR.lean:104:8: declaration uses `sorry`
+warning: src/Transformer/Modes/Section3_ErrorKR.lean:116:8: declaration uses `sorry`
+warning: src/Transformer/Modes/Section3_ErrorKR.lean:164:8: declaration uses `sorry`
+⚠ [5123/5133] Replayed Transformer.GPTMini.ClusteringTheorem
+warning: src/Transformer/GPTMini/ClusteringTheorem.lean:96:8: declaration uses `sorry`
+✔ [10749/10750] Built Transformer (4.8s)
+Build completed successfully (10750 jobs).

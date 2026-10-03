@@ -143,6 +143,7 @@ import Transformer.AdamBeyond
 import Transformer.XSA
 import Transformer.Quartet
 import Transformer.GPTMini
+import Transformer.GPTMini.Sparsemax
 import Transformer.Precision
 import Transformer.Convexifying
 import Transformer.Zoology

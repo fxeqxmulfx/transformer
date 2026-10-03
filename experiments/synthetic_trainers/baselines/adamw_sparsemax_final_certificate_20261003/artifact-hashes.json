@@ -1,0 +1,55 @@
+{
+  "files": {
+    "CPU-export-validation.json": "654ff65fb432fca6952a3246d725a9c8b7b7c187c79cf5bd74522c1bd9672fc4",
+    "affected-module-build.log": "b4d9948c2ab411ff6f1bb06188e2fb23071a11d57075a05fc114c7f9dd0bf77b",
+    "final-routing-probe/frozen-root-plan.json": "261aba71d67b68c4856fb1aa2dba5a3b1c97e3f3a85b3fc29324f0abb14ec94f",
+    "final-routing-probe/probe-snapshot.py": "841dfdd6ed603caa3daea2a1404073b5b27279deba8d37de36a0bfaec1afd9b2",
+    "final-routing-probe/routing-gradient-probes.json": "2eaad7a772dfe22da2e18420213a5618d0eb1dfab37c6599e8d421d83901c395",
+    "final-strict-gap-probes.json": "f506dc41876d0cd44c8fe3134ac35875438d6a3f5763b4054b23112036bb57ef",
+    "full-build.log": "25107305c3b12b7932f771680aff3934660f0be0f341b8bbeb75ca95ce0231d7",
+    "full-tree-axioms.log": "703dadfe5fc0b34c3a70af25b10240cabe7c8fa4f51186d000a5c6cc6765b115",
+    "heldout-predictions.csv": "0861dd669f55d44cfa30f687721d665b5eefa68bd8e39a62866e9959c052fe49",
+    "snapshot-SparsemaxCertificateAudit.lean": "0da4206faddbf1f55c31d267c246b9faa4f45a7744bc6014c75365fb91204902",
+    "snapshot-export_sparsemax_final_certificate.py": "a7e54e2331ab51a783a31decce157a17edcf6f08b00e2f7f8f9a3083d8a12e8a",
+    "snapshot-generate_sparsemax_final_certificate.py": "5e9801cba38fb5df675b98abfd3bf04e356ab4650f456376d26418a5ef9563df",
+    "snapshot-probe_final_sparsemax_gap.py": "726eae85e0762b3d375296bcd6222580560f29ce0b80293ea6abadb7c4a7dced",
+    "snapshot-verify_sparsemax_final_certificate.py": "28c1abe45339d143106d49c142b33aaa0a08f61d1f6a90c09fca1bf86f238e3f",
+    "statements-definitions-and-axioms.log": "3212e6c576f496154e4caf08fe253feebb42c25d3eddd9b94842facac519fca4",
+    "table-and-packing-validation.json": "e3a2ff727dbcc1bf9b18e958421c340efee2b4fbdde0ccd38b5be9c0721beb22",
+    "train-predictions.csv": "85a1ba18e80d6b54b41f38a6387a04f2001c50863bed897aa4118c3d3915e82d",
+    "validation.json": "30ae410a9627de6241f944067cef914e633740357f833eb8f81b33bb543e9a79"
+  },
+  "repository_sources": {
+    "src/Transformer/GPTMini/Sparsemax/Basic.lean": "4fdd1f7da0510d6b8a94d07f5c7b3cc8ae40c4f96f9a6a5c2c9975ac23692c7d",
+    "src/Transformer/GPTMini/Sparsemax/Certificate/Basic.lean": "068dc6458315b4e51ec81db76f6f0b78b98e894346558b19795bd8ac09a05edf",
+    "src/Transformer/GPTMini/Sparsemax/Certificate/Counts.lean": "e4a7d6907689ad187514bb9cb5df079275d004a0736b8b147c0babad52c7c33a",
+    "src/Transformer/GPTMini/Sparsemax/Certificate/HeldoutFirst.lean": "cdbcc72bcaa1aac3a5f321c7ed717dd1f6b3677f8d39c224c0baab1922a5258d",
+    "src/Transformer/GPTMini/Sparsemax/Certificate/HeldoutLast.lean": "4925dbf81da9e07ca2bde158b438e7f730ca638bf104cad74a2f1ed07912ba55",
+    "src/Transformer/GPTMini/Sparsemax/Certificate/Results.lean": "c86ca4758779b6e9619382c5ba7e2fcb40d6bcb13c568f07a556c9899599e6e7",
+    "src/Transformer/GPTMini/Sparsemax/Certificate/Train.lean": "371dee1169f10ebb5c8b972423ddaf4faf1532f108f89904a3c8bd3e802ead5e",
+    "src/Transformer/GPTMini/Sparsemax/Failure.lean": "3b3fefefbcaeb009cd5757fd1a2d21a38a636a3946288344e47bacd5a21beff7",
+    "src/Transformer/GPTMini/Sparsemax.lean": "e64040e1d207d5eb39c5ae287cd13649c14c01f8b3effe8772d87a5c692aeaeb",
+    "src/Transformer.lean": "fc261722b6b9b3de0fd7516b52fc2abc2191ca96483928a7cccb9ea61d04edfc",
+    "INDEX.md": "0ac27bd8dc4b09f40cef7f921c234c93213c69a4e3ada548b8171f7ad26c5367",
+    "experiments/synthetic_trainers/protocols/adamw_stability_20261002/export_sparsemax_final_certificate.py": "a7e54e2331ab51a783a31decce157a17edcf6f08b00e2f7f8f9a3083d8a12e8a",
+    "experiments/synthetic_trainers/protocols/adamw_stability_20261002/generate_sparsemax_final_certificate.py": "5e9801cba38fb5df675b98abfd3bf04e356ab4650f456376d26418a5ef9563df",
+    "experiments/synthetic_trainers/protocols/adamw_stability_20261002/probe_final_sparsemax_gap.py": "726eae85e0762b3d375296bcd6222580560f29ce0b80293ea6abadb7c4a7dced",
+    "experiments/synthetic_trainers/protocols/adamw_stability_20261002/verify_sparsemax_final_certificate.py": "28c1abe45339d143106d49c142b33aaa0a08f61d1f6a90c09fca1bf86f238e3f",
+    "experiments/synthetic_trainers/protocols/adamw_stability_20261002/SparsemaxCertificateAudit.lean": "0da4206faddbf1f55c31d267c246b9faa4f45a7744bc6014c75365fb91204902"
+  },
+  "active_frozen_Lean_specifications": {
+    "src/Transformer/GPTMini/Convex.lean": "e19dbe13d646242942b2aa80a449e198244538144639dfa76c156c4a55fd8692",
+    "src/Transformer/ConvexRecall/Simplex.lean": "bc7c93bc09a98c0d222ba019ecacb737a4707e2afa8a7cca24ce033d5fb2ae30",
+    "src/Transformer/GPTMini/Convex/Attention.lean": "ec71529343792265e49fa94cf6309c35dc03f417ced6be39b591a02788fa0a8f",
+    "src/Transformer/GPTMini/Convex/Basic.lean": "e7b3d87fb04ef2c9e7ff2a45668c7ed466493c8b9120a055c3d932321c97c0bd",
+    "src/Transformer/GPTMini/Convex/Model.lean": "8688be6740a583f761959e8a87a02843660dbc7a5c5e68aee60855abb4fda845",
+    "src/Transformer/GPTMini/Convex/TrainingBoundary.lean": "57ea1f40b903e46981972fc4eff7cd41c8b79683670d35ae9ef4928f58e5aba7",
+    "src/Transformer/GPTMini/QKNorm.lean": "2fd2f89d1fd164d5c09be80966889dbfa9ece2ff7160f429a8db260a1d03aebe",
+    "src/Transformer/GPTMini/RoPE.lean": "65d2b6b05b199779074a0152817950a4b881453c8841e37d21d194b8bfb89cf4",
+    "src/Transformer/GPTMini/CausalMHA.lean": "96809c3fc5c215d00e996376b371a56303f957f05c45f26c34225cc3df3e772d"
+  },
+  "local_manuscripts": {
+    "papers/arXiv-2211.11052v1/arxiv.tex": "80db7319f40cf0536c41665a42aac9ba97489ec30cbbaa4541bec3753cc164ab",
+    "papers/arXiv-1912.02292v1/rffs.tex": "a3047fd84e9b78c58dbf7953b93dd55a397392cf2fc1fce4671455dc4782807f"
+  }
+}

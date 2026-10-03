@@ -1,0 +1,93 @@
+{
+  "recorded_at_utc": "2026-10-03T07:30:46.550765+00:00",
+  "scope": "real_sparsemax_saturation_mechanism_and_actual_final_prediction_table_certificate",
+  "checkpoint_sha256": "c3f296b2f9ffd388451f4beefb358b184ad32da404658424c6685c9a935ac601",
+  "affected_module_build": {
+    "command": "lake build Transformer.GPTMini.Sparsemax",
+    "session_id": 52084,
+    "exit_code": 0
+  },
+  "full_build": {
+    "command": "lake build",
+    "exit_code": 0,
+    "existing_sorry_warning_count": 157,
+    "new_module_warnings": 0
+  },
+  "individual_statement_definition_and_transitive_axiom_audit": {
+    "command": "lake env lean experiments/synthetic_trainers/protocols/adamw_stability_20261002/SparsemaxCertificateAudit.lean",
+    "exit_code": 0,
+    "audited_axiom_outputs": 39,
+    "extra_axioms": 0,
+    "sorry_dependencies": 0
+  },
+  "full_tree_audit": {
+    "command": "lake env lean scripts/Axioms.lean",
+    "exit_code": 0,
+    "sorry": 157,
+    "rests": 0,
+    "extra_axioms": 0
+  },
+  "index_before": {
+    "modules": 1766,
+    "theorems": 7099,
+    "sorry": 157,
+    "vacuous": 0,
+    "placeholder": 0
+  },
+  "index_after": {
+    "modules": 1775,
+    "theorems": 7111,
+    "sorry": 157,
+    "vacuous": 0,
+    "placeholder": 0
+  },
+  "count_certificates_depend_on_no_axioms": true,
+  "new_source_modules": 9,
+  "every_new_Lean_module_reachable_from_Transformer": true,
+  "all_active_frozen_sources_unchanged": true,
+  "optimizer_updates_performed_by_inspections": 0,
+  "proof_boundaries": {
+    "real_row_saturation": true,
+    "actual_supplied_prediction_table": true,
+    "PyTorch_forward_semantics_formally_verified": false,
+    "full_300k_training_trajectory_formally_verified": false,
+    "exact_accuracy_causally_explained": false,
+    "CPU_GPU_per_row_identity_claimed": false
+  },
+  "paper_fidelity_review": {
+    "source": "local arXiv:2211.11052v1, sections 3.1 and 4",
+    "saturation_and_prime193_experiment_are_explicit_extensions": true,
+    "shared_paper_simplex_not_conflated_with_content_scores": true
+  },
+  "new_Lean_source_sha256": {
+    "src/Transformer/GPTMini/Sparsemax/Basic.lean": "4fdd1f7da0510d6b8a94d07f5c7b3cc8ae40c4f96f9a6a5c2c9975ac23692c7d",
+    "src/Transformer/GPTMini/Sparsemax/Certificate/Basic.lean": "068dc6458315b4e51ec81db76f6f0b78b98e894346558b19795bd8ac09a05edf",
+    "src/Transformer/GPTMini/Sparsemax/Certificate/Counts.lean": "e4a7d6907689ad187514bb9cb5df079275d004a0736b8b147c0babad52c7c33a",
+    "src/Transformer/GPTMini/Sparsemax/Certificate/HeldoutFirst.lean": "cdbcc72bcaa1aac3a5f321c7ed717dd1f6b3677f8d39c224c0baab1922a5258d",
+    "src/Transformer/GPTMini/Sparsemax/Certificate/HeldoutLast.lean": "4925dbf81da9e07ca2bde158b438e7f730ca638bf104cad74a2f1ed07912ba55",
+    "src/Transformer/GPTMini/Sparsemax/Certificate/Results.lean": "c86ca4758779b6e9619382c5ba7e2fcb40d6bcb13c568f07a556c9899599e6e7",
+    "src/Transformer/GPTMini/Sparsemax/Certificate/Train.lean": "371dee1169f10ebb5c8b972423ddaf4faf1532f108f89904a3c8bd3e802ead5e",
+    "src/Transformer/GPTMini/Sparsemax/Failure.lean": "3b3fefefbcaeb009cd5757fd1a2d21a38a636a3946288344e47bacd5a21beff7",
+    "src/Transformer/GPTMini/Sparsemax.lean": "e64040e1d207d5eb39c5ae287cd13649c14c01f8b3effe8772d87a5c692aeaeb"
+  },
+  "executed_program_sha256": {
+    "experiments/synthetic_trainers/protocols/adamw_stability_20261002/export_sparsemax_final_certificate.py": "a7e54e2331ab51a783a31decce157a17edcf6f08b00e2f7f8f9a3083d8a12e8a",
+    "experiments/synthetic_trainers/protocols/adamw_stability_20261002/generate_sparsemax_final_certificate.py": "5e9801cba38fb5df675b98abfd3bf04e356ab4650f456376d26418a5ef9563df",
+    "experiments/synthetic_trainers/protocols/adamw_stability_20261002/probe_final_sparsemax_gap.py": "726eae85e0762b3d375296bcd6222580560f29ce0b80293ea6abadb7c4a7dced",
+    "experiments/synthetic_trainers/protocols/adamw_stability_20261002/verify_sparsemax_final_certificate.py": "28c1abe45339d143106d49c142b33aaa0a08f61d1f6a90c09fca1bf86f238e3f",
+    "experiments/synthetic_trainers/protocols/adamw_stability_20261002/SparsemaxCertificateAudit.lean": "0da4206faddbf1f55c31d267c246b9faa4f45a7744bc6014c75365fb91204902"
+  },
+  "whitespace_check": {
+    "exit_code": 0,
+    "CSV_line_endings": "original_export_CRLF_preserved",
+    "git_configuration": "core.whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol"
+  },
+  "table_verifier_default_inspection_writes_no_files": true,
+  "table_verifier_checks": {
+    "default_inspection_exit_code": 0,
+    "default_preserves_every_archive_byte": true,
+    "existing_receipt_rejected": true,
+    "rejection_preserves_every_archive_byte": true
+  },
+  "last_statement_review": "Removed a redundant causal-bound premise from the two-slot score-gap lemma; substantive strict-gap premises and source fidelity remain checked."
+}
