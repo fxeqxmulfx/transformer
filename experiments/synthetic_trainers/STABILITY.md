@@ -435,6 +435,15 @@ The future scientific freezer requires both full normalizer budgets to be
 reviewed and committed, with terminal sessions consumed. A passing primary
 softmax control enters six independent confirmations; scheduling remains
 conditional on failure and a separately committed 300,000-update paired plan.
+The [tagged confirmation adapter](protocols/adamw_stability_20261002/tagged-confirmation-preparation.md)
+now preserves these recipe tags/native source sets for the first six fresh
+crossed cases (models 4/5/6, data 2/3). Its four tests and two actual six-case
+CPU fixtures pass; complete negative archives verify without Torch and cannot
+open the scientific benchmark gate. Four combined PNGs and their actual PDFs
+are inspected. The current incomplete pair is rejected by the real scientific
+freezer before GPU initialization. No scientific confirmation has started;
+the complete passing primary calibration, committed reviewed evidence, full
+300,000-update budgets and all-six criterion remain mandatory.
 The [harder-task summary](protocols/adamw_stability_20261002/harder-task-results.md)
 keeps the three complete single-case AdamW outcomes and their task/exposure
 differences together; it does not average interventions or form ineligible ratios.

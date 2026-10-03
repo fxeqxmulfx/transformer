@@ -575,6 +575,26 @@ plotting archive worker with `.venv/bin/python`; the system Python remains
 useful for verification without Torch. The current pair's frozen 43 Python
 and nine Lean sources remain unchanged.
 
+The separate [tagged confirmation adapter](protocols/adamw_stability_20261002/tagged-confirmation-preparation.md)
+now prepares the first fresh model-seed 4/5/6 × data-seed 2/3 cohort for a
+passing native softmax or scheduled-softmax recipe. It retains the exact
+seventeen-source trainers; the old ordinary-config driver cannot directly
+consume these tags/source sets. Four tests pass in 12.484 seconds. Two actual
+full-width six-case CPU fixtures complete twelve cases and 360 updates, keep
+every negative, verify without Torch and have no scientific benchmark claim.
+The four new combined PNGs and their four actual PDFs are inspected; reference
+calibration artifacts remain byte-identical. See the
+[receipt](protocols/adamw_stability_20261002/tagged-confirmation-preparation-validation.json).
+No scientific confirmation is selected, frozen or started. The actual freezer
+rejects the incomplete current pair before creating a manifest or GPU context.
+A full passing primary result, committed reviewed evidence and a new committed
+manifest remain required. Every scientific case is capped at 300,000 updates;
+all six must pass the unchanged criterion before architecture selection.
+Use `tagged_confirmation_report.verified_benchmark` for this tagged pipeline;
+the prepared schedule's 55 and active normalizer's 43 Python/nine Lean sources
+are unchanged. A failed scientific cohort consumes its seeds and requires a
+new prospective cohort for any later confirmation.
+
 ```bash
 cat experiments/runs/adamw_stability_20261002/attention_mod193_fraction25_lr0003_budget300k/state.json
 cat experiments/runs/adamw_stability_20261002/bootstrap/attention-pair-archive-worker.json
