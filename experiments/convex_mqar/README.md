@@ -1,5 +1,14 @@
 # Convex content routing versus a RoPE Transformer on MQAR
 
+> The code this README documents is no longer in the tree: read it at commit
+> `9416d03` (`git show 9416d03:experiments/convex_mqar/src/convex_mqar/cli.py`).
+> The trained Transformers of the comparison, with softmax and sparsemax
+> attention, and its learning-rate selection are ported to
+> [`python/src/lab`](../../python/src/lab), as
+> [`experiments/mqar_sparsemax.py`](../mqar_sparsemax.py); the convex
+> construction and its certificate, the Zoology models and the diagnostics
+> are not. The commands below are how the reports kept here were produced.
+
 Standalone Python project managed by **uv**, with a committed `uv.lock`.
 It compares a new convex recall construction with an ordinary, end-to-end
 trained, two-layer causal Transformer using RoPE.
