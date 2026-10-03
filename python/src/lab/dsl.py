@@ -11,8 +11,8 @@ from .domain.model import (FFN, GELU, XSA, Attention, Block, FusedQKV, LayerNorm
                            PerHeadQKV, PostNorm, PreNorm, QKNorm, ReLU, ReLU2, RMSNorm, RoPE, ScaledDot,
                            Sinusoidal, Softmax, Sparsemax, Tied, TorchDefault, Transformer, Untied)
 from .domain.spec import describe, fingerprint, substitute, swap, walk
-from .domain.training import (AdamW, Budget, Checkpoint, Cosine, CudaGraph, Diagnostics, Eager, Evaluate,
-                              Schedule, Seeds)
+from .domain.training import (SGD, AdamW, AMSGradW, Budget, Checkpoint, Cosine, CudaGraph, Diagnostics, Eager,
+                              Evaluate, Schedule, Seeds)
 
 __all__ = [
     # model
@@ -24,7 +24,7 @@ __all__ = [
     # benchmarks
     "ModularDivision",
     # training
-    "AdamW", "Schedule", "Cosine", "Budget", "Seeds", "Evaluate", "Diagnostics", "Checkpoint",
+    "AdamW", "AMSGradW", "SGD", "Schedule", "Cosine", "Budget", "Seeds", "Evaluate", "Diagnostics", "Checkpoint",
     "Eager", "CudaGraph",
     # composition
     "Experiment", "grid", "swap", "substitute", "walk", "describe", "fingerprint",

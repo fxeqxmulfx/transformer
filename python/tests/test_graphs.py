@@ -13,7 +13,7 @@ import torch
 
 from lab.domain.model import Softmax, Sparsemax
 from lab.domain.spec import describe, substitute, swap
-from lab.domain.training import Checkpoint, Cosine, CudaGraph, Diagnostics, Evaluate
+from lab.domain.training import SGD, AMSGradW, Checkpoint, Cosine, CudaGraph, Diagnostics, Evaluate
 from lab.infrastructure.engine.graphs import GraphStepper
 from lab.infrastructure.engine.loop import Training
 from lab.infrastructure.store import STREAMS, RunDirectory
@@ -48,7 +48,10 @@ def experiments():
     return {"replayed": gradients, "sampled": swap(base, "diagnostics", TRACE),
             "reference-wrap": swap(swap(swap(gradients, "model", reference(32, 2, 4)), "benchmark.tail", "wrap"),
                                    "evaluate", Evaluate(every=10, batch=16)),
-            "sparsemax-cosine": sparse}
+            "sparsemax-cosine": sparse,
+            "amsgradw": swap(swap(base, "diagnostics", TRACE), "optimizer",
+                             AMSGradW(lr=1e-3, betas=(0.9, 0.999), weight_decay=1.0)),
+            "sgd": swap(gradients, "optimizer", SGD(lr=0.1, weight_decay=0.01))}
 
 
 def train(experiment, root, stepper, progress=lambda row: None):

@@ -33,6 +33,39 @@ class AdamW(Optimizer):
 
 
 @dataclass(frozen=True)
+class SGD(Optimizer):
+    """Gradient descent with decoupled decay: x <- x - lr (g + weight_decay x)."""
+    lr: float
+    weight_decay: float = 0.0
+
+    def check(self):
+        require(math.isfinite(self.lr) and self.lr > 0, "Learning rate must be positive")
+        require(self.weight_decay >= 0, "Decay must be nonnegative")
+
+
+@dataclass(frozen=True)
+class AMSGradW(Optimizer):
+    """AMSGrad on raw moments, with decoupled decay.
+
+    Source: arXiv:1904.03590v4, Algorithm 1 and Section 6, with the decay of
+    arXiv:2606.25971v2, Sections 2 and 4.1; `Transformer.AMSGradW.trainingStep`.
+    No bias correction: m <- b1 m + (1 - b1) g, v <- b2 v + (1 - b2) g^2,
+    vmax <- max(vmax, v), and x <- x - lr (m / (sqrt(vmax) + eps) + weight_decay x).
+    Weight decay 0 is AMSGrad.
+    """
+    lr: float
+    betas: tuple[float, float]
+    weight_decay: float
+    eps: float = 1e-8
+
+    def check(self):
+        require(math.isfinite(self.lr) and self.lr > 0, "Learning rate must be positive")
+        require(len(self.betas) == 2 and 0 <= self.betas[0] < 1 and 0 <= self.betas[1] <= 1,
+                "AMSGradW needs beta1 in [0, 1) and beta2 in [0, 1]")
+        require(self.weight_decay >= 0 and self.eps > 0, "Decay must be nonnegative, epsilon positive")
+
+
+@dataclass(frozen=True)
 class Cosine(Spec):
     """Anneal the rate by a half cosine from 1 at `start` to `final` at `end`."""
     start: int

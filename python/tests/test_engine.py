@@ -1,8 +1,9 @@
 """The eager engine reproduces the historical modular trainer, record for record.
 
 Golden records: the `runs` and `cuda_runs` of `fixtures/legacy_modular.json`,
-written by `paper_reproduction.grokking.train` and its sparsemax and cosine
-variants at the commit the fixture names. Timing fields are left out.
+written by `paper_reproduction.grokking.train` under AdamW and AMSGradW, and by
+its sparsemax and cosine variants, at the commit the fixture names. Timing
+fields are left out.
 """
 
 import hashlib
@@ -16,7 +17,7 @@ import torch
 from lab.application.study import Study, run_study
 from lab.domain.model import Softmax, Sparsemax
 from lab.domain.spec import substitute, swap
-from lab.domain.training import Checkpoint, Cosine, Diagnostics, Eager
+from lab.domain.training import AMSGradW, Checkpoint, Cosine, Diagnostics, Eager
 from lab.infrastructure.engine import Engine
 from lab.infrastructure.nn.legacy import DERIVED, rename
 from lab.infrastructure.store import RunDirectories, RunDirectory
@@ -30,16 +31,21 @@ TRACE = Diagnostics(every=4, neighbors=True, gradients=True)
 
 def historical(name, device="cpu"):
     """A fixture run in the DSL: prime 11, 30 updates of 8 rows, observed every 10."""
-    model = reference(32, 2, 4) if name == "reference" else gptmini(32, 2, 4)
+    model = reference(32, 2, 4) if name.startswith("reference") else gptmini(32, 2, 4)
     if name == "gptmini-sparsemax":
         model = substitute(model, Softmax, Sparsemax())
     experiment = modular(model, prime=11, updates=30, batch=8, every=10, execution=Eager(device=device))
     if name == "gptmini-wrap":
         return swap(experiment, "benchmark.tail", "wrap")
+    if name in ("gptmini-cosine", "reference-amsgradw"):
+        experiment = swap(experiment, "diagnostics", Diagnostics(gradients=True))
+    else:
+        experiment = swap(experiment, "diagnostics", TRACE)
     if name == "gptmini-cosine":
-        return swap(swap(experiment, "schedule.anneal", Cosine(start=15, end=25, final=.1)),
-                    "diagnostics", Diagnostics(gradients=True))
-    return swap(experiment, "diagnostics", TRACE)
+        return swap(experiment, "schedule.anneal", Cosine(start=15, end=25, final=.1))
+    if name.endswith("-amsgradw"):
+        return swap(experiment, "optimizer", AMSGradW(lr=1e-3, betas=(0.9, 0.999), weight_decay=1.0))
+    return experiment
 
 
 def train(experiment, root, progress=lambda label, row: None):

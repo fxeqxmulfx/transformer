@@ -2,7 +2,7 @@
 
 Each batch size that recurs (the full batch, and a short epoch tail) gets one
 captured update: gather the batch through a static index, forward, backward,
-the gradient norm, the capturable AdamW step, and the norm appended to a
+the gradient norm, the capturable optimizer step, and the norm appended to a
 device trace. Each observed split gets one captured evaluation over all its
 chunks. Between replays the host only copies indices on the device and sets
 the rate tensor; it waits for the device at observations and when it stages

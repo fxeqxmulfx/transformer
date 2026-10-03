@@ -1,12 +1,21 @@
 """Per-tensor measurements around one update; none of them changes the trajectory.
 
-Ports of `paper_reproduction.diagnostics.before_update` and `after_update`
-for AdamW, whose moments are read as stored, before bias correction.
+Ports of `paper_reproduction.diagnostics.before_update` and `after_update`.
+Moments are read as stored: AdamW's before bias correction, AMSGradW's raw
+buffers, which never had one.
 """
 
 import torch
 
-MOMENT_SCOPE = "AdamW_exp_avg_and_exp_avg_sq_before_bias_correction; actual_parameter_updates"
+MOMENTS = ("m", "v", "maximum", "exp_avg", "exp_avg_sq")
+SCOPES = (("maximum", "raw_buffers_without_bias_correction_for_AMSGradW; actual_parameter_updates"),
+          ("exp_avg", "AdamW_exp_avg_and_exp_avg_sq_before_bias_correction; actual_parameter_updates"))
+
+
+def moment_scope(optimizer):
+    """What the recorded moments are, by the buffers the optimizer keeps."""
+    return next((scope for key, scope in SCOPES if any(key in state for state in optimizer.state.values())),
+                "actual_parameter_updates")
 
 
 @torch.no_grad()
@@ -27,9 +36,12 @@ def after_update(model, optimizer, task, before, losses, gradient_norm):
             "gradient_l2": parameter.grad.norm() if parameter.grad is not None else parameter.new_zeros(()),
             "update_l2": (parameter - before[name]).norm(),
         }
-        for key in ("exp_avg", "exp_avg_sq"):
+        for key in MOMENTS:
             if key in state:
                 values[key + "_l2"] = state[key].norm()
+        if "maximum" in state:
+            values["maximum_min"] = state["maximum"].min()
+            values["maximum_max"] = state["maximum"].max()
         names.append(name)
         keys.append(list(values))
         tensors.extend(values.values())
@@ -39,4 +51,4 @@ def after_update(model, optimizer, task, before, losses, gradient_norm):
     scalars = iter(torch.stack(tensors).cpu().tolist())
     parameters = {name: {key: next(scalars) for key in fields} for name, fields in zip(names, keys, strict=True)}
     return {"gradient_l2": gradient_norm, **dict(zip(task.components, losses, strict=True)),
-            "parameters": parameters, "temperatures": temperatures, "moment_scope": MOMENT_SCOPE}
+            "parameters": parameters, "temperatures": temperatures, "moment_scope": moment_scope(optimizer)}
