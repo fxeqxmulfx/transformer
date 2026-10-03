@@ -1,0 +1,104 @@
+"""Synthetic benchmarks sample the historical splits, row for row.
+
+Golden records: `fixtures/legacy_splits.json`. Its `runs` are every distinct
+split configuration of the two archived synthetic suites
+(`experiments/synthetic_trainers/baselines/amsgradw_softmax_20261002` and
+`amsgradw_softmax_scaling_20261002`), with the fingerprints and the number of
+corrupted labels those runs recorded; its `grid` was computed by the
+historical generator, at the commit the fixture names, on controls the runs
+leave unexercised. A fingerprint hashes every row of a split with the
+historical task specification and seed, so an equal fingerprint is an equal
+split.
+"""
+
+from dataclasses import fields
+import json
+from pathlib import Path
+import unittest
+
+from lab.domain.generative import (Addition, BooleanAnd, Copy, Count, DoubleHistogram, Histogram, Mode,
+                                   MostFrequent, Parity, RandomLM, Reverse, Sort)
+from lab.domain.synthetic import Memorization, Synthetic
+from lab.domain.tasks import CRASP, MQAR, AlternatingBlocks, Dyck, Lookup, TypedDyck
+from lab.infrastructure.benchmarks.synthetic.splits import benchmark_splits
+
+FIXTURE = json.loads((Path(__file__).parent / "fixtures" / "legacy_splits.json").read_text())
+TASKS = {"mqar": MQAR, "lookup": Lookup, "dyck": Dyck, "blocks": AlternatingBlocks, "dyck2": TypedDyck,
+         "crasp": CRASP, "histogram": Histogram, "histogram2": DoubleHistogram, "mode": Mode,
+         "most_freq": MostFrequent, "copy": Copy, "reverse": Reverse, "sort": Sort, "count": Count,
+         "addition": Addition, "parity": Parity, "boolean_and": BooleanAnd, "random_lm": RandomLM}
+RENAMED = {"bracket_types": "types", "formula_depth": "depth", "formula_seed": "program", "histogram_bos": "bos",
+           "addition_order": "order", "index_hints": "hints", "carry_sampling": "carries", "and_shift": "shift",
+           "and_region": "region"}
+
+
+def block(task):
+    """The task block of a historical task specification (`specs.TaskSpec`)."""
+    kind = TASKS[task["task"]]
+    names = {field.name for field in fields(kind)}
+    return kind(**{RENAMED.get(key, key): value for key, value in task.items() if RENAMED.get(key, key) in names})
+
+
+def benchmark(record):
+    task, study = record["task"], record["study"]
+    return Synthetic(task=block(task), length=task["length"], min_length=task["min_length"], train=record["train"],
+                     validation=record["validation"], test=record["test"], ood=tuple(record["ood"]),
+                     study=None if study is None else Memorization(**study))
+
+
+def sampled(record):
+    """Each split's fingerprint by its historical name, and how many training labels the noise changed."""
+    splits, noise = benchmark_splits(benchmark(record), record["data_seed"])
+    names = {"test": "in_distribution"}
+    return ({names.get(name, name.removeprefix("test/")): split.fingerprint for name, split in splits.items()},
+            noise and noise["changed_targets"])
+
+
+class HistoricalSplitTests(unittest.TestCase):
+    def test_every_archived_split(self):
+        for record in FIXTURE["runs"]:
+            with self.subTest(run=record["runs"][0]):
+                fingerprints, changed = sampled(record)
+                # The runs did not record their validation probes' fingerprints.
+                self.assertEqual({name: value for name, value in fingerprints.items()
+                                  if not name.startswith("validation/")}, record["fingerprints"])
+                self.assertEqual(changed, record["changed"])
+
+    def test_every_control_of_the_historical_generator(self):
+        for record in FIXTURE["grid"]:
+            with self.subTest(task=record["task"]["task"], study=record["study"]):
+                self.assertEqual(sampled(record), (record["fingerprints"], record["changed"]))
+
+    def test_every_task_is_exercised(self):
+        self.assertEqual({record["task"]["task"] for record in FIXTURE["runs"]}, set(TASKS))
+
+
+class SyntheticSpecTests(unittest.TestCase):
+    def test_every_length_a_benchmark_samples_is_checked_when_written(self):
+        # Each invalid benchmark, and the nearest valid one.
+        cases = ((MQAR(), 16, None, (), MQAR(), 21), (Dyck(), 6, None, (), Dyck(), 9),
+                 (Copy(unique=True, symbols=8), 8, None, (16,), Copy(unique=True, symbols=16), 8),
+                 (Count(number_limit=12), 8, None, (16,), Count(number_limit=16), 8),
+                 (Addition(carry_length=3), 4, 2, (), Addition(carry_length=2), 4))
+        for invalid, length, minimum, ood, valid, valid_length in cases:
+            with self.subTest(task=valid):
+                Synthetic(task=valid, length=valid_length, min_length=minimum, ood=ood)
+                with self.assertRaises(ValueError):
+                    Synthetic(task=invalid, length=length, min_length=minimum, ood=ood)
+
+    def test_the_random_control_takes_no_noise_and_no_disjoint_pools(self):
+        for study in (Memorization(noise=0.1), Memorization(disjoint=True)):
+            with self.subTest(study=study), self.assertRaises(ValueError):
+                Synthetic(task=RandomLM(), length=8, study=study)
+        Synthetic(task=RandomLM(), length=8, study=Memorization())
+
+    def test_held_out_distributions_are_named_as_they_were(self):
+        self.assertEqual(list(Synthetic(task=BooleanAnd(), length=8, ood=(16,)).probes),
+                         ["length-16", "position_shift", "position-shift-length-16"])
+        self.assertEqual(list(Synthetic(task=Addition(), length=4, ood=(8,)).probes),
+                         ["length-8", "hard-carry-length-4", "hard-carry-length-8"])
+        self.assertEqual(Synthetic(task=Parity(scratchpad="ones", hints=True), length=8, ood=(16,)).context, 67)
+
+
+if __name__ == "__main__":
+    unittest.main()
