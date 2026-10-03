@@ -25,7 +25,7 @@ from unittest import mock
 
 from lab.domain.spec import swap
 from lab.domain.training import Checkpoint
-from lab.dsl import SGD, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradW, Geometric, Inverse, InverseSqrt
+from lab.dsl import SGD, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradW, Geometric, Inverse, InverseSqrt, RMSProp
 from lab.infrastructure.optim import coordinate
 from lab.infrastructure.store import RunDirectory
 
@@ -43,6 +43,7 @@ EXACT = {
                                                beta1_decay=Geometric(0.99), lr_decay=InverseSqrt()),
     "adamx": lambda rate: AdamX(lr=rate),
     "adamnc": lambda rate: AdamNC(lr=rate),
+    "rmsprop": lambda rate: RMSProp(lr=rate),
 }
 CLOSE = {
     "adam": lambda rate: Adam(lr=rate),

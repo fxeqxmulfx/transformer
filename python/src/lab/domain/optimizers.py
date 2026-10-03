@@ -195,3 +195,20 @@ class AdamNC(Optimizer):
         check_rate(self.lr)
         require(0 <= self.beta1 < 1 and self.eps > 0, "AdamNC needs beta1 in [0, 1) and a positive epsilon")
         check_decays(self, "beta1_decay", "lr_decay")
+
+
+@dataclass(frozen=True)
+class RMSProp(Optimizer):
+    """RMSProp on the raw second moment, without momentum or bias correction.
+
+    v <- b2 v + (1 - b2) g^2 and x <- x - lr g / (sqrt(v) + eps): the dense
+    baseline of arXiv:2602.15322v1, Section 2, as its benchmark ran it. The
+    manuscript is not among papers/; the rule is the benchmark's.
+    """
+    lr: float
+    beta2: float = 0.999
+    eps: float = 1e-8
+
+    def check(self):
+        check_rate(self.lr)
+        require(0 <= self.beta2 < 1 and self.eps > 0, "RMSProp needs beta2 in [0, 1) and a positive epsilon")

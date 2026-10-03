@@ -1,6 +1,7 @@
-"""Coordinate-wise adaptive rules: AMSGradW, Adam, AdamX, AdaGrad and AdamNC.
+"""Coordinate-wise adaptive rules: AMSGradW, Adam, AdamX, AdaGrad, AdamNC and RMSProp.
 
-Ports of the rules of `optimizer_benchmark.coordinate.CoordinateOptimizer`,
+Ports of the rules of `optimizer_benchmark.coordinate.CoordinateOptimizer`
+and of `magma_benchmark.optimizer.RMSPropOptimizer`,
 with the arithmetic of the historical trainers. A coefficient that stays
 constant is a Python number, applied as the modular trainer applied it:
 `m.mul_(b).add_(g, alpha=1 - b)`. A coefficient that changes with the update
@@ -164,3 +165,17 @@ class AdamNC(Coordinate):
         mean_square(v, gradient, step)
         average(m, gradient, scaled(spec.beta1, spec.beta1_decay, step))
         return ratio(m, v.sqrt() + spec.eps, factor(spec.lr_decay, step))
+
+
+class RMSProp(Coordinate):
+    """The `rmsprop` rule: the gradient over the root of the raw second moment."""
+    buffers = ("v",)
+    moments = "raw_second_moment_for_RMSProp"
+
+    def __init__(self, spec, model, rate=None):
+        super().__init__(spec, model, rate, False)
+
+    def direction(self, parameter, state):
+        spec, gradient, state = self.spec, parameter.grad, self.begin(parameter, state)
+        state["v"].mul_(spec.beta2).addcmul_(gradient, gradient, value=1 - spec.beta2)
+        return gradient / (state["v"].sqrt() + spec.eps)

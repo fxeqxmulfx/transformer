@@ -11,7 +11,7 @@ from .domain.model import (FFN, GELU, XSA, Attention, Block, FusedQKV, LayerNorm
                            PerHeadQKV, PostNorm, PreNorm, QKNorm, ReLU, ReLU2, RMSNorm, RoPE, ScaledDot,
                            Sinusoidal, Softmax, Sparsemax, Tied, TorchDefault, Transformer, Untied)
 from .domain.optimizers import (SGD, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradW, Constant, Geometric, Inverse,
-                                InverseSqrt)
+                                InverseSqrt, RMSProp)
 from .domain.spec import describe, fingerprint, substitute, swap, walk
 from .domain.stopping import EarlyStopping
 from .domain.training import Budget, Checkpoint, Cosine, CudaGraph, Diagnostics, Eager, Evaluate, Schedule, Seeds
@@ -26,7 +26,7 @@ __all__ = [
     # benchmarks
     "ModularDivision", "TinyShakespeare",
     # optimizers
-    "SGD", "AdamW", "AMSGradW", "Adam", "AdamX", "AdaGrad", "AdamNC",
+    "SGD", "AdamW", "AMSGradW", "Adam", "AdamX", "AdaGrad", "AdamNC", "RMSProp",
     "Constant", "Inverse", "InverseSqrt", "Geometric",
     # training
     "Schedule", "Cosine", "Budget", "Seeds", "Evaluate", "Diagnostics", "Checkpoint",

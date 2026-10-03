@@ -33,7 +33,8 @@ def adamw(spec, model, rate=None):
 
 OPTIMIZERS = {optimizers.AdamW: adamw, optimizers.SGD: direction.SGD, optimizers.AMSGradW: coordinate.AMSGradW,
               optimizers.Adam: coordinate.Adam, optimizers.AdamX: coordinate.AdamX,
-              optimizers.AdaGrad: coordinate.AdaGrad, optimizers.AdamNC: coordinate.AdamNC}
+              optimizers.AdaGrad: coordinate.AdaGrad, optimizers.AdamNC: coordinate.AdamNC,
+              optimizers.RMSProp: coordinate.RMSProp}
 
 
 def build_optimizer(spec, model, rate=None):
