@@ -50,7 +50,7 @@ No new sorry or extra axioms are introduced.
 
 Finite entropy support is the required 27-module subset of teorth/pfr,
 copied with its Apache 2.0 license in third_party/Entropy and built against
-the repository's existing Lean/Mathlib 4.34.0. No external package is added.
+the repository's existing Lean/Mathlib 4.34.1. No external package is added.
 scripts/memorization_data.py regenerates the numerical modules using exact
 printed rational values and source SHA256 hashes; --check verifies them.
 scripts/MemorizationAxioms.lean audits all paper and vendored entropy

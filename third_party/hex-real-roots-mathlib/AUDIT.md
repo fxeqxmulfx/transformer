@@ -8,7 +8,7 @@ The copied closure consists only of `Sign.lean`, `SturmChainDefs.lean`, and
 `SturmTheorem.lean`, split by proof dependency under `src/Transformer/Sturm`.
 The original Apache-2.0 license is retained byte for byte in `LICENSE`.
 The upstream toolchain is Lean 4.34.0-rc2; the adapted closure and all new
-proofs are built with this project's Lean and Mathlib 4.34.0.
+proofs are built with this project's Lean and Mathlib 4.34.1.
 The deprecated sign import is replaced by `Mathlib.Basic.Sign.Basic`.
 No Lake dependency, executable, integer certificate machinery, or other
 upstream module is added.

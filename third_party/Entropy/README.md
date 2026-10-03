@@ -8,7 +8,7 @@ development and its additional package dependencies are not included.
 The original namespaces, copyright notices, and Apache 2.0 license are retained.
 These sources supply genuine measure, kernel, entropy, conditional entropy,
 mutual information, and conditional independence constructions. They are built
-against this repository's Lean and Mathlib 4.34.0, and their complete proof
+against this repository's Lean and Mathlib 4.34.1, and their complete proof
 dependencies are audited with the paper formalization using them.
 
 Local compatibility changes:
