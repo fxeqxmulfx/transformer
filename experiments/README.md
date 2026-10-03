@@ -18,12 +18,9 @@ reads it. Its runs train into `runs/<label>/` beside it, which git ignores.
 | [`synthetic_amsgradw`](synthetic_amsgradw) | 61 | Which tasks of the synthetic suite does GPTMini learn, and which does it only memorize? |
 | [`synthetic_scaling`](synthetic_scaling) | 27 | Double descent in width on noisy parity, and copy across model sizes |
 
-Two folders predate the lab and run as scripts:
-
-| Folder | What it measures |
-| --- | --- |
-| [`quartet_sr_evaluation`](quartet_sr_evaluation) | the error of FP4 stochastic rounding with upward E4M3 scales, in NumPy |
-| [`loopexp`](loopexp) | how quantization error propagates through looped and flat pre-norm GPT, configured by flags |
+[`quartet_sr_evaluation`](quartet_sr_evaluation) predates the lab: a NumPy
+script that measures the error of FP4 stochastic rounding with upward E4M3
+scales.
 
 [`archive/`](archive) keeps the records of the three codebases the lab
 replaced: the reference GPTMini with its Tiny Shakespeare optimizer
