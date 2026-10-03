@@ -1,0 +1,199 @@
+{
+  "recorded_at_utc": "2026-10-03T04:59:14.598882+00:00",
+  "scope": "complete_two_run_exploratory_normalizer_pair; independent_benchmark_gate_closed",
+  "completed_updates_per_run": 300000,
+  "completed_scientific_runs": 2,
+  "offline_verification_passed": true,
+  "Torch_imported": false,
+  "all_raw_histories_and_case_archives_preserved_byte_for_byte": true,
+  "reference_archive_preserved_byte_for_byte": true,
+  "softmax_all_1201_non_time_canonical_observations_equal_frozen_same_seed_reference": true,
+  "independent_confirmation_claimed": false,
+  "observation_counts": {
+    "adamw-softmax": {
+      "canonical": 1201,
+      "probes.jsonl": 2400,
+      "diagnostics.jsonl": 3600,
+      "gradients.jsonl": 300000
+    },
+    "adamw-sparsemax": {
+      "canonical": 1201,
+      "probes.jsonl": 2400,
+      "diagnostics.jsonl": 3600,
+      "gradients.jsonl": 300000
+    }
+  },
+  "all_43_Python_17_training_9_Lean_2_papers_and_audit_unchanged": true,
+  "archive_artifact_manifest_sha256": "10c3df55d54d0a73ee192d5f62fb1977b954667de65994b10b2eae17241dc33c",
+  "verification_script_sha256": "06022e292e9c8f584b07d10128a5612aa5a8e068a6d587d7dde659f90b9f4ca4",
+  "outcome": {
+    "control": {
+      "complete_budget": true,
+      "phase_label": "does_not_meet_complete_persistent_target",
+      "memorization_plateau": {
+        "start": 4500,
+        "end": 27250,
+        "observations": 92
+      },
+      "persistent_final_performance": false,
+      "stable_grokking": false,
+      "tail_failures": 2,
+      "observed_target_training_seconds": 2491.8255679934227,
+      "observed_target_wall_seconds": 3092.4105534289993,
+      "eligible_target_training_seconds": null,
+      "eligible_target_wall_seconds": null,
+      "eligible_timing_support": 0,
+      "timing_scope": "first_long_joint_confirmation_with_complete_final_tail; no_between_sample_or_beyond_budget_guarantee",
+      "name": "adamw-softmax",
+      "parameters": 436104,
+      "final_train_accuracy": 1.0,
+      "final_heldout_accuracy": 1.0,
+      "final_heldout_answer_loss": 1.2687003352088038e-07,
+      "final_heldout_EOS_loss": 1.9302020942368068e-10,
+      "epochs_seen": 15789.497409326425,
+      "training_seconds": 7466.25834126769,
+      "wall_seconds": 9260.629807288002,
+      "diagnostic_seconds": 85.34714923110732,
+      "peak_cuda_allocated_bytes": 120240128,
+      "peak_cuda_reserved_bytes": 140509184
+    },
+    "candidate": {
+      "complete_budget": true,
+      "phase_label": "does_not_meet_complete_persistent_target",
+      "memorization_plateau": {
+        "start": 49750,
+        "end": 255750,
+        "observations": 825
+      },
+      "persistent_final_performance": false,
+      "stable_grokking": false,
+      "tail_failures": 201,
+      "observed_target_training_seconds": null,
+      "observed_target_wall_seconds": null,
+      "eligible_target_training_seconds": null,
+      "eligible_target_wall_seconds": null,
+      "eligible_timing_support": 0,
+      "timing_scope": "first_long_joint_confirmation_with_complete_final_tail; no_between_sample_or_beyond_budget_guarantee",
+      "name": "adamw-sparsemax",
+      "parameters": 436104,
+      "final_train_accuracy": 1.0,
+      "final_heldout_accuracy": 0.34056563039723664,
+      "final_heldout_answer_loss": 5.221930926053361,
+      "final_heldout_EOS_loss": 3.0711658580555726e-09,
+      "epochs_seen": 15789.497409326425,
+      "training_seconds": 8771.16665181308,
+      "wall_seconds": 12503.703401389997,
+      "diagnostic_seconds": 44.71882499595813,
+      "peak_cuda_allocated_bytes": 119802880,
+      "peak_cuda_reserved_bytes": 157286400
+    },
+    "changed_fields": [
+      "attention_normalization"
+    ],
+    "eligible_pair_support": 0,
+    "control_to_candidate_training_time_ratio": null,
+    "control_to_candidate_wall_time_ratio": null,
+    "final_heldout_accuracy_difference": -0.6594343696027634,
+    "claim_scope": "one_frozen_pair; all_failures_retained; improvement_rule_and_all_pairs_required_for_a_campaign_claim"
+  },
+  "PNG_figures_visually_reviewed": true,
+  "PDF_figures_visually_reviewed": true,
+  "trainer_and_archive_worker_terminal_sessions_consumed": true,
+  "native_optimizer_CPU_audits": {
+    "sparsemax": {
+      "name": "adamw-sparsemax",
+      "completed_updates": 300000,
+      "parameters": 436104,
+      "native_state_count": 11,
+      "all_native_steps": [
+        300000
+      ],
+      "all_model_and_native_tensors_finite": true,
+      "maximum_second_moment_buffers_absent": true,
+      "actual_native_class": "torch.optim.AdamW",
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "amsgrad": false,
+      "learning_rate": 0.0003,
+      "all_trainable_parameters_in_one_group_once": true,
+      "optimizer_updates_performed": 0,
+      "GPU_context_initialized": false,
+      "checkpoint_sha256": "c3f296b2f9ffd388451f4beefb358b184ad32da404658424c6685c9a935ac601",
+      "executed_audit_script_sha256": "eb5f8873f84fb9070000be6845aa603623090f072e1331a607fa29491c030d32"
+    },
+    "softmax": {
+      "name": "adamw-softmax",
+      "completed_updates": 300000,
+      "parameters": 436104,
+      "native_state_count": 11,
+      "all_native_steps": [
+        300000
+      ],
+      "all_model_and_native_tensors_finite": true,
+      "maximum_second_moment_buffers_absent": true,
+      "actual_native_class": "torch.optim.AdamW",
+      "betas": [
+        0.9,
+        0.98
+      ],
+      "epsilon": 1e-08,
+      "weight_decay": 0.1,
+      "amsgrad": false,
+      "learning_rate": 0.0003,
+      "all_trainable_parameters_in_one_group_once": true,
+      "optimizer_updates_performed": 0,
+      "GPU_context_initialized": false,
+      "checkpoint_sha256": "516bf695bb98cefeef080ce3bc8e5e24ecb53bb3a861e94600c9351eccbbb0bb",
+      "executed_audit_script_sha256": "eb5f8873f84fb9070000be6845aa603623090f072e1331a607fa29491c030d32"
+    }
+  },
+  "campaign_architecture_claim_allowed": false,
+  "review_recorded_at_utc": "2026-10-03T05:03:56.060128+00:00",
+  "terminal_sessions": {
+    "trainer": {
+      "pid": 139507,
+      "session_id": 47567,
+      "exit_code": 0,
+      "terminal_result_consumed": true
+    },
+    "archive_worker": {
+      "pid": 145323,
+      "session_id": 25387,
+      "exit_code": 0,
+      "terminal_result_consumed": true
+    }
+  },
+  "visually_reviewed_figure_sha256": {
+    "sparsemax": {
+      "plots/collapse-neighbors.pdf": "f9078cd12248f28755d98c6480b0d81b5f90c6176d73bad303e3c5fbfd226b25",
+      "plots/collapse-neighbors.png": "b4a1c2b38515b3fe09ccbf599c8ff98d81bd8f60e0e5d19e6694621340e4e6c5",
+      "plots/stability-overview.pdf": "71899e8753252b124428ba454e6189cfbfe8a37881ad56308de8ffc976087578",
+      "plots/stability-overview.png": "a17bea0c4c3068d6f1fa5bd518e8122b7bd14cc1ab38962a8e8a6610554ba668"
+    },
+    "softmax": {
+      "plots/collapse-neighbors.pdf": "7904fe44d7fe1a3a757d7e089e6d91f867d5b888a95c9e82553a3d6a612bf29a",
+      "plots/collapse-neighbors.png": "cf893efdc379a00044e977cabd4e8392df43d762df36938b486c1d44a8eb4a2c",
+      "plots/stability-overview.pdf": "3a144ad8be200f285aec100145e9b34d0bee6455f969e2d18305ac8bff82b58d",
+      "plots/stability-overview.png": "4a8873a459f267e2cdbf06b71bce4d6d1c62db49f0eaac02708b22637300828b"
+    },
+    "pair": {
+      "plots/attention-recovery.pdf": "c5a1e4e6cab5291a70c56f64065d30db27e7916ad009943eb7f2de88083d4eee",
+      "plots/attention-recovery.png": "6a859ec36867d4c6bc548340b8fa863f56edb4f7e8abdf8263cf08eb6efbdfa1",
+      "plots/calibration-comparison.pdf": "86ddd2ffb3a14d2fdb27ba86b0bc3d9a527cb4fab3088a10054f6db14369c91c",
+      "plots/calibration-comparison.png": "75e9fbab064e1dd104f6094e09b0e701fe7b6dd1787f4c0e9ae78c40e3b5f9ae"
+    }
+  },
+  "retained_evidence_sha256": {
+    "attention-pair-result-evidence/archive-worker-log.jsonl": "f05b8a9e2dd5fd71ff8d360ccad7f175299df947fbb437aa02f1c2f9a9202dc2",
+    "attention-pair-result-evidence/completed-archive-worker.json": "ea941fd4137d3a41326ecc27b1af5b7e6074dc8886b66330b63ff7ab8059dc8d",
+    "attention-pair-result-evidence/completed-raw-state.json": "6c963d23d3901ee41200a3cea38443ad71526c59689bcc7f508c7cda3814a187",
+    "attention-pair-result-evidence/trainer-final-record.json": "35260cbc350405810983a73c2f641ee84b807edd87040718b260bf0431b17207"
+  },
+  "observed_total_optimizer_updates": 600000,
+  "primary_benchmark_gate_opened": false,
+  "next_stage": "conditional_fixed_schedule_pair; separate_committed_freeze_required"
+}

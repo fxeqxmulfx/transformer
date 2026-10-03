@@ -705,10 +705,21 @@ canonical targets over 275,750–300,000. Full tail-bin failures are 0/40, 0/40,
 canonical observations matches the frozen same-seed/split reference; this
 is not independent confirmation. Raw histories/CSV bytes, source/audit pins,
 native final CPU state and both PNG/actual PDFs verify. Training/wall times
-are 7,466.26/9,260.63 seconds. The whole pair is now complete and visually
-reviewed; commit its separate full comparison/terminal receipt before the
-prepared conditional schedule freeze. No stable benchmark or eligible timing
+are 7,466.26/9,260.63 seconds. No stable benchmark or eligible timing
 comparison is established.
+
+The [complete normalizer comparison](protocols/adamw_stability_20261002/attention-pair-result.md)
+preserves both 300k case archives and the entire byte-exact historical reference.
+NoTorch verification recomputes all outcomes, recovery series and CSV rows;
+native CPU audits, actual PNG/PDF reviews and consumed exit-code-0 sessions
+47567/25387 are in the [terminal/review receipt](protocols/adamw_stability_20261002/attention-pair-result-validation.json).
+Sparsemax's final held-out difference is −65.943437 percentage points; eligible
+persistent timing support is zero and both ratios are null. Neither descriptive
+improvement rule passes. The primary all-six gate remains closed. Commit this
+logical result, then freeze/commit the prepared conditional full-budget schedule
+pair before GPU updates: fresh constant softmax first, then fixed cosine
+150k–250k to 10% rate. This result claims no scientific schedule execution or
+repeatable architecture improvement.
 
 The [full architecture-cohort pipeline](protocols/adamw_stability_20261002/architecture-cohort-preparation.md)
 is separately prepared, preserving the selected native AdamW schedule and all

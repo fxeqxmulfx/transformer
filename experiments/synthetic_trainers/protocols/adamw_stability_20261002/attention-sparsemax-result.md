@@ -7,7 +7,8 @@ seeds 0/0, batch 512 with 48-example epoch tails, LR 0.0003, decay 0.1,
 warmup 10, no clipping and all original phase/persistence criteria.
 Only the attention normalizer changes to the existing causal-simplex Euclidean
 projection. This is an exploratory single case, not independent confirmation.
-The fresh paired softmax control is running its full frozen budget.
+The fresh paired softmax control now completes its full frozen budget;
+see its [complete result](attention-softmax-result.md).
 
 | Complete candidate measurement | Value |
 | --- | ---: |
@@ -71,7 +72,7 @@ The [earlier routing probe](sparsemax-routing-gradient-probe.md) uses different
 weights from update 280,000; do not substitute the final checkpoint. Lean's
 fixed-score convex row result does not establish joint-training success.
 
-The scientific pair remains incomplete. Complete all 300,000 softmax updates,
-verify/review/commit the whole pair and consume both terminal sessions.
+The [complete scientific pair](attention-pair-result.md) preserves both full
+budgets, portable verification, figure review and consumed terminal sessions.
 No timing ratio or repeatable architecture improvement is certified here.
 The all-six primary benchmark gate and later declared studies remain required.

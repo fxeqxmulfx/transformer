@@ -560,6 +560,15 @@ native final CPU state and both PNG/actual PDFs verify. Both scientific runs
 and processes are complete; the paired comparison's separate reviewed commit
 is required before selecting the prepared conditional schedule.
 
+The [complete normalizer comparison](protocols/adamw_stability_20261002/attention-pair-result.md)
+now retains both full runs and the byte-exact historical reference. NoTorch
+recomputation, both native CPU audits, actual PNG/PDF reviews and consumed
+exit-code-0 terminal sessions are recorded. Sparsemax's final quality difference
+is −65.943437 percentage points; eligible timing support is zero and both
+ratios are null. Neither improvement rule passes. After committing this reviewed
+result, the conditional fixed-schedule pair can be frozen separately; the
+primary all-six gate and later scientific architecture/complementary work remain.
+
 The [full native paired-cohort preparation](protocols/adamw_stability_20261002/architecture-cohort-preparation.md)
 now executes all twelve held-out control/candidate cases with unchanged selected
 rates, common parameter initialization, alternating order and full-budget native

@@ -1,0 +1,12 @@
+{
+  "recorded_at_utc": "2026-10-03T04:55:05.686171+00:00",
+  "pid": 145323,
+  "trainer_pid": 139507,
+  "status": "complete_normalizer_pair_ready_for_review_and_commit",
+  "torch_imported": false,
+  "worker_sha256": "fbbf7ea8fb3f393673b45a07da8842373ba0efc978bc6b51974261d62a0efb61",
+  "pair": "experiments/synthetic_trainers/baselines/adamw_attention_softmax_sparsemax_mod193_fraction25_lr0003_budget300k_pair_20261002",
+  "complete_pair": true,
+  "eligible_pair_support": 0,
+  "campaign_architecture_claim_allowed": false
+}

@@ -1,0 +1,25 @@
+{
+  "files": {
+    "REPORT.md": "a0dd96a7e747e563ff9b26361164b47c2bcaba93018c224343856bd318983508",
+    "comparison.csv": "ea460cd84ca62096eb0bed6792cc72d9fc4fb9d0867260bd916661ad8f3e8d83",
+    "plan.json": "24907608e884e236c5b18562800cc388742bcc9b59d0763f34064b1b48b786c9",
+    "plots/calibration-comparison.pdf": "7393065b8786ef9d6e69a21c85efb6bced034043619cfa2532127db30addd32c",
+    "plots/calibration-comparison.png": "93b9d3f94545630162761c603e4064c349f6e0d6bd2c5022f1849779c142325c",
+    "runs/adamw-mod193-fraction25-lr0003-budget300k/artifact-hashes.json": "f512283373278bc38aa121dd024874cfcba3bfccd9f006bb7a1b088940c34d57",
+    "runs/adamw-mod193-fraction25-lr0003-budget300k/diagnostic-metrics.csv": "651b63cecae9dd5f475effd492c37caa7b5f899b429bd918c54d862af907d552",
+    "runs/adamw-mod193-fraction25-lr0003-budget300k/diagnostics.jsonl": "2faad8e2c490a5b8a52a1f1ab9300b72e3f2837245298399c875b9eee3f14536",
+    "runs/adamw-mod193-fraction25-lr0003-budget300k/gradient-metrics.csv": "870d2356d76dc69ff1e503b5bd6f61ff8aad94fd23133a9002499508c08aaed0",
+    "runs/adamw-mod193-fraction25-lr0003-budget300k/gradients.jsonl": "08a7616b66c73e97ebcab0408d892f9ebbe29538507b45fb5f6d81e861b8a88c",
+    "runs/adamw-mod193-fraction25-lr0003-budget300k/measurements.json": "f98b4460ac27cdce645dee887a589e18548f7016363a77075783a2cf41dfbb8f",
+    "runs/adamw-mod193-fraction25-lr0003-budget300k/metrics.csv": "9f632fe97690d72782f67afa627f41bceb73a849bf95f8eb51fb4e9efec6a79c",
+    "runs/adamw-mod193-fraction25-lr0003-budget300k/neighbor-metrics.csv": "b858c1ca223023ec88f5063b729cb2a9cc9c3ee8cf1cf8c26c74826cf3a16475",
+    "runs/adamw-mod193-fraction25-lr0003-budget300k/plan.json": "24907608e884e236c5b18562800cc388742bcc9b59d0763f34064b1b48b786c9",
+    "runs/adamw-mod193-fraction25-lr0003-budget300k/plots/collapse-neighbors.pdf": "4c465a2c62f43362d10ecea2240366cd4b8e3db0f06d4beb1682a08db15d4fe6",
+    "runs/adamw-mod193-fraction25-lr0003-budget300k/plots/collapse-neighbors.png": "cf893efdc379a00044e977cabd4e8392df43d762df36938b486c1d44a8eb4a2c",
+    "runs/adamw-mod193-fraction25-lr0003-budget300k/plots/stability-overview.pdf": "2604d619edf87a472c19ccdf76fac6f07880bfe4c898c71170092ddcca9c704b",
+    "runs/adamw-mod193-fraction25-lr0003-budget300k/plots/stability-overview.png": "699c3457a6723f6dade944a0129cb6e643e0db589c0eb515af83bcff398776cf",
+    "runs/adamw-mod193-fraction25-lr0003-budget300k/probes.jsonl": "be337a35d11de96d9a15e960dac8252ff8a0b97d1d5faa2ffeb49775a95f27ac",
+    "runs/adamw-mod193-fraction25-lr0003-budget300k/summary.json": "ba00c1dbb6097b78ff705ca0515e15890e47bdf2e1b6dd37e217c31706aa549c",
+    "summary.json": "6e3d8c3839eaeb833aee5d64f9b003191518f0a028f0f6591dc2606ee68cb882"
+  }
+}

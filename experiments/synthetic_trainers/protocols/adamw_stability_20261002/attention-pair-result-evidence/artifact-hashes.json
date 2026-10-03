@@ -1,0 +1,8 @@
+{
+  "files": {
+    "archive-worker-log.jsonl": "f05b8a9e2dd5fd71ff8d360ccad7f175299df947fbb437aa02f1c2f9a9202dc2",
+    "completed-archive-worker.json": "ea941fd4137d3a41326ecc27b1af5b7e6074dc8886b66330b63ff7ab8059dc8d",
+    "completed-raw-state.json": "6c963d23d3901ee41200a3cea38443ad71526c59689bcc7f508c7cda3814a187",
+    "trainer-final-record.json": "35260cbc350405810983a73c2f641ee84b807edd87040718b260bf0431b17207"
+  }
+}
