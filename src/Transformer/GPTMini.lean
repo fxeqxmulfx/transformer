@@ -4,8 +4,9 @@
 Top-level module re-exporting the formalization of the `gpt-mini`
 transformer architecture defined in `reference/model.py`.
 
-The source is restored byte for byte at `experiments/gpt_mini.py`; every citation
-of `reference/model.py` in `Transformer.GPTMini` refers to its last version,
+The source is restored byte for byte at
+`experiments/archive/gpt_mini/gpt_mini.py`; every citation of
+`reference/model.py` in `Transformer.GPTMini` refers to its last version,
 commit `f11b6e2`:
 
   `git show f11b6e27d3cfe6813a2876bdeec38565fc54258c:reference/model.py`

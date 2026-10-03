@@ -17,7 +17,7 @@ def sinusoid_table(context, width, base):
 
 
 def rope_tables(head_width, context, theta):
-    """`experiments/gpt_mini.py` `rope_tables`: cos and sin of shape (context, head_width / 2).
+    """`experiments/archive/gpt_mini/gpt_mini.py` `rope_tables`: cos and sin of shape (context, head_width / 2).
 
     The frequencies equal those of the convex MQAR `RotaryAttention`, bit for bit.
     """

@@ -3,13 +3,15 @@
 > The code this README documents is no longer in the tree: read it at commit
 > `5d64147` (`git show 5d64147:experiments/synthetic_trainers/cli.py`). The
 > tasks, the training and the analyses its records are read with are ported
-> to [`python/src/lab`](../../python/src/lab); see
-> [`python/README.md`](../../python/README.md). The commands below are how
+> to [`python/src/lab`](../../../python/src/lab); see
+> [`python/README.md`](../../../python/README.md). The commands below are how
 > the records kept here were produced: the plans and findings, `protocols/`,
-> `baselines/` and `paper_reproduction/`.
+> `baselines/` and `paper_reproduction/`. They name the paths of that commit;
+> the records have since moved to `experiments/archive/synthetic_trainers/`
+> ([old paths](../README.md#old-paths)).
 
 The suite contains 17 tasks and 37 default comparison variants sharing the
-original [`GPTMini`](../gpt_mini.py), reproducible data, and one training protocol.
+original [`GPTMini`](../gpt_mini/gpt_mini.py), reproducible data, and one training protocol.
 
 | Trainer | CLI selection | Task |
 | --- | --- | --- |

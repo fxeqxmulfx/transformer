@@ -1,8 +1,8 @@
 # Synthetic trainer and paper reproduction handoff
 
 State updated on 2026-10-03 (UTC). Run commands from the repository root.
-Read [AGENTS.md](../../AGENTS.md), the root
-[EXPERIMENT_PLAN.md](../../EXPERIMENT_PLAN.md), [PLAN.md](PLAN.md), and
+Read [AGENTS.md](../../../AGENTS.md), the root
+[EXPERIMENT_PLAN.md](../../../EXPERIMENT_PLAN.md), [PLAN.md](PLAN.md), and
 [STUDIES.md](STUDIES.md) before continuing.
 
 ## User-requested pause (2026-10-03)
@@ -77,10 +77,10 @@ and [source receipt](protocols/adamw_stability_20261002/complementary-attention-
 remain archived. Subsequent result/freeze/launch changes add read-only evidence,
 portable full-archive checks and documentation. The new saturation/certificate
 modules above preserve all nine frozen Lean specification sources.
-Lean's [projection theorem](../../src/Transformer/GPTMini/Convex/Attention.lean#L96)
+Lean's [projection theorem](../../../src/Transformer/GPTMini/Convex/Attention.lean#L96)
 holds for fixed scores at the original scale; it establishes neither convex
 joint training nor optimizer/generalization guarantees. The
-[one-neuron CE counterexample](../../src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L60)
+[one-neuron CE counterexample](../../../src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L60)
 has its stated FFN scope, not a proved full-GPT training result.
 
 A separate [native schedule checkpoint audit](protocols/adamw_stability_20261002/scheduled-checkpoint-audit-preparation.md)
@@ -232,14 +232,14 @@ Regenerating a PDF may change its metadata. Preserve archived measurements and
 source fingerprints. Fresh archive destinations are required by `paper_report`.
 Main entry points are `paper_reproduction/grokking.py`, `reproduction.py`,
 `paper_reproduction/rff_experiment.py`, `paper_phases.py`, `paper_report.py`, and
-`paper_plots.py`; the model is [gpt_mini.py](../gpt_mini.py).
+`paper_plots.py`; the model is [gpt_mini.py](../gpt_mini/gpt_mini.py).
 
 No Lean source changed in this experimental campaign. The current generated
-[INDEX.md](../../INDEX.md) records 1,766 modules, 7,099 theorems, and 157
+[INDEX.md](../../../INDEX.md) records 1,766 modules, 7,099 theorems, and 157
 `sorry` globally; RASP, RASP-L, and C-RASP rows each record zero `sorry`.
 This index is not a new full-tree axiom audit. Follow the Lean build, paper
 fidelity, external-dependency audit, and index requirements for future proofs.
-[AGENTS.md](../../AGENTS.md) now requires regular commits of verified logical
+[AGENTS.md](../../../AGENTS.md) now requires regular commits of verified logical
 changes and forbids subagents. No new approval is needed for already authorized
 reversible work or regular commits.
 
@@ -595,7 +595,7 @@ softmax control preserving AdamW, corpus, seeds, the total 300,000-update cap,
 QK normalization, learned temperatures, RoPE and XSA. The
 [preparation](protocols/adamw_stability_20261002/sparsemax-preparation.md)
 uses the exact causal-simplex projection already formalized in
-[Lean](../../src/Transformer/GPTMini/Convex/Attention.lean).
+[Lean](../../../src/Transformer/GPTMini/Convex/Attention.lean).
 Six independent CPU checks pass, including exhaustive simplex-face KKT
 solutions, finite-difference derivatives, causal prefixes, parameter/RNG
 preservation and exact restoration of original softmax outputs/gradients.

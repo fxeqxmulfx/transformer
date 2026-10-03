@@ -33,7 +33,7 @@ and scaling measurements remain part of this work. Increasing model size alone
 does not count as a reproduction.
 
 For grokking, use the modular division mod 97 experiment in
-[Convexifying Transformers](../../papers/arXiv-2211.11052v1/arxiv.tex), Section 4,
+[Convexifying Transformers](../../../papers/arXiv-2211.11052v1/arxiv.tex), Section 4,
 as an initial reference: its standard transformer fits train around 1,000 updates
 but generalizes after more than 100,000 updates. Recover missing implementation
 details from the authors' published reference code, preserve attribution and
@@ -44,7 +44,7 @@ architecture/optimizer substitutions as adaptations. Use sufficient budgets to
 observe the reported delay, rather than stopping when train has been fitted.
 
 For double descent, reproduce an interpolation transition and both descending
-branches of held-out risk from [Deep Double Descent](../../papers/arXiv-1912.02292v1/paper.txt).
+branches of held-out risk from [Deep Double Descent](../../../papers/arXiv-1912.02292v1/paper.txt).
 Its random-feature case study supplies a simpler fixed-feature reference with
 a measurable linear interpolation threshold. Its CNN and translation results
 use different data and model families; synthetic GPTMini analogues should not
@@ -166,7 +166,7 @@ answer. Hard-carry tests and AND position transfer complement length extension.
 
 ## Comparison protocol
 
-Establish a baseline using [`gpt_mini.py`](../gpt_mini.py), then compare
+Establish a baseline using [`gpt_mini.py`](../gpt_mini/gpt_mini.py), then compare
 architecture variants on the same generated splits, optimizer protocol,
 tuning budget, and hardware. Record parameter counts, compute, and memory
 when a change affects their cost. Choose validation targets and budgets

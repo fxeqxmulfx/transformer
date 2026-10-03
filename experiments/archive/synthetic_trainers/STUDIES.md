@@ -48,7 +48,7 @@ disabled for the random-sequence control. A positive sampled lag alone does not
 establish an abrupt grokking transition.
 
 This follows the measurable grokking lag discussed in the local
-[convex-transformer paper](../../papers/arXiv-2211.11052v1/arxiv.tex), Sections 1
+[convex-transformer paper](../../../papers/arXiv-2211.11052v1/arxiv.tex), Sections 1
 and 4 (algorithmic datasets), with stronger transfer probes added for this suite.
 
 ## AMSGradW/softmax baseline protocol
@@ -61,8 +61,8 @@ width to 16, 32, 64, or 128 while retaining four heads and FFN multiplier four.
 Parameter counts vary with vocabulary and width and are recorded per run.
 
 The optimizer is the raw AMSGradW recurrence defined in
-[AMSGradW/Basic.lean](../../src/Transformer/AMSGradW/Basic.lean), implemented by
-the existing [`CoordinateOptimizer`](../optimizer_benchmark/coordinate.py):
+[AMSGradW/Basic.lean](../../../src/Transformer/AMSGradW/Basic.lean), implemented by
+the existing [`CoordinateOptimizer`](../gpt_mini/optimizer_benchmark/coordinate.py):
 
 ```text
 m = 0.9*m + 0.1*g
@@ -162,27 +162,27 @@ capacity interpretation. The random control learned a mean net coding gain of
 The local theorem statements constrain which quantities can be used in an
 experiment:
 
-- [EMC](../../src/Transformer/DoubleDescent/Section2_EffectiveComplexity.lean)
+- [EMC](../../../src/Transformer/DoubleDescent/Section2_EffectiveComplexity.lean)
   is defined through expected IID train risk for a particular training
   procedure. It is not parameter count. The paper's heuristic fit tolerance is
   0.1; these experiments use a stricter 0.01 complete-example error. A single
   nested pool and finite budget measure an observed frontier, not population EMC.
-- [Fixed-feature interpolation](../../src/Transformer/DoubleDescent/AppendixD_Interpolation.lean)
+- [Fixed-feature interpolation](../../../src/Transformer/DoubleDescent/AppendixD_Interpolation.lean)
   requires `n ≤ d` when a linear design can fit every real label vector.
   This does not identify GPT parameters or embedding width with `d` for a
-  jointly trained nonlinear classifier. The [formal counterexample](../../src/Transformer/DoubleDescent/Section2_Hypothesis.lean)
+  jointly trained nonlinear classifier. The [formal counterexample](../../../src/Transformer/DoubleDescent/Section2_Hypothesis.lean)
   also rules out a general test-risk ordering from EMC alone.
-- [RASP compilation counts](../../src/Transformer/RASP/Compilation.lean) bound
+- [RASP compilation counts](../../../src/Transformer/RASP/Compilation.lean) bound
   program aggregation heads and layers; the paper gives no quantitative
-  embedding-width bound. [C-RASP's depth hierarchy](../../src/Transformer/CRASP/Transformers.lean)
+  embedding-width bound. [C-RASP's depth hierarchy](../../../src/Transformer/CRASP/Transformers.lean)
   uses future-masked rounded fixed-precision transformers with its specified
   positional restrictions. GPTMini's float32/RoPE model differs, so this is
   motivation for a depth ablation rather than a hard lower bound for GPTMini.
-- The RASP-L [experiment table](../../papers/arXiv-2310.16028v1/appendix.tex),
+- The RASP-L [experiment table](../../../papers/arXiv-2310.16028v1/appendix.tex),
   Table 1, uses width 512, six layers, and eight heads for binary copy, with
   100,000 AdamW updates and fresh online examples. These are empirical
   reference sizes, not necessary/sufficient learning bounds. The corrected
-  [convexification width results](../../src/Transformer/Convexifying/Section3_Corrected.lean)
+  [convexification width results](../../../src/Transformer/Convexifying/Section3_Corrected.lean)
   concern heads in a simplex-attention model (`h ≥ n` / `h ≥ n*c` with the
   stated loss assumptions), not softmax GPTMini embedding width.
 
@@ -250,7 +250,7 @@ experiments.
 ## Reproduced random-feature double descent (2026-10-02)
 
 The local source is *Deep Double Descent*, arXiv:1912.02292v1,
-[Appendix C](../../papers/arXiv-1912.02292v1/rffs.tex), Figures 14–15. The
+[Appendix C](../../../papers/arXiv-1912.02292v1/rffs.tex), Figures 14–15. The
 [new trainer](paper_reproduction/RANDOM_FEATURES.md) uses the specified frozen
 Gaussian first layer with variance 1/d, exp(-i*x) activation, Fashion-MNIST,
 and zero-initialized complex MSE head. QR computes the minimum-norm
@@ -551,7 +551,7 @@ learning. Protocol differences and negative results remain part of this record.
 Double descent is a descent, ascent, and second descent in held-out error as
 model size, sample count, or training time changes. It can accompany delayed
 algorithmic generalization, but does not establish that mechanism. The local
-[double-descent paper](../../papers/arXiv-1912.02292v1/model_dd.tex), Section 5,
+[double-descent paper](../../../papers/arXiv-1912.02292v1/model_dd.tex), Section 5,
 also discusses linear-model examples and noise absorption among interpolating
 solutions. Section 6 describes an epoch-wise second descent after overfitting.
 The mechanisms behind deep-network double descent remain open in that paper.
@@ -580,7 +580,7 @@ first descent, ascent, and second descent, with `--curve-tolerance` absolute
 margin (default 0.001). It uses both task error and mean per-example loss. A
 stronger flag records whether the second descent improves on the first minimum.
 The detector matches the finite predicate in
-[Section5_Curves.lean](../../src/Transformer/DoubleDescent/Section5_Curves.lean).
+[Section5_Curves.lean](../../../src/Transformer/DoubleDescent/Section5_Curves.lean).
 A witness describes sampled points, not statistical significance or monotonicity
 between observations. `peak_transition_alignment` records whether the confirmed
 transfer onset follows that witness's peak; temporal ordering is not a causal test.
@@ -588,7 +588,7 @@ transfer onset follows that witness's peak; temporal ordering is not a causal te
 The interpolation frontier comes from observed train risk, not parameter count.
 Sweep reports list fitted and unfitted pool sizes, the largest observed fitted
 pool, and any holes. They do not call this finite grid the population EMC from
-[Section 4](../../papers/arXiv-1912.02292v1/general_dd.tex).
+[Section 4](../../../papers/arXiv-1912.02292v1/general_dd.tex).
 
 ## Fixed label noise on algorithmic tasks
 
@@ -613,7 +613,7 @@ High observed train accuracy together with high novel transfer accuracy can
 therefore mean noise memorization and algorithmic generalization coexist.
 
 This is a training-noise adaptation of the uniform incorrect-label mechanism in
-[Section 4](../../papers/arXiv-1912.02292v1/setup.tex), not a reproduction of the
+[Section 4](../../../papers/arXiv-1912.02292v1/setup.tex), not a reproduction of the
 paper's image/translation datasets or its train/test noise settings. The structured
 generators include matched pairs, so their rows are not generally IID samples of
 the learning-procedure definition.
@@ -641,7 +641,7 @@ deduplication or added label noise would change that interpretation.
 The measured model code length is whole-answer NLL in bits, including the cost
 of predicting EOS. Payload and EOS costs are also recorded separately. Reports
 include signed `net_gain_bits`, its bits-per-parameter ratio, and two reference
-comparisons from [Sections 2.3 and 3.2](../../papers/arXiv-2505.24832/main.tex):
+comparisons from [Sections 2.3 and 3.2](../../../papers/arXiv-2505.24832/main.tex):
 
 - `clipped_sequence_gain_bits`: sum of positive **whole-sequence** coding gains.
   The underlying pointwise maximum likelihood is not a normalized distribution.

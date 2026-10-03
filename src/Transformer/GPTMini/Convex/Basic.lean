@@ -1,8 +1,9 @@
 /-
 # A solved convex replacement for the attention weight row
 
-New modification of `experiments/gpt_mini.py`, `CausalMHA.forward`, restored
-from commit f11b6e27d3cfe6813a2876bdeec38565fc54258c. The simplex idea is
+New modification of `experiments/archive/gpt_mini/gpt_mini.py`,
+`CausalMHA.forward`, restored from commit
+f11b6e27d3cfe6813a2876bdeec38565fc54258c. The simplex idea is
 from arXiv:2211.11052v1, §3.1; this is not that paper's shared matrix.
 Scores are inputs to inference. Their dependence on trainable Q/K matrices
 is retained by the next module and is not assumed jointly convex.

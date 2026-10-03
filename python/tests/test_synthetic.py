@@ -2,9 +2,9 @@
 
 Golden records: `fixtures/legacy_splits.json`. Its `runs` are every distinct
 split configuration of the two archived synthetic suites
-(`experiments/synthetic_trainers/baselines/amsgradw_softmax_20261002` and
-`amsgradw_softmax_scaling_20261002`), with the fingerprints and the number of
-corrupted labels those runs recorded; its `grid` was computed by the
+(`experiments/archive/synthetic_trainers/baselines/amsgradw_softmax_20261002`
+and `amsgradw_softmax_scaling_20261002`), with the fingerprints and the number
+of corrupted labels those runs recorded; its `grid` was computed by the
 historical generator, at the commit the fixture names, on controls the runs
 leave unexercised. A fingerprint hashes every row of a split with the
 historical task specification and seed, so an equal fingerprint is an equal

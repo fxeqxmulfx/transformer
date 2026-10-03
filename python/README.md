@@ -115,15 +115,15 @@ read a cited source with `git show <commit>:<path>`:
 | Cited as | Path | Last in |
 | --- | --- | --- |
 | `gpt_mini.*` | `legacy/gpt_mini/src/` | `2aec5b9` |
-| `optimizer_benchmark.*`, `full_compile_benchmark.*`, `magma_benchmark.*`, `amsgrad_extensions_benchmark.*` | `legacy/gpt_mini/src/infrastructure/benchmark/` (as measured: its `archive/experiments/`) | `2aec5b9` |
+| `optimizer_benchmark.*`, `full_compile_benchmark.*`, `magma_benchmark.*`, `amsgrad_extensions_benchmark.*` | `legacy/gpt_mini/src/infrastructure/benchmark/` (as measured: its subfolder `archive/experiments/`) | `2aec5b9` |
 | the synthetic trainers' modules, `paper_reproduction.*` | `experiments/synthetic_trainers/` | `5d64147` |
 | the convex MQAR comparison's modules | `experiments/convex_mqar/src/convex_mqar/` | `9416d03` |
 
-Their records stay under `experiments/`: the plans and results of the
-TinyShakespeare benchmarks (`*_benchmark/`), the plans, protocols and
-baselines of the synthetic trainers, and the convex MQAR reports.
-`experiments/gpt_mini.py` stays as well; the Lean formalization and the lab
-cite it as the reference GPTMini.
+Their records are kept in [`experiments/archive/`](../experiments/archive),
+a folder per codebase: the reference `gpt_mini.py`, which the Lean
+formalization and the lab cite as GPTMini, with the plans and results of its
+Tiny Shakespeare benchmarks; the plans, protocols and baselines of the
+synthetic trainers; and the convex MQAR reports.
 
 Not ported: the complementary-attention study of the synthetic trainers,
 and the reports, plots, layouts and integrity checks of their protocols;

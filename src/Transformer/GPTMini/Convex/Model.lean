@@ -2,9 +2,9 @@
 # The gpt-mini stack with causal sparsemax heads
 
 New modification of `Block.forward` and `GPTMini.forward` in
-`experiments/gpt_mini.py` (restored from commit f11b6e2). It uses the
-original trainable parameter records, RMSNorm, head reshapes, ReLU² FFN,
-residuals, and tied embeddings. Each attention head uses the solved
+`experiments/archive/gpt_mini/gpt_mini.py` (restored from commit f11b6e2).
+It uses the original trainable parameter records, RMSNorm, head reshapes,
+ReLU² FFN, residuals, and tied embeddings. Each attention head uses the solved
 quadratic simplex program from `Convex.Attention`. RMSNorm and QK/XSA
 have separate epsilon arguments, matching the Python defaults `1e-5`
 and `1e-6`, respectively. Inference convexity
@@ -22,7 +22,8 @@ noncomputable section
 namespace Transformer.GPTMini.Convex
 
 /-- The original attention sub-layer with replacement heads. Source:
-`Block.forward` and `CausalMHA.forward` in `experiments/gpt_mini.py`. -/
+`Block.forward` and `CausalMHA.forward` in
+`experiments/archive/gpt_mini/gpt_mini.py`. -/
 def attnSubLayer (cfg : Config) (params : AttnParams cfg) (rmsEps qkEps : ℝ)
     {T : ℕ} (positions : Fin T → ℝ) (x : Fin T → EucSpace cfg.d_model) :
     Fin T → EucSpace cfg.d_model :=
@@ -34,7 +35,8 @@ def attnSubLayer (cfg : Config) (params : AttnParams cfg) (rmsEps qkEps : ℝ)
     attentionHead cfg (params.log_alpha h) qkEps (q h) (k h) (v h) positions i))
 
 /-- Pre-LN attention and FFN with sequential residual additions. Source:
-`Block.forward` in `experiments/gpt_mini.py`; only the head weights change. -/
+`Block.forward` in `experiments/archive/gpt_mini/gpt_mini.py`; only the head
+weights change. -/
 def blockForward (cfg : Config) (params : BlockParams cfg) (rmsEps qkEps : ℝ)
     {T : ℕ} (positions : Fin T → ℝ) (x : Fin T → EucSpace cfg.d_model) :
     Fin T → EucSpace cfg.d_model :=
@@ -54,7 +56,8 @@ def hidden (cfg : Config) (params : ModelParams cfg) (rmsEps qkEps : ℝ)
       else hidden cfg params rmsEps qkEps positions tokens L
 
 /-- Replacement model logits, with the original final RMSNorm and tied
-unembedding. Source: `GPTMini.forward` in `experiments/gpt_mini.py`. -/
+unembedding. Source: `GPTMini.forward` in
+`experiments/archive/gpt_mini/gpt_mini.py`. -/
 def forward (cfg : Config) (params : ModelParams cfg) (rmsEps qkEps : ℝ)
     {T : ℕ} (positions : Fin T → ℝ) (tokens : Fin T → Fin cfg.vocab_size)
     (i : Fin T) (v : Fin cfg.vocab_size) : ℝ :=
@@ -64,7 +67,8 @@ def forward (cfg : Config) (params : ModelParams cfg) (rmsEps qkEps : ℝ)
 
 /-- The same parameter-dependent attention bound as the source block.
 The convex row remains a probability vector for arbitrary learned Q/K.
-Source: `Block.forward`, Pre-LN attention, in `experiments/gpt_mini.py`. -/
+Source: `Block.forward`, Pre-LN attention, in
+`experiments/archive/gpt_mini/gpt_mini.py`. -/
 theorem attnSubLayer_bounded (cfg : Config) (params : AttnParams cfg)
     (rmsEps qkEps : ℝ) (hrms : 0 < rmsEps) (hqk : 0 ≤ qkEps)
     {T : ℕ} (positions : Fin T → ℝ)
@@ -109,7 +113,8 @@ theorem attnSubLayer_bounded (cfg : Config) (params : AttnParams cfg)
     _ = _ := by rw [hB]; ring
 
 /-- A replacement block has the source growth estimate, including the
-trainable ReLU² FFN. Source: `Block.forward` in `experiments/gpt_mini.py`. -/
+trainable ReLU² FFN. Source: `Block.forward` in
+`experiments/archive/gpt_mini/gpt_mini.py`. -/
 theorem blockForward_growth (cfg : Config) (params : BlockParams cfg)
     (rmsEps qkEps : ℝ) (hrms : 0 < rmsEps) (hqk : 0 ≤ qkEps)
     {T : ℕ} (positions : Fin T → ℝ)
@@ -128,7 +133,8 @@ theorem blockForward_growth (cfg : Config) (params : BlockParams cfg)
   linarith
 
 /-- The bound premises include the source's RMSNorm epsilon. Source:
-`RMSNorm.__init__`, default `eps=1e-5` in `experiments/gpt_mini.py`. -/
+`RMSNorm.__init__`, default `eps=1e-5` in
+`experiments/archive/gpt_mini/gpt_mini.py`. -/
 example : (0 : ℝ) < 1 / 100000 ∧ (0 : ℝ) ≤ 1 / 1000000 := by norm_num
 
 end Transformer.GPTMini.Convex

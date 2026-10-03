@@ -7,7 +7,7 @@ from lab.dsl import (FFN, GELU, XSA, AdamW, Attention, Block, Budget, Eager, Eva
 
 
 def gptmini(width=128, depth=2, heads=4):
-    """`experiments/gpt_mini.py` as `paper_reproduction.grokking` built it."""
+    """`experiments/archive/gpt_mini/gpt_mini.py` as `paper_reproduction.grokking` built it."""
     attention = Attention(heads=heads, projections=FusedQKV(), scores=QKNorm(), weights=Softmax(),
                           exclusive=XSA())
     block = Block(attention=attention, ffn=FFN(activation=ReLU2()), norm=RMSNorm(), residual=PreNorm())

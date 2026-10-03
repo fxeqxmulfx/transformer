@@ -28,7 +28,7 @@ its batch order from its model seed, as `train_run` drew it.
   source cites Section 3 for that condition.
 
 The archived runs (RTX 3050, 2026-10-01, issued eagerly;
-`experiments/synthetic_trainers/baselines/amsgradw_softmax_scaling_20261002`)
+`experiments/archive/synthetic_trainers/baselines/amsgradw_softmax_scaling_20261002`)
 found no double descent in width: the mean test loss and error of the last
 models over width descend twice nowhere, and the error of two seeds alone
 does, by at most 0.07 around chance. The calibration fit its noisy labels on

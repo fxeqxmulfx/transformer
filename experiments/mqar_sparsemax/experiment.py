@@ -22,7 +22,7 @@ evaluation chunk, holds 64 sequences, 16 from length 256 and 8 from 512
 
 The archived runs (RTX 3050, bf16 autocast, fused AdamW, the loss compiled
 though some softmax epochs ran eagerly;
-`experiments/convex_mqar/reports/validation_milestones.json`) covered
+`experiments/archive/convex_mqar/reports/validation_milestones.json`) covered
 lengths 64, 128 and 256; the archive holds no run at length 512. Softmax
 reached 99% validation accuracy in 2 of its 12 runs: at length 128 under
 rate 1e-2 in epoch 18 (and fell to 0.0065 by the last epoch), and at length

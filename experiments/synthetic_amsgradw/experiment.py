@@ -24,7 +24,7 @@ its batch order from its model seed, as `train_run` drew it.
   test, 1000 updates, tested at 16 and 32, from model seeds 0, 1 and 2.
 
 The archived runs (RTX 3050, 2026-10-01, issued eagerly;
-`experiments/synthetic_trainers/baselines/amsgradw_softmax_20261002`) fit
+`experiments/archive/synthetic_trainers/baselines/amsgradw_softmax_20261002`) fit
 their training splits, but for two parity runs of the suite, one run at
 width 128 under label noise, and the random controls, which fit one of their
 8 answers. Few generalized in distribution. On the suite the last models

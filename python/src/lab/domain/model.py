@@ -4,8 +4,9 @@ Structural choices have no defaults, so an experiment file states its whole
 architecture; only numerical constants (epsilons, RoPE base) default to their
 standard values. Three historical models are compositions of these blocks:
 
-- GPTMini (`experiments/gpt_mini.py`): PreNorm, parameter-free RMSNorm,
-  FusedQKV, QKNorm, Softmax, XSA, ReLU2, RoPE, Tied, final RMSNorm, Normal(0.02);
+- GPTMini (`experiments/archive/gpt_mini/gpt_mini.py`): PreNorm,
+  parameter-free RMSNorm, FusedQKV, QKNorm, Softmax, XSA, ReLU2, RoPE, Tied,
+  final RMSNorm, Normal(0.02);
 - the openai/grok reference: PostNorm, LayerNorm, PerHeadQKV, ScaledDot,
   Softmax, ReLU, Sinusoidal, Untied, no final norm, TorchDefault;
 - the RoPE transformer of the convex MQAR comparison

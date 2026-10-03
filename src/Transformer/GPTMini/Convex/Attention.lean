@@ -1,12 +1,13 @@
 /-
 # Causal sparsemax with the gpt-mini score and XSA projection
 
-New replacement of `CausalMHA.forward` in `experiments/gpt_mini.py`,
-restored from commit f11b6e27d3cfe6813a2876bdeec38565fc54258c. RoPE,
-QK normalization, the learned temperature, and XSA keep their existing
-definitions. Only the attention weight row uses a quadratic simplex
-program. Motivation: arXiv:2211.11052v1, §3.1, not its shared positional
-matrix or an equivalence to softmax attention.
+New replacement of `CausalMHA.forward` in
+`experiments/archive/gpt_mini/gpt_mini.py`, restored from commit
+f11b6e27d3cfe6813a2876bdeec38565fc54258c. RoPE, QK normalization, the
+learned temperature, and XSA keep their existing definitions. Only the
+attention weight row uses a quadratic simplex program. Motivation:
+arXiv:2211.11052v1, §3.1, not its shared positional matrix or an
+equivalence to softmax attention.
 -/
 
 import Transformer.GPTMini.Convex.Basic

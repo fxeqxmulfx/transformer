@@ -18,7 +18,7 @@ numeric classes in each legal role. This finite coverage says nothing about
 learnability, memorization phases, persistent convergence, or an internal
 algorithm. It does not certify coverage on independent confirmation splits.
 
-The local [*Convexifying Transformers* manuscript](../../../../papers/arXiv-2211.11052v1/arxiv.tex),
+The local [*Convexifying Transformers* manuscript](../../../../../papers/arXiv-2211.11052v1/arxiv.tex),
 Section 4 (`arxiv.tex`, line 487), specifies the mod-97 task and reports training at about 1,000
 iterations followed by generalization beyond 100,000; it does not give the
 train fraction or regularization used there. Any fraction change remains an

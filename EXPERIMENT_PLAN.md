@@ -3,7 +3,7 @@
 Updated on 2026-10-03 UTC. **Paused at the user's explicit request.**
 Resume the experimental cycle only after a new user instruction to continue.
 This is the project-level plan; detailed historical evidence remains in
-[the synthetic trainer handoff](experiments/synthetic_trainers/HANDOFF.md).
+[the synthetic trainer handoff](experiments/archive/synthetic_trainers/HANDOFF.md).
 
 ## Objective and established results
 
@@ -25,7 +25,7 @@ route has positive loss and zero score derivative. Lean also certifies the
 accuracy of all 37,056 supplied final CPU prediction records. These results
 establish a possible obstruction and exact table counts; they do not establish
 the cause of this model's generalization gap or verify its PyTorch trajectory.
-See [the proof and certificate report](experiments/synthetic_trainers/protocols/adamw_stability_20261002/sparsemax-mechanism-and-final-certificate.md).
+See [the proof and certificate report](experiments/archive/synthetic_trainers/protocols/adamw_stability_20261002/sparsemax-mechanism-and-final-certificate.md).
 
 ## Abandoned schedule pair
 
@@ -43,7 +43,8 @@ strict final-window condition. Only 153 of 201 final-window checks exist.
 The durable checkpoint is update 285,000, SHA-256
 `14706a5662e124119fef1caf882c6adae1ba8b8a8dfd7ed5cf14e6080a371380`,
 rechecked after termination. The cosine case never started. Raw state is under
-`experiments/runs/adamw_stability_20261002/schedule_mod193_fraction25_lr0003_budget300k/`.
+`experiments/archive/synthetic_trainers/runs/adamw_stability_20261002/schedule_mod193_fraction25_lr0003_budget300k/`
+(`experiments/runs/` until 2026-10-03).
 The incomplete pair supports no conclusion about either schedule. Its frozen
 plan pins sources at their `experiments/` paths; replaying it requires a
 checkout of commit `698d904`.
@@ -101,8 +102,11 @@ gradients on fixed train and held-out batches. Instrumented logits, losses
 and every parameter gradient must match ordinary execution exactly.
 
 A preliminary CPU inspection already finished; its observations are under
-`experiments/runs/adamw_stability_20261002/bootstrap/sparsemax-generalization-inspection-20261003/`.
-The inspector remains an uncommitted work item. Review the source, independently
+`experiments/archive/synthetic_trainers/runs/adamw_stability_20261002/bootstrap/sparsemax-generalization-inspection-20261003/`.
+The inspector remains an uncommitted work item, now at
+`experiments/archive/synthetic_trainers/protocols/adamw_stability_20261002/inspect_sparsemax_generalization.py`;
+it imports the removed synthetic trainers and reads `experiments/runs/`, so it
+no longer runs as it is. Review the source, independently
 check the observations, archive them and commit before treating them as final.
 No intervention training has started.
 

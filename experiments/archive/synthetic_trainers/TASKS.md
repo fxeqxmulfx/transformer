@@ -47,7 +47,7 @@ hypotheses to test include attention selectivity, the interleaving of
 attention and feed-forward operations, and extra or reused computation steps.
 Count all reused steps in the compute and timing comparison.
 
-Sources: [RASP compilation](../../src/Transformer/RASP/Compilation.lean),
+Sources: [RASP compilation](../../../src/Transformer/RASP/Compilation.lean),
 arXiv:2106.06981v2, Sections 3.1 and 4; the existing
 [MQAR data contract](../convex_mqar/src/convex_mqar/data.py).
 
@@ -89,12 +89,12 @@ Its rounding rules and rational phase assumptions differ from mini GPT's
 implementation, so
 the practical depth requirement and learning speed remain experimental.
 
-Sources: [Dyck example](../../src/Transformer/CRASP/Basic.lean),
+Sources: [Dyck example](../../../src/Transformer/CRASP/Basic.lean),
 arXiv:2506.16055v3, Example 2.3 and Appendix A.2;
-[`E_k` definition](../../src/Transformer/CRASP/PositionalDepth.lean) and
-[encoding hierarchy](../../src/Transformer/CRASP/EncodingHierarchy.lean),
+[`E_k` definition](../../../src/Transformer/CRASP/PositionalDepth.lean) and
+[encoding hierarchy](../../../src/Transformer/CRASP/EncodingHierarchy.lean),
 Appendix F and Section 4.5. The ordinary hierarchy is in
-[Transformers.lean](../../src/Transformer/CRASP/Transformers.lean).
+[Transformers.lean](../../../src/Transformer/CRASP/Transformers.lean).
 
 ## Evaluation and first experiments
 
@@ -115,7 +115,7 @@ difficulty controls: training should expose failures of simple frequency,
 endpoint, fixed-position, and fixed-distance shortcuts. This is an empirical
 design principle from a conjecture, not a proved learning guarantee.
 Source: arXiv:2310.16028v1, Section 3, recorded in
-[Conjecture.lean](../../src/Transformer/RASPL/Conjecture.lean).
+[Conjecture.lean](../../../src/Transformer/RASPL/Conjecture.lean).
 
 First calibrate the baseline on these modes, using validation data to choose
 informative difficulty groups and quality targets. Then test architecture
@@ -133,7 +133,7 @@ program length alone is an unreliable difficulty measure. Scratchpads change
 the available computation and therefore need a separate comparison budget.
 
 Source: arXiv:2106.06981v2, Section 5, in the local
-[experiment section](../../papers/arXiv-2106.06981v2/05_experiments.tex).
+[experiment section](../../../papers/arXiv-2106.06981v2/05_experiments.tex).
 
 ## Complete RASP-family coverage
 
@@ -149,11 +149,11 @@ Source: arXiv:2106.06981v2, Section 5, in the local
 | Boolean-AND | Transfer of the decisive zero to unseen positions at unchanged length; random-position control |
 | Sampled C-RASP formulas | Fixed programs with varied inclusive count nesting, comparisons, integer arithmetic, and Boolean composition |
 
-Sources: [RASP Section 5](../../papers/arXiv-2106.06981v2/05_experiments.tex),
-[RASP-L experimental task definitions](../../papers/arXiv-2310.16028v1/appendix.tex),
-[RASP-L causal interpretation](../../papers/arXiv-2310.16028v1/rasp.tex),
-[addition and scratchpads, Section 5](../../papers/arXiv-2310.16028v1/scratchpads.tex),
-and [C-RASP syntax, Section 2.3](../../papers/arXiv-2506.16055v3/neurips2025.tex).
+Sources: [RASP Section 5](../../../papers/arXiv-2106.06981v2/05_experiments.tex),
+[RASP-L experimental task definitions](../../../papers/arXiv-2310.16028v1/appendix.tex),
+[RASP-L causal interpretation](../../../papers/arXiv-2310.16028v1/rasp.tex),
+[addition and scratchpads, Section 5](../../../papers/arXiv-2310.16028v1/scratchpads.tex),
+and [C-RASP syntax, Section 2.3](../../../papers/arXiv-2506.16055v3/neurips2025.tex).
 
 These are mechanism benchmarks derived from the papers rather than replicas
 of every published experimental setting. Global RASP outputs follow the full

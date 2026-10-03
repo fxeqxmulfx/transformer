@@ -1,8 +1,9 @@
 /-
 # A training obstruction that a convex attention row does not remove
 
-The remaining `ReLU2_FFN.forward` in `experiments/gpt_mini.py` has two
-trainable linear maps. An exact one-neuron instance below violates Jensen's
+The remaining `ReLU2_FFN.forward` in
+`experiments/archive/gpt_mini/gpt_mini.py` has two trainable linear maps. An
+exact one-neuron instance below violates Jensen's
 inequality for binary cross-entropy, even with fixed input and positive
 weights. This is a counterexample in the original weight coordinates,
 not an impossibility result for a different parameterization or penalty.
@@ -20,7 +21,7 @@ namespace Transformer.GPTMini.Convex
 
 /-- One neuron with trainable input and output weights and input `1`,
 defined using the original `relu2FFN`, not a surrogate network.
-Source: `ReLU2_FFN.forward` in `experiments/gpt_mini.py`. -/
+Source: `ReLU2_FFN.forward` in `experiments/archive/gpt_mini/gpt_mini.py`. -/
 def oneNeuron (weights : ℝ × ℝ) : ℝ :=
   (relu2FFN
     (weights.1 • ContinuousLinearMap.id ℝ (EucSpace 1))
@@ -28,7 +29,7 @@ def oneNeuron (weights : ℝ × ℝ) : ℝ :=
     (EuclideanSpace.single (0 : Fin 1) 1)) 0
 
 /-- The actual scalar FFN output is `w_out * max(0,w_in)²`.
-Source: `ReLU2_FFN.forward` in `experiments/gpt_mini.py`. -/
+Source: `ReLU2_FFN.forward` in `experiments/archive/gpt_mini/gpt_mini.py`. -/
 theorem oneNeuron_formula (weights : ℝ × ℝ) :
     oneNeuron weights = weights.2 * relu2 weights.1 := by
   simp [oneNeuron, relu2FFN, relu2Vec_apply, PiLp.smul_apply, smul_eq_mul]

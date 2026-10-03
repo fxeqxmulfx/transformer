@@ -8,7 +8,7 @@ The local manuscript is arXiv:2211.11052v1, §§3.1 and 4. Sparsemax with
 learned Q/K scores and prime-193 division are explicitly repository
 extensions, not the paper's shared positional simplex training model.
 
-The [saturation proof](../../../../src/Transformer/GPTMini/Sparsemax/Basic.lean)
+The [saturation proof](../../../../../src/Transformer/GPTMini/Sparsemax/Basic.lean)
 uses the existing convex routing objective at its original score scale:
 `sum(a²)/4 - sum(a*score)/2`. If an allowed winner exceeds every other
 allowed score by at least one, the exact minimizer is its basis vector.
@@ -19,7 +19,7 @@ Any outer loss through that row has zero score derivative when its other
 inputs are fixed; no loss smoothness or assumed Jacobian is needed.
 The equality boundary is excluded from the derivative theorem.
 
-The [outer-loss counterexample](../../../../src/Transformer/GPTMini/Sparsemax/Failure.lean)
+The [outer-loss counterexample](../../../../../src/Transformer/GPTMini/Sparsemax/Failure.lean)
 uses scores `(2, 0)`, a desired row `(0, 1)`, and squared error. The actual
 sparsemax row is `(1, 0)`, the loss is 2, and its full score derivative is
 zero, while scores `(0, 2)` attain loss zero. Thus a convex inner inference
@@ -58,11 +58,11 @@ reconstructs both exact corpus fingerprints, checks disjoint coverage,
 matches every packed Lean record against its CSV row, and checks the inverse
 oracle against the multiplication correctness predicate.
 
-The [kernel certificates](../../../../src/Transformer/GPTMini/Sparsemax/Certificate/Counts.lean)
+The [kernel certificates](../../../../../src/Transformer/GPTMini/Sparsemax/Certificate/Counts.lean)
 use plain `decide` on every record, including operand bounds, EOS and
 `y * predicted mod 193 = x`. Their exact counts depend on **no axioms**:
 train 9,264/9,264 and held-out 9,465/27,792, with EOS correct everywhere.
-The [rational accuracy results](../../../../src/Transformer/GPTMini/Sparsemax/Certificate/Results.lean)
+The [rational accuracy results](../../../../../src/Transformer/GPTMini/Sparsemax/Certificate/Results.lean)
 prove train accuracy 1, held-out accuracy 9465/27792, the strict percentage
 rounding interval `(34.055%, 34.065%)`, and failure of the 99% final target.
 CPU and the archived GPU result have equal aggregate correct counts; no

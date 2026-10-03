@@ -8790,7 +8790,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer.GPTMini`
 
-**[Transformer.GPTMini](src/Transformer/GPTMini.lean)** — 85 lines, aggregator
+**[Transformer.GPTMini](src/Transformer/GPTMini.lean)** — 86 lines, aggregator
 
 **[Transformer.GPTMini.AttentionBounds](src/Transformer/GPTMini/AttentionBounds.lean)** — 211 lines
 
@@ -8882,7 +8882,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`cache_eq_group_size_mul`](src/Transformer/GPTMini/Config.lean#L154) | theorem | proved |
 | [`ofDivisor`](src/Transformer/GPTMini/Config.lean#L159) | def |  |
 
-**[Transformer.GPTMini.Convex](src/Transformer/GPTMini/Convex.lean)** — 14 lines, aggregator
+**[Transformer.GPTMini.Convex](src/Transformer/GPTMini/Convex.lean)** — 15 lines, aggregator
 
 **[Transformer.GPTMini.HeadLipschitz](src/Transformer/GPTMini/HeadLipschitz.lean)** — 186 lines
 
@@ -9133,61 +9133,61 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer.GPTMini.Convex`
 
-**[Transformer.GPTMini.Convex.Attention](src/Transformer/GPTMini/Convex/Attention.lean)** — 150 lines
+**[Transformer.GPTMini.Convex.Attention](src/Transformer/GPTMini/Convex/Attention.lean)** — 151 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`headScores`](src/Transformer/GPTMini/Convex/Attention.lean#L27) | def |  |
-| [`attentionWeights`](src/Transformer/GPTMini/Convex/Attention.lean#L36) | def |  |
-| [`attentionOutput`](src/Transformer/GPTMini/Convex/Attention.lean#L41) | def |  |
-| [`attentionHead`](src/Transformer/GPTMini/Convex/Attention.lean#L47) | def |  |
-| [`attentionWeights_mem`](src/Transformer/GPTMini/Convex/Attention.lean#L53) | theorem | proved |
-| [`attentionWeights_nonneg`](src/Transformer/GPTMini/Convex/Attention.lean#L60) | theorem | proved |
-| [`attentionWeights_row_sum`](src/Transformer/GPTMini/Convex/Attention.lean#L67) | theorem | proved |
-| [`attentionWeights_zero_above`](src/Transformer/GPTMini/Convex/Attention.lean#L74) | theorem | proved |
-| [`attentionObjective_convex`](src/Transformer/GPTMini/Convex/Attention.lean#L88) | theorem | proved |
-| [`attentionWeights_projection_min`](src/Transformer/GPTMini/Convex/Attention.lean#L96) | theorem | proved |
-| [`attentionOutput_norm_le`](src/Transformer/GPTMini/Convex/Attention.lean#L116) | theorem | proved |
-| [`attentionHead_norm_le`](src/Transformer/GPTMini/Convex/Attention.lean#L134) | theorem | proved |
+| [`headScores`](src/Transformer/GPTMini/Convex/Attention.lean#L28) | def |  |
+| [`attentionWeights`](src/Transformer/GPTMini/Convex/Attention.lean#L37) | def |  |
+| [`attentionOutput`](src/Transformer/GPTMini/Convex/Attention.lean#L42) | def |  |
+| [`attentionHead`](src/Transformer/GPTMini/Convex/Attention.lean#L48) | def |  |
+| [`attentionWeights_mem`](src/Transformer/GPTMini/Convex/Attention.lean#L54) | theorem | proved |
+| [`attentionWeights_nonneg`](src/Transformer/GPTMini/Convex/Attention.lean#L61) | theorem | proved |
+| [`attentionWeights_row_sum`](src/Transformer/GPTMini/Convex/Attention.lean#L68) | theorem | proved |
+| [`attentionWeights_zero_above`](src/Transformer/GPTMini/Convex/Attention.lean#L75) | theorem | proved |
+| [`attentionObjective_convex`](src/Transformer/GPTMini/Convex/Attention.lean#L89) | theorem | proved |
+| [`attentionWeights_projection_min`](src/Transformer/GPTMini/Convex/Attention.lean#L97) | theorem | proved |
+| [`attentionOutput_norm_le`](src/Transformer/GPTMini/Convex/Attention.lean#L117) | theorem | proved |
+| [`attentionHead_norm_le`](src/Transformer/GPTMini/Convex/Attention.lean#L135) | theorem | proved |
 
-**[Transformer.GPTMini.Convex.Basic](src/Transformer/GPTMini/Convex/Basic.lean)** — 183 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`simplexOn_closed`](src/Transformer/GPTMini/Convex/Basic.lean#L25) | theorem | proved |
-| [`simplexOn_compact`](src/Transformer/GPTMini/Convex/Basic.lean#L39) | theorem | proved |
-| [`routingObjective_continuous`](src/Transformer/GPTMini/Convex/Basic.lean#L51) | theorem | proved |
-| [`routing_minimum_exists`](src/Transformer/GPTMini/Convex/Basic.lean#L59) | theorem | proved |
-| [`routing_midpoint_identity`](src/Transformer/GPTMini/Convex/Basic.lean#L75) | theorem | proved |
-| [`routing_minimizers_eq`](src/Transformer/GPTMini/Convex/Basic.lean#L98) | theorem | proved |
-| [`routing_minimum_unique`](src/Transformer/GPTMini/Convex/Basic.lean#L136) | theorem | proved |
-| [`sparseWeights`](src/Transformer/GPTMini/Convex/Basic.lean#L147) | def |  |
-| [`sparseWeights_spec`](src/Transformer/GPTMini/Convex/Basic.lean#L154) | theorem | proved |
-| [`routing_projection_identity`](src/Transformer/GPTMini/Convex/Basic.lean#L166) | theorem | proved |
-
-**[Transformer.GPTMini.Convex.Model](src/Transformer/GPTMini/Convex/Model.lean)** — 134 lines
+**[Transformer.GPTMini.Convex.Basic](src/Transformer/GPTMini/Convex/Basic.lean)** — 184 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`attnSubLayer`](src/Transformer/GPTMini/Convex/Model.lean#L26) | def |  |
-| [`blockForward`](src/Transformer/GPTMini/Convex/Model.lean#L38) | def |  |
-| [`hidden`](src/Transformer/GPTMini/Convex/Model.lean#L46) | def |  |
-| [`forward`](src/Transformer/GPTMini/Convex/Model.lean#L58) | def |  |
-| [`attnSubLayer_bounded`](src/Transformer/GPTMini/Convex/Model.lean#L68) | theorem | proved |
-| [`blockForward_growth`](src/Transformer/GPTMini/Convex/Model.lean#L113) | theorem | proved |
+| [`simplexOn_closed`](src/Transformer/GPTMini/Convex/Basic.lean#L26) | theorem | proved |
+| [`simplexOn_compact`](src/Transformer/GPTMini/Convex/Basic.lean#L40) | theorem | proved |
+| [`routingObjective_continuous`](src/Transformer/GPTMini/Convex/Basic.lean#L52) | theorem | proved |
+| [`routing_minimum_exists`](src/Transformer/GPTMini/Convex/Basic.lean#L60) | theorem | proved |
+| [`routing_midpoint_identity`](src/Transformer/GPTMini/Convex/Basic.lean#L76) | theorem | proved |
+| [`routing_minimizers_eq`](src/Transformer/GPTMini/Convex/Basic.lean#L99) | theorem | proved |
+| [`routing_minimum_unique`](src/Transformer/GPTMini/Convex/Basic.lean#L137) | theorem | proved |
+| [`sparseWeights`](src/Transformer/GPTMini/Convex/Basic.lean#L148) | def |  |
+| [`sparseWeights_spec`](src/Transformer/GPTMini/Convex/Basic.lean#L155) | theorem | proved |
+| [`routing_projection_identity`](src/Transformer/GPTMini/Convex/Basic.lean#L167) | theorem | proved |
 
-**[Transformer.GPTMini.Convex.TrainingBoundary](src/Transformer/GPTMini/Convex/TrainingBoundary.lean)** — 86 lines
+**[Transformer.GPTMini.Convex.Model](src/Transformer/GPTMini/Convex/Model.lean)** — 140 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`oneNeuron`](src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L24) | def |  |
-| [`oneNeuron_formula`](src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L32) | theorem | proved |
-| [``1`.`](src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L37) | class |  |
-| [`oneNeuronCELoss`](src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L39) | def |  |
-| [`oneNeuron_endpoints`](src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L44) | theorem | proved |
-| [`oneNeuron_midpoint`](src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L51) | theorem | proved |
-| [`oneNeuronCE_jensen_violation`](src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L60) | theorem | proved |
-| [`oneNeuronCE_not_convex`](src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L76) | theorem | proved |
+| [`attnSubLayer`](src/Transformer/GPTMini/Convex/Model.lean#L27) | def |  |
+| [`blockForward`](src/Transformer/GPTMini/Convex/Model.lean#L40) | def |  |
+| [`hidden`](src/Transformer/GPTMini/Convex/Model.lean#L48) | def |  |
+| [`forward`](src/Transformer/GPTMini/Convex/Model.lean#L61) | def |  |
+| [`attnSubLayer_bounded`](src/Transformer/GPTMini/Convex/Model.lean#L72) | theorem | proved |
+| [`blockForward_growth`](src/Transformer/GPTMini/Convex/Model.lean#L118) | theorem | proved |
+
+**[Transformer.GPTMini.Convex.TrainingBoundary](src/Transformer/GPTMini/Convex/TrainingBoundary.lean)** — 87 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`oneNeuron`](src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L25) | def |  |
+| [`oneNeuron_formula`](src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L33) | theorem | proved |
+| [``1`.`](src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L38) | class |  |
+| [`oneNeuronCELoss`](src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L40) | def |  |
+| [`oneNeuron_endpoints`](src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L45) | theorem | proved |
+| [`oneNeuron_midpoint`](src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L52) | theorem | proved |
+| [`oneNeuronCE_jensen_violation`](src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L61) | theorem | proved |
+| [`oneNeuronCE_not_convex`](src/Transformer/GPTMini/Convex/TrainingBoundary.lean#L77) | theorem | proved |
 
 ### `Transformer.GPTMini.Properties`
 

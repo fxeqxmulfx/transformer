@@ -4,10 +4,12 @@
 > `9416d03` (`git show 9416d03:experiments/convex_mqar/src/convex_mqar/cli.py`).
 > The trained Transformers of the comparison, with softmax and sparsemax
 > attention, and its learning-rate selection are ported to
-> [`python/src/lab`](../../python/src/lab), as
-> [`experiments/mqar_sparsemax`](../mqar_sparsemax); the convex
+> [`python/src/lab`](../../../python/src/lab), as
+> [`experiments/mqar_sparsemax`](../../mqar_sparsemax); the convex
 > construction and its certificate, the Zoology models and the diagnostics
-> are not. The commands below are how the reports kept here were produced.
+> are not. The commands below are how the reports kept here were produced,
+> at the paths of that commit; the reports have since moved to
+> `experiments/archive/convex_mqar/` ([old paths](../README.md#old-paths)).
 
 Standalone Python project managed by **uv**, with a committed `uv.lock`.
 It compares a new convex recall construction with an ordinary, end-to-end

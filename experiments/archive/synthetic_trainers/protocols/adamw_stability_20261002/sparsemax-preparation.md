@@ -4,7 +4,7 @@ On 2026-10-02 the user requested sparsemax after the current native AdamW
 300,000-update run and directed the implementation to the existing Lean code.
 This is CPU/proof preparation; no scientific sparsemax run has started.
 
-[Basic.lean](../../../../src/Transformer/GPTMini/Convex/Basic.lean) defines
+[Basic.lean](../../../../../src/Transformer/GPTMini/Convex/Basic.lean) defines
 `sparseWeights` as the unique minimizer of
 `sum(a²)/4 - sum(a*score)/2` on the causal simplex: nonnegative weights,
 sum one, and zero above the diagonal. `routing_projection_identity` shows
@@ -13,7 +13,7 @@ Consequently ordinary Euclidean sparsemax uses the original scores without
 any additional scaling. Existence and uniqueness are proved for every finite
 real score row, with the diagonal supplying a feasible point.
 
-[Attention.lean](../../../../src/Transformer/GPTMini/Convex/Attention.lean)
+[Attention.lean](../../../../../src/Transformer/GPTMini/Convex/Attention.lean)
 connects this minimizer to the original content scores, QK normalization,
 RoPE and learned temperature, then retains the epsilon-regularized XSA
 projection. It proves nonnegative weights, sum one, causal zeros, projection

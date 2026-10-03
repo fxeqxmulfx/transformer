@@ -1,7 +1,8 @@
 """Parameter names of the historical models, mapped to the modules built here.
 
-`rename` turns a state dictionary of `experiments/gpt_mini.py` GPTMini (also
-after `sparsemax_attention.replace_attention`), of the openai/grok reference
+`rename` turns a state dictionary of GPTMini
+(`experiments/archive/gpt_mini/gpt_mini.py`, also after
+`sparsemax_attention.replace_attention`), of the openai/grok reference
 `Transformer`, or of the convex MQAR `RopeTransformer` (also as
 `SparsemaxTransformer`) into one that `nn.Transformer` loads. Buffers that a
 spec determines (position tables, the causal mask) are dropped.
