@@ -41,6 +41,11 @@ class ExperimentFolderTests(unittest.TestCase):
                 rows = survey(load(path))
                 self.assertEqual(len({row["fingerprint"] for row in rows}), len(rows))
 
+    def test_every_experiment_has_a_readme(self):
+        for path in experiment_folders():
+            with self.subTest(path.name):
+                self.assertTrue((path / "README.md").is_file())
+
 
 def baseline(name):
     """The label of a run of the archived baseline, `phase/variant/width-W/noise-r/seed-s`."""

@@ -1,44 +1,7 @@
 """GPTMini on the synthetic suite under AMSGradW: the softmax baseline and its studies.
 
-`baseline.py` of `experiments/synthetic_trainers` and its recipes
-(`baseline_recipes.py`), in the experiment language: 61 runs of GPTMini of
-width 64, with 2 layers of 4 heads and the context of its benchmark, under
-AMSGradW at rate 1e-3 with betas (0.9, 0.999), epsilon 1e-8 and decay 0.1,
-on 32 rows per update, observed in chunks of 32, each under the
-double-descent study with curve tolerance 0.02 on data seed 1. A run draws
-its batch order from its model seed, as `train_run` drew it.
-
-- suite: each task of the suite and each named control of it, 1000 updates
-  on 128 training rows from model seed 0, observed every 100 updates on 32
-  validation rows and tested on 64: at lengths 8 to 16, tested at 32 and 64;
-  MQAR and lookup at length 24, with their 4 associations and 2 queries,
-  tested at 48 and 96; Dyck and typed Dyck from length 12; addition of 2 to
-  4 digits, tested at 8 and 16.
-- transitions: copy, and parity with and without a running scratchpad, 5000
-  updates on disjoint pools of 64 training, 64 validation and 128 test rows,
-  observed every 250 and tested at 16 and 32, from model seeds 0, 1 and 2.
-- capacity: parity on the same pools with 20% of its training labels
-  corrupted (noise seed 2), 1000 updates observed every 100, at widths 16,
-  32, 64 and 128, from model seeds 0, 1 and 2.
-- control: the random control on 8 training rows, 64 validation and 128
-  test, 1000 updates, tested at 16 and 32, from model seeds 0, 1 and 2.
-
-The archived runs (RTX 3050, 2026-10-01, issued eagerly;
-`experiments/archive/synthetic_trainers/baselines/amsgradw_softmax_20261002`) fit
-their training splits, but for two parity runs of the suite, one run at
-width 128 under label noise, and the random controls, which fit one of their
-8 answers. Few generalized in distribution. On the suite the last models
-reached test sequence accuracy 1.0 on both Boolean-and controls, 0.95 on
-Dyck, 0.92 on alternating blocks and 0.91 on C-RASP of depths 1 and 2; 0.70
-at depth 3, 0.64 and 0.66 on typed Dyck, 0.56 on parity without a
-scratchpad, near the chance of its one-label answer, and 0.39 on mode; and
-at most 0.19 on every other task, MQAR and lookup included. Under the
-transition budget parity with a running scratchpad generalized (0.91 to
-0.99), parity without it reached 0.35 to 0.44, and copy at most 0.04. Under
-label noise every width tested at 0.35 to 0.56, without a trend in width.
-
-The runs replay from CUDA graphs here, so none is its archived run bit for
-bit.
+`README.md` beside this file describes the runs and what their archived
+runs found.
 """
 
 from lab.dsl import *

@@ -1,14 +1,7 @@
 """Stability of GPTMini on x / y mod 193 under native AdamW.
 
-The 2026-10-02 adamw_stability protocols, in the experiment language. The
-base is the calibration at rate 3e-4 on 25% train, extended to 300,000
-updates; two pairs compare it with sparsemax attention weights and with a
-cosine anneal of the rate to a tenth over updates 150,000-250,000. The two
-earlier calibrations at rate 1e-3, on 25% and 50% train, ran 150,000 updates.
-
-Every run samples per-tensor diagnostics at each evaluation and at the updates
-beside it, and records every gradient norm. Eager execution issues the updates
-as the historical trainer did.
+`README.md` beside this file describes the runs and what their archived
+runs found.
 """
 
 from lab.dsl import *

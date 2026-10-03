@@ -1,13 +1,7 @@
 """Grokking x / y mod 97 with the openai/grok reference transformer and GPTMini.
 
-The 2026-10-02 runs of `paper_reproduction.grokking`, in the experiment
-language. Three calibrations of the reference on seeds 0/0 vary the train
-fraction and the weight decay. The confirmation repeats the calibration that
-passed its launch condition (50% train, weight decay 0.1) in three arms: the
-reference and GPTMini under AdamW, and GPTMini under raw AMSGradW with betas
-(0.9, 0.999), on data seed 1 with initialization seeds 1, 2 and 3.
-
-Eager execution issues the updates as the historical trainer did.
+`README.md` beside this file describes the runs and what their archived
+runs found.
 """
 
 from lab.dsl import *

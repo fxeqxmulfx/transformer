@@ -1,17 +1,7 @@
 """Stability of GPTMini on x / y mod 97 under AdamW and raw AMSGradW.
 
-The 2026-10-02 optimizer pair of the adamw_stability protocols and the
-amsgradw_stability calibrations, in the experiment language. The pair trains
-GPTMini on 50% of the equations for 150,000 updates at rate 1e-3 with weight
-decay 0.1, under AdamW with betas (0.9, 0.98) and under raw AMSGradW with
-betas (0.9, 0.999); nothing else differs. Each AMSGradW calibration changes
-one mechanism of its arm: the batch tail wraps across epochs, or the rate is
-3e-4, 2e-4 or 1e-4.
-
-Every run samples per-tensor diagnostics at each evaluation and at the updates
-beside it, and records every gradient norm; the historical calibrations did
-not record gradient norms, and no diagnostic changes a trajectory. Eager
-execution issues the updates as the historical trainer did.
+`README.md` beside this file describes the runs and what their archived
+runs found.
 """
 
 from lab.dsl import *

@@ -1,34 +1,7 @@
 """GPTMini on Tiny Shakespeare under the historical optimizer zoo, each recipe at its selected rate.
 
-The all24 benchmark and the AMSGrad extensions (RTX 3050) in the experiment
-language: 27 optimizer recipes under softmax and under sparsemax attention,
-from model seeds 0, 1 and 2. Model, data and stopping are those of
-`shakespeare_amsgradw`: GPTMini of width 128, with 2 layers of 4 heads, reads
-32 windows of 64 characters per update; validation is evaluated every 250
-updates, and a run stops after 8 observations without an improvement of
-1e-4, or after 3 consecutive observations 0.1 above its best, both from
-update 1000 on, and at the latest after 20,000 updates. Each recipe trains
-at the rate its validation selected from a grid of three, which differs
-between the attentions for SGD, the guard over Muon and over DASH, and
-RMSProp.
-
-The recipes, as the benchmark named them: SGD; AdaGrad; Adam and AMSGrad
-without debiasing, AMSGrad also with b1_t = b1 / t or b1 0.99^(t - 1) under
-the step size lr / sqrt(t); AdamX; AdamNC; RMSProp; PyTorch's AdamW and raw
-AMSGradW, both with decay 0.01; Muon; DASH under each inverse root; AdaFisher
-and AdaFisherW; MAGMA over RMSProp, Adam, AdamW, Muon and SGD; AMSGradMD; and
-the descent guard over Muon, over DASH with Newton iterations, and over
-AMSGradMD, whose directions move at 3e-4 under sigma 0.25.
-
-What the historical runs found: the guard over Muon and over DASH rejected
-every proposal, so both trained as SGD (`Transformer.OptimizerBenchmark.
-guardedBatchRun_eq_sgd`), and at the same rates as SGD their best models
-equal SGD's to the bit in all six runs. The guard over AMSGradMD accepted
-0.16% to 0.67% of its proposals.
-
-Every recipe replays as CUDA graphs except DASH with an eigendecomposition,
-which torch cannot capture, and which runs eagerly. No run reproduces its
-historical run bit for bit: the historical steps were compiled by inductor.
+`README.md` beside this file describes the runs and what their archived
+runs found.
 """
 
 from lab.dsl import *
