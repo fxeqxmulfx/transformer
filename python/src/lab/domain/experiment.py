@@ -11,10 +11,10 @@ import re
 
 from .benchmarks import Benchmark
 from .model import Transformer
-from .optimizers import Optimizer
-from .spec import Spec, describe, require, require_kind, swap
+from .optimizers import EVD, Optimizer
+from .spec import Spec, describe, require, require_kind, swap, walk
 from .stopping import EarlyStopping
-from .training import Budget, Checkpoint, Diagnostics, Evaluate, Execution, Schedule, Seeds
+from .training import Budget, Checkpoint, CudaGraph, Diagnostics, Evaluate, Execution, Schedule, Seeds
 
 LABEL = re.compile(r"[a-z0-9][a-z0-9._-]*")
 
@@ -45,6 +45,9 @@ class Experiment(Spec):
                 f"the model context is {self.model.context}")
         anneal = self.schedule.anneal
         require(anneal is None or anneal.end <= self.budget.updates, "Annealing must end within the budget")
+        require(not (isinstance(self.execution, CudaGraph)
+                     and any(isinstance(block, EVD) for _, block in walk(self.optimizer))),
+                "torch cannot capture an eigendecomposition: run Dash with EVD under Eager()")
         if self.stopping is not None:
             require_kind(self.stopping, EarlyStopping, "stopping")
             require(self.benchmark.selection is not None,

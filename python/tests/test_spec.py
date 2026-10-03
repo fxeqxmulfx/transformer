@@ -4,7 +4,7 @@ from lab.domain.experiment import differences, grid, require_continuation
 from lab.domain.model import Norm, Sparsemax, Softmax
 from lab.domain.spec import describe, fingerprint, substitute, swap, walk
 from lab.domain.training import Budget, CudaGraph
-from lab.dsl import GELU, SGD, AMSGradMD, Guarded, LayerNorm, Magma, RMSNorm, Seeds
+from lab.dsl import EVD, GELU, SGD, AMSGradMD, Dash, Eager, Guarded, LayerNorm, Magma, RMSNorm, Seeds
 
 from examples import gptmini, modular, reference
 
@@ -44,6 +44,12 @@ class SpecTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "The guard applies once"):
             Guarded(Magma(Guarded(SGD(lr=0.1))))
         self.assertEqual(Guarded(Magma(SGD(lr=0.1))).lr, 0.1)
+
+    def test_an_eigendecomposition_is_refused_a_graph_when_the_experiment_is_written(self):
+        evd = swap(self.base, "optimizer", Magma(Guarded(Dash(lr=1e-3, solver=EVD()))))
+        with self.assertRaisesRegex(ValueError, "eigendecomposition"):
+            swap(evd, "execution", CudaGraph())
+        self.assertEqual(swap(evd, "execution", Eager()).execution, Eager())
 
     def test_magma_damps_directions_which_amsgradmd_does_not_compute(self):
         for spec in (AMSGradMD(lr=1e-3), Guarded(AMSGradMD(lr=0.3, direction_rate=3e-4), sigma=0.25)):
