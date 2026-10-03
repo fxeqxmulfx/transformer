@@ -12,8 +12,9 @@ import unittest
 import torch
 
 from lab.domain.model import Softmax, Sparsemax
+from lab.domain.optimizers import SGD, AMSGradW
 from lab.domain.spec import describe, substitute, swap
-from lab.domain.training import SGD, AMSGradW, Checkpoint, Cosine, CudaGraph, Diagnostics, Evaluate
+from lab.domain.training import Checkpoint, Cosine, CudaGraph, Diagnostics, Evaluate
 from lab.infrastructure.engine.graphs import GraphStepper
 from lab.infrastructure.engine.loop import Training
 from lab.infrastructure.store import STREAMS, RunDirectory

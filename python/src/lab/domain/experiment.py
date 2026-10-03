@@ -11,10 +11,10 @@ import re
 
 from .benchmarks import Benchmark
 from .model import Transformer
+from .optimizers import Optimizer
 from .spec import Spec, describe, require, require_kind, swap
 from .stopping import EarlyStopping
-from .training import (Budget, Checkpoint, Diagnostics, Evaluate, Execution, Optimizer, Schedule,
-                       Seeds)
+from .training import Budget, Checkpoint, Diagnostics, Evaluate, Execution, Schedule, Seeds
 
 LABEL = re.compile(r"[a-z0-9][a-z0-9._-]*")
 

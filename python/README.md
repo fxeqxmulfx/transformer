@@ -81,7 +81,8 @@ Eager run. On the GTX 1050 it trains the mod-97 models 1.4-2.2 times faster.
 `src/lab/` is layered by dependency; inner layers never import outer ones.
 
 ```
-domain/          the language (spec, model, training, benchmarks, experiment)
+domain/          the language (spec, model, optimizers, training, benchmarks,
+                 stopping, experiment)
                  and pure rules (cadence, analysis); standard library only
 application/     use cases over ports; no PyTorch
 infrastructure/  PyTorch builders and engines, data, storage

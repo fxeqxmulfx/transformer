@@ -10,7 +10,7 @@ the historical `CoordinateOptimizer`.
 
 import torch
 
-from ...domain import training
+from ...domain import optimizers
 from . import direction
 
 
@@ -31,7 +31,7 @@ def adamw(spec, model, rate=None):
                              foreach=True, capturable=True)
 
 
-OPTIMIZERS = {training.AdamW: adamw, training.SGD: direction.SGD, training.AMSGradW: direction.AMSGradW}
+OPTIMIZERS = {optimizers.AdamW: adamw, optimizers.SGD: direction.SGD, optimizers.AMSGradW: direction.AMSGradW}
 
 
 def build_optimizer(spec, model, rate=None):

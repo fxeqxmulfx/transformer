@@ -10,10 +10,10 @@ from .domain.experiment import Experiment, grid
 from .domain.model import (FFN, GELU, XSA, Attention, Block, FusedQKV, LayerNorm, NoPositions, Normal,
                            PerHeadQKV, PostNorm, PreNorm, QKNorm, ReLU, ReLU2, RMSNorm, RoPE, ScaledDot,
                            Sinusoidal, Softmax, Sparsemax, Tied, TorchDefault, Transformer, Untied)
+from .domain.optimizers import SGD, AdamW, AMSGradW
 from .domain.spec import describe, fingerprint, substitute, swap, walk
 from .domain.stopping import EarlyStopping
-from .domain.training import (SGD, AdamW, AMSGradW, Budget, Checkpoint, Cosine, CudaGraph, Diagnostics, Eager,
-                              Evaluate, Schedule, Seeds)
+from .domain.training import Budget, Checkpoint, Cosine, CudaGraph, Diagnostics, Eager, Evaluate, Schedule, Seeds
 
 __all__ = [
     # model

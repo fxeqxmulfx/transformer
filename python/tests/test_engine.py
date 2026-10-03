@@ -17,7 +17,8 @@ import torch
 from lab.application.study import Study, run_study
 from lab.domain.model import Softmax, Sparsemax
 from lab.domain.spec import substitute, swap
-from lab.domain.training import AMSGradW, Checkpoint, Cosine, Diagnostics, Eager
+from lab.domain.optimizers import AMSGradW
+from lab.domain.training import Checkpoint, Cosine, Diagnostics, Eager
 from lab.infrastructure.engine import Engine
 from lab.infrastructure.nn.legacy import DERIVED, rename
 from lab.infrastructure.store import RunDirectories, RunDirectory
