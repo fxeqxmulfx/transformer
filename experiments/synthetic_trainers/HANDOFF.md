@@ -595,6 +595,22 @@ the prepared schedule's 55 and active normalizer's 43 Python/nine Lean sources
 are unchanged. A failed scientific cohort consumes its seeds and requires a
 new prospective cohort for any later confirmation.
 
+The [later native architecture adapter](protocols/adamw_stability_20261002/architecture-native-preparation.md)
+now preserves either selected constant or fixed-cosine rate path while changing
+only softmax/sparsemax normalization. Four targeted tests pass in 9.991 seconds:
+both controls exactly match their native parents, scheduled sparsemax resumes
+with unchanged moments/sampling/logs, and changed tags fail before checkpoint
+loading. Scientific-shape initial tensors/RNG match on CPU (436,104 parameters).
+Two real full-width CPU pairs complete four cases/160 updates, retain every
+negative and null speed ratio, and verify without Torch. All eight PNG figures
+and eight actual PDF renders are reviewed; complete recovery descriptions are
+retained. See the [receipt](protocols/adamw_stability_20261002/architecture-native-preparation-validation.json).
+The CPU plan pins 66 sources/nineteen training sources and the existing nine
+Lean files. The active 43/nine, prepared 55 and both 62-source sets are unchanged.
+This is implementation preparation: no scientific architecture campaign is
+selected, frozen or launched, and both negative CPU confirmation references
+are rejected by the actual all-six scientific benchmark gate.
+
 ```bash
 cat experiments/runs/adamw_stability_20261002/attention_mod193_fraction25_lr0003_budget300k/state.json
 cat experiments/runs/adamw_stability_20261002/bootstrap/attention-pair-archive-worker.json

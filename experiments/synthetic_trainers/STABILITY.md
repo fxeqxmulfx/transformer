@@ -291,6 +291,17 @@ specific protocol adaptation or verify matching options before the later
 scientific comparison. Its two-update probes provide implementation evidence
 only, and do not open the modular independent-confirmation or architecture gate.
 
+The [later native normalizer/schedule adapter](protocols/adamw_stability_20261002/architecture-native-preparation.md)
+now combines these paths without changing the paired AdamW/rate protocol.
+Four targeted tests pass; real constant/cosine softmax controls exactly match
+their native parents, and scheduled sparsemax preserves native continuation.
+Two complete full-width CPU pairs retain all negatives, recovery metrics and
+null timing ratios, verify without Torch and have eight reviewed PNGs/eight
+actual PDFs. Both actual negative CPU confirmation references fail the
+scientific benchmark gate. All active/prepared source sets are unchanged;
+scientific architecture selection still requires every independent primary
+confirmation before prospectively freezing new held-out architecture pairs.
+
 ## Environment and next decisions
 
 The restored environment initially had Python 3.12.13 and PyTorch 2.7.1+cu118.

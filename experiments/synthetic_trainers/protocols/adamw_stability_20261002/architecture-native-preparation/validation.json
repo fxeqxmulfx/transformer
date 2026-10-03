@@ -1,0 +1,45 @@
+{
+  "recorded_utc": "2026-10-03T01:26:19.160559+00:00",
+  "CPU_fixture": true,
+  "scientific_run": false,
+  "scientific_architecture_selected": false,
+  "cases": [
+    {
+      "name": "constant-sparsemax",
+      "parameters": 412296,
+      "completed_updates": 40,
+      "stable_grokking": false,
+      "canonical_observations": 9,
+      "gradient_observations": 40
+    },
+    {
+      "name": "constant-softmax",
+      "parameters": 412296,
+      "completed_updates": 40,
+      "stable_grokking": false,
+      "canonical_observations": 9,
+      "gradient_observations": 40
+    },
+    {
+      "name": "cosine_tail-sparsemax",
+      "parameters": 412296,
+      "completed_updates": 40,
+      "stable_grokking": false,
+      "canonical_observations": 9,
+      "gradient_observations": 40
+    },
+    {
+      "name": "cosine_tail-softmax",
+      "parameters": 412296,
+      "completed_updates": 40,
+      "stable_grokking": false,
+      "canonical_observations": 9,
+      "gradient_observations": 40
+    }
+  ],
+  "total_completed_updates": 160,
+  "scientific_benchmark_guard_rejections": {
+    "normalizer": "Architecture selection requires all six scientific primary confirmations to pass",
+    "schedule": "Architecture selection requires all six scientific primary confirmations to pass"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "files": {
+    "diagnostic-metrics.csv": "eef48a3a42f0897074d5330829c609ba1da02c424fc98ca4afc107e6d8aba64f",
+    "diagnostics.jsonl": "0a8ef2e62b665918d07c4beae3fad375e0a53180f73dffdd0066fb0b718257b5",
+    "gradient-metrics.csv": "ecc356c12f9003650a8ec25d8db54cc394ef053ad1270bfe162ffcd25c8b394a",
+    "gradients.jsonl": "c91e4e67f37c041f8d37fdd9a8fcb161ff64abe7fe86b685978c51078fbeed30",
+    "measurements.json": "cffcd150f23afb4a06a49531fe161dfca06ddac0dcfd354b7227dde1dc9930bf",
+    "metrics.csv": "3d036f96ee3257a497185ea4a92633f1cbafe4f1ae5b50a2feb976ef5cd8e304",
+    "neighbor-metrics.csv": "bcf738459d753cc653f34dba992e57ee6eeff322f5d68d969c1844a570713f9f",
+    "plan.json": "2df4d59bec88a84c6c469c51a72ad27f2d1ff821383a284dd3e12c832f6dc9d0",
+    "plots/collapse-neighbors.pdf": "80855e4e11903a42fea72ce7e0bf66b9e62b50045340250df1e3d3f8bc3dca24",
+    "plots/collapse-neighbors.png": "b4a1c2b38515b3fe09ccbf599c8ff98d81bd8f60e0e5d19e6694621340e4e6c5",
+    "plots/stability-overview.pdf": "3c0d3da61061c35ed1e1f97cd971ab3f8a8a7054ea3ee8374e7b937effaae158",
+    "plots/stability-overview.png": "9f70ebd625e9be4760312cebca72c9f4ccf7b3f0f367660d5966c56946f13359",
+    "probes.jsonl": "e454184ca62873f3dc2b6ee760ecd73e46a7e0e03768ba8e080491c2a694ffb1",
+    "summary.json": "f74a2fabb755f834374643308f837c0d0461e65753af023b8e7f20bdc805f504"
+  },
+  "raw_checkpoint_sha256": "613a014af1a1775bfdf13e68e1a1273c71245373441f9fb592a3cd2190bbb0b1",
+  "checkpoint_scope": "weights_and_optimizer_are_local_resources; not_part_of_this_portable_archive"
+}

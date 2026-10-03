@@ -1,0 +1,218 @@
+{
+  "reviewed_utc": "2026-10-03T01:30:52.588350+00:00",
+  "base_commit": "5d7a100",
+  "scope": "native_architecture_implementation_preparation_only",
+  "scientific_run": false,
+  "scientific_architecture_selected_frozen_or_started": false,
+  "maximum_total_updates_per_run": 300000,
+  "targeted_tests": {
+    "command": ".venv/bin/python -m unittest experiments.synthetic_trainers.tests.test_architecture_training.ArchitectureTrainingTests -v",
+    "passed": 4,
+    "seconds": 9.991,
+    "terminal_session": 65638,
+    "terminal_session_consumed_exit_code": 0
+  },
+  "CPU_preparation_terminal_session": 64100,
+  "CPU_preparation_session_consumed_exit_code": 0,
+  "actual_CPU_cases": 4,
+  "actual_CPU_pairs": 2,
+  "completed_updates_per_case": 40,
+  "total_completed_updates": 160,
+  "parameters_per_CPU_case": 412296,
+  "examples_seen_per_case": 142,
+  "actual_scientific_initial_parameters_on_CPU": 436104,
+  "scientific_initial_tensors_and_rng_identical_for_both_normalizers": true,
+  "both_softmax_controls_exactly_match_native_parents": true,
+  "constant_sparsemax_exactly_matches_normalizer_parent": true,
+  "scheduled_sparsemax_resume_preserves_native_state_rng_sampling_and_raw_logs": true,
+  "changed_normalizer_schedule_and_factor_resume_rejected_before_load": true,
+  "all_original_functions_restored_after_interruption": true,
+  "complete_CPU_pairs_negative_with_null_ratios_and_zero_eligible_support": true,
+  "portable_verification": {
+    "CPU_cases": 4,
+    "CPU_pairs": 2,
+    "completed_updates": 160,
+    "all_stable_grokking": false,
+    "eligible_pair_support": {
+      "constant": 0,
+      "cosine_tail": 0
+    },
+    "Torch_imported": false,
+    "scientific_run": false
+  },
+  "portable_command": "python3 -m experiments.synthetic_trainers.protocols.adamw_stability_20261002.verify_architecture_native experiments/synthetic_trainers/protocols/adamw_stability_20261002/architecture-native-preparation",
+  "archive_hash_manifest_sha256": "37530e91330ea400d0066c4860545e8fbe5cbc642be826385d8301f1e978cc6d",
+  "archive_validation_sha256": "147c23b7b7e46d5b214dd4a2d423defa49b36c0349bf423fea6919343248c1b3",
+  "current_66_sources_match": true,
+  "training_sources": 19,
+  "Lean_sources": 9,
+  "all_8_PNG_and_8_actual_PDF_figures_visually_reviewed": true,
+  "figures": [
+    {
+      "name": "constant-sparsemax",
+      "figure": "stability-overview",
+      "PNG": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/architecture-native-preparation/constant-sparsemax/plots/stability-overview.png",
+      "PNG_sha256": "5c145b81392260407ea8cf06591b6832ceeb45a7fcf5f11cf8d4e6b08cad1a5f",
+      "PDF": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/architecture-native-preparation/constant-sparsemax/plots/stability-overview.pdf",
+      "PDF_sha256": "c3907951d6880c6bdb38ab5ac02f9880e687ee28b0eca352bb14edd1c428b50e",
+      "actual_PDF_raster": "/tmp/transformer-architecture-native-PDF-review/constant-sparsemax-stability-overview.png",
+      "actual_PDF_raster_sha256": "5b0e3fd7e57e93435b2a8d4e6ea51f18dc914f9606f27ac1b40310998e3d2571",
+      "original_PNG_visually_reviewed": true,
+      "actual_PDF_visually_reviewed": true
+    },
+    {
+      "name": "constant-sparsemax",
+      "figure": "collapse-neighbors",
+      "PNG": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/architecture-native-preparation/constant-sparsemax/plots/collapse-neighbors.png",
+      "PNG_sha256": "b4a1c2b38515b3fe09ccbf599c8ff98d81bd8f60e0e5d19e6694621340e4e6c5",
+      "PDF": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/architecture-native-preparation/constant-sparsemax/plots/collapse-neighbors.pdf",
+      "PDF_sha256": "eed0f48683b7c1888288e38c94364cbb9f0b91668ae02d2e5353e10fe454b350",
+      "actual_PDF_raster": "/tmp/transformer-architecture-native-PDF-review/constant-sparsemax-collapse-neighbors.png",
+      "actual_PDF_raster_sha256": "2d3b3dd5291ecebe761e982da6b59fda0f126457836b3fd90107ce63e0960783",
+      "original_PNG_visually_reviewed": true,
+      "actual_PDF_visually_reviewed": true
+    },
+    {
+      "name": "constant-softmax",
+      "figure": "stability-overview",
+      "PNG": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/architecture-native-preparation/constant-softmax/plots/stability-overview.png",
+      "PNG_sha256": "720ecb29efdcb798c2ff590433dcfef67597d7dfc1a4e8c0249d21313ef07286",
+      "PDF": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/architecture-native-preparation/constant-softmax/plots/stability-overview.pdf",
+      "PDF_sha256": "2d683e4cda90bd674d453d03619b0c299ab78a80cf7bcfcb8807dc30f4d1405c",
+      "actual_PDF_raster": "/tmp/transformer-architecture-native-PDF-review/constant-softmax-stability-overview.png",
+      "actual_PDF_raster_sha256": "64395d57a37ee8868f7a6cbc32de4f941e1013f30f62cf18603a6f243dd9be0b",
+      "original_PNG_visually_reviewed": true,
+      "actual_PDF_visually_reviewed": true
+    },
+    {
+      "name": "constant-softmax",
+      "figure": "collapse-neighbors",
+      "PNG": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/architecture-native-preparation/constant-softmax/plots/collapse-neighbors.png",
+      "PNG_sha256": "b4a1c2b38515b3fe09ccbf599c8ff98d81bd8f60e0e5d19e6694621340e4e6c5",
+      "PDF": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/architecture-native-preparation/constant-softmax/plots/collapse-neighbors.pdf",
+      "PDF_sha256": "e7d701941a30ea58077cf74911ea3d2e1a14514f22200fa027856cd6c1d88cc3",
+      "actual_PDF_raster": "/tmp/transformer-architecture-native-PDF-review/constant-softmax-collapse-neighbors.png",
+      "actual_PDF_raster_sha256": "2d3b3dd5291ecebe761e982da6b59fda0f126457836b3fd90107ce63e0960783",
+      "original_PNG_visually_reviewed": true,
+      "actual_PDF_visually_reviewed": true
+    },
+    {
+      "name": "cosine_tail-sparsemax",
+      "figure": "stability-overview",
+      "PNG": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/architecture-native-preparation/cosine_tail-sparsemax/plots/stability-overview.png",
+      "PNG_sha256": "9f70ebd625e9be4760312cebca72c9f4ccf7b3f0f367660d5966c56946f13359",
+      "PDF": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/architecture-native-preparation/cosine_tail-sparsemax/plots/stability-overview.pdf",
+      "PDF_sha256": "3c0d3da61061c35ed1e1f97cd971ab3f8a8a7054ea3ee8374e7b937effaae158",
+      "actual_PDF_raster": "/tmp/transformer-architecture-native-PDF-review/cosine_tail-sparsemax-stability-overview.png",
+      "actual_PDF_raster_sha256": "b819c28aeb085e02d4300223024addb78ea69425ebb43877fc8b632e65edcac1",
+      "original_PNG_visually_reviewed": true,
+      "actual_PDF_visually_reviewed": true
+    },
+    {
+      "name": "cosine_tail-sparsemax",
+      "figure": "collapse-neighbors",
+      "PNG": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/architecture-native-preparation/cosine_tail-sparsemax/plots/collapse-neighbors.png",
+      "PNG_sha256": "b4a1c2b38515b3fe09ccbf599c8ff98d81bd8f60e0e5d19e6694621340e4e6c5",
+      "PDF": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/architecture-native-preparation/cosine_tail-sparsemax/plots/collapse-neighbors.pdf",
+      "PDF_sha256": "80855e4e11903a42fea72ce7e0bf66b9e62b50045340250df1e3d3f8bc3dca24",
+      "actual_PDF_raster": "/tmp/transformer-architecture-native-PDF-review/cosine_tail-sparsemax-collapse-neighbors.png",
+      "actual_PDF_raster_sha256": "2d3b3dd5291ecebe761e982da6b59fda0f126457836b3fd90107ce63e0960783",
+      "original_PNG_visually_reviewed": true,
+      "actual_PDF_visually_reviewed": true
+    },
+    {
+      "name": "cosine_tail-softmax",
+      "figure": "stability-overview",
+      "PNG": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/architecture-native-preparation/cosine_tail-softmax/plots/stability-overview.png",
+      "PNG_sha256": "4e1f06332d18088b938346554ddaa64a959f3794fcd88588ecde81a9b8a81ae1",
+      "PDF": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/architecture-native-preparation/cosine_tail-softmax/plots/stability-overview.pdf",
+      "PDF_sha256": "24fee47a72fcb7fb6f1f5a4d16be1b4362642388b84bffa5c8675da0950adeb5",
+      "actual_PDF_raster": "/tmp/transformer-architecture-native-PDF-review/cosine_tail-softmax-stability-overview.png",
+      "actual_PDF_raster_sha256": "5260c1f67aee02b10caf21ac36dd68109206334e75cd5c9dba8ff13602cb1026",
+      "original_PNG_visually_reviewed": true,
+      "actual_PDF_visually_reviewed": true
+    },
+    {
+      "name": "cosine_tail-softmax",
+      "figure": "collapse-neighbors",
+      "PNG": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/architecture-native-preparation/cosine_tail-softmax/plots/collapse-neighbors.png",
+      "PNG_sha256": "b4a1c2b38515b3fe09ccbf599c8ff98d81bd8f60e0e5d19e6694621340e4e6c5",
+      "PDF": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/architecture-native-preparation/cosine_tail-softmax/plots/collapse-neighbors.pdf",
+      "PDF_sha256": "3e33403724c98e61612d1e32a94243ace1416d54cfa8679d12340623088a025b",
+      "actual_PDF_raster": "/tmp/transformer-architecture-native-PDF-review/cosine_tail-softmax-collapse-neighbors.png",
+      "actual_PDF_raster_sha256": "2d3b3dd5291ecebe761e982da6b59fda0f126457836b3fd90107ce63e0960783",
+      "original_PNG_visually_reviewed": true,
+      "actual_PDF_visually_reviewed": true
+    }
+  ],
+  "actual_rate_anchors": {
+    "constant-sparsemax": {
+      "1": 0.0,
+      "2": 2.9999999999999997e-05,
+      "11": 0.0003,
+      "21": 0.0003,
+      "26": 0.0003,
+      "31": 0.0003,
+      "40": 0.0003
+    },
+    "constant-softmax": {
+      "1": 0.0,
+      "2": 2.9999999999999997e-05,
+      "11": 0.0003,
+      "21": 0.0003,
+      "26": 0.0003,
+      "31": 0.0003,
+      "40": 0.0003
+    },
+    "cosine_tail-sparsemax": {
+      "1": 0.0,
+      "2": 2.9999999999999997e-05,
+      "11": 0.0003,
+      "21": 0.0003,
+      "26": 0.000165,
+      "31": 2.9999999999999997e-05,
+      "40": 2.9999999999999997e-05
+    },
+    "cosine_tail-softmax": {
+      "1": 0.0,
+      "2": 2.9999999999999997e-05,
+      "11": 0.0003,
+      "21": 0.0003,
+      "26": 0.000165,
+      "31": 2.9999999999999997e-05,
+      "40": 2.9999999999999997e-05
+    }
+  },
+  "unchanged_frozen_source_sets": [
+    {
+      "plan": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/attention-pair-plan.json",
+      "Python_sources": 43,
+      "plan_sha256": "261aba71d67b68c4856fb1aa2dba5a3b1c97e3f3a85b3fc29324f0abb14ec94f",
+      "all_unchanged": true
+    },
+    {
+      "plan": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/scheduled-pair-preparation/pair/plan.json",
+      "Python_sources": 55,
+      "plan_sha256": "3eb176a7e2520233b1a30354dafccad14d1712cc24b604b6923655616582be2f",
+      "all_unchanged": true
+    },
+    {
+      "plan": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/tagged-confirmation-preparation/normalizer/plan.json",
+      "Python_sources": 62,
+      "plan_sha256": "88aeeca4392100c6366f3a02d3d45781b7b3cbabe7931975e8bec6ff46cd7e59",
+      "all_unchanged": true
+    },
+    {
+      "plan": "experiments/synthetic_trainers/protocols/adamw_stability_20261002/tagged-confirmation-preparation/schedule/plan.json",
+      "Python_sources": 62,
+      "plan_sha256": "280389f343fa6e9dc3cc7e09128da6efb710bc783c24864232dde54d5c2280c5",
+      "all_unchanged": true
+    }
+  ],
+  "prior_complementary_83_native_and_repository_fingerprints_unchanged": true,
+  "prior_complementary_archive_hash_manifest_sha256": "b65ebe28096861b11b863bc2f032f5c08d5b3d9377d1fb187b42070f837ae6e5",
+  "active_GPU_trainer_restarted": false,
+  "active_modular_manifest_or_reference_changed": false,
+  "Lean_source_changed": false,
+  "next_scientific_action": "complete_review_and_commit_current_pair_then_preserve_primary_six_case_gate_before_architecture_selection"
+}

@@ -1,0 +1,18 @@
+{
+  "constant-sparsemax": {
+    "raw_checkpoint_sha256": "ccd235e9e311c19dc39944ca653d187ad66d5f80dec4fb5b2ff12d2229885ef1",
+    "portable_scope": "native_checkpoint_local; raw_histories_and_checksums_archived"
+  },
+  "constant-softmax": {
+    "raw_checkpoint_sha256": "7db10a2cedcb8ec9c97a900b7e337c45738184d44e435d6282bb99cd70aa6f03",
+    "portable_scope": "native_checkpoint_local; raw_histories_and_checksums_archived"
+  },
+  "cosine_tail-sparsemax": {
+    "raw_checkpoint_sha256": "613a014af1a1775bfdf13e68e1a1273c71245373441f9fb592a3cd2190bbb0b1",
+    "portable_scope": "native_checkpoint_local; raw_histories_and_checksums_archived"
+  },
+  "cosine_tail-softmax": {
+    "raw_checkpoint_sha256": "488b389eef417f5bd566a58eddac659c3e98f6d490a5d696e6a1c3d1b0454423",
+    "portable_scope": "native_checkpoint_local; raw_histories_and_checksums_archived"
+  }
+}
