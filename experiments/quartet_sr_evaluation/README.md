@@ -64,12 +64,13 @@ kernels and matched GEMM shapes before a training-throughput claim is made.
 ## Reproduction
 
 ```sh
-python3 experiments/quartet_sr_evaluation.py \
+python3 experiments/quartet_sr_evaluation/quartet_sr_evaluation.py \
   --samples 100000 --batch 4096 --repeats 7 \
-  --json experiments/quartet_sr_evaluation.json
+  --json experiments/quartet_sr_evaluation/quartet_sr_evaluation.json
 ```
 
 The script checks the FP4 SR moment at `0.75`, zero and underflowing groups,
 FP8 representability and non-clipping of the corrected scales, and the
 MS-EDEN `101/102` witness before printing the results. The output is stored
-in `experiments/quartet_sr_evaluation.json`.
+in [`quartet_sr_evaluation.json`](quartet_sr_evaluation.json). The script
+needs only NumPy and predates the [lab](../../python/README.md).
