@@ -32,6 +32,10 @@ class DirectionOptimizer(torch.optim.Optimizer):
     def direction(self, parameter, state):
         raise NotImplementedError
 
+    def first_moment(self, parameter):
+        """The key of the rule's raw first moment of `parameter` in its state, or None if it keeps none."""
+        return None
+
     def directions(self, parameters):
         """The direction of every parameter, before any parameter moves."""
         return [self.direction(parameter, self.state[parameter]) for parameter in parameters]

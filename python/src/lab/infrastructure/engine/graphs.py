@@ -30,7 +30,8 @@ class GraphStepper:
         self.task, self.model, self.clock = task, model, clock
         self.observed, self.batch, self.device = experiment.benchmark.observed, experiment.evaluate.batch, task.device
         self.rate = torch.zeros((), device=self.device)
-        self.optimizer = build_optimizer(experiment.optimizer, model, rate=self.rate)
+        self.optimizer = build_optimizer(experiment.optimizer, model, self.rate, experiment.budget.updates,
+                                         experiment.seeds.model)
         self.parameters = [parameter for parameter in model.parameters() if parameter.requires_grad]
         self.trace = torch.zeros(experiment.evaluate.every, device=self.device)
         self.counter = torch.zeros(1, dtype=torch.long, device=self.device)

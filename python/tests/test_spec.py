@@ -4,7 +4,7 @@ from lab.domain.experiment import differences, grid, require_continuation
 from lab.domain.model import Norm, Sparsemax, Softmax
 from lab.domain.spec import describe, fingerprint, substitute, swap, walk
 from lab.domain.training import Budget, CudaGraph
-from lab.dsl import GELU, LayerNorm, RMSNorm, Seeds
+from lab.dsl import GELU, SGD, Guarded, LayerNorm, Magma, RMSNorm, Seeds
 
 from examples import gptmini, modular, reference
 
@@ -37,6 +37,13 @@ class SpecTests(unittest.TestCase):
         self.assertEqual(substitute(self.base, RMSNorm(), LayerNorm()), changed)
         with self.assertRaisesRegex(LookupError, "GELU"):
             substitute(self.base, GELU, GELU())
+
+    def test_a_stage_applies_once_at_any_depth(self):
+        with self.assertRaisesRegex(ValueError, "MAGMA applies once"):
+            Magma(Guarded(Magma(SGD(lr=0.1))))
+        with self.assertRaisesRegex(ValueError, "The guard applies once"):
+            Guarded(Magma(Guarded(SGD(lr=0.1))))
+        self.assertEqual(Guarded(Magma(SGD(lr=0.1))).lr, 0.1)
 
     def test_description_identifies_every_field(self):
         description = describe(self.base)

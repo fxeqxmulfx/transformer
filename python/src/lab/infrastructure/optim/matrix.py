@@ -38,6 +38,9 @@ class Muon(DirectionOptimizer):
         super().__init__(model, rate)
         self.spec, self.hidden = spec, set(model.hidden_matrices())
 
+    def first_moment(self, parameter):
+        return "momentum" if parameter in self.hidden else "m"
+
     def direction(self, parameter, state):
         spec, gradient = self.spec, parameter.grad
         if parameter in self.hidden:

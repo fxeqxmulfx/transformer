@@ -58,6 +58,9 @@ class AdaFisher(DirectionOptimizer):
         super().__init__(model, rate)
         self.spec, self.factors = spec, Factors(model)
 
+    def first_moment(self, parameter):
+        return "m"
+
     def zero_grad(self, set_to_none=True):
         self.factors.fresh.clear()
         super().zero_grad(set_to_none=set_to_none)

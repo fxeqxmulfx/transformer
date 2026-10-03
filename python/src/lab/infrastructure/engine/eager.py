@@ -12,7 +12,8 @@ class EagerStepper:
     def __init__(self, experiment, task, model, clock):
         self.task, self.model, self.clock = task, model, clock
         self.batch = experiment.evaluate.batch
-        self.optimizer = build_optimizer(experiment.optimizer, model)
+        self.optimizer = build_optimizer(experiment.optimizer, model, None, experiment.budget.updates,
+                                         experiment.seeds.model)
         self.norms = []
 
     def state_dict(self):

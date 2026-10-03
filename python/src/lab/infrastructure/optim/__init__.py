@@ -5,7 +5,8 @@ constructed it: every trainable parameter in `parameters()` order, the rate
 left for the schedule to set before each update, and PyTorch's default
 implementation (foreach on CUDA, a loop over tensors on the CPU). Every other
 rule is a direction optimizer (`.direction`), with the arithmetic of the
-historical optimizer zoo.
+historical optimizer zoo, and so is AdamW under a stage (`.stages`), which
+transforms the directions of a rule.
 """
 
 import torch
@@ -31,12 +32,28 @@ def adamw(spec, model, rate=None):
                              foreach=True, capturable=True)
 
 
-def guarded(spec, model, rate=None):
-    optimizer = build_optimizer(spec.base, model, rate)
-    if not isinstance(optimizer, direction.DirectionOptimizer):
-        raise NotImplementedError(f"The guard needs a direction rule, not {spec.base!r}")
-    optimizer.stages.append(stages.Guard(spec.sigma, optimizer))
-    return optimizer
+RULES = {optimizers.SGD: direction.SGD, optimizers.AdamW: coordinate.AdamW, optimizers.AMSGradW: coordinate.AMSGradW,
+         optimizers.Adam: coordinate.Adam, optimizers.AdamX: coordinate.AdamX, optimizers.AdaGrad: coordinate.AdaGrad,
+         optimizers.AdamNC: coordinate.AdamNC, optimizers.RMSProp: coordinate.RMSProp, optimizers.Muon: matrix.Muon,
+         optimizers.Dash: matrix.Dash, optimizers.AdaFisher: fisher.AdaFisher}
+
+
+def rule(spec, model, rate, updates, seed):
+    """The direction optimizer of `spec`, with the stages it names applied innermost first."""
+    if isinstance(spec, optimizers.Guarded):
+        optimizer = rule(spec.base, model, rate, updates, seed)
+        optimizer.stages.append(stages.Guard(spec.sigma, optimizer))
+        return optimizer
+    if isinstance(spec, optimizers.Magma):
+        if updates is None or (spec.seed is None and seed is None):
+            raise ValueError("MAGMA draws the masks of the run's updates from its seed or the model's")
+        optimizer = rule(spec.base, model, rate, updates, seed)
+        mask_seed = seed + 20_000 if spec.seed is None else spec.seed
+        optimizer.stages.append(stages.Magma(spec, optimizer, model, updates, mask_seed))
+        return optimizer
+    if type(spec) not in RULES:
+        raise NotImplementedError(f"No optimizer for {spec!r}")
+    return RULES[type(spec)](spec, model, rate)
 
 
 def report(optimizer):
@@ -44,20 +61,15 @@ def report(optimizer):
     return optimizer.report() if isinstance(optimizer, direction.DirectionOptimizer) else {}
 
 
-OPTIMIZERS = {optimizers.AdamW: adamw, optimizers.SGD: direction.SGD, optimizers.AMSGradW: coordinate.AMSGradW,
-              optimizers.Adam: coordinate.Adam, optimizers.AdamX: coordinate.AdamX,
-              optimizers.AdaGrad: coordinate.AdaGrad, optimizers.AdamNC: coordinate.AdamNC,
-              optimizers.RMSProp: coordinate.RMSProp, optimizers.Muon: matrix.Muon, optimizers.Dash: matrix.Dash,
-              optimizers.AdaFisher: fisher.AdaFisher, optimizers.Guarded: guarded}
-
-
-def build_optimizer(spec, model, rate=None):
+def build_optimizer(spec, model, rate=None, updates=None, seed=None):
     """The optimizer for `spec`; given `rate`, its capturable form.
 
     `rate` is a one-element tensor on the parameters' device. The capturable
     optimizer keeps all its state there and reads the rate from `rate` when an
     update runs, so a captured update replays with whatever `rate` holds.
+    `updates` and `seed`, the run's budget and model seed, are what MAGMA
+    draws its masks for and from.
     """
-    if type(spec) not in OPTIMIZERS:
-        raise NotImplementedError(f"No optimizer for {spec!r}")
-    return OPTIMIZERS[type(spec)](spec, model, rate)
+    if isinstance(spec, optimizers.AdamW):
+        return adamw(spec, model, rate)
+    return rule(spec, model, rate, updates, seed)

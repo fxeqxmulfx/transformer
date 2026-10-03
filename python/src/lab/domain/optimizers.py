@@ -250,11 +250,53 @@ class Guarded(Optimizer):
 
     def check(self):
         require_kind(self.base, Optimizer, "base")
+        require(not any(isinstance(base, Guarded) for base in bases(self)), "The guard applies once")
         require(0 < self.sigma <= 1, "The guard's sigma lies in (0, 1]")
 
     @property
     def lr(self):
         return self.base.lr
+
+
+@dataclass(frozen=True)
+class Magma(Optimizer):
+    """MAGMA over a direction rule: hidden matrices masked at random, damped by alignment.
+
+    Source: arXiv:2602.15322v1, Sections 2-3 and Algorithm 1;
+    `Transformer.Magma.cosine`, `damping` and `algorithmDisplacement`. After
+    the base computes every direction, each hidden matrix W, a weight of the
+    blocks, updates its scale s <- 0.9 s + 0.1 sigmoid(cos(m, g) / tau) from
+    0.5, where m is the base's raw first moment of W when it keeps one (Muon's
+    momentum, the m of the Adam family and of AdaFisher) and otherwise an EMA
+    m <- 0.9 m + 0.1 g that MAGMA keeps, and cos is zero at a zero vector. W
+    then moves by s times its direction with probability `survival`, and stays
+    otherwise: without the 1 / survival of Section 5's analysis. The masks
+    come from a CPU generator seeded by `seed`, or by the model seed + 20000
+    when it is None, the benchmark's convention. The manuscript is not among
+    papers/.
+    """
+    base: Optimizer
+    tau: float = 2.0
+    survival: float = 0.5
+    seed: int | None = None
+
+    def check(self):
+        require_kind(self.base, Optimizer, "base")
+        require(not any(isinstance(base, Magma) for base in bases(self)), "MAGMA applies once")
+        require(math.isfinite(self.tau) and self.tau > 0, "MAGMA's temperature is finite and positive")
+        require(0 < self.survival <= 1, "MAGMA's survival probability lies in (0, 1]")
+        require(self.seed is None or self.seed >= 0, "Seeds are nonnegative")
+
+    @property
+    def lr(self):
+        return self.base.lr
+
+
+def bases(stage):
+    """The optimizers a stage is built on, from its own base inward."""
+    while isinstance(stage, (Guarded, Magma)):
+        stage = stage.base
+        yield stage
 
 
 @dataclass(frozen=True)

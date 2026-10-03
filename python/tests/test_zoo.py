@@ -10,11 +10,15 @@ did, the coefficients that change with the update included: both compute them
 from a float64 update count. A first moment with a constant coefficient is
 the exception. It is averaged as the modular trainer averaged it,
 `m.mul_(b).add_(g, alpha=1 - b)`, where the historical step wrote
-`m.mul_(b).add_(g * (1 - b))`: under the historical form Adam and AMSGrad
-reproduce their runs bit for bit, and under their own they part in the last
-bits, which Adam's normalization amplifies to 3.1e-5 relative over 40 updates
-(AMSGrad 1.3e-5). The zoo's bias-corrected AdamW is PyTorch's, within 9e-8.
-They are held to a relative 1e-4 of every observation, with the same decisions.
+`m.mul_(b).add_(g * (1 - b))`: under the historical form Adam, AMSGrad, and
+MAGMA over Adam and over AdamW's direction reproduce their runs bit for bit,
+and under their own they part in the last bits, which Adam's normalization
+amplifies to 3.1e-5 relative over 40 updates (AMSGrad 1.3e-5, MAGMA over
+AdamW 8.7e-8). The zoo's bias-corrected AdamW is PyTorch's, within 9e-8. They
+are held to a relative 1e-4 of every observation, with the same decisions;
+MAGMA over Adam, run at three times Adam's rate, amplifies its last bits to
+2.2e-3 and is held to 3e-3. A rule under stages reports what they counted,
+the guard's acceptance and MAGMA's masks and scales, as its run did.
 """
 
 import json
@@ -28,8 +32,9 @@ import torch
 from lab.domain.spec import swap
 from lab.domain.training import Checkpoint
 from lab.dsl import (EVD, SGD, AdaFisher, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradW, Chebyshev, CoupledNewton,
-                     Dash, Geometric, Guarded, Inverse, InverseSqrt, Muon, NewtonDB, RMSProp)
+                     Dash, Geometric, Guarded, Inverse, InverseSqrt, Magma, Muon, NewtonDB, RMSProp)
 from lab.infrastructure.nn import build_model
+from lab.infrastructure.nn.legacy import rename
 from lab.infrastructure.optim import build_optimizer, coordinate
 from lab.infrastructure.store import RunDirectory
 
@@ -57,17 +62,33 @@ EXACT = {
     "dash_ndb_guarded": lambda rate: Guarded(Dash(lr=rate)),
     "adafisher": lambda rate: AdaFisher(lr=rate),
     "adafisherw": lambda rate: AdaFisher(lr=rate, weight_decay=0.01),
+    "magma_rmsprop": lambda rate: Magma(RMSProp(lr=rate)),
+    "magma_muon": lambda rate: Magma(Muon(lr=rate)),
+    "magma_sgd": lambda rate: Magma(SGD(lr=rate)),
 }
 CLOSE = {
     "adam": lambda rate: Adam(lr=rate),
     "amsgrad": lambda rate: AMSGradW(lr=rate, betas=BETAS, weight_decay=0.0),
     "adamw": lambda rate: AdamW(lr=rate, betas=BETAS, weight_decay=0.01),
+    "magma_adam": lambda rate: Magma(Adam(lr=rate)),
+    "magma_adamw": lambda rate: Magma(AdamW(lr=rate, betas=BETAS, weight_decay=0.01)),
 }
+# Relative distances other than 1e-4 that a rule of other arithmetic keeps from its run.
+TOLERANCE = {"magma_adam": 3e-3}
 
 
 def recipe(name, recipes):
     golden = FIXTURE["runs"][name]
     return golden, swap(historical(golden), "optimizer", recipes[name](golden["config"]["rate"]))
+
+
+def stages_agree(test, golden, result):
+    """The guard's acceptance and MAGMA's report are the run's."""
+    if golden["guard_acceptance"] is not None:
+        test.assertEqual(result["optimizer"]["guard"]["acceptance"], golden["guard_acceptance"])
+    if golden["magma"] is not None:
+        blocks = {rename(name): block for name, block in golden["magma"]["blocks"].items()}
+        test.assertEqual(result["optimizer"]["magma"], {**golden["magma"], "blocks": blocks})
 
 
 def historical_average(m, gradient, beta):
@@ -82,8 +103,7 @@ class ZooTests(unittest.TestCase):
             with self.subTest(recipe=name), tempfile.TemporaryDirectory() as root:
                 result = train(experiment, root)
                 reproduces(self, golden, root)
-                if golden["guard_acceptance"] is not None:
-                    self.assertEqual(result["optimizer"]["guard"]["acceptance"], golden["guard_acceptance"])
+                stages_agree(self, golden, result)
 
     def test_a_guard_applies_the_directions_it_accepts(self):
         golden = FIXTURE["runs"]["sgd"]
@@ -114,12 +134,13 @@ class ZooTests(unittest.TestCase):
             reproduces(self, golden, root)
 
     def test_constant_momenta_reproduce_their_runs_under_the_historical_arithmetic(self):
-        for name in ("adam", "amsgrad"):
+        for name in ("adam", "amsgrad", "magma_adam", "magma_adamw"):
             golden, experiment = recipe(name, CLOSE)
             with (self.subTest(recipe=name), tempfile.TemporaryDirectory() as root,
                   mock.patch.object(coordinate, "average", historical_average)):
-                train(experiment, root)
+                result = train(experiment, root)
                 reproduces(self, golden, root)
+                stages_agree(self, golden, result)
 
     def test_rules_of_other_arithmetic_follow_their_runs(self):
         for name in CLOSE:
@@ -128,11 +149,12 @@ class ZooTests(unittest.TestCase):
                 result = train(experiment, root)
                 history = RunDirectory(Path(root) / "historical" / "run").records("history")
                 self.assertEqual([row["step"] for row in history], [check["step"] for check in golden["curves"]])
+                tolerance = TOLERANCE.get(name, 1e-4)
                 for row, check in zip(history, golden["curves"], strict=True):
-                    self.assertLess(abs(row["validation"]["loss"] / check["validation_loss"] - 1), 1e-4)
+                    self.assertLess(abs(row["validation"]["loss"] / check["validation_loss"] - 1), tolerance)
                 self.assertEqual((result["stop"]["reason"], result["best"]["step"]),
                                  (REASONS[golden["stop_reason"]], golden["best_step"]))
-                self.assertLess(abs(result["best"]["test"]["loss"] / golden["test_loss"] - 1), 1e-4)
+                self.assertLess(abs(result["best"]["test"]["loss"] / golden["test_loss"] - 1), tolerance)
 
 
 if __name__ == "__main__":

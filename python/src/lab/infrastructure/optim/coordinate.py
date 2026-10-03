@@ -1,4 +1,4 @@
-"""Coordinate-wise adaptive rules: AMSGradW, Adam, AdamX, AdaGrad, AdamNC and RMSProp.
+"""Coordinate-wise adaptive rules: AMSGradW, AdamW, Adam, AdamX, AdaGrad, AdamNC and RMSProp.
 
 Ports of the rules of `optimizer_benchmark.coordinate.CoordinateOptimizer`
 and of `magma_benchmark.optimizer.RMSPropOptimizer`,
@@ -71,6 +71,9 @@ class Coordinate(DirectionOptimizer):
             state["step"].add_(1)
         return state
 
+    def first_moment(self, parameter):
+        return "m" if "m" in self.buffers else None
+
 
 def varies(*decays):
     return any(not isinstance(decay, optimizers.Constant) for decay in decays)
@@ -93,6 +96,31 @@ class AMSGradW(Coordinate):
         torch.maximum(maximum, v, out=maximum)
         direction = ratio(m, maximum.sqrt() + spec.eps, factor(spec.lr_decay, step))
         if spec.weight_decay:
+            direction = direction + spec.weight_decay * parameter
+        return direction
+
+
+class AdamW(Coordinate):
+    """The `adamw` rule: PyTorch's AdamW as a direction, for stages to transform.
+
+    m / (1 - b1^t) over sqrt(v / (1 - b2^t)) + eps, plus `weight_decay` times
+    each decayed parameter, which the update multiplies by the rate as
+    PyTorch's decoupled decay does. It parts from the native AdamW in the last
+    bits.
+    """
+    buffers = ("m", "v")
+    moments = "raw_buffers_before_bias_correction_for_AdamW"
+
+    def __init__(self, spec, model, rate=None):
+        super().__init__(spec, model, rate, True)
+
+    def direction(self, parameter, state):
+        spec, gradient, state = self.spec, parameter.grad, self.begin(parameter, state)
+        (beta, beta2), m, v, step = spec.betas, state["m"], state["v"], state["step"]
+        average(m, gradient, beta)
+        v.mul_(beta2).addcmul_(gradient, gradient, value=1 - beta2)
+        direction = (m / (1 - beta ** step)) / ((v / (1 - beta2 ** step)).sqrt() + spec.eps)
+        if spec.weight_decay and (spec.decay == "all" or parameter.ndim >= 2):
             direction = direction + spec.weight_decay * parameter
         return direction
 
