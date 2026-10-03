@@ -13,8 +13,9 @@ supervised logits and their targets, `loss` to the training loss, and
 
 from ...domain import benchmarks
 from .modular import ModularTask
+from .text import TextTask
 
-TASKS = {benchmarks.ModularDivision: ModularTask}
+TASKS = {benchmarks.ModularDivision: ModularTask, benchmarks.TinyShakespeare: TextTask}
 
 
 def build_task(spec, data_seed, device):

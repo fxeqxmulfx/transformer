@@ -12,7 +12,13 @@ decides how updates and evaluations reach the device:
     stepper.evaluate(split)              the metrics of the named split
 
 A stepper may return gradient norms late; the loop collects them before each
-observation and stops at the first that is not finite.
+observation and each sampled update, and stops at the first that is not
+finite: the run fails, or, under a stopping policy, ends there.
+
+When the benchmark has a selection split, the model of the best observation
+travels in every checkpoint. At the end of a run it is restored, its selection
+loss is evaluated again and must be the one observed, and the benchmark's
+final splits are evaluated once, on it.
 """
 
 from contextlib import contextmanager
@@ -22,6 +28,7 @@ import time
 import torch
 
 from ...domain import cadence
+from ...domain.stopping import Selection
 from ...domain.training import rate
 from ..benchmarks import build_task
 from ..nn import build_model
@@ -69,6 +76,12 @@ class Clock:
         self.segment_diagnostics += time.perf_counter() - started
 
 
+class NonfiniteGradient(FloatingPointError):
+    def __init__(self, step, norm):
+        super().__init__(f"The gradient norm of update {step} is {norm}")
+        self.step = step
+
+
 @torch.no_grad()
 def evaluate(task, model, rows, batch):
     """The metrics of one split, evaluated exhaustively in chunks of `batch` rows."""
@@ -96,6 +109,9 @@ class Training:
         self.stepper = stepper(experiment, self.task, self.model, self.clock)
         self.sampler = self.task.sampler(experiment.budget.batch, experiment.seeds.batch_seed)
         self.completed, self.seen, self.last_batch_size = 0, 0, None
+        selection = experiment.benchmark.selection
+        self.selection = None if selection is None else Selection(experiment.stopping)
+        self.best = None
         checkpoint = run.checkpoint(self.device)
         if checkpoint is not None:
             self.model.load_state_dict(checkpoint["model"])
@@ -104,9 +120,15 @@ class Training:
             self.clock.restore(checkpoint)
             self.completed, self.seen = checkpoint["step"], checkpoint["examples_seen"]
             self.last_batch_size = checkpoint["last_batch_size"]
+            self.best = checkpoint.get("best")
         # Records past the checkpoint are dropped; without a checkpoint, every record is.
         run.rewind(self.completed if checkpoint is not None else -1)
         self.history = run.records("history")
+        if self.selection is not None:
+            for row in self.history:
+                self.selection.observe(row["step"], row[selection]["loss"])
+            if self.selection.step != (None if self.best is None else self.best["step"]):
+                raise ValueError("The checkpointed best model is not the best observation of the history")
         if experiment.diagnostics.gradients and (
                 [row["step"] for row in run.records("gradients")] != list(range(1, self.completed + 1))):
             raise ValueError("The gradient trace does not cover every checkpointed update")
@@ -123,27 +145,46 @@ class Training:
         else:
             self.history.append(row)
             self.run.record("history", row)
+            selection = self.experiment.benchmark.selection
+            if self.selection is not None and self.selection.observe(step, row[selection]["loss"]):
+                self.best = {"step": step, "model": {name: value.detach().cpu().clone()
+                                                     for name, value in self.model.state_dict().items()}}
         self.progress({"diagnostic_probe": True, **row} if probe else row)
 
     def flush(self):
         """Check, and record if traced, the gradient norms of the updates since the last flush."""
-        for row, norm in zip(self.trace, self.stepper.gradient_norms(), strict=True):
+        trace, self.trace = self.trace, []
+        for row, norm in zip(trace, self.stepper.gradient_norms(), strict=True):
             if not math.isfinite(norm):
-                raise FloatingPointError(f"The gradient norm of update {row['step']} is {norm}")
+                raise NonfiniteGradient(row["step"], norm)
             if self.experiment.diagnostics.gradients:
                 self.run.record("gradients", {**row, "gradient_l2": norm})
-        self.trace = []
 
     def save(self, step):
         self.run.save({"model": self.model.state_dict(), "optimizer": self.stepper.state_dict(), "step": step,
                        "examples_seen": self.seen, "training_seconds": self.clock.training,
                        "diagnostic_seconds": self.clock.diagnostics, "last_batch_size": self.last_batch_size,
-                       "wall_seconds": self.clock.wall(), **self.sampler.state()})
+                       "wall_seconds": self.clock.wall(), **self.sampler.state(),
+                       **({} if self.selection is None else {"best": self.best})})
+
+    def stopped(self):
+        return self.selection is not None and self.selection.stop is not None
 
     def __call__(self):
-        experiment = self.experiment
         if not self.history:
             self.observe(0, probe=False)
+        try:
+            if not self.stopped():
+                self.train()
+        except NonfiniteGradient as failure:
+            if self.experiment.stopping is None:
+                raise
+            self.clock.pause()
+            self.selection.stop = (failure.step, "nonfinite_gradient")
+        return self.finish()
+
+    def train(self):
+        experiment = self.experiment
         self.clock.resume()
         for step in range(self.completed + 1, experiment.budget.updates + 1):
             parts, place = self.sampler.next()
@@ -156,6 +197,7 @@ class Training:
                                "learning_rate": learning_rate})
             if sampled:
                 with self.clock.diagnosing():
+                    self.flush()
                     self.run.record("diagnostics", {"step": step, "batch_size": size, **place,
                                                     "learning_rate": learning_rate, **measurements})
             canonical = cadence.canonical(experiment, step)
@@ -164,15 +206,37 @@ class Training:
                     self.flush()
                 self.clock.pause()
                 self.observe(step, probe=not canonical)
-                if cadence.checkpointed(experiment, step):
+                if self.stopped() or cadence.checkpointed(experiment, step):
                     self.save(step)
+                if self.stopped():
+                    return
                 self.clock.resume()
+
+    def finish(self):
+        experiment = self.experiment
         memory = {"peak_cuda_allocated_bytes": None, "peak_cuda_reserved_bytes": None}
         if self.device.type == "cuda":
             memory = {"peak_cuda_allocated_bytes": torch.cuda.max_memory_allocated(self.device),
                       "peak_cuda_reserved_bytes": torch.cuda.max_memory_reserved(self.device)}
-        result = {"updates": experiment.budget.updates, "training_seconds": self.clock.training,
-                  "diagnostic_seconds": self.clock.diagnostics, "wall_seconds": self.clock.wall(), **memory,
-                  **self.task.analyze(self.history), "final": self.history[-1]}
+        step, reason = self.selection.stop if self.stopped() else (experiment.budget.updates, "budget")
+        result = {"updates": experiment.budget.updates, "stop": {"step": step, "reason": reason},
+                  "training_seconds": self.clock.training, "diagnostic_seconds": self.clock.diagnostics,
+                  "wall_seconds": self.clock.wall(), **memory, **self.task.analyze(self.history),
+                  "final": self.history[-1]}
+        if self.selection is not None:
+            result["best"] = self.select()
         self.run.finish(result)
         return result
+
+    def select(self):
+        """Restore the best observation's model, check it, and evaluate the final splits on it once."""
+        benchmark = self.experiment.benchmark
+        if self.best is None:
+            raise FloatingPointError(f"No {benchmark.selection} loss of the run is finite")
+        self.model.load_state_dict(self.best["model"])
+        observed = next(row for row in self.history if row["step"] == self.best["step"])[benchmark.selection]
+        again = self.stepper.evaluate(benchmark.selection)
+        if again != observed:
+            raise RuntimeError(f"The best model evaluates to {again}, not to the observed {observed}")
+        return {"step": self.best["step"], benchmark.selection: again,
+                **{split: self.stepper.evaluate(split) for split in benchmark.final}}

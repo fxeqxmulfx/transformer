@@ -5,12 +5,13 @@
     experiments = {"softmax": base, "sparsemax": substitute(base, Softmax, Sparsemax())}
 """
 
-from .domain.benchmarks import ModularDivision
+from .domain.benchmarks import ModularDivision, TinyShakespeare
 from .domain.experiment import Experiment, grid
 from .domain.model import (FFN, GELU, XSA, Attention, Block, FusedQKV, LayerNorm, NoPositions, Normal,
                            PerHeadQKV, PostNorm, PreNorm, QKNorm, ReLU, ReLU2, RMSNorm, RoPE, ScaledDot,
                            Sinusoidal, Softmax, Sparsemax, Tied, TorchDefault, Transformer, Untied)
 from .domain.spec import describe, fingerprint, substitute, swap, walk
+from .domain.stopping import EarlyStopping
 from .domain.training import (SGD, AdamW, AMSGradW, Budget, Checkpoint, Cosine, CudaGraph, Diagnostics, Eager,
                               Evaluate, Schedule, Seeds)
 
@@ -22,10 +23,10 @@ __all__ = [
     "FusedQKV", "PerHeadQKV", "ScaledDot", "QKNorm", "Softmax", "Sparsemax",
     "ReLU", "ReLU2", "GELU", "Tied", "Untied", "TorchDefault", "Normal",
     # benchmarks
-    "ModularDivision",
+    "ModularDivision", "TinyShakespeare",
     # training
     "AdamW", "AMSGradW", "SGD", "Schedule", "Cosine", "Budget", "Seeds", "Evaluate", "Diagnostics", "Checkpoint",
-    "Eager", "CudaGraph",
+    "EarlyStopping", "Eager", "CudaGraph",
     # composition
     "Experiment", "grid", "swap", "substitute", "walk", "describe", "fingerprint",
 ]

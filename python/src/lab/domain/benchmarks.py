@@ -20,6 +20,16 @@ class Benchmark(Spec, kind=True):
         """The splits evaluated at every observation."""
         raise NotImplementedError
 
+    @property
+    def selection(self):
+        """The observed split whose loss selects the best observation, if any."""
+        return None
+
+    @property
+    def final(self):
+        """The splits evaluated once, on the model of the best observation."""
+        return ()
+
 
 def is_prime(number):
     return number >= 2 and all(number % divisor for divisor in range(2, math.isqrt(number) + 1))
@@ -57,3 +67,39 @@ class ModularDivision(Benchmark):
     @property
     def observed(self):
         return ("train", "heldout")
+
+
+@dataclass(frozen=True)
+class TinyShakespeare(Benchmark):
+    """Next-character prediction on Tiny Shakespeare.
+
+    Source: the char-rnn corpus (Karpathy, 2015) of 1,115,393 characters, as
+    the historical GPTMini text benchmarks read it (`optimizer_benchmark.data`):
+    the vocabulary is the sorted set of its characters, and the text splits at
+    90% and 95% into train, validation and test. Each update draws `batch`
+    windows of `window` characters at uniformly random starts in the training
+    text and predicts every next character. Evaluation reads a split as
+    consecutive nonoverlapping windows. Validation selects the best
+    observation, and the test split is evaluated once, on its model. The
+    splits are fixed, so the data seed is not used.
+    """
+    window: int
+
+    def check(self):
+        require(self.window >= 1, "Windows hold at least one character")
+
+    @property
+    def context(self):
+        return self.window
+
+    @property
+    def observed(self):
+        return ("validation",)
+
+    @property
+    def selection(self):
+        return "validation"
+
+    @property
+    def final(self):
+        return ("test",)

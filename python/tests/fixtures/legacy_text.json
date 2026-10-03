@@ -1,0 +1,8266 @@
+{
+ "source": {
+  "commit": "317db81",
+  "trainer": "legacy/gpt_mini/src/infrastructure/benchmark/full_compile_benchmark/training.py (train_one, uncompiled step)",
+  "stopper": "legacy/gpt_mini/src/domain/stopping.py",
+  "torch": "2.14.0+cu126",
+  "threads": 1,
+  "gpu": "NVIDIA GeForce GTX 1050",
+  "hash": "sha256 of each tensor's contiguous bytes"
+ },
+ "runs": {
+  "softmax": {
+   "config": {
+    "attention": "softmax",
+    "method": "sgd",
+    "rate": 0.3,
+    "seed": 0,
+    "batch": 8,
+    "model": {
+     "vocab_size": 65,
+     "n_layers": 2,
+     "n_heads": 4,
+     "d_model": 32,
+     "d_ff": 128,
+     "max_seq_len": 16,
+     "rope_theta": 10000.0
+    },
+    "stop": {
+     "every": 5,
+     "patience": 2,
+     "min_delta": 0.0001,
+     "min_steps": 10,
+     "max_steps": 40,
+     "divergence_delta": 0.1,
+     "divergence_patience": 3
+    },
+    "device": "cpu"
+   },
+   "curves": [
+    {
+     "step": 0,
+     "validation_loss": 4.176459379483501,
+     "train_loss": null,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 5,
+     "validation_loss": 3.458406844063845,
+     "train_loss": 3.5396595001220703,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 10,
+     "validation_loss": 3.3488883720408897,
+     "train_loss": 3.3406715393066406,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 15,
+     "validation_loss": 3.2588341777259684,
+     "train_loss": 3.436471939086914,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 20,
+     "validation_loss": 3.2169061603299856,
+     "train_loss": 3.243391275405884,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 25,
+     "validation_loss": 3.191037201847202,
+     "train_loss": 3.3746869564056396,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 30,
+     "validation_loss": 3.16857962697274,
+     "train_loss": 3.045300006866455,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 35,
+     "validation_loss": 3.1523022776183645,
+     "train_loss": 3.172305107116699,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 40,
+     "validation_loss": 3.150944057119799,
+     "train_loss": 3.106715440750122,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": "max_steps"
+    }
+   ],
+   "status": "ok",
+   "stop_reason": "max_steps",
+   "actual_steps": 40,
+   "best_step": 40,
+   "validation_loss": 3.150944057119799,
+   "test_loss": 3.172727986011478,
+   "initial_sha256": "0b5e1b0ed4bef74b919be5aeeb2a8080610f13331860f43a3f3013fcde4692e5",
+   "batch_plan_sha256": "d9f3a0a28e0e8b077d0dc9356a955ced3025851c7173e4b5673270d66bb9f005",
+   "best_model_sha256": "051d611b24efe5efab7f2e647394f9de00249379ce0d4e7f56f1aaaa5666c92d",
+   "best": {
+    "embed.weight": "a07f4ed22ae207eb78f3f9e108f3369cf959ad439eb5bac0c8c4e321f0360027",
+    "blocks.0.attn.log_alpha": "89bb6975a6ae15aeeb668c450f33868f0fd833353a106c5abd11a6cf5d706cd5",
+    "blocks.0.attn.qkv.weight": "efd6c88447a326aaabecad2d12431b1cf77df996fb6c796a2a4270154ef9f3c6",
+    "blocks.0.attn.proj.weight": "aed2e0d90087c57218e709a98433f36a082f3eacef8eb3bacf783fcdba67c27d",
+    "blocks.0.ffn.w_in.weight": "0b3e2b9698f5af0f2bc1b5cae9f294889dd7fe05c744824d2ac65efdfad597e7",
+    "blocks.0.ffn.w_out.weight": "90878f659a4ba9c1dbaa22d78a540a8827b33e67cc9bd3d8051e7b508b562c4f",
+    "blocks.1.attn.log_alpha": "b7b7c9153206b3051ededa0bfb2ee49cc07f7785d2271c765c651d1e85b06a61",
+    "blocks.1.attn.qkv.weight": "155fc07f39d0e52bdc04dea515fdd346dc172ac0b1a3c2c5aecdb3fa34e69560",
+    "blocks.1.attn.proj.weight": "6f59e3b795e5002cff8bd53c1140959cc579bbb5988d725479bbe6a8ed052d1e",
+    "blocks.1.ffn.w_in.weight": "e79c06464df074835385c9d2fab13eaeac91274b25950a1a8cd7cee6951713f1",
+    "blocks.1.ffn.w_out.weight": "8105399cd1321c2fa31b72e300e85e8b88ab647287f6660ea48f29d7d5ce857d",
+    "unembed.weight": "a07f4ed22ae207eb78f3f9e108f3369cf959ad439eb5bac0c8c4e321f0360027"
+   }
+  },
+  "sparsemax": {
+   "config": {
+    "attention": "sparsemax",
+    "method": "sgd",
+    "rate": 0.3,
+    "seed": 1,
+    "batch": 8,
+    "model": {
+     "vocab_size": 65,
+     "n_layers": 2,
+     "n_heads": 4,
+     "d_model": 32,
+     "d_ff": 128,
+     "max_seq_len": 16,
+     "rope_theta": 10000.0
+    },
+    "stop": {
+     "every": 5,
+     "patience": 2,
+     "min_delta": 0.0001,
+     "min_steps": 10,
+     "max_steps": 40,
+     "divergence_delta": 0.1,
+     "divergence_patience": 3
+    },
+    "device": "cpu"
+   },
+   "curves": [
+    {
+     "step": 0,
+     "validation_loss": 4.169669397865854,
+     "train_loss": null,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 5,
+     "validation_loss": 3.468607929071019,
+     "train_loss": 3.5766210556030273,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 10,
+     "validation_loss": 3.3278761657101863,
+     "train_loss": 3.241217851638794,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 15,
+     "validation_loss": 3.2486420597202295,
+     "train_loss": 3.5003366470336914,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 20,
+     "validation_loss": 3.2141855160509327,
+     "train_loss": 3.193758487701416,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 25,
+     "validation_loss": 3.171912549318508,
+     "train_loss": 3.103494167327881,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 30,
+     "validation_loss": 3.1562606483142037,
+     "train_loss": 2.991410255432129,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 35,
+     "validation_loss": 3.126417907101865,
+     "train_loss": 3.2523069381713867,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 40,
+     "validation_loss": 3.0966163580523673,
+     "train_loss": 3.1297152042388916,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": "max_steps"
+    }
+   ],
+   "status": "ok",
+   "stop_reason": "max_steps",
+   "actual_steps": 40,
+   "best_step": 40,
+   "validation_loss": 3.0966163580523673,
+   "test_loss": 3.1099685034074604,
+   "initial_sha256": "0402170c3cd6c5e651adbc3910357c5bfd8a162f291d0fe7593629c122f51979",
+   "batch_plan_sha256": "85eddf66e034acd0324c6c80c08b229cf372ac297e44b2bff592f72bb0317b7d",
+   "best_model_sha256": "bff0d4aa67e65fafc22833bd38987be8be428f58c38a413ca961e79e7d3bc470",
+   "best": {
+    "embed.weight": "9df86847a8529d52fc316da9b7c47e7263929c250c67bb814661d79a2e9e8fb1",
+    "blocks.0.attn.log_alpha": "a4a99c02dbc5e606dc6646e3a2a695772b5f24694b0532601b6bf846cdffa29d",
+    "blocks.0.attn.qkv.weight": "394e0c0c5657c132a7c6a2a401dd69e0ed5fa9278ad456dd77ba5a9dea975b1e",
+    "blocks.0.attn.proj.weight": "b6a7d6e1f3fd0dddaa6b18d1cd41fd10dba05f302a1727c7ecd1b4912a0b75b5",
+    "blocks.0.ffn.w_in.weight": "8fd51854663715e868accf632503d103a0237cbbe1d08d025ef1294d1decc114",
+    "blocks.0.ffn.w_out.weight": "7a7f67698bb6dc539b741dd387459a04383465270ac818e1b09a2a4fe3ca23f2",
+    "blocks.1.attn.log_alpha": "9a998295993c93d6fc86c1445a5c558d910a56210bfe880e9840d8db57045b51",
+    "blocks.1.attn.qkv.weight": "b4bc45fc407189128ce8cb9df0c2a3ba61ec10d0d3601ed792c57cf1d1583315",
+    "blocks.1.attn.proj.weight": "db9d706dba7b834df8e8d91f4845f95a9f9235dcf9d41e24bd07cd5db0f5f2f6",
+    "blocks.1.ffn.w_in.weight": "8cea2d0592120e497c56f35cd8766f86749d5223fe6d0b61c8ddaa88f4b65a42",
+    "blocks.1.ffn.w_out.weight": "3996428b89af36e3eba15cb9bb598db71b89beae5adc482731b7c4bd050402c7",
+    "unembed.weight": "9df86847a8529d52fc316da9b7c47e7263929c250c67bb814661d79a2e9e8fb1"
+   }
+  },
+  "patience": {
+   "config": {
+    "attention": "softmax",
+    "method": "sgd",
+    "rate": 0.3,
+    "seed": 2,
+    "batch": 8,
+    "model": {
+     "vocab_size": 65,
+     "n_layers": 2,
+     "n_heads": 4,
+     "d_model": 32,
+     "d_ff": 128,
+     "max_seq_len": 16,
+     "rope_theta": 10000.0
+    },
+    "stop": {
+     "every": 5,
+     "patience": 2,
+     "min_delta": 0.05,
+     "min_steps": 10,
+     "max_steps": 40,
+     "divergence_delta": 0.1,
+     "divergence_patience": 3
+    },
+    "device": "cpu"
+   },
+   "curves": [
+    {
+     "step": 0,
+     "validation_loss": 4.179536462069584,
+     "train_loss": null,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 5,
+     "validation_loss": 3.477110888181492,
+     "train_loss": 3.5677292346954346,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 10,
+     "validation_loss": 3.318189842629125,
+     "train_loss": 3.357423782348633,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 15,
+     "validation_loss": 3.2976442005918223,
+     "train_loss": 3.069059371948242,
+     "new_best": true,
+     "bad_checks": 1,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 20,
+     "validation_loss": 3.1925716799677186,
+     "train_loss": 3.2192933559417725,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 25,
+     "validation_loss": 3.1702572968974176,
+     "train_loss": 3.3622238636016846,
+     "new_best": true,
+     "bad_checks": 1,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 30,
+     "validation_loss": 3.153886074246772,
+     "train_loss": 3.0249087810516357,
+     "new_best": true,
+     "bad_checks": 2,
+     "divergent_checks": 0,
+     "stop_reason": "patience"
+    }
+   ],
+   "status": "ok",
+   "stop_reason": "patience",
+   "actual_steps": 30,
+   "best_step": 30,
+   "validation_loss": 3.153886074246772,
+   "test_loss": 3.1628474713055956,
+   "initial_sha256": "6676d0964319d065bfd9859cee764e45cc425963d25db723e83b104ba7e66969",
+   "batch_plan_sha256": "c45e728ea75bd76f3082a66a5e6767ab81830eacc807650ce1f60855c2816858",
+   "best_model_sha256": "445ceeda269179b8724996c6a037ba7256162bf606a31fc9526f6fd027bdd4b6",
+   "best": {
+    "embed.weight": "3125787a91aaa93373969344a389aa7463cc42aadab51e91c9dc62514f7f093d",
+    "blocks.0.attn.log_alpha": "090d5c74bc5f9ed4ced788c68e85620855c913aa4eea657cf836bd0cc5c813bc",
+    "blocks.0.attn.qkv.weight": "160f8cd0b114fe1dbdceb9a7e9865970fb42304ea9311e29a0b75376b937a547",
+    "blocks.0.attn.proj.weight": "5f6c17eb0745fca38f35046e202afb935bf4609bb4b88e216f5f6cf0d861faa1",
+    "blocks.0.ffn.w_in.weight": "c81aa013b76a3309d67c42c7eb1b2017c02e8bcb75d1dbd6fe3a1928c79e2e34",
+    "blocks.0.ffn.w_out.weight": "aee12bcbd04d6a96292b91ecdceae330668e45174c5c09e2ba449adbab138edd",
+    "blocks.1.attn.log_alpha": "01febf516fcfc02adbf0690a6659cd07e97a6b2596bd2d6f76c1c8f33cd55b56",
+    "blocks.1.attn.qkv.weight": "0773a162daaeb1db31282aa75e39cd9e51a5ebfb57385d479a80eaaaf7525978",
+    "blocks.1.attn.proj.weight": "17b2aa3b027097960164105e4e8bd60db8234cd8e89121b16a7f43331dc8ed83",
+    "blocks.1.ffn.w_in.weight": "43f5e3826dc48648c2ba1e0530b73bed57767fd8007483be92056a82c740bd8b",
+    "blocks.1.ffn.w_out.weight": "8a2bdd788aa0e7c16b900b20112d5135931a795888e353c0e83a3b6c8b0967d7",
+    "unembed.weight": "3125787a91aaa93373969344a389aa7463cc42aadab51e91c9dc62514f7f093d"
+   }
+  },
+  "divergence": {
+   "config": {
+    "attention": "softmax",
+    "method": "sgd",
+    "rate": 1.5,
+    "seed": 0,
+    "batch": 8,
+    "model": {
+     "vocab_size": 65,
+     "n_layers": 2,
+     "n_heads": 4,
+     "d_model": 32,
+     "d_ff": 128,
+     "max_seq_len": 16,
+     "rope_theta": 10000.0
+    },
+    "stop": {
+     "every": 5,
+     "patience": 5,
+     "min_delta": 0.0001,
+     "min_steps": 10,
+     "max_steps": 40,
+     "divergence_delta": 0.1,
+     "divergence_patience": 3
+    },
+    "device": "cpu"
+   },
+   "curves": [
+    {
+     "step": 0,
+     "validation_loss": 4.176459379483501,
+     "train_loss": null,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 5,
+     "validation_loss": 5.630635760401722,
+     "train_loss": 5.572427749633789,
+     "new_best": false,
+     "bad_checks": 1,
+     "divergent_checks": 1,
+     "stop_reason": null
+    },
+    {
+     "step": 10,
+     "validation_loss": 6.560154008249642,
+     "train_loss": 7.7207560539245605,
+     "new_best": false,
+     "bad_checks": 2,
+     "divergent_checks": 2,
+     "stop_reason": null
+    },
+    {
+     "step": 15,
+     "validation_loss": 6.837390714670014,
+     "train_loss": 7.07833194732666,
+     "new_best": false,
+     "bad_checks": 3,
+     "divergent_checks": 3,
+     "stop_reason": "validation_divergence"
+    }
+   ],
+   "status": "ok",
+   "stop_reason": "validation_divergence",
+   "actual_steps": 15,
+   "best_step": 0,
+   "validation_loss": 4.176459379483501,
+   "test_loss": 4.177346552187949,
+   "initial_sha256": "0b5e1b0ed4bef74b919be5aeeb2a8080610f13331860f43a3f3013fcde4692e5",
+   "batch_plan_sha256": "d9f3a0a28e0e8b077d0dc9356a955ced3025851c7173e4b5673270d66bb9f005",
+   "best_model_sha256": "0b5e1b0ed4bef74b919be5aeeb2a8080610f13331860f43a3f3013fcde4692e5",
+   "best": {
+    "embed.weight": "50cadd3d05a73c4e922b2eb72edcdb9ce68bca94b67bef82f59ef373a3faccc4",
+    "blocks.0.attn.log_alpha": "5ece95309b75a76ba1118b810debfcac69044b2c328a94818621f458a2cc0ab1",
+    "blocks.0.attn.qkv.weight": "4a375267bafd8be4244b32a05bd704d5c935e6597610a9a1b96248f10c67d769",
+    "blocks.0.attn.proj.weight": "e7194485578fbf7c9a24309d23f7ec145adc5bf9b6440f7798fe8e237a5413b5",
+    "blocks.0.ffn.w_in.weight": "8e8645b6fd00ba4e99cde2470ecf973a2a80e010a4ad63cbaf71e1a41beccc93",
+    "blocks.0.ffn.w_out.weight": "5ef063adc88355a54e792b7eda18bb571d65973da9e1eaa845824de3af0bbbab",
+    "blocks.1.attn.log_alpha": "5ece95309b75a76ba1118b810debfcac69044b2c328a94818621f458a2cc0ab1",
+    "blocks.1.attn.qkv.weight": "6e39b438b7153de4e9b423a737a99c8d74d73fd94b6c46a2794df830c7f41619",
+    "blocks.1.attn.proj.weight": "7c2913009a0f2c65d380486e4f2043b1a832ab86bec3c2bc0c579ef0020af367",
+    "blocks.1.ffn.w_in.weight": "0ca62d3fcaa54397c116291949ee59e7aef401b78e5a52a0dd2648192b600cd2",
+    "blocks.1.ffn.w_out.weight": "9e8fcfc5fcea9347b97cd905673eacbc0b2db71b34356940ea58e6695a3d431e",
+    "unembed.weight": "50cadd3d05a73c4e922b2eb72edcdb9ce68bca94b67bef82f59ef373a3faccc4"
+   }
+  },
+  "nonfinite": {
+   "config": {
+    "attention": "softmax",
+    "method": "sgd",
+    "rate": 3.0,
+    "seed": 0,
+    "batch": 8,
+    "model": {
+     "vocab_size": 65,
+     "n_layers": 2,
+     "n_heads": 4,
+     "d_model": 32,
+     "d_ff": 128,
+     "max_seq_len": 16,
+     "rope_theta": 10000.0
+    },
+    "stop": {
+     "every": 5,
+     "patience": 5,
+     "min_delta": 0.0001,
+     "min_steps": 10,
+     "max_steps": 40,
+     "divergence_delta": 0.1,
+     "divergence_patience": 3
+    },
+    "device": "cpu"
+   },
+   "curves": [
+    {
+     "step": 0,
+     "validation_loss": 4.176459379483501,
+     "train_loss": null,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 5,
+     "validation_loss": 30.88745068149211,
+     "train_loss": 34.7737922668457,
+     "new_best": false,
+     "bad_checks": 1,
+     "divergent_checks": 1,
+     "stop_reason": null
+    },
+    {
+     "step": 10,
+     "validation_loss": 46.63037571736012,
+     "train_loss": 86.41510009765625,
+     "new_best": false,
+     "bad_checks": 2,
+     "divergent_checks": 2,
+     "stop_reason": null
+    },
+    {
+     "step": 15,
+     "validation_loss": null,
+     "train_loss": 3570.597412109375,
+     "new_best": false,
+     "bad_checks": 2,
+     "divergent_checks": 2,
+     "stop_reason": "nonfinite_validation"
+    }
+   ],
+   "status": "recovered",
+   "stop_reason": "nonfinite_validation",
+   "actual_steps": 15,
+   "best_step": 0,
+   "validation_loss": 4.176459379483501,
+   "test_loss": 4.177346552187949,
+   "initial_sha256": "0b5e1b0ed4bef74b919be5aeeb2a8080610f13331860f43a3f3013fcde4692e5",
+   "batch_plan_sha256": "d9f3a0a28e0e8b077d0dc9356a955ced3025851c7173e4b5673270d66bb9f005",
+   "best_model_sha256": "0b5e1b0ed4bef74b919be5aeeb2a8080610f13331860f43a3f3013fcde4692e5",
+   "best": {
+    "embed.weight": "50cadd3d05a73c4e922b2eb72edcdb9ce68bca94b67bef82f59ef373a3faccc4",
+    "blocks.0.attn.log_alpha": "5ece95309b75a76ba1118b810debfcac69044b2c328a94818621f458a2cc0ab1",
+    "blocks.0.attn.qkv.weight": "4a375267bafd8be4244b32a05bd704d5c935e6597610a9a1b96248f10c67d769",
+    "blocks.0.attn.proj.weight": "e7194485578fbf7c9a24309d23f7ec145adc5bf9b6440f7798fe8e237a5413b5",
+    "blocks.0.ffn.w_in.weight": "8e8645b6fd00ba4e99cde2470ecf973a2a80e010a4ad63cbaf71e1a41beccc93",
+    "blocks.0.ffn.w_out.weight": "5ef063adc88355a54e792b7eda18bb571d65973da9e1eaa845824de3af0bbbab",
+    "blocks.1.attn.log_alpha": "5ece95309b75a76ba1118b810debfcac69044b2c328a94818621f458a2cc0ab1",
+    "blocks.1.attn.qkv.weight": "6e39b438b7153de4e9b423a737a99c8d74d73fd94b6c46a2794df830c7f41619",
+    "blocks.1.attn.proj.weight": "7c2913009a0f2c65d380486e4f2043b1a832ab86bec3c2bc0c579ef0020af367",
+    "blocks.1.ffn.w_in.weight": "0ca62d3fcaa54397c116291949ee59e7aef401b78e5a52a0dd2648192b600cd2",
+    "blocks.1.ffn.w_out.weight": "9e8fcfc5fcea9347b97cd905673eacbc0b2db71b34356940ea58e6695a3d431e",
+    "unembed.weight": "50cadd3d05a73c4e922b2eb72edcdb9ce68bca94b67bef82f59ef373a3faccc4"
+   }
+  }
+ },
+ "cuda_runs": {
+  "softmax": {
+   "config": {
+    "attention": "softmax",
+    "method": "sgd",
+    "rate": 0.3,
+    "seed": 0,
+    "batch": 8,
+    "model": {
+     "vocab_size": 65,
+     "n_layers": 2,
+     "n_heads": 4,
+     "d_model": 32,
+     "d_ff": 128,
+     "max_seq_len": 16,
+     "rope_theta": 10000.0
+    },
+    "stop": {
+     "every": 5,
+     "patience": 2,
+     "min_delta": 0.0001,
+     "min_steps": 10,
+     "max_steps": 40,
+     "divergence_delta": 0.1,
+     "divergence_patience": 3
+    },
+    "device": "cuda"
+   },
+   "curves": [
+    {
+     "step": 0,
+     "validation_loss": 4.176459379483501,
+     "train_loss": null,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 5,
+     "validation_loss": 3.458406844063845,
+     "train_loss": 3.5396595001220703,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 10,
+     "validation_loss": 3.3488886522596846,
+     "train_loss": 3.3406713008880615,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 15,
+     "validation_loss": 3.2588341777259684,
+     "train_loss": 3.436472177505493,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 20,
+     "validation_loss": 3.2169061603299856,
+     "train_loss": 3.243391513824463,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 25,
+     "validation_loss": 3.191037482065997,
+     "train_loss": 3.3746848106384277,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 30,
+     "validation_loss": 3.16858018741033,
+     "train_loss": 3.0453004837036133,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 35,
+     "validation_loss": 3.152302838055954,
+     "train_loss": 3.1723031997680664,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 40,
+     "validation_loss": 3.1509418153694404,
+     "train_loss": 3.106715202331543,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": "max_steps"
+    }
+   ],
+   "status": "ok",
+   "stop_reason": "max_steps",
+   "actual_steps": 40,
+   "best_step": 40,
+   "validation_loss": 3.1509418153694404,
+   "test_loss": 3.172726304698709,
+   "initial_sha256": "0b5e1b0ed4bef74b919be5aeeb2a8080610f13331860f43a3f3013fcde4692e5",
+   "batch_plan_sha256": "d9f3a0a28e0e8b077d0dc9356a955ced3025851c7173e4b5673270d66bb9f005",
+   "best_model_sha256": "4c9c21b9d73b0d1ef4c37f13035e65569039115ba84871363156899caff4d06b",
+   "best": {
+    "embed.weight": "9362eda9aadf2893ac9fd63fb799d936616d6adfb6c919636dd2f1719a0cb320",
+    "blocks.0.attn.log_alpha": "2889dffec7e8755338370400d5d8d0eed2f27bf5015e006c65aedbc9b5b8388e",
+    "blocks.0.attn.qkv.weight": "6135018d5d58f4b2adcebf58c41e75492f1f0266a5c253ecae57ee8d7c53211a",
+    "blocks.0.attn.proj.weight": "b041ca66c3227a6434b2e919862491edaa01d3a99c7ae1fe9b4f3a8705a4c0a7",
+    "blocks.0.ffn.w_in.weight": "98dd8e9a82861cf754ae9c325693921e22cdb80ccf490a57cbbe2e3dbc97413b",
+    "blocks.0.ffn.w_out.weight": "06e1c4717f9759f3858f4fe65479488b8e5ac84ef7e84e30e09d48bb1a124b13",
+    "blocks.1.attn.log_alpha": "236dd7e7af3fe3824678d84327de1d1d83f6a9b62bd89bfa0c7b1d120296bcd6",
+    "blocks.1.attn.qkv.weight": "ad46262a94899145bbea1c7a27da344cd35185ed9d48573c2c24df4b417ffc18",
+    "blocks.1.attn.proj.weight": "a3205909a6d5bc4a338a135eb899a2cb01c86e1a879fe09721a236a9c0f1ee77",
+    "blocks.1.ffn.w_in.weight": "1c7282475500d6ed1adb1d34d10526242a7d52b1a606fe612a89d41ccdf7d3f9",
+    "blocks.1.ffn.w_out.weight": "a7fcb874e4c60682373e8a1adbb470b36df287300daebb919779929c183a8227",
+    "unembed.weight": "9362eda9aadf2893ac9fd63fb799d936616d6adfb6c919636dd2f1719a0cb320"
+   }
+  },
+  "sparsemax": {
+   "config": {
+    "attention": "sparsemax",
+    "method": "sgd",
+    "rate": 0.3,
+    "seed": 1,
+    "batch": 8,
+    "model": {
+     "vocab_size": 65,
+     "n_layers": 2,
+     "n_heads": 4,
+     "d_model": 32,
+     "d_ff": 128,
+     "max_seq_len": 16,
+     "rope_theta": 10000.0
+    },
+    "stop": {
+     "every": 5,
+     "patience": 2,
+     "min_delta": 0.0001,
+     "min_steps": 10,
+     "max_steps": 40,
+     "divergence_delta": 0.1,
+     "divergence_patience": 3
+    },
+    "device": "cuda"
+   },
+   "curves": [
+    {
+     "step": 0,
+     "validation_loss": 4.169669678084649,
+     "train_loss": null,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 5,
+     "validation_loss": 3.468607648852224,
+     "train_loss": 3.5766210556030273,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 10,
+     "validation_loss": 3.327876445928981,
+     "train_loss": 3.241217613220215,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 15,
+     "validation_loss": 3.2486423399390243,
+     "train_loss": 3.5003366470336914,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 20,
+     "validation_loss": 3.214185235832138,
+     "train_loss": 3.193758487701416,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 25,
+     "validation_loss": 3.1719133899748924,
+     "train_loss": 3.1034913063049316,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 30,
+     "validation_loss": 3.1562595274390244,
+     "train_loss": 2.9914002418518066,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 35,
+     "validation_loss": 3.126569225251076,
+     "train_loss": 3.2523155212402344,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": null
+    },
+    {
+     "step": 40,
+     "validation_loss": 3.0968705164992825,
+     "train_loss": 3.1294212341308594,
+     "new_best": true,
+     "bad_checks": 0,
+     "divergent_checks": 0,
+     "stop_reason": "max_steps"
+    }
+   ],
+   "status": "ok",
+   "stop_reason": "max_steps",
+   "actual_steps": 40,
+   "best_step": 40,
+   "validation_loss": 3.0968705164992825,
+   "test_loss": 3.110182030129125,
+   "initial_sha256": "0402170c3cd6c5e651adbc3910357c5bfd8a162f291d0fe7593629c122f51979",
+   "batch_plan_sha256": "85eddf66e034acd0324c6c80c08b229cf372ac297e44b2bff592f72bb0317b7d",
+   "best_model_sha256": "cf0fc417c896b205ae943e0ff65437b2d0b5c8d02225d8598154525662cab5fc",
+   "best": {
+    "embed.weight": "b9bf1dbe26f2a24c8abfa9395922b820a5bd31c6e8c58544cf9ea3db84768b5a",
+    "blocks.0.attn.log_alpha": "323dfad4395151c70df11b1e1ee78ea7857d738a28609712485eab25a80c88ed",
+    "blocks.0.attn.qkv.weight": "ab4609224e81cc5a01939876e6a7749b914907c8582fa55f37668305045c863c",
+    "blocks.0.attn.proj.weight": "79ac18175f0200a00c8f2ad534fdb628382f2558f0351a5a1bacbd5376eca56a",
+    "blocks.0.ffn.w_in.weight": "95aa68ad444aac806b5cc6fdec5d7478d07876d45c3c52af8d0127663675ab03",
+    "blocks.0.ffn.w_out.weight": "78d821da00cc9184d9e2c2a8f8a397b413e45dbf0111bb469ecfc4caf3deb9a3",
+    "blocks.1.attn.log_alpha": "d746f43abb074430cc3c59c0a9f467ec3aaf910037845be96d8bc4aa580b0caf",
+    "blocks.1.attn.qkv.weight": "c7a38755bad565bcedc26e82af06fc3365a498b679c9f4260c2c0a01e251c76b",
+    "blocks.1.attn.proj.weight": "d778c4800555edd5df41eddac744610ead78bb0894685e5265299142565968e0",
+    "blocks.1.ffn.w_in.weight": "6f4ede969f743307411ca8047e6a70c949f0840e70556825fef949e9778da833",
+    "blocks.1.ffn.w_out.weight": "73ed2010049e2052f09fa0c56c5762a964e881ab4d79d87f67e62d5bd292f8b2",
+    "unembed.weight": "b9bf1dbe26f2a24c8abfa9395922b820a5bd31c6e8c58544cf9ea3db84768b5a"
+   }
+  }
+ },
+ "stopper": [
+  {
+   "policy": {
+    "patience": 2,
+    "min_delta": 0.05,
+    "min_steps": 3,
+    "divergence_delta": 0.1,
+    "divergence_patience": 2
+   },
+   "sequences": [
+    [
+     {
+      "step": 1,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": "patience",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 4,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 5,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 6,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 5,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 7,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 5,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": null,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 4,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 6,
+      "loss": 0.8,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 4,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 4,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 6,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 4,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 5,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 6,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 5,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.8,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": "patience",
+      "best_step": 4,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": null,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": "patience",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.8,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 4,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 6,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": "patience",
+      "best_step": 6,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     }
+    ]
+   ]
+  },
+  {
+   "policy": {
+    "patience": 3,
+    "min_delta": 0.0,
+    "min_steps": 0,
+    "divergence_delta": 0.05,
+    "divergence_patience": 1
+   },
+   "sequences": [
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": null,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": null,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": null,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": null,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 5,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 6,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 5,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.8,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.8,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.8,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": null,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.8,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 1
+     }
+    ]
+   ]
+  },
+  {
+   "policy": {
+    "patience": 1,
+    "min_delta": 0.1,
+    "min_steps": 5,
+    "divergence_delta": 0.2,
+    "divergence_patience": 3
+   },
+   "sequences": [
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 2,
+      "bad": 3,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": "patience",
+      "best_step": 5,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": "patience",
+      "best_step": 5,
+      "bad": 4,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": "patience",
+      "best_step": 5,
+      "bad": 4,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 4,
+      "bad": 1,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 5,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 6,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 5,
+      "bad": 1,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 3,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 4,
+      "bad": 4,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 4,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 4,
+      "bad": 1,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 2,
+      "bad": 3,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 4,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 2
+     },
+     {
+      "step": 5,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 3,
+      "divergent": 3
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 4,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 2
+     },
+     {
+      "step": 4,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 4,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 2
+     },
+     {
+      "step": 5,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 3,
+      "divergent": 3
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.8,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 2,
+      "bad": 3,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 2
+     },
+     {
+      "step": 4,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 3
+     },
+     {
+      "step": 5,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 4,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 4,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 4,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 2,
+      "bad": 3,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 4,
+      "bad": 3,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": "patience",
+      "best_step": 5,
+      "bad": 4,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 3,
+      "bad": 3,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 2
+     },
+     {
+      "step": 4,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 3
+     },
+     {
+      "step": 5,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 4,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 4,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 4,
+      "bad": 1,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 3,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 3,
+      "bad": 4,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 4,
+      "bad": 1,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 2
+     },
+     {
+      "step": 5,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 3,
+      "divergent": 3
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 2,
+      "bad": 3,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 2
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 3
+     },
+     {
+      "step": 5,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 4,
+      "divergent": 4
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 3,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 2,
+      "bad": 4,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": "patience",
+      "best_step": 5,
+      "bad": 4,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": null,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 3,
+      "bad": 3,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 4,
+      "bad": 1,
+      "divergent": 0
+     }
+    ]
+   ]
+  },
+  {
+   "policy": {
+    "patience": 4,
+    "min_delta": 0.0001,
+    "min_steps": 0,
+    "divergence_delta": 0.1,
+    "divergence_patience": 2
+   },
+   "sequences": [
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 4,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 6,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 4,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 6,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 6,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 7,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 6,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 8,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 6,
+      "bad": 2,
+      "divergent": 1
+     },
+     {
+      "step": 9,
+      "loss": 0.8,
+      "new_best": false,
+      "stop": null,
+      "best_step": 6,
+      "bad": 3,
+      "divergent": 0
+     },
+     {
+      "step": 10,
+      "loss": 0.8,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 6,
+      "bad": 4,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 1
+     },
+     {
+      "step": 6,
+      "loss": 0.8,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 3,
+      "divergent": 0
+     },
+     {
+      "step": 7,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 3,
+      "bad": 4,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.8,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 1
+     },
+     {
+      "step": 6,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 3,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 5,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 6,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 6,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 7,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 6,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.2,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 4,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 6,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 4,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 4,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": null,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.8,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 1,
+      "bad": 4,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 3,
+      "divergent": 1
+     },
+     {
+      "step": 6,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 2,
+      "bad": 4,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 1
+     },
+     {
+      "step": 6,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 3,
+      "divergent": 0
+     },
+     {
+      "step": 7,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 7,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 8,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 7,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 9,
+      "loss": 0.8,
+      "new_best": false,
+      "stop": null,
+      "best_step": 7,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 10,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 7,
+      "bad": 3,
+      "divergent": 1
+     },
+     {
+      "step": 11,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 7,
+      "bad": 4,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 3,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.1,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 3,
+      "divergent": 1
+     },
+     {
+      "step": 6,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 4,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 3,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 4,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 6,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 4,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 0.95,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 4,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 5,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 4,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 6,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 4,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 7,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 4,
+      "bad": 3,
+      "divergent": 1
+     },
+     {
+      "step": 8,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 4,
+      "bad": 4,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.85,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": null,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 1,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.05,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 4,
+      "loss": 1.0,
+      "new_best": false,
+      "stop": "validation_divergence",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 2
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.0,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 0.95,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 0.8,
+      "new_best": true,
+      "stop": null,
+      "best_step": 3,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 0.9,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 1,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 2,
+      "divergent": 0
+     },
+     {
+      "step": 6,
+      "loss": 1.15,
+      "new_best": false,
+      "stop": null,
+      "best_step": 3,
+      "bad": 3,
+      "divergent": 1
+     },
+     {
+      "step": 7,
+      "loss": 0.85,
+      "new_best": false,
+      "stop": "patience",
+      "best_step": 3,
+      "bad": 4,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 0.9,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     }
+    ],
+    [
+     {
+      "step": 1,
+      "loss": 1.15,
+      "new_best": true,
+      "stop": null,
+      "best_step": 1,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 2,
+      "loss": 1.05,
+      "new_best": true,
+      "stop": null,
+      "best_step": 2,
+      "bad": 0,
+      "divergent": 0
+     },
+     {
+      "step": 3,
+      "loss": 1.1,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 1,
+      "divergent": 0
+     },
+     {
+      "step": 4,
+      "loss": 1.2,
+      "new_best": false,
+      "stop": null,
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 1
+     },
+     {
+      "step": 5,
+      "loss": null,
+      "new_best": false,
+      "stop": "nonfinite_validation",
+      "best_step": 2,
+      "bad": 2,
+      "divergent": 1
+     }
+    ]
+   ]
+  }
+ ]
+}

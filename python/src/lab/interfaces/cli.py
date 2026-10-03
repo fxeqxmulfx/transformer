@@ -52,8 +52,12 @@ def show(arguments):
     print(json.dumps(describe(experiment), indent=2))
 
 
+def number(value):
+    return "nan" if value is None else f"{value:.4f}"
+
+
 def metrics(row):
-    return "  ".join(f"{name} loss {values['loss']:.4f}"
+    return "  ".join(f"{name} loss {number(values['loss'])}"
                      + (f" accuracy {values['accuracy']:.4f}" if "accuracy" in values else "")
                      for name, values in row.items() if isinstance(values, dict))
 
@@ -71,7 +75,12 @@ def run(arguments):
     study = load(arguments.file)
     results = run_study(study, arguments.labels, RunDirectories(runs_root(arguments.file)), Engine(), report)
     for label, result in results.items():
-        print(f"{label} finished {result['updates']} updates  {metrics(result['final'])}")
+        stop = result["stop"]
+        ending = (f"finished {result['updates']} updates" if stop["reason"] == "budget"
+                  else f"stopped at update {stop['step']} ({stop['reason']})")
+        print(f"{label} {ending}  {metrics(result['final'])}")
+        if "best" in result:
+            print(f"{label} best at update {result['best']['step']}  {metrics(result['best'])}")
 
 
 def main(argv=None):

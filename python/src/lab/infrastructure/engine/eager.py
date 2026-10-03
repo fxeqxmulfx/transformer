@@ -32,7 +32,7 @@ class EagerStepper:
             group["lr"] = rate
         output, targets = self.task.forward(self.model, batch)
         self.task.loss(output, targets).backward()
-        norm = torch.nn.utils.clip_grad_norm_(self.model.parameters(), float("inf"), error_if_nonfinite=True)
+        norm = torch.nn.utils.clip_grad_norm_(self.model.parameters(), float("inf"))
         if sampled:
             with self.clock.diagnosing():
                 before = measure.before_update(self.model, self.task, output, targets)

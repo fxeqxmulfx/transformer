@@ -62,6 +62,40 @@ class EpochSampler:
         self.permutation, self.cursor = checkpoint["permutation"].cpu(), checkpoint["cursor"]
 
 
+class WindowSampler:
+    """`batch` uniform window starts below `high` per update, `block` updates at a time.
+
+    A port of `optimizer_benchmark.data.training_starts`, which drew the starts
+    of every update at once, `torch.randint(high, (updates, batch))`; the CPU
+    generator yields the same numbers in blocks.
+    """
+    traced = ()
+
+    def __init__(self, high, batch, seed, block=1024):
+        self.high, self.batch, self.block = high, batch, block
+        self.generator = torch.Generator().manual_seed(seed)
+        self.starts, self.cursor = self.draw(), 0
+
+    def draw(self):
+        return torch.randint(self.high, (self.block * self.batch,), generator=self.generator)
+
+    def sizes(self):
+        return [self.batch]
+
+    def next(self):
+        if self.cursor == self.block:
+            self.starts, self.cursor = self.draw(), 0
+        self.cursor += 1
+        return [(self.starts, (self.cursor - 1) * self.batch, self.batch)], {}
+
+    def state(self):
+        return {"window_generator_state": self.generator.get_state(), "starts": self.starts, "cursor": self.cursor}
+
+    def restore(self, checkpoint):
+        self.generator.set_state(checkpoint["window_generator_state"].cpu())
+        self.starts, self.cursor = checkpoint["starts"].cpu(), checkpoint["cursor"]
+
+
 def gather(parts):
     """A batch's indices, on the host."""
     return torch.cat([indices[start:start + count] for indices, start, count in parts])

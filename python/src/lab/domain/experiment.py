@@ -12,6 +12,7 @@ import re
 from .benchmarks import Benchmark
 from .model import Transformer
 from .spec import Spec, describe, require, require_kind, swap
+from .stopping import EarlyStopping
 from .training import (Budget, Checkpoint, Diagnostics, Evaluate, Execution, Optimizer, Schedule,
                        Seeds)
 
@@ -31,6 +32,7 @@ class Experiment(Spec):
     execution: Execution
     diagnostics: Diagnostics = Diagnostics()
     checkpoint: Checkpoint = Checkpoint()
+    stopping: EarlyStopping | None = None
 
     def check(self):
         for name, kind in (("model", Transformer), ("benchmark", Benchmark), ("optimizer", Optimizer),
@@ -43,6 +45,10 @@ class Experiment(Spec):
                 f"the model context is {self.model.context}")
         anneal = self.schedule.anneal
         require(anneal is None or anneal.end <= self.budget.updates, "Annealing must end within the budget")
+        if self.stopping is not None:
+            require_kind(self.stopping, EarlyStopping, "stopping")
+            require(self.benchmark.selection is not None,
+                    f"{type(self.benchmark).__name__} has no selection split to stop on")
 
 
 def study(experiments):
