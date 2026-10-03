@@ -3,7 +3,7 @@
 
 Navigation aid and audit surface: every declaration, where it lives, and
 whether the build can actually vouch for it.  Run after any change under
-`src/` and commit the result in the same change (see CLAUDE.md).
+`src/` and commit the result in the same change (see AGENTS.md).
 
 Three things are reported per declaration, in order of precedence:
 

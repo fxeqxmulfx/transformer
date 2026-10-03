@@ -1,115 +1,73 @@
 # AGENTS.md
 
-Repository instructions for Codex. `CLAUDE.md` contains the fuller rationale and
-examples behind these rules.
+Lean in `src/` formalizes the manuscripts in `papers/` (gitignored; `./make.py papers`
+fetches missing ones; read them there, not on the web). The lab in `python/` runs the
+experiments in `experiments/`. `./make.py` runs every task.
 
-The current experimental research plan and the state of the last run are in the
-root [EXPERIMENT_PLAN.md](EXPERIMENT_PLAN.md). The user paused the experimental
-cycle on 2026-10-03; resume it only after an explicit instruction to continue.
+## Always
 
-## Paper fidelity
+- Work solo: no subagents, no parallel agents.
+- English in code, docstrings, comments, filenames, commits.
+- One commit per logical change, as soon as its checks pass.
+- Never stage `.discrtree/`, `discrtree.toml`, `.claude/skills/discrtree/`.
 
-- Formalize the manuscripts under `papers/` in Lean files under `src/`. The
-  papers are gitignored; `INDEX.md` is the generated inventory of declarations
-  and proof debt.
-- The papers and reference source files for this project are available locally
-  under `papers/`; `./make.py papers` fetches any cited arXiv paper missing
-  there. Search and read those local files when checking a statement or
-  proof; do not browse the web for their contents.
-- Recheck every theorem against its paper before calling it complete or making
-  a requested commit: hypotheses, quantifiers, constants, indices, and
-  conclusion. A closing Lean proof does not establish fidelity to the paper.
-- If a paper statement needs a fixable correction, state the corrected theorem
-  and document the source wording and correction in its docstring. If the claim
-  is false, prove a counterexample and identify the refuted claim in the
-  docstring. Never weaken a claim while retaining the paper's name.
-- Cite the paper section or equation in every statement's docstring. Write
-  declarations, docstrings, comments, filenames, and commit messages in English.
+## Lean
 
-## Statements and proof integrity
+- Every paper claim, open ones included, is a `theorem`; unproved = `sorry` in proof
+  position. Never a claim as `def _ : Prop`, `axiom` or structure field; a
+  `def _ : Prop` is only a predicate of its arguments.
+- Before each commit, reread every touched statement beside its source: hypotheses,
+  quantifiers, constants, indices, conclusion. Docstring cites paper and § or equation.
+- Source fixable (missing hypothesis, wrong constant, index): prove the corrected
+  statement; docstring gives the source's wording and the change. Source false: prove
+  a counterexample; docstring names the claim. Never weaken a statement under the
+  paper's name.
+- Every theorem with hypotheses gets an `example` satisfying them.
+- Stuck: compare the statement and its definitions with the paper before stronger
+  tactics. Never move a difficulty into a definition.
+- Forbidden: `axiom`, `native_decide`, `set_option linter.* false`, `autoImplicit`, a
+  conclusion `True`, a definition ignoring an argument, an unused binder renamed `_h`
+  (delete it). `rfl`/`trivial`/one-line `simp` closing a substantive theorem: suspect
+  the definitions. A file without `sorry` has no warnings.
+- `sorry` in `INDEX.md` only falls, except for a new paper's statements entering
+  `src/Transformer.lean` in that commit. `vacuous` and `placeholder` stay 0.
+- `./make.py audit`: 0 `rests`, 0 extra axioms (only `propext`, `Classical.choice`,
+  `Quot.sound`). A result needing an unproved input takes it as a hypothesis.
+- Read the statement, hypotheses and instances of every library lemma used. Find
+  lemmas with `dt find '<pattern>'`, `dt find --name <part>`, `dt show <name>`, not
+  grep or memory. A Reservoir package only if compatible; prefer copying the needed
+  proofs, attributed.
+- A paper: `Section<§>_<Topic>.lean` files mirroring the manuscript. Otherwise by
+  import depth, never by declaration kind: `Foo/Defs.lean` → `Foo/Basic.lean` →
+  `Foo/<Topic>.lean` → `Foo.lean` (imports and docstring only).
+- Namespace `Transformer.` + directory: `Transformer/Metastability/Staircase.lean` →
+  `Transformer.Metastability`; `Transformer/XSA.lean` → `Transformer.XSA`;
+  `Transformer/Basic.lean` → `Transformer`.
+- Files of 150–200 lines. Every module reachable from `src/Transformer.lean`.
+- `INDEX.md` locates declarations. Never edit it; regenerate it in the commit of
+  every `src/` change.
+- Iterate with `lake build Transformer.<Module>`. Before committing: `lake build`,
+  `./make.py audit`, `./make.py index`, `./make.py forbidden`.
+- A Mathlib bump fixes its deprecations in the same commit.
 
-- Represent every paper claim, including conjectures and open problems, as a
-  `theorem`; use `sorry` for an unproved claim. Do not hide claims in a
-  `def _ : Prop`, `axiom`, or structure field. A genuine predicate of its
-  arguments may be a `def _ : Prop`.
-- For each theorem with hypotheses, include an `example` showing that the
-  hypotheses are satisfiable. Delete unused binders or fix the incomplete
-  proof; do not silence them by renaming to `_h`.
-- Do not use decorative proofs or definitions: conclusions of `True`, constant
-  bodies that ignore substantive arguments, placeholder `Prop` definitions,
-  or `sorry` outside proof position. A substantive theorem closed by `rfl`,
-  `trivial`, or one-line `simp` warrants checking its definitions.
-- Do not add `axiom`, `native_decide`, or `set_option linter.* false`.
-  `autoImplicit` is disabled in `lakefile.toml`; declare variables explicitly.
-  Use explicit hypotheses for assumptions instead of axioms.
-- A theorem using a sorried theorem can appear proved in `INDEX.md`. Run
-  `lake env lean scripts/Axioms.lean` to audit the full tree. `rests` (proved
-  declarations depending on `sorryAx`) and extra `axiom` must both be zero;
-  only `propext`, `Classical.choice`, and `Quot.sound` are accepted. Carry an
-  unproved premise as an explicit hypothesis rather than hiding a dependency.
-- Checking every external-library declaration used by a proof is mandatory,
-  including declarations from Mathlib. Inspect its statement, hypotheses,
-  relevant definitions, typeclass assumptions, and transitive proof
-  dependencies. Verify that it expresses the intended mathematical claim and
-  contains no placeholders, vacuous reformulations, or hidden unproved claims.
-  Audit its transitive axioms with `#print axioms` and the full-tree audit;
-  only `propext`, `Classical.choice`, and `Quot.sound` are accepted. Successful
-  import, compilation, or a library's own claim of verification is insufficient.
-- The `sorry` count must not increase except when adding a new paper's
-  statements under `src/` and importing its aggregator from
-  `src/Transformer.lean` in the same change. Vacuous statements and
-  placeholder definitions must not increase. Read the current counts from
-  `INDEX.md`, not from a hard-coded number. A Lean file without `sorry`
-  should have no warnings.
+## Python
 
-## Modules and navigation
-
-- Keep Lean files around 150–200 lines; split at about 200 unless a proof is
-  indivisible. Paper formalizations mirror manuscript sections as
-  `Section*_*.lean`.
-- For other subjects, organize by import depth rather than declaration kind:
-  `Foo/Defs.lean` (definitions) → `Foo/Basic.lean` (immediate API) →
-  `Foo/<Topic>.lean` (theorems) → `Foo.lean` (aggregator with imports and
-  docstring, no proofs). Merge `Defs` into `Basic` while small.
-- Use namespace `Transformer.` followed by the file's directory path. Root
-  files use their own name (`XSA.lean` → `Transformer.XSA`); `Basic.lean` uses
-  `Transformer`. Every module must be reachable from `src/Transformer.lean`
-  so that `lake build` covers it.
-- Python experiments live in `python/` (the `lab` package, see
-  `python/README.md`); `experiments/` holds a folder per experiment, its
-  `experiment.py` beside a `README.md`, and in `archive/` the records of
-  past runs. `./make.py` runs every task, Lean and Python.
-- Read `INDEX.md` to locate declarations. Regenerate it with
-  `python3 scripts/index.py` after any change under `src/`, and include it in
-  the same requested commit as the source change. Do not edit it by hand.
-- Use `dt find`, `dt show`, and `dt deps` to search Mathlib declarations when
-  a lemma is hard to name or may already exist. Do not grep Mathlib sources
-  first. `.discrtree/`, `discrtree.toml`, and the discrtree skill belong to a
-  separate line of work; do not stage them for Lean changes.
-- Search [Reservoir](https://reservoir.lean-lang.org/) for Lean packages when
-  useful results are unavailable in the current dependencies. Additional
-  packages needed for proofs may be installed. Check compatibility with the
-  project's Lean and Mathlib versions. The mandatory checks for every imported
-  result and its proof dependencies apply before using a package's results.
-- Keep external dependencies to a minimum. When practical, prefer copying only
-  the necessary definitions and proofs into this repository over adding a whole
-  package. Preserve source attribution and license notices. Copied code must
-  pass the same statement, definition, assumption, and proof-dependency checks
-  as imported library results.
-
-## Checks and workflow
-
-- Work directly in one session; do not use subagents or parallel agent work.
-- During Lean development, build the affected module with
-  `lake build Transformer.X`. Before finishing a Lean source change, run
-  `lake build`, `lake env lean scripts/Axioms.lean`, and
-  `python3 scripts/index.py`; inspect the resulting counts and warnings. Use
-  `#print axioms F` for an individual theorem when needed.
-- Search `src/` for forbidden constructs such as `native_decide`, `axiom`,
-  and disabled linter options. Fix Mathlib deprecations in the change that
-  updates Mathlib.
-- Commit completed, verified logical changes regularly during task work.
-  Do not wait until an entire long-running experiment campaign is finished.
-  Keep one logical change per commit, run the checks appropriate to that
-  change, and recheck any changed theorem statements against the papers first.
-  Leave unfinished work and unrelated changes out of each commit.
+- Experiment: `experiments/<name>/experiment.py` and `README.md`, and a row in
+  `experiments/README.md`. The file: `from lab.dsl import *`, then
+  `experiments = {label: Experiment(...)}`; variants by `swap(base, "path", value)`,
+  `substitute(base, Block, block)`, `grid`, never by flags. `./make.py blocks` lists
+  the words.
+- README: the question, a table of how the runs differ, what they found.
+- `./make.py check experiments/<name>`, `show … <label>`, `run … [labels]`,
+  `report … [labels]`. `run` trains into `runs/<label>/` beside the file (gitignored)
+  and resumes on rerun; `report` prints JSON.
+- `EXPERIMENT_PLAN.md` is the plan; obey its status.
+- New block: spec in `python/src/lab/domain/`, PyTorch in `infrastructure/`, word in
+  `dsl.py`, test in `python/tests/`. Layers domain → application → infrastructure →
+  interfaces import only their own or earlier ones; third-party packages only in the
+  last two.
+- A block's docstring cites its source (paper §, Lean declaration, ported module and
+  commit) and every deviation from it.
+- uv only through `./make.py` or plain `uv run --locked` inside `python/`; never
+  `--active`, never at the root.
+- Before committing: `./make.py test`.
