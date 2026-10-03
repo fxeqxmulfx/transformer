@@ -3,8 +3,9 @@
 Each batch size that recurs (the full batch, and a short epoch tail) gets one
 captured update: gather the batch through a static index, forward, backward,
 the gradient norm and any clipping, the capturable optimizer step, and the
-norm appended to a device trace. Each observed split gets one captured evaluation over all its
-chunks. Between replays the host only copies indices on the device and sets
+norm appended to a device trace. The rows of each observed split get one
+captured evaluation over all their chunks, which every split sharing them
+replays. Between replays the host only copies indices on the device and sets
 the rate tensor; it waits for the device at observations and when it stages
 a new index tensor of the sampler. Every evaluation, captured or not, is
 static (`benchmarks`), so all of them compute alike.
@@ -61,8 +62,13 @@ class GraphStepper:
         torch.cuda.current_stream(self.device).wait_stream(stream)
         for size in sizes:
             self.updates[size] = self.capture_update(size)
-        for name in self.observed:
-            self.evaluations[name] = self.capture_evaluation(self.task.splits[name])
+        for rows in self.observed_rows():
+            self.evaluations[id(rows)] = self.capture_evaluation(rows)
+
+    def observed_rows(self):
+        """The rows of the observed splits, each once."""
+        splits = self.task.splits
+        return list({id(splits[name]): splits[name] for name in self.observed if splits[name] is not None}.values())
 
     def warm_up(self, sizes):
         """Run every graph's operations before capture, then restore what they changed.
@@ -79,8 +85,8 @@ class GraphStepper:
                 self.optimizer.zero_grad(set_to_none=True)
                 self.forward_backward(index)
                 self.optimizer.step()
-        for name in self.observed:
-            evaluate(self.task, self.model, self.task.splits[name], self.batch, static=True)
+        for rows in self.observed_rows():
+            evaluate(self.task, self.model, rows, self.batch, static=True)
         with torch.no_grad():
             for parameter, value in zip(self.parameters, parameters, strict=True):
                 parameter.copy_(value)
@@ -191,8 +197,9 @@ class GraphStepper:
         return norms
 
     def evaluate(self, split):
-        if split not in self.evaluations:
-            return evaluate(self.task, self.model, self.task.splits[split], self.batch, static=True)
-        graph, sums = self.evaluations[split]
+        rows = self.task.splits[split]
+        if id(rows) not in self.evaluations:
+            return evaluate(self.task, self.model, rows, self.batch, static=True)
+        graph, sums = self.evaluations[id(rows)]
         graph.replay()
-        return self.task.metrics(sums.tolist(), len(self.task.splits[split]))
+        return self.task.metrics(sums.tolist(), rows)

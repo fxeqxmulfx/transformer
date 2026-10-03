@@ -34,6 +34,11 @@ class Benchmark(Spec, kind=True):
         """The splits evaluated once, on the model of the best observation."""
         return ()
 
+    @property
+    def last(self):
+        """The splits evaluated once, on the model at the end of training, before the best is restored."""
+        return ()
+
 
 def is_prime(number):
     return number >= 2 and all(number % divisor for divisor in range(2, math.isqrt(number) + 1))

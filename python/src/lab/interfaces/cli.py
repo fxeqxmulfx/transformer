@@ -57,9 +57,10 @@ def number(value):
 
 
 def metrics(row):
+    """The loss, and any accuracy, of each split measured in `row`; other measurements are left out."""
     return "  ".join(f"{name} loss {number(values['loss'])}"
                      + (f" accuracy {values['accuracy']:.4f}" if "accuracy" in values else "")
-                     for name, values in row.items() if isinstance(values, dict))
+                     for name, values in row.items() if isinstance(values, dict) and "loss" in values)
 
 
 def report(label, row):

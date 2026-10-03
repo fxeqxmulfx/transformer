@@ -8,7 +8,8 @@ first, and it can be captured. Evaluation selects them through indices
 computed on the host (`Rows`), so every metric adds the float32 values the
 historical evaluation added, in its order, and its totals are bit-identical.
 A split of generated answers is also scored on free generation
-(`generation`), as `evaluate` scored it.
+(`generation`), as `evaluate` scored it; a training split, by teacher forcing
+alone. A memorization study measures more (`memorization`).
 """
 
 import math
@@ -19,6 +20,7 @@ from torch.nn import functional as F
 from ..samplers import EpochSampler
 from . import generator
 from .generation import TOTALS, rollout, score, static_rollout
+from .memorization import Measures
 from .rows import Rows
 from .splits import benchmark_splits
 from .vocabulary import IGNORE
@@ -38,14 +40,18 @@ class SyntheticTask:
     components = ("loss",)
 
     def __init__(self, spec, data_seed, device):
-        if spec.study is not None:
-            raise NotImplementedError("The observations of a memorization study are not ported yet")
         self.spec, self.device = spec, device
-        splits, _ = benchmark_splits(spec, data_seed)
+        splits, noise = benchmark_splits(spec, data_seed)
         self.generator = generator(spec.problem)
         self.vocab = max(split.generator.vocab for split in splits.values())
         self.fingerprints = {name: split.fingerprint for name, split in splits.items()}
-        self.splits = {name: Rows(split.examples, device) for name, split in splits.items()}
+        self.splits = {}
+        for name, split in splits.items():
+            # Labels no noise changed are the observed ones, and their rows are measured once.
+            same = name == "train_clean" and split.examples == splits["train"].examples
+            self.splits[name] = self.splits["train"] if same else Rows(split.examples, device,
+                                                                       generate=not name.startswith("train"))
+        self.measures = None if spec.study is None else Measures(spec, splits, noise, self.splits, device)
 
     def sampler(self, batch, seed):
         """Shuffled epochs of the training rows, each ending with its remainder, as `train_run` drew them."""
@@ -106,20 +112,20 @@ class SyntheticTask:
             sums[GENERATED:CLASSES].add_(totals)
             written.index_add_(0, chunk.answers.answers.clamp(min=0).flatten(), generated.flatten().to(sums.dtype))
 
-    def metrics(self, sums, examples):
+    def metrics(self, sums, rows):
         """`Metrics.report`, or for generated answers the report of `evaluate`.
 
         That is the report of `GenerationMetrics`, with the loss and example
         loss of teacher forcing, and its whole report as `teacher_forced`. A
         loss that is not finite is reported as None, which no selection ranks.
         """
-        totals, vocab = sums[:CLASSES], self.vocab
+        totals, vocab, examples = sums[:CLASSES], self.vocab, len(rows)
         counts, right, written = (sums[CLASSES + kind * vocab:CLASSES + (kind + 1) * vocab] for kind in range(3))
         loss = totals[LOSS] / totals[TARGETS]
         teacher = {"loss": loss if math.isfinite(loss) else None, "example_loss": totals[EXAMPLE_LOSS] / examples,
                    **self.accuracy(totals, counts, examples, totals[CORRECT], totals[EXACT],
                                    totals[TRANSITION_CORRECT], right)}
-        if not self.spec.task.generative:
+        if not rows.generates:
             return teacher
         correct, exact, final, ended, generated, extra, transition_correct = totals[GENERATED:CLASSES]
         return {**self.accuracy(totals, counts, examples, correct, exact, transition_correct, written),
@@ -138,11 +144,23 @@ class SyntheticTask:
                 "target_count": int(totals[TARGETS]), "correct": int(correct), "example_count": examples,
                 "exact": int(exact), "transition_count": int(totals[TRANSITIONS]), "classes": classes}
 
+    def observe(self, model, batch):
+        """What a study measures at an observation beyond the metrics of the splits."""
+        return {} if self.measures is None else self.measures.observe(model, batch)
+
+    def inspect(self, model, batch):
+        """What a study measures of the last and the best model."""
+        return {} if self.measures is None else {"memorization": self.measures.inspect(model, batch)}
+
     def analyze(self, history):
-        """The splits' fingerprints, and the first observation whose validation `metric` reaches `target`."""
+        """The splits' fingerprints, the first observation whose validation `metric` reaches `target`, and the
+        report of a study."""
         spec = self.spec
         hit = None if spec.target is None else next(
             (row for row in history if row["validation"][spec.metric] >= spec.target), None)
-        return {"split_fingerprints": self.fingerprints, "time_to_target": None if hit is None else {
+        found = {"split_fingerprints": self.fingerprints, "time_to_target": None if hit is None else {
             **{key: hit[key] for key in ("step", "training_seconds", "wall_seconds", "examples_seen")},
             "value": hit["validation"][spec.metric]}}
+        if self.measures is not None:
+            found["memorization"] = self.measures.report(history)
+        return found

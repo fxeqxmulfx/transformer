@@ -16,10 +16,16 @@ A stepper may return gradient norms late; the loop collects them before each
 observation and each sampled update, and stops at the first that is not
 finite: the run fails, or, under a stopping policy, ends there.
 
+An observation evaluates each observed split once, however many names share
+its rows; a split without rows measures None. The task adds what it measures
+of the model beyond the splits (`observe`).
+
 When the benchmark has a selection split, the model of the best observation
-travels in every checkpoint. At the end of a run it is restored, its selection
-split is evaluated again and must measure what was observed, and the
-benchmark's final splits are evaluated once, on it.
+travels in every checkpoint. At the end of a run the benchmark's last splits
+are evaluated once on the last model, which the task inspects too; then the
+best model is restored, its selection split is evaluated again and must
+measure what was observed, its final splits are evaluated once, and the task
+inspects it.
 """
 
 from contextlib import contextmanager
@@ -91,7 +97,7 @@ def evaluate(task, model, rows, batch, static=False):
     sums = task.accumulator()
     for start in range(0, len(rows), batch):
         task.accumulate(model, rows[start:start + batch], sums, static)
-    return task.metrics(sums.tolist(), len(rows))
+    return task.metrics(sums.tolist(), rows)
 
 
 class Training:
@@ -137,11 +143,21 @@ class Training:
         self.trace = []
         self.stepper.prepare(self.sampler.sizes())
 
+    def measure(self):
+        """The metrics of each observed split, evaluated once for all the names that share its rows."""
+        metrics, evaluated = {}, {}
+        for name in self.experiment.benchmark.observed:
+            rows = self.task.splits[name]
+            if rows is not None and id(rows) not in evaluated:
+                evaluated[id(rows)] = self.stepper.evaluate(name)
+            metrics[name] = None if rows is None else evaluated[id(rows)]
+        return metrics
+
     def observe(self, step, probe):
         row = {"step": step, **self.task.progress(self.seen),
                "training_seconds": self.clock.training, "wall_seconds": self.clock.wall(),
-               "last_batch_size": self.last_batch_size,
-               **{name: self.stepper.evaluate(name) for name in self.experiment.benchmark.observed}}
+               "last_batch_size": self.last_batch_size, **self.measure(),
+               **self.task.observe(self.model, self.experiment.evaluate.batch)}
         if probe:
             self.run.record("probes", row)
         else:
@@ -228,13 +244,17 @@ class Training:
         stages = report(self.stepper.optimizer)
         if stages:
             result["optimizer"] = stages
+        last = {**{split: self.stepper.evaluate(split) for split in experiment.benchmark.last},
+                **self.task.inspect(self.model, experiment.evaluate.batch)}
+        if last:
+            result["last"] = last
         if self.selection is not None:
             result["best"] = self.select()
         self.run.finish(result)
         return result
 
     def select(self):
-        """Restore the best observation's model, check it, and evaluate the final splits on it once."""
+        """Restore the best observation's model, check it, evaluate the final splits on it once, and inspect it."""
         benchmark = self.experiment.benchmark
         if self.best is None:
             raise FloatingPointError(f"No {benchmark.selection} loss of the run is finite")
@@ -244,4 +264,5 @@ class Training:
         if again != observed:
             raise RuntimeError(f"The best model evaluates to {again}, not to the observed {observed}")
         return {"step": self.best["step"], benchmark.selection: again,
-                **{split: self.stepper.evaluate(split) for split in benchmark.final}}
+                **{split: self.stepper.evaluate(split) for split in benchmark.final},
+                **self.task.inspect(self.model, self.experiment.evaluate.batch)}

@@ -149,11 +149,20 @@ class ModularTask:
         sums.add_(torch.cat([counts.double(), losses.double()]))
 
     @staticmethod
-    def metrics(sums, examples):
+    def metrics(sums, rows):
+        examples = len(rows)
         correct, answers, stops, loss, answer_loss, stop_loss = sums
         return {"accuracy": correct / examples, "answer_accuracy": answers / examples,
                 "EOS_accuracy": stops / examples, "loss": loss / (2 * examples),
                 "answer_loss": answer_loss / examples, "EOS_loss": stop_loss / examples, "examples": examples}
+
+    @staticmethod
+    def observe(model, batch):
+        return {}
+
+    @staticmethod
+    def inspect(model, batch):
+        return {}
 
     @staticmethod
     def analyze(history):

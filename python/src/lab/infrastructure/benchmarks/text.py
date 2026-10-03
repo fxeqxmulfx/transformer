@@ -77,10 +77,18 @@ class TextTask:
         output, targets = TextTask.forward(model, chunk)
         sums.add_(F.cross_entropy(output.flatten(0, 1), targets.flatten(), reduction="sum"))
 
-    def metrics(self, sums, examples):
+    def metrics(self, sums, rows):
         """The mean loss per character; None when it is not finite, which a stopping policy stops on."""
-        loss = sums[0] / (examples * self.window)
-        return {"loss": loss if math.isfinite(loss) else None, "examples": examples}
+        loss = sums[0] / (len(rows) * self.window)
+        return {"loss": loss if math.isfinite(loss) else None, "examples": len(rows)}
+
+    @staticmethod
+    def observe(model, batch):
+        return {}
+
+    @staticmethod
+    def inspect(model, batch):
+        return {}
 
     @staticmethod
     def analyze(history):

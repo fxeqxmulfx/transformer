@@ -38,6 +38,14 @@ class Synthetic(Benchmark):
     `test` and `test/<name>` of each held-out distribution, are evaluated
     once, on its model. The run reports the first observation whose
     validation `metric` reaches `target`.
+
+    A `study` (`Memorization`) also observes the training split by teacher
+    forcing alone, with its observed labels (`train`) and the oracle's
+    (`train_clean`), each held-out distribution at the size of validation
+    (`validation/<name>`), and the rows of validation and of each held-out
+    split whose input no training row has (`<split>/novel`), None when
+    there are none (`studies.py`). It evaluates the test splits on the last
+    model too, before the best is restored.
     """
     task: Task
     length: int
@@ -85,7 +93,10 @@ class Synthetic(Benchmark):
 
     @property
     def observed(self):
-        return ("validation",)
+        if self.study is None:
+            return ("validation",)
+        return ("validation", "validation/novel", "train", "train_clean",
+                *(f"validation/{name}{novel}" for name in self.probes for novel in ("", "/novel")))
 
     @property
     def selection(self):
@@ -94,6 +105,10 @@ class Synthetic(Benchmark):
     @property
     def final(self):
         return ("test", *(f"test/{name}" for name in self.probes))
+
+    @property
+    def last(self):
+        return () if self.study is None else self.final
 
     def rank(self, metrics):
         rank = metrics["sequence_accuracy"], metrics["balanced_accuracy"], -metrics["loss"]
