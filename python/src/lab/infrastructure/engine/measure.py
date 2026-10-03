@@ -8,14 +8,14 @@ buffers, which never had one.
 import torch
 
 MOMENTS = ("m", "v", "maximum", "exp_avg", "exp_avg_sq")
-SCOPES = (("maximum", "raw_buffers_without_bias_correction_for_AMSGradW; actual_parameter_updates"),
-          ("exp_avg", "AdamW_exp_avg_and_exp_avg_sq_before_bias_correction; actual_parameter_updates"))
 
 
 def moment_scope(optimizer):
-    """What the recorded moments are, by the buffers the optimizer keeps."""
-    return next((scope for key, scope in SCOPES if any(key in state for state in optimizer.state.values())),
-                "actual_parameter_updates")
+    """What the recorded moments are: as a direction optimizer names them, or AdamW's."""
+    moments = getattr(optimizer, "moments", None)
+    if moments is None and any("exp_avg" in state for state in optimizer.state.values()):
+        moments = "AdamW_exp_avg_and_exp_avg_sq_before_bias_correction"
+    return "actual_parameter_updates" if moments is None else f"{moments}; actual_parameter_updates"
 
 
 @torch.no_grad()

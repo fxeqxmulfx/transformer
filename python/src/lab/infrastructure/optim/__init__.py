@@ -3,15 +3,15 @@
 The native AdamW is constructed as `paper_reproduction.grokking.make_optimizer`
 constructed it: every trainable parameter in `parameters()` order, the rate
 left for the schedule to set before each update, and PyTorch's default
-implementation (foreach on CUDA, a loop over tensors on the CPU). SGD and
-AMSGradW are the direction optimizers of `.direction`, with the arithmetic of
-the historical `CoordinateOptimizer`.
+implementation (foreach on CUDA, a loop over tensors on the CPU). Every other
+rule is a direction optimizer (`.direction`), with the arithmetic of the
+historical optimizer zoo.
 """
 
 import torch
 
 from ...domain import optimizers
-from . import direction
+from . import coordinate, direction
 
 
 def parameter_groups(spec, model):
@@ -31,7 +31,9 @@ def adamw(spec, model, rate=None):
                              foreach=True, capturable=True)
 
 
-OPTIMIZERS = {optimizers.AdamW: adamw, optimizers.SGD: direction.SGD, optimizers.AMSGradW: direction.AMSGradW}
+OPTIMIZERS = {optimizers.AdamW: adamw, optimizers.SGD: direction.SGD, optimizers.AMSGradW: coordinate.AMSGradW,
+              optimizers.Adam: coordinate.Adam, optimizers.AdamX: coordinate.AdamX,
+              optimizers.AdaGrad: coordinate.AdaGrad, optimizers.AdamNC: coordinate.AdamNC}
 
 
 def build_optimizer(spec, model, rate=None):

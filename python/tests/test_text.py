@@ -66,22 +66,27 @@ class WindowSamplerTests(unittest.TestCase):
         self.assertTrue(torch.equal(torch.stack(drawn), expected))
 
 
+def reproduces(test, golden, root):
+    """The run under `root` makes the golden observations, decisions and best model, bit for bit."""
+    run = RunDirectory(Path(root) / "historical" / "run")
+    test.assertEqual([(row["step"], row["validation"]["loss"]) for row in run.records("history")],
+                     [(check["step"], check["validation_loss"]) for check in golden["curves"]])
+    result = run.result()
+    stopped = golden["stop_reason"] != "max_steps"
+    test.assertEqual(result["stop"], {"step": golden["actual_steps"] if stopped else result["updates"],
+                                      "reason": REASONS[golden["stop_reason"]]})
+    best = result["best"]
+    test.assertEqual((best["step"], best["validation"]["loss"], best["test"]["loss"]),
+                     (golden["best_step"], golden["validation_loss"], golden["test_loss"]))
+    checkpoint = run.checkpoint("cpu")
+    test.assertEqual(checkpoint["step"], golden["actual_steps"])
+    test.assertEqual({name: sha(value) for name, value in checkpoint["best"]["model"].items()},
+                     {rename(name): value for name, value in golden["best"].items()})
+
+
 class HistoricalTextTests(unittest.TestCase):
     def assert_reproduces(self, golden, root):
-        run = RunDirectory(Path(root) / "historical" / "run")
-        self.assertEqual([(row["step"], row["validation"]["loss"]) for row in run.records("history")],
-                         [(check["step"], check["validation_loss"]) for check in golden["curves"]])
-        result = run.result()
-        stopped = golden["stop_reason"] != "max_steps"
-        self.assertEqual(result["stop"], {"step": golden["actual_steps"] if stopped else result["updates"],
-                                          "reason": REASONS[golden["stop_reason"]]})
-        best = result["best"]
-        self.assertEqual((best["step"], best["validation"]["loss"], best["test"]["loss"]),
-                         (golden["best_step"], golden["validation_loss"], golden["test_loss"]))
-        checkpoint = run.checkpoint("cpu")
-        self.assertEqual(checkpoint["step"], golden["actual_steps"])
-        self.assertEqual({name: sha(value) for name, value in checkpoint["best"]["model"].items()},
-                         {rename(name): value for name, value in golden["best"].items()})
+        reproduces(self, golden, root)
 
     def test_every_historical_cpu_run(self):
         for name, golden in FIXTURE["runs"].items():

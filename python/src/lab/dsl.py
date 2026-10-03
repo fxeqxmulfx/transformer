@@ -10,7 +10,8 @@ from .domain.experiment import Experiment, grid
 from .domain.model import (FFN, GELU, XSA, Attention, Block, FusedQKV, LayerNorm, NoPositions, Normal,
                            PerHeadQKV, PostNorm, PreNorm, QKNorm, ReLU, ReLU2, RMSNorm, RoPE, ScaledDot,
                            Sinusoidal, Softmax, Sparsemax, Tied, TorchDefault, Transformer, Untied)
-from .domain.optimizers import SGD, AdamW, AMSGradW
+from .domain.optimizers import (SGD, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradW, Constant, Geometric, Inverse,
+                                InverseSqrt)
 from .domain.spec import describe, fingerprint, substitute, swap, walk
 from .domain.stopping import EarlyStopping
 from .domain.training import Budget, Checkpoint, Cosine, CudaGraph, Diagnostics, Eager, Evaluate, Schedule, Seeds
@@ -24,8 +25,11 @@ __all__ = [
     "ReLU", "ReLU2", "GELU", "Tied", "Untied", "TorchDefault", "Normal",
     # benchmarks
     "ModularDivision", "TinyShakespeare",
+    # optimizers
+    "SGD", "AdamW", "AMSGradW", "Adam", "AdamX", "AdaGrad", "AdamNC",
+    "Constant", "Inverse", "InverseSqrt", "Geometric",
     # training
-    "AdamW", "AMSGradW", "SGD", "Schedule", "Cosine", "Budget", "Seeds", "Evaluate", "Diagnostics", "Checkpoint",
+    "Schedule", "Cosine", "Budget", "Seeds", "Evaluate", "Diagnostics", "Checkpoint",
     "EarlyStopping", "Eager", "CudaGraph",
     # composition
     "Experiment", "grid", "swap", "substitute", "walk", "describe", "fingerprint",
