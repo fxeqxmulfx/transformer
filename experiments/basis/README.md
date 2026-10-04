@@ -50,9 +50,13 @@ outnumber the width because over few tokens recall can be counting: over c
 tokens, once each key and its value share a position, it is defined at
 depth 1 of TL[◁#] by c² counts, and a one-layer transformer with uniform
 attention, no query matched to a key, does it
-(`Transformer.CRASP.exists_rtfr_answers`); that more tokens than width rule
-counting out is not proved. In the hard
-mode 8 of the 16 writes rebind a key, and a query asks for the latest
+(`Transformer.CRASP.exists_rtfr_answers`). Attention that ignores the query
+needs, over n + 1 ≥ c rows, at k layers of width d and p bits,
+c − 1 ≤ k (2d + 1) log₂(2^p (n + 1) + 1)
+(`Transformer.CRASP.two_pow_le_of_queryFree`), a width growing with c; the
+runs bind 8 or 16 keys, far fewer rows than tokens, where the bound says
+nothing, and that more tokens than width rule counting out there is not
+proved. In the hard mode 8 of the 16 writes rebind a key, and a query asks for the latest
 value: a head that adds a recency term to a write's score returns the later
 write when one step of that term outweighs the rounding of both scores
 (`Transformer.ALM.latest_wins`), and for every recency scale and bound on

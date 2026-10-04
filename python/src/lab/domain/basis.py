@@ -29,12 +29,17 @@ recall
     width: over c tokens, once each key and its value share a position,
     recall is counting at depth 1 of TL[◁#], c² counts in all, with no
     attention from a query to a key
-    (`Transformer.CRASP.exists_rtfr_answers`); that more tokens than width
-    rule counting out is not proved. Easy binds 8 keys. Hard writes 16
-    times, 8 of them rebinding a key, and answers a query with its key's
-    latest value (`Transformer.ALM.latest_wins`). Both train on 20,000
-    rows, not Zoology's 100,000 (Appendix E.2), on which the smaller model
-    passes later, or from one seed of three not within twice the budget.
+    (`Transformer.CRASP.exists_rtfr_answers`). Attention that ignores the
+    query needs, over n + 1 >= c rows, at k layers of width d and p bits,
+    c - 1 <= k (2d + 1) log2(2^p (n + 1) + 1)
+    (`Transformer.CRASP.two_pow_le_of_queryFree`), a width growing with c;
+    the runs bind 8 or 16 keys, far fewer rows than tokens, where the bound
+    says nothing, and that more tokens than width rule counting out there
+    is not proved. Easy binds 8 keys. Hard writes 16 times, 8 of them
+    rebinding a key, and answers a query with its key's latest value
+    (`Transformer.ALM.latest_wins`). Both train on 20,000 rows, not
+    Zoology's 100,000 (Appendix E.2), on which the smaller model passes
+    later, or from one seed of three not within twice the budget.
 parity
     Whether 1 to 16 bits hold an odd number of ones (`Parity`), without a
     scratchpad: RASP-L has no program for it (arXiv:2310.16028v1, §5.2),
