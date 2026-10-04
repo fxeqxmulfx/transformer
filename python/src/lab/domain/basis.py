@@ -35,7 +35,11 @@ parity
     Whether 1 to 16 bits hold an odd number of ones (`Parity`), without a
     scratchpad: RASP-L has no program for it (arXiv:2310.16028v1, §5.2),
     and without one the paper's transformer fits not even its training set
-    (Appendix C.1). The larger model learns parity of 16 bits in more
+    (Appendix C.1). No formula of TL[◁#] defines it, so no future-masked
+    rounded transformer recognizes it at every length
+    (`Transformer.CRASP.not_recognizes_parity`); up to 16 bits it is a
+    finite language, which a transformer can fit, and no run judges a
+    longer string. The larger model learns parity of 16 bits in more
     updates than the smaller, and of 20 bits, from seed 0, not within
     12,000, where the smaller does; of 24 bits neither passes reliably
     within 16,000, so a longer parity would make the hard mode a draw

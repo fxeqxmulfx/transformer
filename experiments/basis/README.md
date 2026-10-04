@@ -59,8 +59,11 @@ small model passes later, or not within twice the budget (Found).
 **Parity.** Whether 1 to 16 bits hold an odd number of ones, answered after
 the bits without a scratchpad (`Parity`). RASP-L has no program for it
 (arXiv:2310.16028v1, §5.2), and without a scratchpad the paper's
-transformer fits not even its training set (Appendix C.1). It is the same
-in both modes: the large model learns 16 bits in more updates than the
+transformer fits not even its training set (Appendix C.1). No formula of
+TL[◁#] defines it, so no future-masked rounded transformer recognizes it at
+every length (`Transformer.CRASP.not_recognizes_parity`); up to 16 bits it
+is a finite language, which a transformer can fit, and no run judges a
+longer string. It is the same in both modes: the large model learns 16 bits in more updates than the
 small one, and 20 bits from seed 0 not within 12,000 updates, where the
 small one does; at 24 bits neither passes reliably (Found).
 
