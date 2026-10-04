@@ -32,10 +32,14 @@ recall
     (`Transformer.CRASP.exists_rtfr_answers`). Attention that ignores the
     query needs, over n + 1 >= c rows, at k layers of width d and p bits,
     c - 1 <= k (2d + 1) log2(2^p (n + 1) + 1)
-    (`Transformer.CRASP.two_pow_le_of_queryFree`), a width growing with c;
-    the runs bind 8 or 16 keys, far fewer rows than tokens, where the bound
-    says nothing, and that more tokens than width rule counting out there
-    is not proved. Easy binds 8 keys. Hard writes 16 times, 8 of them
+    (`Transformer.CRASP.two_pow_le_of_queryFree`), a width growing with c,
+    while one layer of width 5 whose attention compares the query with each
+    key recalls at p = O(log c + log n) bits
+    (`Transformer.CRASP.matcher_answers`), so the two separate at every
+    depth and width (`Transformer.CRASP.exists_matcher_not_queryFree`). The
+    runs bind 8 or 16 keys, far fewer rows than tokens, where the bound says
+    nothing, and that more tokens than width rule counting out there is not
+    proved. Easy binds 8 keys. Hard writes 16 times, 8 of them
     rebinding a key, and answers a query with its key's latest value
     (`Transformer.ALM.latest_wins`). Both train on 20,000 rows, not
     Zoology's 100,000 (Appendix E.2), on which the smaller model passes

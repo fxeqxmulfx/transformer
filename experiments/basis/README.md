@@ -53,10 +53,13 @@ attention, no query matched to a key, does it
 (`Transformer.CRASP.exists_rtfr_answers`). Attention that ignores the query
 needs, over n + 1 ≥ c rows, at k layers of width d and p bits,
 c − 1 ≤ k (2d + 1) log₂(2^p (n + 1) + 1)
-(`Transformer.CRASP.two_pow_le_of_queryFree`), a width growing with c; the
-runs bind 8 or 16 keys, far fewer rows than tokens, where the bound says
-nothing, and that more tokens than width rule counting out there is not
-proved. In the hard mode 8 of the 16 writes rebind a key, and a query asks for the latest
+(`Transformer.CRASP.two_pow_le_of_queryFree`), a width growing with c,
+while one layer of width 5 whose attention compares the query with each key
+recalls at p = O(log c + log n) bits (`Transformer.CRASP.matcher_answers`), so
+the two separate at every depth and width
+(`Transformer.CRASP.exists_matcher_not_queryFree`). The runs bind 8 or 16
+keys, far fewer rows than tokens, where the bound says nothing, and that more
+tokens than width rule counting out there is not proved. In the hard mode 8 of the 16 writes rebind a key, and a query asks for the latest
 value: a head that adds a recency term to a write's score returns the later
 write when one step of that term outweighs the rounding of both scores
 (`Transformer.ALM.latest_wins`), and for every recency scale and bound on
