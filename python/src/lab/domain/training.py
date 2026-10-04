@@ -159,8 +159,9 @@ class Compiled(Execution):
     An update reads its batch at the full width of the training split, so
     each batch size compiles once, and the native AdamW runs its fused
     kernel. Compiled kernels and the fused optimizer round differently from
-    the eager ones in the last bits: a compiled run reproduces itself at its
-    thread count, not an Eager run.
+    the eager ones in the last bits. The one-thread test cases reproduce
+    their own records exactly; a fixed thread count alone does not ensure
+    bit-identical multi-threaded large-model trajectories.
     """
     device: str = "cpu"
     threads: int = 1

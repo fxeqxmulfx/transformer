@@ -8,14 +8,18 @@ zeros; sampling compiled updates must preserve the complete training state.
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 import torch
 from torch.nn import functional as F
 
 from lab.domain.model import Softmax, Sparsemax
-from lab.domain.spec import substitute, swap
-from lab.domain.training import Compiled, Diagnostics
+from lab.domain.spec import describe, substitute, swap
+from lab.domain.basis import basis
+from lab.domain.training import Checkpoint, Compiled, Diagnostics
+from lab.infrastructure.engine import measure
 from lab.infrastructure.engine.compiled import CompiledStepper
+from lab.infrastructure.engine.loop import Training
 from lab.infrastructure.nn import build_model
 from lab.infrastructure.nn.sparsemax import causal_sparsemax
 from lab.infrastructure.store import RunDirectory
@@ -23,6 +27,20 @@ from lab.infrastructure.store import RunDirectory
 from examples import gptmini, modular
 from test_engine import untimed
 from test_graphs import summary, train
+
+
+def diagnostic_cases():
+    """One modular run and both multi-threaded large-model shapes of the basis."""
+    cases = {"modular": modular(gptmini(32, 2, 4), prime=11, updates=20, batch=8, every=10,
+                                execution=Compiled())}
+    for task, threads in (("depth", 2), ("recall", 4)):
+        run = basis(gptmini(128, 6, 4), "easy")[task]
+        for path, value in (("benchmark.train", 128), ("benchmark.validation", 64), ("benchmark.test", 64),
+                            ("budget.updates", 20), ("evaluate.every", 10), ("evaluate.batch", 64),
+                            ("execution.threads", threads), ("stopping", None)):
+            run = swap(run, path, value)
+        cases[task] = run
+    return {name: swap(run, "checkpoint", Checkpoint(every=10)) for name, run in cases.items()}
 
 
 class SparsemaxCompiledTests(unittest.TestCase):
@@ -67,8 +85,7 @@ class SparsemaxCompiledTests(unittest.TestCase):
                 torch.testing.assert_close(compiled_parameter.grad, parameter.grad)
 
     def test_diagnostics_preserve_compiled_losses_and_training_state_under_both_weights(self):
-        base = modular(gptmini(32, 2, 4), prime=11, updates=20, batch=8, every=10,
-                       execution=Compiled())
+        base = diagnostic_cases()["modular"]
         for weights in (Softmax(), Sparsemax()):
             run = substitute(base, Softmax, weights)
             with self.subTest(weights=type(weights).__name__), tempfile.TemporaryDirectory() as root:
@@ -77,12 +94,58 @@ class SparsemaxCompiledTests(unittest.TestCase):
                 train(swap(run, "diagnostics", Diagnostics(every=10)), sampled, CompiledStepper)
                 plain, sampled = RunDirectory(plain), RunDirectory(sampled)
                 self.assertEqual(untimed(plain.records("history")), untimed(sampled.records("history")))
-                self.assertEqual(summary(plain.checkpoint("cpu")), summary(sampled.checkpoint("cpu")))
+                checkpoints = plain.checkpoint("cpu"), sampled.checkpoint("cpu")
+                self.assertTrue(all(checkpoint is not None for checkpoint in checkpoints))
+                self.assertEqual(summary(checkpoints[0]), summary(checkpoints[1]))
                 self.assertEqual(summary(plain.result()), summary(sampled.result()))
                 measurements = sampled.records("diagnostics")
                 self.assertEqual([row["step"] for row in measurements], [10, 20])
                 self.assertTrue(all(row["temperatures"] for row in measurements))
                 self.assertTrue(all("answer_loss" in row and "EOS_loss" in row for row in measurements))
+
+    def test_multithreaded_diagnostics_leave_each_compiled_training_state_unchanged(self):
+        """Compare the same state's before/after images: separate threaded runs can round differently."""
+        for name, base in diagnostic_cases().items():
+            if name == "modular":
+                continue
+            for weights in (Softmax(), Sparsemax()):
+                run = swap(substitute(base, Softmax, weights), "diagnostics", Diagnostics(every=10))
+                checked = []
+
+                def snapshot(stepper, arguments):
+                    return summary({"model": stepper.model.state_dict(),
+                                    "gradients": [parameter.grad for parameter in stepper.parameters],
+                                    "optimizer": stepper.optimizer.state_dict(),
+                                    "sampler": training.sampler.state(), "rng": torch.get_rng_state(),
+                                    "modes": [module.training for module in stepper.model.modules()],
+                                    "arguments": arguments})
+
+                def guarded(stepper, function, label, argument_start):
+                    def observed(*arguments):
+                        before = snapshot(stepper, arguments[argument_start:])
+                        result = function(*arguments)
+                        self.assertEqual(before, snapshot(stepper, arguments[argument_start:]))
+                        checked.append(label)
+                        return result
+                    return observed
+
+                class CheckedStepper(CompiledStepper):
+                    def step(self, parts, rate, sampled):
+                        before = guarded(self, measure.before_update, "before", 2)
+                        after = guarded(self, measure.after_update, "after", 3)
+                        with patch.object(measure, "before_update", before), patch.object(measure, "after_update", after):
+                            return super().step(parts, rate, sampled)
+
+                with self.subTest(task=name, weights=type(weights).__name__), tempfile.TemporaryDirectory() as root:
+                    directory = RunDirectory(root)
+                    directory.begin(describe(run), {"engine": {}}, "# a test experiment\n")
+                    training = Training(run, directory, lambda row: None, CheckedStepper)
+                    training()
+                    self.assertEqual(checked, ["before", "after", "before", "after"])
+                    self.assertIsNotNone(directory.checkpoint("cpu"))
+                    measurements = directory.records("diagnostics")
+                    self.assertEqual([row["step"] for row in measurements], [10, 20])
+                    self.assertTrue(all(row["temperatures"] and "loss" in row for row in measurements))
 
 
 if __name__ == "__main__":

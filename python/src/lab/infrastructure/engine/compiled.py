@@ -15,9 +15,10 @@ eagerly. A stepper first drops what earlier ones compiled in the process:
 their graphs guard on another model, and would only count toward the limit.
 
 A sampled update runs the compiled update as every other update does, so
-measurements see what any update leaves. Inductor's kernels compute the
-same values on every call at a fixed thread count, so an interrupted run
-resumes onto its own records.
+measurements see what any update leaves. The one-thread test cases resume
+onto their own records exactly. Separate multi-threaded large-model runs
+can differ in rounding even without measurements; a fixed thread count
+alone does not guarantee a bit-identical trajectory.
 """
 
 import math

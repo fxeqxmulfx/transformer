@@ -1,12 +1,310 @@
 {
-  "scope": "30 small-model benchmark runs and four completed parity neighboring-rate checks; large-model runs are still in progress",
+  "scope": "30 small-model benchmark runs and 6 neighboring-rate checks",
   "date_utc": "2026-10-04",
   "criterion": "First observed selection sequence accuracy >= 0.99",
   "softmax_repetition": {
-    "runs": 15,
-    "identical_non_timing_observations": 661,
-    "model_optimizer_sampler_checkpoints_bit_identical": true
+    "softmax-easy-small-depth-seed0": {
+      "common_observations": 2,
+      "identical_common_observations": 2,
+      "first_differing_step": null,
+      "first_difference": null,
+      "whole_non_timing_history_identical": true,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-small-depth-seed0/history.jsonl": "11ecedb8fd15ac1da0e49ee7b9da9fe38160a290ae8c0d4103a07101d3e94726",
+        "experiments/basis/runs/easy-small-depth-seed0/result.json": "a259ac46edd2d23ab59029d197e67c49dac5a8dfd045ed8302d4db2d7c4d1401"
+      }
+    },
+    "softmax-easy-small-recall-seed0": {
+      "common_observations": 34,
+      "identical_common_observations": 34,
+      "first_differing_step": null,
+      "first_difference": null,
+      "whole_non_timing_history_identical": true,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 1650,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 1650,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-small-recall-seed0/history.jsonl": "702fd38ecdaa8d9efbc5320e0a02a0a835ae2c6845188ab10dccc71c6366a10d",
+        "experiments/basis/runs/easy-small-recall-seed0/result.json": "0b3b6de30b261df044257df2175a7a3ec6cccf2b656d1c1d4c379797e372ad8a"
+      }
+    },
+    "softmax-easy-small-parity-seed0": {
+      "common_observations": 42,
+      "identical_common_observations": 42,
+      "first_differing_step": null,
+      "first_difference": null,
+      "whole_non_timing_history_identical": true,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 8200,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 8200,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-small-parity-seed0/history.jsonl": "b60707186444a8530f58eb13c05fe528294d8e7c60365a6076128c4cf59e753a",
+        "experiments/basis/runs/easy-small-parity-seed0/result.json": "d818e99f7e05fd8cc217fa9d9558aadab88e077e6e13ce2a7fbf4c39992ce909"
+      }
+    },
+    "softmax-easy-small-depth-seed1": {
+      "common_observations": 2,
+      "identical_common_observations": 2,
+      "first_differing_step": null,
+      "first_difference": null,
+      "whole_non_timing_history_identical": true,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-small-depth-seed1/history.jsonl": "73d761cc524f16003777238af6fbd0ca2a480058e781155bd12fe46a047cddc9",
+        "experiments/basis/runs/easy-small-depth-seed1/result.json": "de8b689f3e566dbe4699ff818cb64f43c591dd6bcc73968e251a6664084daaa0"
+      }
+    },
+    "softmax-easy-small-recall-seed1": {
+      "common_observations": 50,
+      "identical_common_observations": 50,
+      "first_differing_step": null,
+      "first_difference": null,
+      "whole_non_timing_history_identical": true,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 2450,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 2450,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-small-recall-seed1/history.jsonl": "43b3cb476b5db51ec3e436df8568885e575c5527980500b110aba43d442d8a56",
+        "experiments/basis/runs/easy-small-recall-seed1/result.json": "c90904e81c5a9f61bf982fa710af6fd5ef72818d2f8c915fc83c09e06af785c8"
+      }
+    },
+    "softmax-easy-small-parity-seed1": {
+      "common_observations": 26,
+      "identical_common_observations": 26,
+      "first_differing_step": null,
+      "first_difference": null,
+      "whole_non_timing_history_identical": true,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 5000,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 5000,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-small-parity-seed1/history.jsonl": "163f755534b64fce54e8200ddb74a239058acfd532c158e60b224544c8d2a011",
+        "experiments/basis/runs/easy-small-parity-seed1/result.json": "bbe21bbc8e540118789171841e79cf8a96e50491191cd066ed7b72c45e51044b"
+      }
+    },
+    "softmax-easy-small-depth-seed2": {
+      "common_observations": 2,
+      "identical_common_observations": 2,
+      "first_differing_step": null,
+      "first_difference": null,
+      "whole_non_timing_history_identical": true,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-small-depth-seed2/history.jsonl": "d8d25285058d537da6b6400d1397ab6b677a55f5edbaf5f8b3647820f56bfb93",
+        "experiments/basis/runs/easy-small-depth-seed2/result.json": "c52b5e6090cba4dc6f471296cb0d966d5c517f1aa7bb23a688a212ebda04c476"
+      }
+    },
+    "softmax-easy-small-recall-seed2": {
+      "common_observations": 37,
+      "identical_common_observations": 37,
+      "first_differing_step": null,
+      "first_difference": null,
+      "whole_non_timing_history_identical": true,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 1800,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 1800,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-small-recall-seed2/history.jsonl": "c754843a21518f9f625f2eb563951ab25b38c2b08a3ef6d9949d5105d37e7460",
+        "experiments/basis/runs/easy-small-recall-seed2/result.json": "228f3420d5972cf990f24e56da38f3fc29d8e28212780e8bf065da7f78b605f9"
+      }
+    },
+    "softmax-easy-small-parity-seed2": {
+      "common_observations": 22,
+      "identical_common_observations": 22,
+      "first_differing_step": null,
+      "first_difference": null,
+      "whole_non_timing_history_identical": true,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 4200,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 4200,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-small-parity-seed2/history.jsonl": "472886f08ddbf9b2b50a32b4ee82fef6548e3b2d08e2250f814053ee97eab631",
+        "experiments/basis/runs/easy-small-parity-seed2/result.json": "39aabe2e50429ea6ed3b98c458f9c637002fae1aaa67f0307a4b9dbbf41c9291"
+      }
+    },
+    "softmax-hard-small-depth-seed0": {
+      "common_observations": 51,
+      "identical_common_observations": 51,
+      "first_differing_step": null,
+      "first_difference": null,
+      "whole_non_timing_history_identical": true,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 10000,
+        "reason": "budget"
+      },
+      "archive_stop": {
+        "step": 10000,
+        "reason": "budget"
+      },
+      "archive_source": {
+        "experiments/basis/runs/hard-small-depth-seed0/history.jsonl": "a54246cd6a32e36c2f5e5e19637e8943db3320b5b215129790ad776013158cee",
+        "experiments/basis/runs/hard-small-depth-seed0/result.json": "53f2dfc0c811f5162ebf2da09c09c45ead41494f40ae9085ba4095bd61e83fe3"
+      }
+    },
+    "softmax-hard-small-recall-seed0": {
+      "common_observations": 97,
+      "identical_common_observations": 97,
+      "first_differing_step": null,
+      "first_difference": null,
+      "whole_non_timing_history_identical": true,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "archive_stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "archive_source": {
+        "experiments/basis/runs/hard-small-recall-seed0/history.jsonl": "0bfd4b275905c1d7ad106406376295972f7aa0bf9bb573d8d8fe5a5c9179b323",
+        "experiments/basis/runs/hard-small-recall-seed0/result.json": "337a303dcec6ab9cc1cbc87e15be2d654af40930395f856e9bf044d16d07295b"
+      }
+    },
+    "softmax-hard-small-depth-seed1": {
+      "common_observations": 51,
+      "identical_common_observations": 51,
+      "first_differing_step": null,
+      "first_difference": null,
+      "whole_non_timing_history_identical": true,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 10000,
+        "reason": "budget"
+      },
+      "archive_stop": {
+        "step": 10000,
+        "reason": "budget"
+      },
+      "archive_source": {
+        "experiments/basis/runs/hard-small-depth-seed1/history.jsonl": "f3424183586c46b3354ad473100b0cf8ee09c6b2ca485cf60725866063f8eda0",
+        "experiments/basis/runs/hard-small-depth-seed1/result.json": "0d353d63dafc76acaee7a581bdb5d1fa8f094d97747ae4562763b4afc3076623"
+      }
+    },
+    "softmax-hard-small-recall-seed1": {
+      "common_observations": 97,
+      "identical_common_observations": 97,
+      "first_differing_step": null,
+      "first_difference": null,
+      "whole_non_timing_history_identical": true,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "archive_stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "archive_source": {
+        "experiments/basis/runs/hard-small-recall-seed1/history.jsonl": "580776ffd1b518d7965beb7341e892ed451e7662704c8ae12e6e29ebeff77f00",
+        "experiments/basis/runs/hard-small-recall-seed1/result.json": "59bc2d5be2c2c33a7c6a2dbb3bf2c46f14fb07304aa0be71227453c70da209e7"
+      }
+    },
+    "softmax-hard-small-depth-seed2": {
+      "common_observations": 51,
+      "identical_common_observations": 51,
+      "first_differing_step": null,
+      "first_difference": null,
+      "whole_non_timing_history_identical": true,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 10000,
+        "reason": "budget"
+      },
+      "archive_stop": {
+        "step": 10000,
+        "reason": "budget"
+      },
+      "archive_source": {
+        "experiments/basis/runs/hard-small-depth-seed2/history.jsonl": "130654528204b5ec72c2dd23e71b9dec0d287fd0d501a834f2f4f7fd1606f4a8",
+        "experiments/basis/runs/hard-small-depth-seed2/result.json": "c41af87e95a1265f1cc3b1cc0298b251d4b0c38a392ff1d234294337241caebd"
+      }
+    },
+    "softmax-hard-small-recall-seed2": {
+      "common_observations": 97,
+      "identical_common_observations": 97,
+      "first_differing_step": null,
+      "first_difference": null,
+      "whole_non_timing_history_identical": true,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "archive_stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "archive_source": {
+        "experiments/basis/runs/hard-small-recall-seed2/history.jsonl": "54017f89002a1ff02c9b34c7dca4a4633dbb6d1bad244bea0c1cca59ed5b208e",
+        "experiments/basis/runs/hard-small-recall-seed2/result.json": "a4c0d91fe9c6fdbb2055eac73c2ec14812bef280de2b6daa5d60a820753937ef"
+      }
+    }
   },
+  "persistent_matched_seed_failures": [],
   "runs": {
     "softmax-easy-small-depth-seed0": {
       "selection": "validation",
@@ -45,84 +343,6 @@
         "runs/softmax-easy-small-depth-seed0/result.json": "dfaffd460826ac6cfd087310ec6c1c72d28a7749b69158f057870245811f2d6f",
         "runs/softmax-easy-small-depth-seed0/history.jsonl": "2246a2314b9ad5f771ed78d4260f408b8d0d9c499459d73af61b9eb0c41c9630",
         "runs/softmax-easy-small-depth-seed0/diagnostics.jsonl": "5647f45dd5826d471621a3f6ea6e6ccde8fb0073d1bf6e752c277a6413d2cab8"
-      }
-    },
-    "softmax-easy-small-depth-seed1": {
-      "selection": "validation",
-      "rate": 0.001,
-      "budget": {
-        "type": "Budget",
-        "updates": 2000,
-        "batch": 16
-      },
-      "stop": {
-        "step": 200,
-        "reason": "solved"
-      },
-      "pass_step": 200,
-      "best_sequence_accuracy": 1.0,
-      "best_exact": 512,
-      "validation_rows": 512,
-      "last_batch_loss": 0.026028519496321678,
-      "last_batch_loss_step": 200,
-      "final_head_scales": {
-        "blocks.0.attention.scores.log_alpha": [
-          3.8844995498657227,
-          3.9743056297302246,
-          3.821833610534668,
-          4.090687274932861
-        ],
-        "blocks.1.attention.scores.log_alpha": [
-          4.058790683746338,
-          3.8960490226745605,
-          3.988581895828247,
-          4.054797172546387
-        ]
-      },
-      "source": {
-        "runs/softmax-easy-small-depth-seed1/experiment.json": "b5c830fbdbe683b04a40832d33c6d51306c778165954107fbf21df7c4d77e5a5",
-        "runs/softmax-easy-small-depth-seed1/result.json": "9924e9bff0144036adae1ea96536d814d24f4839703692e9c952107cc61d8693",
-        "runs/softmax-easy-small-depth-seed1/history.jsonl": "775755e87c37ff6c0fd5e8c0f355ae98732dec6ae45e1376afffe4b5406c4884",
-        "runs/softmax-easy-small-depth-seed1/diagnostics.jsonl": "4f5f9882231798671850a84e0dbea365414450da23815d8a2f305c23d5f1e5c4"
-      }
-    },
-    "softmax-easy-small-depth-seed2": {
-      "selection": "validation",
-      "rate": 0.001,
-      "budget": {
-        "type": "Budget",
-        "updates": 2000,
-        "batch": 16
-      },
-      "stop": {
-        "step": 200,
-        "reason": "solved"
-      },
-      "pass_step": 200,
-      "best_sequence_accuracy": 0.998046875,
-      "best_exact": 511,
-      "validation_rows": 512,
-      "last_batch_loss": 0.025272157043218613,
-      "last_batch_loss_step": 200,
-      "final_head_scales": {
-        "blocks.0.attention.scores.log_alpha": [
-          3.865344762802124,
-          4.013974189758301,
-          3.983258008956909,
-          3.8082032203674316
-        ],
-        "blocks.1.attention.scores.log_alpha": [
-          3.9485912322998047,
-          3.8703277111053467,
-          3.8905913829803467,
-          4.070072650909424
-        ]
-      },
-      "source": {
-        "runs/softmax-easy-small-depth-seed2/experiment.json": "01d2aba5fcd802b5eac3fcc78d7c837afd0c5852e3b579b001fc6ae7b81bfe86",
-        "runs/softmax-easy-small-depth-seed2/result.json": "1343b35ddf110735e46ac8ff8ce7be02fd3d2cf32da9e7860318be50747b69b5",
-        "runs/softmax-easy-small-depth-seed2/history.jsonl": "bcfc871f974d505f6913a4ba7c7036ceb453b97d15e91df3c50c69e3cd2acf35",
-        "runs/softmax-easy-small-depth-seed2/diagnostics.jsonl": "4a65a903581b3a1c35be737954599c1c61bd7706285c002080ea33c24638931c"
       }
     },
     "softmax-easy-small-recall-seed0": {
@@ -164,84 +384,6 @@
         "runs/softmax-easy-small-recall-seed0/diagnostics.jsonl": "dc64a9811213a5692d58dba9a0a6f1ba7772a9a33646d299fc8f6e672b625209"
       }
     },
-    "softmax-easy-small-recall-seed1": {
-      "selection": "validation",
-      "rate": 0.001,
-      "budget": {
-        "type": "Budget",
-        "updates": 4800,
-        "batch": 64
-      },
-      "stop": {
-        "step": 2450,
-        "reason": "solved"
-      },
-      "pass_step": 2450,
-      "best_sequence_accuracy": 0.990234375,
-      "best_exact": 507,
-      "validation_rows": 512,
-      "last_batch_loss": 0.011765542440116405,
-      "last_batch_loss_step": 2450,
-      "final_head_scales": {
-        "blocks.0.attention.scores.log_alpha": [
-          2.1730430126190186,
-          6.407726287841797,
-          2.500535726547241,
-          5.6873674392700195
-        ],
-        "blocks.1.attention.scores.log_alpha": [
-          11.649737358093262,
-          11.656722068786621,
-          11.911320686340332,
-          12.035581588745117
-        ]
-      },
-      "source": {
-        "runs/softmax-easy-small-recall-seed1/experiment.json": "8a3f35be5d0536c61729db154d4d666406699b86f08cd106aeadb65b3d9a1724",
-        "runs/softmax-easy-small-recall-seed1/result.json": "b9c51f1abe43536def099368ec62be42fab34d09ea6b277ff1e22be4720863b4",
-        "runs/softmax-easy-small-recall-seed1/history.jsonl": "15d3afb55550cfdf9601d40e8cd01580a9f0837567ab1e6813e48d64ae302a2f",
-        "runs/softmax-easy-small-recall-seed1/diagnostics.jsonl": "4ed272edb344b7ec582eab6c61e1a2cf1d377b7b1b871448aada65414a51a4b4"
-      }
-    },
-    "softmax-easy-small-recall-seed2": {
-      "selection": "validation",
-      "rate": 0.001,
-      "budget": {
-        "type": "Budget",
-        "updates": 4800,
-        "batch": 64
-      },
-      "stop": {
-        "step": 1800,
-        "reason": "solved"
-      },
-      "pass_step": 1800,
-      "best_sequence_accuracy": 0.994140625,
-      "best_exact": 509,
-      "validation_rows": 512,
-      "last_batch_loss": 0.00846758484840393,
-      "last_batch_loss_step": 1800,
-      "final_head_scales": {
-        "blocks.0.attention.scores.log_alpha": [
-          3.1864969730377197,
-          3.4990694522857666,
-          6.904029369354248,
-          4.021945953369141
-        ],
-        "blocks.1.attention.scores.log_alpha": [
-          9.691411018371582,
-          9.933467864990234,
-          9.20329475402832,
-          9.11963176727295
-        ]
-      },
-      "source": {
-        "runs/softmax-easy-small-recall-seed2/experiment.json": "b9f2a3da096598be4d7e55272e918f237a85a5872d129bbe282654a9f1e1e970",
-        "runs/softmax-easy-small-recall-seed2/result.json": "1f9d603bf3d08477ac5e6402c5157557204810814ad0d1b969fbe342fbf5e3d5",
-        "runs/softmax-easy-small-recall-seed2/history.jsonl": "6cb47c85fc480c63a3b5cfaee1dbacccd3086c81fd0dadb7a59e1ef433570843",
-        "runs/softmax-easy-small-recall-seed2/diagnostics.jsonl": "4f7470a7688e8965385fd7352d770077b2ec61592de25187d37e543f26ae2245"
-      }
-    },
     "softmax-easy-small-parity-seed0": {
       "selection": "validation",
       "rate": 0.0003,
@@ -281,6 +423,84 @@
         "runs/softmax-easy-small-parity-seed0/diagnostics.jsonl": "b81b6951676b7a17e2f373e1dea81330b63d09a5c6cd5fabf7fb4f5b3b8f4aee"
       }
     },
+    "softmax-easy-small-depth-seed1": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 2000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "pass_step": 200,
+      "best_sequence_accuracy": 1.0,
+      "best_exact": 512,
+      "validation_rows": 512,
+      "last_batch_loss": 0.026028519496321678,
+      "last_batch_loss_step": 200,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          3.8844995498657227,
+          3.9743056297302246,
+          3.821833610534668,
+          4.090687274932861
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          4.058790683746338,
+          3.8960490226745605,
+          3.988581895828247,
+          4.054797172546387
+        ]
+      },
+      "source": {
+        "runs/softmax-easy-small-depth-seed1/experiment.json": "b5c830fbdbe683b04a40832d33c6d51306c778165954107fbf21df7c4d77e5a5",
+        "runs/softmax-easy-small-depth-seed1/result.json": "9924e9bff0144036adae1ea96536d814d24f4839703692e9c952107cc61d8693",
+        "runs/softmax-easy-small-depth-seed1/history.jsonl": "775755e87c37ff6c0fd5e8c0f355ae98732dec6ae45e1376afffe4b5406c4884",
+        "runs/softmax-easy-small-depth-seed1/diagnostics.jsonl": "4f5f9882231798671850a84e0dbea365414450da23815d8a2f305c23d5f1e5c4"
+      }
+    },
+    "softmax-easy-small-recall-seed1": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 2450,
+        "reason": "solved"
+      },
+      "pass_step": 2450,
+      "best_sequence_accuracy": 0.990234375,
+      "best_exact": 507,
+      "validation_rows": 512,
+      "last_batch_loss": 0.011765542440116405,
+      "last_batch_loss_step": 2450,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          2.1730430126190186,
+          6.407726287841797,
+          2.500535726547241,
+          5.6873674392700195
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          11.649737358093262,
+          11.656722068786621,
+          11.911320686340332,
+          12.035581588745117
+        ]
+      },
+      "source": {
+        "runs/softmax-easy-small-recall-seed1/experiment.json": "8a3f35be5d0536c61729db154d4d666406699b86f08cd106aeadb65b3d9a1724",
+        "runs/softmax-easy-small-recall-seed1/result.json": "b9c51f1abe43536def099368ec62be42fab34d09ea6b277ff1e22be4720863b4",
+        "runs/softmax-easy-small-recall-seed1/history.jsonl": "15d3afb55550cfdf9601d40e8cd01580a9f0837567ab1e6813e48d64ae302a2f",
+        "runs/softmax-easy-small-recall-seed1/diagnostics.jsonl": "4ed272edb344b7ec582eab6c61e1a2cf1d377b7b1b871448aada65414a51a4b4"
+      }
+    },
     "softmax-easy-small-parity-seed1": {
       "selection": "validation",
       "rate": 0.0003,
@@ -318,6 +538,84 @@
         "runs/softmax-easy-small-parity-seed1/result.json": "a667d5704e0f441120787346bd377d8efcfe1345b21ba241032d8b51fcc095e3",
         "runs/softmax-easy-small-parity-seed1/history.jsonl": "72824342afbdf066154313277604addec2d5a8e83ab9563dd331d1ed09d008b4",
         "runs/softmax-easy-small-parity-seed1/diagnostics.jsonl": "ed707405d66a711562025b47b480a0a2be2ddae14bed42c33d81371039c807c3"
+      }
+    },
+    "softmax-easy-small-depth-seed2": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 2000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "pass_step": 200,
+      "best_sequence_accuracy": 0.998046875,
+      "best_exact": 511,
+      "validation_rows": 512,
+      "last_batch_loss": 0.025272157043218613,
+      "last_batch_loss_step": 200,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          3.865344762802124,
+          4.013974189758301,
+          3.983258008956909,
+          3.8082032203674316
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          3.9485912322998047,
+          3.8703277111053467,
+          3.8905913829803467,
+          4.070072650909424
+        ]
+      },
+      "source": {
+        "runs/softmax-easy-small-depth-seed2/experiment.json": "01d2aba5fcd802b5eac3fcc78d7c837afd0c5852e3b579b001fc6ae7b81bfe86",
+        "runs/softmax-easy-small-depth-seed2/result.json": "1343b35ddf110735e46ac8ff8ce7be02fd3d2cf32da9e7860318be50747b69b5",
+        "runs/softmax-easy-small-depth-seed2/history.jsonl": "bcfc871f974d505f6913a4ba7c7036ceb453b97d15e91df3c50c69e3cd2acf35",
+        "runs/softmax-easy-small-depth-seed2/diagnostics.jsonl": "4a65a903581b3a1c35be737954599c1c61bd7706285c002080ea33c24638931c"
+      }
+    },
+    "softmax-easy-small-recall-seed2": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 1800,
+        "reason": "solved"
+      },
+      "pass_step": 1800,
+      "best_sequence_accuracy": 0.994140625,
+      "best_exact": 509,
+      "validation_rows": 512,
+      "last_batch_loss": 0.00846758484840393,
+      "last_batch_loss_step": 1800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          3.1864969730377197,
+          3.4990694522857666,
+          6.904029369354248,
+          4.021945953369141
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          9.691411018371582,
+          9.933467864990234,
+          9.20329475402832,
+          9.11963176727295
+        ]
+      },
+      "source": {
+        "runs/softmax-easy-small-recall-seed2/experiment.json": "b9f2a3da096598be4d7e55272e918f237a85a5872d129bbe282654a9f1e1e970",
+        "runs/softmax-easy-small-recall-seed2/result.json": "1f9d603bf3d08477ac5e6402c5157557204810814ad0d1b969fbe342fbf5e3d5",
+        "runs/softmax-easy-small-recall-seed2/history.jsonl": "6cb47c85fc480c63a3b5cfaee1dbacccd3086c81fd0dadb7a59e1ef433570843",
+        "runs/softmax-easy-small-recall-seed2/diagnostics.jsonl": "4f7470a7688e8965385fd7352d770077b2ec61592de25187d37e543f26ae2245"
       }
     },
     "softmax-easy-small-parity-seed2": {
@@ -398,84 +696,6 @@
         "runs/softmax-hard-small-depth-seed0/diagnostics.jsonl": "449053a2459b3156137ec3ec8cf84b3ed64b3f3cb3d8accc991eb9b08f78f7cb"
       }
     },
-    "softmax-hard-small-depth-seed1": {
-      "selection": "validation/length-128",
-      "rate": 0.001,
-      "budget": {
-        "type": "Budget",
-        "updates": 10000,
-        "batch": 16
-      },
-      "stop": {
-        "step": 10000,
-        "reason": "budget"
-      },
-      "pass_step": null,
-      "best_sequence_accuracy": 0.349609375,
-      "best_exact": 179,
-      "validation_rows": 512,
-      "last_batch_loss": 0.02444649301469326,
-      "last_batch_loss_step": 10000,
-      "final_head_scales": {
-        "blocks.0.attention.scores.log_alpha": [
-          1.9579976797103882,
-          3.0698516368865967,
-          1.9014217853546143,
-          2.393601655960083
-        ],
-        "blocks.1.attention.scores.log_alpha": [
-          3.1263442039489746,
-          2.044816255569458,
-          2.051218032836914,
-          2.1960110664367676
-        ]
-      },
-      "source": {
-        "runs/softmax-hard-small-depth-seed1/experiment.json": "a4922b3bc9daddcf0a1a5ca2745c98ffbefe06203cb8b506ebc797871e56e6c1",
-        "runs/softmax-hard-small-depth-seed1/result.json": "2f6325df3e017cd58572ac822755c0e5772f5fb64467f883ec33accb3f18af72",
-        "runs/softmax-hard-small-depth-seed1/history.jsonl": "bced5a311da7a21bbcb29658fdd895fa66ee7ccd041249b13f9946ca43cb9e0e",
-        "runs/softmax-hard-small-depth-seed1/diagnostics.jsonl": "1e3e590085d5e108e56b559b985e1433cac58e91067115d3ab6e3d5d36aa2992"
-      }
-    },
-    "softmax-hard-small-depth-seed2": {
-      "selection": "validation/length-128",
-      "rate": 0.001,
-      "budget": {
-        "type": "Budget",
-        "updates": 10000,
-        "batch": 16
-      },
-      "stop": {
-        "step": 10000,
-        "reason": "budget"
-      },
-      "pass_step": null,
-      "best_sequence_accuracy": 0.310546875,
-      "best_exact": 159,
-      "validation_rows": 512,
-      "last_batch_loss": 0.00030692751170136034,
-      "last_batch_loss_step": 10000,
-      "final_head_scales": {
-        "blocks.0.attention.scores.log_alpha": [
-          2.0171220302581787,
-          3.109241485595703,
-          1.886468768119812,
-          1.8275057077407837
-        ],
-        "blocks.1.attention.scores.log_alpha": [
-          2.1095993518829346,
-          2.1146955490112305,
-          2.784487724304199,
-          2.21062970161438
-        ]
-      },
-      "source": {
-        "runs/softmax-hard-small-depth-seed2/experiment.json": "f7b4c172e52100e0bf638c02cb4cf98b892d26c00ead68a550fb015e42b1a0f0",
-        "runs/softmax-hard-small-depth-seed2/result.json": "10a96b0e71058b0dc4baeed9dcda769a830531184178f48a42ad0e74f9aa0e5e",
-        "runs/softmax-hard-small-depth-seed2/history.jsonl": "4b97d6215520c1d8818bbe32ab8457547007b2415ccc7f03e6813cda2bb14eac",
-        "runs/softmax-hard-small-depth-seed2/diagnostics.jsonl": "5e4bb4a151864302f6afd6d6cd4fe9d6c23c495dd4195fe1b1835cf0a674dd65"
-      }
-    },
     "softmax-hard-small-recall-seed0": {
       "selection": "validation",
       "rate": 0.0003,
@@ -515,6 +735,45 @@
         "runs/softmax-hard-small-recall-seed0/diagnostics.jsonl": "c50423de2cbba468ab21571c98a5ef7cae4d3055e3dd78221da37c2f656f61f7"
       }
     },
+    "softmax-hard-small-depth-seed1": {
+      "selection": "validation/length-128",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 10000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 10000,
+        "reason": "budget"
+      },
+      "pass_step": null,
+      "best_sequence_accuracy": 0.349609375,
+      "best_exact": 179,
+      "validation_rows": 512,
+      "last_batch_loss": 0.02444649301469326,
+      "last_batch_loss_step": 10000,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          1.9579976797103882,
+          3.0698516368865967,
+          1.9014217853546143,
+          2.393601655960083
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          3.1263442039489746,
+          2.044816255569458,
+          2.051218032836914,
+          2.1960110664367676
+        ]
+      },
+      "source": {
+        "runs/softmax-hard-small-depth-seed1/experiment.json": "a4922b3bc9daddcf0a1a5ca2745c98ffbefe06203cb8b506ebc797871e56e6c1",
+        "runs/softmax-hard-small-depth-seed1/result.json": "2f6325df3e017cd58572ac822755c0e5772f5fb64467f883ec33accb3f18af72",
+        "runs/softmax-hard-small-depth-seed1/history.jsonl": "bced5a311da7a21bbcb29658fdd895fa66ee7ccd041249b13f9946ca43cb9e0e",
+        "runs/softmax-hard-small-depth-seed1/diagnostics.jsonl": "1e3e590085d5e108e56b559b985e1433cac58e91067115d3ab6e3d5d36aa2992"
+      }
+    },
     "softmax-hard-small-recall-seed1": {
       "selection": "validation",
       "rate": 0.0003,
@@ -552,6 +811,45 @@
         "runs/softmax-hard-small-recall-seed1/result.json": "86edd0af2f30221defca817a3d19cabc3d43c62daf33b6c7f2934bc14e8540eb",
         "runs/softmax-hard-small-recall-seed1/history.jsonl": "2181a776e898c92e5c90980526d4db03e1f3058a1fd907a5c91f9e5e63afe172",
         "runs/softmax-hard-small-recall-seed1/diagnostics.jsonl": "f3cb0b136ee20c50046dae2cc4575b65515b43fb3a1ae97b2fc1722accdd3390"
+      }
+    },
+    "softmax-hard-small-depth-seed2": {
+      "selection": "validation/length-128",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 10000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 10000,
+        "reason": "budget"
+      },
+      "pass_step": null,
+      "best_sequence_accuracy": 0.310546875,
+      "best_exact": 159,
+      "validation_rows": 512,
+      "last_batch_loss": 0.00030692751170136034,
+      "last_batch_loss_step": 10000,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          2.0171220302581787,
+          3.109241485595703,
+          1.886468768119812,
+          1.8275057077407837
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          2.1095993518829346,
+          2.1146955490112305,
+          2.784487724304199,
+          2.21062970161438
+        ]
+      },
+      "source": {
+        "runs/softmax-hard-small-depth-seed2/experiment.json": "f7b4c172e52100e0bf638c02cb4cf98b892d26c00ead68a550fb015e42b1a0f0",
+        "runs/softmax-hard-small-depth-seed2/result.json": "10a96b0e71058b0dc4baeed9dcda769a830531184178f48a42ad0e74f9aa0e5e",
+        "runs/softmax-hard-small-depth-seed2/history.jsonl": "4b97d6215520c1d8818bbe32ab8457547007b2415ccc7f03e6813cda2bb14eac",
+        "runs/softmax-hard-small-depth-seed2/diagnostics.jsonl": "5e4bb4a151864302f6afd6d6cd4fe9d6c23c495dd4195fe1b1835cf0a674dd65"
       }
     },
     "softmax-hard-small-recall-seed2": {
@@ -632,84 +930,6 @@
         "runs/sparsemax-easy-small-depth-seed0/diagnostics.jsonl": "f4caa9a1d2a5da541b1af58ccc6443a3a345defc4c98d3187dfa14b509f283fa"
       }
     },
-    "sparsemax-easy-small-depth-seed1": {
-      "selection": "validation",
-      "rate": 0.001,
-      "budget": {
-        "type": "Budget",
-        "updates": 2000,
-        "batch": 16
-      },
-      "stop": {
-        "step": 200,
-        "reason": "solved"
-      },
-      "pass_step": 200,
-      "best_sequence_accuracy": 0.9921875,
-      "best_exact": 508,
-      "validation_rows": 512,
-      "last_batch_loss": 0.03210741654038429,
-      "last_batch_loss_step": 200,
-      "final_head_scales": {
-        "blocks.0.attention.scores.log_alpha": [
-          3.8056721687316895,
-          3.838484525680542,
-          3.920644760131836,
-          3.8218581676483154
-        ],
-        "blocks.1.attention.scores.log_alpha": [
-          4.043821811676025,
-          3.865487575531006,
-          3.915236234664917,
-          3.9400923252105713
-        ]
-      },
-      "source": {
-        "runs/sparsemax-easy-small-depth-seed1/experiment.json": "4a30b06c9aedf6636587b446dca3a7cc6a3a7aaf830e2a83f410ab7a14cb519b",
-        "runs/sparsemax-easy-small-depth-seed1/result.json": "24ff815f4a3188258ccf85ae4ab3dcb705a109844897a8e5d9486b41c0568d9b",
-        "runs/sparsemax-easy-small-depth-seed1/history.jsonl": "a462753489592160b2f32f4a1f15314a2786d412f38f628e33bace2b86240ba7",
-        "runs/sparsemax-easy-small-depth-seed1/diagnostics.jsonl": "42bf4b17a2672875fd05d96a2f3bcaa4f8fb00926636f6bcf19b01e270b0abd5"
-      }
-    },
-    "sparsemax-easy-small-depth-seed2": {
-      "selection": "validation",
-      "rate": 0.001,
-      "budget": {
-        "type": "Budget",
-        "updates": 2000,
-        "batch": 16
-      },
-      "stop": {
-        "step": 200,
-        "reason": "solved"
-      },
-      "pass_step": 200,
-      "best_sequence_accuracy": 1.0,
-      "best_exact": 512,
-      "validation_rows": 512,
-      "last_batch_loss": 0.02107565477490425,
-      "last_batch_loss_step": 200,
-      "final_head_scales": {
-        "blocks.0.attention.scores.log_alpha": [
-          3.9030473232269287,
-          3.9230940341949463,
-          3.9070968627929688,
-          3.8454768657684326
-        ],
-        "blocks.1.attention.scores.log_alpha": [
-          3.873957633972168,
-          3.9342916011810303,
-          3.8728933334350586,
-          3.9868171215057373
-        ]
-      },
-      "source": {
-        "runs/sparsemax-easy-small-depth-seed2/experiment.json": "76ce315255c1a27e037466593ee5c12f2c4cb048dfcffde17be0a43e49daa1ff",
-        "runs/sparsemax-easy-small-depth-seed2/result.json": "a8df8385eca08ddb8b24ca431e162f4e1f3b1b6b5fab98b892a242a62a1c5cf3",
-        "runs/sparsemax-easy-small-depth-seed2/history.jsonl": "5762d8ac2c62458603835669663b41ffd3de7e8dd8a1854e2d314695aac025a3",
-        "runs/sparsemax-easy-small-depth-seed2/diagnostics.jsonl": "93dc7c522ffae9e57300130c1cd0f2b5b6051cb641112055ae8ae34b44e994bb"
-      }
-    },
     "sparsemax-easy-small-recall-seed0": {
       "selection": "validation",
       "rate": 0.001,
@@ -747,84 +967,6 @@
         "runs/sparsemax-easy-small-recall-seed0/result.json": "920793aad77c9b00265f780310717c2c7454b0ed6b76a0d8bbefa03c48ef6293",
         "runs/sparsemax-easy-small-recall-seed0/history.jsonl": "3fba5ba4e5a8e663cf48733ef0943785c37c594c506f798c58d1e9422d72d92c",
         "runs/sparsemax-easy-small-recall-seed0/diagnostics.jsonl": "554307371cd883166b342a2c31a4851ee98df2039e00d7893af715a22bd0d577"
-      }
-    },
-    "sparsemax-easy-small-recall-seed1": {
-      "selection": "validation",
-      "rate": 0.001,
-      "budget": {
-        "type": "Budget",
-        "updates": 4800,
-        "batch": 64
-      },
-      "stop": {
-        "step": 350,
-        "reason": "solved"
-      },
-      "pass_step": 350,
-      "best_sequence_accuracy": 0.99609375,
-      "best_exact": 510,
-      "validation_rows": 512,
-      "last_batch_loss": 0.8436025977134705,
-      "last_batch_loss_step": 350,
-      "final_head_scales": {
-        "blocks.0.attention.scores.log_alpha": [
-          3.4590673446655273,
-          3.9828004837036133,
-          3.5241177082061768,
-          3.2149033546447754
-        ],
-        "blocks.1.attention.scores.log_alpha": [
-          4.050121307373047,
-          3.9955620765686035,
-          4.020293712615967,
-          4.022092819213867
-        ]
-      },
-      "source": {
-        "runs/sparsemax-easy-small-recall-seed1/experiment.json": "c7d6e1620042b163a5850835e5f666cb5f732203f18c95306d1553dc024852de",
-        "runs/sparsemax-easy-small-recall-seed1/result.json": "20ebb318599e30b2ec0679e6b769a47f67e5b33c4b742c10282f413329d25df6",
-        "runs/sparsemax-easy-small-recall-seed1/history.jsonl": "9ca71f03408bcd35a72838f9e065c0370e89ab489b4bd3bbef9e02312573ce5c",
-        "runs/sparsemax-easy-small-recall-seed1/diagnostics.jsonl": "d0337fb45e0e653ab47afc74d92044628b9f6f1e3afb1f8318bc740d03d50973"
-      }
-    },
-    "sparsemax-easy-small-recall-seed2": {
-      "selection": "validation",
-      "rate": 0.001,
-      "budget": {
-        "type": "Budget",
-        "updates": 4800,
-        "batch": 64
-      },
-      "stop": {
-        "step": 4800,
-        "reason": "budget"
-      },
-      "pass_step": null,
-      "best_sequence_accuracy": 0.412109375,
-      "best_exact": 211,
-      "validation_rows": 512,
-      "last_batch_loss": 0.18333090841770172,
-      "last_batch_loss_step": 4800,
-      "final_head_scales": {
-        "blocks.0.attention.scores.log_alpha": [
-          2.7921674251556396,
-          2.038311243057251,
-          1.6265240907669067,
-          2.8614797592163086
-        ],
-        "blocks.1.attention.scores.log_alpha": [
-          2.632017135620117,
-          2.858529567718506,
-          2.7238993644714355,
-          2.6202034950256348
-        ]
-      },
-      "source": {
-        "runs/sparsemax-easy-small-recall-seed2/experiment.json": "c8ef2c41aefc02ad4840ac713abdda54eaf862e6815a0ff67ab909022d79a0fe",
-        "runs/sparsemax-easy-small-recall-seed2/result.json": "26550b04925dfbeecb6a86d882616fb7bc4eda09ab5f4001fa274c05d55b1bf5",
-        "runs/sparsemax-easy-small-recall-seed2/history.jsonl": "5c4b0f7d2bee1bd32dc86ef141c03427a1e9613d4931b24154157676f78a93f9",
-        "runs/sparsemax-easy-small-recall-seed2/diagnostics.jsonl": "c03ce58701a97aa4eea1042368849140bd5ba2b35b045b36bdfb2dc7018ce14a"
       }
     },
     "sparsemax-easy-small-parity-seed0": {
@@ -866,6 +1008,84 @@
         "runs/sparsemax-easy-small-parity-seed0/diagnostics.jsonl": "e103e16a3cad9c4133faa598bbdf6b5721ac6ff27cfbe9e2cc01fb8ee7a368da"
       }
     },
+    "sparsemax-easy-small-depth-seed1": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 2000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "pass_step": 200,
+      "best_sequence_accuracy": 0.9921875,
+      "best_exact": 508,
+      "validation_rows": 512,
+      "last_batch_loss": 0.03210741654038429,
+      "last_batch_loss_step": 200,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          3.8056721687316895,
+          3.838484525680542,
+          3.920644760131836,
+          3.8218581676483154
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          4.043821811676025,
+          3.865487575531006,
+          3.915236234664917,
+          3.9400923252105713
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-small-depth-seed1/experiment.json": "4a30b06c9aedf6636587b446dca3a7cc6a3a7aaf830e2a83f410ab7a14cb519b",
+        "runs/sparsemax-easy-small-depth-seed1/result.json": "24ff815f4a3188258ccf85ae4ab3dcb705a109844897a8e5d9486b41c0568d9b",
+        "runs/sparsemax-easy-small-depth-seed1/history.jsonl": "a462753489592160b2f32f4a1f15314a2786d412f38f628e33bace2b86240ba7",
+        "runs/sparsemax-easy-small-depth-seed1/diagnostics.jsonl": "42bf4b17a2672875fd05d96a2f3bcaa4f8fb00926636f6bcf19b01e270b0abd5"
+      }
+    },
+    "sparsemax-easy-small-recall-seed1": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 350,
+        "reason": "solved"
+      },
+      "pass_step": 350,
+      "best_sequence_accuracy": 0.99609375,
+      "best_exact": 510,
+      "validation_rows": 512,
+      "last_batch_loss": 0.8436025977134705,
+      "last_batch_loss_step": 350,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          3.4590673446655273,
+          3.9828004837036133,
+          3.5241177082061768,
+          3.2149033546447754
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          4.050121307373047,
+          3.9955620765686035,
+          4.020293712615967,
+          4.022092819213867
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-small-recall-seed1/experiment.json": "c7d6e1620042b163a5850835e5f666cb5f732203f18c95306d1553dc024852de",
+        "runs/sparsemax-easy-small-recall-seed1/result.json": "20ebb318599e30b2ec0679e6b769a47f67e5b33c4b742c10282f413329d25df6",
+        "runs/sparsemax-easy-small-recall-seed1/history.jsonl": "9ca71f03408bcd35a72838f9e065c0370e89ab489b4bd3bbef9e02312573ce5c",
+        "runs/sparsemax-easy-small-recall-seed1/diagnostics.jsonl": "d0337fb45e0e653ab47afc74d92044628b9f6f1e3afb1f8318bc740d03d50973"
+      }
+    },
     "sparsemax-easy-small-parity-seed1": {
       "selection": "validation",
       "rate": 0.0003,
@@ -903,6 +1123,84 @@
         "runs/sparsemax-easy-small-parity-seed1/result.json": "021721f21cd6961c17b5eb1a3fb10c7094f77f3732c96a91b4e93e6f0512494e",
         "runs/sparsemax-easy-small-parity-seed1/history.jsonl": "2d3b6e4d1c15889ac898ea90c47128a2d829f4a572e8e5e4b206f0995a124490",
         "runs/sparsemax-easy-small-parity-seed1/diagnostics.jsonl": "47ffc822fd52858c9f76af080035c84ab23b5dc0b128d1163262c64f24d66f76"
+      }
+    },
+    "sparsemax-easy-small-depth-seed2": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 2000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "pass_step": 200,
+      "best_sequence_accuracy": 1.0,
+      "best_exact": 512,
+      "validation_rows": 512,
+      "last_batch_loss": 0.02107565477490425,
+      "last_batch_loss_step": 200,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          3.9030473232269287,
+          3.9230940341949463,
+          3.9070968627929688,
+          3.8454768657684326
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          3.873957633972168,
+          3.9342916011810303,
+          3.8728933334350586,
+          3.9868171215057373
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-small-depth-seed2/experiment.json": "76ce315255c1a27e037466593ee5c12f2c4cb048dfcffde17be0a43e49daa1ff",
+        "runs/sparsemax-easy-small-depth-seed2/result.json": "a8df8385eca08ddb8b24ca431e162f4e1f3b1b6b5fab98b892a242a62a1c5cf3",
+        "runs/sparsemax-easy-small-depth-seed2/history.jsonl": "5762d8ac2c62458603835669663b41ffd3de7e8dd8a1854e2d314695aac025a3",
+        "runs/sparsemax-easy-small-depth-seed2/diagnostics.jsonl": "93dc7c522ffae9e57300130c1cd0f2b5b6051cb641112055ae8ae34b44e994bb"
+      }
+    },
+    "sparsemax-easy-small-recall-seed2": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "pass_step": null,
+      "best_sequence_accuracy": 0.412109375,
+      "best_exact": 211,
+      "validation_rows": 512,
+      "last_batch_loss": 0.18333090841770172,
+      "last_batch_loss_step": 4800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          2.7921674251556396,
+          2.038311243057251,
+          1.6265240907669067,
+          2.8614797592163086
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          2.632017135620117,
+          2.858529567718506,
+          2.7238993644714355,
+          2.6202034950256348
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-small-recall-seed2/experiment.json": "c8ef2c41aefc02ad4840ac713abdda54eaf862e6815a0ff67ab909022d79a0fe",
+        "runs/sparsemax-easy-small-recall-seed2/result.json": "26550b04925dfbeecb6a86d882616fb7bc4eda09ab5f4001fa274c05d55b1bf5",
+        "runs/sparsemax-easy-small-recall-seed2/history.jsonl": "5c4b0f7d2bee1bd32dc86ef141c03427a1e9613d4931b24154157676f78a93f9",
+        "runs/sparsemax-easy-small-recall-seed2/diagnostics.jsonl": "c03ce58701a97aa4eea1042368849140bd5ba2b35b045b36bdfb2dc7018ce14a"
       }
     },
     "sparsemax-easy-small-parity-seed2": {
@@ -983,84 +1281,6 @@
         "runs/sparsemax-hard-small-depth-seed0/diagnostics.jsonl": "50d2ae690cc736f61b641fe0c38b47518a62ccf8352de234072a8c2fb2557c98"
       }
     },
-    "sparsemax-hard-small-depth-seed1": {
-      "selection": "validation/length-128",
-      "rate": 0.001,
-      "budget": {
-        "type": "Budget",
-        "updates": 10000,
-        "batch": 16
-      },
-      "stop": {
-        "step": 10000,
-        "reason": "budget"
-      },
-      "pass_step": null,
-      "best_sequence_accuracy": 0.443359375,
-      "best_exact": 227,
-      "validation_rows": 512,
-      "last_batch_loss": 0.004451903980225325,
-      "last_batch_loss_step": 10000,
-      "final_head_scales": {
-        "blocks.0.attention.scores.log_alpha": [
-          1.2887893915176392,
-          1.5681533813476562,
-          1.3292380571365356,
-          2.4962480068206787
-        ],
-        "blocks.1.attention.scores.log_alpha": [
-          2.6724472045898438,
-          1.3255774974822998,
-          2.0436928272247314,
-          1.7558798789978027
-        ]
-      },
-      "source": {
-        "runs/sparsemax-hard-small-depth-seed1/experiment.json": "4f2805357d81070ade3dee276e1abfb5ac0d17472a9fb2ddf70cb9829c1ab47b",
-        "runs/sparsemax-hard-small-depth-seed1/result.json": "cdf248143dd535ff1a549bfe81876dd6e74d6a2f9b1041d6834f1501144db6c3",
-        "runs/sparsemax-hard-small-depth-seed1/history.jsonl": "f1fd524fc28214c86adb211345c79aa35830e336725ec0481b52d6d0549fd910",
-        "runs/sparsemax-hard-small-depth-seed1/diagnostics.jsonl": "b2973e806df951c148d6192d030734a942d10d7d0ed12c0d9b199e41017dfac7"
-      }
-    },
-    "sparsemax-hard-small-depth-seed2": {
-      "selection": "validation/length-128",
-      "rate": 0.001,
-      "budget": {
-        "type": "Budget",
-        "updates": 10000,
-        "batch": 16
-      },
-      "stop": {
-        "step": 10000,
-        "reason": "budget"
-      },
-      "pass_step": null,
-      "best_sequence_accuracy": 0.3359375,
-      "best_exact": 172,
-      "validation_rows": 512,
-      "last_batch_loss": 0.00020490525639615953,
-      "last_batch_loss_step": 10000,
-      "final_head_scales": {
-        "blocks.0.attention.scores.log_alpha": [
-          1.4565863609313965,
-          1.7576014995574951,
-          1.9406256675720215,
-          1.6303900480270386
-        ],
-        "blocks.1.attention.scores.log_alpha": [
-          1.9714586734771729,
-          1.826901912689209,
-          1.2862273454666138,
-          1.70313560962677
-        ]
-      },
-      "source": {
-        "runs/sparsemax-hard-small-depth-seed2/experiment.json": "27ec4c7e99b6d451bb193090ad624dd20c7e7998befc959f368e0e98f8fe1ab1",
-        "runs/sparsemax-hard-small-depth-seed2/result.json": "91543aa4086cdf032790789eacab7f890508dd7a1fe5a18ae1a1ebef94876a1b",
-        "runs/sparsemax-hard-small-depth-seed2/history.jsonl": "e2ca73f46cee10e944297d8b23cef31429fc92694b3b571901f0992d4cf199f3",
-        "runs/sparsemax-hard-small-depth-seed2/diagnostics.jsonl": "e1ff154b36db646854c37f420cc470b9ddb5766e998d6cbfbbe515ca9ff3dba4"
-      }
-    },
     "sparsemax-hard-small-recall-seed0": {
       "selection": "validation",
       "rate": 0.0003,
@@ -1098,6 +1318,45 @@
         "runs/sparsemax-hard-small-recall-seed0/result.json": "b55715fd77b3f6a5409518f1bac511b045882fd34b766b9695baaf23549eee8b",
         "runs/sparsemax-hard-small-recall-seed0/history.jsonl": "a9fffc885553b9e6741940fc6c1a2d21741fc946ef9c009fba8bfe29c8aba7b8",
         "runs/sparsemax-hard-small-recall-seed0/diagnostics.jsonl": "78f4b90de15f62ec8985ec8c05e45076d7383f35b2890c75ed55ce06dfda9f08"
+      }
+    },
+    "sparsemax-hard-small-depth-seed1": {
+      "selection": "validation/length-128",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 10000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 10000,
+        "reason": "budget"
+      },
+      "pass_step": null,
+      "best_sequence_accuracy": 0.443359375,
+      "best_exact": 227,
+      "validation_rows": 512,
+      "last_batch_loss": 0.004451903980225325,
+      "last_batch_loss_step": 10000,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          1.2887893915176392,
+          1.5681533813476562,
+          1.3292380571365356,
+          2.4962480068206787
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          2.6724472045898438,
+          1.3255774974822998,
+          2.0436928272247314,
+          1.7558798789978027
+        ]
+      },
+      "source": {
+        "runs/sparsemax-hard-small-depth-seed1/experiment.json": "4f2805357d81070ade3dee276e1abfb5ac0d17472a9fb2ddf70cb9829c1ab47b",
+        "runs/sparsemax-hard-small-depth-seed1/result.json": "cdf248143dd535ff1a549bfe81876dd6e74d6a2f9b1041d6834f1501144db6c3",
+        "runs/sparsemax-hard-small-depth-seed1/history.jsonl": "f1fd524fc28214c86adb211345c79aa35830e336725ec0481b52d6d0549fd910",
+        "runs/sparsemax-hard-small-depth-seed1/diagnostics.jsonl": "b2973e806df951c148d6192d030734a942d10d7d0ed12c0d9b199e41017dfac7"
       }
     },
     "sparsemax-hard-small-recall-seed1": {
@@ -1139,6 +1398,45 @@
         "runs/sparsemax-hard-small-recall-seed1/diagnostics.jsonl": "08206c087d7a6b8453185cb66125083f79a8398503164d59d0ad911af336ead8"
       }
     },
+    "sparsemax-hard-small-depth-seed2": {
+      "selection": "validation/length-128",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 10000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 10000,
+        "reason": "budget"
+      },
+      "pass_step": null,
+      "best_sequence_accuracy": 0.3359375,
+      "best_exact": 172,
+      "validation_rows": 512,
+      "last_batch_loss": 0.00020490525639615953,
+      "last_batch_loss_step": 10000,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          1.4565863609313965,
+          1.7576014995574951,
+          1.9406256675720215,
+          1.6303900480270386
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          1.9714586734771729,
+          1.826901912689209,
+          1.2862273454666138,
+          1.70313560962677
+        ]
+      },
+      "source": {
+        "runs/sparsemax-hard-small-depth-seed2/experiment.json": "27ec4c7e99b6d451bb193090ad624dd20c7e7998befc959f368e0e98f8fe1ab1",
+        "runs/sparsemax-hard-small-depth-seed2/result.json": "91543aa4086cdf032790789eacab7f890508dd7a1fe5a18ae1a1ebef94876a1b",
+        "runs/sparsemax-hard-small-depth-seed2/history.jsonl": "e2ca73f46cee10e944297d8b23cef31429fc92694b3b571901f0992d4cf199f3",
+        "runs/sparsemax-hard-small-depth-seed2/diagnostics.jsonl": "e1ff154b36db646854c37f420cc470b9ddb5766e998d6cbfbbe515ca9ff3dba4"
+      }
+    },
     "sparsemax-hard-small-recall-seed2": {
       "selection": "validation",
       "rate": 0.0003,
@@ -1176,45 +1474,6 @@
         "runs/sparsemax-hard-small-recall-seed2/result.json": "4c7aecf86696fab16fadf3a59fe0a9d3e24cd788e80c4887d6fde4d81e63ab4c",
         "runs/sparsemax-hard-small-recall-seed2/history.jsonl": "1df9623290eb3cdabd555b3e5d0544c5ce3bb96040427eccb34e61f45a7962c3",
         "runs/sparsemax-hard-small-recall-seed2/diagnostics.jsonl": "014149eb241dea85cadd6f0d2b1419baf60d7a4b9460ab0f28f1b55b29fb4a5d"
-      }
-    },
-    "sparsemax-easy-small-parity-seed0-lr1e-4": {
-      "selection": "validation",
-      "rate": 0.0001,
-      "budget": {
-        "type": "Budget",
-        "updates": 20000,
-        "batch": 16
-      },
-      "stop": {
-        "step": 13400,
-        "reason": "solved"
-      },
-      "pass_step": 13400,
-      "best_sequence_accuracy": 0.990234375,
-      "best_exact": 507,
-      "validation_rows": 512,
-      "last_batch_loss": 0.016833771020174026,
-      "last_batch_loss_step": 13400,
-      "final_head_scales": {
-        "blocks.0.attention.scores.log_alpha": [
-          3.3730342388153076,
-          3.3077380657196045,
-          3.167156457901001,
-          3.3833327293395996
-        ],
-        "blocks.1.attention.scores.log_alpha": [
-          3.7070956230163574,
-          3.336378574371338,
-          3.347177505493164,
-          3.237311840057373
-        ]
-      },
-      "source": {
-        "runs/sparsemax-easy-small-parity-seed0-lr1e-4/experiment.json": "98a425ce29513ef462e76ae6f1d7e73356e8bd7564ee19afcf3aab3d8a91ae55",
-        "runs/sparsemax-easy-small-parity-seed0-lr1e-4/result.json": "2d9fe96da8da491097cbb7495ef9bfec589a958e07ceeb23f7a5faf2ffce7773",
-        "runs/sparsemax-easy-small-parity-seed0-lr1e-4/history.jsonl": "9efbb7c55cc930bd27e805d83730f08652c3d28f97640ee73863c8764f937fe9",
-        "runs/sparsemax-easy-small-parity-seed0-lr1e-4/diagnostics.jsonl": "ada00345263c5d026a0d283a50bd4c15893afe47e7688eca24b113b1ab058e56"
       }
     },
     "sparsemax-easy-small-parity-seed0-lr1e-3": {
@@ -1256,7 +1515,7 @@
         "runs/sparsemax-easy-small-parity-seed0-lr1e-3/diagnostics.jsonl": "aefee872b8a9fee45bcc4b326a132e13eddd9fa5db06b3c675c18cbfc43ffdfe"
       }
     },
-    "sparsemax-easy-small-parity-seed1-lr1e-4": {
+    "sparsemax-easy-small-parity-seed0-lr1e-4": {
       "selection": "validation",
       "rate": 0.0001,
       "budget": {
@@ -1265,34 +1524,34 @@
         "batch": 16
       },
       "stop": {
-        "step": 9800,
+        "step": 13400,
         "reason": "solved"
       },
-      "pass_step": 9800,
+      "pass_step": 13400,
       "best_sequence_accuracy": 0.990234375,
       "best_exact": 507,
       "validation_rows": 512,
-      "last_batch_loss": 0.019892174750566483,
-      "last_batch_loss_step": 9800,
+      "last_batch_loss": 0.016833771020174026,
+      "last_batch_loss_step": 13400,
       "final_head_scales": {
         "blocks.0.attention.scores.log_alpha": [
-          3.5349972248077393,
-          3.5231761932373047,
-          3.36269211769104,
-          3.530539035797119
+          3.3730342388153076,
+          3.3077380657196045,
+          3.167156457901001,
+          3.3833327293395996
         ],
         "blocks.1.attention.scores.log_alpha": [
-          3.661259889602661,
-          3.5471231937408447,
-          3.4892373085021973,
-          3.4943599700927734
+          3.7070956230163574,
+          3.336378574371338,
+          3.347177505493164,
+          3.237311840057373
         ]
       },
       "source": {
-        "runs/sparsemax-easy-small-parity-seed1-lr1e-4/experiment.json": "98999f5ee2da7fbf09151c9513c6b9ad03318e644341551a6dd19ef562cb9c1f",
-        "runs/sparsemax-easy-small-parity-seed1-lr1e-4/result.json": "9974fb31f41cfdc8d6451b371de07970897208975928261244d8da176c6fa952",
-        "runs/sparsemax-easy-small-parity-seed1-lr1e-4/history.jsonl": "85ee4fa92f6912771c518160bcd54a5ec8e5e2a4f82e8c65d790380a77f19442",
-        "runs/sparsemax-easy-small-parity-seed1-lr1e-4/diagnostics.jsonl": "cb3563e9dea0db20f110b5d54761fed7e4c61fa1e8f5099a7802bb7fb76b0d25"
+        "runs/sparsemax-easy-small-parity-seed0-lr1e-4/experiment.json": "98a425ce29513ef462e76ae6f1d7e73356e8bd7564ee19afcf3aab3d8a91ae55",
+        "runs/sparsemax-easy-small-parity-seed0-lr1e-4/result.json": "2d9fe96da8da491097cbb7495ef9bfec589a958e07ceeb23f7a5faf2ffce7773",
+        "runs/sparsemax-easy-small-parity-seed0-lr1e-4/history.jsonl": "9efbb7c55cc930bd27e805d83730f08652c3d28f97640ee73863c8764f937fe9",
+        "runs/sparsemax-easy-small-parity-seed0-lr1e-4/diagnostics.jsonl": "ada00345263c5d026a0d283a50bd4c15893afe47e7688eca24b113b1ab058e56"
       }
     },
     "sparsemax-easy-small-parity-seed1-lr1e-3": {
@@ -1333,6 +1592,127 @@
         "runs/sparsemax-easy-small-parity-seed1-lr1e-3/history.jsonl": "15a42e81391adba0119acb8b9202ef8d18c86d9ce97172755b45b43c91d432a7",
         "runs/sparsemax-easy-small-parity-seed1-lr1e-3/diagnostics.jsonl": "e180339dd2c83700455eb4e3f422220db8d91797137065cd482b5985ac6061fb"
       }
+    },
+    "sparsemax-easy-small-parity-seed1-lr1e-4": {
+      "selection": "validation",
+      "rate": 0.0001,
+      "budget": {
+        "type": "Budget",
+        "updates": 20000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 9800,
+        "reason": "solved"
+      },
+      "pass_step": 9800,
+      "best_sequence_accuracy": 0.990234375,
+      "best_exact": 507,
+      "validation_rows": 512,
+      "last_batch_loss": 0.019892174750566483,
+      "last_batch_loss_step": 9800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          3.5349972248077393,
+          3.5231761932373047,
+          3.36269211769104,
+          3.530539035797119
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          3.661259889602661,
+          3.5471231937408447,
+          3.4892373085021973,
+          3.4943599700927734
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-small-parity-seed1-lr1e-4/experiment.json": "98999f5ee2da7fbf09151c9513c6b9ad03318e644341551a6dd19ef562cb9c1f",
+        "runs/sparsemax-easy-small-parity-seed1-lr1e-4/result.json": "9974fb31f41cfdc8d6451b371de07970897208975928261244d8da176c6fa952",
+        "runs/sparsemax-easy-small-parity-seed1-lr1e-4/history.jsonl": "85ee4fa92f6912771c518160bcd54a5ec8e5e2a4f82e8c65d790380a77f19442",
+        "runs/sparsemax-easy-small-parity-seed1-lr1e-4/diagnostics.jsonl": "cb3563e9dea0db20f110b5d54761fed7e4c61fa1e8f5099a7802bb7fb76b0d25"
+      }
+    },
+    "sparsemax-easy-small-recall-seed2-lr3e-3": {
+      "selection": "validation",
+      "rate": 0.003,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "pass_step": null,
+      "best_sequence_accuracy": 0.98828125,
+      "best_exact": 506,
+      "validation_rows": 512,
+      "last_batch_loss": 0.003149866359308362,
+      "last_batch_loss_step": 4800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          1.2742223739624023,
+          3.6829302310943604,
+          3.167025089263916,
+          1.8550972938537598
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          5.8160719871521,
+          5.700446128845215,
+          5.339540958404541,
+          6.051179885864258
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-small-recall-seed2-lr3e-3/experiment.json": "93c913614bd379055d787bf35c98e0e91e40505b36db23dfe97e6ed09f03e588",
+        "runs/sparsemax-easy-small-recall-seed2-lr3e-3/result.json": "9129109fb6340cd3bd103e154c4a2fa95ca77161668d0e9b5a1176e3fd981040",
+        "runs/sparsemax-easy-small-recall-seed2-lr3e-3/history.jsonl": "2b49cc76509b9c32308b68d942668cce7bb9813510e57a1b7bbca93bae6b1987",
+        "runs/sparsemax-easy-small-recall-seed2-lr3e-3/diagnostics.jsonl": "1ee6529987e8929e2726adaad60ec62d134dbe7ce2f332b09b49f3ee69c0cac1"
+      }
+    },
+    "sparsemax-easy-small-recall-seed2-lr3e-4": {
+      "selection": "validation",
+      "rate": 0.0003,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 3850,
+        "reason": "solved"
+      },
+      "pass_step": 3850,
+      "best_sequence_accuracy": 0.990234375,
+      "best_exact": 507,
+      "validation_rows": 512,
+      "last_batch_loss": 0.0349937379360199,
+      "last_batch_loss_step": 3850,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          4.109968185424805,
+          2.408719062805176,
+          2.9387688636779785,
+          2.265875816345215
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          3.5722670555114746,
+          3.4990148544311523,
+          3.5220227241516113,
+          3.424422025680542
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-small-recall-seed2-lr3e-4/experiment.json": "dd44a0e2ae9119ad8a963c99575ae280b23b22d2ac890110f7958ed7dafedebf",
+        "runs/sparsemax-easy-small-recall-seed2-lr3e-4/result.json": "1ace857f7ef18ea7883e9a48955623e2a179d8f4195ec9872999157117a08146",
+        "runs/sparsemax-easy-small-recall-seed2-lr3e-4/history.jsonl": "3bca4437bafafc02c050c5a1fc49fe91006c7a08c102af95d5548fa4e6463488",
+        "runs/sparsemax-easy-small-recall-seed2-lr3e-4/diagnostics.jsonl": "ba903ee64757d2ced406e623ebaa938864130b975bef019270225cec31eec1d8"
+      }
     }
+  },
+  "softmax_checkpoint_repetition": {
+    "runs": 15,
+    "model_optimizer_sampler_bit_identical_to_archive": true
   }
 }

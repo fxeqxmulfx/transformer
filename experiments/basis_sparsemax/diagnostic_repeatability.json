@@ -1,0 +1,645 @@
+{
+  "question": "Does the two-thread large-model drift occur without diagnostics?",
+  "scope": "Three independent twenty-update compiled large depth/sparsemax runs; no causal attribution to a particular kernel",
+  "source_program": {
+    "path": "/tmp/diagnose_basis_diagnostics.py",
+    "sha256": "a647636594e95008c70dd018c5984c7d7a4a318fc155544fbd58099ecba9ea4b",
+    "source": "\"\"\"Compare repeatability with the effect of sampling, without changing lab code.\"\"\"\n\nfrom pathlib import Path\nimport json\nimport sys\n\nimport torch\n\nsys.path.insert(0, \"tests\")\nfrom test_sparsemax_compiled import diagnostic_cases\nfrom test_graphs import train, summary\nfrom test_engine import untimed\nfrom lab.domain.model import Softmax, Sparsemax\nfrom lab.domain.spec import substitute, swap\nfrom lab.domain.training import Diagnostics\nfrom lab.infrastructure.engine.compiled import CompiledStepper\nfrom lab.infrastructure.store import RunDirectory\n\n\ndef differences(left, right, path=\"\"):\n    if torch.is_tensor(left):\n        if not torch.equal(left, right):\n            delta = (left.to(torch.float64) - right.to(torch.float64)).abs()\n            yield {\"path\": path, \"maximum_absolute_difference\": delta.max().item(),\n                   \"different_entries\": torch.count_nonzero(delta).item(), \"entries\": left.numel()}\n    elif isinstance(left, dict):\n        for key in left:\n            if key not in (\"training_seconds\", \"diagnostic_seconds\", \"wall_seconds\"):\n                yield from differences(left[key], right[key], f\"{path}.{key}\")\n    elif isinstance(left, (tuple, list)):\n        for index, (a, b) in enumerate(zip(left, right, strict=True)):\n            yield from differences(a, b, f\"{path}.{index}\")\n    elif left != right:\n        yield {\"path\": path, \"left\": left, \"right\": right}\n\n\ntask = sys.argv[1]\nweights = Softmax() if sys.argv[2] == \"softmax\" else Sparsemax()\nbase = substitute(diagnostic_cases()[task], Softmax, weights)\nroot = Path(sys.argv[3])\nfor name in (\"plain-a\", \"plain-b\", \"sampled\"):\n    run = swap(base, \"diagnostics\", Diagnostics(every=10)) if name == \"sampled\" else base\n    print(\"training\", task, type(weights).__name__, name, flush=True)\n    train(run, root / name, CompiledStepper)\n\na, b, sampled = (RunDirectory(root / name) for name in (\"plain-a\", \"plain-b\", \"sampled\"))\nfor name, other in ((\"plain-repeat\", b), (\"diagnostics\", sampled)):\n    checkpoints = list(differences(a.checkpoint(\"cpu\"), other.checkpoint(\"cpu\")))\n    history = list(differences(untimed(a.records(\"history\")), untimed(other.records(\"history\"))))\n    report = {\"comparison\": name, \"checkpoint_differences\": len(checkpoints),\n              \"first_checkpoint_differences\": checkpoints[:12], \"history_differences\": len(history),\n              \"first_history_differences\": history[:12]}\n    print(json.dumps(report), flush=True)\n"
+  },
+  "comparisons": [
+    {
+      "comparison": "plain-repeat",
+      "checkpoint_differences": 126,
+      "first_checkpoint_differences": [
+        {
+          "path": ".model.embed.weight",
+          "maximum_absolute_difference": 9.708106517791748e-06,
+          "different_entries": 4599,
+          "entries": 4608
+        },
+        {
+          "path": ".model.blocks.0.attention.scores.log_alpha",
+          "maximum_absolute_difference": 4.410743713378906e-06,
+          "different_entries": 4,
+          "entries": 4
+        },
+        {
+          "path": ".model.blocks.0.attention.projections.qkv.weight",
+          "maximum_absolute_difference": 3.442121669650078e-05,
+          "different_entries": 49142,
+          "entries": 49152
+        },
+        {
+          "path": ".model.blocks.0.attention.output.weight",
+          "maximum_absolute_difference": 2.6514986529946327e-05,
+          "different_entries": 16379,
+          "entries": 16384
+        },
+        {
+          "path": ".model.blocks.0.ffn.input.weight",
+          "maximum_absolute_difference": 9.985314682126045e-05,
+          "different_entries": 65005,
+          "entries": 65536
+        },
+        {
+          "path": ".model.blocks.0.ffn.output.weight",
+          "maximum_absolute_difference": 8.705258369445801e-05,
+          "different_entries": 64942,
+          "entries": 65536
+        },
+        {
+          "path": ".model.blocks.1.attention.scores.log_alpha",
+          "maximum_absolute_difference": 1.1086463928222656e-05,
+          "different_entries": 4,
+          "entries": 4
+        },
+        {
+          "path": ".model.blocks.1.attention.projections.qkv.weight",
+          "maximum_absolute_difference": 7.005780935287476e-05,
+          "different_entries": 49127,
+          "entries": 49152
+        },
+        {
+          "path": ".model.blocks.1.attention.output.weight",
+          "maximum_absolute_difference": 2.8228387236595154e-05,
+          "different_entries": 16379,
+          "entries": 16384
+        },
+        {
+          "path": ".model.blocks.1.ffn.input.weight",
+          "maximum_absolute_difference": 5.2410177886486053e-05,
+          "different_entries": 64984,
+          "entries": 65536
+        },
+        {
+          "path": ".model.blocks.1.ffn.output.weight",
+          "maximum_absolute_difference": 8.585257455706596e-05,
+          "different_entries": 64856,
+          "entries": 65536
+        },
+        {
+          "path": ".model.blocks.2.attention.scores.log_alpha",
+          "maximum_absolute_difference": 2.6464462280273438e-05,
+          "different_entries": 4,
+          "entries": 4
+        }
+      ],
+      "history_differences": 4,
+      "first_history_differences": [
+        {
+          "path": ".1.validation.loss",
+          "left": 1.8937962055206299,
+          "right": 1.893802523612976
+        },
+        {
+          "path": ".1.validation.example_loss",
+          "left": 1.8927323818206787,
+          "right": 1.892739176750183
+        },
+        {
+          "path": ".2.validation.loss",
+          "left": 1.3659723997116089,
+          "right": 1.3660305738449097
+        },
+        {
+          "path": ".2.validation.example_loss",
+          "left": 1.3650966882705688,
+          "right": 1.3651490211486816
+        }
+      ]
+    },
+    {
+      "comparison": "diagnostics",
+      "checkpoint_differences": 126,
+      "first_checkpoint_differences": [
+        {
+          "path": ".model.embed.weight",
+          "maximum_absolute_difference": 9.71183180809021e-06,
+          "different_entries": 4599,
+          "entries": 4608
+        },
+        {
+          "path": ".model.blocks.0.attention.scores.log_alpha",
+          "maximum_absolute_difference": 4.410743713378906e-06,
+          "different_entries": 4,
+          "entries": 4
+        },
+        {
+          "path": ".model.blocks.0.attention.projections.qkv.weight",
+          "maximum_absolute_difference": 3.4422148019075394e-05,
+          "different_entries": 49134,
+          "entries": 49152
+        },
+        {
+          "path": ".model.blocks.0.attention.output.weight",
+          "maximum_absolute_difference": 2.6519177481532097e-05,
+          "different_entries": 16379,
+          "entries": 16384
+        },
+        {
+          "path": ".model.blocks.0.ffn.input.weight",
+          "maximum_absolute_difference": 9.986106306314468e-05,
+          "different_entries": 65047,
+          "entries": 65536
+        },
+        {
+          "path": ".model.blocks.0.ffn.output.weight",
+          "maximum_absolute_difference": 8.704327046871185e-05,
+          "different_entries": 64972,
+          "entries": 65536
+        },
+        {
+          "path": ".model.blocks.1.attention.scores.log_alpha",
+          "maximum_absolute_difference": 1.1086463928222656e-05,
+          "different_entries": 4,
+          "entries": 4
+        },
+        {
+          "path": ".model.blocks.1.attention.projections.qkv.weight",
+          "maximum_absolute_difference": 7.005780935287476e-05,
+          "different_entries": 49126,
+          "entries": 49152
+        },
+        {
+          "path": ".model.blocks.1.attention.output.weight",
+          "maximum_absolute_difference": 2.8228387236595154e-05,
+          "different_entries": 16381,
+          "entries": 16384
+        },
+        {
+          "path": ".model.blocks.1.ffn.input.weight",
+          "maximum_absolute_difference": 5.240924656391144e-05,
+          "different_entries": 65070,
+          "entries": 65536
+        },
+        {
+          "path": ".model.blocks.1.ffn.output.weight",
+          "maximum_absolute_difference": 8.585397154092789e-05,
+          "different_entries": 64933,
+          "entries": 65536
+        },
+        {
+          "path": ".model.blocks.2.attention.scores.log_alpha",
+          "maximum_absolute_difference": 2.6464462280273438e-05,
+          "different_entries": 4,
+          "entries": 4
+        }
+      ],
+      "history_differences": 4,
+      "first_history_differences": [
+        {
+          "path": ".1.validation.loss",
+          "left": 1.8937962055206299,
+          "right": 1.893802523612976
+        },
+        {
+          "path": ".1.validation.example_loss",
+          "left": 1.8927323818206787,
+          "right": 1.892739176750183
+        },
+        {
+          "path": ".2.validation.loss",
+          "left": 1.3659723997116089,
+          "right": 1.3660308122634888
+        },
+        {
+          "path": ".2.validation.example_loss",
+          "left": 1.3650966882705688,
+          "right": 1.3651492595672607
+        }
+      ]
+    }
+  ],
+  "runs": {
+    "plain-a": {
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 6,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06
+              },
+              "weights": {
+                "type": "Sparsemax"
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 128
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "AlternatingBlocks",
+            "blocks": 2,
+            "neutral_fraction": 0.25,
+            "max_neutral_gap": null
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 128,
+          "validation": 64,
+          "test": 64,
+          "ood": [
+            128
+          ],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 20,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 10,
+          "batch": 64
+        },
+        "execution": {
+          "type": "Compiled",
+          "device": "cpu",
+          "threads": 2
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 10
+        },
+        "stopping": null
+      },
+      "records": {
+        "history.jsonl": "3985f7ddbc0f0c9fc3511744eb9e309f131fcf3243195a0b5304c522bcc0dab2",
+        "checkpoint.pt": "ec309d3fedc646e37a83f389e3bbb8ea48612cdc8c697e74310bfd901c271fd6",
+        "result.json": "f84a5d3c9ac54afdcc91a4243e06b8c5099e1d0381db84492b9588bde356f842"
+      }
+    },
+    "plain-b": {
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 6,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06
+              },
+              "weights": {
+                "type": "Sparsemax"
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 128
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "AlternatingBlocks",
+            "blocks": 2,
+            "neutral_fraction": 0.25,
+            "max_neutral_gap": null
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 128,
+          "validation": 64,
+          "test": 64,
+          "ood": [
+            128
+          ],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 20,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 10,
+          "batch": 64
+        },
+        "execution": {
+          "type": "Compiled",
+          "device": "cpu",
+          "threads": 2
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 10
+        },
+        "stopping": null
+      },
+      "records": {
+        "history.jsonl": "3f1a3b3ed750f077ed387cfad99111d22c6945efadefaff541a62d586cb42414",
+        "checkpoint.pt": "19d4cc23a1e35652ba5e8cd0a33b8afee699387de684841a6319597326b44aa7",
+        "result.json": "4c407e472c4e8a8a6d3abd48d6430fb44a08f3935cfe615f1c2e36bf66a0db09"
+      }
+    },
+    "sampled": {
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 6,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06
+              },
+              "weights": {
+                "type": "Sparsemax"
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 128
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "AlternatingBlocks",
+            "blocks": 2,
+            "neutral_fraction": 0.25,
+            "max_neutral_gap": null
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 128,
+          "validation": 64,
+          "test": 64,
+          "ood": [
+            128
+          ],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 20,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 10,
+          "batch": 64
+        },
+        "execution": {
+          "type": "Compiled",
+          "device": "cpu",
+          "threads": 2
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 10,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 10
+        },
+        "stopping": null
+      },
+      "records": {
+        "history.jsonl": "29c751d1a3423e94e7acb8160065596951733d240c6d4844db75dfd0ca13dfe7",
+        "diagnostics.jsonl": "9fcf280784162f479ccada0d110c2c82ff3ab639e5d7dddad90be39b0298f964",
+        "checkpoint.pt": "bf009e56516978e460f53afa466e8908bdd9fd778be9f9cf28f97bf395f7f607",
+        "result.json": "642e56e6c04db4885e44efefdfaf173505da46c56ae5438fe2c792bcc5736e4e"
+      }
+    }
+  },
+  "lab_source_commit": "08b56fc",
+  "case_source": "def diagnostic_cases():\n    \"\"\"One modular run and both multi-threaded large-model shapes of the basis.\"\"\"\n    cases = {\"modular\": modular(gptmini(32, 2, 4), prime=11, updates=20, batch=8, every=10,\n                                execution=Compiled())}\n    for task, threads in ((\"depth\", 2), (\"recall\", 4)):\n        run = basis(gptmini(128, 6, 4), \"easy\")[task]\n        for path, value in ((\"benchmark.train\", 128), (\"benchmark.validation\", 64), (\"benchmark.test\", 64),\n                            (\"budget.updates\", 20), (\"evaluate.every\", 10), (\"evaluate.batch\", 64),\n                            (\"execution.threads\", threads), (\"stopping\", None)):\n            run = swap(run, path, value)\n        cases[task] = run\n    return {name: swap(run, \"checkpoint\", Checkpoint(every=10)) for name, run in cases.items()}\n",
+  "case_source_sha256": "d6e6dcd0f0e9530cab8505b14601423f9ef7c5c10b93043d02c30e0a5dd0e020"
+}

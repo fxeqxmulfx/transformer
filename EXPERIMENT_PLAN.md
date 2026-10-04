@@ -1,6 +1,6 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-04 UTC. **In progress: step 1. Step 0 is done.** The investigation cycle
+Updated on 2026-10-04 UTC. **In progress: step 2. Steps 0 and 1 are done.** The investigation cycle
 was started on 2026-10-04 at the user's request. On 2026-10-04 the user asked for
 this plan: find out why sparsemax attention fails, and try to repair it, on
 the basis benchmark. It replaces the plan of 2026-10-03 for the mod-193
@@ -114,9 +114,13 @@ defines the 60 benchmark runs and six short timing runs, with the existing
 diagnostics recording training batch loss and head scales. Sparsemax's
 projection, backward, model logits and every parameter gradient agree with
 eager evaluation within rounding under full-graph compilation. Diagnostics
-preserves compiled observation metrics and the complete training state
-under both weights, and a sparsemax run resumes onto its own records.
-All 142 lab tests pass. The measured sparsemax/softmax update-time ratios are
+preserves one-thread compiled observation metrics and the complete training
+state under both weights, and a one-thread sparsemax run resumes onto its
+own records. On large depth and recall at two and four threads, measurements
+leave the actual training state and their inputs exactly unchanged; separate
+large multi-threaded runs can round differently even without diagnostics,
+so exact trajectory repetition is not guaranteed there. The measured
+sparsemax/softmax update-time ratios are
 1.681 (depth), 1.708 (recall) and 1.238 (parity), below the factor-of-two
 ceiling; no implementation repair was needed. The short softmax controls
 repeat every common archived basis validation record exactly; step 1 checks
@@ -145,17 +149,24 @@ check:
 
 ## 1. Find where sparsemax fails
 
-**In progress on 2026-10-04.** All 30 original small-model runs are
-complete. The 15 softmax controls repeat all 661 archived non-timing
-observations and their model, optimizer and sampler checkpoints exactly.
-Sparsemax passes the easy depth from every seed, passes easy recall early
-from seeds 0 and 1 but fails from seed 2, and fails parity from seeds 0
-and 1. Both parity failures pass at the neighboring rate 1e-4, so H5
-removes them from the mechanism study. The recall neighbors remain to be
-checked. The 30 original large-model runs are training; the final list of
-targets awaits them and the remaining adjacent-rate checks. Tables,
-training batch losses, final head scales and source hashes are in
-[basis_sparsemax](experiments/basis_sparsemax/README.md).
+**Done on 2026-10-04.** All 60 original runs and 12 required adjacent-rate
+checks are complete. The 15 small softmax controls repeat all 661 archived
+non-timing observations and their model, optimizer and sampler checkpoints
+exactly. Fourteen of the 15 large controls' full histories differ, with the
+same pass/fail set, so the large comparison uses the current arms as step 0
+allows. Separate large runs without diagnostics also drift; direct tests
+verify that measurements leave the actual training state unchanged.
+
+H5 removes both small parity failures at 1e-4, small easy recall seed 2 at
+3e-4, and large easy recall seed 2 at either 3e-4 or 3e-3. There is no
+persistent matched-seed small-model failure. On the large model, sparsemax
+passes every depth and parity; hard depth passes earlier than softmax,
+parity later. Only `(hard, large, recall)` remains a mechanism target:
+softmax passes seeds 1 and 2 while sparsemax's best accuracies at the recipe
+are 98.63% and 97.66%, and neither adjacent rate passes either seed. Step 2
+measures this cell from all three seeds under both weights. The small-model
+target ablation is empty. Tables, final training batch losses, head scales
+and source hashes are in [basis_sparsemax](experiments/basis_sparsemax/README.md).
 
 Train the small model's 15 runs under both weights, then the large model's
 15. Record, as the basis's Found does, the update of each pass or the best
@@ -173,6 +184,11 @@ does not show the failure: record that, move step 2's measurement to mod 193,
 and keep the basis to check that a repair costs nothing there.
 
 ## 2. Measure the mechanism
+
+**In progress on 2026-10-04.** The target is large hard recall. The observer
+will retain fixed validation examples and causal support masks across
+checkpoints, and test both its statistics and noninterference before these
+six target runs. Initial QKNorm/scaled-dot measurements cover both sizes.
 
 Add to `Diagnostics` a measurement of attention (domain, infrastructure,
 test). At every observation, an uncompiled forward of 256 fixed validation

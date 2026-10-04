@@ -28,11 +28,15 @@ hashes and this experiment's source. Sparsemax compiles in a full graph,
 including its custom backward. Tests compare its weights and score
 gradients at lengths 1, 17 and 64, and all logits and parameter gradients
 of the small GPTMini at length 64, to eager evaluation within float32
-rounding. A short compiled modular run under each normalizer records
-identical observation metrics, model, optimizer and sampler state with and
-without diagnostics; the sparsemax engine also checks interruption and
-resumption against an uninterrupted run. `./make.py test` passes all 142
-tests, including the CUDA graph and historical trainer checks.
+rounding. A short one-thread compiled modular run under each normalizer
+records identical observation metrics, model, optimizer and sampler state
+with and without diagnostics, with explicit nonempty checkpoint checks;
+the sparsemax engine also checks interruption and resumption against an
+uninterrupted run. On the actual large depth and recall shapes at two and
+four threads, tests check that every measurement leaves its inputs, model,
+gradients, optimizer, sampler, global RNG and module training modes exactly
+unchanged. The full lab suite also covers CUDA graphs and historical trainers.
+The final step 1 check passes all 143 lab tests.
 
 Each timing run trains 300 updates on one physical core at the easy recipe.
 The table divides `training_seconds` by 300, excluding compilation,
@@ -48,7 +52,21 @@ All are below step 0's factor-of-two ceiling. The timing controls'
 validation records match bd63e50's archived basis exactly at every common
 observation: updates 0 and 200 for depth and parity, and 0, 100, 200 and 300
 for recall. The full benchmark will check the rest of each trajectory.
-The small-model comparison is complete; the large-model comparison is in progress.
+All 60 original benchmark runs and the 12 required neighboring-rate checks
+are complete.
+
+The large softmax controls preserve the archive's pass/fail set, but 14 of
+their 15 full non-timing histories differ. This comparison therefore uses
+the current softmax arm, as step 0 allows. Separate twenty-update large
+depth/sparsemax runs without diagnostics also differ at two threads:
+126 checkpoint fields differ, and validation loss at update 20 is
+1.3659723997 versus 1.3660305738. A sampled repeat differs comparably
+(1.3660308123). This establishes that the drift also occurs without
+diagnostics; it does not identify its computational cause or guarantee
+bit-identical resumption for large multi-threaded runs. The small controls'
+exact archive repetition below remains a separate result. Descriptions,
+checkpoint differences and record hashes of the three short runs are in
+[diagnostic_repeatability.json](diagnostic_repeatability.json).
 
 ### Small model
 
@@ -82,18 +100,72 @@ than softmax from seeds 0 and 1; from seed 2 it fails recall within 4,800
 updates. Parity takes longer and fails from two seeds at its recipe.
 Neither normalizer passes the small model's hard depth or hard recall.
 
-H5 removes both parity failures: rate 1e-4 passes both. The larger neighbor
-1e-3 passes seed 1, but not seed 0. The adjacent-rate checks for the recall
-failure are queued with the remaining step 1 work.
+H5 removes all three small-model failures whose softmax control passes:
+rate 1e-4 passes both parity seeds, and 3e-4 passes recall seed 2. The
+larger parity neighbor 1e-3 passes seed 1, but not seed 0; the larger recall
+neighbor 3e-3 falls short at 98.83%.
 
 | Parity seed | Recipe, 3e-4 | Neighbor, 1e-4 | Neighbor, 1e-3 |
 | ---: | --- | --- | --- |
 | 0 | fails, 87.11% | passes at 13,400 | fails, 95.31% |
 | 1 | fails, 96.68% | passes at 9,800 | passes at 16,600 |
 
+| Recall seed | Recipe, 1e-3 | Neighbor, 3e-4 | Neighbor, 3e-3 |
+| ---: | --- | --- | --- |
+| 2 | fails, 41.21% | passes at 3,850 | fails, 98.83% |
+
 The full-precision numbers, final head scales and hashes of the source
-records are in [small_results.json](small_results.json). Large-model
-results and the final list of mechanism targets remain pending.
+records are in [small_results.json](small_results.json).
+
+### Large model
+
+All 30 original large-model runs have finished. This table compares the
+current arms; their shared pass threshold is selection sequence accuracy
+0.99, including length 128 for hard depth. Losses again describe the final
+sampled training batch.
+
+| Mode | Task | Seed | Softmax | Sparsemax | Last batch loss, softmax | Last batch loss, sparsemax |
+| --- | --- | ---: | --- | --- | ---: | ---: |
+| easy | depth | 0 | passes at 200 | passes at 600 | 0.005176 | 0.000455 |
+| easy | depth | 1 | passes at 200 | passes at 200 | 0.004812 | 0.005366 |
+| easy | depth | 2 | passes at 200 | passes at 200 | 0.004596 | 0.005002 |
+| easy | recall | 0 | fails, 97.27% | fails, 94.92% | 0.010500 | 0.036267 |
+| easy | recall | 1 | fails, 96.68% | passes at 2,200 | 0.017379 | 0.004321 |
+| easy | recall | 2 | passes at 1,500 | fails, 80.27% | 0.013770 | 0.100726 |
+| easy | parity | 0 | passes at 6,600 | passes at 13,600 | 0.032085 | 0.014851 |
+| easy | parity | 1 | passes at 7,600 | passes at 16,800 | 0.004917 | 0.028669 |
+| easy | parity | 2 | passes at 7,000 | passes at 16,800 | 0.010212 | 0.000640 |
+| hard | depth | 0 | passes at 3,600 | passes at 600 | 0.000014 | 0.000161 |
+| hard | depth | 1 | passes at 4,400 | passes at 400 | 0.000005 | 0.000555 |
+| hard | depth | 2 | passes at 1,800 | passes at 600 | 0.000150 | 0.000435 |
+| hard | recall | 0 | passes at 3,600 | passes at 3,900 | 0.019992 | 0.041314 |
+| hard | recall | 1 | passes at 3,200 | fails, 98.63% | 0.002921 | 0.027439 |
+| hard | recall | 2 | passes at 2,650 | fails, 97.66% | 0.010402 | 0.007515 |
+
+Sparsemax passes hard depth substantially earlier from every seed; its
+large parity passes are later than softmax's. Easy recall seed 2 passes at
+the lower neighbor 3e-4 (update 2,750) and the upper 3e-3 (update 2,800),
+so H5 removes that failure too. Neither neighboring rate removes hard
+recall's failures: both seeds have best sequence accuracy 0% at 1e-4 and
+1e-3 over their 4,800-update budgets. Their higher-rate runs also leave
+large training batch losses, 1.57 and 1.52, unlike the low final batch
+losses at the original 3e-4. This does not establish that every training
+example was fitted at the original rate.
+
+| Hard recall seed | Neighbor, 1e-4 | Recipe, 3e-4 | Neighbor, 1e-3 |
+| ---: | --- | --- | --- |
+| 1 | fails, 0.00% | fails, 98.63% | fails, 0.00% |
+| 2 | fails, 0.00% | fails, 97.66% | fails, 0.00% |
+
+The full-precision large results, final head scales, source hashes and
+archived-control comparison are in [large_results.json](large_results.json).
+Only the cell `(hard, large, recall)`, from seeds 1 and 2, remains a
+mechanism target after H5. Step 2 measures that cell from all three seeds
+under both weights, including its passing seed 0. There is no small-model
+target for step 2's small-model factorial ablation. Sparsemax's depth
+failure prediction is not borne out here; parity is slower but its small
+failures are removed by the recipe. These outcomes do not identify the
+attention mechanism behind the remaining recall failures.
 
 Run a pair with:
 

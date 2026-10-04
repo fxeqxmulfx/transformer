@@ -1,0 +1,2637 @@
+{
+  "scope": "30 large-model benchmark runs and 6 neighboring-rate checks",
+  "date_utc": "2026-10-04",
+  "criterion": "First observed selection sequence accuracy >= 0.99",
+  "softmax_repetition": {
+    "softmax-easy-large-depth-seed0": {
+      "common_observations": 2,
+      "identical_common_observations": 1,
+      "first_differing_step": 200,
+      "first_difference": {
+        "path": ".validation.loss",
+        "current": 0.005105763040954613,
+        "archive": 0.005107902115126997
+      },
+      "whole_non_timing_history_identical": false,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-large-depth-seed0/history.jsonl": "4c69490a0936d3e6f906a29d0d93e03ade30ab8a1fac389ec02da9f4fc5c7a0d",
+        "experiments/basis/runs/easy-large-depth-seed0/result.json": "3a7243c1780c6bf79e36308ea1ef5e084c83d96a7b19996d8bfd9783a2460d22"
+      }
+    },
+    "softmax-easy-large-recall-seed0": {
+      "common_observations": 97,
+      "identical_common_observations": 3,
+      "first_differing_step": 150,
+      "first_difference": {
+        "path": ".validation.example_loss",
+        "current": 4.578434944152832,
+        "archive": 4.578435182571411
+      },
+      "whole_non_timing_history_identical": false,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "archive_stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-large-recall-seed0/history.jsonl": "8b0d713ac065adcaab1178f94aa2bf70fe08f73d3cebda90f615d1d9420afa6e",
+        "experiments/basis/runs/easy-large-recall-seed0/result.json": "a1ad3820a71642ed9cd2c5c730ea5370a922396403d4f0309ca10ad69b75d14a"
+      }
+    },
+    "softmax-easy-large-parity-seed0": {
+      "common_observations": 26,
+      "identical_common_observations": 1,
+      "first_differing_step": 200,
+      "first_difference": {
+        "path": ".validation.loss",
+        "current": 0.3681282103061676,
+        "archive": 0.36812347173690796
+      },
+      "whole_non_timing_history_identical": false,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 6600,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 5000,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-large-parity-seed0/history.jsonl": "3aab9707544674cf1a71e10d32c9091dfdc7d0c94861124b54b0dc64dea07556",
+        "experiments/basis/runs/easy-large-parity-seed0/result.json": "a29d4a9eaf63e19a501a4434810307f4d0bb57224a2f039d5f6ffbb6296e0161"
+      }
+    },
+    "softmax-easy-large-depth-seed1": {
+      "common_observations": 2,
+      "identical_common_observations": 1,
+      "first_differing_step": 200,
+      "first_difference": {
+        "path": ".validation.loss",
+        "current": 0.004818086916411295,
+        "archive": 0.004817670395872846
+      },
+      "whole_non_timing_history_identical": false,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-large-depth-seed1/history.jsonl": "397221e38e0e1bba60e7c2648f50052b3a15b4f932f32bd858648ddf60b88817",
+        "experiments/basis/runs/easy-large-depth-seed1/result.json": "b31cb78bf7b7ffe5e37f0c64fd38b0e0dd2086cd83c0d44a50c22dfe9e3a1089"
+      }
+    },
+    "softmax-easy-large-recall-seed1": {
+      "common_observations": 97,
+      "identical_common_observations": 4,
+      "first_differing_step": 200,
+      "first_difference": {
+        "path": ".validation.loss",
+        "current": 4.20640230178833,
+        "archive": 4.206402540206909
+      },
+      "whole_non_timing_history_identical": false,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "archive_stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-large-recall-seed1/history.jsonl": "d40825eecd0e70e3164907756fb39fee06b6bc77c5c94792d6007e4da091823e",
+        "experiments/basis/runs/easy-large-recall-seed1/result.json": "5de17691ef4be0f35871338a660c699e13dbac644be135b971201f5c4cc377af"
+      }
+    },
+    "softmax-easy-large-parity-seed1": {
+      "common_observations": 39,
+      "identical_common_observations": 1,
+      "first_differing_step": 200,
+      "first_difference": {
+        "path": ".validation.loss",
+        "current": 0.3685758262872696,
+        "archive": 0.36857545375823975
+      },
+      "whole_non_timing_history_identical": false,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 7600,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 8400,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-large-parity-seed1/history.jsonl": "494e073a33d935baeb912931d18b57b51fa058938a9c2fba028344be1dbe64a2",
+        "experiments/basis/runs/easy-large-parity-seed1/result.json": "0ca14471cb45cfe3d2c2ee17c34a58feff1971a93c64e82e83a792d1a117c08e"
+      }
+    },
+    "softmax-easy-large-depth-seed2": {
+      "common_observations": 2,
+      "identical_common_observations": 2,
+      "first_differing_step": null,
+      "first_difference": null,
+      "whole_non_timing_history_identical": true,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-large-depth-seed2/history.jsonl": "1cf8ef71d2fd9fc5017cbcfa4284c9529791162d3f2dfe1a76752f9ad8a5411b",
+        "experiments/basis/runs/easy-large-depth-seed2/result.json": "9d27845243573a95b448dbd28b7475faf5407bae5fe3de6e8a1b9aeafadaa4a6"
+      }
+    },
+    "softmax-easy-large-recall-seed2": {
+      "common_observations": 28,
+      "identical_common_observations": 1,
+      "first_differing_step": 50,
+      "first_difference": {
+        "path": ".validation.loss",
+        "current": 5.599671125411987,
+        "archive": 5.599670886993408
+      },
+      "whole_non_timing_history_identical": false,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 1500,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 1350,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-large-recall-seed2/history.jsonl": "d94a85edc0127d70a610dbd0fd49a35e8e6c41bd2f3f2f907a931b79d233af46",
+        "experiments/basis/runs/easy-large-recall-seed2/result.json": "496651b04b3baeb7935d91cede5d95f3f06e8cabe42cc7a9ca87e23cf6db95e4"
+      }
+    },
+    "softmax-easy-large-parity-seed2": {
+      "common_observations": 36,
+      "identical_common_observations": 1,
+      "first_differing_step": 200,
+      "first_difference": {
+        "path": ".validation.loss",
+        "current": 0.3660370856523514,
+        "archive": 0.3660369962453842
+      },
+      "whole_non_timing_history_identical": false,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 7000,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 8800,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/easy-large-parity-seed2/history.jsonl": "481e7ef4c2f7b8d961f7a65612cd8dc5eb34eddb5285b4942b1bc805a72e6392",
+        "experiments/basis/runs/easy-large-parity-seed2/result.json": "d6c5c6c5418c8a4f88d4b797400923d06bb045a8103adab9ca0a4427a8778c67"
+      }
+    },
+    "softmax-hard-large-depth-seed0": {
+      "common_observations": 5,
+      "identical_common_observations": 1,
+      "first_differing_step": 200,
+      "first_difference": {
+        "path": ".validation.loss",
+        "current": 0.011197809261452812,
+        "archive": 0.01530599116213781
+      },
+      "whole_non_timing_history_identical": false,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 3600,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 800,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/hard-large-depth-seed0/history.jsonl": "188e5d26069a837003f0fada252328d52e251605152535c355b5620db6644e39",
+        "experiments/basis/runs/hard-large-depth-seed0/result.json": "3b59ae6ece262cc9dbfbf0dd780fd0dfe69af0ccbfb2476cffcddb1087c47d44"
+      }
+    },
+    "softmax-hard-large-recall-seed0": {
+      "common_observations": 68,
+      "identical_common_observations": 9,
+      "first_differing_step": 100,
+      "first_difference": {
+        "path": ".validation.example_loss",
+        "current": 5.667591571807861,
+        "archive": 5.66759181022644
+      },
+      "whole_non_timing_history_identical": false,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 3600,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 3350,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/hard-large-recall-seed0/history.jsonl": "106dd2c6f92141b5384236b8e00738724e37795686af34f18ae0af414ea9ddeb",
+        "experiments/basis/runs/hard-large-recall-seed0/result.json": "72a31a201475809af91dc5ff39da182df00f10200f5b968f4ee2118864bec8af"
+      }
+    },
+    "softmax-hard-large-depth-seed1": {
+      "common_observations": 8,
+      "identical_common_observations": 1,
+      "first_differing_step": 200,
+      "first_difference": {
+        "path": ".validation.loss",
+        "current": 0.010863820151107819,
+        "archive": 0.013604584144247403
+      },
+      "whole_non_timing_history_identical": false,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 4400,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 1400,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/hard-large-depth-seed1/history.jsonl": "2ee142f94d0652fa72159c93bb684f1c156c3b41dc83eefa257cc4fcbc95654a",
+        "experiments/basis/runs/hard-large-depth-seed1/result.json": "b74ff70f89614f9fdeffdabd686ccb9d4503092f82074dc6d772e3a093d74abb"
+      }
+    },
+    "softmax-hard-large-recall-seed1": {
+      "common_observations": 58,
+      "identical_common_observations": 14,
+      "first_differing_step": 50,
+      "first_difference": {
+        "path": ".validation.loss",
+        "current": 5.943869113922119,
+        "archive": 5.943868398666382
+      },
+      "whole_non_timing_history_identical": false,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 3200,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 2850,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/hard-large-recall-seed1/history.jsonl": "841ea8518b26fadf2ffe505e48fd8ee42610b82136bf63adf64837b72c37bfb7",
+        "experiments/basis/runs/hard-large-recall-seed1/result.json": "397dffd309d88849b1f630f9427f21d3ee8eef2eaa934207984403b9182ec1ce"
+      }
+    },
+    "softmax-hard-large-depth-seed2": {
+      "common_observations": 10,
+      "identical_common_observations": 1,
+      "first_differing_step": 200,
+      "first_difference": {
+        "path": ".validation.loss",
+        "current": 0.02163891955249179,
+        "archive": 0.0224127517441761
+      },
+      "whole_non_timing_history_identical": false,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 1800,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 5800,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/hard-large-depth-seed2/history.jsonl": "eceafbf26ad0dce1c4d6e82afed3e8a3aabc4563dbadcf30fb6705603d0ae6f1",
+        "experiments/basis/runs/hard-large-depth-seed2/result.json": "d5fce4228e55c7a134c13a2f5bbc9101641c172b7fd35f0762da6eaa7e12785d"
+      }
+    },
+    "softmax-hard-large-recall-seed2": {
+      "common_observations": 53,
+      "identical_common_observations": 9,
+      "first_differing_step": 50,
+      "first_difference": {
+        "path": ".validation.loss",
+        "current": 5.930500745773315,
+        "archive": 5.930500507354736
+      },
+      "whole_non_timing_history_identical": false,
+      "pass_status_identical": true,
+      "current_stop": {
+        "step": 2650,
+        "reason": "solved"
+      },
+      "archive_stop": {
+        "step": 2600,
+        "reason": "solved"
+      },
+      "archive_source": {
+        "experiments/basis/runs/hard-large-recall-seed2/history.jsonl": "7012605956397e06238f5a4e30ff71ace340570983ebd0b97005d48176b764e6",
+        "experiments/basis/runs/hard-large-recall-seed2/result.json": "9e8e8132c3a7c0e26e30a95a069c7f086518ba3c16083ff31afb53b8ec16b694"
+      }
+    }
+  },
+  "persistent_matched_seed_failures": [
+    "sparsemax-hard-large-recall-seed1",
+    "sparsemax-hard-large-recall-seed2"
+  ],
+  "runs": {
+    "softmax-easy-large-depth-seed0": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 2000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "pass_step": 200,
+      "best_sequence_accuracy": 1.0,
+      "best_exact": 512,
+      "validation_rows": 512,
+      "last_batch_loss": 0.005176032427698374,
+      "last_batch_loss_step": 200,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          5.535316467285156,
+          5.471479415893555,
+          5.458642959594727,
+          5.427883625030518
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          5.595409870147705,
+          5.470465660095215,
+          5.566168308258057,
+          5.505908489227295
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          5.428010940551758,
+          5.474565029144287,
+          5.497330665588379,
+          5.4698872566223145
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          5.452268123626709,
+          5.495077133178711,
+          5.481153964996338,
+          5.464037895202637
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          5.491595268249512,
+          5.4732489585876465,
+          5.505760192871094,
+          5.474148750305176
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          5.502845764160156,
+          5.45697021484375,
+          5.427631855010986,
+          5.497732162475586
+        ]
+      },
+      "source": {
+        "runs/softmax-easy-large-depth-seed0/experiment.json": "a0a5ac4b3f41a7b3c9bff75429fa5437e83c8a5079a7774bc952a9cfb29be264",
+        "runs/softmax-easy-large-depth-seed0/result.json": "ae56f50d685b5ee2f57621f26a2671c6c0bd13acb7eac19d55fd82dbced702f9",
+        "runs/softmax-easy-large-depth-seed0/history.jsonl": "fa9c5348a0fe8afe3daed14440e3204eecab5e26f8f43efa4a97134531250c7b",
+        "runs/softmax-easy-large-depth-seed0/diagnostics.jsonl": "62f30bc4a76de00e52b21e8343ecce90fb68cf16b03b406a3f380eb044f8f9b7"
+      }
+    },
+    "softmax-easy-large-recall-seed0": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "pass_step": null,
+      "best_sequence_accuracy": 0.97265625,
+      "best_exact": 498,
+      "validation_rows": 512,
+      "last_batch_loss": 0.010499714873731136,
+      "last_batch_loss_step": 4800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          7.867687225341797,
+          7.168755531311035,
+          4.331692695617676,
+          8.505278587341309
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          5.5690202713012695,
+          4.360968112945557,
+          4.777743339538574,
+          4.2798285484313965
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          10.180099487304688,
+          8.407632827758789,
+          7.438656330108643,
+          15.830927848815918
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          10.354948997497559,
+          11.48119068145752,
+          10.350459098815918,
+          11.3892822265625
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          5.860010623931885,
+          5.841464996337891,
+          6.768171310424805,
+          7.197681427001953
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          7.040152072906494,
+          3.81166410446167,
+          4.785501480102539,
+          3.765693426132202
+        ]
+      },
+      "source": {
+        "runs/softmax-easy-large-recall-seed0/experiment.json": "59f5df28464dcd9c70ec69280cde4edfc12ff6c2034d6b12aa8201390ecc38b3",
+        "runs/softmax-easy-large-recall-seed0/result.json": "3a83f4f85b813e916ee5510d0c39f3f7b3986a092473b743ad52e6fa01f541ab",
+        "runs/softmax-easy-large-recall-seed0/history.jsonl": "7f945b4ed97fc9867bc971eeb647dcb67908c05e2076bec016b71eb13c76878a",
+        "runs/softmax-easy-large-recall-seed0/diagnostics.jsonl": "f3a72d7ef3c9c9c8cb1f002501fdabeb833cd7eaf13598cf02c426d21cffb156"
+      }
+    },
+    "softmax-easy-large-parity-seed0": {
+      "selection": "validation",
+      "rate": 0.0003,
+      "budget": {
+        "type": "Budget",
+        "updates": 20000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 6600,
+        "reason": "solved"
+      },
+      "pass_step": 6600,
+      "best_sequence_accuracy": 0.9921875,
+      "best_exact": 508,
+      "validation_rows": 512,
+      "last_batch_loss": 0.03208548203110695,
+      "last_batch_loss_step": 6600,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          4.0606818199157715,
+          4.127391338348389,
+          4.075475692749023,
+          4.223924160003662
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          4.204092502593994,
+          4.297581672668457,
+          3.9604580402374268,
+          4.0098042488098145
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          4.577613353729248,
+          4.347426891326904,
+          4.022407531738281,
+          4.105144500732422
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          4.0137715339660645,
+          4.3807501792907715,
+          3.9145314693450928,
+          4.437591552734375
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          4.196609973907471,
+          4.785688400268555,
+          4.157737731933594,
+          3.8750762939453125
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          4.57098913192749,
+          4.518678665161133,
+          4.341970443725586,
+          5.052127361297607
+        ]
+      },
+      "source": {
+        "runs/softmax-easy-large-parity-seed0/experiment.json": "c8f15d7308d1487308667445bd2db7d4c125564c816e8afd8228eb06793a53c3",
+        "runs/softmax-easy-large-parity-seed0/result.json": "9d2624d2b9e63b0c931386b189bc17ec8668b143ce5a9d04db87e5fa97c3c249",
+        "runs/softmax-easy-large-parity-seed0/history.jsonl": "d04a34b22be6d2e83536c86082de035a80e42ab806be50ebc45baac14c5d93d6",
+        "runs/softmax-easy-large-parity-seed0/diagnostics.jsonl": "7460415d9f31d2f4bfe85ae25b33b7a47856214dc3ff524c940112859a3f85fd"
+      }
+    },
+    "softmax-easy-large-depth-seed1": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 2000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "pass_step": 200,
+      "best_sequence_accuracy": 1.0,
+      "best_exact": 512,
+      "validation_rows": 512,
+      "last_batch_loss": 0.004811612889170647,
+      "last_batch_loss_step": 200,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          5.558411598205566,
+          5.460653781890869,
+          5.453263759613037,
+          5.370424270629883
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          5.488966941833496,
+          5.466042518615723,
+          5.552901744842529,
+          5.6025590896606445
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          5.510594844818115,
+          5.49712610244751,
+          5.443264007568359,
+          5.459631443023682
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          5.502782821655273,
+          5.435669422149658,
+          5.457114219665527,
+          5.47230863571167
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          5.494566440582275,
+          5.491747856140137,
+          5.492414951324463,
+          5.512935161590576
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          5.518044471740723,
+          5.505360126495361,
+          5.525370121002197,
+          5.515031814575195
+        ]
+      },
+      "source": {
+        "runs/softmax-easy-large-depth-seed1/experiment.json": "bfcb1ae22d7fc153a8ae98534390df79d4598c9f94ef46fc9011a69b29649c5a",
+        "runs/softmax-easy-large-depth-seed1/result.json": "9e80f8f63f46815ee186bec184aff1e78879f63f637ff088f173f9aa833a562c",
+        "runs/softmax-easy-large-depth-seed1/history.jsonl": "f4612a075a0864f403b389d8ac617a35e3d26186a0528879baf36c89c5af2a07",
+        "runs/softmax-easy-large-depth-seed1/diagnostics.jsonl": "67c62a0a3f3fafa99142db87cc29c6af67618b85f45fd5a9571158d25438b3f2"
+      }
+    },
+    "softmax-easy-large-recall-seed1": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "pass_step": null,
+      "best_sequence_accuracy": 0.966796875,
+      "best_exact": 495,
+      "validation_rows": 512,
+      "last_batch_loss": 0.0173792764544487,
+      "last_batch_loss_step": 4800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          7.697930335998535,
+          7.458820343017578,
+          6.7278971672058105,
+          6.92075252532959
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          4.1842122077941895,
+          4.823615550994873,
+          4.791890621185303,
+          5.055104732513428
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          7.882518291473389,
+          7.420599460601807,
+          7.755896091461182,
+          7.963589668273926
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          6.1876606941223145,
+          6.024172782897949,
+          6.291373252868652,
+          6.2220659255981445
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          5.108497619628906,
+          4.895022392272949,
+          4.9991374015808105,
+          4.758731842041016
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          3.958251953125,
+          4.245759963989258,
+          7.163002967834473,
+          4.206433296203613
+        ]
+      },
+      "source": {
+        "runs/softmax-easy-large-recall-seed1/experiment.json": "d74de36ce2eb85694315edf35cdd4cd61a90a12b71d611e45135b88b8e459790",
+        "runs/softmax-easy-large-recall-seed1/result.json": "deaad814d40bea5c431d23d0032efb5e68a8469a2a9ca8f62f64361fab347cc5",
+        "runs/softmax-easy-large-recall-seed1/history.jsonl": "349910f20871ca6b6139fc56a3c14cdf9b0a2db1a49d5da90e07fdb7a47c7524",
+        "runs/softmax-easy-large-recall-seed1/diagnostics.jsonl": "82971a8cceb3cd69dd4937b260630182f310fdcc430a3f9f0944b20d945e7aeb"
+      }
+    },
+    "softmax-easy-large-parity-seed1": {
+      "selection": "validation",
+      "rate": 0.0003,
+      "budget": {
+        "type": "Budget",
+        "updates": 20000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 7600,
+        "reason": "solved"
+      },
+      "pass_step": 7600,
+      "best_sequence_accuracy": 0.994140625,
+      "best_exact": 509,
+      "validation_rows": 512,
+      "last_batch_loss": 0.004916701931506395,
+      "last_batch_loss_step": 7600,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          4.057307243347168,
+          4.075575351715088,
+          3.7885777950286865,
+          4.218303680419922
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          4.092083930969238,
+          3.8947060108184814,
+          4.008084774017334,
+          3.8419036865234375
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          4.068071365356445,
+          4.07998514175415,
+          4.035281658172607,
+          4.278998851776123
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          4.423018455505371,
+          4.439221382141113,
+          4.1483025550842285,
+          4.041032314300537
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          4.779078483581543,
+          3.9570796489715576,
+          4.77396297454834,
+          4.117938041687012
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          4.186722278594971,
+          4.306583881378174,
+          5.379441261291504,
+          3.92162823677063
+        ]
+      },
+      "source": {
+        "runs/softmax-easy-large-parity-seed1/experiment.json": "cff99c55f114b3d7b68ed8912504c551f12c1ebc3ea245724511f4cd05c78775",
+        "runs/softmax-easy-large-parity-seed1/result.json": "4dda3c5d182782cd96d9e379df0d0032fafc51efa51f361bcaacdc9b793c3f6a",
+        "runs/softmax-easy-large-parity-seed1/history.jsonl": "3abd60258e057513a1644508c24ef1fbed70afe1d9a55adaf54b086d51089c3b",
+        "runs/softmax-easy-large-parity-seed1/diagnostics.jsonl": "170cbf8c0856cbeb3e16b4a53b7587550df47be1447b6b5befba08ccf48a7913"
+      }
+    },
+    "softmax-easy-large-depth-seed2": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 2000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "pass_step": 200,
+      "best_sequence_accuracy": 1.0,
+      "best_exact": 512,
+      "validation_rows": 512,
+      "last_batch_loss": 0.004595988895744085,
+      "last_batch_loss_step": 200,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          5.462386131286621,
+          5.500500202178955,
+          5.484678745269775,
+          5.496152877807617
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          5.470701694488525,
+          5.542877197265625,
+          5.469864368438721,
+          5.467280864715576
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          5.57948112487793,
+          5.46516752243042,
+          5.561336517333984,
+          5.465478420257568
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          5.4789018630981445,
+          5.518308162689209,
+          5.5016632080078125,
+          5.50932502746582
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          5.484189033508301,
+          5.508290767669678,
+          5.516842365264893,
+          5.506855487823486
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          5.489595890045166,
+          5.484325885772705,
+          5.491765022277832,
+          5.531189918518066
+        ]
+      },
+      "source": {
+        "runs/softmax-easy-large-depth-seed2/experiment.json": "1ffa898765a7b6501ab55204721e02ad6a7abdb2280058ee617f56c987529ee2",
+        "runs/softmax-easy-large-depth-seed2/result.json": "9ebb584b68c1b3182f1b982071ca5e4aeee278685d45bd2a83920a013f48be21",
+        "runs/softmax-easy-large-depth-seed2/history.jsonl": "3db9cfbfdc20b63b244f6734923d32234e85500ffb309a04ea7c148034c82ef6",
+        "runs/softmax-easy-large-depth-seed2/diagnostics.jsonl": "6d10e2983602f4475e3776c8b019fecb40d50ffe01d5418ede98c0b4b87f8aa5"
+      }
+    },
+    "softmax-easy-large-recall-seed2": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 1500,
+        "reason": "solved"
+      },
+      "pass_step": 1500,
+      "best_sequence_accuracy": 0.990234375,
+      "best_exact": 507,
+      "validation_rows": 512,
+      "last_batch_loss": 0.013769733719527721,
+      "last_batch_loss_step": 1500,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          4.519957065582275,
+          4.313961505889893,
+          3.9688377380371094,
+          5.827364921569824
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          7.5676374435424805,
+          7.522828578948975,
+          7.84598445892334,
+          6.152382850646973
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          5.599775314331055,
+          5.556353569030762,
+          5.950396537780762,
+          5.592615604400635
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          5.233616828918457,
+          5.560248374938965,
+          5.583720684051514,
+          5.479079723358154
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          5.175229549407959,
+          5.15243673324585,
+          5.1836771965026855,
+          5.233468532562256
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          4.770371437072754,
+          4.75680685043335,
+          4.627826690673828,
+          4.6118245124816895
+        ]
+      },
+      "source": {
+        "runs/softmax-easy-large-recall-seed2/experiment.json": "70eb29293351884a669a60f2aab73a960cedb69955d93e8cada3b139f2058433",
+        "runs/softmax-easy-large-recall-seed2/result.json": "5436e02b41a69d2ec18403910ab884220a3414924a943f63c1d6ee5d9763037a",
+        "runs/softmax-easy-large-recall-seed2/history.jsonl": "2c52bd68efc6bb2252a224b895285f8a54b3f9248a35caa95a1108ac0f485851",
+        "runs/softmax-easy-large-recall-seed2/diagnostics.jsonl": "299b3f969ee125949c010d742c5712b669f9ca3980000b1dbe6e08746e6e10bd"
+      }
+    },
+    "softmax-easy-large-parity-seed2": {
+      "selection": "validation",
+      "rate": 0.0003,
+      "budget": {
+        "type": "Budget",
+        "updates": 20000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 7000,
+        "reason": "solved"
+      },
+      "pass_step": 7000,
+      "best_sequence_accuracy": 0.990234375,
+      "best_exact": 507,
+      "validation_rows": 512,
+      "last_batch_loss": 0.01021181233227253,
+      "last_batch_loss_step": 7000,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          4.32118034362793,
+          4.108222484588623,
+          3.9867796897888184,
+          4.425563812255859
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          4.1910176277160645,
+          3.9541239738464355,
+          3.8988194465637207,
+          4.172231197357178
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          4.020969867706299,
+          4.074692249298096,
+          3.8872246742248535,
+          3.863778591156006
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          4.282774448394775,
+          3.9091804027557373,
+          4.665517330169678,
+          4.197117328643799
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          3.940315008163452,
+          4.0716471672058105,
+          3.9090187549591064,
+          5.138558864593506
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          4.651022911071777,
+          5.180843830108643,
+          4.520295143127441,
+          4.531570911407471
+        ]
+      },
+      "source": {
+        "runs/softmax-easy-large-parity-seed2/experiment.json": "e653e382f7804fb7c5842e1bd7f883755ac483eaafb2a1c2402699cab6c453c3",
+        "runs/softmax-easy-large-parity-seed2/result.json": "91ee51cc30ae5134b1c869bb42883f9df0cc0b0df47fd142cbf2f86a0780a7ab",
+        "runs/softmax-easy-large-parity-seed2/history.jsonl": "5bc078479e11a628fc94de2d25c11224c74cca199388d3d7d473c25b95127504",
+        "runs/softmax-easy-large-parity-seed2/diagnostics.jsonl": "408a07217566af73dbdd5d51a62d8255ab3037f468af26a32acb8c2de3cf1888"
+      }
+    },
+    "softmax-hard-large-depth-seed0": {
+      "selection": "validation/length-128",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 10000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 3600,
+        "reason": "solved"
+      },
+      "pass_step": 3600,
+      "best_sequence_accuracy": 0.994140625,
+      "best_exact": 509,
+      "validation_rows": 512,
+      "last_batch_loss": 1.361793329124339e-05,
+      "last_batch_loss_step": 3600,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          3.3577990531921387,
+          3.9307188987731934,
+          3.2775967121124268,
+          3.3581273555755615
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          3.368520736694336,
+          3.417231321334839,
+          3.2555618286132812,
+          3.509424924850464
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          3.2796599864959717,
+          3.9748053550720215,
+          3.5019748210906982,
+          3.5112292766571045
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          3.7867956161499023,
+          3.491273880004883,
+          3.4186208248138428,
+          3.498070240020752
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          4.00590181350708,
+          3.5174825191497803,
+          3.5045297145843506,
+          3.6114001274108887
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          3.7305150032043457,
+          3.4319283962249756,
+          3.4672391414642334,
+          3.9536941051483154
+        ]
+      },
+      "source": {
+        "runs/softmax-hard-large-depth-seed0/experiment.json": "9f306daabcbb99800b4d0f347fa14435f5d33537ee2610c21984d45be51611b8",
+        "runs/softmax-hard-large-depth-seed0/result.json": "080af1cdb48b3f39ea7b22f2a475e77f0c6fd51500ee5c8a1871a68f740c42f4",
+        "runs/softmax-hard-large-depth-seed0/history.jsonl": "50ac52d8a3903567f65322cf68a6e309799d02ab6a264476ebd097d0f5c81fef",
+        "runs/softmax-hard-large-depth-seed0/diagnostics.jsonl": "646778460b808fd70dc7fdac089cc9915e8559006274c17d11aa6f38f595024c"
+      }
+    },
+    "softmax-hard-large-recall-seed0": {
+      "selection": "validation",
+      "rate": 0.0003,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 3600,
+        "reason": "solved"
+      },
+      "pass_step": 3600,
+      "best_sequence_accuracy": 0.990234375,
+      "best_exact": 507,
+      "validation_rows": 512,
+      "last_batch_loss": 0.019992094486951828,
+      "last_batch_loss_step": 3600,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          5.389077663421631,
+          6.067145824432373,
+          4.846447467803955,
+          5.496588230133057
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          4.99851131439209,
+          5.40904426574707,
+          6.609832763671875,
+          5.215139865875244
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          7.816170692443848,
+          7.46523904800415,
+          7.933726787567139,
+          7.715290069580078
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          7.419224739074707,
+          7.52524995803833,
+          7.588809490203857,
+          7.7259016036987305
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          7.462470054626465,
+          7.579150199890137,
+          7.693073749542236,
+          7.899637222290039
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          7.793481826782227,
+          5.949296474456787,
+          7.863666534423828,
+          7.9209160804748535
+        ]
+      },
+      "source": {
+        "runs/softmax-hard-large-recall-seed0/experiment.json": "543d65d4b1123e7c8905d31b96512e8f46a3cf456e89de25df0b6029365cdd49",
+        "runs/softmax-hard-large-recall-seed0/result.json": "5ab6dfa43231b4b2750cd09e4659e99b0ea6f2330c8581fb959712b40ce30758",
+        "runs/softmax-hard-large-recall-seed0/history.jsonl": "1d0d22d5dd4194a3842511eb47bbf2b8c5e535bf3428240b0085cf406636db26",
+        "runs/softmax-hard-large-recall-seed0/diagnostics.jsonl": "c6cc59c60dc4ab966f4a606b7772a4343a340f0b7ae8e9c08840d00af60ad638"
+      }
+    },
+    "softmax-hard-large-depth-seed1": {
+      "selection": "validation/length-128",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 10000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 4400,
+        "reason": "solved"
+      },
+      "pass_step": 4400,
+      "best_sequence_accuracy": 0.99609375,
+      "best_exact": 510,
+      "validation_rows": 512,
+      "last_batch_loss": 4.838320819544606e-06,
+      "last_batch_loss_step": 4400,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          3.122760534286499,
+          4.166265964508057,
+          2.978564739227295,
+          2.988523244857788
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          3.149827718734741,
+          2.827573776245117,
+          3.0631699562072754,
+          3.352128744125366
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          3.1172990798950195,
+          3.2454895973205566,
+          3.039043426513672,
+          3.359814167022705
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          3.3258681297302246,
+          3.1004350185394287,
+          3.489187717437744,
+          3.427076578140259
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          3.362837553024292,
+          3.21183443069458,
+          3.187134027481079,
+          3.187061071395874
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          3.190777540206909,
+          3.4416630268096924,
+          3.312757968902588,
+          3.506687879562378
+        ]
+      },
+      "source": {
+        "runs/softmax-hard-large-depth-seed1/experiment.json": "7d33f7873a05dc648938040083449ccb957275e7a000469476b9bbf09ba3358a",
+        "runs/softmax-hard-large-depth-seed1/result.json": "eeddeb690b903dbad5c94d4c591f56361f50b9ae775474460e879d0b75260f14",
+        "runs/softmax-hard-large-depth-seed1/history.jsonl": "dc1dd51559706288040af310cf430fd1e62b54ee5a9c08056898464c92173557",
+        "runs/softmax-hard-large-depth-seed1/diagnostics.jsonl": "fbb78821e95e4e5a4d7d3307747e052890b47a49404667ac724c8ee8575f52fd"
+      }
+    },
+    "softmax-hard-large-recall-seed1": {
+      "selection": "validation",
+      "rate": 0.0003,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 3200,
+        "reason": "solved"
+      },
+      "pass_step": 3200,
+      "best_sequence_accuracy": 0.9921875,
+      "best_exact": 508,
+      "validation_rows": 512,
+      "last_batch_loss": 0.002920528408139944,
+      "last_batch_loss_step": 3200,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          4.9921746253967285,
+          5.8653788566589355,
+          5.9799885749816895,
+          5.109057426452637
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          5.317102432250977,
+          5.6369524002075195,
+          5.563973426818848,
+          6.440324783325195
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          7.181283473968506,
+          7.195773601531982,
+          7.2910566329956055,
+          7.169077396392822
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          6.9873857498168945,
+          7.039403438568115,
+          7.05867338180542,
+          6.876819610595703
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          6.442117691040039,
+          6.2209577560424805,
+          7.7423906326293945,
+          6.565067768096924
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          6.404179096221924,
+          6.016520023345947,
+          5.981648921966553,
+          6.817861557006836
+        ]
+      },
+      "source": {
+        "runs/softmax-hard-large-recall-seed1/experiment.json": "ef2e16ed34d3e22eb45a22e9b246ed308ce3d28e943088e91550ffc4b0630ee3",
+        "runs/softmax-hard-large-recall-seed1/result.json": "b1e9e20cb6aa1007278a6e474021fdd4ef924589d649dece12c52ba0cba09f62",
+        "runs/softmax-hard-large-recall-seed1/history.jsonl": "c43da0e21dee82365f2597f636217b4afd77d377ea8b26ee03d7c8b9f5c3e2a2",
+        "runs/softmax-hard-large-recall-seed1/diagnostics.jsonl": "d2a5018b7145b1b92639e8714653a9f5529e24e4d221c1dd0482a2d9dc415659"
+      }
+    },
+    "softmax-hard-large-depth-seed2": {
+      "selection": "validation/length-128",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 10000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 1800,
+        "reason": "solved"
+      },
+      "pass_step": 1800,
+      "best_sequence_accuracy": 1.0,
+      "best_exact": 512,
+      "validation_rows": 512,
+      "last_batch_loss": 0.0001499933423474431,
+      "last_batch_loss_step": 1800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          4.268529891967773,
+          4.701334476470947,
+          4.350410461425781,
+          4.242857933044434
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          4.650389194488525,
+          4.12293815612793,
+          3.990588903427124,
+          4.198263645172119
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          4.312467098236084,
+          4.464935779571533,
+          4.502633571624756,
+          4.488377571105957
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          4.4716715812683105,
+          4.253788948059082,
+          4.282939910888672,
+          4.2892889976501465
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          4.347655296325684,
+          4.498804569244385,
+          4.416562080383301,
+          4.3813395500183105
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          4.312743186950684,
+          4.342555999755859,
+          4.414671421051025,
+          4.689957618713379
+        ]
+      },
+      "source": {
+        "runs/softmax-hard-large-depth-seed2/experiment.json": "c07f5e0977c3a39fb48b8d1d3ae94acc6c5c8515a481ef7c897b3f232ef0fc63",
+        "runs/softmax-hard-large-depth-seed2/result.json": "bb4e80fbfaf24a14e414c425df88161a0c2e37d99b3599056a60d456ccf00e70",
+        "runs/softmax-hard-large-depth-seed2/history.jsonl": "f1f255b458733bf2ca3b84f68d017c170cb7679db6415a58da1b747cd7e13864",
+        "runs/softmax-hard-large-depth-seed2/diagnostics.jsonl": "901f3f7a7ddc325def334d9c0205f2685b2c853cc8e87236967441b6d3acd438"
+      }
+    },
+    "softmax-hard-large-recall-seed2": {
+      "selection": "validation",
+      "rate": 0.0003,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 2650,
+        "reason": "solved"
+      },
+      "pass_step": 2650,
+      "best_sequence_accuracy": 0.994140625,
+      "best_exact": 509,
+      "validation_rows": 512,
+      "last_batch_loss": 0.010402316227555275,
+      "last_batch_loss_step": 2650,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          5.268048286437988,
+          5.1042799949646,
+          6.068136692047119,
+          5.184062480926514
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          5.7341084480285645,
+          6.236934661865234,
+          5.917629718780518,
+          5.085495471954346
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          6.699108600616455,
+          6.890679359436035,
+          6.815843105316162,
+          6.817319393157959
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          6.837227821350098,
+          6.788439750671387,
+          6.832186698913574,
+          6.955541133880615
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          6.954309940338135,
+          7.0540242195129395,
+          6.882692337036133,
+          6.501667022705078
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          6.792426109313965,
+          6.748809814453125,
+          5.6873955726623535,
+          5.969330787658691
+        ]
+      },
+      "source": {
+        "runs/softmax-hard-large-recall-seed2/experiment.json": "9582671045d534461ff343cac1c5ea837c19f27bcaeaafc7af13ff31209bddd0",
+        "runs/softmax-hard-large-recall-seed2/result.json": "0733cbdd7a4e178bdc6554a4d21e757a6ebfcb627712a5b55a1ab4bd5d89c420",
+        "runs/softmax-hard-large-recall-seed2/history.jsonl": "788fcf305e4981a2df14db1a9f9d393bb2f48beea98944e8a0909b09c85d2bf5",
+        "runs/softmax-hard-large-recall-seed2/diagnostics.jsonl": "9b4208d0e3b58041b8edcb52275c3228293f0fd38fff31cc5c0c89aea4beecd4"
+      }
+    },
+    "sparsemax-easy-large-depth-seed0": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 2000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 600,
+        "reason": "solved"
+      },
+      "pass_step": 600,
+      "best_sequence_accuracy": 1.0,
+      "best_exact": 512,
+      "validation_rows": 512,
+      "last_batch_loss": 0.00045489080366678536,
+      "last_batch_loss_step": 600,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          5.192469596862793,
+          5.0272064208984375,
+          5.106417179107666,
+          5.138554573059082
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          5.172975063323975,
+          5.1806159019470215,
+          5.185934066772461,
+          5.075906276702881
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          5.119565486907959,
+          5.115242004394531,
+          5.124314785003662,
+          5.0687336921691895
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          5.181694984436035,
+          5.073668956756592,
+          5.213354587554932,
+          5.061600208282471
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          5.1891937255859375,
+          5.076140403747559,
+          5.118879318237305,
+          5.059487819671631
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          5.395497798919678,
+          5.366177558898926,
+          5.108904838562012,
+          5.205706596374512
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-large-depth-seed0/experiment.json": "6f17dccabd652fa901c50a374802cb9447b3d8dabf457a9a2363202ab1ce4193",
+        "runs/sparsemax-easy-large-depth-seed0/result.json": "ef89331e78770471e2e5ac97bda12d5e163160e78bbacadabf57c38150d21520",
+        "runs/sparsemax-easy-large-depth-seed0/history.jsonl": "7f8eca3c45669b6e0fce2d117157948ec596cfd454d589157b8e5c0e07f5cf09",
+        "runs/sparsemax-easy-large-depth-seed0/diagnostics.jsonl": "b9d931515bc38d6c7490947c1e20e2c28be91f06fd24bdc71d7c946956e218fd"
+      }
+    },
+    "sparsemax-easy-large-recall-seed0": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "pass_step": null,
+      "best_sequence_accuracy": 0.94921875,
+      "best_exact": 486,
+      "validation_rows": 512,
+      "last_batch_loss": 0.036266934126615524,
+      "last_batch_loss_step": 4800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          3.486342668533325,
+          2.9769108295440674,
+          3.2460031509399414,
+          4.126773834228516
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          2.3522472381591797,
+          3.518080711364746,
+          3.6731202602386475,
+          3.4139528274536133
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          3.2303500175476074,
+          3.162036895751953,
+          3.086869478225708,
+          3.8221871852874756
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          2.3010966777801514,
+          2.2369771003723145,
+          2.859532356262207,
+          2.520500421524048
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          2.3142318725585938,
+          2.9067351818084717,
+          3.007476329803467,
+          2.7018744945526123
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          2.0700032711029053,
+          2.3692307472229004,
+          2.469632148742676,
+          2.4578590393066406
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-large-recall-seed0/experiment.json": "3ceaf587b44851eab77e746c1d49fc335dc910b81a1d6357b7c22a047de39d2e",
+        "runs/sparsemax-easy-large-recall-seed0/result.json": "f906bf7d88d7e86acc64a1320f80485a5ff99b74a59eb028608cbcd86f7d005f",
+        "runs/sparsemax-easy-large-recall-seed0/history.jsonl": "5ad89fbc44f32ae3a129edfc1188b952c8cca62ea4569b4272834285422fdfa5",
+        "runs/sparsemax-easy-large-recall-seed0/diagnostics.jsonl": "0ac5bfb12764804d585d2162c035224d0e774ed49bd5927d78e92493e555ecb8"
+      }
+    },
+    "sparsemax-easy-large-parity-seed0": {
+      "selection": "validation",
+      "rate": 0.0003,
+      "budget": {
+        "type": "Budget",
+        "updates": 20000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 13600,
+        "reason": "solved"
+      },
+      "pass_step": 13600,
+      "best_sequence_accuracy": 0.990234375,
+      "best_exact": 507,
+      "validation_rows": 512,
+      "last_batch_loss": 0.014851454645395279,
+      "last_batch_loss_step": 13600,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          3.0633490085601807,
+          3.268869400024414,
+          3.1660025119781494,
+          3.2167351245880127
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          3.1624786853790283,
+          3.0917725563049316,
+          3.229499340057373,
+          3.293923854827881
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          3.1773955821990967,
+          3.30010986328125,
+          2.9629716873168945,
+          3.152726411819458
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          3.215461015701294,
+          3.2374136447906494,
+          3.3973326683044434,
+          3.605583906173706
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          3.104904890060425,
+          3.1915197372436523,
+          3.7929747104644775,
+          4.290873050689697
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          2.845862627029419,
+          3.249164581298828,
+          3.04459810256958,
+          4.107885360717773
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-large-parity-seed0/experiment.json": "1f87d40237abba076c5e7a0a5b4fe58d77b8abbb739dcd395b1d2b4ab1b82e67",
+        "runs/sparsemax-easy-large-parity-seed0/result.json": "2e0fd62e8a66e4e89103feea1ccd7945abd6835e3f28f9783078f1577bfd2242",
+        "runs/sparsemax-easy-large-parity-seed0/history.jsonl": "b5aac2c26f03746241bd8432a2a292f59720d026359faee14066b0760f8f2c76",
+        "runs/sparsemax-easy-large-parity-seed0/diagnostics.jsonl": "ade23e98237e5227148033ff6031e07fece79cc6a8b642b1294766ed6304464e"
+      }
+    },
+    "sparsemax-easy-large-depth-seed1": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 2000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "pass_step": 200,
+      "best_sequence_accuracy": 1.0,
+      "best_exact": 512,
+      "validation_rows": 512,
+      "last_batch_loss": 0.0053659300319850445,
+      "last_batch_loss_step": 200,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          5.418798923492432,
+          5.379883766174316,
+          5.501521587371826,
+          5.4237895011901855
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          5.419198036193848,
+          5.464625358581543,
+          5.422019958496094,
+          5.520290851593018
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          5.46915864944458,
+          5.453453063964844,
+          5.44533634185791,
+          5.4738078117370605
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          5.434973239898682,
+          5.458859443664551,
+          5.45448637008667,
+          5.486935138702393
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          5.458000659942627,
+          5.449613571166992,
+          5.456127166748047,
+          5.474451541900635
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          5.451315879821777,
+          5.506459712982178,
+          5.459808826446533,
+          5.442127227783203
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-large-depth-seed1/experiment.json": "4262e01a10f5e0f7527c10d9f6e9f5b298c60452f7a7ae43ae58c8288de5267b",
+        "runs/sparsemax-easy-large-depth-seed1/result.json": "de8fc3734a36099b9f1fc59dff3a2cb43289ecdd756a5d63a02dcc7104d95c94",
+        "runs/sparsemax-easy-large-depth-seed1/history.jsonl": "da825b2cb950d29fc4d6281dc53c1230007824f4b867434e0a3b7f963d5aa966",
+        "runs/sparsemax-easy-large-depth-seed1/diagnostics.jsonl": "dda06fd70966a585df28db146e3da2bfda5fbe73e38aea29aa883f205d2d65fc"
+      }
+    },
+    "sparsemax-easy-large-recall-seed1": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 2200,
+        "reason": "solved"
+      },
+      "pass_step": 2200,
+      "best_sequence_accuracy": 0.9921875,
+      "best_exact": 508,
+      "validation_rows": 512,
+      "last_batch_loss": 0.004320970270782709,
+      "last_batch_loss_step": 2200,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          2.02816104888916,
+          2.9777793884277344,
+          5.235071659088135,
+          2.0168728828430176
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          3.6160552501678467,
+          3.5651869773864746,
+          3.517512083053589,
+          3.3437459468841553
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          2.6399056911468506,
+          3.0914361476898193,
+          2.665585994720459,
+          3.1269516944885254
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          2.864757537841797,
+          3.185208320617676,
+          2.84623122215271,
+          3.1347553730010986
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          3.2104856967926025,
+          3.0640881061553955,
+          3.1968491077423096,
+          2.994067430496216
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          3.1498124599456787,
+          3.096214771270752,
+          3.1782138347625732,
+          3.074397325515747
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-large-recall-seed1/experiment.json": "69f08333efe3ee0f07b04a3a96e90e75fa463eb356c507bef14c0236e4764e42",
+        "runs/sparsemax-easy-large-recall-seed1/result.json": "cc8cb46f75d13cd6ddccfa48ecdcb1725f6db0ce2bee60ef95d1dbfc2b97882c",
+        "runs/sparsemax-easy-large-recall-seed1/history.jsonl": "05fefd035974d49cd2df481b1d819c024539833982622955b86eacf57d45d5de",
+        "runs/sparsemax-easy-large-recall-seed1/diagnostics.jsonl": "5d1ca6e47ac5b033d1d072b3e6b74c889faa78268ffe57ed81560a77c5b74866"
+      }
+    },
+    "sparsemax-easy-large-parity-seed1": {
+      "selection": "validation",
+      "rate": 0.0003,
+      "budget": {
+        "type": "Budget",
+        "updates": 20000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 16800,
+        "reason": "solved"
+      },
+      "pass_step": 16800,
+      "best_sequence_accuracy": 0.9921875,
+      "best_exact": 508,
+      "validation_rows": 512,
+      "last_batch_loss": 0.028668900951743126,
+      "last_batch_loss_step": 16800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          2.714406967163086,
+          2.859442710876465,
+          2.7331900596618652,
+          2.9031004905700684
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          2.780273199081421,
+          2.7222840785980225,
+          3.14764404296875,
+          2.9141411781311035
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          2.6005656719207764,
+          2.890011787414551,
+          2.6792402267456055,
+          2.9522972106933594
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          2.762845993041992,
+          2.891434907913208,
+          2.489180564880371,
+          2.770157814025879
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          2.6847546100616455,
+          2.593954086303711,
+          2.8191025257110596,
+          2.7208354473114014
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          2.825162410736084,
+          2.8565375804901123,
+          2.8323612213134766,
+          2.6405858993530273
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-large-parity-seed1/experiment.json": "e72377182496cb7a0d4e46429acb490cc633803a9945f31a616460d954441bf4",
+        "runs/sparsemax-easy-large-parity-seed1/result.json": "356eb1ad3f2b85a81a74908cac622738a2e6ff29e0fd927dddcf8e072e01ed96",
+        "runs/sparsemax-easy-large-parity-seed1/history.jsonl": "e8a745108e80eadd28fa4c53751f751d0faf55e7b427a1708dfca5885dd93a04",
+        "runs/sparsemax-easy-large-parity-seed1/diagnostics.jsonl": "574da990465ed9d3d9a8bdf501c55c2a4dac06e1cb606e9ab166a5e406104136"
+      }
+    },
+    "sparsemax-easy-large-depth-seed2": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 2000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "pass_step": 200,
+      "best_sequence_accuracy": 1.0,
+      "best_exact": 512,
+      "validation_rows": 512,
+      "last_batch_loss": 0.005001584067940712,
+      "last_batch_loss_step": 200,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          5.407011032104492,
+          5.500810146331787,
+          5.459625244140625,
+          5.481900691986084
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          5.41195821762085,
+          5.554738998413086,
+          5.4422101974487305,
+          5.4333109855651855
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          5.4867329597473145,
+          5.471129417419434,
+          5.562568187713623,
+          5.506163120269775
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          5.4616193771362305,
+          5.461050987243652,
+          5.455838203430176,
+          5.4974589347839355
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          5.469297409057617,
+          5.492737770080566,
+          5.4651689529418945,
+          5.491497039794922
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          5.452523708343506,
+          5.468932628631592,
+          5.466129779815674,
+          5.528537750244141
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-large-depth-seed2/experiment.json": "13ba6e6d45e506ff58c9d8baa6c4828d899a8fea978a6a65b75c1e9159e701cc",
+        "runs/sparsemax-easy-large-depth-seed2/result.json": "90b2b7c9394b0efa77487ea43d558ec1ee79cfda48df2cdd16f62e56b020f4fb",
+        "runs/sparsemax-easy-large-depth-seed2/history.jsonl": "b9fe4382d70a268eee7b5c74a8a571b9ce7bc4ec277c5011ef5dfdfb42a28b51",
+        "runs/sparsemax-easy-large-depth-seed2/diagnostics.jsonl": "b1c0d065ea63b8aa3189895bdfab881c9a0b6490faa4cbbae1a7c76b20a29a9f"
+      }
+    },
+    "sparsemax-easy-large-recall-seed2": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "pass_step": null,
+      "best_sequence_accuracy": 0.802734375,
+      "best_exact": 411,
+      "validation_rows": 512,
+      "last_batch_loss": 0.10072635114192963,
+      "last_batch_loss_step": 4800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          1.6546441316604614,
+          3.639420986175537,
+          2.0872178077697754,
+          2.329590320587158
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          2.1955087184906006,
+          6.190392017364502,
+          3.5024681091308594,
+          1.666473388671875
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          1.9862045049667358,
+          3.6230974197387695,
+          2.471005916595459,
+          6.332433700561523
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          7.754670143127441,
+          5.795478343963623,
+          7.697322845458984,
+          3.7994179725646973
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          6.966248512268066,
+          13.145999908447266,
+          6.173367023468018,
+          11.039502143859863
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          4.421269416809082,
+          4.28285026550293,
+          3.554030656814575,
+          2.8900463581085205
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-large-recall-seed2/experiment.json": "acde3617cba8f0ca2d89db58d2bf343366eb5f1cf2ded040b23a08dbb0773c06",
+        "runs/sparsemax-easy-large-recall-seed2/result.json": "86f77b7fb7eca3b2c778924bf0aa5fa1688c64224eeb9aee7bfe853e180db086",
+        "runs/sparsemax-easy-large-recall-seed2/history.jsonl": "1befecf2a2a002e68fe6a974f88d2ccdcf94aead56a43cda2b6918dd5695d0fb",
+        "runs/sparsemax-easy-large-recall-seed2/diagnostics.jsonl": "15bd5d185900a40cb498657bcbf9cc1f812495228099278049d68cfc7eecee49"
+      }
+    },
+    "sparsemax-easy-large-parity-seed2": {
+      "selection": "validation",
+      "rate": 0.0003,
+      "budget": {
+        "type": "Budget",
+        "updates": 20000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 16800,
+        "reason": "solved"
+      },
+      "pass_step": 16800,
+      "best_sequence_accuracy": 0.990234375,
+      "best_exact": 507,
+      "validation_rows": 512,
+      "last_batch_loss": 0.0006403816514648497,
+      "last_batch_loss_step": 16800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          2.7597413063049316,
+          2.857152223587036,
+          2.9398162364959717,
+          2.892944812774658
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          2.8075594902038574,
+          2.643202066421509,
+          2.928244113922119,
+          2.804245710372925
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          2.7172787189483643,
+          2.9005508422851562,
+          2.812786817550659,
+          2.7373008728027344
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          2.6577658653259277,
+          2.505833864212036,
+          2.8642356395721436,
+          2.8661134243011475
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          2.690293788909912,
+          2.7676901817321777,
+          2.6719510555267334,
+          2.8068339824676514
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          3.352081060409546,
+          2.9664502143859863,
+          2.832488536834717,
+          3.078734874725342
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-large-parity-seed2/experiment.json": "cbe797f36456e76193a24d09c977946f8c15d14fc4d599fc3f50902868ed36e4",
+        "runs/sparsemax-easy-large-parity-seed2/result.json": "310c17824804d97649ca95a1a8a1a679ca1acbdba6e5603af30e9802024dab08",
+        "runs/sparsemax-easy-large-parity-seed2/history.jsonl": "9f83c734718e5b1cd03418618f3cbcee5f3df65afacfab08f553315c84d19f90",
+        "runs/sparsemax-easy-large-parity-seed2/diagnostics.jsonl": "d03272dc17fe44cf091c42207b47c5334dd6147b8acee75fbdd76e67ed72ceca"
+      }
+    },
+    "sparsemax-hard-large-depth-seed0": {
+      "selection": "validation/length-128",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 10000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 600,
+        "reason": "solved"
+      },
+      "pass_step": 600,
+      "best_sequence_accuracy": 1.0,
+      "best_exact": 512,
+      "validation_rows": 512,
+      "last_batch_loss": 0.000161123025463894,
+      "last_batch_loss_step": 600,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          5.174032211303711,
+          5.113205432891846,
+          4.966504096984863,
+          5.198050498962402
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          5.061405658721924,
+          5.004786968231201,
+          5.081528186798096,
+          5.314891815185547
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          5.025428771972656,
+          5.067570686340332,
+          5.202226161956787,
+          5.0132737159729
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          4.954766273498535,
+          5.088834762573242,
+          5.048420429229736,
+          5.290948867797852
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          5.185540199279785,
+          5.135575771331787,
+          5.142717361450195,
+          5.0500807762146
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          4.980867385864258,
+          5.116691589355469,
+          5.0907440185546875,
+          5.166439056396484
+        ]
+      },
+      "source": {
+        "runs/sparsemax-hard-large-depth-seed0/experiment.json": "6bdf4a2210f2d615c70962b7a9498d90c710d3f615d9993c881a881fb507570d",
+        "runs/sparsemax-hard-large-depth-seed0/result.json": "67f33557aeff8fda350941bccff37326b6895b2e232f1973bf1bb7ce8336c250",
+        "runs/sparsemax-hard-large-depth-seed0/history.jsonl": "782e423060f976c8789da1ef41c125bc972f873c7fbb314b0e5d5fb1d390a3cb",
+        "runs/sparsemax-hard-large-depth-seed0/diagnostics.jsonl": "5eef4b8b520c6bfac35dfe1a050d7f8e991238d23c408df18a73fac4effb95cd"
+      }
+    },
+    "sparsemax-hard-large-recall-seed0": {
+      "selection": "validation",
+      "rate": 0.0003,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 3900,
+        "reason": "solved"
+      },
+      "pass_step": 3900,
+      "best_sequence_accuracy": 0.990234375,
+      "best_exact": 507,
+      "validation_rows": 512,
+      "last_batch_loss": 0.04131389781832695,
+      "last_batch_loss_step": 3900,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          3.53899884223938,
+          3.397927761077881,
+          3.8565893173217773,
+          3.8671483993530273
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          4.118103981018066,
+          4.564933776855469,
+          3.726461410522461,
+          3.9359216690063477
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          5.185117244720459,
+          4.935042381286621,
+          4.667954444885254,
+          5.177647113800049
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          4.983645915985107,
+          5.3400187492370605,
+          5.098595142364502,
+          5.500804901123047
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          6.239048004150391,
+          5.964207172393799,
+          6.297731399536133,
+          6.207609176635742
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          4.765048503875732,
+          5.528323650360107,
+          4.859615325927734,
+          4.874013423919678
+        ]
+      },
+      "source": {
+        "runs/sparsemax-hard-large-recall-seed0/experiment.json": "f26e09eda8bcb20c6fbe4f7ff91f3f73ed84e9c3d101d6a2ed53b02efdfc4380",
+        "runs/sparsemax-hard-large-recall-seed0/result.json": "f105df77e314f35a22a5a0ece67a8a35afe47d3d8a9d341484e4a1b48fe342d7",
+        "runs/sparsemax-hard-large-recall-seed0/history.jsonl": "c51cf52e672f880a9a8d3a39336f34645f3e4d1865ae2d02142d456e75d486b8",
+        "runs/sparsemax-hard-large-recall-seed0/diagnostics.jsonl": "ba36667987c33863f0293cd2577fe673a1879220e6e6fa05ab3097294ac5657b"
+      }
+    },
+    "sparsemax-hard-large-depth-seed1": {
+      "selection": "validation/length-128",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 10000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 400,
+        "reason": "solved"
+      },
+      "pass_step": 400,
+      "best_sequence_accuracy": 0.990234375,
+      "best_exact": 507,
+      "validation_rows": 512,
+      "last_batch_loss": 0.0005546071333810687,
+      "last_batch_loss_step": 400,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          5.245296955108643,
+          5.219631671905518,
+          5.31386137008667,
+          5.3129377365112305
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          5.25020170211792,
+          5.200010776519775,
+          5.166380882263184,
+          5.251480579376221
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          5.216659069061279,
+          5.327001571655273,
+          5.36559534072876,
+          5.190273761749268
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          5.231871128082275,
+          5.262054443359375,
+          5.154477119445801,
+          5.074377059936523
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          5.3708038330078125,
+          5.608778476715088,
+          5.232187747955322,
+          5.15966796875
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          5.278890132904053,
+          5.3019585609436035,
+          5.250202655792236,
+          5.238840103149414
+        ]
+      },
+      "source": {
+        "runs/sparsemax-hard-large-depth-seed1/experiment.json": "18bc5b284e2280f8a3b197d7ca4992f3c16c2b7b95c7e110083a0153d8badfae",
+        "runs/sparsemax-hard-large-depth-seed1/result.json": "98d596c219a34faf9f246c5fadbe6ddc3df08c2427cc231380bf14a1d3abc2f4",
+        "runs/sparsemax-hard-large-depth-seed1/history.jsonl": "ac962e3a6d96a994bf17715777cc9454d9451a05acf19fd98f0c67f50e61179e",
+        "runs/sparsemax-hard-large-depth-seed1/diagnostics.jsonl": "ab0469e075dcdd291294e9e949b2a2959a9a0127a6cff7260597ea258242c809"
+      }
+    },
+    "sparsemax-hard-large-recall-seed1": {
+      "selection": "validation",
+      "rate": 0.0003,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "pass_step": null,
+      "best_sequence_accuracy": 0.986328125,
+      "best_exact": 505,
+      "validation_rows": 512,
+      "last_batch_loss": 0.027439070865511894,
+      "last_batch_loss_step": 4800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          3.473170518875122,
+          3.118654251098633,
+          3.229522466659546,
+          3.149481773376465
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          3.372519016265869,
+          3.7301905155181885,
+          3.9998626708984375,
+          4.017105579376221
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          5.713512897491455,
+          5.740860462188721,
+          5.911396026611328,
+          5.984532833099365
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          4.904575347900391,
+          5.222970485687256,
+          5.216046333312988,
+          5.144257545471191
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          5.386510372161865,
+          5.58279275894165,
+          4.232285499572754,
+          5.5150041580200195
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          3.7723169326782227,
+          3.383219003677368,
+          3.54923677444458,
+          3.8727240562438965
+        ]
+      },
+      "source": {
+        "runs/sparsemax-hard-large-recall-seed1/experiment.json": "f7a67c58e6181e1f4413c8d8ffa374931cb76f8429edb388cb8a3ac1ab961e7f",
+        "runs/sparsemax-hard-large-recall-seed1/result.json": "4ffc0797e2470054aa458d92c7262b77fadc225ef3a80c84adfcf889bf62e654",
+        "runs/sparsemax-hard-large-recall-seed1/history.jsonl": "7e584c297622c14fde3eb4b9d96d2559c0cdea88302ee97ea5aef5719632c00a",
+        "runs/sparsemax-hard-large-recall-seed1/diagnostics.jsonl": "bb9fcb2a5a7d7d0e0e0d439dbdba3e8b118e268d20703f63d5d33bbfa053a90b"
+      }
+    },
+    "sparsemax-hard-large-depth-seed2": {
+      "selection": "validation/length-128",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 10000,
+        "batch": 16
+      },
+      "stop": {
+        "step": 600,
+        "reason": "solved"
+      },
+      "pass_step": 600,
+      "best_sequence_accuracy": 0.998046875,
+      "best_exact": 511,
+      "validation_rows": 512,
+      "last_batch_loss": 0.0004346182104200125,
+      "last_batch_loss_step": 600,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          5.057661533355713,
+          5.229788303375244,
+          4.982508182525635,
+          5.08309268951416
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          5.044488430023193,
+          5.088979721069336,
+          5.212762355804443,
+          4.997931480407715
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          5.031953811645508,
+          4.945275783538818,
+          5.077312469482422,
+          5.401933670043945
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          5.005290985107422,
+          4.5580291748046875,
+          5.0166168212890625,
+          4.9819416999816895
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          5.403026580810547,
+          5.201510906219482,
+          4.931427478790283,
+          5.132644176483154
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          4.543154716491699,
+          5.297280311584473,
+          4.93435525894165,
+          5.38690185546875
+        ]
+      },
+      "source": {
+        "runs/sparsemax-hard-large-depth-seed2/experiment.json": "5243ab64b4b48233b4ff97f6f27aa5b4824f832734187990ce3113b29dd62e6a",
+        "runs/sparsemax-hard-large-depth-seed2/result.json": "b9aa884efdd406b3b33365c19bcfef93124b30fa5d50eb84cddcfbc1b6ee5d3e",
+        "runs/sparsemax-hard-large-depth-seed2/history.jsonl": "c190a0f11af0f03e7cd3359dc642ec7a23c62588999ba91612dbc2d2d2083da1",
+        "runs/sparsemax-hard-large-depth-seed2/diagnostics.jsonl": "1d1846d0eb22f7f46850fe2acbc7f2cd560f9d6b9a3a91879734b18b00d57ff9"
+      }
+    },
+    "sparsemax-hard-large-recall-seed2": {
+      "selection": "validation",
+      "rate": 0.0003,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "pass_step": null,
+      "best_sequence_accuracy": 0.9765625,
+      "best_exact": 500,
+      "validation_rows": 512,
+      "last_batch_loss": 0.007515373639762402,
+      "last_batch_loss_step": 4800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          2.9910106658935547,
+          3.0319955348968506,
+          3.106403112411499,
+          3.0200884342193604
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          3.6405773162841797,
+          3.103264570236206,
+          4.381147384643555,
+          4.170955181121826
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          4.904946804046631,
+          4.485103607177734,
+          4.91801643371582,
+          4.611863613128662
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          6.00695276260376,
+          5.48490571975708,
+          6.140250205993652,
+          6.166131496429443
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          4.77091646194458,
+          5.076899528503418,
+          4.732790946960449,
+          4.6588921546936035
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          4.678582191467285,
+          3.6404623985290527,
+          4.691400051116943,
+          3.407060384750366
+        ]
+      },
+      "source": {
+        "runs/sparsemax-hard-large-recall-seed2/experiment.json": "c2efae1a642ae3b8e025451043b28852765ba9e6044dfb86f1271ddffd0c5f90",
+        "runs/sparsemax-hard-large-recall-seed2/result.json": "82cc03a3ee733b1186c766de693d41f186feb85dc4d6a8379b6e574a0c392169",
+        "runs/sparsemax-hard-large-recall-seed2/history.jsonl": "08674f189637efef6c1de7e3ba8cc17cb7a4425c17323b2bb1edd78637605291",
+        "runs/sparsemax-hard-large-recall-seed2/diagnostics.jsonl": "e537ff8af4a22e7a4bcccff9ec5b82acf35d9a925702bb3a648fc250ce6f9aa3"
+      }
+    },
+    "sparsemax-easy-large-recall-seed2-lr3e-3": {
+      "selection": "validation",
+      "rate": 0.003,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 2800,
+        "reason": "solved"
+      },
+      "pass_step": 2800,
+      "best_sequence_accuracy": 0.990234375,
+      "best_exact": 507,
+      "validation_rows": 512,
+      "last_batch_loss": 0.02314181998372078,
+      "last_batch_loss_step": 2800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          0.9748669862747192,
+          1.3433040380477905,
+          4.751394748687744,
+          1.316888451576233
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          1.2855322360992432,
+          9.968923568725586,
+          7.687965393066406,
+          1.1624798774719238
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          2.979170083999634,
+          4.70319128036499,
+          2.2914621829986572,
+          1.9133049249649048
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          7.409433364868164,
+          7.517892360687256,
+          4.4028401374816895,
+          5.973311424255371
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          1.5221588611602783,
+          2.4408822059631348,
+          2.4820055961608887,
+          4.825272083282471
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          3.2096259593963623,
+          3.7420852184295654,
+          1.2445106506347656,
+          2.8723995685577393
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-large-recall-seed2-lr3e-3/experiment.json": "cf50132f4842dac79936992a1a28935576bd42d08efad708844cd8428ca1b9a7",
+        "runs/sparsemax-easy-large-recall-seed2-lr3e-3/result.json": "e514e175cc98df6296b8a9ca406aae8886171789928c069d79dcbf665492ee3e",
+        "runs/sparsemax-easy-large-recall-seed2-lr3e-3/history.jsonl": "0add746c50884c952e33e94688afa06b404146a4f44cde40532b95015be9f80d",
+        "runs/sparsemax-easy-large-recall-seed2-lr3e-3/diagnostics.jsonl": "829ebf47459b36d0ed5f1266339cc375b243388fee9611fe37adf15d2e3a6d9d"
+      }
+    },
+    "sparsemax-easy-large-recall-seed2-lr3e-4": {
+      "selection": "validation",
+      "rate": 0.0003,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 2750,
+        "reason": "solved"
+      },
+      "pass_step": 2750,
+      "best_sequence_accuracy": 0.9921875,
+      "best_exact": 508,
+      "validation_rows": 512,
+      "last_batch_loss": 0.007361405994743109,
+      "last_batch_loss_step": 2750,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          3.524548292160034,
+          4.014163494110107,
+          3.9657275676727295,
+          4.3745598793029785
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          4.29069709777832,
+          4.027816295623779,
+          4.058727741241455,
+          3.9435596466064453
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          4.115607261657715,
+          4.593789100646973,
+          4.4868669509887695,
+          4.143694877624512
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          4.789601802825928,
+          4.805789470672607,
+          4.796761989593506,
+          4.725238800048828
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          4.928348064422607,
+          4.829122066497803,
+          4.978456020355225,
+          4.924442291259766
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          4.988946914672852,
+          4.793463706970215,
+          4.919210433959961,
+          4.816328048706055
+        ]
+      },
+      "source": {
+        "runs/sparsemax-easy-large-recall-seed2-lr3e-4/experiment.json": "ad58a4998f23555bb056e82a6bbc44399fba00ed06a25256add9927eff5b4b0e",
+        "runs/sparsemax-easy-large-recall-seed2-lr3e-4/result.json": "5576c45274ae1d72a80e0c5f69f9a2ddffed0fb219ea022e80b66c02f67e068b",
+        "runs/sparsemax-easy-large-recall-seed2-lr3e-4/history.jsonl": "79f5faef83243cfdae39118914a2d2ba0beeca89fb2abcbcd831012f5a1e9e8c",
+        "runs/sparsemax-easy-large-recall-seed2-lr3e-4/diagnostics.jsonl": "4c99c03524443087f23f64323672f1779143fd9b9673c6643276095ab73ea7d7"
+      }
+    },
+    "sparsemax-hard-large-recall-seed1-lr1e-3": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "pass_step": null,
+      "best_sequence_accuracy": 0.0,
+      "best_exact": 0,
+      "validation_rows": 512,
+      "last_batch_loss": 1.5680084228515625,
+      "last_batch_loss_step": 4800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          2.2320914268493652,
+          2.042508602142334,
+          3.1554596424102783,
+          2.0716216564178467
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          1.9532878398895264,
+          1.9521961212158203,
+          2.275265693664551,
+          1.9592878818511963
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          2.4530346393585205,
+          1.9626328945159912,
+          1.9816313982009888,
+          1.9636366367340088
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          2.1118977069854736,
+          2.056612253189087,
+          2.1199452877044678,
+          2.0631167888641357
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          2.2866218090057373,
+          2.3039867877960205,
+          2.2980759143829346,
+          2.2180733680725098
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          4.001530170440674,
+          2.371438980102539,
+          2.28534197807312,
+          2.4767937660217285
+        ]
+      },
+      "source": {
+        "runs/sparsemax-hard-large-recall-seed1-lr1e-3/experiment.json": "9934fa5ccdd88325e70531e5ae7d82c9ae452d31e2cb421794d50cee7e2019e2",
+        "runs/sparsemax-hard-large-recall-seed1-lr1e-3/result.json": "a88fb4f7e2110125c5139a14601b848662a31bee996c39c7e754f8da0b6ba379",
+        "runs/sparsemax-hard-large-recall-seed1-lr1e-3/history.jsonl": "01feca44db2405d17df7da0577def5e17765f3eb0f961ab4364593849c4a7788",
+        "runs/sparsemax-hard-large-recall-seed1-lr1e-3/diagnostics.jsonl": "05b3f0857f5e28daff1d8c9b1a4cf8b0eef6e0f0fae74cc2607feea967892683"
+      }
+    },
+    "sparsemax-hard-large-recall-seed1-lr1e-4": {
+      "selection": "validation",
+      "rate": 0.0001,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "pass_step": null,
+      "best_sequence_accuracy": 0.0,
+      "best_exact": 0,
+      "validation_rows": 512,
+      "last_batch_loss": 3.783087730407715,
+      "last_batch_loss_step": 4800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          4.657697677612305,
+          4.656428337097168,
+          4.674230098724365,
+          4.652228355407715
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          4.7134857177734375,
+          4.772218704223633,
+          4.742898941040039,
+          4.724838733673096
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          4.822085857391357,
+          4.84372091293335,
+          4.93608283996582,
+          4.916030406951904
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          5.030271530151367,
+          5.252530097961426,
+          5.221671104431152,
+          5.138253211975098
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          5.449674129486084,
+          5.364907264709473,
+          5.262086391448975,
+          5.332670211791992
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          5.331811904907227,
+          5.119054317474365,
+          5.011467933654785,
+          5.129215240478516
+        ]
+      },
+      "source": {
+        "runs/sparsemax-hard-large-recall-seed1-lr1e-4/experiment.json": "2e7d81f4a5568a089d981dca575ebfacdae142a5e72016345ca0e747abaa1682",
+        "runs/sparsemax-hard-large-recall-seed1-lr1e-4/result.json": "434098098d00da6d7d1122cdcdac908278dc3cb8bc2548a314a119fdbf1d03d4",
+        "runs/sparsemax-hard-large-recall-seed1-lr1e-4/history.jsonl": "31996f4a8e6183e3cd51ba710c24cd48b54e24c2bd27318bdbb0c11e12d35b21",
+        "runs/sparsemax-hard-large-recall-seed1-lr1e-4/diagnostics.jsonl": "ba785d52ef27414c4f6d5799bef5e2a80e2c7bc69c74f5beca8749cf913cbca6"
+      }
+    },
+    "sparsemax-hard-large-recall-seed2-lr1e-3": {
+      "selection": "validation",
+      "rate": 0.001,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "pass_step": null,
+      "best_sequence_accuracy": 0.0,
+      "best_exact": 0,
+      "validation_rows": 512,
+      "last_batch_loss": 1.520637035369873,
+      "last_batch_loss_step": 4800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          1.9625216722488403,
+          1.9921233654022217,
+          1.8652616739273071,
+          3.414764881134033
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          2.07783842086792,
+          1.9568450450897217,
+          1.9645167589187622,
+          1.9499212503433228
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          1.9563648700714111,
+          2.0795176029205322,
+          1.9799869060516357,
+          2.2592968940734863
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          2.20237398147583,
+          2.0900399684906006,
+          2.174278497695923,
+          2.1052026748657227
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          2.2202954292297363,
+          2.378202438354492,
+          2.2767913341522217,
+          2.3393442630767822
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          4.658567905426025,
+          2.5394341945648193,
+          2.401789903640747,
+          2.519160747528076
+        ]
+      },
+      "source": {
+        "runs/sparsemax-hard-large-recall-seed2-lr1e-3/experiment.json": "d45c0fe728f35b2127f86eec4000fbd231d3a89786d825eba78a8e56f6045070",
+        "runs/sparsemax-hard-large-recall-seed2-lr1e-3/result.json": "cfb361d6f8373fbc91be999c74cda2fc12d3a7fd2e9a9c44f21fbc7be2221b50",
+        "runs/sparsemax-hard-large-recall-seed2-lr1e-3/history.jsonl": "1329cf87f66f8071c65c379fbb05475ff9a0acdd29df8625fc16d143169d90af",
+        "runs/sparsemax-hard-large-recall-seed2-lr1e-3/diagnostics.jsonl": "63eb0aaf1c87d7944c311094099a98e11be181df2d4d47d20c70afc2cf200d94"
+      }
+    },
+    "sparsemax-hard-large-recall-seed2-lr1e-4": {
+      "selection": "validation",
+      "rate": 0.0001,
+      "budget": {
+        "type": "Budget",
+        "updates": 4800,
+        "batch": 64
+      },
+      "stop": {
+        "step": 4800,
+        "reason": "budget"
+      },
+      "pass_step": null,
+      "best_sequence_accuracy": 0.0,
+      "best_exact": 0,
+      "validation_rows": 512,
+      "last_batch_loss": 3.886575937271118,
+      "last_batch_loss_step": 4800,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": [
+          4.797844409942627,
+          4.735281944274902,
+          4.633551597595215,
+          4.734058380126953
+        ],
+        "blocks.1.attention.scores.log_alpha": [
+          4.7741193771362305,
+          4.6981353759765625,
+          4.776793956756592,
+          4.737257480621338
+        ],
+        "blocks.2.attention.scores.log_alpha": [
+          4.893345355987549,
+          4.886812210083008,
+          4.834043502807617,
+          4.789613246917725
+        ],
+        "blocks.3.attention.scores.log_alpha": [
+          5.100650310516357,
+          5.228368759155273,
+          5.136417865753174,
+          5.141113758087158
+        ],
+        "blocks.4.attention.scores.log_alpha": [
+          5.261962890625,
+          5.129261016845703,
+          4.745490550994873,
+          5.252477645874023
+        ],
+        "blocks.5.attention.scores.log_alpha": [
+          5.251569747924805,
+          5.052722930908203,
+          5.018258571624756,
+          5.186586380004883
+        ]
+      },
+      "source": {
+        "runs/sparsemax-hard-large-recall-seed2-lr1e-4/experiment.json": "a446d32b046b628bfd09ffa9bf8e55145c707498821feebb3bfeddfd3642f1d9",
+        "runs/sparsemax-hard-large-recall-seed2-lr1e-4/result.json": "20f8832823cc6663972d20f80c82c7ff0aecc7d95f03a0f4c5f2fbd6e921c6db",
+        "runs/sparsemax-hard-large-recall-seed2-lr1e-4/history.jsonl": "eee3961d78876da9530741baf6a5cf7c3fdcfcbbf813e5c4af7ad5408139604b",
+        "runs/sparsemax-hard-large-recall-seed2-lr1e-4/diagnostics.jsonl": "67129cc151398ad5c8359985e47d38df6c5bc7988e233e4cc5939aafb6a3dbea"
+      }
+    }
+  }
+}
