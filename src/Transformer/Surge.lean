@@ -12,10 +12,16 @@ makes it:
 * the limit of eq. (29) needs `G_t ≠ 0`, and fails without it
   (`SectionA_SignUpdate`);
 * eq. (36) needs the coordinates of `G_est` independent: the per-sample gradients of all
-  the parameters are taken independent (`SectionC_SignMoments`).
+  the parameters are taken independent (`SectionC_SignMoments`);
+* Theorem 2, as Lemma 1, needs a positive denominator, which a positive semidefinite
+  nonzero Hessian gives (`Section2_Theorem2`);
+* the "≈" of eq. (10) is not an equality; it holds as a ratio tending to `1` as `B → 0`
+  and as `B → ∞` (`Section2_SignApprox`).
 -/
 
 import Transformer.Surge.Section2_Lemma1
+import Transformer.Surge.Section2_SignApprox
+import Transformer.Surge.Section2_Theorem2
 import Transformer.Surge.SectionA_AdamMoments
 import Transformer.Surge.SectionA_SignUpdate
 import Transformer.Surge.SectionC_SignMoments
