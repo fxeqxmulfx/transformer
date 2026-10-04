@@ -28,8 +28,8 @@ for it.  Zoology argues from the randomized index bound; an exact recognizer
 needs only the deterministic one, a pigeonhole
 (`Transformer.Zoology.exact_index_requires_bits` states it for bits).  Below
 `c - 1` rows nothing is claimed.  Attention comparing a query with a key
-recalls in width `5` at `p = O(log c + log n)` bits (`matcher_answers`), so at
-every depth and width the two separate (`exists_matcher_not_queryFree`).
+recalls in width `5` at `p = O(log c)` bits whatever `n` (`matcher_answers`),
+so at every depth and width the two separate (`exists_matcher_not_queryFree`).
 -/
 
 import Transformer.CRASP.AlignedRecall

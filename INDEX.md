@@ -5214,7 +5214,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`MajRects.Represents`](src/Transformer/CRASP/MajTwoTranslation.lean#L20) | def |  |
 | [`Maj2.exists_rectangles`](src/Transformer/CRASP/MajTwoTranslation.lean#L25) | theorem | proved |
 
-**[Transformer.CRASP.MatchingRecall](src/Transformer/CRASP/MatchingRecall.lean)** — 199 lines
+**[Transformer.CRASP.MatchingRecall](src/Transformer/CRASP/MatchingRecall.lean)** — 200 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -5224,36 +5224,36 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`entry`](src/Transformer/CRASP/MatchingRecall.lean#L60) | def |  |
 | [`embed`](src/Transformer/CRASP/MatchingRecall.lean#L64) | def |  |
 | [`matcher`](src/Transformer/CRASP/MatchingRecall.lean#L76) | def |  |
-| [`val_ofInt_of_le`](src/Transformer/CRASP/MatchingRecall.lean#L90) | theorem | proved |
-| [`entry_embed`](src/Transformer/CRASP/MatchingRecall.lean#L104) | theorem | proved |
-| [`score_matcher_none`](src/Transformer/CRASP/MatchingRecall.lean#L122) | theorem | proved |
-| [`score_matcher_some`](src/Transformer/CRASP/MatchingRecall.lean#L128) | theorem | proved |
-| [`two_pow_lt_exp`](src/Transformer/CRASP/MatchingRecall.lean#L165) | theorem | proved |
-| [`val_round_exp`](src/Transformer/CRASP/MatchingRecall.lean#L172) | theorem | proved |
+| [`val_ofInt_of_le`](src/Transformer/CRASP/MatchingRecall.lean#L91) | theorem | proved |
+| [`entry_embed`](src/Transformer/CRASP/MatchingRecall.lean#L105) | theorem | proved |
+| [`score_matcher_none`](src/Transformer/CRASP/MatchingRecall.lean#L123) | theorem | proved |
+| [`score_matcher_some`](src/Transformer/CRASP/MatchingRecall.lean#L129) | theorem | proved |
+| [`two_pow_lt_exp`](src/Transformer/CRASP/MatchingRecall.lean#L166) | theorem | proved |
+| [`val_round_exp`](src/Transformer/CRASP/MatchingRecall.lean#L173) | theorem | proved |
 
-**[Transformer.CRASP.MatchingRecallAnswers](src/Transformer/CRASP/MatchingRecallAnswers.lean)** — 198 lines
-
-| declaration | kind | status |
-| --- | --- | --- |
-| [`actAt_matcher`](src/Transformer/CRASP/MatchingRecallAnswers.lean#L29) | theorem | proved |
-| [`mul_div_le_iff`](src/Transformer/CRASP/MatchingRecallAnswers.lean#L90) | theorem | proved |
-| [`card_filter_last`](src/Transformer/CRASP/MatchingRecallAnswers.lean#L113) | theorem | proved |
-| [`priorAnswer_iff_pos`](src/Transformer/CRASP/MatchingRecallAnswers.lean#L120) | theorem | proved |
-| [`matcher_answers`](src/Transformer/CRASP/MatchingRecallAnswers.lean#L136) | theorem | proved |
-
-**[Transformer.CRASP.MatchingRecallSums](src/Transformer/CRASP/MatchingRecallSums.lean)** — 160 lines
+**[Transformer.CRASP.MatchingRecallAnswers](src/Transformer/CRASP/MatchingRecallAnswers.lean)** — 169 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`two_pow_lt_of_le`](src/Transformer/CRASP/MatchingRecallSums.lean#L24) | theorem | proved |
-| [`val_round_one`](src/Transformer/CRASP/MatchingRecallSums.lean#L35) | theorem | proved |
-| [`val_weight_none`](src/Transformer/CRASP/MatchingRecallSums.lean#L43) | theorem | proved |
-| [`val_weight_some`](src/Transformer/CRASP/MatchingRecallSums.lean#L54) | theorem | proved |
-| [`val_weighted_none`](src/Transformer/CRASP/MatchingRecallSums.lean#L69) | theorem | proved |
-| [`val_weighted_some`](src/Transformer/CRASP/MatchingRecallSums.lean#L88) | theorem | proved |
-| [`masked_eq_univ`](src/Transformer/CRASP/MatchingRecallSums.lean#L120) | theorem | proved |
-| [`sum_bos_word`](src/Transformer/CRASP/MatchingRecallSums.lean#L130) | theorem | proved |
-| [`layer_matcher`](src/Transformer/CRASP/MatchingRecallSums.lean#L139) | theorem | proved |
+| [`actAt_matcher`](src/Transformer/CRASP/MatchingRecallAnswers.lean#L30) | theorem | proved |
+| [`m_round_nonneg_iff`](src/Transformer/CRASP/MatchingRecallAnswers.lean#L92) | theorem | proved |
+| [`card_filter_last`](src/Transformer/CRASP/MatchingRecallAnswers.lean#L97) | theorem | proved |
+| [`priorAnswer_iff_pos`](src/Transformer/CRASP/MatchingRecallAnswers.lean#L104) | theorem | proved |
+| [`matcher_answers`](src/Transformer/CRASP/MatchingRecallAnswers.lean#L120) | theorem | proved |
+
+**[Transformer.CRASP.MatchingRecallSums](src/Transformer/CRASP/MatchingRecallSums.lean)** — 168 lines
+
+| declaration | kind | status |
+| --- | --- | --- |
+| [`two_pow_lt_of_le`](src/Transformer/CRASP/MatchingRecallSums.lean#L25) | theorem | proved |
+| [`val_round_one`](src/Transformer/CRASP/MatchingRecallSums.lean#L36) | theorem | proved |
+| [`val_weight_none`](src/Transformer/CRASP/MatchingRecallSums.lean#L44) | theorem | proved |
+| [`val_weight_some`](src/Transformer/CRASP/MatchingRecallSums.lean#L55) | theorem | proved |
+| [`val_weighted_none`](src/Transformer/CRASP/MatchingRecallSums.lean#L70) | theorem | proved |
+| [`val_weighted_some`](src/Transformer/CRASP/MatchingRecallSums.lean#L96) | theorem | proved |
+| [`masked_eq_univ`](src/Transformer/CRASP/MatchingRecallSums.lean#L128) | theorem | proved |
+| [`sum_bos_word`](src/Transformer/CRASP/MatchingRecallSums.lean#L138) | theorem | proved |
+| [`layer_matcher`](src/Transformer/CRASP/MatchingRecallSums.lean#L147) | theorem | proved |
 
 **[Transformer.CRASP.Middle](src/Transformer/CRASP/Middle.lean)** — 162 lines
 
@@ -5696,7 +5696,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`priorAnswer_indexInstance`](src/Transformer/CRASP/QueryFreeRecall.lean#L90) | theorem | proved |
 | [`two_pow_le_of_queryFree`](src/Transformer/CRASP/QueryFreeRecall.lean#L118) | theorem | proved |
 
-**[Transformer.CRASP.RecallSeparation](src/Transformer/CRASP/RecallSeparation.lean)** — 190 lines
+**[Transformer.CRASP.RecallSeparation](src/Transformer/CRASP/RecallSeparation.lean)** — 182 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -5704,12 +5704,12 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`eleven_mul_le_two_pow`](src/Transformer/CRASP/RecallSeparation.lean#L33) | theorem | proved |
 | [`mul_lt_two_pow_sub_one`](src/Transformer/CRASP/RecallSeparation.lean#L42) | theorem | proved |
 | [`exists_matcher_not_queryFree`](src/Transformer/CRASP/RecallSeparation.lean#L58) | theorem | proved |
-| [`RTfr.out_eq_of_map`](src/Transformer/CRASP/RecallSeparation.lean#L96) | theorem | proved |
-| [`collide`](src/Transformer/CRASP/RecallSeparation.lean#L121) | def |  |
-| [`consistent_collide`](src/Transformer/CRASP/RecallSeparation.lean#L127) | theorem | proved |
-| [`priorAnswer_collide`](src/Transformer/CRASP/RecallSeparation.lean#L131) | theorem | proved |
-| [`card_le_of_recall`](src/Transformer/CRASP/RecallSeparation.lean#L147) | theorem | proved |
-| [`le_two_pow_of_recall`](src/Transformer/CRASP/RecallSeparation.lean#L175) | theorem | proved |
+| [`RTfr.out_eq_of_map`](src/Transformer/CRASP/RecallSeparation.lean#L88) | theorem | proved |
+| [`collide`](src/Transformer/CRASP/RecallSeparation.lean#L113) | def |  |
+| [`consistent_collide`](src/Transformer/CRASP/RecallSeparation.lean#L119) | theorem | proved |
+| [`priorAnswer_collide`](src/Transformer/CRASP/RecallSeparation.lean#L123) | theorem | proved |
+| [`card_le_of_recall`](src/Transformer/CRASP/RecallSeparation.lean#L139) | theorem | proved |
+| [`le_two_pow_of_recall`](src/Transformer/CRASP/RecallSeparation.lean#L167) | theorem | proved |
 
 **[Transformer.CRASP.ReductionUnsound](src/Transformer/CRASP/ReductionUnsound.lean)** — 128 lines
 

@@ -69,21 +69,22 @@ noncomputable def embed : Option (Fin c × Fin c × Fin c) → Fin 5 → Fx p s
 /-- **The matcher** for the value `v`, of one layer and width `5`
 (Definition `def:transformer`): the query of a token `(a, u, r)` is
 `(-β R², 2βR, -β, 0, 0)` for `R = r + 1` and `β = s + 1`, its key is
-`(1, A, A², 0, 0)` for `A = a + 1`, the key of `⊲` is `0`, and the values are
-`[u = v]` and `[⊲]` in the last two coordinates.  The feed-forward network is
-the identity, and `W_out` accepts when `(1 + [a = r ∧ u = v]) · m₄ ≤ m₃` for
-the last two mantissas `m₃`, `m₄`. -/
+`(1, A, A², 0, 0)` for `A = a + 1`, and its value is `[u = v]` in the last two
+coordinates; the key of `⊲` is `0`, and its values there are `-1` and `-2`.
+The feed-forward network is the identity, and `W_out` accepts when the
+mantissa of coordinate `3 + [a = r ∧ u = v]` is not negative. -/
 noncomputable def matcher (v : Fin c) : RTfr (Option (Fin c × Fin c × Fin c)) p s 5 1 where
   E := embed
   WQ _ h := ![Fx.ofInt p s (-(s + 1) * entry h 2 ^ 2), Fx.ofInt p s (2 * (s + 1) * entry h 2),
     Fx.ofInt p s (-(s + 1)), 0, 0]
   WK _ h := if entry h 0 = 0 then 0 else
     ![Fx.ofInt p s 1, Fx.ofInt p s (entry h 0), Fx.ofInt p s (entry h 0 ^ 2), 0, 0]
-  WV _ h := ![0, 0, 0, if entry h 1 = v.val + 1 then Fx.ofInt p s 1 else 0,
-    if entry h 0 = 0 then Fx.ofInt p s 1 else 0]
+  WV _ h := if entry h 0 = 0 then ![0, 0, 0, Fx.ofInt p s (-1), Fx.ofInt p s (-2)] else
+    ![0, 0, 0, if entry h 1 = v.val + 1 then Fx.ofInt p s 1 else 0,
+      if entry h 1 = v.val + 1 then Fx.ofInt p s 1 else 0]
   ff _ h := h
-  Wout h := if (1 + if entry h 0 = entry h 2 ∧ entry h 1 = v.val + 1 then 1 else 0) * (h 4).m ≤
-    (h 3).m then Fx.ofInt p s 1 else 0
+  Wout h := if 0 ≤ (if entry h 0 = entry h 2 ∧ entry h 1 = v.val + 1 then h 4 else h 3).m
+    then Fx.ofInt p s 1 else 0
 
 /-- The integers the matcher writes, up to `2 (s + 1) c²`, are exact once
 `2 (s + 1) c² 2^s < 2^{p-1}`. -/

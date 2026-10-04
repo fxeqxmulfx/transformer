@@ -80,7 +80,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.QueryFreeRecall` | such a transformer recalls over `c` tokens only if `2^{c-1} ≤ (2^p (n + 1) + 1)^{k (2d + 1)}` |
 | `CRASP.MatchingRecall` | a layer of width `5` whose query meets a key in the score `-(s + 1) (r - a)²` |
 | `CRASP.MatchingRecallSums` | its rounded weights: `1` for `⊲` and for a key equal to the query, `0` otherwise |
-| `CRASP.MatchingRecallAnswers` | it recalls over `c` tokens and `n + 1` rows at `p = O(log c + log n)` bits |
+| `CRASP.MatchingRecallAnswers` | it recalls over `c` tokens at every length at `p = O(log c)` bits, by the sign of a rounded average |
 | `CRASP.RecallSeparation` | at that precision no query-free transformer of a fixed depth and width recalls, and none at all below `p d = log₂ c` |
 | `CRASP.FiniteFunction` | `lem:finite_function`: postcomposing a definable map with any `g : 𝔽 → 𝔽` |
 | `CRASP.ConstantLayer` | above a constant activation a layer computes one vector, and the collapsed transformer |

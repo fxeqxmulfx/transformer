@@ -4,9 +4,10 @@
 In no paper: the attention of `CRASP.MatchingRecall`'s matcher, token by
 token.  Once `2 (s + 1) c² 2^s < 2^{p-1}` over `c` tokens, a query weighs `⊲`
 `1` (`val_weight_none`), and a row `1` when its key is the query and `0`
-otherwise (`val_weight_some`); the values mark `⊲` in the last coordinate
-(`val_weighted_none`) and the rows with value `v` in the fourth
-(`val_weighted_some`).  A sum over `⊲ · word x` is the sum at `⊲` plus one per
+otherwise (`val_weight_some`); weighted, `⊲` contributes `-1` and `-2` in the
+last two coordinates (`val_weighted_none`), and a row `1` in both when its key
+is the query and its value `v` (`val_weighted_some`).  A sum over `⊲ · word x`
+is the sum at `⊲` plus one per
 row (`sum_bos_word`), at the last position every position is visible
 (`masked_eq_univ`), and a coordinate of the matcher's layer is its weighted
 values over its weights once these do not sum to `0` (`layer_matcher`).
@@ -65,32 +66,39 @@ example : (Fx.round 5 1 (Real.exp ((matcher (0 : Fin 1) : RTfr _ 5 1 5 1).score 
     if (0 : Fin 1) = 0 then 1 else 0 :=
   val_weight_some (by norm_num) 0 0 0 0 0 0 0
 
-/-- **`⊲` contributes its mark**, in the last coordinate. -/
-theorem val_weighted_none (hp : (2 : ℤ) ^ s < 2 ^ (p - 1)) (v : Fin c) (q : Fin 5 → Fx p s)
-    (k : Fin 5) :
+/-- **`⊲` contributes `-1` and `-2`**, in the last two coordinates. -/
+theorem val_weighted_none (hp : 2 * (s + 1) * c ^ 2 * 2 ^ s < 2 ^ (p - 1)) (v : Fin c)
+    (q : Fin 5 → Fx p s) (k : Fin 5) :
     (Fx.round p s (Real.exp ((matcher v : RTfr _ p s 5 1).score 0 q (embed (c := c) none)) *
-      ((matcher v : RTfr _ p s 5 1).WV 0 (embed (c := c) none) k).val)).val = if k = 4 then 1 else 0 := by
-  have hv : (0 : ℤ) ≠ v.val + 1 := by omega
-  have h₁ : (Fx.ofInt p s 1).val = 1 := by
-    simpa using Fx.val_ofInt (p := p) (s := s) (z := 1) (by simpa using hp)
+      ((matcher v : RTfr _ p s 5 1).WV 0 (embed (c := c) none) k).val)).val =
+      if k = 3 then -1 else if k = 4 then -2 else 0 := by
+  have hc : (1 : ℤ) ≤ c := by exact_mod_cast Fin.pos v
+  have hb : ∀ z : ℤ, |z| ≤ 2 → (Fx.round p s (z : ℝ)).val = z := fun z hz =>
+    val_ofInt_of_le hp (hz.trans (by nlinarith))
+  have h₁ : (Fx.ofInt p s (-1)).val = -1 := by simpa using val_ofInt_of_le hp (z := -1) (by
+    rw [abs_neg, abs_one]; nlinarith)
+  have h₂ : (Fx.ofInt p s (-2)).val = -2 := by simpa using val_ofInt_of_le hp (z := -2) (by
+    rw [abs_neg, abs_two]; nlinarith)
   rw [score_matcher_none, Real.exp_zero, one_mul]
-  fin_cases k <;> simp [matcher, embed, entry, h₁, val_round_one hp, hv]
+  fin_cases k <;> simp [matcher, embed, entry, h₁, h₂]
+  · simpa using hb (-1) (by norm_num)
+  · simpa using hb (-2) (by norm_num)
 
 /-- The hypothesis of `val_weighted_none` is satisfiable: one token, `s = 1`,
-`p = 3`. -/
-example : (Fx.round 3 1 (Real.exp ((matcher (0 : Fin 1) : RTfr _ 3 1 5 1).score 0 0
-    (embed (c := 1) none)) * ((matcher (0 : Fin 1) : RTfr _ 3 1 5 1).WV 0 (embed (c := 1) none) 4).val)).val =
-    if (4 : Fin 5) = 4 then 1 else 0 :=
+`p = 5`. -/
+example : (Fx.round 5 1 (Real.exp ((matcher (0 : Fin 1) : RTfr _ 5 1 5 1).score 0 0
+    (embed (c := 1) none)) * ((matcher (0 : Fin 1) : RTfr _ 5 1 5 1).WV 0 (embed (c := 1) none) 4).val)).val =
+    if (4 : Fin 5) = 3 then -1 else if (4 : Fin 5) = 4 then -2 else 0 :=
   val_weighted_none (by norm_num) 0 0 4
 
 /-- **A row contributes `[its key is the query ∧ its value is v]`**, in the
-fourth coordinate. -/
+last two coordinates. -/
 theorem val_weighted_some (hp : 2 * (s + 1) * c ^ 2 * 2 ^ s < 2 ^ (p - 1)) (v : Fin c)
     (a u r a' u' r' : Fin c) (k : Fin 5) :
     (Fx.round p s (Real.exp ((matcher v : RTfr _ p s 5 1).score 0 (embed (some (a, u, r)))
       (embed (some (a', u', r')))) *
       ((matcher v : RTfr _ p s 5 1).WV 0 (embed (some (a', u', r'))) k).val)).val =
-      if k = 3 ∧ a' = r ∧ u' = v then 1 else 0 := by
+      if (k = 3 ∨ k = 4) ∧ a' = r ∧ u' = v then 1 else 0 := by
   have h2 := two_pow_lt_of_le hp (Fin.pos r)
   obtain ⟨ha, hu, -⟩ := entry_embed (p := p) (s := s) hp a' u' r'
   have hA : (a'.val : ℤ) + 1 ≠ 0 := by omega
@@ -100,7 +108,7 @@ theorem val_weighted_some (hp : 2 * (s + 1) * c ^ 2 * 2 ^ s < 2 ^ (p - 1)) (v : 
   have hu' : ((u'.val : ℤ) + 1 = v.val + 1) = (u' = v) := by
     simp only [add_left_inj, Nat.cast_inj, Fin.val_inj]
   have hWV : (matcher v : RTfr _ p s 5 1).WV 0 (embed (some (a', u', r'))) =
-      ![0, 0, 0, if u' = v then Fx.ofInt p s 1 else 0, 0] := by
+      ![0, 0, 0, if u' = v then Fx.ofInt p s 1 else 0, if u' = v then Fx.ofInt p s 1 else 0] := by
     simp only [matcher, ha, hu, hA, hu', ite_false]
   rw [hWV]
   by_cases huv : u' = v
@@ -113,7 +121,7 @@ theorem val_weighted_some (hp : 2 * (s + 1) * c ^ 2 * 2 ^ s < 2 ^ (p - 1)) (v : 
 example : (Fx.round 5 1 (Real.exp ((matcher (0 : Fin 1) : RTfr _ 5 1 5 1).score 0
     (embed (some ((0 : Fin 1), (0 : Fin 1), (0 : Fin 1)))) (embed (some ((0 : Fin 1), (0 : Fin 1), (0 : Fin 1))))) *
     ((matcher (0 : Fin 1) : RTfr _ 5 1 5 1).WV 0 (embed (some ((0 : Fin 1), (0 : Fin 1), (0 : Fin 1)))) 3).val)).val =
-    if (3 : Fin 5) = 3 ∧ (0 : Fin 1) = 0 ∧ (0 : Fin 1) = 0 then 1 else 0 :=
+    if ((3 : Fin 5) = 3 ∨ (3 : Fin 5) = 4) ∧ (0 : Fin 1) = 0 ∧ (0 : Fin 1) = 0 then 1 else 0 :=
   val_weighted_some (by norm_num) 0 0 0 0 0 0 0 3
 
 /-- At the last position every position is visible. -/
