@@ -30,3 +30,4 @@ import Transformer.NoiseScale.Section2_Quadratic
 import Transformer.NoiseScale.Section2_NoiseScale
 import Transformer.NoiseScale.Section2_Implications
 import Transformer.NoiseScale.Section2_Tradeoff
+import Transformer.NoiseScale.SectionA_Estimators
