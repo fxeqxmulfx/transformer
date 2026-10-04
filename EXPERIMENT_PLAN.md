@@ -1,6 +1,7 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-04 UTC. **Not started.** On 2026-10-04 the user asked for
+Updated on 2026-10-04 UTC. **In progress: step 1. Step 0 is done.** The investigation cycle
+was started on 2026-10-04 at the user's request. On 2026-10-04 the user asked for
 this plan: find out why sparsemax attention fails, and try to repair it, on
 the basis benchmark. It replaces the plan of 2026-10-03 for the mod-193
 normalizer pair, which the user had paused. That plan's forward/backward
@@ -107,6 +108,20 @@ failure that a neighboring rate of `RATES` removes is the recipe's, and the
 mechanism study leaves it.
 
 ## 0. Run sparsemax on the basis
+
+**Done on 2026-10-04.** [basis_sparsemax](experiments/basis_sparsemax/README.md)
+defines the 60 benchmark runs and six short timing runs, with the existing
+diagnostics recording training batch loss and head scales. Sparsemax's
+projection, backward, model logits and every parameter gradient agree with
+eager evaluation within rounding under full-graph compilation. Diagnostics
+preserves compiled observation metrics and the complete training state
+under both weights, and a sparsemax run resumes onto its own records.
+All 142 lab tests pass. The measured sparsemax/softmax update-time ratios are
+1.681 (depth), 1.708 (recall) and 1.238 (parity), below the factor-of-two
+ceiling; no implementation repair was needed. The short softmax controls
+repeat every common archived basis validation record exactly; step 1 checks
+the full trajectories. The small model's 15 runs under each weight come
+first, then the large model's, then neighboring rates for failures.
 
 Write `experiments/basis_sparsemax` (`experiment.py`, `README.md` and a row
 in `experiments/README.md`). Its runs are the basis's 30 benchmark runs under

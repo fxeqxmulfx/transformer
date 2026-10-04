@@ -10,7 +10,8 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from lab.domain.spec import swap
+from lab.domain.model import Softmax, Sparsemax
+from lab.domain.spec import substitute, swap
 from lab.domain.training import Checkpoint, Compiled, Eager
 from lab.infrastructure.engine.compiled import CompiledStepper
 from lab.infrastructure.engine.eager import EagerStepper
@@ -32,6 +33,8 @@ def experiments():
     return {"modular": swap(compiled(modular(gptmini(32, 2, 4), prime=11, updates=30, batch=8, every=10)),
                             "diagnostics", TRACE),
             "mqar": compiled(synthetic(SYNTHETIC["runs"]["mqar-adamw-clipped"])),
+            "sparsemax": substitute(compiled(modular(gptmini(32, 2, 4), prime=11, updates=30, batch=8,
+                                                     every=10)), Softmax, Sparsemax()),
             "copy": compiled(synthetic(SYNTHETIC["runs"]["copy-adamw"])),
             "parity": compiled(synthetic(SYNTHETIC["runs"]["parity-running-amsgradw-clipped"]))}
 
