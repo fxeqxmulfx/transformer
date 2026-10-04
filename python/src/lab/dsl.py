@@ -5,6 +5,7 @@
     experiments = {"softmax": base, "sparsemax": substitute(base, Softmax, Sparsemax())}
 """
 
+from .domain.basis import basis
 from .domain.benchmarks import AssociativeRecall, ModularDivision, TinyShakespeare
 from .domain.experiment import Experiment, grid
 from .domain.generative import (Addition, BooleanAnd, Copy, Count, DoubleHistogram, Histogram, Mode, MostFrequent,
@@ -44,4 +45,6 @@ __all__ = [
     "EarlyStopping", "Solved", "Eager", "CudaGraph",
     # composition
     "Experiment", "grid", "swap", "substitute", "walk", "describe", "fingerprint",
+    # suites
+    "basis",
 ]
