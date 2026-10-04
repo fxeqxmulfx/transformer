@@ -21,9 +21,12 @@ makes it:
   `B → 0`, the one of eq. (39) for `μ_i ≠ 0` (`Section2_SmallBatchLimit`);
 * eq. (11) holds when the `𝓔_i(B)` share a profile, `𝓔_i(B) = f(B)μ_i/σ_i`, as in the
   linearization of eq. (39), for which eq. (12) is proved; the "≈" of eqs. (3) and (4) holds as
-  a ratio tending to `1` as `B → 0` (`Section2_RateForm`).
+  a ratio tending to `1` as `B → 0` (`Section2_RateForm`);
+* eq. (17) of Theorem 4 needs every `μ_i ≠ 0`, which its condition `B ≫ πσ_i²/(2μ_i²)` presumes
+  without stating it, and fails without it (`Section2_LargeBatch`).
 -/
 
+import Transformer.Surge.Section2_LargeBatch
 import Transformer.Surge.Section2_Lemma1
 import Transformer.Surge.Section2_PeakRate
 import Transformer.Surge.Section2_RateForm

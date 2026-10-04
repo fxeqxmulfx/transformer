@@ -21,15 +21,13 @@ open Transformer.BatchSize
 
 variable {ι : Type*} [Fintype ι]
 
-/-- The denominator of eq. (9) tends to `ΣH_ii` when every `𝓔_i` tends to `0`. -/
-theorem tendsto_signDen {α : Type*} {l : Filter α} {E : α → ι → ℝ}
-    (hE : ∀ i, Tendsto (fun a => E a i) l (𝓝 0)) (H : Matrix ι ι ℝ) :
-    Tendsto (fun a => signDen (E a) H) l (𝓝 (∑ i, H i i)) := by
-  have h : Tendsto (fun a => signDen (E a) H) l (𝓝 (signDen 0 H)) :=
-    (tendsto_finsetSum _ fun i _ => ((tendsto_const_nhds.sub ((hE i).pow 2)).mul
-      tendsto_const_nhds)).add (tendsto_finsetSum _ fun i _ => tendsto_finsetSum _ fun j _ =>
-      ((hE i).mul (hE j)).mul tendsto_const_nhds)
-  simpa [signDen] using h
+/-- The denominator of eq. (9) is continuous in `𝓔`. -/
+theorem tendsto_signDen {α : Type*} {l : Filter α} {E : α → ι → ℝ} {e : ι → ℝ}
+    (hE : ∀ i, Tendsto (fun a => E a i) l (𝓝 (e i))) (H : Matrix ι ι ℝ) :
+    Tendsto (fun a => signDen (E a) H) l (𝓝 (signDen e H)) :=
+  (tendsto_finsetSum _ fun i _ => ((tendsto_const_nhds.sub ((hE i).pow 2)).mul
+    tendsto_const_nhds)).add (tendsto_finsetSum _ fun i _ => tendsto_finsetSum _ fun j _ =>
+    ((hE i).mul (hE j)).mul tendsto_const_nhds)
 
 /-- When `𝓔_i/t → c_i` and `t → 0`, the learning rate of eq. (9) over `t` tends to
 `Σc_iμ_i/ΣH_ii`, `ΣH_ii ≠ 0`. -/
@@ -46,7 +44,9 @@ theorem tendsto_lrSign_div {α : Type*} {l : Filter α} {E : α → ι → ℝ} 
     field_simp
   have hnum : Tendsto (fun a => ∑ i, E a i / t a * μ i) l (𝓝 (∑ i, c i * μ i)) :=
     tendsto_finsetSum _ fun i _ => (hE i).mul tendsto_const_nhds
-  refine (hnum.div (tendsto_signDen hE0 H) hD).congr fun a => ?_
+  have hden : Tendsto (fun a => signDen (E a) H) l (𝓝 (∑ i, H i i)) := by
+    simpa [signDen] using tendsto_signDen (e := 0) hE0 H
+  refine (hnum.div hden hD).congr fun a => ?_
   rw [Pi.div_apply, lrSign, div_right_comm]
   congr 1
   rw [Finset.sum_div]
