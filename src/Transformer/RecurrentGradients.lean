@@ -7,8 +7,9 @@ Formalization of:
 Deviations from the source, each recorded in the docstring of the file that
 makes it:
 * eq. (5) writes the Jacobian of eq. (2) as `W_recᵀ diag(σ'(x_{i-1}))`; it is
-  `W_rec diag(σ'(x_{i-1}))` (`Section1_Gradients`), and the supplementary's
-  `(W_recᵀ)^l` is `W_rec^l` (`Section2_Linear`);
+  `W_rec diag(σ'(x_{i-1}))` (`Section1_Gradients`), the supplementary's
+  `(W_recᵀ)^l` is `W_rec^l` (`Section2_Linear`), and eq. (`dir_deriv`)'s
+  `W_recᵀ diag(σ'(x_k))` is `W_rec diag(σ'(x_k))` (`Section3_Regularizer`);
 * §2.1's conditions for nonlinear `σ` with `|σ'| ≤ γ`, `λ₁ < 1/γ` sufficient
   for vanishing and `λ₁ > 1/γ` necessary for exploding, are false
   (`Section2_Counterexample`); their proof proves them with the 2-norm
@@ -20,12 +21,16 @@ makes it:
   information inserted in the model, in the regime of the penalty or in an
   Echo State Network, dies out exponentially fast, are false for tanh
   (`Section3_Previous`); the information an input inserts is read as the
-  derivative of the later states in that input (`Section3_Inputs`).
+  derivative of the later states in that input (`Section3_Inputs`);
+* §3.3's "we are not ensured the norm of the error signal is preserved" is
+  read as a small `Ω` leaving the error norm unbounded (`Section3_ErrorSignal`).
 
 Not transcribed, deliberately: the dynamical-systems discussion of §2.2, the
 error surface of Fig. 6 and the hypothesis of §2.3 that "in general when
 gradients explode so does the curvature along `v`", which the paper states
-without a precise form.
+without a precise form, and the heuristics of §3.3: that increasing
+`‖∂x_t/∂x_k‖` "can not be always done while following a descent direction",
+and that preventing vanishing gradients makes exploding ones "more probable".
 -/
 
 import Transformer.RecurrentGradients.Section1_Recurrence
@@ -37,3 +42,5 @@ import Transformer.RecurrentGradients.Section2_Geometric
 import Transformer.RecurrentGradients.Section3_Inputs
 import Transformer.RecurrentGradients.Section3_Previous
 import Transformer.RecurrentGradients.Section3_Clipping
+import Transformer.RecurrentGradients.Section3_Regularizer
+import Transformer.RecurrentGradients.Section3_ErrorSignal
