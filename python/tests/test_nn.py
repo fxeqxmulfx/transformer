@@ -15,7 +15,7 @@ import torch
 import torch.nn.functional as F
 
 from lab.domain.benchmarks import ModularDivision
-from lab.domain.model import Softmax, Sparsemax
+from lab.domain.model import FusedQKV, PerHeadQKV, Softmax, Sparsemax
 from lab.domain.spec import substitute, swap
 from lab.infrastructure.benchmarks.modular import make_corpus
 from lab.infrastructure.nn import build_model
@@ -91,6 +91,29 @@ class LegacyModelTests(unittest.TestCase):
         self.assertTrue(all(current[key].shape == value.shape for key, value in imported.items()))
         with self.assertRaisesRegex(KeyError, "decoder.extra"):
             import_state({"decoder.extra": torch.zeros(1)})
+
+
+class FusedAttentionTests(unittest.TestCase):
+    def setUp(self):
+        torch.set_num_threads(1)
+
+    def test_fused_softmax_attention_is_the_unfused_function_rounded_otherwise(self):
+        batch = torch.tensor(make_corpus(ModularDivision(prime=11, train_fraction=.2), 0).train)
+        for name in ("gptmini", "reference"):
+            for projections in (FusedQKV(), PerHeadQKV()):
+                spec = swap(SPECS[name], "block.attention.projections", projections)
+                with self.subTest(model=name, projections=type(projections).__name__):
+                    unfused, fused = (self.measure(substitute(spec, Softmax, weights), batch)
+                                      for weights in (Softmax(), Softmax(fused=True)))
+                    torch.testing.assert_close(fused, unfused)
+
+    @staticmethod
+    def measure(spec, batch):
+        """The logits of a batch and the gradient of every parameter, from the parameters of seed 0."""
+        model = build_model(spec, FIXTURE["models"]["gptmini"]["vocab"], seed=0)
+        output = model(batch[:, :-1])
+        F.cross_entropy(output[:, 4:].reshape(-1, output.shape[-1]), batch[:, 5:].reshape(-1)).backward()
+        return [output.detach()] + [parameter.grad for parameter in model.parameters()]
 
 
 def recall_model(config, length, width, attention):

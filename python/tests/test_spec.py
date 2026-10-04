@@ -108,8 +108,6 @@ class SpecTests(unittest.TestCase):
             gptmini(width=12, heads=4)
         reference(width=12, heads=4)
         self.assertEqual(rope(width=32, heads=2, context=18).head_width, 16)
-        with self.assertRaisesRegex(ValueError, "Fused softmax attention needs ScaledDot scores"):
-            swap(gptmini(), "block.attention.weights", Softmax(fused=True))
 
 
 if __name__ == "__main__":

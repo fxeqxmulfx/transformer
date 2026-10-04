@@ -124,8 +124,9 @@ class Softmax(Weights):
     """exp(s) / sum exp(s) over the visible prefix.
 
     `fused` computes the attention it weights by PyTorch's fused scaled
-    dot-product attention: the same function, rounded otherwise. It needs
-    ScaledDot scores, whose scale the kernel applies itself.
+    dot-product attention: the same function, rounded otherwise. The kernel
+    applies the scale of ScaledDot scores itself; QKNorm scores multiply
+    their unit queries by theirs.
     """
     fused: bool = False
 
@@ -161,8 +162,6 @@ class Attention(Spec):
         require_kind(self.weights, Weights, "weights")
         if self.exclusive is not None:
             require_kind(self.exclusive, XSA, "exclusive")
-        if isinstance(self.weights, Softmax) and self.weights.fused:
-            require(isinstance(self.scores, ScaledDot), "Fused softmax attention needs ScaledDot scores")
 
 
 @dataclass(frozen=True)

@@ -5,7 +5,8 @@ batch axis, PerHeadQKV one group per head. Scores, weights and XSA act on the
 last two axes, so one code path serves both; each group reproduces the
 operations of its historical source, which keeps the historical models
 bit-identical. Fused softmax attention leaves scores and weights to PyTorch's
-kernel, as the convex MQAR `RotaryAttention` did.
+kernel, as the convex MQAR `RotaryAttention` did; under QKNorm the unit
+queries carry the learned scale into it, and the kernel scales by one.
 """
 
 import math
@@ -67,7 +68,7 @@ class ScaledDotScores(nn.Module):
             q, k = rotate(q, *rotary), rotate(k, *rotary)
         return torch.matmul(q, k.transpose(-2, -1)) / self.scale
 
-    def attend(self, q, k, v, rotary):
+    def attend(self, q, k, v, rotary, index):
         """Causal softmax attention by the fused kernel, at its default scale 1 / sqrt(head width)."""
         if rotary is not None:
             q, k = rotate(q, *rotary), rotate(k, *rotary)
@@ -80,14 +81,23 @@ class QKNormScores(nn.Module):
         self.eps = eps
         self.log_alpha = nn.Parameter(torch.full((heads,), 0.5 * math.log(head)))
 
-    def forward(self, q, k, rotary, index):
+    def unit(self, q, k, rotary, index):
+        """Unit queries and keys, rotated, and the scale of their head group."""
         q = F.normalize(q, dim=-1, eps=self.eps)
         k = F.normalize(k, dim=-1, eps=self.eps)
         if rotary is not None:
             q, k = rotate(q, *rotary), rotate(k, *rotary)
         alpha = self.log_alpha.exp()
-        alpha = alpha.view(1, -1, 1, 1) if index is None else alpha[index]
+        return q, k, alpha.view(1, -1, 1, 1) if index is None else alpha[index]
+
+    def forward(self, q, k, rotary, index):
+        q, k, alpha = self.unit(q, k, rotary, index)
         return (q @ k.transpose(-2, -1)) * alpha
+
+    def attend(self, q, k, v, rotary, index):
+        """Causal softmax attention by the fused kernel: the scale multiplies the unit queries, not their scores."""
+        q, k, alpha = self.unit(q, k, rotary, index)
+        return F.scaled_dot_product_attention(q * alpha, k, v, dropout_p=0.0, is_causal=True, scale=1.0)
 
 
 def softmax(scores):
@@ -124,7 +134,7 @@ class Attention(nn.Module):
         outputs = []
         for q, k, v, index in self.projections(x):
             if self.fused:
-                y = self.scores.attend(q, k, v, rotary)
+                y = self.scores.attend(q, k, v, rotary, index)
             else:
                 y = self.weights(self.scores(q, k, rotary, index)) @ v
             if self.exclusive is not None:
