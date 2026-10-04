@@ -21,6 +21,18 @@ instance : Finite (Fx p s) := Finite.of_injective
 /-- Enumeration of all representable values (Appendix B.2). -/
 noncomputable instance : Fintype (Fx p s) := Fintype.ofFinite _
 
+/-- There are `2 · 2^{p-1}` fixed-point numbers, `2^p` at `p ≥ 1` bits: the
+mantissas `-2^{p-1}, …, 2^{p-1} - 1`.  Source: arXiv:2506.16055v3, Appendix
+B.1, `def:fixed_precision`. -/
+theorem card_eq : Fintype.card (Fx p s) = 2 * 2 ^ (p - 1) := by
+  have e : Fx p s ≃ Finset.Ico (-2 ^ (p - 1) : ℤ) (2 ^ (p - 1)) :=
+    { toFun := fun x => ⟨x.m, Finset.mem_Ico.mpr ⟨x.lo, x.hi⟩⟩
+      invFun := fun m => ⟨m.1, (Finset.mem_Ico.mp m.2).1, (Finset.mem_Ico.mp m.2).2⟩
+      left_inv := fun _ => rfl
+      right_inv := fun _ => rfl }
+  rw [Fintype.card_congr e, Fintype.card_coe, Int.card_Ico, sub_neg_eq_add, ← two_mul]
+  exact_mod_cast Int.toNat_natCast (2 * 2 ^ (p - 1))
+
 /-- Equality of fixed-point values is equality of their integer mantissas (B.1). -/
 instance : DecidableEq (Fx p s) := fun x y =>
   decidable_of_iff (x.m = y.m) ⟨Fx.ext, congrArg Fx.m⟩
