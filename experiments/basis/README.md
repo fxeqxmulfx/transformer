@@ -261,23 +261,32 @@ fastest pass of the batch:
 
 The fewest updates of a batch, over rates tuned on a grid, stand for the
 batch (McCandlish et al., arXiv:1812.06162v1, Appendix A.2 and A.3). Their
-eqs. 2.11 and 2.12 with E = BS make S = S_min (1 + B_crit / B), which,
-fitted to them by least squares in 1 / B, gives S_min 85 and B_crit 56 for
-depth at length 128, 311 and 352 for recall, and 1,650 and 15 for parity. A batch well
-below B_crit takes about as many examples as any smaller one, and one well
-above about as many updates as any larger one.
+eqs. 2.11 and 2.12 with E = BS make S = S_min (1 + B_crit / B)
+(`Transformer.NoiseScale.totalSteps_const`), which, fitted to them by least
+squares in 1 / B, gives S_min 85 and B_crit 56 for depth at length 128, 311
+and 352 for recall, and 1,650 and 15 for parity. A batch well below B_crit
+takes about as many examples as any smaller one, and one well above about as
+many updates as any larger one
+(`Transformer.NoiseScale.tendsto_totalExamples`,
+`Transformer.NoiseScale.tendsto_totalSteps`).
 
-Adam's best rate at batch B, by Theorem 3 of Li et al.
-(arXiv:2405.14578v5, §2.1), is ε_max / (½(√(B_noise / B) + √(B / B_noise))):
-it rises with the batch up to B_noise and falls beyond, and their Theorem 5
-(§2.2) gives Adam McCandlish's tradeoff, B_noise standing for B_crit. With
-the fitted B_crit, from 16 to 128 rows the best rate grows 2.2 times for
-recall, changes by at most a fifth for depth, and falls by two fifths for
-parity: against the grid's step of √10, at most one step up for recall, and
-none for the others. The sweep's best rate is 1e-3 for depth at every
-batch (at 128 with 3e-4), 1e-3 for recall up to 64 rows and 3e-3 at 128,
-as predicted, and 3e-4 for parity at every batch but 64, where 1e-3 passed
-in 2,400 updates against 2,950.
+Adam's best rate at batch B, by Theorem 3 of Li et al. (arXiv:2405.14578v5,
+§2.1), is ε_max / (½(√(B_noise / B) + √(B / B_noise))) while B is small
+against πσ_i² / (2μ_i²) (`Transformer.Surge.lrSign_signLin_eq_peak`,
+`Transformer.Surge.tendsto_lrSign_div_peak`): it rises with the batch up to
+B_noise and falls beyond (`Transformer.Surge.strictMonoOn_lrSign_signLin`,
+`Transformer.Surge.strictAntiOn_lrSign_signLin`), and their Theorem 5 (§2.2)
+gives Adam McCandlish's tradeoff
+(`Transformer.Surge.mul_lossDropSign_eq_iff`), B_noise standing for B_crit,
+its mean over the run: while B_noise holds still, the rate peaks at B_crit
+(`Transformer.Surge.lrSign_signLin_eq_lrPeak_iff`). With the fitted B_crit,
+from 16 to 128 rows the best rate grows 2.2 times for recall, changes by at
+most a fifth for depth, and falls by two fifths for parity: against the
+grid's step of √10, at most one step up for recall, and none for the others.
+The sweep's best rate is 1e-3 for depth at every batch (at 128 with 3e-4),
+1e-3 for recall up to 64 rows and 3e-3 at 128, as predicted, and 3e-4 for
+parity at every batch but 64, where 1e-3 passed in 2,400 updates against
+2,950.
 
 An update's time between observations 100 and 300 of the `time-*` runs
 fits t(B) = c (B_sat + B): past about B_sat rows the device is busy, and
