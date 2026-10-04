@@ -26,7 +26,11 @@ makes it:
 * the footnote "`E[x/y] ≥ E[x]/E[y]` in general for positive variables" is
   refuted and proved for independent `x`, `y`; averaging over many batches is
   read as plain averages over independent steps, where the paper averages
-  exponentially (`SectionA_RatioBias`).
+  exponentially (`SectionA_RatioBias`);
+* caveat 3 of §2.4 is read as `B_noise` within the condition number of
+  `B_simple`, "growth over training" for `B_simple` at constant `tr(Σ) > 0`,
+  and "the number of model parameters cancels" as the mediant of the noise
+  scales of two parts (`Section2_Patterns`).
 -/
 
 import Transformer.NoiseScale.Section2_Batches
@@ -34,6 +38,7 @@ import Transformer.NoiseScale.Section2_Quadratic
 import Transformer.NoiseScale.Section2_NoiseScale
 import Transformer.NoiseScale.Section2_Implications
 import Transformer.NoiseScale.Section2_Tradeoff
+import Transformer.NoiseScale.Section2_Patterns
 import Transformer.NoiseScale.Section2_WithoutReplacement
 import Transformer.NoiseScale.SectionA_Estimators
 import Transformer.NoiseScale.SectionA_RatioBias
