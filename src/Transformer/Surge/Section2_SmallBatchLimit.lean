@@ -93,6 +93,14 @@ theorem signLin_div_sqrt (μ σ : ι → ℝ) {B : ℝ} (hB : 0 < B) (i : ι) :
 example (μ σ : Fin 2 → ℝ) := signLin_div_sqrt μ σ one_pos 0
 
 omit [Fintype ι] in
+/-- `√(2B/π)(μ_i/σ_i)/√(B/2) → (2/√π)(μ_i/σ_i)` as `B → 0⁺`, being constant for `B > 0`. -/
+theorem tendsto_signLin_div_sqrt (μ σ : ι → ℝ) (i : ι) :
+    Tendsto (fun B => signLin μ σ B i / √(B / 2)) (𝓝[>] 0) (𝓝 (2 / √π * (μ i / σ i))) :=
+  tendsto_const_nhds.congr' (by
+    filter_upwards [self_mem_nhdsWithin] with B hB
+    exact (signLin_div_sqrt μ σ hB i).symm)
+
+omit [Fintype ι] in
 /-- **Eq. (39)**: `𝓔_i(B)/(√(2B/π)μ_i/σ_i) → 1` as `B → 0⁺`, when `μ_i ≠ 0`, `σ_i ≠ 0`. -/
 theorem tendsto_signMean_div_signLin {μ σ : ι → ℝ} {i : ι} (hμ : μ i ≠ 0) (hσ : σ i ≠ 0) :
     Tendsto (fun B => signMean (μ i) (σ i) B / signLin μ σ B i) (𝓝[>] 0) (𝓝 1) := by
@@ -121,10 +129,7 @@ theorem tendsto_lrSign_div_lrSign_signLin [DecidableEq ι] {μ σ : ι → ℝ} 
     filter_upwards [self_mem_nhdsWithin] with B hB
     exact (Real.sqrt_pos.2 (half_pos hB)).ne'
   have h1 := tendsto_lrSign_div (fun i => tendsto_signMean_div_sqrt (μ i) (σ i)) ht ht0 μ hD
-  have h2 := tendsto_lrSign_div (E := signLin μ σ) (c := fun i => 2 / √π * (μ i / σ i))
-    (fun i => tendsto_const_nhds.congr' (by
-      filter_upwards [self_mem_nhdsWithin] with B hB
-      exact (signLin_div_sqrt μ σ hB i).symm)) ht ht0 μ hD
+  have h2 := tendsto_lrSign_div (tendsto_signLin_div_sqrt μ σ) ht ht0 μ hD
   have hK : (∑ i, 2 / √π * (μ i / σ i) * μ i) / ∑ i, H i i ≠ 0 := by
     rw [show ∑ i, 2 / √π * (μ i / σ i) * μ i = 2 / √π * snrSum μ σ by
       rw [snrSum, Finset.mul_sum]

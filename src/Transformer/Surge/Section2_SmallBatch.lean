@@ -63,22 +63,31 @@ theorem signLin_mul (μ σ : ι → ℝ) {B : ℝ} (hB : 0 ≤ B) (i j : ι) :
 
 variable {μ σ : ι → ℝ} {H : Matrix ι ι ℝ} {B : ℝ}
 
+/-- With `𝓔_i = √(2B/π)μ_i/σ_i`, the denominator of eqs. (8) and (9) is `ΣH_ii + (2B/π)S`,
+`B ≥ 0`. -/
+theorem signDen_signLin (μ σ : ι → ℝ) (H : Matrix ι ι ℝ) (hB : 0 ≤ B) :
+    signDen (signLin μ σ B) H = ∑ i, H i i + 2 * B / π * offSum μ σ H := by
+  rw [signDen_eq, offSum, Finset.mul_sum]
+  congr 1
+  refine Finset.sum_congr rfl fun i _ => ?_
+  rw [Finset.mul_sum]
+  refine Finset.sum_congr rfl fun j _ => ?_
+  split_ifs
+  · ring
+  · rw [signLin_mul μ σ hB]
+    ring
+
+/-- The hypothesis of `signDen_signLin` is satisfiable: `B = 1`. -/
+example (μ σ : Fin 2 → ℝ) (H : Matrix (Fin 2) (Fin 2) ℝ) := signDen_signLin μ σ H zero_le_one
+
 /-- **Eq. (40)**, first line: with `𝓔_i = √(2B/π)μ_i/σ_i`, eq. (9) is
 `ε(B) = Σ√(2B/π)(μ_i/σ_i)μ_i/(ΣH_ii + (2B/π)S)`, `B ≥ 0`. -/
 theorem lrSign_signLin (μ σ : ι → ℝ) (H : Matrix ι ι ℝ) (hB : 0 ≤ B) :
     lrSign (signLin μ σ B) μ H =
       (∑ i, √(2 * B / π) * (μ i / σ i) * μ i) / (∑ i, H i i + 2 * B / π * offSum μ σ H) := by
-  rw [lrSign, signDen_eq, offSum, Finset.mul_sum]
+  rw [lrSign, signDen_signLin μ σ H hB]
   congr 1
-  · exact Finset.sum_congr rfl fun i _ => by rw [signLin, mul_div_assoc]
-  · congr 1
-    refine Finset.sum_congr rfl fun i _ => ?_
-    rw [Finset.mul_sum]
-    refine Finset.sum_congr rfl fun j _ => ?_
-    split_ifs
-    · ring
-    · rw [signLin_mul μ σ hB]
-      ring
+  exact Finset.sum_congr rfl fun i _ => by rw [signLin, mul_div_assoc]
 
 /-- The hypothesis of `lrSign_signLin` is satisfiable: `B = 1`. -/
 example (μ σ : Fin 2 → ℝ) (H : Matrix (Fin 2) (Fin 2) ℝ) := lrSign_signLin μ σ H zero_le_one
