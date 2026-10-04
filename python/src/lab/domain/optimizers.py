@@ -300,13 +300,15 @@ class Magma(Optimizer):
 class Clipped(Optimizer):
     """Another rule, on the gradient rescaled to a global norm of at most `norm`.
 
-    Source: norm clipping, arXiv:1211.5063, Section 3.2 and Algorithm 1, as
-    torch's `clip_grad_norm_` computes it and the historical synthetic
-    trainer applied it (`grad_clip`): the gradient g of all trainable
-    parameters, as one vector, is multiplied by min(1, norm / (|g| + 1e-6)),
-    where the paper rescales by norm / |g| only when |g| >= norm. It acts
-    before the rule and every stage of it, so it is written outermost. The
-    recorded gradient norm is |g| before clipping.
+    Source: norm clipping, arXiv:1211.5063, Section 3.2 and Algorithm 1
+    (Lean `Transformer.RecurrentGradients.clip`), as torch's
+    `clip_grad_norm_` computes it and the historical synthetic trainer
+    applied it (`grad_clip`): the gradient g of all trainable parameters, as
+    one vector, is multiplied by min(1, norm / (|g| + 1e-6)). Algorithm 1
+    rescales by norm / |g| only when |g| >= norm, the factor min(1, norm / |g|)
+    (`clip_eq_smul`), leaving the norm min(|g|, norm) (`norm_clip`); the 1e-6
+    is the deviation. It acts before the rule and every stage of it, so it is
+    written outermost. The recorded gradient norm is |g| before clipping.
     """
     base: Optimizer
     norm: float = 1.0
