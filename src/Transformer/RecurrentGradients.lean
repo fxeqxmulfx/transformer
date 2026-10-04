@@ -16,6 +16,11 @@ makes it:
 * "explode" is read as factors of norm at least `C α^l`, `α > 1`, for
   infinitely many `l` in the linear model, and as unbounded factors for the
   corrected nonlinear condition.
+
+Not transcribed, deliberately: the dynamical-systems discussion of §2.2, the
+error surface of Fig. 6 and the hypothesis of §2.3 that "in general when
+gradients explode so does the curvature along `v`", which the paper states
+without a precise form.
 -/
 
 import Transformer.RecurrentGradients.Section1_Recurrence
@@ -23,3 +28,4 @@ import Transformer.RecurrentGradients.Section1_Gradients
 import Transformer.RecurrentGradients.Section2_Mechanics
 import Transformer.RecurrentGradients.Section2_Counterexample
 import Transformer.RecurrentGradients.Section2_Linear
+import Transformer.RecurrentGradients.Section2_Geometric
