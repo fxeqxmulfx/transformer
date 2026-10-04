@@ -75,7 +75,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.FiniteAlphabet` | a natural-token parity counterexample to omitting the paper's finite alphabet |
 | `CRASP.Parity` | PARITY is not in `TL[◁#]` at any depth, so no rounded transformer recognizes it |
 | `CRASP.ParityTwoSided` | PARITY is in `TL[◁#, ▷#]` at depth `2` |
-| `CRASP.SecondLast` | `Σ*bΣ`, the previous symbol, is in `TL[◁#, ▷#]` at depth `2` and in `TL[◁#]` at none |
+| `CRASP.SecondLast` | `Σ*bΣ`, the previous symbol, is in `TL[◁#]` at no depth, with `Y` at depth `0`, and in `TL[◁#, ▷#]` at depth `2` |
 | `CRASP.AlignedRecall` | aligned MQAR over `c` tokens is in `TL[◁#]_1`, counting `c²` pairs |
 | `CRASP.QueryFree` | attention that ignores the query reads the past through `2d + 1` sums a layer |
 | `CRASP.QueryFreeRecall` | such a transformer recalls over `c` tokens only if `2^{c-1} ≤ (2^p (n + 1) + 1)^{k (2d + 1)}` |

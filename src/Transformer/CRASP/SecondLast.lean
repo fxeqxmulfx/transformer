@@ -8,7 +8,10 @@ symbol)".  Without positions no depth suffices for it: `Σ*bΣ`, the strings ove
 `TL[◁#]` at no depth (`not_definableL_secondLast`), so no future-masked rounded
 transformer recognizes it (`not_recognizes_secondLast`).  Counting to the end
 defines it at depth 2 (`definable_secondLast`), so it is, like PARITY
-(`CRASP.Parity`, `CRASP.ParityTwoSided`), in `TL[◁#, ▷#]` and not in `TL[◁#]`.
+(`CRASP.Parity`, `CRASP.ParityTwoSided`), in `TL[◁#, ▷#]` and not in `TL[◁#]`;
+and `Y Q_b` defines it at depth 0 in `TL[◁#]` with the operator `Y` of
+Appendix F (`definableY_secondLast`), the logic into which `thm:rtfr_to_TLCly`
+translates transformers with ALiBi.
 
 The proof is the lower bound of the depth hierarchy (`CRASP.LowerBound`) cut
 short.  After some word `u`, a formula of `TL[◁#]_{k+1}` reads at a position
@@ -23,6 +26,7 @@ no formula agrees with `Σ*bΣ` even on the nonempty strings
 
 import Transformer.CRASP.BoundedExists
 import Transformer.CRASP.LowerBound
+import Transformer.CRASP.Positional
 import Transformer.CRASP.Transformers
 
 namespace Transformer
@@ -134,6 +138,20 @@ theorem definable_secondLast : Definable secondLast 2 := by
     exact ⟨j - 1, by omega, hb⟩
   · rintro ⟨m, hm, hb⟩
     exact ⟨m + 1, by omega, by omega, by simpa using hb, by omega⟩
+
+/-- **`Σ*bΣ` is definable at depth 0 with `Y`**, by `Y Q_b`, in the logic
+`TL[◁#]` with the operator `Y` of Appendix F (`app:tlclpos`), into which
+`thm:rtfr_to_TLCly` translates transformers with ALiBi: `Y` is what `TL[◁#]`
+lacks for it. -/
+theorem definableY_secondLast : DefinableY secondLast 0 := by
+  refine ⟨.prev (.sym true), ⟨rfl, by decide⟩, Set.ext fun w => ?_⟩
+  change (FormP.prev (.sym true)).sat w w.length = true ↔ w ∈ secondLast
+  simp only [mem_secondLast_iff, FormP.sat, Bool.and_eq_true, decide_eq_true_eq]
+  constructor
+  · rintro ⟨h, hb⟩
+    exact ⟨w.length - 2, by omega, by rwa [show w.length - 2 = w.length - 1 - 1 by omega]⟩
+  · rintro ⟨m, hm, hb⟩
+    exact ⟨by omega, by rwa [hm, show m + 2 - 1 - 1 = m by omega]⟩
 
 end CRASP
 end Transformer
