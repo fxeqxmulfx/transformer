@@ -1,31 +1,279 @@
-# Project experiment plan: sparsemax generalization and runtime
+# Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-03 UTC. **Paused at the user's explicit request.**
-Resume the experimental cycle only after a new user instruction to continue.
-This is the project-level plan; detailed historical evidence remains in
+Updated on 2026-10-04 UTC. **Not started.** On 2026-10-04 the user asked for
+this plan: find out why sparsemax attention fails, and try to repair it, on
+the basis benchmark. It replaces the plan of 2026-10-03 for the mod-193
+normalizer pair, which the user had paused. That plan's forward/backward
+intervention and its Lean step continue here as steps 3 and 6, and mod 193
+returns in step 5 to confirm a repair. The steps run in order; each ends in a
+commit, and this file marks it done. Detailed historical evidence remains in
 [the synthetic trainer handoff](experiments/archive/synthetic_trainers/HANDOFF.md).
 
-## Objective and established results
+## Objective
 
-Identify experimentally why sparsemax fails to generalize as well as softmax
-in the controlled modular-division setting, then prove the supported mechanism
-in Lean. Improve experiment throughput through measured changes, preserving
-the distinction between faster execution and a changed learning procedure.
+Find what makes sparsemax attention fail where softmax succeeds, on
+[`experiments/basis`](experiments/basis/README.md); repair it; prove in Lean
+what the experiments support. A repair succeeds when sparsemax attention with
+it passes the basis wherever softmax passes, and still attends sparsely.
 
-The task is division `x/y mod 193`, with nonzero denominator: 37,056 exhaustive
-operand pairs, split into 9,264 train and 27,792 held-out examples. In the
-completed 300,000-update normalizer pair, sparsemax reaches 100% train and
-9,465/27,792 = 34.056563% held-out accuracy; softmax finishes at 100% on both.
-Sparsemax fails all 201 final-window checks; softmax fails two and recovers.
-Neither result establishes the required persistent stable benchmark.
+## What is known
 
-Commit `0cf0524` proves that a strict unit score gap makes the actual causal
-sparsemax row locally constant with zero Frechet derivative. A concrete wrong
-route has positive loss and zero score derivative. Lean also certifies the
-accuracy of all 37,056 supplied final CPU prediction records. These results
-establish a possible obstruction and exact table counts; they do not establish
-the cause of this model's generalization gap or verify its PyTorch trajectory.
-See [the proof and certificate report](experiments/archive/synthetic_trainers/protocols/adamw_stability_20261002/sparsemax-mechanism-and-final-certificate.md).
+Sparsemax replaces softmax by the Euclidean projection of a row's scores onto
+the simplex (arXiv:1602.02068v2, §2), whose weights are exactly zero
+outside a support.
+
+- Modular division ([`mod193_stability`](experiments/mod193_stability/README.md)):
+  GPTMini, whose attention normalizes queries and keys (QKNorm) and removes
+  from each position's output its own value (XSA), trained on 25% of the
+  37,056 equations `x / y mod 193`. Under sparsemax it fits every training
+  equation, memorizes for 206,000 updates and never generalizes: held-out
+  accuracy ends at 9,465/27,792 = 34.06% and peaks at 35.48%. Under softmax
+  it ends at 100% on both splits.
+- Associative recall ([`mqar_sparsemax`](experiments/mqar_sparsemax/README.md)):
+  a transformer of one head, scaled dot-product scores and no XSA. Sparsemax
+  reached 99% in 11 of 12 archived runs, at lengths 64 to 256 and four rates;
+  softmax in 2.
+- Tiny Shakespeare ([`shakespeare_amsgradw`](experiments/shakespeare_amsgradw/README.md)):
+  GPTMini again; best test cross-entropy 1.638935 ± 0.016796 under sparsemax
+  against 1.625375 ± 0.001731 under softmax, over three seeds.
+- Lean, commit `0cf0524` (`Transformer.GPTMini.Sparsemax`): when one visible
+  score of a causal row exceeds every other by more than 1, the sparsemax row
+  is that position's basis vector on a neighborhood
+  (`sparseWeights_eventually_eq_basis`), so its derivative, and that of any
+  loss of it, is zero (`sparseWeights_hasFDerivAt_zero`,
+  `rowLoss_hasFDerivAt_zero`); a wrong route can be such a point, of positive
+  loss (`wrong_route_positive_stationary_point`). These concern one row: a
+  possible obstruction, not the cause. Lean also certifies the accuracy of
+  all 37,056 final CPU prediction records of the mod-193 pair
+  ([report](experiments/archive/synthetic_trainers/protocols/adamw_stability_20261002/sparsemax-mechanism-and-final-certificate.md)).
+
+So sparsemax does not fail everywhere: it wins on recall without QKNorm and
+XSA, nearly ties on language with them, and fails to generalize on modular
+division with them. The basis tells tasks apart: depth, recall and parity,
+which a transformer solves by different means, on two sizes of GPTMini, each
+calibrated under softmax ([Found](experiments/basis/README.md#found), at
+bd63e50). Its 30 runs take 20 minutes on 28 cores, the small model's 15 about
+nine.
+
+## Hypotheses
+
+Steps 1 to 3 decide each by its criterion.
+
+**H1. Locked routes.** A sparsemax row passes no gradient to the scores
+outside its support, and none at all once a gap of more than 1 isolates one
+position (the Lean results above). A route the task needs that starts outside
+the support is found only through other rows. *Predicted:* in a failing run
+the supports of fixed rows stop changing while the run is below target, and
+on wrong recall answers the position holding the answer lies outside every
+head's support. *Refuted if* the supports keep changing until the run ends,
+or the answer's position is in a support on the wrong answers.
+
+**H2. The starting scale.** QKNorm multiplies the cosine of a query and a key
+by a learned e^α that starts at √(head width): 4 on the small model, about
+5.7 on the large. A row's scores then spread about 1, whatever the
+initialization, and sparsemax keeps few positions: were a row's 64 scores
+independent standard normals, it would keep 3.3 on average, and one alone in
+6% of rows. Scaled dot-product scores under the initialization at 0.02 spread
+about 0.02² × width, 0.026 on the small model and 0.051 on the large; as
+independent normals, a row of 64 keeps about 41 and 27. *Predicted:* at
+update 0, QKNorm rows keep a few positions, and a smaller starting e^α or
+scaled dot-product scores remove sparsemax's failures. *Refuted if* QKNorm
+rows start wide, or neither change helps where sparsemax fails.
+
+**H3. Counting needs ties.** Depth is definable by counting
+(`Transformer.CRASP.definablePos_altPlusNeutral`), and parity of up to 16
+bits can be read off the count of ones; a count is an average over
+positions. A sparsemax row that keeps all T visible positions weighs each by
+1/T plus its score's deviation from the row's mean, so averaging within a
+relative error ε needs every score within ε/T of the mean; softmax needs
+about ε, whatever T. At length 64 sparsemax needs ties 64 times finer.
+*Predicted:* sparsemax fails or slows on depth and parity more than on
+recall; where softmax passes, some heads average many positions nearly
+uniformly, while under sparsemax the same layers keep few positions, or their
+e^α falls far below its start. *Refuted if* sparsemax passes depth and parity
+as softmax does.
+
+**H4. XSA erases self-routes.** XSA subtracts from a head's output its
+component along the position's own value. A sparsemax row whose support is
+the position itself outputs exactly that value, so the head outputs zero
+there, and with a gap above 1 the row passes no gradient to its query, keys
+or values. Softmax gives one position all of a row's weight only in a row of
+one position. *Predicted:* failing sparsemax runs have many such rows, and
+dropping XSA helps sparsemax more than softmax. *Refuted if* such rows are
+rare, or dropping XSA leaves sparsemax's outcome unchanged.
+
+**H5. The recipe.** The basis recipes were set under softmax. A sparsemax
+failure that a neighboring rate of `RATES` removes is the recipe's, and the
+mechanism study leaves it.
+
+## 0. Run sparsemax on the basis
+
+Write `experiments/basis_sparsemax` (`experiment.py`, `README.md` and a row
+in `experiments/README.md`). Its runs are the basis's 30 benchmark runs under
+each of the two weights, labeled
+`<weights>-<mode>-<model>-<task>-seed<seed>`: `softmax` repeats the basis,
+and `sparsemax` is `basis(substitute(model, Softmax, Sparsemax()), mode,
+seed)`, both on the basis's thread counts. Both record `Diagnostics` at
+every observation: the training batch's loss, which tells a failure to fit
+from mod 193's failure to generalize, and the e^α of every head. First
+check:
+
+- that `Sparsemax`, a sort, a cumulative sum and a custom backward, compiles
+  under `Compiled`, and that compiled and eager sparsemax give the same
+  logits and gradients to rounding (a test in `python/tests`);
+- that diagnostics leave a compiled run's records unchanged, and that the
+  softmax runs repeat bd63e50's; if not, the two arms compare at this commit
+  alone;
+- the time of an update of each small task under both weights. If sparsemax
+  does not compile, or costs more than twice softmax, fix that in the lab
+  first.
+
+## 1. Find where sparsemax fails
+
+Train the small model's 15 runs under both weights, then the large model's
+15. Record, as the basis's Found does, the update of each pass or the best
+selection accuracy, and the last training loss. Where sparsemax fails from a
+seed that softmax passes from, train that seed at the two rates of `RATES`
+beside the recipe's (H5).
+
+Predicted before the runs: by H3, depth and parity fail or slow; by
+`mqar_sparsemax`, recall passes at least as often as under softmax, unless
+H2 or H4 interferes.
+
+The cells (mode, model, task) where sparsemax fails at every rate tried and
+softmax passes are the targets of steps 2 to 4. If there are none, the basis
+does not show the failure: record that, move step 2's measurement to mod 193,
+and keep the basis to check that a repair costs nothing there.
+
+## 2. Measure the mechanism
+
+Add to `Diagnostics` a measurement of attention (domain, infrastructure,
+test). At every observation, an uncompiled forward of 256 fixed validation
+rows, which draws no random numbers, records per layer and head:
+
+- the size of the support, in positions and as a share of the visible ones;
+- the share of rows that keep one position, and of rows that keep only
+  their own;
+- the share of rows with a gap above 1, which are locally constant;
+- the turnover: the share of (row, position) pairs whose membership in the
+  support changed since the previous observation;
+- under softmax, the same for the sparsemax of its scores, and the
+  normalized entropy of its weights;
+- on recall, at each query, the weight on the position holding the answer,
+  the largest over the layer's heads, and whether that position is in any
+  support.
+
+Tests check each statistic on hand-made rows, and that a run with the
+measurement records the same losses as one without. Then:
+
+1. At update 0, measure both models under QKNorm and under scaled
+   dot-product scores (H2's estimate).
+2. Train the target cells under both weights from seeds 0 to 2 with the
+   measurement.
+3. On the small model's target cells, train {QKNorm, ScaledDot} ×
+   {XSA, none} × {softmax, sparsemax} from seeds 0 to 2 (H2, H4).
+
+Decide each hypothesis by its criterion, and write what was found in the
+experiment's README.
+
+## 3. Separate forward routing from backward sensitivity
+
+The intervention planned for mod 193, moved onto the basis:
+
+| Forward weights | Backward score map | Purpose |
+| --- | --- | --- |
+| Softmax | Softmax Jacobian | Control |
+| Sparsemax | Sparsemax support Jacobian | Candidate |
+| Sparsemax | Softmax Jacobian | Keep sparse routing; change score gradients |
+| Softmax | Sparsemax support Jacobian | Keep dense routing; change score gradients |
+
+A new `Weights` block computes one normalizer forward and the other's
+Jacobian backward, at the same scores: a declared surrogate gradient, not
+the derivative of the loss. CPU tests: with both normalizers the same, it
+equals the plain block bit for bit, logits and every gradient; mixed, its
+weights are those of its forward normalizer, and its backward equals an
+independent vector-Jacobian product of its backward normalizer
+(`torch.func.vjp`), inactive entries included. Train the two mixed cases on
+the target cells from seeds 0 to 2; steps 1 and 2 hold the diagonal ones.
+
+If sparse forward with the softmax backward passes where sparsemax fails,
+and dense forward with the sparsemax backward fails where softmax passes,
+the backward map is implicated (H1). The swap changes both the support and
+the size of score gradients; a focused case, the sparsemax backward with
+softmax's gradients for the inactive scores alone, attributes the effect to
+their zeros. If sparse forward fails under either
+backward, the forward is implicated (H3, H4). Other patterns indicate an
+interaction or an unsuitable surrogate.
+
+## 4. Repair
+
+Try the candidates whose hypothesis survived, each a block or a `swap` or
+`substitute` variant:
+
+- (H2) QKNorm starting at e^α = 1, a new field of `QKNorm`; scaled
+  dot-product scores;
+- (H4) no XSA;
+- (H1, H3) α-entmax at α = 1.5 (arXiv:1905.05702v2, §3.2 to 3.4): still
+  exact zeros, but its support reaches 2 below the top score, not 1, and
+  averaging within ε needs scores within about ε/√T of the mean, not ε/T;
+  or α = 1 + sigmoid(a) learned per head, in (1, 2) (arXiv:1909.00015v2,
+  §3 and 4), so that a head that counts can stay dense; there the heads
+  first grew denser, and some sparser later (§5.1);
+- (H1) sparse forward with the softmax backward, from step 3.
+
+Screen each on the small model's 15 runs: in the easy mode a failure counts
+against it, in the hard mode a pass counts for it. Then the large model's 15.
+A repair succeeds if it passes every cell from every seed that softmax
+passes from. Record its updates to pass beside softmax's, seed by seed, and
+how sparse its attention ends: the mean support and the share of exact
+zeros, per layer and head. A repair that passes only by making its rows
+dense explains the failure; it does not repair sparse attention.
+
+## 5. Confirm on mod 193
+
+Train the best repair as a label of `experiments/mod193_stability` beside
+`sparsemax`, changing nothing else, with step 2's measurement, for its
+300,000 updates; the archived pair took 2.6 and 3.5 hours on the GPU. The
+lab has not trained `base` or `sparsemax` yet: their table holds archived
+runs of the historical trainers, so train both too. Record the archived
+table's columns: memorized, confirmed, failures in the last 50,000 updates
+and the worst held-out accuracy there, final accuracies. The repair is
+confirmed if it generalizes as `base` does: confirmed for 20 evaluations,
+ending at 100% on both splits. One seed cannot establish general
+applicability: repeat a confirmed repair from fresh model and data seeds
+before claiming it.
+
+A preliminary CPU inspection of the archived pair's final checkpoints has
+finished; its observations are under
+`experiments/archive/synthetic_trainers/runs/adamw_stability_20261002/bootstrap/sparsemax-generalization-inspection-20261003/`
+(not tracked). The inspector that wrote them is in commit `441f47b`, at
+`experiments/archive/synthetic_trainers/protocols/adamw_stability_20261002/inspect_sparsemax_generalization.py`,
+and left the tree with the other archive scripts; its SHA256 is the
+`program_sha256` the observations record. It imports the removed synthetic
+trainers and reads `experiments/runs/`, so it does not run as it is. Review
+the source, independently check the observations, and archive them before
+treating them as final.
+
+## 6. Prove the supported statements in Lean
+
+Prove only what the experiments support, under AGENTS.md: statements checked
+against their sources, an example for every theorem with hypotheses, no axiom
+or new `sorry`; then `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden`. Distinguish a real-arithmetic theorem, a
+floating-point measurement and a certificate of supplied data; a theorem
+about one row says nothing about a whole training run. Candidates, beside
+`Transformer.GPTMini.Sparsemax`:
+
+- (H2) every position of a sparsemax row's support scores within 1 of the
+  row's maximum, by the closed form of arXiv:1602.02068v2, §2.2, so under
+  QKNorm its cosine is within e^(−α) of the largest;
+- (H3) with a full support the weights are 1/T plus each score's deviation
+  from the mean, so a near-uniform average needs ties T times finer than
+  under softmax;
+- (H4) a row whose support is its own position, by a gap above 1, has an XSA
+  output of zero on a neighborhood, hence zero derivative in its query, keys
+  and values (from `sparseWeights_eventually_eq_basis`);
+- (H1) what the intervention attributes.
 
 ## Abandoned schedule pair
 
@@ -48,130 +296,3 @@ rechecked after termination. The cosine case never started. Raw state is under
 The incomplete pair supports no conclusion about either schedule. Its frozen
 plan pins sources at their `experiments/` paths; replaying it requires a
 checkout of commit `698d904`.
-
-## 1. Measure acceleration before choosing a new recipe
-
-The pre-pause read-only sample at 07:43 UTC observed GPU utilization of 65--96%
-(median 76%), 221 MiB of 2,048 MiB VRAM used, and approximately one fully busy
-CPU core on a 56-core host. Ten samples covered 9.31 seconds; this is a short
-snapshot, not a whole-run performance profile. Low total host CPU utilization
-does not imply that the training process has spare CPU capacity.
-
-The corpus is already resident on the GPU. The trainer uses one CPU thread,
-checks gradient finiteness every update, synchronizes and writes the gradient
-trace every update, and performs exhaustive canonical and neighboring
-evaluations. Evaluation currently uses batch 1,024. Measure training,
-evaluation, diagnostics and checkpoint overhead separately.
-
-Benchmark isolated softmax and sparsemax
-copies with training batches 512, 1,024, 2,048 and 4,096, subject to available
-memory. Keep LR at 0.0003 initially. Start every benchmark from the same saved
-model and optimizer state; use warmup and synchronized timings. Record update
-latency, examples per second and peak allocated VRAM. Benchmark runs have no
-scientific generalization status and must never overwrite scientific histories.
-
-First prefer execution improvements that preserve the learning recipe:
-larger evaluation batches, fewer CPU/GPU synchronization points in evaluation,
-and buffered trace writes with identical records and checkpoint recovery.
-Keep diagnostic cadence and all accuracy/recovery criteria. Verify per-example
-predictions, model gradients, native AdamW updates, sampler state and exact
-resumption as applicable; retain explicit numerical checks for loss reductions.
-
-A larger training batch changes gradient noise, examples per update, epoch
-counts, and the optimizer's effective time scale per example. Report runtime
-and generalization against updates, examples seen and elapsed time separately.
-At the same 300,000-update limit it is a changed experiment. Do not automatically
-increase AdamW LR with batch size. If a larger batch is selected, first compare
-it at the existing LR; freeze any later LR sweep as a separate factor. Preserve
-batch 512/LR 0.0003 controls. Use one common recipe for the causal normalizer
-study; do not tune the four normalizer cases separately.
-
-## 2. Review fixed-checkpoint diagnostics
-
-Inspect both actual final checkpoints on the entire frozen corpus. Separate
-numeric-answer attention from EOS, train from held-out, and correct from wrong
-numeric predictions. Record each layer and head's support size, singleton
-frequency, strict unit gaps, entropy, and zero numerator/denominator weights.
-Zero direct operand weight does not prove absence of operand information:
-earlier layers and residual paths can retain it.
-
-Evaluate all four checkpoint-weight/forward-normalizer combinations without
-updates. This measures the learned representation's dependence on routing;
-it does not identify a training cause. Inspect inactive-score and singleton
-gradients on fixed train and held-out batches. Instrumented logits, losses
-and every parameter gradient must match ordinary execution exactly.
-
-A preliminary CPU inspection already finished; its observations are under
-`experiments/archive/synthetic_trainers/runs/adamw_stability_20261002/bootstrap/sparsemax-generalization-inspection-20261003/`
-(not tracked). The inspector that wrote them is in commit `441f47b`, at
-`experiments/archive/synthetic_trainers/protocols/adamw_stability_20261002/inspect_sparsemax_generalization.py`,
-and left the tree with the other archive scripts; its SHA256 is the
-`program_sha256` the observations record. It imports the removed synthetic
-trainers and reads `experiments/runs/`, so it does not run as it is. Review
-the source, independently check the observations, and archive them before
-treating them as final. No intervention training has started.
-
-## 3. Separate forward routing from backward sensitivity
-
-Prepare and freeze a two-by-two training intervention:
-
-| Forward weights | Backward score map | Purpose |
-| --- | --- | --- |
-| Softmax | Softmax Jacobian | Original control |
-| Sparsemax | Sparsemax support Jacobian | Original candidate |
-| Sparsemax | Softmax Jacobian | Preserve sparse routing; change score gradients |
-| Softmax | Sparsemax support Jacobian | Preserve dense routing; change score gradients |
-
-The mixed cases use declared surrogate gradients; these are not the derivative
-of the chosen forward loss. CPU controls must establish that diagonal cases
-reproduce original initialized parameters, logits, every gradient, AdamW
-updates, sampler exposure and resumed execution. Mixed cases must reproduce
-the chosen forward weights and independently checked Jacobian-vector products,
-including inactive entries. Preparation checks establish no learning result.
-
-The reference recipe is prime 193, train fraction 25%, model/data seeds 0/0,
-width 128, two layers, four heads, native AdamW betas (0.9, 0.98), epsilon 1e-8,
-decay 0.1 on all parameters, LR 0.0003, warmup 10, batch 512 with short tails,
-and no clipping. Execution changes and any prospective batch/LR amendments
-must be separately measured, documented and frozen before the first update.
-Each scientific case has **at most 300,000 total optimizer updates**, with
-the main four-case comparison planned for the complete 300,000-update budget
-and no target-based early stop. Freeze source hashes and commit the final plan.
-
-Retain canonical diagnostics every 250 updates and neighboring observations,
-dense gradient tracing, the memorization-before-generalization plateau,
-twenty-observation long confirmation, and all 201 final-window persistence
-checks from 250,000 through 300,000. Measure numeric and EOS losses separately,
-support, failure depth, recovery delay, failure fractions and episode onsets
-per 10,000 updates. Keep quiet intervals and late relapses in the report.
-
-## 4. Interpret, narrow and confirm the mechanism
-
-Analyze all four complete cases together. If dense backward routing rescues
-sparse forward routing and sparse backward routing damages dense forward
-routing, the backward map is implicated in this setting. This intervention
-changes both support and gradient magnitude; follow with a focused intervention
-before attributing the effect specifically to inactive-score zeros. If forward
-mixing is implicated, test operand-information retention and value mixing.
-Other patterns may indicate interaction or an unsuitable surrogate.
-
-Repeat a supported effect across independently frozen model/data seeds before
-claiming repeatability. One seed pair cannot establish general applicability.
-The existing stable-benchmark gate still requires all six fresh crossed
-confirmations; CPU fixtures and exploratory mechanism studies do not open
-the architecture or complementary-attention gates.
-
-## 5. Prove the experimentally supported statement in Lean
-
-Only after the experiments isolate a mechanism, formulate its precise
-mathematical statement with explicit assumptions and satisfiable examples.
-Possible targets concern support, derivatives, loss geometry, information
-retention or finite-precision bounds. Distinguish a real-arithmetic theorem,
-a floating-point measurement and a supplied-data certificate. Do not infer a
-whole-model training or generalization theorem from a local attention-row proof.
-
-Follow AGENTS.md: check statements against the local papers, document extensions,
-inspect external lemmas and their proof dependencies, add no axioms or new
-`sorry`, build affected modules and the full tree, run the full axiom audit,
-and regenerate INDEX.md. Commit each verified logical change and update the
-global plan and detailed handoff. Until the user resumes work, stop here.
