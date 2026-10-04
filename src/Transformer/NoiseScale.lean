@@ -22,7 +22,11 @@ makes it:
 * §2.3 is derived, as the paper derives it, from eq. (D.1), the trajectory's
   `ds` a finite measure; `B_crit = E_min/S_min` is the model's, not a fit, and
   `S_min`, `E_min` are proved least and the limits of constant batches
-  (`Section2_Tradeoff`).
+  (`Section2_Tradeoff`);
+* the footnote "`E[x/y] ≥ E[x]/E[y]` in general for positive variables" is
+  refuted and proved for independent `x`, `y`; averaging over many batches is
+  read as plain averages over independent steps, where the paper averages
+  exponentially (`SectionA_RatioBias`).
 -/
 
 import Transformer.NoiseScale.Section2_Batches
@@ -31,3 +35,4 @@ import Transformer.NoiseScale.Section2_NoiseScale
 import Transformer.NoiseScale.Section2_Implications
 import Transformer.NoiseScale.Section2_Tradeoff
 import Transformer.NoiseScale.SectionA_Estimators
+import Transformer.NoiseScale.SectionA_RatioBias
