@@ -6,22 +6,23 @@ the archived AMSGradW/softmax baseline of the synthetic suite,
 `synthetic_scaling` those of `fixtures/legacy_scaling.json`, the
 configurations its archived sweeps recorded, and `mqar_sparsemax` the `full`
 and `sanity` profiles of the convex MQAR comparison recorded in
-`fixtures/legacy_recall.json`.
+`fixtures/legacy_recall.json`, on the lab's MQAR.
 """
 
 import itertools
 import json
+import math
 from pathlib import Path
 import unittest
 
 from lab.application.study import survey
 from lab.domain.spec import swap
-from lab.domain.training import Checkpoint, CudaGraph
+from lab.dsl import (MQAR, AdamW, Budget, Checkpoint, CudaGraph, Eager, Evaluate, Experiment, Schedule, Seeds,
+                     Synthetic)
 from lab.infrastructure.loader import load
 
 from test_memorization_training import study
-from test_nn import RECALL
-from test_recall import recipe
+from test_nn import RECALL, recall_model
 
 EXPERIMENTS = Path(__file__).resolve().parents[2] / "experiments"
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -67,6 +68,30 @@ def scaling(name):
 # Each experiment written from archived runs, the fixture of their recipes, and the label it gives a run.
 ARCHIVED = {"synthetic_amsgradw": ("legacy_baseline.json", baseline),
             "synthetic_scaling": ("legacy_scaling.json", scaling)}
+
+
+def recipe(config, length, width, rate, attention, batch):
+    """`train_run` of a configuration in the DSL, at one length, width and rate: each epoch observed after its end.
+
+    The comparison's sequences of `length` tokens bound `length / 4` keys out
+    of half its vocabulary to values out of the other half, queried each
+    once at positions weighted p^-alpha; here the lab's MQAR draws them, and
+    its target is the comparison's milestone, 99% of the queries answered.
+    """
+    epoch = math.ceil(config["train_examples"] / batch)
+    updates = epoch * config["epochs"]
+    pairs = length // 4
+    return Experiment(
+        model=recall_model(config, length, width, attention),
+        benchmark=Synthetic(MQAR(symbols=config["vocab"] // 2, pairs=pairs, queries=pairs, alpha=config["alpha"]),
+                            length=length, train=config["train_examples"], validation=config["validation_examples"],
+                            test=config["test_examples"], target=.99, metric="token_accuracy"),
+        optimizer=AdamW(lr=rate, betas=(0.9, 0.999), weight_decay=config["weight_decay"], decay="matrices"),
+        schedule=Schedule(warmup=max(1, int(config["warmup_fraction"] * updates)), inclusive=True),
+        budget=Budget(updates=updates, batch=batch),
+        seeds=Seeds(model=config["seed"], data=config["seed"], batches=config["seed"]),
+        evaluate=Evaluate(every=epoch, batch=batch),
+        execution=Eager(device="cpu"))
 
 
 def recall():

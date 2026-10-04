@@ -1,7 +1,7 @@
 import unittest
 
 from lab.domain import cadence
-from lab.domain.analysis import curve_witness, milestones, transition
+from lab.domain.analysis import curve_witness, transition
 from lab.domain.spec import swap
 from lab.domain.training import Cosine, Diagnostics, Schedule, rate
 
@@ -74,20 +74,6 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual((result["train_fit_step"], result["heldout_onset_step"],
                           result["heldout_confirmed_step"], result["lag_steps"]), (10, 40, 50, 30))
         self.assertTrue(result["delayed_generalization"])
-
-    def test_milestones_record_the_first_crossing_and_whether_it_held(self):
-        row = lambda step, correct: {"step": step, "validation": {"accuracy": correct / 8, "correct": correct,
-                                                                  "queries": 8}}
-        found = milestones([row(0, 6), row(5, 4), row(10, 8), row(15, 7)], "validation", (50, 75, 90, 100))
-        # Four of eight reach 50% exactly.
-        self.assertEqual(found["50"], {"step": 0, "accuracy": .75, "previous_step": None, "previous_accuracy": None,
-                                       "sustained_to_end": True})
-        self.assertEqual(found["75"], {"step": 0, "accuracy": .75, "previous_step": None, "previous_accuracy": None,
-                                       "sustained_to_end": False})
-        self.assertEqual(found["90"], {"step": 10, "accuracy": 1.0, "previous_step": 5, "previous_accuracy": .5,
-                                       "sustained_to_end": False})
-        self.assertEqual(found["100"], found["90"])
-        self.assertIsNone(milestones([row(0, 3)], "validation", (50,))["50"])
 
     def test_curve_witness_finds_descent_ascent_descent(self):
         self.assertEqual(curve_witness([(0, 3), (1, 1), (2, 2), (3, 0)])["indices"], [0, 1, 2, 3])

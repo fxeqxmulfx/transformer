@@ -22,13 +22,22 @@ from lab.infrastructure.store import STREAMS, RunDirectory
 
 from examples import gptmini, modular, reference
 from test_engine import TRACE, Interrupted, sha, untimed
+from test_experiments import recipe
 from test_memorization_training import FIXTURE as MEMORIZATION
 from test_memorization_training import study
-from test_recall import experiment as recall
+from test_nn import RECALL
 from test_synthetic_training import FIXTURE as SYNTHETIC
 from test_synthetic_training import experiment as synthetic
 from test_text import FIXTURE as TEXT
 from test_text import historical as text
+
+
+def recall(name):
+    """A run of the convex MQAR comparison in `fixtures/legacy_recall.json`, on the lab's MQAR."""
+    golden = RECALL["runs"][name]
+    config = golden["config"]
+    return recipe(config, config["lengths"][0], config["widths"][0], config["learning_rates"][0],
+                  golden["attention"], golden["batch"])
 
 
 class Issued(GraphStepper):

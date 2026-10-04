@@ -67,7 +67,9 @@ class MQAR(Task):
     the bindings, at positions drawn without replacement with weight
     position^-alpha. A recurring key is supervised with its value. The
     procedure has no BOS and recurs every key: `queries` = `pairs` and
-    `query_gap` = 0.
+    `query_gap` = 0. So did the convex MQAR comparison
+    (`experiments/mqar_sparsemax`), whose keys and values split its
+    vocabulary in halves and whose draws were NumPy's.
 
     `overwrites` extends the procedure: that many of the `pairs` writes
     rebind a key already written, each to a value other than its current

@@ -5,18 +5,24 @@ with softmax attention, and does it learn it at more lengths and rates when
 sparsemax replaces softmax and nothing else? These are the trained
 transformers of the [convex MQAR comparison](../archive/convex_mqar): its
 `full` profile with its attention ablation, and its `sanity` profile, in
-the lab's language. Its convex construction and certificate are not ported.
+the lab's language and on the lab's MQAR. Its convex construction and
+certificate are not ported.
 
 ## Runs
 
-A sequence of `length` tokens out of 8,192 opens with `length / 4` adjacent
-key-value pairs, keys from the first half of the tokens and values from the
-second. Each key recurs once later, at a position p drawn with weight
-p^-0.1, and the model is scored on the value it predicts there; every other
-token is a random value. A run trains on 100,000 sequences for 64 epochs
-and is observed on 3,000 validation sequences after every epoch; the best
-model, by validation accuracy and then loss, is evaluated once on 3,000 test
-sequences. Every seed is 0.
+A sequence of `length` tokens is the lab's `MQAR` at the comparison's
+sizes: after BOS it binds `length / 4` distinct keys, out of 4,096 key
+tokens, to values out of 4,096 value tokens, in adjacent pairs. Each key
+recurs once later, at a position p drawn with weight p^-0.1, and the model
+is scored on the value it predicts there; every other token is a random
+value. A run trains on 100,000 sequences for 64 epochs and is observed on
+3,000 validation sequences after every epoch; the best model, by the share
+of validation sequences with every query answered, then balanced accuracy,
+then loss, is evaluated once on 3,000 test sequences. A run records the
+first observation at which 99% of the validation queries are answered, and
+`report` compares the runs that differ in their rate alone: the best
+observation, the first to reach 99%, and the first to reach it and hold it.
+Every seed is 0.
 
 The model is the comparison's `RopeTransformer`: two pre-norm layers of
 width 64 with one head of interleaved RoPE (base 10,000), LayerNorm, a
@@ -35,9 +41,11 @@ made. A batch, and an evaluation chunk, holds 64 sequences, 16 at length
 
 The rates are `np.logspace(-4, -2, 4)`, labeled to eight significant
 digits: `lr0.0001`, `lr0.00046415888`, `lr0.0021544347` and `lr0.01`.
-`sanity` is a model of width 32, trained on 2,048 sequences and observed and
-tested on 512 each, for 128 epochs. Every run trains in float32, replays
-from CUDA graphs, and keeps a checkpoint after every epoch.
+`sanity` is a model of width 32, trained on 2,048 sequences out of 8 key
+and 8 value tokens and observed and tested on 512 each, for 128 epochs.
+Every run trains in float32, replays from CUDA graphs, and keeps a
+checkpoint after every epoch. At length 512 the training sequences alone
+take 1.2 GB of device memory.
 
 ## Running
 
@@ -71,5 +79,8 @@ and held it in 8; under rate 1e-2 it fell to 0.02 at length 64 and to 0.004
 at length 128. The sanity run reached validation and test accuracy 1.0
 ([`rope_sanity.json`](../archive/convex_mqar/reports/rope_sanity.json)).
 
-Here every run trains in float32 and replays from CUDA graphs, and the
-initial model is observed too, so none is its archived run bit for bit.
+Here a sequence opens with BOS and is drawn by the lab's MQAR, not by the
+comparison's NumPy generator; the best observation ranks first by whole
+sequences answered, not by queries; every run trains in float32 and replays
+from CUDA graphs; and the initial model is observed too. So none is its
+archived run bit for bit.

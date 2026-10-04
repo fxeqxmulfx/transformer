@@ -11,8 +11,9 @@ import unittest
 
 from lab.application.report import report_study
 from lab.application.study import Study
-from lab.domain.benchmarks import AssociativeRecall
 from lab.domain.spec import describe, swap
+from lab.domain.synthetic import Synthetic
+from lab.domain.tasks import MQAR
 from lab.infrastructure.store import RunDirectories
 
 from examples import gptmini, modular
@@ -20,10 +21,15 @@ from test_collapse import CASES as COLLAPSE
 from test_stability import CASES as STABILITY, archived
 
 EXPERIMENT = modular(gptmini(), prime=193)
-RECALL = swap(swap(swap(EXPERIMENT, "benchmark", AssociativeRecall(length=16, vocab=64, alpha=.1, train=8,
-                                                                    validation=8, test=8)),
+RECALL = swap(swap(swap(EXPERIMENT, "benchmark", Synthetic(MQAR(pairs=4, queries=4), length=16, train=8,
+                                                            validation=8, test=8, target=.99)),
                     "budget.updates", 500), "evaluate.every", 250)
 FINISHED = {"updates": 150000, "stop": {"step": 150000, "reason": "budget"}}
+
+
+def metrics(accuracy, loss):
+    """An observation of a synthetic split whose sequences are all right or all wrong together."""
+    return {"sequence_accuracy": accuracy, "balanced_accuracy": accuracy, "loss": loss}
 
 
 def history():
@@ -96,22 +102,19 @@ class ReportTests(unittest.TestCase):
                          STABILITY["grokking"]["persistence"])
 
     def test_other_benchmarks_have_no_stability_analyses(self):
-        self.write("recall", RECALL, [{"step": 0, "validation": {"accuracy": 0.0, "loss": 4.0}}], streams=False)
+        self.write("recall", RECALL, [{"step": 0, "validation": metrics(0, 4)}], streams=False)
         self.assertEqual(set(self.report({"recall": RECALL})["recall"]), {"status", "budget", "latest", "result"})
 
     def test_finished_runs_that_differ_in_their_rate_alone_are_calibrated(self):
-        # Rate 1e-2 crosses 99% first and falls back; 1e-3 crosses later, holds, and has the best observation
-        # at accuracy 1; 1e-4 has the lowest loss but never crosses.
+        # Rate 1e-2 reaches the target of 99% first and falls back; 1e-3 reaches it later, holds, and has the
+        # best observation at accuracy 1; 1e-4 has the lowest loss but never reaches it.
         for name, lr, accuracies, best in (("fast", 1e-2, (0, 1, .5), (1, .3)), ("slow", 1e-3, (0, .5, 1), (1, .2)),
                                            ("calm", 1e-4, (0, .9, .98), (.98, .1))):
             rows = [{"step": step, "training_seconds": step / 100, "wall_seconds": step / 50,
-                     "validation": {"accuracy": accuracy, "loss": 1 - accuracy}}
+                     "validation": metrics(accuracy, 1 - accuracy)}
                     for step, accuracy in zip((0, 250, 500), accuracies, strict=True)]
-            crossing = next((row for row in rows if row["validation"]["accuracy"] >= .99), None)
             result = {"updates": 500, "stop": {"step": 500, "reason": "budget"}, "final": rows[-1],
-                      "best": {"step": 500, "validation": {"accuracy": best[0], "loss": best[1]}},
-                      "milestones": {"99": None if crossing is None else {
-                          "step": crossing["step"], "sustained_to_end": rows[-1]["validation"]["accuracy"] >= .99}}}
+                      "best": {"step": 500, "validation": metrics(*best)}}
             self.write(name, swap(RECALL, "optimizer.lr", lr), rows, result, streams=False)
         experiments = {name: swap(RECALL, "optimizer.lr", lr)
                        for name, lr in (("fast", 1e-2), ("slow", 1e-3), ("calm", 1e-4), ("next", 3e-4))}
@@ -122,8 +125,8 @@ class ReportTests(unittest.TestCase):
         selected = self.document(experiments)["rate_selection"]
         self.assertEqual(selected, [{"labels": ["fast", "slow", "calm"], "selected": {
             "best": {"status": "selected", "label": "slow", "lr": 1e-3},
-            "first99": {"status": "selected", "label": "fast", "lr": 1e-2},
-            "stable99": {"status": "selected", "label": "slow", "lr": 1e-3}}}])
+            "first": {"status": "selected", "label": "fast", "lr": 1e-2},
+            "stable": {"status": "selected", "label": "slow", "lr": 1e-3}}}])
 
 
 if __name__ == "__main__":

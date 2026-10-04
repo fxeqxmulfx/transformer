@@ -7,7 +7,7 @@ alone are compared once each has trained the budget its file sets.
 """
 
 from ..domain.benchmarks import ModularDivision
-from ..domain.calibration import POLICIES, choose, rate_groups
+from ..domain.calibration import POLICIES, choose, crossing, rate_groups
 from ..domain.collapse import collapse, largest_gradients
 from ..domain.experiment import require_continuation
 from ..domain.phases import phases
@@ -44,16 +44,12 @@ def stability(run: Run, history, budget, every, finished):
 
 def candidate(label, experiment, history, result):
     """What a finished run offers the rate selection: its rate, the rank of its best observation, and, when its
-    benchmark marks milestones, its first observation at 99%."""
+    benchmark sets a target, its crossing of it."""
     benchmark = experiment.benchmark
     found = {"label": label, "lr": experiment.optimizer.lr,
              "rank": benchmark.rank(result["best"][benchmark.selection])}
-    if "milestones" in result:
-        reached = result["milestones"]["99"]
-        seconds = {row["step"]: row["training_seconds"] for row in history}
-        found["crossing"] = None if reached is None else {
-            "step": reached["step"], "training_seconds": seconds[reached["step"]],
-            "sustained_to_end": reached["sustained_to_end"]}
+    if benchmark.targeted:
+        found["crossing"] = crossing(benchmark, history)
     return found
 
 
@@ -61,8 +57,8 @@ def select_rates(chosen, candidates):
     """For each group of chosen runs that differ in their rate alone, the run each policy selects.
 
     Only a benchmark with a selection split is calibrated, and the crossing
-    policies need its milestones too. A group waits until each of its runs
-    has trained its file's budget.
+    policies need its target too. A group waits until each of its runs has
+    trained its file's budget.
     """
     groups = rate_groups({label: describe(experiment) for label, experiment in chosen
                           if experiment.benchmark.selection is not None})

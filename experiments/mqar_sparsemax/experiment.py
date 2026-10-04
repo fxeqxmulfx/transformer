@@ -20,15 +20,16 @@ def rope(width, context):
         positions=RoPE(interleaved=True), readout=Tied(), final_norm=LayerNorm(), init=ScaledResidual(0.02))
 
 
-def run(length, width, lr, vocab=8192, train=100_000, held_out=3000, epochs=64):
+def run(length, width, lr, symbols=4096, train=100_000, held_out=3000, epochs=64):
     """`train_run` at one length, width and rate: an observation and a checkpoint after every epoch."""
     batch = 8 if max(length, width) >= 512 else 16 if max(length, width) >= 256 else 64
     epoch = math.ceil(train / batch)
     updates = epochs * epoch
+    pairs = length // 4
     return Experiment(
         model=rope(width, length),
-        benchmark=AssociativeRecall(length=length, vocab=vocab, alpha=0.1, train=train, validation=held_out,
-                                    test=held_out),
+        benchmark=Synthetic(MQAR(symbols=symbols, pairs=pairs, queries=pairs, alpha=0.1), length=length, train=train,
+                            validation=held_out, test=held_out, target=0.99, metric="token_accuracy"),
         optimizer=AdamW(lr=lr, betas=(0.9, 0.999), weight_decay=0.1, decay="matrices"),
         schedule=Schedule(warmup=max(1, int(0.1 * updates)), inclusive=True),
         budget=Budget(updates=updates, batch=batch),
@@ -46,5 +47,5 @@ experiments = {
     **softmax,
     **{label.replace("softmax", "sparsemax", 1): substitute(experiment, Softmax, Sparsemax())
        for label, experiment in softmax.items()},
-    "sanity": run(8, 32, 0.003, vocab=16, train=2048, held_out=512, epochs=128),
+    "sanity": run(8, 32, 0.003, symbols=8, train=2048, held_out=512, epochs=128),
 }

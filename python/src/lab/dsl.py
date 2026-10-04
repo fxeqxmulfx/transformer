@@ -6,7 +6,7 @@
 """
 
 from .domain.basis import basis
-from .domain.benchmarks import AssociativeRecall, ModularDivision, TinyShakespeare
+from .domain.benchmarks import ModularDivision, TinyShakespeare
 from .domain.experiment import Experiment, grid
 from .domain.generative import (Addition, BooleanAnd, Copy, Count, DoubleHistogram, Histogram, Mode, MostFrequent,
                                 Parity, RandomLM, Reverse, Sort)
@@ -31,7 +31,7 @@ __all__ = [
     "FusedQKV", "PerHeadQKV", "ScaledDot", "QKNorm", "Softmax", "Sparsemax",
     "ReLU", "ReLU2", "GELU", "Tied", "Untied", "TorchDefault", "Normal", "ScaledResidual",
     # benchmarks
-    "ModularDivision", "TinyShakespeare", "AssociativeRecall", "Synthetic", "Memorization",
+    "ModularDivision", "TinyShakespeare", "Synthetic", "Memorization",
     # synthetic tasks
     "MQAR", "Lookup", "Dyck", "AlternatingBlocks", "TypedDyck", "CRASP",
     "Histogram", "DoubleHistogram", "Mode", "MostFrequent", "Copy", "Reverse", "Sort", "Count", "Addition",

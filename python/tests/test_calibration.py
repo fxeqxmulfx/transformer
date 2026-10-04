@@ -4,7 +4,9 @@ Golden records: `fixtures/legacy_rates.json`, what
 `validation_milestones.build_report` of `experiments/convex_mqar` selected
 under each policy from the archived summaries of its 24 runs, and what it
 read of each. The runs are matched to the labels of
-`experiments/mqar_sparsemax`, whose epochs set the observed updates.
+`experiments/mqar_sparsemax`, whose epochs set the observed updates. The
+comparison ranked a best observation by accuracy, then loss, and named its
+policies and their failures after its target of 99% accuracy.
 """
 
 import json
@@ -19,6 +21,9 @@ from test_experiments import EXPERIMENTS
 
 LEGACY = json.loads((Path(__file__).parent / "fixtures" / "legacy_rates.json").read_text())
 STUDY = load(EXPERIMENTS / "mqar_sparsemax")
+POLICIES = {"best": "best", "first99": "first", "stable99": "stable"}
+STATUSES = {"selected": "selected", "99_percent_unreached": "target_unreached",
+            "99_percent_not_sustained": "target_not_sustained"}
 
 
 def label(run):
@@ -29,9 +34,8 @@ def candidate(run):
     """What the selection reads of an archived run, at the updates of its experiment's epochs."""
     experiment = STUDY.experiments[label(run)]
     assert experiment.optimizer.lr == run["learning_rate"]
-    milestone = run["milestone"]
-    return {"label": label(run), "lr": run["learning_rate"],
-            "rank": experiment.benchmark.rank(run["best_validation"]),
+    milestone, best = run["milestone"], run["best_validation"]
+    return {"label": label(run), "lr": run["learning_rate"], "rank": (best["accuracy"], -best["loss"]),
             "crossing": None if milestone is None else {
                 "step": milestone["epoch"] * experiment.evaluate.every,
                 "training_seconds": milestone["training_seconds"],
@@ -51,8 +55,8 @@ class CalibrationTests(unittest.TestCase):
                 with self.subTest(policy=policy, attention=group["attention"], length=group["length"]):
                     runs = [run for run in LEGACY["runs"]
                             if (run["attention"], run["length"]) == (group["attention"], group["length"])]
-                    found = choose([candidate(run) for run in runs], policy)
-                    expected = {"status": group["status"]}
+                    found = choose([candidate(run) for run in runs], POLICIES[policy])
+                    expected = {"status": STATUSES[group["status"]]}
                     if group["learning_rate"] is not None:
                         expected |= {"label": label(group), "lr": group["learning_rate"]}
                     self.assertEqual(found, expected)
