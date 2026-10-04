@@ -13,8 +13,8 @@ precision instead: the query `(-β R², 2βR, -β)` of a token `R` meets the key
 `round(exp(score))` is `1` on a match and `0` otherwise (`val_round_exp`), as
 `e^{s+1} > 2^s`; the key of `⊲` is `0`, so `⊲` weighs `1`
 (`score_matcher_none`) and no denominator vanishes.  This file builds the
-transformer (`matcher`) and its scores; `CRASP.MatchingRecallCorrect` sums
-them at the last position.
+transformer (`matcher`) and its scores; `CRASP.MatchingRecallSums` sums them,
+and `CRASP.MatchingRecallAnswers` reads the last position.
 -/
 
 import Transformer.CRASP.FixedSign
