@@ -10,9 +10,12 @@ makes it:
   paper evaluates it, and Lemma 1 needs `tr(H cov(V)) + E[V]ᵀHE[V] > 0`, which
   it leaves implicit (`Section2_Lemma1`);
 * the limit of eq. (29) needs `G_t ≠ 0`, and fails without it
-  (`SectionA_SignUpdate`).
+  (`SectionA_SignUpdate`);
+* eq. (36) needs the coordinates of `G_est` independent: the per-sample gradients of all
+  the parameters are taken independent (`SectionC_SignMoments`).
 -/
 
 import Transformer.Surge.Section2_Lemma1
 import Transformer.Surge.SectionA_AdamMoments
 import Transformer.Surge.SectionA_SignUpdate
+import Transformer.Surge.SectionC_SignMoments
