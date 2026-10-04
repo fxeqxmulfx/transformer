@@ -1,5 +1,5 @@
 /-
-Formalization of thirty-two papers on the mathematics of Transformers:
+Formalization of thirty-four papers on the mathematics of Transformers:
 
 1. Weiss, Goldberg, Yahav — arXiv:2106.06981v2
    "Thinking Like Transformers".
@@ -110,6 +110,10 @@ Formalization of thirty-two papers on the mathematics of Transformers:
 33. McCandlish, Kaplan, Amodei, OpenAI Dota Team — arXiv:1812.06162
    "An Empirical Model of Large-Batch Training".
 
+34. Li, Zhao, Zhang, Sun, Wu, Jiao, Wang, Liu, Fang, Xue, Tao, Cui, Wang —
+   arXiv:2405.14578v5
+   "Surge Phenomenon in Optimal Learning Rate and Batch Size Scaling".
+
 Alongside these, `Transformer.ALM` formalizes the paraboloid-lifted lookup
 used by the append-only lookup machine (Percepta, transformer-vm), and
 `Transformer.Precision` proves the limits finite precision puts on attention:
@@ -168,3 +172,4 @@ import Transformer.Memorization
 import Transformer.MagnitudeDirection
 import Transformer.RecurrentGradients
 import Transformer.NoiseScale
+import Transformer.Surge
