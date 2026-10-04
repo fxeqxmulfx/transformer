@@ -76,6 +76,8 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.Parity` | PARITY is not in `TL[◁#]` at any depth, so no rounded transformer recognizes it |
 | `CRASP.ParityTwoSided` | PARITY is in `TL[◁#, ▷#]` at depth `2` |
 | `CRASP.AlignedRecall` | aligned MQAR over `c` tokens is in `TL[◁#]_1`, counting `c²` pairs |
+| `CRASP.QueryFree` | attention that ignores the query reads the past through `2d + 1` sums a layer |
+| `CRASP.QueryFreeRecall` | such a transformer recalls over `c` tokens only if `2^{c-1} ≤ (2^p (n + 1) + 1)^{k (2d + 1)}` |
 | `CRASP.FiniteFunction` | `lem:finite_function`: postcomposing a definable map with any `g : 𝔽 → 𝔽` |
 | `CRASP.ConstantLayer` | above a constant activation a layer computes one vector, and the collapsed transformer |
 | `CRASP.Collapse` | a conjecture, in no paper: collapse after `L` layers caps the depth at `L` |
@@ -137,8 +139,11 @@ either: it is a statement about circuits, which this development does not
 model.  One remark the source leaves in a comment, after
 `thm:transformer_equivalence`, is formalized all the same: PARITY is in
 `TL[◁#, ▷#]` and not in `TL[◁#]` (`CRASP.Parity`, `CRASP.ParityTwoSided`).
-One result is in no paper: Zoology's recall, once each value sits beside its
-key, is counting at depth `1` over a finite vocabulary (`CRASP.AlignedRecall`).
+Two results are in no paper: Zoology's recall, once each value sits beside its
+key, is counting at depth `1` over a finite vocabulary (`CRASP.AlignedRecall`);
+and a transformer whose attention ignores the query, as that one's does, needs a
+width growing with the vocabulary to recall over as many rows as tokens, by
+Zoology's index argument (`CRASP.QueryFree`, `CRASP.QueryFreeRecall`).
 -/
 
 import Transformer.CRASP.Defs
@@ -183,6 +188,8 @@ import Transformer.CRASP.FiniteAlphabet
 import Transformer.CRASP.Parity
 import Transformer.CRASP.ParityTwoSided
 import Transformer.CRASP.AlignedRecall
+import Transformer.CRASP.QueryFree
+import Transformer.CRASP.QueryFreeRecall
 import Transformer.CRASP.FiniteFunction
 import Transformer.CRASP.ConstantLayer
 import Transformer.CRASP.Collapse

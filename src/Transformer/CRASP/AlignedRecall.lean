@@ -20,16 +20,18 @@ a formula of `TL[◁#]` of depth 1 (`answers_mem`) that is true exactly where
 `key = q ∧ value = v` (`countSubs_answers`); the `c` values together take
 `c²` counts, one per pair.  By `thm:transformer_equivalence` of
 arXiv:2506.16055v3 a future-masked rounded transformer of one layer, whose
-attention in that construction is uniform, recognizes the instances whose
-last query `v` answers (`exists_rtfr_answers`): over a fixed vocabulary,
-aligned recall is counting, with no attention from a query to a key.  The
-converse, that a vocabulary larger than the width rules counting out, is not
-proved here.
+attention in that construction ignores the query (`RTfr.QueryFree`),
+recognizes the instances whose last query `v` answers (`exists_rtfr_answers`):
+over a fixed vocabulary, aligned recall is counting, with no attention from a
+query to a key.  At `n + 1 ≥ c` rows such a transformer needs
+`c - 1 ≤ k (2d + 1) log₂(2^p (n + 1) + 1)`, a width growing with `c`
+(`two_pow_le_of_queryFree`, `CRASP.QueryFreeRecall`).
 -/
 
 import Transformer.CRASP.BoundedExists
 import Transformer.CRASP.FormulaBounds
 import Transformer.CRASP.Locality
+import Transformer.CRASP.QueryFree
 import Transformer.CRASP.Transformers
 import Transformer.Zoology.Section3_MQAR
 
@@ -141,17 +143,18 @@ example : (holds fun t : Fin 1 × Fin 1 × Fin 1 => t.1 = 0 && t.2.1 = 0) ∈
   simp [answers, countSubs_any, List.finRange, Form.countSubs, Form.exBefore, Form.or, Form.le,
     Term.countSubs, countSubs_holds]
 
-/-- **A one-layer future-masked rounded transformer recognizes aligned recall
-over `c` tokens**: for each value `v`, one accepts exactly the instances whose
-last query `v` answers (`thm:transformer_equivalence` of arXiv:2506.16055v3
-applied to `answers v`). -/
+/-- **A one-layer future-masked rounded transformer whose attention ignores
+the query recognizes aligned recall over `c` tokens**: for each value `v`, one
+accepts exactly the instances whose last query `v` answers
+(`thm:TLCl_to_rtfr` of arXiv:2506.16055v3 applied to `answers v`, whose
+transformer has uniform attention, `W_Q = W_K = 0`). -/
 theorem exists_rtfr_answers (v : Fin c) :
-    ∃ (p s d : ℕ) (T : RTfr (Option (Fin c × Fin c × Fin c)) p s d 1),
+    ∃ (p s d : ℕ) (T : RTfr (Option (Fin c × Fin c × Fin c)) p s d 1), T.QueryFree ∧
       ∀ {n : ℕ} (x : Zoology.MQARInstance (n + 1) c),
         T.Accepts (bos (word x)) ↔ Zoology.PriorAnswer x (Fin.last n) v := by
-  obtain ⟨p, s, d, T, hT⟩ := exists_rtfr_of_mem_TLCl 1 (answers v) (answers_mem v)
-  refine ⟨p, s, d, T, fun {n} x => ?_⟩
-  rw [hT, ← sat_answers x (Fin.last n) v]
+  refine ⟨_, _, _, TemporalProgram.model (answers v) 1, RTfr.queryFree_model _ _,
+    fun {n} x => ?_⟩
+  rw [TemporalProgram.model_recognizes _ 1 (answers_mem v), ← sat_answers x (Fin.last n) v]
   change (answers v).sat (word x) (word x).length = true ↔ _
   simp [word]
 
