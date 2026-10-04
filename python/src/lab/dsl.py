@@ -21,7 +21,8 @@ from .domain.memorization import Memorization
 from .domain.stopping import EarlyStopping, Solved
 from .domain.synthetic import Synthetic
 from .domain.tasks import CRASP, MQAR, AlternatingBlocks, Dyck, Lookup, TypedDyck
-from .domain.training import Budget, Checkpoint, Cosine, CudaGraph, Diagnostics, Eager, Evaluate, Schedule, Seeds
+from .domain.training import (Budget, Checkpoint, Compiled, Cosine, CudaGraph, Diagnostics, Eager, Evaluate, Schedule,
+                               Seeds)
 
 __all__ = [
     # model
@@ -42,7 +43,7 @@ __all__ = [
     "Constant", "Inverse", "InverseSqrt", "Geometric",
     # training
     "Schedule", "Cosine", "Budget", "Seeds", "Evaluate", "Diagnostics", "Checkpoint",
-    "EarlyStopping", "Solved", "Eager", "CudaGraph",
+    "EarlyStopping", "Solved", "Eager", "CudaGraph", "Compiled",
     # composition
     "Experiment", "grid", "swap", "substitute", "walk", "describe", "fingerprint",
     # suites

@@ -162,6 +162,8 @@ class RowsTests(unittest.TestCase):
                                                for target in example.targets if target != -100])
         self.assertEqual(rows.select(torch.tensor([0, 5])).shape[-1],
                          max(len(split.examples[index].tokens) for index in (0, 5)))
+        self.assertEqual(rows.select(torch.tensor([0, 5]), static=True).shape[-1],
+                         max(len(example.tokens) for example in split.examples))
 
 
 if __name__ == "__main__":

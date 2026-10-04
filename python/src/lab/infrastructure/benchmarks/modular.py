@@ -104,8 +104,8 @@ class ModularTask:
     def sampler(self, batch, seed):
         return EpochSampler(len(self.corpus.train), batch, self.spec.tail == "wrap", seed)
 
-    def inputs(self, indices):
-        """The training rows at `indices`."""
+    def inputs(self, indices, static=False):
+        """The training rows at `indices`, all of one width, `static` or not."""
         return self.splits["train"].index_select(0, indices.to(self.device))
 
     def progress(self, seen):

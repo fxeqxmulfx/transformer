@@ -150,3 +150,20 @@ class CudaGraph(Execution):
     def check(self):
         require(self.device.startswith("cuda"), "CUDA graphs need a CUDA device")
         require(self.threads >= 1, "Thread count must be positive")
+
+
+@dataclass(frozen=True)
+class Compiled(Execution):
+    """Each update's forward and loss, and each evaluation's forward, compiled by TorchInductor.
+
+    An update reads its batch at the full width of the training split, so
+    each batch size compiles once, and the native AdamW runs its fused
+    kernel. Compiled kernels and the fused optimizer round differently from
+    the eager ones in the last bits: a compiled run reproduces itself at its
+    thread count, not an Eager run.
+    """
+    device: str = "cpu"
+    threads: int = 1
+
+    def check(self):
+        require(self.threads >= 1, "Thread count must be positive")

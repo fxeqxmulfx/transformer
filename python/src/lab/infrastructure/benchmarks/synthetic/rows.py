@@ -4,8 +4,9 @@ The historical trainer padded each batch to its own longest example
 (`experiments/synthetic_trainers/records.py`, `collate`), and a model reads a
 batch's width: attention sums over it. A slice of `Rows`, the chunk an
 evaluation reads, is therefore cut the same way, and so are training rows
-drawn at host indices. A captured update reads the rows at a device index,
-which holds no lengths the host could read, at the full width of the split.
+drawn for an update issued eagerly. A static update, captured or compiled,
+reads them at the full width of the split, so that its shape depends on its
+size alone.
 A chunk of generated-answer rows also holds what their free generation
 reads and is scored on (`generation`).
 """
@@ -107,9 +108,9 @@ class Rows:
                                              generated)
         return self.chunks[start, stop]
 
-    def select(self, indices):
-        """The rows at `indices`: cut to the longest of them from host indices, at full width from a device index."""
-        if indices.device.type != "cpu":
-            return self.rows.index_select(0, indices)
+    def select(self, indices, static=False):
+        """The rows at `indices`: at the full width when `static`, otherwise cut to the longest of them."""
+        if static:
+            return self.rows.index_select(0, indices.to(self.rows.device))
         width = max(self.lengths[index] for index in indices.tolist())
         return self.rows.index_select(0, indices.to(self.rows.device))[:, :, :width]

@@ -2,11 +2,12 @@
 
 from ...domain import training
 from ..provenance import provenance
+from .compiled import CompiledStepper
 from .eager import EagerStepper
 from .graphs import GraphStepper
 from .loop import Training
 
-STEPPERS = {training.Eager: EagerStepper, training.CudaGraph: GraphStepper}
+STEPPERS = {training.Eager: EagerStepper, training.CudaGraph: GraphStepper, training.Compiled: CompiledStepper}
 
 
 class Engine:

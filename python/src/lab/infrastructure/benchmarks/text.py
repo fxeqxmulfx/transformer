@@ -49,7 +49,8 @@ class TextTask:
     def sampler(self, batch, seed):
         return WindowSampler(len(self.train) - self.window, batch, seed)
 
-    def inputs(self, starts):
+    def inputs(self, starts, static=False):
+        """The training windows at `starts`, all of one width, `static` or not."""
         return windows(self.train, starts.to(self.device), self.window)
 
     def progress(self, seen):

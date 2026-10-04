@@ -57,8 +57,8 @@ class SyntheticTask:
         """Shuffled epochs of the training rows, each ending with its remainder, as `train_run` drew them."""
         return EpochSampler(len(self.splits["train"]), batch, False, seed)
 
-    def inputs(self, indices):
-        return self.splits["train"].select(indices)
+    def inputs(self, indices, static=False):
+        return self.splits["train"].select(indices, static)
 
     def progress(self, seen):
         return {"examples_seen": seen, "epochs_seen": seen / len(self.splits["train"])}

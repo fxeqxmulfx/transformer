@@ -3,11 +3,12 @@
 The native AdamW is constructed as `paper_reproduction.grokking.make_optimizer`
 constructed it: every trainable parameter in `parameters()` order, the rate
 left for the schedule to set before each update, and PyTorch's default
-implementation (foreach on CUDA, a loop over tensors on the CPU). Every other
-rule is a direction optimizer (`.direction`), with the arithmetic of the
-historical optimizer zoo, and so is AdamW under a stage (`.stages`), which
-transforms the directions of a rule. AMSGradMD (`.magnitude`) writes new
-values instead, and carries its own guard.
+implementation (foreach on CUDA, a loop over tensors on the CPU), or its
+fused kernel when a stepper asks for it. Every other rule is a direction
+optimizer (`.direction`), with the arithmetic of the historical optimizer
+zoo, and so is AdamW under a stage (`.stages`), which transforms the
+directions of a rule. AMSGradMD (`.magnitude`) writes new values instead,
+and carries its own guard.
 """
 
 import torch
@@ -25,10 +26,11 @@ def parameter_groups(spec, model):
             {"params": [parameter for parameter in parameters if parameter.ndim < 2], "weight_decay": 0.0}]
 
 
-def adamw(spec, model, rate=None):
+def adamw(spec, model, rate=None, fused=False):
     groups = parameter_groups(spec, model)
     if rate is None:
-        return torch.optim.AdamW(groups, lr=0.0, betas=spec.betas, eps=spec.eps, weight_decay=spec.weight_decay)
+        return torch.optim.AdamW(groups, lr=0.0, betas=spec.betas, eps=spec.eps, weight_decay=spec.weight_decay,
+                                 **({"fused": True} if fused else {}))
     return torch.optim.AdamW(groups, lr=rate, betas=spec.betas, eps=spec.eps, weight_decay=spec.weight_decay,
                              foreach=True, capturable=True)
 
@@ -65,8 +67,8 @@ def report(optimizer):
     return optimizer.report() if hasattr(optimizer, "report") else {}
 
 
-def build_optimizer(spec, model, rate=None, updates=None, seed=None):
-    """The optimizer for `spec`; given `rate`, its capturable form.
+def build_optimizer(spec, model, rate=None, updates=None, seed=None, fused=False):
+    """The optimizer for `spec`; given `rate`, its capturable form; `fused`, the native AdamW's fused kernel.
 
     `rate` is a one-element tensor on the parameters' device. The capturable
     optimizer keeps all its state there and reads the rate from `rate` when an
@@ -78,5 +80,5 @@ def build_optimizer(spec, model, rate=None, updates=None, seed=None):
     if isinstance(spec, optimizers.Clipped):
         spec = spec.base
     if isinstance(spec, optimizers.AdamW):
-        return adamw(spec, model, rate)
+        return adamw(spec, model, rate, fused)
     return rule(spec, model, rate, updates, seed)

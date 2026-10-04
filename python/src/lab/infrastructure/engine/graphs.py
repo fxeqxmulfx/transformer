@@ -100,7 +100,7 @@ class GraphStepper:
 
     def forward_backward(self, index):
         """The operations of an update before the optimizer step."""
-        output, targets = self.task.forward(self.model, self.task.inputs(index))
+        output, targets = self.task.forward(self.model, self.task.inputs(index, static=True))
         self.task.loss(output, targets).backward()
         norm = torch.nn.utils.get_total_norm([parameter.grad for parameter in self.parameters
                                               if parameter.grad is not None])
