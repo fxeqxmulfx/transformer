@@ -20,7 +20,9 @@ makes it:
 -/
 
 import Transformer.Surge.Section2_Lemma1
+import Transformer.Surge.Section2_PeakRate
 import Transformer.Surge.Section2_SignApprox
+import Transformer.Surge.Section2_SmallBatch
 import Transformer.Surge.Section2_Theorem2
 import Transformer.Surge.SectionA_AdamMoments
 import Transformer.Surge.SectionA_SignUpdate
