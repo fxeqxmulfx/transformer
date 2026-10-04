@@ -22,9 +22,16 @@ def code():
 
 
 def device_name(device):
+    """The GPU, or the CPU model the kernel reports, whose instructions compiled kernels use."""
     device = torch.device(device)
     if device.type == "cuda":
         return torch.cuda.get_device_name(device)
+    try:
+        for line in Path("/proc/cpuinfo").read_text().splitlines():
+            if line.startswith("model name"):
+                return line.split(":", 1)[1].strip()
+    except OSError:
+        pass
     return platform.processor() or platform.machine()
 
 
