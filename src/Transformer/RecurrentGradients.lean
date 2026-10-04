@@ -29,3 +29,4 @@ import Transformer.RecurrentGradients.Section2_Mechanics
 import Transformer.RecurrentGradients.Section2_Counterexample
 import Transformer.RecurrentGradients.Section2_Linear
 import Transformer.RecurrentGradients.Section2_Geometric
+import Transformer.RecurrentGradients.Section3_Clipping
