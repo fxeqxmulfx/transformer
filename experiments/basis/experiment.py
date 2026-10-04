@@ -16,6 +16,13 @@ def gptmini(width, depth):
 
 MODELS = {"small": gptmini(64, 2), "large": gptmini(128, 6)}
 RATES = {"1e-4": 1e-4, "3e-4": 3e-4, "1e-3": 1e-3, "3e-3": 3e-3, "1e-2": 1e-2}
+# The cores a benchmark run compiles on, by model and task; one where none is given.
+THREADS = {("large", "recall"): 4, ("large", "depth"): 2, ("large", "parity"): 2}
+
+
+def graphed(run):
+    """`run` replaying CUDA graphs on the GPU, as the runs that set the recipes did."""
+    return swap(run, "execution", CudaGraph())
 
 
 def held(run):
@@ -54,7 +61,7 @@ def timed(run, batch):
 
 
 # A hard parity run is its easy one.
-runs = {f"{mode}-{name}-{task}-seed{seed}": run
+runs = {f"{mode}-{name}-{task}-seed{seed}": swap(run, "execution.threads", THREADS.get((name, task), 1))
         for mode in ("easy", "hard") for name, model in MODELS.items() for seed in (0, 1, 2)
         for task, run in basis(model, mode, seed).items() if (mode, task) != ("hard", "parity")}
 
@@ -110,4 +117,5 @@ times = {f"time-{mode}-{task}-{name}-b{batch}": timed(run, batch)
          for task, run in basis(MODELS[name], mode).items() for batch in batches
          if (mode, task, batch) != ("hard", "depth", 128)}
 
-experiments = {**runs, **easy, **hard, **depth128, **recall, **lengths, **times}
+experiments = {**runs, **{label: graphed(run)
+                           for label, run in {**easy, **hard, **depth128, **recall, **lengths, **times}.items()}}

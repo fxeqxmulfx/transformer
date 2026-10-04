@@ -67,7 +67,9 @@ validation and 512 test. A run trains under AdamW with betas (0.9, 0.98)
 and weight decay 0.1 after a linear warmup over 50 updates, at the batch,
 rate and budget its task and mode calibrated on both models
 (`experiments/basis/README.md`), and is observed after every 3,200
-examples, in chunks of 256 rows, replaying CUDA graphs.
+examples, in chunks of 256 rows. Its updates and evaluations are compiled
+by TorchInductor for the CPU (`Compiled`), on one thread unless an
+experiment gives it more.
 """
 
 from typing import NamedTuple
@@ -79,7 +81,7 @@ from .spec import require, swap
 from .stopping import Solved
 from .synthetic import Synthetic
 from .tasks import MQAR, AlternatingBlocks
-from .training import Budget, CudaGraph, Evaluate, Schedule, Seeds
+from .training import Budget, Compiled, Evaluate, Schedule, Seeds
 
 MODES = ("easy", "hard")
 TASKS = ("depth", "recall", "parity")
@@ -127,5 +129,5 @@ def basis(model, mode, seed=0):
                 optimizer=AdamW(lr=recipe.lr, betas=(0.9, 0.98), weight_decay=0.1),
                 schedule=Schedule(warmup=WARMUP), budget=Budget(updates=recipe.updates, batch=recipe.batch),
                 seeds=Seeds(model=seed, data=1), evaluate=Evaluate(every=OBSERVED // recipe.batch, batch=256),
-                execution=CudaGraph(), stopping=Solved())
+                execution=Compiled(), stopping=Solved())
             for task, (benchmark, recipe) in BASIS[mode].items()}

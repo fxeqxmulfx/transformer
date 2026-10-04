@@ -3,13 +3,13 @@
 import unittest
 
 from examples import gptmini
-from lab.dsl import Schedule, Solved, basis, swap
+from lab.dsl import Compiled, Schedule, Solved, basis, swap
 
 MODES = ("easy", "hard")
 
 
 class BasisTests(unittest.TestCase):
-    def test_each_mode_runs_the_model_on_every_task_until_solved(self):
+    def test_each_mode_runs_the_model_on_every_task_until_solved_compiled_for_the_cpu(self):
         model = gptmini(64, 2)
         for mode in MODES:
             runs = basis(model, mode)
@@ -20,6 +20,7 @@ class BasisTests(unittest.TestCase):
                     self.assertEqual((run.benchmark.target, run.benchmark.metric), (0.99, "sequence_accuracy"))
                     self.assertEqual(run.stopping, Solved())
                     self.assertEqual(run.evaluate.every * run.budget.batch, 3_200)
+                    self.assertEqual(run.execution, Compiled())
 
     def test_the_hard_mode_is_harder_on_depth_and_recall_and_keeps_parity(self):
         easy, hard = (basis(gptmini(), mode) for mode in MODES)

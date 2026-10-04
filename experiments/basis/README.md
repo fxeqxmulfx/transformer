@@ -96,7 +96,11 @@ width 128 and six. A run trains under AdamW with betas (0.9, 0.98) and
 weight decay 0.1, the rate warmed up linearly over 50 updates and then held
 unless a label says otherwise, on splits drawn from data seed 1: 20,000
 training rows, 512 validation and 512 test. It is observed after every
-3,200 examples, in chunks of 256 rows, and replays CUDA graphs.
+3,200 examples, in chunks of 256 rows. A benchmark run compiles its updates
+and evaluations for the CPU (`Compiled`), on four physical cores for the
+large model's recall, two for its depth and parity, and one for the small
+model's tasks (`THREADS`); the runs that set the recipes replay CUDA graphs
+on the GPU (`graphed`), as they did when they ran.
 
 | Labels | Runs | What they train |
 | --- | ---: | --- |
@@ -128,9 +132,11 @@ The recipes, rows per update, rate and budget in updates:
 ```
 
 A run trains into `runs/<label>/` here, which git ignores, and continues
-from its checkpoint when started again. Another model takes the benchmark
-in an experiment file of its own, whose runs are `basis(model, "easy")` and
-`basis(model, "hard")`.
+from its checkpoint when started again. Several runs train side by side,
+each in a process of its own on the physical cores its execution asks for:
+a run on the GPU first, alone on it, then the widest. Another model takes
+the benchmark in an experiment file of its own, whose runs are
+`basis(model, "easy")` and `basis(model, "hard")`.
 
 ## Found
 
