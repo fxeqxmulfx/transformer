@@ -40,6 +40,27 @@ Its three runs train side by side in about four minutes:
 ./make.py run experiments/basis easy-small-{depth,recall,parity}-seed0
 ```
 
+All 15 runs of the small model, both modes from three seeds, train side by
+side on 15 cores in about nine minutes:
+
+```sh
+./make.py run experiments/basis easy-small-{depth,recall,parity}-seed{0,1,2} \
+                                hard-small-{depth,recall}-seed{0,1,2}
+```
+
+These runs screen an idea before the large model takes it. At bd63e50 the
+small model passed the easy mode from every seed. It failed the hard depth
+and recall from every seed, as intended, since the hard mode is set for the
+large model. So a failure in the easy mode counts against an idea, and a
+pass in the hard mode counts for it. The recipes were set for this model:
+before dropping an idea, try a rate or two around its recipe. Compare
+seed by seed: on the small model a seed moved a pass by up to twice the
+updates, and on the large model's hard depth by seven times (800 against
+5,800). On the large model, the easy recall missed from seeds 0 and 1 too.
+
+A model of its own takes the benchmark in an experiment file whose runs are
+`basis(model, mode, seed)`. Labeled as here, the same commands train it.
+
 The whole benchmark has 30 runs: each mode on both models, from seeds 0, 1
 and 2. A hard parity run is its easy one, so the hard mode lists only depth
 and recall:
