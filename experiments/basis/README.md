@@ -140,9 +140,27 @@ the benchmark in an experiment file of its own, whose runs are
 
 ## Found
 
-The runs ran on a GeForce GTX 1050 (2 GB) under torch 2.14.1, on 2026-10-03
-and 04. A run's time is its wall clock from drawing its splits to its stop;
-starting the process, about 2 s, is not counted.
+The benchmark runs trained side by side on two Xeon E5-2680 v4 (28 cores)
+under torch 2.14.1, on 2026-10-04 at commit bd63e50. The runs that set the
+recipes trained one at a time on a GeForce GTX 1050 (2 GB) on 2026-10-03
+and 04, as the benchmark did before it moved to the CPU; its runs there are
+kept in `runs/_superseded/<label>-cudagraph`. A run's time is its wall clock
+from drawing its splits to its stop; starting the process, about 2 s, is
+not counted.
+
+A run records its experiment in full, the commit it ran at and the hash of
+every lab source it ran (`runs/<label>/experiment.json`); to repeat it,
+check out that commit. The commits of the runs, those from before commits
+were recorded placed by the hashes:
+
+| Runs | Commit |
+| --- | --- |
+| `<mode>-<model>-<task>-seed<seed>` | bd63e50 |
+| `sweep-*` but `sweep-hard-depth-large-b8-lr1e-3` and `sweep-hard-recall-large-b64-lr1e-3` | be205d1 |
+| those two, the other runs that set the recipes, and the benchmark on the GPU | 954423f, whose `domain/basis.py` then held the recipes being set |
+
+The `time-*` runs also ran the `sampling.py` and `retrieval.py` of
+9e3c784, which draw the same rows.
 
 ### The benchmark
 
@@ -151,28 +169,34 @@ that did not, with its seconds; a hard parity run is its easy one:
 
 | Mode | Model | Seed | Depth | Recall | Parity | Seconds |
 | --- | --- | ---: | --- | --- | --- | ---: |
-| easy | small | 0 | 200 (5 s) | 1,600 (31 s) | 3,000 (9 s) | 45 |
-| easy | small | 1 | 200 (5 s) | 2,150 (40 s) | 3,400 (10 s) | 55 |
-| easy | small | 2 | 200 (5 s) | 1,250 (26 s) | 6,000 (16 s) | 47 |
-| easy | large | 0 | 200 (9 s) | 2,200 (184 s) | 6,000 (64 s) | 258 |
-| easy | large | 1 | 200 (9 s) | fails, 0.977 (396 s) | 8,200 (87 s) | 493 |
-| easy | large | 2 | 200 (10 s) | 1,450 (124 s) | 11,600 (122 s) | 256 |
-| hard | small | 0 | fails, 0.371 (53 s) | fails, 0.000 (84 s) | 3,000 (9 s) | 147 |
-| hard | small | 1 | fails, 0.363 (54 s) | fails, 0.000 (85 s) | 3,400 (10 s) | 149 |
-| hard | small | 2 | fails, 0.354 (53 s) | fails, 0.000 (84 s) | 6,000 (16 s) | 153 |
-| hard | large | 0 | 2,600 (70 s) | 3,000 (251 s) | 6,000 (64 s) | 385 |
-| hard | large | 1 | 1,000 (30 s) | 2,350 (198 s) | 8,200 (87 s) | 315 |
-| hard | large | 2 | 4,200 (109 s) | 2,500 (210 s) | 11,600 (122 s) | 442 |
+| easy | small | 0 | 200 (23 s) | 1,650 (207 s) | 8,200 (93 s) | 323 |
+| easy | small | 1 | 200 (16 s) | 2,450 (287 s) | 5,000 (62 s) | 365 |
+| easy | small | 2 | 200 (16 s) | 1,800 (214 s) | 4,200 (54 s) | 283 |
+| easy | large | 0 | 200 (36 s) | fails, 0.947 (1,181 s) | 5,000 (280 s) | 1,497 |
+| easy | large | 1 | 200 (36 s) | fails, 0.967 (1,078 s) | 8,400 (384 s) | 1,498 |
+| easy | large | 2 | 200 (36 s) | 1,350 (317 s) | 8,800 (402 s) | 756 |
+| hard | small | 0 | fails, 0.443 (328 s) | fails, 0.000 (522 s) | 8,200 (93 s) | 943 |
+| hard | small | 1 | fails, 0.350 (324 s) | fails, 0.000 (472 s) | 5,000 (62 s) | 858 |
+| hard | small | 2 | fails, 0.311 (320 s) | fails, 0.000 (467 s) | 4,200 (54 s) | 841 |
+| hard | large | 0 | 800 (144 s) | 3,350 (786 s) | 5,000 (280 s) | 1,210 |
+| hard | large | 1 | 1,400 (215 s) | 2,850 (656 s) | 8,400 (384 s) | 1,255 |
+| hard | large | 2 | 5,800 (697 s) | 2,600 (602 s) | 8,800 (402 s) | 1,701 |
 
-The small model passes the easy mode from every seed, in 45 to 55 s, and
-fails the hard one: at length 128 it labels at most 0.371 of the E_4
-sequences right, and no hard recall sequence. The large model passes the
-hard mode from every seed, in 315 to 442 s, and the easy one from seeds 0
-and 2: from seed 1 its easy recall stops at 0.977 (below). A run stops at
-the first observation at which its selection split reaches 0.99, so the
-test split of a passing run, drawn the same way, scores 0.963 to 1.0. Easy
-depth stops by update 200, before the small model carries E_2 to length
-128: its test there is 0.604, 0.637 and 0.904.
+The small model passes the easy mode from every seed and fails the hard
+one: at length 128 it labels at most 0.443 of the E_4 sequences right, and
+no hard recall sequence. The large model passes the hard mode from every
+seed, and the easy one from seed 2 alone: from seeds 0 and 1 its easy
+recall stops at 0.947 and 0.967 (below). A run stops at the first
+observation at which its selection split reaches 0.99, so the test split of
+a passing run, drawn the same way, scores 0.967 to 1.0. Easy depth stops by
+update 200, before the small model carries E_2 to length 128: its test
+there is 0.604, 0.631 and 0.904.
+
+On the GPU every run ended as here but the large model's easy recall from
+seed 0, which passed at update 2,200. The two devices round differently,
+and a run's trajectory drifts: a pass moved by up to 3.3 times its update,
+the hard depth on the large model from seed 0 passing at update 2,600
+there and at 800 here.
 
 ### How the recipes were set
 
@@ -208,8 +232,8 @@ training rows and 0.951 of validation right, fitting neither; annealed,
 passes from every seed, but past the budget, in 424 to 758 s a run against
 124 to 184 s for its passes on 20,000 (two of them trained in two sittings,
 which count the setup twice). The easy mode keeps the recipe the small
-model passes with from every seed, and the large model's miss from seed 1
-is its price.
+model passes with from every seed, and the large model's misses, from seed 1
+on the GPU and from seeds 0 and 1 on the CPU, are its price.
 
 The hard recall takes the large model 8,400 updates at 16 rows per update
 and rate 3e-4 (200 s), 5,400 at 32 (237 s), and 2,350 to 3,000 at 64, its
@@ -294,10 +318,10 @@ The sweep's best rate is 1e-3 for depth at every batch (at 128 with 3e-4),
 parity at every batch but 64, where 1e-3 passed in 2,400 updates against
 2,950.
 
-An update's time between observations 100 and 300 of the `time-*` runs
-fits t(B) = c (B_sat + B): past about B_sat rows the device is busy, and
-the time grows in proportion to the rows. The wall time to the target,
-S(B) t(B), is least at B* = √(B_sat B_crit):
+On the GPU, an update's time between observations 100 and 300 of the
+`time-*` runs fits t(B) = c (B_sat + B): past about B_sat rows the device
+is busy, and the time grows in proportion to the rows. The wall time to
+the target, S(B) t(B), is least at B* = √(B_sat B_crit):
 
 | Task | Model | ms per row, c | B_sat | B_crit | B* | Recipe |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
@@ -322,31 +346,44 @@ rows 24% faster than 64; the one run at 16 took 200 s, within the 198 to
 
 ### Where the time goes
 
-A benchmark run's wall clock, the mean over its three seeds: setup, to the
-first observation; training; and observations, with the final evaluation
-and checkpoints:
+A benchmark run's wall clock side by side, the mean over its three seeds:
+setup, to the first observation; training; and observations, with the final
+evaluation and checkpoints; and the training time of an update on the
+physical cores the run holds:
 
-| Run | Setup | Training | Observations | Wall |
-| --- | ---: | ---: | ---: | ---: |
-| easy depth, small | 4.4 s | 0.9 s | 0.1 s | 5.4 s |
-| easy recall, small | 4.7 s | 26.1 s | 1.5 s | 32.3 s |
-| parity, small | 2.7 s | 8.1 s | 0.8 s | 11.6 s |
-| easy depth, large | 4.7 s | 4.4 s | 0.4 s | 9.5 s |
-| easy recall, large | 5.1 s | 218.2 s | 11.6 s | 234.9 s |
-| parity, large | 3.3 s | 79.4 s | 8.3 s | 91.1 s |
-| hard depth, small | 3.7 s | 43.1 s | 6.5 s | 53.4 s |
-| hard recall, small | 5.1 s | 75.0 s | 4.2 s | 84.3 s |
-| hard depth, large | 4.4 s | 56.5 s | 8.8 s | 69.6 s |
-| hard recall, large | 6.4 s | 202.7 s | 10.9 s | 219.9 s |
+| Run | Cores | Setup | Training | Observations | Wall | ms per update |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| easy depth, small | 1 | 12.1 s | 5.5 s | 0.7 s | 18.4 s | 28 |
+| easy recall, small | 1 | 12.9 s | 205.3 s | 17.6 s | 235.8 s | 105 |
+| parity, small | 1 | 10.1 s | 53.0 s | 6.4 s | 69.5 s | 9 |
+| easy depth, large | 2 | 13.4 s | 20.4 s | 2.4 s | 36.2 s | 102 |
+| easy recall, large | 4 | 15.7 s | 796.6 s | 46.5 s | 858.8 s | 216 |
+| parity, large | 2 | 36.2 s | 281.6 s | 37.6 s | 355.4 s | 38 |
+| hard depth, small | 1 | 11.9 s | 245.8 s | 66.2 s | 323.9 s | 25 |
+| hard recall, small | 1 | 12.4 s | 436.7 s | 38.1 s | 487.2 s | 91 |
+| hard depth, large | 2 | 18.5 s | 277.6 s | 55.9 s | 352.0 s | 115 |
+| hard recall, large | 4 | 13.8 s | 630.5 s | 37.0 s | 681.2 s | 215 |
 
-Of setup, drawing the splits takes 1.1 s for parity, 1.9 s for depth and
-2.3 s for recall on 20,000 rows; the first AdamW of a process 1.1 s, as it
-imports TorchDynamo; and warming up the updates before their capture 0.5 s
-on the small model and 1.0 s on the large one. Under Scalene's CPU profiler
-(`./make.py profile`, `runs/<label>.scalene.json`) the easy recall on the
-small model, 43 s there, spends 61% of its time with the host waiting for
-the device, 12% drawing the splits, 11% building AdamW and 2% issuing the
-updates' graphs; the easy depth, 16 s there and 5 s without, spends 37%
-drawing its splits and 31% building AdamW. Training is bound by the device,
-and the host could gain only on setup: drawing a split once for the runs
-that share it.
+The 30 runs take 171 min end to end and 19 min 52 s side by side; their
+26,345 core-seconds would fill the 28 cores for 941 s, and the farm ends
+with the large model's easy recall from seeds 0 and 1, which run all 4,800
+updates of their budget, 1,078 and 1,181 s from the start. On the GPU they
+took 41 min one after another, an update 2.8 (the large model's recall) to
+6.7 times (the small model's easy recall) as fast as here. Side by side an
+update takes 1.4 to 1.5 times as long as alone, the cores sharing their
+caches, memory and power: alone, the large model's recall takes 157 ms an
+update on four cores against 216, and the small model's easy recall from
+seed 0 71.5 ms on one against 107.1, with the same loss at every
+observation.
+
+Setup is mostly importing TorchDynamo and compiling: TorchInductor builds a
+run's updates and evaluations from its cache on disk, or in 40 to 80 s
+without it, as for the first large parity run here; drawing the splits
+takes 0.9 s for parity, 1.7 s for depth and 2.1 to 2.5 s for recall. Under
+Scalene's CPU profiler (`./make.py profile`, `runs/<label>.scalene.json`;
+the GPU's in `runs/_superseded`) the easy recall on the small model, 167 s
+there, spends 81% of its time in the compiled update, 9% setting it up and
+compiling it, 7% evaluating and 1% drawing its splits; the easy depth on
+the small model, 37 s there, spends 52% setting up and compiling, 19%
+evaluating, 18% training and 8% drawing its splits. Training is bound by
+the kernels, which the Python around them barely touches.
