@@ -18,11 +18,15 @@ makes it:
 * the "≈" of eq. (10) is not an equality; it holds as a ratio tending to `1` as `B → 0`
   and as `B → ∞` (`Section2_SignApprox`);
 * the "≈" of eqs. (13) and (39), for `B ≪ πσ_i²/(2μ_i²)`, holds as a ratio tending to `1` as
-  `B → 0`, the one of eq. (39) for `μ_i ≠ 0` (`Section2_SmallBatchLimit`).
+  `B → 0`, the one of eq. (39) for `μ_i ≠ 0` (`Section2_SmallBatchLimit`);
+* eq. (11) holds when the `𝓔_i(B)` share a profile, `𝓔_i(B) = f(B)μ_i/σ_i`, as in the
+  linearization of eq. (39), for which eq. (12) is proved; the "≈" of eqs. (3) and (4) holds as
+  a ratio tending to `1` as `B → 0` (`Section2_RateForm`).
 -/
 
 import Transformer.Surge.Section2_Lemma1
 import Transformer.Surge.Section2_PeakRate
+import Transformer.Surge.Section2_RateForm
 import Transformer.Surge.Section2_SignApprox
 import Transformer.Surge.Section2_SmallBatch
 import Transformer.Surge.Section2_SmallBatchLimit
