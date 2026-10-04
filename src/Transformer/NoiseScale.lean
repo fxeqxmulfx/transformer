@@ -36,7 +36,13 @@ makes it:
   and `GᵀHG` by their means, its `tr(Σ)H` is read as `tr(HΣ)`, and its noise
   scales are refuted and corrected; the cited SGD equilibrium
   `MH + HM = (ε/B)Σ` is a hypothesis, proved for one SGD step up to `εHMH`
-  (`SectionC_ToyModel`, `SectionC_Temperature`).
+  (`SectionC_ToyModel`, `SectionC_Temperature`);
+* Appendix D's full-batch step, "over which the loss increases by `δL`", is
+  read as one over which it drops; an optimal schedule as one taking the fewest
+  steps for its examples among positive schedules; "inserting `B ≫ 𝓑` and
+  `B ≪ 𝓑` respectively into (D.3)" as the limits `r → ∞` and `r → 0`; the
+  footnote's expectations over a run as averages over `ds`
+  (`SectionD_ExchangeRate`, `SectionD_ParetoFront`, `SectionD_Variation`).
 -/
 
 import Transformer.NoiseScale.Section2_Batches
@@ -50,3 +56,6 @@ import Transformer.NoiseScale.SectionA_Estimators
 import Transformer.NoiseScale.SectionA_RatioBias
 import Transformer.NoiseScale.SectionC_ToyModel
 import Transformer.NoiseScale.SectionC_Temperature
+import Transformer.NoiseScale.SectionD_ExchangeRate
+import Transformer.NoiseScale.SectionD_ParetoFront
+import Transformer.NoiseScale.SectionD_Variation
