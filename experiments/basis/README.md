@@ -65,7 +65,12 @@ value: a head that adds a recency term to a write's score returns the later
 write when one step of that term outweighs the rounding of both scores
 (`Transformer.ALM.latest_wins`), and for every recency scale and bound on
 the rounding, past some position a rounding within the bound can make the
-earlier write win (`Transformer.ALM.past_the_window_rounding_decides`). No
+earlier write win (`Transformer.ALM.past_the_window_rounding_decides`). Over
+one key the latest value is the previous symbol, which TL[◁#] reads at no
+depth (`Transformer.CRASP.not_definableL_secondLast`), so without positions
+no rounded transformer recalls the latest value at every length
+(`Transformer.CRASP.not_recallsLatest`); the proof rebinds a key to the value
+it holds, which these runs never do, and their models have positions. No
 theorem bounds the size recall needs; its separation is measured. Recall
 trains on 20,000 rows, a fifth of Zoology's (Appendix E.2): on 100,000 the
 small model passes later, or not within twice the budget (Found).

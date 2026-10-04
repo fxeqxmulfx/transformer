@@ -41,9 +41,13 @@ recall
     nothing, and that more tokens than width rule counting out there is not
     proved. Easy binds 8 keys. Hard writes 16 times, 8 of them
     rebinding a key, and answers a query with its key's latest value
-    (`Transformer.ALM.latest_wins`). Both train on 20,000 rows, not
-    Zoology's 100,000 (Appendix E.2), on which the smaller model passes
-    later, or from one seed of three not within twice the budget.
+    (`Transformer.ALM.latest_wins`), which over one key is the previous
+    symbol, so that without positions no rounded transformer recalls it
+    at every length (`Transformer.CRASP.not_recallsLatest`); the proof
+    rebinds a key to the value it holds, which no run does. Both train on
+    20,000 rows, not Zoology's 100,000 (Appendix E.2), on which the
+    smaller model passes later, or from one seed of three not within
+    twice the budget.
 parity
     Whether 1 to 16 bits hold an odd number of ones (`Parity`), without a
     scratchpad: RASP-L has no program for it (arXiv:2310.16028v1, §5.2),
