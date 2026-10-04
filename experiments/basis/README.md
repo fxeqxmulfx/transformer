@@ -45,7 +45,13 @@ failure without covering it.
 **Recall.** Multi-query associative recall (`MQAR`, arXiv:2312.04927v1,
 Appendix E.1): after BOS, writes bind keys to values, out of 256 key and 256
 value tokens, more than either width; random values follow, among which the
-keys recur as queries, each supervised with its key's value. In the hard
+keys recur as queries, each supervised with its key's value. The tokens
+outnumber the width because over few tokens recall can be counting: over c
+tokens, once each key and its value share a position, it is defined at
+depth 1 of TL[◁#] by c² counts, and a one-layer transformer with uniform
+attention, no query matched to a key, does it
+(`Transformer.CRASP.exists_rtfr_answers`); that more tokens than width rule
+counting out is not proved. In the hard
 mode 8 of the 16 writes rebind a key, and a query asks for the latest
 value: a head that adds a recency term to a write's score returns the later
 write when one step of that term outweighs the rounding of both scores
