@@ -30,7 +30,13 @@ makes it:
 * caveat 3 of §2.4 is read as `B_noise` within the condition number of
   `B_simple`, "growth over training" for `B_simple` at constant `tr(Σ) > 0`,
   and "the number of model parameters cancels" as the mediant of the noise
-  scales of two parts (`Section2_Patterns`).
+  scales of two parts (`Section2_Patterns`);
+* the `ε_max(B)` of eq. (C.1) is read as `ε_opt(B)`, and `T ≈ ε/B` as a limit
+  up to a factor independent of `ε` and `B`; the toy model's `≈` replaces `|G|²`
+  and `GᵀHG` by their means, its `tr(Σ)H` is read as `tr(HΣ)`, and its noise
+  scales are refuted and corrected; the cited SGD equilibrium
+  `MH + HM = (ε/B)Σ` is a hypothesis, proved for one SGD step up to `εHMH`
+  (`SectionC_ToyModel`, `SectionC_Temperature`).
 -/
 
 import Transformer.NoiseScale.Section2_Batches
@@ -42,3 +48,5 @@ import Transformer.NoiseScale.Section2_Patterns
 import Transformer.NoiseScale.Section2_WithoutReplacement
 import Transformer.NoiseScale.SectionA_Estimators
 import Transformer.NoiseScale.SectionA_RatioBias
+import Transformer.NoiseScale.SectionC_ToyModel
+import Transformer.NoiseScale.SectionC_Temperature
