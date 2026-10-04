@@ -33,6 +33,26 @@ budget.
 
 ## The benchmark
 
+A run of the basis is labeled `<mode>-<model>-<task>-seed<seed>`. The mode
+names the tasks and the model names the network: `easy-large-recall-seed0`
+is the large model on the easy recall. Both models are GPTMini with four
+heads: `small` has width 64 and two layers, `large` width 128 and six. The
+two modes:
+
+| Task | easy | hard |
+| --- | --- | --- |
+| depth | E_2, judged at the trained lengths, 32 to 64 | E_4, judged at length 128 |
+| recall | 8 keys, each bound once | 16 writes to 8 keys, each key queried for its latest value |
+| parity | 1 to 16 bits | the same |
+
+The easy mode is set for the small model and the hard mode for the large
+one. At bd63e50, from seeds 0, 1 and 2:
+
+| | small | large |
+| --- | --- | --- |
+| easy | passes every task from every seed | passes depth and parity; recall from seed 2 alone |
+| hard | fails depth and recall from every seed, as intended; passes parity | passes every task from every seed |
+
 The smallest complete version takes one mode on one model from one seed.
 Its three runs train side by side in about four minutes:
 
@@ -48,15 +68,13 @@ side on 15 cores in about nine minutes:
                                 hard-small-{depth,recall}-seed{0,1,2}
 ```
 
-These runs screen an idea before the large model takes it. At bd63e50 the
-small model passed the easy mode from every seed. It failed the hard depth
-and recall from every seed, as intended, since the hard mode is set for the
-large model. So a failure in the easy mode counts against an idea, and a
-pass in the hard mode counts for it. The recipes were set for this model:
-before dropping an idea, try a rate or two around its recipe. Compare
-seed by seed: on the small model a seed moved a pass by up to twice the
-updates, and on the large model's hard depth by seven times (800 against
-5,800). On the large model, the easy recall missed from seeds 0 and 1 too.
+These runs screen an idea before the large model takes it. In the easy
+mode, where the small model passes everything, a failure counts against an
+idea. In the hard mode, where it fails depth and recall, a pass counts for
+it. The recipes were set for GPTMini, so before dropping an idea, try a
+rate or two around its recipe. Compare seed by seed: on the small model a
+seed moved a pass by up to twice the updates, and on the large model's hard
+depth by seven times (800 against 5,800).
 
 A model of its own takes the benchmark in an experiment file whose runs are
 `basis(model, mode, seed)`. Labeled as here, the same commands train it.
