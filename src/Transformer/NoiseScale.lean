@@ -18,10 +18,15 @@ makes it:
 * "the loss may increase" beyond `2ε_opt` is proved as "increases", in the
   model (`Section2_NoiseScale`);
 * `B ≪ B_noise` and `B ≫ B_noise` are read as bounds within a factor 2 and a
-  limit (`Section2_Implications`).
+  limit (`Section2_Implications`);
+* §2.3 is derived, as the paper derives it, from eq. (D.1), the trajectory's
+  `ds` a finite measure; `B_crit = E_min/S_min` is the model's, not a fit, and
+  `S_min`, `E_min` are proved least and the limits of constant batches
+  (`Section2_Tradeoff`).
 -/
 
 import Transformer.NoiseScale.Section2_Batches
 import Transformer.NoiseScale.Section2_Quadratic
 import Transformer.NoiseScale.Section2_NoiseScale
 import Transformer.NoiseScale.Section2_Implications
+import Transformer.NoiseScale.Section2_Tradeoff
