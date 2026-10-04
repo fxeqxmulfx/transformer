@@ -75,6 +75,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.FiniteAlphabet` | a natural-token parity counterexample to omitting the paper's finite alphabet |
 | `CRASP.Parity` | PARITY is not in `TL[◁#]` at any depth, so no rounded transformer recognizes it |
 | `CRASP.ParityTwoSided` | PARITY is in `TL[◁#, ▷#]` at depth `2` |
+| `CRASP.AlignedRecall` | aligned MQAR over `c` tokens is in `TL[◁#]_1`, counting `c²` pairs |
 | `CRASP.FiniteFunction` | `lem:finite_function`: postcomposing a definable map with any `g : 𝔽 → 𝔽` |
 | `CRASP.ConstantLayer` | above a constant activation a layer computes one vector, and the collapsed transformer |
 | `CRASP.Collapse` | a conjecture, in no paper: collapse after `L` layers caps the depth at `L` |
@@ -136,6 +137,8 @@ either: it is a statement about circuits, which this development does not
 model.  One remark the source leaves in a comment, after
 `thm:transformer_equivalence`, is formalized all the same: PARITY is in
 `TL[◁#, ▷#]` and not in `TL[◁#]` (`CRASP.Parity`, `CRASP.ParityTwoSided`).
+One result is in no paper: Zoology's recall, once each value sits beside its
+key, is counting at depth `1` over a finite vocabulary (`CRASP.AlignedRecall`).
 -/
 
 import Transformer.CRASP.Defs
@@ -179,6 +182,7 @@ import Transformer.CRASP.Transformers
 import Transformer.CRASP.FiniteAlphabet
 import Transformer.CRASP.Parity
 import Transformer.CRASP.ParityTwoSided
+import Transformer.CRASP.AlignedRecall
 import Transformer.CRASP.FiniteFunction
 import Transformer.CRASP.ConstantLayer
 import Transformer.CRASP.Collapse
