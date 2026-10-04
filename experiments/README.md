@@ -4,8 +4,9 @@ A folder per experiment, and its `README.md` says what the runs ask, how
 they differ, and what their archived runs found. A folder with an
 `experiment.py` is written in the language of the
 [lab](../python/README.md): it composes a model and the conditions of its
-benchmark runs, and `./make.py check|show|run|report experiments/<name>`
-reads it. Its runs train into `runs/<label>/` beside it, which git ignores.
+benchmark runs, and `./make.py check|show|run|report|profile
+experiments/<name>` reads it. Its runs train into `runs/<label>/` beside
+it, which git ignores.
 
 | Experiment | Runs | What it asks |
 | --- | ---: | --- |

@@ -17,6 +17,7 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
     show <experiment> <label>     print one run's description
     run <experiment> [labels]     train an experiment's runs, or the labeled ones
     report <experiment> [labels]  print what the runs recorded and what their records say, as JSON
+    profile <experiment> <label>  train one run afresh under Scalene's CPU profiler; print where its time goes
 
 Together
     verify                        lean, audit, index, forbidden and test: the checks before a commit
@@ -32,9 +33,11 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import tempfile
 
 ROOT = Path(__file__).resolve().parent
 PYTHON = ROOT / "python"
+SCALENE = "scalene==2.3.0"
 
 
 def execute(command, cwd=ROOT):
@@ -84,6 +87,24 @@ def verify(arguments):
     test(argparse.Namespace(patterns=[]))
 
 
+def profile(arguments):
+    """Train one run from scratch, in a temporary copy of its experiment, under Scalene's CPU profiler.
+
+    The profile, of the lab's own lines, is kept beside the run's folder as runs/<label>.scalene.json.
+    Scalene's GPU mode slows Python-heavy code, such as sampling splits, by two orders of magnitude.
+    """
+    experiment = (ROOT / arguments.experiment).resolve()
+    output = experiment / "runs" / f"{arguments.label}.scalene.json"
+    output.parent.mkdir(exist_ok=True)
+    scalene = ["uv", "run", "--locked", "--project", str(PYTHON), "--with", SCALENE, "scalene"]
+    with tempfile.TemporaryDirectory() as copy:
+        shutil.copy(experiment / "experiment.py", copy)
+        execute([*scalene, "run", "--cpu-only", "--profile-only", "lab/", "--program-path", str(PYTHON / "src"),
+                 "-o", str(output), str(PYTHON / "src" / "lab" / "__main__.py"), "---", "run", copy,
+                 arguments.label])
+    execute([*scalene, "view", "--cli", "--reduced", str(output)])
+
+
 def papers(arguments):
     execute([sys.executable, "scripts/papers.py", *(["--dry-run"] if arguments.dry_run else [])])
 
@@ -122,6 +143,10 @@ def main():
     command.add_argument("experiment")
     command.add_argument("labels", nargs="*")
     command.set_defaults(handler=lambda arguments: lab("report", arguments.experiment, *arguments.labels))
+    command = tasks.add_parser("profile")
+    command.add_argument("experiment")
+    command.add_argument("label")
+    command.set_defaults(handler=profile)
     arguments = parser.parse_args()
     try:
         arguments.handler(arguments)

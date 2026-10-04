@@ -59,8 +59,9 @@ experiments in `experiments/`. `./make.py` runs every task.
   the words.
 - README: the question, a table of how the runs differ, what they found.
 - `./make.py check experiments/<name>`, `show … <label>`, `run … [labels]`,
-  `report … [labels]`. `run` trains into `runs/<label>/` beside the file (gitignored)
-  and resumes on rerun; `report` prints JSON.
+  `report … [labels]`, `profile … <label>`. `run` trains into `runs/<label>/` beside
+  the file (gitignored) and resumes on rerun; `report` prints JSON; `profile` trains
+  one run afresh under Scalene.
 - `EXPERIMENT_PLAN.md` is the plan; obey its status.
 - New block: spec in `python/src/lab/domain/`, PyTorch in `infrastructure/`, word in
   `dsl.py`, test in `python/tests/`. Layers domain → application → infrastructure →
