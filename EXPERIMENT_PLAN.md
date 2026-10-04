@@ -185,10 +185,15 @@ and keep the basis to check that a repair costs nothing there.
 
 ## 2. Measure the mechanism
 
-**In progress on 2026-10-04.** The target is large hard recall. The observer
-will retain fixed validation examples and causal support masks across
-checkpoints, and test both its statistics and noninterference before these
-six target runs. Initial QKNorm/scaled-dot measurements cover both sizes.
+**In progress on 2026-10-04.** The target is large hard recall.
+`AttentionDiagnostics` retains fixed validation examples and previous
+causal support masks across checkpoints. Focused tests check hand-made
+statistics, latest-write query routes, CPU/CUDA live-state preservation,
+compiler guards, one-thread compiled noninterference and resumed turnover.
+The 24 initial QKNorm/scaled-dot measurements cover both sizes and weights
+from three seeds; the six target runs retain every canonical measurement.
+All 155 lab tests pass; those runs are ready to start. There is no small-model target for
+the small factorial ablation.
 
 Add to `Diagnostics` a measurement of attention (domain, infrastructure,
 test). At every observation, an uncompiled forward of 256 fixed validation

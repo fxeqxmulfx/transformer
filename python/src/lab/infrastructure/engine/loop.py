@@ -36,10 +36,11 @@ import torch
 
 from ...domain import cadence
 from ...domain.stopping import Selection
-from ...domain.training import rate
+from ...domain.training import AttentionDiagnostics, rate
 from ..benchmarks import build_task
 from ..nn import build_model
 from ..optim import report
+from .attention import AttentionObserver
 
 
 class Clock:
@@ -77,11 +78,15 @@ class Clock:
         self.segment_diagnostics = 0.0
 
     @contextmanager
-    def diagnosing(self):
+    def diagnosing(self, paused=False):
         self.synchronize()
         started = time.perf_counter()
         yield
-        self.segment_diagnostics += time.perf_counter() - started
+        if paused:
+            self.synchronize()
+            self.diagnostics += time.perf_counter() - started
+        else:
+            self.segment_diagnostics += time.perf_counter() - started
 
 
 class NonfiniteGradient(FloatingPointError):
@@ -114,6 +119,8 @@ class Training:
         self.clock = Clock(self.device)
         self.task = build_task(experiment.benchmark, experiment.seeds.data, self.device)
         self.model = build_model(experiment.model, self.task.vocab, experiment.seeds.model).to(self.device)
+        self.attention = (AttentionObserver(experiment.diagnostics, self.task)
+                          if isinstance(experiment.diagnostics, AttentionDiagnostics) else None)
         self.stepper = stepper(experiment, self.task, self.model, self.clock)
         self.sampler = self.task.sampler(experiment.budget.batch, experiment.seeds.batch_seed)
         self.completed, self.seen, self.last_batch_size = 0, 0, None
@@ -130,6 +137,10 @@ class Training:
             self.completed, self.seen = checkpoint["step"], checkpoint["examples_seen"]
             self.last_batch_size = checkpoint["last_batch_size"]
             self.best = checkpoint.get("best")
+            if self.attention is not None:
+                if "attention" not in checkpoint:
+                    raise ValueError("An attention-diagnostic checkpoint must hold its previous supports")
+                self.attention.load_state_dict(checkpoint["attention"], self.completed)
         # Records past the checkpoint are dropped; without a checkpoint, every record is.
         run.rewind(self.completed if checkpoint is not None else -1)
         self.history = run.records("history")
@@ -168,6 +179,10 @@ class Training:
             if self.selection is not None and self.selection.observe(step, row[selection]):
                 self.best = {"step": step, "model": {name: value.detach().cpu().clone()
                                                      for name, value in self.model.state_dict().items()}}
+        if self.attention is not None:
+            with self.clock.diagnosing(paused=True):
+                self.run.record("attention", {"diagnostic_probe": probe,
+                                               **self.attention.observe(self.model, self.task, step)})
         self.progress({"diagnostic_probe": True, **row} if probe else row)
 
     def flush(self):
@@ -184,6 +199,7 @@ class Training:
                        "examples_seen": self.seen, "training_seconds": self.clock.training,
                        "diagnostic_seconds": self.clock.diagnostics, "last_batch_size": self.last_batch_size,
                        "wall_seconds": self.clock.wall(), **self.sampler.state(),
+                       **({} if self.attention is None else {"attention": self.attention.state_dict()}),
                        **({} if self.selection is None else {"best": self.best})})
 
     def stopped(self):

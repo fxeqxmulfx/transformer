@@ -5,6 +5,7 @@
     history.jsonl      canonical observations; probes.jsonl, their neighbors
     diagnostics.jsonl  sampled per-tensor measurements
     gradients.jsonl    the gradient norm of every update
+    attention.jsonl    fixed-validation attention observations, including update zero
     checkpoint.pt      model, optimizer and sampler state at the last checkpoint
     result.json        the summary, written when the budget is reached
 """
@@ -16,7 +17,7 @@ import time
 
 import torch
 
-STREAMS = ("history", "probes", "diagnostics", "gradients")
+STREAMS = ("history", "probes", "diagnostics", "gradients", "attention")
 
 
 def replace(path, text):

@@ -113,6 +113,28 @@ class Diagnostics(Spec):
 
 
 @dataclass(frozen=True)
+class AttentionDiagnostics(Diagnostics):
+    """Fixed-example attention observations; EXPERIMENT_PLAN.md, step 2.
+
+    At every observation, including update zero and diagnostic neighbors, an uncompiled
+    teacher-forced forward measures support, score gaps, entropy and recall
+    routes on the first up to `examples` rows of the selection split (or
+    heldout for modular division). Support means a strictly positive
+    floating-point weight, following arXiv:1602.02068v2, section 2.2;
+    causal masking and padding do not count as sparsity. Previous supports
+    travel in checkpoints so turnover survives interruption. Inherited
+    fields keep their per-update meanings. A separate block preserves the
+    stored descriptions of runs with ordinary Diagnostics.
+    """
+    examples: int = 256
+
+    def check(self):
+        super().check()
+        require(type(self.examples) is int and self.examples >= 1,
+                "Attention measurements need a positive integer example count")
+
+
+@dataclass(frozen=True)
 class Checkpoint(Spec):
     """Save model, optimizer and sampler state after each `every` updates."""
     every: int = 5000

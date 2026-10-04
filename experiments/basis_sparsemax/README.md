@@ -2,7 +2,7 @@
 
 Where does sparsemax attention fail where softmax passes the calibrated
 [basis](../basis/README.md), and is a failure removed by a neighboring rate?
-This is steps 0 and 1 of [EXPERIMENT_PLAN.md](../../EXPERIMENT_PLAN.md).
+This is steps 0 to 2 of [EXPERIMENT_PLAN.md](../../EXPERIMENT_PLAN.md).
 The arms change only the attention weights. Both keep QKNorm, XSA, the
 basis's recipes, splits, seeds and thread counts. Hard parity is the easy
 parity run, as in the basis.
@@ -13,6 +13,8 @@ parity run, as in the basis.
 | `sparsemax-<mode>-<model>-<task>-seed<seed>` | 30 | Euclidean simplex projection instead of softmax |
 | `time-<weights>-small-<task>` | 6 | 300 updates at the easy recipe, without early stopping, observed every 100 |
 | `sparsemax-<mode>-<model>-<task>-seed<seed>-lr<rate>` | 60 | The two adjacent rates of `RATES`; only failures whose softmax control passes are trained |
+| `probe-<weights>-hard-large-recall-seed<seed>` | 6 | Repeat the target cell with attention measurements on 256 fixed validation examples |
+| `init-<weights>-<model>-seed<seed>-<scores>` | 24 | Initial hard-recall attention under QKNorm and ScaledDot, both sizes and weights; one zero-rate warmup update retains update-zero records |
 
 `Diagnostics` samples every observed update: `loss` is the
 last training batch's mean supervised cross-entropy before that update, and
@@ -20,10 +22,36 @@ last training batch's mean supervised cross-entropy before that update, and
 (e^alpha) after it. Update 0 has no training batch. Diagnostics also
 records the existing per-tensor gradient, update and moment norms.
 
+`AttentionDiagnostics` retains those measurements and adds `attention.jsonl`
+at update zero and every observation, including requested diagnostic
+neighbors. It uses the first 256
+examples of the selected validation split, in their stored order; their
+fingerprint is recorded. The forward is uncompiled and teacher-forced.
+Every layer records actual and shadow-sparsemax statistics per head, for
+all valid context rows, rows after BOS and supervised positions. Support
+means weight strictly greater than zero; neither future nor padded
+positions count as zeros. `mean_support_share` averages row shares,
+whereas `exact_zero_pair_share` counts all visible pairs. Entropy is divided
+by the log of the visible prefix length, with zero for length one.
+Turnover counts changed memberships among the same visible pairs; the
+initial value is null. Previous masks travel in checkpoints, and records
+beyond a resumed checkpoint are rewound.
+
+For recall, `queries` identifies each example, query position and latest
+answer-value position, and marks its teacher-forced prediction correct or
+wrong. Each layer's `answer_routes` supplies the weights at that column in
+head order, their maximum and whether any head supports it; the sparsemax
+shadow supplies the same fields. Repeated values at unrelated writes or
+fillers do not count as the answer position. Self-only XSA routes also
+count value norms below its normalization epsilon: the real-arithmetic
+self-cancellation identity needs a norm at least that epsilon. Eager and
+compiled or fused attention can round differently; fused softmax's
+reported weights are its explicit unfused reference.
+
 ## Found
 
 Preparation on 2026-10-04 used torch 2.14.1 on the basis's Xeon E5-2680 v4
-CPU. The lab sources are those of ea18d55; the run manifests keep their
+CPU. Steps 0 and 1 use the lab sources of ea18d55; the run manifests keep their
 hashes and this experiment's source. Sparsemax compiles in a full graph,
 including its custom backward. Tests compare its weights and score
 gradients at lengths 1, 17 and 64, and all logits and parameter gradients
@@ -166,6 +194,26 @@ target for step 2's small-model factorial ablation. Sparsemax's depth
 failure prediction is not borne out here; parity is slower but its small
 failures are removed by the recipe. These outcomes do not identify the
 attention mechanism behind the remaining recall failures.
+
+### Attention measurement
+
+The observer is implemented and the focused checks pass: hand-made rows
+check every statistic, masking and turnover; a rewritten table checks
+latest-write routing; CPU and CUDA checks preserve live parameters,
+buffers, gradients, optimizer, sampler, RNG states and module modes.
+Temporary hooks survive failure cleanup and do not invalidate an existing
+compiled graph. Short one-thread compiled softmax and sparsemax runs have
+identical losses, training diagnostics, results and non-observer checkpoint
+state with and without the probe; interrupted runs reproduce their entire
+attention stream and checkpointed supports exactly. Step 1's qualification
+of multi-threaded trajectory repetition still applies.
+All 155 lab tests pass after the observer is added. The six QKNorm/ScaledDot
+initialization pairs also share every non-score parameter exactly, for
+both sizes and all three model seeds; score parameters alone differ.
+
+The 24 initialization runs and six target runs are pending. There is no
+small-model target requiring the factorial ablation. H1--H4 await the
+measured trajectories and the interventions of the plan.
 
 Run a pair with:
 

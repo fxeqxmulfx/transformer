@@ -9,12 +9,13 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 import re
 
-from .benchmarks import Benchmark
+from .benchmarks import Benchmark, ModularDivision
 from .model import Transformer
 from .optimizers import EVD, Clipped, Optimizer
 from .spec import Spec, describe, require, require_kind, swap, walk
 from .stopping import Solved, Stopping
-from .training import Budget, Checkpoint, CudaGraph, Diagnostics, Evaluate, Execution, Schedule, Seeds
+from .synthetic import Synthetic
+from .training import AttentionDiagnostics, Budget, Checkpoint, CudaGraph, Diagnostics, Evaluate, Execution, Schedule, Seeds
 
 LABEL = re.compile(r"[a-z0-9][a-z0-9._-]*")
 
@@ -50,6 +51,9 @@ class Experiment(Spec):
                 "torch cannot capture an eigendecomposition: run Dash with EVD under Eager()")
         require(not any(isinstance(block, Clipped) for path, block in walk(self.optimizer) if path),
                 "Clipping acts on the gradient before the whole rule: write Clipped outermost")
+        if isinstance(self.diagnostics, AttentionDiagnostics):
+            require(isinstance(self.benchmark, (Synthetic, ModularDivision)),
+                    "AttentionDiagnostics needs a Synthetic or ModularDivision benchmark")
         if self.stopping is not None:
             require_kind(self.stopping, Stopping, "stopping")
             require(self.benchmark.selection is not None,

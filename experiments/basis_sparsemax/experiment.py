@@ -1,4 +1,4 @@
-"""Softmax against sparsemax on the calibrated basis; EXPERIMENT_PLAN.md, steps 0 and 1."""
+"""Softmax against sparsemax on the calibrated basis; EXPERIMENT_PLAN.md, steps 0 to 2."""
 
 from lab.dsl import *
 
@@ -50,4 +50,25 @@ def neighbors(run):
 rates = {variant: candidate for label, run in runs.items() if label.startswith("sparsemax-")
          for variant, candidate in grid({label: run}, {"optimizer.lr": neighbors(run)}).items()}
 
-experiments = {**runs, **times, **rates}
+def observed(run):
+    """256 fixed selection examples at every observation; EXPERIMENT_PLAN.md, step 2."""
+    diagnostic = run.diagnostics
+    return swap(run, "diagnostics", AttentionDiagnostics(every=diagnostic.every,
+                neighbors=diagnostic.neighbors, gradients=diagnostic.gradients, examples=256))
+
+
+probes = {f"probe-{label}": observed(run) for label, run in runs.items()
+          if "-hard-large-recall-" in label}
+
+
+def initialized(run):
+    """Retain update zero and one zero-rate warmup update, without early stopping, for H2."""
+    run = swap(swap(swap(run, "budget.updates", 1), "evaluate.every", 1), "stopping", None)
+    return swap(observed(run), "diagnostics.every", 1)
+
+
+initial = grid({f"init-{weights}-{name}-seed{seed}": initialized(runs[f"{weights}-hard-{name}-recall-seed{seed}"])
+                for weights in WEIGHTS for name in MODELS for seed in (0, 1, 2)},
+               {"model.block.attention.scores": {"qknorm": QKNorm(), "scaleddot": ScaledDot()}})
+
+experiments = {**runs, **times, **rates, **probes, **initial}
