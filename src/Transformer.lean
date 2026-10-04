@@ -107,6 +107,9 @@ Formalization of thirty-two papers on the mathematics of Transformers:
 32. Pascanu, Mikolov, Bengio — arXiv:1211.5063
    "On the difficulty of training Recurrent Neural Networks".
 
+33. McCandlish, Kaplan, Amodei, OpenAI Dota Team — arXiv:1812.06162
+   "An Empirical Model of Large-Batch Training".
+
 Alongside these, `Transformer.ALM` formalizes the paraboloid-lifted lookup
 used by the append-only lookup machine (Percepta, transformer-vm), and
 `Transformer.Precision` proves the limits finite precision puts on attention:
@@ -164,3 +167,4 @@ import Transformer.DoubleDescent
 import Transformer.Memorization
 import Transformer.MagnitudeDirection
 import Transformer.RecurrentGradients
+import Transformer.NoiseScale
