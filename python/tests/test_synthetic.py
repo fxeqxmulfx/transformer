@@ -14,6 +14,7 @@ split.
 from dataclasses import fields
 import json
 from pathlib import Path
+import random
 import unittest
 
 from lab.domain.generative import (Addition, BooleanAnd, Copy, Count, DoubleHistogram, Histogram, Mode,
@@ -22,6 +23,7 @@ from lab.domain.memorization import Memorization
 from lab.domain.spec import swap
 from lab.domain.synthetic import Synthetic
 from lab.domain.tasks import CRASP, MQAR, AlternatingBlocks, Dyck, Lookup, TypedDyck
+from lab.infrastructure.benchmarks.synthetic.sampling import uniform_draws
 from lab.infrastructure.benchmarks.synthetic.splits import benchmark_splits
 from lab.infrastructure.benchmarks.synthetic.vocabulary import IGNORE
 
@@ -152,6 +154,19 @@ class RewriteTests(unittest.TestCase):
                         {"symbols": 4, "pairs": 8, "overwrites": 3}):
             with self.subTest(task=invalid), self.assertRaises(ValueError):
                 MQAR(**invalid)
+
+
+class SamplingTests(unittest.TestCase):
+    def test_uniform_draws_are_randrange_on_the_same_stream(self):
+        # A width that is a power of two, one included, rejects half its draws.
+        for start, stop in ((0, 1), (7, 8), (272, 528), (-3, 1000), (0, 2 ** 70 + 1)):
+            with self.subTest(start=start, stop=stop):
+                drawn, expected = random.Random(5), random.Random(5)
+                self.assertEqual(uniform_draws(drawn, start, stop, 300),
+                                 [expected.randrange(start, stop) for _ in range(300)])
+                self.assertEqual(drawn.getstate(), expected.getstate())
+        with self.assertRaises(ValueError):
+            uniform_draws(random.Random(0), 3, 3, 1)
 
 
 if __name__ == "__main__":

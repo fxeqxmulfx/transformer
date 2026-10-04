@@ -7,7 +7,7 @@ extend the port (`lab.domain.tasks.MQAR`).
 """
 
 from .base import Generator
-from .sampling import distribute, weighted_positions
+from .sampling import distribute, uniform_draws, weighted_positions
 from .vocabulary import BOS, END_TABLE, FILL, IDENTITY_BASE, IGNORE, KEY, QUERY, VALUE
 
 
@@ -44,7 +44,7 @@ class MQAR(Generator):
                 value += 1
             current[key] = value
             values.append(value)
-        tokens = [BOS] + [rng.randrange(first_value, vocab) for _ in range(length - 1)]
+        tokens = [BOS] + uniform_draws(rng, first_value, vocab, length - 1)
         for row, (key, value) in enumerate(zip(keys, values)):
             tokens[1 + 2 * row:3 + 2 * row] = [key, value]
         end = 1 + 2 * task.pairs
