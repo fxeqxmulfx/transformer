@@ -2,7 +2,8 @@
 
 An update reads its batch at the full width of the training split, so each
 batch size the sampler draws compiles one forward and loss, and AOTAutograd
-the backward of it; the gradient norm, any clipping and the native AdamW,
+the backward of it; the readout reads only the positions a target can read
+(`supervised`), and the gradient norm, any clipping and the native AdamW,
 fused, run as they come. An evaluation runs the model's forward compiled
 for inference, static (`benchmarks`), so the chunks of a split keep their
 shapes from one observation to the next; each chunk, and each step of a
@@ -54,7 +55,7 @@ class CompiledStepper:
 
     def forward(self, batch):
         """A batch's loss, its supervised logits and their targets."""
-        output, targets = self.task.forward(self.model, batch)
+        output, targets = self.task.forward(self.model, batch, supervised=True)
         return self.task.loss(output, targets), output, targets
 
     def prepare(self, sizes):

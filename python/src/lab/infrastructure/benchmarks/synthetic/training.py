@@ -66,10 +66,20 @@ class SyntheticTask:
     def accumulator(self):
         return torch.zeros(CLASSES + 3 * self.vocab, dtype=torch.float64, device=self.device)
 
-    @staticmethod
-    def forward(model, batch):
-        """Logits at every position, and the targets."""
-        return model(batch[:, 0]), batch[:, 1]
+    def forward(self, model, batch, supervised=False):
+        """Logits and targets at every position, or, `supervised`, at as many as a training row is supervised
+        at, each row's supervised positions first.
+
+        The logits at the supervised positions are the same either way, and
+        so is the loss up to the order of its terms; the readout skips the
+        positions no target reads.
+        """
+        tokens, targets = batch[:, 0], batch[:, 1]
+        if not supervised:
+            return model(tokens), targets
+        positions = (targets != IGNORE).int().argsort(dim=1, descending=True, stable=True)
+        positions = positions[:, :self.splits["train"].readout]
+        return model(tokens, positions), targets.gather(1, positions)
 
     @staticmethod
     def loss(output, targets):

@@ -116,8 +116,8 @@ class ModularTask:
         return torch.zeros(6, dtype=torch.float64, device=self.device)
 
     @staticmethod
-    def forward(model, batch):
-        """Logits at the supervised positions, and their targets."""
+    def forward(model, batch, supervised=False):
+        """Logits at the supervised positions, and their targets, `supervised` or not."""
         return model(batch[:, :-1])[:, 4:, :], batch[:, 5:]
 
     @staticmethod

@@ -70,6 +70,7 @@ class Rows:
     reads are the same tensors every time it runs: a captured evaluation
     replays on them. Without `generate`, generated answers are scored by
     teacher forcing alone, as the historical trainer scored a training split.
+    `readout` is the most positions a row is supervised at.
     """
 
     def __init__(self, examples, device, generate=True):
@@ -87,6 +88,7 @@ class Rows:
         values = array("q", chain.from_iterable(map(padded, examples)))
         self.host = torch.frombuffer(values, dtype=torch.long).view(len(examples), 3, width)
         self.rows = self.host.to(device)
+        self.readout = int((self.host[:, 1] != IGNORE).sum(1).max())
         self.chunks = {}
 
     def __len__(self):

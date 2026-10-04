@@ -60,8 +60,8 @@ class TextTask:
         return torch.zeros(1, device=self.device)
 
     @staticmethod
-    def forward(model, rows):
-        """Logits at every position, and the next characters."""
+    def forward(model, rows, supervised=False):
+        """Logits at every position, and the next characters, `supervised` or not: every position is."""
         return model(rows[:, :-1]), rows[:, 1:]
 
     @staticmethod

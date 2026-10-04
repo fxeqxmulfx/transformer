@@ -23,6 +23,7 @@ from lab.infrastructure.benchmarks import build_task
 from lab.infrastructure.benchmarks.synthetic import generator
 from lab.infrastructure.benchmarks.synthetic.rows import Rows
 from lab.infrastructure.benchmarks.synthetic.splits import build_split
+from lab.infrastructure.nn import build_model
 from lab.infrastructure.nn.legacy import rename
 from lab.infrastructure.store import RunDirectory
 
@@ -164,6 +165,23 @@ class RowsTests(unittest.TestCase):
                          max(len(split.examples[index].tokens) for index in (0, 5)))
         self.assertEqual(rows.select(torch.tensor([0, 5]), static=True).shape[-1],
                          max(len(example.tokens) for example in split.examples))
+        self.assertEqual(rows.readout, max(sum(target != -100 for target in example.targets)
+                                           for example in split.examples))
+
+
+class StaticForwardTests(unittest.TestCase):
+    def test_a_static_batch_reads_out_its_supervised_positions_alone(self):
+        spec = experiment(FIXTURE["runs"]["mqar-adamw-clipped"])
+        task = build_task(spec.benchmark, spec.seeds.data, "cpu")
+        model = build_model(spec.model, task.vocab, spec.seeds.model)
+        batch = task.inputs(torch.arange(16), static=True)
+        every, targets = task.forward(model, batch)
+        output, read = task.forward(model, batch, supervised=True)
+        self.assertEqual(output.shape[1], task.splits["train"].readout)
+        self.assertLess(output.shape[1], every.shape[1])
+        self.assertEqual(read[read != -100].tolist(), targets[targets != -100].tolist())
+        torch.testing.assert_close(output[read != -100], every[targets != -100])
+        torch.testing.assert_close(task.loss(output, read), task.loss(every, targets))
 
 
 if __name__ == "__main__":
