@@ -13,6 +13,9 @@ run, beside the folder's `README.md`.
 A run lives in `runs/<label>/` in the experiment's folder. Running an
 experiment again continues each unfinished run from its last checkpoint and
 skips the finished ones; raising `budget.updates` extends a finished run.
+Several runs to train train side by side, each in a `lab run` process of its
+own on as many physical cores as its execution block asks for, a CUDA run
+alone on its device (`infrastructure.farm`).
 """
 
 import argparse
@@ -20,7 +23,7 @@ import json
 
 from .. import dsl
 from ..application.report import report_study
-from ..application.study import run_study, survey
+from ..application.study import run_study, sessions, survey
 from ..domain.spec import blocks_of, composites, describe, kinds, signature
 from ..infrastructure.loader import load, runs_root
 
@@ -71,20 +74,37 @@ def progress(label, row):
     print(f"{label} {kind} {row['step']}  {metrics(row)}  {row['wall_seconds']:.0f}s", flush=True)
 
 
+def outcome(label, result):
+    stop = result["stop"]
+    ending = (f"finished {result['updates']} updates" if stop["reason"] == "budget"
+              else f"stopped at update {stop['step']} ({stop['reason']})")
+    print(f"{label} {ending}  {metrics(result['final'])}")
+    if "best" in result:
+        print(f"{label} best at update {result['best']['step']}  {metrics(result['best'])}")
+
+
 def run(arguments):
     # Only training needs PyTorch, which the engine and the store load.
-    from ..infrastructure.engine import Engine
     from ..infrastructure.store import RunDirectories
 
     study = load(arguments.experiment)
-    results = run_study(study, arguments.labels, RunDirectories(runs_root(arguments.experiment)), Engine(), progress)
-    for label, result in results.items():
-        stop = result["stop"]
-        ending = (f"finished {result['updates']} updates" if stop["reason"] == "budget"
-                  else f"stopped at update {stop['step']} ({stop['reason']})")
-        print(f"{label} {ending}  {metrics(result['final'])}")
-        if "best" in result:
-            print(f"{label} best at update {result['best']['step']}  {metrics(result['best'])}")
+    runs = RunDirectories(runs_root(arguments.experiment))
+    training = [(label, experiment.execution)
+                for label, experiment, _, done in sessions(study, arguments.labels, runs) if not done]
+    if len(training) < 2:
+        from ..infrastructure.engine import Engine
+
+        for label, result in run_study(study, arguments.labels, runs, Engine(), progress).items():
+            outcome(label, result)
+        return
+    from ..infrastructure.farm import train_apart
+
+    failed = train_apart(arguments.experiment, training, lambda line: print(line, flush=True))
+    for label, _ in study.select(arguments.labels):
+        if label not in failed:
+            outcome(label, runs.open(label).result())
+    if failed:
+        raise SystemExit(f"Training failed: {', '.join(failed)}")
 
 
 def report(arguments):
