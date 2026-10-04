@@ -1,4 +1,4 @@
-"""Runs trained side by side record what each records trained alone, on cores placed by package."""
+"""Runs side by side record what each records alone; they start device first, then widest, on cores by package."""
 
 from contextlib import redirect_stdout
 import io
@@ -7,7 +7,8 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from lab.infrastructure.farm import Cores
+from lab.domain.training import Compiled, CudaGraph
+from lab.infrastructure.farm import Cores, order
 from lab.infrastructure.store import STREAMS, RunDirectory
 from lab.interfaces.cli import main
 
@@ -25,6 +26,11 @@ class CoresTests(unittest.TestCase):
         self.assertEqual(cores.take(2), [(0, 4), (1, 5)])
         self.assertEqual(cores.take(2), [(3, 7), (8, 9)])
         self.assertIsNone(cores.take(1))
+
+    def test_a_run_holding_a_device_starts_first_then_the_widest(self):
+        runs = [("one", Compiled()), ("four", Compiled(threads=4)), ("graph", CudaGraph()), ("other", Compiled()),
+                ("two", Compiled(threads=2))]
+        self.assertEqual([label for label, _ in order(runs)], ["graph", "four", "two", "one", "other"])
 
     def test_only_a_run_wider_than_every_package_spans_packages(self):
         cores = Cores({0: [(0,), (1,)], 1: [(2,), (3,)]})

@@ -4,11 +4,13 @@ A run takes `execution.threads` physical cores, and a CUDA run its device as
 well, which no other run shares. A run's cores come from one package when
 any could hold them, the one with the fewest free cores that can, so that
 its memory stays local and wide runs still find room; only a run wider
-than every package spans packages. Runs start in the order given, each as
-soon as what it takes is free, a later one ahead of an earlier that must
-wait. A run's process is `lab run <experiment> <label>`: it trains as it
-would alone, on every logical CPU of its cores, with as many threads as
-it asks for, and its output is passed on line by line.
+than every package spans packages. A run holding a device comes first, so
+that the device never idles, then the widest, so that narrower runs fill
+in around it, equals in the order given (`order`); each starts as soon as
+what it takes is free, a later one ahead of an earlier that must wait. A
+run's process is `lab run <experiment> <label>`: it trains as it would
+alone, on every logical CPU of its cores, with as many threads as it asks
+for, and its output is passed on line by line.
 """
 
 import os
@@ -78,6 +80,11 @@ def device(execution):
     return name if ":" in name else name + ":0"
 
 
+def order(runs):
+    """The (label, execution) of `runs` in the order they start: those holding a device, then by width."""
+    return sorted(runs, key=lambda run: (device(run[1]) is None, -run[1].threads))
+
+
 class Process:
     """A run's `lab run` process, and the cores and device it holds."""
 
@@ -110,7 +117,7 @@ def train_apart(experiment, runs, echo):
     for label, execution in runs:
         if execution.threads > len(machine):
             raise ValueError(f"{label} asks for {execution.threads} cores; the machine has {len(machine)}")
-    pending, busy, failed = list(runs), set(), []
+    pending, busy, failed = order(runs), set(), []
     selector = selectors.DefaultSelector()
     try:
         while pending or selector.get_map():
