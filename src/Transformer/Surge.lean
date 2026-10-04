@@ -29,7 +29,15 @@ makes it:
 * the "≈" of `B_noise ≈ B_crit` in eq. (21) is an equality at constant `μ, σ, H`, where `B_peak`
   is the balance point; in general `B_crit = E_min/S_min` is the mean of `B_noise` over the run.
   The fit `B_crit ≈ B_*/L^{1/α_B}` of eq. (21), from Kaplan et al., is a hypothesis
-  (`Section2_Tradeoff`).
+  (`Section2_Tradeoff`);
+* eq. (22) holds with `B_crit = E_min/S_min` for `B_noise`, as eq. (21) allows, the two
+  coinciding at constant `μ, σ, H`; the expectations of eqs. (23) and (24) are means over a
+  finite grid of batches (`Section3_Estimation`).
+
+Not transcribed, deliberately: the experiments of §3.1, §3.3 and Appendix H, the figures, and
+the restatements of §1, §4, §5 and §6; the remark after Theorem 4 that late in training its limit
+"is more likely to exceed the local maximum", a heuristic; the grid searches and curve fits of
+§3.2, of which the identities behind eqs. (22) to (24) are proved.
 -/
 
 import Transformer.Surge.Section2_LargeBatch
@@ -42,6 +50,7 @@ import Transformer.Surge.Section2_SmallBatch
 import Transformer.Surge.Section2_SmallBatchLimit
 import Transformer.Surge.Section2_Theorem2
 import Transformer.Surge.Section2_Tradeoff
+import Transformer.Surge.Section3_Estimation
 import Transformer.Surge.SectionA_AdamMoments
 import Transformer.Surge.SectionA_SignUpdate
 import Transformer.Surge.SectionC_SignMoments
