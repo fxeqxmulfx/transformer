@@ -42,7 +42,24 @@ makes it:
   steps for its examples among positive schedules; "inserting `B ≫ 𝓑` and
   `B ≪ 𝓑` respectively into (D.3)" as the limits `r → ∞` and `r → 0`; the
   footnote's expectations over a run as averages over `ds`
-  (`SectionD_ExchangeRate`, `SectionD_ParetoFront`, `SectionD_Variation`).
+  (`SectionD_ExchangeRate`, `SectionD_ParetoFront`, `SectionD_Variation`);
+* the line search of §E.1 is read in the model (2.4) along the update, its
+  optimum at half the update as the update leaving the loss unchanged; the
+  power law and plateau of §3.1 as the limits of eq. (A.3) at `B → 0` and
+  `B → ∞`; "stays fixed up to `B_*`" as within a factor 2; Adam with `β₁`,
+  `β₂`, `ε_Adam` disregarded as `εE[G_i]/√E[G_i²]`, its moving averages read
+  as means over the timesteps (`SectionE_Optimization`).
+
+Not transcribed, deliberately: the measurements of §3 and Appendix B, the
+figures, and the restatements of §1, §2.6 and §5; the intuitive picture of
+§2.1 and the pattern "larger for difficult tasks" of §2.5, argued from
+intuition; the grid searches, Pareto front fits and task details of
+Appendices A.2–A.4; Appendix C's measured dependence of the noise scale on the
+temperature, the consistency of tuned runs, and its footnotes on defining `T`
+by the noise scale and on Adam's `β₂`; Appendix D's procedure
+`B = √(rB_simple)`, its SVHN observations and the fit `ε = 0.27B/(96 + B)`;
+the observations of line searches in §E.1, the `β₂` that "pushes `α` back
+towards 1.0" in §E.2, and the dip of `B_crit` on the test set in §E.3.
 -/
 
 import Transformer.NoiseScale.Section2_Batches
@@ -59,3 +76,4 @@ import Transformer.NoiseScale.SectionC_Temperature
 import Transformer.NoiseScale.SectionD_ExchangeRate
 import Transformer.NoiseScale.SectionD_ParetoFront
 import Transformer.NoiseScale.SectionD_Variation
+import Transformer.NoiseScale.SectionE_Optimization
