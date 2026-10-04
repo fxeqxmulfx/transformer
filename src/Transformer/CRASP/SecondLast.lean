@@ -17,7 +17,8 @@ only its letter and the numbers of `a`s and `b`s since `u`
 `u·baa` agree on those at their last position, while only the first has `b`
 second to last (`exists_models_iff_secondLast`).  Both words are nonempty, so
 no formula agrees with `Σ*bΣ` even on the nonempty strings
-(`not_models_iff_secondLast`).
+(`not_models_iff_secondLast`), which is what a reduction from recall needs
+(`CRASP.LatestRecall`).
 -/
 
 import Transformer.CRASP.BoundedExists

@@ -83,6 +83,7 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.MatchingRecallSums` | its rounded weights: `1` for `⊲` and for a key equal to the query, `0` otherwise |
 | `CRASP.MatchingRecallAnswers` | it recalls over `c` tokens at every length at `p = O(log c)` bits, by the sign of a rounded average |
 | `CRASP.RecallSeparation` | at that precision no query-free transformer of a fixed depth and width recalls, and none at all below `p d = log₂ c` |
+| `CRASP.LatestRecall` | no rounded transformer recalls the latest value of a rebound key, which over one key is `Σ*bΣ` |
 | `CRASP.FiniteFunction` | `lem:finite_function`: postcomposing a definable map with any `g : 𝔽 → 𝔽` |
 | `CRASP.ConstantLayer` | above a constant activation a layer computes one vector, and the collapsed transformer |
 | `CRASP.Collapse` | a conjecture, in no paper: collapse after `L` layers caps the depth at `L` |
@@ -155,7 +156,8 @@ depth and width the two kinds of attention separate, and no transformer
 recalls with a constant factor fewer bits a position (`CRASP.MatchingRecall`,
 `CRASP.MatchingRecallSums`, `CRASP.MatchingRecallAnswers`,
 `CRASP.RecallSeparation`); and without positions no depth reads the previous
-symbol (`CRASP.SecondLast`).
+symbol, so that no transformer recalls the latest value of a rebound key
+(`CRASP.SecondLast`, `CRASP.LatestRecall`).
 -/
 
 import Transformer.CRASP.Defs
@@ -207,6 +209,7 @@ import Transformer.CRASP.MatchingRecall
 import Transformer.CRASP.MatchingRecallSums
 import Transformer.CRASP.MatchingRecallAnswers
 import Transformer.CRASP.RecallSeparation
+import Transformer.CRASP.LatestRecall
 import Transformer.CRASP.FiniteFunction
 import Transformer.CRASP.ConstantLayer
 import Transformer.CRASP.Collapse
