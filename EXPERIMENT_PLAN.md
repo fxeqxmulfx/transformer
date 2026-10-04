@@ -192,8 +192,12 @@ statistics, latest-write query routes, CPU/CUDA live-state preservation,
 compiler guards, one-thread compiled noninterference and resumed turnover.
 The 24 initial QKNorm/scaled-dot measurements cover both sizes and weights
 from three seeds; the six target runs retain every canonical measurement.
-All 155 lab tests pass; those runs are ready to start. There is no small-model target for
-the small factorial ablation.
+All 155 lab tests pass. The 24 initial runs are complete: first-layer
+query support averages 3.43/3.34 positions under QKNorm on the small/large
+models, against 35.47/24.88 under ScaledDot, with otherwise identical
+initial parameters. This supports H2's initialization prediction, not
+its causal or repair conclusion. The six target runs are training. There
+is no small-model target for the small factorial ablation.
 
 Add to `Diagnostics` a measurement of attention (domain, infrastructure,
 test). At every observation, an uncompiled forward of 256 fixed validation

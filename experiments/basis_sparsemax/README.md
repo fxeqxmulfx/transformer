@@ -211,9 +211,30 @@ All 155 lab tests pass after the observer is added. The six QKNorm/ScaledDot
 initialization pairs also share every non-score parameter exactly, for
 both sizes and all three model seeds; score parameters alone differ.
 
-The 24 initialization runs and six target runs are pending. There is no
-small-model target requiring the factorial ablation. H1--H4 await the
-measured trajectories and the interventions of the plan.
+All 24 initialization runs have finished. Their first-layer sparsemax
+statistics at query positions are below, averaged over the four heads and
+model seeds 0 to 2. Contexts have variable lengths 48 to 64, so these are
+query-prefix measurements, not measurements of exactly 64 independent
+scores. QKNorm and ScaledDot start from identical non-score parameters.
+
+| Model | Scores | Mean support, positions | Mean support share | Mean score standard deviation | Singleton query share |
+| --- | --- | ---: | ---: | ---: | ---: |
+| small | QKNorm | 3.4334 | 7.76% | 0.9772 | 2.66% |
+| small | ScaledDot | 35.4657 | 79.25% | 0.0241 | 0.00% |
+| large | QKNorm | 3.3356 | 7.54% | 0.9703 | 4.13% |
+| large | ScaledDot | 24.8788 | 55.87% | 0.0480 | 0.00% |
+
+This supports H2's narrow-start prediction; it does not yet establish that
+the starting scale caused a failure or that changing it repairs training.
+Initial self-only query shares are 0.0122% (small) and 0.0407% (large)
+under QKNorm, and zero under ScaledDot. H4 needs the failing trajectories,
+not merely these initialization counts. Full initial and unchanged
+zero-rate-update statistics, descriptions and hashes of the source
+observations are in [attention_initial.json](attention_initial.json).
+
+The six target runs are training. There is no small-model target requiring
+the factorial ablation. H1--H4 await the measured trajectories and the
+interventions of the plan.
 
 Run a pair with:
 
