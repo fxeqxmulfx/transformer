@@ -120,13 +120,12 @@ example := lrSign_signLin_eq_lrPeak_iff (ν := Measure.dirac ()) (μ := fun _ : 
   (σ := fun _ => 1) (H := Matrix.of fun _ _ => 1) (by simp) (by simp)
   (by simp [offSum, Fin.sum_univ_two]) (by simp [snrSum]) one_pos
 
-omit [DecidableEq ι] in
 /-- §2.2, after eq. (21), and §2.3: "as the training progresses and the loss decreases,
 according to Eq. (21), `B_peak` will gradually become larger".  Under the fit
 `B_noise ≈ B_crit ≈ B_*/L^{1/α_B}` of eq. (21), after Kaplan et al., eq. (1.4), taken as a
 hypothesis on the statistics `μ(L), σ(L), H(L)` at the loss `L > 0`, with `B_*, α_B > 0`, the
 peak `B_peak = B_noise` (`lrSign_signLin_noiseBatch`) grows as `L` falls. -/
-theorem strictAntiOn_noiseBatch [DecidableEq ι] {μ σ : ℝ → ι → ℝ} {H : ℝ → Matrix ι ι ℝ}
+theorem strictAntiOn_noiseBatch {μ σ : ℝ → ι → ℝ} {H : ℝ → Matrix ι ι ℝ}
     {Bs αB : ℝ} (hBs : 0 < Bs) (hα : 0 < αB)
     (h : ∀ L > 0, noiseBatch (μ L) (σ L) (H L) = Bs / L ^ (1 / αB)) :
     StrictAntiOn (fun L => noiseBatch (μ L) (σ L) (H L)) (Set.Ioi 0) := by

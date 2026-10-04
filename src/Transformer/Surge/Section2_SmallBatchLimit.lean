@@ -119,7 +119,7 @@ example := tendsto_signMean_div_signLin (μ := fun _ : Fin 2 => 1) (σ := fun _ 
 
 /-- **Theorem 3**, eq. (40): as `B → 0⁺`, the learning rate of eq. (9) over the one with
 `𝓔_i(B)` replaced by `√(2B/π)μ_i/σ_i` tends to `1`, when `M ≠ 0` and `ΣH_ii ≠ 0`. -/
-theorem tendsto_lrSign_div_lrSign_signLin [DecidableEq ι] {μ σ : ι → ℝ} {H : Matrix ι ι ℝ}
+theorem tendsto_lrSign_div_lrSign_signLin {μ σ : ι → ℝ} {H : Matrix ι ι ℝ}
     (hM : snrSum μ σ ≠ 0) (hD : ∑ i, H i i ≠ 0) :
     Tendsto (fun B => lrSign (fun i => signMean (μ i) (σ i) B) μ H /
       lrSign (signLin μ σ B) μ H) (𝓝[>] 0) (𝓝 1) := by

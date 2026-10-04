@@ -18241,7 +18241,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`integral_lossDrop_sign_batchGrad`](src/Transformer/Surge/Section2_Theorem2.lean#L123) | theorem | proved |
 | [`integral_lossDrop_sign_le`](src/Transformer/Surge/Section2_Theorem2.lean#L145) | theorem | proved |
 
-**[Transformer.Surge.Section2_Tradeoff](src/Transformer/Surge/Section2_Tradeoff.lean)** — 146 lines
+**[Transformer.Surge.Section2_Tradeoff](src/Transformer/Surge/Section2_Tradeoff.lean)** — 145 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -18250,7 +18250,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`le_totalSteps_runNoiseBatch`](src/Transformer/Surge/Section2_Tradeoff.lean#L65) | theorem | proved |
 | [`totalSteps_mul_totalExamples`](src/Transformer/Surge/Section2_Tradeoff.lean#L83) | theorem | proved |
 | [`lrSign_signLin_eq_lrPeak_iff`](src/Transformer/Surge/Section2_Tradeoff.lean#L109) | theorem | proved |
-| [`strictAntiOn_noiseBatch`](src/Transformer/Surge/Section2_Tradeoff.lean#L129) | theorem | proved |
+| [`strictAntiOn_noiseBatch`](src/Transformer/Surge/Section2_Tradeoff.lean#L128) | theorem | proved |
 
 **[Transformer.Surge.Section3_Estimation](src/Transformer/Surge/Section3_Estimation.lean)** — 176 lines
 
