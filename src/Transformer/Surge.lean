@@ -16,13 +16,16 @@ makes it:
 * Theorem 2, as Lemma 1, needs a positive denominator, which a positive semidefinite
   nonzero Hessian gives (`Section2_Theorem2`);
 * the "≈" of eq. (10) is not an equality; it holds as a ratio tending to `1` as `B → 0`
-  and as `B → ∞` (`Section2_SignApprox`).
+  and as `B → ∞` (`Section2_SignApprox`);
+* the "≈" of eqs. (13) and (39), for `B ≪ πσ_i²/(2μ_i²)`, holds as a ratio tending to `1` as
+  `B → 0`, the one of eq. (39) for `μ_i ≠ 0` (`Section2_SmallBatchLimit`).
 -/
 
 import Transformer.Surge.Section2_Lemma1
 import Transformer.Surge.Section2_PeakRate
 import Transformer.Surge.Section2_SignApprox
 import Transformer.Surge.Section2_SmallBatch
+import Transformer.Surge.Section2_SmallBatchLimit
 import Transformer.Surge.Section2_Theorem2
 import Transformer.Surge.SectionA_AdamMoments
 import Transformer.Surge.SectionA_SignUpdate
