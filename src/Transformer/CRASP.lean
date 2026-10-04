@@ -73,6 +73,8 @@ languages `A_k = (a⁺b⁺)^{k/2}` need depth exactly `k`.
 | `CRASP.TemporalProgramComparison`, `CRASP.TemporalProgramInduction` | counting comparisons and complete recognition correctness |
 | `CRASP.LogicToTransformer` | the complete forward simulation at the same depth |
 | `CRASP.FiniteAlphabet` | a natural-token parity counterexample to omitting the paper's finite alphabet |
+| `CRASP.Parity` | PARITY is not in `TL[◁#]` at any depth, so no rounded transformer recognizes it |
+| `CRASP.ParityTwoSided` | PARITY is in `TL[◁#, ▷#]` at depth `2` |
 | `CRASP.FiniteFunction` | `lem:finite_function`: postcomposing a definable map with any `g : 𝔽 → 𝔽` |
 | `CRASP.ConstantLayer` | above a constant activation a layer computes one vector, and the collapsed transformer |
 | `CRASP.Collapse` | a conjecture, in no paper: collapse after `L` layers caps the depth at `L` |
@@ -131,7 +133,9 @@ source and so are not part of it; so do `thm:mnf`, `thm:tlmod_to_rtfr` and
 `thm:TLCmod_to_rtfr` of Appendix F, and `lem:find_half_planes_oneway` of §4.4.
 The step from `MAJ²` to `FO[<]`-uniform `LTC⁰` circuits is not formalized
 either: it is a statement about circuits, which this development does not
-model.
+model.  One remark the source leaves in a comment, after
+`thm:transformer_equivalence`, is formalized all the same: PARITY is in
+`TL[◁#, ▷#]` and not in `TL[◁#]` (`CRASP.Parity`, `CRASP.ParityTwoSided`).
 -/
 
 import Transformer.CRASP.Defs
@@ -173,6 +177,8 @@ import Transformer.CRASP.FixedBits
 import Transformer.CRASP.Conjunctions
 import Transformer.CRASP.Transformers
 import Transformer.CRASP.FiniteAlphabet
+import Transformer.CRASP.Parity
+import Transformer.CRASP.ParityTwoSided
 import Transformer.CRASP.FiniteFunction
 import Transformer.CRASP.ConstantLayer
 import Transformer.CRASP.Collapse
