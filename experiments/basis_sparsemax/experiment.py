@@ -39,4 +39,15 @@ def timed(run):
 times = {f"time-{weights}-small-{task}": timed(runs[f"{weights}-easy-small-{task}-seed0"])
          for weights in WEIGHTS for task in ("depth", "recall", "parity")}
 
-experiments = {**runs, **times}
+
+def neighbors(run):
+    """The two rates of the basis's RATES beside a run's recipe, for EXPERIMENT_PLAN.md, H5."""
+    ordered = tuple(RATES.items())
+    chosen = next(index for index, (_, rate) in enumerate(ordered) if rate == run.optimizer.lr)
+    return {f"lr{label}": rate for index, (label, rate) in enumerate(ordered) if abs(index - chosen) == 1}
+
+
+rates = {variant: candidate for label, run in runs.items() if label.startswith("sparsemax-")
+         for variant, candidate in grid({label: run}, {"optimizer.lr": neighbors(run)}).items()}
+
+experiments = {**runs, **times, **rates}

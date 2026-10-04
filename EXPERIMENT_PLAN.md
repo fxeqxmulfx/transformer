@@ -145,6 +145,18 @@ check:
 
 ## 1. Find where sparsemax fails
 
+**In progress on 2026-10-04.** All 30 original small-model runs are
+complete. The 15 softmax controls repeat all 661 archived non-timing
+observations and their model, optimizer and sampler checkpoints exactly.
+Sparsemax passes the easy depth from every seed, passes easy recall early
+from seeds 0 and 1 but fails from seed 2, and fails parity from seeds 0
+and 1. Both parity failures pass at the neighboring rate 1e-4, so H5
+removes them from the mechanism study. The recall neighbors remain to be
+checked. The 30 original large-model runs are training; the final list of
+targets awaits them and the remaining adjacent-rate checks. Tables,
+training batch losses, final head scales and source hashes are in
+[basis_sparsemax](experiments/basis_sparsemax/README.md).
+
 Train the small model's 15 runs under both weights, then the large model's
 15. Record, as the basis's Found does, the update of each pass or the best
 selection accuracy, and the last training loss. Where sparsemax fails from a
