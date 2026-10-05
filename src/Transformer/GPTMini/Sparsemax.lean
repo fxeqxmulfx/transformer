@@ -4,6 +4,8 @@ import Transformer.GPTMini.Sparsemax.SupportWindow
 import Transformer.GPTMini.Sparsemax.NonSaturation
 import Transformer.GPTMini.Sparsemax.ActiveDirection
 import Transformer.GPTMini.Sparsemax.OuterSensitivity
+import Transformer.GPTMini.Sparsemax.ValueSpan
+import Transformer.GPTMini.Sparsemax.SeparatedValues
 import Transformer.GPTMini.Sparsemax.ValuePlateau
 import Transformer.GPTMini.Sparsemax.BoundedGain
 import Transformer.GPTMini.Sparsemax.Uniform
@@ -38,4 +40,11 @@ The actual projection has a nonzero active-pair direction; an outer task
 loss receives it only when its derivative distinguishes that pair. A
 bounded-score counterexample retains a positive flat output loss with
 two active positions, recording the limit of the score restriction.
+
+A full span of active value differences prevents cancellation of any
+nonzero output derivative. For ordinary scalar squared error, two distinct
+active values suffice whenever the output is wrong. A constructed separated
+value assignment reaches zero error by a bounded sparse score transfer;
+the previous collapsed value assignment is proved to fail the span premise.
+These are value restrictions, not an enforcement rule for every model input.
 -/

@@ -631,6 +631,46 @@ resting on them, zero extra axioms, zero vacuous statements and zero
 placeholders. The five new Lean modules have no warnings.
 The required `./make.py test` also passes all 171 Python tests.
 
+## Pure sparse follow-up: active value span
+
+**Done on 2026-10-05 UTC.** Two further modules add ten proved theorems
+with no new `sorry`, derived from arXiv:1602.02068v2, §2.2 and §2.5,
+and the frozen linear value readout at `73f8a0b`.
+
+[ValueSpan.lean](src/Transformer/GPTMini/Sparsemax/ValueSpan.lean)
+proves a structural sufficient condition independent of the task target:
+the differences of active values span the output space. Their span then
+cannot lie in the kernel of a nonzero output derivative, so some active
+pair supplies a nonzero raw score direction for the ordinary task loss.
+Two distinct active scalars satisfy the condition. The earlier collapsed
+values `(0, 0, 1)` on the actual two-active row are proved to violate it.
+
+[SeparatedValues.lean](src/Transformer/GPTMini/Sparsemax/SeparatedValues.lean)
+computes the actual derivative for ordinary scalar squared output error:
+`2 * (output - target) * (value_j - value_k)`. A wrong scalar output and
+distinct active values therefore exclude a zero score derivative. The
+constructed values `(-4, 4, 1)` retain the previous initial output, target
+`1/2`, scores `(2/5, 2/5, -2/5)` and weights `(1/2, 1/2, 0)`. The
+active-pair derivative is `-8`; transferring scores by `1/16` gives
+weights `(7/16, 9/16, 0)` and zero output error. Both score endpoints
+stay strictly below the same absolute cap `12/25 < 1/2`.
+
+This repairs the constructed output plateau after changing the values to
+satisfy the separation premise. It does not repair the collapsed values
+through a locally unchanged support, supply an enforcement rule for the
+span in every head/input, prove query/key parameter accessibility of the
+score direction, or establish whole-model convergence. The ordinary
+output target is retained; no attention-position labels are introduced.
+These additions are Lean results only. The Python code and previous
+experimental outcomes are unchanged.
+
+Validation: the full `lake build`, `./make.py audit`, `./make.py index`
+and `./make.py forbidden` pass. The new modules have no warnings. The
+index now has 1,844 modules and 7,609 theorems, with the same 157 existing
+`sorry`, zero results resting on them, zero extra axioms, zero vacuous
+statements and zero placeholders. Python is unchanged since the passing
+171-test run recorded above.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
