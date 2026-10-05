@@ -3,8 +3,11 @@
 The harder task the stability protocols of the synthetic trainers turned to
 after [`mod97_stability`](../mod97_stability): does GPTMini under AdamW
 grok x / y mod 193 and stay generalized, and what do sparsemax attention
-weights or an annealed rate change? These are the 2026-10-02 runs of the
-`adamw_stability` protocols on mod 193, in the lab's language.
+weights or an annealed rate change? The historical table records the
+2026-10-02 `adamw_stability` protocols. Step 5 of the current
+[experiment plan](../../EXPERIMENT_PLAN.md) adds fresh lab controls and the
+best starting-scale attempt from the basis, QKNorm-one. Its question is
+whether this attempt generalizes here while retaining sparse attention.
 
 ## Runs
 
@@ -20,6 +23,8 @@ evaluated on both splits every 250 updates.
 | --- | --- | --- | --- | --- | --- |
 | `base` | 25% | 3e-4 | 300,000 | softmax | constant |
 | `sparsemax` | 25% | 3e-4 | 300,000 | sparsemax | constant |
+| `repair-qknorm-one` | 25% | 3e-4 | 300,000 | sparsemax; learned QKNorm scale starts at 1 | constant |
+| `repair-qknorm-one-seed1` | 25% | 3e-4 | 300,000 | the same attempt, fresh model and data seeds 1 | constant |
 | `cosine` | 25% | 3e-4 | 300,000 | softmax | annealed by a half cosine to a tenth over updates 150,000–250,000 |
 | `lr001` | 25% | 1e-3 | 150,000 | softmax | constant |
 | `fraction50-lr001` | 50% | 1e-3 | 150,000 | softmax | constant |
@@ -28,7 +33,51 @@ The last two are the earlier calibrations. `base` is the calibration at rate
 3e-4, extended to 300,000 updates, and `sparsemax` and `cosine` each change
 one thing in it. Every run samples per-tensor diagnostics at each evaluation
 and at the updates beside it, and records every gradient norm. Eager
-execution issues the updates as the historical trainer did.
+execution issues the updates as the historical trainer did. The two
+controls and the QKNorm-one variants also observe attention on 256 fixed
+held-out examples at initialization and every observation, including
+diagnostic neighbors. The ordinary sparsemax backward, XSA, data fraction,
+optimizer, batch size and schedule remain those of the sparsemax control.
+The seed-1 repeat has model seed 1, data seed 1 and the default batch-order
+seed 10,001; it is trained only if the first attempt meets confirmation.
+
+## Fresh confirmation
+
+All 60 basis repair trials have finished. QKNorm-one matches 17 of 22
+required softmax passes, against 12 for ScaledDot, and rescues one original
+persistent recall seed. Neither is a complete basis repair; the label
+above tests the better partial attempt rather than asserting a repair.
+See [the basis results](../basis_sparsemax/README.md#starting-scale-and-score-map-repairs).
+
+The archived table below is not evidence that the lab has trained these
+labels. Step 5 trains `base`, `sparsemax` and `repair-qknorm-one` afresh for
+their complete 300,000-update budgets. Only the diagnostic observer is
+added to the existing controls; the attempt changes their score block's
+initial scale. The frozen abandoned schedule pair is not resumed.
+
+Confirmation requires 20 consecutive canonical evaluations with both
+train and held-out accuracies at least 99%, and a final accuracy of 100%
+on both. Neighbor probes do not count. The report separately records the
+pre-target memorization plateau, all 201 canonical checks from updates
+250,000 through 300,000, the number of failed joint checks and the worst
+held-out accuracy there. Strict final-window persistence is not required
+by step 5's confirmation rule: the archived softmax reference itself fails
+two such checks. A confirmed attempt is repeated from fresh model and data
+seeds before a broader success claim.
+
+Fresh results are pending. The current lab descriptions and actual-shape
+CUDA observation checks pass: all three main labels preserve parameters,
+buffers, gradients, optimizer, sampler, CPU/CUDA RNG, modes, hooks and
+inputs exactly around observations at updates 0, 10 and 20. These
+temporary short runs provide no generalization evidence. All seven
+descriptions check; the legacy calibration descriptions are unchanged,
+the controls add only the observer, and the attempt changes only the
+initial QKNorm scale relative to `sparsemax`. The seed-1 repeat changes
+only model/data seeds. Before/after descriptions, verification source and
+output, and their scope are retained in [preparation.json](preparation.json).
+Final per-layer/head support and visible-zero statistics will accompany
+the complete canonical histories. The full setup gate passes all 166 lab
+tests (936.095 seconds).
 
 ## Running
 
@@ -36,6 +85,8 @@ execution issues the updates as the historical trainer did.
 ./make.py check experiments/mod193_stability              # the runs, and what differs between them
 ./make.py run experiments/mod193_stability [label ...]    # train every run, or the labeled ones
 ./make.py report experiments/mod193_stability [label ...] # what the runs recorded, as JSON
+
+./make.py run experiments/mod193_stability base sparsemax repair-qknorm-one
 ```
 
 A run trains into `runs/<label>/` here, which git ignores, and continues
@@ -78,3 +129,11 @@ schedule pair, `base` afresh and then `cosine`, was stopped on 2026-10-03
 by the user's decision, with the constant case at update 288,000 and the
 cosine case not started
 ([`EXPERIMENT_PLAN.md`](../../EXPERIMENT_PLAN.md#abandoned-schedule-pair)).
+
+The fixed-checkpoint CPU inspection has been independently checked and
+archived in [sparsemax-final-review](../archive/synthetic_trainers/protocols/adamw_stability_20261002/sparsemax-final-review/README.md).
+Its source, observations, independent program/output and input hashes are
+retained there. All four fixed-weight forward swaps and the selected local
+derivative probes match the original records exactly. That inspection
+performs no optimizer updates and makes no claim about the cause of the
+training failure; it does not replace the fresh confirmation above.

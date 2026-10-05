@@ -347,6 +347,27 @@ dense explains the failure; it does not repair sparse attention.
 
 ## 5. Confirm on mod 193
 
+**In progress on 2026-10-05 UTC.** Step 4 selects QKNorm-one as the best
+partial attempt; neither screened intervention passes the complete basis
+repair criterion. `mod193_stability` declares `repair-qknorm-one` beside
+fresh `base` and `sparsemax` controls, with the same ordinary backward,
+recipes and seeds, and fixed attention on 256 held-out examples at every
+observation. A separate seed-1 label changes both model and data seeds and
+is trained only if the first attempt confirms. The seven run descriptions
+and CUDA live-state preservation are checked before the full training.
+Confirmation uses 20 consecutive canonical evaluations with both
+accuracies at least 99% and ends at 100% on both splits; neighbor probes
+are excluded. Memorization and the 201 final-window checks remain separate
+report columns, not extra confirmation requirements. All seven
+descriptions check and the three actual-shape CUDA observer checks pass:
+parameters, buffers, gradients, optimizer, sampler, CPU/CUDA RNG, modes,
+hooks and inputs remain exactly unchanged at updates 0, 10 and 20. These
+temporary short runs are setup checks, not generalization evidence.
+Before/after descriptions and the check's source/output are retained in
+[preparation.json](experiments/mod193_stability/preparation.json).
+The full lab check passes all 166 tests (936.095 seconds) before the setup
+commits and full runs.
+
 Train the best repair as a label of `experiments/mod193_stability` beside
 `sparsemax`, changing nothing else, with step 2's measurement, for its
 300,000 updates; the archived pair took 2.6 and 3.5 hours on the GPU. The
@@ -369,6 +390,17 @@ and left the tree with the other archive scripts; its SHA256 is the
 trainers and reads `experiments/runs/`, so it does not run as it is. Review
 the source, independently check the observations, and archive them before
 treating them as final.
+
+This review is complete. The exact source from `441f47b`, original
+observations, independent verification source/output and input hashes are
+archived in [sparsemax-final-review](experiments/archive/synthetic_trainers/protocols/adamw_stability_20261002/sparsemax-final-review/README.md).
+The independent program rebuilt every equation and strictly loaded the
+unchanged final parameters in the lab at `d03f594`; all four fixed-weight
+forward swaps and the selected local derivative probes match exactly,
+with no rounding differences or optimizer updates. Both raw checkpoint
+hashes and every embedded lab source hash match their pinned inputs.
+This establishes the fixed-checkpoint observations, not a training cause
+or the result of the new 300,000-update lab trials.
 
 ## 6. Prove the supported statements in Lean
 

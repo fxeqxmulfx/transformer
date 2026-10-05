@@ -1,7 +1,7 @@
 """Stability of GPTMini on x / y mod 193 under native AdamW.
 
-`README.md` beside this file describes the runs and what their archived
-runs found.
+`README.md` beside this file distinguishes the archived runs from the fresh
+score-scale confirmation in EXPERIMENT_PLAN.md, step 5.
 """
 
 from lab.dsl import *
@@ -27,9 +27,16 @@ base = Experiment(
 
 faster = swap(swap(base, "optimizer.lr", 1e-3), "budget.updates", 150_000)
 
+measured = swap(base, "diagnostics", AttentionDiagnostics(
+    every=250, neighbors=True, gradients=True, examples=256))
+sparse = substitute(measured, Softmax, Sparsemax())
+qknorm_one = substitute(sparse, QKNorm, QKNorm(initial_scale=1.0))
+
 experiments = {
-    "base": base,
-    "sparsemax": substitute(base, Softmax, Sparsemax()),
+    "base": measured,
+    "sparsemax": sparse,
+    "repair-qknorm-one": qknorm_one,
+    "repair-qknorm-one-seed1": swap(swap(qknorm_one, "seeds.model", 1), "seeds.data", 1),
     "cosine": swap(base, "schedule.anneal", Cosine(start=150_000, end=250_000, final=0.1)),
     "lr001": faster,
     "fraction50-lr001": swap(faster, "benchmark.train_fraction", 0.5),

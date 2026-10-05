@@ -1,0 +1,1559 @@
+{
+  "checked_utc": "2026-10-05T02:55:54Z",
+  "scope": "Step-5 setup checks before full training; no generalization or repair evidence",
+  "basis_screen_commit": "345db86",
+  "selected_attempt": "qknorm-one",
+  "selected_attempt_passes_complete_basis_criterion": false,
+  "original_descriptions": {
+    "source_sha256": "a34ebd64bcd8bb09d04853d0cf2ee0e322da9d22a6bb8c50a9c44958712845e7",
+    "descriptions": {
+      "base": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 50
+        },
+        "benchmark": {
+          "type": "ModularDivision",
+          "prime": 193,
+          "train_fraction": 0.25,
+          "tail": "short"
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 10,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 300000,
+          "batch": 512
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 0,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 250,
+          "batch": 1024
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 250,
+          "neighbors": true,
+          "gradients": true
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 5000
+        },
+        "stopping": null
+      },
+      "sparsemax": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Sparsemax"
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 50
+        },
+        "benchmark": {
+          "type": "ModularDivision",
+          "prime": 193,
+          "train_fraction": 0.25,
+          "tail": "short"
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 10,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 300000,
+          "batch": 512
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 0,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 250,
+          "batch": 1024
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 250,
+          "neighbors": true,
+          "gradients": true
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 5000
+        },
+        "stopping": null
+      },
+      "cosine": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 50
+        },
+        "benchmark": {
+          "type": "ModularDivision",
+          "prime": 193,
+          "train_fraction": 0.25,
+          "tail": "short"
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 10,
+          "anneal": {
+            "type": "Cosine",
+            "start": 150000,
+            "end": 250000,
+            "final": 0.1
+          },
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 300000,
+          "batch": 512
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 0,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 250,
+          "batch": 1024
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 250,
+          "neighbors": true,
+          "gradients": true
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 5000
+        },
+        "stopping": null
+      },
+      "lr001": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 50
+        },
+        "benchmark": {
+          "type": "ModularDivision",
+          "prime": 193,
+          "train_fraction": 0.25,
+          "tail": "short"
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 10,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 150000,
+          "batch": 512
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 0,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 250,
+          "batch": 1024
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 250,
+          "neighbors": true,
+          "gradients": true
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 5000
+        },
+        "stopping": null
+      },
+      "fraction50-lr001": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 50
+        },
+        "benchmark": {
+          "type": "ModularDivision",
+          "prime": 193,
+          "train_fraction": 0.5,
+          "tail": "short"
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 10,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 150000,
+          "batch": 512
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 0,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 250,
+          "batch": 1024
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 250,
+          "neighbors": true,
+          "gradients": true
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 5000
+        },
+        "stopping": null
+      }
+    }
+  },
+  "description_verification": {
+    "scope": "Step 5 declared labels before any Lab training",
+    "source_sha256": "a1f7c9f9000bad5ebe6c1c6a3ef1a3b8e3b7dabab7a4be53409d6c9125d62108",
+    "old_description_snapshot": "2aa89608a88707ccb575687ea5a8439af0ecf686f136ae48402755f014a8af90",
+    "descriptions": {
+      "base": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 50
+        },
+        "benchmark": {
+          "type": "ModularDivision",
+          "prime": 193,
+          "train_fraction": 0.25,
+          "tail": "short"
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 10,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 300000,
+          "batch": 512
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 0,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 250,
+          "batch": 1024
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "AttentionDiagnostics",
+          "every": 250,
+          "neighbors": true,
+          "gradients": true,
+          "examples": 256
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 5000
+        },
+        "stopping": null
+      },
+      "sparsemax": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Sparsemax"
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 50
+        },
+        "benchmark": {
+          "type": "ModularDivision",
+          "prime": 193,
+          "train_fraction": 0.25,
+          "tail": "short"
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 10,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 300000,
+          "batch": 512
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 0,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 250,
+          "batch": 1024
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "AttentionDiagnostics",
+          "every": 250,
+          "neighbors": true,
+          "gradients": true,
+          "examples": 256
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 5000
+        },
+        "stopping": null
+      },
+      "repair-qknorm-one": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": 1.0
+              },
+              "weights": {
+                "type": "Sparsemax"
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 50
+        },
+        "benchmark": {
+          "type": "ModularDivision",
+          "prime": 193,
+          "train_fraction": 0.25,
+          "tail": "short"
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 10,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 300000,
+          "batch": 512
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 0,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 250,
+          "batch": 1024
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "AttentionDiagnostics",
+          "every": 250,
+          "neighbors": true,
+          "gradients": true,
+          "examples": 256
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 5000
+        },
+        "stopping": null
+      },
+      "repair-qknorm-one-seed1": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": 1.0
+              },
+              "weights": {
+                "type": "Sparsemax"
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 50
+        },
+        "benchmark": {
+          "type": "ModularDivision",
+          "prime": 193,
+          "train_fraction": 0.25,
+          "tail": "short"
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 10,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 300000,
+          "batch": 512
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 1,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 250,
+          "batch": 1024
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "AttentionDiagnostics",
+          "every": 250,
+          "neighbors": true,
+          "gradients": true,
+          "examples": 256
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 5000
+        },
+        "stopping": null
+      },
+      "cosine": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 50
+        },
+        "benchmark": {
+          "type": "ModularDivision",
+          "prime": 193,
+          "train_fraction": 0.25,
+          "tail": "short"
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 10,
+          "anneal": {
+            "type": "Cosine",
+            "start": 150000,
+            "end": 250000,
+            "final": 0.1
+          },
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 300000,
+          "batch": 512
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 0,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 250,
+          "batch": 1024
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 250,
+          "neighbors": true,
+          "gradients": true
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 5000
+        },
+        "stopping": null
+      },
+      "lr001": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 50
+        },
+        "benchmark": {
+          "type": "ModularDivision",
+          "prime": 193,
+          "train_fraction": 0.25,
+          "tail": "short"
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 10,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 150000,
+          "batch": 512
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 0,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 250,
+          "batch": 1024
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 250,
+          "neighbors": true,
+          "gradients": true
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 5000
+        },
+        "stopping": null
+      },
+      "fraction50-lr001": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 50
+        },
+        "benchmark": {
+          "type": "ModularDivision",
+          "prime": 193,
+          "train_fraction": 0.5,
+          "tail": "short"
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 10,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 150000,
+          "batch": 512
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 0,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 250,
+          "batch": 1024
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 250,
+          "neighbors": true,
+          "gradients": true
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 5000
+        },
+        "stopping": null
+      }
+    },
+    "verified_only_changes": {
+      "base": [
+        "diagnostics.type",
+        "diagnostics.examples"
+      ],
+      "sparsemax": [
+        "diagnostics.type",
+        "diagnostics.examples"
+      ],
+      "repair-qknorm-one": [
+        "model.block.attention.scores.initial_scale relative to sparsemax"
+      ],
+      "repair-qknorm-one-seed1": [
+        "seeds.model",
+        "seeds.data relative to first attempt"
+      ]
+    },
+    "uninvoked_legacy_descriptions_unchanged": true,
+    "all_three_main_runs_are_fresh": true,
+    "batch_order_seeds": [
+      10000,
+      10001
+    ]
+  },
+  "live_state_verification": {
+    "program_source": "\"\"\"Verify step-5 attention observations on the actual mod-193 CUDA model and data.\n\nRun after the chosen repair and AttentionDiagnostics are declared in\nexperiments/mod193_stability. The shortened budget is only a live-state\ncheck; it supplies no generalization or repair evidence.\n\"\"\"\n\nfrom pathlib import Path\nimport runpy\nimport sys\nimport tempfile\nfrom unittest.mock import patch\n\nimport torch\n\nfrom lab.domain.spec import describe, swap\nfrom lab.domain.training import AttentionDiagnostics, Checkpoint\nfrom lab.infrastructure.engine.attention import AttentionObserver\nfrom lab.infrastructure.engine.eager import EagerStepper\nfrom lab.infrastructure.engine.loop import Training\nfrom lab.infrastructure.store import RunDirectory\n\nsys.path.insert(0, '/home/misha/lean_projects/transformer/python/tests')\nfrom test_graphs import summary\n\n\nROOT = Path('/home/misha/lean_projects/transformer')\nexperiments = runpy.run_path(str(ROOT / 'experiments/mod193_stability/experiment.py'))['experiments']\ncandidate = sys.argv[1]\nassert candidate in ('qknorm-one', 'scaleddot')\nfor label in ('base', 'sparsemax', f'repair-{candidate}'):\n    run = experiments[label]\n    assert isinstance(run.diagnostics, AttentionDiagnostics)\n    assert run.diagnostics.examples == 256 and run.execution.device.startswith('cuda')\n    run = swap(swap(swap(run, 'budget.updates', 20), 'evaluate.every', 10),\n               'diagnostics', AttentionDiagnostics(every=10, examples=256))\n    run = swap(run, 'checkpoint', Checkpoint(every=10))\n    original = AttentionObserver.observe\n    steps = []\n\n    def snapshot(training, observer, model):\n        return summary({'model': model.state_dict(), 'buffers': list(model.named_buffers()),\n                        'gradients': [parameter.grad for parameter in model.parameters()],\n                        'optimizer': training.stepper.state_dict(), 'sampler': training.sampler.state(),\n                        'CPU_rng': torch.get_rng_state(), 'CUDA_rng': torch.cuda.get_rng_state_all(),\n                        'modes': [module.training for module in model.modules()],\n                        'hooks': [list(module._forward_pre_hooks) for module in model.modules()],\n                        'fixed_batch': observer.fixed.batch, 'inputs': training.task.splits})\n\n    def checked(observer, model, task, step):\n        before = snapshot(training, observer, model)\n        record = original(observer, model, task, step)\n        assert before == snapshot(training, observer, model), f'{label} changed at step {step}'\n        assert record['examples'] == 256 and record['supervised_tokens'] == 512\n        assert record['split'] == 'heldout' and len(record['layers']) == 2\n        assert len(record['queries']) == 0\n        steps.append(step)\n        return record\n\n    with tempfile.TemporaryDirectory() as root:\n        directory = RunDirectory(root)\n        directory.begin(describe(run), {'engine': {}}, '# Read-only mod-193 live-state check\\n')\n        training = Training(run, directory, lambda record: None, EagerStepper)\n        with patch.object(AttentionObserver, 'observe', checked):\n            training()\n        assert steps == [0, 10, 20]\n        assert directory.checkpoint('cpu') is not None\n    print(f'{label}: all three actual-shape CUDA observations preserve live state exactly', flush=True)\n",
+    "program_sha256": "af7596b72458d543ba660e9b04a0492cdab888d1182ec74e3d3dc3698e89cbdc",
+    "stdout": "base: all three actual-shape CUDA observations preserve live state exactly\nsparsemax: all three actual-shape CUDA observations preserve live state exactly\nrepair-qknorm-one: all three actual-shape CUDA observations preserve live state exactly\n",
+    "exit_code": 0,
+    "device": "CUDA",
+    "labels": [
+      "base",
+      "sparsemax",
+      "repair-qknorm-one"
+    ],
+    "shortened_budget_updates_per_label": 20,
+    "observations_per_label": [
+      0,
+      10,
+      20
+    ],
+    "fixed_heldout_examples": 256,
+    "supervised_tokens": 512,
+    "layers": 2,
+    "preserved_exactly": [
+      "parameters",
+      "buffers",
+      "parameter_gradients",
+      "optimizer",
+      "sampler",
+      "CPU_RNG",
+      "CUDA_RNG",
+      "module_modes",
+      "hooks",
+      "fixed_batch",
+      "task_inputs"
+    ],
+    "scope": "Live-state equality around each observer call; temporary short trainings do not establish generalization"
+  },
+  "review_archive_manifest_sha256": "55e163fc7474adcbc85deced5a9e51bfc7789be0915ab4a31ecdaca6ef785a34",
+  "full_lab_test": {
+    "command": "./make.py test",
+    "passed": true,
+    "tests": 166,
+    "seconds": 936.095,
+    "log": "/tmp/mod193-step5-full-tests.log"
+  }
+}

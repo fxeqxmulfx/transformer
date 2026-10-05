@@ -14,7 +14,7 @@ it, which git ignores.
 | [`basis_sparsemax`](basis_sparsemax) | 222 | Where does sparsemax fail where softmax passes the basis, and do a smaller QKNorm starting scale or ScaledDot repair it while retaining sparse attention? |
 | [`mod97_grokking`](mod97_grokking) | 12 | Do the openai/grok transformer and GPTMini generalize x / y mod 97 long after fitting it? |
 | [`mod97_stability`](mod97_stability) | 6 | Once GPTMini generalizes x / y mod 97, does it stay generalized, under AdamW and raw AMSGradW? |
-| [`mod193_stability`](mod193_stability) | 5 | The same on mod 193 under AdamW, and with sparsemax or an annealed rate |
+| [`mod193_stability`](mod193_stability) | 7 | Mod 193 under AdamW: archived normalizer/schedule recipes and fresh sparsemax starting-scale confirmation |
 | [`mqar_sparsemax`](mqar_sparsemax) | 33 | Does sparsemax attention learn associative recall where softmax does not? |
 | [`shakespeare_amsgradw`](shakespeare_amsgradw) | 6 | GPTMini on Tiny Shakespeare under AMSGradW, softmax against sparsemax |
 | [`shakespeare_zoo`](shakespeare_zoo) | 162 | GPTMini on Tiny Shakespeare under 27 optimizer recipes |
