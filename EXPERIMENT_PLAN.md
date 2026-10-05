@@ -1,6 +1,6 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-05 UTC. **In progress: step 5. Steps 0 to 4 are done.** The investigation cycle
+Updated on 2026-10-05 UTC. **In progress: step 6. Steps 0 to 5 are done.** The investigation cycle
 was started on 2026-10-04 at the user's request. On 2026-10-04 the user asked for
 this plan: find out why sparsemax attention fails, and try to repair it, on
 the basis benchmark. It replaces the plan of 2026-10-03 for the mod-193
@@ -347,7 +347,7 @@ dense explains the failure; it does not repair sparse attention.
 
 ## 5. Confirm on mod 193
 
-**In progress on 2026-10-05 UTC.** Step 4 selects QKNorm-one as the best
+**Done on 2026-10-05 UTC.** Step 4 selects QKNorm-one as the best
 partial attempt; neither screened intervention passes the complete basis
 repair criterion. `mod193_stability` declares `repair-qknorm-one` beside
 fresh `base` and `sparsemax` controls, with the same ordinary backward,
@@ -368,11 +368,37 @@ Before/after descriptions and the check's source/output are retained in
 The full lab check passes all 166 tests (936.095 seconds) before the setup
 commits and full runs.
 
+All four scheduled lab runs completed 300,000 updates at the pinned sources.
+The fresh softmax and ordinary sparsemax controls repeat all 1,201 archived
+canonical observations exactly, excluding timing. Softmax ends at 100% on
+both splits, with two final-window failures; ordinary sparsemax ends at
+100%/34.06%, never confirms and fails all 201 final-window checks. QKNorm-one
+confirms at update 121,000, ends at 100%/100%, and passes all 201 final-window
+checks (worst held-out 99.62%). Its fresh model/data-seed-1 repeat confirms
+at 186,250 and ends at 100%/100%; two final-window held-out checks fall below
+99% (worst 98.93%). Both meet the original step-5 confirmation criterion,
+but strict final-window persistence holds only for the first seed. Their
+eight final heads retain visible exact zeros, averaging 36.52% and 46.56%
+of visible non-BOS pairs respectively. This confirms the selected partial
+intervention on mod193 from two seeds; it does not repair the complete basis
+or establish general success or persistence on unseen seeds.
+
+[confirmation_results.json](experiments/mod193_stability/confirmation_results.json)
+retains all canonical/attention curves, initial/final per-head statistics,
+component losses, gains, 32 raw file hashes and embedded reduction sources.
+Each run has 1,201 canonical evaluations, 2,400 neighbor probes, 3,601
+fixed-256-example attention records and 300,000 verified finite gradient
+updates. [control_repetition.json](experiments/mod193_stability/control_repetition.json)
+independently verifies both archived histories, all four canonical reductions,
+matched descriptions, fresh seeds and all 78 runtime source hashes.
+The complete-findings `./make.py test` gate passes all 166 tests, including
+CUDA checks, in 886.968 seconds.
+
 Train the best repair as a label of `experiments/mod193_stability` beside
 `sparsemax`, changing nothing else, with step 2's measurement, for its
 300,000 updates; the archived pair took 2.6 and 3.5 hours on the GPU. The
-lab has not trained `base` or `sparsemax` yet: their table holds archived
-runs of the historical trainers, so train both too. Record the archived
+original table held archived runs of the historical trainers, so train
+`base` and `sparsemax` afresh too. Record the archived
 table's columns: memorized, confirmed, failures in the last 50,000 updates
 and the worst held-out accuracy there, final accuracies. The repair is
 confirmed if it generalizes as `base` does: confirmed for 20 evaluations,

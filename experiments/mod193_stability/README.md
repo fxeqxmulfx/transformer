@@ -49,9 +49,9 @@ persistent recall seed. Neither is a complete basis repair; the label
 above tests the better partial attempt rather than asserting a repair.
 See [the basis results](../basis_sparsemax/README.md#starting-scale-and-score-map-repairs).
 
-The archived table below is not evidence that the lab has trained these
-labels. Step 5 trains `base`, `sparsemax` and `repair-qknorm-one` afresh for
-their complete 300,000-update budgets. Only the diagnostic observer is
+Step 5 trained `base`, `sparsemax` and `repair-qknorm-one` afresh for
+their complete 300,000-update budgets, then completed the conditional
+fresh-seed repeat. Only the diagnostic observer is
 added to the existing controls; the attempt changes their score block's
 initial scale. The frozen abandoned schedule pair is not resumed.
 
@@ -65,7 +65,7 @@ by step 5's confirmation rule: the archived softmax reference itself fails
 two such checks. A confirmed attempt is repeated from fresh model and data
 seeds before a broader success claim.
 
-Fresh results are pending. The current lab descriptions and actual-shape
+The setup's lab descriptions and actual-shape
 CUDA observation checks pass: all three main labels preserve parameters,
 buffers, gradients, optimizer, sampler, CPU/CUDA RNG, modes, hooks and
 inputs exactly around observations at updates 0, 10 and 20. These
@@ -75,9 +75,54 @@ the controls add only the observer, and the attempt changes only the
 initial QKNorm scale relative to `sparsemax`. The seed-1 repeat changes
 only model/data seeds. Before/after descriptions, verification source and
 output, and their scope are retained in [preparation.json](preparation.json).
-Final per-layer/head support and visible-zero statistics will accompany
+Final per-layer/head support and visible-zero statistics accompany
 the complete canonical histories. The full setup gate passes all 166 lab
 tests (936.095 seconds).
+
+All four runs finished on 2026-10-05 with the pinned lab code at `73f8a0b`.
+The complete canonical results, excluding neighboring diagnostic probes, are:
+
+| Run | Memorized | Twenty joint evaluations, onset–confirmation | Last 50,000 updates: failed, worst held-out | At the end, train / held-out |
+| --- | --- | --- | --- | --- |
+| `base` | 4,500–27,250 | 95,750–100,500 | 2, 49.18% | 100% / 100% |
+| `sparsemax` | 49,750–255,750 | never | 201, 2.51% | 100% / 34.06% |
+| `repair-qknorm-one` | 29,250–56,250 | 116,250–121,000 | 0, 99.62% | 100% / 100% |
+| `repair-qknorm-one-seed1` | 12,250–48,250 | 181,500–186,250 | 2, 98.93% | 100% / 100% |
+
+Both QKNorm-one seeds meet the original confirmation rule. The second
+seed's held-out accuracy fell below 99% twice in the final window;
+strict persistence therefore holds only for the first seed. The intervention
+improves this task without being a complete basis repair or establishing
+general applicability to other seeds/tasks.
+
+Both successful sparsemax variants retain visible exact zeros in all eight
+heads at the final evaluation on 256 fixed held-out examples. Averaging
+non-BOS head statistics, their support has 2.5391/2.1378 positions, with
+36.52%/46.56% visible exact zeros for seed 0/1. Ordinary sparsemax has
+2.5514 positions and 36.22% zeros; softmax has no visible exact zeros.
+The mean visible prefix in these non-BOS measurements contains four
+positions; masked future zeros and the compulsory one-position BOS row
+are excluded.
+
+[confirmation_results.json](confirmation_results.json) retains all four
+canonical curves, attention trajectories, component training losses,
+head gains, full initial/final per-head statistics, matched descriptions,
+raw hashes and embedded collection/policy source. Each complete run has
+1,201 canonical evaluations, 2,400 neighbor probes, 3,601 fixed-example
+attention records and 300,000 verified finite gradient updates. The first
+controller completed training `base` before a collection-only error from
+expecting a combined loss field; modular diagnostics have separate answer
+and EOS losses. The corrected collector retained those components and
+collected the completed control without retraining it.
+
+An independent check in [control_repetition.json](control_repetition.json)
+confirms all four canonical reductions, description differences and fresh
+seeds. Both new controls reproduce all 1,201 archived evaluations exactly,
+including train/held-out losses, accuracies and counts, epoch/sample fields;
+timing fields are excluded. All 78 runtime source hashes match the pinned
+code. The fresh-seed observer fingerprint differs from seed 0 as expected.
+Before the findings commit, the full lab gate passes all 166 tests,
+including CUDA checks, in 886.968 seconds.
 
 ## Running
 
