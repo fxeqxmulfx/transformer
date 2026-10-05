@@ -27,6 +27,11 @@ import Transformer.GPTMini.Sparsemax.ProjectionUpdate
 import Transformer.GPTMini.Sparsemax.MixedInputQK
 import Transformer.GPTMini.Sparsemax.QKIndependentDirections
 import Transformer.GPTMini.Sparsemax.QKIndependentError
+import Transformer.GPTMini.Sparsemax.PrefixInputs
+import Transformer.GPTMini.Sparsemax.LongContextQK
+import Transformer.GPTMini.Sparsemax.QKPrefixMatrix
+import Transformer.GPTMini.Sparsemax.QKPrefixDirections
+import Transformer.GPTMini.Sparsemax.QKPrefixError
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -97,4 +102,16 @@ width; a proved obstruction records the failure above that width.
 The fixed unit frame, restricted key parameterization and independent
 input family are explicit restrictions. They do not follow
 from unconstrained QKNorm or arbitrary learned embeddings.
+
+Full input independence is unnecessary when only anchors need control.
+A partial decoder isolates the anchors and kills ordinary inputs. Its
+dedicated-channel implementation permits arbitrary ordinary embeddings
+and context lengths. A smooth anchor-only update through the current
+shared matrix preserves all ordinary keys and realizes the anchored scores.
+Nonzero ordinary task derivatives still reach joint Q/K matrices, and
+wrong squared-error outputs remain excluded as local minima. A concrete
+family with arbitrarily many repeated ordinary tokens satisfies the
+weaker premises while long instances fail full input independence.
+The unit-frame, key-family and visible value-anchor restrictions remain;
+these single-row results do not exclude cancellation in a shared objective.
 -/

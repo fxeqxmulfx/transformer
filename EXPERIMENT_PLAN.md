@@ -872,6 +872,63 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Pure sparse follow-up: partial anchor access on long contexts
+
+**Done on 2026-10-05 UTC.** Five modules add twenty-seven proved
+theorems with no new `sorry`, derived from arXiv:1602.02068v2,
+§2.2 and §2.5, and shared Q/K projections and QKNorm at `73f8a0b`.
+The full-context independence and resulting context-width bound are
+removed from the task-direction and local-minimum results below.
+
+[PrefixInputs.lean](src/Transformer/GPTMini/Sparsemax/PrefixInputs.lean)
+constructs dedicated anchor channels followed by arbitrary ordinary
+embedding channels. Its proved continuous linear decoder identifies
+each anchor and kills every ordinary input, regardless of repetitions,
+rank or context length. A context longer than the input width is proved
+dependent and still satisfies the partial decoder identities. This
+architecture uses `A + B` input coordinates for `A + N` tokens, where
+`N` is unrestricted. The ordinary embedding channels are not decoded.
+
+[QKPrefixMatrix.lean](src/Transformer/GPTMini/Sparsemax/QKPrefixMatrix.lean)
+builds a differentiable path through the actual current matrix that
+changes anchor keys and preserves all ordinary keys. Because the ordinary
+keys in the anchored family do not depend on anchor parameters, the
+actual shared projection realizes the entire desired family along that
+path. A special initial matrix with zero unseen components is not required.
+
+[QKPrefixDirections.lean](src/Transformer/GPTMini/Sparsemax/QKPrefixDirections.lean)
+proves that a nonzero ordinary output derivative survives in the shared
+key matrix and joint Q/K matrices under only the partial decoder condition.
+[QKPrefixError.lean](src/Transformer/GPTMini/Sparsemax/QKPrefixError.lean)
+excludes zero joint matrix derivatives and erroneous local minima for
+ordinary squared output error. The local-minimum proof uses the continuous
+anchor path and does not assume full sparsemax differentiability at
+inactive support boundaries.
+
+[LongContextQK.lean](src/Transformer/GPTMini/Sparsemax/LongContextQK.lean)
+provides explicit shared matrices for two anchors and arbitrarily many
+repeated nonzero ordinary inputs, using input width three and head width
+two. The actual normalized scores realize every finite anchor assignment.
+The initial actual sparse row has weights `1/2` on both anchors and
+exactly zero on every ordinary token. With anchor values zero and one,
+ordinary values seven and output target zero, its incorrect output is
+`1/2`. The general matrix theorems have concrete inhabited examples at
+one hundred ordinary tokens, where full independence is proved impossible.
+
+The partial decoder is an enforced input-channel modification, with a
+proved implementation, rather than a consequence of arbitrary embeddings.
+The current projected key family, unit query frame, active value anchors,
+fixed values and single unrotated readout before XSA/output projection
+remain explicit conditions. Shared-row cancellation, uniform gradient
+bounds and whole-model convergence remain open. The completed experiment
+cycle and Python implementation are unchanged; no new dataset training
+claim is made.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
