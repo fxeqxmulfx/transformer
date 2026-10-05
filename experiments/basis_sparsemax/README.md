@@ -232,9 +232,63 @@ not merely these initialization counts. Full initial and unchanged
 zero-rate-update statistics, descriptions and hashes of the source
 observations are in [attention_initial.json](attention_initial.json).
 
-The six target runs are training. There is no small-model target requiring
-the factorial ablation. H1--H4 await the measured trajectories and the
-interventions of the plan.
+All six target repeats finished on 2026-10-04 UTC. Their descriptions differ
+from step 1 only in diagnostics, and all six have identical update-zero
+metrics to those originals. Their multi-threaded trajectories diverge at
+the first or second later observation. Softmax again passes all three
+seeds, but all three sparsemax repeats fail with best selection sequence
+accuracy 0%, unlike step 1's pass and near-passes. Their last training batch
+losses are 1.78--2.09, so these measured runs also fail to fit well.
+This is a comparison of the current arms; it does not reproduce step 1's
+particular fitted checkpoints or identify why separate threaded runs drift.
+An additional direct check at the actual large recall shape, four threads
+and 256 fixed examples preserves parameters, buffers, gradients, optimizer,
+sampler, inputs, RNG and module flags exactly around all observations,
+under both weights. The checks and record hashes are retained with the data.
+
+| Seed | Softmax | Sparsemax | Last batch loss, softmax | Last batch loss, sparsemax |
+| ---: | --- | --- | ---: | ---: |
+| 0 | passes at 3,400 | fails, 0.00% | 0.002643 | 1.781534 |
+| 1 | passes at 2,450 | fails, 0.00% | 0.018210 | 2.086703 |
+| 2 | passes at 2,700 | fails, 0.00% | 0.004171 | 2.050959 |
+
+The final sparsemax query statistics below average the 24 layer/head pairs
+at the 2,048 fixed queries. Turnover compares updates 4,750 and 4,800;
+answer support means any head in any layer, and its denominator is only
+the wrong teacher-forced queries, not every query.
+
+| Seed | Mean support, positions | Visible pairs exactly zero | Query turnover | Changed query memberships | Wrong queries with answer in any support | Self-only query share |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 0 | 3.7887 | 91.62% | 1.96% | 43,576 | 1,455/1,609 (90.43%) | 0.0020% |
+| 1 | 3.6178 | 92.00% | 2.18% | 48,415 | 1,811/1,863 (97.21%) | 0.0081% |
+| 2 | 3.6853 | 91.85% | 2.30% | 51,085 | 1,794/1,853 (96.82%) | 0.1119% |
+
+H1 is **refuted by its stated criterion in these measured failures**:
+query supports change at every observation through the budget, and most
+wrong queries have their answer position in a support. Membership is not
+evidence that the head uses the answer successfully. The existing Lean
+singleton-row theorem still holds; it does not imply locked training.
+H2's narrow-start prediction is **supported** by the initialization pairs;
+its causal and repair predictions remain open until the score-map or
+starting-scale interventions. H3 is **refuted as a persistent basis failure
+after H5**: sparsemax passes depth and parity wherever the matched softmax
+does, with neighboring rates removing the small parity failures. Large
+parity is slower, so this does not assert equal convergence speed.
+H4 is **refuted by the rarity of self-only routes** in these measured
+failures. After BOS is excluded, their share averaged over layer/head pairs
+never exceeds 1.87%; the query share never exceeds 1.24%. Final individual
+heads reach at most 6.10% of non-BOS rows and 2.05% of queries. All measured
+self-only values exceed or equal XSA's epsilon. No small-model cell survives
+H5, so the prescribed small factorial and its no-XSA intervention are empty;
+these results make no claim about an unrun large no-XSA ablation.
+
+Descriptions, all reduced observations, initial and final per-head actual
+and shadow statistics, final scales and source hashes are in
+[attention_targets.json](attention_targets.json). Raw per-query weights and
+routes remain in each run's `attention.jsonl`. These uncompiled,
+teacher-forced measurements describe the observed trajectories, not a
+real-arithmetic theorem or a certificate of compiled routing. Step 3 still
+tests score sensitivity independently by swapping the two backward maps.
 
 Run a pair with:
 

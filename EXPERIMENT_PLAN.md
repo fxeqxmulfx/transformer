@@ -1,6 +1,6 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-04 UTC. **In progress: step 2. Steps 0 and 1 are done.** The investigation cycle
+Updated on 2026-10-04 UTC. **Next: step 3. Steps 0 to 2 are done.** The investigation cycle
 was started on 2026-10-04 at the user's request. On 2026-10-04 the user asked for
 this plan: find out why sparsemax attention fails, and try to repair it, on
 the basis benchmark. It replaces the plan of 2026-10-03 for the mod-193
@@ -185,7 +185,7 @@ and keep the basis to check that a repair costs nothing there.
 
 ## 2. Measure the mechanism
 
-**In progress on 2026-10-04.** The target is large hard recall.
+**Done on 2026-10-04 UTC.** The target is large hard recall.
 `AttentionDiagnostics` retains fixed validation examples and previous
 causal support masks across checkpoints. Focused tests check hand-made
 statistics, latest-write query routes, CPU/CUDA live-state preservation,
@@ -196,8 +196,19 @@ All 155 lab tests pass. The 24 initial runs are complete: first-layer
 query support averages 3.43/3.34 positions under QKNorm on the small/large
 models, against 35.47/24.88 under ScaledDot, with otherwise identical
 initial parameters. This supports H2's initialization prediction, not
-its causal or repair conclusion. The six target runs are training. There
-is no small-model target for the small factorial ablation.
+its causal or repair conclusion. The six target repeats are complete:
+softmax passes all seeds, sparsemax none. The measured sparsemax trajectories
+also fit poorly, unlike step 1's fitted near-passes; separate threaded runs
+diverge despite identical initial metrics. Direct real-shape, four-thread
+checks preserve the entire live training state around attention observation.
+H1 is refuted by continued turnover through the budget and by answer
+membership on 90--97% of final wrong queries. H4 is refuted by rare self-only
+routes, excluding BOS (at most 1.87% averaged over layer/head pairs at any
+observation). H3 has no persistent depth/parity failure after H5; parity
+can still take longer. H2's causal prediction awaits the score/scale
+interventions. There is no small-model target for the small factorial
+ablation. Detailed trajectories, per-head statistics, qualifications and
+source hashes are in [basis_sparsemax](experiments/basis_sparsemax/README.md).
 
 Add to `Diagnostics` a measurement of attention (domain, infrastructure,
 test). At every observation, an uncompiled forward of 256 fixed validation
