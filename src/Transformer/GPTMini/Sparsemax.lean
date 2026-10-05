@@ -41,6 +41,13 @@ import Transformer.GPTMini.Sparsemax.SharedRowLoss
 import Transformer.GPTMini.Sparsemax.SharedRowMinimum
 import Transformer.GPTMini.Sparsemax.SharedRowDerivative
 import Transformer.GPTMini.Sparsemax.SharedRowCancellation
+import Transformer.GPTMini.Sparsemax.EmbeddingGram
+import Transformer.GPTMini.Sparsemax.GramRouting
+import Transformer.GPTMini.Sparsemax.GramRoutingEnergy
+import Transformer.GPTMini.Sparsemax.GramSupport
+import Transformer.GPTMini.Sparsemax.GramBoundary
+import Transformer.GPTMini.Sparsemax.NormalizedGram
+import Transformer.GPTMini.Sparsemax.NormalizedGramExamples
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -141,4 +148,20 @@ with conflicting targets zero and one have positive global minimum `1/2`,
 two active anchors and exact ordinary zeros. Joint attainability, endpoint
 support compatibility, clipped keys and fixed values remain essential;
 these results do not assert convergence of an unconstrained full model.
+
+A new Gram architecture learns both query and key embedding families in
+one bounded PSD matrix, with exact finite-coordinate recovery and affine
+shared content scores. The joint causal-row domain and squared projection
+energy are convex without fixing supports. An entry cap below one half
+excludes singleton saturation. The unrestricted exact sparsemax graph is
+still nonconvex, and dropping the score-square energy term also fails.
+A stronger linear restriction makes each selected score row itself a
+causal probability row. Actual sparsemax fixes it, so the exact learned
+embedding/attention graph is convex even when supports change. A four-token
+example changes both embedding families and loses one active position;
+its midpoint attention is exactly the mean endpoint attention. Its midpoint
+Gram cannot retain the endpoints' one-feature width. These are new finite-
+context architectures replacing QKNorm, with no task loss or FFN yet.
+Ordinary jointly learned value mixing has a separate nonconvex output graph,
+even with bounded parameters and full support; it is not covered by the lift.
 -/

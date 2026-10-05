@@ -1009,6 +1009,75 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Convex embedding and attention foundation
+
+**Done on 2026-10-05 UTC.** At the user's request, the next architectural
+stage focuses on learned embeddings and attention; FFN and task-loss design
+are deferred. Seven modules add fifty-five proved theorems without new
+`sorry`, derived from sparsemax arXiv:1602.02068v2, Eq. (1) and Proposition 1.
+This is a new restricted architecture, not a completed transformer repair
+or an equivalence to the QKNorm implementation at `73f8a0b`.
+
+[EmbeddingGram.lean](src/Transformer/GPTMini/Sparsemax/EmbeddingGram.lean)
+learns one positive semidefinite Gram matrix on the query and key copies of
+a finite vocabulary. Its full bounded domain is proved convex; every feasible
+matrix has exact finite embedding coordinates. Query and key families both
+remain trainable, and no fixed small feature width is assumed. Unnormalized
+Gram scores replace QKNorm, RoPE and the learned multiplicative gain.
+
+[GramRouting.lean](src/Transformer/GPTMini/Sparsemax/GramRouting.lean)
+uses this single matrix across every specified context and row. Shared token
+identities select affine content scores, so identical visible token codes
+receive identical weights; occurrence information requires richer codes.
+The joint embedding/causal-weight domain is convex with no prescribed support.
+[GramRoutingEnergy.lean](src/Transformer/GPTMini/Sparsemax/GramRoutingEnergy.lean)
+proves joint convexity and the exact Jensen gap of the squared projection
+energy. Actual sparsemax conditionally minimizes it at any fixed learned
+Gram. The score-square term is retained: it is variable during embedding
+learning. A future objective on free attention rows can change their
+conditional optimizer, so this energy alone is not an exact task-training
+reformulation.
+
+[GramSupport.lean](src/Transformer/GPTMini/Sparsemax/GramSupport.lean)
+proves that a Gram entry cap below one half guarantees two positive weights
+on every row with two visible positions, for every feasible learned matrix.
+A scalar embedding example has an exact visible zero whereas the feasible
+zero Gram has full support. No routing targets or frozen Q/K are needed.
+[GramBoundary.lean](src/Transformer/GPTMini/Sparsemax/GramBoundary.lean)
+proves that the unrestricted exact sparsemax graph remains nonconvex even
+inside this bounded PSD domain. Omitting the score-square term has an actual
+Jensen violation. Ordinary value mixing has a nonconvex exact output graph
+even on an unchanged full two-slot support with bounded scores and values;
+this obstruction precedes any task loss or FFN.
+
+[NormalizedGram.lean](src/Transformer/GPTMini/Sparsemax/NormalizedGram.lean)
+provides an exact positive restriction: require each specified Gram score
+row to be nonnegative, sum to one and vanish at future positions. These are
+linear constraints on the learned matrix. The normalized domain is proved
+convex, actual variational sparsemax fixes every such row, and the exact
+embedding/attention graph is convex. Supports can acquire or lose exact
+zeros. Normalization is an architectural constraint; it is not inferred
+from PSD or an ordinary norm bound, and arbitrary-context feasibility is
+not assumed.
+
+[NormalizedGramExamples.lean](src/Transformer/GPTMini/Sparsemax/NormalizedGramExamples.lean)
+inhabits the exact domain at cap `3/8`. Two genuine one-feature embedding
+families have different Q and K squared norms. The actual row changes from
+`(1/4, 1/4, 1/4, 1/4)` to `(1/3, 1/3, 1/3, 0)`; its true Gram midpoint
+gives `(7/24, 7/24, 7/24, 1/8)`, exactly the mean endpoint attention.
+A positive two-by-two minor proves that this midpoint cannot be recovered
+with only one feature, recording the cost of a fixed small embedding width.
+
+The foundation covers Q/K embeddings and attention weights on the specified
+finite contexts. Jointly learned value mixtures, arbitrary-context
+normalization, a practical embedding-width bound, FFN and task loss remain
+outside the guarantee. No new basis or Shakespeare training is claimed.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
