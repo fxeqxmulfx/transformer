@@ -371,8 +371,72 @@ is a different experiment and is rejected for continuation onto old state.
 The five focused tests pass (0.691 seconds), including exact non-score
 parameter equality for both model sizes and all three seeds, normalized-dot
 scores and query/key gradients, and the learned scale's gradient.
-All 166 lab tests pass (922.757 seconds). All 30 small-model repair runs precede the
-30 large-model ones; no repair pass or generalization claim is made yet.
+All 166 lab tests pass (922.757 seconds). All 30 small-model repair runs
+finished before the 30 large-model ones started. The small screen is
+complete; the large screen is in progress, so no best-candidate or
+generalization claim is made yet.
+
+Each candidate matches 6 of the 9 small-model softmax passes. QKNorm-one
+misses parity seeds 0 and 2 and easy recall seed 2; ScaledDot passes every
+parity seed but misses every easy recall seed. Neither passes a hard run.
+Every passing run retains exact zeros among visible pairs after BOS, in
+all eight heads. These are genuine sparse passes, but the failures already
+exclude both candidates from the complete basis repair criterion at the
+unchanged recipes. The large hard-recall screen still tests whether either
+intervention helps the original persistent failure.
+
+The table gives the pass update or best selection sequence accuracy of a
+failure. Hard depth selects the length-128 validation split. Last batch
+losses are sampled before the final update. Full initial and final
+statistics for each layer/head, every reduced attention observation, the
+collector and helper sources, description checks and five raw-file hashes
+per run are in [small_repair_results.json](small_repair_results.json).
+All 30 small runs used identical lab source hashes at `aadc772` and changed
+only the declared score block and `AttentionDiagnostics` relative to their
+original sparsemax runs. Final sparsity below describes the last trained
+weights, including for failures; their best accuracies may occur earlier.
+The screen's record and description checks pass, as do all 166 lab tests
+(1,206.052 seconds).
+
+| Mode | Task | Seed | Softmax | QKNorm-one | ScaledDot | Last batch loss, QKNorm-one | Last batch loss, ScaledDot |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| easy | depth | 0 | 200 | 200 | 2000 | 0.020944 | 0.000625 |
+| easy | depth | 1 | 200 | 200 | 1000 | 0.020880 | 0.000409 |
+| easy | depth | 2 | 200 | 200 | 200 | 0.022573 | 0.037704 |
+| easy | recall | 0 | 1650 | 2600 | fail (67.97%) | 0.006364 | 0.158280 |
+| easy | recall | 1 | 2450 | 3850 | fail (96.29%) | 0.005444 | 0.008972 |
+| easy | recall | 2 | 1800 | fail (68.36%) | fail (91.21%) | 0.091421 | 0.033928 |
+| easy | parity | 0 | 8200 | fail (91.60%) | 3000 | 0.082636 | 0.040531 |
+| easy | parity | 1 | 5000 | 6600 | 10200 | 0.060305 | 0.089290 |
+| easy | parity | 2 | 4200 | fail (91.99%) | 14800 | 0.041831 | 0.039936 |
+| hard | depth | 0 | fail (44.34%) | fail (42.58%) | fail (54.10%) | 0.007547 | 0.001628 |
+| hard | depth | 1 | fail (34.96%) | fail (57.42%) | fail (37.50%) | 0.000041 | 0.000145 |
+| hard | depth | 2 | fail (31.05%) | fail (41.99%) | fail (43.55%) | 0.000092 | 0.001248 |
+| hard | recall | 0 | fail (0.00%) | fail (0.00%) | fail (0.59%) | 3.220756 | 1.661782 |
+| hard | recall | 1 | fail (0.00%) | fail (0.00%) | fail (19.53%) | 2.971327 | 1.193219 |
+| hard | recall | 2 | fail (0.00%) | fail (0.00%) | fail (1.37%) | 2.396232 | 1.779001 |
+
+Mean support positions and the share of exact zeros among visible
+pairs after BOS, averaged over layer/head pairs; no future or padded
+position contributes a zero. The JSON retains every head separately.
+
+| Mode | Task | Seed | Support, QKNorm-one | Zeros, QKNorm-one | Support, ScaledDot | Zeros, ScaledDot |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| easy | depth | 0 | 7.336 | 71.41% | 3.568 | 86.09% |
+| easy | depth | 1 | 6.703 | 73.87% | 4.877 | 80.99% |
+| easy | depth | 2 | 7.198 | 71.94% | 8.074 | 68.53% |
+| easy | recall | 0 | 5.157 | 80.29% | 3.218 | 87.70% |
+| easy | recall | 1 | 3.464 | 86.76% | 4.081 | 84.40% |
+| easy | recall | 2 | 4.137 | 84.19% | 5.173 | 80.23% |
+| easy | parity | 0 | 4.085 | 46.19% | 5.307 | 30.09% |
+| easy | parity | 1 | 3.908 | 48.52% | 5.871 | 22.66% |
+| easy | parity | 2 | 3.821 | 49.66% | 5.713 | 24.73% |
+| hard | depth | 0 | 7.687 | 88.17% | 6.031 | 90.72% |
+| hard | depth | 1 | 9.194 | 85.86% | 5.170 | 92.05% |
+| hard | depth | 2 | 9.616 | 85.21% | 5.586 | 91.41% |
+| hard | recall | 0 | 7.571 | 74.31% | 5.708 | 80.63% |
+| hard | recall | 1 | 7.146 | 75.75% | 7.274 | 75.32% |
+| hard | recall | 2 | 6.069 | 79.41% | 6.088 | 79.34% |
 
 Run a pair with:
 

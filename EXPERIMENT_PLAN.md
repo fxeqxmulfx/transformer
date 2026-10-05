@@ -299,7 +299,15 @@ the scale learned. Five focused tests pass: validation, old-description
 compatibility, original rounding, identical non-score parameters and score
 gradients with a learned scale. Sixty repair labels cover both candidates
 on the small model's 15 runs and then the large model's 15, with fixed-row
-attention measurements. All 166 lab tests pass; the 60 training runs are next.
+attention measurements. All 166 lab tests pass. All 30 small-model runs are
+complete: each candidate matches 6 of the 9 softmax passes, neither passes
+the six hard runs, and every passing run retains exact visible zeros in
+all eight heads after BOS. QKNorm-one fails parity seeds 0 and 2 and easy
+recall seed 2; ScaledDot fails every easy recall seed. Thus neither is a
+complete basis repair at these recipes. The 30 large-model runs are in
+progress and still test the original persistent hard-recall failure.
+The matched-seed table, final losses, full per-head supports and source
+hashes are in [basis_sparsemax](experiments/basis_sparsemax/README.md).
 The failed surrogate is not screened as a repair; H4's rarity criterion and
 H3's lack of persistent failures do not justify no-XSA or entmax trials here.
 
