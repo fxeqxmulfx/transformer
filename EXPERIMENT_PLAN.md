@@ -1131,6 +1131,84 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Convex shared memory across causal data contexts
+
+**Done on 2026-10-05 UTC.** The user's continuation adds eight modules and
+sixty-eight proved theorems without new `sorry`. One learned dictionary
+and one learned value table now serve arbitrarily many context queries,
+including repeated tokens. The positive construction changes ordinary
+input-token self-attention into attention to learned parameter memory.
+Fixed causal probability codes from data mix learned query embeddings.
+FFN and task-loss design remain deferred.
+
+[MemoryGram.lean](src/Transformer/GPTMini/Sparsemax/MemoryGram.lean)
+normalizes every learned dictionary score row linearly and bounds its
+diagonal below by a floor greater than one half. Together with a bounded
+PSD Gram, these constraints define a convex domain. Actual variational
+sparsemax equals its normalized genuine Q/K scores. Unit row mass gives
+strict diagonal dominance, and Gershgorin proves nonsingularity without
+a triangular support restriction. Both directional supports can change.
+
+[MemoryValues.lean](src/Transformer/GPTMini/Sparsemax/MemoryValues.lean)
+uses the exact global coordinates `Z = B(G) * V`, where `B` is dictionary
+attention. It decodes one table `V = B(G) inverse * Z`, independent of the
+context. Both inverse identities and uniqueness are proved. Original values
+and both embedding families remain variable in the convex joint domain.
+
+[ContextMemory.lean](src/Transformer/GPTMini/Sparsemax/ContextMemory.lean)
+proves that scores for a probability code `M` are actual inner products of
+mixed learned Q and the common learned K. Actual sparsemax equals `M * B`.
+Data codes are inputs, not teacher routes or attention targets. All learned
+memory slots are visible parameters preceding the query; they do not contain
+future observations. Codes are fixed during optimization, while query and
+key embedding coordinates remain trainable through the Gram.
+
+[PrefixMemoryCodes.lean](src/Transformer/GPTMini/Sparsemax/PrefixMemoryCodes.lean)
+constructs such codes from arbitrary causal token prefixes. Zero-score
+sparsemax is proved exactly uniform on every visible prefix, and its mass
+is aggregated by token identity. Every length and repetition pattern gives
+a probability code. Future-token changes leave codes unchanged, and absent
+visible tokens receive exactly zero mass. This concrete encoder retains
+prefix frequencies and loses word order; other fixed causal probability
+codes can be supplied to the general memory results.
+
+[SharedMemoryValues.lean](src/Transformer/GPTMini/Sparsemax/SharedMemoryValues.lean)
+proves simultaneous exact original-value recovery and actual forward affinity
+for all context rows. The shared decoded output is `M * Z`, computed through
+the real sparsemax/value operation. Prefix-code forwards are causal even
+outside the structural Gram domain.
+[SharedMemoryGeometry.lean](src/Transformer/GPTMini/Sparsemax/SharedMemoryGeometry.lean)
+proves that every future convex criterion on the whole context-output table
+is convex in joint Gram/output coordinates. The exact prediction class is
+the linear image `{M * Z}` and is convex; arbitrary context targets need not
+be attainable. A common decoder compensates feasible Gram changes across
+all contexts, so an output-only objective leaves the Gram undetermined.
+
+[MemoryExampleGrams.lean](src/Transformer/GPTMini/Sparsemax/MemoryExampleGrams.lean)
+gives a genuine feasible identity embedding Gram for every dictionary size.
+Its two-slot witness changes Q/K squared norms and actual memory attention
+from identity to `[[3/4,1/4],[1/4,3/4]]`, acquiring both off-diagonal supports.
+[SharedMemoryExamples.lean](src/Transformer/GPTMini/Sparsemax/SharedMemoryExamples.lean)
+uses actual repeated-token prefixes `(1,1,1)`, `(0,1,1)` and `(0,0,1)`.
+One original value table changes from `(1,0)` to `(-1/2,3/2)`, while global
+output coordinates change from `(1,0)` to `(0,1)`. The three actual context
+outputs change from `(0,1/3,2/3)` to `(1,2/3,1/3)`. At the true midpoint,
+one shared decoded table `(1/2,1/2)` gives all three outputs one half.
+Literal mean original values instead give first-context output `11/16`.
+Every actual output obeys `Y2 = 2 * Y1 - Y0`; the target triple `(0,0,1)`
+is proved unattainable for every feasible Gram and common value table.
+
+The guarantee covers the stated memory architecture and fixed data codes.
+It does not recover unrestricted occurrence self-attention, trainable codes,
+a fixed small embedding width, original value penalties or inverse norm bounds.
+Outputs precede XSA and output projection. No new basis or Shakespeare training
+is claimed, and the completed experiment cycle is unchanged.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be

@@ -53,6 +53,14 @@ import Transformer.GPTMini.Sparsemax.GramValues
 import Transformer.GPTMini.Sparsemax.JointGramValues
 import Transformer.GPTMini.Sparsemax.GramValueExampleGrams
 import Transformer.GPTMini.Sparsemax.JointGramValueExamples
+import Transformer.GPTMini.Sparsemax.MemoryGram
+import Transformer.GPTMini.Sparsemax.MemoryValues
+import Transformer.GPTMini.Sparsemax.ContextMemory
+import Transformer.GPTMini.Sparsemax.PrefixMemoryCodes
+import Transformer.GPTMini.Sparsemax.SharedMemoryValues
+import Transformer.GPTMini.Sparsemax.SharedMemoryGeometry
+import Transformer.GPTMini.Sparsemax.MemoryExampleGrams
+import Transformer.GPTMini.Sparsemax.SharedMemoryExamples
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -177,8 +185,16 @@ by the attention inverse. Encoding and decoding are proved mutually exact,
 and the actual attention/value output is affine in these joint coordinates.
 Any future convex output objective remains convex; no task loss is selected.
 A two-token example changes both Q/K families, values and sparse support.
-The true midpoint output is the mean endpoint output, while literal mean
-values produce a different output. This finite-context change does not infer
-repeated-token or multi-context sharing, fixed small embedding width,
-original value penalties or a uniform inverse conditioning bound.
+The true midpoint output is the mean endpoint output; literal mean values
+produce a different output. This finite-context chart leaves multi-context
+sharing, fixed small width, value penalties and inverse conditioning open.
+
+A shared learned dictionary now handles arbitrarily many causal data codes.
+Their genuine Q/K mixture scores give actual attention M times the memory.
+A convex diagonal floor above one half guarantees its inverse without
+triangular supports. One global decoded value table gives M times Z for
+all contexts; the exact prediction class and any convex output objective
+remain convex. Repeated-token prefix codes and a three-context witness are
+proved. This is memory attention with fixed data codes; ordinary token
+self-attention is changed, and output-only training leaves the Gram free.
 -/
