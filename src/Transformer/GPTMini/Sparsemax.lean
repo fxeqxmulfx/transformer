@@ -1,6 +1,11 @@
 import Transformer.GPTMini.Sparsemax.Basic
 import Transformer.GPTMini.Sparsemax.ClosedForm
 import Transformer.GPTMini.Sparsemax.SupportWindow
+import Transformer.GPTMini.Sparsemax.NonSaturation
+import Transformer.GPTMini.Sparsemax.ActiveDirection
+import Transformer.GPTMini.Sparsemax.OuterSensitivity
+import Transformer.GPTMini.Sparsemax.ValuePlateau
+import Transformer.GPTMini.Sparsemax.BoundedGain
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -25,4 +30,12 @@ that norm hypothesis is required by the implementation.
 arXiv:1602.02068v2, §3.2–§3.3, supplies a score loss with a corrective
 derivative on a wrong saturated route when its target position is given.
 That supervised row result does not guarantee learning latent attention.
+
+Derived restrictions from §2.2 and §2.5 need no routing targets: a top-two
+gap below one, or a persistent QKNorm gain below one half, ensures two
+active visible positions. A bounded sigmoid gain enforces this restriction.
+The actual projection has a nonzero active-pair direction; an outer task
+loss receives it only when its derivative distinguishes that pair. A
+bounded-score counterexample retains a positive flat output loss with
+two active positions, recording the limit of the score restriction.
 -/

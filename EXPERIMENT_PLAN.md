@@ -600,6 +600,37 @@ need supplied targets, a declared teacher or another source of score
 supervision. No such training intervention has been run, and the previous
 benchmark findings and completed-cycle manifest remain unchanged.
 
+## Mathematical follow-up: constraints without routing targets
+
+**Done on 2026-10-05 UTC.** Five modules add 34 proved theorems about
+the existing causal variational projection, with inhabited examples for
+every explicit hypothesis and no new `sorry`. These are derived results
+from arXiv:1602.02068v2, §2.2 and §2.5, and the score/value code at
+`73f8a0b`; they are not results of a new training intervention.
+
+| Module | Constraint or result | Scope |
+| --- | --- | --- |
+| [NonSaturation.lean](src/Transformer/GPTMini/Sparsemax/NonSaturation.lean) | A singleton occurs exactly at a visible winner's unit gap; a top-two gap below one ensures two positive weights. | Exact zeros at other visible slots remain possible: `(2/5, 2/5, -2/5)` projects to `(1/2, 1/2, 0)`. |
+| [ActiveDirection.lean](src/Transformer/GPTMini/Sparsemax/ActiveDirection.lean) | Transferring scores between two active slots transfers the same probability mass for small steps. | The score-to-weight map cannot have a zero full derivative; this does not assert existence of a full derivative at support boundaries. |
+| [BoundedGain.lean](src/Transformer/GPTMini/Sparsemax/BoundedGain.lean) | QKNorm's persistent gain `g < 1/2` suffices; the new law `g = c/(1 + exp(-a))`, `0 < c < 1/2`, enforces it and has a positive derivative at every finite `a`. | Epsilon is nonnegative and at least two slots are visible. The guarantee concerns raw score derivatives, not query/key/gain parameter derivatives. |
+| [OuterSensitivity.lean](src/Transformer/GPTMini/Sparsemax/OuterSensitivity.lean) | A task derivative distinguishes an active pair exactly when `output_gradient(value_j - value_k)` is nonzero. | This uses the ordinary task loss, with frozen values. Equal values cancel; distinct values can also lie in the gradient's kernel. |
+| [ValuePlateau.lean](src/Transformer/GPTMini/Sparsemax/ValuePlateau.lean) | With values `(0, 0, 1)` and scalar output target `1/2`, squared error stays `1/4` on an open score neighborhood of the sparse bounded example. | Both this positive stationary point and a zero-error alternative obey `abs(score) <= 2/5`. The projection itself still has a nonzero active direction. |
+
+The gain restriction removes singleton saturation without a teacher or
+attention-position labels. It does not remove every flat outer loss or
+prove convergence on Shakespeare or the basis. The value condition is a
+conditional guarantee, not a rule proved enforceable for every task input.
+No Python implementation or training run of the bounded gain has been
+added. The original cycle remains complete with its qualified negative
+complete-basis outcome and its pinned manifest.
+
+Validation: the full `lake build`, `./make.py audit`, `./make.py index`
+and `./make.py forbidden` pass. The generated index has 1,842 modules,
+7,599 theorems and the same 157 existing `sorry`; there are zero results
+resting on them, zero extra axioms, zero vacuous statements and zero
+placeholders. The five new Lean modules have no warnings.
+The required `./make.py test` also passes all 171 Python tests.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
