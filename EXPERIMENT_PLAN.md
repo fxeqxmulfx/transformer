@@ -799,6 +799,14 @@ reaches the jointly trained projection parameters. Equal inputs are
 proved to force equal scores under every shared projection, explaining
 why arbitrary input embeddings do not inherit this freedom.
 
+[QKProjectedError.lean](src/Transformer/GPTMini/Sparsemax/QKProjectedError.lean)
+adds four further proved theorems. Wrong squared-error outputs have a
+nonzero direction in the jointly learned Q/K projection matrices and
+cannot be local minima of that projection loss. The complete finite
+correction, now evaluated through the shared linear projections,
+normalization and actual sparsemax, changes only the key matrix and
+reduces ordinary output loss from `1/256` to `0`.
+
 This closes the score-to-Q/K transfer for an explicit restricted row
 architecture. It requires an orthogonal unit query frame, chart-parameterized
 keys, a gain depending on this row's ordinary score parameters, `d + 1`

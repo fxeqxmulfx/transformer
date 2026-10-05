@@ -20,6 +20,7 @@ import Transformer.GPTMini.Sparsemax.QKAnchors
 import Transformer.GPTMini.Sparsemax.QKTaskDirections
 import Transformer.GPTMini.Sparsemax.QKSquaredError
 import Transformer.GPTMini.Sparsemax.QKProjection
+import Transformer.GPTMini.Sparsemax.QKProjectedError
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -79,6 +80,9 @@ ordinary score, while all keys have norm one. Nonzero ordinary task
 derivatives reach actual K vectors, and wrong squared-error outputs
 cannot be local minima in those vectors. On standard-basis inputs, the
 same directions reach jointly trained shared Q/K projection matrices.
+For ordinary squared error, wrong outputs are not local minima of the
+joint projection loss either. A finite change of the actual key matrix
+reaches zero loss in the sparse scalar example.
 The fixed unit frame, restricted key parameterization and independent
 input coordinates are explicit architecture changes. They do not follow
 from unconstrained QKNorm or arbitrary learned embeddings.
