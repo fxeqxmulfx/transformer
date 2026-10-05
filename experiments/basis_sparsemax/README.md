@@ -312,8 +312,44 @@ differentiates regular tensor operations for the paper's Algorithm 1 rather
 than invoking the production custom backward. All six focused tests pass
 (54.184 seconds), as do all 161 lab tests (933.852 seconds). The 156 previous
 descriptions remain identical, and the six new targets differ from their
-diagnostic controls only in the weights block. Their training follows this
-check; no mixed outcome or repair success is inferred from the tests.
+diagnostic controls only in the weights block. All six mixed trainings
+finished their 4,800-update budgets on 2026-10-05 UTC. Each repeats the exact
+update-zero validation metrics and fixed-row fingerprint of its forward
+normalizer's diagonal control. The table compares them with step 2's
+measured diagonals; its sparsemax controls are the failed repeats, not
+step 1's fitted near-passes.
+
+| Forward | Backward | Seed 0 | Seed 1 | Seed 2 |
+| --- | --- | --- | --- | --- |
+| softmax | softmax | passes at 3,400 | passes at 2,450 | passes at 2,700 |
+| sparsemax | sparsemax | fails, 0.00% | fails, 0.00% | fails, 0.00% |
+| sparsemax | softmax | fails, 0.00% | fails, 0.00% | fails, 0.00% |
+| softmax | sparsemax | fails, 96.88% | fails, 96.29% | fails, 98.63% |
+
+The last sampled training batch losses are 1.7742, 1.8029 and 1.8043 for
+sparse forward with softmax backward, versus 0.0403, 0.0524 and 0.0086 for
+the inverse mixture. These are batch measurements, not exhaustive training
+accuracies. Sparse forward retains about 3.42 query positions per layer/head
+on average, with 92.44--92.46% of visible query pairs exactly zero. Its final
+query turnover is still 2.03--2.18%. The inverse mixture has dense forward
+support throughout these final queries.
+
+Softmax score gradients do not rescue sparse routing at this recipe, so
+the backward-rescue criterion is not met and the conditional inactive-score
+focus is not run. The forward remains binding in the tested intervention;
+the inverse mixture's failures also leave an interaction or an unsuitable
+surrogate. These outcomes do not attribute the failures specifically to
+inactive zeros, counting ties or XSA self-erasure, and do not establish a
+gradient-only repair. H2's starting-scale prediction is still open causally:
+step 4 will test QKNorm starting at scale one and ScaledDot with the ordinary
+sparsemax backward.
+
+Full descriptions, reduced trajectories, final per-layer/head statistics,
+initial-forward comparisons, training losses and source hashes are in
+[surrogate_results.json](surrogate_results.json). Raw attention observations
+and all per-query routes remain in the run directories. The conclusions
+retain step 2's distinction between eager measurements, compiled selection
+metrics and separate multi-threaded trajectories.
 
 Run a pair with:
 

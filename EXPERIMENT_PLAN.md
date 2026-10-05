@@ -1,6 +1,6 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-05 UTC. **In progress: step 3. Steps 0 to 2 are done.** The investigation cycle
+Updated on 2026-10-05 UTC. **Next: step 4. Steps 0 to 3 are done.** The investigation cycle
 was started on 2026-10-04 at the user's request. On 2026-10-04 the user asked for
 this plan: find out why sparsemax attention fails, and try to repair it, on
 the basis benchmark. It replaces the plan of 2026-10-03 for the mod-193
@@ -241,14 +241,26 @@ experiment's README.
 
 ## 3. Separate forward routing from backward sensitivity
 
-**In progress on 2026-10-05 UTC.** `SurrogateWeights` and six mixed target
+**Done on 2026-10-05 UTC.** `SurrogateWeights` and six mixed target
 labels are implemented. Identical pairs use the ordinary block; mixed pairs
 retain exact forward probabilities and ask autograd for the other map's
 score Jacobian. Tests cover bit-identical diagonal logits and gradients,
 independent `torch.func.vjp` references, inactive scores and compilation.
 All six focused tests pass, as do all 161 lab tests. The previous 156 run
 descriptions remain identical; the six mixed targets differ only in the
-explicit forward/backward weights block. Their training follows this check.
+explicit forward/backward weights block. All six mixed targets completed
+4,800 updates. Sparse forward with softmax backward fails from every seed
+(best sequence accuracy 0%); softmax forward with sparse backward learns
+much more but also misses the target (96.88%, 96.29%, 98.63%). Both ordinary
+and surrogate backward fail with sparse routing, so the forward map remains
+binding in this intervention; this does not confirm H3's counting or H4's
+self-erasure mechanism, already refuted by their criteria. The inverse
+surrogate's failures also leave a role for backward sensitivity or an
+unsuitable surrogate. No gradient-only repair is found. The conditional
+inactive-score-only case is not triggered: softmax backward does not rescue
+sparse forward. H2's initialization prediction remains the next justified
+repair test. Results, per-head statistics and source hashes are in
+[basis_sparsemax](experiments/basis_sparsemax/README.md).
 
 The intervention planned for mod 193, moved onto the basis:
 
