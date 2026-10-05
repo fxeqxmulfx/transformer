@@ -11,6 +11,10 @@ import Transformer.GPTMini.Sparsemax.BoundedGain
 import Transformer.GPTMini.Sparsemax.BoundedCoordinates
 import Transformer.GPTMini.Sparsemax.AnchoredScores
 import Transformer.GPTMini.Sparsemax.AnchoredValues
+import Transformer.GPTMini.Sparsemax.AnchorTransfer
+import Transformer.GPTMini.Sparsemax.TrainableAnchors
+import Transformer.GPTMini.Sparsemax.AnchoredSquaredError
+import Transformer.GPTMini.Sparsemax.AnchoredCorrection
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -55,4 +59,12 @@ through independent bounded coordinates. The span persists for every
 finite parameter assignment, with arbitrary ordinary values and exact
 inactive zeros. This is a new row architecture, not a guarantee for the
 existing query/key parameterization or for a zero output derivative.
+
+The differentiable inverse of the anchor score chart realizes exact
+active-pair transfers through learned parameters. Nonzero ordinary task
+derivatives therefore survive in trainable anchor directions. For squared
+output error, every wrong finite output fails to be a local minimum of
+this row loss, even at support boundaries. A concrete finite parameter
+step reaches zero error while retaining the third weight at zero.
+These row results do not assert whole-model or shared-row convergence.
 -/

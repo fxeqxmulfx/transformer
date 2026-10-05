@@ -711,6 +711,55 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 `./make.py forbidden`; the new modules have no warnings. Python is unchanged
 since the passing 171-test run recorded above.
 
+## Pure sparse follow-up: reaching trainable parameters
+
+**Done on 2026-10-05 UTC.** Four modules and a readout evaluation lemma
+add twenty-three proved theorems, with no new `sorry`, derived from
+arXiv:1602.02068v2, §2.2 and §2.5, and the ordinary value sum at `73f8a0b`.
+
+[AnchorTransfer.lean](src/Transformer/GPTMini/Sparsemax/AnchorTransfer.lean)
+lifts an exact active-anchor score transfer through the bounded coordinate
+inverse. The curve starts at the actual parameters, is differentiable,
+and realizes the same raw score transfer on a neighborhood. Ordinary
+scores and values stay frozen along this particular curve.
+
+[TrainableAnchors.lean](src/Transformer/GPTMini/Sparsemax/TrainableAnchors.lean)
+proves that the ordinary task derivative along this parameter curve is
+`output_gradient(value_j - value_k)`. The scaled-basis anchors always
+supply a separating pair for a nonzero output derivative. Thus the
+earlier raw-score guarantee now reaches actual trainable anchor parameters,
+for every finite assignment; no supplied attention route is required.
+
+[AnchoredSquaredError.lean](src/Transformer/GPTMini/Sparsemax/AnchoredSquaredError.lean)
+proves the actual derivative of squared distance to an ordinary output
+target in a real inner-product space. It vanishes exactly at the target.
+For the anchored architecture, every wrong finite output has a nonzero
+trainable score direction and is not a local minimum of this row loss.
+The local-minimum proof uses the differentiable parameter curve rather
+than assuming a full sparsemax derivative at support boundaries.
+
+[AnchoredCorrection.lean](src/Transformer/GPTMini/Sparsemax/AnchoredCorrection.lean)
+checks a complete finite correction. Values are `(-1/16, 15/16, 7)` and
+the ordinary output target remains `1/2`. Zero initial anchor parameters
+give weights `(1/2, 1/2, 0)`, output `7/16` and loss `1/256`. The lifted
+active-pair derivative is `-1/8`. A raw score transfer of `1/16` is exactly
+realized by the finite parameters `(-log 3, log 3)`, yields weights
+`(7/16, 9/16, 0)` and reaches zero ordinary output error.
+
+The closure is for the explicit anchored row architecture. It does not
+transfer automatically to the existing query/key factorization, rule out
+gradient cancellations between rows sharing parameters, supply a uniform
+gradient lower bound, or prove global learning on the basis or Shakespeare.
+Fixed value hulls can still make a target unattainable. All results use
+the actual causal variational sparsemax with exact zeros and ordinary
+output losses. Python and the completed benchmark cycle are unchanged.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass; the new modules have no warnings. No new
+`sorry`, extra axiom, result resting on a `sorry`, vacuous statement or
+placeholder is introduced. Python is unchanged since its passing 171-test
+run recorded above.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be

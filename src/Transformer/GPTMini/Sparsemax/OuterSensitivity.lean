@@ -90,6 +90,13 @@ at `73f8a0b`, one row of `weights @ values`, before XSA and output maps. -/
 def frozenValueReadout {T : ℕ} (values : Fin T → E) : (Fin T → ℝ) →L[ℝ] E :=
   ∑ n, (ContinuousLinearMap.proj n).smulRight (values n)
 
+/-- Evaluating the linear readout gives the ordinary weighted value sum.
+Source: `Attention.forward` at `73f8a0b`, one row of `weights @ values`. -/
+theorem frozenValueReadout_apply {T : ℕ} (values : Fin T → E) (weights : Fin T → ℝ) :
+    frozenValueReadout values weights = ∑ n, weights n • values n := by
+  simp only [frozenValueReadout, sum_apply, ContinuousLinearMap.smulRight_apply,
+    ContinuousLinearMap.proj_apply]
+
 /-- Pull back an output derivative through the frozen linear value
 readout of attention. Source: `Attention` at commit `73f8a0b`, the sum
 of attention weights times value vectors; §2.5 supplies the score path. -/
