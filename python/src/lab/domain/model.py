@@ -16,6 +16,7 @@ standard values. Three historical models are compositions of these blocks:
 """
 
 from dataclasses import dataclass
+import math
 
 from .spec import Spec, require, require_kind
 
@@ -107,11 +108,22 @@ class ScaledDot(Scores):
 
 @dataclass(frozen=True)
 class QKNorm(Scores):
-    """Unit q . unit k times a learned per-head e^alpha, alpha = log(head width) / 2 at start."""
+    """Unit q . unit k times a learned per-head e^alpha.
+
+    Source: `python/src/lab/infrastructure/nn/attention.py` at d03f594,
+    ported from GPTMini. The default starts alpha at log(head width) / 2.
+    EXPERIMENT_PLAN.md, step 4 (H2), adds `initial_scale` to override that
+    starting e^alpha by a positive finite value; the scale continues to learn.
+    """
     eps: float = 1e-6
+    initial_scale: float | None = None
 
     def check(self):
         require(self.eps > 0, "QKNorm epsilon must be positive")
+        if self.initial_scale is not None:
+            require(isinstance(self.initial_scale, (int, float)) and not isinstance(self.initial_scale, bool)
+                    and math.isfinite(self.initial_scale) and self.initial_scale > 0,
+                    "QKNorm initial_scale must be a positive finite number")
 
 
 @dataclass(frozen=True)

@@ -1,4 +1,4 @@
-"""Softmax against sparsemax on the calibrated basis; EXPERIMENT_PLAN.md, steps 0 to 3."""
+"""Softmax against sparsemax on the calibrated basis; EXPERIMENT_PLAN.md, steps 0 to 4."""
 
 from lab.dsl import *
 
@@ -78,4 +78,9 @@ surrogates = {f"{case}-hard-large-recall-seed{seed}":
               substitute(observed(runs[f"softmax-hard-large-recall-seed{seed}"]), Softmax, normalizer)
               for case, normalizer in SURROGATES.items() for seed in (0, 1, 2)}
 
-experiments = {**runs, **times, **rates, **probes, **initial, **surrogates}
+REPAIRS = {"qknorm-one": QKNorm(initial_scale=1.0), "scaleddot": ScaledDot()}
+
+repairs = {f"repair-{case}-{label.removeprefix('sparsemax-')}": observed(substitute(run, QKNorm, scores))
+           for case, scores in REPAIRS.items() for label, run in runs.items() if label.startswith('sparsemax-')}
+
+experiments = {**runs, **times, **rates, **probes, **initial, **surrogates, **repairs}

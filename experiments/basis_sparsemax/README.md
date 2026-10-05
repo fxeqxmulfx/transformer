@@ -2,7 +2,7 @@
 
 Where does sparsemax attention fail where softmax passes the calibrated
 [basis](../basis/README.md), and is a failure removed by a neighboring rate?
-This is steps 0 to 3 of [EXPERIMENT_PLAN.md](../../EXPERIMENT_PLAN.md).
+This is steps 0 to 4 of [EXPERIMENT_PLAN.md](../../EXPERIMENT_PLAN.md).
 The main arms change only the attention weights. Both keep QKNorm, XSA, the
 basis's recipes, splits, seeds and thread counts. Hard parity is the easy
 parity run, as in the basis.
@@ -16,6 +16,7 @@ parity run, as in the basis.
 | `probe-<weights>-hard-large-recall-seed<seed>` | 6 | Repeat the target cell with attention measurements on 256 fixed validation examples |
 | `init-<weights>-<model>-seed<seed>-<scores>` | 24 | Initial hard-recall attention under QKNorm and ScaledDot, both sizes and weights; one zero-rate warmup update retains update-zero records |
 | `forward-<weights>-backward-<weights>-hard-large-recall-seed<seed>` | 6 | Sparsemax forward with softmax score gradients, or softmax forward with sparsemax score gradients; other target settings unchanged |
+| `repair-<candidate>-<mode>-<model>-<task>-seed<seed>` | 60 | Ordinary sparsemax with QKNorm initially at scale one, or with ScaledDot; unchanged recipes and fixed-row attention measurements |
 
 `Diagnostics` samples every observed update: `loss` is the
 last training batch's mean supervised cross-entropy before that update, and
@@ -350,6 +351,28 @@ initial-forward comparisons, training losses and source hashes are in
 and all per-query routes remain in the run directories. The conclusions
 retain step 2's distinction between eager measurements, compiled selection
 metrics and separate multi-threaded trajectories.
+
+### Starting-scale and score-map repairs
+
+H2's initialization prediction motivates two candidates. `qknorm-one`
+sets `QKNorm(initial_scale=1.0)`; its per-head `log_alpha` starts at zero and
+continues to learn. `scaleddot` replaces QKNorm by `ScaledDot()`. Both retain
+the ordinary sparsemax backward, XSA, every task recipe, split and seed.
+They measure fixed attention at every observation so a pass can be checked
+for actual sparsity, per layer and head. Neither the failed surrogate nor
+the refuted counting/self-erasure explanations justify an additional repair
+candidate in this screen.
+
+With `initial_scale=None`, the constructor keeps the original expression
+`0.5 * log(head width)` and its float32 rounding. The new optional field is
+compatible with descriptions saved before it existed: an absent field and
+its default null compare equally for continuation. An explicit new start
+is a different experiment and is rejected for continuation onto old state.
+The five focused tests pass (0.691 seconds), including exact non-score
+parameter equality for both model sizes and all three seeds, normalized-dot
+scores and query/key gradients, and the learned scale's gradient.
+All 166 lab tests pass (922.757 seconds). All 30 small-model repair runs precede the
+30 large-model ones; no repair pass or generalization claim is made yet.
 
 Run a pair with:
 

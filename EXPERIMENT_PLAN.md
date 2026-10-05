@@ -1,6 +1,6 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-05 UTC. **Next: step 4. Steps 0 to 3 are done.** The investigation cycle
+Updated on 2026-10-05 UTC. **In progress: step 4. Steps 0 to 3 are done.** The investigation cycle
 was started on 2026-10-04 at the user's request. On 2026-10-04 the user asked for
 this plan: find out why sparsemax attention fails, and try to repair it, on
 the basis benchmark. It replaces the plan of 2026-10-03 for the mod-193
@@ -290,6 +290,18 @@ backward, the forward is implicated (H3, H4). Other patterns indicate an
 interaction or an unsuitable surrogate.
 
 ## 4. Repair
+
+**In progress on 2026-10-05 UTC.** H2 justifies the two score interventions:
+QKNorm initialized at scale one and ScaledDot, each with the ordinary
+sparsemax backward and unchanged basis recipes. `QKNorm.initial_scale`
+defaults to the original square-root-of-head-width initialization and keeps
+the scale learned. Five focused tests pass: validation, old-description
+compatibility, original rounding, identical non-score parameters and score
+gradients with a learned scale. Sixty repair labels cover both candidates
+on the small model's 15 runs and then the large model's 15, with fixed-row
+attention measurements. All 166 lab tests pass; the 60 training runs are next.
+The failed surrogate is not screened as a repair; H4's rarity criterion and
+H3's lack of persistent failures do not justify no-XSA or entmax trials here.
 
 Try the candidates whose hypothesis survived, each a block or a `swap` or
 `substitute` variant:

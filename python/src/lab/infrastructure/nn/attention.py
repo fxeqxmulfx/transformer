@@ -78,10 +78,11 @@ class ScaledDotScores(nn.Module):
 
 
 class QKNormScores(nn.Module):
-    def __init__(self, heads, head, eps):
+    def __init__(self, heads, head, eps, initial_scale=None):
         super().__init__()
         self.eps = eps
-        self.log_alpha = nn.Parameter(torch.full((heads,), 0.5 * math.log(head)))
+        start = 0.5 * math.log(head) if initial_scale is None else math.log(initial_scale)
+        self.log_alpha = nn.Parameter(torch.full((heads,), start))
 
     def unit(self, q, k, rotary, index):
         """Unit queries and keys, rotated, and the scale of their head group."""
@@ -125,7 +126,7 @@ def scores_module(spec, heads, head):
     if isinstance(spec, model.ScaledDot):
         return ScaledDotScores(head)
     if isinstance(spec, model.QKNorm):
-        return QKNormScores(heads, head, spec.eps)
+        return QKNormScores(heads, head, spec.eps, spec.initial_scale)
     raise NotImplementedError(f"No builder for {spec!r}")
 
 
