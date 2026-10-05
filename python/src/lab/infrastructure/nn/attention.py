@@ -77,6 +77,30 @@ class ScaledDotScores(nn.Module):
         return F.scaled_dot_product_attention(q, k, v, dropout_p=0.0, is_causal=True)
 
 
+class LearnedScaledDotScores(nn.Module):
+    """ScaledDotScores at 73f8a0b with QKNorm's learned head gain, without L2 normalization."""
+
+    def __init__(self, heads, head, initial_scale):
+        super().__init__()
+        self.scale = math.sqrt(head)
+        self.log_alpha = nn.Parameter(torch.full((heads,), math.log(initial_scale)))
+
+    def gain(self, index):
+        alpha = self.log_alpha.exp()
+        return alpha.view(1, -1, 1, 1) if index is None else alpha[index]
+
+    def forward(self, q, k, rotary, index):
+        if rotary is not None:
+            q, k = rotate(q, *rotary), rotate(k, *rotary)
+        return (q @ k.transpose(-2, -1)) / self.scale * self.gain(index)
+
+    def attend(self, q, k, v, rotary, index):
+        """Fused causal softmax: raw queries carry the head gain at ScaledDot's default scale."""
+        if rotary is not None:
+            q, k = rotate(q, *rotary), rotate(k, *rotary)
+        return F.scaled_dot_product_attention(q * self.gain(index), k, v, dropout_p=0.0, is_causal=True)
+
+
 class QKNormScores(nn.Module):
     def __init__(self, heads, head, eps, initial_scale=None):
         super().__init__()
@@ -125,6 +149,8 @@ def weights_function(spec):
 def scores_module(spec, heads, head):
     if isinstance(spec, model.ScaledDot):
         return ScaledDotScores(head)
+    if isinstance(spec, model.LearnedScaledDot):
+        return LearnedScaledDotScores(heads, head, spec.initial_scale)
     if isinstance(spec, model.QKNorm):
         return QKNormScores(heads, head, spec.eps, spec.initial_scale)
     raise NotImplementedError(f"No builder for {spec!r}")

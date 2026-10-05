@@ -1,0 +1,371 @@
+{
+  "scope": "Six completed step-4 large hard-recall runs; observed score growth, not a causal or repair conclusion",
+  "source_file": "/home/misha/lean_projects/transformer/experiments/basis_sparsemax/large_repair_results.json",
+  "source_sha256": "f3e8bb3146872acd278325614d5466105b93f6f80642eafc43df53f14dbb54d2",
+  "aggregation": "Actual supervised query rows averaged over all 24 heads, on the same fixed 256 examples at initialization and final observation",
+  "rows": [
+    {
+      "label": "repair-qknorm-one-hard-large-recall-seed0",
+      "pass_step": 2300,
+      "last_training_batch_loss": 0.015337114222347736,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": {
+          "log_alpha": [
+            -0.045906905084848404,
+            -0.09502767026424408,
+            -0.0994725152850151,
+            -0.10039524734020233
+          ],
+          "inverse_temperature": [
+            0.9551308751106262,
+            0.9093477725982666,
+            0.9053148627281189,
+            0.9044798612594604
+          ]
+        },
+        "blocks.1.attention.scores.log_alpha": {
+          "log_alpha": [
+            0.030337480828166008,
+            0.023364707827568054,
+            -0.04301764443516731,
+            0.09652593731880188
+          ],
+          "inverse_temperature": [
+            1.0308023691177368,
+            1.0236397981643677,
+            0.957894504070282,
+            1.1013381481170654
+          ]
+        },
+        "blocks.2.attention.scores.log_alpha": {
+          "log_alpha": [
+            0.18570585548877716,
+            0.20305919647216797,
+            0.20822426676750183,
+            0.22812078893184662
+          ],
+          "inverse_temperature": [
+            1.2040680646896362,
+            1.2251449823379517,
+            1.2314893007278442,
+            1.2562370300292969
+          ]
+        },
+        "blocks.3.attention.scores.log_alpha": {
+          "log_alpha": [
+            0.2659730911254883,
+            0.25137144327163696,
+            0.24471415579319,
+            0.24167421460151672
+          ],
+          "inverse_temperature": [
+            1.3046998977661133,
+            1.285787582397461,
+            1.2772561311721802,
+            1.2733793258666992
+          ]
+        },
+        "blocks.4.attention.scores.log_alpha": {
+          "log_alpha": [
+            0.21989929676055908,
+            0.24596215784549713,
+            0.28073087334632874,
+            0.27010399103164673
+          ],
+          "inverse_temperature": [
+            1.2459512948989868,
+            1.2788511514663696,
+            1.3240971565246582,
+            1.3101006746292114
+          ]
+        },
+        "blocks.5.attention.scores.log_alpha": {
+          "log_alpha": [
+            -0.005135820247232914,
+            0.17617234587669373,
+            0.1882535070180893,
+            0.2033686637878418
+          ],
+          "inverse_temperature": [
+            0.9948773384094238,
+            1.192643642425537,
+            1.207139492034912,
+            1.2255241870880127
+          ]
+        }
+      },
+      "initial_query_means": {
+        "mean_score_std": 0.16065615539749464,
+        "mean_support_positions": 11.211995442708334,
+        "exact_zero_pair_share": 0.7521515587965647,
+        "singleton_row_share": 0.0
+      },
+      "final_query_means": {
+        "mean_score_std": 0.43995133228600025,
+        "mean_support_positions": 6.69293212890625,
+        "exact_zero_pair_share": 0.8520483871301016,
+        "singleton_row_share": 0.0
+      }
+    },
+    {
+      "label": "repair-qknorm-one-hard-large-recall-seed1",
+      "pass_step": null,
+      "last_training_batch_loss": 1.3867608308792114,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": {
+          "log_alpha": [
+            -0.28720006346702576,
+            -0.2089480608701706,
+            -0.1475411206483841,
+            -0.23788334429264069
+          ],
+          "inverse_temperature": [
+            0.7503616213798523,
+            0.8114373683929443,
+            0.862826943397522,
+            0.7882946133613586
+          ]
+        },
+        "blocks.1.attention.scores.log_alpha": {
+          "log_alpha": [
+            0.10043368488550186,
+            0.06391508877277374,
+            0.08896281570196152,
+            0.058714017271995544
+          ],
+          "inverse_temperature": [
+            1.1056503057479858,
+            1.0660018920898438,
+            1.0930399894714355,
+            1.0604718923568726
+          ]
+        },
+        "blocks.2.attention.scores.log_alpha": {
+          "log_alpha": [
+            0.18252649903297424,
+            0.19619423151016235,
+            0.20846238732337952,
+            0.20200027525424957
+          ],
+          "inverse_temperature": [
+            1.200245976448059,
+            1.2167632579803467,
+            1.2317825555801392,
+            1.2238483428955078
+          ]
+        },
+        "blocks.3.attention.scores.log_alpha": {
+          "log_alpha": [
+            0.23843391239643097,
+            0.21985116600990295,
+            0.26032528281211853,
+            0.1432112157344818
+          ],
+          "inverse_temperature": [
+            1.2692598104476929,
+            1.2458913326263428,
+            1.2973520755767822,
+            1.1539734601974487
+          ]
+        },
+        "blocks.4.attention.scores.log_alpha": {
+          "log_alpha": [
+            0.29083186388015747,
+            0.31363776326179504,
+            0.044230587780475616,
+            0.35810452699661255
+          ],
+          "inverse_temperature": [
+            1.3375396728515625,
+            1.3683940172195435,
+            1.045223355293274,
+            1.4306151866912842
+          ]
+        },
+        "blocks.5.attention.scores.log_alpha": {
+          "log_alpha": [
+            0.08152357488870621,
+            0.15322910249233246,
+            0.11157847195863724,
+            0.06471270322799683
+          ],
+          "inverse_temperature": [
+            1.0849387645721436,
+            1.1655919551849365,
+            1.1180415153503418,
+            1.0668524503707886
+          ]
+        }
+      },
+      "initial_query_means": {
+        "mean_score_std": 0.15885574432710806,
+        "mean_support_positions": 11.34478759765625,
+        "exact_zero_pair_share": 0.7492161020636559,
+        "singleton_row_share": 0.0
+      },
+      "final_query_means": {
+        "mean_score_std": 0.2195164393633604,
+        "mean_support_positions": 7.453470865885417,
+        "exact_zero_pair_share": 0.835236186782519,
+        "singleton_row_share": 0.0
+      }
+    },
+    {
+      "label": "repair-qknorm-one-hard-large-recall-seed2",
+      "pass_step": 3550,
+      "last_training_batch_loss": 0.011541557498276234,
+      "final_head_scales": {
+        "blocks.0.attention.scores.log_alpha": {
+          "log_alpha": [
+            -0.0317508839070797,
+            -0.14007268846035004,
+            -0.13791011273860931,
+            -0.1141970232129097
+          ],
+          "inverse_temperature": [
+            0.9687478542327881,
+            0.869295060634613,
+            0.8711770176887512,
+            0.892082154750824
+          ]
+        },
+        "blocks.1.attention.scores.log_alpha": {
+          "log_alpha": [
+            0.07288055866956711,
+            0.014426282607018948,
+            0.09465371817350388,
+            -0.05090561881661415
+          ],
+          "inverse_temperature": [
+            1.0756020545959473,
+            1.014530897140503,
+            1.0992780923843384,
+            0.950368344783783
+          ]
+        },
+        "blocks.2.attention.scores.log_alpha": {
+          "log_alpha": [
+            0.31317195296287537,
+            0.32911887764930725,
+            0.3229534924030304,
+            0.3212617337703705
+          ],
+          "inverse_temperature": [
+            1.367756724357605,
+            1.3897430896759033,
+            1.381201148033142,
+            1.37886643409729
+          ]
+        },
+        "blocks.3.attention.scores.log_alpha": {
+          "log_alpha": [
+            0.3767358958721161,
+            0.36441853642463684,
+            0.3501255512237549,
+            0.3573800027370453
+          ],
+          "inverse_temperature": [
+            1.457519292831421,
+            1.4396766424179077,
+            1.419245719909668,
+            1.4295790195465088
+          ]
+        },
+        "blocks.4.attention.scores.log_alpha": {
+          "log_alpha": [
+            0.33858099579811096,
+            0.37564727663993835,
+            0.2945866286754608,
+            0.23742547631263733
+          ],
+          "inverse_temperature": [
+            1.402955412864685,
+            1.4559334516525269,
+            1.3425712585449219,
+            1.2679804563522339
+          ]
+        },
+        "blocks.5.attention.scores.log_alpha": {
+          "log_alpha": [
+            0.34802669286727905,
+            0.32194989919662476,
+            0.3145855963230133,
+            0.29000338912010193
+          ],
+          "inverse_temperature": [
+            1.4162700176239014,
+            1.379815697669983,
+            1.3696916103363037,
+            1.3364319801330566
+          ]
+        }
+      },
+      "initial_query_means": {
+        "mean_score_std": 0.15909488561252752,
+        "mean_support_positions": 11.324320475260416,
+        "exact_zero_pair_share": 0.7496685460209846,
+        "singleton_row_share": 0.0
+      },
+      "final_query_means": {
+        "mean_score_std": 0.47537980787456036,
+        "mean_support_positions": 7.26507568359375,
+        "exact_zero_pair_share": 0.8394007831811905,
+        "singleton_row_share": 0.0
+      }
+    },
+    {
+      "label": "repair-scaleddot-hard-large-recall-seed0",
+      "pass_step": null,
+      "last_training_batch_loss": 0.11054707318544388,
+      "final_head_scales": {},
+      "initial_query_means": {
+        "mean_score_std": 0.04467782595505317,
+        "mean_support_positions": 25.961161295572918,
+        "exact_zero_pair_share": 0.4261116658647855,
+        "singleton_row_share": 0.0
+      },
+      "final_query_means": {
+        "mean_score_std": 2.8856769216557345,
+        "mean_support_positions": 3.1985880533854165,
+        "exact_zero_pair_share": 0.9292931333184242,
+        "singleton_row_share": 0.16135660807291666
+      }
+    },
+    {
+      "label": "repair-scaleddot-hard-large-recall-seed1",
+      "pass_step": null,
+      "last_training_batch_loss": 0.025832461193203926,
+      "final_head_scales": {},
+      "initial_query_means": {
+        "mean_score_std": 0.044454203297694526,
+        "mean_support_positions": 26.0767822265625,
+        "exact_zero_pair_share": 0.42355579634507495,
+        "singleton_row_share": 0.0
+      },
+      "final_query_means": {
+        "mean_score_std": 1.7783920541405678,
+        "mean_support_positions": 3.2575887044270835,
+        "exact_zero_pair_share": 0.9279888942837715,
+        "singleton_row_share": 0.19903564453125
+      }
+    },
+    {
+      "label": "repair-scaleddot-hard-large-recall-seed2",
+      "pass_step": null,
+      "last_training_batch_loss": 0.018202414736151695,
+      "final_head_scales": {},
+      "initial_query_means": {
+        "mean_score_std": 0.0443000226902465,
+        "mean_support_positions": 26.13165283203125,
+        "exact_zero_pair_share": 0.42234283685684204,
+        "singleton_row_share": 0.0
+      },
+      "final_query_means": {
+        "mean_score_std": 1.3929650199910004,
+        "mean_support_positions": 3.1623128255208335,
+        "exact_zero_pair_share": 0.9300950169563293,
+        "singleton_row_share": 0.15976969401041666
+      }
+    }
+  ]
+}

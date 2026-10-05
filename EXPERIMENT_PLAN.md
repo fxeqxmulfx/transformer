@@ -345,6 +345,44 @@ how sparse its attention ends: the mean support and the share of exact
 zeros, per layer and head. A repair that passes only by making its rows
 dense explains the failure; it does not repair sparse attention.
 
+### QKNorm follow-up requested during step 5
+
+On 2026-10-05 the user asked whether sparsemax needs QKNorm and requested
+continued investigation. The completed ScaledDot screen removed both L2
+normalization and the learned gain, and changed the initial score scale.
+A supplementary CPU study, [basis_qknorm](experiments/basis_qknorm/README.md),
+therefore removes L2 normalization while keeping a learned head gain.
+It compares gain one against the initialization-only gain estimate
+`1 / (width * init_std^2 * sqrt(head width))`, with fresh QKNorm-one,
+ScaledDot and softmax controls in the large hard-recall target cell.
+The estimated scale is fixed before measurements; actual initial score
+dispersion and support must be measured, not assumed equal. All 150
+descriptions check and five focused tests pass. Thirty initial models
+preserve every non-gain parameter and the observer's live state; all 90
+control descriptions equal their originals with the same observer. Six
+actual-shape pairs preserve ScaledDot's initial logits and every non-gain
+gradient exactly at gain one, while the gain receives nonzero gradients.
+On first-layer queries, the estimated-gain raw-dot rows keep 8.70/11.00
+positions on the small/large model, against QKNorm-one's 8.58/10.76,
+with similar measured score dispersion. These are initialization checks,
+not evidence that removing normalization repairs training. Their full
+observations and source hashes are retained in
+[preparation.json](experiments/basis_qknorm/preparation.json).
+
+The full CPU lab gate passes all 171 tests (1172.811 seconds), with six
+CUDA-only checks skipped while the GPU runs mod193. This follow-up starts
+with independent derivative/compilation and initialization checks and
+that full lab gate, then trains both new arms
+and fresh softmax controls on the small model's 15 runs before the large
+model's 15, plus the six QKNorm-one/ScaledDot target controls. All 96
+runs use the same lab sources. It collects the same pass, batch-loss
+and per-head sparsity evidence as step 4; untrained declared controls
+support no conclusion. Preparation and runs
+use a separate checkout until the pinned step-5 series ends. The existing
+mod-193 jobs continue, and steps 5 and 6 remain required in their original
+order. This supplements the completed screen rather than changing its
+criteria or calling either old intervention a repair.
+
 ## 5. Confirm on mod 193
 
 **In progress on 2026-10-05 UTC.** Step 4 selects QKNorm-one as the best
