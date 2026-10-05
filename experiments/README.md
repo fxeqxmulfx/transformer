@@ -12,6 +12,7 @@ it, which git ignores.
 | --- | ---: | --- |
 | [`basis`](basis) | 180 | Does a two-layer GPTMini of width 64 pass depth, recall and parity in the easy mode, while the hard mode takes width 128 and six layers? At what batch and rate do the runs go fastest? |
 | [`basis_sparsemax`](basis_sparsemax) | 222 | Where does sparsemax fail where softmax passes the basis, and do a smaller QKNorm starting scale or ScaledDot repair it while retaining sparse attention? |
+| [`basis_qknorm`](basis_qknorm) | 150 | Does sparsemax need query/key L2 normalization when its learned head gain and starting score dispersion are controlled? |
 | [`mod97_grokking`](mod97_grokking) | 12 | Do the openai/grok transformer and GPTMini generalize x / y mod 97 long after fitting it? |
 | [`mod97_stability`](mod97_stability) | 6 | Once GPTMini generalizes x / y mod 97, does it stay generalized, under AdamW and raw AMSGradW? |
 | [`mod193_stability`](mod193_stability) | 7 | Mod 193 under AdamW: archived normalizer/schedule recipes and fresh sparsemax starting-scale confirmation |

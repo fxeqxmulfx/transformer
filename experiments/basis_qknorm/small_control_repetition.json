@@ -1,0 +1,430 @@
+{
+  "scope": "Complete 45-run small reduction and 15 contemporary softmax controls compared to step 1",
+  "raw_file_hashes_verified": 225,
+  "small_results_sha256": "ae1c294bce09a5ea81cb79b104a81eaaf70672fa4c4ec3c6791135a2bb1236b1",
+  "runtime_source_files_verified": 78,
+  "checkpoint_sha256": {
+    "softmax-easy-small-depth-seed0": "23b120f1f04958a0ea4c3d928ec3469e1d26ee8cd490c71f2f3461e41b99060f",
+    "softmax-easy-small-recall-seed0": "8fe7affe47aa472b9181c21cb4d7c6673ce6902d157f119ac478cf8a0074a604",
+    "softmax-easy-small-parity-seed0": "22c488dc861be6b448b89aa7b56eccfae7dc142f4d4ced9621b9eb7b737a24c1",
+    "softmax-easy-small-depth-seed1": "6136c13aedd82df02d7a20d5adc2e57251553cd3cd79ef7e3f8eb85d37e0c649",
+    "softmax-easy-small-recall-seed1": "b930ce9555f4c7614eaabd8179d7013482948eb0aea91c6bae57e582eecc2a73",
+    "softmax-easy-small-parity-seed1": "e2dc610efa612277f07df9704afef609e3a83f55e5b4775b7e3b0b46476cdf9d",
+    "softmax-easy-small-depth-seed2": "a50c94e8d64596428616ac8352848fb09f6dcd32cebe1f774743979d001ef56e",
+    "softmax-easy-small-recall-seed2": "59705c3ae77d03271453659ff4b2fe80e40eca3c87078231f5ca9290d2470f23",
+    "softmax-easy-small-parity-seed2": "c842d03d52f80d154cdcdea96dd56785891c6917528f580cbe1999b37dad8ffb",
+    "softmax-hard-small-depth-seed0": "ebe542666bdf76993cabf8cb7d7c6fae48aa312571e98e7e2e4cd3124ea7ccc7",
+    "softmax-hard-small-recall-seed0": "ea592b1ab6d87c11df9e6871bf5b99b330ef07d03c68398d556544356bfbee50",
+    "softmax-hard-small-depth-seed1": "610c60abdfdcaab7532c651e78479207fe55b4f49b56680713131909546c4a2f",
+    "softmax-hard-small-recall-seed1": "9c03e4dce1adeb9cbdcba8de7c0dc562267978f969661cdf79ff8f0ca8397613",
+    "softmax-hard-small-depth-seed2": "935fa45fd929bd9c8a70248de511b8de6a706f661d2215f581f53692dbc6752d",
+    "softmax-hard-small-recall-seed2": "47e9cf3cb9d14d83c5ad88f3e45aaa7c1efd00d5c64a346fa7761ad3b3ac9de1",
+    "learned-dot-one-easy-small-depth-seed0": "ebb7147abc79da5fc0cf26273e552696b9958643095d6dd08b76fe5ea3678e38",
+    "learned-dot-one-easy-small-recall-seed0": "13ae327e2140c67e39976a172ab1577080512a5b67292dfb25e51e9a40f1f56e",
+    "learned-dot-one-easy-small-parity-seed0": "da49b32e1bb9a266decf447910b76a81e700da21333fab6a11b22f8563e4201f",
+    "learned-dot-one-easy-small-depth-seed1": "ff8dcd23aa88d6c75883b689c39eee86f5b29bfd8e90be64140e00ef006377e3",
+    "learned-dot-one-easy-small-recall-seed1": "bf01d75fe1b306d728ab5306369c6961d0335d625f245cdfb2289a0587a7b721",
+    "learned-dot-one-easy-small-parity-seed1": "30590108d44b207d4884f88f6f4edc6398ac94cba13989908c874dc44c96ebe3",
+    "learned-dot-one-easy-small-depth-seed2": "fcc8ddb0211e733982e5b3905b6be7903fb8a5e5c25b500d97dce12980bfe5c7",
+    "learned-dot-one-easy-small-recall-seed2": "11ba6ae42a6651aa8b837e53e7ae07fb6053aac8c1e99ba8c9c9849d312ec886",
+    "learned-dot-one-easy-small-parity-seed2": "f90532138cda770e41a4f986f49b2dbc2ad738de6d2ef719aa03637b640569e3",
+    "learned-dot-one-hard-small-depth-seed0": "6f6dfe25dc8bddc3f1172b2763a34f03c8e2cc3b2eba4b06b19a8810abcd23f6",
+    "learned-dot-one-hard-small-recall-seed0": "742514872e5d2bc892752457efa094880f875b58a1a3f5c82136fba000503729",
+    "learned-dot-one-hard-small-depth-seed1": "5fa392eea95eb7d0f63e63d6c1b301ad75e9e024666cd1d9bb2c68414076294e",
+    "learned-dot-one-hard-small-recall-seed1": "9f47613326ea34f71a1761226da5af163214a2752b4675c2b031510037d2a7e0",
+    "learned-dot-one-hard-small-depth-seed2": "946ea9b89739bf5eb4a086fc2d1a22be3d0f9cfc4164d1d7417737f1d30c2152",
+    "learned-dot-one-hard-small-recall-seed2": "4ab2d01bf9369296dc023a99504b0c43a03ffad3da77b116d9bde244b4c534b4",
+    "learned-dot-matched-easy-small-depth-seed0": "8136456195cba653d939e36d4d4c382c673b5bdab33635c4af927206fc24b610",
+    "learned-dot-matched-easy-small-recall-seed0": "29e859284523a97b166173e3fd30b3627b745c7017b9303187b06549c4deafe8",
+    "learned-dot-matched-easy-small-parity-seed0": "0d903ec0c9c484c8bee2c85f1bd43ff1f3a7f126e111e4bcffcd4250ae0fe03b",
+    "learned-dot-matched-easy-small-depth-seed1": "76bc6ca09b21e4b7d493c8040d53aa680a2d01caef4a1bea0e5986a349cd8bef",
+    "learned-dot-matched-easy-small-recall-seed1": "af71c1cf52130526761ff75b14c3cbd50375749e120b50eacb7d188b8e22a49d",
+    "learned-dot-matched-easy-small-parity-seed1": "cc2a58139e14fabe4f1637c41a66cca50736e03f34427690108153278da19cb5",
+    "learned-dot-matched-easy-small-depth-seed2": "69ca2fd2f9724a4a807c1386d770ccbce3f30f80f1a26b87c8a1ab432823a13b",
+    "learned-dot-matched-easy-small-recall-seed2": "7e11937585062f69159cb1f5254806be25d98792b34f3d6cdde117b9d0525455",
+    "learned-dot-matched-easy-small-parity-seed2": "4fc4a2082f10164ec1cbadf7c081f1c6f8bcea57c5540d0a31a5538cf9240724",
+    "learned-dot-matched-hard-small-depth-seed0": "cbab197abb2a4f20de7dbb2e9dd19328c8fc8c6d27421716cba3226d0979c04e",
+    "learned-dot-matched-hard-small-recall-seed0": "c9060e761a14eb0f6242ea9b023f91291147f64ee18ceb1d881fc5e703177210",
+    "learned-dot-matched-hard-small-depth-seed1": "556ca31b6060a35df51ccff14d0df6cc4ee796253b4872402cfd24d2a5589bbc",
+    "learned-dot-matched-hard-small-recall-seed1": "17d88c8fe007a620d75555c71e23d599c6bfcba48eec6aa8eab87a7ca28c8f7b",
+    "learned-dot-matched-hard-small-depth-seed2": "820de8073dbe084209dfce4b9a16befc5f438968d81cc3ee28ae6eeb6aeecb61",
+    "learned-dot-matched-hard-small-recall-seed2": "10ce4c5cc7f6ca4772d4d4af57f6513d97bd3d850c2ca1c7b11499c7cdb07d09"
+  },
+  "softmax_runs_compared": 15,
+  "canonical_observations_compared": 661,
+  "differing_observations": 0,
+  "history_fields_excluded": [
+    "training_seconds",
+    "wall_seconds"
+  ],
+  "checkpoint_fields_excluded": [
+    "attention",
+    "diagnostic_seconds",
+    "training_seconds",
+    "wall_seconds"
+  ],
+  "softmax_repetitions": {
+    "softmax-easy-small-depth-seed0": {
+      "canonical_observations": 2,
+      "differing_observations": 0,
+      "checkpoint_fields_compared": [
+        "batch_generator_state",
+        "best",
+        "cursor",
+        "examples_seen",
+        "last_batch_size",
+        "model",
+        "optimizer",
+        "permutation",
+        "step"
+      ],
+      "checkpoint_tensors_and_values_exact": true,
+      "history_sha256": {
+        "current": "0ae482e02b40c0e81e5cb070ff95bbdcb02fc82ff40a3080e52f8edc731db925",
+        "original": "2246a2314b9ad5f771ed78d4260f408b8d0d9c499459d73af61b9eb0c41c9630"
+      },
+      "checkpoint_sha256": {
+        "current": "23b120f1f04958a0ea4c3d928ec3469e1d26ee8cd490c71f2f3461e41b99060f",
+        "original": "cd7dc935c7c16ea6e97559fa16f4fbfe12966d7b787f9c92b92bff91d9e7407f"
+      }
+    },
+    "softmax-easy-small-recall-seed0": {
+      "canonical_observations": 34,
+      "differing_observations": 0,
+      "checkpoint_fields_compared": [
+        "batch_generator_state",
+        "best",
+        "cursor",
+        "examples_seen",
+        "last_batch_size",
+        "model",
+        "optimizer",
+        "permutation",
+        "step"
+      ],
+      "checkpoint_tensors_and_values_exact": true,
+      "history_sha256": {
+        "current": "5dc3755505deaff901a20eb183ae3a33d82826d4e09c7de8c77c319d442dc38c",
+        "original": "969dade9babc7aabad8f502d5fd25d5b100089cfc301899b65900d9385f8c642"
+      },
+      "checkpoint_sha256": {
+        "current": "8fe7affe47aa472b9181c21cb4d7c6673ce6902d157f119ac478cf8a0074a604",
+        "original": "13fd65e33aac0814d213ea7bc9ed4f5b5f24cac37fe15e4f8e586e2b7e428499"
+      }
+    },
+    "softmax-easy-small-parity-seed0": {
+      "canonical_observations": 42,
+      "differing_observations": 0,
+      "checkpoint_fields_compared": [
+        "batch_generator_state",
+        "best",
+        "cursor",
+        "examples_seen",
+        "last_batch_size",
+        "model",
+        "optimizer",
+        "permutation",
+        "step"
+      ],
+      "checkpoint_tensors_and_values_exact": true,
+      "history_sha256": {
+        "current": "1add67b7da640fce83348bc2aad7d0f8ee51cc3a3c026ab472524e2c531cb8b6",
+        "original": "761636ca6638ae1b97e7c556167f49dca8b53234c9f0213cdad2eca898126fe2"
+      },
+      "checkpoint_sha256": {
+        "current": "22c488dc861be6b448b89aa7b56eccfae7dc142f4d4ced9621b9eb7b737a24c1",
+        "original": "fab1cf292153e6e234ace98fecf40a41cf21f1d41077590408225adb8d03e68a"
+      }
+    },
+    "softmax-easy-small-depth-seed1": {
+      "canonical_observations": 2,
+      "differing_observations": 0,
+      "checkpoint_fields_compared": [
+        "batch_generator_state",
+        "best",
+        "cursor",
+        "examples_seen",
+        "last_batch_size",
+        "model",
+        "optimizer",
+        "permutation",
+        "step"
+      ],
+      "checkpoint_tensors_and_values_exact": true,
+      "history_sha256": {
+        "current": "f6003ddb0de3dbcc267a186106aa8b2dac3a4552d33ce3c161ad2bc134fb1d70",
+        "original": "775755e87c37ff6c0fd5e8c0f355ae98732dec6ae45e1376afffe4b5406c4884"
+      },
+      "checkpoint_sha256": {
+        "current": "6136c13aedd82df02d7a20d5adc2e57251553cd3cd79ef7e3f8eb85d37e0c649",
+        "original": "86167e97632eb84a2bdc30ccaefcb00890913957b419e74e80b7adbd6eede323"
+      }
+    },
+    "softmax-easy-small-recall-seed1": {
+      "canonical_observations": 50,
+      "differing_observations": 0,
+      "checkpoint_fields_compared": [
+        "batch_generator_state",
+        "best",
+        "cursor",
+        "examples_seen",
+        "last_batch_size",
+        "model",
+        "optimizer",
+        "permutation",
+        "step"
+      ],
+      "checkpoint_tensors_and_values_exact": true,
+      "history_sha256": {
+        "current": "fcbcbacd8361aa25ff40316ac05265e1fd8d30c766fe0ab8c1f702fa6d40d578",
+        "original": "15d3afb55550cfdf9601d40e8cd01580a9f0837567ab1e6813e48d64ae302a2f"
+      },
+      "checkpoint_sha256": {
+        "current": "b930ce9555f4c7614eaabd8179d7013482948eb0aea91c6bae57e582eecc2a73",
+        "original": "a083b89b6d56a84a338a89ac7d46c5f5f7f9f2325fcb2cc918f474b7dc08751b"
+      }
+    },
+    "softmax-easy-small-parity-seed1": {
+      "canonical_observations": 26,
+      "differing_observations": 0,
+      "checkpoint_fields_compared": [
+        "batch_generator_state",
+        "best",
+        "cursor",
+        "examples_seen",
+        "last_batch_size",
+        "model",
+        "optimizer",
+        "permutation",
+        "step"
+      ],
+      "checkpoint_tensors_and_values_exact": true,
+      "history_sha256": {
+        "current": "bc7c4be1cebec336fe99bc8762a870a83983958db347107c4f3d884dbe1ec36e",
+        "original": "72824342afbdf066154313277604addec2d5a8e83ab9563dd331d1ed09d008b4"
+      },
+      "checkpoint_sha256": {
+        "current": "e2dc610efa612277f07df9704afef609e3a83f55e5b4775b7e3b0b46476cdf9d",
+        "original": "6febb9f4b511e2329d5155e332f6116d67a7b13fd8749475b942681f5af41d36"
+      }
+    },
+    "softmax-easy-small-depth-seed2": {
+      "canonical_observations": 2,
+      "differing_observations": 0,
+      "checkpoint_fields_compared": [
+        "batch_generator_state",
+        "best",
+        "cursor",
+        "examples_seen",
+        "last_batch_size",
+        "model",
+        "optimizer",
+        "permutation",
+        "step"
+      ],
+      "checkpoint_tensors_and_values_exact": true,
+      "history_sha256": {
+        "current": "080f9d89eac43c4131f3f5cc8edb2798c51267ff1f710033faf035eff5f36a57",
+        "original": "bcfc871f974d505f6913a4ba7c7036ceb453b97d15e91df3c50c69e3cd2acf35"
+      },
+      "checkpoint_sha256": {
+        "current": "a50c94e8d64596428616ac8352848fb09f6dcd32cebe1f774743979d001ef56e",
+        "original": "bf79e41650d4d5e991d2223d10e5e443aac515ad70786ba06b348dc5295b18f4"
+      }
+    },
+    "softmax-easy-small-recall-seed2": {
+      "canonical_observations": 37,
+      "differing_observations": 0,
+      "checkpoint_fields_compared": [
+        "batch_generator_state",
+        "best",
+        "cursor",
+        "examples_seen",
+        "last_batch_size",
+        "model",
+        "optimizer",
+        "permutation",
+        "step"
+      ],
+      "checkpoint_tensors_and_values_exact": true,
+      "history_sha256": {
+        "current": "440b6acdf84fa5df36304699bf671975cd3ee875f800049207512252e187a9bd",
+        "original": "6cb47c85fc480c63a3b5cfaee1dbacccd3086c81fd0dadb7a59e1ef433570843"
+      },
+      "checkpoint_sha256": {
+        "current": "59705c3ae77d03271453659ff4b2fe80e40eca3c87078231f5ca9290d2470f23",
+        "original": "5a1eddb36df40fbb544a85c31e992adf20517fc45d9d1ac8c4df54845f59c19b"
+      }
+    },
+    "softmax-easy-small-parity-seed2": {
+      "canonical_observations": 22,
+      "differing_observations": 0,
+      "checkpoint_fields_compared": [
+        "batch_generator_state",
+        "best",
+        "cursor",
+        "examples_seen",
+        "last_batch_size",
+        "model",
+        "optimizer",
+        "permutation",
+        "step"
+      ],
+      "checkpoint_tensors_and_values_exact": true,
+      "history_sha256": {
+        "current": "cb2161c36d81155ed8bb1dc662f92fb968f272b3ebfc96d1fbc4ef7830704d41",
+        "original": "add16d2fdc37f3b1959b07b3fe7920adc333e2b39c741f1f122316610c0c42f4"
+      },
+      "checkpoint_sha256": {
+        "current": "c842d03d52f80d154cdcdea96dd56785891c6917528f580cbe1999b37dad8ffb",
+        "original": "7a24d53797a066c339587a4592b21c047692b615cbf01a3eba92584132032990"
+      }
+    },
+    "softmax-hard-small-depth-seed0": {
+      "canonical_observations": 51,
+      "differing_observations": 0,
+      "checkpoint_fields_compared": [
+        "batch_generator_state",
+        "best",
+        "cursor",
+        "examples_seen",
+        "last_batch_size",
+        "model",
+        "optimizer",
+        "permutation",
+        "step"
+      ],
+      "checkpoint_tensors_and_values_exact": true,
+      "history_sha256": {
+        "current": "8c8bbb5389e15337b083a863489733959de9e7616a161b03e6dd2c0088934859",
+        "original": "1c94ae4bce4d095032962572918f80954661249edd38165cb87427d7fffb25bf"
+      },
+      "checkpoint_sha256": {
+        "current": "ebe542666bdf76993cabf8cb7d7c6fae48aa312571e98e7e2e4cd3124ea7ccc7",
+        "original": "db0986dac7d9b4ae579d686a7d285d9e491a6343acf7d937d59fae3b24851427"
+      }
+    },
+    "softmax-hard-small-recall-seed0": {
+      "canonical_observations": 97,
+      "differing_observations": 0,
+      "checkpoint_fields_compared": [
+        "batch_generator_state",
+        "best",
+        "cursor",
+        "examples_seen",
+        "last_batch_size",
+        "model",
+        "optimizer",
+        "permutation",
+        "step"
+      ],
+      "checkpoint_tensors_and_values_exact": true,
+      "history_sha256": {
+        "current": "b4709d898657b82a4a29ca79bdbf5e234dc8a283d687b5644a132c1c579fc2df",
+        "original": "b0ac5cb37022c0f6ed3a7a46f10456a1d586ef4f192306e9dd0c7083427faff6"
+      },
+      "checkpoint_sha256": {
+        "current": "ea592b1ab6d87c11df9e6871bf5b99b330ef07d03c68398d556544356bfbee50",
+        "original": "0a10aa7894c58cf25339b2420d5bb81764bf8e402c0c7de6934be0ec1e944144"
+      }
+    },
+    "softmax-hard-small-depth-seed1": {
+      "canonical_observations": 51,
+      "differing_observations": 0,
+      "checkpoint_fields_compared": [
+        "batch_generator_state",
+        "best",
+        "cursor",
+        "examples_seen",
+        "last_batch_size",
+        "model",
+        "optimizer",
+        "permutation",
+        "step"
+      ],
+      "checkpoint_tensors_and_values_exact": true,
+      "history_sha256": {
+        "current": "875bad9c121693f0cb81d9630d284e8645035965a1344fb19fb76650af842986",
+        "original": "bced5a311da7a21bbcb29658fdd895fa66ee7ccd041249b13f9946ca43cb9e0e"
+      },
+      "checkpoint_sha256": {
+        "current": "610c60abdfdcaab7532c651e78479207fe55b4f49b56680713131909546c4a2f",
+        "original": "512a1097371b38b81964d81e1cafbcf7d7a09fbf5dd2367840fb2962eb851499"
+      }
+    },
+    "softmax-hard-small-recall-seed1": {
+      "canonical_observations": 97,
+      "differing_observations": 0,
+      "checkpoint_fields_compared": [
+        "batch_generator_state",
+        "best",
+        "cursor",
+        "examples_seen",
+        "last_batch_size",
+        "model",
+        "optimizer",
+        "permutation",
+        "step"
+      ],
+      "checkpoint_tensors_and_values_exact": true,
+      "history_sha256": {
+        "current": "03875d8f5f32ef5c5ce45c9bc11172a2e5fbd2c49aba1b3748ffa007f0dbd9b4",
+        "original": "2181a776e898c92e5c90980526d4db03e1f3058a1fd907a5c91f9e5e63afe172"
+      },
+      "checkpoint_sha256": {
+        "current": "9c03e4dce1adeb9cbdcba8de7c0dc562267978f969661cdf79ff8f0ca8397613",
+        "original": "eabde1b0b911c6385b2845a14890075cfe23954bd2b04f9490eed27e26afeb68"
+      }
+    },
+    "softmax-hard-small-depth-seed2": {
+      "canonical_observations": 51,
+      "differing_observations": 0,
+      "checkpoint_fields_compared": [
+        "batch_generator_state",
+        "best",
+        "cursor",
+        "examples_seen",
+        "last_batch_size",
+        "model",
+        "optimizer",
+        "permutation",
+        "step"
+      ],
+      "checkpoint_tensors_and_values_exact": true,
+      "history_sha256": {
+        "current": "5860abf586c660f73d440c66a760f3b128b957b239e96c71a574bb0910b18809",
+        "original": "4b97d6215520c1d8818bbe32ab8457547007b2415ccc7f03e6813cda2bb14eac"
+      },
+      "checkpoint_sha256": {
+        "current": "935fa45fd929bd9c8a70248de511b8de6a706f661d2215f581f53692dbc6752d",
+        "original": "5d5316f65b3114f41006c16e6009e2b0c3f3aa3b4a285e14abde3829b390a0c9"
+      }
+    },
+    "softmax-hard-small-recall-seed2": {
+      "canonical_observations": 97,
+      "differing_observations": 0,
+      "checkpoint_fields_compared": [
+        "batch_generator_state",
+        "best",
+        "cursor",
+        "examples_seen",
+        "last_batch_size",
+        "model",
+        "optimizer",
+        "permutation",
+        "step"
+      ],
+      "checkpoint_tensors_and_values_exact": true,
+      "history_sha256": {
+        "current": "658a0fafde78685bce0446cfac39fcb6c33e1d69983459c50963d7d3bc3d897d",
+        "original": "1f111f2f5b3658a3a1b747a44c5ef2d6a3c06d3d28beace8988a9a1bfd8d2714"
+      },
+      "checkpoint_sha256": {
+        "current": "47e9cf3cb9d14d83c5ad88f3e45aaa7c1efd00d5c64a346fa7761ad3b3ac9de1",
+        "original": "2ab0d47e1b1991f881b56a5c9d9be1fe1f65bbf5598fa6070bcf8cd1396cb861"
+      }
+    }
+  },
+  "program_source": "\"\"\"Check the complete small reduction and reproduce the original softmax controls.\"\"\"\n\nimport hashlib\nimport json\nfrom pathlib import Path\n\nimport torch\n\n\nROOT = Path('/tmp/transformer-qknorm-study')\nEXPERIMENT = ROOT / 'experiments/basis_qknorm'\nORIGINAL = Path('/home/misha/lean_projects/transformer/experiments/basis_sparsemax')\nOUTPUT = EXPERIMENT / 'small_control_repetition.json'\n\n\ndef sha(path):\n    with path.open('rb') as source:\n        return hashlib.file_digest(source, 'sha256').hexdigest()\n\n\ndef equal(left, right):\n    if isinstance(left, torch.Tensor):\n        assert isinstance(right, torch.Tensor)\n        return left.dtype == right.dtype and left.shape == right.shape and torch.equal(left, right)\n    if isinstance(left, dict):\n        return isinstance(right, dict) and left.keys() == right.keys() and all(equal(value, right[key]) for key, value in left.items())\n    if isinstance(left, (list, tuple)):\n        return type(left) is type(right) and len(left) == len(right) and all(equal(a, b) for a, b in zip(left, right))\n    return type(left) is type(right) and left == right\n\n\ndef main():\n    artifact = json.loads((EXPERIMENT / 'small_results.json').read_text())\n    assert len(artifact['runs']) == 45\n    assert hashlib.sha256(artifact['program_source'].encode()).hexdigest() == artifact['program_sha256']\n    assert hashlib.sha256(artifact['helper_source'].encode()).hexdigest() == artifact['helper_sha256']\n    assert sha(EXPERIMENT / 'experiment.py') == artifact['experiment_source_sha256']\n    assert sha(EXPERIMENT / 'preparation.json') == artifact['preparation_sha256']\n    assert all(sha(ROOT / 'python/src/lab' / path) == digest\n               for path, digest in artifact['runtime_code_sha256'].items())\n    hashes, repetitions, observations = {}, {}, 0\n    for label, run in artifact['runs'].items():\n        directory = EXPERIMENT / 'runs' / label\n        assert all(sha(EXPERIMENT / path) == digest for path, digest in run['source'].items()), label\n        hashes[label] = sha(directory / 'checkpoint.pt')\n        heads = [head for layer in run['final_heads'].values() for head in layer['actual']['nontrivial_rows']]\n        assert len(heads) == 8 and all(head['row_count'] > 0 for head in heads), label\n        if run['arm'] != 'softmax':\n            assert all(head['exact_zero_pair_share'] > 0 for head in heads), label\n            continue\n        original = ORIGINAL / 'runs' / label\n        histories = [[json.loads(line) for line in (path / 'history.jsonl').read_text().splitlines()]\n                     for path in (directory, original)]\n        ignored = {'training_seconds', 'wall_seconds'}\n        measured = [[{key: value for key, value in row.items() if key not in ignored} for row in history]\n                    for history in histories]\n        assert measured[0] == measured[1], label\n        observations += len(measured[0])\n        checkpoints = [torch.load(path / 'checkpoint.pt', map_location='cpu', weights_only=True)\n                       for path in (directory, original)]\n        omitted = {'training_seconds', 'diagnostic_seconds', 'wall_seconds', 'attention'}\n        selected = [{key: value for key, value in checkpoint.items() if key not in omitted}\n                    for checkpoint in checkpoints]\n        assert equal(selected[0], selected[1]), label\n        repetitions[label] = {\n            'canonical_observations': len(measured[0]), 'differing_observations': 0,\n            'checkpoint_fields_compared': sorted(selected[0]),\n            'checkpoint_tensors_and_values_exact': True,\n            'history_sha256': {'current': sha(directory / 'history.jsonl'), 'original': sha(original / 'history.jsonl')},\n            'checkpoint_sha256': {'current': hashes[label], 'original': sha(original / 'checkpoint.pt')},\n        }\n    assert len(repetitions) == 15\n    program = Path(__file__).read_text()\n    result = {\n        'scope': 'Complete 45-run small reduction and 15 contemporary softmax controls compared to step 1',\n        'raw_file_hashes_verified': sum(len(run['source']) for run in artifact['runs'].values()),\n        'small_results_sha256': sha(EXPERIMENT / 'small_results.json'),\n        'runtime_source_files_verified': len(artifact['runtime_code_sha256']),\n        'checkpoint_sha256': hashes, 'softmax_runs_compared': len(repetitions),\n        'canonical_observations_compared': observations, 'differing_observations': 0,\n        'history_fields_excluded': sorted(ignored), 'checkpoint_fields_excluded': sorted(omitted),\n        'softmax_repetitions': repetitions,\n        'program_source': program, 'program_sha256': hashlib.sha256(program.encode()).hexdigest(),\n    }\n    OUTPUT.write_text(json.dumps(result, indent=2) + '\\n')\n    print(json.dumps({key: result[key] for key in ('raw_file_hashes_verified', 'runtime_source_files_verified',\n        'softmax_runs_compared', 'canonical_observations_compared', 'differing_observations')}))\n\n\nif __name__ == '__main__':\n    main()\n",
+  "program_sha256": "5249be6c4ee2b6247cae69505000ee15a0944d379c642e34c7b4aa28c157d4ef"
+}

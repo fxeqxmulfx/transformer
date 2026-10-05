@@ -107,6 +107,25 @@ class ScaledDot(Scores):
 
 
 @dataclass(frozen=True)
+class LearnedScaledDot(Scores):
+    """q . k / sqrt(head width), multiplied by a learned per-head e^alpha.
+
+    Source: ScaledDotScores and QKNormScores in
+    `python/src/lab/infrastructure/nn/attention.py` at 73f8a0b.
+    The QKNorm follow-up in EXPERIMENT_PLAN.md retains the learned head
+    scale but removes query/key L2 normalization. Unlike ScaledDot, its
+    multiplicative gain learns; unlike QKNorm, query/key norms affect scores.
+    `initial_scale` is the starting gain over ordinary ScaledDot scores.
+    """
+    initial_scale: float = 1.0
+
+    def check(self):
+        require(isinstance(self.initial_scale, (int, float)) and not isinstance(self.initial_scale, bool)
+                and math.isfinite(self.initial_scale) and self.initial_scale > 0,
+                "LearnedScaledDot initial_scale must be a positive finite number")
+
+
+@dataclass(frozen=True)
 class QKNorm(Scores):
     """Unit q . unit k times a learned per-head e^alpha.
 
