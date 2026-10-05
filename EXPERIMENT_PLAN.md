@@ -671,6 +671,46 @@ index now has 1,844 modules and 7,609 theorems, with the same 157 existing
 statements and zero placeholders. Python is unchanged since the passing
 171-test run recorded above.
 
+## Pure sparse follow-up: enforcing the value span
+
+**Done on 2026-10-05 UTC.** Three modules add sixteen proved theorems,
+with no new `sorry`, derived from arXiv:1602.02068v2, §2.2 and §2.5,
+and the frozen linear value readout at `73f8a0b`.
+
+[BoundedCoordinates.lean](src/Transformer/GPTMini/Sparsemax/BoundedCoordinates.lean)
+proves strict bounds, a positive derivative and a differentiable inverse
+for independent score coordinates `c * (exp(a) - 1) / (exp(a) + 1)`.
+These modify the scores; the weights remain the actual causal variational
+sparsemax projection.
+
+[AnchoredScores.lean](src/Transformer/GPTMini/Sparsemax/AnchoredScores.lean)
+prepends `A` bounded anchor scores to ordinary scores below `-c`.
+If `c > 0`, `2 * A * c < 1` and the anchors are visible, every anchor
+has positive weight at every finite parameter assignment. Ordinary slots
+can remain exactly inactive, including the checked weights `(1/2, 1/2, 0)`.
+
+[AnchoredValues.lean](src/Transformer/GPTMini/Sparsemax/AnchoredValues.lean)
+uses `d + 1` anchors in a `d`-dimensional output: a trainable common base
+and that base plus each fixed basis direction multiplied by a positive
+learned exponential scale. Ordinary values are arbitrary. All active value
+differences automatically span the output, for arbitrary changes of the
+base, scales, score parameters and ordinary values. Thus preservation
+under finite parameter updates follows from the parameterization; the
+span is no longer a hypothesis about learned values. A nonzero ordinary
+output derivative always distinguishes two anchors and cannot disappear
+in the raw score path.
+
+This is an explicit anchored architecture modification, requiring `d + 1`
+visible prefix slots and independent anchor scores. It does not prove that
+the existing query/key architecture satisfies the same condition, or that
+a zero output derivative or whole-model nonconvexity is repaired. No route
+target, teacher, dense weight branch, Python implementation or new training
+run is introduced. The completed benchmark cycle remains unchanged.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden`; the new modules have no warnings. Python is unchanged
+since the passing 171-test run recorded above.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be

@@ -8,6 +8,9 @@ import Transformer.GPTMini.Sparsemax.ValueSpan
 import Transformer.GPTMini.Sparsemax.SeparatedValues
 import Transformer.GPTMini.Sparsemax.ValuePlateau
 import Transformer.GPTMini.Sparsemax.BoundedGain
+import Transformer.GPTMini.Sparsemax.BoundedCoordinates
+import Transformer.GPTMini.Sparsemax.AnchoredScores
+import Transformer.GPTMini.Sparsemax.AnchoredValues
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -46,5 +49,10 @@ nonzero output derivative. For ordinary scalar squared error, two distinct
 active values suffice whenever the output is wrong. A constructed separated
 value assignment reaches zero error by a bounded sparse score transfer;
 the previous collapsed value assignment is proved to fail the span premise.
-These are value restrictions, not an enforcement rule for every model input.
+The anchor construction enforces the span in any finite output dimension:
+prepend a translated, positively scaled basis and keep its scores active
+through independent bounded coordinates. The span persists for every
+finite parameter assignment, with arbitrary ordinary values and exact
+inactive zeros. This is a new row architecture, not a guarantee for the
+existing query/key parameterization or for a zero output derivative.
 -/
