@@ -1080,7 +1080,7 @@ Python is unchanged since the recorded passing 171-test run.
 
 ## Exact convex coordinates for jointly learned values
 
-**Done on 2026-10-06 UTC.** The user's joint-values extension adds five
+**Done on 2026-10-05 UTC.** The user's joint-values extension adds five
 modules and forty-six proved theorems without new `sorry`. FFN and task-loss
 design remain deferred. This is an exact change of coordinates on an explicit
 finite-context architecture, not a convexity claim in the original value
