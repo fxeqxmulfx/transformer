@@ -574,6 +574,32 @@ These are qualified experimental conclusions; the row-level Lean results
 do not prove a global training cause. The completion manifest is retained in
 [cycle_audit.json](experiments/basis_sparsemax/cycle_audit.json).
 
+## Mathematical follow-up: supervised score loss
+
+**Done on 2026-10-05 UTC.** The loss in arXiv:1602.02068v2, §3.2,
+`sparsemax_loss`, depends directly on the target score as well as on the
+projection's quadratic potential. Its score gradient is `sparsemax(z) - y`
+for a supplied routing target `y`. This objective can supply a corrective
+signal on a wrong singleton even though every outer function of that
+locally constant probability row has zero score derivative.
+
+[RoutingLoss.lean](src/Transformer/GPTMini/Sparsemax/RoutingLoss.lean)
+uses the existing causal variational projection. It proves the potential
+identity, feasible-route lower bound, visible-target nonnegativity, and
+full score derivative on strict singleton regions. Adding the score loss
+to any outer probability loss supplies the same derivative multiplied by
+its weight. On the previous counterexample `(2, 0)` with target slot 1,
+the target-coordinate derivative is `-1`; a score-gradient step of size
+`3/2` produces `(1/2, 3/2)`, the exact correct route and zero score loss.
+No new `sorry` is used.
+
+This repairs the supervised row counterexample, not the complete basis.
+Attention routes are latent: the experiment's output labels do not directly
+specify the desired position in every head. An auxiliary routing loss would
+need supplied targets, a declared teacher or another source of score
+supervision. No such training intervention has been run, and the previous
+benchmark findings and completed-cycle manifest remain unchanged.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
