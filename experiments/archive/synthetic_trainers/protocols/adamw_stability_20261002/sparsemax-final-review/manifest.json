@@ -1,0 +1,30 @@
+{
+  "scope": "Tracked review bundle prepared from exact historical source and independently checked observations; not a new training result",
+  "original_inspector_commit": "441f47b",
+  "original_inspector_path": "experiments/archive/synthetic_trainers/protocols/adamw_stability_20261002/inspect_sparsemax_generalization.py",
+  "independent_review_lab_commit": "d03f594",
+  "independent_review_lab_source_hashes": {
+    "python/src/lab/infrastructure/nn/__init__.py": "73e7051498fae6f9fc1e510be8fab430f3c4c3d04d948b031a56f8e6ea40e276",
+    "python/src/lab/infrastructure/nn/attention.py": "3d696cfe3ac2a62386b13e9d2dafb0112c4bb8ec9fbc45fa2197c5870d428f87",
+    "python/src/lab/infrastructure/nn/legacy.py": "c6a5d4084c86dc0cb114a0cebd5873e243571b2b61f7178f5914c373d23e7048",
+    "python/src/lab/infrastructure/nn/positions.py": "f95752d6948a1ecff5602e8c7fb26171cd7a6e4c54618547a9f7f7c2d70dd102",
+    "python/src/lab/infrastructure/nn/sparsemax.py": "c864ce1e440f8c5b349df2c9eab0b6e018d5a486d400a8d155e9ef111f3ac2c0",
+    "python/src/lab/infrastructure/nn/surrogate.py": "2141bb936750cd178b18c8c9646e2f9a7261447cc065a32f6400b6ab050e47c3",
+    "python/src/lab/infrastructure/nn/transformer.py": "ca61ddc99b2fbcc6b42774aab66f774caec1bf0b11ce7f38fd906ce8d743b19d",
+    "python/src/lab/infrastructure/benchmarks/modular.py": "81707cdca23171d30c1ee74fde6ad00b007bbc6692b7dde813dc301659e49fd6",
+    "experiments/mod193_stability/experiment.py": "a34ebd64bcd8bb09d04853d0cf2ee0e322da9d22a6bb8c50a9c44958712845e7"
+  },
+  "checkpoint_hashes": {
+    "sparsemax": "c3f296b2f9ffd388451f4beefb358b184ad32da404658424c6685c9a935ac601",
+    "softmax": "516bf695bb98cefeef080ce3bc8e5e24ecb53bb3a861e94600c9351eccbbb0bb"
+  },
+  "files": {
+    "confirmation_archive_check.json": "2311291d7bbd917699e40e25cb58e70d69f352d844d05f5d2bd36f2d52be6558",
+    "confirmation_metrics.py": "6ee6ee17e8bfbb47ee9805c8601cc2e95aefcd391672e333c873ea26409958c9",
+    "independent_review.json": "76479ee87e1adaa67427eebc6d32bd0d9ffec8cc84d4a277cf13ebaaae59df4b",
+    "inspector_441f47b.py": "77e1471950ab533be43ab36054cd489b7a3c414853736d17ef374488b4d724f3",
+    "observations.json": "eb636175dbcbfa3f9d68724912e41bb94c07cbc66eab2dc9bb3749ef7d30e3e1",
+    "verify_observations.py": "322177b31ee90f56d5fdabceae0572ae2aea614941456403849b3537434f146b",
+    "README.md": "018d5d6a617a0227c7b860272c11c583bc5705147471f073f2e8b943b8350cca"
+  }
+}
