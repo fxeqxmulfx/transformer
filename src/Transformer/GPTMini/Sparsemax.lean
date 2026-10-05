@@ -15,6 +15,11 @@ import Transformer.GPTMini.Sparsemax.AnchorTransfer
 import Transformer.GPTMini.Sparsemax.TrainableAnchors
 import Transformer.GPTMini.Sparsemax.AnchoredSquaredError
 import Transformer.GPTMini.Sparsemax.AnchoredCorrection
+import Transformer.GPTMini.Sparsemax.QKChart
+import Transformer.GPTMini.Sparsemax.QKAnchors
+import Transformer.GPTMini.Sparsemax.QKTaskDirections
+import Transformer.GPTMini.Sparsemax.QKSquaredError
+import Transformer.GPTMini.Sparsemax.QKProjection
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -67,4 +72,14 @@ output error, every wrong finite output fails to be a local minimum of
 this row loss, even at support boundaries. A concrete finite parameter
 step reaches zero error while retaining the third weight at zero.
 These row results do not assert whole-model or shared-row convergence.
+
+A differentiable unit-key chart now implements the anchored scores
+through the actual QKNorm inner product. Its gain dominates every finite
+ordinary score, while all keys have norm one. Nonzero ordinary task
+derivatives reach actual K vectors, and wrong squared-error outputs
+cannot be local minima in those vectors. On standard-basis inputs, the
+same directions reach jointly trained shared Q/K projection matrices.
+The fixed unit frame, restricted key parameterization and independent
+input coordinates are explicit architecture changes. They do not follow
+from unconstrained QKNorm or arbitrary learned embeddings.
 -/

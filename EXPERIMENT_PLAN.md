@@ -760,6 +760,59 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 placeholder is introduced. Python is unchanged since its passing 171-test
 run recorded above.
 
+## Pure sparse follow-up: reaching query/key projections
+
+**Done on 2026-10-05 UTC.** Five modules add twenty-five proved theorems,
+with no new `sorry`, derived from arXiv:1602.02068v2, §2.2 and §2.5,
+and the linear projections, normalization and value sum at `73f8a0b`.
+
+[QKChart.lean](src/Transformer/GPTMini/Sparsemax/QKChart.lean)
+constructs actual unit keys in an orthogonal unit frame. A desired score
+`s` in `(-g, g)` is represented by
+`(s/g) * query + sqrt(1 - (s/g)^2) * transverse`. The existing normalized
+dot product, with temperature `log g` and epsilon at most one, is proved
+equal to `s`. The vector chart is differentiable on its strict interval.
+
+[QKAnchors.lean](src/Transformer/GPTMini/Sparsemax/QKAnchors.lean)
+sets `g = c + 1 + sum exp ordinary`, which strictly dominates every
+anchor and ordinary score at all finite parameters. The actual QKNorm
+scores therefore equal the earlier anchored scores. Every key has norm
+one; the key array is differentiable in the learned anchor parameters.
+The actual sparse example retains weights `(1/2, 1/2, 0)`.
+
+[QKTaskDirections.lean](src/Transformer/GPTMini/Sparsemax/QKTaskDirections.lean)
+proves the full active-value span on these actual Q/K rows and excludes
+a zero ordinary task derivative both in anchor parameters and in all
+actual key-vector directions. The chain rule uses the genuine differentiable
+key chart; no sparsemax derivative is assigned or assumed at support boundaries.
+
+[QKSquaredError.lean](src/Transformer/GPTMini/Sparsemax/QKSquaredError.lean)
+removes the nonzero output-gradient premise for ordinary squared output
+error: any wrong output has a nonzero actual K direction and is not a
+local minimum of the key-vector loss. The finite correction's loss
+`1/256` to `0` is now verified through the existing QKNorm operator.
+
+[QKProjection.lean](src/Transformer/GPTMini/Sparsemax/QKProjection.lean)
+evaluates actual shared linear Q/K projection matrices on standard-basis
+inputs. Each input selects one column, so the nonzero task direction
+reaches the jointly trained projection parameters. Equal inputs are
+proved to force equal scores under every shared projection, explaining
+why arbitrary input embeddings do not inherit this freedom.
+
+This closes the score-to-Q/K transfer for an explicit restricted row
+architecture. It requires an orthogonal unit query frame, chart-parameterized
+keys, a gain depending on this row's ordinary score parameters, `d + 1`
+visible value anchors and independent input coordinates for the projection
+result. These are modifications, not consequences of the existing unrestricted
+transformer. Shared-row gradient cancellation, target attainability with fixed
+values and global convergence remain open; no basis or Shakespeare training
+claim is made. Python and the completed experiment cycle are unchanged.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
