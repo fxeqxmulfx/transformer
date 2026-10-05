@@ -929,6 +929,86 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Pure sparse follow-up: transfer to a shared multi-row objective
+
+**Done on 2026-10-05 UTC.** Nine modules add fifty-eight proved theorems,
+with no new `sorry`, derived from arXiv:1602.02068v2, §2.2 and §2.5,
+and actual shared Q/K projections, QKNorm and value sums at `73f8a0b`.
+This is a conditional transfer of the single-row result to the sum;
+unconditional transfer is refuted by an actual shared-matrix counterexample.
+
+[SupportSegment.lean](src/Transformer/GPTMini/Sparsemax/SupportSegment.lean)
+proves that matching actual endpoint zero patterns make sparsemax affine
+on the score segment, including inactive threshold ties. It constructs a
+normalized threshold for the actual simplex projection and retains exact
+inactive zeros; no attention targets, dense mixture or replacement
+projection are introduced.
+
+[ClippedKeySegment.lean](src/Transformer/GPTMini/Sparsemax/ClippedKeySegment.lean)
+connects this score segment to one actual shared key-matrix segment,
+with the query matrix fixed. The additional restriction is explicit:
+projected keys at both endpoints have norm at most epsilon. Their whole
+convex segment remains within that ball, where the actual QKNorm maximum
+denominator is constant and normalized scores are affine for every row.
+This replaces the preceding curved unit-key chart for this transfer;
+arbitrary normalized unit-key segments need not be affine. The example
+uses epsilon one. At the usual epsilon `1e-6`, these premises require
+projected keys within that much smaller ball; they are not an automatic
+property of the existing initialization or an experiment-backed repair.
+
+[SharedRows.lean](src/Transformer/GPTMini/Sparsemax/SharedRows.lean)
+defines actual multi-row outputs and their summed ordinary squared loss.
+Different examples can have different inputs and frozen values, while all
+use one pair of actual Q/K matrices. Endpoint norm and support conditions
+give simultaneous affine outputs and exact inactive zeros without query
+independence, an input decoder, row-specific parameters or a context-width
+bound. [SharedRowLoss.lean](src/Transformer/GPTMini/Sparsemax/SharedRowLoss.lean)
+proves convexity of the sum along that common matrix segment. A shared
+endpoint fitting all ordinary targets gives exact loss `(1-t)^2 * L(0)`.
+[SquaredSegment.lean](src/Transformer/GPTMini/Sparsemax/SquaredSegment.lean)
+supplies the ordinary squared-loss and neighborhood arguments.
+
+[SharedRowMinimum.lean](src/Transformer/GPTMini/Sparsemax/SharedRowMinimum.lean)
+excludes a local minimum in jointly learned Q/K whenever a better
+compatible shared key endpoint exists, even without an exact target fit.
+Consequently, a joint local minimum is optimal against all clipped-key
+endpoints with the same row supports and fixed Q. If a common admissible
+endpoint fits the ordinary targets, positive-loss local minima are
+excluded. [SharedRowDerivative.lean](src/Transformer/GPTMini/Sparsemax/SharedRowDerivative.lean)
+proves that the actual common path has right derivative `-2 * L(0)`.
+At positive loss, this rules out a zero full joint Q/K derivative without
+assuming ambient sparsemax differentiability across support boundaries.
+
+[SharedRowsExample.lean](src/Transformer/GPTMini/Sparsemax/SharedRowsExample.lean)
+provides actual shared matrices for two different causal queries in a
+four-position context. Both initial outputs are `1/2`, ordinary targets
+are `11/16` and `5/16`, and the initial errors have opposite signs. One
+shared key correction attains both: the sum drops from `9/128` to zero,
+is `9/512` halfway along the actual matrix path, and has initial right
+derivative `-9/64`. Both anchors stay active and ordinary weights stay zero.
+Every conditional theorem has a concrete inhabited example.
+
+[SharedRowCancellation.lean](src/Transformer/GPTMini/Sparsemax/SharedRowCancellation.lean)
+refutes unconditional transfer. Two identical actual observations with
+ordinary targets zero and one necessarily have the same output for every
+shared parameter point. A certified sparse output `1/2` is a global and
+local matrix minimum with summed loss `1/2`, despite both rows being wrong.
+It has two active anchors and exact ordinary zeros, rather than a saturated
+one-hot route. No common target fit exists. Ordinary target attainability
+cannot be inferred from separate single-row correction theorems.
+
+Inputs, values, gain and epsilon remain fixed, and readouts are unrotated
+and before XSA/output projection. Joint attainability, compatible endpoint
+supports and epsilon-clipped keys remain restrictions. Uniform gradient
+bounds, unrestricted support changes and whole-model convergence remain
+open. The completed experiment cycle and Python implementation are unchanged;
+no new basis or Shakespeare training claim is made.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be

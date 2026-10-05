@@ -32,6 +32,15 @@ import Transformer.GPTMini.Sparsemax.LongContextQK
 import Transformer.GPTMini.Sparsemax.QKPrefixMatrix
 import Transformer.GPTMini.Sparsemax.QKPrefixDirections
 import Transformer.GPTMini.Sparsemax.QKPrefixError
+import Transformer.GPTMini.Sparsemax.SupportSegment
+import Transformer.GPTMini.Sparsemax.ClippedKeySegment
+import Transformer.GPTMini.Sparsemax.SharedRowsExample
+import Transformer.GPTMini.Sparsemax.SharedRows
+import Transformer.GPTMini.Sparsemax.SquaredSegment
+import Transformer.GPTMini.Sparsemax.SharedRowLoss
+import Transformer.GPTMini.Sparsemax.SharedRowMinimum
+import Transformer.GPTMini.Sparsemax.SharedRowDerivative
+import Transformer.GPTMini.Sparsemax.SharedRowCancellation
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -114,4 +123,22 @@ family with arbitrarily many repeated ordinary tokens satisfies the
 weaker premises while long instances fail full input independence.
 The unit-frame, key-family and visible value-anchor restrictions remain;
 these single-row results do not exclude cancellation in a shared objective.
+
+The summed ordinary squared loss now uses actual shared matrices for
+arbitrarily many rows and examples. Matching endpoint sparse supports
+make the actual projection affine on a score segment. A new explicit
+restriction keeps projected endpoint keys in the epsilon ball, where
+actual QKNorm is linear; the common matrix segment stays in that ball.
+No independent queries, input decoder or row-specific parameters are used.
+A better compatible endpoint excludes a joint local minimum of the sum.
+If one compatible shared matrix fits all ordinary targets, the actual
+path loss is `(1-t)^2 * initialLoss`, with right derivative `-2 * initialLoss`.
+At positive error, a zero full joint Q/K derivative is impossible, including
+inactive threshold ties. A two-row sparse example has opposite initial
+errors and distinct targets fitted by one shared matrix: loss `9/128` to zero.
+An actual counterexample refutes unconditional transfer: repeated observations
+with conflicting targets zero and one have positive global minimum `1/2`,
+two active anchors and exact ordinary zeros. Joint attainability, endpoint
+support compatibility, clipped keys and fixed values remain essential;
+these results do not assert convergence of an unconstrained full model.
 -/
