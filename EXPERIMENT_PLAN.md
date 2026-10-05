@@ -388,8 +388,8 @@ both learned raw-dot starts match six, with visible exact zeros in all
 120 final non-BOS heads per arm. Gain one passes all three parity seeds
 but loses all three easy-recall seeds. The estimated starting gain passes
 two recall seeds but loses two parity seeds; recall seed 0 reaches 98.44%
-without passing. Neither is a complete small-model repair. The 51 large
-runs continue with unchanged sources and budgets. The full small reduction,
+without passing. Neither is a complete small-model repair. All 51 large
+runs have now finished with unchanged sources and budgets. The full small reduction,
 per-head statistics, gains, pass comparisons and raw file hashes are in
 [small_results.json](experiments/basis_qknorm/small_results.json).
 All 15 fresh small softmax controls repeat step 1's 661 canonical
@@ -399,7 +399,20 @@ reduction hashes verify; the independent comparison is retained in
 [small_control_repetition.json](experiments/basis_qknorm/small_control_repetition.json).
 The findings' required `./make.py test` gate checks 171 tests in 818.584
 seconds: 165 pass and the same six CUDA-only checks are skipped. Runtime
-and experiment sources remain unchanged during the large runs.
+and experiment sources remained unchanged during the large runs.
+
+The complete 96-run screen is done. Each new arm matches 6 of 14 large
+softmax passes and 12 of 23 across both sizes. All 360 final large-model
+non-BOS heads per arm retain visible exact zeros. Neither new arm passes
+large hard recall from any seed; current softmax passes 3/3, QKNorm-one
+2/3 and ScaledDot 1/3. The earlier step-4 global counts use different
+multi-threaded trajectories; only the three current target seeds compare
+all five arms. There is no better candidate warranting another mod-193
+transfer. [results.json](experiments/basis_qknorm/results.json) verifies
+480 raw hashes and all runtime/source/description/fixed-row pins and links
+the detailed large and small reductions. Before the complete-findings
+commit, all 171 tests are checked again (808.529 seconds): 165 pass and six
+CUDA-only tests are skipped. Steps 5 and 6 retain their original scope.
 The source-validation mismatch after the completed small training was
 corrected to follow Lab's 78-file runtime provenance, excluding its three
 command-line files; all completed small sources match and none is retrained.

@@ -50,9 +50,9 @@ record support and visible exact zeros per layer and head. Dense-only
 passes do not count as a sparse-attention repair.
 
 `./make.py check experiments/basis_qknorm` checks the definitions;
-`run` trains selected labels and resumes an existing run. The staged
-controller will preserve the source hashes and collect pass updates,
-final batch losses, head gains and all initial/final per-head sparsity.
+`run` trains selected labels and resumes an existing run. The completed
+screen retains source hashes, pass updates, final batch losses, head gains
+and all initial/final per-head sparsity.
 
 ## Preparation
 
@@ -109,7 +109,7 @@ and the source artifact hash are in
 All 45 small runs have completed with the pinned sources and fixed validation
 rows. Fresh softmax passes nine of its fifteen cells. Each new arm matches
 six of those nine; neither passes the small-model repair criterion. These
-are complete small-model results, with the 51 large runs still in progress.
+are complete small-model results; the 51 large runs have now finished too.
 
 Pass updates below are ordered by seed 0, 1, 2. A dash means no 99% sequence
 accuracy within the declared budget. Hard depth selects length 128;
@@ -170,5 +170,58 @@ from runtime provenance. The corrected check validates the 78 recorded
 runtime files against their pinned hashes. It collected the existing small
 runs without retraining and continued with the fresh large runs.
 
-This study stays in a separate checkout so the running mod-193 series keeps
-its pinned lab code and descriptions.
+The study ran in a separate checkout so the mod-193 series kept its pinned
+lab code and descriptions throughout training.
+
+## Large-model results and complete screen
+
+All 51 large runs finished with the same pinned sources: 30 new candidate
+runs, 15 fresh softmax controls and six QKNorm-one/ScaledDot hard-recall
+controls. Fresh softmax passes 14 of 15 large cells. Each new arm matches
+six of those fourteen, consisting of every easy and hard depth seed.
+
+| Mode/task | Softmax pass updates | Learned dot, gain one | Learned dot, estimated starting gain |
+| --- | --- | --- | --- |
+| easy depth | 200 / 200 / 200 | 200 / 200 / 200 | 200 / 200 / 200 |
+| easy recall | 2450 / — / 1550 | — / — / — | — / — / — |
+| easy parity | 6000 / 10800 / 14200 | — / — / — | — / — / — |
+| hard depth | 2600 / 2000 / 4000 | 4800 / 4000 / 2600 | 3200 / 600 / 200 |
+| hard recall | 2950 / 2150 / 2750 | — / — / — | — / — / — |
+
+Every final non-BOS head has visible exact zeros: 360 of 360 large-model
+heads in each new arm. Across both sizes each arm matches 12 of the 23
+contemporary softmax passes, all with sparsity, and has no extra passes
+where softmax fails. Neither is a complete basis repair. The individual
+histories, training-batch losses, head gains, full per-head measurements,
+reduction program and raw hashes are in [large_results.json](large_results.json).
+
+The current large hard-recall controls isolate the remaining target with
+all five arms at the same source revision and fixed validation rows:
+
+| Arm | Pass updates, seeds 0 / 1 / 2 | Passing seeds |
+| --- | --- | ---: |
+| softmax | 2950 / 2150 / 2750 | 3/3 |
+| QKNorm starting at one | 2600 / — / 2750 | 2/3 |
+| ScaledDot, fixed gain | — / — / 4600 | 1/3 |
+| learned dot, gain one | — / — / — | 0/3 |
+| learned dot, estimated starting gain | — / — / — | 0/3 |
+
+Thus retaining a trainable scalar while removing Q/K normalization does
+not rescue this target. QKNorm is unnecessary for some successful sparsemax
+tasks, but its removal is not a general repair. Matching initial dispersion
+approximately does not reproduce QKNorm-one's outcomes. These comparisons
+do not identify a single training cause.
+
+The earlier large softmax controls passed 13 cells; these pass 14, with
+easy recall seed 0 now passing. Multi-threaded trajectories can change;
+the complete screen uses its own contemporary softmax denominator of 23.
+The old global QKNorm-one result, 17/22, and ScaledDot result, 12/22, belong
+to step 4's separate trajectories. Contemporary comparisons against these
+two arms cover only the three large hard-recall seeds above; the other 54
+declared controls were not trained and are not counted as observations.
+
+[results.json](results.json) combines all 96 completed runs and validates
+480 raw file hashes, all 78 runtime source hashes, fixed-row identities
+and matched candidate/control descriptions. It references the detailed
+small/large reductions by hash. The complete-findings gate checks 171
+tests in 808.529 seconds: 165 pass and six CUDA-only checks are skipped.
