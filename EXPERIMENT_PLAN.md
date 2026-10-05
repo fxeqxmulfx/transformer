@@ -369,8 +369,8 @@ not evidence that removing normalization repairs training. Their full
 observations and source hashes are retained in
 [preparation.json](experiments/basis_qknorm/preparation.json).
 
-The full CPU lab gate passes all 171 tests (1172.811 seconds), with six
-CUDA-only checks skipped while the GPU runs mod193. This follow-up starts
+The full CPU lab gate checks 171 tests in 1172.811 seconds: 165 pass and six
+CUDA-only checks are skipped while the GPU runs mod193. This follow-up starts
 with independent derivative/compilation and initialization checks and
 that full lab gate, then trains both new arms
 and fresh softmax controls on the small model's 15 runs before the large
@@ -382,6 +382,27 @@ use a separate checkout until the pinned step-5 series ends. The existing
 mod-193 jobs continue, and steps 5 and 6 remain required in their original
 order. This supplements the completed screen rather than changing its
 criteria or calling either old intervention a repair.
+
+All 45 small follow-up runs are complete. Fresh softmax passes nine cells;
+both learned raw-dot starts match six, with visible exact zeros in all
+120 final non-BOS heads per arm. Gain one passes all three parity seeds
+but loses all three easy-recall seeds. The estimated starting gain passes
+two recall seeds but loses two parity seeds; recall seed 0 reaches 98.44%
+without passing. Neither is a complete small-model repair. The 51 large
+runs continue with unchanged sources and budgets. The full small reduction,
+per-head statistics, gains, pass comparisons and raw file hashes are in
+[small_results.json](experiments/basis_qknorm/small_results.json).
+All 15 fresh small softmax controls repeat step 1's 661 canonical
+observations and every non-timing model/optimizer/sampler/best checkpoint
+field exactly, excluding the new attention-observer state. All 225 raw
+reduction hashes verify; the independent comparison is retained in
+[small_control_repetition.json](experiments/basis_qknorm/small_control_repetition.json).
+The findings' required `./make.py test` gate checks 171 tests in 818.584
+seconds: 165 pass and the same six CUDA-only checks are skipped. Runtime
+and experiment sources remain unchanged during the large runs.
+The source-validation mismatch after the completed small training was
+corrected to follow Lab's 78-file runtime provenance, excluding its three
+command-line files; all completed small sources match and none is retrained.
 
 ## 5. Confirm on mod 193
 

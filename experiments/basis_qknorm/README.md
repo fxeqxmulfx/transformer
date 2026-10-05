@@ -88,10 +88,10 @@ The tracked observations retain every per-head statistic; the complete
 per-query routes remain in the hashed raw snapshot under
 `runs/preparation/observations.jsonl`.
 
-The full CPU lab gate passes all 171 tests (1172.811 seconds); six CUDA-only
-checks are skipped with CUDA hidden from this checkout while mod193 uses
-the GPU. The new block's focused analytic, fused and compilation checks
-run on CPU.
+The full CPU lab gate checks 171 tests in 1172.811 seconds: 165 pass and six
+CUDA-only checks are skipped with CUDA hidden from this checkout while
+mod193 uses the GPU. The new block's focused analytic, fused and compilation
+checks run on CPU.
 
 The completed step-4 hard-recall runs give another reason to distinguish
 initial scale from later behavior. Averaged over all 24 heads, ScaledDot's
@@ -104,5 +104,71 @@ a proof that score growth causes failure. All six means, gains, losses
 and the source artifact hash are in
 [prior_score_growth.json](prior_score_growth.json).
 
-No full training results have been collected yet. This study is prepared in a separate checkout
-so the running mod-193 series keeps its pinned lab code and descriptions.
+## Small-model results
+
+All 45 small runs have completed with the pinned sources and fixed validation
+rows. Fresh softmax passes nine of its fifteen cells. Each new arm matches
+six of those nine; neither passes the small-model repair criterion. These
+are complete small-model results, with the 51 large runs still in progress.
+
+Pass updates below are ordered by seed 0, 1, 2. A dash means no 99% sequence
+accuracy within the declared budget. Hard depth selects length 128;
+the other cells select the ordinary validation split.
+
+| Mode/task | Softmax pass updates | Learned dot, gain one | Learned dot, estimated starting gain |
+| --- | --- | --- | --- |
+| easy depth | 200 / 200 / 200 | 400 / 800 / 200 | 200 / 200 / 200 |
+| easy recall | 1650 / 2450 / 1800 | — / — / — | — / 750 / 4050 |
+| easy parity | 8200 / 5000 / 4200 | 15800 / 13000 / 12200 | 20000 / — / — |
+| hard depth | — / — / — | — / — / — | — / — / — |
+| hard recall | — / — / — | — / — / — | — / — / — |
+
+Removing QKNorm while retaining a learned gain permits sparsemax to solve
+all three small parity seeds at gain one, though later than softmax.
+It does not fix recall: best sequence accuracies are 91.02%, 68.55% and
+86.13%. The estimated starting gain helps recall seeds 1 and 2, while seed 0
+reaches 98.44% without passing. It instead loses parity seeds 1 and 2,
+whose best accuracies are 71.09% and 77.93%. A similar initial score
+dispersion and support therefore do not ensure the same training outcome.
+QKNorm is not required for these successful sparsemax runs; simply removing
+it is not a repair across the required cells.
+
+These successes retain sparsity. Every final non-BOS head has visible
+exact zeros: 120 of 120 heads in each new arm. Gain-one parity ends with
+4.17--4.56 support positions and 39.93--45.11% visible exact zeros, averaged
+over the eight heads of each run. The two passing estimated-gain recall
+runs end with 2.79 and 3.82 support positions, and 89.33% and 85.40% zeros.
+No matched pass is dense-only. All initial/final per-head statistics,
+fixed-row trajectories, pass comparisons, training-batch losses, head-gain
+trajectories, reduction source and raw file hashes are retained in
+[small_results.json](small_results.json).
+
+The trainable gain alone does not prevent later raw-score growth. In the
+three failed gain-one easy-recall runs, supervised-query score standard
+deviation rises from about 0.024 to 5.59, 10.10 and 0.91; support ends at
+1.52, 1.60 and 2.35 positions. These means cover all eight heads on fixed
+queries. Sharp rows also occur in the two passing estimated-gain recall
+runs: 69.02% and 47.71% of their supervised rows are singletons at their
+respective stopping steps. Singleton frequency alone does not distinguish
+success from failure in these runs.
+
+The 15 fresh softmax controls reproduce all 661 canonical observations
+from step 1 exactly, excluding timing fields. Final model, optimizer,
+sampler and best-model checkpoint fields also match exactly; timings and
+the newly recorded attention state are excluded. All 225 raw reduction
+hashes and all 78 runtime-source hashes verify. The complete comparison,
+checkpoint hashes for all 45 runs and its program are retained in
+[small_control_repetition.json](small_control_repetition.json).
+
+Before committing these findings, `./make.py test` checks 171 tests again
+in 818.584 seconds: 165 pass and the same six CUDA-only checks are skipped.
+The runtime and experiment sources remain unchanged during the large runs.
+
+The first controller completed all 45 training runs before its source
+validation failed: it included three command-line files that Lab excludes
+from runtime provenance. The corrected check validates the 78 recorded
+runtime files against their pinned hashes. It collected the existing small
+runs without retraining and continued with the fresh large runs.
+
+This study stays in a separate checkout so the running mod-193 series keeps
+its pinned lab code and descriptions.
