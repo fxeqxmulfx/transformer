@@ -21,6 +21,12 @@ import Transformer.GPTMini.Sparsemax.QKTaskDirections
 import Transformer.GPTMini.Sparsemax.QKSquaredError
 import Transformer.GPTMini.Sparsemax.QKProjection
 import Transformer.GPTMini.Sparsemax.QKProjectedError
+import Transformer.GPTMini.Sparsemax.InputDecoder
+import Transformer.GPTMini.Sparsemax.ProjectionLift
+import Transformer.GPTMini.Sparsemax.ProjectionUpdate
+import Transformer.GPTMini.Sparsemax.MixedInputQK
+import Transformer.GPTMini.Sparsemax.QKIndependentDirections
+import Transformer.GPTMini.Sparsemax.QKIndependentError
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -78,12 +84,17 @@ A differentiable unit-key chart now implements the anchored scores
 through the actual QKNorm inner product. Its gain dominates every finite
 ordinary score, while all keys have norm one. Nonzero ordinary task
 derivatives reach actual K vectors, and wrong squared-error outputs
-cannot be local minima in those vectors. On standard-basis inputs, the
-same directions reach jointly trained shared Q/K projection matrices.
+cannot be local minima in those vectors. For any linearly independent
+input family, the same directions reach jointly trained shared Q/K
+projection matrices. A proved continuous linear decoder and affine update
+realize arbitrary key changes starting at the actual current matrix,
+retaining its action on directions unseen by the decoder.
 For ordinary squared error, wrong outputs are not local minima of the
 joint projection loss either. A finite change of the actual key matrix
-reaches zero loss in the sparse scalar example.
+reaches zero loss in both standard and nonstandard sparse scalar examples.
+The full-family independence condition requires context size at most input
+width; a proved obstruction records the failure above that width.
 The fixed unit frame, restricted key parameterization and independent
-input coordinates are explicit architecture changes. They do not follow
+input family are explicit restrictions. They do not follow
 from unconstrained QKNorm or arbitrary learned embeddings.
 -/

@@ -821,6 +821,57 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Pure sparse follow-up: removing standard-basis inputs
+
+**Done on 2026-10-05 UTC.** Six modules add forty proved theorems,
+with no new `sorry`, derived from arXiv:1602.02068v2, §2.2 and §2.5,
+and the shared projections and normalization at `73f8a0b`.
+
+[InputDecoder.lean](src/Transformer/GPTMini/Sparsemax/InputDecoder.lean)
+proves that a finite input family's linear independence is equivalent to
+the existence of a continuous linear coordinate decoder. Its existence
+comes from a proved left inverse of the synthesis map; no decoder oracle
+or unproved accessibility assumption is used. Inputs need not be standard
+basis vectors, orthogonal, or span the ambient space. The rank restriction
+is explicit: the full family must have size at most the input width, and
+a longer context cannot admit a full coordinate decoder.
+
+[ProjectionLift.lean](src/Transformer/GPTMini/Sparsemax/ProjectionLift.lean)
+constructs the actual matrix-column lift and proves its evaluation is a
+right inverse. [ProjectionUpdate.lean](src/Transformer/GPTMini/Sparsemax/ProjectionUpdate.lean)
+turns it into an affine update from an arbitrary current key matrix. The
+update starts at that matrix, is differentiable, realizes every requested
+key row, preserves the matrix's action on decoder-kernel inputs, and
+composes correctly with subsequent updates. This closes the gap between
+a specially constructed matrix and a local perturbation at actual parameters.
+
+[QKIndependentDirections.lean](src/Transformer/GPTMini/Sparsemax/QKIndependentDirections.lean)
+transports a nonzero ordinary output derivative into actual shared key
+columns and joint Q/K columns on any independent input family.
+[QKIndependentError.lean](src/Transformer/GPTMini/Sparsemax/QKIndependentError.lean)
+proves that wrong squared-error outputs cannot have a zero joint matrix
+derivative and cannot be local minima of that matrix loss. The latter
+uses continuity of the affine lift and holds without assuming sparsemax
+differentiable at inactive support boundaries.
+
+[MixedInputQK.lean](src/Transformer/GPTMini/Sparsemax/MixedInputQK.lean)
+supplies concrete inhabited premises with input vectors `(2, 1, 0)`,
+`(1, 2, 0)` and `(0, 0, 1)`. Actual shared matrices and QKNorm realize the
+anchored scores. A finite change of the key matrix lowers ordinary output
+error from `1/256` to `0`, retaining the third weight exactly zero.
+
+The unit query frame, chart-restricted projected keys, fixed values,
+visible value anchors and single unrotated row remain explicit conditions.
+Full-family independence is still stronger than arbitrary learned input
+embeddings; long contexts, shared-row cancellation and whole-model
+convergence remain open. No new basis or Shakespeare training claim is
+made. The completed experiment cycle and Python implementation are unchanged.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
