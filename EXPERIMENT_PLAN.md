@@ -1209,6 +1209,66 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Richer causal codes remove the three-target obstruction
+
+**Done on 2026-10-05 UTC.** The user's challenge adds five modules and
+thirty-eight proved theorems without new `sorry`. The previous exclusion
+of `(0,0,1)` was specific to the rank-two token-frequency code. It remains
+valid for that encoder; it is not a universal impossibility for shared
+values or the convex memory architecture. Richer codes are derived from
+observations alone, and the learned Gram, values and supports remain variable.
+
+[PrefixFeatureCodes.lean](src/Transformer/GPTMini/Sparsemax/PrefixFeatureCodes.lean)
+pushes causal zero-score sparsemax probabilities through arbitrary fixed
+position/token features. Probability feasibility and future insensitivity
+are proved, as is the actual shared-memory output formula. The same three
+prefixes use six shared `(position, token)` slots; their code rows occupy
+`(1,3,5)`, `(0,3,5)` and `(0,2,5)`, each with weights one third.
+
+[PositionalMemoryTargets.lean](src/Transformer/GPTMini/Sparsemax/PositionalMemoryTargets.lean)
+constructs a fixed right inverse `C` with `M * C = I`. For every finite
+vector-valued target table `Y` and every feasible learned Gram, one common
+original value table `V = B(G) inverse * C * Y` gives actual outputs `Y`.
+Scalar global coordinates for `(a,b,c)` put `3*(a-b)`, `3*(c-b)` and `3*b`
+in slots 1, 2 and 5. The exact actual prediction class is the entire target
+space. From every current joint point, the update `Z += C * delta` produces
+any desired output correction `delta`; no task loss or attention target is
+needed for this forward-map statement. Explicit original values with only
+slot 2 equal to three give the formerly excluded triple `(0,0,1)`.
+
+[CodeMemoryOutputs.lean](src/Transformer/GPTMini/Sparsemax/CodeMemoryOutputs.lean)
+proves a general categorical-code characterization. One global table extends
+every target table constant on equal-code fibers. Actual shared-memory
+attainment is equivalent to this consistency, for every feasible Gram.
+The encoder is chosen from data before the target table is supplied.
+
+[CausalPrefixKeys.lean](src/Transformer/GPTMini/Sparsemax/CausalPrefixKeys.lean)
+encodes complete visible prefixes, masking every future position with `none`.
+Equality of dictionary keys is proved equivalent to equality of query positions
+and every visible token. Word order, repetitions and prefix length are retained.
+The full target-independent dictionary has exactly `(V + 1)^T` slots for
+vocabulary size `V` and window length `T`, including unused signatures.
+
+[CausalMemoryUniversality.lean](src/Transformer/GPTMini/Sparsemax/CausalMemoryUniversality.lean)
+proves that the exact actual prediction class is all output tables consistent
+on identical observed causal prefixes. Distinct prefixes permit arbitrary
+finite vector targets; repeated observations with contradictory targets remain
+impossible for a deterministic causal model. The joint actual forward is causal,
+the shared prediction class is convex, and the earlier convex-objective theorem
+applies. Original values are decoded globally, independently of context.
+
+The six-slot result removes the specific example obstruction at modest cost.
+Complete-prefix universality pays an exponential dictionary cost and unbounded
+feature width; it does not prove an efficient compact ordinary transformer.
+Fixed data codes and the learned-memory architecture remain explicit. An
+output-only objective still leaves the Gram undetermined. FFN, task-loss choice
+and new training remain deferred; the completed experiment cycle is unchanged.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be

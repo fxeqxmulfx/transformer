@@ -61,6 +61,11 @@ import Transformer.GPTMini.Sparsemax.SharedMemoryValues
 import Transformer.GPTMini.Sparsemax.SharedMemoryGeometry
 import Transformer.GPTMini.Sparsemax.MemoryExampleGrams
 import Transformer.GPTMini.Sparsemax.SharedMemoryExamples
+import Transformer.GPTMini.Sparsemax.CodeMemoryOutputs
+import Transformer.GPTMini.Sparsemax.CausalPrefixKeys
+import Transformer.GPTMini.Sparsemax.CausalMemoryUniversality
+import Transformer.GPTMini.Sparsemax.PrefixFeatureCodes
+import Transformer.GPTMini.Sparsemax.PositionalMemoryTargets
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -106,31 +111,15 @@ finite parameter assignment, with arbitrary ordinary values and exact
 inactive zeros. This is a new row architecture, not a guarantee for the
 existing query/key parameterization or for a zero output derivative.
 
-The differentiable inverse of the anchor score chart realizes exact
-active-pair transfers through learned parameters. Nonzero ordinary task
-derivatives therefore survive in trainable anchor directions. For squared
-output error, every wrong finite output fails to be a local minimum of
-this row loss, even at support boundaries. A concrete finite parameter
-step reaches zero error while retaining the third weight at zero.
-These row results do not assert whole-model or shared-row convergence.
-
-A differentiable unit-key chart now implements the anchored scores
-through the actual QKNorm inner product. Its gain dominates every finite
-ordinary score, while all keys have norm one. Nonzero ordinary task
-derivatives reach actual K vectors, and wrong squared-error outputs
-cannot be local minima in those vectors. For any linearly independent
-input family, the same directions reach jointly trained shared Q/K
-projection matrices. A proved continuous linear decoder and affine update
-realize arbitrary key changes starting at the actual current matrix,
-retaining its action on directions unseen by the decoder.
-For ordinary squared error, wrong outputs are not local minima of the
-joint projection loss either. A finite change of the actual key matrix
-reaches zero loss in both standard and nonstandard sparse scalar examples.
-The full-family independence condition requires context size at most input
-width; a proved obstruction records the failure above that width.
-The fixed unit frame, restricted key parameterization and independent
-input family are explicit restrictions. They do not follow
-from unconstrained QKNorm or arbitrary learned embeddings.
+The differentiable anchor chart realizes exact active-pair transfers,
+including at support boundaries. A unit-key chart implements them through
+actual QKNorm. Under independent input features, a continuous decoder
+transfers them to shared Q/K projection matrices while retaining their
+action on unseen directions. Wrong squared-error outputs are excluded as
+local minima in these restricted row architectures; a finite update fits
+the target. Full independence requires context size at most input width.
+Fixed frames, dedicated anchors and parameter restrictions are explicit;
+these results do not assert unconstrained whole-model convergence.
 
 Full input independence is unnecessary when only anchors need control.
 A partial decoder isolates the anchors and kills ordinary inputs. Its
@@ -197,4 +186,14 @@ all contexts; the exact prediction class and any convex output objective
 remain convex. Repeated-token prefix codes and a three-context witness are
 proved. This is memory attention with fixed data codes; ordinary token
 self-attention is changed, and output-only training leaves the Gram free.
+
+The frequency-code three-target obstruction is removed by richer data
+features. Six shared position/token slots give a proved right inverse for
+the same three prefixes, permitting arbitrary vector outputs and the
+previously excluded triple `(0,0,1)`. Complete causal signatures realize
+exactly all observation-consistent target tables for a finite window.
+Identical visible prefixes must share outputs; different prefixes impose
+no extra restriction. Both constructions retain the convex joint chart
+for every feasible learned Gram. Full signatures cost `(V+1)^T` slots,
+so finite universality does not establish an efficient compact transformer.
 -/
