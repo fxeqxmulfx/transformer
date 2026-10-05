@@ -2,8 +2,8 @@
 
 Where does sparsemax attention fail where softmax passes the calibrated
 [basis](../basis/README.md), and is a failure removed by a neighboring rate?
-This is steps 0 to 2 of [EXPERIMENT_PLAN.md](../../EXPERIMENT_PLAN.md).
-The arms change only the attention weights. Both keep QKNorm, XSA, the
+This is steps 0 to 3 of [EXPERIMENT_PLAN.md](../../EXPERIMENT_PLAN.md).
+The main arms change only the attention weights. Both keep QKNorm, XSA, the
 basis's recipes, splits, seeds and thread counts. Hard parity is the easy
 parity run, as in the basis.
 
@@ -15,6 +15,7 @@ parity run, as in the basis.
 | `sparsemax-<mode>-<model>-<task>-seed<seed>-lr<rate>` | 60 | The two adjacent rates of `RATES`; only failures whose softmax control passes are trained |
 | `probe-<weights>-hard-large-recall-seed<seed>` | 6 | Repeat the target cell with attention measurements on 256 fixed validation examples |
 | `init-<weights>-<model>-seed<seed>-<scores>` | 24 | Initial hard-recall attention under QKNorm and ScaledDot, both sizes and weights; one zero-rate warmup update retains update-zero records |
+| `forward-<weights>-backward-<weights>-hard-large-recall-seed<seed>` | 6 | Sparsemax forward with softmax score gradients, or softmax forward with sparsemax score gradients; other target settings unchanged |
 
 `Diagnostics` samples every observed update: `loss` is the
 last training batch's mean supervised cross-entropy before that update, and
@@ -289,6 +290,30 @@ routes remain in each run's `attention.jsonl`. These uncompiled,
 teacher-forced measurements describe the observed trajectories, not a
 real-arithmetic theorem or a certificate of compiled routing. Step 3 still
 tests score sensitivity independently by swapping the two backward maps.
+
+### Forward and backward intervention
+
+`SurrogateWeights(forward, backward)` declares both normalizers in the DSL.
+An identical pair dispatches to the ordinary block, including fused softmax.
+A mixed pair computes both maps at the same scores: its probabilities and
+value gradients follow `forward`, and its score gradients follow `backward`.
+The implementation adds the other map minus its detached copy (exactly zero)
+to detached forward weights. It therefore preserves forward probabilities
+exactly while autograd computes the declared surrogate. This mixed rule is
+not the derivative of its forward loss. Mixed pairs use unfused softmax;
+backward probabilities are cast to the forward dtype before the difference.
+
+The six labels retain the target recipe, seeds, QKNorm, XSA and fixed-row
+observer. Step 2 supplies the ordinary diagonal cases. New tests check exact
+diagonal logits and every parameter gradient, mixed forward equality,
+independent `torch.func.vjp` results including inactive and future scores,
+and full-graph compiled logits and gradients. The sparsemax VJP reference
+differentiates regular tensor operations for the paper's Algorithm 1 rather
+than invoking the production custom backward. All six focused tests pass
+(54.184 seconds), as do all 161 lab tests (933.852 seconds). The 156 previous
+descriptions remain identical, and the six new targets differ from their
+diagnostic controls only in the weights block. Their training follows this
+check; no mixed outcome or repair success is inferred from the tests.
 
 Run a pair with:
 

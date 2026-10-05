@@ -12,7 +12,7 @@ from .domain.generative import (Addition, BooleanAnd, Copy, Count, DoubleHistogr
                                 Parity, RandomLM, Reverse, Sort)
 from .domain.model import (FFN, GELU, XSA, Attention, Block, FusedQKV, LayerNorm, NoPositions, Normal,
                            PerHeadQKV, PostNorm, PreNorm, QKNorm, ReLU, ReLU2, RMSNorm, RoPE, ScaledDot,
-                           ScaledResidual, Sinusoidal, Softmax, Sparsemax, Tied, TorchDefault, Transformer, Untied)
+                           ScaledResidual, Sinusoidal, Softmax, Sparsemax, SurrogateWeights, Tied, TorchDefault, Transformer, Untied)
 from .domain.optimizers import (EVD, SGD, AdaFisher, AdaGrad, Adam, AdamNC, AdamW, AdamX, AMSGradMD, AMSGradW,
                                 Chebyshev, Clipped, Constant, CoupledNewton, Dash, Geometric, Guarded, Inverse,
                                 InverseSqrt, Magma, Muon, NewtonDB, RMSProp)
@@ -29,7 +29,7 @@ __all__ = [
     "Transformer", "Block", "Attention", "FFN", "XSA",
     "RMSNorm", "LayerNorm", "PreNorm", "PostNorm",
     "RoPE", "Sinusoidal", "NoPositions",
-    "FusedQKV", "PerHeadQKV", "ScaledDot", "QKNorm", "Softmax", "Sparsemax",
+    "FusedQKV", "PerHeadQKV", "ScaledDot", "QKNorm", "Softmax", "Sparsemax", "SurrogateWeights",
     "ReLU", "ReLU2", "GELU", "Tied", "Untied", "TorchDefault", "Normal", "ScaledResidual",
     # benchmarks
     "ModularDivision", "TinyShakespeare", "Synthetic", "Memorization",

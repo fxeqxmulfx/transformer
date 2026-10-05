@@ -137,6 +137,31 @@ class Sparsemax(Weights):
 
 
 @dataclass(frozen=True)
+class SurrogateWeights(Weights):
+    """One causal forward map with the other's score Jacobian, at the same scores.
+
+    EXPERIMENT_PLAN.md, step 3, using the softmax and sparsemax maps and
+    Jacobians of arXiv:1602.02068v2, sections 2.2 and 2.4. A mixed pair
+    deliberately declares a surrogate gradient, not the derivative of
+    its forward. Identical blocks dispatch directly to that ordinary block,
+    including fused Softmax; mixed pairs need explicit unfused probabilities.
+    Only Softmax and Sparsemax are supported by this intervention.
+    """
+    forward: Weights
+    backward: Weights
+
+    def check(self):
+        for name in ('forward', 'backward'):
+            normalizer = getattr(self, name)
+            require_kind(normalizer, Weights, name)
+            require(type(normalizer) in (Softmax, Sparsemax),
+                    "SurrogateWeights needs plain Softmax or Sparsemax maps")
+        if self.forward != self.backward:
+            require(not any(getattr(normalizer, 'fused', False) for normalizer in (self.forward, self.backward)),
+                    "Mixed SurrogateWeights needs unfused Softmax")
+
+
+@dataclass(frozen=True)
 class XSA(Spec):
     """Exclusive self-attention: remove the output component along the own value."""
     eps: float = 1e-6

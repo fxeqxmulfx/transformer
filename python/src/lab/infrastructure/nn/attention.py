@@ -10,6 +10,7 @@ queries carry the learned scale into it, and the kernel scales by one.
 """
 
 import math
+from functools import partial
 
 import torch
 from torch import nn
@@ -18,6 +19,7 @@ from torch.nn import functional as F
 from ...domain import model
 from .positions import rotate
 from .sparsemax import causal_sparsemax
+from .surrogate import surrogate_weights
 
 
 class FusedProjections(nn.Module):
@@ -110,6 +112,15 @@ PROJECTIONS = {model.FusedQKV: FusedProjections, model.PerHeadQKV: PerHeadProjec
 WEIGHTS = {model.Softmax: softmax, model.Sparsemax: causal_sparsemax}
 
 
+def weights_function(spec):
+    """Build explicit causal probabilities; a diagonal surrogate uses the ordinary function."""
+    if isinstance(spec, model.SurrogateWeights):
+        if spec.forward == spec.backward:
+            return WEIGHTS[type(spec.forward)]
+        return partial(surrogate_weights, forward=WEIGHTS[type(spec.forward)], backward=WEIGHTS[type(spec.backward)])
+    return WEIGHTS[type(spec)]
+
+
 def scores_module(spec, heads, head):
     if isinstance(spec, model.ScaledDot):
         return ScaledDotScores(head)
@@ -126,8 +137,11 @@ class Attention(nn.Module):
         self.scores = scores_module(spec.scores, spec.heads, head)
         self.projections = PROJECTIONS[type(spec.projections)](width, spec.heads, spec.projections.bias)
         self.output = nn.Linear(width, width, bias=spec.output_bias)
-        self.fused = isinstance(spec.weights, model.Softmax) and spec.weights.fused
-        self.weights = WEIGHTS[type(spec.weights)]
+        normalizer = spec.weights
+        if isinstance(normalizer, model.SurrogateWeights) and normalizer.forward == normalizer.backward:
+            normalizer = normalizer.forward
+        self.fused = isinstance(normalizer, model.Softmax) and normalizer.fused
+        self.weights = weights_function(normalizer)
         self.exclusive = None if spec.exclusive is None else spec.exclusive.eps
 
     def forward(self, x, rotary):

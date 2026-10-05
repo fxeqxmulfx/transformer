@@ -1,4 +1,4 @@
-"""Softmax against sparsemax on the calibrated basis; EXPERIMENT_PLAN.md, steps 0 to 2."""
+"""Softmax against sparsemax on the calibrated basis; EXPERIMENT_PLAN.md, steps 0 to 3."""
 
 from lab.dsl import *
 
@@ -71,4 +71,11 @@ initial = grid({f"init-{weights}-{name}-seed{seed}": initialized(runs[f"{weights
                 for weights in WEIGHTS for name in MODELS for seed in (0, 1, 2)},
                {"model.block.attention.scores": {"qknorm": QKNorm(), "scaleddot": ScaledDot()}})
 
-experiments = {**runs, **times, **rates, **probes, **initial}
+SURROGATES = {"forward-sparsemax-backward-softmax": SurrogateWeights(Sparsemax(), Softmax()),
+              "forward-softmax-backward-sparsemax": SurrogateWeights(Softmax(), Sparsemax())}
+
+surrogates = {f"{case}-hard-large-recall-seed{seed}":
+              substitute(observed(runs[f"softmax-hard-large-recall-seed{seed}"]), Softmax, normalizer)
+              for case, normalizer in SURROGATES.items() for seed in (0, 1, 2)}
+
+experiments = {**runs, **times, **rates, **probes, **initial, **surrogates}
