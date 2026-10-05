@@ -48,6 +48,11 @@ import Transformer.GPTMini.Sparsemax.GramSupport
 import Transformer.GPTMini.Sparsemax.GramBoundary
 import Transformer.GPTMini.Sparsemax.NormalizedGram
 import Transformer.GPTMini.Sparsemax.NormalizedGramExamples
+import Transformer.GPTMini.Sparsemax.InvertibleGram
+import Transformer.GPTMini.Sparsemax.GramValues
+import Transformer.GPTMini.Sparsemax.JointGramValues
+import Transformer.GPTMini.Sparsemax.GramValueExampleGrams
+import Transformer.GPTMini.Sparsemax.JointGramValueExamples
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -163,5 +168,17 @@ its midpoint attention is exactly the mean endpoint attention. Its midpoint
 Gram cannot retain the endpoints' one-feature width. These are new finite-
 context architectures replacing QKNorm, with no task loss or FFN yet.
 Ordinary jointly learned value mixing has a separate nonconvex output graph,
-even with bounded parameters and full support; it is not covered by the lift.
+even with bounded parameters and full support in its original coordinates.
+
+For one distinct-token context with all causal rows, a positive self-weight
+floor gives a convex structural domain with invertible actual attention.
+Learn the Gram and output table together; decode one shared value table
+by the attention inverse. Encoding and decoding are proved mutually exact,
+and the actual attention/value output is affine in these joint coordinates.
+Any future convex output objective remains convex; no task loss is selected.
+A two-token example changes both Q/K families, values and sparse support.
+The true midpoint output is the mean endpoint output, while literal mean
+values produce a different output. This finite-context change does not infer
+repeated-token or multi-context sharing, fixed small embedding width,
+original value penalties or a uniform inverse conditioning bound.
 -/

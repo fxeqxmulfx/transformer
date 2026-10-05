@@ -1078,6 +1078,59 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Exact convex coordinates for jointly learned values
+
+**Done on 2026-10-06 UTC.** The user's joint-values extension adds five
+modules and forty-six proved theorems without new `sorry`. FFN and task-loss
+design remain deferred. This is an exact change of coordinates on an explicit
+finite-context architecture, not a convexity claim in the original value
+parameters or an unrestricted language-model guarantee.
+
+[InvertibleGram.lean](src/Transformer/GPTMini/Sparsemax/InvertibleGram.lean)
+uses one distinct-token context with every causal row and the normalized
+learned Gram from the previous stage. A positive diagonal floor `eta` adds
+linear constraints. The domain remains convex, actual sparsemax attention
+is lower triangular, and its determinant is positive for every feasible
+learned Gram. Off-diagonal supports can change. The entry cap is explicit;
+the forced first causal row cannot satisfy the earlier sub-half cap.
+
+[GramValues.lean](src/Transformer/GPTMini/Sparsemax/GramValues.lean)
+replaces a learned shared value table `V` by its output table `Z = A(G) * V`.
+It decodes `V = A(G) inverse * Z`, with both inverse identities, uniqueness,
+injectivity and surjectivity proved for the actual sparsemax/value product.
+Changing the Gram also admits an exact output-preserving value transport.
+No original values are frozen, private row values or routing targets used.
+
+[JointGramValues.lean](src/Transformer/GPTMini/Sparsemax/JointGramValues.lean)
+proves convexity of the joint Gram/output domain and affinity of the actual
+decoded forward map. Any future convex objective on outputs is convex in
+these new learned coordinates. Every feasible original Gram/value pair is
+recovered exactly, and every output table is attainable once the Gram domain
+is inhabited. This is a bijective coordinate change, not a rank relaxation.
+An output-only objective therefore leaves the Gram undetermined: learned
+values can compensate any feasible attention change on this context.
+
+[GramValueExampleGrams.lean](src/Transformer/GPTMini/Sparsemax/GramValueExampleGrams.lean)
+and [JointGramValueExamples.lean](src/Transformer/GPTMini/Sparsemax/JointGramValueExamples.lean)
+give two genuine Q/K embedding tables in the same cap-four, floor-one-half
+domain. Actual attention changes from identity to `[[1, 0], [1/2, 1/2]]`,
+and one value table shared across both rows changes from `(1, 0)` to `(0, 2)`.
+Outputs change from `(1, 0)` to `(0, 1)`. At the true joint midpoint, actual
+attention is `[[1, 0], [1/4, 3/4]]`, recovered values and outputs are both
+`(1/2, 1/2)`, and the determinant is `3/4`. Literal mean original values
+instead give second output `7/8`, witnessing the nonlinear value decoder.
+
+The guarantee covers this one distinct-token context, before XSA and output
+projection. Repeated-token or arbitrary multi-context value sharing is not
+proved. Original value penalties or norm bounds and a fixed small embedding
+width are not preserved, and no uniform inverse conditioning bound is proved.
+No new basis or Shakespeare training is claimed.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
