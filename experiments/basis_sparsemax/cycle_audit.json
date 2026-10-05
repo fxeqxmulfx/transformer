@@ -1,0 +1,121 @@
+{
+  "scope": "Complete prescribed finite cycle and user-requested QKNorm follow-up; no general basis repair or whole-training theorem",
+  "integrated_python_commit": "d9a424fbcc7374f29fcb8122dfa1c0c12c5b9b25",
+  "artifact_sha256": {
+    "experiments/basis_sparsemax/small_results.json": "54db5e32db7ddafc6b06bb51a6954471bae8fe37dd7722e76b5e71e65bb0d012",
+    "experiments/basis_sparsemax/large_results.json": "5469e1c816c5c2628d921ede933092c9ed13d60bb478662d13de0bd1e9b319c3",
+    "experiments/basis_sparsemax/attention_initial.json": "c8364c1a6130bd6a1ed3c95b3070a9849a5fcf82c7a3ba4f9a0fa9a3e6578287",
+    "experiments/basis_sparsemax/attention_targets.json": "a30a25fd8ad1b51cc0cd21f040b0ac82758c18135c4edd1c862e6c770c20ecb5",
+    "experiments/basis_sparsemax/surrogate_results.json": "27ad77e3636df9712fca6b80835eca971225234822ed44392fea431a11b57ca0",
+    "experiments/basis_sparsemax/small_repair_results.json": "36c1bd82659bfb78cf6dd3dcb31082b34c8f74b463f1458abb68c2e18f6cf3fa",
+    "experiments/basis_sparsemax/large_repair_results.json": "f3e8bb3146872acd278325614d5466105b93f6f80642eafc43df53f14dbb54d2",
+    "experiments/mod193_stability/confirmation_results.json": "64fb2b9db1ac0ef05a091a14b23fb18c395f905bc112d5feaec8a93d9c7edd43",
+    "experiments/basis_qknorm/small_results.json": "ae1c294bce09a5ea81cb79b104a81eaaf70672fa4c4ec3c6791135a2bb1236b1",
+    "experiments/basis_qknorm/large_results.json": "2be50d230bca3cfb4096eb7dc2e680447efb3f99e1b73141d35e64cf6dde16b9",
+    "experiments/basis_sparsemax/repair_results.json": "91963d727f4eb1ea0006e020d59f05437ec888e26280eeae910d9a1acf2b48a8",
+    "experiments/basis_qknorm/results.json": "969e063f85429dac27da2495c8d43718d59899c59673daef0c29031ff6f9aea8",
+    "experiments/mod193_stability/control_repetition.json": "08322fa822370762397a59863016433ffefc60c1f1b4219753188c01f4504aec"
+  },
+  "completed_run_counts": {
+    "basis_sparsemax": {
+      "small_results.json": 36,
+      "large_results.json": 36,
+      "attention_initial.json": 24,
+      "attention_targets.json": 6,
+      "surrogate_results.json": 6,
+      "small_repair_results.json": 30,
+      "large_repair_results.json": 30
+    },
+    "mod193_stability": {
+      "confirmation_results.json": 4
+    },
+    "basis_qknorm": {
+      "small_results.json": 45,
+      "large_results.json": 51
+    }
+  },
+  "unique_raw_file_hashes_verified": 1304,
+  "raw_hash_counts_by_experiment": {
+    "basis_sparsemax": 792,
+    "mod193_stability": 32,
+    "basis_qknorm": 480
+  },
+  "step0_timing_runs": 6,
+  "step0_timing_metrics": {
+    "depth": {
+      "softmax_milliseconds_per_update": 22.580096139960613,
+      "sparsemax_milliseconds_per_update": 37.94897142991734,
+      "sparsemax_over_softmax": 1.6806381688852958
+    },
+    "recall": {
+      "softmax_milliseconds_per_update": 84.3493642967466,
+      "sparsemax_milliseconds_per_update": 144.0948936866092,
+      "sparsemax_over_softmax": 1.7083103694732529
+    },
+    "parity": {
+      "softmax_milliseconds_per_update": 6.691045363356049,
+      "sparsemax_milliseconds_per_update": 8.280594063301882,
+      "sparsemax_over_softmax": 1.237563581417502
+    }
+  },
+  "formal_modules": {
+    "src/Transformer/GPTMini/Sparsemax/ClosedForm.lean": {
+      "sha256": "69e9e9620ba1e985f1da25b1149bd74592da85709d1e8314bc15d08fef0c983e",
+      "lines": 163,
+      "theorems": 3,
+      "examples": 1
+    },
+    "src/Transformer/GPTMini/Sparsemax/SupportWindow.lean": {
+      "sha256": "88ebd883a56d501341c9774f1e28f0e47137201aa3c3980e5dd76992df98666e",
+      "lines": 150,
+      "theorems": 7,
+      "examples": 5
+    },
+    "src/Transformer/GPTMini/Sparsemax/Uniform.lean": {
+      "sha256": "937f20a192dcc145b9c17a8ae4d547da8ff89cee970b8cd8d32fb28874719589",
+      "lines": 154,
+      "theorems": 4,
+      "examples": 3
+    },
+    "src/Transformer/GPTMini/Sparsemax/SelfRoute.lean": {
+      "sha256": "871569cb9981cc9693e1bcfe6bc36a4f9c9da213f189ac80b7f7e364e489b630",
+      "lines": 175,
+      "theorems": 5,
+      "examples": 5
+    },
+    "src/Transformer/GPTMini/Sparsemax/Clipping.lean": {
+      "sha256": "f703eb87ee8b542d516965df46a821cc9cb499e79f6b033e1eb2f1639dc35481",
+      "lines": 150,
+      "theorems": 6,
+      "examples": 4
+    }
+  },
+  "new_theorems": 25,
+  "lean_checks": {
+    "build": true,
+    "sorry": 157,
+    "rests_on_sorry": 0,
+    "extra_axioms": 0,
+    "vacuous": 0,
+    "placeholders": 0,
+    "forbidden": false
+  },
+  "python_checks": {
+    "total": 171,
+    "passed": 171,
+    "skipped": 0,
+    "seconds": 911.172
+  },
+  "mod193_repair_confirmed_seeds": [
+    0,
+    1
+  ],
+  "mod193_repair_persistent_final_window_seeds": [
+    0
+  ],
+  "complete_basis_repair_found": false,
+  "normalization_removal_is_complete_repair": false,
+  "remaining_required_plan_steps": [],
+  "program_source": "\"\"\"Check the complete prescribed sparsemax cycle and its additional normalization study.\"\"\"\n\nimport hashlib\nimport json\nfrom pathlib import Path\nimport re\nimport subprocess\n\n\nROOT = Path('/home/misha/lean_projects/transformer')\nSTUDY = Path('/tmp/transformer-qknorm-study')\n\n\ndef sha(path):\n    with path.open('rb') as source:\n        return hashlib.file_digest(source, 'sha256').hexdigest()\n\n\ndef main():\n    groups = {\n        'basis_sparsemax': {\n            'small_results.json': 36, 'large_results.json': 36,\n            'attention_initial.json': 24, 'attention_targets.json': 6,\n            'surrogate_results.json': 6,\n            'small_repair_results.json': 30, 'large_repair_results.json': 30,\n        },\n        'mod193_stability': {'confirmation_results.json': 4},\n        'basis_qknorm': {'small_results.json': 45, 'large_results.json': 51},\n    }\n    verified_paths = {}\n    artifacts = {}\n    run_counts = {}\n    for experiment, files in groups.items():\n        directory = ROOT / 'experiments' / experiment\n        run_counts[experiment] = {}\n        for name, expected_count in files.items():\n            path = directory / name\n            result = json.loads(path.read_text())\n            assert len(result['runs']) == expected_count, name\n            run_counts[experiment][name] = expected_count\n            artifacts[str(path.relative_to(ROOT))] = sha(path)\n            for stem in ('program', 'helper', 'collector', 'policy'):\n                if stem + '_source' in result:\n                    assert hashlib.sha256(result[stem + '_source'].encode()).hexdigest() == result[stem + '_sha256'], (name, stem)\n            for label, run in result['runs'].items():\n                assert run['stop']['reason'] in ('solved', 'budget'), label\n                if 'budget' in run:\n                    assert run['stop']['step'] <= run['budget']['updates']\n                for relative, digest in run['source'].items():\n                    raw_path = directory / relative\n                    if str(raw_path) in verified_paths:\n                        assert verified_paths[str(raw_path)] == digest\n                        continue\n                    assert sha(raw_path) == digest, (name, label, relative)\n                    verified_paths[str(raw_path)] = digest\n            print(f'Checked {experiment}/{name}: {expected_count} runs', flush=True)\n    timing = {}\n    timing_raw_files = 0\n    for task in ('depth', 'recall', 'parity'):\n        timing[task] = {}\n        for weights in ('softmax', 'sparsemax'):\n            directory = ROOT / 'experiments/basis_sparsemax/runs' / f'time-{weights}-small-{task}'\n            result = json.loads((directory / 'result.json').read_text())\n            assert result['stop'] == {'step': 300, 'reason': 'budget'}\n            history = [json.loads(line) for line in (directory / 'history.jsonl').read_text().splitlines()]\n            assert [row['step'] for row in history] == [0, 100, 200, 300]\n            timing[task][weights + '_milliseconds_per_update'] = 1000 * result['training_seconds'] / 300\n            for name in ('experiment.json', 'result.json', 'history.jsonl', 'diagnostics.jsonl'):\n                path = directory / name\n                verified_paths[str(path)] = sha(path)\n                timing_raw_files += 1\n        ratio = timing[task]['sparsemax_milliseconds_per_update'] / timing[task]['softmax_milliseconds_per_update']\n        assert 0 < ratio < 2\n        timing[task]['sparsemax_over_softmax'] = ratio\n    assert timing_raw_files == 24\n    repair_path = ROOT / 'experiments/basis_sparsemax/repair_results.json'\n    repair = json.loads(repair_path.read_text())\n    assert repair['best_attempt_for_mod193'] == 'qknorm-one'\n    assert not repair['best_attempt_passes_basis_repair_criterion']\n    for name, digest in repair['screen_sources'].items():\n        assert sha(repair_path.parent / name) == digest\n    q_path = ROOT / 'experiments/basis_qknorm/results.json'\n    q = json.loads(q_path.read_text())\n    assert q['completed_runs'] == 96 and q['raw_file_hashes_verified'] == 480\n    for name, digest in q['source_artifacts_sha256'].items():\n        assert sha(q_path.parent / name) == digest\n    for comparison in q['comparisons'].values():\n        assert comparison['sparse_matched_required_passes'] == 12\n        assert comparison['required_softmax_passes'] == 23\n        assert not comparison['passes_complete_basis_criterion']\n    mod_path = ROOT / 'experiments/mod193_stability/confirmation_results.json'\n    mod = json.loads(mod_path.read_text())\n    assert mod['conditional_repeat']['triggered'] and mod['conditional_repeat']['confirmed']\n    for label, expected_confirmed, expected_failures in (\n        ('base', True, 2), ('sparsemax', False, 201),\n        ('repair-qknorm-one', True, 0), ('repair-qknorm-one-seed1', True, 2),\n    ):\n        run = mod['runs'][label]\n        metrics = run['canonical_metrics']\n        assert metrics['confirmed_by_step5_criterion'] == expected_confirmed\n        assert metrics['final_window']['observations'] == 201\n        assert metrics['final_window']['failed_observations'] == expected_failures\n        assert run['stop']['step'] == run['gradient_updates_verified'] == 300000\n        assert run['attention_observations'] == 3601 and run['neighbor_probes'] == 2400\n        assert len(run['canonical_curve']) == 1201\n    for path in (repair_path, q_path, ROOT / 'experiments/mod193_stability/control_repetition.json'):\n        artifacts[str(path.relative_to(ROOT))] = sha(path)\n    formal = {}\n    for name in ('ClosedForm', 'SupportWindow', 'Uniform', 'SelfRoute', 'Clipping'):\n        path = STUDY / 'src/Transformer/GPTMini/Sparsemax' / (name + '.lean')\n        source = path.read_text()\n        assert 150 <= len(source.splitlines()) <= 200\n        assert 'sorry' not in source and 'axiom ' not in source\n        assert 'arXiv:' in source\n        formal[str(path.relative_to(STUDY))] = {\n            'sha256': sha(path), 'lines': len(source.splitlines()),\n            'theorems': len(re.findall(r'^theorem ', source, re.M)),\n            'examples': len(re.findall(r'^example ', source, re.M)),\n        }\n    assert sum(entry['theorems'] for entry in formal.values()) == 25\n    lean_log = Path('/tmp/sparsemax-step6-full-lean-build.log').read_text()\n    assert 'Build completed successfully' in lean_log\n    assert not re.search(r'warning: src/Transformer/GPTMini/Sparsemax/(ClosedForm|SupportWindow|Uniform|SelfRoute|Clipping)', lean_log)\n    audit_log = Path('/tmp/sparsemax-step6-audit.log').read_text()\n    assert '157 sorry \u00b7 0 resting on a sorry \u00b7 0 extra axioms' in audit_log\n    index_log = Path('/tmp/sparsemax-step6-index.log').read_text()\n    assert '1836 modules, 7556 theorems, 157 sorry, 0 vacuous, 0 placeholder' in index_log\n    forbidden_log = Path('/tmp/sparsemax-step6-forbidden.log').read_text()\n    assert 'src/ has no native_decide, axiom or disabled linter' in forbidden_log\n    python_log = Path('/tmp/sparsemax-integration-full-tests.log').read_text()\n    assert 'Ran 171 tests' in python_log and '\\nOK\\n' in python_log and 'skipped' not in python_log\n    plan = (STUDY / 'EXPERIMENT_PLAN.md').read_text()\n    assert '**Done: steps 0 to 6 and the requested QKNorm follow-up.**' in plan\n    for number in range(7):\n        chapter = re.search(rf'^## {number}\\. .*?\\n(.*?)(?=^## |\\Z)', plan, re.M | re.S)\n        assert chapter and '**Done on ' in chapter[1], number\n    source = Path(__file__).read_text()\n    result = {\n        'scope': 'Complete prescribed finite cycle and user-requested QKNorm follow-up; no general basis repair or whole-training theorem',\n        'integrated_python_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),\n        'artifact_sha256': artifacts, 'completed_run_counts': run_counts,\n        'unique_raw_file_hashes_verified': len(verified_paths),\n        'raw_hash_counts_by_experiment': {\n            name: sum(f'/experiments/{name}/' in path for path in verified_paths) for name in groups},\n        'step0_timing_runs': 6, 'step0_timing_metrics': timing,\n        'formal_modules': formal, 'new_theorems': 25,\n        'lean_checks': {'build': True, 'sorry': 157, 'rests_on_sorry': 0,\n                        'extra_axioms': 0, 'vacuous': 0, 'placeholders': 0, 'forbidden': False},\n        'python_checks': {'total': 171, 'passed': 171, 'skipped': 0, 'seconds': 911.172},\n        'mod193_repair_confirmed_seeds': [0, 1],\n        'mod193_repair_persistent_final_window_seeds': [0],\n        'complete_basis_repair_found': False,\n        'normalization_removal_is_complete_repair': False,\n        'remaining_required_plan_steps': [],\n        'program_source': source, 'program_sha256': hashlib.sha256(source.encode()).hexdigest(),\n    }\n    output = STUDY / 'experiments/basis_sparsemax/cycle_audit.json'\n    output.write_text(json.dumps(result, indent=2) + '\\n')\n    print(json.dumps({key: result[key] for key in ('unique_raw_file_hashes_verified', 'raw_hash_counts_by_experiment', 'new_theorems', 'remaining_required_plan_steps')}), flush=True)\n\n\nif __name__ == '__main__':\n    main()\n",
+  "program_sha256": "c1e22c03fcbd9bfadc3e3a240e4e62a17e45aa7de372213f6bd294237186dc24"
+}

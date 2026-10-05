@@ -1,6 +1,6 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-05 UTC. **In progress: step 6. Steps 0 to 5 are done.** The investigation cycle
+Updated on 2026-10-05 UTC. **Done: steps 0 to 6 and the requested QKNorm follow-up.** The investigation cycle
 was started on 2026-10-04 at the user's request. On 2026-10-04 the user asked for
 this plan: find out why sparsemax attention fails, and try to repair it, on
 the basis benchmark. It replaces the plan of 2026-10-03 for the mod-193
@@ -106,6 +106,12 @@ rare, or dropping XSA leaves sparsemax's outcome unchanged.
 **H5. The recipe.** The basis recipes were set under softmax. A sparsemax
 failure that a neighboring rate of `RATES` removes is the recipe's, and the
 mechanism study leaves it.
+
+Step 6 corrects H4's implementation-level wording: exact erasure requires
+the self-value norm at least epsilon, and the locally-zero result uses a
+strict norm bound above epsilon. A clipped nonzero value can survive a
+strict self route; a Lean counterexample below makes that correction
+explicit. It does not change the empirical rarity conclusion of step 2.
 
 ## 0. Run sparsemax on the basis
 
@@ -416,6 +422,10 @@ CUDA-only tests are skipped. Steps 5 and 6 retain their original scope.
 The source-validation mismatch after the completed small training was
 corrected to follow Lab's 78-file runtime provenance, excluding its three
 command-line files; all completed small sources match and none is retrained.
+After all four pinned mod193 runs finished, the complete study was merged
+into the main workspace. The full CPU/CUDA lab gate then passed all 171
+tests without skips (911.172 seconds). Raw study runs are retained in the
+main workspace's ignored `experiments/basis_qknorm/runs/` directory.
 
 ## 5. Confirm on mod 193
 
@@ -502,6 +512,37 @@ or the result of the new 300,000-update lab trials.
 
 ## 6. Prove the supported statements in Lean
 
+**Done on 2026-10-05 UTC.** Five modules beside
+`Transformer.GPTMini.Sparsemax` add 25 proved theorems, with examples for
+every explicit hypothesis and no new `sorry`:
+
+- [ClosedForm.lean](src/Transformer/GPTMini/Sparsemax/ClosedForm.lean)
+  proves a normalized clipped candidate minimizes the existing variational
+  objective, proves a threshold exists, and identifies the actual row with it.
+- [SupportWindow.lean](src/Transformer/GPTMini/Sparsemax/SupportWindow.lean)
+  proves H2's strict unit support window and the `exp(-alpha)` window for
+  QKNorm's normalized similarities, including epsilon clipping.
+- [Uniform.lean](src/Transformer/GPTMini/Sparsemax/Uniform.lean) proves H3's
+  full-support weight formula, its exact relative-uniformity/score-tie
+  equivalence at `epsilon/N`, and the resulting attention average.
+- [SelfRoute.lean](src/Transformer/GPTMini/Sparsemax/SelfRoute.lean) proves
+  H4's corrected locally-zero output and score/value/parameter derivative
+  with strict score and epsilon-norm bounds; continuity of parameter maps
+  is an explicit premise.
+- [Clipping.lean](src/Transformer/GPTMini/Sparsemax/Clipping.lean) proves
+  the residual below epsilon and a strict self-route counterexample:
+  self-value norm `1/2`, epsilon `1`, output norm `3/8`.
+
+Sources were reread beside the statements: arXiv:1602.02068v2, §2.2,
+Proposition 1, and arXiv:2603.09078v1, §2, equation `xsa` and Algorithm 1,
+plus the epsilon-clipped lab code at `73f8a0b`. All modules are reachable
+from `src/Transformer.lean`. The full `lake build`, `./make.py audit`,
+`./make.py index` and `./make.py forbidden` checks pass: 157 existing
+`sorry`, zero resting on them, zero extra axioms, zero vacuous statements
+and zero placeholders. The generated index has 1,836 modules and 7,556
+theorems. New modules have no warnings. H1's intervention did not isolate
+a whole-training cause, so no such theorem is claimed.
+
 Prove only what the experiments support, under AGENTS.md: statements checked
 against their sources, an example for every theorem with hypotheses, no axiom
 or new `sorry`; then `lake build`, `./make.py audit`, `./make.py index` and
@@ -520,6 +561,18 @@ about one row says nothing about a whole training run. Candidates, beside
   output of zero on a neighborhood, hence zero derivative in its query, keys
   and values (from `sparseWeights_eventually_eq_basis`);
 - (H1) what the intervention attributes.
+
+## Cycle outcome
+
+The prescribed cycle and the QKNorm follow-up are complete. The selected
+initial-scale intervention confirms sparse Mod193 generalization on two
+fresh model/data seeds, but the complete-basis repair criterion remains
+unmet: QKNorm-one matched 17/22 step-4 softmax passes; each learned raw-dot
+start matched 12/23 contemporary follow-up passes. Final-window persistence
+holds for the first Mod193 repair seed and fails twice for the repeat.
+These are qualified experimental conclusions; the row-level Lean results
+do not prove a global training cause. The completion manifest is retained in
+[cycle_audit.json](experiments/basis_sparsemax/cycle_audit.json).
 
 ## Abandoned schedule pair
 

@@ -530,6 +530,17 @@ raw-file hashes and both artifacts' program/helper hashes have been
 verified against their sources. The final full lab check passes all 166
 tests (938.589 seconds), and all 222 experiment descriptions check.
 
+The completed [mod193 confirmation](../mod193_stability/README.md#fresh-confirmation)
+and [QKNorm follow-up](../basis_qknorm/README.md#large-model-results-and-complete-screen)
+qualify this outcome: the selected starting-scale attempt confirms sparse
+modular generalization from two model/data seeds, while neither retaining
+nor removing QKNorm has produced a complete basis repair. Five reachable
+Lean modules prove the actual projection's closed form, H2's support window,
+H3's full-support uniformity condition, and H4's local self-route erasure
+with the epsilon-norm correction and a clipping counterexample.
+The complete source/raw-file and gate manifest is in
+[cycle_audit.json](cycle_audit.json).
+
 Run a pair with:
 
 ```sh

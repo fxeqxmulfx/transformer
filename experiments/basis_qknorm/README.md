@@ -225,3 +225,8 @@ declared controls were not trained and are not counted as observations.
 and matched candidate/control descriptions. It references the detailed
 small/large reductions by hash. The complete-findings gate checks 171
 tests in 808.529 seconds: 165 pass and six CUDA-only checks are skipped.
+
+After the pinned Mod193 series finished, the complete study was integrated
+into the main workspace. The final CPU/CUDA lab gate passes all 171 tests
+without skips in 911.172 seconds. The complete raw study runs are retained
+under the main workspace's ignored `experiments/basis_qknorm/runs/` directory.
