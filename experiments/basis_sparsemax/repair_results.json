@@ -1,0 +1,1205 @@
+{
+  "collected_utc": "2026-10-05T02:35:07Z",
+  "scope": "All 60 repair runs; trajectory data retained in the two referenced screen artifacts",
+  "code_commit": "aadc7728c7309d5491f2093796f94dd659329c4e",
+  "program_source": "\"\"\"Combine both complete screens without duplicating their attention trajectories.\n\nThe ranking selects the best attempted intervention for mod 193. It does\nnot turn a failed basis criterion into a successful repair.\n\"\"\"\n\nimport hashlib\nimport json\nfrom pathlib import Path\nimport time\n\n\nROOT = Path('/home/misha/lean_projects/transformer/experiments/basis_sparsemax')\nCANDIDATES = ('qknorm-one', 'scaleddot')\n\n\ndef sha(path):\n    with path.open('rb') as source:\n        return hashlib.file_digest(source, 'sha256').hexdigest()\n\n\ndef collect():\n    screens = {size: json.loads((ROOT / f'{size}_repair_results.json').read_text())\n               for size in ('small', 'large')}\n    assert screens['small']['code_commit'] == screens['large']['code_commit']\n    assert screens['small']['runtime_code_sha256'] == screens['large']['runtime_code_sha256']\n    assert screens['small']['experiment_source_sha256'] == screens['large']['experiment_source_sha256']\n    runs = {label: run for screen in screens.values() for label, run in screen['runs'].items()}\n    assert len(runs) == 60\n    for screen in screens.values():\n        assert hashlib.sha256(screen['program_source'].encode()).hexdigest() == screen['program_sha256']\n        assert hashlib.sha256(screen['helper_source'].encode()).hexdigest() == screen['helper_sha256']\n        for run in screen['runs'].values():\n            assert run['runtime_source_code_verified']\n            for name, checksum in run['source'].items():\n                assert sha(ROOT / name) == checksum, name\n    comparisons = {}\n    for candidate in CANDIDATES:\n        chosen = {label: run for label, run in runs.items() if run['comparison']['candidate'] == candidate}\n        required = {label: run for label, run in chosen.items() if run['comparison']['required_softmax_pass']}\n        matched = [label for label, run in required.items() if run['pass_step'] is not None]\n        sparse = [label for label in matched if chosen[label]['final_sparsity']['has_exact_visible_zeros']]\n        persistent = [f'repair-{candidate}-hard-large-recall-seed{seed}' for seed in (1, 2)]\n        all_sparse_passes = [label for label, run in chosen.items()\n                            if run['pass_step'] is not None and run['final_sparsity']['has_exact_visible_zeros']]\n        assert len(chosen) == 30 and len(required) == 22\n        comparisons[candidate] = {\n            'runs': 30, 'required_softmax_passes': 22, 'matched_required_passes': len(matched),\n            'sparse_matched_required_passes': len(sparse),\n            'persistent_target_passes': sum(chosen[label]['pass_step'] is not None for label in persistent),\n            'all_passes': sum(run['pass_step'] is not None for run in chosen.values()),\n            'all_sparse_passes': len(all_sparse_passes),\n            'passes_basis_repair_criterion': len(sparse) == 22,\n            'unmatched_softmax_labels': [label for label in required if label not in matched],\n            'dense_only_passing_labels': [label for label in matched if label not in sparse],\n            'cells': {label: {'stop': run['stop'], 'pass_step': run['pass_step'],\n                             'softmax_pass_step': run['comparison']['softmax_pass_step'],\n                             'sparsemax_pass_step': run['comparison']['sparsemax_pass_step'],\n                             'best_sequence_accuracy': run['best_sequence_accuracy'],\n                             'last_training_batch_loss': run['last_training_batch_loss'],\n                             'final_sparsity': run['final_sparsity']}\n                      for label, run in chosen.items()},\n        }\n    ranking = sorted(CANDIDATES, key=lambda candidate: (\n        -comparisons[candidate]['sparse_matched_required_passes'],\n        -comparisons[candidate]['persistent_target_passes'],\n        -comparisons[candidate]['all_sparse_passes'], CANDIDATES.index(candidate)))\n    source = Path(__file__).read_text()\n    summary = {\n        'collected_utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),\n        'scope': 'All 60 repair runs; trajectory data retained in the two referenced screen artifacts',\n        'code_commit': screens['small']['code_commit'], 'program_source': source,\n        'program_sha256': hashlib.sha256(source.encode()).hexdigest(),\n        'screen_sources': {f'{size}_repair_results.json': sha(ROOT / f'{size}_repair_results.json')\n                           for size in screens},\n        'comparisons': comparisons, 'ranking': ranking,\n        'ranking_rule': 'Sparse matched softmax passes, then persistent target passes, then all sparse passes; stable candidate order breaks an exact tie',\n        'best_attempt_for_mod193': ranking[0],\n        'best_attempt_passes_basis_repair_criterion': comparisons[ranking[0]]['passes_basis_repair_criterion'],\n    }\n    (ROOT / 'repair_results.json').write_text(json.dumps(summary, indent=2) + '\\n')\n    print(json.dumps({candidate: {key: value for key, value in record.items() if key != 'cells'}\n                      for candidate, record in comparisons.items()}, indent=2), flush=True)\n    print(json.dumps({'ranking': ranking, 'best_attempt_for_mod193': ranking[0]}), flush=True)\n\n\nif __name__ == '__main__':\n    collect()\n",
+  "program_sha256": "8121c405c38374eb2a301ee7f880286b94f51153161029832359332f73decc0d",
+  "screen_sources": {
+    "small_repair_results.json": "36c1bd82659bfb78cf6dd3dcb31082b34c8f74b463f1458abb68c2e18f6cf3fa",
+    "large_repair_results.json": "f3e8bb3146872acd278325614d5466105b93f6f80642eafc43df53f14dbb54d2"
+  },
+  "comparisons": {
+    "qknorm-one": {
+      "runs": 30,
+      "required_softmax_passes": 22,
+      "matched_required_passes": 17,
+      "sparse_matched_required_passes": 17,
+      "persistent_target_passes": 1,
+      "all_passes": 19,
+      "all_sparse_passes": 19,
+      "passes_basis_repair_criterion": false,
+      "unmatched_softmax_labels": [
+        "repair-qknorm-one-easy-small-parity-seed0",
+        "repair-qknorm-one-easy-small-recall-seed2",
+        "repair-qknorm-one-easy-small-parity-seed2",
+        "repair-qknorm-one-easy-large-parity-seed2",
+        "repair-qknorm-one-hard-large-recall-seed1"
+      ],
+      "dense_only_passing_labels": [],
+      "cells": {
+        "repair-qknorm-one-easy-small-depth-seed0": {
+          "stop": {
+            "step": 200,
+            "reason": "solved"
+          },
+          "pass_step": 200,
+          "softmax_pass_step": 200,
+          "sparsemax_pass_step": 400,
+          "best_sequence_accuracy": 1.0,
+          "last_training_batch_loss": 0.02094370499253273,
+          "final_sparsity": {
+            "mean_support_positions": 7.3360912799835205,
+            "mean_support_share": 0.3795073814690113,
+            "exact_zero_pair_share": 0.7140614539384842,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-easy-small-recall-seed0": {
+          "stop": {
+            "step": 2600,
+            "reason": "solved"
+          },
+          "pass_step": 2600,
+          "softmax_pass_step": 1650,
+          "sparsemax_pass_step": 550,
+          "best_sequence_accuracy": 0.990234375,
+          "last_training_batch_loss": 0.006363943684846163,
+          "final_sparsity": {
+            "mean_support_positions": 5.156715422868729,
+            "mean_support_share": 0.2810926269739866,
+            "exact_zero_pair_share": 0.8029018864035606,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-easy-small-parity-seed0": {
+          "stop": {
+            "step": 20000,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": 8200,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.916015625,
+          "last_training_batch_loss": 0.08263644576072693,
+          "final_sparsity": {
+            "mean_support_positions": 4.0846757888793945,
+            "mean_support_share": 0.6214714720845222,
+            "exact_zero_pair_share": 0.4618939831852913,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-easy-small-depth-seed1": {
+          "stop": {
+            "step": 200,
+            "reason": "solved"
+          },
+          "pass_step": 200,
+          "softmax_pass_step": 200,
+          "sparsemax_pass_step": 200,
+          "best_sequence_accuracy": 1.0,
+          "last_training_batch_loss": 0.020880158990621567,
+          "final_sparsity": {
+            "mean_support_positions": 6.702849119901657,
+            "mean_support_share": 0.37052327021956444,
+            "exact_zero_pair_share": 0.7387433126568794,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-easy-small-recall-seed1": {
+          "stop": {
+            "step": 3850,
+            "reason": "solved"
+          },
+          "pass_step": 3850,
+          "softmax_pass_step": 2450,
+          "sparsemax_pass_step": 350,
+          "best_sequence_accuracy": 0.990234375,
+          "last_training_batch_loss": 0.005443971138447523,
+          "final_sparsity": {
+            "mean_support_positions": 3.4637019634246826,
+            "mean_support_share": 0.21172359213232994,
+            "exact_zero_pair_share": 0.8676116392016411,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-easy-small-parity-seed1": {
+          "stop": {
+            "step": 6600,
+            "reason": "solved"
+          },
+          "pass_step": 6600,
+          "softmax_pass_step": 5000,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.990234375,
+          "last_training_batch_loss": 0.06030450388789177,
+          "final_sparsity": {
+            "mean_support_positions": 3.9077057540416718,
+            "mean_support_share": 0.6126159876585007,
+            "exact_zero_pair_share": 0.4852076396346092,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-easy-small-depth-seed2": {
+          "stop": {
+            "step": 200,
+            "reason": "solved"
+          },
+          "pass_step": 200,
+          "softmax_pass_step": 200,
+          "sparsemax_pass_step": 200,
+          "best_sequence_accuracy": 1.0,
+          "last_training_batch_loss": 0.02257254719734192,
+          "final_sparsity": {
+            "mean_support_positions": 7.198170602321625,
+            "mean_support_share": 0.37756963446736336,
+            "exact_zero_pair_share": 0.7194371819496155,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-easy-small-recall-seed2": {
+          "stop": {
+            "step": 4800,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": 1800,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.68359375,
+          "last_training_batch_loss": 0.09142061322927475,
+          "final_sparsity": {
+            "mean_support_positions": 4.136864811182022,
+            "mean_support_share": 0.24179530143737793,
+            "exact_zero_pair_share": 0.8418822437524796,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-easy-small-parity-seed2": {
+          "stop": {
+            "step": 20000,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": 4200,
+          "sparsemax_pass_step": 14200,
+          "best_sequence_accuracy": 0.919921875,
+          "last_training_batch_loss": 0.04183054715394974,
+          "final_sparsity": {
+            "mean_support_positions": 3.821040391921997,
+            "mean_support_share": 0.5897207707166672,
+            "exact_zero_pair_share": 0.4966247156262398,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-hard-small-depth-seed0": {
+          "stop": {
+            "step": 10000,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": null,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.42578125,
+          "last_training_batch_loss": 0.007547331973910332,
+          "final_sparsity": {
+            "mean_support_positions": 7.68726921081543,
+            "mean_support_share": 0.20359966158866882,
+            "exact_zero_pair_share": 0.8817343190312386,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-hard-small-recall-seed0": {
+          "stop": {
+            "step": 4800,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": null,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.0,
+          "last_training_batch_loss": 3.2207562923431396,
+          "final_sparsity": {
+            "mean_support_positions": 7.570674419403076,
+            "mean_support_share": 0.355765487998724,
+            "exact_zero_pair_share": 0.7430966272950172,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-hard-small-depth-seed1": {
+          "stop": {
+            "step": 10000,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": null,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.57421875,
+          "last_training_batch_loss": 4.075338802067563e-05,
+          "final_sparsity": {
+            "mean_support_positions": 9.193786144256592,
+            "mean_support_share": 0.23252015933394432,
+            "exact_zero_pair_share": 0.8585571348667145,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-hard-small-recall-seed1": {
+          "stop": {
+            "step": 4800,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": null,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.0,
+          "last_training_batch_loss": 2.9713268280029297,
+          "final_sparsity": {
+            "mean_support_positions": 7.145862698554993,
+            "mean_support_share": 0.340531587600708,
+            "exact_zero_pair_share": 0.7575121968984604,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-hard-small-depth-seed2": {
+          "stop": {
+            "step": 10000,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": null,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.419921875,
+          "last_training_batch_loss": 9.190104901790619e-05,
+          "final_sparsity": {
+            "mean_support_positions": 9.616430103778839,
+            "mean_support_share": 0.246578773483634,
+            "exact_zero_pair_share": 0.8520549163222313,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-hard-small-recall-seed2": {
+          "stop": {
+            "step": 4800,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": null,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.0,
+          "last_training_batch_loss": 2.3962316513061523,
+          "final_sparsity": {
+            "mean_support_positions": 6.069055378437042,
+            "mean_support_share": 0.2962028197944164,
+            "exact_zero_pair_share": 0.7940525934100151,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-easy-large-depth-seed0": {
+          "stop": {
+            "step": 200,
+            "reason": "solved"
+          },
+          "pass_step": 200,
+          "softmax_pass_step": 200,
+          "sparsemax_pass_step": 600,
+          "best_sequence_accuracy": 1.0,
+          "last_training_batch_loss": 0.006045072339475155,
+          "final_sparsity": {
+            "mean_support_positions": 9.193373243014017,
+            "mean_support_share": 0.49450546751419705,
+            "exact_zero_pair_share": 0.6416702419519424,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-easy-large-recall-seed0": {
+          "stop": {
+            "step": 4450,
+            "reason": "solved"
+          },
+          "pass_step": 4450,
+          "softmax_pass_step": null,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.998046875,
+          "last_training_batch_loss": 0.002680988283827901,
+          "final_sparsity": {
+            "mean_support_positions": 4.052331631382306,
+            "mean_support_share": 0.22403852734714746,
+            "exact_zero_pair_share": 0.8451132476329803,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-easy-large-parity-seed0": {
+          "stop": {
+            "step": 7800,
+            "reason": "solved"
+          },
+          "pass_step": 7800,
+          "softmax_pass_step": 6600,
+          "sparsemax_pass_step": 13600,
+          "best_sequence_accuracy": 0.990234375,
+          "last_training_batch_loss": 0.02011776901781559,
+          "final_sparsity": {
+            "mean_support_positions": 4.196250667174657,
+            "mean_support_share": 0.6380073986947536,
+            "exact_zero_pair_share": 0.4471953809261322,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-easy-large-depth-seed1": {
+          "stop": {
+            "step": 200,
+            "reason": "solved"
+          },
+          "pass_step": 200,
+          "softmax_pass_step": 200,
+          "sparsemax_pass_step": 200,
+          "best_sequence_accuracy": 1.0,
+          "last_training_batch_loss": 0.004569838754832745,
+          "final_sparsity": {
+            "mean_support_positions": 8.574393838644028,
+            "mean_support_share": 0.44568240580459434,
+            "exact_zero_pair_share": 0.6657961954673132,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-easy-large-recall-seed1": {
+          "stop": {
+            "step": 3700,
+            "reason": "solved"
+          },
+          "pass_step": 3700,
+          "softmax_pass_step": null,
+          "sparsemax_pass_step": 2200,
+          "best_sequence_accuracy": 0.9921875,
+          "last_training_batch_loss": 0.014928880147635937,
+          "final_sparsity": {
+            "mean_support_positions": 4.014009570082028,
+            "mean_support_share": 0.220650814473629,
+            "exact_zero_pair_share": 0.8465779895583788,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-easy-large-parity-seed1": {
+          "stop": {
+            "step": 15800,
+            "reason": "solved"
+          },
+          "pass_step": 15800,
+          "softmax_pass_step": 7600,
+          "sparsemax_pass_step": 16800,
+          "best_sequence_accuracy": 0.990234375,
+          "last_training_batch_loss": 0.009817715734243393,
+          "final_sparsity": {
+            "mean_support_positions": 3.922716091076533,
+            "mean_support_share": 0.6105831687649091,
+            "exact_zero_pair_share": 0.48323019842306775,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-easy-large-depth-seed2": {
+          "stop": {
+            "step": 200,
+            "reason": "solved"
+          },
+          "pass_step": 200,
+          "softmax_pass_step": 200,
+          "sparsemax_pass_step": 200,
+          "best_sequence_accuracy": 1.0,
+          "last_training_batch_loss": 0.004727470222860575,
+          "final_sparsity": {
+            "mean_support_positions": 7.788701941569646,
+            "mean_support_share": 0.40637879508237046,
+            "exact_zero_pair_share": 0.6964200635751089,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-easy-large-recall-seed2": {
+          "stop": {
+            "step": 3300,
+            "reason": "solved"
+          },
+          "pass_step": 3300,
+          "softmax_pass_step": 1500,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.9921875,
+          "last_training_batch_loss": 0.00481605576351285,
+          "final_sparsity": {
+            "mean_support_positions": 4.102704698840777,
+            "mean_support_share": 0.2232403721039494,
+            "exact_zero_pair_share": 0.8431879058480263,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-easy-large-parity-seed2": {
+          "stop": {
+            "step": 20000,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": 7000,
+          "sparsemax_pass_step": 16800,
+          "best_sequence_accuracy": 0.953125,
+          "last_training_batch_loss": 0.1612595170736313,
+          "final_sparsity": {
+            "mean_support_positions": 3.8433941900730133,
+            "mean_support_share": 0.5889413245022297,
+            "exact_zero_pair_share": 0.49367989351352054,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-hard-large-depth-seed0": {
+          "stop": {
+            "step": 3800,
+            "reason": "solved"
+          },
+          "pass_step": 3800,
+          "softmax_pass_step": 3600,
+          "sparsemax_pass_step": 600,
+          "best_sequence_accuracy": 1.0,
+          "last_training_batch_loss": 5.767118182120612e-06,
+          "final_sparsity": {
+            "mean_support_positions": 10.188268899917603,
+            "mean_support_share": 0.24468454904854298,
+            "exact_zero_pair_share": 0.8432573998967806,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-hard-large-recall-seed0": {
+          "stop": {
+            "step": 2300,
+            "reason": "solved"
+          },
+          "pass_step": 2300,
+          "softmax_pass_step": 3600,
+          "sparsemax_pass_step": 3900,
+          "best_sequence_accuracy": 0.9921875,
+          "last_training_batch_loss": 0.015337114222347736,
+          "final_sparsity": {
+            "mean_support_positions": 6.292930821577708,
+            "mean_support_share": 0.2839205681035916,
+            "exact_zero_pair_share": 0.7864555940032005,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-hard-large-depth-seed1": {
+          "stop": {
+            "step": 1800,
+            "reason": "solved"
+          },
+          "pass_step": 1800,
+          "softmax_pass_step": 4400,
+          "sparsemax_pass_step": 400,
+          "best_sequence_accuracy": 1.0,
+          "last_training_batch_loss": 2.7312695237924345e-05,
+          "final_sparsity": {
+            "mean_support_positions": 11.83459053436915,
+            "mean_support_share": 0.2808257558693488,
+            "exact_zero_pair_share": 0.817929374674956,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-hard-large-recall-seed1": {
+          "stop": {
+            "step": 4800,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": 3200,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.0,
+          "last_training_batch_loss": 1.3867608308792114,
+          "final_sparsity": {
+            "mean_support_positions": 7.420368134975433,
+            "mean_support_share": 0.3780977241694927,
+            "exact_zero_pair_share": 0.748197115957737,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-hard-large-depth-seed2": {
+          "stop": {
+            "step": 3200,
+            "reason": "solved"
+          },
+          "pass_step": 3200,
+          "softmax_pass_step": 1800,
+          "sparsemax_pass_step": 600,
+          "best_sequence_accuracy": 0.9921875,
+          "last_training_batch_loss": 5.486099780682707e-06,
+          "final_sparsity": {
+            "mean_support_positions": 10.072106738885244,
+            "mean_support_share": 0.25041441588352126,
+            "exact_zero_pair_share": 0.8450445085763931,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-qknorm-one-hard-large-recall-seed2": {
+          "stop": {
+            "step": 3550,
+            "reason": "solved"
+          },
+          "pass_step": 3550,
+          "softmax_pass_step": 2650,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.990234375,
+          "last_training_batch_loss": 0.011541557498276234,
+          "final_sparsity": {
+            "mean_support_positions": 6.358900586764018,
+            "mean_support_share": 0.28162076013783616,
+            "exact_zero_pair_share": 0.7842169776558876,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        }
+      }
+    },
+    "scaleddot": {
+      "runs": 30,
+      "required_softmax_passes": 22,
+      "matched_required_passes": 12,
+      "sparse_matched_required_passes": 12,
+      "persistent_target_passes": 0,
+      "all_passes": 13,
+      "all_sparse_passes": 13,
+      "passes_basis_repair_criterion": false,
+      "unmatched_softmax_labels": [
+        "repair-scaleddot-easy-small-recall-seed0",
+        "repair-scaleddot-easy-small-recall-seed1",
+        "repair-scaleddot-easy-small-recall-seed2",
+        "repair-scaleddot-easy-large-parity-seed0",
+        "repair-scaleddot-easy-large-parity-seed1",
+        "repair-scaleddot-easy-large-recall-seed2",
+        "repair-scaleddot-easy-large-parity-seed2",
+        "repair-scaleddot-hard-large-recall-seed0",
+        "repair-scaleddot-hard-large-recall-seed1",
+        "repair-scaleddot-hard-large-recall-seed2"
+      ],
+      "dense_only_passing_labels": [],
+      "cells": {
+        "repair-scaleddot-easy-small-depth-seed0": {
+          "stop": {
+            "step": 2000,
+            "reason": "solved"
+          },
+          "pass_step": 2000,
+          "softmax_pass_step": 200,
+          "sparsemax_pass_step": 400,
+          "best_sequence_accuracy": 0.998046875,
+          "last_training_batch_loss": 0.0006251605227589607,
+          "final_sparsity": {
+            "mean_support_positions": 3.567703992128372,
+            "mean_support_share": 0.22411198541522026,
+            "exact_zero_pair_share": 0.8609417527914047,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-easy-small-recall-seed0": {
+          "stop": {
+            "step": 4800,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": 1650,
+          "sparsemax_pass_step": 550,
+          "best_sequence_accuracy": 0.6796875,
+          "last_training_batch_loss": 0.15828044712543488,
+          "final_sparsity": {
+            "mean_support_positions": 3.2177362740039825,
+            "mean_support_share": 0.1645297771319747,
+            "exact_zero_pair_share": 0.8770128488540649,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-easy-small-parity-seed0": {
+          "stop": {
+            "step": 3000,
+            "reason": "solved"
+          },
+          "pass_step": 3000,
+          "softmax_pass_step": 8200,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.990234375,
+          "last_training_batch_loss": 0.04053114354610443,
+          "final_sparsity": {
+            "mean_support_positions": 5.306628495454788,
+            "mean_support_share": 0.7663804367184639,
+            "exact_zero_pair_share": 0.3009166941046715,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-easy-small-depth-seed1": {
+          "stop": {
+            "step": 1000,
+            "reason": "solved"
+          },
+          "pass_step": 1000,
+          "softmax_pass_step": 200,
+          "sparsemax_pass_step": 200,
+          "best_sequence_accuracy": 1.0,
+          "last_training_batch_loss": 0.0004088143177796155,
+          "final_sparsity": {
+            "mean_support_positions": 4.877155184745789,
+            "mean_support_share": 0.3133616726845503,
+            "exact_zero_pair_share": 0.8099033087491989,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-easy-small-recall-seed1": {
+          "stop": {
+            "step": 4800,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": 2450,
+          "sparsemax_pass_step": 350,
+          "best_sequence_accuracy": 0.962890625,
+          "last_training_batch_loss": 0.00897178240120411,
+          "final_sparsity": {
+            "mean_support_positions": 4.081398978829384,
+            "mean_support_share": 0.20315218809992075,
+            "exact_zero_pair_share": 0.8440022468566895,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-easy-small-parity-seed1": {
+          "stop": {
+            "step": 10200,
+            "reason": "solved"
+          },
+          "pass_step": 10200,
+          "softmax_pass_step": 5000,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.990234375,
+          "last_training_batch_loss": 0.08928973227739334,
+          "final_sparsity": {
+            "mean_support_positions": 5.870778411626816,
+            "mean_support_share": 0.8317743986845016,
+            "exact_zero_pair_share": 0.226596862077713,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-easy-small-depth-seed2": {
+          "stop": {
+            "step": 200,
+            "reason": "solved"
+          },
+          "pass_step": 200,
+          "softmax_pass_step": 200,
+          "sparsemax_pass_step": 200,
+          "best_sequence_accuracy": 1.0,
+          "last_training_batch_loss": 0.03770383819937706,
+          "final_sparsity": {
+            "mean_support_positions": 8.073549211025238,
+            "mean_support_share": 0.4585168585181236,
+            "exact_zero_pair_share": 0.6853175908327103,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-easy-small-recall-seed2": {
+          "stop": {
+            "step": 4800,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": 1800,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.912109375,
+          "last_training_batch_loss": 0.033928465098142624,
+          "final_sparsity": {
+            "mean_support_positions": 5.1730077266693115,
+            "mean_support_share": 0.2724560983479023,
+            "exact_zero_pair_share": 0.8022791892290115,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-easy-small-parity-seed2": {
+          "stop": {
+            "step": 14800,
+            "reason": "solved"
+          },
+          "pass_step": 14800,
+          "softmax_pass_step": 4200,
+          "sparsemax_pass_step": 14200,
+          "best_sequence_accuracy": 0.990234375,
+          "last_training_batch_loss": 0.039935655891895294,
+          "final_sparsity": {
+            "mean_support_positions": 5.713266670703888,
+            "mean_support_share": 0.8335247859358788,
+            "exact_zero_pair_share": 0.24734708666801453,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-hard-small-depth-seed0": {
+          "stop": {
+            "step": 10000,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": null,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.541015625,
+          "last_training_batch_loss": 0.0016282274154946208,
+          "final_sparsity": {
+            "mean_support_positions": 6.031273007392883,
+            "mean_support_share": 0.16986895818263292,
+            "exact_zero_pair_share": 0.9072111919522285,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-hard-small-recall-seed0": {
+          "stop": {
+            "step": 4800,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": null,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.005859375,
+          "last_training_batch_loss": 1.6617815494537354,
+          "final_sparsity": {
+            "mean_support_positions": 5.70779949426651,
+            "mean_support_share": 0.2854232843965292,
+            "exact_zero_pair_share": 0.8063114434480667,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-hard-small-depth-seed1": {
+          "stop": {
+            "step": 10000,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": null,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.375,
+          "last_training_batch_loss": 0.00014487438602373004,
+          "final_sparsity": {
+            "mean_support_positions": 5.169710397720337,
+            "mean_support_share": 0.14962648786604404,
+            "exact_zero_pair_share": 0.9204659983515739,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-hard-small-recall-seed1": {
+          "stop": {
+            "step": 4800,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": null,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.1953125,
+          "last_training_batch_loss": 1.1932189464569092,
+          "final_sparsity": {
+            "mean_support_positions": 7.273854285478592,
+            "mean_support_share": 0.2937625162303448,
+            "exact_zero_pair_share": 0.7531689181923866,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-hard-small-depth-seed2": {
+          "stop": {
+            "step": 10000,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": null,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.435546875,
+          "last_training_batch_loss": 0.0012477055424824357,
+          "final_sparsity": {
+            "mean_support_positions": 5.586498856544495,
+            "mean_support_share": 0.1510972399264574,
+            "exact_zero_pair_share": 0.9140538722276688,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-hard-small-recall-seed2": {
+          "stop": {
+            "step": 4800,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": null,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.013671875,
+          "last_training_batch_loss": 1.7790011167526245,
+          "final_sparsity": {
+            "mean_support_positions": 6.088035047054291,
+            "mean_support_share": 0.3024460282176733,
+            "exact_zero_pair_share": 0.7934085354208946,
+            "dense_heads": 0,
+            "total_heads": 8,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-easy-large-depth-seed0": {
+          "stop": {
+            "step": 200,
+            "reason": "solved"
+          },
+          "pass_step": 200,
+          "softmax_pass_step": 200,
+          "sparsemax_pass_step": 600,
+          "best_sequence_accuracy": 1.0,
+          "last_training_batch_loss": 0.0048714145086705685,
+          "final_sparsity": {
+            "mean_support_positions": 10.953118781248728,
+            "mean_support_share": 0.5505286417901516,
+            "exact_zero_pair_share": 0.5730807060996691,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-easy-large-recall-seed0": {
+          "stop": {
+            "step": 4800,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": null,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.962890625,
+          "last_training_batch_loss": 0.03127942606806755,
+          "final_sparsity": {
+            "mean_support_positions": 1.5216401815414429,
+            "mean_support_share": 0.09409458935260773,
+            "exact_zero_pair_share": 0.9418404226501783,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-easy-large-parity-seed0": {
+          "stop": {
+            "step": 20000,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": 6600,
+          "sparsemax_pass_step": 13600,
+          "best_sequence_accuracy": 0.69921875,
+          "last_training_batch_loss": 0.21785764396190643,
+          "final_sparsity": {
+            "mean_support_positions": 1.8546033849318821,
+            "mean_support_share": 0.3104216946909825,
+            "exact_zero_pair_share": 0.7556787182887396,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-easy-large-depth-seed1": {
+          "stop": {
+            "step": 200,
+            "reason": "solved"
+          },
+          "pass_step": 200,
+          "softmax_pass_step": 200,
+          "sparsemax_pass_step": 200,
+          "best_sequence_accuracy": 1.0,
+          "last_training_batch_loss": 0.004836552776396275,
+          "final_sparsity": {
+            "mean_support_positions": 8.94250774383545,
+            "mean_support_share": 0.47638776898384094,
+            "exact_zero_pair_share": 0.6514482274651527,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-easy-large-recall-seed1": {
+          "stop": {
+            "step": 1900,
+            "reason": "solved"
+          },
+          "pass_step": 1900,
+          "softmax_pass_step": null,
+          "sparsemax_pass_step": 2200,
+          "best_sequence_accuracy": 0.990234375,
+          "last_training_batch_loss": 0.016067825257778168,
+          "final_sparsity": {
+            "mean_support_positions": 3.248513882358869,
+            "mean_support_share": 0.19132066362847885,
+            "exact_zero_pair_share": 0.8758364816506704,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-easy-large-parity-seed1": {
+          "stop": {
+            "step": 20000,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": 7600,
+          "sparsemax_pass_step": 16800,
+          "best_sequence_accuracy": 0.814453125,
+          "last_training_batch_loss": 0.2844313383102417,
+          "final_sparsity": {
+            "mean_support_positions": 1.9145962695280712,
+            "mean_support_share": 0.3250457315395276,
+            "exact_zero_pair_share": 0.7477753882606825,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-easy-large-depth-seed2": {
+          "stop": {
+            "step": 200,
+            "reason": "solved"
+          },
+          "pass_step": 200,
+          "softmax_pass_step": 200,
+          "sparsemax_pass_step": 200,
+          "best_sequence_accuracy": 1.0,
+          "last_training_batch_loss": 0.004719715099781752,
+          "final_sparsity": {
+            "mean_support_positions": 9.348163733879725,
+            "mean_support_share": 0.4881667165706555,
+            "exact_zero_pair_share": 0.6356369828184446,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-easy-large-recall-seed2": {
+          "stop": {
+            "step": 4800,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": 1500,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.81640625,
+          "last_training_batch_loss": 0.16750290989875793,
+          "final_sparsity": {
+            "mean_support_positions": 4.26909202337265,
+            "mean_support_share": 0.22805636220922074,
+            "exact_zero_pair_share": 0.8368283013502756,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-easy-large-parity-seed2": {
+          "stop": {
+            "step": 20000,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": 7000,
+          "sparsemax_pass_step": 16800,
+          "best_sequence_accuracy": 0.939453125,
+          "last_training_batch_loss": 0.09911830723285675,
+          "final_sparsity": {
+            "mean_support_positions": 1.7606592923402786,
+            "mean_support_share": 0.31181936897337437,
+            "exact_zero_pair_share": 0.768054706354936,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-hard-large-depth-seed0": {
+          "stop": {
+            "step": 1200,
+            "reason": "solved"
+          },
+          "pass_step": 1200,
+          "softmax_pass_step": 3600,
+          "sparsemax_pass_step": 600,
+          "best_sequence_accuracy": 0.998046875,
+          "last_training_batch_loss": 0.00036374444607645273,
+          "final_sparsity": {
+            "mean_support_positions": 3.2469280461470285,
+            "mean_support_share": 0.0973174845178922,
+            "exact_zero_pair_share": 0.9500472620129585,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-hard-large-recall-seed0": {
+          "stop": {
+            "step": 4800,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": 3600,
+          "sparsemax_pass_step": 3900,
+          "best_sequence_accuracy": 0.8359375,
+          "last_training_batch_loss": 0.11054707318544388,
+          "final_sparsity": {
+            "mean_support_positions": 3.8343598743279776,
+            "mean_support_share": 0.18358308790872493,
+            "exact_zero_pair_share": 0.8698847790559133,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-hard-large-depth-seed1": {
+          "stop": {
+            "step": 1600,
+            "reason": "solved"
+          },
+          "pass_step": 1600,
+          "softmax_pass_step": 4400,
+          "sparsemax_pass_step": 400,
+          "best_sequence_accuracy": 0.990234375,
+          "last_training_batch_loss": 0.0002383556857239455,
+          "final_sparsity": {
+            "mean_support_positions": 3.2492195020119348,
+            "mean_support_share": 0.10004205241178472,
+            "exact_zero_pair_share": 0.9500120108326277,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-hard-large-recall-seed1": {
+          "stop": {
+            "step": 4800,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": 3200,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.96875,
+          "last_training_batch_loss": 0.025832461193203926,
+          "final_sparsity": {
+            "mean_support_positions": 3.85754257440567,
+            "mean_support_share": 0.18488432932645082,
+            "exact_zero_pair_share": 0.8690980995694796,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-hard-large-depth-seed2": {
+          "stop": {
+            "step": 1800,
+            "reason": "solved"
+          },
+          "pass_step": 1800,
+          "softmax_pass_step": 1800,
+          "sparsemax_pass_step": 600,
+          "best_sequence_accuracy": 0.994140625,
+          "last_training_batch_loss": 8.177365202755027e-07,
+          "final_sparsity": {
+            "mean_support_positions": 3.929345339536667,
+            "mean_support_share": 0.1110532283782959,
+            "exact_zero_pair_share": 0.939548539618651,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        },
+        "repair-scaleddot-hard-large-recall-seed2": {
+          "stop": {
+            "step": 4800,
+            "reason": "budget"
+          },
+          "pass_step": null,
+          "softmax_pass_step": 2650,
+          "sparsemax_pass_step": null,
+          "best_sequence_accuracy": 0.9296875,
+          "last_training_batch_loss": 0.018202414736151695,
+          "final_sparsity": {
+            "mean_support_positions": 4.1622319122155504,
+            "mean_support_share": 0.192773323195676,
+            "exact_zero_pair_share": 0.8587587624788284,
+            "dense_heads": 0,
+            "total_heads": 24,
+            "has_exact_visible_zeros": true
+          }
+        }
+      }
+    }
+  },
+  "ranking": [
+    "qknorm-one",
+    "scaleddot"
+  ],
+  "ranking_rule": "Sparse matched softmax passes, then persistent target passes, then all sparse passes; stable candidate order breaks an exact tie",
+  "best_attempt_for_mod193": "qknorm-one",
+  "best_attempt_passes_basis_repair_criterion": false
+}

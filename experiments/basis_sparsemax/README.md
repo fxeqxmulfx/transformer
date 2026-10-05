@@ -373,8 +373,9 @@ parameter equality for both model sizes and all three seeds, normalized-dot
 scores and query/key gradients, and the learned scale's gradient.
 All 166 lab tests pass (922.757 seconds). All 30 small-model repair runs
 finished before the 30 large-model ones started. The small screen is
-complete; the large screen is in progress, so no best-candidate or
-generalization claim is made yet.
+complete, as is the large screen below. Neither candidate satisfies the
+complete basis repair criterion; QKNorm-one is the better attempted
+intervention to transfer to mod 193, not a confirmed repair.
 
 Each candidate matches 6 of the 9 small-model softmax passes. QKNorm-one
 misses parity seeds 0 and 2 and easy recall seed 2; ScaledDot passes every
@@ -382,8 +383,8 @@ parity seed but misses every easy recall seed. Neither passes a hard run.
 Every passing run retains exact zeros among visible pairs after BOS, in
 all eight heads. These are genuine sparse passes, but the failures already
 exclude both candidates from the complete basis repair criterion at the
-unchanged recipes. The large hard-recall screen still tests whether either
-intervention helps the original persistent failure.
+unchanged recipes. The large hard-recall screen below tests the original
+persistent failure.
 
 The table gives the pass update or best selection sequence accuracy of a
 failure. Hard depth selects the length-128 validation split. Last batch
@@ -437,6 +438,97 @@ position contributes a zero. The JSON retains every head separately.
 | hard | recall | 0 | 7.571 | 74.31% | 5.708 | 80.63% |
 | hard | recall | 1 | 7.146 | 75.75% | 7.274 | 75.32% |
 | hard | recall | 2 | 6.069 | 79.41% | 6.088 | 79.34% |
+
+All 30 large-model repair runs have finished. QKNorm-one matches 11 of the
+13 large softmax passes and passes 13 runs in total, including both easy
+recall seeds whose softmax controls fail. It passes the original persistent
+hard-recall seed 2 at update 3,550, but seed 1 still fails and fits poorly
+(last batch loss 1.3868). Its parity seed 2 also fails where both original
+normalizers pass. ScaledDot matches 6 of 13 required passes, passes 7 runs
+in total, and fails all three hard-recall seeds and all three large parity
+seeds. Every final head has exact visible zeros after BOS, including in
+every passing run; there are 24 heads per large model.
+
+| Mode | Task | Seed | Softmax | QKNorm-one | ScaledDot | Last batch loss, QKNorm-one | Last batch loss, ScaledDot |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| easy | depth | 0 | 200 | 200 | 200 | 0.006045 | 0.004871 |
+| easy | depth | 1 | 200 | 200 | 200 | 0.004570 | 0.004837 |
+| easy | depth | 2 | 200 | 200 | 200 | 0.004727 | 0.004720 |
+| easy | recall | 0 | fail (97.27%) | 4450 | fail (96.29%) | 0.002681 | 0.031279 |
+| easy | recall | 1 | fail (96.68%) | 3700 | 1900 | 0.014929 | 0.016068 |
+| easy | recall | 2 | 1500 | 3300 | fail (81.64%) | 0.004816 | 0.167503 |
+| easy | parity | 0 | 6600 | 7800 | fail (69.92%) | 0.020118 | 0.217858 |
+| easy | parity | 1 | 7600 | 15800 | fail (81.45%) | 0.009818 | 0.284431 |
+| easy | parity | 2 | 7000 | fail (95.31%) | fail (93.95%) | 0.161260 | 0.099118 |
+| hard | depth | 0 | 3600 | 3800 | 1200 | 0.000006 | 0.000364 |
+| hard | depth | 1 | 4400 | 1800 | 1600 | 0.000027 | 0.000238 |
+| hard | depth | 2 | 1800 | 3200 | 1800 | 0.000005 | 0.000001 |
+| hard | recall | 0 | 3600 | 2300 | fail (83.59%) | 0.015337 | 0.110547 |
+| hard | recall | 1 | 3200 | fail (0.00%) | fail (96.88%) | 1.386761 | 0.025832 |
+| hard | recall | 2 | 2650 | 3550 | fail (92.97%) | 0.011542 | 0.018202 |
+
+The same final support and visible-zero averages as for the small model:
+
+| Mode | Task | Seed | Support, QKNorm-one | Zeros, QKNorm-one | Support, ScaledDot | Zeros, ScaledDot |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| easy | depth | 0 | 9.193 | 64.17% | 10.953 | 57.31% |
+| easy | depth | 1 | 8.574 | 66.58% | 8.943 | 65.14% |
+| easy | depth | 2 | 7.789 | 69.64% | 9.348 | 63.56% |
+| easy | recall | 0 | 4.052 | 84.51% | 1.522 | 94.18% |
+| easy | recall | 1 | 4.014 | 84.66% | 3.249 | 87.58% |
+| easy | recall | 2 | 4.103 | 84.32% | 4.269 | 83.68% |
+| easy | parity | 0 | 4.196 | 44.72% | 1.855 | 75.57% |
+| easy | parity | 1 | 3.923 | 48.32% | 1.915 | 74.78% |
+| easy | parity | 2 | 3.843 | 49.37% | 1.761 | 76.81% |
+| hard | depth | 0 | 10.188 | 84.33% | 3.247 | 95.00% |
+| hard | depth | 1 | 11.835 | 81.79% | 3.249 | 95.00% |
+| hard | depth | 2 | 10.072 | 84.50% | 3.929 | 93.95% |
+| hard | recall | 0 | 6.293 | 78.65% | 3.834 | 86.99% |
+| hard | recall | 1 | 7.420 | 74.82% | 3.858 | 86.91% |
+| hard | recall | 2 | 6.359 | 78.42% | 4.162 | 85.88% |
+
+The actual initial hard-recall query measurements also show that
+QKNorm-one broadens support. First-layer head/seed means use the same
+fixed query prefixes as step 2, with otherwise identical non-score initial
+parameters; ScaledDot's measurements agree with step 2's.
+
+| Model | Scores | Initial support, positions | Initial support share | Initial score standard deviation |
+| --- | --- | ---: | ---: | ---: |
+| small | QKNorm-one | 8.5798 | 19.35% | 0.2443 |
+| small | ScaledDot | 35.4657 | 79.25% | 0.0241 |
+| large | QKNorm-one | 10.7562 | 24.25% | 0.1715 |
+| large | ScaledDot | 24.8788 | 55.87% | 0.0480 |
+
+Across both sizes QKNorm-one matches 17 of 22 required softmax passes,
+against 12 of 22 for ScaledDot; their total passes are 19 and 13. QKNorm-one
+rescues one of the two original persistent targets, ScaledDot neither.
+The selection rule ranks sparse matched softmax passes first, then
+persistent target passes, then all sparse passes. All passes have exact
+visible zeros, and every final head does too, so no dense-only pass is
+counted. These results select QKNorm-one as the best attempt for step 5.
+
+H2's narrow-start prediction is supported. A lower learned QKNorm start
+helps the particular persistent seed 2 but does not remove the basis
+failures; changing the whole score map to ScaledDot also fails that goal.
+This is evidence for a task/seed-dependent effect, not for a complete
+repair or a single cause of failure. The comparisons retain the earlier
+qualification about separate multi-threaded trajectories: step 2's
+repeated sparsemax targets failed to fit, whereas step 1's original
+targets were fitted near-passes. A support measurement and a best compiled
+selection accuracy can also describe different rows or different updates.
+These trials neither revive H1/H4 nor identify a counting mechanism.
+
+Full initial and final statistics per head, all reduced large trajectories,
+description/cadence checks, collector sources and raw-file hashes are in
+[large_repair_results.json](large_repair_results.json). All 60 repair runs
+use identical lab source hashes at `aadc772`, retain ordinary sparsemax
+weights and change only the declared scores and observer relative to the
+original sparsemax descriptions. The combined comparison and source
+hashes are in [repair_results.json](repair_results.json), which references
+the two screen artifacts without duplicating their trajectories. All 300
+raw-file hashes and both artifacts' program/helper hashes have been
+verified against their sources. The final full lab check passes all 166
+tests (938.589 seconds), and all 222 experiment descriptions check.
 
 Run a pair with:
 

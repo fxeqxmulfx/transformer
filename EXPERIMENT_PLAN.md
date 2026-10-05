@@ -1,6 +1,6 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-05 UTC. **In progress: step 4. Steps 0 to 3 are done.** The investigation cycle
+Updated on 2026-10-05 UTC. **In progress: step 5. Steps 0 to 4 are done.** The investigation cycle
 was started on 2026-10-04 at the user's request. On 2026-10-04 the user asked for
 this plan: find out why sparsemax attention fails, and try to repair it, on
 the basis benchmark. It replaces the plan of 2026-10-03 for the mod-193
@@ -291,7 +291,7 @@ interaction or an unsuitable surrogate.
 
 ## 4. Repair
 
-**In progress on 2026-10-05 UTC.** H2 justifies the two score interventions:
+**Done on 2026-10-05 UTC.** H2 justifies the two score interventions:
 QKNorm initialized at scale one and ScaledDot, each with the ordinary
 sparsemax backward and unchanged basis recipes. `QKNorm.initial_scale`
 defaults to the original square-root-of-head-width initialization and keeps
@@ -304,8 +304,20 @@ complete: each candidate matches 6 of the 9 softmax passes, neither passes
 the six hard runs, and every passing run retains exact visible zeros in
 all eight heads after BOS. QKNorm-one fails parity seeds 0 and 2 and easy
 recall seed 2; ScaledDot fails every easy recall seed. Thus neither is a
-complete basis repair at these recipes. The 30 large-model runs are in
-progress and still test the original persistent hard-recall failure.
+complete basis repair at these recipes. All 30 large-model runs are now
+complete too: QKNorm-one matches 11 of 13 required large softmax passes,
+ScaledDot 6 of 13. QKNorm-one passes the original persistent hard-recall
+seed 2 at update 3,550 but not seed 1, and fails large parity seed 2.
+ScaledDot fails every large parity and hard-recall seed. Every final head
+of all 60 runs retains exact visible zeros after BOS. Across both sizes,
+QKNorm-one matches 17 of 22 required softmax passes and has 19 total passes;
+ScaledDot matches 12 of 22 and has 13 total passes. Neither is a complete
+repair. QKNorm-one is the best attempted intervention for step 5, ranked
+by sparse matched softmax passes, then persistent target passes, then all
+sparse passes. H2's narrow-start prediction holds and changing the start
+helps one persistent seed, but its failure-removal prediction is not met.
+The complete source/description/cadence and 300 raw-file hash checks pass,
+as do all 166 lab tests (938.589 seconds).
 The matched-seed table, final losses, full per-head supports and source
 hashes are in [basis_sparsemax](experiments/basis_sparsemax/README.md).
 The failed surrogate is not screened as a repair; H4's rarity criterion and
