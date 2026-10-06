@@ -1,30 +1,10 @@
 import Transformer.GPTMini.Sparsemax.SeparatedValues
 import Transformer.GPTMini.Sparsemax.ValuePlateau
 import Transformer.GPTMini.Sparsemax.QKIndependentError
-import Transformer.GPTMini.Sparsemax.QKPrefixError
-import Transformer.GPTMini.Sparsemax.SupportSegment
-import Transformer.GPTMini.Sparsemax.ClippedKeySegment
-import Transformer.GPTMini.Sparsemax.SharedRowsExample
-import Transformer.GPTMini.Sparsemax.SharedRows
-import Transformer.GPTMini.Sparsemax.SquaredSegment
-import Transformer.GPTMini.Sparsemax.SharedRowLoss
-import Transformer.GPTMini.Sparsemax.SharedRowMinimum
-import Transformer.GPTMini.Sparsemax.SharedRowDerivative
 import Transformer.GPTMini.Sparsemax.SharedRowCancellation
-import Transformer.GPTMini.Sparsemax.EmbeddingGram
-import Transformer.GPTMini.Sparsemax.GramRouting
-import Transformer.GPTMini.Sparsemax.GramRoutingEnergy
-import Transformer.GPTMini.Sparsemax.GramSupport
 import Transformer.GPTMini.Sparsemax.GramBoundary
-import Transformer.GPTMini.Sparsemax.NormalizedGram
 import Transformer.GPTMini.Sparsemax.NormalizedGramExamples
-import Transformer.GPTMini.Sparsemax.InvertibleGram
-import Transformer.GPTMini.Sparsemax.GramValues
-import Transformer.GPTMini.Sparsemax.JointGramValues
-import Transformer.GPTMini.Sparsemax.GramValueExampleGrams
 import Transformer.GPTMini.Sparsemax.JointGramValueExamples
-import Transformer.GPTMini.Sparsemax.MemoryGram
-import Transformer.GPTMini.Sparsemax.MemoryValues
 import Transformer.GPTMini.Sparsemax.ContextMemory
 import Transformer.GPTMini.Sparsemax.PrefixMemoryCodes
 import Transformer.GPTMini.Sparsemax.SharedMemoryValues
@@ -66,6 +46,7 @@ import Transformer.GPTMini.Sparsemax.PeriodicMemoryRank
 import Transformer.GPTMini.Sparsemax.OutputTiedMemoryDescent
 import Transformer.GPTMini.Sparsemax.CompactAffineCapacity
 import Transformer.GPTMini.Sparsemax.CausalContentBlock
+import Transformer.GPTMini.Sparsemax.AtomicMatchingContext
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -195,4 +176,24 @@ Future token changes cannot affect predictions; no prototype search is needed.
 Selected K features restrict capacity; universal coefficient-linear scalar
 responses need 2^r coefficients. Free token codes, normalization, layer stacks,
 FFN/language criteria and successful Basis training are not established.
+
+A new atomic model retains freely learned shared token Q/K/value embeddings
+and actual causal sparsemax over token occurrences. All bounded heads are
+eligible; active identities are selected rather than prescribed interactions.
+Original values remain independent, with no inverse or attention cancellation.
+Finite nonnegative unit-mass states form a convex domain, and their physical
+prediction set is exactly the convex hull of every eligible matching head.
+Mixture coefficients absorb into original values for ordinary multihead sums.
+
+Every finite state has a representative with at most R+1 heads preserving
+R observed scalar outputs and every criterion of those outputs. An attained
+optimum, if supplied, has the same finite representation. Storage is bounded
+by `(R+1)*(2*V*H+V*D+1)` scalars for the learned head tables and weights.
+Convex output criteria give a convex full-state problem. A supporting output
+functional and a certified price lower bound over all possible heads bound
+the global objective gap. Two-context answer fits require order-sensitive
+heads; uniform routing has error at least 1/8 even with freely learned values.
+Head pricing is nonconvex even on an affine Q/K path with unchanged values.
+Variable head count, a numerical atom box and unit mass replace fixed-width
+raw training; original weight decay and unseen-text guarantees are deferred.
 -/

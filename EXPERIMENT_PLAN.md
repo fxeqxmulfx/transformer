@@ -2083,6 +2083,102 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Freely learned query-key matching through a convex atomic state
+
+**Done on 2026-10-06 UTC for the stated mathematical architecture.** Seven
+modules add forty-six proved theorems without new `sorry`. The user's
+correction is accepted: the previous selected bit-product response and its
+inverse-adjusted values do not establish independently learned attention
+matching. That construction is not sufficient evidence for the requested
+ConvexGPT block; its Python port has not started.
+
+The new architecture retains genuine attention over causal input-token
+occurrences. An atom contains three independent learned tables: Q and K
+of shape V*H and original values of shape V*D. Token identities are observed
+inputs; every context uses the same tables of each head. All coordinates
+are bounded by a numerical cap C. The complete eligible atom family ranges
+over every such table triple, with no selected feature products, prescribed
+routes, prototype bank or fixed sparsemax support. Effective Q/K token
+embeddings are free; a shared factorization into E*W_Q and E*W_K is not asserted.
+
+[AtomicMatchingHead.lean](src/Transformer/GPTMini/Sparsemax/AtomicMatchingHead.lean)
+uses literal Q(token_i) dot K(token_j), the repository's original variational
+causal sparsemax, and its product with independent common original values.
+It proves physical causality and output bounds. Changing both Q and K from
+zero to one in the two-token witness changes the output from 1/2 to 1 while
+the original values remain identical. No inverse decoder cancels matching.
+Position features may be included in input identities; RoPE and normalization
+are not implemented by this theorem.
+
+[AtomicMatchingMixture.lean](src/Transformer/GPTMini/Sparsemax/AtomicMatchingMixture.lean)
+stores a finitely supported nonnegative distribution with total mass one
+over the complete continuously parameterized atom family. Its domain is
+convex: combining states may select previously absent Q/K/value heads.
+The forward is the actual weighted sum of all active attention-head outputs.
+Absorbing each coefficient into that head's original values gives ordinary
+physical multihead evaluation. Convexity is in the distributional state,
+not in independently interpolated raw matrices at a fixed head count.
+
+[AtomicMatchingHull.lean](src/Transformer/GPTMini/Sparsemax/AtomicMatchingHull.lean)
+proves that this physical prediction class is exactly the convex hull of
+all eligible heads' observed responses, reconstructing finite head families
+in both directions. Convexity is not stipulated as the definition of the
+physical forward. Head identities may be chosen from the data, while a
+fixed finite interaction dictionary is not part of the architecture.
+
+[AtomicMatchingCompression.lean](src/Transformer/GPTMini/Sparsemax/AtomicMatchingCompression.lean)
+proves that R observed scalar outputs have an equivalent feasible state
+with at most R+1 active heads. Every criterion of those exact outputs is
+preserved. Learned storage is at most `(R+1)*(2*V*H+V*D+1)` real scalars;
+V is the input vocabulary and H,D are per-head dimensions. This counts the
+stored Q/K/value tables and weights, not caches or a numerical optimizer.
+If an attained optimum is supplied, there is an equally optimal compressed
+state. Attainment for arbitrary continuous criteria is not proved here.
+Compression concerns the chosen observations and may change unseen responses.
+
+[AtomicMatchingOptimality.lean](src/Transformer/GPTMini/Sparsemax/AtomicMatchingOptimality.lean)
+proves convexity for every supplied convex output criterion. It evaluates
+the true pricing objective `sum(r, g[r]*head_output[r])`. A supporting
+functional g and a certified lower price c over every eligible head give
+a global criterion-gap bound `pairing(g, current_output)-c`. The hypothesis
+ranges over all Q/K/value triples, including heads outside the active support.
+A nonzero-gradient squared-error example satisfies the complete certificate
+and has a genuine constrained optimum. No efficient global pricing oracle
+or convergence of raw Q/K gradient descent is claimed.
+
+[AtomicMatchingSelection.lean](src/Transformer/GPTMini/Sparsemax/AtomicMatchingSelection.lean)
+proves that adding positive mass to a different matching head strictly
+improves the ordinary squared answer error, with identical original values
+and no route labels. The actual midpoint obtained by interpolating Q/K
+of one raw head differs from the convex mixture midpoint. Atom pricing is
+proved nonconvex even on an affine raw-Q/K path with unchanged values.
+Any normalized number of repeated uniform heads remains suboptimal against
+an eligible nonuniform head; restricting optimization to an unchanging bank loses the
+full problem's guarantee.
+
+[AtomicMatchingContext.lean](src/Transformer/GPTMini/Sparsemax/AtomicMatchingContext.lean)
+uses two contexts with the same token multiset in different orders. The
+ordinary final-position answers differ. A zero-query uniform head has total
+squared error at least 1/8 even with freely relearned keys and original
+values; a constant value table attains this bound. A bounded genuine matching
+head attains zero error. Every exact-fitting feasible mixture must select an
+actual head that distinguishes the orders. Answer-only data can therefore
+require effective matching even when values are trainable; no route labels
+or inverse values are supplied.
+
+The remaining computation is substantial: globally pricing a new genuine
+head still contains nonlinear learned matching. The numerical atom box,
+unit mixture mass and variable head count are explicit restrictions of this
+new architecture; it is not an equivalence with the paper's four-matrix
+weight decay or a fixed-width GPTMini. Multiple jointly trained nonlinear
+layers, FFN, language-head loss, constant storage, arbitrary exact fitting,
+generalization on new text and a successful Basis comparison are not proved.
+Python is unchanged and new model training remains deferred.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+extra axioms, results resting on `sorry`, vacuous statements or placeholders.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
