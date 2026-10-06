@@ -1,6 +1,6 @@
 import Transformer.GPTMini.Semantics.FinalBlock
 import Transformer.GPTMini.Semantics.Order
-import Transformer.GPTMini.Semantics.ParityInputs
+import Transformer.GPTMini.Semantics.ParityCorrectness
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -29,8 +29,10 @@ a 68-unit homogeneous bounded-count parity decoder and a simultaneous
 has distinct tied EVEN/ODD/EOS codes and exactly the same actual count
 projection. Its full hidden state is connected to the real decoder FFN,
 and exact pre-FFN prompt/answer formulas are proved for all raw bit words.
-Sufficient readout margins and task correctness, ordered-prefix and
-recall-pair encoders remain separate obligations.
+Uniform finite weights give strict label/EOS margins through final RMSNorm.
+The actual checked List Int function solves every legal parity prefix in
+both modes and freely generates label then EOS in two calls. Ordered-prefix
+and recall-pair encoders remain separate obligations.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout

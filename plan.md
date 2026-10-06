@@ -73,10 +73,14 @@ unchanged and its full hidden state uses the real decoder FFN.
 ParityInputs derives exact raw prompt/answer pre-FFN formulas and phase
 values for every bit word, with no prepared encoder-value premise.
 
-Next prove sufficient readout margins uniformly on every raw prompt and
-supplied-answer prefix, then the checked integer SolvesTask theorem.
-Continue
-with the raw adjacency/last-write encoder and depth-prefix recurrence.
+ParityCoordinates/Bounds/Readout/Correctness now derive uniform strict
+label/EOS margins with ordinary finite FFN weights 1024 and 131072.
+The given original small two-layer model's checked integer function
+solves every legal parity prefix in either mode and generates label/EOS
+in two calls. This covers real arithmetic and the documented shared
+epsilon range (0, 1/64], not floating-point equivalence or AdamW success.
+
+Next construct the raw adjacency/last-write encoder and depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -160,3 +164,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-06 | 1 | Proved legal variable-length first-state collision; actual ONE/BOS channels recover the count for all raw parity words in the original 64-wide block. | Bounded ReLU2 parity decoder, EOS/readout, raw MQAR and depth encoders. |
 | 2026-10-06 | 1 | Repaired features committed in 2099735. Proved homogeneous parity decoder and realized simultaneous parity/EOS in 69 of the original 256 FFN units. | Full-stack distinct tied embeddings and readout margins; raw MQAR/depth encoders. |
 | 2026-10-06 | 1 | Decoder committed in 69b9380. Connected distinct tied embeddings and the actual two-layer hidden state; derived universal raw prompt/answer FFN inputs. | Uniform quantitative readout margins and parity SolvesTask; raw MQAR/depth encoders. |
+| 2026-10-06 | 1 | Raw full-model coupling committed in 8adde25. Proved all 68 tied-score comparisons, bounded actual normalization and complete parity SolvesTask, including free generation and the 16-ONE/19-slot boundary. | Full raw MQAR and depth encoders; convex architecture search and controlled FLOP comparisons remain. |
