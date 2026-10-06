@@ -163,6 +163,15 @@ on categorical codes is precisely the already verified matching geometry;
 zero nonrecords and unused fast coordinates remain zero. The true second
 prenorm, shared QKV and clipping saturation still need to be derived.
 
+RecallSaturation proves the exact clipped-QKNorm scale cancellation
+condition, including different query/record amplitudes. Above the actual
+threshold, faithful insertion and original RoPE convert a compact copy
+error eta <= 1 into normalized error at most 2*eta, independently of the
+small implementation epsilon or positive amplitude. The base norm lower
+bound is derived from the norm-two symbol and its copy distance. These
+are local operator laws; raw-state/RMS bounds and one finite shared QKV
+gain must still discharge clipping rather than assume it for the model.
+
 Next construct the simultaneous raw adjacency/table-gating/last-write encoder
 and depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
@@ -258,3 +267,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Actual full-block table gate committed in 62c26f0. Derived a uniform finite-temperature latest-write score margin from the original slow RoPE pairs, simultaneously below the different-key content gap. | Transport the real encoder's copied-key errors through second prenorm/QKNorm/QKV, bind all conditions to validated raw prefixes, then original retrieval/readout and depth correctness. |
 | 2026-10-07 | 1 | Uniform latest-write gap committed in b4822b4. Chose a finite shared predecessor temperature and proved uniform raw copy accuracy; the true full block stores positive-norm table keys with relative error latestMargin/16, preserving raw query/value codes. | Realize the actual second matching matrix and prove normalization/saturation/error transport, complete raw-parser/readout coupling, full depth and convex architecture search. |
 | 2026-10-07 | 1 | Uniform finite raw binding accuracy committed in 7d7fa9d. Proved an ordinary shared linear insertion of all real copied keys into the original slow RoPE pairs, with exact norm and error preservation and faithful categorical matching geometry. | Derive true second prenorm/QKNorm saturation and robust latest-write routing/readout, complete raw parser coupling, full depth correctness and convex architecture search. |
+| 2026-10-07 | 1 | Faithful matching insertion committed in 8dbdabe. Proved actual clipped-QKNorm cancellation of independent positive amplitudes above saturation and epsilon-independent normalized copy error through the true matrix/RoPE. | Derive uniform raw-state/RMS bounds and a finite shared second QKV gain to discharge clipping, then actual robust retrieval/readout, validated parser coupling, full depth and convex architecture search. |

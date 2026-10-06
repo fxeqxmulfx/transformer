@@ -16,6 +16,7 @@ import Transformer.GPTMini.Semantics.RecallRawMarker
 import Transformer.GPTMini.Semantics.RecallRawGate
 import Transformer.GPTMini.Semantics.RecallRawBinding
 import Transformer.GPTMini.Semantics.RecallRotaryInsert
+import Transformer.GPTMini.Semantics.RecallSaturation
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -103,6 +104,15 @@ products, norms and copy distances are preserved, including imperfect
 copies and position-dependent amplitudes. Its categorical image is the
 verified matching code, and its excluded fast coordinates are zero.
 Second-block prenorm/QKNorm saturation and robust routing remain.
+
+Local original-QKNorm laws now cancel independent positive query/key
+amplitudes above their actual clipping thresholds. Faithful insertion
+and original RoPE transport base copy error to a normalized error at
+most twice that error, independently of epsilon or record amplitude.
+The lower base norm is derived from the norm-two reference and copy
+distance. Actual raw-state bounds must still discharge clipping for a
+finite shared second projection gain; these are operator laws rather
+than an assumed saturated encoder or a complete recall solver.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
