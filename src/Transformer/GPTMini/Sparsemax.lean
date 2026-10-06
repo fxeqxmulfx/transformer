@@ -84,6 +84,9 @@ import Transformer.GPTMini.Sparsemax.LocalMemorySupport
 import Transformer.GPTMini.Sparsemax.LocalJointMemory
 import Transformer.GPTMini.Sparsemax.LocalNearestMemory
 import Transformer.GPTMini.Sparsemax.LocalMemoryExamples
+import Transformer.GPTMini.Sparsemax.LocalMemoryQuadratic
+import Transformer.GPTMini.Sparsemax.LocalMemorySelection
+import Transformer.GPTMini.Sparsemax.LocalRegularizedMemory
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -157,44 +160,41 @@ convex. A two-token example changes Q/K, values and support. Its actual
 midpoint output is the endpoint mean, unlike literal mean original values.
 Sharing across contexts, small width and value penalties need separate results.
 
-A shared learned dictionary now handles arbitrarily many causal data codes.
-Their genuine Q/K mixture scores give actual attention M times the memory.
-A convex diagonal floor above one half guarantees its inverse without
-triangular supports. One global decoded value table gives M times Z for
-all contexts; the exact prediction class and any convex output objective
-remain convex. Repeated-token prefix codes and a three-context witness are
-proved. This is memory attention with fixed data codes; ordinary token
-self-attention is changed, and output-only training leaves the Gram free.
+A shared dictionary handles arbitrary numbers of fixed causal data codes.
+Genuine mixture-query scores give attention M times memory; a floor above
+one half guarantees its inverse without triangular supports. One global
+value table gives MZ outputs, a convex prediction class and convex output
+criteria. Repeated-token witnesses are proved. This changes token attention
+to parameter memory; output-only fitting leaves the Gram free.
 
-Richer features remove the frequency-code three-target obstruction. Six
-position/token slots give a right inverse for the same prefixes, permitting
-arbitrary vector outputs and the excluded triple `(0,0,1)`. Complete causal
-signatures fit exactly all observation-consistent finite-window targets.
-Both retain the convex chart for every feasible Gram; identical prefixes
-must share outputs. Full signatures cost `(V+1)^T` slots.
+Six position/token slots remove the frequency-code obstruction with a right
+inverse fitting arbitrary targets, including `(0,0,1)`. Complete signatures
+fit all consistent finite-window targets in the same convex chart; identical
+prefixes must share outputs. Full signatures cost `(V+1)^T` slots.
 
-A compact kernel registers P distinct observed prefixes and P memory slots.
-Its data kernel is identity plus constant and squared-feature Grams; training
-codes have a proved right inverse. One common value table fits arbitrary
-vector targets for every feasible learned Gram, with genuine Q/K width 2P.
-Actual forwards are causal kernel sums and convex output criteria remain
-convex jointly. This affine chart needs at least R slots for R independent
-vector target rows. Gram parameters grow quadratically and routes are dense.
+A P-slot kernel on distinct observed prefixes has a proved training-code
+right inverse, from identity plus constant and squared-feature Grams. One
+common value table fits arbitrary prototype targets with genuine Q/K width
+2P and convex joint output criteria. This affine chart needs at least R slots
+for R independent target rows; Gram storage is quadratic and routes are dense.
 
-A nearest variant gives one-hot data codes and identity prototype codes in
-the same joint chart. Masked Hamming distance ignores future query and
-prototype tokens. Actual output error is at most epsilon plus L times cover
-radius under explicit fit, regularity and coverage hypotheses. Two targets
-agreeing on registered observations disprove unconditional unseen guarantees.
-Unrestricted memory rows can still be dense; output-only fitting leaves Gram free.
+A nearest variant gives one-hot codes and identity prototype codes in the
+same chart. Masked Hamming distance ignores future query/prototype tokens.
+Error is at most epsilon plus L times cover radius under explicit fit,
+regularity and coverage; indistinguishable targets disprove unconditional bounds.
 
-A compact path variant learns 3P-1 scalar edge/norm coordinates in a convex
-linear domain. Its affine genuine Gram has independently variable Q/K norms;
-floor above one half guarantees the actual attention inverse. A nearest query
-has at most three active actual routes, attained by an unseen four-slot example.
-Common values retain MZ outputs, arbitrary prototype fitting, conditional unseen
-error bounds and convex joint output criteria. Possible connections and
-same-family orthogonality are fixed architectural restrictions. A concrete
-noninjective forward proves output-only Gram freedom persists. Prototype count
-and width still grow with data; FFN and task-loss choice stay open.
+A compact path learns 3P-1 edge/norm coordinates in a convex linear domain.
+Its affine genuine Gram permits independent Q/K norms; floor above one half
+guarantees the inverse. Actual nearest queries have at most three routes,
+attained by an unseen four-slot witness. Common values retain MZ outputs,
+arbitrary prototype fit, conditional unseen bounds and convex joint criteria.
+Possible connections and same-family orthogonality are fixed restrictions;
+a noninjective forward retains output-only Gram freedom. Data count and width
+still grow with observations; FFN and task-loss choice remain open.
+
+An additional complete-coordinate squared criterion is strictly convex and
+has a unique constrained minimum on the compact domain, even for an infeasible
+reference. Positive weight preserves joint convexity with convex output criteria.
+Every attained joint minimum uses the same selected Gram parameters, even
+at different outputs. The reference supplies additional information for this choice.
 -/

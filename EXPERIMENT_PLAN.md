@@ -1457,6 +1457,58 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Unique compact attention selection with an additional convex criterion
+
+**Done on 2026-10-06 UTC.** Three modules add twenty-two proved theorems
+without new `sorry`. They address the compact chart's remaining output-only
+Gram freedom by an explicit extra criterion, while preserving joint convexity.
+This is a proved optional mathematical extension, not a selected model task
+loss, a solver implementation or evidence of useful learned semantic routes.
+
+[LocalMemoryQuadratic.lean](src/Transformer/GPTMini/Sparsemax/LocalMemoryQuadratic.lean)
+sums squared differences from a supplied reference over all `3P-1` compact
+edge and Q/K-norm coordinates. It is nonnegative, zero exactly at the
+reference and strictly convex. Its exact affine gap is
+`a * R(reference,p) + b * R(reference,q) - R(reference,a*p+b*q)
+= a*b*R(q,p)` for `a+b=1`. Two distinct constrained parameter minima cannot
+exist on any convex domain; no embedding family is omitted from the criterion.
+
+[LocalMemorySelection.lean](src/Transformer/GPTMini/Sparsemax/LocalMemorySelection.lean)
+proves the actual compact parameter domain is compact: a finite coordinate
+box intersected with a closed total-edge budget. The criterion is continuous,
+so `cap >= 1` and `floor <= 1` imply a unique constrained minimum for every
+reference, including infeasible references. A concrete reference violates
+both edge and norm bounds and still has a unique admissible minimum. The
+noncomputable selected-point definition records this proved optimization
+result, not an executable numerical solver. A floor above one half gives
+genuine width-`2P` embeddings and an inverse for the selected actual attention.
+
+[LocalRegularizedMemory.lean](src/Transformer/GPTMini/Sparsemax/LocalRegularizedMemory.lean)
+adds `coefficient * R(reference, parameters)` to any convex output criterion.
+A nonnegative coefficient preserves convexity of the entire compact
+parameter/global-output learning task. A strictly positive coefficient forces
+every attained joint minimum to minimize the parameter criterion. All joint
+minima have identical attention parameters, even if their global output
+tables differ; these parameters equal the proved unique constrained projection.
+Nonconstant squared-output witnesses attain the minimum with nonidentity
+attention, changed Q/K norms and different nonconstant output tables.
+
+The selection reference supplies additional information or an architectural
+preference; it may be computed from observations, but no such text-derived
+reference is claimed here. The unchanged output-only criterion remains
+nonidentifying. This extension chooses among its equivalent attention/value
+representations; it does not demonstrate learning useful routes from output
+targets alone. The full joint minimum's existence still depends on the
+output objective; parameter-projection existence is proved. Text regularity,
+coverage and useful numerical generalization constants remain to establish.
+FFN, task-loss selection and new training remain deferred; the completed
+sparsemax experiment cycle is unchanged.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass; the modules have no warnings, new `sorry`, extra
+axioms, results resting on a `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
