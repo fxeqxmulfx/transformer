@@ -48,6 +48,7 @@ import Transformer.GPTMini.Sparsemax.CompactAffineCapacity
 import Transformer.GPTMini.Sparsemax.CausalContentBlock
 import Transformer.GPTMini.Sparsemax.AtomicMatchingContext
 import Transformer.GPTMini.Sparsemax.AtomicMatchingAttainment
+import Transformer.GPTMini.Sparsemax.PairedRecallRouting
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -178,28 +179,22 @@ Selected K features restrict capacity; universal coefficient-linear scalar
 responses need 2^r coefficients. Free token codes, normalization, layer stacks,
 FFN/language criteria and successful Basis training are not established.
 
-A new atomic model retains freely learned shared token Q/K/value embeddings
-and actual causal sparsemax over token occurrences. All bounded heads are
-eligible; active identities are selected rather than prescribed interactions.
-Original values remain independent, with no inverse or attention cancellation.
-Finite nonnegative unit-mass states form a convex domain, and their physical
-prediction set is exactly the convex hull of every eligible matching head.
-Mixture coefficients absorb into original values for ordinary multihead sums.
+The genuine atomic model retains free shared token Q/K and independent original values with actual causal sparsemax.
+All bounded heads are eligible; nonnegative unit-total finite states are convex, and predictions form their complete convex hull.
+Mixture masses absorb into original values. R observations compress exactly to at most R+1 actual heads.
+At nonnegative cap, support-changing inference is continuous and a compact R+1 chart covers the observed prediction set.
+Every continuous output criterion attains a global minimum; storage is bounded by `(R+1)*(2*V*H+V*D+1)`.
+Convex criteria give convex distributional training; supporting functionals and certified global head prices bound the gap.
+Physical head-price minima exist, but finding them can be nonconvex even on affine Q/K paths with fixed values.
+The two-order example has uniform error floor 1/8. Variable head count, coordinate bounds and unit mass replace fixed raw-width training.
+Original weight decay and unseen-text guarantees are deferred.
 
-Every finite state has a representative with at most R+1 heads preserving
-R observed scalar outputs and every criterion of those outputs. For a
-nonnegative numerical cap, the complete observed prediction class is compact:
-actual support-changing sparsemax is continuous, and a compact R+1-slot
-physical chart covers every mixture prediction. Every continuous output
-criterion has an attained global minimum with at most R+1 heads; no optimal
-state or exact-fit hypothesis is supplied. Storage is bounded by `(R+1)*(2*V*H+V*D+1)` scalars for the learned head tables and weights.
-Convex output criteria give a convex full-state problem. A supporting output
-functional and a certified price lower bound over all possible heads bound
-the global objective gap. The full physical-head price attains its minimum,
-so a finite global gap certificate exists for every supporting functional.
-Finding that head numerically remains a separate optimization problem. Two-context answer fits require order-sensitive
-heads; uniform routing has error at least 1/8 even with freely learned values.
-Head pricing is nonconvex even on an affine Q/K path with unchanged values.
-Variable head count, a numerical atom box and unit mass replace fixed-width
-raw training; original weight decay and unseen-text guarantees are deferred.
+Content-only heads lose key/value binding: every visible permutation fixing the query preserves their outputs.
+Exchanging two written values produces distinct correct answers and sharp error floor 1/2 for every old mixture.
+A new causal encoder splits keys into freely learned current-token and predecessor roles, with current-token Q and original values.
+Its physical storage has no V-squared pair table. True contextual forward continuity, output bounds and convex mixture criteria survive.
+Global contextual head prices attain minima over the original token tables; efficient discovery is still separate.
+A cap-one head fits both exchanged tables and attains the exact two-observation price lower bound.
+For 256 keys, a cap-four width-eight physical head uses distinct signed integer codes of norm thirty and unit score gaps.
+Original sparsemax selects the unique visible matching predecessor and reads its next value. Rewrites and optimizer convergence are deferred.
 -/
