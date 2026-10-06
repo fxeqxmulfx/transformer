@@ -53,9 +53,16 @@ and phase features, full-stack phase preservation, and internal code/error
 conditions implying an actual integer answer are proved. Complete prefix
 encoders, reliable retrieval selection, and the parity/EOS decoder remain.
 
-First work item: prove the variable-length normalized-count collision and
-repair the parity representation by retaining a denominator/length signal.
-Then prove the bounded-count parity decoder and its EOS branch. Continue
+First work item completed: ParityCollision proves a full first-state
+collision for legal 4-token/8-token prompts with different parity labels.
+DenominatorEmbedding/Head/Block add a simultaneous raw BOS indicator in
+the original small GPTMini and prove internal count recovery. ParityFeatures
+establishes it for every raw prompt and supplied-answer continuation,
+without an external length or RMS multiplier. This repairs a feature
+representation; it is not yet a complete parity solver.
+
+Next prove a homogeneous bounded-count decoder using the original ReLU2
+FFN and its EOS branch, then discharge full-stack tied readout. Continue
 with the raw adjacency/last-write encoder and depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
@@ -137,3 +144,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | Date | Stage | Result | Remaining work |
 | --- | --- | --- | --- |
 | 2026-10-06 | Setup | Cycle started from b243ba5; prior 77 semantic theorems retained. | Stage 1: normalized count versus exact count, full decoders and encoders. |
+| 2026-10-06 | 1 | Proved legal variable-length first-state collision; actual ONE/BOS channels recover the count for all raw parity words in the original 64-wide block. | Bounded ReLU2 parity decoder, EOS/readout, raw MQAR and depth encoders. |

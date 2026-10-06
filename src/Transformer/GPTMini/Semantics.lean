@@ -1,6 +1,6 @@
 import Transformer.GPTMini.Semantics.FinalBlock
 import Transformer.GPTMini.Semantics.Order
-import Transformer.GPTMini.Semantics.ParityState
+import Transformer.GPTMini.Semantics.ParityFeatures
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -19,8 +19,12 @@ Concrete original-model parameters compute raw ONE counts from embeddings
 and the actual fused QKV, retaining the result in the first residual
 block. A nonzero attention projection computes this count alongside an
 independent completion-phase feature. Local output-matrix kernel equations
-prove phase preservation throughout the full stack. Ordered-prefix and
-recall-pair encoders for every Basis input remain separate obligations.
+prove phase preservation throughout the full stack. A variable-length
+collision is proved for this first count/phase block. A simultaneous BOS
+denominator channel repairs it and recovers the raw count from the actual
+first hidden state for every parity prompt and supplied-answer prefix,
+without an external length input. The actual parity/EOS FFN/readout,
+ordered-prefix and recall-pair encoders remain separate obligations.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
