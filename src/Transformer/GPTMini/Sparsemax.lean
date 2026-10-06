@@ -76,8 +76,6 @@ import Transformer.GPTMini.Sparsemax.NearestPrototypeCodes
 import Transformer.GPTMini.Sparsemax.PrefixNearestCodes
 import Transformer.GPTMini.Sparsemax.NearestMemoryGeneralization
 import Transformer.GPTMini.Sparsemax.PermutationMemoryGram
-import Transformer.GPTMini.Sparsemax.LocalMemoryWeights
-import Transformer.GPTMini.Sparsemax.LocalMemoryCore
 import Transformer.GPTMini.Sparsemax.LocalMemoryParameters
 import Transformer.GPTMini.Sparsemax.LocalMemoryFeasibility
 import Transformer.GPTMini.Sparsemax.LocalMemorySupport
@@ -101,16 +99,9 @@ import Transformer.GPTMini.Sparsemax.PrefixObservedMemory
 import Transformer.GPTMini.Sparsemax.ObservedMemoryExamples
 import Transformer.GPTMini.Sparsemax.IncidentRegularizedMemory
 import Transformer.GPTMini.Sparsemax.IncidentMemoryDescent
-import Transformer.GPTMini.Sparsemax.EnergyCoupledMemory
-import Transformer.GPTMini.Sparsemax.EnergyMemoryExamples
-import Transformer.GPTMini.Sparsemax.EnergyMemoryValues
-import Transformer.GPTMini.Sparsemax.EnergyMemoryIdentification
 import Transformer.GPTMini.Sparsemax.EnergyMemoryLoss
-import Transformer.GPTMini.Sparsemax.PeriodicMemoryKeys
-import Transformer.GPTMini.Sparsemax.PeriodicMemoryQueries
-import Transformer.GPTMini.Sparsemax.PeriodicMemoryAttention
-import Transformer.GPTMini.Sparsemax.PeriodicMemoryForward
 import Transformer.GPTMini.Sparsemax.PeriodicMemoryRank
+import Transformer.GPTMini.Sparsemax.OutputTiedMemoryCurvature
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -198,4 +189,12 @@ three/four. Both Q and K change; actual masked sparsemax, common-value inverse,
 joint convex energy domain and categorical forward are proved. The former
 normalized Gram requires width at least P; the new physical Gram differs,
 and masked attention has full rank despite QK score rank at most three.
+
+Every better feasible endpoint gives joint descent; convex ordinary criteria
+have no nonglobal constrained local minima for any finite observation table.
+Affine sharing of local edges with learned adjacent output coordinates
+removes residual intrinsic freedom. With all prototypes observed, ordinary
+squared error is strictly convex for arbitrary targets, with complete
+coordinate curvature controlled by `1+4*gain^2`, independent of P. Opposite
+nonidentity answer fits and their support-changing midpoint remain feasible.
 -/

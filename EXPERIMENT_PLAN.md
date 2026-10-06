@@ -1763,6 +1763,79 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Ordinary output curvature through affine parameter sharing
+
+**Done on 2026-10-06 UTC.** Six modules add forty-six proved theorems
+without new `sorry`. General feasible descent now applies to arbitrary
+finite observation tables. An additional explicit architectural restriction
+removes intrinsic flat segments of ordinary squared output error, without
+an added geometry criterion or supervised attention routes.
+
+[MatrixOutputError.lean](src/Transformer/GPTMini/Sparsemax/MatrixOutputError.lean)
+defines only sum squared error against ordinary vector answers. It proves
+zero-error equivalence, strict output curvature, the exact affine gap,
+exact target-segment decay and a constrained output-distance growth bound.
+There is no averaging, factor one half or embedding penalty.
+
+[PeriodicMemoryDescent.lean](src/Transformer/GPTMini/Sparsemax/PeriodicMemoryDescent.lean)
+connects those facts to the actual masked sparsemax/common-value forward.
+For any convex output criterion and any better feasible joint endpoint,
+all positive segment times up to one give strict descent. Every feasible
+constrained local minimum is global, without an exact-fit or fixed-support
+assumption. A feasible exact fit gives exact `(1-time)^2` ordinary-error
+decay for arbitrary output dimension. Independent edge freedom at fixed
+outputs remains in this untied chart.
+
+[OutputTiedMemory.lean](src/Transformer/GPTMini/Sparsemax/OutputTiedMemory.lean)
+intersects the true joint domain with the affine equality
+`t[e] = offset[e] + gain*(Z[e,channel]+Z[e+1,channel])`. Z is the learned
+output-coordinate table, not a supplied attention target. The fixed offset,
+gain and channel implement parameter sharing before optimization. This
+preserves joint convexity and the original physical width-three Q/K,
+variational sparsemax and globally decoded common values. With every
+registered prototype observed, actual predictions determine all intrinsic
+parameters. Independently adjustable norm/frame variables are absent from
+this canonical physical chart.
+
+[OutputTiedMemoryExamples.lean](src/Transformer/GPTMini/Sparsemax/OutputTiedMemoryExamples.lean)
+uses fixed offset and gain both 1/24 on the same earlier domain: floor 3/4,
+edge budget 1/8 and energy 6. Ordinary answers `(1,1,-2)` and `(-2,1,1)`
+remain exact fits with opposite nonidentity attention supports. Both physical
+queries and keys change, and original common values remain nonconstant and
+learned. The same domain contains both distinct points and their midpoint;
+the midpoint has both local edges 1/16. The restriction is not a singleton.
+
+[OutputTiedMemoryBounds.lean](src/Transformer/GPTMini/Sparsemax/OutputTiedMemoryBounds.lean)
+proves the adjacent affine readout's squared Lipschitz bound `4*gain^2`,
+independently of dictionary size. Each output coordinate occurs in at most
+two adjacent edges. Full intrinsic edge/output squared distance is at most
+`(1+4*gain^2)` times output-table squared distance. This distance is used
+only to state guarantees and is never added to the optimized criterion.
+
+[OutputTiedMemoryCurvature.lean](src/Transformer/GPTMini/Sparsemax/OutputTiedMemoryCurvature.lean)
+proves strict convexity of ordinary squared prediction error in every tied
+intrinsic direction for arbitrary answer tables, including unattainable
+ones. Its quantitative affine gap controls full coordinate distance with
+the same size-independent factor. Every constrained local minimum is global
+and every attained minimum is unique in all intrinsic learned coordinates.
+Thus intrinsic affine flat segments are removed in this restricted block,
+rather than only separated at two special exact-fit examples.
+
+Full prototype observation, categorical encoding, structural local mask,
+strict self-weight floor and the fixed affine parameter-sharing rule are
+explicit restrictions. The output criterion is ordinary squared regression;
+no claim of strict curvature for arbitrary convex criteria or free physical
+Q/K/value parameterizations is made. The rule restricts attainable answers,
+and its language-model usefulness is unproved. Unobserved prototype freedoms
+are not covered. Minimum attainment for arbitrary targets and quantitative
+descent to an attained minimum are the next extension. Prototype records
+and values still grow with P; FFN and new model training remain deferred.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+extra axioms, results resting on `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
