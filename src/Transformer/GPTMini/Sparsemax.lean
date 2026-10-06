@@ -87,6 +87,14 @@ import Transformer.GPTMini.Sparsemax.LocalMemoryExamples
 import Transformer.GPTMini.Sparsemax.LocalMemoryQuadratic
 import Transformer.GPTMini.Sparsemax.LocalMemorySelection
 import Transformer.GPTMini.Sparsemax.LocalRegularizedMemory
+import Transformer.GPTMini.Sparsemax.BipartiteMemoryGram
+import Transformer.GPTMini.Sparsemax.LocalIncidentWeights
+import Transformer.GPTMini.Sparsemax.LocalMemoryScoreIdentities
+import Transformer.GPTMini.Sparsemax.IncidentMemoryCore
+import Transformer.GPTMini.Sparsemax.IncidentMemoryParameters
+import Transformer.GPTMini.Sparsemax.IncidentMemoryFeasibility
+import Transformer.GPTMini.Sparsemax.IncidentJointMemory
+import Transformer.GPTMini.Sparsemax.IncidentNearestMemory
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -95,106 +103,79 @@ import Transformer.GPTMini.Sparsemax.RoutingLoss
 import Transformer.GPTMini.Sparsemax.Certificate.Results
 
 /-!
-# Sparsemax training boundaries and measured prediction certificates
+# Sparsemax training boundaries and convex learned-memory constructions
 
 Real-valued causal saturation is motivated by arXiv:2211.11052v1, §3.1.
 Convex row inference does not make every outer training gradient useful.
 The finite certificate is separate from floating-point PyTorch correctness.
 
-arXiv:1602.02068v2, §2.2, Proposition 1 certifies the clipped threshold,
-one-unit support window and full-support relative uniformity. The XSA
-combination, arXiv:2603.09078v1, §2, is locally zero on a strict self route
-above epsilon; a below-epsilon counterexample requires the norm hypothesis.
+arXiv:1602.02068v2, §2.2, Proposition 1 certifies clipped thresholds,
+one-unit support windows and relative uniformity. The XSA combination,
+arXiv:2603.09078v1, §2, is locally zero above epsilon on strict self routes;
+a below-epsilon counterexample needs its explicit norm hypothesis.
+The sparsemax paper's §3.2–§3.3 gives corrective supervised score gradients
+with target positions supplied, without proving latent attention learning.
 
-arXiv:1602.02068v2, §3.2–§3.3, supplies a corrective score-loss derivative
-on a wrong saturated route with its target position given. This supervised
-row result does not guarantee learning latent attention.
+Derived bounded gaps and QKNorm gains ensure multiple active positions.
+Nonzero active-pair directions reach an outer loss only if its derivative
+distinguishes their values. Separated or spanning active value differences
+prevent cancellation. Bounded anchors implement sparse transfers and correct
+wrong squared outputs. Dedicated anchor channels remove the context-length
+restriction for independent input directions. Fixed frames and value anchors
+remain explicit assumptions; shared-row cancellation is a separate boundary.
 
-Derived restrictions from §2.2 and §2.5 need no routing targets: a top-two
-gap below one, or a persistent QKNorm gain below one half, ensures two
-active visible positions. A bounded sigmoid gain enforces this restriction.
-The actual projection has a nonzero active-pair direction; an outer task
-loss receives it only when its derivative distinguishes that pair. A
-bounded-score counterexample retains a positive flat output loss with
-two active positions, recording the limit of the score restriction.
-
-Spanning active value differences prevents cancellation of a nonzero output
-derivative; two distinct scalar values suffice for wrong squared-error outputs.
-A separated assignment fits by bounded sparse transfer; collapsed values fail
-the span premise. Translated, scaled basis anchors enforce the span in any
-finite dimension using independent bounded active scores, retaining ordinary
-values and exact inactive zeros. These are restricted row architectures.
-
-Differentiable anchors realize exact active-pair transfers at boundaries.
-Unit-key and shared-matrix decoders implement them through actual QKNorm.
-Wrong squared-error outputs cannot be local minima and finite updates fit
-targets. Full independent-input decoding requires context size at most input
-width. Dedicated anchor channels remove that length restriction, allow
-ordinary embeddings and preserve ordinary keys under smooth Q/K updates.
-Repeated-token witnesses satisfy the partial-decoder premises. Fixed unit
-frames and value anchors remain; shared-row cancellation is separate.
-
-For shared rows, compatible endpoint supports and clipped QKNorm keys give
-an affine score path. A target-fitting endpoint yields loss `(1-t)^2 *
-initialLoss` and derivative `-2 * initialLoss`, excluding positive-error
-joint stationary points even at inactive ties. A two-row example fits from
-`9/128` to zero; conflicting repeated observations have minimum `1/2`.
-Joint attainability, support compatibility and fixed values remain essential.
+Compatible shared-row endpoints with fixed values give an affine attention
+path and loss `(1-t)^2 * initialLoss`. A fitting endpoint excludes positive
+joint stationary points even at inactive ties. Repeated conflicting inputs
+have a nonzero attainable minimum. Joint attainability is essential.
 
 A bounded PSD Gram learns both Q/K families with exact feature recovery
-and affine shared content scores. Causal score domains and squared projection
-energy are convex without fixed supports; cap below one half excludes
-singleton saturation. The unrestricted sparsemax graph and score energy
-without its score-square term remain nonconvex. Requiring probability score
-rows makes actual attention affine, including changed supports. A four-token
-witness changes both Q/K families and loses one active position; midpoint
-attention is the endpoint mean, but its Gram cannot keep one-feature width.
-These finite-context restrictions replace QKNorm. Ordinary joint value
-mixing still has a nonconvex graph, even with bounds and full support.
+and affine content scores. Score domains and squared projection energy are
+convex; unrestricted sparsemax graphs and ordinary joint value mixtures are
+nonconvex. Probability input scores make actual attention affine, including
+changed supports. Genuine examples change both Q/K and support. Small fixed
+rank may fail at their midpoint, so rank is not silently constrained.
 
-For one distinct-token causal context, self-weight floors give a convex
-domain with invertible attention. Learn Gram and output coordinates jointly;
-inverse decoding gives one common value table. Encoding and decoding are
-mutually exact; actual outputs are affine and convex output criteria stay
-convex. A two-token example changes Q/K, values and support. Its actual
-midpoint output is the endpoint mean, unlike literal mean original values.
-Sharing across contexts, small width and value penalties need separate results.
+For one causal context, self-weight floors yield a convex inverse domain.
+Learn Gram and output coordinates jointly; one common value table is decoded
+by the actual attention inverse. Outputs are affine and convex output
+criteria stay convex. Sharing across contexts needs a data encoder.
 
-A shared dictionary handles arbitrary numbers of fixed causal data codes.
-Genuine mixture-query scores give attention M times memory; a floor above
-one half guarantees its inverse without triangular supports. One global
-value table gives MZ outputs, a convex prediction class and convex output
-criteria. Repeated-token witnesses are proved. This changes token attention
-to parameter memory; output-only fitting leaves the Gram free.
+A shared dictionary handles arbitrary fixed probability data codes. Genuine
+mixture queries give attention M times memory; a floor above one half ensures
+an inverse without triangular support restrictions. One global common value
+table gives MZ outputs. Output-only fitting leaves the Gram unidentified.
+Distinct complete causal signatures fit consistent arbitrary finite targets,
+while identical prefixes must share outputs. Full signatures cost `(V+1)^T` slots.
 
-Six position/token slots remove the frequency-code obstruction with a right
-inverse fitting arbitrary targets, including `(0,0,1)`. Complete signatures
-fit all consistent finite-window targets in the same convex chart; identical
-prefixes must share outputs. Full signatures cost `(V+1)^T` slots.
+A kernel on P observed distinct prefixes has a training-code right inverse,
+from identity plus constant and squared-feature Grams. It fits arbitrary
+prototype targets with genuine width 2P and convex joint output criteria.
+This chart requires at least R slots for R independent target rows; its free
+Gram has quadratic storage and dense routes.
 
-A P-slot kernel on distinct observed prefixes has a proved training-code
-right inverse, from identity plus constant and squared-feature Grams. One
-common value table fits arbitrary prototype targets with genuine Q/K width
-2P and convex joint output criteria. This affine chart needs at least R slots
-for R independent target rows; Gram storage is quadratic and routes are dense.
+Nearest observed-prefix codes are one-hot and identity on registered data.
+Masked Hamming distance ignores future query/prototype tokens. Unseen error
+is at most epsilon plus L times cover radius under explicit fit, regularity
+and coverage; indistinguishable target functions refute unconditional bounds.
 
-A nearest variant gives one-hot codes and identity prototype codes in the
-same chart. Masked Hamming distance ignores future query/prototype tokens.
-Error is at most epsilon plus L times cover radius under explicit fit,
-regularity and coverage; indistinguishable targets disprove unconditional bounds.
-
-A compact path learns 3P-1 edge/norm coordinates in a convex linear domain.
-Its affine genuine Gram permits independent Q/K norms; floor above one half
-guarantees the inverse. Actual nearest queries have at most three routes,
-attained by an unseen four-slot witness. Common values retain MZ outputs,
-arbitrary prototype fit, conditional unseen bounds and convex joint criteria.
-Possible connections and same-family orthogonality are fixed restrictions;
-a noninjective forward retains output-only Gram freedom. Data count and width
-still grow with observations; FFN and task-loss choice remain open.
+A compact path learns 3P-1 edge/norm coordinates. Its affine genuine Gram
+permits independent Q/K norms; strict floors ensure the inverse. Actual
+nearest queries have at most three routes, including unseen witnesses.
+Shared values retain MZ outputs, arbitrary prototype fitting, conditional
+unseen bounds and convex joint criteria. Possible connections and same-family
+orthogonality are fixed. Width and prototype count grow; FFN is deferred.
 
 An additional complete-coordinate squared criterion is strictly convex and
-has a unique constrained minimum on the compact domain, even for an infeasible
-reference. Positive weight preserves joint convexity with convex output criteria.
-Every attained joint minimum uses the same selected Gram parameters, even
-at different outputs. The reference supplies additional information for this choice.
+has one constrained minimum, even for an infeasible reference. Positive
+weight preserves joint convexity for convex output criteria. Every attained
+joint minimum selects the same Gram parameters, even at different outputs.
+The reference supplies information beyond the unidentified output-only loss.
+
+Separate incident-edge budgets enlarge the compact domain beyond its former
+global budget. Explicit nonnegative score-weighted outer products prove PSD
+without requiring the global identity coefficient to stay nonnegative.
+The same affine Gram, variable Q/K norms, actual three-route support, inverse,
+convex joint output criteria and conditional causal generalization survive.
+The enlarged compact domain also has a unique squared-criterion minimum.
 -/

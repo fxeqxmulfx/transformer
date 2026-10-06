@@ -1509,6 +1509,54 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Compact memory with separate incident-edge budgets
+
+**Done on 2026-10-06 UTC.** Eight modules add 64 proved theorems without
+new `sorry`. The global edge budget was sufficient but unnecessarily coupled
+remote parts of the dictionary. The new convex domain requires nonnegative
+edges and, separately at every slot, incident edge mass at most `1-floor`.
+It retains the same `3P-1` stored edge and independent Q/K-norm coordinates.
+
+[LocalIncidentWeights.lean](src/Transformer/GPTMini/Sparsemax/LocalIncidentWeights.lean)
+proves domain convexity, bounds and strict enlargement. Three edges of `1/8`
+at floor `3/4` satisfy every separate budget and fail the former global one.
+[LocalMemoryScoreIdentities.lean](src/Transformer/GPTMini/Sparsemax/LocalMemoryScoreIdentities.lean)
+proves symmetric unit-mass rows, diagonal `1-incidentMass`, nonnegative scores
+and entry bounds. These identities hold for the unchanged affine path Gram.
+
+[BipartiteMemoryGram.lean](src/Transformer/GPTMini/Sparsemax/BipartiteMemoryGram.lean)
+constructs an explicit outer-product lift of any nonnegative cross-score table.
+Unit row and column sums give identity Q/Q and K/K blocks. The cross block
+recovers the score table exactly. [IncidentMemoryCore.lean](src/Transformer/GPTMini/Sparsemax/IncidentMemoryCore.lean)
+proves the existing path Gram equals this lift, hence is PSD without a
+nonnegative global identity coefficient. Local budgets imply the complete
+bounded memory domain; actual sparsemax equals the path scores, is affine
+and has an inverse for floor above one half. Width-`2P` recovery and exact
+common-value decoding remain conclusions of the construction.
+
+[IncidentMemoryParameters.lean](src/Transformer/GPTMini/Sparsemax/IncidentMemoryParameters.lean)
+proves convexity, compactness and unique squared-criterion minimization on the
+enlarged edge/norm domain. [IncidentMemoryFeasibility.lean](src/Transformer/GPTMini/Sparsemax/IncidentMemoryFeasibility.lean)
+proves actual learned norm bounds, PSD, width recovery, inverse, common-value
+fit and at most three routes. The new witness has an actual row
+`(1/8, 3/4, 1/8, 0)` and lies outside the former compact parameter domain.
+
+[IncidentJointMemory.lean](src/Transformer/GPTMini/Sparsemax/IncidentJointMemory.lean)
+and [IncidentNearestMemory.lean](src/Transformer/GPTMini/Sparsemax/IncidentNearestMemory.lean)
+reuse the actual forward unchanged and prove its MZ identity, joint affinity,
+convex output criteria, arbitrary registered causal-prefix fitting, three-route
+nearest attention and conditional `epsilon + L*radius` unseen error bounds.
+Output-only geometry remains unidentified. The path, same-family orthogonality
+and input metric remain fixed restrictions; generalization assumptions for
+Shakespeare and a bounded prototype count/width remain unproved. Data-derived
+parameter selection is the next extension. FFN and task-loss selection remain
+deferred; the completed experimental training cycle is unchanged.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+extra axioms, results resting on `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
