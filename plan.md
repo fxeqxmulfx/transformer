@@ -67,9 +67,15 @@ units. CompletionFFN adds a simultaneous 69th phase unit for EOS, proves
 its exact output formula and preserves phase. All fit the existing width
 256. These are explicit original FFN computations, not a task oracle.
 
-Next connect the decoder to a complete two-layer parameter assignment with
-distinct tied EVEN/ODD/EOS embeddings and prove sufficient readout margins
-on every raw prompt and supplied-answer prefix. Continue
+ParityConstruction supplies a complete original two-layer parameter family
+with distinct tied EVEN/ODD/EOS embeddings. Its projected inputs are proved
+unchanged and its full hidden state uses the real decoder FFN.
+ParityInputs derives exact raw prompt/answer pre-FFN formulas and phase
+values for every bit word, with no prepared encoder-value premise.
+
+Next prove sufficient readout margins uniformly on every raw prompt and
+supplied-answer prefix, then the checked integer SolvesTask theorem.
+Continue
 with the raw adjacency/last-write encoder and depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
@@ -153,3 +159,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-06 | Setup | Cycle started from b243ba5; prior 77 semantic theorems retained. | Stage 1: normalized count versus exact count, full decoders and encoders. |
 | 2026-10-06 | 1 | Proved legal variable-length first-state collision; actual ONE/BOS channels recover the count for all raw parity words in the original 64-wide block. | Bounded ReLU2 parity decoder, EOS/readout, raw MQAR and depth encoders. |
 | 2026-10-06 | 1 | Repaired features committed in 2099735. Proved homogeneous parity decoder and realized simultaneous parity/EOS in 69 of the original 256 FFN units. | Full-stack distinct tied embeddings and readout margins; raw MQAR/depth encoders. |
+| 2026-10-06 | 1 | Decoder committed in 69b9380. Connected distinct tied embeddings and the actual two-layer hidden state; derived universal raw prompt/answer FFN inputs. | Uniform quantitative readout margins and parity SolvesTask; raw MQAR/depth encoders. |
