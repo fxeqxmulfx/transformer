@@ -2444,6 +2444,43 @@ changed output head; no compatible embedding/attention-only construction
 has been found. Do not present that idea as an admitted drop-in prototype.
 No optimizer was changed, no new experiment was run, and ANSR remains stopped.
 
+The new GPTMini.Convex.Reparameterization modules test the coordinate
+escape on an unchanged physical softmax head class. Two query rows share
+three keys, scalar Q/K factors are unrestricted, and fixed one-hot values
+expose the attention probabilities. Every physical head has a rank-one
+log-odds matrix against the third category, hence zero two-by-two minor.
+One head predicts (1/2, 1/4, 1/4) and a uniform second row; another predicts
+a uniform first row and (1/4, 1/2, 1/4). Convex likelihoods for every category
+would require each midpoint entry to dominate its endpoint geometric mean.
+For every positive normalized table meeting these inequalities, rational
+probability bounds force a strictly positive log-odds minor. The arithmetic
+mean witnesses consistency of those hypotheses, but no such table belongs
+to the original scalar-head class.
+
+Thus no parameterization into this class covering these two actual heads
+has globally convex negative log likelihoods for every category. The map
+may be nonlinear, redundant, and of arbitrary dimension; no continuity,
+smoothness, injectivity, or affine-logit assumption is used. This rules out
+coordinate changes for this finite class, beyond the original Q/K sign
+symmetry. It is not a theorem about all head widths, joint learned values,
+a full causal GPTMini, or one dataset's aggregate loss. The control uses
+log probabilities as logits; its ordinary cross-entropy identity is proved,
+without identifying that readout with the model's learned downstream head.
+
+There is also a constructive finite completion. Two unconstrained
+sequential Bernoulli utilities per query row (four scalars total) attain
+every positive normalized two-by-three probability table, including every
+original scalar head and the arithmetic midpoint outside that class.
+All category likelihoods and the explicit log-probability cross entropies
+are jointly convex. Therefore enlarging the operator's prediction class
+can bypass the obstruction without increasing the parameter count in this
+tiny example. Its utilities are independent per query, category decision
+order and one-hot values are fixed, and a direct generalization grows with
+the number of query/category pairs. It is a finite mathematical control,
+not an admissible shared token encoder, learned-value block, or drop-in
+replacement. Continue seeking a compact changed operator with shared
+learned matching and values; do not treat this completion as that result.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be

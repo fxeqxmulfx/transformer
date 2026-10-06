@@ -18,6 +18,9 @@ exact affine coverage of every linear head therefore has cubic dimension.
 That coverage bound leaves nonlinear and restricted-class routes open.
 Nonlinear categorical likelihood controls show why affinity is not necessary
 for a particular loss, and give a prediction-fiber test for joint matching.
+For a finite scalar softmax head class, a prediction-space rank obstruction
+also rules out arbitrary nonlinear likelihood coordinates. A small convex
+completion covers that control by enlarging its prediction class.
 The combined token-to-stream prefix is a candidate interface replacement;
 no compact Python drop-in block or full-model convexity is established.
 -/
@@ -29,3 +32,4 @@ import Transformer.GPTMini.Convex.TrainingBoundary
 import Transformer.GPTMini.Convex.JointInteractionBoundary
 import Transformer.GPTMini.Convex.InteractionCompression
 import Transformer.GPTMini.Convex.Likelihood
+import Transformer.GPTMini.Convex.Reparameterization
