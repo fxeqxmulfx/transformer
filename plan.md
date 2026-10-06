@@ -89,6 +89,15 @@ still needs simultaneous raw embedding/QKV realization. A complete recall
 encoder must also gate the table region: a post-table filler after an
 earlier query must not be interpreted as another key/value write.
 
+RecallCodes/Frequencies/RotaryCode/Matching supply a compact four-base-four-
+digit code for all 256 symbols in eight coordinates. In the actual head's
+slow pairs four through seven, its exact norm and QKNorm/RoPE score are
+proved. At every displacement within context 64, an identical symbol has
+normalized score at least 0.93, a different one at most 0.91, and the
+content gap is exp(alpha)/50. For equal symbols the actual rotary score
+strictly prefers the later visible write. This is simultaneous compact
+geometry, not yet a raw encoder or full recall SolvesTask theorem.
+
 Next construct the simultaneous raw adjacency/table-gating/last-write encoder
 and depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
@@ -176,3 +185,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-06 | 1 | Decoder committed in 69b9380. Connected distinct tied embeddings and the actual two-layer hidden state; derived universal raw prompt/answer FFN inputs. | Uniform quantitative readout margins and parity SolvesTask; raw MQAR/depth encoders. |
 | 2026-10-06 | 1 | Raw full-model coupling committed in 8adde25. Proved all 68 tied-score comparisons, bounded actual normalization and complete parity SolvesTask, including free generation and the 16-ONE/19-slot boundary. | Full raw MQAR and depth encoders; convex architecture search and controlled FLOP comparisons remain. |
 | 2026-10-06 | 1 | Parity correctness committed in f8ea725. Derived an actual original RoPE predecessor gap and finite softmax/XSA copy bound without an assumed positional gap. | Realize simultaneous raw QKV, gate post-table false writes, derive compact content/latest-write matching, then full recall/depth correctness. |
+| 2026-10-06 | 1 | Positional copy committed in 10a2c36. Proved compact collision-free 256-symbol codes, all actual low frequencies, normalized content score gap and strict latest-equal-key preference in the original head. | Simultaneous raw embedding/QKV/table gate and finite-copy robustness; full recall readout and depth construction. |

@@ -2,6 +2,7 @@ import Transformer.GPTMini.Semantics.FinalBlock
 import Transformer.GPTMini.Semantics.Order
 import Transformer.GPTMini.Semantics.ParityCorrectness
 import Transformer.GPTMini.Semantics.AdjacencyRouting
+import Transformer.GPTMini.Semantics.RecallMatching
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -41,6 +42,14 @@ actual finite softmax/XSA approximately copies that neighbor when the
 projected self-value is zero. Realizing its QKV from simultaneous raw
 embeddings, excluding post-table false writes and selecting the latest
 matching record remain separate recall obligations.
+
+A compact four-digit code distinguishes all 256 recall symbols with eight
+coordinates. Placed in four actual slow RoPE pairs, it has exact norm two,
+derived QKNorm scores and a content gap of exp(alpha)/50 at context 64.
+Among equal keys its actual rotary score strictly prefers the latest
+visible record. These are simultaneous geometric properties; the raw
+embedding/QKV/table-gating encoder and complete recall readout still need
+their own proof.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
