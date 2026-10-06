@@ -14,6 +14,7 @@ import Transformer.GPTMini.Semantics.RecallRawCopy
 import Transformer.GPTMini.Semantics.RecallMarkerWeights
 import Transformer.GPTMini.Semantics.RecallRawMarker
 import Transformer.GPTMini.Semantics.RecallRawGate
+import Transformer.GPTMini.Semantics.RecallRawBinding
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -84,6 +85,16 @@ post-table values, excluding false writes after queries. Table values
 retain the genuine compact predecessor copy with its derived positive
 position-dependent RMS/gate amplitude. Complete raw-prefix coupling and
 robust latest-write retrieval/readout remain.
+
+A finite shared first-head log-temperature now supplies any positive
+copy tolerance uniformly over the whole recall context. At a fixed
+sixteenth of the derived latest-write margin, the genuine full first
+block's table-key error is bounded relative to its actual gate amplitude,
+and the stored key has positive norm for positive finite gain. Raw value
+and query codes are retained. These are real-arithmetic capacity bounds;
+second-block saturation/routing/readout and full validated-parser coupling
+remain to be proved, and floating-point or optimization success is not
+inferred from the conservative finite temperature.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
