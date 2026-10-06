@@ -2415,6 +2415,35 @@ Continue investigating compact nonlinear probabilities with convex
 negative log likelihoods, checking simultaneous embedding, matching and
 value training rather than coordinatewise output convexity alone.
 
+The new `GPTMini.Convex.Likelihood` modules provide a constructive nonlinear
+control. Two unrestricted real utilities define three sequential Bernoulli
+outcome probabilities. They are strictly positive and normalize exactly.
+Their log probabilities are actual categorical logits; unchanged log-sum-exp
+cross entropy equals a sum of softplus terms and is jointly convex in both
+utilities, including any joint affine parameterization of those utilities.
+A strict midpoint gap in a class-logit difference proves that this is not
+an affine logit model disguised by a common shift. It has no token encoder,
+Q/K matching or learned attention values and is not a drop-in block.
+
+A separate necessary condition covers nonlinear probabilities: if every
+observed-category negative log likelihood is convex, any two parameter
+assignments with identical normalized positive predictions must retain that
+prediction on their entire segment. All likelihoods are flat along such a
+fiber. Consequently an even family on an unrestricted parameter space must
+be prediction-constant. This concerns a guarantee for all possible labels,
+not convexity of one particular dataset's aggregate loss. Replacing one
+utility by a free scalar query times a free scalar key already produces an
+explicit ordinary-CE midpoint counterexample. A new normalizer by itself
+does not remove that factorization's opposite-parameter symmetry.
+
+Keep the nonlinear route active only with an admissible matching/value
+parameterization that passes these tests and the existing module interfaces.
+An unused outcome that absorbs probability mass could bypass normalization
+over observed categories and encode a curvature penalty, but it requires a
+changed output head; no compatible embedding/attention-only construction
+has been found. Do not present that idea as an admitted drop-in prototype.
+No optimizer was changed, no new experiment was run, and ANSR remains stopped.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be

@@ -16,6 +16,8 @@ recovery and single-head compression counterexample state that limit.
 Actual two- and three-token outputs identify all interaction coordinates;
 exact affine coverage of every linear head therefore has cubic dimension.
 That coverage bound leaves nonlinear and restricted-class routes open.
+Nonlinear categorical likelihood controls show why affinity is not necessary
+for a particular loss, and give a prediction-fiber test for joint matching.
 The combined token-to-stream prefix is a candidate interface replacement;
 no compact Python drop-in block or full-model convexity is established.
 -/
@@ -26,3 +28,4 @@ import Transformer.GPTMini.Convex.Model
 import Transformer.GPTMini.Convex.TrainingBoundary
 import Transformer.GPTMini.Convex.JointInteractionBoundary
 import Transformer.GPTMini.Convex.InteractionCompression
+import Transformer.GPTMini.Convex.Likelihood
