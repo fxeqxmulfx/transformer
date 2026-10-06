@@ -137,6 +137,14 @@ RMS square. No gate-sign, prepared copy or encoded table indicator is a
 premise of the raw-input outcomes. Full validated-prefix parser coupling,
 robust latest-write selection and second-block/readout margins remain.
 
+RecallLatestGap strengthens equal-key strict ordering to the explicit
+uniform normalized margin (1-cos(1/100))/4 whenever records are at least
+one raw position apart. It includes all four actual RoPE frequencies
+and fits below the different-key content margin, so one positive constant
+can separate either kind of competitor before copied-key perturbations.
+Finite temperature can use this bound; the real encoder/QKV perturbation
+and value/readout margins still need to be connected.
+
 Next construct the simultaneous raw adjacency/table-gating/last-write encoder
 and depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
@@ -229,3 +237,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-06 | 1 | Raw embedding committed in 298d784. Realized simultaneous original QKV/head merge/W_o and derived actual raw adjacency binding error in the first attention residual, preserving value and query codes. | Exact causal BOS marker, actual ReLU2 table gate, finite-copy/latest-write robustness and full recall readout; full depth and convex candidate remain. |
 | 2026-10-07 | 1 | Actual raw binding committed in 9b448ed. Derived exact causal BOS mass at every later raw position and transported it into the true original attention residual; proved context bounds and strict position ordering. | Actual ReLU2 table gate and raw-prefix parser integration, robust second-block retrieval/readout, full depth correctness, then convex architecture search. |
 | 2026-10-07 | 1 | Exact causal marker committed in 419da8e. Realized the actual sixteen-unit table gate and whole first block; proved exact exclusion of raw keys/BOS/post-table false writes and a derived positive amplitude for true table values. | Complete raw-prefix parser coupling and finite-copy/latest-write robustness, original second-block/tied readout, full depth correctness; convex candidate and FLOP comparisons remain queued. |
+| 2026-10-07 | 1 | Actual full-block table gate committed in 62c26f0. Derived a uniform finite-temperature latest-write score margin from the original slow RoPE pairs, simultaneously below the different-key content gap. | Transport the real encoder's copied-key errors through second prenorm/QKNorm/QKV, bind all conditions to validated raw prefixes, then original retrieval/readout and depth correctness. |

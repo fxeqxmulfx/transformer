@@ -3,6 +3,7 @@ import Transformer.GPTMini.Semantics.Order
 import Transformer.GPTMini.Semantics.ParityCorrectness
 import Transformer.GPTMini.Semantics.AdjacencyRouting
 import Transformer.GPTMini.Semantics.RecallMatching
+import Transformer.GPTMini.Semantics.RecallLatestGap
 import Transformer.GPTMini.Semantics.RecallSlots
 import Transformer.GPTMini.Semantics.RecallEmbedding
 import Transformer.GPTMini.Semantics.RecallEmbeddingFeatures
@@ -57,8 +58,11 @@ A compact four-digit code distinguishes all 256 recall symbols with eight
 coordinates. Placed in four actual slow RoPE pairs, it has exact norm two,
 derived QKNorm scores and a content gap of exp(alpha)/50 at context 64.
 Among equal keys its actual rotary score strictly prefers the latest
-visible record. These are simultaneous geometric properties; full table
-gating and complete recall readout still need their own proof.
+visible record. A uniform normalized latest-write margin
+(1-cos(1/100))/4 is derived when raw records are separated by at least
+one position; it is also below the categorical content margin. These
+simultaneous geometric properties still need copied-key robustness and
+complete recall retrieval/readout.
 
 Simultaneous compact raw key/value codes now occupy disjoint ordinary
 embedding slots, with protected constant/type coordinates. All 548 entries
