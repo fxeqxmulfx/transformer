@@ -3,6 +3,9 @@ import Transformer.GPTMini.Semantics.Order
 import Transformer.GPTMini.Semantics.ParityCorrectness
 import Transformer.GPTMini.Semantics.AdjacencyRouting
 import Transformer.GPTMini.Semantics.RecallMatching
+import Transformer.GPTMini.Semantics.RecallSlots
+import Transformer.GPTMini.Semantics.RecallEmbedding
+import Transformer.GPTMini.Semantics.RecallEmbeddingFeatures
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -50,6 +53,13 @@ Among equal keys its actual rotary score strictly prefers the latest
 visible record. These are simultaneous geometric properties; the raw
 embedding/QKV/table-gating encoder and complete recall readout still need
 their own proof.
+
+Simultaneous compact raw key/value codes now occupy disjoint ordinary
+embedding slots, with protected constant/type coordinates. All 548 entries
+have derived norm squared six and a shared actual RMS multiplier. Exact
+linear readback and zero cross-channels are proved; copy, position and
+gated-key channels are initially zero. The actual fused QKV/BOS head and
+table gate remain the next encoder obligations.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout

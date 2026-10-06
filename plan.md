@@ -98,6 +98,15 @@ content gap is exp(alpha)/50. For equal symbols the actual rotary score
 strictly prefers the later visible write. This is simultaneous compact
 geometry, not yet a raw encoder or full recall SolvesTask theorem.
 
+RecallSlots/Embedding/EmbeddingFeatures now realize simultaneous raw key
+and value codes, a protected constant and three type flags in the original
+64-coordinate table. Every one of the 548 actual vocabulary entries has
+derived squared norm six, so all first-prenorm projections have one proved
+multiplier. Actual slot matrices read faithful codes and zero cross-channels;
+the future copy/position/gated-key coordinates are proved initially zero.
+The table still contains only token-local information. Fused QKV and the
+causal BOS-derived table gate are the next computations to verify.
+
 Next construct the simultaneous raw adjacency/table-gating/last-write encoder
 and depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
@@ -186,3 +195,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-06 | 1 | Raw full-model coupling committed in 8adde25. Proved all 68 tied-score comparisons, bounded actual normalization and complete parity SolvesTask, including free generation and the 16-ONE/19-slot boundary. | Full raw MQAR and depth encoders; convex architecture search and controlled FLOP comparisons remain. |
 | 2026-10-06 | 1 | Parity correctness committed in f8ea725. Derived an actual original RoPE predecessor gap and finite softmax/XSA copy bound without an assumed positional gap. | Realize simultaneous raw QKV, gate post-table false writes, derive compact content/latest-write matching, then full recall/depth correctness. |
 | 2026-10-06 | 1 | Positional copy committed in 10a2c36. Proved compact collision-free 256-symbol codes, all actual low frequencies, normalized content score gap and strict latest-equal-key preference in the original head. | Simultaneous raw embedding/QKV/table gate and finite-copy robustness; full recall readout and depth construction. |
+| 2026-10-06 | 1 | Compact geometry committed in a7d5e0f. Realized all raw key/value/type channels in the original embedding table, derived uniform true RMS scaling and proved exact disjoint projections and initially empty encoder channels. | Fused original QKV, simultaneous predecessor/BOS heads, actual table gate, robust latest-write retrieval/readout; full depth construction. |
