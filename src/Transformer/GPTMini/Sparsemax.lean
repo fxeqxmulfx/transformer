@@ -95,6 +95,12 @@ import Transformer.GPTMini.Sparsemax.IncidentMemoryParameters
 import Transformer.GPTMini.Sparsemax.IncidentMemoryFeasibility
 import Transformer.GPTMini.Sparsemax.IncidentJointMemory
 import Transformer.GPTMini.Sparsemax.IncidentNearestMemory
+import Transformer.GPTMini.Sparsemax.IncidentMemorySelection
+import Transformer.GPTMini.Sparsemax.ObservedMemoryPreferences
+import Transformer.GPTMini.Sparsemax.PrefixObservedMemory
+import Transformer.GPTMini.Sparsemax.ObservedMemoryExamples
+import Transformer.GPTMini.Sparsemax.IncidentRegularizedMemory
+import Transformer.GPTMini.Sparsemax.IncidentMemoryDescent
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -178,4 +184,13 @@ without requiring the global identity coefficient to stay nonnegative.
 The same affine Gram, variable Q/K norms, actual three-route support, inverse,
 convex joint output criteria and conditional causal generalization survive.
 The enlarged compact domain also has a unique squared-criterion minimum.
+
+Adjacent observed distances and fixed separate feature energies now supply
+a concrete reference, without attention labels or a dense target Gram.
+Hidden text continuations leave selection and the actual pipeline unchanged.
+Data changes alter selected attention and both Q/K norms in proved examples.
+Positive extra curvature gives a finite midpoint gain away from selected
+geometry; criterion suboptimality bounds squared coordinate error. Attained
+output-coordinate minima and the proved projection give actual joint minima.
+Fixed metrics/features and conditional unseen regularity remain restrictions.
 -/

@@ -1557,6 +1557,86 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Observation-derived convex geometry selection and finite descent
+
+**Done on 2026-10-06 UTC.** Six modules add thirty-nine proved theorems
+without new `sorry`. The additional selection reference is now explicitly
+computed from observations rather than supplied as an arbitrary table.
+The separate-budget compact domain, actual sparsemax and common-value
+forward are reused unchanged. Task-loss choice and FFN remain deferred.
+
+[ObservedMemoryPreferences.lean](src/Transformer/GPTMini/Sparsemax/ObservedMemoryPreferences.lean)
+uses `scale/(1+distance)` on adjacent observed prototypes, and independent
+fixed query/key data-feature energies as preferred norm additions. It needs
+only adjacent distances and per-prototype energies, with `3P-1` stored
+reference coordinates, rather than a dense reference Gram or attention
+labels. Nonnegative distances give nonnegative, scale-bounded preferences;
+positive scale gives positive preferences and strict decrease with increasing
+distance. Coupled constraints can alter their projected ordering. The metric,
+feature maps, prototype order and scale are explicit fixed choices during
+optimization; joint convex learning of these choices is not claimed.
+
+[IncidentMemorySelection.lean](src/Transformer/GPTMini/Sparsemax/IncidentMemorySelection.lean)
+selects the proved unique constrained projection, including infeasible
+references. Its geometry has genuine width-`2P` embeddings, an actual
+attention inverse, at most three routes and exact common-value decoding.
+For any convex feasible set and an attained minimum q, midpoint comparison
+proves `R(q,p) <= 2 * (R(reference,p)-R(reference,q))`. An epsilon-suboptimal
+geometry therefore has squared complete-coordinate error at most `2*epsilon`.
+The factor two is explicit; this bound concerns parameter error, not unseen
+prediction error. The selector records a proved optimization result and is
+noncomputable; no numerical solver is implemented.
+
+[PrefixObservedMemory.lean](src/Transformer/GPTMini/Sparsemax/PrefixObservedMemory.lean)
+computes the reference from masked prefix Hamming distances and features
+of those same masked records. Hidden prototype continuations cannot change
+the reference, selected parameters, or the full actual nearest-code/common-
+value forward, even when geometry is recomputed from the altered dataset.
+Distinct registered causal prefixes still fit arbitrary vector targets with
+one globally decoded value table. These fit statements do not establish
+text-target regularity or coverage for new text.
+
+[ObservedMemoryExamples.lean](src/Transformer/GPTMini/Sparsemax/ObservedMemoryExamples.lean)
+compares prototype tables `(0,1)` and `(0,3)` under identical metric, order,
+scale and nonconstant separate features. Both references are feasible and
+are recovered exactly by unique projection. Their actual selected sparsemax
+edge weights are `1/16` and `1/32`; actual query and key squared norms both
+change. The attention inverses are proved without assuming original embedding
+coordinates or target routes. Observation dependence survives constrained
+selection, rather than being asserted only for an unprojected formula.
+
+[IncidentRegularizedMemory.lean](src/Transformer/GPTMini/Sparsemax/IncidentRegularizedMemory.lean)
+proves joint convexity of the additional quadratic criterion plus any convex
+output criterion on the enlarged compact domain. With positive coefficient,
+every attained joint minimum uses the same proved parameter projection,
+even at different output tables. The output-only criterion remains unable
+to identify geometry. This extra criterion chooses among equivalent exact
+attention/value representations; its semantic usefulness is not established.
+
+[IncidentMemoryDescent.lean](src/Transformer/GPTMini/Sparsemax/IncidentMemoryDescent.lean)
+proves a feasible midpoint toward a geometry minimum lowers the actual
+regularized criterion by at least `coefficient/4 * R(q,p)`, including support
+boundaries. Positive coefficient makes this a strict finite decrease whenever
+p differs from q, without any convexity requirement on the fixed-output
+criterion. A regularized fixed-output gap of epsilon bounds weighted squared
+parameter error by `2*epsilon`. An attained output-coordinate minimum and
+the proved geometry projection together supply an actual joint minimum;
+output-minimum attainment is the remaining explicit objective assumption.
+
+Possible path connections, same-family orthogonality, fixed observation metric
+and feature maps remain restrictions. Prototype count and embedding width
+still grow, and nearest search may scan the dictionary. Useful regularity,
+coverage and constants for Shakespeare remain to establish. FFN, model task
+loss selection and new training remain deferred; the completed experiment
+cycle is unchanged. These results remove the supplied-reference gap and
+geometric flatness of the additional criterion, not output-only semantic
+learning or every unrestricted transformer obstruction.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+extra axioms, results resting on `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
