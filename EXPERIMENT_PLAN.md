@@ -2341,6 +2341,62 @@ fresh-batch correction still require investigation before claiming a
 trained convex Basis model. Keep all prior baseline results. ANSR remains
 stopped by the user's request.
 
+## Drop-in joint embedding/attention scope
+
+**Status: In progress; compact admissible block not yet constructed.**
+The user's 2026-10-06 requirements supersede the sparsemax-specific search:
+first make embedding plus self-attention jointly convex, and consider only
+replacements of the existing blocks that keep the training optimizer.
+Keep the ordinary forward/backward/update loop and the existing data,
+token-to-stream shapes, FFN and downstream loss. Changing the attention
+operator or its internal parameterization is allowed. Keep ANSR stopped.
+
+The guarantee must concern the jointly trained embedding/attention
+parameters. Convex inference at fixed scores, convexity in network inputs,
+separate convexity of two trained modules, and a convex outer mixture with
+nonconvex head pricing do not meet this requirement. A feasible direct
+parameter update must not require an SDP solver, rank projection, atomic
+column optimizer, or inner search for a new head. Keeping AdamW does not
+by itself supply a convergence theorem, even for a convex objective.
+
+The first algebraic control is the complete unfactorized interaction tensor
+in `GPTMini.Convex.JointInteraction`, `JointInteractionFactorization` and
+`JointInteractionBoundary`. A free residual embedding plus coefficients
+`C[query token, predecessor key token, current value token, channel]` maps
+tokens to a causal residual stream. The forward is linear in all these
+parameters and every convex output criterion remains jointly convex.
+Ordinary answer squared error fits the two swapped binding tables exactly;
+its convexity and actual global minimum are proved, with no route targets.
+
+This control changes softmax/sparsemax to a signed unnormalized interaction
+sum and absorbs all learned embedding/projection/value products into C.
+It is a mathematical candidate for replacing the combined token-to-stream
+prefix, not a wired replacement of each individual Python module. Every
+tensor has an exact representation by V² width-one dot-product heads with
+original-token values; one shared width-V embedding realizes the recovered
+tables. None of these width, head-count or penalty choices preserves the
+original fixed-small GPTMini parameter class. At the actual Basis recall
+vocabulary V=548 and output width 64, the naive full tensor stores
+10,532,261,888 scalars, about 42.1 GB for float32 parameters alone, before
+gradients or AdamW states. This is the complete tensor's size, not a lower
+bound for every restricted-data or compact replacement.
+
+Requiring that tensor to come from one original head is not a convex
+compression, even if the head's Q/K width is unrestricted: two attainable
+query/value diagonal tensors have a midpoint with nonzero rank-one minor.
+This counterexample rules out that particular compression only. It does
+not rule out a different compact operator or parameterization.
+
+Next, search for a compact, unconstrained joint parameterization with the
+existing module interfaces, ordinary optimizer and learned content matching.
+Check that joint embedding training preserves its convexity; a fixed-input
+attention proof is insufficient. Fixed tangent features would provide an
+approximation control, not the requested unrestricted learned matching.
+Finite selected head/feature banks and SDP drafts remain outside the active
+drop-in route. No new training result is claimed from the tensor control,
+and nonlinear downstream layers or the tied readout can still destroy
+convexity of the complete model.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be

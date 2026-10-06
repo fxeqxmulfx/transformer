@@ -7,9 +7,18 @@ and training convexity are separate claims. The first replacement is causal
 sparsemax. Motivation: Convexifying Transformers, §3.1; not an equivalence
 to its original softmax model or a claim that all gpt-mini parameters train
 jointly convexly.
+
+The new direct joint-interaction route changes the attention operator to
+an unnormalized causal sum and absorbs the embedding/Q/K/value products.
+It gives an unconstrained parameter-space training guarantee, without
+changing the optimizer, at cubic vocabulary storage. Its exact finite-head
+recovery and single-head compression counterexample state that limit.
+The combined token-to-stream prefix is a candidate interface replacement;
+no compact Python drop-in block or full-model convexity is established.
 -/
 
 import Transformer.GPTMini.Convex.Basic
 import Transformer.GPTMini.Convex.Attention
 import Transformer.GPTMini.Convex.Model
 import Transformer.GPTMini.Convex.TrainingBoundary
+import Transformer.GPTMini.Convex.JointInteractionBoundary
