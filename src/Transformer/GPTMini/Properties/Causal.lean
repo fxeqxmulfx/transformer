@@ -10,10 +10,10 @@ This implies the **causal-equivariance** property of the full forward
 pass: changing token at position `j > i` cannot affect the logits at
 position `i`.
 
-We do not attempt to prove the full top-level equivariance here (that
-requires substantial bookkeeping through the multi-head reshape and
-sub-layer composition); instead we prove the foundational lemma at the
-attention-weight level, which is the load-bearing fact.
+The complete top-level property is proved in `GPTMini.Causality.Model`:
+`forward_causal` includes every block and the final readout;
+`forward_prefix` also permits arbitrary additions to the sequence length.
+This module retains the foundational attention-output restriction.
 -/
 
 import Transformer.GPTMini.AttentionBounds

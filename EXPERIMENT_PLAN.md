@@ -2481,6 +2481,60 @@ not an admissible shared token encoder, learned-value block, or drop-in
 replacement. Continue seeking a compact changed operator with shared
 learned matching and values; do not treat this completion as that result.
 
+## Basis integer-list formalization (2026-10-06)
+
+At the user's request, `Transformer.Basis` now gives depth E_2/E_4,
+easy/hard raw MQAR and 1..16-bit parity the common `List Int -> List Int`
+answer-append interface. Every call preserves the input and increases its
+length by one. Depth uses the independently proved alternating-subsequence
+criterion for E_k, including neutral symbols. MQAR parses actual adjacent
+key/value tokens, validates its query/filler region and selects the latest
+write. Parity requires BOS/bits/SEP and generates the label and EOS in two
+successive calls. The integer IDs, mode parameters, vocabulary sizes and
+context caps come from the current Basis generators; invalid inputs use an
+explicit PAD fallback. The validated prefix domains contain the sampled
+supervised prefixes but omit the sampler's distribution-specific constraints.
+Depth/recall labels are appended only for this mathematical interface: they
+do not replace the benchmark's following random input tokens.
+
+`Transformer.GPTMini.TokenInterface` wraps the actual existing Lean stack,
+checks integer-to-Fin vocabulary conversion and the Python context cap,
+uses positions 0..T-1, and greedily decodes the last-position logits. The
+softmax and logit decoders agree, including the smallest-ID tie rule. The
+task oracle is not called by the model function. Exact maximum/tie and
+sufficient strict-margin certificates connect this forward to the raw task
+labels. Every certificate hypothesis has a satisfiable example, including
+explicit weights in the small two-layer, four-head, width-64 architecture.
+Those control weights correctly reject BOS,a and fail on BOS,a,b, so a
+passing example does not become a whole-task capacity theorem.
+
+The user's clarified target is verification of the required model
+properties, rather than an existence theorem for weights. Full-stack
+causality is now proved for every parameter assignment, including the
+masked denominator, all head reshapes, RoPE, QKNorm, XSA, residuals, FFN
+and final tied readout. Arbitrary future tokens preserve all old logits,
+also across different sequence lengths. Teacher-forced row evaluation and
+the List Int prefix continuation therefore predict exactly the same token.
+
+All validated task prefixes are proved nonempty, within the task context,
+and encodable in the actual vocabulary. Given a compatible model shape,
+`solvesTask_iff_logit_property` characterizes full correctness exactly by
+its actual maximum/tie conditions on every supervised prefix. No weight
+existence or assumed whole-task success is used in this equivalence.
+Independent necessary answer distinctions require depth order, adjacent
+MQAR binding, chronological overwrite order and parity bit content;
+bag-invariant next-answer computations provably fail actual easy recall.
+These semantic requirements are stated for the real model too, but their
+satisfaction by an unrestricted parameter assignment does not follow
+from causality. The control model proves that implication false.
+
+`SolvesTask` covers every validated supervised prefix, stronger than the
+sampled benchmark's 99 percent stopping rule. There are no new sorrys.
+The adapter inherits the existing Lean stack's shared epsilon, whereas
+Python defaults use 1e-5 for RMSNorm and 1e-6 for QKNorm/XSA. General
+floating-point equality and AdamW convergence are not certified. No
+experiment or optimizer was changed, and ANSR remains stopped.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be

@@ -129,6 +129,7 @@ cross-paper construction with explicit changes to the original models.
 -/
 
 import Transformer.Basic
+import Transformer.Basis
 import Transformer.Wasserstein
 import Transformer.GlobalFlow
 import Transformer.ALM
