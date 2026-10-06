@@ -66,6 +66,12 @@ import Transformer.GPTMini.Sparsemax.CausalPrefixKeys
 import Transformer.GPTMini.Sparsemax.CausalMemoryUniversality
 import Transformer.GPTMini.Sparsemax.PrefixFeatureCodes
 import Transformer.GPTMini.Sparsemax.PositionalMemoryTargets
+import Transformer.GPTMini.Sparsemax.BoundedGramWidth
+import Transformer.GPTMini.Sparsemax.PrototypeKernelCodes
+import Transformer.GPTMini.Sparsemax.PrototypeKernelFeatures
+import Transformer.GPTMini.Sparsemax.PrototypeKernelTraining
+import Transformer.GPTMini.Sparsemax.PrototypePrefixMemory
+import Transformer.GPTMini.Sparsemax.PrototypeKernelGeometry
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -99,57 +105,39 @@ loss receives it only when its derivative distinguishes that pair. A
 bounded-score counterexample retains a positive flat output loss with
 two active positions, recording the limit of the score restriction.
 
-A full span of active value differences prevents cancellation of any
-nonzero output derivative. For ordinary scalar squared error, two distinct
-active values suffice whenever the output is wrong. A constructed separated
-value assignment reaches zero error by a bounded sparse score transfer;
-the previous collapsed value assignment is proved to fail the span premise.
-The anchor construction enforces the span in any finite output dimension:
-prepend a translated, positively scaled basis and keep its scores active
-through independent bounded coordinates. The span persists for every
-finite parameter assignment, with arbitrary ordinary values and exact
-inactive zeros. This is a new row architecture, not a guarantee for the
-existing query/key parameterization or for a zero output derivative.
+A full span of active value differences prevents cancellation of a nonzero
+output derivative. Two distinct active scalar values suffice for wrong
+squared-error outputs. A separated assignment reaches zero error by bounded
+sparse transfer, while collapsed values fail the span premise. Translated,
+scaled basis anchors enforce the span in any finite output dimension through
+independent bounded active scores, retaining arbitrary ordinary values and
+exact inactive zeros. These are restricted row architectures.
 
-The differentiable anchor chart realizes exact active-pair transfers,
-including at support boundaries. A unit-key chart implements them through
-actual QKNorm. Under independent input features, a continuous decoder
-transfers them to shared Q/K projection matrices while retaining their
-action on unseen directions. Wrong squared-error outputs are excluded as
-local minima in these restricted row architectures; a finite update fits
-the target. Full independence requires context size at most input width.
-Fixed frames, dedicated anchors and parameter restrictions are explicit;
-these results do not assert unconstrained whole-model convergence.
+The differentiable anchor chart realizes exact active-pair transfers at
+support boundaries. A unit-key chart implements them through actual QKNorm.
+An independent-input decoder transfers them to shared Q/K matrices while
+retaining unseen directions. Wrong squared-error outputs cannot be local
+minima, and a finite update fits the target. Full independence requires
+context size at most input width; fixed frames and anchors remain explicit.
 
-Full input independence is unnecessary when only anchors need control.
-A partial decoder isolates the anchors and kills ordinary inputs. Its
-dedicated-channel implementation permits arbitrary ordinary embeddings
-and context lengths. A smooth anchor-only update through the current
-shared matrix preserves all ordinary keys and realizes the anchored scores.
-Nonzero ordinary task derivatives still reach joint Q/K matrices, and
-wrong squared-error outputs remain excluded as local minima. A concrete
-family with arbitrarily many repeated ordinary tokens satisfies the
-weaker premises while long instances fail full input independence.
-The unit-frame, key-family and visible value-anchor restrictions remain;
-these single-row results do not exclude cancellation in a shared objective.
+A partial decoder controls only anchors and kills ordinary inputs. Its
+dedicated channels permit arbitrary ordinary embeddings and context lengths.
+A smooth shared-matrix update preserves ordinary keys while realizing
+anchored scores. Nonzero task derivatives reach joint Q/K matrices, and
+wrong squared-error outputs remain excluded as local minima. Repeated-token
+examples satisfy these premises while failing full input independence.
+Unit frames and visible value anchors remain; shared-row cancellation is separate.
 
-The summed ordinary squared loss now uses actual shared matrices for
-arbitrarily many rows and examples. Matching endpoint sparse supports
-make the actual projection affine on a score segment. A new explicit
-restriction keeps projected endpoint keys in the epsilon ball, where
-actual QKNorm is linear; the common matrix segment stays in that ball.
-No independent queries, input decoder or row-specific parameters are used.
-A better compatible endpoint excludes a joint local minimum of the sum.
-If one compatible shared matrix fits all ordinary targets, the actual
-path loss is `(1-t)^2 * initialLoss`, with right derivative `-2 * initialLoss`.
-At positive error, a zero full joint Q/K derivative is impossible, including
-inactive threshold ties. A two-row sparse example has opposite initial
-errors and distinct targets fitted by one shared matrix: loss `9/128` to zero.
-An actual counterexample refutes unconditional transfer: repeated observations
-with conflicting targets zero and one have positive global minimum `1/2`,
-two active anchors and exact ordinary zeros. Joint attainability, endpoint
-support compatibility, clipped keys and fixed values remain essential;
-these results do not assert convergence of an unconstrained full model.
+Summed squared loss uses shared matrices across rows and examples. Matching
+endpoint supports make sparsemax affine on a score segment; clipped endpoint
+keys keep actual QKNorm linear throughout it. A better compatible endpoint
+excludes a joint local minimum. A shared target-fitting endpoint gives path
+loss `(1-t)^2 * initialLoss` and derivative `-2 * initialLoss`, excluding
+positive-error joint stationary points, including inactive threshold ties.
+A two-row example fits distinct targets from loss `9/128` to zero. Repeated
+observations with conflicting targets instead have global minimum `1/2`.
+Joint attainability, support compatibility, clipped keys and fixed values
+remain essential; unconstrained whole-model convergence is not asserted.
 
 A new Gram architecture learns both query and key embedding families in
 one bounded PSD matrix, with exact finite-coordinate recovery and affine
@@ -194,6 +182,19 @@ previously excluded triple `(0,0,1)`. Complete causal signatures realize
 exactly all observation-consistent target tables for a finite window.
 Identical visible prefixes must share outputs; different prefixes impose
 no extra restriction. Both constructions retain the convex joint chart
-for every feasible learned Gram. Full signatures cost `(V+1)^T` slots,
-so finite universality does not establish an efficient compact transformer.
+for every feasible learned Gram. Full signatures cost `(V+1)^T` slots.
+
+A compact kernel construction registers P distinct observed prefixes, with
+P learned memory slots. Its data kernel is identity plus a constant Gram
+and a squared-feature Gram, so normalized training codes have a proved
+right inverse. One common decoded value table fits arbitrary vector targets
+on these prototypes for every feasible learned Gram. Genuine learned Q/K
+embeddings need width at most 2P, without a nonconvex rank restriction.
+Actual forwards are causal normalized kernel sums, and any convex output
+criterion remains convex jointly. This affine chart requires at least R
+slots for R independent vector target rows; the construction attains that
+bound. Gram parameters still grow quadratically, actual query routes are
+dense, fixed data codes remain, and output-only training leaves the Gram
+undetermined. Finite interpolation does not prove text generalization or
+sample-independent compactness. FFN and task-loss selection stay open.
 -/

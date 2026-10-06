@@ -1,6 +1,6 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-05 UTC. **Done: steps 0 to 6 and the requested QKNorm follow-up.** The investigation cycle
+Updated on 2026-10-06 UTC. **Done: steps 0 to 6 and the requested QKNorm follow-up.** The investigation cycle
 was started on 2026-10-04 at the user's request. On 2026-10-04 the user asked for
 this plan: find out why sparsemax attention fails, and try to repair it, on
 the basis benchmark. It replaces the plan of 2026-10-03 for the mod-193
@@ -1263,6 +1263,81 @@ feature width; it does not prove an efficient compact ordinary transformer.
 Fixed data codes and the learned-memory architecture remain explicit. An
 output-only objective still leaves the Gram undetermined. FFN, task-loss choice
 and new training remain deferred; the completed experiment cycle is unchanged.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
+extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
+## Compact observed-prefix kernel memory
+
+**Done on 2026-10-06 UTC.** The requested compact mathematical construction
+adds six modules and forty-two proved theorems without new `sorry`. Register
+`P` distinct observed causal prefixes before target fitting and use `P`
+learned memory slots. This replaces the exponential complete-prefix dictionary
+by a data-relative memory. The learned Gram and the common value table remain
+variable on the earlier exact convex joint domain.
+
+[PrototypeKernelCodes.lean](src/Transformer/GPTMini/Sparsemax/PrototypeKernelCodes.lean)
+defines the fixed data kernel
+`k(q,j) = indicator(prefix(q) = prefix(j)) + 1 + dot(phi(q), phi(j))^2`.
+Every entry is at least one, giving a positive normalization denominator
+even on unseen queries. Its normalized profiles are probability codes.
+Evaluation uses dot products and a normalized weighted sum of the global
+output table, without enumerating all signatures or ordered feature pairs.
+
+[PrototypeKernelFeatures.lean](src/Transformer/GPTMini/Sparsemax/PrototypeKernelFeatures.lean)
+proves that the squared dot product is the Gram of ordered pair features.
+On distinct registered observations, the training kernel is identity plus
+the constant Gram plus this genuine pair-feature Gram. It is positive
+definite and nonsingular for arbitrary real feature rows, even when those
+rows are zero or rank deficient. The two-prototype example with scalar
+features `(1,2)` gives kernel `[[3,5],[5,18]]` and determinant 29.
+
+[PrototypeKernelTraining.lean](src/Transformer/GPTMini/Sparsemax/PrototypeKernelTraining.lean)
+constructs the data-derived right inverse `C = kernel inverse * diagonal(row mass)`
+of the normalized training codes `M`, proving `M * C = I`. Every vector
+target table `Y` has global coordinates `Z = C * Y` and one common original
+value table `V = B(G) inverse * C * Y`. Actual sparsemax/value outputs are
+exactly `Y` for every feasible learned Gram. Any current point admits every
+prototype-output correction through `Z += C * delta`; attainability is a
+proved consequence of the encoder, not an assumed target-compatibility input.
+
+[BoundedGramWidth.lean](src/Transformer/GPTMini/Sparsemax/BoundedGramWidth.lean)
+retains the explicit dimension in Mathlib's positive spectral decomposition.
+Every PSD Gram on `2P` query/key indices is recovered exactly with Q/K width
+`2P`, preserving the squared norm cap. The same feature table realizes all
+context scores and actual normalized attention. Context count does not
+increase this width, and no nonconvex rank restriction is added to the domain.
+
+[PrototypePrefixMemory.lean](src/Transformer/GPTMini/Sparsemax/PrototypePrefixMemory.lean)
+constructs the kernel profiles from actual masked prefix signatures and
+causal position/token features. Future changes in either queries or prototype
+records leave codes and actual outputs unchanged. Its final theorem combines
+arbitrary prototype-target recovery, one common original value table and
+Q/K width `2P`, for every feasible learned Gram. The actual three-prefix
+example fits `(0,0,1)` with three memory slots, versus six position/token
+slots or twenty-seven complete-signature slots in the earlier constructions.
+
+[PrototypeKernelGeometry.lean](src/Transformer/GPTMini/Sparsemax/PrototypeKernelGeometry.lean)
+proves convexity of every future convex output criterion on the same joint
+domain, together with the actual normalized-kernel forward formula. Matrix
+rank gives a lower bound: this exact fixed-code affine chart needs at least
+`R` memory slots to realize every independently specifiable vector target
+table on `R` contexts. The construction attains that slot bound on its
+registered distinct observations. This is a bound for this architecture,
+not an impossibility for every transformer or structured target class.
+
+The guarantees cover finite registered observations. Learned Gram parameters
+still grow quadratically with `P`, the width bound grows linearly, and fixed
+features and prototype selection remain explicit. Positive profiles and the
+diagonal floor force dense actual query attention; memory supports can still
+change. Output-only optimization still leaves the Gram undetermined under
+the common value decoder. Unseen queries have a well-defined prediction,
+without a generalization guarantee or an independently specifiable target.
+FFN, task-loss choice and new training remain deferred; the completed sparsemax
+experiment cycle is unchanged. A sample-independent compact construction for
+structured text targets remains a mathematical question.
 
 Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 `./make.py forbidden` pass; the new modules have no warnings, new `sorry`,
