@@ -80,7 +80,17 @@ solves every legal parity prefix in either mode and generates label/EOS
 in two calls. This covers real arithmetic and the documented shared
 epsilon range (0, 1/64], not floating-point equivalence or AdamW success.
 
-Next construct the raw adjacency/last-write encoder and depth-prefix recurrence.
+AdjacencyRoPE/Routing prove an explicit predecessor gap using the original
+head_dim=16/theta=10000 pair seven and the actual clipped QKNorm. Every
+wrong causal position has a derived positive gap up to context 128, and
+the original finite softmax/XSA copies the predecessor with a derived
+error bound when its self-value is zero. This positional routing result
+still needs simultaneous raw embedding/QKV realization. A complete recall
+encoder must also gate the table region: a post-table filler after an
+earlier query must not be interpreted as another key/value write.
+
+Next construct the simultaneous raw adjacency/table-gating/last-write encoder
+and depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -165,3 +175,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-06 | 1 | Repaired features committed in 2099735. Proved homogeneous parity decoder and realized simultaneous parity/EOS in 69 of the original 256 FFN units. | Full-stack distinct tied embeddings and readout margins; raw MQAR/depth encoders. |
 | 2026-10-06 | 1 | Decoder committed in 69b9380. Connected distinct tied embeddings and the actual two-layer hidden state; derived universal raw prompt/answer FFN inputs. | Uniform quantitative readout margins and parity SolvesTask; raw MQAR/depth encoders. |
 | 2026-10-06 | 1 | Raw full-model coupling committed in 8adde25. Proved all 68 tied-score comparisons, bounded actual normalization and complete parity SolvesTask, including free generation and the 16-ONE/19-slot boundary. | Full raw MQAR and depth encoders; convex architecture search and controlled FLOP comparisons remain. |
+| 2026-10-06 | 1 | Parity correctness committed in f8ea725. Derived an actual original RoPE predecessor gap and finite softmax/XSA copy bound without an assumed positional gap. | Realize simultaneous raw QKV, gate post-table false writes, derive compact content/latest-write matching, then full recall/depth correctness. |

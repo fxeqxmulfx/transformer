@@ -1,6 +1,7 @@
 import Transformer.GPTMini.Semantics.FinalBlock
 import Transformer.GPTMini.Semantics.Order
 import Transformer.GPTMini.Semantics.ParityCorrectness
+import Transformer.GPTMini.Semantics.AdjacencyRouting
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -33,6 +34,13 @@ Uniform finite weights give strict label/EOS margins through final RMSNorm.
 The actual checked List Int function solves every legal parity prefix in
 both modes and freely generates label then EOS in two calls. Ordered-prefix
 and recall-pair encoders remain separate obligations.
+
+An explicit pair of the original 16-dimensional RoPE gives a derived
+positive predecessor score gap across all Basis context lengths. The
+actual finite softmax/XSA approximately copies that neighbor when the
+projected self-value is zero. Realizing its QKV from simultaneous raw
+embeddings, excluding post-table false writes and selecting the latest
+matching record remain separate recall obligations.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
