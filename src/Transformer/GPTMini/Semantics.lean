@@ -15,6 +15,7 @@ import Transformer.GPTMini.Semantics.RecallMarkerWeights
 import Transformer.GPTMini.Semantics.RecallRawMarker
 import Transformer.GPTMini.Semantics.RecallRawGate
 import Transformer.GPTMini.Semantics.RecallRawBinding
+import Transformer.GPTMini.Semantics.RecallRotaryInsert
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -95,6 +96,13 @@ and query codes are retained. These are real-arithmetic capacity bounds;
 second-block saturation/routing/readout and full validated-parser coupling
 remain to be proved, and floating-point or optimization success is not
 inferred from the conservative finite temperature.
+
+An ordinary shared eight-to-sixteen linear matrix now inserts every real
+compact copied key into the original slow rotary pairs. Exact inner
+products, norms and copy distances are preserved, including imperfect
+copies and position-dependent amplitudes. Its categorical image is the
+verified matching code, and its excluded fast coordinates are zero.
+Second-block prenorm/QKNorm saturation and robust routing remain.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout

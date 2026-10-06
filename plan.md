@@ -155,6 +155,14 @@ encoded-key premise is assumed. The conservative temperature is a real
 capacity bound, not a numerical-optimality or AdamW claim. Actual second
 prenorm/QKV/QKNorm saturation and robust score/readout transport remain.
 
+RecallRotaryInsert realizes the ordinary shared eight-to-sixteen matrix
+needed by the second projection. It retains arbitrary real copied-key
+coordinates, preserves their exact inner products and norms, and transports
+every copy error without amplification through actual RoPE. Its output
+on categorical codes is precisely the already verified matching geometry;
+zero nonrecords and unused fast coordinates remain zero. The true second
+prenorm, shared QKV and clipping saturation still need to be derived.
+
 Next construct the simultaneous raw adjacency/table-gating/last-write encoder
 and depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
@@ -249,3 +257,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Exact causal marker committed in 419da8e. Realized the actual sixteen-unit table gate and whole first block; proved exact exclusion of raw keys/BOS/post-table false writes and a derived positive amplitude for true table values. | Complete raw-prefix parser coupling and finite-copy/latest-write robustness, original second-block/tied readout, full depth correctness; convex candidate and FLOP comparisons remain queued. |
 | 2026-10-07 | 1 | Actual full-block table gate committed in 62c26f0. Derived a uniform finite-temperature latest-write score margin from the original slow RoPE pairs, simultaneously below the different-key content gap. | Transport the real encoder's copied-key errors through second prenorm/QKNorm/QKV, bind all conditions to validated raw prefixes, then original retrieval/readout and depth correctness. |
 | 2026-10-07 | 1 | Uniform latest-write gap committed in b4822b4. Chose a finite shared predecessor temperature and proved uniform raw copy accuracy; the true full block stores positive-norm table keys with relative error latestMargin/16, preserving raw query/value codes. | Realize the actual second matching matrix and prove normalization/saturation/error transport, complete raw-parser/readout coupling, full depth and convex architecture search. |
+| 2026-10-07 | 1 | Uniform finite raw binding accuracy committed in 7d7fa9d. Proved an ordinary shared linear insertion of all real copied keys into the original slow RoPE pairs, with exact norm and error preservation and faithful categorical matching geometry. | Derive true second prenorm/QKNorm saturation and robust latest-write routing/readout, complete raw parser coupling, full depth correctness and convex architecture search. |
