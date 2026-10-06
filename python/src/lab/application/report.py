@@ -61,7 +61,7 @@ def select_rates(chosen, candidates):
     trained its file's budget.
     """
     groups = rate_groups({label: describe(experiment) for label, experiment in chosen
-                          if experiment.benchmark.selection is not None})
+                          if experiment.benchmark.selection is not None and hasattr(experiment.optimizer, "lr")})
     selections = []
     for labels in groups:
         incomplete = [label for label in labels if label not in candidates]
@@ -97,7 +97,7 @@ def report_study(study, labels, runs: Runs):
         if history and isinstance(experiment.benchmark, ModularDivision):
             found |= stability(run, history, budget, stored["evaluate"]["every"], found["status"] == "finished")
         if (found["status"] == "finished" and budget == experiment.budget.updates
-                and experiment.benchmark.selection is not None):
+                and experiment.benchmark.selection is not None and hasattr(experiment.optimizer, "lr")):
             candidates[label] = candidate(label, experiment, history, result)
         reports[label] = found
     return {"runs": reports, "rate_selection": select_rates(chosen, candidates)}

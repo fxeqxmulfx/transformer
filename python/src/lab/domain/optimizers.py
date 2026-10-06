@@ -57,6 +57,38 @@ class Optimizer(Spec, kind=True):
 
 
 @dataclass(frozen=True)
+class ANSR(Optimizer):
+    """Across Neighbourhood Search with Restarts on fresh training batches.
+
+    Source: fxeqxmulfx/ansr, src/ansr/ansr_torch.py at
+    9cb98c12b3184368c80fea72f3b81432123d96dd. Mutation and restart rules are
+    retained. Personal attractors are reevaluated on each current batch;
+    the source retains old fitness on its fixed copy-task data. Evaluation
+    is gradient-free, uses deterministic vmap, and checkpoints its population
+    and generator. The original model must already fit the parameter box
+    instead of being clipped at initialization. There is no learning rate,
+    weight decay, or rate schedule. `batch_size` counts population members,
+    not training examples. Function evaluations include attractor refreshes.
+    """
+    popsize: int = 64
+    sigma: float = 0.05
+    p_self: float = 0.05
+    bound: float = 20.0
+    restart_tolerance: float = 1e-8
+    batch_size: int = 4
+
+    def check(self):
+        require(type(self.popsize) is int and self.popsize >= 2, "ANSR needs at least two particles")
+        require(math.isfinite(self.sigma) and self.sigma > 0, "ANSR sigma must be finite and positive")
+        require(math.isfinite(self.p_self) and 0 <= self.p_self <= 1, "ANSR p_self lies in [0, 1]")
+        require(math.isfinite(self.bound) and self.bound > 0, "ANSR bound must be finite and positive")
+        require(math.isfinite(self.restart_tolerance) and self.restart_tolerance > 0,
+                "ANSR restart tolerance must be finite and positive")
+        require(type(self.batch_size) is int and 1 <= self.batch_size <= self.popsize,
+                "ANSR batch_size must lie between one and the population size")
+
+
+@dataclass(frozen=True)
 class AdamW(Optimizer):
     """torch.optim.AdamW: bias-corrected moments and decoupled decay.
 

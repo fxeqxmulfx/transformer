@@ -35,6 +35,7 @@ import time
 import torch
 
 from ...domain import cadence
+from ...domain.optimizers import ANSR
 from ...domain.stopping import Selection
 from ...domain.training import AttentionDiagnostics, rate
 from ..benchmarks import build_task
@@ -189,6 +190,8 @@ class Training:
         """Check, and record if traced, the gradient norms of the updates since the last flush."""
         trace, self.trace = self.trace, []
         for row, norm in zip(trace, self.stepper.gradient_norms(), strict=True):
+            if norm is None:
+                continue
             if not math.isfinite(norm):
                 raise NonfiniteGradient(row["step"], norm)
             if self.experiment.diagnostics.gradients:
@@ -223,7 +226,8 @@ class Training:
         self.clock.resume()
         for step in range(self.completed + 1, experiment.budget.updates + 1):
             parts, place = self.sampler.next()
-            learning_rate = rate(experiment.optimizer.lr, experiment.schedule, step - 1)
+            learning_rate = (None if isinstance(experiment.optimizer, ANSR) else
+                             rate(experiment.optimizer.lr, experiment.schedule, step - 1))
             sampled = cadence.sampled(experiment, step)
             size, measurements = self.stepper.step(parts, learning_rate, sampled)
             self.seen += size

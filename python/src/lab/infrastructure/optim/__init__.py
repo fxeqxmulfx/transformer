@@ -15,6 +15,7 @@ import torch
 
 from ...domain import optimizers
 from . import coordinate, direction, fisher, magnitude, matrix, stages
+from .ansr import ANSR
 
 
 def parameter_groups(spec, model):
@@ -79,6 +80,10 @@ def build_optimizer(spec, model, rate=None, updates=None, seed=None, fused=False
     """
     if isinstance(spec, optimizers.Clipped):
         spec = spec.base
+    if isinstance(spec, optimizers.ANSR):
+        if rate is not None or fused:
+            raise ValueError("ANSR requires eager population evaluation without a learning rate")
+        return ANSR(spec, model, seed)
     if isinstance(spec, optimizers.AdamW):
         return adamw(spec, model, rate, fused)
     return rule(spec, model, rate, updates, seed)

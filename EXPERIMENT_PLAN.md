@@ -2083,6 +2083,30 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## ANSR training on ordinary softmax GPTMini
+
+**In progress on 2026-10-06, explicitly requested by the user.** The user
+provided https://github.com/fxeqxmulfx/ansr and requested a clone in `/tmp`
+and Basis training on ordinary softmax GPTMini. This authorizes the present
+empirical attempt before any further convex-block port. The reference is
+pinned to 9cb98c12b3184368c80fea72f3b81432123d96dd.
+
+`experiments/basis_ansr` keeps the small, easy Basis GPTMini and all three
+tasks. Low and high p_self ANSR arms get 100,000 generations each (about
+12.8 million loss evaluations); AdamW controls retain calibrated task budgets.
+The model, data splits, seeds and batch
+sizes are unchanged. Execution is eager CUDA. The ANSR port refreshes stored
+attractor fitness on each new training batch and counts those evaluations,
+preserves tied weights, and checkpoints its population and RNG. This is a
+training attempt, not a claim that optimizer behavior proves convexity.
+
+The nine 256-generation preparation/control runs completed and are archived
+in `experiments/basis_ansr/pilot_summary.json` and `pilot_report.json`. AdamW
+passed easy depth, recall and parity at 200, 1,700 and 4,800 updates. The short
+ANSR runs do not settle its efficacy. The user explicitly required a much
+larger budget; all six ANSR runs continue from checkpoint toward 100,000
+generations each, without resetting their population or random generators.
+
 ## Freely learned query-key matching through a convex atomic state
 
 **Done on 2026-10-06 UTC for the stated mathematical architecture.** Seven

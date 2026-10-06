@@ -1,0 +1,2385 @@
+{
+  "phase": "256-generation preparation check; main ANSR budget will be 100000 generations",
+  "source_ansr_commit": "9cb98c12b3184368c80fea72f3b81432123d96dd",
+  "runs": {
+    "adamw-easy-small-depth-seed0": {
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 128
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "AlternatingBlocks",
+            "blocks": 2,
+            "neutral_fraction": 0.25,
+            "max_neutral_gap": null
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [
+            128
+          ],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 2000,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 200,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 5000
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "engine": {
+          "code": {
+            "__init__.py": "5247f0245c4e0e85225d43902285e61a7a162900ebde899cbe0f48aaa7ff06ce",
+            "application/__init__.py": "3971805b0409c0ce3a044d90d72d65d8565380e3699eb19695cd26b5231cd46e",
+            "application/ports.py": "89d231b66db064b7d879fc4025c0965a6bcd41f6091e47b90520e140059520a1",
+            "application/report.py": "cb61e932a892220a41144874f8b1efd009ea796cec3559fa854fc33456b23ec8",
+            "application/study.py": "81c7f9db3eb2739cdff6c617519f408d8552bd2b84ffdea271b2b5444920d982",
+            "domain/__init__.py": "54f6bfc495f239ff287f39dbebf100043317863a0c9ada92b6f001de01a36b2c",
+            "domain/analysis.py": "ea94291415afca7e28a6009137ed44add69b23999f07eb8cd4ddc083bfec24f2",
+            "domain/basis.py": "df653b7a0ab8440f134a6f8ce59860980d1fd72df8995892c44784e2b4314e9c",
+            "domain/benchmarks.py": "ac6f0472f65c8c5a54b8bfe43f1004c1d4219fea84b50a74b8edc092131baae6",
+            "domain/cadence.py": "592ba56790469be4fe33a430c270b98d537d03e4948fbb92de202fe3111968e0",
+            "domain/calibration.py": "ecfd2060bd84db189e1c75da53e0c00a809578b75c22e356da17823aac645410",
+            "domain/collapse.py": "f7bac076f5ea495c1b4673682071eb898e0de8fc343203d10585db08155e8e89",
+            "domain/experiment.py": "510194599b5863256115998763cede297e50206252c19f354dce6e5ee809a3a8",
+            "domain/generative.py": "efbd172d1e120012f896386b62849cb992528bf523fdbc9de9c174c37e3df126",
+            "domain/memorization.py": "d1119100afafa87e3bfbe3f53429243e59c44a0986c01b0c106856be12b17219",
+            "domain/model.py": "6ad3ce50a1bb696bf963339c1de154aea4eac6beea84ccd8a4c81465647a7e4c",
+            "domain/optimizers.py": "14da6a7ce96b13b788f661bff27d6c279f0a3c7f82c77503ba952a6ff234dc52",
+            "domain/phases.py": "c1029198684bd0eaf482059bda3175275c0f52075b5a419b544c67be02d07239",
+            "domain/spec.py": "0ad08c0060d555309c43c9bfc223487683f9240c1bbf7dc75157f22560e6e8f2",
+            "domain/stability.py": "9e1d6573cff2bfbd1559afde361c8ba09c29a2306908d4b19cf3fb30daaacb4d",
+            "domain/stopping.py": "f3cd37a4a3040d925fd330490cf387f5d139760d4bd3f7c14d764e048dbf252a",
+            "domain/synthetic.py": "903e3bf7d747524e3729d2873110de6b4c725e9f6eb0102ac97e62dcb2230e6d",
+            "domain/tasks.py": "0b17f033b623e17ef84f68428d8a62aac3b5c9207a6481ebcbbc6bc0d4ea275f",
+            "domain/training.py": "3ae5ace08a99992461aadc71e91566d1d68b3568373b808bc64fffa28c210d1c",
+            "dsl.py": "bbee9dcefe157e1725aa6cb055a8898a931551321489380087c61bd863d84900",
+            "infrastructure/__init__.py": "24f37965caf4b37e7b38dc11c18c7e1ea249dd157e53e3eeee20312d74d1a8d3",
+            "infrastructure/benchmarks/__init__.py": "14d68337a6b62e9e3d7759c6d527ccb0f365c6b5d8a9a8bcb3b3f8e8d2bfd990",
+            "infrastructure/benchmarks/modular.py": "81707cdca23171d30c1ee74fde6ad00b007bbc6692b7dde813dc301659e49fd6",
+            "infrastructure/benchmarks/samplers.py": "9d5bfdfb476c5faaa89b78716efd61fe0bff10011dccbe705b22ba653a8801ab",
+            "infrastructure/benchmarks/synthetic/__init__.py": "6e433a4fc98f53a4502c39e2d0e7d50d519e2827666f3028b37dad0f846ffc47",
+            "infrastructure/benchmarks/synthetic/arithmetic.py": "e70be51638ec745839bd498fe9b8a1645806eb1d940dcfc875b2bcd3fc2b93a6",
+            "infrastructure/benchmarks/synthetic/base.py": "16a16f4e0d94124ca5196455ad676c7deb918569daf85043444aeacc5ed4533a",
+            "infrastructure/benchmarks/synthetic/bits.py": "508d9ad10454f837f8f28bcca00c1e49d56f35ee9c5bffe4db8364d7ffc6c094",
+            "infrastructure/benchmarks/synthetic/compression.py": "656f600ed920aaa0c3a7e02f1ba6e6a8ce5dfe19662506fae131bfdf71c848b1",
+            "infrastructure/benchmarks/synthetic/control.py": "fe6b6327d576b02abf96aa3adce840d157d1438e2c9c5e062ca2a8c36e08d264",
+            "infrastructure/benchmarks/synthetic/corpus.py": "17f641d95fa5cddd8613ece3122ea6980c186cde06d91d67708d3ff36b278d13",
+            "infrastructure/benchmarks/synthetic/crasp.py": "362a47828b8610cd71827cc74e2d5425a4857683ad2ea646a310142537911cfc",
+            "infrastructure/benchmarks/synthetic/generation.py": "558a70b0c6c3fd3a5c80a1369cb2de237ee8bd98ce0058bfcf2ac4c353c2f138",
+            "infrastructure/benchmarks/synthetic/memorization.py": "3ce28545604583dcc69d51155f854f87009ffa12f207a12001babcbbbd2a281e",
+            "infrastructure/benchmarks/synthetic/noise.py": "bf55ddd6cede01adf01066f397fe3fcbf9b9d36d20efe4414a6529648f818cc2",
+            "infrastructure/benchmarks/synthetic/prefixes.py": "72d58f5fa02e394dceca77c483f048a63eb45b8cf6cfd7c5acbd986745988ad7",
+            "infrastructure/benchmarks/synthetic/records.py": "cb9c51b37263f8df2ffbd0960af9b7f1e97ae29d8ba261024bfb08e3c58e0e82",
+            "infrastructure/benchmarks/synthetic/retrieval.py": "deb4b69e4fd136e20a747b74e59d6d50b8b2d3e54663829f60d2c8b828326d5f",
+            "infrastructure/benchmarks/synthetic/rows.py": "71f552498f66087f681ada0073c174a40a303cc76d7e0981bc316325f11ff9a7",
+            "infrastructure/benchmarks/synthetic/sampling.py": "2ced1668f7b49e33de37bc77077327e2967121161e8221412d7ee3a209240d28",
+            "infrastructure/benchmarks/synthetic/sequences.py": "3f1ce4b63fcff17fe8309428c9e53a3095bebf0986e6135e8d5117ddc6fd7342",
+            "infrastructure/benchmarks/synthetic/splits.py": "34bcd8cf9295b4dbd4e9efd7dfe60fefbd28c433ccf6d03f4cbb177e6e6b47d9",
+            "infrastructure/benchmarks/synthetic/training.py": "f3da45fadf7017aff6a47dfefa7a69fe10dc49b1198af1b8d3b0bbf67a5485ed",
+            "infrastructure/benchmarks/synthetic/vocabulary.py": "8459f5f95f737c12e1cc2e165038ee743fb7973de3355544d8c72df9cb3e4e48",
+            "infrastructure/benchmarks/text.py": "038e2f7b58e9e6c6d689d3b660d4d9d2880726f82732a397e2dd72239e200352",
+            "infrastructure/engine/__init__.py": "615a2fa4d1e3217651136093504bcc9cf57a28db0e883864f2cd9d9116bf027d",
+            "infrastructure/engine/attention.py": "0ac754e5d62a3299bfae219af86d84b5f09bb1851e085ebbe11cca38b9d1125b",
+            "infrastructure/engine/attention_batch.py": "d233d13baf8fbdce43677175fadd46d08c5011b0ee9cd01c63e8b839e4fb0d47",
+            "infrastructure/engine/attention_stats.py": "5f4f2d1943a394e6af6ac07f8ec094c3f334b1ebbc052001a6b4fc1989df14a2",
+            "infrastructure/engine/compiled.py": "850d1de1e1c8fa9ab04c13c507d351efee6b90e2b1c21ae381a9e0c4d71028a7",
+            "infrastructure/engine/eager.py": "e892f0ff750c5182dd5a5cdd326950301aee554e33fecec27d11760903208fda",
+            "infrastructure/engine/graphs.py": "20326ad0fca1c7d6905eb7ef663f29364b9fd1e4601a74b5bd51826e64e38a2e",
+            "infrastructure/engine/loop.py": "88ee6882726c8006eed0fc7ead0eb5527d4080c23f4020e9333486630dcbb1cb",
+            "infrastructure/engine/measure.py": "43b0c6c031230b10a04ee4fe0fe42b1c46b9f32c1e828b370789e700190d5d09",
+            "infrastructure/engine/population.py": "97d63265f967d9395dd9bbcbc87e21f10ad1ee9543e1cd3899d0f0c5a8ff5d01",
+            "infrastructure/farm.py": "626b5b1c3a92ca5bfc3c4078c0c59a2e7b6ff8acdbc38782cbc5949640821b27",
+            "infrastructure/loader.py": "b1cc1bc0463910c78abd30f587ae5a66fa5d091ce7639785bba58b6a1016b97c",
+            "infrastructure/nn/__init__.py": "73e7051498fae6f9fc1e510be8fab430f3c4c3d04d948b031a56f8e6ea40e276",
+            "infrastructure/nn/attention.py": "cd99d0f524f05959fba6cb331191a46b0f4323e5d09f0fbadf3e966c1b160f0c",
+            "infrastructure/nn/legacy.py": "c6a5d4084c86dc0cb114a0cebd5873e243571b2b61f7178f5914c373d23e7048",
+            "infrastructure/nn/positions.py": "f95752d6948a1ecff5602e8c7fb26171cd7a6e4c54618547a9f7f7c2d70dd102",
+            "infrastructure/nn/sparsemax.py": "c864ce1e440f8c5b349df2c9eab0b6e018d5a486d400a8d155e9ef111f3ac2c0",
+            "infrastructure/nn/surrogate.py": "2141bb936750cd178b18c8c9646e2f9a7261447cc065a32f6400b6ab050e47c3",
+            "infrastructure/nn/transformer.py": "ca61ddc99b2fbcc6b42774aab66f774caec1bf0b11ce7f38fd906ce8d743b19d",
+            "infrastructure/optim/__init__.py": "8a7168402ddb6df5d821ff85b23d8672656a8bce8c6bbcf8a17d0c4a965a67fe",
+            "infrastructure/optim/ansr.py": "a0f6d6c559ccd0c53e87e7d457116c6a8864145d46805df7ef19fa66e971b191",
+            "infrastructure/optim/coordinate.py": "1bb074fc2fcc9033c6fa7a3fe5133ad427c0d2059e765c5904fe2292becea6ab",
+            "infrastructure/optim/direction.py": "716b07ad28890e1e1e1dd7cacc506d3c6d1507005f915f1b50b4091e9f848df9",
+            "infrastructure/optim/fisher.py": "9085d71581af08b0767dff3ecee28b8dd1c87abcb545089e2514a68187cb4803",
+            "infrastructure/optim/magnitude.py": "cdb75c6f9dc33c8b88af1f8551180fb3b53b59f24290b65cf91dd41e0861f2d9",
+            "infrastructure/optim/matrix.py": "5c9988b9cadc865fe28086b0130702b827958e0f96cc93e65e7175976eb70ae5",
+            "infrastructure/optim/roots.py": "a0d2486a9cd6d80bab6468cb200ac208945169d7ed2cd1e8a9dccf8b4559578b",
+            "infrastructure/optim/stages.py": "409aec59127a8a2c75b4e282b70ee9c3ec682e0bf3224e13a90eddd8bae86224",
+            "infrastructure/provenance.py": "37b6cfe2f0accca81ffa0be02216623875855e441d21e5ab68644aba5206f7f0",
+            "infrastructure/store.py": "8277dd46ba043ece8bd4bdeb35354617dbbc758a17e2db407980b6b2d0e72ca5"
+          },
+          "torch": "2.14.1+cu126",
+          "device": "NVIDIA GeForce GTX 1050"
+        },
+        "commit": {
+          "head": "5d91bc4258f10bd8ea008d20c281cf21378458a4",
+          "lab_modified": true
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      },
+      "stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "best_step": 200,
+      "initial_validation": {
+        "loss": 3.451107147872184,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "best_validation": {
+        "loss": 0.01890899824092011,
+        "token_accuracy": 1.0,
+        "sequence_accuracy": 1.0
+      },
+      "best_test": {
+        "loss": 0.01879280029608814,
+        "token_accuracy": 1.0,
+        "sequence_accuracy": 1.0
+      },
+      "training_seconds": 4.455124345025979,
+      "optimizer": null
+    },
+    "adamw-easy-small-recall-seed0": {
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 64
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "MQAR",
+            "symbols": 256,
+            "pairs": 8,
+            "queries": 8,
+            "query_gap": 0,
+            "alpha": 0.1,
+            "overwrites": 0
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 4800,
+          "batch": 64
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 50,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 5000
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "engine": {
+          "code": {
+            "__init__.py": "5247f0245c4e0e85225d43902285e61a7a162900ebde899cbe0f48aaa7ff06ce",
+            "application/__init__.py": "3971805b0409c0ce3a044d90d72d65d8565380e3699eb19695cd26b5231cd46e",
+            "application/ports.py": "89d231b66db064b7d879fc4025c0965a6bcd41f6091e47b90520e140059520a1",
+            "application/report.py": "cb61e932a892220a41144874f8b1efd009ea796cec3559fa854fc33456b23ec8",
+            "application/study.py": "81c7f9db3eb2739cdff6c617519f408d8552bd2b84ffdea271b2b5444920d982",
+            "domain/__init__.py": "54f6bfc495f239ff287f39dbebf100043317863a0c9ada92b6f001de01a36b2c",
+            "domain/analysis.py": "ea94291415afca7e28a6009137ed44add69b23999f07eb8cd4ddc083bfec24f2",
+            "domain/basis.py": "df653b7a0ab8440f134a6f8ce59860980d1fd72df8995892c44784e2b4314e9c",
+            "domain/benchmarks.py": "ac6f0472f65c8c5a54b8bfe43f1004c1d4219fea84b50a74b8edc092131baae6",
+            "domain/cadence.py": "592ba56790469be4fe33a430c270b98d537d03e4948fbb92de202fe3111968e0",
+            "domain/calibration.py": "ecfd2060bd84db189e1c75da53e0c00a809578b75c22e356da17823aac645410",
+            "domain/collapse.py": "f7bac076f5ea495c1b4673682071eb898e0de8fc343203d10585db08155e8e89",
+            "domain/experiment.py": "510194599b5863256115998763cede297e50206252c19f354dce6e5ee809a3a8",
+            "domain/generative.py": "efbd172d1e120012f896386b62849cb992528bf523fdbc9de9c174c37e3df126",
+            "domain/memorization.py": "d1119100afafa87e3bfbe3f53429243e59c44a0986c01b0c106856be12b17219",
+            "domain/model.py": "6ad3ce50a1bb696bf963339c1de154aea4eac6beea84ccd8a4c81465647a7e4c",
+            "domain/optimizers.py": "14da6a7ce96b13b788f661bff27d6c279f0a3c7f82c77503ba952a6ff234dc52",
+            "domain/phases.py": "c1029198684bd0eaf482059bda3175275c0f52075b5a419b544c67be02d07239",
+            "domain/spec.py": "0ad08c0060d555309c43c9bfc223487683f9240c1bbf7dc75157f22560e6e8f2",
+            "domain/stability.py": "9e1d6573cff2bfbd1559afde361c8ba09c29a2306908d4b19cf3fb30daaacb4d",
+            "domain/stopping.py": "f3cd37a4a3040d925fd330490cf387f5d139760d4bd3f7c14d764e048dbf252a",
+            "domain/synthetic.py": "903e3bf7d747524e3729d2873110de6b4c725e9f6eb0102ac97e62dcb2230e6d",
+            "domain/tasks.py": "0b17f033b623e17ef84f68428d8a62aac3b5c9207a6481ebcbbc6bc0d4ea275f",
+            "domain/training.py": "3ae5ace08a99992461aadc71e91566d1d68b3568373b808bc64fffa28c210d1c",
+            "dsl.py": "bbee9dcefe157e1725aa6cb055a8898a931551321489380087c61bd863d84900",
+            "infrastructure/__init__.py": "24f37965caf4b37e7b38dc11c18c7e1ea249dd157e53e3eeee20312d74d1a8d3",
+            "infrastructure/benchmarks/__init__.py": "14d68337a6b62e9e3d7759c6d527ccb0f365c6b5d8a9a8bcb3b3f8e8d2bfd990",
+            "infrastructure/benchmarks/modular.py": "81707cdca23171d30c1ee74fde6ad00b007bbc6692b7dde813dc301659e49fd6",
+            "infrastructure/benchmarks/samplers.py": "9d5bfdfb476c5faaa89b78716efd61fe0bff10011dccbe705b22ba653a8801ab",
+            "infrastructure/benchmarks/synthetic/__init__.py": "6e433a4fc98f53a4502c39e2d0e7d50d519e2827666f3028b37dad0f846ffc47",
+            "infrastructure/benchmarks/synthetic/arithmetic.py": "e70be51638ec745839bd498fe9b8a1645806eb1d940dcfc875b2bcd3fc2b93a6",
+            "infrastructure/benchmarks/synthetic/base.py": "16a16f4e0d94124ca5196455ad676c7deb918569daf85043444aeacc5ed4533a",
+            "infrastructure/benchmarks/synthetic/bits.py": "508d9ad10454f837f8f28bcca00c1e49d56f35ee9c5bffe4db8364d7ffc6c094",
+            "infrastructure/benchmarks/synthetic/compression.py": "656f600ed920aaa0c3a7e02f1ba6e6a8ce5dfe19662506fae131bfdf71c848b1",
+            "infrastructure/benchmarks/synthetic/control.py": "fe6b6327d576b02abf96aa3adce840d157d1438e2c9c5e062ca2a8c36e08d264",
+            "infrastructure/benchmarks/synthetic/corpus.py": "17f641d95fa5cddd8613ece3122ea6980c186cde06d91d67708d3ff36b278d13",
+            "infrastructure/benchmarks/synthetic/crasp.py": "362a47828b8610cd71827cc74e2d5425a4857683ad2ea646a310142537911cfc",
+            "infrastructure/benchmarks/synthetic/generation.py": "558a70b0c6c3fd3a5c80a1369cb2de237ee8bd98ce0058bfcf2ac4c353c2f138",
+            "infrastructure/benchmarks/synthetic/memorization.py": "3ce28545604583dcc69d51155f854f87009ffa12f207a12001babcbbbd2a281e",
+            "infrastructure/benchmarks/synthetic/noise.py": "bf55ddd6cede01adf01066f397fe3fcbf9b9d36d20efe4414a6529648f818cc2",
+            "infrastructure/benchmarks/synthetic/prefixes.py": "72d58f5fa02e394dceca77c483f048a63eb45b8cf6cfd7c5acbd986745988ad7",
+            "infrastructure/benchmarks/synthetic/records.py": "cb9c51b37263f8df2ffbd0960af9b7f1e97ae29d8ba261024bfb08e3c58e0e82",
+            "infrastructure/benchmarks/synthetic/retrieval.py": "deb4b69e4fd136e20a747b74e59d6d50b8b2d3e54663829f60d2c8b828326d5f",
+            "infrastructure/benchmarks/synthetic/rows.py": "71f552498f66087f681ada0073c174a40a303cc76d7e0981bc316325f11ff9a7",
+            "infrastructure/benchmarks/synthetic/sampling.py": "2ced1668f7b49e33de37bc77077327e2967121161e8221412d7ee3a209240d28",
+            "infrastructure/benchmarks/synthetic/sequences.py": "3f1ce4b63fcff17fe8309428c9e53a3095bebf0986e6135e8d5117ddc6fd7342",
+            "infrastructure/benchmarks/synthetic/splits.py": "34bcd8cf9295b4dbd4e9efd7dfe60fefbd28c433ccf6d03f4cbb177e6e6b47d9",
+            "infrastructure/benchmarks/synthetic/training.py": "f3da45fadf7017aff6a47dfefa7a69fe10dc49b1198af1b8d3b0bbf67a5485ed",
+            "infrastructure/benchmarks/synthetic/vocabulary.py": "8459f5f95f737c12e1cc2e165038ee743fb7973de3355544d8c72df9cb3e4e48",
+            "infrastructure/benchmarks/text.py": "038e2f7b58e9e6c6d689d3b660d4d9d2880726f82732a397e2dd72239e200352",
+            "infrastructure/engine/__init__.py": "615a2fa4d1e3217651136093504bcc9cf57a28db0e883864f2cd9d9116bf027d",
+            "infrastructure/engine/attention.py": "0ac754e5d62a3299bfae219af86d84b5f09bb1851e085ebbe11cca38b9d1125b",
+            "infrastructure/engine/attention_batch.py": "d233d13baf8fbdce43677175fadd46d08c5011b0ee9cd01c63e8b839e4fb0d47",
+            "infrastructure/engine/attention_stats.py": "5f4f2d1943a394e6af6ac07f8ec094c3f334b1ebbc052001a6b4fc1989df14a2",
+            "infrastructure/engine/compiled.py": "850d1de1e1c8fa9ab04c13c507d351efee6b90e2b1c21ae381a9e0c4d71028a7",
+            "infrastructure/engine/eager.py": "e892f0ff750c5182dd5a5cdd326950301aee554e33fecec27d11760903208fda",
+            "infrastructure/engine/graphs.py": "20326ad0fca1c7d6905eb7ef663f29364b9fd1e4601a74b5bd51826e64e38a2e",
+            "infrastructure/engine/loop.py": "88ee6882726c8006eed0fc7ead0eb5527d4080c23f4020e9333486630dcbb1cb",
+            "infrastructure/engine/measure.py": "43b0c6c031230b10a04ee4fe0fe42b1c46b9f32c1e828b370789e700190d5d09",
+            "infrastructure/engine/population.py": "97d63265f967d9395dd9bbcbc87e21f10ad1ee9543e1cd3899d0f0c5a8ff5d01",
+            "infrastructure/farm.py": "626b5b1c3a92ca5bfc3c4078c0c59a2e7b6ff8acdbc38782cbc5949640821b27",
+            "infrastructure/loader.py": "b1cc1bc0463910c78abd30f587ae5a66fa5d091ce7639785bba58b6a1016b97c",
+            "infrastructure/nn/__init__.py": "73e7051498fae6f9fc1e510be8fab430f3c4c3d04d948b031a56f8e6ea40e276",
+            "infrastructure/nn/attention.py": "cd99d0f524f05959fba6cb331191a46b0f4323e5d09f0fbadf3e966c1b160f0c",
+            "infrastructure/nn/legacy.py": "c6a5d4084c86dc0cb114a0cebd5873e243571b2b61f7178f5914c373d23e7048",
+            "infrastructure/nn/positions.py": "f95752d6948a1ecff5602e8c7fb26171cd7a6e4c54618547a9f7f7c2d70dd102",
+            "infrastructure/nn/sparsemax.py": "c864ce1e440f8c5b349df2c9eab0b6e018d5a486d400a8d155e9ef111f3ac2c0",
+            "infrastructure/nn/surrogate.py": "2141bb936750cd178b18c8c9646e2f9a7261447cc065a32f6400b6ab050e47c3",
+            "infrastructure/nn/transformer.py": "ca61ddc99b2fbcc6b42774aab66f774caec1bf0b11ce7f38fd906ce8d743b19d",
+            "infrastructure/optim/__init__.py": "8a7168402ddb6df5d821ff85b23d8672656a8bce8c6bbcf8a17d0c4a965a67fe",
+            "infrastructure/optim/ansr.py": "a0f6d6c559ccd0c53e87e7d457116c6a8864145d46805df7ef19fa66e971b191",
+            "infrastructure/optim/coordinate.py": "1bb074fc2fcc9033c6fa7a3fe5133ad427c0d2059e765c5904fe2292becea6ab",
+            "infrastructure/optim/direction.py": "716b07ad28890e1e1e1dd7cacc506d3c6d1507005f915f1b50b4091e9f848df9",
+            "infrastructure/optim/fisher.py": "9085d71581af08b0767dff3ecee28b8dd1c87abcb545089e2514a68187cb4803",
+            "infrastructure/optim/magnitude.py": "cdb75c6f9dc33c8b88af1f8551180fb3b53b59f24290b65cf91dd41e0861f2d9",
+            "infrastructure/optim/matrix.py": "5c9988b9cadc865fe28086b0130702b827958e0f96cc93e65e7175976eb70ae5",
+            "infrastructure/optim/roots.py": "a0d2486a9cd6d80bab6468cb200ac208945169d7ed2cd1e8a9dccf8b4559578b",
+            "infrastructure/optim/stages.py": "409aec59127a8a2c75b4e282b70ee9c3ec682e0bf3224e13a90eddd8bae86224",
+            "infrastructure/provenance.py": "37b6cfe2f0accca81ffa0be02216623875855e441d21e5ab68644aba5206f7f0",
+            "infrastructure/store.py": "8277dd46ba043ece8bd4bdeb35354617dbbc758a17e2db407980b6b2d0e72ca5"
+          },
+          "torch": "2.14.1+cu126",
+          "device": "NVIDIA GeForce GTX 1050"
+        },
+        "commit": {
+          "head": "5d91bc4258f10bd8ea008d20c281cf21378458a4",
+          "lab_modified": true
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      },
+      "stop": {
+        "step": 1700,
+        "reason": "solved"
+      },
+      "best_step": 1700,
+      "initial_validation": {
+        "loss": 6.320268630981445,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "best_validation": {
+        "loss": 0.012765797320753336,
+        "token_accuracy": 0.99951171875,
+        "sequence_accuracy": 0.99609375
+      },
+      "best_test": {
+        "loss": 0.012439217884093523,
+        "token_accuracy": 0.99951171875,
+        "sequence_accuracy": 0.99609375
+      },
+      "training_seconds": 41.625577053637244,
+      "optimizer": null
+    },
+    "adamw-easy-small-parity-seed0": {
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 19
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "Parity",
+            "scratchpad": "none",
+            "hints": false,
+            "symbols": 32,
+            "number_limit": 512
+          },
+          "length": 16,
+          "min_length": 1,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 20000,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 200,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 5000
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "engine": {
+          "code": {
+            "__init__.py": "5247f0245c4e0e85225d43902285e61a7a162900ebde899cbe0f48aaa7ff06ce",
+            "application/__init__.py": "3971805b0409c0ce3a044d90d72d65d8565380e3699eb19695cd26b5231cd46e",
+            "application/ports.py": "89d231b66db064b7d879fc4025c0965a6bcd41f6091e47b90520e140059520a1",
+            "application/report.py": "cb61e932a892220a41144874f8b1efd009ea796cec3559fa854fc33456b23ec8",
+            "application/study.py": "81c7f9db3eb2739cdff6c617519f408d8552bd2b84ffdea271b2b5444920d982",
+            "domain/__init__.py": "54f6bfc495f239ff287f39dbebf100043317863a0c9ada92b6f001de01a36b2c",
+            "domain/analysis.py": "ea94291415afca7e28a6009137ed44add69b23999f07eb8cd4ddc083bfec24f2",
+            "domain/basis.py": "df653b7a0ab8440f134a6f8ce59860980d1fd72df8995892c44784e2b4314e9c",
+            "domain/benchmarks.py": "ac6f0472f65c8c5a54b8bfe43f1004c1d4219fea84b50a74b8edc092131baae6",
+            "domain/cadence.py": "592ba56790469be4fe33a430c270b98d537d03e4948fbb92de202fe3111968e0",
+            "domain/calibration.py": "ecfd2060bd84db189e1c75da53e0c00a809578b75c22e356da17823aac645410",
+            "domain/collapse.py": "f7bac076f5ea495c1b4673682071eb898e0de8fc343203d10585db08155e8e89",
+            "domain/experiment.py": "510194599b5863256115998763cede297e50206252c19f354dce6e5ee809a3a8",
+            "domain/generative.py": "efbd172d1e120012f896386b62849cb992528bf523fdbc9de9c174c37e3df126",
+            "domain/memorization.py": "d1119100afafa87e3bfbe3f53429243e59c44a0986c01b0c106856be12b17219",
+            "domain/model.py": "6ad3ce50a1bb696bf963339c1de154aea4eac6beea84ccd8a4c81465647a7e4c",
+            "domain/optimizers.py": "14da6a7ce96b13b788f661bff27d6c279f0a3c7f82c77503ba952a6ff234dc52",
+            "domain/phases.py": "c1029198684bd0eaf482059bda3175275c0f52075b5a419b544c67be02d07239",
+            "domain/spec.py": "0ad08c0060d555309c43c9bfc223487683f9240c1bbf7dc75157f22560e6e8f2",
+            "domain/stability.py": "9e1d6573cff2bfbd1559afde361c8ba09c29a2306908d4b19cf3fb30daaacb4d",
+            "domain/stopping.py": "f3cd37a4a3040d925fd330490cf387f5d139760d4bd3f7c14d764e048dbf252a",
+            "domain/synthetic.py": "903e3bf7d747524e3729d2873110de6b4c725e9f6eb0102ac97e62dcb2230e6d",
+            "domain/tasks.py": "0b17f033b623e17ef84f68428d8a62aac3b5c9207a6481ebcbbc6bc0d4ea275f",
+            "domain/training.py": "3ae5ace08a99992461aadc71e91566d1d68b3568373b808bc64fffa28c210d1c",
+            "dsl.py": "bbee9dcefe157e1725aa6cb055a8898a931551321489380087c61bd863d84900",
+            "infrastructure/__init__.py": "24f37965caf4b37e7b38dc11c18c7e1ea249dd157e53e3eeee20312d74d1a8d3",
+            "infrastructure/benchmarks/__init__.py": "14d68337a6b62e9e3d7759c6d527ccb0f365c6b5d8a9a8bcb3b3f8e8d2bfd990",
+            "infrastructure/benchmarks/modular.py": "81707cdca23171d30c1ee74fde6ad00b007bbc6692b7dde813dc301659e49fd6",
+            "infrastructure/benchmarks/samplers.py": "9d5bfdfb476c5faaa89b78716efd61fe0bff10011dccbe705b22ba653a8801ab",
+            "infrastructure/benchmarks/synthetic/__init__.py": "6e433a4fc98f53a4502c39e2d0e7d50d519e2827666f3028b37dad0f846ffc47",
+            "infrastructure/benchmarks/synthetic/arithmetic.py": "e70be51638ec745839bd498fe9b8a1645806eb1d940dcfc875b2bcd3fc2b93a6",
+            "infrastructure/benchmarks/synthetic/base.py": "16a16f4e0d94124ca5196455ad676c7deb918569daf85043444aeacc5ed4533a",
+            "infrastructure/benchmarks/synthetic/bits.py": "508d9ad10454f837f8f28bcca00c1e49d56f35ee9c5bffe4db8364d7ffc6c094",
+            "infrastructure/benchmarks/synthetic/compression.py": "656f600ed920aaa0c3a7e02f1ba6e6a8ce5dfe19662506fae131bfdf71c848b1",
+            "infrastructure/benchmarks/synthetic/control.py": "fe6b6327d576b02abf96aa3adce840d157d1438e2c9c5e062ca2a8c36e08d264",
+            "infrastructure/benchmarks/synthetic/corpus.py": "17f641d95fa5cddd8613ece3122ea6980c186cde06d91d67708d3ff36b278d13",
+            "infrastructure/benchmarks/synthetic/crasp.py": "362a47828b8610cd71827cc74e2d5425a4857683ad2ea646a310142537911cfc",
+            "infrastructure/benchmarks/synthetic/generation.py": "558a70b0c6c3fd3a5c80a1369cb2de237ee8bd98ce0058bfcf2ac4c353c2f138",
+            "infrastructure/benchmarks/synthetic/memorization.py": "3ce28545604583dcc69d51155f854f87009ffa12f207a12001babcbbbd2a281e",
+            "infrastructure/benchmarks/synthetic/noise.py": "bf55ddd6cede01adf01066f397fe3fcbf9b9d36d20efe4414a6529648f818cc2",
+            "infrastructure/benchmarks/synthetic/prefixes.py": "72d58f5fa02e394dceca77c483f048a63eb45b8cf6cfd7c5acbd986745988ad7",
+            "infrastructure/benchmarks/synthetic/records.py": "cb9c51b37263f8df2ffbd0960af9b7f1e97ae29d8ba261024bfb08e3c58e0e82",
+            "infrastructure/benchmarks/synthetic/retrieval.py": "deb4b69e4fd136e20a747b74e59d6d50b8b2d3e54663829f60d2c8b828326d5f",
+            "infrastructure/benchmarks/synthetic/rows.py": "71f552498f66087f681ada0073c174a40a303cc76d7e0981bc316325f11ff9a7",
+            "infrastructure/benchmarks/synthetic/sampling.py": "2ced1668f7b49e33de37bc77077327e2967121161e8221412d7ee3a209240d28",
+            "infrastructure/benchmarks/synthetic/sequences.py": "3f1ce4b63fcff17fe8309428c9e53a3095bebf0986e6135e8d5117ddc6fd7342",
+            "infrastructure/benchmarks/synthetic/splits.py": "34bcd8cf9295b4dbd4e9efd7dfe60fefbd28c433ccf6d03f4cbb177e6e6b47d9",
+            "infrastructure/benchmarks/synthetic/training.py": "f3da45fadf7017aff6a47dfefa7a69fe10dc49b1198af1b8d3b0bbf67a5485ed",
+            "infrastructure/benchmarks/synthetic/vocabulary.py": "8459f5f95f737c12e1cc2e165038ee743fb7973de3355544d8c72df9cb3e4e48",
+            "infrastructure/benchmarks/text.py": "038e2f7b58e9e6c6d689d3b660d4d9d2880726f82732a397e2dd72239e200352",
+            "infrastructure/engine/__init__.py": "615a2fa4d1e3217651136093504bcc9cf57a28db0e883864f2cd9d9116bf027d",
+            "infrastructure/engine/attention.py": "0ac754e5d62a3299bfae219af86d84b5f09bb1851e085ebbe11cca38b9d1125b",
+            "infrastructure/engine/attention_batch.py": "d233d13baf8fbdce43677175fadd46d08c5011b0ee9cd01c63e8b839e4fb0d47",
+            "infrastructure/engine/attention_stats.py": "5f4f2d1943a394e6af6ac07f8ec094c3f334b1ebbc052001a6b4fc1989df14a2",
+            "infrastructure/engine/compiled.py": "850d1de1e1c8fa9ab04c13c507d351efee6b90e2b1c21ae381a9e0c4d71028a7",
+            "infrastructure/engine/eager.py": "e892f0ff750c5182dd5a5cdd326950301aee554e33fecec27d11760903208fda",
+            "infrastructure/engine/graphs.py": "20326ad0fca1c7d6905eb7ef663f29364b9fd1e4601a74b5bd51826e64e38a2e",
+            "infrastructure/engine/loop.py": "88ee6882726c8006eed0fc7ead0eb5527d4080c23f4020e9333486630dcbb1cb",
+            "infrastructure/engine/measure.py": "43b0c6c031230b10a04ee4fe0fe42b1c46b9f32c1e828b370789e700190d5d09",
+            "infrastructure/engine/population.py": "97d63265f967d9395dd9bbcbc87e21f10ad1ee9543e1cd3899d0f0c5a8ff5d01",
+            "infrastructure/farm.py": "626b5b1c3a92ca5bfc3c4078c0c59a2e7b6ff8acdbc38782cbc5949640821b27",
+            "infrastructure/loader.py": "b1cc1bc0463910c78abd30f587ae5a66fa5d091ce7639785bba58b6a1016b97c",
+            "infrastructure/nn/__init__.py": "73e7051498fae6f9fc1e510be8fab430f3c4c3d04d948b031a56f8e6ea40e276",
+            "infrastructure/nn/attention.py": "cd99d0f524f05959fba6cb331191a46b0f4323e5d09f0fbadf3e966c1b160f0c",
+            "infrastructure/nn/legacy.py": "c6a5d4084c86dc0cb114a0cebd5873e243571b2b61f7178f5914c373d23e7048",
+            "infrastructure/nn/positions.py": "f95752d6948a1ecff5602e8c7fb26171cd7a6e4c54618547a9f7f7c2d70dd102",
+            "infrastructure/nn/sparsemax.py": "c864ce1e440f8c5b349df2c9eab0b6e018d5a486d400a8d155e9ef111f3ac2c0",
+            "infrastructure/nn/surrogate.py": "2141bb936750cd178b18c8c9646e2f9a7261447cc065a32f6400b6ab050e47c3",
+            "infrastructure/nn/transformer.py": "ca61ddc99b2fbcc6b42774aab66f774caec1bf0b11ce7f38fd906ce8d743b19d",
+            "infrastructure/optim/__init__.py": "8a7168402ddb6df5d821ff85b23d8672656a8bce8c6bbcf8a17d0c4a965a67fe",
+            "infrastructure/optim/ansr.py": "a0f6d6c559ccd0c53e87e7d457116c6a8864145d46805df7ef19fa66e971b191",
+            "infrastructure/optim/coordinate.py": "1bb074fc2fcc9033c6fa7a3fe5133ad427c0d2059e765c5904fe2292becea6ab",
+            "infrastructure/optim/direction.py": "716b07ad28890e1e1e1dd7cacc506d3c6d1507005f915f1b50b4091e9f848df9",
+            "infrastructure/optim/fisher.py": "9085d71581af08b0767dff3ecee28b8dd1c87abcb545089e2514a68187cb4803",
+            "infrastructure/optim/magnitude.py": "cdb75c6f9dc33c8b88af1f8551180fb3b53b59f24290b65cf91dd41e0861f2d9",
+            "infrastructure/optim/matrix.py": "5c9988b9cadc865fe28086b0130702b827958e0f96cc93e65e7175976eb70ae5",
+            "infrastructure/optim/roots.py": "a0d2486a9cd6d80bab6468cb200ac208945169d7ed2cd1e8a9dccf8b4559578b",
+            "infrastructure/optim/stages.py": "409aec59127a8a2c75b4e282b70ee9c3ec682e0bf3224e13a90eddd8bae86224",
+            "infrastructure/provenance.py": "37b6cfe2f0accca81ffa0be02216623875855e441d21e5ab68644aba5206f7f0",
+            "infrastructure/store.py": "8277dd46ba043ece8bd4bdeb35354617dbbc758a17e2db407980b6b2d0e72ca5"
+          },
+          "torch": "2.14.1+cu126",
+          "device": "NVIDIA GeForce GTX 1050"
+        },
+        "commit": {
+          "head": "5d91bc4258f10bd8ea008d20c281cf21378458a4",
+          "lab_modified": true
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      },
+      "stop": {
+        "step": 4800,
+        "reason": "solved"
+      },
+      "best_step": 4800,
+      "initial_validation": {
+        "loss": 4.290003776550293,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "best_validation": {
+        "loss": 0.003551803878508508,
+        "token_accuracy": 1.0,
+        "sequence_accuracy": 1.0
+      },
+      "best_test": {
+        "loss": 0.00499883177690208,
+        "token_accuracy": 0.9990234375,
+        "sequence_accuracy": 0.998046875
+      },
+      "training_seconds": 108.09887213126058,
+      "optimizer": null
+    },
+    "ansr-low-easy-small-depth-seed0": {
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 128
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "AlternatingBlocks",
+            "blocks": 2,
+            "neutral_fraction": 0.25,
+            "max_neutral_gap": null
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [
+            128
+          ],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "ANSR",
+          "popsize": 64,
+          "sigma": 0.05,
+          "p_self": 0.05,
+          "bound": 20.0,
+          "restart_tolerance": 1e-08,
+          "batch_size": 4
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 0,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 256,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 32,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 32,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 32
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "engine": {
+          "code": {
+            "__init__.py": "5247f0245c4e0e85225d43902285e61a7a162900ebde899cbe0f48aaa7ff06ce",
+            "application/__init__.py": "3971805b0409c0ce3a044d90d72d65d8565380e3699eb19695cd26b5231cd46e",
+            "application/ports.py": "89d231b66db064b7d879fc4025c0965a6bcd41f6091e47b90520e140059520a1",
+            "application/report.py": "cb61e932a892220a41144874f8b1efd009ea796cec3559fa854fc33456b23ec8",
+            "application/study.py": "81c7f9db3eb2739cdff6c617519f408d8552bd2b84ffdea271b2b5444920d982",
+            "domain/__init__.py": "54f6bfc495f239ff287f39dbebf100043317863a0c9ada92b6f001de01a36b2c",
+            "domain/analysis.py": "ea94291415afca7e28a6009137ed44add69b23999f07eb8cd4ddc083bfec24f2",
+            "domain/basis.py": "df653b7a0ab8440f134a6f8ce59860980d1fd72df8995892c44784e2b4314e9c",
+            "domain/benchmarks.py": "ac6f0472f65c8c5a54b8bfe43f1004c1d4219fea84b50a74b8edc092131baae6",
+            "domain/cadence.py": "592ba56790469be4fe33a430c270b98d537d03e4948fbb92de202fe3111968e0",
+            "domain/calibration.py": "ecfd2060bd84db189e1c75da53e0c00a809578b75c22e356da17823aac645410",
+            "domain/collapse.py": "f7bac076f5ea495c1b4673682071eb898e0de8fc343203d10585db08155e8e89",
+            "domain/experiment.py": "510194599b5863256115998763cede297e50206252c19f354dce6e5ee809a3a8",
+            "domain/generative.py": "efbd172d1e120012f896386b62849cb992528bf523fdbc9de9c174c37e3df126",
+            "domain/memorization.py": "d1119100afafa87e3bfbe3f53429243e59c44a0986c01b0c106856be12b17219",
+            "domain/model.py": "6ad3ce50a1bb696bf963339c1de154aea4eac6beea84ccd8a4c81465647a7e4c",
+            "domain/optimizers.py": "14da6a7ce96b13b788f661bff27d6c279f0a3c7f82c77503ba952a6ff234dc52",
+            "domain/phases.py": "c1029198684bd0eaf482059bda3175275c0f52075b5a419b544c67be02d07239",
+            "domain/spec.py": "0ad08c0060d555309c43c9bfc223487683f9240c1bbf7dc75157f22560e6e8f2",
+            "domain/stability.py": "9e1d6573cff2bfbd1559afde361c8ba09c29a2306908d4b19cf3fb30daaacb4d",
+            "domain/stopping.py": "f3cd37a4a3040d925fd330490cf387f5d139760d4bd3f7c14d764e048dbf252a",
+            "domain/synthetic.py": "903e3bf7d747524e3729d2873110de6b4c725e9f6eb0102ac97e62dcb2230e6d",
+            "domain/tasks.py": "0b17f033b623e17ef84f68428d8a62aac3b5c9207a6481ebcbbc6bc0d4ea275f",
+            "domain/training.py": "3ae5ace08a99992461aadc71e91566d1d68b3568373b808bc64fffa28c210d1c",
+            "dsl.py": "bbee9dcefe157e1725aa6cb055a8898a931551321489380087c61bd863d84900",
+            "infrastructure/__init__.py": "24f37965caf4b37e7b38dc11c18c7e1ea249dd157e53e3eeee20312d74d1a8d3",
+            "infrastructure/benchmarks/__init__.py": "14d68337a6b62e9e3d7759c6d527ccb0f365c6b5d8a9a8bcb3b3f8e8d2bfd990",
+            "infrastructure/benchmarks/modular.py": "81707cdca23171d30c1ee74fde6ad00b007bbc6692b7dde813dc301659e49fd6",
+            "infrastructure/benchmarks/samplers.py": "9d5bfdfb476c5faaa89b78716efd61fe0bff10011dccbe705b22ba653a8801ab",
+            "infrastructure/benchmarks/synthetic/__init__.py": "6e433a4fc98f53a4502c39e2d0e7d50d519e2827666f3028b37dad0f846ffc47",
+            "infrastructure/benchmarks/synthetic/arithmetic.py": "e70be51638ec745839bd498fe9b8a1645806eb1d940dcfc875b2bcd3fc2b93a6",
+            "infrastructure/benchmarks/synthetic/base.py": "16a16f4e0d94124ca5196455ad676c7deb918569daf85043444aeacc5ed4533a",
+            "infrastructure/benchmarks/synthetic/bits.py": "508d9ad10454f837f8f28bcca00c1e49d56f35ee9c5bffe4db8364d7ffc6c094",
+            "infrastructure/benchmarks/synthetic/compression.py": "656f600ed920aaa0c3a7e02f1ba6e6a8ce5dfe19662506fae131bfdf71c848b1",
+            "infrastructure/benchmarks/synthetic/control.py": "fe6b6327d576b02abf96aa3adce840d157d1438e2c9c5e062ca2a8c36e08d264",
+            "infrastructure/benchmarks/synthetic/corpus.py": "17f641d95fa5cddd8613ece3122ea6980c186cde06d91d67708d3ff36b278d13",
+            "infrastructure/benchmarks/synthetic/crasp.py": "362a47828b8610cd71827cc74e2d5425a4857683ad2ea646a310142537911cfc",
+            "infrastructure/benchmarks/synthetic/generation.py": "558a70b0c6c3fd3a5c80a1369cb2de237ee8bd98ce0058bfcf2ac4c353c2f138",
+            "infrastructure/benchmarks/synthetic/memorization.py": "3ce28545604583dcc69d51155f854f87009ffa12f207a12001babcbbbd2a281e",
+            "infrastructure/benchmarks/synthetic/noise.py": "bf55ddd6cede01adf01066f397fe3fcbf9b9d36d20efe4414a6529648f818cc2",
+            "infrastructure/benchmarks/synthetic/prefixes.py": "72d58f5fa02e394dceca77c483f048a63eb45b8cf6cfd7c5acbd986745988ad7",
+            "infrastructure/benchmarks/synthetic/records.py": "cb9c51b37263f8df2ffbd0960af9b7f1e97ae29d8ba261024bfb08e3c58e0e82",
+            "infrastructure/benchmarks/synthetic/retrieval.py": "deb4b69e4fd136e20a747b74e59d6d50b8b2d3e54663829f60d2c8b828326d5f",
+            "infrastructure/benchmarks/synthetic/rows.py": "71f552498f66087f681ada0073c174a40a303cc76d7e0981bc316325f11ff9a7",
+            "infrastructure/benchmarks/synthetic/sampling.py": "2ced1668f7b49e33de37bc77077327e2967121161e8221412d7ee3a209240d28",
+            "infrastructure/benchmarks/synthetic/sequences.py": "3f1ce4b63fcff17fe8309428c9e53a3095bebf0986e6135e8d5117ddc6fd7342",
+            "infrastructure/benchmarks/synthetic/splits.py": "34bcd8cf9295b4dbd4e9efd7dfe60fefbd28c433ccf6d03f4cbb177e6e6b47d9",
+            "infrastructure/benchmarks/synthetic/training.py": "f3da45fadf7017aff6a47dfefa7a69fe10dc49b1198af1b8d3b0bbf67a5485ed",
+            "infrastructure/benchmarks/synthetic/vocabulary.py": "8459f5f95f737c12e1cc2e165038ee743fb7973de3355544d8c72df9cb3e4e48",
+            "infrastructure/benchmarks/text.py": "038e2f7b58e9e6c6d689d3b660d4d9d2880726f82732a397e2dd72239e200352",
+            "infrastructure/engine/__init__.py": "615a2fa4d1e3217651136093504bcc9cf57a28db0e883864f2cd9d9116bf027d",
+            "infrastructure/engine/attention.py": "0ac754e5d62a3299bfae219af86d84b5f09bb1851e085ebbe11cca38b9d1125b",
+            "infrastructure/engine/attention_batch.py": "d233d13baf8fbdce43677175fadd46d08c5011b0ee9cd01c63e8b839e4fb0d47",
+            "infrastructure/engine/attention_stats.py": "5f4f2d1943a394e6af6ac07f8ec094c3f334b1ebbc052001a6b4fc1989df14a2",
+            "infrastructure/engine/compiled.py": "850d1de1e1c8fa9ab04c13c507d351efee6b90e2b1c21ae381a9e0c4d71028a7",
+            "infrastructure/engine/eager.py": "e892f0ff750c5182dd5a5cdd326950301aee554e33fecec27d11760903208fda",
+            "infrastructure/engine/graphs.py": "20326ad0fca1c7d6905eb7ef663f29364b9fd1e4601a74b5bd51826e64e38a2e",
+            "infrastructure/engine/loop.py": "88ee6882726c8006eed0fc7ead0eb5527d4080c23f4020e9333486630dcbb1cb",
+            "infrastructure/engine/measure.py": "43b0c6c031230b10a04ee4fe0fe42b1c46b9f32c1e828b370789e700190d5d09",
+            "infrastructure/engine/population.py": "97d63265f967d9395dd9bbcbc87e21f10ad1ee9543e1cd3899d0f0c5a8ff5d01",
+            "infrastructure/farm.py": "626b5b1c3a92ca5bfc3c4078c0c59a2e7b6ff8acdbc38782cbc5949640821b27",
+            "infrastructure/loader.py": "b1cc1bc0463910c78abd30f587ae5a66fa5d091ce7639785bba58b6a1016b97c",
+            "infrastructure/nn/__init__.py": "73e7051498fae6f9fc1e510be8fab430f3c4c3d04d948b031a56f8e6ea40e276",
+            "infrastructure/nn/attention.py": "cd99d0f524f05959fba6cb331191a46b0f4323e5d09f0fbadf3e966c1b160f0c",
+            "infrastructure/nn/legacy.py": "c6a5d4084c86dc0cb114a0cebd5873e243571b2b61f7178f5914c373d23e7048",
+            "infrastructure/nn/positions.py": "f95752d6948a1ecff5602e8c7fb26171cd7a6e4c54618547a9f7f7c2d70dd102",
+            "infrastructure/nn/sparsemax.py": "c864ce1e440f8c5b349df2c9eab0b6e018d5a486d400a8d155e9ef111f3ac2c0",
+            "infrastructure/nn/surrogate.py": "2141bb936750cd178b18c8c9646e2f9a7261447cc065a32f6400b6ab050e47c3",
+            "infrastructure/nn/transformer.py": "ca61ddc99b2fbcc6b42774aab66f774caec1bf0b11ce7f38fd906ce8d743b19d",
+            "infrastructure/optim/__init__.py": "8a7168402ddb6df5d821ff85b23d8672656a8bce8c6bbcf8a17d0c4a965a67fe",
+            "infrastructure/optim/ansr.py": "a0f6d6c559ccd0c53e87e7d457116c6a8864145d46805df7ef19fa66e971b191",
+            "infrastructure/optim/coordinate.py": "1bb074fc2fcc9033c6fa7a3fe5133ad427c0d2059e765c5904fe2292becea6ab",
+            "infrastructure/optim/direction.py": "716b07ad28890e1e1e1dd7cacc506d3c6d1507005f915f1b50b4091e9f848df9",
+            "infrastructure/optim/fisher.py": "9085d71581af08b0767dff3ecee28b8dd1c87abcb545089e2514a68187cb4803",
+            "infrastructure/optim/magnitude.py": "cdb75c6f9dc33c8b88af1f8551180fb3b53b59f24290b65cf91dd41e0861f2d9",
+            "infrastructure/optim/matrix.py": "5c9988b9cadc865fe28086b0130702b827958e0f96cc93e65e7175976eb70ae5",
+            "infrastructure/optim/roots.py": "a0d2486a9cd6d80bab6468cb200ac208945169d7ed2cd1e8a9dccf8b4559578b",
+            "infrastructure/optim/stages.py": "409aec59127a8a2c75b4e282b70ee9c3ec682e0bf3224e13a90eddd8bae86224",
+            "infrastructure/provenance.py": "37b6cfe2f0accca81ffa0be02216623875855e441d21e5ab68644aba5206f7f0",
+            "infrastructure/store.py": "8277dd46ba043ece8bd4bdeb35354617dbbc758a17e2db407980b6b2d0e72ca5"
+          },
+          "torch": "2.14.1+cu126",
+          "device": "NVIDIA GeForce GTX 1050"
+        },
+        "commit": {
+          "head": "5d91bc4258f10bd8ea008d20c281cf21378458a4",
+          "lab_modified": true
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      },
+      "stop": {
+        "step": 256,
+        "reason": "budget"
+      },
+      "best_step": 0,
+      "initial_validation": {
+        "loss": 3.451107147872184,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "best_validation": {
+        "loss": 3.451107147872184,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "best_test": {
+        "loss": 3.4535627574635246,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "training_seconds": 63.13112536189146,
+      "optimizer": {
+        "algorithm": "ANSR",
+        "parameters": 100616,
+        "popsize": 64,
+        "sigma": 0.05,
+        "p_self": 0.05,
+        "bound": 20.0,
+        "updates": 256,
+        "nfev": 32704,
+        "refresh_nfev": 16320,
+        "restarts": 0,
+        "restart_frequency": 0.0,
+        "restarts_per_generation": 0.0
+      }
+    },
+    "ansr-low-easy-small-recall-seed0": {
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 64
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "MQAR",
+            "symbols": 256,
+            "pairs": 8,
+            "queries": 8,
+            "query_gap": 0,
+            "alpha": 0.1,
+            "overwrites": 0
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "ANSR",
+          "popsize": 64,
+          "sigma": 0.05,
+          "p_self": 0.05,
+          "bound": 20.0,
+          "restart_tolerance": 1e-08,
+          "batch_size": 4
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 0,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 256,
+          "batch": 64
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 32,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 32,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 32
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "engine": {
+          "code": {
+            "__init__.py": "5247f0245c4e0e85225d43902285e61a7a162900ebde899cbe0f48aaa7ff06ce",
+            "application/__init__.py": "3971805b0409c0ce3a044d90d72d65d8565380e3699eb19695cd26b5231cd46e",
+            "application/ports.py": "89d231b66db064b7d879fc4025c0965a6bcd41f6091e47b90520e140059520a1",
+            "application/report.py": "cb61e932a892220a41144874f8b1efd009ea796cec3559fa854fc33456b23ec8",
+            "application/study.py": "81c7f9db3eb2739cdff6c617519f408d8552bd2b84ffdea271b2b5444920d982",
+            "domain/__init__.py": "54f6bfc495f239ff287f39dbebf100043317863a0c9ada92b6f001de01a36b2c",
+            "domain/analysis.py": "ea94291415afca7e28a6009137ed44add69b23999f07eb8cd4ddc083bfec24f2",
+            "domain/basis.py": "df653b7a0ab8440f134a6f8ce59860980d1fd72df8995892c44784e2b4314e9c",
+            "domain/benchmarks.py": "ac6f0472f65c8c5a54b8bfe43f1004c1d4219fea84b50a74b8edc092131baae6",
+            "domain/cadence.py": "592ba56790469be4fe33a430c270b98d537d03e4948fbb92de202fe3111968e0",
+            "domain/calibration.py": "ecfd2060bd84db189e1c75da53e0c00a809578b75c22e356da17823aac645410",
+            "domain/collapse.py": "f7bac076f5ea495c1b4673682071eb898e0de8fc343203d10585db08155e8e89",
+            "domain/experiment.py": "510194599b5863256115998763cede297e50206252c19f354dce6e5ee809a3a8",
+            "domain/generative.py": "efbd172d1e120012f896386b62849cb992528bf523fdbc9de9c174c37e3df126",
+            "domain/memorization.py": "d1119100afafa87e3bfbe3f53429243e59c44a0986c01b0c106856be12b17219",
+            "domain/model.py": "6ad3ce50a1bb696bf963339c1de154aea4eac6beea84ccd8a4c81465647a7e4c",
+            "domain/optimizers.py": "14da6a7ce96b13b788f661bff27d6c279f0a3c7f82c77503ba952a6ff234dc52",
+            "domain/phases.py": "c1029198684bd0eaf482059bda3175275c0f52075b5a419b544c67be02d07239",
+            "domain/spec.py": "0ad08c0060d555309c43c9bfc223487683f9240c1bbf7dc75157f22560e6e8f2",
+            "domain/stability.py": "9e1d6573cff2bfbd1559afde361c8ba09c29a2306908d4b19cf3fb30daaacb4d",
+            "domain/stopping.py": "f3cd37a4a3040d925fd330490cf387f5d139760d4bd3f7c14d764e048dbf252a",
+            "domain/synthetic.py": "903e3bf7d747524e3729d2873110de6b4c725e9f6eb0102ac97e62dcb2230e6d",
+            "domain/tasks.py": "0b17f033b623e17ef84f68428d8a62aac3b5c9207a6481ebcbbc6bc0d4ea275f",
+            "domain/training.py": "3ae5ace08a99992461aadc71e91566d1d68b3568373b808bc64fffa28c210d1c",
+            "dsl.py": "bbee9dcefe157e1725aa6cb055a8898a931551321489380087c61bd863d84900",
+            "infrastructure/__init__.py": "24f37965caf4b37e7b38dc11c18c7e1ea249dd157e53e3eeee20312d74d1a8d3",
+            "infrastructure/benchmarks/__init__.py": "14d68337a6b62e9e3d7759c6d527ccb0f365c6b5d8a9a8bcb3b3f8e8d2bfd990",
+            "infrastructure/benchmarks/modular.py": "81707cdca23171d30c1ee74fde6ad00b007bbc6692b7dde813dc301659e49fd6",
+            "infrastructure/benchmarks/samplers.py": "9d5bfdfb476c5faaa89b78716efd61fe0bff10011dccbe705b22ba653a8801ab",
+            "infrastructure/benchmarks/synthetic/__init__.py": "6e433a4fc98f53a4502c39e2d0e7d50d519e2827666f3028b37dad0f846ffc47",
+            "infrastructure/benchmarks/synthetic/arithmetic.py": "e70be51638ec745839bd498fe9b8a1645806eb1d940dcfc875b2bcd3fc2b93a6",
+            "infrastructure/benchmarks/synthetic/base.py": "16a16f4e0d94124ca5196455ad676c7deb918569daf85043444aeacc5ed4533a",
+            "infrastructure/benchmarks/synthetic/bits.py": "508d9ad10454f837f8f28bcca00c1e49d56f35ee9c5bffe4db8364d7ffc6c094",
+            "infrastructure/benchmarks/synthetic/compression.py": "656f600ed920aaa0c3a7e02f1ba6e6a8ce5dfe19662506fae131bfdf71c848b1",
+            "infrastructure/benchmarks/synthetic/control.py": "fe6b6327d576b02abf96aa3adce840d157d1438e2c9c5e062ca2a8c36e08d264",
+            "infrastructure/benchmarks/synthetic/corpus.py": "17f641d95fa5cddd8613ece3122ea6980c186cde06d91d67708d3ff36b278d13",
+            "infrastructure/benchmarks/synthetic/crasp.py": "362a47828b8610cd71827cc74e2d5425a4857683ad2ea646a310142537911cfc",
+            "infrastructure/benchmarks/synthetic/generation.py": "558a70b0c6c3fd3a5c80a1369cb2de237ee8bd98ce0058bfcf2ac4c353c2f138",
+            "infrastructure/benchmarks/synthetic/memorization.py": "3ce28545604583dcc69d51155f854f87009ffa12f207a12001babcbbbd2a281e",
+            "infrastructure/benchmarks/synthetic/noise.py": "bf55ddd6cede01adf01066f397fe3fcbf9b9d36d20efe4414a6529648f818cc2",
+            "infrastructure/benchmarks/synthetic/prefixes.py": "72d58f5fa02e394dceca77c483f048a63eb45b8cf6cfd7c5acbd986745988ad7",
+            "infrastructure/benchmarks/synthetic/records.py": "cb9c51b37263f8df2ffbd0960af9b7f1e97ae29d8ba261024bfb08e3c58e0e82",
+            "infrastructure/benchmarks/synthetic/retrieval.py": "deb4b69e4fd136e20a747b74e59d6d50b8b2d3e54663829f60d2c8b828326d5f",
+            "infrastructure/benchmarks/synthetic/rows.py": "71f552498f66087f681ada0073c174a40a303cc76d7e0981bc316325f11ff9a7",
+            "infrastructure/benchmarks/synthetic/sampling.py": "2ced1668f7b49e33de37bc77077327e2967121161e8221412d7ee3a209240d28",
+            "infrastructure/benchmarks/synthetic/sequences.py": "3f1ce4b63fcff17fe8309428c9e53a3095bebf0986e6135e8d5117ddc6fd7342",
+            "infrastructure/benchmarks/synthetic/splits.py": "34bcd8cf9295b4dbd4e9efd7dfe60fefbd28c433ccf6d03f4cbb177e6e6b47d9",
+            "infrastructure/benchmarks/synthetic/training.py": "f3da45fadf7017aff6a47dfefa7a69fe10dc49b1198af1b8d3b0bbf67a5485ed",
+            "infrastructure/benchmarks/synthetic/vocabulary.py": "8459f5f95f737c12e1cc2e165038ee743fb7973de3355544d8c72df9cb3e4e48",
+            "infrastructure/benchmarks/text.py": "038e2f7b58e9e6c6d689d3b660d4d9d2880726f82732a397e2dd72239e200352",
+            "infrastructure/engine/__init__.py": "615a2fa4d1e3217651136093504bcc9cf57a28db0e883864f2cd9d9116bf027d",
+            "infrastructure/engine/attention.py": "0ac754e5d62a3299bfae219af86d84b5f09bb1851e085ebbe11cca38b9d1125b",
+            "infrastructure/engine/attention_batch.py": "d233d13baf8fbdce43677175fadd46d08c5011b0ee9cd01c63e8b839e4fb0d47",
+            "infrastructure/engine/attention_stats.py": "5f4f2d1943a394e6af6ac07f8ec094c3f334b1ebbc052001a6b4fc1989df14a2",
+            "infrastructure/engine/compiled.py": "850d1de1e1c8fa9ab04c13c507d351efee6b90e2b1c21ae381a9e0c4d71028a7",
+            "infrastructure/engine/eager.py": "e892f0ff750c5182dd5a5cdd326950301aee554e33fecec27d11760903208fda",
+            "infrastructure/engine/graphs.py": "20326ad0fca1c7d6905eb7ef663f29364b9fd1e4601a74b5bd51826e64e38a2e",
+            "infrastructure/engine/loop.py": "88ee6882726c8006eed0fc7ead0eb5527d4080c23f4020e9333486630dcbb1cb",
+            "infrastructure/engine/measure.py": "43b0c6c031230b10a04ee4fe0fe42b1c46b9f32c1e828b370789e700190d5d09",
+            "infrastructure/engine/population.py": "97d63265f967d9395dd9bbcbc87e21f10ad1ee9543e1cd3899d0f0c5a8ff5d01",
+            "infrastructure/farm.py": "626b5b1c3a92ca5bfc3c4078c0c59a2e7b6ff8acdbc38782cbc5949640821b27",
+            "infrastructure/loader.py": "b1cc1bc0463910c78abd30f587ae5a66fa5d091ce7639785bba58b6a1016b97c",
+            "infrastructure/nn/__init__.py": "73e7051498fae6f9fc1e510be8fab430f3c4c3d04d948b031a56f8e6ea40e276",
+            "infrastructure/nn/attention.py": "cd99d0f524f05959fba6cb331191a46b0f4323e5d09f0fbadf3e966c1b160f0c",
+            "infrastructure/nn/legacy.py": "c6a5d4084c86dc0cb114a0cebd5873e243571b2b61f7178f5914c373d23e7048",
+            "infrastructure/nn/positions.py": "f95752d6948a1ecff5602e8c7fb26171cd7a6e4c54618547a9f7f7c2d70dd102",
+            "infrastructure/nn/sparsemax.py": "c864ce1e440f8c5b349df2c9eab0b6e018d5a486d400a8d155e9ef111f3ac2c0",
+            "infrastructure/nn/surrogate.py": "2141bb936750cd178b18c8c9646e2f9a7261447cc065a32f6400b6ab050e47c3",
+            "infrastructure/nn/transformer.py": "ca61ddc99b2fbcc6b42774aab66f774caec1bf0b11ce7f38fd906ce8d743b19d",
+            "infrastructure/optim/__init__.py": "8a7168402ddb6df5d821ff85b23d8672656a8bce8c6bbcf8a17d0c4a965a67fe",
+            "infrastructure/optim/ansr.py": "a0f6d6c559ccd0c53e87e7d457116c6a8864145d46805df7ef19fa66e971b191",
+            "infrastructure/optim/coordinate.py": "1bb074fc2fcc9033c6fa7a3fe5133ad427c0d2059e765c5904fe2292becea6ab",
+            "infrastructure/optim/direction.py": "716b07ad28890e1e1e1dd7cacc506d3c6d1507005f915f1b50b4091e9f848df9",
+            "infrastructure/optim/fisher.py": "9085d71581af08b0767dff3ecee28b8dd1c87abcb545089e2514a68187cb4803",
+            "infrastructure/optim/magnitude.py": "cdb75c6f9dc33c8b88af1f8551180fb3b53b59f24290b65cf91dd41e0861f2d9",
+            "infrastructure/optim/matrix.py": "5c9988b9cadc865fe28086b0130702b827958e0f96cc93e65e7175976eb70ae5",
+            "infrastructure/optim/roots.py": "a0d2486a9cd6d80bab6468cb200ac208945169d7ed2cd1e8a9dccf8b4559578b",
+            "infrastructure/optim/stages.py": "409aec59127a8a2c75b4e282b70ee9c3ec682e0bf3224e13a90eddd8bae86224",
+            "infrastructure/provenance.py": "37b6cfe2f0accca81ffa0be02216623875855e441d21e5ab68644aba5206f7f0",
+            "infrastructure/store.py": "8277dd46ba043ece8bd4bdeb35354617dbbc758a17e2db407980b6b2d0e72ca5"
+          },
+          "torch": "2.14.1+cu126",
+          "device": "NVIDIA GeForce GTX 1050"
+        },
+        "commit": {
+          "head": "5d91bc4258f10bd8ea008d20c281cf21378458a4",
+          "lab_modified": true
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      },
+      "stop": {
+        "step": 256,
+        "reason": "budget"
+      },
+      "best_step": 0,
+      "initial_validation": {
+        "loss": 6.320268630981445,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "best_validation": {
+        "loss": 6.320268630981445,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "best_test": {
+        "loss": 6.321897029876709,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "training_seconds": 187.21983970090514,
+      "optimizer": {
+        "algorithm": "ANSR",
+        "parameters": 133384,
+        "popsize": 64,
+        "sigma": 0.05,
+        "p_self": 0.05,
+        "bound": 20.0,
+        "updates": 256,
+        "nfev": 32704,
+        "refresh_nfev": 16320,
+        "restarts": 0,
+        "restart_frequency": 0.0,
+        "restarts_per_generation": 0.0
+      }
+    },
+    "ansr-low-easy-small-parity-seed0": {
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 19
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "Parity",
+            "scratchpad": "none",
+            "hints": false,
+            "symbols": 32,
+            "number_limit": 512
+          },
+          "length": 16,
+          "min_length": 1,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "ANSR",
+          "popsize": 64,
+          "sigma": 0.05,
+          "p_self": 0.05,
+          "bound": 20.0,
+          "restart_tolerance": 1e-08,
+          "batch_size": 4
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 0,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 256,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 32,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 32,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 32
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "engine": {
+          "code": {
+            "__init__.py": "5247f0245c4e0e85225d43902285e61a7a162900ebde899cbe0f48aaa7ff06ce",
+            "application/__init__.py": "3971805b0409c0ce3a044d90d72d65d8565380e3699eb19695cd26b5231cd46e",
+            "application/ports.py": "89d231b66db064b7d879fc4025c0965a6bcd41f6091e47b90520e140059520a1",
+            "application/report.py": "cb61e932a892220a41144874f8b1efd009ea796cec3559fa854fc33456b23ec8",
+            "application/study.py": "81c7f9db3eb2739cdff6c617519f408d8552bd2b84ffdea271b2b5444920d982",
+            "domain/__init__.py": "54f6bfc495f239ff287f39dbebf100043317863a0c9ada92b6f001de01a36b2c",
+            "domain/analysis.py": "ea94291415afca7e28a6009137ed44add69b23999f07eb8cd4ddc083bfec24f2",
+            "domain/basis.py": "df653b7a0ab8440f134a6f8ce59860980d1fd72df8995892c44784e2b4314e9c",
+            "domain/benchmarks.py": "ac6f0472f65c8c5a54b8bfe43f1004c1d4219fea84b50a74b8edc092131baae6",
+            "domain/cadence.py": "592ba56790469be4fe33a430c270b98d537d03e4948fbb92de202fe3111968e0",
+            "domain/calibration.py": "ecfd2060bd84db189e1c75da53e0c00a809578b75c22e356da17823aac645410",
+            "domain/collapse.py": "f7bac076f5ea495c1b4673682071eb898e0de8fc343203d10585db08155e8e89",
+            "domain/experiment.py": "510194599b5863256115998763cede297e50206252c19f354dce6e5ee809a3a8",
+            "domain/generative.py": "efbd172d1e120012f896386b62849cb992528bf523fdbc9de9c174c37e3df126",
+            "domain/memorization.py": "d1119100afafa87e3bfbe3f53429243e59c44a0986c01b0c106856be12b17219",
+            "domain/model.py": "6ad3ce50a1bb696bf963339c1de154aea4eac6beea84ccd8a4c81465647a7e4c",
+            "domain/optimizers.py": "14da6a7ce96b13b788f661bff27d6c279f0a3c7f82c77503ba952a6ff234dc52",
+            "domain/phases.py": "c1029198684bd0eaf482059bda3175275c0f52075b5a419b544c67be02d07239",
+            "domain/spec.py": "0ad08c0060d555309c43c9bfc223487683f9240c1bbf7dc75157f22560e6e8f2",
+            "domain/stability.py": "9e1d6573cff2bfbd1559afde361c8ba09c29a2306908d4b19cf3fb30daaacb4d",
+            "domain/stopping.py": "f3cd37a4a3040d925fd330490cf387f5d139760d4bd3f7c14d764e048dbf252a",
+            "domain/synthetic.py": "903e3bf7d747524e3729d2873110de6b4c725e9f6eb0102ac97e62dcb2230e6d",
+            "domain/tasks.py": "0b17f033b623e17ef84f68428d8a62aac3b5c9207a6481ebcbbc6bc0d4ea275f",
+            "domain/training.py": "3ae5ace08a99992461aadc71e91566d1d68b3568373b808bc64fffa28c210d1c",
+            "dsl.py": "bbee9dcefe157e1725aa6cb055a8898a931551321489380087c61bd863d84900",
+            "infrastructure/__init__.py": "24f37965caf4b37e7b38dc11c18c7e1ea249dd157e53e3eeee20312d74d1a8d3",
+            "infrastructure/benchmarks/__init__.py": "14d68337a6b62e9e3d7759c6d527ccb0f365c6b5d8a9a8bcb3b3f8e8d2bfd990",
+            "infrastructure/benchmarks/modular.py": "81707cdca23171d30c1ee74fde6ad00b007bbc6692b7dde813dc301659e49fd6",
+            "infrastructure/benchmarks/samplers.py": "9d5bfdfb476c5faaa89b78716efd61fe0bff10011dccbe705b22ba653a8801ab",
+            "infrastructure/benchmarks/synthetic/__init__.py": "6e433a4fc98f53a4502c39e2d0e7d50d519e2827666f3028b37dad0f846ffc47",
+            "infrastructure/benchmarks/synthetic/arithmetic.py": "e70be51638ec745839bd498fe9b8a1645806eb1d940dcfc875b2bcd3fc2b93a6",
+            "infrastructure/benchmarks/synthetic/base.py": "16a16f4e0d94124ca5196455ad676c7deb918569daf85043444aeacc5ed4533a",
+            "infrastructure/benchmarks/synthetic/bits.py": "508d9ad10454f837f8f28bcca00c1e49d56f35ee9c5bffe4db8364d7ffc6c094",
+            "infrastructure/benchmarks/synthetic/compression.py": "656f600ed920aaa0c3a7e02f1ba6e6a8ce5dfe19662506fae131bfdf71c848b1",
+            "infrastructure/benchmarks/synthetic/control.py": "fe6b6327d576b02abf96aa3adce840d157d1438e2c9c5e062ca2a8c36e08d264",
+            "infrastructure/benchmarks/synthetic/corpus.py": "17f641d95fa5cddd8613ece3122ea6980c186cde06d91d67708d3ff36b278d13",
+            "infrastructure/benchmarks/synthetic/crasp.py": "362a47828b8610cd71827cc74e2d5425a4857683ad2ea646a310142537911cfc",
+            "infrastructure/benchmarks/synthetic/generation.py": "558a70b0c6c3fd3a5c80a1369cb2de237ee8bd98ce0058bfcf2ac4c353c2f138",
+            "infrastructure/benchmarks/synthetic/memorization.py": "3ce28545604583dcc69d51155f854f87009ffa12f207a12001babcbbbd2a281e",
+            "infrastructure/benchmarks/synthetic/noise.py": "bf55ddd6cede01adf01066f397fe3fcbf9b9d36d20efe4414a6529648f818cc2",
+            "infrastructure/benchmarks/synthetic/prefixes.py": "72d58f5fa02e394dceca77c483f048a63eb45b8cf6cfd7c5acbd986745988ad7",
+            "infrastructure/benchmarks/synthetic/records.py": "cb9c51b37263f8df2ffbd0960af9b7f1e97ae29d8ba261024bfb08e3c58e0e82",
+            "infrastructure/benchmarks/synthetic/retrieval.py": "deb4b69e4fd136e20a747b74e59d6d50b8b2d3e54663829f60d2c8b828326d5f",
+            "infrastructure/benchmarks/synthetic/rows.py": "71f552498f66087f681ada0073c174a40a303cc76d7e0981bc316325f11ff9a7",
+            "infrastructure/benchmarks/synthetic/sampling.py": "2ced1668f7b49e33de37bc77077327e2967121161e8221412d7ee3a209240d28",
+            "infrastructure/benchmarks/synthetic/sequences.py": "3f1ce4b63fcff17fe8309428c9e53a3095bebf0986e6135e8d5117ddc6fd7342",
+            "infrastructure/benchmarks/synthetic/splits.py": "34bcd8cf9295b4dbd4e9efd7dfe60fefbd28c433ccf6d03f4cbb177e6e6b47d9",
+            "infrastructure/benchmarks/synthetic/training.py": "f3da45fadf7017aff6a47dfefa7a69fe10dc49b1198af1b8d3b0bbf67a5485ed",
+            "infrastructure/benchmarks/synthetic/vocabulary.py": "8459f5f95f737c12e1cc2e165038ee743fb7973de3355544d8c72df9cb3e4e48",
+            "infrastructure/benchmarks/text.py": "038e2f7b58e9e6c6d689d3b660d4d9d2880726f82732a397e2dd72239e200352",
+            "infrastructure/engine/__init__.py": "615a2fa4d1e3217651136093504bcc9cf57a28db0e883864f2cd9d9116bf027d",
+            "infrastructure/engine/attention.py": "0ac754e5d62a3299bfae219af86d84b5f09bb1851e085ebbe11cca38b9d1125b",
+            "infrastructure/engine/attention_batch.py": "d233d13baf8fbdce43677175fadd46d08c5011b0ee9cd01c63e8b839e4fb0d47",
+            "infrastructure/engine/attention_stats.py": "5f4f2d1943a394e6af6ac07f8ec094c3f334b1ebbc052001a6b4fc1989df14a2",
+            "infrastructure/engine/compiled.py": "850d1de1e1c8fa9ab04c13c507d351efee6b90e2b1c21ae381a9e0c4d71028a7",
+            "infrastructure/engine/eager.py": "e892f0ff750c5182dd5a5cdd326950301aee554e33fecec27d11760903208fda",
+            "infrastructure/engine/graphs.py": "20326ad0fca1c7d6905eb7ef663f29364b9fd1e4601a74b5bd51826e64e38a2e",
+            "infrastructure/engine/loop.py": "88ee6882726c8006eed0fc7ead0eb5527d4080c23f4020e9333486630dcbb1cb",
+            "infrastructure/engine/measure.py": "43b0c6c031230b10a04ee4fe0fe42b1c46b9f32c1e828b370789e700190d5d09",
+            "infrastructure/engine/population.py": "97d63265f967d9395dd9bbcbc87e21f10ad1ee9543e1cd3899d0f0c5a8ff5d01",
+            "infrastructure/farm.py": "626b5b1c3a92ca5bfc3c4078c0c59a2e7b6ff8acdbc38782cbc5949640821b27",
+            "infrastructure/loader.py": "b1cc1bc0463910c78abd30f587ae5a66fa5d091ce7639785bba58b6a1016b97c",
+            "infrastructure/nn/__init__.py": "73e7051498fae6f9fc1e510be8fab430f3c4c3d04d948b031a56f8e6ea40e276",
+            "infrastructure/nn/attention.py": "cd99d0f524f05959fba6cb331191a46b0f4323e5d09f0fbadf3e966c1b160f0c",
+            "infrastructure/nn/legacy.py": "c6a5d4084c86dc0cb114a0cebd5873e243571b2b61f7178f5914c373d23e7048",
+            "infrastructure/nn/positions.py": "f95752d6948a1ecff5602e8c7fb26171cd7a6e4c54618547a9f7f7c2d70dd102",
+            "infrastructure/nn/sparsemax.py": "c864ce1e440f8c5b349df2c9eab0b6e018d5a486d400a8d155e9ef111f3ac2c0",
+            "infrastructure/nn/surrogate.py": "2141bb936750cd178b18c8c9646e2f9a7261447cc065a32f6400b6ab050e47c3",
+            "infrastructure/nn/transformer.py": "ca61ddc99b2fbcc6b42774aab66f774caec1bf0b11ce7f38fd906ce8d743b19d",
+            "infrastructure/optim/__init__.py": "8a7168402ddb6df5d821ff85b23d8672656a8bce8c6bbcf8a17d0c4a965a67fe",
+            "infrastructure/optim/ansr.py": "a0f6d6c559ccd0c53e87e7d457116c6a8864145d46805df7ef19fa66e971b191",
+            "infrastructure/optim/coordinate.py": "1bb074fc2fcc9033c6fa7a3fe5133ad427c0d2059e765c5904fe2292becea6ab",
+            "infrastructure/optim/direction.py": "716b07ad28890e1e1e1dd7cacc506d3c6d1507005f915f1b50b4091e9f848df9",
+            "infrastructure/optim/fisher.py": "9085d71581af08b0767dff3ecee28b8dd1c87abcb545089e2514a68187cb4803",
+            "infrastructure/optim/magnitude.py": "cdb75c6f9dc33c8b88af1f8551180fb3b53b59f24290b65cf91dd41e0861f2d9",
+            "infrastructure/optim/matrix.py": "5c9988b9cadc865fe28086b0130702b827958e0f96cc93e65e7175976eb70ae5",
+            "infrastructure/optim/roots.py": "a0d2486a9cd6d80bab6468cb200ac208945169d7ed2cd1e8a9dccf8b4559578b",
+            "infrastructure/optim/stages.py": "409aec59127a8a2c75b4e282b70ee9c3ec682e0bf3224e13a90eddd8bae86224",
+            "infrastructure/provenance.py": "37b6cfe2f0accca81ffa0be02216623875855e441d21e5ab68644aba5206f7f0",
+            "infrastructure/store.py": "8277dd46ba043ece8bd4bdeb35354617dbbc758a17e2db407980b6b2d0e72ca5"
+          },
+          "torch": "2.14.1+cu126",
+          "device": "NVIDIA GeForce GTX 1050"
+        },
+        "commit": {
+          "head": "5d91bc4258f10bd8ea008d20c281cf21378458a4",
+          "lab_modified": true
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      },
+      "stop": {
+        "step": 256,
+        "reason": "budget"
+      },
+      "best_step": 0,
+      "initial_validation": {
+        "loss": 4.290003776550293,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "best_validation": {
+        "loss": 4.290003776550293,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "best_test": {
+        "loss": 4.289251327514648,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "training_seconds": 62.713542759243865,
+      "optimizer": {
+        "algorithm": "ANSR",
+        "parameters": 102664,
+        "popsize": 64,
+        "sigma": 0.05,
+        "p_self": 0.05,
+        "bound": 20.0,
+        "updates": 256,
+        "nfev": 32704,
+        "refresh_nfev": 16320,
+        "restarts": 0,
+        "restart_frequency": 0.0,
+        "restarts_per_generation": 0.0
+      }
+    },
+    "ansr-high-easy-small-depth-seed0": {
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 128
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "AlternatingBlocks",
+            "blocks": 2,
+            "neutral_fraction": 0.25,
+            "max_neutral_gap": null
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [
+            128
+          ],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "ANSR",
+          "popsize": 64,
+          "sigma": 0.05,
+          "p_self": 0.95,
+          "bound": 20.0,
+          "restart_tolerance": 1e-08,
+          "batch_size": 4
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 0,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 256,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 32,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 32,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 32
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "engine": {
+          "code": {
+            "__init__.py": "5247f0245c4e0e85225d43902285e61a7a162900ebde899cbe0f48aaa7ff06ce",
+            "application/__init__.py": "3971805b0409c0ce3a044d90d72d65d8565380e3699eb19695cd26b5231cd46e",
+            "application/ports.py": "89d231b66db064b7d879fc4025c0965a6bcd41f6091e47b90520e140059520a1",
+            "application/report.py": "cb61e932a892220a41144874f8b1efd009ea796cec3559fa854fc33456b23ec8",
+            "application/study.py": "81c7f9db3eb2739cdff6c617519f408d8552bd2b84ffdea271b2b5444920d982",
+            "domain/__init__.py": "54f6bfc495f239ff287f39dbebf100043317863a0c9ada92b6f001de01a36b2c",
+            "domain/analysis.py": "ea94291415afca7e28a6009137ed44add69b23999f07eb8cd4ddc083bfec24f2",
+            "domain/basis.py": "df653b7a0ab8440f134a6f8ce59860980d1fd72df8995892c44784e2b4314e9c",
+            "domain/benchmarks.py": "ac6f0472f65c8c5a54b8bfe43f1004c1d4219fea84b50a74b8edc092131baae6",
+            "domain/cadence.py": "592ba56790469be4fe33a430c270b98d537d03e4948fbb92de202fe3111968e0",
+            "domain/calibration.py": "ecfd2060bd84db189e1c75da53e0c00a809578b75c22e356da17823aac645410",
+            "domain/collapse.py": "f7bac076f5ea495c1b4673682071eb898e0de8fc343203d10585db08155e8e89",
+            "domain/experiment.py": "510194599b5863256115998763cede297e50206252c19f354dce6e5ee809a3a8",
+            "domain/generative.py": "efbd172d1e120012f896386b62849cb992528bf523fdbc9de9c174c37e3df126",
+            "domain/memorization.py": "d1119100afafa87e3bfbe3f53429243e59c44a0986c01b0c106856be12b17219",
+            "domain/model.py": "6ad3ce50a1bb696bf963339c1de154aea4eac6beea84ccd8a4c81465647a7e4c",
+            "domain/optimizers.py": "14da6a7ce96b13b788f661bff27d6c279f0a3c7f82c77503ba952a6ff234dc52",
+            "domain/phases.py": "c1029198684bd0eaf482059bda3175275c0f52075b5a419b544c67be02d07239",
+            "domain/spec.py": "0ad08c0060d555309c43c9bfc223487683f9240c1bbf7dc75157f22560e6e8f2",
+            "domain/stability.py": "9e1d6573cff2bfbd1559afde361c8ba09c29a2306908d4b19cf3fb30daaacb4d",
+            "domain/stopping.py": "f3cd37a4a3040d925fd330490cf387f5d139760d4bd3f7c14d764e048dbf252a",
+            "domain/synthetic.py": "903e3bf7d747524e3729d2873110de6b4c725e9f6eb0102ac97e62dcb2230e6d",
+            "domain/tasks.py": "0b17f033b623e17ef84f68428d8a62aac3b5c9207a6481ebcbbc6bc0d4ea275f",
+            "domain/training.py": "3ae5ace08a99992461aadc71e91566d1d68b3568373b808bc64fffa28c210d1c",
+            "dsl.py": "bbee9dcefe157e1725aa6cb055a8898a931551321489380087c61bd863d84900",
+            "infrastructure/__init__.py": "24f37965caf4b37e7b38dc11c18c7e1ea249dd157e53e3eeee20312d74d1a8d3",
+            "infrastructure/benchmarks/__init__.py": "14d68337a6b62e9e3d7759c6d527ccb0f365c6b5d8a9a8bcb3b3f8e8d2bfd990",
+            "infrastructure/benchmarks/modular.py": "81707cdca23171d30c1ee74fde6ad00b007bbc6692b7dde813dc301659e49fd6",
+            "infrastructure/benchmarks/samplers.py": "9d5bfdfb476c5faaa89b78716efd61fe0bff10011dccbe705b22ba653a8801ab",
+            "infrastructure/benchmarks/synthetic/__init__.py": "6e433a4fc98f53a4502c39e2d0e7d50d519e2827666f3028b37dad0f846ffc47",
+            "infrastructure/benchmarks/synthetic/arithmetic.py": "e70be51638ec745839bd498fe9b8a1645806eb1d940dcfc875b2bcd3fc2b93a6",
+            "infrastructure/benchmarks/synthetic/base.py": "16a16f4e0d94124ca5196455ad676c7deb918569daf85043444aeacc5ed4533a",
+            "infrastructure/benchmarks/synthetic/bits.py": "508d9ad10454f837f8f28bcca00c1e49d56f35ee9c5bffe4db8364d7ffc6c094",
+            "infrastructure/benchmarks/synthetic/compression.py": "656f600ed920aaa0c3a7e02f1ba6e6a8ce5dfe19662506fae131bfdf71c848b1",
+            "infrastructure/benchmarks/synthetic/control.py": "fe6b6327d576b02abf96aa3adce840d157d1438e2c9c5e062ca2a8c36e08d264",
+            "infrastructure/benchmarks/synthetic/corpus.py": "17f641d95fa5cddd8613ece3122ea6980c186cde06d91d67708d3ff36b278d13",
+            "infrastructure/benchmarks/synthetic/crasp.py": "362a47828b8610cd71827cc74e2d5425a4857683ad2ea646a310142537911cfc",
+            "infrastructure/benchmarks/synthetic/generation.py": "558a70b0c6c3fd3a5c80a1369cb2de237ee8bd98ce0058bfcf2ac4c353c2f138",
+            "infrastructure/benchmarks/synthetic/memorization.py": "3ce28545604583dcc69d51155f854f87009ffa12f207a12001babcbbbd2a281e",
+            "infrastructure/benchmarks/synthetic/noise.py": "bf55ddd6cede01adf01066f397fe3fcbf9b9d36d20efe4414a6529648f818cc2",
+            "infrastructure/benchmarks/synthetic/prefixes.py": "72d58f5fa02e394dceca77c483f048a63eb45b8cf6cfd7c5acbd986745988ad7",
+            "infrastructure/benchmarks/synthetic/records.py": "cb9c51b37263f8df2ffbd0960af9b7f1e97ae29d8ba261024bfb08e3c58e0e82",
+            "infrastructure/benchmarks/synthetic/retrieval.py": "deb4b69e4fd136e20a747b74e59d6d50b8b2d3e54663829f60d2c8b828326d5f",
+            "infrastructure/benchmarks/synthetic/rows.py": "71f552498f66087f681ada0073c174a40a303cc76d7e0981bc316325f11ff9a7",
+            "infrastructure/benchmarks/synthetic/sampling.py": "2ced1668f7b49e33de37bc77077327e2967121161e8221412d7ee3a209240d28",
+            "infrastructure/benchmarks/synthetic/sequences.py": "3f1ce4b63fcff17fe8309428c9e53a3095bebf0986e6135e8d5117ddc6fd7342",
+            "infrastructure/benchmarks/synthetic/splits.py": "34bcd8cf9295b4dbd4e9efd7dfe60fefbd28c433ccf6d03f4cbb177e6e6b47d9",
+            "infrastructure/benchmarks/synthetic/training.py": "f3da45fadf7017aff6a47dfefa7a69fe10dc49b1198af1b8d3b0bbf67a5485ed",
+            "infrastructure/benchmarks/synthetic/vocabulary.py": "8459f5f95f737c12e1cc2e165038ee743fb7973de3355544d8c72df9cb3e4e48",
+            "infrastructure/benchmarks/text.py": "038e2f7b58e9e6c6d689d3b660d4d9d2880726f82732a397e2dd72239e200352",
+            "infrastructure/engine/__init__.py": "615a2fa4d1e3217651136093504bcc9cf57a28db0e883864f2cd9d9116bf027d",
+            "infrastructure/engine/attention.py": "0ac754e5d62a3299bfae219af86d84b5f09bb1851e085ebbe11cca38b9d1125b",
+            "infrastructure/engine/attention_batch.py": "d233d13baf8fbdce43677175fadd46d08c5011b0ee9cd01c63e8b839e4fb0d47",
+            "infrastructure/engine/attention_stats.py": "5f4f2d1943a394e6af6ac07f8ec094c3f334b1ebbc052001a6b4fc1989df14a2",
+            "infrastructure/engine/compiled.py": "850d1de1e1c8fa9ab04c13c507d351efee6b90e2b1c21ae381a9e0c4d71028a7",
+            "infrastructure/engine/eager.py": "e892f0ff750c5182dd5a5cdd326950301aee554e33fecec27d11760903208fda",
+            "infrastructure/engine/graphs.py": "20326ad0fca1c7d6905eb7ef663f29364b9fd1e4601a74b5bd51826e64e38a2e",
+            "infrastructure/engine/loop.py": "88ee6882726c8006eed0fc7ead0eb5527d4080c23f4020e9333486630dcbb1cb",
+            "infrastructure/engine/measure.py": "43b0c6c031230b10a04ee4fe0fe42b1c46b9f32c1e828b370789e700190d5d09",
+            "infrastructure/engine/population.py": "97d63265f967d9395dd9bbcbc87e21f10ad1ee9543e1cd3899d0f0c5a8ff5d01",
+            "infrastructure/farm.py": "626b5b1c3a92ca5bfc3c4078c0c59a2e7b6ff8acdbc38782cbc5949640821b27",
+            "infrastructure/loader.py": "b1cc1bc0463910c78abd30f587ae5a66fa5d091ce7639785bba58b6a1016b97c",
+            "infrastructure/nn/__init__.py": "73e7051498fae6f9fc1e510be8fab430f3c4c3d04d948b031a56f8e6ea40e276",
+            "infrastructure/nn/attention.py": "cd99d0f524f05959fba6cb331191a46b0f4323e5d09f0fbadf3e966c1b160f0c",
+            "infrastructure/nn/legacy.py": "c6a5d4084c86dc0cb114a0cebd5873e243571b2b61f7178f5914c373d23e7048",
+            "infrastructure/nn/positions.py": "f95752d6948a1ecff5602e8c7fb26171cd7a6e4c54618547a9f7f7c2d70dd102",
+            "infrastructure/nn/sparsemax.py": "c864ce1e440f8c5b349df2c9eab0b6e018d5a486d400a8d155e9ef111f3ac2c0",
+            "infrastructure/nn/surrogate.py": "2141bb936750cd178b18c8c9646e2f9a7261447cc065a32f6400b6ab050e47c3",
+            "infrastructure/nn/transformer.py": "ca61ddc99b2fbcc6b42774aab66f774caec1bf0b11ce7f38fd906ce8d743b19d",
+            "infrastructure/optim/__init__.py": "8a7168402ddb6df5d821ff85b23d8672656a8bce8c6bbcf8a17d0c4a965a67fe",
+            "infrastructure/optim/ansr.py": "a0f6d6c559ccd0c53e87e7d457116c6a8864145d46805df7ef19fa66e971b191",
+            "infrastructure/optim/coordinate.py": "1bb074fc2fcc9033c6fa7a3fe5133ad427c0d2059e765c5904fe2292becea6ab",
+            "infrastructure/optim/direction.py": "716b07ad28890e1e1e1dd7cacc506d3c6d1507005f915f1b50b4091e9f848df9",
+            "infrastructure/optim/fisher.py": "9085d71581af08b0767dff3ecee28b8dd1c87abcb545089e2514a68187cb4803",
+            "infrastructure/optim/magnitude.py": "cdb75c6f9dc33c8b88af1f8551180fb3b53b59f24290b65cf91dd41e0861f2d9",
+            "infrastructure/optim/matrix.py": "5c9988b9cadc865fe28086b0130702b827958e0f96cc93e65e7175976eb70ae5",
+            "infrastructure/optim/roots.py": "a0d2486a9cd6d80bab6468cb200ac208945169d7ed2cd1e8a9dccf8b4559578b",
+            "infrastructure/optim/stages.py": "409aec59127a8a2c75b4e282b70ee9c3ec682e0bf3224e13a90eddd8bae86224",
+            "infrastructure/provenance.py": "37b6cfe2f0accca81ffa0be02216623875855e441d21e5ab68644aba5206f7f0",
+            "infrastructure/store.py": "8277dd46ba043ece8bd4bdeb35354617dbbc758a17e2db407980b6b2d0e72ca5"
+          },
+          "torch": "2.14.1+cu126",
+          "device": "NVIDIA GeForce GTX 1050"
+        },
+        "commit": {
+          "head": "5d91bc4258f10bd8ea008d20c281cf21378458a4",
+          "lab_modified": true
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      },
+      "stop": {
+        "step": 256,
+        "reason": "budget"
+      },
+      "best_step": 160,
+      "initial_validation": {
+        "loss": 3.451107147872184,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "best_validation": {
+        "loss": 3.2746740572133977,
+        "token_accuracy": 0.7497284198211749,
+        "sequence_accuracy": 0.04296875
+      },
+      "best_test": {
+        "loss": 3.2234581299717466,
+        "token_accuracy": 0.7512400793650794,
+        "sequence_accuracy": 0.0859375
+      },
+      "training_seconds": 65.61674083111575,
+      "optimizer": {
+        "algorithm": "ANSR",
+        "parameters": 100616,
+        "popsize": 64,
+        "sigma": 0.05,
+        "p_self": 0.95,
+        "bound": 20.0,
+        "updates": 256,
+        "nfev": 32704,
+        "refresh_nfev": 16320,
+        "restarts": 0,
+        "restart_frequency": 0.0,
+        "restarts_per_generation": 0.0
+      }
+    },
+    "ansr-high-easy-small-recall-seed0": {
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 64
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "MQAR",
+            "symbols": 256,
+            "pairs": 8,
+            "queries": 8,
+            "query_gap": 0,
+            "alpha": 0.1,
+            "overwrites": 0
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "ANSR",
+          "popsize": 64,
+          "sigma": 0.05,
+          "p_self": 0.95,
+          "bound": 20.0,
+          "restart_tolerance": 1e-08,
+          "batch_size": 4
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 0,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 256,
+          "batch": 64
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 32,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 32,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 32
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "engine": {
+          "code": {
+            "__init__.py": "5247f0245c4e0e85225d43902285e61a7a162900ebde899cbe0f48aaa7ff06ce",
+            "application/__init__.py": "3971805b0409c0ce3a044d90d72d65d8565380e3699eb19695cd26b5231cd46e",
+            "application/ports.py": "89d231b66db064b7d879fc4025c0965a6bcd41f6091e47b90520e140059520a1",
+            "application/report.py": "cb61e932a892220a41144874f8b1efd009ea796cec3559fa854fc33456b23ec8",
+            "application/study.py": "81c7f9db3eb2739cdff6c617519f408d8552bd2b84ffdea271b2b5444920d982",
+            "domain/__init__.py": "54f6bfc495f239ff287f39dbebf100043317863a0c9ada92b6f001de01a36b2c",
+            "domain/analysis.py": "ea94291415afca7e28a6009137ed44add69b23999f07eb8cd4ddc083bfec24f2",
+            "domain/basis.py": "df653b7a0ab8440f134a6f8ce59860980d1fd72df8995892c44784e2b4314e9c",
+            "domain/benchmarks.py": "ac6f0472f65c8c5a54b8bfe43f1004c1d4219fea84b50a74b8edc092131baae6",
+            "domain/cadence.py": "592ba56790469be4fe33a430c270b98d537d03e4948fbb92de202fe3111968e0",
+            "domain/calibration.py": "ecfd2060bd84db189e1c75da53e0c00a809578b75c22e356da17823aac645410",
+            "domain/collapse.py": "f7bac076f5ea495c1b4673682071eb898e0de8fc343203d10585db08155e8e89",
+            "domain/experiment.py": "510194599b5863256115998763cede297e50206252c19f354dce6e5ee809a3a8",
+            "domain/generative.py": "efbd172d1e120012f896386b62849cb992528bf523fdbc9de9c174c37e3df126",
+            "domain/memorization.py": "d1119100afafa87e3bfbe3f53429243e59c44a0986c01b0c106856be12b17219",
+            "domain/model.py": "6ad3ce50a1bb696bf963339c1de154aea4eac6beea84ccd8a4c81465647a7e4c",
+            "domain/optimizers.py": "14da6a7ce96b13b788f661bff27d6c279f0a3c7f82c77503ba952a6ff234dc52",
+            "domain/phases.py": "c1029198684bd0eaf482059bda3175275c0f52075b5a419b544c67be02d07239",
+            "domain/spec.py": "0ad08c0060d555309c43c9bfc223487683f9240c1bbf7dc75157f22560e6e8f2",
+            "domain/stability.py": "9e1d6573cff2bfbd1559afde361c8ba09c29a2306908d4b19cf3fb30daaacb4d",
+            "domain/stopping.py": "f3cd37a4a3040d925fd330490cf387f5d139760d4bd3f7c14d764e048dbf252a",
+            "domain/synthetic.py": "903e3bf7d747524e3729d2873110de6b4c725e9f6eb0102ac97e62dcb2230e6d",
+            "domain/tasks.py": "0b17f033b623e17ef84f68428d8a62aac3b5c9207a6481ebcbbc6bc0d4ea275f",
+            "domain/training.py": "3ae5ace08a99992461aadc71e91566d1d68b3568373b808bc64fffa28c210d1c",
+            "dsl.py": "bbee9dcefe157e1725aa6cb055a8898a931551321489380087c61bd863d84900",
+            "infrastructure/__init__.py": "24f37965caf4b37e7b38dc11c18c7e1ea249dd157e53e3eeee20312d74d1a8d3",
+            "infrastructure/benchmarks/__init__.py": "14d68337a6b62e9e3d7759c6d527ccb0f365c6b5d8a9a8bcb3b3f8e8d2bfd990",
+            "infrastructure/benchmarks/modular.py": "81707cdca23171d30c1ee74fde6ad00b007bbc6692b7dde813dc301659e49fd6",
+            "infrastructure/benchmarks/samplers.py": "9d5bfdfb476c5faaa89b78716efd61fe0bff10011dccbe705b22ba653a8801ab",
+            "infrastructure/benchmarks/synthetic/__init__.py": "6e433a4fc98f53a4502c39e2d0e7d50d519e2827666f3028b37dad0f846ffc47",
+            "infrastructure/benchmarks/synthetic/arithmetic.py": "e70be51638ec745839bd498fe9b8a1645806eb1d940dcfc875b2bcd3fc2b93a6",
+            "infrastructure/benchmarks/synthetic/base.py": "16a16f4e0d94124ca5196455ad676c7deb918569daf85043444aeacc5ed4533a",
+            "infrastructure/benchmarks/synthetic/bits.py": "508d9ad10454f837f8f28bcca00c1e49d56f35ee9c5bffe4db8364d7ffc6c094",
+            "infrastructure/benchmarks/synthetic/compression.py": "656f600ed920aaa0c3a7e02f1ba6e6a8ce5dfe19662506fae131bfdf71c848b1",
+            "infrastructure/benchmarks/synthetic/control.py": "fe6b6327d576b02abf96aa3adce840d157d1438e2c9c5e062ca2a8c36e08d264",
+            "infrastructure/benchmarks/synthetic/corpus.py": "17f641d95fa5cddd8613ece3122ea6980c186cde06d91d67708d3ff36b278d13",
+            "infrastructure/benchmarks/synthetic/crasp.py": "362a47828b8610cd71827cc74e2d5425a4857683ad2ea646a310142537911cfc",
+            "infrastructure/benchmarks/synthetic/generation.py": "558a70b0c6c3fd3a5c80a1369cb2de237ee8bd98ce0058bfcf2ac4c353c2f138",
+            "infrastructure/benchmarks/synthetic/memorization.py": "3ce28545604583dcc69d51155f854f87009ffa12f207a12001babcbbbd2a281e",
+            "infrastructure/benchmarks/synthetic/noise.py": "bf55ddd6cede01adf01066f397fe3fcbf9b9d36d20efe4414a6529648f818cc2",
+            "infrastructure/benchmarks/synthetic/prefixes.py": "72d58f5fa02e394dceca77c483f048a63eb45b8cf6cfd7c5acbd986745988ad7",
+            "infrastructure/benchmarks/synthetic/records.py": "cb9c51b37263f8df2ffbd0960af9b7f1e97ae29d8ba261024bfb08e3c58e0e82",
+            "infrastructure/benchmarks/synthetic/retrieval.py": "deb4b69e4fd136e20a747b74e59d6d50b8b2d3e54663829f60d2c8b828326d5f",
+            "infrastructure/benchmarks/synthetic/rows.py": "71f552498f66087f681ada0073c174a40a303cc76d7e0981bc316325f11ff9a7",
+            "infrastructure/benchmarks/synthetic/sampling.py": "2ced1668f7b49e33de37bc77077327e2967121161e8221412d7ee3a209240d28",
+            "infrastructure/benchmarks/synthetic/sequences.py": "3f1ce4b63fcff17fe8309428c9e53a3095bebf0986e6135e8d5117ddc6fd7342",
+            "infrastructure/benchmarks/synthetic/splits.py": "34bcd8cf9295b4dbd4e9efd7dfe60fefbd28c433ccf6d03f4cbb177e6e6b47d9",
+            "infrastructure/benchmarks/synthetic/training.py": "f3da45fadf7017aff6a47dfefa7a69fe10dc49b1198af1b8d3b0bbf67a5485ed",
+            "infrastructure/benchmarks/synthetic/vocabulary.py": "8459f5f95f737c12e1cc2e165038ee743fb7973de3355544d8c72df9cb3e4e48",
+            "infrastructure/benchmarks/text.py": "038e2f7b58e9e6c6d689d3b660d4d9d2880726f82732a397e2dd72239e200352",
+            "infrastructure/engine/__init__.py": "615a2fa4d1e3217651136093504bcc9cf57a28db0e883864f2cd9d9116bf027d",
+            "infrastructure/engine/attention.py": "0ac754e5d62a3299bfae219af86d84b5f09bb1851e085ebbe11cca38b9d1125b",
+            "infrastructure/engine/attention_batch.py": "d233d13baf8fbdce43677175fadd46d08c5011b0ee9cd01c63e8b839e4fb0d47",
+            "infrastructure/engine/attention_stats.py": "5f4f2d1943a394e6af6ac07f8ec094c3f334b1ebbc052001a6b4fc1989df14a2",
+            "infrastructure/engine/compiled.py": "850d1de1e1c8fa9ab04c13c507d351efee6b90e2b1c21ae381a9e0c4d71028a7",
+            "infrastructure/engine/eager.py": "e892f0ff750c5182dd5a5cdd326950301aee554e33fecec27d11760903208fda",
+            "infrastructure/engine/graphs.py": "20326ad0fca1c7d6905eb7ef663f29364b9fd1e4601a74b5bd51826e64e38a2e",
+            "infrastructure/engine/loop.py": "88ee6882726c8006eed0fc7ead0eb5527d4080c23f4020e9333486630dcbb1cb",
+            "infrastructure/engine/measure.py": "43b0c6c031230b10a04ee4fe0fe42b1c46b9f32c1e828b370789e700190d5d09",
+            "infrastructure/engine/population.py": "97d63265f967d9395dd9bbcbc87e21f10ad1ee9543e1cd3899d0f0c5a8ff5d01",
+            "infrastructure/farm.py": "626b5b1c3a92ca5bfc3c4078c0c59a2e7b6ff8acdbc38782cbc5949640821b27",
+            "infrastructure/loader.py": "b1cc1bc0463910c78abd30f587ae5a66fa5d091ce7639785bba58b6a1016b97c",
+            "infrastructure/nn/__init__.py": "73e7051498fae6f9fc1e510be8fab430f3c4c3d04d948b031a56f8e6ea40e276",
+            "infrastructure/nn/attention.py": "cd99d0f524f05959fba6cb331191a46b0f4323e5d09f0fbadf3e966c1b160f0c",
+            "infrastructure/nn/legacy.py": "c6a5d4084c86dc0cb114a0cebd5873e243571b2b61f7178f5914c373d23e7048",
+            "infrastructure/nn/positions.py": "f95752d6948a1ecff5602e8c7fb26171cd7a6e4c54618547a9f7f7c2d70dd102",
+            "infrastructure/nn/sparsemax.py": "c864ce1e440f8c5b349df2c9eab0b6e018d5a486d400a8d155e9ef111f3ac2c0",
+            "infrastructure/nn/surrogate.py": "2141bb936750cd178b18c8c9646e2f9a7261447cc065a32f6400b6ab050e47c3",
+            "infrastructure/nn/transformer.py": "ca61ddc99b2fbcc6b42774aab66f774caec1bf0b11ce7f38fd906ce8d743b19d",
+            "infrastructure/optim/__init__.py": "8a7168402ddb6df5d821ff85b23d8672656a8bce8c6bbcf8a17d0c4a965a67fe",
+            "infrastructure/optim/ansr.py": "a0f6d6c559ccd0c53e87e7d457116c6a8864145d46805df7ef19fa66e971b191",
+            "infrastructure/optim/coordinate.py": "1bb074fc2fcc9033c6fa7a3fe5133ad427c0d2059e765c5904fe2292becea6ab",
+            "infrastructure/optim/direction.py": "716b07ad28890e1e1e1dd7cacc506d3c6d1507005f915f1b50b4091e9f848df9",
+            "infrastructure/optim/fisher.py": "9085d71581af08b0767dff3ecee28b8dd1c87abcb545089e2514a68187cb4803",
+            "infrastructure/optim/magnitude.py": "cdb75c6f9dc33c8b88af1f8551180fb3b53b59f24290b65cf91dd41e0861f2d9",
+            "infrastructure/optim/matrix.py": "5c9988b9cadc865fe28086b0130702b827958e0f96cc93e65e7175976eb70ae5",
+            "infrastructure/optim/roots.py": "a0d2486a9cd6d80bab6468cb200ac208945169d7ed2cd1e8a9dccf8b4559578b",
+            "infrastructure/optim/stages.py": "409aec59127a8a2c75b4e282b70ee9c3ec682e0bf3224e13a90eddd8bae86224",
+            "infrastructure/provenance.py": "37b6cfe2f0accca81ffa0be02216623875855e441d21e5ab68644aba5206f7f0",
+            "infrastructure/store.py": "8277dd46ba043ece8bd4bdeb35354617dbbc758a17e2db407980b6b2d0e72ca5"
+          },
+          "torch": "2.14.1+cu126",
+          "device": "NVIDIA GeForce GTX 1050"
+        },
+        "commit": {
+          "head": "5d91bc4258f10bd8ea008d20c281cf21378458a4",
+          "lab_modified": true
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      },
+      "stop": {
+        "step": 256,
+        "reason": "budget"
+      },
+      "best_step": 0,
+      "initial_validation": {
+        "loss": 6.320268630981445,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "best_validation": {
+        "loss": 6.320268630981445,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "best_test": {
+        "loss": 6.321897029876709,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "training_seconds": 169.83810725691728,
+      "optimizer": {
+        "algorithm": "ANSR",
+        "parameters": 133384,
+        "popsize": 64,
+        "sigma": 0.05,
+        "p_self": 0.95,
+        "bound": 20.0,
+        "updates": 256,
+        "nfev": 32702,
+        "refresh_nfev": 16318,
+        "restarts": 2,
+        "restart_frequency": 0.003914133692128922,
+        "restarts_per_generation": 0.0078125
+      }
+    },
+    "ansr-high-easy-small-parity-seed0": {
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 19
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "Parity",
+            "scratchpad": "none",
+            "hints": false,
+            "symbols": 32,
+            "number_limit": 512
+          },
+          "length": 16,
+          "min_length": 1,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "ANSR",
+          "popsize": 64,
+          "sigma": 0.05,
+          "p_self": 0.95,
+          "bound": 20.0,
+          "restart_tolerance": 1e-08,
+          "batch_size": 4
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 0,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 256,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 32,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Eager",
+          "device": "cuda",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 32,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 32
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "engine": {
+          "code": {
+            "__init__.py": "5247f0245c4e0e85225d43902285e61a7a162900ebde899cbe0f48aaa7ff06ce",
+            "application/__init__.py": "3971805b0409c0ce3a044d90d72d65d8565380e3699eb19695cd26b5231cd46e",
+            "application/ports.py": "89d231b66db064b7d879fc4025c0965a6bcd41f6091e47b90520e140059520a1",
+            "application/report.py": "cb61e932a892220a41144874f8b1efd009ea796cec3559fa854fc33456b23ec8",
+            "application/study.py": "81c7f9db3eb2739cdff6c617519f408d8552bd2b84ffdea271b2b5444920d982",
+            "domain/__init__.py": "54f6bfc495f239ff287f39dbebf100043317863a0c9ada92b6f001de01a36b2c",
+            "domain/analysis.py": "ea94291415afca7e28a6009137ed44add69b23999f07eb8cd4ddc083bfec24f2",
+            "domain/basis.py": "df653b7a0ab8440f134a6f8ce59860980d1fd72df8995892c44784e2b4314e9c",
+            "domain/benchmarks.py": "ac6f0472f65c8c5a54b8bfe43f1004c1d4219fea84b50a74b8edc092131baae6",
+            "domain/cadence.py": "592ba56790469be4fe33a430c270b98d537d03e4948fbb92de202fe3111968e0",
+            "domain/calibration.py": "ecfd2060bd84db189e1c75da53e0c00a809578b75c22e356da17823aac645410",
+            "domain/collapse.py": "f7bac076f5ea495c1b4673682071eb898e0de8fc343203d10585db08155e8e89",
+            "domain/experiment.py": "510194599b5863256115998763cede297e50206252c19f354dce6e5ee809a3a8",
+            "domain/generative.py": "efbd172d1e120012f896386b62849cb992528bf523fdbc9de9c174c37e3df126",
+            "domain/memorization.py": "d1119100afafa87e3bfbe3f53429243e59c44a0986c01b0c106856be12b17219",
+            "domain/model.py": "6ad3ce50a1bb696bf963339c1de154aea4eac6beea84ccd8a4c81465647a7e4c",
+            "domain/optimizers.py": "14da6a7ce96b13b788f661bff27d6c279f0a3c7f82c77503ba952a6ff234dc52",
+            "domain/phases.py": "c1029198684bd0eaf482059bda3175275c0f52075b5a419b544c67be02d07239",
+            "domain/spec.py": "0ad08c0060d555309c43c9bfc223487683f9240c1bbf7dc75157f22560e6e8f2",
+            "domain/stability.py": "9e1d6573cff2bfbd1559afde361c8ba09c29a2306908d4b19cf3fb30daaacb4d",
+            "domain/stopping.py": "f3cd37a4a3040d925fd330490cf387f5d139760d4bd3f7c14d764e048dbf252a",
+            "domain/synthetic.py": "903e3bf7d747524e3729d2873110de6b4c725e9f6eb0102ac97e62dcb2230e6d",
+            "domain/tasks.py": "0b17f033b623e17ef84f68428d8a62aac3b5c9207a6481ebcbbc6bc0d4ea275f",
+            "domain/training.py": "3ae5ace08a99992461aadc71e91566d1d68b3568373b808bc64fffa28c210d1c",
+            "dsl.py": "bbee9dcefe157e1725aa6cb055a8898a931551321489380087c61bd863d84900",
+            "infrastructure/__init__.py": "24f37965caf4b37e7b38dc11c18c7e1ea249dd157e53e3eeee20312d74d1a8d3",
+            "infrastructure/benchmarks/__init__.py": "14d68337a6b62e9e3d7759c6d527ccb0f365c6b5d8a9a8bcb3b3f8e8d2bfd990",
+            "infrastructure/benchmarks/modular.py": "81707cdca23171d30c1ee74fde6ad00b007bbc6692b7dde813dc301659e49fd6",
+            "infrastructure/benchmarks/samplers.py": "9d5bfdfb476c5faaa89b78716efd61fe0bff10011dccbe705b22ba653a8801ab",
+            "infrastructure/benchmarks/synthetic/__init__.py": "6e433a4fc98f53a4502c39e2d0e7d50d519e2827666f3028b37dad0f846ffc47",
+            "infrastructure/benchmarks/synthetic/arithmetic.py": "e70be51638ec745839bd498fe9b8a1645806eb1d940dcfc875b2bcd3fc2b93a6",
+            "infrastructure/benchmarks/synthetic/base.py": "16a16f4e0d94124ca5196455ad676c7deb918569daf85043444aeacc5ed4533a",
+            "infrastructure/benchmarks/synthetic/bits.py": "508d9ad10454f837f8f28bcca00c1e49d56f35ee9c5bffe4db8364d7ffc6c094",
+            "infrastructure/benchmarks/synthetic/compression.py": "656f600ed920aaa0c3a7e02f1ba6e6a8ce5dfe19662506fae131bfdf71c848b1",
+            "infrastructure/benchmarks/synthetic/control.py": "fe6b6327d576b02abf96aa3adce840d157d1438e2c9c5e062ca2a8c36e08d264",
+            "infrastructure/benchmarks/synthetic/corpus.py": "17f641d95fa5cddd8613ece3122ea6980c186cde06d91d67708d3ff36b278d13",
+            "infrastructure/benchmarks/synthetic/crasp.py": "362a47828b8610cd71827cc74e2d5425a4857683ad2ea646a310142537911cfc",
+            "infrastructure/benchmarks/synthetic/generation.py": "558a70b0c6c3fd3a5c80a1369cb2de237ee8bd98ce0058bfcf2ac4c353c2f138",
+            "infrastructure/benchmarks/synthetic/memorization.py": "3ce28545604583dcc69d51155f854f87009ffa12f207a12001babcbbbd2a281e",
+            "infrastructure/benchmarks/synthetic/noise.py": "bf55ddd6cede01adf01066f397fe3fcbf9b9d36d20efe4414a6529648f818cc2",
+            "infrastructure/benchmarks/synthetic/prefixes.py": "72d58f5fa02e394dceca77c483f048a63eb45b8cf6cfd7c5acbd986745988ad7",
+            "infrastructure/benchmarks/synthetic/records.py": "cb9c51b37263f8df2ffbd0960af9b7f1e97ae29d8ba261024bfb08e3c58e0e82",
+            "infrastructure/benchmarks/synthetic/retrieval.py": "deb4b69e4fd136e20a747b74e59d6d50b8b2d3e54663829f60d2c8b828326d5f",
+            "infrastructure/benchmarks/synthetic/rows.py": "71f552498f66087f681ada0073c174a40a303cc76d7e0981bc316325f11ff9a7",
+            "infrastructure/benchmarks/synthetic/sampling.py": "2ced1668f7b49e33de37bc77077327e2967121161e8221412d7ee3a209240d28",
+            "infrastructure/benchmarks/synthetic/sequences.py": "3f1ce4b63fcff17fe8309428c9e53a3095bebf0986e6135e8d5117ddc6fd7342",
+            "infrastructure/benchmarks/synthetic/splits.py": "34bcd8cf9295b4dbd4e9efd7dfe60fefbd28c433ccf6d03f4cbb177e6e6b47d9",
+            "infrastructure/benchmarks/synthetic/training.py": "f3da45fadf7017aff6a47dfefa7a69fe10dc49b1198af1b8d3b0bbf67a5485ed",
+            "infrastructure/benchmarks/synthetic/vocabulary.py": "8459f5f95f737c12e1cc2e165038ee743fb7973de3355544d8c72df9cb3e4e48",
+            "infrastructure/benchmarks/text.py": "038e2f7b58e9e6c6d689d3b660d4d9d2880726f82732a397e2dd72239e200352",
+            "infrastructure/engine/__init__.py": "615a2fa4d1e3217651136093504bcc9cf57a28db0e883864f2cd9d9116bf027d",
+            "infrastructure/engine/attention.py": "0ac754e5d62a3299bfae219af86d84b5f09bb1851e085ebbe11cca38b9d1125b",
+            "infrastructure/engine/attention_batch.py": "d233d13baf8fbdce43677175fadd46d08c5011b0ee9cd01c63e8b839e4fb0d47",
+            "infrastructure/engine/attention_stats.py": "5f4f2d1943a394e6af6ac07f8ec094c3f334b1ebbc052001a6b4fc1989df14a2",
+            "infrastructure/engine/compiled.py": "850d1de1e1c8fa9ab04c13c507d351efee6b90e2b1c21ae381a9e0c4d71028a7",
+            "infrastructure/engine/eager.py": "e892f0ff750c5182dd5a5cdd326950301aee554e33fecec27d11760903208fda",
+            "infrastructure/engine/graphs.py": "20326ad0fca1c7d6905eb7ef663f29364b9fd1e4601a74b5bd51826e64e38a2e",
+            "infrastructure/engine/loop.py": "88ee6882726c8006eed0fc7ead0eb5527d4080c23f4020e9333486630dcbb1cb",
+            "infrastructure/engine/measure.py": "43b0c6c031230b10a04ee4fe0fe42b1c46b9f32c1e828b370789e700190d5d09",
+            "infrastructure/engine/population.py": "97d63265f967d9395dd9bbcbc87e21f10ad1ee9543e1cd3899d0f0c5a8ff5d01",
+            "infrastructure/farm.py": "626b5b1c3a92ca5bfc3c4078c0c59a2e7b6ff8acdbc38782cbc5949640821b27",
+            "infrastructure/loader.py": "b1cc1bc0463910c78abd30f587ae5a66fa5d091ce7639785bba58b6a1016b97c",
+            "infrastructure/nn/__init__.py": "73e7051498fae6f9fc1e510be8fab430f3c4c3d04d948b031a56f8e6ea40e276",
+            "infrastructure/nn/attention.py": "cd99d0f524f05959fba6cb331191a46b0f4323e5d09f0fbadf3e966c1b160f0c",
+            "infrastructure/nn/legacy.py": "c6a5d4084c86dc0cb114a0cebd5873e243571b2b61f7178f5914c373d23e7048",
+            "infrastructure/nn/positions.py": "f95752d6948a1ecff5602e8c7fb26171cd7a6e4c54618547a9f7f7c2d70dd102",
+            "infrastructure/nn/sparsemax.py": "c864ce1e440f8c5b349df2c9eab0b6e018d5a486d400a8d155e9ef111f3ac2c0",
+            "infrastructure/nn/surrogate.py": "2141bb936750cd178b18c8c9646e2f9a7261447cc065a32f6400b6ab050e47c3",
+            "infrastructure/nn/transformer.py": "ca61ddc99b2fbcc6b42774aab66f774caec1bf0b11ce7f38fd906ce8d743b19d",
+            "infrastructure/optim/__init__.py": "8a7168402ddb6df5d821ff85b23d8672656a8bce8c6bbcf8a17d0c4a965a67fe",
+            "infrastructure/optim/ansr.py": "a0f6d6c559ccd0c53e87e7d457116c6a8864145d46805df7ef19fa66e971b191",
+            "infrastructure/optim/coordinate.py": "1bb074fc2fcc9033c6fa7a3fe5133ad427c0d2059e765c5904fe2292becea6ab",
+            "infrastructure/optim/direction.py": "716b07ad28890e1e1e1dd7cacc506d3c6d1507005f915f1b50b4091e9f848df9",
+            "infrastructure/optim/fisher.py": "9085d71581af08b0767dff3ecee28b8dd1c87abcb545089e2514a68187cb4803",
+            "infrastructure/optim/magnitude.py": "cdb75c6f9dc33c8b88af1f8551180fb3b53b59f24290b65cf91dd41e0861f2d9",
+            "infrastructure/optim/matrix.py": "5c9988b9cadc865fe28086b0130702b827958e0f96cc93e65e7175976eb70ae5",
+            "infrastructure/optim/roots.py": "a0d2486a9cd6d80bab6468cb200ac208945169d7ed2cd1e8a9dccf8b4559578b",
+            "infrastructure/optim/stages.py": "409aec59127a8a2c75b4e282b70ee9c3ec682e0bf3224e13a90eddd8bae86224",
+            "infrastructure/provenance.py": "37b6cfe2f0accca81ffa0be02216623875855e441d21e5ab68644aba5206f7f0",
+            "infrastructure/store.py": "8277dd46ba043ece8bd4bdeb35354617dbbc758a17e2db407980b6b2d0e72ca5"
+          },
+          "torch": "2.14.1+cu126",
+          "device": "NVIDIA GeForce GTX 1050"
+        },
+        "commit": {
+          "head": "5d91bc4258f10bd8ea008d20c281cf21378458a4",
+          "lab_modified": true
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      },
+      "stop": {
+        "step": 256,
+        "reason": "budget"
+      },
+      "best_step": 0,
+      "initial_validation": {
+        "loss": 4.290003776550293,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "best_validation": {
+        "loss": 4.290003776550293,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "best_test": {
+        "loss": 4.289251327514648,
+        "token_accuracy": 0.0,
+        "sequence_accuracy": 0.0
+      },
+      "training_seconds": 54.53655215102481,
+      "optimizer": {
+        "algorithm": "ANSR",
+        "parameters": 102664,
+        "popsize": 64,
+        "sigma": 0.05,
+        "p_self": 0.95,
+        "bound": 20.0,
+        "updates": 256,
+        "nfev": 32704,
+        "refresh_nfev": 16320,
+        "restarts": 0,
+        "restart_frequency": 0.0,
+        "restarts_per_generation": 0.0
+      }
+    }
+  }
+}
