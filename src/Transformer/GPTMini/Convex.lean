@@ -13,6 +13,9 @@ an unnormalized causal sum and absorbs the embedding/Q/K/value products.
 It gives an unconstrained parameter-space training guarantee, without
 changing the optimizer, at cubic vocabulary storage. Its exact finite-head
 recovery and single-head compression counterexample state that limit.
+Actual two- and three-token outputs identify all interaction coordinates;
+exact affine coverage of every linear head therefore has cubic dimension.
+That coverage bound leaves nonlinear and restricted-class routes open.
 The combined token-to-stream prefix is a candidate interface replacement;
 no compact Python drop-in block or full-model convexity is established.
 -/
@@ -22,3 +25,4 @@ import Transformer.GPTMini.Convex.Attention
 import Transformer.GPTMini.Convex.Model
 import Transformer.GPTMini.Convex.TrainingBoundary
 import Transformer.GPTMini.Convex.JointInteractionBoundary
+import Transformer.GPTMini.Convex.InteractionCompression

@@ -2387,6 +2387,19 @@ query/value diagonal tensors have a midpoint with nonzero rank-one minor.
 This counterexample rules out that particular compression only. It does
 not rule out a different compact operator or parameterization.
 
+The new `InteractionObservations` and `InteractionCompression` modules
+strengthen the scope of that storage result. All true final-row outputs on
+two- and three-token contexts linearly identify every tensor coordinate and
+the free residual embedding. If an affine prediction family covers every
+width-one physical head of this changed unnormalized operator on all these
+contexts, its parameter dimension is at least V³D. The proof does not assume
+that the family explicitly stores a tensor: recover the coefficients from
+its actual predictions, then use the original heads' full tensor span.
+Thus exact affine compression of this complete class is ruled out. This is
+not a bound for a finite training sample, normalized softmax, a restricted
+matching class, or arbitrary nonlinear parameterizations. The separate
+residual embedding has VD further observable coordinates.
+
 Next, search for a compact, unconstrained joint parameterization with the
 existing module interfaces, ordinary optimizer and learned content matching.
 Check that joint embedding training preserves its convexity; a fixed-input
@@ -2396,6 +2409,11 @@ Finite selected head/feature banks and SDP drafts remain outside the active
 drop-in route. No new training result is claimed from the tensor control,
 and nonlinear downstream layers or the tied readout can still destroy
 convexity of the complete model.
+The affine forward is a sufficient control for every convex output
+criterion, not a necessary condition for a particular cross-entropy loss.
+Continue investigating compact nonlinear probabilities with convex
+negative log likelihoods, checking simultaneous embedding, matching and
+value training rather than coordinatewise output convexity alone.
 
 ## Abandoned schedule pair
 
