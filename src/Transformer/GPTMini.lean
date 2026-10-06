@@ -42,6 +42,7 @@ The architecture is:
 | `GPTMini.Model` | the stack, the tied unembedding, and the forward pass |
 | `GPTMini.Causality` | full-stack causality and prefix preservation at every parameter assignment |
 | `GPTMini.TokenInterface` | checked List Int continuations and the exact required Basis logit property |
+| `GPTMini.Semantics` | internal count/order/routing guarantees, protected phase and robust code decoding |
 | `GPTMini.Properties` | what holds of it at every weight assignment at all |
 | `GPTMini.Bridge` | and how it sits inside the setups of the formalized papers |
 | `GPTMini.ClusteringTheorem` | and what those setups would then say about its layers |
@@ -81,6 +82,7 @@ import Transformer.GPTMini.BlockLipschitz
 import Transformer.GPTMini.Model
 import Transformer.GPTMini.Causality
 import Transformer.GPTMini.TokenInterface
+import Transformer.GPTMini.Semantics
 import Transformer.GPTMini.Properties
 import Transformer.GPTMini.Bridge
 import Transformer.GPTMini.ClusteringTheorem

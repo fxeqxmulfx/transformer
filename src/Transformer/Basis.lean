@@ -5,6 +5,7 @@ import Transformer.Basis.Parity
 import Transformer.Basis.Tasks
 import Transformer.Basis.Requirements
 import Transformer.Basis.Encoding
+import Transformer.Basis.RecallAnswer
 
 /-!
 # Basis on List Int
@@ -19,4 +20,6 @@ The real model adapter and prediction certificates are exported by
 Transformer.GPTMini.TokenInterface. Necessary answer distinctions cover
 depth order, raw MQAR binding/overwrites and parity bits. Every supervised
 prefix is proved to be nonempty, encodable and within its actual context.
+Raw recall parser inversion identifies the final adjacent matching write,
+including unrelated later records and hard-mode overwrites.
 -/

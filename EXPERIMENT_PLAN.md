@@ -2535,6 +2535,49 @@ Python defaults use 1e-5 for RMSNorm and 1e-6 for QKNorm/XSA. General
 floating-point equality and AdamW convergence are not certified. No
 experiment or optimizer was changed, and ANSR remains stopped.
 
+## Basis internal semantic guarantees (2026-10-06)
+
+The next formalization step is `Transformer.GPTMini.Semantics`. Raw MQAR
+parser inversion identifies the last matching adjacent write, including
+earlier overwrites and unrelated later records. For an actual retrieval
+head, a post-RoPE score gap bounds the omitted softmax mass and the value
+error. The complete XSA head has error at most
+`2 * ((T - 1) * exp(-gap) * B + eta)` when the target is orthogonal to the
+normalized self-value, value diameter is at most B, and the selected value
+has encoding error at most eta. Approximate key copying reduces an ideal
+matching gap by at most `4 * exp(alpha) / eps * eta`. These are conditional
+operator guarantees; they do not assume correct final task logits.
+
+Internal head and FFN codes propagate through the actual head merge, W_o
+and both residuals. A maximal-norm answer embedding separated from every
+competitor by delta decodes correctly when the final state error is less
+than `scale * delta / 2`, for positive scale and epsilon. The final-block
+theorem derives the full original model's List Int continuation from these
+local codes and their combined error budget. Correct logits are a
+consequence, rather than a premise. Examples realize every hypothesis.
+
+For parity, explicit parameters in the original 64-wide, two-layer,
+four-head, 68-token model compute raw ONE counts from the actual embeddings,
+RMSNorm and fused QKV. The count reaches the actual first residual block.
+The ONE and ZERO one-bit inputs have provably distinct first hidden states
+at every positive epsilon. A single further parameter assignment computes
+the count alongside a protected phase coordinate with a nonzero attention
+output projection. Its two legal six-token contexts needing EVEN and EOS
+have equal count signals and opposite phase signals. Local kernel equations
+for W_o and W_out preserve that phase through every layer of the real
+stack. The explicit controls verify internal features; their final
+EVEN/ODD/EOS decoder is not a full-task correctness result.
+
+For depth, an actual finite-softmax head detects ordered subsequences under
+a faithful earlier-prefix feature encoding, and distinguishes raw aabb
+from abab. Positivity and a QKNorm-dependent signal floor are proved for
+arbitrary Q/K arrays and learned finite temperatures. The earlier-prefix
+encoder and raw adjacent-key copying/routing for every Basis prefix remain
+unproved model invariants. Consequently the work does not yet establish
+complete Basis correctness or learned-checkpoint correctness. All new
+results have proofs, with no additional sorrys. No optimizer, experiment
+or running training job was changed.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
