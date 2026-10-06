@@ -106,6 +106,11 @@ import Transformer.GPTMini.Sparsemax.EnergyMemoryExamples
 import Transformer.GPTMini.Sparsemax.EnergyMemoryValues
 import Transformer.GPTMini.Sparsemax.EnergyMemoryIdentification
 import Transformer.GPTMini.Sparsemax.EnergyMemoryLoss
+import Transformer.GPTMini.Sparsemax.PeriodicMemoryKeys
+import Transformer.GPTMini.Sparsemax.PeriodicMemoryQueries
+import Transformer.GPTMini.Sparsemax.PeriodicMemoryAttention
+import Transformer.GPTMini.Sparsemax.PeriodicMemoryForward
+import Transformer.GPTMini.Sparsemax.PeriodicMemoryRank
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -116,16 +121,12 @@ import Transformer.GPTMini.Sparsemax.Certificate.Results
 /-!
 # Sparsemax training boundaries and convex learned-memory constructions
 
-Real-valued causal saturation is motivated by arXiv:2211.11052v1, §3.1.
-Convex row inference does not make every outer training gradient useful.
-The finite certificate is separate from floating-point PyTorch correctness.
-
-arXiv:1602.02068v2, §2.2, Proposition 1 certifies clipped thresholds,
-one-unit support windows and relative uniformity. The XSA combination,
+arXiv:2211.11052v1, §3.1 motivates causal saturation; the finite certificate
+is separate from floating-point correctness. arXiv:1602.02068v2, §2.2,
+Proposition 1 certifies thresholds and support windows; §3.2–§3.3's supplied
+target positions do not establish latent attention learning. XSA,
 arXiv:2603.09078v1, §2, is locally zero above epsilon on strict self routes;
-a below-epsilon counterexample needs its explicit norm hypothesis.
-The sparsemax paper's §3.2–§3.3 gives corrective supervised score gradients
-with target positions supplied, without proving latent attention learning.
+the below-epsilon counterexample needs its norm hypothesis.
 
 Derived bounded gaps and QKNorm gains ensure multiple active positions.
 Nonzero active-pair directions reach an outer loss only if its derivative
@@ -140,24 +141,20 @@ path and loss `(1-t)^2 * initialLoss`. A fitting endpoint excludes positive
 joint stationary points even at inactive ties. Repeated conflicting inputs
 have a nonzero attainable minimum. Joint attainability is essential.
 
-A bounded PSD Gram learns both Q/K families with exact feature recovery
-and affine content scores. Score domains and squared projection energy are
-convex; unrestricted sparsemax graphs and ordinary joint value mixtures are
-nonconvex. Probability input scores make actual attention affine, including
-changed supports. Genuine examples change both Q/K and support. Small fixed
-rank may fail at their midpoint, so rank is not silently constrained.
+A PSD Gram learns both Q/K families with exact recovery and affine scores.
+Unrestricted sparsemax graphs and joint value mixtures are nonconvex.
+Probability input scores give affine actual attention, including changed
+supports. A fixed small rank can fail at a feasible midpoint.
 
-For one causal context, self-weight floors yield a convex inverse domain.
-Learn Gram and output coordinates jointly; one common value table is decoded
-by the actual attention inverse. Outputs are affine and convex output
-criteria stay convex. Sharing across contexts needs a data encoder.
+For one causal context, self-weight floors give a convex inverse domain;
+joint Gram/output learning decodes one common value table. Outputs are affine
+and convex criteria remain convex. Sharing contexts needs a data encoder.
 
-A shared dictionary handles arbitrary fixed probability data codes. Genuine
-mixture queries give attention M times memory; a floor above one half ensures
-an inverse without triangular support restrictions. One global common value
-table gives MZ outputs. Output-only fitting leaves the Gram unidentified.
-Distinct complete causal signatures fit consistent arbitrary finite targets,
-while identical prefixes must share outputs. Full signatures cost `(V+1)^T` slots.
+A shared dictionary handles fixed probability data codes; genuine mixtures
+give attention M times memory and a strict floor gives its inverse. A common
+value table gives MZ outputs but leaves Gram unidentified. Distinct complete
+causal signatures fit consistent arbitrary targets; identical prefixes share
+outputs. Full signatures cost `(V+1)^T` slots.
 
 A kernel on P observed distinct prefixes has a training-code right inverse,
 from identity plus constant and squared-feature Grams. It fits arbitrary
@@ -165,10 +162,9 @@ prototype targets with genuine width 2P and convex joint output criteria.
 This chart requires at least R slots for R independent target rows; its free
 Gram has quadratic storage and dense routes.
 
-Nearest observed-prefix codes are one-hot and identity on registered data.
-Masked Hamming distance ignores future query/prototype tokens. Unseen error
-is at most epsilon plus L times cover radius under explicit fit, regularity
-and coverage; indistinguishable target functions refute unconditional bounds.
+Nearest codes are identity on registered prefixes. Masked Hamming ignores
+future tokens. Unseen error is bounded by epsilon plus L times cover radius
+under explicit fit, regularity and coverage; unconditional bounds fail.
 
 A compact path learns 3P-1 edge/norm coordinates. Its affine genuine Gram
 permits independent Q/K norms; strict floors ensure the inverse. Actual
@@ -182,12 +178,10 @@ global budget. Nonnegative score-weighted outer products prove PSD without
 nonnegative global identity mass. Affine geometry, three-route support,
 inverse, variable Q/K norms and conditional unseen bounds survive.
 
-Adjacent observed distances and fixed separate feature energies now supply
-a complete-coordinate squared reference with a unique constrained minimum.
-Positive weight preserves joint convexity; finite midpoint descent and a
-parameter-error bound hold. Prefix masking ignores hidden continuations.
-Data changes select different attention and Q/K norms. Output-only error
-still does not select geometry in that unrestricted common-value chart.
+Observed distances and feature energies supply a unique constrained geometry
+reference. Positive weight gives finite descent and parameter-error bounds;
+prefix masking ignores hidden continuations. This additional criterion
+selects attention and norms; output-only error in that chart does not.
 
 A new affine block PSD constraint couples attention B to learned outputs Z.
 It is exactly an attention-weighted energy budget on original values B⁻¹Z.
@@ -197,4 +191,11 @@ for two three-slot answer patterns. Every minimum identifies attention;
 the wrong allocation leaves error at least 27/512 after relearning values.
 The constraint restricts attainable outputs and leaves Q/K norms free.
 This active-energy example is not a language-model guarantee or solver.
+
+Three periodic key classes and a structural local score mask realize every
+feasible path at fixed physical width three, with Q/K squared norms at most
+three/four. Both Q and K change; actual masked sparsemax, common-value inverse,
+joint convex energy domain and categorical forward are proved. The former
+normalized Gram requires width at least P; the new physical Gram differs,
+and masked attention has full rank despite QK score rank at most three.
 -/

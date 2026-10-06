@@ -1701,6 +1701,68 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Constant physical width for locally masked learned attention
+
+**Done on 2026-10-06 UTC.** Five modules add thirty-three proved theorems
+without new `sorry`. The physical Q/K head dimension is now exactly three
+for arbitrary prototype count. This changes the old normalized-Gram
+architecture by applying an explicit structural score mask; learned local
+weights and actual sparse supports still vary.
+
+[PeriodicMemoryKeys.lean](src/Transformer/GPTMini/Sparsemax/PeriodicMemoryKeys.lean)
+assigns each prototype its index modulo three. Every possible local
+destination triple has distinct classes, including clamped boundaries.
+Each genuine key uses its class coordinate with learned scale equal to one
+plus its incident edge mass. Scales lie in `[1,2-floor]`, and squared key
+norms are at most four, independently of prototype count.
+
+[PeriodicMemoryQueries.lean](src/Transformer/GPTMini/Sparsemax/PeriodicMemoryQueries.lean)
+constructs genuine queries by placing each local score divided by its
+destination's learned key scale in the corresponding coordinate. Actual
+dot products recover every possible local score. Query coordinates lie in
+`[0,1]`, and squared norms are at most three. Explicit simultaneous edge
+changes alter both query and key families; neither family is frozen.
+
+[PeriodicMemoryAttention.lean](src/Transformer/GPTMini/Sparsemax/PeriodicMemoryAttention.lean)
+keeps genuine dot products on the local mask and assigns score -1 outside.
+The original variational sparsemax has proved threshold zero and equals
+the old affine path attention, including support boundaries. A self-weight
+floor above one half retains the actual inverse. The real feature Gram is
+PSD, has width three and obeys the uniform norm cap. It differs from the
+old normalized Gram; the old affine lift is only a proof certificate here.
+
+[PeriodicMemoryForward.lean](src/Transformer/GPTMini/Sparsemax/PeriodicMemoryForward.lean)
+uses only learned edges and output coordinates, eliminating independent
+norm additions. The earlier block PSD value-energy coupling and aggregate
+edge budget remain jointly convex. Actual categorical queries multiply
+one globally decoded original value table; registered and nearest codes
+give the selected rows of Z. Joint affinity and convex output criteria are
+proved for any finite dictionary and output dimension. Both earlier
+nonidentity, nonconstant task examples remain feasible at physical width
+three. Mixtures of differently masked queries are not asserted to commute
+with the new mask.
+
+[PeriodicMemoryRank.lean](src/Transformer/GPTMini/Sparsemax/PeriodicMemoryRank.lean)
+proves the old unmasked normalized chart necessarily needs width at least
+P: an invertible P-slot QK product cannot factor through fewer coordinates.
+In the new construction the genuine unmasked score matrix has rank at
+most three, while actual masked sparsemax attention has rank P. For P>3
+these matrices and the former physical Gram provably differ. Thus the
+fixed-width result does not silently assume a low-rank invertible QK product.
+
+Stored prototype records, values, edge parameters and nearest search still
+grow with prototype count. Possible path connections and categorical input
+encoding remain restrictions; the physical Gram is not affine in its
+three-coordinate realization, while the intrinsic optimization chart is
+convex. General output-conditioned identifiability and removal of intrinsic
+flat directions are the next extension. FFN, new model training and useful
+Shakespeare generalization remain deferred.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+extra axioms, results resting on `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
