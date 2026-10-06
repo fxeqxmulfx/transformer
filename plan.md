@@ -107,6 +107,16 @@ the future copy/position/gated-key coordinates are proved initially zero.
 The table still contains only token-local information. Fused QKV and the
 causal BOS-derived table gate are the next computations to verify.
 
+RecallQKV/HeadValues/RawHeads/RawCopy now give the simultaneous original
+64-to-192 matrix and nonzero W_o. The actual raw prenorm/fused projection
+yields the predecessor query/key and faithful compact values, plus a
+second zero-score marker head. At every actual adjacent key/value pair,
+the real softmax/XSA head copies the key with error at most
+4*(T-1)*exp(-adjacentGap alpha), and the true attention residual stores
+that copy alongside the unchanged raw value and query codes. Its gap and
+value bound are derived, not assumed. Exact causal BOS mass, the actual
+FFN table gate and robust second-block latest-write/readout remain.
+
 Next construct the simultaneous raw adjacency/table-gating/last-write encoder
 and depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
@@ -196,3 +206,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-06 | 1 | Parity correctness committed in f8ea725. Derived an actual original RoPE predecessor gap and finite softmax/XSA copy bound without an assumed positional gap. | Realize simultaneous raw QKV, gate post-table false writes, derive compact content/latest-write matching, then full recall/depth correctness. |
 | 2026-10-06 | 1 | Positional copy committed in 10a2c36. Proved compact collision-free 256-symbol codes, all actual low frequencies, normalized content score gap and strict latest-equal-key preference in the original head. | Simultaneous raw embedding/QKV/table gate and finite-copy robustness; full recall readout and depth construction. |
 | 2026-10-06 | 1 | Compact geometry committed in a7d5e0f. Realized all raw key/value/type channels in the original embedding table, derived uniform true RMS scaling and proved exact disjoint projections and initially empty encoder channels. | Fused original QKV, simultaneous predecessor/BOS heads, actual table gate, robust latest-write retrieval/readout; full depth construction. |
+| 2026-10-06 | 1 | Raw embedding committed in 298d784. Realized simultaneous original QKV/head merge/W_o and derived actual raw adjacency binding error in the first attention residual, preserving value and query codes. | Exact causal BOS marker, actual ReLU2 table gate, finite-copy/latest-write robustness and full recall readout; full depth and convex candidate remain. |

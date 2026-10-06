@@ -6,6 +6,10 @@ import Transformer.GPTMini.Semantics.RecallMatching
 import Transformer.GPTMini.Semantics.RecallSlots
 import Transformer.GPTMini.Semantics.RecallEmbedding
 import Transformer.GPTMini.Semantics.RecallEmbeddingFeatures
+import Transformer.GPTMini.Semantics.RecallQKV
+import Transformer.GPTMini.Semantics.RecallHeadValues
+import Transformer.GPTMini.Semantics.RecallRawHeads
+import Transformer.GPTMini.Semantics.RecallRawCopy
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -60,6 +64,12 @@ have derived norm squared six and a shared actual RMS multiplier. Exact
 linear readback and zero cross-channels are proved; copy, position and
 gated-key channels are initially zero. The actual fused QKV/BOS head and
 table gate remain the next encoder obligations.
+
+The actual fused QKV and nonzero W_o now realize predecessor and marker
+heads simultaneously. Every raw adjacent key/value pair has a derived
+finite-softmax/XSA copy error in the true first attention residual;
+its own raw value and query codes are retained. The exact causal BOS
+marker, FFN table gate and robust latest-write retrieval/readout remain.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
