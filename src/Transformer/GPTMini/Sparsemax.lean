@@ -76,7 +76,6 @@ import Transformer.GPTMini.Sparsemax.NearestPrototypeCodes
 import Transformer.GPTMini.Sparsemax.PrefixNearestCodes
 import Transformer.GPTMini.Sparsemax.NearestMemoryGeneralization
 import Transformer.GPTMini.Sparsemax.PermutationMemoryGram
-import Transformer.GPTMini.Sparsemax.LocalMemoryParameters
 import Transformer.GPTMini.Sparsemax.LocalMemoryFeasibility
 import Transformer.GPTMini.Sparsemax.LocalMemorySupport
 import Transformer.GPTMini.Sparsemax.LocalJointMemory
@@ -85,13 +84,6 @@ import Transformer.GPTMini.Sparsemax.LocalMemoryExamples
 import Transformer.GPTMini.Sparsemax.LocalMemoryQuadratic
 import Transformer.GPTMini.Sparsemax.LocalMemorySelection
 import Transformer.GPTMini.Sparsemax.LocalRegularizedMemory
-import Transformer.GPTMini.Sparsemax.BipartiteMemoryGram
-import Transformer.GPTMini.Sparsemax.LocalIncidentWeights
-import Transformer.GPTMini.Sparsemax.LocalMemoryScoreIdentities
-import Transformer.GPTMini.Sparsemax.IncidentMemoryCore
-import Transformer.GPTMini.Sparsemax.IncidentMemoryParameters
-import Transformer.GPTMini.Sparsemax.IncidentMemoryFeasibility
-import Transformer.GPTMini.Sparsemax.IncidentJointMemory
 import Transformer.GPTMini.Sparsemax.IncidentNearestMemory
 import Transformer.GPTMini.Sparsemax.IncidentMemorySelection
 import Transformer.GPTMini.Sparsemax.ObservedMemoryPreferences
@@ -101,7 +93,7 @@ import Transformer.GPTMini.Sparsemax.IncidentRegularizedMemory
 import Transformer.GPTMini.Sparsemax.IncidentMemoryDescent
 import Transformer.GPTMini.Sparsemax.EnergyMemoryLoss
 import Transformer.GPTMini.Sparsemax.PeriodicMemoryRank
-import Transformer.GPTMini.Sparsemax.OutputTiedMemoryCurvature
+import Transformer.GPTMini.Sparsemax.OutputTiedMemoryDescent
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -197,4 +189,11 @@ removes residual intrinsic freedom. With all prototypes observed, ordinary
 squared error is strictly convex for arbitrary targets, with complete
 coordinate curvature controlled by `1+4*gain^2`, independent of P. Opposite
 nonidentity answer fits and their support-changing midpoint remain feasible.
+
+Nonempty energy domains are compact; arbitrary ordinary answer tables have
+an attained unique tied minimum, including positive-error targets. Sharp
+suboptimality bounds full parameter distance by `1+4*gain^2` times ordinary
+loss gap. Midpoint gain is distance over `4*(1+4*gain^2)`; every other feasible
+point descends toward the proved optimum. Its selector is noncomputable;
+no numerical solver is implemented.
 -/

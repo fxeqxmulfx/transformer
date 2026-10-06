@@ -1836,6 +1836,69 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Attained training and complete parameter guarantees
+
+**Done on 2026-10-06 UTC.** Five modules add thirty-one proved theorems
+without new `sorry`. Arbitrary ordinary answer tables now have an attained
+unique minimum on every nonempty tied domain. Exact fitting and a supplied
+optimal point are not assumptions of the final guarantees.
+
+[PeriodicEnergyTopology.lean](src/Transformer/GPTMini/Sparsemax/PeriodicEnergyTopology.lean)
+proves closedness of the actual joint energy domain and its affine
+parameter-sharing restriction. Local score coefficients, the auxiliary
+attention/output PSD block and the affine readout are continuous. Ordinary
+prediction error is continuous on the genuine inverse domain through the
+proved actual forward identity; continuity at singular inverses is not
+assumed.
+
+[PeriodicEnergyCompact.lean](src/Transformer/GPTMini/Sparsemax/PeriodicEnergyCompact.lean)
+derives `Z[i,d]^2 <= energy` from a principal two-by-two PSD minor and the
+attention diagonal bound. The incident edge bounds and these output bounds
+make every finite joint domain compact. Any continuous ordinary output
+error attains a minimum on a nonempty domain, for arbitrary finite coded
+observations and target answers.
+
+[OutputTiedMemoryMinimum.lean](src/Transformer/GPTMini/Sparsemax/OutputTiedMemoryMinimum.lean)
+combines compactness with strict ordinary-loss convexity to prove existence
+and uniqueness in all intrinsic trained coordinates. A noncomputable
+selector records the proved point, its feasibility, its true attention
+inverse and its optimality. The earlier nonsingleton domain also gives an
+unattainable zero answer table with a proved positive-error minimum; the
+two nonconstant exact-fit targets retain their unique learned solutions.
+
+[OutputTiedMemoryGrowth.lean](src/Transformer/GPTMini/Sparsemax/OutputTiedMemoryGrowth.lean)
+compares all feasible interpolation times to obtain the sharp bound
+`output_distance^2 <= loss - minimum_loss`. Full intrinsic edge/output
+squared distance is at most `(1+4*gain^2)*(loss-minimum_loss)`, independently
+of prototype count. Epsilon-suboptimal training therefore controls all
+intrinsic coordinates with that same constant. These are consequences of
+the ordinary criterion, without an added parameter penalty or an exact-fit
+assumption.
+
+[OutputTiedMemoryDescent.lean](src/Transformer/GPTMini/Sparsemax/OutputTiedMemoryDescent.lean)
+proves that the feasible midpoint toward the attained minimum decreases
+ordinary error by at least full squared parameter distance divided by
+`4*(1+4*gain^2)`. Every other feasible point strictly descends toward the
+proved minimum at every positive segment time up to one. The statements
+allow sparse support changes and positive optimal error; the optimal
+endpoint is proved to exist rather than supplied as an oracle premise.
+The noncomputable selector is not a numerical optimization algorithm.
+
+The guarantees retain the explicit local mask, categorical input codes,
+full prototype observation, fixed affine edge/output sharing, strict
+self-weight floor and energy constraints. They remove intrinsic affine
+flat segments and nonglobal constrained minima throughout this restricted
+constant-width block. They do not establish convexity for independently
+free physical Q/K/value tables, a language-model criterion or an FFN.
+Physical Q/K width is three for arbitrary P; stored prototype records,
+values and nearest search still grow with P. A numerical solver, useful
+Shakespeare generalization and new model training remain deferred.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+extra axioms, results resting on `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
