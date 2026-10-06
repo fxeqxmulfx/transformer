@@ -1,26 +1,6 @@
 import Transformer.GPTMini.Sparsemax.SeparatedValues
 import Transformer.GPTMini.Sparsemax.ValuePlateau
-import Transformer.GPTMini.Sparsemax.AnchoredValues
-import Transformer.GPTMini.Sparsemax.AnchorTransfer
-import Transformer.GPTMini.Sparsemax.TrainableAnchors
-import Transformer.GPTMini.Sparsemax.AnchoredSquaredError
-import Transformer.GPTMini.Sparsemax.AnchoredCorrection
-import Transformer.GPTMini.Sparsemax.QKChart
-import Transformer.GPTMini.Sparsemax.QKAnchors
-import Transformer.GPTMini.Sparsemax.QKTaskDirections
-import Transformer.GPTMini.Sparsemax.QKSquaredError
-import Transformer.GPTMini.Sparsemax.QKProjection
-import Transformer.GPTMini.Sparsemax.QKProjectedError
-import Transformer.GPTMini.Sparsemax.InputDecoder
-import Transformer.GPTMini.Sparsemax.ProjectionLift
-import Transformer.GPTMini.Sparsemax.ProjectionUpdate
-import Transformer.GPTMini.Sparsemax.MixedInputQK
-import Transformer.GPTMini.Sparsemax.QKIndependentDirections
 import Transformer.GPTMini.Sparsemax.QKIndependentError
-import Transformer.GPTMini.Sparsemax.PrefixInputs
-import Transformer.GPTMini.Sparsemax.LongContextQK
-import Transformer.GPTMini.Sparsemax.QKPrefixMatrix
-import Transformer.GPTMini.Sparsemax.QKPrefixDirections
 import Transformer.GPTMini.Sparsemax.QKPrefixError
 import Transformer.GPTMini.Sparsemax.SupportSegment
 import Transformer.GPTMini.Sparsemax.ClippedKeySegment
@@ -85,6 +65,7 @@ import Transformer.GPTMini.Sparsemax.EnergyMemoryLoss
 import Transformer.GPTMini.Sparsemax.PeriodicMemoryRank
 import Transformer.GPTMini.Sparsemax.OutputTiedMemoryDescent
 import Transformer.GPTMini.Sparsemax.CompactAffineCapacity
+import Transformer.GPTMini.Sparsemax.CausalContentBlock
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -197,4 +178,21 @@ ordinary curvature, unique attained training and finite descent survive.
 This exact affine response family cannot memorize arbitrary answers: every
 universal affine scalar decoder needs at least P coefficients. A three-slot
 nonlinear target has sharp positive best error 2/3 in the compact model.
+
+A new content block encodes visible token bits, positions and presence.
+Selected sign products represent nonlinear interactions, matching and parity;
+all subsets span every function of a finite bit state at exponential cost.
+The memory has generated bit-flip destinations rather than stored prototypes.
+Genuine Q/K at width r+1 and a fixed mask give actual sparsemax with at most
+r+1 routes among 2^r virtual slots. Each selected feature has eigenvalue
+`1-2*sum(selected flip masses)`; a strict self floor bounds every divisor
+below by `2*floor-1`. Shared original values use K*D generated coefficients.
+Affine coefficient readouts jointly learn Q/K and values with changed supports.
+The complete causal forward is affine in all learned coefficients on a convex
+domain. Normalized readouts make that domain exactly a nonempty compact box.
+Every bounded finite response has a feasible exact fit with the full subset family.
+Future token changes cannot affect predictions; no prototype search is needed.
+Selected K features restrict capacity; universal coefficient-linear scalar
+responses need 2^r coefficients. Free token codes, normalization, layer stacks,
+FFN/language criteria and successful Basis training are not established.
 -/

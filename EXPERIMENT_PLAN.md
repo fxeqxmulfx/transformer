@@ -1982,6 +1982,107 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Expressive causal content encoding and joint sparsemax memory
+
+**Done on 2026-10-06 UTC.** Eleven modules add seventy-eight proved
+theorems without new `sorry`. The new encoder preserves observed token
+content, order, repetitions and prefix length. The new block learns
+coefficients of selected nonlinear content interactions instead of only
+constant and affine prototype-position responses.
+
+[CausalContentBits.lean](src/Transformer/GPTMini/Sparsemax/CausalContentBits.lean)
+encodes each position's presence and B fixed binary token bits. For a
+vocabulary of size V, `V <= 2^B` makes the canonical binary code injective.
+The prefix representation is lossless on visible tokens, and a future token
+change leaves it unchanged. The bit dimension is `r = T*(B+1)` for a maximum
+length T. Basis recall's current 548-token vocabulary fits in ten token bits;
+these are data codes, not supervised attention destinations.
+
+[CubeContentBits.lean](src/Transformer/GPTMini/Sparsemax/CubeContentBits.lean)
+and [CubeContentFeatures.lean](src/Transformer/GPTMini/Sparsemax/CubeContentFeatures.lean)
+generate sign products `chi_S(x) = product(i in S, (-1)^x[i])` for selected
+coordinate subsets S. They include constants, individual bits, bit matching
+and interactions across positions; a selected high-order product represents
+parity. The response is `Phi_W(x,d) = sum(k, chi_S[k](x)*W[k,d])`, with K*D
+learned coefficients and fixed feature descriptions.
+
+[CubeContentRouting.lean](src/Transformer/GPTMini/Sparsemax/CubeContentRouting.lean)
+uses generated virtual bit states rather than stored text prototypes.
+Nonnegative flip masses t have total at most `1-floor`. A query routes to
+itself with mass `1-sum(t)` and to the state with bit i flipped with mass
+`t[i]`. This action has eigenvalue `lambda_S = 1-2*sum(i in S, t[i])` on
+each selected feature, uniformly bounded below by `2*floor-1 > 0` when
+`floor > 1/2`.
+
+[CubeContentQK.lean](src/Transformer/GPTMini/Sparsemax/CubeContentQK.lean)
+and [CubeContentAttention.lean](src/Transformer/GPTMini/Sparsemax/CubeContentAttention.lean)
+realize those weights through genuine Q/K dot products of width r+1, a fixed
+structural local mask with outside score -1, and the original variational
+sparsemax operator. The normalization threshold is zero. At most r+1
+generated destinations can receive positive mass among `2^r` virtual states;
+supports may change during training. This is content-addressed virtual
+memory, not GPTMini attention over input-token occurrences. The causal
+guarantee comes from encoding only the observed prefix.
+
+[CubeContentValues.lean](src/Transformer/GPTMini/Sparsemax/CubeContentValues.lean)
+generates original common values as
+`V(x,d) = sum(k, chi_S[k](x)*W[k,d]/lambda_S[k])`. Actual sparsemax times
+these values equals `Phi_W` exactly; that equality is proved from the
+physical forward, not used as its definition. The inverse factor is at
+most `1/(2*floor-1)`. A query evaluates only its generated local destinations.
+No stored per-prototype values, bit-state feature table or nearest-prototype
+search is needed in this representation. Besides K*D learned coefficients,
+the fixed selected subsets and readout maps also require storage.
+
+[CubeContentLearning.lean](src/Transformer/GPTMini/Sparsemax/CubeContentLearning.lean)
+sets `t[i](W) = offset[i] + gain[i]*W[pick[i],channel]`. The coefficient caps
+and route budgets define a convex joint domain. Both Q and K change, and
+original values are learned through their actual inverse-adjusted formula.
+The genuine block forward is affine in every learned coefficient throughout
+the domain, including across support changes. Convexity is in this shared
+state W; independently free physical Q/K/value matrices are not covered.
+
+[CubeContentBudget.lean](src/Transformer/GPTMini/Sparsemax/CubeContentBudget.lean)
+normalizes every offset and gain to `(1-floor)/(2*r)`. For `r > 0` and
+`1/2 < floor <= 1`, the complete domain is exactly the nonempty compact box
+`-1 <= W[k,d] <= 1`. Coefficient clipping therefore suffices for the real
+arithmetic feasibility and value-denominator guarantees. No dictionary-sized
+PSD constraint or learned routing table is required. Optimizer convergence
+and floating-point accuracy are not established.
+
+[CubeContentExpressivity.lean](src/Transformer/GPTMini/Sparsemax/CubeContentExpressivity.lean)
+proves that a single two-bit interaction fits XOR sign, while a constant
+plus individual-bit response cannot. The full subset family spans every
+finite bit-state response through an explicit kernel inverse. For targets
+in [-1,1], all resulting coefficients lie in the unit box, so the jointly
+learned physical sparsemax/common-value block has a feasible exact fit.
+Full capacity needs `2^r*D` coefficients. A universal coefficient-linear
+scalar decoder needs at least `2^r` coefficients; selecting K features trades
+that capacity for K*D learned storage rather than evading this bound.
+
+[CausalContentBlock.lean](src/Transformer/GPTMini/Sparsemax/CausalContentBlock.lean)
+connects the physical block to causal token data. It proves future
+independence at any parameter assignment, joint forward affinity on the
+convex domain and convexity of every supplied convex criterion in the block
+outputs. Ordinary squared prediction error supplies a nonconstant example.
+It does not assert strict curvature or remove freedoms from unobserved or
+linearly dependent selected features.
+
+The fixed binary token encoding, selected feature identities, affine readout
+maps, local virtual-memory mask and strict self-weight floor are explicit
+restrictions. Q/K width grows with the prefix bit dimension, and the full
+interaction family is exponential. Neither a small selected family solving
+all Basis tasks nor generalization to new text is proved. Free learned token
+codes, normalization, a jointly trained layer stack, FFN and a language-model
+head remain outside the guarantee. The Python port and a ConvexGPT versus
+GPTMini-softmax Basis comparison have not started; new model training remains
+deferred.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+extra axioms, results resting on `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
