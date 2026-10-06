@@ -75,6 +75,15 @@ import Transformer.GPTMini.Sparsemax.PrototypeKernelGeometry
 import Transformer.GPTMini.Sparsemax.NearestPrototypeCodes
 import Transformer.GPTMini.Sparsemax.PrefixNearestCodes
 import Transformer.GPTMini.Sparsemax.NearestMemoryGeneralization
+import Transformer.GPTMini.Sparsemax.PermutationMemoryGram
+import Transformer.GPTMini.Sparsemax.LocalMemoryWeights
+import Transformer.GPTMini.Sparsemax.LocalMemoryCore
+import Transformer.GPTMini.Sparsemax.LocalMemoryParameters
+import Transformer.GPTMini.Sparsemax.LocalMemoryFeasibility
+import Transformer.GPTMini.Sparsemax.LocalMemorySupport
+import Transformer.GPTMini.Sparsemax.LocalJointMemory
+import Transformer.GPTMini.Sparsemax.LocalNearestMemory
+import Transformer.GPTMini.Sparsemax.LocalMemoryExamples
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -113,58 +122,40 @@ the span premise. Translated, scaled basis anchors enforce the span in any
 finite dimension using independent bounded active scores, retaining ordinary
 values and exact inactive zeros. These are restricted row architectures.
 
-The differentiable anchor chart realizes exact active-pair transfers at
-support boundaries. A unit-key chart implements them through actual QKNorm.
-An independent-input decoder transfers them to shared Q/K matrices while
-retaining unseen directions. Wrong squared-error outputs cannot be local
-minima, and a finite update fits the target. Full independence requires
-context size at most input width; fixed frames and anchors remain explicit.
+Differentiable anchors realize exact active-pair transfers at boundaries.
+Unit-key and shared-matrix decoders implement them through actual QKNorm.
+Wrong squared-error outputs cannot be local minima and finite updates fit
+targets. Full independent-input decoding requires context size at most input
+width. Dedicated anchor channels remove that length restriction, allow
+ordinary embeddings and preserve ordinary keys under smooth Q/K updates.
+Repeated-token witnesses satisfy the partial-decoder premises. Fixed unit
+frames and value anchors remain; shared-row cancellation is separate.
 
-A partial decoder controls only anchors and kills ordinary inputs. Its
-dedicated channels permit arbitrary ordinary embeddings and context lengths.
-A smooth shared-matrix update preserves ordinary keys while realizing
-anchored scores. Nonzero task derivatives reach joint Q/K matrices, and
-wrong squared-error outputs remain excluded as local minima. Repeated-token
-examples satisfy these premises while failing full input independence.
-Unit frames and visible value anchors remain; shared-row cancellation is separate.
+For shared rows, compatible endpoint supports and clipped QKNorm keys give
+an affine score path. A target-fitting endpoint yields loss `(1-t)^2 *
+initialLoss` and derivative `-2 * initialLoss`, excluding positive-error
+joint stationary points even at inactive ties. A two-row example fits from
+`9/128` to zero; conflicting repeated observations have minimum `1/2`.
+Joint attainability, support compatibility and fixed values remain essential.
 
-Summed squared loss uses shared matrices across rows and examples. Matching
-endpoint supports make sparsemax affine on a score segment; clipped endpoint
-keys keep actual QKNorm linear throughout it. A better compatible endpoint
-excludes a joint local minimum. A shared target-fitting endpoint gives path
-loss `(1-t)^2 * initialLoss` and derivative `-2 * initialLoss`, excluding
-positive-error joint stationary points, including inactive threshold ties.
-A two-row example fits distinct targets from loss `9/128` to zero. Repeated
-observations with conflicting targets instead have global minimum `1/2`.
-Joint attainability, support compatibility, clipped keys and fixed values
-remain essential; unconstrained whole-model convergence is not asserted.
+A bounded PSD Gram learns both Q/K families with exact feature recovery
+and affine shared content scores. Causal score domains and squared projection
+energy are convex without fixed supports; cap below one half excludes
+singleton saturation. The unrestricted sparsemax graph and score energy
+without its score-square term remain nonconvex. Requiring probability score
+rows makes actual attention affine, including changed supports. A four-token
+witness changes both Q/K families and loses one active position; midpoint
+attention is the endpoint mean, but its Gram cannot keep one-feature width.
+These finite-context restrictions replace QKNorm. Ordinary joint value
+mixing still has a nonconvex graph, even with bounds and full support.
 
-A new Gram architecture learns both query and key embedding families in
-one bounded PSD matrix, with exact finite-coordinate recovery and affine
-shared content scores. The joint causal-row domain and squared projection
-energy are convex without fixing supports. An entry cap below one half
-excludes singleton saturation. The unrestricted exact sparsemax graph is
-still nonconvex, and dropping the score-square energy term also fails.
-A stronger linear restriction makes each selected score row itself a
-causal probability row. Actual sparsemax fixes it, so the exact learned
-embedding/attention graph is convex even when supports change. A four-token
-example changes both embedding families and loses one active position;
-its midpoint attention is exactly the mean endpoint attention. Its midpoint
-Gram cannot retain the endpoints' one-feature width. These are new finite-
-context architectures replacing QKNorm, with no task loss or FFN yet.
-Ordinary jointly learned value mixing has a separate nonconvex output graph,
-even with bounded parameters and full support in its original coordinates.
-
-For one distinct-token context with all causal rows, a positive self-weight
-floor gives a convex structural domain with invertible actual attention.
-Learn the Gram and output table together; decode one shared value table
-by the attention inverse. Encoding and decoding are proved mutually exact,
-and the actual attention/value output is affine in these joint coordinates.
-Any future convex output objective remains convex; no task loss is selected.
-A two-token example changes both Q/K families, values and sparse support.
-The true midpoint output is the mean endpoint output; literal mean values
-produce a different output. This finite-context chart leaves multi-context
-sharing, fixed small width, value penalties and inverse conditioning open.
+For one distinct-token causal context, self-weight floors give a convex
+domain with invertible attention. Learn Gram and output coordinates jointly;
+inverse decoding gives one common value table. Encoding and decoding are
+mutually exact; actual outputs are affine and convex output criteria stay
+convex. A two-token example changes Q/K, values and support. Its actual
+midpoint output is the endpoint mean, unlike literal mean original values.
+Sharing across contexts, small width and value penalties need separate results.
 
 A shared learned dictionary now handles arbitrarily many causal data codes.
 Their genuine Q/K mixture scores give actual attention M times the memory.
@@ -195,6 +186,15 @@ the same joint chart. Masked Hamming distance ignores future query and
 prototype tokens. Actual output error is at most epsilon plus L times cover
 radius under explicit fit, regularity and coverage hypotheses. Two targets
 agreeing on registered observations disprove unconditional unseen guarantees.
-Actual attention is a learned memory row without a sparsity bound; output-only
-fitting leaves the Gram free. FFN and task-loss choice stay open.
+Unrestricted memory rows can still be dense; output-only fitting leaves Gram free.
+
+A compact path variant learns 3P-1 scalar edge/norm coordinates in a convex
+linear domain. Its affine genuine Gram has independently variable Q/K norms;
+floor above one half guarantees the actual attention inverse. A nearest query
+has at most three active actual routes, attained by an unseen four-slot example.
+Common values retain MZ outputs, arbitrary prototype fitting, conditional unseen
+error bounds and convex joint output criteria. Possible connections and
+same-family orthogonality are fixed architectural restrictions. A concrete
+noninjective forward proves output-only Gram freedom persists. Prototype count
+and width still grow with data; FFN and task-loss choice stay open.
 -/

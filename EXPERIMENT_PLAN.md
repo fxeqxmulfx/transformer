@@ -1385,6 +1385,78 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Linear-parameter Gram and at most three actual routes
+
+**Done on 2026-10-06 UTC.** Nine modules add sixty-eight proved theorems
+without new `sorry`. The compact variant retains joint convex embeddings,
+actual sparsemax attention and one common learned value table. It restricts
+the earlier unrestricted Gram family to a fixed path of possible connections.
+
+[PermutationMemoryGram.lean](src/Transformer/GPTMini/Sparsemax/PermutationMemoryGram.lean)
+constructs genuine finite-coordinate Gram atoms from basis queries and
+permuted basis keys. Identity and adjacent swaps are bounded PSD memories
+with probability cross-score rows. Both same-family blocks are identity.
+
+[LocalMemoryWeights.lean](src/Transformer/GPTMini/Sparsemax/LocalMemoryWeights.lean)
+learns nonnegative path-edge weights `t`, with `sum(t) <= 1 - floor`.
+Identity receives residual mass `1 - sum(t)`, at least the required diagonal
+floor. The domain is convex and inhabited exactly when `floor <= 1`.
+[LocalMemoryCore.lean](src/Transformer/GPTMini/Sparsemax/LocalMemoryCore.lean)
+proves the affine mixture of these actual atoms is a bounded PSD memory
+with the required score normalization and floor, without assuming a feature
+factorization or imposing a nonconvex rank constraint.
+
+[LocalMemoryParameters.lean](src/Transformer/GPTMini/Sparsemax/LocalMemoryParameters.lean)
+adds `2P` independently stored norm coordinates `u`, with `0 <= u <= cap-1`.
+The full affine Gram is `core(t) + diagonal(u)`. Its cross scores are unchanged
+by these additions and genuine Q/K squared norms are `1 + u`. The complete
+coordinate encoding is injective and has exactly `3P-1` stored scalars.
+The parameter domain is convex and inhabited exactly for `cap >= 1` and
+`floor <= 1`. This is storage count, not the dimension of a boundary domain.
+
+[LocalMemoryFeasibility.lean](src/Transformer/GPTMini/Sparsemax/LocalMemoryFeasibility.lean)
+proves all bounded PSD and normalized memory constraints from the linear
+parameter bounds. Actual variational sparsemax equals the path scores.
+A floor strictly above one half guarantees its inverse, one global original
+value table, and genuine Q/K feature width at most `2P`. Actual attention
+is affine throughout the convex parameter domain, including support changes.
+
+[LocalMemorySupport.lean](src/Transformer/GPTMini/Sparsemax/LocalMemorySupport.lean)
+proves exact zeros outside a query slot and its two immediate neighbors.
+Every actual nearest-data query has at most three active sparsemax routes,
+including unseen queries; the bound concerns attention itself, not just codes.
+[LocalJointMemory.lean](src/Transformer/GPTMini/Sparsemax/LocalJointMemory.lean)
+retains the exact common-value forward `MZ` and a convex joint domain for
+the compact parameters and global output table. Every future convex output
+criterion is convex jointly. Every output-only criterion is also invariant
+under feasible attention-parameter changes compensated by the common values.
+
+[LocalNearestMemory.lean](src/Transformer/GPTMini/Sparsemax/LocalNearestMemory.lean)
+combines this family with actual causal nearest-prefix codes. Distinct
+registered prefixes fit arbitrary vector targets. Future query tokens do not
+affect outputs. Explicit prototype fitting, target regularity and coverage
+give actual unseen coordinate error at most `epsilon + L * delta` here too.
+[LocalMemoryExamples.lean](src/Transformer/GPTMini/Sparsemax/LocalMemoryExamples.lean)
+changes both Q/K squared norms from one to two and actual two-slot support
+from identity to weights `(3/4,1/4)` in both directions. A four-slot interior
+row has weights `(1/10,4/5,1/10,0)` and exactly three active routes, also for
+the unseen real query `5/4`. The forward map in compact attention parameters
+is proved noninjective for every fixed output table and probability encoder.
+
+Linear Gram storage and bounded actual route count are now proved. Their
+price is the fixed path, fixed same-family orthogonality and a global edge
+budget stronger than separate row budgets. Prototype count, feature width
+and nearest-search cost can still grow with data. Output-only Gram freedom
+remains intrinsic to this exact value chart; a separate criterion is needed
+to select parameters. Unseen regularity and coverage have not been established
+for Shakespeare or arbitrary text. FFN, task-loss selection and new training
+remain deferred; the completed sparsemax experiment cycle is unchanged.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass; the modules have no warnings, new `sorry`, extra
+axioms, results resting on a `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
