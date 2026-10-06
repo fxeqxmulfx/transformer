@@ -1899,6 +1899,89 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Constant-size generated original common values
+
+**Done on 2026-10-06 UTC.** Eight modules add fifty-seven proved theorems
+without new `sorry`. A new restricted jointly learned block has two
+coefficient rows per output channel for arbitrary prototype count. Original
+common values are evaluated from a generated function; no per-prototype
+value or fixed basis rows are stored in its mathematical representation.
+
+[AffineValueProfile.lean](src/Transformer/GPTMini/Sparsemax/AffineValueProfile.lean)
+generates all local path edges from one scalar as `c*(e+1)*(N+1-e)`.
+The actual path score action preserves constants and affine position at
+both boundaries, giving eigenvalues 1 and `1-2*c` on these two features.
+
+[AffineValueBasis.lean](src/Transformer/GPTMini/Sparsemax/AffineValueBasis.lean)
+generates normalized positions in `[-1,1]` and affine responses from a
+`2 x D` coefficient table W. Endpoint observations recover all coefficients
+and bound their squared distance by half the full output distance,
+independently of dictionary size. The feature is a position formula,
+rather than a supplied dictionary-sized basis matrix.
+
+[AffineValueDecoder.lean](src/Transformer/GPTMini/Sparsemax/AffineValueDecoder.lean)
+proves equality to the original global inverse value decoder: the constant
+coefficient stays unchanged, and the slope is divided by `1-2*c`.
+The strict self-weight floor bounds that denominator below by
+`2*floor-1`. Thus the exact original value at slot i is
+`W[0] + position(i)*W[1]/(1-2*c)`, requiring only two coefficient rows.
+The actual variational sparsemax forward gives the affine response exactly.
+
+[AffineValueFeasibility.lean](src/Transformer/GPTMini/Sparsemax/AffineValueFeasibility.lean)
+derives the full incident mass formula. Normalizing `c=rho/(N+2)^2`
+makes `0 <= rho <= 1-floor` sufficient for every local budget, without
+a learned edge vector. Genuine bounded width-three Q/K therefore remain
+valid for every dictionary size. A query needs values only at its at most
+three possible local destinations; the other original value rows need not
+be materialized for that query.
+
+[CompactAffineMemory.lean](src/Transformer/GPTMini/Sparsemax/CompactAffineMemory.lean)
+ties rho to one learned slope coefficient by a fixed affine readout.
+The entire trained state is W, with `2*D` scalar coefficients; geometry and
+values are both generated from it. Coefficient caps and the scalar interval
+give a convex compact domain that is itself independent of prototype count.
+This explicitly replaces the earlier global PSD value-energy constraint,
+using coefficient bounds and sufficient local feasibility budgets instead.
+Both opposite nonconstant response witnesses are feasible on one domain.
+
+[CompactAffineTraining.lean](src/Transformer/GPTMini/Sparsemax/CompactAffineTraining.lean)
+connects actual predictions to ordinary sum squared output error. For
+arbitrary full prototype answer tables, error is strictly convex in all
+learned coefficients. The exact affine gap controls coefficient distance
+with factor two, independently of prototype count. There are no route
+labels, additional geometric criterion or independently free frame/norm
+coordinates. Exact fitting holds for the feasible generated response family.
+
+[CompactAffineMinimum.lean](src/Transformer/GPTMini/Sparsemax/CompactAffineMinimum.lean)
+proves an attained unique minimum on every nonempty domain for arbitrary
+targets. Every constrained local minimum is global. Ordinary suboptimality
+bounds complete coefficient squared distance with constant one; a midpoint
+lowers error by at least half that distance. Every different feasible point
+strictly descends toward the minimum at every positive segment time up to
+one. Existence does not assume an exact fit or a supplied minimum.
+
+[CompactAffineCapacity.lean](src/Transformer/GPTMini/Sparsemax/CompactAffineCapacity.lean)
+proves that universal exact fitting through a fixed coefficient-affine
+scalar decoder requires at least P scalar coefficients. The compact
+two-feature response family therefore trades arbitrary memorization for
+constant parameter storage. Answers `(0,1,0)` have sharp best ordinary
+error `2/3`, attained by a genuine feasible compact point. Separate physical
+witnesses prove that both Q and K change and actual sparsemax support goes
+from zero to positive on a local edge. Original common values are nonconstant
+and genuinely inverse-adjusted, rather than frozen or equal to coefficients.
+
+Only original value and learned geometry storage are constant here. Stored
+prototype records and nearest search still grow with P. The positional
+response family, categorical input encoding, fixed local mask, fixed scalar
+readout, coefficient caps and full observation are explicit restrictions.
+No numerical implementation, useful language-model criterion, FFN or
+Shakespeare generalization is established. New model training remains deferred.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+extra axioms, results resting on `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be

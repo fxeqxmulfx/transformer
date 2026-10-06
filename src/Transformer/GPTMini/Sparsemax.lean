@@ -1,15 +1,5 @@
-import Transformer.GPTMini.Sparsemax.Basic
-import Transformer.GPTMini.Sparsemax.ClosedForm
-import Transformer.GPTMini.Sparsemax.SupportWindow
-import Transformer.GPTMini.Sparsemax.NonSaturation
-import Transformer.GPTMini.Sparsemax.ActiveDirection
-import Transformer.GPTMini.Sparsemax.OuterSensitivity
-import Transformer.GPTMini.Sparsemax.ValueSpan
 import Transformer.GPTMini.Sparsemax.SeparatedValues
 import Transformer.GPTMini.Sparsemax.ValuePlateau
-import Transformer.GPTMini.Sparsemax.BoundedGain
-import Transformer.GPTMini.Sparsemax.BoundedCoordinates
-import Transformer.GPTMini.Sparsemax.AnchoredScores
 import Transformer.GPTMini.Sparsemax.AnchoredValues
 import Transformer.GPTMini.Sparsemax.AnchorTransfer
 import Transformer.GPTMini.Sparsemax.TrainableAnchors
@@ -94,6 +84,7 @@ import Transformer.GPTMini.Sparsemax.IncidentMemoryDescent
 import Transformer.GPTMini.Sparsemax.EnergyMemoryLoss
 import Transformer.GPTMini.Sparsemax.PeriodicMemoryRank
 import Transformer.GPTMini.Sparsemax.OutputTiedMemoryDescent
+import Transformer.GPTMini.Sparsemax.CompactAffineCapacity
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -196,4 +187,14 @@ suboptimality bounds full parameter distance by `1+4*gain^2` times ordinary
 loss gap. Midpoint gain is distance over `4*(1+4*gain^2)`; every other feasible
 point descends toward the proved optimum. Its selector is noncomputable;
 no numerical solver is implemented.
+
+A generated quadratic edge profile preserves constant and affine position
+features. Its original common values need two coefficient rows per output
+channel, independent of P, and a query evaluates only its local destinations.
+A fixed readout of the learned slope generates geometry. Coefficient caps
+and a scalar interval replace the global energy PSD constraint; strict
+ordinary curvature, unique attained training and finite descent survive.
+This exact affine response family cannot memorize arbitrary answers: every
+universal affine scalar decoder needs at least P coefficients. A three-slot
+nonlinear target has sharp positive best error 2/3 in the compact model.
 -/
