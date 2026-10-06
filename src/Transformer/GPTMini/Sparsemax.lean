@@ -47,6 +47,7 @@ import Transformer.GPTMini.Sparsemax.OutputTiedMemoryDescent
 import Transformer.GPTMini.Sparsemax.CompactAffineCapacity
 import Transformer.GPTMini.Sparsemax.CausalContentBlock
 import Transformer.GPTMini.Sparsemax.AtomicMatchingContext
+import Transformer.GPTMini.Sparsemax.AtomicMatchingAttainment
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -186,12 +187,17 @@ prediction set is exactly the convex hull of every eligible matching head.
 Mixture coefficients absorb into original values for ordinary multihead sums.
 
 Every finite state has a representative with at most R+1 heads preserving
-R observed scalar outputs and every criterion of those outputs. An attained
-optimum, if supplied, has the same finite representation. Storage is bounded
-by `(R+1)*(2*V*H+V*D+1)` scalars for the learned head tables and weights.
+R observed scalar outputs and every criterion of those outputs. For a
+nonnegative numerical cap, the complete observed prediction class is compact:
+actual support-changing sparsemax is continuous, and a compact R+1-slot
+physical chart covers every mixture prediction. Every continuous output
+criterion has an attained global minimum with at most R+1 heads; no optimal
+state or exact-fit hypothesis is supplied. Storage is bounded by `(R+1)*(2*V*H+V*D+1)` scalars for the learned head tables and weights.
 Convex output criteria give a convex full-state problem. A supporting output
 functional and a certified price lower bound over all possible heads bound
-the global objective gap. Two-context answer fits require order-sensitive
+the global objective gap. The full physical-head price attains its minimum,
+so a finite global gap certificate exists for every supporting functional.
+Finding that head numerically remains a separate optimization problem. Two-context answer fits require order-sensitive
 heads; uniform routing has error at least 1/8 even with freely learned values.
 Head pricing is nonconvex even on an affine Q/K path with unchanged values.
 Variable head count, a numerical atom box and unit mass replace fixed-width

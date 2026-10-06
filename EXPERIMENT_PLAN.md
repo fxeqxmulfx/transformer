@@ -2106,6 +2106,8 @@ passed easy depth, recall and parity at 200, 1,700 and 4,800 updates. The short
 ANSR runs do not settle its efficacy. The user explicitly required a much
 larger budget; all six ANSR runs continue from checkpoint toward 100,000
 generations each, without resetting their population or random generators.
+The user then explicitly returned to Lean and convex training. The existing
+background ANSR queue continues; current development resumes formal guarantees.
 
 ## Freely learned query-key matching through a convex atomic state
 
@@ -2202,6 +2204,53 @@ Python is unchanged and new model training remains deferred.
 Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 `./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
+
+
+## Attained convex atomic matching training
+
+**Done on 2026-10-06 UTC for the bounded genuine-head architecture.** Three
+modules add twenty-one proved theorems without new `sorry`. The user explicitly
+returned to Lean and convex training. This removes the previous need to supply
+an attained optimum before obtaining a finite optimal physical model.
+
+[AtomicMatchingContinuity.lean](src/Transformer/GPTMini/Sparsemax/AtomicMatchingContinuity.lean)
+proves continuity of the repository's original variational causal sparsemax
+at every score assignment, including changes of active support. Its optimality
+graph is closed in the compact causal simplex. Genuine shared Q/K scores,
+independent original values and their actual head outputs are continuous.
+The complete numerical Q/K/value box is compact, and a nonnegative cap makes
+it nonempty. No score-gap, fixed-support or attention-inverse premise is used.
+
+[AtomicMatchingFamily.lean](src/Transformer/GPTMini/Sparsemax/AtomicMatchingFamily.lean)
+gives a compact N-slot chart of freely selected physical heads and probability
+weights, with a continuous actual forward. Any feasible finite mixture with
+at most N active heads has an exactly matching chart representation: unused
+slots receive zero mass and a feasible zero head. Conversely, each valid chart
+reconstructs a feasible finite distributional state. Slots are storage locations,
+not a fixed interaction bank. The criterion in raw chart coordinates need not
+be convex; convexity remains in the distributional state and observed outputs.
+
+[AtomicMatchingAttainment.lean](src/Transformer/GPTMini/Sparsemax/AtomicMatchingAttainment.lean)
+proves that the entire genuine observed prediction set is exactly the image
+of the compact R+1-slot chart. It is therefore nonempty and compact for a
+nonnegative cap. Every continuous criterion of R observed scalar outputs has
+an attained global minimum with at most R+1 learned Q/K/value heads, including
+criteria with unavoidable positive optimal error. Neither a fitting target
+nor an optimal mixture is an existence hypothesis. The earlier convexity
+theorem applies whenever the supplied output criterion is convex.
+
+The true physical-head pricing objective is also continuous and attains a
+minimum over every eligible Q/K/value table. A supporting output functional
+therefore has an attained finite global objective-gap certificate; the pricing
+bound is derived from an existing global minimizing head. This proves existence,
+not an efficient global head search or convergence of a practical optimizer.
+Fixed-width raw matrices, FFN training and unseen-text generalization remain
+outside these statements. Numerical bounds and unit total mass are unchanged.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass. No new `sorry`, new-module warnings, extra axioms,
+results resting on `sorry`, vacuous conclusions or placeholder definitions.
+Python sources are unchanged; the previously passing 178-test suite applies.
 
 ## Abandoned schedule pair
 
