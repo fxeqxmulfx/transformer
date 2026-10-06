@@ -1,6 +1,6 @@
 import Transformer.GPTMini.Semantics.FinalBlock
 import Transformer.GPTMini.Semantics.Order
-import Transformer.GPTMini.Semantics.ParityFeatures
+import Transformer.GPTMini.Semantics.CompletionFFN
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -23,8 +23,11 @@ prove phase preservation throughout the full stack. A variable-length
 collision is proved for this first count/phase block. A simultaneous BOS
 denominator channel repairs it and recovers the raw count from the actual
 first hidden state for every parity prompt and supplied-answer prefix,
-without an external length input. The actual parity/EOS FFN/readout,
-ordered-prefix and recall-pair encoders remain separate obligations.
+without an external length input. Explicit original FFN matrices realize
+a 68-unit homogeneous bounded-count parity decoder and a simultaneous
+69th completion-phase unit. Tied embedding codes, sufficient full-model
+readout margins, ordered-prefix and recall-pair encoders remain separate
+obligations.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout

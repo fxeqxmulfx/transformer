@@ -61,8 +61,15 @@ establishes it for every raw prompt and supplied-answer continuation,
 without an external length or RMS multiplier. This repairs a feature
 representation; it is not yet a complete parity solver.
 
-Next prove a homogeneous bounded-count decoder using the original ReLU2
-FFN and its EOS branch, then discharge full-stack tied readout. Continue
+CountSpline now proves an exact homogeneous four-hinge count decoder;
+CountFFN realizes it with the original W_in/ReLU2/W_out in 68 hidden
+units. CompletionFFN adds a simultaneous 69th phase unit for EOS, proves
+its exact output formula and preserves phase. All fit the existing width
+256. These are explicit original FFN computations, not a task oracle.
+
+Next connect the decoder to a complete two-layer parameter assignment with
+distinct tied EVEN/ODD/EOS embeddings and prove sufficient readout margins
+on every raw prompt and supplied-answer prefix. Continue
 with the raw adjacency/last-write encoder and depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
@@ -145,3 +152,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | --- | --- | --- | --- |
 | 2026-10-06 | Setup | Cycle started from b243ba5; prior 77 semantic theorems retained. | Stage 1: normalized count versus exact count, full decoders and encoders. |
 | 2026-10-06 | 1 | Proved legal variable-length first-state collision; actual ONE/BOS channels recover the count for all raw parity words in the original 64-wide block. | Bounded ReLU2 parity decoder, EOS/readout, raw MQAR and depth encoders. |
+| 2026-10-06 | 1 | Repaired features committed in 2099735. Proved homogeneous parity decoder and realized simultaneous parity/EOS in 69 of the original 256 FFN units. | Full-stack distinct tied embeddings and readout margins; raw MQAR/depth encoders. |
