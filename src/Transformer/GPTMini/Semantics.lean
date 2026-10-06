@@ -10,6 +10,8 @@ import Transformer.GPTMini.Semantics.RecallQKV
 import Transformer.GPTMini.Semantics.RecallHeadValues
 import Transformer.GPTMini.Semantics.RecallRawHeads
 import Transformer.GPTMini.Semantics.RecallRawCopy
+import Transformer.GPTMini.Semantics.RecallMarkerWeights
+import Transformer.GPTMini.Semantics.RecallRawMarker
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -40,36 +42,38 @@ projection. Its full hidden state is connected to the real decoder FFN,
 and exact pre-FFN prompt/answer formulas are proved for all raw bit words.
 Uniform finite weights give strict label/EOS margins through final RMSNorm.
 The actual checked List Int function solves every legal parity prefix in
-both modes and freely generates label then EOS in two calls. Ordered-prefix
-and recall-pair encoders remain separate obligations.
+both modes and freely generates label then EOS in two calls. Complete
+gated recall and ordered-prefix depth encoders remain separate obligations.
 
 An explicit pair of the original 16-dimensional RoPE gives a derived
 positive predecessor score gap across all Basis context lengths. The
 actual finite softmax/XSA approximately copies that neighbor when the
-projected self-value is zero. Realizing its QKV from simultaneous raw
-embeddings, excluding post-table false writes and selecting the latest
+projected self-value is zero. The compact raw projection below realizes
+its QKV; excluding post-table false writes and selecting the latest
 matching record remain separate recall obligations.
 
 A compact four-digit code distinguishes all 256 recall symbols with eight
 coordinates. Placed in four actual slow RoPE pairs, it has exact norm two,
 derived QKNorm scores and a content gap of exp(alpha)/50 at context 64.
 Among equal keys its actual rotary score strictly prefers the latest
-visible record. These are simultaneous geometric properties; the raw
-embedding/QKV/table-gating encoder and complete recall readout still need
-their own proof.
+visible record. These are simultaneous geometric properties; full table
+gating and complete recall readout still need their own proof.
 
 Simultaneous compact raw key/value codes now occupy disjoint ordinary
 embedding slots, with protected constant/type coordinates. All 548 entries
 have derived norm squared six and a shared actual RMS multiplier. Exact
 linear readback and zero cross-channels are proved; copy, position and
-gated-key channels are initially zero. The actual fused QKV/BOS head and
-table gate remain the next encoder obligations.
+gated-key channels are initially zero. These raw coordinates feed the
+actual fused QKV/BOS head.
 
 The actual fused QKV and nonzero W_o now realize predecessor and marker
 heads simultaneously. Every raw adjacent key/value pair has a derived
 finite-softmax/XSA copy error in the true first attention residual;
-its own raw value and query codes are retained. The exact causal BOS
-marker, FFN table gate and robust latest-write retrieval/readout remain.
+its own raw value and query codes are retained. At every later position
+the actual simultaneous marker head and residual contain exactly
+1/(i+1), derived from raw BOS/alphabet IDs and the genuine causal mask,
+even with future array entries. The FFN table gate and robust latest-write
+retrieval/readout remain.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout

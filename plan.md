@@ -117,6 +117,16 @@ that copy alongside the unchanged raw value and query codes. Its gap and
 value bound are derived, not assumed. Exact causal BOS mass, the actual
 FFN table gate and robust second-block latest-write/readout remain.
 
+RecallMarkerWeights/RawMarker now derive the exact causal denominator
+i+1 and the marker value 1/(i+1) at every later raw position, including
+intermediate positions in arrays containing future tokens. The actual
+first-head pair and marker run simultaneously; coordinate 26 in the true
+attention residual contains that exact mass. Only raw BOS/alphabet IDs
+are premises, not a prepared marker or an external position input. Across
+the original recall context its value lies in [1/64, 1/2] and strictly
+decreases with the position. Next realize a fixed table threshold in the
+actual ReLU2 FFN and prove exclusion of post-table false writes.
+
 Next construct the simultaneous raw adjacency/table-gating/last-write encoder
 and depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
@@ -207,3 +217,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-06 | 1 | Positional copy committed in 10a2c36. Proved compact collision-free 256-symbol codes, all actual low frequencies, normalized content score gap and strict latest-equal-key preference in the original head. | Simultaneous raw embedding/QKV/table gate and finite-copy robustness; full recall readout and depth construction. |
 | 2026-10-06 | 1 | Compact geometry committed in a7d5e0f. Realized all raw key/value/type channels in the original embedding table, derived uniform true RMS scaling and proved exact disjoint projections and initially empty encoder channels. | Fused original QKV, simultaneous predecessor/BOS heads, actual table gate, robust latest-write retrieval/readout; full depth construction. |
 | 2026-10-06 | 1 | Raw embedding committed in 298d784. Realized simultaneous original QKV/head merge/W_o and derived actual raw adjacency binding error in the first attention residual, preserving value and query codes. | Exact causal BOS marker, actual ReLU2 table gate, finite-copy/latest-write robustness and full recall readout; full depth and convex candidate remain. |
+| 2026-10-07 | 1 | Actual raw binding committed in 9b448ed. Derived exact causal BOS mass at every later raw position and transported it into the true original attention residual; proved context bounds and strict position ordering. | Actual ReLU2 table gate and raw-prefix parser integration, robust second-block retrieval/readout, full depth correctness, then convex architecture search. |
