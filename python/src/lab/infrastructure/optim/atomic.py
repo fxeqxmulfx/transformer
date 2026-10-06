@@ -1,8 +1,9 @@
 """Column generation for the genuine sparsemax matching family.
 
 Source: matchingMixture_criterion_convex, matchingMixture_gap_certificate
-and matchingHeadPrice_minimum_exists at 83d985f. OrderPricing is an analytic
-global oracle only on the two formal contexts. SearchPricing uses a local
+and matchingHeadPrice_minimum_exists at 83d985f. OrderPricing and BindingPricing
+are analytic global oracles only on their two formal contexts. Paired heads
+use pairedMixture_criterion_convex and pairedBinding_fit. SearchPricing uses a local
 Q/K optimizer, and never reports its found price as a global lower bound.
 Values are optimized in their original table, not recovered by an inverse.
 """
@@ -11,7 +12,7 @@ from itertools import combinations
 
 import torch
 
-from ...domain.atomic import OrderPricing
+from ...domain.atomic import BindingPricing, OrderPricing
 from ..nn.atomic import MatchingHead
 
 
@@ -34,8 +35,17 @@ def order_price(gradient, final_tokens, reference):
     return MatchingHead(q, k, values)
 
 
+def binding_price(gradient, written_values, reference):
+    """Select the original value following key one; attain the full box price bound."""
+    q, k, values = (torch.zeros_like(t[0]) for t in (reference.q, reference.k, reference.values))
+    channel = q.shape[-1] // 2
+    q[1, channel] = k[1, channel] = 1
+    values[written_values, 0] = -gradient.flatten().sign().to(values.dtype)
+    return MatchingHead(q, k, values, forward_map=reference.forward_map)
+
+
 def simplex_squared_fit(columns, targets):
-    """Solve the order example's <=3-column convex QP, including singular faces."""
+    """Solve either scalar example's <=3-column convex QP, including singular faces."""
     size = len(columns)
     matrix, target = columns.flatten(1).T.double(), targets.flatten().double()
     best_loss, best = float("inf"), None
@@ -57,7 +67,7 @@ def simplex_squared_fit(columns, targets):
             if loss < best_loss:
                 best_loss, best = loss, mass
     if best is None:
-        raise ArithmeticError("No feasible face in the order simplex QP")
+        raise ArithmeticError("No feasible face in the scalar simplex QP")
     return best.to(columns.dtype)
 
 
@@ -97,6 +107,8 @@ class AtomicColumns:
         if isinstance(self.spec.pricing, OrderPricing):
             tokens = self.task.tokens[batch][:, -1]
             return order_price(gradient, tokens, self.model)
+        if isinstance(self.spec.pricing, BindingPricing):
+            return binding_price(gradient, self.task.tokens[batch][:, 2], self.model)
         return self.search_price(gradient, batch)
 
     def search_price(self, gradient, batch):
@@ -106,7 +118,7 @@ class AtomicColumns:
             scale = min(cap, 0.25) if restart % 2 == 0 else cap
             tables = [(torch.rand(t[0].shape, generator=self.generator, dtype=t.dtype) * 2 - 1)
                       .to(t.device) * scale for t in (model.q, model.k)]
-            head = MatchingHead(*tables, torch.zeros_like(model.values[0]))
+            head = MatchingHead(*tables, torch.zeros_like(model.values[0]), forward_map=model.forward_map)
             optimizer = torch.optim.Adam((head.q, head.k), lr=spec.lr)
             for step in range(spec.steps + 1):
                 # The price is linear in original values at every fixed Q/K.
@@ -121,7 +133,8 @@ class AtomicColumns:
                 self.search_evaluations += 2
                 if float(price.detach()) < best_price:
                     best_price = float(price.detach())
-                    best = MatchingHead(head.q.detach(), head.k.detach(), head.values.detach())
+                    best = MatchingHead(head.q.detach(), head.k.detach(), head.values.detach(),
+                                        forward_map=model.forward_map)
                 if step < spec.steps:
                     price.backward()
                     optimizer.step()
@@ -133,13 +146,14 @@ class AtomicColumns:
     @torch.no_grad()
     def columns(self, batch):
         model = self.model
-        return torch.stack([self.response(MatchingHead(model.q[i], model.k[i], model.values[i]), batch)
+        return torch.stack([self.response(MatchingHead(model.q[i], model.k[i], model.values[i],
+                                                      forward_map=model.forward_map), batch)
                             for i in range(int(model.active))])
 
     def correct(self, batch, targets):
         columns = self.columns(batch)
         count = len(columns)
-        if isinstance(self.spec.pricing, OrderPricing):
+        if isinstance(self.spec.pricing, (OrderPricing, BindingPricing)):
             mass = simplex_squared_fit(columns, targets)
         else:
             mass = self.model.mass[:count].detach().clone()
@@ -186,9 +200,12 @@ class AtomicColumns:
         pairing = float((after_output * after_gradient).sum())
         # All genuine heads have each output in [-cap, cap], regardless of Q/K.
         lower = -model.spec.cap * float(after_gradient.abs().sum())
-        exact = isinstance(self.spec.pricing, OrderPricing)
+        exact = isinstance(self.spec.pricing, (OrderPricing, BindingPricing))
         if exact:
-            final_head = order_price(after_gradient, self.task.tokens[batch][:, -1], model)
+            if isinstance(self.spec.pricing, OrderPricing):
+                final_head = order_price(after_gradient, self.task.tokens[batch][:, -1], model)
+            else:
+                final_head = binding_price(after_gradient, self.task.tokens[batch][:, 2], model)
             with torch.no_grad():
                 lower = float((after_gradient * self.response(final_head, batch)).sum())
         self.updates += 1

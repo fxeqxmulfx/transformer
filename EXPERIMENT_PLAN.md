@@ -2295,6 +2295,52 @@ continuation. Lean sources are unchanged from the checked attainment commit.
 The user immediately authorized trying to repair the binding encoder; that
 follow-up must retain these baseline results and convex mixture training.
 
+## Preserve key/value binding in convex matching
+
+**Encoder repair and experiment completed on 2026-10-06 UTC; full Basis
+training remains unsolved.** Explicitly authorized by the user. The content-only
+recall witness exchanges two written values while preserving the visible
+multiset and query. Every old physical head and mixture is invariant to that
+exchange. This is an encoder obstruction separate from sparsemax plateaus.
+
+[convex_binding](experiments/convex_binding) introduces `PairedMatching`:
+current-token queries and original values, with current-token and predecessor
+roles in two freely learned key halves. No pair dictionary, route labels or
+fixed head bank is supplied. Commit `4ef16e5` proves the actual causal forward,
+box bounds, continuity, convex mixture criterion, attained head pricing,
+the old sharp error floor and its repaired original-value witness. Compact
+four-channel integer key codes give one-head exact recall with total width
+eight and cap four under a unique matching-predecessor premise.
+Commit `a155424` also proves that any feasible mixture fitting the swapped
+answer labels contains an actual head that distinguishes those bindings.
+
+All 18 runs finished. The four paired exact and four paired numerical scalar
+runs reach squared error below `1.5e-29`; both four-seed content controls
+remain at the sharp floor `0.5`. On easy Basis, both width-eight models
+finish 512 outer updates and 266,240 physical pricing forwards. Their test
+token accuracies are 0.415% (content) and 0.732% (paired), with zero sequence
+accuracy and identical logits on the binding-swap witness in both cases.
+A separately constructed feasible head at the same width and cap attains
+100% on both held-out splits; it is not used in learning or pricing.
+
+The archived ordinary softmax GPTMini reaches the 99% validation sequence
+criterion in 1,650–2,450 AdamW updates and 207–287 CPU seconds over three
+seeds, against 1,622/1,843 CUDA seconds for the column models. Split hashes
+match exactly. At update 500 it still has zero sequence accuracy, with
+11.06–11.72% validation token accuracy. Architectures differ and equal
+FLOPs have not been measured. Detailed results and qualifications are in
+[the experiment report](experiments/convex_binding/README.md).
+
+Validation passes: 196 Python tests, all 18 experiment definitions, and
+unchanged lab-source hashes for every run. Lean passes the full build,
+audit, index and forbidden checks with 157 existing `sorry`, zero rests,
+zero extra axioms, zero vacuous claims and zero placeholders.
+
+The structural encoder obstruction is removed; numerical pricing and
+fresh-batch correction still require investigation before claiming a
+trained convex Basis model. Keep all prior baseline results. ANSR remains
+stopped by the user's request.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be

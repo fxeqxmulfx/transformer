@@ -53,6 +53,26 @@ class AtomicMatching(Model):
 
 
 @dataclass(frozen=True)
+class PairedMatching(AtomicMatching):
+    """Encode current and preceding tokens in separate learned key channels.
+
+    Source: pairedHeadLift and pairedHeadOutput in
+    src/Transformer/GPTMini/Sparsemax/PairedMatchingHead.lean, a new causal
+    encoder for the genuine atomic family following Appendix A.4 of
+    arXiv:2211.11052v1. The first half of K comes from the current token;
+    the second comes from its preceding token (itself at position zero).
+    Q and original values use the current token. All Q/K/value coordinates
+    remain freely learned. The model stores token tables, not a V-squared
+    pair dictionary. `width` counts both halves, so it must be even.
+    Floating point, finite storage and approximate pricing are deviations.
+    """
+
+    def check(self):
+        super().check()
+        require(self.width % 2 == 0, "PairedMatching needs an even width for current and preceding keys")
+
+
+@dataclass(frozen=True)
 class MatchingOrders(Benchmark):
     """The two actual order contexts [0,1] and [1,0], observed at row one.
 
@@ -82,6 +102,25 @@ class MatchingOrders(Benchmark):
 
 
 @dataclass(frozen=True)
+class MatchingBindings(MatchingOrders):
+    """Two valid key/value assignments with the same query and visible multiset.
+
+    Source: pairedBindingTokens and pairedBinding_fit in
+    src/Transformer/GPTMini/Sparsemax/PairedMatchingWitness.lean. Contexts
+    [0,1,3,2,4,1] and [0,1,4,2,3,1] ask key one's value, encoded by the
+    independent scalar values of tokens three and four. Answer targets are
+    (0,1), with no supplied route labels. The content-only model's optimum
+    squared-error sum is 1/2; a paired head attains zero. Both splits contain
+    the same two observations; this is a finite structural check.
+    """
+    targets: tuple[float, float] = (0.0, 1.0)
+
+    @property
+    def context(self):
+        return 6
+
+
+@dataclass(frozen=True)
 class Pricing(Spec, kind=True):
     """How a new physical head minimizes the supporting output functional."""
 
@@ -94,6 +133,18 @@ class OrderPricing(Pricing):
     Eq. (1) of arXiv:1602.02068v2. K=(-1/2,1/2), values=(-1,1) and
     Q=(-sign(g1),-sign(g0)) attain the universal lower bound -sum(abs(g)).
     This analytic oracle is specific to these two observations, not Basis.
+    """
+
+
+@dataclass(frozen=True)
+class BindingPricing(Pricing):
+    """Exact global price on MatchingBindings with scalar cap-one paired heads.
+
+    Source: pairedBinding_scores and pairedBinding_fit. Q/K's preceding
+    channel selects the value immediately after key one. Original values
+    for tokens three/four take -sign(g0)/-sign(g1), attaining the universal
+    price lower bound -sum(abs(g)). This oracle is specific to these two
+    observations; numerical pricing and Basis do not use it.
     """
 
 
@@ -121,8 +172,9 @@ class AtomicColumns(Optimizer):
     """Generate physical atoms, then minimize the convex active-weight problem.
 
     Source: matchingMixture_criterion_convex and matchingMixture_gap_certificate
-    at 5d91bc4. The order example solves its small simplex QP by active-set
-    enumeration. Other criteria use projected weights and line search.
+    at 5d91bc4; paired mixtures use pairedMixture_criterion_convex. The two
+    scalar examples solve their small simplex QPs by active-set enumeration.
+    Other criteria use projected weights and line search.
     Finite corrective steps, storage capacity and floating-point errors are
     deviations from an ideal infinite-family convex solver. With SearchPricing
     the found-head gap is not a global certificate; the separate output-box

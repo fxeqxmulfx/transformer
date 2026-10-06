@@ -6,7 +6,8 @@
 """
 
 from .domain.basis import basis
-from .domain.atomic import AtomicColumns, AtomicMatching, MatchingOrders, OrderPricing, SearchPricing
+from .domain.atomic import (AtomicColumns, AtomicMatching, BindingPricing, MatchingBindings,
+                           MatchingOrders, OrderPricing, PairedMatching, SearchPricing)
 from .domain.benchmarks import ModularDivision, TinyShakespeare
 from .domain.experiment import Experiment, grid
 from .domain.generative import (Addition, BooleanAnd, Copy, Count, DoubleHistogram, Histogram, Mode, MostFrequent,
@@ -27,19 +28,19 @@ from .domain.training import (AttentionDiagnostics, Budget, Checkpoint, Compiled
 
 __all__ = [
     # model
-    "Transformer", "AtomicMatching", "Block", "Attention", "FFN", "XSA",
+    "Transformer", "AtomicMatching", "PairedMatching", "Block", "Attention", "FFN", "XSA",
     "RMSNorm", "LayerNorm", "PreNorm", "PostNorm",
     "RoPE", "Sinusoidal", "NoPositions",
     "FusedQKV", "PerHeadQKV", "ScaledDot", "LearnedScaledDot", "QKNorm", "Softmax", "Sparsemax", "SurrogateWeights",
     "ReLU", "ReLU2", "GELU", "Tied", "Untied", "TorchDefault", "Normal", "ScaledResidual",
     # benchmarks
-    "ModularDivision", "TinyShakespeare", "Synthetic", "Memorization", "MatchingOrders",
+    "ModularDivision", "TinyShakespeare", "Synthetic", "Memorization", "MatchingOrders", "MatchingBindings",
     # synthetic tasks
     "MQAR", "Lookup", "Dyck", "AlternatingBlocks", "TypedDyck", "CRASP",
     "Histogram", "DoubleHistogram", "Mode", "MostFrequent", "Copy", "Reverse", "Sort", "Count", "Addition",
     "Parity", "BooleanAnd", "RandomLM",
     # optimizers
-    "ANSR", "AtomicColumns", "OrderPricing", "SearchPricing", "SGD", "AdamW", "AMSGradW", "Adam", "AdamX", "AdaGrad", "AdamNC", "RMSProp", "Muon", "Guarded", "Magma", "Clipped",
+    "ANSR", "AtomicColumns", "OrderPricing", "BindingPricing", "SearchPricing", "SGD", "AdamW", "AMSGradW", "Adam", "AdamX", "AdaGrad", "AdamNC", "RMSProp", "Muon", "Guarded", "Magma", "Clipped",
     "Dash", "NewtonDB", "CoupledNewton", "EVD", "Chebyshev", "AdaFisher", "AMSGradMD",
     "Constant", "Inverse", "InverseSqrt", "Geometric",
     # training

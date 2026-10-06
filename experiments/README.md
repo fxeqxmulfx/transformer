@@ -15,6 +15,7 @@ it, which git ignores.
 | [`basis_qknorm`](basis_qknorm) | 150 | Does sparsemax need query/key L2 normalization when its learned head gain and starting score dispersion are controlled? |
 | [`basis_ansr`](basis_ansr) | 9 | Does ANSR train the unchanged softmax GPTMini on Basis depth, recall and parity, and how does low p_self compare with high p_self and AdamW? |
 | [`convex_atomic`](convex_atomic) | 38 | Does answer-only convex atomic sparsemax training escape uniform and saturated error floors, attain its positive-error minimum and transfer to Basis with generated physical heads? |
+| [`convex_binding`](convex_binding) | 18 | Does a factorized neighboring-token key encoder remove recall's binding obstruction while retaining convex atomic training and free original values? |
 | [`mod97_grokking`](mod97_grokking) | 12 | Do the openai/grok transformer and GPTMini generalize x / y mod 97 long after fitting it? |
 | [`mod97_stability`](mod97_stability) | 6 | Once GPTMini generalizes x / y mod 97, does it stay generalized, under AdamW and raw AMSGradW? |
 | [`mod193_stability`](mod193_stability) | 7 | Mod 193 under AdamW: archived normalizer/schedule recipes and fresh sparsemax starting-scale confirmation |

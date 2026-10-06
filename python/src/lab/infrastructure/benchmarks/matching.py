@@ -1,13 +1,15 @@
-"""Numerical answer-only check of the Lean order-sensitive physical head.
+"""Numerical answer-only checks of the Lean order and binding heads.
 
 Source: matchingOrderTokens, matchingOrderTarget and
 matchingOrderError_uniform_lower at 5d91bc4. No route labels are supplied.
-All splits refer to the same two formal observations. Loss is a sum, not
-mean, so its scale agrees exactly with the Lean error 1/8.
+MatchingBindings uses pairedBindingTokens and pairedBinding_fit in the
+new PairedMatchingWitness.lean. All splits refer to the same two formal
+observations of their task. Loss is a sum, not mean, agreeing with Lean.
 """
 
 import torch
 
+from ...domain.atomic import MatchingBindings
 from ..nn.sparsemax import causal_sparsemax
 from .samplers import EpochSampler
 
@@ -18,7 +20,9 @@ class MatchingTask:
 
     def __init__(self, spec, data_seed, device):
         self.spec, self.device = spec, device
-        self.tokens = torch.tensor([[0, 1], [1, 0]], device=device)
+        self.vocab = 5 if isinstance(spec, MatchingBindings) else 2
+        tokens = [[0, 1, 3, 2, 4, 1], [0, 1, 4, 2, 3, 1]] if isinstance(spec, MatchingBindings) else [[0, 1], [1, 0]]
+        self.tokens = torch.tensor(tokens, device=device)
         self.targets = torch.tensor(spec.targets, dtype=torch.float64, device=device).reshape(2, 1, 1)
         rows = torch.arange(2, device=device)
         self.splits = {"train": rows, "validation": rows}
@@ -30,7 +34,7 @@ class MatchingTask:
         return indices.to(self.device)
 
     def forward(self, model, batch, supervised=False):
-        rows = torch.ones(len(batch), 1, dtype=torch.long, device=self.device)
+        rows = torch.full((len(batch), 1), self.spec.context - 1, dtype=torch.long, device=self.device)
         return model(self.tokens[batch], rows), self.targets[batch]
 
     @staticmethod
@@ -60,8 +64,8 @@ class MatchingTask:
             count = int(model.active)
             supports = []
             for i in range(count):
-                q, k = model.q[i][self.tokens], model.k[i][self.tokens]
-                supports.append((causal_sparsemax(q @ k.transpose(-1, -2))[:, 1] > 0).tolist())
+                scores = model.score_map(model.q[i], model.k[i], self.tokens)
+                supports.append((causal_sparsemax(scores)[:, -1] > 0).tolist())
             return {"atomic": {**model.inspect(), "predictions": prediction.flatten().tolist(),
                                "targets": targets.flatten().tolist(), "head_supports": supports,
                                "q": model.q[:count].tolist(), "k": model.k[:count].tolist(),

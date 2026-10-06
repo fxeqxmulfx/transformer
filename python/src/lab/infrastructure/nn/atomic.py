@@ -3,18 +3,43 @@
 Source: matchingHeadScores, matchingHeadOutput and matchingMixtureSample
 at 83d985f. The only numerical deviations are floating-point arithmetic and
 finite atom storage. Selecting readout rows skips only unused value products.
+PairedMatching implements pairedHeadLift/pairedHeadOutput using factorized
+current/preceding token lookups rather than allocating the expanded pair
+vocabulary in PairedMatchingHead.lean; its numerical forward is the same.
 """
 
 import torch
 from torch import nn
 
+from ...domain.atomic import PairedMatching
 from .sparsemax import causal_sparsemax
 
 
 def head_forward(q, k, values, tokens, readout_positions=None):
     """One shared physical Q/K/value table; no inverse, normalizer or surrogate."""
-    queries, keys = q[tokens], k[tokens]
-    weights = causal_sparsemax(queries @ keys.transpose(-1, -2)).to(values.dtype)
+    return _response(head_scores(q, k, tokens), values, tokens, readout_positions)
+
+
+def head_scores(q, k, tokens):
+    return q[tokens] @ k[tokens].transpose(-1, -2)
+
+
+def paired_head_forward(q, k, values, tokens, readout_positions=None):
+    """pairedHeadOutput: factorized current/preceding key roles, independent original values."""
+    return _response(paired_head_scores(q, k, tokens), values, tokens, readout_positions)
+
+
+def paired_head_scores(q, k, tokens):
+    if q.shape[-1] % 2:
+        raise ValueError("Paired matching needs an even Q/K width")
+    half = q.shape[-1] // 2
+    preceding = torch.cat((tokens[:, :1], tokens[:, :-1]), dim=1)
+    keys = torch.cat((k[tokens][..., :half], k[preceding][..., half:]), dim=-1)
+    return q[tokens] @ keys.transpose(-1, -2)
+
+
+def _response(scores, values, tokens, readout_positions):
+    weights = causal_sparsemax(scores).to(values.dtype)
     if readout_positions is not None:
         weights = weights.gather(1, readout_positions.unsqueeze(-1).expand(-1, -1, tokens.shape[1]))
     return weights @ values[tokens]
@@ -23,12 +48,13 @@ def head_forward(q, k, values, tokens, readout_positions=None):
 class MatchingHead(nn.Module):
     """A freely searched atom, with original independently stored values."""
 
-    def __init__(self, q, k, values):
+    def __init__(self, q, k, values, forward_map=head_forward):
         super().__init__()
         self.q, self.k, self.values = (nn.Parameter(t.clone()) for t in (q, k, values))
+        self.forward_map = forward_map
 
     def forward(self, tokens, readout_positions=None):
-        return head_forward(self.q, self.k, self.values, tokens, readout_positions)
+        return self.forward_map(self.q, self.k, self.values, tokens, readout_positions)
 
 
 class AtomicMatching(nn.Module):
@@ -37,6 +63,8 @@ class AtomicMatching(nn.Module):
     def __init__(self, spec, vocab):
         super().__init__()
         self.spec = spec
+        self.forward_map = paired_head_forward if isinstance(spec, PairedMatching) else head_forward
+        self.score_map = paired_head_scores if isinstance(spec, PairedMatching) else head_scores
         channels = vocab if spec.channels is None else spec.channels
         dtype = getattr(torch, spec.precision)
         self.q = nn.Parameter(torch.zeros(spec.heads, vocab, spec.width, dtype=dtype))
@@ -54,7 +82,7 @@ class AtomicMatching(nn.Module):
     def forward(self, tokens, readout_positions=None):
         result = None
         for index in range(int(self.active)):
-            response = head_forward(self.q[index], self.k[index], self.values[index], tokens, readout_positions)
+            response = self.forward_map(self.q[index], self.k[index], self.values[index], tokens, readout_positions)
             weighted = self.mass[index] * response
             result = weighted if result is None else result + weighted
         return result

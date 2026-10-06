@@ -21,7 +21,7 @@ the best model; `analyze` summarizes the history of observations.
 """
 
 from ...domain.benchmarks import ModularDivision, TinyShakespeare
-from ...domain.atomic import MatchingOrders
+from ...domain.atomic import MatchingBindings, MatchingOrders
 from ...domain.synthetic import Synthetic
 from .modular import ModularTask
 from .matching import MatchingTask
@@ -29,7 +29,7 @@ from .synthetic.training import SyntheticTask
 from .text import TextTask
 
 TASKS = {ModularDivision: ModularTask, TinyShakespeare: TextTask, Synthetic: SyntheticTask,
-         MatchingOrders: MatchingTask}
+         MatchingOrders: MatchingTask, MatchingBindings: MatchingTask}
 
 
 def build_task(spec, data_seed, device):

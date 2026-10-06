@@ -11,7 +11,8 @@ import re
 
 from .benchmarks import Benchmark, ModularDivision
 from .model import Model
-from .atomic import AtomicColumns, AtomicMatching, MatchingOrders, OrderPricing
+from .atomic import (AtomicColumns, AtomicMatching, BindingPricing, MatchingBindings,
+                     MatchingOrders, OrderPricing, PairedMatching)
 from .optimizers import ANSR, EVD, AdamW, Clipped, Optimizer
 from .spec import Spec, describe, require, require_kind, swap, walk
 from .stopping import Solved, Stopping
@@ -66,12 +67,17 @@ class Experiment(Spec):
             require(self.schedule == Schedule(), "AtomicColumns has no outer learning-rate schedule")
             require(not self.diagnostics.gradients, "AtomicColumns does not update raw model gradients")
             if isinstance(self.optimizer.pricing, OrderPricing):
-                require(isinstance(self.benchmark, MatchingOrders), "OrderPricing needs MatchingOrders")
+                require(type(self.benchmark) is MatchingOrders, "OrderPricing needs MatchingOrders")
                 require(self.model.width == 1 and self.model.cap == 1 and self.model.channels == 1,
                         "OrderPricing requires scalar heads with cap one")
-                require(self.budget.batch == 2, "OrderPricing needs both observations in every update")
-                require(self.model.heads <= 3, "The exact order QP uses at most three heads")
-                require(self.execution.device == "cpu", "The exact order QP runs on the CPU")
+            if isinstance(self.optimizer.pricing, BindingPricing):
+                require(isinstance(self.benchmark, MatchingBindings), "BindingPricing needs MatchingBindings")
+                require(isinstance(self.model, PairedMatching) and self.model.cap == 1 and self.model.channels == 1,
+                        "BindingPricing requires scalar paired heads with cap one")
+            if isinstance(self.optimizer.pricing, (OrderPricing, BindingPricing)):
+                require(self.budget.batch == 2, "Exact scalar pricing needs both observations in every update")
+                require(self.model.heads <= 3, "The exact scalar QP uses at most three heads")
+                require(self.execution.device == "cpu", "The exact scalar QP runs on the CPU")
         if isinstance(self.benchmark, MatchingOrders):
             require(isinstance(self.model, AtomicMatching) and self.model.channels == 1,
                     "MatchingOrders requires scalar AtomicMatching outputs")
