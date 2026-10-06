@@ -17,6 +17,7 @@ import Transformer.GPTMini.Semantics.RecallRawGate
 import Transformer.GPTMini.Semantics.RecallRawBinding
 import Transformer.GPTMini.Semantics.RecallRotaryInsert
 import Transformer.GPTMini.Semantics.RecallSaturation
+import Transformer.GPTMini.Semantics.RecallStateBounds
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -113,6 +114,13 @@ The lower base norm is derived from the norm-two reference and copy
 distance. Actual raw-state bounds must still discharge clipping for a
 finite shared second projection gain; these are operator laws rather
 than an assumed saturated encoder or a complete recall solver.
+
+Uniform genuine raw-state bounds now give pre-FFN norm in [1,9] and
+its actual RMS multiplier in [1/2,8] for epsilon in [0,1]. The lower
+norm follows from the protected constant, and the upper norm from
+both simultaneous true heads and W_o. The complete first block also
+has norm at least one and a positive next-prenorm multiplier at most
+eight. A full-block upper bound and sufficient shared QKV gain remain.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
