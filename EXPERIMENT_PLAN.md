@@ -1344,6 +1344,47 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 extra axioms, results resting on a `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Sparse nearest observations and conditional unseen guarantees
+
+**Done on 2026-10-06 UTC.** Three modules add twenty-one proved theorems
+without new `sorry`. The nearest variant uses the same variable learned
+memory and globally decoded shared values as the kernel construction.
+
+[NearestPrototypeCodes.lean](src/Transformer/GPTMini/Sparsemax/NearestPrototypeCodes.lean)
+selects a minimum-distance registered observation, independently of targets.
+Its data code has one active slot. Nonnegative separating distances, zero
+self-distance and distinct prototypes imply identity training codes. Actual
+query attention is the selected learned memory row; this does not yet bound
+the sparsity of that memory row.
+
+[PrefixNearestCodes.lean](src/Transformer/GPTMini/Sparsemax/PrefixNearestCodes.lean)
+uses Hamming distance between masked causal prefix signatures. Distance is
+nonnegative, symmetric, separating and satisfies the triangle inequality.
+Future changes in queries or prototype records leave codes unchanged.
+Distinct registered prefixes have identity codes, so arbitrary consistent
+prototype targets remain attainable with the existing common-value decoder.
+
+[NearestMemoryGeneralization.lean](src/Transformer/GPTMini/Sparsemax/NearestMemoryGeneralization.lean)
+proves the actual forward selects the corresponding global output row.
+Prototype fitting error at most `epsilon`, a target Lipschitz constant `L`
+and data coverage radius `delta` imply unseen coordinate error at most
+`epsilon + L * delta`. These are explicit assumptions with nonconstant,
+unseen-query examples, not consequences of interpolation or Shakespeare
+claims. Two target functions agree on both registered observations and
+disagree at the third; every prediction has error at least one half for one
+of these indistinguishable targets there.
+
+The result removes dense data codes and replaces the absence of any unseen
+bound by a conditional one. Gram parameter count, actual attention sparsity
+and output-only Gram nonidentifiability remain to address. Prototype selection
+and distance stay fixed data choices. FFN, task-loss selection and new
+training remain deferred; the completed experiment cycle is unchanged.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass; the modules have no warnings, new `sorry`, extra
+axioms, results resting on a `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be

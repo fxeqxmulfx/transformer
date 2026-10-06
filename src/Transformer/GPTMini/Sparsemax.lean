@@ -72,6 +72,9 @@ import Transformer.GPTMini.Sparsemax.PrototypeKernelFeatures
 import Transformer.GPTMini.Sparsemax.PrototypeKernelTraining
 import Transformer.GPTMini.Sparsemax.PrototypePrefixMemory
 import Transformer.GPTMini.Sparsemax.PrototypeKernelGeometry
+import Transformer.GPTMini.Sparsemax.NearestPrototypeCodes
+import Transformer.GPTMini.Sparsemax.PrefixNearestCodes
+import Transformer.GPTMini.Sparsemax.NearestMemoryGeneralization
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -82,20 +85,18 @@ import Transformer.GPTMini.Sparsemax.Certificate.Results
 /-!
 # Sparsemax training boundaries and measured prediction certificates
 
-Real-valued saturation of the repository's causal projection, motivated by
-arXiv:2211.11052v1, §3.1. Convex row inference does not make every outer
-training gradient useful. The finite experimental certificate is separate
-from a proof of floating-point PyTorch execution.
+Real-valued causal saturation is motivated by arXiv:2211.11052v1, §3.1.
+Convex row inference does not make every outer training gradient useful.
+The finite certificate is separate from floating-point PyTorch correctness.
 
-arXiv:1602.02068v2, §2.2, Proposition 1 certifies the clipped-threshold
-formula, the one-unit support window and full-support relative uniformity.
-The XSA combination, arXiv:2603.09078v1, §2, is locally zero on a strict
-self route above epsilon; a below-epsilon counterexample records why
-that norm hypothesis is required by the implementation.
+arXiv:1602.02068v2, §2.2, Proposition 1 certifies the clipped threshold,
+one-unit support window and full-support relative uniformity. The XSA
+combination, arXiv:2603.09078v1, §2, is locally zero on a strict self route
+above epsilon; a below-epsilon counterexample requires the norm hypothesis.
 
-arXiv:1602.02068v2, §3.2–§3.3, supplies a score loss with a corrective
-derivative on a wrong saturated route when its target position is given.
-That supervised row result does not guarantee learning latent attention.
+arXiv:1602.02068v2, §3.2–§3.3, supplies a corrective score-loss derivative
+on a wrong saturated route with its target position given. This supervised
+row result does not guarantee learning latent attention.
 
 Derived restrictions from §2.2 and §2.5 need no routing targets: a top-two
 gap below one, or a persistent QKNorm gain below one half, ensures two
@@ -105,13 +106,12 @@ loss receives it only when its derivative distinguishes that pair. A
 bounded-score counterexample retains a positive flat output loss with
 two active positions, recording the limit of the score restriction.
 
-A full span of active value differences prevents cancellation of a nonzero
-output derivative. Two distinct active scalar values suffice for wrong
-squared-error outputs. A separated assignment reaches zero error by bounded
-sparse transfer, while collapsed values fail the span premise. Translated,
-scaled basis anchors enforce the span in any finite output dimension through
-independent bounded active scores, retaining arbitrary ordinary values and
-exact inactive zeros. These are restricted row architectures.
+Spanning active value differences prevents cancellation of a nonzero output
+derivative; two distinct scalar values suffice for wrong squared-error outputs.
+A separated assignment fits by bounded sparse transfer; collapsed values fail
+the span premise. Translated, scaled basis anchors enforce the span in any
+finite dimension using independent bounded active scores, retaining ordinary
+values and exact inactive zeros. These are restricted row architectures.
 
 The differentiable anchor chart realizes exact active-pair transfers at
 support boundaries. A unit-key chart implements them through actual QKNorm.
@@ -175,26 +175,26 @@ remain convex. Repeated-token prefix codes and a three-context witness are
 proved. This is memory attention with fixed data codes; ordinary token
 self-attention is changed, and output-only training leaves the Gram free.
 
-The frequency-code three-target obstruction is removed by richer data
-features. Six shared position/token slots give a proved right inverse for
-the same three prefixes, permitting arbitrary vector outputs and the
-previously excluded triple `(0,0,1)`. Complete causal signatures realize
-exactly all observation-consistent target tables for a finite window.
-Identical visible prefixes must share outputs; different prefixes impose
-no extra restriction. Both constructions retain the convex joint chart
-for every feasible learned Gram. Full signatures cost `(V+1)^T` slots.
+Richer features remove the frequency-code three-target obstruction. Six
+position/token slots give a right inverse for the same prefixes, permitting
+arbitrary vector outputs and the excluded triple `(0,0,1)`. Complete causal
+signatures fit exactly all observation-consistent finite-window targets.
+Both retain the convex chart for every feasible Gram; identical prefixes
+must share outputs. Full signatures cost `(V+1)^T` slots.
 
-A compact kernel construction registers P distinct observed prefixes, with
-P learned memory slots. Its data kernel is identity plus a constant Gram
-and a squared-feature Gram, so normalized training codes have a proved
-right inverse. One common decoded value table fits arbitrary vector targets
-on these prototypes for every feasible learned Gram. Genuine learned Q/K
-embeddings need width at most 2P, without a nonconvex rank restriction.
-Actual forwards are causal normalized kernel sums, and any convex output
-criterion remains convex jointly. This affine chart requires at least R
-slots for R independent vector target rows; the construction attains that
-bound. Gram parameters still grow quadratically, actual query routes are
-dense, fixed data codes remain, and output-only training leaves the Gram
-undetermined. Finite interpolation does not prove text generalization or
-sample-independent compactness. FFN and task-loss selection stay open.
+A compact kernel registers P distinct observed prefixes and P memory slots.
+Its data kernel is identity plus constant and squared-feature Grams; training
+codes have a proved right inverse. One common value table fits arbitrary
+vector targets for every feasible learned Gram, with genuine Q/K width 2P.
+Actual forwards are causal kernel sums and convex output criteria remain
+convex jointly. This affine chart needs at least R slots for R independent
+vector target rows. Gram parameters grow quadratically and routes are dense.
+
+A nearest variant gives one-hot data codes and identity prototype codes in
+the same joint chart. Masked Hamming distance ignores future query and
+prototype tokens. Actual output error is at most epsilon plus L times cover
+radius under explicit fit, regularity and coverage hypotheses. Two targets
+agreeing on registered observations disprove unconditional unseen guarantees.
+Actual attention is a learned memory row without a sparsity bound; output-only
+fitting leaves the Gram free. FFN and task-loss choice stay open.
 -/
