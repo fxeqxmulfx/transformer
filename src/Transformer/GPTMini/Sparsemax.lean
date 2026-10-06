@@ -101,6 +101,11 @@ import Transformer.GPTMini.Sparsemax.PrefixObservedMemory
 import Transformer.GPTMini.Sparsemax.ObservedMemoryExamples
 import Transformer.GPTMini.Sparsemax.IncidentRegularizedMemory
 import Transformer.GPTMini.Sparsemax.IncidentMemoryDescent
+import Transformer.GPTMini.Sparsemax.EnergyCoupledMemory
+import Transformer.GPTMini.Sparsemax.EnergyMemoryExamples
+import Transformer.GPTMini.Sparsemax.EnergyMemoryValues
+import Transformer.GPTMini.Sparsemax.EnergyMemoryIdentification
+import Transformer.GPTMini.Sparsemax.EnergyMemoryLoss
 import Transformer.GPTMini.Sparsemax.Uniform
 import Transformer.GPTMini.Sparsemax.SelfRoute
 import Transformer.GPTMini.Sparsemax.Clipping
@@ -172,25 +177,24 @@ Shared values retain MZ outputs, arbitrary prototype fitting, conditional
 unseen bounds and convex joint criteria. Possible connections and same-family
 orthogonality are fixed. Width and prototype count grow; FFN is deferred.
 
-An additional complete-coordinate squared criterion is strictly convex and
-has one constrained minimum, even for an infeasible reference. Positive
-weight preserves joint convexity for convex output criteria. Every attained
-joint minimum selects the same Gram parameters, even at different outputs.
-The reference supplies information beyond the unidentified output-only loss.
-
 Separate incident-edge budgets enlarge the compact domain beyond its former
-global budget. Explicit nonnegative score-weighted outer products prove PSD
-without requiring the global identity coefficient to stay nonnegative.
-The same affine Gram, variable Q/K norms, actual three-route support, inverse,
-convex joint output criteria and conditional causal generalization survive.
-The enlarged compact domain also has a unique squared-criterion minimum.
+global budget. Nonnegative score-weighted outer products prove PSD without
+nonnegative global identity mass. Affine geometry, three-route support,
+inverse, variable Q/K norms and conditional unseen bounds survive.
 
 Adjacent observed distances and fixed separate feature energies now supply
-a concrete reference, without attention labels or a dense target Gram.
-Hidden text continuations leave selection and the actual pipeline unchanged.
-Data changes alter selected attention and both Q/K norms in proved examples.
-Positive extra curvature gives a finite midpoint gain away from selected
-geometry; criterion suboptimality bounds squared coordinate error. Attained
-output-coordinate minima and the proved projection give actual joint minima.
-Fixed metrics/features and conditional unseen regularity remain restrictions.
+a complete-coordinate squared reference with a unique constrained minimum.
+Positive weight preserves joint convexity; finite midpoint descent and a
+parameter-error bound hold. Prefix masking ignores hidden continuations.
+Data changes select different attention and Q/K norms. Output-only error
+still does not select geometry in that unrestricted common-value chart.
+
+A new affine block PSD constraint couples attention B to learned outputs Z.
+It is exactly an attention-weighted energy budget on original values B⁻¹Z.
+With a prescribed aggregate edge budget, ordinary output squared error
+remains jointly convex and selects opposite nonidentity attention supports
+for two three-slot answer patterns. Every minimum identifies attention;
+the wrong allocation leaves error at least 27/512 after relearning values.
+The constraint restricts attainable outputs and leaves Q/K norms free.
+This active-energy example is not a language-model guarantee or solver.
 -/

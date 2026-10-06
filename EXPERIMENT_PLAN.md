@@ -1637,6 +1637,70 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 extra axioms, results resting on `sorry`, vacuous statements or placeholders.
 Python is unchanged since the recorded passing 171-test run.
 
+## Ordinary output error selects attention through a convex value-energy coupling
+
+**Done on 2026-10-06 UTC.** Five modules add thirty-five proved theorems
+without new `sorry`. Unlike the earlier additional geometry criterion, the
+new restriction makes attainable ordinary output error depend on attention,
+while every original shared value remains learned. No target attention routes
+or embedding reference are supplied to the criterion.
+
+[EnergyCoupledMemory.lean](src/Transformer/GPTMini/Sparsemax/EnergyCoupledMemory.lean)
+adds the affine block PSD constraint `[[B,Z],[Z^T,energy I]] >= 0`, together
+with the incident parameter bounds and a prescribed aggregate edge budget.
+All these constraints are jointly convex in the compact Q/K and output
+coordinates. B is the actual sparsemax attention on the domain. The genuine
+shared-value forward is reused and remains MZ; every convex output criterion
+remains jointly convex. Its unconstrained partial formula at fixed Z still
+does not distinguish geometry: geometry now changes the feasible output set.
+
+[EnergyMemoryValues.lean](src/Transformer/GPTMini/Sparsemax/EnergyMemoryValues.lean)
+derives positive definiteness of actual attention from the coupling and
+proved strict self-weight floor. The Schur complement gives an exact
+equivalence, for arbitrary original common values V and Z=BV, with
+`energy I - V^T B V >= 0`. Recovered shared values satisfy this bound in
+every output direction. This is an attention-weighted energy budget, not a
+Euclidean value-norm cap; its proof assumes no unproved inverse or factorization.
+
+[EnergyMemoryExamples.lean](src/Transformer/GPTMini/Sparsemax/EnergyMemoryExamples.lean)
+supplies two genuine three-slot examples in the same domain: floor `3/4`,
+norm cap 4, total edge weight `1/8` and energy 6. Ordinary answers `(1,1,-2)`
+fit with first edge `1/8` and second edge zero; answers `(-2,1,1)` fit with
+the opposite allocation. Explicit PSD decompositions certify both examples,
+and the globally decoded original value tables equal their nonconstant
+answer tables. All values are trained; the examples do not use private values
+per query or frozen decoder entries.
+
+[EnergyMemoryIdentification.lean](src/Transformer/GPTMini/Sparsemax/EnergyMemoryIdentification.lean)
+tests the PSD matrix on `(target,-1)`. Exact ordinary output fitting forces
+the discordant edge to vanish; the positive aggregate budget then determines
+the other edge. Both selected actual attention matrices are nonidentity and
+different. Q/K squared norms remain a proved freedom at fixed edges: the
+energy matrix and feasibility permit every otherwise feasible norm change.
+
+[EnergyMemoryLoss.lean](src/Transformer/GPTMini/Sparsemax/EnergyMemoryLoss.lean)
+uses only sum squared error of the actual shared-memory predictions. It
+proves joint convexity, attained zero minima and attention identification at
+every attained minimum. Fixing the opposite edge allocation leaves error at
+least `27/512` for every feasible relearned common value table. This bound
+is on the sum of squared errors, without averaging or a factor of one half.
+The lower-bound premises have a concrete feasible nonconstant witness.
+
+The aggregate budget excludes identity attention, which otherwise permits
+every energy-feasible output of this symmetric path family and weakly
+dominates mixing. It fixes only the total weight, not its allocation or
+support. Selection here uses an active energy boundary and two finite
+regression answer patterns. Unrestricted arbitrary-output fitting is traded
+for the convex energy coupling. General task-conditioned identifiability,
+interior flatness, useful language-model objectives, a numerical solver and
+Shakespeare generalization remain open. Prototype count and feature width
+still grow; FFN and new model training remain deferred.
+
+Validation: full `lake build`, `./make.py audit`, `./make.py index` and
+`./make.py forbidden` pass. No new `sorry`, warnings in the new modules,
+extra axioms, results resting on `sorry`, vacuous statements or placeholders.
+Python is unchanged since the recorded passing 171-test run.
+
 ## Abandoned schedule pair
 
 The frozen constant/cosine schedule pair is incomplete and will not be
