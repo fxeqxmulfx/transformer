@@ -127,6 +127,16 @@ the original recall context its value lies in [1/64, 1/2] and strictly
 decreases with the position. Next realize a fixed table threshold in the
 actual ReLU2 FFN and prove exclusion of post-table false writes.
 
+RecallGateScalar/Matrices/Bounds/Signals/FFN/Block/RawGate now realize
+that cutoff with sixteen of the original 256 ReLU2 units. The true first
+block's gated-key slot is exactly zero for raw keys, BOS and every later
+value after the table; the raw code/type channels remain unchanged.
+Raw table values retain the complete real predecessor copy times a
+derived positive gate amplitude, including their actual position-dependent
+RMS square. No gate-sign, prepared copy or encoded table indicator is a
+premise of the raw-input outcomes. Full validated-prefix parser coupling,
+robust latest-write selection and second-block/readout margins remain.
+
 Next construct the simultaneous raw adjacency/table-gating/last-write encoder
 and depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
@@ -218,3 +228,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-06 | 1 | Compact geometry committed in a7d5e0f. Realized all raw key/value/type channels in the original embedding table, derived uniform true RMS scaling and proved exact disjoint projections and initially empty encoder channels. | Fused original QKV, simultaneous predecessor/BOS heads, actual table gate, robust latest-write retrieval/readout; full depth construction. |
 | 2026-10-06 | 1 | Raw embedding committed in 298d784. Realized simultaneous original QKV/head merge/W_o and derived actual raw adjacency binding error in the first attention residual, preserving value and query codes. | Exact causal BOS marker, actual ReLU2 table gate, finite-copy/latest-write robustness and full recall readout; full depth and convex candidate remain. |
 | 2026-10-07 | 1 | Actual raw binding committed in 9b448ed. Derived exact causal BOS mass at every later raw position and transported it into the true original attention residual; proved context bounds and strict position ordering. | Actual ReLU2 table gate and raw-prefix parser integration, robust second-block retrieval/readout, full depth correctness, then convex architecture search. |
+| 2026-10-07 | 1 | Exact causal marker committed in 419da8e. Realized the actual sixteen-unit table gate and whole first block; proved exact exclusion of raw keys/BOS/post-table false writes and a derived positive amplitude for true table values. | Complete raw-prefix parser coupling and finite-copy/latest-write robustness, original second-block/tied readout, full depth correctness; convex candidate and FLOP comparisons remain queued. |

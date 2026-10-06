@@ -12,6 +12,7 @@ import Transformer.GPTMini.Semantics.RecallRawHeads
 import Transformer.GPTMini.Semantics.RecallRawCopy
 import Transformer.GPTMini.Semantics.RecallMarkerWeights
 import Transformer.GPTMini.Semantics.RecallRawMarker
+import Transformer.GPTMini.Semantics.RecallRawGate
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -72,8 +73,13 @@ finite-softmax/XSA copy error in the true first attention residual;
 its own raw value and query codes are retained. At every later position
 the actual simultaneous marker head and residual contain exactly
 1/(i+1), derived from raw BOS/alphabet IDs and the genuine causal mask,
-even with future array entries. The FFN table gate and robust latest-write
-retrieval/readout remain.
+even with future array entries. Sixteen actual original ReLU2 units now
+realize the fixed table cutoff and preserve all raw code/type channels.
+The full first block's gated-key slot is exactly zero on keys/BOS and
+post-table values, excluding false writes after queries. Table values
+retain the genuine compact predecessor copy with its derived positive
+position-dependent RMS/gate amplitude. Complete raw-prefix coupling and
+robust latest-write retrieval/readout remain.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
