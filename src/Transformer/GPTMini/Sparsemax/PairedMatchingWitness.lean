@@ -151,4 +151,35 @@ theorem pairedBinding_price_exact (g : Fin 2 → ℝ) : pairedHeadPrice (H := 1)
     show (1 : Fin 2) ≠ 0 from by decide, ite_false, he]
   ring
 
+/-- Fitting ordinary answers forces an actual bounded head to distinguish the swapped bindings.
+Source: a new answer-driven necessity result for the repaired Appendix A.4 architecture;
+freely relearning original values cannot replace contextual matching in every active head. -/
+theorem pairedBinding_fit_selects_head {H : ℕ} (cap : ℝ) (μ : MatchingMixture 5 (2 * H) 1)
+    (hμ : μ ∈ matchingMixtureDomain 5 (2 * H) 1 cap)
+    (hs : pairedMixtureSample (H := H) pairedBindingTokens (fun _ => 5) (fun _ => 0) μ = pairedBindingTarget) :
+    ∃ h ∈ μ.support, h ∈ matchingHeadBox 5 (2 * H) 1 cap ∧
+      pairedHeadOutput (H := H) h (pairedBindingTokens 0) 5 0 ≠
+        pairedHeadOutput (H := H) h (pairedBindingTokens 1) 5 0 := by
+  classical
+  by_contra hn
+  have he (h : MatchingHead 5 (2 * H) 1) (hh : h ∈ μ.support) :
+      pairedHeadOutput (H := H) h (pairedBindingTokens 0) 5 0 =
+        pairedHeadOutput (H := H) h (pairedBindingTokens 1) 5 0 := by
+    by_contra hne
+    exact hn ⟨h, hh, hμ.2.1 h (Finsupp.mem_support_iff.mp hh), hne⟩
+  have hp : pairedMixtureSample (H := H) pairedBindingTokens (fun _ => 5) (fun _ => 0) μ 0 =
+      pairedMixtureSample (H := H) pairedBindingTokens (fun _ => 5) (fun _ => 0) μ 1 := by
+    rw [pairedMixtureSample_apply, pairedMixtureSample_apply]
+    apply Finset.sum_congr rfl
+    intro h hh
+    rw [he h hh]
+  rw [hs] at hp
+  norm_num [pairedBindingTarget] at hp
+
+/-- The feasible learned-value witness satisfies every answer-driven head-selection premise. -/
+example : ∃ h ∈ (Finsupp.single (pairedBindingHead 0 1) (1 : ℝ)).support,
+    h ∈ matchingHeadBox 5 2 1 1 ∧ pairedHeadOutput (H := 1) h (pairedBindingTokens 0) 5 0 ≠
+      pairedHeadOutput (H := 1) h (pairedBindingTokens 1) 5 0 :=
+  pairedBinding_fit_selects_head (H := 1) 1 _ pairedBinding_state_mem pairedBinding_fit
+
 end Transformer.GPTMini.Sparsemax
