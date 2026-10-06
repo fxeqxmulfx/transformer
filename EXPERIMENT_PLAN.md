@@ -1,6 +1,10 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-06 UTC. **Done: steps 0 to 6 and the requested QKNorm follow-up.** The investigation cycle
+Updated on 2026-10-06 UTC. **Active cycle: [Basis correctness and convex architecture](plan.md),
+stage 1.** The user requested this new cycle after the internal semantic
+guarantees in b243ba5. It governs current work, including ordinary AdamW
+and comparison at measured equal FLOPs. The earlier investigation below is
+complete: **steps 0 to 6 and the requested QKNorm follow-up.** The investigation cycle
 was started on 2026-10-04 at the user's request. On 2026-10-04 the user asked for
 this plan: find out why sparsemax attention fails, and try to repair it, on
 the basis benchmark. It replaces the plan of 2026-10-03 for the mod-193

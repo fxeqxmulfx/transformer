@@ -1,0 +1,139 @@
+# Basis correctness and convex architecture research cycle
+
+Started: 2026-10-06. Status: active, stage 1.
+
+## Objective and constraints
+
+Prove complete Basis correctness in Lean, use its semantics to search for a
+convex trainable architecture, and compare any verified candidate with the
+original GPTMini softmax under the same measured FLOP budget. Use ordinary
+AdamW. The public interface is `f(tokens: list[int]) -> list[int]`, preserving
+the input and appending one prediction per call. Parity generates its label
+and then EOS in two calls. Train separate parameter assignments for each
+task and mode, as the existing benchmark does.
+
+Retain the earlier requirements: compact shared parameters, causal token
+processing, compatibility with the existing embedding/attention block
+interfaces, and no change of optimizer. Do not count an oracle, a table of
+all possible prefixes, an exponential feature bank, a fixed interaction
+bank, or an uncharged head-search procedure as the requested solution.
+State the exact trainable variables and feasible domain of every convexity
+claim. Treat joint values, FFN, readout and loss explicitly: a convex block
+does not by itself establish a convex training objective. AdamW compatibility
+does not by itself prove convergence or a successful training run.
+
+Work solo. Follow AGENTS.md, use local manuscripts in papers/, and commit
+each logical result after its checks pass. Keep INDEX.md generated. New
+formal results must not increase the existing sorry count. Keep ANSR stopped.
+
+## 1. Prove complete Basis correctness
+
+Status: active.
+
+Use Transformer.Basis's actual integer IDs, raw grammars, easy/hard modes,
+vocabulary sizes and context caps. The formal target is SolvesTask over
+every validated supervised prefix, including depth order and neutral
+tokens, raw adjacent MQAR bindings and last overwrites, and both parity
+answer/EOS positions. This is stronger than the sampled benchmark's
+99-percent stopping rule. Keep that distinction explicit.
+
+Verify the original softmax GPTMini implementation, including embedding,
+prenorm, QKNorm, RoPE, mask, finite softmax, XSA, both residuals, ReLU2 FFN,
+tied readout and checked List Int adapter. Prove behavior of given model
+parameters from explicit local parameter/representation constraints and
+layer induction. Correct output logits, SolvesTask, or a whole-prefix
+oracle encoding cannot be premises of the substantive correctness proof.
+An existence statement for weights alone is not the requested result.
+Demonstrate simultaneous satisfiability of any parameter constraints in
+the stated architecture; do not silently enlarge the small/large GPTMini.
+
+Current proof boundary at b243ba5: raw last-binding semantics, softmax
+routing error bounds, conditional ordered-prefix tests, concrete ONE-count
+and phase features, full-stack phase preservation, and internal code/error
+conditions implying an actual integer answer are proved. Complete prefix
+encoders, reliable retrieval selection, and the parity/EOS decoder remain.
+
+First work item: prove the variable-length normalized-count collision and
+repair the parity representation by retaining a denominator/length signal.
+Then prove the bounded-count parity decoder and its EOS branch. Continue
+with the raw adjacency/last-write encoder and depth-prefix recurrence.
+Record each remaining assumption and discharge it rather than moving it
+into a definition. A failed construction should produce a counterexample
+or a precise missing condition, not a weakened correctness target.
+
+Exit criterion: complete task theorems connected to the actual model
+function, with no unproved encoder or routing input and no added sorrys.
+
+## 2. Search in Lean for a convex architecture
+
+Status: queued after stage 1; structural analysis may proceed alongside it.
+
+Derive the needed operations from the proven Basis semantics: order,
+adjacency, key-conditioned latest-write selection, bounded counting and
+completion phase. Search for compact changed operators that preserve them
+while giving a proved convex parameter domain and the stated training
+objective. Keep learned query-key matching and values in scope. Use the
+existing coordinate-independent softmax-head obstruction to reject only
+the operator classes it actually covers, not every changed architecture.
+
+For every candidate record its formulas, parameter count and scaling,
+causality, integer-function adapter, task guarantees, convexity theorem,
+remaining hypotheses and counterexamples. Distinguish global convexity,
+conditional convexity and an empirical favorable optimization landscape.
+
+Exit criterion: a candidate with proved task capability and a proved
+convexity claim covering the parameters/objective being trained, usable
+with the existing ordinary AdamW implementation and public interface.
+
+## 3. Measure the softmax baseline and compare equal FLOPs
+
+Status: queued; starts when stage 2 produces an admissible candidate.
+
+Use the existing Basis small/large GPTMini softmax recipes and the actual
+success criterion. Pin source revision, task/mode, splits, seeds, model,
+AdamW settings, schedule, batch, precision and hardware. Reuse archived
+measurements only when those details and the required FLOP counts can be
+recovered; otherwise run the controlled baseline. Do not report an
+unmeasured budget as a measured one.
+
+Count forward and backward arithmetic for all training steps and charge
+candidate preprocessing, learned features and any search. Record the FLOP
+convention and coverage of the counter, with evaluation costs separately.
+Record cumulative training FLOPs at the first successful validation
+observation, plus test/OOD results, loss curves and seed variation. Preserve
+unfinished and failed baseline runs instead of assigning them success.
+
+Port the verified candidate through the lab's domain/implementation/DSL
+interfaces with meaningful tests and Lean/source citations. Use identical
+data and ordinary AdamW, and stop each candidate at the corresponding
+baseline's cumulative FLOP budget. Compare accuracy and success at those
+budgets; elapsed time and update count are secondary measurements. Put
+runs, differences and findings in the standard experiment directory and
+README registry. Never substitute a much smaller compute budget.
+
+## 4. Repair or replace weaker candidates
+
+Status: queued; repeats after each controlled comparison.
+
+When a candidate performs worse, preserve its run and identify a concrete
+semantic or optimization failure. Reproduce it in a small control and
+repair its representation/operator in Lean. Reprove correctness and the
+applicable convexity claim before rerunning the affected comparison.
+
+If the repair cannot satisfy the compactness, interface, learned-matching,
+ordinary-AdamW or convexity constraints, record the failed path and its
+mathematical reason, then search for a different architecture in stage 2.
+Keep the baseline protocol and measured budgets fixed across candidates.
+
+## 5. Cycle log and verification
+
+This file is the active plan and must be updated with dates, commits,
+theorems, remaining obligations, candidate decisions and run artifacts.
+EXPERIMENT_PLAN.md points here while retaining earlier completed research.
+Each Lean commit passes lake build, make.py audit, index and forbidden.
+Each Python commit passes make.py test and the relevant experiment checks.
+Do not mark the cycle complete while a required proof or comparison remains.
+
+| Date | Stage | Result | Remaining work |
+| --- | --- | --- | --- |
+| 2026-10-06 | Setup | Cycle started from b243ba5; prior 77 semantic theorems retained. | Stage 1: normalized count versus exact count, full decoders and encoders. |
