@@ -17,6 +17,7 @@ import math
 import torch
 from torch.nn import functional as F
 
+from ....domain.atomic import AtomicMatching
 from ..samplers import EpochSampler
 from . import generator
 from .generation import TOTALS, rollout, score, static_rollout
@@ -156,11 +157,17 @@ class SyntheticTask:
 
     def observe(self, model, batch):
         """What a study measures at an observation beyond the metrics of the splits."""
-        return {} if self.measures is None else self.measures.observe(model, batch)
+        found = {} if self.measures is None else self.measures.observe(model, batch)
+        if isinstance(getattr(model, "spec", None), AtomicMatching):
+            found["atomic"] = model.inspect()
+        return found
 
     def inspect(self, model, batch):
         """What a study measures of the last and the best model."""
-        return {} if self.measures is None else {"memorization": self.measures.inspect(model, batch)}
+        found = {} if self.measures is None else {"memorization": self.measures.inspect(model, batch)}
+        if isinstance(getattr(model, "spec", None), AtomicMatching):
+            found["atomic"] = model.inspect()
+        return found
 
     def analyze(self, history):
         """The splits' fingerprints, the first observation whose selection `metric` reaches `target`, and the

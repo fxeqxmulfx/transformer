@@ -6,6 +6,7 @@
 """
 
 from .domain.basis import basis
+from .domain.atomic import AtomicColumns, AtomicMatching, MatchingOrders, OrderPricing, SearchPricing
 from .domain.benchmarks import ModularDivision, TinyShakespeare
 from .domain.experiment import Experiment, grid
 from .domain.generative import (Addition, BooleanAnd, Copy, Count, DoubleHistogram, Histogram, Mode, MostFrequent,
@@ -26,19 +27,19 @@ from .domain.training import (AttentionDiagnostics, Budget, Checkpoint, Compiled
 
 __all__ = [
     # model
-    "Transformer", "Block", "Attention", "FFN", "XSA",
+    "Transformer", "AtomicMatching", "Block", "Attention", "FFN", "XSA",
     "RMSNorm", "LayerNorm", "PreNorm", "PostNorm",
     "RoPE", "Sinusoidal", "NoPositions",
     "FusedQKV", "PerHeadQKV", "ScaledDot", "LearnedScaledDot", "QKNorm", "Softmax", "Sparsemax", "SurrogateWeights",
     "ReLU", "ReLU2", "GELU", "Tied", "Untied", "TorchDefault", "Normal", "ScaledResidual",
     # benchmarks
-    "ModularDivision", "TinyShakespeare", "Synthetic", "Memorization",
+    "ModularDivision", "TinyShakespeare", "Synthetic", "Memorization", "MatchingOrders",
     # synthetic tasks
     "MQAR", "Lookup", "Dyck", "AlternatingBlocks", "TypedDyck", "CRASP",
     "Histogram", "DoubleHistogram", "Mode", "MostFrequent", "Copy", "Reverse", "Sort", "Count", "Addition",
     "Parity", "BooleanAnd", "RandomLM",
     # optimizers
-    "ANSR", "SGD", "AdamW", "AMSGradW", "Adam", "AdamX", "AdaGrad", "AdamNC", "RMSProp", "Muon", "Guarded", "Magma", "Clipped",
+    "ANSR", "AtomicColumns", "OrderPricing", "SearchPricing", "SGD", "AdamW", "AMSGradW", "Adam", "AdamX", "AdaGrad", "AdamNC", "RMSProp", "Muon", "Guarded", "Magma", "Clipped",
     "Dash", "NewtonDB", "CoupledNewton", "EVD", "Chebyshev", "AdaFisher", "AMSGradMD",
     "Constant", "Inverse", "InverseSqrt", "Geometric",
     # training

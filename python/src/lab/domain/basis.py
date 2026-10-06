@@ -121,13 +121,17 @@ BASIS = {
 }
 
 
-def basis(model, mode, seed=0):
-    """The run of `model` on each task of `mode`, by task, from model seed `seed`."""
+def basis(model, mode, seed=0, execution=Compiled()):
+    """The run of `model` on each task of `mode`, from model seed `seed`.
+
+    `execution` changes how the fixed recipes run; compiled CPU is the
+    historical default. Eager execution also admits the physical atomic model.
+    """
     require(mode in MODES, f"The mode is one of {', '.join(MODES)}")
     return {task: Experiment(
                 model=swap(model, "context", benchmark.context), benchmark=benchmark,
                 optimizer=AdamW(lr=recipe.lr, betas=(0.9, 0.98), weight_decay=0.1),
                 schedule=Schedule(warmup=WARMUP), budget=Budget(updates=recipe.updates, batch=recipe.batch),
                 seeds=Seeds(model=seed, data=1), evaluate=Evaluate(every=OBSERVED // recipe.batch, batch=256),
-                execution=Compiled(), stopping=Solved())
+                execution=execution, stopping=Solved())
             for task, (benchmark, recipe) in BASIS[mode].items()}

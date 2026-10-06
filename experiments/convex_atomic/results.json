@@ -1,0 +1,492 @@
+{
+  "runs": {
+    "order-columns-seed0": {
+      "status": "finished",
+      "best_step": 2,
+      "validation_loss": 2.0954117794933126e-31,
+      "global_gap_bound_after": 3.3306690738754736e-16,
+      "certificate_step": 1000,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": true
+    },
+    "order-columns-seed1": {
+      "status": "finished",
+      "best_step": 2,
+      "validation_loss": 2.0954117794933126e-31,
+      "global_gap_bound_after": 3.3306690738754736e-16,
+      "certificate_step": 1000,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": true
+    },
+    "order-columns-seed2": {
+      "status": "finished",
+      "best_step": 2,
+      "validation_loss": 2.0954117794933126e-31,
+      "global_gap_bound_after": 3.3306690738754736e-16,
+      "certificate_step": 1000,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": true
+    },
+    "order-columns-seed3": {
+      "status": "finished",
+      "best_step": 2,
+      "validation_loss": 2.0954117794933126e-31,
+      "global_gap_bound_after": 3.3306690738754736e-16,
+      "certificate_step": 1000,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": true
+    },
+    "order-columns-seed4": {
+      "status": "finished",
+      "best_step": 2,
+      "validation_loss": 2.0954117794933126e-31,
+      "global_gap_bound_after": 3.3306690738754736e-16,
+      "certificate_step": 1000,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": true
+    },
+    "order-columns-seed5": {
+      "status": "finished",
+      "best_step": 2,
+      "validation_loss": 2.0954117794933126e-31,
+      "global_gap_bound_after": 3.3306690738754736e-16,
+      "certificate_step": 1000,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": true
+    },
+    "order-columns-seed6": {
+      "status": "finished",
+      "best_step": 2,
+      "validation_loss": 2.0954117794933126e-31,
+      "global_gap_bound_after": 3.3306690738754736e-16,
+      "certificate_step": 1000,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": true
+    },
+    "order-columns-seed7": {
+      "status": "finished",
+      "best_step": 2,
+      "validation_loss": 2.0954117794933126e-31,
+      "global_gap_bound_after": 3.3306690738754736e-16,
+      "certificate_step": 1000,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": true
+    },
+    "order-adamw-seed0": {
+      "status": "finished",
+      "best_step": 0,
+      "validation_loss": 0.125,
+      "global_gap_bound_after": null,
+      "certificate_step": 1000,
+      "certificate_scope": null,
+      "pricing_is_global": null
+    },
+    "order-adamw-seed1": {
+      "status": "finished",
+      "best_step": 0,
+      "validation_loss": 0.125,
+      "global_gap_bound_after": null,
+      "certificate_step": 1000,
+      "certificate_scope": null,
+      "pricing_is_global": null
+    },
+    "order-adamw-seed2": {
+      "status": "finished",
+      "best_step": 0,
+      "validation_loss": 0.125,
+      "global_gap_bound_after": null,
+      "certificate_step": 1000,
+      "certificate_scope": null,
+      "pricing_is_global": null
+    },
+    "order-adamw-seed3": {
+      "status": "finished",
+      "best_step": 0,
+      "validation_loss": 0.125,
+      "global_gap_bound_after": null,
+      "certificate_step": 1000,
+      "certificate_scope": null,
+      "pricing_is_global": null
+    },
+    "order-adamw-seed4": {
+      "status": "finished",
+      "best_step": 0,
+      "validation_loss": 0.125,
+      "global_gap_bound_after": null,
+      "certificate_step": 1000,
+      "certificate_scope": null,
+      "pricing_is_global": null
+    },
+    "order-adamw-seed5": {
+      "status": "finished",
+      "best_step": 0,
+      "validation_loss": 0.125,
+      "global_gap_bound_after": null,
+      "certificate_step": 1000,
+      "certificate_scope": null,
+      "pricing_is_global": null
+    },
+    "order-adamw-seed6": {
+      "status": "finished",
+      "best_step": 0,
+      "validation_loss": 0.125,
+      "global_gap_bound_after": null,
+      "certificate_step": 1000,
+      "certificate_scope": null,
+      "pricing_is_global": null
+    },
+    "order-adamw-seed7": {
+      "status": "finished",
+      "best_step": 0,
+      "validation_loss": 0.125,
+      "global_gap_bound_after": null,
+      "certificate_step": 1000,
+      "certificate_scope": null,
+      "pricing_is_global": null
+    },
+    "saturated-columns-seed0": {
+      "status": "finished",
+      "best_step": 2,
+      "validation_loss": 2.0954117794933126e-31,
+      "global_gap_bound_after": 3.3306690738754736e-16,
+      "certificate_step": 1000,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": true
+    },
+    "saturated-columns-seed1": {
+      "status": "finished",
+      "best_step": 2,
+      "validation_loss": 2.0954117794933126e-31,
+      "global_gap_bound_after": 3.3306690738754736e-16,
+      "certificate_step": 1000,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": true
+    },
+    "saturated-columns-seed2": {
+      "status": "finished",
+      "best_step": 2,
+      "validation_loss": 2.0954117794933126e-31,
+      "global_gap_bound_after": 3.3306690738754736e-16,
+      "certificate_step": 1000,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": true
+    },
+    "saturated-columns-seed3": {
+      "status": "finished",
+      "best_step": 2,
+      "validation_loss": 2.0954117794933126e-31,
+      "global_gap_bound_after": 3.3306690738754736e-16,
+      "certificate_step": 1000,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": true
+    },
+    "saturated-columns-seed4": {
+      "status": "finished",
+      "best_step": 2,
+      "validation_loss": 2.0954117794933126e-31,
+      "global_gap_bound_after": 3.3306690738754736e-16,
+      "certificate_step": 1000,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": true
+    },
+    "saturated-columns-seed5": {
+      "status": "finished",
+      "best_step": 2,
+      "validation_loss": 2.0954117794933126e-31,
+      "global_gap_bound_after": 3.3306690738754736e-16,
+      "certificate_step": 1000,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": true
+    },
+    "saturated-columns-seed6": {
+      "status": "finished",
+      "best_step": 2,
+      "validation_loss": 2.0954117794933126e-31,
+      "global_gap_bound_after": 3.3306690738754736e-16,
+      "certificate_step": 1000,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": true
+    },
+    "saturated-columns-seed7": {
+      "status": "finished",
+      "best_step": 2,
+      "validation_loss": 2.0954117794933126e-31,
+      "global_gap_bound_after": 3.3306690738754736e-16,
+      "certificate_step": 1000,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": true
+    },
+    "saturated-adamw-seed0": {
+      "status": "finished",
+      "best_step": 0,
+      "validation_loss": 0.125,
+      "global_gap_bound_after": null,
+      "certificate_step": 1000,
+      "certificate_scope": null,
+      "pricing_is_global": null
+    },
+    "saturated-adamw-seed1": {
+      "status": "finished",
+      "best_step": 0,
+      "validation_loss": 0.125,
+      "global_gap_bound_after": null,
+      "certificate_step": 1000,
+      "certificate_scope": null,
+      "pricing_is_global": null
+    },
+    "saturated-adamw-seed2": {
+      "status": "finished",
+      "best_step": 0,
+      "validation_loss": 0.125,
+      "global_gap_bound_after": null,
+      "certificate_step": 1000,
+      "certificate_scope": null,
+      "pricing_is_global": null
+    },
+    "saturated-adamw-seed3": {
+      "status": "finished",
+      "best_step": 0,
+      "validation_loss": 0.125,
+      "global_gap_bound_after": null,
+      "certificate_step": 1000,
+      "certificate_scope": null,
+      "pricing_is_global": null
+    },
+    "saturated-adamw-seed4": {
+      "status": "finished",
+      "best_step": 0,
+      "validation_loss": 0.125,
+      "global_gap_bound_after": null,
+      "certificate_step": 1000,
+      "certificate_scope": null,
+      "pricing_is_global": null
+    },
+    "saturated-adamw-seed5": {
+      "status": "finished",
+      "best_step": 0,
+      "validation_loss": 0.125,
+      "global_gap_bound_after": null,
+      "certificate_step": 1000,
+      "certificate_scope": null,
+      "pricing_is_global": null
+    },
+    "saturated-adamw-seed6": {
+      "status": "finished",
+      "best_step": 0,
+      "validation_loss": 0.125,
+      "global_gap_bound_after": null,
+      "certificate_step": 1000,
+      "certificate_scope": null,
+      "pricing_is_global": null
+    },
+    "saturated-adamw-seed7": {
+      "status": "finished",
+      "best_step": 0,
+      "validation_loss": 0.125,
+      "global_gap_bound_after": null,
+      "certificate_step": 1000,
+      "certificate_scope": null,
+      "pricing_is_global": null
+    },
+    "outside-columns": {
+      "status": "finished",
+      "best_step": 1,
+      "validation_loss": 2.0,
+      "global_gap_bound_after": 0.0,
+      "certificate_step": 1000,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": true
+    },
+    "order-search-seed0": {
+      "status": "finished",
+      "best_step": 128,
+      "validation_loss": 1.1751895187799134e-21,
+      "global_gap_bound_after": 3.119560168093378e-12,
+      "certificate_step": 128,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": false
+    },
+    "saturated-search-seed0": {
+      "status": "finished",
+      "best_step": 128,
+      "validation_loss": 1.1751895187799134e-21,
+      "global_gap_bound_after": 3.119560168093378e-12,
+      "certificate_step": 128,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": false
+    },
+    "basis-columns-depth-seed0": {
+      "status": "finished",
+      "best_step": 48,
+      "validation_loss": 0.3711586933696022,
+      "global_gap_bound_after": 1.279235601425171,
+      "certificate_step": 128,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": false,
+      "validation_sequence_accuracy": 0.416015625,
+      "test_sequence_accuracy": 0.40234375,
+      "test_loss": 0.36427416198852436,
+      "active_heads": 7,
+      "search_evaluations": 66560
+    },
+    "basis-columns-recall-seed0": {
+      "status": "finished",
+      "best_step": 96,
+      "validation_loss": 8.086858838796616,
+      "global_gap_bound_after": 3.1187204122543335,
+      "certificate_step": 128,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": false,
+      "validation_sequence_accuracy": 0.0,
+      "test_sequence_accuracy": 0.0,
+      "test_loss": 8.112672060728073,
+      "active_heads": 1,
+      "search_evaluations": 66560
+    },
+    "basis-columns-parity-seed0": {
+      "status": "finished",
+      "best_step": 48,
+      "validation_loss": 0.37638516165316105,
+      "global_gap_bound_after": 1.8440066874027252,
+      "certificate_step": 128,
+      "certificate_scope": "current_training_batch",
+      "pricing_is_global": false,
+      "validation_sequence_accuracy": 0.560546875,
+      "test_sequence_accuracy": 0.546875,
+      "test_loss": 0.38203082978725433,
+      "active_heads": 3,
+      "search_evaluations": 66560
+    }
+  },
+  "basis_signature_bounds": {
+    "basis-columns-depth-seed0": {
+      "validation": {
+        "scalar_token_observations": 23934,
+        "signature_classes": 5918,
+        "conflicting_classes": 2441,
+        "maximum_token_accuracy_in_real_model": 0.8274003509651542,
+        "minimum_mean_cross_entropy_in_real_model": 0.2572284181007795
+      },
+      "test": {
+        "scalar_token_observations": 24192,
+        "signature_classes": 6197,
+        "conflicting_classes": 2342,
+        "maximum_token_accuracy_in_real_model": 0.8344494047619048,
+        "minimum_mean_cross_entropy_in_real_model": 0.24722643762326116
+      }
+    },
+    "basis-columns-recall-seed0": {
+      "validation": {
+        "scalar_token_observations": 4096,
+        "signature_classes": 4096,
+        "conflicting_classes": 0,
+        "maximum_token_accuracy_in_real_model": 1.0,
+        "minimum_mean_cross_entropy_in_real_model": 0.0
+      },
+      "test": {
+        "scalar_token_observations": 4096,
+        "signature_classes": 4096,
+        "conflicting_classes": 0,
+        "maximum_token_accuracy_in_real_model": 1.0,
+        "minimum_mean_cross_entropy_in_real_model": 0.0
+      }
+    },
+    "basis-columns-parity-seed0": {
+      "validation": {
+        "scalar_token_observations": 1024,
+        "signature_classes": 196,
+        "conflicting_classes": 0,
+        "maximum_token_accuracy_in_real_model": 1.0,
+        "minimum_mean_cross_entropy_in_real_model": 0.0
+      },
+      "test": {
+        "scalar_token_observations": 1024,
+        "signature_classes": 200,
+        "conflicting_classes": 0,
+        "maximum_token_accuracy_in_real_model": 1.0,
+        "minimum_mean_cross_entropy_in_real_model": 0.0
+      }
+    }
+  },
+  "recall_binding_counterexample": {
+    "first_tokens": [
+      1,
+      233,
+      475,
+      251,
+      403,
+      56,
+      363,
+      168,
+      436,
+      284,
+      363,
+      243,
+      340,
+      191,
+      420,
+      280,
+      367,
+      251,
+      168,
+      280,
+      462,
+      416,
+      458,
+      191,
+      56,
+      405,
+      243,
+      233,
+      521,
+      338,
+      284,
+      455
+    ],
+    "second_tokens": [
+      1,
+      233,
+      403,
+      251,
+      475,
+      56,
+      363,
+      168,
+      436,
+      284,
+      363,
+      243,
+      340,
+      191,
+      420,
+      280,
+      367,
+      251,
+      168,
+      280,
+      462,
+      416,
+      458,
+      191,
+      56,
+      405,
+      243,
+      233,
+      521,
+      338,
+      284,
+      455
+    ],
+    "query_position": 17,
+    "first_target": 403,
+    "second_target": 475,
+    "same_physical_signature": true,
+    "both_examples_accepted_by_raw_oracle": true,
+    "selected_checkpoint_step": 96,
+    "maximum_logit_difference_float64": 0.0,
+    "predictions": [
+      518,
+      518
+    ]
+  }
+}

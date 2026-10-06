@@ -2106,8 +2106,11 @@ passed easy depth, recall and parity at 200, 1,700 and 4,800 updates. The short
 ANSR runs do not settle its efficacy. The user explicitly required a much
 larger budget; all six ANSR runs continue from checkpoint toward 100,000
 generations each, without resetting their population or random generators.
-The user then explicitly returned to Lean and convex training. The existing
-background ANSR queue continues; current development resumes formal guarantees.
+The user then explicitly returned to Lean and convex training. The background
+ANSR queue continued until the user explicitly stopped it on 2026-10-06 UTC.
+Its verified depth checkpoint is generation 22,560; the remaining queue was
+cancelled. Best validation loss was 0.5689167010 at generation 22,528. Checkpoints
+and raw records are preserved; ANSR must not restart without a new user request.
 
 ## Freely learned query-key matching through a convex atomic state
 
@@ -2251,6 +2254,46 @@ Validation: full `lake build`, `./make.py audit`, `./make.py index` and
 `./make.py forbidden` pass. No new `sorry`, new-module warnings, extra axioms,
 results resting on `sorry`, vacuous conclusions or placeholder definitions.
 Python sources are unchanged; the previously passing 178-test suite applies.
+
+## Numerical check of genuine convex atomic training
+
+**Done on 2026-10-06 UTC.** The user explicitly requested an experiment of
+the attained convex architecture. [convex_atomic](experiments/convex_atomic)
+implements actual shared bounded Q/K/value heads, causal sparsemax and
+probability mixtures, with no route targets, predefined head bank, FFN,
+normalization, residual or output projection. Thirty-eight runs finished.
+
+Exact physical-head pricing on the two Lean order contexts attains the
+universal price lower bound. A small corrective convex simplex QP escapes
+both the zero-Q/K state and a strictly one-route saturated state: error
+0.125 falls to 2.0954e-31 at update two, with a numerical global gap bound
+3.3307e-16. Each result persists through 1,000 updates and eight batch orders.
+Raw AdamW stays at 0.125 on both starts. An out-of-box target reaches its
+positive optimum two with gap zero, without assuming an exact fit.
+
+The independent numerical head search also escapes both states: random
+projected Q/K Adam and exact conditional original values reach error
+1.1752e-21 after 128 outer updates, with a box gap bound 3.1196e-12. No
+analytic order pricing is used there. The oracle remains nonconvex and
+approximate; twelve active heads are retained without numerical compression.
+
+Basis uses the unchanged easy data and answer loss, with 128 outer updates
+and 66,560 pricing forwards per task. Best test sequence accuracies are
+40.23% depth, 0% recall and 54.69% parity. The current encoder is content-only:
+query token plus visible multiset determine every real response. Depth has
+observed signature conflicts (test token-accuracy ceiling 83.44%). Two valid
+MQAR inputs obtained by exchanging written values have different oracle
+answers and identical model signatures/logits. This separates an encoder
+capacity restriction from the earlier raw-gradient plateaus. Parity has no
+such finite-split collision certificate. A fresh-batch corrective solver
+does not establish convergence for the full training objective.
+
+Validation: all 189 lab tests pass, including eleven new tests of physical
+forward/causality, flat gradients, exact and approximate certificates,
+positive minima, original values, synthetic answer training and checkpoint
+continuation. Lean sources are unchanged from the checked attainment commit.
+The user immediately authorized trying to repair the binding encoder; that
+follow-up must retain these baseline results and convex mixture training.
 
 ## Abandoned schedule pair
 

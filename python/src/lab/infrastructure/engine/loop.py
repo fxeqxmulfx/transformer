@@ -36,6 +36,7 @@ import torch
 
 from ...domain import cadence
 from ...domain.optimizers import ANSR
+from ...domain.atomic import AtomicColumns
 from ...domain.stopping import Selection
 from ...domain.training import AttentionDiagnostics, rate
 from ..benchmarks import build_task
@@ -226,7 +227,7 @@ class Training:
         self.clock.resume()
         for step in range(self.completed + 1, experiment.budget.updates + 1):
             parts, place = self.sampler.next()
-            learning_rate = (None if isinstance(experiment.optimizer, ANSR) else
+            learning_rate = (None if isinstance(experiment.optimizer, (ANSR, AtomicColumns)) else
                              rate(experiment.optimizer.lr, experiment.schedule, step - 1))
             sampled = cadence.sampled(experiment, step)
             size, measurements = self.stepper.step(parts, learning_rate, sampled)

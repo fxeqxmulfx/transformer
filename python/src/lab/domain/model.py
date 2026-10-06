@@ -337,7 +337,12 @@ class ScaledResidual(Init):
 
 
 @dataclass(frozen=True)
-class Transformer(Spec):
+class Model(Spec, kind=True):
+    """A token model with a finite input context."""
+
+
+@dataclass(frozen=True)
+class Transformer(Model):
     """Embedding, `depth` copies of `block`, optional final norm, readout."""
     width: int
     depth: int

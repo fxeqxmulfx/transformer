@@ -10,8 +10,9 @@ from dataclasses import dataclass
 import re
 
 from .benchmarks import Benchmark, ModularDivision
-from .model import Transformer
-from .optimizers import ANSR, EVD, Clipped, Optimizer
+from .model import Model
+from .atomic import AtomicColumns, AtomicMatching, MatchingOrders, OrderPricing
+from .optimizers import ANSR, EVD, AdamW, Clipped, Optimizer
 from .spec import Spec, describe, require, require_kind, swap, walk
 from .stopping import Solved, Stopping
 from .synthetic import Synthetic
@@ -23,7 +24,7 @@ LABEL = re.compile(r"[a-z0-9][a-z0-9._-]*")
 @dataclass(frozen=True)
 class Experiment(Spec):
     """Everything that determines a run; its description identifies the run."""
-    model: Transformer
+    model: Model
     benchmark: Benchmark
     optimizer: Optimizer
     schedule: Schedule
@@ -36,7 +37,7 @@ class Experiment(Spec):
     stopping: Stopping | None = None
 
     def check(self):
-        for name, kind in (("model", Transformer), ("benchmark", Benchmark), ("optimizer", Optimizer),
+        for name, kind in (("model", Model), ("benchmark", Benchmark), ("optimizer", Optimizer),
                            ("schedule", Schedule), ("budget", Budget), ("seeds", Seeds),
                            ("evaluate", Evaluate), ("execution", Execution),
                            ("diagnostics", Diagnostics), ("checkpoint", Checkpoint)):
@@ -57,6 +58,29 @@ class Experiment(Spec):
             require(isinstance(self.execution, Eager), "ANSR population evaluation requires Eager execution")
             require(self.schedule == Schedule(), "ANSR has no learning-rate schedule")
             require(not self.diagnostics.gradients, "ANSR computes no gradient norms")
+        columns = any(isinstance(block, AtomicColumns) for _, block in walk(self.optimizer))
+        if columns:
+            require(isinstance(self.optimizer, AtomicColumns), "AtomicColumns must be the whole optimizer")
+            require(isinstance(self.model, AtomicMatching), "AtomicColumns needs AtomicMatching")
+            require(isinstance(self.execution, Eager), "AtomicColumns requires Eager execution")
+            require(self.schedule == Schedule(), "AtomicColumns has no outer learning-rate schedule")
+            require(not self.diagnostics.gradients, "AtomicColumns does not update raw model gradients")
+            if isinstance(self.optimizer.pricing, OrderPricing):
+                require(isinstance(self.benchmark, MatchingOrders), "OrderPricing needs MatchingOrders")
+                require(self.model.width == 1 and self.model.cap == 1 and self.model.channels == 1,
+                        "OrderPricing requires scalar heads with cap one")
+                require(self.budget.batch == 2, "OrderPricing needs both observations in every update")
+                require(self.model.heads <= 3, "The exact order QP uses at most three heads")
+                require(self.execution.device == "cpu", "The exact order QP runs on the CPU")
+        if isinstance(self.benchmark, MatchingOrders):
+            require(isinstance(self.model, AtomicMatching) and self.model.channels == 1,
+                    "MatchingOrders requires scalar AtomicMatching outputs")
+        if isinstance(self.model, AtomicMatching):
+            require(isinstance(self.execution, Eager), "AtomicMatching currently requires Eager execution")
+            require(not isinstance(self.diagnostics, AttentionDiagnostics),
+                    "AtomicMatching reports physical heads through the benchmark, not Transformer diagnostics")
+            require(columns or isinstance(self.optimizer, AdamW),
+                    "AtomicMatching supports AtomicColumns or raw AdamW control")
         if isinstance(self.diagnostics, AttentionDiagnostics):
             require(isinstance(self.benchmark, (Synthetic, ModularDivision)),
                     "AttentionDiagnostics needs a Synthetic or ModularDivision benchmark")

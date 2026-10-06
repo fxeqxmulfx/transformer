@@ -5,6 +5,8 @@ import math
 import torch
 
 from ...domain import model
+from ...domain.atomic import AtomicMatching as AtomicSpec
+from .atomic import AtomicMatching
 from .transformer import Transformer
 
 
@@ -16,6 +18,8 @@ def build_model(spec, vocab, seed):
     same spec and seed starts from bit-identical parameters.
     """
     torch.manual_seed(seed)
+    if isinstance(spec, AtomicSpec):
+        return AtomicMatching(spec, vocab)
     built = Transformer(spec, vocab)
     if not isinstance(spec.init, (model.TorchDefault, model.Normal, model.ScaledResidual)):
         raise NotImplementedError(f"No builder for {spec.init!r}")
