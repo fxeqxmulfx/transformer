@@ -29,7 +29,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Analogy only for current finite GPTMini; finite-size scaling not established |
 | Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Observed-logit integer certificate bridge proved; actual floating-point forward, softmax collapse and optimizer-precision analysis remain open |
-| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | Nineteen native first-step laws/counterexamples, including actual effective-loss descent on a state-dependent rate interval and the failure of uniform gradient/time rescaling; repeated-step rule convergence remains unproved |
+| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | Thirty-eight native first-step laws/counterexamples, including state-dependent descent, its exact centered-family threshold, centered overshoot at experimental hyperparameters and the absence of a uniform rate; repeated-step rule convergence remains unproved |
 
 ## Cycle
 
@@ -291,13 +291,43 @@ the total to **220** on 2026-10-08. This still concerns one scalar effective
 constraint, exact reals and zero initial moment buffers, not GPTMini CE,
 floating-point execution or later momentum states.
 
+`AdamW.CenteredFamily` derives the actual quotient gradient and first
+update on `(t, -t/2, -t/2)` for every positive scale. The initial norm
+is nonzero and the normalized loss is always 3/2. `FiniteThreshold`
+computes the updated norm and loss difference, proves that the actual
+updated family remains centered and nonzero, and derives the exact
+improvement threshold `rate < 3*t / (2*A + 3*decay*t)`, where
+`A = 3 / (3 + epsilon*t)` and decay is nonnegative.
+
+`Overshoot` proves a complementary increase criterion. For every fixed
+positive rate and epsilon and nonnegative decay, the explicit positive
+scale `t = rate / (4 + epsilon*rate)` increases the actual loss despite
+a strictly negative derivative at rate zero. Thus no uniform positive
+rate guarantees nonincrease over all such centered scales. A separate
+concrete counterexample retains all experimental optimizer parameters:
+betas `(0.9, 0.98)`, epsilon `1e-8`, decay `0.1`, rate `0.001`, at
+embedding scale `1e-6`. These nineteen proved theorems add no sorry,
+bringing the total to **239**. Neither these exact-real counterexamples
+nor the source's flow model identify actual GPTMini CE, its gradient,
+floating-point execution or later momentum states.
+
+A native CPU float64 sanity check with the same hyperparameters also
+raises the scalar loss, from about 1.5 to 4.35856. Unlike the exact-real
+calculation, autograd produces a first-coordinate gradient of
+`-4.656612873077393e-10` where the true derivative is zero. First-step
+normalization turns this into a centroid shift of about `4.44942e-5`.
+This is a single numerical check, not a formal kernel bridge or a new
+GPTMini training result. The exact centering theorem must not be reported
+as a floating-point invariant; add a quantified gradient-error transfer.
+
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
 properties survive the native adaptive first update even though the
-Euclidean norm conservation law does not. First derive a finite-step
-threshold and test overshoot on a centered family; do not replace the
-state-dependent descent interval by a universal prescribed rate.
-Keep first-step claims distinct
+Euclidean norm conservation law does not. Keep the now-derived
+state-dependent finite-step interval; do not replace it by a universal
+prescribed rate. Next test which first-step statements fail once the
+moment buffers contain an actual reachable history, and bound how the
+first adaptive direction amplifies gradient errors. Keep those claims distinct
 from multi-step momentum dynamics and from the actual GPTMini loss. Preserve
 the distinction between an inverse-rate characteristic time and the time
 to cross a task-dependent generalization threshold. Extend phase-transition
