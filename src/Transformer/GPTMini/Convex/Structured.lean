@@ -34,6 +34,8 @@ import Transformer.GPTMini.Convex.Structured.RecallEnergy
 import Transformer.GPTMini.Convex.Structured.RecallGap
 import Transformer.GPTMini.Convex.Structured.BindingInterface
 import Transformer.GPTMini.Convex.Structured.SharedRecall
+import Transformer.GPTMini.Convex.Structured.MixedHeads
+import Transformer.GPTMini.Convex.Structured.MixedTraining
 
 /-!
 # Structured alternatives guided by raw Basis semantics
