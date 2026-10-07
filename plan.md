@@ -223,6 +223,14 @@ displacements are derived from the original context bounds. A raw
 overwrite witness satisfies every hypothesis. Complete parser coupling
 and excluded nonrecord scores must still give the full causal-row gap.
 
+RecallRawExcluded derives exactly zero matching scores for raw BOS and
+post-table value fillers through the complete actual gate/prenorm/K.
+An imperfect real matching table record's score is at least the positive
+retained gap. The real selected V equals its protected raw symbol code
+times the genuine next RMS multiplier; all actual V norms are at most
+sixteen. These results complete the local competitor/value cases needed
+to assemble full-row routing and quantitative finite retrieval.
+
 Next connect the fixed ordinary second QKV to robust latest-write retrieval
 and readout, discharge full validated-parser conditions, and construct the
 depth-prefix recurrence.
@@ -326,3 +334,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Genuine second QKV committed in 830e91e. Derived exact raw normalized query direction and twice-tolerance table-key error after the actual full encoder, next RMS, fused matrix and QKNorm; query self-values and matching keys are zero. | Robust finite-softmax latest-write selection and tied readout, complete validated raw parser coupling and full depth correctness; convex architecture and FLOP comparisons remain queued. |
 | 2026-10-07 | 1 | Actual raw normalized projections committed in 2768f32. Proved actual raw query/table score error at most 2*exp(alpha)*copyTolerance against the categorical rotary reference, without a factor 1/epsilon; raw key competitors have zero score and query self-values stay zero. | Derive robust latest-write gaps, actual finite-softmax retrieval/tied readout, full raw parser and depth correctness; convex architecture and FLOP comparisons remain queued. |
 | 2026-10-07 | 1 | Actual raw score perturbations committed in 3f1128d. Derived a positive exp(alpha)*latestMargin/2 gap against real different-key and earlier same-key raw table writes, including both actual copy errors and context bounds. | Exclude nonrecord scores and derive the full causal-row gap, then finite-softmax retrieval/readout, full raw parser and depth correctness; convex architecture and FLOP comparisons remain queued. |
+| 2026-10-07 | 1 | Robust raw table gaps committed in 51ec631. Proved exact zero BOS/post-table filler scores, positive lower score for an imperfect real matching record, faithful actual selected V with its genuine RMS multiplier, and uniform actual V norm at most sixteen. | Assemble full-row routing and finite retrieval, connect tied readout and validated raw parser, then full depth correctness; convex architecture and equal-FLOP comparisons remain queued. |

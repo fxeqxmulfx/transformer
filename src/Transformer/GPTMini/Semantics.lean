@@ -23,6 +23,7 @@ import Transformer.GPTMini.Semantics.RecallSecondQKV
 import Transformer.GPTMini.Semantics.RecallNormalizedInputs
 import Transformer.GPTMini.Semantics.RecallScoreError
 import Transformer.GPTMini.Semantics.RecallRawScoreGap
+import Transformer.GPTMini.Semantics.RecallRawExcluded
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -166,6 +167,13 @@ of the same key are both covered using their derived rotary comparisons
 and both actual copied-key errors. Context displacements follow from
 real integer bounds. Complete grammar coupling and excluded nonrecords
 still need to supply a full-row gap for finite retrieval and readout.
+
+Actual BOS and post-table value fillers now have exactly zero matching
+score through the complete real gate, second prenorm and K projection.
+An actual imperfect matching table record has score at least the positive
+retained gap. Its true V is the raw value code with the genuine next RMS
+multiplier, and every actual V norm is at most sixteen. Full-row routing,
+finite retrieval/readout and validated-parser coupling remain.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
