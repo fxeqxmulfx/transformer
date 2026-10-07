@@ -52,7 +52,7 @@ import Transformer.GPTMini.Semantics.DepthResidual
 import Transformer.GPTMini.Semantics.DepthTransition
 import Transformer.GPTMini.Semantics.DepthFeatureBounds
 import Transformer.GPTMini.Semantics.DepthWordInput
-import Transformer.GPTMini.Semantics.DepthReadoutLayout
+import Transformer.GPTMini.Semantics.DepthReadoutPresence
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini

@@ -468,6 +468,10 @@ Genuine readout, full ModelParams and integer coupling remain required.
 DepthReadoutLayout proves genuine readout probes retain current flags
 through the residual even under XSA suppression; reserved output axes
 stay empty through the real encoder and raw constant/types are protected.
+DepthReadoutPresence derives exact visible-pattern positivity, actual
+zero-or-twice-threshold probes, cap 144 and pre-FFN norm in [1,898].
+These are instantiated by the full raw-word encoder without a supplied
+hidden-state invariant or normalized-feature premise.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -602,3 +606,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Real flag bounds/strict precedence committed in c753c3b. Derived all first-detector conditions from actual token-local word embeddings, including raw-type exclusion, fresh channels, genuine norm [1,2] and BOS/neutral embedding coupling. | Propagate quantified ordered-occurrence representation through the real hidden stack, then finish depth tied/greedy readout and checked integer SolvesTask. |
 | 2026-10-07 | 1 | Raw detector inputs committed in 4e30c42. Proved the complete actual ordered detector encoder by induction from raw words: exact independent occurrences, zero-or-[r^2,128] flags, protected types, fresh future channels and norm at most 866. One detector for easy and three for hard fit the original layer budgets. | Finish genuine readout, full ModelParams/hidden-loop coupling and checked List Int depth SolvesTask; stage 2 remains open and stage 3 conditional. |
 | 2026-10-07 | 1 | Actual encoder induction committed in 14a2f0d. Proved upper readout-axis freshness through the full detector prefix and realized genuine residual probes that preserve current flags despite XSA suppression. | Prove quantitative visible-occurrence readout, actual FFN/tied margins, full ModelParams and integer adapter correctness. |
+| 2026-10-07 | 1 | Genuine residual readout layout committed in f3e61b2. Derived actual probes zero or at least twice the shared threshold, capped by 144 and positive exactly at visible independent ordered occurrences, with true pre-FFN norm at most 898. | Realize the seven-unit FFN and tied margins, then full ModelParams/checked integer depth correctness. |
