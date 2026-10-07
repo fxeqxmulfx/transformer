@@ -568,6 +568,20 @@ with exact normalization and output coordinate bounds. The distribution
 is proved identical to the one trained by contractedPointerNLL. Desired
 routes/channels are not inference arguments. This completes the pointer's
 compact matching/value contraction, not its raw Basis semantic capability.
+PointerControls supplies finite shared learned Q/K/value assignments:
+two queries prefer different keys, and actual five-token raw adjacent
+bindings with swapped values give means 19/36 versus 17/36 and opposite
+strict decoded labels. This is a two-symbol/two-record control, not the
+full Basis recall proof. Its unrestricted training objective is convex;
+the forward reads actual raw neighbors rather than a paired-key encoder.
+
+For the ordered head, also investigate a row-softmax six-state Markov
+model: free token-conditioned transition logits, normalized causal state
+propagation, and learned conditional output channels. Complete observed
+state-path NLL would sum affine categorical losses, avoiding a global
+path-partition computation. This variant still needs an exact inference/
+training probability bridge, compact dynamic propagation, full depth/
+parity semantic paths and actual residual integration; it is not accepted.
 
 Remaining acceptance tests: prove compact contraction of the latent
 partition, learned matching and joint value expressivity, complete Basis
@@ -697,3 +711,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Complete Basis family committed in d640a91. Established the actual finite affine-energy joint Gibbs NLL's global convexity as a structured-head foundation. Route/state/channel supervision is explicit, and marginal output CE is not claimed convex. | Prove compact latent contraction and actual changed head capability/interface; assess all acceptance constraints before equal-FLOP training. |
 | 2026-10-07 | 2 | Joint likelihood foundation committed in 19ff013. Proved exact compact matching/value partition contraction and global convexity of the actually computed shared-table pointer loss/minibatches, including all raw Q/K/value/chronology weights. Proved the 52-field count fits width 64 with decoder slots. | Prove exact compact value statistics, raw order/adjacency/role handling and complete task capability; instantiate prenorm/residual/tied interface before stage 3. |
 | 2026-10-07 | 2 | Compact joint pointer committed in 87ffa1b. Proved exact compact output means equal the same jointly trained Gibbs distribution's actual value expectation, including normalization, coordinate bounds and shared-parameter inference/training coupling. | Check learned content/binding controls, derive role/chronology semantics and ordered-state head capability, then realize the public residual/integer interface. |
+| 2026-10-07 | 2 | Exact value contraction committed in 5371b5f. Proved content-dependent routing and raw adjacent-value swap controls for the same finite learned Q/K/value table, with strict actual decoded labels and a globally convex unrestricted complete objective. | Extend from two-record control to full raw recall, prove ordered-state head capability and realize genuine residual/tied/integer architecture. |
