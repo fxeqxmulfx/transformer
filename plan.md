@@ -832,9 +832,36 @@ with the existing ordinary AdamW implementation and public interface.
 
 ## 3. Measure the softmax baseline and compare equal FLOPs
 
-Status: active. The stage-2 mathematical prototype is ready for the
-lab port, meaningful numerical checks and measured baseline protocol.
-No new stage-3 training run or successful FLOP budget has yet been recorded.
+Status: active. The stage-2 mathematical prototype is ported and checked,
+and the measured original-softmax runs have started on 2026-10-07.
+Lab revision 0700c49 passed 214 tests and all sixteen full-shape arithmetic
+coverage probes. The first seed-0 successes are easy depth at 200 updates
+(148,978,162,800 charged operations) and easy parity at 8,200 updates
+(1,609,311,910,000). Their measured ceilings are pinned in the experiment
+for matched candidate arms; other references are still running. Easy depth
+passes its test at 100% and length-128 at 60.35%; parity passes validation
+at 99.02% and its free-generation test at 97.27%. These empirical results
+are separate from the universal Lean capacity proofs.
+Easy recall seed 0 also passes at 1,650 updates/4,989,090,525,500 operations
+(99.80% validation, 100% test); hard parity seed 0 passes at 4,200
+updates/9,475,216,186,800 operations (99.02% validation, 97.46% test).
+Those measured ceilings are likewise pinned for the candidate.
+Hard recall seed 0 passes at 3,350 updates/107,443,940,040,500 operations
+(99.22% validation and 98.63% test), supplying its exact matched ceiling.
+All eighteen original softmax seed/task/mode attempts are now preserved
+in experiments/basis_tensor/reference_budgets.json, including exact
+settings, data fingerprints and source provenance. Seventeen passed.
+Hard depth seed 0 failed the length-128 99% criterion after 10,000 updates
+(best 98.05%); its original result, manifest and checkpoint are archived
+before continuation to 20,000 updates at unchanged trajectory settings.
+All seventeen successful ceilings are pinned for matched candidates.
+Initial candidate results are preserved in initial_comparison.json:
+easy parity seed 0 passes free generation at 100% validation/test within
+the full 1,609,311,910,000-operation ceiling, first passing at 7,000 updates.
+Easy depth seed 0 spends 148,793,847,818 operations/659 whole updates,
+leaving 184,314,982 operations unspent and predicting only reject
+(18.55% validation, 19.73% test, 14.65% length-128 sequence accuracy).
+It therefore enters stage 4 while the other stage-3 arms continue.
 The first Python port is implemented with all literal shared residual
 layers and fixed-zero original FFNs. Actual forward receives only tokens;
 complete path/route/channel labels are generated once from unchanged
@@ -883,7 +910,23 @@ README registry. Never substitute a much smaller compute budget.
 
 ## 4. Repair or replace weaker candidates
 
-Status: queued; repeats after each controlled comparison.
+Status: active for the first easy-depth failure; repeats after each
+controlled comparison while the remaining stage-3 arms continue.
+
+The failed depth checkpoint's observed A/B/neutral transition argmaxes
+are correct, but their probabilities remain 0.32--0.40 and the state
+branch weight is 0.764. Uniformly multiplying its free potentials by
+eight is a separate post-training diagnostic: actual order-control
+predictions change from [15,15] to [16,15], and real validation sequence
+accuracy reaches 100%. This does not yet establish ordinary-AdamW
+learning for a repaired architecture. The next candidate is a fixed
+common linear gain on all unrestricted free fields, with inverse
+coordinates preserving the original model class. Check actual full-stack
+likelihood/inference/capability/convexity in Lean before its lab port;
+then train afresh at the existing measured ceilings, charging the gain
+and preserving ordinary AdamW and the original actual-potential
+initialization scale. This changes conditioning, not gauge directions,
+and does not by itself prove optimizer convergence.
 
 When a candidate performs worse, preserve its run and identify a concrete
 semantic or optimization failure. Reproduce it in a small control and

@@ -1,0 +1,3245 @@
+{
+  "convention": "aten-reference-arithmetic-v1",
+  "captured_utc": "2026-10-07T12:40:00Z",
+  "note": "Completed original recipe attempts; failed attempts do not define a first-success ceiling. Later continuations append records. The identical engine is stored once; per-attempt commit provenance remains separate.",
+  "references": [
+    {
+      "label": "softmax-easy-depth-seed0",
+      "attempt_updates": 2000,
+      "stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 200,
+        "training_seconds": 4.947248190990649,
+        "wall_seconds": 14.10256319004111,
+        "examples_seen": 3200,
+        "value": 1.0
+      },
+      "training_charged_ops": 148978162800,
+      "selection": "validation",
+      "best_step": 200,
+      "best_sequence_accuracy": {
+        "validation": 1.0,
+        "test": 1.0,
+        "test/length-128": 0.603515625
+      },
+      "split_fingerprints": {
+        "train": "48f78e7d0480fa720b2ff7edea1c6bf9901883b8891b7dd85fb2f6c445b21da8",
+        "validation": "5a846b3df5d222be8d9f1d33f3d0635172341a8a285c215e999c21b9260cbfa1",
+        "test": "1a23afae22f1964509cbed215d4ceb5dc0226a1b434bba43e097533ecde66834",
+        "test/length-128": "26dc54f3994b68cbf791e10a065d864262c8a9e123a6bfa47b487f02626ea77a"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 128
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "AlternatingBlocks",
+            "blocks": 2,
+            "neutral_fraction": 0.25,
+            "max_neutral_gap": null
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [
+            128
+          ],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 2000,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 200,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 200
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-easy-depth-seed1",
+      "attempt_updates": 2000,
+      "stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 200,
+        "training_seconds": 4.4698640429996885,
+        "wall_seconds": 13.385311669961084,
+        "examples_seen": 3200,
+        "value": 1.0
+      },
+      "training_charged_ops": 148978162800,
+      "selection": "validation",
+      "best_step": 200,
+      "best_sequence_accuracy": {
+        "validation": 1.0,
+        "test": 0.998046875,
+        "test/length-128": 0.630859375
+      },
+      "split_fingerprints": {
+        "train": "48f78e7d0480fa720b2ff7edea1c6bf9901883b8891b7dd85fb2f6c445b21da8",
+        "validation": "5a846b3df5d222be8d9f1d33f3d0635172341a8a285c215e999c21b9260cbfa1",
+        "test": "1a23afae22f1964509cbed215d4ceb5dc0226a1b434bba43e097533ecde66834",
+        "test/length-128": "26dc54f3994b68cbf791e10a065d864262c8a9e123a6bfa47b487f02626ea77a"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 128
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "AlternatingBlocks",
+            "blocks": 2,
+            "neutral_fraction": 0.25,
+            "max_neutral_gap": null
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [
+            128
+          ],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 2000,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 1,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 200,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 200
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-easy-depth-seed2",
+      "attempt_updates": 2000,
+      "stop": {
+        "step": 200,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 200,
+        "training_seconds": 4.744948044011835,
+        "wall_seconds": 14.480423060012981,
+        "examples_seen": 3200,
+        "value": 0.998046875
+      },
+      "training_charged_ops": 148978162800,
+      "selection": "validation",
+      "best_step": 200,
+      "best_sequence_accuracy": {
+        "validation": 0.998046875,
+        "test": 0.998046875,
+        "test/length-128": 0.904296875
+      },
+      "split_fingerprints": {
+        "train": "48f78e7d0480fa720b2ff7edea1c6bf9901883b8891b7dd85fb2f6c445b21da8",
+        "validation": "5a846b3df5d222be8d9f1d33f3d0635172341a8a285c215e999c21b9260cbfa1",
+        "test": "1a23afae22f1964509cbed215d4ceb5dc0226a1b434bba43e097533ecde66834",
+        "test/length-128": "26dc54f3994b68cbf791e10a065d864262c8a9e123a6bfa47b487f02626ea77a"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 128
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "AlternatingBlocks",
+            "blocks": 2,
+            "neutral_fraction": 0.25,
+            "max_neutral_gap": null
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [
+            128
+          ],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 2000,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 2,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 200,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 200
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-easy-parity-seed0",
+      "attempt_updates": 20000,
+      "stop": {
+        "step": 8200,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 8200,
+        "training_seconds": 68.24235283676535,
+        "wall_seconds": 85.26985474501271,
+        "examples_seen": 131200,
+        "value": 0.990234375
+      },
+      "training_charged_ops": 1609311910000,
+      "selection": "validation",
+      "best_step": 8200,
+      "best_sequence_accuracy": {
+        "validation": 0.990234375,
+        "test": 0.97265625
+      },
+      "split_fingerprints": {
+        "train": "82e6a4a6a3a4b45cae2ca85873ad6b42daa3b59eb0dcfd4c8e5946f9d5c4a76a",
+        "validation": "7cd9f8b3a10d5c76ed219442edc3bd02e0cced7c2ee45a4d79e85295b7d2c1e2",
+        "test": "43204e2c9858b7be7147e4158bba2b653d9a2ee138ff258f930cc41dbac98440"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 19
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "Parity",
+            "scratchpad": "none",
+            "hints": false,
+            "symbols": 32,
+            "number_limit": 512
+          },
+          "length": 16,
+          "min_length": 1,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 20000,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 200,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 200
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-easy-parity-seed1",
+      "attempt_updates": 20000,
+      "stop": {
+        "step": 5000,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 5000,
+        "training_seconds": 38.435015700990334,
+        "wall_seconds": 52.44658215501113,
+        "examples_seen": 80000,
+        "value": 0.990234375
+      },
+      "training_charged_ops": 981287750000,
+      "selection": "validation",
+      "best_step": 5000,
+      "best_sequence_accuracy": {
+        "validation": 0.990234375,
+        "test": 0.974609375
+      },
+      "split_fingerprints": {
+        "train": "82e6a4a6a3a4b45cae2ca85873ad6b42daa3b59eb0dcfd4c8e5946f9d5c4a76a",
+        "validation": "7cd9f8b3a10d5c76ed219442edc3bd02e0cced7c2ee45a4d79e85295b7d2c1e2",
+        "test": "43204e2c9858b7be7147e4158bba2b653d9a2ee138ff258f930cc41dbac98440"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 19
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "Parity",
+            "scratchpad": "none",
+            "hints": false,
+            "symbols": 32,
+            "number_limit": 512
+          },
+          "length": 16,
+          "min_length": 1,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 20000,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 1,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 200,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 200
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-easy-parity-seed2",
+      "attempt_updates": 20000,
+      "stop": {
+        "step": 4200,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 4200,
+        "training_seconds": 30.85120723012369,
+        "wall_seconds": 43.589238605985884,
+        "examples_seen": 67200,
+        "value": 0.994140625
+      },
+      "training_charged_ops": 824281710000,
+      "selection": "validation",
+      "best_step": 4200,
+      "best_sequence_accuracy": {
+        "validation": 0.994140625,
+        "test": 0.98046875
+      },
+      "split_fingerprints": {
+        "train": "82e6a4a6a3a4b45cae2ca85873ad6b42daa3b59eb0dcfd4c8e5946f9d5c4a76a",
+        "validation": "7cd9f8b3a10d5c76ed219442edc3bd02e0cced7c2ee45a4d79e85295b7d2c1e2",
+        "test": "43204e2c9858b7be7147e4158bba2b653d9a2ee138ff258f930cc41dbac98440"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 19
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "Parity",
+            "scratchpad": "none",
+            "hints": false,
+            "symbols": 32,
+            "number_limit": 512
+          },
+          "length": 16,
+          "min_length": 1,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 20000,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 2,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 200,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 200
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-easy-recall-seed0",
+      "attempt_updates": 4800,
+      "stop": {
+        "step": 1650,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 1650,
+        "training_seconds": 154.22899851371767,
+        "wall_seconds": 179.62273658905178,
+        "examples_seen": 105440,
+        "value": 0.998046875
+      },
+      "training_charged_ops": 4989090525500,
+      "selection": "validation",
+      "best_step": 1650,
+      "best_sequence_accuracy": {
+        "validation": 0.998046875,
+        "test": 1.0
+      },
+      "split_fingerprints": {
+        "train": "6d2333ba9f121b0599b4669f1c9772002f5777ef30d997d8a3ff70d5238ecdf5",
+        "validation": "db69fa145e467a08687d05889a85e615d4013d80e5ad35409a43ced3285418e9",
+        "test": "14ef1399a95ce24abcf5a6b554f31e4671464c9f0bba9f6c8ef604d5f18ecdbb"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 64
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "MQAR",
+            "symbols": 256,
+            "pairs": 8,
+            "queries": 8,
+            "query_gap": 0,
+            "alpha": 0.1,
+            "overwrites": 0
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 4800,
+          "batch": 64
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 50,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 50
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-easy-recall-seed1",
+      "attempt_updates": 4800,
+      "stop": {
+        "step": 2450,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 2450,
+        "training_seconds": 220.78230134409387,
+        "wall_seconds": 253.38026766403345,
+        "examples_seen": 156576,
+        "value": 0.990234375
+      },
+      "training_charged_ops": 7408685409020,
+      "selection": "validation",
+      "best_step": 2450,
+      "best_sequence_accuracy": {
+        "validation": 0.990234375,
+        "test": 0.98828125
+      },
+      "split_fingerprints": {
+        "train": "6d2333ba9f121b0599b4669f1c9772002f5777ef30d997d8a3ff70d5238ecdf5",
+        "validation": "db69fa145e467a08687d05889a85e615d4013d80e5ad35409a43ced3285418e9",
+        "test": "14ef1399a95ce24abcf5a6b554f31e4671464c9f0bba9f6c8ef604d5f18ecdbb"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 64
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "MQAR",
+            "symbols": 256,
+            "pairs": 8,
+            "queries": 8,
+            "query_gap": 0,
+            "alpha": 0.1,
+            "overwrites": 0
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 4800,
+          "batch": 64
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 1,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 50,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 50
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-easy-recall-seed2",
+      "attempt_updates": 4800,
+      "stop": {
+        "step": 1800,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 1800,
+        "training_seconds": 158.590378865425,
+        "wall_seconds": 185.29153837700142,
+        "examples_seen": 115040,
+        "value": 0.994140625
+      },
+      "training_charged_ops": 5443331961200,
+      "selection": "validation",
+      "best_step": 1800,
+      "best_sequence_accuracy": {
+        "validation": 0.994140625,
+        "test": 0.982421875
+      },
+      "split_fingerprints": {
+        "train": "6d2333ba9f121b0599b4669f1c9772002f5777ef30d997d8a3ff70d5238ecdf5",
+        "validation": "db69fa145e467a08687d05889a85e615d4013d80e5ad35409a43ced3285418e9",
+        "test": "14ef1399a95ce24abcf5a6b554f31e4671464c9f0bba9f6c8ef604d5f18ecdbb"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 64,
+          "depth": 2,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 64
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "MQAR",
+            "symbols": 256,
+            "pairs": 8,
+            "queries": 8,
+            "query_gap": 0,
+            "alpha": 0.1,
+            "overwrites": 0
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 4800,
+          "batch": 64
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 2,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 50,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 50
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-hard-depth-seed0",
+      "attempt_updates": 10000,
+      "stop": {
+        "step": 10000,
+        "reason": "budget"
+      },
+      "first_success": null,
+      "training_charged_ops": 80179263340000,
+      "selection": "validation/length-128",
+      "best_step": 6000,
+      "best_sequence_accuracy": {
+        "validation/length-128": 0.98046875,
+        "test": 1.0,
+        "test/length-128": 0.978515625
+      },
+      "split_fingerprints": {
+        "train": "47c4bd51f0d410f759eaca11de8a400b4bdfa5ad8e33a4aa78647b1523d3adcf",
+        "validation": "424efffb187b08b05717b522b7b3e572b293fa9ce928cec78b8e8b9486aca2b7",
+        "test": "ad6fc146e5342e92541c43537bf1d8ec4b06b816332712f92c75e381b48f9e06",
+        "validation/length-128": "e397080d60f920d31d46f2466dc935133d986c40a90086a7a80599f9a133d6bb",
+        "test/length-128": "3db3004703f8489fb4d737ada32a2128d8af93f4d79d0191652a47f536940da2"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 6,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 128
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "AlternatingBlocks",
+            "blocks": 4,
+            "neutral_fraction": 0.25,
+            "max_neutral_gap": null
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [
+            128
+          ],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": "length-128"
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 10000,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 200,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 2
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 200
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-hard-depth-seed1",
+      "attempt_updates": 10000,
+      "stop": {
+        "step": 1400,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 1400,
+        "training_seconds": 135.32266338804038,
+        "wall_seconds": 180.6744840289466,
+        "examples_seen": 22400,
+        "value": 0.9921875
+      },
+      "training_charged_ops": 11225096867600,
+      "selection": "validation/length-128",
+      "best_step": 1400,
+      "best_sequence_accuracy": {
+        "validation/length-128": 0.9921875,
+        "test": 1.0,
+        "test/length-128": 0.98828125
+      },
+      "split_fingerprints": {
+        "train": "47c4bd51f0d410f759eaca11de8a400b4bdfa5ad8e33a4aa78647b1523d3adcf",
+        "validation": "424efffb187b08b05717b522b7b3e572b293fa9ce928cec78b8e8b9486aca2b7",
+        "test": "ad6fc146e5342e92541c43537bf1d8ec4b06b816332712f92c75e381b48f9e06",
+        "validation/length-128": "e397080d60f920d31d46f2466dc935133d986c40a90086a7a80599f9a133d6bb",
+        "test/length-128": "3db3004703f8489fb4d737ada32a2128d8af93f4d79d0191652a47f536940da2"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 6,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 128
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "AlternatingBlocks",
+            "blocks": 4,
+            "neutral_fraction": 0.25,
+            "max_neutral_gap": null
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [
+            128
+          ],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": "length-128"
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 10000,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 1,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 200,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 2
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 200
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-hard-depth-seed2",
+      "attempt_updates": 10000,
+      "stop": {
+        "step": 5400,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 5400,
+        "training_seconds": 477.2559712198563,
+        "wall_seconds": 592.4243177990429,
+        "examples_seen": 86400,
+        "value": 1.0
+      },
+      "training_charged_ops": 43296802203600,
+      "selection": "validation/length-128",
+      "best_step": 5400,
+      "best_sequence_accuracy": {
+        "validation/length-128": 1.0,
+        "test": 1.0,
+        "test/length-128": 1.0
+      },
+      "split_fingerprints": {
+        "train": "47c4bd51f0d410f759eaca11de8a400b4bdfa5ad8e33a4aa78647b1523d3adcf",
+        "validation": "424efffb187b08b05717b522b7b3e572b293fa9ce928cec78b8e8b9486aca2b7",
+        "test": "ad6fc146e5342e92541c43537bf1d8ec4b06b816332712f92c75e381b48f9e06",
+        "validation/length-128": "e397080d60f920d31d46f2466dc935133d986c40a90086a7a80599f9a133d6bb",
+        "test/length-128": "3db3004703f8489fb4d737ada32a2128d8af93f4d79d0191652a47f536940da2"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 6,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 128
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "AlternatingBlocks",
+            "blocks": 4,
+            "neutral_fraction": 0.25,
+            "max_neutral_gap": null
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [
+            128
+          ],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": "length-128"
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 10000,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 2,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 200,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 2
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 200
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-hard-parity-seed0",
+      "attempt_updates": 20000,
+      "stop": {
+        "step": 4200,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 4200,
+        "training_seconds": 126.37161947978893,
+        "wall_seconds": 155.81073858303716,
+        "examples_seen": 67200,
+        "value": 0.990234375
+      },
+      "training_charged_ops": 9475216186800,
+      "selection": "validation",
+      "best_step": 4200,
+      "best_sequence_accuracy": {
+        "validation": 0.990234375,
+        "test": 0.974609375
+      },
+      "split_fingerprints": {
+        "train": "82e6a4a6a3a4b45cae2ca85873ad6b42daa3b59eb0dcfd4c8e5946f9d5c4a76a",
+        "validation": "7cd9f8b3a10d5c76ed219442edc3bd02e0cced7c2ee45a4d79e85295b7d2c1e2",
+        "test": "43204e2c9858b7be7147e4158bba2b653d9a2ee138ff258f930cc41dbac98440"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 6,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 19
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "Parity",
+            "scratchpad": "none",
+            "hints": false,
+            "symbols": 32,
+            "number_limit": 512
+          },
+          "length": 16,
+          "min_length": 1,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 20000,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 200,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 2
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 200
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-hard-parity-seed1",
+      "attempt_updates": 20000,
+      "stop": {
+        "step": 7200,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 7200,
+        "training_seconds": 241.33277263690252,
+        "wall_seconds": 287.5790694630123,
+        "examples_seen": 115200,
+        "value": 0.990234375
+      },
+      "training_charged_ops": 16243227748800,
+      "selection": "validation",
+      "best_step": 7200,
+      "best_sequence_accuracy": {
+        "validation": 0.990234375,
+        "test": 0.974609375
+      },
+      "split_fingerprints": {
+        "train": "82e6a4a6a3a4b45cae2ca85873ad6b42daa3b59eb0dcfd4c8e5946f9d5c4a76a",
+        "validation": "7cd9f8b3a10d5c76ed219442edc3bd02e0cced7c2ee45a4d79e85295b7d2c1e2",
+        "test": "43204e2c9858b7be7147e4158bba2b653d9a2ee138ff258f930cc41dbac98440"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 6,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 19
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "Parity",
+            "scratchpad": "none",
+            "hints": false,
+            "symbols": 32,
+            "number_limit": 512
+          },
+          "length": 16,
+          "min_length": 1,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 20000,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 1,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 200,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 2
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 200
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-hard-parity-seed2",
+      "attempt_updates": 20000,
+      "stop": {
+        "step": 8800,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 8800,
+        "training_seconds": 263.5768756289617,
+        "wall_seconds": 313.87368913996033,
+        "examples_seen": 140800,
+        "value": 0.99609375
+      },
+      "training_charged_ops": 19852833915200,
+      "selection": "validation",
+      "best_step": 8800,
+      "best_sequence_accuracy": {
+        "validation": 0.99609375,
+        "test": 0.990234375
+      },
+      "split_fingerprints": {
+        "train": "82e6a4a6a3a4b45cae2ca85873ad6b42daa3b59eb0dcfd4c8e5946f9d5c4a76a",
+        "validation": "7cd9f8b3a10d5c76ed219442edc3bd02e0cced7c2ee45a4d79e85295b7d2c1e2",
+        "test": "43204e2c9858b7be7147e4158bba2b653d9a2ee138ff258f930cc41dbac98440"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 6,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 19
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "Parity",
+            "scratchpad": "none",
+            "hints": false,
+            "symbols": 32,
+            "number_limit": 512
+          },
+          "length": 16,
+          "min_length": 1,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 20000,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 2,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 200,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 2
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 200
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-hard-recall-seed0",
+      "attempt_updates": 4800,
+      "stop": {
+        "step": 3350,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 3350,
+        "training_seconds": 615.4561127049965,
+        "wall_seconds": 666.8179958569817,
+        "examples_seen": 214080,
+        "value": 0.9921875
+      },
+      "training_charged_ops": 107443940040500,
+      "selection": "validation",
+      "best_step": 3350,
+      "best_sequence_accuracy": {
+        "validation": 0.9921875,
+        "test": 0.986328125
+      },
+      "split_fingerprints": {
+        "train": "f51d12def851594c47128b25a3d548ee609a28174c11e8b5a437bcc5f6d5c02e",
+        "validation": "ed164ac1c6a985f46568628f0624cb5d7b50a49bd0da4630a16ccb3ab5fcb23b",
+        "test": "5c9bc46e78e6f3e961ea233f774694c9b9ac38a147775ce597b1be1b5d2f47c8"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 6,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 64
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "MQAR",
+            "symbols": 256,
+            "pairs": 16,
+            "queries": 8,
+            "query_gap": 0,
+            "alpha": 0.1,
+            "overwrites": 8
+          },
+          "length": 64,
+          "min_length": 48,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 4800,
+          "batch": 64
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 50,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 4
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 50
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-hard-recall-seed1",
+      "attempt_updates": 4800,
+      "stop": {
+        "step": 2650,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 2650,
+        "training_seconds": 464.22087990661385,
+        "wall_seconds": 505.52813755802345,
+        "examples_seen": 169344,
+        "value": 0.990234375
+      },
+      "training_charged_ops": 84991530151660,
+      "selection": "validation",
+      "best_step": 2650,
+      "best_sequence_accuracy": {
+        "validation": 0.990234375,
+        "test": 0.984375
+      },
+      "split_fingerprints": {
+        "train": "f51d12def851594c47128b25a3d548ee609a28174c11e8b5a437bcc5f6d5c02e",
+        "validation": "ed164ac1c6a985f46568628f0624cb5d7b50a49bd0da4630a16ccb3ab5fcb23b",
+        "test": "5c9bc46e78e6f3e961ea233f774694c9b9ac38a147775ce597b1be1b5d2f47c8"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 6,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 64
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "MQAR",
+            "symbols": 256,
+            "pairs": 16,
+            "queries": 8,
+            "query_gap": 0,
+            "alpha": 0.1,
+            "overwrites": 8
+          },
+          "length": 64,
+          "min_length": 48,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 4800,
+          "batch": 64
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 1,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 50,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 4
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 50
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-hard-recall-seed2",
+      "attempt_updates": 4800,
+      "stop": {
+        "step": 2400,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 2400,
+        "training_seconds": 455.78165657719364,
+        "wall_seconds": 498.64873426099075,
+        "examples_seen": 153376,
+        "value": 0.99609375
+      },
+      "training_charged_ops": 76977398143040,
+      "selection": "validation",
+      "best_step": 2400,
+      "best_sequence_accuracy": {
+        "validation": 0.99609375,
+        "test": 0.982421875
+      },
+      "split_fingerprints": {
+        "train": "f51d12def851594c47128b25a3d548ee609a28174c11e8b5a437bcc5f6d5c02e",
+        "validation": "ed164ac1c6a985f46568628f0624cb5d7b50a49bd0da4630a16ccb3ab5fcb23b",
+        "test": "5c9bc46e78e6f3e961ea233f774694c9b9ac38a147775ce597b1be1b5d2f47c8"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 6,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 64
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "MQAR",
+            "symbols": 256,
+            "pairs": 16,
+            "queries": 8,
+            "query_gap": 0,
+            "alpha": 0.1,
+            "overwrites": 8
+          },
+          "length": 64,
+          "min_length": 48,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 4800,
+          "batch": 64
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 2,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 50,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 4
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 50
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    }
+  ],
+  "engine": {
+    "code": {
+      "__init__.py": "5247f0245c4e0e85225d43902285e61a7a162900ebde899cbe0f48aaa7ff06ce",
+      "application/__init__.py": "3971805b0409c0ce3a044d90d72d65d8565380e3699eb19695cd26b5231cd46e",
+      "application/ports.py": "89d231b66db064b7d879fc4025c0965a6bcd41f6091e47b90520e140059520a1",
+      "application/report.py": "cb61e932a892220a41144874f8b1efd009ea796cec3559fa854fc33456b23ec8",
+      "application/study.py": "81c7f9db3eb2739cdff6c617519f408d8552bd2b84ffdea271b2b5444920d982",
+      "domain/__init__.py": "54f6bfc495f239ff287f39dbebf100043317863a0c9ada92b6f001de01a36b2c",
+      "domain/analysis.py": "ea94291415afca7e28a6009137ed44add69b23999f07eb8cd4ddc083bfec24f2",
+      "domain/atomic.py": "7022954358b6cf3be90b82277b5e0db20b2f64f5c585657332864134b21d00f5",
+      "domain/basis.py": "99993d1869e53b730b9517474195ee78cccbe0b415a194668cf4ca39cbab577b",
+      "domain/benchmarks.py": "ac6f0472f65c8c5a54b8bfe43f1004c1d4219fea84b50a74b8edc092131baae6",
+      "domain/cadence.py": "592ba56790469be4fe33a430c270b98d537d03e4948fbb92de202fe3111968e0",
+      "domain/calibration.py": "ecfd2060bd84db189e1c75da53e0c00a809578b75c22e356da17823aac645410",
+      "domain/collapse.py": "f7bac076f5ea495c1b4673682071eb898e0de8fc343203d10585db08155e8e89",
+      "domain/experiment.py": "4f89f050f5c2421fdd9356b5916fbf9bdb73484f4c6ecfed6020e93fe4288bbf",
+      "domain/generative.py": "efbd172d1e120012f896386b62849cb992528bf523fdbc9de9c174c37e3df126",
+      "domain/memorization.py": "d1119100afafa87e3bfbe3f53429243e59c44a0986c01b0c106856be12b17219",
+      "domain/model.py": "67c136528c0ac8f4db319c399875927ea706132e84cac9dc6c28b92e5d9120cd",
+      "domain/optimizers.py": "14da6a7ce96b13b788f661bff27d6c279f0a3c7f82c77503ba952a6ff234dc52",
+      "domain/phases.py": "c1029198684bd0eaf482059bda3175275c0f52075b5a419b544c67be02d07239",
+      "domain/spec.py": "0ad08c0060d555309c43c9bfc223487683f9240c1bbf7dc75157f22560e6e8f2",
+      "domain/stability.py": "9e1d6573cff2bfbd1559afde361c8ba09c29a2306908d4b19cf3fb30daaacb4d",
+      "domain/stopping.py": "f3cd37a4a3040d925fd330490cf387f5d139760d4bd3f7c14d764e048dbf252a",
+      "domain/synthetic.py": "903e3bf7d747524e3729d2873110de6b4c725e9f6eb0102ac97e62dcb2230e6d",
+      "domain/tasks.py": "0b17f033b623e17ef84f68428d8a62aac3b5c9207a6481ebcbbc6bc0d4ea275f",
+      "domain/tensor.py": "d71ecc025d716f8c52009c3374fddb8173ca1a4295476648554be8dbeca90c23",
+      "domain/training.py": "2d2db6ef352e1434221d6d3f91cdd879252ab7ab6b7333a8b2f196cf657d2eeb",
+      "dsl.py": "20ad47d7e81697ad2a248c5529db6f993507d99862ef3981a9632c30476f8aa3",
+      "infrastructure/__init__.py": "24f37965caf4b37e7b38dc11c18c7e1ea249dd157e53e3eeee20312d74d1a8d3",
+      "infrastructure/arithmetic.py": "46af2d7383938bee6d2e40cf826dc9a7a18eaa7c0f128450d0220e1fb7e0cdc0",
+      "infrastructure/benchmarks/__init__.py": "95725bb8993b3f5e79c4a0c61c0d09236f7b501c82f1a61922a7c8bcfadb3c17",
+      "infrastructure/benchmarks/matching.py": "b3d521f9ecef3ebcf9a4e7ec7afc198035dec5197ef8793ffb661c9eedeb99c0",
+      "infrastructure/benchmarks/modular.py": "81707cdca23171d30c1ee74fde6ad00b007bbc6692b7dde813dc301659e49fd6",
+      "infrastructure/benchmarks/samplers.py": "9d5bfdfb476c5faaa89b78716efd61fe0bff10011dccbe705b22ba653a8801ab",
+      "infrastructure/benchmarks/synthetic/__init__.py": "6e433a4fc98f53a4502c39e2d0e7d50d519e2827666f3028b37dad0f846ffc47",
+      "infrastructure/benchmarks/synthetic/arithmetic.py": "e70be51638ec745839bd498fe9b8a1645806eb1d940dcfc875b2bcd3fc2b93a6",
+      "infrastructure/benchmarks/synthetic/base.py": "16a16f4e0d94124ca5196455ad676c7deb918569daf85043444aeacc5ed4533a",
+      "infrastructure/benchmarks/synthetic/bits.py": "508d9ad10454f837f8f28bcca00c1e49d56f35ee9c5bffe4db8364d7ffc6c094",
+      "infrastructure/benchmarks/synthetic/compression.py": "656f600ed920aaa0c3a7e02f1ba6e6a8ce5dfe19662506fae131bfdf71c848b1",
+      "infrastructure/benchmarks/synthetic/control.py": "fe6b6327d576b02abf96aa3adce840d157d1438e2c9c5e062ca2a8c36e08d264",
+      "infrastructure/benchmarks/synthetic/corpus.py": "17f641d95fa5cddd8613ece3122ea6980c186cde06d91d67708d3ff36b278d13",
+      "infrastructure/benchmarks/synthetic/crasp.py": "362a47828b8610cd71827cc74e2d5425a4857683ad2ea646a310142537911cfc",
+      "infrastructure/benchmarks/synthetic/generation.py": "558a70b0c6c3fd3a5c80a1369cb2de237ee8bd98ce0058bfcf2ac4c353c2f138",
+      "infrastructure/benchmarks/synthetic/memorization.py": "3ce28545604583dcc69d51155f854f87009ffa12f207a12001babcbbbd2a281e",
+      "infrastructure/benchmarks/synthetic/noise.py": "bf55ddd6cede01adf01066f397fe3fcbf9b9d36d20efe4414a6529648f818cc2",
+      "infrastructure/benchmarks/synthetic/prefixes.py": "72d58f5fa02e394dceca77c483f048a63eb45b8cf6cfd7c5acbd986745988ad7",
+      "infrastructure/benchmarks/synthetic/records.py": "cb9c51b37263f8df2ffbd0960af9b7f1e97ae29d8ba261024bfb08e3c58e0e82",
+      "infrastructure/benchmarks/synthetic/retrieval.py": "deb4b69e4fd136e20a747b74e59d6d50b8b2d3e54663829f60d2c8b828326d5f",
+      "infrastructure/benchmarks/synthetic/rows.py": "71f552498f66087f681ada0073c174a40a303cc76d7e0981bc316325f11ff9a7",
+      "infrastructure/benchmarks/synthetic/sampling.py": "2ced1668f7b49e33de37bc77077327e2967121161e8221412d7ee3a209240d28",
+      "infrastructure/benchmarks/synthetic/sequences.py": "3f1ce4b63fcff17fe8309428c9e53a3095bebf0986e6135e8d5117ddc6fd7342",
+      "infrastructure/benchmarks/synthetic/splits.py": "34bcd8cf9295b4dbd4e9efd7dfe60fefbd28c433ccf6d03f4cbb177e6e6b47d9",
+      "infrastructure/benchmarks/synthetic/tensor.py": "d5bd7c96d21e15108082cf359f1280e9820c74156ba50603d595c68c677f5bb0",
+      "infrastructure/benchmarks/synthetic/training.py": "aa27192db84915cac75cfd834e07eac204393020fd334eff0968a9ace40b0115",
+      "infrastructure/benchmarks/synthetic/vocabulary.py": "8459f5f95f737c12e1cc2e165038ee743fb7973de3355544d8c72df9cb3e4e48",
+      "infrastructure/benchmarks/text.py": "038e2f7b58e9e6c6d689d3b660d4d9d2880726f82732a397e2dd72239e200352",
+      "infrastructure/engine/__init__.py": "75ddb6ca450eb1cde7c187eecd12bc2d5a6bcb3c1c23f276017112e953350f45",
+      "infrastructure/engine/atomic.py": "7e6a76997d7919c24064fa37f1a0fe729fa7403945e9968b7ad031ab10f4a3ac",
+      "infrastructure/engine/attention.py": "0ac754e5d62a3299bfae219af86d84b5f09bb1851e085ebbe11cca38b9d1125b",
+      "infrastructure/engine/attention_batch.py": "d233d13baf8fbdce43677175fadd46d08c5011b0ee9cd01c63e8b839e4fb0d47",
+      "infrastructure/engine/attention_stats.py": "5f4f2d1943a394e6af6ac07f8ec094c3f334b1ebbc052001a6b4fc1989df14a2",
+      "infrastructure/engine/compiled.py": "850d1de1e1c8fa9ab04c13c507d351efee6b90e2b1c21ae381a9e0c4d71028a7",
+      "infrastructure/engine/eager.py": "e892f0ff750c5182dd5a5cdd326950301aee554e33fecec27d11760903208fda",
+      "infrastructure/engine/graphs.py": "20326ad0fca1c7d6905eb7ef663f29364b9fd1e4601a74b5bd51826e64e38a2e",
+      "infrastructure/engine/loop.py": "b6d9790d2b34cdcc8904c2d4123b1de250128a3470be1eabc9479d3fba9f9c8f",
+      "infrastructure/engine/measure.py": "43b0c6c031230b10a04ee4fe0fe42b1c46b9f32c1e828b370789e700190d5d09",
+      "infrastructure/engine/measured.py": "5f81d18adbf9bde3c9e91845cebc4c1fc9163b5855087642afd74cbdf051a083",
+      "infrastructure/engine/population.py": "97d63265f967d9395dd9bbcbc87e21f10ad1ee9543e1cd3899d0f0c5a8ff5d01",
+      "infrastructure/farm.py": "626b5b1c3a92ca5bfc3c4078c0c59a2e7b6ff8acdbc38782cbc5949640821b27",
+      "infrastructure/loader.py": "b1cc1bc0463910c78abd30f587ae5a66fa5d091ce7639785bba58b6a1016b97c",
+      "infrastructure/nn/__init__.py": "162316080abd0577c108aac9d43885ede56f69298d444e44eed8507f38bfc4f5",
+      "infrastructure/nn/atomic.py": "76ab8eed161a2547f36cc7c97cdb2de98ec5a6ce9bd077695918b6b7c371fb05",
+      "infrastructure/nn/attention.py": "cd99d0f524f05959fba6cb331191a46b0f4323e5d09f0fbadf3e966c1b160f0c",
+      "infrastructure/nn/legacy.py": "c6a5d4084c86dc0cb114a0cebd5873e243571b2b61f7178f5914c373d23e7048",
+      "infrastructure/nn/positions.py": "f95752d6948a1ecff5602e8c7fb26171cd7a6e4c54618547a9f7f7c2d70dd102",
+      "infrastructure/nn/sparsemax.py": "c864ce1e440f8c5b349df2c9eab0b6e018d5a486d400a8d155e9ef111f3ac2c0",
+      "infrastructure/nn/surrogate.py": "2141bb936750cd178b18c8c9646e2f9a7261447cc065a32f6400b6ab050e47c3",
+      "infrastructure/nn/tensor.py": "3655f70120a6e5a46d5d91cc00c7949e99557432f6ab621471e0c85d15331b76",
+      "infrastructure/nn/tensor_heads.py": "3081208f3fc436e54a5ee9d75a2e225fcc6fabcda61155bcf20abd65e8d32ca3",
+      "infrastructure/nn/transformer.py": "ca61ddc99b2fbcc6b42774aab66f774caec1bf0b11ce7f38fd906ce8d743b19d",
+      "infrastructure/optim/__init__.py": "8a7168402ddb6df5d821ff85b23d8672656a8bce8c6bbcf8a17d0c4a965a67fe",
+      "infrastructure/optim/ansr.py": "a0f6d6c559ccd0c53e87e7d457116c6a8864145d46805df7ef19fa66e971b191",
+      "infrastructure/optim/atomic.py": "1bea6d20da17c018cfea1ca0b35c3889a372e9c0627501748b7303f030290b75",
+      "infrastructure/optim/coordinate.py": "1bb074fc2fcc9033c6fa7a3fe5133ad427c0d2059e765c5904fe2292becea6ab",
+      "infrastructure/optim/direction.py": "716b07ad28890e1e1e1dd7cacc506d3c6d1507005f915f1b50b4091e9f848df9",
+      "infrastructure/optim/fisher.py": "9085d71581af08b0767dff3ecee28b8dd1c87abcb545089e2514a68187cb4803",
+      "infrastructure/optim/magnitude.py": "cdb75c6f9dc33c8b88af1f8551180fb3b53b59f24290b65cf91dd41e0861f2d9",
+      "infrastructure/optim/matrix.py": "5c9988b9cadc865fe28086b0130702b827958e0f96cc93e65e7175976eb70ae5",
+      "infrastructure/optim/roots.py": "a0d2486a9cd6d80bab6468cb200ac208945169d7ed2cd1e8a9dccf8b4559578b",
+      "infrastructure/optim/stages.py": "409aec59127a8a2c75b4e282b70ee9c3ec682e0bf3224e13a90eddd8bae86224",
+      "infrastructure/provenance.py": "37b6cfe2f0accca81ffa0be02216623875855e441d21e5ab68644aba5206f7f0",
+      "infrastructure/store.py": "8277dd46ba043ece8bd4bdeb35354617dbbc758a17e2db407980b6b2d0e72ca5"
+    },
+    "torch": "2.14.1+cu126",
+    "device": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz"
+  }
+}

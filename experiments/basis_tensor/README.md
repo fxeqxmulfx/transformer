@@ -2,14 +2,14 @@
 
 Does the compact causal stack proved in Lean learn all six Basis recipes
 under ordinary AdamW within the original GPTMini's measured training FLOPs?
-This is stage 3 of [the active cycle](../../plan.md). No new training
-result or successful reference FLOP budget has been recorded yet.
+This is stage 3 of [the active cycle](../../plan.md). The first seed-0
+softmax references have finished; matched candidate training is beginning.
 
 | Arm | Embedding/attention | Training objective | Budget |
 | --- | --- | --- | --- |
 | `softmax-easy-*-seed{0,1,2}` | Original width-64, two-layer, four-head GPTMini; QKNorm/RoPE/XSA/softmax | Existing answer cross entropy | Unchanged substantial Basis recipe, stopped at 99% sequence accuracy |
 | `softmax-hard-*-seed{0,1,2}` | Original width-128, six-layer GPTMini | Existing answer cross entropy | Unchanged hard Basis recipe; E4 selected at length 128 |
-| Tensor candidate (queued) | Same NTC module interfaces; 52 free fields per token, two shared structured heads, learned absolute/relative positions | Actual complete branch/path/route/channel NLL, labels from raw training data | The corresponding measured first-success reference FLOPs; not assigned before measurement |
+| `tensor-*-*-seed*` | Same NTC module interfaces; 52 free fields per token, two shared structured heads, learned absolute/relative positions | Actual complete branch/path/route/channel NLL, labels from raw training data | The corresponding measured first-success reference FLOPs; whole updates, with early success stopping disabled |
 
 All references use the existing 20,000/512/512 data splits from data seed
 1, model seeds 0/1/2, original batch/rate/warmup/AdamW settings, float32 and
@@ -103,6 +103,59 @@ Evaluation executes the complete model. No skipped operation is counted
 as executed work, and every actual repeated layer is charged. Auxiliary
 label preparation is additional to the per-update table.
 
-Next: measure reference first-success training FLOPs, then define and run
-candidate arms at those exact ceilings. Preserve every failure for stage 4
-instead of treating capability weights as evidence of learning.
+First completed references use lab revision `0700c49`. A success means
+the original selection split reaches at least 99% sequence accuracy;
+ordinary test and length extrapolation are reported separately. The
+ceiling is the successful history row's cumulative training charge.
+
+| Reference | First successful update | Training operations | Validation sequence accuracy | Test sequence accuracy | Length-128 sequence accuracy |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Easy depth, seed 0 | 200 | 148,978,162,800 | 1.000000 | 1.000000 | 0.603516 |
+| Easy depth, seed 1 | 200 | 148,978,162,800 | 1.000000 | 0.998047 | 0.630859 |
+| Easy depth, seed 2 | 200 | 148,978,162,800 | 0.998047 | 0.998047 | 0.904297 |
+| Easy recall, seed 0 | 1,650 | 4,989,090,525,500 | 0.998047 | 1.000000 | — |
+| Easy recall, seed 1 | 2,450 | 7,408,685,409,020 | 0.990234 | 0.988281 | — |
+| Easy recall, seed 2 | 1,800 | 5,443,331,961,200 | 0.994141 | 0.982422 | — |
+| Easy parity, seed 0 | 8,200 | 1,609,311,910,000 | 0.990234 | 0.972656 | — |
+| Easy parity, seed 1 | 5,000 | 981,287,750,000 | 0.990234 | 0.974609 | — |
+| Easy parity, seed 2 | 4,200 | 824,281,710,000 | 0.994141 | 0.980469 | — |
+| Hard depth, seed 0 | not passed at 10,000 | 80,179,263,340,000 | 0.980469 | 1.000000 | 0.978516 |
+| Hard depth, seed 1 | 1,400 | 11,225,096,867,600 | 0.992188 | 1.000000 | 0.988281 |
+| Hard depth, seed 2 | 5,400 | 43,296,802,203,600 | 1.000000 | 1.000000 | 1.000000 |
+| Hard recall, seed 0 | 3,350 | 107,443,940,040,500 | 0.992188 | 0.986328 | — |
+| Hard recall, seed 1 | 2,650 | 84,991,530,151,660 | 0.990234 | 0.984375 | — |
+| Hard recall, seed 2 | 2,400 | 76,977,398,143,040 | 0.996094 | 0.982422 | — |
+| Hard parity, seed 0 | 4,200 | 9,475,216,186,800 | 0.990234 | 0.974609 | — |
+| Hard parity, seed 1 | 7,200 | 16,243,227,748,800 | 0.990234 | 0.974609 | — |
+| Hard parity, seed 2 | 8,800 | 19,852,833,915,200 | 0.996094 | 0.990234 | — |
+The complete original attempts and pinned settings are preserved in
+[reference_budgets.json](reference_budgets.json). Seventeen of eighteen
+references passed. Hard depth seed 0 reached a best length-128 validation
+accuracy of 98.05% in 10,000 updates; its original result/checkpoint are
+archived in the run directory and it continues to 20,000 updates at
+unchanged AdamW/rate/batch/schedule. It defines no success ceiling yet.
+
+Candidate arms are added only for a completed successful reference,
+retain its data, batch, learning rate,
+schedule, AdamW and thread count, and stop at its exact arithmetic ceiling.
+The 100,000-update bound is a safety limit, not permission to exceed that
+ceiling. Preserve every failure for stage 4 instead of treating capability
+weights as evidence of learning.
+
+Initial controlled candidate results:
+
+| Candidate | Updates at ceiling | Charged training operations | Unspent ceiling | Best validation sequence accuracy | Test sequence accuracy | Finding |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| tensor-easy-depth-seed0 | 659 | 148,793,847,818 | 184,314,982 | 0.185547 | 0.197266 | Only reject; complete NLL still falling |
+| tensor-easy-parity-seed0 | 32,390 | 1,609,283,865,140 | 28,044,860 | 1.000000 | 1.000000 | Full parity/EOS generation passes; first validation pass at update 7,000 |
+
+The depth checkpoint has the correct preferred transition on every
+observed A/B/neutral row, but individual correct-transition probabilities
+are only 0.32–0.40 and the state branch weight is 0.764. A diagnostic
+uniform multiplication of its learned potentials by eight, keeping fixed
+decoder/anchor geometry, changes the real order-control outputs from
+`[15, 15]` to `[16, 15]` and attains 100% validation sequence accuracy.
+This is a post-training diagnostic, not a fresh ordinary-AdamW result.
+Stage 4 will test a mathematically verified common linear gain during
+training from an independent initialization, including its arithmetic.
+Gauge directions and a guarantee of AdamW convergence remain open.
