@@ -5,6 +5,7 @@ import Transformer.Grokking.AdamW
 import Transformer.Grokking.GradientEvidence
 import Transformer.Grokking.Operational
 import Transformer.Grokking.Geometry
+import Transformer.Grokking.DivisionOrbits
 
 /-! Exact mathematical formulations of grokking and its candidate
 measurements. Current scope: finite-class confidence and decisions, and
@@ -12,4 +13,5 @@ an explicitly optimized convex perceptron specialization, and checked
 quotient-gradient laws of an effective representation model, and an
 explicit counterexample to Euclidean conservation under native AdamW,
 checked interpretations of gradient agreement, current-logit geometry,
-and finite-history windows and delay bounds. -/
+finite-history windows and delay bounds, and the division task's exact
+common-scaling cells. -/

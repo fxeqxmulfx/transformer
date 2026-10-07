@@ -24,6 +24,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
 | Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; circuit-efficiency literature to investigate | Research pending |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Fifty-five proved mean, energy, margin, cleanup and integer-encoding laws/counterexamples; exact certificates measured on all 238 preserved snapshots; 266 Python tests passed |
+| Division-task symmetry | Derive the diagnostic cells from the actual numeric task rather than assuming their labels or orbit interpretation | Power et al., section 3.1; author-code corpus and GrokkingObserver at 43d4d66 | Nineteen proved generator, valid-domain, orbit-equivalence, disjointness and finite-cardinality laws/counterexamples; token/Python implementation bridges remain open |
 | Gradient coherence and implicit bias | State what batch gradient agreement can and cannot imply; distinguish loss descent, task structure and optimizer-specific bias | Fixed-batch gradients; ordinary AdamW | Eighteen proved actual-CE derivative/decomposition/counterexample theorems; shared targets can yield arbitrarily high full alignment despite opposed answers |
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Analogy only for current finite GPTMini; finite-size scaling not established |
@@ -258,8 +259,25 @@ scan, longest-stretch selection, medians and full phase heuristic remain
 additional implementation bridges. These fifteen proved theorems add no
 sorry, bringing the total to **188**.
 
-Next formalize the actual division orbits and investigate dynamics that
-select the correct reference rather than assuming a learned margin. Preserve
+`DivisionOrbits.Basic` derives the generator's answer from actual field
+division, recovers every valid operand pair and proves that equal answers
+are exactly common nonzero scaling of both operands. The scale factor
+is unique. A zero-denominator counterexample refutes dropping the task's
+domain restriction; Python rejects those inputs rather than using Lean's
+total division convention. `FiniteCells` constructs the finite generator
+image, proves actual-answer membership, nonemptiness, disjointness and
+cardinality. It derives 96 points in every full modulo-97 cell and 9,312
+valid inputs. Those counts include quotient zero; they do not certify
+held-out mask coverage or a learned model's correct margins. Integer
+inverse code, token wrappers and the NumPy split are not verified by
+these field identities. These nineteen proved theorems add no sorry,
+bringing the total to **207**.
+
+Next investigate dynamics that select the correct reference rather than
+assuming a learned margin. Derive which descent and noncollapse
+properties survive the native adaptive first update even though the
+Euclidean norm conservation law does not. Keep first-step claims distinct
+from multi-step momentum dynamics and from the actual GPTMini loss. Preserve
 the distinction between an inverse-rate characteristic time and the time
 to cross a task-dependent generalization threshold. Extend phase-transition
 formulations only with stated control parameters and asymptotic regimes.
