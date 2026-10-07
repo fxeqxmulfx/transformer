@@ -48,6 +48,7 @@ import Transformer.GPTMini.Semantics.DepthAttentionBounds
 import Transformer.GPTMini.Semantics.DepthSignalPresence
 import Transformer.GPTMini.Semantics.DepthDetector
 import Transformer.GPTMini.Semantics.DepthLayout
+import Transformer.GPTMini.Semantics.DepthResidual
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -175,8 +176,7 @@ lower scale is achieved without an assumed leakage bound, and one shared
 output gain has gain*lowerScale=2. No floating-point or AdamW success is inferred.
 
 The genuine second block has matching fused QKV, finite temperature, W_o and zero FFN.
-Its exact full state writes compact retrieval into the raw value interval,
-preserves query/type coordinates and transports actual head accuracy
+Its full state writes compact retrieval, preserves query/type coordinates and transports head accuracy
 through the real merge/output matrix.
 
 Both real blocks now yield a full final-state error at most one eighth
