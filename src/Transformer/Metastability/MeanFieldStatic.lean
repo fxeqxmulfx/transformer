@@ -1,13 +1,19 @@
 /-
 # Metastability — a static mean-field solution
 
-A Dirac mass `δ_p` on `𝕊^0 = {±p}` does not move, and neither does anything
+A Dirac mass `δ_p` solves the mean-field equation at rest in every dimension.
+Its field at another unit vector `x` is `Proj_x p`; the normalized kernel
+cancels exactly. The full characteristic flow above dimension one is
+constructed in `Section5_DiracDynamics`.
+
+On `𝕊^0 = {±p}` the mass does not move, and neither does anything
 else: on `𝕊^0` every tangent vector is zero.  The constant curve at `δ_p`
 therefore solves `eq: mean.field.pde`, the identity is its characteristic
 flow, and with one cap around `p` and a large `β` it is a `(β, ε)`-separated
 measure.  This is the configuration that witnesses the hypotheses of
 `Metastability.metastability_mf`, `Metastability.cap_exit` and
-`Metastability.variance_small` (arXiv:2410.06833v1, §5).
+the estimate refuted by `Metastability.variance_small_counterexample`
+(arXiv:2410.06833v1, §5).
 -/
 
 import Transformer.Metastability.MeanField
@@ -19,6 +25,39 @@ namespace Transformer
 namespace Metastability
 
 open Perspective
+
+/-- The normalized field in `eq: mean.field.pde` at `δ_w` equals `Proj_z w`.
+The positive exponential cancels exactly against its partition function.
+
+Source: arXiv:2410.06833v1, §5. -/
+theorem MFVel_diracProb (d : ℕ) (β : ℝ) (w : SSphere d) (z : EucSpace d) :
+    MFVel d β (diracProb d w) z = proj d z w := by
+  have hμ : (diracProb d w : Measure (SSphere d)) = Measure.dirac w := rfl
+  simp [MFVel, partitionMu, hμ, Real.exp_ne_zero]
+
+/-- The mass has zero velocity in `eq: mean.field.pde`, in every dimension.
+
+Source: arXiv:2410.06833v1, §5. -/
+theorem MFVel_diracProb_self (d : ℕ) (β : ℝ) (w : SSphere d) :
+    MFVel d β (diracProb d w) (w : EucSpace d) = 0 := by
+  rw [MFVel_diracProb]
+  simpa only [one_smul] using proj_smul_self (mem_sphere_zero_iff_norm.mp w.2) 1
+
+/-- A constant Dirac law solves `eq: mean.field.pde` in every dimension.
+Every test-function integral is constant and the velocity at the mass is zero.
+
+Source: arXiv:2410.06833v1, §5. -/
+theorem meanFieldPDE_dirac (d : ℕ) (β : ℝ) (w : SSphere d) :
+    meanFieldPDE d β (fun _ => diracProb d w) := by
+  intro φ _ t
+  have hμ : (diracProb d w : Measure (SSphere d)) = Measure.dirac w := rfl
+  rw [hμ, integral_dirac, MFVel_diracProb_self, inner_zero_right]
+  exact hasDerivAt_const t _
+
+/-- Both zero velocity and stationarity have genuine instances on the circle. -/
+example : MFVel 2 1000 (diracProb 2 (basePoint 1)) (basePoint 1 : EucSpace 2) = 0 ∧
+    meanFieldPDE 2 1000 (fun _ => diracProb 2 (basePoint 1)) :=
+  ⟨MFVel_diracProb_self 2 1000 (basePoint 1), meanFieldPDE_dirac 2 1000 (basePoint 1)⟩
 
 /-- On `𝕊^0` a unit vector spans the line: `v = ⟨x, v⟩ x`. -/
 theorem eq_inner_smul_of_dim_one (x v : EucSpace 1) (hx : ‖x‖ = 1) :
