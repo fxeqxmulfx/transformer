@@ -9,6 +9,7 @@ import Transformer.GPTMini.Convex.Structured.MarkovTraining
 import Transformer.GPTMini.Convex.Structured.MarkovMarginals
 import Transformer.GPTMini.Convex.Structured.MarkovEmissions
 import Transformer.GPTMini.Convex.Structured.MarkovObjective
+import Transformer.GPTMini.Convex.Structured.StatePathProduct
 import Transformer.GPTMini.Convex.Structured.SharedSlots
 import Transformer.GPTMini.Convex.Structured.SharedPointer
 import Transformer.GPTMini.Convex.Structured.Concentration
@@ -50,6 +51,9 @@ import Transformer.GPTMini.Convex.Structured.TensorPointer
 import Transformer.GPTMini.Convex.Structured.TensorHeads
 import Transformer.GPTMini.Convex.Structured.TensorReadout
 import Transformer.GPTMini.Convex.Structured.TensorCausalBlock
+import Transformer.GPTMini.Convex.Structured.TensorTraining
+import Transformer.GPTMini.Convex.Structured.TensorLikelihood
+import Transformer.GPTMini.Convex.Structured.TensorBasisTraining
 
 /-!
 # Structured alternatives guided by raw Basis semantics

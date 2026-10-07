@@ -777,10 +777,18 @@ The output's actual support eliminates free input-field contributions to
 tied logits; its genuine final RMS scale is proved positive. Future rows
 cannot affect a block row. This is one changed attention residual;
 multilayer input-field preservation and FFN integration remain explicit.
+StatePathProduct/TensorTraining/TensorLikelihood now prove that the actual
+tensor state/path factors and contracted all-pair probability are the same
+normalized learned joint used by inference. The computed categorical and
+pointer NLL equals minus log of that joint for every free parameter, and
+is globally convex through actual embedding, positions and RMSNorm.
+TensorBasisTraining transfers this result to correct generated raw-data
+labels and shared variable-length minibatches for all six Basis recipes.
+Complete configurations are loss/proof indices, not an inference bank.
 
 Remaining acceptance tests: realize the changed full stack with retained
-raw fields/zero deferred FFN and actual complete tensor likelihood, then connect the
-complete tensor model to the proved raw capability and convex objective.
+raw fields and zero deferred FFN, then connect the complete tensor integer
+model to the proved raw capability and the same convex objective.
 Compact contraction, learned matching/joint values, all raw mixed-head
 Basis capability and correct explicit data supervision are now proved.
 Charge target generation and the changed loss in FLOP accounting.
@@ -935,3 +943,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Complete correct raw-data training committed in 62f1f6f. Realized genuine Euclidean embeddings/learned positions at widths 64/128 and proved exact tensor-only recovery of every free Q/K/value/transition/position field after actual positive-epsilon RMSNorm. | Compute both heads from recovered tensors alone, realize actual residual/tied readout and complete changed-stack capability/objective before candidate acceptance and stage 3. |
 | 2026-10-07 | 2 | Genuine Euclidean embedding/RMS recovery committed in e49ca6d. Computed both learned state/value and all-pair binding heads from prenorm tensors alone; proved actual compact mixture decoding equals the complete verified raw model for every free assignment and derived true coordinate bounds. | Select each row's causal prefix, realize residual/tied readout and actual tensor complete likelihood/stack before candidate acceptance and measured equal-FLOP training. |
 | 2026-10-07 | 2 | Genuine learned tensor-head inference committed in 5bdff3c. Realized the actual causal per-row attention residual, genuine ten-axis output, final RMSNorm and unchanged tied Euclidean readout; proved real final-row greedy equality with the verified mixed decoder for all free weights and structural future independence. | Preserve raw input fields through the changed full stack with deferred FFN, realize actual tensor complete likelihood and integer model coupling before candidate acceptance and stage 3. |
+| 2026-10-07 | 2 | Genuine causal tensor block/readout committed in 84ba59d. Proved physical-index state-path unrolling, actual normalized tensor mixture probability and exact computed complete NLL/inference coupling. The true tensor objective and correctly labeled six-recipe variable-length minibatches are globally convex jointly in all unrestricted embedding/Q/K/value/position/head weights. | Preserve raw fields through a real changed multilayer stack with zero deferred FFN and prove the actual tensor integer model's complete Basis capability before candidate acceptance and stage 3; output-only CE, AdamW success and measured comparisons remain open. |
