@@ -42,6 +42,7 @@ import Transformer.GPTMini.Semantics.DepthMatrices
 import Transformer.GPTMini.Semantics.DepthRecurrence
 import Transformer.GPTMini.Semantics.DepthEmbedding
 import Transformer.GPTMini.Semantics.DepthQKV
+import Transformer.GPTMini.Semantics.DepthNormalization
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -73,8 +74,8 @@ step and raw-type exclusion. Six original FFN units realize both gates
 simultaneously, preserve unwritten coordinates and retain the true RMS
 quadratic scale. The genuine uniform softmax/XSA head gives exact absence
 and floor L/128 at zero self-value; collinear XSA stays nonnegative and capped.
-The E_2/E_4 recurrence, token-local embeddings and genuine two-head
-fused QKV are proved at both widths. Full hidden/readout remain.
+The E_2/E_4 recurrence, embeddings, fused QKV and bounded genuine RMS
+scales are proved at both widths. Full hidden/readout remain.
 
 An explicit original RoPE pair gives a positive predecessor score gap
 across all Basis context lengths. Actual finite softmax/XSA copies that
@@ -168,8 +169,7 @@ requested retrieval tolerance uniformly over the raw recall context.
 Its true gap is log(1+2016/tolerance), evaluated directly in the finite
 softmax tail. A positive tolerance at one sixteenth of the true next RMS
 lower scale is achieved without an assumed leakage bound, and one shared
-output gain has gain*lowerScale=2. No floating-point or AdamW success is
-inferred; tied readout and full-parser discharge remain.
+output gain has gain*lowerScale=2. No floating-point or AdamW success is inferred.
 
 The genuine second ordinary block now includes the actual matching fused
 matrix, finite shared temperature, nonzero W_o and original zero FFN.

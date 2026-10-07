@@ -391,6 +391,14 @@ proved zero, the two V slices read their own residual coordinates,
 and the other two original heads have zero values. These identities
 hold for arbitrary real residuals with the true chunk/view indices;
 output projection, RMS amplitude bounds and state recurrence remain.
+DepthNormalization proves positive actual RMS scale, upper scale
+sixteen, upper squared scale 128 and normalized norm sixteen. Under
+the explicit local norm bound [1,4096] and epsilon in [0,1], every
+true scale is at least r=1/4224. One shared ordinary threshold
+r^3/256, homogeneous FFN gain 1/(2*threshold^2) and tied label gain
+8/r^2 now have proved positive finite compensation identities.
+The actual block induction must discharge that local norm bound;
+the coefficients alone do not establish floating-point or AdamW success.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -513,3 +521,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Ordered depth recurrence committed in 0f9d21c. Defined genuine token-local tied depth embeddings in the original 64x2 and 128x6 configurations; proved working-axis separation, actual raw constant, empty later channels and input norm bounds [1,2]. | Realize fused uniform heads, propagate actual normalized amplitudes and complete depth readout/SolvesTask; no convex candidate or FLOP comparison has started. |
 | 2026-10-07 | 1 | Actual original-width depth embeddings committed in 949d2c1. Proved exact original uniform-head/XSA formula for arbitrary current amplitudes, attenuation in [0,1], nonnegative genuine probes and the undoubled value cap. | Couple simultaneous fused heads to the real residual stream, propagate quantitative feature amplitudes and complete depth SolvesTask; convex architecture and measured FLOPs remain conditional. |
 | 2026-10-07 | 1 | Full original depth-head attenuation committed in f479eb7. Realized simultaneous ordinary fused QKV at both original widths; proved all actual Q/K slices zero, both active V scalar reads and unused-head zeros using genuine chunk/view indices. | Couple W_o and genuine RMS scaling, prove quantitative hidden-state recurrence and full depth SolvesTask; convex search and equal-FLOP training remain next stages. |
+| 2026-10-07 | 1 | Original simultaneous depth QKV committed in afb6840. Proved actual RMS multiplier bounds at both widths and shared finite threshold/FFN/readout compensation; the local [1,4096] norm domain is explicit. | Derive the domain and feature amplitudes through the actual residual blocks, then full depth SolvesTask; no convex or training-success claim follows from these given weights. |
