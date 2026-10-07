@@ -28,7 +28,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Gradient coherence and implicit bias | State what batch gradient agreement can and cannot imply; distinguish loss descent, task structure and optimizer-specific bias | Fixed-batch gradients; ordinary AdamW | Eighteen proved actual-CE derivative/decomposition/counterexample theorems; shared targets can yield arbitrarily high full alignment despite opposed answers |
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Analogy only for current finite GPTMini; finite-size scaling not established |
-| Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Observed-logit integer certificate bridge proved; actual floating-point forward, softmax collapse and optimizer-precision analysis remain open |
+| Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Observed-logit integer certificate bridge and eight conditional native first-step gradient-error bounds/counterexamples proved; actual floating-point forward, autograd error generation and softmax collapse remain open |
 | Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | Thirty-eight native first-step laws/counterexamples, including state-dependent descent, its exact centered-family threshold, centered overshoot at experimental hyperparameters and the absence of a uniform rate; repeated-step rule convergence remains unproved |
 
 ## Cycle
@@ -320,14 +320,31 @@ This is a single numerical check, not a formal kernel bridge or a new
 GPTMini training result. The exact centering theorem must not be reported
 as a floating-point invariant; add a quantified gradient-error transfer.
 
+`AdamW.GradientError` now derives that conditional transfer from the two
+actual coordinate updates, with correct zero gradient versus supplied
+error `delta`. Their absolute discrepancy is exactly
+`abs(rate)*abs(delta)/(abs(delta)+epsilon)`, independently of the current
+parameter and common decay. It is bounded by one step and by
+`abs(rate)*abs(delta)/epsilon`. A relative error budget
+`abs(delta) <= rho*epsilon` gives the sharper fraction `rho/(rho+1)`.
+Errors at least epsilon move at least half a step; an explicit
+counterexample makes the absolute error arbitrarily small while varying
+epsilon with it. Epsilon is not fixed in that last statement. Supplying
+the observed error `-2^-31` at the experimental parameters yields an
+exact-real coordinate discrepancy strictly between `4e-5` and `5e-5`.
+No theorem verifies that PyTorch generated the supplied error or bounds
+its full gradient. These eight proved theorems add no sorry, bringing
+the total to **247**.
+
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
 properties survive the native adaptive first update even though the
 Euclidean norm conservation law does not. Keep the now-derived
 state-dependent finite-step interval; do not replace it by a universal
 prescribed rate. Next test which first-step statements fail once the
-moment buffers contain an actual reachable history, and bound how the
-first adaptive direction amplifies gradient errors. Keep those claims distinct
+moment buffers contain an actual reachable history. Extend the now-derived
+error certificate to nonzero gradients and actual numerical kernels only
+with verified premises. Keep those claims distinct
 from multi-step momentum dynamics and from the actual GPTMini loss. Preserve
 the distinction between an inverse-rate characteristic time and the time
 to cross a task-dependent generalization threshold. Extend phase-transition
