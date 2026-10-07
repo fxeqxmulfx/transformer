@@ -378,6 +378,13 @@ start at zero and every validated raw input has norm in [1,2]. Labels
 use separate tied readout channels and do not occur in the raw input
 grammar. Actual fused heads, quantitative state induction and readout
 remain; these capacity parameters make no training or convexity claim.
+DepthUniformProjection proves the full original head formula without
+a zero-current assumption: genuine causal mean times
+1-(amplitude/max(abs(amplitude),epsilon))^2 along its unit value axis.
+This attenuation lies in [0,1], so all nonnegative feature arrays give
+a nonnegative actual probe and head norm below their true amplitude
+cap. Final residual readout can retain a positive current occurrence;
+earlier-occurrence floors still require its semantic zero-self case.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -498,3 +505,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Actual variable-amplitude causal presence committed in df46fd4. Realized both depth type/presence gates in six ordinary shared FFN units; proved actual matrix coordinates, complete FFN output, protected residual channels and the true RMS quadratic scale at generic dimensions. | Connect raw embedding and fused uniform attention, propagate quantitative ordered-feature bounds and complete depth readout/SolvesTask. |
 | 2026-10-07 | 1 | Simultaneous original depth FFN matrices committed in 830e7fc. Proved neutral-preserving original-position alternating occurrence recurrence, opposite-current exclusion and exact independent E_2/E_4 integer answer criteria. | Realize these data predicates by actual raw embedding/head matrices and quantitative hidden-state induction, then full depth SolvesTask. |
 | 2026-10-07 | 1 | Ordered depth recurrence committed in 0f9d21c. Defined genuine token-local tied depth embeddings in the original 64x2 and 128x6 configurations; proved working-axis separation, actual raw constant, empty later channels and input norm bounds [1,2]. | Realize fused uniform heads, propagate actual normalized amplitudes and complete depth readout/SolvesTask; no convex candidate or FLOP comparison has started. |
+| 2026-10-07 | 1 | Actual original-width depth embeddings committed in 949d2c1. Proved exact original uniform-head/XSA formula for arbitrary current amplitudes, attenuation in [0,1], nonnegative genuine probes and the undoubled value cap. | Couple simultaneous fused heads to the real residual stream, propagate quantitative feature amplitudes and complete depth SolvesTask; convex architecture and measured FLOPs remain conditional. |

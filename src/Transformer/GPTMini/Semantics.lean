@@ -37,6 +37,7 @@ import Transformer.GPTMini.Semantics.RecallParserLatest
 import Transformer.GPTMini.Semantics.RecallCorrectness
 import Transformer.GPTMini.Semantics.DepthStep
 import Transformer.GPTMini.Semantics.DepthPresence
+import Transformer.GPTMini.Semantics.DepthUniformProjection
 import Transformer.GPTMini.Semantics.DepthMatrices
 import Transformer.GPTMini.Semantics.DepthRecurrence
 import Transformer.GPTMini.Semantics.DepthEmbedding
@@ -71,7 +72,7 @@ Three ordinary homogeneous ReLU2 hinges compute a saturated presence
 step and raw-type exclusion. Six original FFN units realize both gates
 simultaneously, preserve unwritten coordinates and retain the true RMS
 quadratic scale. The genuine uniform softmax/XSA head gives exact absence
-and a presence floor L/128 for variable amplitudes at zero self-value.
+and floor L/128 at zero self-value; collinear XSA stays nonnegative and capped.
 The E_2/E_4 recurrence is proved; token-local raw embeddings now fit
 both original widths with norms in [1,2]. Full hidden/readout remain.
 
@@ -161,7 +162,6 @@ bound. Original XSA preserves retrieval because the true raw query V is
 zero. The genuine head's error from its actual selected value is at most
 32*(T-1)*exp(-retainedGap), with value diameter derived. The concrete raw
 overwrite control strictly prefers its later, different-valued write.
-These raw applicability predicates still require full-parser discharge.
 
 One fixed finite second-head log-temperature now gives any positive
 requested retrieval tolerance uniformly over the raw recall context.
