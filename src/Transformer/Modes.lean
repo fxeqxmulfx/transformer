@@ -38,6 +38,7 @@ import Transformer.Modes.Section2_PhiTDelta
 import Transformer.Modes.Section2_IntPhiFinal
 import Transformer.Modes.Section2_MainIntPhi
 import Transformer.Modes.Section2_IntPhiB
+import Transformer.Modes.Section2_MainIntPhiT
 import Transformer.Modes.Section3_Hermite
 import Transformer.Modes.Section3_Cumulants
 import Transformer.Modes.Section3_ExpMoments

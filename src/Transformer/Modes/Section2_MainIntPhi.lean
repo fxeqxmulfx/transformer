@@ -15,7 +15,8 @@ its proof reduces to.  The proxy Kac-Rice integral is `proxyKR`
   factor `√R` is paid for by `e^{-A_t/2} ≤ e^{-κ R t²}` together with the width
   `R^{-1/2}` of `∫ e^{-κ R t²} dt` near `t = 0`
   (`Section2_ProxyKRTPrime.lean`, `Section2_WidthIntegral.lean`).  The bound on
-  `T`, `main_int_phi_T`, is not proved here.
+  `T`, `main_int_phi_T`, is proved in `Section2_MainIntPhiT.lean` by retaining
+  the Gaussian shift and integrating its width directly.
 
 * `eq:int-phi-b` is carried in the form its proof uses: for every `C > 0`,
   `∫_T e^{-C β^{-3/2} n t² e^{-t²/2}} dt ≍ √(log β)` and
@@ -93,18 +94,6 @@ theorem integral_exp_phiRate_T' {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (h
     _ = Real.sqrt (π / C) := integral_gaussian C
 
 /-! ### `lem:main-int-phi` -/
-
-/-- **Lemma (lem:main-int-phi), on `T`.**  In the regime `n^c ≲ β ≲ n^{2-c}`,
-`∫_T ∫_0^∞ y (det Σ_t)^{-1/2} φ(…) dy dt ≍ √(β log β)`.
-
-Not proved here.
-
-Source: arXiv:2412.09080v3, `lem:main-int-phi`. -/
-theorem main_int_phi_T {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : IsRegime c N B)
-    {ω : ℝ → ℝ} (hω : IsSlowGrowth ω) :
-    (fun k => (proxyKR (N k) (B k) (intervalT (N k) (B k) (ω (B k)))).toReal)
-      =Θ[atTop] fun k => Real.sqrt (B k * Real.log (B k)) := by
-  sorry
 
 /-- **Lemma (lem:main-int-phi), on `T'`.**  In the regime `n^c ≲ β ≲ n^{2-c}`,
 `∫_{T'} ∫_0^∞ y (det Σ_t)^{-1/2} φ(…) dy dt ≲ √β`.  Finiteness is stated,
