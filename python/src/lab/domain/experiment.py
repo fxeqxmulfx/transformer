@@ -17,6 +17,7 @@ from .optimizers import ANSR, EVD, AdamW, Clipped, Optimizer
 from .spec import Spec, describe, require, require_kind, swap, walk
 from .stopping import Solved, Stopping
 from .synthetic import Synthetic
+from .tensor import TensorStack, check_tensor_benchmark
 from .training import AttentionDiagnostics, Budget, Checkpoint, CudaGraph, Diagnostics, Eager, Evaluate, Execution, Schedule, Seeds
 
 LABEL = re.compile(r"[a-z0-9][a-z0-9._-]*")
@@ -87,6 +88,11 @@ class Experiment(Spec):
                     "AtomicMatching reports physical heads through the benchmark, not Transformer diagnostics")
             require(columns or isinstance(self.optimizer, AdamW),
                     "AtomicMatching supports AtomicColumns or raw AdamW control")
+        if isinstance(self.model, TensorStack):
+            check_tensor_benchmark(self.benchmark)
+            require(isinstance(self.optimizer, AdamW), "TensorStack uses ordinary AdamW")
+            require(not isinstance(self.diagnostics, AttentionDiagnostics),
+                    "TensorStack has joint distributions, not the original attention diagnostics")
         if isinstance(self.diagnostics, AttentionDiagnostics):
             require(isinstance(self.benchmark, (Synthetic, ModularDivision)),
                     "AttentionDiagnostics needs a Synthetic or ModularDivision benchmark")

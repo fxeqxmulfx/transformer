@@ -22,13 +22,14 @@ from .domain.spec import describe, fingerprint, substitute, swap, walk
 from .domain.memorization import Memorization
 from .domain.stopping import EarlyStopping, Solved
 from .domain.synthetic import Synthetic
+from .domain.tensor import TensorStack
 from .domain.tasks import CRASP, MQAR, AlternatingBlocks, Dyck, Lookup, TypedDyck
 from .domain.training import (AttentionDiagnostics, Budget, Checkpoint, Compiled, Cosine, CudaGraph, Diagnostics, Eager, Evaluate, Schedule,
                                Seeds)
 
 __all__ = [
     # model
-    "Transformer", "AtomicMatching", "PairedMatching", "Block", "Attention", "FFN", "XSA",
+    "Transformer", "TensorStack", "AtomicMatching", "PairedMatching", "Block", "Attention", "FFN", "XSA",
     "RMSNorm", "LayerNorm", "PreNorm", "PostNorm",
     "RoPE", "Sinusoidal", "NoPositions",
     "FusedQKV", "PerHeadQKV", "ScaledDot", "LearnedScaledDot", "QKNorm", "Softmax", "Sparsemax", "SurrogateWeights",

@@ -835,6 +835,18 @@ with the existing ordinary AdamW implementation and public interface.
 Status: active. The stage-2 mathematical prototype is ready for the
 lab port, meaningful numerical checks and measured baseline protocol.
 No new stage-3 training run or successful FLOP budget has yet been recorded.
+The first Python port is implemented with all literal shared residual
+layers and fixed-zero original FFNs. Actual forward receives only tokens;
+complete path/route/channel labels are generated once from unchanged
+training data and used only by the complete likelihood. The quadratic
+log-space all-pair prefix contraction has been checked against literal
+pair sums and gradients. State marginals agree with explicit short-path
+sums, actual tensor/readout/causal controls pass at widths 64/128 and
+depths two/six, and finite Lean capacity witnesses decode order, parity/EOS
+and latest-overwrite controls without overflow. These are implementation
+checks, not learned success. `experiments/basis_tensor` pins the 18
+original-softmax mode/task/seed references; candidate budgets remain
+unassigned until a covered arithmetic counter measures reference success.
 
 Use the existing Basis small/large GPTMini softmax recipes and the actual
 success criterion. Pin source revision, task/mode, splits, seeds, model,

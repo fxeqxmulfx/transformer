@@ -119,7 +119,7 @@ class Training:
         if self.device.type == "cuda":
             torch.cuda.reset_peak_memory_stats(self.device)
         self.clock = Clock(self.device)
-        self.task = build_task(experiment.benchmark, experiment.seeds.data, self.device)
+        self.task = build_task(experiment.benchmark, experiment.seeds.data, self.device, experiment.model)
         self.model = build_model(experiment.model, self.task.vocab, experiment.seeds.model).to(self.device)
         self.attention = (AttentionObserver(experiment.diagnostics, self.task)
                           if isinstance(experiment.diagnostics, AttentionDiagnostics) else None)
