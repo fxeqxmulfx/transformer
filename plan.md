@@ -489,6 +489,11 @@ decoding: correct tied score at least five, opposite at most minus three,
 every other token at most two. Actual final RMS preserves the margin and
 greedy returns the independent ordered answer. Full original model-loop
 and checked integer-prefix coupling remain the final depth obligations.
+DepthModel realizes the complete original two/six-layer parameter record,
+proves actual detector/readout/tail hidden-loop equalities and derives
+strict full forward logits. Its token-local embedding equality is the
+remaining input coupling, to be discharged by raw integer serialization.
+Parameters are shared across prefixes and independent of epsilon.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -628,3 +633,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Original seven-unit matrices committed in a705ed2. Derived exact actual readout FFN binary/common amplitudes, protected all other coordinates and proved contribution norm at most 384 with concrete simultaneous witnesses. | Derive semantic complete-block readout and tied margins, then full ModelParams/checked List Int depth SolvesTask. |
 | 2026-10-07 | 1 | Actual FFN amplitudes/bounds committed in 2d14aea. Proved the complete genuine readout block and its raw-word instantiation: independent semantic flags, common true scale [r^2,128], raw protection and final norm [1,1282], without an encoder/invariant premise. | Strict tied 36-token margins, original ModelParams/hidden-loop and raw integer depth SolvesTask remain. |
 | 2026-10-07 | 1 | Complete real raw-word readout committed in 59cf964. Proved all 36 tied score comparisons, genuine final RMS margin and greedy semantic answer; linked last-position visibility to full ordered-pattern presence. | Original two/six-layer ModelParams, complete hidden-loop and checked List Int depth correctness remain. |
+| 2026-10-07 | 1 | Whole-vocabulary depth decoding committed in 4dec64b. Realized original complete two/six-layer ModelParams, proved every actual detector/readout/tail loop state and full forward strict logits. | Discharge raw BOS/body token-local embedding coupling and prove checked integer depth SolvesTask, then aggregate all Basis semantics. |
