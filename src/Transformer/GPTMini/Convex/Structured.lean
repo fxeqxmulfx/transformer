@@ -64,6 +64,7 @@ import Transformer.GPTMini.Convex.Structured.TensorStackInterface
 import Transformer.GPTMini.Convex.Structured.TensorBasisModel
 import Transformer.GPTMini.Convex.Structured.TensorBasisStackTraining
 import Transformer.GPTMini.Convex.Structured.TensorGain
+import Transformer.GPTMini.Convex.Structured.TensorLossCertificate
 
 /-!
 # Structured alternatives guided by raw Basis semantics

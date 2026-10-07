@@ -832,59 +832,61 @@ with the existing ordinary AdamW implementation and public interface.
 
 ## 3. Measure the softmax baseline and compare equal FLOPs
 
-Status: active. The stage-2 mathematical prototype is ported and checked,
-and the measured original-softmax runs have started on 2026-10-07.
-Lab revision 0700c49 passed 214 tests and all sixteen full-shape arithmetic
-coverage probes. The first seed-0 successes are easy depth at 200 updates
-(148,978,162,800 charged operations) and easy parity at 8,200 updates
-(1,609,311,910,000). Their measured ceilings are pinned in the experiment
-for matched candidate arms; other references are still running. Easy depth
-passes its test at 100% and length-128 at 60.35%; parity passes validation
-at 99.02% and its free-generation test at 97.27%. These empirical results
-are separate from the universal Lean capacity proofs.
-Easy recall seed 0 also passes at 1,650 updates/4,989,090,525,500 operations
-(99.80% validation, 100% test); hard parity seed 0 passes at 4,200
-updates/9,475,216,186,800 operations (99.02% validation, 97.46% test).
-Those measured ceilings are likewise pinned for the candidate.
-Hard recall seed 0 passes at 3,350 updates/107,443,940,040,500 operations
-(99.22% validation and 98.63% test), supplying its exact matched ceiling.
-All eighteen original softmax seed/task/mode attempts are now preserved
-in experiments/basis_tensor/reference_budgets.json, including exact
-settings, data fingerprints and source provenance. Seventeen passed.
-Hard depth seed 0 failed the length-128 99% criterion after 10,000 updates
-(best 98.05%); its original result, manifest and checkpoint are archived
-before continuation to 20,000 updates at unchanged trajectory settings.
-All seventeen successful ceilings are pinned for matched candidates.
-Initial candidate results are preserved in initial_comparison.json:
-easy parity seed 0 passes free generation at 100% validation/test within
-the full 1,609,311,910,000-operation ceiling, first passing at 7,000 updates.
-Easy depth seed 0 spends 148,793,847,818 operations/659 whole updates,
-leaving 184,314,982 operations unspent and predicting only reject
-(18.55% validation, 19.73% test, 14.65% length-128 sequence accuracy).
-It therefore enters stage 4 while the other stage-3 arms continue.
-The first Python port is implemented with all literal shared residual
+Status: active. All eighteen original-softmax mode/task/model-seed references
+now satisfy the original 99-percent validation sequence criterion. Their
+first-success charged training costs, full settings, data fingerprints and
+source provenance are preserved in
+experiments/basis_tensor/reference_budgets.json and its README table.
+Hard depth seed 0 first failed at its original 10,000-update cap (best
+98.05% length-128 validation). Its unchanged continuation first succeeds
+at 11,400 updates/91,404,360,207,600 operations, with 99.22% length-128
+validation and 99.41% length-128 test. Both attempts remain preserved.
+All eighteen measured success ceilings are assigned to the candidate arms;
+none uses the baseline's nominal update count as an arithmetic budget.
+
+Original candidate controls remain in initial_comparison.json. Easy depth
+seed 0 spends 148,793,847,818 operations/659 whole updates, leaves
+184,314,982 operations unspent and predicts only reject (18.55% validation,
+19.73% test, 14.65% length-128 sequence accuracy). Easy and hard parity
+seed 0 finish their respective ceilings at 100% validation/test, each
+first passing at 7,000 updates. Original easy/hard recall seed 0 continue
+from the frozen lab source in /tmp/transformer-qknorm-study.
+
+The gain-eight repair is ported and committed in ccc0ea5 after all 218
+Python tests and eight actual full-shape arithmetic-coverage probes pass.
+All eighteen repaired mode/task/seed arms were launched from that committed
+lab source on 2026-10-07, with unchanged AdamW and the exact corresponding
+reference ceilings. Easy depth completes all three seeds at 100%
+validation, test and length-128 accuracy. Each first passes at update 600/
+135,475,524,680 operations, compared with softmax's update 200/
+148,978,162,800. Each spends 148,797,158,634 operations through update 659,
+leaving 181,004,166 operations insufficient for another whole update.
+The other repaired arms are running or queued; early validation success
+is not recorded as a completed full-ceiling comparison.
+
+The compact operator is implemented with all literal shared residual
 layers and fixed-zero original FFNs. Actual forward receives only tokens;
 complete path/route/channel labels are generated once from unchanged
 training data and used only by the complete likelihood. The quadratic
-log-space all-pair prefix contraction has been checked against literal
-pair sums and gradients. State marginals agree with explicit short-path
-sums, actual tensor/readout/causal controls pass at widths 64/128 and
-depths two/six, and finite Lean capacity witnesses decode order, parity/EOS
-and latest-overwrite controls without overflow. These are implementation
-checks, not learned success. `experiments/basis_tensor` pins the 18
-original-softmax mode/task/seed references; candidate budgets remain
-unassigned until a covered arithmetic counter measures reference success.
-The arithmetic counter and measured compiled execution are implemented.
-They trace real shapes on independent eager copies, cover forward/loss,
-backward, gradient norm and unchanged fused AdamW, reject unsupported
-operators and record operator/phase coverage. Actual evaluation model calls
-and generation are counted separately. The declared reference convention
-charges scalar transcendental/comparison/selection operations and auxiliary
-integer work; it is not a hardware instruction counter. Complete raw-data
-label construction is tensorized and charged, including regeneration after
-resume. A whole-update ceiling preserves sampling order and reports its
-unspent remainder. Small controls verify unchanged compiled trajectories,
-exact stopping and restored counts; no full reference success is claimed.
+log-space all-pair prefix contraction agrees with literal pair sums and
+gradients. State marginals agree with explicit short-path sums, actual
+tensor/readout/causal controls pass at widths 64/128 and depths two/six,
+and finite Lean capacity witnesses decode order, parity/EOS and
+latest-overwrite controls without overflow. These implementation checks
+are distinct from learned success.
+
+The measured compiled arithmetic counter traces actual shapes on independent
+eager copies, covers forward/loss, backward, gradient norm and unchanged
+fused AdamW, rejects unsupported operators and records operator/phase
+coverage. Actual evaluation model calls and generation are counted separately.
+The declared reference convention charges scalar transcendental/comparison/
+selection operations and auxiliary integer work; it is not a hardware
+instruction counter. Complete raw-data label construction is tensorized and
+charged, including regeneration after resume. Every gain multiplication is
+included. Whole-update ceilings preserve sampling order and report the
+unspent remainder. Tests cover unchanged compiled trajectories, exact stopping
+and restored counts. Universal Lean capacity, learned sampled correctness,
+and equal-budget comparisons remain separate claims.
 
 Use the existing Basis small/large GPTMini softmax recipes and the actual
 success criterion. Pin source revision, task/mode, splits, seeds, model,
@@ -953,12 +955,22 @@ Both attempts are retained. Original tensor hard parity seed 0 also
 finishes its ceiling with 100% validation/test, first passing at 7,000
 updates. Fresh gain-eight arms are specified for every mode/task/seed;
 their measured arithmetic and ordinary-AdamW outcomes remain to run.
-The completed gain port passes 218 Python tests and all eight full-shape
-operator-coverage probes. The counter includes every gain multiplication;
-it slightly changes the cost per update but not any pinned reference
-ceiling. Launch the repaired ordinary-AdamW comparisons on all three seeds,
-retain the original failures, and report full-ceiling validation/test/OOD
+All eighteen repaired ordinary-AdamW comparisons are launched from the
+committed gain port. The completed three easy-depth seeds repair the initial
+failure, including the actual length-128 test; the remaining arms continue.
+Retain the original failures and report full-ceiling validation/test/OOD
 and first-success costs separately.
+
+TensorLossCertificate.lean adds an arbitrary-weight sufficient semantic
+property of the same genuine complete objective. A correctly labeled
+configuration with NLL < log(11/10) has true mixed probability > 10/11;
+the derived whole-vocabulary margin 11*p-10 is strictly positive. Correct
+raw-data labels and the actual full-stack greedy coupling then derive the
+independent Basis next answer and the gained public List Int interface.
+The finite parity witness satisfies the loss premise, proving it is real.
+This is a pointwise sufficient certificate, not a necessary threshold,
+a uniform consequence of a small minibatch mean, an IEEE certificate,
+or a claim that AdamW reaches it on every valid or unseen prefix.
 
 When a candidate performs worse, preserve its run and identify a concrete
 semantic or optimization failure. Reproduce it in a small control and
@@ -1078,3 +1090,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Genuine causal tensor block/readout committed in 84ba59d. Proved physical-index state-path unrolling, actual normalized tensor mixture probability and exact computed complete NLL/inference coupling. The true tensor objective and correctly labeled six-recipe variable-length minibatches are globally convex jointly in all unrestricted embedding/Q/K/value/position/head weights. | Preserve raw fields through a real changed multilayer stack with zero deferred FFN and prove the actual tensor integer model's complete Basis capability before candidate acceptance and stage 3; output-only CE, AdamW success and measured comparisons remain open. |
 | 2026-10-07 | 2 | Actual correct complete tensor training committed in 815556c. Proved genuine intermediate causal residual field/anchor preservation after changed code coordinates and actual recomputed RMSNorm; every actual head inference, complete probability and computed NLL is invariant under the derived preserved observations. | Induct over the real shared-weight stack with zero deferred FFN, connect its actual integer function and complete training to the proved six-recipe capability/convexity before candidate acceptance and stage 3. |
 | 2026-10-07 | 2 → 3 | Intermediate tensor observations committed in 09393dd. Proved actual original zero-FFN second residuals, full shared-weight stack anchor/observation induction, genuine final-RMS/tied integer forward coupling and all-six-recipe finite-weight Basis correctness at widths 64/128 and depths two/six. Complete actual final-head sample/minibatch training is globally convex jointly in the full free parameter domain with correct data-generated labels. Accepted this explicitly scoped mathematical prototype for ordinary-AdamW experiments. | Port the exact compact operator and complete raw-data loss into the lab; check stable numerical inference/gradients and actual parameter counts, pin a substantial original-softmax protocol, measure its first-success training FLOPs and compare the candidate at precisely that budget. No optimizer-convergence or empirical-success claim. |
+| 2026-10-07 | 4 | Fixed-gain port committed in ccc0ea5 after 218 Python tests and eight full-shape arithmetic probes. All eighteen matched repaired arms launched. All three easy-depth seeds complete their softmax ceilings with 100% validation/test/length-128 accuracy; first success costs 135,475,524,680 operations versus 148,978,162,800 for softmax. Added a genuine full-stack arbitrary-weight complete-loss-to-semantic-answer certificate at log(11/10). | Finish every repaired full-ceiling comparison and the frozen original recall controls; preserve any weaker results and repair in Lean or change candidate. Pointwise semantic certification does not prove optimizer convergence or universal learned generalization. |
