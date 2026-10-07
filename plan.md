@@ -730,8 +730,17 @@ complete NLL equals minus log of that same true mixed probability and is
 globally convex jointly in all raw token, value, position and head
 coordinates, including variable-length shared minibatches. No task label
 or correct state/route enters inference. Complete recall data-target
-generation and the actual tensor-stack/prenorm/residual/tied readout
-remain required. MixedConfidence/MixedMargins now derive the genuine
+generation is now proved by RecallDataRoutes/RecallDataTargets: an actual
+computable Nat-ranked scan selects the latest matching raw record and
+its true neighboring key/value digits, including overwrites and fillers.
+The scan uses no learned scores, hidden states or choice of an unknown
+correctness witness. BasisTraining supplies all recipe targets, proves
+their output channels equal the independent raw answers and establishes
+global convexity of the actual complete likelihood/shared minibatches on
+the entire free mixed parameter space. Exact scalar counts are 2384 for
+depth, 28816 for recall and 3721 for parity, independent of data count.
+Actual tensor-stack/prenorm/residual/tied readout remains required.
+MixedConfidence/MixedMargins now derive the genuine
 whole-mixture finite confidence and greedy margins, including its
 positive incorrect branch. MixedInterface/MixedBasis prove that one
 actual freely learned mixed-head callback solves every raw prefix of all
@@ -743,11 +752,12 @@ tensor-block realization is proved.
 Output-only CE and AdamW convergence are not proved convex or successful
 by these complete-likelihood/capacity results.
 
-Remaining acceptance tests: prove compact contraction of the latent
-partition, learned matching and joint value expressivity, complete Basis
-capability from actual raw inputs, the prenorm/residual/tied-readout
-coupling, and the precise auxiliary-target generation without inference
-oracle use. Charge that generation and the changed loss in FLOP accounting.
+Remaining acceptance tests: realize the true tensor embedding/attention
+interfaces and prenorm/residual/tied readout, then connect the actual
+complete tensor model to the proved raw capability and convex objective.
+Compact contraction, learned matching/joint values, all raw mixed-head
+Basis capability and correct explicit data supervision are now proved.
+Charge target generation and the changed loss in FLOP accounting.
 Reject or repair this proposal if these obligations fail; stage 3 stays queued.
 
 Exit criterion: a candidate with proved task capability and a proved
@@ -895,3 +905,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Full raw recall gap/confidence committed in e5e8823. Proved the actual finite learned all-pair head solves both complete raw recall grammars through the checked append-one integer interface, with genuine value-swap control and derived whole-vocabulary greedy margins. | Correct complete recall data targets, true learned two-head mixing and full tensor/prenorm/residual/tied realization remain before stage 3; no candidate training started. |
 | 2026-10-07 | 2 | Full standalone raw recall capability committed in 05fb3e2. Realized genuine learned mixing of the actual state and all-pair binding distributions, exact compact mixed decoder expectation, and globally convex actual complete NLL/shared minibatches on the full unrestricted joint parameter space. | Derive complete mixed finite-weight confidence/Basis capability, correct recall data targets and actual tensor-stack/prenorm/residual/tied realization before stage 3; output-only CE and AdamW success remain unproved. |
 | 2026-10-07 | 2 | Actual jointly convex mixed inference/training committed in d436526. Derived finite whole-mixture confidence and genuine original greedy margins; proved the actual common mixed integer callback solves every full raw prefix of all six Basis recipes, two-call parity and real full-size swap/overwrite/order controls. | Correct raw recall data-target generation and actual tensor embedding/attention/prenorm/residual/tied realization remain before candidate acceptance and stage 3; training and FLOP comparisons have not started. |
+| 2026-10-07 | 2 | Complete finite mixed-head Basis capability committed in d7be618. Proved actual computable raw recall route/channel generation, full independent answer agreement in both modes, and globally convex actual complete training with correct data labels across all six recipes/shared minibatches; exact compact scalar counts are explicit. | Realize true tensor embedding/attention/prenorm/residual/tied inference and couple it to the same objective/capability before candidate acceptance and equal-FLOP training; no new training runs started. |
