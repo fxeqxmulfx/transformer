@@ -20,6 +20,7 @@ import Transformer.GPTMini.Semantics.RecallSaturation
 import Transformer.GPTMini.Semantics.RecallStateBounds
 import Transformer.GPTMini.Semantics.RecallProjectionScale
 import Transformer.GPTMini.Semantics.RecallSecondQKV
+import Transformer.GPTMini.Semantics.RecallNormalizedInputs
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -141,6 +142,14 @@ leaves V independent; all unassigned head rows are zero. Its actual
 prenorm retains the genuine position-dependent multiplier, and zero
 gated keys or query self-values remain exactly zero. Normalized raw
 coupling, robust latest-write selection and complete readout remain.
+
+Actual raw query normalization now equals the verified categorical rotary
+direction, and every true adjacent table key has normalized error at most
+twice the fixed copy tolerance. These facts use the genuine complete first
+block, fused second matrix and actual prenorm; all clipping and norm
+conditions are derived from raw tokens and the finite shared gains.
+The raw query's own V and K are exactly zero. Robust finite-softmax score
+selection, readout and complete raw-parser correctness remain.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout

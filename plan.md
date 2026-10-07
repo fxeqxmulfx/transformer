@@ -201,6 +201,13 @@ and query self-values are exactly zero. The next step discharges actual
 clipping and transports copied-key error through these real projections
 to robust latest-write selection and the complete tied integer readout.
 
+RecallNormalizedInputs now discharges actual query and table-key clipping
+for these genuine projections. The raw normalized query is exactly its
+verified rotary direction; normalized table-key error is at most twice
+the fixed copy tolerance. The real query's own V and K are exactly zero.
+All statements derive from the full first block, raw token IDs and shared
+finite coefficients; no prepared normalized head is supplied.
+
 Next connect the fixed ordinary second QKV to robust latest-write retrieval
 and readout, discharge full validated-parser conditions, and construct the
 depth-prefix recurrence.
@@ -301,3 +308,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Local QKNorm/error transport committed in 42305c4. Derived genuine pre-FFN norm [1,9], gate RMS scale [1/2,8], and a protected positive bounded next-prenorm multiplier after the full first block. | Choose a fixed gate gain and bound the full block to derive one shared saturating QKV scale, then original robust retrieval/readout and full raw parser/depth correctness; convex search remains queued. |
 | 2026-10-07 | 1 | Actual state/prenorm bounds committed in 87cf916. Chose finite shared gate/QK gains and proved raw table amplitudes/key norms at least one, a whole raw-block upper bound, and a genuine shared projection/RMS product above epsilon at every position; query self-values stay zero and prenorm values have positive lower/finite upper norms. | Connect the true fused second QKV and normalized copied-key errors to robust latest-write routing/readout, complete validated raw parser coupling and full depth correctness; convex architecture/FLOP comparison remain queued. |
 | 2026-10-07 | 1 | Uniform finite shared gains committed in 072caeb. Realized the actual fused second QKV with simultaneous raw query, real gated copied-key and independent value slots; derived its genuine prenorm formulas and exact zero nonrecord/self-value outcomes. | Discharge clipping for these actual projections, transport normalized copy errors to robust latest-write selection and tied readout, then full validated raw parser and depth correctness; convex search and FLOP comparisons remain queued. |
+| 2026-10-07 | 1 | Genuine second QKV committed in 830e91e. Derived exact raw normalized query direction and twice-tolerance table-key error after the actual full encoder, next RMS, fused matrix and QKNorm; query self-values and matching keys are zero. | Robust finite-softmax latest-write selection and tied readout, complete validated raw parser coupling and full depth correctness; convex architecture and FLOP comparisons remain queued. |
