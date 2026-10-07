@@ -50,6 +50,7 @@ import Transformer.GPTMini.Semantics.DepthDetector
 import Transformer.GPTMini.Semantics.DepthLayout
 import Transformer.GPTMini.Semantics.DepthResidual
 import Transformer.GPTMini.Semantics.DepthTransition
+import Transformer.GPTMini.Semantics.DepthFeatureBounds
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -58,10 +59,8 @@ Source: the archived GPTMini at f11b6e2 and Basis raw-token semantics at
 cbafbe9. These results verify original operators, rather than replacing
 the model by the task oracle or merely quantifying over possible weights.
 
-Finite-softmax score gaps bound retrieval error, retaining RoPE, QKNorm,
-XSA and key-copy errors. Faithful ordered features distinguish same-bag
-depth words. Raw MQAR's semantic target is independently proved to be its
-last adjacent binding in Transformer.Basis.RecallAnswer.
+Finite-softmax gaps retain RoPE/QKNorm/XSA and copy errors; ordered features distinguish same-bag depth words.
+Raw MQAR's last adjacent binding is independently proved in Transformer.Basis.RecallAnswer.
 
 Concrete original parameters compute raw ONE counts and phase through
 the actual fused QKV and residual stack. A proved variable-length
@@ -82,6 +81,7 @@ The actual FFN gives binary amplitudes and norm at most 256 on matching-type gap
 The genuine uniform softmax/XSA head gives exact absence
 and floor L/128 at zero self-value. Actual two-head attention adds norm at most 32.
 Actual blocks preserve raw types/stages, write true RMS-square flags and grow norm by at most 288.
+True flags are zero or in [r^2,128], with strictly earlier opposite presence derived from the actual mask.
 
 An explicit original RoPE pair gives a positive predecessor score gap
 across all Basis context lengths. Actual finite softmax/XSA copies that

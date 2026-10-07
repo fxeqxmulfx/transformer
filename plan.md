@@ -447,6 +447,12 @@ complete block writes exactly zero or its real pre-FFN RMS square, with
 positive output exactly at actual type-and-presence success. Including
 both residuals, its norm grows by at most 288. The quantitative ordered
 raw-state induction and final tied readout remain to be completed.
+DepthFeatureBounds derives actual new flags in {0} union [r^2,128]
+from incoming norm at most 4064. Their positivity is exactly raw-type
+match and a strictly earlier genuine source feature at least r^2;
+strict precedence follows from zero opposite self under the original
+self-inclusive causal mask. Wrong raw types have exact zero flags.
+The raw-word induction must instantiate these results at every stage.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -577,3 +583,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Complete depth FFN committed in 199706f. Assembled fixed actual detector BlockParams for all three stages, coupled each real source to the previous opposite-ending target, and proved preservation of raw axes and other stages through both residuals. | Derive actual pre-FFN representation and M+288 block bounds, propagate the ordered raw-word features, then complete depth readout/SolvesTask. |
 | 2026-10-07 | 1 | Fixed original detector blocks committed in beb4e74. Proved actual pre-FFN raw/signal/feature reads and genuine norm bounds; recorded explicit simultaneous local input conditions with an active-A real-array witness. | Derive FFN conditions and complete M+288 transitions from these inputs, close ordered raw-state induction and full depth readout/SolvesTask. |
 | 2026-10-07 | 1 | Actual pre-FFN residual committed in 135a904. Derived all true FFN requirements from incoming states, proved exact complete-block flags and their positive iff condition, and bounded both real residuals by M+288. | Derive separated flag amplitudes and ordered occurrences through all raw stages, then complete tied readout and depth SolvesTask. |
+| 2026-10-07 | 1 | Complete detector transitions committed in f8a76c9. Derived real flag separation/cap, threshold iff positivity, exact wrong-type zero and strict earlier-source semantics through the unchanged causal head/FFN. | Derive initial and propagated representation directly from raw words, then complete original full-model depth readout/SolvesTask. |
