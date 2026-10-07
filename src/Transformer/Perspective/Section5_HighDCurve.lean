@@ -14,6 +14,7 @@ Continues `Perspective.Section5_HighD`:
 -/
 
 import Transformer.Perspective.Section5_HighD
+import Transformer.Perspective.Section6_EquiangularFlow
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
@@ -28,46 +29,6 @@ open Perspective
 variable (d n : ℕ)
 
 /-! ### §6.2 — More precise quantitative convergence -/
-
-/-- The scalar ODE driving the angle between pairwise orthogonal particles
-under `SA`:
-
-  `γ̇_β(t) = 2 e^{β γ_β(t)} (1 - γ_β(t)) ((n-1) γ_β(t) + 1)
-             / (e^β + (n-1) e^{β γ_β(t)})`,
-  `γ_β(0) = 0`.
-
-This is **Equation (eq: ybeta).** -/
-def ybetaODE_SA (n : ℕ) (β : ℝ) (γ : ℝ → ℝ) : Prop :=
-  γ 0 = 0 ∧
-  ∀ t : ℝ, HasDerivAt γ
-    (2 * Real.exp (β * γ t) * (1 - γ t) * ((n - 1 : ℝ) * γ t + 1)
-      / (Real.exp β + (n - 1 : ℝ) * Real.exp (β * γ t))) t
-
-/-- The scalar ODE for `USA` (eq: ybetaUSA):
-
-  `γ̇_β(t) = (2/n) e^{β γ_β(t)} (1 - γ_β(t)) ((n-1) γ_β(t) + 1)`. -/
-def ybetaODE_USA (n : ℕ) (β : ℝ) (γ : ℝ → ℝ) : Prop :=
-  γ 0 = 0 ∧
-  ∀ t : ℝ, HasDerivAt γ
-    ((2 / (n : ℝ)) * Real.exp (β * γ t) * (1 - γ t) * ((n - 1 : ℝ) * γ t + 1)) t
-
-/-- **A solution of `eq: ybeta`.**  At `n = 1` and `β = 0` the equation is
-`γ̇ = 2(1 - γ)`, `γ(0) = 0`, whose solution is `γ(t) = 1 - e^{-2t}`: the angle
-closes at an exponential rate.
-
-It is the one solution of `eq: ybeta` available in closed form, and it is what
-witnesses that the hypothesis `ybetaODE_SA` of the estimates below is
-satisfiable. -/
-theorem ybetaODE_SA_one_zero :
-    ybetaODE_SA 1 0 (fun t => 1 - Real.exp (-2 * t)) := by
-  refine ⟨by simp, fun t => ?_⟩
-  have hlin : HasDerivAt (fun s : ℝ => -2 * s) (-2 : ℝ) t := by
-    simpa using HasDerivAt.const_mul (-2 : ℝ) (hasDerivAt_id t)
-  have h : HasDerivAt (fun s : ℝ => 1 - Real.exp (-2 * s))
-      (-(Real.exp (-2 * t) * -2)) t := hlin.exp.const_sub 1
-  refine h.congr_deriv ?_
-  norm_num
-  ring
 
 /-- **The derivative of `tanh`,** `tanh' = 1 - tanh²`.
 
@@ -113,12 +74,20 @@ theorem ybetaODE_USA_two_zero : ybetaODE_USA 2 0 Real.tanh := by
 
 /-- **Theorem (thm: orthogonal).** *Orthogonal initial sequence.*
 
-Let `β ≥ 0`, `d, n ≥ 2`.  If `(x_i(0))_{i ∈ [n]}` are pairwise orthogonal on
-`𝕊^{d-1}`, then the angle `θ(t) := ∠(x_i(t), x_j(t))` is the same for all
-distinct `i, j`, and `γ_β(t) := cos θ(t)` satisfies `eq: ybeta` (for `SA`) or
-`eq: ybetaUSA` (for `USA`). -/
+The source assumes `β ≥ 0` and `d, n ≥ 2`. If the initial sphere tokens
+are pairwise orthogonal, all distinct pairs have the same angle, whose cosine
+solves `eq: ybeta` for `SA` (and `eq: ybetaUSA` for `USA`).
+
+This statement is the `SA` part. It is strengthened to every real `β` and
+any dimension admitting the given orthogonal tuple; only `n ≥ 2` is needed.
+A global scalar solution is constructed, its common-angle matrix solves the
+closed Gram ODE, and uniqueness identifies it with every `SA` trajectory.
+The scalar solution exists on all of `ℝ`, although the conclusion here,
+as in the source, concerns nonnegative times.
+
+Source: arXiv:2312.10794v5, §6.2, `thm: orthogonal` and `eq: ybeta`. -/
 theorem orthogonal_initial
-    (β : ℝ) (hβ : 0 ≤ β) (hd : 2 ≤ d) (hn : 2 ≤ n)
+    (β : ℝ) (hn : 2 ≤ n)
     (X₀ : SphereTuple d n)
     (h_ortho : ∀ i j : Idx n, i ≠ j →
                 inner (𝕜 := ℝ) ((X₀ i : EucSpace d)) ((X₀ j : EucSpace d)) = 0) :
@@ -126,7 +95,21 @@ theorem orthogonal_initial
       ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Perspective.SA d n β X →
         ∀ t : ℝ, 0 ≤ t → ∀ i j : Idx n, i ≠ j →
           inner (𝕜 := ℝ) ((X t i : EucSpace d)) ((X t j : EucSpace d)) = γ t := by
-  sorry
+  obtain ⟨γ, hγ0, hγ⟩ := exists_saAngle n β hn
+  refine ⟨γ, ⟨hγ0, fun t => (hγ t).1⟩, ?_⟩
+  intro X hX0 hX t _ i j hij
+  have h0 : tokenGram (X 0) = equiGram n (γ 0) := by
+    rw [hX0, hγ0]
+    exact tokenGram_orthogonal d n X₀ h_ortho
+  have heq := tokenGram_eq_equiGram d n β X hX γ (fun t => (hγ t).1) h0 t
+  simpa [tokenGram, equiGram, hij] using congrFun (congrFun heq i) j
+
+/-- The theorem's hypotheses, as well as the source's original temperature
+and dimension restrictions, hold for the two basis tokens in the plane. -/
+example : (0 : ℝ) ≤ 0 ∧ 2 ≤ 2 ∧ 2 ≤ 2 ∧
+    ∀ i j : Idx 2, i ≠ j →
+      inner ℝ (sphereBasisConfig 2 i : EucSpace 2) (sphereBasisConfig 2 j : EucSpace 2) = 0 :=
+  ⟨le_rfl, le_rfl, le_rfl, sphereBasisConfig_orthogonal 2⟩
 
 /-- **Theorem (thm: phase.transition.curve), eq: upto-t.**
 
