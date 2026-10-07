@@ -1,31 +1,27 @@
 import Transformer.Modes.Section3_ErrorThird
 import Transformer.Modes.Section3_EtaMoment
+import Transformer.Modes.Section3_PointwiseFalse
 
 /-
 # The number of modes of a Gaussian KDE — higher-order errors, pointwise
 
-§3.2 of arXiv:2412.09080v3: `lem:error-higher`, the analogue of `thm:br` for
-`q_t` with the dependence on `β` tracked, and `eq:rate`, the rate it gives on
-`T` and `T'`.
+§3.2 of arXiv:2412.09080v3: counterexamples to `lem:error-higher`, and the
+valid arithmetic estimates `eq:rate` on `T` and `T'`.
 
 **What the source says and what is carried here.**
 
-* **`eq:error-higher` is corrected.**  The source defines `g₂ = q_t - φ` and
+* **The missing Edgeworth term is accounted for.** The source defines `g₂ = q_t - φ` and
   `g₃ = q_t - φ - n^{-1/2}ψ` and then writes `|q_t - φ|` in the display for both
-  `s = 2` and `s = 3`.  For `s = 3` that claims `|q_t - φ| ≲ n^{-1}η₄`, which
-  is false as soon as `n^{-1/2}ψ ≠ 0` — the Edgeworth term is the first-order
-  error.  The proof in `sec:pf-error-higher` bounds `g_s`, and `cor:error-higher`
-  uses `g₃`; what is stated is `g_s`.
+  `s = 2` and `s = 3`. The proof in `sec:pf-error-higher` bounds `g_s`, and
+  `cor:error-higher` uses `g₃`. Both the literal display and its corrected
+  version are refuted in `Section3_PointwiseFalse.lean`.
 
-* The source fixes `t` in the proof and uses the bound uniformly in `t ∈ T` in
-  `cor:error-higher`; the uniform statement is the one stated.  The proof's
-  `ε = sup_{‖z‖>a} |𝓕f(z)| < 1` depends on `t` and `β`, and the uniformity
-  needs `ε^{n/5}` to beat a power of `n` uniformly, which the source does not
-  address.
-
-* The density `q_t` is asserted to exist, be continuous, and satisfy the bound:
-  a continuous density is unique, so this is the source's claim, and it cannot
-  hold vacuously for want of a density.
+* **The global pointwise bounds are false.** In the allowed regime `β = n`,
+  every `n ≥ 5` has no bounded standardized density, at any `t`. A finite
+  uniform error from the bounded Gaussian or Edgeworth target would give
+  precisely such a density. The negative statements below keep the source's
+  rates and quantifiers at this explicit regime; continuity is unnecessary.
+  The observation point `0` belongs to every window `T`.
 
 * `eq:rate`: the first `≲` is `lem:eta` at `s + 1` (`etaMoment_le`), proved.
   The rest is arithmetic on `T` and `T'` and is proved: `rate_T`, `rate_T'`.
@@ -42,43 +38,39 @@ namespace Modes
 
 /-! ### `lem:error-higher` -/
 
-/-- **Lemma (lem:error-higher), `s = 2`, corrected.**  In the regime
-`n^c ≲ β ≲ n^{2-c}`, uniformly in `t ∈ T`, the density `q_t` of
-`n^{-1/2} Σ Yᵢ(t)` exists, is continuous, and
-`sup_x (1 + ‖x‖²) |q_t - φ|(x) ≲ n^{-1/2} η₃`.
-
-Not proved here.
-
-Source: arXiv:2412.09080v3, `lem:error-higher`, `eq:error-higher`. -/
-theorem error_higher_two {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : IsRegime c N B)
-    {ω : ℝ → ℝ} (hω : IsSlowGrowth ω) :
-    ∃ C : ℝ, ∀ᶠ k in atTop, ∀ t ∈ intervalT (N k) (B k) (ω (B k)),
-      ∃ q : ℝ × ℝ → ℝ, Continuous q ∧
-        IsDensityOf (Measure.pi fun _ : Fin (N k) => lawY (B k) t) (scaledSum (N k)) q ∧
+/-- **Counterexample to `lem:error-higher`, `s = 2`.** In the allowed regime
+`n = β = k+1`, even densities without continuity cannot satisfy the source's
+uniform weighted error bound. The failure already occurs at `t = 0 ∈ T`.
+Source: arXiv:2412.09080v3, §3.2, `lem:error-higher`, `eq:error-higher`. -/
+theorem not_error_higher_two (ω : ℝ → ℝ) :
+    ¬ ∃ C : ℝ, ∀ᶠ k : ℕ in atTop, ∀ t ∈ intervalT (k + 1) (k + 1) (ω (k + 1)),
+      ∃ q : ℝ × ℝ → ℝ,
+        IsDensityOf (Measure.pi fun _ : Fin (k + 1) => lawY (k + 1) t) (scaledSum (k + 1)) q ∧
         ∀ x, (1 + eucl x ^ 2) * |q x - phi2 x|
-          ≤ C * ((N k : ℝ) ^ (-(1 : ℝ) / 2) * etaMoment (B k) t 3) := by
-  sorry
+          ≤ C * (((k + 1 : ℕ) : ℝ) ^ (-(1 : ℝ) / 2) * etaMoment (k + 1) t 3) := by
+  rintro ⟨C, hC⟩
+  obtain ⟨k, hk, hk4⟩ := (hC.and (eventually_ge_atTop (4 : ℕ))).exists
+  obtain ⟨q, hqP, hbound⟩ := hk 0 (zero_mem_intervalT _ _ _)
+  exact not_weighted_gaussian_density_scaledSum (n := k + 1) (by omega)
+    (by exact_mod_cast (show 2 < k + 1 by omega)) (by norm_num) 0 ⟨q, hqP, _, hbound⟩
 
-/-- **Lemma (lem:error-higher), `s = 3`, corrected.**  In the regime
-`n^c ≲ β ≲ n^{2-c}`, uniformly in `t ∈ T`, the density `q_t` of
-`n^{-1/2} Σ Yᵢ(t)` exists, is continuous, and
-`sup_x (1 + ‖x‖³) |q_t - φ - n^{-1/2}ψ|(x) ≲ n^{-1} η₄`.  The source writes
-`|q_t - φ|`; see the module docstring.
+/-- **The corrected `s = 3` claim is false as well.** The source's display
+omits `n^{-1/2}ψ`; inserting it does not repair the global bound in `β = n`.
+No continuity assumption is needed for this counterexample.
+Source: arXiv:2412.09080v3, §3.2, `lem:error-higher`, corrected `eq:error-higher`. -/
+theorem not_error_higher_three (ω : ℝ → ℝ) :
+    ¬ ∃ C : ℝ, ∀ᶠ k : ℕ in atTop, ∀ t ∈ intervalT (k + 1) (k + 1) (ω (k + 1)),
+      ∃ q : ℝ × ℝ → ℝ,
+        IsDensityOf (Measure.pi fun _ : Fin (k + 1) => lawY (k + 1) t) (scaledSum (k + 1)) q ∧
+        ∀ x, (1 + eucl x ^ 3) * |q x - phi2 x - (Real.sqrt (k + 1 : ℕ))⁻¹ * psiOf (lawY (k + 1) t) x|
+          ≤ C * (((k + 1 : ℕ) : ℝ)⁻¹ * etaMoment (k + 1) t 4) := by
+  rintro ⟨C, hC⟩
+  obtain ⟨k, hk, hk4⟩ := (hC.and (eventually_ge_atTop (4 : ℕ))).exists
+  obtain ⟨q, hqP, hbound⟩ := hk 0 (zero_mem_intervalT _ _ _)
+  exact not_weighted_edgeworth_density_scaledSum (n := k + 1) (by omega)
+    (by exact_mod_cast (show 2 < k + 1 by omega)) (by norm_num) 0 ⟨q, hqP, _, hbound⟩
 
-Not proved here.
-
-Source: arXiv:2412.09080v3, `lem:error-higher`, `eq:error-higher`. -/
-theorem error_higher_three {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : IsRegime c N B)
-    {ω : ℝ → ℝ} (hω : IsSlowGrowth ω) :
-    ∃ C : ℝ, ∀ᶠ k in atTop, ∀ t ∈ intervalT (N k) (B k) (ω (B k)),
-      ∃ q : ℝ × ℝ → ℝ, Continuous q ∧
-        IsDensityOf (Measure.pi fun _ : Fin (N k) => lawY (B k) t) (scaledSum (N k)) q ∧
-        ∀ x, (1 + eucl x ^ 3) * |q x - phi2 x - (Real.sqrt (N k))⁻¹ * psiOf (lawY (B k) t) x|
-          ≤ C * ((N k : ℝ)⁻¹ * etaMoment (B k) t 4) := by
-  sorry
-
-/-- The hypotheses of `error_higher_two` and `error_higher_three` are
-satisfiable. -/
+/-- Both counterexamples satisfy the source's original growth hypotheses. -/
 example : IsRegime 1 (fun k => k + 1) (fun k => ((k + 1 : ℕ) : ℝ)) ∧
     IsSlowGrowth (fun β => Real.sqrt (Real.log (Real.log β))) :=
   ⟨isRegime_succ, isSlowGrowth_sqrt_log_log⟩

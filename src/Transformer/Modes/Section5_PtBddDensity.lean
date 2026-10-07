@@ -11,7 +11,7 @@ Here the density conclusion itself is refuted, without any Fourier argument.
 For `β > 2`, all samples in `[t-z-1,t-z]` put the normalized pair in a
 rectangle of radius `c exp(-a z²)`, where `a = (β+2)/4` and `c > 0` is fixed.
 That event has probability at least `(2π)^{-n/2} exp(-n(z+1-t)²/2)`.
-A density continuous near the origin would bound this by `C exp(-2a z²)`.
+A density bounded near the origin would bound this by `C exp(-2a z²)`.
 Their ratio has positive quadratic exponent when `n < β + 2`, a contradiction.
 
 In particular `n = 5`, `β = 10` satisfies all the source's numerical
@@ -27,20 +27,14 @@ open scoped ENNReal
 
 namespace Transformer.Modes
 
-/-- **Counterexample to the density conclusion of `lem: pt.bdd`.**
-For `β > 2` and `0 < n < β + 2`, the normalized sum has no density
-continuous even on the unit rectangle around the origin. The tail event
-in `gaussianSample_box_mass_lower` contradicts `continuous_density_box_le`.
-
-Source: arXiv:2412.09080v3, §4.1, `lem: pt.bdd`; §5.5. The source's
-unrestricted assertion of a continuous density is false. -/
-theorem not_continuous_density_sumGG' {n : ℕ} (hn : 0 < n) {β : ℝ}
+/-- Small rectangles do not have the quadratic mass bound required by
+`lem: pt.bdd`: the Gaussian tail event has a slower decay rate than their area.
+Source: arXiv:2412.09080v3, §4.1, `lem: pt.bdd`; §5.5. -/
+theorem not_quadratic_box_mass_bound {n : ℕ} (hn : 0 < n) {β : ℝ}
     (hβ : 2 < β) (hnβ : (n : ℝ) < β + 2) (t : ℝ) :
-    ¬ ∃ q : ℝ × ℝ → ℝ, ContinuousOn q (centeredBox 1) ∧
-      Measure.map (sumGG' n β t) (gaussianSample n) =
-        volume.withDensity fun z => ENNReal.ofReal (q z) := by
-  rintro ⟨q, hq, hqP⟩
-  obtain ⟨C, _, hmass⟩ := continuous_density_box_le hq hqP
+    ¬ ∃ C : ℝ, ∀ r : ℝ, 0 ≤ r → r ≤ 1 →
+      (gaussianSample n).real (sumGG' n β t ⁻¹' centeredBox r) ≤ C * r ^ 2 := by
+  rintro ⟨C, hmass⟩
   have hnR : (0 : ℝ) < n := Nat.cast_pos.mpr hn
   let K : ℝ := 2 * β / (β - 2)
   have hK : 0 < K := div_pos (by linarith) (by linarith)
@@ -73,9 +67,6 @@ theorem not_continuous_density_sumGG' {n : ℕ} (hn : 0 < n) {β : ℝ}
     dsimp [Q, r, c, K, a]
     exact gaussianSample_box_mass_lower hβ n t hz1 hzt
   have hupper := hmass r hr.le hr1
-  rw [measureReal_def, Measure.map_apply (measurable_sumGG' n β t)
-    (measurableSet_centeredBox r)] at hupper
-  change (gaussianSample n).real (sumGG' n β t ⁻¹' centeredBox r) ≤ C * r ^ 2 at hupper
   have hcompare := hlower.trans hupper
   rw [inv_pow, inv_mul_le_iff₀ (pow_pos hQ n)] at hcompare
   have hscaled := mul_le_mul_of_nonneg_right hcompare (Real.exp_pos (2 * a * z ^ 2)).le
@@ -96,7 +87,45 @@ theorem not_continuous_density_sumGG' {n : ℕ} (hn : 0 < n) {β : ℝ}
   rw [hleft, hright] at hscaled
   exact (not_lt_of_ge hscaled) hzE
 
-/-- All the numerical assumptions hold at the source counterexample. -/
+/-- All the numerical assumptions hold at the mass-bound counterexample. -/
+example : 0 < (5 : ℕ) ∧ (2 : ℝ) < 10 ∧ (5 : ℝ) < 10 + 2 := by norm_num
+
+/-- **Counterexample to the density conclusion of `lem: pt.bdd`.**
+For `β > 2` and `0 < n < β + 2`, no density is continuous even on the
+unit rectangle. Such continuity would give the refuted quadratic mass bound.
+Source: arXiv:2412.09080v3, §4.1, `lem: pt.bdd`; §5.5. -/
+theorem not_continuous_density_sumGG' {n : ℕ} (hn : 0 < n) {β : ℝ}
+    (hβ : 2 < β) (hnβ : (n : ℝ) < β + 2) (t : ℝ) :
+    ¬ ∃ q : ℝ × ℝ → ℝ, ContinuousOn q (centeredBox 1) ∧
+      Measure.map (sumGG' n β t) (gaussianSample n) =
+        volume.withDensity fun z => ENNReal.ofReal (q z) := by
+  rintro ⟨q, hq, hqP⟩
+  obtain ⟨C, _, hmass⟩ := continuous_density_box_le hq hqP
+  apply not_quadratic_box_mass_bound hn hβ hnβ t
+  refine ⟨C, fun r hr hr1 => ?_⟩
+  simpa only [measureReal_def, Measure.map_apply (measurable_sumGG' n β t)
+    (measurableSet_centeredBox r)] using hmass r hr hr1
+
+/-- The continuity obstruction's numerical assumptions hold simultaneously. -/
+example : 0 < (5 : ℕ) ∧ (2 : ℝ) < 10 ∧ (5 : ℝ) < 10 + 2 := by norm_num
+
+/-- **The bounded-density assertion of `lem: pt.bdd` is also false.**
+Continuity is unnecessary: any globally bounded density would give the same
+quadratic mass estimate. Source: arXiv:2412.09080v3, §4.1 and §5.5. -/
+theorem not_bounded_density_sumGG' {n : ℕ} (hn : 0 < n) {β : ℝ}
+    (hβ : 2 < β) (hnβ : (n : ℝ) < β + 2) (t : ℝ) :
+    ¬ ∃ (q : ℝ × ℝ → ℝ) (B : ℝ),
+      Measure.map (sumGG' n β t) (gaussianSample n) =
+        volume.withDensity (fun z => ENNReal.ofReal (q z)) ∧ ∀ z, q z ≤ B := by
+  rintro ⟨q, B, hP, hq⟩
+  apply not_quadratic_box_mass_bound hn hβ hnβ t
+  refine ⟨4 * max B 0, fun r hr _ => ?_⟩
+  have hmass := density_box_le_of_bound (le_max_right B 0) hr
+    (fun z _ => (hq z).trans (le_max_left B 0)) hP
+  simpa only [measureReal_def, Measure.map_apply (measurable_sumGG' n β t)
+    (measurableSet_centeredBox r)] using hmass
+
+/-- The bounded-density obstruction has the same numerical witnesses. -/
 example : 0 < (5 : ℕ) ∧ (2 : ℝ) < 10 ∧ (5 : ℝ) < 10 + 2 := by norm_num
 
 /-- Increasing the sample count does not remove the obstruction when the

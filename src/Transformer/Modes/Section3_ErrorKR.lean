@@ -12,11 +12,12 @@ import Transformer.Modes.Section3_ErrorHigher
 * The integrals are `ℝ≥0∞`-valued and every bound is on the integral itself,
   so an infinite integral cannot satisfy them.
 
-* `q_t` is not a function the source defines but "the density" of
-  `n^{-1/2} Σ Yᵢ(t)`.  Each statement asserts that a family of continuous
-  densities, one per `t ∈ S`, exists and satisfies the bound
-  (`IsDensityFamily`); continuous densities are unique, so this is the
-  source's claim about *the* density.
+* The source's integral bounds use "the density" `q_t`, together with the
+  continuity asserted in `lem: pt.bdd`. The continuous-family versions on
+  `T`, expressed by `IsDensityFamily`, are false in the allowed regime
+  `β = n`: no such family exists. The refutations below concern that
+  assertion, and do not refute integral estimates for other density versions.
+  The two claims on `T'` remain open; this regime has empty `T'` eventually.
 
 * "The second equation holds upon replacing `y ≥ 0` by `y ≥ Δ_t`, by
   non-negativity of the integrand" is proved, `gThreeKR_Ioi_le`.  The integrand
@@ -48,6 +49,18 @@ structure IsDensityFamily (n : ℕ) (β : ℝ) (S : Set ℝ) (q : ℝ → ℝ ×
   isDensityOf : ∀ t ∈ S,
     IsDensityOf (Measure.pi fun _ : Fin n => lawY β t) (scaledSum n) (q t)
 
+/-- Continuous density families on `T` are eventually impossible in `β = n`.
+Source: arXiv:2412.09080v3, §3.2, `cor:error-higher`; §4.1, `lem: pt.bdd`. -/
+theorem not_eventually_densityFamily_T_succ (ω : ℝ → ℝ) :
+    ¬ ∀ᶠ k : ℕ in atTop, ∃ q,
+      IsDensityFamily (k + 1) (k + 1) (intervalT (k + 1) (k + 1) (ω (k + 1))) q := by
+  intro h
+  apply not_eventually_continuous_density_on_T_succ ω
+  filter_upwards [h] with k hk
+  obtain ⟨q, hq⟩ := hk
+  intro t ht
+  exact ⟨q t, hq.continuous t ht, hq.isDensityOf t ht⟩
+
 /-- `∫_S ∫_{R_t} (det Σ_t)^{-1/2} y |q_t - φ|(Σ_t^{-1/2}[(0,y) - μ_t]) dy dt`.
 arXiv:2412.09080v3, `eq:error-goal`, `cor:error-higher`. -/
 noncomputable def gTwoKR (n : ℕ) (β : ℝ) (S : Set ℝ) (q : ℝ → ℝ × ℝ → ℝ)
@@ -65,36 +78,33 @@ noncomputable def gThreeKR (n : ℕ) (β : ℝ) (S : Set ℝ) (q : ℝ → ℝ �
 
 /-! ### `cor:error-higher` -/
 
-/-- **Corollary (cor:error-higher), first display, on `T`.**
-`∫_T ∫_0^{Δ_t} (det Σ_t)^{-1/2} y |q_t - φ|(…) dy dt ≲ e^{-ω(β)/4} √(β log β)`.
-
-Not proved here.
-
-Source: arXiv:2412.09080v3, `cor:error-higher`. -/
-theorem error_higher_two_KR_T {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : IsRegime c N B)
-    {ω : ℝ → ℝ} (hω : IsSlowGrowth ω) :
-    ∃ C : ℝ, ∀ᶠ k in atTop, ∃ q,
-      IsDensityFamily (N k) (B k) (intervalT (N k) (B k) (ω (B k))) q ∧
-      gTwoKR (N k) (B k) (intervalT (N k) (B k) (ω (B k))) q
-          (fun t => Set.Ioc 0 (deltaCut (N k) (B k) t))
+/-- **Counterexample to the continuous-family version of the first display
+of `cor:error-higher` on `T`.** The allowed regime `β = n` has no such family,
+independently of the proposed integral bound.
+Source: arXiv:2412.09080v3, §3.2, `cor:error-higher`; §4.1, `lem: pt.bdd`. -/
+theorem not_error_higher_two_KR_T (ω : ℝ → ℝ) :
+    ¬ ∃ C : ℝ, ∀ᶠ k : ℕ in atTop, ∃ q,
+      IsDensityFamily (k + 1) (k + 1) (intervalT (k + 1) (k + 1) (ω (k + 1))) q ∧
+      gTwoKR (k + 1) (k + 1) (intervalT (k + 1) (k + 1) (ω (k + 1))) q
+          (fun t => Set.Ioc 0 (deltaCut (k + 1) (k + 1) t))
         ≤ ENNReal.ofReal
-          (C * (Real.exp (-(ω (B k)) / 4) * Real.sqrt (B k * Real.log (B k)))) := by
-  sorry
+          (C * (Real.exp (-(ω (k + 1)) / 4) * Real.sqrt ((k + 1) * Real.log (k + 1)))) := by
+  rintro ⟨C, hC⟩
+  apply not_eventually_densityFamily_T_succ ω
+  exact hC.mono fun k ⟨q, hq, _⟩ => ⟨q, hq⟩
 
-/-- **Corollary (cor:error-higher), second display, on `T`.**
-`∫_T ∫_0^∞ (det Σ_t)^{-1/2} y |q_t - φ - n^{-1/2}ψ|(…) dy dt ≲ e^{-ω(β)/2} √(β log β)`.
-
-Not proved here.
-
-Source: arXiv:2412.09080v3, `cor:error-higher`. -/
-theorem error_higher_three_KR_T {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : IsRegime c N B)
-    {ω : ℝ → ℝ} (hω : IsSlowGrowth ω) :
-    ∃ C : ℝ, ∀ᶠ k in atTop, ∃ q,
-      IsDensityFamily (N k) (B k) (intervalT (N k) (B k) (ω (B k))) q ∧
-      gThreeKR (N k) (B k) (intervalT (N k) (B k) (ω (B k))) q (fun _ => Set.Ioi 0)
+/-- **The continuous-family version of the second display is also false.**
+Its rate cannot restore the density family missing in the allowed `β = n`.
+Source: arXiv:2412.09080v3, §3.2, `cor:error-higher`; §4.1, `lem: pt.bdd`. -/
+theorem not_error_higher_three_KR_T (ω : ℝ → ℝ) :
+    ¬ ∃ C : ℝ, ∀ᶠ k : ℕ in atTop, ∃ q,
+      IsDensityFamily (k + 1) (k + 1) (intervalT (k + 1) (k + 1) (ω (k + 1))) q ∧
+      gThreeKR (k + 1) (k + 1) (intervalT (k + 1) (k + 1) (ω (k + 1))) q (fun _ => Set.Ioi 0)
         ≤ ENNReal.ofReal
-          (C * (Real.exp (-(ω (B k)) / 2) * Real.sqrt (B k * Real.log (B k)))) := by
-  sorry
+          (C * (Real.exp (-(ω (k + 1)) / 2) * Real.sqrt ((k + 1) * Real.log (k + 1)))) := by
+  rintro ⟨C, hC⟩
+  apply not_eventually_densityFamily_T_succ ω
+  exact hC.mono fun k ⟨q, hq, _⟩ => ⟨q, hq⟩
 
 /-- **Corollary (cor:error-higher), first display, on `T'`:** `O(√β)`.
 
@@ -155,22 +165,20 @@ theorem gThreeKR_Ioi_le (n : ℕ) (β : ℝ) (S : Set ℝ) (q : ℝ → ℝ × �
 
 /-! ### `eq:error-goal` -/
 
-/-- **Equation (eq:error-goal).**  In the regime `n^c ≲ β ≲ n^{2-c}`,
-`∫_T ∫_0^∞ (det Σ_t)^{-1/2} y |q_t - φ|(Σ_t^{-1/2}[(0,y) - μ_t]) dy dt ≪ √(β log β)`.
+/-- **The continuous-family version of `eq:error-goal` is false.** The
+allowed regime `β = n` lacks the asserted family, already when `ε = 1`.
+Source: arXiv:2412.09080v3, §3, `eq:error-goal`; §4.1, `lem: pt.bdd`. -/
+theorem not_error_goal (ω : ℝ → ℝ) :
+    ¬ ∀ ε : ℝ, 0 < ε → ∀ᶠ k : ℕ in atTop, ∃ q,
+      IsDensityFamily (k + 1) (k + 1) (intervalT (k + 1) (k + 1) (ω (k + 1))) q ∧
+      gTwoKR (k + 1) (k + 1) (intervalT (k + 1) (k + 1) (ω (k + 1))) q (fun _ => Set.Ioi 0)
+        ≤ ENNReal.ofReal (ε * Real.sqrt ((k + 1) * Real.log (k + 1))) := by
+  intro h
+  apply not_eventually_densityFamily_T_succ ω
+  exact (h 1 one_pos).mono fun k ⟨q, hq, _⟩ => ⟨q, hq⟩
 
-Not proved here; §3 proves it from `lem:error-3` and `cor:error-higher`.
-
-Source: arXiv:2412.09080v3, `eq:error-goal`. -/
-theorem error_goal {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : IsRegime c N B)
-    {ω : ℝ → ℝ} (hω : IsSlowGrowth ω) :
-    ∀ ε : ℝ, 0 < ε → ∀ᶠ k in atTop, ∃ q,
-      IsDensityFamily (N k) (B k) (intervalT (N k) (B k) (ω (B k))) q ∧
-      gTwoKR (N k) (B k) (intervalT (N k) (B k) (ω (B k))) q (fun _ => Set.Ioi 0)
-        ≤ ENNReal.ofReal (ε * Real.sqrt (B k * Real.log (B k))) := by
-  sorry
-
-/-- The hypotheses of `error_goal` are satisfiable, and so is the one of the
-implication it asserts. -/
+/-- The `β = n` counterexample satisfies the original growth assumptions
+and the positive test tolerance used in the refutation. -/
 example : IsRegime 1 (fun k => k + 1) (fun k => ((k + 1 : ℕ) : ℝ)) ∧
     IsSlowGrowth (fun β => Real.sqrt (Real.log (Real.log β))) ∧ (0 : ℝ) < 1 :=
   ⟨isRegime_succ, isSlowGrowth_sqrt_log_log, one_pos⟩
