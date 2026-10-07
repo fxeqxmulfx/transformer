@@ -272,7 +272,15 @@ amplitude times the compact inner product (four for the same symbol,
 at most three for any different one). All 548 raw embedding entries amplify
 residual error by at most three. These identities precede strict readout.
 
-Next derive strict tied-readout margins and the actual integer decoder, discharge full
+RecallReadout proves a strict selected-value margin against every one of
+the 547 remaining vocabulary entries. Both actual error bounds and the
+selected prenorm amplitude are derived from raw data. The true final
+RMS multiplier is positive by its protected constant, so the actual
+normalized tied readout and greedy decoder return the selected value.
+The genuine six-token overwrite control returns the later different value.
+These results still require complete ModelParams and parser coupling.
+
+Next connect the actual complete model and integer decoder, discharge full
 validated-parser conditions, and construct the depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
@@ -380,3 +388,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Finite uniform retrieval accuracy committed in 94d0b89. Realized the actual unchanged second attention/block with ordinary nonzero W_o, finite shared matching parameters, complete state formula, protected query/type coordinates and true headAt/output-error coupling. | Strict tied-readout margins and actual integer decoder, full validated raw parser discharge and depth correctness; convex architecture and equal-FLOP comparisons remain queued. |
 | 2026-10-07 | 1 | Genuine second block committed in 5e1dc59. Proved full genuine final-state error at most 1/8, selected real value amplitude at least two and faithful final raw query/type/reserved readout channels. | Strict tied readout over all 548 tokens and actual integer decoder, complete validated parser discharge and depth correctness; convex architecture and equal-FLOP comparisons remain queued. |
 | 2026-10-07 | 1 | Full final-state/error coupling committed in 486a860. Evaluated actual tied key/reserved scores and selected-value reference scores; proved compact categorical products four versus at most three and uniform raw score-error amplification at most three. | Derive strict all-token readout, connect actual complete ModelParams/decoder, discharge full validated recall parsing, then depth correctness; convex architecture/FLOP comparison remain queued. |
+| 2026-10-07 | 1 | Tied-score identities committed in 1315cac. Proved strict actual answer margin over all 547 competing tokens, genuine final RMS positivity and greedy selected-value correctness; the actual six-token overwrite control decodes its later value. | Complete top-level model and integer adapter coupling, validated-parser discharge and depth correctness; convex architecture and equal-FLOP comparison remain queued. |

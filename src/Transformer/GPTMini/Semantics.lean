@@ -29,6 +29,7 @@ import Transformer.GPTMini.Semantics.RecallRetrievalAccuracy
 import Transformer.GPTMini.Semantics.RecallRetrievalBlock
 import Transformer.GPTMini.Semantics.RecallFinalState
 import Transformer.GPTMini.Semantics.RecallReadoutCoordinates
+import Transformer.GPTMini.Semantics.RecallReadout
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -77,14 +78,10 @@ linear readback and zero cross-channels are proved; copy, position and
 gated-key channels are initially zero. These raw coordinates feed the
 actual fused QKV/BOS head.
 
-The actual fused QKV and nonzero W_o now realize predecessor and marker
-heads simultaneously. Every raw adjacent key/value pair has a derived
-finite-softmax/XSA copy error in the true first attention residual;
-its own raw value and query codes are retained. At every later position
-the actual simultaneous marker head and residual contain exactly
-1/(i+1), derived from raw BOS/alphabet IDs and the genuine causal mask,
-even with future array entries. Sixteen actual original ReLU2 units now
-realize the fixed table cutoff and preserve all raw code/type channels.
+Actual fused QKV/W_o realize predecessor and marker heads simultaneously,
+retaining raw query/value codes and a derived finite-softmax copy error.
+The actual BOS marker is exactly 1/(i+1), even with future array entries.
+Sixteen original ReLU2 units realize the cutoff and protect raw channels.
 The full first block's gated-key slot is exactly zero on keys/BOS and
 post-table values, excluding false writes after queries. Table values
 retain the genuine compact predecessor copy with its derived positive
@@ -189,7 +186,10 @@ tied readout, the integer decoder and full validated parser remain.
 Actual tied key scores are at most six, reserved scores exactly one,
 and selected-value reference scores use compact categorical products
 four versus at most three. Every raw embedding bounds score perturbations
-by three times the actual residual error.
+by three times the actual residual error. The correct raw value now
+strictly defeats all 547 other tokens, including after the actual final
+RMSNorm and greedy decoding. The real six-token overwrite control
+returns its later value. Top-level model and full-parser coupling remain.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
