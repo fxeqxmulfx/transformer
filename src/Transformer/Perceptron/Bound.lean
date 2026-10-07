@@ -2,10 +2,12 @@
 # Perceptrons and attention's mean-field landscape — the anti-concentration bound
 
 Formalization of `thm: bound` and `cor: bound` of arXiv:2601.21366v2, §3.2:
-the strict concavity of `θ ↦ e^{β cos θ}` on `(-β^{-1/2}, β^{-1/2})` stops the
-atoms of a SOPD critical point from concentrating — a cluster of angular width
-`1/(2√β)` carries at most `0.5742 + O(e^{-β})` of the mass — and, when the
-weights are small enough, the whole configuration cannot be one such cluster.
+the source's local concavity estimate for `θ ↦ e^{β cos θ}` bounds the mass
+of a cluster in a SOPD critical point — a cluster of angular width
+`1/(2√β)` carries at most `0.5742 + O(e^{-β})` of the mass at large `β`.
+The source additionally excludes a single such cluster for every `β > 0`
+when the weights are small. That universal claim is false:
+`Section3_ClusterCounterexample` proves a counterexample and its negation.
 
 **What the source says and what is carried here.**
 
@@ -42,17 +44,17 @@ weights are small enough, the whole configuration cannot be one such cluster.
 
 **What is not witnessed.**  The examples below exhibit every hypothesis except
 `IsSOPD`: a Lipschitz activation with its primitive, and a three-atom
-configuration two of whose atoms are `1/(2√β)` apart.  That such a cluster
-occurs *at a SOPD critical point* is exhibited neither here nor in the source —
-the source's evidence for it is numerical — and it is precisely what the bound
-constrains.  `Antipodal.lean` exhibits the two-atom SOPD critical points, for
-which the cluster condition fails.
+configuration two of whose atoms are `1/(2√β)` apart. The antipodal SOPD
+family in `Section3_Antipodal` satisfies the cluster condition exactly when
+`0 < β ≤ 1/(4π²)`, as proved in `Section3_ClusterCounterexample`; it does not
+witness a cluster at large `β`.
 
 Source: arXiv:2601.21366v2, `thm: bound`, `cor: bound`.
 -/
 
 import Transformer.Perceptron.Atoms
 import Transformer.Perceptron.Geodesic
+import Transformer.Perceptron.Section3_ClusterCounterexample
 import Mathlib.Analysis.Real.Pi.Bounds
 
 open scoped BigOperators ENNReal
@@ -131,33 +133,6 @@ example (β : ℝ) (hβ : 1 ≤ β) :
     rw [Int.cast_zero, mul_zero, add_zero, hij, abs_mul, abs_of_pos hδ]
     have : |((i : ℕ) : ℝ) - (j : ℕ)| ≤ 1 := abs_le.mpr ⟨by linarith, by linarith⟩
     nlinarith
-
-/-- **Theorem (thm: bound), second part.**  If the weights satisfy
-`|ω₁|‖a₁‖² + |ω₂|‖a₂‖² < 0.16547`, then the whole index set `⟦1,N⟧` cannot
-satisfy the cluster condition `eq: pairwise.distance`, for any `β > 0`.
-
-Not proved here.
-
-Source: arXiv:2601.21366v2, `thm: bound`, `eq: theta.bound`. -/
-theorem not_cluster_univ_of_weights_small (β : ℝ) (hβ : 0 < β) (φ σ : ℝ → ℝ)
-    (hφ : ∀ s : ℝ, HasDerivAt φ (2 * σ s) s) (hlip : LipschitzWith 1 σ)
-    (hσ0 : σ 0 = 0) (ω : Idx 2 → ℝ) (a : Idx 2 → EucSpace 2)
-    (hω : |ω 0| * ‖a 0‖ ^ 2 + |ω 1| * ‖a 1‖ ^ 2 < 0.16547)
-    (N : ℕ) (m θ : Idx N → ℝ) (μ : Perspective.ProbSphere 2)
-    (hatom : IsAtomicOnCircle N m θ μ) (hSOPD : IsSOPD β φ σ ω a μ) :
-    ¬ ∀ i j : Idx N, ∃ k : ℤ,
-        |θ i - θ j + 2 * π * (k : ℝ)| ≤ 1 / (2 * Real.sqrt β) := by
-  sorry
-
-/-- The weight hypothesis of `not_cluster_univ_of_weights_small` is
-satisfiable: the vanishing perceptron `ω = 0`, whose activation `σ = 0` is
-`1`-Lipschitz with `σ(0) = 0` and has the primitive `φ = 0`. -/
-example (a : Idx 2 → EucSpace 2) :
-    (∀ s : ℝ, HasDerivAt (fun _ : ℝ => (0 : ℝ)) (2 * (0 : ℝ → ℝ) s) s) ∧
-      LipschitzWith 1 (0 : ℝ → ℝ) ∧ (0 : ℝ → ℝ) 0 = 0 ∧
-      |(0 : Idx 2 → ℝ) 0| * ‖a 0‖ ^ 2 + |(0 : Idx 2 → ℝ) 1| * ‖a 1‖ ^ 2 < 0.16547 :=
-  ⟨fun s => by simpa using hasDerivAt_const s (0 : ℝ),
-    LipschitzWith.const' 0, rfl, by norm_num⟩
 
 /-- **Corollary (cor: bound).**  If the support of `μ` is covered by `M` arcs
 of length at most `L < 2π`, the number `N_ε` of atoms of mass at least `ε`
