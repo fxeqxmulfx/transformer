@@ -1,6 +1,8 @@
 import Transformer.GPTMini.Convex.Structured.Basic
 import Transformer.GPTMini.Convex.Structured.Factorial
 import Transformer.GPTMini.Convex.Structured.PointerTraining
+import Transformer.GPTMini.Convex.Structured.ChannelMarginals
+import Transformer.GPTMini.Convex.Structured.PointerValues
 
 /-!
 # Structured alternatives guided by raw Basis semantics
