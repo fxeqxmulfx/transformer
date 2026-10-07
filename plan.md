@@ -478,6 +478,12 @@ common RMS-square scale. All rows fit the original FFN dimensions.
 DepthReadoutFFN derives true zero-or-common-RMS-square indicators,
 the exact common coordinate, arbitrary protected channels and a norm
 cap 384; simultaneous actual-vector controls satisfy every local premise.
+DepthReadoutBlock/DepthWordFinalState now derive the complete actual
+readout from raw words, including both semantic indicator coordinates,
+common scale in [r^2,128], protected raw types and final norm [1,1282].
+No invariant, encoder, route or correct-logit premise is supplied in
+these full raw-word results. Tied margins and ModelParams/int coupling
+still remain; this is real capacity, not an AdamW or convexity guarantee.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -615,3 +621,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Genuine residual readout layout committed in f3e61b2. Derived actual probes zero or at least twice the shared threshold, capped by 144 and positive exactly at visible independent ordered occurrences, with true pre-FFN norm at most 898. | Realize the seven-unit FFN and tied margins, then full ModelParams/checked integer depth correctness. |
 | 2026-10-07 | 1 | Actual readout separation committed in 6ba8bea. Realized all seven ordinary readout FFN rows and proved the complete true matrix/prenorm formula with a common RMS-square scale. | Couple exact semantic flags to the full readout block, prove tied margins, then original ModelParams and raw integer correctness. |
 | 2026-10-07 | 1 | Original seven-unit matrices committed in a705ed2. Derived exact actual readout FFN binary/common amplitudes, protected all other coordinates and proved contribution norm at most 384 with concrete simultaneous witnesses. | Derive semantic complete-block readout and tied margins, then full ModelParams/checked List Int depth SolvesTask. |
+| 2026-10-07 | 1 | Actual FFN amplitudes/bounds committed in 2d14aea. Proved the complete genuine readout block and its raw-word instantiation: independent semantic flags, common true scale [r^2,128], raw protection and final norm [1,1282], without an encoder/invariant premise. | Strict tied 36-token margins, original ModelParams/hidden-loop and raw integer depth SolvesTask remain. |
