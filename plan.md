@@ -730,8 +730,16 @@ complete NLL equals minus log of that same true mixed probability and is
 globally convex jointly in all raw token, value, position and head
 coordinates, including variable-length shared minibatches. No task label
 or correct state/route enters inference. Complete recall data-target
-generation, combined finite-weight task confidence/capability and the
-actual tensor-stack/prenorm/residual/tied readout remain required.
+generation and the actual tensor-stack/prenorm/residual/tied readout
+remain required. MixedConfidence/MixedMargins now derive the genuine
+whole-mixture finite confidence and greedy margins, including its
+positive incorrect branch. MixedInterface/MixedBasis prove that one
+actual freely learned mixed-head callback solves every raw prefix of all
+six task/mode recipes, preserves the complete integer-list contract and
+generates parity label/EOS in two real calls. The full eight/sixteen-write
+swap/overwrite controls and equal-bag depth order control are actual
+model predictions. This remains head-level capability until the genuine
+tensor-block realization is proved.
 Output-only CE and AdamW convergence are not proved convex or successful
 by these complete-likelihood/capacity results.
 
@@ -886,3 +894,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | True raw all-pair inference/loss/decoder coupling committed in e0be315. Derived complete raw recall finite-weight energy gaps for every rival and the actual correct configuration's whole-distribution probability bound; proved a finite logarithmic gain covers the latent and two-head tails. | Complete strict whole-vocabulary raw recall greedy/List Int capability and genuine mixture training/inference, then realize the actual tensor/prenorm/residual/tied block before stage 3. |
 | 2026-10-07 | 2 | Full raw recall gap/confidence committed in e5e8823. Proved the actual finite learned all-pair head solves both complete raw recall grammars through the checked append-one integer interface, with genuine value-swap control and derived whole-vocabulary greedy margins. | Correct complete recall data targets, true learned two-head mixing and full tensor/prenorm/residual/tied realization remain before stage 3; no candidate training started. |
 | 2026-10-07 | 2 | Full standalone raw recall capability committed in 05fb3e2. Realized genuine learned mixing of the actual state and all-pair binding distributions, exact compact mixed decoder expectation, and globally convex actual complete NLL/shared minibatches on the full unrestricted joint parameter space. | Derive complete mixed finite-weight confidence/Basis capability, correct recall data targets and actual tensor-stack/prenorm/residual/tied realization before stage 3; output-only CE and AdamW success remain unproved. |
+| 2026-10-07 | 2 | Actual jointly convex mixed inference/training committed in d436526. Derived finite whole-mixture confidence and genuine original greedy margins; proved the actual common mixed integer callback solves every full raw prefix of all six Basis recipes, two-call parity and real full-size swap/overwrite/order controls. | Correct raw recall data-target generation and actual tensor embedding/attention/prenorm/residual/tied realization remain before candidate acceptance and stage 3; training and FLOP comparisons have not started. |

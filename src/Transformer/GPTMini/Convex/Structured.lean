@@ -36,6 +36,10 @@ import Transformer.GPTMini.Convex.Structured.BindingInterface
 import Transformer.GPTMini.Convex.Structured.SharedRecall
 import Transformer.GPTMini.Convex.Structured.MixedHeads
 import Transformer.GPTMini.Convex.Structured.MixedTraining
+import Transformer.GPTMini.Convex.Structured.MixedConfidence
+import Transformer.GPTMini.Convex.Structured.MixedMargins
+import Transformer.GPTMini.Convex.Structured.MixedInterface
+import Transformer.GPTMini.Convex.Structured.MixedBasis
 
 /-!
 # Structured alternatives guided by raw Basis semantics
