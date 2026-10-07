@@ -1,6 +1,6 @@
 {
   "convention": "aten-reference-arithmetic-v1",
-  "snapshot": "2026-10-07 15:11 UTC",
+  "snapshot": "2026-10-07 16:12 UTC",
   "status": "active; only completed full-ceiling gain-eight arms are included; all other continuations retained",
   "candidates": [
     {
@@ -2879,6 +2879,319 @@
       "result_sha256": "feb561c3d7816298bde5a646682ca7b5a46c147a3f7aef9bdc1a27fa2333985a"
     },
     {
+      "label": "tensor-gain8-easy-recall-seed1",
+      "reference": "softmax-easy-recall-seed1",
+      "stop": {
+        "step": 7720,
+        "reason": "flop_budget"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "TensorGain",
+          "width": 64,
+          "depth": 2,
+          "context": 64,
+          "eps": 1e-05,
+          "std": 0.02,
+          "gain": 8.0
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "MQAR",
+            "symbols": 256,
+            "pairs": 8,
+            "queries": 8,
+            "query_gap": 0,
+            "alpha": 0.1,
+            "overwrites": 0
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "FlopBudget",
+          "updates": 100000,
+          "batch": 64,
+          "flops": 7408685409020
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 1,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 50,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 1
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 50
+        },
+        "stopping": null
+      },
+      "source_revisions": [
+        {
+          "head": "6d207f299de0de18791e5de5b0f195d4808468b7",
+          "lab_modified": false
+        }
+      ],
+      "lab_source_digest": "479f8a79e9744dce6facc80057f8e8aa2402ff1314be3d7f37c6f1357750d6ed",
+      "first_success": {
+        "step": 300,
+        "training_seconds": 250.18238167400705,
+        "wall_seconds": 301.99410514498595,
+        "examples_seen": 19200,
+        "value": 0.998046875,
+        "training_charged_ops": 288366336124
+      },
+      "arithmetic": {
+        "convention": "aten-reference-arithmetic-v1",
+        "training_floating_ops": 7406937170808,
+        "training_integer_ops": 1306892608,
+        "auxiliary_labels": 33280024,
+        "training_charged_ops": 7408277343440,
+        "evaluation_forward_floating_ops": 1327127183488,
+        "evaluation_forward_integer_ops": 15532032,
+        "setup_evaluation_forward_ops": 8399637440,
+        "last_minibatch_loss": 2.0600855350494385e-06,
+        "ceiling": 7408685409020,
+        "unspent": 408065580,
+        "metric_aggregation_and_profiling_metered": false,
+        "inference_profiles": {
+          "(((256, 64), 'torch.int64', 'cpu'),)": {
+            "convention": "aten-reference-arithmetic-v1",
+            "floating_ops": 4199769568,
+            "integer_ops": 49152,
+            "charged_ops": 4199818720,
+            "operators": {
+              "aten._log_softmax.default": 3112960,
+              "aten._softmax.default": 5506176,
+              "aten._unsafe_view.default": 0,
+              "aten.add.Tensor": 129671168,
+              "aten.add_.Scalar": 81920,
+              "aten.arange.default": 0,
+              "aten.bitwise_not.default": 16384,
+              "aten.bmm.default": 10223616,
+              "aten.cat.default": 0,
+              "aten.constant_pad_nd.default": 0,
+              "aten.div.Tensor": 4194304,
+              "aten.embedding.default": 0,
+              "aten.exp.default": 655360,
+              "aten.expand.default": 0,
+              "aten.index.Tensor": 0,
+              "aten.le.Tensor": 8192,
+              "aten.logcumsumexp.default": 346816512,
+              "aten.logsumexp.default": 312999936,
+              "aten.masked_fill.Scalar": 44040192,
+              "aten.mean.dim": 5242880,
+              "aten.mm.default": 3299344384,
+              "aten.mul.Tensor": 6611296,
+              "aten.permute.default": 0,
+              "aten.pow.Tensor_Scalar": 13631488,
+              "aten.relu.default": 8388608,
+              "aten.rsqrt.default": 81920,
+              "aten.select.int": 0,
+              "aten.slice.Tensor": 0,
+              "aten.squeeze.dim": 0,
+              "aten.stack.default": 0,
+              "aten.sub.Tensor": 2768896,
+              "aten.sum.dim_IntList": 6422528,
+              "aten.t.default": 0,
+              "aten.transpose.int": 0,
+              "aten.unsqueeze.default": 0,
+              "aten.view.default": 0
+            },
+            "calls": {
+              "aten._log_softmax.default": 2,
+              "aten._softmax.default": 8,
+              "aten._unsafe_view.default": 7,
+              "aten.add.Tensor": 23,
+              "aten.add_.Scalar": 5,
+              "aten.arange.default": 2,
+              "aten.bitwise_not.default": 4,
+              "aten.bmm.default": 130,
+              "aten.cat.default": 2,
+              "aten.constant_pad_nd.default": 4,
+              "aten.div.Tensor": 4,
+              "aten.embedding.default": 1,
+              "aten.exp.default": 2,
+              "aten.expand.default": 2,
+              "aten.index.Tensor": 2,
+              "aten.le.Tensor": 2,
+              "aten.logcumsumexp.default": 4,
+              "aten.logsumexp.default": 8,
+              "aten.masked_fill.Scalar": 4,
+              "aten.mean.dim": 5,
+              "aten.mm.default": 7,
+              "aten.mul.Tensor": 24,
+              "aten.permute.default": 10,
+              "aten.pow.Tensor_Scalar": 7,
+              "aten.relu.default": 2,
+              "aten.rsqrt.default": 5,
+              "aten.select.int": 134,
+              "aten.slice.Tensor": 15,
+              "aten.squeeze.dim": 128,
+              "aten.stack.default": 2,
+              "aten.sub.Tensor": 8,
+              "aten.sum.dim_IntList": 4,
+              "aten.t.default": 5,
+              "aten.transpose.int": 4,
+              "aten.unsqueeze.default": 173,
+              "aten.view.default": 25
+            }
+          }
+        },
+        "label_profile": {
+          "convention": "aten-reference-arithmetic-v1",
+          "floating_ops": 0,
+          "integer_ops": 33280024,
+          "charged_ops": 33280024,
+          "operators": {
+            "aten.add.Tensor": 8,
+            "aten.amax.default": 8960000,
+            "aten.arange.default": 0,
+            "aten.clamp_min.default": 2560000,
+            "aten.eq.Tensor": 10240000,
+            "aten.index.Tensor": 0,
+            "aten.mul.Tensor": 8,
+            "aten.scalar_tensor.default": 0,
+            "aten.select.int": 0,
+            "aten.stack.default": 0,
+            "aten.sub.Tensor": 1280008,
+            "aten.unsqueeze.default": 0,
+            "aten.where.self": 10240000
+          },
+          "calls": {
+            "aten.add.Tensor": 1,
+            "aten.amax.default": 1,
+            "aten.arange.default": 1,
+            "aten.clamp_min.default": 2,
+            "aten.eq.Tensor": 1,
+            "aten.index.Tensor": 1,
+            "aten.mul.Tensor": 1,
+            "aten.scalar_tensor.default": 1,
+            "aten.select.int": 2,
+            "aten.stack.default": 1,
+            "aten.sub.Tensor": 2,
+            "aten.unsqueeze.default": 2,
+            "aten.where.self": 1
+          }
+        }
+      },
+      "best": {
+        "step": 4850,
+        "validation": {
+          "loss": 0.2367696687579155,
+          "example_loss": 0.2367696762084961,
+          "token_accuracy": 1.0,
+          "sequence_accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "target_count": 4096,
+          "correct": 4096,
+          "example_count": 512,
+          "exact": 512,
+          "transition_count": 4081
+        },
+        "test": {
+          "loss": 0.23686125129461288,
+          "example_loss": 0.23686125874519348,
+          "token_accuracy": 1.0,
+          "sequence_accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "target_count": 4096,
+          "correct": 4096,
+          "example_count": 512,
+          "exact": 512,
+          "transition_count": 4083
+        }
+      },
+      "final": {
+        "step": 7720,
+        "examples_seen": 493312,
+        "epochs_seen": 24.6656,
+        "training_seconds": 6642.278227012954,
+        "wall_seconds": 7270.684371041018,
+        "last_batch_size": 64,
+        "validation": {
+          "loss": 0.23676971346139908,
+          "example_loss": 0.23676971346139908,
+          "token_accuracy": 1.0,
+          "sequence_accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "target_count": 4096,
+          "correct": 4096,
+          "example_count": 512,
+          "exact": 512,
+          "transition_count": 4081
+        },
+        "arithmetic": {
+          "convention": "aten-reference-arithmetic-v1",
+          "training_floating_ops": 7406937170808,
+          "training_integer_ops": 1306892608,
+          "auxiliary_labels": 33280024,
+          "training_charged_ops": 7408277343440,
+          "evaluation_forward_floating_ops": 1310328105216,
+          "evaluation_forward_integer_ops": 15335424,
+          "setup_evaluation_forward_ops": 8399637440,
+          "last_minibatch_loss": 2.0600855350494385e-06,
+          "ceiling": 7408685409020,
+          "unspent": 408065580,
+          "metric_aggregation_and_profiling_metered": false
+        }
+      },
+      "split_fingerprints": {
+        "train": "6d2333ba9f121b0599b4669f1c9772002f5777ef30d997d8a3ff70d5238ecdf5",
+        "validation": "db69fa145e467a08687d05889a85e615d4013d80e5ad35409a43ced3285418e9",
+        "test": "14ef1399a95ce24abcf5a6b554f31e4671464c9f0bba9f6c8ef604d5f18ecdbb"
+      },
+      "training_seconds": 6642.278227012954,
+      "wall_seconds": 7274.095862393035,
+      "result_sha256": "8dd82fb7063577b8f483d604f72b162d049fc560f436dd37873e39b183e7dc75"
+    },
+    {
       "label": "tensor-gain8-easy-recall-seed2",
       "reference": "softmax-easy-recall-seed2",
       "stop": {
@@ -3608,6 +3921,424 @@
       "training_seconds": 1756.0232809848967,
       "wall_seconds": 3099.4502868420095,
       "result_sha256": "23176c1f01f2295040e80a93aef5a74de566e56f7fc9fa4f10d64208cd2e9c27"
+    },
+    {
+      "label": "tensor-gain8-hard-depth-seed2",
+      "reference": "softmax-hard-depth-seed2",
+      "stop": {
+        "step": 13697,
+        "reason": "flop_budget"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "TensorGain",
+          "width": 128,
+          "depth": 6,
+          "context": 128,
+          "eps": 1e-05,
+          "std": 0.02,
+          "gain": 8.0
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "AlternatingBlocks",
+            "blocks": 4,
+            "neutral_fraction": 0.25,
+            "max_neutral_gap": null
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [
+            128
+          ],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": "length-128"
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "FlopBudget",
+          "updates": 100000,
+          "batch": 16,
+          "flops": 43296802203600
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 2,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 200,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 2
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 200
+        },
+        "stopping": null
+      },
+      "source_revisions": [
+        {
+          "head": "ccc0ea5d444143dcde04d0b37b8f85f73c082cfd",
+          "lab_modified": false
+        }
+      ],
+      "lab_source_digest": "479f8a79e9744dce6facc80057f8e8aa2402ff1314be3d7f37c6f1357750d6ed",
+      "first_success": {
+        "step": 800,
+        "training_seconds": 427.15350420208415,
+        "wall_seconds": 1247.8892503220122,
+        "examples_seen": 12800,
+        "value": 1.0,
+        "training_charged_ops": 2528658313080
+      },
+      "arithmetic": {
+        "convention": "aten-reference-arithmetic-v1",
+        "training_floating_ops": 43291806209878,
+        "training_integer_ops": 1962999252,
+        "auxiliary_labels": 1281080,
+        "training_charged_ops": 43293770490210,
+        "evaluation_forward_floating_ops": 13083333856704,
+        "evaluation_forward_integer_ops": 105873408,
+        "setup_evaluation_forward_ops": 182512918400,
+        "last_minibatch_loss": 0.0,
+        "ceiling": 43296802203600,
+        "unspent": 3031713390,
+        "metric_aggregation_and_profiling_metered": false,
+        "inference_profiles": {
+          "(((256, 64), 'torch.int64', 'cpu'),)": {
+            "convention": "aten-reference-arithmetic-v1",
+            "floating_ops": 28745049888,
+            "integer_ops": 147456,
+            "charged_ops": 28745197344,
+            "operators": {
+              "aten._log_softmax.default": 9338880,
+              "aten._softmax.default": 16518528,
+              "aten._unsafe_view.default": 0,
+              "aten.add.Tensor": 400547840,
+              "aten.add_.Scalar": 212992,
+              "aten.arange.default": 0,
+              "aten.bitwise_not.default": 49152,
+              "aten.bmm.default": 30670848,
+              "aten.cat.default": 0,
+              "aten.constant_pad_nd.default": 0,
+              "aten.div.Tensor": 25165824,
+              "aten.embedding.default": 0,
+              "aten.exp.default": 1966080,
+              "aten.expand.default": 0,
+              "aten.index.Tensor": 0,
+              "aten.le.Tensor": 24576,
+              "aten.logcumsumexp.default": 1040449536,
+              "aten.logsumexp.default": 938999808,
+              "aten.masked_fill.Scalar": 132120576,
+              "aten.mean.dim": 27262976,
+              "aten.mm.default": 25928663040,
+              "aten.mul.Tensor": 31201696,
+              "aten.permute.default": 0,
+              "aten.pow.Tensor_Scalar": 77594624,
+              "aten.relu.default": 50331648,
+              "aten.rsqrt.default": 212992,
+              "aten.select.int": 0,
+              "aten.slice.Tensor": 0,
+              "aten.squeeze.dim": 0,
+              "aten.stack.default": 0,
+              "aten.sub.Tensor": 14598144,
+              "aten.sum.dim_IntList": 19267584,
+              "aten.t.default": 0,
+              "aten.transpose.int": 0,
+              "aten.unsqueeze.default": 0,
+              "aten.view.default": 0
+            },
+            "calls": {
+              "aten._log_softmax.default": 6,
+              "aten._softmax.default": 24,
+              "aten._unsafe_view.default": 19,
+              "aten.add.Tensor": 67,
+              "aten.add_.Scalar": 13,
+              "aten.arange.default": 6,
+              "aten.bitwise_not.default": 12,
+              "aten.bmm.default": 390,
+              "aten.cat.default": 2,
+              "aten.constant_pad_nd.default": 12,
+              "aten.div.Tensor": 12,
+              "aten.embedding.default": 1,
+              "aten.exp.default": 6,
+              "aten.expand.default": 6,
+              "aten.index.Tensor": 6,
+              "aten.le.Tensor": 6,
+              "aten.logcumsumexp.default": 12,
+              "aten.logsumexp.default": 24,
+              "aten.masked_fill.Scalar": 12,
+              "aten.mean.dim": 13,
+              "aten.mm.default": 19,
+              "aten.mul.Tensor": 64,
+              "aten.permute.default": 30,
+              "aten.pow.Tensor_Scalar": 19,
+              "aten.relu.default": 6,
+              "aten.rsqrt.default": 13,
+              "aten.select.int": 402,
+              "aten.slice.Tensor": 48,
+              "aten.squeeze.dim": 384,
+              "aten.stack.default": 6,
+              "aten.sub.Tensor": 24,
+              "aten.sum.dim_IntList": 12,
+              "aten.t.default": 13,
+              "aten.transpose.int": 12,
+              "aten.unsqueeze.default": 517,
+              "aten.view.default": 73
+            }
+          },
+          "(((256, 128), 'torch.int64', 'cpu'),)": {
+            "convention": "aten-reference-arithmetic-v1",
+            "floating_ops": 62510672032,
+            "integer_ops": 589824,
+            "charged_ops": 62511261856,
+            "operators": {
+              "aten._log_softmax.default": 18677760,
+              "aten._softmax.default": 33033600,
+              "aten._unsafe_view.default": 0,
+              "aten.add.Tensor": 1543536640,
+              "aten.add_.Scalar": 425984,
+              "aten.arange.default": 0,
+              "aten.bitwise_not.default": 196608,
+              "aten.bmm.default": 61341696,
+              "aten.cat.default": 0,
+              "aten.constant_pad_nd.default": 0,
+              "aten.div.Tensor": 50331648,
+              "aten.embedding.default": 0,
+              "aten.exp.default": 3932160,
+              "aten.expand.default": 0,
+              "aten.index.Tensor": 0,
+              "aten.le.Tensor": 98304,
+              "aten.logcumsumexp.default": 4194828288,
+              "aten.logsumexp.default": 3740270592,
+              "aten.masked_fill.Scalar": 528482304,
+              "aten.mean.dim": 54525952,
+              "aten.mm.default": 51857326080,
+              "aten.mul.Tensor": 62397216,
+              "aten.permute.default": 0,
+              "aten.pow.Tensor_Scalar": 155189248,
+              "aten.relu.default": 100663296,
+              "aten.rsqrt.default": 425984,
+              "aten.select.int": 0,
+              "aten.slice.Tensor": 0,
+              "aten.squeeze.dim": 0,
+              "aten.stack.default": 0,
+              "aten.sub.Tensor": 29294592,
+              "aten.sum.dim_IntList": 76283904,
+              "aten.t.default": 0,
+              "aten.transpose.int": 0,
+              "aten.unsqueeze.default": 0,
+              "aten.view.default": 0
+            },
+            "calls": {
+              "aten._log_softmax.default": 6,
+              "aten._softmax.default": 24,
+              "aten._unsafe_view.default": 19,
+              "aten.add.Tensor": 67,
+              "aten.add_.Scalar": 13,
+              "aten.arange.default": 6,
+              "aten.bitwise_not.default": 12,
+              "aten.bmm.default": 774,
+              "aten.cat.default": 2,
+              "aten.constant_pad_nd.default": 12,
+              "aten.div.Tensor": 12,
+              "aten.embedding.default": 1,
+              "aten.exp.default": 6,
+              "aten.expand.default": 6,
+              "aten.index.Tensor": 6,
+              "aten.le.Tensor": 6,
+              "aten.logcumsumexp.default": 12,
+              "aten.logsumexp.default": 24,
+              "aten.masked_fill.Scalar": 12,
+              "aten.mean.dim": 13,
+              "aten.mm.default": 19,
+              "aten.mul.Tensor": 64,
+              "aten.permute.default": 30,
+              "aten.pow.Tensor_Scalar": 19,
+              "aten.relu.default": 6,
+              "aten.rsqrt.default": 13,
+              "aten.select.int": 786,
+              "aten.slice.Tensor": 47,
+              "aten.squeeze.dim": 768,
+              "aten.stack.default": 6,
+              "aten.sub.Tensor": 24,
+              "aten.sum.dim_IntList": 12,
+              "aten.t.default": 13,
+              "aten.transpose.int": 12,
+              "aten.unsqueeze.default": 901,
+              "aten.view.default": 73
+            }
+          }
+        },
+        "label_profile": {
+          "convention": "aten-reference-arithmetic-v1",
+          "floating_ops": 0,
+          "integer_ops": 1281080,
+          "charged_ops": 1281080,
+          "operators": {
+            "aten.arange.default": 0,
+            "aten.clamp_min.default": 1280000,
+            "aten.eq.Scalar": 180,
+            "aten.index.Tensor": 0,
+            "aten.scalar_tensor.default": 0,
+            "aten.select.int": 0,
+            "aten.stack.default": 0,
+            "aten.unbind.int": 0,
+            "aten.unsqueeze.default": 0,
+            "aten.where.self": 900,
+            "aten.zeros.default": 0
+          },
+          "calls": {
+            "aten.arange.default": 2,
+            "aten.clamp_min.default": 1,
+            "aten.eq.Scalar": 10,
+            "aten.index.Tensor": 64,
+            "aten.scalar_tensor.default": 8,
+            "aten.select.int": 2,
+            "aten.stack.default": 3,
+            "aten.unbind.int": 1,
+            "aten.unsqueeze.default": 2,
+            "aten.where.self": 10,
+            "aten.zeros.default": 1
+          }
+        }
+      },
+      "best": {
+        "step": 8800,
+        "validation/length-128": {
+          "loss": 0.03277299180626869,
+          "example_loss": 0.03277299739420414,
+          "token_accuracy": 1.0,
+          "sequence_accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "target_count": 65024,
+          "correct": 65024,
+          "example_count": 512,
+          "exact": 512,
+          "transition_count": 1152
+        },
+        "test": {
+          "loss": 0.03274529795939129,
+          "example_loss": 0.03274626471102238,
+          "token_accuracy": 1.0,
+          "sequence_accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "target_count": 24004,
+          "correct": 24004,
+          "example_count": 512,
+          "exact": 512,
+          "transition_count": 1137
+        },
+        "test/length-128": {
+          "loss": 0.03273358754813671,
+          "example_loss": 0.03273359313607216,
+          "token_accuracy": 1.0,
+          "sequence_accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "target_count": 65024,
+          "correct": 65024,
+          "example_count": 512,
+          "exact": 512,
+          "transition_count": 1112
+        }
+      },
+      "final": {
+        "step": 13697,
+        "examples_seen": 219152,
+        "epochs_seen": 10.9576,
+        "training_seconds": 6747.389472851239,
+        "wall_seconds": 9942.746156936977,
+        "last_batch_size": 16,
+        "validation": {
+          "loss": 0.03272833086970654,
+          "example_loss": 0.032722003757953644,
+          "token_accuracy": 1.0,
+          "sequence_accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "target_count": 23570,
+          "correct": 23570,
+          "example_count": 512,
+          "exact": 512,
+          "transition_count": 1134
+        },
+        "validation/length-128": {
+          "loss": 0.03277462534606457,
+          "example_loss": 0.03277460299432278,
+          "token_accuracy": 1.0,
+          "sequence_accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "target_count": 65024,
+          "correct": 65024,
+          "example_count": 512,
+          "exact": 512,
+          "transition_count": 1152
+        },
+        "arithmetic": {
+          "convention": "aten-reference-arithmetic-v1",
+          "training_floating_ops": 43291806209878,
+          "training_integer_ops": 1962999252,
+          "auxiliary_labels": 1281080,
+          "training_charged_ops": 43293770490210,
+          "evaluation_forward_floating_ops": 12775801068800,
+          "evaluation_forward_integer_ops": 103219200,
+          "setup_evaluation_forward_ops": 182512918400,
+          "last_minibatch_loss": 0.0,
+          "ceiling": 43296802203600,
+          "unspent": 3031713390,
+          "metric_aggregation_and_profiling_metered": false
+        }
+      },
+      "split_fingerprints": {
+        "train": "47c4bd51f0d410f759eaca11de8a400b4bdfa5ad8e33a4aa78647b1523d3adcf",
+        "validation": "424efffb187b08b05717b522b7b3e572b293fa9ce928cec78b8e8b9486aca2b7",
+        "test": "ad6fc146e5342e92541c43537bf1d8ec4b06b816332712f92c75e381b48f9e06",
+        "validation/length-128": "e397080d60f920d31d46f2466dc935133d986c40a90086a7a80599f9a133d6bb",
+        "test/length-128": "3db3004703f8489fb4d737ada32a2128d8af93f4d79d0191652a47f536940da2"
+      },
+      "training_seconds": 6747.389472851239,
+      "wall_seconds": 9977.986041198019,
+      "result_sha256": "eafa147df4ed56a5380b91fac039b82fa3af85c23241b884dca947a9ee368367"
     },
     {
       "label": "tensor-gain8-hard-parity-seed0",
@@ -4958,6 +5689,924 @@
       "training_seconds": 1178.1563695697114,
       "wall_seconds": 1446.9280290040188,
       "result_sha256": "e0b41b09bc4284b9fe45fb0e30b9ed99cf387f9b70977133351cc1c2f66bce57"
+    },
+    {
+      "label": "tensor-gain8-hard-recall-seed0",
+      "reference": "softmax-hard-recall-seed0",
+      "stop": {
+        "step": 8472,
+        "reason": "flop_budget"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "TensorGain",
+          "width": 128,
+          "depth": 6,
+          "context": 64,
+          "eps": 1e-05,
+          "std": 0.02,
+          "gain": 8.0
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "MQAR",
+            "symbols": 256,
+            "pairs": 16,
+            "queries": 8,
+            "query_gap": 0,
+            "alpha": 0.1,
+            "overwrites": 8
+          },
+          "length": 64,
+          "min_length": 48,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "FlopBudget",
+          "updates": 100000,
+          "batch": 64,
+          "flops": 107443940040500
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 50,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 4
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 50
+        },
+        "stopping": null
+      },
+      "source_revisions": [
+        {
+          "head": "ccc0ea5d444143dcde04d0b37b8f85f73c082cfd",
+          "lab_modified": false
+        }
+      ],
+      "lab_source_digest": "479f8a79e9744dce6facc80057f8e8aa2402ff1314be3d7f37c6f1357750d6ed",
+      "first_success": null,
+      "arithmetic": {
+        "convention": "aten-reference-arithmetic-v1",
+        "training_floating_ops": 107430704800680,
+        "training_integer_ops": 2266986432,
+        "auxiliary_labels": 64000048,
+        "training_charged_ops": 107433035787160,
+        "evaluation_forward_floating_ops": 10688834739392,
+        "evaluation_forward_integer_ops": 51019776,
+        "setup_evaluation_forward_ops": 61785466816,
+        "last_minibatch_loss": 0.1618361473083496,
+        "ceiling": 107443940040500,
+        "unspent": 10904253340,
+        "metric_aggregation_and_profiling_metered": false,
+        "inference_profiles": {
+          "(((256, 64), 'torch.int64', 'cpu'),)": {
+            "convention": "aten-reference-arithmetic-v1",
+            "floating_ops": 30892585952,
+            "integer_ops": 147456,
+            "charged_ops": 30892733408,
+            "operators": {
+              "aten._log_softmax.default": 9338880,
+              "aten._softmax.default": 16518528,
+              "aten._unsafe_view.default": 0,
+              "aten.add.Tensor": 400547840,
+              "aten.add_.Scalar": 212992,
+              "aten.arange.default": 0,
+              "aten.bitwise_not.default": 49152,
+              "aten.bmm.default": 30670848,
+              "aten.cat.default": 0,
+              "aten.constant_pad_nd.default": 0,
+              "aten.div.Tensor": 25165824,
+              "aten.embedding.default": 0,
+              "aten.exp.default": 1966080,
+              "aten.expand.default": 0,
+              "aten.index.Tensor": 0,
+              "aten.le.Tensor": 24576,
+              "aten.logcumsumexp.default": 1040449536,
+              "aten.logsumexp.default": 938999808,
+              "aten.masked_fill.Scalar": 132120576,
+              "aten.mean.dim": 27262976,
+              "aten.mm.default": 28076146688,
+              "aten.mul.Tensor": 31254112,
+              "aten.permute.default": 0,
+              "aten.pow.Tensor_Scalar": 77594624,
+              "aten.relu.default": 50331648,
+              "aten.rsqrt.default": 212992,
+              "aten.select.int": 0,
+              "aten.slice.Tensor": 0,
+              "aten.squeeze.dim": 0,
+              "aten.stack.default": 0,
+              "aten.sub.Tensor": 14598144,
+              "aten.sum.dim_IntList": 19267584,
+              "aten.t.default": 0,
+              "aten.transpose.int": 0,
+              "aten.unsqueeze.default": 0,
+              "aten.view.default": 0
+            },
+            "calls": {
+              "aten._log_softmax.default": 6,
+              "aten._softmax.default": 24,
+              "aten._unsafe_view.default": 19,
+              "aten.add.Tensor": 67,
+              "aten.add_.Scalar": 13,
+              "aten.arange.default": 6,
+              "aten.bitwise_not.default": 12,
+              "aten.bmm.default": 390,
+              "aten.cat.default": 2,
+              "aten.constant_pad_nd.default": 12,
+              "aten.div.Tensor": 12,
+              "aten.embedding.default": 1,
+              "aten.exp.default": 6,
+              "aten.expand.default": 6,
+              "aten.index.Tensor": 6,
+              "aten.le.Tensor": 6,
+              "aten.logcumsumexp.default": 12,
+              "aten.logsumexp.default": 24,
+              "aten.masked_fill.Scalar": 12,
+              "aten.mean.dim": 13,
+              "aten.mm.default": 19,
+              "aten.mul.Tensor": 64,
+              "aten.permute.default": 30,
+              "aten.pow.Tensor_Scalar": 19,
+              "aten.relu.default": 6,
+              "aten.rsqrt.default": 13,
+              "aten.select.int": 402,
+              "aten.slice.Tensor": 47,
+              "aten.squeeze.dim": 384,
+              "aten.stack.default": 6,
+              "aten.sub.Tensor": 24,
+              "aten.sum.dim_IntList": 12,
+              "aten.t.default": 13,
+              "aten.transpose.int": 12,
+              "aten.unsqueeze.default": 517,
+              "aten.view.default": 73
+            }
+          }
+        },
+        "label_profile": {
+          "convention": "aten-reference-arithmetic-v1",
+          "floating_ops": 0,
+          "integer_ops": 64000048,
+          "charged_ops": 64000048,
+          "operators": {
+            "aten.add.Tensor": 16,
+            "aten.amax.default": 19200000,
+            "aten.arange.default": 0,
+            "aten.clamp_min.default": 2560000,
+            "aten.eq.Tensor": 20480000,
+            "aten.index.Tensor": 0,
+            "aten.mul.Tensor": 16,
+            "aten.scalar_tensor.default": 0,
+            "aten.select.int": 0,
+            "aten.stack.default": 0,
+            "aten.sub.Tensor": 1280016,
+            "aten.unsqueeze.default": 0,
+            "aten.where.self": 20480000
+          },
+          "calls": {
+            "aten.add.Tensor": 1,
+            "aten.amax.default": 1,
+            "aten.arange.default": 1,
+            "aten.clamp_min.default": 2,
+            "aten.eq.Tensor": 1,
+            "aten.index.Tensor": 1,
+            "aten.mul.Tensor": 1,
+            "aten.scalar_tensor.default": 1,
+            "aten.select.int": 2,
+            "aten.stack.default": 1,
+            "aten.sub.Tensor": 2,
+            "aten.unsqueeze.default": 2,
+            "aten.where.self": 1
+          }
+        }
+      },
+      "best": {
+        "step": 8450,
+        "validation": {
+          "loss": 0.2940579950809479,
+          "example_loss": 0.2940579801797867,
+          "token_accuracy": 0.981689453125,
+          "sequence_accuracy": 0.861328125,
+          "balanced_accuracy": 0.9817345365388914,
+          "transition_accuracy": 0.9816356513222331,
+          "target_count": 4096,
+          "correct": 4021,
+          "example_count": 512,
+          "exact": 441,
+          "transition_count": 4084
+        },
+        "test": {
+          "loss": 0.2794043719768524,
+          "example_loss": 0.27940434217453003,
+          "token_accuracy": 0.98095703125,
+          "sequence_accuracy": 0.861328125,
+          "balanced_accuracy": 0.9806027160589793,
+          "transition_accuracy": 0.9811366976972072,
+          "target_count": 4096,
+          "correct": 4018,
+          "example_count": 512,
+          "exact": 441,
+          "transition_count": 4082
+        }
+      },
+      "final": {
+        "step": 8472,
+        "examples_seen": 541344,
+        "epochs_seen": 27.0672,
+        "training_seconds": 8999.594036979892,
+        "wall_seconds": 10201.363587330969,
+        "last_batch_size": 64,
+        "validation": {
+          "loss": 0.29645250737667084,
+          "example_loss": 0.29645250737667084,
+          "token_accuracy": 0.98095703125,
+          "sequence_accuracy": 0.853515625,
+          "balanced_accuracy": 0.9806777370324983,
+          "transition_accuracy": 0.9809010773751224,
+          "target_count": 4096,
+          "correct": 4018,
+          "example_count": 512,
+          "exact": 437,
+          "transition_count": 4084
+        },
+        "arithmetic": {
+          "convention": "aten-reference-arithmetic-v1",
+          "training_floating_ops": 107430704800680,
+          "training_integer_ops": 2266986432,
+          "auxiliary_labels": 64000048,
+          "training_charged_ops": 107433035787160,
+          "evaluation_forward_floating_ops": 10565264395584,
+          "evaluation_forward_integer_ops": 50429952,
+          "setup_evaluation_forward_ops": 61785466816,
+          "last_minibatch_loss": 0.1618361473083496,
+          "ceiling": 107443940040500,
+          "unspent": 10904253340,
+          "metric_aggregation_and_profiling_metered": false
+        }
+      },
+      "split_fingerprints": {
+        "train": "f51d12def851594c47128b25a3d548ee609a28174c11e8b5a437bcc5f6d5c02e",
+        "validation": "ed164ac1c6a985f46568628f0624cb5d7b50a49bd0da4630a16ccb3ab5fcb23b",
+        "test": "5c9bc46e78e6f3e961ea233f774694c9b9ac38a147775ce597b1be1b5d2f47c8"
+      },
+      "training_seconds": 8999.594036979892,
+      "wall_seconds": 10204.549223070964,
+      "result_sha256": "5e5f596bb553532d92abea4d6abd6b560bc7d36fd4e566fb6737ee129ba05fd8"
+    },
+    {
+      "label": "tensor-gain8-hard-recall-seed1",
+      "reference": "softmax-hard-recall-seed1",
+      "stop": {
+        "step": 6702,
+        "reason": "flop_budget"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "TensorGain",
+          "width": 128,
+          "depth": 6,
+          "context": 64,
+          "eps": 1e-05,
+          "std": 0.02,
+          "gain": 8.0
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "MQAR",
+            "symbols": 256,
+            "pairs": 16,
+            "queries": 8,
+            "query_gap": 0,
+            "alpha": 0.1,
+            "overwrites": 8
+          },
+          "length": 64,
+          "min_length": 48,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "FlopBudget",
+          "updates": 100000,
+          "batch": 64,
+          "flops": 84991530151660
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 1,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 50,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 4
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 50
+        },
+        "stopping": null
+      },
+      "source_revisions": [
+        {
+          "head": "ccc0ea5d444143dcde04d0b37b8f85f73c082cfd",
+          "lab_modified": false
+        }
+      ],
+      "lab_source_digest": "479f8a79e9744dce6facc80057f8e8aa2402ff1314be3d7f37c6f1357750d6ed",
+      "first_success": null,
+      "arithmetic": {
+        "convention": "aten-reference-arithmetic-v1",
+        "training_floating_ops": 84988184711490,
+        "training_integer_ops": 1793382000,
+        "auxiliary_labels": 64000048,
+        "training_charged_ops": 84990042093538,
+        "evaluation_forward_floating_ops": 8526353722752,
+        "evaluation_forward_integer_ops": 40697856,
+        "setup_evaluation_forward_ops": 61785466816,
+        "last_minibatch_loss": 0.1558404415845871,
+        "ceiling": 84991530151660,
+        "unspent": 1488058122,
+        "metric_aggregation_and_profiling_metered": false,
+        "inference_profiles": {
+          "(((256, 64), 'torch.int64', 'cpu'),)": {
+            "convention": "aten-reference-arithmetic-v1",
+            "floating_ops": 30892585952,
+            "integer_ops": 147456,
+            "charged_ops": 30892733408,
+            "operators": {
+              "aten._log_softmax.default": 9338880,
+              "aten._softmax.default": 16518528,
+              "aten._unsafe_view.default": 0,
+              "aten.add.Tensor": 400547840,
+              "aten.add_.Scalar": 212992,
+              "aten.arange.default": 0,
+              "aten.bitwise_not.default": 49152,
+              "aten.bmm.default": 30670848,
+              "aten.cat.default": 0,
+              "aten.constant_pad_nd.default": 0,
+              "aten.div.Tensor": 25165824,
+              "aten.embedding.default": 0,
+              "aten.exp.default": 1966080,
+              "aten.expand.default": 0,
+              "aten.index.Tensor": 0,
+              "aten.le.Tensor": 24576,
+              "aten.logcumsumexp.default": 1040449536,
+              "aten.logsumexp.default": 938999808,
+              "aten.masked_fill.Scalar": 132120576,
+              "aten.mean.dim": 27262976,
+              "aten.mm.default": 28076146688,
+              "aten.mul.Tensor": 31254112,
+              "aten.permute.default": 0,
+              "aten.pow.Tensor_Scalar": 77594624,
+              "aten.relu.default": 50331648,
+              "aten.rsqrt.default": 212992,
+              "aten.select.int": 0,
+              "aten.slice.Tensor": 0,
+              "aten.squeeze.dim": 0,
+              "aten.stack.default": 0,
+              "aten.sub.Tensor": 14598144,
+              "aten.sum.dim_IntList": 19267584,
+              "aten.t.default": 0,
+              "aten.transpose.int": 0,
+              "aten.unsqueeze.default": 0,
+              "aten.view.default": 0
+            },
+            "calls": {
+              "aten._log_softmax.default": 6,
+              "aten._softmax.default": 24,
+              "aten._unsafe_view.default": 19,
+              "aten.add.Tensor": 67,
+              "aten.add_.Scalar": 13,
+              "aten.arange.default": 6,
+              "aten.bitwise_not.default": 12,
+              "aten.bmm.default": 390,
+              "aten.cat.default": 2,
+              "aten.constant_pad_nd.default": 12,
+              "aten.div.Tensor": 12,
+              "aten.embedding.default": 1,
+              "aten.exp.default": 6,
+              "aten.expand.default": 6,
+              "aten.index.Tensor": 6,
+              "aten.le.Tensor": 6,
+              "aten.logcumsumexp.default": 12,
+              "aten.logsumexp.default": 24,
+              "aten.masked_fill.Scalar": 12,
+              "aten.mean.dim": 13,
+              "aten.mm.default": 19,
+              "aten.mul.Tensor": 64,
+              "aten.permute.default": 30,
+              "aten.pow.Tensor_Scalar": 19,
+              "aten.relu.default": 6,
+              "aten.rsqrt.default": 13,
+              "aten.select.int": 402,
+              "aten.slice.Tensor": 47,
+              "aten.squeeze.dim": 384,
+              "aten.stack.default": 6,
+              "aten.sub.Tensor": 24,
+              "aten.sum.dim_IntList": 12,
+              "aten.t.default": 13,
+              "aten.transpose.int": 12,
+              "aten.unsqueeze.default": 517,
+              "aten.view.default": 73
+            }
+          }
+        },
+        "label_profile": {
+          "convention": "aten-reference-arithmetic-v1",
+          "floating_ops": 0,
+          "integer_ops": 64000048,
+          "charged_ops": 64000048,
+          "operators": {
+            "aten.add.Tensor": 16,
+            "aten.amax.default": 19200000,
+            "aten.arange.default": 0,
+            "aten.clamp_min.default": 2560000,
+            "aten.eq.Tensor": 20480000,
+            "aten.index.Tensor": 0,
+            "aten.mul.Tensor": 16,
+            "aten.scalar_tensor.default": 0,
+            "aten.select.int": 0,
+            "aten.stack.default": 0,
+            "aten.sub.Tensor": 1280016,
+            "aten.unsqueeze.default": 0,
+            "aten.where.self": 20480000
+          },
+          "calls": {
+            "aten.add.Tensor": 1,
+            "aten.amax.default": 1,
+            "aten.arange.default": 1,
+            "aten.clamp_min.default": 2,
+            "aten.eq.Tensor": 1,
+            "aten.index.Tensor": 1,
+            "aten.mul.Tensor": 1,
+            "aten.scalar_tensor.default": 1,
+            "aten.select.int": 2,
+            "aten.stack.default": 1,
+            "aten.sub.Tensor": 2,
+            "aten.unsqueeze.default": 2,
+            "aten.where.self": 1
+          }
+        }
+      },
+      "best": {
+        "step": 6650,
+        "validation": {
+          "loss": 0.32059532403945923,
+          "example_loss": 0.3205953538417816,
+          "token_accuracy": 0.977783203125,
+          "sequence_accuracy": 0.8359375,
+          "balanced_accuracy": 0.977826541959941,
+          "transition_accuracy": 0.9777179236043095,
+          "target_count": 4096,
+          "correct": 4005,
+          "example_count": 512,
+          "exact": 428,
+          "transition_count": 4084
+        },
+        "test": {
+          "loss": 0.3201562762260437,
+          "example_loss": 0.3201562613248825,
+          "token_accuracy": 0.977783203125,
+          "sequence_accuracy": 0.8359375,
+          "balanced_accuracy": 0.9767643087756345,
+          "transition_accuracy": 0.9779519843214111,
+          "target_count": 4096,
+          "correct": 4005,
+          "example_count": 512,
+          "exact": 428,
+          "transition_count": 4082
+        }
+      },
+      "final": {
+        "step": 6702,
+        "examples_seen": 428256,
+        "epochs_seen": 21.4128,
+        "training_seconds": 7168.48280809063,
+        "wall_seconds": 8253.605282353004,
+        "last_batch_size": 64,
+        "validation": {
+          "loss": 0.313417986035347,
+          "example_loss": 0.313417986035347,
+          "token_accuracy": 0.97802734375,
+          "sequence_accuracy": 0.833984375,
+          "balanced_accuracy": 0.97811531345448,
+          "transition_accuracy": 0.9779627815866797,
+          "target_count": 4096,
+          "correct": 4006,
+          "example_count": 512,
+          "exact": 427,
+          "transition_count": 4084
+        },
+        "arithmetic": {
+          "convention": "aten-reference-arithmetic-v1",
+          "training_floating_ops": 84988184711490,
+          "training_integer_ops": 1793382000,
+          "auxiliary_labels": 64000048,
+          "training_charged_ops": 84990042093538,
+          "evaluation_forward_floating_ops": 8402783378944,
+          "evaluation_forward_integer_ops": 40108032,
+          "setup_evaluation_forward_ops": 61785466816,
+          "last_minibatch_loss": 0.1558404415845871,
+          "ceiling": 84991530151660,
+          "unspent": 1488058122,
+          "metric_aggregation_and_profiling_metered": false
+        }
+      },
+      "split_fingerprints": {
+        "train": "f51d12def851594c47128b25a3d548ee609a28174c11e8b5a437bcc5f6d5c02e",
+        "validation": "ed164ac1c6a985f46568628f0624cb5d7b50a49bd0da4630a16ccb3ab5fcb23b",
+        "test": "5c9bc46e78e6f3e961ea233f774694c9b9ac38a147775ce597b1be1b5d2f47c8"
+      },
+      "training_seconds": 7168.48280809063,
+      "wall_seconds": 8256.836117386003,
+      "result_sha256": "6ae650861587538f271b35c934f5bb069e64ef10e6c0d933503d989356f6c959"
+    },
+    {
+      "label": "tensor-gain8-hard-recall-seed2",
+      "reference": "softmax-hard-recall-seed2",
+      "stop": {
+        "step": 6070,
+        "reason": "flop_budget"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "TensorGain",
+          "width": 128,
+          "depth": 6,
+          "context": 64,
+          "eps": 1e-05,
+          "std": 0.02,
+          "gain": 8.0
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "MQAR",
+            "symbols": 256,
+            "pairs": 16,
+            "queries": 8,
+            "query_gap": 0,
+            "alpha": 0.1,
+            "overwrites": 8
+          },
+          "length": 64,
+          "min_length": 48,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": null
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.0003,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "FlopBudget",
+          "updates": 100000,
+          "batch": 64,
+          "flops": 76977398143040
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 2,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 50,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 4
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 50
+        },
+        "stopping": null
+      },
+      "source_revisions": [
+        {
+          "head": "ccc0ea5d444143dcde04d0b37b8f85f73c082cfd",
+          "lab_modified": false
+        }
+      ],
+      "lab_source_digest": "479f8a79e9744dce6facc80057f8e8aa2402ff1314be3d7f37c6f1357750d6ed",
+      "first_success": null,
+      "arithmetic": {
+        "convention": "aten-reference-arithmetic-v1",
+        "training_floating_ops": 76973906210810,
+        "training_integer_ops": 1624266928,
+        "auxiliary_labels": 64000048,
+        "training_charged_ops": 76975594477786,
+        "evaluation_forward_floating_ops": 7723146488000,
+        "evaluation_forward_integer_ops": 36864000,
+        "setup_evaluation_forward_ops": 61785466816,
+        "last_minibatch_loss": 0.1540152132511139,
+        "ceiling": 76977398143040,
+        "unspent": 1803665254,
+        "metric_aggregation_and_profiling_metered": false,
+        "inference_profiles": {
+          "(((256, 64), 'torch.int64', 'cpu'),)": {
+            "convention": "aten-reference-arithmetic-v1",
+            "floating_ops": 30892585952,
+            "integer_ops": 147456,
+            "charged_ops": 30892733408,
+            "operators": {
+              "aten._log_softmax.default": 9338880,
+              "aten._softmax.default": 16518528,
+              "aten._unsafe_view.default": 0,
+              "aten.add.Tensor": 400547840,
+              "aten.add_.Scalar": 212992,
+              "aten.arange.default": 0,
+              "aten.bitwise_not.default": 49152,
+              "aten.bmm.default": 30670848,
+              "aten.cat.default": 0,
+              "aten.constant_pad_nd.default": 0,
+              "aten.div.Tensor": 25165824,
+              "aten.embedding.default": 0,
+              "aten.exp.default": 1966080,
+              "aten.expand.default": 0,
+              "aten.index.Tensor": 0,
+              "aten.le.Tensor": 24576,
+              "aten.logcumsumexp.default": 1040449536,
+              "aten.logsumexp.default": 938999808,
+              "aten.masked_fill.Scalar": 132120576,
+              "aten.mean.dim": 27262976,
+              "aten.mm.default": 28076146688,
+              "aten.mul.Tensor": 31254112,
+              "aten.permute.default": 0,
+              "aten.pow.Tensor_Scalar": 77594624,
+              "aten.relu.default": 50331648,
+              "aten.rsqrt.default": 212992,
+              "aten.select.int": 0,
+              "aten.slice.Tensor": 0,
+              "aten.squeeze.dim": 0,
+              "aten.stack.default": 0,
+              "aten.sub.Tensor": 14598144,
+              "aten.sum.dim_IntList": 19267584,
+              "aten.t.default": 0,
+              "aten.transpose.int": 0,
+              "aten.unsqueeze.default": 0,
+              "aten.view.default": 0
+            },
+            "calls": {
+              "aten._log_softmax.default": 6,
+              "aten._softmax.default": 24,
+              "aten._unsafe_view.default": 19,
+              "aten.add.Tensor": 67,
+              "aten.add_.Scalar": 13,
+              "aten.arange.default": 6,
+              "aten.bitwise_not.default": 12,
+              "aten.bmm.default": 390,
+              "aten.cat.default": 2,
+              "aten.constant_pad_nd.default": 12,
+              "aten.div.Tensor": 12,
+              "aten.embedding.default": 1,
+              "aten.exp.default": 6,
+              "aten.expand.default": 6,
+              "aten.index.Tensor": 6,
+              "aten.le.Tensor": 6,
+              "aten.logcumsumexp.default": 12,
+              "aten.logsumexp.default": 24,
+              "aten.masked_fill.Scalar": 12,
+              "aten.mean.dim": 13,
+              "aten.mm.default": 19,
+              "aten.mul.Tensor": 64,
+              "aten.permute.default": 30,
+              "aten.pow.Tensor_Scalar": 19,
+              "aten.relu.default": 6,
+              "aten.rsqrt.default": 13,
+              "aten.select.int": 402,
+              "aten.slice.Tensor": 47,
+              "aten.squeeze.dim": 384,
+              "aten.stack.default": 6,
+              "aten.sub.Tensor": 24,
+              "aten.sum.dim_IntList": 12,
+              "aten.t.default": 13,
+              "aten.transpose.int": 12,
+              "aten.unsqueeze.default": 517,
+              "aten.view.default": 73
+            }
+          }
+        },
+        "label_profile": {
+          "convention": "aten-reference-arithmetic-v1",
+          "floating_ops": 0,
+          "integer_ops": 64000048,
+          "charged_ops": 64000048,
+          "operators": {
+            "aten.add.Tensor": 16,
+            "aten.amax.default": 19200000,
+            "aten.arange.default": 0,
+            "aten.clamp_min.default": 2560000,
+            "aten.eq.Tensor": 20480000,
+            "aten.index.Tensor": 0,
+            "aten.mul.Tensor": 16,
+            "aten.scalar_tensor.default": 0,
+            "aten.select.int": 0,
+            "aten.stack.default": 0,
+            "aten.sub.Tensor": 1280016,
+            "aten.unsqueeze.default": 0,
+            "aten.where.self": 20480000
+          },
+          "calls": {
+            "aten.add.Tensor": 1,
+            "aten.amax.default": 1,
+            "aten.arange.default": 1,
+            "aten.clamp_min.default": 2,
+            "aten.eq.Tensor": 1,
+            "aten.index.Tensor": 1,
+            "aten.mul.Tensor": 1,
+            "aten.scalar_tensor.default": 1,
+            "aten.select.int": 2,
+            "aten.stack.default": 1,
+            "aten.sub.Tensor": 2,
+            "aten.unsqueeze.default": 2,
+            "aten.where.self": 1
+          }
+        }
+      },
+      "best": {
+        "step": 5650,
+        "validation": {
+          "loss": 0.33152106404304504,
+          "example_loss": 0.33152109384536743,
+          "token_accuracy": 0.9765625,
+          "sequence_accuracy": 0.82421875,
+          "balanced_accuracy": 0.9769572867714376,
+          "transition_accuracy": 0.9764936336924583,
+          "target_count": 4096,
+          "correct": 4000,
+          "example_count": 512,
+          "exact": 422,
+          "transition_count": 4084
+        },
+        "test": {
+          "loss": 0.3240917921066284,
+          "example_loss": 0.3240917921066284,
+          "token_accuracy": 0.97705078125,
+          "sequence_accuracy": 0.833984375,
+          "balanced_accuracy": 0.9761422222457694,
+          "transition_accuracy": 0.9772170504654581,
+          "target_count": 4096,
+          "correct": 4002,
+          "example_count": 512,
+          "exact": 427,
+          "transition_count": 4082
+        }
+      },
+      "final": {
+        "step": 6070,
+        "examples_seen": 387872,
+        "epochs_seen": 19.3936,
+        "training_seconds": 6606.757860677026,
+        "wall_seconds": 7669.472752930014,
+        "last_batch_size": 64,
+        "validation": {
+          "loss": 0.32944175601005554,
+          "example_loss": 0.32944175601005554,
+          "token_accuracy": 0.9755859375,
+          "sequence_accuracy": 0.81640625,
+          "balanced_accuracy": 0.9758663427634439,
+          "transition_accuracy": 0.9755142017629774,
+          "target_count": 4096,
+          "correct": 3996,
+          "example_count": 512,
+          "exact": 418,
+          "transition_count": 4084
+        },
+        "arithmetic": {
+          "convention": "aten-reference-arithmetic-v1",
+          "training_floating_ops": 76973906210810,
+          "training_integer_ops": 1624266928,
+          "auxiliary_labels": 64000048,
+          "training_charged_ops": 76975594477786,
+          "evaluation_forward_floating_ops": 7599576144192,
+          "evaluation_forward_integer_ops": 36274176,
+          "setup_evaluation_forward_ops": 61785466816,
+          "last_minibatch_loss": 0.1540152132511139,
+          "ceiling": 76977398143040,
+          "unspent": 1803665254,
+          "metric_aggregation_and_profiling_metered": false
+        }
+      },
+      "split_fingerprints": {
+        "train": "f51d12def851594c47128b25a3d548ee609a28174c11e8b5a437bcc5f6d5c02e",
+        "validation": "ed164ac1c6a985f46568628f0624cb5d7b50a49bd0da4630a16ccb3ab5fcb23b",
+        "test": "5c9bc46e78e6f3e961ea233f774694c9b9ac38a147775ce597b1be1b5d2f47c8"
+      },
+      "training_seconds": 6606.757860677026,
+      "wall_seconds": 7673.777126158995,
+      "result_sha256": "c90b8b3288720e53c618318013e0112cb40211a3c2bd63f90fd1ef49ab48b942"
     }
   ]
 }

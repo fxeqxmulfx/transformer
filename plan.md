@@ -1,6 +1,8 @@
 # Basis correctness and convex architecture research cycle
 
-Started: 2026-10-06. Status: active, stages 3 and 4.
+Started: 2026-10-06. Status: unfinished, stages 3 and 4; primary research
+direction changed to grokking progress metrics by the user on 2026-10-07.
+Previously launched comparisons retain their original budgets and artifacts.
 
 ## Objective and constraints
 
@@ -849,8 +851,10 @@ seed 0 spends 148,793,847,818 operations/659 whole updates, leaves
 184,314,982 operations unspent and predicts only reject (18.55% validation,
 19.73% test, 14.65% length-128 sequence accuracy). Easy and hard parity
 seed 0 finish their respective ceilings at 100% validation/test, each
-first passing at 7,000 updates. Original easy/hard recall seed 0 continue
-from the frozen lab source in /tmp/transformer-qknorm-study.
+first passing at 7,000 updates. Original easy recall seed 0 finishes with
+100% validation/test, first passing at update 1900. Original hard recall
+seed 0 finishes its 8472-update ceiling with 10.16% best validation and
+11.72% test sequence accuracy; this unsuccessful control is retained.
 
 The gain-eight repair is ported and committed in ccc0ea5 after all 218
 Python tests and eight actual full-shape arithmetic-coverage probes pass.
@@ -861,17 +865,20 @@ validation, test and length-128 accuracy. Each first passes at update 600/
 135,475,524,680 operations, compared with softmax's update 200/
 148,978,162,800. Each spends 148,797,158,634 operations through update 659,
 leaving 181,004,166 operations insufficient for another whole update.
-At the 2026-10-07 15:11 UTC snapshot, twelve repaired arms finish the full
-ceiling with 100% validation/test: three easy-depth seeds, three easy-parity
-seeds, easy recall seeds 0/2, hard depth seed 1 and three hard-parity seeds. Completed depth arms
-also give 100% length-128 test accuracy. Parity first passes at update
+At the 2026-10-07 16:12 UTC snapshot, seventeen repaired arms finish the full
+ceiling. Fourteen give 100% validation/test: three easy-depth seeds, three
+easy-parity seeds, all three easy-recall seeds, hard depth seeds 1/2 and
+three hard-parity seeds. Completed depth arms also give 100% length-128
+test accuracy. All three hard-recall arms fail the 99% criterion: best
+validation is 86.13/83.59/82.42% and test is 86.13/83.59/83.40% for seeds
+0/1/2. Their exact counts and failures are retained. Parity first passes at update
 1000, costing 49,692,659,720 operations in easy mode and 851,463,887,720
 in hard mode. Hard depth seed 1 first passes at update 800/
 2,528,658,313,080 operations. Actual source, counts, remainders and split
 identity are recorded in experiments/basis_tensor/gain_comparison.json.
-The other repaired arms continue; early success is not recorded as a
-completed full-ceiling comparison. Original easy recall seed 0 also
-finishes its full ceiling at 100%, first passing at update 1900.
+Hard depth seed 0 continues; early success is not recorded as a completed
+full-ceiling comparison. Three independently charged gain-32 hard-recall
+repairs are also running, without a success claim.
 
 The compact operator is implemented with all literal shared residual
 layers and fixed-zero original FFNs. Actual forward receives only tokens;

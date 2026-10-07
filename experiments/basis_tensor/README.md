@@ -155,6 +155,7 @@ Initial controlled candidate results:
 | tensor-easy-parity-seed0 | 32,390 | 1,609,283,865,140 | 28,044,860 | 1.000000 | 1.000000 | Full parity/EOS generation passes; first validation pass at update 7,000 |
 | tensor-hard-parity-seed0 | 11,128 | 9,474,985,814,904 | 230,371,896 | 1.000000 | 1.000000 | First validation pass at update 7,000 |
 | tensor-easy-recall-seed0 | 5,199 | 4,988,858,443,969 | 232,081,531 | 1.000000 | 1.000000 | First validation pass at update 1,900 |
+| tensor-hard-recall-seed0 | 8,472 | 107,432,525,806,648 | 11,414,233,852 | 0.101562 | 0.117188 | Full original ceiling fails the sequence criterion |
 
 The depth checkpoint has the correct preferred transition on every
 observed A/B/neutral row, but individual correct-transition probabilities
@@ -185,10 +186,11 @@ counting probes, including both recall batch sizes, have complete operator
 coverage. The added actual gain work is included in the table and every
 candidate's whole-update ceiling.
 
-Twelve gain-eight arms have completed their full ceilings at the
-2026-10-07 15:11 UTC snapshot. All twelve have 100% best validation and test
+Seventeen gain-eight arms have completed their full ceilings at the
+2026-10-07 16:12 UTC snapshot. Fourteen have 100% best validation and test
 sequence accuracy; completed depth arms also have 100% length-128 test
-accuracy. Detailed source, actual charges, first-success observations and
+accuracy. All three hard-recall arms fail the 99% criterion. Detailed source,
+actual charges, first-success observations and
 unchanged split fingerprints are pinned in
 [gain_comparison.json](gain_comparison.json). Running arms are excluded
 from that completed comparison.
@@ -197,9 +199,15 @@ from that completed comparison.
 | --- | ---: | ---: | --- |
 | Easy depth, seeds 0/1/2 | 600 | 135,475,524,680 | 659 / 659 / 659 |
 | Easy parity, seeds 0/1/2 | 1,000 | 49,692,659,720 | 32,385 / 19,747 / 16,587 |
-| Easy recall, seeds 0/2 | 300 | 288,366,336,124 | 5,198 / 5,672 |
-| Hard depth, seed 1 | 800 | 2,528,658,313,080 | 3,551 |
+| Easy recall, seeds 0/1/2 | 300 | 288,366,336,124 | 5,198 / 7,720 / 5,672 |
+| Hard depth, seeds 1/2 | 800 | 2,528,658,313,080 | 3,551 / 13,697 |
 | Hard parity, seeds 0/1/2 | 1,000 | 851,463,887,720 | 11,128 / 19,076 / 23,316 |
+
+| Failed gain-eight hard recall | Full-ceiling updates | Charged training operations | Best validation sequence accuracy | Test sequence accuracy |
+| --- | ---: | ---: | ---: | ---: |
+| Seed 0 | 8,472 | 107,433,035,787,160 | 0.861328 | 0.861328 |
+| Seed 1 | 6,702 | 84,990,042,093,538 | 0.835938 | 0.835938 |
+| Seed 2 | 6,070 | 76,975,594,477,786 | 0.824219 | 0.833984 |
 
 Hard recall is the remaining observed accuracy bottleneck. Read-only
 diagnosis of every validation row at updates 3450/3500/3500 gives
