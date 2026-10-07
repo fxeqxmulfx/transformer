@@ -1,7 +1,7 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-06 UTC. **Active cycle: [Basis correctness and convex architecture](plan.md),
-stage 1.** The user requested this new cycle after the internal semantic
+Updated on 2026-10-07 UTC. **Active cycle: [Basis correctness and convex architecture](plan.md),
+stage 2; complete real-model Basis semantics committed in d640a91.** The user requested this new cycle after the internal semantic
 guarantees in b243ba5. It governs current work, including ordinary AdamW
 and comparison at measured equal FLOPs. The earlier investigation below is
 complete: **steps 0 to 6 and the requested QKNorm follow-up.** The investigation cycle

@@ -33,3 +33,4 @@ import Transformer.GPTMini.Convex.JointInteractionBoundary
 import Transformer.GPTMini.Convex.InteractionCompression
 import Transformer.GPTMini.Convex.Likelihood
 import Transformer.GPTMini.Convex.Reparameterization
+import Transformer.GPTMini.Convex.Structured

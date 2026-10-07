@@ -533,6 +533,35 @@ causality, integer-function adapter, task guarantees, convexity theorem,
 remaining hypotheses and counterexamples. Distinguish global convexity,
 conditional convexity and an empirical favorable optimization landscape.
 
+Current direction: a structured Gibbs head with affine complete energies.
+Structured.Basic proves the actual positive normalized joint distribution
+and global convexity of its complete-configuration NLL in all raw weights.
+This is a foundation, not yet an admissible architecture. Latent routes,
+state paths and matching/value channels require data-derived supervision
+for this objective. Ordinary label-only CE remains outside the guarantee.
+
+The compact proposal under investigation has free token-local Q/K log
+potentials (four groups of four channels each) and free value log
+potentials (five groups of four), plus a fixed ten-coordinate output
+label code and one constant: 52 trainable + 11 fixed coordinates fit
+width 64. The fixed output code is a decoder, not an input interaction
+bank; all input matching/value potentials are trained. The pointer
+energy sums Q(query,channel)+K(previous token,channel)+V(value,channel),
+with learned chronology and a learned positional table-role potential.
+Its implicit channels must be summed by products of small sums, never
+an enumerated exponential feature table. A free six-state transition
+head would handle order/count/phase, with all token transition energies
+trainable rather than a hardcoded task interpreter. These are proposed
+operators and slot counts; their actual computation, compatibility and
+joint capacity are not proved yet. No successful AdamW run is claimed.
+
+Remaining acceptance tests: prove compact contraction of the latent
+partition, learned matching and joint value expressivity, complete Basis
+capability from actual raw inputs, the prenorm/residual/tied-readout
+coupling, and the precise auxiliary-target generation without inference
+oracle use. Charge that generation and the changed loss in FLOP accounting.
+Reject or repair this proposal if these obligations fail; stage 3 stays queued.
+
 Exit criterion: a candidate with proved task capability and a proved
 convexity claim covering the parameters/objective being trained, usable
 with the existing ordinary AdamW implementation and public interface.
@@ -651,3 +680,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Whole-vocabulary depth decoding committed in 4dec64b. Realized original complete two/six-layer ModelParams, proved every actual detector/readout/tail loop state and full forward strict logits. | Discharge raw BOS/body token-local embedding coupling and prove checked integer depth SolvesTask, then aggregate all Basis semantics. |
 | 2026-10-07 | 1 | Complete original depth model committed in d3aae47. Proved exact raw integer serialization and universal depthModel_solves_depth in both full Basis modes, plus actual neutral/wrong-start/order controls and append-one contract. | Consolidate all three tasks/two modes with explicit real-arithmetic, epsilon and width scope; then start stage 2 convex architecture search. |
 | 2026-10-07 | 1 -> 2 | Raw depth correctness committed in e1afb3d. Consolidated the actual original family in BasisCorrectness: every task/mode, independent next-token agreement, two-call parity and exact append-one contract. Common epsilon and small/large dimension boundaries are explicit. | Search changed compact embedding/attention operators with jointly trainable matching/values and a proved convex objective; do not start equal-FLOP training until an admissible candidate exists. |
+| 2026-10-07 | 2 | Complete Basis family committed in d640a91. Established the actual finite affine-energy joint Gibbs NLL's global convexity as a structured-head foundation. Route/state/channel supervision is explicit, and marginal output CE is not claimed convex. | Prove compact latent contraction and actual changed head capability/interface; assess all acceptance constraints before equal-FLOP training. |
