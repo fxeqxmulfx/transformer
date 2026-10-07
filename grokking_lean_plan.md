@@ -23,7 +23,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
 | Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; circuit-efficiency literature to investigate | Research pending |
-| Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Six measurements and objective decomposition checked; 256 Python tests passed |
+| Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Eleven proved scalar cell-mean, energy and least-squares laws; full masked-logit geometry and correctness certificates next; 256 Python tests passed |
 | Gradient coherence and implicit bias | State what batch gradient agreement can and cannot imply; distinguish loss descent, task structure and optimizer-specific bias | Fixed-batch gradients; ordinary AdamW | Eighteen proved actual-CE derivative/decomposition/counterexample theorems; shared targets can yield arbitrarily high full alignment despite opposed answers |
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Analogy only for current finite GPTMini; finite-size scaling not established |
@@ -173,6 +173,15 @@ crossing soundly and completely over all bounded traces. No optimizer
 dynamics or full deterministic state is imposed; the impossibility is
 model-free, not an impossibility for AdamW under additional premises.
 These twelve theorems add no sorry, bringing the total to 118.
+
+`Transformer.Grokking.Geometry.Basic` computes the cell mean as the
+actual finite sum divided by cardinality. It derives zero residual sum,
+orthogonality, exact energy decomposition, the best constant fit and its
+uniqueness on nonempty cells, then proves linearity and idempotence.
+Empty cells are handled explicitly and supply no coverage evidence.
+These are logit-space identities, with no assumed orthogonality and no
+claim of convexity in transformer parameters. They add eleven proved
+theorems and no sorry, bringing the total to 129.
 
 Next formalize sustained operational windows and geometry metrics. Preserve
 the distinction between an inverse-rate characteristic time and the time
