@@ -591,6 +591,13 @@ relative offsets; no per-pair learned table or hard adjacency mask is
 stored. Naive route evaluation uses quadratically many position pairs
 per query and must be charged in the FLOP comparison. Full raw recall
 correctness and actual tensor/residual/tied integration remain open.
+RecallPositions now derives every physical even table value slot's
+actual neighboring key/value IDs, the selected last-write slot and
+matching-record chronology from successful complete raw parsing. A real
+overwrite plus two distinct queries and a later even-position filler
+checks the table boundary. These are data/witness facts, absent from
+the freely learned all-pair forward; true finite energy gaps and recall
+head correctness are still required.
 
 For the ordered head, also investigate a row-softmax six-state Markov
 model: free token-conditioned transition logits, normalized causal state
@@ -829,3 +836,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Actual raw learned parity head committed in b91036f. Proved the independent raw six-state depth data scan exactly matches Basis E2/E4 via genuine compression/chain/subsequence invariants, physical neutral/BOS transitions and saturated run counts. | Realize full finite shared learned depth capability and data targets; complete recall, two-head mixing and actual tensor-stack/tied/integer integration remain before stage 3. |
 | 2026-10-07 | 2 | Independent full raw depth semantics committed in 6c91a98. Proved the genuine finite shared learned head solves all raw depth prefixes in both modes, computes order/mode controls, and has correct raw-data complete labels with a globally convex actual shared likelihood. | Extend the jointly learned pointer to full raw recall/latest-write/filler exclusion, prove finite two-head mixing and actual prenorm/residual/tied tensor-stack realization before stage 3. |
 | 2026-10-07 | 2 | Full standalone learned depth capability committed in 3812fda. Replaced the proposed fixed neighboring-key shift by free relative binding over every visible position pair; proved exact compact inference/training coupling and unrestricted joint convexity, with 28816 recall scalars. | Derive the finite all-pair pointer's complete raw recall/latest-write/filler semantics and decoder margin; mixture and full tensor-stack realization remain before stage 3. |
+| 2026-10-07 | 2 | Joint learned positional binding committed in f37438a. Derived actual raw even table slots, both unchanged key/value reads and latest-write chronology directly from complete parsing, with genuine overwrite/distinct-query/post-table-filler controls. | Construct finite free shared pointer weights and derive their uniform complete-configuration gap and full-vocabulary recall decoder; combine heads and realize the actual tensor stack before stage 3. |

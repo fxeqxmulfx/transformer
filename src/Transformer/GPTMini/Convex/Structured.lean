@@ -25,6 +25,7 @@ import Transformer.GPTMini.Convex.Structured.DepthScan
 import Transformer.GPTMini.Convex.Structured.DepthReference
 import Transformer.GPTMini.Convex.Structured.SharedDepth
 import Transformer.GPTMini.Convex.Structured.Binding
+import Transformer.GPTMini.Convex.Structured.RecallPositions
 
 /-!
 # Structured alternatives guided by raw Basis semantics
