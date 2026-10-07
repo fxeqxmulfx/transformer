@@ -1855,6 +1855,3772 @@
         "validation": "7cd9f8b3a10d5c76ed219442edc3bd02e0cced7c2ee45a4d79e85295b7d2c1e2",
         "test": "43204e2c9858b7be7147e4158bba2b653d9a2ee138ff258f930cc41dbac98440"
       }
+    },
+    {
+      "label": "tensor-easy-recall-seed0",
+      "stop": {
+        "step": 5199,
+        "reason": "flop_budget"
+      },
+      "arithmetic": {
+        "convention": "aten-reference-arithmetic-v1",
+        "training_floating_ops": 4987945032753,
+        "training_integer_ops": 880131192,
+        "auxiliary_labels": 33280024,
+        "training_charged_ops": 4988858443969,
+        "evaluation_forward_floating_ops": 898738368000,
+        "evaluation_forward_integer_ops": 10518528,
+        "setup_evaluation_forward_ops": 8399522304,
+        "last_minibatch_loss": 0.04172607511281967,
+        "ceiling": 4989090525500,
+        "unspent": 232081531,
+        "metric_aggregation_and_profiling_metered": false,
+        "training_profiles": {
+          "32": {
+            "batch": 32,
+            "input_length": 64,
+            "phases": {
+              "forward_loss": {
+                "convention": "aten-reference-arithmetic-v1",
+                "floating_ops": 204246217,
+                "integer_ops": 107272,
+                "charged_ops": 204353489,
+                "operators": {
+                  "aten._log_softmax.default": 194560,
+                  "aten._softmax.default": 344640,
+                  "aten._to_copy.default": 0,
+                  "aten._unsafe_view.default": 0,
+                  "aten.add.Tensor": 10713088,
+                  "aten.add_.Scalar": 6144,
+                  "aten.alias.default": 0,
+                  "aten.arange.default": 0,
+                  "aten.bitwise_not.default": 12544,
+                  "aten.bmm.default": 638976,
+                  "aten.cat.default": 0,
+                  "aten.constant_pad_nd.default": 0,
+                  "aten.detach.default": 0,
+                  "aten.div.Tensor": 393217,
+                  "aten.embedding.default": 0,
+                  "aten.exp.default": 40960,
+                  "aten.expand.default": 0,
+                  "aten.floor_divide.default": 18432,
+                  "aten.gather.default": 0,
+                  "aten.index.Tensor": 0,
+                  "aten.index_select.default": 0,
+                  "aten.le.Tensor": 8192,
+                  "aten.logcumsumexp.default": 22708224,
+                  "aten.logsumexp.default": 28639240,
+                  "aten.masked_fill.Scalar": 2883840,
+                  "aten.mean.dim": 393216,
+                  "aten.mm.default": 134381568,
+                  "aten.mul.Tensor": 477312,
+                  "aten.ne.Scalar": 2304,
+                  "aten.permute.default": 0,
+                  "aten.pow.Scalar": 9,
+                  "aten.pow.Tensor_Scalar": 917504,
+                  "aten.relu.default": 524288,
+                  "aten.remainder.Scalar": 20480,
+                  "aten.rsqrt.default": 6144,
+                  "aten.select.int": 0,
+                  "aten.slice.Tensor": 0,
+                  "aten.sort.stable": 12288,
+                  "aten.squeeze.dim": 0,
+                  "aten.stack.default": 0,
+                  "aten.sub.Tensor": 198657,
+                  "aten.sum.default": 510,
+                  "aten.sum.dim_IntList": 817152,
+                  "aten.t.default": 0,
+                  "aten.transpose.int": 0,
+                  "aten.unbind.int": 0,
+                  "aten.unsqueeze.default": 0,
+                  "aten.view.default": 0
+                },
+                "calls": {
+                  "aten._log_softmax.default": 1,
+                  "aten._softmax.default": 4,
+                  "aten._to_copy.default": 1,
+                  "aten._unsafe_view.default": 3,
+                  "aten.add.Tensor": 24,
+                  "aten.add_.Scalar": 3,
+                  "aten.alias.default": 1,
+                  "aten.arange.default": 5,
+                  "aten.bitwise_not.default": 4,
+                  "aten.bmm.default": 65,
+                  "aten.cat.default": 2,
+                  "aten.constant_pad_nd.default": 3,
+                  "aten.detach.default": 21,
+                  "aten.div.Tensor": 4,
+                  "aten.embedding.default": 1,
+                  "aten.exp.default": 1,
+                  "aten.expand.default": 3,
+                  "aten.floor_divide.default": 2,
+                  "aten.gather.default": 8,
+                  "aten.index.Tensor": 3,
+                  "aten.index_select.default": 2,
+                  "aten.le.Tensor": 2,
+                  "aten.logcumsumexp.default": 3,
+                  "aten.logsumexp.default": 8,
+                  "aten.masked_fill.Scalar": 4,
+                  "aten.mean.dim": 3,
+                  "aten.mm.default": 3,
+                  "aten.mul.Tensor": 8,
+                  "aten.ne.Scalar": 2,
+                  "aten.permute.default": 5,
+                  "aten.pow.Scalar": 2,
+                  "aten.pow.Tensor_Scalar": 4,
+                  "aten.relu.default": 1,
+                  "aten.remainder.Scalar": 3,
+                  "aten.rsqrt.default": 3,
+                  "aten.select.int": 71,
+                  "aten.slice.Tensor": 18,
+                  "aten.sort.stable": 1,
+                  "aten.squeeze.dim": 66,
+                  "aten.stack.default": 1,
+                  "aten.sub.Tensor": 12,
+                  "aten.sum.default": 2,
+                  "aten.sum.dim_IntList": 6,
+                  "aten.t.default": 2,
+                  "aten.transpose.int": 3,
+                  "aten.unbind.int": 1,
+                  "aten.unsqueeze.default": 101,
+                  "aten.view.default": 17
+                }
+              },
+              "backward": {
+                "convention": "aten-reference-arithmetic-v1",
+                "floating_ops": 275963234,
+                "integer_ops": 0,
+                "charged_ops": 275963234,
+                "operators": {
+                  "aten._log_softmax_backward_data.default": 153600,
+                  "aten._softmax_backward_data.default": 283104,
+                  "aten.abs.default": 2883584,
+                  "aten.add.Tensor": 13023302,
+                  "aten.bmm.default": 1277952,
+                  "aten.constant_pad_nd.default": 0,
+                  "aten.copy_.default": 0,
+                  "aten.detach.default": 0,
+                  "aten.div.Scalar": 393216,
+                  "aten.div.Tensor": 1179649,
+                  "aten.embedding_dense_backward.default": 131072,
+                  "aten.exp.default": 12926978,
+                  "aten.expand.default": 0,
+                  "aten.flip.default": 0,
+                  "aten.gt.Scalar": 2883584,
+                  "aten.index_put.default": 10240,
+                  "aten.log.default": 2883584,
+                  "aten.logcumsumexp.default": 45416448,
+                  "aten.lt.Scalar": 2883584,
+                  "aten.masked_fill.Scalar": 2883840,
+                  "aten.mm.default": 134381568,
+                  "aten.mul.Scalar": 923648,
+                  "aten.mul.Tensor": 9470082,
+                  "aten.neg.default": 571393,
+                  "aten.new_empty_strided.default": 0,
+                  "aten.new_zeros.default": 0,
+                  "aten.ones_like.default": 0,
+                  "aten.permute.default": 0,
+                  "aten.pow.Tensor_Scalar": 923648,
+                  "aten.scalar_tensor.default": 0,
+                  "aten.scatter_add.default": 233728,
+                  "aten.select.int": 0,
+                  "aten.select_backward.default": 0,
+                  "aten.slice.Tensor": 0,
+                  "aten.slice_backward.default": 0,
+                  "aten.squeeze.dim": 0,
+                  "aten.sub.Tensor": 15810562,
+                  "aten.sum.default": 86138,
+                  "aten.sum.dim_IntList": 17532986,
+                  "aten.t.default": 0,
+                  "aten.threshold_backward.default": 1048576,
+                  "aten.transpose.int": 0,
+                  "aten.unsqueeze.default": 0,
+                  "aten.view.default": 0,
+                  "aten.where.self": 5767168
+                },
+                "calls": {
+                  "aten._log_softmax_backward_data.default": 1,
+                  "aten._softmax_backward_data.default": 4,
+                  "aten.abs.default": 3,
+                  "aten.add.Tensor": 162,
+                  "aten.bmm.default": 130,
+                  "aten.constant_pad_nd.default": 3,
+                  "aten.copy_.default": 1,
+                  "aten.detach.default": 27,
+                  "aten.div.Scalar": 3,
+                  "aten.div.Tensor": 10,
+                  "aten.embedding_dense_backward.default": 1,
+                  "aten.exp.default": 14,
+                  "aten.expand.default": 10,
+                  "aten.flip.default": 12,
+                  "aten.gt.Scalar": 3,
+                  "aten.index_put.default": 3,
+                  "aten.log.default": 3,
+                  "aten.logcumsumexp.default": 6,
+                  "aten.lt.Scalar": 3,
+                  "aten.masked_fill.Scalar": 4,
+                  "aten.mm.default": 3,
+                  "aten.mul.Scalar": 7,
+                  "aten.mul.Tensor": 32,
+                  "aten.neg.default": 9,
+                  "aten.new_empty_strided.default": 1,
+                  "aten.new_zeros.default": 9,
+                  "aten.ones_like.default": 1,
+                  "aten.permute.default": 5,
+                  "aten.pow.Tensor_Scalar": 7,
+                  "aten.scalar_tensor.default": 3,
+                  "aten.scatter_add.default": 6,
+                  "aten.select.int": 64,
+                  "aten.select_backward.default": 69,
+                  "aten.slice.Tensor": 4,
+                  "aten.slice_backward.default": 16,
+                  "aten.squeeze.dim": 84,
+                  "aten.sub.Tensor": 17,
+                  "aten.sum.default": 6,
+                  "aten.sum.dim_IntList": 24,
+                  "aten.t.default": 3,
+                  "aten.threshold_backward.default": 1,
+                  "aten.transpose.int": 133,
+                  "aten.unsqueeze.default": 88,
+                  "aten.view.default": 26,
+                  "aten.where.self": 6
+                }
+              },
+              "gradient_norm": {
+                "convention": "aten-reference-arithmetic-v1",
+                "floating_ops": 57646,
+                "integer_ops": 0,
+                "charged_ops": 57646,
+                "operators": {
+                  "aten._foreach_norm.Scalar": 57632,
+                  "aten.linalg_vector_norm.default": 14,
+                  "aten.stack.default": 0
+                },
+                "calls": {
+                  "aten._foreach_norm.Scalar": 1,
+                  "aten.linalg_vector_norm.default": 1,
+                  "aten.stack.default": 1
+                }
+              },
+              "adamw": {
+                "convention": "aten-reference-arithmetic-v1",
+                "floating_ops": 403494,
+                "integer_ops": 0,
+                "charged_ops": 403494,
+                "operators": {
+                  "aten._foreach_add_.Scalar": 7,
+                  "aten._fused_adamw_.default": 403487,
+                  "aten.zeros.default": 0,
+                  "aten.zeros_like.default": 0,
+                  "profiler._record_function_enter_new.default": 0,
+                  "profiler._record_function_exit._RecordFunction": 0
+                },
+                "calls": {
+                  "aten._foreach_add_.Scalar": 1,
+                  "aten._fused_adamw_.default": 1,
+                  "aten.zeros.default": 7,
+                  "aten.zeros_like.default": 14,
+                  "profiler._record_function_enter_new.default": 1,
+                  "profiler._record_function_exit._RecordFunction": 1
+                }
+              }
+            },
+            "floating_ops": 480670591,
+            "integer_ops": 107272,
+            "charged_ops": 480777863
+          },
+          "64": {
+            "batch": 64,
+            "input_length": 64,
+            "phases": {
+              "forward_loss": {
+                "convention": "aten-reference-arithmetic-v1",
+                "floating_ops": 408491721,
+                "integer_ops": 169480,
+                "charged_ops": 408661201,
+                "operators": {
+                  "aten._log_softmax.default": 389120,
+                  "aten._softmax.default": 688704,
+                  "aten._to_copy.default": 0,
+                  "aten._unsafe_view.default": 0,
+                  "aten.add.Tensor": 21417984,
+                  "aten.add_.Scalar": 12288,
+                  "aten.alias.default": 0,
+                  "aten.arange.default": 0,
+                  "aten.bitwise_not.default": 12800,
+                  "aten.bmm.default": 1277952,
+                  "aten.cat.default": 0,
+                  "aten.constant_pad_nd.default": 0,
+                  "aten.detach.default": 0,
+                  "aten.div.Tensor": 786433,
+                  "aten.embedding.default": 0,
+                  "aten.exp.default": 81920,
+                  "aten.expand.default": 0,
+                  "aten.floor_divide.default": 36864,
+                  "aten.gather.default": 0,
+                  "aten.index.Tensor": 0,
+                  "aten.index_select.default": 0,
+                  "aten.le.Tensor": 8192,
+                  "aten.logcumsumexp.default": 45416448,
+                  "aten.logsumexp.default": 57278472,
+                  "aten.masked_fill.Scalar": 5767680,
+                  "aten.mean.dim": 786432,
+                  "aten.mm.default": 268763136,
+                  "aten.mul.Tensor": 954496,
+                  "aten.ne.Scalar": 4608,
+                  "aten.permute.default": 0,
+                  "aten.pow.Scalar": 9,
+                  "aten.pow.Tensor_Scalar": 1835008,
+                  "aten.relu.default": 1048576,
+                  "aten.remainder.Scalar": 40960,
+                  "aten.rsqrt.default": 12288,
+                  "aten.select.int": 0,
+                  "aten.slice.Tensor": 0,
+                  "aten.sort.stable": 24576,
+                  "aten.squeeze.dim": 0,
+                  "aten.stack.default": 0,
+                  "aten.sub.Tensor": 380929,
+                  "aten.sum.default": 1022,
+                  "aten.sum.dim_IntList": 1634304,
+                  "aten.t.default": 0,
+                  "aten.transpose.int": 0,
+                  "aten.unbind.int": 0,
+                  "aten.unsqueeze.default": 0,
+                  "aten.view.default": 0
+                },
+                "calls": {
+                  "aten._log_softmax.default": 1,
+                  "aten._softmax.default": 4,
+                  "aten._to_copy.default": 1,
+                  "aten._unsafe_view.default": 3,
+                  "aten.add.Tensor": 24,
+                  "aten.add_.Scalar": 3,
+                  "aten.alias.default": 1,
+                  "aten.arange.default": 5,
+                  "aten.bitwise_not.default": 4,
+                  "aten.bmm.default": 65,
+                  "aten.cat.default": 2,
+                  "aten.constant_pad_nd.default": 3,
+                  "aten.detach.default": 21,
+                  "aten.div.Tensor": 4,
+                  "aten.embedding.default": 1,
+                  "aten.exp.default": 1,
+                  "aten.expand.default": 3,
+                  "aten.floor_divide.default": 2,
+                  "aten.gather.default": 8,
+                  "aten.index.Tensor": 3,
+                  "aten.index_select.default": 2,
+                  "aten.le.Tensor": 2,
+                  "aten.logcumsumexp.default": 3,
+                  "aten.logsumexp.default": 8,
+                  "aten.masked_fill.Scalar": 4,
+                  "aten.mean.dim": 3,
+                  "aten.mm.default": 3,
+                  "aten.mul.Tensor": 8,
+                  "aten.ne.Scalar": 2,
+                  "aten.permute.default": 5,
+                  "aten.pow.Scalar": 2,
+                  "aten.pow.Tensor_Scalar": 4,
+                  "aten.relu.default": 1,
+                  "aten.remainder.Scalar": 3,
+                  "aten.rsqrt.default": 3,
+                  "aten.select.int": 71,
+                  "aten.slice.Tensor": 18,
+                  "aten.sort.stable": 1,
+                  "aten.squeeze.dim": 66,
+                  "aten.stack.default": 1,
+                  "aten.sub.Tensor": 12,
+                  "aten.sum.default": 2,
+                  "aten.sum.dim_IntList": 6,
+                  "aten.t.default": 2,
+                  "aten.transpose.int": 3,
+                  "aten.unbind.int": 1,
+                  "aten.unsqueeze.default": 101,
+                  "aten.view.default": 17
+                }
+              },
+              "backward": {
+                "convention": "aten-reference-arithmetic-v1",
+                "floating_ops": 551929698,
+                "integer_ops": 0,
+                "charged_ops": 551929698,
+                "operators": {
+                  "aten._log_softmax_backward_data.default": 307200,
+                  "aten._softmax_backward_data.default": 565728,
+                  "aten.abs.default": 5767168,
+                  "aten.add.Tensor": 26046342,
+                  "aten.bmm.default": 2555904,
+                  "aten.constant_pad_nd.default": 0,
+                  "aten.copy_.default": 0,
+                  "aten.detach.default": 0,
+                  "aten.div.Scalar": 786432,
+                  "aten.div.Tensor": 2359297,
+                  "aten.embedding_dense_backward.default": 262144,
+                  "aten.exp.default": 25853954,
+                  "aten.expand.default": 0,
+                  "aten.flip.default": 0,
+                  "aten.gt.Scalar": 5767168,
+                  "aten.index_put.default": 12288,
+                  "aten.log.default": 5767168,
+                  "aten.logcumsumexp.default": 90832896,
+                  "aten.lt.Scalar": 5767168,
+                  "aten.masked_fill.Scalar": 5767680,
+                  "aten.mm.default": 268763136,
+                  "aten.mul.Scalar": 1847296,
+                  "aten.mul.Tensor": 18940034,
+                  "aten.neg.default": 1142785,
+                  "aten.new_empty_strided.default": 0,
+                  "aten.new_zeros.default": 0,
+                  "aten.ones_like.default": 0,
+                  "aten.permute.default": 0,
+                  "aten.pow.Tensor_Scalar": 1847296,
+                  "aten.scalar_tensor.default": 0,
+                  "aten.scatter_add.default": 467456,
+                  "aten.select.int": 0,
+                  "aten.select_backward.default": 0,
+                  "aten.slice.Tensor": 0,
+                  "aten.slice_backward.default": 0,
+                  "aten.squeeze.dim": 0,
+                  "aten.sub.Tensor": 31621122,
+                  "aten.sum.default": 172154,
+                  "aten.sum.dim_IntList": 35078394,
+                  "aten.t.default": 0,
+                  "aten.threshold_backward.default": 2097152,
+                  "aten.transpose.int": 0,
+                  "aten.unsqueeze.default": 0,
+                  "aten.view.default": 0,
+                  "aten.where.self": 11534336
+                },
+                "calls": {
+                  "aten._log_softmax_backward_data.default": 1,
+                  "aten._softmax_backward_data.default": 4,
+                  "aten.abs.default": 3,
+                  "aten.add.Tensor": 162,
+                  "aten.bmm.default": 130,
+                  "aten.constant_pad_nd.default": 3,
+                  "aten.copy_.default": 1,
+                  "aten.detach.default": 27,
+                  "aten.div.Scalar": 3,
+                  "aten.div.Tensor": 10,
+                  "aten.embedding_dense_backward.default": 1,
+                  "aten.exp.default": 14,
+                  "aten.expand.default": 10,
+                  "aten.flip.default": 12,
+                  "aten.gt.Scalar": 3,
+                  "aten.index_put.default": 3,
+                  "aten.log.default": 3,
+                  "aten.logcumsumexp.default": 6,
+                  "aten.lt.Scalar": 3,
+                  "aten.masked_fill.Scalar": 4,
+                  "aten.mm.default": 3,
+                  "aten.mul.Scalar": 7,
+                  "aten.mul.Tensor": 32,
+                  "aten.neg.default": 9,
+                  "aten.new_empty_strided.default": 1,
+                  "aten.new_zeros.default": 9,
+                  "aten.ones_like.default": 1,
+                  "aten.permute.default": 5,
+                  "aten.pow.Tensor_Scalar": 7,
+                  "aten.scalar_tensor.default": 3,
+                  "aten.scatter_add.default": 6,
+                  "aten.select.int": 64,
+                  "aten.select_backward.default": 69,
+                  "aten.slice.Tensor": 4,
+                  "aten.slice_backward.default": 16,
+                  "aten.squeeze.dim": 84,
+                  "aten.sub.Tensor": 17,
+                  "aten.sum.default": 6,
+                  "aten.sum.dim_IntList": 24,
+                  "aten.t.default": 3,
+                  "aten.threshold_backward.default": 1,
+                  "aten.transpose.int": 133,
+                  "aten.unsqueeze.default": 88,
+                  "aten.view.default": 26,
+                  "aten.where.self": 6
+                }
+              },
+              "gradient_norm": {
+                "convention": "aten-reference-arithmetic-v1",
+                "floating_ops": 57646,
+                "integer_ops": 0,
+                "charged_ops": 57646,
+                "operators": {
+                  "aten._foreach_norm.Scalar": 57632,
+                  "aten.linalg_vector_norm.default": 14,
+                  "aten.stack.default": 0
+                },
+                "calls": {
+                  "aten._foreach_norm.Scalar": 1,
+                  "aten.linalg_vector_norm.default": 1,
+                  "aten.stack.default": 1
+                }
+              },
+              "adamw": {
+                "convention": "aten-reference-arithmetic-v1",
+                "floating_ops": 403494,
+                "integer_ops": 0,
+                "charged_ops": 403494,
+                "operators": {
+                  "aten._foreach_add_.Scalar": 7,
+                  "aten._fused_adamw_.default": 403487,
+                  "aten.zeros.default": 0,
+                  "aten.zeros_like.default": 0,
+                  "profiler._record_function_enter_new.default": 0,
+                  "profiler._record_function_exit._RecordFunction": 0
+                },
+                "calls": {
+                  "aten._foreach_add_.Scalar": 1,
+                  "aten._fused_adamw_.default": 1,
+                  "aten.zeros.default": 7,
+                  "aten.zeros_like.default": 14,
+                  "profiler._record_function_enter_new.default": 1,
+                  "profiler._record_function_exit._RecordFunction": 1
+                }
+              }
+            },
+            "floating_ops": 960882559,
+            "integer_ops": 169480,
+            "charged_ops": 961052039
+          }
+        },
+        "inference_profiles": {
+          "(((256, 64), 'torch.int64', 'cpu'),)": {
+            "convention": "aten-reference-arithmetic-v1",
+            "floating_ops": 4199712000,
+            "integer_ops": 49152,
+            "charged_ops": 4199761152,
+            "operators": {
+              "aten._log_softmax.default": 3112960,
+              "aten._softmax.default": 5506176,
+              "aten._unsafe_view.default": 0,
+              "aten.add.Tensor": 129671168,
+              "aten.add_.Scalar": 81920,
+              "aten.arange.default": 0,
+              "aten.bitwise_not.default": 16384,
+              "aten.bmm.default": 10223616,
+              "aten.cat.default": 0,
+              "aten.constant_pad_nd.default": 0,
+              "aten.div.Tensor": 4194304,
+              "aten.embedding.default": 0,
+              "aten.exp.default": 655360,
+              "aten.expand.default": 0,
+              "aten.index.Tensor": 0,
+              "aten.le.Tensor": 8192,
+              "aten.logcumsumexp.default": 346816512,
+              "aten.logsumexp.default": 312999936,
+              "aten.masked_fill.Scalar": 44040192,
+              "aten.mean.dim": 5242880,
+              "aten.mm.default": 3299344384,
+              "aten.mul.Tensor": 6553728,
+              "aten.permute.default": 0,
+              "aten.pow.Tensor_Scalar": 13631488,
+              "aten.relu.default": 8388608,
+              "aten.rsqrt.default": 81920,
+              "aten.select.int": 0,
+              "aten.slice.Tensor": 0,
+              "aten.squeeze.dim": 0,
+              "aten.stack.default": 0,
+              "aten.sub.Tensor": 2768896,
+              "aten.sum.dim_IntList": 6422528,
+              "aten.t.default": 0,
+              "aten.transpose.int": 0,
+              "aten.unsqueeze.default": 0,
+              "aten.view.default": 0
+            },
+            "calls": {
+              "aten._log_softmax.default": 2,
+              "aten._softmax.default": 8,
+              "aten._unsafe_view.default": 7,
+              "aten.add.Tensor": 23,
+              "aten.add_.Scalar": 5,
+              "aten.arange.default": 2,
+              "aten.bitwise_not.default": 4,
+              "aten.bmm.default": 130,
+              "aten.cat.default": 2,
+              "aten.constant_pad_nd.default": 4,
+              "aten.div.Tensor": 4,
+              "aten.embedding.default": 1,
+              "aten.exp.default": 2,
+              "aten.expand.default": 2,
+              "aten.index.Tensor": 2,
+              "aten.le.Tensor": 2,
+              "aten.logcumsumexp.default": 4,
+              "aten.logsumexp.default": 8,
+              "aten.masked_fill.Scalar": 4,
+              "aten.mean.dim": 5,
+              "aten.mm.default": 7,
+              "aten.mul.Tensor": 11,
+              "aten.permute.default": 10,
+              "aten.pow.Tensor_Scalar": 7,
+              "aten.relu.default": 2,
+              "aten.rsqrt.default": 5,
+              "aten.select.int": 134,
+              "aten.slice.Tensor": 15,
+              "aten.squeeze.dim": 128,
+              "aten.stack.default": 2,
+              "aten.sub.Tensor": 8,
+              "aten.sum.dim_IntList": 4,
+              "aten.t.default": 5,
+              "aten.transpose.int": 4,
+              "aten.unsqueeze.default": 173,
+              "aten.view.default": 25
+            }
+          }
+        },
+        "label_profile": {
+          "convention": "aten-reference-arithmetic-v1",
+          "floating_ops": 0,
+          "integer_ops": 33280024,
+          "charged_ops": 33280024,
+          "operators": {
+            "aten.add.Tensor": 8,
+            "aten.amax.default": 8960000,
+            "aten.arange.default": 0,
+            "aten.clamp_min.default": 2560000,
+            "aten.eq.Tensor": 10240000,
+            "aten.index.Tensor": 0,
+            "aten.mul.Tensor": 8,
+            "aten.scalar_tensor.default": 0,
+            "aten.select.int": 0,
+            "aten.stack.default": 0,
+            "aten.sub.Tensor": 1280008,
+            "aten.unsqueeze.default": 0,
+            "aten.where.self": 10240000
+          },
+          "calls": {
+            "aten.add.Tensor": 1,
+            "aten.amax.default": 1,
+            "aten.arange.default": 1,
+            "aten.clamp_min.default": 2,
+            "aten.eq.Tensor": 1,
+            "aten.index.Tensor": 1,
+            "aten.mul.Tensor": 1,
+            "aten.scalar_tensor.default": 1,
+            "aten.select.int": 2,
+            "aten.stack.default": 1,
+            "aten.sub.Tensor": 2,
+            "aten.unsqueeze.default": 2,
+            "aten.where.self": 1
+          }
+        }
+      },
+      "first_success": {
+        "step": 1900,
+        "training_seconds": 1450.1315060040797,
+        "wall_seconds": 1848.4518060000264,
+        "examples_seen": 121408,
+        "value": 0.998046875
+      },
+      "best": {
+        "step": 5199,
+        "validation": {
+          "loss": 0.2377694919705391,
+          "example_loss": 0.2377694994211197,
+          "token_accuracy": 1.0,
+          "sequence_accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "target_count": 4096,
+          "correct": 4096,
+          "example_count": 512,
+          "exact": 512,
+          "transition_count": 4081,
+          "classes": {
+            "292": {
+              "name": "id_256",
+              "count": 8,
+              "correct": 8,
+              "accuracy": 1.0
+            },
+            "293": {
+              "name": "id_257",
+              "count": 23,
+              "correct": 23,
+              "accuracy": 1.0
+            },
+            "294": {
+              "name": "id_258",
+              "count": 22,
+              "correct": 22,
+              "accuracy": 1.0
+            },
+            "295": {
+              "name": "id_259",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "296": {
+              "name": "id_260",
+              "count": 22,
+              "correct": 22,
+              "accuracy": 1.0
+            },
+            "297": {
+              "name": "id_261",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "298": {
+              "name": "id_262",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "299": {
+              "name": "id_263",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "300": {
+              "name": "id_264",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "301": {
+              "name": "id_265",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "302": {
+              "name": "id_266",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "303": {
+              "name": "id_267",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "304": {
+              "name": "id_268",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "305": {
+              "name": "id_269",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "306": {
+              "name": "id_270",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "307": {
+              "name": "id_271",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "308": {
+              "name": "id_272",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "309": {
+              "name": "id_273",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "310": {
+              "name": "id_274",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "311": {
+              "name": "id_275",
+              "count": 22,
+              "correct": 22,
+              "accuracy": 1.0
+            },
+            "312": {
+              "name": "id_276",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "313": {
+              "name": "id_277",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "314": {
+              "name": "id_278",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "315": {
+              "name": "id_279",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "316": {
+              "name": "id_280",
+              "count": 10,
+              "correct": 10,
+              "accuracy": 1.0
+            },
+            "317": {
+              "name": "id_281",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "318": {
+              "name": "id_282",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "319": {
+              "name": "id_283",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "320": {
+              "name": "id_284",
+              "count": 22,
+              "correct": 22,
+              "accuracy": 1.0
+            },
+            "321": {
+              "name": "id_285",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "322": {
+              "name": "id_286",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "323": {
+              "name": "id_287",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "324": {
+              "name": "id_288",
+              "count": 22,
+              "correct": 22,
+              "accuracy": 1.0
+            },
+            "325": {
+              "name": "id_289",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "326": {
+              "name": "id_290",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "327": {
+              "name": "id_291",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "328": {
+              "name": "id_292",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "329": {
+              "name": "id_293",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "330": {
+              "name": "id_294",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "331": {
+              "name": "id_295",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "332": {
+              "name": "id_296",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "333": {
+              "name": "id_297",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "334": {
+              "name": "id_298",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "335": {
+              "name": "id_299",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "336": {
+              "name": "id_300",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "337": {
+              "name": "id_301",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "338": {
+              "name": "id_302",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "339": {
+              "name": "id_303",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "340": {
+              "name": "id_304",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "341": {
+              "name": "id_305",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "342": {
+              "name": "id_306",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "343": {
+              "name": "id_307",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "344": {
+              "name": "id_308",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "345": {
+              "name": "id_309",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "346": {
+              "name": "id_310",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "347": {
+              "name": "id_311",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "348": {
+              "name": "id_312",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "349": {
+              "name": "id_313",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "350": {
+              "name": "id_314",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "351": {
+              "name": "id_315",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "352": {
+              "name": "id_316",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "353": {
+              "name": "id_317",
+              "count": 23,
+              "correct": 23,
+              "accuracy": 1.0
+            },
+            "354": {
+              "name": "id_318",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "355": {
+              "name": "id_319",
+              "count": 10,
+              "correct": 10,
+              "accuracy": 1.0
+            },
+            "356": {
+              "name": "id_320",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "357": {
+              "name": "id_321",
+              "count": 22,
+              "correct": 22,
+              "accuracy": 1.0
+            },
+            "358": {
+              "name": "id_322",
+              "count": 24,
+              "correct": 24,
+              "accuracy": 1.0
+            },
+            "359": {
+              "name": "id_323",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "360": {
+              "name": "id_324",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "361": {
+              "name": "id_325",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "362": {
+              "name": "id_326",
+              "count": 25,
+              "correct": 25,
+              "accuracy": 1.0
+            },
+            "363": {
+              "name": "id_327",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "364": {
+              "name": "id_328",
+              "count": 10,
+              "correct": 10,
+              "accuracy": 1.0
+            },
+            "365": {
+              "name": "id_329",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "366": {
+              "name": "id_330",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "367": {
+              "name": "id_331",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "368": {
+              "name": "id_332",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "369": {
+              "name": "id_333",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "370": {
+              "name": "id_334",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "371": {
+              "name": "id_335",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "372": {
+              "name": "id_336",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "373": {
+              "name": "id_337",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "374": {
+              "name": "id_338",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "375": {
+              "name": "id_339",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "376": {
+              "name": "id_340",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "377": {
+              "name": "id_341",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "378": {
+              "name": "id_342",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "379": {
+              "name": "id_343",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "380": {
+              "name": "id_344",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "381": {
+              "name": "id_345",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "382": {
+              "name": "id_346",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "383": {
+              "name": "id_347",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "384": {
+              "name": "id_348",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "385": {
+              "name": "id_349",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "386": {
+              "name": "id_350",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "387": {
+              "name": "id_351",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "388": {
+              "name": "id_352",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "389": {
+              "name": "id_353",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "390": {
+              "name": "id_354",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "391": {
+              "name": "id_355",
+              "count": 24,
+              "correct": 24,
+              "accuracy": 1.0
+            },
+            "392": {
+              "name": "id_356",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "393": {
+              "name": "id_357",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "394": {
+              "name": "id_358",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "395": {
+              "name": "id_359",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "396": {
+              "name": "id_360",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "397": {
+              "name": "id_361",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "398": {
+              "name": "id_362",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "399": {
+              "name": "id_363",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "400": {
+              "name": "id_364",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "401": {
+              "name": "id_365",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "402": {
+              "name": "id_366",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "403": {
+              "name": "id_367",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "404": {
+              "name": "id_368",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "405": {
+              "name": "id_369",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "406": {
+              "name": "id_370",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "407": {
+              "name": "id_371",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "408": {
+              "name": "id_372",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "409": {
+              "name": "id_373",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "410": {
+              "name": "id_374",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "411": {
+              "name": "id_375",
+              "count": 5,
+              "correct": 5,
+              "accuracy": 1.0
+            },
+            "412": {
+              "name": "id_376",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "413": {
+              "name": "id_377",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "414": {
+              "name": "id_378",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "415": {
+              "name": "id_379",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "416": {
+              "name": "id_380",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "417": {
+              "name": "id_381",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "418": {
+              "name": "id_382",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "419": {
+              "name": "id_383",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "420": {
+              "name": "id_384",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "421": {
+              "name": "id_385",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "422": {
+              "name": "id_386",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "423": {
+              "name": "id_387",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "424": {
+              "name": "id_388",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "425": {
+              "name": "id_389",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "426": {
+              "name": "id_390",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "427": {
+              "name": "id_391",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "428": {
+              "name": "id_392",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "429": {
+              "name": "id_393",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "430": {
+              "name": "id_394",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "431": {
+              "name": "id_395",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "432": {
+              "name": "id_396",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "433": {
+              "name": "id_397",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "434": {
+              "name": "id_398",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "435": {
+              "name": "id_399",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "436": {
+              "name": "id_400",
+              "count": 10,
+              "correct": 10,
+              "accuracy": 1.0
+            },
+            "437": {
+              "name": "id_401",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "438": {
+              "name": "id_402",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "439": {
+              "name": "id_403",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "440": {
+              "name": "id_404",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "441": {
+              "name": "id_405",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "442": {
+              "name": "id_406",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "443": {
+              "name": "id_407",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "444": {
+              "name": "id_408",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "445": {
+              "name": "id_409",
+              "count": 6,
+              "correct": 6,
+              "accuracy": 1.0
+            },
+            "446": {
+              "name": "id_410",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "447": {
+              "name": "id_411",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "448": {
+              "name": "id_412",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "449": {
+              "name": "id_413",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "450": {
+              "name": "id_414",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "451": {
+              "name": "id_415",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "452": {
+              "name": "id_416",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "453": {
+              "name": "id_417",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "454": {
+              "name": "id_418",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "455": {
+              "name": "id_419",
+              "count": 10,
+              "correct": 10,
+              "accuracy": 1.0
+            },
+            "456": {
+              "name": "id_420",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "457": {
+              "name": "id_421",
+              "count": 23,
+              "correct": 23,
+              "accuracy": 1.0
+            },
+            "458": {
+              "name": "id_422",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "459": {
+              "name": "id_423",
+              "count": 25,
+              "correct": 25,
+              "accuracy": 1.0
+            },
+            "460": {
+              "name": "id_424",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "461": {
+              "name": "id_425",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "462": {
+              "name": "id_426",
+              "count": 10,
+              "correct": 10,
+              "accuracy": 1.0
+            },
+            "463": {
+              "name": "id_427",
+              "count": 22,
+              "correct": 22,
+              "accuracy": 1.0
+            },
+            "464": {
+              "name": "id_428",
+              "count": 25,
+              "correct": 25,
+              "accuracy": 1.0
+            },
+            "465": {
+              "name": "id_429",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "466": {
+              "name": "id_430",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "467": {
+              "name": "id_431",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "468": {
+              "name": "id_432",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "469": {
+              "name": "id_433",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "470": {
+              "name": "id_434",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "471": {
+              "name": "id_435",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "472": {
+              "name": "id_436",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "473": {
+              "name": "id_437",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "474": {
+              "name": "id_438",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "475": {
+              "name": "id_439",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "476": {
+              "name": "id_440",
+              "count": 10,
+              "correct": 10,
+              "accuracy": 1.0
+            },
+            "477": {
+              "name": "id_441",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "478": {
+              "name": "id_442",
+              "count": 22,
+              "correct": 22,
+              "accuracy": 1.0
+            },
+            "479": {
+              "name": "id_443",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "480": {
+              "name": "id_444",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "481": {
+              "name": "id_445",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "482": {
+              "name": "id_446",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "483": {
+              "name": "id_447",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "484": {
+              "name": "id_448",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "485": {
+              "name": "id_449",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "486": {
+              "name": "id_450",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "487": {
+              "name": "id_451",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "488": {
+              "name": "id_452",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "489": {
+              "name": "id_453",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "490": {
+              "name": "id_454",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "491": {
+              "name": "id_455",
+              "count": 10,
+              "correct": 10,
+              "accuracy": 1.0
+            },
+            "492": {
+              "name": "id_456",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "493": {
+              "name": "id_457",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "494": {
+              "name": "id_458",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "495": {
+              "name": "id_459",
+              "count": 9,
+              "correct": 9,
+              "accuracy": 1.0
+            },
+            "496": {
+              "name": "id_460",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "497": {
+              "name": "id_461",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "498": {
+              "name": "id_462",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "499": {
+              "name": "id_463",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "500": {
+              "name": "id_464",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "501": {
+              "name": "id_465",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "502": {
+              "name": "id_466",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "503": {
+              "name": "id_467",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "504": {
+              "name": "id_468",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "505": {
+              "name": "id_469",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "506": {
+              "name": "id_470",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "507": {
+              "name": "id_471",
+              "count": 29,
+              "correct": 29,
+              "accuracy": 1.0
+            },
+            "508": {
+              "name": "id_472",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "509": {
+              "name": "id_473",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "510": {
+              "name": "id_474",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "511": {
+              "name": "id_475",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "512": {
+              "name": "id_476",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "513": {
+              "name": "id_477",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "514": {
+              "name": "id_478",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "515": {
+              "name": "id_479",
+              "count": 26,
+              "correct": 26,
+              "accuracy": 1.0
+            },
+            "516": {
+              "name": "id_480",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "517": {
+              "name": "id_481",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "518": {
+              "name": "id_482",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "519": {
+              "name": "id_483",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "520": {
+              "name": "id_484",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "521": {
+              "name": "id_485",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "522": {
+              "name": "id_486",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "523": {
+              "name": "id_487",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "524": {
+              "name": "id_488",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "525": {
+              "name": "id_489",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "526": {
+              "name": "id_490",
+              "count": 7,
+              "correct": 7,
+              "accuracy": 1.0
+            },
+            "527": {
+              "name": "id_491",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "528": {
+              "name": "id_492",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "529": {
+              "name": "id_493",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "530": {
+              "name": "id_494",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "531": {
+              "name": "id_495",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "532": {
+              "name": "id_496",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "533": {
+              "name": "id_497",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "534": {
+              "name": "id_498",
+              "count": 8,
+              "correct": 8,
+              "accuracy": 1.0
+            },
+            "535": {
+              "name": "id_499",
+              "count": 28,
+              "correct": 28,
+              "accuracy": 1.0
+            },
+            "536": {
+              "name": "id_500",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "537": {
+              "name": "id_501",
+              "count": 10,
+              "correct": 10,
+              "accuracy": 1.0
+            },
+            "538": {
+              "name": "id_502",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "539": {
+              "name": "id_503",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "540": {
+              "name": "id_504",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "541": {
+              "name": "id_505",
+              "count": 24,
+              "correct": 24,
+              "accuracy": 1.0
+            },
+            "542": {
+              "name": "id_506",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "543": {
+              "name": "id_507",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "544": {
+              "name": "id_508",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "545": {
+              "name": "id_509",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "546": {
+              "name": "id_510",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "547": {
+              "name": "id_511",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            }
+          }
+        },
+        "test": {
+          "loss": 0.23789620399475098,
+          "example_loss": 0.23789621889591217,
+          "token_accuracy": 1.0,
+          "sequence_accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "transition_accuracy": 1.0,
+          "target_count": 4096,
+          "correct": 4096,
+          "example_count": 512,
+          "exact": 512,
+          "transition_count": 4083,
+          "classes": {
+            "292": {
+              "name": "id_256",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "293": {
+              "name": "id_257",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "294": {
+              "name": "id_258",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "295": {
+              "name": "id_259",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "296": {
+              "name": "id_260",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "297": {
+              "name": "id_261",
+              "count": 26,
+              "correct": 26,
+              "accuracy": 1.0
+            },
+            "298": {
+              "name": "id_262",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "299": {
+              "name": "id_263",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "300": {
+              "name": "id_264",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "301": {
+              "name": "id_265",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "302": {
+              "name": "id_266",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "303": {
+              "name": "id_267",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "304": {
+              "name": "id_268",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "305": {
+              "name": "id_269",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "306": {
+              "name": "id_270",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "307": {
+              "name": "id_271",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "308": {
+              "name": "id_272",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "309": {
+              "name": "id_273",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "310": {
+              "name": "id_274",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "311": {
+              "name": "id_275",
+              "count": 9,
+              "correct": 9,
+              "accuracy": 1.0
+            },
+            "312": {
+              "name": "id_276",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "313": {
+              "name": "id_277",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "314": {
+              "name": "id_278",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "315": {
+              "name": "id_279",
+              "count": 22,
+              "correct": 22,
+              "accuracy": 1.0
+            },
+            "316": {
+              "name": "id_280",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "317": {
+              "name": "id_281",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "318": {
+              "name": "id_282",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "319": {
+              "name": "id_283",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "320": {
+              "name": "id_284",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "321": {
+              "name": "id_285",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "322": {
+              "name": "id_286",
+              "count": 8,
+              "correct": 8,
+              "accuracy": 1.0
+            },
+            "323": {
+              "name": "id_287",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "324": {
+              "name": "id_288",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "325": {
+              "name": "id_289",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "326": {
+              "name": "id_290",
+              "count": 9,
+              "correct": 9,
+              "accuracy": 1.0
+            },
+            "327": {
+              "name": "id_291",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "328": {
+              "name": "id_292",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "329": {
+              "name": "id_293",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "330": {
+              "name": "id_294",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "331": {
+              "name": "id_295",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "332": {
+              "name": "id_296",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "333": {
+              "name": "id_297",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "334": {
+              "name": "id_298",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "335": {
+              "name": "id_299",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "336": {
+              "name": "id_300",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "337": {
+              "name": "id_301",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "338": {
+              "name": "id_302",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "339": {
+              "name": "id_303",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "340": {
+              "name": "id_304",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "341": {
+              "name": "id_305",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "342": {
+              "name": "id_306",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "343": {
+              "name": "id_307",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "344": {
+              "name": "id_308",
+              "count": 9,
+              "correct": 9,
+              "accuracy": 1.0
+            },
+            "345": {
+              "name": "id_309",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "346": {
+              "name": "id_310",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "347": {
+              "name": "id_311",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "348": {
+              "name": "id_312",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "349": {
+              "name": "id_313",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "350": {
+              "name": "id_314",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "351": {
+              "name": "id_315",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "352": {
+              "name": "id_316",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "353": {
+              "name": "id_317",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "354": {
+              "name": "id_318",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "355": {
+              "name": "id_319",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "356": {
+              "name": "id_320",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "357": {
+              "name": "id_321",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "358": {
+              "name": "id_322",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "359": {
+              "name": "id_323",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "360": {
+              "name": "id_324",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "361": {
+              "name": "id_325",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "362": {
+              "name": "id_326",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "363": {
+              "name": "id_327",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "364": {
+              "name": "id_328",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "365": {
+              "name": "id_329",
+              "count": 25,
+              "correct": 25,
+              "accuracy": 1.0
+            },
+            "366": {
+              "name": "id_330",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "367": {
+              "name": "id_331",
+              "count": 10,
+              "correct": 10,
+              "accuracy": 1.0
+            },
+            "368": {
+              "name": "id_332",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "369": {
+              "name": "id_333",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "370": {
+              "name": "id_334",
+              "count": 9,
+              "correct": 9,
+              "accuracy": 1.0
+            },
+            "371": {
+              "name": "id_335",
+              "count": 22,
+              "correct": 22,
+              "accuracy": 1.0
+            },
+            "372": {
+              "name": "id_336",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "373": {
+              "name": "id_337",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "374": {
+              "name": "id_338",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "375": {
+              "name": "id_339",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "376": {
+              "name": "id_340",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "377": {
+              "name": "id_341",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "378": {
+              "name": "id_342",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "379": {
+              "name": "id_343",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "380": {
+              "name": "id_344",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "381": {
+              "name": "id_345",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "382": {
+              "name": "id_346",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "383": {
+              "name": "id_347",
+              "count": 7,
+              "correct": 7,
+              "accuracy": 1.0
+            },
+            "384": {
+              "name": "id_348",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "385": {
+              "name": "id_349",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "386": {
+              "name": "id_350",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "387": {
+              "name": "id_351",
+              "count": 8,
+              "correct": 8,
+              "accuracy": 1.0
+            },
+            "388": {
+              "name": "id_352",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "389": {
+              "name": "id_353",
+              "count": 22,
+              "correct": 22,
+              "accuracy": 1.0
+            },
+            "390": {
+              "name": "id_354",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "391": {
+              "name": "id_355",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "392": {
+              "name": "id_356",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "393": {
+              "name": "id_357",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "394": {
+              "name": "id_358",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "395": {
+              "name": "id_359",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "396": {
+              "name": "id_360",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "397": {
+              "name": "id_361",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "398": {
+              "name": "id_362",
+              "count": 10,
+              "correct": 10,
+              "accuracy": 1.0
+            },
+            "399": {
+              "name": "id_363",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "400": {
+              "name": "id_364",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "401": {
+              "name": "id_365",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "402": {
+              "name": "id_366",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "403": {
+              "name": "id_367",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "404": {
+              "name": "id_368",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "405": {
+              "name": "id_369",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "406": {
+              "name": "id_370",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "407": {
+              "name": "id_371",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "408": {
+              "name": "id_372",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "409": {
+              "name": "id_373",
+              "count": 10,
+              "correct": 10,
+              "accuracy": 1.0
+            },
+            "410": {
+              "name": "id_374",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "411": {
+              "name": "id_375",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "412": {
+              "name": "id_376",
+              "count": 25,
+              "correct": 25,
+              "accuracy": 1.0
+            },
+            "413": {
+              "name": "id_377",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "414": {
+              "name": "id_378",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "415": {
+              "name": "id_379",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "416": {
+              "name": "id_380",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "417": {
+              "name": "id_381",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "418": {
+              "name": "id_382",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "419": {
+              "name": "id_383",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "420": {
+              "name": "id_384",
+              "count": 9,
+              "correct": 9,
+              "accuracy": 1.0
+            },
+            "421": {
+              "name": "id_385",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "422": {
+              "name": "id_386",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "423": {
+              "name": "id_387",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "424": {
+              "name": "id_388",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "425": {
+              "name": "id_389",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "426": {
+              "name": "id_390",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "427": {
+              "name": "id_391",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "428": {
+              "name": "id_392",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "429": {
+              "name": "id_393",
+              "count": 10,
+              "correct": 10,
+              "accuracy": 1.0
+            },
+            "430": {
+              "name": "id_394",
+              "count": 24,
+              "correct": 24,
+              "accuracy": 1.0
+            },
+            "431": {
+              "name": "id_395",
+              "count": 25,
+              "correct": 25,
+              "accuracy": 1.0
+            },
+            "432": {
+              "name": "id_396",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "433": {
+              "name": "id_397",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "434": {
+              "name": "id_398",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "435": {
+              "name": "id_399",
+              "count": 9,
+              "correct": 9,
+              "accuracy": 1.0
+            },
+            "436": {
+              "name": "id_400",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "437": {
+              "name": "id_401",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "438": {
+              "name": "id_402",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "439": {
+              "name": "id_403",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "440": {
+              "name": "id_404",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "441": {
+              "name": "id_405",
+              "count": 24,
+              "correct": 24,
+              "accuracy": 1.0
+            },
+            "442": {
+              "name": "id_406",
+              "count": 22,
+              "correct": 22,
+              "accuracy": 1.0
+            },
+            "443": {
+              "name": "id_407",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "444": {
+              "name": "id_408",
+              "count": 8,
+              "correct": 8,
+              "accuracy": 1.0
+            },
+            "445": {
+              "name": "id_409",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "446": {
+              "name": "id_410",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "447": {
+              "name": "id_411",
+              "count": 29,
+              "correct": 29,
+              "accuracy": 1.0
+            },
+            "448": {
+              "name": "id_412",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "449": {
+              "name": "id_413",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "450": {
+              "name": "id_414",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "451": {
+              "name": "id_415",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "452": {
+              "name": "id_416",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "453": {
+              "name": "id_417",
+              "count": 10,
+              "correct": 10,
+              "accuracy": 1.0
+            },
+            "454": {
+              "name": "id_418",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "455": {
+              "name": "id_419",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "456": {
+              "name": "id_420",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "457": {
+              "name": "id_421",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "458": {
+              "name": "id_422",
+              "count": 23,
+              "correct": 23,
+              "accuracy": 1.0
+            },
+            "459": {
+              "name": "id_423",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "460": {
+              "name": "id_424",
+              "count": 23,
+              "correct": 23,
+              "accuracy": 1.0
+            },
+            "461": {
+              "name": "id_425",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "462": {
+              "name": "id_426",
+              "count": 22,
+              "correct": 22,
+              "accuracy": 1.0
+            },
+            "463": {
+              "name": "id_427",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "464": {
+              "name": "id_428",
+              "count": 24,
+              "correct": 24,
+              "accuracy": 1.0
+            },
+            "465": {
+              "name": "id_429",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "466": {
+              "name": "id_430",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "467": {
+              "name": "id_431",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "468": {
+              "name": "id_432",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "469": {
+              "name": "id_433",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "470": {
+              "name": "id_434",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "471": {
+              "name": "id_435",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "472": {
+              "name": "id_436",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "473": {
+              "name": "id_437",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "474": {
+              "name": "id_438",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "475": {
+              "name": "id_439",
+              "count": 7,
+              "correct": 7,
+              "accuracy": 1.0
+            },
+            "476": {
+              "name": "id_440",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "477": {
+              "name": "id_441",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "478": {
+              "name": "id_442",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "479": {
+              "name": "id_443",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "480": {
+              "name": "id_444",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "481": {
+              "name": "id_445",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "482": {
+              "name": "id_446",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "483": {
+              "name": "id_447",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "484": {
+              "name": "id_448",
+              "count": 22,
+              "correct": 22,
+              "accuracy": 1.0
+            },
+            "485": {
+              "name": "id_449",
+              "count": 20,
+              "correct": 20,
+              "accuracy": 1.0
+            },
+            "486": {
+              "name": "id_450",
+              "count": 24,
+              "correct": 24,
+              "accuracy": 1.0
+            },
+            "487": {
+              "name": "id_451",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "488": {
+              "name": "id_452",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "489": {
+              "name": "id_453",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "490": {
+              "name": "id_454",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "491": {
+              "name": "id_455",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "492": {
+              "name": "id_456",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "493": {
+              "name": "id_457",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "494": {
+              "name": "id_458",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "495": {
+              "name": "id_459",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "496": {
+              "name": "id_460",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "497": {
+              "name": "id_461",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "498": {
+              "name": "id_462",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "499": {
+              "name": "id_463",
+              "count": 9,
+              "correct": 9,
+              "accuracy": 1.0
+            },
+            "500": {
+              "name": "id_464",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "501": {
+              "name": "id_465",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "502": {
+              "name": "id_466",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "503": {
+              "name": "id_467",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "504": {
+              "name": "id_468",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "505": {
+              "name": "id_469",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "506": {
+              "name": "id_470",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "507": {
+              "name": "id_471",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "508": {
+              "name": "id_472",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "509": {
+              "name": "id_473",
+              "count": 17,
+              "correct": 17,
+              "accuracy": 1.0
+            },
+            "510": {
+              "name": "id_474",
+              "count": 22,
+              "correct": 22,
+              "accuracy": 1.0
+            },
+            "511": {
+              "name": "id_475",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "512": {
+              "name": "id_476",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "513": {
+              "name": "id_477",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "514": {
+              "name": "id_478",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "515": {
+              "name": "id_479",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "516": {
+              "name": "id_480",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "517": {
+              "name": "id_481",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "518": {
+              "name": "id_482",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "519": {
+              "name": "id_483",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "520": {
+              "name": "id_484",
+              "count": 23,
+              "correct": 23,
+              "accuracy": 1.0
+            },
+            "521": {
+              "name": "id_485",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "522": {
+              "name": "id_486",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "523": {
+              "name": "id_487",
+              "count": 11,
+              "correct": 11,
+              "accuracy": 1.0
+            },
+            "524": {
+              "name": "id_488",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "525": {
+              "name": "id_489",
+              "count": 16,
+              "correct": 16,
+              "accuracy": 1.0
+            },
+            "526": {
+              "name": "id_490",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "527": {
+              "name": "id_491",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "528": {
+              "name": "id_492",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "529": {
+              "name": "id_493",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "530": {
+              "name": "id_494",
+              "count": 22,
+              "correct": 22,
+              "accuracy": 1.0
+            },
+            "531": {
+              "name": "id_495",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "532": {
+              "name": "id_496",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "533": {
+              "name": "id_497",
+              "count": 21,
+              "correct": 21,
+              "accuracy": 1.0
+            },
+            "534": {
+              "name": "id_498",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "535": {
+              "name": "id_499",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "536": {
+              "name": "id_500",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "537": {
+              "name": "id_501",
+              "count": 15,
+              "correct": 15,
+              "accuracy": 1.0
+            },
+            "538": {
+              "name": "id_502",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "539": {
+              "name": "id_503",
+              "count": 28,
+              "correct": 28,
+              "accuracy": 1.0
+            },
+            "540": {
+              "name": "id_504",
+              "count": 12,
+              "correct": 12,
+              "accuracy": 1.0
+            },
+            "541": {
+              "name": "id_505",
+              "count": 19,
+              "correct": 19,
+              "accuracy": 1.0
+            },
+            "542": {
+              "name": "id_506",
+              "count": 18,
+              "correct": 18,
+              "accuracy": 1.0
+            },
+            "543": {
+              "name": "id_507",
+              "count": 22,
+              "correct": 22,
+              "accuracy": 1.0
+            },
+            "544": {
+              "name": "id_508",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "545": {
+              "name": "id_509",
+              "count": 14,
+              "correct": 14,
+              "accuracy": 1.0
+            },
+            "546": {
+              "name": "id_510",
+              "count": 13,
+              "correct": 13,
+              "accuracy": 1.0
+            },
+            "547": {
+              "name": "id_511",
+              "count": 8,
+              "correct": 8,
+              "accuracy": 1.0
+            }
+          }
+        }
+      },
+      "split_fingerprints": {
+        "train": "6d2333ba9f121b0599b4669f1c9772002f5777ef30d997d8a3ff70d5238ecdf5",
+        "validation": "db69fa145e467a08687d05889a85e615d4013d80e5ad35409a43ced3285418e9",
+        "test": "14ef1399a95ce24abcf5a6b554f31e4671464c9f0bba9f6c8ef604d5f18ecdbb"
+      }
     }
   ]
 }

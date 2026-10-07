@@ -2,8 +2,8 @@
 
 Does the compact causal stack proved in Lean learn all six Basis recipes
 under ordinary AdamW within the original GPTMini's measured training FLOPs?
-This is stage 3 of [the active cycle](../../plan.md). The first seed-0
-softmax references have finished; matched candidate training is beginning.
+This is stages 3 and 4 of [the active cycle](../../plan.md). All eighteen
+softmax references have passed; matched convex comparisons and repairs continue.
 
 | Arm | Embedding/attention | Training objective | Budget |
 | --- | --- | --- | --- |
@@ -11,6 +11,7 @@ softmax references have finished; matched candidate training is beginning.
 | `softmax-hard-*-seed{0,1,2}` | Original width-128, six-layer GPTMini | Existing answer cross entropy | Unchanged hard Basis recipe; E4 selected at length 128 |
 | `tensor-*-*-seed*` | Same NTC module interfaces; 52 free fields per token, two shared structured heads, learned absolute/relative positions | Actual complete branch/path/route/channel NLL, labels from raw training data | The corresponding measured first-success reference FLOPs; whole updates, with early success stopping disabled |
 | `tensor-gain8-*-*-seed*` | The same true stack with all free potentials in fixed gain-eight coordinates | The actual gained complete NLL; same data targets and jointly convex free domain | The same pinned per-seed reference ceiling; original actual-potential initialization scale and unchanged AdamW/rate/schedule |
+| `tensor-gain32-hard-recall-seed*` | The same stack in fixed gain-32 coordinates; fresh initialization | The same genuine complete NLL and unrestricted jointly convex domain | The same three hard-recall reference ceilings; separately charged repair attempts, with previous arms preserved |
 
 All references use the existing 20,000/512/512 data splits from data seed
 1, model seeds 0/1/2, original batch/rate/warmup/AdamW settings, float32 and
@@ -131,8 +132,8 @@ ceiling is the successful history row's cumulative training charge.
 | Hard parity, seed 1 | 7,200 | 16,243,227,748,800 | 0.990234 | 0.974609 | — |
 | Hard parity, seed 2 | 8,800 | 19,852,833,915,200 | 0.996094 | 0.990234 | — |
 The complete original attempts and pinned settings are preserved in
-[reference_budgets.json](reference_budgets.json). Seventeen of eighteen
-original references passed. Hard depth seed 0 reached a best length-128 validation
+[reference_budgets.json](reference_budgets.json). All eighteen
+original references passed. Hard depth seed 0 first reached a best length-128 validation
 accuracy of 98.05% in 10,000 updates; its original result/checkpoint are
 archived in the run directory and it continues to 20,000 updates at
 unchanged AdamW/rate/batch/schedule. That continuation passes at 11,400
@@ -152,6 +153,8 @@ Initial controlled candidate results:
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | tensor-easy-depth-seed0 | 659 | 148,793,847,818 | 184,314,982 | 0.185547 | 0.197266 | Only reject; complete NLL still falling |
 | tensor-easy-parity-seed0 | 32,390 | 1,609,283,865,140 | 28,044,860 | 1.000000 | 1.000000 | Full parity/EOS generation passes; first validation pass at update 7,000 |
+| tensor-hard-parity-seed0 | 11,128 | 9,474,985,814,904 | 230,371,896 | 1.000000 | 1.000000 | First validation pass at update 7,000 |
+| tensor-easy-recall-seed0 | 5,199 | 4,988,858,443,969 | 232,081,531 | 1.000000 | 1.000000 | First validation pass at update 1,900 |
 
 The depth checkpoint has the correct preferred transition on every
 observed A/B/neutral row, but individual correct-transition probabilities
@@ -176,8 +179,50 @@ potentials at `std=.02`; no trained witness initializes an experiment.
 Gain arithmetic is counted. Independent tests compare actual forward,
 both losses and all gradients with an explicitly scaled original model,
 check identical initial potentials and the unrestricted Jensen inequality.
-Fresh matched learning is the remaining empirical check.
+Fresh matched learning proceeds at the pinned per-seed ceilings.
 The complete gain-eight port passes 218 Python tests. All eight full-shape
 counting probes, including both recall batch sizes, have complete operator
 coverage. The added actual gain work is included in the table and every
 candidate's whole-update ceiling.
+
+Twelve gain-eight arms have completed their full ceilings at the
+2026-10-07 15:11 UTC snapshot. All twelve have 100% best validation and test
+sequence accuracy; completed depth arms also have 100% length-128 test
+accuracy. Detailed source, actual charges, first-success observations and
+unchanged split fingerprints are pinned in
+[gain_comparison.json](gain_comparison.json). Running arms are excluded
+from that completed comparison.
+
+| Completed gain-eight arms | First successful update | First-success operations | Full-ceiling updates, seeds in order |
+| --- | ---: | ---: | --- |
+| Easy depth, seeds 0/1/2 | 600 | 135,475,524,680 | 659 / 659 / 659 |
+| Easy parity, seeds 0/1/2 | 1,000 | 49,692,659,720 | 32,385 / 19,747 / 16,587 |
+| Easy recall, seeds 0/2 | 300 | 288,366,336,124 | 5,198 / 5,672 |
+| Hard depth, seed 1 | 800 | 2,528,658,313,080 | 3,551 |
+| Hard parity, seeds 0/1/2 | 1,000 | 851,463,887,720 | 11,128 / 19,076 / 23,316 |
+
+Hard recall is the remaining observed accuracy bottleneck. Read-only
+diagnosis of every validation row at updates 3450/3500/3500 gives
+76.76/76.56/76.95% sequence accuracy and 98.19/98.07/98.10% maximal-route
+accuracy. All 74/79/78 misselected routes match a different key; none
+selects a nonadjacent value or an outdated matching write. Effective
+table-position biases span about seven logits. Removing only the value
+partition from routing without retraining raises sequence accuracy to
+77.73/77.93/78.52%, so this alone does not solve the bottleneck.
+
+The separately charged gain-32 hard-recall repair retains the same
+verified class, genuine complete loss, ordinary AdamW and actual initial
+potentials. It tests whether stronger learned matching separation can
+overcome the observed positional preference. Previous full-ceiling runs
+continue and their costs remain recorded; no post-training scaling is
+reported as successful fresh learning.
+
+Lean's arbitrary-weight parity certificate is committed in `9b86323`.
+Nine required transition rows, fifteen reachable value rows, initial and
+learned branch confidence derive correctness for every valid raw parity
+input when `deltaHead + deltaInitial + 19*deltaTransition + 5*deltaValue`
+is below `1/11`. It covers the actual full tensor stack and both generated
+answer/EOS calls. Numerical float64 row checks of all six completed
+gain-eight parity checkpoints give budgets below `2.17e-7`; every needed
+logit gap exceeds 20. These numerical estimates support the sufficient
+condition; exact learned-weight and IEEE certification are separate checks.

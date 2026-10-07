@@ -65,3 +65,10 @@ for (mode, task, seed), ceiling in REFERENCE_FLOPS.items():
     gained = TensorGain(width=model.width, depth=model.depth, context=model.context, gain=8.0)
     experiments[f"tensor-gain8-{mode}-{task}-seed{seed}"] = swap(
         experiments[f"tensor-{mode}-{task}-seed{seed}"], "model", gained)
+
+# The nine-row parity certificate and TensorGain cover every real fixed
+# gain. Hard recall's learned matching/position tradeoff motivates this
+# separately charged fresh comparison, with all prior arms retained.
+for seed in (0, 1, 2):
+    experiments[f"tensor-gain32-hard-recall-seed{seed}"] = swap(
+        experiments[f"tensor-gain8-hard-recall-seed{seed}"], "model.gain", 32.0)

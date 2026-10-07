@@ -1,6 +1,6 @@
 # Basis correctness and convex architecture research cycle
 
-Started: 2026-10-06. Status: active, stage 3.
+Started: 2026-10-06. Status: active, stages 3 and 4.
 
 ## Objective and constraints
 
@@ -861,8 +861,17 @@ validation, test and length-128 accuracy. Each first passes at update 600/
 135,475,524,680 operations, compared with softmax's update 200/
 148,978,162,800. Each spends 148,797,158,634 operations through update 659,
 leaving 181,004,166 operations insufficient for another whole update.
-The other repaired arms are running or queued; early validation success
-is not recorded as a completed full-ceiling comparison.
+At the 2026-10-07 15:11 UTC snapshot, twelve repaired arms finish the full
+ceiling with 100% validation/test: three easy-depth seeds, three easy-parity
+seeds, easy recall seeds 0/2, hard depth seed 1 and three hard-parity seeds. Completed depth arms
+also give 100% length-128 test accuracy. Parity first passes at update
+1000, costing 49,692,659,720 operations in easy mode and 851,463,887,720
+in hard mode. Hard depth seed 1 first passes at update 800/
+2,528,658,313,080 operations. Actual source, counts, remainders and split
+identity are recorded in experiments/basis_tensor/gain_comparison.json.
+The other repaired arms continue; early success is not recorded as a
+completed full-ceiling comparison. Original easy recall seed 0 also
+finishes its full ceiling at 100%, first passing at update 1900.
 
 The compact operator is implemented with all literal shared residual
 layers and fixed-zero original FFNs. Actual forward receives only tokens;
@@ -998,6 +1007,12 @@ so inspect learned matching separation versus positional preference. The
 next controlled coordinate repair increases fixed gain while retaining
 the verified class, ordinary AdamW, fresh initialization and exact existing
 FLOP ceilings. Preserve all current gain-eight full-ceiling continuations.
+Three fresh gain-32 hard-recall arms are specified through the existing
+TensorGain word. The gain transfer is already proved for every fixed real
+gain; this changes no lab implementation or optimizer. Their checked
+descriptions retain the same per-seed ceilings and actual initialization
+scale. All 57 experiment descriptions pass and the complete 218-test Python
+suite passes in 1164.486 seconds before committing/launching the repair.
 
 When a candidate performs worse, preserve its run and identify a concrete
 semantic or optimization failure. Reproduce it in a small control and
