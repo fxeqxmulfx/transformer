@@ -385,6 +385,12 @@ This attenuation lies in [0,1], so all nonnegative feature arrays give
 a nonnegative actual probe and head norm below their true amplitude
 cap. Final residual readout can retain a positive current occurrence;
 earlier-occurrence floors still require its semantic zero-self case.
+DepthQKV now realizes both uniform value heads in a single ordinary
+fused matrix at each original width. All actual query/key slices are
+proved zero, the two V slices read their own residual coordinates,
+and the other two original heads have zero values. These identities
+hold for arbitrary real residuals with the true chunk/view indices;
+output projection, RMS amplitude bounds and state recurrence remain.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -506,3 +512,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Simultaneous original depth FFN matrices committed in 830e7fc. Proved neutral-preserving original-position alternating occurrence recurrence, opposite-current exclusion and exact independent E_2/E_4 integer answer criteria. | Realize these data predicates by actual raw embedding/head matrices and quantitative hidden-state induction, then full depth SolvesTask. |
 | 2026-10-07 | 1 | Ordered depth recurrence committed in 0f9d21c. Defined genuine token-local tied depth embeddings in the original 64x2 and 128x6 configurations; proved working-axis separation, actual raw constant, empty later channels and input norm bounds [1,2]. | Realize fused uniform heads, propagate actual normalized amplitudes and complete depth readout/SolvesTask; no convex candidate or FLOP comparison has started. |
 | 2026-10-07 | 1 | Actual original-width depth embeddings committed in 949d2c1. Proved exact original uniform-head/XSA formula for arbitrary current amplitudes, attenuation in [0,1], nonnegative genuine probes and the undoubled value cap. | Couple simultaneous fused heads to the real residual stream, propagate quantitative feature amplitudes and complete depth SolvesTask; convex architecture and measured FLOPs remain conditional. |
+| 2026-10-07 | 1 | Full original depth-head attenuation committed in f479eb7. Realized simultaneous ordinary fused QKV at both original widths; proved all actual Q/K slices zero, both active V scalar reads and unused-head zeros using genuine chunk/view indices. | Couple W_o and genuine RMS scaling, prove quantitative hidden-state recurrence and full depth SolvesTask; convex search and equal-FLOP training remain next stages. |

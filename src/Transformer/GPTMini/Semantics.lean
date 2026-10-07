@@ -41,6 +41,7 @@ import Transformer.GPTMini.Semantics.DepthUniformProjection
 import Transformer.GPTMini.Semantics.DepthMatrices
 import Transformer.GPTMini.Semantics.DepthRecurrence
 import Transformer.GPTMini.Semantics.DepthEmbedding
+import Transformer.GPTMini.Semantics.DepthQKV
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -49,11 +50,10 @@ Source: the archived GPTMini at f11b6e2 and Basis raw-token semantics at
 cbafbe9. These results verify original operators, rather than replacing
 the model by the task oracle or merely quantifying over possible weights.
 
-Finite-softmax score gaps bound retrieval error, including RoPE, QKNorm,
-XSA and approximate key copies. Faithful prefix features give exact
-ordered-subsequence presence tests and distinguish the same-bag depth
-pair. Raw MQAR's semantic target is independently proved to be its last
-adjacent binding in Transformer.Basis.RecallAnswer.
+Finite-softmax score gaps bound retrieval error, retaining RoPE, QKNorm,
+XSA and key-copy errors. Faithful ordered features distinguish same-bag
+depth words. Raw MQAR's semantic target is independently proved to be its
+last adjacent binding in Transformer.Basis.RecallAnswer.
 
 Concrete original parameters compute raw ONE counts and phase through
 the actual fused QKV and residual stack. A proved variable-length
@@ -73,8 +73,8 @@ step and raw-type exclusion. Six original FFN units realize both gates
 simultaneously, preserve unwritten coordinates and retain the true RMS
 quadratic scale. The genuine uniform softmax/XSA head gives exact absence
 and floor L/128 at zero self-value; collinear XSA stays nonnegative and capped.
-The E_2/E_4 recurrence is proved; token-local raw embeddings now fit
-both original widths with norms in [1,2]. Full hidden/readout remain.
+The E_2/E_4 recurrence, token-local embeddings and genuine two-head
+fused QKV are proved at both widths. Full hidden/readout remain.
 
 An explicit original RoPE pair gives a positive predecessor score gap
 across all Basis context lengths. Actual finite softmax/XSA copies that
