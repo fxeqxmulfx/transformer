@@ -47,6 +47,7 @@ import Transformer.GPTMini.Semantics.DepthAttention
 import Transformer.GPTMini.Semantics.DepthAttentionBounds
 import Transformer.GPTMini.Semantics.DepthSignalPresence
 import Transformer.GPTMini.Semantics.DepthDetector
+import Transformer.GPTMini.Semantics.DepthLayout
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -79,8 +80,7 @@ simultaneously, preserve unwritten coordinates and retain true RMS square.
 The actual FFN gives binary amplitudes and norm at most 256 on matching-type gaps.
 The genuine uniform softmax/XSA head gives exact absence
 and floor L/128 at zero self-value. Actual two-head attention adds norm at most 32.
-Actual two-head attention, protected channels, RMS bounds and the E_2/E_4
-data recurrence and true separated presence are proved. Full hidden/readout remain.
+Actual fixed detector blocks preserve raw types and other stages; full hidden/readout remain.
 
 An explicit original RoPE pair gives a positive predecessor score gap
 across all Basis context lengths. Actual finite softmax/XSA copies that

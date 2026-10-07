@@ -429,6 +429,12 @@ matches: wrong types are suppressed using the cap alone. This removes
 an unjustified gap condition on XSA-attenuated wrong-type signals.
 A real active-A state satisfies all local hypotheses simultaneously.
 Full block recurrence must derive these conditions from raw inputs.
+DepthLayout now supplies fixed complete original detector BlockParams
+for three possible stages. The actual first source reads the opposite
+raw type; later sources are exactly the previous opposite-ending FFN
+targets. Both real residual updates preserve the constant, raw types
+and every other stage's channels. Signals and feature columns are
+distinct in the unchanged widths, with no input-dependent parameters.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -556,3 +562,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Complete original depth attention committed in e40f61f. Derived actual normalized coordinate bounds, r^3 feature floor on the explicit state domain, true signal range [0,16], whole attention norm at most 32 and first residual bound M+32; proved actual zero-self and visible absence. | Derive occurrence/FFN transitions and close the actual hidden-state induction, then tied readout and depth SolvesTask. |
 | 2026-10-07 | 1 | Genuine attention/residual bounds committed in d327192. Proved true occurrence signal at least 2*threshold, exact positivity iff visible separated feature, and zero-or-gap input for the ordinary FFN, with simultaneous concrete operator witnesses. | Connect these actual head signals to the true FFN transition, derive all representation conditions by ordered layer induction and complete depth SolvesTask. |
 | 2026-10-07 | 1 | Actual signal separation committed in d013328. Proved the complete original six-unit FFN record, exact zero-or-true-RMS-square output, arbitrary protected coordinates and contribution norm at most 256. Corrected the gap condition to matching raw types only; wrong types need the actual cap. | Assemble genuine detector blocks, derive all norm/feature conditions by ordered raw-state induction and complete depth tied readout/SolvesTask. |
+| 2026-10-07 | 1 | Complete depth FFN committed in 199706f. Assembled fixed actual detector BlockParams for all three stages, coupled each real source to the previous opposite-ending target, and proved preservation of raw axes and other stages through both residuals. | Derive actual pre-FFN representation and M+288 block bounds, propagate the ordered raw-word features, then complete depth readout/SolvesTask. |
