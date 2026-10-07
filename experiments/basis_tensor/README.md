@@ -10,6 +10,7 @@ softmax references have finished; matched candidate training is beginning.
 | `softmax-easy-*-seed{0,1,2}` | Original width-64, two-layer, four-head GPTMini; QKNorm/RoPE/XSA/softmax | Existing answer cross entropy | Unchanged substantial Basis recipe, stopped at 99% sequence accuracy |
 | `softmax-hard-*-seed{0,1,2}` | Original width-128, six-layer GPTMini | Existing answer cross entropy | Unchanged hard Basis recipe; E4 selected at length 128 |
 | `tensor-*-*-seed*` | Same NTC module interfaces; 52 free fields per token, two shared structured heads, learned absolute/relative positions | Actual complete branch/path/route/channel NLL, labels from raw training data | The corresponding measured first-success reference FLOPs; whole updates, with early success stopping disabled |
+| `tensor-gain8-*-*-seed*` | The same true stack with all free potentials in fixed gain-eight coordinates | The actual gained complete NLL; same data targets and jointly convex free domain | The same pinned per-seed reference ceiling; original actual-potential initialization scale and unchanged AdamW/rate/schedule |
 
 All references use the existing 20,000/512/512 data splits from data seed
 1, model seeds 0/1/2, original batch/rate/warmup/AdamW settings, float32 and
@@ -86,14 +87,14 @@ per-update reference operations, not a first-success budget or a training
 result. Both columns use the recipe's original batch, static training width
 (64 for depth/recall and 19 for parity), precision and AdamW.
 
-| Recipe | Batch | Softmax update, G operations | Tensor update, G operations |
-| --- | ---: | ---: | ---: |
-| Easy depth, 64 × 2 | 16 | 0.744891 | 0.225785 |
-| Easy recall, 64 × 2 | 64 | 3.028276 | 0.961052 |
-| Easy parity, 64 × 2 | 16 | 0.196258 | 0.049685 |
-| Hard depth, 128 × 6 | 16 | 8.017926 | 3.160813 |
-| Hard recall, 128 × 6 | 64 | 32.120729 | 12.701124 |
-| Hard parity, 128 × 6 | 16 | 2.256004 | 0.851454 |
+| Recipe | Batch | Softmax update, G operations | Tensor update, G operations | Gain-eight tensor update, G operations |
+| --- | ---: | ---: | ---: | ---: |
+| Easy depth, 64 × 2 | 16 | 0.744891 | 0.225785 | 0.225790 |
+| Easy recall, 64 × 2 | 64 | 3.028276 | 0.961052 | 0.961110 |
+| Easy parity, 64 × 2 | 16 | 0.196258 | 0.049685 | 0.049692 |
+| Hard depth, 128 × 6 | 16 | 8.017926 | 3.160813 | 3.160821 |
+| Hard recall, 128 × 6 | 64 | 32.120729 | 12.701124 | 12.701184 |
+| Hard parity, 128 × 6 | 16 | 2.256004 | 0.851454 | 0.851464 |
 
 All operator coverage checks passed on these shapes. The tensor training
 loss computes the complete likelihood at the actual final-head input; it
@@ -120,6 +121,7 @@ ceiling is the successful history row's cumulative training charge.
 | Easy parity, seed 1 | 5,000 | 981,287,750,000 | 0.990234 | 0.974609 | — |
 | Easy parity, seed 2 | 4,200 | 824,281,710,000 | 0.994141 | 0.980469 | — |
 | Hard depth, seed 0 | not passed at 10,000 | 80,179,263,340,000 | 0.980469 | 1.000000 | 0.978516 |
+| Hard depth, seed 0 continuation | 11,400 | 91,404,360,207,600 | 0.992188 | 1.000000 | 0.994141 |
 | Hard depth, seed 1 | 1,400 | 11,225,096,867,600 | 0.992188 | 1.000000 | 0.988281 |
 | Hard depth, seed 2 | 5,400 | 43,296,802,203,600 | 1.000000 | 1.000000 | 1.000000 |
 | Hard recall, seed 0 | 3,350 | 107,443,940,040,500 | 0.992188 | 0.986328 | — |
@@ -130,10 +132,12 @@ ceiling is the successful history row's cumulative training charge.
 | Hard parity, seed 2 | 8,800 | 19,852,833,915,200 | 0.996094 | 0.990234 | — |
 The complete original attempts and pinned settings are preserved in
 [reference_budgets.json](reference_budgets.json). Seventeen of eighteen
-references passed. Hard depth seed 0 reached a best length-128 validation
+original references passed. Hard depth seed 0 reached a best length-128 validation
 accuracy of 98.05% in 10,000 updates; its original result/checkpoint are
 archived in the run directory and it continues to 20,000 updates at
-unchanged AdamW/rate/batch/schedule. It defines no success ceiling yet.
+unchanged AdamW/rate/batch/schedule. That continuation passes at 11,400
+updates, supplying the eighteenth measured success ceiling. Both its
+original failure and successful continuation are kept in the JSON.
 
 Candidate arms are added only for a completed successful reference,
 retain its data, batch, learning rate,
@@ -159,3 +163,21 @@ This is a post-training diagnostic, not a fresh ordinary-AdamW result.
 Stage 4 will test a mathematically verified common linear gain during
 training from an independent initialization, including its arithmetic.
 Gauge directions and a guarantee of AdamW convergence remain open.
+
+The repaired block is `TensorGain`, from Lean's TensorGain at `c12df24`.
+For fixed nonzero gain its function class is unchanged: inverse coordinates
+recover every original model and explicit finite raw Basis solver. Its
+real complete sample/batch loss remains jointly convex in all free
+coordinates and is the negative log of the same actual inference joint.
+The implementation uses gain eight in embeddings, absolute/relative
+positions, chronology, initial/state/value/head potentials and complete
+NLL. Coordinates initialize at `std/gain`, preserving the original actual
+potentials at `std=.02`; no trained witness initializes an experiment.
+Gain arithmetic is counted. Independent tests compare actual forward,
+both losses and all gradients with an explicitly scaled original model,
+check identical initial potentials and the unrestricted Jensen inequality.
+Fresh matched learning is the remaining empirical check.
+The complete gain-eight port passes 218 Python tests. All eight full-shape
+counting probes, including both recall batch sizes, have complete operator
+coverage. The added actual gain work is included in the table and every
+candidate's whole-update ceiling.

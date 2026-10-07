@@ -1,6 +1,6 @@
 {
   "convention": "aten-reference-arithmetic-v1",
-  "captured_utc": "2026-10-07T12:40:00Z",
+  "captured_utc": "2026-10-07T12:56:00Z",
   "note": "Completed original recipe attempts; failed attempts do not define a first-success ceiling. Later continuations append records. The identical engine is stored once; per-attempt commit provenance remains separate.",
   "references": [
     {
@@ -3130,6 +3130,183 @@
         "checkpoint": {
           "type": "Checkpoint",
           "every": 50
+        },
+        "stopping": {
+          "type": "Solved"
+        }
+      },
+      "provenance": {
+        "commit": {
+          "head": "0700c490587fde37c0b46639628fb2f9ce87142b",
+          "lab_modified": false
+        },
+        "cuda": "12.6",
+        "python": "3.14.8"
+      }
+    },
+    {
+      "label": "softmax-hard-depth-seed0",
+      "attempt_updates": 20000,
+      "stop": {
+        "step": 11400,
+        "reason": "solved"
+      },
+      "first_success": {
+        "step": 11400,
+        "training_seconds": 1023.9234763299464,
+        "wall_seconds": 1262.0887718299637,
+        "examples_seen": 182400,
+        "value": 0.9921875
+      },
+      "training_charged_ops": 91404360207600,
+      "selection": "validation/length-128",
+      "best_step": 11400,
+      "best_sequence_accuracy": {
+        "validation/length-128": 0.9921875,
+        "test": 1.0,
+        "test/length-128": 0.994140625
+      },
+      "split_fingerprints": {
+        "train": "47c4bd51f0d410f759eaca11de8a400b4bdfa5ad8e33a4aa78647b1523d3adcf",
+        "validation": "424efffb187b08b05717b522b7b3e572b293fa9ce928cec78b8e8b9486aca2b7",
+        "test": "ad6fc146e5342e92541c43537bf1d8ec4b06b816332712f92c75e381b48f9e06",
+        "validation/length-128": "e397080d60f920d31d46f2466dc935133d986c40a90086a7a80599f9a133d6bb",
+        "test/length-128": "3db3004703f8489fb4d737ada32a2128d8af93f4d79d0191652a47f536940da2"
+      },
+      "description": {
+        "type": "Experiment",
+        "model": {
+          "type": "Transformer",
+          "width": 128,
+          "depth": 6,
+          "block": {
+            "type": "Block",
+            "attention": {
+              "type": "Attention",
+              "heads": 4,
+              "projections": {
+                "type": "FusedQKV",
+                "bias": false
+              },
+              "scores": {
+                "type": "QKNorm",
+                "eps": 1e-06,
+                "initial_scale": null
+              },
+              "weights": {
+                "type": "Softmax",
+                "fused": false
+              },
+              "exclusive": {
+                "type": "XSA",
+                "eps": 1e-06
+              },
+              "output_bias": false
+            },
+            "ffn": {
+              "type": "FFN",
+              "activation": {
+                "type": "ReLU2"
+              },
+              "multiplier": 4,
+              "bias": false
+            },
+            "norm": {
+              "type": "RMSNorm",
+              "eps": 1e-05,
+              "scale": false
+            },
+            "residual": {
+              "type": "PreNorm"
+            }
+          },
+          "positions": {
+            "type": "RoPE",
+            "theta": 10000.0,
+            "interleaved": false
+          },
+          "readout": {
+            "type": "Tied"
+          },
+          "final_norm": {
+            "type": "RMSNorm",
+            "eps": 1e-05,
+            "scale": false
+          },
+          "init": {
+            "type": "Normal",
+            "std": 0.02
+          },
+          "context": 128
+        },
+        "benchmark": {
+          "type": "Synthetic",
+          "task": {
+            "type": "AlternatingBlocks",
+            "blocks": 4,
+            "neutral_fraction": 0.25,
+            "max_neutral_gap": null
+          },
+          "length": 64,
+          "min_length": 32,
+          "train": 20000,
+          "validation": 512,
+          "test": 512,
+          "ood": [
+            128
+          ],
+          "study": null,
+          "target": 0.99,
+          "metric": "sequence_accuracy",
+          "select": "length-128"
+        },
+        "optimizer": {
+          "type": "AdamW",
+          "lr": 0.001,
+          "betas": [
+            0.9,
+            0.98
+          ],
+          "weight_decay": 0.1,
+          "eps": 1e-08,
+          "decay": "all"
+        },
+        "schedule": {
+          "type": "Schedule",
+          "warmup": 50,
+          "anneal": null,
+          "inclusive": false
+        },
+        "budget": {
+          "type": "Budget",
+          "updates": 20000,
+          "batch": 16
+        },
+        "seeds": {
+          "type": "Seeds",
+          "model": 0,
+          "data": 1,
+          "batches": null
+        },
+        "evaluate": {
+          "type": "Evaluate",
+          "every": 200,
+          "batch": 256
+        },
+        "execution": {
+          "type": "Measured",
+          "device": "cpu",
+          "threads": 2
+        },
+        "diagnostics": {
+          "type": "Diagnostics",
+          "every": 0,
+          "neighbors": false,
+          "gradients": false
+        },
+        "checkpoint": {
+          "type": "Checkpoint",
+          "every": 200
         },
         "stopping": {
           "type": "Solved"

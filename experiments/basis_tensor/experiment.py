@@ -43,6 +43,7 @@ REFERENCE_FLOPS = {
     ("easy", "parity", 0): 1_609_311_910_000,
     ("easy", "parity", 1): 981_287_750_000,
     ("easy", "parity", 2): 824_281_710_000,
+    ("hard", "depth", 0): 91_404_360_207_600,
     ("hard", "depth", 1): 11_225_096_867_600,
     ("hard", "depth", 2): 43_296_802_203_600,
     ("hard", "recall", 0): 107_443_940_040_500,
@@ -61,3 +62,6 @@ for (mode, task, seed), ceiling in REFERENCE_FLOPS.items():
     candidate = swap(candidate, "budget", FlopBudget(updates=100_000, batch=reference.budget.batch,
                                                      flops=ceiling))
     experiments[f"tensor-{mode}-{task}-seed{seed}"] = swap(candidate, "stopping", None)
+    gained = TensorGain(width=model.width, depth=model.depth, context=model.context, gain=8.0)
+    experiments[f"tensor-gain8-{mode}-{task}-seed{seed}"] = swap(
+        experiments[f"tensor-{mode}-{task}-seed{seed}"], "model", gained)

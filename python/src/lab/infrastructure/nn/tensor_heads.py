@@ -5,6 +5,8 @@ only prenorm NTC tensors and globally shared weights. Deviations: stable
 log-space prefix contractions; the all-pair sum is reassociated by key and
 prefix value position. This keeps every causal key/value pair and all small
 latent channels, without enumerating paths or the implicit 4**9 choices.
+Fixed common gain follows TensorGain at c12df24; every global and token
+potential uses the same gained assignment, including the training NLL.
 """
 
 import torch
@@ -15,6 +17,11 @@ from torch.nn import functional as F
 QUARTERS = ((1., 0.), (0., 1.), (-1., 0.), (0., -1.))
 
 
+def scaled_potential(value, gain):
+    """Fixed linear coordinates; gain one preserves the original operations."""
+    return value if gain == 1 else value * gain
+
+
 def recover(x):
     """Read genuine free fields and absolute positions after RMSNorm."""
     raw = x / x[..., 62:63]
@@ -23,12 +30,12 @@ def recover(x):
 
 class TensorHeads(nn.Module):
     """Shared state/value, all-pair binding and branch parameters."""
-    def __init__(self, context, std):
+    def __init__(self, context, std, gain=1.0):
         super().__init__()
-        self.context = context
+        self.context, self.gain = context, gain
         self.initial = nn.Parameter(torch.zeros(6))
         self.emission = nn.Parameter(torch.empty(6, 5, 4))
-        nn.init.normal_(self.emission, std=std)
+        nn.init.normal_(self.emission, std=std / gain)
         self.branch = nn.Parameter(torch.zeros(2))
         self.chronology = nn.Parameter(torch.zeros(()))
         self.relative = nn.Parameter(torch.zeros(2 * context - 1))
@@ -38,13 +45,13 @@ class TensorHeads(nn.Module):
         """Every actual chronological endpoint marginal; no reference path."""
         batch, length = fields.shape[:2]
         transition = fields[..., :36].reshape(batch, length, 6, 6).softmax(-1)
-        state = self.initial.softmax(-1).expand(batch, 6)
+        state = scaled_potential(self.initial, self.gain).softmax(-1).expand(batch, 6)
         history = []
         for position in range(length):
             state = torch.bmm(state[:, None, :], transition[:, position]).squeeze(1)
             history.append(state)
         marginal = torch.stack(history, 1)
-        return torch.einsum("bts,shd->bthd", marginal, self.emission.softmax(-1))
+        return torch.einsum("bts,shd->bthd", marginal, scaled_potential(self.emission, self.gain).softmax(-1))
 
     def pointer_terms(self, fields, positions):
         """Log partition of each real all-pair prefix, with no table mask."""
@@ -54,8 +61,8 @@ class TensorHeads(nn.Module):
         value = fields[..., 32:52].reshape(batch, length, 5, 4)
         matching = torch.logsumexp(query[:, :, None] + key[:, None, :], -1).sum(-1)
         index = torch.arange(length, device=fields.device)
-        relative = self.relative[index[None, :] - index[:, None] + self.context - 1]
-        bias = positions[:, None, :] + self.chronology * index + relative
+        relative = scaled_potential(self.relative, self.gain)[index[None, :] - index[:, None] + self.context - 1]
+        bias = positions[:, None, :] + scaled_potential(self.chronology, self.gain) * index + relative
         routed = bias + torch.logsumexp(value, -1).sum(-1)[:, None, :]
         prefix = torch.logcumsumexp(routed, -1).transpose(1, 2)
         causal = index[None, :] <= index[:, None]
@@ -77,7 +84,7 @@ class TensorHeads(nn.Module):
         """Ten axes of the actual mixed joint expectation."""
         state = self.state_channels(fields)
         pointer = self.pointer_channels(fields, positions)
-        weights = self.branch.softmax(-1)
+        weights = scaled_potential(self.branch, self.gain).softmax(-1)
         mixed = weights[0] * state + weights[1] * pointer
         return torch.matmul(mixed, self.quarters).flatten(-2)
 

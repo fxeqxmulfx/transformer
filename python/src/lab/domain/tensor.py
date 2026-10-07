@@ -27,6 +27,7 @@ class TensorStack(Model):
     Gaussian initialization instead of the finite capability witness.
     The implementation explicitly executes every residual layer and zero
     FFN; no layer or preprocessing cost is assigned to imaginary work.
+
     """
     width: int
     depth: int
@@ -46,6 +47,27 @@ class TensorStack(Model):
         """BindingParameters' exact dimension; independent of dataset size."""
         require(type(vocab) is int and 1 <= vocab <= 1024, "The verified decoder covers 1..1024 tokens")
         return 52 * vocab + 3 * self.context + 128
+
+
+@dataclass(frozen=True)
+class TensorGain(TensorStack):
+    """The actual verified tensor stack in fixed linear potential coordinates.
+
+    Source: TensorGain.tensorGainFunction, basisGain_solves and
+    basisGainBatchNLL_convex at c12df24. Every free potential is gain *
+    its optimizer coordinate. This invertible linear parameterization
+    changes conditioning and keeps the model class, parameter count,
+    ordinary AdamW and true inference/loss coupling. Initialize coordinates
+    at std/gain to keep the actual-potential initialization scale std.
+    Deviations: float32, stable contractions and Gaussian initialization
+    inherited from TensorStack. Successful learning, floating-point
+    identities and AdamW convergence remain experimental.
+    """
+    gain: float = 8.0
+
+    def check(self):
+        super().check()
+        require(math.isfinite(self.gain) and self.gain > 0, "Fixed potential gain must be positive and finite")
 
 
 def check_tensor_benchmark(benchmark):

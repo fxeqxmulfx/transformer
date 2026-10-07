@@ -4,13 +4,16 @@ Source: Structured.TensorEmbedding/Stream/DeferredFFN/Stack/StackInterface
 at b0a43a8. All free fields are shared across layers. Deviations: float32
 by default and stable head contractions; every original zero FFN and all
 repeated attention computations are executed, without a semantic oracle.
+The common fixed gain is the exact real parameter map of TensorGain at
+c12df24. Gaussian optimizer coordinates use std/gain; actual potentials
+retain the original initialization scale and every gain operation is real.
 """
 
 import torch
 from torch import nn
 from torch.nn import functional as F
 
-from .tensor_heads import QUARTERS, TensorHeads, recover
+from .tensor_heads import QUARTERS, TensorHeads, recover, scaled_potential
 
 
 def digits(tokens, places=5):
@@ -20,10 +23,11 @@ def digits(tokens, places=5):
 
 class TensorEmbedding(nn.Module):
     """52 free input fields, ten fixed output axes, unit anchor and spares."""
-    def __init__(self, vocab, width, std):
+    def __init__(self, vocab, width, std, gain=1.0):
         super().__init__()
         self.fields = nn.Parameter(torch.empty(vocab, 52))
-        nn.init.normal_(self.fields, std=std)
+        self.gain = gain
+        nn.init.normal_(self.fields, std=std / gain)
         code = torch.tensor(QUARTERS)[digits(torch.arange(vocab))].flatten(-2)
         self.register_buffer("code", code)
         self.register_buffer("anchor", torch.ones(vocab, 1))
@@ -31,7 +35,7 @@ class TensorEmbedding(nn.Module):
 
     @property
     def weight(self):
-        return torch.cat((self.fields, self.code, self.anchor, self.spare), -1)
+        return torch.cat((scaled_potential(self.fields, self.gain), self.code, self.anchor, self.spare), -1)
 
     def forward(self, tokens):
         return F.embedding(tokens, self.weight)
@@ -79,11 +83,13 @@ class TensorStack(nn.Module):
     """f(List Int) adapter and ordinary model(tokens, positions) interface."""
     def __init__(self, spec, vocab):
         super().__init__()
+        spec.check()
         spec.parameter_count(vocab)
         self.spec, self.vocab, self.context = spec, vocab, spec.context
-        self.embed = TensorEmbedding(vocab, spec.width, spec.std)
+        self.gain = getattr(spec, "gain", 1.0)
+        self.embed = TensorEmbedding(vocab, spec.width, spec.std, self.gain)
         self.absolute = nn.Parameter(torch.zeros(spec.context))
-        self.heads = TensorHeads(spec.context, spec.std)
+        self.heads = TensorHeads(spec.context, spec.std, self.gain)
         self.blocks = nn.ModuleList(TensorBlock(self.heads, spec.width, spec.eps, layer == spec.depth - 1)
                                     for layer in range(spec.depth))
 
@@ -91,7 +97,7 @@ class TensorStack(nn.Module):
         length = tokens.shape[1]
         if not 1 <= length <= self.context:
             raise ValueError(f"Input length {length} exceeds context {self.context}, or is empty")
-        position = F.pad(self.absolute[:length, None], (63, self.spec.width - 64))
+        position = F.pad(scaled_potential(self.absolute, self.gain)[:length, None], (63, self.spec.width - 64))
         return self.embed(tokens) + position
 
     def stack_input(self, tokens):
@@ -121,16 +127,18 @@ class TensorStack(nn.Module):
         Source: tensorStackNLL and tensorMixedNLL at b0a43a8.
         """
         fields, positions = recover(self.stack_input(tokens))
-        head = self.heads.branch.logsumexp(-1) - self.heads.branch[branch]
+        branch_logits = scaled_potential(self.heads.branch, self.gain)
+        head = branch_logits.logsumexp(-1) - branch_logits[branch]
         if branch == 0:
             previous, state, target = observed.unbind(1)
             rows = fields[..., :36].reshape(*tokens.shape, 6, 6)
             row = rows.gather(2, previous[..., None, None].expand(-1, -1, 1, 6)).squeeze(2)
             transition = row.logsumexp(-1) - row.gather(-1, state[..., None]).squeeze(-1)
-            emission = self.heads.emission[state]
+            emission = scaled_potential(self.heads.emission, self.gain)[state]
             selected = emission.gather(-1, digits(target)[..., None]).squeeze(-1).sum(-1)
             values = emission.logsumexp(-1).sum(-1) - selected
-            initial = self.heads.initial.logsumexp(-1) - self.heads.initial[0]
+            initial_logits = scaled_potential(self.heads.initial, self.gain)
+            initial = initial_logits.logsumexp(-1) - initial_logits[0]
             return head + initial + transition.cumsum(1) + values
         key_position, value_position, target = observed.unbind(1)
         partition = self.heads.pointer_terms(fields, positions)[0]
@@ -142,8 +150,8 @@ class TensorStack(nn.Module):
         match_score = matching.gather(-1, digits((key_tokens + 220) % 256, 4)[..., None]).squeeze(-1).sum(-1)
         value = value_fields[..., 32:52].reshape(*tokens.shape, 5, 4)
         value_score = value.gather(-1, digits(target)[..., None]).squeeze(-1).sum(-1)
-        bias = positions.gather(1, value_position) + self.heads.chronology * value_position
-        bias = bias + self.heads.relative[value_position - key_position + self.context - 1]
+        bias = positions.gather(1, value_position) + scaled_potential(self.heads.chronology, self.gain) * value_position
+        bias = bias + scaled_potential(self.heads.relative, self.gain)[value_position - key_position + self.context - 1]
         return head + partition - bias - match_score - value_score
 
     @torch.no_grad()

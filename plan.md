@@ -940,6 +940,26 @@ model class; it still needs a fresh ordinary-AdamW experiment. Keep the
 old lab sources fixed for all running reference/prototype continuations
 and port the repaired model in a separate checkout if necessary.
 
+TensorGain's transfer is committed in c12df24. The gain-eight lab block
+is implemented in the main checkout while the unchanged original lab
+continues its remaining recall controls in /tmp/transformer-qknorm-study.
+Independent numerical checks preserve actual initial potentials and
+parameter counts and compare the real gained stack, both complete losses
+and all free gradients with an independently scaled original model.
+All eighteen reference ceilings are now available: hard depth seed 0's
+unchanged continuation passes at 11,400 updates/91,404,360,207,600 operations,
+with 99.22% length-128 validation and 99.41% length-128 test accuracy.
+Both attempts are retained. Original tensor hard parity seed 0 also
+finishes its ceiling with 100% validation/test, first passing at 7,000
+updates. Fresh gain-eight arms are specified for every mode/task/seed;
+their measured arithmetic and ordinary-AdamW outcomes remain to run.
+The completed gain port passes 218 Python tests and all eight full-shape
+operator-coverage probes. The counter includes every gain multiplication;
+it slightly changes the cost per update but not any pinned reference
+ceiling. Launch the repaired ordinary-AdamW comparisons on all three seeds,
+retain the original failures, and report full-ceiling validation/test/OOD
+and first-success costs separately.
+
 When a candidate performs worse, preserve its run and identify a concrete
 semantic or optimization failure. Reproduce it in a small control and
 repair its representation/operator in Lean. Reprove correctness and the
