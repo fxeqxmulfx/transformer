@@ -928,6 +928,18 @@ and preserving ordinary AdamW and the original actual-potential
 initialization scale. This changes conditioning, not gauge directions,
 and does not by itself prove optimizer convergence.
 
+The repair's mathematical transfer is now checked in
+src/Transformer/GPTMini/Convex/Structured/TensorGain.lean. It evaluates
+the genuine configured tensor stack at one common gain * theta assignment,
+not a separate surrogate: true inference/loss coupling, global joint
+sample/minibatch convexity and the actual append-one/prefix interface
+hold throughout the unrestricted free domain. Explicit inverse-scaled
+finite weights solve all six complete raw Basis recipes for nonzero gain.
+The proposed fixed gain eight adds no free scalars and preserves the
+model class; it still needs a fresh ordinary-AdamW experiment. Keep the
+old lab sources fixed for all running reference/prototype continuations
+and port the repaired model in a separate checkout if necessary.
+
 When a candidate performs worse, preserve its run and identify a concrete
 semantic or optimization failure. Reproduce it in a small control and
 repair its representation/operator in Lean. Reprove correctness and the
