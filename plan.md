@@ -441,6 +441,12 @@ targets remain empty, and the true norm is at most M+32 and at least
 one when the raw constant is one. The explicit six-condition input
 predicate has a simultaneous active-A real-array witness; full raw-word
 induction must establish it, without a semantic encoder premise.
+DepthTransition now derives all actual pre-FFN constant/type/gap/cap
+conditions from those incoming coordinates and true norm bounds. Each
+complete block writes exactly zero or its real pre-FFN RMS square, with
+positive output exactly at actual type-and-presence success. Including
+both residuals, its norm grows by at most 288. The quantitative ordered
+raw-state induction and final tied readout remain to be completed.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -570,3 +576,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Actual signal separation committed in d013328. Proved the complete original six-unit FFN record, exact zero-or-true-RMS-square output, arbitrary protected coordinates and contribution norm at most 256. Corrected the gap condition to matching raw types only; wrong types need the actual cap. | Assemble genuine detector blocks, derive all norm/feature conditions by ordered raw-state induction and complete depth tied readout/SolvesTask. |
 | 2026-10-07 | 1 | Complete depth FFN committed in 199706f. Assembled fixed actual detector BlockParams for all three stages, coupled each real source to the previous opposite-ending target, and proved preservation of raw axes and other stages through both residuals. | Derive actual pre-FFN representation and M+288 block bounds, propagate the ordered raw-word features, then complete depth readout/SolvesTask. |
 | 2026-10-07 | 1 | Fixed original detector blocks committed in beb4e74. Proved actual pre-FFN raw/signal/feature reads and genuine norm bounds; recorded explicit simultaneous local input conditions with an active-A real-array witness. | Derive FFN conditions and complete M+288 transitions from these inputs, close ordered raw-state induction and full depth readout/SolvesTask. |
+| 2026-10-07 | 1 | Actual pre-FFN residual committed in 135a904. Derived all true FFN requirements from incoming states, proved exact complete-block flags and their positive iff condition, and bounded both real residuals by M+288. | Derive separated flag amplitudes and ordered occurrences through all raw stages, then complete tied readout and depth SolvesTask. |

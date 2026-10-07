@@ -49,6 +49,7 @@ import Transformer.GPTMini.Semantics.DepthSignalPresence
 import Transformer.GPTMini.Semantics.DepthDetector
 import Transformer.GPTMini.Semantics.DepthLayout
 import Transformer.GPTMini.Semantics.DepthResidual
+import Transformer.GPTMini.Semantics.DepthTransition
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -75,13 +76,12 @@ Uniform finite weights give strict label/EOS margins through final RMSNorm.
 The actual checked List Int function solves every legal parity prefix in
 both modes and freely generates label then EOS in two calls.
 
-Three ordinary homogeneous ReLU2 hinges compute a saturated presence
-step and raw-type exclusion. Six original FFN units realize both gates
+Three homogeneous ReLU2 hinges compute presence/type exclusion; six original units realize both gates
 simultaneously, preserve unwritten coordinates and retain true RMS square.
 The actual FFN gives binary amplitudes and norm at most 256 on matching-type gaps.
 The genuine uniform softmax/XSA head gives exact absence
 and floor L/128 at zero self-value. Actual two-head attention adds norm at most 32.
-Actual fixed detector blocks preserve raw types and other stages; full hidden/readout remain.
+Actual blocks preserve raw types/stages, write true RMS-square flags and grow norm by at most 288.
 
 An explicit original RoPE pair gives a positive predecessor score gap
 across all Basis context lengths. Actual finite softmax/XSA copies that
