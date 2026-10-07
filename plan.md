@@ -640,6 +640,12 @@ every rival. The compact learned Markov score equals that same joint
 expectation, so gain log(100000) yields strict whole-vocabulary margins
 through context 128. Raw shared witnesses and residual/tied realization
 remain open; this is not a complete learned Basis solver.
+SharedReference now realizes all finite initial/transition/emission
+witnesses in one actual shared 52-field token/global parameter assignment.
+Every genuine learned lookup, complete loss and compact decoder score is
+proved equal to the same finite stochastic model with the derived margin.
+The data rule chooses weights only; it is absent from learned inference.
+Next connect raw task encodings and integer decoding, then tensor blocks.
 
 Remaining acceptance tests: prove compact contraction of the latent
 partition, learned matching and joint value expressivity, complete Basis
@@ -781,3 +787,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Actual causal confidence propagation committed in 842cc59. Proved the six-state data/reference rule's counted parity and label/EOS agreement on every actual validated raw Basis parity prefix, with no external phase/count input. | Realize finite learned initial/transition/value witnesses and prove full parity model margins; raw depth/reference rules, complete recall, mixture and genuine residual/tied/integer integration remain. |
 | 2026-10-07 | 2 | Full raw parity reference semantics committed in 91299ae. Proved actual compact encoder and full initial/path/value finite-table confidence, including a uniform 1-794*exp(-gain) joint-mass bound up to the largest Basis context 128. | Embed finite witnesses in actual shared raw slots and prove tied whole-vocabulary decoder margins; depth, recall, mixture and true residual/integer integration remain. |
 | 2026-10-07 | 2 | Joint causal/output confidence committed in 61226da. Proved ten-coordinate codes for all 1024 output IDs, the quantitative 11*p_correct-10 full-distribution margin, equality to actual compact Markov decoding and strict all-token margins for finite gain log(100000) through length 128. | Realize these finite tables in actual shared raw embedding fields and prove raw parity capability; full depth/recall, mixture and true residual/tied/integer integration remain. |
+| 2026-10-07 | 2 | Whole-vocabulary compact decoder committed in d84bd84. Constructed actual finite shared embedding/head weights, evaluated every genuine transition/initial/emission lookup and connected the real shared loss/output score to the same learned finite-row model and strict margin. | Prove the actual shared head's raw integer parity continuation and two-call generation; full depth/recall, mixture and residual/tied block integration remain. |

@@ -17,6 +17,7 @@ import Transformer.GPTMini.Convex.Structured.ParityReference
 import Transformer.GPTMini.Convex.Structured.MarkovConfidence
 import Transformer.GPTMini.Convex.Structured.OutputCodes
 import Transformer.GPTMini.Convex.Structured.OutputMargins
+import Transformer.GPTMini.Convex.Structured.SharedReference
 
 /-!
 # Structured alternatives guided by raw Basis semantics
