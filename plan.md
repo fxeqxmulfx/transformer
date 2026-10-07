@@ -265,6 +265,13 @@ the one fixed ordinary output gain. The real final query code, constant
 and all type/reserved readout axes are derived directly from the raw
 embedding. No common selected-value scale or desired residual is an input.
 
+RecallReadoutCoordinates evaluates the actual tied input embeddings against
+the true final query. Key scores are at most six, reserved scores exactly
+one, and selected-value reference scores are one plus their genuine
+amplitude times the compact inner product (four for the same symbol,
+at most three for any different one). All 548 raw embedding entries amplify
+residual error by at most three. These identities precede strict readout.
+
 Next derive strict tied-readout margins and the actual integer decoder, discharge full
 validated-parser conditions, and construct the depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
@@ -372,3 +379,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Full raw routing/retrieval committed in 19545b9. Chose a finite logarithmic shared temperature and proved uniform actual head accuracy, including fixed positive secondScaleLower/16 tolerance and finite output-gain product two. | Realize genuine second W_o/tied readout and discharge raw layout/latest-write conditions from complete Basis parsing, then full depth correctness; convex architecture and equal-FLOP comparisons remain queued. |
 | 2026-10-07 | 1 | Finite uniform retrieval accuracy committed in 94d0b89. Realized the actual unchanged second attention/block with ordinary nonzero W_o, finite shared matching parameters, complete state formula, protected query/type coordinates and true headAt/output-error coupling. | Strict tied-readout margins and actual integer decoder, full validated raw parser discharge and depth correctness; convex architecture and equal-FLOP comparisons remain queued. |
 | 2026-10-07 | 1 | Genuine second block committed in 5e1dc59. Proved full genuine final-state error at most 1/8, selected real value amplitude at least two and faithful final raw query/type/reserved readout channels. | Strict tied readout over all 548 tokens and actual integer decoder, complete validated parser discharge and depth correctness; convex architecture and equal-FLOP comparisons remain queued. |
+| 2026-10-07 | 1 | Full final-state/error coupling committed in 486a860. Evaluated actual tied key/reserved scores and selected-value reference scores; proved compact categorical products four versus at most three and uniform raw score-error amplification at most three. | Derive strict all-token readout, connect actual complete ModelParams/decoder, discharge full validated recall parsing, then depth correctness; convex architecture/FLOP comparison remain queued. |

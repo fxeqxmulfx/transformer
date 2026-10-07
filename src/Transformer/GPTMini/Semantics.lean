@@ -28,6 +28,7 @@ import Transformer.GPTMini.Semantics.RecallRawRouting
 import Transformer.GPTMini.Semantics.RecallRetrievalAccuracy
 import Transformer.GPTMini.Semantics.RecallRetrievalBlock
 import Transformer.GPTMini.Semantics.RecallFinalState
+import Transformer.GPTMini.Semantics.RecallReadoutCoordinates
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -42,15 +43,10 @@ ordered-subsequence presence tests and distinguish the same-bag depth
 pair. Raw MQAR's semantic target is independently proved to be its last
 adjacent binding in Transformer.Basis.RecallAnswer.
 
-Concrete original-model parameters compute raw ONE counts from embeddings
-and the actual fused QKV, retaining the result in the first residual
-block. A nonzero attention projection computes this count alongside an
-independent completion-phase feature. Local output-matrix kernel equations
-prove phase preservation throughout the full stack. A variable-length
-collision is proved for this first count/phase block. A simultaneous BOS
-denominator channel repairs it and recovers the raw count from the actual
-first hidden state for every parity prompt and supplied-answer prefix,
-without an external length input. Explicit original FFN matrices realize
+Concrete original parameters compute raw ONE counts and phase through
+the actual fused QKV and residual stack. A proved variable-length
+count/phase collision is repaired by a simultaneous actual BOS denominator
+channel, recovering the count without external length. Original FFNs realize
 a 68-unit homogeneous bounded-count parity decoder and a simultaneous
 69th completion-phase unit. A complete original two-layer parameter family
 has distinct tied EVEN/ODD/EOS codes and exactly the same actual count
@@ -190,6 +186,10 @@ Both real blocks now yield a full final-state error at most one eighth
 from the first state plus the selected raw value's genuine amplitude,
 which is at least two. Query/type/reserved readout axes stay raw. Strict
 tied readout, the integer decoder and full validated parser remain.
+Actual tied key scores are at most six, reserved scores exactly one,
+and selected-value reference scores use compact categorical products
+four versus at most three. Every raw embedding bounds score perturbations
+by three times the actual residual error.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
