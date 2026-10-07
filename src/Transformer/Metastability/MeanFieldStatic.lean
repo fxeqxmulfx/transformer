@@ -11,7 +11,7 @@ else: on `𝕊^0` every tangent vector is zero.  The constant curve at `δ_p`
 therefore solves `eq: mean.field.pde`, the identity is its characteristic
 flow, and with one cap around `p` and a large `β` it is a `(β, ε)`-separated
 measure.  This is the configuration that witnesses the hypotheses of
-`Metastability.metastability_mf`, `Metastability.cap_exit` and
+`Metastability.metastability_mf`, the cap-exit claim and
 the estimate refuted by `Metastability.variance_small_counterexample`
 (arXiv:2410.06833v1, §5).
 -/
@@ -145,6 +145,35 @@ theorem separated_one_cap (p : SSphere 1) :
   have hlog := Real.log_le_sub_one_of_pos (by norm_num : (0 : ℝ) < 2 * ((1 : ℕ) : ℝ) ^ 2 / (1 / 32))
   norm_num at hlog ⊢
   linarith
+
+/-- The hypotheses of the cap-exit claim and the refuted equation `eq: v.small` are satisfiable: on
+`𝕊^0`, one cap around `p`, `ν = μ_0 = δ_p` at rest, the identity flow with
+`x ≡ p` its minimising selection, `β = 1000`, `ε = 1/32`, and `c = λ` the
+midpoint of `(8ε, γ)` (`Metastability.MeanFieldStatic`). -/
+example : let p := basePoint 0
+    let γ := γβ 1 1000 (αDist 1 1 (fun _ => p) (1 / 32)) (1 / 32)
+    (1 : ℝ) < 1000 ∧ (0 : ℝ) < 1 / 32 ∧ (1 / 32 : ℝ) < 1 / 16 ∧ 0 < 1 ∧
+      (∀ q : Idx 1, ((fun _ => diracProb 1 p) q : Measure (SSphere 1)).support
+        ⊆ sphericalCap 1 ((fun _ => p) q) (1 / 32)) ∧
+      ((diracProb 1 p : ProbSphere 1) : Measure (SSphere 1))
+        = (((1 : ℕ) : ℝ)⁻¹).toNNReal •
+            ∑ q : Idx 1, ((fun _ => diracProb 1 p) q : Measure (SSphere 1)) ∧
+      8 * (1 / 32 : ℝ) < γ ∧
+      meanFieldPDE 1 1000 (fun _ => diracProb 1 p) ∧
+      IsMFFlow 1 1000 (fun _ => diracProb 1 p) (fun _ x => x) ∧
+      IsCapArgmin 1 (fun _ x => x) p (1 / 32) (fun _ => p) ∧
+      0 < (8 * (1 / 32) + γ) / 2 ∧
+      8 * (1 / 32 : ℝ) < (8 * (1 / 32) + γ) / 2 ∧ (8 * (1 / 32) + γ) / 2 < γ := by
+  intro p γ
+  have hsep : 8 * (1 / 32 : ℝ) < γ := separated_one_cap p
+  refine ⟨by norm_num, by norm_num, by norm_num, one_pos, fun _ y hy => ?_, by simp, hsep,
+    meanFieldPDE_const_diracProb 1000 p, isMFFlow_id_diracProb 1000 p,
+    isCapArgmin_id_dim_one p _ (by norm_num) (by norm_num), by linarith, by linarith,
+    by linarith⟩
+  rw [Interpolation.eq_of_mem_support_dirac hy]
+  simp only [sphericalCap, Set.mem_ofPred_eq, real_inner_self_eq_norm_mul_norm,
+    mem_sphere_zero_iff_norm.mp p.2]
+  norm_num
 
 end Metastability
 end Transformer
