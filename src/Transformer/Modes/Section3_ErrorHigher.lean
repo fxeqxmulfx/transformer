@@ -1,4 +1,5 @@
 import Transformer.Modes.Section3_ErrorThird
+import Transformer.Modes.Section3_EtaMoment
 
 /-
 # The number of modes of a Gaussian KDE — higher-order errors, pointwise
@@ -26,7 +27,7 @@ import Transformer.Modes.Section3_ErrorThird
   a continuous density is unique, so this is the source's claim, and it cannot
   hold vacuously for want of a density.
 
-* `eq:rate`: the first `≲` is `lem:eta` at `s + 1` (`etaMoment_le`), unproved.
+* `eq:rate`: the first `≲` is `lem:eta` at `s + 1` (`etaMoment_le`), proved.
   The rest is arithmetic on `T` and `T'` and is proved: `rate_T`, `rate_T'`.
 
 Source: arXiv:2412.09080v3, §3.2, `lem:error-higher`, `eq:error-higher`,

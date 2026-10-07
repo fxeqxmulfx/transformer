@@ -24,7 +24,8 @@ the density `q_t` of `n^{-1/2} Σ Yᵢ(t)`, and `lem:eta`.
   (a cumulant is a polynomial in moments, each of which Lyapunov's
   inequality bounds by a power of `η_s`); it is stated so.  The second half,
   `η_s ≲ (β e^{t²})^{(s-2)/4}`, is uniform on `T`, as its proof in §5 uses
-  `t ∈ T`.
+  `t ∈ T`. The moment bound is proved in `Section3_EtaMoment`, after
+  standardization and the pointwise bounds for the summand.
 
 Source: arXiv:2412.09080v3, `eq:Yi`, `eq:qt`, `lem:eta` and its proof in §5.
 -/
@@ -71,23 +72,10 @@ theorem abs_cumulantOf_le (a b : ℕ) (hs : 3 ≤ a + b) :
       |cumulantOf μ a b| ≤ C * ∫ x, eucl x ^ (a + b) ∂μ := by
   sorry
 
-/-- **Lemma (lem:eta), moments.**  `η_s = 𝔼‖Y(t)‖^s ≲ (β e^{t²})^{(s-2)/4}`,
-uniformly on `T`.  arXiv:2412.09080v3, `lem:eta` and its proof in §5. -/
-theorem etaMoment_le {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : IsRegime c N B)
-    {ω : ℝ → ℝ} (hω : IsSlowGrowth ω) (s : ℕ) (hs : 3 ≤ s) :
-    ∃ C : ℝ, ∀ᶠ k in atTop, ∀ t ∈ intervalT (N k) (B k) (ω (B k)),
-      etaMoment (B k) t s ≤ C * (B k * Real.exp (t ^ 2)) ^ (((s : ℝ) - 2) / 4) := by
-  sorry
-
 /-- The hypotheses of `abs_cumulantOf_le` are satisfiable, and so are those
 of the implication it asserts. -/
 example : 3 ≤ 3 + 0 ∧ IsProbabilityMeasure stdGauss2 ∧ HasExpMoments stdGauss2 :=
   ⟨le_rfl, inferInstance, hasExpMoments_stdGauss2⟩
-
-/-- The hypotheses of `etaMoment_le` are satisfiable. -/
-example : IsRegime 1 (fun k => k + 1) (fun k => ((k + 1 : ℕ) : ℝ)) ∧
-    IsSlowGrowth (fun β => Real.sqrt (Real.log (Real.log β))) ∧ 3 ≤ 3 :=
-  ⟨isRegime_succ, isSlowGrowth_sqrt_log_log, le_rfl⟩
 
 end Modes
 end Transformer
