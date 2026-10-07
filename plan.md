@@ -360,6 +360,16 @@ coordinates are proved, including the genuine position-dependent RMS
 square. No bias, prepared Boolean output, extra width or external scale
 is inserted. Complete raw embeddings, fused attention projections,
 amplitude induction and the final depth readout remain to connect.
+DepthRecurrence proves alternating ending-pattern recurrence at the
+actual original Option Bool positions, retaining every neutral slot.
+A next occurrence is exactly the current raw letter plus a strictly
+earlier opposite-ending occurrence; the opposite current feature is
+absent, which is the semantic zero-self obligation for original XSA.
+The two final ending-pattern presences are proved equivalent to the
+independent actual E_2/E_4 integer oracle, including wrong-start rejection.
+These data-side predicates do not define the model's hidden computation;
+actual raw embedding, fused head matrices and state induction still must
+realize them, then yield the full tied/greedy integer readout.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -478,3 +488,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Full raw recall correctness committed in c30b8c3. Proved an ordinary three-unit homogeneous ReLU2 presence step, raw-type exclusion, exact separated Boolean amplitude and positive prenorm-scaled margin for the depth construction. | Realize and bound genuine prefix detectors in the original attention/FFN matrices; complete depth SolvesTask before the convex architecture/FLOP stages. |
 | 2026-10-07 | 1 | Homogeneous depth FFN gate committed in fe30f91. Proved the true uniform softmax/XSA causal mean for nonconstant real value amplitudes, exact absence, upper cap and occurrence floor L/128; derived the separated presence input without unit-amplitude assumptions. | Derive these local bounds from real raw embedding/matrices and propagate the complete ordered depth recurrence, then final SolvesTask. |
 | 2026-10-07 | 1 | Actual variable-amplitude causal presence committed in df46fd4. Realized both depth type/presence gates in six ordinary shared FFN units; proved actual matrix coordinates, complete FFN output, protected residual channels and the true RMS quadratic scale at generic dimensions. | Connect raw embedding and fused uniform attention, propagate quantitative ordered-feature bounds and complete depth readout/SolvesTask. |
+| 2026-10-07 | 1 | Simultaneous original depth FFN matrices committed in 830e7fc. Proved neutral-preserving original-position alternating occurrence recurrence, opposite-current exclusion and exact independent E_2/E_4 integer answer criteria. | Realize these data predicates by actual raw embedding/head matrices and quantitative hidden-state induction, then full depth SolvesTask. |

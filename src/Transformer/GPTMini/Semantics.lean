@@ -38,6 +38,7 @@ import Transformer.GPTMini.Semantics.RecallCorrectness
 import Transformer.GPTMini.Semantics.DepthStep
 import Transformer.GPTMini.Semantics.DepthPresence
 import Transformer.GPTMini.Semantics.DepthMatrices
+import Transformer.GPTMini.Semantics.DepthRecurrence
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -70,7 +71,8 @@ step and raw-type exclusion. Six original FFN units realize both gates
 simultaneously, preserve unwritten coordinates and retain the true RMS
 quadratic scale. The genuine uniform softmax/XSA head gives exact absence
 and a presence floor L/128 for variable amplitudes at zero self-value.
-The complete raw depth recurrence and readout remain.
+The original-position alternating recurrence and exact E_2/E_4 criteria
+are proved; actual hidden-state induction and readout remain.
 
 An explicit original RoPE pair gives a positive predecessor score gap
 across all Basis context lengths. Actual finite softmax/XSA copies that
@@ -85,12 +87,10 @@ visible record. A uniform normalized latest-write margin
 one position; it is also below the categorical content margin. The raw
 construction below supplies copied-key robustness and actual retrieval.
 
-Simultaneous compact raw key/value codes now occupy disjoint ordinary
-embedding slots, with protected constant/type coordinates. All 548 entries
-have derived norm squared six and a shared actual RMS multiplier. Exact
-linear readback and zero cross-channels are proved; copy, position and
-gated-key channels are initially zero. These raw coordinates feed the
-actual fused QKV/BOS head.
+Compact raw key/value codes occupy disjoint embedding slots, with protected
+constant/type coordinates. All 548 entries have norm squared six and one
+actual RMS multiplier. Exact readback and zero cross-channels are proved;
+copy, position and gated-key channels start at zero for true fused QKV.
 
 Actual fused QKV/W_o realize predecessor and marker heads simultaneously,
 retaining raw query/value codes and a derived finite-softmax copy error.
