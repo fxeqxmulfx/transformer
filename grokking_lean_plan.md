@@ -24,7 +24,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
 | Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; circuit-efficiency literature to investigate | Research pending |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Six measurements and objective decomposition checked; 256 Python tests passed |
-| Gradient coherence and implicit bias | State what batch gradient agreement can and cannot imply; distinguish loss descent, task structure and optimizer-specific bias | Fixed-batch gradients; ordinary AdamW | Shared EOS explains most initialization alignment; answer-only alignment also fails as a standalone signal |
+| Gradient coherence and implicit bias | State what batch gradient agreement can and cannot imply; distinguish loss descent, task structure and optimizer-specific bias | Fixed-batch gradients; ordinary AdamW | Eighteen proved actual-CE derivative/decomposition/counterexample theorems; shared targets can yield arbitrarily high full alignment despite opposed answers |
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Analogy only for current finite GPTMini; finite-size scaling not established |
 | Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Research pending; optimizer remains unchanged |
@@ -62,10 +62,11 @@ and endpoint logit changes have been measured around the actual
 effects, not a universal detector. Full control/seed budgets remain active
 or queued. The reference control completed all 150,000 updates with about
 1.50% held-out answer accuracy; absence of a later transition is not proved.
-Seed 2 completes its full 150,000 updates with 100% accuracy, first
-exceeding 99% at 1,250 compared with 35,500 for seed 1. Seed 3 first
-exceeds 99% at 750 and continues its full budget. These are early learning
-comparisons, not second delayed-transition replications.
+Seed 2 and seed 3 both complete 150,000 updates with 100% accuracy, first
+exceeding 99% at 1,250 and 750 compared with 35,500 for seed 1. These are
+early learning comparisons, not second delayed-transition replications.
+All declared training runs, checkpoint archives and six-measurement
+workers have completed. No training worker is left running.
 
 The six-probe implementation and frozen results are committed as `4436290`.
 All 249 Python tests passed, including CPU/CUDA noninterference checks.
@@ -149,9 +150,19 @@ is negligible and answer alignment is still 0.8567 before generalization.
 At the delayed transition answer alignment decreases. Both shared targets
 and answer-only false signals must therefore enter the formalization.
 
-Next prove a shared-target gradient-coherence counterexample from actual
-loss derivatives, then formalize operational delay and causal detectors.
-Then formalize operational delay/causal detectors and geometry metrics. Preserve
+`Transformer.Grokking.GradientEvidence.BinaryObjectives` specializes
+ordinary finite-class softmax CE to two independent readout coordinates,
+averages answer and common-target losses in the actual protocol's
+proportions, and proves every partial derivative. `SharedTarget` proves
+the signed energy and four-term dot decompositions and the exact cosine
+`(R^2 - 1) / (R^2 + 1)`. For every positive tolerance there is a positive
+shared feature scale with full alignment exceeding one minus that
+tolerance, while the answer-only gradients remain opposed and both
+initial losses equal `log 2`. The loss is actual CE, not a surrogate;
+the two-coordinate readout remains an explicit deviation from GPTMini.
+These eighteen theorems add no sorry, bringing the total to 106.
+
+Next formalize operational delay, causal detectors and geometry metrics. Preserve
 the distinction between an inverse-rate characteristic time and the time
 to cross a task-dependent generalization threshold. Extend phase-transition
 formulations only with stated control parameters and asymptotic regimes.

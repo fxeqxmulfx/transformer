@@ -2,6 +2,7 @@ import Transformer.Grokking.NaiveLoss
 import Transformer.Grokking.Perceptron
 import Transformer.Grokking.EffectiveTheory
 import Transformer.Grokking.AdamW
+import Transformer.Grokking.GradientEvidence
 
 /-! Exact mathematical formulations of grokking and its candidate
 measurements. Current scope: finite-class confidence and decisions, and
