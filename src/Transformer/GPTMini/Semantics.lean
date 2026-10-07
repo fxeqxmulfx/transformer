@@ -34,6 +34,7 @@ import Transformer.GPTMini.Semantics.RecallConstruction
 import Transformer.GPTMini.Semantics.RecallIntegerArray
 import Transformer.GPTMini.Semantics.RecallParserLayout
 import Transformer.GPTMini.Semantics.RecallParserLatest
+import Transformer.GPTMini.Semantics.RecallCorrectness
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -188,8 +189,7 @@ strictly defeats all 547 other tokens, including after the actual final
 RMSNorm and greedy decoding. The real six-token overwrite control
 returns its later value. A complete original two-layer ModelParams now
 realizes both states in the actual hidden loop and derives all forward
-logits. Its checked List Int function appends that selected value,
-including on the raw overwrite control. Full Basis parsing remains.
+logits. Its actual integer adapter solves both full recall grammars.
 Full successful parsing derives actual layout, final query and selected
 last write, including all chronological bounds, without routing premises.
 

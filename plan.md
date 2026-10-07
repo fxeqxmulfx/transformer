@@ -325,7 +325,19 @@ is proved identical to the final query, and every real matching write is
 no later than the selected row. All finite bounds and the answer ID are
 derived; no layout, selected-row or latest-write certificate is supplied.
 
-Next prove recall SolvesTask and construct the depth-prefix recurrence.
+RecallCorrectness proves recallModel_solves_recall for both actual Basis
+grammars through the genuine public List Int adapter. Complete successful
+parsing alone discharges every raw model condition; all 256 keys/values,
+legal query/filler positions and hard-mode last overwrites are covered.
+The true eight-write control, sixteen-write overwrite control and swapped
+binding controls produce the correct distinct raw answers. This is the
+given width-64/two-layer real-arithmetic/shared-epsilon capacity family,
+not AdamW success, floating-point/default-epsilon equivalence or a proved
+lift to the experiment's width-128/six-layer large model.
+
+Parity and recall are complete within their documented formal model
+scope. Next construct and prove the full depth-prefix recurrence in the
+actual original blocks, at the existing small/large dimensions.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -440,3 +452,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Full-prefix integer positions committed in 4272535. Coupled genuine raw integer reads to the exact finite input tokens, deriving position bounds and actual key/value/BOS IDs, with reverse exact key/value serialization at the same positions. | Discharge all raw layout/latest-write conditions from successful parsing and prove complete recall SolvesTask, then depth correctness; convex architecture/FLOP comparison remain queued. |
 | 2026-10-07 | 1 | Exact finite/integer coupling committed in 9ea43d1. Derived full actual RecallRawLayout and final compact query solely from successful validated Basis parsing, including finite-position bounds and genuine key/value adjacency; the overwrite control's layout is now parser-derived. | Derive the finite selected last write and its chronology, then complete easy/hard recall SolvesTask and full depth correctness; convex architecture/FLOP comparison remain queued. |
 | 2026-10-07 | 1 | Complete parser-derived raw layout committed in 75c8c94. Derived the actual finite selected write, neighboring key, final matching query, answer ID and chronological upper bound solely from successful full raw parsing, including genuine earlier overwrites. | Complete easy/hard recall SolvesTask through the actual List Int adapter, then full depth correctness; convex architecture/FLOP comparison remain queued. |
+| 2026-10-07 | 1 | Parser-derived finite last-write conditions committed in 643f78d. Proved full recall SolvesTask for both Basis grammars through the actual integer model callback, with no layout/selected-write/logit premise. Actual eight-write, sixteen-write and swapped-binding controls are covered. | Complete original depth correctness, retaining all real-arithmetic/shared-epsilon and compact-model scope distinctions; convex architecture/FLOP comparison remain queued. |
