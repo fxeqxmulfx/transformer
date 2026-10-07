@@ -25,6 +25,7 @@ import Transformer.GPTMini.Semantics.RecallScoreError
 import Transformer.GPTMini.Semantics.RecallRawScoreGap
 import Transformer.GPTMini.Semantics.RecallRawExcluded
 import Transformer.GPTMini.Semantics.RecallRawRouting
+import Transformer.GPTMini.Semantics.RecallRetrievalAccuracy
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -102,32 +103,26 @@ sixteenth of the derived latest-write margin, the genuine full first
 block's table-key error is bounded relative to its actual gate amplitude,
 and the stored key has positive norm for positive finite gain. Raw value
 and query codes are retained. These are real-arithmetic capacity bounds;
-second-block saturation/routing/readout and full validated-parser coupling
-remain to be proved, and floating-point or optimization success is not
-inferred from the conservative finite temperature.
+floating-point or optimization success is not inferred from this temperature.
 
 An ordinary shared eight-to-sixteen linear matrix now inserts every real
 compact copied key into the original slow rotary pairs. Exact inner
 products, norms and copy distances are preserved, including imperfect
 copies and position-dependent amplitudes. Its categorical image is the
 verified matching code, and its excluded fast coordinates are zero.
-Second-block prenorm/QKNorm saturation and robust routing remain.
 
 Local original-QKNorm laws now cancel independent positive query/key
 amplitudes above their actual clipping thresholds. Faithful insertion
 and original RoPE transport base copy error to a normalized error at
 most twice that error, independently of epsilon or record amplitude.
 The lower base norm is derived from the norm-two reference and copy
-distance. Actual raw-state bounds must still discharge clipping for a
-finite shared second projection gain; these are operator laws rather
-than an assumed saturated encoder or a complete recall solver.
+distance. These operator laws are connected to actual raw clipping below.
 
 Uniform genuine raw-state bounds now give pre-FFN norm in [1,9] and
 its actual RMS multiplier in [1/2,8] for epsilon in [0,1]. The lower
-norm follows from the protected constant, and the upper norm from
-both simultaneous true heads and W_o. The complete first block also
-has norm at least one and a positive next-prenorm multiplier at most
-eight. A full-block upper bound and sufficient shared QKV gain remain.
+norm follows from the protected constant, and the upper norm from both
+true heads and W_o. The full block has norm at least one and positive
+next-prenorm multiplier at most eight.
 
 The fixed finite table gain 4/tableMargin now makes genuine raw table
 amplitudes at least one. Every actual adjacent stored table key has
@@ -137,44 +132,39 @@ derived from raw BOS/alphabet/table positions. A shared next Q/K gain
 (1+epsilon)/(8/sqrt(M^2+64*epsilon)) times each genuine next RMS scale
 exceeds epsilon. Raw query self-values stay zero, and prenorm value
 code norms are bounded between twice the positive lower scale and
-sixteen. Complete fused second-QKV and robust retrieval/readout remain.
+sixteen.
 
 The actual second 64-to-192 fused QKV now evaluates simultaneous raw
 query, gated copied-key and independent value projections in the
 original sixteen-coordinate head. One ordinary gain scales Q/K and
 leaves V independent; all unassigned head rows are zero. Its actual
 prenorm retains the genuine position-dependent multiplier, and zero
-gated keys or query self-values remain exactly zero. Normalized raw
-coupling, robust latest-write selection and complete readout remain.
+gated keys or query self-values remain exactly zero.
 
 Actual raw query normalization now equals the verified categorical rotary
 direction, and every true adjacent table key has normalized error at most
 twice the fixed copy tolerance. These facts use the genuine complete first
 block, fused second matrix and actual prenorm; all clipping and norm
 conditions are derived from raw tokens and the finite shared gains.
-The raw query's own V and K are exactly zero. Robust finite-softmax score
-selection, readout and complete raw-parser correctness remain.
+The raw query's own V and K are exactly zero.
 
 At the fixed actual encoder, raw query/table scores now differ from their
 true categorical rotary reference by at most twice exp(alpha) times the
 copy tolerance. The proof uses the real normalized projections with no
 inverse-epsilon amplification. Raw key/query competitors have zero score,
-and the genuine own-value stays zero. Actual robust latest-write gaps,
-finite-softmax retrieval and tied readout remain to be connected.
+and the genuine own-value stays zero.
 
 Genuine raw table competitors now retain a positive score gap
 exp(alpha)*latestMargin/2. Different neighboring keys and earlier writes
 of the same key are both covered using their derived rotary comparisons
 and both actual copied-key errors. Context displacements follow from
-real integer bounds. Complete grammar coupling and excluded nonrecords
-still need to supply a full-row gap for finite retrieval and readout.
+real integer bounds.
 
 Actual BOS and post-table value fillers now have exactly zero matching
 score through the complete real gate, second prenorm and K projection.
 An actual imperfect matching table record has score at least the positive
 retained gap. Its true V is the raw value code with the genuine next RMS
-multiplier, and every actual V norm is at most sixteen. Full-row routing,
-finite retrieval/readout and validated-parser coupling remain.
+multiplier, and every actual V norm is at most sixteen.
 
 Raw table adjacency and chronological last-write conditions now imply
 a complete actual matching-score row gap and finite causal-softmax tail
@@ -182,8 +172,16 @@ bound. Original XSA preserves retrieval because the true raw query V is
 zero. The genuine head's error from its actual selected value is at most
 32*(T-1)*exp(-retainedGap), with value diameter derived. The concrete raw
 overwrite control strictly prefers its later, different-valued write.
-These raw applicability predicates still require full-parser discharge;
-uniform finite accuracy, genuine second W_o and tied readout remain.
+These raw applicability predicates still require full-parser discharge.
+
+One fixed finite second-head log-temperature now gives any positive
+requested retrieval tolerance uniformly over the raw recall context.
+Its true gap is log(1+2016/tolerance), evaluated directly in the finite
+softmax tail. A positive tolerance at one sixteenth of the true next RMS
+lower scale is achieved without an assumed leakage bound, and one shared
+output gain has gain*lowerScale=2. Actual second W_o/tied readout and
+full-parser discharge of the raw conditions remain; no floating-point
+or AdamW success is inferred.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
