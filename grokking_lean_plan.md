@@ -23,12 +23,12 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
 | Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; circuit-efficiency literature to investigate | Research pending |
-| Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Six measurements implemented and checked; 249 Python tests passed |
-| Gradient coherence and implicit bias | State what batch gradient agreement can and cannot imply; distinguish loss descent, task structure and optimizer-specific bias | Fixed-batch gradients; ordinary AdamW | High agreement at initialization rejects a standalone signal |
+| Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Six measurements and objective decomposition checked; 256 Python tests passed |
+| Gradient coherence and implicit bias | State what batch gradient agreement can and cannot imply; distinguish loss descent, task structure and optimizer-specific bias | Fixed-batch gradients; ordinary AdamW | Shared EOS explains most initialization alignment; answer-only alignment also fails as a standalone signal |
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Analogy only for current finite GPTMini; finite-size scaling not established |
 | Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Research pending; optimizer remains unchanged |
-| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | General convergence to a rule is not proved |
+| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | Six native first-step laws/counterexamples prove that Euclidean norm conservation does not transfer unrestrictedly; convergence to a rule remains unproved |
 
 ## Cycle
 
@@ -62,9 +62,10 @@ and endpoint logit changes have been measured around the actual
 effects, not a universal detector. Full control/seed budgets remain active
 or queued. The reference control completed all 150,000 updates with about
 1.50% held-out answer accuracy; absence of a later transition is not proved.
-Seed 2 first exceeded 99% held-out accuracy at 1,250 updates,
-compared with 35,500 for seed 1. This is an early-generalizing comparison,
-not a second delayed-transition replication; its full budget continues.
+Seed 2 completes its full 150,000 updates with 100% accuracy, first
+exceeding 99% at 1,250 compared with 35,500 for seed 1. Seed 3 first
+exceeds 99% at 750 and continues its full budget. These are early learning
+comparisons, not second delayed-transition replications.
 
 The six-probe implementation and frozen results are committed as `4436290`.
 All 249 Python tests passed, including CPU/CUDA noninterference checks.
@@ -129,9 +130,27 @@ ODE path remains an input. A classifier, discrete optimizer and arbitrary
 dataset are not identified with this one-parallelogram model. These modules
 add thirteen proved theorems and no sorry, bringing the total to 82.
 
-Next verify which Euclidean-flow conservation properties fail under
-adaptive AdamW updates, and separate shared EOS supervision from answer
-gradients in the actual checkpoint measurements.
+`Transformer.Grokking.AdamW.FirstStep` derives the first bias-corrected
+direction from zero moment buffers and the derivative of the actual finite
+update's squared norm. At the nonzero quotient-loss point `(1, 2, 0)`,
+the true Euclidean gradient is tangent but the adaptive direction is not.
+Its norm derivative is strictly negative for every positive epsilon and
+nonnegative decay, including zero decay. Finite updates with betas
+`(0.9, 0.98)`, rate `0.001`, epsilon `1e-8`, with and without decay `0.1`,
+also lower the norm. These six theorems are exact-real counterexamples to
+an unrestricted conservation transfer, not to grokking or to this actual
+GPTMini trajectory. No sorry is added; the total is now 88.
+
+The checked objective decomposition is committed as `d5bf4b4`. Across all
+three initialized GPTMinis, EOS supplies most of the full train/held-out
+gradient dot product. Seed 1 has full cosine 0.9524, answer cosine 0.3154,
+and EOS–EOS contribution 0.9297 to the full cosine. By 1,000 updates EOS
+is negligible and answer alignment is still 0.8567 before generalization.
+At the delayed transition answer alignment decreases. Both shared targets
+and answer-only false signals must therefore enter the formalization.
+
+Next prove a shared-target gradient-coherence counterexample from actual
+loss derivatives, then formalize operational delay and causal detectors.
 Then formalize operational delay/causal detectors and geometry metrics. Preserve
 the distinction between an inverse-rate characteristic time and the time
 to cross a task-dependent generalization threshold. Extend phase-transition
