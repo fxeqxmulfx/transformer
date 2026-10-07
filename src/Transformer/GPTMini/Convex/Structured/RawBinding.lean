@@ -10,6 +10,8 @@ every candidate key/value are read from the unchanged finite raw token
 list. All visible position pairs are retained, including BOS, wrong
 key/value orders, earlier writes and post-table fillers. The only
 input side condition bounds physical positions by the context cap.
+Actual next-token callbacks use the final position as their query;
+causal tensor layers must evaluate each row on that row's own prefix.
 
 The actual loss is computed by the all-route/small-channel contraction;
 it is the negative log of the same probability used by inference and
