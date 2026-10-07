@@ -414,6 +414,14 @@ signals lie in [0,16], so the complete two-head output and W_o add
 norm at most 32 and the real first residual is bounded by M+32.
 Zero self and visible absence are proved at the actual raw residual
 coordinates, including a nonzero future-feature control.
+DepthSignalPresence now derives the exact gap 2*threshold in the
+actual head from a visible real residual feature at least r^2 and
+a zero current feature. In the explicit bounded, separated feature
+domain, genuine signal positivity is equivalent to visible feature
+presence; the true signal is zero or at least twice the threshold.
+A simultaneous ordinary real-vector control satisfies every local
+hypothesis. Actual ordered block induction must still establish this
+domain and zero-self condition from the validated raw depth word.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -539,3 +547,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Original simultaneous depth QKV committed in afb6840. Proved actual RMS multiplier bounds at both widths and shared finite threshold/FFN/readout compensation; the local [1,4096] norm domain is explicit. | Derive the domain and feature amplitudes through the actual residual blocks, then full depth SolvesTask; no convex or training-success claim follows from these given weights. |
 | 2026-10-07 | 1 | Genuine depth RMS/gains committed in 18fff55. Coupled complete original two-head attention, true RMS, real head merge and nonzero W_o; proved exact output signals, zero protected contributions and independent target reads. | Derive quantitative actual signal/state bounds and ordered hidden-state induction, then full depth SolvesTask before convex search and equal-FLOP tests. |
 | 2026-10-07 | 1 | Complete original depth attention committed in e40f61f. Derived actual normalized coordinate bounds, r^3 feature floor on the explicit state domain, true signal range [0,16], whole attention norm at most 32 and first residual bound M+32; proved actual zero-self and visible absence. | Derive occurrence/FFN transitions and close the actual hidden-state induction, then tied readout and depth SolvesTask. |
+| 2026-10-07 | 1 | Genuine attention/residual bounds committed in d327192. Proved true occurrence signal at least 2*threshold, exact positivity iff visible separated feature, and zero-or-gap input for the ordinary FFN, with simultaneous concrete operator witnesses. | Connect these actual head signals to the true FFN transition, derive all representation conditions by ordered layer induction and complete depth SolvesTask. |

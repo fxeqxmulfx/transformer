@@ -45,6 +45,7 @@ import Transformer.GPTMini.Semantics.DepthQKV
 import Transformer.GPTMini.Semantics.DepthNormalization
 import Transformer.GPTMini.Semantics.DepthAttention
 import Transformer.GPTMini.Semantics.DepthAttentionBounds
+import Transformer.GPTMini.Semantics.DepthSignalPresence
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -77,7 +78,7 @@ simultaneously, preserve unwritten coordinates and retain the true RMS
 quadratic scale. The genuine uniform softmax/XSA head gives exact absence
 and floor L/128 at zero self-value. Actual two-head attention adds norm at most 32.
 Actual two-head attention, protected channels, RMS bounds and the E_2/E_4
-data recurrence are proved. Full hidden-state induction/readout remain.
+data recurrence and true separated presence are proved. Full hidden/readout remain.
 
 An explicit original RoPE pair gives a positive predecessor score gap
 across all Basis context lengths. Actual finite softmax/XSA copies that
@@ -173,8 +174,7 @@ softmax tail. A positive tolerance at one sixteenth of the true next RMS
 lower scale is achieved without an assumed leakage bound, and one shared
 output gain has gain*lowerScale=2. No floating-point or AdamW success is inferred.
 
-The genuine second ordinary block now includes the actual matching fused
-matrix, finite shared temperature, nonzero W_o and original zero FFN.
+The genuine second block has matching fused QKV, finite temperature, W_o and zero FFN.
 Its exact full state writes compact retrieval into the raw value interval,
 preserves query/type coordinates and transports actual head accuracy
 through the real merge/output matrix.
