@@ -13,14 +13,19 @@ Thm. 1): the expected number of modes of `eq:gkde` in a **fixed** interval
   `=o[atTop]`, `=Θ[atTop]`, `=O[atTop]`.
 
 * `1{0 ∈ [a, b]} + o(1)`, `Θ(1)`, `Θ(n^{-1/2}β^{5/4})`, `Θ(√β)` are the four
-  conclusions, in that order.  The identity `Θ(n^{-1/2}β^{5/4}) = o(√β)` that
+  source conclusions, in that order. The first is false as a universal
+  claim including endpoints: `not_mammen_lt` refutes it even on
+  nondegenerate intervals, at `β = 1`, `n = k + 1`. Reflection prevents both
+  `[-1,1]` and `[0,1]` from having expected count tending to one.
+  The identity `Θ(n^{-1/2}β^{5/4}) = o(√β)` that
   the source appends to the third is `isLittleO_mammen_mid_sqrt`, and it is
   proved: it is arithmetic on the regime `β ≪ n^{2/3}`, not a statement about
   modes.
 
-* **Deviation.**  The source says "a fixed interval `[a, b]`" in all four
-  bullets.  The second and the third carry here the extra hypothesis
-  `0 ∈ [a, b]`, and all but the first the extra hypothesis `a < b`.  Both are
+* **Deviation.** The source says "a fixed interval `[a, b]`" in all four
+  bullets. The first is refuted. The second and the third carry here the
+  extra hypothesis `0 ∈ [a, b]`, and the three remaining positive claims
+  carry `a < b`. Both are
   needed:  a degenerate interval holds at most one mode, and an interval at
   positive distance from the origin holds `o(1)` of them in the second and
   third regimes — by the paper's own account of where the modes are, the
@@ -36,6 +41,7 @@ Source: arXiv:2412.09080v3, `thm:mammen`.
 
 import Transformer.Modes.Section1_KDE
 import Transformer.Modes.Growth
+import Transformer.Modes.Section1_MammenBoundary
 
 open Filter Asymptotics
 open scoped Topology ENNReal
@@ -43,26 +49,25 @@ open scoped Topology ENNReal
 namespace Transformer
 namespace Modes
 
-/-! ### `β ≪ n^{2/5}`: the single mode at the origin -/
+/-! ### `β ≪ n^{2/5}`: a counterexample at the interval boundary -/
 
-/-- **Theorem (thm:mammen), first bullet.**  If `β ≪ n^{2/5}`, the expected
-number of modes of `P̂_n` in a fixed `[a, b]` is `1{0 ∈ [a, b]} + o(1)`.
-Finiteness is stated: `expectedModesReal` reads `∞` as `0`, which for
-`0 ∉ [a, b]` would satisfy the `o(1)` vacuously.
-
-Not proved here.
-
-Source: arXiv:2412.09080v3, `thm:mammen`. -/
-theorem mammen_lt (a b : ℝ) (hab : a ≤ b) (N : ℕ → ℕ) (B : ℕ → ℝ)
-    (hN : Tendsto (fun k => (N k : ℝ)) atTop atTop) (hB : ∀ k, 0 < B k)
-    (hreg : B =o[atTop] fun k => (N k : ℝ) ^ ((2 : ℝ) / 5)) :
-    (∀ᶠ k in atTop, expectedModes (B k) (N k) (Set.Icc a b) ≠ ∞) ∧
-    (fun k => expectedModesReal (B k) (N k) (Set.Icc a b) -
+/-- **Counterexample to `thm:mammen`, first bullet.** The source predicts
+`1{0 ∈ [a,b]} + o(1)` for every fixed interval in the low-bandwidth regime.
+At `β = 1`, `n = k + 1`, its conclusions for `[-1,1]` and `[0,1]` contradict
+reflection and the fact that zero is almost surely not a mode. These are
+nondegenerate intervals. The regime hypotheses are proved below and in
+`mammen_lt_counterexample_regime`; no corrected positive formula is assumed.
+Eventual finiteness prevents the real conversion from concealing infinity.
+Source: arXiv:2412.09080v3, §1.1, first bullet of `thm:mammen`. -/
+theorem not_mammen_lt :
+    ¬ ∀ a b : ℝ, a ≤ b →
+      (∀ᶠ k : ℕ in atTop, expectedModes 1 (k + 1) (Set.Icc a b) ≠ ∞) ∧
+      (fun k : ℕ => expectedModesReal 1 (k + 1) (Set.Icc a b) -
         (if (0 : ℝ) ∈ Set.Icc a b then 1 else 0)) =o[atTop] fun _ => (1 : ℝ) := by
-  sorry
+  exact not_mammen_lt_all_Icc
 
-/-- The hypotheses of `mammen_lt` are satisfiable: `n = k + 1` samples and a
-constant bandwidth parameter. -/
+/-- The original regime hypotheses hold for the counterexample: `n = k + 1`
+samples, constant positive bandwidth, and a nondegenerate interval. -/
 example : (0 : ℝ) ≤ 1 ∧ Tendsto (fun k : ℕ => ((k + 1 : ℕ) : ℝ)) atTop atTop ∧
     (∀ _ : ℕ, (0 : ℝ) < 1) ∧
     (fun _ : ℕ => (1 : ℝ)) =o[atTop] fun k : ℕ => ((k + 1 : ℕ) : ℝ) ^ ((2 : ℝ) / 5) := by
