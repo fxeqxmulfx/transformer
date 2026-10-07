@@ -222,7 +222,19 @@ Nine required transition rows, fifteen reachable value rows, initial and
 learned branch confidence derive correctness for every valid raw parity
 input when `deltaHead + deltaInitial + 19*deltaTransition + 5*deltaValue`
 is below `1/11`. It covers the actual full tensor stack and both generated
-answer/EOS calls. Numerical float64 row checks of all six completed
-gain-eight parity checkpoints give budgets below `2.17e-7`; every needed
-logit gap exceeds 20. These numerical estimates support the sufficient
-condition; exact learned-weight and IEEE certification are separate checks.
+answer/EOS calls.
+
+The exact learned-weight check is now proved in Lean. All six completed
+gain-eight parity checkpoints supply 122 relevant scalar coordinates each,
+stored as exact gained dyadic reals. The kernel checks their 96 physical
+target/rival differences with gap at least twenty; a proved elementary
+bound shows gap eleven already meets the complete confidence budget.
+`TensorLearnedParity` then proves the actual tensor integer model solves
+every valid raw parity prefix and generates both answer/EOS tokens, with
+all other weights arbitrary. This is a guarantee for the given learned
+coordinate families rather than a test-set assumption. The saved
+[exact certificates](parity_exact_certificates.json) retain checkpoint
+hashes, original row indices and all checked rational coordinates.
+Checkpoint deserialization, IEEE inference equivalence and AdamW
+convergence are not formalized; the guarantee is in real arithmetic for
+the original parity grammar.

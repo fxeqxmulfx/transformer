@@ -70,6 +70,12 @@ import Transformer.GPTMini.Convex.Structured.ParityDataList
 import Transformer.GPTMini.Convex.Structured.ParityRows
 import Transformer.GPTMini.Convex.Structured.ParitySemanticRows
 import Transformer.GPTMini.Convex.Structured.TensorParityCertificate
+import Transformer.GPTMini.Convex.Structured.ParityLogitCertificate
+import Transformer.GPTMini.Convex.Structured.LearnedParityData
+import Transformer.GPTMini.Convex.Structured.LearnedParityParameters
+import Transformer.GPTMini.Convex.Structured.LearnedParityRows
+import Transformer.GPTMini.Convex.Structured.LearnedParityConfidence
+import Transformer.GPTMini.Convex.Structured.TensorLearnedParity
 
 /-!
 # Structured alternatives guided by raw Basis semantics

@@ -991,8 +991,28 @@ the selected actual path and endpoint; correct logits or a correct encoder
 are not premises. The literal tensor integer model then solves every valid
 parity prefix, including both free-generated label/EOS calls and gained
 coordinates. A real finite full parameter assignment satisfies all checks.
-The result is in real arithmetic; checking learned floating-point rows and
-IEEE decoder margins remains a separate obligation.
+The result is in real arithmetic; its application to saved learned rows
+and IEEE decoder margins are separate obligations.
+
+ParityLogitCertificate and LearnedParityData/Parameters/Rows/Confidence
+now discharge the learned-row obligation for all six completed gain-eight
+parity checkpoints. Their original float32 coordinates are serialized as
+exact dyadic reals at the actual fixed gain. The Lean kernel checks all
+96 physical target/rival comparisons per checkpoint with gap at least
+twenty. An elementary exp(11) >= 2048 bound then proves that gap eleven
+suffices for the complete nineteen-position confidence budget. All 936
+stored rational entries, including excluded padding, match the saved
+metadata in experiments/basis_tensor/parity_exact_certificates.json.
+
+TensorLearnedParity derives actual full-stack SolvesTask and both generated
+answer/EOS calls for every valid raw prefix, with every remaining full
+parameter arbitrary. It also proves the sufficient genuine complete NLL
+and probability bounds and recovers the same public function in inverse
+gain coordinates. This is a property of given learned weight families,
+not an existence-only theorem or an empirical test-set premise. The
+checkpoint hashes and exact row layout are retained. Deserialization,
+IEEE inference equivalence and AdamW convergence are not formalized;
+the guarantee retains the original parity grammar and real arithmetic.
 
 Read-only diagnostics on all 512 hard-recall validation rows at gain-eight
 updates 3450/3500/3500 give sequence accuracy 76.76/76.56/76.95 percent
@@ -1133,3 +1153,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Actual correct complete tensor training committed in 815556c. Proved genuine intermediate causal residual field/anchor preservation after changed code coordinates and actual recomputed RMSNorm; every actual head inference, complete probability and computed NLL is invariant under the derived preserved observations. | Induct over the real shared-weight stack with zero deferred FFN, connect its actual integer function and complete training to the proved six-recipe capability/convexity before candidate acceptance and stage 3. |
 | 2026-10-07 | 2 → 3 | Intermediate tensor observations committed in 09393dd. Proved actual original zero-FFN second residuals, full shared-weight stack anchor/observation induction, genuine final-RMS/tied integer forward coupling and all-six-recipe finite-weight Basis correctness at widths 64/128 and depths two/six. Complete actual final-head sample/minibatch training is globally convex jointly in the full free parameter domain with correct data-generated labels. Accepted this explicitly scoped mathematical prototype for ordinary-AdamW experiments. | Port the exact compact operator and complete raw-data loss into the lab; check stable numerical inference/gradients and actual parameter counts, pin a substantial original-softmax protocol, measure its first-success training FLOPs and compare the candidate at precisely that budget. No optimizer-convergence or empirical-success claim. |
 | 2026-10-07 | 4 | Fixed-gain port committed in ccc0ea5 after 218 Python tests and eight full-shape arithmetic probes. All eighteen matched repaired arms launched. All three easy-depth seeds complete their softmax ceilings with 100% validation/test/length-128 accuracy; first success costs 135,475,524,680 operations versus 148,978,162,800 for softmax. Added a genuine full-stack arbitrary-weight complete-loss-to-semantic-answer certificate at log(11/10). | Finish every repaired full-ceiling comparison and the frozen original recall controls; preserve any weaker results and repair in Lean or change candidate. Pointwise semantic certification does not prove optimizer convergence or universal learned generalization. |
+| 2026-10-07 | 4 | Kernel-checked the exact learned dyadic rows of all six completed parity checkpoints and derived full real tensor correctness for every valid raw parity prefix, including free answer/EOS generation, with all remaining fields arbitrary. Checkpoint hashes and exact coordinate metadata are retained. | Finish matched gain-eight comparisons and fresh gain-32 recall repairs. Deserialization/IEEE preservation and learned depth/recall certificates remain separate from this real parity guarantee. |
