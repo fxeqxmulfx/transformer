@@ -11,7 +11,7 @@ high dimension Gaussian vertices do, with probability tending to one;
 condition on the edges at that vertex.
 -/
 
-import Transformer.FrankWolfe.Section4_Polytope
+import Transformer.FrankWolfe.Section4_GaussianCells
 import Transformer.FrankWolfe.Section4_Edges
 import Mathlib.Probability.Distributions.Gaussian.Multivariate
 import Mathlib.Geometry.Euclidean.Angle.Unoriented.Affine
@@ -26,26 +26,20 @@ variable {d κ : ℕ}
 
 /-- **Remark (prop: d.to.infty) — Gaussian vertices in high dimension.**
 
-Let `v_1, …, v_κ` be i.i.d. `𝒩(0, I_d)` and let `B ≻ 0` have condition number
-bounded independently of `d`.  With `κ` fixed and `d → +∞`, with probability
-tending to `1`,
-
+For i.i.d. `𝒩(0, I_d)` vertices and `B ≻ 0` of uniformly bounded condition
+number, fixed `κ` and `d → ∞`, with probability tending to one,
   `⟨B v_i, v_i⟩ > ⟨B v_i, v_j⟩`   for all `j ≠ i`,
 
-that is, every vertex lies in its own cell and no two vertices lie in the same
-cell.
-
-**What the source says and what is changed here.**  "Condition number bounded
-independently of `d`" is spelled out as the two-sided bound the source's own
-proof uses: constants `0 < λ_min ≤ λ_max` independent of `d` with
-`λ_min ‖x‖² ≤ ⟨B x, x⟩ ≤ λ_max ‖x‖²`.  The family `B` is therefore indexed by
-`d`, as it must be for `d → ∞` to mean anything.
-
-Not proved here.
-
+so every vertex lies strictly in its own cell.
+**Source conditions.** The source's proof uses fixed positive spectral bounds
+`λ_min ‖x‖² ≤ ⟨B_d x,x⟩ ≤ λ_max ‖x‖²`; the family is indexed by `d`.
+The symmetry in `B ≻ 0`, omitted in the earlier formal statement, is restored:
+quadratic bounds do not control a skew-symmetric part. The proof combines
+conditional Gaussian tails, escape from fixed balls and a finite union bound.
 Source: arXiv:2508.09628v1, §4, `prop: d.to.infty`. -/
 theorem gaussian_vertices_own_cell (κ : ℕ) (B : (d : ℕ) → ParamMatrix d) (lmin lmax : ℝ)
     (hlmin : 0 < lmin)
+    (hsymm : ∀ d, (B d).toLinearMap.IsSymmetric)
     (hlb : ∀ (d : ℕ) (x : EucSpace d), lmin * ‖x‖ ^ 2 ≤ inner (𝕜 := ℝ) (B d x) x)
     (hub : ∀ (d : ℕ) (x : EucSpace d), inner (𝕜 := ℝ) (B d x) x ≤ lmax * ‖x‖ ^ 2) :
     Filter.Tendsto
@@ -53,17 +47,21 @@ theorem gaussian_vertices_own_cell (κ : ℕ) (B : (d : ℕ) → ParamMatrix d) 
         {v : Idx κ → EucSpace d | ∀ i j : Idx κ, j ≠ i →
           inner (𝕜 := ℝ) (B d (v i)) (v j) < inner (𝕜 := ℝ) (B d (v i)) (v i)})
       Filter.atTop (nhds 1) := by
-  sorry
+  apply gaussian_vertices_own_cell_of_norm_bound κ B hlmin (M := |lmax|) _ hlb
+  intro d
+  exact norm_le_of_symmetric_quadratic_bounds (B d) (hsymm d) lmax
+    (fun x => (mul_nonneg hlmin.le (sq_nonneg ‖x‖)).trans (hlb d x)) (hub d)
 
 /-- The hypotheses of `gaussian_vertices_own_cell` are satisfiable: `B_d = I_d`,
 `λ_min = λ_max = 1`. -/
 example :
     (0 : ℝ) < 1 ∧
+    (∀ d, (ContinuousLinearMap.id ℝ (EucSpace d)).toLinearMap.IsSymmetric) ∧
     (∀ (d : ℕ) (x : EucSpace d),
       (1 : ℝ) * ‖x‖ ^ 2 ≤ inner (𝕜 := ℝ) (ContinuousLinearMap.id ℝ (EucSpace d) x) x) ∧
     (∀ (d : ℕ) (x : EucSpace d),
       inner (𝕜 := ℝ) (ContinuousLinearMap.id ℝ (EucSpace d) x) x ≤ (1 : ℝ) * ‖x‖ ^ 2) := by
-  refine ⟨one_pos, fun d x => ?_, fun d x => ?_⟩ <;> simp
+  refine ⟨one_pos, fun _ _ _ => rfl, fun d x => ?_, fun d x => ?_⟩ <;> simp
 
 /-- `eq: neigh`: the vertices adjacent to `v_i` in `𝒦 = conv{v_ℓ}` — those
 `v ≠ v_i` for which the segment `[v_i, v]` is a face of `𝒦`.
