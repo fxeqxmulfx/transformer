@@ -31,6 +31,7 @@ import Transformer.GPTMini.Semantics.RecallFinalState
 import Transformer.GPTMini.Semantics.RecallReadoutCoordinates
 import Transformer.GPTMini.Semantics.RecallReadout
 import Transformer.GPTMini.Semantics.RecallConstruction
+import Transformer.GPTMini.Semantics.RecallIntegerArray
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -97,11 +98,9 @@ and the stored key has positive norm for positive finite gain. Raw value
 and query codes are retained. These are real-arithmetic capacity bounds;
 floating-point or optimization success is not inferred from this temperature.
 
-An ordinary shared eight-to-sixteen linear matrix now inserts every real
-compact copied key into the original slow rotary pairs. Exact inner
-products, norms and copy distances are preserved, including imperfect
-copies and position-dependent amplitudes. Its categorical image is the
-verified matching code, and its excluded fast coordinates are zero.
+An ordinary eight-to-sixteen matrix inserts real copied keys into the
+original slow rotary pairs, preserving norms/inner products/copy errors
+and excluding fast coordinates, including imperfect scaled copies.
 
 Original QKNorm cancels independent positive Q/K amplitudes above clipping.
 Actual insertion/RoPE bound normalized error by twice the base copy error,
@@ -189,6 +188,8 @@ returns its later value. A complete original two-layer ModelParams now
 realizes both states in the actual hidden loop and derives all forward
 logits. Its checked List Int function appends that selected value,
 including on the raw overwrite control. Full Basis parsing remains.
+Actual integer reads now retain their exact finite input tokens and
+positions, deriving bounds and genuine key/value/BOS IDs for coupling.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout

@@ -307,7 +307,13 @@ every matching write by the selected raw position. Selected key/value
 positions and the successful parser's final validated query index are
 exact; every non-BOS position has the true checked key/value alphabet.
 
-Next transfer these validated integer positions to checked finite arrays,
+RecallIntegerArray connects every actual integer read to the same checked
+finite token and embedding index, deriving a bounded position from raw
+read success. Key/value interval validation is equivalent to the genuine
+finite key/value IDs, and raw BOS recovers actual token one. Reverse
+key/value readback preserves exact raw IDs at the same array positions.
+
+Next discharge layout and latest-write predicates from full raw parsing,
 prove recall SolvesTask, and construct the depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
@@ -420,3 +426,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Complete model/integer coupling committed in a4ca072. Strengthened successful raw Basis parsing to retain all earlier/later table and full query/filler range checks together with chronological last-write decomposition. | Transfer this validated raw decomposition to exact finite-array positions and discharge all routing predicates, then recall SolvesTask and full depth correctness; convex architecture/FLOP comparison remain queued. |
 | 2026-10-07 | 1 | Complete validated parser conditions committed in 52d6321. Proved exact serialized key/value positions, every true table value's immediate raw key predecessor, the actual BOS offset and a last-write upper bound on all matching record indices. | Couple these actual integer positions to the checked finite arrays and discharge raw layout/latest predicates, then recall SolvesTask and full depth correctness; convex architecture/FLOP comparison remain queued. |
 | 2026-10-07 | 1 | Exact table serialization/chronology committed in 5507968. Transported genuine adjacency, row recovery and last-write bounds through full raw BOS/table/query prefixes; derived selected raw positions, the final actual query index and all non-BOS alphabet positions. | Transfer these integer facts to checked finite arrays and prove complete recall SolvesTask, then full depth correctness; convex architecture/FLOP comparison remain queued. |
+| 2026-10-07 | 1 | Full-prefix integer positions committed in 4272535. Coupled genuine raw integer reads to the exact finite input tokens, deriving position bounds and actual key/value/BOS IDs, with reverse exact key/value serialization at the same positions. | Discharge all raw layout/latest-write conditions from successful parsing and prove complete recall SolvesTask, then depth correctness; convex architecture/FLOP comparison remain queued. |
