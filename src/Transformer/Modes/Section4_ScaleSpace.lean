@@ -1,4 +1,5 @@
 import Transformer.Modes.Section1_Sketch
+import Transformer.Modes.Section4_TwoPointModes
 
 /-
 # The number of modes of a Gaussian KDE — `lem:scale-space`
@@ -8,11 +9,18 @@ modes far from the origin by the sample points beyond them.
 
 **What the source says and what is carried here.**
 
-* `lem:scale-space` is stated for `β > 0` and `n ≥ 1`.  The source leaves both
-  implicit, and both are needed: for `β ≤ 0` or `n = 0` the KDE is identically
-  `0`, every point is a mode, and the count is infinite.  Its proof rests on
-  Carreira-Perpiñán–Williams, Theorem 2, which is not in Mathlib; the lemma is
-  not proved here.
+* `lem:scale-space` is false even with `β > 0`, `n ≥ 1`, and `a > 0`.
+  At `β = 2`, the samples `0` and `2` have two modes strictly between the
+  centers. A positive threshold below the left mode leaves both modes to
+  its right, but only one sample. `scale_space_counterexample` proves
+  this for the actual KDE and `not_scale_space` refutes the source claim.
+  The helper module constructs the modes by the extreme value theorem
+  and exact derivative signs, without a numerical peak approximation.
+
+* The proof's appeal to Carreira-Perpiñán–Williams, Theorem 2, cannot justify
+  a bound on a fixed half-line: an existing mode can move across its boundary
+  when a component is added. This counterexample concerns the stated local
+  bound, rather than the global count of modes under Gaussian smoothing.
 
 * "By symmetry, the same estimate holds for modes in `(-∞, -a)`" is proved,
   `modeCount_kde_Iio_le`, from the `(a, ∞)` case applied to the reflected
@@ -29,23 +37,29 @@ namespace Modes
 
 variable {n : ℕ}
 
-open Classical in
-/-- The number of sample points in `S`. -/
-noncomputable def countIn (X : Idx n → ℝ) (S : Set ℝ) : ℕ :=
-  (Finset.univ.filter fun i => X i ∈ S).card
+/-- **Counterexample to `lem:scale-space`.** With `β=2` and samples `0,2`,
+there is a positive threshold with one sample on its right and more than
+one actual mode. Source: arXiv:2412.09080v3, §4.2, `lem:scale-space`. -/
+theorem scale_space_counterexample :
+    ∃ a : ℝ, 0 < a ∧ countIn twoPointSample (Set.Ici a) = 1 ∧
+      (1 : ℝ≥0∞) < modeCount (kde 2 twoPointSample) (Set.Ioi a) := by
+  obtain ⟨a, ha, ha2, hmodes⟩ := exists_twoPointSample_tail_modes
+  exact ⟨a, ha, countIn_twoPointSample ha ha2.le, lt_of_lt_of_le (by norm_num) hmodes⟩
 
-/-- **Lemma (lem:scale-space).**  For `a > 0`, the number of modes of `P̂_n` in
-`(a, ∞)` is at most `|{i : Xᵢ ≥ a}|`.
+/-- The source's universal pathwise bound is false under all its intended
+positivity hypotheses. No corrected bound is assumed under the paper's name.
+Source: arXiv:2412.09080v3, §4.2, `lem:scale-space`. -/
+theorem not_scale_space :
+    ¬ ∀ n : ℕ, ∀ β : ℝ, 0 < β → 0 < n → ∀ a : ℝ, 0 < a → ∀ X : Idx n → ℝ,
+      modeCount (kde β X) (Set.Ioi a) ≤ countIn X (Set.Ici a) := by
+  intro h
+  obtain ⟨a, ha, hcount, hmodes⟩ := scale_space_counterexample
+  have hbound := h 2 2 (by norm_num) (by norm_num) a ha twoPointSample
+  rw [hcount] at hbound
+  exact hmodes.not_ge (by simpa only [Nat.cast_one] using hbound)
 
-Not proved here; the source deduces it from Carreira-Perpiñán–Williams,
-Theorem 2.  See the module docstring for `β > 0` and `n ≥ 1`.
-
-Source: arXiv:2412.09080v3, `lem:scale-space`. -/
-theorem scale_space {β : ℝ} (hβ : 0 < β) (hn : 0 < n) {a : ℝ} (ha : 0 < a)
-    (X : Idx n → ℝ) : modeCount (kde β X) (Set.Ioi a) ≤ countIn X (Set.Ici a) := by
-  sorry
-
-/-- The hypotheses of `scale_space` are satisfiable. -/
+/-- The source's positivity hypotheses are satisfiable; the counterexample
+uses positive bandwidth and a nonempty sample as well. -/
 example : (0 : ℝ) < 1 ∧ 0 < 1 ∧ (0 : ℝ) < 1 := ⟨one_pos, one_pos, one_pos⟩
 
 /-! ### Symmetry -/
