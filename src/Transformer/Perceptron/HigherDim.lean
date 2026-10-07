@@ -33,7 +33,7 @@ Source: arXiv:2601.21366v2, `thm: any.d`.
 -/
 
 import Transformer.Perceptron.Atomicity
-import Transformer.Perceptron.Section3_Genericity
+import Transformer.Perceptron.Section3_ReLUGenericity
 import Transformer.Metastability.InitialUniform
 
 open scoped BigOperators ENNReal
@@ -139,23 +139,37 @@ example :
 is stationary, the restriction of `μ` to the active regions
 `⋃_j {x : a_j · x > 0}` is purely atomic with at most countably many atoms.
 
-Not proved here.
+The measure is fixed before choosing the parameter set. The proof gives
+the stronger conclusion that its active region is null, hence takes the
+countable set to be empty. The set includes stationary parameters for
+Dirac measures with strictly inactive inputs. The former primitive `φ` and
+`φ' = 2σ` binders are omitted: stationarity and source (iii) use `σ` alone.
 
-Source: arXiv:2601.21366v2, `thm: any.d` (iii). -/
-theorem any_d_relu_generic_countablyAtomic (d : ℕ) (hd : 2 ≤ d) (φ : ℝ → ℝ)
-    (hφ : ∀ s : ℝ, HasDerivAt φ (2 * max s 0) s) (μ : Perspective.ProbSphere d) :
+Source: arXiv:2601.21366v2, §3.1, `thm: any.d` (iii). -/
+theorem any_d_relu_generic_countablyAtomic (d : ℕ) (hd : 2 ≤ d)
+    (μ : Perspective.ProbSphere d) :
     ∃ U : Set (Params d), U ⊆ {p | 0 < p.1} ∧ {p | 0 < p.1} ⊆ closure U ∧
       ∀ p ∈ U, IsStationary p.1 (fun s => max s 0) p.2.1 p.2.2 μ →
         ∃ A : Set (SSphere d), A.Countable ∧
           (μ : Measure (SSphere d))
             ({x : SSphere d | ∃ j : Idx d,
               0 < inner (𝕜 := ℝ) (p.2.2 j) (x : EucSpace d)} \ A) = 0 := by
-  sorry
+  obtain ⟨U, hpos, hdense, hnull⟩ := exists_dense_active_null_params hd μ
+  refine ⟨U, hpos, hdense, ?_⟩
+  intro p hp hs
+  refine ⟨∅, Set.countable_empty, ?_⟩
+  simpa only [Set.sdiff_empty] using hnull p hp hs
 
 /-- The hypotheses of `any_d_relu_generic_countablyAtomic` are satisfiable:
-`d = 2` and the ReLU primitive `φ(s) = (s_+)²`. -/
-example : (2 : ℕ) ≤ 2 ∧ ∀ s : ℝ, HasDerivAt (fun t : ℝ => max t 0 ^ 2) (2 * max s 0) s :=
-  ⟨le_rfl, hasDerivAt_reluSq⟩
+`d = 2`; a Dirac measure has actual stationary parameters in the chosen set. -/
+example : (2 : ℕ) ≤ 2 ∧
+    (1, (fun _ : Idx 2 => (1 : ℝ)),
+        fun _ : Idx 2 => -((basePoint 1 : SSphere 2) : EucSpace 2)) ∈
+      reluGenericParams (Perspective.diracProb 2 (basePoint 1)) ∧
+    IsStationary 1 (fun s => max s 0) (fun _ : Idx 2 => 1)
+      (fun _ => -((basePoint 1 : SSphere 2) : EucSpace 2))
+      (Perspective.diracProb 2 (basePoint 1)) :=
+  ⟨le_rfl, dirac_mem_reluGenericParams_and_stationary 1 one_pos (fun _ => 1) _⟩
 
 end Perceptron
 end Transformer
