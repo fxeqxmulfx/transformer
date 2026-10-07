@@ -36,6 +36,7 @@ import Transformer.GPTMini.Semantics.RecallParserLayout
 import Transformer.GPTMini.Semantics.RecallParserLatest
 import Transformer.GPTMini.Semantics.RecallCorrectness
 import Transformer.GPTMini.Semantics.DepthStep
+import Transformer.GPTMini.Semantics.DepthPresence
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -68,6 +69,8 @@ presence step. A linear raw-type offset excludes the wrong current letter;
 separated genuine presence gives exactly zero or a common positive plateau,
 including through the actual positive position-dependent RMS multiplier.
 Simultaneous matrices and the complete depth recurrence remain to construct.
+The genuine uniform softmax/XSA head now retains variable amplitudes at
+zero self-value, deriving exact absence, a cap and a presence floor L/128.
 
 An explicit original RoPE pair gives a positive predecessor score gap
 across all Basis context lengths. Actual finite softmax/XSA copies that

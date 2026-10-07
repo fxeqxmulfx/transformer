@@ -346,6 +346,13 @@ For ordered detection the opposite-type self-value must be zero, so XSA
 preserves that signal. Arbitrary own-value subtraction is not assumed to
 equal removal of just the own softmax summand. Actual matrices, propagated
 presence floors, final readout and full depth SolvesTask remain to prove.
+DepthPresence connects arbitrary nonconstant real value amplitudes to
+the genuine diagonal-inclusive causal softmax/XSA head at zero self-value.
+It derives nonnegativity, a length-independent upper cap, exact visible
+absence and a uniform occurrence floor L/128. Zero-or-bounded amplitudes
+therefore give a separated true prefix signal, even with future array
+positions and different prenorm scales. Actual raw matrices and layer
+induction must still derive these local representation bounds.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -462,3 +469,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Complete parser-derived raw layout committed in 75c8c94. Derived the actual finite selected write, neighboring key, final matching query, answer ID and chronological upper bound solely from successful full raw parsing, including genuine earlier overwrites. | Complete easy/hard recall SolvesTask through the actual List Int adapter, then full depth correctness; convex architecture/FLOP comparison remain queued. |
 | 2026-10-07 | 1 | Parser-derived finite last-write conditions committed in 643f78d. Proved full recall SolvesTask for both Basis grammars through the actual integer model callback, with no layout/selected-write/logit premise. Actual eight-write, sixteen-write and swapped-binding controls are covered. | Complete original depth correctness, retaining all real-arithmetic/shared-epsilon and compact-model scope distinctions; convex architecture/FLOP comparison remain queued. |
 | 2026-10-07 | 1 | Full raw recall correctness committed in c30b8c3. Proved an ordinary three-unit homogeneous ReLU2 presence step, raw-type exclusion, exact separated Boolean amplitude and positive prenorm-scaled margin for the depth construction. | Realize and bound genuine prefix detectors in the original attention/FFN matrices; complete depth SolvesTask before the convex architecture/FLOP stages. |
+| 2026-10-07 | 1 | Homogeneous depth FFN gate committed in fe30f91. Proved the true uniform softmax/XSA causal mean for nonconstant real value amplitudes, exact absence, upper cap and occurrence floor L/128; derived the separated presence input without unit-amplitude assumptions. | Derive these local bounds from real raw embedding/matrices and propagate the complete ordered depth recurrence, then final SolvesTask. |
