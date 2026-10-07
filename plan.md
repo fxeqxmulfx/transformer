@@ -1,6 +1,6 @@
 # Basis correctness and convex architecture research cycle
 
-Started: 2026-10-06. Status: active, stage 2.
+Started: 2026-10-06. Status: active, stage 3.
 
 ## Objective and constraints
 
@@ -518,7 +518,8 @@ function, with no unproved encoder or routing input and no added sorrys.
 
 ## 2. Search in Lean for a convex architecture
 
-Status: active. Complete raw semantics and original-model capability are available.
+Status: a mathematical prototype is admissible in the explicit scope below.
+Continue mathematical repair/search if its stage-3 experiments fail.
 
 Derive the needed operations from the proven Basis semantics: order,
 adjacency, key-conditioned latest-write selection, bounded counting and
@@ -790,18 +791,40 @@ a genuine intermediate causal attention residual overwrites only the
 ten decoder axes and preserves all raw Q/K/value/state/position fields
 and the anchor. After recomputed RMSNorm, actual observation equality
 implies identical complete head inference, probability and computed NLL.
-The next stack construction will use shared weights across its layers
+The actual stack construction uses shared weights across its layers
 and a zero deferred FFN; this scope must not be described as a proof for
 arbitrary independently trained multilayer transformers. Charge every
 repeated layer computation even if the resulting output is unchanged.
 
-Remaining acceptance tests: realize the changed full stack with retained
-raw fields and zero deferred FFN, then connect the complete tensor integer
-model to the proved raw capability and the same convex objective.
-Compact contraction, learned matching/joint values, all raw mixed-head
-Basis capability and correct explicit data supervision are now proved.
-Charge target generation and the changed loss in FLOP accounting.
-Reject or repair this proposal if these obligations fail; stage 3 stays queued.
+TensorDeferredFFN/TensorStack now include both real residuals and the
+original RMSNorm/W_in/ReLU2/W_out FFN with fixed zero matrices. Induction
+derives the unit anchor and all actual head observations through every
+nonfinal layer. Actual final attention, final RMSNorm and tied inner
+product equal the verified mixed decoder for every unrestricted weight.
+TensorStackTraining proves the computed complete final-head NLL equals
+minus log of that same genuine stack joint and is globally jointly convex.
+TensorStackInterface proves the actual checked List Int function equals
+the raw mixed callback on every integer input, including all fallbacks.
+TensorBasisModel.basisTensor_solves proves explicit finite actual tensor
+models solve every raw prefix in all six recipes and real two-call parity.
+The easy/hard models use width 64/128 and exactly two/six blocks for all
+tasks, two structured heads and the real task vocabularies/context caps.
+TensorBasisStackTraining proves correct-data sample/minibatch objectives
+are jointly convex through that same actual stack, on Set.univ of the
+entire BindingParameters domain. Free scalar counts remain 2384/28816/3721.
+
+Candidate decision: accept this shared-weight, zero-FFN, complete-data-NLL
+prototype for experimental implementation. Q/K and both kinds of values,
+transitions, positions and mixture logits are all free and use ordinary
+gradient updates; no projection or optimizer change is required. Ten
+decoder axes and the protected anchor are architectural constants, and
+the remaining width-128 spare axes are zero. All visible pairs remain
+in matching; no latent configuration bank is enumerated by inference.
+Output-only CE, independently trained deep matrices, a learned FFN,
+floating-point equivalence and AdamW convergence/success are unproved.
+Charge every actual forward/backward/loss/data-label operation and all
+repeated layers. Stable compact full-array contraction and numerical
+equivalence are implementation checks, not assumed experimental results.
 
 Exit criterion: a candidate with proved task capability and a proved
 convexity claim covering the parameters/objective being trained, usable
@@ -809,7 +832,9 @@ with the existing ordinary AdamW implementation and public interface.
 
 ## 3. Measure the softmax baseline and compare equal FLOPs
 
-Status: queued; starts when stage 2 produces an admissible candidate.
+Status: active. The stage-2 mathematical prototype is ready for the
+lab port, meaningful numerical checks and measured baseline protocol.
+No new stage-3 training run or successful FLOP budget has yet been recorded.
 
 Use the existing Basis small/large GPTMini softmax recipes and the actual
 success criterion. Pin source revision, task/mode, splits, seeds, model,
@@ -954,3 +979,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Genuine learned tensor-head inference committed in 5bdff3c. Realized the actual causal per-row attention residual, genuine ten-axis output, final RMSNorm and unchanged tied Euclidean readout; proved real final-row greedy equality with the verified mixed decoder for all free weights and structural future independence. | Preserve raw input fields through the changed full stack with deferred FFN, realize actual tensor complete likelihood and integer model coupling before candidate acceptance and stage 3. |
 | 2026-10-07 | 2 | Genuine causal tensor block/readout committed in 84ba59d. Proved physical-index state-path unrolling, actual normalized tensor mixture probability and exact computed complete NLL/inference coupling. The true tensor objective and correctly labeled six-recipe variable-length minibatches are globally convex jointly in all unrestricted embedding/Q/K/value/position/head weights. | Preserve raw fields through a real changed multilayer stack with zero deferred FFN and prove the actual tensor integer model's complete Basis capability before candidate acceptance and stage 3; output-only CE, AdamW success and measured comparisons remain open. |
 | 2026-10-07 | 2 | Actual correct complete tensor training committed in 815556c. Proved genuine intermediate causal residual field/anchor preservation after changed code coordinates and actual recomputed RMSNorm; every actual head inference, complete probability and computed NLL is invariant under the derived preserved observations. | Induct over the real shared-weight stack with zero deferred FFN, connect its actual integer function and complete training to the proved six-recipe capability/convexity before candidate acceptance and stage 3. |
+| 2026-10-07 | 2 → 3 | Intermediate tensor observations committed in 09393dd. Proved actual original zero-FFN second residuals, full shared-weight stack anchor/observation induction, genuine final-RMS/tied integer forward coupling and all-six-recipe finite-weight Basis correctness at widths 64/128 and depths two/six. Complete actual final-head sample/minibatch training is globally convex jointly in the full free parameter domain with correct data-generated labels. Accepted this explicitly scoped mathematical prototype for ordinary-AdamW experiments. | Port the exact compact operator and complete raw-data loss into the lab; check stable numerical inference/gradients and actual parameter counts, pin a substantial original-softmax protocol, measure its first-success training FLOPs and compare the candidate at precisely that budget. No optimizer-convergence or empirical-success claim. |

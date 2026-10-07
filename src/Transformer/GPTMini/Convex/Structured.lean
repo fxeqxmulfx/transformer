@@ -57,12 +57,22 @@ import Transformer.GPTMini.Convex.Structured.TensorBasisTraining
 import Transformer.GPTMini.Convex.Structured.TensorStream
 import Transformer.GPTMini.Convex.Structured.TensorObservations
 import Transformer.GPTMini.Convex.Structured.TensorObservationInference
+import Transformer.GPTMini.Convex.Structured.TensorDeferredFFN
+import Transformer.GPTMini.Convex.Structured.TensorStack
+import Transformer.GPTMini.Convex.Structured.TensorStackTraining
+import Transformer.GPTMini.Convex.Structured.TensorStackInterface
+import Transformer.GPTMini.Convex.Structured.TensorBasisModel
+import Transformer.GPTMini.Convex.Structured.TensorBasisStackTraining
 
 /-!
 # Structured alternatives guided by raw Basis semantics
 
 Source: complete Basis semantics at d640a91 and the finite log-sum-exp
-argument in arXiv:2305.05465v6, §7. Complete affine Gibbs objectives are
-convex in all raw parameters. A compact trainable embedding/attention
-replacement and full task capability are still construction obligations.
+argument in arXiv:2305.05465v6, §7. The actual compact shared-weight
+embedding/attention tensor stack solves all six complete raw Basis
+recipes at explicit finite weights. Correct data-supervised complete
+sample/minibatch NLL is jointly convex in all unrestricted learned
+parameters, with FFN fixed zero and readonly decoder/anchor axes.
+Output-only CE, independent deep matrices and AdamW/FLOP results are
+outside this mathematical prototype's scope.
 -/
