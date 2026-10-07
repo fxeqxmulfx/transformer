@@ -7,6 +7,7 @@ import Transformer.GPTMini.Convex.Structured.PointerControls
 import Transformer.GPTMini.Convex.Structured.MarkovChain
 import Transformer.GPTMini.Convex.Structured.MarkovTraining
 import Transformer.GPTMini.Convex.Structured.MarkovMarginals
+import Transformer.GPTMini.Convex.Structured.MarkovEmissions
 
 /-!
 # Structured alternatives guided by raw Basis semantics
