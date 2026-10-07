@@ -19,7 +19,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 
 | Route | First mathematical question | Evidence / source | Status |
 | --- | --- | --- | --- |
-| Operational delayed generalization | Define train fit, a sustained held-out plateau, later generalization, and finite-budget censoring without future information entering a detector | Power et al., arXiv:2201.02177; pinned causal histories | Definition/proof work next |
+| Operational delayed generalization | Define train fit, a sustained held-out plateau, later generalization, and finite-budget censoring without future information entering a detector | Power et al., arXiv:2201.02177v1, sections 1 and 3.1; pinned causal histories | Twelve proved threshold, prefix, confirmation-clock and bounded-continuation theorems; sustained windows and the full Python heuristic remain open |
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
 | Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; circuit-efficiency literature to investigate | Research pending |
@@ -59,8 +59,8 @@ match the original exactly, including the zero-step observation.
 Frozen probes, spectra, neuron profiles, gradients, head/subspace ablations
 and endpoint logit changes have been measured around the actual
 33,000–36,000 transition. These are associations and named intervention
-effects, not a universal detector. Full control/seed budgets remain active
-or queued. The reference control completed all 150,000 updates with about
+effects, not a universal detector. The reference control completed all
+150,000 updates with about
 1.50% held-out answer accuracy; absence of a later transition is not proved.
 Seed 2 and seed 3 both complete 150,000 updates with 100% accuracy, first
 exceeding 99% at 1,250 and 750 compared with 35,500 for seed 1. These are
@@ -162,7 +162,19 @@ initial losses equal `log 2`. The loss is actual CE, not a surrogate;
 the two-coordinate readout remains an explicit deviation from GPTMini.
 These eighteen theorems add no sorry, bringing the total to 106.
 
-Next formalize operational delay, causal detectors and geometry metrics. Preserve
+`Transformer.Grokking.Operational.Basic` separates a first observed
+threshold crossing from later confirmation and proves their finite-prefix
+invariance. The clock identity explains the study's 1,000-step confirmation
+latency for five observations spaced by 250; it is measurement latency,
+not a law of learning. `Censoring` constructs bounded success and failure
+continuations of every valid below-threshold prefix. Their recorded lists
+are exactly equal, so no finite accuracy-only observer can decide eventual
+crossing soundly and completely over all bounded traces. No optimizer
+dynamics or full deterministic state is imposed; the impossibility is
+model-free, not an impossibility for AdamW under additional premises.
+These twelve theorems add no sorry, bringing the total to 118.
+
+Next formalize sustained operational windows and geometry metrics. Preserve
 the distinction between an inverse-rate characteristic time and the time
 to cross a task-dependent generalization threshold. Extend phase-transition
 formulations only with stated control parameters and asymptotic regimes.
