@@ -20,7 +20,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Route | First mathematical question | Evidence / source | Status |
 | --- | --- | --- | --- |
 | Operational delayed generalization | Define train fit, a sustained held-out plateau, later generalization, and finite-budget censoring without future information entering a detector | Power et al., arXiv:2201.02177; pinned causal histories | Definition/proof work next |
-| Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | First Lean target |
+| Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Local manuscripts read; source assumptions remain explicit |
 | Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; circuit-efficiency literature to investigate | Research pending |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Six measurements implemented and being checked |
@@ -61,8 +61,16 @@ and endpoint logit changes have been measured around the actual
 effects, not a universal detector. Full control/seed budgets remain active
 or queued.
 
-Finish the current Python check and results commit, then formalize the
-confidence/decision distinction and a genuinely optimized toy trajectory.
-Keep the phase-transition hypothesis open until its extra requirements
-are checked. New papers may introduce open theorem statements under
-AGENTS.md's explicit allowance; existing sorry counts must not increase.
+The six-probe implementation and frozen results are committed as `4436290`.
+All 249 Python tests passed, including CPU/CUDA noninterference checks.
+The first Lean module proves standard-CE equivalence, common-shift
+invariance, positive-scale decision invariance, strict loss reduction under
+explicit margin conditions, their combination, and the all-tied countercase.
+The complete Lean build, audit, index generation and forbidden check pass:
+the existing 157 sorry declarations are unchanged and the new module adds none.
+
+Next derive delayed test-boundary crossing from the gradient dynamics of an
+explicit training objective, including a convex toy model. Keep the
+phase-transition hypothesis open until its extra requirements are checked.
+New papers may introduce open theorem statements under AGENTS.md's explicit
+allowance; existing sorry counts must not increase.

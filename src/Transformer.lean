@@ -174,3 +174,4 @@ import Transformer.MagnitudeDirection
 import Transformer.RecurrentGradients
 import Transformer.NoiseScale
 import Transformer.Surge
+import Transformer.Grokking
