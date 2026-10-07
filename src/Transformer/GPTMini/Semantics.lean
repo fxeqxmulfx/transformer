@@ -35,6 +35,7 @@ import Transformer.GPTMini.Semantics.RecallIntegerArray
 import Transformer.GPTMini.Semantics.RecallParserLayout
 import Transformer.GPTMini.Semantics.RecallParserLatest
 import Transformer.GPTMini.Semantics.RecallCorrectness
+import Transformer.GPTMini.Semantics.DepthStep
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -60,8 +61,13 @@ projection. Its full hidden state is connected to the real decoder FFN,
 and exact pre-FFN prompt/answer formulas are proved for all raw bit words.
 Uniform finite weights give strict label/EOS margins through final RMSNorm.
 The actual checked List Int function solves every legal parity prefix in
-both modes and freely generates label then EOS in two calls. Complete
-gated recall and ordered-prefix depth encoders remain separate obligations.
+both modes and freely generates label then EOS in two calls.
+
+Three ordinary homogeneous ReLU2 hinges now realize a continuous saturated
+presence step. A linear raw-type offset excludes the wrong current letter;
+separated genuine presence gives exactly zero or a common positive plateau,
+including through the actual positive position-dependent RMS multiplier.
+Simultaneous matrices and the complete depth recurrence remain to construct.
 
 An explicit original RoPE pair gives a positive predecessor score gap
 across all Basis context lengths. Actual finite softmax/XSA copies that
@@ -90,28 +96,18 @@ Sixteen original ReLU2 units realize the cutoff and protect raw channels.
 The full first block's gated-key slot is exactly zero on keys/BOS and
 post-table values, excluding false writes after queries. Table values
 retain the genuine compact predecessor copy with its derived positive
-position-dependent RMS/gate amplitude. Complete raw-prefix coupling and
-robust latest-write retrieval/readout remain.
+position-dependent RMS/gate amplitude.
 
-A finite shared first-head log-temperature now supplies any positive
-copy tolerance uniformly over the whole recall context. At a fixed
-sixteenth of the derived latest-write margin, the genuine full first
-block's table-key error is bounded relative to its actual gate amplitude,
-and the stored key has positive norm for positive finite gain. Raw value
-and query codes are retained. These are real-arithmetic capacity bounds;
-floating-point or optimization success is not inferred from this temperature.
-
-An ordinary eight-to-sixteen matrix inserts real copied keys into the
-original slow rotary pairs, preserving norms/inner products/copy errors
-and excluding fast coordinates, including imperfect scaled copies.
-
-Original QKNorm cancels independent positive Q/K amplitudes above clipping.
-Actual insertion/RoPE bound normalized error by twice the base copy error,
-independently of epsilon/amplitude, with norm lower bound derived.
-
-Genuine raw pre-FFN norm lies in [1,9] and its RMS multiplier in [1/2,8]
-for epsilon in [0,1], derived from the constant and true heads/W_o.
+A finite shared first-head temperature supplies any positive copy tolerance
+at context 64. At latestMargin/16, the full table-key error is relative to
+its positive gate amplitude. Raw query/value codes remain protected.
+An ordinary eight-to-sixteen insertion preserves norms, inner products and
+copy errors in the slow rotary pairs. Above clipping, original QKNorm
+cancels independent Q/K amplitudes and bounds normalized error by twice
+the base copy error, independently of epsilon. Genuine raw pre-FFN norm
+lies in [1,9] and its RMS multiplier in [1/2,8] for epsilon in [0,1].
 The full block retains a positive next RMS multiplier at most eight.
+These real capacity bounds do not imply floating-point or AdamW success.
 
 The fixed finite table gain 4/tableMargin now makes genuine raw table
 amplitudes at least one. Every actual adjacent stored table key has

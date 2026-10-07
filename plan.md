@@ -338,6 +338,14 @@ lift to the experiment's width-128/six-layer large model.
 Parity and recall are complete within their documented formal model
 scope. Next construct and prove the full depth-prefix recurrence in the
 actual original blocks, at the existing small/large dimensions.
+DepthStep proves a genuine continuous three-ReLU2 saturated presence
+step and an ordinary linear raw-type gate. A separated actual prefix
+signal yields exactly zero or a positive common plateau; both computations
+retain their quadratic scale through real position-dependent prenorm.
+For ordered detection the opposite-type self-value must be zero, so XSA
+preserves that signal. Arbitrary own-value subtraction is not assumed to
+equal removal of just the own softmax summand. Actual matrices, propagated
+presence floors, final readout and full depth SolvesTask remain to prove.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -453,3 +461,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Exact finite/integer coupling committed in 9ea43d1. Derived full actual RecallRawLayout and final compact query solely from successful validated Basis parsing, including finite-position bounds and genuine key/value adjacency; the overwrite control's layout is now parser-derived. | Derive the finite selected last write and its chronology, then complete easy/hard recall SolvesTask and full depth correctness; convex architecture/FLOP comparison remain queued. |
 | 2026-10-07 | 1 | Complete parser-derived raw layout committed in 75c8c94. Derived the actual finite selected write, neighboring key, final matching query, answer ID and chronological upper bound solely from successful full raw parsing, including genuine earlier overwrites. | Complete easy/hard recall SolvesTask through the actual List Int adapter, then full depth correctness; convex architecture/FLOP comparison remain queued. |
 | 2026-10-07 | 1 | Parser-derived finite last-write conditions committed in 643f78d. Proved full recall SolvesTask for both Basis grammars through the actual integer model callback, with no layout/selected-write/logit premise. Actual eight-write, sixteen-write and swapped-binding controls are covered. | Complete original depth correctness, retaining all real-arithmetic/shared-epsilon and compact-model scope distinctions; convex architecture/FLOP comparison remain queued. |
+| 2026-10-07 | 1 | Full raw recall correctness committed in c30b8c3. Proved an ordinary three-unit homogeneous ReLU2 presence step, raw-type exclusion, exact separated Boolean amplitude and positive prenorm-scaled margin for the depth construction. | Realize and bound genuine prefix detectors in the original attention/FFN matrices; complete depth SolvesTask before the convex architecture/FLOP stages. |
