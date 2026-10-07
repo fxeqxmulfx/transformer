@@ -44,6 +44,7 @@ import Transformer.GPTMini.Semantics.DepthEmbedding
 import Transformer.GPTMini.Semantics.DepthQKV
 import Transformer.GPTMini.Semantics.DepthNormalization
 import Transformer.GPTMini.Semantics.DepthAttention
+import Transformer.GPTMini.Semantics.DepthAttentionBounds
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -74,7 +75,7 @@ Three ordinary homogeneous ReLU2 hinges compute a saturated presence
 step and raw-type exclusion. Six original FFN units realize both gates
 simultaneously, preserve unwritten coordinates and retain the true RMS
 quadratic scale. The genuine uniform softmax/XSA head gives exact absence
-and floor L/128 at zero self-value; collinear XSA stays nonnegative and capped.
+and floor L/128 at zero self-value. Actual two-head attention adds norm at most 32.
 Actual two-head attention, protected channels, RMS bounds and the E_2/E_4
 data recurrence are proved. Full hidden-state induction/readout remain.
 
@@ -193,8 +194,7 @@ logits. Its actual integer adapter solves both full recall grammars.
 Full successful parsing derives actual layout, final query and selected
 last write, including all chronological bounds, without routing premises.
 
-The final-block certificate and actual integer readout derive correct
-logits from internal codes. None of these theorems claims full Basis
-accuracy for unrestricted parameters, floating-point equivalence, or
-optimizer convergence. No new unproved claims are exported.
+Actual integer readout derives correct logits from internal codes.
+These results cover given real parameters, without floating-point
+equivalence or optimizer convergence. No new unproved claims are exported.
 -/

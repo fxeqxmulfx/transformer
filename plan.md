@@ -406,6 +406,14 @@ coordinates are exactly zero; distinct targets read their own signal.
 The output matrix and true normalization no longer remain abstract.
 Quantitative signal/state bounds, ordered layer induction and full
 tied/greedy integer readout still must be completed.
+DepthAttentionBounds derives nonnegative genuine V coordinates and
+their universal cap sixteen from true normalized residual norms.
+Within the explicit bounded state domain, every real feature at
+least r^2 gives actual V amplitude at least r^3. Actual attenuated
+signals lie in [0,16], so the complete two-head output and W_o add
+norm at most 32 and the real first residual is bounded by M+32.
+Zero self and visible absence are proved at the actual raw residual
+coordinates, including a nonzero future-feature control.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -530,3 +538,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Full original depth-head attenuation committed in f479eb7. Realized simultaneous ordinary fused QKV at both original widths; proved all actual Q/K slices zero, both active V scalar reads and unused-head zeros using genuine chunk/view indices. | Couple W_o and genuine RMS scaling, prove quantitative hidden-state recurrence and full depth SolvesTask; convex search and equal-FLOP training remain next stages. |
 | 2026-10-07 | 1 | Original simultaneous depth QKV committed in afb6840. Proved actual RMS multiplier bounds at both widths and shared finite threshold/FFN/readout compensation; the local [1,4096] norm domain is explicit. | Derive the domain and feature amplitudes through the actual residual blocks, then full depth SolvesTask; no convex or training-success claim follows from these given weights. |
 | 2026-10-07 | 1 | Genuine depth RMS/gains committed in 18fff55. Coupled complete original two-head attention, true RMS, real head merge and nonzero W_o; proved exact output signals, zero protected contributions and independent target reads. | Derive quantitative actual signal/state bounds and ordered hidden-state induction, then full depth SolvesTask before convex search and equal-FLOP tests. |
+| 2026-10-07 | 1 | Complete original depth attention committed in e40f61f. Derived actual normalized coordinate bounds, r^3 feature floor on the explicit state domain, true signal range [0,16], whole attention norm at most 32 and first residual bound M+32; proved actual zero-self and visible absence. | Derive occurrence/FFN transitions and close the actual hidden-state induction, then tied readout and depth SolvesTask. |
