@@ -543,11 +543,14 @@ for this objective. Ordinary label-only CE remains outside the guarantee.
 The compact proposal under investigation has free token-local Q/K log
 potentials (four groups of four channels each) and free value log
 potentials (five groups of four), plus a fixed ten-coordinate output
-label code and one constant: 52 trainable + 11 fixed coordinates fit
-width 64. The fixed output code is a decoder, not an input interaction
+label code and one constant, plus one learned positional potential:
+52 free token fields + 11 fixed axes + one free position axis fit width
+64 exactly. The fixed output code is a decoder, not an input interaction
 bank; all input matching/value potentials are trained. The pointer
 energy sums Q(query,channel)+K(previous token,channel)+V(value,channel),
-with learned chronology and a learned positional table-role potential.
+with learned chronology and a free positional potential per context slot.
+The latter must learn table exclusion from observed routes, without a
+fixed table-record mask or an enumerated latent role bank.
 Its implicit channels must be summed by products of small sums, never
 an enumerated exponential feature table. A free six-state transition
 head would handle order/count/phase, with all token transition energies
@@ -593,8 +596,13 @@ state/path/channel model's exact expectation, with normalization and
 coordinate bounds. MarkovObjective now proves the computed compact loss
 equals that same joint model's negative log probability and is globally
 convex simultaneously in unrestricted initial/transition/emission raw
-parameters, including shared finite minibatches. This variant still needs
-actual compact parameter/readout slots, full raw depth/
+parameters, including shared finite minibatches. SharedSlots realizes
+the actual common raw token coordinates: disjoint 16/16/20 pointer
+groups and 36 independent state-transition fields in the same 52 slots.
+Its full parameter domain has exactly 52*V+C+129 free real coordinates;
+there are six free initial and 120 free conditional value logits.
+The state-head objective is proved convex on that whole actual space.
+This variant still needs full raw depth/
 parity semantic paths and actual residual integration; it is not accepted.
 
 Remaining acceptance tests: prove compact contraction of the latent
@@ -730,3 +738,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Causal encoder/path training committed in 11899f6. Proved exact normalization and endpoint marginal contraction of the same actual full path model into compact forward state propagation, for every unrestricted initial/transition table. | Jointly learned output emission/objective, raw semantic depth/parity paths, complete recall and actual residual/tied/integer integration remain. |
 | 2026-10-07 | 2 | Exact causal path contraction committed in f1f6c9c. Added free conditional output-channel potentials and proved their compact inference means equal the actual complete normalized state/path/channel model's value expectation at arbitrary joint parameters. | Full initial/transition/emission training convexity, raw depth/parity capability, complete recall and true residual/tied/integer integration remain. |
 | 2026-10-07 | 2 | Exact conditional emissions committed in 33e99c8. Proved the actual compact complete NLL equals that same inference model's joint negative log probability and is globally convex jointly in every initial/transition/value weight, including shared minibatches. | Realize shared compact raw parameter slots and full raw depth/parity capability; full recall and true residual/tied/integer integration remain. |
+| 2026-10-07 | 2 | Joint state/value objective committed in 95456c1. Realized actual shared raw slot lookups, disjoint pointer groups, independent 36 transition fields and the convex state objective on a 52*V+C+129-parameter domain; embedding slot counts include a learned position axis. | Full raw depth/parity capability, pointer learned-position/chronology integration and complete recall, then actual prenorm/residual/tied/integer integration remain. |
