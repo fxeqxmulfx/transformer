@@ -51,6 +51,7 @@ import Transformer.GPTMini.Semantics.DepthLayout
 import Transformer.GPTMini.Semantics.DepthResidual
 import Transformer.GPTMini.Semantics.DepthTransition
 import Transformer.GPTMini.Semantics.DepthFeatureBounds
+import Transformer.GPTMini.Semantics.DepthWordInput
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -71,8 +72,7 @@ a 68-unit homogeneous bounded-count parity decoder and a simultaneous
 has distinct tied EVEN/ODD/EOS codes and exactly the same actual count
 projection. Its full hidden state is connected to the real decoder FFN,
 and exact pre-FFN prompt/answer formulas are proved for all raw bit words.
-Uniform finite weights give strict label/EOS margins through final RMSNorm.
-The actual checked List Int function solves every legal parity prefix in
+Uniform finite weights give strict margins through final RMSNorm; checked List Int solves every legal parity prefix in
 both modes and freely generates label then EOS in two calls.
 
 Three homogeneous ReLU2 hinges compute presence/type exclusion; six original units realize both gates

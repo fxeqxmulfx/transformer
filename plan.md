@@ -453,6 +453,12 @@ match and a strictly earlier genuine source feature at least r^2;
 strict precedence follows from zero opposite self under the original
 self-inclusive causal mask. Wrong raw types have exact zero flags.
 The raw-word induction must instantiate these results at every stage.
+DepthWordInput now derives every first-stage input condition directly
+from the genuine token-local embedding of an arbitrary raw letter word.
+Neutral positions are retained; both raw types are binary and mutually
+exclusive, later stage channels start empty, and input norm lies in
+[1,2]. A leading none has the same actual embedding as the true BOS
+token, with integer-ID coupling still required at the full model.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -584,3 +590,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Fixed original detector blocks committed in beb4e74. Proved actual pre-FFN raw/signal/feature reads and genuine norm bounds; recorded explicit simultaneous local input conditions with an active-A real-array witness. | Derive FFN conditions and complete M+288 transitions from these inputs, close ordered raw-state induction and full depth readout/SolvesTask. |
 | 2026-10-07 | 1 | Actual pre-FFN residual committed in 135a904. Derived all true FFN requirements from incoming states, proved exact complete-block flags and their positive iff condition, and bounded both real residuals by M+288. | Derive separated flag amplitudes and ordered occurrences through all raw stages, then complete tied readout and depth SolvesTask. |
 | 2026-10-07 | 1 | Complete detector transitions committed in f8a76c9. Derived real flag separation/cap, threshold iff positivity, exact wrong-type zero and strict earlier-source semantics through the unchanged causal head/FFN. | Derive initial and propagated representation directly from raw words, then complete original full-model depth readout/SolvesTask. |
+| 2026-10-07 | 1 | Real flag bounds/strict precedence committed in c753c3b. Derived all first-detector conditions from actual token-local word embeddings, including raw-type exclusion, fresh channels, genuine norm [1,2] and BOS/neutral embedding coupling. | Propagate quantified ordered-occurrence representation through the real hidden stack, then finish depth tied/greedy readout and checked integer SolvesTask. |
