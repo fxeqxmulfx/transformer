@@ -133,34 +133,18 @@ noncomputable def psiKR (n : ℕ) (β : ℝ) (S : Set ℝ) : ℝ≥0∞ :=
       |psiOf (lawY β t)
         (whiten (sigmaFst β t) (sigmaCov β t) (sigmaSnd β t) (-muFst n β t, y - muSnd n β t))|)
 
-/-- **Lemma (lem:error-3), on `T`.**  In the regime `n^c ≲ β ≲ n^{2-c}`,
-`∫_T ∫_{Δ_t}^∞ y (n det Σ_t)^{-1/2} |ψ|(…) dy dt ≲ e^{-ω(β)/4} √(β log β)`.
+/-- Restricting the location window decreases the nonnegative Edgeworth
+contribution.  Source: arXiv:2412.09080v3, §3.1, `lem:error-3`.
+The estimates themselves are proved in `Section3_ErrorThirdT` and
+`Section3_ErrorThirdTPrime`. -/
+theorem psiKR_mono_set {S U : Set ℝ} (hSU : S ⊆ U) (n : ℕ) (β : ℝ) :
+    psiKR n β S ≤ psiKR n β U := lintegral_mono_set hSU
 
-Not proved here.
-
-Source: arXiv:2412.09080v3, `lem:error-3`. -/
-theorem error_three_T {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : IsRegime c N B)
-    {ω : ℝ → ℝ} (hω : IsSlowGrowth ω) :
-    ∃ C : ℝ, ∀ᶠ k in atTop,
-      psiKR (N k) (B k) (intervalT (N k) (B k) (ω (B k)))
-        ≤ ENNReal.ofReal (C * (Real.exp (-(ω (B k)) / 4) * Real.sqrt (B k * Real.log (B k)))) := by
-  sorry
-
-/-- **Lemma (lem:error-3), on `T'`.**  In the regime `n^c ≲ β ≲ n^{2-c}`,
-`∫_{T'} ∫_{Δ_t}^∞ y (n det Σ_t)^{-1/2} |ψ|(…) dy dt ≲ √β`.
-
-Not proved here.
-
-Source: arXiv:2412.09080v3, `lem:error-3`. -/
-theorem error_three_T' {c : ℝ} {N : ℕ → ℕ} {B : ℕ → ℝ} (hreg : IsRegime c N B) :
-    ∃ C : ℝ, ∀ᶠ k in atTop,
-      psiKR (N k) (B k) (intervalT' (N k) (B k)) ≤ ENNReal.ofReal (C * Real.sqrt (B k)) := by
-  sorry
-
-/-- The hypotheses of `error_three_T` and `error_three_T'` are satisfiable. -/
-example : IsRegime 1 (fun k => k + 1) (fun k => ((k + 1 : ℕ) : ℝ)) ∧
-    IsSlowGrowth (fun β => Real.sqrt (Real.log (Real.log β))) :=
-  ⟨isRegime_succ, isSlowGrowth_sqrt_log_log⟩
+example : Set.Icc (-1 : ℝ) 1 ⊆ Set.Icc (-2 : ℝ) 2 := by
+  intro x hx
+  constructor
+  · linarith [hx.1]
+  · linarith [hx.2]
 
 end Modes
 end Transformer

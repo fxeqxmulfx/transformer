@@ -58,6 +58,7 @@ import Transformer.Modes.Section3_Standardized
 import Transformer.Modes.Section3_EtaMoment
 import Transformer.Modes.Section3_ChangeOfVar
 import Transformer.Modes.Section3_ErrorThird
+import Transformer.Modes.Section3_ErrorThirdTPrime
 import Transformer.Modes.Section3_ErrorHigher
 import Transformer.Modes.Section3_ErrorKR
 import Transformer.Modes.Section4_KacRiceAppl
