@@ -1,6 +1,6 @@
 # Basis correctness and convex architecture research cycle
 
-Started: 2026-10-06. Status: active, stage 1.
+Started: 2026-10-06. Status: active, stage 2.
 
 ## Objective and constraints
 
@@ -28,7 +28,7 @@ formal results must not increase the existing sorry count. Keep ANSR stopped.
 
 ## 1. Prove complete Basis correctness
 
-Status: active.
+Status: complete for the explicit real-arithmetic model family below.
 
 Use Transformer.Basis's actual integer IDs, raw grammars, easy/hard modes,
 vocabulary sizes and context caps. The formal target is SolvesTask over
@@ -499,8 +499,16 @@ finite indexing, last-position and independent answer coupling. The
 actual tokenFunction solves every validated raw E_2/E_4 prefix up to
 128 at epsilon in (0,1], retaining original 64x2/128x6 dimensions.
 Neutral, wrong-start and equal-bag/different-order controls pass through
-the actual integer callback. Stage 1's remaining work is the consolidated
-all-task theorem and explicit common scope; no new sorrys were introduced.
+the actual integer callback. No new sorrys were introduced.
+BasisCorrectness consolidates all three tasks and both modes through the
+actual original model family. basisModel_solves covers every validated
+raw prefix at common epsilon in (0,1/64]; basisModel_reference_all gives
+all six grammars at 1e-5. basisModel_predicts identifies the actual next
+token with independent taskNext, and basisModel_parity_twice proves free
+label/EOS generation. Widths are explicit: depth easy 64x2/hard 128x6;
+recall/parity 64x2 for both full grammars. The large-model lift for those
+two tasks, unequal Python epsilons, FP execution and AdamW success are
+not certified. Stage 1's semantic exit criterion is satisfied.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -510,7 +518,7 @@ function, with no unproved encoder or routing input and no added sorrys.
 
 ## 2. Search in Lean for a convex architecture
 
-Status: queued after stage 1; structural analysis may proceed alongside it.
+Status: active. Complete raw semantics and original-model capability are available.
 
 Derive the needed operations from the proven Basis semantics: order,
 adjacency, key-conditioned latest-write selection, bounded counting and
@@ -642,3 +650,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Complete real raw-word readout committed in 59cf964. Proved all 36 tied score comparisons, genuine final RMS margin and greedy semantic answer; linked last-position visibility to full ordered-pattern presence. | Original two/six-layer ModelParams, complete hidden-loop and checked List Int depth correctness remain. |
 | 2026-10-07 | 1 | Whole-vocabulary depth decoding committed in 4dec64b. Realized original complete two/six-layer ModelParams, proved every actual detector/readout/tail loop state and full forward strict logits. | Discharge raw BOS/body token-local embedding coupling and prove checked integer depth SolvesTask, then aggregate all Basis semantics. |
 | 2026-10-07 | 1 | Complete original depth model committed in d3aae47. Proved exact raw integer serialization and universal depthModel_solves_depth in both full Basis modes, plus actual neutral/wrong-start/order controls and append-one contract. | Consolidate all three tasks/two modes with explicit real-arithmetic, epsilon and width scope; then start stage 2 convex architecture search. |
+| 2026-10-07 | 1 -> 2 | Raw depth correctness committed in e1afb3d. Consolidated the actual original family in BasisCorrectness: every task/mode, independent next-token agreement, two-call parity and exact append-one contract. Common epsilon and small/large dimension boundaries are explicit. | Search changed compact embedding/attention operators with jointly trainable matching/values and a proved convex objective; do not start equal-FLOP training until an admissible candidate exists. |
