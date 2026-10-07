@@ -2,6 +2,8 @@
 
 Started 2026-10-07 at the user's request. Status: active; implement and
 experimentally assess a causal observer on ordinary softmax transformers.
+The user subsequently requested an ongoing [experiment-to-Lean research
+cycle](grokking_lean_plan.md) covering competing grokking formulations.
 The previous [Basis/convex cycle](plan.md) is paused, unfinished. ANSR stays
 stopped. Work solo and follow AGENTS.md.
 
@@ -48,7 +50,9 @@ Status: implemented. Twenty-three focused observer/report tests pass,
 including unchanged actual CPU/CUDA AdamW checkpoints and resume,
 temporary-hook cleanup, constant/wrong symmetric rules and a training-only
 memorizer. The complete `./make.py test` suite passes: 233 tests on
-2026-10-07, including available CUDA checks.
+2026-10-07, including available CUDA checks. The six offline measurements
+in [grokking_internals](experiments/grokking_internals/README.md) add 16
+focused tests; the complete suite now passes all 249 tests.
 
 ## 3. Run the complete ordinary-transformer budget
 
@@ -64,7 +68,9 @@ predictive validity. If useful, add unseen seeds and tasks with different
 symmetries before claiming a transferable detector. Do not resume the
 convex-architecture search unless the user redirects work back to it.
 
-Status: two full-budget runs active, two CUDA seed controls queued. Fresh
+Status: the primary completed all 150,000 updates at 100% held-out answer
+accuracy. The CPU control and checkpoint-preserving repeat are active;
+CUDA seed controls remain queued. Fresh
 primary evidence: structure signal at 33,000 (14.39% held-out accuracy),
 first 99% at 35,500, confirmed delayed generalization at 36,500. Internal
 snapshots at 30,000 and 35,000 show strong changes in the second block

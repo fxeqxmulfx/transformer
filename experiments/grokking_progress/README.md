@@ -123,6 +123,13 @@ Reproduce the archive table from `python/` with
 
 ## First fresh evidence (partial budgets)
 
+Update: the primary seed 1 completed its full **150,000-update** budget
+with **100% held-out answer accuracy**. The checkpoint-preserving repeat
+and all six new offline measurements are in
+[grokking_internals](../grokking_internals/README.md), with a reproduced
+transition and raw-checkpoint/source fingerprints. The measurements below
+describe the initial snapshot; controls still retain their full budgets.
+
 On the freshly trained ordinary GPTMini seed 1, the pinned structural
 signal first appears at update **33,000**, with held-out answer accuracy
 **14.39%**. The first 99% observation is at **35,500**, and five consecutive
@@ -161,7 +168,7 @@ Matplotlib. The internal comparisons are observations, not feature
 ablations or evidence that those particular modules cause grokking.
 Complete negative-control and fresh seed results remain pending. All
 four budgets remain 150,000 updates; seed controls are queued after the
-primary CUDA run, and the CPU reference control trains concurrently.
+checkpoint-preserving repeat, and the CPU reference control trains concurrently.
 
 From `python/`, use `uv run --locked python
 ../experiments/grokking_progress/summarize.py` to refresh the snapshot and

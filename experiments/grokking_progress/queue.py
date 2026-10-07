@@ -1,4 +1,4 @@
-"""Run the two declared seed controls after the active CUDA run completes.
+"""Run the checkpoint repeat and seed controls after the active CUDA run.
 
 From python/: uv run --locked python ../experiments/grokking_progress/queue.py.
 The full 150,000-update budgets stay in experiment.py. No optimizer or
@@ -22,6 +22,10 @@ def main():
     completed = json.loads(result.read_text())
     if completed["stop"]["reason"] != "budget" or completed["stop"]["step"] != 150_000:
         raise RuntimeError("Primary CUDA run did not complete its declared budget")
+    repeat = STUDY.parent / "grokking_internals"
+    status = subprocess.call([str(ROOT / "make.py"), "run", str(repeat)], cwd=ROOT)
+    if status:
+        raise SystemExit(status)
     raise SystemExit(subprocess.call([str(ROOT / "make.py"), "run", str(STUDY),
                                      "gptmini-seed2", "gptmini-seed3"], cwd=ROOT))
 
