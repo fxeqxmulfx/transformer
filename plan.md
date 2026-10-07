@@ -610,6 +610,11 @@ globally convex with all these parameter groups free. No record mask
 or semantic role input is part of inference; full recall capacity remains.
 This variant still needs full raw depth/
 parity semantic paths and actual residual integration; it is not accepted.
+Concentration proves true finite-energy rival/tail bounds for the actual
+Gibbs model and actual row softmax, including finite freely trainable
+sharp-row witnesses. These are local operator laws only: semantic raw
+parameter assignments must derive their gap conditions, and complete
+path/output confidence and task capability remain open.
 
 Remaining acceptance tests: prove compact contraction of the latent
 partition, learned matching and joint value expressivity, complete Basis
@@ -746,3 +751,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Exact conditional emissions committed in 33e99c8. Proved the actual compact complete NLL equals that same inference model's joint negative log probability and is globally convex jointly in every initial/transition/value weight, including shared minibatches. | Realize shared compact raw parameter slots and full raw depth/parity capability; full recall and true residual/tied/integer integration remain. |
 | 2026-10-07 | 2 | Joint state/value objective committed in 95456c1. Realized actual shared raw slot lookups, disjoint pointer groups, independent 36 transition fields and the convex state objective on a 52*V+C+129-parameter domain; embedding slot counts include a learned position axis. | Full raw depth/parity capability, pointer learned-position/chronology integration and complete recall, then actual prenorm/residual/tied/integer integration remain. |
 | 2026-10-07 | 2 | Shared compact coordinates committed in bdbea00. Realized jointly free raw Q/K/value/position/chronology pointer energies, exact compact partition and inference/training identity, and global complete-likelihood convexity on the same actual parameter domain. | Full raw recall/latest-write/filler exclusion, depth/parity capability, two-head mixture and actual prenorm/residual/tied/integer integration remain. |
+| 2026-10-07 | 2 | Shared learned-position pointer committed in 7598fbc. Proved actual finite Gibbs/transition-row rival and selected-mass bounds, and explicit finite sharp-row confidence witnesses. | Derive gaps from raw semantic shared parameters and propagate confidence to full depth/parity/recall outputs; mixture and genuine residual/tied/integer integration remain. |
