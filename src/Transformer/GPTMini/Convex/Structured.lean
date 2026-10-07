@@ -13,6 +13,7 @@ import Transformer.GPTMini.Convex.Structured.SharedSlots
 import Transformer.GPTMini.Convex.Structured.SharedPointer
 import Transformer.GPTMini.Convex.Structured.Concentration
 import Transformer.GPTMini.Convex.Structured.MarkovTeacher
+import Transformer.GPTMini.Convex.Structured.ParityReference
 
 /-!
 # Structured alternatives guided by raw Basis semantics
