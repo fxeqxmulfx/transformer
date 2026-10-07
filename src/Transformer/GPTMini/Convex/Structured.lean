@@ -43,6 +43,8 @@ import Transformer.GPTMini.Convex.Structured.MixedBasis
 import Transformer.GPTMini.Convex.Structured.RecallDataRoutes
 import Transformer.GPTMini.Convex.Structured.RecallDataTargets
 import Transformer.GPTMini.Convex.Structured.BasisTraining
+import Transformer.GPTMini.Convex.Structured.TensorEmbedding
+import Transformer.GPTMini.Convex.Structured.TensorRecovery
 
 /-!
 # Structured alternatives guided by raw Basis semantics
