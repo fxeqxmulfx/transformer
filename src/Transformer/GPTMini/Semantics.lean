@@ -39,6 +39,7 @@ import Transformer.GPTMini.Semantics.DepthStep
 import Transformer.GPTMini.Semantics.DepthPresence
 import Transformer.GPTMini.Semantics.DepthMatrices
 import Transformer.GPTMini.Semantics.DepthRecurrence
+import Transformer.GPTMini.Semantics.DepthEmbedding
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -71,8 +72,8 @@ step and raw-type exclusion. Six original FFN units realize both gates
 simultaneously, preserve unwritten coordinates and retain the true RMS
 quadratic scale. The genuine uniform softmax/XSA head gives exact absence
 and a presence floor L/128 for variable amplitudes at zero self-value.
-The original-position alternating recurrence and exact E_2/E_4 criteria
-are proved; actual hidden-state induction and readout remain.
+The E_2/E_4 recurrence is proved; token-local raw embeddings now fit
+both original widths with norms in [1,2]. Full hidden/readout remain.
 
 An explicit original RoPE pair gives a positive predecessor score gap
 across all Basis context lengths. Actual finite softmax/XSA copies that
