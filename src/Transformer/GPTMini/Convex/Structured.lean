@@ -32,6 +32,8 @@ import Transformer.GPTMini.Convex.Structured.PointerDecoder
 import Transformer.GPTMini.Convex.Structured.RawBinding
 import Transformer.GPTMini.Convex.Structured.RecallEnergy
 import Transformer.GPTMini.Convex.Structured.RecallGap
+import Transformer.GPTMini.Convex.Structured.BindingInterface
+import Transformer.GPTMini.Convex.Structured.SharedRecall
 
 /-!
 # Structured alternatives guided by raw Basis semantics

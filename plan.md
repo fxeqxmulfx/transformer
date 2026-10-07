@@ -714,8 +714,18 @@ The genuine standalone head solves every full raw E2/E4 prefix through
 List Int -> List Int, including order-sensitive and conflicting-mode
 controls. Its complete raw-data state/channel targets match the independent
 Basis answer, and their likelihood is convex in the entire free shared
-domain. Depth and parity head capability is complete; full recall and
-realized combined tensor-stack/tied readout are still required.
+domain. BindingInterface/SharedRecall now prove full standalone recall
+capability in both modes through the actual checked integer-list callback.
+The final physical query reads every visible key/value position pair,
+using free learned Q/K/value, absolute position, chronology and relative
+binding potentials. Complete raw parsing derives the latest correct
+record and a strict actual whole-vocabulary margin at finite weights;
+the equal-bag swapped-value control has opposite actual predictions.
+Thus all three tasks have proved standalone learned-head capability.
+Complete recall data-target generation, genuine learned two-head mixing
+and realized combined tensor-stack/prenorm/residual/tied readout remain
+required. Output-only CE and AdamW convergence are not proved convex or
+successful by these complete-likelihood/capacity results.
 
 Remaining acceptance tests: prove compact contraction of the latent
 partition, learned matching and joint value expressivity, complete Basis
@@ -866,3 +876,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Full raw record/overwrite positional facts committed in 9e6661b. Proved genuine finite learned-channel deficits and constructed/evaluated the complete shared recall token/position/chronology/binding/head weight assignment, with all 256 raw keys distinguished. | Derive the true whole all-pair recall configuration gap and probability/readout margin, then complete raw recall capability, head mixture and actual tensor-stack realization. |
 | 2026-10-07 | 2 | Actual finite shared recall fields and channel deficits committed in b127359. Connected true ten-axis pointer decoding to the full normalized joint distribution; realized actual unchanged raw-prefix all-pair inference/loss, proved unrestricted joint convexity and the exact implicit choice-count bound. | Prove uniform raw finite-weight recall energy gaps and actual greedy List Int correctness, then two-head mixing and true prenorm/residual/tied tensor-stack realization before stage 3. |
 | 2026-10-07 | 2 | True raw all-pair inference/loss/decoder coupling committed in e0be315. Derived complete raw recall finite-weight energy gaps for every rival and the actual correct configuration's whole-distribution probability bound; proved a finite logarithmic gain covers the latent and two-head tails. | Complete strict whole-vocabulary raw recall greedy/List Int capability and genuine mixture training/inference, then realize the actual tensor/prenorm/residual/tied block before stage 3. |
+| 2026-10-07 | 2 | Full raw recall gap/confidence committed in e5e8823. Proved the actual finite learned all-pair head solves both complete raw recall grammars through the checked append-one integer interface, with genuine value-swap control and derived whole-vocabulary greedy margins. | Correct complete recall data targets, true learned two-head mixing and full tensor/prenorm/residual/tied realization remain before stage 3; no candidate training started. |
