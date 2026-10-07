@@ -627,6 +627,12 @@ raw Basis parity semantics: real bit tokens, BOS/SEP, count modulo two,
 both validated label and supplied-answer/EOS prefixes. It has no hidden
 phase/count input. This is a semantic target/capacity-rule proof, not yet
 the learned finite-row model's full parity SolvesTask theorem.
+MarkovConfidence now bounds the actual compact encoder's reference
+endpoint and the complete learned initial/path/value configuration for
+explicit finite tables. For six states and five four-channel groups,
+every raw length T<=128 has joint mass at least 1-794*exp(-gain).
+This derives genuine output confidence, but still requires raw shared
+slot realization, proven task labels and actual tied decoder margins.
 
 Remaining acceptance tests: prove compact contraction of the latent
 partition, learned matching and joint value expressivity, complete Basis
@@ -766,3 +772,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Shared learned-position pointer committed in 7598fbc. Proved actual finite Gibbs/transition-row rival and selected-mass bounds, and explicit finite sharp-row confidence witnesses. | Derive gaps from raw semantic shared parameters and propagate confidence to full depth/parity/recall outputs; mixture and genuine residual/tied/integer integration remain. |
 | 2026-10-07 | 2 | Finite confidence laws committed in d68381b. Derived actual full chronological path confidence with linear T*epsilon error, true reference-path endpoints, and inclusion of each initial/path probability in the compact encoder's endpoint mass. | Prove task-specific reference rules against raw Basis, realize their finite shared raw weights and conditional output confidence; recall, mixture and actual residual/tied/integer integration remain. |
 | 2026-10-07 | 2 | Actual causal confidence propagation committed in 842cc59. Proved the six-state data/reference rule's counted parity and label/EOS agreement on every actual validated raw Basis parity prefix, with no external phase/count input. | Realize finite learned initial/transition/value witnesses and prove full parity model margins; raw depth/reference rules, complete recall, mixture and genuine residual/tied/integer integration remain. |
+| 2026-10-07 | 2 | Full raw parity reference semantics committed in 91299ae. Proved actual compact encoder and full initial/path/value finite-table confidence, including a uniform 1-794*exp(-gain) joint-mass bound up to the largest Basis context 128. | Embed finite witnesses in actual shared raw slots and prove tied whole-vocabulary decoder margins; depth, recall, mixture and true residual/integer integration remain. |
