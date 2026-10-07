@@ -472,6 +472,9 @@ DepthReadoutPresence derives exact visible-pattern positivity, actual
 zero-or-twice-threshold probes, cap 144 and pre-FFN norm in [1,898].
 These are instantiated by the full raw-word encoder without a supplied
 hidden-state invariant or normalized-feature premise.
+DepthReadoutMatrices realizes the ordinary seven-unit readout FFN and
+proves its complete continuous matrix formula and genuine prenormed
+common RMS-square scale. All rows fit the original FFN dimensions.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -607,3 +610,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Raw detector inputs committed in 4e30c42. Proved the complete actual ordered detector encoder by induction from raw words: exact independent occurrences, zero-or-[r^2,128] flags, protected types, fresh future channels and norm at most 866. One detector for easy and three for hard fit the original layer budgets. | Finish genuine readout, full ModelParams/hidden-loop coupling and checked List Int depth SolvesTask; stage 2 remains open and stage 3 conditional. |
 | 2026-10-07 | 1 | Actual encoder induction committed in 14a2f0d. Proved upper readout-axis freshness through the full detector prefix and realized genuine residual probes that preserve current flags despite XSA suppression. | Prove quantitative visible-occurrence readout, actual FFN/tied margins, full ModelParams and integer adapter correctness. |
 | 2026-10-07 | 1 | Genuine residual readout layout committed in f3e61b2. Derived actual probes zero or at least twice the shared threshold, capped by 144 and positive exactly at visible independent ordered occurrences, with true pre-FFN norm at most 898. | Realize the seven-unit FFN and tied margins, then full ModelParams/checked integer depth correctness. |
+| 2026-10-07 | 1 | Actual readout separation committed in 6ba8bea. Realized all seven ordinary readout FFN rows and proved the complete true matrix/prenorm formula with a common RMS-square scale. | Couple exact semantic flags to the full readout block, prove tied margins, then original ModelParams and raw integer correctness. |
