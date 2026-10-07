@@ -54,6 +54,9 @@ import Transformer.GPTMini.Convex.Structured.TensorCausalBlock
 import Transformer.GPTMini.Convex.Structured.TensorTraining
 import Transformer.GPTMini.Convex.Structured.TensorLikelihood
 import Transformer.GPTMini.Convex.Structured.TensorBasisTraining
+import Transformer.GPTMini.Convex.Structured.TensorStream
+import Transformer.GPTMini.Convex.Structured.TensorObservations
+import Transformer.GPTMini.Convex.Structured.TensorObservationInference
 
 /-!
 # Structured alternatives guided by raw Basis semantics
