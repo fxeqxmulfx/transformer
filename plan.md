@@ -231,6 +231,16 @@ times the genuine next RMS multiplier; all actual V norms are at most
 sixteen. These results complete the local competitor/value cases needed
 to assemble full-row routing and quantitative finite retrieval.
 
+RecallRawRouting now assembles all genuine score-row cases from raw
+table/alphabet/adjacency and chronological last-write predicates. These
+predicates mention only raw data, never a hidden state, score or desired
+model output. It derives the full-row positive gap, actual causal tail
+bound and original softmax/XSA head retrieval error
+32*(T-1)*exp(-retainedGap). The six-token raw overwrite control strictly
+prefers its later, different-valued write. Full Basis parsing must still
+discharge the raw predicates. Next choose a finite shared temperature,
+realize the genuine second W_o and connect the complete tied readout.
+
 Next connect the fixed ordinary second QKV to robust latest-write retrieval
 and readout, discharge full validated-parser conditions, and construct the
 depth-prefix recurrence.
@@ -335,3 +345,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Actual raw normalized projections committed in 2768f32. Proved actual raw query/table score error at most 2*exp(alpha)*copyTolerance against the categorical rotary reference, without a factor 1/epsilon; raw key competitors have zero score and query self-values stay zero. | Derive robust latest-write gaps, actual finite-softmax retrieval/tied readout, full raw parser and depth correctness; convex architecture and FLOP comparisons remain queued. |
 | 2026-10-07 | 1 | Actual raw score perturbations committed in 3f1128d. Derived a positive exp(alpha)*latestMargin/2 gap against real different-key and earlier same-key raw table writes, including both actual copy errors and context bounds. | Exclude nonrecord scores and derive the full causal-row gap, then finite-softmax retrieval/readout, full raw parser and depth correctness; convex architecture and FLOP comparisons remain queued. |
 | 2026-10-07 | 1 | Robust raw table gaps committed in 51ec631. Proved exact zero BOS/post-table filler scores, positive lower score for an imperfect real matching record, faithful actual selected V with its genuine RMS multiplier, and uniform actual V norm at most sixteen. | Assemble full-row routing and finite retrieval, connect tied readout and validated raw parser, then full depth correctness; convex architecture and equal-FLOP comparisons remain queued. |
+| 2026-10-07 | 1 | Nonrecord exclusion/actual V bounds committed in 377aeaa. Derived a full genuine score-row gap from raw table adjacency and last-write chronology, actual causal-softmax tail and original XSA retrieval error 32*(T-1)*exp(-retainedGap); the real overwrite control strictly prefers its later write. | Choose uniform finite retrieval accuracy, realize actual second W_o/tied readout and discharge raw predicates from complete Basis parsing, then full depth correctness; convex architecture and equal-FLOP comparisons remain queued. |

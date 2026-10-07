@@ -46,7 +46,7 @@ noncomputable def recallMatchKey (P : ℕ) (eps : ℝ) {T : ℕ}
 /-- The independent unrotated actual value of original head zero.
 Source: original V chunk, without the query/key matching gain or a semantic-value substitution. -/
 noncomputable def recallMatchValue (P : ℕ) (eps : ℝ) {T : ℕ}
-    (tokens : Fin T → Fin recallConfig.vocab_size) (i : Fin T) : EucSpace 16 :=
+    (tokens : Fin T → Fin recallConfig.vocab_size) (i : Fin T) : EucSpace recallConfig.head_dim :=
   headSlice recallConfig (qkvSlice recallConfig (qkvV recallConfig) (recallMatchQKV P eps tokens i)) 0
 
 /-- The actual matching score after original rotary positions and clipped normalization.

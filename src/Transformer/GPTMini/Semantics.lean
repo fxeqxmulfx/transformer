@@ -24,6 +24,7 @@ import Transformer.GPTMini.Semantics.RecallNormalizedInputs
 import Transformer.GPTMini.Semantics.RecallScoreError
 import Transformer.GPTMini.Semantics.RecallRawScoreGap
 import Transformer.GPTMini.Semantics.RecallRawExcluded
+import Transformer.GPTMini.Semantics.RecallRawRouting
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -174,6 +175,15 @@ An actual imperfect matching table record has score at least the positive
 retained gap. Its true V is the raw value code with the genuine next RMS
 multiplier, and every actual V norm is at most sixteen. Full-row routing,
 finite retrieval/readout and validated-parser coupling remain.
+
+Raw table adjacency and chronological last-write conditions now imply
+a complete actual matching-score row gap and finite causal-softmax tail
+bound. Original XSA preserves retrieval because the true raw query V is
+zero. The genuine head's error from its actual selected value is at most
+32*(T-1)*exp(-retainedGap), with value diameter derived. The concrete raw
+overwrite control strictly prefers its later, different-valued write.
+These raw applicability predicates still require full-parser discharge;
+uniform finite accuracy, genuine second W_o and tied readout remain.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
