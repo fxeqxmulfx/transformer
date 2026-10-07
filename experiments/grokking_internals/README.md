@@ -17,7 +17,7 @@ changes a training model, its optimizer, sampler or random state.
 
 The primary, repeat, seed 2 and reference control have completed their
 full budgets. The repeat matches all 601 canonical observations of the
-primary exactly. Seed 3 continues its full budget on the GPU. Seed 2's
+primary exactly. Seed 3 also completes all 150,000 updates. Seed 2's
 brief earlier interruption before its first checkpoint remains documented
 under `runs/gptmini-seed2/interrupted_before_first_checkpoint/`; the complete
 run restarted from its same initialization. All budgets remain unchanged.
@@ -97,7 +97,7 @@ the timing study.
 The reference control completes 150,000 updates with 1.503% held-out answer
 accuracy and a frozen probe near chance. Seed 2 completes 150,000 updates
 with 100% accuracy and first exceeds 99% at 1,250 updates. Seed 3 first
-exceeds 99% at 750 updates and continues training. These two initializations
+exceeds 99% at 750 updates and completes at 100%. These two initializations
 are early-generalizing controls, not replications of seed 1's long plateau.
 Seed 2 temporarily loses accuracy at 35,000 and later recovers; that event
 is not its first acquisition of a generalizing solution.
@@ -138,10 +138,10 @@ than 0.000001 to the full cosine. At the actual 30,000–35,000 transition,
 answer-only cosine decreases from 0.0469 to 0.0336. Thus removing EOS does
 not turn this measurement into a standalone detector.
 
-[The component results](objective_component_results.json) retain 22
+[The component results](objective_component_results.json) retain 23
 observations with checkpoint, source and batch hashes. Missing intermediate
 reference weights are explicit; its first retained noninitial snapshot is
-45,000. Seed 3's final weights are still pending in this snapshot. Maximum
+45,000. All four measured runs now include their final weights. Maximum
 relative gradient-reconstruction error for all parameters is below
 `5e-7`. Initialized-model records are distinguished from training weights.
 
@@ -155,7 +155,8 @@ newly available pinned snapshots without changing the recipe.
 
 ## Artifacts and thermodynamic interpretation
 
-`internal_suite_results.json` pins checkpoint and source-prefix hashes,
+`internal_suite_results.json` now includes all five completed run records
+and the canonical-repeat comparison. It pins checkpoint and source-prefix hashes,
 observer code, sampled updates, raw metrics, and threshold crossings.
 `six_measurements.svg` and `control_comparison.svg` are scientific figures.
 Do not infer missing intermediate weights from connected curve segments.

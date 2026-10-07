@@ -1,12 +1,12 @@
 {
-  "snapshot_utc": "2026-10-07T17:22:22.737809+00:00",
+  "snapshot_utc": "2026-10-07T20:40:28.220432+00:00",
   "runs": {
     "gptmini-seed1": {
-      "status": "unfinished",
-      "through_update": 76500,
+      "status": "finished",
+      "through_update": 150000,
       "budget": 150000,
-      "history_sha256": "1c378a2cbaa58348a73fd1e3e89632513e8b8c4df0a3a22f496b9a9ee89836b6",
-      "diagnostics_sha256": "c97a7f23a81ddf8ed19a7e6b1c4a204429ea84a6d680588e47aae2214a4ec244",
+      "history_sha256": "f4454af9dab3217211d8521b95dd996743d61553479ba47b1414617905b79271",
+      "diagnostics_sha256": "29bad70883e742ff0a52ae9fec51222d0f09be3c0177278ee09f0f31d6cdef68",
       "first_events": {
         "loss_only_alarm": 35000,
         "structure_forming": 33000,
@@ -74,17 +74,17 @@
         }
       },
       "latest": {
-        "step": 76500,
-        "epochs_seen": 7650.0,
-        "training_seconds": 1668.0122610625112,
-        "wall_seconds": 1740.6928668330074,
+        "step": 150000,
+        "epochs_seen": 15000.0,
+        "training_seconds": 3217.404037413071,
+        "wall_seconds": 3350.1717145869625,
         "last_batch_size": 48,
         "train": {
           "accuracy": 1.0,
           "answer_accuracy": 1.0,
           "EOS_accuracy": 1.0,
-          "loss": 3.768815675426232e-08,
-          "answer_loss": 7.537631350852464e-08,
+          "loss": 4.7417434524101464e-08,
+          "answer_loss": 9.483486904820293e-08,
           "EOS_loss": 0.0,
           "examples": 4656
         },
@@ -92,67 +92,100 @@
           "accuracy": 1.0,
           "answer_accuracy": 1.0,
           "EOS_accuracy": 1.0,
-          "loss": 4.2770424086709156e-08,
-          "answer_loss": 8.554084817341831e-08,
+          "loss": 5.055384731833916e-08,
+          "answer_loss": 1.0110769463667832e-07,
           "EOS_loss": 0.0,
           "examples": 4656
+        },
+        "grokking": {
+          "step": 150000,
+          "rows_sha256": "3101bde6ddd16d2cf3710ee300023b04c42407c166da74d35ea0c1202d9bfd32",
+          "examples": 9312,
+          "forward": "uncompiled_raw_answer_prefix_without_answer_token",
+          "projection": "all_common_scaling_orbits; zero_removed_from_main_energy",
+          "invariant_energy_fraction": 0.9972127017325806,
+          "total_energy": 1.8999204690629807,
+          "invariant_energy": 1.8946248240313268,
+          "residual_energy": 0.0052956450316540326,
+          "energy_decomposition_error": 1.1535911115245767e-16,
+          "raw_train_loss": 1.3268053908423975e-07,
+          "raw_heldout_loss": 1.3596612569651214e-07,
+          "restricted_train_loss": 1.3286078480087902e-07,
+          "restricted_heldout_loss": 1.3327820527880332e-07,
+          "heldout_invariant_energy_fraction": 0.9970122035832772,
+          "heldout_total_energy": 1.9007910992854522,
+          "heldout_invariant_energy": 1.8951119224500685,
+          "heldout_residual_energy": 0.005679176835383599,
+          "heldout_energy_decomposition_error": 5.984795992119984e-17,
+          "heldout_orbit_coverage": 1.0,
+          "heldout_min_orbit_size": 37,
+          "heldout_restricted_loss": 1.3454148235731883e-07,
+          "heldout_restricted_accuracy": 1.0,
+          "excluded_train_loss": 4.8331551936850365,
+          "excluded_heldout_loss": 4.860269547662396,
+          "raw_heldout_accuracy": 1.0,
+          "restricted_heldout_accuracy": 1.0,
+          "excluded_train_accuracy": 0.0,
+          "nonzero_quotients": 96,
+          "orbit_size": 96,
+          "constant_logits": false
         }
       },
       "latest_norms": {
-        "step": 76000,
+        "step": 150000,
         "groups": {
           "all": {
-            "parameter_l2": 35.70582398436163,
-            "gradient_l2": 1.0485205180867094e-06,
-            "update_l2": 0.009964355397024418,
-            "relative_update_l2": 0.0002790753268960366
+            "parameter_l2": 38.94789254091733,
+            "gradient_l2": 1.0010541614974022e-06,
+            "update_l2": 0.00968691608160336,
+            "relative_update_l2": 0.0002487161425581126
           },
           "embedding": {
-            "parameter_l2": 34.54620361328125,
-            "gradient_l2": 4.2190461613245134e-07,
-            "update_l2": 0.0026202278677374125,
-            "relative_update_l2": 7.584959459140351e-05
+            "parameter_l2": 37.59334945678711,
+            "gradient_l2": 2.800840093186707e-07,
+            "update_l2": 0.002254083752632141,
+            "relative_update_l2": 5.996031068130419e-05
           },
           "attention": {
-            "parameter_l2": 4.761505421172775,
-            "gradient_l2": 6.316402028970859e-07,
-            "update_l2": 0.00536977112467509,
-            "relative_update_l2": 0.0011276480690047943
+            "parameter_l2": 5.492384778177616,
+            "gradient_l2": 4.985845563507125e-07,
+            "update_l2": 0.005168667534923621,
+            "relative_update_l2": 0.0009410188122119628
           },
           "ffn": {
-            "parameter_l2": 7.667708160595977,
-            "gradient_l2": 7.227879535652754e-07,
-            "update_l2": 0.007974229898112263,
-            "relative_update_l2": 0.0010398907668568286
+            "parameter_l2": 8.573920891119235,
+            "gradient_l2": 8.216299788492438e-07,
+            "update_l2": 0.007876568130954761,
+            "relative_update_l2": 0.0009185902094758716
           }
         },
         "temperatures": {
           "blocks.0.attention.scores.log_alpha": {
             "log_alpha": [
-              0.29060184955596924,
-              0.0425729900598526,
-              0.020780324935913086,
-              0.04267572611570358
+              0.3848930299282074,
+              0.04741457477211952,
+              0.021301543340086937,
+              0.06656613200902939
             ],
             "inverse_temperature": [
-              1.337231993675232,
-              1.0434921979904175,
-              1.0209977626800537,
-              1.0435994863510132
+              1.4694571495056152,
+              1.0485565662384033,
+              1.021530032157898,
+              1.0688315629959106
             ]
           },
           "blocks.1.attention.scores.log_alpha": {
             "log_alpha": [
-              0.14375798404216766,
-              0.1699715554714203,
-              0.31780850887298584,
-              0.07994520664215088
+              0.2875382900238037,
+              0.1859397441148758,
+              0.2957415282726288,
+              0.08204721659421921
             ],
             "inverse_temperature": [
-              1.1546046733856201,
-              1.185271143913269,
-              1.3741130828857422,
-              1.0832277536392212
+              1.333141565322876,
+              1.2043496370315552,
+              1.3441227674484253,
+              1.0855071544647217
             ]
           }
         }
@@ -172,7 +205,7 @@
       },
       "training_device": "cuda",
       "threads": 1,
-      "internal_checkpoint_probes_sha256": "f1563a09249fb807a6f703becf5f46636de3950ce8d6dd4bd2c5eea1ded43033",
+      "internal_checkpoint_probes_sha256": "650d974520eaf4589c85ae968e752628ce152c5f5a65306beac3272b1fed64c6",
       "internal_checkpoints": [
         {
           "step": 30000,
@@ -2243,23 +2276,3694 @@
               }
             }
           }
+        },
+        {
+          "step": 80000,
+          "checkpoint_sha256": "ac14a1d43e2cbd14b3b5efcb09fece897f8434bcf43d93cbdbbddd75a4b1fe57",
+          "observation_device": "cpu",
+          "training_device": "cuda",
+          "heldout_invariant_energy_fraction": 0.996109617470755,
+          "raw_heldout_loss": 2.1332776513605079e-07,
+          "heldout_restricted_loss": 2.1055588717195527e-07,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.010478064012638092,
+                "total_energy": 0.0005230096540577952,
+                "invariant_energy": 5.4801286344452816e-06,
+                "residual_energy": 0.0005175295254233499,
+                "energy_decomposition_error": 0.0,
+                "activation_rms": 0.10757761451323856
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.3604265652344785,
+                "total_energy": 0.0005915594518045489,
+                "invariant_energy": 0.0002132137413459046,
+                "residual_energy": 0.0003783457104586442,
+                "energy_decomposition_error": 1.0842021724855044e-19,
+                "activation_rms": 0.04528456228992911
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.54666695735386,
+                "total_energy": 0.00038743430073407906,
+                "invariant_energy": 0.00021179753035681934,
+                "residual_energy": 0.00017563677037725972,
+                "energy_decomposition_error": 0.0,
+                "activation_rms": 0.037300943897294075
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.9396752174293499,
+                "total_energy": 0.002814414681676512,
+                "invariant_energy": 0.002644635727940731,
+                "residual_energy": 0.00016977895373578066,
+                "energy_decomposition_error": 4.336808689942018e-19,
+                "activation_rms": 0.05572035396853444
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.9964275270043423,
+                "total_energy": 0.010849765182607636,
+                "invariant_energy": 0.010811004689483544,
+                "residual_energy": 3.876049312409057e-05,
+                "energy_decomposition_error": 1.870248747537495e-18,
+                "activation_rms": 0.11344178246715132
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.9949147671900392,
+                "total_energy": 0.00949734119304577,
+                "invariant_energy": 0.009449045002003501,
+                "residual_energy": 4.829619104226867e-05,
+                "energy_decomposition_error": 1.0164395367051604e-19,
+                "activation_rms": 0.10607590862563046
+              }
+            },
+            "attention": {
+              "blocks.0.attention": {
+                "entropy_by_head": [
+                  1.3100117794988642,
+                  1.5689839466337927,
+                  1.3089759010635544,
+                  1.5116562109516158
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.26508487117735996,
+                    0.03400959972615428,
+                    0.31244950160973056,
+                    0.032818257885895465,
+                    0.35563776812986614
+                  ],
+                  [
+                    0.16053956354043328,
+                    0.2870495450295687,
+                    0.1786558370288346,
+                    0.22120291457105032,
+                    0.1525521405886129
+                  ],
+                  [
+                    0.5516290843640406,
+                    0.11839367800369807,
+                    0.10770020536643124,
+                    0.10770898802474756,
+                    0.11456802563543377
+                  ],
+                  [
+                    0.08520070112492774,
+                    0.3222687511586447,
+                    0.1827883715981368,
+                    0.24435892090188577,
+                    0.16538325536522464
+                  ]
+                ]
+              },
+              "blocks.1.attention": {
+                "entropy_by_head": [
+                  1.3958336446248956,
+                  1.2659361063747925,
+                  1.319587579570678,
+                  1.4913866705975585
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.12504261267240258,
+                    0.2722728427873982,
+                    0.11072457434219081,
+                    0.37932181653416236,
+                    0.11263815497201819
+                  ],
+                  [
+                    0.07592311309637739,
+                    0.08751572704237096,
+                    0.5432649369309961,
+                    0.07991653882267907,
+                    0.21337968484527364
+                  ],
+                  [
+                    0.1273799314214832,
+                    0.29933960166442947,
+                    0.10159489336660407,
+                    0.3797725400874628,
+                    0.09191303406650028
+                  ],
+                  [
+                    0.13347383620396666,
+                    0.19644939598604985,
+                    0.11794289618672937,
+                    0.3478729735061373,
+                    0.20426089896042784
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "norms": {
+            "step": 80000,
+            "groups": {
+              "all": {
+                "parameter_l2": 35.282601124426485,
+                "gradient_l2": 9.374546750696392e-07,
+                "update_l2": 0.008049686200037421,
+                "relative_update_l2": 0.00022816298379588556
+              },
+              "embedding": {
+                "parameter_l2": 33.989376068115234,
+                "gradient_l2": 3.466390410267195e-07,
+                "update_l2": 0.005484342109411955,
+                "relative_update_l2": 0.00016136627918325155
+              },
+              "attention": {
+                "parameter_l2": 4.936722172606854,
+                "gradient_l2": 5.379422321775311e-07,
+                "update_l2": 0.003167351429624151,
+                "relative_update_l2": 0.0006415317397701148
+              },
+              "ffn": {
+                "parameter_l2": 8.075458550206818,
+                "gradient_l2": 6.850407271731034e-07,
+                "update_l2": 0.0049686340645354,
+                "relative_update_l2": 0.0006152332484437717
+              }
+            },
+            "temperatures": {
+              "blocks.0.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.3005552291870117,
+                  0.045434508472681046,
+                  0.01604871079325676,
+                  0.044736411422491074
+                ],
+                "inverse_temperature": [
+                  1.3506085872650146,
+                  1.0464824438095093,
+                  1.0161781311035156,
+                  1.0457521677017212
+                ]
+              },
+              "blocks.1.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.15712687373161316,
+                  0.1685735285282135,
+                  0.28726279735565186,
+                  0.06670628488063812
+                ],
+                "inverse_temperature": [
+                  1.1701440811157227,
+                  1.1836153268814087,
+                  1.3327744007110596,
+                  1.0689815282821655
+                ]
+              }
+            }
+          }
+        },
+        {
+          "step": 85000,
+          "checkpoint_sha256": "0465bc360e83c30224aa56c311a68922d309e4c9ab790d32e1301849a981ca67",
+          "observation_device": "cpu",
+          "training_device": "cuda",
+          "heldout_invariant_energy_fraction": 0.9380658229117569,
+          "raw_heldout_loss": 8.04753851954556e-06,
+          "heldout_restricted_loss": 2.854886606480799e-07,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.01097552665970561,
+                "total_energy": 0.0010165114537201974,
+                "invariant_energy": 1.1156748560202132e-05,
+                "residual_energy": 0.001005354705159995,
+                "energy_decomposition_error": 2.168404344971009e-19,
+                "activation_rms": 0.12552898331605927
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.4232914452939211,
+                "total_energy": 0.0007675982308427526,
+                "invariant_energy": 0.0003249177645384856,
+                "residual_energy": 0.00044268046630426694,
+                "energy_decomposition_error": 0.0,
+                "activation_rms": 0.04774380857957506
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.4568796107626067,
+                "total_energy": 0.0007155167124265499,
+                "invariant_energy": 0.0003269049970675821,
+                "residual_energy": 0.00038861171535896783,
+                "energy_decomposition_error": 5.421010862427522e-20,
+                "activation_rms": 0.044797076762489015
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.9309957064032912,
+                "total_energy": 0.00338147127365113,
+                "invariant_energy": 0.0031481352370952708,
+                "residual_energy": 0.00023333603655585972,
+                "energy_decomposition_error": 4.607859233063394e-19,
+                "activation_rms": 0.060569451644551874
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.9610197551047275,
+                "total_energy": 0.009648210282869467,
+                "invariant_energy": 0.009272120683242128,
+                "residual_energy": 0.00037608959962733945,
+                "energy_decomposition_error": 7.589415207398531e-19,
+                "activation_rms": 0.10498558146666762
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.9367654751807772,
+                "total_energy": 0.007917336120353956,
+                "invariant_energy": 0.007416687132949305,
+                "residual_energy": 0.0005006489874046509,
+                "energy_decomposition_error": 4.336808689942018e-19,
+                "activation_rms": 0.09184950826932058
+              }
+            },
+            "attention": {
+              "blocks.0.attention": {
+                "entropy_by_head": [
+                  1.3867048855766986,
+                  1.4788918304584509,
+                  1.3339672040602866,
+                  1.4725835859331744
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.2997153901984704,
+                    0.052319031447985075,
+                    0.3258580061770284,
+                    0.05155121679721829,
+                    0.27055635867173117
+                  ],
+                  [
+                    0.07751797736283149,
+                    0.3405203593581198,
+                    0.16534050563318314,
+                    0.2590611460698685,
+                    0.15756001277695508
+                  ],
+                  [
+                    0.5356773220361098,
+                    0.11862437088759392,
+                    0.1104161480339276,
+                    0.1144497036098589,
+                    0.12083244252521097
+                  ],
+                  [
+                    0.10361605724703866,
+                    0.35740958939904915,
+                    0.15512368407522895,
+                    0.25490008078713955,
+                    0.12895059114629306
+                  ]
+                ]
+              },
+              "blocks.1.attention": {
+                "entropy_by_head": [
+                  1.395039492283821,
+                  1.3125180963346716,
+                  1.3142177885129538,
+                  1.4517221791362045
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.12700646400013202,
+                    0.25844595911496565,
+                    0.11814422064294391,
+                    0.3804407463108167,
+                    0.11596261092407238
+                  ],
+                  [
+                    0.09766280650852498,
+                    0.094565446813402,
+                    0.5296983898095659,
+                    0.09579247427877051,
+                    0.18228088202006168
+                  ],
+                  [
+                    0.13357513199105883,
+                    0.3052371641472174,
+                    0.09816108244436048,
+                    0.3736933671030827,
+                    0.08933325502397396
+                  ],
+                  [
+                    0.16818877681769764,
+                    0.15986021557227545,
+                    0.11951279906472799,
+                    0.39803253555241525,
+                    0.15440567342974118
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "norms": {
+            "step": 85000,
+            "groups": {
+              "all": {
+                "parameter_l2": 36.54567963535655,
+                "gradient_l2": 4.255108923694358e-06,
+                "update_l2": 0.006972834981048114,
+                "relative_update_l2": 0.00019078285244299522
+              },
+              "embedding": {
+                "parameter_l2": 35.29142761230469,
+                "gradient_l2": 1.2988191429030849e-06,
+                "update_l2": 0.0028187690768390894,
+                "relative_update_l2": 7.986495272606111e-05
+              },
+              "attention": {
+                "parameter_l2": 5.132496833250392,
+                "gradient_l2": 2.99253212966051e-06,
+                "update_l2": 0.0009580597324656943,
+                "relative_update_l2": 0.00018664525524543014
+              },
+              "ffn": {
+                "parameter_l2": 7.9849429147769975,
+                "gradient_l2": 2.731990526975046e-06,
+                "update_l2": 0.006305322363956638,
+                "relative_update_l2": 0.0007896003347909797
+              }
+            },
+            "temperatures": {
+              "blocks.0.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.33347025513648987,
+                  0.05973261222243309,
+                  0.01765180565416813,
+                  0.06327731907367706
+                ],
+                "inverse_temperature": [
+                  1.395803451538086,
+                  1.0615527629852295,
+                  1.017808437347412,
+                  1.0653221607208252
+                ]
+              },
+              "blocks.1.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.18770098686218262,
+                  0.18013860285282135,
+                  0.29868340492248535,
+                  0.07046423852443695
+                ],
+                "inverse_temperature": [
+                  1.206472635269165,
+                  1.1973834037780762,
+                  1.3480827808380127,
+                  1.0730061531066895
+                ]
+              }
+            }
+          }
+        },
+        {
+          "step": 90000,
+          "checkpoint_sha256": "b3a1530151d3ae9bf1980945a5a85a8da116d6ab95826324b9c230c2c7b92ea7",
+          "observation_device": "cpu",
+          "training_device": "cuda",
+          "heldout_invariant_energy_fraction": 0.9369550243154645,
+          "raw_heldout_loss": 2.9078348705777085e-05,
+          "heldout_restricted_loss": 3.8152356657918256e-07,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.011101031388273125,
+                "total_energy": 0.0008962121087580895,
+                "invariant_energy": 9.948878749874e-06,
+                "residual_energy": 0.0008862632300082156,
+                "energy_decomposition_error": 1.0842021724855044e-19,
+                "activation_rms": 0.13209889383608778
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.4239131688605103,
+                "total_energy": 0.0005748122911160854,
+                "invariant_energy": 0.0002436704998269899,
+                "residual_energy": 0.00033114179128909536,
+                "energy_decomposition_error": 1.6263032587282567e-19,
+                "activation_rms": 0.03774380539304491
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.3553420591967285,
+                "total_energy": 0.0006961922054599839,
+                "invariant_energy": 0.0002473863718848626,
+                "residual_energy": 0.0004488058335751212,
+                "energy_decomposition_error": 1.0842021724855044e-19,
+                "activation_rms": 0.0427647170417967
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.920502590952908,
+                "total_energy": 0.0027828181313116476,
+                "invariant_energy": 0.002561591300023101,
+                "residual_energy": 0.00022122683128854642,
+                "energy_decomposition_error": 2.710505431213761e-20,
+                "activation_rms": 0.05474297168641749
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.9581797580267101,
+                "total_energy": 0.009118198769412764,
+                "invariant_energy": 0.008736873490515367,
+                "residual_energy": 0.0003813252788973969,
+                "energy_decomposition_error": 3.2526065174565133e-19,
+                "activation_rms": 0.10143452743405933
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.9326160804643859,
+                "total_energy": 0.008478996385840975,
+                "invariant_energy": 0.007907648375634704,
+                "residual_energy": 0.000571348010206271,
+                "energy_decomposition_error": 1.0842021724855044e-19,
+                "activation_rms": 0.09365168866549069
+              }
+            },
+            "attention": {
+              "blocks.0.attention": {
+                "entropy_by_head": [
+                  1.3565618382800348,
+                  1.5270672295643262,
+                  1.3839432122873976,
+                  1.4807169006358054
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.32911849507095475,
+                    0.04320146190162582,
+                    0.29683371436785383,
+                    0.043931435607213694,
+                    0.2869148734585731
+                  ],
+                  [
+                    0.12703221283622623,
+                    0.3025662245651342,
+                    0.16300283499298893,
+                    0.2566501729836835,
+                    0.15074855689426622
+                  ],
+                  [
+                    0.5013938052611765,
+                    0.1252199196483927,
+                    0.11770588798205212,
+                    0.12437379527420983,
+                    0.1313065838715209
+                  ],
+                  [
+                    0.09062528828978282,
+                    0.3218886758140016,
+                    0.15828676846300818,
+                    0.28512626753870357,
+                    0.14407299728776068
+                  ]
+                ]
+              },
+              "blocks.1.attention": {
+                "entropy_by_head": [
+                  1.340973640594227,
+                  1.3153217761982812,
+                  1.3049125912122934,
+                  1.4867755900915516
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.12094045983694647,
+                    0.31187398422707857,
+                    0.09768452768332463,
+                    0.38086343725944816,
+                    0.08863759069796331
+                  ],
+                  [
+                    0.11271635722368956,
+                    0.11128279648855635,
+                    0.542443126811297,
+                    0.1069733549679127,
+                    0.12658436593833247
+                  ],
+                  [
+                    0.14148771311108446,
+                    0.3181959064245301,
+                    0.09770686626258303,
+                    0.3601213310728381,
+                    0.0824881840882906
+                  ],
+                  [
+                    0.1585912044220876,
+                    0.16227645771033883,
+                    0.11600068280044495,
+                    0.3660746915729979,
+                    0.1970569633533122
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "norms": {
+            "step": 90000,
+            "groups": {
+              "all": {
+                "parameter_l2": 35.997637987435446,
+                "gradient_l2": 8.249959665247988e-06,
+                "update_l2": 0.0059763223336783055,
+                "relative_update_l2": 0.00016600912143555858
+              },
+              "embedding": {
+                "parameter_l2": 34.75515365600586,
+                "gradient_l2": 2.6049888219858985e-06,
+                "update_l2": 0.0024714982137084007,
+                "relative_update_l2": 7.110709966798625e-05
+              },
+              "attention": {
+                "parameter_l2": 5.1710513667048,
+                "gradient_l2": 6.133275764442433e-06,
+                "update_l2": 0.0009613715354659919,
+                "relative_update_l2": 0.00018589377076776246
+              },
+              "ffn": {
+                "parameter_l2": 7.821090894803517,
+                "gradient_l2": 4.8640308503185185e-06,
+                "update_l2": 0.005355734308799686,
+                "relative_update_l2": 0.0006847522578927108
+              }
+            },
+            "temperatures": {
+              "blocks.0.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.35779476165771484,
+                  0.06256905198097229,
+                  0.017854418605566025,
+                  0.057256948202848434
+                ],
+                "inverse_temperature": [
+                  1.430172085762024,
+                  1.064568042755127,
+                  1.018014669418335,
+                  1.0589278936386108
+                ]
+              },
+              "blocks.1.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.19519352912902832,
+                  0.1685832291841507,
+                  0.2960129380226135,
+                  0.07030361145734787
+                ],
+                "inverse_temperature": [
+                  1.2155461311340332,
+                  1.1836267709732056,
+                  1.3444875478744507,
+                  1.0728338956832886
+                ]
+              }
+            }
+          }
+        },
+        {
+          "step": 95000,
+          "checkpoint_sha256": "937c11ad41569e14ea2d5ae0c02fd6c208f7963509687b9e638d437f280874a5",
+          "observation_device": "cpu",
+          "training_device": "cuda",
+          "heldout_invariant_energy_fraction": 0.9956266164993124,
+          "raw_heldout_loss": 2.1930543366096382e-07,
+          "heldout_restricted_loss": 2.1595404833017796e-07,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.010678396651978627,
+                "total_energy": 0.0009490947632081777,
+                "invariant_energy": 1.0134810341852652e-05,
+                "residual_energy": 0.000938959952866325,
+                "energy_decomposition_error": 1.0842021724855044e-19,
+                "activation_rms": 0.09022156600867434
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.37745122112281,
+                "total_energy": 0.0011301118209769542,
+                "invariant_energy": 0.0004265620868330738,
+                "residual_energy": 0.0007035497341438803,
+                "energy_decomposition_error": 1.0842021724855044e-19,
+                "activation_rms": 0.05730967876247443
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.6536509662054578,
+                "total_energy": 0.000648069628904041,
+                "invariant_energy": 0.0004236113391015389,
+                "residual_energy": 0.00022445828980250214,
+                "energy_decomposition_error": 8.131516293641283e-20,
+                "activation_rms": 0.0564279292686706
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.9552797190326163,
+                "total_energy": 0.004559356088009112,
+                "invariant_energy": 0.004355460402722993,
+                "residual_energy": 0.0002038956852861185,
+                "energy_decomposition_error": 8.131516293641283e-20,
+                "activation_rms": 0.0716375760718132
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.9960186721696003,
+                "total_energy": 0.01708130360288611,
+                "invariant_energy": 0.017013297333472434,
+                "residual_energy": 6.800626941368027e-05,
+                "energy_decomposition_error": 2.4801124695605914e-18,
+                "activation_rms": 0.142357691985004
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.9947214315787177,
+                "total_energy": 0.014757148744255098,
+                "invariant_energy": 0.014679252124905508,
+                "residual_energy": 7.78966193495935e-05,
+                "energy_decomposition_error": 3.618524750670371e-18,
+                "activation_rms": 0.12960865153619627
+              }
+            },
+            "attention": {
+              "blocks.0.attention": {
+                "entropy_by_head": [
+                  1.3531905112991804,
+                  1.579650343030587,
+                  1.3112791525047014,
+                  1.5949332571842947
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.25522526155171527,
+                    0.04590379058373804,
+                    0.3286138565449166,
+                    0.04227910413089948,
+                    0.3279779672981128
+                  ],
+                  [
+                    0.15719202617535374,
+                    0.2542163310092442,
+                    0.16001964191173257,
+                    0.23051012480228217,
+                    0.19806187435395733
+                  ],
+                  [
+                    0.5500046444282294,
+                    0.10901557710149751,
+                    0.10568593130879027,
+                    0.11311772327767718,
+                    0.1221760807421276
+                  ],
+                  [
+                    0.17430457269574462,
+                    0.24171360112291432,
+                    0.17196779984571167,
+                    0.21826574463986143,
+                    0.19374828343679712
+                  ]
+                ]
+              },
+              "blocks.1.attention": {
+                "entropy_by_head": [
+                  1.4134770119888682,
+                  1.2549526418988688,
+                  1.325805409261543,
+                  1.4553502797249378
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.13239804264862104,
+                    0.26345646369216574,
+                    0.13074072943584308,
+                    0.3523323778191076,
+                    0.12107238632105163
+                  ],
+                  [
+                    0.10301478073973835,
+                    0.08129101657769498,
+                    0.5704343104959047,
+                    0.08248199028910308,
+                    0.1627779023280156
+                  ],
+                  [
+                    0.13224961717782663,
+                    0.3090962673188587,
+                    0.09899673940729081,
+                    0.36159199171721984,
+                    0.09806538385153457
+                  ],
+                  [
+                    0.12324689417802233,
+                    0.15923813911462106,
+                    0.1249960450186711,
+                    0.4269790750995432,
+                    0.16553984733003982
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "norms": {
+            "step": 95000,
+            "groups": {
+              "all": {
+                "parameter_l2": 32.81163782680309,
+                "gradient_l2": 1.1459154716248446e-06,
+                "update_l2": 0.00873531486639136,
+                "relative_update_l2": 0.00026624628714320606
+              },
+              "embedding": {
+                "parameter_l2": 31.056753158569336,
+                "gradient_l2": 3.761456923712103e-07,
+                "update_l2": 0.005630525294691324,
+                "relative_update_l2": 0.0001813150416062901
+              },
+              "attention": {
+                "parameter_l2": 5.562739698819457,
+                "gradient_l2": 6.849455518800064e-07,
+                "update_l2": 0.0033892795274013438,
+                "relative_update_l2": 0.0006092264424854474
+              },
+              "ffn": {
+                "parameter_l2": 9.00764048839468,
+                "gradient_l2": 8.381445443236902e-07,
+                "update_l2": 0.0057546237936095535,
+                "relative_update_l2": 0.0006388085387900956
+              }
+            },
+            "temperatures": {
+              "blocks.0.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.2873396873474121,
+                  0.059517938643693924,
+                  0.00902935117483139,
+                  0.057660531252622604
+                ],
+                "inverse_temperature": [
+                  1.3328769207000732,
+                  1.0613248348236084,
+                  1.0090702772140503,
+                  1.05935537815094
+                ]
+              },
+              "blocks.1.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.16753795742988586,
+                  0.14906205236911774,
+                  0.2556062340736389,
+                  0.06159070134162903
+                ],
+                "inverse_temperature": [
+                  1.1823902130126953,
+                  1.1607450246810913,
+                  1.2912441492080688,
+                  1.06352698802948
+                ]
+              }
+            }
+          }
+        },
+        {
+          "step": 100000,
+          "checkpoint_sha256": "aa0ea63109f50c8cfde80e7698a0fdb31362373866419a11d40353376d8deb7f",
+          "observation_device": "cpu",
+          "training_device": "cuda",
+          "heldout_invariant_energy_fraction": 0.955742571725312,
+          "raw_heldout_loss": 0.014009592764056897,
+          "heldout_restricted_loss": 1.971793883354174e-05,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.010410263575635454,
+                "total_energy": 0.0008857720289569307,
+                "invariant_energy": 9.221120289367048e-06,
+                "residual_energy": 0.0008765509086675634,
+                "energy_decomposition_error": 2.168404344971009e-19,
+                "activation_rms": 0.11759073238388278
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.3524565657876187,
+                "total_energy": 0.0007789828858007751,
+                "invariant_energy": 0.00027455763273666995,
+                "residual_energy": 0.0005044252530641052,
+                "energy_decomposition_error": 1.0842021724855044e-19,
+                "activation_rms": 0.06089885637971681
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.4749842616090627,
+                "total_energy": 0.0005754817556187163,
+                "invariant_energy": 0.00027334477676204305,
+                "residual_energy": 0.00030213697885667323,
+                "energy_decomposition_error": 5.421010862427522e-20,
+                "activation_rms": 0.05612394032720668
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.9367733006961202,
+                "total_energy": 0.003638274287644291,
+                "invariant_energy": 0.003408238213274368,
+                "residual_energy": 0.00023003607436992271,
+                "energy_decomposition_error": 5.692061405548898e-19,
+                "activation_rms": 0.06430368926498485
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.9655004964064027,
+                "total_energy": 0.010998738785666751,
+                "invariant_energy": 0.010619287757405603,
+                "residual_energy": 0.00037945102826114906,
+                "energy_decomposition_error": 1.0299920638612292e-18,
+                "activation_rms": 0.11616868672968919
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.9531367538055231,
+                "total_energy": 0.009459594786385667,
+                "invariant_energy": 0.009016287467011285,
+                "residual_energy": 0.00044330731937437925,
+                "energy_decomposition_error": 2.2768245622195593e-18,
+                "activation_rms": 0.10642046864169456
+              }
+            },
+            "attention": {
+              "blocks.0.attention": {
+                "entropy_by_head": [
+                  1.5212910208819028,
+                  1.4926157677567151,
+                  1.470056839713836,
+                  1.5537217940804378
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.35102585068170966,
+                    0.13105238337530611,
+                    0.19886922403606763,
+                    0.10526821882659217,
+                    0.2137843143431745
+                  ],
+                  [
+                    0.07253040001916465,
+                    0.31586498858989615,
+                    0.17991756298019201,
+                    0.27621087876766204,
+                    0.1554761714337208
+                  ],
+                  [
+                    0.4327059198631761,
+                    0.14142949828922852,
+                    0.13467336053035103,
+                    0.14098549112549558,
+                    0.15020572204347635
+                  ],
+                  [
+                    0.13436284674254736,
+                    0.2925108167506063,
+                    0.1857655816919513,
+                    0.24363412358878098,
+                    0.14372663310476133
+                  ]
+                ]
+              },
+              "blocks.1.attention": {
+                "entropy_by_head": [
+                  1.3942460780826302,
+                  1.3212917299430111,
+                  1.3282136355683425,
+                  1.302568933822815
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.14060070364387176,
+                    0.2675904110954159,
+                    0.10627883070715002,
+                    0.38080337496243954,
+                    0.10472667852858293
+                  ],
+                  [
+                    0.12033152422160422,
+                    0.1028606551635332,
+                    0.5394708729921952,
+                    0.10932749617825617,
+                    0.12800945142200826
+                  ],
+                  [
+                    0.12339290985645554,
+                    0.3089956201291307,
+                    0.09954394999878718,
+                    0.3787440088692784,
+                    0.08932351124876169
+                  ],
+                  [
+                    0.12675257555698766,
+                    0.10784052728748915,
+                    0.09091679261648496,
+                    0.5474852812748492,
+                    0.12700482259930154
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "norms": {
+            "step": 100000,
+            "groups": {
+              "all": {
+                "parameter_l2": 34.00564436790054,
+                "gradient_l2": 0.00015153952113182401,
+                "update_l2": 0.08560485884570872,
+                "relative_update_l2": 0.0025174229333954855
+              },
+              "embedding": {
+                "parameter_l2": 32.51901626586914,
+                "gradient_l2": 4.564874689094722e-05,
+                "update_l2": 0.014022601768374443,
+                "relative_update_l2": 0.000431218430774751
+              },
+              "attention": {
+                "parameter_l2": 5.351404351035085,
+                "gradient_l2": 0.0001294868472623946,
+                "update_l2": 0.060755128433251024,
+                "relative_update_l2": 0.011353671436354186
+              },
+              "ffn": {
+                "parameter_l2": 8.382117957174476,
+                "gradient_l2": 6.413715583181146e-05,
+                "update_l2": 0.058654691770552055,
+                "relative_update_l2": 0.006998304292585906
+              }
+            },
+            "temperatures": {
+              "blocks.0.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.304379403591156,
+                  0.05931845307350159,
+                  0.017916928976774216,
+                  0.046275507658720016
+                ],
+                "inverse_temperature": [
+                  1.3557833433151245,
+                  1.0611131191253662,
+                  1.0180784463882446,
+                  1.0473629236221313
+                ]
+              },
+              "blocks.1.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.18375302851200104,
+                  0.14782792329788208,
+                  0.26058194041252136,
+                  0.06803738325834274
+                ],
+                "inverse_temperature": [
+                  1.201719045639038,
+                  1.159313440322876,
+                  1.2976850271224976,
+                  1.07040536403656
+                ]
+              }
+            }
+          }
+        },
+        {
+          "step": 105000,
+          "checkpoint_sha256": "da2316837d16f9e4dcab38e8616d045a75003f5673ae33854931b54a6ce0db26",
+          "observation_device": "cpu",
+          "training_device": "cuda",
+          "heldout_invariant_energy_fraction": 0.9667749549863592,
+          "raw_heldout_loss": 2.736376555917124e-07,
+          "heldout_restricted_loss": 1.969850807907216e-07,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.010375468380826074,
+                "total_energy": 0.0011782880341230637,
+                "invariant_energy": 1.2225290241549562e-05,
+                "residual_energy": 0.0011660627438815144,
+                "energy_decomposition_error": 2.168404344971009e-19,
+                "activation_rms": 0.1266365284630379
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.42899006968568554,
+                "total_energy": 0.0010703279751683597,
+                "invariant_energy": 0.00045916007265401335,
+                "residual_energy": 0.0006111679025143465,
+                "energy_decomposition_error": 1.0842021724855044e-19,
+                "activation_rms": 0.06037598394047387
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.5641739641887787,
+                "total_energy": 0.0008091351526619373,
+                "invariant_energy": 0.00045649298664177785,
+                "residual_energy": 0.0003526421660201595,
+                "energy_decomposition_error": 0.0,
+                "activation_rms": 0.060507250795328225
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.923368932827901,
+                "total_energy": 0.002621118379000891,
+                "invariant_energy": 0.0024202592804336504,
+                "residual_energy": 0.00020085909856724032,
+                "energy_decomposition_error": 2.710505431213761e-19,
+                "activation_rms": 0.0612639006109088
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.9798145388100427,
+                "total_energy": 0.009579425891488655,
+                "invariant_energy": 0.009386060761933938,
+                "residual_energy": 0.00019336512955471722,
+                "energy_decomposition_error": 4.0657581468206416e-19,
+                "activation_rms": 0.10503376651958993
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.9649273021791036,
+                "total_energy": 0.008337695700994215,
+                "invariant_energy": 0.008045270219150658,
+                "residual_energy": 0.0002924254818435578,
+                "energy_decomposition_error": 7.589415207398531e-19,
+                "activation_rms": 0.0975211230778583
+              }
+            },
+            "attention": {
+              "blocks.0.attention": {
+                "entropy_by_head": [
+                  1.5945241613429233,
+                  1.5321076241767824,
+                  1.3985419095284137,
+                  1.5221560878894993
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.18224700514380773,
+                    0.19371005002076375,
+                    0.25931171823574606,
+                    0.15787286926508973,
+                    0.20685834854303561
+                  ],
+                  [
+                    0.08348462090401869,
+                    0.29137000461073775,
+                    0.19872107248612492,
+                    0.2584488309913433,
+                    0.1679754735857146
+                  ],
+                  [
+                    0.49052420599686936,
+                    0.1252594267920658,
+                    0.11886925699951005,
+                    0.12781034498971558,
+                    0.1375367783739702
+                  ],
+                  [
+                    0.09393987190010365,
+                    0.29063093312775967,
+                    0.1768130335918407,
+                    0.2837887558401194,
+                    0.15482740492089508
+                  ]
+                ]
+              },
+              "blocks.1.attention": {
+                "entropy_by_head": [
+                  1.3593679049406424,
+                  1.2213336813745594,
+                  1.299765479444289,
+                  1.2767213892749412
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.12891137500091926,
+                    0.28719310679623405,
+                    0.1076101594583749,
+                    0.3750347430974604,
+                    0.10125061596145284
+                  ],
+                  [
+                    0.10210246600121055,
+                    0.07977421132005956,
+                    0.5950966325374096,
+                    0.08928380045268518,
+                    0.13374288984865615
+                  ],
+                  [
+                    0.12636943722041355,
+                    0.3175750315866251,
+                    0.09296532831301983,
+                    0.3737099980087343,
+                    0.08938020525925834
+                  ],
+                  [
+                    0.11896610893533145,
+                    0.115738332857253,
+                    0.0953473818746053,
+                    0.564198577037254,
+                    0.10574959950198345
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "norms": {
+            "step": 105000,
+            "groups": {
+              "all": {
+                "parameter_l2": 34.38530251278755,
+                "gradient_l2": 1.9212873176289573e-06,
+                "update_l2": 0.005889080251526022,
+                "relative_update_l2": 0.00017125928203371926
+              },
+              "embedding": {
+                "parameter_l2": 32.95729064941406,
+                "gradient_l2": 6.752629815309774e-07,
+                "update_l2": 0.0017336895689368248,
+                "relative_update_l2": 5.260173623239848e-05
+              },
+              "attention": {
+                "parameter_l2": 5.384112876919824,
+                "gradient_l2": 1.3575763837152354e-06,
+                "update_l2": 0.0013067407611250055,
+                "relative_update_l2": 0.0002426753261398143
+              },
+              "ffn": {
+                "parameter_l2": 8.196179016745807,
+                "gradient_l2": 1.1799793324607143e-06,
+                "update_l2": 0.005474305003439969,
+                "relative_update_l2": 0.0006678785890866504
+              }
+            },
+            "temperatures": {
+              "blocks.0.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.3061314821243286,
+                  0.06894795596599579,
+                  0.014371938072144985,
+                  0.05377759039402008
+                ],
+                "inverse_temperature": [
+                  1.3581608533859253,
+                  1.0713804960250854,
+                  1.014475703239441,
+                  1.0552499294281006
+                ]
+              },
+              "blocks.1.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.22547665238380432,
+                  0.1386711299419403,
+                  0.27387315034866333,
+                  0.07437089085578918
+                ],
+                "inverse_temperature": [
+                  1.2529197931289673,
+                  1.1487462520599365,
+                  1.3150479793548584,
+                  1.0772062540054321
+                ]
+              }
+            }
+          }
+        },
+        {
+          "step": 110000,
+          "checkpoint_sha256": "e86e887061b98cd1693773b8cb8fcc94f5dbdfd41a48d04bb69a65565e627bf0",
+          "observation_device": "cpu",
+          "training_device": "cuda",
+          "heldout_invariant_energy_fraction": 0.9920481196647472,
+          "raw_heldout_loss": 2.5167941314826547e-07,
+          "heldout_restricted_loss": 2.4236544340604695e-07,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.01055904143071,
+                "total_energy": 0.0010635985908990701,
+                "invariant_energy": 1.1230581586948059e-05,
+                "residual_energy": 0.0010523680093121222,
+                "energy_decomposition_error": 0.0,
+                "activation_rms": 0.09522921326488866
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.2579846499181399,
+                "total_energy": 0.0011512822314818226,
+                "invariant_energy": 0.0002970131434458129,
+                "residual_energy": 0.0008542690880360096,
+                "energy_decomposition_error": 1.0842021724855044e-19,
+                "activation_rms": 0.06664834892455315
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.693092499160948,
+                "total_energy": 0.0004183657029352382,
+                "invariant_energy": 0.000289966130610611,
+                "residual_energy": 0.00012839957232462724,
+                "energy_decomposition_error": 2.710505431213761e-20,
+                "activation_rms": 0.04507489844677999
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.9627072447565568,
+                "total_energy": 0.0032530792375524186,
+                "invariant_energy": 0.0031317629497588494,
+                "residual_energy": 0.00012131628779356941,
+                "energy_decomposition_error": 2.710505431213761e-19,
+                "activation_rms": 0.06182281193203253
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.9929628670414354,
+                "total_energy": 0.010222452823648394,
+                "invariant_energy": 0.010150516063965727,
+                "residual_energy": 7.193675968266614e-05,
+                "energy_decomposition_error": 1.2061749168901237e-18,
+                "activation_rms": 0.10792933015088943
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.9896539430499233,
+                "total_energy": 0.00866887646932765,
+                "invariant_energy": 0.008579187779682806,
+                "residual_energy": 8.968868964484531e-05,
+                "energy_decomposition_error": 1.3823577699190182e-18,
+                "activation_rms": 0.10020503587645914
+              }
+            },
+            "attention": {
+              "blocks.0.attention": {
+                "entropy_by_head": [
+                  1.3069780298524776,
+                  1.5090797831969665,
+                  1.3955726600912657,
+                  1.5247352656758417
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.252411783397633,
+                    0.03641639616623636,
+                    0.32503434355111466,
+                    0.03171947586775799,
+                    0.3544179995726679
+                  ],
+                  [
+                    0.08157659789924974,
+                    0.3301152376829298,
+                    0.19031568922908956,
+                    0.2420881993114897,
+                    0.15590427533957044
+                  ],
+                  [
+                    0.4929569160175283,
+                    0.12649969455603624,
+                    0.1204685527124023,
+                    0.12605276277058364,
+                    0.13402204157278916
+                  ],
+                  [
+                    0.10131386124058482,
+                    0.32423992282822983,
+                    0.1693731839560561,
+                    0.2435640718890322,
+                    0.16150895986526795
+                  ]
+                ]
+              },
+              "blocks.1.attention": {
+                "entropy_by_head": [
+                  1.3825870724617475,
+                  1.3023151956110952,
+                  1.3547770062510893,
+                  1.4953676760366361
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.1187236124035163,
+                    0.28167177922223596,
+                    0.1096257782233975,
+                    0.37930692819225575,
+                    0.11067190158574544
+                  ],
+                  [
+                    0.12427936146144605,
+                    0.09613396358897083,
+                    0.5433660339231241,
+                    0.07718744864559307,
+                    0.15903319126551912
+                  ],
+                  [
+                    0.12718106562566153,
+                    0.2851888424560069,
+                    0.11463467168375287,
+                    0.3673719838525639,
+                    0.10562343725492966
+                  ],
+                  [
+                    0.15352448852271916,
+                    0.12600724621519088,
+                    0.12126578160968075,
+                    0.38028546970632066,
+                    0.2189170155591008
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "norms": {
+            "step": 110000,
+            "groups": {
+              "all": {
+                "parameter_l2": 33.21243312107341,
+                "gradient_l2": 1.1285798979030366e-06,
+                "update_l2": 0.008764521525553095,
+                "relative_update_l2": 0.00026391008147861814
+              },
+              "embedding": {
+                "parameter_l2": 31.69497299194336,
+                "gradient_l2": 3.4104741075680067e-07,
+                "update_l2": 0.004442310426384211,
+                "relative_update_l2": 0.0001401692520183051
+              },
+              "attention": {
+                "parameter_l2": 5.35585607998543,
+                "gradient_l2": 6.035727148001226e-07,
+                "update_l2": 0.0028475264570965234,
+                "relative_update_l2": 0.000531604897762416
+              },
+              "ffn": {
+                "parameter_l2": 8.355190393536105,
+                "gradient_l2": 8.905499579000161e-07,
+                "update_l2": 0.0069981646682295935,
+                "relative_update_l2": 0.0008375396027579312
+              }
+            },
+            "temperatures": {
+              "blocks.0.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.3017876148223877,
+                  0.06984005868434906,
+                  0.012448088265955448,
+                  0.06345638632774353
+                ],
+                "inverse_temperature": [
+                  1.3522740602493286,
+                  1.0723366737365723,
+                  1.0125259160995483,
+                  1.0655131340026855
+                ]
+              },
+              "blocks.1.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.22518813610076904,
+                  0.141595721244812,
+                  0.2729189991950989,
+                  0.06755079329013824
+                ],
+                "inverse_temperature": [
+                  1.2525583505630493,
+                  1.1521108150482178,
+                  1.3137938976287842,
+                  1.0698845386505127
+                ]
+              }
+            }
+          }
+        },
+        {
+          "step": 115000,
+          "checkpoint_sha256": "f4fa26f1735fbbc012de981767016f7fe9c985b0b353fdd96ad09aac30e00534",
+          "observation_device": "cpu",
+          "training_device": "cuda",
+          "heldout_invariant_energy_fraction": 0.9978140132180503,
+          "raw_heldout_loss": 1.220670667212963e-07,
+          "heldout_restricted_loss": 1.2117584705397185e-07,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.01058611800234263,
+                "total_energy": 0.0005214842641358489,
+                "invariant_energy": 5.52049395650691e-06,
+                "residual_energy": 0.000515963770179342,
+                "energy_decomposition_error": 0.0,
+                "activation_rms": 0.1532777779005533
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.4002987341496744,
+                "total_energy": 0.0006481567613181228,
+                "invariant_energy": 0.00025945633108619717,
+                "residual_energy": 0.0003887004302319256,
+                "energy_decomposition_error": 0.0,
+                "activation_rms": 0.05089320814531104
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.7493812201414675,
+                "total_energy": 0.0003425326202931448,
+                "invariant_energy": 0.00025668751293353085,
+                "residual_energy": 8.584510735961397e-05,
+                "energy_decomposition_error": 1.3552527156068805e-20,
+                "activation_rms": 0.03746332439188761
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.9707612264751185,
+                "total_energy": 0.002820992164609627,
+                "invariant_energy": 0.0027385098135931413,
+                "residual_energy": 8.24823510164856e-05,
+                "energy_decomposition_error": 2.846030702774449e-19,
+                "activation_rms": 0.05615579161548742
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.9978473617395742,
+                "total_energy": 0.012668139126444338,
+                "invariant_energy": 0.012640869205472357,
+                "residual_energy": 2.7269920971980718e-05,
+                "energy_decomposition_error": 1.5585406229479126e-19,
+                "activation_rms": 0.12748261782210496
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.9972276052265635,
+                "total_energy": 0.011824718563411883,
+                "invariant_energy": 0.011791935775469322,
+                "residual_energy": 3.278278794256114e-05,
+                "energy_decomposition_error": 6.844026213814747e-19,
+                "activation_rms": 0.1324389548130423
+              }
+            },
+            "attention": {
+              "blocks.0.attention": {
+                "entropy_by_head": [
+                  1.3284885393812185,
+                  1.5779868853450552,
+                  1.3020888434590137,
+                  1.5646077833511731
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.2829999021283284,
+                    0.04003920559083268,
+                    0.29304317474570063,
+                    0.03518155121638142,
+                    0.3487361658979015
+                  ],
+                  [
+                    0.15216351358725647,
+                    0.2853333141488308,
+                    0.1928484406757498,
+                    0.21062563685540275,
+                    0.1590290913467145
+                  ],
+                  [
+                    0.5557533059256388,
+                    0.10918933977420951,
+                    0.10472456026419076,
+                    0.10911887430640328,
+                    0.1212139678974972
+                  ],
+                  [
+                    0.13378943433613866,
+                    0.2976358677852656,
+                    0.18693874336305455,
+                    0.22087088028525875,
+                    0.1607650741742751
+                  ]
+                ]
+              },
+              "blocks.1.attention": {
+                "entropy_by_head": [
+                  1.3643568880240875,
+                  1.2865021774259948,
+                  1.332166489741309,
+                  1.4069567323885206
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.12122308651042968,
+                    0.3048587278542957,
+                    0.10853800875265983,
+                    0.3516370948208848,
+                    0.11374308308106415
+                  ],
+                  [
+                    0.3254133371533858,
+                    0.0604481390362151,
+                    0.4501172331933099,
+                    0.0528272535832746,
+                    0.11119403831878376
+                  ],
+                  [
+                    0.12101759382642012,
+                    0.30917687168188035,
+                    0.10647540560785898,
+                    0.35899962514920536,
+                    0.10433050475316923
+                  ],
+                  [
+                    0.22021683389993058,
+                    0.12310195514529022,
+                    0.08077579856885411,
+                    0.4493914084425804,
+                    0.12651400307603053
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "norms": {
+            "step": 115000,
+            "groups": {
+              "all": {
+                "parameter_l2": 39.60618761724474,
+                "gradient_l2": 8.714313244532323e-07,
+                "update_l2": 0.008848151505665317,
+                "relative_update_l2": 0.0002234074776684599
+              },
+              "embedding": {
+                "parameter_l2": 38.37861251831055,
+                "gradient_l2": 2.463439159328118e-07,
+                "update_l2": 0.0020096073858439922,
+                "relative_update_l2": 5.2364048346357003e-05
+              },
+              "attention": {
+                "parameter_l2": 5.373667610187053,
+                "gradient_l2": 4.634774831454349e-07,
+                "update_l2": 0.004302941669924656,
+                "relative_update_l2": 0.0008006588916515498
+              },
+              "ffn": {
+                "parameter_l2": 8.176545429274789,
+                "gradient_l2": 6.956262293346734e-07,
+                "update_l2": 0.0074656517603752925,
+                "relative_update_l2": 0.0009129821862485654
+              }
+            },
+            "temperatures": {
+              "blocks.0.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.37052658200263977,
+                  0.061038851737976074,
+                  0.034451067447662354,
+                  0.030925041064620018
+                ],
+                "inverse_temperature": [
+                  1.4484971761703491,
+                  1.062940239906311,
+                  1.0350513458251953,
+                  1.0314081907272339
+                ]
+              },
+              "blocks.1.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.25495684146881104,
+                  0.1807211935520172,
+                  0.296389639377594,
+                  0.07926718890666962
+                ],
+                "inverse_temperature": [
+                  1.2904059886932373,
+                  1.1980810165405273,
+                  1.344994068145752,
+                  1.082493543624878
+                ]
+              }
+            }
+          }
+        },
+        {
+          "step": 120000,
+          "checkpoint_sha256": "1e499c017d25780a58f9c0690892b6ee98a0cfb82f0631acb6f9d8d2f184e5c7",
+          "observation_device": "cpu",
+          "training_device": "cuda",
+          "heldout_invariant_energy_fraction": 0.9108921608452699,
+          "raw_heldout_loss": 0.0006366437630026667,
+          "heldout_restricted_loss": 5.440826115832744e-06,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.010569562321040095,
+                "total_energy": 0.0015564015533238715,
+                "invariant_energy": 1.645048321442027e-05,
+                "residual_energy": 0.0015399510701094514,
+                "energy_decomposition_error": 0.0,
+                "activation_rms": 0.1625765731983185
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.5146381315507365,
+                "total_energy": 0.0015834234852779815,
+                "invariant_energy": 0.0008148901039170155,
+                "residual_energy": 0.000768533381360966,
+                "energy_decomposition_error": 0.0,
+                "activation_rms": 0.06280489774959501
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.40606654267631914,
+                "total_energy": 0.0020186692560704416,
+                "invariant_energy": 0.0008197140456195014,
+                "residual_energy": 0.00119895521045094,
+                "energy_decomposition_error": 4.336808689942018e-19,
+                "activation_rms": 0.07551519738371523
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.9221242465204467,
+                "total_energy": 0.00638399119950721,
+                "invariant_energy": 0.0058868330746387485,
+                "residual_energy": 0.0004971581248684616,
+                "energy_decomposition_error": 4.336808689942018e-19,
+                "activation_rms": 0.08441857238517109
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.9350890865448652,
+                "total_energy": 0.01775052839399128,
+                "invariant_energy": 0.016598325381626,
+                "residual_energy": 0.001152203012365281,
+                "energy_decomposition_error": 1.0842021724855044e-18,
+                "activation_rms": 0.14618503055712365
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.8986287845042454,
+                "total_energy": 0.019189294417529163,
+                "invariant_energy": 0.017244052317918333,
+                "residual_energy": 0.0019452420996108305,
+                "energy_decomposition_error": 6.505213034913027e-19,
+                "activation_rms": 0.13971276471644306
+              }
+            },
+            "attention": {
+              "blocks.0.attention": {
+                "entropy_by_head": [
+                  1.459116743613454,
+                  1.507680195820263,
+                  1.3349920044111618,
+                  1.5091708768709875
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.3141881053006321,
+                    0.08680820429243173,
+                    0.2970711506032657,
+                    0.07004413771750309,
+                    0.23188838021528885
+                  ],
+                  [
+                    0.06784604154879234,
+                    0.31545122001396936,
+                    0.21687355991836982,
+                    0.24272820468403117,
+                    0.15710097606073029
+                  ],
+                  [
+                    0.5349078301045903,
+                    0.11943518279497976,
+                    0.10967170299411691,
+                    0.11310749265918975,
+                    0.12287782921369389
+                  ],
+                  [
+                    0.07926924912182172,
+                    0.30816979086045754,
+                    0.1673457979375042,
+                    0.2751178383647986,
+                    0.17009732212960924
+                  ]
+                ]
+              },
+              "blocks.1.attention": {
+                "entropy_by_head": [
+                  1.3471862709060982,
+                  1.3661442779299873,
+                  1.3324854918220375,
+                  1.2304945504408302
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.13369140841940552,
+                    0.288027477900328,
+                    0.1122711667002105,
+                    0.36171282965952334,
+                    0.10429711704769674
+                  ],
+                  [
+                    0.10601659051920335,
+                    0.10491996128400116,
+                    0.5051465626050722,
+                    0.12587327607091248,
+                    0.15804360910475612
+                  ],
+                  [
+                    0.14809411537235034,
+                    0.3094790748574953,
+                    0.10212721202052054,
+                    0.33893598680131626,
+                    0.10136361071308658
+                  ],
+                  [
+                    0.10188142123033654,
+                    0.1112957141182907,
+                    0.09403531775966645,
+                    0.5924364764953858,
+                    0.10035106960581648
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "norms": {
+            "step": 120000,
+            "groups": {
+              "all": {
+                "parameter_l2": 38.7602198716024,
+                "gradient_l2": 0.0005433730760676328,
+                "update_l2": 0.011965247322536786,
+                "relative_update_l2": 0.0003086692887429126
+              },
+              "embedding": {
+                "parameter_l2": 37.396446228027344,
+                "gradient_l2": 0.00019627519941423088,
+                "update_l2": 0.0037605096586048603,
+                "relative_update_l2": 0.00010054792098893962
+              },
+              "attention": {
+                "parameter_l2": 5.818689667244245,
+                "gradient_l2": 0.0003975370908006628,
+                "update_l2": 0.0006595866043898209,
+                "relative_update_l2": 0.00011334503916722999
+              },
+              "ffn": {
+                "parameter_l2": 8.366797748572996,
+                "gradient_l2": 0.00031415697879857914,
+                "update_l2": 0.011339782013262988,
+                "relative_update_l2": 0.0013552813315068427
+              }
+            },
+            "temperatures": {
+              "blocks.0.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.3854641616344452,
+                  0.08512650430202484,
+                  0.027999678626656532,
+                  0.06709372997283936
+                ],
+                "inverse_temperature": [
+                  1.4702966213226318,
+                  1.0888547897338867,
+                  1.0283952951431274,
+                  1.069395661354065
+                ]
+              },
+              "blocks.1.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.29853856563568115,
+                  0.18169157207012177,
+                  0.31550291180610657,
+                  0.09845532476902008
+                ],
+                "inverse_temperature": [
+                  1.3478875160217285,
+                  1.1992442607879639,
+                  1.3709485530853271,
+                  1.1034650802612305
+                ]
+              }
+            }
+          }
+        },
+        {
+          "step": 125000,
+          "checkpoint_sha256": "efdc0fda5aa840117db036884fe8c72f6cd6f34f525558c34e8d7e275d673390",
+          "observation_device": "cpu",
+          "training_device": "cuda",
+          "heldout_invariant_energy_fraction": 0.9969668157258307,
+          "raw_heldout_loss": 1.2837899594348099e-07,
+          "heldout_restricted_loss": 1.271647612779805e-07,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.010546933672212882,
+                "total_energy": 0.0004644355045192293,
+                "invariant_energy": 4.898370461185038e-06,
+                "residual_energy": 0.0004595371340580442,
+                "energy_decomposition_error": 5.421010862427522e-20,
+                "activation_rms": 0.15426075038015458
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.36345001384298636,
+                "total_energy": 0.0005313595780547218,
+                "invariant_energy": 0.00019312264599959203,
+                "residual_energy": 0.00033823693205512986,
+                "energy_decomposition_error": 5.421010862427522e-20,
+                "activation_rms": 0.045009078876543304
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.6705771649904846,
+                "total_energy": 0.0002842767361356884,
+                "invariant_energy": 0.00019062948779061798,
+                "residual_energy": 9.364724834507044e-05,
+                "energy_decomposition_error": 1.3552527156068805e-20,
+                "activation_rms": 0.035555175820155056
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.9539431294548448,
+                "total_energy": 0.0019788805192724455,
+                "invariant_energy": 0.001887739475371985,
+                "residual_energy": 9.114104390046085e-05,
+                "energy_decomposition_error": 4.472333961502706e-19,
+                "activation_rms": 0.04827881915589666
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.9969681030302437,
+                "total_energy": 0.008251797618441224,
+                "invariant_energy": 0.00822677901824683,
+                "residual_energy": 2.5018600194393765e-05,
+                "energy_decomposition_error": 3.3542504711270293e-19,
+                "activation_rms": 0.10256257775527938
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.9963602562870891,
+                "total_energy": 0.007600406346245837,
+                "invariant_energy": 0.007572742815031521,
+                "residual_energy": 2.766353121431839e-05,
+                "energy_decomposition_error": 2.1108061045577164e-18,
+                "activation_rms": 0.10543871785244371
+              }
+            },
+            "attention": {
+              "blocks.0.attention": {
+                "entropy_by_head": [
+                  1.325690272085708,
+                  1.5625309331540767,
+                  1.2571174465251238,
+                  1.5453521189944188
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.23492759921591205,
+                    0.0421640873971456,
+                    0.30169746071689113,
+                    0.038150930723985114,
+                    0.3830599200518168
+                  ],
+                  [
+                    0.09959359114343153,
+                    0.27260541156113555,
+                    0.20875683737937936,
+                    0.2248941203931353,
+                    0.1941500362456869
+                  ],
+                  [
+                    0.5824226445656052,
+                    0.10106604560390371,
+                    0.09547269878320114,
+                    0.10338805297460035,
+                    0.11765055860235929
+                  ],
+                  [
+                    0.08085357625344672,
+                    0.2775078992714587,
+                    0.19517880801073054,
+                    0.23137465016308315,
+                    0.21508506868239427
+                  ]
+                ]
+              },
+              "blocks.1.attention": {
+                "entropy_by_head": [
+                  1.3433025515229056,
+                  1.2771678388255987,
+                  1.2902454653255664,
+                  1.2689276097377915
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.11843475027496309,
+                    0.3073835350305828,
+                    0.10574854260368138,
+                    0.3598400781865638,
+                    0.1085930937465882
+                  ],
+                  [
+                    0.08067626073793269,
+                    0.07458042985874891,
+                    0.4909514823794058,
+                    0.06566002723021605,
+                    0.2881317992128201
+                  ],
+                  [
+                    0.11265613242849401,
+                    0.3238009477043812,
+                    0.09108709357198827,
+                    0.38470262876484557,
+                    0.08775319696541659
+                  ],
+                  [
+                    0.08910664051524732,
+                    0.15215342849512228,
+                    0.0859038493335183,
+                    0.5654933263013249,
+                    0.10734275504914705
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "norms": {
+            "step": 125000,
+            "groups": {
+              "all": {
+                "parameter_l2": 38.63581838737527,
+                "gradient_l2": 1.0423649652559476e-06,
+                "update_l2": 0.009525593211699735,
+                "relative_update_l2": 0.0002465525877816836
+              },
+              "embedding": {
+                "parameter_l2": 37.55875778198242,
+                "gradient_l2": 2.939973740012647e-07,
+                "update_l2": 0.002222420647740364,
+                "relative_update_l2": 5.917318202223048e-05
+              },
+              "attention": {
+                "parameter_l2": 4.935457213839093,
+                "gradient_l2": 6.370969858708427e-07,
+                "update_l2": 0.005095657221726165,
+                "relative_update_l2": 0.0010324006864356032
+              },
+              "ffn": {
+                "parameter_l2": 7.596541214722879,
+                "gradient_l2": 7.708421988109373e-07,
+                "update_l2": 0.007735117967939943,
+                "relative_update_l2": 0.0010181640369904
+              }
+            },
+            "temperatures": {
+              "blocks.0.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.3673519194126129,
+                  0.06857842952013016,
+                  0.026189744472503662,
+                  0.057658370584249496
+                ],
+                "inverse_temperature": [
+                  1.4439059495925903,
+                  1.0709846019744873,
+                  1.0265357494354248,
+                  1.0593531131744385
+                ]
+              },
+              "blocks.1.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.27973419427871704,
+                  0.16655142605304718,
+                  0.29107558727264404,
+                  0.08168333023786545
+                ],
+                "inverse_temperature": [
+                  1.3227782249450684,
+                  1.1812243461608887,
+                  1.3378655910491943,
+                  1.08511221408844
+                ]
+              }
+            }
+          }
+        },
+        {
+          "step": 130000,
+          "checkpoint_sha256": "09f3f64cfea33356171d8135c9b1abcb336fdfd54d8b9ea22651d9e30cc620af",
+          "observation_device": "cpu",
+          "training_device": "cuda",
+          "heldout_invariant_energy_fraction": 0.9959557768993338,
+          "raw_heldout_loss": 1.831007890372277e-07,
+          "heldout_restricted_loss": 1.805530470790715e-07,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.010665484635052567,
+                "total_energy": 0.0006138628410884377,
+                "invariant_energy": 6.547144699658448e-06,
+                "residual_energy": 0.0006073156963887792,
+                "energy_decomposition_error": 0.0,
+                "activation_rms": 0.12315875111053205
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.31214686020438376,
+                "total_energy": 0.0006000495684843819,
+                "invariant_energy": 0.00018730358876939515,
+                "residual_energy": 0.0004127459797149868,
+                "energy_decomposition_error": 5.421010862427522e-20,
+                "activation_rms": 0.048196842626351925
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.5536879325311271,
+                "total_energy": 0.0003336260122834366,
+                "invariant_energy": 0.00018472469697982042,
+                "residual_energy": 0.00014890131530361615,
+                "energy_decomposition_error": 2.710505431213761e-20,
+                "activation_rms": 0.041828139846146105
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.9487882339189365,
+                "total_energy": 0.0027984002766534895,
+                "invariant_energy": 0.0026550892562843278,
+                "residual_energy": 0.00014331102036916203,
+                "energy_decomposition_error": 2.439454888092385e-19,
+                "activation_rms": 0.055963487447814264
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.9965230891827571,
+                "total_energy": 0.008232074183423931,
+                "invariant_energy": 0.008203451995647239,
+                "residual_energy": 2.8622187776691712e-05,
+                "energy_decomposition_error": 7.691059161069047e-19,
+                "activation_rms": 0.09991437983954549
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.9949304637733296,
+                "total_energy": 0.007099718688108524,
+                "invariant_energy": 0.007063726407019989,
+                "residual_energy": 3.5992281088535745e-05,
+                "energy_decomposition_error": 1.0367683274392636e-18,
+                "activation_rms": 0.09296963664078434
+              }
+            },
+            "attention": {
+              "blocks.0.attention": {
+                "entropy_by_head": [
+                  1.3143543954862327,
+                  1.581758266634536,
+                  1.2425353497717975,
+                  1.5626711989196305
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.3199748382471579,
+                    0.031549293731092845,
+                    0.3189207488715751,
+                    0.03494830793401873,
+                    0.2946067883143413
+                  ],
+                  [
+                    0.1502564796646641,
+                    0.270777568371512,
+                    0.1773966577038476,
+                    0.22308624603007873,
+                    0.17848304746499688
+                  ],
+                  [
+                    0.5912879460148796,
+                    0.10036505010023815,
+                    0.0964534105268976,
+                    0.1023055227358163,
+                    0.10958808452479823
+                  ],
+                  [
+                    0.11423524560669239,
+                    0.28826942439815123,
+                    0.17791930492327282,
+                    0.23553567567897826,
+                    0.1840403504234409
+                  ]
+                ]
+              },
+              "blocks.1.attention": {
+                "entropy_by_head": [
+                  1.37215939769402,
+                  1.315451346453717,
+                  1.3404414948596135,
+                  1.5090590225329907
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.14298822170705935,
+                    0.2830994154528244,
+                    0.10681187745689373,
+                    0.35503978917976886,
+                    0.11206069679553156
+                  ],
+                  [
+                    0.1238603229727276,
+                    0.08757956765745718,
+                    0.5265083174410042,
+                    0.07961736183655144,
+                    0.18243442974421373
+                  ],
+                  [
+                    0.14340914527427956,
+                    0.3017199049612565,
+                    0.09967452084447202,
+                    0.354033419835186,
+                    0.10116301001612853
+                  ],
+                  [
+                    0.20618347120167257,
+                    0.11661190147546865,
+                    0.13188372708895466,
+                    0.37232207864702155,
+                    0.1729988208283827
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "norms": {
+            "step": 130000,
+            "groups": {
+              "all": {
+                "parameter_l2": 36.648988964998324,
+                "gradient_l2": 1.2862891990687928e-06,
+                "update_l2": 0.009106463648593306,
+                "relative_update_l2": 0.0002484881904368142
+              },
+              "embedding": {
+                "parameter_l2": 35.41249084472656,
+                "gradient_l2": 4.3804368488054024e-07,
+                "update_l2": 0.004573012702167034,
+                "relative_update_l2": 0.0001291421645576222
+              },
+              "attention": {
+                "parameter_l2": 5.11829405803096,
+                "gradient_l2": 9.80099557087225e-07,
+                "update_l2": 0.004171356042649887,
+                "relative_update_l2": 0.0008148813877380821
+              },
+              "ffn": {
+                "parameter_l2": 7.931390184844728,
+                "gradient_l2": 7.085636823707094e-07,
+                "update_l2": 0.006679447864488392,
+                "relative_update_l2": 0.0008420896026850903
+              }
+            },
+            "temperatures": {
+              "blocks.0.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.37044307589530945,
+                  0.07436472922563553,
+                  0.019316501915454865,
+                  0.059422533959150314
+                ],
+                "inverse_temperature": [
+                  1.448376178741455,
+                  1.0771996974945068,
+                  1.0195043087005615,
+                  1.0612236261367798
+                ]
+              },
+              "blocks.1.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.2664198875427246,
+                  0.1453971117734909,
+                  0.2745220959186554,
+                  0.08403046429157257
+                ],
+                "inverse_temperature": [
+                  1.3052829504013062,
+                  1.1564987897872925,
+                  1.3159016370773315,
+                  1.0876619815826416
+                ]
+              }
+            }
+          }
+        },
+        {
+          "step": 135000,
+          "checkpoint_sha256": "353e869daccfb035c589fcc574e2d7e4c43eac51ff8491ce9e87e3e5ff851b4c",
+          "observation_device": "cpu",
+          "training_device": "cuda",
+          "heldout_invariant_energy_fraction": 0.9696055465522815,
+          "raw_heldout_loss": 6.9799800260281675e-06,
+          "heldout_restricted_loss": 1.910193132309349e-07,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.01045113519041416,
+                "total_energy": 0.000862322796183746,
+                "invariant_energy": 9.012252120692285e-06,
+                "residual_energy": 0.0008533105440630536,
+                "energy_decomposition_error": 1.0842021724855044e-19,
+                "activation_rms": 0.1377787737992503
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.2650234273741686,
+                "total_energy": 0.0006963490567296206,
+                "invariant_energy": 0.00018454881366325346,
+                "residual_energy": 0.0005118002430663672,
+                "energy_decomposition_error": 1.0842021724855044e-19,
+                "activation_rms": 0.052550726004095084
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.4785363185509209,
+                "total_energy": 0.0003797904040292248,
+                "invariant_energy": 0.00018174350176511207,
+                "residual_energy": 0.00019804690226411277,
+                "energy_decomposition_error": 2.710505431213761e-20,
+                "activation_rms": 0.04366360325428411
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.9391878692191502,
+                "total_energy": 0.002422086409439159,
+                "invariant_energy": 0.002274794173945826,
+                "residual_energy": 0.00014729223549333304,
+                "energy_decomposition_error": 5.421010862427522e-20,
+                "activation_rms": 0.05569491391212252
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.9789731636441089,
+                "total_energy": 0.006908685438379476,
+                "invariant_energy": 0.006763417640232344,
+                "residual_energy": 0.00014526779814713376,
+                "energy_decomposition_error": 1.0299920638612292e-18,
+                "activation_rms": 0.09156351884657463
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.9659378679166742,
+                "total_energy": 0.0059760019647237626,
+                "invariant_energy": 0.005772446596471127,
+                "residual_energy": 0.0002035553682526343,
+                "energy_decomposition_error": 9.215718466126788e-19,
+                "activation_rms": 0.08322507409710958
+              }
+            },
+            "attention": {
+              "blocks.0.attention": {
+                "entropy_by_head": [
+                  1.4201395051885104,
+                  1.5673383083603087,
+                  1.2810703044009848,
+                  1.546598619981849
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.4164812604343051,
+                    0.06997517519470471,
+                    0.2379290787599136,
+                    0.08889900579651709,
+                    0.18671547667574637
+                  ],
+                  [
+                    0.13524427002334258,
+                    0.27175234161522177,
+                    0.16869215302399754,
+                    0.24846687448239818,
+                    0.1758443597908999
+                  ],
+                  [
+                    0.5686859287500791,
+                    0.1060327198516411,
+                    0.10263886191654963,
+                    0.1057984802465489,
+                    0.11684398034657911
+                  ],
+                  [
+                    0.11766065687062763,
+                    0.2844071859954712,
+                    0.15558129450453514,
+                    0.2659728413230109,
+                    0.17637802236089387
+                  ]
+                ]
+              },
+              "blocks.1.attention": {
+                "entropy_by_head": [
+                  1.3928675489425608,
+                  1.356789044900985,
+                  1.3632161118322907,
+                  1.168285047741758
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.13992315007348088,
+                    0.28361786144811185,
+                    0.11945800651088868,
+                    0.34230574750808734,
+                    0.11469523366412654
+                  ],
+                  [
+                    0.12059541141831946,
+                    0.11817069672035291,
+                    0.5091163576212535,
+                    0.08558293882696617,
+                    0.1665345959563794
+                  ],
+                  [
+                    0.14272094528507634,
+                    0.27869043006846533,
+                    0.10836171015418579,
+                    0.36930546039696205,
+                    0.10092145306397472
+                  ],
+                  [
+                    0.08728497729019047,
+                    0.09481827168056543,
+                    0.08474925371875852,
+                    0.6280010820868909,
+                    0.105146415217994
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "norms": {
+            "step": 135000,
+            "groups": {
+              "all": {
+                "parameter_l2": 36.299170730720476,
+                "gradient_l2": 3.5620153140285677e-06,
+                "update_l2": 0.005819432350848882,
+                "relative_update_l2": 0.000160312753614695
+              },
+              "embedding": {
+                "parameter_l2": 35.0361213684082,
+                "gradient_l2": 7.909368946457107e-07,
+                "update_l2": 0.0015775127103552222,
+                "relative_update_l2": 4.5023779654717325e-05
+              },
+              "attention": {
+                "parameter_l2": 5.155226664765089,
+                "gradient_l2": 2.9407426058284464e-06,
+                "update_l2": 0.0015673240406890384,
+                "relative_update_l2": 0.00030399238452529274
+              },
+              "ffn": {
+                "parameter_l2": 7.97017146810903,
+                "gradient_l2": 1.8478108269862348e-06,
+                "update_l2": 0.005377800841073649,
+                "relative_update_l2": 0.0006747088351265863
+              }
+            },
+            "temperatures": {
+              "blocks.0.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.3787834048271179,
+                  0.06955404579639435,
+                  0.01819854974746704,
+                  0.061219651252031326
+                ],
+                "inverse_temperature": [
+                  1.460506558418274,
+                  1.0720300674438477,
+                  1.0183651447296143,
+                  1.063132405281067
+                ]
+              },
+              "blocks.1.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.25588732957839966,
+                  0.13517503440380096,
+                  0.26519328355789185,
+                  0.0836116373538971
+                ],
+                "inverse_temperature": [
+                  1.2916072607040405,
+                  1.1447371244430542,
+                  1.3036829233169556,
+                  1.0872066020965576
+                ]
+              }
+            }
+          }
+        },
+        {
+          "step": 140000,
+          "checkpoint_sha256": "10d3a5dd2ed91703dbd9ff2b2c9376f8357154b1fb5fd6f16383a8ba46df90e6",
+          "observation_device": "cpu",
+          "training_device": "cuda",
+          "heldout_invariant_energy_fraction": 0.9959205144594682,
+          "raw_heldout_loss": 1.626952749400871e-07,
+          "heldout_restricted_loss": 1.5998745780608595e-07,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.010545553245990762,
+                "total_energy": 0.001257501282560922,
+                "invariant_energy": 1.3261046732147876e-05,
+                "residual_energy": 0.0012442402358287742,
+                "energy_decomposition_error": 2.168404344971009e-19,
+                "activation_rms": 0.0966953146357921
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.34868164628701753,
+                "total_energy": 0.001408082736953451,
+                "invariant_energy": 0.0004909726068292587,
+                "residual_energy": 0.0009171101301241923,
+                "energy_decomposition_error": 1.0842021724855044e-19,
+                "activation_rms": 0.08053634498363672
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.6376719261861763,
+                "total_energy": 0.0007605789645310141,
+                "invariant_energy": 0.00048499985332917925,
+                "residual_energy": 0.00027557911120183493,
+                "energy_decomposition_error": 5.421010862427522e-20,
+                "activation_rms": 0.06138274284790938
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.9632562840443357,
+                "total_energy": 0.007653780132909611,
+                "invariant_energy": 0.007372551809718874,
+                "residual_energy": 0.00028122832319073645,
+                "energy_decomposition_error": 4.336808689942018e-19,
+                "activation_rms": 0.09085622406213313
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.9964204868750615,
+                "total_energy": 0.02362832111672221,
+                "invariant_energy": 0.02354374323116464,
+                "residual_energy": 8.457788555757138e-05,
+                "energy_decomposition_error": 7.860465750519907e-19,
+                "activation_rms": 0.16477730111274727
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.9952122336939173,
+                "total_energy": 0.0206454598890053,
+                "invariant_energy": 0.02054661425177514,
+                "residual_energy": 9.884563723016236e-05,
+                "energy_decomposition_error": 1.179069862577986e-18,
+                "activation_rms": 0.15462639514069343
+              }
+            },
+            "attention": {
+              "blocks.0.attention": {
+                "entropy_by_head": [
+                  1.3723139138543636,
+                  1.5964187291422756,
+                  1.4871003205483904,
+                  1.5142395816292804
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.2932361654994875,
+                    0.05110262406356249,
+                    0.316427389998309,
+                    0.0451610362988535,
+                    0.2940727816414587
+                  ],
+                  [
+                    0.18745644165593425,
+                    0.2467024382331834,
+                    0.17530068944294736,
+                    0.21498944063405298,
+                    0.17555098900014593
+                  ],
+                  [
+                    0.41720757906123535,
+                    0.1490004864198082,
+                    0.14330138619733124,
+                    0.14259768784353413,
+                    0.14789286093255088
+                  ],
+                  [
+                    0.07279660931509949,
+                    0.29783769757118833,
+                    0.15943548825162998,
+                    0.25713536236435175,
+                    0.21279484268815554
+                  ]
+                ]
+              },
+              "blocks.1.attention": {
+                "entropy_by_head": [
+                  1.3946162411119458,
+                  1.2872156549310954,
+                  1.389123320621686,
+                  1.328391631095359
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.12626293699394694,
+                    0.305883147783379,
+                    0.1119440669718733,
+                    0.32451123652717295,
+                    0.13139861140438577
+                  ],
+                  [
+                    0.08872003833238433,
+                    0.07831215964393415,
+                    0.5248583285810099,
+                    0.08194004313914661,
+                    0.2261694292233828
+                  ],
+                  [
+                    0.12426839891462699,
+                    0.3028024404911369,
+                    0.11226781790986452,
+                    0.3381789883397059,
+                    0.12248235487273519
+                  ],
+                  [
+                    0.08658899663534668,
+                    0.2497396745728617,
+                    0.07909410069792618,
+                    0.4901529266162939,
+                    0.09442430158078517
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "norms": {
+            "step": 140000,
+            "groups": {
+              "all": {
+                "parameter_l2": 36.05593215029944,
+                "gradient_l2": 6.618241700697696e-07,
+                "update_l2": 0.008664106138114963,
+                "relative_update_l2": 0.00024030496465781727
+              },
+              "embedding": {
+                "parameter_l2": 34.245445251464844,
+                "gradient_l2": 2.135800656333231e-07,
+                "update_l2": 0.00583933899179101,
+                "relative_update_l2": 0.00017052268310638856
+              },
+              "attention": {
+                "parameter_l2": 6.113326719200659,
+                "gradient_l2": 3.23660845205004e-07,
+                "update_l2": 0.003420004662021359,
+                "relative_update_l2": 0.0005593944864218523
+              },
+              "ffn": {
+                "parameter_l2": 9.481928030745031,
+                "gradient_l2": 5.363193497663376e-07,
+                "update_l2": 0.00541039956225256,
+                "relative_update_l2": 0.0005705516991756539
+              }
+            },
+            "temperatures": {
+              "blocks.0.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.3172696828842163,
+                  0.06697201728820801,
+                  0.011994968168437481,
+                  0.06312809139490128
+                ],
+                "inverse_temperature": [
+                  1.3733729124069214,
+                  1.0692654848098755,
+                  1.012067198753357,
+                  1.0651633739471436
+                ]
+              },
+              "blocks.1.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.23596201837062836,
+                  0.1602238416671753,
+                  0.23127621412277222,
+                  0.06847306340932846
+                ],
+                "inverse_temperature": [
+                  1.266126275062561,
+                  1.1737735271453857,
+                  1.2602072954177856,
+                  1.0708717107772827
+                ]
+              }
+            }
+          }
+        },
+        {
+          "step": 145000,
+          "checkpoint_sha256": "7d4a65c177cc4f93077008d17b01d25460c4290f5dfbb798001ff3fa7471eed4",
+          "observation_device": "cpu",
+          "training_device": "cuda",
+          "heldout_invariant_energy_fraction": 0.9975722493463475,
+          "raw_heldout_loss": 1.3659962720692649e-07,
+          "heldout_restricted_loss": 1.3553721000943097e-07,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.010542676420564718,
+                "total_energy": 0.0005362615725021487,
+                "invariant_energy": 5.6536322356733595e-06,
+                "residual_energy": 0.0005306079402664754,
+                "energy_decomposition_error": 0.0,
+                "activation_rms": 0.1402904117639136
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.34113746868859507,
+                "total_energy": 0.000590721007030793,
+                "invariant_energy": 0.0002015170690396625,
+                "residual_energy": 0.00038920393799113053,
+                "energy_decomposition_error": 0.0,
+                "activation_rms": 0.049978248004287816
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.614727922717271,
+                "total_energy": 0.0003237794492290243,
+                "invariant_energy": 0.00019903626824310021,
+                "residual_energy": 0.00012474318098592408,
+                "energy_decomposition_error": 2.710505431213761e-20,
+                "activation_rms": 0.038182037666045825
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.9576054072991639,
+                "total_energy": 0.002864357495515105,
+                "invariant_energy": 0.0027429242261431553,
+                "residual_energy": 0.0001214332693719493,
+                "energy_decomposition_error": 5.827586677109586e-19,
+                "activation_rms": 0.05631260155268381
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.9977004866245546,
+                "total_energy": 0.010171618807995338,
+                "invariant_energy": 0.01014822903449642,
+                "residual_energy": 2.3389773498918432e-05,
+                "energy_decomposition_error": 3.4220131069073734e-19,
+                "activation_rms": 0.11605320559184734
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.9971233534397587,
+                "total_energy": 0.009353624286191655,
+                "invariant_energy": 0.009326717215062992,
+                "residual_energy": 2.6907071128663098e-05,
+                "energy_decomposition_error": 2.507217523872729e-19,
+                "activation_rms": 0.11615919258028456
+              }
+            },
+            "attention": {
+              "blocks.0.attention": {
+                "entropy_by_head": [
+                  1.3546120928849268,
+                  1.5785764512570772,
+                  1.3673353970405275,
+                  1.5699023765368794
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.2833813248727074,
+                    0.04305194698344545,
+                    0.3156482215228257,
+                    0.043053520884992126,
+                    0.31486499045825084
+                  ],
+                  [
+                    0.14511092560192973,
+                    0.28264731705137547,
+                    0.18840275624210073,
+                    0.21992154736583894,
+                    0.16391745889783418
+                  ],
+                  [
+                    0.5132405791444468,
+                    0.12448888619132724,
+                    0.11733167334635745,
+                    0.11876314263342787,
+                    0.126175705481103
+                  ],
+                  [
+                    0.1315583135849473,
+                    0.2887376538282612,
+                    0.17152719726766816,
+                    0.2259613342800808,
+                    0.1822155025752447
+                  ]
+                ]
+              },
+              "blocks.1.attention": {
+                "entropy_by_head": [
+                  1.3730265936157489,
+                  1.2181770154788982,
+                  1.370446974578696,
+                  1.2288884981233301
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.117772785765903,
+                    0.30568837074729327,
+                    0.11275325630570657,
+                    0.34672407627336144,
+                    0.11706151128218499
+                  ],
+                  [
+                    0.07117746710133999,
+                    0.08150303403565283,
+                    0.5732777304947376,
+                    0.07283739096811521,
+                    0.2012043768488818
+                  ],
+                  [
+                    0.12189729910510308,
+                    0.30657578743930225,
+                    0.10988068922272407,
+                    0.3463409340866806,
+                    0.11530528998776912
+                  ],
+                  [
+                    0.09679601961087525,
+                    0.10649556039170045,
+                    0.09829571857229132,
+                    0.5963465525189421,
+                    0.10206614897499994
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "norms": {
+            "step": 145000,
+            "groups": {
+              "all": {
+                "parameter_l2": 38.238067816692364,
+                "gradient_l2": 1.055191371186917e-06,
+                "update_l2": 0.010135366202847376,
+                "relative_update_l2": 0.00026506574133131115
+              },
+              "embedding": {
+                "parameter_l2": 37.02771759033203,
+                "gradient_l2": 3.160355106501811e-07,
+                "update_l2": 0.002312406664714217,
+                "relative_update_l2": 6.245245059532275e-05
+              },
+              "attention": {
+                "parameter_l2": 5.195057715578963,
+                "gradient_l2": 6.065026462338257e-07,
+                "update_l2": 0.005418473550318527,
+                "relative_update_l2": 0.0010430069419706388
+              },
+              "ffn": {
+                "parameter_l2": 8.006830567483236,
+                "gradient_l2": 8.035576680903322e-07,
+                "update_l2": 0.008247337016716648,
+                "relative_update_l2": 0.0010299635437214798
+              }
+            },
+            "temperatures": {
+              "blocks.0.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.3371373116970062,
+                  0.04521871730685234,
+                  0.02518461085855961,
+                  0.05159858986735344
+                ],
+                "inverse_temperature": [
+                  1.400931477546692,
+                  1.0462566614151,
+                  1.025504469871521,
+                  1.0529530048370361
+                ]
+              },
+              "blocks.1.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.24388942122459412,
+                  0.16631069779396057,
+                  0.24142180383205414,
+                  0.0668327808380127
+                ],
+                "inverse_temperature": [
+                  1.2762032747268677,
+                  1.1809399127960205,
+                  1.2730578184127808,
+                  1.0691165924072266
+                ]
+              }
+            }
+          }
+        },
+        {
+          "step": 150000,
+          "checkpoint_sha256": "abc9568eff251b434752da6359b1a72eb612ff7ca4bf51080dea5f00a4098cda",
+          "observation_device": "cpu",
+          "training_device": "cuda",
+          "heldout_invariant_energy_fraction": 0.997012203243917,
+          "raw_heldout_loss": 1.3596613374090662e-07,
+          "heldout_restricted_loss": 1.3454149028377593e-07,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.010595487669676296,
+                "total_energy": 0.0008424379379956174,
+                "invariant_energy": 8.926040784500088e-06,
+                "residual_energy": 0.0008335118972111174,
+                "energy_decomposition_error": 0.0,
+                "activation_rms": 0.1368910669102667
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.3881937988092658,
+                "total_energy": 0.001023036021700188,
+                "invariant_energy": 0.0003971362395825145,
+                "residual_energy": 0.0006258997821176735,
+                "energy_decomposition_error": 0.0,
+                "activation_rms": 0.06640707346512649
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.7302119348264285,
+                "total_energy": 0.0005391770825683809,
+                "invariant_energy": 0.0003937135406763264,
+                "residual_energy": 0.00014546354189205448,
+                "energy_decomposition_error": 0.0,
+                "activation_rms": 0.052225295129964114
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.9728600730158647,
+                "total_energy": 0.005387386870047582,
+                "invariant_energy": 0.005241173583759202,
+                "residual_energy": 0.00014621328628837947,
+                "energy_decomposition_error": 7.589415207398531e-19,
+                "activation_rms": 0.07888516826785666
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.9973020275379619,
+                "total_energy": 0.015924693089698582,
+                "invariant_energy": 0.015881728706276167,
+                "residual_energy": 4.296438342241635e-05,
+                "energy_decomposition_error": 1.5043305143236374e-18,
+                "activation_rms": 0.14222135451999024
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.9963478161733246,
+                "total_energy": 0.013664244054099384,
+                "invariant_energy": 0.013614339722961256,
+                "residual_energy": 4.9904331138125284e-05,
+                "energy_decomposition_error": 1.971892701208011e-18,
+                "activation_rms": 0.13787972116446393
+              }
+            },
+            "attention": {
+              "blocks.0.attention": {
+                "entropy_by_head": [
+                  1.3286656745703276,
+                  1.5482811059048944,
+                  1.3591790907397487,
+                  1.5697086664487445
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.3066366914070861,
+                    0.0372516097468116,
+                    0.33565221881154683,
+                    0.03620823143814975,
+                    0.28425125560732845
+                  ],
+                  [
+                    0.10259728163602375,
+                    0.29319182479325234,
+                    0.17724581315627008,
+                    0.24561083888398208,
+                    0.1813542410872134
+                  ],
+                  [
+                    0.5188029168679338,
+                    0.12732750405733476,
+                    0.11851415633707214,
+                    0.11528958060340219,
+                    0.12006586792645176
+                  ],
+                  [
+                    0.12951189592237428,
+                    0.2798416715025697,
+                    0.16676785700228,
+                    0.23520045857428482,
+                    0.18867811979245894
+                  ]
+                ]
+              },
+              "blocks.1.attention": {
+                "entropy_by_head": [
+                  1.3907786944285025,
+                  1.2669094995882997,
+                  1.391104685658638,
+                  1.3303757574130102
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.13637387137732043,
+                    0.2897726959809725,
+                    0.1190543638340668,
+                    0.328782247681862,
+                    0.12601682180186727
+                  ],
+                  [
+                    0.0969290324835638,
+                    0.0803536613242976,
+                    0.5478300218601612,
+                    0.07307609569527772,
+                    0.20181118846707738
+                  ],
+                  [
+                    0.13341557360302234,
+                    0.2886855088484784,
+                    0.1231061315893666,
+                    0.33014384198844227,
+                    0.12464894447155629
+                  ],
+                  [
+                    0.09692711755793375,
+                    0.13272765712313278,
+                    0.10497432244026272,
+                    0.531824433337577,
+                    0.1335464700611622
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "norms": {
+            "step": 150000,
+            "groups": {
+              "all": {
+                "parameter_l2": 38.94789254091733,
+                "gradient_l2": 1.0010541614974022e-06,
+                "update_l2": 0.00968691608160336,
+                "relative_update_l2": 0.0002487161425581126
+              },
+              "embedding": {
+                "parameter_l2": 37.59334945678711,
+                "gradient_l2": 2.800840093186707e-07,
+                "update_l2": 0.002254083752632141,
+                "relative_update_l2": 5.996031068130419e-05
+              },
+              "attention": {
+                "parameter_l2": 5.492384778177616,
+                "gradient_l2": 4.985845563507125e-07,
+                "update_l2": 0.005168667534923621,
+                "relative_update_l2": 0.0009410188122119628
+              },
+              "ffn": {
+                "parameter_l2": 8.573920891119235,
+                "gradient_l2": 8.216299788492438e-07,
+                "update_l2": 0.007876568130954761,
+                "relative_update_l2": 0.0009185902094758716
+              }
+            },
+            "temperatures": {
+              "blocks.0.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.3848930299282074,
+                  0.04741457477211952,
+                  0.021301543340086937,
+                  0.06656613200902939
+                ],
+                "inverse_temperature": [
+                  1.4694571495056152,
+                  1.0485565662384033,
+                  1.021530032157898,
+                  1.0688315629959106
+                ]
+              },
+              "blocks.1.attention.scores.log_alpha": {
+                "log_alpha": [
+                  0.2875382900238037,
+                  0.1859397441148758,
+                  0.2957415282726288,
+                  0.08204721659421921
+                ],
+                "inverse_temperature": [
+                  1.333141565322876,
+                  1.2043496370315552,
+                  1.3441227674484253,
+                  1.0855071544647217
+                ]
+              }
+            }
+          }
         }
       ]
     },
     "gptmini-seed2": {
-      "status": "not_started",
-      "budget": 150000
+      "status": "finished",
+      "through_update": 150000,
+      "budget": 150000,
+      "history_sha256": "14d9ce7a63a72a42781f70b4488b1eb28d1d4f950f6d359b81b2e8f751628023",
+      "diagnostics_sha256": "d95b7697a7f7665c779d7b41a268b0b48f9ef3290e1e8d70344244f98a0face9",
+      "first_events": {
+        "loss_only_alarm": null,
+        "structure_forming": null,
+        "cleanup": null,
+        "observed_delayed_generalization": null
+      },
+      "first_heldout_99": 1250,
+      "lead_to_first_heldout_99": null,
+      "at_first_structure_signal": null,
+      "latest": {
+        "step": 150000,
+        "epochs_seen": 15000.0,
+        "training_seconds": 3077.028340403631,
+        "wall_seconds": 3229.7034007789916,
+        "last_batch_size": 48,
+        "train": {
+          "accuracy": 1.0,
+          "answer_accuracy": 1.0,
+          "EOS_accuracy": 1.0,
+          "loss": 5.198763602427639e-08,
+          "answer_loss": 1.0289993051909985e-07,
+          "EOS_loss": 1.075341443992457e-09,
+          "examples": 4656
+        },
+        "heldout": {
+          "accuracy": 1.0,
+          "answer_accuracy": 1.0,
+          "EOS_accuracy": 1.0,
+          "loss": 5.266612454126885e-08,
+          "answer_loss": 1.0394966711609822e-07,
+          "EOS_loss": 1.3825818321444544e-09,
+          "examples": 4656
+        },
+        "grokking": {
+          "step": 150000,
+          "rows_sha256": "3101bde6ddd16d2cf3710ee300023b04c42407c166da74d35ea0c1202d9bfd32",
+          "examples": 9312,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.010251871891330939,
+                "total_energy": 0.0005468113702854315,
+                "invariant_energy": 5.6058401168893685e-06,
+                "residual_energy": 0.0005412055301685422,
+                "energy_decomposition_error": 1.0842021724855044e-19,
+                "activation_rms": 0.12583118722648168
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.5126422840637769,
+                "total_energy": 0.0010549392899109255,
+                "invariant_energy": 0.0005408064871285557,
+                "residual_energy": 0.0005141328027823695,
+                "energy_decomposition_error": 3.2526065174565133e-19,
+                "activation_rms": 0.053864265361162865
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.9752879746416712,
+                "total_energy": 0.0005485665239099034,
+                "invariant_energy": 0.0005350103340603116,
+                "residual_energy": 1.3556189849591709e-05,
+                "energy_decomposition_error": 1.3891340334970526e-19,
+                "activation_rms": 0.03575383886500709
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.9843490888796058,
+                "total_energy": 0.001113274689923508,
+                "invariant_energy": 0.0010958509266989307,
+                "residual_energy": 1.7423763224577155e-05,
+                "energy_decomposition_error": 5.082197683525802e-20,
+                "activation_rms": 0.03741088353073626
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.9925441498954664,
+                "total_energy": 0.005354727729944927,
+                "invariant_energy": 0.005314803682639867,
+                "residual_energy": 3.9924047305060306e-05,
+                "energy_decomposition_error": 9.215718466126788e-19,
+                "activation_rms": 0.08022763971363057
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.9920224438984282,
+                "total_energy": 0.004616788354219113,
+                "invariant_energy": 0.004579957666114247,
+                "residual_energy": 3.683068810486674e-05,
+                "energy_decomposition_error": 3.9979955110402976e-19,
+                "activation_rms": 0.07554554824414819
+              }
+            },
+            "attention": {
+              "blocks.0.attention": {
+                "entropy_by_head": [
+                  1.4517556359919122,
+                  1.5592198685588943,
+                  1.4789659390513707,
+                  1.3587360234632464
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.1044852918756428,
+                    0.07910103075961579,
+                    0.14841663036687472,
+                    0.3320478221107133,
+                    0.33594921885435935
+                  ],
+                  [
+                    0.08695055711278339,
+                    0.22806710566480443,
+                    0.2335427304589001,
+                    0.24450803524094453,
+                    0.20693156624987363
+                  ],
+                  [
+                    0.06955811150269615,
+                    0.3426878609505716,
+                    0.27282868859540554,
+                    0.19659320641104197,
+                    0.11833213084246132
+                  ],
+                  [
+                    0.16632569600792788,
+                    0.47304918937052237,
+                    0.2178022321377628,
+                    0.08494671137004937,
+                    0.05787617146978443
+                  ]
+                ]
+              },
+              "blocks.1.attention": {
+                "entropy_by_head": [
+                  1.3909405538975397,
+                  1.3659082732781591,
+                  1.32276242619365,
+                  1.3456587190513312
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.10233417258012234,
+                    0.09311363486656311,
+                    0.4097593853192538,
+                    0.08971836308459032,
+                    0.3050744431381373
+                  ],
+                  [
+                    0.08559313168128331,
+                    0.07738965346247495,
+                    0.3926650951312426,
+                    0.09819015919445306,
+                    0.34616196053454656
+                  ],
+                  [
+                    0.0733356597222055,
+                    0.08759730542478666,
+                    0.40412730846835676,
+                    0.07478168603557696,
+                    0.3601580416732484
+                  ],
+                  [
+                    0.10474086053912685,
+                    0.0999167860946474,
+                    0.4723870653076629,
+                    0.09419191449310925,
+                    0.22876337357185447
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "forward": "uncompiled_raw_answer_prefix_without_answer_token",
+          "projection": "all_common_scaling_orbits; zero_removed_from_main_energy",
+          "invariant_energy_fraction": 0.9931956522552925,
+          "total_energy": 1.9670253373192224,
+          "invariant_energy": 1.9536410129014519,
+          "residual_energy": 0.013384324417770113,
+          "energy_decomposition_error": 3.7470027081099033e-16,
+          "raw_train_loss": 1.3577452631669904e-07,
+          "raw_heldout_loss": 1.3739838025864553e-07,
+          "restricted_train_loss": 1.3268130090160206e-07,
+          "restricted_heldout_loss": 1.3323265930713231e-07,
+          "heldout_invariant_energy_fraction": 0.9931254582722401,
+          "heldout_total_energy": 1.9696988764044163,
+          "heldout_invariant_energy": 1.9561580992874523,
+          "heldout_residual_energy": 0.01354077711696377,
+          "heldout_energy_decomposition_error": 2.2724877535296173e-16,
+          "heldout_orbit_coverage": 1.0,
+          "heldout_min_orbit_size": 37,
+          "heldout_restricted_loss": 1.3367934456772838e-07,
+          "heldout_restricted_accuracy": 1.0,
+          "excluded_train_loss": 4.883688447478944,
+          "excluded_heldout_loss": 4.899749100507905,
+          "raw_heldout_accuracy": 1.0,
+          "restricted_heldout_accuracy": 1.0,
+          "excluded_train_accuracy": 0.0,
+          "nonzero_quotients": 96,
+          "orbit_size": 96,
+          "constant_logits": false
+        }
+      },
+      "latest_norms": {
+        "step": 150000,
+        "groups": {
+          "all": {
+            "parameter_l2": 35.86494740406591,
+            "gradient_l2": 1.2614683345739362e-06,
+            "update_l2": 0.010311721733514053,
+            "relative_update_l2": 0.00028752767191122207
+          },
+          "embedding": {
+            "parameter_l2": 34.74708938598633,
+            "gradient_l2": 3.715400112014322e-07,
+            "update_l2": 0.0031596925109624863,
+            "relative_update_l2": 9.093856227107383e-05
+          },
+          "attention": {
+            "parameter_l2": 4.198228097691647,
+            "gradient_l2": 4.852711875851402e-07,
+            "update_l2": 0.005383461417882571,
+            "relative_update_l2": 0.00128227613436479
+          },
+          "ffn": {
+            "parameter_l2": 7.830013559275794,
+            "gradient_l2": 1.1035271875712385e-06,
+            "update_l2": 0.008207697089181802,
+            "relative_update_l2": 0.0010481589258129725
+          }
+        },
+        "temperatures": {
+          "blocks.0.attention.scores.log_alpha": {
+            "log_alpha": [
+              0.07714008539915085,
+              -0.020428966730833054,
+              0.011086743324995041,
+              0.13820524513721466
+            ],
+            "inverse_temperature": [
+              1.0801934003829956,
+              0.9797782897949219,
+              1.011148452758789,
+              1.148211121559143
+            ]
+          },
+          "blocks.1.attention.scores.log_alpha": {
+            "log_alpha": [
+              0.04730294644832611,
+              0.08317242562770844,
+              0.08211424201726913,
+              0.07454844564199448
+            ],
+            "inverse_temperature": [
+              1.0484395027160645,
+              1.0867291688919067,
+              1.0855798721313477,
+              1.0773975849151611
+            ]
+          }
+        }
+      },
+      "criterion": {
+        "target": 0.99,
+        "patience": 5,
+        "minimum_delay": 1000,
+        "chance_ceiling": 0.1,
+        "loss_window": 21,
+        "smooth": 5,
+        "log_drop": 0.1,
+        "structure_window": 5,
+        "structure_rise": 0.05,
+        "cleanup_share": 0.9,
+        "restricted_loss": 0.1
+      },
+      "training_device": "cuda",
+      "threads": 1
     },
     "gptmini-seed3": {
-      "status": "not_started",
-      "budget": 150000
+      "status": "finished",
+      "through_update": 150000,
+      "budget": 150000,
+      "history_sha256": "ab997d07e266db3d44626373e7f0fddfddf3ab3b34c801857c765c0bcb3484f8",
+      "diagnostics_sha256": "5340bdaec59c326935486fe3aa72c4f4b9bc41f90f790439eda7fc7f2b3861a8",
+      "first_events": {
+        "loss_only_alarm": null,
+        "structure_forming": null,
+        "cleanup": null,
+        "observed_delayed_generalization": null
+      },
+      "first_heldout_99": 750,
+      "lead_to_first_heldout_99": null,
+      "at_first_structure_signal": null,
+      "latest": {
+        "step": 150000,
+        "epochs_seen": 15000.0,
+        "training_seconds": 3077.968904134177,
+        "wall_seconds": 3222.406749103975,
+        "last_batch_size": 48,
+        "train": {
+          "accuracy": 1.0,
+          "answer_accuracy": 1.0,
+          "EOS_accuracy": 1.0,
+          "loss": 5.248462128424153e-05,
+          "answer_loss": 0.00010476270178492946,
+          "EOS_loss": 2.0653968653421613e-07,
+          "examples": 4656
+        },
+        "heldout": {
+          "accuracy": 1.0,
+          "answer_accuracy": 1.0,
+          "EOS_accuracy": 1.0,
+          "loss": 0.00013020339732368788,
+          "answer_loss": 0.0002601519387048954,
+          "EOS_loss": 2.548530327223795e-07,
+          "examples": 4656
+        },
+        "grokking": {
+          "step": 150000,
+          "rows_sha256": "3101bde6ddd16d2cf3710ee300023b04c42407c166da74d35ea0c1202d9bfd32",
+          "examples": 9312,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.010794714444922495,
+                "total_energy": 0.005891070672972542,
+                "invariant_energy": 6.359242568959598e-05,
+                "residual_energy": 0.0058274782472829455,
+                "energy_decomposition_error": 8.673617379884035e-19,
+                "activation_rms": 0.12273540555044002
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.6785593065133861,
+                "total_energy": 0.010949193906385265,
+                "invariant_energy": 0.007429677423997379,
+                "residual_energy": 0.0035195164823878847,
+                "energy_decomposition_error": 1.3010426069826053e-18,
+                "activation_rms": 0.16914305696928042
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.8097260242708159,
+                "total_energy": 0.009177089638851513,
+                "invariant_energy": 0.007430928307644133,
+                "residual_energy": 0.0017461613312073807,
+                "energy_decomposition_error": 1.0842021724855044e-18,
+                "activation_rms": 0.16021959559174992
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.9076867169080748,
+                "total_energy": 0.0070069142246482865,
+                "invariant_energy": 0.006360082968227492,
+                "residual_energy": 0.0006468312564207939,
+                "energy_decomposition_error": 8.673617379884035e-19,
+                "activation_rms": 0.08862871902488414
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.938183692825458,
+                "total_energy": 0.11837100424899002,
+                "invariant_energy": 0.11105374588977544,
+                "residual_energy": 0.007317258359214589,
+                "energy_decomposition_error": 6.938893903907228e-18,
+                "activation_rms": 0.3698828692549929
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.940651028870205,
+                "total_energy": 0.1577183223154661,
+                "invariant_energy": 0.1483579021577258,
+                "residual_energy": 0.009360420157740308,
+                "energy_decomposition_error": 6.938893903907228e-18,
+                "activation_rms": 0.40117924432643653
+              }
+            },
+            "attention": {
+              "blocks.0.attention": {
+                "entropy_by_head": [
+                  1.3436656797427566,
+                  1.4944331939870035,
+                  1.4971919095635347,
+                  1.4954967170518094
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.10943985109047842,
+                    0.48786357267282876,
+                    0.23566625692603207,
+                    0.10132578541636723,
+                    0.06570453423513836
+                  ],
+                  [
+                    0.041893807000599005,
+                    0.27333231265832675,
+                    0.24696433075297228,
+                    0.2455516363241265,
+                    0.19225791299594022
+                  ],
+                  [
+                    0.40573753474785906,
+                    0.1535295325705839,
+                    0.1362410623394593,
+                    0.13886562696437246,
+                    0.16562621948978132
+                  ],
+                  [
+                    0.12344071971527797,
+                    0.08200044001379016,
+                    0.18288586894850345,
+                    0.3363611891840127,
+                    0.27531178492118197
+                  ]
+                ]
+              },
+              "blocks.1.attention": {
+                "entropy_by_head": [
+                  1.413274237368314,
+                  1.4464874426358212,
+                  1.4417726540778812,
+                  1.4260829009862188
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.07722151601891901,
+                    0.13156922274714022,
+                    0.3723931149147528,
+                    0.10642028384429124,
+                    0.3123958619804317
+                  ],
+                  [
+                    0.0598879965035008,
+                    0.20108523472657114,
+                    0.35327567061556575,
+                    0.10983614965191565,
+                    0.27591494922734205
+                  ],
+                  [
+                    0.05715293601504127,
+                    0.18496623536078996,
+                    0.3724843720902282,
+                    0.12003331551571533,
+                    0.26536314182713167
+                  ],
+                  [
+                    0.09460391701739986,
+                    0.1271432647497563,
+                    0.427070973716241,
+                    0.10889762389406409,
+                    0.2422842200192594
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "forward": "uncompiled_raw_answer_prefix_without_answer_token",
+          "projection": "all_common_scaling_orbits; zero_removed_from_main_energy",
+          "invariant_energy_fraction": 0.9462063841382019,
+          "total_energy": 3.021347482162828,
+          "invariant_energy": 2.8588182763223497,
+          "residual_energy": 0.16252920584047773,
+          "energy_decomposition_error": 4.163336342344337e-16,
+          "raw_train_loss": 0.00010484167513431054,
+          "raw_heldout_loss": 0.00026022504918835266,
+          "restricted_train_loss": 5.604137842541576e-05,
+          "restricted_heldout_loss": 5.678559476053652e-05,
+          "heldout_invariant_energy_fraction": 0.9446385772237276,
+          "heldout_total_energy": 3.025288877489269,
+          "heldout_invariant_energy": 2.857804580922231,
+          "heldout_residual_energy": 0.16748429656703803,
+          "heldout_energy_decomposition_error": 2.7755575615628914e-17,
+          "heldout_orbit_coverage": 1.0,
+          "heldout_min_orbit_size": 37,
+          "heldout_restricted_loss": 6.323500242558455e-05,
+          "heldout_restricted_accuracy": 1.0,
+          "excluded_train_loss": 5.187337501519606,
+          "excluded_heldout_loss": 5.338217293894297,
+          "raw_heldout_accuracy": 1.0,
+          "restricted_heldout_accuracy": 1.0,
+          "excluded_train_accuracy": 0.012027491408934709,
+          "nonzero_quotients": 96,
+          "orbit_size": 96,
+          "constant_logits": false
+        }
+      },
+      "latest_norms": {
+        "step": 150000,
+        "groups": {
+          "all": {
+            "parameter_l2": 35.94363251222088,
+            "gradient_l2": 0.0017282739923589583,
+            "update_l2": 0.017967391213752387,
+            "relative_update_l2": 0.0004998236417635664
+          },
+          "embedding": {
+            "parameter_l2": 33.729705810546875,
+            "gradient_l2": 0.0006467433995567262,
+            "update_l2": 0.009370527230203152,
+            "relative_update_l2": 0.00027778107493812363
+          },
+          "attention": {
+            "parameter_l2": 6.092690636502657,
+            "gradient_l2": 0.0010128915482388132,
+            "update_l2": 0.0006962965861133235,
+            "relative_update_l2": 0.00011427231779047077
+          },
+          "ffn": {
+            "parameter_l2": 10.822697672734606,
+            "gradient_l2": 0.0012420566328877928,
+            "update_l2": 0.015314553128322571,
+            "relative_update_l2": 0.001414968184700224
+          }
+        },
+        "temperatures": {
+          "blocks.0.attention.scores.log_alpha": {
+            "log_alpha": [
+              0.23391199111938477,
+              0.0624317042529583,
+              0.02024936117231846,
+              0.11710277944803238
+            ],
+            "inverse_temperature": [
+              1.2635332345962524,
+              1.0644217729568481,
+              1.0204557180404663,
+              1.124234914779663
+            ]
+          },
+          "blocks.1.attention.scores.log_alpha": {
+            "log_alpha": [
+              0.1063288077712059,
+              0.07413922250270844,
+              0.07792699337005615,
+              0.08634738624095917
+            ],
+            "inverse_temperature": [
+              1.1121875047683716,
+              1.0769567489624023,
+              1.0810437202453613,
+              1.0901849269866943
+            ]
+          }
+        }
+      },
+      "criterion": {
+        "target": 0.99,
+        "patience": 5,
+        "minimum_delay": 1000,
+        "chance_ceiling": 0.1,
+        "loss_window": 21,
+        "smooth": 5,
+        "log_drop": 0.1,
+        "structure_window": 5,
+        "structure_rise": 0.05,
+        "cleanup_share": 0.9,
+        "restricted_loss": 0.1
+      },
+      "training_device": "cuda",
+      "threads": 1
     },
     "reference-fraction20": {
-      "status": "unfinished",
-      "through_update": 14250,
+      "status": "finished",
+      "through_update": 150000,
       "budget": 150000,
-      "history_sha256": "9391ce30237039be52fd42ea6905c0f4df74f832796d2f87a7c8c1092f59b4af",
-      "diagnostics_sha256": "1b2dc498f7b3d2dd2856420d35a5602ad79546908adbffa2065205074fc047f0",
+      "history_sha256": "34524747c467741c9ab7ede1b8f1b8d6898ee031ccc79c3f3c68c7d7c42107be",
+      "diagnostics_sha256": "448f038ca2d461fea44530aa5e256414c74ef2be96719165dacd6d544b00860f",
       "first_events": {
         "loss_only_alarm": null,
         "structure_forming": null,
@@ -2270,56 +5974,264 @@
       "lead_to_first_heldout_99": null,
       "at_first_structure_signal": null,
       "latest": {
-        "step": 14250,
-        "epochs_seen": 3562.549946294307,
-        "training_seconds": 708.663710295572,
-        "wall_seconds": 732.9115125260432,
-        "last_batch_size": 512,
+        "step": 150000,
+        "epochs_seen": 37500.0,
+        "training_seconds": 7159.119238411076,
+        "wall_seconds": 7387.51455963304,
+        "last_batch_size": 326,
         "train": {
-          "accuracy": 0.5757250268528464,
-          "answer_accuracy": 0.5757250268528464,
+          "accuracy": 1.0,
+          "answer_accuracy": 1.0,
           "EOS_accuracy": 1.0,
-          "loss": 0.9469420600014266,
-          "answer_loss": 1.8923510296388293,
-          "EOS_loss": 0.0015330799284094003,
+          "loss": 0.015580968109032521,
+          "answer_loss": 0.030808775560684287,
+          "EOS_loss": 0.0003531558557176436,
           "examples": 1862
         },
         "heldout": {
-          "accuracy": 0.013288590604026845,
-          "answer_accuracy": 0.013288590604026845,
+          "accuracy": 0.015033557046979866,
+          "answer_accuracy": 0.015033557046979866,
           "EOS_accuracy": 1.0,
-          "loss": 3.0326013675152055,
-          "answer_loss": 6.063615001704068,
-          "EOS_loss": 0.001587837022422944,
+          "loss": 3.668802973600042,
+          "answer_loss": 7.337241178166947,
+          "EOS_loss": 0.0003647603344597272,
           "examples": 7450
+        },
+        "grokking": {
+          "step": 150000,
+          "rows_sha256": "3101bde6ddd16d2cf3710ee300023b04c42407c166da74d35ea0c1202d9bfd32",
+          "examples": 9312,
+          "internal": {
+            "features": {
+              "blocks.0.attention": {
+                "invariant_energy_fraction": 0.00819144723570128,
+                "total_energy": 0.0013765797074846405,
+                "invariant_energy": 1.1276180039597536e-05,
+                "residual_energy": 0.001365303527445043,
+                "energy_decomposition_error": 0.0,
+                "activation_rms": 0.42595485243206826
+              },
+              "blocks.0.ffn": {
+                "invariant_energy_fraction": 0.009019250748182482,
+                "total_energy": 5.895563722285857e-07,
+                "invariant_energy": 5.317356751318422e-09,
+                "residual_energy": 5.842390154772674e-07,
+                "energy_decomposition_error": 1.0587911840678754e-22,
+                "activation_rms": 0.01001113050607714
+              },
+              "blocks.0": {
+                "invariant_energy_fraction": 0.009862181010803198,
+                "total_energy": 1.0583053201809166e-05,
+                "invariant_energy": 1.0437198632320234e-07,
+                "residual_energy": 1.0478681215485963e-05,
+                "energy_decomposition_error": 1.6940658945086007e-21,
+                "activation_rms": 0.03824056485130695
+              },
+              "blocks.1.attention": {
+                "invariant_energy_fraction": 0.01395053414574585,
+                "total_energy": 2.7399768241703773e-05,
+                "invariant_energy": 3.822414024414112e-07,
+                "residual_energy": 2.701752683926236e-05,
+                "energy_decomposition_error": 3.3881317890172014e-21,
+                "activation_rms": 0.028919655074060868
+              },
+              "blocks.1.ffn": {
+                "invariant_energy_fraction": 0.011004698909565208,
+                "total_energy": 0.0015740509529248903,
+                "invariant_energy": 1.7321956805252618e-05,
+                "residual_energy": 0.0015567289961196374,
+                "energy_decomposition_error": 2.168404344971009e-19,
+                "activation_rms": 0.04261671597042348
+              },
+              "blocks.1": {
+                "invariant_energy_fraction": 0.019857246124764985,
+                "total_energy": 0.3421048032440054,
+                "invariant_energy": 0.006793259278480514,
+                "residual_energy": 0.3353115439655249,
+                "energy_decomposition_error": 5.551115123125783e-17,
+                "activation_rms": 0.6074994201589866
+              }
+            },
+            "attention": {
+              "blocks.0.attention.head0": {
+                "entropy_by_head": [
+                  0.2072562115437258
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.0004789977513379342,
+                    0.5861627079380115,
+                    0.05781712995120147,
+                    0.3538064326240322,
+                    0.0017347428885230796
+                  ]
+                ]
+              },
+              "blocks.0.attention.head1": {
+                "entropy_by_head": [
+                  0.1471297126356848
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    5.476431781927897e-06,
+                    0.48471155810507843,
+                    0.00031737290660361955,
+                    0.514338951798744,
+                    0.0006266468239900503
+                  ]
+                ]
+              },
+              "blocks.0.attention.head2": {
+                "entropy_by_head": [
+                  0.14260663547445404
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    2.047250180041875e-05,
+                    0.5631841196649305,
+                    1.023616744835824e-05,
+                    0.42460192547245285,
+                    0.012183251176276772
+                  ]
+                ]
+              },
+              "blocks.0.attention.head3": {
+                "entropy_by_head": [
+                  0.35396560513423836
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    6.817937387973215e-05,
+                    0.444585153181724,
+                    0.0007660282257830542,
+                    0.49311401127250326,
+                    0.061466633497424386
+                  ]
+                ]
+              },
+              "blocks.1.attention.head0": {
+                "entropy_by_head": [
+                  0.6062480549168942
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.009032263151735642,
+                    0.43772358954335633,
+                    0.007592810369864335,
+                    0.5138675139385163,
+                    0.03178382340620191
+                  ]
+                ]
+              },
+              "blocks.1.attention.head1": {
+                "entropy_by_head": [
+                  0.6587458980778496
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.011050512725143574,
+                    0.3349687793249914,
+                    0.008884133167077332,
+                    0.6066961142863303,
+                    0.03840045971324005
+                  ]
+                ]
+              },
+              "blocks.1.attention.head2": {
+                "entropy_by_head": [
+                  0.6091693837019113
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.013658449557334834,
+                    0.571718234214088,
+                    0.008656463559760694,
+                    0.3770110238203271,
+                    0.028955828648766866
+                  ]
+                ]
+              },
+              "blocks.1.attention.head3": {
+                "entropy_by_head": [
+                  0.6043686909000812
+                ],
+                "mean_weights_by_head_and_prompt_token": [
+                  [
+                    0.00972245226632538,
+                    0.6175690666205662,
+                    0.009191029940316947,
+                    0.3349372731627359,
+                    0.028580177729939978
+                  ]
+                ]
+              }
+            },
+            "position": "answer_query_at_equals_token",
+            "prompt_positions": [
+              "EOS",
+              "numerator",
+              "operator",
+              "denominator",
+              "equals"
+            ],
+            "scope": "current_heldout_nonzero_orbit_feature_energy; heldout_route_statistics; no_ablation"
+          },
+          "forward": "uncompiled_raw_answer_prefix_without_answer_token",
+          "projection": "all_common_scaling_orbits; zero_removed_from_main_energy",
+          "invariant_energy_fraction": 0.044238098076303696,
+          "total_energy": 2.080844680424613,
+          "invariant_energy": 0.09205261105417885,
+          "residual_energy": 1.9887920693704344,
+          "energy_decomposition_error": 2.220446049250313e-16,
+          "raw_train_loss": 0.030808766414572877,
+          "raw_heldout_loss": 7.337241205321396,
+          "restricted_train_loss": 2.7831851470732247,
+          "restricted_heldout_loss": 2.895360106622025,
+          "heldout_invariant_energy_fraction": 0.021374205503568434,
+          "heldout_total_energy": 2.0749375719593366,
+          "heldout_invariant_energy": 0.04435014207013418,
+          "heldout_residual_energy": 2.030587429889202,
+          "heldout_energy_decomposition_error": 4.440892098500626e-16,
+          "heldout_orbit_coverage": 1.0,
+          "heldout_min_orbit_size": 67,
+          "heldout_restricted_loss": 4.731590649814823,
+          "heldout_restricted_accuracy": 0.019328859060402683,
+          "excluded_train_loss": 0.22466274610509596,
+          "excluded_heldout_loss": 9.228508060583328,
+          "raw_heldout_accuracy": 0.015033557046979866,
+          "restricted_heldout_accuracy": 0.9775838926174497,
+          "excluded_train_accuracy": 0.9887218045112782,
+          "nonzero_quotients": 96,
+          "orbit_size": 96,
+          "constant_logits": false
         }
       },
       "latest_norms": {
-        "step": 14000,
+        "step": 150000,
         "groups": {
           "all": {
-            "parameter_l2": 73.44644790663224,
-            "gradient_l2": 1.2391140022013227,
-            "update_l2": 0.05278576831913444,
-            "relative_update_l2": 0.0007182247589569286
+            "parameter_l2": 62.24607493684412,
+            "gradient_l2": 2.5471794196107855,
+            "update_l2": 0.03108810842139077,
+            "relative_update_l2": 0.0004994216311209821
           },
           "embedding": {
-            "parameter_l2": 6.257038116455078,
-            "gradient_l2": 0.07905755192041397,
-            "update_l2": 0.0073456610552966595,
-            "relative_update_l2": 0.0011729234470695203
+            "parameter_l2": 5.13219690322876,
+            "gradient_l2": 0.11091266572475433,
+            "update_l2": 0.006943140644580126,
+            "relative_update_l2": 0.001351888813515461
           },
           "attention": {
-            "parameter_l2": 65.15385901507398,
-            "gradient_l2": 0.5049824603597219,
-            "update_l2": 0.04726556198623812,
-            "relative_update_l2": 0.0007249289806102243
+            "parameter_l2": 53.24480142363902,
+            "gradient_l2": 0.9007128505079017,
+            "update_l2": 0.018717155656339666,
+            "relative_update_l2": 0.00035152949461718694
           },
           "ffn": {
-            "parameter_l2": 14.649529736922013,
-            "gradient_l2": 0.06606131380351137,
-            "update_l2": 0.01640745626725518,
-            "relative_update_l2": 0.0011194674340467223
+            "parameter_l2": 13.152065399469882,
+            "gradient_l2": 0.1569775898784296,
+            "update_l2": 0.02105411974001295,
+            "relative_update_l2": 0.0016005312632564148
           }
         },
         "temperatures": {}

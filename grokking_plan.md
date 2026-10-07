@@ -73,8 +73,8 @@ Status: the primary completed all 150,000 updates at 100% held-out answer
 accuracy. The checkpoint-preserving repeat completes the same budget and
 matches all 601 canonical observations exactly. The reference control
 completes 150,000 updates at 1.503% held-out answer accuracy. Seed 2
-completes 150,000 updates at 100%, first reaching 99% at 1,250; seed 3 first
-reaches 99% at 750 and continues its full budget. These are early learning
+completes 150,000 updates at 100%, first reaching 99% at 1,250; seed 3
+completes 150,000 at 100%, first reaching 99% at 750. These are early learning
 controls, not independent delayed-transition replications. Fresh
 primary evidence: structure signal at 33,000 (14.39% held-out accuracy),
 first 99% at 35,500, confirmed delayed generalization at 36,500. Internal
@@ -84,5 +84,7 @@ example. Shared EOS supplies most of the full gradient cosine's numerator
 at initialization, but answer-only agreement remains high at 1,000 and
 does not rise across the delayed transition. The pinned component result
 is in `experiments/grokking_internals/objective_component_results.json`.
-Seed 3's full budget and general predictive validity remain unfinished;
-do not mark this research direction complete.
+All declared training budgets, checkpoint archives and six-measurement
+workers have completed. General predictive validity and the mathematical
+mechanism in the actual transformer remain unfinished; do not mark this
+research direction complete.

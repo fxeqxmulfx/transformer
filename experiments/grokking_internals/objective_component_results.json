@@ -7949,6 +7949,395 @@
             }
           },
           "observation_seconds": 1.0197360789752565
+        },
+        {
+          "step": 150000,
+          "checkpoint_sha256": "3a3d80720581473974d476e9471db414ecd08c4b28620a7419683e883307c166",
+          "origin": "actual_training_checkpoint",
+          "measurement": {
+            "objective": "actual_mean_answer_and_EOS_CE; separate_position_gradients_are_diagnostics",
+            "supervision": "positions_4_and_5_of_the_six_token_training_input; EOS_sees_answer",
+            "batch_size": 32,
+            "batches_by_split": {
+              "train": 8,
+              "heldout": 8
+            },
+            "sample_seed": 1729,
+            "selection": {
+              "train": {
+                "examples": 256,
+                "indices_sha256": "66d556bd946d3132bb17d63499a79caad6518076ef372d192f4c74ddf5838332"
+              },
+              "heldout": {
+                "examples": 256,
+                "indices_sha256": "66d556bd946d3132bb17d63499a79caad6518076ef372d192f4c74ddf5838332"
+              }
+            },
+            "unique_trainable_tensors": 11,
+            "loss_by_split": {
+              "train": {
+                "answer": 9.620136552257463e-05,
+                "EOS": 2.1559827456663072e-07,
+                "full": 4.820848289455171e-05
+              },
+              "heldout": {
+                "answer": 0.0002260948076582281,
+                "EOS": 6.379551886759316e-08,
+                "full": 0.00011307929935355787
+              }
+            },
+            "groups": {
+              "attention": {
+                "components": {
+                  "answer": {
+                    "train": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.03932135646813965,
+                      "positive_pair_fraction": 0.7142857142857143,
+                      "mean_batch_gradient_l2": 0.0046718073943367066
+                    },
+                    "heldout": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": -0.011873766149326654,
+                      "positive_pair_fraction": 0.42857142857142855,
+                      "mean_batch_gradient_l2": 0.025729261160076906
+                    },
+                    "train_heldout_mean_gradient_cosine": 0.03266436534706214
+                  },
+                  "EOS": {
+                    "train": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.412721715320495,
+                      "positive_pair_fraction": 0.8928571428571429,
+                      "mean_batch_gradient_l2": 1.032360803486128e-05
+                    },
+                    "heldout": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.4838607088279388,
+                      "positive_pair_fraction": 0.9642857142857143,
+                      "mean_batch_gradient_l2": 1.5557849549097295e-06
+                    },
+                    "train_heldout_mean_gradient_cosine": 0.873380233620665
+                  },
+                  "full": {
+                    "train": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.03927854574139278,
+                      "positive_pair_fraction": 0.7142857142857143,
+                      "mean_batch_gradient_l2": 0.0023362894255828993
+                    },
+                    "heldout": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": -0.011874874364877622,
+                      "positive_pair_fraction": 0.42857142857142855,
+                      "mean_batch_gradient_l2": 0.012864686142341424
+                    },
+                    "train_heldout_mean_gradient_cosine": 0.03185211690257862
+                  }
+                },
+                "energy_by_split": {
+                  "train": {
+                    "full_squared_norm": 7.992633472698895e-06,
+                    "quarter_answer_squared_norm": 7.991586324851343e-06,
+                    "quarter_EOS_squared_norm": 2.049512218938669e-10,
+                    "half_answer_EOS_dot": 8.420410354277759e-10,
+                    "energy_identity_absolute_error": 1.5559023021793838e-13,
+                    "max_gradient_reconstruction_l2": 1.4847958058633087e-09,
+                    "max_gradient_reconstruction_relative_error": 4.451594970094272e-07,
+                    "mean_answer_EOS_gradient_cosine": -0.010887978289865548
+                  },
+                  "heldout": {
+                    "full_squared_norm": 0.0003475724568163707,
+                    "quarter_answer_squared_norm": 0.00034757004936200586,
+                    "quarter_EOS_squared_norm": 3.708908622654441e-12,
+                    "half_answer_EOS_dot": 2.4117480756869254e-09,
+                    "energy_identity_absolute_error": 8.002619487928115e-12,
+                    "max_gradient_reconstruction_l2": 1.546973425279154e-08,
+                    "max_gradient_reconstruction_relative_error": 4.6075013327208466e-07,
+                    "mean_answer_EOS_gradient_cosine": -0.15690565391852826
+                  }
+                },
+                "train_heldout_dot_decomposition": {
+                  "full_dot": 2.2478892788633196e-07,
+                  "quarter_component_dots": {
+                    "answer_answer": 2.3053417875770028e-07,
+                    "answer_EOS": -7.919742682670131e-13,
+                    "EOS_answer": -5.747343324165481e-09,
+                    "EOS_EOS": 3.0365343895395648e-12
+                  },
+                  "dot_identity_absolute_error": 1.5210732409918892e-13,
+                  "terms_over_full_norm_product": {
+                    "answer_answer": 0.03266620683178546,
+                    "answer_EOS": -1.1222108319067661e-07,
+                    "EOS_answer": -0.0008143864253542924,
+                    "EOS_EOS": 4.302705176085115e-07
+                  }
+                }
+              },
+              "embedding": {
+                "components": {
+                  "answer": {
+                    "train": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.15645873951008374,
+                      "positive_pair_fraction": 0.7857142857142857,
+                      "mean_batch_gradient_l2": 0.0036792109325209377
+                    },
+                    "heldout": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": -0.05908921802307474,
+                      "positive_pair_fraction": 0.39285714285714285,
+                      "mean_batch_gradient_l2": 0.017640841760904066
+                    },
+                    "train_heldout_mean_gradient_cosine": -0.21393190053125002
+                  },
+                  "EOS": {
+                    "train": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.8138539186769816,
+                      "positive_pair_fraction": 1.0,
+                      "mean_batch_gradient_l2": 4.64016566357618e-06
+                    },
+                    "heldout": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.8430702902636403,
+                      "positive_pair_fraction": 1.0,
+                      "mean_batch_gradient_l2": 9.886379955571925e-07
+                    },
+                    "train_heldout_mean_gradient_cosine": 0.7975831248353696
+                  },
+                  "full": {
+                    "train": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.15643249854105326,
+                      "positive_pair_fraction": 0.7857142857142857,
+                      "mean_batch_gradient_l2": 0.0018395991825126128
+                    },
+                    "heldout": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": -0.059089262872584425,
+                      "positive_pair_fraction": 0.39285714285714285,
+                      "mean_batch_gradient_l2": 0.00882043834792862
+                    },
+                    "train_heldout_mean_gradient_cosine": -0.21413211167390037
+                  }
+                },
+                "energy_by_split": {
+                  "train": {
+                    "full_squared_norm": 6.006147836618936e-06,
+                    "quarter_answer_squared_norm": 6.00615926572547e-06,
+                    "quarter_EOS_squared_norm": 3.6260720849423656e-11,
+                    "half_answer_EOS_dot": -4.817417228290865e-11,
+                    "energy_identity_absolute_error": 4.84344898914951e-13,
+                    "max_gradient_reconstruction_l2": 9.87452802847571e-10,
+                    "max_gradient_reconstruction_relative_error": 3.8753377292349996e-07,
+                    "mean_answer_EOS_gradient_cosine": -0.018924175038826666
+                  },
+                  "heldout": {
+                    "full_squared_norm": 0.00015367084587775048,
+                    "quarter_answer_squared_norm": 0.0001536702319759396,
+                    "quarter_EOS_squared_norm": 7.114933450088086e-13,
+                    "half_answer_EOS_dot": 6.097187466975222e-10,
+                    "energy_identity_absolute_error": 3.471570827158127e-12,
+                    "max_gradient_reconstruction_l2": 5.371239548574964e-09,
+                    "max_gradient_reconstruction_relative_error": 3.326422001410061e-07,
+                    "mean_answer_EOS_gradient_cosine": 0.030157694211693956
+                  }
+                },
+                "train_heldout_dot_decomposition": {
+                  "full_dot": -8.27955095080981e-07,
+                  "quarter_component_dots": {
+                    "answer_answer": -8.272074186984211e-07,
+                    "answer_EOS": -3.266741960567128e-11,
+                    "EOS_answer": -7.155986983077048e-10,
+                    "EOS_EOS": 7.275879455228925e-13
+                  },
+                  "dot_identity_absolute_error": 1.3785259199205818e-13,
+                  "terms_over_full_norm_product": {
+                    "answer_answer": -0.21393874186000897,
+                    "answer_EOS": -8.448699192334314e-06,
+                    "EOS_answer": -0.00018507363658983912,
+                    "EOS_EOS": 1.8817438787311672e-07
+                  }
+                }
+              },
+              "ffn": {
+                "components": {
+                  "answer": {
+                    "train": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.04525885613062163,
+                      "positive_pair_fraction": 0.8214285714285714,
+                      "mean_batch_gradient_l2": 0.00542573365369953
+                    },
+                    "heldout": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.006036357579781053,
+                      "positive_pair_fraction": 0.6785714285714286,
+                      "mean_batch_gradient_l2": 0.026939757500758957
+                    },
+                    "train_heldout_mean_gradient_cosine": 0.03278602080091226
+                  },
+                  "EOS": {
+                    "train": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.6432858519562459,
+                      "positive_pair_fraction": 0.8214285714285714,
+                      "mean_batch_gradient_l2": 1.7072371702325988e-05
+                    },
+                    "heldout": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.7055494830921438,
+                      "positive_pair_fraction": 1.0,
+                      "mean_batch_gradient_l2": 3.0080815600181134e-06
+                    },
+                    "train_heldout_mean_gradient_cosine": 0.8835601679726639
+                  },
+                  "full": {
+                    "train": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.04526880320758738,
+                      "positive_pair_fraction": 0.8214285714285714,
+                      "mean_batch_gradient_l2": 0.0027131288580342495
+                    },
+                    "heldout": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.006036453115992102,
+                      "positive_pair_fraction": 0.6785714285714286,
+                      "mean_batch_gradient_l2": 0.013469881956700031
+                    },
+                    "train_heldout_mean_gradient_cosine": 0.032819765527248496
+                  }
+                },
+                "energy_by_split": {
+                  "train": {
+                    "full_squared_norm": 1.0159883333664065e-05,
+                    "quarter_answer_squared_norm": 1.0159033524369079e-05,
+                    "quarter_EOS_squared_norm": 5.278700570096158e-10,
+                    "half_answer_EOS_dot": 3.2203943201121346e-10,
+                    "energy_identity_absolute_error": 1.001940350345374e-13,
+                    "max_gradient_reconstruction_l2": 9.413871390942423e-10,
+                    "max_gradient_reconstruction_relative_error": 3.0707889288660286e-07,
+                    "mean_answer_EOS_gradient_cosine": 0.00847299942462971
+                  },
+                  "heldout": {
+                    "full_squared_norm": 0.00033480191054252736,
+                    "quarter_answer_squared_norm": 0.00033480177083087794,
+                    "quarter_EOS_squared_norm": 9.142462437759903e-12,
+                    "half_answer_EOS_dot": 1.2884868311174046e-10,
+                    "energy_identity_absolute_error": 1.7205038723118011e-12,
+                    "max_gradient_reconstruction_l2": 7.460860511808357e-09,
+                    "max_gradient_reconstruction_relative_error": 2.6121772612518037e-07,
+                    "mean_answer_EOS_gradient_cosine": 0.001711487477096299
+                  }
+                },
+                "train_heldout_dot_decomposition": {
+                  "full_dot": 2.652925026755273e-07,
+                  "quarter_component_dots": {
+                    "answer_answer": 2.6499899068281903e-07,
+                    "answer_EOS": 1.9572435588223155e-11,
+                    "EOS_answer": 2.655885589781749e-10,
+                    "EOS_EOS": 8.332849345611854e-12
+                  },
+                  "dot_identity_absolute_error": 1.8148796225556682e-14,
+                  "terms_over_full_norm_product": {
+                    "answer_answer": 0.032783454682867405,
+                    "answer_EOS": 2.421337732217468e-06,
+                    "EOS_answer": 3.2856391132336336e-05,
+                    "EOS_EOS": 1.0308702995325744e-06
+                  }
+                }
+              },
+              "all": {
+                "components": {
+                  "answer": {
+                    "train": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.06674901395194575,
+                      "positive_pair_fraction": 0.7857142857142857,
+                      "mean_batch_gradient_l2": 0.008084160774531293
+                    },
+                    "heldout": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": -0.013828965189776374,
+                      "positive_pair_fraction": 0.35714285714285715,
+                      "mean_batch_gradient_l2": 0.04133783097979818
+                    },
+                    "train_heldout_mean_gradient_cosine": -0.01698121889973447
+                  },
+                  "EOS": {
+                    "train": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.6526352064771258,
+                      "positive_pair_fraction": 0.9642857142857143,
+                      "mean_batch_gradient_l2": 2.0543694913629918e-05
+                    },
+                    "heldout": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.7118913271027044,
+                      "positive_pair_fraction": 1.0,
+                      "mean_batch_gradient_l2": 3.5835311732381577e-06
+                    },
+                    "train_heldout_mean_gradient_cosine": 0.8727468991032947
+                  },
+                  "full": {
+                    "train": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": 0.06672143295610024,
+                      "positive_pair_fraction": 0.7857142857142857,
+                      "mean_batch_gradient_l2": 0.004042481508964119
+                    },
+                    "heldout": {
+                      "nonzero_batches": 8,
+                      "mean_pair_cosine": -0.013829442750164511,
+                      "positive_pair_fraction": 0.35714285714285715,
+                      "mean_batch_gradient_l2": 0.020668959368714886
+                    },
+                    "train_heldout_mean_gradient_cosine": -0.017298614675669163
+                  }
+                },
+                "energy_by_split": {
+                  "train": {
+                    "full_squared_norm": 2.415866464298189e-05,
+                    "quarter_answer_squared_norm": 2.4156779114945893e-05,
+                    "quarter_EOS_squared_norm": 7.690819997529064e-10,
+                    "half_answer_EOS_dot": 1.1159062951560808e-09,
+                    "energy_identity_absolute_error": 5.397410898629417e-13,
+                    "max_gradient_reconstruction_l2": 2.0164055565815257e-09,
+                    "max_gradient_reconstruction_relative_error": 3.648418375414043e-07,
+                    "mean_answer_EOS_gradient_cosine": -0.0011023108510604695
+                  },
+                  "heldout": {
+                    "full_squared_norm": 0.0008360452132366484,
+                    "quarter_answer_squared_norm": 0.0008360420521688235,
+                    "quarter_EOS_squared_norm": 1.3562864405423152e-11,
+                    "half_answer_EOS_dot": 3.1503155054961877e-09,
+                    "energy_identity_absolute_error": 2.8105449781932046e-12,
+                    "max_gradient_reconstruction_l2": 1.7995203019606475e-08,
+                    "max_gradient_reconstruction_relative_error": 3.3952886363921413e-07,
+                    "mean_answer_EOS_gradient_cosine": -0.045941785581454224
+                  }
+                },
+                "train_heldout_dot_decomposition": {
+                  "full_dot": -3.378736645191235e-07,
+                  "quarter_component_dots": {
+                    "answer_answer": -3.3167424925789857e-07,
+                    "answer_EOS": -1.3886958285715144e-11,
+                    "EOS_answer": -6.197353463495013e-09,
+                    "EOS_EOS": 1.2096971680674316e-11
+                  },
+                  "dot_identity_absolute_error": 2.7181112486847876e-13,
+                  "terms_over_full_norm_product": {
+                    "answer_answer": -0.016981214099418204,
+                    "answer_EOS": -7.109910171412038e-07,
+                    "EOS_answer": -0.0003172950153617437,
+                    "EOS_EOS": 6.193464416479341e-07
+                  }
+                }
+              }
+            }
+          },
+          "observation_seconds": 1.0745992030133493
         }
       ]
     },
@@ -8927,11 +9316,6 @@
     }
   ],
   "missing": [
-    {
-      "study": "grokking_progress",
-      "label": "gptmini-seed3",
-      "step": 150000
-    },
     {
       "study": "grokking_progress",
       "label": "reference-fraction20",

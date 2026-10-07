@@ -132,7 +132,7 @@ describe the initial snapshot. The repeat matches all 601 canonical
 observations of the primary exactly. The reference control completes
 150,000 updates with 1.503% held-out answer accuracy. Seed 2 completes
 150,000 at 100%, first exceeding 99% at 1,250; seed 3 first exceeds 99%
-at 750 and continues its full budget. These controls generalize early,
+at 750 and completes 150,000 at 100%. These controls generalize early,
 so they do not replicate the delayed transition of seed 1.
 
 On the freshly trained ordinary GPTMini seed 1, the pinned structural
@@ -172,8 +172,8 @@ updates, budgets, causal events, source hashes and internal checkpoints.
 and [archived false alarm](archived_loss_baseline.svg) are generated with
 Matplotlib. The internal comparisons are observations, not feature
 ablations or evidence that those particular modules cause grokking.
-Seed 3's final budget remains pending. All four budgets remain 150,000
-updates. The additional answer/EOS gradient decomposition and its pinned
+All four budgets complete 150,000 updates. The additional answer/EOS
+gradient decomposition and its pinned
 checkpoint results are in [grokking_internals](../grokking_internals/README.md).
 
 From `python/`, use `uv run --locked python
