@@ -606,6 +606,15 @@ logits for every prefix of a task. Real raw key IDs retain all 256
 distinct codes, and every genuine Q/K/value lookup is evaluated exactly.
 This is a concrete capacity weight assignment, not a trained model or
 complete recall solver; all-pair raw energy gaps and decoding remain.
+PointerDecoder proves the actual ten output-coordinate dot product,
+exact whole-joint expected score, coordinate/score bounds and the full
+11p-10 vocabulary margin. RawBinding realizes true unchanged raw-prefix
+query/key/value/position reads over every visible pair, identifies its
+computed loss with the same inference probability and proves global
+convexity in all free raw binding parameters. Its exact implicit choice
+count is T*T*4^9, bounded by 1073741824 at the actual recall cap; these
+configurations are summed by contraction, not stored or enumerated by
+inference. The finite witness's raw semantic energy gap remains to prove.
 
 For the ordered head, also investigate a row-softmax six-state Markov
 model: free token-conditioned transition logits, normalized causal state
@@ -846,3 +855,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Full standalone learned depth capability committed in 3812fda. Replaced the proposed fixed neighboring-key shift by free relative binding over every visible position pair; proved exact compact inference/training coupling and unrestricted joint convexity, with 28816 recall scalars. | Derive the finite all-pair pointer's complete raw recall/latest-write/filler semantics and decoder margin; mixture and full tensor-stack realization remain before stage 3. |
 | 2026-10-07 | 2 | Joint learned positional binding committed in f37438a. Derived actual raw even table slots, both unchanged key/value reads and latest-write chronology directly from complete parsing, with genuine overwrite/distinct-query/post-table-filler controls. | Construct finite free shared pointer weights and derive their uniform complete-configuration gap and full-vocabulary recall decoder; combine heads and realize the actual tensor stack before stage 3. |
 | 2026-10-07 | 2 | Full raw record/overwrite positional facts committed in 9e6661b. Proved genuine finite learned-channel deficits and constructed/evaluated the complete shared recall token/position/chronology/binding/head weight assignment, with all 256 raw keys distinguished. | Derive the true whole all-pair recall configuration gap and probability/readout margin, then complete raw recall capability, head mixture and actual tensor-stack realization. |
+| 2026-10-07 | 2 | Actual finite shared recall fields and channel deficits committed in b127359. Connected true ten-axis pointer decoding to the full normalized joint distribution; realized actual unchanged raw-prefix all-pair inference/loss, proved unrestricted joint convexity and the exact implicit choice-count bound. | Prove uniform raw finite-weight recall energy gaps and actual greedy List Int correctness, then two-head mixing and true prenorm/residual/tied tensor-stack realization before stage 3. |
