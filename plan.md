@@ -554,6 +554,14 @@ head would handle order/count/phase, with all token transition energies
 trainable rather than a hardcoded task interpreter. These are proposed
 operators and slot counts; their actual computation, compatibility and
 joint capacity are not proved yet. No successful AdamW run is claimed.
+Factorial now proves the exact memory/group contraction and genuine
+route-weight normalization. PointerTraining realizes shared free token
+tables and chronology as actual linear complete energies, identifies the
+computed compact objective with jointNLL, and proves global convexity
+for both individual examples and shared finite minibatches. The actual
+slot type has exactly 52 trainable fields per token; no per-prefix or
+exponential parameter table is stored. Output-channel contraction,
+semantic capability and the true replacement residual block remain open.
 
 Remaining acceptance tests: prove compact contraction of the latent
 partition, learned matching and joint value expressivity, complete Basis
@@ -681,3 +689,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Complete original depth model committed in d3aae47. Proved exact raw integer serialization and universal depthModel_solves_depth in both full Basis modes, plus actual neutral/wrong-start/order controls and append-one contract. | Consolidate all three tasks/two modes with explicit real-arithmetic, epsilon and width scope; then start stage 2 convex architecture search. |
 | 2026-10-07 | 1 -> 2 | Raw depth correctness committed in e1afb3d. Consolidated the actual original family in BasisCorrectness: every task/mode, independent next-token agreement, two-call parity and exact append-one contract. Common epsilon and small/large dimension boundaries are explicit. | Search changed compact embedding/attention operators with jointly trainable matching/values and a proved convex objective; do not start equal-FLOP training until an admissible candidate exists. |
 | 2026-10-07 | 2 | Complete Basis family committed in d640a91. Established the actual finite affine-energy joint Gibbs NLL's global convexity as a structured-head foundation. Route/state/channel supervision is explicit, and marginal output CE is not claimed convex. | Prove compact latent contraction and actual changed head capability/interface; assess all acceptance constraints before equal-FLOP training. |
+| 2026-10-07 | 2 | Joint likelihood foundation committed in 19ff013. Proved exact compact matching/value partition contraction and global convexity of the actually computed shared-table pointer loss/minibatches, including all raw Q/K/value/chronology weights. Proved the 52-field count fits width 64 with decoder slots. | Prove exact compact value statistics, raw order/adjacency/role handling and complete task capability; instantiate prenorm/residual/tied interface before stage 3. |
