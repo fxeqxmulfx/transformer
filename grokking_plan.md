@@ -52,7 +52,8 @@ temporary-hook cleanup, constant/wrong symmetric rules and a training-only
 memorizer. The complete `./make.py test` suite passes: 233 tests on
 2026-10-07, including available CUDA checks. The six offline measurements
 in [grokking_internals](experiments/grokking_internals/README.md) add 16
-focused tests; the complete suite now passes all 249 tests.
+focused tests. Separating answer/EOS gradients adds seven counterexample
+and noninterference tests; the complete suite now passes all 256 tests.
 
 ## 3. Run the complete ordinary-transformer budget
 
@@ -69,11 +70,19 @@ symmetries before claiming a transferable detector. Do not resume the
 convex-architecture search unless the user redirects work back to it.
 
 Status: the primary completed all 150,000 updates at 100% held-out answer
-accuracy. The CPU control and checkpoint-preserving repeat are active;
-CUDA seed controls remain queued. Fresh
+accuracy. The checkpoint-preserving repeat completes the same budget and
+matches all 601 canonical observations exactly. The reference control
+completes 150,000 updates at 1.503% held-out answer accuracy. Seed 2
+completes 150,000 updates at 100%, first reaching 99% at 1,250; seed 3 first
+reaches 99% at 750 and continues its full budget. These are early learning
+controls, not independent delayed-transition replications. Fresh
 primary evidence: structure signal at 33,000 (14.39% held-out accuracy),
 first 99% at 35,500, confirmed delayed generalization at 36,500. Internal
 snapshots at 30,000 and 35,000 show strong changes in the second block
-while overall weight norm changes only 0.2%. This is a partial-budget,
-known-seed positive example. Complete controls and general predictive
-validity are unfinished; do not mark this research direction complete.
+while overall weight norm changes only 0.2%. This is a known-seed positive
+example. Shared EOS supplies most of the full gradient cosine's numerator
+at initialization, but answer-only agreement remains high at 1,000 and
+does not rise across the delayed transition. The pinned component result
+is in `experiments/grokking_internals/objective_component_results.json`.
+Seed 3's full budget and general predictive validity remain unfinished;
+do not mark this research direction complete.

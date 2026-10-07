@@ -109,7 +109,7 @@ updates by embedding, attention and FFN; QKNorm head gains are retained.
 Norms depend on parameter scale and are not used as a success criterion.
 
 The first `gptmini-seed1` run started with the initial output observer.
-It continues with byte-identical source in `/tmp/transformer-grokking-study`;
+It completed with byte-identical source in `/tmp/transformer-grokking-study`;
 its canonical output/norm records remain intact. `watch.py` reads its
 atomic checkpoints and records the newly added internal measurements on
 CPU, without updating training. These snapshots explicitly record both
@@ -121,14 +121,19 @@ internals directly during their ordinary diagnostic forward.
 Reproduce the archive table from `python/` with
 `uv run --locked python ../experiments/grokking_progress/archived.py`.
 
-## First fresh evidence (partial budgets)
+## Fresh evidence and full-budget controls
 
 Update: the primary seed 1 completed its full **150,000-update** budget
 with **100% held-out answer accuracy**. The checkpoint-preserving repeat
 and all six new offline measurements are in
 [grokking_internals](../grokking_internals/README.md), with a reproduced
 transition and raw-checkpoint/source fingerprints. The measurements below
-describe the initial snapshot; controls still retain their full budgets.
+describe the initial snapshot. The repeat matches all 601 canonical
+observations of the primary exactly. The reference control completes
+150,000 updates with 1.503% held-out answer accuracy. Seed 2 completes
+150,000 at 100%, first exceeding 99% at 1,250; seed 3 first exceeds 99%
+at 750 and continues its full budget. These controls generalize early,
+so they do not replicate the delayed transition of seed 1.
 
 On the freshly trained ordinary GPTMini seed 1, the pinned structural
 signal first appears at update **33,000**, with held-out answer accuracy
@@ -158,7 +163,8 @@ symmetry alone is insufficient. The detector also checks correctness,
 confirmed fit, previous memorization and trends in past observations.
 In the first 5,000 updates of the fresh reference control, held-out
 accuracy is 1.36%, invariant fraction 0.0155 and projected CE 4.99; no
-structural alarm has fired. Its full control budget is still unfinished.
+structural alarm has fired at that snapshot. The final full-budget control
+result above does not prove absence of a transition beyond this budget.
 
 [The compact snapshot](fresh_results.json) names the actual observed
 updates, budgets, causal events, source hashes and internal checkpoints.
@@ -166,9 +172,9 @@ updates, budgets, causal events, source hashes and internal checkpoints.
 and [archived false alarm](archived_loss_baseline.svg) are generated with
 Matplotlib. The internal comparisons are observations, not feature
 ablations or evidence that those particular modules cause grokking.
-Complete negative-control and fresh seed results remain pending. All
-four budgets remain 150,000 updates; seed controls are queued after the
-checkpoint-preserving repeat, and the CPU reference control trains concurrently.
+Seed 3's final budget remains pending. All four budgets remain 150,000
+updates. The additional answer/EOS gradient decomposition and its pinned
+checkpoint results are in [grokking_internals](../grokking_internals/README.md).
 
 From `python/`, use `uv run --locked python
 ../experiments/grokking_progress/summarize.py` to refresh the snapshot and

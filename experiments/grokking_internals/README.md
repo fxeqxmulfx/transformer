@@ -15,13 +15,12 @@ on CPU copies of saved weights. Intermediate weights are retained by
 `archive.py`, which also watches the original study's controls. No probe
 changes a training model, its optimizer, sampler or random state.
 
-The repeat is active on the GPU, following the completed primary and
-preceding the queued seed controls. The CPU reference control continues.
-All declared training budgets remain unchanged. Seed 2 briefly started
-while the queue was reordered; it was interrupted before its first
-checkpoint. Its initial records are preserved under
-`runs/gptmini-seed2/interrupted_before_first_checkpoint/` in the original
-study. The queued ordinary run will restart from its same initialization.
+The primary, repeat, seed 2 and reference control have completed their
+full budgets. The repeat matches all 601 canonical observations of the
+primary exactly. Seed 3 continues its full budget on the GPU. Seed 2's
+brief earlier interruption before its first checkpoint remains documented
+under `runs/gptmini-seed2/interrupted_before_first_checkpoint/`; the complete
+run restarted from its same initialization. All budgets remain unchanged.
 
 ## Protocol
 
@@ -95,10 +94,13 @@ to removing that head; it does not establish the head's complete algorithm
 or show when it first became necessary. The repeated checkpoints supply
 the timing study.
 
-The reference control still has roughly 1–2% held-out answer accuracy and
-its frozen probe remains near chance at available checkpoints. Its full
-budget, the repeat's remaining updates and the queued seed controls are
-not replaced by partial-budget conclusions.
+The reference control completes 150,000 updates with 1.503% held-out answer
+accuracy and a frozen probe near chance. Seed 2 completes 150,000 updates
+with 100% accuracy and first exceeds 99% at 1,250 updates. Seed 3 first
+exceeds 99% at 750 updates and continues training. These two initializations
+are early-generalizing controls, not replications of seed 1's long plateau.
+Seed 2 temporarily loses accuracy at 35,000 and later recovers; that event
+is not its first acquisition of a generalizing solution.
 
 Sixteen focused tests pass on CPU and CUDA, including equality of actual
 AdamW parameters, optimizer state, existing gradients and RNG through the
@@ -106,6 +108,50 @@ next update, intervention/capture cleanup after failures, a training-only
 memorizer, fixed-probe held-out-label independence, exact known spectra
 and confidence-only counterexamples. The complete `./make.py test` suite
 passes: **249 tests in 1,181.248 seconds**, including available CUDA tests.
+
+## Answer versus shared EOS gradients
+
+`compare_objectives.py` adds offline observations on pinned available
+checkpoints of the repeat, both seed controls and the reference. It leaves
+the six-measurement worker and all training source unchanged. Each sampled
+batch supplies three gradients from the same training forward: answer CE,
+EOS CE, and the actual mean CE. The EOS position sees the supplied answer,
+as it does during training. Batches and unique parameters, including tied
+embedding/readout weights, match the existing gradient protocol.
+
+The reader verifies `g_full = (g_answer + g_EOS) / 2` numerically, retains
+the signed cross term in squared norms, and decomposes the train/held-out
+mean-gradient dot product into four component terms. Those terms are not
+nonnegative fractions; cancellation and cross-component alignment matter.
+
+| Initialized model | Full train/held-out cosine | Answer cosine | EOS cosine | EOS–EOS contribution to full cosine |
+| --- | ---: | ---: | ---: | ---: |
+| GPTMini seed 1 | 0.9524 | 0.3154 | 0.9807 | 0.9297 |
+| GPTMini seed 2 | 0.9581 | 0.2818 | 0.9781 | 0.9338 |
+| GPTMini seed 3 | 0.9615 | 0.3567 | 0.9819 | 0.9712 |
+| Reference control | 0.9886 | 0.7723 | 0.9954 | 0.9767 |
+
+Shared EOS supervision supplies most of the full cosine's numerator at
+initialization. It does not explain every early agreement: seed 1 at
+1,000 updates has answer-only cosine 0.8567 while EOS contributes less
+than 0.000001 to the full cosine. At the actual 30,000–35,000 transition,
+answer-only cosine decreases from 0.0469 to 0.0336. Thus removing EOS does
+not turn this measurement into a standalone detector.
+
+[The component results](objective_component_results.json) retain 22
+observations with checkpoint, source and batch hashes. Missing intermediate
+reference weights are explicit; its first retained noninitial snapshot is
+45,000. Seed 3's final weights are still pending in this snapshot. Maximum
+relative gradient-reconstruction error for all parameters is below
+`5e-7`. Initialized-model records are distinguished from training weights.
+
+Seven new tests cover opposing answers aligned by a shared signal, signed
+cancellation, cross-component dot terms, the actual supervision mask,
+unused/tied parameters, failure cleanup and unchanged next AdamW updates
+on CPU/CUDA. The full suite passes **256 tests in 942.386 seconds**.
+Reproduce from `python/` with `uv run --locked python
+../experiments/grokking_internals/compare_objectives.py`; rerunning fills
+newly available pinned snapshots without changing the recipe.
 
 ## Artifacts and thermodynamic interpretation
 
