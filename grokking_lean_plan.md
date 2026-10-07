@@ -21,7 +21,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | --- | --- | --- | --- |
 | Operational delayed generalization | Define train fit, a sustained held-out plateau, later generalization, and finite-budget censoring without future information entering a detector | Power et al., arXiv:2201.02177; pinned causal histories | Definition/proof work next |
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
-| Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; forty-four effective-model laws/counterexamples, including relative-mode decay and nonvanishing from initial ground data |
+| Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
 | Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; circuit-efficiency literature to investigate | Research pending |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Six measurements implemented and checked; 249 Python tests passed |
 | Gradient coherence and implicit bias | State what batch gradient agreement can and cannot imply; distinguish loss descent, task structure and optimizer-specific bias | Fixed-batch gradients; ordinary AdamW | High agreement at initialization rejects a standalone signal |
@@ -116,8 +116,22 @@ premise, while the nonzero representation domain and classical-flow
 existence remain explicit. These modules add twelve proved theorems and
 no sorry, bringing the grokking formalization to 69 theorems.
 
-Next derive nonzero-domain preservation from initial data and verify which
-Euclidean-flow conservation properties fail under adaptive AdamW updates.
+`Section3_InitialDomain` proves that a differentiable path obeying the
+quotient-gradient equation only off the origin has constant squared norm
+everywhere. At the origin the squared-norm derivative is zero directly;
+elsewhere the actual radial-gradient identity applies. Nonzero initial norm
+therefore excludes the origin without an all-time domain hypothesis.
+`Section3_InitialModes` then derives ground nonvanishing and exact relative
+mode decay from initial ground data alone, bounds the normalized loss by
+`2 * initial_relative_mode^2 * exp(-24 * t / initial_norm)`, and proves
+convergence to zero effective loss. Existence of a global differentiable
+ODE path remains an input. A classifier, discrete optimizer and arbitrary
+dataset are not identified with this one-parallelogram model. These modules
+add thirteen proved theorems and no sorry, bringing the total to 82.
+
+Next verify which Euclidean-flow conservation properties fail under
+adaptive AdamW updates, and separate shared EOS supervision from answer
+gradients in the actual checkpoint measurements.
 Then formalize operational delay/causal detectors and geometry metrics. Preserve
 the distinction between an inverse-rate characteristic time and the time
 to cross a task-dependent generalization threshold. Extend phase-transition
