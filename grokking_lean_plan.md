@@ -23,13 +23,14 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
 | Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; circuit-efficiency literature to investigate | Research pending |
+| Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Research pending; derive a coupled-component objective and its actual derivatives before transferring it to attention or interpreting an instability as a thermodynamic transition |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Fifty-five proved mean, energy, margin, cleanup and integer-encoding laws/counterexamples; exact certificates measured on all 238 preserved snapshots; 266 Python tests passed |
 | Division-task symmetry | Derive the diagnostic cells from the actual numeric task rather than assuming their labels or orbit interpretation | Power et al., section 3.1; author-code corpus and GrokkingObserver at 43d4d66 | Nineteen proved generator, valid-domain, orbit-equivalence, disjointness and finite-cardinality laws/counterexamples; token/Python implementation bridges remain open |
 | Gradient coherence and implicit bias | State what batch gradient agreement can and cannot imply; distinguish loss descent, task structure and optimizer-specific bias | Fixed-batch gradients; ordinary AdamW | Eighteen proved actual-CE derivative/decomposition/counterexample theorems; shared targets can yield arbitrarily high full alignment despite opposed answers |
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Analogy only for current finite GPTMini; finite-size scaling not established |
 | Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Observed-logit integer certificate bridge and eight conditional native first-step gradient-error bounds/counterexamples proved; actual floating-point forward, autograd error generation and softmax collapse remain open |
-| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | Thirty-eight native first-step laws/counterexamples, including state-dependent descent, its exact centered-family threshold, centered overshoot at experimental hyperparameters and the absence of a uniform rate; repeated-step rule convergence remains unproved |
+| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | Sixty native-update laws/counterexamples: state-dependent first-step descent, finite overshoot, conditional gradient-error bounds, second-step alignment and actual reachable momentum ascent; repeated-step rule convergence remains unproved |
 
 ## Cycle
 
@@ -336,15 +337,43 @@ No theorem verifies that PyTorch generated the supplied error or bounds
 its full gradient. These eight proved theorems add no sorry, bringing
 the total to **247**.
 
+`AdamW.SecondStep` derives the native bias-corrected direction from the
+previous and current gradients, starting from zero buffers. Differentiating
+the actual finite effective-loss update gives minus its current
+gradient/direction alignment. Positive alignment suffices for local
+decrease, but no weighted gradient-square identity supplies its sign
+after momentum accumulates. The current representation and prior gradient
+remain inputs to this conditional formula; arbitrary states are not
+asserted reachable.
+
+`MomentumCounterexample` closes that reachability issue for a separate
+strictly convex scalar quadratic with its actual derivative. Starting at
+`0.00075` with zero buffers and all experimental optimizer parameters,
+the actual first point is `-750195003 / 3000040000000` and its loss is
+strictly lower. The retained moment gives a positive second direction
+while the true current gradient is negative. Including decay, the full
+second-update loss has a strictly positive rate derivative at zero and
+increases for every positive second rate. The example uses the same
+objective at both steps and no artificial moment input. It refutes
+unconditional repeated-step descent, not grokking or convergence of
+GPTMini. These fourteen proved theorems add no sorry, bringing the total
+to **261**. A native CPU float64 two-step sanity check also gives loss
+`2.8125e-7 -> 3.12654e-8 -> 2.12373e-7` at the rate `0.001`.
+
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
 properties survive the native adaptive first update even though the
 Euclidean norm conservation law does not. Keep the now-derived
 state-dependent finite-step interval; do not replace it by a universal
-prescribed rate. Next test which first-step statements fail once the
-moment buffers contain an actual reachable history. Extend the now-derived
+prescribed rate. The reachable momentum counterexample now identifies
+the missing direction-alignment condition; next read actual archived
+moment buffers and distinguish current full-gradient alignment from
+the stochastic next minibatch. Extend the now-derived
 error certificate to nonzero gradients and actual numerical kernels only
-with verified premises. Keep those claims distinct
+with verified premises. Continue rule/memorization competition and
+coupled-component formation, plus control-parameter/spectral-gap
+formulations rather than treating these
+optimizer obstructions as a complete grokking mechanism. Keep those claims distinct
 from multi-step momentum dynamics and from the actual GPTMini loss. Preserve
 the distinction between an inverse-rate characteristic time and the time
 to cross a task-dependent generalization threshold. Extend phase-transition
