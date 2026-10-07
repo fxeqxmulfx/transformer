@@ -153,6 +153,90 @@ Reproduce from `python/` with `uv run --locked python
 ../experiments/grokking_internals/compare_objectives.py`; rerunning fills
 newly available pinned snapshots without changing the recipe.
 
+## Exact certificates for current answers
+
+`compare_geometry.py` evaluates the Lean cleanup criterion on the same
+23 pinned checkpoints. `compare_geometry_all.py` reads all **238**
+preserved snapshots: 151 from the repeat, 2 from the original, 31 from each
+of seeds 2 and 3, and 23 from the reference. These are observations of the
+completed 150,000-update runs; no training budget or optimizer changes.
+The pinned reader and the full reader agree exactly on every shared
+measurement and checkpoint hash. Missing reference weights before 45,000
+remain absent, apart from its initialization.
+
+The reference is the actual held-out cell mean of raw logits, with class
+bias retained. Align each observed row to the reference's row mean; this
+changes no class ordering. For the correct reference margin `m > 0` and
+that row's residual squared energy `R`, `2 * R < m^2` certifies its strict
+correct answer. The reference is computed from the current outputs; it
+is an offline diagnostic using target labels, not a decoder or supervision
+added to training. All measurements below exclude the zero quotient.
+
+`geometry_certificates.py` represents the finite observed binary logits
+by exact integers with a common denominator. For `n` observations and
+`C` classes, its residual numerator is
+`n*C*x - n*row_sum - C*column_sum + total_sum`. With target column-sum
+gap `g`, the exact test is `g > 0` and
+`2 * sum(residual_numerator^2) < (C*g)^2`. No rounded squared energy
+decides the certificate count. Quantiles, energy summaries and the signed
+margin/error balance still use float64.
+
+Lean's `Geometry.RowAlignment`, `IntegerEncoding` and `IntegerCertificate`
+add eighteen proved identities and sufficient/necessary implications:
+the integer test equals the real cleanup inequality, preserves positive
+scale invariance and certifies the original raw row. The integer encoding
+is an input; Python's float extraction, its program and the transformer's
+floating-point forward execution are not formally verified.
+
+| Seed 1 repeat update | Actual nonzero accuracy | Cell-mean nonzero accuracy | Exact certified fraction |
+| --- | ---: | ---: | ---: |
+| 33,000 | 13.39% | 25.38% | 0.00% |
+| 34,000 | 68.97% | 99.11% | 0.22% |
+| 35,000 | 98.35% | 100.00% | 27.79% |
+| 36,000 | 99.87% | 100.00% | 95.94% |
+| 38,000 | 99.96% | 100.00% | 99.72% |
+| 40,000 | 99.70% | 100.00% | 50.93% |
+| 150,000 | 100.00% | 100.00% | 100.00% |
+
+The first preserved seed 1 cell-mean accuracy above 99% is at 34,000;
+the first certified fraction above 99% is at 38,000. The separate canonical
+evaluation, every 250 updates and including the zero quotient, first
+exceeds 99% at **35,500**. There are no retained weights at 35,500 in this
+reader. The cell projection supports the interpretation that a correct
+functional component precedes stable raw decisions; it does not identify
+an attention/FFN algorithm or prove how AdamW learned that component.
+
+Across 1,159,032 current-input certificate evaluations, **759,256** tests
+certify an answer and **zero** certified answers are incorrect. These are
+applications across snapshots, not distinct examples. There are zero
+exact/float64 predicate disagreements here, with maximum float64 energy
+decomposition error below `1e-9`. Every snapshot meets the two-point
+nonzero-cell coverage and energy protocol. The conservative certificate
+using the global residual sum certifies no answers in any snapshot.
+
+The sufficient certificate is not a monotone onset detector. Seed 1's
+coverage falls at 40,000 while accuracy remains high. Seed 3 finishes
+with 100% accuracy but 83.72% certificate coverage. Seed 2's loss of
+accuracy at 35,000 also changes the cell reference. Seed 1's cell-mean
+accuracy already reaches 59.60% at 1,000 updates, then falls during the
+long plateau; that early rise alone does not predict sustained success.
+The reference ends with 0.49% nonzero
+accuracy and no certified answers; its previously reported 1.503%
+canonical accuracy includes the zero quotient.
+
+Ten new tests check an independent rational oracle, extreme binary
+scales, the strict boundary, wrong symmetric references, class-bias
+restoration, masked locality, sum/mean factors, scale invariance and
+noninterference. The full suite passes **266 tests in 911.148 seconds**.
+[Pinned results](geometry_certificate_results.json),
+[all preserved results](geometry_all_results.json) and
+[the figure](geometry_certificates.svg) retain the protocol and hashes.
+Reproduce from `python/` with `uv run --locked python
+../experiments/grokking_internals/compare_geometry.py`, then
+`uv run --locked python ../experiments/grokking_internals/compare_geometry_all.py`.
+For the figure use `uv run --locked --with matplotlib==3.10.8 python
+../experiments/grokking_internals/plot_geometry.py`.
+
 ## Artifacts and thermodynamic interpretation
 
 `internal_suite_results.json` now includes all five completed run records

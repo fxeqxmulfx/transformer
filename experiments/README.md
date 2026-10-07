@@ -19,7 +19,7 @@ it, which git ignores.
 | [`convex_binding`](convex_binding) | 18 | Does a factorized neighboring-token key encoder remove recall's binding obstruction while retaining convex atomic training and free original values? |
 | [`mod97_grokking`](mod97_grokking) | 12 | Do the openai/grok transformer and GPTMini generalize x / y mod 97 long after fitting it? |
 | [`grokking_progress`](grokking_progress) | 4 | Does a causal held-out symmetry projection reveal rule formation in ordinary softmax transformers before accuracy rises, while rejecting memorization and immediate learning? |
-| [`grokking_internals`](grokking_internals) | 1 | Which frozen probes, answer/EOS gradient agreements, activation spectra, neuron statistics, ablations and functional changes track ordinary transformer grokking? |
+| [`grokking_internals`](grokking_internals) | 1 | Which frozen probes, answer/EOS gradients, spectra, neuron statistics, ablations, functional changes and exact current-logit certificates track ordinary transformer grokking? |
 | [`mod97_stability`](mod97_stability) | 6 | Once GPTMini generalizes x / y mod 97, does it stay generalized, under AdamW and raw AMSGradW? |
 | [`mod193_stability`](mod193_stability) | 7 | Mod 193 under AdamW: archived normalizer/schedule recipes and fresh sparsemax starting-scale confirmation |
 | [`mqar_sparsemax`](mqar_sparsemax) | 33 | Does sparsemax attention learn associative recall where softmax does not? |

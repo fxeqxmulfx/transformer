@@ -23,11 +23,11 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
 | Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; circuit-efficiency literature to investigate | Research pending |
-| Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Thirty-seven proved mean, energy, margin and cleanup laws/counterexamples; measure the new correctness certificates on preserved weights next; 256 Python tests passed |
+| Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Fifty-five proved mean, energy, margin, cleanup and integer-encoding laws/counterexamples; exact certificates measured on all 238 preserved snapshots; 266 Python tests passed |
 | Gradient coherence and implicit bias | State what batch gradient agreement can and cannot imply; distinguish loss descent, task structure and optimizer-specific bias | Fixed-batch gradients; ordinary AdamW | Eighteen proved actual-CE derivative/decomposition/counterexample theorems; shared targets can yield arbitrarily high full alignment despite opposed answers |
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Analogy only for current finite GPTMini; finite-size scaling not established |
-| Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Research pending; optimizer remains unchanged |
+| Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Observed-logit integer certificate bridge proved; actual floating-point forward, softmax collapse and optimizer-precision analysis remain open |
 | Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | Six native first-step laws/counterexamples prove that Euclidean norm conservation does not transfer unrestrictedly; convergence to a rule remains unproved |
 
 ## Cycle
@@ -211,10 +211,34 @@ one, yet every prediction is strictly wrong with target gap `-2`.
 It therefore fails the missing positive-margin premise. These eighteen
 theorems add no sorry, bringing the total to 155.
 
-Next measure the new margin/residual certificates on the preserved full-budget
-checkpoints, with their numerical scope stated, and formalize sustained
-operational windows and actual division orbits. Then investigate dynamics
-that select the correct reference rather than assuming a learned margin. Preserve
+`Geometry.RowAlignment` derives the actual error measured after harmless
+row alignment, preserves class bias in the reference, and proves row-shift
+and residual class-bias invariance. `IntegerEncoding` derives the reader's
+integer residual numerator from finite means, including every class and
+observation factor. `IntegerCertificate` proves exact equivalence with
+the real cleanup test and certifies the original observed raw row. The
+integer matrix and positive common scale are inputs; Lean does not yet
+verify Python's float conversion or the transformer forward program.
+These eighteen theorems add no sorry, bringing the total to **173**.
+
+Both read-only readers are complete. All 238 preserved snapshots meet
+the nonzero-cell coverage and energy protocol; 759,256 positive
+certificates across 1,159,032 current-input evaluations include zero
+incorrect answers. The pinned 23-snapshot subset agrees exactly with
+the full reader. No training run or budget changes. Seed 1's cell mean
+first reaches 99% at a retained 34,000 snapshot, before the canonical
+raw 35,500 crossing, while certificate coverage first reaches 99% at
+38,000. Coverage later falls at 40,000 despite high accuracy; seed 3
+finishes at 100% accuracy with 83.72% coverage. The sufficient criterion
+confirms current robustness, not future generalization or monotone progress.
+The conservative global-residual version certifies no current answers.
+See [the detailed scope and figure](experiments/grokking_internals/README.md)
+and [the complete observations](experiments/grokking_internals/geometry_all_results.json).
+Ten new focused tests and the full 266-test Python suite pass.
+
+Next formalize sustained operational windows and actual division orbits,
+then investigate dynamics that select the correct reference rather than
+assuming a learned margin. Preserve
 the distinction between an inverse-rate characteristic time and the time
 to cross a task-dependent generalization threshold. Extend phase-transition
 formulations only with stated control parameters and asymptotic regimes.
