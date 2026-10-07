@@ -14,7 +14,8 @@ The actual quotient-gradient equations imply a scalar linear ODE for this
 ratio, with coefficient `12 / Z₀`. Conserved `Z₀` then gives an exact
 exponential law. These are derived consequences of an explicitly stated
 classical flow on the nonzero domain. The ground component `E₀ - E₂`
-must remain nonzero; proving this from initial data alone is separate work.
+must remain nonzero; `Section3_GroundDynamics` derives this from initial
+data and conserved norm, strengthening the layered result here.
 The stationary nonzero-loss counterexample has zero ground component.
 No transformer/AdamW trajectory is asserted to meet these effective premises.
 -/
