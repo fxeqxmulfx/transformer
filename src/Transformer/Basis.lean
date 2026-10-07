@@ -7,6 +7,7 @@ import Transformer.Basis.Requirements
 import Transformer.Basis.Encoding
 import Transformer.Basis.RecallAnswer
 import Transformer.Basis.RecallParsed
+import Transformer.Basis.RecallTablePositions
 
 /-!
 # Basis on List Int
@@ -25,4 +26,6 @@ Raw recall parser inversion identifies the final adjacent matching write,
 including unrelated later records and hard-mode overwrites.
 The complete parser decomposition also retains all earlier/later table
 and query/filler alphabet checks needed by the actual raw encoder.
+Exact serialization indices prove value/key adjacency and bound every
+matching record index by the parser's selected chronological last write.
 -/
