@@ -583,8 +583,11 @@ cached-prefix composition. MarkovTraining proves the complete observed
 state-path NLL equals its actual path's negative log probability and is
 globally convex in every unrestricted shared transition coordinate. It
 sums affine categorical losses, avoiding a global path-partition
-computation. This variant still needs an exact inference/
-training probability bridge, compact dynamic propagation, full depth/
+computation. MarkovMarginals now proves normalization of every complete
+path distribution and exact endpoint-probability/expectation equality
+with markovRun's actual compact forward recurrence at arbitrary weights.
+Histories exist only in proofs and training targets, not inference memory.
+This variant still needs learned conditional emissions, full depth/
 parity semantic paths and actual residual integration; it is not accepted.
 
 Remaining acceptance tests: prove compact contraction of the latent
@@ -717,3 +720,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Compact joint pointer committed in 87ffa1b. Proved exact compact output means equal the same jointly trained Gibbs distribution's actual value expectation, including normalization, coordinate bounds and shared-parameter inference/training coupling. | Check learned content/binding controls, derive role/chronology semantics and ordered-state head capability, then realize the public residual/integer interface. |
 | 2026-10-07 | 2 | Exact value contraction committed in 5371b5f. Proved content-dependent routing and raw adjacent-value swap controls for the same finite learned Q/K/value table, with strict actual decoded labels and a globally convex unrestricted complete objective. | Extend from two-record control to full raw recall, prove ordered-state head capability and realize genuine residual/tied/integer architecture. |
 | 2026-10-07 | 2 | Raw learned pointer controls committed in aa27386. Proved the actual compact causal state encoder's normalized positive distributions and actual observed-path likelihood's global convexity in the unrestricted shared transition table. | Prove exact complete-path marginal/inference identity, conditional value emissions and full depth/parity paths; full recall and residual/tied/integer integration remain. |
+| 2026-10-07 | 2 | Causal encoder/path training committed in 11899f6. Proved exact normalization and endpoint marginal contraction of the same actual full path model into compact forward state propagation, for every unrestricted initial/transition table. | Jointly learned output emission/objective, raw semantic depth/parity paths, complete recall and actual residual/tied/integer integration remain. |
