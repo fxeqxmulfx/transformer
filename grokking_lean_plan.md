@@ -21,7 +21,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | --- | --- | --- | --- |
 | Operational delayed generalization | Define train fit, a sustained held-out plateau, later generalization, and finite-budget censoring without future information entering a detector | Power et al., arXiv:2201.02177; pinned causal histories | Definition/proof work next |
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
-| Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; sixteen quotient-gradient laws/counterexamples; recover relative-mode dynamics next |
+| Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; thirty-two effective-model laws/counterexamples, including corrected exact relative-mode decay |
 | Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; circuit-efficiency literature to investigate | Research pending |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Six measurements implemented and checked; 249 Python tests passed |
 | Gradient coherence and implicit bias | State what batch gradient agreement can and cannot imply; distinguish loss descent, task structure and optimizer-specific bias | Fixed-batch gradients; ordinary AdamW | High agreement at initialization rejects a standalone signal |
@@ -60,7 +60,9 @@ Frozen probes, spectra, neuron profiles, gradients, head/subspace ablations
 and endpoint logit changes have been measured around the actual
 33,000–36,000 transition. These are associations and named intervention
 effects, not a universal detector. Full control/seed budgets remain active
-or queued. Seed 2 first exceeded 99% held-out accuracy at 1,250 updates,
+or queued. The reference control completed all 150,000 updates with about
+1.50% held-out answer accuracy; absence of a later transition is not proved.
+Seed 2 first exceeded 99% held-out accuracy at 1,250 updates,
 compared with 35,500 for seed 1. This is an early-generalizing comparison,
 not a second delayed-transition replication; its full budget continues.
 
@@ -92,10 +94,22 @@ replacing the quotient gradient by the numerator gradient divided by the
 norm. Constancy of a denominator along a flow does not justify discarding
 its partial derivatives. These modules add sixteen theorems and no sorry.
 
-Next recover the spectral mechanism through relative eigenmodes and explicit
-nonzero ground-mode premises, instead of transferring the source's raw
-linear-flow deduction. Then formalize operational delay/causal detectors and
-geometry metrics before extending the phase-transition formulation. Keep
-the actual-transformer/AdamW transfer open. New papers may introduce open
-theorem statements under AGENTS.md's explicit allowance; existing sorry
-counts must not increase.
+`Section3_ScalarMode` proves scalar-ODE uniqueness, sign and decay,
+threshold behavior, the factor-exp(-1) characteristic time, energy and
+time-shift identities. `Section3_RelativeModes` recovers the spectral
+mechanism from actual quotient partial derivatives: the radial correction
+cancels in `(E0 + E2 - 2 E1) / (E0 - E2)`, giving rate `12 / Z0` and exact
+exponential decay when the ground component stays nonzero. This is a
+one-constraint specialization with constant averaging factors suppressed;
+the coefficient is not claimed for an arbitrary dataset or GPTMini.
+These modules add sixteen theorems and no sorry, bringing the new grokking
+formalization to 57 proved theorems.
+
+Next derive the nonvanishing ground-mode premise from initial data, then
+formalize operational delay/causal detectors and geometry metrics. Preserve
+the distinction between an inverse-rate characteristic time and the time
+to cross a task-dependent generalization threshold. Extend phase-transition
+formulations only with stated control parameters and asymptotic regimes.
+Keep the actual-transformer/AdamW transfer open. New papers may introduce
+open theorem statements under AGENTS.md's explicit allowance; existing
+sorry counts must not increase.
