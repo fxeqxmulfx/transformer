@@ -258,8 +258,14 @@ query/type coordinates and retaining original residuals and zero-matrix
 FFN. Actual headAt accuracy and output error are connected to this real
 block. Complete tied readout and validated integer-parser coupling remain.
 
-Next transport the complete genuine second block's retrieval error to
-strict tied-readout margins and the actual integer decoder, discharge full
+RecallFinalState transports the true complete second-block error into a
+uniform final-residual error at most 1/8. The selected value retains its
+genuine position-dependent prenorm amplitude, proved at least two using
+the one fixed ordinary output gain. The real final query code, constant
+and all type/reserved readout axes are derived directly from the raw
+embedding. No common selected-value scale or desired residual is an input.
+
+Next derive strict tied-readout margins and the actual integer decoder, discharge full
 validated-parser conditions, and construct the depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
@@ -365,3 +371,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Nonrecord exclusion/actual V bounds committed in 377aeaa. Derived a full genuine score-row gap from raw table adjacency and last-write chronology, actual causal-softmax tail and original XSA retrieval error 32*(T-1)*exp(-retainedGap); the real overwrite control strictly prefers its later write. | Choose uniform finite retrieval accuracy, realize actual second W_o/tied readout and discharge raw predicates from complete Basis parsing, then full depth correctness; convex architecture and equal-FLOP comparisons remain queued. |
 | 2026-10-07 | 1 | Full raw routing/retrieval committed in 19545b9. Chose a finite logarithmic shared temperature and proved uniform actual head accuracy, including fixed positive secondScaleLower/16 tolerance and finite output-gain product two. | Realize genuine second W_o/tied readout and discharge raw layout/latest-write conditions from complete Basis parsing, then full depth correctness; convex architecture and equal-FLOP comparisons remain queued. |
 | 2026-10-07 | 1 | Finite uniform retrieval accuracy committed in 94d0b89. Realized the actual unchanged second attention/block with ordinary nonzero W_o, finite shared matching parameters, complete state formula, protected query/type coordinates and true headAt/output-error coupling. | Strict tied-readout margins and actual integer decoder, full validated raw parser discharge and depth correctness; convex architecture and equal-FLOP comparisons remain queued. |
+| 2026-10-07 | 1 | Genuine second block committed in 5e1dc59. Proved full genuine final-state error at most 1/8, selected real value amplitude at least two and faithful final raw query/type/reserved readout channels. | Strict tied readout over all 548 tokens and actual integer decoder, complete validated parser discharge and depth correctness; convex architecture and equal-FLOP comparisons remain queued. |

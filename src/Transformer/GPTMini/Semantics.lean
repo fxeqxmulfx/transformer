@@ -27,6 +27,7 @@ import Transformer.GPTMini.Semantics.RecallRawExcluded
 import Transformer.GPTMini.Semantics.RecallRawRouting
 import Transformer.GPTMini.Semantics.RecallRetrievalAccuracy
 import Transformer.GPTMini.Semantics.RecallRetrievalBlock
+import Transformer.GPTMini.Semantics.RecallFinalState
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -60,12 +61,9 @@ The actual checked List Int function solves every legal parity prefix in
 both modes and freely generates label then EOS in two calls. Complete
 gated recall and ordered-prefix depth encoders remain separate obligations.
 
-An explicit pair of the original 16-dimensional RoPE gives a derived
-positive predecessor score gap across all Basis context lengths. The
-actual finite softmax/XSA approximately copies that neighbor when the
-projected self-value is zero. The compact raw projection below realizes
-its QKV; excluding post-table false writes and selecting the latest
-matching record remain separate recall obligations.
+An explicit original RoPE pair gives a positive predecessor score gap
+across all Basis context lengths. Actual finite softmax/XSA copies that
+neighbor with derived error when its projected self-value is zero.
 
 A compact four-digit code distinguishes all 256 recall symbols with eight
 coordinates. Placed in four actual slow RoPE pairs, it has exact norm two,
@@ -73,9 +71,8 @@ derived QKNorm scores and a content gap of exp(alpha)/50 at context 64.
 Among equal keys its actual rotary score strictly prefers the latest
 visible record. A uniform normalized latest-write margin
 (1-cos(1/100))/4 is derived when raw records are separated by at least
-one position; it is also below the categorical content margin. These
-simultaneous geometric properties still need copied-key robustness and
-complete recall retrieval/readout.
+one position; it is also below the categorical content margin. The raw
+construction below supplies copied-key robustness and actual retrieval.
 
 Simultaneous compact raw key/value codes now occupy disjoint ordinary
 embedding slots, with protected constant/type coordinates. All 548 entries
@@ -180,15 +177,19 @@ requested retrieval tolerance uniformly over the raw recall context.
 Its true gap is log(1+2016/tolerance), evaluated directly in the finite
 softmax tail. A positive tolerance at one sixteenth of the true next RMS
 lower scale is achieved without an assumed leakage bound, and one shared
-output gain has gain*lowerScale=2. Actual second W_o/tied readout and
-full-parser discharge of the raw conditions remain; no floating-point
-or AdamW success is inferred.
+output gain has gain*lowerScale=2. No floating-point or AdamW success is
+inferred; tied readout and full-parser discharge remain.
 
 The genuine second ordinary block now includes the actual matching fused
 matrix, finite shared temperature, nonzero W_o and original zero FFN.
 Its exact full state writes compact retrieval into the raw value interval,
 preserves query/type coordinates and transports actual head accuracy
-through the real merge/output matrix. Tied readout and full parser remain.
+through the real merge/output matrix.
+
+Both real blocks now yield a full final-state error at most one eighth
+from the first state plus the selected raw value's genuine amplitude,
+which is at least two. Query/type/reserved readout axes stay raw. Strict
+tied readout, the integer decoder and full validated parser remain.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
