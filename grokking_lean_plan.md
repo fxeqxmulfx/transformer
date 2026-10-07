@@ -29,7 +29,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Analogy only for current finite GPTMini; finite-size scaling not established |
 | Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Observed-logit integer certificate bridge proved; actual floating-point forward, softmax collapse and optimizer-precision analysis remain open |
-| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | Six native first-step laws/counterexamples prove that Euclidean norm conservation does not transfer unrestrictedly; convergence to a rule remains unproved |
+| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | Nineteen native first-step laws/counterexamples, including actual effective-loss descent on a state-dependent rate interval and the failure of uniform gradient/time rescaling; repeated-step rule convergence remains unproved |
 
 ## Cycle
 
@@ -273,10 +273,31 @@ inverse code, token wrappers and the NumPy split are not verified by
 these field identities. These nineteen proved theorems add no sorry,
 bringing the total to **207**.
 
+`AdamW.LossDirection` differentiates the actual effective quotient along
+the native finite first-update path. Decoupled decay cancels from its
+learning-rate derivative at zero by the true gradient's radial identity;
+bias correction gives minus an explicit weighted gradient-square sum.
+`LossDescent` proves this energy is positive precisely away from stationary
+gradients when epsilon is positive, then derives a genuine positive
+interval of finite learning rates that strictly lower the effective loss.
+The interval depends on the initial representation and hyperparameters;
+the experimental numerical rate is not assumed to lie in it. Scaling
+the gradient by a positive factor changes effective epsilon to epsilon
+divided by that factor. A two-coordinate counterexample refutes absorbing
+this change by one time factor. Thus the source's suppressed averaging
+constants, harmless for its Euclidean time argument, need separate
+attention for AdamW. These thirteen proved theorems add no sorry, bringing
+the total to **220** on 2026-10-08. This still concerns one scalar effective
+constraint, exact reals and zero initial moment buffers, not GPTMini CE,
+floating-point execution or later momentum states.
+
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
 properties survive the native adaptive first update even though the
-Euclidean norm conservation law does not. Keep first-step claims distinct
+Euclidean norm conservation law does not. First derive a finite-step
+threshold and test overshoot on a centered family; do not replace the
+state-dependent descent interval by a universal prescribed rate.
+Keep first-step claims distinct
 from multi-step momentum dynamics and from the actual GPTMini loss. Preserve
 the distinction between an inverse-rate characteristic time and the time
 to cross a task-dependent generalization threshold. Extend phase-transition
