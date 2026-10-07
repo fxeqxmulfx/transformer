@@ -422,6 +422,13 @@ presence; the true signal is zero or at least twice the threshold.
 A simultaneous ordinary real-vector control satisfies every local
 hypothesis. Actual ordered block induction must still establish this
 domain and zero-self condition from the validated raw depth word.
+DepthDetector supplies the complete original ordinary FFN record and
+proves exact zero-or-true-RMS-square output, protected coordinates and
+norm at most 256. The signal gap is required only when the raw type
+matches: wrong types are suppressed using the cap alone. This removes
+an unjustified gap condition on XSA-attenuated wrong-type signals.
+A real active-A state satisfies all local hypotheses simultaneously.
+Full block recurrence must derive these conditions from raw inputs.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -548,3 +555,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Genuine depth RMS/gains committed in 18fff55. Coupled complete original two-head attention, true RMS, real head merge and nonzero W_o; proved exact output signals, zero protected contributions and independent target reads. | Derive quantitative actual signal/state bounds and ordered hidden-state induction, then full depth SolvesTask before convex search and equal-FLOP tests. |
 | 2026-10-07 | 1 | Complete original depth attention committed in e40f61f. Derived actual normalized coordinate bounds, r^3 feature floor on the explicit state domain, true signal range [0,16], whole attention norm at most 32 and first residual bound M+32; proved actual zero-self and visible absence. | Derive occurrence/FFN transitions and close the actual hidden-state induction, then tied readout and depth SolvesTask. |
 | 2026-10-07 | 1 | Genuine attention/residual bounds committed in d327192. Proved true occurrence signal at least 2*threshold, exact positivity iff visible separated feature, and zero-or-gap input for the ordinary FFN, with simultaneous concrete operator witnesses. | Connect these actual head signals to the true FFN transition, derive all representation conditions by ordered layer induction and complete depth SolvesTask. |
+| 2026-10-07 | 1 | Actual signal separation committed in d013328. Proved the complete original six-unit FFN record, exact zero-or-true-RMS-square output, arbitrary protected coordinates and contribution norm at most 256. Corrected the gap condition to matching raw types only; wrong types need the actual cap. | Assemble genuine detector blocks, derive all norm/feature conditions by ordered raw-state induction and complete depth tied readout/SolvesTask. |

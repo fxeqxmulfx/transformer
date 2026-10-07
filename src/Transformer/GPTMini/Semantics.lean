@@ -46,6 +46,7 @@ import Transformer.GPTMini.Semantics.DepthNormalization
 import Transformer.GPTMini.Semantics.DepthAttention
 import Transformer.GPTMini.Semantics.DepthAttentionBounds
 import Transformer.GPTMini.Semantics.DepthSignalPresence
+import Transformer.GPTMini.Semantics.DepthDetector
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -74,8 +75,9 @@ both modes and freely generates label then EOS in two calls.
 
 Three ordinary homogeneous ReLU2 hinges compute a saturated presence
 step and raw-type exclusion. Six original FFN units realize both gates
-simultaneously, preserve unwritten coordinates and retain the true RMS
-quadratic scale. The genuine uniform softmax/XSA head gives exact absence
+simultaneously, preserve unwritten coordinates and retain true RMS square.
+The actual FFN gives binary amplitudes and norm at most 256 on matching-type gaps.
+The genuine uniform softmax/XSA head gives exact absence
 and floor L/128 at zero self-value. Actual two-head attention adds norm at most 32.
 Actual two-head attention, protected channels, RMS bounds and the E_2/E_4
 data recurrence and true separated presence are proved. Full hidden/readout remain.
@@ -90,8 +92,7 @@ derived QKNorm scores and a content gap of exp(alpha)/50 at context 64.
 Among equal keys its actual rotary score strictly prefers the latest
 visible record. A uniform normalized latest-write margin
 (1-cos(1/100))/4 is derived when raw records are separated by at least
-one position; it is also below the categorical content margin. The raw
-construction below supplies copied-key robustness and actual retrieval.
+one position; it is also below the categorical content margin.
 
 Compact raw key/value codes occupy disjoint embedding slots, with protected
 constant/type coordinates. All 548 entries have norm squared six and one
@@ -100,8 +101,7 @@ copy, position and gated-key channels start at zero for true fused QKV.
 
 Actual fused QKV/W_o realize predecessor and marker heads simultaneously,
 retaining raw query/value codes and a derived finite-softmax copy error.
-The actual BOS marker is exactly 1/(i+1), even with future array entries.
-Sixteen original ReLU2 units realize the cutoff and protect raw channels.
+The actual BOS marker is exactly 1/(i+1); sixteen ReLU2 units realize the cutoff and protect raw channels.
 The full first block's gated-key slot is exactly zero on keys/BOS and
 post-table values, excluding false writes after queries. Table values
 retain the genuine compact predecessor copy with its derived positive
