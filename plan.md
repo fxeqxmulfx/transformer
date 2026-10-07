@@ -847,6 +847,17 @@ and latest-overwrite controls without overflow. These are implementation
 checks, not learned success. `experiments/basis_tensor` pins the 18
 original-softmax mode/task/seed references; candidate budgets remain
 unassigned until a covered arithmetic counter measures reference success.
+The arithmetic counter and measured compiled execution are implemented.
+They trace real shapes on independent eager copies, cover forward/loss,
+backward, gradient norm and unchanged fused AdamW, reject unsupported
+operators and record operator/phase coverage. Actual evaluation model calls
+and generation are counted separately. The declared reference convention
+charges scalar transcendental/comparison/selection operations and auxiliary
+integer work; it is not a hardware instruction counter. Complete raw-data
+label construction is tensorized and charged, including regeneration after
+resume. A whole-update ceiling preserves sampling order and reports its
+unspent remainder. Small controls verify unchanged compiled trajectories,
+exact stopping and restored counts; no full reference success is claimed.
 
 Use the existing Basis small/large GPTMini softmax recipes and the actual
 success criterion. Pin source revision, task/mode, splits, seeds, model,

@@ -69,6 +69,23 @@ class Budget(Spec):
 
 
 @dataclass(frozen=True)
+class FlopBudget(Budget):
+    """An exact reference-arithmetic ceiling, plus an update safety limit.
+
+    Source: plan.md stage 3 and infrastructure.arithmetic's versioned rules.
+    Used with Measured execution. FLOPs follow aten-reference-arithmetic-v1;
+    auxiliary integer work is charged one unit per scalar operation.
+    An update runs only if its entire measured cost fits the remaining
+    ceiling. Record the unspent remainder; never pretend padding is learning.
+    """
+    flops: int
+
+    def check(self):
+        super().check()
+        require(type(self.flops) is int and self.flops > 0, "FLOP ceiling must be a positive integer")
+
+
+@dataclass(frozen=True)
 class Seeds(Spec):
     """Model initialization, data split, and batch order.
 
@@ -190,3 +207,16 @@ class Compiled(Execution):
 
     def check(self):
         require(self.threads >= 1, "Thread count must be positive")
+
+
+@dataclass(frozen=True)
+class Measured(Compiled):
+    """Compiled training with audited ATen reference arithmetic by real shape.
+
+    Source: plan.md stage 3. Same updates, evaluation and ordinary fused
+    AdamW as Compiled. An independent eager copy measures forward/loss,
+    backward, gradient norm and AdamW for every recurring static batch size.
+    Inference calls are charged at their actual shapes, including generation.
+    Counts describe reference arithmetic, not hardware instructions; setup,
+    compilation and measurement probes are excluded from learning compute.
+    """

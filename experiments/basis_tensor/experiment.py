@@ -19,7 +19,7 @@ MODELS = {"easy": gptmini(64, 2), "hard": gptmini(128, 6)}
 
 experiments = {
     f"softmax-{mode}-{task}-seed{seed}": swap(
-        swap(run, "execution.threads", THREADS.get((mode, task), 1)),
+        swap(run, "execution", Measured(device="cpu", threads=THREADS.get((mode, task), 1))),
         "checkpoint", Checkpoint(every=run.evaluate.every))
     for mode, model in MODELS.items() for seed in (0, 1, 2)
     for task, run in basis(model, mode, seed).items()

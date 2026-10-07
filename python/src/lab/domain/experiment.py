@@ -19,6 +19,7 @@ from .stopping import Solved, Stopping
 from .synthetic import Synthetic
 from .tensor import TensorStack, check_tensor_benchmark
 from .training import AttentionDiagnostics, Budget, Checkpoint, CudaGraph, Diagnostics, Eager, Evaluate, Execution, Schedule, Seeds
+from .training import FlopBudget, Measured
 
 LABEL = re.compile(r"[a-z0-9][a-z0-9._-]*")
 
@@ -54,6 +55,13 @@ class Experiment(Spec):
                 "torch cannot capture an eigendecomposition: run Dash with EVD under Eager()")
         require(not any(isinstance(block, Clipped) for path, block in walk(self.optimizer) if path),
                 "Clipping acts on the gradient before the whole rule: write Clipped outermost")
+        if isinstance(self.execution, Measured):
+            require(isinstance(self.optimizer, AdamW), "Measured execution covers ordinary AdamW")
+            require(isinstance(self.benchmark, Synthetic), "Measured execution currently covers synthetic benchmarks")
+            require(not isinstance(self.diagnostics, AttentionDiagnostics) and not self.diagnostics.every
+                    and not self.diagnostics.neighbors, "Measured runs keep extra arithmetic diagnostics disabled")
+        if isinstance(self.budget, FlopBudget):
+            require(isinstance(self.execution, Measured), "FlopBudget needs Measured execution")
         population = any(isinstance(block, ANSR) for _, block in walk(self.optimizer))
         if population:
             require(isinstance(self.optimizer, ANSR), "ANSR does not take gradient optimizer stages")

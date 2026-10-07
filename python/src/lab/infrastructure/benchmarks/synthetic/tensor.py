@@ -10,6 +10,7 @@ import torch
 
 from ....domain.generative import Parity
 from ....domain.tasks import AlternatingBlocks
+from ...arithmetic import Arithmetic
 from .training import SyntheticTask
 from .vocabulary import A, B, BOS, EVEN, IGNORE, NEUTRAL, ODD, ONE, SEP, ZERO
 
@@ -42,12 +43,29 @@ def parity_step(token, state):
     return 5
 
 
+def reference_table(task, vocab, device):
+    """Tensorized raw reference table; every arithmetic operation is traceable."""
+    token = torch.arange(vocab, device=device)[:, None]
+    state = torch.arange(6, device=device)[None, :]
+    if isinstance(task, AlternatingBlocks):
+        on_a = torch.where(state == 0, 1, torch.where(state == 2, 3, torch.where(state == 4, 5, state)))
+        on_b = torch.where(state == 0, 5, torch.where(state == 1, 2, torch.where(state == 3, 4, state)))
+        table = torch.where(token == A, on_a, torch.where(token == B, on_b,
+                            torch.where(token == NEUTRAL, state, 5)))
+    else:
+        valid = state <= 1
+        on_zero, on_one = torch.where(valid, state, 5), torch.where(valid, 1 - state, 5)
+        on_sep = torch.where(valid, state + 2, 5)
+        answered = ((token == EVEN) & (state == 2)) | ((token == ODD) & (state == 3))
+        table = torch.where(token == ZERO, on_zero, torch.where(token == ONE, on_one,
+                            torch.where(token == SEP, on_sep, torch.where(answered, 4, 5))))
+    return torch.where(token == BOS, 0, table)
+
+
 def complete_labels(tokens, targets, task, vocab):
     """Actual state histories or latest physical routes from unchanged rows."""
     if isinstance(task, (AlternatingBlocks, Parity)):
-        step = depth_step if isinstance(task, AlternatingBlocks) else parity_step
-        table = torch.tensor([[step(token, state) for state in range(6)] for token in range(vocab)],
-                             device=tokens.device)
+        table = reference_table(task, vocab, tokens.device)
         state = torch.zeros(len(tokens), dtype=torch.long, device=tokens.device)
         previous, history = [], []
         for token in tokens.unbind(1):
@@ -69,7 +87,10 @@ class TensorBasisTask(SyntheticTask):
         super().__init__(spec, data_seed, device)
         self.branch = 0 if isinstance(spec.task, (AlternatingBlocks, Parity)) else 1
         rows = self.splits["train"]
-        self.observed = complete_labels(rows.rows[:, 0], rows.rows[:, 1], spec.task, self.vocab)
+        counter = Arithmetic()
+        with counter:
+            self.observed = complete_labels(rows.rows[:, 0], rows.rows[:, 1], spec.task, self.vocab)
+        self.label_arithmetic = counter.report()
 
     def inputs(self, indices, static=False):
         batch = super().inputs(indices, static)
