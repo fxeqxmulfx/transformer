@@ -43,6 +43,7 @@ import Transformer.GPTMini.Semantics.DepthRecurrence
 import Transformer.GPTMini.Semantics.DepthEmbedding
 import Transformer.GPTMini.Semantics.DepthQKV
 import Transformer.GPTMini.Semantics.DepthNormalization
+import Transformer.GPTMini.Semantics.DepthAttention
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -74,8 +75,8 @@ step and raw-type exclusion. Six original FFN units realize both gates
 simultaneously, preserve unwritten coordinates and retain the true RMS
 quadratic scale. The genuine uniform softmax/XSA head gives exact absence
 and floor L/128 at zero self-value; collinear XSA stays nonnegative and capped.
-The E_2/E_4 recurrence, embeddings, fused QKV and bounded genuine RMS
-scales are proved at both widths. Full hidden/readout remain.
+Actual two-head attention, protected channels, RMS bounds and the E_2/E_4
+data recurrence are proved. Full hidden-state induction/readout remain.
 
 An explicit original RoPE pair gives a positive predecessor score gap
 across all Basis context lengths. Actual finite softmax/XSA copies that
@@ -179,8 +180,7 @@ through the real merge/output matrix.
 
 Both real blocks now yield a full final-state error at most one eighth
 from the first state plus the selected raw value's genuine amplitude,
-which is at least two. Query/type/reserved readout axes stay raw. Strict
-tied readout, the integer decoder and full validated parser remain.
+which is at least two. Query/type/reserved readout axes stay raw.
 Actual tied key scores are at most six, reserved scores exactly one,
 and selected-value reference scores use compact categorical products
 four versus at most three. Every raw embedding bounds score perturbations
