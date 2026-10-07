@@ -661,6 +661,14 @@ idempotence, saturated alternating counts, wrong-start rejection and
 neutral/BOS serialization derive the exact label on every valid raw
 prefix for E2/E4. This is independently proved data/reference semantics;
 the actual learned finite shared depth head must still be connected.
+SharedDepth now connects one finite shared raw vocabulary/head weight
+table per mode to actual stochastic inference and checked greedy decoding.
+The genuine standalone head solves every full raw E2/E4 prefix through
+List Int -> List Int, including order-sensitive and conflicting-mode
+controls. Its complete raw-data state/channel targets match the independent
+Basis answer, and their likelihood is convex in the entire free shared
+domain. Depth and parity head capability is complete; full recall and
+realized combined tensor-stack/tied readout are still required.
 
 Remaining acceptance tests: prove compact contraction of the latent
 partition, learned matching and joint value expressivity, complete Basis
@@ -805,3 +813,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Whole-vocabulary compact decoder committed in d84bd84. Constructed actual finite shared embedding/head weights, evaluated every genuine transition/initial/emission lookup and connected the real shared loss/output score to the same learned finite-row model and strict margin. | Prove the actual shared head's raw integer parity continuation and two-call generation; full depth/recall, mixture and residual/tied block integration remain. |
 | 2026-10-07 | 2 | Actual finite shared causal weights committed in d72d3b3. Proved the genuine standalone stochastic state/value head solves every raw parity prefix in both modes through the checked integer-list/greedy callback, including two-call label/EOS generation; actual data targets agree and their full likelihood is convex in the free shared domain. | Prove independent raw depth reference semantics and full learned depth/recall capability; two-head mixing and true prenorm/residual/tied tensor-stack realization remain before stage 3. |
 | 2026-10-07 | 2 | Actual raw learned parity head committed in b91036f. Proved the independent raw six-state depth data scan exactly matches Basis E2/E4 via genuine compression/chain/subsequence invariants, physical neutral/BOS transitions and saturated run counts. | Realize full finite shared learned depth capability and data targets; complete recall, two-head mixing and actual tensor-stack/tied/integer integration remain before stage 3. |
+| 2026-10-07 | 2 | Independent full raw depth semantics committed in 6c91a98. Proved the genuine finite shared learned head solves all raw depth prefixes in both modes, computes order/mode controls, and has correct raw-data complete labels with a globally convex actual shared likelihood. | Extend the jointly learned pointer to full raw recall/latest-write/filler exclusion, prove finite two-head mixing and actual prenorm/residual/tied tensor-stack realization before stage 3. |
