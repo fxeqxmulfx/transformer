@@ -1,11 +1,10 @@
 /-
 # Metastability — the open problems of 2410.06833v1
 
-Three questions the survey poses and leaves open:
+Two remaining questions the survey poses and leaves open. The energy-level
+question of §4 is proved for a nonempty window near consensus at sufficiently
+large `β` in `Section4_EnergyWindow`, imported here.
 
-* the `problem` of `sec: energy.levels` — is an assumption on the *energy
-  level* of the initial configuration, relative to the energy of a uniform
-  sample, enough for metastability?
 * `Problem conj: saddle-to-saddle` — does the energy of `SA` follow a
   staircase profile along some time reparametrization?
 * the `problem` of the reparametrization candidate — does it hold for the
@@ -18,17 +17,10 @@ on them, which is what the `sorry` says.
 What stays a `Prop`-valued definition is what is a genuine predicate of its
 arguments — `IsMetastable` (`Metastability.IsMetastable`), `HasStaircaseProfile`,
 `IsGradientReparam`, `IsEnergyGradNorm` — and those are the vocabulary the
-three statements are written in, not statements themselves.
+statements are written in, not statements themselves.
 -/
 
-import Transformer.Basic
-import Transformer.Metastability.Basic
-import Transformer.Metastability.EnergyScale
-import Transformer.Metastability.MainTheorem
-import Transformer.Metastability.InitialUniform
-import Transformer.Metastability.IsMetastable
-import Transformer.Metastability.EnergyLevel
-import Transformer.Metastability.DirectProofWitness
+import Transformer.Metastability.Section4_EnergyWindow
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 open scoped BigOperators
@@ -38,67 +30,6 @@ namespace Transformer
 namespace Metastability
 
 variable (d n : ℕ)
-
-/-- **Problem (sec: energy.levels).** *Metastability from an energy level.*
-
-Fix `d, n ≥ 2`, and let `U_1,…,U_n` be i.i.d. uniform on `𝕊^{d-1}`.  Can one
-find `1 > c₂ > c₁ > 0`, depending on `β`, such that every
-`(x_1,…,x_n) ∈ (𝕊^{d-1})^n` with
-
-  `c₂ ≥ 𝖤_β(x_1,…,x_n) - 𝔼[𝖤_β(U_1,…,U_n)] ≥ c₁`
-
-is metastable in the sense of `thm: metastability` (`IsMetastable`)?
-
-The uniform measure is not constructed in this development: it is pinned down
-by `Metastability.IsUniformOn` — a rotation-invariant probability measure, of
-which there is exactly one — and `𝔼[𝖤_β(U)]` is the integral of `𝖤_β` against
-the `n`-fold product `iidSphere d n ν`, exactly as in `InitialUniform`.
-
-Not proved here; the survey leaves it open.
-
-**What the source says and what is changed here.**
-
-* *`IsMetastable`.*  The source asks for "metastability, as stated in
-  `thm: metastability`".  The earlier predicate kept only the conclusion of the
-  theorem and admitted `k = 0` caps, for which it held for every configuration;
-  it is now the theorem with its hypotheses (a nonempty cover of the initial
-  configuration by caps, `γ(β) > 0`, the bounds of `eq: lambda.3`) and its
-  conclusion, see `IsMetastable`.
-* *The window is nonempty.*  The source does not say how large the window
-  `[c₁, c₂]` is, and read literally the question is answered by an empty
-  window: `printed_energy_level_trivial` gives, for `β > 1/2`, a `c₁ ≥ 1/(2β)`
-  with no configuration in it.  A nonempty window is required here.  That does
-  not make the window large: the remark of the source that "any configuration
-  which breaks the symmetry of uniformly distributed random points will lead to
-  metastability" would ask for more, and the source gives no size to encode.
-  A window of configurations with strongly clustered tokens is not excluded by
-  the statement.
-* *Large `β`.*  The source fixes `β > 0`.  `thm: metastability` needs `β > 1`,
-  and `γ(β) > 0` forces `β > (1/2) log(32 n²)` (as `α ≥ -1` and `ε < 1/16`),
-  so below that no configuration is metastable in the sense of `IsMetastable`
-  and no nonempty window can work.  The statement is for `β ≥ β₀`, some `β₀`;
-  the regime of the source is the low temperature limit `β → +∞`.
-
-Source: arXiv:2410.06833v1, §4, `sec: energy.levels`. -/
-theorem energy_level_metastability (hd : 2 ≤ d) (hn : 2 ≤ n) :
-    ∀ ν : Measure (SSphere d), IsUniformOn d ν →
-      ∃ β₀ : ℝ, ∀ β : ℝ, β₀ ≤ β →
-        ∃ c₁ c₂ : ℝ, 0 < c₁ ∧ c₁ < c₂ ∧ c₂ < 1 ∧
-          (∃ X₀ : SphereTuple d n,
-            c₁ ≤ Eβ d n β X₀ - ∫ U, Eβ d n β U ∂(iidSphere d n ν) ∧
-            Eβ d n β X₀ - ∫ U, Eβ d n β U ∂(iidSphere d n ν) ≤ c₂) ∧
-          ∀ X₀ : SphereTuple d n,
-            c₁ ≤ Eβ d n β X₀ - ∫ U, Eβ d n β U ∂(iidSphere d n ν) →
-            Eβ d n β X₀ - ∫ U, Eβ d n β U ∂(iidSphere d n ν) ≤ c₂ →
-              IsMetastable d n β X₀ := by
-  sorry
-
-/-- The hypotheses of `energy_level_metastability` are satisfiable: `d = n = 2`,
-and `IsMetastable` is satisfiable there (`isMetastable_basePoint`).  The
-uniformity of `ν` stays inside the statement — no rotation-invariant measure on
-`𝕊^{d-1}` is constructed here, so there is none to exhibit. -/
-example : 2 ≤ 2 ∧ 2 ≤ 2 ∧ IsMetastable 2 2 10000 (fun _ : Idx 2 => basePoint 1) :=
-  ⟨le_rfl, le_rfl, isMetastable_basePoint 1⟩
 
 /-- The **staircase profile** of `conj: saddle-to-saddle`.
 
