@@ -37,6 +37,7 @@ import Transformer.GPTMini.Semantics.RecallParserLatest
 import Transformer.GPTMini.Semantics.RecallCorrectness
 import Transformer.GPTMini.Semantics.DepthStep
 import Transformer.GPTMini.Semantics.DepthPresence
+import Transformer.GPTMini.Semantics.DepthMatrices
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -64,13 +65,12 @@ Uniform finite weights give strict label/EOS margins through final RMSNorm.
 The actual checked List Int function solves every legal parity prefix in
 both modes and freely generates label then EOS in two calls.
 
-Three ordinary homogeneous ReLU2 hinges now realize a continuous saturated
-presence step. A linear raw-type offset excludes the wrong current letter;
-separated genuine presence gives exactly zero or a common positive plateau,
-including through the actual positive position-dependent RMS multiplier.
-Simultaneous matrices and the complete depth recurrence remain to construct.
-The genuine uniform softmax/XSA head now retains variable amplitudes at
-zero self-value, deriving exact absence, a cap and a presence floor L/128.
+Three ordinary homogeneous ReLU2 hinges compute a saturated presence
+step and raw-type exclusion. Six original FFN units realize both gates
+simultaneously, preserve unwritten coordinates and retain the true RMS
+quadratic scale. The genuine uniform softmax/XSA head gives exact absence
+and a presence floor L/128 for variable amplitudes at zero self-value.
+The complete raw depth recurrence and readout remain.
 
 An explicit original RoPE pair gives a positive predecessor score gap
 across all Basis context lengths. Actual finite softmax/XSA copies that
