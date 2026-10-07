@@ -10,6 +10,7 @@ import Transformer.GPTMini.Convex.Structured.MarkovMarginals
 import Transformer.GPTMini.Convex.Structured.MarkovEmissions
 import Transformer.GPTMini.Convex.Structured.MarkovObjective
 import Transformer.GPTMini.Convex.Structured.SharedSlots
+import Transformer.GPTMini.Convex.Structured.SharedPointer
 
 /-!
 # Structured alternatives guided by raw Basis semantics

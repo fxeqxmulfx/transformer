@@ -602,6 +602,12 @@ groups and 36 independent state-transition fields in the same 52 slots.
 Its full parameter domain has exactly 52*V+C+129 free real coordinates;
 there are six free initial and 120 free conditional value logits.
 The state-head objective is proved convex on that whole actual space.
+SharedPointer now realizes actual Q/K/value lookups and learned positional
+potentials/chronology as one true linear complete energy on that same
+parameter domain. Its compact partition, complete NLL and inference
+probability are exactly the affine Gibbs model, and joint training is
+globally convex with all these parameter groups free. No record mask
+or semantic role input is part of inference; full recall capacity remains.
 This variant still needs full raw depth/
 parity semantic paths and actual residual integration; it is not accepted.
 
@@ -739,3 +745,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Exact causal path contraction committed in f1f6c9c. Added free conditional output-channel potentials and proved their compact inference means equal the actual complete normalized state/path/channel model's value expectation at arbitrary joint parameters. | Full initial/transition/emission training convexity, raw depth/parity capability, complete recall and true residual/tied/integer integration remain. |
 | 2026-10-07 | 2 | Exact conditional emissions committed in 33e99c8. Proved the actual compact complete NLL equals that same inference model's joint negative log probability and is globally convex jointly in every initial/transition/value weight, including shared minibatches. | Realize shared compact raw parameter slots and full raw depth/parity capability; full recall and true residual/tied/integer integration remain. |
 | 2026-10-07 | 2 | Joint state/value objective committed in 95456c1. Realized actual shared raw slot lookups, disjoint pointer groups, independent 36 transition fields and the convex state objective on a 52*V+C+129-parameter domain; embedding slot counts include a learned position axis. | Full raw depth/parity capability, pointer learned-position/chronology integration and complete recall, then actual prenorm/residual/tied/integer integration remain. |
+| 2026-10-07 | 2 | Shared compact coordinates committed in bdbea00. Realized jointly free raw Q/K/value/position/chronology pointer energies, exact compact partition and inference/training identity, and global complete-likelihood convexity on the same actual parameter domain. | Full raw recall/latest-write/filler exclusion, depth/parity capability, two-head mixture and actual prenorm/residual/tied/integer integration remain. |
