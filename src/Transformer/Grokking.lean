@@ -11,4 +11,5 @@ measurements. Current scope: finite-class confidence and decisions, and
 an explicitly optimized convex perceptron specialization, and checked
 quotient-gradient laws of an effective representation model, and an
 explicit counterexample to Euclidean conservation under native AdamW,
-checked interpretations of gradient agreement and finite-history metrics. -/
+checked interpretations of gradient agreement, current-logit geometry,
+and finite-history windows and delay bounds. -/

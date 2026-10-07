@@ -19,7 +19,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 
 | Route | First mathematical question | Evidence / source | Status |
 | --- | --- | --- | --- |
-| Operational delayed generalization | Define train fit, a sustained held-out plateau, later generalization, and finite-budget censoring without future information entering a detector | Power et al., arXiv:2201.02177v1, sections 1 and 3.1; pinned causal histories | Twelve proved threshold, prefix, confirmation-clock and bounded-continuation theorems; sustained windows and the full Python heuristic remain open |
+| Operational delayed generalization | Define train fit, a sustained held-out plateau, later generalization, and finite-budget censoring without future information entering a detector | Power et al., arXiv:2201.02177v1, sections 1 and 3.1; pinned causal histories | Twenty-seven proved threshold, prefix, confirmation, sustained-window, delay-bound and bounded-continuation laws/counterexamples; the full Python heuristic remains open |
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
 | Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; circuit-efficiency literature to investigate | Research pending |
@@ -236,9 +236,30 @@ See [the detailed scope and figure](experiments/grokking_internals/README.md)
 and [the complete observations](experiments/grokking_internals/geometry_all_results.json).
 Ten new focused tests and the full 266-test Python suite pass.
 
-Next formalize sustained operational windows and actual division orbits,
-then investigate dynamics that select the correct reference rather than
-assuming a learned margin. Preserve
+`Operational.Windows` gives positive-width score predicates for fit,
+low held-out accuracy and their simultaneous memorization window. Actual
+score bounds imply the train/test gap and disjointness from a successful
+window. Neither event order is built into those predicates. Prefix
+invariance requires every point through confirmation to be observed.
+`Sustained` formalizes the first consecutive-success window, proves its
+uniqueness and confirmation-prefix locality, and distinguishes its onset
+from the first isolated crossing with a bounded counterexample.
+
+`DelayedWindows` proves that a first held-out crossing lies outside a
+memorization window. An additional observed below-threshold prefix
+excludes earlier success and implies that the full window ends before
+the crossing. Together with the actual first train fit, this derives
+`window_width <= held_out_crossing - train_fit` in observation intervals.
+Identical train/held-out scores cannot supply a separated memory window.
+A bounded trace with early sustained success, later memorization and
+recovery refutes treating every recovery as first grokking. These are
+conditional trace laws, not optimizer dynamics; Python's finite-list
+scan, longest-stretch selection, medians and full phase heuristic remain
+additional implementation bridges. These fifteen proved theorems add no
+sorry, bringing the total to **188**.
+
+Next formalize the actual division orbits and investigate dynamics that
+select the correct reference rather than assuming a learned margin. Preserve
 the distinction between an inverse-rate characteristic time and the time
 to cross a task-dependent generalization threshold. Extend phase-transition
 formulations only with stated control parameters and asymptotic regimes.
