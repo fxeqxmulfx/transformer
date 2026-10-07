@@ -475,6 +475,9 @@ hidden-state invariant or normalized-feature premise.
 DepthReadoutMatrices realizes the ordinary seven-unit readout FFN and
 proves its complete continuous matrix formula and genuine prenormed
 common RMS-square scale. All rows fit the original FFN dimensions.
+DepthReadoutFFN derives true zero-or-common-RMS-square indicators,
+the exact common coordinate, arbitrary protected channels and a norm
+cap 384; simultaneous actual-vector controls satisfy every local premise.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -611,3 +614,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Actual encoder induction committed in 14a2f0d. Proved upper readout-axis freshness through the full detector prefix and realized genuine residual probes that preserve current flags despite XSA suppression. | Prove quantitative visible-occurrence readout, actual FFN/tied margins, full ModelParams and integer adapter correctness. |
 | 2026-10-07 | 1 | Genuine residual readout layout committed in f3e61b2. Derived actual probes zero or at least twice the shared threshold, capped by 144 and positive exactly at visible independent ordered occurrences, with true pre-FFN norm at most 898. | Realize the seven-unit FFN and tied margins, then full ModelParams/checked integer depth correctness. |
 | 2026-10-07 | 1 | Actual readout separation committed in 6ba8bea. Realized all seven ordinary readout FFN rows and proved the complete true matrix/prenorm formula with a common RMS-square scale. | Couple exact semantic flags to the full readout block, prove tied margins, then original ModelParams and raw integer correctness. |
+| 2026-10-07 | 1 | Original seven-unit matrices committed in a705ed2. Derived exact actual readout FFN binary/common amplitudes, protected all other coordinates and proved contribution norm at most 384 with concrete simultaneous witnesses. | Derive semantic complete-block readout and tied margins, then full ModelParams/checked List Int depth SolvesTask. |
