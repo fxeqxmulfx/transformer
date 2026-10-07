@@ -52,7 +52,7 @@ import Transformer.GPTMini.Semantics.DepthResidual
 import Transformer.GPTMini.Semantics.DepthTransition
 import Transformer.GPTMini.Semantics.DepthFeatureBounds
 import Transformer.GPTMini.Semantics.DepthWordInput
-import Transformer.GPTMini.Semantics.DepthModel
+import Transformer.GPTMini.Semantics.DepthCorrectness
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -81,8 +81,8 @@ simultaneously, preserve unwritten coordinates and retain true RMS square.
 The actual FFN gives binary amplitudes and norm at most 256 on matching-type gaps.
 The genuine uniform softmax/XSA head gives exact absence
 and floor L/128 at zero self-value. Actual two-head attention adds norm at most 32.
-Actual blocks preserve raw types/stages, write true RMS-square flags and grow norm by at most 288.
-True flags are zero or in [r^2,128], with strictly earlier opposite presence derived from the actual mask.
+Actual ordered depth encoding/readout derives strict whole-vocabulary tied margins and correct original full forward logits.
+The checked List Int depth model solves both full raw grammars in unchanged original two/six-layer configurations.
 
 An explicit original RoPE pair gives a positive predecessor score gap
 across all Basis context lengths. Actual finite softmax/XSA copies that
