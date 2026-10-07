@@ -208,6 +208,13 @@ the fixed copy tolerance. The real query's own V and K are exactly zero.
 All statements derive from the full first block, raw token IDs and shared
 finite coefficients; no prepared normalized head is supplied.
 
+RecallScoreError evaluates the genuine second Q/K/V through ordinary
+forward-pass accessors. It bounds every raw query/table score's error
+against its true rotary reference by 2*exp(alpha)*copyTolerance, with no
+inverse-epsilon amplification. Raw key/query competitors have exactly
+zero score and the genuine query's own value remains zero. The robust
+latest-write margin and finite retrieval/readout are the next obligations.
+
 Next connect the fixed ordinary second QKV to robust latest-write retrieval
 and readout, discharge full validated-parser conditions, and construct the
 depth-prefix recurrence.
@@ -309,3 +316,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Actual state/prenorm bounds committed in 87cf916. Chose finite shared gate/QK gains and proved raw table amplitudes/key norms at least one, a whole raw-block upper bound, and a genuine shared projection/RMS product above epsilon at every position; query self-values stay zero and prenorm values have positive lower/finite upper norms. | Connect the true fused second QKV and normalized copied-key errors to robust latest-write routing/readout, complete validated raw parser coupling and full depth correctness; convex architecture/FLOP comparison remain queued. |
 | 2026-10-07 | 1 | Uniform finite shared gains committed in 072caeb. Realized the actual fused second QKV with simultaneous raw query, real gated copied-key and independent value slots; derived its genuine prenorm formulas and exact zero nonrecord/self-value outcomes. | Discharge clipping for these actual projections, transport normalized copy errors to robust latest-write selection and tied readout, then full validated raw parser and depth correctness; convex search and FLOP comparisons remain queued. |
 | 2026-10-07 | 1 | Genuine second QKV committed in 830e91e. Derived exact raw normalized query direction and twice-tolerance table-key error after the actual full encoder, next RMS, fused matrix and QKNorm; query self-values and matching keys are zero. | Robust finite-softmax latest-write selection and tied readout, complete validated raw parser coupling and full depth correctness; convex architecture and FLOP comparisons remain queued. |
+| 2026-10-07 | 1 | Actual raw normalized projections committed in 2768f32. Proved actual raw query/table score error at most 2*exp(alpha)*copyTolerance against the categorical rotary reference, without a factor 1/epsilon; raw key competitors have zero score and query self-values stay zero. | Derive robust latest-write gaps, actual finite-softmax retrieval/tied readout, full raw parser and depth correctness; convex architecture and FLOP comparisons remain queued. |

@@ -21,6 +21,7 @@ import Transformer.GPTMini.Semantics.RecallStateBounds
 import Transformer.GPTMini.Semantics.RecallProjectionScale
 import Transformer.GPTMini.Semantics.RecallSecondQKV
 import Transformer.GPTMini.Semantics.RecallNormalizedInputs
+import Transformer.GPTMini.Semantics.RecallScoreError
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -150,6 +151,13 @@ block, fused second matrix and actual prenorm; all clipping and norm
 conditions are derived from raw tokens and the finite shared gains.
 The raw query's own V and K are exactly zero. Robust finite-softmax score
 selection, readout and complete raw-parser correctness remain.
+
+At the fixed actual encoder, raw query/table scores now differ from their
+true categorical rotary reference by at most twice exp(alpha) times the
+copy tolerance. The proof uses the real normalized projections with no
+inverse-epsilon amplification. Raw key/query competitors have zero score,
+and the genuine own-value stays zero. Actual robust latest-write gaps,
+finite-softmax retrieval and tied readout remain to be connected.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
