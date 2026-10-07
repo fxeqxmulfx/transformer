@@ -10,6 +10,7 @@ from dataclasses import dataclass
 import re
 
 from .benchmarks import Benchmark, ModularDivision
+from .grokking import GrokkingDiagnostics
 from .model import Model
 from .atomic import (AtomicColumns, AtomicMatching, BindingPricing, MatchingBindings,
                      MatchingOrders, OrderPricing, PairedMatching)
@@ -62,6 +63,11 @@ class Experiment(Spec):
                     and not self.diagnostics.neighbors, "Measured runs keep extra arithmetic diagnostics disabled")
         if isinstance(self.budget, FlopBudget):
             require(isinstance(self.execution, Measured), "FlopBudget needs Measured execution")
+        if isinstance(self.diagnostics, GrokkingDiagnostics):
+            require(isinstance(self.benchmark, ModularDivision) and self.benchmark.prime >= 3,
+                    "Orbit diagnostics require nontrivial prime-field division")
+            require(self.diagnostics.orbit_every % self.evaluate.every == 0,
+                    "Orbit cadence must coincide with canonical evaluations")
         population = any(isinstance(block, ANSR) for _, block in walk(self.optimizer))
         if population:
             require(isinstance(self.optimizer, ANSR), "ANSR does not take gradient optimizer stages")

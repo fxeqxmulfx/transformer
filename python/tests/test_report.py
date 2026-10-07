@@ -73,6 +73,7 @@ class ReportTests(unittest.TestCase):
             self.assertEqual(report[key], STABILITY["grokking"][key])
         self.assertEqual(report["collapse"], COLLAPSE["grokking"]["collapse"])
         self.assertEqual(report["largest_gradients"], COLLAPSE["grokking"]["largest"])
+        self.assertIn("not_applicable", report["grokking_progress"])
 
     def test_only_a_run_that_reached_its_budget_is_read_as_complete(self):
         self.write("running", EXPERIMENT, history())

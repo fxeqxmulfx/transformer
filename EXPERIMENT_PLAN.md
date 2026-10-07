@@ -1,11 +1,12 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-07 UTC. **Active cycle: [Basis correctness and convex architecture](plan.md),
-stage 3; complete real-model Basis semantics committed in d640a91 and the
-explicit shared-weight, zero-FFN, complete-data-NLL tensor prototype is
-mathematically verified in Lean.** The user requested this new cycle after the internal semantic
-guarantees in b243ba5. It governs current work, including ordinary AdamW
-and comparison at measured equal FLOPs. The earlier investigation below is
+Updated on 2026-10-07 UTC. **Active direction: [Grokking progress measurements](grokking_plan.md),
+on ordinary softmax transformers with unchanged AdamW.** The user changed
+direction on 2026-10-07. The [Basis correctness and convex architecture](plan.md)
+cycle is paused and unfinished in stages 3 and 4; its checkpoints and original
+FLOP budgets are retained. Complete real-model Basis semantics and the explicit
+tensor prototype remain verified in Lean, with the empirical recall failures
+preserved. The earlier investigation below is
 complete: **steps 0 to 6 and the requested QKNorm follow-up.** The investigation cycle
 was started on 2026-10-04 at the user's request. On 2026-10-04 the user asked for
 this plan: find out why sparsemax attention fails, and try to repair it, on

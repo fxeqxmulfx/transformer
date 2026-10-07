@@ -9,6 +9,7 @@ from .domain.basis import basis
 from .domain.atomic import (AtomicColumns, AtomicMatching, BindingPricing, MatchingBindings,
                            MatchingOrders, OrderPricing, PairedMatching, SearchPricing)
 from .domain.benchmarks import ModularDivision, TinyShakespeare
+from .domain.grokking import GrokkingDiagnostics
 from .domain.experiment import Experiment, grid
 from .domain.generative import (Addition, BooleanAnd, Copy, Count, DoubleHistogram, Histogram, Mode, MostFrequent,
                                 Parity, RandomLM, Reverse, Sort)
@@ -45,7 +46,7 @@ __all__ = [
     "Dash", "NewtonDB", "CoupledNewton", "EVD", "Chebyshev", "AdaFisher", "AMSGradMD",
     "Constant", "Inverse", "InverseSqrt", "Geometric",
     # training
-    "Schedule", "Cosine", "Budget", "FlopBudget", "Seeds", "Evaluate", "Diagnostics", "AttentionDiagnostics", "Checkpoint",
+    "Schedule", "Cosine", "Budget", "FlopBudget", "Seeds", "Evaluate", "Diagnostics", "AttentionDiagnostics", "GrokkingDiagnostics", "Checkpoint",
     "EarlyStopping", "Solved", "Eager", "CudaGraph", "Compiled", "Measured",
     # composition
     "Experiment", "grid", "swap", "substitute", "walk", "describe", "fingerprint",

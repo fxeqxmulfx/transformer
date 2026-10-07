@@ -44,6 +44,8 @@ from ..benchmarks import build_task
 from ..nn import build_model
 from ..optim import report
 from .attention import AttentionObserver
+from ...domain.grokking import GrokkingDiagnostics
+from .grokking import GrokkingObserver
 
 
 class Clock:
@@ -124,6 +126,8 @@ class Training:
         self.model = build_model(experiment.model, self.task.vocab, experiment.seeds.model).to(self.device)
         self.attention = (AttentionObserver(experiment.diagnostics, self.task)
                           if isinstance(experiment.diagnostics, AttentionDiagnostics) else None)
+        self.grokking = (GrokkingObserver(experiment.diagnostics, self.task)
+                        if isinstance(experiment.diagnostics, GrokkingDiagnostics) else None)
         self.stepper = stepper(experiment, self.task, self.model, self.clock)
         self.sampler = self.task.sampler(experiment.budget.batch, experiment.seeds.batch_seed)
         self.completed, self.seen, self.last_batch_size = 0, 0, None
@@ -173,6 +177,9 @@ class Training:
                "training_seconds": self.clock.training, "wall_seconds": self.clock.wall(),
                "last_batch_size": self.last_batch_size, **self.measure(),
                **self.task.observe(self.model, self.experiment.evaluate.batch)}
+        if self.grokking is not None and not probe and step % self.experiment.diagnostics.orbit_every == 0:
+            with self.clock.diagnosing(paused=True):
+                row["grokking"] = self.grokking.observe(self.model, step)
         if isinstance(self.experiment.execution, Measured):
             row["arithmetic"] = self.stepper.arithmetic()
         if probe:

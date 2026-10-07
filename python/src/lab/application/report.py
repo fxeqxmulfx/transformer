@@ -7,6 +7,7 @@ alone are compared once each has trained the budget its file sets.
 """
 
 from ..domain.benchmarks import ModularDivision
+from ..domain.grokking import available as grokking_available, norm_progress, progress as grokking_progress
 from ..domain.calibration import POLICIES, choose, crossing, rate_groups
 from ..domain.collapse import collapse, largest_gradients
 from ..domain.experiment import require_continuation
@@ -96,6 +97,9 @@ def report_study(study, labels, runs: Runs):
                  "result": result}
         if history and isinstance(experiment.benchmark, ModularDivision):
             found |= stability(run, history, budget, stored["evaluate"]["every"], found["status"] == "finished")
+            found["grokking_progress"] = (grokking_progress(history) if grokking_available(history)
+                                          else {"not_applicable": "Train/heldout accuracy and loss are required"})
+            found["norm_progress"] = norm_progress(run.records("diagnostics"))
         if (found["status"] == "finished" and budget == experiment.budget.updates
                 and experiment.benchmark.selection is not None and hasattr(experiment.optimizer, "lr")):
             candidates[label] = candidate(label, experiment, history, result)
