@@ -912,7 +912,7 @@ README registry. Never substitute a much smaller compute budget.
 
 ## 4. Repair or replace weaker candidates
 
-Status: active for the first easy-depth failure; repeats after each
+Status: active for hard recall after the repaired easy-depth success; repeats after each
 controlled comparison while the remaining stage-3 arms continue.
 
 The failed depth checkpoint's observed A/B/neutral transition argmaxes
@@ -971,6 +971,33 @@ The finite parity witness satisfies the loss premise, proving it is real.
 This is a pointwise sufficient certificate, not a necessary threshold,
 a uniform consequence of a small minibatch mean, an IEEE certificate,
 or a claim that AdamW reaches it on every valid or unseen prefix.
+
+LocalConfidence/ParityDataList/ParityRows/ParitySemanticRows and
+TensorParityCertificate derive a uniform arbitrary-weight parity certificate
+from finite actual learned rows. Nine needed transitions, fifteen reachable
+value-channel rows, initial-state and learned branch bounds suffice when
+deltaHead + deltaInitial + 19*deltaTransition + 5*deltaValue < 1/11 and
+deltaTransition is nonnegative. Raw valid prompt/completion semantics derive
+the selected actual path and endpoint; correct logits or a correct encoder
+are not premises. The literal tensor integer model then solves every valid
+parity prefix, including both free-generated label/EOS calls and gained
+coordinates. A real finite full parameter assignment satisfies all checks.
+The result is in real arithmetic; checking learned floating-point rows and
+IEEE decoder margins remains a separate obligation.
+
+Read-only diagnostics on all 512 hard-recall validation rows at gain-eight
+updates 3450/3500/3500 give sequence accuracy 76.76/76.56/76.95 percent
+and true-route accuracy 98.19/98.07/98.10 percent. Every misselected maximal
+route uses a different key (74/79/78 cases); none uses a nonadjacent value
+or an outdated matching write. Removing only the value partition from
+routing, without retraining, improves sequence accuracy to
+77.73/77.93/78.52 percent. This rejects latest-write failure as the primary
+observed bottleneck and does not establish a trained conditional-value
+repair. Effective table-position biases span approximately seven logits,
+so inspect learned matching separation versus positional preference. The
+next controlled coordinate repair increases fixed gain while retaining
+the verified class, ordinary AdamW, fresh initialization and exact existing
+FLOP ceilings. Preserve all current gain-eight full-ceiling continuations.
 
 When a candidate performs worse, preserve its run and identify a concrete
 semantic or optimization failure. Reproduce it in a small control and
