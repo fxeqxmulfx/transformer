@@ -760,9 +760,18 @@ genuine normalized anchor recovers the entire raw tensor after actual
 positive-epsilon RMSNorm, for every unrestricted token/position weight.
 Actual Q/K/value and state-transition fields are consequently recovered
 without external token lookups or a supplied normalization multiplier.
+TensorState/TensorPointer/TensorHeads now compute both genuine branches
+and their learned mixture from prenorm `Fin T → EucSpace d` inputs alone.
+Only compact head-global/relative parameters enter attention directly;
+token and absolute-position parameters enter through actual embeddings.
+All ten inferred coordinates stay in [-1,1], and their true tied-code
+dot product equals the verified complete mixed decoder for every free
+parameter assignment. The head sees every supplied pair and chronological
+state update, without semantic labels, token-table lookups or a fixed
+adjacency/table mask. Causal per-row prefix selection is still required.
 
-Remaining acceptance tests: realize the true tensor-only attention
-interface and residual/tied readout, then connect the actual
+Remaining acceptance tests: realize causal tensor row-prefix selection,
+residual/tied readout and actual complete tensor likelihood, then connect the
 complete tensor model to the proved raw capability and convex objective.
 Compact contraction, learned matching/joint values, all raw mixed-head
 Basis capability and correct explicit data supervision are now proved.
@@ -916,3 +925,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Actual jointly convex mixed inference/training committed in d436526. Derived finite whole-mixture confidence and genuine original greedy margins; proved the actual common mixed integer callback solves every full raw prefix of all six Basis recipes, two-call parity and real full-size swap/overwrite/order controls. | Correct raw recall data-target generation and actual tensor embedding/attention/prenorm/residual/tied realization remain before candidate acceptance and stage 3; training and FLOP comparisons have not started. |
 | 2026-10-07 | 2 | Complete finite mixed-head Basis capability committed in d7be618. Proved actual computable raw recall route/channel generation, full independent answer agreement in both modes, and globally convex actual complete training with correct data labels across all six recipes/shared minibatches; exact compact scalar counts are explicit. | Realize true tensor embedding/attention/prenorm/residual/tied inference and couple it to the same objective/capability before candidate acceptance and equal-FLOP training; no new training runs started. |
 | 2026-10-07 | 2 | Complete correct raw-data training committed in 62f1f6f. Realized genuine Euclidean embeddings/learned positions at widths 64/128 and proved exact tensor-only recovery of every free Q/K/value/transition/position field after actual positive-epsilon RMSNorm. | Compute both heads from recovered tensors alone, realize actual residual/tied readout and complete changed-stack capability/objective before candidate acceptance and stage 3. |
+| 2026-10-07 | 2 | Genuine Euclidean embedding/RMS recovery committed in e49ca6d. Computed both learned state/value and all-pair binding heads from prenorm tensors alone; proved actual compact mixture decoding equals the complete verified raw model for every free assignment and derived true coordinate bounds. | Select each row's causal prefix, realize residual/tied readout and actual tensor complete likelihood/stack before candidate acceptance and measured equal-FLOP training. |
