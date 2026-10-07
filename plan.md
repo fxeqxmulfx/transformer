@@ -192,6 +192,15 @@ zero for XSA; genuine prenorm value norms are in [2*r,16]. These finite
 uniform coefficients depend only on table size/epsilon. The complete
 fused second QKV and robust selection/readout still need to be connected.
 
+RecallSecondQKV realizes the actual shared 64-to-192 matrix, including
+all original query/key/value chunks and sixteen head coordinates. Q reads
+the raw query interval, K the real gated-key interval and V the independent
+raw value interval. The same fixed ordinary gain scales Q/K; V retains
+its own genuine prenorm multiplier. Unassigned head rows, excluded keys
+and query self-values are exactly zero. The next step discharges actual
+clipping and transports copied-key error through these real projections
+to robust latest-write selection and the complete tied integer readout.
+
 Next connect the fixed ordinary second QKV to robust latest-write retrieval
 and readout, discharge full validated-parser conditions, and construct the
 depth-prefix recurrence.
@@ -291,3 +300,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Faithful matching insertion committed in 8dbdabe. Proved actual clipped-QKNorm cancellation of independent positive amplitudes above saturation and epsilon-independent normalized copy error through the true matrix/RoPE. | Derive uniform raw-state/RMS bounds and a finite shared second QKV gain to discharge clipping, then actual robust retrieval/readout, validated parser coupling, full depth and convex architecture search. |
 | 2026-10-07 | 1 | Local QKNorm/error transport committed in 42305c4. Derived genuine pre-FFN norm [1,9], gate RMS scale [1/2,8], and a protected positive bounded next-prenorm multiplier after the full first block. | Choose a fixed gate gain and bound the full block to derive one shared saturating QKV scale, then original robust retrieval/readout and full raw parser/depth correctness; convex search remains queued. |
 | 2026-10-07 | 1 | Actual state/prenorm bounds committed in 87cf916. Chose finite shared gate/QK gains and proved raw table amplitudes/key norms at least one, a whole raw-block upper bound, and a genuine shared projection/RMS product above epsilon at every position; query self-values stay zero and prenorm values have positive lower/finite upper norms. | Connect the true fused second QKV and normalized copied-key errors to robust latest-write routing/readout, complete validated raw parser coupling and full depth correctness; convex architecture/FLOP comparison remain queued. |
+| 2026-10-07 | 1 | Uniform finite shared gains committed in 072caeb. Realized the actual fused second QKV with simultaneous raw query, real gated copied-key and independent value slots; derived its genuine prenorm formulas and exact zero nonrecord/self-value outcomes. | Discharge clipping for these actual projections, transport normalized copy errors to robust latest-write selection and tied readout, then full validated raw parser and depth correctness; convex search and FLOP comparisons remain queued. |

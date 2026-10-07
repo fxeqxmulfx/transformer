@@ -19,6 +19,7 @@ import Transformer.GPTMini.Semantics.RecallRotaryInsert
 import Transformer.GPTMini.Semantics.RecallSaturation
 import Transformer.GPTMini.Semantics.RecallStateBounds
 import Transformer.GPTMini.Semantics.RecallProjectionScale
+import Transformer.GPTMini.Semantics.RecallSecondQKV
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -132,6 +133,14 @@ derived from raw BOS/alphabet/table positions. A shared next Q/K gain
 exceeds epsilon. Raw query self-values stay zero, and prenorm value
 code norms are bounded between twice the positive lower scale and
 sixteen. Complete fused second-QKV and robust retrieval/readout remain.
+
+The actual second 64-to-192 fused QKV now evaluates simultaneous raw
+query, gated copied-key and independent value projections in the
+original sixteen-coordinate head. One ordinary gain scales Q/K and
+leaves V independent; all unassigned head rows are zero. Its actual
+prenorm retains the genuine position-dependent multiplier, and zero
+gated keys or query self-values remain exactly zero. Normalized raw
+coupling, robust latest-write selection and complete readout remain.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
