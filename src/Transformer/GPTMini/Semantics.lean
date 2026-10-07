@@ -18,6 +18,7 @@ import Transformer.GPTMini.Semantics.RecallRawBinding
 import Transformer.GPTMini.Semantics.RecallRotaryInsert
 import Transformer.GPTMini.Semantics.RecallSaturation
 import Transformer.GPTMini.Semantics.RecallStateBounds
+import Transformer.GPTMini.Semantics.RecallProjectionScale
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -121,6 +122,16 @@ norm follows from the protected constant, and the upper norm from
 both simultaneous true heads and W_o. The complete first block also
 has norm at least one and a positive next-prenorm multiplier at most
 eight. A full-block upper bound and sufficient shared QKV gain remain.
+
+The fixed finite table gain 4/tableMargin now makes genuine raw table
+amplitudes at least one. Every actual adjacent stored table key has
+norm at least one at the fixed copy temperature. The whole raw block
+has norm at most M=9+512*gain at every position, with gate decisions
+derived from raw BOS/alphabet/table positions. A shared next Q/K gain
+(1+epsilon)/(8/sqrt(M^2+64*epsilon)) times each genuine next RMS scale
+exceeds epsilon. Raw query self-values stay zero, and prenorm value
+code norms are bounded between twice the positive lower scale and
+sixteen. Complete fused second-QKV and robust retrieval/readout remain.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout

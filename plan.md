@@ -181,8 +181,20 @@ multiplier at most eight. These are uniform raw computations, not
 prepared representation or common-position-scale premises. A fixed gate
 gain, full-block upper bound and sufficient shared QKV scale follow next.
 
-Next construct the simultaneous raw adjacency/table-gating/last-write encoder
-and depth-prefix recurrence.
+RecallGateGain/EncoderBounds/ProjectionScale now choose the finite shared
+table gain 4/tableMargin and derive actual raw table amplitude and bound-key
+norm at least one. The full raw block has norm at most M=9+512*gain at
+every position, with all gate regions discharged from raw IDs rather than
+assumed. Its next RMS multiplier is at least r=8/sqrt(M^2+64*epsilon).
+The fixed Q/K gain (1+epsilon)/r therefore times each genuine next RMS
+multiplier exceeds epsilon. The raw query's own value remains exactly
+zero for XSA; genuine prenorm value norms are in [2*r,16]. These finite
+uniform coefficients depend only on table size/epsilon. The complete
+fused second QKV and robust selection/readout still need to be connected.
+
+Next connect the fixed ordinary second QKV to robust latest-write retrieval
+and readout, discharge full validated-parser conditions, and construct the
+depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -278,3 +290,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Uniform finite raw binding accuracy committed in 7d7fa9d. Proved an ordinary shared linear insertion of all real copied keys into the original slow RoPE pairs, with exact norm and error preservation and faithful categorical matching geometry. | Derive true second prenorm/QKNorm saturation and robust latest-write routing/readout, complete raw parser coupling, full depth correctness and convex architecture search. |
 | 2026-10-07 | 1 | Faithful matching insertion committed in 8dbdabe. Proved actual clipped-QKNorm cancellation of independent positive amplitudes above saturation and epsilon-independent normalized copy error through the true matrix/RoPE. | Derive uniform raw-state/RMS bounds and a finite shared second QKV gain to discharge clipping, then actual robust retrieval/readout, validated parser coupling, full depth and convex architecture search. |
 | 2026-10-07 | 1 | Local QKNorm/error transport committed in 42305c4. Derived genuine pre-FFN norm [1,9], gate RMS scale [1/2,8], and a protected positive bounded next-prenorm multiplier after the full first block. | Choose a fixed gate gain and bound the full block to derive one shared saturating QKV scale, then original robust retrieval/readout and full raw parser/depth correctness; convex search remains queued. |
+| 2026-10-07 | 1 | Actual state/prenorm bounds committed in 87cf916. Chose finite shared gate/QK gains and proved raw table amplitudes/key norms at least one, a whole raw-block upper bound, and a genuine shared projection/RMS product above epsilon at every position; query self-values stay zero and prenorm values have positive lower/finite upper norms. | Connect the true fused second QKV and normalized copied-key errors to robust latest-write routing/readout, complete validated raw parser coupling and full depth correctness; convex architecture/FLOP comparison remain queued. |
