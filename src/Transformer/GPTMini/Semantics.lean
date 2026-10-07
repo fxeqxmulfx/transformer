@@ -22,6 +22,7 @@ import Transformer.GPTMini.Semantics.RecallProjectionScale
 import Transformer.GPTMini.Semantics.RecallSecondQKV
 import Transformer.GPTMini.Semantics.RecallNormalizedInputs
 import Transformer.GPTMini.Semantics.RecallScoreError
+import Transformer.GPTMini.Semantics.RecallRawScoreGap
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -158,6 +159,13 @@ copy tolerance. The proof uses the real normalized projections with no
 inverse-epsilon amplification. Raw key/query competitors have zero score,
 and the genuine own-value stays zero. Actual robust latest-write gaps,
 finite-softmax retrieval and tied readout remain to be connected.
+
+Genuine raw table competitors now retain a positive score gap
+exp(alpha)*latestMargin/2. Different neighboring keys and earlier writes
+of the same key are both covered using their derived rotary comparisons
+and both actual copied-key errors. Context displacements follow from
+real integer bounds. Complete grammar coupling and excluded nonrecords
+still need to supply a full-row gap for finite retrieval and readout.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
