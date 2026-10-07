@@ -33,6 +33,7 @@ Source: arXiv:2601.21366v2, `thm: any.d`.
 -/
 
 import Transformer.Perceptron.Atomicity
+import Transformer.Perceptron.Section3_Genericity
 import Transformer.Metastability.InitialUniform
 
 open scoped BigOperators ENNReal
@@ -42,11 +43,6 @@ namespace Transformer
 namespace Perceptron
 
 variable {d : ℕ}
-
-/-- The parameter space `ℝ_{>0} × (ℝ^{d+1})^d` of `thm: any.d` (ii)–(iii): an
-inverse temperature `β`, and for each of the `d` neurons an output scalar
-`ω_j` and an input vector `a_j`. -/
-abbrev Params (d : ℕ) : Type := ℝ × (Idx d → ℝ) × (Idx d → EucSpace d)
 
 /-- **"In particular, `μ` is singular with respect to `σ_d`".**  A measure
 whose support is `ν`-null is mutually singular with `ν`: the complement of the
@@ -113,25 +109,30 @@ example :
 `s ≠ 0`, there is an open dense `U_μ ⊂ ℝ_{>0} × (ℝ^{d+1})^d` such that a `μ`
 stationary at a parameter of `U_μ` is purely atomic with finite support.
 
-Not proved here.
+The measure is fixed before the parameter set is chosen. The proof uses
+`exists_open_dense_nonstationary_params`: its open dense set excludes
+stationarity of this fixed measure. The source's hypotheses and conclusion
+are preserved; no uniform parameter set or finiteness of the field's zeros
+is asserted. The former formalization also passed a primitive `φ` and
+`φ' = 2σ`; those unused binders are omitted because stationarity uses `σ` alone.
 
-Source: arXiv:2601.21366v2, `thm: any.d` (ii). -/
-theorem any_d_generic_isFinitelyAtomic (d : ℕ) (hd : 2 ≤ d) (φ σ : ℝ → ℝ)
-    (hφ : ∀ s : ℝ, HasDerivAt φ (2 * σ s) s) (hσ : AnalyticOnNhd ℝ σ Set.univ)
+Source: arXiv:2601.21366v2, §3.1, `thm: any.d` (ii). -/
+theorem any_d_generic_isFinitelyAtomic (d : ℕ) (hd : 2 ≤ d) (σ : ℝ → ℝ)
+    (hσ : AnalyticOnNhd ℝ σ Set.univ)
     (hσ0 : ∀ s : ℝ, s ≠ 0 → σ s ≠ 0) (μ : Perspective.ProbSphere d) :
     ∃ U : Set (Params d), IsOpen U ∧ U ⊆ {p | 0 < p.1} ∧ {p | 0 < p.1} ⊆ closure U ∧
       ∀ p ∈ U, IsStationary p.1 σ p.2.1 p.2.2 μ → IsFinitelyAtomic μ := by
-  sorry
+  obtain ⟨U, hopen, hpos, hdense, hnonstat⟩ :=
+    exists_open_dense_nonstationary_params hd σ hσ (hσ0 1 one_ne_zero) μ
+  exact ⟨U, hopen, hpos, hdense, fun p hp hstat => (hnonstat p hp hstat).elim⟩
 
 /-- The hypotheses of `any_d_generic_isFinitelyAtomic` are satisfiable: `d = 2`,
-`φ = id` and the constant activation `σ ≡ 1/2`, which is real-analytic and
+the constant activation `σ ≡ 1/2`, which is real-analytic and
 never vanishes. -/
 example :
-    (2 : ℕ) ≤ 2 ∧ (∀ s : ℝ, HasDerivAt (fun t : ℝ => t) (2 * (fun _ : ℝ => (2 : ℝ)⁻¹) s) s) ∧
-      AnalyticOnNhd ℝ (fun _ : ℝ => (2 : ℝ)⁻¹) Set.univ ∧
+    (2 : ℕ) ≤ 2 ∧ AnalyticOnNhd ℝ (fun _ : ℝ => (2 : ℝ)⁻¹) Set.univ ∧
       ∀ s : ℝ, s ≠ 0 → (fun _ : ℝ => (2 : ℝ)⁻¹) s ≠ 0 :=
-  ⟨le_rfl, fun s => by simpa using hasDerivAt_id' (𝕜 := ℝ) (x := s),
-    fun _ _ => analyticAt_const, fun _ _ => by norm_num⟩
+  ⟨le_rfl, fun _ _ => analyticAt_const, fun _ _ => by norm_num⟩
 
 /-- **Theorem (thm: any.d) (iii).**  If `σ(s) = s_+`, there is a dense
 `U_μ ⊂ ℝ_{>0} × (ℝ^{d+1})^d` such that, at a parameter of `U_μ` at which `μ`
