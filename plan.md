@@ -288,8 +288,14 @@ function retains its input and appends the selected value from its true
 last-row decoder, including the literal overwrite control. Raw layout
 and latest-write applicability must still follow from complete Basis parsing.
 
-Next discharge full
-validated-parser conditions, and construct the depth-prefix recurrence.
+Basis.RecallParsed derives the complete key/value alphabet from every
+successful raw query/filler scan and retains every record's range checks
+in the actual last-write decomposition. Earlier repeated-key writes,
+later unrelated writes and arbitrary valid query/filler regions are kept.
+No paired model input is supplied by these data-side inversion theorems.
+
+Next transfer the validated decomposition to raw finite-array positions,
+prove recall SolvesTask, and construct the depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
 or a precise missing condition, not a weakened correctness target.
@@ -398,3 +404,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Full final-state/error coupling committed in 486a860. Evaluated actual tied key/reserved scores and selected-value reference scores; proved compact categorical products four versus at most three and uniform raw score-error amplification at most three. | Derive strict all-token readout, connect actual complete ModelParams/decoder, discharge full validated recall parsing, then depth correctness; convex architecture/FLOP comparison remain queued. |
 | 2026-10-07 | 1 | Tied-score identities committed in 1315cac. Proved strict actual answer margin over all 547 competing tokens, genuine final RMS positivity and greedy selected-value correctness; the actual six-token overwrite control decodes its later value. | Complete top-level model and integer adapter coupling, validated-parser discharge and depth correctness; convex architecture and equal-FLOP comparison remain queued. |
 | 2026-10-07 | 1 | Strict tied recall decoding committed in d86fa0a. Assembled complete original two-layer ModelParams, connected both actual hidden states and all final forward logits, and proved its checked List Int continuation appends the selected raw value, including the literal overwrite control. | Discharge raw layout/adjacency/latest-write premises from every validated Basis prefix, then full depth correctness; convex architecture and equal-FLOP comparison remain queued. |
+| 2026-10-07 | 1 | Complete model/integer coupling committed in a4ca072. Strengthened successful raw Basis parsing to retain all earlier/later table and full query/filler range checks together with chronological last-write decomposition. | Transfer this validated raw decomposition to exact finite-array positions and discharge all routing predicates, then recall SolvesTask and full depth correctness; convex architecture/FLOP comparison remain queued. |

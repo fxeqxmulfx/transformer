@@ -6,6 +6,7 @@ import Transformer.Basis.Tasks
 import Transformer.Basis.Requirements
 import Transformer.Basis.Encoding
 import Transformer.Basis.RecallAnswer
+import Transformer.Basis.RecallParsed
 
 /-!
 # Basis on List Int
@@ -22,4 +23,6 @@ depth order, raw MQAR binding/overwrites and parity bits. Every supervised
 prefix is proved to be nonempty, encodable and within its actual context.
 Raw recall parser inversion identifies the final adjacent matching write,
 including unrelated later records and hard-mode overwrites.
+The complete parser decomposition also retains all earlier/later table
+and query/filler alphabet checks needed by the actual raw encoder.
 -/
