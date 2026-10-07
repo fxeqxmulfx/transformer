@@ -280,7 +280,15 @@ normalized tied readout and greedy decoder return the selected value.
 The genuine six-token overwrite control returns the later different value.
 These results still require complete ModelParams and parser coupling.
 
-Next connect the actual complete model and integer decoder, discharge full
+RecallConstruction supplies the complete original ModelParams: the same
+raw tied table and the two real blocks, with fixed shared finite weights.
+Both true hidden-loop states and full forward logits are connected to the
+verified computations at every position. The actual checked List Int
+function retains its input and appends the selected value from its true
+last-row decoder, including the literal overwrite control. Raw layout
+and latest-write applicability must still follow from complete Basis parsing.
+
+Next discharge full
 validated-parser conditions, and construct the depth-prefix recurrence.
 Record each remaining assumption and discharge it rather than moving it
 into a definition. A failed construction should produce a counterexample
@@ -389,3 +397,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 1 | Genuine second block committed in 5e1dc59. Proved full genuine final-state error at most 1/8, selected real value amplitude at least two and faithful final raw query/type/reserved readout channels. | Strict tied readout over all 548 tokens and actual integer decoder, complete validated parser discharge and depth correctness; convex architecture and equal-FLOP comparisons remain queued. |
 | 2026-10-07 | 1 | Full final-state/error coupling committed in 486a860. Evaluated actual tied key/reserved scores and selected-value reference scores; proved compact categorical products four versus at most three and uniform raw score-error amplification at most three. | Derive strict all-token readout, connect actual complete ModelParams/decoder, discharge full validated recall parsing, then depth correctness; convex architecture/FLOP comparison remain queued. |
 | 2026-10-07 | 1 | Tied-score identities committed in 1315cac. Proved strict actual answer margin over all 547 competing tokens, genuine final RMS positivity and greedy selected-value correctness; the actual six-token overwrite control decodes its later value. | Complete top-level model and integer adapter coupling, validated-parser discharge and depth correctness; convex architecture and equal-FLOP comparison remain queued. |
+| 2026-10-07 | 1 | Strict tied recall decoding committed in d86fa0a. Assembled complete original two-layer ModelParams, connected both actual hidden states and all final forward logits, and proved its checked List Int continuation appends the selected raw value, including the literal overwrite control. | Discharge raw layout/adjacency/latest-write premises from every validated Basis prefix, then full depth correctness; convex architecture and equal-FLOP comparison remain queued. |

@@ -30,6 +30,7 @@ import Transformer.GPTMini.Semantics.RecallRetrievalBlock
 import Transformer.GPTMini.Semantics.RecallFinalState
 import Transformer.GPTMini.Semantics.RecallReadoutCoordinates
 import Transformer.GPTMini.Semantics.RecallReadout
+import Transformer.GPTMini.Semantics.RecallConstruction
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -102,18 +103,13 @@ products, norms and copy distances are preserved, including imperfect
 copies and position-dependent amplitudes. Its categorical image is the
 verified matching code, and its excluded fast coordinates are zero.
 
-Local original-QKNorm laws now cancel independent positive query/key
-amplitudes above their actual clipping thresholds. Faithful insertion
-and original RoPE transport base copy error to a normalized error at
-most twice that error, independently of epsilon or record amplitude.
-The lower base norm is derived from the norm-two reference and copy
-distance. These operator laws are connected to actual raw clipping below.
+Original QKNorm cancels independent positive Q/K amplitudes above clipping.
+Actual insertion/RoPE bound normalized error by twice the base copy error,
+independently of epsilon/amplitude, with norm lower bound derived.
 
-Uniform genuine raw-state bounds now give pre-FFN norm in [1,9] and
-its actual RMS multiplier in [1/2,8] for epsilon in [0,1]. The lower
-norm follows from the protected constant, and the upper norm from both
-true heads and W_o. The full block has norm at least one and positive
-next-prenorm multiplier at most eight.
+Genuine raw pre-FFN norm lies in [1,9] and its RMS multiplier in [1/2,8]
+for epsilon in [0,1], derived from the constant and true heads/W_o.
+The full block retains a positive next RMS multiplier at most eight.
 
 The fixed finite table gain 4/tableMargin now makes genuine raw table
 amplitudes at least one. Every actual adjacent stored table key has
@@ -189,7 +185,10 @@ four versus at most three. Every raw embedding bounds score perturbations
 by three times the actual residual error. The correct raw value now
 strictly defeats all 547 other tokens, including after the actual final
 RMSNorm and greedy decoding. The real six-token overwrite control
-returns its later value. Top-level model and full-parser coupling remain.
+returns its later value. A complete original two-layer ModelParams now
+realizes both states in the actual hidden loop and derives all forward
+logits. Its checked List Int function appends that selected value,
+including on the raw overwrite control. Full Basis parsing remains.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
