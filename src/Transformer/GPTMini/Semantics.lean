@@ -26,6 +26,7 @@ import Transformer.GPTMini.Semantics.RecallRawScoreGap
 import Transformer.GPTMini.Semantics.RecallRawExcluded
 import Transformer.GPTMini.Semantics.RecallRawRouting
 import Transformer.GPTMini.Semantics.RecallRetrievalAccuracy
+import Transformer.GPTMini.Semantics.RecallRetrievalBlock
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -182,6 +183,12 @@ lower scale is achieved without an assumed leakage bound, and one shared
 output gain has gain*lowerScale=2. Actual second W_o/tied readout and
 full-parser discharge of the raw conditions remain; no floating-point
 or AdamW success is inferred.
+
+The genuine second ordinary block now includes the actual matching fused
+matrix, finite shared temperature, nonzero W_o and original zero FFN.
+Its exact full state writes compact retrieval into the raw value interval,
+preserves query/type coordinates and transports actual head accuracy
+through the real merge/output matrix. Tied readout and full parser remain.
 
 The final-block certificate transports internal head and FFN codes to the
 answer's separated embedding neighborhood. The complete actual readout
