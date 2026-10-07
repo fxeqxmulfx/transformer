@@ -33,6 +33,7 @@ import Transformer.GPTMini.Semantics.RecallReadout
 import Transformer.GPTMini.Semantics.RecallConstruction
 import Transformer.GPTMini.Semantics.RecallIntegerArray
 import Transformer.GPTMini.Semantics.RecallParserLayout
+import Transformer.GPTMini.Semantics.RecallParserLatest
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -189,9 +190,8 @@ returns its later value. A complete original two-layer ModelParams now
 realizes both states in the actual hidden loop and derives all forward
 logits. Its checked List Int function appends that selected value,
 including on the raw overwrite control. Full Basis parsing remains.
-Integer reads retain exact finite tokens/positions. Full successful
-parsing now derives actual raw layout and final query without a manual
-alphabet/adjacency certificate; the selected last write remains to couple.
+Full successful parsing derives actual layout, final query and selected
+last write, including all chronological bounds, without routing premises.
 
 The final-block certificate and actual integer readout derive correct
 logits from internal codes. None of these theorems claims full Basis
