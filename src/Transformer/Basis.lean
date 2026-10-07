@@ -8,6 +8,7 @@ import Transformer.Basis.Encoding
 import Transformer.Basis.RecallAnswer
 import Transformer.Basis.RecallParsed
 import Transformer.Basis.RecallTablePositions
+import Transformer.Basis.RecallPrefixPositions
 
 /-!
 # Basis on List Int
@@ -28,4 +29,6 @@ The complete parser decomposition also retains all earlier/later table
 and query/filler alphabet checks needed by the actual raw encoder.
 Exact serialization indices prove value/key adjacency and bound every
 matching record index by the parser's selected chronological last write.
+Those exact adjacency/last-write bounds now hold at original integer
+positions in complete BOS/table/query prefixes, with final query derived.
 -/
