@@ -5,8 +5,11 @@ Formalization of §3.2 of arXiv:2411.04551v3:
 
 * `Lemma lem: induction.barycenter` — shrinking one measure and a companion
   into a small ball around the direction of its barycenter,
-* `Lemma lem: perturbation` / `lem: colinearity` — making two measures with
-  collinear barycenters "non-colinear".
+* Part 2 of `Lemma lem: perturbation` / `lem: colinearity` — making two
+  different collinear barycenters non-collinear.
+
+Part 1, with equal barycenters and a flow fixing points outside the two
+geodesic hulls, is refuted in `Section3_PerturbationFalse`.
 
 As in `Transformer.Interpolation.Disentanglement`, "the solution" is read as: a
 solution exists, and every solution satisfies the conclusion; `O(d · N)` is a
@@ -18,6 +21,7 @@ import Transformer.Perspective.Section2_FlowMap
 import Transformer.Interpolation.Basic
 import Transformer.Interpolation.Clustering
 import Transformer.Interpolation.HypPropagationFalse
+import Transformer.Interpolation.Section3_PerturbationFalse
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -95,52 +99,34 @@ example :
 
 variable (d : ℕ)
 
-/-- **Lemma (lem: perturbation / lem: colinearity).**
+/-- **Lemma (lem: perturbation / lem: colinearity), Part 2.**
 
 Let `T > 0` and let `μ_0, ν_0 ∈ 𝒫(ℚ_1^{d-1})` be two different measures with
-`𝔼_{μ_0}[x] = γ_1 𝔼_{ν_0}[x]` for some `γ_1 ∈ (0, 1]`.
+`𝔼_{μ_0}[x] = γ_1 𝔼_{ν_0}[x]` for some `γ_1 ∈ (0, 1]`, with `γ_1 ≠ 1`.
+With `𝐁 ≡ 0` there are `(𝐕, 𝐖, 𝐔, b)`, piecewise constant with at most two
+switches, such that `𝔼_{μ(T)}[x] ≠ γ_2 𝔼_{ν(T)}[x]` for every `γ_2 ∈ ℝ`.
 
-1. If `γ_1 = 1`, then with `𝐕 ≡ 0` there are constant `𝐖, 𝐔` and `b` such that
-   `𝔼_{μ(T)}[x] ≠ 𝔼_{ν(T)}[x]`; moreover the flow map `Φ^T : 𝕊^{d-1} → 𝕊^{d-1}`
-   of the characteristics is Lipschitz, invertible, and satisfies
-   `eq: identity.flow`: `Φ^T(x) = x` off `conv_g supp μ_0 ∪ conv_g supp ν_0`.
-2. If `γ_1 ≠ 1`, then with `𝐁 ≡ 0` there are `(𝐕, 𝐖, 𝐔, b)`, piecewise
-   constant with at most two switches, such that
-   `𝔼_{μ(T)}[x] ≠ γ_2 𝔼_{ν(T)}[x]` for every `γ_2 ∈ ℝ`.
-
-In case 1 the vector field is `eq: average.vf`, so `𝐁 ≡ 0` as well; with
-`𝐕 ≡ 0` it does not depend on the measure, and a characteristic is a curve
-`y` with `ẏ = 𝐯(t, y)` (`IsCharacteristic`) for any measure curve in the
-attention slot.
+Part 1 of the source, which additionally demands `eq: identity.flow` when
+`γ_1 = 1`, is false: `perturbation_equal_barycenter_counterexample` exhibits
+distinct positive-quadrant laws with the same barycenter for which every
+continuous map fixing the complement of the two hulls is the identity.
+Part 2 is retained independently, with its original hypotheses and result.
 
 Not proved here.
 
-Source: arXiv:2411.04551v3, §3, `lem: perturbation`, `eq: identity.flow`. -/
-theorem perturbation (T γ₁ : ℝ) (μ₀ ν₀ : ProbSphere d) (hT : 0 < T) (hne : μ₀ ≠ ν₀)
+Source: arXiv:2411.04551v3, §3, `lem: perturbation`, Part 2. -/
+theorem perturbation_noncolinear (T γ₁ : ℝ) (μ₀ ν₀ : ProbSphere d) (hT : 0 < T) (hne : μ₀ ≠ ν₀)
     (hμ₀ : (μ₀ : Measure (SSphere d)).support ⊆ positiveQuadrant d)
     (hν₀ : (ν₀ : Measure (SSphere d)).support ⊆ positiveQuadrant d)
-    (hγ₀ : 0 < γ₁) (hγ₁ : γ₁ ≤ 1) (hbary : barycenter d μ₀ = γ₁ • barycenter d ν₀) :
-    (γ₁ = 1 →
-      ∃ (W U : ParamMatrix d) (b : EucSpace d),
-        let θ : TimeParams d := fun _ => { V := 0, B := 0, W := W, U := U, b := b }
-        (∃ μ : ℝ → ProbSphere d, μ 0 = μ₀ ∧ cauchyPB d θ μ) ∧
-        (∃ ν : ℝ → ProbSphere d, ν 0 = ν₀ ∧ cauchyPB d θ ν) ∧
-        (∀ μ ν : ℝ → ProbSphere d, μ 0 = μ₀ → cauchyPB d θ μ →
-          ν 0 = ν₀ → cauchyPB d θ ν → barycenter d (μ T) ≠ barycenter d (ν T)) ∧
-        ∃ Φ : SSphere d → SSphere d, (∃ L, LipschitzWith L Φ) ∧ Function.Bijective Φ ∧
-          (∀ (x : SSphere d) (ρ : ℝ → ProbSphere d) (y : ℝ → EucSpace d),
-            y 0 = x → IsCharacteristic d θ ρ y →
-              y T = Φ x) ∧
-          ∀ x : SSphere d, x ∉ convG d (μ₀ : Measure (SSphere d)).support ∪
-            convG d (ν₀ : Measure (SSphere d)).support → Φ x = x) ∧
-    (γ₁ ≠ 1 →
-      ∃ θ : TimeParams d,
-        PiecewiseConstant d θ T 3 ∧ (∀ s : ℝ, (θ s).B = 0) ∧
-        (∃ μ : ℝ → ProbSphere d, μ 0 = μ₀ ∧ cauchyPB d θ μ) ∧
-        (∃ ν : ℝ → ProbSphere d, ν 0 = ν₀ ∧ cauchyPB d θ ν) ∧
-        ∀ μ ν : ℝ → ProbSphere d, μ 0 = μ₀ → cauchyPB d θ μ →
-          ν 0 = ν₀ → cauchyPB d θ ν →
-          ∀ γ₂ : ℝ, barycenter d (μ T) ≠ γ₂ • barycenter d (ν T)) := by
+    (hγ₀ : 0 < γ₁) (hγ₁ : γ₁ ≤ 1) (hbary : barycenter d μ₀ = γ₁ • barycenter d ν₀)
+    (hγne : γ₁ ≠ 1) :
+    ∃ θ : TimeParams d,
+      PiecewiseConstant d θ T 3 ∧ (∀ s : ℝ, (θ s).B = 0) ∧
+      (∃ μ : ℝ → ProbSphere d, μ 0 = μ₀ ∧ cauchyPB d θ μ) ∧
+      (∃ ν : ℝ → ProbSphere d, ν 0 = ν₀ ∧ cauchyPB d θ ν) ∧
+      ∀ μ ν : ℝ → ProbSphere d, μ 0 = μ₀ → cauchyPB d θ μ →
+        ν 0 = ν₀ → cauchyPB d θ ν →
+        ∀ γ₂ : ℝ, barycenter d (μ T) ≠ γ₂ • barycenter d (ν T) := by
   sorry
 
 /-- A point `(p, q)` of the circle with `p² + q² = 1`. -/
@@ -155,35 +141,16 @@ theorem circlePt_mem_positiveQuadrant {p q : ℝ} (h : p ^ 2 + q ^ 2 = 1)
   intro i
   fin_cases i <;> simpa [circlePt]
 
-/-- `½δ_x + ½δ_y` is supported in `{x, y}`: the complement of that finite set
-is an open null set. -/
-theorem mem_of_mem_support_halfDirac {d : ℕ} {x y z : SSphere d}
-    (hz : z ∈ (halfDirac d x y : Measure (SSphere d)).support) : z = x ∨ z = y := by
-  by_contra hne
-  push Not at hne
-  refine Measure.notMem_support_iff_exists.mpr ⟨{x, y}ᶜ, ?_, ?_⟩ hz
-  · exact ((Set.toFinite _).isClosed).isOpen_compl.mem_nhds (by simp [hne.1, hne.2])
-  · simp
-
-/-- The barycenter of `½δ_x + ½δ_y` is the midpoint `½x + ½y`. -/
-theorem barycenter_halfDirac {d : ℕ} (x y : SSphere d) :
-    barycenter d (halfDirac d x y) = (2⁻¹ : ℝ) • (x : EucSpace d) + (2⁻¹ : ℝ) • (y : EucSpace d) := by
-  rw [barycenter, coe_halfDirac, integral_add_measure, integral_smul_measure,
-    integral_smul_measure, integral_dirac, integral_dirac]
-  · simp
-  · exact (integrable_dirac (by simp)).smul_measure (by simp)
-  · exact (integrable_dirac (by simp)).smul_measure (by simp)
-
-/-- The hypotheses of `perturbation` are satisfiable, with two different
+/-- The hypotheses of `perturbation_noncolinear` are satisfiable, with two different
 measures: on `𝕊^1`, `μ_0 = ½δ_{(5,12)/13} + ½δ_{(12,5)/13}` and
 `ν_0 = ½δ_{(3,4)/5} + ½δ_{(4,3)/5}`, supported in `ℚ_1^1`, whose barycenters
-`(17/26)(1, 1)` and `(7/10)(1, 1)` are collinear with `γ_1 = 85/91 ∈ (0, 1]`.
+`(17/26)(1, 1)` and `(7/10)(1, 1)` are collinear with `γ_1 = 85/91 ∈ (0, 1)`.
 In `d = 1` no witness exists, since `𝒫(ℚ_1^0) = {δ_{+1}}`. -/
 example : ∃ (μ₀ ν₀ : ProbSphere 2) (γ₁ : ℝ),
     (0 : ℝ) < 1 ∧ μ₀ ≠ ν₀ ∧
     (μ₀ : Measure (SSphere 2)).support ⊆ positiveQuadrant 2 ∧
     (ν₀ : Measure (SSphere 2)).support ⊆ positiveQuadrant 2 ∧
-    0 < γ₁ ∧ γ₁ ≤ 1 ∧ barycenter 2 μ₀ = γ₁ • barycenter 2 ν₀ := by
+    0 < γ₁ ∧ γ₁ ≤ 1 ∧ barycenter 2 μ₀ = γ₁ • barycenter 2 ν₀ ∧ γ₁ ≠ 1 := by
   have h1 : (5 / 13 : ℝ) ^ 2 + (12 / 13) ^ 2 = 1 := by norm_num
   have h2 : (12 / 13 : ℝ) ^ 2 + (5 / 13) ^ 2 = 1 := by norm_num
   have h3 : (3 / 5 : ℝ) ^ 2 + (4 / 5) ^ 2 = 1 := by norm_num
@@ -202,7 +169,7 @@ example : ∃ (μ₀ ν₀ : ProbSphere 2) (γ₁ : ℝ),
       (circlePt_mem_positiveQuadrant h2 (by norm_num) (by norm_num)),
     hQ (circlePt_mem_positiveQuadrant h3 (by norm_num) (by norm_num))
       (circlePt_mem_positiveQuadrant h4 (by norm_num) (by norm_num)),
-    by norm_num, by norm_num, ?_⟩
+    by norm_num, by norm_num, ?_, by norm_num⟩
   · have := congrArg (fun m : ProbSphere 2 => (m : Measure (SSphere 2)) {circlePt _ _ h3}) h
     simp [Pi.single_eq_of_ne (hne h1 h3 (by norm_num)),
       Pi.single_eq_of_ne (hne h2 h3 (by norm_num))] at this
