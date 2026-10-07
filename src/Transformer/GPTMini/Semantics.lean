@@ -52,6 +52,7 @@ import Transformer.GPTMini.Semantics.DepthResidual
 import Transformer.GPTMini.Semantics.DepthTransition
 import Transformer.GPTMini.Semantics.DepthFeatureBounds
 import Transformer.GPTMini.Semantics.DepthWordInput
+import Transformer.GPTMini.Semantics.DepthEncoding
 
 /-!
 # Internal semantic guarantees for the original softmax GPTMini
@@ -60,7 +61,7 @@ Source: the archived GPTMini at f11b6e2 and Basis raw-token semantics at
 cbafbe9. These results verify original operators, rather than replacing
 the model by the task oracle or merely quantifying over possible weights.
 
-Finite-softmax gaps retain RoPE/QKNorm/XSA and copy errors; ordered features distinguish same-bag depth words.
+Finite-softmax gaps retain RoPE/QKNorm/XSA and copy errors; actual ordered depth encoder invariants derive from raw words.
 Raw MQAR's last adjacent binding is independently proved in Transformer.Basis.RecallAnswer.
 
 Concrete original parameters compute raw ONE counts and phase through
@@ -194,7 +195,6 @@ logits. Its actual integer adapter solves both full recall grammars.
 Full successful parsing derives actual layout, final query and selected
 last write, including all chronological bounds, without routing premises.
 
-Actual integer readout derives correct logits from internal codes.
 These results cover given real parameters, without floating-point
 equivalence or optimizer convergence. No new unproved claims are exported.
 -/
