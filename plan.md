@@ -547,9 +547,13 @@ label code and one constant, plus one learned positional potential:
 52 free token fields + 11 fixed axes + one free position axis fit width
 64 exactly. The fixed output code is a decoder, not an input interaction
 bank; all input matching/value potentials are trained. The pointer
-energy sums Q(query,channel)+K(previous token,channel)+V(value,channel),
+energy sums Q(query,channel)+K(key token,channel)+V(value token,channel),
 with learned chronology and a free positional potential per context slot.
-The latter must learn table exclusion from observed routes, without a
+The current complete-recall construction considers every visible
+key/value position pair, with an additional free potential for each
+signed relative displacement. Adjacency must be learned, rather than
+supplied by a fixed predecessor shift or paired input encoder.
+The absolute-position potentials must learn table exclusion from observed routes, without a
 fixed table-record mask or an enumerated latent role bank.
 Its implicit channels must be summed by products of small sums, never
 an enumerated exponential feature table. A free six-state transition
@@ -577,6 +581,16 @@ bindings with swapped values give means 19/36 versus 17/36 and opposite
 strict decoded labels. This is a two-symbol/two-record control, not the
 full Basis recall proof. Its unrestricted training objective is convex;
 the forward reads actual raw neighbors rather than a paired-key encoder.
+Binding now extends this control's operator to fully learned physical
+key/value pairing. It proves that the computed all-pair/small-channel
+normalizer and inference are the exact affine-energy joint Gibbs model,
+whose complete likelihood is convex in all shared Q/K/value, absolute
+position, chronology and relative-binding weights simultaneously. The
+largest Basis recall layout has 28816 free scalars, including 127 shared
+relative offsets; no per-pair learned table or hard adjacency mask is
+stored. Naive route evaluation uses quadratically many position pairs
+per query and must be charged in the FLOP comparison. Full raw recall
+correctness and actual tensor/residual/tied integration remain open.
 
 For the ordered head, also investigate a row-softmax six-state Markov
 model: free token-conditioned transition logits, normalized causal state
@@ -814,3 +828,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Actual finite shared causal weights committed in d72d3b3. Proved the genuine standalone stochastic state/value head solves every raw parity prefix in both modes through the checked integer-list/greedy callback, including two-call label/EOS generation; actual data targets agree and their full likelihood is convex in the free shared domain. | Prove independent raw depth reference semantics and full learned depth/recall capability; two-head mixing and true prenorm/residual/tied tensor-stack realization remain before stage 3. |
 | 2026-10-07 | 2 | Actual raw learned parity head committed in b91036f. Proved the independent raw six-state depth data scan exactly matches Basis E2/E4 via genuine compression/chain/subsequence invariants, physical neutral/BOS transitions and saturated run counts. | Realize full finite shared learned depth capability and data targets; complete recall, two-head mixing and actual tensor-stack/tied/integer integration remain before stage 3. |
 | 2026-10-07 | 2 | Independent full raw depth semantics committed in 6c91a98. Proved the genuine finite shared learned head solves all raw depth prefixes in both modes, computes order/mode controls, and has correct raw-data complete labels with a globally convex actual shared likelihood. | Extend the jointly learned pointer to full raw recall/latest-write/filler exclusion, prove finite two-head mixing and actual prenorm/residual/tied tensor-stack realization before stage 3. |
+| 2026-10-07 | 2 | Full standalone learned depth capability committed in 3812fda. Replaced the proposed fixed neighboring-key shift by free relative binding over every visible position pair; proved exact compact inference/training coupling and unrestricted joint convexity, with 28816 recall scalars. | Derive the finite all-pair pointer's complete raw recall/latest-write/filler semantics and decoder margin; mixture and full tensor-stack realization remain before stage 3. |
