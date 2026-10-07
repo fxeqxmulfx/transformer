@@ -20,6 +20,9 @@ import Transformer.GPTMini.Convex.Structured.OutputMargins
 import Transformer.GPTMini.Convex.Structured.SharedReference
 import Transformer.GPTMini.Convex.Structured.SharedInterface
 import Transformer.GPTMini.Convex.Structured.SharedParity
+import Transformer.GPTMini.Convex.Structured.DepthCompression
+import Transformer.GPTMini.Convex.Structured.DepthScan
+import Transformer.GPTMini.Convex.Structured.DepthReference
 
 /-!
 # Structured alternatives guided by raw Basis semantics

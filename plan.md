@@ -654,6 +654,13 @@ inputs; no correct encoder/state/logit premise is used. Actual causal
 data-derived state/channel targets agree with the independently checked
 raw output, and their genuine likelihood is globally convex in all shared
 weights. This is head-level capability, not full tensor-block integration.
+DepthCompression/DepthScan/DepthReference now prove the six-state data
+scan against the independent raw Basis depth parser/subsequence test.
+Actual run compression, Bool-chain canonical forms, repeated-letter
+idempotence, saturated alternating counts, wrong-start rejection and
+neutral/BOS serialization derive the exact label on every valid raw
+prefix for E2/E4. This is independently proved data/reference semantics;
+the actual learned finite shared depth head must still be connected.
 
 Remaining acceptance tests: prove compact contraction of the latent
 partition, learned matching and joint value expressivity, complete Basis
@@ -797,3 +804,4 @@ Do not mark the cycle complete while a required proof or comparison remains.
 | 2026-10-07 | 2 | Joint causal/output confidence committed in 61226da. Proved ten-coordinate codes for all 1024 output IDs, the quantitative 11*p_correct-10 full-distribution margin, equality to actual compact Markov decoding and strict all-token margins for finite gain log(100000) through length 128. | Realize these finite tables in actual shared raw embedding fields and prove raw parity capability; full depth/recall, mixture and true residual/tied/integer integration remain. |
 | 2026-10-07 | 2 | Whole-vocabulary compact decoder committed in d84bd84. Constructed actual finite shared embedding/head weights, evaluated every genuine transition/initial/emission lookup and connected the real shared loss/output score to the same learned finite-row model and strict margin. | Prove the actual shared head's raw integer parity continuation and two-call generation; full depth/recall, mixture and residual/tied block integration remain. |
 | 2026-10-07 | 2 | Actual finite shared causal weights committed in d72d3b3. Proved the genuine standalone stochastic state/value head solves every raw parity prefix in both modes through the checked integer-list/greedy callback, including two-call label/EOS generation; actual data targets agree and their full likelihood is convex in the free shared domain. | Prove independent raw depth reference semantics and full learned depth/recall capability; two-head mixing and true prenorm/residual/tied tensor-stack realization remain before stage 3. |
+| 2026-10-07 | 2 | Actual raw learned parity head committed in b91036f. Proved the independent raw six-state depth data scan exactly matches Basis E2/E4 via genuine compression/chain/subsequence invariants, physical neutral/BOS transitions and saturated run counts. | Realize full finite shared learned depth capability and data targets; complete recall, two-head mixing and actual tensor-stack/tied/integer integration remain before stage 3. |
