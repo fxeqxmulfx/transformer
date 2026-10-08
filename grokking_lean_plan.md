@@ -22,7 +22,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Operational delayed generalization | Define train fit, a sustained held-out plateau, later generalization, and finite-budget censoring without future information entering a detector | Power et al., arXiv:2201.02177v1, sections 1 and 3.1; pinned causal histories | Twenty-seven proved threshold, prefix, confirmation, sustained-window, delay-bound and bounded-continuation laws/counterexamples; the full Python heuristic remains open |
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
-| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendices C–D | Fifty-five allocation/CE/derivative laws and counterexamples: both two-circuit budget regimes, actual multiclass CE, attained nonzero minima, optimum cost balance/ratio and correct fixed-table test decisions; native AdamW rule selection remains open |
+| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendices C–D | Sixty-nine allocation/CE/gradient/update laws and counterexamples: both budget regimes, attained actual CE minima, correct fixed-table decisions, actual subweight gradients and finite GD rates/absence obstruction; native AdamW rule selection remains open |
 | Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Seventy-four proved actual-CE component, saddle, stationary-state, class-centered output and decision-transfer results/counterexamples; 644 real head-pair loss observations and 644 stage/output observations reject interaction-only detection; causal multi-step formation remains open |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Fifty-five proved mean, energy, margin, cleanup and integer-encoding laws/counterexamples; exact certificates measured on all 238 preserved snapshots; 266 Python tests passed |
 | Division-task symmetry | Derive the diagnostic cells from the actual numeric task rather than assuming their labels or orbit interpretation | Power et al., section 3.1; author-code corpus and GrokkingObserver at 43d4d66 | Nineteen proved generator, valid-domain, orbit-equivalence, disjointness and finite-cardinality laws/counterexamples; token/Python implementation bridges remain open |
@@ -685,6 +685,30 @@ not establish delayed arrival, discovery of Gen or native AdamW
 convergence. Next derive dynamics of the actual product subweights and
 compare their rates/obstructions with preserved native moments, keeping
 all full-budget runs and earlier observers unchanged.
+
+`SectionC_SubweightGradient` derives both actual product-coordinate CE
+derivatives and all four partial derivatives in the source's independent
+subweights, valid also at zero products for r>=1. The candidate gradient
+is proved equal to those derivatives; it is not assigned as a success
+premise. `SectionC_SubweightDynamics` applies simultaneous finite GD to
+them and defines its actual repeated iteration. A product `a*b` changes
+to `a*b*(1+rate^2*marginal^2)-rate*marginal*(a^2+b^2)`. The difference
+of factor squares changes by multiplier `1-rate^2*marginal^2`, so the
+continuous-flow conservation is not silently transferred to finite GD.
+
+For r>1, initial factors `(0,genSeed)` and `(0,memSeed)` give product
+weights `rate*((q-1)/q)*seed^2` after one step. Unequal nonnegative seeds
+therefore yield correct training and wrong held-out decisions. The
+source's q=113, rate=0.01 and seeds 0.005/1 give exact products
+`7/28250000` and `28/2825`, a factor 40000. This does not assert loss
+descent for every prescribed rate or a later transition. A completely
+absent Gen factor pair remains absent at every actual defined GD
+iteration, independently of the other circuit and penalty coefficients.
+Thus the proved effective optimum and a feasible product-space
+improvement do not establish discovery of Gen. Fourteen checked results
+bring the total to **431** without new sorry. Next check how native
+adaptive normalization changes the seed-dependent rate; persistent
+moments, circuit discovery and delayed crossing remain open.
 
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse

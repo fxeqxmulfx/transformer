@@ -1,4 +1,6 @@
 import Transformer.Grokking.CircuitEfficiency.SectionC_TableLoss
+import Transformer.Grokking.CircuitEfficiency.SectionC_SubweightGradient
+import Transformer.Grokking.CircuitEfficiency.SectionC_SubweightDynamics
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEExistence
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEMinima
