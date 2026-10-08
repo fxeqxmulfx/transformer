@@ -3361,3 +3361,25 @@ initialized threshold classification including equality. Stable
 weak-decay relative selection, learned stochastic/numerical GPTMini
 and thermodynamic system-size transfer remain open. Frozen evidence,
 optimizers and checkpoints are unchanged.
+
+
+`CircuitEfficiency.SectionC_GainColdSeededThreshold` closes the exact
+initialized absolute-collapse boundary, including critical equality.
+With standard nonnegative zero-buffer seeds, a positive Gen partner,
+greater Gen gain and legal retained hyperparameters with positive
+decay/rate/epsilon/remaining decay, total mass tends to zero iff cold
+CE coefficient times Gen gain is at most decay times epsilon. The
+same iff holds for zero limits of all four physical coordinates.
+No future convergence or held-out success is a premise. A binary
+original-beta epsilon=1 control has the exact boundary decay=1.5.
+If rate times the cold Gen coefficient is at least epsilon, positive
+remaining decay excludes absolute collapse for every legal decay:
+the required threshold would force rate*decay at least one. The joint
+small-epsilon example uses beta1=0.9/beta2=0.98, epsilon=1e-8,
+rate=0.001, decay=0.1 and the same nonzero source-style physical seeds.
+Four results bring Grokking to **1097** and CircuitEfficiency to 619,
+without new sorry or target warnings. This classification concerns
+absolute physical mass, not stable relative Gen/Mem selection or a
+thermodynamic size limit. Next finish actual critical CE coefficient,
+score/confidence limits, then return to weak-decay relative selection
+and learned-head mechanisms. Frozen evidence and optimizers are unchanged.
