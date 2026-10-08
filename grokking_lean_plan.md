@@ -22,8 +22,8 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Operational delayed generalization | Define train fit, a sustained held-out plateau, later generalization, and finite-budget censoring without future information entering a detector | Power et al., arXiv:2201.02177v1, sections 1 and 3.1; pinned causal histories | Twenty-seven proved threshold, prefix, confirmation, sustained-window, delay-bound and bounded-continuation laws/counterexamples; the full Python heuristic remains open |
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
-| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendices C–D | 81 allocation/CE/gradient/update laws and counterexamples: attained actual CE minima, correct fixed-table decisions, subweight gradients, finite GD rates/absence obstruction and native adaptive seed-ratio transfer; persistent-moment rule selection remains open |
-| Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Seventy-four proved actual-CE component, saddle, stationary-state, class-centered output and decision-transfer results/counterexamples; 644 real head-pair loss observations and 644 stage/output observations reject interaction-only detection; causal multi-step formation remains open |
+| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendices C–D | 133 allocation/CE/gradient/update laws and counterexamples: attained actual CE minima, actual subweight derivatives, finite GD rates, closed clipped native parameter/moment feedback, positive-seed formation, zero-pair invariance, corrected generated-history bounds, symmetry test-loss floors and zero-decay train-CE descent; persistent-moment rule selection remains open |
+| Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Seventy-four proved actual-CE component, saddle, stationary-state, class-centered output and decision-transfer results/counterexamples; 644 real head-pair loss observations and 644 stage/output observations reject interaction-only detection; seeded fixed-table native formation is checked in CircuitEfficiency, learned-head multi-step formation remains open |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Fifty-five proved mean, energy, margin, cleanup and integer-encoding laws/counterexamples; exact certificates measured on all 238 preserved snapshots; 266 Python tests passed |
 | Division-task symmetry | Derive the diagnostic cells from the actual numeric task rather than assuming their labels or orbit interpretation | Power et al., section 3.1; author-code corpus and GrokkingObserver at 43d4d66 | Nineteen proved generator, valid-domain, orbit-equivalence, disjointness and finite-cardinality laws/counterexamples; token/Python implementation bridges remain open |
 | Gradient coherence and implicit bias | State what batch gradient agreement can and cannot imply; distinguish loss descent, task structure and optimizer-specific bias | Fixed-batch gradients; ordinary AdamW | Eighteen proved actual-CE derivative/decomposition/counterexample theorems; shared targets can yield arbitrarily high full alignment despite opposed answers |
@@ -927,6 +927,41 @@ complete absence, and full-state Gen/Mem symmetry. Next identify a
 symmetry-breaking mechanism or its necessary state/geometry conditions;
 the source's circuit-efficiency allocation theorem cannot be substituted
 for native adaptive dynamics under uniform parameter-wise decay.
+
+`CircuitEfficiency.SectionC_NativeDescent` derives actual zero-decay
+training-CE descent on the formed positive-factor/nonpositive-moment
+region. Every current clipped derivative is strictly negative, so retained
+native adaptation increases all four factors at any positive rate; both
+products and their total training score strictly increase. The actual
+multiclass CE has a globally negative derivative and therefore strictly
+decreases. Along positive source seeds, this holds between any two finite
+clocks after formation, with admissible beta2 on the actual closed path.
+
+The joint equal-seed countercase proves correct training decisions after
+the first step, strict subsequent training-CE decrease and held-out CE at
+least log two at every finite clock. The held-out loss may improve towards
+that floor; neither no held-out improvement nor universal argmax error is
+asserted. Training-CE convergence to zero is not yet established, and
+positive native decay or learned GPTMini features require new analysis.
+The source's coupled cost-asymmetric penalty is not transferred by naming
+uniform native decay as circuit efficiency.
+
+These seven checked results bring the total to **563** without new sorry;
+CircuitEfficiency now has 133 checked results and AdamW 155. The actual
+closed fixed-table native feedback loop has formation and nonformation,
+retained history estimates, symmetry obstruction and conditional continued
+loss improvement. Next derive a genuine symmetry-breaking or allocation
+mechanism with physical parameters, and analyze positive decay and native
+stationary limits before predicting a late held-out margin crossing.
+Continue the other spectral, geometry, operational and phase routes;
+these fixed-table results are not a completed grokking mechanism for GPTMini.
+For the next native-dynamics iteration, first derive necessary stationary
+conditions from the actual recurrence under an explicit convergent-state
+premise; do not presume convergence from bounded moments. Investigate
+efficiency encoded in the physical forward parameterization under the
+same uniform native decay, separately from introducing unequal decay
+groups or a coupled objective. Any simpler zero-decay convergence result
+must retain the symmetry test-loss obstruction and its fixed-table scope.
 
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
