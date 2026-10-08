@@ -22,7 +22,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Operational delayed generalization | Define train fit, a sustained held-out plateau, later generalization, and finite-budget censoring without future information entering a detector | Power et al., arXiv:2201.02177v1, sections 1 and 3.1; pinned causal histories | Twenty-seven proved threshold, prefix, confirmation, sustained-window, delay-bound and bounded-continuation laws/counterexamples; the full Python heuristic remains open |
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
-| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendices C–D | 172 allocation/CE/gradient/update laws and counterexamples: attained actual CE minima, actual subweight derivatives, finite GD rates, closed clipped native parameter/moment feedback, positive-seed formation, zero-pair invariance, corrected generated-history bounds, zero train-CE limits with permanent held-out obstruction, equal positive interior native balance, actual nonzero retained trajectories and closed positive-limit allocation/margin/test-CE laws; persistent-moment rule selection remains open |
+| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendices C–D | 180 allocation/CE/gradient/update laws and counterexamples: attained actual CE minima, actual subweight derivatives, finite GD rates, closed clipped native parameter/moment feedback, positive-seed formation, zero-pair invariance, corrected generated-history bounds, zero train-CE limits with permanent held-out obstruction, equal positive interior native balance, actual nonzero retained trajectories, closed positive-limit allocation/margin/test-CE laws and attained physical forward-efficiency norm budgets; persistent-moment rule selection remains open |
 | Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Seventy-four proved actual-CE component, saddle, stationary-state, class-centered output and decision-transfer results/counterexamples; 644 real head-pair loss observations and 644 stage/output observations reject interaction-only detection; seeded fixed-table native formation is checked in CircuitEfficiency, learned-head multi-step formation remains open |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Fifty-five proved mean, energy, margin, cleanup and integer-encoding laws/counterexamples; exact certificates measured on all 238 preserved snapshots; 266 Python tests passed |
 | Division-task symmetry | Derive the diagnostic cells from the actual numeric task rather than assuming their labels or orbit interpretation | Power et al., section 3.1; author-code corpus and GrokkingObserver at 43d4d66 | Nineteen proved generator, valid-domain, orbit-equivalence, disjointness and finite-cardinality laws/counterexamples; token/Python implementation bridges remain open |
@@ -1141,6 +1141,28 @@ forward and CE derivatives, preserving uniform AdamW rather than
 silently inserting unequal decay groups or the source's coupled norm
 objective. Global positive-limit convergence from unequal source seeds,
 stochastic learned GPTMini and numerical-kernel transfer remain open.
+
+`CircuitEfficiency.SectionC_PhysicalGain` implements efficiency in the
+actual forward: a fixed readout gain multiplies two trainable factors,
+whose actual squared norm is the sum of their coordinate squares. For
+every nonnegative target logit, the minimum squared trainable norm is
+twice that logit divided by the positive gain. Explicit square-root
+factors attain it, and equality forces balanced factors. A larger gain
+therefore achieves the same positive training logit at strictly smaller
+actual trainable norm. The fixed gain is not a trainable parameter, an
+optimizer group or a norm penalty inserted into cross-entropy. Both
+output and norm scaling laws follow from the physical parameters, and
+unit gains recover the previous source-table forward.
+
+These eight checked results bring the total to **622** without new sorry;
+CircuitEfficiency now has 180 checked results. The degree-two physical
+specialization differs from the source simulation's exponent 1.2 and
+assumed circuit costs. It does not establish that native AdamW selects
+the cheaper circuit. Next derive the true gained-forward CE partials,
+their shared clipping and actual retained feedback recurrence, then
+analyze the necessary positive finite-limit allocations under uniform
+decay. No successful held-out margin, supplied gradient stream or
+learned GPTMini feature-discovery premise is hidden in this norm result.
 
 Next derive a rule-selection mechanism in the actual physical forward
 under the same uniform native AdamW, and characterize boundary limits.

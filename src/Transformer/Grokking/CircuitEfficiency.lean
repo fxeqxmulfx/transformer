@@ -14,6 +14,7 @@ import Transformer.Grokking.CircuitEfficiency.SectionC_NativeCELimits
 import Transformer.Grokking.CircuitEfficiency.SectionC_NativePositiveBalance
 import Transformer.Grokking.CircuitEfficiency.SectionC_NativeUnitPath
 import Transformer.Grokking.CircuitEfficiency.SectionC_NativePositiveLimits
+import Transformer.Grokking.CircuitEfficiency.SectionC_PhysicalGain
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEExistence
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEMinima
