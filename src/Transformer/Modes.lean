@@ -69,6 +69,7 @@ import Transformer.Modes.Section5_PtBddFourier
 import Transformer.Modes.Section5_PowerIntegrability
 import Transformer.Modes.Section3_YCharFun
 import Transformer.Modes.Section3_SumCharFun
+import Transformer.Modes.Section5_FourierGap
 import Transformer.Modes.Section5_PtBddFejer
 import Transformer.Modes.Section5_PtBddSmallBall
 import Transformer.Modes.Section5_PtBddDecayFalse
