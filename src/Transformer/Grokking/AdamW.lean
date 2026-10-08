@@ -9,6 +9,8 @@ import Transformer.Grokking.AdamW.SecondStep
 import Transformer.Grokking.AdamW.MomentumCounterexample
 import Transformer.Grokking.AdamW.CoupledFirstStep
 import Transformer.Grokking.AdamW.CoupledThreshold
+import Transformer.Grokking.AdamW.CurvatureBound
+import Transformer.Grokking.AdamW.CurvatureCounterexample
 
 /-! Native AdamW update semantics and limits of transferring Euclidean
 effective-flow explanations of grokking to the actual optimizer. -/

@@ -30,7 +30,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Analogy only for current finite GPTMini; finite-size scaling not established |
 | Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Observed-logit integer certificate bridge and eight conditional native first-step gradient-error bounds/counterexamples proved; actual floating-point forward, autograd error generation and softmax collapse remain open |
-| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | Seventy-four native-update laws/counterexamples: state-dependent first-step descent, finite overshoot, conditional gradient-error bounds, second-step alignment, reachable momentum ascent and fresh-buffer compositional CE growth; repeated-step rule convergence remains unproved |
+| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | Eighty-seven update/curve laws/counterexamples: state-dependent descent, finite overshoot, conditional gradient-error bounds, reachable momentum ascent, compositional CE growth, interval derivative bounds and initial-Hessian counterexamples; repeated-step rule convergence remains unproved |
 
 ## Cycle
 
@@ -553,6 +553,29 @@ weighted tails, invalid states, zero-quotient scopes and noninterference.
 The full Python suite passes **293 tests in 904.206 seconds**; experiment
 check and the full Lean build, audit, generated index and forbidden
 checks pass. Existing readers and training implementations stay frozen.
+
+`AdamW.CurvatureBound` now derives a finite quadratic loss bound from
+actual derivative hypotheses and the interval envelope
+`d(t) <= d(0) + curvature*t`. Subtracting the linear and quadratic terms
+gives an antitone remainder by the real mean-value theorem. Therefore
+`f(rate) <= f(0) + d(0)*rate + curvature*rate^2/2`; the strict condition
+`curvature*rate < -2*d(0)` supplies finite descent for a positive rate.
+A concrete quadratic proves this coefficient/strict boundary sharp.
+The interval premise does not require global second continuous
+differentiability across activation boundaries, but it is not supplied
+by one measured Hessian or finite samples.
+
+`CurvatureCounterexample` uses actual binary CE of the explicit score
+`t - coefficient*t^4`. Every coefficient gives the same initial loss
+`log 2`, derivative `-1/2` and second derivative `1/4`. For every proposed
+positive rate, coefficient `2/rate^3` makes the endpoint score negative
+and increases actual positive CE. This varies the score family with the
+rate; it does not say that one fixed curve has no improving rate. The
+family is not identified with GPTMini's learned score. These thirteen
+proved results bring the total to **362** without new sorry. Next measure
+actual autograd HVP and loss curves along the archived native CPU
+displacement, preserving all previous observers and their source identity.
+Sampled curvature will remain evidence rather than an interval certificate.
 
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse

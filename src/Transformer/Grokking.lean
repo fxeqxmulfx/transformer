@@ -21,4 +21,6 @@ and finite stationary-state thresholds, including additive-score
 counterexamples to identifying circuits from nonlinear loss contrasts,
 class-centered output energy, limits of endpoint gate diagnostics, and
 current-margin conditions for additive output reconstruction, plus the
-native fresh-buffer growth threshold for actual compositional CE. -/
+native fresh-buffer growth threshold for actual compositional CE, and
+finite-step bounds with actual CE counterexamples to initial-curvature
+certificates. -/
