@@ -19,4 +19,5 @@ common-scaling cells, plus actual bilinear CE component gradients,
 stationary saddles, removal contrasts, regularized origin curvature
 and finite stationary-state thresholds, including additive-score
 counterexamples to identifying circuits from nonlinear loss contrasts,
-class-centered output energy and limits of endpoint gate diagnostics. -/
+class-centered output energy, limits of endpoint gate diagnostics, and
+current-margin conditions for additive output reconstruction. -/

@@ -102,6 +102,22 @@ theorem centeredInteraction_shift (cs : Finset C) (f : ℝ → ℝ → C → ℝ
 example : ({0, 1} : Finset ℕ).Nonempty := by
   exact ⟨0, by norm_num⟩
 
+/-- An input-independent class bias cancels from the contrast even though
+it can alter task decisions. Source: arXiv:2301.05217v1 §5.1's policy of
+retaining class bias when scoring references; the appendix-inspired
+interaction energy must therefore be paired with actual decision metrics. -/
+theorem centeredInteraction_class_bias (cs : Finset C) (f : ℝ → ℝ → C → ℝ)
+    (bias : C → ℝ) (a b : ℝ) (c : C) :
+    centeredInteraction cs (fun u v k => f u v k + bias k) a b c =
+      centeredInteraction cs f a b c := by
+  have hf : (fun k => scoreInteraction (fun u v => f u v k + bias k) a b) =
+      fun k => scoreInteraction (fun u v => f u v k) a b := by
+    funext k
+    unfold scoreInteraction
+    ring
+  unfold centeredInteraction
+  rw [hf]
+
 /-- The measured squared interaction is nonnegative by actual finite sums.
 Source: the pre-loss diagnostic refinement of arXiv:2301.05217v1's
 appendix; nonnegativity does not make this a correctness certificate. -/

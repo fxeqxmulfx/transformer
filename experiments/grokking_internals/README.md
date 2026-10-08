@@ -5,9 +5,10 @@ and confidence growth? Check all six proposed measurements: frozen linear
 probes, gradient agreement, activation spectra, FFN neuron specialization,
 causal ablations, and functional update decomposition.
 
-The follow-up pair-removal study is documented below: all 28 head pairs
-at 23 immutable snapshots, with answer-only CE and explicit zero-quotient
-controls. It adds observations, not training variants.
+The follow-up pair-removal studies are documented below: all 28 head pairs
+at 23 immutable snapshots, with answer-only CE, computation-stage outputs
+and explicit zero-quotient controls. They add observations, not training
+variants.
 
 | Run | Difference from grokking_progress | Budget |
 | --- | --- | ---: |
@@ -348,13 +349,82 @@ Lean also proves the stronger two-example counterexample in
 `2*a-b` and `2*b-a` give negative mean-CE interaction and **both** useful
 individual removals at `(1,1)`. Their actual mixed score derivatives
 and four-corner score contrasts are nevertheless zero. The loss can
-create the interaction pattern by itself. The next observation should
-retain four-corner logit contrasts before CE, removing common row shifts;
-it still must control for normalization and downstream FFN nonlinearities.
-This refinement has been proved on the scalar examples and has not yet
-been measured as a new real-transformer diagnostic.
+create the interaction pattern by itself. The follow-up below retains
+four-corner logit contrasts before CE, removing common row shifts, and
+distinguishes normalization and downstream FFN nonlinearities.
 
 Validation on 2026-10-08: `./make.py check experiments/grokking_internals`
 and the full `./make.py test` pass (275 tests, including nine new pair
 controls/noninterference checks). Lean build, audit, generated index and
 forbidden checks pass; no new sorry or additional axioms were introduced.
+
+## Output interactions at actual computation stages
+
+`compare_output_interactions.py` observes all 28 pairs at the same 23
+snapshots, retaining the earlier CE reader and results unchanged. For
+each pair, capture all four actual states at equals: attention output
+projections, FFN output projections, block residuals, final normalization
+and answer logits. Compute `I = z11 - z01 - z10 + z00` before applying
+loss. Center each logit row across all classes; intermediate feature
+coordinates remain uncentered. Common row offsets are invisible to
+softmax. Fixed class bias cancels from the contrast but is retained in
+the hypothetical additive output `z01 + z10 - z00` when scoring answers.
+All scopes below exclude the zero quotient.
+
+Report relative interaction energy as the mean squared centered logit
+contrast divided by the sum of the two single-removal change energies.
+An explicit energy floor retains `None` for an uninformative denominator.
+No head pair is selected or fitted. The three-corner reconstruction is
+arithmetic on observed outputs, not a separately trained architecture.
+
+| Seed 1 update | Actual accuracy | Median relative interaction, 28 pairs | Reconstruction accuracy range, 28 pairs |
+| --- | ---: | ---: | ---: |
+| 1,000 | 47.04% | 0.2963 | 1.80–42.89% |
+| 30,000 | 7.56% | 0.2809 | 4.02–8.52% |
+| 33,000 | 13.39% | 0.2261 | 5.24–14.04% |
+| 34,000 | 68.97% | 0.1476 | 41.35–69.90% |
+| 35,000 | 98.35% | 0.1499 | 65.25–98.39% |
+| 36,000 | 99.87% | 0.2171 | 64.60–99.85% |
+| 150,000 | 100.00% | 0.3163 | 27.51–100.00% |
+
+The relative interaction is higher at step 1,000 than at the transition,
+so its magnitude is not a monotone detector. At 150k the failed reference
+has median relative interaction **0.3212** with only **0.49%** accuracy,
+comparable to seed 1's **0.3163** at 100% accuracy. Nonlinear output
+interaction therefore does not certify rule learning. At the final
+successful seed 2 and seed 3 states, reconstruction accuracy ranges over
+pairs are 0–100% and 9.56–100%. Some pair interactions affect decisions
+strongly, while others leave every answer correct.
+
+For same-block head pairs, their own attention-projection contrast has
+RMS between `2.52e-9` and `9.00e-8` across all 276 observations. This
+finite float32 residual is compatible with an affine projection plus
+rounding. Their downstream FFN contrast is positive in all 276 cases,
+with RMS between `0.001217` and `1.09648`. A real-block float64 control
+checks an almost-zero affine contrast and a nonzero downstream FFN
+contrast, and a cross-block intervention leaves earlier causal stages
+unchanged. Final-output interaction alone cannot identify a learned
+cross-layer attention computation.
+
+Lean's `Composition.OutputInteractions` derives actual class centering,
+zero-energy invariance of CE and strict decisions, and the per-row
+sufficient condition `2 * interactionEnergy < current_margin^2` for
+correct additive reconstruction. Positive interaction can also preserve
+all decisions. Lean uses a coordinate sum; the observation reports
+coordinate/example means, and does not verify the theorem's per-row
+margin hypothesis. The binary-endpoint counterexample additionally shows
+that zero removal contrast can miss an interaction at interior gate
+values. Neither observed float64 summaries nor endpoint removals certify
+a global computation or causal training dynamics.
+
+[The completed results](output_interaction_results.json) contain 644
+pair observations with eight stages for each GPTMini and seven for the
+reference without final normalization, checkpoint/source hashes,
+four split/quotient scopes, reconstruction decisions and margins against
+the fixed baseline's strongest wrong class. Four missing intermediate
+reference weights remain explicit. Ten new controls check loss-induced
+false interactions, row-offset and scale invariance, endpoint blindness,
+nonlinear stage separation, and preservation of weights, gradients, modes,
+RNG and hooks, including failure cleanup. The complete suite passes
+**285 tests in 888.098 seconds**. Reproduce from `python/` with
+`uv run --locked python ../experiments/grokking_internals/compare_output_interactions.py`.

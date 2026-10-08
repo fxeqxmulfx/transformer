@@ -23,7 +23,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
 | Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; circuit-efficiency literature to investigate | Research pending |
-| Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Sixty-five proved actual-CE component, saddle, stationary-state, class-centered output and diagnostic-identification results/counterexamples; 644 real head-pair loss observations reject count-only detection and training-only rule identification; output-stage measurements and multi-step formation remain open |
+| Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Seventy-four proved actual-CE component, saddle, stationary-state, class-centered output and decision-transfer results/counterexamples; 644 real head-pair loss observations and 644 stage/output observations reject interaction-only detection; causal multi-step formation remains open |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Fifty-five proved mean, energy, margin, cleanup and integer-encoding laws/counterexamples; exact certificates measured on all 238 preserved snapshots; 266 Python tests passed |
 | Division-task symmetry | Derive the diagnostic cells from the actual numeric task rather than assuming their labels or orbit interpretation | Power et al., section 3.1; author-code corpus and GrokkingObserver at 43d4d66 | Nineteen proved generator, valid-domain, orbit-equivalence, disjointness and finite-cardinality laws/counterexamples; token/Python implementation bridges remain open |
 | Gradient coherence and implicit bias | State what batch gradient agreement can and cannot imply; distinguish loss descent, task structure and optimizer-specific bias | Fixed-batch gradients; ordinary AdamW | Eighteen proved actual-CE derivative/decomposition/counterexample theorems; shared targets can yield arbitrarily high full alignment despite opposed answers |
@@ -458,6 +458,47 @@ through an affine projection; downstream nonlinearities can create
 final-output interaction independently of a learned cross-layer
 attention algorithm. That implementation-stage transfer must be
 checked on actual saved weights rather than inferred from the toy map.
+
+The stage reader has completed all 644 pair observations at the same
+23 immutable snapshots, retaining the original CE reader's identity.
+It captures attention projections, FFN projections, residuals, final
+normalization and answer logits at equals; only class logits are centered.
+Same-block head pairs have their own attention-projection RMS contrast
+between `2.52e-9` and `9.00e-8` in the observed float32 outputs, while
+their own downstream FFN contrast is positive in all 276 observations,
+with RMS between `0.001217` and `1.09648`. The real-block float64 control
+also isolates the affine projection from downstream nonlinearities.
+This distinguishes computation stages; it does not identify an attention
+algorithm from final-output interaction.
+
+The median relative logit interaction over 28 pairs is `0.2963` at seed
+1's step 1,000 and `0.1476` at 34,000, so it does not grow monotonically
+into grokking. At 150,000 the failed reference has ratio `0.3212` with
+0.49% held-out nonzero accuracy, compared with seed 1's ratio `0.3163`
+and 100% accuracy. High interaction is therefore insufficient to identify
+rule learning. Hypothetical additive reconstruction at seed 1's final
+state yields pair-dependent accuracies from 27.51% to 100%; the other
+successful seeds range from 0% to 100% and 9.56% to 100%. These are
+current-output sensitivities, not prospective training interventions.
+Every contrast and ratio remains an uncertified float64 statistic of
+observed model outputs; Lean's energy is a per-row coordinate sum,
+whereas the reported energy is a coordinate/example mean.
+
+`OutputInteractions.Decisions` derives the actual three-corner
+reconstruction and its error, preserves fixed class bias, and proves
+that zero centered energy preserves CE and every strict target decision.
+Its current-margin bound `2 * interactionEnergy < margin^2` preserves
+the reconstruction's correct decision after removing the computed
+common row offset. A positive-interaction example preserves its decision
+as well, rejecting interaction-as-decision-change. `Basic` also proves
+that fixed class bias cancels from the contrast, even though it may
+change predictions. These nine proved results bring the total to **335**
+without new sorry. No aggregate mean or unverified floating-point bound
+supplies the theorem's per-row margin hypothesis. The implementation,
+controls, checkpoint hashes and full findings are in
+`experiments/grokking_internals/output_interaction_results.json` and its
+README. The full Python suite passes **285 tests in 888.098 seconds**;
+the earlier frozen readers and results remain unchanged.
 
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
