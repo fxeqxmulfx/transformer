@@ -3298,3 +3298,22 @@ from this actual convergent weighted path. Original nonzero-first-
 beta critical physical collapse, stable weak-decay relative selection,
 learned stochastic/numerical GPTMini and thermodynamic system-size
 transfer remain open. Frozen evidence and optimizers are unchanged.
+
+
+`CircuitEfficiency.SectionC_GainColdWeightedDissipation` retains both
+native moments while summing a strict input-induced decrement over
+the true four-coordinate CE step. A current large actual input and
+its denominator above epsilon give a positive gap in the weighted
+mass law: the original 4*rate*clip_bound*beta1^clock error remains,
+and (1-beta1)*epsilon*rate times the adaptive gap is subtracted.
+Other coordinates need no input floors. One result brings Grokking
+to **1087** and CircuitEfficiency to 609, without new sorry or target
+warnings. The joint current-hypothesis example uses its actual CE
+callback; no future input stream or parameter limit is prescribed.
+Next derive these current premises on initialized legal nonzero-beta
+paths whenever physical mass exceeds an arbitrary positive level.
+Convergence of the generated weighted observer and vanishing clock
+error should then exclude such late levels and prove critical
+physical collapse. Stable weak-decay relative selection, learned
+stochastic/numerical GPTMini and thermodynamic system-size transfer
+remain open. Frozen evidence and optimizers are unchanged.
