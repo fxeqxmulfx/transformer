@@ -3234,3 +3234,22 @@ actual initialized feedback. Stable weak-decay relative selection,
 learned stochastic/numerical GPTMini transfer and thermodynamic
 system-size scaling remain open. Frozen evidence and optimizers are
 unchanged.
+
+
+`AdamW.GeometricError` formalizes the numerical correction needed for
+nonzero first-beta clock errors. An observer with next-step increase
+bounded by budget*beta^n becomes antitone after adding its explicit
+remaining geometric budget. Legal beta and nonnegative budget generate
+a finite initialized observer ceiling; a nonnegative observer then has
+a finite nonnegative limit by order completeness and vanishing
+correction. A closed positive-constant counterexample proves that this
+law alone cannot force a zero limit. Five results bring Grokking to
+**1079** and AdamW to 199, without new sorry or target warnings; every
+external hypothesis group has a joint satisfying example. The actual
+CE path must still generate the one-step error budget and a strict
+input-dependent decrement. Next derive its clock error from the
+complete epsilon floor and newly retained moment bounds, then use
+the weighted physical parameter/moment observer. Nonzero-first-beta
+critical convergence, stable weak-decay relative selection, learned
+stochastic/numerical GPTMini transfer and thermodynamic system-size
+scaling remain open. Frozen evidence and optimizers are unchanged.
