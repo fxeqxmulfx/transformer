@@ -90,6 +90,7 @@ import Transformer.Modes.Section3_GaussianDensity
 import Transformer.Modes.Section3_CubicGaussianComparison
 import Transformer.Modes.Section3_CubicPower
 import Transformer.Modes.Section3_CubicFrequency
+import Transformer.Modes.Section3_CubicTailRates
 import Transformer.Modes.Section3_CharacteristicDerivatives
 import Transformer.Modes.Section3_DerivativeMoments
 import Transformer.Modes.Section3_DerivativeTaylor
