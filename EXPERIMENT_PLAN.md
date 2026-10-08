@@ -1,8 +1,9 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-07 UTC. **Active direction: [Grokking progress measurements](grokking_plan.md),
+Updated on 2026-10-08 UTC. **Active direction: [Grokking progress measurements](grokking_plan.md),
 on ordinary softmax transformers with unchanged AdamW, and the active
-[experiment-to-Lean grokking cycle](grokking_lean_plan.md).** The user changed
+[experiment-to-Lean grokking cycle](grokking_lean_plan.md), now restricted
+to a [RASP task family with realizability and model-size gates](grokking_rasp_plan.md).** The user changed
 direction on 2026-10-07. The [Basis correctness and convex architecture](plan.md)
 cycle is paused and unfinished in stages 3 and 4; its checkpoints and original
 FLOP budgets are retained. Complete real-model Basis semantics and the explicit
