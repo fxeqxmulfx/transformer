@@ -599,3 +599,94 @@ and plot with `uv run --locked --with matplotlib==3.10.8 python
 ../experiments/grokking_internals/plot_curvature.py`.
 The full `./make.py test` passes **300 tests in 915.584 seconds**;
 the experiment check and Lean build/audit/index/forbidden checks pass.
+
+## Same-gradient native-moment reset counterfactuals
+
+How much do the actual archived moment buffers change the next step,
+independently of its starting weights and clipped minibatch gradient?
+`compare_moment_resets.py` reads the same **19 noninitial states**, records
+four missing reference states and excludes four weight-only initializations.
+It restores the actual next sampler batch, computes and clips its gradient
+once, and copies that gradient into four disposable native CPU optimizers.
+Every branch starts from the same archived weights and uses the original
+scheduled rate `0.001`. The retained branch loads the actual saved buffers.
+
+| Branch | First buffer before gradient insertion | Second buffer before insertion | Bias clock after insertion |
+| --- | --- | --- | --- |
+| `retained` | Archived first moment | Archived second moment | Original clock + 1 |
+| `fresh_adamw` | Zero | Zero | 1 |
+| `reset_first_moment` | Zero | Archived second moment | Original clock + 1 |
+| `reset_second_moment` | Archived first moment | Zero | Original clock + 1 |
+
+The completed observations use **95.69 summed elapsed seconds** on a
+four-thread CPU reader. The retained branch reproduces the frozen momentum
+reader's restored batch hashes, gradient norms, direction norms, exhaustive
+before/after CE, answer accuracy and directional derivatives **exactly** on
+both populations at all 19 states. No CUDA trajectory resumes, no training
+update is inserted and every original 150,000-update budget stays unchanged.
+
+| Starting state | Before: held-out nonzero answer CE | Retained | Both + clock reset | First reset | Second reset |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Seed 1, 34k | 1.19208 | 1.22916 | 1.16114 | 1.15451 | 352.39542 |
+| Seed 1, 35k | 0.0553758 | 0.0552823 | 0.1311524 | 0.0554014 | 2.8547111 |
+| Seed 1, 40k | 0.0101112 | 0.0100634 | 1.2551925 | 0.0101152 | 7.9809489 |
+| Seed 2, 150k | 1.04e-7 | 6.89e-8 | 2.2553223 | 5.39e-8 | 7.73e-8 |
+| Failed reference, 150k | 7.41274 | 7.42869 | 5.81549 | 7.37984 | 5.69448 |
+
+These cells are CE **after one step from independent archived states**.
+At seed 1 34k, erasing only variance expands the total algorithm-direction
+norm from about `145.30` to `3.840e5`; the archived first moment now lacks
+its old variance denominator. Held-out accuracy falls from `68.97%` to
+`1.11%`, compared with `68.71%` after the retained step. At seed 1 35k,
+variance erasure lowers accuracy to `50%`; at 40k it lowers it to `1.06%`.
+This demonstrates a large same-gradient next-step dependence on optimizer
+state, rather than a failure to store the rule in the starting weights.
+
+The early-learning controls reject sensitivity to resetting AdamW as a
+standalone signal of grokking's onset. Seed 2 at 150k starts with `100%`
+held-out accuracy, remains there with retained buffers and falls to `71.49%`
+with a fresh optimizer. Seed 3 at 150k falls from `100%` to `1.17%` under
+variance-only erasure. Conversely, resetting the first moment at seed 2
+35k gives `92.94%` versus the retained branch's `77.55%`, but this checkpoint
+is a temporary loss of an already acquired solution, not its first onset.
+The failed reference remains near chance in every branch despite its
+large answer-CE decrease under two resets.
+
+Across all states, held-out answer CE increases in `8/19` retained,
+`14/19` fresh, `6/19` first-reset and `13/19` second-reset observations.
+Train full CE increases in `3/19`, `16/19`, `8/19` and `14/19`, respectively.
+These descriptive counts include tiny floating-point changes and are not
+statistical estimates of a reset's safety or benefit. First-moment erasure
+also changes magnitude even in an aligned history: Lean derives the
+constant-gradient factor `(1-beta1)/(1-beta1^(clock+1))`, about `0.1` at
+these large clocks. A better endpoint does not isolate misalignment removal.
+
+![All 19 same-gradient buffer-reset observations](moment_resets.svg)
+
+`Transformer.Grokking.AdamW.MomentRecurrence`, `MomentBounds`, `MomentMemory`
+and `PartialReset` derive corrected histories, causal bounds, exact direct
+buffer forgetting and the partial-reset formulas. Erasing variance cannot
+reduce absolute adaptive direction at a fixed numerator and current gradient;
+erasing the first moment restores scalar adaptive-current-gradient alignment.
+Neither claim includes the finite rate, decoupled decay or generalization.
+At the lab betas, direct old-buffer contributions attenuate below `1e-4`
+after 100/500 identical-gradient insertions. Different parameters generally
+produce different later gradients, so this is not a forgetting theorem for
+the full training system or a derivation of the delayed transition time.
+
+[The complete results](moment_reset_results.json) pin sources, checkpoint
+hashes, batch hashes, clocks, branch directions and full/answer/EOS objectives.
+The maximum relative finite-displacement versus algorithm discrepancy over
+the four branches is `4.42e-4`; these float32 CPU updates remain uncertified.
+Seven new scientific controls check partial-buffer/clock isolation,
+independent retained/fresh native EagerStepper updates, preservation of the
+supplied state and its next update, failure cleanup, invalid registration
+and clocks, negative variance rejection, and first-moment erasure reversing
+the reachable scalar-quadratic momentum counterexample at the observed rate.
+Reproduce from `python/` with `uv run --locked python
+../experiments/grokking_internals/compare_moment_resets.py`; plot with
+`uv run --locked --with matplotlib==3.10.8 python
+../experiments/grokking_internals/plot_moment_resets.py`.
+The full `./make.py test` passes **307 tests in 943.004 seconds**;
+experiment check, full Lean build, audit, generated index and forbidden
+checks pass. The moment theorems are committed as `afffd88`.

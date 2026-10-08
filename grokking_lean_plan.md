@@ -771,6 +771,28 @@ that feedback to actual circuit development. The positive-seed product
 trajectory and later task-margin crossing remain open. Preserve all prior
 full-budget runs, observers and numerical results.
 
+The same-gradient moment-reset observer now covers all 19 preserved native
+noninitial states, with seven new controls and all **307 Python tests passing
+in 943.004 seconds**. Four disposable CPU branches retain actual buffers,
+reset both buffers and clock, reset only the first moment, or reset only
+variance. Their retained branch agrees exactly with the frozen momentum
+reader on both exhaustive populations: starting/ending CE, answer accuracy,
+direction norms/slopes and restored minibatches. All checkpoint/source hashes
+are verified; no training run, budget or earlier observer/result changes.
+
+At the primary 34k checkpoint, variance-only erasure gives held-out nonzero
+answer CE 352.40 versus 1.2292 with retention; total direction norm grows from
+145.30 to 384010.22. At seed 2's successful 150k state, a fresh optimizer
+lowers the next-copy accuracy from 100% to 71.49%; seed 3 variance erasure
+lowers it to 1.17%. First-moment erasure helps the temporary seed 2 35k
+regression but also changes effective magnitude, and the failed reference
+remains near chance under every branch. Thus next-step dependence on moments
+is observed and formally explained in its stated scalar cases, while reset
+sensitivity does not single out initial grokking. These are single-step CPU
+counterfactuals, not evidence of multi-step recovery or loss of the represented
+rule before the intervention. Full results and all-state plots are linked in
+the experiment README. Continue the feedback and circuit-development proofs.
+
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
 properties survive the native adaptive first update even though the
