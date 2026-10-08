@@ -98,6 +98,7 @@ import Transformer.Modes.Section3_CubicFrequency
 import Transformer.Modes.Section3_CubicTailRates
 import Transformer.Modes.Section3_CubicCorrectionTail
 import Transformer.Modes.Section3_CubicIntegralComparison
+import Transformer.Modes.Section3_CubicDensity
 import Transformer.Modes.Section3_CharacteristicDerivatives
 import Transformer.Modes.Section3_DerivativeMoments
 import Transformer.Modes.Section3_DerivativeTaylor
