@@ -1,5 +1,5 @@
 import Transformer.Modes.Section5_PtBdd
-import Transformer.Modes.Section5_FinitePhase
+import Transformer.Modes.Section5_PhaseRoots
 import Transformer.Modes.Section3_Cumulants
 import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
 import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
