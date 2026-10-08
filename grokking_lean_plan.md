@@ -3213,3 +3213,24 @@ errors at nonzero first beta. Stable weak-decay relative selection,
 learned stochastic/numerical GPTMini transfer and thermodynamic
 system-size scaling remain open. Frozen evidence and optimizers are
 unchanged.
+
+
+`AdamW.RetainedInputDissipation` transfers the native inserted-input
+denominator floor and strict adaptive gap to arbitrary legal first
+and second betas. Every strict subfloor eventually holds uniformly
+over all nonnegative current variances and inputs meeting the fixed
+input floor. A nonpositive retained first moment cannot cancel the
+new negative input; its true next magnitude covers (1-beta1) times
+that floor. The resulting adaptive gap keeps the complete numerator,
+variance and completed clock. Three results bring Grokking to **1074**
+and AdamW to 194, without new sorry or target warnings. Joint examples
+include beta1=0.9/beta2=0.98 and nonzero retained moments at a positive
+clock. The uniform tail is conditional on the current input magnitude,
+not an independently supplied future gradient trajectory. Critical
+native convergence at nonzero first beta still requires deriving a
+weighted mass decrement and absorbing other coordinates' geometric
+clock errors. Next formalize that correction and apply it to the
+actual initialized feedback. Stable weak-decay relative selection,
+learned stochastic/numerical GPTMini transfer and thermodynamic
+system-size scaling remain open. Frozen evidence and optimizers are
+unchanged.
