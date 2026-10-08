@@ -52,6 +52,7 @@ import Transformer.Grokking.CircuitEfficiency.SectionC_GainPairDifference
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainPairContraction
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainPairMass
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainRelativeStep
+import Transformer.Grokking.CircuitEfficiency.SectionC_GainRelativePath
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEExistence
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEMinima
