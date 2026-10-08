@@ -40,6 +40,7 @@ import Transformer.Grokking.CircuitEfficiency.SectionC_GainCycleFeedback
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainCycleStep
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainCyclePath
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainFeedbackBounds
+import Transformer.Grokking.CircuitEfficiency.SectionC_GainFeedbackFloor
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEExistence
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEMinima
