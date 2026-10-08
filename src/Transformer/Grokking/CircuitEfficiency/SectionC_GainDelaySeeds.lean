@@ -1,4 +1,5 @@
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainDelayPrefix
+import Transformer.Grokking.CircuitEfficiency.SectionC_GainBounds
 
 /-!
 # Positive efficient Gen seeds allow arbitrarily long wrong-test prefixes
@@ -155,5 +156,31 @@ theorem fixed_native_arbitrary_wrong_test_prefix (remaining : ℕ) :
     (1 / 100000000) (1 / 10) (1 / 1000) 1 (by norm_num) (by norm_num) (by norm_num)
     (by norm_num) (by norm_num) (by norm_num) (by norm_num) (by norm_num) (by norm_num)
     (by norm_num) (by norm_num) (by norm_num)
+
+/-- The same fixed-native delayed prefixes have bounded physical
+parameters and both retained buffers for all time. Sources: section
+3's small seeds, appendix C tables and native AdamW at 3a44336;
+boundedness and positive Gen formation are proved on the very same
+trajectories, without inferring parameter convergence or later success. -/
+theorem fixed_native_bounded_wrong_test_prefix (remaining : ℕ) :
+    ∀ budget : ℕ, ∃ seed ceiling : ℝ, 0 < seed ∧ 0 < ceiling ∧
+      let initial := seededNativeSubweights ((0, seed), (1, 1))
+      let path := gainNativePath remaining 3 2 1 (9 / 10) (49 / 50) (1 / 100000000) (1 / 10) (1 / 1000) initial
+      (∀ n, NonnegativeNativeState (path n) ∧ ∀ i,
+        (path n i).parameter ≤ ceiling ∧ -(path n i).moment ≤ 1 ∧ (path n i).variance ≤ 1 ^ 2) ∧
+      (∀ n, 0 < physicalCircuitScore 3 (path (n + 1) 0).parameter (path (n + 1) 1).parameter) ∧
+      ∀ n, n ≤ budget →
+        let x := physicalCircuitScore 3 (path n 0).parameter (path n 1).parameter
+        let y := physicalCircuitScore 2 (path n 2).parameter (path n 3).parameter
+        Transformer.Grokking.NaiveLoss.StrictCorrect (trainTableLogits remaining x y) 0 ∧
+          Transformer.Grokking.NaiveLoss.StrictCorrect (heldoutTableLogits remaining x y) (0 : Fin (remaining + 1)).succ := by
+  intro budget
+  obtain ⟨seed, hseed, hpositive, hprefix⟩ := fixed_native_arbitrary_wrong_test_prefix remaining budget
+  obtain ⟨ceiling, hceiling, hbounded⟩ := gain_native_seeded_bounded remaining 3 2 1 (9 / 10) (49 / 50)
+    (1 / 100000000) (1 / 10) (1 / 1000) 0 seed 1 1
+    (by norm_num) (by norm_num) (by norm_num) (by norm_num) (by norm_num)
+    (by norm_num) (by norm_num) (by norm_num) (by norm_num) (by norm_num) (by norm_num)
+    (by norm_num) (le_of_lt hseed) (by norm_num) (by norm_num)
+  exact ⟨seed, ceiling, hseed, hceiling, hbounded, hpositive, hprefix⟩
 
 end Transformer.Grokking.CircuitEfficiency
