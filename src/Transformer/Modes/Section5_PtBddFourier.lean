@@ -1,5 +1,5 @@
 import Transformer.Modes.Section5_PtBdd
-import Transformer.Modes.Section5_PhaseSummation
+import Transformer.Modes.Section5_FourierIntegral
 import Transformer.Modes.Section3_Cumulants
 import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
 import Mathlib.Analysis.SpecialFunctions.Gaussian.PoissonSummation
@@ -32,7 +32,8 @@ for `n > 4`.
   constant depending on both.  The borderline `β = 2` is not claimed.  This is
   what the source's stationary-phase argument would give once the tail is
   repaired (the tail mass `ρ^{-1/β}` is negligible against `ρ^{-1/2}` exactly for
-  `β < 2`); it is not proved here.
+  `β < 2`). `Section5_FourierIntegral` proves it by summing all unit intervals
+  with the shifted Gaussian weight retained.
 
 * "`∫|𝓕ν_t|ⁿ ≲ ∫_{‖ξ‖≤1} 1 + ∫_{‖ξ‖>1} |ξ|^{-n/2}`, which is finite as long
   as `n > 4`" is proved, for any function with the decay of
@@ -48,28 +49,6 @@ open scoped ENNReal Topology
 
 namespace Transformer
 namespace Modes
-
-/-- `𝓕ν_t(ξ) = 𝔼 e^{-i(ξ₁ G(t) + ξ₂ G'(t))}`, the Fourier transform of the law
-`ν_t` of `(G(t), G'(t))`.  arXiv:2412.09080v3, §5.5. -/
-noncomputable def fourierNu (β t : ℝ) (ξ : ℝ × ℝ) : ℂ :=
-  ∫ x, Complex.exp (-(Complex.I * ((ξ.1 * bigG β t x + ξ.2 * bigG' β t x : ℝ) : ℂ)))
-    ∂gaussianReal 0 1
-
-/-- **Equation (eq:uniform-decay)**, for a fixed `t` and `0 < β < 2`:
-`|𝓕ν_t(ξ)| ≲ (1 + ‖ξ‖)^{-1/2}` for all `ξ ∈ ℝ²`.
-
-Not proved here.  The source states it for every `β`, with a constant depending
-only on `β`; that is false — the constant depends on `t` (`not_uniform_decay`),
-and the estimate fails for every `β > 2` (`not_uniform_decay_of_two_lt`).  The
-hypothesis `β < 2` is the correction; see the module docstring.
-
-Source: arXiv:2412.09080v3, §5.5, `eq:uniform-decay`. -/
-theorem uniform_decay {β : ℝ} (hβ : 0 < β) (hβ2 : β < 2) (t : ℝ) :
-    ∃ C : ℝ, ∀ ξ : ℝ × ℝ, ‖fourierNu β t ξ‖ ≤ C / Real.sqrt (1 + ‖ξ‖) := by
-  sorry
-
-/-- The hypotheses of `uniform_decay` are satisfiable: `β = 1`. -/
-example : (0 : ℝ) < 1 ∧ (1 : ℝ) < 2 := ⟨one_pos, one_lt_two⟩
 
 /-! ### The constant of `eq:uniform-decay` cannot be uniform in `t` -/
 
@@ -168,6 +147,17 @@ theorem lintegral_pow_lt_top_of_decay {F : ℝ × ℝ → ℂ} {C : ℝ}
 
 /-- The hypothesis of `lintegral_pow_lt_top_of_decay` is satisfiable. -/
 example : ∀ ξ : ℝ × ℝ, ‖(0 : ℂ)‖ ≤ 0 / Real.sqrt (1 + ‖ξ‖) := fun _ => by simp
+
+/-- For the corrected bandwidth range, the actual Fourier transform has
+integrable `n`th power for every `n > 4`, by the now-proved decay.
+The source prints this consequence without the needed `β < 2` restriction
+for its decay argument. Source: arXiv:2412.09080v3, §5.5, after `eq:uniform-decay`. -/
+theorem lintegral_fourierNu_pow_lt_top {β : ℝ} (hβ : 0 < β) (hβ2 : β < 2)
+    (t : ℝ) {n : ℕ} (hn : 5 ≤ n) : ∫⁻ ξ : ℝ × ℝ, ‖fourierNu β t ξ‖ₑ ^ n < ∞ := by
+  obtain ⟨C, hC⟩ := uniform_decay hβ hβ2 t
+  exact lintegral_pow_lt_top_of_decay (C := C) hC hn
+
+example : (0 : ℝ) < 1 ∧ (1 : ℝ) < 2 ∧ 5 ≤ (5 : ℕ) := by norm_num
 
 end Modes
 end Transformer
