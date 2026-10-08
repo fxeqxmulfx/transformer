@@ -1,13 +1,18 @@
-# Grokking: an active experiment-to-Lean research cycle
+# Grokking: the experiment-to-Lean route list (closed)
 
-Started 2026-10-07 at the user's explicit request. Status: active. Work solo.
+**Closed on 2026-10-08: superseded by [grokking_plan.md](grokking_plan.md),**
+which replaced both the measurement study and the RASP realizability cycle
+named below. This file is kept as the ledger of the routes' results; do not
+extend it.
+
+Started 2026-10-07 at the user's explicit request. Status: closed. Work solo.
 The [Basis/convex cycle](plan.md) remains paused and unfinished; ANSR stays
 stopped. Continue the [measurement study](grokking_plan.md) with ordinary
 softmax and unchanged native AdamW. Every declared run retains 150,000
 updates. The research goal has no requested token or time limit.
 
 Updated 2026-10-08 after user steering: the **primary task family is RASP**.
-The active [RASP realizability-first cycle](grokking_rasp_plan.md) requires
+The [RASP realizability-first cycle](grokking_plan.md), since folded into the grokking plan, requires
 an explicit task/program/resource certificate before studying its learned
 Gen dynamics. Width, depth and heads are now explicit research variables.
 Existing fixed-table Gen/Mem results remain auxiliary; no more scalar limit

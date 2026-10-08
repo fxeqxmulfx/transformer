@@ -1,9 +1,11 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-08 UTC. **Active direction: [Grokking progress measurements](grokking_plan.md),
-on ordinary softmax transformers with unchanged AdamW, and the active
-[experiment-to-Lean grokking cycle](grokking_lean_plan.md), now restricted
-to a [RASP task family with realizability and model-size gates](grokking_rasp_plan.md).** The user changed
+Updated on 2026-10-08 UTC. **Active direction: [Grokking: how it works and when it fails](grokking_plan.md),
+rebuilt on 2026-10-08 at the user's request around three measured boundaries
+(whether the rule is expressible at the model's size, memorization capacity and
+the critical data size) on RASP and C-RASP tasks, on ordinary softmax
+transformers with unchanged AdamW. The earlier [route list](grokking_lean_plan.md)
+is closed and kept as the ledger of its results.** The user changed
 direction on 2026-10-07. The [Basis correctness and convex architecture](plan.md)
 cycle is paused and unfinished in stages 3 and 4; its checkpoints and original
 FLOP budgets are retained. Complete real-model Basis semantics and the explicit

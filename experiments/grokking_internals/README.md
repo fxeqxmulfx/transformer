@@ -257,7 +257,9 @@ effective temperature for AdamW nor finite-size scaling is established
 here. Liu et al., arXiv:2205.10343v2, discuss an effective representation
 theory; Žunkovič/Ilievski, arXiv:2210.15435v1, analyze solvable phase
 transition models. Their assumptions are not transferred to GPTMini.
-The active formalization cycle is [grokking_lean_plan.md](../../grokking_lean_plan.md).
+These measurements belong to the route list of
+[grokking_lean_plan.md](../../grokking_lean_plan.md), closed on 2026-10-08;
+the active plan is [grokking_plan.md](../../grokking_plan.md).
 
 From `python/`, reproduce the snapshot with `uv run --locked python
 ../experiments/grokking_internals/summarize.py`, and figures with
