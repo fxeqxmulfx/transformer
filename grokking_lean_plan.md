@@ -3087,3 +3087,21 @@ critical equality permits without presuming attraction. Stable weak-
 decay relative selection, learned stochastic/numerical GPTMini transfer
 and thermodynamic system-size scaling remain open. Frozen transformer
 evidence and optimizers are unchanged.
+
+
+`CircuitEfficiency.SectionC_GainColdLoss` ports the actual retained
+output limits at 2c2a85b to the sharp strict cold threshold. Both physical
+circuit scores and the Gen-minus-Mem margin tend to zero; original train
+and held-out CE approach log(class count); every full held-out softmax
+class probability approaches its uniform value. All actual classes enter
+the exponential sum, and no successful decision, future confidence or
+loss is an independent premise. Three results bring Grokking to **1055**
+and CircuitEfficiency to 593, without new sorry or target warnings.
+Joint nonzero source-style examples use legal retained beta memory and
+the decay=2/epsilon=1 binary configuration. Absolute confidence limits
+do not classify exact finite-clock accuracy or relative Gen/Mem decay.
+Next examine balanced finite limits at or above the cold threshold,
+including equality, before attempting actual critical convergence.
+Stable weak-decay relative selection, learned stochastic/numerical
+GPTMini transfer and thermodynamic system-size scaling remain open.
+Frozen transformer evidence and optimizers are unchanged.
