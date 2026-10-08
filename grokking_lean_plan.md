@@ -3008,3 +3008,23 @@ noncollapse condition. Critical equality, stable weak-decay confidence/
 relative selection, learned stochastic/numerical GPTMini transfer and
 thermodynamic system-size scaling remain open. Frozen transformer
 evidence and optimizers are unchanged.
+
+
+`CircuitEfficiency.SectionC_GainColdBounds` bounds the true next
+total parameter mass using any supplied positive floor for all four
+complete corrected denominators. More importantly, actual growing
+clocks generate a common tail for every floor strictly below epsilon,
+without gradient, parameter or variance convergence. Combining this
+with initialized sign invariance and the actual cold CE ceiling
+generates both retained mass envelopes on the original path. Three
+results bring Grokking to **1044** and CircuitEfficiency to 582,
+without new sorry or target warnings. Every external hypothesis group
+has a joint satisfying example, including nonzero source-style data.
+Next use the generated tail and positive contraction weights to prove
+actual total parameter and retained moment collapse whenever
+coldGainCEGradientScale*Gen_gain < decay*epsilon. The opposite strict
+initialized noncollapse condition is already proved; critical equality
+and stable weak-decay relative circuit selection remain open. Learned
+stochastic/numerical GPTMini transfer and thermodynamic system-size
+scaling are separate unfinished routes. Frozen transformer evidence
+and optimizers are unchanged.
