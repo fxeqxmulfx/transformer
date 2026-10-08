@@ -69,6 +69,7 @@ import Transformer.Modes.Section5_PtBddFourier
 import Transformer.Modes.Section5_PowerIntegrability
 import Transformer.Modes.Section3_YCharFun
 import Transformer.Modes.Section3_SumCharFun
+import Transformer.Modes.Section3_PhaseTaylor
 import Transformer.Modes.Section3_FourierRegularization
 import Transformer.Modes.Section3_DensityInversion
 import Transformer.Modes.Section3_DensityFamily
