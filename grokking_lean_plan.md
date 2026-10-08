@@ -3105,3 +3105,25 @@ including equality, before attempting actual critical convergence.
 Stable weak-decay relative selection, learned stochastic/numerical
 GPTMini transfer and thermodynamic system-size scaling remain open.
 Frozen transformer evidence and optimizers are unchanged.
+
+
+`CircuitEfficiency.SectionC_GainColdCriticalLimits` proves that a
+nonnegative normalized native pair at or above its coefficient threshold
+has only the zero balanced parameter point. Applied to the actual
+clipped CE Gen/Mem coefficients, the cold greater-gain ceiling excludes
+every nonzero nonnegative balanced physical point at or above the
+threshold, including critical equality. Consequently any supplied
+finite physical parameter limit on the original legal initialized path
+there must be zero: input and normalized balance follow from the actual
+feedback and retained histories. Three results bring Grokking to **1058**
+and CircuitEfficiency to 596, without new sorry or target warnings.
+All external hypothesis groups have joint satisfying examples; the
+exact critical zero native path realizes the conditional convergence
+premise. The point example permits nonzero retained buffers because
+normalized parameter balance is not a fixed whole-optimizer-state
+claim. Actual positive-seed critical convergence remains open, as do
+stable weak-decay relative selection, learned stochastic/numerical
+GPTMini transfer and thermodynamic system-size scaling. Next examine
+the true critical mass dissipation, beginning with a legal zero-first-
+beta control before transferring any argument to retained beta1=0.9.
+Frozen transformer evidence and optimizers are unchanged.
