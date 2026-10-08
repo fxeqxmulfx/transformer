@@ -42,6 +42,7 @@ import Transformer.Modes.Section2_MainIntPhiT
 import Transformer.Modes.Section3_Hermite
 import Transformer.Modes.Section3_GaussianHermite
 import Transformer.Modes.Section3_ScalarGaussianFourier
+import Transformer.Modes.Section3_HermiteFourier
 import Transformer.Modes.Section3_Cumulants
 import Transformer.Modes.Section3_ExpMoments
 import Transformer.Modes.Section3_MixedMoments
