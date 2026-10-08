@@ -23,7 +23,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
 | Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; circuit-efficiency literature to investigate | Research pending |
-| Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Research pending; derive a coupled-component objective and its actual derivatives before transferring it to attention or interpreting an instability as a thermodynamic transition |
+| Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Twenty-nine proved actual bilinear binary-CE derivative, saddle, nonconvexity, removal-contrast and regularized origin-curvature results; learned attention and multi-step formation remain open |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Fifty-five proved mean, energy, margin, cleanup and integer-encoding laws/counterexamples; exact certificates measured on all 238 preserved snapshots; 266 Python tests passed |
 | Division-task symmetry | Derive the diagnostic cells from the actual numeric task rather than assuming their labels or orbit interpretation | Power et al., section 3.1; author-code corpus and GrokkingObserver at 43d4d66 | Nineteen proved generator, valid-domain, orbit-equivalence, disjointness and finite-cardinality laws/counterexamples; token/Python implementation bridges remain open |
 | Gradient coherence and implicit bias | State what batch gradient agreement can and cannot imply; distinguish loss descent, task structure and optimizer-specific bias | Fixed-batch gradients; ordinary AdamW | Eighteen proved actual-CE derivative/decomposition/counterexample theorems; shared targets can yield arbitrarily high full alignment despite opposed answers |
@@ -359,6 +359,32 @@ unconditional repeated-step descent, not grokking or convergence of
 GPTMini. These fourteen proved theorems add no sorry, bringing the total
 to **261**. A native CPU float64 two-step sanity check also gives loss
 `2.8125e-7 -> 3.12654e-8 -> 2.12373e-7` at the rate `0.001`.
+
+`Composition.Basic`, `Curvature` and `StationarySaddle` now specialize the
+source's explicitly speculative composition hypothesis to ordinary binary
+softmax CE with a bilinear score `x*y`. Deriving both actual partial
+derivatives distinguishes flat coordinate restrictions from stationary
+regions: the axes have constant loss, but the only zero full gradient is
+the origin. Every neighborhood of that origin contains both better and
+worse states; it is not a local minimum, and the actual parameter loss is
+not jointly convex. A four-corner removal contrast is negative for aligned
+components and positive for opposed ones. Adding the explicitly stated
+coupled L2 penalty `lambda*(x^2+y^2)/2` gives the actual origin Hessian
+`[[lambda,-1/2],[-1/2,lambda]]`. Its aligned direction has negative
+curvature for `0 <= lambda < 1/2`; above that threshold the origin's
+quadratic form is nonnegative. This is local curvature, not global
+convexity, a thermodynamic limit, or a theorem about decoupled AdamW.
+The CE has unit weight, so this numeric threshold is not silently
+transferred to the answer/EOS averaged training objective. These
+twenty-nine proved results add no sorry, bringing the total to **290**.
+No theorem makes exactly zero deterministic initialization escape, gives
+a probability for random initialization, or identifies this score with
+a GPTMini head circuit. Increasing an already positive product can be
+confidence alone, without any new held-out decision. Next measure all
+pairwise head-removal contrasts on immutable real GPTMini checkpoints,
+with individual-removal effects, all four losses, nonzero-quotient
+controls and early-generalization seeds. A contrast sign by itself will
+not count as a unique algorithm or a forecast of grokking.
 
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
