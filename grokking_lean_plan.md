@@ -30,7 +30,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Actual fixed native two-circuit decision limits do not commute between explicit vanishing positive Gen initialization families and long time, for both the earlier balanced zero-beta path and original legal beta1=0.9/beta2=0.98 retained memory with source-style double-zero first factors. Each member succeeds, but no uniform finite success start exists. Width/task remain fixed and actual full feedback generates every limit; no thermodynamic size limit, temperature or Gibbs distribution is supplied. Analogy only for finite GPTMini; finite-size scaling and learned/numerical transfer remain open |
 | Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Observed-logit integer certificate bridge and eight conditional native first-step gradient-error bounds/counterexamples proved; actual floating-point forward, autograd error generation and softmax collapse remain open |
-| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | 203 update/history/curve laws and counterexamples: state-dependent descent, finite overshoot, gradient-error bounds, reachable momentum ascent, compositional CE growth, interval curvature bounds, causal corrected-moment bounds, direct buffer forgetting, distinct-gradient feedback, partial resets, retained scalar states, exact-real native clipping, derived moment/direction limits, necessary finite-limit parameter balance, actual corrected-denominator identities, positivity, parameter lower bounds, denominator limits from actual retained inputs, explicit two-factor retained-moment envelope growth/noncollapse laws, the full first-clock epsilon denominator floor/parameter increment ceiling and the legal zero-beta normalized-input identity at arbitrary retained clocks; repeated-step rule convergence remains unproved |
+| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | 209 update/history/curve laws and counterexamples: state-dependent descent, finite overshoot, gradient-error bounds, reachable momentum ascent, compositional CE growth, interval curvature bounds, causal corrected-moment bounds, direct buffer forgetting, distinct-gradient feedback, partial resets, retained scalar states, exact-real native clipping, derived moment/direction limits, necessary finite-limit parameter balance, actual corrected-denominator identities, positivity, parameter lower bounds, denominator limits from actual retained inputs, explicit two-factor retained-moment envelope growth/noncollapse laws, the full first-clock epsilon denominator floor/parameter increment ceiling and the legal zero-beta normalized-input identity at arbitrary retained clocks; repeated-step rule convergence remains unproved |
 
 The latest checked cold-route closure includes exact critical equality with
 original retained betas: initialized physical collapse, native input/buffer/
@@ -3436,3 +3436,26 @@ routes remain part of the active full transformer objective. Stable
 weak-decay attraction, learned stochastic/numerical GPTMini and a
 thermodynamic system-size limit remain open. Six frozen measurements,
 full-budget runs, optimizers and checkpoints are unchanged.
+
+
+`AdamW.MomentSquare` derives native first/second-buffer coupling from
+same-input insertions, without sign, clipping or convergence premises.
+When beta1 squared is below beta2, the squared first moment is bounded
+by an explicit positive scale times retained variance. A nonnegative
+square remainder proves preservation through each actual insertion
+and through every actual scalar path satisfying the initial guard.
+The original beta1=0.9/beta2=0.98 scale is exactly 49/17. A second
+insertion law propagates a positive present numerical square budget;
+it prepares the finite-clock correction rather than prescribing a
+future history bound. An actual original-beta first insertion satisfies
+the guard, while resetting only variance to zero violates it. This is
+a proved numerical counterfactual; preserved optimizer states are not
+reset. Six results bring Grokking to **1110** and native AdamW to 209,
+with CircuitEfficiency unchanged at 626 and no new sorry or target
+warnings. Next derive initialized finite-history budgets and corrected
+direction bounds independent of epsilon and gradient magnitude, then
+use them for weak-decay relative selection and learned-coordinate
+transfer. No initialized corrected direction ceiling, attraction or
+task generalization follows from the current buffer guard alone. The
+full delayed-generalization, confidence, geometry, spectral and phase
+routes stay active; all six frozen measurements and runs are unchanged.
