@@ -30,7 +30,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Analogy only for current finite GPTMini; finite-size scaling not established |
 | Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Observed-logit integer certificate bridge and eight conditional native first-step gradient-error bounds/counterexamples proved; actual floating-point forward, autograd error generation and softmax collapse remain open |
-| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | Eighty-seven update/curve laws/counterexamples: state-dependent descent, finite overshoot, conditional gradient-error bounds, reachable momentum ascent, compositional CE growth, interval derivative bounds and initial-Hessian counterexamples; repeated-step rule convergence remains unproved |
+| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | 120 update/history/curve laws and counterexamples: state-dependent descent, finite overshoot, gradient-error bounds, reachable momentum ascent, compositional CE growth, interval curvature bounds, causal corrected-moment bounds, direct buffer forgetting and same-gradient partial-reset semantics; repeated-step rule convergence remains unproved |
 
 ## Cycle
 
@@ -735,6 +735,41 @@ seed multi-step emergence and feasible margin crossing rather than
 inferring them from first-step normalization or an attained static
 optimum. Zero seed, overshoot and momentum ascent remain relevant
 countercases to unrestricted transfers.
+
+`AdamW.MomentRecurrence`, `MomentBounds`, `MomentMemory` and `PartialReset`
+derive the documented PyTorch 2.14.1 zero-initialized exponential moments,
+positive-clock corrections, continued histories and compatibility with the
+previous first/second-step formulas. A bounded causal gradient prefix gives
+corrected first-moment magnitude at most its coordinate bound and corrected
+second moment between zero and the squared bound. The adaptive direction is
+bounded by the coordinate bound divided by epsilon; no alignment with the
+current gradient follows from that bound.
+
+Under exactly the same subsequent gradient inputs, the difference caused by
+an old moment is exactly beta^age times its old difference. It tends to zero,
+and erasing an actual first/second buffer has the proved causal-prefix bounds.
+For the lab's beta1=0.9 and beta2=0.98, raw contributions are attenuated below
+1e-4 after 100 and 500 shared-gradient insertions, respectively, and remain
+so afterwards. These are raw buffer contributions, not a training-time
+explanation: adaptive normalization and parameter-induced changes in future
+gradients remain outside that shared-input estimate.
+
+The counterfactual partial-reset formulas keep the original completed-update
+clock. Erasing a physical second moment cannot reduce absolute adaptive
+direction at a fixed numerator and current gradient. At zero current gradient
+it exposes a stale first moment divided by epsilon. Erasing the first moment
+instead restores scalar adaptive-current-gradient alignment. Even for a
+constant already aligned history it also multiplies the original direction
+by `(1-beta1)/(1-beta1^(clock+1))`; removing misalignment is therefore not an
+isolated explanation of a reset's observed benefit. Neither reset theorem
+includes finite-step descent, decoupled decay or a grokking guarantee.
+
+These thirty-three checked results bring the total to **476** without new
+sorry. Native persistent-moment formulas are now derived; next bound how
+different parameter trajectories change their gradient inputs and connect
+that feedback to actual circuit development. The positive-seed product
+trajectory and later task-margin crossing remain open. Preserve all prior
+full-budget runs, observers and numerical results.
 
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
