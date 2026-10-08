@@ -521,15 +521,49 @@ These fourteen proved results bring the total to **349** with no new
 sorry. Persistent momentum, minibatch histories and learned rule decisions
 remain open beyond this specialization.
 
+The archived-momentum reader has now completed 19 noninitial snapshots.
+It restores the actual next minibatch on one disposable CPU model and
+native optimizer copy, preserving the original CUDA training and budget.
+Four initial weight files lack archived optimizer/sampler states and are
+excluded; four intermediate reference weights remain missing. Exhaustive
+sample-weighted train/held-out answer, EOS and original averaged gradients
+are diagnostics, not gradients supplied to the update. All named clocks
+and parameter registrations match the archived native builder.
+
+All 19 measured total directions have negative estimated derivatives
+for the exhaustive training objective and its next minibatch, yet finite
+full train CE increases in three probes. Seed 1's held-out nonzero answer
+slopes at 33k and 34k are positive, with observed finite CE increases
+`0.0025951` and `0.0370853`, before the later canonical transition. At
+36k the estimated slope is negative but the finite CE change positive.
+The failed reference's final probe reduces full train CE and increases
+held-out answer CE, despite its retained-buffer direction predicting
+held-out decrease. The inserted stochastic gradient and updated adaptive
+denominator can change that conclusion. One-step alignment, old momentum
+and decay alone therefore do not provide a causal grokking forecast.
+
+These are float64 diagnostics of float32 CPU autograd/optimizer outputs;
+they are not the visited CUDA next step or exact derivative certificates.
+Very small loss changes and sign disagreements need rounding/curvature
+bounds before causal attribution. The completed
+`momentum_direction_results.json` and grokking_internals README preserve
+every checkpoint, source and next-batch hash. Eight new independent
+controls cover native update/sampler agreement, full-batch gradients,
+weighted tails, invalid states, zero-quotient scopes and noninterference.
+The full Python suite passes **293 tests in 904.206 seconds**; experiment
+check and the full Lean build, audit, generated index and forbidden
+checks pass. Existing readers and training implementations stay frozen.
+
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
 properties survive the native adaptive first update even though the
 Euclidean norm conservation law does not. Keep the now-derived
 state-dependent finite-step interval; do not replace it by a universal
-prescribed rate. The reachable momentum counterexample now identifies
-the missing direction-alignment condition; next read actual archived
-moment buffers and distinguish current full-gradient alignment from
-the stochastic next minibatch. Extend the now-derived
+prescribed rate. The reachable momentum counterexample and archived
+direction study now identify the missing direction-alignment and
+finite-rate conditions. Next connect a multi-step objective/geometry
+change to persistent native moments, rather than inferring it from one
+stochastic update. Extend the now-derived
 error certificate to nonzero gradients and actual numerical kernels only
 with verified premises. Continue rule/memorization competition and
 coupled-component formation, plus control-parameter/spectral-gap

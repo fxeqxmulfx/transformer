@@ -428,3 +428,91 @@ nonlinear stage separation, and preservation of weights, gradients, modes,
 RNG and hooks, including failure cleanup. The complete suite passes
 **285 tests in 888.098 seconds**. Reproduce from `python/` with
 `uv run --locked python ../experiments/grokking_internals/compare_output_interactions.py`.
+
+## Archived momentum and the next stochastic direction
+
+`compare_momentum.py` reads actual optimizer and sampler states at the
+19 noninitial pinned snapshots. The four seeded initial weight files
+have no archived moment/sampler state and are explicitly excluded; four
+intermediate reference weights are still missing. Every original
+150,000-update run stays completed. One disposable CPU model/optimizer
+copy takes the minibatch selected by restoring the checkpoint's sampler
+and uses the next scheduled rate, original clipping and native AdamW.
+The copy is discarded, including probes from the final checkpoints.
+This is a counterfactual CPU observation, not resumed CUDA training.
+
+Before the update, compute exhaustive gradients of the current answer CE,
+EOS CE and original averaged CE on each train/held-out all/nonzero
+population. Every chunk contributes its sample-count weight; small tails
+do not receive the weight of full chunks. These diagnostic gradients
+never feed the update. Exhaustive diagnostics use evaluation mode; the
+disposable native update uses training mode. Tied parameters appear once
+in registration order.
+Read the retained buffer direction, the newly corrected adaptive
+direction, decoupled decay, their total, and the actual finite CPU
+displacement. Their dot products distinguish alignment with the restored
+minibatch from alignment with the entire training or held-out objective.
+
+The estimated loss-rate derivative is `-gradient dot down_direction`.
+It describes a local affine parameter path with the computed direction
+held fixed. Recompute the losses after the actual finite step as a
+separate observation. All rows below use rate `0.001`, and the held-out
+column excludes the zero quotient.
+
+| Seed 1 update | Estimated held-out answer CE slope | Finite held-out answer CE change | Finite full train CE change |
+| --- | ---: | ---: | ---: |
+| 1,000 | -95.746 | -0.0048513 | -0.0014784 |
+| 30,000 | -153.054 | -0.1044663 | +0.0788875 |
+| 33,000 | +2.539 | +0.0025951 | -9.99e-10 |
+| 34,000 | +12.133 | +0.0370853 | +0.0022819 |
+| 35,000 | -0.094935 | -9.35e-5 | -7.95e-8 |
+| 36,000 | -0.00011245 | +2.77e-6 | -1.66e-9 |
+| 40,000 | -0.049068 | -4.78e-5 | -1.28e-7 |
+| 150,000 | -4.76e-6 | -2.28e-8 | -1.29e-8 |
+
+Every measured total direction has a negative estimated derivative for
+the exhaustive original training loss and for its next minibatch.
+Nevertheless, the finite full training loss increases in **3 of 19**
+probes. Local alignment therefore does not supply a safe finite rate.
+The held-out answer loss increases at 33k and 34k despite the subsequent
+canonical grokking transition. At 36k its local slope and finite change
+have opposite signs. Three more such sign disagreements occur in early
+learning controls near very low losses. These remain uncertified
+floating-point observations; their small differences do not identify
+rounding versus curvature without additional error bounds.
+
+The failed reference's final step decreases full train CE by `0.0009144`
+while increasing held-out nonzero answer CE by `0.0159453`; its estimated
+held-out answer slope is `+74.164`. The retained-buffer direction alone
+has slope `-80.260`, the new adaptive direction `+84.067` and decay
+`-9.903`. Reading old momentum alone therefore misses the new gradient
+and preconditioner. For seed 1 at 33k, decay contributes `-1.105` but
+the adaptive term `+3.644`, giving a total slope `+2.539`. Decay does
+not ensure held-out descent in these observed states.
+
+Lean's existing `SecondStep` and reachable `MomentumCounterexample`
+separate local alignment from guaranteed descent. The new
+`CoupledFirstStep`/`CoupledThreshold` results additionally derive growth
+for the actual scalar compositional CE under **zero** moment buffers:
+`decay*(s + epsilon*(exp(s^2)+1)) < 1`. Some positive growing amplitude
+exists iff `decay < 1/(2*epsilon)`; it reduces CE while preserving an
+already correct binary decision. This fresh-buffer, unit-CE threshold
+is not assigned to the archived answer/EOS objective or its accumulated
+moments. None of these theorems verifies the numerical gradient program
+or supplies multi-step GPTMini rule convergence.
+
+[The completed results](momentum_direction_results.json) retain every
+checkpoint hash, restored next-batch hash, moment clock, objective,
+four exhaustive populations and before/after losses. The maximum
+relative full-versus-component gradient discrepancy is `3.48e-7`;
+the relative finite-displacement versus algorithm-direction discrepancy
+is at most `2.81e-4`. Float64 statistics do not turn their float32
+inputs into exact certificates. Eight new controls check an independent
+full-batch gradient oracle, weighted tails, a separately restored native
+EagerStepper, zero-quotient scopes, noninterference and failure cleanup,
+invalid clocks/variance/registration, and the reachable scalar momentum
+counterexample. Reproduce from `python/` with
+`uv run --locked python ../experiments/grokking_internals/compare_momentum.py`.
+The full `./make.py test` passes **293 tests in 904.206 seconds**;
+experiment check, Lean build/audit, generated index and forbidden checks
+pass. No training implementation or earlier observer/result is modified.
