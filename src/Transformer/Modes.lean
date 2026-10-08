@@ -66,6 +66,7 @@ import Transformer.Modes.Section4_ScaleSpace
 import Transformer.Modes.Section4_Tail
 import Transformer.Modes.Section5_PtBdd
 import Transformer.Modes.Section5_PtBddFourier
+import Transformer.Modes.Section5_PowerIntegrability
 import Transformer.Modes.Section5_PtBddFejer
 import Transformer.Modes.Section5_PtBddSmallBall
 import Transformer.Modes.Section5_PtBddDecayFalse

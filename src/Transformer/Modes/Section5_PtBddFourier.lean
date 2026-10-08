@@ -38,8 +38,9 @@ for `n > 4`.
 * "`∫|𝓕ν_t|ⁿ ≲ ∫_{‖ξ‖≤1} 1 + ∫_{‖ξ‖>1} |ξ|^{-n/2}`, which is finite as long
   as `n > 4`" is proved, for any function with the decay of
   `eq:uniform-decay`: `lintegral_pow_lt_top_of_decay`.  For `β > 2` the decay
-  is not available, so this route to a continuous density of `μ_t = ν_t^{*n}` is
-  closed there.
+  is not available. `Section5_FractionalFourier` supplies a smaller positive
+  exponent for every `β > 0`; `Section5_PowerIntegrability` proves actual
+  power integrability at fixed `t` whenever `n > 4(β + 1)`.
 
 Source: arXiv:2412.09080v3, §5.5, `eq:uniform-decay`.
 -/
