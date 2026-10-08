@@ -34,6 +34,7 @@ import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdSelection
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainGrowthEnvelope
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainGrowthBounds
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainDelayPrefix
+import Transformer.Grokking.CircuitEfficiency.SectionC_GainDelaySeeds
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEExistence
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEMinima
