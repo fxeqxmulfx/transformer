@@ -22,6 +22,7 @@ import Transformer.Grokking.CircuitEfficiency.SectionC_GainLimitBalance
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainAllocation
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedPath
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainPositiveLimits
+import Transformer.Grokking.CircuitEfficiency.SectionC_GainBoundary
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEExistence
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEMinima
