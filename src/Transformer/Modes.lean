@@ -73,6 +73,7 @@ import Transformer.Modes.Section3_PhaseTaylor
 import Transformer.Modes.Section3_WeightedPhase
 import Transformer.Modes.Section3_FourthOrderPhase
 import Transformer.Modes.Section3_CharacteristicTaylor
+import Transformer.Modes.Section3_CharacteristicCubic
 import Transformer.Modes.Section3_SmallFrequency
 import Transformer.Modes.Section3_GaussianComparison
 import Transformer.Modes.Section3_FourierRegularization
