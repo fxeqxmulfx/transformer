@@ -23,7 +23,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
 | Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; circuit-efficiency literature to investigate | Research pending |
-| Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Twenty-nine proved actual bilinear binary-CE derivative, saddle, nonconvexity, removal-contrast and regularized origin-curvature results; learned attention and multi-step formation remain open |
+| Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Thirty-seven proved actual bilinear binary-CE derivative, saddle, nonconvexity, removal-contrast, origin-curvature and stationary-state threshold results; learned attention and multi-step formation remain open |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Fifty-five proved mean, energy, margin, cleanup and integer-encoding laws/counterexamples; exact certificates measured on all 238 preserved snapshots; 266 Python tests passed |
 | Division-task symmetry | Derive the diagnostic cells from the actual numeric task rather than assuming their labels or orbit interpretation | Power et al., section 3.1; author-code corpus and GrokkingObserver at 43d4d66 | Nineteen proved generator, valid-domain, orbit-equivalence, disjointness and finite-cardinality laws/counterexamples; token/Python implementation bridges remain open |
 | Gradient coherence and implicit bias | State what batch gradient agreement can and cannot imply; distinguish loss descent, task structure and optimizer-specific bias | Fixed-batch gradients; ordinary AdamW | Eighteen proved actual-CE derivative/decomposition/counterexample theorems; shared targets can yield arbitrarily high full alignment despite opposed answers |
@@ -385,6 +385,20 @@ pairwise head-removal contrasts on immutable real GPTMini checkpoints,
 with individual-removal effects, all four losses, nonzero-quotient
 controls and early-generalization seeds. A contrast sign by itself will
 not count as a unique algorithm or a forecast of grokking.
+
+`Composition.StationaryStates` now classifies the stationary equations
+of that same actual penalized loss, assuming nonnegative lambda. Every
+stationary pair has `x=y`, with either `x=0` or
+`lambda=1/(exp(x^2)+1)`. Nonzero states exist exactly for
+`0 < lambda < 1/2`; the ordinary expression
+`sqrt(log((1-lambda)/lambda))` gives positive and negative aligned
+witnesses whose actual gradients are proved zero. At or above `1/2`
+only the origin is stationary. These eight new proved results bring
+the total to **298**, without new sorry. They establish a finite
+equilibrium threshold, not global-minimum classification, dynamical
+attraction or a thermodynamic phase transition. Native AdamW uses
+decoupled decay and coordinate normalization; transferring this L2
+coefficient to that algorithm remains unsupported.
 
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
