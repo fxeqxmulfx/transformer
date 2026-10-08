@@ -22,7 +22,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Operational delayed generalization | Define train fit, a sustained held-out plateau, later generalization, and finite-budget censoring without future information entering a detector | Power et al., arXiv:2201.02177v1, sections 1 and 3.1; pinned causal histories | Twenty-seven proved threshold, prefix, confirmation, sustained-window, delay-bound and bounded-continuation laws/counterexamples; the full Python heuristic remains open |
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
-| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendices C–D | 169 allocation/CE/gradient/update laws and counterexamples: attained actual CE minima, actual subweight derivatives, finite GD rates, closed clipped native parameter/moment feedback, positive-seed formation, zero-pair invariance, corrected generated-history bounds, zero train-CE limits with permanent held-out obstruction, equal positive interior native balance and an actual nonzero retained trajectory at every valid beta; persistent-moment rule selection remains open |
+| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendices C–D | 172 allocation/CE/gradient/update laws and counterexamples: attained actual CE minima, actual subweight derivatives, finite GD rates, closed clipped native parameter/moment feedback, positive-seed formation, zero-pair invariance, corrected generated-history bounds, zero train-CE limits with permanent held-out obstruction, equal positive interior native balance, actual nonzero retained trajectories and closed positive-limit allocation/margin/test-CE laws; persistent-moment rule selection remains open |
 | Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Seventy-four proved actual-CE component, saddle, stationary-state, class-centered output and decision-transfer results/counterexamples; 644 real head-pair loss observations and 644 stage/output observations reject interaction-only detection; seeded fixed-table native formation is checked in CircuitEfficiency, learned-head multi-step formation remains open |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Fifty-five proved mean, energy, margin, cleanup and integer-encoding laws/counterexamples; exact certificates measured on all 238 preserved snapshots; 266 Python tests passed |
 | Division-task symmetry | Derive the diagnostic cells from the actual numeric task rather than assuming their labels or orbit interpretation | Power et al., section 3.1; author-code corpus and GrokkingObserver at 43d4d66 | Nineteen proved generator, valid-domain, orbit-equivalence, disjointness and finite-cardinality laws/counterexamples; token/Python implementation bridges remain open |
@@ -1118,22 +1118,45 @@ Next state positive-limit allocation/margin/test-CE laws directly on
 actual closed paths, using this nonzero valid native path to witness all
 joint hypotheses, before inspecting physical forward efficiency.
 
-Next investigate dynamics that select the correct reference rather than
-assuming a learned margin. Derive which descent and noncollapse
-properties survive the native adaptive first update even though the
-Euclidean norm conservation law does not. Keep the now-derived
-state-dependent finite-step interval; do not replace it by a universal
-prescribed rate. The reachable momentum counterexample and archived
-direction study now identify the missing direction-alignment and
-finite-rate conditions. Next connect a multi-step objective/geometry
-change to persistent native moments, rather than inferring it from one
-stochastic update. Extend the now-derived
-error certificate to nonzero gradients and actual numerical kernels only
-with verified premises. Continue rule/memorization competition and
-coupled-component formation, plus control-parameter/spectral-gap
-formulations rather than treating these
-optimizer obstructions as a complete grokking mechanism. Keep those claims distinct
-from multi-step momentum dynamics and from the actual GPTMini loss. Preserve
+`CircuitEfficiency.SectionC_NativePositiveLimits` states the positive
+interior consequences directly on actual closed clipped CE updates.
+At constant positive learning rate and valid native betas/epsilon, finite
+convergence of all four parameters to positive limits implies positive
+uniform decay and equal limit factors within and across Gen/Mem. Actual
+input and buffer convergence are derived, without a symmetric-buffer,
+supplied-gradient-limit or instantaneous matching premise. The actual
+Gen-minus-Mem product margin tends to zero; actual multiclass held-out
+CE converges to its actual reference-point value, at least log two, and
+cannot tend to zero. A zero limiting margin is explicitly not assigned
+a finite-clock accuracy, since a margin may stay positive at every
+finite clock while tending to zero.
+
+These three checked results bring the total to **614** without new sorry;
+CircuitEfficiency now has 172 checked results. Every joint-hypothesis
+example uses the actual nonzero native unit path at beta1=0.9/beta2=0.98,
+with evolved buffers, growing clocks and its explicitly chosen epsilon.
+Next inspect boundary allocations and physical forward efficiency:
+different logit production per trainable parameter must enter the actual
+forward and CE derivatives, preserving uniform AdamW rather than
+silently inserting unequal decay groups or the source's coupled norm
+objective. Global positive-limit convergence from unequal source seeds,
+stochastic learned GPTMini and numerical-kernel transfer remain open.
+
+Next derive a rule-selection mechanism in the actual physical forward
+under the same uniform native AdamW, and characterize boundary limits.
+Retained closed CE feedback now has checked formation, nonformation,
+zero-decay score/loss asymptotics and positive finite-limit allocation
+obstructions. These do not prove global convergence or a learned
+generalizing margin. Distinct physical logit production, boundary
+allocations and changing learned features must be analyzed explicitly.
+Keep the derived state-dependent finite-step interval and reachable
+momentum counterexample; do not substitute a universal prescribed rate
+or infer multi-step objective/geometry progress from one stochastic step.
+Extend the numerical error certificate to nonzero gradients and actual
+kernels only with verified premises. Continue coupled-component,
+control-parameter and spectral-gap routes as competing formulations,
+rather than treating optimizer obstructions as a complete mechanism.
+Keep fixed-table dynamics distinct from actual GPTMini loss. Preserve
 the distinction between an inverse-rate characteristic time and the time
 to cross a task-dependent generalization threshold. Extend phase-transition
 formulations only with stated control parameters and asymptotic regimes.
