@@ -7,6 +7,7 @@ import Transformer.Grokking.Operational
 import Transformer.Grokking.Geometry
 import Transformer.Grokking.DivisionOrbits
 import Transformer.Grokking.Composition
+import Transformer.Grokking.CircuitEfficiency
 
 /-! Exact mathematical formulations of grokking and its candidate
 measurements. Current scope: finite-class confidence and decisions, and
@@ -23,4 +24,5 @@ class-centered output energy, limits of endpoint gate diagnostics, and
 current-margin conditions for additive output reconstruction, plus the
 native fresh-buffer growth threshold for actual compositional CE, and
 finite-step bounds with actual CE counterexamples to initial-curvature
-certificates. -/
+certificates, and corrected fixed-circuit efficiency allocation with
+positive-penalty and global-optimality premises. -/
