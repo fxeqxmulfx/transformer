@@ -6,7 +6,7 @@ import Transformer.Grokking.AdamW.FiniteThreshold
 import Transformer.Grokking.AdamW.Overshoot
 import Transformer.Grokking.AdamW.GradientError
 import Transformer.Grokking.AdamW.SecondStep
-import Transformer.Grokking.AdamW.MomentMemory
+import Transformer.Grokking.AdamW.MomentFeedback
 import Transformer.Grokking.AdamW.PartialReset
 import Transformer.Grokking.AdamW.MomentumCounterexample
 import Transformer.Grokking.AdamW.CoupledFirstStep

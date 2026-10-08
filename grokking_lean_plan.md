@@ -30,7 +30,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Analogy only for current finite GPTMini; finite-size scaling not established |
 | Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Observed-logit integer certificate bridge and eight conditional native first-step gradient-error bounds/counterexamples proved; actual floating-point forward, autograd error generation and softmax collapse remain open |
-| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | 120 update/history/curve laws and counterexamples: state-dependent descent, finite overshoot, gradient-error bounds, reachable momentum ascent, compositional CE growth, interval curvature bounds, causal corrected-moment bounds, direct buffer forgetting and same-gradient partial-reset semantics; repeated-step rule convergence remains unproved |
+| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | 128 update/history/curve laws and counterexamples: state-dependent descent, finite overshoot, gradient-error bounds, reachable momentum ascent, compositional CE growth, interval curvature bounds, causal corrected-moment bounds, direct buffer forgetting, distinct-gradient feedback and same-gradient partial-reset semantics; repeated-step rule convergence remains unproved |
 
 ## Cycle
 
@@ -792,6 +792,33 @@ sensitivity does not single out initial grokking. These are single-step CPU
 counterfactuals, not evidence of multi-step recovery or loss of the represented
 rule before the intervention. Full results and all-state plots are linked in
 the experiment README. Continue the feedback and circuit-development proofs.
+
+`AdamW.MomentFeedback` derives the missing different-input comparison. For
+two initial buffers and two gradient streams with causal prefix disagreement
+at most D, their moment difference is bounded by
+`beta^n*abs(initialDifference) + (1-beta^n)*D`. The later-gradient term is
+attained exactly by constant different streams and cannot be removed in
+general. Constant different inputs also leave their exact difference in
+the corrected first moments at every positive clock, despite identical
+zero initial buffers. These are input-stream countercases, not asserted
+visited GPTMini trajectories.
+
+For coordinate magnitudes bounded by C and gradient disagreement at most D,
+the two actual zero-initialized second moments differ by at most
+`(1-beta2^n)*2*C*D`. For supplied scalar parameter paths, a local bound
+on their loss-derivative difference by L times parameter distance, together
+with distance at most R on the visited prefix, gives the first-moment
+bound `(1-beta1^n)*L*R`. The theorem uses objective derivative values and
+explicit pathwise assumptions; it does not establish those bounds for
+GPTMini, control the two parameter paths, or certify its numerical gradients.
+
+These eight checked results bring the total to **484** without new sorry.
+The direct memory law now has an explicit gradient-feedback extension.
+Next close the parameter/gradient coupling for the actual fixed-circuit CE
+subweights under persistent native AdamW, retaining its zero-seed and
+finite-rate obstructions. Positive-seed emergence, circuit competition,
+later margin crossing and transfer to learned GPTMini circuits remain open;
+do not infer them from buffer contraction or the attained coupled optimum.
 
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
