@@ -87,6 +87,7 @@ import Transformer.Modes.Section3_FrequencyMoments
 import Transformer.Modes.Section3_IntegralComparison
 import Transformer.Modes.Section3_DensityComparison
 import Transformer.Modes.Section3_GaussianDensity
+import Transformer.Modes.Section3_CubicGaussianComparison
 import Transformer.Modes.Section3_CharacteristicDerivatives
 import Transformer.Modes.Section3_DerivativeMoments
 import Transformer.Modes.Section3_DerivativeTaylor
