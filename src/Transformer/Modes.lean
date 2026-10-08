@@ -81,6 +81,7 @@ import Transformer.Modes.Section3_FourierTail
 import Transformer.Modes.Section3_FrequencyMoments
 import Transformer.Modes.Section3_IntegralComparison
 import Transformer.Modes.Section3_DensityComparison
+import Transformer.Modes.Section3_GaussianDensity
 import Transformer.Modes.Section3_DensityFamily
 import Transformer.Modes.Section5_FourierGap
 import Transformer.Modes.Section5_PtBddFejer
