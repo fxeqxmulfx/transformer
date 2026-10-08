@@ -184,4 +184,14 @@ example : (∀ n : ℕ, zeroScalarStateAt (n + 1) =
   exact ⟨fun n => (scalar_native_zero_step 0 0 1 (1 / 10) (1 / 1000) n).symm,
     by norm_num, by norm_num, by norm_num, by norm_num, tendsto_const_nhds, by norm_num⟩
 
+/-- Legal zero betas give the instantaneous normalized input even
+at a retained clock. Source: native AdamW at dc4009c; this follows
+from both actual insertions and corrections, without a buffer reset. -/
+theorem scalar_zero_betas_parameter (eps decay rate gradient : ℝ) (state : ScalarState) :
+    (scalarNativeStep 0 0 eps decay rate state gradient).parameter =
+      (1 - rate * decay) * state.parameter - rate * gradient / (|gradient| + eps) := by
+  rw [scalar_parameter_denominator]
+  simp [nextBufferDenominator, scalarNativeStep, Real.sqrt_sq_eq_abs]
+  ring
+
 end Transformer.Grokking.AdamW
