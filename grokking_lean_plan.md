@@ -3067,3 +3067,23 @@ limits under this sharp strict condition. Critical equality, stable
 weak-decay relative selection, learned stochastic/numerical GPTMini
 transfer and thermodynamic system-size scaling remain open. Frozen
 transformer evidence and optimizers are unchanged.
+
+
+`CircuitEfficiency.SectionC_GainColdNativeLimits` transfers the generated
+strict-threshold parameter/input collapse through the original causal
+native histories. Both retained buffers tend to zero, every complete
+next-input denominator tends to epsilon, and every completed clock
+diverges. The actual shared CE/clipping coefficient approaches its
+strictly positive attained cold value: the vanishing coordinate inputs
+come from vanishing partner parameters. No input, buffer, variance or
+denominator convergence is supplied separately. This ports the earlier
+conservative native limits at 1880c50 to the sharp strict condition;
+the source-style beta1=0.9/beta2=0.98 binary example uses decay=2 and
+epsilon=1. Three results bring Grokking to **1052** and CircuitEfficiency
+to 590, without new sorry or target warnings. All external hypothesis
+groups have joint nonzero satisfying examples. Next derive original
+output/CE/confidence limits at the same condition, then examine what
+critical equality permits without presuming attraction. Stable weak-
+decay relative selection, learned stochastic/numerical GPTMini transfer
+and thermodynamic system-size scaling remain open. Frozen transformer
+evidence and optimizers are unchanged.
