@@ -3028,3 +3028,23 @@ and stable weak-decay relative circuit selection remain open. Learned
 stochastic/numerical GPTMini transfer and thermodynamic system-size
 scaling are separate unfinished routes. Frozen transformer evidence
 and optimizers are unchanged.
+
+
+`CircuitEfficiency.SectionC_GainColdContraction` closes the strict
+actual cold-collapse direction: cold CE coefficient times greater
+physical gain < decay*epsilon generates a positive sub-epsilon floor,
+a common completed-clock tail, positive parameter/moment weights and
+a strict factor. The original retained path has a geometric weighted
+ceiling after this derived start; both total physical parameter mass
+and negative retained first-moment mass tend to zero. No future
+gradient, variance, mass or denominator limit is a premise. Two results
+bring Grokking to **1046** and CircuitEfficiency to 584, without new
+sorry or target warnings. All hypothesis groups have joint nonzero
+source-style examples with legal beta1=0.9/beta2=0.98; the binary
+epsilon=1/decay=2 example was outside the old conservative decay>33
+bound. This matches the already proved opposite strict initialized
+noncollapse threshold. Next derive complete cold state/output limits
+and a single strict threshold classification, keeping equality open.
+Stable weak-decay relative circuit selection, learned stochastic/
+numerical GPTMini transfer and thermodynamic system-size scaling remain
+unfinished. Frozen transformer evidence and optimizers are unchanged.
