@@ -516,3 +516,86 @@ counterexample. Reproduce from `python/` with
 The full `./make.py test` passes **293 tests in 904.206 seconds**;
 experiment check, Lean build/audit, generated index and forbidden checks
 pass. No training implementation or earlier observer/result is modified.
+
+## Curvature along the same native CPU displacement
+
+Can curvature explain a finite CE increase despite a negative current
+directional derivative, and does the initial Hessian predict the endpoint?
+`compare_curvature.py` reads the same **19 noninitial checkpoints**, excludes
+the four weight-only initializations and records the same four missing
+reference checkpoints. It restores the native moments and next minibatch,
+makes one disposable CPU step, then holds its observed displacement fixed.
+These are counterfactual CPU curves; no archived CUDA run resumes or changes
+its 150,000-update budget.
+
+| Measurement | Objective | Positions and derivatives |
+| --- | --- | --- |
+| `train_all` | Exhaustive mean of the original full answer/EOS CE | CE, slope and answer accuracy at seven endpoint fractions; autograd HVP at five |
+| `heldout_nonzero` | Exhaustive nonzero-quotient answer CE | The same fractions and derivatives, on the held-out population |
+
+Fractions are `0, .01, .1, .25, .5, .75, 1`, with HVP at
+`0, .25, .5, .75, 1`. The down direction is the observed parameter
+displacement divided by the original scheduled rate, not a recomputed
+optimizer direction. Float64 endpoint interpolation is rounded back to
+the original float32 model, and HVP directions are cast to that dtype.
+The native softmax implementation is already unfused and supports second
+autograd derivatives; no attention backend or model is substituted.
+Sample weighting includes the final short chunk. The completed curves
+use 396.64 summed elapsed observation seconds on a four-thread CPU reader.
+Their endpoint CE agrees with
+the independent frozen momentum reader to at most `1.78e-15`, initial
+directional slopes to `1.60e-14`, and answer accuracies and restored
+minibatch hashes exactly.
+
+The initial linear prediction is `rate * slope`; the quadratic prediction
+adds `rate^2 * curvature / 2`. Both use the current fixed displacement.
+
+| Checkpoint / objective | Linear prediction | Initial quadratic prediction | Observed finite CE change |
+| --- | ---: | ---: | ---: |
+| Seed 1, 30k / full train | -0.0084840 | +0.0793812 | +0.0788875 |
+| Seed 1, 34k / full train | -0.0005740 | +0.0019078 | +0.0022819 |
+| Seed 1, 36k / held-out answer | -0.0000001140 | +0.0000028700 | +0.0000027717 |
+| Seed 2, 35k / full train | -0.8707075 | +0.1829553 | -0.1692601 |
+| Seed 2, 35k / held-out answer | -1.8424790 | +0.2988185 | -0.3467655 |
+| Failed reference, 150k / held-out answer | +0.0741640 | +0.0184538 | +0.0159453 |
+
+Curvature accounts well for the primary 36k held-out discrepancy: its
+initial answer CE is `0.00739248`, so the finite increase is not a
+zero-loss observation. The large primary train increases also have the
+same sign and close size as their quadratic predictions. Across all
+states the quadratic sign agrees with the measured endpoint in **15/19**
+train cases and **16/19** held-out cases. This is descriptive endpoint
+agreement, not a grokking detector or a certified accuracy rate.
+
+The seed 2 35k counterexample is substantial: both objectives decrease
+even though both initial quadratic predictions increase. Train curvature
+falls from `2.107e6` to about `0.931e6` along the sampled segment, so the
+initial value is a poor approximation to the weighted interval curvature.
+The other sign disagreements occur at very small losses/changes and
+remain unresolved between curvature variation and floating-point effects.
+For seed 1 34k, sampled train curvature rises from `4963.69` to `9256.53`
+at the halfway point; the initial value is not even an observed upper bound.
+
+![Observed CE curves and their initial quadratic predictions](curvature_profiles.svg)
+
+`Transformer.Grokking.AdamW.CurvatureBound` proves an exact-real finite
+descent bound from an actual derivative envelope **throughout the update
+interval**. `CurvatureCounterexample` constructs ordinary binary CE curves
+with the same initial loss, slope and Hessian but arbitrarily different
+finite behavior over the family. Neither theorem equates sampled HVP with
+that interval premise. The measured curves and quadratic crossing rates
+are uncertified float32 diagnostics, including rounded interpolation and
+activation boundaries. No causal multi-step or generalization theorem is
+obtained from the local fit.
+
+[All observations](curvature_profile_results.json) pin every checkpoint,
+source file, next minibatch and frozen momentum-data hash. Seven new controls
+check analytic CE/HVP values, weighted feature means, independent central
+loss differences, opposite finite CE behavior with equal initial data,
+native GPTMini endpoint agreement, noninterference/failure cleanup and
+invalid states/directions. Reproduce from `python/` with
+`uv run --locked python ../experiments/grokking_internals/compare_curvature.py`,
+and plot with `uv run --locked --with matplotlib==3.10.8 python
+../experiments/grokking_internals/plot_curvature.py`.
+The full `./make.py test` passes **300 tests in 915.584 seconds**;
+the experiment check and Lean build/audit/index/forbidden checks pass.

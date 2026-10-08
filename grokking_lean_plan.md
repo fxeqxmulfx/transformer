@@ -572,10 +572,33 @@ positive rate, coefficient `2/rate^3` makes the endpoint score negative
 and increases actual positive CE. This varies the score family with the
 rate; it does not say that one fixed curve has no improving rate. The
 family is not identified with GPTMini's learned score. These thirteen
-proved results bring the total to **362** without new sorry. Next measure
-actual autograd HVP and loss curves along the archived native CPU
-displacement, preserving all previous observers and their source identity.
-Sampled curvature will remain evidence rather than an interval certificate.
+proved results bring the total to **362** without new sorry.
+
+The new curvature reader now covers the same 19 actual noninitial
+moment/sampler states. Seven fractions of the fixed observed native CPU
+displacement retain exhaustive full train CE and held-out nonzero answer
+CE, with autograd HVP at five fractions. Endpoint losses agree with the
+frozen momentum observer to `1.78e-15` and initial slopes to `1.60e-14`;
+accuracy and next-batch hashes agree exactly. No earlier observer,
+training source or budget changes. The summed elapsed observation time is
+396.64 seconds on four CPU threads. The curves are rounded float32 diagnostics, not exact-real
+interval certificates or visited CUDA next steps.
+
+For seed 1 36k, the negative answer slope predicts `-1.14e-7`, while
+the initial quadratic predicts `+2.87e-6`, close to the observed `+2.77e-6`.
+The large primary train increases at 30k and 34k also match the quadratic
+sign and approximate size. But seed 2 35k reduces full train CE by
+`0.16926` while its initial quadratic predicts an increase of `0.18296`;
+held-out answer CE also has the wrong quadratic sign. Curvature varies
+substantially along the sampled interval. Overall initial-quadratic signs
+agree in 15/19 train and 16/19 held-out cases; very small-loss mismatches
+remain unresolved between interval variation and numerical error. These
+are retrospective finite-step comparisons, not a success forecast. The
+complete reader and scientific figure are in grokking_internals. Seven
+new controls and the full **300-test Python suite in 915.584 seconds** pass;
+experiment and Lean build/audit/index/forbidden checks pass. Next improve
+multi-step rule-selection formulations rather than treating local
+quadratic agreement as a complete explanation of grokking.
 
 `CircuitEfficiency.SectionD_EfficientAllocation` begins the rule-versus-memory
 route from Varma et al., arXiv:2309.02390v1, appendix D, Theorem case 1.
