@@ -75,6 +75,7 @@ import Transformer.Modes.Section3_SmallFrequency
 import Transformer.Modes.Section3_GaussianComparison
 import Transformer.Modes.Section3_FourierRegularization
 import Transformer.Modes.Section3_DensityInversion
+import Transformer.Modes.Section3_CharacteristicGap
 import Transformer.Modes.Section3_DensityFamily
 import Transformer.Modes.Section5_FourierGap
 import Transformer.Modes.Section5_PtBddFejer
