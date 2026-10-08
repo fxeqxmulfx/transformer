@@ -1,4 +1,5 @@
 import Transformer.Grokking.CircuitEfficiency.SectionC_TableLoss
+import Transformer.Grokking.CircuitEfficiency.SectionC_TrainProbability
 import Transformer.Grokking.CircuitEfficiency.SectionC_SubweightGradient
 import Transformer.Grokking.CircuitEfficiency.SectionC_SubweightDynamics
 import Transformer.Grokking.CircuitEfficiency.SectionC_AdaptiveFirstStep
