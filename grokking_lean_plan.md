@@ -3275,3 +3275,26 @@ dissipation. Nonzero-first-beta critical convergence, stable weak-
 decay relative selection, learned stochastic/numerical GPTMini and
 thermodynamic system-size transfer remain open. Frozen evidence and
 optimizers are unchanged.
+
+
+`CircuitEfficiency.SectionC_GainColdWeightedLimit` derives an actual
+retained weighted observer limit at or above the cold threshold for
+arbitrary legal first/second betas, including beta1=0.9/beta2=0.98.
+The numerical observer is (1-beta1)*epsilon times total physical mass
+plus rate*beta1 times total negative first-moment mass. The true
+four-coordinate CE update admits a 4*rate*clip_bound*beta1^clock error
+budget. Standard nonnegative seeds generate the required moment
+ceilings, signs and common clocks; the geometric correction then gives
+a finite nonnegative observer limit. No future physical parameter,
+input, variance or denominator limit is supplied. Three results bring
+Grokking to **1086** and CircuitEfficiency to 608, without new sorry or
+target warnings. Joint nonzero source-style examples include exact
+binary critical decay=1.5/epsilon=1 with both original betas and
+rate=0.001. Nonnegative rate remains allowed here, so zero observer
+limit or physical collapse is not claimed. Next use positive rate,
+the generated physical box, actual CE input floor and late corrected
+denominator dissipation to exclude recurrent positive physical mass
+from this actual convergent weighted path. Original nonzero-first-
+beta critical physical collapse, stable weak-decay relative selection,
+learned stochastic/numerical GPTMini and thermodynamic system-size
+transfer remain open. Frozen evidence and optimizers are unchanged.
