@@ -30,7 +30,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Analogy only for current finite GPTMini; finite-size scaling not established |
 | Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Observed-logit integer certificate bridge and eight conditional native first-step gradient-error bounds/counterexamples proved; actual floating-point forward, autograd error generation and softmax collapse remain open |
-| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | 173 update/history/curve laws and counterexamples: state-dependent descent, finite overshoot, gradient-error bounds, reachable momentum ascent, compositional CE growth, interval curvature bounds, causal corrected-moment bounds, direct buffer forgetting, distinct-gradient feedback, partial resets, retained scalar states, exact-real native clipping, derived moment/direction limits, necessary finite-limit parameter balance, actual corrected-denominator identities, positivity, parameter lower bounds and denominator limits from actual retained inputs; repeated-step rule convergence remains unproved |
+| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | 178 update/history/curve laws and counterexamples: state-dependent descent, finite overshoot, gradient-error bounds, reachable momentum ascent, compositional CE growth, interval curvature bounds, causal corrected-moment bounds, direct buffer forgetting, distinct-gradient feedback, partial resets, retained scalar states, exact-real native clipping, derived moment/direction limits, necessary finite-limit parameter balance, actual corrected-denominator identities, positivity, parameter lower bounds, denominator limits from actual retained inputs and explicit two-factor retained-moment envelope growth/noncollapse laws; repeated-step rule convergence remains unproved |
 
 ## Cycle
 
@@ -1364,6 +1364,26 @@ must derive vanishing inputs and a feedback gain exceeding decay from
 its current CE parameters, then rule out collapse of the retained pair.
 No parameter convergence or actual GPTMini generalization is supplied
 by the optimizer helper.
+
+`AdamW.PairEnvelope` controls the numerical quantity
+`(1 - beta1) * ceiling * parameter_mass + beta1 * rate * negative_moment_mass`.
+Explicit moment/parameter recurrence lower bounds imply a weighted
+increment of at least
+`rate * (1 - beta1) * (coefficient - decay * ceiling) * parameter_mass`.
+Above the critical threshold it grows strictly; at or above it, the
+retained tail stays above its positive starting mass. Conditional on
+finite parameter-mass convergence and vanishing retained moment, the
+limiting parameter mass is therefore positive, including beta1=0.
+All hypothesis lists have joint witnesses, including critical constant
+paths. Neither the coefficient nor ceiling is defined as success.
+
+These five checked results bring the total to **683** without new sorry;
+AdamW now has 178 checked results. The next step is the closed gained-CE
+bridge: derive the moment/parameter envelope bounds from present partners,
+actual shared clipping and retained denominators. Until that bridge is
+proved, these supplied lower bounds are not asserted for an arbitrary
+CE path. Source-seed convergence, a delayed crossing and learned GPTMini
+transfer remain open.
 
 Next derive source-seed attraction and delayed selection in the actual
 physical forward under the same uniform native AdamW, and characterize
