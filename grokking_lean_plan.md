@@ -3383,3 +3383,24 @@ absolute physical mass, not stable relative Gen/Mem selection or a
 thermodynamic size limit. Next finish actual critical CE coefficient,
 score/confidence limits, then return to weak-decay relative selection
 and learned-head mechanisms. Frozen evidence and optimizers are unchanged.
+
+
+`CircuitEfficiency.SectionC_GainColdSeededReadouts` determines the
+actual retained observer limit as zero at or above the threshold,
+including equality. Generated native buffer limits give zero total
+negative first-moment mass; this and physical mass collapse force
+the same weighted observer used by the critical proof to vanish.
+The true shared clipped CE coefficient approaches its strictly
+positive attained cold value, while both physical circuit scores
+and their held-out margin vanish. Every input vanishes through its
+partner parameter, not through a zero shared CE coefficient.
+Four results bring Grokking to **1101** and CircuitEfficiency to 623,
+without new sorry or target warnings. Joint source-style examples
+use original retained betas, exact binary critical decay=1.5,
+epsilon=1, rate=0.001 and Gen=(0,0.005)/Mem=(0,1). No future
+observer/coefficient/score/parameter limit is a premise. Next derive
+complete multiclass confidence and original train/held-out CE limits
+at equality; relative ordering and exact decisions must stay distinct.
+Weak-decay stable rule selection, learned stochastic/numerical GPTMini
+and thermodynamic system-size transfer remain open. Frozen evidence,
+optimizers and checkpoints are unchanged.
