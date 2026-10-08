@@ -83,6 +83,7 @@ import Transformer.Modes.Section3_IntegralComparison
 import Transformer.Modes.Section3_DensityComparison
 import Transformer.Modes.Section3_GaussianDensity
 import Transformer.Modes.Section3_CharacteristicDerivatives
+import Transformer.Modes.Section3_DerivativeMoments
 import Transformer.Modes.Section3_DensityFamily
 import Transformer.Modes.Section5_FourierGap
 import Transformer.Modes.Section5_PtBddFejer
