@@ -3153,3 +3153,21 @@ dissipation argument. Stable weak-decay relative selection, learned
 stochastic/numerical GPTMini transfer and thermodynamic system-size
 scaling remain open. Frozen transformer evidence and optimizers are
 unchanged.
+
+
+`AdamW.ScalarInputDissipation` derives a strict native denominator
+floor from the inserted input square with legal first beta zero and
+arbitrary retained nonnegative variance, completed clock and beta2<1.
+A positive negative-input floor generates an explicit positive loss
+from the linear epsilon adaptive ceiling; positive rate makes that
+current scalar ceiling strict. Four results bring Grokking to **1066**
+and AdamW to 191, without new sorry or target warnings. All hypothesis
+groups have joint satisfying examples with retained beta2=0.98. The
+application must still derive the input floor from actual CE feedback;
+these scalar results do not presume future gradients or prove a
+transformer grokking event. Next combine this gap with true cold mass
+envelopes and the generated physical box to exclude a positive mass
+limit at critical equality. Transfer to retained nonzero first beta,
+stable weak-decay relative selection, learned stochastic/numerical
+GPTMini transfer and thermodynamic system-size scaling remain open.
+Frozen transformer evidence and optimizers are unchanged.
