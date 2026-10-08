@@ -14,6 +14,7 @@ import Transformer.Grokking.AdamW.ScalarLimits
 import Transformer.Grokking.AdamW.ScalarDenominator
 import Transformer.Grokking.AdamW.PairEnvelope
 import Transformer.Grokking.AdamW.PairComparison
+import Transformer.Grokking.AdamW.PairContraction
 import Transformer.Grokking.AdamW.GradientClipping
 import Transformer.Grokking.AdamW.MomentumCounterexample
 import Transformer.Grokking.AdamW.CoupledFirstStep

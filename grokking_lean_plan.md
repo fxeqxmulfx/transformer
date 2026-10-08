@@ -30,7 +30,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Actual fixed native two-circuit decision limits do not commute between explicit vanishing positive Gen initialization families and long time, for both the earlier balanced zero-beta path and original legal beta1=0.9/beta2=0.98 retained memory with source-style double-zero first factors. Each member succeeds, but no uniform finite success start exists. Width/task remain fixed and actual full feedback generates every limit; no thermodynamic size limit, temperature or Gibbs distribution is supplied. Analogy only for finite GPTMini; finite-size scaling and learned/numerical transfer remain open |
 | Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Observed-logit integer certificate bridge and eight conditional native first-step gradient-error bounds/counterexamples proved; actual floating-point forward, autograd error generation and softmax collapse remain open |
-| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | 184 update/history/curve laws and counterexamples: state-dependent descent, finite overshoot, gradient-error bounds, reachable momentum ascent, compositional CE growth, interval curvature bounds, causal corrected-moment bounds, direct buffer forgetting, distinct-gradient feedback, partial resets, retained scalar states, exact-real native clipping, derived moment/direction limits, necessary finite-limit parameter balance, actual corrected-denominator identities, positivity, parameter lower bounds, denominator limits from actual retained inputs, explicit two-factor retained-moment envelope growth/noncollapse laws, the full first-clock epsilon denominator floor/parameter increment ceiling and the legal zero-beta normalized-input identity at arbitrary retained clocks; repeated-step rule convergence remains unproved |
+| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | 187 update/history/curve laws and counterexamples: state-dependent descent, finite overshoot, gradient-error bounds, reachable momentum ascent, compositional CE growth, interval curvature bounds, causal corrected-moment bounds, direct buffer forgetting, distinct-gradient feedback, partial resets, retained scalar states, exact-real native clipping, derived moment/direction limits, necessary finite-limit parameter balance, actual corrected-denominator identities, positivity, parameter lower bounds, denominator limits from actual retained inputs, explicit two-factor retained-moment envelope growth/noncollapse laws, the full first-clock epsilon denominator floor/parameter increment ceiling and the legal zero-beta normalized-input identity at arbitrary retained clocks; repeated-step rule convergence remains unproved |
 
 ## Cycle
 
@@ -2987,3 +2987,24 @@ gap. Critical equality, stable weak-decay confidence/relative selection,
 learned stochastic/numerical GPTMini transfer and thermodynamic
 system-size scaling remain open. Frozen transformer evidence and
 optimizers are unchanged.
+
+
+`AdamW.PairContraction` derives positive parameter and moment weights
+and a common strict contraction factor from coefficient < decay*floor,
+valid beta, positive floor/rate/coefficient and nonnegative remaining
+decay. Its construction augments the retained beta*rate moment weight
+by rate*(decay*floor-coefficient)/(2*coefficient); both normalized row
+sums become strictly below one. The two current retained upper
+envelopes contract the numerical weighted sum, and induction derives
+tail power ceilings from the complete retained starting mass. Three
+results bring Grokking to **1041** and AdamW to 187, without new sorry
+or target warnings. Every external hypothesis group has a joint
+satisfying example. Bounds remain explicit abstract inputs here;
+no actual optimizer or moment history has been changed. Next generate
+a general eventual native denominator floor arbitrarily near epsilon
+and instantiate the envelopes using the actual cold CE ceiling. This
+would close the strict collapse threshold opposite the initialized
+noncollapse condition. Critical equality, stable weak-decay confidence/
+relative selection, learned stochastic/numerical GPTMini transfer and
+thermodynamic system-size scaling remain open. Frozen transformer
+evidence and optimizers are unchanged.
