@@ -3,6 +3,7 @@ import Transformer.Grokking.CircuitEfficiency.SectionC_SubweightGradient
 import Transformer.Grokking.CircuitEfficiency.SectionC_SubweightDynamics
 import Transformer.Grokking.CircuitEfficiency.SectionC_AdaptiveFirstStep
 import Transformer.Grokking.CircuitEfficiency.SectionC_SeedRateComparison
+import Transformer.Grokking.CircuitEfficiency.SectionC_NativeSymmetry
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEExistence
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEMinima
@@ -12,4 +13,6 @@ import Transformer.Grokking.CircuitEfficiency.SectionD_SuperlinearAllocation
 
 /-! Fixed-circuit competition in Varma et al., arXiv:2309.02390v1,
 with corrected increment estimates, both two-circuit allocation regimes,
-explicit penalty/optimum premises and limits of optimizer transfer. -/
+explicit penalty/optimum premises and limits of optimizer transfer.
+The closed clipped native CE iteration proves positive-factor formation
+and a retained symmetry obstruction, separately from coupled penalties. -/

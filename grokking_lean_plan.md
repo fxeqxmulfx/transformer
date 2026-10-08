@@ -850,6 +850,42 @@ factors. Close initialization, parameter feedback, noncollapse, zero-seed
 invariance and competition symmetries on that actual iteration before
 claiming any later rule-selection or generalization threshold crossing.
 
+`CircuitEfficiency.SectionC_NativeRecurrence`, `NativeSigns`,
+`NativePositive` and `NativeSymmetry` close the actual four-factor
+parameter/gradient/moment/clock loop. All four derivatives are proved to
+be actual finite-class product-CE partials, evaluated at the old parameter
+state, passed through shared native clipping, and updated simultaneously.
+The source q=113, seeds 0.005/1 initialization has raw norm below 0.999,
+so its first unit-bound step agrees with the earlier unclipped formula.
+Clipping now supplies every coordinate bound on every visited state.
+
+Each derivative is its present factor partner times the common strictly
+negative training CE slope. Nonnegative factors and retained nonpositive
+moments stay in their numerical sign region under valid beta1/beta2,
+positive epsilon and nonnegative remaining decay factor. With positive
+second-factor seeds, positive rate and positive remaining decay factor,
+both zero first factors activate after one actual native step; all four
+parameters remain positive at every later finite step. Consequently all
+training classes are strictly correctly ranked after that first update.
+This is a decision result, not proof that training CE tends to zero.
+
+Equal full Gen/Mem factor states, including both buffers and clocks, are
+invariant under actual CE, shared clipping and uniform native decay.
+Equal seeds therefore keep both product logits equal forever, and their
+true multiclass held-out CE is at least log two at every finite clock.
+Positive component formation and perfect training decisions alone do not
+imply eventual rule selection. This obstructs a naive transfer to native
+AdamW; it does not refute the source's GD with a cost-asymmetric coupled
+circuit-norm penalty. Fixed reference tables and exact-real arithmetic
+remain explicit, and no general argmax-tie error claim is made.
+
+These twenty-nine checked results bring the total to **540** without new
+sorry. Next connect the generated clipped gradient sequence to the actual
+retained buffer histories and their corrected bounds. Prove zero-pair
+invariance on this closed trajectory, then identify an actual symmetry-
+breaking mechanism before asserting late held-out margin crossing or
+transfer to learned GPTMini circuits.
+
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
 properties survive the native adaptive first update even though the
