@@ -22,7 +22,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Operational delayed generalization | Define train fit, a sustained held-out plateau, later generalization, and finite-budget censoring without future information entering a detector | Power et al., arXiv:2201.02177v1, sections 1 and 3.1; pinned causal histories | Twenty-seven proved threshold, prefix, confirmation, sustained-window, delay-bound and bounded-continuation laws/counterexamples; the full Python heuristic remains open |
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
-| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendices C–D | 209 allocation/CE/gradient/update laws and counterexamples: attained actual CE minima, actual subweight derivatives, finite GD rates, closed clipped native parameter/moment feedback, positive-seed formation, zero-pair invariance, corrected generated-history bounds, zero train-CE limits with permanent held-out obstruction, equal positive interior native balance, actual nonzero retained trajectories, closed positive-limit allocation/margin/test-CE laws, attained physical forward-efficiency norm budgets, all true gained-forward CE coordinate derivatives, their closed uniform-decay native feedback, actual gained input/loss limits and necessary native balance with derived retained-buffer limits; persistent-moment rule selection remains open |
+| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendices C–D | 212 allocation/CE/gradient/update laws and counterexamples: attained actual CE minima, actual subweight derivatives, finite GD rates, closed clipped native parameter/moment feedback, positive-seed formation, zero-pair invariance, corrected generated-history bounds, zero train-CE limits with permanent held-out obstruction, equal positive interior native balance, actual nonzero retained trajectories, closed positive-limit allocation/margin/test-CE laws, attained physical forward-efficiency norm budgets, all true gained-forward CE coordinate derivatives, their closed uniform-decay native feedback, actual gained input/loss limits, necessary native balance with derived retained-buffer limits and efficient-circuit positive-interior parameter/logit selection; attraction and delayed persistent-moment rule selection remain open |
 | Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Seventy-four proved actual-CE component, saddle, stationary-state, class-centered output and decision-transfer results/counterexamples; 644 real head-pair loss observations and 644 stage/output observations reject interaction-only detection; seeded fixed-table native formation is checked in CircuitEfficiency, learned-head multi-step formation remains open |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Fifty-five proved mean, energy, margin, cleanup and integer-encoding laws/counterexamples; exact certificates measured on all 238 preserved snapshots; 266 Python tests passed |
 | Division-task symmetry | Derive the diagnostic cells from the actual numeric task rather than assuming their labels or orbit interpretation | Power et al., section 3.1; author-code corpus and GrokkingObserver at 43d4d66 | Nineteen proved generator, valid-domain, orbit-equivalence, disjointness and finite-cardinality laws/counterexamples; token/Python implementation bridges remain open |
@@ -1238,6 +1238,26 @@ Then construct a nonzero retained actual path witnessing every joint
 positive-limit premise before deriving eventual held-out correctness.
 Boundary allocations, source-seed attraction, delay and GPTMini transfer
 remain separate obligations.
+
+`CircuitEfficiency.SectionC_GainAllocation` solves the strictly positive
+actual normalized balance with different physical gains and uniform
+decay. Both factor pairs must be balanced and decay must be positive.
+When Gen's gain is greater, both its balanced physical coordinate and
+its actual gained product logit are strictly greater than Mem's.
+The correct held-out class then strictly beats the wrong Mem class
+and every zero-logit competitor. The successful margin is derived
+from true CE/native balance, not inserted as a premise. Gains 3/2,
+Gen factors 1, Mem factors 1/2, uniform decay 1/2 and epsilon three
+times the actual clipped CE scale give a nonzero joint point witness.
+
+These three checked results bring the total to **654** without new sorry;
+CircuitEfficiency now has 212 checked results. This is positive-interior
+allocation, not proof that arbitrary source seeds converge there or
+that a parameter-point solution is an actual native trajectory. Next
+construct its retained zero-buffer native path at valid ordinary betas,
+then prove eventual held-out correctness directly on actual positive
+finite-limit feedback paths. Source-seed attraction, boundary failures,
+delayed crossing and learned GPTMini transfer remain open.
 
 Next derive a rule-selection mechanism in the actual physical forward
 under the same uniform native AdamW, and characterize boundary limits.
