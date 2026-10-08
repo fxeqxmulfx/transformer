@@ -22,7 +22,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Operational delayed generalization | Define train fit, a sustained held-out plateau, later generalization, and finite-budget censoring without future information entering a detector | Power et al., arXiv:2201.02177v1, sections 1 and 3.1; pinned causal histories | Twenty-seven proved threshold, prefix, confirmation, sustained-window, delay-bound and bounded-continuation laws/counterexamples; the full Python heuristic remains open |
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
-| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendices C–D | 146 allocation/CE/gradient/update laws and counterexamples: attained actual CE minima, actual subweight derivatives, finite GD rates, closed clipped native parameter/moment feedback, positive-seed formation, zero-pair invariance, corrected generated-history bounds, symmetry test-loss floors, zero-decay train-CE descent, actual callback/loss limits and closed native finite-limit balance; persistent-moment rule selection remains open |
+| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendices C–D | 151 allocation/CE/gradient/update laws and counterexamples: attained actual CE minima, actual subweight derivatives, finite GD rates, closed clipped native parameter/moment feedback, positive-seed formation, zero-pair invariance, corrected generated-history bounds, symmetry test-loss floors, zero-decay train-CE descent, actual callback/loss limits, closed finite-limit balance and derived unbounded source-seed scores; persistent-moment rule selection remains open |
 | Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Seventy-four proved actual-CE component, saddle, stationary-state, class-centered output and decision-transfer results/counterexamples; 644 real head-pair loss observations and 644 stage/output observations reject interaction-only detection; seeded fixed-table native formation is checked in CircuitEfficiency, learned-head multi-step formation remains open |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Fifty-five proved mean, energy, margin, cleanup and integer-encoding laws/counterexamples; exact certificates measured on all 238 preserved snapshots; 266 Python tests passed |
 | Division-task symmetry | Derive the diagnostic cells from the actual numeric task rather than assuming their labels or orbit interpretation | Power et al., section 3.1; author-code corpus and GrokkingObserver at 43d4d66 | Nineteen proved generator, valid-domain, orbit-equivalence, disjointness and finite-cardinality laws/counterexamples; token/Python implementation bridges remain open |
@@ -1037,6 +1037,24 @@ formation and monotonicity with this finite-limit obstruction to decide
 the zero-decay train-CE limit. Then inspect the positive-decay allocations
 and genuine physical circuit-efficiency asymmetry, without identifying
 the fixed-table model with stochastic learned GPTMini features.
+
+`CircuitEfficiency.SectionC_NativeScoreGrowth` proves unbounded training
+score on the actual no-decay trajectory from any two positive second
+seeds. Every formed coordinate strictly increases. A bounded total score
+would bound each coordinate through its positive first-formed partner;
+monotone coordinates would then have finite positive limits. The closed
+native limit law would force these limits to zero, a contradiction.
+Consequently the full score path tends to positive infinity, and the
+four parameters cannot have a finite joint limit. No convergence premise
+on future parameters, gradients, buffers or logits enters this dynamics
+result, and all native moments and completed clocks are retained.
+
+These five checked results bring the total to **593** without new sorry;
+CircuitEfficiency now has 151 checked results. Next transfer the derived
+score growth to the actual CE limit and combine it with the exact
+Gen/Mem symmetry floor. The no-decay scope is essential; positive native
+decay, physical efficiency asymmetry, learned features, stochastic inputs
+and finite-precision implementation are still separate obligations.
 
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
