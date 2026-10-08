@@ -72,6 +72,7 @@ import Transformer.Modes.Section3_SumCharFun
 import Transformer.Modes.Section3_PhaseTaylor
 import Transformer.Modes.Section3_CharacteristicTaylor
 import Transformer.Modes.Section3_SmallFrequency
+import Transformer.Modes.Section3_GaussianComparison
 import Transformer.Modes.Section3_FourierRegularization
 import Transformer.Modes.Section3_DensityInversion
 import Transformer.Modes.Section3_DensityFamily
