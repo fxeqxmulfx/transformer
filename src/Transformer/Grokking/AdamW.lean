@@ -19,6 +19,7 @@ import Transformer.Grokking.AdamW.ScalarBiasError
 import Transformer.Grokking.AdamW.MomentSquare
 import Transformer.Grokking.AdamW.SquareHistory
 import Transformer.Grokking.AdamW.SquareDirection
+import Transformer.Grokking.AdamW.SquareParameterBox
 import Transformer.Grokking.AdamW.PairEnvelope
 import Transformer.Grokking.AdamW.PairComparison
 import Transformer.Grokking.AdamW.PairContraction
