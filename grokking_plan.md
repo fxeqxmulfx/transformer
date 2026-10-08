@@ -51,6 +51,10 @@ These definitions are pinned in lab code, with tests, before any run.
 - **Held-out** means inputs that no training row contains, at the training
   lengths. **Length transfer** is the accuracy at longer lengths. It is
   reported on its own and never merged into held-out accuracy.
+- **Delayed length transfer.** The four phases also apply to length
+  transfer, with held-out accuracy at the training lengths in place of train
+  accuracy. A late rise there is length grokking, and the Basis depth runs
+  already show it (see "Already in the repository").
 - **Recording.** Every run records full curves at a fixed interval, with no
   early stopping and no checkpoint selection, and keeps checkpoints for
   stage 6.
@@ -111,7 +115,8 @@ bits instead.
      any conclusion.
   2. At the training lengths the uniform bound says nothing, because there
      the language is finite. A shallow model may still answer held-out
-     inputs through a shortcut tied to the training lengths. Depth 1 is an
+     inputs through a shortcut tied to the training lengths, as two layers
+     with RoPE already do on E₄ in the Basis runs. Depth 1 is an
      exception. Without positions, one attention layer sees only the current
      token and the counts of each token in the prefix. So it answers alike
      on two words with the same counts and the same last letter, such as
@@ -349,6 +354,23 @@ This tests H3 and H5.
   - [grokking_progress](experiments/grokking_progress/README.md) and
     [grokking_internals](experiments/grokking_internals/README.md) hold the
     observer and the internal measurements on mod 97.
+  - [basis](experiments/basis/README.md): E_k with RoPE on 20,000 training
+    rows, GPTMini under AdamW at decay 0.1. Read from the run records in
+    `experiments/basis/runs/`.
+    - On E₄, two layers pass 0.99 held-out at the training lengths 32–64
+      within 1,400–4,000 updates. At length 128 they stay at 0.31–0.44
+      through 10,000–12,000 updates: a shortcut tied to the training
+      lengths. Six layers pass at 128 after 800–5,800 updates, climbing
+      gradually.
+    - On E₂, two layers pass at the training lengths by update 400 in all 20
+      `depth128-*` runs, but at 128 in only 11, at updates 150–7,600. In
+      one run, accuracy at 128 sat near 0.68 for 7,000 updates and then
+      jumped to 1.0. Four of the nine misses never got past 347 of the
+      same 512 sequences (0.678), which hints at one shared intermediate
+      solution.
+    - No run shows a delay at the training lengths: with this much data
+      there is no memorization phase. Runs stop at their first pass, so
+      their stability is unknown.
   - [synthetic_amsgradw](experiments/synthetic_amsgradw/README.md):
     - GPTMini of width 64 with two layers fit 128 training rows within
       1,000 updates under AMSGradW.
