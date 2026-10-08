@@ -17,4 +17,5 @@ checked interpretations of gradient agreement, current-logit geometry,
 finite-history windows and delay bounds, and the division task's exact
 common-scaling cells, plus actual bilinear CE component gradients,
 stationary saddles, removal contrasts, regularized origin curvature
-and finite stationary-state thresholds. -/
+and finite stationary-state thresholds, including additive-score
+counterexamples to identifying circuits from nonlinear loss contrasts. -/

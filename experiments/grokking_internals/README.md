@@ -5,6 +5,10 @@ and confidence growth? Check all six proposed measurements: frozen linear
 probes, gradient agreement, activation spectra, FFN neuron specialization,
 causal ablations, and functional update decomposition.
 
+The follow-up pair-removal study is documented below: all 28 head pairs
+at 23 immutable snapshots, with answer-only CE and explicit zero-quotient
+controls. It adds observations, not training variants.
+
 | Run | Difference from grokking_progress | Budget |
 | --- | --- | ---: |
 | `gptmini-seed1` | Save every 1,000 updates instead of every 5,000 | 150,000 |
@@ -259,3 +263,98 @@ From `python/`, reproduce the snapshot with `uv run --locked python
 `uv run --locked --with matplotlib==3.10.8 python
 ../experiments/grokking_internals/plot.py`. Run `archive.py` and `observe.py`
 as long-lived read-only workers to retain and measure future checkpoints.
+
+## Pairwise head interactions: retrospective sensitivity, not a detector
+
+Does a useful multi-part computation become visible before the model
+starts generalizing? The composition hypothesis in Nanda et al.,
+arXiv:2301.05217v1, appendix Further speculations on grokking, motivates
+measuring all four losses for every unordered pair of heads:
+
+`I = L(both present) - L(A removed) - L(B removed) + L(both removed)`.
+
+The Lean scalar specialization at commit `b141ba0` proves a negative
+contrast for aligned components supplying a product logit. The real
+transformer is measured separately: each head's merged output is removed
+at all prompt positions, after XSA and before its projection. All four
+answer-only CE losses, accuracies and changed predictions are retained
+for both splits, including separate nonzero-quotient scopes. EOS is not
+part of this measurement. No pair is fitted, selected using later weights,
+or supplied to training. The analysis enumerates all eight heads and all
+28 pairs at every available pinned snapshot.
+
+`pair_interactions.py` defines the observation and `compare_interactions.py`
+reads the same pinned steps as the objective-components study. Run from
+`python/` with `uv run --locked python ../experiments/grokking_internals/compare_interactions.py`.
+SHA-256 identities pin source, task rows and each actual checkpoint. Modes,
+RNG, weights, buffers and gradients are retained; temporary hooks are
+removed even on failure. Missing weights are recorded, not reconstructed.
+The four reference snapshots at 5k, 30k, 35k and 40k remain unavailable.
+The completed [result](pair_interaction_results.json) contains 23 snapshots
+and 644 pair observations. Each declared training run remains at its
+completed 150,000-update budget.
+
+Count a pair only when both individual removals increase the measured
+loss and `I` is negative beyond the declared heuristic tolerance
+`1e-9 + 1e-7 * max(abs(corner losses))`. This tolerance is not a proved
+floating-point error bound. The following table uses held-out **nonzero**
+quotients throughout:
+
+| Seed 1 update | Answer accuracy | Counted pairs, out of 28 |
+| ---: | ---: | ---: |
+| 0 | 0.33% | 4 |
+| 1,000 | 47.04% | 20 |
+| 30,000 | 7.56% | 0 |
+| 33,000 | 13.39% | 3 |
+| 34,000 | 68.97% | 7 |
+| 35,000 | 98.35% | 3 |
+| 36,000 | 99.87% | 9 |
+| 40,000 | 99.70% | 7 |
+| 150,000 | 100% | 13 |
+
+The count is nonmonotone and already substantial at 1k, followed by much
+poorer accuracy at 30k. The most negative eligible contrast is about
+`-8.03` at 1k, versus `-0.19` at 35k. Neither count nor magnitude alone
+is a forecast of the later transition. Early-generalization controls
+also have eligible pairs at initialization: six in seed 2 and two in
+seed 3. Their first 99% canonical crossings remain 1,250 and 750,
+respectively; the sparse intervention snapshots do not redefine them.
+
+At the completed budget, using nonzero quotients on both splits:
+
+| Run at 150k | Held-out accuracy | Counted train pairs | Counted held-out pairs |
+| --- | ---: | ---: | ---: |
+| Seed 1 | 100% | 13 | 13 |
+| Seed 2 | 100% | 14 | 14 |
+| Seed 3 | 100% | 4 | 4 |
+| Reference, 20% training fraction | 0.49% | 28 | 0 |
+
+Every pair meets this criterion on the failed reference's **training**
+examples, while no pair does on its held-out examples. Thus useful
+training interactions do not certify a transferable rule. Different
+100%-accurate seeds also have different counts. The reference's 0.49%
+nonzero accuracy is distinct from its 1.50% all-quotient accuracy; the
+trivial zero quotient is an explicit confound rather than hidden evidence.
+
+A negative contrast can arise from opposed additive scores with no
+product logit, as the numerical control tests demonstrate. Even paired
+removal is an off-manifold intervention with downstream nonlinearities;
+it does not recover a unique head algorithm, establish a causal training
+mechanism or prove a thermodynamic transition. The full four-corner data
+support named sensitivity comparisons, not a universal grokking metric.
+
+Lean also proves the stronger two-example counterexample in
+`Transformer.Grokking.Composition.AdditiveContrast`: additive scores
+`2*a-b` and `2*b-a` give negative mean-CE interaction and **both** useful
+individual removals at `(1,1)`. Their actual mixed score derivatives
+and four-corner score contrasts are nevertheless zero. The loss can
+create the interaction pattern by itself. The next observation should
+retain four-corner logit contrasts before CE, removing common row shifts;
+it still must control for normalization and downstream FFN nonlinearities.
+This refinement has been proved on the scalar examples and has not yet
+been measured as a new real-transformer diagnostic.
+
+Validation on 2026-10-08: `./make.py check experiments/grokking_internals`
+and the full `./make.py test` pass (275 tests, including nine new pair
+controls/noninterference checks). Lean build, audit, generated index and
+forbidden checks pass; no new sorry or additional axioms were introduced.

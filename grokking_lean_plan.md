@@ -23,7 +23,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
 | Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; circuit-efficiency literature to investigate | Research pending |
-| Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Thirty-seven proved actual bilinear binary-CE derivative, saddle, nonconvexity, removal-contrast, origin-curvature and stationary-state threshold results; learned attention and multi-step formation remain open |
+| Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Forty-eight proved actual-CE component, saddle, curvature, stationary-state and interaction results/counterexamples; 644 real head-pair observations reject a count-only detector and training-only rule identification; learned attention and multi-step formation remain open |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Fifty-five proved mean, energy, margin, cleanup and integer-encoding laws/counterexamples; exact certificates measured on all 238 preserved snapshots; 266 Python tests passed |
 | Division-task symmetry | Derive the diagnostic cells from the actual numeric task rather than assuming their labels or orbit interpretation | Power et al., section 3.1; author-code corpus and GrokkingObserver at 43d4d66 | Nineteen proved generator, valid-domain, orbit-equivalence, disjointness and finite-cardinality laws/counterexamples; token/Python implementation bridges remain open |
 | Gradient coherence and implicit bias | State what batch gradient agreement can and cannot imply; distinguish loss descent, task structure and optimizer-specific bias | Fixed-batch gradients; ordinary AdamW | Eighteen proved actual-CE derivative/decomposition/counterexample theorems; shared targets can yield arbitrarily high full alignment despite opposed answers |
@@ -399,6 +399,43 @@ equilibrium threshold, not global-minimum classification, dynamical
 attraction or a thermodynamic phase transition. Native AdamW uses
 decoupled decay and coordinate normalization; transferring this L2
 coefficient to that algorithm remains unsupported.
+
+The real pair-removal reader has now completed all 644 head-pair
+observations at 23 immutable checkpoints of the three seeds and the
+reference. Four intermediate reference weights remain missing and are
+recorded rather than reconstructed. All four actual answer-only losses
+and decision changes are retained on train/held-out splits with separate
+nonzero-quotient scopes. Head removal follows the original intervention,
+not the scalar model. Counting negative interactions for which both
+single removals hurt gives seed 1 held-out counts `4,20,0,3,7,3,9,7,13`
+at steps `0,1k,30k,33k,34k,35k,36k,40k,150k`. The large early count
+and later decline reject a monotone or current-count-only detector.
+At 150k the failed reference has 28 counted pairs on training examples
+and zero on held-out examples, so training interactions alone do not
+certify a reusable rule. Successful seeds have different final counts
+`13,14,4`. Contrast signs use an explicit heuristic tolerance, not a
+formal floating-point certificate. The read-only result and controls
+are in the grokking_internals README and pair_interaction_results.json.
+Keep unique-circuit identification and causal multi-step formation open.
+
+`Composition.AdditiveContrast` provides a stronger exact diagnostic
+counterexample. Two examples use ordinary binary CE of additive scores
+`2*a-b` and `2*b-a`; at `(1,1)` both individual removals increase the
+mean loss and its four-corner contrast is negative. Both score functions
+have zero actual mixed partial derivatives and zero four-corner score
+contrasts for every component state. Nonlinear CE and aggregation can
+produce the pattern without any product in the logits. This is an
+explicit fixed two-example task, not a theorem about the division data
+or the measured head algorithm. The bilinear score contrast, by contrast,
+equals `a*b`. These eleven proved identities/counterexamples bring the
+total to **309**, without new sorry. Next measure four-corner **logit**
+contrasts before applying loss, removing softmax-invisible common row
+shifts. This can distinguish additive output scores from nonlinear
+output interaction, but downstream normalization/FFN nonlinearities
+still prevent unique attention-circuit identification. Preserve the
+original CE reader/results under their frozen source identity.
+Validation: the full Python suite passes all 275 tests; experiment check,
+full Lean build, audit, regenerated index and forbidden checks pass.
 
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
