@@ -30,6 +30,7 @@ import Transformer.Grokking.CircuitEfficiency.SectionC_GainReferenceBalance
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainSourceLimits
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdRegime
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdLimits
+import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdSelection
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEExistence
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEMinima

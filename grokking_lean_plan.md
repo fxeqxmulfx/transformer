@@ -22,7 +22,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Operational delayed generalization | Define train fit, a sustained held-out plateau, later generalization, and finite-budget censoring without future information entering a detector | Power et al., arXiv:2201.02177v1, sections 1 and 3.1; pinned causal histories | Twenty-seven proved threshold, prefix, confirmation, sustained-window, delay-bound and bounded-continuation laws/counterexamples; the full Python heuristic remains open |
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
-| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendices C–D | 251 allocation/CE/gradient/update laws and counterexamples: attained actual CE minima, actual subweight derivatives, finite GD rates, closed clipped native parameter/moment feedback, positive-seed formation, zero-pair invariance, corrected generated-history bounds, zero train-CE limits with permanent held-out obstruction, equal positive interior native balance, actual nonzero retained trajectories, closed positive-limit allocation/margin/test-CE laws, attained physical forward-efficiency norm budgets, all true gained-forward CE coordinate derivatives, their closed uniform-decay native feedback, actual gained input/loss limits, necessary native balance with derived retained-buffer limits, efficient-circuit positive-interior parameter/logit selection, actual retained trajectories at gained balanced points, eventual all-class held-out correctness on actual positive finite-limit feedback, nonzero positive-decay Mem-only boundary trajectories with permanently unique wrong test decisions, gained-feedback numerical sign preservation, finite-clock persistence of positive seeded coordinates, actual CE generation of the retained pair envelope with derived scale limits, exclusion of zero Gen limiting mass above the actual decay/epsilon threshold, nonnegative pair classification, derivation of that threshold from a positive Mem factor and greater Gen efficiency, positive Gen limits and eventual all-class correctness from initial positive Gen-partner data rather than a positive Gen reference premise, actual cold feedback computation, explicit nonempty decay/epsilon regimes and positive Gen mass/margin under a static cold regime without a live-Mem-limit premise; attraction and delay remain open |
+| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendices C–D | 253 allocation/CE/gradient/update laws and counterexamples: attained actual CE minima, actual subweight derivatives, finite GD rates, closed clipped native parameter/moment feedback, positive-seed formation, zero-pair invariance, corrected generated-history bounds, zero train-CE limits with permanent held-out obstruction, equal positive interior native balance, actual nonzero retained trajectories, closed positive-limit allocation/margin/test-CE laws, attained physical forward-efficiency norm budgets, all true gained-forward CE coordinate derivatives, their closed uniform-decay native feedback, actual gained input/loss limits, necessary native balance with derived retained-buffer limits, efficient-circuit positive-interior parameter/logit selection, actual retained trajectories at gained balanced points, eventual all-class held-out correctness on actual positive finite-limit feedback, nonzero positive-decay Mem-only boundary trajectories with permanently unique wrong test decisions, gained-feedback numerical sign preservation, finite-clock persistence of positive seeded coordinates, actual CE generation of the retained pair envelope with derived scale limits, exclusion of zero Gen limiting mass above the actual decay/epsilon threshold, nonnegative pair classification, derivation of that threshold from a positive Mem factor and greater Gen efficiency, positive Gen limits and eventual all-class correctness from initial positive Gen-partner data rather than a positive Gen reference premise, actual cold feedback computation, explicit nonempty decay/epsilon regimes, positive Gen mass/margin under a static cold regime without a live-Mem-limit premise and actual margin limits/eventual all-class correctness under that initial-data regime; attraction and delay remain open |
 | Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Seventy-four proved actual-CE component, saddle, stationary-state, class-centered output and decision-transfer results/counterexamples; 644 real head-pair loss observations and 644 stage/output observations reject interaction-only detection; seeded fixed-table native formation is checked in CircuitEfficiency, learned-head multi-step formation remains open |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Fifty-five proved mean, energy, margin, cleanup and integer-encoding laws/counterexamples; exact certificates measured on all 238 preserved snapshots; 266 Python tests passed |
 | Division-task symmetry | Derive the diagnostic cells from the actual numeric task rather than assuming their labels or orbit interpretation | Power et al., section 3.1; author-code corpus and GrokkingObserver at 43d4d66 | Nineteen proved generator, valid-domain, orbit-equivalence, disjointness and finite-cardinality laws/counterexamples; token/Python implementation bridges remain open |
@@ -1514,6 +1514,36 @@ Next derive the actual margin limit and eventual all-class correctness
 under the static regime, then address convergence and formation time.
 Neither boundary exclusion nor reference balance alone proves global
 attraction, a delayed transition or learned GPTMini transfer.
+
+`CircuitEfficiency.SectionC_GainColdSelection` derives actual positive
+Gen score, positive Gen-minus-Mem limiting margin, its physical output
+limit and eventual strict held-out correctness under the static regime.
+It uses initial numerical signs, one positive Gen partner, positive
+rate/decay/epsilon/cap, valid betas, positive remaining decay factor and
+actual finite parameter convergence. No positive future Gen or Mem
+factor, independently supplied input history, buffer match or successful
+margin is assumed. Zero Mem references remain admitted. All hypotheses
+are jointly realized by nonzero actual retained balanced paths at
+beta1=0.9/beta2=0.98 with derived parameter convergence.
+
+These two checked results bring the total to **706** without new sorry;
+CircuitEfficiency now has 253 checked results and AdamW 178. Efficient
+fixed-table rule selection is therefore conditional on finite native
+parameter convergence and an explicit initial-data regime, rather than
+on future rule presence. The new theorem does not establish global
+convergence, a delayed train/test transition, learned circuit formation
+or stochastic/numerical GPTMini transfer.
+
+Next attack actual parameter bounds, convergence and formation time.
+For a finite-budget delay route, derive the full corrected denominator
+floor `(1 - beta1) * epsilon`, an actual Gen mass/retained-moment upper
+envelope using the checked `actual_CE_scale < 1`, and the Mem pure-decay
+lower floor. From zero Gen buffers and a sufficiently small positive
+partner seed, compare these bounds at every clock through a fixed budget
+with the same hyperparameters. Such a prolonged wrong-decision prefix
+alone proves neither later success nor a grokking transition; finite
+convergence remains a separate obligation. Keep spectral, geometry,
+operational, component-formation and phase formulations active.
 
 Next derive source-seed attraction and delayed selection in the actual
 physical forward under the same uniform native AdamW, and characterize
