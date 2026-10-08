@@ -96,6 +96,7 @@ import Transformer.Modes.Section3_DerivativeTail
 import Transformer.Modes.Section3_DerivativeTailRate
 import Transformer.Modes.Section3_DerivativeIntegralComparison
 import Transformer.Modes.Section3_WeightedFourier
+import Transformer.Modes.Section3_WeightedDensity
 import Transformer.Modes.Section3_DensityFamily
 import Transformer.Modes.Section5_FourierGap
 import Transformer.Modes.Section5_PtBddFejer
