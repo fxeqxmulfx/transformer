@@ -30,7 +30,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Analogy only for current finite GPTMini; finite-size scaling not established |
 | Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Observed-logit integer certificate bridge and eight conditional native first-step gradient-error bounds/counterexamples proved; actual floating-point forward, autograd error generation and softmax collapse remain open |
-| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | 155 update/history/curve laws and counterexamples: state-dependent descent, finite overshoot, gradient-error bounds, reachable momentum ascent, compositional CE growth, interval curvature bounds, causal corrected-moment bounds, direct buffer forgetting, distinct-gradient feedback, partial resets, retained scalar states and exact-real native clipping; repeated-step rule convergence remains unproved |
+| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | 163 update/history/curve laws and counterexamples: state-dependent descent, finite overshoot, gradient-error bounds, reachable momentum ascent, compositional CE growth, interval curvature bounds, causal corrected-moment bounds, direct buffer forgetting, distinct-gradient feedback, partial resets, retained scalar states, exact-real native clipping and moment/direction limits derived from convergent inputs; repeated-step rule convergence remains unproved |
 
 ## Cycle
 
@@ -962,6 +962,25 @@ efficiency encoded in the physical forward parameterization under the
 same uniform native decay, separately from introducing unequal decay
 groups or a coupled objective. Any simpler zero-decay convergence result
 must retain the symmetry test-loss obstruction and its fixed-table scope.
+
+`AdamW.MomentLimits` derives actual retained-buffer limits from convergent
+input gradients. A shifted tail bound keeps the entire earlier buffer as
+an exponentially decaying term. An epsilon-tail argument then proves the
+first moment tends to the gradient limit and the second to its square,
+without assuming buffer/current-input agreement or instantaneous resets.
+Completed-clock bias corrections tend to one, including any retained
+clock tending to infinity; no finite limiting clock is assumed. The actual
+corrected-history direction tends to gradient/(abs(gradient)+epsilon).
+
+These eight checked results bring the total to **571** without new sorry;
+AdamW now has 163 checked results. Gradient convergence remains a premise
+for this generic result. Bounded clipping alone does not supply it, and
+stochastic minibatch inputs need not converge at finite parameter limits.
+Next derive the actual scalar recurrence's necessary parameter balance
+from convergent parameters and inputs, using these automatic moment limits.
+For the fixed-table CE path, derive input convergence from its actual
+parameter feedback before applying that balance. Then analyze whether a
+positive coexistence limit can select a rule under uniform native decay.
 
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
