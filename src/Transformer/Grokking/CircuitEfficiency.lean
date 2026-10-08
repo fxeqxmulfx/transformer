@@ -45,6 +45,7 @@ import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedStep
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainRelativeRate
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainRatioGrowth
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedEscape
+import Transformer.Grokking.CircuitEfficiency.SectionC_GainBalancedOrder
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEExistence
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEMinima
