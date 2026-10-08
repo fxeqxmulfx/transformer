@@ -18,6 +18,7 @@ import Transformer.Grokking.CircuitEfficiency.SectionC_PhysicalGain
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainGradient
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainRecurrence
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainGradientLimits
+import Transformer.Grokking.CircuitEfficiency.SectionC_GainLimitBalance
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEExistence
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEMinima
