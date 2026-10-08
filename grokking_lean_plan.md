@@ -3048,3 +3048,22 @@ and a single strict threshold classification, keeping equality open.
 Stable weak-decay relative circuit selection, learned stochastic/
 numerical GPTMini transfer and thermodynamic system-size scaling remain
 unfinished. Frozen transformer evidence and optimizers are unchanged.
+
+
+`CircuitEfficiency.SectionC_GainColdCollapse` derives every physical
+parameter and original applied CE input tending to zero above the
+strict cold threshold. It also joins both strict directions into a
+single exact classification: with positive initialized Gen partner,
+greater Gen gain and legal retained native data, away from explicit
+critical equality, total physical mass tends to zero if and only if
+coldGainCEGradientScale*Gen_gain < decay*epsilon. Both below- and
+above-threshold source-style examples jointly satisfy the classification
+hypotheses. Three results bring Grokking to **1049** and CircuitEfficiency
+to 587, without new sorry or target warnings. The positive Gen condition
+excludes the actual absent-Gen negative control; noncollapse alone is
+not a stable positive limit or held-out success. Next derive the full
+retained buffer/denominator, circuit score and original CE/confidence
+limits under this sharp strict condition. Critical equality, stable
+weak-decay relative selection, learned stochastic/numerical GPTMini
+transfer and thermodynamic system-size scaling remain open. Frozen
+transformer evidence and optimizers are unchanged.

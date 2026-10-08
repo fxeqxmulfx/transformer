@@ -109,6 +109,7 @@ import Transformer.Grokking.CircuitEfficiency.SectionC_GainSmallDecayGen
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdCeiling
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdBounds
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdContraction
+import Transformer.Grokking.CircuitEfficiency.SectionC_GainColdCollapse
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEExistence
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEMinima
