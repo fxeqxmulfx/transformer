@@ -40,6 +40,7 @@ import Transformer.Modes.Section2_MainIntPhi
 import Transformer.Modes.Section2_IntPhiB
 import Transformer.Modes.Section2_MainIntPhiT
 import Transformer.Modes.Section3_Hermite
+import Transformer.Modes.Section3_GaussianHermite
 import Transformer.Modes.Section3_Cumulants
 import Transformer.Modes.Section3_ExpMoments
 import Transformer.Modes.Section3_MixedMoments
