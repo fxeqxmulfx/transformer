@@ -3190,3 +3190,26 @@ Nonzero-first-beta critical convergence, stable weak-decay relative
 selection, learned stochastic/numerical GPTMini transfer and
 thermodynamic system-size scaling remain open. Frozen transformer
 evidence and optimizers are unchanged.
+
+
+`CircuitEfficiency.SectionC_GainColdCriticalCollapse` closes actual
+critical convergence for the legal first-beta-zero control with its
+second beta, variance and completed clocks retained. At or above the
+actual cold threshold, initialized nonnegative signs, positive rate
+and nonnegative remaining decay force total physical mass, each
+physical coordinate and every true clipped CE input to tend to zero.
+A positive generated mass limit would preserve an actual input floor
+and fixed positive mass decrement, contradicting that same convergence.
+No future parameter/input limit, variance ceiling, partner mixing or
+successful classifier is an independent premise. Three results bring
+Grokking to **1071** and CircuitEfficiency to 605, without new sorry or
+target warnings. Joint nonzero source-style examples include exact
+binary critical decay=1.5/epsilon=1/beta2=0.98/rate=0.001. This control
+does not alter frozen beta1=0.9 experiments or prove their critical
+convergence. Next derive complete native/output limits for this
+critical branch and transfer the strict adaptive decrement to a
+weighted parameter/moment observer with summable clock-correction
+errors at nonzero first beta. Stable weak-decay relative selection,
+learned stochastic/numerical GPTMini transfer and thermodynamic
+system-size scaling remain open. Frozen evidence and optimizers are
+unchanged.
