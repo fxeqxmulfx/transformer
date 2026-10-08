@@ -86,6 +86,7 @@ import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryRatio
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryCoverage
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryMixing
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemorySelection
+import Transformer.Grokking.CircuitEfficiency.SectionC_GainMemoryDelay
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEExistence
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEMinima
