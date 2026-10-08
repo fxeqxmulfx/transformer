@@ -7,6 +7,7 @@ import Transformer.Grokking.CircuitEfficiency.SectionC_NativeSymmetry
 import Transformer.Grokking.CircuitEfficiency.SectionC_NativeHistory
 import Transformer.Grokking.CircuitEfficiency.SectionC_NativeZero
 import Transformer.Grokking.CircuitEfficiency.SectionC_NativeDescent
+import Transformer.Grokking.CircuitEfficiency.SectionC_NativeGradientLimits
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEExistence
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEMinima
