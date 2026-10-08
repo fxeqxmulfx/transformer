@@ -8,6 +8,8 @@ The inversion argument of arXiv:2412.09080v3, §5.4
 weights. The complex coordinate model has the Euclidean norm and
 preserves volume, whereas the project's product norm is the sup norm.
 The operator norm of the coordinate map is therefore retained explicitly.
+The coordinate estimates hold at every finite derivative order, including
+the third order needed for the cubic spatial weight.
 
 Positive frequency scaling has the exact Jacobian `c⁻²`. Transporting a
 second derivative contributes `c²`, so these factors cancel in its norm
@@ -23,8 +25,8 @@ namespace Transformer.Modes
 /-- Coordinate transport and frequency scaling bound the actual iterated derivative.
 Source: arXiv:2412.09080v3, §5.4 `eq:higher-error-goal`, its Fourier
 coordinate change. The product-to-Euclidean norm comparison is explicit. -/
-theorem norm_iteratedFDeriv_realProd_smul_le (f : ℝ × ℝ → ℂ)
-    (hf : ContDiff ℝ 2 f) {k : ℕ} (hk : k ≤ 2) (c : ℝ) (hc : 0 < c) (ξ : ℂ) :
+theorem norm_iteratedFDeriv_realProd_smul_le {N : ℕ} (f : ℝ × ℝ → ℂ)
+    (hf : ContDiff ℝ N f) {k : ℕ} (hk : k ≤ N) (c : ℝ) (hc : 0 < c) (ξ : ℂ) :
     ‖iteratedFDeriv ℝ k (fun ζ : ℂ => f (c • Complex.equivRealProdCLM ζ)) ξ‖ ≤
       (c * ‖Complex.equivRealProdCLM.toContinuousLinearMap‖) ^ k *
         ‖iteratedFDeriv ℝ k f (c • Complex.equivRealProdCLM ξ)‖ := by
@@ -55,8 +57,8 @@ example : (0 : ℝ) < 2 * Real.pi := by positivity
 /-- Coordinate transport preserves derivative integrability and bounds its norm integral.
 Source: arXiv:2412.09080v3, §5.4 `eq:higher-error-goal`, the normalized
 Fourier derivative step. The derivative scale and volume scale are both retained. -/
-theorem integrable_iteratedFDeriv_realProd_smul_and_bound (f : ℝ × ℝ → ℂ)
-    (hf : ContDiff ℝ 2 f) {k : ℕ} (hk : k ≤ 2)
+theorem integrable_iteratedFDeriv_realProd_smul_and_bound {N : ℕ} (f : ℝ × ℝ → ℂ)
+    (hf : ContDiff ℝ N f) {k : ℕ} (hk : k ≤ N)
     (hI : Integrable (fun ξ => ‖iteratedFDeriv ℝ k f ξ‖)) (c : ℝ) (hc : 0 < c) :
     Integrable (iteratedFDeriv ℝ k (fun ζ : ℂ => f (c • Complex.equivRealProdCLM ζ))) ∧
       (∫ ξ : ℂ, ‖iteratedFDeriv ℝ k (fun ζ : ℂ => f (c • Complex.equivRealProdCLM ζ)) ξ‖) ≤

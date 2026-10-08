@@ -95,7 +95,7 @@ theorem continuous_density_sub_eucl_sq_abs_le
     exact Complex.abs_re_le_norm _
   have hEucl : ‖w‖ = eucl x := by rw [Complex.norm_eq_sqrt_sq_add_sq]; rfl
   have hFg := norm_sq_mul_norm_fourier_le_second_derivative g hgC hIg w
-  have hInt := (integrable_iteratedFDeriv_realProd_smul_and_bound f hfC (k := 2)
+  have hInt := (integrable_iteratedFDeriv_realProd_smul_and_bound (N := 2) f hfC (k := 2)
     (by omega) (hIf 2 (by omega)) (2 * Real.pi) (by positivity)).2
   have hInt' : (∫ ξ : ℂ, ‖iteratedFDeriv ℝ 2 g ξ‖) ≤
       ‖Complex.equivRealProdCLM.toContinuousLinearMap‖ ^ 2 *
