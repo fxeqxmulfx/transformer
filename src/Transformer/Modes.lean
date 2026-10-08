@@ -93,6 +93,7 @@ import Transformer.Modes.Section3_FirstDerivativeFrequency
 import Transformer.Modes.Section3_SecondDerivativeFrequency
 import Transformer.Modes.Section3_DerivativeMomentBounds
 import Transformer.Modes.Section3_DerivativeTail
+import Transformer.Modes.Section3_DerivativeTailRate
 import Transformer.Modes.Section3_DensityFamily
 import Transformer.Modes.Section5_FourierGap
 import Transformer.Modes.Section5_PtBddFejer
