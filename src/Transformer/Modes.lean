@@ -78,6 +78,7 @@ import Transformer.Modes.Section3_DensityInversion
 import Transformer.Modes.Section3_CharacteristicGap
 import Transformer.Modes.Section3_LargeFrequency
 import Transformer.Modes.Section3_FourierTail
+import Transformer.Modes.Section3_FrequencyMoments
 import Transformer.Modes.Section3_DensityFamily
 import Transformer.Modes.Section5_FourierGap
 import Transformer.Modes.Section5_PtBddFejer
