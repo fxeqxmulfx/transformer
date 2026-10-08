@@ -23,7 +23,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
 | Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; circuit-efficiency literature to investigate | Research pending |
-| Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Forty-eight proved actual-CE component, saddle, curvature, stationary-state and interaction results/counterexamples; 644 real head-pair observations reject a count-only detector and training-only rule identification; learned attention and multi-step formation remain open |
+| Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Sixty-five proved actual-CE component, saddle, stationary-state, class-centered output and diagnostic-identification results/counterexamples; 644 real head-pair loss observations reject count-only detection and training-only rule identification; output-stage measurements and multi-step formation remain open |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Fifty-five proved mean, energy, margin, cleanup and integer-encoding laws/counterexamples; exact certificates measured on all 238 preserved snapshots; 266 Python tests passed |
 | Division-task symmetry | Derive the diagnostic cells from the actual numeric task rather than assuming their labels or orbit interpretation | Power et al., section 3.1; author-code corpus and GrokkingObserver at 43d4d66 | Nineteen proved generator, valid-domain, orbit-equivalence, disjointness and finite-cardinality laws/counterexamples; token/Python implementation bridges remain open |
 | Gradient coherence and implicit bias | State what batch gradient agreement can and cannot imply; distinguish loss descent, task structure and optimizer-specific bias | Fixed-batch gradients; ordinary AdamW | Eighteen proved actual-CE derivative/decomposition/counterexample theorems; shared targets can yield arbitrarily high full alignment despite opposed answers |
@@ -436,6 +436,28 @@ still prevent unique attention-circuit identification. Preserve the
 original CE reader/results under their frozen source identity.
 Validation: the full Python suite passes all 275 tests; experiment check,
 full Lean build, audit, regenerated index and forbidden checks pass.
+
+`Composition.OutputInteractions.Basic` now derives class centering of
+the four output corners before CE. It commutes with the contrast and
+removes arbitrary independent common row shifts at the four states,
+assuming a nonempty measured class set. The actual squared centered
+energy vanishes exactly when the raw contrast is a common class offset
+on that set. This is a finite-output condition, not a trained-parameter
+convexity or a numerical certificate. `NonIdentification` proves that
+affine class scores with arbitrary nonlinear common row shifts have
+zero energy; the stated binary product score has actual energy
+`(a*b)^2/2`. A polynomial gate score `a*b*(1-a)*(1-b)` has zero energy
+at the complete binary removal endpoints, while its interior energy
+at `(1/2,1/2)` is exactly `1/512`. Thus a zero endpoint measurement
+does not establish global additivity. These seventeen proved results
+bring the total to **326**, with no new sorry. Next observe centered
+logit contrasts together with uncentered attention-projection, FFN
+output and residual contrasts, and report the hypothetical additive
+output reconstruction's accuracy. Same-layer head outputs pass
+through an affine projection; downstream nonlinearities can create
+final-output interaction independently of a learned cross-layer
+attention algorithm. That implementation-stage transfer must be
+checked on actual saved weights rather than inferred from the toy map.
 
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
