@@ -886,6 +886,24 @@ invariance on this closed trajectory, then identify an actual symmetry-
 breaking mechanism before asserting late held-out margin crossing or
 transfer to learned GPTMini circuits.
 
+`CircuitEfficiency.SectionC_NativeHistory` identifies both retained
+buffers and the completed clock with the causal history of each actual
+generated clipped CE derivative. The next actual parameter is its pure
+decay contribution minus the native bias-corrected direction of that same
+history. The wrapper supplies all visited coordinate bounds, so at every
+positive clock the corrected first moment has magnitude at most bound and
+the physical corrected variance lies between zero and bound squared. The
+next adaptive direction has the explicit bound/epsilon estimate. These
+are actual closed-path consequences; no arbitrary successful future
+gradient stream is supplied, and loss descent or generalization does not
+follow from the loose magnitude estimate.
+
+These eight checked results bring the total to **548** without new sorry.
+Next prove the fully zero pair's invariance under actual CE feedback and
+retained native moments. Then investigate a mechanism that selects Gen
+over Mem despite training-table symmetry; uniform decoupled parameter
+decay cannot be identified with the source's cost-asymmetric penalty.
+
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
 properties survive the native adaptive first update even though the
