@@ -87,6 +87,7 @@ import Transformer.Modes.Section3_CharacteristicDerivatives
 import Transformer.Modes.Section3_DerivativeMoments
 import Transformer.Modes.Section3_DerivativeTaylor
 import Transformer.Modes.Section3_GaussianDerivativeComparison
+import Transformer.Modes.Section3_PowerDerivatives
 import Transformer.Modes.Section3_DensityFamily
 import Transformer.Modes.Section5_FourierGap
 import Transformer.Modes.Section5_PtBddFejer
