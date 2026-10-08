@@ -26,4 +26,5 @@ native fresh-buffer growth threshold for actual compositional CE, and
 finite-step bounds with actual CE counterexamples to initial-curvature
 certificates, and corrected fixed-circuit efficiency allocation with
 positive-penalty and global-optimality premises, including source
-counterexamples and repaired real-power increment estimates. -/
+counterexamples, repaired real-power increment estimates, actual feasible
+transfers, superlinear minimum cost balance/ratios and fixed-table margins. -/

@@ -22,7 +22,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Operational delayed generalization | Define train fit, a sustained held-out plateau, later generalization, and finite-budget censoring without future information entering a detector | Power et al., arXiv:2201.02177v1, sections 1 and 3.1; pinned causal histories | Twenty-seven proved threshold, prefix, confirmation, sustained-window, delay-bound and bounded-continuation laws/counterexamples; the full Python heuristic remains open |
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
-| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendix D | Fourteen allocation and derivative laws/counterexamples with explicit penalty, optimum and local-radius assumptions; the source's incorrect increment lemma is repaired; native AdamW rule selection remains open |
+| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendix D | Twenty-six allocation/derivative laws and counterexamples: both two-circuit budget regimes, actual transfer improvements, optimum cost balance/ratio and conditional held-out margin; native AdamW rule selection remains open |
 | Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Seventy-four proved actual-CE component, saddle, stationary-state, class-centered output and decision-transfer results/counterexamples; 644 real head-pair loss observations and 644 stage/output observations reject interaction-only detection; causal multi-step formation remains open |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Fifty-five proved mean, energy, margin, cleanup and integer-encoding laws/counterexamples; exact certificates measured on all 238 preserved snapshots; 266 Python tests passed |
 | Division-task symmetry | Derive the diagnostic cells from the actual numeric task rather than assuming their labels or orbit interpretation | Power et al., section 3.1; author-code corpus and GrokkingObserver at 43d4d66 | Nineteen proved generator, valid-domain, orbit-equivalence, disjointness and finite-cardinality laws/counterexamples; token/Python implementation bridges remain open |
@@ -628,9 +628,31 @@ A positive active weight gives a strictly positive linear transfer budget.
 The quadratic difference below its tangent also refutes retaining zero
 tolerance in the strict corrected estimate. These seven results bring
 the total to **376** without new sorry; they repair the local ingredient,
-not the entire printed case-2 proof or its optimizer transfer. Next
-derive actual minimizer allocation in the quadratic-cost regime, then
-investigate dynamics rather than identifying equilibrium with learning.
+not the entire printed case-2 proof or its optimizer transfer.
+
+`SectionD_TransferDirections` and `SectionD_SuperlinearAllocation` now
+derive the second regime for every exponent `r > 1`, beyond just a
+quadratic specialization. The actual objective on `(x+epsilon,y-epsilon)`
+has derivative `multiplier*r*(cost0*x^(r-1)-cost1*y^(r-1))`. Training loss
+is constant along this curve because the stated training logits agree;
+no derivative of an arbitrary reduced training loss is assumed. At an
+absent-circuit boundary, the actual negative derivative gives a strictly
+feasible finite improvement, so every nonzero nonnegative global minimum
+with positive multiplier/costs has both weights positive. Fermat's theorem
+then derives cost balance and the ratio
+`x/y = (cost1/cost0)^(1/(r-1))`. A concrete smooth bounded MSE example
+proves that all global-minimum hypotheses are jointly attainable.
+
+When the generalizing lookup table has strictly smaller cost, that balance
+gives `x-y > 0`, its actual binary held-out margin. The current transfer
+still assumes the fixed Gen/Mem tables, normalized norm-scaling objective,
+nonzero attained minimum and coupled penalty; it does not show that native
+AdamW learns those tables or reaches the minimum. These twelve results
+bring the total to **388** without new sorry. Next remove the nonzero-
+minimum premise where the actual CE allows it, then investigate multi-step
+learning and rule formation with preserved moments. The two-circuit
+case analysis does not exhaust arbitrary circuit families or all possible
+explanations of grokking.
 
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
