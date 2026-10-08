@@ -3171,3 +3171,22 @@ limit at critical equality. Transfer to retained nonzero first beta,
 stable weak-decay relative selection, learned stochastic/numerical
 GPTMini transfer and thermodynamic system-size scaling remain open.
 Frozen transformer evidence and optimizers are unchanged.
+
+
+`CircuitEfficiency.SectionC_GainColdMassDissipation` sums the true
+native scalar bounds: at or above the cold threshold, a positive
+floor for one actual negative CE input forces total physical mass
+to drop by rate times the explicit adaptive gap. A current physical
+box and positive lower mass generate such a positive floor for at
+least one coordinate from the true CE multiplier and partner gains.
+Two results bring Grokking to **1068** and CircuitEfficiency to 602,
+without new sorry or target warnings. Joint satisfying examples use
+nonzero source-style factors and retained beta2=0.98; the current
+input-floor example is computed from its actual CE callback. No
+gradient stream or future parameter limit is prescribed. Next combine
+this generated decrement with the actual initialized antitone mass
+limit to prove zero-first-beta convergence at critical equality.
+Nonzero-first-beta critical convergence, stable weak-decay relative
+selection, learned stochastic/numerical GPTMini transfer and
+thermodynamic system-size scaling remain open. Frozen transformer
+evidence and optimizers are unchanged.
