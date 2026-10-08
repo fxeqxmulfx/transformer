@@ -3253,3 +3253,25 @@ the weighted physical parameter/moment observer. Nonzero-first-beta
 critical convergence, stable weak-decay relative selection, learned
 stochastic/numerical GPTMini transfer and thermodynamic system-size
 scaling remain open. Frozen evidence and optimizers are unchanged.
+
+
+`AdamW.ScalarBiasError` derives the geometric clock error from the
+complete actual scalar native denominator. The corrected epsilon
+reciprocal exceeds its baseline by at most the completed first-beta
+power times the newly retained magnitude over the first-clock epsilon
+floor. A current generated moment ceiling supplies the fixed error
+budget, indexed by the actual retained old clock. Multiplying by
+(1-beta1)*epsilon and adding rate*beta1 times the new negative moment
+cancels that epsilon baseline in the weighted parameter/moment law,
+leaving rate*bound*beta1^clock. Four results bring Grokking to **1083**
+and AdamW to 203, without new sorry or target warnings. Joint examples
+use beta1=0.9/beta2=0.98 and nonzero retained buffers at a positive
+clock. The squared-gradient denominator is bounded, not replaced;
+no future gradient or buffer limit is supplied. Next sum the true
+four-coordinate CE laws, derive initialized moment bounds/clocks,
+and apply the geometric correction to obtain an actual weighted
+observer limit before forcing physical mass collapse by input-induced
+dissipation. Nonzero-first-beta critical convergence, stable weak-
+decay relative selection, learned stochastic/numerical GPTMini and
+thermodynamic system-size transfer remain open. Frozen evidence and
+optimizers are unchanged.

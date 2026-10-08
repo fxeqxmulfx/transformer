@@ -15,6 +15,7 @@ import Transformer.Grokking.AdamW.ScalarDenominator
 import Transformer.Grokking.AdamW.ScalarInputDissipation
 import Transformer.Grokking.AdamW.RetainedInputDissipation
 import Transformer.Grokking.AdamW.GeometricError
+import Transformer.Grokking.AdamW.ScalarBiasError
 import Transformer.Grokking.AdamW.PairEnvelope
 import Transformer.Grokking.AdamW.PairComparison
 import Transformer.Grokking.AdamW.PairContraction
