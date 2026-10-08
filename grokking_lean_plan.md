@@ -3127,3 +3127,29 @@ GPTMini transfer and thermodynamic system-size scaling. Next examine
 the true critical mass dissipation, beginning with a legal zero-first-
 beta control before transferring any argument to retained beta1=0.9.
 Frozen transformer evidence and optimizers are unchanged.
+
+
+`CircuitEfficiency.SectionC_GainColdMassMonotone` begins the actual
+critical-convergence route with explicit legal first beta zero while
+retaining the second buffer, its beta and completed clocks. At or above
+the actual cold threshold one true native CE step cannot increase total
+physical mass. Initialized signs generate an antitone nonnegative mass
+sequence, a uniform physical coordinate box from its initial total
+mass, and a finite nonnegative mass limit by order completeness. None
+of those future bounds or limits is an input. Four results bring
+Grokking to **1062** and CircuitEfficiency to 600, without new sorry or
+target warnings. Every hypothesis group has a jointly satisfying
+nonzero source-style example at exact binary critical decay=1.5,
+epsilon=1, beta2=0.98 and rate=0.001. Nonnegative rate remains allowed
+in these observer laws, so they do not yet force a zero limit. Next use
+positive rate, the derived physical box and true CE floor: each nonzero
+input inserts a squared-gradient contribution into retained variance,
+making its actual denominator strictly exceed epsilon. A uniform input
+floor should then force a mass decrement and exclude a positive limit
+without a partner-mixing or variance-ceiling premise. This control does not
+replace or reset beta1=0.9/beta2=0.98 in the frozen transformer runs;
+nonzero-first-beta critical convergence still needs its own weighted
+dissipation argument. Stable weak-decay relative selection, learned
+stochastic/numerical GPTMini transfer and thermodynamic system-size
+scaling remain open. Frozen transformer evidence and optimizers are
+unchanged.
