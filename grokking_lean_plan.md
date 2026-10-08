@@ -904,6 +904,30 @@ retained native moments. Then investigate a mechanism that selects Gen
 over Mem despite training-table symmetry; uniform decoupled parameter
 decay cannot be identified with the source's cost-asymmetric penalty.
 
+`CircuitEfficiency.SectionC_NativeZero` proves that a fully absent Gen
+pair has zero actual CE coordinate derivatives while the product-weight
+CE slope remains negative. Shared clipping cannot insert derivatives;
+zero parameters and actual buffers remain zero at every native update,
+with clocks still advancing. The entire closed path from two zero Gen
+seeds preserves the absent pair, regardless of the other circuit's seeds.
+Nonzero stale first moments are explicitly excluded by the initial-buffer
+conditions; a zero current gradient alone is not enough for the result.
+
+With nonnegative Mem seeds and the checked valid-beta/epsilon/remaining-
+decay conditions, true held-out CE stays at least log q for every finite
+step. This is its uniform-initialization loss, stronger than the earlier
+log-two equal-circuit floor. It is not a claim about argmax tie-breaking or
+the source's positive-second-factor Gen simulation. Clipped native
+training cannot discover this entirely absent fixed product circuit;
+discovery of learned GPTMini features remains a different open problem.
+
+These eight checked results bring the total to **556** without new sorry.
+The closed native trajectory now distinguishes positive-seed formation,
+complete absence, and full-state Gen/Mem symmetry. Next identify a
+symmetry-breaking mechanism or its necessary state/geometry conditions;
+the source's circuit-efficiency allocation theorem cannot be substituted
+for native adaptive dynamics under uniform parameter-wise decay.
+
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
 properties survive the native adaptive first update even though the
