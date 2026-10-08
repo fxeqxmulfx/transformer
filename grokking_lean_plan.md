@@ -30,7 +30,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Analogy only for current finite GPTMini; finite-size scaling not established |
 | Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Observed-logit integer certificate bridge and eight conditional native first-step gradient-error bounds/counterexamples proved; actual floating-point forward, autograd error generation and softmax collapse remain open |
-| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | 128 update/history/curve laws and counterexamples: state-dependent descent, finite overshoot, gradient-error bounds, reachable momentum ascent, compositional CE growth, interval curvature bounds, causal corrected-moment bounds, direct buffer forgetting, distinct-gradient feedback and same-gradient partial-reset semantics; repeated-step rule convergence remains unproved |
+| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | 155 update/history/curve laws and counterexamples: state-dependent descent, finite overshoot, gradient-error bounds, reachable momentum ascent, compositional CE growth, interval curvature bounds, causal corrected-moment bounds, direct buffer forgetting, distinct-gradient feedback, partial resets, retained scalar states and exact-real native clipping; repeated-step rule convergence remains unproved |
 
 ## Cycle
 
@@ -819,6 +819,36 @@ subweights under persistent native AdamW, retaining its zero-seed and
 finite-rate obstructions. Positive-seed emergence, circuit competition,
 later margin crossing and transfer to learned GPTMini circuits remain open;
 do not infer them from buffer contraction or the attained coupled optimum.
+
+`AdamW.ScalarRecurrence` and `ScalarStability` keep the parameter, both
+retained buffers and completed clock in one numerical state. The update
+agrees with the previously checked first step at zero initialization and
+retains old momentum even at a zero current gradient. Nonpositive current
+and retained first-moment signs give a nonpositive adaptive direction;
+a strictly negative current derivative makes it negative. With positive
+remaining decay factor, seeded positive coordinates cannot collapse in
+that sign region, and a negative derivative activates a zero coordinate.
+These are derived update facts, not sign or success claims built into the
+state. Current-gradient signs remain hypotheses until the CE callback
+derives them on the actual coupled path.
+
+`AdamW.GradientClipping` formalizes the documented PyTorch 2.14.1 flattened
+norm-two clipping coefficient `min(1, bound/(norm+1e-6))`. A positive finite
+bound makes it positive and at most one. The actual clipped norm and every
+coordinate magnitude are bounded by it; negative signs persist strictly.
+This derives the exact-real coordinate premise for the earlier moment
+bounds without assuming bounded raw derivatives. The source doc's wording
+that scaling only occurs above max_norm is corrected: no scaling requires
+`norm+1e-6<=bound`, and a unit gradient at unit max_norm has multiplier
+`1000000/1000001`. This is an exact-real coefficient counterexample, not a
+claim that a numerical kernel or the training recipe has changed.
+
+These twenty-seven checked results bring the total to **511** without new
+sorry. Next instantiate the complete retained state and clipping wrapper
+with each of the four actual product-CE partial derivatives at its current
+factors. Close initialization, parameter feedback, noncollapse, zero-seed
+invariance and competition symmetries on that actual iteration before
+claiming any later rule-selection or generalization threshold crossing.
 
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
