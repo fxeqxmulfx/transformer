@@ -25,6 +25,7 @@ import Transformer.Grokking.CircuitEfficiency.SectionC_GainPositiveLimits
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainBoundary
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainSigns
 import Transformer.Grokking.CircuitEfficiency.SectionC_GainEnvelope
+import Transformer.Grokking.CircuitEfficiency.SectionC_GainNoncollapse
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEExistence
 import Transformer.Grokking.CircuitEfficiency.SectionD_CEMinima
