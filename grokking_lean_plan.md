@@ -3341,3 +3341,23 @@ initialized threshold classification including equality. Relative
 Gen/Mem selection at weak decay, learned stochastic/numerical
 GPTMini and thermodynamic system-size transfer remain open. The
 six frozen measurements, runs, optimizers and checkpoints are unchanged.
+
+
+`CircuitEfficiency.SectionC_GainColdSeededNativeLimits` propagates
+generated initialized critical collapse through the original native
+optimizer. Every actual clipped CE input and both retained moments
+tend to zero; the completed-clock denominator tends to epsilon,
+completed clocks diverge, and the actual corrected adaptive direction
+tends to zero. All limits include critical equality with arbitrary
+legal retained betas and require no future input/buffer/denominator
+premise. The actual physical mass cap supplies input convergence;
+the scalar native port retains the complete causal histories.
+Four results bring Grokking to **1093** and CircuitEfficiency to 615,
+without new sorry or target warnings. Each joint nonzero source-style
+example uses original beta1=0.9/beta2=0.98, exact binary critical
+decay=1.5/epsilon=1, rate=0.001 and Gen=(0,0.005)/Mem=(0,1).
+Next close original CE coefficient, score/confidence limits and the
+initialized threshold classification including equality. Stable
+weak-decay relative selection, learned stochastic/numerical GPTMini
+and thermodynamic system-size transfer remain open. Frozen evidence,
+optimizers and checkpoints are unchanged.
