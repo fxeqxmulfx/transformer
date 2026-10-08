@@ -20,4 +20,5 @@ stationary saddles, removal contrasts, regularized origin curvature
 and finite stationary-state thresholds, including additive-score
 counterexamples to identifying circuits from nonlinear loss contrasts,
 class-centered output energy, limits of endpoint gate diagnostics, and
-current-margin conditions for additive output reconstruction. -/
+current-margin conditions for additive output reconstruction, plus the
+native fresh-buffer growth threshold for actual compositional CE. -/

@@ -30,7 +30,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Analogy only for current finite GPTMini; finite-size scaling not established |
 | Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Observed-logit integer certificate bridge and eight conditional native first-step gradient-error bounds/counterexamples proved; actual floating-point forward, autograd error generation and softmax collapse remain open |
-| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | Sixty native-update laws/counterexamples: state-dependent first-step descent, finite overshoot, conditional gradient-error bounds, second-step alignment and actual reachable momentum ascent; repeated-step rule convergence remains unproved |
+| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | Seventy-four native-update laws/counterexamples: state-dependent first-step descent, finite overshoot, conditional gradient-error bounds, second-step alignment, reachable momentum ascent and fresh-buffer compositional CE growth; repeated-step rule convergence remains unproved |
 
 ## Cycle
 
@@ -499,6 +499,27 @@ controls, checkpoint hashes and full findings are in
 `experiments/grokking_internals/output_interaction_results.json` and its
 README. The full Python suite passes **285 tests in 888.098 seconds**;
 the earlier frozen readers and results remain unchanged.
+
+`AdamW.CoupledFirstStep` and `CoupledThreshold` apply the verified native
+first-update algorithm to the actual two-component CE gradient. At a
+positive aligned state `x=y=s`, both updated amplitudes equal
+`s + rate*s*(1/(s + epsilon*(exp(s^2)+1)) - decay)`. Growth is exactly
+`decay*(s + epsilon*(exp(s^2)+1)) < 1`. A growing positive state exists
+iff `decay < 1/(2*epsilon)`; continuity gives an actual interval of
+small positive states with growth and strictly smaller CE. At or above
+that threshold no positive aligned state grows. Exactly absent components
+remain fixed, and the growing states retain their already correct binary
+decisions. This can be confidence growth, not delayed generalization.
+
+At the experimental epsilon/betas/rate, decay one-half still permits
+small positive growing states. Thus the earlier coupled L2 curvature
+threshold one-half cannot be transferred to the native decoupled
+algorithm. The CE is unit-weight binary CE, unlike the lab's shared
+answer/EOS averaged objective; neither this coefficient nor zero initial
+moment buffers is silently assigned to GPTMini's later checkpoints.
+These fourteen proved results bring the total to **349** with no new
+sorry. Persistent momentum, minibatch histories and learned rule decisions
+remain open beyond this specialization.
 
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse
