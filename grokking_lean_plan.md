@@ -3317,3 +3317,27 @@ error should then exclude such late levels and prove critical
 physical collapse. Stable weak-decay relative selection, learned
 stochastic/numerical GPTMini and thermodynamic system-size transfer
 remain open. Frozen evidence and optimizers are unchanged.
+
+
+`CircuitEfficiency.SectionC_GainColdSeededCollapse` closes actual
+initialized critical physical collapse for arbitrary legal retained
+first/second betas, including beta1=0.9/beta2=0.98. At or above the
+greater-gain cold threshold, standard nonnegative zero-buffer seeds
+and positive rate give total physical mass tending to zero, and
+every physical coordinate tends to zero. Clipping and positive decay
+generate the box and moment bounds. Whenever mass exceeds a fixed
+positive level, the true CE box floor generates an actual input;
+late completed clocks force its denominator above epsilon, yielding
+a fixed weighted decrement. Weighted convergence and vanishing
+clock errors exclude recurrent positive levels without assuming
+physical monotonicity or future parameter/input/buffer limits.
+Two results bring Grokking to **1089** and CircuitEfficiency to 611,
+without new sorry or target warnings. Joint source-style examples
+use exact binary critical decay=1.5/epsilon=1, original retained
+betas, rate=0.001 and Gen=(0,0.005)/Mem=(0,1). Remaining decay may
+be zero. Next propagate actual critical collapse through native
+inputs, moments, denominators, scores and losses, and close the
+initialized threshold classification including equality. Relative
+Gen/Mem selection at weak decay, learned stochastic/numerical
+GPTMini and thermodynamic system-size transfer remain open. The
+six frozen measurements, runs, optimizers and checkpoints are unchanged.
