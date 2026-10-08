@@ -30,7 +30,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Regularization and norms | Relate an explicitly stated penalty or decay update to competing solutions; reject norm-only success claims | Golechha, arXiv:2405.12755v1, section 3; current grouped norms | Whole-model norm barely changes across the observed transition |
 | Phase transitions | Specify an order parameter, control parameter, asymptotic regime and distribution before claiming a thermodynamic transition | Liu effective theory; Žunkovič/Ilievski solvable models | Analogy only for current finite GPTMini; finite-size scaling not established |
 | Numerical precision and softmax collapse | Compare exact-real loss gradients with floating-point zeros and prove only the quantization model actually used | Prieto et al., section 3; local CUDA/CPU execution | Observed-logit integer certificate bridge and eight conditional native first-step gradient-error bounds/counterexamples proved; actual floating-point forward, autograd error generation and softmax collapse remain open |
-| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | 178 update/history/curve laws and counterexamples: state-dependent descent, finite overshoot, gradient-error bounds, reachable momentum ascent, compositional CE growth, interval curvature bounds, causal corrected-moment bounds, direct buffer forgetting, distinct-gradient feedback, partial resets, retained scalar states, exact-real native clipping, derived moment/direction limits, necessary finite-limit parameter balance, actual corrected-denominator identities, positivity, parameter lower bounds, denominator limits from actual retained inputs and explicit two-factor retained-moment envelope growth/noncollapse laws; repeated-step rule convergence remains unproved |
+| Actual transformer and AdamW transfer | Identify which premises about the real forward map, token task and optimizer are verified, and which remain unproved | Existing GPTMini List Int semantics; native lab checkpoints | 180 update/history/curve laws and counterexamples: state-dependent descent, finite overshoot, gradient-error bounds, reachable momentum ascent, compositional CE growth, interval curvature bounds, causal corrected-moment bounds, direct buffer forgetting, distinct-gradient feedback, partial resets, retained scalar states, exact-real native clipping, derived moment/direction limits, necessary finite-limit parameter balance, actual corrected-denominator identities, positivity, parameter lower bounds, denominator limits from actual retained inputs, explicit two-factor retained-moment envelope growth/noncollapse laws and the full first-clock epsilon denominator floor/parameter increment ceiling; repeated-step rule convergence remains unproved |
 
 ## Cycle
 
@@ -1533,6 +1533,22 @@ parameter convergence and an explicit initial-data regime, rather than
 on future rule presence. The new theorem does not establish global
 convergence, a delayed train/test transition, learned circuit formation
 or stochastic/numerical GPTMini transfer.
+
+On 2026-10-08, `AdamW.ScalarDenominator` derives the complete numerical
+denominator floor `(1 - beta1) * epsilon` at every retained clock.
+It follows from the completed first bias correction and nonnegative
+actual square root; no supplied variance/current-gradient agreement
+is needed. Nonpositive old moments and current inputs then cap the
+actual parameter increment by its newly inserted retained moment
+divided by that floor. Valid first beta and positive epsilon/rate
+conditions are explicit and jointly satisfiable at beta1=0.9.
+
+These two checked results bring the total to **708** without new sorry;
+AdamW now has 180 checked results. This is a finite-step numerical
+bound, not a convergence or generalization certificate. Next close
+the gained-CE Gen upper envelope and derive a same-hyperparameter
+wrong-decision prefix from small positive Gen seeds and the Mem
+pure-decay floor.
 
 Next attack actual parameter bounds, convergence and formation time.
 For a finite-budget delay route, derive the full corrected denominator

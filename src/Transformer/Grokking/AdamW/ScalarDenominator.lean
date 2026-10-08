@@ -54,6 +54,22 @@ theorem next_buffer_denominator_pos (b1 b2 eps variance gradient : ℝ) (clock :
 
 example : (0 : ℝ) ≤ 9 / 10 ∧ (9 / 10 : ℝ) < 1 ∧ (0 : ℝ) < 1 / 100000000 := by norm_num
 
+/-- The completed-clock denominator is at least its first-clock
+epsilon floor. Source: native AdamW at 315f601; the retained square
+root is nonnegative without assuming instantaneous variance matching. -/
+theorem next_buffer_denominator_floor (b1 b2 eps variance gradient : ℝ) (clock : ℕ)
+    (hb : 0 ≤ b1) (h1 : b1 ≤ 1) (he : 0 ≤ eps) :
+    (1 - b1) * eps ≤ nextBufferDenominator b1 b2 eps variance gradient clock := by
+  have hp := pow_le_of_le_one hb h1 (show clock + 1 ≠ 0 by omega)
+  have hc : 0 ≤ 1 - b1 ^ (clock + 1) := by linarith only [hp, h1]
+  have hs := mul_nonneg hc (Real.sqrt_nonneg
+    ((b2 * variance + (1 - b2) * gradient ^ 2) / (1 - b2 ^ (clock + 1))))
+  have ht := mul_nonneg (show 0 ≤ b1 - b1 ^ (clock + 1) by linarith only [hp]) he
+  unfold nextBufferDenominator
+  nlinarith only [hs, ht]
+
+example : (0 : ℝ) ≤ 9 / 10 ∧ (9 / 10 : ℝ) ≤ 1 ∧ (0 : ℝ) ≤ 1 / 100000000 := by norm_num
+
 /-- Exact parameter movement uses the newly retained moment and
 the actual corrected denominator. Source: native AdamW at 79f4fb0;
 both decay and adaptive insertion belong to the same native step. -/
@@ -90,6 +106,27 @@ example : (0 : ℝ) ≤ 0 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) ≤ 
     (seededScalarState 1).moment ≤ 0 ∧ (-1 : ℝ) ≤ 0 ∧
     nextBufferDenominator 0 0 1 (seededScalarState 1).variance (-1) (seededScalarState 1).clock ≤ 2 := by
   norm_num [nextBufferDenominator, seededScalarState]
+
+/-- The epsilon floor caps the true adaptive parameter increment.
+Source: native AdamW at 315f601; retain the newly inserted first
+moment instead of substituting the current CE gradient for it. -/
+theorem scalar_parameter_denominator_ceiling (b1 b2 eps decay rate gradient : ℝ)
+    (state : ScalarState) (hb : 0 ≤ b1) (h1 : b1 < 1) (he : 0 < eps) (heta : 0 ≤ rate)
+    (hm : state.moment ≤ 0) (hg : gradient ≤ 0) :
+    (scalarNativeStep b1 b2 eps decay rate state gradient).parameter ≤
+      (1 - rate * decay) * state.parameter + rate *
+        (-(scalarNativeStep b1 b2 eps decay rate state gradient).moment) / ((1 - b1) * eps) := by
+  have hn := scalar_native_moment_nonpos b1 b2 eps decay rate gradient state hb (le_of_lt h1) hm hg
+  have hd : 0 < (1 - b1) * eps := mul_pos (by linarith only [h1]) he
+  have hdiv := div_le_div_of_nonneg_left
+    (mul_nonneg heta (neg_nonneg.mpr hn)) hd
+    (next_buffer_denominator_floor b1 b2 eps state.variance gradient state.clock hb (le_of_lt h1) (le_of_lt he))
+  rw [scalar_parameter_denominator]
+  linarith only [hdiv]
+
+example : (0 : ℝ) ≤ 9 / 10 ∧ (9 / 10 : ℝ) < 1 ∧ (0 : ℝ) < 1 / 100000000 ∧
+    (0 : ℝ) ≤ 1 / 1000 ∧ (seededScalarState 1).moment ≤ 0 ∧ (-1 : ℝ) ≤ 0 := by
+  norm_num [seededScalarState]
 
 /-- The true corrected denominator has its native input-limit value.
 Source: native AdamW at 79f4fb0; derive variance and correction limits
