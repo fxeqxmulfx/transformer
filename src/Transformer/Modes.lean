@@ -80,6 +80,7 @@ import Transformer.Modes.Section3_CharacteristicCubic
 import Transformer.Modes.Section3_CubicCumulant
 import Transformer.Modes.Section3_CubicCorrection
 import Transformer.Modes.Section3_CubicFourier
+import Transformer.Modes.Section3_CubicFourierInversion
 import Transformer.Modes.Section3_SmallFrequency
 import Transformer.Modes.Section3_GaussianComparison
 import Transformer.Modes.Section3_FourierRegularization
