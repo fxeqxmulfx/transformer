@@ -22,7 +22,7 @@ are separate results; the transfer must be proved, not hidden in a definition.
 | Operational delayed generalization | Define train fit, a sustained held-out plateau, later generalization, and finite-budget censoring without future information entering a detector | Power et al., arXiv:2201.02177v1, sections 1 and 3.1; pinned causal histories | Twenty-seven proved threshold, prefix, confirmation, sustained-window, delay-bound and bounded-continuation laws/counterexamples; the full Python heuristic remains open |
 | Confidence versus decisions | Positive logit scaling preserves every ordering but can strictly decrease cross-entropy; quantify the missing conditions and counterexamples | Prieto et al., arXiv:2501.04697v1, section 4.2; measured endpoint projections | Six proved theorems in `Transformer.Grokking.NaiveLoss.Section4_LogitScaling`; no sorry |
 | Spectral optimization dynamics | Derive slow modes and exact delayed test-boundary crossing from an actual gradient flow or update recurrence, including convex toy models | Liu et al., arXiv:2205.10343v2, effective embedding dynamics; Žunkovič/Ilievski, arXiv:2210.15435v1, section 3 | Nineteen perceptron theorems; fifty-seven effective-model laws/counterexamples, including noncollapse and effective-loss convergence from initial ground data |
-| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendix D | Twenty-six allocation/derivative laws and counterexamples: both two-circuit budget regimes, actual transfer improvements, optimum cost balance/ratio and conditional held-out margin; native AdamW rule selection remains open |
+| Rule learning versus memorization | State when a reusable rule component wins over an example-specific component under the same training objective | Nanda et al., arXiv:2301.05217v1, sections 4–5; Varma et al., arXiv:2309.02390v1, appendices C–D | Fifty-five allocation/CE/derivative laws and counterexamples: both two-circuit budget regimes, actual multiclass CE, attained nonzero minima, optimum cost balance/ratio and correct fixed-table test decisions; native AdamW rule selection remains open |
 | Compositional circuit formation | Distinguish zero coordinate gradients from a local minimum when a useful computation needs multiple learned components | Nanda et al., appendix Further speculations on grokking, Hypothesis: Phase Transitions are inherent to composition | Seventy-four proved actual-CE component, saddle, stationary-state, class-centered output and decision-transfer results/counterexamples; 644 real head-pair loss observations and 644 stage/output observations reject interaction-only detection; causal multi-step formation remains open |
 | Geometry of representations | Prove orbit projection identities, scale/bias invariances and counterexamples to symmetry-only success; connect train-fitted probes to held-out decoding | Division common-scaling observer, actual checkpoint features | Fifty-five proved mean, energy, margin, cleanup and integer-encoding laws/counterexamples; exact certificates measured on all 238 preserved snapshots; 266 Python tests passed |
 | Division-task symmetry | Derive the diagnostic cells from the actual numeric task rather than assuming their labels or orbit interpretation | Power et al., section 3.1; author-code corpus and GrokkingObserver at 43d4d66 | Nineteen proved generator, valid-domain, orbit-equivalence, disjointness and finite-cardinality laws/counterexamples; token/Python implementation bridges remain open |
@@ -653,6 +653,38 @@ minimum premise where the actual CE allows it, then investigate multi-step
 learning and rule formation with preserved moments. The two-circuit
 case analysis does not exhaust arbitrary circuit families or all possible
 explanations of grokking.
+
+`SectionC_TableLoss`, `SectionD_CEBudgetBasic`, `SectionD_CEExistence`
+and `SectionD_CEMinima` now use the actual finite-class train and test
+tables from Varma et al., appendices C–D. With q=remaining+2, training CE
+is `log(exp(x+y)+q-1)-(x+y)` and held-out CE is
+`log(exp(x)+exp(y)+q-2)-x`. These formulas are derived from standard
+finite-class cross-entropy. The train derivative is
+`-(q-1)/(exp(score)+q-1)`, strictly negative at every finite score; for
+the source's q=113 its initial value is exactly `-112/113`.
+
+For exponent r>1 the actual CE budget has an improving feasible direction
+at the origin, independent of its finite cost coefficients. Every
+nonnegative global minimum consequently has positive total score. With
+positive multiplier and both costs positive, a compact-rectangle argument
+proves that a global minimum is attained for r>=1. In the superlinear
+regime both weights are positive, cost balance and the inverse-cost
+ratio follow from the actual objective, and a strictly cheaper Gen table
+gives correct train and held-out decisions among every one of the q
+classes. Thus neither attainment nor a nonzero minimum is merely an
+assumption for this stated actual-CE model. Satisfying examples use
+its proved q=113 minimum, rather than an MSE substitute.
+
+The source-specific application uses normalized norms one/two, p=2,
+scalingExp=1.2 and appendix D's multiplier alpha/p=0.005/2=1/400.
+Appendix C's displayed LossWD omits that factor, so an exact simulator
+normalization is not asserted. These twenty-nine checked theorems bring
+the total to **417** without new sorry. Fixed circuits, their norm-scaling
+assumption and coupled penalty remain explicit; the result still does
+not establish delayed arrival, discovery of Gen or native AdamW
+convergence. Next derive dynamics of the actual product subweights and
+compare their rates/obstructions with preserved native moments, keeping
+all full-budget runs and earlier observers unchanged.
 
 Next investigate dynamics that select the correct reference rather than
 assuming a learned margin. Derive which descent and noncollapse

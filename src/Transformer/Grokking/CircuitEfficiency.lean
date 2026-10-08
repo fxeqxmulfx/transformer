@@ -1,3 +1,7 @@
+import Transformer.Grokking.CircuitEfficiency.SectionC_TableLoss
+import Transformer.Grokking.CircuitEfficiency.SectionD_CEBudgetBasic
+import Transformer.Grokking.CircuitEfficiency.SectionD_CEExistence
+import Transformer.Grokking.CircuitEfficiency.SectionD_CEMinima
 import Transformer.Grokking.CircuitEfficiency.SectionD_EfficientAllocation
 import Transformer.Grokking.CircuitEfficiency.SectionD_PowerDerivative
 import Transformer.Grokking.CircuitEfficiency.SectionD_SuperlinearAllocation
