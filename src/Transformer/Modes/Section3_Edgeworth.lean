@@ -1,4 +1,6 @@
 import Transformer.Modes.Section3_BR
+import Transformer.Modes.Section3_CumulantCalculus
+import Transformer.Modes.Section3_MomentRoots
 
 /-
 # The number of modes of a Gaussian KDE — the standardized summand `Y(t)`
@@ -31,7 +33,7 @@ Source: arXiv:2412.09080v3, `eq:Yi`, `eq:qt`, `lem:eta` and its proof in §5.
 -/
 
 open Real MeasureTheory ProbabilityTheory Filter
-open scoped ENNReal
+open scoped ENNReal Topology
 
 namespace Transformer
 namespace Modes
@@ -63,6 +65,67 @@ noncomputable def etaMoment (β t : ℝ) (s : ℕ) : ℝ := ∫ z, eucl z ^ s �
 noncomputable def sumGG' (n : ℕ) (β t : ℝ) (X : Fin n → ℝ) : ℝ × ℝ :=
   ((Real.sqrt n)⁻¹ * ∑ i, bigG β t (X i), (Real.sqrt n)⁻¹ * ∑ i, bigG' β t (X i))
 
+/-- The algebraic moment expression obtained by actual mixed logarithmic
+derivatives. The zero-order expression is zero because a probability MGF
+is one at the origin. The equality with `cumulantOf` is proved below.
+Source: arXiv:2412.09080v3, §3.1 and the proof of `lem:eta` in §5.3. -/
+def cumulantExpression : ℕ → ℕ → MomentExpression
+  | 0, 0 => MomentExpression.scale 0 (MomentExpression.moment 0 0)
+  | a + 1, 0 => (MomentExpression.diff true)^[a] (MomentExpression.logDerivative true)
+  | a, b + 1 => (MomentExpression.diff true)^[a]
+      ((MomentExpression.diff false)^[b] (MomentExpression.logDerivative false))
+
+/-- The moment expansion has exactly the order of its mixed derivative.
+Source: arXiv:2412.09080v3, proof of `lem:eta` in §5.3. -/
+theorem degree_cumulantExpression (a b : ℕ) :
+    MomentExpression.Degree (cumulantExpression a b) (a + b) := by
+  cases b with
+  | zero =>
+      cases a with
+      | zero => exact MomentExpression.Degree.scale 0 (MomentExpression.Degree.moment 0 0)
+      | succ a =>
+          simpa [cumulantExpression, Nat.add_comm] using
+            (MomentExpression.degree_logDerivative true).iterate_diff true a
+  | succ b =>
+      simpa [cumulantExpression, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
+        ((MomentExpression.degree_logDerivative false).iterate_diff false b).iterate_diff true a
+
+/-- The actual mixed derivatives of the logarithm equal their moment
+expansion. Exponential moments justify each derivative on a neighbourhood.
+Source: arXiv:2412.09080v3, §3.1, definition of `κ^α`, and `lem:eta`. -/
+theorem cumulantOf_eq_expression {μ : Measure (ℝ × ℝ)} [IsProbabilityMeasure μ]
+    (hexp : HasExpMoments μ) (a b : ℕ) :
+    cumulantOf μ a b = (cumulantExpression a b).eval (fun i j => expMoment μ i j 0 0) := by
+  obtain ⟨ε, hε, hE⟩ := hexp
+  have h0 : |(0 : ℝ)| < ε := by simpa using hε
+  cases b with
+  | zero =>
+      cases a with
+      | zero => simp [cumulantOf, cumulantExpression, MomentExpression.eval,
+          ← expMoment_zero_zero]
+      | succ a =>
+          have h := MomentExpression.iteratedDeriv_logAlong hE h0 h0 true a
+          simpa [cumulantOf, cumulantExpression, MomentExpression.evalAlong,
+            ← expMoment_zero_zero] using h
+  | succ b =>
+      have heq : (fun u => iteratedDeriv (b + 1)
+          (fun v => log (expMoment μ 0 0 u v)) 0) =ᶠ[𝓝 (0 : ℝ)]
+          fun u => ((MomentExpression.diff false)^[b] (MomentExpression.logDerivative false)
+            ).evalAlong μ true 0 u := by
+        filter_upwards [continuous_abs.continuousAt.eventually_lt continuousAt_const h0]
+          with u hu
+        have h := MomentExpression.iteratedDeriv_logAlong hE hu h0 false b
+        simpa [MomentExpression.evalAlong] using h
+      simp only [cumulantOf, ← expMoment_zero_zero]
+      rw [heq.iteratedDeriv_eq a]
+      have h := MomentExpression.iteratedDeriv_evalAlong hE h0 h0
+        ((MomentExpression.diff false)^[b] (MomentExpression.logDerivative false)) true a
+      rw [cumulantExpression]
+      exact h
+
+example : IsProbabilityMeasure stdGauss2 ∧ HasExpMoments stdGauss2 :=
+  ⟨inferInstance, hasExpMoments_stdGauss2⟩
+
 /-- **Lemma (lem:eta), cumulants.**  A cumulant of order `s = a + b ≥ 3` is
 `O(η_s)`, with a constant depending on `(a, b)` only.
 arXiv:2412.09080v3, `lem:eta` and its proof in §5 ("cumulants of order `s` are
@@ -70,7 +133,18 @@ clearly `O(η_s)`"), stated for every law with exponential moments. -/
 theorem abs_cumulantOf_le (a b : ℕ) (hs : 3 ≤ a + b) :
     ∃ C : ℝ, ∀ μ : Measure (ℝ × ℝ), IsProbabilityMeasure μ → HasExpMoments μ →
       |cumulantOf μ a b| ≤ C * ∫ x, eucl x ^ (a + b) ∂μ := by
-  sorry
+  refine ⟨(cumulantExpression a b).size, fun μ hμ hexp => ?_⟩
+  have := hμ
+  let M : ℝ := ∫ x, eucl x ^ (a + b) ∂μ
+  have hM : 0 ≤ M := integral_nonneg fun x => by unfold eucl; positivity
+  have hn : 0 < a + b := by omega
+  rw [cumulantOf_eq_expression hexp a b]
+  have h := MomentExpression.eval_bound (degree_cumulantExpression a b) le_rfl
+    (fun i j => expMoment μ i j 0 0) (M ^ ((a + b : ℕ) : ℝ)⁻¹)
+    (moment_root_nonneg M hM (a + b)) (expMoment_origin_zero_zero μ)
+    (fun i j hij => expMoment_origin_le_root hexp (a + b) i j hn hij)
+  rw [moment_root_pow_self M hM (a + b) hn] at h
+  exact h
 
 /-- The hypotheses of `abs_cumulantOf_le` are satisfiable, and so are those
 of the implication it asserts. -/
