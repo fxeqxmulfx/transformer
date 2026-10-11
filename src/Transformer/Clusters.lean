@@ -83,6 +83,7 @@ import Transformer.Clusters.Section10_ComplementaryGrowth
 import Transformer.Clusters.Section10_LeadingFlow
 import Transformer.Clusters.Section10_ScoreError
 import Transformer.Clusters.Section10_ProjectedEnergy
+import Transformer.Clusters.Section10_CorrectedEnergy
 import Transformer.Clusters.Section10_Remainder
 import Transformer.Clusters.Section10_RemainderFalse
 import Transformer.Clusters.Section10_Step2
