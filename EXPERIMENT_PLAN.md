@@ -2599,3 +2599,12 @@ rechecked after termination. The cosine case never started. Raw state is under
 The incomplete pair supports no conclusion about either schedule. Its frozen
 plan pins sources at their `experiments/` paths; replaying it requires a
 checkout of commit `698d904`.
+
+## Mod 97 size search (2026-10-11)
+
+Status: active, requested by the user. Search the dense GPTMini first in
+`experiments/mod97_size_search`, then Mesh GPT in the Rust repository. Every
+run is capped at 10,000 complete passes over its fixed training split. Use
+exhaustive held-out evaluation, record delayed grokking separately from
+immediate generalization and transient peaks, and commit tested setup and
+result milestones promptly. Preserve the archived runs and unrelated work.
