@@ -14,21 +14,23 @@ the growth of `‖π_ℱ(Az_i(t))‖²` away from `𝒮_δ`, which replace Step 
 * Both statements are conditioned on `z_i(t) ∉ 𝒮_δ × 𝒢`, which through the
   splitting is `π_ℱ(z_i(t)) ∉ 𝒮_δ`.
 
-* `𝒦` is not re-derived: the convergence of the projected hull, the sorried
-  half of `exists_polytope_tendsto_image_tokenHull`, is taken as an explicit
-  hypothesis, so that `𝒦` is the polytope the proof means and nothing here
-  rests on an unproved result.
+* Both positive lower bounds are false with that definition of `𝒮_δ`.
+  An actual identity-value square approaches its nonempty limiting hull
+  from outside at every finite time. Each corner's competing scores and
+  energy derivative are nonpositive. The hull is derived from the actual
+  ODE and identified with the future-hull intersection.
 
 * The first equality of `e:derivativenorm123`,
   `½ d/dt ‖π_ℱ(Az_i(t))‖² = ⟨π_ℱ(Aż_i(t)), π_ℱ(Az_i(t))⟩`, is proved; it is
-  the chain rule on `e:Rres`.  What Step 2' adds to it — the lower bound — is
-  the sorried part.
+  the chain rule on `e:Rres`. The false lower bounds are replaced below by
+  counterexamples, without changing the source's restricted neighborhood.
 
 Source: arXiv:2305.05465v6, `sec: clustering.hyperplanes.and.polytopes`,
 `cl:gamma'12`, Step 2', `e:derivativenorm123`.
 -/
 
 import Transformer.Clusters.Section10_Remainder
+import Transformer.Clusters.Section10_SquareApproach
 import Mathlib.Analysis.InnerProductSpace.Calculus
 
 open scoped BigOperators
@@ -98,52 +100,67 @@ theorem candidatesThickening_subset (A proj : ParamMatrix d) (F : Submodule ℝ 
 
 /-! ### `cl:gamma'12` and Step 2' -/
 
-/-- **Claim (cl:gamma'12).**  There is `γ' > 0`, depending only on the
-geometry of `𝒦`, such that for every `δ ∈ (0, δ₀]` there is `T = T(δ) > 0`
-with: if `t ≥ T` and `z_i(t) ∉ 𝒮_δ × 𝒢`, then `a_j(t) ≥ γ'δ` for some
-`j ∈ [n]`.
+/-- **Claim `cl:gamma'12` is false with the source's `Sδ ⊂ K`.**
+The good triple, positive root and projection are all identities, with
+`F = ℝ²`, `G = 0`. The actual square corner never belongs to the genuine
+limit polytope, while every competing score is nonpositive.
+Nonemptiness and exact future-hull equality are required as well as
+Hausdorff convergence. Source: arXiv:2305.05465v6, §10, `cl:gamma'12`. -/
+theorem not_exists_gamma_projScore :
+    ¬ ∀ (Z : ℝ → Idx 4 → EucSpace 2) (S : Finset (⊤ : Submodule ℝ (EucSpace 2))),
+      RescaledDynamics (1 : ParamMatrix 2) 1 1 Z → S.Nonempty →
+      polytopeIn ⊤ S = {x | ∀ t : ℝ, 0 ≤ t → x ∈ (1 : ParamMatrix 2) '' tokenHull (Z t)} →
+      Tendsto (fun t => Metric.hausdorffDist ((1 : ParamMatrix 2) '' tokenHull (Z t))
+        (polytopeIn ⊤ S)) atTop (nhds 0) →
+      ∃ γ δ₀ : ℝ, 0 < γ ∧ 0 < δ₀ ∧ ∀ δ : ℝ, 0 < δ → δ ≤ δ₀ →
+        ∃ T : ℝ, 0 < T ∧ ∀ t : ℝ, T ≤ t → ∀ i : Idx 4,
+          (1 : ParamMatrix 2) (Z t i) ∉ candidatesThickening 1 1 ⊤ S δ →
+            ∃ j : Idx 4, γ * δ ≤ projScore 1 1 (Z t) i j := by
+  intro h
+  obtain ⟨Z, S, hZ, hS, hHull, hHaus, hout, hscore, _⟩ := exists_square_outside_limit_polytope
+  obtain ⟨γ, δ₀, hγ, hδ, hbound⟩ := h Z S hZ hS hHull hHaus
+  obtain ⟨T, hT, htime⟩ := hbound δ₀ hδ le_rfl
+  have hnot : (1 : ParamMatrix 2) (Z T 3) ∉ candidatesThickening 1 1 ⊤ S δ₀ := by
+    simp only [one_apply_eq_self]
+    exact fun hm => hout T hT.le (candidatesThickening_subset 1 1 ⊤ S δ₀ hm)
+  obtain ⟨j, hj⟩ := htime T le_rfl 3 hnot
+  have hpos := mul_pos hγ hδ
+  linarith [hscore T j]
 
-Not proved here.
+/-- **Step 2' is false with the source's restricted neighborhood.**
+The same actual identity-value square has nonpositive energy derivative
+while its corner remains outside the genuine nonempty limit polytope.
+Uniqueness of the derivative contradicts any positive bound `γ δ`.
+Source: arXiv:2305.05465v6, §10, Step 2' and `e:derivativenorm123`. -/
+theorem not_exists_gamma_deriv_norm_sq_proj :
+    ¬ ∀ (Z : ℝ → Idx 4 → EucSpace 2) (S : Finset (⊤ : Submodule ℝ (EucSpace 2))),
+      RescaledDynamics (1 : ParamMatrix 2) 1 1 Z → S.Nonempty →
+      polytopeIn ⊤ S = {x | ∀ t : ℝ, 0 ≤ t → x ∈ (1 : ParamMatrix 2) '' tokenHull (Z t)} →
+      Tendsto (fun t => Metric.hausdorffDist ((1 : ParamMatrix 2) '' tokenHull (Z t))
+        (polytopeIn ⊤ S)) atTop (nhds 0) →
+      ∃ γ δ₀ : ℝ, 0 < γ ∧ 0 < δ₀ ∧ ∀ δ : ℝ, 0 < δ → δ ≤ δ₀ →
+        ∃ T : ℝ, 0 < T ∧ ∀ t : ℝ, T ≤ t → ∀ i : Idx 4,
+          (1 : ParamMatrix 2) (Z t i) ∉ candidatesThickening 1 1 ⊤ S δ →
+            ∃ D : ℝ, HasDerivAt (fun s => ‖(1 : ParamMatrix 2) ((1 : ParamMatrix 2)
+              (Z s i))‖ ^ 2) D t ∧ γ * δ ≤ D := by
+  intro h
+  obtain ⟨Z, S, hZ, hS, hHull, hHaus, hout, _, hder⟩ := exists_square_outside_limit_polytope
+  obtain ⟨γ, δ₀, hγ, hδ, hbound⟩ := h Z S hZ hS hHull hHaus
+  obtain ⟨T, hT, htime⟩ := hbound δ₀ hδ le_rfl
+  have hnot : (1 : ParamMatrix 2) (Z T 3) ∉ candidatesThickening 1 1 ⊤ S δ₀ := by
+    simp only [one_apply_eq_self]
+    exact fun hm => hout T hT.le (candidatesThickening_subset 1 1 ⊤ S δ₀ hm)
+  obtain ⟨D, hD, hlow⟩ := htime T le_rfl 3 hnot
+  obtain ⟨v, hv, hnonpos⟩ := hder T hT.le
+  have hD' : HasDerivAt (fun s => ‖Z s 3‖ ^ 2) D T := by
+    simpa only [one_apply_eq_self] using hD
+  have heq := hD'.unique hv
+  have hpos := mul_pos hγ hδ
+  linarith
 
-Source: arXiv:2305.05465v6, `cl:gamma'12`. -/
-theorem exists_gamma_projScore (Q K V A proj : ParamMatrix d)
-    (F G : Submodule ℝ (EucSpace d)) (lam : ℝ)
-    (hQKV : IsGoodTripleMulti Q K V F G lam) (hA : IsAttentionRoot Q K A)
-    (hproj : IsProjOnto proj F G) (Z : ℝ → Idx n → EucSpace d)
-    (hZ : RescaledDynamics Q K V Z) (S : Finset F)
-    (hS : Tendsto (fun t => Metric.hausdorffDist (proj '' tokenHull (Z t)) (polytopeIn F S))
-      atTop (nhds 0)) :
-    ∃ γ δ₀ : ℝ, 0 < γ ∧ 0 < δ₀ ∧ ∀ δ : ℝ, 0 < δ → δ ≤ δ₀ →
-      ∃ T : ℝ, 0 < T ∧ ∀ t : ℝ, T ≤ t → ∀ i : Idx n,
-        proj (Z t i) ∉ candidatesThickening A proj F S δ →
-          ∃ j : Idx n, γ * δ ≤ projScore A proj (Z t) i j := by
-  sorry
-
-/-- **Step 2'.**  There is `γ = γ(𝒦) > 0` such that for every `δ ∈ (0, δ₀]`
-there is `T = T(δ) > 0` with: if `t ≥ T` and `π_ℱ(z_i(t)) ∉ 𝒮_δ`, then
-
-  `d/dt ‖π_ℱ(Az_i(t))‖² ≥ γδ`.
-
-Not proved here.  This replaces `e:eq17`, Step 2 of the proof of
-`t:Idcase11`.
-
-Source: arXiv:2305.05465v6, Step 2'. -/
-theorem exists_gamma_deriv_norm_sq_proj (Q K V A proj : ParamMatrix d)
-    (F G : Submodule ℝ (EucSpace d)) (lam : ℝ)
-    (hQKV : IsGoodTripleMulti Q K V F G lam) (hA : IsAttentionRoot Q K A)
-    (hproj : IsProjOnto proj F G) (Z : ℝ → Idx n → EucSpace d)
-    (hZ : RescaledDynamics Q K V Z) (S : Finset F)
-    (hS : Tendsto (fun t => Metric.hausdorffDist (proj '' tokenHull (Z t)) (polytopeIn F S))
-      atTop (nhds 0)) :
-    ∃ γ δ₀ : ℝ, 0 < γ ∧ 0 < δ₀ ∧ ∀ δ : ℝ, 0 < δ → δ ≤ δ₀ →
-      ∃ T : ℝ, 0 < T ∧ ∀ t : ℝ, T ≤ t → ∀ i : Idx n,
-        proj (Z t i) ∉ candidatesThickening A proj F S δ →
-          ∃ D : ℝ, HasDerivAt (fun s => ‖proj (A (Z s i))‖ ^ 2) D t ∧ γ * δ ≤ D := by
-  sorry
-
-/-- The hypotheses of `exists_gamma_projScore` and `exists_gamma_deriv_norm_sq_proj`
-are satisfiable: the triple `(I_d, I_d, I_d)` with `ℱ = ℝ^d`, `𝒢 = 0`, the
-stationary configuration, and `𝒦 = {z}`, which the constant hull equals. -/
+/-- Good-triple, root, projection, actual-ODE and hull inputs coexist for
+stationary tokens, and for the square used by the counterexamples.
+Source: arXiv:2305.05465v6, §10, the inputs of `cl:gamma'12` and Step 2'. -/
 example (d : ℕ) (z : EucSpace d) (hz : z ∈ (⊤ : Submodule ℝ (EucSpace d))) :
     IsGoodTripleMulti (1 : ParamMatrix d) 1 1 ⊤ ⊥ 1 ∧
       IsAttentionRoot (1 : ParamMatrix d) 1 1 ∧
