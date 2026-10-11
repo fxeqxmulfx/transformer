@@ -120,6 +120,7 @@ import Transformer.Modes.Section3_CubicPowerFactorization
 import Transformer.Modes.Section3_MixedPowerDerivativeBounds
 import Transformer.Modes.Section3_CubicProductDerivativeBounds
 import Transformer.Modes.Section3_GeometricDerivativeBounds
+import Transformer.Modes.Section3_CubicLocalDerivativeBounds
 import Transformer.Modes.Section3_PowerComparison
 import Transformer.Modes.Section3_FirstDerivativeFrequency
 import Transformer.Modes.Section3_SecondDerivativeFrequency
