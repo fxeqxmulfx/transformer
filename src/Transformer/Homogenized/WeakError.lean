@@ -21,8 +21,10 @@ it is where the improved rate comes from.
 arranged so that this is what the statement says — `φ` is fixed before `C` is
 produced, and `η`, `L`, the variance proxy and both probability spaces come
 after it.
+The source's expectations are over probability measures: `IsRandomChain.prob`
+supplies this for `P`, and the missing condition on `P'` is explicit below.
 
-Source: arXiv:2604.01978v1, §2.3.2, `thm:weak_error_clean`.
+Source: arXiv:2604.01978v1, §2.2.3, `thm:weak_error_clean`.
 -/
 
 import Transformer.Homogenized.RandomChain
@@ -68,7 +70,7 @@ theorem weak_error_clean {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ≥
       ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
         (Θ : ℕ → Idx H → Ω → HeadParam d) (Xd : Ω → ℕ → Idx n → EucSpace d),
         IsRandomChain η β ρ P Θ Xd x₀ →
-      ∀ (Ω' : Type) [MeasurableSpace Ω'] (P' : Measure Ω')
+      ∀ (Ω' : Type) [MeasurableSpace Ω'] (P' : Measure Ω') [IsProbabilityMeasure P']
         (X : ℝ → Ω' → (Idx n → EucSpace d)),
         IsFirstSde β (alphaOf η s H) s ρ P' X → (∀ ω', X 0 ω' = x₀) →
       ∀ t ∈ Set.Icc (0 : ℝ) (η * L),
@@ -110,7 +112,7 @@ proof follows, so it is stated at the grid times `t = ℓη`, `ℓ ≤ L`, where
 
 Not proved here.
 
-Source: arXiv:2604.01978v1, §2.3.2, the paragraph after
+Source: arXiv:2604.01978v1, §2.2.3, the paragraph after
 `thm:weak_error_clean`. -/
 theorem weak_error_modified {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ≥0)
     (ρ : Measure (HeadParam d)) (hρ : HasHighOrderLaw d σV σA ρ)
@@ -121,7 +123,7 @@ theorem weak_error_modified {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ
       ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
         (Θ : ℕ → Idx H → Ω → HeadParam d) (Xd : Ω → ℕ → Idx n → EucSpace d),
         IsRandomChain η β ρ P Θ Xd x₀ →
-      ∀ (Ω' : Type) [MeasurableSpace Ω'] (P' : Measure Ω')
+      ∀ (Ω' : Type) [MeasurableSpace Ω'] (P' : Measure Ω') [IsProbabilityMeasure P']
         (X : ℝ → Ω' → (Idx n → EucSpace d)),
         IsModifiedSde η β (alphaOf η s H) s ρ P' X → (∀ ω', X 0 ω' = x₀) →
       ∀ l : ℕ, l ≤ L →
@@ -178,7 +180,7 @@ theorem stability_generator {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ
       ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
         (Θ : ℕ → Idx H → Ω → HeadParam d) (Xd : Ω → ℕ → Idx n → EucSpace d),
         IsRandomChain η β ρ P Θ Xd x →
-      ∀ (Ω' : Type) [MeasurableSpace Ω'] (P' : Measure Ω')
+      ∀ (Ω' : Type) [MeasurableSpace Ω'] (P' : Measure Ω') [IsProbabilityMeasure P']
         (X : ℝ → Ω' → (Idx n → EucSpace d)),
         IsModifiedSde η β (alphaOf η s H) s ρ P' X → (∀ ω', X 0 ω' = x) →
         |(∫ ω', φ (X η ω') ∂P') - ∫ ω, φ (Xd ω 1) ∂P| ≤

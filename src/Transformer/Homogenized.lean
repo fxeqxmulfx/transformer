@@ -27,6 +27,7 @@ import Transformer.Homogenized.Barycenter
 import Transformer.Homogenized.Laplace
 import Transformer.Homogenized.OverlapDrift
 import Transformer.Homogenized.Regimes
+import Transformer.Homogenized.Section5_DiffusiveRegime
 import Transformer.Homogenized.RotationHead
 import Transformer.Homogenized.RegimeRefutation
 import Transformer.Homogenized.WeakErrorRefutation

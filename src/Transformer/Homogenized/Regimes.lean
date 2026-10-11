@@ -4,6 +4,8 @@
 Formalization of `cor:ode1` (ballistic), `cor:ode2` (modified) and `cor:SDE`
 (diffusive) of arXiv:2604.01978v1, *Homogenized Transformers*: the three
 corollaries of `thm:weak_error_clean` that fill the phase diagram.
+The grid-time diffusive corollary is proved in `Section5_DiffusiveRegime`,
+with the still-open improved weak estimate passed as an explicit hypothesis.
 
 **On the scaling conditions.**  The hypotheses of the three corollaries are
 asymptotic — `αηL = o(1)`, `η²L = o(1)`, `η³L = o(1)`, `αηL = O(1)` — and an
@@ -141,40 +143,9 @@ example (d n : ℕ) (β : ℝ) :
       (fun _ => by simp [basePoint, PiLp.norm_single]), ?_⟩
   simp
 
-/-- **Corollary (cor:SDE), diffusive regime.**  In the diffusive scaling
-`αηL = O(1)` and `η³L = o(1)`, the interpolated chain is weakly approximated
-by the solution of `eq:SDE_ito_clean` at the rate
-`C e^{C t_L} η (t_L+1) max(η,α)`, at the grid times `t = ℓη` where that rate
-holds — see `weak_error_modified`.  The source states it uniformly in
-`t ∈ [0, t_L]`, which is false: `not_diffusive_regime_printed`.
-
-Not proved here.
-
-Source: arXiv:2604.01978v1, `cor:SDE`. -/
-theorem diffusive_regime {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ≥0)
-    (ρ : Measure (HeadParam d)) (hρ : HasHighOrderLaw d σV σA ρ)
-    (φ : (Idx n → EucSpace d) → ℝ) (hφ : ContDiff ℝ 4 φ)
-    (η : ℕ → ℝ) (L : ℕ → ℕ) (s : ℝ) (hs : IsVarianceProxy d n β ρ s)
-    (hη : ∀ m, 0 < η m)
-    (hαL : ∃ M : ℝ, ∀ m, alphaOf (η m) s H * η m * L m ≤ M)
-    (hηL : Tendsto (fun m => η m ^ 3 * L m) atTop (nhds 0)) :
-    ∃ C : ℝ, 1 ≤ C ∧
-      ∀ (m : ℕ) (x₀ : Idx n → EucSpace d), (∀ i, ‖x₀ i‖ = 1) →
-      ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
-        (Θ : ℕ → Idx H → Ω → HeadParam d) (Xd : Ω → ℕ → Idx n → EucSpace d),
-        IsRandomChain (η m) β ρ P Θ Xd x₀ →
-      ∀ (Ω' : Type) [MeasurableSpace Ω'] (P' : Measure Ω')
-        (X : ℝ → Ω' → (Idx n → EucSpace d)),
-        IsModifiedSde (η m) β (alphaOf (η m) s H) s ρ P' X → (∀ ω', X 0 ω' = x₀) →
-      ∀ l : ℕ, l ≤ L m →
-        |(∫ ω, φ (interpChain (η m) (Xd ω) ((l : ℝ) * η m)) ∂P) -
-            ∫ ω', φ (X ((l : ℝ) * η m) ω') ∂P'| ≤
-          C * Real.exp (C * (η m * L m)) * η m * (η m * L m + 1) *
-            max (η m) (alphaOf (η m) s H) := by
-  sorry
-
-/-- The hypotheses of `diffusive_regime` are satisfiable: the same witnesses,
-with `αηL ≤ 0` bounded. -/
+/-- The diffusive scaling data of arXiv:2604.01978v1, §5, `cor:SDE`, are
+satisfiable: the degenerate head law and `L = 0` give `αηL ≤ 0`. The complete
+hypothesis witness for the conditional corollary is in `Section5_DiffusiveRegime`. -/
 example (d n : ℕ) (β : ℝ) :
     0 < 1 ∧ HasHighOrderLaw (d + 1) 0 0 (Measure.dirac (0 : HeadParam (d + 1))) ∧
       IsVarianceProxy (d + 1) (n + 1) β (Measure.dirac (0 : HeadParam (d + 1))) 0 ∧
