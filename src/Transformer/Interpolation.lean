@@ -29,3 +29,4 @@ import Transformer.Interpolation.GenericDiscrete
 import Transformer.Interpolation.Section5_PureAttention
 import Transformer.Interpolation.Section5_EmpiricalLimits
 import Transformer.Interpolation.Section5_ClusterRotations
+import Transformer.Interpolation.Section5_IndependentClusters
