@@ -66,6 +66,7 @@ import Transformer.Clusters.Section8_LimitPrinciples
 import Transformer.Clusters.Section8_PathBounds
 import Transformer.Clusters.Section8_GainLimit
 import Transformer.Clusters.Section8_ClusterLimits
+import Transformer.Clusters.Section8_IdConvergence
 import Transformer.Clusters.Section8_Origin
 import Transformer.Clusters.Section8_Bounded
 import Transformer.Clusters.Section8_Energy

@@ -1,8 +1,8 @@
 /-
 # The emergence of clusters in self-attention dynamics — the convex polytope
 
-§8 of arXiv:2305.05465v6, `sec: clustering.polytopes`: the full form of the
-`V = I_d` clustering theorem, and the shrinking convex hull it rests on.
+§8 of arXiv:2305.05465v6, `sec: clustering.polytopes`: the shrinking convex
+hull and candidate set used by the `V = I_d` clustering theorem.
 
 **What the source says and what is carried here.**
 
@@ -18,8 +18,8 @@
 
 * `c:theziunifbdd` is deduced from `p:noninc` in one line, as in the source.
 
-* `t:Idcase11` is the full statement whose simplified form `t:Idcase11int` is
-  carried in `Section3_IdCase.lean`.  "The convex hull converges to a convex
+* `t:Idcase11`, proved in `Section8_IdConvergence.lean`, is the full statement
+  whose simplified form is `t:Idcase11int`. "The convex hull converges to a convex
   polytope `𝒦`" is convergence in Hausdorff distance — the hulls are nested
   compact sets, so this is the convergence to their intersection.  The
   vertices `𝒱` are `Set.extremePoints ℝ`, and `‖Ax‖² = max_{j∈[m]}⟨Ax,Av_j⟩`
@@ -149,36 +149,25 @@ Source: arXiv:2305.05465v6, `e:Ax15`. -/
 def limitCandidates (A : ParamMatrix d) (P : Set (EucSpace d)) : Set (EucSpace d) :=
   {x ∈ P | IsAttentionMax A P x}
 
-/-- **Theorem (t:Idcase11).**  Let `V = I_d` and `QᵀK ≻ 0`.  Then for any
-initial datum the solution of `e:dynIdzi` has a convex hull converging to some
-convex polytope `𝒦 ⊂ ℝ^d`.  Moreover the set
+/-- The positive square root in `eq: A` is injective: a vector in its
+kernel contradicts its positive quadratic form. Source:
+arXiv:2305.05465v6, §8.1, `eq: A` and `t:Idcase11`.
+This is the property used for finiteness of the candidate set. -/
+theorem IsAttentionRoot.injective {Q K A : ParamMatrix d}
+    (hA : IsAttentionRoot Q K A) : Function.Injective A := by
+  intro x y hxy
+  by_contra hne
+  have hpos := hA.2.1 (x - y) (sub_ne_zero.mpr hne)
+  have hz : A (x - y) = 0 := by rw [map_sub, hxy, sub_self]
+  rw [hz, inner_zero_left] at hpos
+  exact (lt_irrefl 0) hpos
 
-  `𝒮 = {x ∈ 𝒦 : ‖Ax‖² = max_{j∈[m]}⟨Ax, Av_j⟩}`,
-
-where `𝒱 = {v_1, …, v_m}` are the vertices of `𝒦`, is finite and satisfies
-`𝒱 ⊆ 𝒮 ⊆ ∂𝒦 ∪ {0}`; and every `z_i(t)` converges to a point of `𝒮`.
-
-Not proved here.
-
-Source: arXiv:2305.05465v6, `t:Idcase11`. -/
-theorem idCase_tendsto_limitCandidates (Q K A : ParamMatrix d) (hA : IsAttentionRoot Q K A)
-    (Z : ℝ → Idx n → EucSpace d) (hZ : IdRescaledDynamics A Z) :
-    ∃ (P : Set (EucSpace d)) (S : Finset (EucSpace d)),
-      P = convexHull ℝ (S : Set (EucSpace d)) ∧
-      Tendsto (fun t => Metric.hausdorffDist (tokenHull (Z t)) P) atTop (nhds 0) ∧
-      (limitCandidates A P).Finite ∧
-      P.extremePoints ℝ ⊆ limitCandidates A P ∧
-      limitCandidates A P ⊆ frontier P ∪ {0} ∧
-      ∀ i : Idx n, ∃ p ∈ limitCandidates A P, Tendsto (fun t => Z t i) atTop (nhds p) := by
-  sorry
-
-/-- The hypotheses of `idCase_tendsto_limitCandidates` are satisfiable, by the
-witness of `tokenHull_antitone` and `A = Q = K = I_d`. -/
-example (z : EucSpace d) :
+/-- The full square-root hypothesis is realized by the identity:
+arXiv:2305.05465v6, §8.1, `eq: A`. -/
+example :
     IsAttentionRoot (d := d) (ContinuousLinearMap.id ℝ (EucSpace d))
-        (ContinuousLinearMap.id ℝ (EucSpace d)) (ContinuousLinearMap.id ℝ (EucSpace d)) ∧
-      IdRescaledDynamics (n := n) (ContinuousLinearMap.id ℝ (EucSpace d)) (fun _ _ => z) :=
-  ⟨isAttentionRoot_id d, idRescaledDynamics_const _ z⟩
+        (ContinuousLinearMap.id ℝ (EucSpace d)) (ContinuousLinearMap.id ℝ (EucSpace d)) :=
+  isAttentionRoot_id d
 
 end Clusters
 end Transformer
