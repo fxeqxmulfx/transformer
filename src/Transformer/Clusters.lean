@@ -62,6 +62,7 @@ import Transformer.Clusters.Section8_CandidateBoundary
 import Transformer.Clusters.Section8_CandidateFinite
 import Transformer.Clusters.Section8_SoftmaxEnergy
 import Transformer.Clusters.Section8_EnergyGrowth
+import Transformer.Clusters.Section8_LimitPrinciples
 import Transformer.Clusters.Section8_Origin
 import Transformer.Clusters.Section8_Bounded
 import Transformer.Clusters.Section8_Energy
