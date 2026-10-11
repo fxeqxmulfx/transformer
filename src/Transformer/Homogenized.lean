@@ -59,3 +59,4 @@ import Transformer.Homogenized.ProductHeadLaw
 import Transformer.Homogenized.RareTokenMeasure
 import Transformer.Homogenized.RareTokenAttention
 import Transformer.Homogenized.RareTokenDiffusion
+import Transformer.Homogenized.RareTokenVariance
