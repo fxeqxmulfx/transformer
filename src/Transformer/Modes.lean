@@ -117,6 +117,7 @@ import Transformer.Modes.Section3_GaussianThirdDerivativeBounds
 import Transformer.Modes.Section3_CubicCorrectionDerivativeBounds
 import Transformer.Modes.Section3_CubicDerivativeTailRates
 import Transformer.Modes.Section3_CubicPowerFactorization
+import Transformer.Modes.Section3_MixedPowerDerivativeBounds
 import Transformer.Modes.Section3_PowerComparison
 import Transformer.Modes.Section3_FirstDerivativeFrequency
 import Transformer.Modes.Section3_SecondDerivativeFrequency
