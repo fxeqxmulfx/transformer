@@ -126,6 +126,7 @@ import Transformer.Modes.Section3_CubicScaledErrorFactors
 import Transformer.Modes.Section3_NormalizedGeometricDerivatives
 import Transformer.Modes.Section3_CubicDerivativeFrequency
 import Transformer.Modes.Section3_CubicErrorRegularity
+import Transformer.Modes.Section3_CubicDerivativeTail
 import Transformer.Modes.Section3_PowerComparison
 import Transformer.Modes.Section3_FirstDerivativeFrequency
 import Transformer.Modes.Section3_SecondDerivativeFrequency
