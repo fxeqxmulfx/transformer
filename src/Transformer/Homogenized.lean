@@ -56,3 +56,4 @@ import Transformer.Homogenized.GaussianVariance
 import Transformer.Homogenized.GaussianProductTail
 import Transformer.Homogenized.ProductHeadSource
 import Transformer.Homogenized.ProductHeadLaw
+import Transformer.Homogenized.RareTokenMeasure
