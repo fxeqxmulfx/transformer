@@ -119,6 +119,7 @@ import Transformer.Perspective.Beta0Field
 import Transformer.Perspective.Softmax
 import Transformer.Perspective.Beta0Gronwall
 import Transformer.Perspective.SAField
+import Transformer.Perspective.Section2_ExtendedField
 import Transformer.Perspective.SALipschitz
 import Transformer.Perspective.Section3_Gronwall
 import Transformer.Perspective.Section4_LargeBeta
