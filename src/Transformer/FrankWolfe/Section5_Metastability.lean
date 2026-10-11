@@ -7,6 +7,9 @@ Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
 
 The self-attention process `(SA_ℙ)` first clusters at the vertices of the
 polytope in `O(1)` steps, and then stays there for a time exponential in `β`.
+This module contains the geometric data and the first-phase statement.
+The completed metastability proof is in `Section5_MetaBound`, after the
+transition, drift, and stopped-event probability estimates.
 -/
 
 import Transformer.FrankWolfe.Section5_Process
@@ -145,90 +148,6 @@ Source: arXiv:2508.09628v1, §5, `lem: metastab.1`. -/
 def groupHull (X₀ : Idx n → EucSpace d) (σ : Idx n → Idx κ) (a : Idx κ) : Set (EucSpace d) :=
   convexHull ℝ {y : EucSpace d | ∃ j : Idx n, σ j = a ∧ y = X₀ j}
 
-
-/-- **Theorem (lem: metastab.1) — metastability, as repaired.**
-
-In the setup of `lem: first.phase` — a polytope `𝒦` with vertices `v`, particles `X₀ ∈ 𝒦ⁿ`
-attached to vertices by `σ`, each within `ρ` of its own vertex — let `ε > 0` and `γ ∈ (0,1)`.  The
-exit time
-
-  `T₂ = inf{t : x_{ji}^t ∉ conv{x_{ji}^0}_j + B(0,ε) for some i, j}`
-
-then satisfies, for `t > 1`,
-
-  `ℙ[T₂ ≥ t] ≥ 1 - exp(M (1 + log(t n² / M) - β c₀ / 2))`,   `M = ⌈ε / (γ 𝖽(𝒦))⌉`,
-
-where `𝖽(𝒦)` is the diameter.  The right-hand side is close to `1` up to `t ∼ e^{β c₀ / 2}`.
-
-**What the source says and what is changed here.**  The printed bound
-
-  `ℙ[T₂ ≥ t] ≥ 1 - exp((1 + ε/γ) log(γt/ε) + (1 + ε/γ) log n - β c₀ ε / (2γ))`
-
-is not what the proof gives, and the two differ in the exponent.  The proof shows that a particle
-cannot leave its group's `ε`-neighbourhood in fewer than `M ≈ ε/(γ𝖽(𝒦))` steps in which some
-particle attends to another group, each such step having probability at most `n² e^{-λβ}`; the
-printed exponent `β c₀ ε / (2γ)` drops the factor `1/𝖽(𝒦)` and puts `c₀` in place of `λ ≤ c₀`.
-It is not invariant under rescaling the polytope, which the dynamics is (at inverse temperature
-`β s²`), so it cannot be right as printed.  Four repairs, each a missing hypothesis or a wrong
-constant:
-
-* the number of exits needed is `M`, not `ε/γ`, and the tail estimate is the binomial one,
-  `ℙ[Bin(N,p) ≥ M] ≤ C(N,M) p^M ≤ (e N p / M)^M` — the printed `(N p / M)^M` lacks the `e`;
-* `cl: group.cluster.bound` bounds `⟨x, v_m⟩ ≤ ⟨v_ℓ, v_m⟩ + ‖x - v_ℓ‖ ‖v_m‖`, so the norm `R` of
-  the vertices enters, not `𝖽(𝒦)`; with `r = ρ + ε` the score of another group is at most
-  `e^{-β (c₀ - 4Rr - r²)}` relative to the particle's own, and `λ = c₀ - 4Rr - r²` is positive only
-  when `r` is small.  The printed statement asks for that of `ε` alone (`ε_*`), while `Cτ` may be as
-  large as `C c₀ / (2 max_j ‖v_i - v_j‖)`, so the smallness of `ρ + ε` is a hypothesis here:
-  `4R(ρ + ε) + 2(ρ + ε)² ≤ c₀/2`, which gives `λ ≥ c₀/2`;
-* `C`, `τ`, `ε_*` and `β_*` only ever served to make `ρ = Cτ` and `ε` small enough for that
-  estimate, so they are replaced by it: `ρ` is the radius of the initial balls and no `β_*` is
-  needed (`β ≥ 0`);
-* `κ ≤ n` and `ε/γ ≥ 2𝖽(𝒦)` are not used by the argument and are dropped, which makes the
-  statement stronger, not weaker.
-
-`T₂` is not introduced as an `ℕ∞`-valued random variable.  The event `{T₂ ≥ t}` is the event that
-no particle has left its group's `ε`-neighbourhood at any step `s < t`, and that is what the
-conclusion is stated about — the same set, without the extra definition.  Relabelling `x_ℓ^0` as
-`x_{ji}^0` is the fibre `σ⁻¹(i)`, so `conv{x_{ji}^0}_j` is `groupHull X₀ σ (σ i)`.
-
-Not proved here.
-
-Source: arXiv:2508.09628v1, §5, `lem: metastab.1`, `eq: metastability.bound`. -/
-theorem metastability {d κ n : ℕ} {K : Set (EucSpace d)} {v : Idx κ → EucSpace d}
-    {c₀ R ρ ε γ β : ℝ} (hK : ConePolytope K v c₀) (hR : ∀ i, ‖v i‖ ≤ R)
-    (hγ : γ ∈ Set.Ioo (0 : ℝ) 1) (hρ : 0 < ρ) (hε : 0 < ε) (hβ : 0 ≤ β)
-    (hsmall : 4 * R * (ρ + ε) + 2 * (ρ + ε) ^ 2 ≤ c₀ / 2)
-    (X₀ : Idx n → EucSpace d) (σ : Idx n → Idx κ) (P : Measure (ℕ → Idx n → EucSpace d))
-    (hX₀ : ∀ i, X₀ i ∈ K) (hρX : ∀ i, X₀ i ∈ Metric.ball (v (σ i)) ρ)
-    (hP : IsSAProcess β γ X₀ P) (t : ℝ) (ht : 1 < t) :
-    1 - Real.exp (⌈ε / (γ * Metric.diam K)⌉₊ *
-        (1 + Real.log (t * n ^ 2 / ⌈ε / (γ * Metric.diam K)⌉₊) - β * (c₀ / 2)))
-      ≤ (P {x : ℕ → Idx n → EucSpace d | ∀ s : ℕ, (s : ℝ) < t → ∀ i : Idx n,
-          x s i ∈ groupHull X₀ σ (σ i) + Metric.ball (0 : EucSpace d) ε}).toReal := by
-  sorry
-
-/-- The hypotheses of `metastability` are satisfiable, the process included: one vertex `e₀` in
-`ℝ^1`, `𝒦 = {e₀}`, `c₀ = R = 1`, `γ = 1/2`, `ρ = ε = 1/20`, `β = 1`, one particle sitting at the
-vertex, whose process is the point mass at the constant path (`isSAProcess_single`). -/
-example :
-    ConePolytope {(EuclideanSpace.single (0 : Fin 1) (1 : ℝ))}
-      (fun _ : Idx 1 => (EuclideanSpace.single (0 : Fin 1) (1 : ℝ))) 1 ∧
-    (∀ _ : Idx 1, ‖(EuclideanSpace.single (0 : Fin 1) (1 : ℝ))‖ ≤ 1) ∧
-    (1 / 2 : ℝ) ∈ Set.Ioo (0 : ℝ) 1 ∧
-    4 * (1 : ℝ) * (1 / 20 + 1 / 20) + 2 * (1 / 20 + 1 / 20) ^ 2 ≤ 1 / 2 ∧
-    (EuclideanSpace.single (0 : Fin 1) (1 : ℝ)) ∈ Metric.ball
-      (EuclideanSpace.single (0 : Fin 1) (1 : ℝ)) (1 / 20) ∧
-    IsSAProcess 1 (1 / 2) (fun _ : Idx 1 => (EuclideanSpace.single (0 : Fin 1) (1 : ℝ)))
-      (Measure.dirac fun _ => fun _ => (EuclideanSpace.single (0 : Fin 1) (1 : ℝ))) := by
-  refine ⟨⟨?_, ⟨?_, ?_⟩, fun i => ⟨0, by positivity, fun x hx y hy hxi hyi => ?_⟩,
-    fun i j => rfl, one_pos, fun i j hij => absurd (Subsingleton.elim i j) hij⟩,
-    fun _ => by simp, ⟨by norm_num, by norm_num⟩, by norm_num,
-    Metric.mem_ball_self (by norm_num), isSAProcess_single _ _ _⟩
-  · rw [Set.range_const, convexHull_singleton]
-  · intro a b _
-    exact Subsingleton.elim a b
-  · rw [Set.range_const, extremePoints_singleton]
-  · exact absurd hx hxi
 
 end FrankWolfe
 end Transformer

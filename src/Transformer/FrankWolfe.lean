@@ -42,3 +42,4 @@ import Transformer.FrankWolfe.Section5_BadEvents
 import Transformer.FrankWolfe.Section5_FirstExit
 import Transformer.FrankWolfe.Section5_MetaTail
 import Transformer.FrankWolfe.Section5_BinomialExp
+import Transformer.FrankWolfe.Section5_MetaBound
