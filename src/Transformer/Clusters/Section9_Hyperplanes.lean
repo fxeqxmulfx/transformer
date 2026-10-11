@@ -11,10 +11,10 @@
   `φ₁*(z_i(t))` converges as `t → +∞`", and "there exists a set of at most 3
   real numbers such that for any `i ∈ [n]` the limit belongs to this set",
   and then "Theorem `l:3hyperplanes11` directly follows from these facts".
-  Those are the two theorems of this file: the first is
-  `exists_tendsto_eigenFunctional`, unproved; the second, the passage from it
-  to the hyperplanes, is `dist_tendsto_zero_of_tendsto_eigenFunctional`, and
-  it is proved — "directly follows" is here made good on.
+  Both facts are proved: `exists_tendsto_eigenFunctional` obtains the
+  coordinate limits, and `dist_tendsto_zero_of_tendsto_eigenFunctional`
+  gives their affine hyperplanes. Together they prove the original
+  `good_dist_tendsto_zero` of §4.
 
 * The three numbers are `{0, a, b}` with `a`, `b` of `e:defab`
   (`exists_tendsto_maxCoord_minCoord`), and the hyperplanes are their level
@@ -34,6 +34,7 @@ Source: arXiv:2305.05465v6, `sec: clustering.hyperplanes`, the proof of
 -/
 
 import Transformer.Clusters.Section9_Growth
+import Transformer.Clusters.Section9_ThreeCoordinates
 
 open scoped BigOperators
 open Real Filter Topology
@@ -44,12 +45,6 @@ namespace Clusters
 variable {d m n : ℕ}
 
 /-! ### From a converging coordinate to a limiting hyperplane -/
-
-/-- The level set `{x : f x = c}` is the translate of `ker f` through `c • v`,
-whenever `f v = 1`; this is the point on it that `affineShift` wants. -/
-theorem apply_smul_eq (f : EucSpace d →L[ℝ] ℝ) {v : EucSpace d} (hv : f v = 1) (c : ℝ) :
-    f (c • v) = c := by
-  rw [map_smul, hv, smul_eq_mul, mul_one]
 
 /-- **The distance to `H_c` is controlled by the coordinate.**  If
 `f (x t) → c` then `x t` converges to the hyperplane `{f = c}`.
@@ -73,14 +68,11 @@ theorem tendsto_infDist_affineShift (f : EucSpace d →L[ℝ] ℝ) {v : EucSpace
   · have := ((hx.sub_const c).abs).mul_const ‖v‖
     simpa using this
 
-/-- `ker f` has codimension `1` as soon as `f` takes the value `1`. -/
-theorem finrank_ker_add_one (f : EucSpace d →L[ℝ] ℝ) {v : EucSpace d} (hv : f v = 1) :
-    Module.finrank ℝ (LinearMap.ker (f : EucSpace d →ₗ[ℝ] ℝ)) + 1 = d := by
-  have hsurj : LinearMap.range (f : EucSpace d →ₗ[ℝ] ℝ) = ⊤ :=
-    LinearMap.range_eq_top.mpr fun c => ⟨c • v, apply_smul_eq f hv c⟩
-  have hrk := LinearMap.finrank_range_add_finrank_ker (f : EucSpace d →ₗ[ℝ] ℝ)
-  rw [hsurj, finrank_top, Module.finrank_self, finrank_euclideanSpace_fin] at hrk
-  omega
+example (z : EucSpace 1) :
+    (EuclideanSpace.proj (𝕜 := ℝ) 0) (EuclideanSpace.single 0 (1 : ℝ)) = 1 ∧
+      Tendsto (fun _ : ℝ => (EuclideanSpace.proj (𝕜 := ℝ) 0) z) atTop (nhds (z 0)) ∧
+      (EuclideanSpace.proj (𝕜 := ℝ) 0) z = z 0 :=
+  ⟨by simp, tendsto_const_nhds, rfl⟩
 
 /-- **Theorem `l:3hyperplanes11` "directly follows from these facts".**  Given
 that every `φ₁*(z_i(t))` converges to one of at most three reals, every token
@@ -122,13 +114,10 @@ triple with leading eigenpair `(λ₁, φ₁)` and normalised eigenfunctional `�
 every `φ₁*(z_i(t))` converges, and there is a set of at most three reals — the
 `{0, a, b}` of `e:defab` — containing every limit.
 
-Not proved here.  The source's argument, in outline: `eq:phistarvar` is the
-scalar equation for `φ₁*(z_i)`; `e:majorizeweights` says the attention weights
-are, to leading order `e^{2λ₁t}`, governed by `c₁₁ φ₁*(z_i)φ₁*(z_j)` with
-`c₁₁ > 0`; a token whose coordinate stays bounded away from `0` therefore sees
-the extreme token `j₀` with overwhelming weight, and `e:movem` bounds its drift
-from below by `λ₁ε/2n` as long as its coordinate is in `[ε, b-ε]`, so it must
-leave that interval upward.
+The proof uses the actual leading score estimate, vanishing corrected-energy
+gain, and finite cluster-point convergence from `Section9_ThreeCoordinates`.
+It retains the original hypotheses, including non-diagonalizable value maps
+and positivity only on the leading line.
 
 Source: arXiv:2305.05465v6, the proof of `l:3hyperplanes11`. -/
 theorem exists_tendsto_eigenFunctional (Q K V : ParamMatrix d) (lam : ℝ) (φ : EucSpace d)
@@ -137,7 +126,7 @@ theorem exists_tendsto_eigenFunctional (Q K V : ParamMatrix d) (lam : ℝ) (φ :
     (Z : ℝ → Idx (m + 1) → EucSpace d) (hZ : RescaledDynamics Q K V Z) :
     ∃ S : Finset ℝ, S.card ≤ 3 ∧
       ∀ i : Idx (m + 1), ∃ c ∈ S, Tendsto (fun t => f (Z t i)) atTop (nhds c) := by
-  sorry
+  exact hZ.exists_three_leading_coordinate_limits Q K V lam φ G hQKV f hf hfφ Z
 
 /-- The hypotheses of `exists_tendsto_eigenFunctional` are satisfiable: the
 good triple `(I₁, I₁, I₁)` with its leading eigenpair `(1, e₀)`, the
@@ -150,6 +139,35 @@ example (z : EucSpace 1) :
       RescaledDynamics (n := m + 1) (1 : ParamMatrix 1) 1 1 (fun _ _ => z) :=
   ⟨isGoodTripleWith_one, isEigenFunctional_one _, by simp,
     rescaledDynamics_one_const _ _ z⟩
+
+/-- **Theorem (l:3hyperplanes11), convergence toward `≤ 3` hyperplanes.**
+For a good triple and any actual rescaled trajectory, every token's
+distance to one of at most three parallel hyperplanes tends to zero.
+The coordinate construction requires no diagonalizability of `V`.
+Source: arXiv:2305.05465v6, §4, `l:3hyperplanes11`, and its proof in §9. -/
+theorem good_dist_tendsto_zero (Q K V : ParamMatrix d) (hQKV : IsGoodTriple Q K V)
+    (Z : ℝ → Idx n → EucSpace d) (hZ : RescaledDynamics Q K V Z) :
+    ∃ (W : Submodule ℝ (EucSpace d)) (S : Finset (EucSpace d)),
+      Module.finrank ℝ W + 1 = d ∧ S.card ≤ 3 ∧
+        ∀ i : Idx n, ∃ p ∈ S,
+          Tendsto (fun t => Metric.infDist (Z t i) (affineShift W p)) atTop (nhds 0) := by
+  obtain ⟨lam, φ, G, hgood⟩ := hQKV
+  obtain ⟨f, hf, hfφ, _⟩ := hgood.exists_leading_eigenFunctional Q K V lam φ G
+  cases n with
+  | zero =>
+    refine ⟨LinearMap.ker (f : EucSpace d →ₗ[ℝ] ℝ), ∅,
+      finrank_ker_add_one f hfφ, by simp, fun i => ?_⟩
+    exact Fin.elim0 i
+  | succ m =>
+    obtain ⟨S, hS, hlim⟩ := exists_tendsto_eigenFunctional Q K V lam φ G hgood f hf hfφ Z hZ
+    exact dist_tendsto_zero_of_tendsto_eigenFunctional f hfφ Z S hS hlim
+
+/-- The original good-triple and ODE hypotheses coexist for a nonzero
+stationary scalar trajectory. Source: arXiv:2305.05465v6, §4, `l:3hyperplanes11`. -/
+example (z : EucSpace 1) :
+    IsGoodTriple (1 : ParamMatrix 1) 1 1 ∧
+      RescaledDynamics (n := n) (1 : ParamMatrix 1) 1 1 (fun _ _ => z) :=
+  ⟨isGoodTriple_one, rescaledDynamics_one_const _ _ z⟩
 
 end Clusters
 end Transformer

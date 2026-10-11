@@ -29,11 +29,15 @@ the convergence of every token to one of at most three parallel hyperplanes.
   hyperplanes are the level sets of `φ₁*`, which are exactly the translates of
   `ker φ₁*`.
 
+The convergence theorem is proved in `Section9_Hyperplanes`; this file
+supplies its good-triple predicates and affine level-set geometry.
+
 Source: arXiv:2305.05465v6, `d:good`, `l:3hyperplanes11`.
 -/
 
 import Transformer.Clusters.Section3_IdCase
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.Topology.MetricSpace.HausdorffDistance
 
 open scoped BigOperators
@@ -124,31 +128,31 @@ theorem isGoodTripleWith_one :
 theorem isGoodTriple_one : IsGoodTriple (1 : ParamMatrix 1) 1 1 :=
   ⟨1, EuclideanSpace.single 0 (1 : ℝ), ⊥, isGoodTripleWith_one⟩
 
-/-! ### Convergence toward at most three hyperplanes -/
+/-! ### Geometry of the limiting coordinate level sets -/
 
-/-- **Theorem (l:3hyperplanes11), convergence toward `≤ 3` hyperplanes.**  For
-a good triple and any initial sequence, there are at most three parallel
-hyperplanes such that the distance of every rescaled token to one of them
-tends to `0`.
+/-- The level set `{x : f x = c}` contains `c • v` whenever `f v = 1`.
+Source: arXiv:2305.05465v6, §9, the hyperplanes `H_0`, `H_a`, and `H_b`
+in the proof of `l:3hyperplanes11`. -/
+theorem apply_smul_eq (f : EucSpace d →L[ℝ] ℝ) {v : EucSpace d} (hv : f v = 1) (c : ℝ) :
+    f (c • v) = c := by
+  rw [map_smul, hv, smul_eq_mul, mul_one]
 
-Not proved here.
+example : (EuclideanSpace.proj (𝕜 := ℝ) 0)
+    (EuclideanSpace.single 0 (1 : ℝ) : EucSpace 1) = 1 := by simp
 
-Source: arXiv:2305.05465v6, `l:3hyperplanes11`. -/
-theorem good_dist_tendsto_zero (Q K V : ParamMatrix d) (hQKV : IsGoodTriple Q K V)
-    (Z : ℝ → Idx n → EucSpace d) (hZ : RescaledDynamics Q K V Z) :
-    ∃ (W : Submodule ℝ (EucSpace d)) (S : Finset (EucSpace d)),
-      Module.finrank ℝ W + 1 = d ∧ S.card ≤ 3 ∧
-        ∀ i : Idx n, ∃ p ∈ S,
-          Tendsto (fun t => Metric.infDist (Z t i) (affineShift W p)) atTop (nhds 0) := by
-  sorry
+/-- `ker f` has codimension `1` when the normalized coordinate takes
+the value `1`. Source: arXiv:2305.05465v6, §4, `l:3hyperplanes11`,
+and §9, the parallel hyperplanes given by the level sets of `φ₁*`. -/
+theorem finrank_ker_add_one (f : EucSpace d →L[ℝ] ℝ) {v : EucSpace d} (hv : f v = 1) :
+    Module.finrank ℝ (LinearMap.ker (f : EucSpace d →ₗ[ℝ] ℝ)) + 1 = d := by
+  have hsurj : LinearMap.range (f : EucSpace d →ₗ[ℝ] ℝ) = ⊤ :=
+    LinearMap.range_eq_top.mpr fun c => ⟨c • v, apply_smul_eq f hv c⟩
+  have hrk := LinearMap.finrank_range_add_finrank_ker (f : EucSpace d →ₗ[ℝ] ℝ)
+  rw [hsurj, finrank_top, Module.finrank_self, finrank_euclideanSpace_fin] at hrk
+  omega
 
-/-- The hypotheses of `good_dist_tendsto_zero` are satisfiable: the good
-triple `(I₁, I₁, I₁)` together with the stationary configuration of
-`rescaledDynamics_one_const`. -/
-example (z : EucSpace 1) :
-    IsGoodTriple (1 : ParamMatrix 1) 1 1 ∧
-      RescaledDynamics (n := n) (1 : ParamMatrix 1) 1 1 (fun _ _ => z) :=
-  ⟨isGoodTriple_one, rescaledDynamics_one_const _ _ z⟩
+example : (EuclideanSpace.proj (𝕜 := ℝ) 0)
+    (EuclideanSpace.single 0 (1 : ℝ) : EucSpace 1) = 1 := by simp
 
 end Clusters
 end Transformer

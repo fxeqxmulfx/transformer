@@ -59,6 +59,7 @@ import Transformer.Clusters.Section9_LeadingScores
 import Transformer.Clusters.Section9_LeadingEnergy
 import Transformer.Clusters.Section9_LeadingGain
 import Transformer.Clusters.Section9_ThreeCandidates
+import Transformer.Clusters.Section9_ThreeCoordinates
 import Transformer.Clusters.Section9_Hyperplanes
 import Transformer.Clusters.Section8_Polytope
 import Transformer.Clusters.Section8_HullContinuity
