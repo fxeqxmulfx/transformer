@@ -80,6 +80,7 @@ import Transformer.Modes.Section3_CharacteristicCubic
 import Transformer.Modes.Section3_CubicCumulant
 import Transformer.Modes.Section3_CubicCorrection
 import Transformer.Modes.Section3_CubicDerivatives
+import Transformer.Modes.Section3_CubicHigherDerivatives
 import Transformer.Modes.Section3_WeightedDotMoments
 import Transformer.Modes.Section3_CubicDerivativeTaylor
 import Transformer.Modes.Section3_CubicFourier
