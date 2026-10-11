@@ -5,6 +5,7 @@ Formalization of:
 -/
 
 import Transformer.Normalization.Basic
+import Transformer.Normalization.Section2_RadialInvariant
 import Transformer.Normalization.Clustering
 import Transformer.Normalization.ClusteringLine
 import Transformer.Normalization.ClusterSpeed
