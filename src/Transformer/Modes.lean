@@ -110,6 +110,7 @@ import Transformer.Modes.Section3_DerivativeMoments
 import Transformer.Modes.Section3_DerivativeTaylor
 import Transformer.Modes.Section3_GaussianDerivativeComparison
 import Transformer.Modes.Section3_PowerDerivatives
+import Transformer.Modes.Section3_ThirdPowerDerivative
 import Transformer.Modes.Section3_PowerComparison
 import Transformer.Modes.Section3_FirstDerivativeFrequency
 import Transformer.Modes.Section3_SecondDerivativeFrequency
