@@ -25,6 +25,28 @@ namespace Transformer.Clusters
 
 variable {d n : ℕ}
 
+/-- **The actual projected hull converges to a polytope with finite
+leading candidates on its relative boundary or at zero.**
+Source: arXiv:2305.05465v6, §10, the opening paragraph and the adaptation
+of `cl:propofS`. The source uses `π_F A` and states `S ⊂ ∂K`; here the
+original scores give `A π_F`, and `{0}` is restored as in §8 and §5.
+Positive token count is explicit, and the nonempty polytope is identified
+with the future-hull intersection rather than only by real Hausdorff distance. -/
+theorem exists_polytope_tendsto_image_tokenHull (Q K V A proj : ParamMatrix d)
+    (F G : Submodule ℝ (EucSpace d)) (lam : ℝ)
+    (hQKV : IsGoodTripleMulti Q K V F G lam) (hA : IsAttentionRoot Q K A)
+    (hproj : IsProjOnto proj F G) (Z : ℝ → Idx n → EucSpace d)
+    (hZ : RescaledDynamics Q K V Z) (hn : 0 < n) :
+    ∃ S : Finset F, S.Nonempty ∧ S.card ≤ n ∧
+      polytopeIn F S = {x | ∀ t : ℝ, 0 ≤ t → x ∈ proj '' tokenHull (Z t)} ∧
+      Tendsto (fun t => Metric.hausdorffDist (proj '' tokenHull (Z t)) (polytopeIn F S))
+        atTop (nhds 0) ∧ (leadingLimitCandidates A F S).Finite ∧
+      leadingLimitCandidates A F S ⊆ frontier (convexHull ℝ (S : Set F)) ∪ {0} := by
+  obtain ⟨S, hS, hcard, hHull, hHaus⟩ :=
+    hZ.exists_projected_hull_polytope_limit Q K V proj F G lam hQKV.2 hproj Z hn
+  exact ⟨S, hS, hcard, hHull, hHaus, finite_leadingLimitCandidates A hA.injective F S,
+    leadingLimitCandidates_subset_frontier_union_zero A hA.injective F S⟩
+
 /-- **The actual leading hull and every projected token have compatible
 polytope limits.** Source: arXiv:2305.05465v6, §10, `t:multiplicity`.
 The same polytope is the future-hull intersection, has at most `n`
