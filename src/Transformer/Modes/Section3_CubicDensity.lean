@@ -16,28 +16,31 @@ retain the precise factor `(2π)⁻²`. The spectral estimate for the actual
 normalized sum then gives a uniform `C/n` density error. Continuous
 densities also exist eventually under the same original assumptions.
 
-These are unweighted consequences of `thm:br`. The additional spatial
-factor `1 + |x|³` still requires controlling Fourier derivatives through
-order three. The source's `edgeworth_three` statement is kept separately;
-no derivative-error estimate or signed correction law is assumed here.
+These are unweighted consequences of `thm:br`. The Fourier norm bound
+is also used by `Section3_CubicWeightedDensity`, where the proved third
+derivative estimate supplies the spatial factor `1 + |x|³`. The source's
+`edgeworth_three` statement is kept separately in `Section3_BREstimates`.
 -/
 
 open Real MeasureTheory ProbabilityTheory Filter
 open scoped ENNReal Topology FourierTransform
 namespace Transformer.Modes
 
-/-- The actual continuous density error after the signed cubic correction obeys the inverse-Fourier bound.
+/-- The actual continuous density error after the signed cubic correction is bounded by its Fourier transform norm.
 Source: arXiv:2412.09080v3, §3 `thm:br`, `s = 3`, §3.1 `eq:psi`,
 and §5.4 `eq:higher-error-goal`, its zero-derivative consequence. -/
-theorem continuous_density_sub_gaussian_cubic_abs_le
+theorem continuous_density_sub_gaussian_cubic_abs_le_norm_fourier
     (σ μ : Measure (ℝ × ℝ)) [IsProbabilityMeasure σ] [IsProbabilityMeasure μ]
     (hI : Integrable (characteristic2 σ)) (hμ : IsStandardized μ)
     (hexp : HasExpMoments μ) (hmom : MemLp id 3 μ) (r : ℝ)
     {q : ℝ × ℝ → ℝ} (hq : Continuous q) (hq0 : ∀ z, 0 ≤ q z)
     (hσ : σ = volume.withDensity (fun z => ENNReal.ofReal (q z))) (x : ℝ × ℝ) :
-    |q x - phi2 x - r * psiOf μ x| ≤ ((2 * Real.pi) ^ 2)⁻¹ *
-      ∫ ξ : ℝ × ℝ, ‖characteristic2 σ ξ - characteristic2 stdGauss2 ξ -
-        (r : ℂ) * characteristic2 stdGauss2 ξ * cubicCharacteristicCorrection μ ξ‖ := by
+    |q x - phi2 x - r * psiOf μ x| ≤
+      ‖𝓕 (fun ξ : ℂ => characteristic2 σ ((2 * Real.pi) • Complex.equivRealProdCLM ξ) -
+        characteristic2 stdGauss2 ((2 * Real.pi) • Complex.equivRealProdCLM ξ) -
+          (r : ℂ) * characteristic2 stdGauss2 ((2 * Real.pi) • Complex.equivRealProdCLM ξ) *
+            cubicCharacteristicCorrection μ ((2 * Real.pi) • Complex.equivRealProdCLM ξ))
+        (Complex.measurableEquivRealProd.symm x)‖ := by
   let f : ℝ × ℝ → ℂ := fun ξ => characteristic2 σ ξ - characteristic2 stdGauss2 ξ -
     (r : ℂ) * characteristic2 stdGauss2 ξ * cubicCharacteristicCorrection μ ξ
   let g : ℂ → ℂ := fun ξ => f ((2 * Real.pi) • (ξ.re, ξ.im))
@@ -83,8 +86,34 @@ theorem continuous_density_sub_gaussian_cubic_abs_le
       simp only [Complex.sub_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, mul_zero, sub_zero]
     rw [← hr]
     exact Complex.abs_re_le_norm _
+  exact hqr
+
+example : IsProbabilityMeasure stdGauss2 ∧ Integrable (characteristic2 stdGauss2) ∧
+    IsStandardized stdGauss2 ∧ HasExpMoments stdGauss2 ∧ MemLp id 3 stdGauss2 ∧
+    Continuous phi2 ∧ (∀ z, 0 ≤ phi2 z) ∧
+    stdGauss2 = volume.withDensity (fun z => ENNReal.ofReal (phi2 z)) :=
+  ⟨inferInstance, integrable_characteristic2_stdGauss2, isStandardized_stdGauss2,
+    hasExpMoments_stdGauss2, IsGaussian.memLp_id _ _ (by simp),
+    by unfold phi2; fun_prop, isDensityOf_stdGauss2.nonneg, stdGauss2_eq_withDensity_phi2⟩
+
+/-- The actual continuous density error after the signed cubic correction obeys the inverse-Fourier integral bound.
+Source: arXiv:2412.09080v3, §3 `thm:br`, `s = 3`, §3.1 `eq:psi`,
+and §5.4 `eq:higher-error-goal`, its zero-derivative consequence. -/
+theorem continuous_density_sub_gaussian_cubic_abs_le
+    (σ μ : Measure (ℝ × ℝ)) [IsProbabilityMeasure σ] [IsProbabilityMeasure μ]
+    (hI : Integrable (characteristic2 σ)) (hμ : IsStandardized μ)
+    (hexp : HasExpMoments μ) (hmom : MemLp id 3 μ) (r : ℝ)
+    {q : ℝ × ℝ → ℝ} (hq : Continuous q) (hq0 : ∀ z, 0 ≤ q z)
+    (hσ : σ = volume.withDensity (fun z => ENNReal.ofReal (q z))) (x : ℝ × ℝ) :
+    |q x - phi2 x - r * psiOf μ x| ≤ ((2 * Real.pi) ^ 2)⁻¹ *
+      ∫ ξ : ℝ × ℝ, ‖characteristic2 σ ξ - characteristic2 stdGauss2 ξ -
+        (r : ℂ) * characteristic2 stdGauss2 ξ * cubicCharacteristicCorrection μ ξ‖ := by
+  let f := fun ξ => characteristic2 σ ξ - characteristic2 stdGauss2 ξ -
+    (r : ℂ) * characteristic2 stdGauss2 ξ * cubicCharacteristicCorrection μ ξ
+  let g := fun ξ : ℂ => f ((2 * Real.pi) • Complex.equivRealProdCLM ξ)
   calc
-    _ ≤ ‖(𝓕 g) w‖ := hqr
+    _ ≤ ‖𝓕 g (Complex.measurableEquivRealProd.symm x)‖ :=
+      continuous_density_sub_gaussian_cubic_abs_le_norm_fourier σ μ hI hμ hexp hmom r hq hq0 hσ x
     _ ≤ ∫ ξ : ℂ, ‖g ξ‖ := by
       rw [Real.fourier_eq']
       apply (norm_integral_le_integral_norm _).trans_eq

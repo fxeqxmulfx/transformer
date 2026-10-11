@@ -1,4 +1,5 @@
 import Transformer.Modes.Section3_WeightedDensity
+import Transformer.Modes.Section3_CubicWeightedDensity
 /-!
 # The cited Edgeworth estimates for actual normalized sums
 
@@ -19,6 +20,8 @@ large sample counts, by the separately proved inversion result.
 The `s = 3` statement retains its original fourth moment and exponential
 moment hypotheses. Its correction `psiOf` uses the mixed derivatives of
 the literal logarithmic moment generating function, as in `eq:psi`.
+The proved corrected error integrals at orders zero and three supply
+its cubic spatial weight and inverse-n rate by the same Fourier inversion.
 The Gaussian examples satisfy every hypothesis of both original
 statements. Their names, quantifiers, spatial weights, and rate powers
 are unchanged from `Section3_BR`; the estimates follow the Fourier
@@ -144,7 +147,8 @@ theorem edgeworth_three (μ : Measure (ℝ × ℝ)) [IsProbabilityMeasure μ]
       IsDensityOf (Measure.pi fun _ : Fin n => μ) (scaledSum n) q →
       ∀ x, (1 + eucl x ^ 3) * |q x - phi2 x - (Real.sqrt n)⁻¹ * psiOf μ x|
         ≤ C * (n : ℝ)⁻¹ := by
-  sorry
+  obtain ⟨C, _, herror⟩ := eventually_weighted_abs_scaledSum_density_sub_phi2_psiOf μ hμ hmom hexp hcf
+  exact ⟨C, herror⟩
 
 /-- The hypotheses of `edgeworth_two` are satisfiable. -/
 example : IsProbabilityMeasure stdGauss2 ∧ IsStandardized stdGauss2 ∧
