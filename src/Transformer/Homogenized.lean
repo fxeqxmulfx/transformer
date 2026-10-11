@@ -54,3 +54,5 @@ import Transformer.Homogenized.AttnAverage
 import Transformer.Homogenized.GaussianEntries
 import Transformer.Homogenized.GaussianVariance
 import Transformer.Homogenized.GaussianProductTail
+import Transformer.Homogenized.ProductHeadSource
+import Transformer.Homogenized.ProductHeadLaw
