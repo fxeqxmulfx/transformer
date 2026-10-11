@@ -55,6 +55,7 @@ import Transformer.Clusters.Section9_Fj
 import Transformer.Clusters.Section9_Limits
 import Transformer.Clusters.Section9_Growth
 import Transformer.Clusters.Section9_LeadingProjection
+import Transformer.Clusters.Section9_LeadingScores
 import Transformer.Clusters.Section9_Hyperplanes
 import Transformer.Clusters.Section8_Polytope
 import Transformer.Clusters.Section8_HullContinuity
