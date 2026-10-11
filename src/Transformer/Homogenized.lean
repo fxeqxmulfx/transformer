@@ -53,3 +53,4 @@ import Transformer.Homogenized.GaussianMoments
 import Transformer.Homogenized.AttnAverage
 import Transformer.Homogenized.GaussianEntries
 import Transformer.Homogenized.GaussianVariance
+import Transformer.Homogenized.GaussianProductTail
