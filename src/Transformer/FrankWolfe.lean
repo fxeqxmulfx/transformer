@@ -37,3 +37,4 @@ import Transformer.FrankWolfe.Section5_Contraction
 import Transformer.FrankWolfe.Section5_Collapse
 import Transformer.FrankWolfe.Section5_Metastability
 import Transformer.FrankWolfe.Section5_MetaLevel
+import Transformer.FrankWolfe.Section5_RareEvents
