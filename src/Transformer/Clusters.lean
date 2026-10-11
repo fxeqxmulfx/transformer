@@ -78,6 +78,7 @@ import Transformer.Clusters.Section10_ProjectedDynamics
 import Transformer.Clusters.Section10_ProjectedHullLimit
 import Transformer.Clusters.Section10_PowerMetric
 import Transformer.Clusters.Section10_PowerContraction
+import Transformer.Clusters.Section10_ComplementaryProjection
 import Transformer.Clusters.Section10_Remainder
 import Transformer.Clusters.Section10_RemainderFalse
 import Transformer.Clusters.Section10_Step2
