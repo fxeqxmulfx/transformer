@@ -1,45 +1,25 @@
 /-
-# Homogenized Transformers — the diffusion kernel is Lipschitz
+# Homogenized Transformers — the displayed mean-field Lipschitz rate is false
 
-Formalization of `prop:satisfying_MF` of arXiv:2604.01978v1, *Homogenized
-Transformers*: the coefficient `G_μ(x,·)` of `eq:G_def` is Lipschitz jointly
-in the measure, for `W₂`, and in the point.  This is the input the proof of
-`thm:PoC_wellposedness` runs on.
+This module computes the diffusion coefficient at point masses and refutes
+the displayed rate in `prop:satisfying_MF` of arXiv:2604.01978v1,
+`C = O(β² exp(4β‖Ā‖) exp(β²dσ_A²))`.
 
-**What the source says and what is carried here.**  The source displays the
-constant
+At one fixed model, `A ≡ 0` and a centered Rademacher value entry give a
+coefficient difference of norm one at `μ = ν = δ_{e₁}`, `x = e₁`, `y = e₂`,
+for every temperature. The proposed rate vanishes as `β` tends to zero.
+Thus even a model-dependent constant cannot give that rate uniformly in `β`.
+The displayed rate also omits the scale of the value matrix, although the
+source's covariance identity includes `dσ_V²`; the proof below uses only
+the fixed-model, small-temperature counterexample.
 
-  `C = O(β² e^{4β‖Ā‖} e^{β²dσ_A²})`,
+The qualitative assertion is false as well: `MeanFieldCounterexample.lean`
+proves `not_satisfying_MF_productHead` and `not_forall_satisfying_MF` at one
+fixed temperature and a genuine Gaussian-product query/key law allowed by
+`ass:high_order_short`. The former unproved `satisfying_MF` is removed,
+rather than asserting a weakened bound under the source claim's name.
 
-and that rate is false: `not_forall_satisfying_MF_rate` refutes it even at one
-fixed model, with the constant allowed to depend on all model data but `β`.
-
-* It vanishes as `β ↓ 0`, and the left-hand side does not.  At small `β` the
-  attention is nearly uniform and `m_A[μ](x)` nearly independent of `x`, but
-  `Proj_x` still depends on `x`, and `Proj_x u - Proj_y u` is of order
-  `‖x-y‖`, not `β²‖x-y‖`.  This is what the refutation proves.
-* Read with a constant uniform over models, it fails a second time: it carries
-  no scale of the value matrix.  The identity the proof opens with reads
-
-  `‖G_μ(x,·)-G_ν(y,·)‖²_{L²} = dσ_V² ‖Proj_x m_A[μ](x) - Proj_y m_A[ν](y)‖²_{L²}
-    + ‖Proj_x V̄ Cov^A_μ(x) - Proj_y V̄ Cov^A_ν(y)‖²_{L²}`,
-
-  whose two sides scale together under `(σ_V, V̄) ↦ (λσ_V, λV̄)`, while the
-  displayed `C` mentions neither.  `lem:Kernel_regularity` of the same paper
-  does carry the factor `dσ_V²`.  This is a remark; the refutation does not
-  rest on it.
-
-The witness is `d = 2`, `Ā = 0` and `A ≡ 0`, so both exponentials are `1` at
-every `β`; one Rademacher entry in `V`, by `isHighOrderLaw_rademacher`; and
-`μ = ν = δ_{e₁}`, `x = e₁`, `y = e₂`, for which the left-hand side is `1` and
-the right-hand side at most `2Kβ²`.
-
-What survives is the qualitative statement, and it is exactly what the proof of
-`thm:PoC_wellposedness` uses of this proposition — "the coefficient `G_μ(x,·)`
-is globally Lipschitz in `x` and `μ`": a constant produced after the model data
-`(β, σ_V, σ_A, ρ*)` is fixed.  That is `satisfying_MF`.
-
-Source: arXiv:2604.01978v1, `prop:satisfying_MF`.
+Source: arXiv:2604.01978v1, `prop:satisfying_MF`, `eq:G_def`.
 -/
 
 import Transformer.Homogenized.RademacherLaw
@@ -70,37 +50,6 @@ theorem GfieldOf_dirac {d : ℕ} (β : ℝ) (ρ : Measure (HeadParam d)) (z x : 
       = proj d x (valueMap θ z - ∫ θ', valueMap θ' z ∂ρ) := by
   rw [GfieldOf, fluctOf, meanFieldOf, attnFieldOf_dirac]
   simp only [attnFieldOf_dirac]
-
-/-! ### The proposition -/
-
-/-- **Proposition (prop:satisfying_MF).**  Under `ass:high_order_short` the
-diffusion kernel of `eq:G_def` is Lipschitz in its two arguments:
-
-  `‖G_μ(x,·) - G_ν(y,·)‖_{L²(ρ*)} ≤ C (W₂(μ,ν) + ‖x-y‖)`
-
-for all probability measures `μ, ν` on the sphere and all unit `x, y`.
-
-The constant is produced after the model data is fixed.  The rate the source
-displays for it is refuted by `not_forall_satisfying_MF_rate`; the module
-docstring records what it says and why it is not carried.
-
-Not proved here.
-
-Source: arXiv:2604.01978v1, `prop:satisfying_MF`. -/
-theorem satisfying_MF {d : ℕ} (β : ℝ) (σV σA : ℝ≥0) (ρ : Measure (HeadParam d))
-    (hρ : HasHighOrderLaw d σV σA ρ) :
-    ∃ L : ℝ, 0 < L ∧
-      ∀ (μ ν : Measure (EucSpace d)), IsProbabilityMeasure μ → IsProbabilityMeasure ν →
-        μ {z : EucSpace d | ‖z‖ = 1}ᶜ = 0 → ν {z : EucSpace d | ‖z‖ = 1}ᶜ = 0 →
-      ∀ x y : EucSpace d, ‖x‖ = 1 → ‖y‖ = 1 →
-        Real.sqrt (∫ θ, ‖GfieldOf β ρ μ x θ - GfieldOf β ρ ν y θ‖ ^ 2 ∂ρ) ≤
-          L * (Wasserstein.W2 μ ν + ‖x - y‖) := by
-  sorry
-
-/-- The hypothesis of `satisfying_MF` is satisfiable, and not only at a law
-whose fluctuation vanishes: the Rademacher law of `isHighOrderLaw_rademacher`
-satisfies `ass:high_order_short`. -/
-example : HasHighOrderLaw 2 1 0 radLaw := hasHighOrderLaw_rademacher
 
 /-! ### The displayed rate is false -/
 
