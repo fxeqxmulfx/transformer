@@ -60,6 +60,7 @@ import Transformer.Clusters.Section8_HullContinuity
 import Transformer.Clusters.Section8_HullLimit
 import Transformer.Clusters.Section8_CandidateBoundary
 import Transformer.Clusters.Section8_CandidateFinite
+import Transformer.Clusters.Section8_SoftmaxEnergy
 import Transformer.Clusters.Section8_Origin
 import Transformer.Clusters.Section8_Bounded
 import Transformer.Clusters.Section8_Energy
