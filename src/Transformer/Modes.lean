@@ -82,6 +82,8 @@ import Transformer.Modes.Section3_CubicCorrection
 import Transformer.Modes.Section3_CubicDerivatives
 import Transformer.Modes.Section3_CubicHigherDerivatives
 import Transformer.Modes.Section3_WeightedDotMoments
+import Transformer.Modes.Section3_CubicHigherTaylor
+import Transformer.Modes.Section3_CubicHigherGaussianComparison
 import Transformer.Modes.Section3_CubicDerivativeTaylor
 import Transformer.Modes.Section3_CubicFourier
 import Transformer.Modes.Section3_CubicFourierInversion
