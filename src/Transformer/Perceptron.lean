@@ -13,6 +13,7 @@ import Transformer.Perceptron.Atomicity
 import Transformer.Perceptron.HigherDim
 import Transformer.Perceptron.Atoms
 import Transformer.Perceptron.Bound
+import Transformer.Perceptron.Section3_AtomCount
 import Transformer.Perceptron.MinMax
 import Transformer.Perceptron.Minimizer
 import Transformer.Perceptron.GeodesicCurve

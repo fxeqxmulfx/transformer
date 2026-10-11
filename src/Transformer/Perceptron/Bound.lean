@@ -42,7 +42,11 @@ when the weights are small. That universal claim is false:
   claims no bound in `d ≥ 3`, so there is nothing to put on the books; the
   dimension hypothesis of both theorems above is the record of it.
 
-**What is not witnessed.**  The examples below exhibit every hypothesis except
+The conditional atom-count corollary is proved in `Section3_AtomCount`.
+Its cluster-mass estimate is an explicit input, and every input is witnessed
+there by the actual antipodal SOPD measure.
+
+**What is not witnessed for the mass bound.**  The example below exhibits every hypothesis except
 `IsSOPD`: a Lipschitz activation with its primitive, and a three-atom
 configuration two of whose atoms are `1/(2√β)` apart. The antipodal SOPD
 family in `Section3_Antipodal` satisfies the cluster condition exactly when
@@ -134,7 +138,10 @@ example (β : ℝ) (hβ : 1 ≤ β) :
     have : |((i : ℕ) : ℝ) - (j : ℕ)| ≤ 1 := abs_le.mpr ⟨by linarith, by linarith⟩
     nlinarith
 
-/-- **Corollary (cor: bound).**  If the support of `μ` is covered by `M` arcs
+/-- The covering data in **Corollary (cor: bound)** are intervals of length
+at most `L`. The conditional counting result is `bound_atom_count` in
+`Section3_AtomCount`, with the mass estimate as an explicit input.
+If the support of `μ` is covered by `M` arcs
 of length at most `L < 2π`, the number `N_ε` of atoms of mass at least `ε`
 satisfies, for `β` large enough,
 
@@ -143,25 +150,8 @@ satisfies, for `β` large enough,
 the constant of `O(e^{-β})` depending on the weights `ϑ`, as in
 `bound_cluster_mass`.
 
-Not proved here.
-
-Source: arXiv:2601.21366v2, `cor: bound`. -/
-theorem bound_atom_count :
-    ∀ (ω : Idx 2 → ℝ) (a : Idx 2 → EucSpace 2),
-    ∃ C β₀ : ℝ, 0 < C ∧ 0 < β₀ ∧
-      ∀ β : ℝ, β₀ ≤ β → ∀ φ σ : ℝ → ℝ, (∀ s : ℝ, HasDerivAt φ (2 * σ s) s) →
-        LipschitzWith 1 σ → σ 0 = 0 →
-      ∀ (N : ℕ) (m θ : Idx N → ℝ) (μ : Perspective.ProbSphere 2),
-        IsAtomicOnCircle N m θ μ → IsSOPD β φ σ ω a μ →
-      ∀ (M : ℕ), 1 ≤ M → ∀ (l r : Idx M → ℝ) (L : ℝ), L < 2 * π →
-        (∀ j : Idx M, r j - l j ≤ L) →
-        (∀ i : Idx N, ∃ j : Idx M, θ i ∈ Set.Icc (l j) (r j)) →
-      ∀ ε : ℝ, 0 < ε →
-        (({i : Idx N | ε ≤ m i} : Set (Idx N)).ncard : ℝ)
-          ≤ (M / ε) * (1 + 2 * L * Real.sqrt β) * (0.5742 + C * Real.exp (-β)) := by
-  sorry
-
-/-- The covering hypotheses of `bound_atom_count` are satisfiable: one arc of
+Source: arXiv:2601.21366v2, §3.2, `cor: bound`. The covering data are
+satisfiable: one arc of
 length `1` containing the three angles `0, δ, 2δ` of the configuration above,
 and any positive `ε`. -/
 example (β : ℝ) (hβ : 1 ≤ β) :
