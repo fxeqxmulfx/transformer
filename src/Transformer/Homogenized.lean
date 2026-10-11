@@ -57,3 +57,4 @@ import Transformer.Homogenized.GaussianProductTail
 import Transformer.Homogenized.ProductHeadSource
 import Transformer.Homogenized.ProductHeadLaw
 import Transformer.Homogenized.RareTokenMeasure
+import Transformer.Homogenized.RareTokenAttention
