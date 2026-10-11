@@ -21,14 +21,13 @@ problem it carries.
   can also be included to allow for translations."  The display carries no
   bias and no statement of the source depends on one, so none is carried.
 
-* The open problem is the one the source names: "we […] illustrate a possible
-  generalization of Theorem `l:3hyperplanes11` to this setup […] The
-  clustering property appears to persist […] We leave this problem open to
-  further investigation."  It is carried at `σ = ReLU` and `W = I_d`, the top
-  row of Figure `fig: last.pdf`, where the caption is definite: "every
-  particle eventually follows one of three hyperplanes determined by the
-  spectrum of `V` and the projection onto `(ℝ_{>0})^d`" — that is, the
-  conclusion of `l:3hyperplanes11` verbatim.
+* The source proposes an extension of `l:3hyperplanes11` and leaves it
+  open. For `σ = ReLU` and `W = I_d`, the top row of Figure `fig: last.pdf`
+  describes three hyperplanes. Its universal extension to every good
+  triple is false: `Section12_ReluCounterexample` proves an actual
+  dimension-one trajectory with four distinct limiting points. The
+  dynamics and good-triple hypotheses are unchanged. No false universal
+  assertion is retained as an unproved theorem.
 
 * The other two rows of the figure ("all particles appear to collapse to `0`",
   for `σ = tanh` with `W = I_d` and for `σ = ReLU` with `W` random) are
@@ -40,6 +39,7 @@ Source: arXiv:2305.05465v6, `sec:conclusion`, `eq: mlp.transfo`, Figure
 -/
 
 import Transformer.Clusters.Section4_Hyperplanes
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
 
 open scoped BigOperators
 open Real Filter Topology
@@ -67,6 +67,8 @@ theorem actPointwise_zero {σ : ℝ → ℝ} (hσ : σ 0 = 0) : actPointwise (d 
   ext i
   rw [actPointwise_apply]
   simpa using hσ
+
+example : (fun r : ℝ => r) 0 = 0 := rfl
 
 /-- The identity activation does nothing. -/
 theorem actPointwise_id (x : EucSpace d) : actPointwise (fun r => r) x = x := by
@@ -127,32 +129,32 @@ theorem mlpRescaledDynamics_const (W : ParamMatrix d) {σ : ℝ → ℝ} (hσ : 
   intro t i
   simpa [actPointwise_zero hσ] using hasDerivAt_const t z
 
-/-! ### The open problem -/
+/-! ### What ReLU guarantees -/
 
-/-- **Open problem (`sec:conclusion`), `l:3hyperplanes11` with a feed-forward
-layer.**  For a good triple and the dynamics `eq: mlp.transfo` with
-`σ = ReLU` and `W = I_d`, are there still at most three parallel hyperplanes
-such that the distance of every rescaled token to one of them tends to `0`?
+/-- With identity output weights, each coordinate is nondecreasing.
+Source: arXiv:2305.05465v6, §12, `eq: mlp.transfo`,
+the nonnegative ReLU velocity. The caption of Figure `fig: last.pdf`
+observes motion into the positive orthant in its simulation; nonnegative
+velocity alone does not require a negative coordinate to reach zero. -/
+theorem mlpRescaledDynamics_relu_coords_monotone (Q K V : ParamMatrix d)
+    (Z : ℝ → Idx n → EucSpace d) (hZ : MlpRescaledDynamics 1 relu Q K V Z)
+    (i : Idx n) (k : Idx d) : Monotone (fun t => Z t i k) := by
+  let f := fun t => (V (∑ j : Idx n,
+    attentionMatrix Q K (fun l => expTime V t (Z t l)) i j • (Z t j - Z t i))) k
+  have hD (t : ℝ) : HasDerivAt (fun s => Z s i k) (relu (f t)) t := by
+    have h := (EuclideanSpace.proj k).hasFDerivAt.comp_hasDerivAt t (hZ t i)
+    let v := V (∑ j : Idx n,
+      attentionMatrix Q K (fun l => expTime V t (Z t l)) i j • (Z t j - Z t i))
+    change HasDerivAt (fun s => Z s i k) (actPointwise relu v k) t at h
+    simpa only [actPointwise_apply] using h
+  exact monotone_of_hasDerivAt_nonneg hD (fun t => le_max_right _ _)
 
-Open: "The clustering property appears to persist, the pattern depending on
-the weight matrix `W` and on the activation function `σ`.  We leave this
-problem open to further investigation."  The conclusion is
-`l:3hyperplanes11`'s own; Figure `fig: last.pdf` names the hyperplanes as
-"determined by the spectrum of `V` and the projection onto `(ℝ_{>0})^d`",
-which is a description of the limit, not a further assertion, and is not
-carried.
+/-- The ReLU monotonicity hypotheses hold for an actual stationary solution. -/
+example (z : EucSpace d) :
+    MlpRescaledDynamics (n := n) 1 relu (1 : ParamMatrix d) 1 1 (fun _ _ => z) :=
+  mlpRescaledDynamics_const 1 relu_zero 1 1 1 z
 
-Source: arXiv:2305.05465v6, `sec:conclusion`, `eq: mlp.transfo`, Figure
-`fig: last.pdf`. -/
-theorem mlpRelu_dist_tendsto_zero (Q K V : ParamMatrix d) (hQKV : IsGoodTriple Q K V)
-    (Z : ℝ → Idx n → EucSpace d) (hZ : MlpRescaledDynamics 1 relu Q K V Z) :
-    ∃ (U : Submodule ℝ (EucSpace d)) (S : Finset (EucSpace d)),
-      Module.finrank ℝ U + 1 = d ∧ S.card ≤ 3 ∧
-        ∀ i : Idx n, ∃ p ∈ S,
-          Tendsto (fun t => Metric.infDist (Z t i) (affineShift U p)) atTop (nhds 0) := by
-  sorry
-
-/-- The hypotheses of `mlpRelu_dist_tendsto_zero` are satisfiable: the good
+/-- The proposed extension's hypotheses are satisfiable: the good
 triple `(I₁, I₁, I₁)` together with a configuration of equal tokens, which
 `eq: mlp.transfo` keeps fixed because `ReLU(0) = 0`. -/
 example (z : EucSpace 1) :

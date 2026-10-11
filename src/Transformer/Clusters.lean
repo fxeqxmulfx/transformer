@@ -72,3 +72,5 @@ import Transformer.Clusters.Section12_ReluScalar
 import Transformer.Clusters.Section12_ReluBounds
 import Transformer.Clusters.Section12_ReluFlow
 import Transformer.Clusters.Section12_ReluLimits
+import Transformer.Clusters.Section12_ReluDynamics
+import Transformer.Clusters.Section12_ReluCounterexample
