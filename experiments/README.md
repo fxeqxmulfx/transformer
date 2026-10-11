@@ -17,7 +17,7 @@ it, which git ignores.
 | [`convex_atomic`](convex_atomic) | 38 | Does answer-only convex atomic sparsemax training escape uniform and saturated error floors, attain its positive-error minimum and transfer to Basis with generated physical heads? |
 | [`convex_binding`](convex_binding) | 18 | Does a factorized neighboring-token key encoder remove recall's binding obstruction while retaining convex atomic training and free original values? |
 | [`mod97_grokking`](mod97_grokking) | 12 | Do the openai/grok transformer and GPTMini generalize x / y mod 97 long after fitting it? |
-| [`mod97_size_search`](mod97_size_search) | 9 | What is the smallest tested dense GPTMini that groks mod 97 within 10,000 full epochs? |
+| [`mod97_size_search`](mod97_size_search) | 12 | What is the smallest tested dense GPTMini that groks mod 97 within 10,000 full epochs? |
 | [`mod97_stability`](mod97_stability) | 6 | Once GPTMini generalizes x / y mod 97, does it stay generalized, under AdamW and raw AMSGradW? |
 | [`mod193_stability`](mod193_stability) | 7 | Mod 193 under AdamW: archived normalizer/schedule recipes and fresh sparsemax starting-scale confirmation |
 | [`mqar_sparsemax`](mqar_sparsemax) | 33 | Does sparsemax attention learn associative recall where softmax does not? |

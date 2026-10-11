@@ -31,5 +31,8 @@ experiments = {
     "graph-w32": swap(base, "model.width", 32),
     "graph-w16": swap(base, "model.width", 16),
     "graph-w8": swap(base, "model.width", 8),
+    "graph-w32-wd02": swap(swap(base, "model.width", 32), "optimizer.weight_decay", 0.2),
+    "graph-w24-wd02": swap(swap(base, "model.width", 24), "optimizer.weight_decay", 0.2),
+    "graph-w16-wd02": swap(swap(base, "model.width", 16), "optimizer.weight_decay", 0.2),
     "native-w128": swap(base, "execution", Eager()),
 }

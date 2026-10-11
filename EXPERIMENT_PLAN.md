@@ -2608,3 +2608,13 @@ run is capped at 10,000 complete passes over its fixed training split. Use
 exhaustive held-out evaluation, record delayed grokking separately from
 immediate generalization and transient peaks, and commit tested setup and
 result milestones promptly. Preserve the archived runs and unrelated work.
+
+Dense stage complete: seven fresh 10,000-epoch runs. The smallest tested
+delayed-grokking model has width 32, two layers, four heads and 32,232
+parameters with learning rate 0.001 and weight decay 0.2. Generalization
+began at epoch 7,675 and was confirmed at 8,150; final training and held-out
+accuracy are both 100%, and the final 1,000-epoch window stays above 99%.
+Widths 24 and 16 with the same decay failed within the cap. The Mesh stage
+is active; retain the fixed architecture-specific data and report the
+vocabulary, loss and split differences. See the experiment README and the
+Rust repository's portable histories for the complete outcomes.

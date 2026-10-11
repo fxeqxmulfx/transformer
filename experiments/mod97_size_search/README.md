@@ -24,6 +24,9 @@ in the primary search. No run stops at a transient accuracy peak.
 | graph-w32 | 32 | 32,232 | Captured CUDA graphs |
 | graph-w16 | 16 | 9,976 | Captured CUDA graphs |
 | graph-w8 | 8 | 3,456 | Captured CUDA graphs |
+| graph-w32-wd02 | 32 | 32,232 | Captured CUDA graphs; decay 0.2 |
+| graph-w24-wd02 | 24 | 19,568 | Captured CUDA graphs; decay 0.2 |
+| graph-w16-wd02 | 16 | 9,976 | Captured CUDA graphs; decay 0.2 |
 | native-w128 | 128 | 423,816 | Native eager control |
 
 The count includes the learned tied embedding and eight head-temperature
@@ -61,15 +64,40 @@ additional seeds will be added under new labels when the coarse bracket is
 known. A reported minimum means the smallest successful tested configuration,
 not a proof that every smaller architecture fails.
 
-The fresh width-128 graph run has reached sustained 99% generalization;
-its final-budget result is still pending. Smaller models have not run yet.
+## Fresh results
+
+All completed runs below used exactly 100,000 updates, or 10,000 full epochs.
+
+| Run | Final training / held-out | Sustained joint 99% onset / confirmation | Final 1,000 epochs stable | Delayed grokking |
+| --- | --- | --- | --- | --- |
+| graph-w128 | 100% / 100% | 3,675 / 4,150 | No; minimum held-out 96.28% | No strict near-chance plateau |
+| graph-w64 | 100% / 100% | 1,375 / 1,850 | Yes; minimum held-out 99.87% | No strict near-chance plateau |
+| graph-w32 | 99.81% / 96.41% | Not reached | No | Not reached within cap |
+| graph-w16 | 61.96% / 37.26% | Not reached | No | Not reached within cap |
+| graph-w32-wd02 | 100% / 100% | 7,675 / 8,150 | Yes; minimum held-out 99.98% | Yes |
+| graph-w24-wd02 | 99.89% / 37.46% | Not reached | No | Not reached within cap |
+| graph-w16-wd02 | 69.61% / 34.60% | Not reached | No | Not reached within cap |
+
+Changing only weight decay from 0.1 to 0.2 brought the width-32 transition
+inside the budget. Training first reached 99% at epoch 825. Five consecutive
+near-chance held-out observations with fitted training began at epoch 1,050
+and were confirmed at 1,150. This 32,232-parameter model is currently the
+smallest tested delayed-grokking model. Widths 24 and 16 with decay 0.2
+failed within the cap. Seven fresh dense runs are complete; the larger
+Mesh GPT search is now active in the Rust repository. The remaining labels
+in the configuration table are predefined candidates, not completed runs. Portable full learning curves, history hashes and the shared
+stricter criteria are archived in the Rust repository's
+`docs/grokking-results/summary.json`; the lab's built-in transition detector
+uses a shorter two-observation patience and is reported separately.
 
 ## Validation
 
-The study checker accepts all nine configurations, and direct PyTorch model
+The study checker accepts all twelve configurations, and direct PyTorch model
 construction verifies every parameter count in the table. The required
 `uv run --locked ../make.py test` ran 196 tests in 905 seconds and reported
-69 failures and three skips. The failures include exact historical CPU
+69 failures and three skips. A later required rerun took 511 seconds with
+the same failure and skip counts. The final refinement rerun took 516
+seconds, again with 69 failures and three skips. The failures include exact historical CPU
 fixture comparisons; the modular fixture was recorded with PyTorch
 2.14.0+cu126 while the locked environment uses 2.14.1+cu126. An isolated
 `test_engine.py` rerun also fails at update zero. This study changes no lab
