@@ -16,6 +16,7 @@ import Transformer.Clusters.Section4_SquareScalar
 import Transformer.Clusters.Section4_SquareAmplitude
 import Transformer.Clusters.Section4_SquareGeometry
 import Transformer.Clusters.Section4_SquareDynamics
+import Transformer.Clusters.Section4_SquareCounterexample
 import Transformer.Clusters.Section5_Mix
 import Transformer.Clusters.Section6_Field
 import Transformer.Clusters.Section6_WellPosed

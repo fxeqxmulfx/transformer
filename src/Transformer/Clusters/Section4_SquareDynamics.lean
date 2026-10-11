@@ -55,7 +55,8 @@ theorem attentionMatrix_square (u : ℝ) (i j : Idx 4) :
 
 /-- The genuine attention drift of every corner is the scalar square drift in its own direction.
 Source: arXiv:2305.05465v6, `eq:trans_dyn`, with `Q = K = V = I₂`.
-This verifies the scalar reduction directly from the vector attention average. -/
+This verifies the scalar reduction directly from the vector attention average.
+The partition denominator stays positive even at zero amplitude. -/
 theorem attentionDrift_square (u : ℝ) (i : Idx 4) :
     (∑ j : Idx 4, attentionMatrix (1 : ParamMatrix 2) 1 (squareCorner u) i j • squareCorner u j) =
       squareCorner (squareScalarDrift u) i := by
