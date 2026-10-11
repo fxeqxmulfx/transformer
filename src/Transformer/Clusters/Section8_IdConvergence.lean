@@ -147,4 +147,37 @@ example (z : EucSpace d) :
       IdRescaledDynamics (n := n) (ContinuousLinearMap.id ℝ (EucSpace d)) (fun _ _ => z) :=
   ⟨isAttentionRoot_id d, idRescaledDynamics_const _ z⟩
 
+/-- **Theorem (t:Idcase11int).** Let `V = I_d` and `QᵀK ≻ 0`. For every
+initial token configuration, each rescaled token converges to zero or to
+the boundary of one convex polytope. Source: arXiv:2305.05465v6, §3,
+`t:Idcase11int`, proved by the complete statement in §8.1, `t:Idcase11`.
+The original positivity and rescaled-ODE hypotheses are unchanged. -/
+theorem idCase_tendsto_zero_or_frontier (Q K : ParamMatrix d) (hQK : IsPosDefQK Q K)
+    (Z : ℝ → Idx n → EucSpace d) (hZ : RescaledDynamics Q K 1 Z) :
+    ∃ S : Finset (EucSpace d), ∀ i : Idx n,
+      Filter.Tendsto (fun t => Z t i) Filter.atTop (nhds 0) ∨
+        ∃ p ∈ frontier (convexHull ℝ (S : Set (EucSpace d))),
+          Filter.Tendsto (fun t => Z t i) Filter.atTop (nhds p) := by
+  obtain ⟨A, hA, hAZ⟩ := hZ.exists_identity_root Q K hQK Z
+  obtain ⟨P, S, hP, -, -, -, hboundary, hlim⟩ :=
+    idCase_tendsto_limitCandidates Q K A hA Z hAZ
+  refine ⟨S, ?_⟩
+  intro i
+  obtain ⟨p, hp, hpi⟩ := hlim i
+  rcases hboundary hp with hfrontier | hzero
+  · rw [hP] at hfrontier
+    exact Or.inr ⟨p, hfrontier, hpi⟩
+  · have hp0 : p = 0 := Set.mem_singleton_iff.mp hzero
+    subst p
+    exact Or.inl hpi
+
+/-- The original §3 hypotheses are satisfied by identity query and key
+maps and stationary tokens; arXiv:2305.05465v6, §3, `e:Rres`. -/
+example (z : EucSpace d) :
+    IsPosDefQK (d := d) (ContinuousLinearMap.id ℝ (EucSpace d))
+        (ContinuousLinearMap.id ℝ (EucSpace d)) ∧
+      RescaledDynamics (n := n) (ContinuousLinearMap.id ℝ (EucSpace d))
+        (ContinuousLinearMap.id ℝ (EucSpace d)) 1 (fun _ _ => z) :=
+  ⟨isPosDefQK_of_isAttentionRoot (isAttentionRoot_id d), rescaledDynamics_one_const _ _ z⟩
+
 end Transformer.Clusters

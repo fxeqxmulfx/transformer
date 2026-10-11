@@ -1,8 +1,8 @@
 /-
 # The emergence of clusters in self-attention dynamics — the case `V = I_d`
 
-§3 of arXiv:2305.05465v6 continued: the rescaled dynamics at `V = I_d`, which
-is `e:dynIdzi`, and the clustering theorem `t:Idcase11int` stated on it.
+§3 of arXiv:2305.05465v6 continued: the rescaled dynamics at `V = I_d`,
+their exact identity-root form, and continuity of the actual solutions.
 
 **What the source says and what is carried here.**
 
@@ -23,12 +23,13 @@ is `e:dynIdzi`, and the clustering theorem `t:Idcase11int` stated on it.
 * "`z_i(t)` converges either to `0` or to some point on `∂K`" is the
   disjunction below; the source's own summary sentence is the weaker form of
   `t:Idcase11`, whose full statement (the limit set `𝒮`, the vertices `𝒱`)
-  is carried with §8.
+  is proved with §8 in `Section8_IdConvergence.lean`.
 
 Source: arXiv:2305.05465v6, `e:dynIdzi`, `eq: A`, `t:Idcase11int`.
 -/
 
 import Transformer.Clusters.Section3_Rescaled
+import Transformer.Clusters.Section8_AttentionRoot
 import Mathlib.Analysis.Convex.Combination
 
 open scoped BigOperators
@@ -102,32 +103,60 @@ theorem rescaledDynamics_one_const (Q K : ParamMatrix d) (z : EucSpace d) :
   intro t i
   simpa using hasDerivAt_const t z
 
-/-! ### `t:Idcase11int` -/
+/-! ### The positive-root form and continuity -/
 
-/-- **Theorem (t:Idcase11int).**  Let `V = I_d` and `QᵀK ≻ 0`.  Then for any
-initial sequence of tokens there is a convex polytope `K ⊂ ℝ^d` such that each
-`z_i(t)` converges, as `t → +∞`, either to `0` or to a point of `∂K`.
+/-- Positive definiteness is equivalent to existence of the positive
+attention root. Source: arXiv:2305.05465v6, §3, `t:Idcase11int`, and §8.1,
+`eq: A`. The square-root notation adds no hypothesis to the dynamics. -/
+theorem isPosDefQK_iff_exists_attentionRoot (Q K : ParamMatrix d) :
+    IsPosDefQK Q K ↔ ∃ A : ParamMatrix d, IsAttentionRoot Q K A := by
+  constructor
+  · exact IsPosDefQK.exists_attentionRoot
+  · rintro ⟨A, hA⟩
+    exact isPosDefQK_of_isAttentionRoot hA
 
-Not proved here.
+/-- Every solution under the original positive-definiteness hypothesis
+has the identity-root form `e:dynIdzi`. Source: arXiv:2305.05465v6, §3,
+`e:Rres`, and §8.1, `eq: A`. The root is constructed from `Q` and `K`. -/
+theorem RescaledDynamics.exists_identity_root (Q K : ParamMatrix d)
+    (hQK : IsPosDefQK Q K) (Z : ℝ → Idx n → EucSpace d)
+    (hZ : RescaledDynamics Q K 1 Z) :
+    ∃ A : ParamMatrix d, IsAttentionRoot Q K A ∧ IdRescaledDynamics A Z := by
+  obtain ⟨A, hA⟩ := hQK.exists_attentionRoot
+  exact ⟨A, hA, (rescaledDynamics_one_iff hA Z).mp hZ⟩
 
-Source: arXiv:2305.05465v6, `t:Idcase11int`. -/
-theorem idCase_tendsto_zero_or_frontier (Q K : ParamMatrix d) (hQK : IsPosDefQK Q K)
-    (Z : ℝ → Idx n → EucSpace d) (hZ : RescaledDynamics Q K 1 Z) :
-    ∃ S : Finset (EucSpace d), ∀ i : Idx n,
-      Filter.Tendsto (fun t => Z t i) Filter.atTop (nhds 0) ∨
-        ∃ p ∈ frontier (convexHull ℝ (S : Set (EucSpace d))),
-          Filter.Tendsto (fun t => Z t i) Filter.atTop (nhds p) := by
-  sorry
-
-/-- The hypotheses of `idCase_tendsto_zero_or_frontier` are satisfiable:
-`Q = K = I_d` is positive definite, and the configuration in which all `n`
-tokens sit at one point solves `e:Rres` at `V = I_d`. -/
+/-- The complete positivity and ODE inputs hold simultaneously for identity
+query and key maps and stationary tokens; arXiv:2305.05465v6, §3, `e:Rres`. -/
 example (z : EucSpace d) :
     IsPosDefQK (d := d) (ContinuousLinearMap.id ℝ (EucSpace d))
         (ContinuousLinearMap.id ℝ (EucSpace d)) ∧
       RescaledDynamics (n := n) (ContinuousLinearMap.id ℝ (EucSpace d))
         (ContinuousLinearMap.id ℝ (EucSpace d)) 1 (fun _ _ => z) :=
   ⟨isPosDefQK_of_isAttentionRoot (isAttentionRoot_id d), rescaledDynamics_one_const _ _ z⟩
+
+/-- Any token path in the rescaled dynamics is continuous, by its
+specified derivative. Source: arXiv:2305.05465v6, §3, `e:Rres`.
+This does not require positive definiteness or identity value maps. -/
+theorem RescaledDynamics.continuous_token (Q K V : ParamMatrix d)
+    (Z : ℝ → Idx n → EucSpace d) (hZ : RescaledDynamics Q K V Z) (i : Idx n) :
+    Continuous (fun t => Z t i) :=
+  continuous_iff_continuousAt.mpr fun t => (hZ t i).continuousAt
+
+/-- An actual stationary solution satisfies the entire ODE input.
+Source: arXiv:2305.05465v6, §3, `e:Rres`. -/
+example (z : EucSpace 1) : RescaledDynamics (1 : ParamMatrix 1) 1 1
+    (fun _ (_ : Idx 2) => z) := rescaledDynamics_one_const 1 1 z
+
+/-- The complete rescaled token tuple is continuous.
+Source: arXiv:2305.05465v6, §3, `e:Rres`; finite products preserve continuity. -/
+theorem RescaledDynamics.continuous_tuple (Q K V : ParamMatrix d)
+    (Z : ℝ → Idx n → EucSpace d) (hZ : RescaledDynamics Q K V Z) : Continuous Z :=
+  continuous_pi fun i => hZ.continuous_token Q K V Z i
+
+/-- Tuple continuity is based on an actual solution, here two stationary
+unit tokens. Source: arXiv:2305.05465v6, §3, `e:Rres`. -/
+example : RescaledDynamics (1 : ParamMatrix 1) 1 1
+    (fun _ (_ : Idx 2) => (basePoint 0 : EucSpace 1)) := rescaledDynamics_one_const 1 1 _
 
 end Clusters
 end Transformer
