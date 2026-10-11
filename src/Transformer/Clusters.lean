@@ -87,6 +87,7 @@ import Transformer.Clusters.Section10_CorrectedEnergy
 import Transformer.Clusters.Section10_ProjectedGain
 import Transformer.Clusters.Section10_ProjectedClusterLimits
 import Transformer.Clusters.Section10_RelativeCandidates
+import Transformer.Clusters.Section10_Multiplicity
 import Transformer.Clusters.Section10_Remainder
 import Transformer.Clusters.Section10_RemainderFalse
 import Transformer.Clusters.Section10_Step2
