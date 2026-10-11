@@ -56,6 +56,7 @@ import Transformer.Clusters.Section9_Limits
 import Transformer.Clusters.Section9_Growth
 import Transformer.Clusters.Section9_Hyperplanes
 import Transformer.Clusters.Section8_Polytope
+import Transformer.Clusters.Section8_HullContinuity
 import Transformer.Clusters.Section8_Origin
 import Transformer.Clusters.Section8_Bounded
 import Transformer.Clusters.Section8_Energy
