@@ -76,6 +76,7 @@ import Transformer.Clusters.Section8_Convergence
 import Transformer.Clusters.Section10_ProjHull
 import Transformer.Clusters.Section10_ProjectedDynamics
 import Transformer.Clusters.Section10_ProjectedHullLimit
+import Transformer.Clusters.Section10_PowerMetric
 import Transformer.Clusters.Section10_Remainder
 import Transformer.Clusters.Section10_RemainderFalse
 import Transformer.Clusters.Section10_Step2
