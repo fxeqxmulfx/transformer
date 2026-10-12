@@ -89,6 +89,7 @@ import Transformer.Perceptron.Section6_BranchIdentity
 import Transformer.Perceptron.Section6_SignedQuadratic
 import Transformer.Perceptron.Section6_NormalizedForce
 import Transformer.Perceptron.Section6_NormalizedCircleAtomicity
+import Transformer.Perceptron.Section6_GreatCircleWeight
 import Transformer.Perceptron.NormalizedMap
 import Transformer.Perceptron.SignedGram
 import Transformer.Perceptron.NormalizedAtomicity
