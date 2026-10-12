@@ -25,6 +25,14 @@ import Transformer.Perceptron.KernelAsymp
 import Transformer.Perceptron.KernelHess
 import Transformer.Perceptron.KernelSup
 import Transformer.Perceptron.CircleDeriv
+import Transformer.Perceptron.Section5_CircleGeometry
+import Transformer.Perceptron.Section5_InteractionCurvature
+import Transformer.Perceptron.Section5_InteractionIntegral
+import Transformer.Perceptron.Section5_AngularFirstVariation
+import Transformer.Perceptron.Section5_CriticalSupport
+import Transformer.Perceptron.Section5_AngularSupport
+import Transformer.Perceptron.Section5_StrictCurvatureWitness
+import Transformer.Perceptron.Section5_FirstVariationCurvature
 import Transformer.Perceptron.StrictSOPD
 import Transformer.Perceptron.Transform
 import Transformer.Perceptron.TransformPoly
