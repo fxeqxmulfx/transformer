@@ -40,6 +40,7 @@ import Transformer.Perceptron.Section5_FiniteVariation
 import Transformer.Perceptron.Section5_StrictHessian
 import Transformer.Perceptron.Section5_KernelClusterBounds
 import Transformer.Perceptron.Section5_PotentialForce
+import Transformer.Perceptron.Section5_ClusterLifts
 import Transformer.Perceptron.StrictSOPD
 import Transformer.Perceptron.Transform
 import Transformer.Perceptron.TransformPoly
