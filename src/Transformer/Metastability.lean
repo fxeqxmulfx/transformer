@@ -45,6 +45,11 @@ import Transformer.Metastability.Section3_ForceCoercivity
 import Transformer.Metastability.Section3_SlowManifold
 import Transformer.Metastability.Section3_ClusterSpread
 import Transformer.Metastability.Section3_PL
+import Transformer.Metastability.Section3_SharpTaylor
+import Transformer.Metastability.Section3_SharpEnergy
+import Transformer.Metastability.Section3_SlowGradient
+import Transformer.Metastability.Section3_SlowProjection
+import Transformer.Metastability.Section3_SlowFlatnessCounterexample
 import Transformer.Metastability.OttoCorollary
 import Transformer.Metastability.OttoReznikoff
 import Transformer.Metastability.ReversePL
