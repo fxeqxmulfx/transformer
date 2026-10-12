@@ -71,6 +71,7 @@ import Transformer.Perceptron.Hyperplane
 import Transformer.Perceptron.Bias
 import Transformer.Perceptron.BiasedAtomicity
 import Transformer.Perceptron.GeneralAttention
+import Transformer.Perceptron.Section5_MapKernel
 import Transformer.Perceptron.GeneralAtomicity
 import Transformer.Perceptron.Piecewise
 import Transformer.Perceptron.Normalized
