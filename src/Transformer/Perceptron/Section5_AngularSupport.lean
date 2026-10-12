@@ -8,9 +8,9 @@ of that finite set covers the entire topological support of the
 actual measure on `𝕊¹`, because the angular chart is surjective.
 
 A measure with finite topological support is then represented by
-its actual singleton masses and Dirac measures. The step uses the
-fact that a Borel measure on this second-countable space carries
-its topological support; no atomicity result of the paper is used.
+its actual singleton masses and Dirac measures, using the general
+measure-theory lemmas in `Atomicity.lean`. No atomicity conclusion
+of the paper is assumed by the support reduction.
 
 The angular zero and curvature conditions are explicit inputs.
 The later first-variation calculation must establish them for the
@@ -27,6 +27,45 @@ open scoped Topology
 
 namespace Transformer.Perceptron
 
+/-- An actual angular force that vanishes at support angles and has
+a nonzero derivative there isolates those angles, making support finite.
+Source: arXiv:2601.21366v2, §5.5, the zero-isolation step behind
+`eq:strictSOPD-sufficient`. This calculus step needs neither positivity
+nor continuity of the supplied derivative witnesses. The angular chart
+covers every sphere point on a compact interval of representatives. -/
+theorem finite_support_of_angular_force_nonzero_derivative (μ : Perspective.ProbSphere 2)
+    (g : ℝ → ℝ)
+    (hzero : ∀ θ : ℝ, circlePoint θ ∈ (μ : Measure (SSphere 2)).support → g θ = 0)
+    (hderiv : ∀ θ : ℝ, circlePoint θ ∈ (μ : Measure (SSphere 2)).support →
+      ∃ d : ℝ, HasDerivAt g d θ ∧ d ≠ 0) :
+    (μ : Measure (SSphere 2)).support.Finite := by
+  let S : Set ℝ := Icc (-π) π ∩ circlePoint ⁻¹' (μ : Measure (SSphere 2)).support
+  have hcompact : IsCompact S := isCompact_Icc.inter_right
+    (Measure.isClosed_support.preimage continuous_circlePoint)
+  have hfinite : S.Finite := finite_zero_set_of_nonzero_derivative g S hcompact
+    (fun θ hθ => hzero θ hθ.2) (fun θ hθ => hderiv θ hθ.2)
+  apply (hfinite.image circlePoint).subset
+  intro x hx
+  obtain ⟨θ, hθ, heq⟩ := exists_circlePoint_eq x
+  refine ⟨θ, ⟨hθ, ?_⟩, heq⟩
+  change circlePoint θ ∈ (μ : Measure (SSphere 2)).support
+  rwa [heq]
+
+/-- Nonzero actual second derivatives suffice for the topological
+support reduction. Source: arXiv:2601.21366v2, §5.5, the calculus step
+behind `eq:strictSOPD-sufficient`. This is stronger than its positive
+curvature input, without changing any later strict SOPD criterion. -/
+theorem finite_support_of_nonzero_angular_curvature (μ : Perspective.ProbSphere 2)
+    (f : ℝ → ℝ)
+    (hcrit : ∀ θ : ℝ, circlePoint θ ∈ (μ : Measure (SSphere 2)).support → deriv f θ = 0)
+    (hcurv : ∀ θ : ℝ, circlePoint θ ∈ (μ : Measure (SSphere 2)).support →
+      deriv^[2] f θ ≠ 0) : (μ : Measure (SSphere 2)).support.Finite := by
+  apply finite_support_of_angular_force_nonzero_derivative μ (deriv f) hcrit
+  intro θ hθ
+  have hn := hcurv θ hθ
+  change deriv (deriv f) θ ≠ 0 at hn
+  exact ⟨deriv (deriv f) θ, (differentiableAt_of_deriv_ne_zero hn).hasDerivAt, hn⟩
+
 /-- **Positive angular curvature at critical support points forces
 the topological support to be finite.** Source: arXiv:2601.21366v2,
 §5.5, the angular stationarity equation and `eq:strictSOPD-sufficient`.
@@ -38,70 +77,31 @@ theorem finite_support_of_positive_angular_curvature (μ : Perspective.ProbSpher
     (hcurv : ∀ θ : ℝ, circlePoint θ ∈ (μ : Measure (SSphere 2)).support →
       0 < deriv^[2] f θ) :
     (μ : Measure (SSphere 2)).support.Finite := by
-  let S : Set ℝ := Icc (-π) π ∩ circlePoint ⁻¹' (μ : Measure (SSphere 2)).support
-  have hcompact : IsCompact S := isCompact_Icc.inter_right
-    (Measure.isClosed_support.preimage continuous_circlePoint)
-  have hfinite : S.Finite := finite_critical_set_of_positive_second_derivative f S hcompact
-    (fun θ hθ => hcrit θ hθ.2) (fun θ hθ => hcurv θ hθ.2)
-  apply (hfinite.image circlePoint).subset
-  intro x hx
-  obtain ⟨θ, hθ, heq⟩ := exists_circlePoint_eq x
-  refine ⟨θ, ⟨hθ, ?_⟩, heq⟩
-  change circlePoint θ ∈ (μ : Measure (SSphere 2)).support
-  rwa [heq]
+  exact finite_support_of_nonzero_angular_curvature μ f hcrit (fun θ hθ => (hcurv θ hθ).ne')
 
-/-- **A probability measure with finite topological support is a finite
-combination of Dirac masses, with its actual singleton masses.**
-Source: arXiv:2601.21366v2, §3.1, the meaning of finite atomicity
-in `thm: circle` and `thm: circle.gelu`.
-The ambient dimension is arbitrary; the sphere has a Borel measure
-space with measurable singletons and second-countable topology. -/
-theorem isFinitelyAtomic_of_finite_topological_support {d : ℕ}
-    (μ : Perspective.ProbSphere d) (hfinite : (μ : Measure (SSphere d)).support.Finite) :
-    IsFinitelyAtomic μ := by
-  classical
-  have hcarry : ∀ᵐ x ∂(μ : Measure (SSphere d)), x ∈ hfinite.toFinset := by
-    filter_upwards [Measure.support_mem_ae (μ := (μ : Measure (SSphere d)))] with x hx
-    exact hfinite.mem_toFinset.mpr hx
-  exact ⟨hfinite.toFinset, fun x => (μ : Measure (SSphere d)) {x},
-    Measure.ae_mem_finset_iff.mp hcarry⟩
+/-- The isolated-force condition gives the source's finite Dirac
+presentation of the actual measure. Source: arXiv:2601.21366v2,
+§5.5, the support reduction in `rem:strictSOPD-perceptron`.
+Only the actual force zero and derivative hypotheses are supplied. -/
+theorem isFinitelyAtomic_of_angular_force_nonzero_derivative (μ : Perspective.ProbSphere 2)
+    (g : ℝ → ℝ)
+    (hzero : ∀ θ : ℝ, circlePoint θ ∈ (μ : Measure (SSphere 2)).support → g θ = 0)
+    (hderiv : ∀ θ : ℝ, circlePoint θ ∈ (μ : Measure (SSphere 2)).support →
+      ∃ d : ℝ, HasDerivAt g d θ ∧ d ≠ 0) : IsFinitelyAtomic μ :=
+  isFinitelyAtomic_of_finite_topological_support μ
+    (finite_support_of_angular_force_nonzero_derivative μ g hzero hderiv)
 
-/-- The finite-support input is realized on the actual nonempty
-one-dimensional sphere by its Dirac probability measure. -/
-example : (Perspective.diracProb 1 (basePoint 0) : Measure (SSphere 1)).support.Finite := by
-  apply (finite_singleton (basePoint 0)).subset
-  intro x hx
-  exact mem_singleton_iff.mpr (Interpolation.eq_of_mem_support_dirac hx)
-
-/-- **A finite Dirac presentation has finite topological support.**
-Source: arXiv:2601.21366v2, §3.1, the meaning of finite atomicity
-in `thm: circle` and `thm: circle.gelu`. Together with the converse
-above this verifies that the calculus step yields the source's
-actual measure-theoretic conclusion. Zero-mass atoms are permitted. -/
-theorem finite_support_of_finitely_atomic {d : ℕ} (μ : Perspective.ProbSphere d)
-    (hμ : IsFinitelyAtomic μ) : (μ : Measure (SSphere d)).support.Finite := by
-  classical
-  obtain ⟨F, m, heq⟩ := hμ
-  have hsub (G : Finset (SSphere d)) :
-      (∑ z ∈ G, m z • Measure.dirac z).support ⊆ (G : Set (SSphere d)) := by
-    induction G using Finset.induction_on with
-    | empty => simp
-    | @insert z G hz ih =>
-      rw [Finset.sum_insert hz, Measure.support_add]
-      intro x hx
-      rcases hx with hx | hx
-      · have hxz : x = z := Interpolation.eq_of_mem_support_dirac
-          (Measure.smul_absolutelyContinuous.support_mono hx)
-        subst x
-        exact Finset.mem_insert_self z G
-      · exact Finset.mem_insert_of_mem (ih hx)
-  rw [heq]
-  exact F.finite_toSet.subset (hsub F)
-
-/-- The finite-presentation input is satisfied by an actual Dirac
-probability measure on a nonempty sphere. -/
-example : IsFinitelyAtomic (Perspective.diracProb 1 (basePoint 0)) :=
-  isFinitelyAtomic_diracProb (basePoint 0)
+/-- Nonzero actual angular curvature at critical support angles gives
+the same finite Dirac conclusion. Source: arXiv:2601.21366v2, §5.5,
+the zero-isolation step behind `eq:strictSOPD-sufficient`.
+No finite-support or global smoothness input is assumed. -/
+theorem isFinitelyAtomic_of_nonzero_angular_curvature (μ : Perspective.ProbSphere 2)
+    (f : ℝ → ℝ)
+    (hcrit : ∀ θ : ℝ, circlePoint θ ∈ (μ : Measure (SSphere 2)).support → deriv f θ = 0)
+    (hcurv : ∀ θ : ℝ, circlePoint θ ∈ (μ : Measure (SSphere 2)).support →
+      deriv^[2] f θ ≠ 0) : IsFinitelyAtomic μ :=
+  isFinitelyAtomic_of_finite_topological_support μ
+    (finite_support_of_nonzero_angular_curvature μ f hcrit hcurv)
 
 /-- **The angular curvature condition gives actual finite atomicity.**
 Source: arXiv:2601.21366v2, §5.5, the support reduction behind
@@ -124,7 +124,12 @@ example : let μ := Perspective.diracProb 2 (basePoint 1)
     (∀ θ : ℝ, circlePoint θ ∈ (μ : Measure (SSphere 2)).support →
       deriv (fun s : ℝ => -Real.cos s) θ = 0) ∧
     (∀ θ : ℝ, circlePoint θ ∈ (μ : Measure (SSphere 2)).support →
-      0 < deriv^[2] (fun s : ℝ => -Real.cos s) θ) := by
+      0 < deriv^[2] (fun s : ℝ => -Real.cos s) θ) ∧
+    (∀ θ : ℝ, circlePoint θ ∈ (μ : Measure (SSphere 2)).support →
+      deriv^[2] (fun s : ℝ => -Real.cos s) θ ≠ 0) ∧
+    (∀ θ : ℝ, circlePoint θ ∈ (μ : Measure (SSphere 2)).support → Real.sin θ = 0) ∧
+    (∀ θ : ℝ, circlePoint θ ∈ (μ : Measure (SSphere 2)).support →
+      ∃ d : ℝ, HasDerivAt Real.sin d θ ∧ d ≠ 0) := by
   intro μ
   have hfirst : deriv (fun s : ℝ => -Real.cos s) = Real.sin := by
     funext θ
@@ -143,11 +148,18 @@ example : let μ := Perspective.diracProb 2 (basePoint 1)
       simpa [basePoint] using hc
     · rw [circlePoint_coord_one] at hs
       simpa [basePoint] using hs
-  constructor
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · intro θ hθ
     rw [hfirst, (hcoords θ hθ).2]
   · intro θ hθ
     rw [hsecond, (hcoords θ hθ).1]
     exact zero_lt_one
+  · intro θ hθ
+    rw [hsecond, (hcoords θ hθ).1]
+    exact one_ne_zero
+  · intro θ hθ
+    exact (hcoords θ hθ).2
+  · intro θ hθ
+    exact ⟨Real.cos θ, Real.hasDerivAt_sin θ, by rw [(hcoords θ hθ).1]; exact one_ne_zero⟩
 
 end Transformer.Perceptron

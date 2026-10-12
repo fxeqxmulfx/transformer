@@ -49,6 +49,8 @@ import Transformer.Perceptron.Section5_GradientFields
 import Transformer.Perceptron.Section5_LocalGradients
 import Transformer.Perceptron.Section5_ZeroMeanDirections
 import Transformer.Perceptron.Section5_LocalHessianBound
+import Transformer.Perceptron.Section5_Accumulation
+import Transformer.Perceptron.Section3_StrictAtomicity
 import Transformer.Perceptron.Section5_WeightedVariance
 import Transformer.Perceptron.Section5_FiniteVariation
 import Transformer.Perceptron.Section5_StrictHessian
