@@ -41,6 +41,10 @@ import Transformer.Perceptron.Section5_StrictHessian
 import Transformer.Perceptron.Section5_KernelClusterBounds
 import Transformer.Perceptron.Section5_PotentialForce
 import Transformer.Perceptron.Section5_ClusterLifts
+import Transformer.Perceptron.Section5_AtomicForce
+import Transformer.Perceptron.Section5_SymmetricForce
+import Transformer.Perceptron.Section5_QuadraticClusterWitness
+import Transformer.Perceptron.Section5_StationaryCluster
 import Transformer.Perceptron.StrictSOPD
 import Transformer.Perceptron.Transform
 import Transformer.Perceptron.TransformPoly

@@ -2,8 +2,8 @@
 # Counting heavy atoms from the cluster-mass estimate
 
 The conditional counting step of arXiv:2601.21366v2, §3.2, `cor: bound`.
-The estimate of `thm: bound` is still open and is passed explicitly in full
-for every cluster of the actual atomic configuration. The conclusion keeps
+The estimate of `thm: bound` is passed explicitly in full for every
+cluster of the actual atomic configuration; `bound_cluster_mass` now proves it. The conclusion keeps
 the source's factor `M (1 + 2 L sqrt β) (0.5742 + C exp(-β)) / ε`.
 
 The statement is pointwise in `β` and the constant `C`: when the uniform
