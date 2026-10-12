@@ -45,6 +45,8 @@ import Transformer.Perceptron.Section5_PotentialVariation
 import Transformer.Perceptron.Section5_GeneralHessian
 import Transformer.Perceptron.Section5_ContinuousCurvature
 import Transformer.Perceptron.Section5_ExpandedHessian
+import Transformer.Perceptron.Section5_GradientFields
+import Transformer.Perceptron.Section5_LocalGradients
 import Transformer.Perceptron.Section5_WeightedVariance
 import Transformer.Perceptron.Section5_FiniteVariation
 import Transformer.Perceptron.Section5_StrictHessian
