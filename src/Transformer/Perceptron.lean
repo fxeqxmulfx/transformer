@@ -40,6 +40,9 @@ import Transformer.Perceptron.Section5_CircleRotation
 import Transformer.Perceptron.Section5_RotatedKernel
 import Transformer.Perceptron.Section5_DominatedVariation
 import Transformer.Perceptron.Section5_InteractionVariation
+import Transformer.Perceptron.Section5_CirclePotential
+import Transformer.Perceptron.Section5_PotentialVariation
+import Transformer.Perceptron.Section5_GeneralHessian
 import Transformer.Perceptron.Section5_WeightedVariance
 import Transformer.Perceptron.Section5_FiniteVariation
 import Transformer.Perceptron.Section5_StrictHessian
