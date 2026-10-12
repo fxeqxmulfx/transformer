@@ -37,6 +37,9 @@ import Transformer.Perceptron.Section5_FirstVariationCurvature
 import Transformer.Perceptron.Section5_AtomicIntegrals
 import Transformer.Perceptron.Section5_CircleGeodesics
 import Transformer.Perceptron.Section5_CircleRotation
+import Transformer.Perceptron.Section5_RotatedKernel
+import Transformer.Perceptron.Section5_DominatedVariation
+import Transformer.Perceptron.Section5_InteractionVariation
 import Transformer.Perceptron.Section5_WeightedVariance
 import Transformer.Perceptron.Section5_FiniteVariation
 import Transformer.Perceptron.Section5_StrictHessian

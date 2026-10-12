@@ -94,6 +94,13 @@ noncomputable def circleRotation (s : SSphere 2 → ℝ) (t : ℝ) (x : SSphere 
     Real.sin (t * s x) • circleTangent (x : EucSpace 2),
     mem_sphere_zero_iff_norm.mpr (norm_circle_rotation x (t * s x))⟩
 
+/-- Transport starts at the actual point. Source: arXiv:2601.21366v2,
+§2.2, the geodesic issued from the original measure. -/
+@[simp] theorem circleRotation_zero (s : SSphere 2 → ℝ) (x : SSphere 2) :
+    circleRotation s 0 x = x := by
+  apply Subtype.ext
+  simp [circleRotation]
+
 /-- The rotation is the exact angular shift in every representative.
 Source: arXiv:2601.21366v2, §5.2, `eq:Hess-bilinear.std`. -/
 theorem circleRotation_circlePoint (s : SSphere 2 → ℝ) (t θ : ℝ) :
