@@ -87,6 +87,7 @@ import Transformer.Perceptron.Section6_ActivationPatterns
 import Transformer.Perceptron.Section6_BranchCalculus
 import Transformer.Perceptron.Section6_BranchIdentity
 import Transformer.Perceptron.Section6_SignedQuadratic
+import Transformer.Perceptron.Section6_NormalizedForce
 import Transformer.Perceptron.NormalizedMap
 import Transformer.Perceptron.SignedGram
 import Transformer.Perceptron.NormalizedAtomicity
