@@ -49,9 +49,10 @@ when the weights are small. That universal claim is false:
   claims no bound in `d ≥ 3`, so there is nothing to put on the books; the
   dimension hypothesis of both theorems above is the record of it.
 
-The conditional atom-count corollary is proved in `Section3_AtomCount`.
-Its cluster-mass estimate is an explicit input, and every input is witnessed
-there by the actual antipodal SOPD measure.
+The full atom-count corollary is proved in `Section3_StationaryAtomCount`,
+using the same constants and periodic arc covers. `Section3_AtomCount`
+contains the generic counting step from a cluster-mass estimate, with
+every input witnessed there by the actual antipodal SOPD measure.
 
 The mass-bound inputs have a complete joint witness at the actual threshold
 `β=4`: the quadratic symmetric pair at angles `1/8,2π-1/8`, with equal
