@@ -16,8 +16,8 @@ Equations and statements covered, here and in the modules named:
   `Transformer.Metastability.OttoAttention`,
 * `eq: tau.small`, `eq: cond.sine`, `eq: Ht.first.lb`, `eq: Ht.second.lb`,
 * `eq: Ht.third.lb`, `Claim claim: 1` — in
-  `Transformer.Metastability.OttoClaimOne`, stated for one ordered cluster off
-  the slow manifold, as the source uses it,
+  `Transformer.Metastability.OttoClaimOne`, proved by the stronger endpoint
+  comparison for an ordered separated small cap,
 * `Lemma lem: quantitative inequality` — in
   `Transformer.Metastability.QuantitativeInequality`, which proves it with the
   sign and the constant its argument supports,

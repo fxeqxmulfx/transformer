@@ -33,6 +33,9 @@ import Transformer.Metastability.CapVariance
 import Transformer.Metastability.BakryEmery
 import Transformer.Metastability.OttoAttention
 import Transformer.Metastability.OttoClaimOne
+import Transformer.Metastability.Section3_CapTemperature
+import Transformer.Metastability.Section3_ForceMonotonicity
+import Transformer.Metastability.Section3_GradientComparison
 import Transformer.Metastability.OttoCorollary
 import Transformer.Metastability.OttoReznikoff
 import Transformer.Metastability.ReversePL
