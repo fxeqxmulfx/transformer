@@ -84,6 +84,7 @@ import Transformer.Perceptron.Normalized
 import Transformer.Perceptron.Section6_AnalyticIntegral
 import Transformer.Perceptron.Section6_AnalyticWeight
 import Transformer.Perceptron.Section6_ActivationPatterns
+import Transformer.Perceptron.Section6_BranchCalculus
 import Transformer.Perceptron.NormalizedMap
 import Transformer.Perceptron.SignedGram
 import Transformer.Perceptron.NormalizedAtomicity
