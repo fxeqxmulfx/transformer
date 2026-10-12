@@ -21,6 +21,7 @@ statements are written in, not statements themselves.
 -/
 
 import Transformer.Metastability.Section4_EnergyWindow
+import Transformer.Metastability.Section6_UniformPlateaux
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 
 open scoped BigOperators
