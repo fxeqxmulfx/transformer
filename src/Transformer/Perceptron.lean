@@ -38,6 +38,7 @@ import Transformer.Perceptron.Section5_CircleGeodesics
 import Transformer.Perceptron.Section5_WeightedVariance
 import Transformer.Perceptron.Section5_FiniteVariation
 import Transformer.Perceptron.Section5_StrictHessian
+import Transformer.Perceptron.Section5_KernelClusterBounds
 import Transformer.Perceptron.StrictSOPD
 import Transformer.Perceptron.Transform
 import Transformer.Perceptron.TransformPoly

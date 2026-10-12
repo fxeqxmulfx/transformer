@@ -98,16 +98,14 @@ theorem kernelK2_le_of_abs_le_lambda_thetaC (lam : ℝ) (hlam : lam ∈ Set.Ioo 
 `λ = 1/2`. -/
 example : (1 : ℝ) / 2 ∈ Set.Ioo (0 : ℝ) 1 := ⟨by norm_num, by norm_num⟩
 
-/-- **`eq:kernel-hess-bound-max`.**  There is `β₁` with
-`K_β''(θ) ≤ 2β e^{β - 3/2}` for every `β ≥ β₁` and every `θ ∈ [θ_c(β), π]`.
-Here `β₁ = 4`, and the bound holds at every `θ`: inside the window
-`K_β'' < 0` anyway (`kernelK2_neg`).
-
-Source: arXiv:2601.21366v2, `eq:kernel-hess-bound-max`. -/
-theorem kernelK2_le_of_thetaC_le :
-    ∃ β₁ : ℝ, 0 < β₁ ∧ ∀ β : ℝ, β₁ ≤ β → ∀ θ ∈ Set.Icc (thetaC β) π,
-      kernelK2 β θ ≤ 2 * β * Real.exp (β - 3 / 2) := by
-  refine ⟨4, by norm_num, fun β hβ θ _ => ?_⟩
+/-- **The global form of `eq:kernel-hess-bound-max`.**
+Source: arXiv:2601.21366v2, §5.1, `eq:kernel-hess-bound-max`,
+and §5.4, `eq:T-out-bound`.
+The existing exponential argument proves the source's upper bound
+at every real angle once `β ≥ 4`; restricting to `[θ_c,π]` is
+unnecessary. The original restricted statement is retained below. -/
+theorem kernelK2_le_of_four_le (β : ℝ) (hβ : 4 ≤ β) (θ : ℝ) :
+    kernelK2 β θ ≤ 2 * β * Real.exp (β - 3 / 2) := by
   set x := β * (1 - Real.cos θ) with hxdef
   have hx0 : 0 ≤ x := mul_nonneg (by linarith) (by linarith [Real.cos_le_one θ])
   have hc : β * Real.cos θ = β - x := by rw [hxdef]; ring
@@ -138,6 +136,20 @@ theorem kernelK2_le_of_thetaC_le :
     nlinarith [mul_le_mul_of_nonneg_left this hy.le]
   nlinarith [mul_le_mul_of_nonneg_left hx1 (by linarith : (0 : ℝ) ≤ β),
     mul_le_mul_of_nonneg_left hh1.le hy.le, mul_nonneg (by linarith : (0 : ℝ) ≤ β - 4) hy.le]
+
+/-- The fixed-threshold hypothesis of the global kernel bound is
+realized by `β=4`; every real angle is allowed. -/
+example : (4 : ℝ) ≤ 4 := le_rfl
+
+/-- **`eq:kernel-hess-bound-max`.** There is `β₁` with
+`K_β''(θ) ≤ 2β e^{β-3/2}` for `β ≥ β₁` and `θ ∈ [θ_c(β),π]`.
+Here `β₁=4`; the global estimate above implies the source's
+restricted statement with precisely the same constant.
+Source: arXiv:2601.21366v2, §5.1, `eq:kernel-hess-bound-max`. -/
+theorem kernelK2_le_of_thetaC_le :
+    ∃ β₁ : ℝ, 0 < β₁ ∧ ∀ β : ℝ, β₁ ≤ β → ∀ θ ∈ Set.Icc (thetaC β) π,
+      kernelK2 β θ ≤ 2 * β * Real.exp (β - 3 / 2) := by
+  exact ⟨4, by norm_num, fun β hβ θ _ => kernelK2_le_of_four_le β hβ θ⟩
 
 end Perceptron
 end Transformer
