@@ -43,6 +43,7 @@ import Transformer.Perceptron.KernelSup
 import Transformer.Perceptron.CircleDeriv
 import Transformer.Perceptron.Geodesic
 import Transformer.Perceptron.MinStationary
+import Transformer.Perceptron.Section5_StrictHessian
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -106,9 +107,12 @@ is at least `2‖K_β''‖_∞/β + 2κ = 2e^β + 2κ` at every angle of `supp �
 The constant is `2e^β` because `‖K_β''‖_∞ = β e^β`, which is
 `isGreatest_abs_kernelK2`.
 
-Not proved here.
+Stationarity and strict angular curvature first force finite support.
+The actual energy along each Monge geodesic then has the source's
+finite Hessian formula; the exact weighted velocity-difference identity
+and sharp kernel bound give the coefficient `κ`.
 
-Source: arXiv:2601.21366v2, `eq:strictSOPD-sufficient`. -/
+Source: arXiv:2601.21366v2, §5.5, `eq:strictSOPD-sufficient`. -/
 theorem isStrictSOPD_of_secondDeriv_ge (β : ℝ) (hβ : 0 < β) (φ σ σ' : ℝ → ℝ)
     (hφ : ∀ s : ℝ, HasDerivAt φ (2 * σ s) s) (hσ : ∀ s : ℝ, HasDerivAt σ (σ' s) s)
     (ω : Idx 2 → ℝ) (a : Idx 2 → EucSpace 2) (μ : Perspective.ProbSphere 2)
@@ -117,7 +121,11 @@ theorem isStrictSOPD_of_secondDeriv_ge (β : ℝ) (hβ : 0 < β) (φ σ σ' : �
       2 * Real.exp β + 2 * κ ≤
         deriv^[2] (fun s : ℝ => potential φ ω a (circlePoint s : EucSpace 2)) θ) :
     IsStrictSOPD β φ σ ω a μ := by
-  sorry
+  have hfinite := finite_support_of_finitely_atomic μ
+    (isFinitelyAtomic_of_strict_angular_curvature β hβ φ σ σ' hφ hσ ω a μ hμ κ hκ hge)
+  refine ⟨hμ, κ, hκ, fun ξ hξ ν hν H hH => ?_⟩
+  exact geodesic_hessian_ge_of_finite_support β hβ φ σ σ' hφ hσ ω a μ hfinite
+    κ hge ξ (fun z => inner_isGradientField hξ z) ν hν H hH
 
 /-- The hypotheses of `isStrictSOPD_of_secondDeriv_ge` are satisfiable: `β = 1`,
 the quadratic primitive `φ(s) = s²` of `2σ` for the linear `σ(s) = s`, whose
@@ -138,45 +146,7 @@ example :
         2 * Real.exp 1 + 2 * 1 ≤
           deriv^[2] (fun s : ℝ => potential (fun t : ℝ => t ^ 2) (Pi.single 0 (-4 : ℝ))
             (Pi.single 0 (-((basePoint 1 : SSphere 2) : EucSpace 2)))
-            (circlePoint s : EucSpace 2)) θ := by
-  have hφ : ∀ s : ℝ, HasDerivAt (fun t : ℝ => t ^ 2) (2 * (fun s : ℝ => s) s) s :=
-    fun s => by simpa using hasDerivAt_pow 2 s
-  have hσ : ∀ s : ℝ, HasDerivAt (fun t : ℝ => t) ((fun _ : ℝ => (1 : ℝ)) s) s :=
-    fun s => hasDerivAt_id' (𝕜 := ℝ) (x := s)
-  have hu : inner (𝕜 := ℝ) ((basePoint 1 : SSphere 2) : EucSpace 2)
-      ((basePoint 1 : SSphere 2) : EucSpace 2) = (1 : ℝ) := by
-    rw [real_inner_self_eq_norm_sq, norm_basePoint_one]; norm_num
-  have hw : inner (𝕜 := ℝ) secondAxis secondAxis = (1 : ℝ) := by
-    rw [real_inner_self_eq_norm_sq, norm_secondAxis]; norm_num
-  refine ⟨one_pos, hφ, hσ, ?_, one_pos, ?_⟩
-  · refine isStationary_diracProb_of_radial 1 _ _ _ (basePoint 1) (-4) ?_
-    rw [Fin.sum_univ_two]
-    simp [inner_neg_left, ← neg_smul]
-  · intro θ hθ
-    have hx : circlePoint θ = basePoint 1 := Interpolation.eq_of_mem_support_dirac hθ
-    have hcos : Real.cos θ = 1 := by
-      have := inner_circlePoint ((basePoint 1 : SSphere 2) : EucSpace 2) θ
-      rw [hx, hu, inner_basePoint_secondAxis] at this
-      linarith
-    have hwu : inner (𝕜 := ℝ) secondAxis ((basePoint 1 : SSphere 2) : EucSpace 2) = 0 := by
-      rw [real_inner_comm]; exact inner_basePoint_secondAxis
-    have hsin : Real.sin θ = 0 := by
-      have := inner_circlePoint secondAxis θ
-      rw [hx, hw, hwu] at this
-      linarith
-    have hvel : circleVel θ = secondAxis := by
-      rw [circleVel, hsin, hcos, neg_zero, zero_smul, one_smul, zero_add]
-    rw [secondDeriv_potential_circlePoint (fun t : ℝ => t ^ 2) (fun s : ℝ => s)
-      (fun _ : ℝ => (1 : ℝ)) hφ hσ _ _ θ, hx, hvel, Fin.sum_univ_two]
-    have h0 : inner (𝕜 := ℝ) (-((basePoint 1 : SSphere 2) : EucSpace 2)) secondAxis = 0 := by
-      rw [inner_neg_left, inner_basePoint_secondAxis, neg_zero]
-    have h1 : inner (𝕜 := ℝ) (-((basePoint 1 : SSphere 2) : EucSpace 2))
-        ((basePoint 1 : SSphere 2) : EucSpace 2) = -1 := by
-      rw [inner_neg_left, hu]
-    simp only [Pi.single_eq_same, Pi.single_eq_of_ne (show (1 : Idx 2) ≠ 0 by decide),
-      inner_zero_left, h0, h1]
-    norm_num
-    linarith [Real.exp_one_lt_three]
+            (circlePoint s : EucSpace 2)) θ := strict_curvature_quadratic_dirac_witness
 
 /-- The sufficient condition read in the source's own display: by
 `secondDeriv_potential_circlePoint`, `eq:strictSOPD-sufficient` at an angle is
