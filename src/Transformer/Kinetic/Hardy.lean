@@ -133,6 +133,12 @@ The supremum of `eq:affine-smallness` is written pointwise, as `t a_n ≤ …` f
 every `n ≥ 1`.  For `t ≥ 0` that is equivalent to `t sup_{n≥1} a_n ≤ …`, and it
 does not lean on the family being bounded, which `aCoeff_tendsto_zero` proves.
 
+The recency slope `𝒮'_t(1⁻)` is the left limit of the derivative on `(0,1)`.
+The source's proof uses the continuous series extension `ψ_c(0)=c`.
+The literal `hardyProfile` formula instead vanishes on the diagonal, outside
+the stated domain `σ₀<σ` of `prop:Bessel`; a positive left derivative at
+that totalized value is impossible (`not_positive_endpoint_derivative`).
+
 Not proved here.
 
 Source: arXiv:2605.09213v1, `thm:U-shape`, `eq:affine-smallness`. -/
@@ -143,7 +149,8 @@ theorem u_shape (β lam M t : ℝ) (hβ : 0 < β) (hlam : 0 < lam) (hM : 0 < M)
     Filter.Tendsto (fun σ₀ => softCorrection β lam M t σ₀)
         (nhdsWithin 0 (Set.Ioi 0)) Filter.atTop ∧
       (∃ D : ℝ, 0 < D ∧
-        HasDerivWithinAt (fun σ₀ => softCorrection β lam M t σ₀) D (Set.Iic 1) 1) ∧
+        Filter.Tendsto (deriv (fun σ₀ => softCorrection β lam M t σ₀))
+          (nhdsWithin 1 (Set.Iio 1)) (nhds D)) ∧
       (∃! s : ℝ, s ∈ Set.Ioo (0 : ℝ) 1 ∧
         ∀ σ₀ ∈ Set.Ioo (0 : ℝ) 1, softCorrection β lam M t s ≤ softCorrection β lam M t σ₀) := by
   sorry
