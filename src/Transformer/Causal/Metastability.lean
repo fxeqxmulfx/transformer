@@ -14,6 +14,7 @@ Equations and statements covered:
 import Transformer.Basic
 import Transformer.Causal.Basic
 import Transformer.Causal.Packing
+import Transformer.Causal.Section5_StrongGap
 
 open scoped BigOperators
 open Real
@@ -45,18 +46,14 @@ def isStrongRenyiCenters
 
 /-- **Lemma (lemma: meta).**  *Strong R'enyi centers stay nearly fixed.*
 
-For `d = 2`, `Q = K = V = I_2`, suppose the strong R'enyi centers
-`x_{s_1},…,x_{s_m}` satisfy
+At `d=2`, `Q=K=V=I₂`, initial predecessor separation
+`c(1+2ε)β^{-1/2}` above the interaction peak and the time condition
+`T_j s_j h(cβ^{-1/2}) < εcβ^{-1/2}` imply displacement below `εcβ^{-1/2}`.
 
-  `min_{i < s_j} |x_{s_j} - x_i| > c (1 + 2 ε) β^{-1/2}`
-
-with `c > β^{1/2} arccos((-1 + √(4 β² + 1)) / (2 β))`.  For any `T_j` with
-
-  `T_j · s_j · h(c β^{-1/2}) < ε c β^{-1/2}`,
-
-the displacement of each center is bounded:
-
-  `max_{t ∈ [0, T_j]} |x_{s_j}(t) - x_{s_j}(0)| < ε c β^{-1/2}`.
+The paper uses one-based labels and bounds its `s_j-1` interactions by
+`s_j`. Here `s j` is zero-based and is the exact predecessor count; the
+same proof gives this sharper time condition. Chord gaps are treated
+directly, avoiding the source proof's changing closest angular coordinate.
 
 Source: arXiv:2411.04990v2, §5, `lemma: meta`. -/
 theorem lemma_meta
@@ -80,25 +77,61 @@ theorem lemma_meta
       ‖((X t ⟨s j, hs j⟩ : EucSpace 2))
           - ((X 0 ⟨s j, hs j⟩ : EucSpace 2))‖
         < ε * c * β ^ (-(1/2 : ℝ)) := by
-  sorry
-
-/-- A single token on the circle is a stationary solution of `CSA`: its own
-attention average is itself, and `Proj_x x = 0`. -/
-theorem csa_const_one (β : ℝ) (x₀ : SSphere 2) :
-    Causal.CSA 2 1 β (ContinuousLinearMap.id ℝ (EucSpace 2))
-      (ContinuousLinearMap.id ℝ (EucSpace 2))
-      (ContinuousLinearMap.id ℝ (EucSpace 2)) (fun _ => fun _ => x₀) := by
-  intro t k
-  have hx : ‖(x₀ : EucSpace 2)‖ = 1 := by
-    exact mem_sphere_zero_iff_norm.mp x₀.2
-  have hE : (Real.exp (β * inner (𝕜 := ℝ) ((x₀ : EucSpace 2)) ((x₀ : EucSpace 2))))⁻¹
-      • (Real.exp (β * inner (𝕜 := ℝ) ((x₀ : EucSpace 2)) ((x₀ : EucSpace 2)))
-          • (x₀ : EucSpace 2)) = (x₀ : EucSpace 2) := by
-    rw [smul_smul, inv_mul_cancel₀ (Real.exp_ne_zero _), one_smul]
-  have hproj : proj 2 ((x₀ : EucSpace 2)) ((x₀ : EucSpace 2)) = 0 := by
-    rw [proj, real_inner_self_eq_norm_mul_norm, hx, one_mul, one_smul, sub_self]
-  simpa [Subsingleton.elim k (0 : Idx 1), hE, hproj] using
-    (hasDerivAt_const t ((x₀ : EucSpace 2)))
+  let r := c * β ^ (-(1 / 2 : ℝ))
+  have hp : 0 < β ^ (-(1 / 2 : ℝ)) := Real.rpow_pos_of_pos hβ _
+  have hr : 0 < r := mul_pos hc hp
+  have hsqrt : Real.sqrt β * β ^ (-(1 / 2 : ℝ)) = 1 := by
+    rw [Real.sqrt_eq_rpow, Real.rpow_neg hβ.le,
+      mul_inv_cancel₀ (ne_of_gt (Real.rpow_pos_of_pos hβ _))]
+  have hpeak : Real.arccos ((-1 + Real.sqrt (4 * β ^ 2 + 1)) / (2 * β)) ≤ r := by
+    apply le_of_lt
+    calc
+      _ = Real.arccos ((-1 + Real.sqrt (4 * β ^ 2 + 1)) / (2 * β)) *
+          (Real.sqrt β * β ^ (-(1 / 2 : ℝ))) := by rw [hsqrt, mul_one]
+      _ = (Real.sqrt β * Real.arccos ((-1 + Real.sqrt (4 * β ^ 2 + 1)) / (2 * β))) *
+          β ^ (-(1 / 2 : ℝ)) := by ring
+      _ < r := mul_lt_mul_of_pos_right h_c hp
+  let k : Idx n := ⟨s j, hs j⟩
+  have hinit (i : Idx n) (hi : i < k) :
+      (1 + 2 * ε) * r < ‖(X 0 k : EucSpace 2) - (X 0 i : EucSpace 2)‖ := by
+    have h := h_strong j i (Fin.lt_def.mp hi)
+    dsimp only [r, k]
+    nlinarith [h]
+  have htime : T_j * (k : ℝ) * h_pot β r < ε * r := by
+    simpa only [k, r, mul_assoc] using hT
+  intro t ht0 htT
+  change ‖(X t k : EucSpace 2) - (X 0 k : EucSpace 2)‖ < _
+  rw [mul_assoc]
+  change ‖(X t k : EucSpace 2) - (X 0 k : EucSpace 2)‖ < ε * r
+  by_cases hTpos : 0 < T_j
+  · by_cases hk : (k : ℕ) = 0
+    · have hd (u : ℝ) : HasDerivAt (fun v => (X v k : EucSpace 2)) 0 u := by
+        have hempty : Finset.Iio k = ∅ := by
+          ext i
+          simp only [Finset.mem_Iio, Finset.notMem_empty, iff_false]
+          change ¬ (i : ℕ) < (k : ℕ)
+          omega
+        have hz : causalDrift β (X u) k = 0 := by
+          simp only [causalDrift, hempty, Finset.sum_empty, smul_zero]
+        simpa only [hz] using hasDerivAt_causalDrift β X hX u k
+      have hconst := is_const_of_deriv_eq_zero (fun u => (hd u).differentiableAt)
+        (fun u => (hd u).deriv) t 0
+      rw [hconst, sub_self, norm_zero]
+      exact mul_pos hε hr
+    · have hkpos : 0 < (k : ℕ) := by omega
+      let i : Idx n := ⟨0, (hkpos.trans k.isLt)⟩
+      have hi : i < k := hkpos
+      have hsep := hinit i hi
+      have hchord := norm_sub_le (X 0 k : EucSpace 2) (X 0 i : EucSpace 2)
+      rw [mem_sphere_zero_iff_norm.mp (X 0 k).2,
+        mem_sphere_zero_iff_norm.mp (X 0 i).2] at hchord
+      have hrπ : r ≤ π := by nlinarith [mul_pos hε hr, Real.pi_gt_three]
+      exact strong_center_displacement β hβ r ε T_j hr hε hTpos hrπ hpeak
+        X hX k hinit htime t ⟨ht0, htT⟩
+  · have ht : t = 0 := by linarith
+    subst t
+    rw [sub_self, norm_zero]
+    exact mul_pos hε hr
 
 /-- The hypotheses of `lemma_meta` are satisfiable: one token on the circle,
 `s ≡ 0` — so that `h_strong` quantifies over an empty range and `hT` reads
