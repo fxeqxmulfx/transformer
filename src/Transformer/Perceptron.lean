@@ -74,6 +74,8 @@ import Transformer.Perceptron.GeneralAttention
 import Transformer.Perceptron.Section5_MapKernel
 import Transformer.Perceptron.Section5_MapTransport
 import Transformer.Perceptron.Section5_MapIntegral
+import Transformer.Perceptron.Section5_MapForce
+import Transformer.Perceptron.Section5_MapHessian
 import Transformer.Perceptron.GeneralAtomicity
 import Transformer.Perceptron.Piecewise
 import Transformer.Perceptron.Normalized
