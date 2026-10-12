@@ -63,8 +63,9 @@ out as `∑ᵢ (U t i - V t i)²`.
 Not proved here.  The paper derives it from `thm: Otto result` applied to
 `-𝖤_β` on `𝕋^n`, but that theorem is false as printed (`not_otto_reznikoff`,
 it fails at `t = 0`), so the derivation does not stand; a proof has to go
-through a corrected form of it.  The verification of (H1), (H2) for `𝖤_β` —
-`PL_borjan` — is `sorry` as well.
+through a corrected form of it. The energy-gradient PL estimate
+`PL_borjan` is now proved with a uniform coefficient; the projection and
+flow comparison required for this corollary remain separate.
 
 Source: arXiv:2410.06833v1, §3.2, `eq: otto.attention`. -/
 theorem otto_attention (ε : ℝ) (hε : 0 < ε) (hε1 : ε < 1) :

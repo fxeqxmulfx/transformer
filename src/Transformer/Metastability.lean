@@ -36,6 +36,15 @@ import Transformer.Metastability.OttoClaimOne
 import Transformer.Metastability.Section3_CapTemperature
 import Transformer.Metastability.Section3_ForceMonotonicity
 import Transformer.Metastability.Section3_GradientComparison
+import Transformer.Metastability.Section3_AngularCharts
+import Transformer.Metastability.Section3_ScalarTaylor
+import Transformer.Metastability.Section3_EnergyAlgebra
+import Transformer.Metastability.Section3_EnergyTaylor
+import Transformer.Metastability.Section3_ForceDerivative
+import Transformer.Metastability.Section3_ForceCoercivity
+import Transformer.Metastability.Section3_SlowManifold
+import Transformer.Metastability.Section3_ClusterSpread
+import Transformer.Metastability.Section3_PL
 import Transformer.Metastability.OttoCorollary
 import Transformer.Metastability.OttoReznikoff
 import Transformer.Metastability.ReversePL
