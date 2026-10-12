@@ -81,6 +81,8 @@ import Transformer.Perceptron.Section3_StrictMatrixAtomicity
 import Transformer.Perceptron.GeneralAtomicity
 import Transformer.Perceptron.Piecewise
 import Transformer.Perceptron.Normalized
+import Transformer.Perceptron.Section6_AnalyticIntegral
+import Transformer.Perceptron.Section6_AnalyticWeight
 import Transformer.Perceptron.NormalizedMap
 import Transformer.Perceptron.SignedGram
 import Transformer.Perceptron.NormalizedAtomicity
