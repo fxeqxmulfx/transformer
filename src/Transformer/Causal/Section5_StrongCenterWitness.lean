@@ -100,7 +100,7 @@ theorem strong_center_witness : ∃ X : ℝ → SphereTuple 2 2,
   · norm_num only [Real.one_rpow, mul_one, one_mul]
     linarith
 
-/-- The hypotheses of `strong_center_displacement` hold simultaneously,
+/-- The hypotheses of `strong_center_displacement_at_scale` hold simultaneously,
 including genuine separation from one predecessor. -/
 example : ∃ X : ℝ → SphereTuple 2 2,
     CSA 2 2 1 (ContinuousLinearMap.id ℝ (EucSpace 2))
@@ -113,7 +113,7 @@ example : ∃ X : ℝ → SphereTuple 2 2,
       ‖(X t 1 : EucSpace 2) - (X 0 1 : EucSpace 2)‖ < 1 / 4) := by
   obtain ⟨X, hX, hβ, hε, _, _, hsep, hc, hT⟩ := strong_center_witness
   refine ⟨X, hX, hsep, fun t ht => ?_⟩
-  have h := strong_center_displacement 1 1 (1 / 4) hβ hβ hε X hX 1 hsep hc (1 / 100)
+  have h := strong_center_displacement_at_scale 1 1 (1 / 4) hβ hβ hε X hX 1 hsep hc (1 / 100)
     (by simpa using hT)
     t ht.1 ht.2
   simpa only [Real.one_rpow, mul_one] using h

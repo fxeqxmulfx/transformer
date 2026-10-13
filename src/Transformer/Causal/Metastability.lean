@@ -15,6 +15,7 @@ import Transformer.Basic
 import Transformer.Causal.Basic
 import Transformer.Causal.Packing
 import Transformer.Causal.Section5_StrongCenter
+import Transformer.Causal.Section5_CausalWeights
 
 open scoped BigOperators
 open Real
@@ -87,26 +88,8 @@ theorem lemma_meta
       ‖((X t ⟨s j, hs j⟩ : EucSpace 2))
           - ((X 0 ⟨s j, hs j⟩ : EucSpace 2))‖
         < ε * c * β ^ (-(1/2 : ℝ)) := by
-  exact strong_center_displacement β c ε hβ hc hε X hX ⟨s j, hs j⟩
+  exact strong_center_displacement_at_scale β c ε hβ hc hε X hX ⟨s j, hs j⟩
     (fun i hi => h_strong j i hi) h_c T_j hT
-
-/-- A single token on the circle is a stationary solution of `CSA`: its own
-attention average is itself, and `Proj_x x = 0`. -/
-theorem csa_const_one (β : ℝ) (x₀ : SSphere 2) :
-    Causal.CSA 2 1 β (ContinuousLinearMap.id ℝ (EucSpace 2))
-      (ContinuousLinearMap.id ℝ (EucSpace 2))
-      (ContinuousLinearMap.id ℝ (EucSpace 2)) (fun _ => fun _ => x₀) := by
-  intro t k
-  have hx : ‖(x₀ : EucSpace 2)‖ = 1 := by
-    exact mem_sphere_zero_iff_norm.mp x₀.2
-  have hE : (Real.exp (β * inner (𝕜 := ℝ) ((x₀ : EucSpace 2)) ((x₀ : EucSpace 2))))⁻¹
-      • (Real.exp (β * inner (𝕜 := ℝ) ((x₀ : EucSpace 2)) ((x₀ : EucSpace 2)))
-          • (x₀ : EucSpace 2)) = (x₀ : EucSpace 2) := by
-    rw [smul_smul, inv_mul_cancel₀ (Real.exp_ne_zero _), one_smul]
-  have hproj : proj 2 ((x₀ : EucSpace 2)) ((x₀ : EucSpace 2)) = 0 := by
-    rw [proj, real_inner_self_eq_norm_mul_norm, hx, one_mul, one_smul, sub_self]
-  simpa [Subsingleton.elim k (0 : Idx 1), hE, hproj] using
-    (hasDerivAt_const t ((x₀ : EucSpace 2)))
 
 /-- The hypotheses of `lemma_meta` are satisfiable: one token on the circle,
 `s ≡ 0` — so that `h_strong` quantifies over an empty range and `hT` reads

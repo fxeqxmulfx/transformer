@@ -17,6 +17,10 @@ import Transformer.Causal.Packing
 import Transformer.Causal.Metastability
 import Transformer.Causal.Section5_CircleGeometry
 import Transformer.Causal.Section5_InteractionDecay
+import Transformer.Causal.Section5_CausalWeights
+import Transformer.Causal.Section5_ClosestDrift
+import Transformer.Causal.Section5_GapBarrier
+import Transformer.Causal.Section5_StrongGap
 import Transformer.Causal.Section5_StrongCenterWitness
 import Transformer.Causal.FixedCenters
 import Transformer.Causal.SequentialFlow

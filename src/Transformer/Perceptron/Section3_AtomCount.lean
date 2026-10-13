@@ -2,16 +2,18 @@
 # Counting heavy atoms from the cluster-mass estimate
 
 The conditional counting step of arXiv:2601.21366v2, §3.2, `cor: bound`.
-The estimate of `thm: bound` is still open and is passed explicitly in full
-for every cluster of the actual atomic configuration. The conclusion keeps
-the source's factor `M (1 + 2 L sqrt β) (0.5742 + C exp(-β)) / ε`.
+The estimate of `thm: bound` is passed explicitly in full for every
+cluster of the actual atomic configuration; `bound_cluster_mass` now proves it.
+The conclusion keeps the source's factor
+`M (1 + 2 L sqrt β) (0.5742 + C exp(-β)) / ε`.
 
 The statement is pointwise in `β` and the constant `C`: when the uniform
 constants of `bound_cluster_mass` are available, the same constants work
 at every temperature above their threshold. The perceptron and SOPD
 conditions enter this counting argument only through that estimate.
 The unused restriction `L < 2π` is dropped: the argument works for any
-finite interval cover of the chosen angle representatives.
+finite circular-arc cover. Integer turns in the cover condition allow
+arcs to cross angle zero while retaining the original representatives.
 
 A total-mass argument avoids subdividing intervals. With two cover intervals,
 or one interval longer than the cluster scale, the displayed factor is
@@ -77,7 +79,8 @@ theorem bound_atom_count (C β : ℝ) (hC : 0 ≤ C) (hβ : 0 < β)
       ∑ i ∈ S, m i ≤ 0.5742 + C * Real.exp (-β))
     (M : ℕ) (hM : 1 ≤ M) (l r : Idx M → ℝ) (L : ℝ)
     (hlength : ∀ j, r j - l j ≤ L)
-    (hcover : ∀ i : Idx N, ∃ j : Idx M, θ i ∈ Set.Icc (l j) (r j))
+    (hcover : ∀ i : Idx N, ∃ j : Idx M, ∃ k : ℤ,
+      θ i + 2 * π * (k : ℝ) ∈ Set.Icc (l j) (r j))
     (ε : ℝ) (hε : 0 < ε) :
     (({i : Idx N | ε ≤ m i} : Set (Idx N)).ncard : ℝ) ≤
       (M / ε) * (1 + 2 * L * Real.sqrt β) * (0.5742 + C * Real.exp (-β)) := by
@@ -89,7 +92,7 @@ theorem bound_atom_count (C β : ℝ) (hC : 0 ≤ C) (hβ : 0 < β)
     linarith
   have hΛ0 : 0 ≤ Λ := by linarith
   have hs : 0 < Real.sqrt β := Real.sqrt_pos.mpr hβ
-  obtain ⟨j, hj⟩ := hcover ⟨0, by have := hatom.two_le; omega⟩
+  obtain ⟨j, k, hj⟩ := hcover ⟨0, by have := hatom.two_le; omega⟩
   have hL : 0 ≤ L := by linarith [hlength j, hj.1, hj.2]
   have hx : 0 ≤ 2 * L * Real.sqrt β := by positivity
   have hfactor : 1 ≤ (M : ℝ) * (1 + 2 * L * Real.sqrt β) * Λ := by
@@ -104,15 +107,18 @@ theorem bound_atom_count (C β : ℝ) (hC : 0 ≤ C) (hβ : 0 < β)
         rw [← hatom.mass_sum]
         apply hmass Finset.univ (by simpa using hatom.two_le)
         intro i _ j _
-        obtain ⟨a, ha⟩ := hcover i
-        obtain ⟨b, hb⟩ := hcover j
+        obtain ⟨a, ki, ha⟩ := hcover i
+        obtain ⟨b, kj, hb⟩ := hcover j
         have ha0 : a = 0 := Fin.fin_one_eq_zero a
         have hb0 : b = 0 := Fin.fin_one_eq_zero b
         rw [ha0] at ha
         rw [hb0] at hb
-        refine ⟨0, ?_⟩
-        simp only [Int.cast_zero, mul_zero, add_zero]
-        have hab : |θ i - θ j| ≤ L :=
+        refine ⟨ki - kj, ?_⟩
+        rw [Int.cast_sub]
+        have heq : θ i - θ j + 2 * π * ((ki : ℝ) - kj) =
+            (θ i + 2 * π * (ki : ℝ)) - (θ j + 2 * π * (kj : ℝ)) := by ring
+        rw [heq]
+        have hab : |(θ i + 2 * π * (ki : ℝ)) - (θ j + 2 * π * (kj : ℝ))| ≤ L :=
           abs_le.mpr ⟨by linarith [hlength 0, ha.1, hb.2],
             by linarith [hlength 0, ha.2, hb.1]⟩
         exact hab.trans hshort
@@ -148,12 +154,13 @@ example : (0 : ℝ) ≤ Real.exp 1 ∧ (0 : ℝ) < 1 ∧
       ∑ i ∈ S, (fun _ : Idx 2 => (1 / 2 : ℝ)) i ≤ 0.5742 + Real.exp 1 * Real.exp (-1)) ∧
     1 ≤ (2 : ℕ) ∧
     (∀ j : Idx 2, antipodalCircleAngles j - antipodalCircleAngles j ≤ 0) ∧
-    (∀ i : Idx 2, ∃ j : Idx 2,
-      antipodalCircleAngles i ∈ Set.Icc (antipodalCircleAngles j) (antipodalCircleAngles j)) ∧
+    (∀ i : Idx 2, ∃ j : Idx 2, ∃ k : ℤ,
+      antipodalCircleAngles i + 2 * π * (k : ℝ) ∈
+        Set.Icc (antipodalCircleAngles j) (antipodalCircleAngles j)) ∧
     (0 : ℝ) < 1 / 2 := by
   refine ⟨(Real.exp_pos 1).le, one_pos, isAtomicOnCircle_antipodalCircleProb,
     isSOPD_antipodalCircleProb 1 one_pos, ?_, by norm_num,
-    fun _ => by simp, fun i => ⟨i, le_rfl, le_rfl⟩, by norm_num⟩
+    fun _ => by simp, fun i => ⟨i, 0, by simp⟩, by norm_num⟩
   intro S _ _
   have hsum : ∑ i ∈ S, (fun _ : Idx 2 => (1 / 2 : ℝ)) i ≤
       ∑ i : Idx 2, (fun _ : Idx 2 => (1 / 2 : ℝ)) i :=

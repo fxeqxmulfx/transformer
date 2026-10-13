@@ -7,7 +7,7 @@ interaction radius. The center velocity is therefore bounded throughout
 the interval, and the mean-value inequality bounds its displacement.
 -/
 
-import Transformer.Causal.Section5_GapBarrier
+import Transformer.Causal.Section5_MinCurve
 import Transformer.Causal.Section5_VelocityBounds
 
 open scoped BigOperators
@@ -88,7 +88,7 @@ radius is `c β⁻¹ᐟ²`, exactly as printed. The zero-predecessor case is
 stationary; otherwise separation itself places the radius below `2 < π`.
 Source: arXiv:2411.04990v2, §5, `lemma:meta`, `eq:c`, `eq:renyi`, and
 `eq:time_bd`. The hypotheses are witnessed in `Section5_StrongCenterWitness`. -/
-theorem strong_center_displacement (β c ε : ℝ) (hβ : 0 < β) (hc : 0 < c) (hε : 0 < ε)
+theorem strong_center_displacement_at_scale (β c ε : ℝ) (hβ : 0 < β) (hc : 0 < c) (hε : 0 < ε)
     (X : ℝ → SphereTuple 2 n)
     (hX : CSA 2 n β (ContinuousLinearMap.id ℝ (EucSpace 2))
       (ContinuousLinearMap.id ℝ (EucSpace 2))

@@ -17,14 +17,17 @@ cannot spread out.
   primitive of `2σ` (`hasDerivAt_reluSq` exhibits one): that is the standing
   convention `φ' = 2σ` of §2, and no statement depends on the constant.
 
-* "real-analytic `σ`" is `AnalyticOnNhd ℝ σ Set.univ`; "`v_ϑ` not real-analytic
-  on `𝕊¹`" is `¬ IsAnalyticOnSphere`, see `Analytic.lean`.
+* "real-analytic `σ`" is `AnalyticOnNhd ℝ σ Set.univ`; its strict SOPD
+  conclusion is proved in `Section3_StrictAtomicity.lean`. The non-analytic
+  ReLU hypothesis is `¬ IsAnalyticOnSphere`, see `Analytic.lean`.
 
 Source: arXiv:2601.21366v2, `thm: circle`, `thm: circle.gelu`.
 -/
 
 import Transformer.Perceptron.Analytic
 import Transformer.Perceptron.Dirac
+import Mathlib.MeasureTheory.Measure.Support
+import Mathlib.MeasureTheory.Measure.Dirac.Basic
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -51,6 +54,59 @@ theorem isFinitelyAtomic_diracProb (x : SSphere d) :
     show Measure.dirac x = ∑ z ∈ ({x} : Finset (SSphere d)), (1 : ℝ≥0∞) • Measure.dirac z
     rw [Finset.sum_singleton, one_smul]⟩
 
+/-- **A probability measure with finite topological support is a finite
+combination of Dirac masses, with its actual singleton masses.**
+Source: arXiv:2601.21366v2, §3.1, the meaning of finite atomicity
+in `thm: circle` and `thm: circle.gelu`.
+The ambient dimension is arbitrary; the sphere has a Borel measure
+space with measurable singletons and second-countable topology. -/
+theorem isFinitelyAtomic_of_finite_topological_support
+    (μ : Perspective.ProbSphere d) (hfinite : (μ : Measure (SSphere d)).support.Finite) :
+    IsFinitelyAtomic μ := by
+  classical
+  have hcarry : ∀ᵐ x ∂(μ : Measure (SSphere d)), x ∈ hfinite.toFinset := by
+    filter_upwards [Measure.support_mem_ae (μ := (μ : Measure (SSphere d)))] with x hx
+    exact hfinite.mem_toFinset.mpr hx
+  exact ⟨hfinite.toFinset, fun x => (μ : Measure (SSphere d)) {x},
+    Measure.ae_mem_finset_iff.mp hcarry⟩
+
+/-- The finite-support input is realized on the actual nonempty
+one-dimensional sphere by its Dirac probability measure. -/
+example : (Perspective.diracProb 1 (basePoint 0) : Measure (SSphere 1)).support.Finite := by
+  apply (Set.finite_singleton (basePoint 0)).subset
+  intro x hx
+  exact Set.mem_singleton_iff.mpr (Interpolation.eq_of_mem_support_dirac hx)
+
+/-- **A finite Dirac presentation has finite topological support.**
+Source: arXiv:2601.21366v2, §3.1, the meaning of finite atomicity
+in `thm: circle` and `thm: circle.gelu`. Together with the converse
+above this verifies that the calculus step yields the source's
+actual measure-theoretic conclusion. Zero-mass atoms are permitted. -/
+theorem finite_support_of_finitely_atomic (μ : Perspective.ProbSphere d)
+    (hμ : IsFinitelyAtomic μ) : (μ : Measure (SSphere d)).support.Finite := by
+  classical
+  obtain ⟨F, m, heq⟩ := hμ
+  have hsub (G : Finset (SSphere d)) :
+      (∑ z ∈ G, m z • Measure.dirac z).support ⊆ (G : Set (SSphere d)) := by
+    induction G using Finset.induction_on with
+    | empty => simp
+    | @insert z G hz ih =>
+      rw [Finset.sum_insert hz, Measure.support_add]
+      intro x hx
+      rcases hx with hx | hx
+      · have hxz : x = z := Interpolation.eq_of_mem_support_dirac
+          (Measure.smul_absolutelyContinuous.support_mono hx)
+        subst x
+        exact Finset.mem_insert_self z G
+      · exact Finset.mem_insert_of_mem (ih hx)
+  rw [heq]
+  exact F.finite_toSet.subset (hsub F)
+
+/-- The finite-presentation input is satisfied by an actual Dirac
+probability measure on a nonempty sphere. -/
+example : IsFinitelyAtomic (Perspective.diracProb 1 (basePoint 0)) :=
+  isFinitelyAtomic_diracProb (basePoint 0)
+
 /-! ### A concrete frame of `ℝ²`
 
 `basePoint 1` is the first standard basis vector of `ℝ²`; `secondAxis` is the
@@ -70,7 +126,7 @@ noncomputable def secondAxis : EucSpace 2 := EuclideanSpace.single (1 : Fin 2) (
     inner (𝕜 := ℝ) ((basePoint 1 : SSphere 2) : EucSpace 2) secondAxis = 0 := by
   simp [basePoint, secondAxis, EuclideanSpace.inner_single_left]
 
-/-! ### The two theorems -/
+/-! ### ReLU atomicity -/
 
 /-- **Theorem (thm: circle).**  Let `d = 2`, `β > 0` and `σ(s) = s_+`, and let
 the weights `ϑ` be such that `v_ϑ` is not real-analytic on `𝕊¹`.  Then any
@@ -108,35 +164,6 @@ example :
     not_isAnalyticOnSphere_relu 0 norm_basePoint_one norm_secondAxis
       inner_basePoint_secondAxis,
     isStationary_relu_pin 1 0 (basePoint 1)⟩
-
-/-- **Theorem (thm: circle.gelu).**  Let `d = 2`, `β > 0`, fix weights `ϑ` and
-a real-analytic `σ : ℝ → ℝ`.  If `μ ∈ P(𝕊¹)` is a *strict* SOPD Wasserstein
-critical point of `E_{β,ϑ}` in the sense of `eq:strict2order`, then `μ` is
-purely atomic and has finite support.
-
-Equivalently: a SOPD critical point with infinite support is degenerate.
-
-Not proved here.
-
-Source: arXiv:2601.21366v2, `thm: circle.gelu`. -/
-theorem circle_gelu_isFinitelyAtomic (β : ℝ) (hβ : 0 < β) (φ σ : ℝ → ℝ)
-    (hφ : ∀ s : ℝ, HasDerivAt φ (2 * σ s) s)
-    (hσ : AnalyticOnNhd ℝ σ Set.univ) (ω : Idx 2 → ℝ) (a : Idx 2 → EucSpace 2)
-    (μ : Perspective.ProbSphere 2) (hμ : IsStrictSOPD β φ σ ω a μ) :
-    IsFinitelyAtomic μ := by
-  sorry
-
-/-- The hypotheses of `circle_gelu_isFinitelyAtomic` are satisfiable: `β = 1`,
-`φ = id`, the constant activation `σ ≡ 1/2` — real-analytic — and the pinned
-Dirac mass of `isStrictSOPD_pin`, a strict SOPD critical point with `κ = 1/2`. -/
-example :
-    (0 : ℝ) < 1 ∧ (∀ s : ℝ, HasDerivAt (fun t : ℝ => t) (2 * (fun _ : ℝ => (2 : ℝ)⁻¹) s) s) ∧
-      AnalyticOnNhd ℝ (fun _ : ℝ => (2 : ℝ)⁻¹) Set.univ ∧
-      IsStrictSOPD 1 (fun s => s) (fun _ => (2 : ℝ)⁻¹) (Pi.single 0 (1 : ℝ))
-        (Pi.single 0 (-((basePoint 1 : SSphere 2) : EucSpace 2)))
-        (Perspective.diracProb 2 (basePoint 1)) :=
-  ⟨one_pos, fun s => by simpa using hasDerivAt_id' (𝕜 := ℝ) (x := s), fun _ _ => analyticAt_const,
-    isStrictSOPD_pin 1 0 (basePoint 1)⟩
 
 end Perceptron
 end Transformer

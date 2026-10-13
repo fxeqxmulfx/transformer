@@ -27,6 +27,7 @@ Source: arXiv:2601.21366v2, `rem: ext` (ii), `rem:unifiedlog-B`.
 
 import Transformer.Perceptron.GeneralAttention
 import Transformer.Perceptron.HigherDim
+import Transformer.Perceptron.Section3_StrictMatrixAtomicity
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -78,16 +79,19 @@ example :
 invertible `B` in the interaction energy, a strict SOPD critical point at a
 real-analytic `σ` is still purely atomic with finite support.
 
-Not proved here.
+The proved result strengthens the source by removing matrix invertibility.
+The local proof already applies to a continuous actual activation derivative;
+the analytic activation hypothesis and actual finite-atomic conclusion
+are retained here. Symmetry is used in the genuine energy Hessian.
 
-Source: arXiv:2601.21366v2, `rem: ext` (ii), `thm: circle.gelu`. -/
+Source: arXiv:2601.21366v2, §3.1, `rem: ext` (ii), `thm: circle.gelu`, and §5.2. -/
 theorem ext_circle_gelu_isFinitelyAtomic (B : EucSpace 2 →ₗ[ℝ] EucSpace 2)
-    (hsymm : B.IsSymmetric) (hB : Function.Bijective B) (φ σ : ℝ → ℝ)
+    (hsymm : B.IsSymmetric) (φ σ : ℝ → ℝ)
     (hφ : ∀ s : ℝ, HasDerivAt φ (2 * σ s) s) (hσ : AnalyticOnNhd ℝ σ Set.univ)
     (ω : Idx 2 → ℝ) (a : Idx 2 → EucSpace 2) (μ : Perspective.ProbSphere 2)
     (hμ : IsStrictSOPDMap B φ σ ω a μ) :
-    IsFinitelyAtomic μ := by
-  sorry
+    IsFinitelyAtomic μ :=
+  isFinitelyAtomic_of_strictSOPDMap_analytic B hsymm φ σ hφ hσ ω a μ hμ
 
 /-- The hypotheses of `ext_circle_gelu_isFinitelyAtomic` are satisfiable at
 `B = id`, where the pinned Dirac of `isStrictSOPD_pin` is again a strict SOPD

@@ -32,12 +32,17 @@ atomic with finitely many atoms.
   `thm: any.d` likewise extend to `E_B` — is `rem: ext` (ii), carried in
   `GeneralAtomicity.lean`.
 
+* The proved circle `Map` result drops the source's symmetry assumption:
+  the actual weighted-field argument needs only invertibility for transform
+  injectivity. The higher-dimensional open statement retains symmetry.
+
 Source: arXiv:2601.21366v2, `prop: unified.log`, `rem:unifiedlog-B`.
 -/
 
 import Transformer.Perceptron.NormalizedMap
 import Transformer.Perceptron.SignedGram
 import Transformer.Perceptron.GeneralAtomicity
+import Transformer.Perceptron.Section6_NormalizedCircleAtomicity
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -82,15 +87,17 @@ example :
 stationary measures of the normalized dynamics are purely atomic with finite
 support.
 
-Not proved here.
+The actual branch forces, analytic continuation, antipodal invariance and
+signed quadratic contradiction are proved in `Section6_NormalizedCircleAtomicity`.
 
-Source: arXiv:2601.21366v2, `prop: unified.log`. -/
+Source: arXiv:2601.21366v2, §6, `prop: unified.log`, part (b). -/
 theorem unifiedLog_isFinitelyAtomic (β : ℝ) (hβ : 0 < β) (ω : Idx 2 → ℝ)
     (a : Idx 2 → EucSpace 2) (hnd : IsNonDegenerate ω a)
     (μ : Perspective.ProbSphere 2)
     (hμ : IsNormalizedStationary β (fun s => max s 0) ω a μ) :
     IsFinitelyAtomic μ := by
-  sorry
+  exact isFinitelyAtomic_of_finite_topological_support μ
+    (finite_support_of_normalizedStationary_circle β hβ.ne' ω a hnd μ hμ)
 
 /-- The hypotheses of `unifiedLog_isFinitelyAtomic` are satisfiable, by the
 same witness. -/
@@ -137,20 +144,21 @@ example :
   ⟨le_rfl, (isSymmetric_bijective_id 2).1, (isSymmetric_bijective_id 2).2,
     isNonDegenerate_pin, isNormalizedStationaryMap_relu_pin 0 (basePoint 1)⟩
 
-/-- **Remark (rem:unifiedlog-B), second conclusion.**  In `d = 2`, with a
-symmetric invertible `B`, the stationary measures of the normalized dynamics
-are purely atomic with finite support.
+/-- **Remark (rem:unifiedlog-B), second conclusion.** In `d = 2` the stationary
+measures of the normalized dynamics with an invertible `B` are purely atomic
+with finite support. The source also assumes symmetry of `B`.
 
-Not proved here.
+The proved weighted-field result strengthens the source by dropping symmetry:
+invertibility alone supplies transform injectivity and the antipodal argument.
 
-Source: arXiv:2601.21366v2, `rem:unifiedlog-B`. -/
+Source: arXiv:2601.21366v2, §6, `rem:unifiedlog-B`. -/
 theorem unifiedLogMap_isFinitelyAtomic (B : EucSpace 2 →ₗ[ℝ] EucSpace 2)
-    (hsymm : B.IsSymmetric) (hB : Function.Bijective B) (ω : Idx 2 → ℝ)
+    (hB : Function.Bijective B) (ω : Idx 2 → ℝ)
     (a : Idx 2 → EucSpace 2) (hnd : IsNonDegenerate ω a)
     (μ : Perspective.ProbSphere 2)
     (hμ : IsNormalizedStationaryMap B (fun s => max s 0) ω a μ) :
     IsFinitelyAtomic μ := by
-  sorry
+  exact isFinitelyAtomic_of_normalizedStationaryMap_circle B hB ω a hnd μ hμ
 
 /-- The hypotheses of `unifiedLogMap_isFinitelyAtomic` are satisfiable, by the
 same witness at `B = id`. -/
