@@ -107,6 +107,7 @@ import Transformer.Perceptron.Section5_QuadraticCoefficients
 import Transformer.Perceptron.Section5_QuadraticPolynomials
 import Transformer.Perceptron.Section5_QuadraticDensity
 import Transformer.Perceptron.Section5_PolynomialSupport
+import Transformer.Perceptron.Section5_AffineQuadraticDensity
 import Transformer.Perceptron.Section5_LinearStationarity
 import Transformer.Perceptron.Section5_ReLUBranches
 import Transformer.Perceptron.Section5_ReLUObstruction
