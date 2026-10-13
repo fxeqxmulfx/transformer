@@ -93,6 +93,7 @@ import Transformer.Perceptron.Section6_GreatCircleWeight
 import Transformer.Perceptron.Section6_CircleNullSupport
 import Transformer.Perceptron.Section6_SeriesIntegral
 import Transformer.Perceptron.Section6_AmbientWeight
+import Transformer.Perceptron.Section6_AmbientGradient
 import Transformer.Perceptron.NormalizedMap
 import Transformer.Perceptron.SignedGram
 import Transformer.Perceptron.NormalizedAtomicity
