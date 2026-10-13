@@ -106,6 +106,7 @@ import Transformer.Perceptron.Section5_QuadraticGeometry
 import Transformer.Perceptron.Section5_QuadraticCoefficients
 import Transformer.Perceptron.Section5_QuadraticPolynomials
 import Transformer.Perceptron.Section5_QuadraticDensity
+import Transformer.Perceptron.Section5_PolynomialSupport
 import Transformer.Perceptron.Section5_LinearStationarity
 import Transformer.Perceptron.Section6_RotationZeroSets
 import Transformer.Perceptron.Section6_ReflectionPaths
