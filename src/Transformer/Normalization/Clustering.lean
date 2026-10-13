@@ -1,19 +1,23 @@
 /-
 # Normalization — Asymptotic clustering (§3 of 2510.22026v2)
 
-* `Theorem thm: convergence` — for `Q = K = V = I_d` the normalized attention
-  dynamics clusters almost surely: unconditionally for Post-LN, nGPT and CoD
-  from a uniform initialization, and up to a stalling radial velocity for
-  Pre-LN, Mix-LN and Peri-LN from a Gaussian one;
+* `Theorem thm: convergence` — its Gaussian alternative for
+  `Q = K = V = I_d`: Pre-LN, Mix-LN and Peri-LN almost surely synchronize
+  or have a stalling radial velocity;
 * its corollary — for Pre-LN and Peri-LN with `n ≤ e^β` the second alternative
   is excluded and the synchronization is unconditional.
 
-The two clustering alternatives remain open. The corollary is proved from
-the second as an explicit input. The uniform law is `Perspective.UniformTuple`,
-and the Gaussian law is Mathlib's `stdGaussian`, taken independently `n` times.
+The Gaussian alternative remains open. The corollary is proved from it
+as an explicit input. The Gaussian law is Mathlib's `stdGaussian`, taken
+independently `n` times. The unrestricted uniform-initialization clause
+is false: `Section3_NGPTZeroStep.not_clusters_from_uniform` refutes it
+at `d=n=2`, where zero-step nGPT freezes distinct tokens almost surely.
+The supplement requires a diverging accumulated step size; the printed
+theorem has no step-size hypothesis. No weaker replacement is asserted here.
 
-*Deviation from the source.*  The source states both for every `d`; each is
-stated here for `d ≥ 2`.  On `𝕊⁰ ⊆ ℝ¹` the tangent space is `0`, so every
+*Deviation from the source.* The Gaussian alternative and its conditional
+corollary are stated here for `d ≥ 2`; the source allows every `d`.
+On `𝕊⁰ ⊆ ℝ¹` the tangent space is `0`, so every
 configuration is a rest point, and two tokens of opposite signs — an event of
 positive probability under both laws — never meet: `ClusteringLine` refutes all
 three statements at `d = 1`, `n = 2`.
@@ -65,35 +69,6 @@ def RadialStalls
           (fun t => radialDerivative d n β (idParams d) (idParams d) (idParams d)
             θ τ scheme t j) Filter.atTop }
     0
-
-/-- **Theorem (thm: convergence), first half.** *Post-LN, nGPT and CoD cluster.*
-
-For `d ≥ 2`, `Q = K = V = I_d` and a uniformly sampled
-`Θ(0) ∈ (𝕊^{d-1})^{⊗ n}`, the Post-LN, nGPT and CoD dynamics synchronize to one
-cluster with probability `1`.
-
-The uniform law is read as every `σ` with `Perspective.UniformTuple d n σ`,
-which holds for exactly one `σ`.  The source has no `d ≥ 2`, and without it the
-statement is false: `not_clusters_from_uniform_one`.  The paper also
-records that the same conclusion holds for constant `Q, K` and
-`V = Q^⊤ K = K^⊤ Q`; only the identity case is stated here.
-
-Not proved here.
-
-Source: arXiv:2510.22026v2, §3, `thm: convergence`. -/
-theorem clusters_from_uniform (hd : 2 ≤ d) (β : ℝ) (α : ℝ → ℝ) (τ : ℝ) (scheme : Scheme)
-    (hscheme : scheme = Scheme.post ∨ scheme = Scheme.nGPT ∨ scheme = Scheme.CoD) :
-    ∀ σ : Measure (SphereTuple d n), Perspective.UniformTuple d n σ →
-    ∀ᵐ Θ₀ ∂σ, ∀ (θ : ℝ → Idx n → EucSpace d) (r : ℝ → Idx n → ℝ),
-      θ 0 = tupleCoe Θ₀ →
-        SchemeDynamics d n β (idParams d) (idParams d) (idParams d) α τ scheme θ r →
-          Synchronizes d n θ := by
-  sorry
-
-/-- The hypotheses of `clusters_from_uniform` are satisfiable: `d = 2`, Post-LN. -/
-example : 2 ≤ 2 ∧ (Scheme.post = Scheme.post ∨ Scheme.post = Scheme.nGPT ∨
-    Scheme.post = Scheme.CoD) :=
-  ⟨le_rfl, Or.inl rfl⟩
 
 /-- **Theorem (thm: convergence), second half.** *Pre-LN, Mix-LN and Peri-LN.*
 

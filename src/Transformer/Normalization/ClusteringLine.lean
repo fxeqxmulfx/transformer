@@ -11,7 +11,9 @@ two tokens of opposite signs stay apart forever (`not_synchronizes_const`):
   whose radii moreover grow at the rate `≥ 1/(2e^β)` (`pre_line_counter`);
 * `not_unconditional_synchronization_one` — the corollary, at `n = 2 ≤ e^β`.
 
-`Normalization.Clustering` therefore states all three for `d ≥ 2`.
+`Normalization.Clustering` therefore states the Gaussian alternative and
+its conditional corollary for `d ≥ 2`. The unrestricted first half also fails
+in dimension two for zero-step nGPT, as proved in `Section3_NGPTZeroStep`.
 
 Source: arXiv:2510.22026v2, §3, `thm: convergence` and its corollary.
 -/
@@ -61,7 +63,7 @@ example : (fun i : Idx 2 => ((sph0 (i = 0) : SSphere 1) : EucSpace 1)) 0 ≠
 
 /-- **`thm: convergence` fails on `𝕊⁰`: Post-LN from a uniform start.**
 
-`clusters_from_uniform` without its `d ≥ 2`, at `d = 1`, `n = 2`, Post-LN: the
+The first half of `thm:convergence` at `d = 1`, `n = 2`, Post-LN: the
 two tokens start at `+1` and `-1` with probability `1/2`, and stay there.
 arXiv:2510.22026v2, §3, `thm: convergence`, first half. -/
 theorem not_clusters_from_uniform_one :

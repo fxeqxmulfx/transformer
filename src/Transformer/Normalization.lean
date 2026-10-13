@@ -10,6 +10,7 @@ import Transformer.Normalization.Section2_SphereInvariant
 import Transformer.Normalization.Section3_RadialBounds
 import Transformer.Normalization.Clustering
 import Transformer.Normalization.ClusteringLine
+import Transformer.Normalization.Section3_NGPTZeroStep
 import Transformer.Normalization.ClusterSpeed
 import Transformer.Normalization.Convergence
 import Transformer.Normalization.Line
