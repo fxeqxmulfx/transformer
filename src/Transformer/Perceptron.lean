@@ -102,6 +102,7 @@ import Transformer.Perceptron.Section6_AmbientBranches
 import Transformer.Perceptron.Section6_SphericalBranchIdentity
 import Transformer.Perceptron.Section6_AntipodalFields
 import Transformer.Perceptron.Section6_BranchObstruction
+import Transformer.Perceptron.Section6_NormalizedNullSupport
 import Transformer.Perceptron.NormalizedMap
 import Transformer.Perceptron.SignedGram
 import Transformer.Perceptron.NormalizedAtomicity

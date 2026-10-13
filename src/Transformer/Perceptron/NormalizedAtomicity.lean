@@ -19,7 +19,8 @@ atomic with finitely many atoms.
   `v_ϑ` enters only the proof.
 
 * `σ_d` is `Metastability.IsUniformOn`, quantified over inside the conclusion,
-  as in `thm: any.d`: the tree never constructs the uniform measure.
+  as in `thm: any.d`. `MeanField.uniformLaw` constructs the original uniform
+  spherical probability law and supplies actual witnesses for this input.
 
 * "in particular, `μ` is singular with respect to `σ_d`" is
   `mutuallySingular_of_measure_support_eq_zero` of `HigherDim.lean`, proved
@@ -32,9 +33,10 @@ atomic with finitely many atoms.
   `thm: any.d` likewise extend to `E_B` — is `rem: ext` (ii), carried in
   `GeneralAtomicity.lean`.
 
-* The proved circle `Map` result drops the source's symmetry assumption:
+* The proved `Map` results drop the source's symmetry assumption:
   the actual weighted-field argument needs only invertibility for transform
-  injectivity. The higher-dimensional open statement retains symmetry.
+  injectivity. Analytic uniqueness on the original sphere proves the
+  null-support result in every dimension at least two.
 
 Source: arXiv:2601.21366v2, `prop: unified.log`, `rem:unifiedlog-B`.
 -/
@@ -43,6 +45,7 @@ import Transformer.Perceptron.NormalizedMap
 import Transformer.Perceptron.SignedGram
 import Transformer.Perceptron.GeneralAtomicity
 import Transformer.Perceptron.Section6_NormalizedCircleAtomicity
+import Transformer.Perceptron.Section6_NormalizedNullSupport
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -59,16 +62,19 @@ variable {d : ℕ}
 condition `eq: nondeg.normalized`.  Then the support of a measure stationary
 for the normalized dynamics `eq:full-WGF-main` is `σ_d`-null.
 
-Not proved here.
+Proved from the original stationary branch field, spherical analytic
+uniqueness, transform parity and the signed Gram contradiction in
+`Section6_NormalizedNullSupport`.
 
-Source: arXiv:2601.21366v2, `prop: unified.log`. -/
+Source: arXiv:2601.21366v2, §6, `prop: unified.log`, part (a). -/
 theorem unifiedLog_measure_support_eq_zero (d : ℕ) (hd : 2 ≤ d) (β : ℝ) (hβ : 0 < β)
     (ω : Idx d → ℝ) (a : Idx d → EucSpace d) (hnd : IsNonDegenerate ω a)
     (μ : Perspective.ProbSphere d)
     (hμ : IsNormalizedStationary β (fun s => max s 0) ω a μ) :
     ∀ ν : Measure (SSphere d), Metastability.IsUniformOn d ν →
       ν (μ : Measure (SSphere d)).support = 0 := by
-  sorry
+  intro ν hν
+  exact measure_support_eq_zero_of_normalizedStationary hd β hβ.ne' ω a hnd μ hμ ν hν
 
 /-- The hypotheses of `unifiedLog_measure_support_eq_zero` are satisfiable at
 `d = 2`, `β = 1`, with the single neuron `a_0 = -basePoint 1` — non-degenerate
@@ -112,28 +118,31 @@ example :
 
 /-! ### `rem:unifiedlog-B` -/
 
-/-- **Remark (rem:unifiedlog-B), first conclusion.**  The same for normalized
-attention with a symmetric invertible matrix `B` in place of `β I_d`: the
-first variation of `E_B` is strictly positive and real-analytic, which is all
-the argument uses.
+/-- **Remark (rem:unifiedlog-B), first conclusion.** Normalized stationarity
+with an invertible matrix `B` has uniform-null support under the original
+non-degeneracy condition. The source also assumes symmetry of `B`.
 
-Not proved here.
+The proved original weighted-field argument strengthens the source by
+dropping symmetry. Its positive analytic weight, actual derivative and
+injective transform provide the spherical branch identities and parity;
+the original signed Gram contradiction then excludes positive support measure.
 
-Source: arXiv:2601.21366v2, `rem:unifiedlog-B`. -/
+Source: arXiv:2601.21366v2, §6, `rem:unifiedlog-B`. -/
 theorem unifiedLogMap_measure_support_eq_zero (d : ℕ) (hd : 2 ≤ d)
-    (B : EucSpace d →ₗ[ℝ] EucSpace d) (hsymm : B.IsSymmetric) (hB : Function.Bijective B)
+    (B : EucSpace d →ₗ[ℝ] EucSpace d) (hB : Function.Bijective B)
     (ω : Idx d → ℝ) (a : Idx d → EucSpace d) (hnd : IsNonDegenerate ω a)
     (μ : Perspective.ProbSphere d)
     (hμ : IsNormalizedStationaryMap B (fun s => max s 0) ω a μ) :
     ∀ ν : Measure (SSphere d), Metastability.IsUniformOn d ν →
       ν (μ : Measure (SSphere d)).support = 0 := by
-  sorry
+  intro ν hν
+  exact measure_support_eq_zero_of_normalizedStationaryMap hd B hB ω a hnd μ hμ ν hν
 
 /-- The hypotheses of `unifiedLogMap_measure_support_eq_zero` are satisfiable
 at `B = id`, where normalized stationarity is the case `β = 1` — by
 `isNormalizedStationaryMap_id_iff` — so the pinned Dirac serves here too. -/
 example :
-    2 ≤ 2 ∧ (LinearMap.id (R := ℝ) (M := EucSpace 2)).IsSymmetric ∧
+    2 ≤ 2 ∧
       Function.Bijective (LinearMap.id (R := ℝ) (M := EucSpace 2)) ∧
       IsNonDegenerate (Pi.single 0 (1 : ℝ))
         (Pi.single 0 (-((basePoint 1 : SSphere 2) : EucSpace 2))) ∧
@@ -141,7 +150,7 @@ example :
         (fun s => max s 0) (Pi.single 0 (1 : ℝ))
         (Pi.single 0 (-((basePoint 1 : SSphere 2) : EucSpace 2)))
         (Perspective.diracProb 2 (basePoint 1)) :=
-  ⟨le_rfl, (isSymmetric_bijective_id 2).1, (isSymmetric_bijective_id 2).2,
+  ⟨le_rfl, (isSymmetric_bijective_id 2).2,
     isNonDegenerate_pin, isNormalizedStationaryMap_relu_pin 0 (basePoint 1)⟩
 
 /-- **Remark (rem:unifiedlog-B), second conclusion.** In `d = 2` the stationary
