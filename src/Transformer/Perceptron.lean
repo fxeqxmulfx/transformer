@@ -104,6 +104,7 @@ import Transformer.Perceptron.Section5_LinearKernel
 import Transformer.Perceptron.Section5_QuadraticKernel
 import Transformer.Perceptron.Section5_QuadraticGeometry
 import Transformer.Perceptron.Section5_QuadraticCoefficients
+import Transformer.Perceptron.Section5_QuadraticPolynomials
 import Transformer.Perceptron.Section6_RotationZeroSets
 import Transformer.Perceptron.Section6_ReflectionPaths
 import Transformer.Perceptron.Section6_SphereUniqueness
