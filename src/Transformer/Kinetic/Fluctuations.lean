@@ -4,14 +4,17 @@
 Formalization of `th:mf-gpt`(ii) and `lem:correl` of arXiv:2605.09213v1,
 *Kinetic theory for Transformers and the lost-in-the-middle phenomenon*.
 
-The quantitative half of the mean-field limit, and the Glauber-calculus
-correlation estimates that drive it: a two-point covariance of size `i⁻¹` and a
+The printed quantitative mean-field estimate is refuted below by a smooth
+position test. The Glauber-calculus correlation estimates remain open:
+a two-point covariance of size `i⁻¹` and a
 third cumulant of size `(ij)⁻¹`, both with the nonstandard factor
 `e^{√(CT log(i/j))}` that the singular cumulative influence of small indices
 produces.
 -/
 
 import Transformer.Kinetic.MeanField
+import Transformer.Kinetic.Section1_GridQuadrature
+import Transformer.Homogenized.RandomChain
 import Mathlib.Probability.Independence.Basic
 import Mathlib.Probability.Moments.Covariance
 import Mathlib.Analysis.Fourier.AddCircle
@@ -107,58 +110,88 @@ example : IsProbabilityMeasure (Measure.dirac () : Measure Unit) ∧
   rw [this]
   exact hasDerivAt_const t 0
 
-/-- **Theorem (th:mf-gpt)(ii), error estimates.**  Under `eq:init-conv` with
-`δ > 0`, for every `t ≥ 0`, `φ ∈ C^∞([0,1] × 𝕋)` and `m > γ ∨ 2 + 1/2`,
+/-- **The printed error estimate of `th:mf-gpt` (ii) is false.**
+The actual constant Dirac profile solves the mean-field equation, but
+no prefactors uniform over jointly smooth tests give the printed rate
+using only their token Sobolev norm. The source's Step 4 itself retains
+`N⁻¹‖∂σφ‖∞`, then drops position derivatives in `eq:conv-rate-muNf`.
 
-  `E[|∫ φ (μ_N(t) - f(t))|²]^{1/2} ≲ N^{-δ∧1/2} e^{Ct} ‖φ‖_{L^∞([0,1];W^{m,∞}(𝕋))}`.
+At `t = 0`, deterministic zero tokens are independent and satisfy
+`eq:init-conv` exactly with `δ = 1`, `γ = Cst = 0`. The smooth test
+`φ_N(σ,θ) = cos(2πNσ)` has every token derivative bounded by one, yet
+its actual empirical-versus-limit root mean-square error is one.
+The proposed `K N⁻¹ᐟ²` vanishes. The counterexample retains the source's
+smoothness assumption omitted in the previous statement, so it also
+refutes that less restrictive formalization.
 
-The Sobolev norm on the right is carried as a bound `K_φ` on the
-`θ`-derivatives of `φ` up to order `m`, uniformly in `σ ∈ [0,1]`: that is what
-`‖φ‖_{L^∞([0,1];W^{m,∞}(𝕋))} ≤ K_φ` says, and it avoids the junk value an
-unbounded supremum would take.
-
-**How the two constants are quantified.**  The implicit constant of `≲` may
-depend on everything the statement fixes before the estimate: the data
-`δ, γ, C` of `eq:init-conv` — the bias at `t = 0` is of size `C N^{-δ}‖φ‖`, so
-no bound uniform in `C` can hold — and the Sobolev order `m`, which is the
-order of the norm on the right.  It may not depend on `N`, on the prompt, on
-`φ` or on `t`, all of which the estimate quantifies over.  The rate `C` of
-`e^{Ct}` is a constant of the model alone and stays outermost.  Quantifying one
-constant outside `δ, γ, C` and `m`, as this statement did before the audit, is
-a strengthening the source does not claim.
-
-Not proved here.
-
-Source: arXiv:2605.09213v1, `th:mf-gpt`(ii), `eq:conv-rate-muNf`. -/
-theorem mean_field_rate (lam β : ℝ) (f₀ : ℝ → ProbabilityMeasure Torus)
-    (f : ℝ → ℝ → ProbabilityMeasure Torus) (hf : IsMeanFieldSolution lam β f₀ f) :
-    ∃ C : ℝ, 0 < C ∧ ∀ (δ γ Cst : ℝ), 0 < δ →
+Source: arXiv:2605.09213v1, §1.1, `th:mf-gpt` (ii),
+`eq:conv-rate-muNf`, and §4, Step 4 of its proof. -/
+theorem mean_field_rate_false (lam β : ℝ) :
+    IsMeanFieldSolution lam β (fun _ => ⟨Measure.dirac 0, inferInstance⟩)
+      (fun _ _ => ⟨Measure.dirac 0, inferInstance⟩) ∧
+    ¬ ∃ C : ℝ, 0 < C ∧ ∀ (δ γ Cst : ℝ), 0 < δ →
       ∀ (m : ℕ), (m : ℝ) > max γ 2 + 1 / 2 →
       ∃ K : ℝ, 0 < K ∧
-        ∀ (P : Measure Ω), IsProbabilityMeasure P →
-        ∀ (N : ℕ) (ϑ : Ω → ℝ → Idx N → ℝ),
+        ∀ (P : Measure Unit), IsProbabilityMeasure P →
+        ∀ (N : ℕ) (ϑ : Unit → ℝ → Idx N → ℝ),
           (∀ ω, IsGPTFlow lam β N (ϑ ω)) →
-          iIndepFun (fun (j : Idx N) (ω : Ω) => ϑ ω 0 j) P →
-          InitConv P N (fun ω => ϑ ω 0) f₀ δ γ Cst →
-        ∀ (φ : ℝ × ℝ → ℝ) (hper : ∀ σ, Function.Periodic (fun u => φ (σ, u)) (2 * π)),
+          iIndepFun (fun (j : Idx N) (ω : Unit) => ϑ ω 0 j) P →
+          InitConv P N (fun ω => ϑ ω 0) (fun _ => ⟨Measure.dirac 0, inferInstance⟩) δ γ Cst →
+        ∀ φ : ℝ × ℝ → ℝ, ContDiff ℝ (⊤ : ℕ∞) φ →
+        ∀ hper : ∀ σ, Function.Periodic (fun u => φ (σ, u)) (2 * π),
           ∀ Kφ : ℝ, (∀ σ ∈ Set.Icc (0 : ℝ) 1, ∀ r ≤ m, ∀ u : ℝ,
               |iteratedDeriv r (fun u => φ (σ, u)) u| ≤ Kφ) →
         ∀ t ∈ Set.Ici (0 : ℝ),
           Real.sqrt (∫ ω, ((N : ℝ)⁻¹ * ∑ j : Idx N, φ (((j : ℝ) + 1) / N, ϑ ω t j)
-              - ∫ σ in (0 : ℝ)..1, ∫ x, (hper σ).lift x ∂(f t σ : Measure Torus)) ^ 2 ∂P)
+              - ∫ σ in (0 : ℝ)..1, ∫ x, (hper σ).lift x ∂(Measure.dirac (0 : Torus))) ^ 2 ∂P)
             ≤ K * (N : ℝ) ^ (-(min δ (1 / 2))) * Real.exp (C * t) * Kφ := by
-  sorry
+  refine ⟨isMeanFieldSolution_constant_zero lam β, ?_⟩
+  rintro ⟨C, -, hC⟩
+  obtain ⟨K, -, hK⟩ := hC 1 0 0 one_pos 3 (by norm_num)
+  obtain ⟨N, hN, hbad⟩ := exists_cursorCos_error_gt_decay K (1 / 2) (by norm_num)
+  let φ : ℝ × ℝ → ℝ := fun p => cursorCos N p.1
+  let hper : ∀ σ, Function.Periodic (fun u => φ (σ, u)) (2 * π) := periodic_cursorCos_test N
+  have hinit : InitConv (Measure.dirac ()) N (fun (_ : Unit) (_ : Idx N) => 0)
+      (fun _ => ⟨Measure.dirac 0, inferInstance⟩) 1 0 0 := by simp [InitConv]
+  have hb := hK (Measure.dirac ()) inferInstance N (fun _ _ _ => 0)
+    (fun _ => isGPTFlow_constant_zero lam β N) (Homogenized.iIndepFun_of_unit _) hinit
+    φ (contDiff_cursorCos_test N) hper 1
+    (fun σ _ r _ u => abs_iteratedDeriv_cursorCos_test_le_one N r σ u) 0 (by simp)
+  have hlim : (∫ σ in (0 : ℝ)..1, ∫ x, (hper σ).lift x
+      ∂(Measure.dirac (0 : Torus))) = 0 := by
+    calc
+      _ = ∫ σ in (0 : ℝ)..1, cursorCos N σ := by
+        apply intervalIntegral.integral_congr
+        intro σ _
+        change (∫ x, (hper σ).lift x ∂(Measure.dirac (0 : Torus))) = cursorCos N σ
+        rw [integral_dirac]
+        exact (hper σ).lift_coe (0 : ℝ)
+      _ = 0 := integral_cursorCos N hN
+  have havg : (N : ℝ)⁻¹ * ∑ j : Idx N, φ (((j : ℝ) + 1) / N, 0) = 1 :=
+    rightRiemann_cursorCos N hN
+  rw [hlim, havg] at hb
+  simp only [integral_dirac, sub_zero, one_pow, Real.sqrt_one,
+    min_eq_right (by norm_num : (1 / 2 : ℝ) ≤ 1), mul_zero, Real.exp_zero, mul_one] at hb
+  rw [cursorCos_error_one N hN] at hbad
+  exact not_lt_of_ge hb hbad
 
-/-- The hypotheses of `mean_field_rate` are satisfiable.  Its one binder
-hypothesis is that `f` solves `eq:mfl-lambda`, which is exactly what
-`mean_field_limit` produces from an initial profile.  The conditions quantified
-inside the statement are witnessed here in the regime they constrain: `δ > 0`,
-an admissible Sobolev order `m = 3` for `γ = 0`, and a test function periodic
-in `θ`. -/
-example : (0 : ℝ) < 1 ∧ ((3 : ℕ) : ℝ) > max 0 2 + 1 / 2 ∧
-    ∀ σ : ℝ, Function.Periodic (fun u => ((fun p : ℝ × ℝ => Real.cos p.2) (σ, u))) (2 * π) := by
-  refine ⟨by norm_num, by norm_num, fun σ u => ?_⟩
-  simp [Real.cos_add_two_pi]
+/-- The refutation's original flow, independence, weakly continuous profile,
+exact initialization rate and Sobolev order hold jointly for every grid size.
+Source: arXiv:2605.09213v1, §1.1, `th:mf-gpt` (ii) and `eq:init-conv`.
+Joint smoothness and all token derivative bounds are witnessed in
+`Section1_GridQuadrature`. -/
+example (lam β : ℝ) : (0 : ℝ) < 1 ∧ ((3 : ℕ) : ℝ) > max 0 2 + 1 / 2 ∧
+    (∀ ψ : Torus → ℝ, Continuous
+      (fun _ : ℝ => ∫ x, ψ x ∂(Measure.dirac (0 : Torus)))) ∧
+    IsMeanFieldSolution lam β (fun _ => ⟨Measure.dirac 0, inferInstance⟩)
+      (fun _ _ => ⟨Measure.dirac 0, inferInstance⟩) ∧
+    ∀ N : ℕ, IsGPTFlow lam β N (fun _ _ => 0) ∧
+      iIndepFun (fun (_ : Idx N) (_ : Unit) => (0 : ℝ)) (Measure.dirac ()) ∧
+      InitConv (Measure.dirac ()) N (fun (_ : Unit) (_ : Idx N) => 0)
+        (fun _ => ⟨Measure.dirac 0, inferInstance⟩) 1 0 0 :=
+  ⟨one_pos, by norm_num, fun _ => continuous_const, isMeanFieldSolution_constant_zero lam β,
+    fun N => ⟨isGPTFlow_constant_zero lam β N,
+    Homogenized.iIndepFun_of_unit _, by simp [InitConv]⟩⟩
 
 end Kinetic
 end Transformer

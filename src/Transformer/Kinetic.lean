@@ -12,6 +12,10 @@ the graphon `k_λ(σ,σ₀)`, and diagonalizes into Volterra-Hardy profiles that
 explicit in modified Bessel functions. Summing them gives the accuracy's
 leading correction, and that correction is U-shaped — primacy, recency, and a
 minimum in the middle.
+
+The printed uniform mean-field rate `eq:conv-rate-muNf` omits position
+derivative control. `mean_field_rate_false` proves a smooth grid-test
+counterexample, with actual stationary finite and continuum solutions.
 -/
 
 import Transformer.Kinetic.Defs
@@ -20,6 +24,7 @@ import Transformer.Kinetic.Hardy
 import Transformer.Kinetic.Section1_RecencyEndpoint
 import Transformer.Kinetic.Riemann
 import Transformer.Kinetic.MeanField
+import Transformer.Kinetic.Section1_GridQuadrature
 import Transformer.Kinetic.Fluctuations
 import Transformer.Kinetic.Codewords
 import Transformer.Kinetic.Accuracy
