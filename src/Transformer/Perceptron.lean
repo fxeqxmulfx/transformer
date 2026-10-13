@@ -99,6 +99,7 @@ import Transformer.Perceptron.Section5_ConstantTransform
 import Transformer.Perceptron.Section5_UniformSupport
 import Transformer.Perceptron.Section5_FiniteTransform
 import Transformer.Perceptron.Section5_SignedTransform
+import Transformer.Perceptron.Section5_DensityIdentification
 import Transformer.Perceptron.Section6_RotationZeroSets
 import Transformer.Perceptron.Section6_ReflectionPaths
 import Transformer.Perceptron.Section6_SphereUniqueness
