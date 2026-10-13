@@ -109,6 +109,7 @@ import Transformer.Perceptron.Section5_QuadraticDensity
 import Transformer.Perceptron.Section5_PolynomialSupport
 import Transformer.Perceptron.Section5_LinearStationarity
 import Transformer.Perceptron.Section5_ReLUBranches
+import Transformer.Perceptron.Section5_ReLUObstruction
 import Transformer.Perceptron.Section6_RotationZeroSets
 import Transformer.Perceptron.Section6_ReflectionPaths
 import Transformer.Perceptron.Section6_SphereUniqueness
