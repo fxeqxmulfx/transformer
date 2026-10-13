@@ -15,7 +15,7 @@ by the already constructed normalized spherical Lebesgue law.
 -/
 
 import Transformer.Perceptron.Section6_NormalizedCircleAtomicity
-import Transformer.Perceptron.HigherDim
+import Transformer.Perceptron.Atomicity
 import Transformer.Metastability.Section4_UniformLaw
 import Mathlib.MeasureTheory.Measure.Typeclasses.NullSingletonClass
 

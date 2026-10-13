@@ -107,6 +107,27 @@ probability measure on a nonempty sphere. -/
 example : IsFinitelyAtomic (Perspective.diracProb 1 (basePoint 0)) :=
   isFinitelyAtomic_diracProb (basePoint 0)
 
+/-- The original finite-Dirac predicate is equivalent to actual finite
+topological support for the original probability. Source: arXiv:2601.21366v2,
+§3.1, `thm: circle`. Both measure-theoretic directions are proved above. -/
+theorem isFinitelyAtomic_iff_finite_topological_support (μ : Perspective.ProbSphere d) :
+    IsFinitelyAtomic μ ↔ (μ : Measure (SSphere d)).support.Finite :=
+  ⟨finite_support_of_finitely_atomic μ, isFinitelyAtomic_of_finite_topological_support μ⟩
+
+/-- **"In particular, `μ` is singular with respect to `σ_d`".** A measure
+whose support is `ν`-null is mutually singular with `ν`: the complement of
+the support carries no mass of `μ`. Source: arXiv:2601.21366v2, §3.1,
+`thm: any.d` (i). This support-only result belongs before its applications. -/
+theorem mutuallySingular_of_measure_support_eq_zero {μ ν : Measure (SSphere d)}
+    (h : ν μ.support = 0) : μ ⟂ₘ ν :=
+  ⟨μ.supportᶜ, (Measure.isOpen_compl_support (μ := μ)).measurableSet,
+    Measure.measure_compl_support, by rwa [compl_compl]⟩
+
+/-- The support-null input holds for the actual zero measure.
+Source: arXiv:2601.21366v2, §3.1, `thm: any.d` (i). -/
+example : (0 : Measure (SSphere d)) (Measure.support (0 : Measure (SSphere d))) = 0 := by
+  simp
+
 /-! ### A concrete frame of `ℝ²`
 
 `basePoint 1` is the first standard basis vector of `ℝ²`; `secondAxis` is the

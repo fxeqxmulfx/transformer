@@ -44,21 +44,6 @@ namespace Perceptron
 
 variable {d : ℕ}
 
-/-- **"In particular, `μ` is singular with respect to `σ_d`".**  A measure
-whose support is `ν`-null is mutually singular with `ν`: the complement of the
-support carries no mass of `μ`.
-
-Source: arXiv:2601.21366v2, `thm: any.d` (i). -/
-theorem mutuallySingular_of_measure_support_eq_zero {μ ν : Measure (SSphere d)}
-    (h : ν μ.support = 0) : μ ⟂ₘ ν :=
-  ⟨μ.supportᶜ, (Measure.isOpen_compl_support (μ := μ)).measurableSet,
-    Measure.measure_compl_support, by rwa [compl_compl]⟩
-
-/-- The hypothesis of `mutuallySingular_of_measure_support_eq_zero` is
-satisfiable: the zero measure has empty support. -/
-example : (0 : Measure (SSphere d)) (Measure.support (0 : Measure (SSphere d))) = 0 := by
-  simp
-
 /-- **Theorem (thm: any.d) (i).**  Let `d ≥ 2` and `β > 0`.  If `μ` is
 stationary for `σ(s) = s_+` with weights whose potential `v_ϑ` is not
 real-analytic, or `μ` is a strict SOPD critical point for a real-analytic `σ`,
