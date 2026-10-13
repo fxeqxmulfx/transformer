@@ -6,14 +6,17 @@ closing claim of `thm:U-shape` of arXiv:2605.09213v1,
 *Kinetic theory for Transformers and the lost-in-the-middle phenomenon*.
 
 The soft accuracy of the needle-in-a-haystack task, its Fourier
-representation, and the expansion that turns the U-shape of the correction
-`𝒮_t` into the U-shape of the accuracy itself.
+representation, and the expansion involving the limiting correction `𝒮_t`.
+The source's claimed unique interior minimum of the finite-token accuracy
+is refuted by its actual integer source cells. Attainment of a minimum
+is proved separately, without weakening the printed claim under its name.
 -/
 
 import Transformer.Kinetic.Accuracy
 import Transformer.Kinetic.Hardy
 import Transformer.Kinetic.PeriodicGaussian
 import Transformer.Kinetic.UniformPrompt
+import Transformer.Kinetic.Section1_SourceCells
 import Mathlib.Probability.Independence.Basic
 
 open scoped BigOperators
@@ -117,11 +120,9 @@ independence), the source's case, where the mean term is `0` for every `n ≠ 0`
 `eq:init-conv` then holds for every `δ > 0`, so `ζ` is any number `< 1`, and the
 constants `δ`, `γ`, `C` of `eq:init-conv` no longer appear.
 
-**How the two constants are quantified.**  The expansion is read off `th:lost`,
-whose `≲_{ζ,φ}` lets the implicit prefactor depend on `ζ`; the exponent `C` of
-`M^C e^{Ct}` is explicit and is a constant of the model alone, uniform in the
-vocabulary size `M`.  So the prefactor `K` is quantified after `ζ` and before `M`,
-and `C` outside both — see the same discussion at `lost_correlations`.
+The source's `th:lost` uses `≲_{ζ,φ}`, so the prefactor `K` may depend on `ζ`.
+The exponent `C` of `M^C e^{Ct}` depends on the model, uniformly in `ζ` and `M`.
+Thus `C` precedes both parameters and `K` precedes `M`, as in `lost_correlations`.
 
 Not proved here.
 
@@ -142,9 +143,9 @@ theorem soft_accuracy_expansion (lam β : ℝ) :
             ≤ K * (N : ℝ) ^ (-(1 + ζ)) * σ₀⁻¹ ^ 2 * M ^ C * Real.exp (C * t) := by
   sorry
 
-/-- The prompt hypotheses of `soft_accuracy_expansion` and `soft_accuracy_uShape` are
-satisfiable: one token, uniformly distributed on `𝕋` — the uniform law of one period of
-`ℝ` — that never moves. -/
+/-- The source's prompt and flow conditions hold for one token, uniformly
+distributed on `𝕋` via one period of `ℝ`, that never moves. This witnesses
+`soft_accuracy_expansion` and the original finite-accuracy setting. -/
 example (lam β : ℝ) : ∃ P : Measure ℝ, IsProbabilityMeasure P ∧
     ∃ (N : ℕ) (_ : 0 < N) (ϑ : ℝ → ℝ → Idx N → ℝ), (∀ ω, IsGPTFlow lam β N (ϑ ω)) ∧
       iIndepFun (fun (j : Idx N) (ω : ℝ) => ϑ ω 0 j) P ∧ IsUniformPrompt P N (fun ω => ϑ ω 0) := by
@@ -156,50 +157,44 @@ example (lam β : ℝ) : ∃ P : Measure ℝ, IsProbabilityMeasure P ∧
   rw [h0]
   exact hasDerivAt_const t ω
 
-/-- **Theorem (thm:U-shape), the consequence for the accuracy.**  In the
-homogeneous baseline `f_∘ ≡ 1` — iid uniformly distributed prompts — and under the
-smallness condition `eq:affine-smallness`, the soft accuracy `σ₀ ↦ 𝒜_N(t,σ₀)` is
-U-shaped with an interior minimum, for all `N` large enough.
+/-- **The unique finite-accuracy minimum claimed in `thm:U-shape` is false.**
+The original finite-token accuracy never has a unique interior global
+minimizer: a larger interior position selects the same token and gives the
+same integral. This holds for every prompt law, trajectory and positive size,
+including the source's uniform independent regime. The nonnegative lower
+threshold can be `1/N` for the paper's valid source range or zero for the interior.
 
-**What the source says and what is changed here.**
+The former weakening to attainment and strict endpoint gaps is removed;
+the literal uniqueness claim is refuted. The limiting correction is separate.
 
-* The source says "unique interior minimum".  Uniqueness of the minimizer is false at
-  finite `N`: the source position is `i_* = ⌊σ₀N⌋`, so `σ₀ ↦ 𝒜_N(t,σ₀)` is constant on
-  each of the `N` intervals `[i/N, (i+1)/N)` and its minimum is attained on a whole
-  interval, never at one point.  What survives the discretization, and is what U-shaped
-  means, is stated instead: the minimum over `(0,1)` is attained at an interior position
-  and is strictly better than every position near either end.
-* The source's "in the case `f_∘ ≡ 1`" is the hypothesis `IsUniformPrompt`.  This
-  statement used to carry no assumption on the law of the prompts, and was false without
-  it: if every `θ_j(0)` is the constant `0` then nothing moves (`w_β'(0) = 0`), `𝒜_N` does
-  not depend on `σ₀` and no position is strictly better than one near an end.  It also
-  carried a solution `f` of `eq:mfl-lambda` for `f_∘ ≡ 1` that the conclusion never used;
-  that binder is gone.
+Source: arXiv:2605.09213v1, §1.1, `thm:U-shape`, final sentence;
+§1, `eq:Acc-def` and `eq:Acc-soft`. -/
+theorem soft_accuracy_no_unique_minimum (P : Measure Ω) (M : ℝ) (N : ℕ) (hN : 0 < N)
+    (ϑ : Ω → ℝ → Idx N → ℝ) (t : ℝ) :
+    ∀ l : ℝ, 0 ≤ l → ¬ ∃! s : ℝ, s ∈ Set.Ioo l 1 ∧ ∀ u ∈ Set.Ioo l 1,
+      softAccuracy P M N hN ϑ t s ≤ softAccuracy P M N hN ϑ t u := by
+  unfold softAccuracy
+  intro l hl
+  exact not_unique_minimum_of_sourceIdx_above N hN (fun j => ∫ ω, ∑' k : ℤ,
+    Real.exp (-(M ^ 2 / (2 * π ^ 2)) *
+      (ϑ ω t (lastIdx N hN) - ϑ ω 0 j - 2 * π * k) ^ 2) ∂P) l hl
 
-Not proved here.
+/-- Finite-token accuracy attains an interior minimum from its finite nonempty range.
+Source: arXiv:2605.09213v1, §1.1, the attainment part of `thm:U-shape`'s final sentence.
+The uniqueness clause is refuted above; endpoint gaps are a separate question. -/
+theorem soft_accuracy_minimum_attained (P : Measure Ω) (M : ℝ) (N : ℕ) (hN : 0 < N)
+    (ϑ : Ω → ℝ → Idx N → ℝ) (t : ℝ) :
+    ∃ s ∈ Set.Ioo (0 : ℝ) 1, ∀ u ∈ Set.Ioo (0 : ℝ) 1,
+      softAccuracy P M N hN ϑ t s ≤ softAccuracy P M N hN ϑ t u := by
+  unfold softAccuracy
+  exact exists_minimum_of_sourceIdx N hN (fun j => ∫ ω, ∑' k : ℤ,
+    Real.exp (-(M ^ 2 / (2 * π ^ 2)) *
+      (ϑ ω t (lastIdx N hN) - ϑ ω 0 j - 2 * π * k) ^ 2) ∂P)
 
-Source: arXiv:2605.09213v1, `thm:U-shape`, final sentence. -/
-theorem soft_accuracy_uShape (lam β : ℝ) (hβ : 0 < β) (hlam : 0 < lam) (M : ℝ) (hM : 2 ≤ M)
-    (P : Measure Ω) (hP : IsProbabilityMeasure P) (t : ℝ) (ht : 0 < t)
-    (hsmall : ∀ n : ℕ, 1 ≤ n →
-      t * aCoeff β n ≤ min (3 - Real.sqrt 3) (2 * (1 - Real.exp (-lam)))) :
-    ∃ N₀ : ℕ, ∀ N : ℕ, N₀ ≤ N → ∀ hN : 0 < N, ∀ ϑ : Ω → ℝ → Idx N → ℝ,
-      (∀ ω, IsGPTFlow lam β N (ϑ ω)) →
-      iIndepFun (fun (j : Idx N) (ω : Ω) => ϑ ω 0 j) P →
-      IsUniformPrompt P N (fun ω => ϑ ω 0) →
-      ∃ s ∈ Set.Ioo (0 : ℝ) 1,
-        (∀ σ₀ ∈ Set.Ioo (0 : ℝ) 1,
-          softAccuracy P M N hN ϑ t s ≤ softAccuracy P M N hN ϑ t σ₀) ∧
-        ∃ ε > 0, ∀ σ₀ ∈ Set.Ioo (0 : ℝ) 1, σ₀ < ε ∨ 1 - ε < σ₀ →
-          softAccuracy P M N hN ϑ t s < softAccuracy P M N hN ϑ t σ₀ := by
-  sorry
-
-/-- The parameter hypotheses of `soft_accuracy_uShape` are satisfiable, at `β = λ = 1`,
-`M = 2`: a positive `t` meets `eq:affine-smallness`, as for `u_shape`.  The prompt
-hypotheses are witnessed by the example above. -/
-example : (0 : ℝ) < 1 ∧ (2 : ℝ) ≤ 2 ∧ ∃ t : ℝ, 0 < t ∧ ∀ n : ℕ, 1 ≤ n →
-    t * aCoeff 1 n ≤ min (3 - Real.sqrt 3) (2 * (1 - Real.exp (-(1 : ℝ)))) :=
-  ⟨one_pos, le_rfl, exists_affine_smallness 1 1 one_pos⟩
+/-- Prompt sizes are genuine and arbitrarily large; the interior threshold
+zero is admissible. The preceding uniform-prompt example also has an actual flow.
+Source: arXiv:2605.09213v1, §1, `eq:Acc-soft`. -/
+example (N : ℕ) : 0 < N + 1 ∧ (0 : ℝ) ≤ 0 := ⟨Nat.zero_lt_succ N, le_rfl⟩
 
 end Kinetic
 end Transformer

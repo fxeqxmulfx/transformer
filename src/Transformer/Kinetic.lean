@@ -16,6 +16,8 @@ minimum in the middle.
 The printed uniform mean-field rate `eq:conv-rate-muNf` omits position
 derivative control. `mean_field_rate_false` proves a smooth grid-test
 counterexample, with actual stationary finite and continuum solutions.
+The claimed unique finite-accuracy minimum is also refuted: its actual
+integer source cells give an interval of minimizers at every minimum.
 -/
 
 import Transformer.Kinetic.Defs
@@ -25,6 +27,7 @@ import Transformer.Kinetic.Section1_RecencyEndpoint
 import Transformer.Kinetic.Riemann
 import Transformer.Kinetic.MeanField
 import Transformer.Kinetic.Section1_GridQuadrature
+import Transformer.Kinetic.Section1_SourceCells
 import Transformer.Kinetic.Fluctuations
 import Transformer.Kinetic.Codewords
 import Transformer.Kinetic.Accuracy
