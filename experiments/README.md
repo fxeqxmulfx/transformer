@@ -13,11 +13,14 @@ it, which git ignores.
 | [`basis`](basis) | 180 | Does a two-layer GPTMini of width 64 pass depth, recall and parity in the easy mode, while the hard mode takes width 128 and six layers? At what batch and rate do the runs go fastest? |
 | [`basis_sparsemax`](basis_sparsemax) | 222 | Where does sparsemax fail where softmax passes the basis, and do a smaller QKNorm starting scale or ScaledDot repair it while retaining sparse attention? |
 | [`basis_qknorm`](basis_qknorm) | 150 | Does sparsemax need query/key L2 normalization when its learned head gain and starting score dispersion are controlled? |
+| [`basis_tensor`](basis_tensor) | 57 | Does the jointly convex complete-data tensor stack learn all Basis recipes with ordinary AdamW at the original GPTMini softmax's measured FLOPs? |
 | [`basis_ansr`](basis_ansr) | 9 | Does ANSR train the unchanged softmax GPTMini on Basis depth, recall and parity, and how does low p_self compare with high p_self and AdamW? |
 | [`convex_atomic`](convex_atomic) | 38 | Does answer-only convex atomic sparsemax training escape uniform and saturated error floors, attain its positive-error minimum and transfer to Basis with generated physical heads? |
 | [`convex_binding`](convex_binding) | 18 | Does a factorized neighboring-token key encoder remove recall's binding obstruction while retaining convex atomic training and free original values? |
 | [`mod97_grokking`](mod97_grokking) | 12 | Do the openai/grok transformer and GPTMini generalize x / y mod 97 long after fitting it? |
 | [`mod97_size_search`](mod97_size_search) | 12 | What is the smallest tested dense GPTMini that groks mod 97 within 10,000 full epochs? |
+| [`grokking_progress`](grokking_progress) | 4 | Does a causal held-out symmetry projection reveal rule formation in ordinary softmax transformers before accuracy rises, while rejecting memorization and immediate learning? |
+| [`grokking_internals`](grokking_internals) | 1 | Which frozen probes, answer/EOS gradients, spectra, neuron statistics, head ablations, computation-stage interactions, archived AdamW directions, finite-step curvature, same-gradient moment resets and exact current-logit certificates track ordinary transformer grokking? |
 | [`mod97_stability`](mod97_stability) | 6 | Once GPTMini generalizes x / y mod 97, does it stay generalized, under AdamW and raw AMSGradW? |
 | [`mod193_stability`](mod193_stability) | 7 | Mod 193 under AdamW: archived normalizer/schedule recipes and fresh sparsemax starting-scale confirmation |
 | [`mqar_sparsemax`](mqar_sparsemax) | 33 | Does sparsemax attention learn associative recall where softmax does not? |

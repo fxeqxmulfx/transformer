@@ -9,8 +9,10 @@ from .graphs import GraphStepper
 from .loop import Training
 from .population import PopulationStepper
 from .atomic import AtomicStepper
+from .measured import MeasuredStepper
 
-STEPPERS = {training.Eager: EagerStepper, training.CudaGraph: GraphStepper, training.Compiled: CompiledStepper}
+STEPPERS = {training.Eager: EagerStepper, training.CudaGraph: GraphStepper, training.Compiled: CompiledStepper,
+            training.Measured: MeasuredStepper}
 
 
 class Engine:

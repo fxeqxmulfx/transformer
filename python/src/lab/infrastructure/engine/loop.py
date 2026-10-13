@@ -39,10 +39,13 @@ from ...domain.optimizers import ANSR
 from ...domain.atomic import AtomicColumns
 from ...domain.stopping import Selection
 from ...domain.training import AttentionDiagnostics, rate
+from ...domain.training import FlopBudget, Measured
 from ..benchmarks import build_task
 from ..nn import build_model
 from ..optim import report
 from .attention import AttentionObserver
+from ...domain.grokking import GrokkingDiagnostics
+from .grokking import GrokkingObserver
 
 
 class Clock:
@@ -119,10 +122,12 @@ class Training:
         if self.device.type == "cuda":
             torch.cuda.reset_peak_memory_stats(self.device)
         self.clock = Clock(self.device)
-        self.task = build_task(experiment.benchmark, experiment.seeds.data, self.device)
+        self.task = build_task(experiment.benchmark, experiment.seeds.data, self.device, experiment.model)
         self.model = build_model(experiment.model, self.task.vocab, experiment.seeds.model).to(self.device)
         self.attention = (AttentionObserver(experiment.diagnostics, self.task)
                           if isinstance(experiment.diagnostics, AttentionDiagnostics) else None)
+        self.grokking = (GrokkingObserver(experiment.diagnostics, self.task)
+                        if isinstance(experiment.diagnostics, GrokkingDiagnostics) else None)
         self.stepper = stepper(experiment, self.task, self.model, self.clock)
         self.sampler = self.task.sampler(experiment.budget.batch, experiment.seeds.batch_seed)
         self.completed, self.seen, self.last_batch_size = 0, 0, None
@@ -172,6 +177,11 @@ class Training:
                "training_seconds": self.clock.training, "wall_seconds": self.clock.wall(),
                "last_batch_size": self.last_batch_size, **self.measure(),
                **self.task.observe(self.model, self.experiment.evaluate.batch)}
+        if self.grokking is not None and not probe and step % self.experiment.diagnostics.orbit_every == 0:
+            with self.clock.diagnosing(paused=True):
+                row["grokking"] = self.grokking.observe(self.model, step)
+        if isinstance(self.experiment.execution, Measured):
+            row["arithmetic"] = self.stepper.arithmetic()
         if probe:
             self.run.record("probes", row)
         else:
@@ -226,7 +236,18 @@ class Training:
         experiment = self.experiment
         self.clock.resume()
         for step in range(self.completed + 1, experiment.budget.updates + 1):
+            before = self.sampler.state() if isinstance(experiment.budget, FlopBudget) else None
             parts, place = self.sampler.next()
+            if before is not None and not self.stepper.affords(parts):
+                self.sampler.restore(before)
+                with self.clock.diagnosing():
+                    self.flush()
+                self.clock.pause()
+                if self.history[-1]["step"] != step - 1:
+                    self.observe(step - 1, probe=False)
+                self.selection.stop = (step - 1, "flop_budget")
+                self.save(step - 1)
+                return
             learning_rate = (None if isinstance(experiment.optimizer, (ANSR, AtomicColumns)) else
                              rate(experiment.optimizer.lr, experiment.schedule, step - 1))
             sampled = cadence.sampled(experiment, step)
@@ -272,6 +293,8 @@ class Training:
             result["last"] = last
         if self.selection is not None:
             result["best"] = self.select()
+        if isinstance(experiment.execution, Measured):
+            result["arithmetic"] = self.stepper.arithmetic(detailed=True)
         self.run.finish(result)
         return result
 

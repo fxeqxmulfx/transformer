@@ -10,6 +10,7 @@ from dataclasses import dataclass
 import re
 
 from .benchmarks import Benchmark, ModularDivision
+from .grokking import GrokkingDiagnostics
 from .model import Model
 from .atomic import (AtomicColumns, AtomicMatching, BindingPricing, MatchingBindings,
                      MatchingOrders, OrderPricing, PairedMatching)
@@ -17,7 +18,9 @@ from .optimizers import ANSR, EVD, AdamW, Clipped, Optimizer
 from .spec import Spec, describe, require, require_kind, swap, walk
 from .stopping import Solved, Stopping
 from .synthetic import Synthetic
+from .tensor import TensorStack, check_tensor_benchmark
 from .training import AttentionDiagnostics, Budget, Checkpoint, CudaGraph, Diagnostics, Eager, Evaluate, Execution, Schedule, Seeds
+from .training import FlopBudget, Measured
 
 LABEL = re.compile(r"[a-z0-9][a-z0-9._-]*")
 
@@ -53,6 +56,18 @@ class Experiment(Spec):
                 "torch cannot capture an eigendecomposition: run Dash with EVD under Eager()")
         require(not any(isinstance(block, Clipped) for path, block in walk(self.optimizer) if path),
                 "Clipping acts on the gradient before the whole rule: write Clipped outermost")
+        if isinstance(self.execution, Measured):
+            require(isinstance(self.optimizer, AdamW), "Measured execution covers ordinary AdamW")
+            require(isinstance(self.benchmark, Synthetic), "Measured execution currently covers synthetic benchmarks")
+            require(not isinstance(self.diagnostics, AttentionDiagnostics) and not self.diagnostics.every
+                    and not self.diagnostics.neighbors, "Measured runs keep extra arithmetic diagnostics disabled")
+        if isinstance(self.budget, FlopBudget):
+            require(isinstance(self.execution, Measured), "FlopBudget needs Measured execution")
+        if isinstance(self.diagnostics, GrokkingDiagnostics):
+            require(isinstance(self.benchmark, ModularDivision) and self.benchmark.prime >= 3,
+                    "Orbit diagnostics require nontrivial prime-field division")
+            require(self.diagnostics.orbit_every % self.evaluate.every == 0,
+                    "Orbit cadence must coincide with canonical evaluations")
         population = any(isinstance(block, ANSR) for _, block in walk(self.optimizer))
         if population:
             require(isinstance(self.optimizer, ANSR), "ANSR does not take gradient optimizer stages")
@@ -87,6 +102,11 @@ class Experiment(Spec):
                     "AtomicMatching reports physical heads through the benchmark, not Transformer diagnostics")
             require(columns or isinstance(self.optimizer, AdamW),
                     "AtomicMatching supports AtomicColumns or raw AdamW control")
+        if isinstance(self.model, TensorStack):
+            check_tensor_benchmark(self.benchmark)
+            require(isinstance(self.optimizer, AdamW), "TensorStack uses ordinary AdamW")
+            require(not isinstance(self.diagnostics, AttentionDiagnostics),
+                    "TensorStack has joint distributions, not the original attention diagnostics")
         if isinstance(self.diagnostics, AttentionDiagnostics):
             require(isinstance(self.benchmark, (Synthetic, ModularDivision)),
                     "AttentionDiagnostics needs a Synthetic or ModularDivision benchmark")

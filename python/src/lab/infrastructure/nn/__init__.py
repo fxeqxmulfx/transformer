@@ -6,7 +6,9 @@ import torch
 
 from ...domain import model
 from ...domain.atomic import AtomicMatching as AtomicSpec
+from ...domain.tensor import TensorStack as TensorSpec
 from .atomic import AtomicMatching
+from .tensor import TensorStack
 from .transformer import Transformer
 
 
@@ -20,6 +22,8 @@ def build_model(spec, vocab, seed):
     torch.manual_seed(seed)
     if isinstance(spec, AtomicSpec):
         return AtomicMatching(spec, vocab)
+    if isinstance(spec, TensorSpec):
+        return TensorStack(spec, vocab)
     built = Transformer(spec, vocab)
     if not isinstance(spec.init, (model.TorchDefault, model.Normal, model.ScaledResidual)):
         raise NotImplementedError(f"No builder for {spec.init!r}")

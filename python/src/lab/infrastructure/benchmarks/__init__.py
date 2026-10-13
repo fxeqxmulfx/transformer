@@ -23,16 +23,20 @@ the best model; `analyze` summarizes the history of observations.
 from ...domain.benchmarks import ModularDivision, TinyShakespeare
 from ...domain.atomic import MatchingBindings, MatchingOrders
 from ...domain.synthetic import Synthetic
+from ...domain.tensor import TensorStack
 from .modular import ModularTask
 from .matching import MatchingTask
 from .synthetic.training import SyntheticTask
+from .synthetic.tensor import TensorBasisTask
 from .text import TextTask
 
 TASKS = {ModularDivision: ModularTask, TinyShakespeare: TextTask, Synthetic: SyntheticTask,
          MatchingOrders: MatchingTask, MatchingBindings: MatchingTask}
 
 
-def build_task(spec, data_seed, device):
+def build_task(spec, data_seed, device, model_spec=None):
+    if isinstance(model_spec, TensorStack):
+        return TensorBasisTask(spec, data_seed, device)
     if type(spec) not in TASKS:
         raise NotImplementedError(f"No task for {spec!r}")
     return TASKS[type(spec)](spec, data_seed, device)

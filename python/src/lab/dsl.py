@@ -9,6 +9,7 @@ from .domain.basis import basis
 from .domain.atomic import (AtomicColumns, AtomicMatching, BindingPricing, MatchingBindings,
                            MatchingOrders, OrderPricing, PairedMatching, SearchPricing)
 from .domain.benchmarks import ModularDivision, TinyShakespeare
+from .domain.grokking import GrokkingDiagnostics
 from .domain.experiment import Experiment, grid
 from .domain.generative import (Addition, BooleanAnd, Copy, Count, DoubleHistogram, Histogram, Mode, MostFrequent,
                                 Parity, RandomLM, Reverse, Sort)
@@ -22,13 +23,14 @@ from .domain.spec import describe, fingerprint, substitute, swap, walk
 from .domain.memorization import Memorization
 from .domain.stopping import EarlyStopping, Solved
 from .domain.synthetic import Synthetic
+from .domain.tensor import TensorGain, TensorStack
 from .domain.tasks import CRASP, MQAR, AlternatingBlocks, Dyck, Lookup, TypedDyck
-from .domain.training import (AttentionDiagnostics, Budget, Checkpoint, Compiled, Cosine, CudaGraph, Diagnostics, Eager, Evaluate, Schedule,
+from .domain.training import (AttentionDiagnostics, Budget, FlopBudget, Checkpoint, Compiled, Measured, Cosine, CudaGraph, Diagnostics, Eager, Evaluate, Schedule,
                                Seeds)
 
 __all__ = [
     # model
-    "Transformer", "AtomicMatching", "PairedMatching", "Block", "Attention", "FFN", "XSA",
+    "Transformer", "TensorStack", "TensorGain", "AtomicMatching", "PairedMatching", "Block", "Attention", "FFN", "XSA",
     "RMSNorm", "LayerNorm", "PreNorm", "PostNorm",
     "RoPE", "Sinusoidal", "NoPositions",
     "FusedQKV", "PerHeadQKV", "ScaledDot", "LearnedScaledDot", "QKNorm", "Softmax", "Sparsemax", "SurrogateWeights",
@@ -44,8 +46,8 @@ __all__ = [
     "Dash", "NewtonDB", "CoupledNewton", "EVD", "Chebyshev", "AdaFisher", "AMSGradMD",
     "Constant", "Inverse", "InverseSqrt", "Geometric",
     # training
-    "Schedule", "Cosine", "Budget", "Seeds", "Evaluate", "Diagnostics", "AttentionDiagnostics", "Checkpoint",
-    "EarlyStopping", "Solved", "Eager", "CudaGraph", "Compiled",
+    "Schedule", "Cosine", "Budget", "FlopBudget", "Seeds", "Evaluate", "Diagnostics", "AttentionDiagnostics", "GrokkingDiagnostics", "Checkpoint",
+    "EarlyStopping", "Solved", "Eager", "CudaGraph", "Compiled", "Measured",
     # composition
     "Experiment", "grid", "swap", "substitute", "walk", "describe", "fingerprint",
     # suites

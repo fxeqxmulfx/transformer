@@ -1,6 +1,17 @@
 # Project experiment plan: why sparsemax attention fails, and a repair
 
-Updated on 2026-10-06 UTC. **Done: steps 0 to 6 and the requested QKNorm follow-up.** The investigation cycle
+Updated on 2026-10-08 UTC. **Active direction: [Grokking: how it works and when it fails](grokking_plan.md),
+rebuilt on 2026-10-08 at the user's request around three measured boundaries
+(whether the rule is expressible at the model's size, memorization capacity and
+the critical data size) on RASP and C-RASP tasks, on ordinary softmax
+transformers with unchanged AdamW. The earlier [route list](grokking_lean_plan.md)
+is closed and kept as the ledger of its results.** The user changed
+direction on 2026-10-07. The [Basis correctness and convex architecture](plan.md)
+cycle is paused and unfinished in stages 3 and 4; its checkpoints and original
+FLOP budgets are retained. Complete real-model Basis semantics and the explicit
+tensor prototype remain verified in Lean, with the empirical recall failures
+preserved. The earlier investigation below is
+complete: **steps 0 to 6 and the requested QKNorm follow-up.** The investigation cycle
 was started on 2026-10-04 at the user's request. On 2026-10-04 the user asked for
 this plan: find out why sparsemax attention fails, and try to repair it, on
 the basis benchmark. It replaces the plan of 2026-10-03 for the mod-193
