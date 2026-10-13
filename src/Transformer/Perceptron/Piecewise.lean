@@ -30,18 +30,17 @@ Lipschitz piecewise-polynomial activation, and the linear activation
   — and is therefore not finitely atomic.  The uniform law is quantified over
   inside the conclusion, as in `thm: any.d`.
 
-**What is not witnessed.**  The hypothesis of `linear_stationary_polyDensity`
-that `supp μ` has non-empty interior is not exhibited.  The measure that
-satisfies it is `σ_d` itself, stationary at `ω = 0` because the attention
-field of the uniform law vanishes by symmetry; the tree never constructs
-`σ_d`, so no `example` here can produce it.  The remaining hypotheses are
-witnessed below.
+The original uniform law now witnesses every hypothesis of
+`linear_stationary_polyDensity`, including the nonempty support interior.
+`Section5_UniformSupport` proves its actual zero-weight stationarity,
+full support, polynomial density and failure of finite atomicity.
 
 Source: arXiv:2601.21366v2, `rem:piecewise-poly`, `rem:genericity-vacuity`.
 -/
 
 import Transformer.Perceptron.HigherDim
 import Transformer.Perceptron.TransformPoly
+import Transformer.Perceptron.Section5_UniformSupport
 
 open scoped BigOperators ENNReal NNReal
 open Real MeasureTheory
@@ -173,18 +172,20 @@ theorem linear_stationary_polyDensity (d : ℕ) (hd : 2 ≤ d) (β : ℝ) (hβ :
       ¬ IsFinitelyAtomic μ := by
   sorry
 
-/-- Every hypothesis of `linear_stationary_polyDensity` but the one on the
-interior of the support is satisfiable: `d = 2`, `β = 1`, the primitive
-`φ(s) = s²` of `2σ` for `σ(s) = s`, and the Dirac mass pinned at `basePoint 1`
-by the single neuron `a_0 = -basePoint 1`, whose drift there is radial.  See
-the module docstring on why the interior hypothesis is not exhibited. -/
-example :
+/-- Every original hypothesis of `linear_stationary_polyDensity` holds
+jointly: `d=2`, `β=1`, `φ(s)=s²`, zero original weights and the actual uniform
+circle probability. Its original support is the entire nonempty sphere.
+Source: arXiv:2601.21366v2, §5.3, `rem:genericity-vacuity`.
+The original interior hypothesis is retained and genuinely witnessed. -/
+example : ∃ μ : Perspective.ProbSphere 2,
     2 ≤ 2 ∧ (0 : ℝ) < 1 ∧ (∀ s : ℝ, HasDerivAt (fun t : ℝ => t ^ 2) (2 * s) s) ∧
-      IsStationary 1 (fun s : ℝ => s) (Pi.single 0 (1 : ℝ))
-        (Pi.single 0 (-((basePoint 1 : SSphere 2) : EucSpace 2)))
-        (Perspective.diracProb 2 (basePoint 1)) :=
-  ⟨le_rfl, one_pos, fun s => by simpa using hasDerivAt_pow 2 s,
-    isStationary_linear_pin 1 0 (basePoint 1)⟩
+      IsStationary 1 (fun s : ℝ => s) (0 : Idx 2 → ℝ) (0 : Idx 2 → EucSpace 2) μ ∧
+      (interior (μ : Measure (SSphere 2)).support).Nonempty := by
+  have hν := Metastability.isUniformOn_uniformLaw (d := 2) (by norm_num)
+  let μ : Perspective.ProbSphere 2 := ⟨MeanField.uniformLaw 2, hν.1⟩
+  exact ⟨μ, le_rfl, one_pos, fun s => by simpa using hasDerivAt_pow 2 s,
+    isStationary_zero_weights_of_uniform 1 one_ne_zero (fun s => s) 0 μ hν,
+    interior_support_nonempty_of_uniform μ hν⟩
 
 end Perceptron
 end Transformer
