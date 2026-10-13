@@ -95,6 +95,8 @@ import Transformer.Perceptron.Section6_SeriesIntegral
 import Transformer.Perceptron.Section6_AmbientWeight
 import Transformer.Perceptron.Section6_AmbientGradient
 import Transformer.Perceptron.Section6_RotationZeroSets
+import Transformer.Perceptron.Section6_ReflectionPaths
+import Transformer.Perceptron.Section6_SphereUniqueness
 import Transformer.Perceptron.NormalizedMap
 import Transformer.Perceptron.SignedGram
 import Transformer.Perceptron.NormalizedAtomicity
