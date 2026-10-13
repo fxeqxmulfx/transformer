@@ -20,6 +20,8 @@ cannot spread out.
 * "real-analytic `σ`" is `AnalyticOnNhd ℝ σ Set.univ`; its strict SOPD
   conclusion is proved in `Section3_StrictAtomicity.lean`. The non-analytic
   ReLU hypothesis is `¬ IsAnalyticOnSphere`, see `Analytic.lean`.
+  Its proof is in `Section5_ReLUAtomicity.lean`; this module supplies the
+  actual finite-Dirac predicate and its support equivalence before that proof.
 
 Source: arXiv:2601.21366v2, `thm: circle`, `thm: circle.gelu`.
 -/
@@ -146,45 +148,6 @@ noncomputable def secondAxis : EucSpace 2 := EuclideanSpace.single (1 : Fin 2) (
 @[simp] theorem inner_basePoint_secondAxis :
     inner (𝕜 := ℝ) ((basePoint 1 : SSphere 2) : EucSpace 2) secondAxis = 0 := by
   simp [basePoint, secondAxis, EuclideanSpace.inner_single_left]
-
-/-! ### ReLU atomicity -/
-
-/-- **Theorem (thm: circle).**  Let `d = 2`, `β > 0` and `σ(s) = s_+`, and let
-the weights `ϑ` be such that `v_ϑ` is not real-analytic on `𝕊¹`.  Then any
-`μ ∈ P(𝕊¹)` satisfying the stationarity condition `eq: steady.state` is purely
-atomic and has finite support.
-
-The footnote of the source ("this discards `v_ϑ ≡ 0` and the weight symmetries
-making `v_ϑ` a quadratic trigonometric polynomial") is not a further
-hypothesis: those are cases in which `v_ϑ` *is* analytic.
-
-Not proved here.
-
-Source: arXiv:2601.21366v2, `thm: circle`. -/
-theorem circle_isFinitelyAtomic (β : ℝ) (hβ : 0 < β) (φ : ℝ → ℝ)
-    (hφ : ∀ s : ℝ, HasDerivAt φ (2 * max s 0) s) (ω : Idx 2 → ℝ)
-    (a : Idx 2 → EucSpace 2) (hana : ¬ IsAnalyticOnSphere φ ω a)
-    (μ : Perspective.ProbSphere 2)
-    (hμ : IsStationary β (fun s => max s 0) ω a μ) :
-    IsFinitelyAtomic μ := by
-  sorry
-
-/-- The hypotheses of `circle_isFinitelyAtomic` are satisfiable: `β = 1`, the
-ReLU primitive `φ(s) = (s_+)²`, the one-neuron weights `ω = e₀`,
-`a_0 = -basePoint 1` — whose potential is not analytic on `𝕊¹`, by
-`not_isAnalyticOnSphere_relu` — and `μ = δ_{basePoint 1}`, which is stationary
-because that neuron is inactive at its atom. -/
-example :
-    (0 : ℝ) < 1 ∧ (∀ s : ℝ, HasDerivAt (fun t : ℝ => max t 0 ^ 2) (2 * max s 0) s) ∧
-      ¬ IsAnalyticOnSphere (fun s => max s 0 ^ 2) (Pi.single 0 (1 : ℝ))
-          (Pi.single 0 (-((basePoint 1 : SSphere 2) : EucSpace 2))) ∧
-      IsStationary 1 (fun s => max s 0) (Pi.single 0 (1 : ℝ))
-        (Pi.single 0 (-((basePoint 1 : SSphere 2) : EucSpace 2)))
-        (Perspective.diracProb 2 (basePoint 1)) :=
-  ⟨one_pos, hasDerivAt_reluSq,
-    not_isAnalyticOnSphere_relu 0 norm_basePoint_one norm_secondAxis
-      inner_basePoint_secondAxis,
-    isStationary_relu_pin 1 0 (basePoint 1)⟩
 
 end Perceptron
 end Transformer
