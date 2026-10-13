@@ -26,9 +26,11 @@ Lipschitz piecewise-polynomial activation, and the linear activation
 * `rem:genericity-vacuity` is carried as the one statement it makes: for
   `σ(s) = s`, a stationary measure whose support has non-empty interior has a
   density with respect to `σ_d` that is a spherical polynomial of degree `≤ 2`
-  — via `lem: quadpol` (i), which is `isPolyOfDegreeLE_attentionTransform_iff`
-  — and is therefore not finitely atomic.  The uniform law is quantified over
-  inside the conclusion, as in `thm: any.d`.
+  — via the proved original quadratic kernel inverse in
+  `Section5_QuadraticDensity` — and is therefore not finitely atomic.
+  `Section5_LinearStationarity` proves this claim, retaining the original
+  stationary measure and nonempty support interior. The uniform law is
+  quantified over inside the conclusion, as in `thm: any.d`.
 
 The original uniform law now witnesses every hypothesis of
 `linear_stationary_polyDensity`, including the nonempty support interior.
@@ -41,6 +43,7 @@ Source: arXiv:2601.21366v2, `rem:piecewise-poly`, `rem:genericity-vacuity`.
 import Transformer.Perceptron.HigherDim
 import Transformer.Perceptron.TransformPoly
 import Transformer.Perceptron.Section5_UniformSupport
+import Transformer.Perceptron.Section5_LinearStationarity
 
 open scoped BigOperators ENNReal NNReal
 open Real MeasureTheory
@@ -149,43 +152,6 @@ example :
     not_isAnalyticOnSphere_relu 0 norm_basePoint_one norm_secondAxis
       inner_basePoint_secondAxis,
     isStationary_relu_pin 1 0 (basePoint 1)⟩
-
-/-! ### The linear activation -/
-
-/-- **Remark (rem:genericity-vacuity).**  For `σ(s) = s`, whose potential
-`v_ϑ(x) = Σ_j ω_j (a_j·x)²` is quadratic, a stationary measure whose support
-has non-empty interior has a density with respect to `σ_d` that is a spherical
-polynomial of degree `≤ 2`, and is therefore not finitely atomic: the
-parameters carrying it lie in the non-generic set of `thm: any.d` (ii).
-
-Not proved here.
-
-Source: arXiv:2601.21366v2, `rem:genericity-vacuity`. -/
-theorem linear_stationary_polyDensity (d : ℕ) (hd : 2 ≤ d) (β : ℝ) (hβ : 0 < β)
-    (φ : ℝ → ℝ) (hφ : ∀ s : ℝ, HasDerivAt φ (2 * s) s) (ω : Idx d → ℝ)
-    (a : Idx d → EucSpace d) (μ : Perspective.ProbSphere d)
-    (hμ : IsStationary β (fun s => s) ω a μ)
-    (hint : (interior (μ : Measure (SSphere d)).support).Nonempty) :
-    (∀ ν : Measure (SSphere d), Metastability.IsUniformOn d ν →
-        ∃ g : SSphere d → ℝ, IsPolyOfDegreeLE 2 g ∧
-          (μ : Measure (SSphere d)) = ν.withDensity fun y => ENNReal.ofReal (g y)) ∧
-      ¬ IsFinitelyAtomic μ := by
-  sorry
-
-/-- Every original hypothesis of `linear_stationary_polyDensity` holds
-jointly: `d=2`, `β=1`, `φ(s)=s²`, zero original weights and the actual uniform
-circle probability. Its original support is the entire nonempty sphere.
-Source: arXiv:2601.21366v2, §5.3, `rem:genericity-vacuity`.
-The original interior hypothesis is retained and genuinely witnessed. -/
-example : ∃ μ : Perspective.ProbSphere 2,
-    2 ≤ 2 ∧ (0 : ℝ) < 1 ∧ (∀ s : ℝ, HasDerivAt (fun t : ℝ => t ^ 2) (2 * s) s) ∧
-      IsStationary 1 (fun s : ℝ => s) (0 : Idx 2 → ℝ) (0 : Idx 2 → EucSpace 2) μ ∧
-      (interior (μ : Measure (SSphere 2)).support).Nonempty := by
-  have hν := Metastability.isUniformOn_uniformLaw (d := 2) (by norm_num)
-  let μ : Perspective.ProbSphere 2 := ⟨MeanField.uniformLaw 2, hν.1⟩
-  exact ⟨μ, le_rfl, one_pos, fun s => by simpa using hasDerivAt_pow 2 s,
-    isStationary_zero_weights_of_uniform 1 one_ne_zero (fun s => s) 0 μ hν,
-    interior_support_nonempty_of_uniform μ hν⟩
 
 end Perceptron
 end Transformer
