@@ -16,6 +16,8 @@ import Transformer.Causal.InteractionRemark
 import Transformer.Causal.Packing
 import Transformer.Causal.Metastability
 import Transformer.Causal.Section5_CircleGeometry
+import Transformer.Causal.Section5_InteractionDecay
+import Transformer.Causal.Section5_StrongCenterWitness
 import Transformer.Causal.FixedCenters
 import Transformer.Causal.SequentialFlow
 import Transformer.Causal.ParkingCount

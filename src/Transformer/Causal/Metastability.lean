@@ -14,6 +14,7 @@ Equations and statements covered:
 import Transformer.Basic
 import Transformer.Causal.Basic
 import Transformer.Causal.Packing
+import Transformer.Causal.Section5_StrongCenter
 
 open scoped BigOperators
 open Real
@@ -58,6 +59,12 @@ the displacement of each center is bounded:
 
   `max_{t ∈ [0, T_j]} |x_{s_j}(t) - x_{s_j}(0)| < ε c β^{-1/2}`.
 
+The source uses one-based indices and bounds the speed by `s_j h(r)`.
+Here `s j` is zero-based and is the exact number of predecessors; the
+proof establishes the correspondingly sharper time condition above.
+The gap comparison is proved for the actual vector CSA equation, using
+squared chord distances to handle changes of the nearest predecessor.
+
 Source: arXiv:2411.04990v2, §5, `lemma: meta`. -/
 theorem lemma_meta
     (β c ε : ℝ) (hβ : 0 < β) (hc : 0 < c) (hε : 0 < ε)
@@ -80,7 +87,8 @@ theorem lemma_meta
       ‖((X t ⟨s j, hs j⟩ : EucSpace 2))
           - ((X 0 ⟨s j, hs j⟩ : EucSpace 2))‖
         < ε * c * β ^ (-(1/2 : ℝ)) := by
-  sorry
+  exact strong_center_displacement β c ε hβ hc hε X hX ⟨s j, hs j⟩
+    (fun i hi => h_strong j i hi) h_c T_j hT
 
 /-- A single token on the circle is a stationary solution of `CSA`: its own
 attention average is itself, and `Proj_x x = 0`. -/
