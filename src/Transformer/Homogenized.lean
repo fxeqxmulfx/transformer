@@ -70,6 +70,7 @@ import Transformer.Homogenized.Section7_GaussianScoreDerivatives
 import Transformer.Homogenized.Section7_GaussianAttentionHessian
 import Transformer.Homogenized.Section7_GaussianAttentionProduct
 import Transformer.Homogenized.Section7_GaussianAttentionKeyTrace
+import Transformer.Homogenized.Section7_GaussianAttentionKeyBound
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
