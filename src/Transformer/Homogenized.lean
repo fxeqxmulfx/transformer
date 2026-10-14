@@ -75,6 +75,7 @@ import Transformer.Homogenized.Section7_GaussianQueryContractions
 import Transformer.Homogenized.Section7_GaussianAttentionQueryTrace
 import Transformer.Homogenized.Section7_GaussianAttentionTraceBounds
 import Transformer.Homogenized.Section7_GaussianGramHessian
+import Transformer.Homogenized.Section7_GaussianGramCovarianceTrace
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
