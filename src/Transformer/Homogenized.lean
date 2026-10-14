@@ -63,6 +63,7 @@ import Transformer.Homogenized.Section7_SoftmaxContractions
 import Transformer.Homogenized.Section7_GaussianCoordinateLaw
 import Transformer.Homogenized.Section7_GaussianCoordinateMoments
 import Transformer.Homogenized.Section7_GaussianHeadFeatures
+import Transformer.Homogenized.Section7_GaussianFeatureCovariance
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
