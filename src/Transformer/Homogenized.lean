@@ -47,7 +47,7 @@ import Transformer.Homogenized.PropagationChaos
 import Transformer.Homogenized.SphereSde
 import Transformer.Homogenized.HansonWright
 import Transformer.Homogenized.GaussianInterp
-import Transformer.Homogenized.Section7_GaussianCovariance
+import Transformer.Homogenized.Section7_GaussianConditioning
 import Transformer.Homogenized.SoftmaxDerivatives
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
