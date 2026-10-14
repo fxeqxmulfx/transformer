@@ -16,9 +16,11 @@ nonempty sphere invariant under every linear isometry of `ℝ^d`, and such a mea
 unique, so quantifying over all families satisfying it is not a strengthening.
 This is `Perspective.UniformTuple`'s device, one sphere at a time.
 
-`coro: cm` is proved, from `prop: concentration unif` carried as an explicit
-hypothesis and from `Metastability.AlphaDist`, whose `α(ε)` estimate corrects
-the one the source's proof uses.  `prop: concentration unif` is not proved.
+`coro: cm` is proved in a conditional form, with the concentration conclusion
+carried as an explicit hypothesis, and from `Metastability.AlphaDist`, whose
+`α(ε)` estimate corrects the one the source's proof uses. The original
+`prop: concentration unif` is proved in `Section4_UniformConcentration`,
+which imports the initialization vocabulary defined here.
 -/
 
 import Transformer.Basic
@@ -85,25 +87,6 @@ def nearOrthogonal (d n : ℕ) : Set (Idx n → SSphere d) :=
       ∀ i : Idx n, ‖(X i : EucSpace d) - (w i : EucSpace d)‖
         ≤ Real.sqrt (4 * Real.log d / (d : ℝ)) }
 
-/-- **Proposition (prop: concentration unif).**
-
-For `n ≥ 2` there is `d⋆(n) > n` such that for every `d ≥ d⋆(n)`, an i.i.d.
-uniform sample on `𝕊^{d-1}` lies in `nearOrthogonal` with probability at
-least `1 - 2 n² d^{-1/64}`.
-
-Not proved here.
-
-Source: arXiv:2410.06833v1, §4. -/
-theorem concentration_unif (n : ℕ) (hn : 2 ≤ n) :
-    ∀ σ : ∀ d : ℕ, Measure (SSphere d), IsUniformFamily σ →
-      ∃ d_star : ℕ, n < d_star ∧ ∀ d : ℕ, d_star ≤ d →
-        1 - 2 * (n : ℝ)^2 * (d : ℝ) ^ (-(1 : ℝ) / 64)
-          ≤ (iidSphere d n (σ d)).real (nearOrthogonal d n) := by
-  sorry
-
-/-- The hypothesis of `concentration_unif` is satisfiable: `n = 2`. -/
-example : 2 ≤ 2 := le_rfl
-
 /-- **Corollary (coro: cm) with equation (eq: technical.cond).**
 
 For `d ≥ max(d⋆(n), 381)` and `β > 0` satisfying
@@ -113,10 +96,10 @@ For `d ≥ max(d⋆(n), 381)` and `β > 0` satisfying
 an i.i.d. uniform sample on `𝕊^{d-1}` is `(β, ε)`-separated with
 `ε = 4 log d / d` with probability at least `1 - 2 n² d^{-1/64}`.
 
-The concentration statement the corollary rests on, `concentration_unif`, is
-unproved, so it is carried here as the explicit hypothesis `h_conc` rather
-than used: what is proved is that the corollary follows from it, and the
-dependence is legible in the signature.  Given `h_conc` the rest is
+This conditional form carries the concentration conclusion as the explicit
+hypothesis `h_conc`; the full original `concentration_unif` is proved in
+`Section4_UniformConcentration`. Here the corollary follows from that
+conclusion, and the dependence is legible in the signature. Given `h_conc` the rest is
 `isSeparated_of_near_orthogonal` — the near-orthogonal configurations are
 `(β, ε)`-separated — and monotonicity of the measure.
 
