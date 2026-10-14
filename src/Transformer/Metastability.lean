@@ -64,6 +64,7 @@ import Transformer.Metastability.GaussianMixtureTail
 import Transformer.Metastability.InitialCounterexample
 import Transformer.Metastability.InitialUniform
 import Transformer.Metastability.Section4_UniformTail
+import Transformer.Metastability.Section4_UniformProjectionScale
 import Transformer.Metastability.UniformCap
 import Transformer.Metastability.NotSeparated
 import Transformer.Metastability.LowDimDecay
