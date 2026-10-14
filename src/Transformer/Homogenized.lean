@@ -67,6 +67,7 @@ import Transformer.Homogenized.Section7_GaussianFeatureCovariance
 import Transformer.Homogenized.Section7_GaussianIndexedInterpolation
 import Transformer.Homogenized.Section7_GaussianSoftmaxGrowth
 import Transformer.Homogenized.Section7_GaussianScoreDerivatives
+import Transformer.Homogenized.Section7_GaussianAttentionHessian
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
