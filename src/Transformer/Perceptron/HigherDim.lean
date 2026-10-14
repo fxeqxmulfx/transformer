@@ -34,6 +34,8 @@ Source: arXiv:2601.21366v2, `thm: any.d`.
 
 import Transformer.Perceptron.Atomicity
 import Transformer.Perceptron.Section3_ReLUGenericity
+import Transformer.Perceptron.Section5_AnalyticNullSupport
+import Transformer.Perceptron.Section5_ReLUAtomicity
 import Transformer.Metastability.InitialUniform
 
 open scoped BigOperators ENNReal
@@ -53,7 +55,11 @@ The uniform law is quantified over inside the conclusion; see the module
 docstring.  Singularity of `μ` with respect to it then follows, by
 `mutuallySingular_of_measure_support_eq_zero`.
 
-Not proved here.
+The ReLU branch uses the actual analytic branch obstruction. In the
+analytic branch, positive uniform measure of the original support makes
+the actual first variation constant; the proved actual mixed Hessian
+and nonzero smooth gradients in arbitrarily small-mass neighborhoods
+then contradict the original strict coercivity inequality.
 
 Source: arXiv:2601.21366v2, `thm: any.d` (i). -/
 theorem any_d_measure_support_eq_zero (d : ℕ) (hd : 2 ≤ d) (β : ℝ) (hβ : 0 < β)
@@ -64,7 +70,10 @@ theorem any_d_measure_support_eq_zero (d : ℕ) (hd : 2 ≤ d) (β : ℝ) (hβ :
       AnalyticOnNhd ℝ σ Set.univ ∧ IsStrictSOPD β φ σ ω a μ) :
     ∀ ν : Measure (SSphere d), Metastability.IsUniformOn d ν →
       ν (μ : Measure (SSphere d)).support = 0 := by
-  sorry
+  intro ν hν
+  rcases hcrit with ⟨rfl, hana, hstat⟩ | ⟨hσ, hstrict⟩
+  · exact relu_measure_support_eq_zero hd β hβ φ hφ ω a hana μ hstat ν hν
+  · exact analytic_strict_measure_support_eq_zero hd β hβ φ σ hφ hσ ω a μ hstrict ν hν
 
 /-- The hypotheses of `any_d_measure_support_eq_zero` are satisfiable, in both
 of the two alternatives: at `d = 2` the pinned ReLU perceptron of
