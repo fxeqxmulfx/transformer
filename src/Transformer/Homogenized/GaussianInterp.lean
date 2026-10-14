@@ -48,6 +48,8 @@ The source's softmax products are bounded. Their derivatives with respect to
 `h,g` can grow because the scores `h_iᵀg_j` are bilinear. Applying interpolation
 to that application additionally needs a version with derivative growth control;
 bounded derivatives of the softmax in its scores do not give that hypothesis.
+That polynomial-growth version is proved as `gaussian_interp_polynomial`
+in `Section7_GaussianPolynomialInterpolation.lean`, including both endpoints.
 
 Source: arXiv:2604.01978v1, `lem:gaussian_interp`, `eq:interpolation_gaussian`;
 `[vershynin2018high, Lemma 7.2.7]`.
