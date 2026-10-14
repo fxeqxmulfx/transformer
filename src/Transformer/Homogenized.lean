@@ -60,6 +60,7 @@ import Transformer.Homogenized.SoftmaxDerivatives
 import Transformer.Homogenized.Section7_SoftmaxHessian
 import Transformer.Homogenized.Section7_SoftmaxSummedHessian
 import Transformer.Homogenized.Section7_SoftmaxContractions
+import Transformer.Homogenized.Section7_GaussianCoordinateLaw
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
