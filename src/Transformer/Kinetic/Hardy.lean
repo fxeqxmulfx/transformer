@@ -77,27 +77,6 @@ def IsVolterraHardySolution (lam a σ₀ : ℝ) (g : ℝ → ℝ → ℝ) : Prop
       (a * (graphon lam σ σ₀ + ∫ σ' in σ₀..σ, graphon lam σ σ' * g t σ'))
       (Set.Ici 0) t
 
-/-- **Proposition (prop:Bessel).**  For `a > 0`, `λ ∈ ℝ` and `0 < σ₀ < σ ≤ 1`,
-the Volterra-Hardy equation `eq:Hardy-hom` has `hardyProfile` as its unique
-solution: `eq:Bessel-full` for `λ ≠ 0`, `eq:Bessel-output` for `λ = 0`.
-
-Stated as existence together with uniqueness — the source's "the unique
-solution of `eq:Hardy-hom` is given by" — so that nothing is assumed: the
-formula is produced, not hypothesized.
-
-Not proved here.
-
-Source: arXiv:2605.09213v1, `prop:Bessel`. -/
-theorem hardy_bessel (lam a σ₀ : ℝ) (ha : 0 < a) (hσ₀ : 0 < σ₀) (hσ₁ : σ₀ < 1) :
-    IsVolterraHardySolution lam a σ₀ (fun t σ => hardyProfile lam a t σ σ₀) ∧
-      ∀ g : ℝ → ℝ → ℝ, IsVolterraHardySolution lam a σ₀ g →
-        ∀ t ∈ Set.Ici (0 : ℝ), ∀ σ ∈ Set.Ioc σ₀ 1,
-          g t σ = hardyProfile lam a t σ σ₀ := by
-  sorry
-
-/-- The hypotheses of `hardy_bessel` are satisfiable. -/
-example : (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 / 2 ∧ (1 : ℝ) / 2 < 1 := by norm_num
-
 /-- `eq:Sb-def`: the leading correction to the soft accuracy,
 
   `𝒮_t(σ₀) = Σ_{n≥1} e^{-π²n²/(2M²)} g_{a_n}(t, 1; σ₀)`.

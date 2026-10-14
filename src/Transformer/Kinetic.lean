@@ -26,6 +26,13 @@ import Transformer.Kinetic.Hardy
 import Transformer.Kinetic.Section6_PowerSeries
 import Transformer.Kinetic.Section6_PositiveCoefficients
 import Transformer.Kinetic.Section6_ModeProfile
+import Transformer.Kinetic.Section6_HardyVariable
+import Transformer.Kinetic.Section6_HardyKernel
+import Transformer.Kinetic.Section6_GoursatSeries
+import Transformer.Kinetic.Section6_HardyPrimitive
+import Transformer.Kinetic.Section6_HardyRegularity
+import Transformer.Kinetic.Section6_HardyContraction
+import Transformer.Kinetic.Section6_HardyUniqueness
 import Transformer.Kinetic.Section6_ModeCurvature
 import Transformer.Kinetic.Section6_WeightedCoefficients
 import Transformer.Kinetic.Section6_SeriesProfiles
