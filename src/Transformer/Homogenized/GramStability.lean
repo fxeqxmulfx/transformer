@@ -22,6 +22,7 @@ Source: arXiv:2604.01978v1, `lem:Gram_stability`.
 -/
 
 import Transformer.Homogenized.SimplexDrift
+import Transformer.Homogenized.Section7_OverlapDriftGramComparison
 
 open scoped BigOperators NNReal
 open Real MeasureTheory
@@ -139,7 +140,11 @@ differ by at most `ε` entrywise, then for every `i ≠ j`
 * `R(γ)` is not asserted to be realizable; `Y` is a hypothesis, and in
   dimension `d ≥ n` it exists.
 
-Not proved here.
+The proof gives the universal constant 80. The proved Gaussian interpolation
+and original head-feature covariance give the correlation estimate; the
+actual drift formula then preserves it. The intermediate result applies
+to arbitrary unit configurations and real temperatures, so the additional
+simplex, positivity and distinct-index assumptions need no further use.
 
 Source: arXiv:2604.01978v1, `lem:Gram_stability`. -/
 theorem gram_stability :
@@ -154,7 +159,10 @@ theorem gram_stability :
       ∀ i j : Idx (n + 1), i ≠ j →
         |overlapDrift β ρ X i j - overlapDrift β ρ Y i j|
           ≤ K * (1 + (d : ℝ) * (σA : ℝ) ^ 4 * β ^ 2 * ((n : ℝ) + 1)) * ε := by
-  sorry
+  refine ⟨80, by norm_num, ?_⟩
+  intro d n hd _ β _ σV σA ρ hρ _ _ X Y hX hY ε hR i j _
+  simpa only [Nat.cast_add, Nat.cast_one] using
+    abs_overlapDrift_sub_le_gram hd β σV σA ρ hρ X Y hX hY.1 i j ε hR
 
 /-- The hypotheses of `gram_stability` are satisfiable non-trivially: `d = 2`,
 `n + 1 = 2`, `β = 1`, `ρ* = δ_0`, `γ = 0 ∈ (-1, 1)`, and `X = Y` the

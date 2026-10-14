@@ -80,6 +80,7 @@ import Transformer.Homogenized.Section7_GaussianBlendMoments
 import Transformer.Homogenized.Section7_GaussianGramExpectation
 import Transformer.Homogenized.Section7_GaussianGramCoupling
 import Transformer.Homogenized.Section7_BarycenterGramComparison
+import Transformer.Homogenized.Section7_OverlapDriftGramComparison
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
