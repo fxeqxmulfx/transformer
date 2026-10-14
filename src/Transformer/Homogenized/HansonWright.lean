@@ -35,7 +35,7 @@ it is on the books because the source's own estimates are derived from it.
 Source: arXiv:2604.01978v1, `lem:Hanson_wright`; `[vershynin2018high, Thm 6.2.1]`.
 -/
 
-import Transformer.Homogenized.Section6_DiagonalQuadraticMGF
+import Transformer.Homogenized.Section6_MatrixNorms
 import Mathlib.Analysis.CStarAlgebra.Matrix
 
 open scoped BigOperators NNReal ENNReal
@@ -43,19 +43,6 @@ open Real MeasureTheory ProbabilityTheory
 
 namespace Transformer
 namespace Homogenized
-
-/-- The `ℓ²` operator norm of a real square matrix: its norm as a continuous
-linear endomorphism of `EuclideanSpace ℝ (Fin n)`.
-
-Source: arXiv:2604.01978v1, `lem:Hanson_wright` (`‖B‖_op`). -/
-noncomputable def matOpNorm {n : ℕ} (B : Matrix (Fin n) (Fin n) ℝ) : ℝ :=
-  ‖(Matrix.toEuclideanCLM (𝕜 := ℝ) B : EucSpace n →L[ℝ] EucSpace n)‖
-
-theorem matOpNorm_nonneg {n : ℕ} (B : Matrix (Fin n) (Fin n) ℝ) : 0 ≤ matOpNorm B :=
-  norm_nonneg _
-
-@[simp] theorem matOpNorm_zero {n : ℕ} : matOpNorm (0 : Matrix (Fin n) (Fin n) ℝ) = 0 := by
-  simp [matOpNorm]
 
 /-- **Lemma (lem:Hanson_wright), the Hanson–Wright inequality.**  There is a
 universal `c > 0` such that, for a random vector `Z ∈ ℝⁿ` with independent
