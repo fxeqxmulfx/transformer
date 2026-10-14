@@ -112,6 +112,7 @@ import Transformer.Perceptron.Section5_LinearStationarity
 import Transformer.Perceptron.Section5_ReLUBranches
 import Transformer.Perceptron.Section5_BiasedBranches
 import Transformer.Perceptron.Section5_BiasedTransform
+import Transformer.Perceptron.Section5_BiasedObstruction
 import Transformer.Perceptron.Section5_ReLUObstruction
 import Transformer.Perceptron.Section5_ReLUAtomicity
 import Transformer.Perceptron.Section6_RotationZeroSets
