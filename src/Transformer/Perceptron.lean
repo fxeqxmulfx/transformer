@@ -111,6 +111,7 @@ import Transformer.Perceptron.Section5_PolynomialSpace
 import Transformer.Perceptron.Section5_PolynomialSpan
 import Transformer.Perceptron.Section5_PolynomialInverse
 import Transformer.Perceptron.Section5_PolynomialKernel
+import Transformer.Perceptron.Section5_PiecewisePolynomialCover
 import Transformer.Perceptron.Section5_QuadraticCoefficients
 import Transformer.Perceptron.Section5_QuadraticPolynomials
 import Transformer.Perceptron.Section5_QuadraticDensity

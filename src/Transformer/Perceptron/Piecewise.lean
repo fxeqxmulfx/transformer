@@ -42,6 +42,7 @@ Source: arXiv:2601.21366v2, `rem:piecewise-poly`, `rem:genericity-vacuity`.
 
 import Transformer.Perceptron.HigherDim
 import Transformer.Perceptron.TransformPoly
+import Transformer.Perceptron.Section5_PiecewisePolynomialCover
 import Transformer.Perceptron.Section5_UniformSupport
 import Transformer.Perceptron.Section5_LinearStationarity
 
@@ -52,39 +53,6 @@ namespace Transformer
 namespace Perceptron
 
 variable {d : ℕ}
-
-/-! ### Piecewise-polynomial activations -/
-
-/-- **`σ` is piecewise polynomial**: there are finitely many breakpoints such
-that on every open interval avoiding them `σ` is a polynomial.
-
-Source: arXiv:2601.21366v2, `rem:piecewise-poly`. -/
-def IsPiecewisePolynomial (σ : ℝ → ℝ) : Prop :=
-  ∃ B : Finset ℝ, ∀ I : Set ℝ, IsOpen I → IsPreconnected I → Disjoint I (B : Set ℝ) →
-    ∃ P : Polynomial ℝ, ∀ s ∈ I, σ s = P.eval s
-
-/-- The ReLU is piecewise polynomial, with the single breakpoint `0`. -/
-theorem isPiecewisePolynomial_relu : IsPiecewisePolynomial (fun s : ℝ => max s 0) := by
-  refine ⟨{0}, fun I _ hconn hdisj => ?_⟩
-  have h0 : (0 : ℝ) ∉ I := fun h =>
-    (Set.disjoint_left.mp hdisj h) (by simp)
-  rcases Set.eq_empty_or_nonempty I with hI | ⟨s₀, hs₀⟩
-  · exact ⟨0, fun s hs => absurd (hI ▸ hs) (Set.notMem_empty s)⟩
-  rcases lt_or_gt_of_ne (show s₀ ≠ 0 from fun h => h0 (h ▸ hs₀)) with hneg | hpos
-  · refine ⟨0, fun s hs => ?_⟩
-    have hs0 : s < 0 := by
-      by_contra hge
-      exact h0 (hconn.Icc_subset hs₀ hs ⟨hneg.le, not_lt.mp hge⟩)
-    simp [max_eq_right hs0.le]
-  · refine ⟨Polynomial.X, fun s hs => ?_⟩
-    have hs0 : 0 < s := by
-      by_contra hle
-      exact h0 (hconn.Icc_subset hs hs₀ ⟨not_lt.mp hle, hpos.le⟩)
-    simp [max_eq_left hs0.le]
-
-/-- The ReLU is globally Lipschitz, with constant `1`. -/
-theorem lipschitzWith_relu : LipschitzWith 1 (fun s : ℝ => max s 0) :=
-  LipschitzWith.id.max_const 0
 
 /-! ### The extension of `thm: circle` and `thm: any.d` -/
 
