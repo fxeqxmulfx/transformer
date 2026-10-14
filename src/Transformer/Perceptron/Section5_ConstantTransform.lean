@@ -22,7 +22,7 @@ works by the already proved signed-temperature injectivity theorem.
 -/
 
 import Transformer.Perceptron.Section5_UniformInteraction
-import Transformer.Perceptron.TransformPoly
+import Transformer.Perceptron.Section5_QuadraticPolynomials
 import Mathlib.MeasureTheory.Integral.Prod
 
 open Real MeasureTheory Set

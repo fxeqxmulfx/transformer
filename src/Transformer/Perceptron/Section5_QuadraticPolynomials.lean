@@ -5,6 +5,8 @@ ArXiv:2601.21366v2, §5.1, `lem: quadpol` (i), and §5.3,
 `rem:genericity-vacuity`. The original finite sums of squared neuron
 coordinates are restrictions of actual multivariate polynomials of
 total degree at most two.
+The bounded-degree predicate retains that actual polynomial witness;
+only a bound is intrinsic, since `Σ_i x_i² = 1` on the original sphere.
 
 The polynomial operations below retain the actual witnesses and prove
 their actual degree bounds. A linear inner product is represented by
@@ -17,14 +19,27 @@ lemmas establish the degree of the actual candidate produced by the
 quadratic-kernel inverse, rather than declaring it polynomial by fiat.
 -/
 
-import Transformer.Perceptron.TransformPoly
+import Transformer.Perceptron.Transform
 import Transformer.Metastability.Section4_UniformLaw
+import Mathlib.Algebra.MvPolynomial.Degrees
 import Mathlib.Topology.Algebra.MvPolynomial
 
 open Real MeasureTheory
 open scoped BigOperators
 
 namespace Transformer.Perceptron
+
+/-- An actual multivariate polynomial of total degree at most `k`
+restricts to the given function on the original sphere.
+Source: arXiv:2601.21366v2, §5.1, `lem: quadpol` (i). -/
+def IsPolyOfDegreeLE {d : ℕ} (k : ℕ) (f : SSphere d → ℝ) : Prop :=
+  ∃ P : MvPolynomial (Idx d) ℝ, P.totalDegree ≤ k ∧
+    ∀ x : SSphere d, f x = MvPolynomial.eval (fun i => (x : EucSpace d) i) P
+
+/-- An actual constant is a degree-zero original spherical polynomial.
+Source: arXiv:2601.21366v2, §5.1, the degree-zero part of `lem: quadpol` (i). -/
+theorem isPolyOfDegreeLE_const {d : ℕ} (c : ℝ) : IsPolyOfDegreeLE 0 (fun _ : SSphere d => c) :=
+  ⟨MvPolynomial.C c, by simp [MvPolynomial.totalDegree_C], fun _ => by simp⟩
 
 /-- A larger actual degree bound keeps the same actual polynomial witness.
 Source: arXiv:2601.21366v2, §5.1, `lem: quadpol` (i), degree bounds. -/
