@@ -107,6 +107,7 @@ import Transformer.Perceptron.Section5_QuadraticGeometry
 import Transformer.Perceptron.Section5_PolynomialMoments
 import Transformer.Perceptron.Section5_PowerMoments
 import Transformer.Perceptron.Section5_PowerPolynomials
+import Transformer.Perceptron.Section5_PolynomialSpace
 import Transformer.Perceptron.Section5_QuadraticCoefficients
 import Transformer.Perceptron.Section5_QuadraticPolynomials
 import Transformer.Perceptron.Section5_QuadraticDensity
