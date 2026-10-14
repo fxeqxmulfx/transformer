@@ -26,6 +26,17 @@ import Transformer.Kinetic.Hardy
 import Transformer.Kinetic.Section6_PowerSeries
 import Transformer.Kinetic.Section6_PositiveCoefficients
 import Transformer.Kinetic.Section6_ModeProfile
+import Transformer.Kinetic.Section6_ModeCurvature
+import Transformer.Kinetic.Section6_WeightedCoefficients
+import Transformer.Kinetic.Section6_SeriesProfiles
+import Transformer.Kinetic.Section6_WeightedProfiles
+import Transformer.Kinetic.Section6_WeightedConvexity
+import Transformer.Kinetic.Section6_InteriorMinimum
+import Transformer.Kinetic.Section6_OutputAggregation
+import Transformer.Kinetic.Section6_SourcePosition
+import Transformer.Kinetic.Section6_SourceLimits
+import Transformer.Kinetic.Section6_SoftLimits
+import Transformer.Kinetic.Section6_UShape
 import Transformer.Kinetic.Section1_RecencyEndpoint
 import Transformer.Kinetic.Riemann
 import Transformer.Kinetic.MeanField

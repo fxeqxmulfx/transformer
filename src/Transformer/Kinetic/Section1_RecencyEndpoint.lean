@@ -9,7 +9,7 @@ and because `Y=0`. That value is not its extension from the left.
 The proof in the manuscript uses the power series `ψ_c`, with `ψ_c(0)=c`,
 and computes the limiting slope through `Y(σ₀) → 0`. Consequently the
 recency assertion is carried by the limit of the derivative on `(0,1)`,
-as recorded in `Hardy.u_shape`, rather than the derivative of the
+as recorded in `Section6_UShape.u_shape`, rather than the derivative of the
 totalized formula at `1`. The latter assertion is refuted below: a
 nonnegative function vanishing at its right endpoint cannot have a
 positive left derivative there.
@@ -135,7 +135,7 @@ example : (0 : ℝ) ≤ 1 := zero_le_one
 the U-shape theorem.** At `β=λ=M=1`, a positive time satisfying both
 smallness bounds exists, yet the positive derivative at the totalized
 endpoint is impossible. This refutes that former Lean interpretation of
-recency, while leaving the manuscript's interior limiting slope open.
+recency. The manuscript's interior limiting slope is proved in `Section6_SoftLimits`.
 Source: arXiv:2605.09213v1, §1, `thm:U-shape` (ii), `eq:affine-smallness`. -/
 theorem exists_admissible_recency_endpoint_counterexample :
     ∃ t : ℝ, (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧ 0 < t ∧

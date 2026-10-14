@@ -15,6 +15,7 @@ import Transformer.Kinetic.Defs
 import Transformer.Kinetic.FourierDecay
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 open scoped BigOperators
 open Real
@@ -110,51 +111,6 @@ noncomputable def softCorrection (β lam M t σ₀ : ℝ) : ℝ :=
   ∑' n : ℕ, Real.exp (-(π ^ 2 / (2 * M ^ 2)) * ((n : ℝ) + 1) ^ 2) *
     hardyProfile lam (aCoeff β (n + 1)) t 1 σ₀
 
-/-- **Theorem (thm:U-shape), Lost in the middle.**  Let `λ > 0` and assume
-`eq:affine-smallness`,
-
-  `t sup_{n≥1} a_n ≤ min{3 - √3, 2(1 - e^{-λ})}`.
-
-Then
-
-* (i) *primacy*: `𝒮_t(σ₀) → +∞` as `σ₀ ↓ 0`;
-* (ii) *recency*: `𝒮_t'(1⁻) > 0`;
-* (iii) *U-shape*: `σ₀ ↦ 𝒮_t(σ₀)` has a unique global minimum in `(0,1)`.
-
-**What the source says and what is changed here.**  Two standing assumptions of
-the manuscript are written into the statement, because without them the
-conclusions are false rather than merely unproved.  `β > 0`: at `β = 0` the
-interaction `w_β ≡ 1` has `a_n = 0` for every `n ≥ 1`, so `𝒮_t ≡ 0` and neither
-(i) nor (ii) holds.  `t > 0`: at `t = 0` the profile vanishes identically, by
-`hardyProfile_zero`, with the same consequence; the source's own footnote reads
-the smallness condition as a condition "for `t > 0`".
-
-The supremum of `eq:affine-smallness` is written pointwise, as `t a_n ≤ …` for
-every `n ≥ 1`.  For `t ≥ 0` that is equivalent to `t sup_{n≥1} a_n ≤ …`, and it
-does not lean on the family being bounded, which `aCoeff_tendsto_zero` proves.
-
-The recency slope `𝒮'_t(1⁻)` is the left limit of the derivative on `(0,1)`.
-The source's proof uses the continuous series extension `ψ_c(0)=c`.
-The literal `hardyProfile` formula instead vanishes on the diagonal, outside
-the stated domain `σ₀<σ` of `prop:Bessel`; a positive left derivative at
-that totalized value is impossible (`not_positive_endpoint_derivative`).
-
-Not proved here.
-
-Source: arXiv:2605.09213v1, `thm:U-shape`, `eq:affine-smallness`. -/
-theorem u_shape (β lam M t : ℝ) (hβ : 0 < β) (hlam : 0 < lam) (hM : 0 < M)
-    (ht : 0 < t)
-    (hsmall : ∀ n : ℕ, 1 ≤ n →
-      t * aCoeff β n ≤ min (3 - Real.sqrt 3) (2 * (1 - Real.exp (-lam)))) :
-    Filter.Tendsto (fun σ₀ => softCorrection β lam M t σ₀)
-        (nhdsWithin 0 (Set.Ioi 0)) Filter.atTop ∧
-      (∃ D : ℝ, 0 < D ∧
-        Filter.Tendsto (deriv (fun σ₀ => softCorrection β lam M t σ₀))
-          (nhdsWithin 1 (Set.Iio 1)) (nhds D)) ∧
-      (∃! s : ℝ, s ∈ Set.Ioo (0 : ℝ) 1 ∧
-        ∀ σ₀ ∈ Set.Ioo (0 : ℝ) 1, softCorrection β lam M t s ≤ softCorrection β lam M t σ₀) := by
-  sorry
-
 /-- The smallness condition `eq:affine-smallness` is met by some `t > 0`, at every `β` and every
 `λ > 0`: the family `a_n` tends to `0` (`aCoeff_tendsto_zero`), so it is bounded above by some
 `B`, and `t = m / (|B| + 1)` works, `m` being the positive threshold.  This is what makes the
@@ -176,10 +132,54 @@ theorem exists_affine_smallness (β lam : ℝ) (hlam : 0 < lam) :
         mul_le_mul_of_nonneg_left ha (div_pos hm hB1).le
     _ = m := div_mul_cancel₀ m hB1.ne'
 
-/-- The hypotheses of `u_shape` are satisfiable, at `β = λ = M = 1`. -/
-example : (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 ∧ ∃ t : ℝ, 0 < t ∧ ∀ n : ℕ, 1 ≤ n →
-    t * aCoeff 1 n ≤ min (3 - Real.sqrt 3) (2 * (1 - Real.exp (-(1 : ℝ)))) :=
-  ⟨one_pos, one_pos, one_pos, exists_affine_smallness 1 1 one_pos⟩
+/-- The smallness bound is witnessed at the original positive bias.
+Source: arXiv:2605.09213v1, §1, `eq:affine-smallness`. -/
+example := exists_affine_smallness 1 1 one_pos
+
+/-- The actual constant interaction has zero Fourier coefficient at
+every positive frequency. Source: arXiv:2605.09213v1, §1, `eq:wbeta` and the coefficients `ŵ_β`. -/
+theorem wHat_zero_succ (n : ℕ) : wHat 0 (n + 1) = 0 := by
+  have hn : ((n + 1 : ℕ) : ℝ) ≠ 0 := by positivity
+  have hs : Real.sin (((n + 1 : ℕ) : ℝ) * (2 * π)) = 0 := by
+    rw [show ((n + 1 : ℕ) : ℝ) * (2 * π) = ((2 * (n + 1) : ℕ) : ℝ) * π by
+      push_cast; ring]
+    exact Real.sin_nat_mul_pi _
+  simp only [wHat, wBeta, zero_mul, Real.exp_zero, mul_one]
+  rw [intervalIntegral.integral_comp_mul_left (fun x => Real.cos x) hn, integral_cos, hs]
+  simp
+
+/-- Every actual eigenvalue vanishes at zero interaction strength.
+Source: arXiv:2605.09213v1, §1, `a_n=n² ŵ_β(n)`. -/
+theorem aCoeff_zero (n : ℕ) : aCoeff 0 n = 0 := by
+  cases n with
+  | zero => simp [aCoeff]
+  | succ n => rw [aCoeff, wHat_zero_succ, mul_zero]
+
+/-- The actual Bessel profile vanishes at a zero mode parameter.
+Source: arXiv:2605.09213v1, §1, `eq:Bessel-full`, `eq:Bessel-output`. -/
+theorem hardyProfile_zero_mode (lam t σ σ₀ : ℝ) : hardyProfile lam 0 t σ σ₀ = 0 := by
+  simp [hardyProfile]
+
+/-- The original Fourier correction vanishes at zero interaction strength.
+This explains the explicit positive-`β` standing assumption in `u_shape`.
+Source: arXiv:2605.09213v1, §1, `eq:Sb-def` and `thm:U-shape`. -/
+theorem softCorrection_zero_beta (lam M t σ₀ : ℝ) : softCorrection 0 lam M t σ₀ = 0 := by
+  simp [softCorrection, aCoeff_zero, hardyProfile_zero_mode]
+
+/-- The original correction vanishes at zero time, so the source's
+positive-time footnote is essential for `thm:U-shape`.
+Source: arXiv:2605.09213v1, §1, `eq:Sb-def`, `eq:affine-smallness`. -/
+theorem softCorrection_zero_time (β lam M σ₀ : ℝ) : softCorrection β lam M 0 σ₀ = 0 := by
+  simp [softCorrection, hardyProfile_zero]
+
+/-- At zero time every actual interior position minimizes the original
+correction. Thus the unique-minimum conclusion of `thm:U-shape` needs
+the source's positive-time assumption.
+Source: arXiv:2605.09213v1, §1, `thm:U-shape` (iii), `eq:affine-smallness` footnote. -/
+theorem every_position_minimizes_at_zero_time (β lam M s : ℝ) :
+    ∀ σ₀ : ℝ, softCorrection β lam M 0 s ≤ softCorrection β lam M 0 σ₀ := by
+  intro σ₀
+  rw [softCorrection_zero_time, softCorrection_zero_time]
 
 end Kinetic
 end Transformer
