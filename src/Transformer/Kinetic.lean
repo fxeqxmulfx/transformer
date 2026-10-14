@@ -23,6 +23,9 @@ integer source cells give an interval of minimizers at every minimum.
 import Transformer.Kinetic.Defs
 import Transformer.Kinetic.FourierDecay
 import Transformer.Kinetic.Hardy
+import Transformer.Kinetic.Section6_PowerSeries
+import Transformer.Kinetic.Section6_PositiveCoefficients
+import Transformer.Kinetic.Section6_ModeProfile
 import Transformer.Kinetic.Section1_RecencyEndpoint
 import Transformer.Kinetic.Riemann
 import Transformer.Kinetic.MeanField
