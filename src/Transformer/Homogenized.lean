@@ -84,6 +84,7 @@ import Transformer.Homogenized.Section7_OverlapDriftGramComparison
 import Transformer.Homogenized.Section7_SimplexDriftBias
 import Transformer.Homogenized.Section7_SimplexGronwall
 import Transformer.Homogenized.Section7_SimplexError
+import Transformer.Homogenized.Section7_SimplexPathComparison
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
