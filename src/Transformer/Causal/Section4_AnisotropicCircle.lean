@@ -69,7 +69,7 @@ theorem anisotropicValueMap_eigenbasis :
 /-- The original leading unit vector really has eigenvalue two.
 Source: arXiv:2411.04990v2, §4, the `ξ` in `thm1.5`. -/
 theorem anisotropicValueMap_leading :
-    anisotropicValueMap (basePoint 1 : EucSpace 2) = 2 • (basePoint 1 : EucSpace 2) := by
+    anisotropicValueMap (basePoint 1 : EucSpace 2) = (2 : ℝ) • (basePoint 1 : EucSpace 2) := by
   ext i
   rw [anisotropicValueMap_apply]
   fin_cases i <;> simp [basePoint]

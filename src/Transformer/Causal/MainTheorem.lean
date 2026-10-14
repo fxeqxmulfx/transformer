@@ -13,16 +13,18 @@
 All three statements quantify over "almost every initial configuration" with
 respect to the volume measure on `(𝕊^{d-1})^n`.  Its null sets are those of
 the uniform law, which is read as every `σ` with `Perspective.UniformTuple d n σ`
-— it holds for exactly one `σ`.  None of the three is proved here — `thm1.5`
-and `thm2` are conjectures even in the paper.
+— it holds for exactly one `σ`. Conjecture `thm1.5` is refuted by a
+positive-measure counterexample in `Section4_TwoClusterRefutation`.
+The other two convergence assertions remain unproved. The geometric
+`lemma:scalar` and its equality cases are in `SectionA_Scalar`.
 -/
 
 import Transformer.Basic
-import Transformer.Causal.Section4_AnisotropicBarrier
+import Transformer.Causal.Section4_TwoClusterRefutation
+import Transformer.Causal.SectionA_Scalar
 import Transformer.Perspective.Section2_FlowMap
 import Transformer.Perspective.Section3_SmallBeta
 import Mathlib.Analysis.InnerProductSpace.Projection.Basic
-import Mathlib.Basic.Real.Sign
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -65,49 +67,31 @@ theorem single_cluster (hd : 2 ≤ d) (β : ℝ) (Q K : ParamMatrix d) (hn : 1 �
 and `β = 0`. -/
 example : 2 ≤ 2 ∧ (1 : ℕ) ≤ 1 ∧ (0 : ℝ) ≤ 0 := ⟨le_rfl, le_rfl, le_rfl⟩
 
-/-- **Conjecture (thm1.5).**  *Two-cluster convergence.*
-
-Let `V` be diagonalizable with `d` distinct positive real eigenvalues, the
-largest `λ_max` with unit eigenvector `ξ`.  Then for arbitrary `Q, K` and
-almost any initialization the CSA dynamics satisfy
-
-  `∀ k ∈ [n], lim_{t → ∞} x_k(t) ∈ {ξ, -ξ}`.
-
-Diagonalizability is an eigenbasis `e` with eigenvalues `μ`: `d` linearly
-independent eigenvectors in `ℝ^d`.  `λ_max` is an eigenvalue because `ξ` is
-an eigenvector for it, and it is the largest because it bounds every `μ_i`.
-
-Not proved here.
-
-Source: arXiv:2411.04990v2, §4, `thm1.5`. -/
-theorem two_cluster (β : ℝ) (Q K V : ParamMatrix d)
-    (lam : ℝ) (ξ : SSphere d) (hβ : 0 ≤ β)
-    (hdiag : ∃ (e : Idx d → EucSpace d) (μ : Idx d → ℝ), LinearIndependent ℝ e ∧
-      (∀ i, V (e i) = μ i • e i) ∧ Function.Injective μ ∧ (∀ i, 0 < μ i) ∧
-      ∀ i, μ i ≤ lam)
-    (heig : V (ξ : EucSpace d) = lam • (ξ : EucSpace d)) :
-    ∀ σ : Measure (SphereTuple d n), Perspective.UniformTuple d n σ →
-    ∀ᵐ X₀ ∂σ, ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → Causal.CSA d n β Q K V X →
-      ∀ k : Idx n,
-        Filter.Tendsto (fun t : ℝ => (X t k : EucSpace d)) Filter.atTop
-            (nhds (ξ : EucSpace d)) ∨
-          Filter.Tendsto (fun t : ℝ => (X t k : EucSpace d)) Filter.atTop
-            (nhds (-(ξ : EucSpace d))) := by
-  sorry
-
-/-- The hypotheses of `two_cluster` are satisfiable: on the line, `V = I_1` is
-diagonal with the single eigenvalue `1`, and its eigenvector is the basis
-vector. -/
-example :
-    (0 : ℝ) ≤ 0 ∧
-      (∃ (e : Idx 1 → EucSpace 1) (μ : Idx 1 → ℝ), LinearIndependent ℝ e ∧
-        (∀ i, (ContinuousLinearMap.id ℝ (EucSpace 1)) (e i) = μ i • e i) ∧
-        Function.Injective μ ∧ (∀ i, 0 < μ i) ∧ ∀ i, μ i ≤ 1) ∧
-      (ContinuousLinearMap.id ℝ (EucSpace 1)) (EuclideanSpace.single (0 : Fin 1) (1 : ℝ))
-        = (1 : ℝ) • EuclideanSpace.single (0 : Fin 1) (1 : ℝ) := by
-  refine ⟨le_rfl, ⟨fun _ => EuclideanSpace.single (0 : Fin 1) (1 : ℝ), fun _ => 1,
-    linearIndependent_unique_iff.mpr (by simp), fun _ => by simp,
-    fun i j _ => Subsingleton.elim i j, fun _ => one_pos, fun _ => le_rfl⟩, by simp⟩
+/-- **Conjecture (thm1.5) is false.** The source predicts almost-everywhere
+convergence to the leading unit eigenvectors for every query and key pair
+when the value matrix has distinct positive eigenvalues.
+At dimension and token count two, `V=diag(2,1)`, `Q=I`, `K=diag(0,4)`
+and temperature one give a nonempty open region of positive uniform
+product measure whose follower stays off the leading axis forever.
+All original spectral hypotheses and the original causal equation hold,
+by `two_cluster_counterexample`. This is a refutation of the source's
+universal assertion, with its exact hypotheses and conclusion retained
+inside the negation. Source: arXiv:2411.04990v2, §4, `thm1.5`. -/
+theorem not_two_cluster :
+    ¬ ∀ (d n : ℕ) (β : ℝ) (Q K V : ParamMatrix d) (lam : ℝ) (ξ : SSphere d), 0 ≤ β →
+      (∃ (e : Idx d → EucSpace d) (μ : Idx d → ℝ), LinearIndependent ℝ e ∧
+        (∀ i, V (e i) = μ i • e i) ∧ Function.Injective μ ∧ (∀ i, 0 < μ i) ∧
+        ∀ i, μ i ≤ lam) →
+      V (ξ : EucSpace d) = lam • (ξ : EucSpace d) →
+      ∀ σ : Measure (SphereTuple d n), Perspective.UniformTuple d n σ →
+        ∀ᵐ X₀ ∂σ, ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → CSA d n β Q K V X →
+          ∀ k : Idx n,
+            Filter.Tendsto (fun t : ℝ => (X t k : EucSpace d)) Filter.atTop
+              (nhds (ξ : EucSpace d)) ∨
+            Filter.Tendsto (fun t : ℝ => (X t k : EucSpace d)) Filter.atTop
+              (nhds (-(ξ : EucSpace d))) := by
+  intro h
+  exact not_forall_two_cluster (h 2 2)
 
 /-- **Conjecture (thm2).**  *Single-cluster convergence with `λ_max > 0`,
 `dim L ≥ 2`.*
@@ -161,116 +145,6 @@ example :
     rw [Submodule.top_orthogonal_eq_bot, Submodule.mem_bot] at hz
     exact absurd hz hz0
 
-/-- **Lemma (lemma:scalar).** *A scalar inequality for unit vectors.*
-
-For `‖x‖ = ‖y‖ = 1` and `|⟨y, z⟩| ≤ ⟨x, z⟩`,
-
-  `⟨x, z⟩ ≥ ⟨x, y⟩ ⟨y, z⟩`.
-
-The chain is `⟨x,y⟩⟨y,z⟩ ≤ |⟨x,y⟩| |⟨y,z⟩| ≤ |⟨x,y⟩| ⟨x,z⟩ ≤ ⟨x,z⟩`, the last
-step because `|⟨x,y⟩| ≤ 1` for unit vectors and `⟨x,z⟩ ≥ 0` by hypothesis.
-
-Source: arXiv:2411.04990v2, §A, `lemma:scalar`. -/
-theorem inner_mul_le_inner_of_abs_le
-    {d : ℕ} (x y z : EucSpace d) (hx : ‖x‖ = 1) (hy : ‖y‖ = 1)
-    (h : |inner (𝕜 := ℝ) y z| ≤ inner (𝕜 := ℝ) x z) :
-    inner (𝕜 := ℝ) x y * inner (𝕜 := ℝ) y z ≤ inner (𝕜 := ℝ) x z := by
-  have hxz : 0 ≤ inner (𝕜 := ℝ) x z := le_trans (abs_nonneg _) h
-  have hxy : |inner (𝕜 := ℝ) x y| ≤ 1 := by
-    simpa [hx, hy] using abs_real_inner_le_norm x y
-  calc inner (𝕜 := ℝ) x y * inner (𝕜 := ℝ) y z
-      ≤ |inner (𝕜 := ℝ) x y| * |inner (𝕜 := ℝ) y z| := by
-        rw [← abs_mul]; exact le_abs_self _
-    _ ≤ |inner (𝕜 := ℝ) x y| * inner (𝕜 := ℝ) x z :=
-        mul_le_mul_of_nonneg_left h (abs_nonneg _)
-    _ ≤ 1 * inner (𝕜 := ℝ) x z := mul_le_mul_of_nonneg_right hxy hxz
-    _ = inner (𝕜 := ℝ) x z := one_mul _
-
-/-- The hypotheses of `inner_mul_le_inner_of_abs_le` are satisfiable: two
-copies of the first standard basis vector, and `z = 0`. -/
-example :
-    ‖EuclideanSpace.single (0 : Fin 1) (1 : ℝ)‖ = 1 ∧
-      |inner (𝕜 := ℝ) (EuclideanSpace.single (0 : Fin 1) (1 : ℝ))
-          (0 : EucSpace 1)|
-        ≤ inner (𝕜 := ℝ) (EuclideanSpace.single (0 : Fin 1) (1 : ℝ))
-            (0 : EucSpace 1) := by
-  refine ⟨by simp, ?_⟩
-  simp
-
-/-- **Lemma (lemma:scalar), the equality cases.**
-
-Equality `⟨x, z⟩ = ⟨x, y⟩ ⟨y, z⟩` holds if and only if either `⟨x, z⟩ = 0`, or
-`|⟨y, z⟩| = ⟨x, z⟩` together with `⟨x, y⟩ = sign⟨y, z⟩`.
-
-The three inequalities of `inner_mul_le_inner_of_abs_le` are `⟨x,y⟩⟨y,z⟩ ≤
-|⟨x,y⟩||⟨y,z⟩| ≤ |⟨x,y⟩|⟨x,z⟩ ≤ ⟨x,z⟩`, and equality throughout forces
-`|⟨y,z⟩| = ⟨x,z⟩` and — once `⟨x,z⟩ > 0` makes `⟨y,z⟩` nonzero — `|⟨x,y⟩| = 1`
-with the sign of `⟨y,z⟩`.
-
-Source: arXiv:2411.04990v2, §A, `lemma:scalar`. -/
-theorem inner_mul_eq_inner_iff
-    {d : ℕ} (x y z : EucSpace d) (hx : ‖x‖ = 1) (hy : ‖y‖ = 1)
-    (h : |inner (𝕜 := ℝ) y z| ≤ inner (𝕜 := ℝ) x z) :
-    inner (𝕜 := ℝ) x y * inner (𝕜 := ℝ) y z = inner (𝕜 := ℝ) x z ↔
-      inner (𝕜 := ℝ) x z = 0 ∨
-        (|inner (𝕜 := ℝ) y z| = inner (𝕜 := ℝ) x z ∧
-          inner (𝕜 := ℝ) x y = Real.sign (inner (𝕜 := ℝ) y z)) := by
-  set a : ℝ := inner (𝕜 := ℝ) x y with ha
-  set b : ℝ := inner (𝕜 := ℝ) y z with hb
-  set c : ℝ := inner (𝕜 := ℝ) x z with hc
-  have hab : |a| ≤ 1 := by
-    rw [ha]; simpa [hx, hy] using abs_real_inner_le_norm x y
-  have hb0 : 0 ≤ |b| := abs_nonneg b
-  have hc0 : 0 ≤ c := hb0.trans h
-  constructor
-  · intro heq
-    rcases eq_or_lt_of_le hc0 with h0 | hpos
-    · exact Or.inl h0.symm
-    · refine Or.inr ?_
-      have hbne : b ≠ 0 := by
-        intro hbz
-        rw [hbz, mul_zero] at heq
-        exact absurd heq.symm hpos.ne'
-      have hbabs : 0 < |b| := abs_pos.mpr hbne
-      have habs : |a| * |b| = c := by rw [← abs_mul, heq, abs_of_nonneg hc0]
-      have hbc : |b| = c := le_antisymm h (by nlinarith)
-      rw [hbc] at habs
-      have ha1 : |a| = 1 := mul_right_cancel₀ hpos.ne' (by rw [one_mul]; exact habs)
-      refine ⟨hbc, ?_⟩
-      rcases (abs_eq (by norm_num : (0 : ℝ) ≤ 1)).mp ha1 with h1 | h1
-      · have hbpos : 0 < b := by
-          rcases lt_or_gt_of_ne hbne with hneg | hpos'
-          · rw [h1, one_mul] at heq
-            rw [← heq, abs_of_neg hneg] at hbc
-            linarith
-          · exact hpos'
-        rw [h1, Real.sign_of_pos hbpos]
-      · have hbneg : b < 0 := by
-          rcases lt_or_gt_of_ne hbne with hneg | hpos'
-          · exact hneg
-          · rw [h1] at heq
-            rw [abs_of_pos hpos'] at hbc
-            linarith
-        rw [h1, Real.sign_of_neg hbneg]
-  · rintro (h0 | ⟨h1, h2⟩)
-    · have hbz : b = 0 := abs_eq_zero.mp (le_antisymm (h0 ▸ h) hb0)
-      rw [hbz, mul_zero, h0]
-    · rcases lt_trichotomy b 0 with hneg | hzero | hpos'
-      · rw [h2, Real.sign_of_neg hneg, ← h1, abs_of_neg hneg]; ring
-      · rw [h2, hzero, ← h1, hzero]; simp
-      · rw [h2, Real.sign_of_pos hpos', ← h1, abs_of_pos hpos']; ring
-
-/-- The hypotheses of `inner_mul_eq_inner_iff` are satisfiable away from the
-degenerate case as well: three copies of the first standard basis vector make
-`⟨x,z⟩ = 1` rather than `0`, so the second disjunct is the live one. -/
-example :
-    ‖EuclideanSpace.single (0 : Fin 1) (1 : ℝ)‖ = 1 ∧
-      |inner (𝕜 := ℝ) (EuclideanSpace.single (0 : Fin 1) (1 : ℝ))
-          (EuclideanSpace.single (0 : Fin 1) (1 : ℝ))|
-        ≤ inner (𝕜 := ℝ) (EuclideanSpace.single (0 : Fin 1) (1 : ℝ))
-            (EuclideanSpace.single (0 : Fin 1) (1 : ℝ)) := by
-  refine ⟨by simp, ?_⟩
-  simp
 
 end Causal
 end Transformer
