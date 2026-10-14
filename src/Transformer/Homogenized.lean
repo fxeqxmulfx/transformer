@@ -57,6 +57,7 @@ import Transformer.Homogenized.Section7_GaussianPolynomialContinuity
 import Transformer.Homogenized.Section7_GaussianPolynomialDerivative
 import Transformer.Homogenized.Section7_GaussianPolynomialInterpolation
 import Transformer.Homogenized.SoftmaxDerivatives
+import Transformer.Homogenized.Section7_SoftmaxHessian
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
