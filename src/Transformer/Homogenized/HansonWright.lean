@@ -35,7 +35,7 @@ it is on the books because the source's own estimates are derived from it.
 Source: arXiv:2604.01978v1, `lem:Hanson_wright`; `[vershynin2018high, Thm 6.2.1]`.
 -/
 
-import Transformer.Homogenized.Section6_RandomSplitDecoupling
+import Transformer.Homogenized.Section6_OffDiagonalQuadraticMGF
 import Mathlib.Analysis.CStarAlgebra.Matrix
 
 open scoped BigOperators NNReal ENNReal
