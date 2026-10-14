@@ -70,6 +70,7 @@ import Transformer.Perceptron.TransformMap
 import Transformer.Perceptron.Hyperplane
 import Transformer.Perceptron.Bias
 import Transformer.Perceptron.BiasedAtomicity
+import Transformer.Perceptron.Section5_BiasedAtomicity
 import Transformer.Perceptron.GeneralAttention
 import Transformer.Perceptron.Section5_MapKernel
 import Transformer.Perceptron.Section5_MapTransport
