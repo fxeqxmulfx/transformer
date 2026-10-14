@@ -18,7 +18,7 @@ and `thm2` are conjectures even in the paper.
 -/
 
 import Transformer.Basic
-import Transformer.Causal.Section4_AnisotropicCircle
+import Transformer.Causal.Section4_AnisotropicFlow
 import Transformer.Perspective.Section2_FlowMap
 import Transformer.Perspective.Section3_SmallBeta
 import Mathlib.Analysis.InnerProductSpace.Projection.Basic
