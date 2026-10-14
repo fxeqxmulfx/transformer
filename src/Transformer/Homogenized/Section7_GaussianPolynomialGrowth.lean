@@ -10,6 +10,7 @@ The convenient growth bound here is `C (1 + ‖z‖)^p`. Composition with
 an actual affine linear map preserves this bound with an explicit constant.
 Multiplication by an original coordinate increases the degree by one.
 Gaussian moments then give integrability on the original probability space.
+The same moment bound applies to Gaussian pairs in their actual product norm.
 The scalar Stein identity proved directly from the density is transferred
 to the actual Gaussian random variable, retaining its original variance.
 No integration-by-parts or moment identity is assumed in these transfers.
@@ -26,9 +27,9 @@ namespace Transformer.Homogenized
 /-- An actual affine image has at most linear norm growth.
 Source: arXiv:2604.01978v1, §7, the coordinate slices and linear
 Gaussian representations in the proof of `lem:gaussian_interp`. -/
-theorem one_add_norm_gaussian_affine_le {E : Type*} [NormedAddCommGroup E]
-    [NormedSpace ℝ E] {m : ℕ}
-    (L : E →L[ℝ] EucSpace m) (b : EucSpace m) (z : E) :
+theorem one_add_norm_gaussian_affine_le {E F : Type*} [NormedAddCommGroup E]
+    [NormedSpace ℝ E] [NormedAddCommGroup F] [NormedSpace ℝ F]
+    (L : E →L[ℝ] F) (b : F) (z : E) :
     1 + ‖L z + b‖ ≤ (1 + ‖L‖ + ‖b‖) * (1 + ‖z‖) := by
   have h := (norm_add_le (L z) b).trans (add_le_add (L.le_opNorm z) le_rfl)
   nlinarith [norm_nonneg L, norm_nonneg b, norm_nonneg z,
@@ -37,10 +38,10 @@ theorem one_add_norm_gaussian_affine_le {E : Type*} [NormedAddCommGroup E]
 /-- A polynomial bound on an actual test persists along each actual
 affine Gaussian slice. Source: arXiv:2604.01978v1, §7,
 polynomial domination after `eq:interpolation_interm`. -/
-theorem norm_polynomial_gaussian_affine_le {E : Type*} [NormedAddCommGroup E]
-    [NormedSpace ℝ E] {m : ℕ}
-    (L : E →L[ℝ] EucSpace m) (b : EucSpace m)
-    (g : EucSpace m → ℝ) (C : ℝ) (hC : 0 ≤ C) (p : ℕ)
+theorem norm_polynomial_gaussian_affine_le {E F : Type*} [NormedAddCommGroup E]
+    [NormedSpace ℝ E] [NormedAddCommGroup F] [NormedSpace ℝ F]
+    (L : E →L[ℝ] F) (b : F)
+    (g : F → ℝ) (C : ℝ) (hC : 0 ≤ C) (p : ℕ)
     (hbound : ∀ z, ‖g z‖ ≤ C * (1 + ‖z‖) ^ p) (z : E) :
     ‖g (L z + b)‖ ≤ (C * (1 + ‖L‖ + ‖b‖) ^ p) * (1 + ‖z‖) ^ p := by
   calc
@@ -68,8 +69,10 @@ theorem norm_coordinate_mul_polynomial_le {m : ℕ}
 /-- The actual Gaussian vector has finite moments of the convenient
 polynomial envelope. Source: arXiv:2604.01978v1, §7, the Gaussian
 moment justification following `eq:interpolation_interm`. -/
-theorem integrable_gaussian_polynomial_envelope {Ω : Type*} [MeasurableSpace Ω]
-    {m : ℕ} (P : Measure Ω) (X : Ω → EucSpace m) (hX : HasGaussianLaw X P) (p : ℕ) :
+theorem integrable_gaussian_polynomial_envelope {Ω E : Type*} [MeasurableSpace Ω]
+    [NormedAddCommGroup E] [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E]
+    [CompleteSpace E] [SecondCountableTopology E]
+    (P : Measure Ω) (X : Ω → E) (hX : HasGaussianLaw X P) (p : ℕ) :
     Integrable (fun ω => (1 + ‖X ω‖) ^ p) P := by
   have : IsProbabilityMeasure P := hX.isProbabilityMeasure
   have hXmom : MemLp X (p : ENNReal) P := hX.memLp (by simp)
@@ -85,8 +88,10 @@ theorem integrable_gaussian_polynomial_envelope {Ω : Type*} [MeasurableSpace Ω
 original Gaussian vector has a finite expectation. Source:
 arXiv:2604.01978v1, §7, domination in `lem:gaussian_interp`.
 This also applies to the original coordinate derivatives and products. -/
-theorem integrable_of_gaussian_polynomial_bound {Ω : Type*} [MeasurableSpace Ω]
-    {m : ℕ} (P : Measure Ω) (X : Ω → EucSpace m) (hX : HasGaussianLaw X P)
+theorem integrable_of_gaussian_polynomial_bound {Ω E : Type*} [MeasurableSpace Ω]
+    [NormedAddCommGroup E] [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E]
+    [CompleteSpace E] [SecondCountableTopology E]
+    (P : Measure Ω) (X : Ω → E) (hX : HasGaussianLaw X P)
     (f : Ω → ℝ) (hf : AEStronglyMeasurable f P) (C : ℝ) (p : ℕ)
     (hbound : ∀ᵐ ω ∂P, ‖f ω‖ ≤ C * (1 + ‖X ω‖) ^ p) : Integrable f P :=
   ((integrable_gaussian_polynomial_envelope P X hX p).const_mul C).mono' hf hbound
