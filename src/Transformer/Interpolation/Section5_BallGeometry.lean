@@ -104,6 +104,14 @@ noncomputable def sweepPoint (p v : SSphere d)
     mem_sphere_zero_iff_norm.mpr (Perceptron.norm_greatCircle
       (norm_eq_of_mem_sphere p) (norm_eq_of_mem_sphere v) hperp s)⟩
 
+/-- The actual sweep starts at the carrying cap's center.
+Source: arXiv:2411.04551v3, §5, the endpoint of `γ` in `cl: balls`. -/
+@[simp] theorem sweepPoint_zero (p v : SSphere d)
+    (hperp : inner (𝕜 := ℝ) (p : EucSpace d) (v : EucSpace d) = 0) :
+    sweepPoint p v hperp 0 = p := by
+  apply Subtype.ext
+  simp [sweepPoint, Perceptron.greatCircle]
+
 /-- The source's actual center path is continuous in its angular time.
 Source: arXiv:2411.04551v3, §5, `cl: balls`, continuity of `γ`. -/
 theorem continuous_sweepPoint (p v : SSphere d)
