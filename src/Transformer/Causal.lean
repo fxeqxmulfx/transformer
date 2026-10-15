@@ -30,6 +30,7 @@ import Transformer.Causal.InteractionBounds
 import Transformer.Causal.InteractionNumerics
 import Transformer.Causal.InteractionPeak
 import Transformer.Causal.SectionB_PeakTemperature
+import Transformer.Causal.SectionB_CentralCurvature
 import Transformer.Causal.InteractionWindow
 import Transformer.Causal.InteractionRemark
 import Transformer.Causal.Packing
