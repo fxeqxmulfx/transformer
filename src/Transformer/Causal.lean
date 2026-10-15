@@ -7,6 +7,7 @@ Formalization of:
 import Transformer.Causal.Basic
 import Transformer.Causal.Section4_ParticleWeights
 import Transformer.Causal.Section4_ParticleField
+import Transformer.Causal.Section4_SphereFlow
 import Transformer.Causal.SingleToken
 import Transformer.Causal.MainTheorem
 import Transformer.Causal.Interaction
