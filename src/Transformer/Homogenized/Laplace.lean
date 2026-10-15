@@ -18,7 +18,7 @@ and the actual Gaussian query moments are proved in the imported modules.
 -/
 
 import Transformer.Homogenized.Section7_UniformLaplaceCounterexample
-import Transformer.Homogenized.Section7_ProductQueryFourth
+import Transformer.Homogenized.Section7_DeltaNormCovariance
 import Transformer.Homogenized.Metastability
 
 open scoped BigOperators ENNReal NNReal
@@ -101,7 +101,12 @@ distributed entries and so does not change the law of `A`.  Stating it at `Â`
 would therefore be the same lemma written in a matrix the rest of the
 development never forms.
 
-Not proved here.
+The source's displayed covariance used in its proof is false:
+`not_gaussian_delta_norm_covariance` refutes its `2/d + O(d⁻²)`
+diagonal under the actual original Gaussian product law. The proved
+exact normalized squared-query-norm variance is `4/d + 4/d²`.
+The normalized-correlation expansion below remains unproved; this
+covariance discrepancy alone does not establish its corrected remainder.
 
 Source: arXiv:2604.01978v1, `lem:delta_method`. -/
 theorem delta_method :
