@@ -16,6 +16,7 @@ import Transformer.Causal.Section4_SecondOverlap
 import Transformer.Causal.Section4_TwoTokenConvergence
 import Transformer.Causal.Section4_ScalarLimits
 import Transformer.Causal.Section4_FollowerDrift
+import Transformer.Causal.Section4_WeightSensitivity
 import Transformer.Causal.SingleToken
 import Transformer.Causal.MainTheorem
 import Transformer.Causal.Interaction
