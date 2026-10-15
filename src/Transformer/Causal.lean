@@ -55,6 +55,7 @@ import Transformer.Causal.Section5_WeightedInteraction
 import Transformer.Causal.Section5_ParameterGeometry
 import Transformer.Causal.Section5_ParameterTemperature
 import Transformer.Causal.Section5_NarrowWindow
+import Transformer.Causal.Section5_ForceRatio
 import Transformer.Causal.Section5_CenterForce
 import Transformer.Causal.Section5_CenterCurvature
 import Transformer.Causal.Section5_ClusterCurvature
