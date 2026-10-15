@@ -45,6 +45,7 @@ import Transformer.Causal.Section5_GapBarrier
 import Transformer.Causal.Section5_StrongGap
 import Transformer.Causal.Section5_StrongCenterWitness
 import Transformer.Causal.FixedCenters
+import Transformer.Causal.Section5_CircularInteraction
 import Transformer.Causal.Section5_FrozenWeights
 import Transformer.Causal.Section5_FrozenField
 import Transformer.Causal.Section5_FrozenLastRow
