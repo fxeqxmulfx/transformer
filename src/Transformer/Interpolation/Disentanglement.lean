@@ -23,6 +23,7 @@ import Transformer.Basic
 import Transformer.Perspective.Section2_FlowMap
 import Transformer.Interpolation.Basic
 import Transformer.Interpolation.Clustering
+import Transformer.Interpolation.Section3_ProjectionContraction
 
 open scoped BigOperators
 open Real MeasureTheory
