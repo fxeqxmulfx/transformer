@@ -24,8 +24,7 @@ import Transformer.Perspective.Section2_FlowMap
 import Transformer.Interpolation.Basic
 import Transformer.Interpolation.Clustering
 import Transformer.Interpolation.Section3_ProjectionContraction
-import Transformer.Interpolation.Section3_ProjectionRegularity
-import Transformer.Interpolation.Section1_CompactTests
+import Transformer.Interpolation.Section3_ProjectionTransport
 
 open scoped BigOperators
 open Real MeasureTheory

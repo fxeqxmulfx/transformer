@@ -56,6 +56,16 @@ theorem projectionExtension_eq (w x : EucSpace d) (hw : ‖w‖ = 1) (hx : ‖x�
   congr 1
   field_simp
 
+/-- Composition of the ambient extensions retains the actual group law
+at every original unit point. Source: arXiv:2411.04551v3, §3.1,
+`lem: first.quadrant`. -/
+theorem projectionExtension_comp (w x : EucSpace d) (hw : ‖w‖ = 1) (hx : ‖x‖ = 1)
+    (s t : ℝ) : projectionExtension w s (projectionExtension w t x) =
+      projectionFlow w (s + t) x := by
+  rw [projectionExtension_eq w x hw hx t,
+    projectionExtension_eq w _ hw (norm_projectionFlow w x hw hx t) s,
+    projectionFlow_add w x hw hx s t]
+
 /-- The ambient extension is jointly smooth at every time and point.
 Source: arXiv:2411.04551v3, §1, the ambient test convention of
 `eq: cauchy.pb`, and §3.1, `lem: first.quadrant`. -/
@@ -142,6 +152,19 @@ theorem hasDerivAt_projection_pullback (w x : EucSpace d)
   apply ht.congr_deriv
   rw [hspace, ContinuousLinearMap.comp_apply, map_neg,
     fderiv_projectionExtension_field w x hw hx (-t)]
+
+/-- Smooth original tests remain globally smooth under the ambient inverse
+flow extension. Source: arXiv:2411.04551v3, §1, `eq: cauchy.pb`,
+and §3.1, `lem: first.quadrant`. -/
+theorem contDiff_projectionPullback (w : EucSpace d) (hw : ‖w‖ = 1)
+    (φ : EucSpace d → ℝ) (hφ : ContDiff ℝ (⊤ : ℕ∞) φ) :
+    ContDiff ℝ (⊤ : ℕ∞) (fun q : ℝ × EucSpace d => φ (projectionExtension w (-q.1) q.2)) := by
+  have hm : ContDiff ℝ (⊤ : ℕ∞) (fun q : ℝ × EucSpace d =>
+      projectionExtension w (-q.1) q.2) :=
+    ContDiff.comp (f := fun q : ℝ × EucSpace d => (-q.1, q.2))
+      (g := fun q : ℝ × EucSpace d => projectionExtension w q.1 q.2)
+      (contDiff_projectionExtension w hw) (contDiff_fst.neg.prodMk contDiff_snd)
+  exact ContDiff.comp hφ hm
 
 /-- The regularity and tangent transport inputs hold for an actual pair
 of orthogonal, nonzero unit vectors on the circle. -/

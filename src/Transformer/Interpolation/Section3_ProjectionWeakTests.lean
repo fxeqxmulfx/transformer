@@ -1,0 +1,165 @@
+/-
+# Conservation of inverse-characteristic tests for actual weak solutions
+
+ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §3.1,
+`lem: first.quadrant`. On a phase whose original field is `Proj_x w`,
+every original weak solution conserves the integral of a smooth test
+pulled back by the explicit inverse flow. The statement includes phase
+endpoints: the original weak equation gives continuity through switches.
+No characteristic representation is assumed of the measure curve.
+-/
+
+import Transformer.Interpolation.Section1_SpacetimeTests
+import Transformer.Interpolation.Section3_ProjectionRegularity
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
+
+open Real MeasureTheory Filter Topology
+
+namespace Transformer.Interpolation
+
+variable {d : ℕ}
+
+/-- Inside a constant-projection phase, the original integrated equation
+has the expected fixed-test derivative. Source: arXiv:2411.04551v3,
+§1, `eq: cauchy.pb`, and §3.1, `lem: first.quadrant`. -/
+theorem hasDerivAt_cauchyPB_projection_test (θ : TimeParams d)
+    (μ : ℝ → Perspective.ProbSphere d) (hμ : cauchyPB d θ μ)
+    (w : EucSpace d) (a b : ℝ)
+    (hfield : ∀ s ∈ Set.Ioo a b, ∀ x : SSphere d,
+      fullVF d θ (μ s) s (x : EucSpace d) = proj d (x : EucSpace d) w)
+    (φ : EucSpace d → ℝ) (hφ : ContDiff ℝ 2 φ) (t : ℝ) (ht : t ∈ Set.Ioo a b) :
+    HasDerivAt (fun s => ∫ x, φ (x : EucSpace d) ∂(μ s : Measure (SSphere d)))
+      (∫ x, projectionTestFlux φ w (x : EucSpace d) ∂(μ t : Measure (SSphere d))) t := by
+  have hcont := continuous_cauchyPB_projectionTestFlux θ μ hμ φ hφ w
+  have heq : (fun s => ∫ x, inner (𝕜 := ℝ) (gradient φ (x : EucSpace d))
+      (fullVF d θ (μ s) s (x : EucSpace d)) ∂(μ s : Measure (SSphere d)))
+      =ᶠ[nhds t] (fun s => ∫ x, projectionTestFlux φ w (x : EucSpace d)
+        ∂(μ s : Measure (SSphere d))) := by
+    filter_upwards [Ioo_mem_nhds ht.1 ht.2] with s hs
+    apply integral_congr_ae
+    exact ae_of_all _ fun x => by
+      dsimp only
+      rw [hfield s hs x, ← projectionTestFlux_eq_inner]
+  have hd := hasDerivAt_cauchyPB_test_at θ μ hμ φ (hφ.of_le (by norm_num)) t
+    (hcont.continuousAt.congr_of_eventuallyEq heq)
+  convert hd using 1
+  apply integral_congr_ae
+  exact ae_of_all _ fun x => by
+    dsimp only
+    rw [hfield t ht x, ← projectionTestFlux_eq_inner]
+
+/-- The spacetime derivative on one original constant-field phase.
+Source: arXiv:2411.04551v3, §1 and §3.1, `lem: first.quadrant`. -/
+theorem hasDerivAt_cauchyPB_projection_spacetime (θ : TimeParams d)
+    (μ : ℝ → Perspective.ProbSphere d) (hμ : cauchyPB d θ μ)
+    (w : EucSpace d) (a b : ℝ)
+    (hfield : ∀ s ∈ Set.Ioo a b, ∀ x : SSphere d,
+      fullVF d θ (μ s) s (x : EucSpace d) = proj d (x : EucSpace d) w)
+    (F : ℝ × EucSpace d → ℝ) (hF : ContDiff ℝ 2 F) (t : ℝ) (ht : t ∈ Set.Ioo a b) :
+    HasDerivAt (fun s => ∫ x, F (s, (x : EucSpace d)) ∂(μ s : Measure (SSphere d)))
+      ((∫ x, projectionTestFlux (fun y => F (t, y)) w (x : EucSpace d)
+          ∂(μ t : Measure (SSphere d))) +
+        ∫ x, timeTestDerivative F (t, (x : EucSpace d))
+          ∂(μ t : Measure (SSphere d))) t :=
+  hasDerivAt_cauchyPB_spacetime_test θ μ hμ F hF t _
+    (hasDerivAt_cauchyPB_projection_test θ μ hμ w a b hfield _
+      (contDiff_spacetime_slice F hF t) t ht)
+
+/-- The inverse-characteristic test has zero actual weak derivative.
+The backward transport identity is proved for the original explicit flow.
+Source: arXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §3.1,
+`lem: first.quadrant`. -/
+theorem hasDerivAt_projection_pullback_integral (θ : TimeParams d)
+    (μ : ℝ → Perspective.ProbSphere d) (hμ : cauchyPB d θ μ)
+    (w : EucSpace d) (hw : ‖w‖ = 1) (a b : ℝ)
+    (hfield : ∀ s ∈ Set.Ioo a b, ∀ x : SSphere d,
+      fullVF d θ (μ s) s (x : EucSpace d) = proj d (x : EucSpace d) w)
+    (φ : EucSpace d → ℝ) (hφ : ContDiff ℝ (⊤ : ℕ∞) φ)
+    (t : ℝ) (ht : t ∈ Set.Ioo a b) :
+    HasDerivAt (fun s => ∫ x, φ (projectionExtension w (-s) (x : EucSpace d))
+      ∂(μ s : Measure (SSphere d))) 0 t := by
+  let F (q : ℝ × EucSpace d) := φ (projectionExtension w (-q.1) q.2)
+  have hF : ContDiff ℝ 2 F := (contDiff_projectionPullback w hw φ hφ).of_le (by simp)
+  have hG (x : SSphere d) : timeTestDerivative F (t, (x : EucSpace d)) =
+      -(projectionTestFlux (fun y => F (t, y)) w (x : EucSpace d)) := by
+    exact (hasDerivAt_spacetime_slice F hF t (x : EucSpace d)).unique
+      (hasDerivAt_projection_pullback w (x : EucSpace d) hw
+        (mem_sphere_zero_iff_norm.mp x.2) φ (hφ.of_le (by simp)) t)
+  have hd := hasDerivAt_cauchyPB_projection_spacetime θ μ hμ w a b hfield F hF t ht
+  apply hd.congr_deriv
+  have heq := integral_congr_ae (ae_of_all (μ t : Measure (SSphere d)) hG)
+  rw [heq, integral_neg, add_neg_cancel]
+
+/-- These actual inverse-test integrals remain continuous through every
+switch of the controls. Source: arXiv:2411.04551v3, §1,
+`eq: cauchy.pb`, and §3.1, `lem: first.quadrant`. -/
+theorem continuous_projection_pullback_integral (θ : TimeParams d)
+    (μ : ℝ → Perspective.ProbSphere d) (hμ : cauchyPB d θ μ)
+    (w : EucSpace d) (hw : ‖w‖ = 1)
+    (φ : EucSpace d → ℝ) (hφ : ContDiff ℝ (⊤ : ℕ∞) φ) :
+    Continuous (fun s => ∫ x, φ (projectionExtension w (-s) (x : EucSpace d))
+      ∂(μ s : Measure (SSphere d))) :=
+  continuous_cauchyPB_spacetime_test θ μ hμ _
+    ((contDiff_projectionPullback w hw φ hφ).of_le (by simp))
+
+/-- Conservation includes both endpoints of each original control phase.
+Weak continuity retains the values at switches; only the open phase needs
+a pointwise derivative. Source: arXiv:2411.04551v3, §1,
+`eq: cauchy.pb`, and §3.1, `lem: first.quadrant`. -/
+theorem projection_pullback_integral_eq (θ : TimeParams d)
+    (μ : ℝ → Perspective.ProbSphere d) (hμ : cauchyPB d θ μ)
+    (w : EucSpace d) (hw : ‖w‖ = 1) (a b : ℝ) (hab : a < b)
+    (hfield : ∀ s ∈ Set.Ioo a b, ∀ x : SSphere d,
+      fullVF d θ (μ s) s (x : EucSpace d) = proj d (x : EucSpace d) w)
+    (φ : EucSpace d → ℝ) (hφ : ContDiff ℝ (⊤ : ℕ∞) φ) :
+    (∫ x, φ (projectionExtension w (-b) (x : EucSpace d)) ∂(μ b : Measure (SSphere d))) =
+      ∫ x, φ (projectionExtension w (-a) (x : EucSpace d))
+        ∂(μ a : Measure (SSphere d)) := by
+  let I (s : ℝ) := ∫ x, φ (projectionExtension w (-s) (x : EucSpace d))
+    ∂(μ s : Measure (SSphere d))
+  have hc : Continuous I := continuous_projection_pullback_integral θ μ hμ w hw φ hφ
+  have hd (s : ℝ) (hs : s ∈ Set.Ioo a b) : HasDerivAt I 0 s :=
+    hasDerivAt_projection_pullback_integral θ μ hμ w hw a b hfield φ hφ s hs
+  obtain ⟨c, hc, hderiv⟩ := exists_deriv_eq_slope I hab hc.continuousOn
+    (fun s hs => (hd s hs).differentiableAt.differentiableWithinAt)
+  rw [(hd c hc).deriv] at hderiv
+  have hne : b - a ≠ 0 := (sub_pos.mpr hab).ne'
+  exact sub_eq_zero.mp ((div_eq_zero_iff.mp hderiv.symm).resolve_right hne)
+
+/-- A phase starting at zero conserves each inverse-test integral against
+its original initial law. Source: arXiv:2411.04551v3, §1,
+`eq: cauchy.pb`, and §3.1, `lem: first.quadrant`. -/
+theorem projection_pullback_integral_eq_initial (θ : TimeParams d)
+    (μ : ℝ → Perspective.ProbSphere d) (hμ : cauchyPB d θ μ)
+    (w : EucSpace d) (hw : ‖w‖ = 1) (T : ℝ) (hT : 0 < T)
+    (hfield : ∀ s ∈ Set.Ioo 0 T, ∀ x : SSphere d,
+      fullVF d θ (μ s) s (x : EucSpace d) = proj d (x : EucSpace d) w)
+    (φ : EucSpace d → ℝ) (hφ : ContDiff ℝ (⊤ : ℕ∞) φ) :
+    (∫ x, φ (projectionExtension w (-T) (x : EucSpace d)) ∂(μ T : Measure (SSphere d))) =
+      ∫ x, φ (x : EucSpace d) ∂(μ 0 : Measure (SSphere d)) := by
+  rw [projection_pullback_integral_eq θ μ hμ w hw 0 T hT hfield φ hφ]
+  apply integral_congr_ae
+  exact ae_of_all _ fun x => by
+    dsimp only
+    rw [neg_zero, projectionExtension_eq w _ hw (mem_sphere_zero_iff_norm.mp x.2),
+      projectionFlow_zero]
+
+/-- The complete phase hypotheses hold for a nonzero actual weak solution:
+one Dirac law and zero-temperature attention have the nonzero constant
+projection field at every spatial point. The test is nonconstant.
+Source: arXiv:2411.04551v3, §1 and §3.1, `lem: first.quadrant`. -/
+example : cauchyPB 2 (pureAttentionParams 2 0)
+      (fun _ => Perspective.diracProb 2 (basePoint 1)) ∧
+    ‖(basePoint 1 : EucSpace 2)‖ = 1 ∧ (0 : ℝ) < 1 ∧
+    ContDiff ℝ (⊤ : ℕ∞) (fun x : EucSpace 2 => inner (𝕜 := ℝ) (basePoint 1 : EucSpace 2) x) ∧
+    ∀ s ∈ Set.Ioo (0 : ℝ) 1, ∀ x : SSphere 2,
+      fullVF 2 (pureAttentionParams 2 0) (Perspective.diracProb 2 (basePoint 1)) s
+        (x : EucSpace 2) = proj 2 (x : EucSpace 2) (basePoint 1 : EucSpace 2) := by
+  refine ⟨cauchyPB_pureAttention_dirac 0 (basePoint 1),
+    mem_sphere_zero_iff_norm.mp (basePoint 1).2, one_pos,
+    contDiff_const.inner ℝ contDiff_id, ?_⟩
+  intro s hs x
+  rw [fullVF_pureAttention_zero]
+  simp [Perspective.diracProb]
+
+end Transformer.Interpolation
