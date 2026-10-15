@@ -19,7 +19,7 @@ under every probability head law. Neither a simplex condition nor a
 Gaussian assumption is needed for these zero-temperature identities.
 -/
 
-import Transformer.Homogenized.SmallBeta
+import Transformer.Homogenized.GaussianInit
 import Transformer.Homogenized.Section7_SimplexCentroid
 import Transformer.Homogenized.AttnAverage
 import Transformer.Homogenized.SimplexBary
@@ -29,6 +29,24 @@ open Real MeasureTheory
 open scoped BigOperators
 
 namespace Transformer.Homogenized
+
+/-- `eq:def_m_smallbeta`: the empirical second moment
+`m = n^{-2} Σ_i Σ_j ⟨x_i, x_j⟩`.
+
+Source: arXiv:2604.01978v1, `eq:def_m_smallbeta`. -/
+noncomputable def meanOverlap {d n : ℕ} (x : Idx n → EucSpace d) : ℝ :=
+  ((n : ℝ) ^ 2)⁻¹ * ∑ i : Idx n, ∑ j : Idx n, inner (𝕜 := ℝ) (x i) (x j)
+
+/-- A configuration of equal unit tokens has second moment `1`.
+Source: arXiv:2604.01978v1, §2.3.5, `eq:def_m_smallbeta`. -/
+theorem meanOverlap_const {d n : ℕ} (v : EucSpace (d + 1)) (hv : ‖v‖ = 1) :
+    meanOverlap (fun _ : Idx (n + 1) => v) = 1 := by
+  have hvv : inner (𝕜 := ℝ) v v = 1 := by
+    rw [real_inner_self_eq_norm_sq, hv, one_pow]
+  have hn : ((n : ℝ) + 1) ≠ 0 := by positivity
+  simp only [meanOverlap, hvv, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
+    nsmul_eq_mul, mul_one, Nat.cast_add, Nat.cast_one]
+  field_simp
 
 /-- The original mean squared Gram entry in the high-temperature proof.
 Source: arXiv:2604.01978v1, §7, proof of `thm:clustering_small_beta`, part (a). -/
