@@ -31,6 +31,7 @@ import Transformer.Causal.AppendixA_CuspJacobian
 import Transformer.Causal.AppendixA_CuspHyperbolicity
 import Transformer.Causal.AppendixA_CuspClock
 import Transformer.Causal.AppendixA_CuspCollapse
+import Transformer.Causal.AppendixA_SequentialRefutation
 import Transformer.Causal.ParkingCount
 import Transformer.Causal.CapCone
 import Transformer.Causal.CapPolar

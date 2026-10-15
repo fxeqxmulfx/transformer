@@ -8,8 +8,9 @@ critical point with every particle `ε β^{-1/2}`-close to some `θ_j`.
 
 The angles are lifted to `ℝ`; the geodesic distance on `𝕊^1` is
 `|toReal (x : Real.Angle)|`.  Stated and not proved: the paper's proof goes
-through `lemma:convergence` (`Causal.sequentialFlow_converges`), itself a
-`sorry`.
+through `lemma:convergence`. Its printed C¹ version is refuted by
+`Causal.not_sequentialFlow_converges`; the smooth frozen-token specialization
+still needs a separate convergence proof.
 -/
 
 import Transformer.Basic
@@ -101,8 +102,9 @@ probability one `φ(t)` converges to an asymptotically stable critical point
   Solutions are taken on all of `ℝ`: the field is smooth and `2π`-periodic,
   so every solution is global.
 
-Not proved here: the paper derives it from `lemma:convergence`, itself a
-`sorry` (`Causal.sequentialFlow_converges`).
+Not proved here: the paper derives it from `lemma:convergence`, whose
+printed C¹ version is false (`Causal.not_sequentialFlow_converges`).
+The smooth frozen-token specialization still needs a separate convergence proof.
 
 Source: arXiv:2411.04990v2, §5, `thm:fixed_centers`. -/
 theorem fixed_centers (hm : 0 < m) (β ε c : ℝ) (hβ : 0 < β) (hε : 0 < ε)

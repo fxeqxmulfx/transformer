@@ -6,10 +6,14 @@ particle `k` descends an energy `E_k` that only the first `k` particles enter,
 
   `φ̇_k = -(1 / Z_k(φ_1,…,φ_k)) ∂_{φ_k} E_k(φ_1,…,φ_k)`.
 
-`Lemma lemma:convergence` is the substitute for Łojasiewicz's theorem for such
-systems on `𝕊^1`: under isolated critical points and hyperbolicity of every
-truncation, almost every trajectory converges to a strongly stable critical
-point.  It is stated here and not proved.
+`Lemma lemma:convergence` claims that C¹ energies, isolated own-angle
+critical points and the stated spectral alternative at every truncation
+imply convergence to strongly stable critical points for almost every
+initialization. The claim is false under its printed C¹ hypotheses.
+The theorem `Transformer.Causal.not_sequentialFlow_converges` in
+`AppendixA_SequentialRefutation` supplies an actual two-particle periodic
+counterexample. The definitions and genuine hypothesis example
+are retained here as the common input to that construction.
 
 The reference measure is Lebesgue on the angles, so it is `volume` and not a
 parameter; "strongly stable" and "strongly unstable" are read off the
@@ -106,52 +110,8 @@ def StronglyUnstablePrefix
     (((seqJacobian n E Z k ψ).map (fun r : ℝ => (r : ℂ))).charpoly).eval μ = 0 ∧
       0 < μ.re
 
-/-- **Lemma (lemma:convergence).** *Convergence of a sequential gradient flow
-on `𝕊^1`.*
-
-For `C^1` energies `E_k` and normalizations `Z_k` with `0 < c < Z_k < C`, such
-that each `E_k` has isolated critical points in its own variable and every
-critical point of every truncation is either strongly stable or strongly
-unstable, almost every trajectory of
-
-  `φ̇_k = -(1 / Z_k) ∂_{φ_k} E_k`
-
-converges to a strongly stable critical point.
-
-"Almost every" is with respect to Lebesgue measure on the angles (the product measure); smoothness
-is `ContDiff ℝ 1`, the `C^1` of the statement; the two-sided bound on `Z_k` is
-carried as a hypothesis on every configuration.
-
-The angles are lifted to `ℝ`, and `E_k`, `Z_k` are required to be
-`2π`-periodic in each of them (`PeriodicAngles`): the source's particles live
-on `𝕊^1`.  An earlier version dropped the periodicity and was false as
-written — `E_k(ψ) = ψ_k`, `Z_k ≡ 1` has no critical point, and every angle
-drifts to `-∞`.  Convergence of the lift in `ℝ` is the same as convergence on
-`𝕊^1`, since a continuous lift of a convergent path converges.
-
-Not proved here: the paper's proof runs through a stable-manifold argument that
-is not available in this development.
-
-Source: arXiv:2411.04990v2, §A, `lemma:convergence`. -/
-theorem sequentialFlow_converges
-    (E Z : Idx n → (Idx n → ℝ) → ℝ) (c C : ℝ) (hc : 0 < c)
-    (hsmooth : ∀ k : Idx n, ContDiff ℝ 1 (E k) ∧ ContDiff ℝ 1 (Z k))
-    (hZ : ∀ k : Idx n, ∀ ψ : Idx n → ℝ, c < Z k ψ ∧ Z k ψ < C)
-    (hEper : PeriodicAngles n E) (hZper : PeriodicAngles n Z)
-    (hEpre : DependsOnPrefix n E) (hZpre : DependsOnPrefix n Z)
-    (hiso : IsolatedCritical n E)
-    (hhyp : ∀ k : Idx n, ∀ ψ : Idx n → ℝ, IsCriticalPrefix n E Z k ψ →
-      StronglyStablePrefix n E Z k ψ ∨ StronglyUnstablePrefix n E Z k ψ) :
-    ∀ᵐ φ₀ : Idx n → ℝ ∂(Measure.pi fun _ : Idx n => (volume : Measure ℝ)),
-      ∀ φ : ℝ → Idx n → ℝ, φ 0 = φ₀ → SequentialFlow n E Z φ →
-        ∃ φstar : Idx n → ℝ,
-          Filter.Tendsto φ Filter.atTop (nhds φstar) ∧
-          (∀ k : Idx n, IsCriticalPrefix n E Z k φstar ∧
-            StronglyStablePrefix n E Z k φstar) := by
-  sorry
-
-/-- The hypotheses of `sequentialFlow_converges` are satisfiable, and not
-vacuously so: one particle with `E_1(ψ) = cos ψ_1` and `Z_1 ≡ 1`, `c = 1/2`,
+/-- The original hypotheses of Appendix A's `lemma:convergence` are
+jointly satisfiable: one particle with `E_1(ψ) = cos ψ_1` and `Z_1 ≡ 1`, `c = 1/2`,
 `C = 2`.  The velocity is `sin φ_1`; its critical points are the multiples
 `mπ`, strongly unstable for even `m` (Jacobian `cos = 1`) and strongly stable
 for odd `m` (Jacobian `cos = -1`). -/
