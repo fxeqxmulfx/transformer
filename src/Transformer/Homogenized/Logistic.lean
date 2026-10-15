@@ -105,11 +105,22 @@ theorem isLogisticSolution_neg_one {Ω : Type*} {m : MeasurableSpace Ω} (P : Me
   rw [hzero]
   exact isMartingaleOn_const T ℱ P 0
 
+/-- Both original absorbing endpoints are genuine full smooth-test solutions.
+Source: arXiv:2604.01978v1, §7, `sec: sde.logistic`, the two limiting absorbing states. -/
+theorem isLogisticSolution_endpoint {Ω : Type*} {m : MeasurableSpace Ω} (P : Measure Ω)
+    [IsProbabilityMeasure P] (ℱ : Filtration ℝ m) (a : ℝ) (ha : a = 1 ∨ a = -1) :
+    IsLogisticSolution P ℱ (fun _ _ => a) := by
+  rcases ha with h | h
+  · rw [h]
+    exact isLogisticSolution_one P ℱ
+  · rw [h]
+    exact isLogisticSolution_neg_one P ℱ
+
 /-- Both signs occur as initial values of actual solutions under a probability law. -/
 example : IsLogisticSolution (Measure.dirac ())
     (Filtration.const (ι := ℝ) (m := (inferInstance : MeasurableSpace Unit)) ⊥ bot_le)
     (fun _ _ => -1) :=
-  isLogisticSolution_neg_one _ _
+  isLogisticSolution_endpoint _ _ (-1) (Or.inr rfl)
 
 /-! ### Long-time behavior -/
 
@@ -117,29 +128,7 @@ example : IsLogisticSolution (Measure.dirac ())
 
 /- The angle and bracket theorem is proved in Section7_LogisticArcsin. -/
 
-/-- **The limit of `eq: sde.logistic`.**  Started at a deterministic
-`u₀ ∈ [-1,1]`, the solution converges almost surely to one of the two
-absorbing states, and
-
-  `P(u_∞ = 1) = arcsin(u₀)/π + 1/2`,
-
-which is the source's `P_{θ₀}(θ_∞ = π/2) = θ(0)/π + 1/2` with `θ(0) = arcsin u₀`.
-At `u₀ = 0` — the initial condition of `eq: sde.logistic` — `arcsin 0 = 0` and
-this is the source's `P(u_∞ = -1) = P(u_∞ = 1) = 1/2`.
-
-Not proved here.
-
-Source: arXiv:2604.01978v1, `sec: sde.logistic`. -/
-theorem logistic_limit {Ω : Type*} {m : MeasurableSpace Ω} (P : Measure Ω)
-    (hP : IsProbabilityMeasure P) (ℱ : Filtration ℝ m) (u : ℝ → Ω → ℝ)
-    (hu : IsLogisticSolution P ℱ u) (u₀ : ℝ) (hu₀ : u₀ ∈ Set.Icc (-1 : ℝ) 1)
-    (hinit : ∀ ω, u 0 ω = u₀) :
-    ∃ uinf : Ω → ℝ,
-      (∀ᵐ ω ∂P, Filter.Tendsto (fun t => u t ω) Filter.atTop (nhds (uinf ω))) ∧
-        (∀ᵐ ω ∂P, uinf ω = 1 ∨ uinf ω = -1) ∧
-          (P {ω | uinf ω = 1}).toReal = Real.arcsin u₀ / π + 1 / 2 ∧
-            (P {ω | uinf ω = -1}).toReal = 1 / 2 - Real.arcsin u₀ / π := by
-  sorry
+/- The original long-time limit is proved in Section7_LogisticLimit. -/
 
 /-- The hypotheses of `logistic_range`, `logistic_arcsin_martingale` and
 `logistic_limit` are satisfiable at once, on the absorbing solution `u ≡ 1`:
@@ -149,7 +138,7 @@ true statement `P(u_∞ = 1) = arcsin(1)/π + 1/2 = 1`. -/
 example {Ω : Type*} {m : MeasurableSpace Ω} (P : Measure Ω) [IsProbabilityMeasure P]
     (ℱ : Filtration ℝ m) :
     IsLogisticSolution P ℱ (fun _ _ => 1) ∧
-      (∀ _ω : Ω, (1 : ℝ) ∈ Set.Icc (-1 : ℝ) 1) ∧
+      (∀ _ : Ω, (1 : ℝ) ∈ Set.Icc (-1 : ℝ) 1) ∧
         (1 : ℝ) ∈ Set.Icc (-1 : ℝ) 1 ∧
           Real.arcsin 1 / π + 1 / 2 = 1 := by
   refine ⟨isLogisticSolution_one P ℱ, fun _ => ⟨by norm_num, le_refl _⟩,
