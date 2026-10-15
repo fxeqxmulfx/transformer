@@ -14,8 +14,7 @@ method on the sphere — and the second expands the resulting
 and is not restated here.
 -/
 
-import Transformer.Homogenized.Section7_UniformBarycenter
-import Transformer.Homogenized.Section7_GaussianQueryMoments
+import Transformer.Homogenized.Section7_GaussianBarycenterBound
 import Transformer.Homogenized.Metastability
 
 open scoped BigOperators ENNReal NNReal
