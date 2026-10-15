@@ -120,24 +120,33 @@ theorem gaussianMatrix_row_linear_hasLaw {d : ℕ} (g : Fin d → ℝ) (i : Fin 
     Measure.map_map (by fun_prop : Measurable (fun z : Fin d → ℝ => dotProduct g z)) hm]
   rfl
 
+/-- All actual matrix rows are jointly independent under the original
+product law. Source: arXiv:2604.01978v1, initialization (G). -/
+theorem iIndepFun_gaussianMatrix_rows (d : ℕ) :
+    iIndepFun (fun i : Fin d => fun M : Matrix (Fin d) (Fin d) ℝ => M i) (gaussianMatrixLaw d) := by
+  apply (iIndepFun_iff_map_fun_eq_pi_map (fun i =>
+    (Measurable.of_eval fun q => Matrix.measurable_apply (i := i) (j := q)).aemeasurable)).mpr
+  simp_rw [gaussianMatrixLaw_map_row]
+  change ((Measure.pi (fun _ : Fin d => gaussianRowLaw d)).map
+    (Matrix.ofMeasurableEquiv (Fin d) (Fin d) ℝ)).map
+      (Matrix.ofMeasurableEquiv (Fin d) (Fin d) ℝ).symm = _
+  exact (Matrix.ofMeasurableEquiv (Fin d) (Fin d) ℝ).map_symm_map
+
+/-- All conditional query coordinates are jointly independent.
+Source: arXiv:2604.01978v1, §7.3, `lem:delta_method`. -/
+theorem iIndepFun_gaussianMatrix_row_linear {d : ℕ} (g : Fin d → ℝ) :
+    iIndepFun (fun i : Fin d => fun M : Matrix (Fin d) (Fin d) ℝ => dotProduct g (M i))
+      (gaussianMatrixLaw d) := by
+  simpa only [Function.comp_def] using (iIndepFun_gaussianMatrix_rows d).comp
+    (fun _ (z : Fin d → ℝ) => dotProduct g z) (fun _ => by fun_prop)
+
 /-- Conditional queries from distinct actual matrix rows are
 independent. Source: arXiv:2604.01978v1, §7.3, `lem:delta_method`. -/
 theorem indepFun_gaussianMatrix_row_linear {d : ℕ} (g : Fin d → ℝ) (i j : Fin d)
     (hij : i ≠ j) :
     IndepFun (fun M : Matrix (Fin d) (Fin d) ℝ => dotProduct g (M i))
-      (fun M => dotProduct g (M j)) (gaussianMatrixLaw d) := by
-  have hind : iIndepFun (fun i : Fin d => fun M : Matrix (Fin d) (Fin d) ℝ => M i)
-      (gaussianMatrixLaw d) := by
-    apply (iIndepFun_iff_map_fun_eq_pi_map (fun i =>
-      (Measurable.of_eval fun q => Matrix.measurable_apply (i := i) (j := q)).aemeasurable)).mpr
-    simp_rw [gaussianMatrixLaw_map_row]
-    change ((Measure.pi (fun _ : Fin d => gaussianRowLaw d)).map
-      (Matrix.ofMeasurableEquiv (Fin d) (Fin d) ℝ)).map
-        (Matrix.ofMeasurableEquiv (Fin d) (Fin d) ℝ).symm = _
-    exact (Matrix.ofMeasurableEquiv (Fin d) (Fin d) ℝ).map_symm_map
-  exact (hind.indepFun hij).comp
-    (by fun_prop : Measurable (fun z : Fin d → ℝ => dotProduct g z))
-    (by fun_prop : Measurable (fun z : Fin d → ℝ => dotProduct g z))
+      (fun M => dotProduct g (M j)) (gaussianMatrixLaw d) :=
+  (iIndepFun_gaussianMatrix_row_linear g).indepFun hij
 
 /-- Distinct original blocks, an actual key-row index and distinct
 conditional matrix-row indices occur jointly in dimension two. -/
