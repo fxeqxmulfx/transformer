@@ -109,6 +109,7 @@ import Transformer.Homogenized.Section7_MartingaleTimeShift
 import Transformer.Homogenized.Section7_WeightedSupermartingale
 import Transformer.Homogenized.Section7_IntegratingFactor
 import Transformer.Homogenized.Section7_IntegratingFactorVille
+import Transformer.Homogenized.Section7_ExponentialDriftBounds
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
