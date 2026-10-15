@@ -36,6 +36,7 @@ import Transformer.Causal.SectionB_FarCurvature
 import Transformer.Causal.SectionB_PeakHeight
 import Transformer.Causal.SectionB_DoublePeak
 import Transformer.Causal.SectionB_LogSlopeAlgebra
+import Transformer.Causal.SectionB_LogSlope
 import Transformer.Causal.InteractionWindow
 import Transformer.Causal.InteractionRemark
 import Transformer.Causal.Packing
