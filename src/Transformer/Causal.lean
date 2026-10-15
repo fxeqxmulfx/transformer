@@ -59,6 +59,7 @@ import Transformer.Causal.Section5_ForceRatio
 import Transformer.Causal.Section5_NarrowParameters
 import Transformer.Causal.Section5_AlignedForce
 import Transformer.Causal.Section5_PrefixGeometry
+import Transformer.Causal.Section5_PrefixForce
 import Transformer.Causal.Section5_CenterForce
 import Transformer.Causal.Section5_CenterCurvature
 import Transformer.Causal.Section5_ClusterCurvature
