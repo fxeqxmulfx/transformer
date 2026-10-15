@@ -72,6 +72,7 @@ import Transformer.Causal.Section5_FrozenField
 import Transformer.Causal.Section5_FrozenLastRow
 import Transformer.Causal.Section5_FrozenFlow
 import Transformer.Causal.SequentialFlow
+import Transformer.Causal.SectionA_ScalarConvergence
 import Transformer.Causal.AppendixA_Cusp
 import Transformer.Causal.AppendixA_CuspEnergy
 import Transformer.Causal.AppendixA_CuspCritical
