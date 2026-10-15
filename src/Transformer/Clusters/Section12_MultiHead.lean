@@ -3,7 +3,7 @@
   Transformers
 
 §12 of arXiv:2305.05465v6, `sec:conclusion`: the multi-headed Transformer and
-the open problem it carries.
+the positive one-dimensional case of the open problem it carries.
 
 **What the source says and what is carried here.**
 
@@ -23,7 +23,8 @@ the open problem it carries.
   do not expect any clustering to occur".  The open problem is therefore
   carried as the multi-headed form of `t:boolean`: those hypotheses, one copy
   per head, and `t:boolean`'s own conclusion, one per head.  The addition of
-  the hypotheses is the deviation from the source; `Δt > 0` is among them,
+  the hypotheses is the deviation from the source. This case is proved here
+  for the actual discrete dynamics and each original head. `Δt > 0` is among them,
   since at `Δt = 0` no token moves and the attention matrix stays wherever it
   started.
 
@@ -37,7 +38,7 @@ Source: arXiv:2305.05465v6, `sec:conclusion`, the multi-headed display;
 -/
 
 import Transformer.Clusters.Section2_LowRank
-import Transformer.Clusters.Section12_MultiHeadIteration
+import Transformer.Clusters.Section12_MultiHeadBoundedRows
 
 open scoped BigOperators
 open Real Filter Topology
@@ -67,22 +68,49 @@ theorem multiHeadTransformer_zero {H : ℕ} (Δt : ℝ) (Q K V : Idx H → Param
   intro k i
   simp
 
-/-! ### The open problem -/
+/-! ### Convergence for the original positive one-dimensional heads -/
 
-/-- **Open problem (`sec:conclusion`), convergence of the self-attention
-matrix of a multi-headed Transformer.**  With `d = 1`, `V_h > 0` and
-`Q_hK_h > 0` for every head and pairwise distinct initial tokens, does the
-self-attention matrix of each head converge, as `k → +∞`, to a matrix of the
-set `𝒫` of `e:star`?
+/-- Every actual original head has a limiting row, including the possibly bounded token.
+Source: arXiv:2305.05465v6, §7, `l:unboundedparticles`, `l:boundedxn`, and `l:boundedother`,
+for the original discrete head sum of §12. No rate or escape premise is added. -/
+theorem multiHeadTransformer_row_limits {m H : ℕ} {Δt : ℝ} (hΔt : 0 < Δt)
+    {Q K V : Idx H → ParamMatrix 1} (hV : ∀ a, IsPosDefOp (V a))
+    (hQK : ∀ a, IsPosDefQK (Q a) (K a))
+    {X : ℕ → Idx (m + 1) → EucSpace 1} (hX : MultiHeadTransformer Δt Q K V X)
+    (hdist : ∀ i j, i ≠ j → X 0 i ≠ X 0 j) (h : Idx H) :
+    ∀ i, ∃ P : Idx (m + 1) → ℝ, ∀ j,
+      Tendsto (fun k => attentionMatrix (Q h) (K h) (X k) i j) atTop (nhds (P j)) := by
+  obtain ⟨_, _, _, _, γ, _, _, hγ, _, _, _, hz⟩ :=
+    multiHeadTransformer_exists_token_rates hΔt hV hQK hX hdist h
+  obtain ⟨L, M, g, hg, _, hmin, hmax⟩ := multiHeadTransformer_extreme_data hΔt.le hV hQK hX hdist
+  obtain ⟨R, _, halt⟩ := multiHeadTransformer_escape_alternatives hΔt hV hQK hX h
+  intro i
+  rcases halt i with hb | hp | hn
+  · have hbi : ∃ A : ℝ, ∀ k, |X k i 0| ≤ A := ⟨R, hb⟩
+    have hne : ∀ j, j ≠ i → γ j ≠ 0 := by
+      intro j hji he
+      have hbj := (hz j).mp he
+      have hij := multiHeadTransformer_bounded_initial_eq hΔt hV hQK hX h j i hbj hbi
+      exact hdist j i hji hij
+    exact multiHeadTransformer_bounded_row_exists hΔt hV hQK hX h i hbi γ hγ hne
+  · exact ⟨fun j => if j = M then 1 else 0,
+      fun j => multiHeadTransformer_positive_row hΔt.le hV hQK hX i M hg (hmax 0) h hp j⟩
+  · exact ⟨fun j => if j = L then 1 else 0,
+      fun j => multiHeadTransformer_negative_row hΔt.le hV hQK hX i L hg (hmin 0) h hn j⟩
 
-Open: "Proofs regarding clustering or convergence of the self-attention matrix
-for such dynamics is an open problem.  Preliminary numerical investigations
-seem to indicate that interesting clustering phenomena also occur in this
-context."  The hypotheses are `t:boolean`'s, one copy per head; the source
-states none.  `0 < n` is added, as for `t:boolean`: at `n = 0` no matrix is
-in `𝒫`.
+/-- **The positive one-dimensional case of the multi-head convergence problem.**
+With `V_h > 0`, `Q_h K_h > 0`, distinct initial tokens, and a positive time step,
+each original head's full self-attention matrix converges to `𝒫` of `e:star`.
 
-Source: arXiv:2305.05465v6, `sec:conclusion`; `t:boolean`, `e:star`. -/
+The source calls convergence for the general displayed multi-head dynamics an
+open problem and attaches no hypotheses. This theorem retains the carried
+one-dimensional hypotheses of `t:boolean`, one copy per original head; its
+conclusion and discrete dynamics are unchanged. The proof includes the
+exceptional bounded row and assumes no limiting rates or escape alternatives.
+The condition `0 < n` is retained because `𝒫` has no empty matrix.
+
+Source: arXiv:2305.05465v6, §12, `sec:conclusion`; §2, `t:boolean`, `e:star`;
+§3, `r:discreterescaling`; §7, proof of `t:boolean`. -/
 theorem multiHead_tendsto_isBooleanLimit {H : ℕ} (Δt : ℝ) (hΔt : 0 < Δt)
     (Q K V : Idx H → ParamMatrix 1) (hV : ∀ h : Idx H, IsPosDefOp (V h))
     (hQK : ∀ h : Idx H, IsPosDefQK (Q h) (K h))
@@ -91,7 +119,22 @@ theorem multiHead_tendsto_isBooleanLimit {H : ℕ} (Δt : ℝ) (hΔt : 0 < Δt)
     ∃ P : Idx n → Idx n → ℝ, IsBooleanLimit P ∧
       ∀ i j : Idx n,
         Tendsto (fun k => attentionMatrix (Q h) (K h) (X k) i j) atTop (nhds (P i j)) := by
-  sorry
+  classical
+  obtain ⟨m, rfl⟩ : ∃ m, n = m + 1 := ⟨n - 1, by omega⟩
+  choose P hP using multiHeadTransformer_row_limits hΔt hV hQK hX hdist h
+  obtain ⟨L, M, i₀, hrows⟩ := multiHeadTransformer_except_one_basis_rows hΔt hV hQK hX hdist h
+  refine ⟨P, ?_, hP⟩
+  obtain ⟨hnn, hsum⟩ := attentionMatrix_discrete_row_limit_probability (Nat.succ_pos m)
+    (Q h) (K h) X i₀ (P i₀) (hP i₀)
+  refine ⟨L, M, i₀, ?_, hnn, hsum⟩
+  intro i hi
+  rcases hrows i hi with hL | hM
+  · left
+    funext j
+    simpa only [Pi.single_apply] using tendsto_nhds_unique (hP i j) (hL j)
+  · right
+    funext j
+    simpa only [Pi.single_apply] using tendsto_nhds_unique (hP i j) (hM j)
 
 /-- The hypotheses of `multiHead_tendsto_isBooleanLimit` are satisfiable: with
 a single token, every head at `Q_h = K_h = V_h = I_1` and the token pinned at
@@ -108,6 +151,24 @@ example {H : ℕ} :
         (fun _ _ => (0 : EucSpace 1)) 0 i ≠ (fun _ _ => (0 : EucSpace 1)) 0 j) ∧ 0 < 1 :=
   ⟨one_pos, fun _ => isPosDefOp_id 1, fun _ => isPosDefQK_of_isAttentionRoot (isAttentionRoot_id 1),
     multiHeadTransformer_zero 1 _ _ _, fun i j hij => absurd (Subsingleton.elim i j) hij, one_pos⟩
+
+/-- Two genuine original heads and three distinct actual tokens with a bounded
+middle token and both signs of escape jointly realize the full theorem's premises. -/
+example : ∃ (V : Idx 2 → ParamMatrix 1) (X : ℕ → Idx 3 → EucSpace 1),
+    (0 : ℝ) < 1 ∧ (∀ a, IsPosDefOp (V a)) ∧ (∀ a, IsPosDefQK (V a) (V a)) ∧
+    MultiHeadTransformer 1 V V V X ∧ (∀ i j, i ≠ j → X 0 i ≠ X 0 j) ∧
+    (∀ k, X k 1 = 0) ∧ Tendsto (fun k => X k 2 0) atTop atTop ∧
+    Tendsto (fun k => X k 0 0) atTop atBot := by
+  let V : Idx 2 → ParamMatrix 1 := fun _ => 1
+  have hV : ∀ a, IsPosDefOp (V a) := fun _ => isPosDefOp_id 1
+  have hQK : ∀ a, IsPosDefQK (V a) (V a) := fun _ => isPosDefQK_of_isAttentionRoot (isAttentionRoot_id 1)
+  obtain ⟨X, hX, hz, hp, hn, hord⟩ := exists_multiHead_symmetric_escape one_pos hV hQK 0
+  refine ⟨V, X, one_pos, hV, hQK, hX, ?_, hz, hp, hn⟩
+  intro i j hij he
+  have hc := congrArg (fun z : EucSpace 1 => z 0) he
+  rcases lt_or_gt_of_ne hij with hlt | hgt
+  · have hs := hord i j hlt; linarith
+  · have hs := hord j i hgt; linarith
 
 end Clusters
 end Transformer
