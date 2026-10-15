@@ -98,6 +98,7 @@ import Transformer.Homogenized.Section7_DiscreteVille
 import Transformer.Homogenized.Section7_IntervalGrid
 import Transformer.Homogenized.Section7_ContinuousVille
 import Transformer.Homogenized.Section7_ExponentialObservable
+import Transformer.Homogenized.Section7_ExponentialGenerator
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
