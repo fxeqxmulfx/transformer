@@ -40,7 +40,7 @@ import Transformer.Homogenized.SimplexDrift
 import Transformer.Homogenized.SimplexWellDefined
 import Transformer.Homogenized.GramStability
 import Transformer.Homogenized.SmallBeta
-import Transformer.Homogenized.Section7_GaussianMeanLogChernoff
+import Transformer.Homogenized.Section7_GaussianMeanLogMaximal
 import Transformer.Homogenized.RademacherLaw
 import Transformer.Homogenized.MeanFieldLipschitz
 import Transformer.Homogenized.CoupledSystem
