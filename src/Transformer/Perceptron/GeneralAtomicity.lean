@@ -28,6 +28,7 @@ Source: arXiv:2601.21366v2, `rem: ext` (ii), `rem:unifiedlog-B`.
 import Transformer.Perceptron.GeneralAttention
 import Transformer.Perceptron.HigherDim
 import Transformer.Perceptron.Section3_StrictMatrixAtomicity
+import Transformer.Perceptron.Section5_SphericalMapNullSupport
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -115,9 +116,11 @@ stationary measure for the ReLU perceptron with a non-analytic potential — or
 of a strict SOPD critical point at a real-analytic `σ` — is still
 `σ_d`-null.
 
-Not proved here.
+The analytic strict alternative follows from the proved actual matrix
+Hessian and the localized-gradient argument of §5.3. The ReLU alternative
+remains unproved here. The statement retains both original alternatives.
 
-Source: arXiv:2601.21366v2, `rem: ext` (ii), `thm: any.d` (i). -/
+Source: arXiv:2601.21366v2, §3.1, `rem: ext` (ii), `thm: any.d` (i), and §5.3. -/
 theorem ext_any_d_measure_support_eq_zero (d : ℕ) (hd : 2 ≤ d)
     (B : EucSpace d →ₗ[ℝ] EucSpace d) (hsymm : B.IsSymmetric) (hB : Function.Bijective B)
     (φ σ : ℝ → ℝ) (hφ : ∀ s : ℝ, HasDerivAt φ (2 * σ s) s) (ω : Idx d → ℝ)
@@ -127,7 +130,10 @@ theorem ext_any_d_measure_support_eq_zero (d : ℕ) (hd : 2 ≤ d)
       AnalyticOnNhd ℝ σ Set.univ ∧ IsStrictSOPDMap B φ σ ω a μ) :
     ∀ ν : Measure (SSphere d), Metastability.IsUniformOn d ν →
       ν (μ : Measure (SSphere d)).support = 0 := by
-  sorry
+  intro ν hν
+  rcases hcrit with hrelu | ⟨hσ, hstrict⟩
+  · sorry
+  · exact analytic_strictMap_measure_support_eq_zero hd B hsymm φ σ hφ hσ ω a μ hstrict ν hν
 
 /-- The hypotheses of `ext_any_d_measure_support_eq_zero` are satisfiable at
 `d = 2` and `B = id`, in the first of the two alternatives. -/
