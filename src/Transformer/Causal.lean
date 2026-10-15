@@ -71,6 +71,7 @@ import Transformer.Causal.Section5_FrozenWeights
 import Transformer.Causal.Section5_FrozenField
 import Transformer.Causal.Section5_FrozenLastRow
 import Transformer.Causal.Section5_RowField
+import Transformer.Causal.Section5_RowBounds
 import Transformer.Causal.Section5_FrozenFlow
 import Transformer.Causal.SequentialFlow
 import Transformer.Causal.SectionA_ScalarConvergence
