@@ -18,7 +18,7 @@ and the actual Gaussian query moments are proved in the imported modules.
 -/
 
 import Transformer.Homogenized.Section7_UniformLaplaceCounterexample
-import Transformer.Homogenized.Section7_ConditionalQueryMoments
+import Transformer.Homogenized.Section7_ProductQueryFourth
 import Transformer.Homogenized.Metastability
 
 open scoped BigOperators ENNReal NNReal
