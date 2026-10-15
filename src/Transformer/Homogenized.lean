@@ -44,6 +44,7 @@ import Transformer.Homogenized.Section7_GaussianMeanPathError
 import Transformer.Homogenized.RademacherLaw
 import Transformer.Homogenized.MeanFieldLipschitz
 import Transformer.Homogenized.CoupledSystem
+import Transformer.Homogenized.Section4_StaticPoC
 import Transformer.Homogenized.PropagationChaos
 import Transformer.Homogenized.SphereSde
 import Transformer.Homogenized.HansonWright
