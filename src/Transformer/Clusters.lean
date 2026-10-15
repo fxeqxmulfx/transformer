@@ -100,8 +100,7 @@ import Transformer.Clusters.Section10_SquareApproach
 import Transformer.Clusters.Section10_Step2
 import Transformer.Clusters.Section12_MultiHead
 import Transformer.Clusters.Section12_MultiHeadRows
-import Transformer.Clusters.Section12_MultiHeadBoundedUpper
-import Transformer.Clusters.Section12_MultiHeadBoundedLower
+import Transformer.Clusters.Section12_MultiHeadOnlyOne
 import Transformer.Clusters.Section12_Generic
 import Transformer.Clusters.Section12_Feedforward
 import Transformer.Clusters.Section12_ReluScalar
