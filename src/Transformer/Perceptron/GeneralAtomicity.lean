@@ -6,17 +6,13 @@
 `thm: circle.gelu` and `thm: any.d` (i) for the energy `E_B` of
 `GeneralAttention.lean`, with a symmetric invertible `B` in place of `β I_d`.
 
-**What the source says and what is carried here.**
-
 * `rem: ext` (ii) says only "the results above easily extend"; the argument is
   `rem:unifiedlog-B`, which names `thm: circle` and `thm: any.d` and points at
   `rem: general-attention` for the injectivity and parity of `f_B` — both
   already in `Transform.lean`.
-
 * `thm: any.d` (ii) and (iii) are not carried: they are genericity statements
   over `ℝ_{>0} × (ℝ^{d+1})^d`, and the source describes no generic set in the
   space of symmetric invertible matrices to put in place of the `β`.
-
 * The witnesses take `B = id`, where `E_B` is the source's `E_{β,ϑ}` at
   `β = 1` on the nose — `energyMap_id_eq` — so the pinned Diracs of
   `Dirac.lean` serve here too, through `isStationaryMap_id_iff` and
@@ -29,7 +25,7 @@ import Transformer.Perceptron.GeneralAttention
 import Transformer.Perceptron.HigherDim
 import Transformer.Perceptron.Section3_StrictMatrixAtomicity
 import Transformer.Perceptron.Section5_SphericalMapNullSupport
-import Transformer.Perceptron.Section5_ReflectionBranches
+import Transformer.Perceptron.Section5_ReflectionAtomicity
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -48,12 +44,11 @@ theorem isSymmetric_bijective_id (d : ℕ) :
 `B` in the interaction energy, a stationary measure for the ReLU perceptron
 with a non-analytic potential is still purely atomic with finite support.
 
-The signed Gram non-degenerate and conformal-matrix cases are proved.
+The non-degenerate, conformal-matrix and commuting-neuron-reflection cases are proved.
 Otherwise both complementary continued fields vanish globally for an
 actual infinite support pattern, and its signed Gram matrix is scalar.
 Scalar zero is excluded by analyticity of the original potential.
-The remaining nonzero orthogonal-neuron case is unproved; the full claim is retained.
-
+The remaining case without a commuting neuron reflection is unproved; the full claim is retained.
 Source: arXiv:2601.21366v2, `rem: ext` (ii), `thm: circle`. -/
 theorem ext_circle_isFinitelyAtomic (B : EucSpace 2 →ₗ[ℝ] EucSpace 2)
     (hsymm : B.IsSymmetric) (hB : Function.Bijective B) (φ : ℝ → ℝ)
@@ -80,6 +75,11 @@ theorem ext_circle_isFinitelyAtomic (B : EucSpace 2 →ₗ[ℝ] EucSpace 2)
     intro x
     rw [hscalar, hc0, zero_smul]
   have hframe := two_neuron_geometry_of_nonzero_scalar_signedGram ω a J c hc0 hscalar
+  by_cases href : ∃ U : EucSpace 2 ≃ₗᵢ[ℝ] EucSpace 2,
+      (∀ x, B (U x) = U (B x)) ∧ U (a 0) = -a 0 ∧ U (a 1) = a 1
+  · obtain ⟨U, hcomm, h₀, h₁⟩ := href
+    exact hnot (isFinitelyAtomic_of_stationaryMap_commuting_neuron_reflection B hB U hcomm ω a
+      h₀ h₁ hframe.2.1 hframe.2.2.1 (hframe.2.2.2.2.2 0) μ hμ)
   sorry
 
 /-- The hypotheses of `ext_circle_isFinitelyAtomic` are satisfiable at
