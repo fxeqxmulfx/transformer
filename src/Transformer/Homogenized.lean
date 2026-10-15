@@ -101,6 +101,7 @@ import Transformer.Homogenized.Section7_ExponentialObservable
 import Transformer.Homogenized.Section7_ExponentialGenerator
 import Transformer.Homogenized.Section7_WeightedPartition
 import Transformer.Homogenized.Section7_WeightedGridLimit
+import Transformer.Homogenized.Section7_WeightedMartingale
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
