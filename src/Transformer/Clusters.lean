@@ -99,8 +99,7 @@ import Transformer.Clusters.Section10_RemainderFalse
 import Transformer.Clusters.Section10_SquareApproach
 import Transformer.Clusters.Section10_Step2
 import Transformer.Clusters.Section12_MultiHead
-import Transformer.Clusters.Section12_MultiHeadExtremeRates
-import Transformer.Clusters.Section12_DiscreteGeometricError
+import Transformer.Clusters.Section12_MultiHeadFullGrowth
 import Transformer.Clusters.Section12_Generic
 import Transformer.Clusters.Section12_Feedforward
 import Transformer.Clusters.Section12_ReluScalar
