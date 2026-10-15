@@ -19,8 +19,7 @@ and the actual Gaussian query moments are proved in the imported modules.
 
 import Transformer.Homogenized.Section7_UniformLaplaceCounterexample
 import Transformer.Homogenized.Section7_DeltaNormCovariance
-import Transformer.Homogenized.Section7_CorrelationTaylorExpectation
-import Transformer.Homogenized.Section7_GaussianRowDeviationFourth
+import Transformer.Homogenized.Section7_GaussianRowDeviationThird
 import Transformer.Homogenized.Metastability
 
 open scoped BigOperators ENNReal NNReal
