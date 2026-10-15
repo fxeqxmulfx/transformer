@@ -115,6 +115,7 @@ import Transformer.Homogenized.Section7_GaussianOverlapVille
 import Transformer.Homogenized.Section7_GaussianOverlapChernoff
 import Transformer.Homogenized.Section7_OverlapNoiseMaximal
 import Transformer.Homogenized.Section7_OverlapNoiseProbability
+import Transformer.Homogenized.Section7_AttentionMomentContinuity
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
