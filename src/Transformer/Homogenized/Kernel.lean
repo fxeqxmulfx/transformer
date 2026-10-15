@@ -1,80 +1,124 @@
 /-
-# Homogenized Transformers — regularity of the drift and the noise kernel
+# The quantitative kernel regularity claim has a sparse-law counterexample
 
-Formalization of `lem:Kernel_regularity` of arXiv:2604.01978v1, *Homogenized
-Transformers*: the regularity that `ass:high_order_short` buys, and which the
-proof of `thm:weak_error_clean` runs on.
+Lemma `lem:Kernel_regularity` of arXiv:2604.01978v1, §3.1, asserts both
+regularity and quantitative moment bounds under `ass:high_order_short`.
+In particular, it gives `C₁ = O(1 + σ_A ‖𝔼V‖_op β / σ_V)` in the estimate
+`max_X ‖G(X,·)‖_{L³} ≤ C₁ ς`.
 
-**What the source says and what is carried here.**
+The uniform quantitative reading fails with fixed
+`d = n = 2`, `β = C = σ_V = 1`, `σ_A = 0`, and zero mean matrices.
+Let `V₀₁` take values `±1`, each with probability `q⁶/2`, and zero otherwise.
+Every stated subGaussian and independence hypothesis holds, but the exact
+variance proxy is `ς = q³`, and the third moment norm at two coincident unit
+tokens is `q²`. Their ratio is unbounded as `q ↓ 0`.
 
-* The `C^k` norms of the source are carried by explicit dominating functions:
-  "`‖‖G(·,θ)‖_{C⁵}‖_{L²(ρ*)} ≤ C₂ς`" is written as "there is `N` dominating
-  every derivative of order `≤ 5` of `G(·,θ)` at every configuration, with
-  `‖N‖_{L²(ρ*)} ≤ C₂ς`".  That is the same statement — the `C⁵` norm is the
-  least such `N` — and it avoids the junk value a supremum takes when the
-  family is unbounded, which would make the bound vacuously true.
+The proof in §6.3 uses isotropy and identifies actual variances with the
+variance proxies; neither property is part of `ass:high_order_short`.
+The counterexample addresses the uniform quantitative estimate. It does not
+assert a failure of qualitative smoothness for a fixed law.
 
-  The same reading disposes of `def: derivatives`, the source's norm
-  `‖V‖_{𝔛^k((𝕊^{d-1})^n)} = max_X (‖V(X)‖ + max_{j≤k} ‖∇^j V(X)‖)` on vector
-  fields: it is vocabulary for exactly the bounds written out here, is used
-  only inside proofs — "`V₀ ∈ 𝔛⁴`, `G^σ ∈ 𝔛⁵`, `‖G^σ‖_{𝔛⁴} ∨ ‖V₀‖_{𝔛⁵} < ∞`"
-  is this lemma restated — and states nothing on its own, so it is not a
-  separate definition here.
+The final theorem negates the formerly admitted conjunction, with its
+derivative bounds restricted to unit configurations, as in the source.
+The contradiction uses only item (2), so it is independent of the choice of
+ambient or covariant higher derivatives and of behavior away from the sphere.
+Both token count and temperature satisfy the source's positive-parameter setup.
+The proxy is the per-token maximum of `eq: defining.alpha`; using the product
+Euclidean norm multiplies both moments at coincident tokens by the same factor.
 
-* The two claims "there exist `C₁, C₂ > 0`" and "we can choose
-  `C₁ = O(1 + σ_A‖𝔼V‖_op β/σ_V)`, `C₂ = O(1 + β¹⁰σ_A¹⁰d⁵)`" are read as one: a
-  universal `K`, produced before `d, n, β, σ_V, σ_A` are chosen, with `C₁` and
-  `C₂` those explicit expressions.  The operator norm of `𝔼V` is carried as
-  any bound `opV` for it, which is all the estimate uses.
-
-* `ς` is the variance proxy of `eq: defining.alpha`, i.e. the per-token
-  supremum `IsVarianceProxy`; the source writes `‖G(X,·)‖_{L²(ρ*)}` for the
-  whole configuration in `lem:Kernel_regularity` and per token in
-  `eq: defining.alpha`.  The per-token reading is the one `α` is defined from,
-  and it is the one used here.
-
-* Item 3 is stated for the **ambient** derivatives `D^k G(·,θ)` of `Gfield`,
-  not for the covariant derivatives `∇^k` of the tangent field it restricts to.
-  That is the stronger of the two: `claim:boumal` — the fact the source borrows
-  from Boumal (Prop. 5.31, Thm. 5.9, Prop. 3.31) to finish item 3 — says
-  exactly that `max_X ‖∇^k F(X)‖ ≤ C_k max_{s ≤ k} max_X ‖D^s F̃(X)‖` for every
-  smooth extension `F̃`, so an ambient bound implies the intrinsic one and not
-  conversely.  The claim is therefore the step from what is written here to
-  what the source writes, and it has nothing to do in this tree: no statement
-  in it mentions `∇^k`.  It is not formalized — writing it would mean defining
-  iterated covariant derivatives of a vector field on `(𝕊^{d-1})^n`, which
-  Mathlib does not have and which is the whole difficulty of the claim, so a
-  definition supplying it would be the difficulty parked in a definition.
-
-Source: arXiv:2604.01978v1, `lem:Kernel_regularity`, `eq: defining.alpha`,
-`def: derivatives`, `claim:boumal`.
+Source: arXiv:2604.01978v1, §3.1, `lem:Kernel_regularity`,
+`eq:G_def`, `eq: defining.alpha`; proof §6.3.
 -/
 
-import Transformer.Homogenized.RandomChain
+import Transformer.Homogenized.Section3_SparseKernelMoments
 import Transformer.Homogenized.Generator
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory
 
-namespace Transformer
-namespace Homogenized
+namespace Transformer.Homogenized
 
-/-- **Lemma (lem:Kernel_regularity).**  Under `ass:high_order_short`:
+/-- Every proposed uniform constant fails for a genuine high-order law at
+two unit tokens. All model scales and both matrix means are fixed.
+Source: arXiv:2604.01978v1, §3.1, counterexample to the quantitative
+third moment estimate in `lem:Kernel_regularity`(2). -/
+theorem kernel_regularity_counterexample (K : ℝ) (hK : 0 < K) :
+    ∃ q : ℝ, q ∈ Set.Ioo 0 1 ∧
+      IsHighOrderLaw 2 1 1 0 (sparseHeadLaw (q ^ 6)) (sparseSource (q ^ 6))
+        sparseMatrix 0 0 0 0 ∧
+      IsVarianceProxy 2 2 1 (sparseHeadLaw (q ^ 6)) (q ^ 3) ∧
+      K * q ^ 3 <
+        (∫ θ, ‖Gfield 1 (sparseHeadLaw (q ^ 6))
+          (fun _ : Idx 2 => EuclideanSpace.single 1 1) θ 0‖ ^ 3
+            ∂sparseHeadLaw (q ^ 6)) ^ ((1 : ℝ) / 3) := by
+  let q : ℝ := 1 / (K + 1)
+  have hden : 0 < K + 1 := by linarith
+  have hq₀ : 0 < q := by dsimp [q]; positivity
+  have hq₁ : q < 1 := (div_lt_one hden).mpr (by linarith)
+  have hq : q ∈ Set.Icc 0 1 := ⟨hq₀.le, hq₁.le⟩
+  have hp : q ^ 6 ∈ Set.Icc 0 1 := ⟨by positivity, pow_le_one₀ hq.1 hq.2⟩
+  have hKq : K * q < 1 := by
+    dsimp [q]
+    rw [mul_one_div]
+    exact (div_lt_one hden).mpr (by linarith)
+  refine ⟨q, ⟨hq₀, hq₁⟩, isHighOrderLaw_sparse hp, isVarianceProxy_sparse hq 1, ?_⟩
+  rw [sparse_third_moment hq]
+  calc
+    K * q ^ 3 = (K * q) * q ^ 2 := by ring
+    _ < 1 * q ^ 2 := mul_lt_mul_of_pos_right hKq (by positivity)
+    _ = q ^ 2 := one_mul _
 
-1. `b ∈ C⁴((𝕊^{d-1})^n; T(𝕊^{d-1})^n)`;
-2. the variance proxy `ς` of `eq: defining.alpha` is finite, and
-   `max_X ‖G(X,·)‖_{L³(ρ*)} ≤ C₁ ς`;
-3. for `ρ*`-a.e. `θ`, `G(·,θ) ∈ C⁵`, and
-   `‖‖G(·,θ)‖_{C⁵}‖_{L²(ρ*)} + ‖‖∇_G G(·,θ)‖_{C⁵}‖_{L²(ρ*)} ≤ C₂ ς`,
+example : (0 : ℝ) < 1 := one_pos
 
-with `C₁ = O(1 + σ_A ‖𝔼V‖_op β / σ_V)` and `C₂ = O(1 + β¹⁰ σ_A¹⁰ d⁵)`, all
-independent of `α, η, L`.
+/-- The counterexample uses two unit tokens, a genuine high-order law, and
+the claimed operator bound for the zero mean value matrix. -/
+example :
+    IsHighOrderLaw 2 1 1 0 (sparseHeadLaw (1 / 64)) (sparseSource (1 / 64))
+        sparseMatrix 0 0 0 0 ∧
+      (∀ y : EucSpace 2,
+        ‖Matrix.toEuclideanLin (0 : Matrix (Fin 2) (Fin 2) ℝ) y‖ ≤ 0 * ‖y‖) ∧
+      ∀ _i : Idx 2, ‖(EuclideanSpace.single (1 : Fin 2) (1 : ℝ))‖ = 1 := by
+  refine ⟨isHighOrderLaw_sparse (by norm_num), ?_, ?_⟩
+  · intro y; simp
+  · intro i; simp
 
-Not proved here.
+/-- There is no uniform constant in the claimed third moment estimate.
+This is a necessary consequence of `lem:Kernel_regularity`, already false
+with `C = σ_V = β = 1`, `σ_A = ‖𝔼V‖_op = 0`, and `d = n = 2`.
+Source: arXiv:2604.01978v1, §3.1, `lem:Kernel_regularity`(2). -/
+theorem not_kernel_regularity_moment_bound :
+    ¬ ∃ K : ℝ, 0 < K ∧
+      ∀ (d n : ℕ) (β : ℝ) (C σV σA : ℝ≥0) (ρ : Measure (HeadParam d))
+        (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
+        (Vr Wr Wr' : Ω → Matrix (Fin d) (Fin d) ℝ)
+        (mV mA : Matrix (Fin d) (Fin d) ℝ) (opV : ℝ),
+      IsHighOrderLaw d C σV σA ρ P Vr Wr Wr' mV mA →
+      (∀ y : EucSpace d, ‖Matrix.toEuclideanLin mV y‖ ≤ opV * ‖y‖) →
+      ∃ s : ℝ, IsVarianceProxy d n β ρ s ∧
+        ∀ x : Idx n → EucSpace d, (∀ i, ‖x i‖ = 1) → ∀ i : Idx n,
+          (∫ θ, ‖Gfield β ρ x θ i‖ ^ 3 ∂ρ) ^ ((1 : ℝ) / 3) ≤
+            K * (1 + (σA : ℝ) * opV * β / (σV : ℝ)) * s := by
+  rintro ⟨K, hK, h⟩
+  obtain ⟨q, _, hlaw, hproxy, hfail⟩ := kernel_regularity_counterexample K hK
+  obtain ⟨s, hs, hbound⟩ := h 2 2 1 1 1 0 (sparseHeadLaw (q ^ 6)) (Fin 3)
+    (sparseSource (q ^ 6)) sparseMatrix 0 0 0 0 0 hlaw (fun y => by simp)
+  have hse : s = q ^ 3 := hs.unique hproxy
+  have hb := hbound (fun _ : Idx 2 => EuclideanSpace.single 1 1)
+    (fun _ => by simp) 0
+  have hle :
+      (∫ θ, ‖Gfield 1 (sparseHeadLaw (q ^ 6))
+        (fun _ : Idx 2 => EuclideanSpace.single 1 1) θ 0‖ ^ 3
+          ∂sparseHeadLaw (q ^ 6)) ^ ((1 : ℝ) / 3) ≤ K * q ^ 3 := by
+    simpa [hse] using hb
+  exact (not_lt_of_ge hle) hfail
 
-Source: arXiv:2604.01978v1, `lem:Kernel_regularity`. -/
-theorem kernel_regularity :
-    ∃ K : ℝ, 0 < K ∧
+/-- **Counterexample to the quantitative conjunction in
+`lem:Kernel_regularity`.** The third moment bound alone fails under the
+stated assumption. The derivative bounds below range over unit configurations,
+matching the source's domain rather than imposing global ambient bounds.
+Source: arXiv:2604.01978v1, §3.1, `lem:Kernel_regularity`. -/
+theorem not_kernel_regularity :
+    ¬ ∃ K : ℝ, 0 < K ∧
       ∀ (d n : ℕ) (β : ℝ) (C σV σA : ℝ≥0) (ρ : Measure (HeadParam d))
         (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
         (Vr Wr Wr' : Ω → Matrix (Fin d) (Fin d) ℝ)
@@ -89,23 +133,20 @@ theorem kernel_regularity :
         (∀ᵐ θ ∂ρ, ContDiff ℝ 5 (fun x : Idx n → EucSpace d => Gfield β ρ x θ)) ∧
         ∃ N₁ N₂ : HeadParam d → ℝ,
           (∀ θ : HeadParam d, ∀ k ≤ 5, ∀ x : Idx n → EucSpace d,
+            (∀ i, ‖x i‖ = 1) →
             ‖iteratedFDeriv ℝ k (fun y : Idx n → EucSpace d => Gfield β ρ y θ) x‖ ≤ N₁ θ) ∧
           (∀ θ : HeadParam d, ∀ k ≤ 5, ∀ x : Idx n → EucSpace d,
+            (∀ i, ‖x i‖ = 1) →
             ‖iteratedFDeriv ℝ k
               (covDeriv (fun y : Idx n → EucSpace d => Gfield β ρ y θ)) x‖ ≤ N₂ θ) ∧
           Real.sqrt (∫ θ, N₁ θ ^ 2 ∂ρ) + Real.sqrt (∫ θ, N₂ θ ^ 2 ∂ρ) ≤
             K * (1 + β ^ 10 * (σA : ℝ) ^ 10 * (d : ℝ) ^ 5) * s := by
-  sorry
+  rintro ⟨K, hK, h⟩
+  apply not_kernel_regularity_moment_bound
+  refine ⟨K, hK, ?_⟩
+  intro d n β C σV σA ρ Ω _ P Vr Wr Wr' mV mA opV hlaw hop
+  obtain ⟨_, s, hs, hbound, _⟩ :=
+    h d n β C σV σA ρ Ω P Vr Wr Wr' mV mA opV hlaw hop
+  exact ⟨s, hs, hbound⟩
 
-/-- The hypotheses of `kernel_regularity` are satisfiable: the degenerate law
-`ρ* = δ_0` of `isHighOrderLaw_dirac_zero`, whose mean value matrix is `𝔼V = 0`,
-for which `opV = 0` is an operator bound. -/
-example (d : ℕ) :
-    IsHighOrderLaw d 1 0 0 (Measure.dirac (0 : HeadParam d)) (Measure.dirac ())
-        (0 : Unit → Matrix (Fin d) (Fin d) ℝ) 0 0 0 0 ∧
-      ∀ y : EucSpace d,
-        ‖Matrix.toEuclideanLin (0 : Matrix (Fin d) (Fin d) ℝ) y‖ ≤ 0 * ‖y‖ :=
-  ⟨isHighOrderLaw_dirac_zero d, fun y => by simp⟩
-
-end Homogenized
-end Transformer
+end Transformer.Homogenized
