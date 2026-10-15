@@ -22,6 +22,7 @@ import Transformer.Causal.Section4_AntipodalField
 import Transformer.Causal.Section4_AntipodalExpansion
 import Transformer.Causal.Section4_ConditionalMeasure
 import Transformer.Causal.Section4_AntipodalFibers
+import Transformer.Causal.Section4_ConsensusInduction
 import Transformer.Causal.SingleToken
 import Transformer.Causal.MainTheorem
 import Transformer.Causal.Interaction

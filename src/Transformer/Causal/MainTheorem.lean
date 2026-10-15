@@ -15,12 +15,15 @@ respect to the volume measure on `(𝕊^{d-1})^n`.  Its null sets are those of
 the uniform law, which is read as every `σ` with `Perspective.UniformTuple d n σ`
 — it holds for exactly one `σ`. Conjecture `thm1.5` is refuted by a
 positive-measure counterexample in `Section4_TwoClusterRefutation`.
-The other two convergence assertions remain unproved. The geometric
-`lemma:scalar` and its equality cases are in `SectionA_Scalar`.
+The single-cluster theorem is proved by the original prefix induction,
+with its conditional antipodal exception null by the actual follower
+expansion and Fubini. The subspace convergence assertion remains unproved.
+The geometric `lemma:scalar` and its equality cases are in `SectionA_Scalar`.
 -/
 
 import Transformer.Basic
 import Transformer.Causal.Section4_TwoClusterRefutation
+import Transformer.Causal.Section4_ConsensusInduction
 import Transformer.Causal.SectionA_Scalar
 import Transformer.Perspective.Section2_FlowMap
 import Transformer.Perspective.Section3_SmallBeta
@@ -51,7 +54,12 @@ false: `𝕊^0 = {±1}` has no tangent directions, so no token moves, and the
 configuration `(1, -1)` has mass `1/4` under the uniform law and never reaches
 `x_1(0)`.  `2 ≤ d` is added.
 
-Not proved here.
+The actual global causal flow and its prefix consistency are proved first.
+For a fixed converging prefix, the original last token converges to the
+leader or its antipode. The actual field expands near the antipode, so
+at most one original last initial token has that limit. The original
+invariant marginal has zero singleton masses, and Fubini and induction
+give the original almost-everywhere conclusion for every actual solution.
 
 Source: arXiv:2411.04990v2, §4, `thm1`. -/
 theorem single_cluster (hd : 2 ≤ d) (β : ℝ) (Q K : ParamMatrix d) (hn : 1 ≤ n)
@@ -61,7 +69,8 @@ theorem single_cluster (hd : 2 ≤ d) (β : ℝ) (Q K : ParamMatrix d) (hn : 1 �
       Causal.CSA d n β Q K (ContinuousLinearMap.id ℝ (EucSpace d)) X →
         ∀ k : Idx n,
           Filter.Tendsto (fun t : ℝ => X t k) Filter.atTop (nhds (X₀ ⟨0, hn⟩)) := by
-  sorry
+  intro σ hσ
+  simpa only [abs_of_nonneg hβ] using single_cluster_all_real hd |β| Q K hn σ hσ
 
 /-- The hypotheses of `single_cluster` are satisfiable: the circle, one token
 and `β = 0`. -/
