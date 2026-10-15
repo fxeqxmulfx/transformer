@@ -29,7 +29,7 @@ import Transformer.Perceptron.GeneralAttention
 import Transformer.Perceptron.HigherDim
 import Transformer.Perceptron.Section3_StrictMatrixAtomicity
 import Transformer.Perceptron.Section5_SphericalMapNullSupport
-import Transformer.Perceptron.Section5_MapReLUAtomicity
+import Transformer.Perceptron.Section5_MapDegenerateBranches
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -49,9 +49,11 @@ theorem isSymmetric_bijective_id (d : ℕ) :
 with a non-analytic potential is still purely atomic with finite support.
 
 The signed Gram non-degenerate case is proved for the actual original
-matrix field. The remaining case has a scalar signed Gram matrix for
-some activation pattern; non-analyticity alone does not rule that out.
-The full source statement is retained, with that case still unproved.
+matrix field. In the remaining case, both complementary continued
+fields vanish globally for an actual infinite support pattern, and
+its signed Gram matrix is proved scalar. The contradiction with the
+non-analytic potential remains unproved. The full source statement
+is retained.
 
 Source: arXiv:2601.21366v2, `rem: ext` (ii), `thm: circle`. -/
 theorem ext_circle_isFinitelyAtomic (B : EucSpace 2 →ₗ[ℝ] EucSpace 2)
@@ -63,6 +65,11 @@ theorem ext_circle_isFinitelyAtomic (B : EucSpace 2 →ₗ[ℝ] EucSpace 2)
     IsFinitelyAtomic μ := by
   by_cases hnd : IsNonDegenerate ω a
   · exact isFinitelyAtomic_of_stationaryMap_nondegenerate_circle B hB ω a hnd μ hμ
+  by_contra hnot
+  have hInf : (μ : Measure (SSphere 2)).support.Infinite :=
+    fun hf => hnot (isFinitelyAtomic_of_finite_topological_support μ hf)
+  obtain ⟨J, c, hpattern, hJ, hC, hscalar⟩ :=
+    exists_scalar_support_pattern_of_stationaryMap_infinite_circle B hB ω a μ hμ hInf
   sorry
 
 /-- The hypotheses of `ext_circle_isFinitelyAtomic` are satisfiable at
@@ -125,7 +132,9 @@ of a strict SOPD critical point at a real-analytic `σ` — is still
 The analytic strict alternative follows from the proved actual matrix
 Hessian and the localized-gradient argument of §5.3. The ReLU alternative
 is proved under signed Gram non-degeneracy; its remaining degenerate
-case is unproved. The statement retains both original alternatives.
+case has two globally zero complementary fields and a scalar signed
+Gram operator for an actual positive-measure support pattern. The final
+contradiction in that case is unproved. Both original alternatives remain.
 
 Source: arXiv:2601.21366v2, §3.1, `rem: ext` (ii), `thm: any.d` (i), and §5.3. -/
 theorem ext_any_d_measure_support_eq_zero (d : ℕ) (hd : 2 ≤ d)
@@ -141,6 +150,10 @@ theorem ext_any_d_measure_support_eq_zero (d : ℕ) (hd : 2 ≤ d)
   rcases hcrit with ⟨rfl, hana, hstat⟩ | ⟨hσ, hstrict⟩
   · by_cases hnd : IsNonDegenerate ω a
     · exact measure_support_eq_zero_of_stationaryMap_nondegenerate hd B hB ω a hnd μ hstat ν hν
+    by_contra hne
+    obtain ⟨J, c, hpattern, hJ, hC, hscalar⟩ :=
+      exists_scalar_support_pattern_of_stationaryMap_positive_uniform hd B hB ω a μ hstat ν hν
+        (pos_iff_ne_zero.mpr hne)
     sorry
   · exact analytic_strictMap_measure_support_eq_zero hd B hsymm φ σ hφ hσ ω a μ hstrict ν hν
 
