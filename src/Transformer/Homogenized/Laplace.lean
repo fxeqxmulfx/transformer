@@ -9,8 +9,11 @@ temperature thresholds. `laplace_method_false` proves this with all the
 original density, initialization and unit-query conditions retained.
 
 The estimate `lem:delta_method`, which expands normalized-query
-correlation in `1/d`, remains separately stated and unproved below.
-The paper combines these two estimates in `eq:kernel_expansion`, in the
+correlation in `1/d`, has an incorrect first-order coefficient for its
+actual two-factor Gaussian query matrix. The corrected expansion is
+proved below: the coefficient is `(r³-r)/d`, with a uniform actual
+`O(d^(-3/2))` remainder and all original Gaussian-head quantifiers.
+The paper combines its two estimates in `eq:kernel_expansion`, in the
 proof of `thm:large_beta_meta`; no such combination is asserted here.
 The counterexample concerns the uniform simultaneous-dimension estimate
 required by that argument. Exact dimension-dependent barycenter bounds
@@ -19,7 +22,7 @@ and the actual Gaussian query moments are proved in the imported modules.
 
 import Transformer.Homogenized.Section7_UniformLaplaceCounterexample
 import Transformer.Homogenized.Section7_DeltaNormCovariance
-import Transformer.Homogenized.Section7_GaussianMatrixPair
+import Transformer.Homogenized.Section7_GaussianHeadDelta
 import Transformer.Homogenized.Metastability
 
 open scoped BigOperators ENNReal NNReal
@@ -89,7 +92,8 @@ theorem laplace_method_false :
   rw [effBeta_stdSigmaV hdpos] at hb
   exact not_lt_of_ge hb hbad
 
-/-- **Lemma (lem:delta_method).**  For `A = (dσ_A²)⁻¹ Wᵀ W'`,
+/-- **Corrected lemma (`lem:delta_method`).** The source states, for
+`A = (dσ_A²)⁻¹ Wᵀ W'`,
 
   `E⟨Ax/‖Ax‖, Ay/‖Ay‖⟩ = ⟨x,y⟩ + (⟨x,y⟩³ - ⟨x,y⟩)/(2d) + O(d^{-3/2})`.
 
@@ -102,14 +106,26 @@ distributed entries and so does not change the law of `A`.  Stating it at `Â`
 would therefore be the same lemma written in a matrix the rest of the
 development never forms.
 
-The source's displayed covariance used in its proof is false:
+**Correction and proof.** The actual two-factor query has correction
+`(⟨x,y⟩³-⟨x,y⟩)/d`, rather than the source's coefficient with denominator
+`2d`. Each original independent Gaussian factor contributes half of the
+corrected bias. The proof integrates the genuine quadratic Taylor
+polynomial and bounds its actual cubic remainder uniformly for every
+unit input pair. Conditioning on the actual intermediate normalized
+queries composes the two proved factor expansions; their correlation
+fluctuation controls the change in the second cubic correction.
+
+The source's displayed covariance used in its proof is also false:
 `not_gaussian_delta_norm_covariance` refutes its `2/d + O(d⁻²)`
 diagonal under the actual original Gaussian product law. The proved
 exact normalized squared-query-norm variance is `4/d + 4/d²`.
-The normalized-correlation expansion below remains unproved; this
-covariance discrepancy alone does not establish its corrected remainder.
+The corrected expansion below follows from the complete two-factor
+remainder argument, with the actual independent factor laws and original
+head pushforward derived explicitly. Every original Gaussian head law,
+every positive query scale and arbitrary value scale, including zero,
+share the same dimension-independent remainder constant.
 
-Source: arXiv:2604.01978v1, `lem:delta_method`. -/
+Source: arXiv:2604.01978v1, initialization (G), §7.3, `lem:delta_method`. -/
 theorem delta_method :
     ∃ C : ℝ, 0 < C ∧
       ∀ (d : ℕ), 0 < d → ∀ σV σA : ℝ≥0, 0 < σA →
@@ -118,9 +134,9 @@ theorem delta_method :
         |(∫ θ, inner (𝕜 := ℝ)
               (normalizeLayer (qkMap θ x)) (normalizeLayer (qkMap θ y)) ∂ρ)
             - (inner (𝕜 := ℝ) x y
-                + ((inner (𝕜 := ℝ) x y : ℝ) ^ 3 - inner (𝕜 := ℝ) x y) / (2 * (d : ℝ)))|
+                + ((inner (𝕜 := ℝ) x y : ℝ) ^ 3 - inner (𝕜 := ℝ) x y) / (d : ℝ))|
           ≤ C * (d : ℝ) ^ (-(3 : ℝ) / 2) := by
-  sorry
+  exact gaussian_head_delta_method
 
 /-- The original hypotheses used by the refutation hold jointly at the
 common Gaussian scale in dimension two, actual uniform density one and
