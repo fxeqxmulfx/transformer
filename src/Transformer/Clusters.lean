@@ -103,6 +103,7 @@ import Transformer.Clusters.Section12_MultiHeadRates
 import Transformer.Clusters.Section12_MultiHeadScaledDrift
 import Transformer.Clusters.Section12_MultiHeadMean
 import Transformer.Clusters.Section12_MultiHeadBoundedInterior
+import Transformer.Clusters.Section12_MultiHeadMeanDefect
 import Transformer.Clusters.Section12_Generic
 import Transformer.Clusters.Section12_Feedforward
 import Transformer.Clusters.Section12_ReluScalar
