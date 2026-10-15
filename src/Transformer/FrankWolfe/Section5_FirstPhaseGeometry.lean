@@ -168,10 +168,11 @@ theorem conePolytope_firstPhaseSegment : ConePolytope firstPhaseSegment firstPha
   · intro i j hij
     fin_cases i <;> fin_cases j <;> simp_all [firstPhaseVertices]
 
-/-- A genuine interior point and the complete actual acute polytope jointly
-realize the membership and original geometric hypotheses of this calculation. -/
-example : firstPhasePoint 0 ∈ firstPhaseSegment ∧
-    ConePolytope firstPhaseSegment firstPhaseVertices 1 :=
-  ⟨by simp, conePolytope_firstPhaseSegment⟩
+/-- Two genuine interior points, a convex step and the complete actual acute
+polytope jointly realize the membership and original non-entry hypotheses. -/
+example : firstPhasePoint 0 ∈ firstPhaseSegment ∧ firstPhasePoint (1 / 2) ∈ firstPhaseSegment ∧
+    ConePolytope firstPhaseSegment firstPhaseVertices 1 ∧
+    (0 : ℝ) ≤ 1 / 2 ∧ (1 / 2 : ℝ) ≤ 1 :=
+  ⟨by simp, by norm_num, conePolytope_firstPhaseSegment, by norm_num, by norm_num⟩
 
 end Transformer.FrankWolfe

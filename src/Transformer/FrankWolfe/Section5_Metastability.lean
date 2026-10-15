@@ -5,11 +5,13 @@ Formalization of Alcalde, Geshkovski, Ruiz-Balet — arXiv:2508.09628v1,
 *Attention's forward pass and Frank-Wolfe*, §5, `lem: first.phase` and
 `lem: metastab.1`.
 
-The self-attention process `(SA_ℙ)` first clusters at the vertices of the
-polytope in `O(1)` steps, and then stays there for a time exponential in `β`.
-This module contains the geometric data and the first-phase statement.
-The completed metastability proof is in `Section5_MetaBound`, after the
-transition, drift, and stopped-event probability estimates.
+The source claims clustering at the polytope vertices in `O(1)` steps,
+followed by a time exponential in `β` near those vertices. Its printed
+first-phase claim is refuted by `not_first_phase`.
+This module retains the geometric data and proves the valid one-step
+non-entry bound. The conditional metastability proof, starting from a
+configuration already close to the vertices, is in `Section5_MetaBound`,
+after the transition, drift, and stopped-event probability estimates.
 -/
 
 import Transformer.FrankWolfe.Section5_Process
@@ -69,7 +71,7 @@ structure ConePolytope (K : Set (EucSpace d)) (v : Idx κ → EucSpace d) (c₀ 
   sep : ∀ i j : Idx κ, i ≠ j →
     inner (𝕜 := ℝ) (v i) (v j) + c₀ ≤ inner (𝕜 := ℝ) (v i) (v i)
 
-/-- **Theorem (lem: first.phase) — clustering.**
+/-! **The printed theorem (lem: first.phase) — clustering, refuted.**
 
 For a polytope satisfying `ConePolytope` and `n ≥ κ` particles, there is
 `β_* > 0` such that for `β ≥ β_*` the process `(SA_ℙ)` started from a
@@ -97,37 +99,14 @@ nonemptiness side conditions.  `IsGreatest` of the three-fold constraint set
 The particles `i ∈ [1, κ]` and `i ∈ [κ+1, n]` are separated by `(i : ℕ) < κ`,
 the vertices being `v ⟨i, h⟩`.
 
-Not proved here.
+The printed universal radius and minimum-distance time are incompatible.
+`not_first_phase`, in `Section5_FirstPhaseRefutation`, proves a counterexample
+with four actual scalar particles and a genuine process law. Every geometric,
+erosion, cell, minimum, radius and time hypothesis above is satisfied there.
+The source's valid non-entry estimate is proved separately below.
 
 Source: arXiv:2508.09628v1, §5, `lem: first.phase`. -/
-theorem first_phase :
-    ∃ C : ℝ, 1 < C ∧
-      ∀ (d κ n : ℕ) (K : Set (EucSpace d)) (v : Idx κ → EucSpace d) (c₀ γ : ℝ),
-        ConePolytope K v c₀ → γ ∈ Set.Ioo (0 : ℝ) 1 → κ ≤ n →
-        ∃ βstar > (0 : ℝ), ∀ β ≥ βstar,
-          ∀ (X₀ : Idx n → EucSpace d) (σ : Idx n → Idx κ) (m τ : ℝ) (T₁ : ℕ)
-            (P : Measure (ℕ → Idx n → EucSpace d)),
-            (∀ i : Idx n, X₀ i ∈ K) →
-            (∀ (i : Idx n) (h : (i : ℕ) < κ), X₀ i = v ⟨i, h⟩) →
-            (∀ i : Idx n, X₀ i ∈
-              cell (ContinuousLinearMap.id ℝ (EucSpace d)) K v (σ i)) →
-            (∀ i : Idx n, κ ≤ (i : ℕ) →
-              X₀ i ∈ erosion (dominanceCone K v (σ i) (β ^ (-(1 : ℝ) / 8)))
-                (β ^ (-(1 : ℝ) / 4))) →
-            IsLeast {r : ℝ | ∃ j : Idx n, κ ≤ (j : ℕ) ∧ r = ‖X₀ j - v (σ j)‖} m →
-            IsGreatest {r : ℝ | (∀ i j : Idx κ, j ≠ i → r * (2 * ‖v i - v j‖) ≤ c₀) ∧
-              r ≤ Real.sqrt (2 * c₀) / 2 ∧ r ≤ (1 - γ) * m} τ →
-            T₁ = ⌊Real.log (τ / m) / Real.log (1 - γ)⌋₊ →
-            IsSAProcess β γ X₀ P →
-            1 - β ^ (-(1 : ℝ) / 8) ≤
-              (P {x : ℕ → Idx n → EucSpace d |
-                (∀ (i : Idx n) (h : (i : ℕ) < κ),
-                    x T₁ i ∈ Metric.ball (v ⟨i, h⟩) (β ^ (-(1 : ℝ) / 4))) ∧
-                (∀ i : Idx n, κ ≤ (i : ℕ) →
-                    x T₁ i ∈ Metric.ball (v (σ i)) (C * τ))}).toReal := by
-  sorry
-
-/-- The hypotheses `first_phase` carries in its binders are satisfiable: one
+/-- The original geometric hypotheses of `lem: first.phase` are satisfiable: one
 vertex `e₀` in `ℝ^1`, `𝒦 = {e₀}`, `c₀ = 1`, `γ = 1/2`, `n = κ = 1`. -/
 example :
     ConePolytope {(EuclideanSpace.single (0 : Fin 1) (1 : ℝ))}
@@ -141,6 +120,36 @@ example :
     exact Subsingleton.elim a b
   · rw [Set.range_const, extremePoints_singleton]
   · exact absurd hx hxi
+
+/-- The original acute-cone assumption gives the valid one-step non-entry
+bound from Step 1 of the source's proof: a convex sampled step cannot
+reduce the distance to a vertex faster than the factor `1-γ`.
+Source: arXiv:2508.09628v1, §5, `lem: cone.condition`, `eq: aprior.bound.vertex`. -/
+theorem ConePolytope.norm_step_sub_vertex_ge {K : Set (EucSpace d)}
+    {v : Idx κ → EucSpace d} {c₀ : ℝ} (hK : ConePolytope K v c₀)
+    (γ : ℝ) (hγ₀ : 0 ≤ γ) (hγ₁ : γ ≤ 1) (i : Idx κ) (x y : EucSpace d)
+    (hx : x ∈ K) (hy : y ∈ K) :
+    (1 - γ) * ‖x - v i‖ ≤ ‖(1 - γ) • x + γ • y - v i‖ := by
+  have hab : 0 ≤ inner (𝕜 := ℝ) (x - v i) (y - v i) := by
+    by_cases hxi : x = v i
+    · simp [hxi]
+    by_cases hyi : y = v i
+    · simp [hyi]
+    obtain ⟨θ, hθ, hangle⟩ := hK.acute i
+    have hlt := lt_of_le_of_lt (hangle x hx y hy hxi hyi) hθ
+    have hp : 0 < inner (𝕜 := ℝ) (x - v i) (y - v i) := by
+      by_contra hn
+      exact (not_le_of_gt hlt)
+        (InnerProductGeometry.inner_nonpos_iff_pi_div_two_le_angle.mp (le_of_not_gt hn))
+    exact hp.le
+  have hγ : 0 ≤ 1 - γ := sub_nonneg.mpr hγ₁
+  have heq : (1 - γ) • x + γ • y - v i = (1 - γ) • (x - v i) + γ • (y - v i) := by module
+  rw [heq]
+  apply (sq_le_sq₀ (mul_nonneg hγ (norm_nonneg _)) (norm_nonneg _)).mp
+  rw [norm_add_sq_real, norm_smul, norm_smul, Real.norm_eq_abs, Real.norm_eq_abs,
+    abs_of_nonneg hγ, abs_of_nonneg hγ₀, real_inner_smul_left, real_inner_smul_right]
+  have hcross : 0 ≤ 2 * ((1 - γ) * (γ * inner (𝕜 := ℝ) (x - v i) (y - v i))) := by positivity
+  nlinarith [sq_nonneg (γ * ‖y - v i‖)]
 
 /-- The convex hull of the particles that `σ` assigns to the vertex `a`.
 
