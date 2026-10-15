@@ -32,6 +32,8 @@ import Transformer.FrankWolfe.Section4_ODEWellPosed
 import Transformer.FrankWolfe.Section5_Process
 import Transformer.FrankWolfe.Section5_Transition
 import Transformer.FrankWolfe.Section5_TransitionAS
+import Transformer.FrankWolfe.Section5_HistoryKernel
+import Transformer.FrankWolfe.Section5_ProcessLaw
 import Transformer.FrankWolfe.Section5_MetaWeights
 import Transformer.FrankWolfe.Section5_Contraction
 import Transformer.FrankWolfe.Section5_Collapse
