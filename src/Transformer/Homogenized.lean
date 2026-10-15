@@ -106,6 +106,7 @@ import Transformer.Homogenized.Section7_CompensatedPartition
 import Transformer.Homogenized.Section7_WeightedExpectation
 import Transformer.Homogenized.Section7_WeightedConditionalOrder
 import Transformer.Homogenized.Section7_MartingaleTimeShift
+import Transformer.Homogenized.Section7_WeightedSupermartingale
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
