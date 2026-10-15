@@ -15,6 +15,7 @@ Continues `Perspective.Section5_HighD`:
 
 import Transformer.Perspective.Section5_HighD
 import Transformer.Perspective.Section6_EquiangularFlow
+import Transformer.Perspective.AppendixD_UniformCurve
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 
@@ -123,13 +124,12 @@ the solution to the `SA` Cauchy problem satisfies, with probability at least
 for all `i ≠ j` and `t ≥ 0`, where `c(β) = e^{10 max(1,β)}` and `γ_β` is the
 unique solution to `eq: ybeta`.
 
-Appendix D assembles this from two halves, each covering one branch of the
-minimum past the threshold `eq: d.large`: `e:ineqfirstpart` — the
-`√(log d / d)` branch, from `Perspective.almost_orthogonal` — and
-`e:ineqsecondpart` — the exponentially decaying branch, from
-`Perspective.ineq_second_part`, which is proved from the two Grönwall estimates
-it deduces it from, carried as hypotheses.  The estimates themselves are not
-proved, nor is the first half, nor the assembly.
+Appendix D's orthogonal approximation and flow stability give the first
+branch. Quantitative hemisphere chart contraction gives the second with
+`C = 8n³` and `λ = exp(-2β)/n²`. These constants are uniform over dimension
+and initial data: both the sampled trajectory and its orthogonal comparison
+start with hemisphere height at least `1/(2n)`. Gram ODE uniqueness identifies
+the comparison trajectory's common inner product with the prescribed `γ_β`.
 
 The i.i.d. uniform initial sequence is every `P` with `UniformTuple d n P`,
 and "with probability at least `1 - 2n²d^{-1/64}`" is the measure of the set
@@ -137,8 +137,6 @@ of initial sequences on which `eq: upto-t` holds.  `C = C(n, β)` and
 `λ = λ(n, β)`, as the source writes them, are chosen before `d`.  Over every
 initial sequence instead of most of them the claim is false: a constant
 consensus has `⟨x_i, x_j⟩ ≡ 1` while `γ_β(0) = 0`.
-
-Not proved here.
 
 Source: arXiv:2312.10794v5, §6.2, `thm: phase.transition.curve`, and
 Appendix D for the assembly. -/
@@ -158,7 +156,7 @@ theorem phase_transition_curve
                             (2 * (Real.exp (10 * max 1 β)) ^ (n * t) *
                                 Real.sqrt (Real.log d / d))
                             (C * Real.exp (-(lam * t))) } := by
-  sorry
+  simpa only [cBeta] using uniform_phase_transition_curve n β hβ hn
 
 /-- The hypotheses of `phase_transition_curve` are satisfiable: `β = 0`,
 `n = 2`. -/

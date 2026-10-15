@@ -26,8 +26,6 @@ source theorem and exact uniform moments for its projection estimates.
 import Transformer.Basic
 import Transformer.Perspective.AppendixD_Stability
 import Transformer.Perspective.Section1_IPS
-import Transformer.Perspective.Section5_HighD
-import Transformer.Perspective.Section5_HighDCurve
 import Transformer.Perspective.AppendixD_Concentration
 
 open scoped BigOperators
