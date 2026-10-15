@@ -29,7 +29,7 @@ import Transformer.Perceptron.GeneralAttention
 import Transformer.Perceptron.HigherDim
 import Transformer.Perceptron.Section3_StrictMatrixAtomicity
 import Transformer.Perceptron.Section5_SphericalMapNullSupport
-import Transformer.Perceptron.Section5_ConformalAtomicity
+import Transformer.Perceptron.Section5_NonzeroScalarCircle
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -52,7 +52,7 @@ The signed Gram non-degenerate and conformal-matrix cases are proved.
 Otherwise both complementary continued fields vanish globally for an
 actual infinite support pattern, and its signed Gram matrix is scalar.
 Scalar zero is excluded by analyticity of the original potential.
-The remaining nonzero scalar case is unproved; the full claim is retained.
+The remaining nonzero orthogonal-neuron case is unproved; the full claim is retained.
 
 Source: arXiv:2601.21366v2, `rem: ext` (ii), `thm: circle`. -/
 theorem ext_circle_isFinitelyAtomic (B : EucSpace 2 →ₗ[ℝ] EucSpace 2)
@@ -79,6 +79,7 @@ theorem ext_circle_isFinitelyAtomic (B : EucSpace 2 →ₗ[ℝ] EucSpace 2)
       (fun θ hθ => hθ.1.1) (fun θ hθ => hθ.2)
     intro x
     rw [hscalar, hc0, zero_smul]
+  have hframe := two_neuron_geometry_of_nonzero_scalar_signedGram ω a J c hc0 hscalar
   sorry
 
 /-- The hypotheses of `ext_circle_isFinitelyAtomic` are satisfiable at
