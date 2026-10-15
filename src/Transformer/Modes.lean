@@ -26,6 +26,7 @@ import Transformer.Modes.Section2_GaussianCriticalImages
 import Transformer.Modes.Section2_ScoreBranches
 import Transformer.Modes.Section2_ScoreInverses
 import Transformer.Modes.Section2_ZeroCharts
+import Transformer.Modes.Section2_RegularDegenerate
 import Transformer.Modes.Section2_Degenerate
 import Transformer.Modes.Section2_MainForm
 import Transformer.Modes.Section2_Gt
