@@ -132,6 +132,7 @@ import Transformer.Perceptron.Section5_SphericalMapKernel
 import Transformer.Perceptron.Section5_SphericalMapKernelBounds
 import Transformer.Perceptron.Section5_SphericalMapVariation
 import Transformer.Perceptron.Section5_SphericalMapInteraction
+import Transformer.Perceptron.Section5_SphericalMapCancellation
 import Transformer.Perceptron.Section5_ReLUAtomicity
 import Transformer.Perceptron.Section6_RotationZeroSets
 import Transformer.Perceptron.Section6_ReflectionPaths
