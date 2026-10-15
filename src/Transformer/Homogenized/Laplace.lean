@@ -15,7 +15,7 @@ and is not restated here.
 -/
 
 import Transformer.Homogenized.Section7_UniformBarycenter
-import Transformer.Homogenized.Section7_GaussianRowMoments
+import Transformer.Homogenized.Section7_GaussianRowNonzero
 import Transformer.Homogenized.Metastability
 
 open scoped BigOperators ENNReal NNReal
