@@ -132,6 +132,7 @@ import Transformer.Homogenized.Section7_LogisticModification
 import Transformer.Homogenized.Section7_LogisticAngle
 import Transformer.Homogenized.Section7_BoundedMartingaleNatLimit
 import Transformer.Homogenized.Section7_ContinuousSubmartingaleMaximal
+import Transformer.Homogenized.Section7_MartingaleVariance
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
