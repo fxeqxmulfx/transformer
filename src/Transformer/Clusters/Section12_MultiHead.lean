@@ -37,6 +37,7 @@ Source: arXiv:2305.05465v6, `sec:conclusion`, the multi-headed display;
 -/
 
 import Transformer.Clusters.Section2_LowRank
+import Transformer.Clusters.Section12_MultiHeadIteration
 
 open scoped BigOperators
 open Real Filter Topology
@@ -47,21 +48,6 @@ namespace Clusters
 variable {d n : ℕ}
 
 /-! ### The multi-headed Transformer -/
-
-/-- **The multi-headed Transformer of `sec:conclusion`.**  `H` heads, each
-with its own constant weights `Q_h, K_h, V_h`, acting in parallel at every
-layer:
-
-  `x_i^{[k+1]} = x_i^{[k]} + Δt Σ_{h∈[H]} Σ_j P^h_ij(k) V_h x_j^{[k]}`,
-
-where `P^h` is the self-attention matrix `eq:P` of the head `h`.
-
-Source: arXiv:2305.05465v6, `sec:conclusion`. -/
-def MultiHeadTransformer {H : ℕ} (Δt : ℝ) (Q K V : Idx H → ParamMatrix d)
-    (X : ℕ → Idx n → EucSpace d) : Prop :=
-  ∀ (k : ℕ) (i : Idx n),
-    X (k + 1) i = X k i + Δt • ∑ h : Idx H, ∑ j : Idx n,
-      attentionMatrix (Q h) (K h) (X k) i j • V h (X k j)
 
 /-- **One head is `e:discreteequation`.**  At `H = 1` the multi-headed
 iteration is the discrete-time Transformer of `r:discretetime`.
