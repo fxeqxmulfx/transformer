@@ -137,7 +137,8 @@ example : ∃ (Q K V : Idx 2 → ParamMatrix 1) (X : ℕ → Idx 2 → EucSpace 
   have hord : IsOrderedConfig (X 0) := by
     rw [hzero]
     intro i j hij
-    fin_cases i <;> fin_cases j <;> norm_num at hij <;> norm_num [Y, unit1]
+    fin_cases i <;> fin_cases j <;> norm_num at hij
+    norm_num [Y, unit1]
   have hne : X 0 0 ≠ X 0 1 := by
     intro he
     have hc := congrArg (fun z : EucSpace 1 => z 0) he
