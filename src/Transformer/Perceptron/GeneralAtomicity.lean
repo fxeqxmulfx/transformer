@@ -29,7 +29,7 @@ import Transformer.Perceptron.GeneralAttention
 import Transformer.Perceptron.HigherDim
 import Transformer.Perceptron.Section3_StrictMatrixAtomicity
 import Transformer.Perceptron.Section5_SphericalMapNullSupport
-import Transformer.Perceptron.Section5_ConformalSupport
+import Transformer.Perceptron.Section5_ConformalAtomicity
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -48,12 +48,11 @@ theorem isSymmetric_bijective_id (d : ℕ) :
 `B` in the interaction energy, a stationary measure for the ReLU perceptron
 with a non-analytic potential is still purely atomic with finite support.
 
-The signed Gram non-degenerate case is proved for the actual original
-matrix field. In the remaining case, both complementary continued
-fields vanish globally for an actual infinite support pattern, and
-its signed Gram matrix is proved scalar. Scalar zero would make the
-original two-neuron potential analytic, and is excluded. The remaining
-nonzero scalar case is unproved. The full source statement is retained.
+The signed Gram non-degenerate and conformal-matrix cases are proved.
+Otherwise both complementary continued fields vanish globally for an
+actual infinite support pattern, and its signed Gram matrix is scalar.
+Scalar zero is excluded by analyticity of the original potential.
+The remaining nonzero scalar case is unproved; the full claim is retained.
 
 Source: arXiv:2601.21366v2, `rem: ext` (ii), `thm: circle`. -/
 theorem ext_circle_isFinitelyAtomic (B : EucSpace 2 →ₗ[ℝ] EucSpace 2)
@@ -65,6 +64,10 @@ theorem ext_circle_isFinitelyAtomic (B : EucSpace 2 →ₗ[ℝ] EucSpace 2)
     IsFinitelyAtomic μ := by
   by_cases hnd : IsNonDegenerate ω a
   · exact isFinitelyAtomic_of_stationaryMap_nondegenerate_circle B hB ω a hnd μ hμ
+  by_cases hconf : ∃ (r : ℝ) (U : EucSpace 2 ≃ₗᵢ[ℝ] EucSpace 2),
+      0 < r ∧ B = r • U.toLinearEquiv.toLinearMap
+  · obtain ⟨r, U, hr, rfl⟩ := hconf
+    exact isFinitelyAtomic_of_stationaryMap_conformal_circle r hr U φ hφ ω a hana μ hμ
   by_contra hnot
   have hInf : (μ : Measure (SSphere 2)).support.Infinite :=
     fun hf => hnot (isFinitelyAtomic_of_finite_topological_support μ hf)
@@ -135,12 +138,10 @@ stationary measure for the ReLU perceptron with a non-analytic potential — or
 of a strict SOPD critical point at a real-analytic `σ` — is still
 `σ_d`-null.
 
-The analytic strict alternative follows from the proved actual matrix
-Hessian and the localized-gradient argument of §5.3. The ReLU alternative
-is proved under signed Gram non-degeneracy; its remaining degenerate
-case has two globally zero complementary fields and a scalar signed
-Gram operator for an actual positive-measure support pattern. The final
-contradiction in that case is unproved. Both original alternatives remain.
+The analytic strict alternative is proved. The ReLU alternative is proved
+for conformal matrices and non-degenerate signed Gram data. Otherwise an
+actual positive-measure support pattern gives two globally zero complementary
+fields and a scalar signed Gram map; that case is unproved. Both alternatives remain.
 
 Source: arXiv:2601.21366v2, §3.1, `rem: ext` (ii), `thm: any.d` (i), and §5.3. -/
 theorem ext_any_d_measure_support_eq_zero (d : ℕ) (hd : 2 ≤ d)
@@ -156,6 +157,10 @@ theorem ext_any_d_measure_support_eq_zero (d : ℕ) (hd : 2 ≤ d)
   rcases hcrit with ⟨rfl, hana, hstat⟩ | ⟨hσ, hstrict⟩
   · by_cases hnd : IsNonDegenerate ω a
     · exact measure_support_eq_zero_of_stationaryMap_nondegenerate hd B hB ω a hnd μ hstat ν hν
+    by_cases hconf : ∃ (r : ℝ) (U : EucSpace d ≃ₗᵢ[ℝ] EucSpace d),
+        0 < r ∧ B = r • U.toLinearEquiv.toLinearMap
+    · obtain ⟨r, U, hr, rfl⟩ := hconf
+      exact measure_support_eq_zero_of_stationaryMap_conformal hd r hr U φ hφ ω a hana μ hstat ν hν
     by_contra hne
     obtain ⟨J, c, hpattern, hJ, hC, hscalar⟩ :=
       exists_scalar_support_pattern_of_stationaryMap_positive_uniform hd B hB ω a μ hstat ν hν
