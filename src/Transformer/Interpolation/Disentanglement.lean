@@ -29,6 +29,7 @@ import Transformer.Interpolation.Section3_ProjectionLaw
 import Transformer.Interpolation.Section3_ScaledProjectionTransport
 import Transformer.Interpolation.Section3_ProjectionControls
 import Transformer.Interpolation.Section1_WeakConcatenation
+import Transformer.Interpolation.Section3_TwoContractions
 
 open scoped BigOperators
 open Real MeasureTheory
