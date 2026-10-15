@@ -94,6 +94,7 @@ import Transformer.Homogenized.Section7_SimplexScalarBarriers
 import Transformer.Homogenized.Section7_SimplexOdeDomain
 import Transformer.Homogenized.Section7_SimplexNoiseReserve
 import Transformer.Homogenized.Section7_SimplexSourceEnvelope
+import Transformer.Homogenized.Section7_DiscreteVille
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
