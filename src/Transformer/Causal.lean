@@ -18,6 +18,7 @@ import Transformer.Causal.Section4_ScalarLimits
 import Transformer.Causal.Section4_FollowerDrift
 import Transformer.Causal.Section4_WeightSensitivity
 import Transformer.Causal.Section4_FollowerLimits
+import Transformer.Causal.Section4_AntipodalField
 import Transformer.Causal.SingleToken
 import Transformer.Causal.MainTheorem
 import Transformer.Causal.Interaction
