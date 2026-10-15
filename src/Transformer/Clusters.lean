@@ -99,6 +99,7 @@ import Transformer.Clusters.Section10_RemainderFalse
 import Transformer.Clusters.Section10_SquareApproach
 import Transformer.Clusters.Section10_Step2
 import Transformer.Clusters.Section12_MultiHead
+import Transformer.Clusters.Section12_MultiHeadScalar
 import Transformer.Clusters.Section12_Generic
 import Transformer.Clusters.Section12_Feedforward
 import Transformer.Clusters.Section12_ReluScalar
