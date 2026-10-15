@@ -29,7 +29,7 @@ import Transformer.Perceptron.GeneralAttention
 import Transformer.Perceptron.HigherDim
 import Transformer.Perceptron.Section3_StrictMatrixAtomicity
 import Transformer.Perceptron.Section5_SphericalMapNullSupport
-import Transformer.Perceptron.Section5_CollinearReLU
+import Transformer.Perceptron.Section5_ZeroScalarCircle
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -51,9 +51,9 @@ with a non-analytic potential is still purely atomic with finite support.
 The signed Gram non-degenerate case is proved for the actual original
 matrix field. In the remaining case, both complementary continued
 fields vanish globally for an actual infinite support pattern, and
-its signed Gram matrix is proved scalar. The contradiction with the
-non-analytic potential remains unproved. The full source statement
-is retained.
+its signed Gram matrix is proved scalar. Scalar zero would make the
+original two-neuron potential analytic, and is excluded. The remaining
+nonzero scalar case is unproved. The full source statement is retained.
 
 Source: arXiv:2601.21366v2, `rem: ext` (ii), `thm: circle`. -/
 theorem ext_circle_isFinitelyAtomic (B : EucSpace 2 →ₗ[ℝ] EucSpace 2)
@@ -70,6 +70,12 @@ theorem ext_circle_isFinitelyAtomic (B : EucSpace 2 →ₗ[ℝ] EucSpace 2)
     fun hf => hnot (isFinitelyAtomic_of_finite_topological_support μ hf)
   obtain ⟨J, c, hpattern, hJ, hC, hscalar⟩ :=
     exists_scalar_support_pattern_of_stationaryMap_infinite_circle B hB ω a μ hμ hInf
+  by_cases hc0 : c = 0
+  · apply hana
+    apply isAnalyticOnSphere_of_zero_signedGram_infinite_pattern φ hφ ω a J _ hpattern
+      (fun θ hθ => hθ.1.1) (fun θ hθ => hθ.2)
+    intro x
+    rw [hscalar, hc0, zero_smul]
   sorry
 
 /-- The hypotheses of `ext_circle_isFinitelyAtomic` are satisfiable at
