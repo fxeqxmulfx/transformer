@@ -41,7 +41,7 @@ import Transformer.Homogenized.SimplexWellDefined
 import Transformer.Homogenized.GramStability
 import Transformer.Homogenized.SmallBeta
 import Transformer.Homogenized.Section7_SmallTemperatureMeanDrift
-import Transformer.Homogenized.Section7_MeanLogCalculus
+import Transformer.Homogenized.Section7_MeanLogGenerator
 import Transformer.Homogenized.RademacherLaw
 import Transformer.Homogenized.MeanFieldLipschitz
 import Transformer.Homogenized.CoupledSystem
