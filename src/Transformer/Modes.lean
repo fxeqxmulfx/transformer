@@ -24,6 +24,7 @@ import Transformer.Modes.Section2_ParameterTransversality
 import Transformer.Modes.Section2_GaussianTransversality
 import Transformer.Modes.Section2_GaussianCriticalImages
 import Transformer.Modes.Section2_ScoreBranches
+import Transformer.Modes.Section2_ScoreInverses
 import Transformer.Modes.Section2_Degenerate
 import Transformer.Modes.Section2_MainForm
 import Transformer.Modes.Section2_Gt
