@@ -34,6 +34,7 @@ import Transformer.Causal.SectionB_CentralCurvature
 import Transformer.Causal.SectionB_CurvaturePolynomial
 import Transformer.Causal.SectionB_FarCurvature
 import Transformer.Causal.SectionB_PeakHeight
+import Transformer.Causal.SectionB_DoublePeak
 import Transformer.Causal.InteractionWindow
 import Transformer.Causal.InteractionRemark
 import Transformer.Causal.Packing
