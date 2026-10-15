@@ -6,7 +6,7 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 The first half of Appendix D of the survey:
 
-* `eq: almost.ortho.vec`  — almost-orthogonality of a uniform sample (Lévy),
+* `eq: almost.ortho.vec`  — almost-orthogonality of a uniform sample,
 * `e:ineqfirstpart`       — the first half of `eq: upto-t`,
 * `eq: d.large`           — the definition of `d⋆(n, β)`.
 
@@ -17,6 +17,10 @@ The decay of `1 - γ_β(t)`, `e:ybetacloseto1`, is in
 `Perspective.AppendixD_Ybeta`.  The lower bound on the smallest coordinate
 `α(t)` is in `Perspective.AppendixD_Alpha`, and what the survey builds on it
 in `Perspective.AppendixD_Assembly`.
+
+The exact orthogonal-approximation radius and its probability are proved in
+`AppendixD_Concentration`, using the dimension threshold of the surrounding
+source theorem and exact uniform moments for its projection estimates.
 -/
 
 import Transformer.Basic
@@ -24,6 +28,7 @@ import Transformer.Perspective.AppendixD_Stability
 import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section5_HighD
 import Transformer.Perspective.Section5_HighDCurve
+import Transformer.Perspective.AppendixD_Concentration
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -32,34 +37,6 @@ namespace Transformer
 namespace Perspective
 
 variable (d n : ℕ)
-
-/-- **Equation (eq: almost.ortho.vec).** *Almost-orthogonality of a uniform
-sample (Lévy's concentration of measure).*
-
-For `n` i.i.d. uniform points on `𝕊^{d-1}` with `2 ≤ n ≤ d` there are, with
-probability at least `1 - 2 n² d^{-1/64}`, pairwise orthogonal points
-`y_1, …, y_n ∈ 𝕊^{d-1}` with `‖x_i(0) - y_i‖ ≤ √(log d / d)`.
-
-Not proved here: neither the concentration inequality on the sphere nor the
-Gram–Schmidt construction of the `y_i` from it is formalized.  As in §4, the
-uniform law is quantified over as `UniformTuple`, which pins it down uniquely.
-
-Source: arXiv:2312.10794v5, Appendix D, `eq: almost.ortho.vec`. -/
-theorem almost_orthogonal (hn : 2 ≤ n) (hnd : n ≤ d) :
-    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-      1 - 2 * (n : ℝ) ^ 2 * (d : ℝ) ^ (-(1 / 64 : ℝ)) ≤
-        (P { X₀ : SphereTuple d n |
-              ∃ Y : SphereTuple d n,
-                (∀ i j : Idx n, i ≠ j →
-                  inner (𝕜 := ℝ) ((Y i : EucSpace d)) ((Y j : EucSpace d)) = 0) ∧
-                ∀ i : Idx n,
-                  ‖(X₀ i : EucSpace d) - (Y i : EucSpace d)‖
-                    ≤ Real.sqrt (Real.log d / d) }).toReal := by
-  sorry
-
-/-- The hypotheses of `almost_orthogonal` are satisfiable: `d = n = 2`. -/
-example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
-
 
 /-- **Equation (e:ineqfirstpart).** *First half of `eq: upto-t`.*
 
