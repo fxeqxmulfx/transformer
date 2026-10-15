@@ -10,6 +10,7 @@ import Transformer.Causal.Section4_ParticleField
 import Transformer.Causal.Section4_SphereFlow
 import Transformer.Causal.Section4_FlowContinuity
 import Transformer.Causal.Section4_FlowPrefix
+import Transformer.Causal.Section4_ParticleDrift
 import Transformer.Causal.SingleToken
 import Transformer.Causal.MainTheorem
 import Transformer.Causal.Interaction
