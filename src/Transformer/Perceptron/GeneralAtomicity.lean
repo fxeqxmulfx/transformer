@@ -29,6 +29,7 @@ import Transformer.Perceptron.GeneralAttention
 import Transformer.Perceptron.HigherDim
 import Transformer.Perceptron.Section3_StrictMatrixAtomicity
 import Transformer.Perceptron.Section5_SphericalMapNullSupport
+import Transformer.Perceptron.Section5_MapReLUAtomicity
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
@@ -47,7 +48,10 @@ theorem isSymmetric_bijective_id (d : ℕ) :
 `B` in the interaction energy, a stationary measure for the ReLU perceptron
 with a non-analytic potential is still purely atomic with finite support.
 
-Not proved here.
+The signed Gram non-degenerate case is proved for the actual original
+matrix field. The remaining case has a scalar signed Gram matrix for
+some activation pattern; non-analyticity alone does not rule that out.
+The full source statement is retained, with that case still unproved.
 
 Source: arXiv:2601.21366v2, `rem: ext` (ii), `thm: circle`. -/
 theorem ext_circle_isFinitelyAtomic (B : EucSpace 2 →ₗ[ℝ] EucSpace 2)
@@ -57,6 +61,8 @@ theorem ext_circle_isFinitelyAtomic (B : EucSpace 2 →ₗ[ℝ] EucSpace 2)
     (μ : Perspective.ProbSphere 2)
     (hμ : IsStationaryMap B (fun s => max s 0) ω a μ) :
     IsFinitelyAtomic μ := by
+  by_cases hnd : IsNonDegenerate ω a
+  · exact isFinitelyAtomic_of_stationaryMap_nondegenerate_circle B hB ω a hnd μ hμ
   sorry
 
 /-- The hypotheses of `ext_circle_isFinitelyAtomic` are satisfiable at
@@ -118,7 +124,8 @@ of a strict SOPD critical point at a real-analytic `σ` — is still
 
 The analytic strict alternative follows from the proved actual matrix
 Hessian and the localized-gradient argument of §5.3. The ReLU alternative
-remains unproved here. The statement retains both original alternatives.
+is proved under signed Gram non-degeneracy; its remaining degenerate
+case is unproved. The statement retains both original alternatives.
 
 Source: arXiv:2601.21366v2, §3.1, `rem: ext` (ii), `thm: any.d` (i), and §5.3. -/
 theorem ext_any_d_measure_support_eq_zero (d : ℕ) (hd : 2 ≤ d)
@@ -131,8 +138,10 @@ theorem ext_any_d_measure_support_eq_zero (d : ℕ) (hd : 2 ≤ d)
     ∀ ν : Measure (SSphere d), Metastability.IsUniformOn d ν →
       ν (μ : Measure (SSphere d)).support = 0 := by
   intro ν hν
-  rcases hcrit with hrelu | ⟨hσ, hstrict⟩
-  · sorry
+  rcases hcrit with ⟨rfl, hana, hstat⟩ | ⟨hσ, hstrict⟩
+  · by_cases hnd : IsNonDegenerate ω a
+    · exact measure_support_eq_zero_of_stationaryMap_nondegenerate hd B hB ω a hnd μ hstat ν hν
+    sorry
   · exact analytic_strictMap_measure_support_eq_zero hd B hsymm φ σ hφ hσ ω a μ hstrict ν hν
 
 /-- The hypotheses of `ext_any_d_measure_support_eq_zero` are satisfiable at
