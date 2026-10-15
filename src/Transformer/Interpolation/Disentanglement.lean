@@ -23,13 +23,8 @@ import Transformer.Basic
 import Transformer.Perspective.Section2_FlowMap
 import Transformer.Interpolation.Basic
 import Transformer.Interpolation.Clustering
-import Transformer.Interpolation.Section3_ProjectionContraction
-import Transformer.Interpolation.Section3_ProjectionTransport
-import Transformer.Interpolation.Section3_ProjectionLaw
-import Transformer.Interpolation.Section3_ScaledProjectionTransport
-import Transformer.Interpolation.Section3_ProjectionControls
-import Transformer.Interpolation.Section1_WeakConcatenation
 import Transformer.Interpolation.Section3_TwoContractions
+import Transformer.Interpolation.Section3_QuadrantControlPhases
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -111,7 +106,11 @@ Two deviations from the source, both recorded here.
 * `d ≥ 2`.  On `𝕊^0 = {±1}` every tangent field vanishes, so
   `μ_0 = δ_{-1}` never reaches `ℚ_1^0 = {+1}`.
 
-Not proved here.
+The proof uses two explicit rank-one controls, with intrinsic phase
+lengths chosen from the compact union of original supports. Each phase
+occupies half of the prescribed horizon, giving `C = 2(τ₁+τ₂)`.
+Constructed weak solutions establish existence; the original integrated
+equation forces every weak solution to follow the same support maps.
 
 Source: arXiv:2411.04551v3, §3, `lem: first.quadrant` and its proof. -/
 theorem first_quadrant (hd : 2 ≤ d) (μ₀ : Idx N → ProbSphere d)
@@ -125,7 +124,21 @@ theorem first_quadrant (hd : 2 ≤ d) (μ₀ : Idx N → ProbSphere d)
         (∀ i : Idx N, ∃ μ : ℝ → ProbSphere d, μ 0 = μ₀ i ∧ cauchyPB d θ μ) ∧
         ∀ i : Idx N, ∀ μ : ℝ → ProbSphere d, μ 0 = μ₀ i → cauchyPB d θ μ →
           (μ T : Measure (SSphere d)).support ⊆ positiveQuadrant d := by
-  sorry
+  obtain ⟨w₁, w₂, τ₁, τ₂, hτ₁, hτ₂, hflow⟩ :=
+    exists_two_projection_quadrant_supports hd μ₀ hne
+  let j : Fin d := ⟨0, by omega⟩
+  refine ⟨2 * (τ₁ + τ₂), by positivity, ?_⟩
+  intro T hT
+  refine ⟨twoProjectionControls j w₁ w₂ τ₁ τ₂ T,
+    twoProjectionControls_piecewise j w₁ w₂ τ₁ τ₂ T hT, ?_, ?_, ?_, ?_⟩
+  · exact fun s => twoProjectionControls_components j w₁ w₂ τ₁ τ₂ T s
+  · exact fun s _ => twoProjectionControls_norm j w₁ w₂ τ₁ τ₂ T hτ₁.le hτ₂.le hT s
+  · exact fun i => exists_cauchyPB_twoProjectionControls j w₁ w₂ τ₁ τ₂ T hT (μ₀ i)
+  · intro i μ hinit hμ x hx
+    obtain ⟨y, hy, rfl⟩ := twoProjectionControls_support j w₁ w₂ τ₁ τ₂ T hT μ hμ hx
+    obtain ⟨z, hz, rfl⟩ := hy
+    apply hflow i z
+    rwa [hinit] at hz
 
 /-- The hypotheses of `first_quadrant` are satisfiable: on `𝕊^1`, the single
 Dirac mass at `basePoint 1`, whose support misses the antipode and is therefore
