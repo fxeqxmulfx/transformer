@@ -21,6 +21,8 @@ form the survey's proof uses — every geodesic sphere is null.
 import Transformer.Basic
 import Transformer.Interpolation.BallTransport
 import Transformer.Interpolation.Section5_BallMass
+import Transformer.Interpolation.Section5_BallGeometry
+import Transformer.Interpolation.Section5_BallSweep
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
