@@ -42,7 +42,7 @@ import Transformer.Homogenized.GramStability
 import Transformer.Homogenized.SmallBeta
 import Transformer.Homogenized.Section7_MeanOverlapCentroidNoise
 import Transformer.Homogenized.Section7_TemperatureCorrelation
-import Transformer.Homogenized.Section7_GaussianQuerySecondMoment
+import Transformer.Homogenized.Section7_GaussianAttentionSymmetry
 import Transformer.Homogenized.RademacherLaw
 import Transformer.Homogenized.MeanFieldLipschitz
 import Transformer.Homogenized.CoupledSystem
