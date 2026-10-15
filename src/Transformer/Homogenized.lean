@@ -90,6 +90,8 @@ import Transformer.Homogenized.Section7_OverlapNoiseBounds
 import Transformer.Homogenized.Section7_SimplexCentroid
 import Transformer.Homogenized.Section7_SimplexRealization
 import Transformer.Homogenized.Section7_SimplexMomentBounds
+import Transformer.Homogenized.Section7_SimplexScalarBarriers
+import Transformer.Homogenized.Section7_SimplexOdeDomain
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
