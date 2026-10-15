@@ -1,20 +1,23 @@
 /-
 # Homogenized Transformers — the barycenter at low temperature
 
-Formalization of `lemma:Laplace_method` and `lem:delta_method` of
-arXiv:2604.01978v1, *Homogenized Transformers*: the two estimates that make the
-drift of the overlap collapse to the logistic one, and so carry the proof of
-`thm:large_beta_meta`.
+The dimension-uniform version of `lemma:Laplace_method` of
+arXiv:2604.01978v1, *Homogenized Transformers*, is false. The actual
+uniform spherical law and actual original Gaussian product head at entry
+variance `1/d` violate its claimed rate beyond arbitrary dimension and
+temperature thresholds. `laplace_method_false` proves this with all the
+original density, initialization and unit-query conditions retained.
 
-The first says that at large `β` the softmax barycenter `m_{β,A}[μ](x)` of
-`Barycenter.lean` collapses onto the unit vector `A x / ‖A x‖` — the Laplace
-method on the sphere — and the second expands the resulting
-`E⟨Ax/‖Ax‖, Ay/‖Ay‖⟩` in `1/d` by the delta method.  Together they are
-`eq:kernel_expansion`, which is a line of the proof of `thm:large_beta_meta`
-and is not restated here.
+The estimate `lem:delta_method`, which expands normalized-query
+correlation in `1/d`, remains separately stated and unproved below.
+The paper combines these two estimates in `eq:kernel_expansion`, in the
+proof of `thm:large_beta_meta`; no such combination is asserted here.
+The counterexample concerns the uniform simultaneous-dimension estimate
+required by that argument. Exact dimension-dependent barycenter bounds
+and the actual Gaussian query moments are proved in the imported modules.
 -/
 
-import Transformer.Homogenized.Section7_GaussianScaling
+import Transformer.Homogenized.Section7_UniformLaplaceCounterexample
 import Transformer.Homogenized.Metastability
 
 open scoped BigOperators ENNReal NNReal
@@ -25,45 +28,64 @@ namespace Homogenized
 
 /-! ### The two estimates -/
 
-/-- **Lemma (lemma:Laplace_method).**  For `μ` as in `ass:low-temperature`,
+/-- **Counterexample to the dimension-uniform `lemma:Laplace_method`.**
+The source asserts, for `μ` as in `ass:low-temperature`,
 
   `E⟨m_{β,A}[μ](x), m_{β,A}[μ](y)⟩ = E⟨Ax/‖Ax‖, Ay/‖Ay‖⟩ + O(d^{-3/2} + β^{-1/2})`
 
-for all `x, y ∈ 𝕊^{d-1}`.
+for all original unit queries, with constants depending only on the
+low-temperature density and gradient bounds.
 
-**What the source says and what is written here.**
+Fix those bounds to `(ρ_min, ρ_max, L) = (1,1,0)`. The exact uniform
+token law satisfies them jointly with the Gaussian initialization (G),
+standard value variance `1/d`, and common query/key entry variance `1/d`.
+At that scaling `effBeta = β`, so the counterexample also refutes the
+former effective-temperature version of this formal statement.
 
-* The `β` of the error is again the temperature of the normalized query-key
-  matrix, as in `large_beta_metastability`: the proof's Laplace expansion is in
-  `λ_x = β‖A x‖`, and at `A = W W'ᵀ` of `eq: tformers.at.initialization` the
-  norm `‖A x‖` is of order `d σ_A²`, so `λ_x ≍ β d σ_A² = effBeta`.  Writing
-  `β^{-1/2}` here would be the statement at `‖A x‖ ≍ 1`, which is not the
-  ensemble the lemma is applied to.
-* The lemma is stated at a Gaussian head law and not at an arbitrary one: the
-  proof discards the event `{‖A x‖ < ε}` by a Gaussian concentration
-  inequality, and that is where `e^{-c(ε)d} = O(d^{-3/2})` comes from.  At an
-  arbitrary law the claim is false — `ρ* = δ_0` makes the right-hand side a
-  junk value while the left-hand side is `⟨m_{β,0}[μ](x), m_{β,0}[μ](y)⟩`.
-* `ass:low-temperature` is an assumption on a *path* `t ↦ μ(t)`; the lemma uses
-  it at one time, so it is instantiated at the constant path.
-* `ρ_min`, `ρ_max`, `L` come before `C`, which is how the source's "all
-  constants here depend only on bounds on `ρ` and `∇ρ`" is said.
+For every prefactor `C`, choose `β=s²`, cutoff `R=s⁴` and dimension
+larger than `16 exp(2s⁴)`. The proved actual-query second moment and
+uniform barycenter bound give `E‖m‖² < 1/4`, while
+`E‖Ax/‖Ax‖‖² = 1`. The original self-correlation error is therefore
+greater than `3/4`, and the proposed bound can be made less than `1/4`.
+Both temperature and dimension exceed arbitrary prescribed thresholds.
 
-Not proved here.
+The theorem below explicitly permits such thresholds, as a uniform
+Big-O assertion does. Their availability does not restore the claim.
+No zero head, zero query or failing density hypothesis is used.
+The original matrix remains the product of two independent Gaussian
+factors; each coordinate is treated by its actual bilinear row law.
+The uniform law is a probability measure carried by the original sphere,
+and the low-temperature assumption is instantiated at its constant path.
 
-Source: arXiv:2604.01978v1, `lemma:Laplace_method`. -/
-theorem laplace_method (ρmin ρmax L : ℝ) :
-    ∃ C : ℝ, 0 < C ∧
-      ∀ (d : ℕ), 0 < d → ∀ β : ℝ, 0 < β → ∀ σV σA : ℝ≥0, 0 < σA →
+The source's Step 1 includes `O(d ‖w‖²/λ_x)` before dropping dimension
+from the final error. The refutation addresses this simultaneous-limit
+claim; the fixed-dimension Laplace asymptotic has a different uniformity.
+
+Source: arXiv:2604.01978v1, §2.3, initialization (G), §2.3.3,
+`ass:low-temperature`, and §7.3, `lemma:Laplace_method`, Step 1. -/
+theorem laplace_method_false :
+    ¬ ∃ (C B : ℝ) (D : ℕ), 0 < C ∧ 0 ≤ B ∧
+      ∀ (d : ℕ), 0 < d → D ≤ d → ∀ β : ℝ, 0 < β → B ≤ β →
+      ∀ σV σA : ℝ≥0, 0 < σA →
       ∀ ρ : Measure (HeadParam d), IsGaussianHeadLaw d σV σA ρ →
       ∀ (σ μ : Measure (EucSpace d)) (dens : EucSpace d → ℝ),
-        IsLowTemperature d σ (fun _ => μ) (fun _ => dens) ρmin ρmax L →
+        IsLowTemperature d σ (fun _ => μ) (fun _ => dens) 1 1 0 →
       ∀ x y : EucSpace d, ‖x‖ = 1 → ‖y‖ = 1 →
         |baryCorr β ρ μ x y
             - ∫ θ, inner (𝕜 := ℝ)
                 (normalizeLayer (qkMap θ x)) (normalizeLayer (qkMap θ y)) ∂ρ|
           ≤ C * ((d : ℝ) ^ (-(3 : ℝ) / 2) + effBeta d β σA ^ (-(1 : ℝ) / 2)) := by
-  sorry
+  rintro ⟨C, B, D, hC, hB, h⟩
+  obtain ⟨d, hd, hDd, β, ν, x, hβ, hBβ, hx, -, hlow, hG, hbad⟩ :=
+    uniform_laplace_self_error_counterexample C B D hC hB
+  have hdpos : 0 < d := by omega
+  have hb := h d hdpos hDd β hβ hBβ (stdSigmaV d) (stdSigmaV d)
+    (stdSigmaV_pos hdpos)
+    (gaussHeadLaw d (stdSigmaV d) (stdSigmaV d)) hG
+    (ν.map (Subtype.val : SSphere d → EucSpace d)) (ν.map Subtype.val) (fun _ => 1)
+    hlow x x hx hx
+  rw [effBeta_stdSigmaV hdpos] at hb
+  exact not_lt_of_ge hb hbad
 
 /-- **Lemma (lem:delta_method).**  For `A = (dσ_A²)⁻¹ Wᵀ W'`,
 
@@ -93,18 +115,28 @@ theorem delta_method :
           ≤ C * (d : ℝ) ^ (-(3 : ℝ) / 2) := by
   sorry
 
-/-- The hypotheses of `laplace_method` are satisfiable, at the constants
-`ρ_min = ρ_max = 1`, `L = 0` its statement is quantified after: dimension `1`,
-temperature `1`, the Gaussian head law at `σ_V² = 1/d`, and the uniform measure
-with density `1`, tested at the unit vector against itself. -/
+/-- The original hypotheses used by the refutation hold jointly at the
+common Gaussian scale in dimension two, actual uniform density one and
+an actual coordinate unit query. The full counterexample theorem supplies
+such data beyond arbitrary dimension and temperature thresholds too.
+The entry variance is exactly `1/d`, effective temperature is the actual
+temperature, and the original normalized-query self-correlation is one. -/
 example :
-    (0 : ℕ) < 1 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ≥0) < 1 ∧
-      IsGaussianHeadLaw 1 (stdSigmaV 1) 1 (gaussHeadLaw 1 (stdSigmaV 1) 1) ∧
-      IsLowTemperature 1 (uniformAmbient 1) (fun _ => uniformAmbient 1)
+    (0 : ℕ) < 2 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ≥0) < stdSigmaV 2 ∧
+      IsGaussianHeadLaw 2 (stdSigmaV 2) (stdSigmaV 2)
+        (gaussHeadLaw 2 (stdSigmaV 2) (stdSigmaV 2)) ∧
+      IsLowTemperature 2 (uniformAmbient 2) (fun _ => uniformAmbient 2)
         (fun _ => (fun _ => 1)) 1 1 0 ∧
-      ‖EuclideanSpace.single (0 : Fin 1) (1 : ℝ)‖ = 1 :=
-  ⟨one_pos, one_pos, one_pos, isGaussianHeadLaw_gaussHeadLaw 1 _ _,
-    isLowTemperature_uniformAmbient one_pos, by simp [PiLp.norm_single]⟩
+      ‖EuclideanSpace.single (0 : Fin 2) (1 : ℝ)‖ = 1 ∧
+      (stdSigmaV 2 : ℝ) ^ 2 = 1 / 2 ∧ effBeta 2 1 (stdSigmaV 2) = 1 ∧
+      (∫ θ : HeadParam 2, inner ℝ
+        (normalizeLayer (qkMap θ (EuclideanSpace.single (0 : Fin 2) (1 : ℝ))))
+        (normalizeLayer (qkMap θ (EuclideanSpace.single (0 : Fin 2) (1 : ℝ))))
+        ∂gaussHeadLaw 2 (stdSigmaV 2) (stdSigmaV 2)) = 1 :=
+  ⟨by decide, one_pos, stdSigmaV_pos (by decide), isGaussianHeadLaw_gaussHeadLaw 2 _ _,
+    isLowTemperature_uniformAmbient (by decide), by simp [PiLp.norm_single],
+    by simp, effBeta_stdSigmaV (by decide) 1,
+    integral_scaled_gaussianHead_normalized_query_self _ (stdSigmaV_pos (by decide)) 0⟩
 
 /-- The hypotheses of `delta_method` are satisfiable: the same Gaussian head
 law, with no assumption on the token measure. -/
