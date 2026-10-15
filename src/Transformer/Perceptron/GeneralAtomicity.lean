@@ -29,7 +29,7 @@ import Transformer.Perceptron.GeneralAttention
 import Transformer.Perceptron.HigherDim
 import Transformer.Perceptron.Section3_StrictMatrixAtomicity
 import Transformer.Perceptron.Section5_SphericalMapNullSupport
-import Transformer.Perceptron.Section5_MapDegenerateBranches
+import Transformer.Perceptron.Section5_TwoNeuronReduction
 
 open scoped BigOperators ENNReal
 open Real MeasureTheory
