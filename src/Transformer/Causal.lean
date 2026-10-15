@@ -29,6 +29,7 @@ import Transformer.Causal.AppendixA_CuspEnergy
 import Transformer.Causal.AppendixA_CuspCritical
 import Transformer.Causal.AppendixA_CuspJacobian
 import Transformer.Causal.AppendixA_CuspHyperbolicity
+import Transformer.Causal.AppendixA_CuspClock
 import Transformer.Causal.ParkingCount
 import Transformer.Causal.CapCone
 import Transformer.Causal.CapPolar
