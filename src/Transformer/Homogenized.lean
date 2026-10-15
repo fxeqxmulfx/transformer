@@ -87,6 +87,8 @@ import Transformer.Homogenized.Section7_SimplexError
 import Transformer.Homogenized.Section7_SimplexPathComparison
 import Transformer.Homogenized.Section7_OverlapNoiseMoments
 import Transformer.Homogenized.Section7_OverlapNoiseBounds
+import Transformer.Homogenized.Section7_SimplexCentroid
+import Transformer.Homogenized.Section7_SimplexRealization
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
