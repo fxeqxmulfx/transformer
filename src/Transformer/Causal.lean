@@ -21,6 +21,7 @@ import Transformer.Causal.Section4_FollowerLimits
 import Transformer.Causal.Section4_AntipodalField
 import Transformer.Causal.Section4_AntipodalExpansion
 import Transformer.Causal.Section4_ConditionalMeasure
+import Transformer.Causal.Section4_AntipodalFibers
 import Transformer.Causal.SingleToken
 import Transformer.Causal.MainTheorem
 import Transformer.Causal.Interaction
