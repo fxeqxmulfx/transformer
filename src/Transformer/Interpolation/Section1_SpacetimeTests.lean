@@ -144,6 +144,17 @@ theorem projectionTestFlux_eq_inner (φ : EucSpace d → ℝ) (w x : EucSpace d)
   rw [inner_gradient_left]
   rfl
 
+/-- A `C¹` test has a continuous actual projection flux.
+Source: arXiv:2411.04551v3, §1 and §3.1, `lem: first.quadrant`. -/
+theorem continuous_projectionTestFlux (φ : EucSpace d → ℝ) (hφ : ContDiff ℝ 1 φ)
+    (w : EucSpace d) : Continuous (projectionTestFlux φ w) := by
+  have hc : Continuous (fun x : EucSpace d => proj d x w) := by
+    unfold proj
+    exact continuous_const.sub ((Continuous.inner (𝕜 := ℝ)
+      (f := fun x : EucSpace d => x) (g := fun _ : EucSpace d => w)
+      continuous_id continuous_const).smul continuous_id)
+  exact (hφ.continuous_fderiv_apply (by decide)).comp (continuous_id.prodMk hc)
+
 /-- A `C²` test has a `C¹` projection flux on the whole ambient space.
 Source: arXiv:2411.04551v3, §1 and §3.1, `lem: first.quadrant`. -/
 theorem contDiff_projectionTestFlux (φ : EucSpace d → ℝ) (hφ : ContDiff ℝ 2 φ)

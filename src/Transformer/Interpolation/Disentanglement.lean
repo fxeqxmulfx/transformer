@@ -25,6 +25,7 @@ import Transformer.Interpolation.Basic
 import Transformer.Interpolation.Clustering
 import Transformer.Interpolation.Section3_ProjectionContraction
 import Transformer.Interpolation.Section3_ProjectionTransport
+import Transformer.Interpolation.Section3_ProjectionLaw
 
 open scoped BigOperators
 open Real MeasureTheory

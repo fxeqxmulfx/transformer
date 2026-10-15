@@ -12,6 +12,7 @@ as a new condition on the original measure-valued solution.
 
 import Transformer.Interpolation.Section1_MovingTests
 import Mathlib.Topology.UniformSpace.HeineCantor
+import Mathlib.Topology.ContinuousMap.Compact
 
 open Real MeasureTheory Filter Topology Asymptotics
 
@@ -34,6 +35,16 @@ Source: arXiv:2411.04551v3, §1, `eq: cauchy.pb`. -/
 @[simp] theorem boundedTestCurve_apply (F : ℝ → X → ℝ)
     (hF : Continuous (Function.uncurry F)) (t : ℝ) (x : X) :
     boundedTestCurve F hF t x = F t x := rfl
+
+/-- Joint continuity alone gives continuity in the actual supremum norm
+on the compact spatial domain. Source: arXiv:2411.04551v3, §1,
+the weak tests in `eq: cauchy.pb`. -/
+theorem continuous_boundedTestCurve_of_continuous (F : ℝ → X → ℝ)
+    (hF : Continuous (Function.uncurry F)) : Continuous (boundedTestCurve F hF) := by
+  have hi : Isometry (BoundedContinuousFunction.mkOfCompact : C(X, ℝ) →
+      BoundedContinuousFunction X ℝ) :=
+    isometry_iff_dist_eq.mpr fun f g => BoundedContinuousFunction.dist_mkOfCompact f g
+  exact hi.continuous.comp (ContinuousMap.curry ⟨Function.uncurry F, hF⟩).continuous
 
 /-- Joint continuity of the pointwise time derivative gives the derivative
 in the supremum norm on a compact domain. Source: arXiv:2411.04551v3,
@@ -107,6 +118,14 @@ example :
   exact fun t x => (hasDerivAt_sin t).mul_const (x : ℝ)
 
 variable {d : ℕ}
+
+/-- Integration of a jointly continuous compact test against one original
+probability law is continuous in time. Source: arXiv:2411.04551v3,
+§1, `eq: cauchy.pb`. -/
+theorem continuous_spherical_integral_of_joint_continuous (μ : Perspective.ProbSphere d)
+    (F : ℝ → SSphere d → ℝ) (hF : Continuous (Function.uncurry F)) :
+    Continuous (fun s => ∫ x, F s x ∂(μ : Measure (SSphere d))) :=
+  (sphericalIntegralCLM μ).continuous.comp (continuous_boundedTestCurve_of_continuous F hF)
 
 /-- The actual integral of a moving compact test is continuous whenever
 the fixed test is weakly continuous. Source: arXiv:2411.04551v3, §1,
