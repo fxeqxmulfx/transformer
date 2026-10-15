@@ -20,12 +20,25 @@ direction.
   expectation**: a Gaussian sample almost surely has no degenerate critical
   point.  `expectedUpcrossings_le_expectedModes` is the half that follows from
   the inclusion and is proved; the equality
-  `expectedModes_eq_expectedUpcrossings` is stated and unproved.
+  `expectedModes_eq_expectedUpcrossings` is proved below using the actual
+  Gaussian sample law and the nondegeneracy theorem of `Section2_Morse.lean`.
+
+**The probability-zero step.** The derivative of the original score
+`s exp(-βs²/2)` vanishes only at the two displacements `±1/sqrt(β)`.
+If all sample derivatives vanish together, a pair of samples coincides or
+has squared separation `4/β`; those events have probability zero for
+independent Gaussian data. At every other zero, one sample coordinate
+can be solved using one of the score's three actual inverse branches.
+The resulting chart projects to the original sample space with singular
+derivative at a degenerate query. Equal-dimension Sard and absolute
+continuity of the actual product Gaussian law make these finitely many
+critical images null. The two original sets therefore agree almost surely,
+simultaneously for every query set, and their extended counts integrate equally.
 
 Source: arXiv:2412.09080v3, `sec:kac-rice`, after `eq:Fn`.
 -/
 
-import Transformer.Modes.Section2_Field
+import Transformer.Modes.Section2_ModeUpcrossings
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
 
 open scoped BigOperators NNReal ENNReal
@@ -113,13 +126,23 @@ theorem expectedUpcrossings_le_expectedModes {β : ℝ} (hβ : 0 < β) {n : ℕ}
 almost surely has no degenerate critical point, so the two counts agree in
 expectation even though they differ pathwise.
 
-Not proved here.
+The actual Gaussian sample has no degenerate critical point almost surely,
+as proved by the sample-coordinate charts and critical-image measure argument.
+No extra genericity, regularity, finiteness, or measurability assumption on `T` is needed.
 
 Source: arXiv:2412.09080v3, `sec:kac-rice`, after `eq:Fn`. -/
 theorem expectedModes_eq_expectedUpcrossings {β : ℝ} (hβ : 0 < β) {n : ℕ} (hn : 0 < n)
     (T : Set ℝ) :
     expectedModes β n T = expectedUpcrossings (gaussianSample n) (fun X => fieldF β X) 0 T := by
-  sorry
+  exact lintegral_congr_ae (modeCount_ae_eq_upcrossingCount hβ hn T)
+
+/-- The original real-valued expected mode count has the same upcrossing representation.
+Source: arXiv:2412.09080v3, `sec:kac-rice`, the expectation identity after `eq:Fn`.
+This keeps the formalization's existing `toReal` convention, including at an infinite extended count. -/
+theorem expectedModesReal_eq_expectedUpcrossings_toReal {β : ℝ} (hβ : 0 < β)
+    {n : ℕ} (hn : 0 < n) (T : Set ℝ) : expectedModesReal β n T =
+      (expectedUpcrossings (gaussianSample n) (fun X => fieldF β X) 0 T).toReal := by
+  exact congrArg ENNReal.toReal (expectedModes_eq_expectedUpcrossings hβ hn T)
 
 /-- The hypotheses of the two results above are satisfiable. -/
 example : (0 : ℝ) < 1 ∧ 0 < 1 := ⟨one_pos, one_pos⟩

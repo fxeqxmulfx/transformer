@@ -29,6 +29,7 @@ import Transformer.Modes.Section2_ZeroCharts
 import Transformer.Modes.Section2_RegularDegenerate
 import Transformer.Modes.Section2_CriticalCharts
 import Transformer.Modes.Section2_Morse
+import Transformer.Modes.Section2_ModeUpcrossings
 import Transformer.Modes.Section2_Degenerate
 import Transformer.Modes.Section2_MainForm
 import Transformer.Modes.Section2_Gt
