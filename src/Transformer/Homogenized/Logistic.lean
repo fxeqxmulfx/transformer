@@ -91,19 +91,29 @@ theorem isLogisticSolution_one {Ω : Type*} {m : MeasurableSpace Ω} (P : Measur
   rw [hzero]
   exact isMartingaleOn_const T ℱ P 0
 
+/-- The other endpoint is a genuine absorbing solution as well: both original
+coefficients vanish at -1. Source: arXiv:2604.01978v1, §7, `sec: sde.logistic`,
+the two absorbing states in the long-time limit. -/
+theorem isLogisticSolution_neg_one {Ω : Type*} {m : MeasurableSpace Ω} (P : Measure Ω)
+    [IsProbabilityMeasure P] (ℱ : Filtration ℝ m) :
+    IsLogisticSolution P ℱ (fun _ _ => -1) := by
+  refine ⟨fun _ _ => stronglyMeasurable_const, fun _ => continuousOn_const, ?_⟩
+  intro φ _ T _
+  have hzero : logisticMart (fun (_ : ℝ) (_ : Ω) => (-1 : ℝ)) φ = fun _ _ => 0 := by
+    funext t ω
+    simp [logisticMart]
+  rw [hzero]
+  exact isMartingaleOn_const T ℱ P 0
+
+/-- Both signs occur as initial values of actual solutions under a probability law. -/
+example : IsLogisticSolution (Measure.dirac ())
+    (Filtration.const (ι := ℝ) (m := (inferInstance : MeasurableSpace Unit)) ⊥ bot_le)
+    (fun _ _ => -1) :=
+  isLogisticSolution_neg_one _ _
+
 /-! ### Long-time behavior -/
 
-/-- **`[-1,1]` is invariant.**  A solution of `eq: sde.logistic` started in
-`[-1,1]` stays there, which is what the source's `θ(t) ∈ [-π/2, π/2]` records.
-
-Not proved here.
-
-Source: arXiv:2604.01978v1, `sec: sde.logistic`. -/
-theorem logistic_range {Ω : Type*} {m : MeasurableSpace Ω} (P : Measure Ω)
-    (ℱ : Filtration ℝ m) (u : ℝ → Ω → ℝ) (hu : IsLogisticSolution P ℱ u)
-    (hinit : ∀ ω, u 0 ω ∈ Set.Icc (-1 : ℝ) 1) :
-    ∀ t, 0 ≤ t → ∀ᵐ ω ∂P, u t ω ∈ Set.Icc (-1 : ℝ) 1 := by
-  sorry
+/- Interval invariance is proved in Section7_LogisticRange. -/
 
 /- The angle and bracket theorem is proved in Section7_LogisticArcsin. -/
 

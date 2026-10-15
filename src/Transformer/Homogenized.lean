@@ -127,6 +127,7 @@ import Transformer.Homogenized.Section7_LogisticMartingaleAlgebra
 import Transformer.Homogenized.Section7_LogisticArcsin
 import Transformer.Homogenized.Section7_LogisticBoundaryCoordinate
 import Transformer.Homogenized.Section7_LogisticNegativePart
+import Transformer.Homogenized.Section7_LogisticRange
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments
