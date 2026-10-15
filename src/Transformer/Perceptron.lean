@@ -128,6 +128,7 @@ import Transformer.Perceptron.Section5_BiasedTransform
 import Transformer.Perceptron.Section5_BiasedObstruction
 import Transformer.Perceptron.Section5_ReLUObstruction
 import Transformer.Perceptron.Section5_MapFirstVariation
+import Transformer.Perceptron.Section5_SphericalMapKernel
 import Transformer.Perceptron.Section5_ReLUAtomicity
 import Transformer.Perceptron.Section6_RotationZeroSets
 import Transformer.Perceptron.Section6_ReflectionPaths
