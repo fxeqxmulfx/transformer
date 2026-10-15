@@ -12,8 +12,8 @@ Only the original overlap decomposition, its time integrability,
 continuous unit token paths and a bound on the actual noise path
 remain explicit inputs. In particular no intermediate reference
 simplex, ODE invariance or drift stability estimate is assumed.
-This proves the deterministic step, not the stochastic probability
-of the noise event; the original probability theorem remains open.
+The stochastic probability step is proved downstream in
+Section7_ClusteringProbability using this pathwise comparison.
 -/
 
 import Transformer.Homogenized.Section7_SimplexOdeDomain

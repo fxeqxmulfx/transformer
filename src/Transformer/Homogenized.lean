@@ -118,6 +118,8 @@ import Transformer.Homogenized.Section7_OverlapNoiseProbability
 import Transformer.Homogenized.Section7_AttentionMomentContinuity
 import Transformer.Homogenized.Section7_SimplexOdeCompensation
 import Transformer.Homogenized.Section7_SphereMartingale
+import Transformer.Homogenized.Section7_SimplexConsensus
+import Transformer.Homogenized.Section7_ClusteringProbability
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments

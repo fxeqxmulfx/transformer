@@ -83,64 +83,11 @@ Source: arXiv:2604.01978v1, `eq:Phi_def_selfcontained`. -/
 noncomputable def simplexDrift (f g : ℝ → ℝ) (γ : ℝ) : ℝ :=
   γ + (1 - γ) * g γ - γ * (γ + (1 - γ) * f γ)
 
-/-- **Theorem (thm:clustering_random_init), second half.**  Fix `d, n ≥ 2` and
-`β > 0`, start from a simplex configuration with overlap
-`γ₀ ∈ (-1/(n-1), 1)`, and let `γ` solve `γ̇ = b(γ)`, `γ(0) = γ₀`.  Then, with
-probability at least `1 - δ`, the solution of `eq:Diffusive_gaussian_case`
-satisfies
+/- The probability theorem is proved downstream in Section7_ClusteringProbability. -/
 
-  `sup_{t∈[0,T]} max_{i≠j} |⟨x_i(t), x_j(t)⟩ - γ(t)| ≤ e^{CT} √(8T/d log(2n²/δ))`,
-
-with `C = O(1 + d σ_A⁴ β² n)`.
-
-**What the source says and what is carried here.**  The two statements "there
-exists `C > 0`" and "`C = O(1 + dσ_A⁴β²n)`" are read as one: a universal `K`,
-produced before `d, n, β, σ_A` are chosen, with `C = K(1 + dσ_A⁴β²n)`.  That is
-the content of the `O(·)`, and it is stronger than an unquantified `∃ C`.
-
-The functions `f` and `g` are taken as explicit hypotheses, in the form
-`simplex_overlap_wellDefined` (`SimplexWellDefined.lean`) produces them.
-
-The initial configuration is deterministic, as in the source, where `X(0)` is
-given.
-
-The ODE is the source's, `γ̇ = b(γ)`, although the identity the source derives
-it from is false: the drift of an overlap on the simplex line is `b(γ)` only
-as `d → ∞`, by `not_forall_overlapDrift_eq_simplexDrift` and
-`overlapDrift_simplex_sub_simplexDrift`.  The `O(1/d)` discrepancy is left
-here, inside the `e^{CT}√(8T/d log(2n²/δ))` the conclusion allows.
-
-Not proved here.
-
-Source: arXiv:2604.01978v1, `thm:clustering_random_init`. -/
-theorem clustering_random_init :
-    ∃ K : ℝ, 0 < K ∧
-      ∀ (d n : ℕ), 2 ≤ d → 2 ≤ n → ∀ (β : ℝ), 0 < β →
-      ∀ (σV σA : ℝ≥0) (ρ : Measure (HeadParam d)), IsGaussianHeadLaw d σV σA ρ →
-      ∀ f g : ℝ → ℝ,
-        (∀ (γ : ℝ) (x : Idx n → EucSpace d), IsSimplexConfig γ x → ∀ i : Idx n,
-          (∫ θ, ∑ k : Idx n, attnProb β θ.2 x i k ^ 2 ∂ρ) = f γ) →
-        (∀ (γ : ℝ) (x : Idx n → EucSpace d), IsSimplexConfig γ x → ∀ i j : Idx n, i ≠ j →
-          (∫ θ, ∑ k : Idx n, attnProb β θ.2 x i k * attnProb β θ.2 x j k ∂ρ) = g γ) →
-      ∀ (γ₀ : ℝ), γ₀ ∈ Set.Ioo (-(1 / ((n : ℝ) - 1))) 1 →
-      ∀ γ : ℝ → ℝ, γ 0 = γ₀ →
-        (∀ t ∈ Set.Ici (0 : ℝ),
-          HasDerivWithinAt γ (simplexDrift f g (γ t)) (Set.Ici 0) t) →
-      ∀ (T : ℝ), 0 < T → ∀ δ ∈ Set.Ioo (0 : ℝ) 1,
-      ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
-        (X : ℝ → Ω → (Idx n → EucSpace d)) (x₀ : Idx n → EucSpace d),
-        IsDiffusiveSde β ρ P X → (∀ ω, X 0 ω = x₀) → IsSimplexConfig γ₀ x₀ →
-        ENNReal.ofReal (1 - δ) ≤
-          P {ω | ∀ t ∈ Set.Icc (0 : ℝ) T, ∀ i j : Idx n, i ≠ j →
-            |inner (𝕜 := ℝ) (X t ω i) (X t ω j) - γ t| ≤
-              Real.exp (K * (1 + (d : ℝ) * (σA : ℝ) ^ 4 * β ^ 2 * (n : ℝ)) * T) *
-                Real.sqrt (8 * T / (d : ℝ) * Real.log (2 * (n : ℝ) ^ 2 / δ))} := by
-  sorry
-
-/-- The hypotheses `clustering_random_init` quantifies over are satisfiable:
-`d = n = 2`, `β = 1`, `ρ* = δ_0`, `γ₀ = 0 ∈ (-1, 1)`, `T = δ/2 = 1/2`, and the
-degenerate solution of `eq:Diffusive_gaussian_case` started at an orthonormal
-pair, which is a simplex configuration with overlap `0`. -/
+/-- The strict-interior initial geometry of `thm:clustering_random_init`
+is realized by an orthonormal pair with overlap zero, positive horizon,
+and failure probability in (0,1). Source: arXiv:2604.01978v1, §2.3.4. -/
 example :
     (0 : ℝ) ∈ Set.Ioo (-(1 / ((2 : ℝ) - 1))) 1 ∧ (0 : ℝ) < 1 ∧
       (1 / 2 : ℝ) ∈ Set.Ioo (0 : ℝ) 1 ∧
