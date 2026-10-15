@@ -122,6 +122,9 @@ import Transformer.Homogenized.Section7_SimplexConsensus
 import Transformer.Homogenized.Section7_ClusteringProbability
 import Transformer.Homogenized.Section7_LogisticMartingaleLimits
 import Transformer.Homogenized.Section7_LogisticArcsinTests
+import Transformer.Homogenized.Section7_LogisticArcsinBounds
+import Transformer.Homogenized.Section7_LogisticMartingaleAlgebra
+import Transformer.Homogenized.Section7_LogisticArcsin
 import Transformer.Homogenized.SoftmaxSmooth
 import Transformer.Homogenized.LinearFormMoments
 import Transformer.Homogenized.GaussianMoments

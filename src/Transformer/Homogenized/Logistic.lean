@@ -105,27 +105,7 @@ theorem logistic_range {Ω : Type*} {m : MeasurableSpace Ω} (P : Measure Ω)
     ∀ t, 0 ≤ t → ∀ᵐ ω ∂P, u t ω ∈ Set.Icc (-1 : ℝ) 1 := by
   sorry
 
-/-- **`θ = arcsin u` is a bounded martingale** with quadratic variation
-`⟨θ⟩_t = ∫₀^t 2 cos²θ(s) ds`:
-
-  `θ(t) = θ(0) + ∫₀^t √2 cos θ(s) dB(s)`.
-
-Written in `u`, using `cos(arcsin u) = √(1-u²)`, the bracket is
-`∫₀^t 2(1 - u(s)²) ds`; the martingale property of the bracket-compensated
-square is how `⟨θ⟩` is said without a stochastic integral, exactly as in
-`McKeanVlasov.lean`.
-
-Not proved here.
-
-Source: arXiv:2604.01978v1, `sec: sde.logistic`. -/
-theorem logistic_arcsin_martingale {Ω : Type*} {m : MeasurableSpace Ω} (P : Measure Ω)
-    (ℱ : Filtration ℝ m) (u : ℝ → Ω → ℝ) (hu : IsLogisticSolution P ℱ u)
-    (hrange : ∀ t, 0 ≤ t → ∀ ω, u t ω ∈ Set.Icc (-1 : ℝ) 1) (T : ℝ) (hT : 0 ≤ T) :
-    IsMartingaleOn T ℱ P (fun t ω => Real.arcsin (u t ω)) ∧
-      IsMartingaleOn T ℱ P (fun t ω =>
-        (Real.arcsin (u t ω) - Real.arcsin (u 0 ω)) ^ 2
-          - ∫ s in (0 : ℝ)..t, 2 * (1 - u s ω ^ 2)) := by
-  sorry
+/- The angle and bracket theorem is proved in Section7_LogisticArcsin. -/
 
 /-- **The limit of `eq: sde.logistic`.**  Started at a deterministic
 `u₀ ∈ [-1,1]`, the solution converges almost surely to one of the two
