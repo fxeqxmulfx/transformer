@@ -25,6 +25,7 @@ import Transformer.Causal.Section5_StrongCenterWitness
 import Transformer.Causal.FixedCenters
 import Transformer.Causal.SequentialFlow
 import Transformer.Causal.AppendixA_Cusp
+import Transformer.Causal.AppendixA_CuspEnergy
 import Transformer.Causal.ParkingCount
 import Transformer.Causal.CapCone
 import Transformer.Causal.CapPolar
