@@ -130,6 +130,7 @@ import Transformer.Interpolation.Section1_AutonomousPhases
 import Transformer.Interpolation.Section1_PhaseSequenceStep
 import Transformer.Interpolation.Section1_PhaseSequenceControls
 import Transformer.Interpolation.Section1_FullFieldBounds
+import Transformer.Interpolation.Section1_FullFieldLipschitz
 import Transformer.Interpolation.Section1_NeuralConcatenation
 import Transformer.Interpolation.Section1_NeuralPhaseLaw
 import Transformer.Interpolation.Section1_ControlPartitions
