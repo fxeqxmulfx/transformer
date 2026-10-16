@@ -28,6 +28,7 @@ import Transformer.Interpolation.Section3_TwoRidgeLaw
 import Transformer.Interpolation.Section3_NestedCaps
 import Transformer.Interpolation.Section3_CapCenter
 import Transformer.Interpolation.Section3_CapCoefficients
+import Transformer.Interpolation.Section3_CapBoundary
 import Transformer.Interpolation.Section3_PositiveBarycenters
 import Transformer.Interpolation.Section3_MomentVariation
 import Transformer.Interpolation.Section3_UniformNoncolinearity
