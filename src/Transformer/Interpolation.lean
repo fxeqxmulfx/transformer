@@ -14,6 +14,7 @@ import Transformer.Interpolation.Section2_AttentionWeights
 import Transformer.Interpolation.Section2_AttentionLipschitz
 import Transformer.Interpolation.Section2_AttentionRegularity
 import Transformer.Interpolation.Section2_AttentionWeakTests
+import Transformer.Interpolation.Section2_AttentionExtension
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.Perturbation
 import Transformer.Interpolation.Section3_ReLUThresholds
