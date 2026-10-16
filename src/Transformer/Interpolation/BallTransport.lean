@@ -120,8 +120,8 @@ example :
 
 /-- The source's printed real-power bound holds for errors at most one,
 with the corrected order of initial law and controls. The source states
-only `ε > 0`; its missing `ε ≤ 1` is necessary for this form of the mass
-factor. Source: arXiv:2411.04551v3, Appendix,
+only `ε > 0`; the added `ε ≤ 1` restricts its printed retained fraction
+to the nonnegative range. Source: arXiv:2411.04551v3, Appendix,
 `lem: tubular.mass.movement`. -/
 theorem tubular_mass_movement_of_error_le_one (hd : 2 ≤ d)
     (K : ℕ) (z : ℕ → SSphere d) (R : ℕ → ℝ)
