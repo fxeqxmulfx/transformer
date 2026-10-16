@@ -30,7 +30,7 @@ values in a bounded set the two agree, which is not proved here.
 import Transformer.Basic
 import Transformer.Perspective.Section2_FlowMap
 import Transformer.Interpolation.Basic
-import Transformer.Interpolation.BallTransport
+import Transformer.Interpolation.Section3_BallFlow
 import Transformer.Interpolation.Clustering
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.NeuralODE

@@ -15,7 +15,7 @@ zero. The sphere supplies the uniform squared-distance bound `4`.
 No atomicity assumption on the initial probability is made.
 -/
 
-import Transformer.Interpolation.BallTransport
+import Transformer.Interpolation.Section3_BallFlow
 import Transformer.Interpolation.Monge
 import Transformer.Interpolation.Section3_CapCenter
 import Mathlib.MeasureTheory.Integral.DominatedConvergence

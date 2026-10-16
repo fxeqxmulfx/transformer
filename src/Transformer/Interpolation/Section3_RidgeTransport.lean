@@ -16,7 +16,7 @@ between an activation cap and a prescribed source ball is assumed.
 -/
 
 import Transformer.Interpolation.Section1_DiracTransport
-import Transformer.Interpolation.BallTransport
+import Transformer.Interpolation.Section3_BallFlow
 
 open Real MeasureTheory Set Filter
 open scoped Topology NNReal

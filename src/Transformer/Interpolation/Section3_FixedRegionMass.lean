@@ -19,7 +19,7 @@ particle map; neither an invariant law nor a mass estimate is assumed
 beyond the stated overlap bound supplied by the preceding ball control.
 -/
 
-import Transformer.Interpolation.BallTransport
+import Transformer.Interpolation.Section3_BallFlow
 
 open Real MeasureTheory Set Filter
 open scoped ENNReal

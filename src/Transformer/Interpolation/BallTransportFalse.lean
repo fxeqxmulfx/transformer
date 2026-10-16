@@ -16,7 +16,7 @@ and `μ_0 = δ_y`; then `μ(T) = δ_x` gives `A` no mass, while the claim asks f
 The lemmas as stated in `BallTransport` choose `μ_0` first, as the proof does.
 -/
 
-import Transformer.Interpolation.BallTransport
+import Transformer.Interpolation.Section3_BallFlow
 
 open scoped ENNReal
 open MeasureTheory

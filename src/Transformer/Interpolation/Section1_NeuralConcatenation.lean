@@ -15,7 +15,7 @@ bijective. The two fixed complements combine to the complement of their
 union, as required for the source's chain of supported ball transports.
 -/
 
-import Transformer.Interpolation.BallTransport
+import Transformer.Interpolation.Section3_BallFlow
 import Transformer.Interpolation.Section1_ConcatenatedPrimitives
 import Transformer.Interpolation.Section3_TwoRidgeScaling
 
@@ -31,22 +31,6 @@ Source: arXiv:2411.04551v3, Appendix, successive applications of
 noncomputable def concatenateFlow (S : ℝ) (φ₁ φ₂ : ℝ → SSphere d → SSphere d)
     (t : ℝ) (x : SSphere d) : SSphere d :=
   concatenate S (fun s => φ₁ s x) (fun s => φ₂ s (φ₁ S x)) t
-
-/-- The original integrated particle equation has its stated initial
-point. Source: arXiv:2411.04551v3, §4, `eq: neural.ode.sphere`. -/
-theorem IsNeuralFlow.zero (W U : ℝ → ParamMatrix d) (b : ℝ → EucSpace d)
-    (φ : ℝ → SSphere d → SSphere d) (hφ : IsNeuralFlow d W U b φ) (x : SSphere d) :
-    φ 0 x = x := by
-  apply Subtype.ext
-  simpa only [intervalIntegral.integral_same, add_zero] using (hφ x 0).2
-
-/-- Original particle velocities are integrable on every finite interval.
-Auxiliary for arXiv:2411.04551v3, §4, `eq: neural.ode.sphere`. -/
-theorem IsNeuralFlow.intervalIntegrable (W U : ℝ → ParamMatrix d) (b : ℝ → EucSpace d)
-    (φ : ℝ → SSphere d → SSphere d) (hφ : IsNeuralFlow d W U b φ)
-    (x : SSphere d) (a c : ℝ) :
-    IntervalIntegrable (fun s => neuralVF d W U b s (φ s x)) volume a c :=
-  (hφ x a).1.symm.trans (hφ x c).1
 
 /-- Joining the actual controls and flow joins their original velocities
 with the same clock. Source: arXiv:2411.04551v3, §4,
