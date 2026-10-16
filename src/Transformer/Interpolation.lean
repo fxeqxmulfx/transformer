@@ -52,6 +52,7 @@ import Transformer.Interpolation.Section3_FiniteRefinement
 import Transformer.Interpolation.Section3_CollinearRidgePhase
 import Transformer.Interpolation.Section3_RidgeClassProgress
 import Transformer.Interpolation.Section3_RidgeClassSequence
+import Transformer.Interpolation.Section3_PhaseLawMaps
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.Perturbation
 import Transformer.Interpolation.Section3_ReLUThresholds
