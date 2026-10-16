@@ -11,6 +11,7 @@ import Transformer.Interpolation.Clustering
 import Transformer.Interpolation.AtomClustering
 import Transformer.Interpolation.Section2_AttentionAverages
 import Transformer.Interpolation.Section2_AttentionWeights
+import Transformer.Interpolation.Section2_AttentionLipschitz
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.Perturbation
 import Transformer.Interpolation.Section3_ReLUThresholds
