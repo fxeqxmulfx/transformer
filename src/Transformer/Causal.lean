@@ -78,6 +78,7 @@ import Transformer.Causal.Section5_RowRepulsion
 import Transformer.Causal.Section5_RepellerDetector
 import Transformer.Causal.Section5_RowAvoidance
 import Transformer.Causal.Section5_AEConvergence
+import Transformer.Causal.Section5_LocalStability
 import Transformer.Causal.Section5_FrozenFlow
 import Transformer.Causal.Section5_FlowContinuity
 import Transformer.Causal.Section5_ConditionalVolume
