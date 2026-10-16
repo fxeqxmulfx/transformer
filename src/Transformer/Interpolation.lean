@@ -139,6 +139,7 @@ import Transformer.Interpolation.Section1_PhaseDerivatives
 import Transformer.Interpolation.Section1_PiecewiseAtomicity
 import Transformer.Interpolation.Section1_AtomicField
 import Transformer.Interpolation.Section1_AtomicSeparation
+import Transformer.Interpolation.Section1_CloseAtomicInputs
 import Transformer.Interpolation.Section1_NeuralConcatenation
 import Transformer.Interpolation.Section1_NeuralPhaseLaw
 import Transformer.Interpolation.Section1_ControlPartitions
