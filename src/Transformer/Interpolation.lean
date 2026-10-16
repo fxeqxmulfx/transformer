@@ -19,6 +19,9 @@ import Transformer.Interpolation.Section3_RidgeFlow
 import Transformer.Interpolation.Section3_RidgeFlowContinuity
 import Transformer.Interpolation.Section3_RidgeLaw
 import Transformer.Interpolation.Section3_PositiveBarycenters
+import Transformer.Interpolation.Section3_MomentVariation
+import Transformer.Interpolation.Section3_UniformNoncolinearity
+import Transformer.Interpolation.Section3_NoncolinearControls
 import Transformer.Interpolation.SeparationFalse
 import Transformer.Interpolation.IdentityFlow
 import Transformer.Interpolation.NeuralODE

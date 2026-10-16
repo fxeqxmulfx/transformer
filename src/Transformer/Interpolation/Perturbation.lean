@@ -21,6 +21,7 @@ import Transformer.Perspective.Section2_FlowMap
 import Transformer.Interpolation.Basic
 import Transformer.Interpolation.Clustering
 import Transformer.Interpolation.Section3_PositiveBarycenters
+import Transformer.Interpolation.Section3_NoncolinearControls
 import Transformer.Interpolation.HypPropagationFalse
 import Transformer.Interpolation.Section3_PerturbationFalse
 
@@ -111,9 +112,10 @@ Part 1 of the source, which additionally demands `eq: identity.flow` when
 `γ_1 = 1`, is false: `perturbation_equal_barycenter_counterexample` exhibits
 distinct positive-quadrant laws with the same barycenter for which every
 continuous map fixing the complement of the two hulls is the identity.
-Part 2 is retained independently, with its original hypotheses and result.
-
-Not proved here.
+Part 2 is proved independently, with its original hypotheses and result.
+A weighted ReLU ridge separates the transverse barycenter fluxes. Uniform
+first-variation bounds apply to every weak solution, and exact time
+rescaling gives constant pure-perceptron controls at the prescribed horizon.
 
 Source: arXiv:2411.04551v3, §3, `lem: perturbation`, Part 2. -/
 theorem perturbation_noncolinear (T γ₁ : ℝ) (μ₀ ν₀ : ProbSphere d) (hT : 0 < T) (hne : μ₀ ≠ ν₀)
@@ -128,7 +130,9 @@ theorem perturbation_noncolinear (T γ₁ : ℝ) (μ₀ ν₀ : ProbSphere d) (h
       ∀ μ ν : ℝ → ProbSphere d, μ 0 = μ₀ → cauchyPB d θ μ →
         ν 0 = ν₀ → cauchyPB d θ ν →
         ∀ γ₂ : ℝ, barycenter d (μ T) ≠ γ₂ • barycenter d (ν T) := by
-  sorry
+  obtain ⟨θ₀, -, hB, hμ, hν, hsep⟩ := exists_constant_noncolinear_controls
+    T γ₁ μ₀ ν₀ hT hne hμ₀ hν₀ hγ₀ hγ₁ hbary hγne
+  exact ⟨fun _ => θ₀, piecewiseConstant_const_three θ₀ T hT.le, fun _ => hB, hμ, hν, hsep⟩
 
 /-- The hypotheses of `perturbation_noncolinear` are satisfiable, with two different
 measures: on `𝕊^1`, `μ_0 = ½δ_{(5,12)/13} + ½δ_{(12,5)/13}` and
