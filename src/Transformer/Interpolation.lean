@@ -42,6 +42,7 @@ import Transformer.Interpolation.Section3_BallParameters
 import Transformer.Interpolation.Section3_TwoBalls
 import Transformer.Interpolation.Section3_FixedRegionMass
 import Transformer.Interpolation.Section3_ChainMass
+import Transformer.Interpolation.Section3_ChainControls
 import Transformer.Interpolation.Section3_PositiveBarycenters
 import Transformer.Interpolation.Section3_MomentVariation
 import Transformer.Interpolation.Section3_UniformNoncolinearity
