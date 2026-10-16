@@ -36,6 +36,7 @@ import Transformer.Interpolation.Section3_CapContraction
 import Transformer.Interpolation.Section3_CapAttractor
 import Transformer.Interpolation.Section3_CollapseLaws
 import Transformer.Interpolation.Section3_MassConcentration
+import Transformer.Interpolation.Section3_NullRepeller
 import Transformer.Interpolation.Section3_PositiveBarycenters
 import Transformer.Interpolation.Section3_MomentVariation
 import Transformer.Interpolation.Section3_UniformNoncolinearity
