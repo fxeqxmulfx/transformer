@@ -148,4 +148,12 @@ example :
   intro h
   exact hd (congrArg (fun μ : Measure ℝ => ∫ x : ℝ, max (1 - x) 0 ∂μ) h)
 
+/-- Identical nonzero Dirac laws jointly realize the integrability and
+payoff-equality hypotheses in the measure-determination theorem. -/
+example :
+    (∀ b : ℝ, Integrable (fun x : ℝ => max (b - x) 0) (Measure.dirac 0)) ∧
+      ∀ b : ℝ, (∫ x : ℝ, max (b - x) 0 ∂Measure.dirac 0) =
+        ∫ x : ℝ, max (b - x) 0 ∂Measure.dirac 0 :=
+  ⟨fun _ => integrable_dirac (by simp), fun _ => rfl⟩
+
 end Transformer.Interpolation
