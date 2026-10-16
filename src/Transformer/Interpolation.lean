@@ -28,6 +28,7 @@ import Transformer.Interpolation.Section3_MeanAxisClockSpeed
 import Transformer.Interpolation.Section3_MeanAxisClock
 import Transformer.Interpolation.Section3_MeanAxisLaw
 import Transformer.Interpolation.Section3_MeanAxisClockGrowth
+import Transformer.Interpolation.Section1_TimeDependentWeakTests
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.Perturbation
 import Transformer.Interpolation.Section3_ReLUThresholds
