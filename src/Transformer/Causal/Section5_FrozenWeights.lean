@@ -17,7 +17,7 @@ normalization are those of the original theorem. These estimates
 do not assume any convergence or stability conclusion.
 -/
 
-import Transformer.Causal.FixedCenters
+import Transformer.Causal.Section5_FrozenDefs
 
 open scoped BigOperators
 open Real

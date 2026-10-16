@@ -18,7 +18,7 @@ Measurability is an explicit premise of the conditioning
 statements; no null-set property is built into a definition.
 -/
 
-import Transformer.Causal.FixedCenters
+import Transformer.Causal.Section5_FrozenDefs
 import Mathlib.MeasureTheory.Measure.Prod
 
 open Real Set Filter MeasureTheory

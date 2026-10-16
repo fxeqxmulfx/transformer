@@ -16,7 +16,7 @@ and far interaction bounds apply to the actual lifted dynamics,
 including angles crossing the choice of representative at pi.
 -/
 
-import Transformer.Causal.FixedCenters
+import Transformer.Causal.Section5_FrozenDefs
 import Transformer.Causal.SectionB_FarCurvature
 
 open Real Set

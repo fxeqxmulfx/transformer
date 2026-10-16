@@ -1,73 +1,37 @@
 /-
-# Causal attention — Clustering to frozen tokens (§5 of 2411.04990v2)
+# Clustering to frozen tokens
 
-`Theorem thm:fixed_centers`: `n` particles on `𝕊^1` running the causal
-dynamics `eqn:csa-2d`, with `m` frozen, well-separated tokens `θ_j` entering
-with weights `a_j ≥ 1`, converge almost surely to an asymptotically stable
-critical point with every particle `ε β^{-1/2}`-close to some `θ_j`.
+ArXiv:2411.04990v2, §5, `thm:fixed_centers`, with the documented
+source corrections below. Almost every original initialization
+converges under every original global solution to an asymptotically
+stable critical point clustered near the frozen centers.
 
-The angles are lifted to `ℝ`; the geodesic distance on `𝕊^1` is
-`|toReal (x : Real.Angle)|`.  Stated and not proved: the paper's proof goes
-through `lemma:convergence`. Its printed C¹ version is refuted by
-`Causal.not_sequentialFlow_converges`; the smooth frozen-token specialization
-still needs a separate convergence proof.
+The proof treats an empty moving tuple directly. For one frozen
+center, the actual limiting interaction gives simple critical
+angles and exact circular consensus almost everywhere. For at
+least two centers and a nonempty moving tuple, the original
+total mass is at least three.
+The original parameter inequalities then give a smaller radius
+preserving both inequalities and placing the neighborhoods at
+most half the interaction peak.
+
+In that radius, the actual scalar force and curvature classify
+critical angles. Periodic barriers and signed crossings give
+convergence. The Borel derivative detector, countable repelling
+fibers, and original-product Fubini exclude repelling limits
+almost everywhere. Prefix stability and inward scalar barriers
+prove asymptotic stability in the original maximum norm.
 -/
 
-import Transformer.Basic
-import Transformer.Causal.Basic
-import Transformer.Causal.Interaction
-import Transformer.Causal.InteractionWindow
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Angle
-import Mathlib.MeasureTheory.Constructions.Pi
-import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Transformer.Causal.Section5_ClusteredStability
+import Transformer.Causal.Section5_OneCenterConvergence
 
 open scoped BigOperators
 open Real MeasureTheory
 
-namespace Transformer
-namespace Causal
+namespace Transformer.Causal
 
 variable (n m : ℕ)
-
-/-- The geodesic distance on `𝕊^1` between angles whose difference is `x`. -/
-noncomputable def circDist (x : ℝ) : ℝ := |(x : Real.Angle).toReal|
-
-/-- **The normalization `Z_k`** of `thm:fixed_centers`:
-
-  `Z_k = ∑_{j ≤ k} e^{β(cos(φ_k - φ_j) - 1)} + ∑_{j ≤ m} a_j e^{β(cos(φ_k - θ_j) - 1)}`.
-
-Source: arXiv:2411.04990v2, §5, `thm:fixed_centers`. -/
-noncomputable def frozenZ (β : ℝ) (θ a : Idx m → ℝ) (φ : Idx n → ℝ) (k : Idx n) : ℝ :=
-  (∑ j ∈ Finset.univ.filter (fun j : Idx n => j ≤ k),
-      Real.exp (β * (Real.cos (φ k - φ j) - 1)))
-    + ∑ j : Idx m, a j * Real.exp (β * (Real.cos (φ k - θ j) - 1))
-
-/-- **The causal dynamics with frozen tokens**, the right-hand side of
-`thm:fixed_centers`:
-
-  `φ̇_k = Z_k⁻¹ (∑_{j ≤ k} e^{β(cos(φ_k - φ_j) - 1)} sin(φ_j - φ_k)
-                + ∑_{j ≤ m} a_j e^{β(cos(φ_k - θ_j) - 1)} sin(θ_j - φ_k))`.
-
-Source: arXiv:2411.04990v2, §5, `thm:fixed_centers`. -/
-noncomputable def frozenVelocity (β : ℝ) (θ a : Idx m → ℝ) (φ : Idx n → ℝ) :
-    Idx n → ℝ := fun k =>
-  (frozenZ n m β θ a φ k)⁻¹ *
-    ((∑ j ∈ Finset.univ.filter (fun j : Idx n => j ≤ k),
-        Real.exp (β * (Real.cos (φ k - φ j) - 1)) * Real.sin (φ j - φ k))
-      + ∑ j : Idx m, a j * Real.exp (β * (Real.cos (φ k - θ j) - 1))
-          * Real.sin (θ j - φ k))
-
-/-- **Asymptotic stability** of a point `p` for the autonomous equation
-`ẋ = F(x)`: solutions starting near `p` stay near it (Lyapunov stability), and
-those starting near enough converge to it. -/
-def IsAsymptoticallyStable (F : (Idx n → ℝ) → Idx n → ℝ) (p : Idx n → ℝ) : Prop :=
-  (∀ ε : ℝ, 0 < ε → ∃ δ : ℝ, 0 < δ ∧ ∀ x : ℝ → Idx n → ℝ,
-      (∀ t : ℝ, HasDerivAt x (F (x t)) t) → ‖x 0 - p‖ < δ →
-        ∀ t : ℝ, 0 ≤ t → ‖x t - p‖ < ε) ∧
-    ∃ η : ℝ, 0 < η ∧ ∀ x : ℝ → Idx n → ℝ,
-      (∀ t : ℝ, HasDerivAt x (F (x t)) t) → ‖x 0 - p‖ < η →
-        Filter.Tendsto x Filter.atTop (nhds p)
 
 /-- **Theorem (thm:fixed_centers).** *Clustering to frozen tokens for
 `K = Q = V = I_2`.*
@@ -102,9 +66,10 @@ probability one `φ(t)` converges to an asymptotically stable critical point
   Solutions are taken on all of `ℝ`: the field is smooth and `2π`-periodic,
   so every solution is global.
 
-Not proved here: the paper derives it from `lemma:convergence`, whose
-printed C¹ version is false (`Causal.not_sequentialFlow_converges`).
-The smooth frozen-token specialization still needs a separate convergence proof.
+The proof works directly with the smooth frozen-token field. The printed
+C¹ version of `lemma:convergence` is false (`Causal.not_sequentialFlow_converges`);
+the specialized proof instead uses periodic scalar barriers, countable
+repelling fibers, measurable Fubini, and a local stability induction.
 
 Source: arXiv:2411.04990v2, §5, `thm:fixed_centers`. -/
 theorem fixed_centers (hm : 0 < m) (β ε c : ℝ) (hβ : 0 < β) (hε : 0 < ε)
@@ -122,57 +87,78 @@ theorem fixed_centers (hm : 0 < m) (β ε c : ℝ) (hβ : 0 < β) (hε : 0 < ε)
         frozenVelocity n m β θ a φstar = 0 ∧
         IsAsymptoticallyStable n (frozenVelocity n m β θ a) φstar ∧
         ∀ k : Idx n, ∃ j : Idx m, circDist (φstar k - θ j) < ε * β ^ (-(1 / 2 : ℝ)) := by
-  sorry
+  by_cases hn : n = 0
+  · subst n
+    apply Filter.Eventually.of_forall
+    intro φ₀ φ h0 hφ
+    have heq : φ = fun _ => φ₀ := funext (fun _ => Subsingleton.elim _ _)
+    refine ⟨φ₀, ?_, Subsingleton.elim _ _, isAsymptoticallyStable_empty _ _, fun k => Fin.elim0 k⟩
+    rw [heq]
+    exact tendsto_const_nhds
+  by_cases hm1 : m = 1
+  · subst m
+    have hθ : θ = fun _ : Idx 1 => θ 0 := by
+      funext j
+      have hj : j = 0 := Subsingleton.elim _ _
+      rw [hj]
+    have ha_const : a = fun _ : Idx 1 => a 0 := by
+      funext j
+      have hj : j = 0 := Subsingleton.elim _ _
+      rw [hj]
+    have hmass : 0 < a 0 := lt_of_lt_of_le zero_lt_one (ha 0)
+    have hfield : frozenVelocity n 1 β θ a =
+        frozenVelocity n 1 β (fun _ => θ 0) (fun _ => a 0) :=
+      congrArg₂ (fun centers masses : Idx 1 → ℝ => frozenVelocity n 1 β centers masses) hθ ha_const
+    filter_upwards [frozenOneCenterODE_mu_ae_tendsto_stable_consensus β (θ 0) (a 0) hmass n μ₀ hμ₀]
+      with φ₀ hφ₀
+    intro φ h0 hφ
+    have hφ' : ∀ t, HasDerivAt φ (frozenVelocity n 1 β (fun _ => θ 0) (fun _ => a 0) (φ t)) t := by
+      simpa only [hfield] using hφ
+    obtain ⟨φstar, hlim, hcrit, hstable, hnear⟩ := hφ₀ φ h0 hφ'
+    refine ⟨φstar, hlim, ?_, ?_, ?_⟩
+    · simpa only [hfield] using hcrit
+    · simpa only [hfield] using hstable
+    · intro k
+      refine ⟨0, ?_⟩
+      rw [hnear k]
+      exact mul_pos hε (Real.rpow_pos_of_pos hβ _)
+  have hm2 : 2 ≤ m := by omega
+  have hn1 : 1 ≤ n := by omega
+  have hN3 : (3 : ℝ) ≤ (n : ℝ) + ∑ j, a j := by
+    have hlower := frozen_total_mass_lower n a ha
+    have hnreal : (1 : ℝ) ≤ n := by exact_mod_cast hn1
+    have hmreal : (2 : ℝ) ≤ m := by exact_mod_cast hm2
+    linarith
+  have hpair : ∃ i j : Idx m, i ≠ j := by
+    refine ⟨⟨0, by omega⟩, ⟨1, by omega⟩, ?_⟩
+    intro heq
+    have hv := congrArg Fin.val heq
+    norm_num at hv
+  exact frozenODE_mu_ae_tendsto_stable_clustered ((n : ℝ) + ∑ j, a j) β ε c hN3 hβ hε hc
+    θ a ha hsep hpair hh hg n le_rfl μ₀ hμ₀
 
-/-- The hypotheses of `fixed_centers` are satisfiable, and not vacuously so:
-one particle, the two antipodal frozen tokens `θ = (0, π)` with unit weights,
-`N = 3`, `β = 11`, `ε = 0.09`, `c = 5.68`, and `μ₀` uniform on `[0, 1)`.  The
-conditions on `h` and `g` are `lem:interaction`
-(`Causal.interaction_inequalities`), whose bound on `N` is
-`3 < e^{3·4.5²/8} · 0.09/4.68`. -/
-example :
-    (0 : ℕ) < 2 ∧ (0 : ℝ) < 11 ∧ (0 : ℝ) < 9 / 100 ∧ 2 + 2 * (9 / 100 : ℝ) < 142 / 25 ∧
-      (∀ j : Idx 2, (1 : ℝ) ≤ (fun _ => 1 : Idx 2 → ℝ) j) ∧
-      (∀ i j : Idx 2, i ≠ j → (142 / 25 : ℝ) * (11 : ℝ) ^ (-(1 / 2 : ℝ))
-        < circDist ((![0, π] : Idx 2 → ℝ) i - (![0, π] : Idx 2 → ℝ) j)) ∧
-      (((1 : ℕ) : ℝ) + ∑ j : Idx 2, (fun _ => 1 : Idx 2 → ℝ) j)
-          * h_pot 11 ((142 / 25 - 1 - 2 * (9 / 100)) * (11 : ℝ) ^ (-(1 / 2 : ℝ)))
-        < h_pot 11 ((9 / 100) * (11 : ℝ) ^ (-(1 / 2 : ℝ))) ∧
-      -((((1 : ℕ) : ℝ) + ∑ j : Idx 2, (fun _ => 1 : Idx 2 → ℝ) j)
-          * g_pot 11 ((142 / 25 - 2 * (9 / 100)) * (11 : ℝ) ^ (-(1 / 2 : ℝ))))
-        < g_pot 11 ((9 / 100) * (11 : ℝ) ^ (-(1 / 2 : ℝ))) ∧
-      IsProbabilityMeasure (volume.restrict (Set.univ.pi (fun _ : Idx 1 => Set.Ico (0 : ℝ) 1))) ∧
-      volume.restrict (Set.univ.pi (fun _ : Idx 1 => Set.Ico (0 : ℝ) 1)) ≪ volume := by
-  have hN : ((1 : ℕ) : ℝ) + ∑ j : Idx 2, (fun _ => 1 : Idx 2 → ℝ) j = 3 := by
-    simp; norm_num
-  have hex : (156 : ℝ) < Real.exp (3 * (142 / 25 - 1 - 2 * (9 / 100)) ^ 2 / 8) := by
-    have h1 := Real.quadratic_le_exp_of_nonneg (show (0 : ℝ) ≤ 81 / 32 by norm_num)
-    have h3 : Real.exp (3 * (142 / 25 - 1 - 2 * (9 / 100)) ^ 2 / 8) = Real.exp (81 / 32) ^ 3 := by
-      rw [← Real.exp_nat_mul]; norm_num
-    rw [h3]
-    calc (156 : ℝ) < (1 + 81 / 32 + (81 / 32) ^ 2 / 2) ^ 3 := by norm_num
-      _ ≤ Real.exp (81 / 32) ^ 3 := by gcongr
-  have hwin := interaction_inequalities 3 (142 / 25) (9 / 100) 11 (by norm_num) (by norm_num)
-    (by norm_num) (by norm_num) (by norm_num) (by nlinarith)
-  refine ⟨by norm_num, by norm_num, by norm_num, by norm_num, fun _ => le_rfl, ?_,
-    by rw [hN]; exact hwin.1, by rw [hN]; exact hwin.2, ?_,
-    Measure.absolutelyContinuous_of_le Measure.restrict_le_self⟩
-  · have hs : (11 : ℝ) ^ (-(1 / 2 : ℝ)) ≤ 1 / 3 := by
-      rw [Real.rpow_neg (by norm_num), ← Real.sqrt_eq_rpow, one_div]
-      have : (3 : ℝ) ≤ Real.sqrt 11 := by
-        rw [show (3 : ℝ) = Real.sqrt 9 by
-          rw [show (9 : ℝ) = 3 ^ 2 by norm_num, Real.sqrt_sq (by norm_num)]]
-        exact Real.sqrt_le_sqrt (by norm_num)
-      exact inv_anti₀ (by norm_num) this
-    have hpi : circDist π = π := Real.Angle.abs_toReal_coe_eq_self_iff.mpr ⟨pi_pos.le, le_rfl⟩
-    have hpi' : circDist (-π) = π := by
-      rw [circDist, Real.Angle.coe_neg, Real.Angle.neg_coe_pi]; exact hpi
-    have hlt : (142 / 25 : ℝ) * (11 : ℝ) ^ (-(1 / 2 : ℝ)) < π := by
-      nlinarith [pi_gt_three]
-    intro i j hij
-    fin_cases i <;> fin_cases j <;> simp_all
-  · constructor
+/-- The original theorem applies to an actual probability initialization with one moving token, two antipodal frozen centers, and the original concrete parameter values.
+Source: arXiv:2411.04990v2, §5, `thm:fixed_centers`; this instantiates the complete convergence, criticality, stability, and clustering conclusion. -/
+example : ∀ᵐ φ₀ ∂(volume : Measure (Idx 1 → ℝ)).restrict (Set.univ.pi (fun _ : Idx 1 => Set.Ico (0 : ℝ) 1)),
+    ∀ φ : ℝ → Idx 1 → ℝ, φ 0 = φ₀ →
+      (∀ t, HasDerivAt φ (frozenVelocity 1 2 11 (![0, Real.pi]) (fun _ => 1) (φ t)) t) →
+      ∃ φstar : Idx 1 → ℝ, Filter.Tendsto φ Filter.atTop (nhds φstar) ∧
+        frozenVelocity 1 2 11 (![0, Real.pi]) (fun _ => 1) φstar = 0 ∧
+        IsAsymptoticallyStable 1 (frozenVelocity 1 2 11 (![0, Real.pi]) (fun _ => 1)) φstar ∧
+        ∀ k, ∃ j : Idx 2, circDist (φstar k - (![0, Real.pi]) j) <
+          (9 / 100 : ℝ) * (11 : ℝ) ^ (-(1 / 2 : ℝ)) := by
+  obtain ⟨hN, hβ, hε, hc, hcpi, hh, hg⟩ := frozen_sample_parameters
+  obtain ⟨η, hβη, hη, hcη, hcap, ha, hsep, hpair, hNη, hhη, hgη, hpre, hF, hG⟩ := frozen_sample_narrow_prefix_data
+  let μ : Measure (Idx 1 → ℝ) := volume.restrict (Set.univ.pi (fun _ : Idx 1 => Set.Ico (0 : ℝ) 1))
+  have : IsProbabilityMeasure μ := by
+    constructor
+    change volume.restrict (Set.univ.pi (fun _ : Idx 1 => Set.Ico (0 : ℝ) 1)) Set.univ = 1
     rw [Measure.restrict_apply_univ, Real.volume_pi_Ico]
     simp
-end Causal
-end Transformer
+  have hmass : ((1 : ℕ) : ℝ) + ∑ j : Idx 2, (fun _ : Idx 2 => (1 : ℝ)) j = 3 := by
+    norm_num [Fin.sum_univ_two]
+  exact fixed_centers 1 2 (by decide) 11 (9 / 100) (142 / 25) hβ hε hc
+    (![0, Real.pi]) (fun _ => 1) ha hsep (by rw [hmass]; exact hh) (by rw [hmass]; exact hg)
+    μ (Measure.absolutelyContinuous_of_le Measure.restrict_le_self)
+
+end Transformer.Causal
