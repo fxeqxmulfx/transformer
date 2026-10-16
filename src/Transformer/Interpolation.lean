@@ -156,6 +156,7 @@ import Transformer.Interpolation.Section4_RobustPlanes
 import Transformer.Interpolation.Section4_RobustQuadrantFamily
 import Transformer.Interpolation.Section4_LawsToGeneric
 import Transformer.Interpolation.Section4_LawsToTargets
+import Transformer.Interpolation.Section4_QuadrantLawMatching
 import Transformer.Interpolation.Section4_TransversePlanes
 import Transformer.Interpolation.Section4_QuadrantTransfers
 import Transformer.Interpolation.Section4_GenericQuadrantPoints
