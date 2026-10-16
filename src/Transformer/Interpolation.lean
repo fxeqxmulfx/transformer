@@ -22,6 +22,7 @@ import Transformer.Interpolation.Section3_RidgeTransport
 import Transformer.Interpolation.Section3_RidgeWellPosed
 import Transformer.Interpolation.Section3_RidgeCaps
 import Transformer.Interpolation.Section3_TwoRidgeFields
+import Transformer.Interpolation.Section3_TwoRidgeExtension
 import Transformer.Interpolation.Section3_PositiveBarycenters
 import Transformer.Interpolation.Section3_MomentVariation
 import Transformer.Interpolation.Section3_UniformNoncolinearity
