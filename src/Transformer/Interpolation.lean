@@ -148,6 +148,7 @@ import Transformer.Interpolation.Section4_RidgeClocks
 import Transformer.Interpolation.Section4_ProjectionSegments
 import Transformer.Interpolation.Section4_GatedTransfers
 import Transformer.Interpolation.Section4_TransferPhases
+import Transformer.Interpolation.Section4_TransferStability
 import Transformer.Interpolation.Section4_ProtectedTransfers
 import Transformer.Interpolation.Section4_TransversePlanes
 import Transformer.Interpolation.Section4_QuadrantTransfers
