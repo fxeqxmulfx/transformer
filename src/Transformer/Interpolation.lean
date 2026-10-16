@@ -74,6 +74,7 @@ import Transformer.Interpolation.Section1_AutonomousPrefix
 import Transformer.Interpolation.Section1_SquaredDistance
 import Transformer.Interpolation.Section1_DiracTransport
 import Transformer.Interpolation.Section1_TimeRescaling
+import Transformer.Interpolation.Section1_TimeTranslation
 import Transformer.Interpolation.Section5_ZeroTemperatureMoments
 import Transformer.Interpolation.Section5_ConcentrationDefect
 import Transformer.Interpolation.Section5_DiracPersistence
