@@ -33,6 +33,7 @@ import Transformer.Interpolation.Section3_CapEntry
 import Transformer.Interpolation.Section3_CapError
 import Transformer.Interpolation.Section3_CapContraction
 import Transformer.Interpolation.Section3_CapAttractor
+import Transformer.Interpolation.Section3_CollapseLaws
 import Transformer.Interpolation.Section3_PositiveBarycenters
 import Transformer.Interpolation.Section3_MomentVariation
 import Transformer.Interpolation.Section3_UniformNoncolinearity
