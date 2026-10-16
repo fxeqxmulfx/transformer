@@ -42,6 +42,7 @@ import Transformer.Interpolation.Section5_PureAttention
 import Transformer.Interpolation.Section1_WeakContinuity
 import Transformer.Interpolation.Section1_TestModulus
 import Transformer.Interpolation.Section1_AutonomousWeakTests
+import Transformer.Interpolation.Section1_AutonomousComparison
 import Transformer.Interpolation.Section1_SquaredDistance
 import Transformer.Interpolation.Section1_DiracTransport
 import Transformer.Interpolation.Section1_TimeRescaling
