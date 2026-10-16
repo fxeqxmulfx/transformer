@@ -45,6 +45,7 @@ import Transformer.Interpolation.Section3_SelectiveContraction
 import Transformer.Interpolation.Section3_BarycenterContraction
 import Transformer.Interpolation.Section3_BarycenterInduction
 import Transformer.Interpolation.Section3_EqualMeanVariation
+import Transformer.Interpolation.Section3_SmallRidgeStability
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.Perturbation
 import Transformer.Interpolation.Section3_ReLUThresholds
