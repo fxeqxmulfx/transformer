@@ -25,6 +25,7 @@ import Transformer.Interpolation.Section2_AttentionChartEquation
 import Transformer.Interpolation.Section2_AttentionContraction
 import Transformer.Interpolation.Section3_MeanAxisField
 import Transformer.Interpolation.Section3_MeanAxisClockSpeed
+import Transformer.Interpolation.Section3_MeanAxisClock
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.Perturbation
 import Transformer.Interpolation.Section3_ReLUThresholds
