@@ -25,6 +25,7 @@ import Transformer.Interpolation.Basic
 import Transformer.Interpolation.Clustering
 import Transformer.Interpolation.Section3_TwoContractions
 import Transformer.Interpolation.Section3_QuadrantControlPhases
+import Transformer.Interpolation.Section3_SeparationControls
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -58,7 +59,11 @@ Two hypotheses are added to the source's.
   positive length, which `PiecewiseConstant` on `[0, T]` with `T > 0` rules
   out; the source's induction starts at `N = 1`.
 
-Not proved here.
+The proof gives the absolute constant five. Finite small ridge phases
+first make the original means non-collinear. Selective contraction into
+disjoint quadrant caps then restores all other laws exactly. Realizing
+this finite phase list gives the conclusion for every original weak
+solution, without the source's false fixed-outside-hulls clause.
 
 Source: arXiv:2411.04551v3, §3, `prop: separation`. -/
 theorem separation :
@@ -72,7 +77,7 @@ theorem separation :
           μ 0 = μ₀ i → cauchyPB d θ μ → ν 0 = μ₀ j → cauchyPB d θ ν →
           Disjoint (convG d (μ T : Measure (SSphere d)).support)
             (convG d (ν T : Measure (SSphere d)).support) := by
-  sorry
+  exact ⟨5, exists_separation_controls⟩
 
 /-- The hypotheses of `separation` are satisfiable: `N = 1`, `T = 1`, `d = 1`,
 and the Dirac mass at `basePoint 0`, whose support `{+1}` lies in `ℚ_1^0`. -/

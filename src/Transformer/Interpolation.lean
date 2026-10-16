@@ -56,6 +56,7 @@ import Transformer.Interpolation.Section3_PhaseLawMaps
 import Transformer.Interpolation.Section3_SelectivePhaseClocks
 import Transformer.Interpolation.Section3_SeparatedCapSequence
 import Transformer.Interpolation.Section3_SeparationPhases
+import Transformer.Interpolation.Section3_SeparationControls
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.Perturbation
 import Transformer.Interpolation.Section3_ReLUThresholds
