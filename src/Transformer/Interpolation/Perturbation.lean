@@ -20,6 +20,7 @@ import Transformer.Basic
 import Transformer.Perspective.Section2_FlowMap
 import Transformer.Interpolation.Basic
 import Transformer.Interpolation.Clustering
+import Transformer.Interpolation.Section3_PositiveBarycenters
 import Transformer.Interpolation.HypPropagationFalse
 import Transformer.Interpolation.Section3_PerturbationFalse
 
@@ -128,18 +129,6 @@ theorem perturbation_noncolinear (T γ₁ : ℝ) (μ₀ ν₀ : ProbSphere d) (h
         ν 0 = ν₀ → cauchyPB d θ ν →
         ∀ γ₂ : ℝ, barycenter d (μ T) ≠ γ₂ • barycenter d (ν T) := by
   sorry
-
-/-- A point `(p, q)` of the circle with `p² + q² = 1`. -/
-noncomputable def circlePt (p q : ℝ) (h : p ^ 2 + q ^ 2 = 1) : SSphere 2 :=
-  ⟨!₂[p, q], by
-    rw [mem_sphere_zero_iff_norm, EuclideanSpace.norm_eq, Fin.sum_univ_two]
-    simp [h]⟩
-
-/-- A point of the circle with both coordinates positive lies in `ℚ_1^1`. -/
-theorem circlePt_mem_positiveQuadrant {p q : ℝ} (h : p ^ 2 + q ^ 2 = 1)
-    (hp : 0 < p) (hq : 0 < q) : circlePt p q h ∈ positiveQuadrant 2 := by
-  intro i
-  fin_cases i <;> simpa [circlePt]
 
 /-- The hypotheses of `perturbation_noncolinear` are satisfiable, with two different
 measures: on `𝕊^1`, `μ_0 = ½δ_{(5,12)/13} + ½δ_{(12,5)/13}` and

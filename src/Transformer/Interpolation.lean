@@ -18,6 +18,7 @@ import Transformer.Interpolation.Section3_RidgeExtension
 import Transformer.Interpolation.Section3_RidgeFlow
 import Transformer.Interpolation.Section3_RidgeFlowContinuity
 import Transformer.Interpolation.Section3_RidgeLaw
+import Transformer.Interpolation.Section3_PositiveBarycenters
 import Transformer.Interpolation.SeparationFalse
 import Transformer.Interpolation.IdentityFlow
 import Transformer.Interpolation.NeuralODE
