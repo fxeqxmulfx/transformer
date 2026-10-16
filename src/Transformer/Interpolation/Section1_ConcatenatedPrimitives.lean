@@ -2,7 +2,7 @@
 # Joining the integrated equations at one control switch
 
 ArXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §3.1,
-the two phases of `lem: first.quadrant`. The scalar primitive of a
+the two phases of `lem: first.quadrant`. The vector primitive of a
 flux can be joined to a second primitive after a positive switching
 time, provided their endpoint values match. The flux may jump at
 the switch; its single value there does not change its time integral.
@@ -64,9 +64,13 @@ theorem concatenate_of_le {E : Type*} (S : ℝ) (f g : ℝ → E) (t : ℝ)
     subst t
     simp only [concatenate, lt_self_iff_false, ite_false, sub_self, hmatch]
 
+section Primitives
+
+variable {E : Type*} [NormedAddCommGroup E]
+
 /-- Joining two original locally integrable fluxes preserves interval
 integrability. Source: arXiv:2411.04551v3, §1, `eq: cauchy.pb`. -/
-theorem intervalIntegrable_concatenate (S : ℝ) (f g : ℝ → ℝ) (a b : ℝ)
+theorem intervalIntegrable_concatenate (S : ℝ) (f g : ℝ → E) (a b : ℝ)
     (hf : IntervalIntegrable f volume a b)
     (hg : IntervalIntegrable g volume (a - S) (b - S)) :
     IntervalIntegrable (concatenate S f g) volume a b := by
@@ -78,10 +82,12 @@ theorem intervalIntegrable_concatenate (S : ℝ) (f g : ℝ → ℝ) (a b : ℝ)
   · exact Integrable.piecewise (s := Set.Iio S) measurableSet_Iio
       hf.2.integrableOn hg'.2.integrableOn
 
+variable [NormedSpace ℝ E]
+
 /-- Before the switch the actual time integral is the original first
 integral. The endpoint value of the flux at `S` is immaterial.
 Source: arXiv:2411.04551v3, §1 and §3.1, `eq: cauchy.pb`. -/
-theorem integral_concatenate_before (S : ℝ) (hS : 0 < S) (f g : ℝ → ℝ)
+theorem integral_concatenate_before (S : ℝ) (hS : 0 < S) (f g : ℝ → E)
     (t : ℝ) (ht : t ≤ S) :
     (∫ s in (0 : ℝ)..t, concatenate S f g s) = ∫ s in (0 : ℝ)..t, f s := by
   have hne : ∀ᵐ x : ℝ ∂volume, x ≠ S := by
@@ -95,7 +101,7 @@ theorem integral_concatenate_before (S : ℝ) (hS : 0 < S) (f g : ℝ → ℝ)
 /-- After the switch the actual time integral uses the original second
 clock starting at zero. Source: arXiv:2411.04551v3, §1 and §3.1,
 `eq: cauchy.pb`. -/
-theorem integral_concatenate_after (S : ℝ) (f g : ℝ → ℝ) (t : ℝ) (ht : S ≤ t) :
+theorem integral_concatenate_after (S : ℝ) (f g : ℝ → E) (t : ℝ) (ht : S ≤ t) :
     (∫ s in S..t, concatenate S f g s) = ∫ s in (0 : ℝ)..(t - S), g s := by
   calc
     _ = ∫ s in S..t, g (s - S) := by
@@ -108,7 +114,7 @@ theorem integral_concatenate_after (S : ℝ) (f g : ℝ → ℝ) (t : ℝ) (ht :
 the joined curve, with no derivative at the switch assumed.
 Source: arXiv:2411.04551v3, §1, `eq: cauchy.pb`, and §3.1,
 `lem: first.quadrant`. -/
-theorem concatenate_primitives (S : ℝ) (hS : 0 < S) (F₁ F₂ g₁ g₂ : ℝ → ℝ)
+theorem concatenate_primitives (S : ℝ) (hS : 0 < S) (F₁ F₂ g₁ g₂ : ℝ → E)
     (hI₁ : ∀ a b, IntervalIntegrable g₁ volume a b)
     (hI₂ : ∀ a b, IntervalIntegrable g₂ volume a b)
     (hF₁ : ∀ t, F₁ t = F₁ 0 + ∫ s in (0 : ℝ)..t, g₁ s)
@@ -129,7 +135,9 @@ theorem concatenate_primitives (S : ℝ) (hS : 0 < S) (F₁ F₂ g₁ g₂ : ℝ
       ← intervalIntegral.integral_add_adjacent_intervals (hi 0 S) (hi S t),
       integral_concatenate_before S hS g₁ g₂ S le_rfl,
       integral_concatenate_after S g₁ g₂ t hSt, hF₂ (t - S), hmatch, hF₁ S]
-    ring
+    abel
+
+end Primitives
 
 /-- Every primitive-joining input is realized by nonconstant primitives
 with genuinely different nonzero fluxes and a positive switch time. -/
@@ -146,5 +154,22 @@ example : (0 : ℝ) < 1 ∧
   · intro t
     simp
     ring
+
+/-- Constant vector velocities give matching vector primitives in an
+actual two-dimensional space. These are the Bochner-valued inputs needed
+for the original particle equation at a control switch. -/
+example (u v : EucSpace 2) :
+    (0 : ℝ) < 1 ∧
+    (∀ a b : ℝ, IntervalIntegrable (fun _ : ℝ => u) volume a b) ∧
+    (∀ a b : ℝ, IntervalIntegrable (fun _ : ℝ => v) volume a b) ∧
+    (∀ t : ℝ, t • u = (0 : ℝ) • u + ∫ _s in (0 : ℝ)..t, u) ∧
+    (∀ t : ℝ, u + t • v = u + (0 : ℝ) • v + ∫ _s in (0 : ℝ)..t, v) ∧
+    u + (0 : ℝ) • v = (1 : ℝ) • u := by
+  refine ⟨one_pos, fun _ _ => intervalIntegrable_const,
+    fun _ _ => intervalIntegrable_const, ?_, ?_, by simp⟩
+  · intro t
+    simp
+  · intro t
+    simp
 
 end Transformer.Interpolation

@@ -23937,7 +23937,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`continuousAt_spherical_compact_test`](src/Transformer/Interpolation/Section1_CompactTests.lean#L133) | theorem | proved |
 | [`hasDerivAt_spherical_compact_test`](src/Transformer/Interpolation/Section1_CompactTests.lean#L148) | theorem | proved |
 
-**[Transformer.Interpolation.Section1_ConcatenatedPrimitives](src/Transformer/Interpolation/Section1_ConcatenatedPrimitives.lean)** — 150 lines
+**[Transformer.Interpolation.Section1_ConcatenatedPrimitives](src/Transformer/Interpolation/Section1_ConcatenatedPrimitives.lean)** — 175 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -23948,10 +23948,10 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`concatenate_zero`](src/Transformer/Interpolation/Section1_ConcatenatedPrimitives.lean#L46) | theorem | proved |
 | [`concatenate_of_ge`](src/Transformer/Interpolation/Section1_ConcatenatedPrimitives.lean#L52) | theorem | proved |
 | [`concatenate_of_le`](src/Transformer/Interpolation/Section1_ConcatenatedPrimitives.lean#L59) | theorem | proved |
-| [`intervalIntegrable_concatenate`](src/Transformer/Interpolation/Section1_ConcatenatedPrimitives.lean#L69) | theorem | proved |
-| [`integral_concatenate_before`](src/Transformer/Interpolation/Section1_ConcatenatedPrimitives.lean#L84) | theorem | proved |
-| [`integral_concatenate_after`](src/Transformer/Interpolation/Section1_ConcatenatedPrimitives.lean#L98) | theorem | proved |
-| [`concatenate_primitives`](src/Transformer/Interpolation/Section1_ConcatenatedPrimitives.lean#L111) | theorem | proved |
+| [`intervalIntegrable_concatenate`](src/Transformer/Interpolation/Section1_ConcatenatedPrimitives.lean#L73) | theorem | proved |
+| [`integral_concatenate_before`](src/Transformer/Interpolation/Section1_ConcatenatedPrimitives.lean#L90) | theorem | proved |
+| [`integral_concatenate_after`](src/Transformer/Interpolation/Section1_ConcatenatedPrimitives.lean#L104) | theorem | proved |
+| [`concatenate_primitives`](src/Transformer/Interpolation/Section1_ConcatenatedPrimitives.lean#L117) | theorem | proved |
 
 **[Transformer.Interpolation.Section1_ControlPartitions](src/Transformer/Interpolation/Section1_ControlPartitions.lean)** — 150 lines
 
