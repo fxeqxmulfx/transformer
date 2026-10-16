@@ -11,6 +11,7 @@ import Transformer.Interpolation.Clustering
 import Transformer.Interpolation.AtomClustering
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.Perturbation
+import Transformer.Interpolation.Section3_ReLUThresholds
 import Transformer.Interpolation.SeparationFalse
 import Transformer.Interpolation.IdentityFlow
 import Transformer.Interpolation.NeuralODE
