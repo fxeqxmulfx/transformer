@@ -23,6 +23,7 @@ import Transformer.Interpolation.Section2_AttentionHemisphere
 import Transformer.Interpolation.Section2_AttentionChart
 import Transformer.Interpolation.Section2_AttentionChartEquation
 import Transformer.Interpolation.Section2_AttentionContraction
+import Transformer.Interpolation.Section3_MeanAxisField
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.Perturbation
 import Transformer.Interpolation.Section3_ReLUThresholds
