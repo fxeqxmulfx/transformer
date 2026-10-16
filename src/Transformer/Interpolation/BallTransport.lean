@@ -8,6 +8,9 @@ arXiv:2411.04551v3:
                                        overlap with a neighbour,
 * `Lemma lem: tubular.mass.movement` — iterating along a chain of balls.
 
+The proved two-ball statement is in `Section3_TwoBalls`. This module holds
+the shared flow and collapse definitions and the remaining chain statement.
+
 Both lemmas use only the perceptron part of `eq: vf`, which is `eq: vf` with
 `𝐕 ≡ 0`; the `eq: neural.pde.sphere` of the source is therefore `cauchyPB`
 at `neuralParams`, and its flow map is that of `eq: neural.ode.sphere`
@@ -29,7 +32,7 @@ import Transformer.Interpolation.Clustering
 import Transformer.Interpolation.NeuralODE
 
 open scoped BigOperators ENNReal
-open Real MeasureTheory
+open Real MeasureTheory Set
 
 namespace Transformer
 namespace Interpolation
@@ -70,52 +73,49 @@ noncomputable def collapseInto (μ₀ : Measure (SSphere d)) (S : Set (SSphere d
     (ω : SSphere d) : Measure (SSphere d) :=
   μ₀ S • Measure.dirac ω + μ₀.restrict Sᶜ
 
-/-- **Lemma (lem: two.balls).**
+section CollapseMaps
 
-For two overlapping open balls `𝓑_0, 𝓑_1 ⊆ 𝕊^{d-1}`, any `ε, T > 0` and any
-`μ_0 ∈ 𝒫(𝕊^{d-1})` there are constant `𝐖, 𝐔 ∈ M_{d×d}(ℝ)`, `b ∈ ℝ^d` such
-that the solution of `eq: neural.pde.sphere` satisfies
+variable {d : ℕ}
 
-  `μ(T, 𝓑_0 ∩ 𝓑_1) ≥ (1 - ε) μ_0(𝓑_0)`,
+/-- The measurable collapse used in the source's measure `α`.
+Source: arXiv:2411.04551v3, Appendix, last clause of `lem: two.balls`. -/
+noncomputable def collapseMap (S : Set (SSphere d)) (ω x : SSphere d) : SSphere d := by
+  classical
+  exact if x ∈ S then ω else x
 
-and `μ(T) = φ^T_# μ_0` for the flow map `φ^t` of `eq: neural.ode.sphere`,
-Lipschitz, invertible, and the identity off `𝓑_0` for `t ∈ [0, T]`.
-Furthermore, for any `ω ∈ 𝓑_0` the parameters can be chosen so that
-`W_2(μ(T), α) ≤ ε`, `α = μ_0(𝓑_0) δ_ω + μ_0⌊(𝕊^{d-1} ∖ 𝓑_0)`.
+/-- Collapsing a measurable region gives a measurable map.
+Auxiliary for arXiv:2411.04551v3, Appendix, `lem: two.balls`. -/
+theorem measurable_collapseMap (S : Set (SSphere d)) (hS : MeasurableSet S) (ω : SSphere d) :
+    Measurable (collapseMap S ω) := by
+  classical
+  exact Measurable.ite hS measurable_const measurable_id
 
-What is changed.  The source chooses `(𝐖, 𝐔, b)` before `μ_0`; that order is
-false (`not_two_balls`), and `μ_0` comes first here, as in the proof.  `d ≥ 2`
-is added: on `𝕊^0` every tangent projection vanishes, no mass moves, and the
-claim fails for `𝓑_0 = 𝕊^0 ⊋ 𝓑_1`.  "The unique solution" is read as: one
-exists, and every solution satisfies the conclusion.
+/-- The collapse pushforward is exactly the source's measure `α`, including
+the untouched restricted measure. Source: arXiv:2411.04551v3,
+Appendix, the final clause of `lem: two.balls`. -/
+theorem map_collapseMap (μ : Measure (SSphere d)) (S : Set (SSphere d)) (hS : MeasurableSet S) (ω : SSphere d) :
+    Measure.map (collapseMap S ω) μ = collapseInto d μ S ω := by
+  classical
+  ext A hA
+  rw [Measure.map_apply (measurable_collapseMap S hS ω) hA, collapseInto,
+    Measure.add_apply, Measure.smul_apply, Measure.restrict_apply hA, Measure.dirac_apply' ω hA]
+  by_cases hω : ω ∈ A
+  · have he : collapseMap S ω ⁻¹' A = S ∪ (A ∩ Sᶜ) := by
+      ext x
+      by_cases hx : x ∈ S <;> simp [collapseMap, hx, hω]
+    rw [he, measure_union (by exact disjoint_left.mpr (fun x hx hx' => hx'.2 hx)) (hA.inter hS.compl)]
+    simp [hω]
+  · have he : collapseMap S ω ⁻¹' A = A ∩ Sᶜ := by
+      ext x
+      by_cases hx : x ∈ S <;> simp [collapseMap, hx, hω]
+    rw [he]
+    simp [hω]
 
-Not proved here.
+/-- A genuine spherical ball realizes the measurable-collapse hypothesis. -/
+example : MeasurableSet (Metric.ball (basePoint 1) 1 : Set (SSphere 2)) :=
+  Metric.isOpen_ball.measurableSet
 
-Source: arXiv:2411.04551v3, Appendix, `lem: two.balls`. -/
-theorem two_balls (hd : 2 ≤ d)
-    (z₀ z₁ : SSphere d) (R₀ R₁ : ℝ)
-    (hmeet : (Metric.ball z₀ R₀ ∩ Metric.ball z₁ R₁).Nonempty)
-    (ε T : ℝ) (hε : 0 < ε) (hT : 0 < T) (μ₀ : Perspective.ProbSphere d) :
-    (∃ (W U : ParamMatrix d) (b : EucSpace d) (φ : ℝ → SSphere d → SSphere d),
-        IsNeuralFlow d (fun _ => W) (fun _ => U) (fun _ => b) φ ∧
-        IsTransportOutside d φ (Metric.ball z₀ R₀) T ∧
-        (∃ μ : ℝ → Perspective.ProbSphere d, μ 0 = μ₀ ∧ cauchyPB d (constNeural d W U b) μ) ∧
-        ∀ μ : ℝ → Perspective.ProbSphere d, μ 0 = μ₀ → cauchyPB d (constNeural d W U b) μ →
-          (μ T : Measure (SSphere d)) = Measure.map (φ T) (μ₀ : Measure (SSphere d)) ∧
-          ENNReal.ofReal (1 - ε) * (μ₀ : Measure (SSphere d)) (Metric.ball z₀ R₀)
-            ≤ (μ T : Measure (SSphere d)) (Metric.ball z₀ R₀ ∩ Metric.ball z₁ R₁)) ∧
-      ∀ ω ∈ Metric.ball z₀ R₀, ∃ (W U : ParamMatrix d) (b : EucSpace d),
-        (∃ μ : ℝ → Perspective.ProbSphere d, μ 0 = μ₀ ∧ cauchyPB d (constNeural d W U b) μ) ∧
-        ∀ μ : ℝ → Perspective.ProbSphere d, μ 0 = μ₀ → cauchyPB d (constNeural d W U b) μ →
-          W2 d (μ T) (collapseInto d μ₀ (Metric.ball z₀ R₀) ω) ≤ ε := by
-  sorry
-
-/-- The hypotheses of `two_balls` are satisfiable: two copies of the same ball
-on the circle overlap. -/
-example :
-    2 ≤ 2 ∧ ((Metric.ball (basePoint 1) 1 ∩ Metric.ball (basePoint 1) 1 :
-        Set (SSphere 2))).Nonempty ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 :=
-  ⟨le_rfl, ⟨basePoint 1, by simp, by simp⟩, one_pos, one_pos⟩
+end CollapseMaps
 
 /-- **Lemma (lem: tubular.mass.movement).**
 

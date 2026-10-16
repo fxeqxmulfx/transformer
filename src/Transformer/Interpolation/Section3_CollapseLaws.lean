@@ -27,39 +27,30 @@ namespace Transformer.Interpolation
 
 variable {d : ℕ}
 
-/-- The measurable collapse used in the source's measure `α`.
-Source: arXiv:2411.04551v3, Appendix, last clause of `lem: two.balls`. -/
-noncomputable def collapseMap (S : Set (SSphere d)) (ω x : SSphere d) : SSphere d := by
-  classical
-  exact if x ∈ S then ω else x
+/-- Unit vectors have chordal distance at most `2`. Auxiliary for
+arXiv:2411.04551v3, Appendix, the quadratic cost in `lem: two.balls`. -/
+theorem norm_spherical_sub_le_two (x y : SSphere d) :
+    ‖(x : EucSpace d) - (y : EucSpace d)‖ ≤ 2 := by
+  have hn := norm_sub_le (x : EucSpace d) (y : EucSpace d)
+  rwa [mem_sphere_zero_iff_norm.mp x.2, mem_sphere_zero_iff_norm.mp y.2,
+    show (1 : ℝ) + 1 = 2 by norm_num] at hn
 
-/-- Collapsing a measurable region gives a measurable map.
+/-- The genuine squared chordal cost is bounded by `4` on the sphere.
 Auxiliary for arXiv:2411.04551v3, Appendix, `lem: two.balls`. -/
-theorem measurable_collapseMap (S : Set (SSphere d)) (hS : MeasurableSet S) (ω : SSphere d) :
-    Measurable (collapseMap S ω) := by
-  classical
-  exact Measurable.ite hS measurable_const measurable_id
+theorem spherical_squared_distance_le_four (x y : SSphere d) :
+    ‖(x : EucSpace d) - (y : EucSpace d)‖ ^ 2 ≤ 4 := by
+  have hn := norm_spherical_sub_le_two x y
+  nlinarith [norm_nonneg ((x : EucSpace d) - (y : EucSpace d))]
 
-/-- The collapse pushforward is exactly the source's measure `α`, including
-the untouched restricted measure. Source: arXiv:2411.04551v3,
-Appendix, the final clause of `lem: two.balls`. -/
-theorem map_collapseMap (μ : Measure (SSphere d)) (S : Set (SSphere d)) (hS : MeasurableSet S) (ω : SSphere d) :
-    Measure.map (collapseMap S ω) μ = collapseInto d μ S ω := by
-  classical
-  ext A hA
-  rw [Measure.map_apply (measurable_collapseMap S hS ω) hA, collapseInto,
-    Measure.add_apply, Measure.smul_apply, Measure.restrict_apply hA, Measure.dirac_apply' ω hA]
-  by_cases hω : ω ∈ A
-  · have he : collapseMap S ω ⁻¹' A = S ∪ (A ∩ Sᶜ) := by
-      ext x
-      by_cases hx : x ∈ S <;> simp [collapseMap, hx, hω]
-    rw [he, measure_union (by exact disjoint_left.mpr (fun x hx hx' => hx'.2 hx)) (hA.inter hS.compl)]
-    simp [hω]
-  · have he : collapseMap S ω ⁻¹' A = A ∩ Sᶜ := by
-      ext x
-      by_cases hx : x ∈ S <;> simp [collapseMap, hx, hω]
-    rw [he]
-    simp [hω]
+/-- Antipodal unit vectors attain the quadratic bound exactly. -/
+example : ‖(basePoint 1 : EucSpace 2) - (antipode 2 (basePoint 1) : EucSpace 2)‖ ^ 2 = 4 := by
+  let z : SSphere 2 := basePoint 1
+  have he : (z : EucSpace 2) - (antipode 2 z : EucSpace 2) = (2 : ℝ) • (z : EucSpace 2) := by
+    change (z : EucSpace 2) - (-(z : EucSpace 2)) = (2 : ℝ) • (z : EucSpace 2)
+    module
+  change ‖(z : EucSpace 2) - (antipode 2 z : EucSpace 2)‖ ^ 2 = 4
+  rw [he, norm_smul, mem_sphere_zero_iff_norm.mp z.2]
+  norm_num
 
 /-- A genuine Monge coupling bounds the original distance to `α`.
 Auxiliary for arXiv:2411.04551v3, Appendix, `lem: two.balls`. -/
@@ -84,10 +75,8 @@ theorem tendsto_integral_spherical_distance_sq (ν : Perspective.ProbSphere d)
         ∂(ν : Measure (SSphere d)))) := by
   have hbound (t : ℝ) (x : SSphere d) :
       ‖‖(Φ t x : EucSpace d) - (Ψ x : EucSpace d)‖ ^ 2‖ ≤ (4 : ℝ) := by
-    have hn := norm_sub_le (Φ t x : EucSpace d) (Ψ x : EucSpace d)
-    rw [mem_sphere_zero_iff_norm.mp (Φ t x).2, mem_sphere_zero_iff_norm.mp (Ψ x).2] at hn
     rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
-    nlinarith [norm_nonneg ((Φ t x : EucSpace d) - (Ψ x : EucSpace d))]
+    exact spherical_squared_distance_le_four (Φ t x) (Ψ x)
   exact tendsto_integral_filter_of_dominated_convergence (μ := (ν : Measure (SSphere d)))
     (fun _ => (4 : ℝ))
     (Eventually.of_forall fun t => (((continuous_subtype_val.measurable.comp (hΦ t)).sub
