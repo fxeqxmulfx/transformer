@@ -13,6 +13,7 @@ import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.Perturbation
 import Transformer.Interpolation.Section3_ReLUThresholds
 import Transformer.Interpolation.Section3_ReLURidges
+import Transformer.Interpolation.Section3_PerceptronVariation
 import Transformer.Interpolation.SeparationFalse
 import Transformer.Interpolation.IdentityFlow
 import Transformer.Interpolation.NeuralODE
