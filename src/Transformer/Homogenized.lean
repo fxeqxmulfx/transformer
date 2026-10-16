@@ -29,6 +29,7 @@ import Transformer.Homogenized.OverlapDrift
 import Transformer.Homogenized.Regimes
 import Transformer.Homogenized.Section5_DiffusiveRegime
 import Transformer.Homogenized.RotationHead
+import Transformer.Homogenized.Section2_RadialRotation
 import Transformer.Homogenized.RegimeRefutation
 import Transformer.Homogenized.WeakErrorRefutation
 import Transformer.Homogenized.Simplex
