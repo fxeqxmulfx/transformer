@@ -29,6 +29,7 @@ import Transformer.Modes.Section2_JointDensity
 import Transformer.Modes.Section2_SliceWidth
 import Transformer.Modes.Section2_DensityContinuity
 import Transformer.Modes.Section2_MarginalDensity
+import Transformer.Modes.Section2_ProbabilityRegularity
 import Transformer.Modes.Section2_Field
 import Transformer.Modes.Section2_ParameterTransversality
 import Transformer.Modes.Section2_GaussianTransversality
