@@ -25,6 +25,7 @@ import Transformer.Interpolation.Section3_TwoRidgeFields
 import Transformer.Interpolation.Section3_TwoRidgeExtension
 import Transformer.Interpolation.Section3_TwoRidgeFlow
 import Transformer.Interpolation.Section3_TwoRidgeLaw
+import Transformer.Interpolation.Section3_TwoRidgeScaling
 import Transformer.Interpolation.Section3_NestedCaps
 import Transformer.Interpolation.Section3_CapCenter
 import Transformer.Interpolation.Section3_CapCoefficients
