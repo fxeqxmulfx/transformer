@@ -25,6 +25,7 @@ import Transformer.Modes.Section2_DiskProbability
 import Transformer.Modes.Section2_DiskRotations
 import Transformer.Modes.Section2_DiskCoordinates
 import Transformer.Modes.Section2_SliceKernel
+import Transformer.Modes.Section2_JointDensity
 import Transformer.Modes.Section2_Field
 import Transformer.Modes.Section2_ParameterTransversality
 import Transformer.Modes.Section2_GaussianTransversality
