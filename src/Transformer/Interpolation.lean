@@ -36,6 +36,7 @@ import Transformer.Interpolation.Section3_MeanAxisStability
 import Transformer.Interpolation.Section3_CommonTransverseAxis
 import Transformer.Interpolation.Section3_MeanAxisAttraction
 import Transformer.Interpolation.Section3_MeanAxisPhases
+import Transformer.Interpolation.Section3_MeanNeuralPhases
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.Perturbation
 import Transformer.Interpolation.Section3_ReLUThresholds
