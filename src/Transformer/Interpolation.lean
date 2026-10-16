@@ -33,6 +33,7 @@ import Transformer.Interpolation.BallDecomposition
 import Transformer.Interpolation.GenericDiscrete
 import Transformer.Interpolation.Section5_PureAttention
 import Transformer.Interpolation.Section1_WeakContinuity
+import Transformer.Interpolation.Section1_TestModulus
 import Transformer.Interpolation.Section5_ZeroTemperatureMoments
 import Transformer.Interpolation.Section5_ConcentrationDefect
 import Transformer.Interpolation.Section5_DiracPersistence
