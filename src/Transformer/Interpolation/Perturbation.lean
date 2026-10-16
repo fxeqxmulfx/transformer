@@ -24,6 +24,7 @@ import Transformer.Interpolation.Section3_PositiveBarycenters
 import Transformer.Interpolation.Section3_NoncolinearControls
 import Transformer.Interpolation.HypPropagationFalse
 import Transformer.Interpolation.Section3_PerturbationFalse
+import Transformer.Interpolation.Section3_BarycenterInduction
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -50,7 +51,10 @@ ball and the last clause with `μ_0^j`, and has "Fix `j`" commented out; one
 index `j` is used throughout here, which is the reading under which the four
 occurrences refer to the same measure.
 
-Not proved here.
+Proved with absolute constant `C = 3`. One common transverse axis
+replaces the source's basis cycle, followed by a gated contraction and
+the actual inverse attention law. The zero- and one-dimensional cases
+are handled separately without adding data hypotheses.
 
 Source: arXiv:2411.04551v3, §3, `lem: induction.barycenter`. -/
 theorem induction_barycenter :
@@ -73,7 +77,7 @@ theorem induction_barycenter :
               (‖barycenter d (μ₀ j)‖⁻¹ • barycenter d (μ₀ j))) < ε) ∧
         ∀ i : Idx N, i ≠ j → ∀ μ : ℝ → ProbSphere d,
           μ 0 = μ₀ i → cauchyPB d θ μ → μ T = μ₀ i := by
-  sorry
+  exact ⟨3, exists_barycenter_induction_controls⟩
 
 /-- The hypotheses of `induction_barycenter` are satisfiable on a one-element
 family: `N = 1` leaves the non-collinearity of *distinct* barycenters nothing to

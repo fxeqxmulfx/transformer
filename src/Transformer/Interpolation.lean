@@ -42,6 +42,8 @@ import Transformer.Interpolation.Section3_TargetCaps
 import Transformer.Interpolation.Section3_GatedCenterLaw
 import Transformer.Interpolation.Section3_SelectiveClocks
 import Transformer.Interpolation.Section3_SelectiveContraction
+import Transformer.Interpolation.Section3_BarycenterContraction
+import Transformer.Interpolation.Section3_BarycenterInduction
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.Perturbation
 import Transformer.Interpolation.Section3_ReLUThresholds
