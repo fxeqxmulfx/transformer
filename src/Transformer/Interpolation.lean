@@ -141,6 +141,7 @@ import Transformer.Interpolation.Section1_AtomicField
 import Transformer.Interpolation.Section1_AtomicSeparation
 import Transformer.Interpolation.Section1_CloseAtomicInputs
 import Transformer.Interpolation.Section1_UniformNormObstruction
+import Transformer.Interpolation.Section4_ProjectionTransfers
 import Transformer.Interpolation.Section1_NeuralConcatenation
 import Transformer.Interpolation.Section1_NeuralPhaseLaw
 import Transformer.Interpolation.Section1_ControlPartitions
