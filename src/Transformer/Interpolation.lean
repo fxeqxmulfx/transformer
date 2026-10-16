@@ -34,6 +34,7 @@ import Transformer.Interpolation.Section3_MeanAxisPullback
 import Transformer.Interpolation.Section3_MeanAxisTransport
 import Transformer.Interpolation.Section3_MeanAxisStability
 import Transformer.Interpolation.Section3_CommonTransverseAxis
+import Transformer.Interpolation.Section3_BarycenterAxes
 import Transformer.Interpolation.Section3_MeanAxisAttraction
 import Transformer.Interpolation.Section3_MeanAxisPhases
 import Transformer.Interpolation.Section3_MeanNeuralPhases
