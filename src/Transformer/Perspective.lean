@@ -129,6 +129,7 @@ import Transformer.Perspective.Section3_Gronwall
 import Transformer.Perspective.Section4_LargeBeta
 import Transformer.Perspective.MinCurve
 import Transformer.Perspective.MaxCurve
+import Transformer.Perspective.CompactMaxCurve
 import Transformer.Perspective.ConeChart
 import Transformer.Perspective.ConeWidth
 import Transformer.Perspective.ConeLimit
