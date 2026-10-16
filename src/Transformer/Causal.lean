@@ -81,6 +81,7 @@ import Transformer.Causal.Section5_AEConvergence
 import Transformer.Causal.Section5_LocalStability
 import Transformer.Causal.Section5_ClusteredStability
 import Transformer.Causal.Section5_OneCenterField
+import Transformer.Causal.Section5_SimpleRows
 import Transformer.Causal.Section5_FrozenFlow
 import Transformer.Causal.Section5_FlowContinuity
 import Transformer.Causal.Section5_ConditionalVolume
