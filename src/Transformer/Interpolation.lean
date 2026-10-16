@@ -134,6 +134,7 @@ import Transformer.Interpolation.Section1_FullFieldLipschitz
 import Transformer.Interpolation.Section1_ContinuousWeakTests
 import Transformer.Interpolation.Section1_VarianceFlux
 import Transformer.Interpolation.Section1_FullWeakContinuity
+import Transformer.Interpolation.Section1_AtomicVariance
 import Transformer.Interpolation.Section1_NeuralConcatenation
 import Transformer.Interpolation.Section1_NeuralPhaseLaw
 import Transformer.Interpolation.Section1_ControlPartitions
