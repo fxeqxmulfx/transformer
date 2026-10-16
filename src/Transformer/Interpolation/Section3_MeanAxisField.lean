@@ -31,12 +31,12 @@ noncomputable def meanAxisMoment (w : EucSpace d) (ν : Perspective.ProbSphere d
 
 /-- Original constant controls with `V = κ w wᵀ`, `B = W = U = b = 0`.
 Source: arXiv:2411.04551v3, proof of `lem: induction.barycenter`, Step 1. -/
-noncomputable def meanAxisParams (w : EucSpace d) (κ : ℝ) : Params d where
-  V := κ • (innerSL ℝ w).smulRight w
-  B := 0
-  W := 0
-  U := 0
-  b := 0
+noncomputable def meanAxisParams (w : EucSpace d) (κ : ℝ) : Params d :=
+  { V := κ • (innerSL ℝ w).smulRight w
+    B := 0
+    W := 0
+    U := 0
+    b := 0 }
 
 /-- The source's mean component is exactly the linear weak-test moment.
 Source: arXiv:2411.04551v3, §3.2, `eq: cauchy.pb.reloaded`. -/
