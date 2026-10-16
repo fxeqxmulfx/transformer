@@ -1,34 +1,26 @@
 /-
-# Homogenized Transformers — the weak approximation error
+# Homogenized Transformers — weak approximation and false improved rates
 
-Formalization of `thm:weak_error_clean` and `cor:weak_error_centered` of
-arXiv:2604.01978v1, *Homogenized Transformers*.
+Source: arXiv:2604.01978v1, §2.3.2, `thm:weak_error_clean`,
+its improved-rate paragraph, and §6.1, `lem:stability_generator`.
 
-The discrete chain `eq:update_tokens`, interpolated in time as
-`X^η(t) = X^{⌊t/η⌋}`, is approximated in the weak sense by the solution of the
-Itô system `eq: first.sde` on `(𝕊^{d-1})^n`, uniformly on `[0, t_L]` with
-`t_L = ηL`, at rate `O(η)`.  The proof of the source shows more: the chain is
-approximated by the *modified* equation `eq:SDE_ito_clean` at the improved rate
-`η max(η, α)`, and `thm:weak_error_clean` follows because the two limiting
-equations differ by a drift of size `O(η)`.  Both are stated — the improved
-one at the grid times where it holds, see `weak_error_modified`.
+The source compares its actual normalized random chain to a
+homogenized SDE at a coarser rate `O(η)`. That theorem remains
+open below, with the source's initial and probability conditions.
 
-`lem:stability_generator`, the one-step estimate the telescoping of that proof
-runs on, is stated here too: it is the same comparison at a single step, and
-it is where the improved rate comes from.
+The stronger modified-equation estimate is false even at grid
+times. A deterministic value matrix `I+J` has the same projected
+drift as `J`, but a different second-order normalized discrete
+step. The exact phase discrepancy produces an error of order
+`η` at physical time one, against the proposed `O(η²)` bound.
 
-`C ≥ 1` depends on `‖φ‖_{C⁴}` but not on `η, α, L`: the quantifiers are
-arranged so that this is what the statement says — `φ` is fixed before `C` is
-produced, and `η`, `L`, the variance proxy and both probability spaces come
-after it.
-The source's expectations are over probability measures: `IsRandomChain.prob`
-supplies this for `P`, and the missing condition on `P'` is explicit below.
-
-Source: arXiv:2604.01978v1, §2.2.3, `thm:weak_error_clean`.
+The supporting §6.1 module also proves the negation of the
+source's one-step estimate. These refutations preserve the
+original dynamics and full source assumptions; the false
+claims are replaced by theorems naming their counterexamples.
 -/
 
-import Transformer.Homogenized.RandomChain
-import Transformer.Homogenized.Generator
+import Transformer.Homogenized.Section6_OneStepRefutation
 
 open scoped BigOperators NNReal
 open Real MeasureTheory ProbabilityTheory
@@ -86,37 +78,34 @@ example (d n : ℕ) :
       ContDiff ℝ 4 (fun _ : Idx n → EucSpace d => (0 : ℝ)) :=
   ⟨Nat.one_pos, hasHighOrderLaw_dirac_zero d, contDiff_const⟩
 
-/-- **Theorem (thm:weak_error_clean, the improved rate).**  The same statement
-against the *modified* equation `eq:SDE_ito_clean`, whose drift carries the
-extra `-(η/2) ∇_b b`, holds at the rate `C e^{C t_L} η (t_L+1) max(η,α)`.  The
-source states it as the content of the proof of `thm:weak_error_clean`, from
-which `thm:weak_error_clean` follows because the two limiting drifts differ
-uniformly by `O(η)`.
+/-- **The improved rate is false even at grid times.** The paragraph
+following `thm:weak_error_clean` claims that the modified equation
+`eq:SDE_ito_clean` has weak error
+`C e^{C t_L} η (t_L+1) max(η,α)`. The original display takes the supremum
+throughout `[0,t_L]`. The former formal statement restricted it to grid
+times to avoid the interpolation obstruction proved separately in
+`WeakErrorRefutation`.
 
-**What the source says and what is changed here.**  The source states the
-improved rate for `sup_{t ∈ [0,t_L]}`, carrying over the display of
-`thm:weak_error_clean`.  That is false for the piecewise-constant
-interpolation `X^η(t) = X^{⌊t/η⌋}`: at `t = η/2` the chain is still at `X⁰`,
-while `𝔼φ(X(t))` has already moved by `(η/2)(𝖫φ)(X⁰) + O(η²)`.  Take a
-deterministic weight law — `ass:high_order_short` holds with `σ_V = σ_A = 0`
-and `𝔼V ≠ 0` — so that `α = 0` and `b ≢ 0`, and `φ(X) = ⟨e, x_1⟩`; then at
-`t_L = 1` the left-hand side is `Θ(η)` and the right-hand side is
-`C e^C η (t_L+1) max(η,0) = Θ(η²)`.  This is proved:
-`not_weak_error_modified_printed`, in `WeakErrorRefutation`.
+The grid restriction is still insufficient. Take the actual head `(I+J,0)`,
+one planar token, and one head. The high-order law holds with zero centered
+fluctuations and variance proxy zero. The exact modified SDE is unit-speed
+rotation, while each actual layer rotates by `arctan(η/(1+η))`.
+At `η=1/m`, `L=m`, and grid time one, the coordinate error is at least
+`cos(1)/(m+1)`. The claimed right side is `2 C e^C/m²`.
 
-That `Θ(η)` is the interpolation error, and it is what the `max(1,α)` of
-`thm:weak_error_clean` leaves room for.  The improved rate is a statement
-about the grid, as it is in the stochastic-modified-equation literature the
-proof follows, so it is stated at the grid times `t = ℓη`, `ℓ ≤ L`, where
-`interpChain_natCast_mul` identifies `X^η(ℓη)` with `X^ℓ`.
+The negation below keeps every hypothesis and quantifier of the former
+grid-time statement: the model and C⁴ observable are fixed before `C`,
+and both actual processes start from the same deterministic unit token
+on probability spaces. It therefore refutes both the grid-time variant
+and the stronger source display. The distinct coarser theorem
+`weak_error_clean` remains open.
 
-Not proved here.
-
-Source: arXiv:2604.01978v1, §2.2.3, the paragraph after
-`thm:weak_error_clean`. -/
-theorem weak_error_modified {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ≥0)
-    (ρ : Measure (HeadParam d)) (hρ : HasHighOrderLaw d σV σA ρ)
-    (φ : (Idx n → EucSpace d) → ℝ) (hφ : ContDiff ℝ 4 φ) :
+Source: arXiv:2604.01978v1, §2.3.2, the paragraph following
+`thm:weak_error_clean`, and §6.1, its modified-equation proof. -/
+theorem not_weak_error_modified :
+    ¬ ∀ {d n H : ℕ}, 0 < H → ∀ (β : ℝ) (σV σA : ℝ≥0)
+      (ρ : Measure (HeadParam d)), HasHighOrderLaw d σV σA ρ →
+      ∀ φ : (Idx n → EucSpace d) → ℝ, ContDiff ℝ 4 φ →
     ∃ C : ℝ, 1 ≤ C ∧
       ∀ (η s : ℝ), 0 < η → IsVarianceProxy d n β ρ s →
       ∀ (L : ℕ) (x₀ : Idx n → EucSpace d), (∀ i, ‖x₀ i‖ = 1) →
@@ -130,65 +119,32 @@ theorem weak_error_modified {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ
         |(∫ ω', φ (X ((l : ℝ) * η) ω') ∂P') -
             ∫ ω, φ (interpChain η (Xd ω) ((l : ℝ) * η)) ∂P| ≤
           C * Real.exp (C * (η * L)) * η * (η * L + 1) * max η (alphaOf η s H) := by
-  sorry
+  intro h
+  obtain ⟨C, hC, hb⟩ := h (d := 2) (n := 1) (H := 1) Nat.one_pos 1 0 0
+    (Measure.dirac radialRotHead) (radialRotHead_law 1).1 _ contDiff_radialRotObservable
+  obtain ⟨m, hm, hgap⟩ := radialRot_grid_constant C hC
+  have hm0 : (0 : ℝ) < m := by exact_mod_cast hm
+  have hη : (0 : ℝ) < 1 / (m : ℝ) := by positivity
+  have hsde : IsModifiedSde (1 / (m : ℝ)) 1 (alphaOf (1 / (m : ℝ)) 0 1) 0
+      (Measure.dirac radialRotHead) (Measure.dirac ()) (fun t (_ : Unit) => rotFlow t) := by
+    simpa only [alphaOf, zero_pow (by decide : 2 ≠ 0), mul_zero, zero_div] using
+      isModifiedSde_radialRotHead (1 / (m : ℝ)) 1
+  have key := hb _ 0 hη (radialRotHead_law 1).2 m
+    (fun _ => EuclideanSpace.single 0 1) (fun _ => by simp [PiLp.norm_single])
+    Unit (Measure.dirac ()) _ _ (isRandomChain_radialRotChain hη 1)
+    Unit (Measure.dirac ()) (fun t _ => rotFlow t) hsde
+    (fun _ => by funext i; rw [rotFlow_apply]; ext k; fin_cases k <;> simp) m le_rfl
+  rw [interpChain_natCast_mul hη] at key
+  have ht : (m : ℝ) * (1 / (m : ℝ)) = 1 := by field_simp
+  have ht' : (1 / (m : ℝ)) * (m : ℝ) = 1 := by field_simp
+  simp only [ht, ht', integral_dirac, rotFlow_apply, Matrix.cons_val_one,
+    Matrix.cons_val_fin_one, mul_one, alphaOf, zero_pow (by decide : 2 ≠ 0),
+    mul_zero, zero_div, max_eq_left hη.le] at key
+  exact (not_lt_of_ge key) hgap
 
-/-- The hypotheses of `weak_error_modified` are satisfiable, by the same
-witnesses as `weak_error_clean`. -/
-example (d n : ℕ) :
-    0 < 1 ∧ HasHighOrderLaw d 0 0 (Measure.dirac (0 : HeadParam d)) ∧
-      ContDiff ℝ 4 (fun _ : Idx n → EucSpace d => (0 : ℝ)) :=
-  ⟨Nat.one_pos, hasHighOrderLaw_dirac_zero d, contDiff_const⟩
-
-/-! ### The one-step estimate -/
-
-/-- **Lemma (lem:stability_generator).**  For `φ ∈ C⁴((𝕊^{d-1})^n)` there is `C > 0`,
-uniform in the starting configuration, with
-
-  `max_x |𝔼φ(X(η; x)) - 𝔼φ(X¹(x))| ≤ C η² max(η, α)`,
-
-where `X(·; x)` starts from `x` and `X¹(x)` is one step of the chain
-`eq:update_tokens` from `x`.  This is the estimate the telescoping argument of
-`thm:weak_error_clean` sums over the `L` layers.
-
-**What the source says and what is carried here.**  The source writes
-`X(η; x)` for "the solution of the SDE starting from `x`".  The SDE in question
-is the *modified* one: the proof names its drift `V₀(X) = b(X) - (η/2) ∇_{b(X)}
-b(X)` three lines in, and it is the matching of that drift's generator against
-the chain's that produces the `max(η, α)` rather than `max(1, α)`.  So the
-hypothesis carried here is `IsModifiedSde`, as in `weak_error_modified`.
-
-The `max_x` is the universal quantifier over `x` standing inside the `∃ C`:
-`C` is produced before the configuration, which is what makes the telescoping
-legitimate.  The same is true of `η`, of the variance proxy and of both
-probability spaces; `C` may depend on `‖φ‖_{C⁴}` and on the model
-`(d, n, H, β, ρ*)`, and those are fixed first.
-
-`X¹(x)` is the chain of `eq:update_tokens` started at `x` and read at index `1`,
-so the initial condition the source leaves implicit in the notation is the
-hypothesis `IsRandomChain η β ρ P Θ Xd x`; the continuous process is asked for
-the same one.  The number of heads is positive, as in `weak_error_clean`.
-
-Not proved here.
-
-Source: arXiv:2604.01978v1, `lem:stability_generator`. -/
-theorem stability_generator {d n H : ℕ} (hH : 0 < H) (β : ℝ) (σV σA : ℝ≥0)
-    (ρ : Measure (HeadParam d)) (hρ : HasHighOrderLaw d σV σA ρ)
-    (φ : (Idx n → EucSpace d) → ℝ) (hφ : ContDiff ℝ 4 φ) :
-    ∃ C : ℝ, 0 < C ∧
-      ∀ (η s : ℝ), 0 < η → IsVarianceProxy d n β ρ s →
-      ∀ x : Idx n → EucSpace d, (∀ i, ‖x i‖ = 1) →
-      ∀ (Ω : Type) [MeasurableSpace Ω] (P : Measure Ω)
-        (Θ : ℕ → Idx H → Ω → HeadParam d) (Xd : Ω → ℕ → Idx n → EucSpace d),
-        IsRandomChain η β ρ P Θ Xd x →
-      ∀ (Ω' : Type) [MeasurableSpace Ω'] (P' : Measure Ω') [IsProbabilityMeasure P']
-        (X : ℝ → Ω' → (Idx n → EucSpace d)),
-        IsModifiedSde η β (alphaOf η s H) s ρ P' X → (∀ ω', X 0 ω' = x) →
-        |(∫ ω', φ (X η ω') ∂P') - ∫ ω, φ (Xd ω 1) ∂P| ≤
-          C * η ^ 2 * max η (alphaOf η s H) := by
-  sorry
-
-/-- The hypotheses of `stability_generator` are satisfiable, by the same
-witnesses as `weak_error_clean`. -/
+/-- The numerical, head-law, and observable premises of the refuted claim
+are satisfiable. The full counterexample in the proof above also verifies
+both actual processes and their common unit initial configuration. -/
 example (d n : ℕ) :
     0 < 1 ∧ HasHighOrderLaw d 0 0 (Measure.dirac (0 : HeadParam d)) ∧
       ContDiff ℝ 4 (fun _ : Idx n → EucSpace d => (0 : ℝ)) :=

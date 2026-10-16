@@ -5,7 +5,9 @@ Formalization of `cor:ode1` (ballistic), `cor:ode2` (modified) and `cor:SDE`
 (diffusive) of arXiv:2604.01978v1, *Homogenized Transformers*: the three
 corollaries of `thm:weak_error_clean` that fill the phase diagram.
 The grid-time diffusive corollary is proved in `Section5_DiffusiveRegime`,
-with the still-open improved weak estimate passed as an explicit hypothesis.
+with an improved weak estimate passed as an explicit hypothesis for the
+chosen model and observable. That estimate is false in general, as proved
+by `not_weak_error_modified`.
 
 **On the scaling conditions.**  The hypotheses of the three corollaries are
 asymptotic — `αηL = o(1)`, `η²L = o(1)`, `η³L = o(1)`, `αηL = O(1)` — and an
@@ -18,9 +20,10 @@ at every index.  Nothing is weakened: that is what "in the subcritical scaling
 **What the source says and what is changed here: the rate.**  All three
 corollaries display the improved rate `C e^{C t_L} η (t_L+1) max(η,α)` of the
 proof of `thm:weak_error_clean`.  For `cor:SDE`, whose limit is
-`eq:SDE_ito_clean` itself, that is exactly `weak_error_modified`, and it is
-kept — at the grid times where it holds, for the reason recorded there.  For
-the two deterministic limits it is too strong by a factor:
+`eq:SDE_ito_clean` itself, the general estimate fails even at grid times:
+the radial rotation counterexample is proved in `WeakError`. The conditional
+corollary retains the estimate as a hypothesis. For the two deterministic
+limits the source's rate is too strong by a factor:
 
 * `cor:ode1` drops the corrector `-(η/2)∇_b b`, which moves the trajectory by
   `Θ(η t_L)` — the classical `O(η)` weak error of an Euler scheme.  At a

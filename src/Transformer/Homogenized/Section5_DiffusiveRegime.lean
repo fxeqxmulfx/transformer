@@ -2,14 +2,14 @@
 # Homogenized Transformers — the conditional diffusive corollary
 
 The finite grid-time estimate of arXiv:2604.01978v1, §5, `cor:SDE`, follows
-from the improved weak estimate in §2.2.3. The latter is still open here,
-so it is a hypothesis rather than an invocation of `weak_error_modified`.
+from an improved weak estimate for the chosen model and observable.
+The general estimate of §2.3.2 is false even at grid times, as proved by
+`not_weak_error_modified`, so this corollary takes it as a hypothesis.
 The same constant works for every member of the sequence `(η_m, L_m)`.
 
-The source's off-grid improved rate is false, as proved in
-`WeakErrorRefutation`. The grid restriction and the explicit initial condition
-are the corrections already described in `WeakError`. Its missing probability
-condition on the continuous process's measure is explicit here too.
+The source's off-grid improved rate is also refuted in `WeakErrorRefutation`.
+The grid restriction, explicit initial condition, and probability condition
+on the comparison measure are retained in this conditional statement.
 
 A constant observable supplies a genuine witness for the weak-estimate
 hypothesis; its expectation is one on either probability space.

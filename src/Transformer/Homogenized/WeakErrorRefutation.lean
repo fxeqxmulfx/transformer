@@ -11,8 +11,9 @@ noise vanishes (`σ = 0`, so `√α/σ = 0`), the deterministic rotation solves
 `eq:SDE_ito_clean`, and at `t = η/2` it has turned by `η/2` while the chain
 has not moved — an error `sin(η/2) = Θ(η)` against a bound `Θ(η²)`.
 
-`weak_error_modified` and `diffusive_regime` therefore state the improved rate
-at the grid times `t = ℓη` only.
+The general improved estimate also fails at grid times, by the distinct
+radial-head counterexample `not_weak_error_modified` in `WeakError`.
+`diffusive_regime` is conditional on an estimate for its model and observable.
 
 Source: arXiv:2604.01978v1, §2.3.2 (the paragraph after
 `thm:weak_error_clean`), `cor:SDE`.
@@ -62,7 +63,8 @@ theorem isModifiedSde_rotFlow (η β α : ℝ) :
 /-- **The improved rate is false off the grid.**  The rate
 `C e^{C t_L} η (t_L+1) max(η,α)` against `eq:SDE_ito_clean`, uniformly in
 `t ∈ [0, t_L]`, with `C` depending on `φ` only, fails at the rotation head:
-see the module docstring.  `weak_error_modified` states it at grid times.
+see the module docstring. The grid-time claim is refuted separately in
+`WeakError` by `not_weak_error_modified`.
 
 Source: arXiv:2604.01978v1, §2.3.2, the paragraph after `thm:weak_error_clean`. -/
 theorem not_weak_error_modified_printed :
