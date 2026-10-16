@@ -23,6 +23,7 @@ import Transformer.Modes.Section2_OscillatingField
 import Transformer.Modes.Section2_OscillatingModulus
 import Transformer.Modes.Section2_DiskProbability
 import Transformer.Modes.Section2_DiskRotations
+import Transformer.Modes.Section2_DiskCoordinates
 import Transformer.Modes.Section2_Field
 import Transformer.Modes.Section2_ParameterTransversality
 import Transformer.Modes.Section2_GaussianTransversality
