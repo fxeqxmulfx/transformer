@@ -75,6 +75,7 @@ import Transformer.Interpolation.Section1_AutonomousLaw
 import Transformer.Interpolation.Section1_AutonomousPrefix
 import Transformer.Interpolation.Section1_AutonomousTail
 import Transformer.Interpolation.Section1_PhaseConcatenation
+import Transformer.Interpolation.Section1_NeuralConcatenation
 import Transformer.Interpolation.Section1_ControlPartitions
 import Transformer.Interpolation.Section1_SquaredDistance
 import Transformer.Interpolation.Section1_DiracTransport
