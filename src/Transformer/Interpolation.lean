@@ -32,6 +32,7 @@ import Transformer.Interpolation.Section1_TimeDependentWeakTests
 import Transformer.Interpolation.Section3_MeanAxisWeakTests
 import Transformer.Interpolation.Section3_MeanAxisPullback
 import Transformer.Interpolation.Section3_MeanAxisTransport
+import Transformer.Interpolation.Section3_MeanAxisStability
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.Perturbation
 import Transformer.Interpolation.Section3_ReLUThresholds
