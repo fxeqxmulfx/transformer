@@ -74,6 +74,7 @@ import Transformer.Causal.Section5_RowField
 import Transformer.Causal.Section5_RowBounds
 import Transformer.Causal.Section5_RowConvergence
 import Transformer.Causal.Section5_RowDerivative
+import Transformer.Causal.Section5_RowRepulsion
 import Transformer.Causal.Section5_FrozenFlow
 import Transformer.Causal.SequentialFlow
 import Transformer.Causal.SectionA_ScalarConvergence
