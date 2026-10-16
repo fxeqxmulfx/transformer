@@ -146,6 +146,7 @@ import Transformer.Interpolation.Section4_RidgeClocks
 import Transformer.Interpolation.Section4_ProjectionSegments
 import Transformer.Interpolation.Section4_GatedTransfers
 import Transformer.Interpolation.Section4_TransferPhases
+import Transformer.Interpolation.Section4_ProtectedTransfers
 import Transformer.Interpolation.Section1_NeuralConcatenation
 import Transformer.Interpolation.Section1_NeuralPhaseLaw
 import Transformer.Interpolation.Section1_ControlPartitions
