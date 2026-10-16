@@ -48,13 +48,14 @@ theorem contDiff_transportCone (K L ε a T : ℝ) (hε : 0 < ε) (Y : ℝ → SS
     (contDiff_const.mul (contDiff_const.sub contDiff_fst)).exp).mul hq)
 
 /-- Each actual cone has nonpositive material derivative on the sphere.
-The original Lipschitz estimate cancels its exponential slope decay.
+Only the current field and the path's current derivative enter this estimate;
+the path is C1 in time. The original Lipschitz estimate cancels its slope decay.
 Auxiliary for arXiv:2411.04551v3, §1, the well-posedness argument. -/
-theorem fderiv_transportCone_nonpos (F : EucSpace d → EucSpace d) (hF : Continuous F)
+theorem fderiv_transportCone_nonpos_at (F : EucSpace d → EucSpace d)
     (K : ℝ≥0) (hK : LipschitzOnWith K F (Sphere d)) (L ε a T : ℝ)
     (hL : 0 ≤ L) (hε : 0 < ε) (Y : ℝ → SSphere d)
-    (hY : ∀ s : ℝ, HasDerivAt (fun r => (Y r : EucSpace d)) (F (Y s)) s)
-    (t : ℝ) (x : SSphere d) :
+    (hY : ContDiff ℝ 1 (fun r => (Y r : EucSpace d)))
+    (t : ℝ) (hYt : HasDerivAt (fun r => (Y r : EucSpace d)) (F (Y t)) t) (x : SSphere d) :
     fderiv ℝ (transportCone K L ε a T Y) (t, (x : EucSpace d)) (1, F x) ≤ 0 := by
   let z (s : ℝ) : EucSpace d := x + (s - t) • F x - Y s
   let R := sqrt (‖(x : EucSpace d) - (Y t : EucSpace d)‖ ^ 2 + ε ^ 2)
@@ -63,7 +64,7 @@ theorem fderiv_transportCone_nonpos (F : EucSpace d → EucSpace d) (hF : Contin
   have hz : z t = (x : EucSpace d) - (Y t : EucSpace d) := by simp [z]
   have hDz : HasDerivAt z (F x - F (Y t)) t := by
     simpa only [Pi.add_apply, Pi.sub_apply, id_eq, one_smul, zero_add] using
-      ((((hasDerivAt_id t).sub_const t).smul_const (F x)).const_add (x : EucSpace d)).fun_sub (hY t)
+      ((((hasDerivAt_id t).sub_const t).smul_const (F x)).const_add (x : EucSpace d)).fun_sub hYt
   have hDq : HasDerivAt (fun s => sqrt (‖z s‖ ^ 2 + ε ^ 2))
       ((2 * inner ℝ ((x : EucSpace d) - (Y t : EucSpace d)) (F x - F (Y t))) / (2 * R)) t := by
     simpa only [hz] using (hDz.norm_sq.add_const (ε ^ 2)).sqrt
@@ -83,7 +84,7 @@ theorem fderiv_transportCone_nonpos (F : EucSpace d → EucSpace d) (hF : Contin
         ((((hasDerivAt_id t).sub_const t).smul_const (F x)).const_add (x : EucSpace d))
   have hγt : γ t = (t, (x : EucSpace d)) := by simp [γ]
   have hc := ((contDiff_transportCone (K : ℝ) L ε a T hε Y
-    (contDiff_spherical_particle F hF Y hY)).differentiable (by norm_num) (t, (x : EucSpace d))).hasFDerivAt
+    hY).differentiable (by norm_num) (t, (x : EucSpace d))).hasFDerivAt
   rw [← hγt] at hc
   have he := (hc.comp_hasDerivAt t hγ).unique hDt
   rw [hγt, hz] at he
@@ -109,6 +110,18 @@ theorem fderiv_transportCone_nonpos (F : EucSpace d → EucSpace d) (hF : Contin
   have hb := mul_le_mul_of_nonneg_left hfrac hw
   nlinarith
 
+
+/-- The pointwise cone comparison applies to every actual autonomous
+trajectory. The particle equation supplies its C1 time regularity.
+Auxiliary for arXiv:2411.04551v3, §1, the well-posedness argument. -/
+theorem fderiv_transportCone_nonpos (F : EucSpace d → EucSpace d) (hF : Continuous F)
+    (K : ℝ≥0) (hK : LipschitzOnWith K F (Sphere d)) (L ε a T : ℝ)
+    (hL : 0 ≤ L) (hε : 0 < ε) (Y : ℝ → SSphere d)
+    (hY : ∀ s : ℝ, HasDerivAt (fun r => (Y r : EucSpace d)) (F (Y s)) s)
+    (t : ℝ) (x : SSphere d) :
+    fderiv ℝ (transportCone K L ε a T Y) (t, (x : EucSpace d)) (1, F x) ≤ 0 :=
+  fderiv_transportCone_nonpos_at F K hK L ε a T hL hε Y
+    (contDiff_spherical_particle F hF Y hY) t (hY t) x
 
 /-- A regularized cone dominates the corresponding exact distance cone.
 Auxiliary for arXiv:2411.04551v3, §1, the weak transport comparison. -/

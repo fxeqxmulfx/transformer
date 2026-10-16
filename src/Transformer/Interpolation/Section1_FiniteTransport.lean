@@ -40,18 +40,33 @@ theorem contDiff_finiteTransportTest (K L ε β T : ℝ) (hε : 0 < ε)
     (f : SSphere d → ℝ) : ContDiff ℝ 1 (finiteTransportTest K L ε β T Y f) :=
   contDiff_finiteSoftMin β _ fun i => contDiff_transportCone K L ε _ T hε (Y i) (hY i)
 
-/-- The actual finite transport test has nonpositive material derivative.
+/-- The actual finite transport test has nonpositive material derivative
+using only the current field and the current derivatives of its C1 centers.
+Auxiliary for arXiv:2411.04551v3, §1, the weak comparison argument. -/
+theorem fderiv_finiteTransportTest_nonpos_at (F : EucSpace d → EucSpace d)
+    (K : ℝ≥0) (hK : LipschitzOnWith K F (Sphere d)) (L ε β T : ℝ)
+    (hL : 0 ≤ L) (hε : 0 < ε) (hβ : 0 < β) (Y : ι → ℝ → SSphere d)
+    (hY : ∀ i, ContDiff ℝ 1 (fun r => (Y i r : EucSpace d)))
+    (f : SSphere d → ℝ) (t : ℝ)
+    (hYt : ∀ i, HasDerivAt (fun r => (Y i r : EucSpace d)) (F (Y i t)) t) (x : SSphere d) :
+    fderiv ℝ (finiteTransportTest K L ε β T Y f) (t, (x : EucSpace d)) (1, F x) ≤ 0 := by
+  apply fderiv_finiteSoftMin_nonpos β hβ
+    (fun i => transportCone K L ε (f (Y i T)) T (Y i))
+    (fun i => contDiff_transportCone _ _ _ _ _ hε _ (hY i))
+  exact fun i => fderiv_transportCone_nonpos_at F K hK L ε _ T hL hε (Y i) (hY i) t (hYt i) x
+
+
+/-- The pointwise finite comparison applies along the original complete
+autonomous particle paths.
 Auxiliary for arXiv:2411.04551v3, §1, the weak comparison argument. -/
 theorem fderiv_finiteTransportTest_nonpos (F : EucSpace d → EucSpace d) (hF : Continuous F)
     (K : ℝ≥0) (hK : LipschitzOnWith K F (Sphere d)) (L ε β T : ℝ)
     (hL : 0 ≤ L) (hε : 0 < ε) (hβ : 0 < β) (Y : ι → ℝ → SSphere d)
     (hY : ∀ i s, HasDerivAt (fun r => (Y i r : EucSpace d)) (F (Y i s)) s)
     (f : SSphere d → ℝ) (t : ℝ) (x : SSphere d) :
-    fderiv ℝ (finiteTransportTest K L ε β T Y f) (t, (x : EucSpace d)) (1, F x) ≤ 0 := by
-  apply fderiv_finiteSoftMin_nonpos β hβ
-    (fun i => transportCone K L ε (f (Y i T)) T (Y i))
-    (fun i => contDiff_transportCone _ _ _ _ _ hε _ (contDiff_spherical_particle F hF _ (hY i)))
-  exact fun i => fderiv_transportCone_nonpos F hF K hK L ε _ T hL hε (Y i) (hY i) t x
+    fderiv ℝ (finiteTransportTest K L ε β T Y f) (t, (x : EucSpace d)) (1, F x) ≤ 0 :=
+  fderiv_finiteTransportTest_nonpos_at F K hK L ε β T hL hε hβ Y
+    (fun i => contDiff_spherical_particle F hF _ (hY i)) f t (fun i => hY i t) x
 
 /-- At the terminal time the finite comparison dominates the original
 Lipschitz scalar test. Auxiliary for arXiv:2411.04551v3, §1,
