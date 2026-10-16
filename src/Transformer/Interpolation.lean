@@ -40,6 +40,7 @@ import Transformer.Interpolation.Section3_NullRepeller
 import Transformer.Interpolation.Section3_BallControl
 import Transformer.Interpolation.Section3_TwoBalls
 import Transformer.Interpolation.Section3_FixedRegionMass
+import Transformer.Interpolation.Section3_ChainMass
 import Transformer.Interpolation.Section3_PositiveBarycenters
 import Transformer.Interpolation.Section3_MomentVariation
 import Transformer.Interpolation.Section3_UniformNoncolinearity
