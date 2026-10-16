@@ -50,6 +50,7 @@ import Transformer.Interpolation.Section3_BarycenterDirections
 import Transformer.Interpolation.Section3_FiniteRefinement
 import Transformer.Interpolation.Section3_CollinearRidgePhase
 import Transformer.Interpolation.Section3_RidgeClassProgress
+import Transformer.Interpolation.Section3_RidgeClassSequence
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.Perturbation
 import Transformer.Interpolation.Section3_ReLUThresholds
