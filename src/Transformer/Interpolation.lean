@@ -121,6 +121,7 @@ import Transformer.Interpolation.Section1_AutonomousTail
 import Transformer.Interpolation.Section1_PhaseConcatenation
 import Transformer.Interpolation.Section1_GeneralPhaseUniqueness
 import Transformer.Interpolation.Section1_AutonomousPhases
+import Transformer.Interpolation.Section1_PhaseSequenceStep
 import Transformer.Interpolation.Section1_NeuralConcatenation
 import Transformer.Interpolation.Section1_NeuralPhaseLaw
 import Transformer.Interpolation.Section1_ControlPartitions
