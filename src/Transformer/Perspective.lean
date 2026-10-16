@@ -131,6 +131,7 @@ import Transformer.Perspective.MinCurve
 import Transformer.Perspective.MaxCurve
 import Transformer.Perspective.CompactMaxCurve
 import Transformer.Perspective.CompactPositiveFloor
+import Transformer.Perspective.CompactWidth
 import Transformer.Perspective.ConeChart
 import Transformer.Perspective.ConeWidth
 import Transformer.Perspective.ConeLimit
