@@ -136,6 +136,7 @@ import Transformer.Interpolation.Section1_VarianceFlux
 import Transformer.Interpolation.Section1_FullWeakContinuity
 import Transformer.Interpolation.Section1_AtomicVariance
 import Transformer.Interpolation.Section1_PhaseDerivatives
+import Transformer.Interpolation.Section1_PiecewiseAtomicity
 import Transformer.Interpolation.Section1_NeuralConcatenation
 import Transformer.Interpolation.Section1_NeuralPhaseLaw
 import Transformer.Interpolation.Section1_ControlPartitions
