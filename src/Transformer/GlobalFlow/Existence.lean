@@ -1,9 +1,11 @@
 /-
 # Global flows of autonomous ODEs — existence and uniqueness for all time
 
-An autonomous field `F` on a finite-dimensional space, locally Lipschitz and
-of linear growth `‖F x‖ ≤ C ‖x‖`, has exactly one solution through each
-point, and it is defined on all of `ℝ`.
+An autonomous field `F` on a Banach space, Lipschitz on every ball and of
+linear growth `‖F x‖ ≤ C ‖x‖`, has exactly one solution through each point,
+and it is defined on all of `ℝ`.  On a finite-dimensional space a locally
+Lipschitz field is Lipschitz on every ball (`exists_global`,
+`eq_of_hasDerivAt`).
 
 The proof: on `[-T, T]`, Picard–Lindelöf applies to `F ∘ ballRetract R`,
 which is Lipschitz and bounded everywhere; by Grönwall that solution never
@@ -34,26 +36,30 @@ theorem exists_lipschitzOnWith_closedBall [ProperSpace E] {F : E → E} (hF : Lo
 
 /-- **Uniqueness on an interval.**  Two solutions of `x' = F x` on `(a, b)`
 that stay in a common ball and agree at one time agree on `(a, b)`. -/
-theorem eqOn_Ioo [ProperSpace E] {F : E → E} (hF : LocallyLipschitz F) {f g : ℝ → E}
+theorem eqOn_Ioo {F : E → E} (hF : ∀ R, ∃ K, LipschitzOnWith K F (closedBall 0 R)) {f g : ℝ → E}
     {a b t₀ R : ℝ} (ht₀ : t₀ ∈ Ioo a b)
     (hf : ∀ t ∈ Ioo a b, HasDerivAt f (F (f t)) t ∧ ‖f t‖ ≤ R)
     (hg : ∀ t ∈ Ioo a b, HasDerivAt g (F (g t)) t ∧ ‖g t‖ ≤ R) (heq : f t₀ = g t₀) :
     EqOn f g (Ioo a b) := by
-  obtain ⟨K, hK⟩ := exists_lipschitzOnWith_closedBall hF R
+  obtain ⟨K, hK⟩ := hF R
   exact ODE_solution_unique_of_mem_Ioo (v := fun _ => F) (s := fun _ => closedBall 0 R)
     (fun _ _ => hK) ht₀
     (fun t ht => ⟨(hf t ht).1, mem_closedBall_zero_iff.2 (hf t ht).2⟩)
     (fun t ht => ⟨(hg t ht).1, mem_closedBall_zero_iff.2 (hg t ht).2⟩) heq
 
+section Complete
+
+variable [CompleteSpace E]
+
 /-- **Existence on `(-T, T)`**, with the a priori bound. -/
-theorem exists_local [ProperSpace E] {F : E → E} (hF : LocallyLipschitz F) {C : ℝ}
+theorem exists_local {F : E → E} (hF : ∀ R, ∃ K, LipschitzOnWith K F (closedBall 0 R)) {C : ℝ}
     (hC : 0 ≤ C) (hFC : ∀ x, ‖F x‖ ≤ C * ‖x‖) (x₀ : E) {T : ℝ} (hT : 0 < T) :
     ∃ α : ℝ → E, α 0 = x₀ ∧ ∀ t ∈ Ioo (-T) T,
       HasDerivAt α (F (α t)) t ∧ ‖α t‖ ≤ ‖x₀‖ * Real.exp (C * T) := by
   set M := ‖x₀‖ * Real.exp (C * T)
   set R := M + 1
   have hR : 0 < R := by positivity
-  obtain ⟨K, hK⟩ := exists_lipschitzOnWith_closedBall hF R
+  obtain ⟨K, hK⟩ := hF R
   set G : E → E := fun x => F (ballRetract R x)
   have hmaps : MapsTo (ballRetract R) univ (closedBall (0 : E) R) := fun x _ =>
     mem_closedBall_zero_iff.2 (norm_ballRetract_le hR x)
@@ -84,11 +90,9 @@ theorem exists_local [ProperSpace E] {F : E → E} (hF : LocallyLipschitz F) {C 
   have := (hα t htc).hasDerivAt (Icc_mem_nhds ht.1 ht.2)
   simpa only [G, hαR] using this
 
-/-- **Global existence** for a locally Lipschitz field of linear growth.
-
-Source: the standard proof of global existence under linear growth, as used by
-arXiv:2305.05465v6, `p:wellposedparticles`. -/
-theorem exists_global [ProperSpace E] {F : E → E} (hF : LocallyLipschitz F) {C : ℝ}
+/-- **Global existence** for a field of linear growth, Lipschitz on every ball. -/
+theorem exists_global_of_lipschitzOnWith {F : E → E}
+    (hF : ∀ R, ∃ K, LipschitzOnWith K F (closedBall 0 R)) {C : ℝ}
     (hC : 0 ≤ C) (hFC : ∀ x, ‖F x‖ ≤ C * ‖x‖) (x₀ : E) :
     ∃ γ : ℝ → E, γ 0 = x₀ ∧ ∀ t, HasDerivAt γ (F (γ t)) t := by
   choose α hα0 hα using fun N : ℕ =>
@@ -125,9 +129,12 @@ theorem exists_global [ProperSpace E] {F : E → E} (hF : LocallyLipschitz F) {C
   rw [show α N t = α ⌈|t|⌉₊ t from rfl] at hd
   exact hd.congr_of_eventuallyEq heq
 
-/-- **Global uniqueness**: two solutions on `ℝ` of a locally Lipschitz field
-that agree at `0` are equal. -/
-theorem eq_of_hasDerivAt [ProperSpace E] {F : E → E} (hF : LocallyLipschitz F) {f g : ℝ → E}
+end Complete
+
+/-- **Global uniqueness**: two solutions on `ℝ` of a field Lipschitz on every
+ball that agree at `0` are equal. -/
+theorem eq_of_hasDerivAt_of_lipschitzOnWith {F : E → E}
+    (hF : ∀ R, ∃ K, LipschitzOnWith K F (closedBall 0 R)) {f g : ℝ → E}
     (hf : ∀ t, HasDerivAt f (F (f t)) t) (hg : ∀ t, HasDerivAt g (F (g t)) t) (h0 : f 0 = g 0) :
     f = g := by
   funext t
@@ -144,10 +151,30 @@ theorem eq_of_hasDerivAt [ProperSpace E] {F : E → E} (hF : LocallyLipschitz F)
     (fun s hs => ⟨hg s, (hRg s (Ioo_subset_Icc_self hs)).trans (le_max_right _ _)⟩) h0
     ⟨by linarith [neg_abs_le t], by linarith [le_abs_self t]⟩
 
+/-- **Global existence** for a locally Lipschitz field of linear growth on a
+finite-dimensional space.
+
+Source: the standard proof of global existence under linear growth, as used by
+arXiv:2305.05465v6, `p:wellposedparticles`. -/
+theorem exists_global [ProperSpace E] {F : E → E} (hF : LocallyLipschitz F) {C : ℝ}
+    (hC : 0 ≤ C) (hFC : ∀ x, ‖F x‖ ≤ C * ‖x‖) (x₀ : E) :
+    ∃ γ : ℝ → E, γ 0 = x₀ ∧ ∀ t, HasDerivAt γ (F (γ t)) t :=
+  exists_global_of_lipschitzOnWith (exists_lipschitzOnWith_closedBall hF) hC hFC x₀
+
+/-- **Global uniqueness**: two solutions on `ℝ` of a locally Lipschitz field on
+a finite-dimensional space that agree at `0` are equal. -/
+theorem eq_of_hasDerivAt [ProperSpace E] {F : E → E} (hF : LocallyLipschitz F) {f g : ℝ → E}
+    (hf : ∀ t, HasDerivAt f (F (f t)) t) (hg : ∀ t, HasDerivAt g (F (g t)) t) (h0 : f 0 = g 0) :
+    f = g :=
+  eq_of_hasDerivAt_of_lipschitzOnWith (exists_lipschitzOnWith_closedBall hF) hf hg h0
+
 /-- The hypotheses of `exists_global` and `eq_of_hasDerivAt` are satisfiable:
-the linear field `x ↦ x` on `ℝ`. -/
-example : LocallyLipschitz (fun x : ℝ => x) ∧ (0 : ℝ) ≤ 1 ∧ ∀ x : ℝ, ‖x‖ ≤ 1 * ‖x‖ :=
-  ⟨LipschitzWith.id.locallyLipschitz, zero_le_one, fun x => by simp⟩
+the linear field `x ↦ x` on `ℝ`; so are those of their versions for fields
+Lipschitz on every ball. -/
+example : LocallyLipschitz (fun x : ℝ => x) ∧ (0 : ℝ) ≤ 1 ∧ (∀ x : ℝ, ‖x‖ ≤ 1 * ‖x‖) ∧
+    ∀ R : ℝ, ∃ K, LipschitzOnWith K (fun x : ℝ => x) (closedBall 0 R) :=
+  ⟨LipschitzWith.id.locallyLipschitz, zero_le_one, fun x => by simp,
+    fun _ => ⟨1, LipschitzWith.id.lipschitzOnWith⟩⟩
 
 end GlobalFlow
 end Transformer
