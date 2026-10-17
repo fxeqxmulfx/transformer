@@ -106,6 +106,11 @@ theorem IsFlowField.norm_flow_sub_le (hw : IsFlowField w L M) (s t : ℝ) (x : E
     (mem_univ s) (mem_univ t)
   simpa [hw.flow_self, Real.norm_eq_abs] using h
 
+/-- Trajectories from `B̄(0, R)` stay in `B̄(0, R + M |t - s|)`. -/
+theorem IsFlowField.norm_flow_le (hw : IsFlowField w L M) {R : ℝ} {x : E} (hx : ‖x‖ ≤ R)
+    (s t : ℝ) : ‖flow w s t x‖ ≤ R + M * |t - s| := by
+  linarith [norm_le_norm_add_norm_sub' (flow w s t x) x, hw.norm_flow_sub_le s t x]
+
 theorem IsFlowField.flow_reverse (hw : IsFlowField w L M) (s t : ℝ) (x : E) :
     flow (fun t x => -w (-t) x) (-s) (-t) x = flow w s t x := by
   have hγ : ∀ τ, HasDerivAt (fun τ => flow w s (-τ) x) (-w (-τ) (flow w s (-τ) x)) τ := by
