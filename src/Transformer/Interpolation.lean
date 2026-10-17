@@ -195,3 +195,5 @@ import Transformer.Interpolation.Section5_ClusterRotations
 import Transformer.Interpolation.Section5_IndependentClusters
 import Transformer.Interpolation.Section2_LocalPhases
 import Transformer.Interpolation.Section2_PerceptronControls
+import Transformer.Interpolation.Section2_CollapsePhases
+import Transformer.Interpolation.Section2_CollapseChains
