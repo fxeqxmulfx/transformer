@@ -27,6 +27,7 @@ nondegenerate, almost every orbit does.
 | `SaddleAvoidance.SecondOrder` | the second-order test; Hessians at nondegenerate critical points other than strict saddles are positive definite |
 | `SaddleAvoidance.Necessary` | the gradient vanishes and the Hessian is nonnegative at a local minimizer; a critical point with a direction of negative curvature is a strict saddle |
 | `SaddleAvoidance.Nondegenerate` | almost every orbit with a nondegenerate limit point converges to a local minimizer |
+| `SaddleAvoidance.LinearFlow` | the linear flow `exp (τ A)`: it solves `J' = A J`, is symmetric for symmetric `A`, and has the eigenvalue `e^μ` for each eigenvalue `μ` of `A` |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
 and `thm:main` of arXiv:1602.04915.  Both rest on the center-stable manifold
@@ -52,3 +53,4 @@ import Transformer.SaddleAvoidance.CriticalPoints
 import Transformer.SaddleAvoidance.SecondOrder
 import Transformer.SaddleAvoidance.Necessary
 import Transformer.SaddleAvoidance.Nondegenerate
+import Transformer.SaddleAvoidance.LinearFlow
