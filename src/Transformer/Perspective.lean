@@ -102,6 +102,11 @@ cut-stability at most one gap exceeds `τ` (`not_two_circleGap_gt`).
 that paper: a critical point is stationary (C1), a point that is not a strict
 saddle is cut-stable (C2) for every set (`cutStable_of_torusHessianNonPos`),
 and synchronized angles are global maxima.
+`SyncKernel` through `SyncKernelIntegral` take that paper's kernel
+`f_β(x) = sin x e^{β(cos x - 1)}`: `f_β' < 0` off `[-τ_β, τ_β]` (`f_β'_neg`), the
+sign regions of `f_β'''` from the quartic `p(cos x)` (`positiveregion`,
+`positiveregion2`), and `∫_{-π}^{π} |f_β'''|₊` through `f_β''` at the sign
+changes (`integral_posPart_f_β'''_le`).
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -216,6 +221,11 @@ import Transformer.Perspective.CircleCritical
 import Transformer.Perspective.StrictSaddle
 import Transformer.Perspective.CircleSites
 import Transformer.Perspective.CircleGaps
+import Transformer.Perspective.SyncKernel
+import Transformer.Perspective.SyncKernelQuartic
+import Transformer.Perspective.SyncKernelSign
+import Transformer.Perspective.SyncKernelRegions
+import Transformer.Perspective.SyncKernelIntegral
 import Transformer.Perspective.InnerAsymptotics
 import Transformer.Perspective.PeanoTaylor
 import Transformer.Perspective.AppendixB_EBeta
