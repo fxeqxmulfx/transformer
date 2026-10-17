@@ -202,3 +202,6 @@ import Transformer.Interpolation.Section2_HullLevels
 import Transformer.Interpolation.Section2_SupportRegions
 import Transformer.Interpolation.Section2_SmallBalls
 import Transformer.Interpolation.Section2_BallGrouping
+import Transformer.Interpolation.Section2_GenericRoutePoints
+import Transformer.Interpolation.Section2_GreatArcs
+import Transformer.Interpolation.Section2_RouteChains
