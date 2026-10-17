@@ -7,7 +7,8 @@ whether the build can actually vouch for it.  Run after any change under
 
 Three things are reported per declaration, in order of precedence:
 
-  sorry        `lake build` reports the declaration as using `sorry`.
+  sorry        the declaration contains `sorry` itself, as `lake build`
+               reports it.
   vacuous      the statement concludes `True` (`: True`, `: ∃ x, True`, …);
                such a theorem is provable by `trivial` and says nothing,
                yet is invisible both to the sorry count and to
@@ -15,8 +16,10 @@ Three things are reported per declaration, in order of precedence:
   placeholder  a definition whose body is a constant (`True`, `0`, `∅`,
                `⊥`, `∀ _, True`) while its docstring promises content.
 
-The sorry status is taken from `lake build`, never guessed; those warnings
-are replayed from cache, so a cached build is enough.
+The sorry status is read from the build, never guessed: `lake build` brings
+the `.olean` files up to date and `scripts/Sorries.lean` finds the sorries in
+them.  The build's warnings would say the same, but a module restored from
+Lake's artifact cache replays none.
 """
 
 import os
@@ -72,14 +75,19 @@ def namespace(path):
 
 
 def incomplete_declarations():
-    """{(path, line)} for every declaration `lake build` reports as using sorry."""
+    """{(path, line): name} for every declaration containing sorry, at the
+    line of its name; `scan` removes each one it places."""
     build = subprocess.run(["lake", "build"], capture_output=True, text=True)
     if build.returncode != 0:
         sys.exit("lake build failed; index not regenerated")
-    hits = set()
-    for m in re.finditer(
-            r"^warning: (\S+?):(\d+):\d+: declaration uses", build.stdout, re.M):
-        hits.add((os.path.normpath(m.group(1)), int(m.group(2))))
+    found = subprocess.run(["lake", "env", "lean", "scripts/Sorries.lean"],
+                           capture_output=True, text=True)
+    if found.returncode != 0:
+        sys.exit("scripts/Sorries.lean failed; index not regenerated\n" + found.stdout)
+    hits = {}
+    for row in found.stdout.splitlines():
+        path, line, name = row.split("\t")
+        hits[(path, int(line))] = name
     return hits
 
 
@@ -92,9 +100,11 @@ def scan(path, incomplete):
         stop = STOP.search(text, m.end(), end)
         whole = normalize(text[m.start():stop.start() if stop else end])
         line = text[:m.start()].count("\n") + 1
+        # Lean places a declaration at its name, below any attribute line.
+        name_line = text[:m.start(2)].count("\n") + 1
         kind, name = m.group(1), m.group(2)
         signature, _, body = whole.rpartition(":=")
-        if (path, line) in incomplete:
+        if incomplete.pop((path, name_line), None) is not None:
             status = "sorry"
         elif kind in THEOREMS:
             # A conclusion of `True` is the last atom of the signature,
@@ -126,6 +136,9 @@ def main():
         paper = arxiv_id(path)
         if paper and ns not in papers:
             papers[ns] = paper
+    if incomplete:
+        sys.exit("sorry outside every indexed declaration: "
+                 + ", ".join(sorted(incomplete.values())))
 
     everything = [d for ms in by_namespace.values() for _, _, _, ds in ms for d in ds]
     theorems = [d for d in everything if d[1] in THEOREMS]
