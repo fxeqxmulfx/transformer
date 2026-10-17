@@ -95,13 +95,36 @@ theorem integrable_attentionWeight (Q K : ParamMatrix d) (R : ℝ)
     _ ≤ ‖Q x‖ * (‖K‖ * R) := mul_le_mul_of_nonneg_left
         ((K.le_opNorm y).trans (mul_le_mul_of_nonneg_left hy' (norm_nonneg _))) (norm_nonneg _)
 
+/-- `h ↦ ⟨Qh, Ky⟩`, the derivative in `x` of the exponent of `e:vectorfield`. -/
+noncomputable def scoreDual (Q K : ParamMatrix d) (y : EucSpace d) : EucSpace d →L[ℝ] ℝ :=
+  (innerSL ℝ (K y)).comp Q
+
+/-- `scoreDual Q K y` is the exponent of `e:vectorfield`, as a function of `x`. -/
+theorem scoreDual_apply (Q K : ParamMatrix d) (x y : EucSpace d) :
+    scoreDual Q K y x = inner (𝕜 := ℝ) (Q x) (K y) := by
+  simp [scoreDual, real_inner_comm]
+
+/-- `y ↦ ⟨Q·, Ky⟩` is continuous. -/
+theorem continuous_scoreDual (Q K : ParamMatrix d) : Continuous (scoreDual Q K) := by
+  unfold scoreDual; fun_prop
+
+/-- `‖⟨Q·, Ky⟩‖ ≤ ‖QᵀK‖_op ‖y‖`. -/
+theorem norm_scoreDual_le (Q K : ParamMatrix d) (y : EucSpace d) :
+    ‖scoreDual Q K y‖ ≤ ‖(ContinuousLinearMap.adjoint Q).comp K‖ * ‖y‖ := by
+  refine ContinuousLinearMap.opNorm_le_bound _ (by positivity) fun h => ?_
+  rw [scoreDual_apply, ← ContinuousLinearMap.adjoint_inner_right, Real.norm_eq_abs]
+  refine (abs_real_inner_le_norm _ _).trans ?_
+  have := ((ContinuousLinearMap.adjoint Q).comp K).le_opNorm y
+  rw [ContinuousLinearMap.comp_apply] at this
+  nlinarith [norm_nonneg h]
+
 /-- **Estimate (e:bddinx).**  `‖𝒳[μ]‖_{L^∞} ≤ ‖V‖_op R`.
 
 As in the source: `‖V y‖ ≤ ‖V‖_op R` on the ball, and `𝒳[μ](x)` is an
 average of `V y` against the weights `e^{⟨Qx, Ky⟩}`.
 
 Source: arXiv:2305.05465v6, `e:bddinx`. -/
-theorem attentionKernel_norm_le (Q K V : ParamMatrix d) (R : ℝ) (hR : 0 < R)
+theorem attentionKernel_norm_le (Q K V : ParamMatrix d) (R : ℝ) (hR : 0 ≤ R)
     (μ : Measure (EucSpace d)) (hμ : IsProbabilityMeasure μ) (hsupp : IsCarriedBy μ R)
     (x : EucSpace d) :
     ‖attentionKernel Q K V μ x‖ ≤ ‖V‖ * R := by
@@ -115,7 +138,7 @@ theorem attentionKernel_norm_le (Q K V : ParamMatrix d) (R : ℝ) (hR : 0 < R)
     rw [norm_smul, Real.norm_of_nonneg (Real.exp_pos _).le, mul_comm]
     exact mul_le_mul_of_nonneg_right ((V.le_opNorm y).trans
       (mul_le_mul_of_nonneg_left hy' (norm_nonneg _))) (Real.exp_pos _).le
-  have hVR : 0 ≤ ‖V‖ * R := mul_nonneg (norm_nonneg _) hR.le
+  have hVR : 0 ≤ ‖V‖ * R := mul_nonneg (norm_nonneg _) hR
   rw [attentionKernel, norm_smul, Real.norm_eq_abs]
   rcases (integral_nonneg fun y => (Real.exp_pos _).le : 0 ≤ ∫ y, w y ∂μ).eq_or_lt with h | h
   · rw [← h]; simpa using hVR
@@ -124,9 +147,9 @@ theorem attentionKernel_norm_le (Q K V : ParamMatrix d) (R : ℝ) (hR : 0 < R)
 
 /-- The hypotheses of `e:bddinx` are satisfiable: the Dirac mass at
 the origin is a probability measure carried by the unit ball. -/
-example : (0 : ℝ) < 1 ∧ IsProbabilityMeasure (Measure.dirac (0 : EucSpace d)) ∧
+example : (0 : ℝ) ≤ 1 ∧ IsProbabilityMeasure (Measure.dirac (0 : EucSpace d)) ∧
     IsCarriedBy (Measure.dirac (0 : EucSpace d)) 1 :=
-  ⟨one_pos, inferInstance, isCarriedBy_dirac 1 zero_le_one⟩
+  ⟨zero_le_one, inferInstance, isCarriedBy_dirac 1 zero_le_one⟩
 
 end Clusters
 end Transformer
