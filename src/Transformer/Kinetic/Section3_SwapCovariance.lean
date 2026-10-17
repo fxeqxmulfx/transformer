@@ -123,12 +123,19 @@ theorem abs_covariance_le_sum {U H : (Idx N → ℝ) → ℝ} (hU : Measurable U
   simpa [Real.norm_eq_abs] using norm_integral_le_of_norm_le_const
     (μ := (Measure.pi μs).prod (Measure.pi μs)) (ae_of_all _ hb)
 
-/-- The hypotheses of `abs_covariance_le_sum` are satisfiable: constant observables. -/
-example : Measurable (fun _ : Idx 2 → ℝ => (0 : ℝ)) ∧
-    ∀ (x : Idx 2 → ℝ) (l : Idx 2) (z : ℝ),
-      |(fun _ : Idx 2 → ℝ => (0 : ℝ)) x - (fun _ : Idx 2 → ℝ => (0 : ℝ)) (Function.update x l z)| ≤
-        (fun _ : Idx 2 => (0 : ℝ)) l :=
-  ⟨measurable_const, fun _ _ _ => by simp⟩
+/-- The hypotheses of `integrable_of_abs_le` hold for a constant. -/
+example := integrable_of_abs_le (μ := Measure.dirac (0 : ℝ)) (f := fun _ => 0)
+  measurable_const (C := 0) (fun _ => by simp)
+
+/-- The hypotheses of `covariance_eq_sum_swap` and `abs_covariance_le_sum` hold for
+constant observables under Dirac masses. -/
+example := And.intro (covariance_eq_sum_swap (fun _ : Idx 2 => Measure.dirac (0 : ℝ))
+    (U := fun _ => 0) (H := fun _ => 0) measurable_const measurable_const (CU := 0) (CH := 0)
+    (fun _ => by simp) (fun _ => by simp))
+  (abs_covariance_le_sum (fun _ : Idx 2 => Measure.dirac (0 : ℝ)) (U := fun _ => 0)
+    (H := fun _ => 0) measurable_const measurable_const (CU := 0) (CH := 0) (fun _ => by simp)
+    (fun _ => by simp) (sU := fun _ => 0) (sH := fun _ => 0) (fun _ _ _ => by simp)
+    (fun _ _ _ => by simp))
 
 end Kinetic
 end Transformer

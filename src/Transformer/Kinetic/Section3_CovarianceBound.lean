@@ -62,11 +62,18 @@ theorem abs_covariance_flow_le (lam β : ℝ) {L₁ α γ T K : ℝ}
         exact Finset.sum_congr rfl fun l _ => by ring
     _ ≤ _ := mul_le_mul_of_nonneg_left h (by positivity)
 
-/-- The hypotheses of `abs_covariance_flow_le` are satisfiable: `γ = 1/16 ≤ 1/4`, the
-test `sin` with `K = 1`, and the tokens `0 < 1`. -/
-example : (0 : ℝ) < 1 / 16 ∧ (1 / 16 : ℝ) ≤ 1 / 4 ∧ Function.Periodic Real.sin (2 * π) ∧
-    (∀ x, |Real.cos x| ≤ 1) ∧ (0 : Idx 2) < 1 :=
-  ⟨by norm_num, by norm_num, Real.sin_periodic, Real.abs_cos_le_one, by decide⟩
+/-- The hypotheses of `abs_obs_update_sub_le_env` and `abs_covariance_flow_le` hold for
+`sin`, the kernel's own constant `L₁`, `α = 2e^{2|λ|}L₁`, `γ = 1/16`, the times
+`0 ≤ 1 ≤ T = 1`, Dirac masses and the tokens `0 < 1`. -/
+example (lam β : ℝ) (x : Idx 2 → ℝ) :=
+  have hw := (exists_lipschitz_wBetaDeriv β).choose_spec.choose_spec
+  And.intro (abs_obs_update_sub_le_env lam β 2 hw.2.2.2.1 hw.1 le_rfl (γ := 1 / 16)
+    (by norm_num) (by norm_num) Real.sin_periodic Real.hasDerivAt_sin Real.abs_cos_le_one
+    (T := 1) (t := 0) ⟨le_rfl, zero_le_one⟩ 1 x 0 0)
+  (abs_covariance_flow_le (fun _ : Idx 2 => Measure.dirac (0 : ℝ)) lam β hw.2.2.2.1 hw.1
+    le_rfl (γ := 1 / 16) (by norm_num) (by norm_num) Real.sin_periodic Real.hasDerivAt_sin
+    Real.abs_cos_le_one (T := 1) (t := 0) (t' := 1) ⟨le_rfl, zero_le_one⟩
+    ⟨zero_le_one, le_rfl⟩ (i := 1) (j := 0) (by decide))
 
 end Kinetic
 end Transformer

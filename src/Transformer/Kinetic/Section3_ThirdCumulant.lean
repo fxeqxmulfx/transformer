@@ -81,11 +81,15 @@ theorem abs_thirdCumulant_le {F G H : (Idx N → ℝ) → ℝ} (hF : Measurable 
   rw [abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 1 / 2), Finset.sum_add_distrib]
   linarith
 
-/-- The hypotheses of `abs_thirdCumulant_le` are satisfiable: constant observables
-are measurable and bounded. -/
-example : Measurable (fun _ : Idx 2 → ℝ => (0 : ℝ)) ∧
-    ∀ x : Idx 2 → ℝ, |(fun _ : Idx 2 → ℝ => (0 : ℝ)) x| ≤ 0 :=
-  ⟨measurable_const, fun _ => by simp⟩
+/-- The hypotheses of `abs_thirdCumulant_le` hold for constant observables under Dirac
+masses, with zero bounds. -/
+example := abs_thirdCumulant_le (fun _ : Idx 2 => Measure.dirac (0 : ℝ)) (F := fun _ => 0)
+  (G := fun _ => 0) (H := fun _ => 0) measurable_const measurable_const measurable_const
+  (CF := 0) (CG := 0) (CH := 0) (fun _ => by simp) (fun _ => by simp) (fun _ => by simp)
+  (sF := fun _ => 0) (sG := fun _ => 0) (sH := fun _ => 0) (s2F := fun _ _ => 0)
+  (s2G := fun _ _ => 0) (s2H := fun _ _ => 0) (fun _ _ _ => by simp) (fun _ _ _ => by simp)
+  (fun _ _ _ => by simp) (fun _ _ _ _ _ _ => by simp) (fun _ _ _ _ _ _ => by simp)
+  (fun _ _ _ _ _ _ => by simp) (fun _ => le_rfl) (fun _ => le_rfl) (fun _ => le_rfl)
 
 end Kinetic
 end Transformer

@@ -82,10 +82,18 @@ theorem abs_le_of_triangular {N : ℕ} {y y' W W' s : Idx N → ℝ → ℝ} {c 
         (ih b (Finset.mem_filter.1 hb).2 t (Set.Ico_subset_Icc_self ht)) (hc a b)
     linarith [hbound a t ht]
 
-/-- The hypotheses of `abs_le_of_deriv_le` are satisfiable: `f = W = 0`. -/
-example : (∀ t : ℝ, HasDerivAt (fun _ : ℝ => (0 : ℝ)) 0 t) ∧ |(0 : ℝ)| ≤ 0 ∧
-    ∀ t ∈ Set.Ico (0 : ℝ) 1, |(0 : ℝ)| ≤ 0 * |(0 : ℝ)| + 0 :=
-  ⟨fun t => hasDerivAt_const t 0, by simp, fun _ _ => by simp⟩
+/-- The hypotheses of `abs_le_of_deriv_le` hold for `f = W = g = 0` and `L = 0`. -/
+example := abs_le_of_deriv_le (f := fun _ => (0 : ℝ)) (f' := fun _ => 0) (W := fun _ => 0)
+  (W' := fun _ => 0) (g := fun _ => 0) (L := 0) (T := 1) (fun t => hasDerivAt_const t 0)
+  (fun t => hasDerivAt_const t 0) (by simp) (fun _ _ => by simp) (fun _ _ => by simp)
+
+/-- The hypotheses of `abs_le_of_triangular` hold for `y = W = s = 0`, `c = 0` and
+`L = 0`. -/
+example := abs_le_of_triangular (N := 2) (y := fun _ _ => (0 : ℝ)) (y' := fun _ _ => 0)
+  (W := fun _ _ => 0) (W' := fun _ _ => 0) (s := fun _ _ => 0) (c := fun _ _ => 0) (L := 0)
+  (T := 1) (fun _ _ => le_rfl) (fun _ t => hasDerivAt_const t 0)
+  (fun _ t => hasDerivAt_const t 0) (fun _ => by simp) (fun _ _ _ => by simp)
+  (fun _ _ _ => by simp)
 
 end Kinetic
 end Transformer

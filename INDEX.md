@@ -26610,7 +26610,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`not_unique_minimum_of_sourceIdx`](src/Transformer/Kinetic/Section1_SourceCells.lean#L116) | theorem | proved |
 | [`not_unique_minimum_of_sourceIdx_above`](src/Transformer/Kinetic/Section1_SourceCells.lean#L131) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_Amplitudes](src/Transformer/Kinetic/Section3_Amplitudes.lean)** — 147 lines
+**[Transformer.Kinetic.Section3_Amplitudes](src/Transformer/Kinetic/Section3_Amplitudes.lean)** — 152 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26625,7 +26625,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`covariance_fairCoin`](src/Transformer/Kinetic/Section3_AperiodicCovariance.lean#L31) | theorem | proved |
 | [`correlation_bounds_aperiodic_false`](src/Transformer/Kinetic/Section3_AperiodicCovariance.lean#L46) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_ChainSums](src/Transformer/Kinetic/Section3_ChainSums.lean)** — 101 lines
+**[Transformer.Kinetic.Section3_ChainSums](src/Transformer/Kinetic/Section3_ChainSums.lean)** — 111 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26638,14 +26638,14 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sum_rpow_le`](src/Transformer/Kinetic/Section3_ChainSums.lean#L65) | theorem | proved |
 | [`sum_ratioPow_div_le`](src/Transformer/Kinetic/Section3_ChainSums.lean#L80) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_CovarianceBound](src/Transformer/Kinetic/Section3_CovarianceBound.lean)** — 72 lines
+**[Transformer.Kinetic.Section3_CovarianceBound](src/Transformer/Kinetic/Section3_CovarianceBound.lean)** — 79 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`abs_obs_update_sub_le_env`](src/Transformer/Kinetic/Section3_CovarianceBound.lean#L22) | theorem | proved |
 | [`abs_covariance_flow_le`](src/Transformer/Kinetic/Section3_CovarianceBound.lean#L37) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_CrossTerm](src/Transformer/Kinetic/Section3_CrossTerm.lean)** — 112 lines
+**[Transformer.Kinetic.Section3_CrossTerm](src/Transformer/Kinetic/Section3_CrossTerm.lean)** — 118 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26658,7 +26658,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | --- | --- | --- |
 | [`correlation_bounds`](src/Transformer/Kinetic/Section3_CumulantBounds.lean#L64) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_Envelopes](src/Transformer/Kinetic/Section3_Envelopes.lean)** — 131 lines
+**[Transformer.Kinetic.Section3_Envelopes](src/Transformer/Kinetic/Section3_Envelopes.lean)** — 143 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26673,20 +26673,20 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sum_profileEnv_mul_le`](src/Transformer/Kinetic/Section3_Envelopes.lean#L77) | theorem | proved |
 | [`sum_decay_le`](src/Transformer/Kinetic/Section3_Envelopes.lean#L94) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_Fence](src/Transformer/Kinetic/Section3_Fence.lean)** — 91 lines
+**[Transformer.Kinetic.Section3_Fence](src/Transformer/Kinetic/Section3_Fence.lean)** — 99 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`abs_le_of_deriv_le`](src/Transformer/Kinetic/Section3_Fence.lean#L27) | theorem | proved |
 | [`abs_le_of_triangular`](src/Transformer/Kinetic/Section3_Fence.lean#L63) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_FieldSecondDifference](src/Transformer/Kinetic/Section3_FieldSecondDifference.lean)** — 87 lines
+**[Transformer.Kinetic.Section3_FieldSecondDifference](src/Transformer/Kinetic/Section3_FieldSecondDifference.lean)** — 85 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`abs_gptField_second_diff_le`](src/Transformer/Kinetic/Section3_FieldSecondDifference.lean#L19) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_FirstDifferences](src/Transformer/Kinetic/Section3_FirstDifferences.lean)** — 184 lines
+**[Transformer.Kinetic.Section3_FirstDifferences](src/Transformer/Kinetic/Section3_FirstDifferences.lean)** — 194 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26699,7 +26699,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`periodic_flowMap_add_single`](src/Transformer/Kinetic/Section3_FirstDifferences.lean#L155) | theorem | proved |
 | [`exists_periodic_update`](src/Transformer/Kinetic/Section3_FirstDifferences.lean#L168) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_Flow](src/Transformer/Kinetic/Section3_Flow.lean)** — 186 lines
+**[Transformer.Kinetic.Section3_Flow](src/Transformer/Kinetic/Section3_Flow.lean)** — 196 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26721,7 +26721,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`gptVec_add_single`](src/Transformer/Kinetic/Section3_Flow.lean#L145) | theorem | proved |
 | [`flowMap_add_single`](src/Transformer/Kinetic/Section3_Flow.lean#L169) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_ForcingBound](src/Transformer/Kinetic/Section3_ForcingBound.lean)** — 150 lines
+**[Transformer.Kinetic.Section3_ForcingBound](src/Transformer/Kinetic/Section3_ForcingBound.lean)** — 152 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26729,7 +26729,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`crossForcing_eq_zero_of_lt`](src/Transformer/Kinetic/Section3_ForcingBound.lean#L26) | theorem | proved |
 | [`crossForcing_le`](src/Transformer/Kinetic/Section3_ForcingBound.lean#L34) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_ForcingEnvelope](src/Transformer/Kinetic/Section3_ForcingEnvelope.lean)** — 136 lines
+**[Transformer.Kinetic.Section3_ForcingEnvelope](src/Transformer/Kinetic/Section3_ForcingEnvelope.lean)** — 145 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26741,7 +26741,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sum_profile_col_le`](src/Transformer/Kinetic/Section3_ForcingEnvelope.lean#L40) | theorem | proved |
 | [`sum_profile_mul_profile_le`](src/Transformer/Kinetic/Section3_ForcingEnvelope.lean#L69) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_GammaChoice](src/Transformer/Kinetic/Section3_GammaChoice.lean)** — 92 lines
+**[Transformer.Kinetic.Section3_GammaChoice](src/Transformer/Kinetic/Section3_GammaChoice.lean)** — 96 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26749,7 +26749,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`exists_gamma_le`](src/Transformer/Kinetic/Section3_GammaChoice.lean#L26) | theorem | proved |
 | [`exists_gamma_exp_le`](src/Transformer/Kinetic/Section3_GammaChoice.lean#L67) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_InnerCovariance](src/Transformer/Kinetic/Section3_InnerCovariance.lean)** — 101 lines
+**[Transformer.Kinetic.Section3_InnerCovariance](src/Transformer/Kinetic/Section3_InnerCovariance.lean)** — 111 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26758,7 +26758,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`hybrid_update_of_lt`](src/Transformer/Kinetic/Section3_InnerCovariance.lean#L79) | theorem | proved |
 | [`hybrid_update_of_le`](src/Transformer/Kinetic/Section3_InnerCovariance.lean#L88) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_InnerSums](src/Transformer/Kinetic/Section3_InnerSums.lean)** — 115 lines
+**[Transformer.Kinetic.Section3_InnerSums](src/Transformer/Kinetic/Section3_InnerSums.lean)** — 124 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26768,14 +26768,14 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sum_profileEnv_pairDecay_up`](src/Transformer/Kinetic/Section3_InnerSums.lean#L50) | theorem | proved |
 | [`sum_profileEnv_pairDecay_down`](src/Transformer/Kinetic/Section3_InnerSums.lean#L76) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_KappaBound](src/Transformer/Kinetic/Section3_KappaBound.lean)** — 132 lines
+**[Transformer.Kinetic.Section3_KappaBound](src/Transformer/Kinetic/Section3_KappaBound.lean)** — 146 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`abs_obs_second_diff_le_env`](src/Transformer/Kinetic/Section3_KappaBound.lean#L23) | theorem | proved |
 | [`abs_thirdCumulant_flow_le`](src/Transformer/Kinetic/Section3_KappaBound.lean#L49) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_Observables](src/Transformer/Kinetic/Section3_Observables.lean)** — 182 lines
+**[Transformer.Kinetic.Section3_Observables](src/Transformer/Kinetic/Section3_Observables.lean)** — 197 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26787,7 +26787,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`measurable_obs`](src/Transformer/Kinetic/Section3_Observables.lean#L162) | theorem | proved |
 | [`exists_abs_le_of_periodic`](src/Transformer/Kinetic/Section3_Observables.lean#L167) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_PairEnvelope](src/Transformer/Kinetic/Section3_PairEnvelope.lean)** — 134 lines
+**[Transformer.Kinetic.Section3_PairEnvelope](src/Transformer/Kinetic/Section3_PairEnvelope.lean)** — 144 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26804,7 +26804,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`profile_mul_profile_le_pairEnv`](src/Transformer/Kinetic/Section3_PairEnvelope.lean#L56) | theorem | proved |
 | [`pair_le_pairEnv`](src/Transformer/Kinetic/Section3_PairEnvelope.lean#L108) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_PairSums](src/Transformer/Kinetic/Section3_PairSums.lean)** — 186 lines
+**[Transformer.Kinetic.Section3_PairSums](src/Transformer/Kinetic/Section3_PairSums.lean)** — 198 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26816,7 +26816,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`pairSum_up_le`](src/Transformer/Kinetic/Section3_PairSums.lean#L67) | theorem | proved |
 | [`pairSum_mid_le`](src/Transformer/Kinetic/Section3_PairSums.lean#L124) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_PairSumsLower](src/Transformer/Kinetic/Section3_PairSumsLower.lean)** — 134 lines
+**[Transformer.Kinetic.Section3_PairSumsLower](src/Transformer/Kinetic/Section3_PairSumsLower.lean)** — 137 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26830,7 +26830,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sum_sum_pairEnv`](src/Transformer/Kinetic/Section3_PairTotal.lean#L17) | theorem | proved |
 | [`sum_pairEnv_four_le`](src/Transformer/Kinetic/Section3_PairTotal.lean#L34) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_PowerSums](src/Transformer/Kinetic/Section3_PowerSums.lean)** — 95 lines
+**[Transformer.Kinetic.Section3_PowerSums](src/Transformer/Kinetic/Section3_PowerSums.lean)** — 107 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26843,7 +26843,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sum_Ico_inv_le`](src/Transformer/Kinetic/Section3_PowerSums.lean#L77) | theorem | proved |
 | [`sum_range_ite_le`](src/Transformer/Kinetic/Section3_PowerSums.lean#L84) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_RandomFlow](src/Transformer/Kinetic/Section3_RandomFlow.lean)** — 89 lines
+**[Transformer.Kinetic.Section3_RandomFlow](src/Transformer/Kinetic/Section3_RandomFlow.lean)** — 111 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26853,13 +26853,13 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`covariance_randomFlow`](src/Transformer/Kinetic/Section3_RandomFlow.lean#L48) | theorem | proved |
 | [`thirdCumulant_randomFlow`](src/Transformer/Kinetic/Section3_RandomFlow.lean#L64) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_SecondDifferenceBound](src/Transformer/Kinetic/Section3_SecondDifferenceBound.lean)** — 156 lines
+**[Transformer.Kinetic.Section3_SecondDifferenceBound](src/Transformer/Kinetic/Section3_SecondDifferenceBound.lean)** — 154 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`abs_flowMap_second_diff_le`](src/Transformer/Kinetic/Section3_SecondDifferenceBound.lean#L20) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_SecondDifferences](src/Transformer/Kinetic/Section3_SecondDifferences.lean)** — 124 lines
+**[Transformer.Kinetic.Section3_SecondDifferences](src/Transformer/Kinetic/Section3_SecondDifferences.lean)** — 136 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26872,7 +26872,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`hasDerivAt_crossProfile`](src/Transformer/Kinetic/Section3_SecondDifferences.lean#L86) | theorem | proved |
 | [`crossProfile_super`](src/Transformer/Kinetic/Section3_SecondDifferences.lean#L98) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_Supersolution](src/Transformer/Kinetic/Section3_Supersolution.lean)** — 156 lines
+**[Transformer.Kinetic.Section3_Supersolution](src/Transformer/Kinetic/Section3_Supersolution.lean)** — 165 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26886,7 +26886,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sum_profile_le`](src/Transformer/Kinetic/Section3_Supersolution.lean#L82) | theorem | proved |
 | [`profile_le`](src/Transformer/Kinetic/Section3_Supersolution.lean#L133) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_SupersolutionBound](src/Transformer/Kinetic/Section3_SupersolutionBound.lean)** — 168 lines
+**[Transformer.Kinetic.Section3_SupersolutionBound](src/Transformer/Kinetic/Section3_SupersolutionBound.lean)** — 174 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26908,7 +26908,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`measurable_hybrid`](src/Transformer/Kinetic/Section3_Swap.lean#L76) | theorem | proved |
 | [`measurePreserving_swapAt`](src/Transformer/Kinetic/Section3_Swap.lean#L85) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_SwapCovariance](src/Transformer/Kinetic/Section3_SwapCovariance.lean)** — 134 lines
+**[Transformer.Kinetic.Section3_SwapCovariance](src/Transformer/Kinetic/Section3_SwapCovariance.lean)** — 141 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26916,25 +26916,25 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`covariance_eq_sum_swap`](src/Transformer/Kinetic/Section3_SwapCovariance.lean#L30) | theorem | proved |
 | [`abs_covariance_le_sum`](src/Transformer/Kinetic/Section3_SwapCovariance.lean#L107) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_ThirdCumulant](src/Transformer/Kinetic/Section3_ThirdCumulant.lean)** — 91 lines
+**[Transformer.Kinetic.Section3_ThirdCumulant](src/Transformer/Kinetic/Section3_ThirdCumulant.lean)** — 95 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`abs_thirdCumulant_le`](src/Transformer/Kinetic/Section3_ThirdCumulant.lean#L22) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_ThirdCumulantSplit](src/Transformer/Kinetic/Section3_ThirdCumulantSplit.lean)** — 70 lines
+**[Transformer.Kinetic.Section3_ThirdCumulantSplit](src/Transformer/Kinetic/Section3_ThirdCumulantSplit.lean)** — 75 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`abs_thirdCumulant_le_split`](src/Transformer/Kinetic/Section3_ThirdCumulantSplit.lean#L20) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_ThirdOrder](src/Transformer/Kinetic/Section3_ThirdOrder.lean)** — 141 lines
+**[Transformer.Kinetic.Section3_ThirdOrder](src/Transformer/Kinetic/Section3_ThirdOrder.lean)** — 144 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`abs_swap_term_le`](src/Transformer/Kinetic/Section3_ThirdOrder.lean#L29) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_ThreeTokens](src/Transformer/Kinetic/Section3_ThreeTokens.lean)** — 139 lines
+**[Transformer.Kinetic.Section3_ThreeTokens](src/Transformer/Kinetic/Section3_ThreeTokens.lean)** — 137 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26948,7 +26948,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`gptField_three_pi_sub_zero`](src/Transformer/Kinetic/Section3_ThreeTokens.lean#L101) | theorem | proved |
 | [`gptField_three_two_add_turns`](src/Transformer/Kinetic/Section3_ThreeTokens.lean#L120) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_TokenSums](src/Transformer/Kinetic/Section3_TokenSums.lean)** — 115 lines
+**[Transformer.Kinetic.Section3_TokenSums](src/Transformer/Kinetic/Section3_TokenSums.lean)** — 120 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -26957,7 +26957,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sum_profileEnv_mul_two_le`](src/Transformer/Kinetic/Section3_TokenSums.lean#L31) | theorem | proved |
 | [`sum_profileEnv_mul_three_le`](src/Transformer/Kinetic/Section3_TokenSums.lean#L61) | theorem | proved |
 
-**[Transformer.Kinetic.Section3_Weights](src/Transformer/Kinetic/Section3_Weights.lean)** — 176 lines
+**[Transformer.Kinetic.Section3_Weights](src/Transformer/Kinetic/Section3_Weights.lean)** — 185 lines
 
 | declaration | kind | status |
 | --- | --- | --- |

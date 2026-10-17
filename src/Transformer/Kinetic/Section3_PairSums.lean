@@ -175,12 +175,24 @@ theorem pairSum_mid_le {γ τ Q : ℝ} (hγ0 : 0 < γ) (hγ : γ ≤ 1 / 12) (h�
     _ ≤ pairConst γ τ * (Q ^ 6 * u) := mul_le_mul_of_nonneg_right hc (by positivity)
     _ = pairConst γ τ * (Q ^ 6 / (((i : ℝ) + 1) * ((j : ℝ) + 1))) := by rw [hu]; ring
 
-/-- The hypotheses of `pairSum_up_le` and `pairSum_mid_le` are satisfiable:
-`γ = 1/16`, `k = j = 0 < i = 1`, `Q = q_γ(1, 0)`. -/
-example : (0 : ℝ) < 1 / 16 ∧ (1 / 16 : ℝ) ≤ 1 / 12 ∧ (0 : ℕ) < 1 ∧
-    1 ≤ ratioPow (1 / 16) 1 0 ∧ ratioPow (1 / 16) 0 0 ≤ ratioPow (1 / 16) 1 0 :=
-  ⟨by norm_num, by norm_num, by norm_num, one_le_ratioPow (by norm_num) (by norm_num),
-    by rw [ratioPow_self]; exact one_le_ratioPow (by norm_num) (by norm_num)⟩
+/-- The hypotheses of `pairConst_ge`, `pow_le_pow_of_le` and `pairSum_le` hold at
+`γ = τ = 1` and one token. -/
+example := And.intro (pairConst_ge (γ := 1) (τ := 1) one_pos le_rfl zero_le_one) <|
+  And.intro (pow_le_pow_of_le (a := 1) (Q := 1) zero_le_one le_rfl le_rfl (m := 1) (n := 2)
+    (by norm_num))
+  (pairSum_le (γ := 1) (τ := 1) zero_le_one (N := 1) (x := 0) (y := 0) (z := 0)
+    (w := fun n => ∑ M ∈ Finset.range 1, if n < M then profileEnv 1 1 0 M * pairDecay 0 M
+      else 0) (fun _ => le_rfl))
+
+/-- The hypotheses of `pairSum_up_le` and `pairSum_mid_le` hold at `γ = 1/16`, `τ = 1`
+and the tokens `0 = 0 < 1`. -/
+example :=
+  have hQ := one_le_ratioPow (γ := 1 / 16) (by norm_num) (Nat.zero_le 1)
+  have hQ0 : ratioPow (1 / 16) 0 0 ≤ ratioPow (1 / 16) 1 0 := by rw [ratioPow_self]; exact hQ
+  And.intro (pairSum_up_le (γ := 1 / 16) (τ := 1) (by norm_num) (by norm_num) zero_le_one 1
+    (i := 1) (j := 0) (k := 0) Nat.one_pos hQ le_rfl hQ0)
+  (pairSum_mid_le (γ := 1 / 16) (τ := 1) (by norm_num) (by norm_num) zero_le_one 1 (i := 1)
+    (j := 0) (k := 0) Nat.one_pos hQ le_rfl hQ0)
 
 end Kinetic
 end Transformer

@@ -116,9 +116,21 @@ theorem crossProfile_super {α γ T : ℝ} (hα : 0 ≤ α) (hγ0 : 0 < γ) (hγ
     exact mul_le_mul_of_nonneg_left (sum_profile_le hα hγ0 hγ1 c a ht) (hσ c)
   linarith
 
-/-- The hypotheses of `crossProfile_super` are satisfiable. -/
-example : (0 : ℝ) ≤ 1 ∧ (0 : ℝ) < 1 ∧ (1 : ℝ) ≤ 1 ∧ (0 : ℕ) < 1 := ⟨zero_le_one, one_pos, le_rfl,
-  Nat.one_pos⟩
+/-- The hypotheses of `abs_four_point_le` hold for `g = id`, `L₁ = 1`, `L₂ = 0`. -/
+example := abs_four_point_le (g := fun x : ℝ => x) (g' := fun _ => 1) (L₁ := 1) (L₂ := 0)
+  (fun x => hasDerivAt_id x) (fun _ _ => by simp) (fun _ _ => by simp) 0 1 2 3
+
+/-- The hypotheses of `crossForcing_nonneg`, `crossProfile_nonneg`, `crossProfile_mono`,
+`hasDerivAt_crossProfile` and `crossProfile_super` hold at `α = γ = T = 1`. -/
+example := And.intro (crossForcing_nonneg (α := 1) (γ := 1) (T := 1) zero_le_one one_pos
+    zero_le_one 0 1 0) <|
+  And.intro (crossProfile_nonneg (α := 1) (γ := 1) (T := 1) zero_le_one one_pos zero_le_one 1 0
+    1 0 (t := 1) zero_le_one) <|
+  And.intro (crossProfile_mono (α := 1) (γ := 1) (T := 1) zero_le_one one_pos zero_le_one 1 0
+    1 0 (s := 0) (t := 1) le_rfl zero_le_one) <|
+  And.intro (hasDerivAt_crossProfile 1 (γ := 1) one_ne_zero 1 1 0 1 0 0)
+    (crossProfile_super (α := 1) (γ := 1) (T := 1) zero_le_one one_pos le_rfl zero_le_one
+      (n := 1) 0 1 (a := 0) Nat.one_pos (t := 0) le_rfl)
 
 end Kinetic
 end Transformer

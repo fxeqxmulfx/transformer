@@ -129,8 +129,17 @@ theorem sum_profile_mul_profile_le {α γ T : ℝ} (hα : 0 ≤ α) (hγ0 : 0 < 
     nlinarith [mul_le_mul_of_nonneg_left hk he, mul_le_mul_of_nonneg_left hq he]
   linarith
 
-/-- The hypotheses of `sum_profile_col_le` are satisfiable: `α = 1`, `γ = 1/2`, `T = 1`. -/
-example : (0 : ℝ) ≤ 1 ∧ (0 : ℝ) < 1 / 2 ∧ (1 / 2 : ℝ) ≤ 1 ∧ (0 : ℝ) ≤ 1 := by norm_num
+/-- The hypotheses of `profile_eq_zero_of_lt`, `profile_le_rate`, `sum_profile_col_le` and
+`sum_profile_mul_profile_le` hold at `α = T = 1`, `γ = 1/2` (`γ = 1` for the first two) and
+the tokens `0 < 1 < 2`. -/
+example := And.intro (profile_eq_zero_of_lt (α := 1) (γ := 1) (t := 0) (x := 0) (c := 1)
+    Nat.one_pos) <|
+  And.intro (profile_le_rate (α := 1) (γ := 1) (T := 1) one_pos (x := 1) (c := 0)
+    Nat.one_pos) <|
+  And.intro (sum_profile_col_le (α := 1) (γ := 1 / 2) (T := 1) zero_le_one (by norm_num)
+    (by norm_num) zero_le_one 1 0)
+  (sum_profile_mul_profile_le (α := 1) (γ := 1 / 2) (T := 1) zero_le_one (by norm_num)
+    (by norm_num) zero_le_one (n := 0) (M := 1) (c := 2) Nat.one_pos (by norm_num))
 
 end Kinetic
 end Transformer

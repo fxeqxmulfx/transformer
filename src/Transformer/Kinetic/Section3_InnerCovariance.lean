@@ -94,8 +94,18 @@ theorem hybrid_update_of_le {l : ℕ} {m : Idx N} (hm : l ≤ (m : ℕ)) (x x' :
     simp [show ¬ (k : ℕ) < l by omega]
   · simp [hk]
 
-/-- The hypotheses of `hybrid_update_of_lt` are satisfiable. -/
-example : ((0 : Idx 2) : ℕ) < 1 := by decide
+/-- The hypotheses of `abs_integral_centered_mul_le` hold for constant observables under
+Dirac masses. -/
+example := abs_integral_centered_mul_le (fun _ : Idx 2 => Measure.dirac (0 : ℝ))
+  (F := fun _ => 0) (Φ := fun _ => 0) measurable_const measurable_const (CF := 0) (CΦ := 0)
+  (fun _ => by simp) (fun _ => by simp) (sF := fun _ => 0) (sΦ := fun _ => 0)
+  (fun _ _ _ => by simp) (fun _ _ _ _ => by simp)
+
+/-- The hypotheses of `hybrid_update_of_lt` and `hybrid_update_of_le` hold for two
+tokens. -/
+example (x x' : Idx 2 → ℝ) :=
+  And.intro (hybrid_update_of_lt (l := 1) (m := 0) (by decide) x x' 0)
+    (hybrid_update_of_le (l := 0) (m := 1) (by decide) x x' 0)
 
 end Kinetic
 end Transformer

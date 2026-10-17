@@ -124,8 +124,20 @@ theorem sum_decay_le {γ : ℝ} (hγ0 : 0 < γ) (hγ1 : γ ≤ 1) {n x : ℕ} {c
       1 / ((x : ℝ) + 1) + c / ((x : ℝ) + 1) * (ratioPow γ x n / γ) := by ring
   linarith
 
-/-- The hypotheses of `sum_profileEnv_mul_le` are satisfiable: `γ = 1/16`, `r = 6`. -/
-example : (0 : ℝ) ≤ 1 / 16 ∧ (((6 : ℕ) : ℝ) + 1) * (1 / 16) ≤ 1 / 2 := by norm_num
+/-- The hypotheses of `profileRate_nonneg`, `profileEnv_nonneg` and `profile_le_env` hold
+at `α = γ = T = τ = 1`. -/
+example := And.intro (profileRate_nonneg (α := 1) (γ := 1) (T := 1) zero_le_one zero_le_one) <|
+  And.intro (profileEnv_nonneg (γ := 1) (τ := 1) zero_le_one 0 0)
+    (profile_le_env (α := 1) (γ := 1) (T := 1) one_pos 0 0)
+
+/-- The hypotheses of `sum_chainEnv_mul_le`, `sum_profileEnv_mul_le` and `sum_decay_le`
+hold at `γ = 1/16` and `r = 6`, and at `γ = 1` with a vanishing sequence. -/
+example := And.intro (sum_chainEnv_mul_le (γ := 1 / 16) (r := 6) (by norm_num) (by norm_num)
+    1 1) <|
+  And.intro (sum_profileEnv_mul_le (γ := 1 / 16) (τ := 1) (r := 6) (by norm_num) zero_le_one
+    (by norm_num) 1 1)
+  (sum_decay_le (γ := 1) one_pos le_rfl (n := 0) (x := 0) (c := 0) le_rfl (h := fun _ => 0)
+    (fun _ _ => by positivity) 1)
 
 end Kinetic
 end Transformer

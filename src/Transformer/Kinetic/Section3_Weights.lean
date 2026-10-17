@@ -168,9 +168,18 @@ theorem exists_lipschitz_wBetaDeriv (β : ℝ) :
   obtain ⟨L₂, hL₂, h₂⟩ := exists_lipschitz_of_periodic hc hd (periodic_deriv (wBetaDeriv_periodic β))
   exact ⟨L₁, L₂, hL₁, hL₂, fun x => ((hs.differentiable (by norm_num)) x).hasDerivAt, h₁, h₂⟩
 
-/-- The hypotheses of the weight bounds are satisfiable: token `1` of two has the
-predecessor `0`. -/
-example : (0 : Idx 2) < 1 ∧ ((1 : Idx 2) : ℕ) ≠ 0 := ⟨by decide, by decide⟩
+/-- The hypotheses of the weight bounds hold for token `1` of two, whose predecessor is
+`0`: `abs_alibi_exponent_le`, `alibiZ_pos`, `sum_alibiWeight`, `alibiWeight_le`,
+`alibiWeight_le_succ`. -/
+example := And.intro (abs_alibi_exponent_le 0 2 (j := 1) (k := 0) (by decide)) <|
+  And.intro (alibiZ_pos 0 2 (j := 1) (by decide)) <|
+  And.intro (sum_alibiWeight 0 2 (j := 1) (by decide)) <|
+  And.intro (alibiWeight_le 0 2 (j := 1) (k := 0) (by decide))
+    (alibiWeight_le_succ 0 2 (j := 1) (k := 0) (by decide))
+
+/-- The hypotheses of `periodic_deriv` and `exists_lipschitz_of_periodic` hold for `sin`. -/
+example := And.intro (periodic_deriv Real.sin_periodic)
+  (exists_lipschitz_of_periodic Real.two_pi_pos.ne' Real.contDiff_sin Real.sin_periodic)
 
 end Kinetic
 end Transformer

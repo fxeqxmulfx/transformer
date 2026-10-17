@@ -159,10 +159,16 @@ theorem crossProfile_le {α γ T : ℝ} (hα : 0 ≤ α) (hγ0 : 0 < γ) (hγ1 :
       _ = (1 + 2 * (τ / γ)) ^ 3 * (q ^ 3 * (1 / (((x : ℝ) + 1) * ((M : ℝ) + 1)))) := by
           rw [hD]; simp only [div_eq_mul_inv, mul_inv]; ring
 
-/-- The hypotheses of `crossProfile_le` are satisfiable: `α = 1`, `γ = 1/2`, `T = 1`,
-`n = 0 < M = 1`. -/
-example : (0 : ℝ) ≤ 1 ∧ (0 : ℝ) < 1 / 2 ∧ (1 / 2 : ℝ) ≤ 1 ∧ (0 : ℝ) ≤ 1 ∧ (0 : ℕ) < 1 := by
-  norm_num
+/-- The hypotheses of `ratioPow_sq_mul_le`, `crossForcing_mul_profile_le` and
+`crossProfile_le` hold at `α = T = 1`, `γ = 1/2` (`γ = 1` for the first) and the tokens
+`0 < 1 < 2`. -/
+example := And.intro (ratioPow_sq_mul_le (γ := 1) zero_le_one (n := 0) (c := 0) (x := 1)
+    zero_le_one) <|
+  And.intro (crossForcing_mul_profile_le (α := 1) (γ := 1 / 2) (T := 1) zero_le_one
+    (by norm_num) (by norm_num) zero_le_one (n := 0) (M := 1) (x := 2) Nat.one_pos
+    (by norm_num) 0)
+  (crossProfile_le (α := 1) (γ := 1 / 2) (T := 1) zero_le_one (by norm_num) (by norm_num)
+    zero_le_one 2 (n := 0) (M := 1) Nat.one_pos 0)
 
 end Kinetic
 end Transformer

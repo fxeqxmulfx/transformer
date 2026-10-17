@@ -75,13 +75,11 @@ theorem abs_gptField_second_diff_le (lam β : ℝ) (N : ℕ) {L₁ L₂ : ℝ}
     (mul_nonneg hL₁ (abs_nonneg (θ₁₁ a - θ₁₀ a - θ₀₁ a + θ₀₀ a)))
   linarith
 
-/-- The hypotheses of `abs_gptField_second_diff_le` are satisfiable: `w_β'` has the
-Lipschitz constants of `exists_lipschitz_wBetaDeriv`. -/
-example (β : ℝ) : ∃ L₁ L₂ : ℝ, 0 ≤ L₁ ∧ 0 ≤ L₂ ∧
-    (∀ x, HasDerivAt (wBetaDeriv β) (deriv (wBetaDeriv β) x) x) ∧
-    (∀ x y, |wBetaDeriv β x - wBetaDeriv β y| ≤ L₁ * |x - y|) ∧
-    ∀ x y, |deriv (wBetaDeriv β) x - deriv (wBetaDeriv β) y| ≤ L₂ * |x - y| :=
-  exists_lipschitz_wBetaDeriv β
+/-- The hypotheses of `abs_gptField_second_diff_le` hold for the Lipschitz constants of
+`exists_lipschitz_wBetaDeriv`. -/
+example (lam β : ℝ) (θ : Idx 2 → ℝ) :=
+  have hw := (exists_lipschitz_wBetaDeriv β).choose_spec.choose_spec
+  abs_gptField_second_diff_le lam β 2 hw.2.2.1 hw.2.2.2.1 hw.1 hw.2.2.2.2 θ θ θ θ 1
 
 end Kinetic
 end Transformer

@@ -125,15 +125,13 @@ theorem gptField_three_two_add_turns (lam β z : ℝ) (M : ℕ) :
   rw [show z - (π + 2 * π * M) = z - π - M * (2 * π) by ring,
     (wBetaDeriv_periodic β).sub_nat_mul_eq M]
 
-/-- The hypotheses of the three-token lemmas hold at the resting pairs at
-distance `0` and `π`, with the third token resting at `0`, and at `β = 1`. -/
-example (lam β : ℝ) : Real.sin 0 = 0 ∧ Real.sin π = 0 ∧
-    Real.sin ((![0, 0, 0] : Idx 3 → ℝ) 1 - ![0, 0, 0] 0) = 0 ∧
-    (∀ t : ℝ, HasDerivAt (fun _ : ℝ => (0 : ℝ))
-      (gptField lam β 3 ![0, 0, (fun _ : ℝ => (0 : ℝ)) t] 2) t) ∧ (1 : ℝ) ≠ 0 := by
-  refine ⟨Real.sin_zero, Real.sin_pi, by simp, fun t => ?_, one_ne_zero⟩
-  rw [gptField_three_two]
-  simpa [wBetaDeriv] using hasDerivAt_const t (0 : ℝ)
+/-- The hypotheses of `wBetaDeriv_eq_zero_of_sin_eq_zero`, `gptField_three_one_eq_zero`,
+`exists_three_flow` and `gptField_three_pi_sub_zero` hold at the angle `0`, three tokens at
+rest and `β = 1`. -/
+example (lam β : ℝ) := And.intro (wBetaDeriv_eq_zero_of_sin_eq_zero β Real.sin_zero) <|
+  And.intro (gptField_three_one_eq_zero lam β ![0, 0, 0] (by simp)) <|
+  And.intro (exists_three_flow lam β 0 Real.sin_zero)
+    (gptField_three_pi_sub_zero lam 1 one_ne_zero)
 
 end Kinetic
 end Transformer

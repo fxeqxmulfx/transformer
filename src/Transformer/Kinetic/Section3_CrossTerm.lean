@@ -102,11 +102,17 @@ theorem abs_crossTerm_sub_le {G H : (Idx N → ℝ) → ℝ} {sG sH : Idx N → 
         add_le_add (mul_le_mul ha hb (abs_nonneg _) ((abs_nonneg _).trans ha))
           (mul_le_mul ha' hbb (abs_nonneg _) hsG0)
 
-/-- The hypotheses of `abs_crossTerm_sub_le` are satisfiable: constant observables
-with zero bounds. -/
-example : ∀ (x : Idx 2 → ℝ) (l : Idx 2) (z : ℝ),
-    |(fun _ : Idx 2 → ℝ => (0 : ℝ)) x - (fun _ : Idx 2 → ℝ => (0 : ℝ)) (Function.update x l z)| ≤
-      (fun _ : Idx 2 => (0 : ℝ)) l := fun _ _ _ => by simp
+/-- The hypotheses of `second_diff_bound_nonneg` hold for a constant observable with zero
+bound. -/
+example := second_diff_bound_nonneg (G := fun _ : Idx 2 → ℝ => 0) (s2G := fun _ _ => 0)
+  (fun _ _ _ _ _ _ => by simp) (l := 0) (m := 1) (by decide)
+
+/-- The hypotheses of `abs_crossTerm_sub_le` hold for constant observables with zero
+bounds. -/
+example (x x' : Idx 2 → ℝ) := abs_crossTerm_sub_le (G := fun _ => 0) (H := fun _ => 0)
+  (sG := fun _ => 0) (sH := fun _ => 0) (s2G := fun _ _ => 0) (s2H := fun _ _ => 0)
+  (fun _ _ _ => by simp) (fun _ _ _ => by simp) (fun _ _ _ _ _ _ => by simp)
+  (fun _ _ _ _ _ _ => by simp) (fun _ => le_rfl) (fun _ => le_rfl) x x' 0 1 0
 
 end Kinetic
 end Transformer

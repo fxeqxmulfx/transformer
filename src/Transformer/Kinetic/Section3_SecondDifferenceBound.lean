@@ -143,14 +143,12 @@ theorem abs_flowMap_second_diff_le (lam β : ℝ) (N : ℕ) {L₁ L₂ α γ T :
   exact abs_le_of_triangular (fun a b => mul_nonneg hL₁ (alibiWeight_nonneg lam N a b))
     hdy hdW h0 hbound hsuper a t ht
 
-/-- The hypotheses of `abs_gptField_second_diff_le` are satisfiable: the kernel's
-own constants. -/
-example (β : ℝ) : ∃ L₁ L₂ : ℝ, 0 ≤ L₁ ∧
-    (∀ x, HasDerivAt (wBetaDeriv β) (deriv (wBetaDeriv β) x) x) ∧
-    (∀ x y, |wBetaDeriv β x - wBetaDeriv β y| ≤ L₁ * |x - y|) ∧
-    (∀ x y, |deriv (wBetaDeriv β) x - deriv (wBetaDeriv β) y| ≤ L₂ * |x - y|) := by
-  obtain ⟨L₁, L₂, hL₁, -, hd, h₁, h₂⟩ := exists_lipschitz_wBetaDeriv β
-  exact ⟨L₁, L₂, hL₁, hd, h₁, h₂⟩
+/-- The hypotheses of `abs_flowMap_second_diff_le` hold for the kernel's own constants,
+`α = 2e^{2|λ|}L₁`, `γ = 1` and `t = 0 ≤ T = 1`. -/
+example (lam β : ℝ) (x : Idx 2 → ℝ) :=
+  have hw := (exists_lipschitz_wBetaDeriv β).choose_spec.choose_spec
+  abs_flowMap_second_diff_le lam β 2 hw.2.2.1 hw.2.2.2.1 hw.1 hw.2.2.2.2 le_rfl (γ := 1)
+    one_pos le_rfl x 0 1 1 1 1 (T := 1) (t := 0) ⟨le_rfl, zero_le_one⟩
 
 end Kinetic
 end Transformer

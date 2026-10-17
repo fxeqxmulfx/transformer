@@ -88,5 +88,9 @@ example : ∃ γ : ℝ, 0 < γ ∧ γ ≤ 1 ∧ Real.exp (0 / γ * 1) ^ 1 * Real
     Real.exp (√(1 * 1 * 1)) * Real.exp (1 * 1) :=
   exists_gamma_exp_le le_rfl 1 1 one_pos one_pos zero_le_one (by norm_num) (by norm_num)
 
+/-- The hypotheses of `exists_gamma_le` hold at `a = b = γ₀ = T = ℓ = 1`. -/
+example := exists_gamma_le (a := 1) (b := 1) (γ₀ := 1) (T := 1) (ℓ := 1) zero_le_one
+  zero_le_one one_pos one_pos zero_le_one
+
 end Kinetic
 end Transformer

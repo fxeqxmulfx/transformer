@@ -107,9 +107,18 @@ theorem sum_profileEnv_pairDecay_down {γ τ : ℝ} (hγ0 : 0 < γ) (hγ1 : γ �
     · rw [profileEnv_of_gt (by omega), zero_mul]
     · rfl
 
-/-- The hypotheses of `sum_profileEnv_pairDecay_up` are satisfiable: `γ = 1/2`,
-`τ = 1`, `x = 0 < z = 1`. -/
-example : (0 : ℝ) < 1 / 2 ∧ (1 / 2 : ℝ) ≤ 1 ∧ (0 : ℝ) ≤ 1 ∧ (0 : ℕ) < 1 := by norm_num
+/-- The hypotheses of `sum_ratioPow_pairDecay_le`, `profileEnv_mul_pairDecay_le_up` and
+`profileEnv_mul_pairDecay_le_down` hold at `γ = τ = 1` and the tokens `0 < 1`. -/
+example := And.intro (sum_ratioPow_pairDecay_le (γ := 1) one_pos le_rfl 1 0 0) <|
+  And.intro (profileEnv_mul_pairDecay_le_up (γ := 1) (τ := 1) (x := 0) (z := 1) Nat.one_pos 0)
+    (profileEnv_mul_pairDecay_le_down (γ := 1) (τ := 1) (x := 1) (z := 0) Nat.one_pos 0)
+
+/-- The hypotheses of `sum_profileEnv_pairDecay_up` and `sum_profileEnv_pairDecay_down`
+hold at `γ = 1/2`, `τ = 1` and the tokens `0 < 1`. -/
+example := And.intro (sum_profileEnv_pairDecay_up (γ := 1 / 2) (τ := 1) (by norm_num)
+    (by norm_num) zero_le_one (x := 0) (z := 1) Nat.one_pos 1 0)
+  (sum_profileEnv_pairDecay_down (γ := 1 / 2) (τ := 1) (by norm_num) (by norm_num)
+    zero_le_one (x := 1) (z := 0) Nat.one_pos 1 0)
 
 end Kinetic
 end Transformer

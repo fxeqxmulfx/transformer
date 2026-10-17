@@ -178,9 +178,19 @@ theorem flowMap_add_single (lam β : ℝ) (N : ℕ) (x : Idx N → ℝ) (l : Idx
   simp only [flowMap_zero] at this
   exact this.symm
 
-/-- The hypothesis of `eq_flowMap` is satisfiable: the flow itself. -/
-example (lam β : ℝ) (N : ℕ) (x : Idx N → ℝ) :
-    IsGPTFlow lam β N (fun t => flowMap lam β N t x) := isGPTFlow_flowMap lam β N x
+/-- The hypotheses of `abs_gptField_sub_le` and `norm_gptVec_sub_le` hold for the
+Lipschitz constant of `exists_lipschitz_wBetaDeriv`. -/
+example (lam β : ℝ) (θ θ' : Idx 2 → ℝ) :=
+  have hw := (exists_lipschitz_wBetaDeriv β).choose_spec.choose_spec
+  And.intro (abs_gptField_sub_le lam β 2 hw.2.2.2.1 θ θ' 1)
+    (norm_gptVec_sub_le lam β 2 hw.1 hw.2.2.2.1 θ θ')
+
+/-- The hypotheses of `eq_flowMap`, `continuous_flowMap` and `measurable_flowMap` hold for
+the flow itself and `t = 1`. -/
+example (lam β : ℝ) (x : Idx 2 → ℝ) :=
+  And.intro (eq_flowMap lam β 2 (isGPTFlow_flowMap lam β 2 x) 1) <|
+  And.intro (continuous_flowMap lam β 2 (t := 1) zero_le_one)
+    (measurable_flowMap lam β 2 (t := 1) zero_le_one 0)
 
 end Kinetic
 end Transformer

@@ -60,11 +60,16 @@ theorem abs_thirdCumulant_le_split {F G H : (Idx N → ℝ) → ℝ} (hF : Measu
   rw [← Finset.mul_sum]
   ring
 
-/-- The hypotheses of `abs_thirdCumulant_le_split` are satisfiable: constant
-observables, with vanishing envelopes. -/
-example : Measurable (fun _ : Idx 2 → ℝ => (0 : ℝ)) ∧
-    ∀ l : Idx 2, (0 : ℝ) ≤ (fun _ _ => (0 : ℝ)) l l :=
-  ⟨measurable_const, fun _ => le_rfl⟩
+/-- The hypotheses of `abs_thirdCumulant_le_split` hold for constant observables under
+Dirac masses, with vanishing envelopes. -/
+example := abs_thirdCumulant_le_split (fun _ : Idx 2 => Measure.dirac (0 : ℝ))
+  (F := fun _ => 0) (G := fun _ => 0) (H := fun _ => 0) measurable_const measurable_const
+  measurable_const (CF := 0) (CG := 0) (CH := 0) (fun _ => by simp) (fun _ => by simp)
+  (fun _ => by simp) (sF := fun _ => 0) (sG := fun _ => 0) (sH := fun _ => 0)
+  (wF := fun _ _ => 0) (wG := fun _ _ => 0) (wH := fun _ _ => 0) (fun _ _ _ => by simp)
+  (fun _ _ _ => by simp) (fun _ _ _ => by simp) (fun _ _ _ _ _ _ => by simp)
+  (fun _ _ _ _ _ _ => by simp) (fun _ _ _ _ _ _ => by simp) (fun _ => le_rfl)
+  (fun _ => le_rfl) (fun _ => le_rfl)
 
 end Kinetic
 end Transformer

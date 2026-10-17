@@ -170,13 +170,28 @@ theorem exists_abs_le_of_periodic {φ dφ : ℝ → ℝ} (hper : Function.Period
     (by positivity) (continuous_iff_continuousAt.2 fun x => (hφ x).continuousAt))
   exact ⟨C, fun x => by simpa using hC (φ x) ⟨x, rfl⟩⟩
 
-/-- The hypotheses of `abs_obs_update_sub_le` and `abs_obs_second_diff_le` are
-satisfiable: `sin`, with `κ = K' = 1`. -/
-example : Function.Periodic Real.sin (2 * π) ∧ (∀ x, HasDerivAt Real.sin (Real.cos x) x) ∧
-    (∀ x, HasDerivAt Real.cos (-Real.sin x) x) ∧ (∀ x, |Real.cos x| ≤ 1) ∧
-    ∀ x, |-Real.sin x| ≤ 1 :=
-  ⟨Real.sin_periodic, Real.hasDerivAt_sin, Real.hasDerivAt_cos, Real.abs_cos_le_one,
-    fun x => by rw [abs_neg]; exact Real.abs_sin_le_one x⟩
+/-- The hypotheses of `abs_sub_le_of_abs_deriv_le`, `measurable_obs` and
+`exists_abs_le_of_periodic` hold for `sin`, with `K = 1`. -/
+example (lam β : ℝ) := And.intro (abs_sub_le_of_abs_deriv_le Real.hasDerivAt_sin
+    Real.abs_cos_le_one 0 1) <| And.intro (measurable_obs lam β 2 Real.hasDerivAt_sin (t := 1)
+    zero_le_one 0) (exists_abs_le_of_periodic Real.sin_periodic Real.hasDerivAt_sin)
+
+/-- The hypotheses of `abs_flowMap_add_single_sub_le_pi`, `abs_obs_update_sub_le`,
+`exists_periodic_update_two` and `abs_obs_second_diff_le` hold for `sin`, `κ = K' = 1`,
+the kernel's constants, `α = 2e^{2|λ|}L₁`, `γ = 1`, `t = 0 ≤ T = 1` and `l = 0 ≠ m = 1`. -/
+example (lam β : ℝ) (x : Idx 2 → ℝ) :=
+  have hw := (exists_lipschitz_wBetaDeriv β).choose_spec.choose_spec
+  And.intro (abs_flowMap_add_single_sub_le_pi lam β 2 hw.2.2.2.1 hw.1 le_rfl (γ := 1) one_pos
+    le_rfl x 0 (h := 0) (by simp [Real.pi_pos.le]) 1 (T := 1) (t := 0) ⟨le_rfl, zero_le_one⟩) <|
+  And.intro (abs_obs_update_sub_le lam β 2 hw.2.2.2.1 hw.1 le_rfl (γ := 1) one_pos le_rfl
+    Real.sin_periodic Real.hasDerivAt_sin Real.abs_cos_le_one (T := 1) (t := 0)
+    ⟨le_rfl, zero_le_one⟩ 1 x 0 0) <|
+  And.intro (exists_periodic_update_two lam β 2 Real.sin_periodic x (l := 0) (m := 1)
+    (by decide) 0 0)
+  (abs_obs_second_diff_le lam β 2 hw.2.2.1 hw.2.2.2.1 hw.1 hw.2.2.2.2 le_rfl (γ := 1) one_pos
+    le_rfl Real.sin_periodic Real.hasDerivAt_sin Real.hasDerivAt_cos Real.abs_cos_le_one
+    (fun x => by rw [abs_neg]; exact Real.abs_sin_le_one x) (T := 1) (t := 0)
+    ⟨le_rfl, zero_le_one⟩ 1 x (l := 0) (m := 1) (by decide) 0 0)
 
 end Kinetic
 end Transformer

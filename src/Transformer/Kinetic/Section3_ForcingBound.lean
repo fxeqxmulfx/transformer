@@ -141,10 +141,12 @@ theorem crossForcing_le {α γ T : ℝ} (hα : 0 ≤ α) (hγ0 : 0 < γ) (hγ1 :
       nlinarith
     nlinarith [mul_le_mul_of_nonneg_right hcoef hX]
 
-/-- The hypotheses of `crossForcing_le` are satisfiable: `α = 1`, `γ = 1/2`, `T = 1`,
-`n = 0 < M = 1`. -/
-example : (0 : ℝ) ≤ 1 ∧ (0 : ℝ) < 1 / 2 ∧ (1 / 2 : ℝ) ≤ 1 ∧ (0 : ℝ) ≤ 1 ∧ (0 : ℕ) < 1 := by
-  norm_num
+/-- The hypotheses of `crossForcing_eq_zero_of_lt` and `crossForcing_le` hold at `α = T = 1`,
+`γ = 1/2` and the column `0 < 1`. -/
+example := And.intro (crossForcing_eq_zero_of_lt (α := 1) (γ := 1) (T := 1) (l := 0) (M := 1)
+    (c := 0) Nat.one_pos)
+  (crossForcing_le (α := 1) (γ := 1 / 2) (T := 1) zero_le_one (by norm_num) (by norm_num)
+    zero_le_one (n := 0) (M := 1) Nat.one_pos 0)
 
 end Kinetic
 end Transformer

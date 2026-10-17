@@ -173,12 +173,22 @@ theorem exists_periodic_update (lam β : ℝ) (N : ℕ) {φ : ℝ → ℝ}
   refine ⟨h, hh, fun t a => ?_⟩
   rw [update_eq_add_single, hn, periodic_flowMap_add_single lam β N hφ]
 
-/-- The hypotheses of `abs_flowMap_add_single_sub_le` are satisfiable for the
-kernel's own constant and `α = 2 e^{2|λ|} L₁`, `γ = 1`. -/
-example (β : ℝ) : ∃ L₁ : ℝ, 0 ≤ L₁ ∧
-    (∀ x y, |wBetaDeriv β x - wBetaDeriv β y| ≤ L₁ * |x - y|) := by
-  obtain ⟨L₁, -, hL₁, -, -, hL, -⟩ := exists_lipschitz_wBetaDeriv β
-  exact ⟨L₁, hL₁, hL⟩
+/-- The hypothesis of `sum_alibiWeight_mul_le` holds for `f = 1`. -/
+example := sum_alibiWeight_mul_le 0 (N := 2) 1 (f := fun _ => 1) (fun _ => zero_le_one)
+
+/-- The hypotheses of `abs_deriv_flow_sub_le` and `abs_flowMap_add_single_sub_le` hold for
+the kernel's own constant `L₁`, `α = 2e^{2|λ|}L₁`, `γ = 1` and `t = 0 ≤ T = 1`. -/
+example (lam β : ℝ) (x : Idx 2 → ℝ) :=
+  have hw := (exists_lipschitz_wBetaDeriv β).choose_spec.choose_spec
+  And.intro (abs_deriv_flow_sub_le lam β 2 hw.2.2.2.1 hw.1 x x 1)
+    (abs_flowMap_add_single_sub_le lam β 2 hw.2.2.2.1 hw.1 le_rfl (γ := 1) one_pos le_rfl x 0
+      1 1 (T := 1) (t := 0) ⟨le_rfl, zero_le_one⟩)
+
+/-- The hypotheses of `periodic_flowMap_add_single` and `exists_periodic_update` hold for
+the periodic test `sin`. -/
+example (lam β : ℝ) (y : Idx 2 → ℝ) :=
+  And.intro (periodic_flowMap_add_single lam β 2 Real.sin_periodic y 0 1 1 0 0)
+    (exists_periodic_update lam β 2 Real.sin_periodic y 0 1)
 
 end Kinetic
 end Transformer

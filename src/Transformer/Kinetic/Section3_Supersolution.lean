@@ -149,8 +149,17 @@ theorem profile_le (α : ℝ) {γ : ℝ} (hγ : 0 < γ) {b a : ℕ} (hba : b < a
   have := ratioPow_pos γ a b
   gcongr
 
-/-- The hypotheses of the profile bounds are satisfiable: `α = 1`, `γ = 1/2`. -/
-example : (0 : ℝ) ≤ 1 ∧ (0 : ℝ) < 1 / 2 ∧ (1 / 2 : ℝ) ≤ 1 := by norm_num
+/-- The hypotheses of the profile bounds hold at `α = 1` and `γ = 1` (`γ = 1/2` for
+`sum_profile_le`): `hasDerivAt_profile`, `profile_nonneg`, `profileDeriv_nonneg`,
+`profile_mono`, `sum_profile_le`, `profile_le`. -/
+example := And.intro (hasDerivAt_profile 1 (γ := 1) one_ne_zero 0 1 0) <|
+  And.intro (profile_nonneg (α := 1) (γ := 1) zero_le_one one_pos 0 1 (t := 1) zero_le_one) <|
+  And.intro (profileDeriv_nonneg (α := 1) (γ := 1) zero_le_one 0 1 1) <|
+  And.intro (profile_mono (α := 1) (γ := 1) zero_le_one one_pos 0 1 (s := 0) (t := 1)
+    zero_le_one) <|
+  And.intro (sum_profile_le (α := 1) (γ := 1 / 2) zero_le_one (by norm_num) (by norm_num) 0 1
+    (t := 1) zero_le_one)
+  (profile_le 1 (γ := 1) one_pos (b := 0) (a := 1) Nat.one_pos 1)
 
 end Kinetic
 end Transformer

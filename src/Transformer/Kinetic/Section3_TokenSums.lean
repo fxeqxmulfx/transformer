@@ -106,10 +106,15 @@ theorem sum_profileEnv_mul_three_le {γ τ : ℝ} (hγ0 : 0 < γ) (hγ : γ ≤ 
   rw [← hc]
   nlinarith
 
-/-- The hypotheses of `sum_profileEnv_mul_three_le` are satisfiable: `γ = 1/16`,
-`τ = 1`, `k = 0 < j = 1 < i = 2`. -/
-example : (0 : ℝ) < 1 / 16 ∧ (1 / 16 : ℝ) ≤ 1 / 6 ∧ (0 : ℝ) ≤ 1 ∧ (0 : ℕ) < 1 ∧
-    (1 : ℕ) < 2 := by norm_num
+/-- The hypotheses of `profileEnv_mul_chainEnv`, `sum_profileEnv_mul_two_le` and
+`sum_profileEnv_mul_three_le` hold at `γ = 1/16` (`γ = 1` for the first), `τ = 1` and the
+tokens `0 < 1 < 2`. -/
+example := And.intro (profileEnv_mul_chainEnv (γ := 1) (τ := 1) (x := 1) (c := 0) Nat.one_pos
+    0) <|
+  And.intro (sum_profileEnv_mul_two_le (γ := 1 / 16) (τ := 1) (by norm_num) (by norm_num)
+    zero_le_one 1 (i := 1) (j := 0) Nat.one_pos)
+  (sum_profileEnv_mul_three_le (γ := 1 / 16) (τ := 1) (by norm_num) (by norm_num) zero_le_one
+    1 (i := 2) (j := 1) (k := 0) Nat.one_pos (by norm_num))
 
 end Kinetic
 end Transformer

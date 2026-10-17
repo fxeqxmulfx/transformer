@@ -88,8 +88,20 @@ theorem sum_range_ite_le {f : ℕ → ℝ} (hf : ∀ M, 0 ≤ f M) (N a b : ℕ)
   exact Finset.sum_le_sum_of_subset_of_nonneg (fun M hM => (Finset.mem_filter.1 hM).2)
     fun M _ _ => hf M
 
-/-- The hypotheses of `sum_ratioPow_le` are satisfiable. -/
-example : (0 : ℝ) ≤ 1 / 4 ∧ (1 / 4 : ℝ) ≤ 1 / 2 := by norm_num
+/-- The hypotheses of `ratioPow_le_ratioPow_left`, `ratioPow_le_ratioPow_right`,
+`sum_Ico_ratioPow_div_le`, `sum_Ico_inv_le` and `sum_range_ite_le` hold at `γ = 1`. -/
+example := And.intro (ratioPow_le_ratioPow_left (γ := 1) zero_le_one (a := 0) (a' := 1)
+    zero_le_one 0) <|
+  And.intro (ratioPow_le_ratioPow_right (γ := 1) zero_le_one 1 (b := 0) (b' := 1)
+    zero_le_one) <|
+  And.intro (sum_Ico_ratioPow_div_le (γ := 1) one_pos le_rfl 0 2) <|
+  And.intro (sum_Ico_inv_le (γ := 1) one_pos le_rfl 0 2)
+    (sum_range_ite_le (f := fun _ => 1) (fun _ => zero_le_one) 2 0 1)
+
+/-- The hypotheses of `sum_ratioPow_le` and `sum_ratioPow_pow_le` hold at `s = 1/4`, and at
+`γ = 1/16` with `r = 6`. -/
+example := And.intro (sum_ratioPow_le (s := 1 / 4) (by norm_num) (by norm_num) 1)
+  (sum_ratioPow_pow_le (γ := 1 / 16) (r := 6) (by norm_num) (by norm_num) 1)
 
 end Kinetic
 end Transformer

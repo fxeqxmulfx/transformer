@@ -130,12 +130,15 @@ theorem abs_swap_term_le {F G H : (Idx N → ℝ) → ℝ} (hF : Measurable F) (
         (abs_sub _ _).trans (add_le_add (abs_add_le _ _) le_rfl)
     _ ≤ _ := add_le_add (add_le_add hI1 hI2) hI3
 
-/-- The hypotheses of `abs_swap_term_le` are satisfiable: constant observables. -/
-example : ∀ (x : Idx 2 → ℝ) (l m : Idx 2) (z z' : ℝ), m ≠ l →
-    |(fun _ : Idx 2 → ℝ => (0 : ℝ)) x - (fun _ : Idx 2 → ℝ => (0 : ℝ)) (Function.update x l z) -
-      (fun _ : Idx 2 → ℝ => (0 : ℝ)) (Function.update x m z') +
-      (fun _ : Idx 2 → ℝ => (0 : ℝ)) (Function.update (Function.update x l z) m z')| ≤
-      (fun _ _ : Idx 2 => (0 : ℝ)) l m := fun _ _ _ _ _ _ => by simp
+/-- The hypotheses of `abs_swap_term_le` hold for constant observables under Dirac masses,
+with zero bounds. -/
+example := abs_swap_term_le (fun _ : Idx 2 => Measure.dirac (0 : ℝ)) (F := fun _ => 0)
+  (G := fun _ => 0) (H := fun _ => 0) measurable_const measurable_const measurable_const
+  (CF := 0) (CG := 0) (CH := 0) (fun _ => by simp) (fun _ => by simp) (fun _ => by simp)
+  (sF := fun _ => 0) (sG := fun _ => 0) (sH := fun _ => 0) (s2F := fun _ _ => 0)
+  (s2G := fun _ _ => 0) (s2H := fun _ _ => 0) (fun _ _ _ => by simp) (fun _ _ _ => by simp)
+  (fun _ _ _ => by simp) (fun _ _ _ _ _ _ => by simp) (fun _ _ _ _ _ _ => by simp)
+  (fun _ _ _ _ _ _ => by simp) (fun _ => le_rfl) (fun _ => le_rfl) (fun _ => le_rfl) 0
 
 end Kinetic
 end Transformer

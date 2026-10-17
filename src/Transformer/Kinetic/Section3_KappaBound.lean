@@ -121,12 +121,26 @@ theorem abs_thirdCumulant_flow_le (lam β : ℝ) {L₁ L₂ α γ T κ K' : ℝ}
         gcongr
     _ = _ := by ring
 
-/-- The hypotheses of `abs_thirdCumulant_flow_le` are satisfiable: `γ = 1/16 ≤ 1/12`,
-the test `sin` with `κ = K' = 1`, and the tokens `0 < 1 < 2`. -/
-example : (0 : ℝ) < 1 / 16 ∧ (1 / 16 : ℝ) ≤ 1 / 12 ∧ Function.Periodic Real.sin (2 * π) ∧
-    (∀ x, |Real.cos x| ≤ 1) ∧ (∀ x, |-Real.sin x| ≤ 1) ∧ (0 : Idx 3) < 1 ∧ (1 : Idx 3) < 2 :=
-  ⟨by norm_num, by norm_num, Real.sin_periodic, Real.abs_cos_le_one,
-    fun x => by rw [abs_neg]; exact Real.abs_sin_le_one x, by decide, by decide⟩
+/-- The hypotheses of `abs_obs_second_diff_le_env` hold for `sin`, the kernel's own
+constants, `α = 2e^{2|λ|}L₁`, `γ = 1/16`, `t = 0 ≤ T = 1` and the tokens `0 < 1`. -/
+example (lam β : ℝ) (x : Idx 2 → ℝ) :=
+  have hw := (exists_lipschitz_wBetaDeriv β).choose_spec.choose_spec
+  abs_obs_second_diff_le_env lam β 2 hw.2.2.1 hw.2.2.2.1 hw.1 hw.2.2.2.2 hw.2.1 le_rfl
+    (γ := 1 / 16) (by norm_num) (by norm_num) Real.sin_periodic Real.hasDerivAt_sin
+    Real.hasDerivAt_cos Real.abs_cos_le_one (fun x => by rw [abs_neg]; exact Real.abs_sin_le_one x)
+    (T := 1) (t := 0) ⟨le_rfl, zero_le_one⟩ 1 x 0 1 0 0 (by decide)
+
+/-- The hypotheses of `abs_thirdCumulant_flow_le` hold for `sin`, the kernel's own
+constants, `α = 2e^{2|λ|}L₁`, `γ = 1/16`, the times `0, 0, 1 ≤ T = 1`, Dirac masses and
+the tokens `0 < 1 < 2`. -/
+example (lam β : ℝ) :=
+  have hw := (exists_lipschitz_wBetaDeriv β).choose_spec.choose_spec
+  abs_thirdCumulant_flow_le (fun _ : Idx 3 => Measure.dirac (0 : ℝ)) lam β hw.2.2.1 hw.2.2.2.1
+    hw.1 hw.2.2.2.2 hw.2.1 le_rfl (γ := 1 / 16) (by norm_num) (by norm_num) Real.sin_periodic
+    Real.hasDerivAt_sin Real.hasDerivAt_cos Real.abs_cos_le_one Real.abs_cos_le_one
+    (fun x => by rw [abs_neg]; exact Real.abs_sin_le_one x) (T := 1) (t := 0) (t' := 0)
+    (t'' := 1) ⟨le_rfl, zero_le_one⟩ ⟨le_rfl, zero_le_one⟩ ⟨zero_le_one, le_rfl⟩ (i := 2)
+    (j := 1) (k := 0) (by decide) (by decide)
 
 end Kinetic
 end Transformer

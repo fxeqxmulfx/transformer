@@ -79,11 +79,33 @@ theorem thirdCumulant_randomFlow [IsProbabilityMeasure P] (lam β : ℝ) {N : �
     obs_eq_comp lam β N hflow φ t i, obs_eq_comp lam β N hflow φ t' j,
     obs_eq_comp lam β N hflow φ t'' k]
 
-/-- The hypotheses of `covariance_randomFlow` are satisfiable: three tokens resting at
-`0` on the one-point probability space, and the test `sin`. -/
-example (lam β : ℝ) : IsGPTFlow lam β 3 (fun _ _ => 0) ∧
-    (Measurable fun (_ : Unit) => (0 : ℝ)) ∧ (∀ x, HasDerivAt Real.sin (Real.cos x) x) :=
-  ⟨isGPTFlow_constant_zero lam β 3, measurable_const, Real.hasDerivAt_sin⟩
+/-- The hypotheses of `thirdCumulant_map` hold for the identity observables of a constant. -/
+example := thirdCumulant_map (P := Measure.dirac ()) (Z := fun _ : Unit => (0 : ℝ))
+  measurable_const.aemeasurable (F := id) (G := id) (H := id) measurable_id measurable_id
+  measurable_id
+
+/-- The hypotheses of `obs_eq_comp` hold for three tokens resting at `0`. -/
+example (lam β : ℝ) := obs_eq_comp (Ω := Unit) lam β 3 (ϑ := fun _ _ _ => 0)
+  (fun _ => isGPTFlow_constant_zero lam β 3) Real.sin 0 0
+
+/-- The hypotheses of `map_initial_eq_pi` hold on the one-point probability space. -/
+example := map_initial_eq_pi (P := Measure.dirac ()) (N := 3)
+  (ϑ := fun (_ : Unit) _ _ => (0 : ℝ)) (Homogenized.iIndepFun_of_unit _)
+  (fun _ => measurable_const)
+
+/-- The hypotheses of `covariance_randomFlow` hold for three tokens resting at `0` on the
+one-point probability space, and the test `sin`. -/
+example (lam β : ℝ) := covariance_randomFlow (P := Measure.dirac ()) lam β (N := 3)
+  (ϑ := fun (_ : Unit) _ _ => (0 : ℝ)) (fun _ => isGPTFlow_constant_zero lam β 3)
+  (Homogenized.iIndepFun_of_unit _) (fun _ => measurable_const) Real.hasDerivAt_sin le_rfl
+  le_rfl 1 0
+
+/-- The hypotheses of `thirdCumulant_randomFlow` hold for three tokens resting at `0` on
+the one-point probability space, and the test `sin`. -/
+example (lam β : ℝ) := thirdCumulant_randomFlow (P := Measure.dirac ()) lam β (N := 3)
+  (ϑ := fun (_ : Unit) _ _ => (0 : ℝ)) (fun _ => isGPTFlow_constant_zero lam β 3)
+  (Homogenized.iIndepFun_of_unit _) (fun _ => measurable_const) Real.hasDerivAt_sin le_rfl
+  le_rfl le_rfl 2 1 0
 
 end Kinetic
 end Transformer

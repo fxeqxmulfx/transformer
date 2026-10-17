@@ -124,11 +124,14 @@ theorem pairSum_first_le {γ τ Q : ℝ} (hγ0 : 0 < γ) (hγ : γ ≤ 1 / 12) (
     _ ≤ pairConst γ τ * (Q ^ 6 * u) := mul_le_mul_of_nonneg_right hc (by positivity)
     _ = pairConst γ τ * (Q ^ 6 / (((y : ℝ) + 1) * ((z : ℝ) + 1))) := by rw [hu]; ring
 
-/-- The hypotheses of `pairSum_low_le` and `pairSum_first_le` are satisfiable:
-`γ = 1/16`, `k = 0 < x = y = z = 1`, `Q = q_γ(1, 0)`. -/
-example : (0 : ℝ) < 1 / 16 ∧ (1 / 16 : ℝ) ≤ 1 / 12 ∧ (0 : ℕ) < 1 ∧
-    1 ≤ ratioPow (1 / 16) 1 0 :=
-  ⟨by norm_num, by norm_num, by norm_num, one_le_ratioPow (by norm_num) (by norm_num)⟩
+/-- The hypotheses of `pairSum_low_le` and `pairSum_first_le` hold at `γ = 1/16`, `τ = 1`
+and the tokens `0 < 1 = 1`. -/
+example :=
+  have hQ := one_le_ratioPow (γ := 1 / 16) (by norm_num) (Nat.zero_le 1)
+  And.intro (pairSum_low_le (γ := 1 / 16) (τ := 1) (by norm_num) (by norm_num) zero_le_one 1
+    (x := 1) (y := 1) (k := 0) Nat.one_pos Nat.one_pos hQ le_rfl le_rfl)
+  (pairSum_first_le (γ := 1 / 16) (τ := 1) (by norm_num) (by norm_num) zero_le_one 1 (y := 1)
+    (z := 1) (k := 0) Nat.one_pos Nat.one_pos hQ le_rfl le_rfl)
 
 end Kinetic
 end Transformer

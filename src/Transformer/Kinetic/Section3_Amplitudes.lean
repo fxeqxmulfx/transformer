@@ -138,10 +138,15 @@ theorem thirdCumulant_amp_le {α γ T L₁ ω κ K K' q₁ q₂ v : ℝ} (hα1 :
           (by positivity)) le_rfl
     _ = _ := by ring
 
-/-- The hypotheses of `thirdCumulant_amp_le` are satisfiable: `α = 1`, `L₁ = 0`,
-`γ = 1`, `T = ω = κ = 0`, `K = K' = 1`, `q₁ = q₂ = v = 1`. -/
-example : (1 : ℝ) ≤ 1 ∧ (0 : ℝ) ≤ 1 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) ≤ 0 ∧ (0 : ℝ) ≤ 1 :=
-  ⟨le_rfl, zero_le_one, one_pos, le_rfl, zero_le_one⟩
+/-- The hypotheses of `rate_le`, `covariance_amp_le` and `thirdCumulant_amp_le` hold at
+`α = γ = 1`, `L₁ = T = 0` and unit constants. -/
+example := And.intro (rate_le (α := 1) (L₁ := 0) (γ := 1) (T := 0) le_rfl zero_le_one one_pos
+    le_rfl le_rfl) <|
+  And.intro (covariance_amp_le (α := 1) (L₁ := 0) (γ := 1) (T := 0) (K := 1) le_rfl
+    zero_le_one one_pos le_rfl le_rfl zero_le_one one_pos)
+  (thirdCumulant_amp_le (α := 1) (L₁ := 0) (γ := 1) (T := 0) (ω := 0) (κ := 0) (K := 1)
+    (K' := 1) (q₁ := 1) (q₂ := 1) (v := 1) le_rfl zero_le_one one_pos le_rfl le_rfl le_rfl
+    le_rfl zero_le_one zero_le_one le_rfl zero_le_one le_rfl one_pos)
 
 end Kinetic
 end Transformer

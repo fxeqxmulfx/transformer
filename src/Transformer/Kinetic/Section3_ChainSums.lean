@@ -94,8 +94,18 @@ theorem sum_ratioPow_div_le {γ : ℝ} (hγ0 : 0 < γ) (hγ1 : γ ≤ 1) {a b : 
     div_mul_cancel₀ _ hpow.ne', one_mul]
   nlinarith
 
-/-- The hypotheses of `sum_ratioPow_div_le` are satisfiable. -/
-example : (0 : ℝ) < 1 / 2 ∧ (1 / 2 : ℝ) ≤ 1 ∧ (0 : ℕ) < 1 := by norm_num
+/-- The hypotheses of `one_le_ratioPow` hold at `γ = 1`, `b = 0 ≤ a = 1`. -/
+example := one_le_ratioPow (γ := 1) zero_le_one (Nat.zero_le 1)
+
+/-- The hypotheses of `mul_rpow_sub_one_le` hold at `γ = 1/2`, `n = 1`. -/
+example := mul_rpow_sub_one_le (γ := 1 / 2) (by norm_num) (by norm_num) (n := 1) le_rfl
+
+/-- The hypotheses of `sum_rpow_le` hold at `γ = 1/2`, `b = 0`, `a = 1`. -/
+example := sum_rpow_le (γ := 1 / 2) (by norm_num) (by norm_num) 0 1 le_rfl
+
+/-- The hypotheses of `sum_ratioPow_div_le` hold at `γ = 1/2`, `b = 0 < a = 1`. -/
+example := sum_ratioPow_div_le (γ := 1 / 2) (by norm_num) (by norm_num) (a := 1) (b := 0)
+  Nat.one_pos
 
 end Kinetic
 end Transformer

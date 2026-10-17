@@ -54,10 +54,10 @@ theorem sum_pairEnv_four_le {γ τ : ℝ} (hγ0 : 0 < γ) (hγ : γ ≤ 1 / 12) 
   rw [mul_comm ((j : ℝ) + 1)] at h2 h3
   linarith
 
-/-- The hypotheses of `sum_pairEnv_four_le` are satisfiable: `γ = 1/16`, `τ = 1`,
+/-- The hypotheses of `sum_pairEnv_four_le` hold at `γ = 1/16`, `τ = 1` and the tokens
 `k = 0 < j = 1 < i = 2`. -/
-example : (0 : ℝ) < 1 / 16 ∧ (1 / 16 : ℝ) ≤ 1 / 12 ∧ (0 : ℝ) ≤ 1 ∧ (0 : ℕ) < 1 ∧
-    (1 : ℕ) < 2 := by norm_num
+example := sum_pairEnv_four_le (γ := 1 / 16) (τ := 1) (by norm_num) (by norm_num) zero_le_one 1
+  (i := 2) (j := 1) (k := 0) Nat.one_pos (by norm_num)
 
 end Kinetic
 end Transformer

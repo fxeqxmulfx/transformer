@@ -126,9 +126,19 @@ theorem pair_le_pairEnv {α γ T ω : ℝ} (hα : 0 ≤ α) (hγ0 : 0 < γ) (hγ
       crossProfile_comm, mul_comm (profile α γ l x T)]
     exact key h
 
-/-- The hypotheses of `pair_le_pairEnv` are satisfiable: `α = ω = 1`, `γ = 1/2`,
-`T = 1`, `l = 0 ≠ m = 1`. -/
-example : (0 : ℝ) ≤ 1 ∧ (0 : ℝ) < 1 / 2 ∧ (1 / 2 : ℝ) ≤ 1 ∧ (0 : ℕ) ≠ 1 := by norm_num
+/-- The hypotheses of `pairDecay_of_lt`, `pairDecay_of_gt`, `profileEnv_of_lt` and
+`profileEnv_of_gt` hold at the tokens `0 < 1`. -/
+example := And.intro (pairDecay_of_lt (x := 1) (M := 0) Nat.one_pos) <|
+  And.intro (pairDecay_of_gt (x := 0) (M := 1) Nat.one_pos) <|
+  And.intro (profileEnv_of_lt (γ := 1) (τ := 1) (x := 1) (c := 0) Nat.one_pos)
+    (profileEnv_of_gt (γ := 1) (τ := 1) (x := 0) (c := 1) Nat.one_pos)
+
+/-- The hypotheses of `profile_mul_profile_le_pairEnv` and `pair_le_pairEnv` hold at
+`α = T = ω = 1`, `γ = 1` and `γ = 1/2`, and the tokens `0 ≠ 1`. -/
+example := And.intro (profile_mul_profile_le_pairEnv (α := 1) (γ := 1) (T := 1) zero_le_one
+    one_pos zero_le_one (n := 0) (M := 1) Nat.one_pos 0)
+  (pair_le_pairEnv (α := 1) (γ := 1 / 2) (T := 1) (ω := 1) zero_le_one (by norm_num)
+    (by norm_num) zero_le_one zero_le_one 2 (l := 0) (m := 1) zero_ne_one 0)
 
 end Kinetic
 end Transformer
