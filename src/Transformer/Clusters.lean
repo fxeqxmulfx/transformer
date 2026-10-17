@@ -26,6 +26,7 @@ import Transformer.Clusters.Section6_KernelLip
 import Transformer.Clusters.Section6_KernelField
 import Transformer.Clusters.Section6_WeakSolution
 import Transformer.Clusters.Section6_Stability
+import Transformer.Clusters.Section6_LagrangianField
 import Transformer.Clusters.Section6_ContEq
 import Transformer.Clusters.Section7_HigherDim
 import Transformer.Clusters.Section7_LogSumExp
