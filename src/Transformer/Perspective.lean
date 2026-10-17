@@ -115,6 +115,8 @@ import Transformer.Perspective.SphereInvariant
 import Transformer.Perspective.Section3_SmallBeta
 import Transformer.Perspective.UniformAtomless
 import Transformer.Perspective.UniformSlices
+import Transformer.Perspective.UniformShell
+import Transformer.Perspective.SphereUnique
 import Transformer.Perspective.Section5_InvariantMeasure
 import Transformer.Perspective.Beta0Field
 import Transformer.Perspective.Softmax
