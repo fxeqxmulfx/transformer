@@ -55,6 +55,7 @@ Constraints:
 | C, phase model | `PhaseModel.exists_sub_characterPhase_mem_periods_of_isLocalMin` and `isStrictSaddle_of_divisionEnergy_lt` for `V < n²/8` | proved |
 | C, `𝖤_0` on spheres | `Perspective.yury_lemma` | proved |
 | p:beta0 | `Perspective.almost_sure_consensus_beta0`, via an explicit inequality for `𝖤_0` and a cone argument at the saddles | proved |
+| Bounds, periodic energies (M1.4) | `SaddleAvoidance.exists_lipschitzWith_gradient_of_periodic`: a `C²` function invariant under a set of translations spanning `E` has a bounded gradient, a bounded Hessian and a globally Lipschitz gradient; `exists_lipschitzWith_gradient_of_isCompact` for a compact set of representatives | proved |
 
 ## Milestones
 
@@ -190,7 +191,7 @@ Tasks: M1.1 #2, M1.2 #3, M1.3 #4, M1.4 #5, M1.5 #6, M1.6 #7.
 | M1.1 | **Linear flow.** For a constant symmetric `A`, `J τ = exp (τ A)` solves `J' = A J` with `J 0 = id`; `exp A` is symmetric; an eigenvalue `μ` of `A` gives the eigenvalue `e^μ` of `exp A`. Mathlib: `hasDerivAt_exp_smul_const`, `IsSelfAdjoint.exp`. | — |
 | M1.2 | **Time-one map.** `Φ = flow (-∇f) 0 1` for `f` of class `C²` with `∇f` bounded and Lipschitz, which is `IsFlowField`. `Φ` is `C¹` (`contDiff_flow`) with an invertible derivative (backward flow, `flow_reverse`). At a critical point, `Φ z = z` and `DΦ z = exp (-∇²f z)`, obtained by feeding `J τ = exp (-τ ∇²f z)` to `hasFDerivAt_flow`. A strict saddle is therefore `IsSymmetricUnstable Φ z`. | M1.1 |
 | M1.3 | **Avoidance for flows.** `ae_not_tendsto_flow_of_isStrictSaddle`: for `ν`-almost every `x`, `t ↦ flow (-∇f) 0 t x` converges to no strict saddle, because integer times are iterates of `Φ`. Ascent is the same statement for `-f`. | M1.2 |
-| M1.4 | **Periodic energies.** `lipschitzWith_gradient_of_periodic`: if `f` is `C²` and invariant under a lattice spanning `E`, then `∇f` is bounded and globally Lipschitz. This supplies the hypotheses of M1.2 and of the descent theorems for `𝖤_β` on angles and for `V_full`. | — |
+| M1.4 | **Periodic energies, done.** `exists_lipschitzWith_gradient_of_periodic`: if `f` is `C²` and invariant under a set of translations spanning `E`, such as a lattice, then `∇f` is bounded and globally Lipschitz. This supplies the hypotheses of M1.2 and of the descent theorems for `𝖤_β` on angles and for `V_full`. | — |
 | M1.5 | **Symmetrizable derivatives.** `IsSymmetrizableUnstable`: the derivative is conjugate to a symmetric map by a linear isomorphism. Extend `measure_tendsto_symmetricUnstable_eq_zero` to it, and M1.2 to `ẋ = -G(x) ∇f(x)` with `G` symmetric positive definite and `C¹`. SA and the sphere bridge M5.3 need it. | M1.3 |
 | M1.6 | **Optional, for networks.** Gradient descent with a compact forward-invariant sublevel set in place of a global Lipschitz constant. | — |
 
