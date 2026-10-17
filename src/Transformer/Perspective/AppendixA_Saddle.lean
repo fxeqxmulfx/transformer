@@ -20,10 +20,12 @@ perturbation `PerturbationBy` it is read along and the second derivative
 `SecondDerivE0At` it computes are in `Perspective.AppendixA_Hessian`, where
 the identity is proved; that the perturbation exists at all is
 `Perspective.exists_perturbationBy`, in `Perspective.AppendixA_Rotation`.
-`lem: yury.lemma` is proved here from those four; the assembly of `p:beta0` is
-a theorem closed by `sorry`.
+`lem: yury.lemma` is proved here from those four; the assembly of `p:beta0`
+from `no_saddle_convergence` and the convergence of every trajectory
+(`exists_tendsto_isCriticalE0`, in `Perspective.AppendixA_Convergence`) as well.
 -/
 
+import Transformer.Perspective.AppendixA_Convergence
 import Transformer.Perspective.AppendixA_Rotation
 import Transformer.Perspective.AppendixA_SaddleNull
 
@@ -123,24 +125,29 @@ example : 2 ≤ 2 ∧ IsCriticalE0 2 2 (antipodalPair 2 (basePoint 1)) ∧
   ⟨le_rfl, antipodalPair_critical_nonTrivial 2 (basePoint 1)⟩
 
 /-- **Theorem (p:beta0)**, in the almost-sure form Appendix A proves: for
-`d, n ≥ 2` the set of initial sequences whose `β = 0` trajectory does *not*
+`d ≥ 2` the set of initial sequences whose `β = 0` trajectory does *not*
 converge to a single point is null for the uniform law on `(𝕊^{d-1})^n`.
 
 This is the statement `Perspective.beta0_consensus` should have; the latter
 quantifies over every initial sequence, which is false at the exceptional
 null set.
 
-Not proved here.  The paper's proof assembles three ingredients, of which two
-are now available: (i) Łojasiewicz — `𝖤_0` is analytic on a compact analytic
-manifold, so every trajectory of `e:gradfl` converges to a critical point —
-not stated here; (ii) `no_saddle_convergence` — the non-trivial critical
-points are reached from a null set — proved; (iii) `yury_lemma` —
-those are exactly the strict saddles — proved.  The assembly is not recorded
-as a statement of its own: with the conclusion already a sorried theorem, the
-implication would be provable in one line and would assert nothing.
+The proof is Appendix A's.  The flow of `e:gradfl` from `X₀` converges to a
+critical point `Z` of `𝖤_0` (`exists_tendsto_isCriticalE0`, from the finite
+length of the trajectories, in place of Łojasiewicz's theorem), and every
+solution of `e:Snonres0` from `X₀` is that flow at half speed, so it tends to
+`Z` as well (`tendsto_of_beta0Dynamics`).  If the points of `Z` coincide, their
+common value is `x⋆`.  Otherwise `X₀` lies in the null set of
+`no_saddle_convergence`, the non-trivial critical points being the strict
+saddles (`yury_lemma`).
+
+**What the source says and what is changed here.**  The source assumes
+`d, n ≥ 2`.  The hypothesis `n ≥ 2` is dropped: for `n ≤ 1` no critical point
+is non-trivial, and the argument goes through unchanged.  `d ≥ 2` stays, as in
+`no_saddle_convergence`.
 
 Source: arXiv:2312.10794v5, §4, `p:beta0`; Appendix A for the proof. -/
-theorem almost_sure_consensus_beta0 (hd : 2 ≤ d) (hn : 2 ≤ n) :
+theorem almost_sure_consensus_beta0 (hd : 2 ≤ d) :
     ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
       P { X₀ : SphereTuple d n | ¬ ∃ x_star : SSphere d,
             ∀ X : ℝ → SphereTuple d n, X 0 = X₀ → beta0Dynamics d n X →
@@ -148,11 +155,24 @@ theorem almost_sure_consensus_beta0 (hd : 2 ≤ d) (hn : 2 ≤ n) :
                 Filter.Tendsto
                   (fun t : ℝ => ((X t i : EucSpace d) - (x_star : EucSpace d)))
                   Filter.atTop (nhds 0) } = 0 := by
-  sorry
+  intro P hP
+  refine measure_mono_null (fun X₀ hX₀ => ?_) (no_saddle_convergence (d := d) (n := n) hd P hP)
+  obtain ⟨Z, hcrit, hlim⟩ := exists_tendsto_isCriticalE0 (E0GradientAscent_e0Flow X₀)
+  refine ⟨e0Flow X₀, by rw [e0Flow, mul_zero, saFlow_zero], E0GradientAscent_e0Flow X₀, Z,
+    hcrit, ?_, hlim⟩
+  by_contra htriv
+  simp only [NonTrivialTuple, not_exists, not_not] at htriv
+  rcases Nat.eq_zero_or_pos n with rfl | hn
+  · obtain ⟨k, rfl⟩ : ∃ k, d = k + 1 := ⟨d - 1, by omega⟩
+    exact hX₀ ⟨basePoint k, fun _ _ _ i => i.elim0⟩
+  · refine hX₀ ⟨Z ⟨0, hn⟩, fun X hX0 hX i => ?_⟩
+    rw [← htriv i ⟨0, hn⟩]
+    exact tendsto_of_beta0Dynamics hlim hX0 hX i
 
-/-- The hypotheses of `almost_sure_consensus_beta0` are satisfiable:
-`d = n = 2`. -/
-example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
+/-- The hypotheses of `almost_sure_consensus_beta0` hold for the circle, `d = 2`,
+and the uniform law on three particles. -/
+example := almost_sure_consensus_beta0 2 3 le_rfl _
+  (uniformTuple_shellLaw (d := 2) (by norm_num))
 
 end Perspective
 end Transformer
