@@ -12,8 +12,10 @@ Formalization of the main theorems of arXiv:2411.04551v3:
                                   `Transformer.Interpolation.Monge`,
 * `Lemma lem: univ.approx`      — universal `L²`-map approximation.
 
-All but `lem: monge` assert the existence of a parameter curve, or of a map, with no
-construction available here, so they are not proved: each is a theorem closed by `sorry`.
+`thm: targets.atoms` is proved from the construction of
+`Interpolation.Section1_AtomicTargetsNorm`.  `thm: main.result` and `lem: univ.approx`
+assert the existence of a parameter curve, or of a map, with no construction available
+here, so they are not proved: each is a theorem closed by `sorry`.
 
 The two theorems carry the manuscript's standing assumption that the input measures are pairwise
 distinct and so are the targets; without it two equal inputs, which the well-posed Cauchy problem
@@ -35,6 +37,7 @@ import Transformer.Interpolation.Clustering
 import Transformer.Interpolation.Disentanglement
 import Transformer.Interpolation.NeuralODE
 import Transformer.Interpolation.Wasserstein
+import Transformer.Interpolation.Section1_AtomicTargetsNorm
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -73,20 +76,28 @@ The `L^∞` norm of `θ` is measured coordinate by coordinate, as the sum of the
 operator norms of the four matrices and of `‖b‖`; `Params d` carries no norm of
 its own.
 
-**What the source says and what is changed here.**  Four repairs, none of
+**What the source says and what is changed here.**  Six repairs, none of
 them a weakening of what the paper proves.
 
 *`W_2` is `Interpolation.W2`.*  It was a free function of two measures, of
 which nothing was assumed — see `not_forall_monge` for what that costs.
 
-*The two `O(·)` constants are quantified before the data.*  That is what
-`O(d · N)` and `O((d·N)/T + log(1/ε))` mean: one pair of constants serving
-every dimension, every `N` and every datum.  Written as a universally
-quantified binder, as `C` was, the switch bound said instead that *every*
-constant works, so `C = 0` forced `K = 0`; written as an existential inside,
-as `Cnorm` was, it allowed a constant chosen after the data, which is weaker
-than the paper.  Both now stand outside every other quantifier, so `d` and `N`
-are bound here rather than taken from the section.
+*"The unique solution" is read as in `two_balls`:* a solution from each input
+exists, and every solution ends within `ε` of its target.  The statement asked
+only for one solution reaching the target, which says less unless uniqueness is
+known.
+
+*The switch constant is quantified before the data, the norm constant after
+it.*  `O(d · N)` switches means one constant serving every dimension, every `N`
+and every datum, so `C` stands outside every other quantifier and `d` and `N`
+are bound here rather than taken from the section.  The norm constant is not
+uniform: the proof in §5 says of its first stage that "the implicit constant
+depends only on the supports of the initial measures", and its matching stage
+depends on the targets.  Quantified before the data, as it was, the estimate is
+false, even for one solution per input — `not_uniform_targets_atoms_norm`: close
+Dirac inputs sent to antipodal targets in unit time need unbounded parameters.  So
+`Cnorm` follows the data and precedes `T` and `ε`; the factor `d · N` of `1/T` is
+then kept as the source writes it.
 
 *The standing assumption of §1 is written in.*  Before the theorem the source
 fixes `μ_0^i ≢ μ_0^j` and `μ_1^i ≢ μ_1^j` for `i ≠ j`, "for simplicity"; the
@@ -97,32 +108,53 @@ cannot both come within `ε` of different targets.  The footnote which says the
 assumption can be removed (`appendix: technical`) concerns the targets and the
 hole, not the inputs.
 
-*The norm bound is asked for `ε < 1`.*  The `O(·)` in `log(1/ε)` is an
+*The norm bound is asked for `ε ≤ 1/2`.*  The `O(·)` in `log(1/ε)` is an
 asymptotic as `ε ↓ 0`.  As an inequality for every `ε > 0` it cannot hold: at
 `ε > e^{d N / T}` the right-hand side `Cnorm · ((d N)/T + log(1/ε))` is negative
-for `Cnorm > 0`, and a norm is not.  The other conclusions hold for every
-`ε > 0`.
+for `Cnorm > 0`, and a norm is not.  With a constant depending on the data, every
+threshold `t < 1` gives the same statement: the controls for accuracy `1/2` serve
+every `ε ∈ [1/2, t]` at the price of the factor `log 2 / log(1/t)`.  The former
+threshold `1` asked more than the source's proof gives: as `T → ∞` and `ε ↑ 1`
+together the right-hand side tends to `0`, while the matching stage of the
+source is a perceptron, `𝐕 ≡ 0`, whose field moves a point at speed at most
+`‖𝐖‖ (‖𝐔‖ + ‖b‖) ≤ ‖θ‖² / 4`, so that moving an atom a distance `D` in time `T`
+needs `‖θ‖ ≥ 2 √(D / T)`.  The other conclusions hold for every `ε > 0`.
 
 *`N ≥ 1`.*  The index set of the source is `⟦1, N⟧`.  `PiecewiseConstant` counts
 pieces, and `[0, T]` has at least one, so at `N = 0` the bound `K ≤ C · d · N = 0`
 was false whatever `C`.
 
-Not proved here.
+Proved by `exists_atomic_target_norm_controls`, with at most `7 · d · N` pieces.
+Its clustering stage is the ridge neuron of Step 2 in the proof of
+`lem: induction.barycenter`, one per law, rather than the attention clustering of
+`prop: targets.atoms`.
 
-Source: arXiv:2411.04551v3, §1, `thm: targets.atoms`. -/
+Source: arXiv:2411.04551v3, §1, `thm: targets.atoms`, and its proof in §5. -/
 theorem targets_atoms :
-    ∃ C Cnorm : ℝ, ∀ (d N : ℕ) (μ₀ : Idx N → ProbSphere d) (xtarget : Idx N → SSphere d)
-      (T ε : ℝ), 3 ≤ d → 1 ≤ N → 0 < T → 0 < ε → Function.Injective μ₀ →
-      Function.Injective xtarget → (∃ w₀ : SSphere d, IsHole d N μ₀ w₀) →
-      ∃ (θ : TimeParams d) (K : ℕ) (μ : Idx N → ℝ → ProbSphere d),
-        (K : ℝ) ≤ C * (d * N) ∧ PiecewiseConstant d θ T K ∧
-        (ε < 1 → ∀ s ∈ Set.Icc (0 : ℝ) T,
-          ‖(θ s).V‖ + ‖(θ s).B‖ + ‖(θ s).W‖ + ‖(θ s).U‖ + ‖(θ s).b‖
-            ≤ Cnorm * ((d * N : ℝ) / T + Real.log (1 / ε))) ∧
-        (∀ i : Idx N, μ i 0 = μ₀ i ∧ cauchyPB d θ (μ i)) ∧
-        ∀ i : Idx N,
-          W2 d (μ i T : Measure (SSphere d)) (Measure.dirac (xtarget i)) ≤ ε := by
-  sorry
+    ∃ C : ℝ, ∀ (d N : ℕ) (μ₀ : Idx N → ProbSphere d) (xtarget : Idx N → SSphere d),
+      3 ≤ d → 1 ≤ N → Function.Injective μ₀ → Function.Injective xtarget →
+      (∃ w₀ : SSphere d, IsHole d N μ₀ w₀) →
+      ∃ Cnorm : ℝ, ∀ T ε : ℝ, 0 < T → 0 < ε →
+        ∃ (θ : TimeParams d) (K : ℕ),
+          (K : ℝ) ≤ C * (d * N) ∧ PiecewiseConstant d θ T K ∧
+          (ε ≤ 1 / 2 → ∀ s ∈ Set.Icc (0 : ℝ) T,
+            ‖(θ s).V‖ + ‖(θ s).B‖ + ‖(θ s).W‖ + ‖(θ s).U‖ + ‖(θ s).b‖
+              ≤ Cnorm * ((d * N : ℝ) / T + Real.log (1 / ε))) ∧
+          (∀ i : Idx N, ∃ μ : ℝ → ProbSphere d, μ 0 = μ₀ i ∧ cauchyPB d θ μ) ∧
+          ∀ (i : Idx N) (μ : ℝ → ProbSphere d), μ 0 = μ₀ i → cauchyPB d θ μ →
+            W2 d (μ T : Measure (SSphere d)) (Measure.dirac (xtarget i)) ≤ ε := by
+  refine ⟨7, fun d N μ₀ xtarget hd hN hinj htinj hhole => ?_⟩
+  have hunion : (⋃ k, (μ₀ k : Measure (SSphere d)).support) ≠ Set.univ := by
+    obtain ⟨w₀, hw₀⟩ := hhole
+    intro he
+    obtain ⟨k, hk⟩ := Set.mem_iUnion.mp (he ▸ Set.mem_univ w₀)
+    exact hw₀ k hk
+  obtain ⟨Cnorm, hcon⟩ := exists_atomic_target_norm_controls hd hN μ₀ hinj hunion xtarget htinj
+  refine ⟨Cnorm, fun T ε hT hε => ?_⟩
+  obtain ⟨θ, K, hK, hθ, _, hnorm, hμ, hacc⟩ := hcon T ε hT hε
+  refine ⟨θ, K, ?_, hθ, fun hε2 s _ => hnorm hε2 s, hμ, hacc⟩
+  have hK' : (K : ℝ) ≤ 7 * d * N := by exact_mod_cast hK
+  exact hK'.trans_eq (by ring)
 
 /-- The conditions inside `targets_atoms` are satisfiable, so its conclusion is
 asked of a nonempty class of data: `d = 3`, `T = ε = 1`, and a one-element

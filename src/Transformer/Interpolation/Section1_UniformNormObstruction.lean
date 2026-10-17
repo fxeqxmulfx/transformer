@@ -2,13 +2,12 @@
 # Obstruction to a norm estimate uniform over the original data
 
 ArXiv:2411.04551v3, §1, `thm: targets.atoms` and its displayed
-parameter norm estimate. Its proof in §4, just before the technical
-appendix, explicitly permits the separation-stage implicit constant
-to depend on the initial supports. Quantifying the hidden norm constant before
-all input and target data is false, already at d=3, N=2, T=1 and
-accuracy 1/4. This file refutes that explicit uniform interpretation;
-it does not refute existence of interpolating controls with a
-constant that may depend on the data.
+parameter norm estimate. Its proof in §5 explicitly permits the
+separation-stage implicit constant to depend on the initial supports.
+Quantifying the hidden norm constant before all input and target data
+is false, already at d=3, N=2, T=1 and accuracy 1/4. This file refutes
+that explicit uniform interpretation; controls with a constant that
+may depend on the data exist, as `targets_atoms` proves.
 
 For each proposed finite parameter bound, choose distinct sufficiently
 close unit Dirac inputs with a common actual support hole. Every
@@ -89,10 +88,11 @@ theorem exists_atomic_data_obstructing_norm (M : ℝ) :
   rw [hdist] at htarget
   nlinarith [sq_nonneg (‖barycenter 3 (μ 0 1) - barycenter 3 (μ 1 1)‖ - 1)]
 
-/-- The full original `targets_atoms` quantifier order, with both
-constants before all dimensions and data, is false. The counterexample
-uses the fixed legal regime d=3, N=2, T=1, ε=1/4, so neither the
-asymptotic restriction ε<1 nor the positive-piece condition repairs it.
+/-- The `targets_atoms` estimate with both constants before all
+dimensions and data is false, already for one solution per input
+reaching its target. The counterexample uses the fixed legal regime
+d=3, N=2, T=1, ε=1/4, so neither the asymptotic restriction ε ≤ 1/2
+nor the positive-piece condition repairs it.
 Source: arXiv:2411.04551v3, §1, `thm: targets.atoms`; the change being
 refuted is the data-uniform interpretation of its hidden norm constant. -/
 theorem not_uniform_targets_atoms_norm :
@@ -103,7 +103,7 @@ theorem not_uniform_targets_atoms_norm :
       (∃ w₀ : SSphere d, ∀ i, w₀ ∉ (μ₀ i : Measure (SSphere d)).support) →
       ∃ (θ : TimeParams d) (K : ℕ) (μ : Idx N → ℝ → Perspective.ProbSphere d),
         (K : ℝ) ≤ C * (d * N) ∧ PiecewiseConstant d θ T K ∧
-        (ε < 1 → ∀ s ∈ Icc (0 : ℝ) T,
+        (ε ≤ 1 / 2 → ∀ s ∈ Icc (0 : ℝ) T,
           ‖(θ s).V‖ + ‖(θ s).B‖ + ‖(θ s).W‖ + ‖(θ s).U‖ + ‖(θ s).b‖
             ≤ Cnorm * ((d * N : ℝ) / T + log (1 / ε))) ∧
         (∀ i, μ i 0 = μ₀ i ∧ cauchyPB d θ (μ i)) ∧
@@ -158,9 +158,10 @@ example : ∃ (θ : TimeParams 3) (μ ν : ℝ → Perspective.ProbSphere 3) (p 
 
 /-- The obstruction's original hypotheses describe genuine legal
 source data: two distinct actual unit Diracs, two distinct unit targets,
-a common support hole, a positive horizon and positive accuracy below one. -/
+a common support hole, a positive horizon and positive accuracy at most
+one half. -/
 example : ∃ (μ₀ : Idx 2 → Perspective.ProbSphere 3) (xtarget : Idx 2 → SSphere 3),
-    3 ≤ 3 ∧ 1 ≤ 2 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 / 4 ∧ (1 / 4 : ℝ) < 1 ∧
+    3 ≤ 3 ∧ 1 ≤ 2 ∧ (0 : ℝ) < 1 ∧ (0 : ℝ) < 1 / 4 ∧ (1 / 4 : ℝ) ≤ 1 / 2 ∧
     Function.Injective μ₀ ∧ Function.Injective xtarget ∧
     ∃ w : SSphere 3, ∀ i, w ∉ (μ₀ i : Measure (SSphere 3)).support := by
   obtain ⟨X, w, hX, hμ, hw, _⟩ := exists_close_injective_atomic_data 1
