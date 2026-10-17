@@ -180,12 +180,16 @@ theorem gronwallBound_zero_mul (K a b x : ℝ) :
   · simp only [hK, gronwallBound_K0]; ring
   · simp only [gronwallBound_of_K_ne_0 hK]; ring
 
-/-- The hypotheses of `IsFlowField` are satisfiable: the field `sin x` is
-`1`-Lipschitz and bounded by `1`. -/
-example : IsFlowField (fun _ x : ℝ => Real.sin x) 1 1 where
-  continuous := Real.continuous_sin.comp continuous_snd
-  lipschitz _ := Real.lipschitzWith_sin
-  bound _ x := by simpa using Real.abs_sin_le_one x
+/-- The hypotheses of the results above are satisfiable: the field `sin x` is
+`1`-Lipschitz and bounded by `1`, the constant `0` solves `ẋ = sin x` and lies
+in `B̄(0, 0)`, `0 ≤ 1`, and the zero function has compact support. -/
+example : IsFlowField (fun _ x : ℝ => Real.sin x) 1 1 ∧
+    (∀ t, HasDerivAt (fun _ : ℝ => (0 : ℝ)) (Real.sin 0) t) ∧ ‖(0 : ℝ)‖ ≤ 0 ∧ (0 : ℝ) ≤ 1 ∧
+    HasCompactSupport (0 : ℝ → ℝ) :=
+  ⟨⟨Real.continuous_sin.comp continuous_snd, fun _ => Real.lipschitzWith_sin,
+      fun _ x => by simpa using Real.abs_sin_le_one x⟩,
+    fun t => by simpa using hasDerivAt_const t (0 : ℝ), by simp, zero_le_one,
+    HasCompactSupport.zero⟩
 
 end GlobalFlow
 end Transformer

@@ -159,11 +159,11 @@ theorem IsContEqSolution.eq_map_flow (hμ : IsContEqSolution Q K V μ₀ μ) {T 
   simp only [hcid σ ⟨hσ.1, hσ.2.trans hs.2⟩, inner_gradient]
 
 /-- The hypotheses of the results above are satisfiable: the stationary
-solution at the Dirac mass at the origin. -/
+solution at the Dirac mass at the origin, and `t = 0 ∈ [0, 1]`. -/
 example (Q K V : ParamMatrix d) :
     IsContEqSolution Q K V (Measure.dirac (0 : EucSpace d))
-      (fun _ => Measure.dirac (0 : EucSpace d)) :=
-  isContEqSolution_dirac Q K V
+      (fun _ => Measure.dirac (0 : EucSpace d)) ∧ (0 : ℝ) ∈ Icc (0 : ℝ) 1 :=
+  ⟨isContEqSolution_dirac Q K V, le_rfl, zero_le_one⟩
 
 end Clusters
 end Transformer

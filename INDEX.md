@@ -8705,7 +8705,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`hasFDerivAt_attentionKernel`](src/Transformer/Clusters/Section6_KernelDeriv.lean#L47) | theorem | proved |
 | [`attentionKernel_hasFDerivAt`](src/Transformer/Clusters/Section6_KernelDeriv.lean#L125) | theorem | proved |
 
-**[Transformer.Clusters.Section6_KernelField](src/Transformer/Clusters/Section6_KernelField.lean)** — 162 lines
+**[Transformer.Clusters.Section6_KernelField](src/Transformer/Clusters/Section6_KernelField.lean)** — 166 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -8737,7 +8737,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`norm_lagrangianField_le`](src/Transformer/Clusters/Section6_LagrangianField.lean#L92) | theorem | proved |
 | [`lipschitzOnWith_lagrangianField`](src/Transformer/Clusters/Section6_LagrangianField.lean#L99) | theorem | proved |
 
-**[Transformer.Clusters.Section6_Stability](src/Transformer/Clusters/Section6_Stability.lean)** — 142 lines
+**[Transformer.Clusters.Section6_Stability](src/Transformer/Clusters/Section6_Stability.lean)** — 144 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -9316,14 +9316,14 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 **[Transformer.ContinuityEq](src/Transformer/ContinuityEq.lean)** — 25 lines, aggregator
 
-**[Transformer.ContinuityEq.Duality](src/Transformer/ContinuityEq/Duality.lean)** — 189 lines
+**[Transformer.ContinuityEq.Duality](src/Transformer/ContinuityEq/Duality.lean)** — 198 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`hasDerivAt_integral_comp_flow`](src/Transformer/ContinuityEq/Duality.lean#L40) | theorem | proved |
 | [`hasDerivWithinAt_integral_comp_flow_zero`](src/Transformer/ContinuityEq/Duality.lean#L143) | theorem | proved |
 
-**[Transformer.ContinuityEq.Lagrangian](src/Transformer/ContinuityEq/Lagrangian.lean)** — 153 lines
+**[Transformer.ContinuityEq.Lagrangian](src/Transformer/ContinuityEq/Lagrangian.lean)** — 164 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -9331,7 +9331,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`map_flow_closedBall_compl`](src/Transformer/ContinuityEq/Lagrangian.lean#L98) | theorem | proved |
 | [`eq_map_flow`](src/Transformer/ContinuityEq/Lagrangian.lean#L108) | theorem | proved |
 
-**[Transformer.ContinuityEq.Stability](src/Transformer/ContinuityEq/Stability.lean)** — 198 lines
+**[Transformer.ContinuityEq.Stability](src/Transformer/ContinuityEq/Stability.lean)** — 203 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -9341,7 +9341,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`hasDerivAt_cost`](src/Transformer/ContinuityEq/Stability.lean#L81) | theorem | proved |
 | [`W2_map_flow_le`](src/Transformer/ContinuityEq/Stability.lean#L122) | theorem | proved |
 
-**[Transformer.ContinuityEq.Weak](src/Transformer/ContinuityEq/Weak.lean)** — 152 lines
+**[Transformer.ContinuityEq.Weak](src/Transformer/ContinuityEq/Weak.lean)** — 160 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -17449,7 +17449,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`norm_le_of_linearGrowth_fwd`](src/Transformer/GlobalFlow/Basic.lean#L93) | theorem | proved |
 | [`norm_le_of_linearGrowth`](src/Transformer/GlobalFlow/Basic.lean#L108) | theorem | proved |
 
-**[Transformer.GlobalFlow.Existence](src/Transformer/GlobalFlow/Existence.lean)** — 180 lines
+**[Transformer.GlobalFlow.Existence](src/Transformer/GlobalFlow/Existence.lean)** — 183 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -17461,7 +17461,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`exists_global`](src/Transformer/GlobalFlow/Existence.lean#L159) | theorem | proved |
 | [`eq_of_hasDerivAt`](src/Transformer/GlobalFlow/Existence.lean#L166) | theorem | proved |
 
-**[Transformer.GlobalFlow.Flow](src/Transformer/GlobalFlow/Flow.lean)** — 191 lines
+**[Transformer.GlobalFlow.Flow](src/Transformer/GlobalFlow/Flow.lean)** — 195 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -17487,7 +17487,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`IsFlowField.hasCompactSupport_comp_flow`](src/Transformer/GlobalFlow/Flow.lean#L168) | theorem | proved |
 | [`gronwallBound_zero_mul`](src/Transformer/GlobalFlow/Flow.lean#L177) | theorem | proved |
 
-**[Transformer.GlobalFlow.FlowDeriv](src/Transformer/GlobalFlow/FlowDeriv.lean)** — 199 lines
+**[Transformer.GlobalFlow.FlowDeriv](src/Transformer/GlobalFlow/FlowDeriv.lean)** — 202 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -17516,7 +17516,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`exists_timeDependent_through`](src/Transformer/GlobalFlow/TimeDependent.lean#L110) | theorem | proved |
 | [`exists_unique_timeDependent_global`](src/Transformer/GlobalFlow/TimeDependent.lean#L125) | theorem | proved |
 
-**[Transformer.GlobalFlow.Variational](src/Transformer/GlobalFlow/Variational.lean)** — 194 lines
+**[Transformer.GlobalFlow.Variational](src/Transformer/GlobalFlow/Variational.lean)** — 198 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -38195,7 +38195,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 **[Transformer.SmoothApprox](src/Transformer/SmoothApprox.lean)** — 16 lines, aggregator
 
-**[Transformer.SmoothApprox.Basic](src/Transformer/SmoothApprox/Basic.lean)** — 113 lines
+**[Transformer.SmoothApprox.Basic](src/Transformer/SmoothApprox/Basic.lean)** — 117 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -38208,7 +38208,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`exists_contDiff_near`](src/Transformer/SmoothApprox/Basic.lean#L77) | theorem | proved |
 | [`exists_contDiff_near_fderiv`](src/Transformer/SmoothApprox/Basic.lean#L88) | theorem | proved |
 
-**[Transformer.SmoothApprox.Measure](src/Transformer/SmoothApprox/Measure.lean)** — 190 lines
+**[Transformer.SmoothApprox.Measure](src/Transformer/SmoothApprox/Measure.lean)** — 205 lines
 
 | declaration | kind | status |
 | --- | --- | --- |

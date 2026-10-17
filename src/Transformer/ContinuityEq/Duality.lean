@@ -177,13 +177,22 @@ theorem hasDerivWithinAt_integral_comp_flow_zero (hw : IsFlowField w L M)
   exact h3.congr (fun s' _ => hsplit s') (hsplit s)
 
 /-- The hypotheses of the two derivative theorems are satisfiable: the zero
-field, and the constant curve `δ_0`, which solves its continuity equation. -/
+field, with derivative `0`, the constant curve `δ_0`, which solves its
+continuity equation on `[0, 1]`, the test function `0`, and `0 ≤ 0 < 1 ≤ 1`. -/
 example : IsFlowField (fun (_ : ℝ) (_ : E) => (0 : E)) 0 0 ∧
+    Continuous (Function.uncurry fun (_ : ℝ) (_ : E) => (0 : E →L[ℝ] E)) ∧
+    (∀ t x, HasFDerivAt ((fun (_ : ℝ) (_ : E) => (0 : E)) t) (0 : E →L[ℝ] E) x) ∧
     (∀ t₀ : ℝ, ∃ R : ℝ, ∀ᶠ _ in 𝓝 t₀, Measure.dirac (0 : E) (closedBall 0 R)ᶜ = 0) ∧
-    ∀ g : E → ℝ, ContDiff ℝ (⊤ : ℕ∞) g → HasCompactSupport g →
-      Continuous fun (_ : ℝ) => ∫ x, g x ∂(Measure.dirac (0 : E)) :=
-  ⟨⟨continuous_const, fun _ => LipschitzWith.const 0, fun _ _ => by simp⟩,
-    fun _ => ⟨0, Eventually.of_forall fun _ => by simp⟩, fun _ _ _ => continuous_const⟩
+    (∀ g : E → ℝ, ContDiff ℝ (⊤ : ℕ∞) g → HasCompactSupport g →
+      Continuous (fun (_ : ℝ) => ∫ x, g x ∂(Measure.dirac (0 : E))) ∧ ∀ t ∈ Icc (0 : ℝ) 1,
+        ∫ x, g x ∂(Measure.dirac (0 : E)) = ∫ x, g x ∂(Measure.dirac (0 : E)) +
+          ∫ _ in (0 : ℝ)..t, ∫ x, fderiv ℝ g x 0 ∂(Measure.dirac (0 : E))) ∧
+    ContDiff ℝ (⊤ : ℕ∞) (0 : E → ℝ) ∧ HasCompactSupport (0 : E → ℝ) ∧
+    (0 : ℝ) ≤ 0 ∧ (0 : ℝ) < 1 ∧ (1 : ℝ) ≤ 1 :=
+  ⟨⟨continuous_const, fun _ => LipschitzWith.const 0, fun _ _ => by simp⟩, continuous_const,
+    fun _ _ => hasFDerivAt_const 0 _, fun _ => ⟨0, Eventually.of_forall fun _ => by simp⟩,
+    fun _ _ _ => ⟨continuous_const, fun _ _ => by simp⟩, contDiff_const, HasCompactSupport.zero,
+    le_rfl, one_pos, le_rfl⟩
 
 end ContinuityEq
 end Transformer

@@ -168,13 +168,16 @@ theorem eq_of_hasDerivAt [ProperSpace E] {F : E → E} (hF : LocallyLipschitz F)
     f = g :=
   eq_of_hasDerivAt_of_lipschitzOnWith (exists_lipschitzOnWith_closedBall hF) hf hg h0
 
-/-- The hypotheses of `exists_global` and `eq_of_hasDerivAt` are satisfiable:
-the linear field `x ↦ x` on `ℝ`; so are those of their versions for fields
-Lipschitz on every ball. -/
+/-- The hypotheses of the results above are satisfiable: the linear field
+`x ↦ x` on `ℝ`, Lipschitz on every ball and of linear growth, with its
+stationary solution `0`, in `B̄(0, 0)`, on the interval `(-1, 1)` around `0`. -/
 example : LocallyLipschitz (fun x : ℝ => x) ∧ (0 : ℝ) ≤ 1 ∧ (∀ x : ℝ, ‖x‖ ≤ 1 * ‖x‖) ∧
-    ∀ R : ℝ, ∃ K, LipschitzOnWith K (fun x : ℝ => x) (closedBall 0 R) :=
+    (∀ R : ℝ, ∃ K, LipschitzOnWith K (fun x : ℝ => x) (closedBall 0 R)) ∧
+    (∀ t, HasDerivAt (fun _ : ℝ => (0 : ℝ)) ((fun x : ℝ => x) 0) t) ∧ ‖(0 : ℝ)‖ ≤ 0 ∧
+    (0 : ℝ) ∈ Ioo (-1) 1 ∧ (0 : ℝ) < 1 :=
   ⟨LipschitzWith.id.locallyLipschitz, zero_le_one, fun x => by simp,
-    fun _ => ⟨1, LipschitzWith.id.lipschitzOnWith⟩⟩
+    fun _ => ⟨1, LipschitzWith.id.lipschitzOnWith⟩, fun t => hasDerivAt_const t (0 : ℝ),
+    by simp, ⟨by norm_num, by norm_num⟩, one_pos⟩
 
 end GlobalFlow
 end Transformer

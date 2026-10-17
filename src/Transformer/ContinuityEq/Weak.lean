@@ -137,16 +137,24 @@ theorem weak_sub_of_contDiff_one
     add_sub_add_left_eq_sub,
     intervalIntegral.integral_interval_sub_left (hG.intervalIntegrable _ _) (hG.intervalIntegrable _ _)]
 
-/-- The hypotheses of the two extensions are satisfiable: the constant curve
-`δ_0` solves the equation for the zero field, and `0` is a `C¹` test function
-with compact support. -/
+/-- The hypotheses of the results above are satisfiable: the constant curve
+`δ_0`, carried by `B̄(0, 0)`, solves the equation for the zero field on `[0, 1]`,
+`0` is a `C¹` test function with compact support, and `δ_{(0, 0)}` is carried
+by `B̄(0, 0)²`. -/
 example : GlobalFlow.IsFlowField (fun (_ : ℝ) (_ : E) => (0 : E)) 0 0 ∧
-    (∀ g : E → ℝ, ContDiff ℝ (⊤ : ℕ∞) g → HasCompactSupport g → ∀ t ∈ Icc (0 : ℝ) 1,
-      ∫ x, g x ∂(Measure.dirac (0 : E)) = ∫ x, g x ∂(Measure.dirac (0 : E)) +
-        ∫ _ in (0 : ℝ)..t, ∫ x, fderiv ℝ g x 0 ∂(Measure.dirac (0 : E))) ∧
-    ContDiff ℝ 1 (0 : E → ℝ) ∧ HasCompactSupport (0 : E → ℝ) :=
-  ⟨⟨continuous_const, fun _ => LipschitzWith.const 0, fun _ _ => by simp⟩,
-    fun g _ _ _ _ => by simp, contDiff_const, HasCompactSupport.zero⟩
+    Continuous (Function.uncurry fun (_ : ℝ) (_ : E) => (0 : E)) ∧
+    Measure.dirac (0 : E) (closedBall 0 0)ᶜ = 0 ∧
+    (∀ t₀ : ℝ, ∃ R : ℝ, ∀ᶠ _ in 𝓝 t₀, Measure.dirac (0 : E) (closedBall 0 R)ᶜ = 0) ∧
+    (∀ᵐ p ∂Measure.dirac ((0 : E), (0 : E)), ‖p.1‖ ≤ 0 ∧ ‖p.2‖ ≤ 0) ∧
+    (∀ g : E → ℝ, ContDiff ℝ (⊤ : ℕ∞) g → HasCompactSupport g →
+      Continuous (fun _ : ℝ => ∫ x, g x ∂(Measure.dirac (0 : E))) ∧ ∀ t ∈ Icc (0 : ℝ) 1,
+        ∫ x, g x ∂(Measure.dirac (0 : E)) = ∫ x, g x ∂(Measure.dirac (0 : E)) +
+          ∫ _ in (0 : ℝ)..t, ∫ x, fderiv ℝ g x 0 ∂(Measure.dirac (0 : E))) ∧
+    ContDiff ℝ 1 (0 : E → ℝ) ∧ HasCompactSupport (0 : E → ℝ) ∧ (0 : ℝ) ∈ Icc (0 : ℝ) 1 :=
+  ⟨⟨continuous_const, fun _ => LipschitzWith.const 0, fun _ _ => by simp⟩, continuous_const,
+    by simp, fun _ => ⟨0, Eventually.of_forall fun _ => by simp⟩, by rw [ae_dirac_eq]; simp,
+    fun g _ _ => ⟨continuous_const, fun _ _ => by simp⟩, contDiff_const, HasCompactSupport.zero,
+    ⟨le_rfl, zero_le_one⟩⟩
 
 end ContinuityEq
 end Transformer

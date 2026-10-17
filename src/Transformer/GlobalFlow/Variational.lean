@@ -179,16 +179,20 @@ theorem IsFlowField.contDiff_flow (hw : IsFlowField w L M)
   rw [show fderiv ℝ (flow w s t) = fun x => J x t from funext fun x => (hd x).fderiv]
   exact hw.continuous_variational hA hwA hst hJs hJc hJ
 
-/-- The hypotheses of `exists_variational` and `contDiff_flow` are satisfiable: the field `sin x`
-on `ℝ`, whose derivative `cos x` is continuous. -/
-example : IsFlowField (fun _ x : ℝ => Real.sin x) 1 1 ∧
-    Continuous (Function.uncurry fun (_ x : ℝ) => (1 : ℝ →L[ℝ] ℝ).smulRight (Real.cos x)) ∧
-    ∀ t x : ℝ, HasFDerivAt ((fun _ x : ℝ => Real.sin x) t)
-      ((1 : ℝ →L[ℝ] ℝ).smulRight (Real.cos x)) x :=
-  ⟨⟨Real.continuous_sin.comp continuous_snd, fun _ => Real.lipschitzWith_sin,
-      fun _ x => by simpa using Real.abs_sin_le_one x⟩,
-    (ContinuousLinearMap.smulRightL ℝ ℝ ℝ 1).continuous.comp (Real.continuous_cos.comp continuous_snd),
-    fun _ x => (Real.hasDerivAt_sin x).hasFDerivAt⟩
+/-- The hypotheses of the results above are satisfiable: for the zero field on
+`ℝ`, with derivative `0`, on `[0, 1]`, the constant `id` solves the variational
+equation within the bound `e^{0 (τ - 0)}`. -/
+example : IsFlowField (fun _ _ : ℝ => (0 : ℝ)) 0 0 ∧
+    Continuous (Function.uncurry fun (_ _ : ℝ) => (0 : ℝ →L[ℝ] ℝ)) ∧
+    (∀ t x : ℝ, HasFDerivAt ((fun _ _ : ℝ => (0 : ℝ)) t) (0 : ℝ →L[ℝ] ℝ) x) ∧ (0 : ℝ) ≤ 1 ∧
+    Continuous (fun _ : ℝ => ContinuousLinearMap.id ℝ ℝ) ∧
+    ∀ τ : ℝ, HasDerivAt (fun _ : ℝ => ContinuousLinearMap.id ℝ ℝ)
+      ((0 : ℝ →L[ℝ] ℝ).comp (ContinuousLinearMap.id ℝ ℝ)) τ ∧
+      ‖ContinuousLinearMap.id ℝ ℝ‖ ≤ Real.exp (((0 : ℝ≥0) : ℝ) * (τ - 0)) :=
+  ⟨⟨continuous_const, fun _ => LipschitzWith.const 0, fun _ _ => by simp⟩, continuous_const,
+    fun _ _ => hasFDerivAt_const 0 _, zero_le_one, continuous_const,
+    fun τ => ⟨by simpa using hasDerivAt_const τ (ContinuousLinearMap.id ℝ ℝ),
+      by simp⟩⟩
 
 end GlobalFlow
 end Transformer

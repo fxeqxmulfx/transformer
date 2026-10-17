@@ -186,5 +186,20 @@ theorem continuous_integral_param {μ : ℝ → Measure G} [∀ t, IsProbability
         exact add_lt_add_of_le_of_lt h3 hp1
     _ < ε := by linarith
 
+/-- The hypotheses of the results above are satisfiable: the constant curve at the Dirac
+mass at `0 ∈ ℝ`, carried by `B̄(0, 0)`, the zero function and the identity of `ℝ`. -/
+example : IsProbabilityMeasure (Measure.dirac (0 : ℝ)) ∧
+    (∀ t₀ : ℝ, ∃ R : ℝ, ∀ᶠ _ in 𝓝 t₀, Measure.dirac (0 : ℝ) (closedBall 0 R)ᶜ = 0) ∧
+    Measure.dirac (0 : ℝ) (closedBall 0 0)ᶜ = 0 ∧
+    (∀ g : ℝ → ℝ, ContDiff ℝ (⊤ : ℕ∞) g → HasCompactSupport g →
+      Continuous (fun _ : ℝ => ∫ x, g x ∂Measure.dirac (0 : ℝ)) ∧
+        ∫ x, g x ∂Measure.dirac (0 : ℝ) = ∫ x, g x ∂Measure.dirac (0 : ℝ)) ∧
+    (∀ φ : ℝ →L[ℝ] ℝ, Continuous fun p : ℝ => φ p) ∧ Integrable (0 : ℝ → ℝ) (Measure.dirac 0) ∧
+    (∀ x : ℝ, ‖(0 : ℝ → ℝ) x - (0 : ℝ → ℝ) x‖ ≤ 0) ∧ ContDiff ℝ (⊤ : ℕ∞) (0 : ℝ → ℝ) ∧
+    HasCompactSupport (0 : ℝ → ℝ) ∧ Continuous (Function.uncurry fun (_ x : ℝ) => x) :=
+  ⟨inferInstance, fun _ => ⟨0, Eventually.of_forall fun _ => by simp⟩, by simp,
+    fun _ _ _ => ⟨continuous_const, rfl⟩, fun φ => φ.continuous, integrable_zero _ _ _,
+    fun _ => by simp, contDiff_const, HasCompactSupport.zero, continuous_snd⟩
+
 end SmoothApprox
 end Transformer

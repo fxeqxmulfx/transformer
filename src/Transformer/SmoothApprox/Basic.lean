@@ -104,10 +104,14 @@ theorem exists_contDiff_near_fderiv {f : G → F} (hf : ContDiff ℝ 1 f) (hc : 
     exact dist_mollify_le φ hDf fun y hy =>
       h₂ x y ((by simpa [φ] using hy : dist y x < δ).trans_le (min_le_right _ _))
 
-/-- The hypotheses of the two approximation theorems are satisfiable: the
-zero function on `ℝ` is smooth with compact support, and `1 > 0`. -/
-example : ContDiff ℝ 1 (0 : ℝ → ℝ) ∧ HasCompactSupport (0 : ℝ → ℝ) ∧ (0 : ℝ) < 1 :=
-  ⟨contDiff_const, HasCompactSupport.zero, one_pos⟩
+/-- The hypotheses of the results above are satisfiable: the zero function on
+`ℝ` is continuous, smooth, with compact support, and within `0` of its value
+at `0` on every ball; a bump function around `0` exists; and `1 > 0`. -/
+example : Continuous (0 : ℝ → ℝ) ∧ ContDiff ℝ 1 (0 : ℝ → ℝ) ∧ HasCompactSupport (0 : ℝ → ℝ) ∧
+    (0 : ℝ) < 1 ∧ Nonempty (ContDiffBump (0 : ℝ)) ∧
+    ∀ y ∈ ball (0 : ℝ) 2, dist ((0 : ℝ → ℝ) y) ((0 : ℝ → ℝ) 0) ≤ 0 :=
+  ⟨continuous_const, contDiff_const, HasCompactSupport.zero, one_pos,
+    ⟨⟨1, 2, one_pos, one_lt_two⟩⟩, fun _ _ => by simp⟩
 
 end SmoothApprox
 end Transformer

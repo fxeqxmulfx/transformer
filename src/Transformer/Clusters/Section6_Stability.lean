@@ -130,13 +130,15 @@ theorem IsContEqSolution.unique (hμ : IsContEqSolution Q K V μ₀ μ)
 
 /-- The hypotheses of the results above are satisfiable: the stationary
 solution at the Dirac mass at the origin, carried by the unit ball, against
-itself. -/
+itself, with `R = 1 > 0` and `t = 0 ≥ 0`. -/
 example (Q K V : ParamMatrix d) :
     IsContEqSolution Q K V (Measure.dirac (0 : EucSpace d))
         (fun _ => Measure.dirac (0 : EucSpace d)) ∧
       (∀ _ : ℝ, IsCarriedBy (Measure.dirac (0 : EucSpace d)) 1) ∧
-      Wasserstein.W2 (Measure.dirac (0 : EucSpace d)) (Measure.dirac 0) = 0 :=
-  ⟨isContEqSolution_dirac Q K V, fun _ => isCarriedBy_dirac 1 zero_le_one, W2_self _⟩
+      Wasserstein.W2 (Measure.dirac (0 : EucSpace d)) (Measure.dirac 0) = 0 ∧
+      (0 : ℝ) < 1 ∧ (0 : ℝ) ≤ 0 :=
+  ⟨isContEqSolution_dirac Q K V, fun _ => isCarriedBy_dirac 1 zero_le_one, W2_self _, one_pos,
+    le_rfl⟩
 
 end Clusters
 end Transformer

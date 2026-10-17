@@ -152,11 +152,15 @@ theorem isFlowField_attentionKernel (Q K V : ParamMatrix d) {R : ℝ} (hR : 0 < 
 
 /-- The hypotheses of the results above are satisfiable: the constant curve
 at the Dirac mass at the origin is carried by the unit ball and weakly
-continuous. -/
+continuous, and the first projection of `ℝ^d × ℝ^d` is continuous. -/
 example : (0 : ℝ) < 1 ∧ (∀ _ : ℝ, IsCarriedBy (Measure.dirac (0 : EucSpace d)) 1) ∧
-    ∀ g : EucSpace d → ℝ, ContDiff ℝ (⊤ : ℕ∞) g → HasCompactSupport g →
-      Continuous fun _ : ℝ => ∫ x, g x ∂Measure.dirac (0 : EucSpace d) :=
-  ⟨one_pos, fun _ => isCarriedBy_dirac 1 zero_le_one, fun _ _ _ => continuous_const⟩
+    (∀ t₀ : ℝ, ∃ R : ℝ, ∀ᶠ _ in 𝓝 t₀, Measure.dirac (0 : EucSpace d) (closedBall 0 R)ᶜ = 0) ∧
+    (∀ g : EucSpace d → ℝ, ContDiff ℝ (⊤ : ℕ∞) g → HasCompactSupport g →
+      Continuous fun _ : ℝ => ∫ x, g x ∂Measure.dirac (0 : EucSpace d)) ∧
+    Continuous fun p : EucSpace d × EucSpace d => p.1 :=
+  ⟨one_pos, fun _ => isCarriedBy_dirac 1 zero_le_one,
+    fun _ => ⟨1, Eventually.of_forall fun _ => isCarriedBy_dirac 1 zero_le_one⟩,
+    fun _ _ _ => continuous_const, continuous_fst⟩
 
 end Clusters
 end Transformer

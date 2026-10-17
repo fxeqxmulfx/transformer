@@ -135,19 +135,30 @@ theorem eq_map_flow (hw : IsFlowField w L M) {A : ℝ → E → E →L[ℝ] E}
   simp only [hw.flow_self] at hconst
   rw [hconst, integral_map hmeas.aemeasurable hg.continuous.aestronglyMeasurable]
 
-/-- The hypotheses of `weak_of_map` and `eq_map_flow` are satisfiable, and
-their conclusions hold there: the zero field, whose trajectories and flow are
-constant, and the constant curve `δ_0`. -/
+/-- The hypotheses of the results above are satisfiable: the zero field, with
+derivative `0`, whose trajectories `Y t = id` and flow are constant, the
+constant curve `δ_0`, carried by `B̄(0, 0)`, which solves its continuity
+equation on `[0, 1]`, and the test function `0`. -/
 example : IsFlowField (fun (_ : ℝ) (_ : ℝ) => (0 : ℝ)) 0 0 ∧
+    Continuous (Function.uncurry fun (_ _ : ℝ) => (0 : ℝ)) ∧
     (∀ t₀ : ℝ, ∃ M : ℝ, ∀ᶠ t in 𝓝 t₀, ∀ x : ℝ, ‖(fun (_ : ℝ) (_ : ℝ) => (0 : ℝ)) t x‖ ≤ M) ∧
+    Continuous (fun x : ℝ => x) ∧
     (∀ t x : ℝ, HasDerivAt (fun (_ : ℝ) => x) ((fun (_ : ℝ) (_ : ℝ) => (0 : ℝ)) t x) t) ∧
     Continuous (Function.uncurry fun (_ _ : ℝ) => (0 : ℝ →L[ℝ] ℝ)) ∧
     (∀ t x : ℝ, HasFDerivAt ((fun (_ : ℝ) (_ : ℝ) => (0 : ℝ)) t) (0 : ℝ →L[ℝ] ℝ) x) ∧
-    (∀ t₀ : ℝ, ∃ R : ℝ, ∀ᶠ _ in 𝓝 t₀, Measure.dirac (0 : ℝ) (closedBall 0 R)ᶜ = 0) :=
-  ⟨⟨continuous_const, fun _ => LipschitzWith.const 0, fun _ _ => by simp⟩,
-    fun _ => ⟨0, Eventually.of_forall fun _ _ => by simp⟩,
-    fun _ x => hasDerivAt_const _ x, continuous_const, fun _ _ => hasFDerivAt_const 0 _,
-    fun _ => ⟨0, Eventually.of_forall fun _ => by simp⟩⟩
+    Measure.dirac (0 : ℝ) (closedBall 0 0)ᶜ = 0 ∧
+    (∀ t₀ : ℝ, ∃ R : ℝ, ∀ᶠ _ in 𝓝 t₀, Measure.dirac (0 : ℝ) (closedBall 0 R)ᶜ = 0) ∧
+    (∀ g : ℝ → ℝ, ContDiff ℝ (⊤ : ℕ∞) g → HasCompactSupport g →
+      Continuous (fun (_ : ℝ) => ∫ x, g x ∂(Measure.dirac (0 : ℝ))) ∧ ∀ t ∈ Icc (0 : ℝ) 1,
+        ∫ x, g x ∂(Measure.dirac (0 : ℝ)) = ∫ x, g x ∂(Measure.dirac (0 : ℝ)) +
+          ∫ _ in (0 : ℝ)..t, ∫ x, fderiv ℝ g x 0 ∂(Measure.dirac (0 : ℝ))) ∧
+    ContDiff ℝ 1 (0 : ℝ → ℝ) ∧ HasCompactSupport (0 : ℝ → ℝ) ∧ (0 : ℝ) ∈ Icc (0 : ℝ) 1 :=
+  ⟨⟨continuous_const, fun _ => LipschitzWith.const 0, fun _ _ => by simp⟩, continuous_const,
+    fun _ => ⟨0, Eventually.of_forall fun _ _ => by simp⟩, continuous_id,
+    fun _ x => hasDerivAt_const _ x, continuous_const, fun _ _ => hasFDerivAt_const 0 _, by simp,
+    fun _ => ⟨0, Eventually.of_forall fun _ => by simp⟩,
+    fun _ _ _ => ⟨continuous_const, fun _ _ => by simp⟩, contDiff_const, HasCompactSupport.zero,
+    ⟨le_rfl, zero_le_one⟩⟩
 
 end ContinuityEq
 end Transformer

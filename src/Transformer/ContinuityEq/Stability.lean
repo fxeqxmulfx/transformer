@@ -184,14 +184,19 @@ theorem W2_map_flow_le (hw : IsFlowField w Lw Mw) (hu : IsFlowField u Lu Mu)
   rw [div_le_iff₀ (by positivity)] at hsq
   linarith
 
-/-- The hypotheses of `W2_map_flow_le` are satisfiable: the zero field twice,
-whose flows are the identity, and the Dirac mass at the origin. -/
+/-- The hypotheses of the results above are satisfiable: the zero field twice, whose
+flows are the identity, the Dirac mass at the origin, carried by `B̄(0, 0)` and
+coupled with itself by `δ_{(0, 0)}`, `C = 0` and `t = 0 ∈ [0, 1]`. -/
 example : IsFlowField (fun (_ : ℝ) (_ : ℝ) => (0 : ℝ)) 0 0 ∧
     Measure.dirac (0 : ℝ) (closedBall 0 0)ᶜ = 0 ∧
+    IsCoupling (Measure.dirac (0 : ℝ)) (Measure.dirac 0) (Measure.dirac (0, 0)) ∧
+    (∀ᵐ p ∂Measure.dirac ((0 : ℝ), (0 : ℝ)), ‖p.1‖ ≤ 0 ∧ ‖p.2‖ ≤ 0) ∧
+    Continuous (fun x : ℝ => x) ∧ (0 : ℝ) ≤ 0 ∧ (0 : ℝ) ∈ Icc (0 : ℝ) 1 ∧
     ∀ τ ∈ Icc (0 : ℝ) 1, ∀ a ∈ closedBall (0 : ℝ) (0 + 0 * τ), ∀ b ∈ closedBall (0 : ℝ) (0 + 0 * τ),
       ‖(0 : ℝ) - 0‖ ≤ 0 * ‖a - b‖ + 0 * W2 ((Measure.dirac (0 : ℝ)).map
         (flow (fun _ _ => 0) 0 τ)) ((Measure.dirac (0 : ℝ)).map (flow (fun _ _ => 0) 0 τ)) :=
   ⟨⟨continuous_const, fun _ => LipschitzWith.const 0, fun _ _ => by simp⟩, by simp,
+    ⟨by simp, by simp⟩, by rw [ae_dirac_eq]; simp, continuous_id, le_rfl, ⟨le_rfl, zero_le_one⟩,
     fun _ _ _ _ _ _ => by simp⟩
 
 end ContinuityEq

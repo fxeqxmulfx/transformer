@@ -184,16 +184,19 @@ theorem IsFlowField.flow_expansion (hw : IsFlowField w L M) (s r : ℝ) {ε : �
   simp only [hw.flow_self, sub_self, zero_smul, sub_zero, Real.norm_eq_abs] at hmv
   rwa [sub_right_comm] at hmv
 
-/-- The hypotheses of `hasFDerivAt_flow` are satisfiable: the zero field on
-`ℝ`, whose variational equation is solved by the constant `id`. -/
+/-- The hypotheses of the results above are satisfiable: the zero field on `ℝ`, whose
+variational equation is solved by the constant `id`, on `[0, 1]`, with `ε = 1`. -/
 example : IsFlowField (fun _ _ : ℝ => (0 : ℝ)) 0 0 ∧
     Continuous (Function.uncurry fun (_ _ : ℝ) => (0 : ℝ →L[ℝ] ℝ)) ∧
     (∀ t x : ℝ, HasFDerivAt ((fun _ _ : ℝ => (0 : ℝ)) t) (0 : ℝ →L[ℝ] ℝ) x) ∧
-    ∀ τ : ℝ, HasDerivAt (fun _ : ℝ => ContinuousLinearMap.id ℝ ℝ)
-      ((0 : ℝ →L[ℝ] ℝ).comp (ContinuousLinearMap.id ℝ ℝ)) τ :=
+    Continuous (fun _ : ℝ => ContinuousLinearMap.id ℝ ℝ) ∧
+    (∀ τ : ℝ, HasDerivAt (fun _ : ℝ => ContinuousLinearMap.id ℝ ℝ)
+      ((0 : ℝ →L[ℝ] ℝ).comp (ContinuousLinearMap.id ℝ ℝ)) τ) ∧
+    IsCompact (Icc (0 : ℝ) 1) ∧ Convex ℝ (Icc (0 : ℝ) 1) ∧ (0 : ℝ) ≤ 1 ∧ (0 : ℝ) < 1 :=
   ⟨⟨continuous_const, fun _ => LipschitzWith.const 0, fun _ _ => by simp⟩, continuous_const,
-    fun _ _ => hasFDerivAt_const 0 _,
-    fun τ => by simpa using hasDerivAt_const τ (ContinuousLinearMap.id ℝ ℝ)⟩
+    fun _ _ => hasFDerivAt_const 0 _, continuous_const,
+    fun τ => by simpa using hasDerivAt_const τ (ContinuousLinearMap.id ℝ ℝ),
+    isCompact_Icc, convex_Icc 0 1, zero_le_one, one_pos⟩
 
 end GlobalFlow
 end Transformer
