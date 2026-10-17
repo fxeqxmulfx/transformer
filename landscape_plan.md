@@ -35,9 +35,10 @@ Constraints:
   `SaddleAvoidance.ae_exists_tendsto_isLocalMin`.
 - **Never weaken a paper's statement under its name.** Partial regimes get
   their own names, and the paper's theorem stays `sorry`.
-- **Claim a sorry before working on it.** The board `.kanban/` was absent at
-  the root on 2026-10-18. Ask the user before running `agent-kanban init`.
-  New theorems that close no `sorry` need no claim.
+- **Work through the board.** At the user's request, the board was created
+  at the root on 2026-10-18 with tasks #1–#31. Every title starts with its
+  milestone code; list them with `agent-kanban list --tag landscape`. Claim a
+  task before working on it.
 
 ## Proved on 2026-10-18
 
@@ -57,10 +58,11 @@ Constraints:
 
 ### M0 — Sources and board
 
+Task: M0.1 #1.
+
 | Item | Deliverable | Status |
 | --- | --- | --- |
-| M0.1 | Fetch with `./make.py papers` once this file is committed: arXiv:2507.22857 (Polyanskiy, Rigollet, Yao, *Synchronization of mean-field models on the circle*) and arXiv:2405.18273 (Criscitiello, Rebjock, McRae, Boumal, *Synchronization on circles and spheres with nonlinear interactions*). For each paper, record which `β` and `d` it shows to satisfy "every non-maximal critical point of `𝖤_β` is a strict saddle", and how. | todo; unread, so a hypothesis |
-| M0.2 | Ask the user about the board before claiming `strict_saddle` or any other Perspective `sorry`. | todo |
+| M0.1 | Read arXiv:2507.22857 (Polyanskiy, Rigollet, Yao, *Synchronization of mean-field models on the circle*) and arXiv:2405.18273 (Criscitiello, Rebjock, McRae, Boumal, *Synchronization on circles and spheres with nonlinear interactions*). Both were fetched on 2026-10-18. For each paper, record which `β` and `d` it shows to satisfy "every non-maximal critical point of `𝖤_β` is a strict saddle", and how. | todo; unread, so a hypothesis |
 
 arXiv:2512.01868v4 (lines 254–256) reports that arXiv:2507.22857 proves
 clustering on the circle for every `β > -0.16`. arXiv:2312.10794v5 (§7,
@@ -68,6 +70,8 @@ after `o:strictsaddle`) answers the question only for `β ≤ 1` and for
 `β ≥ n²/π²`. Both are hypotheses until M0.1 reads the source.
 
 ### M1 — Layer A for flows (general, `Transformer.SaddleAvoidance`)
+
+Tasks: M1.1 #2, M1.2 #3, M1.3 #4, M1.4 #5, M1.5 #6, M1.6 #7.
 
 | Item | Deliverable | Depends on |
 | --- | --- | --- |
@@ -80,6 +84,8 @@ after `o:strictsaddle`) answers the question only for `β ≤ 1` and for
 
 ### M2 — Layer B, convergence
 
+Tasks: M2.1 #8, M2.2 #9, M2.3 #10, M2.4 #11.
+
 | Item | Deliverable | Depends on |
 | --- | --- | --- |
 | M2.1 | **Łojasiewicz under a symmetry.** `isLojasiewiczAt_of_invariant`: if `f` is invariant under translations by a subspace `W` and its Hessian at the critical point `z` is injective on `Wᗮ`, then `IsLojasiewiczAt f z (1/2)`. Proof: restrict to `z + Wᗮ` and apply `isLojasiewiczAt_of_injective`. It covers the synchronized states of `𝖤_β`, where `W = ℝ𝟙`. | — |
@@ -89,17 +95,23 @@ after `o:strictsaddle`) answers the question only for `β ≤ 1` and for
 
 ### M3 — Layer C, landscape
 
+Tasks: M3.1 #12, M3.2 #13, M3.3 #14, M3.5 #15, M3.4a #16, M3.4b #17,
+M3.4c #18, M3.4d #19.
+
 | Item | Deliverable | Depends on |
 | --- | --- | --- |
 | M3.1 | **`Perspective.strict_saddle`.** Formalize the landscape lemma of the paper from M0.1 that answers `o:strictsaddle`. It is pure landscape and needs neither A nor B: the only Perspective `sorry` that can close without M2.4. If the paper covers only some `β`, prove those regimes under new names. | M0.1 |
 | M3.2 | **The regimes `β ≤ 1` and `β ≥ n²/π²` on the torus.** For `β ≤ 1` use arXiv:2405.18273. For `β ≥ n²/π²` use Appendix B, where `taylor2_inequality`, `taylor3_inequality` and `τ_β_star_spec` are in place. These are new theorems under their own names. | M0.1 |
 | M3.3 | **`d ≥ 3`.** The non-synchronized critical points of `𝖤_β` on `(𝕊^{d-1})^n` are strict saddles: move every particle in one common direction (arXiv:2405.18273; `dr1_skew_inequality`, `claim_yury`). | M0.1 |
+| M3.5 | **`β ≤ c/n` on spheres (Appendix C synthesis).** The non-synchronized critical points of `𝖤_β` on `(𝕊^{d-1})^n` are strict saddles. `AppendixC_BetaTiny` proves the identity `𝖤_β = 𝖤_0 + β 𝖱_β` and the constant of `eq: eigval.beta`. The expansions of `∇𝖤_β` and `Hess 𝖤_β`, and the eigenvalue bound itself, are not proved. | — |
 | M3.4a | **Characters are nondegenerate.** The Hessian of `V_full` at a character is injective, since the rows `e_x - e_y - e_{x-y}` span `ℝⁿ`. This gives Łojasiewicz with exponent `1/2` at the characters. | — |
 | M3.4b | **Research: `V_full` above `n²/8`.** First a lab search for local minimizers with `V ≥ n²/8`, `n ≤ 30`; a hypothesis until proved. | lab |
 | M3.4c | **Research: partial tables `V_S`.** The analogy is Kuramoto on Erdős–Rényi graphs just above connectivity (abdalla2022expander, cited in arXiv:2312.10794v5 §6). A comment in that survey's TeX source (line 908) says the reference proves only that a convergent trajectory ends synchronized. So this is an analogy and a hypothesis. | — |
 | M3.4d | **Finite abelian groups.** Generalize `Fourier` and `Landscape` from `ℤ/n`. | — |
 
 ### M4 — The scheme theorems (general)
+
+Tasks: M4.1 #20, M4.2 #21, M4.3 #22.
 
 | Item | Deliverable | Depends on |
 | --- | --- | --- |
@@ -108,6 +120,8 @@ after `o:strictsaddle`) answers the question only for `β ≤ 1` and for
 | M4.3 | **`𝖤_β` on angles (USA).** In the regimes of M3.2, almost every start converges to a synchronized state, given `hloj` at the non-synchronized critical points. M2.1 covers the synchronized ones. | M3.2, M4.2, M1.4, M2.1 |
 
 ### M5 — Bridges (D)
+
+Tasks: M5.1 #23, M5.2 #24, M5.3 #25, M5.4 #26.
 
 | Item | Deliverable | Depends on |
 | --- | --- | --- |
@@ -124,22 +138,24 @@ after `o:strictsaddle`) answers the question only for `β ≤ 1` and for
 4. M2.2 → M4.2.
 5. M3.1, then M3.2, according to M0.1.
 6. M5.1 → M4.3.
-7. M1.5 → M5.2, M5.3, then M3.3.
+7. M1.5 → M5.2, M5.3, then M3.3 and M3.5.
 
 The research items M2.4, M3.4b–d and M5.4 wait for an argument on paper.
 
 ## Target `sorry`s
 
-| `sorry` | Closed by | Blocked on |
-| --- | --- | --- |
-| `Perspective.strict_saddle` | M3.1 | M0.1; board |
-| `Perspective.beta_tiny_circle` | M3.2, M4.3, M5.1, M5.2 | M2.4 |
-| `Perspective.beta_tiny` | Appendix C synthesis, M5.3 | M2.4 |
-| `Perspective.beta_interval` | M3.2 for `d = 2`, Appendix B, M5.3 | M2.4 |
-| `Perspective.boumal_clustering` | M3.3, M5.3 | M2.4 |
-| `Normalization.lojasiewicz_modulated` | M2.4 | Normalization line |
+| `sorry` | Task | Closed by | Blocked on |
+| --- | --- | --- | --- |
+| `Perspective.strict_saddle` | #12 | M3.1 | M0.1 |
+| `Perspective.beta_tiny_circle` | #27 | M3.2, M4.3, M5.1, M5.2 | M2.4 |
+| `Perspective.beta_tiny` | #28 | M2.1, M3.5, M4.2, M5.3 | M2.4 |
+| `Perspective.beta_interval` | #29 | M2.1, M3.2 (`d = 2`), M3.3 (`d ≥ 3`), M4.2, M5.1–M5.3 | M2.4 |
+| `Perspective.boumal_clustering` | #30 | M2.1, M3.3, M4.2, M5.3 | M2.4 |
+| `Normalization.lojasiewicz_modulated` | #11 | M2.4 | Normalization line |
+| `Perspective.beta0_consensus` | #31 | outside the scheme | — |
 
-`Perspective.beta0_consensus` is outside this scheme. It already follows from
-`almost_sure_consensus_beta0`, but `Section3_SmallBeta` comes before
+`Perspective.beta0_consensus` already follows from
+`almost_sure_consensus_beta0`. `Section3_SmallBeta` comes before
 `AppendixA_Saddle` in the import order, so the statement has to move first.
-Leave it to whoever claims it.
+
+The other `sorry`s of `INDEX.md` have no tasks yet.
