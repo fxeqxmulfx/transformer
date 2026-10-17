@@ -34,6 +34,7 @@ a translation symmetry `W`, an injective Hessian on `Wᗮ` still gives the
 | `SaddleAvoidance.LinearFlow` | the linear flow `exp (τ A)`: it solves `J' = A J`, is symmetric for symmetric `A`, and has the eigenvalue `e^μ` for each eigenvalue `μ` of `A` |
 | `SaddleAvoidance.Periodic` | a `C²` function invariant under a spanning set of translations has a bounded gradient, a bounded Hessian and a Lipschitz gradient |
 | `SaddleAvoidance.Invariant` | the Łojasiewicz inequality at critical points nondegenerate transversally to a translation symmetry |
+| `SaddleAvoidance.LocalInequality` | the local gradient inequality of `Normalization` gives the Łojasiewicz inequality; analytic functions in dimension at most one satisfy it at every critical point |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
 and `thm:main` of arXiv:1602.04915.  Both rest on the center-stable manifold
@@ -62,3 +63,4 @@ import Transformer.SaddleAvoidance.Nondegenerate
 import Transformer.SaddleAvoidance.LinearFlow
 import Transformer.SaddleAvoidance.Periodic
 import Transformer.SaddleAvoidance.Invariant
+import Transformer.SaddleAvoidance.LocalInequality

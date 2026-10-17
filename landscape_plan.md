@@ -58,6 +58,7 @@ Constraints:
 | Bounds, periodic energies (M1.4) | `SaddleAvoidance.exists_lipschitzWith_gradient_of_periodic`: a `C²` function invariant under a set of translations spanning `E` has a bounded gradient, a bounded Hessian and a globally Lipschitz gradient; `exists_lipschitzWith_gradient_of_isCompact` for a compact set of representatives | proved |
 | B, phase model (M3.4a) | `PhaseModel.injective_fderiv_gradient_divisionEnergy_univ` and `isLojasiewiczAt_divisionEnergy_univ`: the Hessian of `V_full` is injective at the characters up to periods, and Łojasiewicz holds there with exponent `1/2`; `isLojasiewiczAt_divisionEnergy_of_mem_span` at every zero of a generating `V_S` | proved |
 | B, under a translation symmetry (M2.1) | `SaddleAvoidance.isLojasiewiczAt_of_invariant`: if `f` is invariant under the translations by a subspace `W` and its Hessian at a critical point is injective on `Wᗮ`, Łojasiewicz holds there with exponent `1/2`; the Hessian of an invariant `f` maps into `Wᗮ` (`mem_orthogonal_of_hasFDerivAt_gradient`) | proved |
+| B, glue to Normalization (M2.3) | `SaddleAvoidance.exists_isLojasiewiczAt_of_local_gradient_inequality`: the local inequality in the form of `hlocal` of `lojasiewicz_modulated_of_local_gradient_inequality` gives `IsLojasiewiczAt` with an exponent `0 ≤ a < 1`, the form of `hloj`; `exists_isLojasiewiczAt_of_analyticAt_low_dimension` at every critical point of an analytic function on `EucSpace N`, `N ≤ 1` | proved |
 
 ## Milestones
 
@@ -205,7 +206,7 @@ Tasks: M2.1 #8, M2.2 #9, M2.3 #10, M2.4 #11.
 | --- | --- | --- |
 | M2.1 | **Łojasiewicz under a symmetry, done.** `isLojasiewiczAt_of_invariant`: if `f` is invariant under translations by a subspace `W` and its Hessian at the critical point `z` is injective on `Wᗮ`, then `IsLojasiewiczAt f z (1/2)`. Proof: restrict to `z + Wᗮ` and apply `isLojasiewiczAt_of_injective`. It covers the synchronized states of `𝖤_β`, where `W = ℝ𝟙`. | — |
 | M2.2 | **Convergence for flows.** The flow analogue of `exists_tendsto_of_isLojasiewiczAt`, with translations `Λ`: a limit point taken modulo `Λ` at which the inequality holds is the limit. First check what the proof of `lojasiewicz_modulated_of_local_gradient_inequality` already gives; reuse it rather than duplicate it. | — |
-| M2.3 | **Glue to Normalization.** Convert the form `\|E y - E z\| ^ α ≤ k ‖∇E y‖` used by the `hlocal` hypothesis of `lojasiewicz_modulated_of_local_gradient_inequality` into `IsLojasiewiczAt`, so the hard core plugs in once proved. | — |
+| M2.3 | **Glue to Normalization, done.** Convert the form `\|E y - E z\| ^ α ≤ k ‖∇E y‖` used by the `hlocal` hypothesis of `lojasiewicz_modulated_of_local_gradient_inequality` into `IsLojasiewiczAt`, so the hard core plugs in once proved. | — |
 | M2.4 | **Hard core, not this plan's work.** Łojasiewicz at degenerate critical points of analytic functions: the remaining input of `Normalization.lojasiewicz_modulated`. The survey proves convergence of every trajectory by Łojasiewicz's theorem. For `β = 0` the repository replaced it by an explicit inequality (`AppendixA_Lojasiewicz`); for `β > 0` no replacement is known. So `beta_tiny`, `beta_tiny_circle`, `beta_interval` and `boumal_clustering` cannot close before M2.4. | Normalization |
 
 ### M3 — Layer C, landscape
