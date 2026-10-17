@@ -23789,7 +23789,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer.Interpolation`
 
-**[Transformer.Interpolation](src/Transformer/Interpolation.lean)** — 199 lines, aggregator
+**[Transformer.Interpolation](src/Transformer/Interpolation.lean)** — 200 lines, aggregator
 
 **[Transformer.Interpolation.AtomClustering](src/Transformer/Interpolation/AtomClustering.lean)** — 20 lines, aggregator
 

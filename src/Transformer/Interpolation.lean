@@ -197,3 +197,4 @@ import Transformer.Interpolation.Section2_LocalPhases
 import Transformer.Interpolation.Section2_PerceptronControls
 import Transformer.Interpolation.Section2_CollapsePhases
 import Transformer.Interpolation.Section2_CollapseChains
+import Transformer.Interpolation.Section2_ClusterCoupling
