@@ -43,6 +43,9 @@ SCALENE = "scalene==2.3.0"
 def execute(command, cwd=ROOT):
     print("+", " ".join(command), flush=True)
     environment = {key: value for key, value in os.environ.items() if key != "VIRTUAL_ENV"}
+    # The artifact cache of lakefile.toml is this package's own; unset, Lake would
+    # extend it to Mathlib and turn Mathlib's build read-only.
+    environment["LAKE_ARTIFACT_CACHE"] = "false"
     subprocess.run(command, cwd=cwd, env=environment, check=True)
 
 

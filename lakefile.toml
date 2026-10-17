@@ -1,5 +1,10 @@
 name = "transformer"
 defaultTargets = ["Transformer"]
+# Lake's artifact cache, shared by the agents' worktrees (AGENTS.md, Board): a
+# module built in one is linked into the others' .lake/build, not rebuilt.  Every
+# `lake` runs with LAKE_ARTIFACT_CACHE=false, or Lake extends the cache to Mathlib.
+enableArtifactCache = true
+restoreAllArtifacts = true
 
 [[require]]
 name = "mathlib"

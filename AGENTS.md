@@ -27,10 +27,17 @@ experiments in `experiments/`. `./make.py` runs every task.
   `--no-checkout`, then run `git sparse-checkout set --no-cone '/*' '!/experiments/'`
   and `git checkout` in it. `agent-kanban` and `dt` find their files from there.
 - A worktree's ignored files die with it: link its `papers`, `.lake/packages` and
-  the `runs` of every experiment it trains to the root's, and `cp -a` the root's
-  `.lake/build` (10 GB, a minute). `lake update`, `lake clean`, `lake exe cache` and
-  a build with a `lake-manifest.json` other than the root's change the shared
-  packages: never in a worktree. A Mathlib bump is made in the root while none exists.
+  the `runs` of every experiment it trains to the root's. Its first `lake build`
+  links into `.lake/build`, read-only, every module that Lake's artifact cache
+  (`lakefile.toml`) holds: all of `main`, in seconds. `lake` runs with
+  `LAKE_ARTIFACT_CACHE=false` (`~/.profile`, `make.py`), which keeps Mathlib out of
+  the cache. `lake update`, `lake clean`, `lake exe cache` and a build with a
+  `lake-manifest.json` other than the root's change the shared packages: never in a
+  worktree. A Mathlib bump is made in the root while none exists, after
+  `lake cache clean` and `chmod -R u+w .lake/packages`.
+- The cache keeps every module version ever built, a removed worktree's too. When
+  the disk runs short and no `lake` runs: `lake cache clean`, then `lake build` in
+  the root to refill it.
 - Land each commit on `main` at once: `git rebase main` (regenerate a conflicting
   `INDEX.md`), rerun the checks if `main` had moved, and fast-forward the root:
   `git -C <root> merge --ff-only <name>`. The root holds no uncommitted work.
