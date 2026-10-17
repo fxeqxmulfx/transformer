@@ -210,3 +210,4 @@ import Transformer.Interpolation.Section2_HighDimClusters
 import Transformer.Interpolation.Section2_CircleChart
 import Transformer.Interpolation.Section2_CircleArcs
 import Transformer.Interpolation.Section2_CircleCuts
+import Transformer.Interpolation.Section2_CircleSweep
