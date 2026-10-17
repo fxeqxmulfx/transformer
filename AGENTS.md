@@ -6,7 +6,8 @@ experiments in `experiments/`. `./make.py` runs every task.
 
 ## Always
 
-- Work solo: no subagents, no parallel agents.
+- Work solo: no subagents, no parallel agents of your own; the user's other agents
+  share the work only through the board.
 - English in code, docstrings, comments, filenames, commits.
 - One commit per logical change, as soon as its checks pass.
 - Never stage `.discrtree/`, `discrtree.toml`, `.claude/skills/discrtree/`,
