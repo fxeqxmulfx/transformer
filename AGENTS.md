@@ -9,7 +9,26 @@ experiments in `experiments/`. `./make.py` runs every task.
 - Work solo: no subagents, no parallel agents.
 - English in code, docstrings, comments, filenames, commits.
 - One commit per logical change, as soon as its checks pass.
-- Never stage `.discrtree/`, `discrtree.toml`, `.claude/skills/discrtree/`.
+- Never stage `.discrtree/`, `discrtree.toml`, `.claude/skills/discrtree/`,
+  `.kanban/`.
+
+## Board
+
+- `agent-kanban` keeps the work in `.kanban/board.db` at the root, untracked: one
+  task per `sorry` of `INDEX.md`. Run `agent-kanban guide` first.
+- Register once, `agent-kanban agent register <name> --role developer|reviewer`;
+  pass `--agent <name>` to the claim, release, submit and review commands.
+- Take a `sorry` only by claiming its task: `claim-next`, or `claim ID`. After an
+  hour another agent may take it over: claim again to renew, `release ID` to give up.
+- Done: commit, then `submit-review ID` with `--pass` or `--fail IDX EVIDENCE` for
+  every test; evidence cites the commit and the command output. Fix a reviewer's
+  `changes` in a new commit and submit again.
+- Review: rerun every test at the submitted commit; `approve ID` if all hold, else
+  `request-changes ID --notes`.
+- A `sorry` entering `INDEX.md` gets its task when committed: tags `sorry`, arXiv id,
+  namespace (`open-problem` and priority `low` if the source leaves it open); tests:
+  module build, `#print axioms`, statement beside the source, pre-commit checks;
+  `--after` every task whose result the source's proof uses.
 
 ## Lean
 
