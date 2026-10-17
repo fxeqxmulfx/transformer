@@ -127,11 +127,12 @@ theorem norm_sub_le_two_mul_norm_proj (e : SSphere d) (S : Finset (Idx n)) {r : 
     mul_le_mul_of_nonneg_right hr (norm_nonneg _)
   linarith
 
-/-- The hypothesis `r ≤ 1/2` of `norm_sub_le_two_mul_norm_proj` and the closeness
-hypotheses hold at `r = 0` for `x = y = signedTuple e S`. -/
+/-- The hypotheses of `abs_inner_sub_le` hold for `x = y = z = e` and `r = 0`, and with
+`r = 0 ≤ 1/2` those of `norm_sub_le_two_mul_norm_proj` for `x = y = signedTuple e S`. -/
 example (e : SSphere 2) (j : Idx 3) :
-    (0 : ℝ) ≤ 1 / 2 ∧ ‖(signedTuple e {0} j : EucSpace 2) - signedTuple e {0} j‖ ≤ 0 := by
-  simp
+    ‖(e : EucSpace 2)‖ = 1 ∧ ‖(e : EucSpace 2) - e‖ ≤ 0 ∧ (0 : ℝ) ≤ 1 / 2 ∧
+      ‖(signedTuple e {0} j : EucSpace 2) - signedTuple e {0} j‖ ≤ 0 :=
+  ⟨mem_sphere_zero_iff_norm.mp e.2, by simp, by norm_num, by simp⟩
 
 /-- `|B(u, a)| ≤ 10 ε Σ_j ‖u_j‖` when every `‖a_j‖ ≤ ε`, from `‖W u‖ ≤ (n-1) Σ_j ‖u_j‖`
 and `‖W a‖ ≤ (2n-2) ε`. -/

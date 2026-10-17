@@ -46,6 +46,10 @@ theorem preimage_sphereShell (U : EucSpace d ≃ₗᵢ[ℝ] EucSpace d) :
 theorem ne_zero_of_mem_sphereShell {y : EucSpace d} (hy : y ∈ sphereShell d) : y ≠ 0 :=
   norm_pos_iff.mp (by linarith [hy.1])
 
+/-- The hypothesis of `ne_zero_of_mem_sphereShell` holds for `(3/2) e₀` in `ℝ²`. -/
+example : (3 / 2 : ℝ) • EuclideanSpace.single (0 : Fin 2) (1 : ℝ) ∈ sphereShell 2 := by
+  norm_num [sphereShell, norm_smul]
+
 /-- **Radial projection onto the sphere,** `y ↦ y / ‖y‖`; the origin, outside the
 shell, goes to the first basis vector. -/
 noncomputable def sphereNormalize (hd : 1 ≤ d) (y : EucSpace d) : SSphere d :=

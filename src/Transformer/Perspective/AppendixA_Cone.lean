@@ -29,6 +29,10 @@ theorem hasDerivAt_proj (e : EucSpace d) {f : ℝ → EucSpace d} {f' : EucSpace
   have h := hf.fun_sub (((hasDerivAt_const t e).inner ℝ hf).smul_const e)
   simpa only [proj, inner_zero_left, add_zero] using h
 
+/-- The hypothesis of `hasDerivAt_proj` holds for the line `s ↦ s v` in `ℝ²`. -/
+example (v : EucSpace 2) : HasDerivAt (fun s : ℝ => s • v) v 0 := by
+  simpa using (hasDerivAt_id (0 : ℝ)).smul_const v
+
 /-- **The derivative of the cone form along two solutions of `e:gradfl`** is the
 polarized form `B(P(x - y), P(F x - F y))`. -/
 theorem hasDerivAt_coneForm (e : EucSpace d) (i₀ : Idx n) (X Y : ℝ → SphereTuple d n)

@@ -143,5 +143,20 @@ example (x : SSphere 2) :
   have hx : (x : EucSpace 2) ≠ 0 := ne_zero_of_mem_unit_sphere x
   norm_num [hx]
 
+/-- The hypotheses of `critical_coord_of_nonneg` and `critical_coord_of_neg` hold for
+`(x, x, -x)`: its barycentre is `x`, which the particle `0` meets with `⟨x, x⟩ = 1 ≥ 0`
+and the particle `2` with `⟨-x, x⟩ = -1 < 0`. -/
+example (x : SSphere 2) :
+    IsCriticalE0 2 3 (signedTuple x {2}) ∧
+      0 ≤ inner (𝕜 := ℝ) (signedTuple (n := 3) x {2} 0 : EucSpace 2)
+        (∑ k : Idx 3, (signedTuple x {2} k : EucSpace 2)) ∧
+      inner (𝕜 := ℝ) (signedTuple (n := 3) x {2} 2 : EucSpace 2)
+        (∑ k : Idx 3, (signedTuple x {2} k : EucSpace 2)) < 0 := by
+  have hxx : inner (𝕜 := ℝ) (x : EucSpace 2) (x : EucSpace 2) = 1 := by
+    rw [real_inner_self_eq_norm_sq, mem_sphere_zero_iff_norm.mp x.2]
+    norm_num
+  refine ⟨isCriticalE0_signedTuple x {2}, ?_, ?_⟩ <;>
+    rw [sum_signedTuple, coe_signedTuple] <;> norm_num [inner_smul_right, hxx]
+
 end Perspective
 end Transformer

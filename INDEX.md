@@ -35313,17 +35313,17 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`northPole`](src/Transformer/Perspective/AppendixA_Beta0.lean#L255) | def |  |
 | [`antipodalPair_critical_nonTrivial`](src/Transformer/Perspective/AppendixA_Beta0.lean#L263) | theorem | proved |
 
-**[Transformer.Perspective.AppendixA_Cone](src/Transformer/Perspective/AppendixA_Cone.lean)** — 137 lines
+**[Transformer.Perspective.AppendixA_Cone](src/Transformer/Perspective/AppendixA_Cone.lean)** — 141 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`hasDerivAt_proj`](src/Transformer/Perspective/AppendixA_Cone.lean#L27) | theorem | proved |
-| [`hasDerivAt_coneForm`](src/Transformer/Perspective/AppendixA_Cone.lean#L34) | theorem | proved |
-| [`coneForm_le`](src/Transformer/Perspective/AppendixA_Cone.lean#L54) | theorem | proved |
-| [`nonpos_of_two_mul_le_deriv`](src/Transformer/Perspective/AppendixA_Cone.lean#L82) | theorem | proved |
-| [`coneForm_nonpos_of_stay`](src/Transformer/Perspective/AppendixA_Cone.lean#L118) | theorem | proved |
+| [`hasDerivAt_coneForm`](src/Transformer/Perspective/AppendixA_Cone.lean#L38) | theorem | proved |
+| [`coneForm_le`](src/Transformer/Perspective/AppendixA_Cone.lean#L58) | theorem | proved |
+| [`nonpos_of_two_mul_le_deriv`](src/Transformer/Perspective/AppendixA_Cone.lean#L86) | theorem | proved |
+| [`coneForm_nonpos_of_stay`](src/Transformer/Perspective/AppendixA_Cone.lean#L122) | theorem | proved |
 
-**[Transformer.Perspective.AppendixA_ConeError](src/Transformer/Perspective/AppendixA_ConeError.lean)** — 197 lines
+**[Transformer.Perspective.AppendixA_ConeError](src/Transformer/Perspective/AppendixA_ConeError.lean)** — 198 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -35336,7 +35336,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`norm_le_norm_proj_add`](src/Transformer/Perspective/AppendixA_ConeError.lean#L96) | theorem | proved |
 | [`abs_inner_signedTuple`](src/Transformer/Perspective/AppendixA_ConeError.lean#L106) | theorem | proved |
 | [`norm_sub_le_two_mul_norm_proj`](src/Transformer/Perspective/AppendixA_ConeError.lean#L117) | theorem | proved |
-| [`abs_coneBil_le`](src/Transformer/Perspective/AppendixA_ConeError.lean#L138) | theorem | proved |
+| [`abs_coneBil_le`](src/Transformer/Perspective/AppendixA_ConeError.lean#L139) | theorem | proved |
 
 **[Transformer.Perspective.AppendixA_ConeForm](src/Transformer/Perspective/AppendixA_ConeForm.lean)** — 200 lines
 
@@ -35381,7 +35381,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`implies`](src/Transformer/Perspective/AppendixA_Convergence.lean#L146) | theorem | proved |
 | [`exists_tendsto_isCriticalE0_of_beta0Dynamics`](src/Transformer/Perspective/AppendixA_Convergence.lean#L154) | theorem | proved |
 
-**[Transformer.Perspective.AppendixA_CriticalShape](src/Transformer/Perspective/AppendixA_CriticalShape.lean)** — 147 lines
+**[Transformer.Perspective.AppendixA_CriticalShape](src/Transformer/Perspective/AppendixA_CriticalShape.lean)** — 162 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -36734,7 +36734,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`preimage_image_subset_radialLift`](src/Transformer/Perspective/UniformLipschitz.lean#L140) | theorem | proved |
 | [`measure_image_eq_zero_of_lipschitz`](src/Transformer/Perspective/UniformLipschitz.lean#L166) | theorem | proved |
 
-**[Transformer.Perspective.UniformShell](src/Transformer/Perspective/UniformShell.lean)** — 174 lines
+**[Transformer.Perspective.UniformShell](src/Transformer/Perspective/UniformShell.lean)** — 178 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -36743,20 +36743,20 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`isOpen_sphereShell`](src/Transformer/Perspective/UniformShell.lean#L36) | theorem | proved |
 | [`preimage_sphereShell`](src/Transformer/Perspective/UniformShell.lean#L40) | theorem | proved |
 | [`ne_zero_of_mem_sphereShell`](src/Transformer/Perspective/UniformShell.lean#L46) | theorem | proved |
-| [`sphereNormalize`](src/Transformer/Perspective/UniformShell.lean#L51) | def |  |
-| [`coe_sphereNormalize`](src/Transformer/Perspective/UniformShell.lean#L58) | theorem | proved |
-| [`measurable_sphereNormalize`](src/Transformer/Perspective/UniformShell.lean#L66) | theorem | proved |
-| [`sphereMap_sphereNormalize`](src/Transformer/Perspective/UniformShell.lean#L72) | theorem | proved |
-| [`dist_sphereNormalize_le`](src/Transformer/Perspective/UniformShell.lean#L86) | theorem | proved |
-| [`shellMeasure`](src/Transformer/Perspective/UniformShell.lean#L115) | def |  |
-| [`shellMeasure_isometry`](src/Transformer/Perspective/UniformShell.lean#L120) | theorem | proved |
-| [`shellMeasure_univ`](src/Transformer/Perspective/UniformShell.lean#L134) | theorem | proved |
-| [`volume_sphereShell_pos`](src/Transformer/Perspective/UniformShell.lean#L138) | theorem | proved |
-| [`volume_sphereShell_lt_top`](src/Transformer/Perspective/UniformShell.lean#L146) | theorem | proved |
-| [`shellLaw`](src/Transformer/Perspective/UniformShell.lean#L153) | def |  |
-| [`isProbabilityMeasure_shellLaw`](src/Transformer/Perspective/UniformShell.lean#L156) | instance |  |
-| [`shellLaw_isometry`](src/Transformer/Perspective/UniformShell.lean#L161) | theorem | proved |
-| [`uniformTuple_shellLaw`](src/Transformer/Perspective/UniformShell.lean#L166) | theorem | proved |
+| [`sphereNormalize`](src/Transformer/Perspective/UniformShell.lean#L55) | def |  |
+| [`coe_sphereNormalize`](src/Transformer/Perspective/UniformShell.lean#L62) | theorem | proved |
+| [`measurable_sphereNormalize`](src/Transformer/Perspective/UniformShell.lean#L70) | theorem | proved |
+| [`sphereMap_sphereNormalize`](src/Transformer/Perspective/UniformShell.lean#L76) | theorem | proved |
+| [`dist_sphereNormalize_le`](src/Transformer/Perspective/UniformShell.lean#L90) | theorem | proved |
+| [`shellMeasure`](src/Transformer/Perspective/UniformShell.lean#L119) | def |  |
+| [`shellMeasure_isometry`](src/Transformer/Perspective/UniformShell.lean#L124) | theorem | proved |
+| [`shellMeasure_univ`](src/Transformer/Perspective/UniformShell.lean#L138) | theorem | proved |
+| [`volume_sphereShell_pos`](src/Transformer/Perspective/UniformShell.lean#L142) | theorem | proved |
+| [`volume_sphereShell_lt_top`](src/Transformer/Perspective/UniformShell.lean#L150) | theorem | proved |
+| [`shellLaw`](src/Transformer/Perspective/UniformShell.lean#L157) | def |  |
+| [`isProbabilityMeasure_shellLaw`](src/Transformer/Perspective/UniformShell.lean#L160) | instance |  |
+| [`shellLaw_isometry`](src/Transformer/Perspective/UniformShell.lean#L165) | theorem | proved |
+| [`uniformTuple_shellLaw`](src/Transformer/Perspective/UniformShell.lean#L170) | theorem | proved |
 
 **[Transformer.Perspective.UniformSlices](src/Transformer/Perspective/UniformSlices.lean)** — 126 lines
 

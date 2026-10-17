@@ -167,8 +167,8 @@ theorem coneLin_growth (hn : 2 ≤ n) (i₀ : Idx n) (u : Idx n → EucSpace d) 
   have := mul_nonneg hpos (mul_nonneg (by linarith : (0 : ℝ) ≤ (n : ℝ) - 2) (sub_nonneg.mpr hCS))
   linarith
 
-/-- The hypothesis of `coneLin_growth` holds for three particles. -/
-example : 2 ≤ 3 := by norm_num
+/-- The hypotheses of `coneLin_growth`, `sum_coneLin` and `coneW_coneLin` hold for `n = 3`. -/
+example : 2 ≤ 3 ∧ 3 ≠ 0 := by norm_num
 
 /-- **A perturbation of the particle `i₀` alone lies in the unstable cone:**
 `q(v) = (n - 2)/n ‖P v_{i₀}‖²` when `v_j = 0` for `j ≠ i₀`. -/
