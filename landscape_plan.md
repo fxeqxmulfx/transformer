@@ -60,6 +60,8 @@ Constraints:
 | B, under a translation symmetry (M2.1) | `SaddleAvoidance.isLojasiewiczAt_of_invariant`: if `f` is invariant under the translations by a subspace `W` and its Hessian at a critical point is injective on `Wᗮ`, Łojasiewicz holds there with exponent `1/2`; the Hessian of an invariant `f` maps into `Wᗮ` (`mem_orthogonal_of_hasFDerivAt_gradient`) | proved |
 | B, glue to Normalization (M2.3) | `SaddleAvoidance.exists_isLojasiewiczAt_of_local_gradient_inequality`: the local inequality in the form of `hlocal` of `lojasiewicz_modulated_of_local_gradient_inequality` gives `IsLojasiewiczAt` with an exponent `0 ≤ a < 1`, the form of `hloj`; `exists_isLojasiewiczAt_of_analyticAt_low_dimension` at every critical point of an analytic function on `EucSpace N`, `N ≤ 1` | proved |
 | C, reduction on the circle (M3.1a) | `Perspective.sum_sin_mul_exp_eq_zero_of_isCritical`: a critical point of `𝖤_β` is stationary (C1) for the kernel `sin x · e^{β (cos x - 1)}`; `cutStable_of_torusHessianNonPos`: a point with no positive second derivative is cut-stable (C2) for every `S`, so a negative cut sum makes a strict saddle (`isStrictSaddleTorusEnergy_of_cut_neg`); synchronized angles are global maxima (`isGlobalMaxTorusEnergy_of_synchronized`) | proved |
+| B, flows (M2.2) | `SaddleAvoidance.exists_tendsto_gradientFlow_of_isLojasiewiczAt`: a gradient flow converges when a point at which the inequality holds is a limit point of it taken modulo translations `Λ`; `tendsto_gradientFlow_of_isLojasiewiczAt` for a cluster point. It reuses `Normalization.converges_of_displacement_bound` | proved |
+| A + B, global minimizers (M4.1) | `SaddleAvoidance.ae_exists_tendsto_isMinOn`: if every critical point is a global minimizer or a strict saddle, given `hloj` and a limit point modulo `Λ`, almost every orbit of gradient descent converges to a global minimizer; `ae_exists_tendsto_isMinOn_of_span_eq_top` needs no limit point when `Λ` spans `E` | proved |
 
 ## Milestones
 
@@ -206,7 +208,7 @@ Tasks: M2.1 #8, M2.2 #9, M2.3 #10, M2.4 #11.
 | Item | Deliverable | Depends on |
 | --- | --- | --- |
 | M2.1 | **Łojasiewicz under a symmetry, done.** `isLojasiewiczAt_of_invariant`: if `f` is invariant under translations by a subspace `W` and its Hessian at the critical point `z` is injective on `Wᗮ`, then `IsLojasiewiczAt f z (1/2)`. Proof: restrict to `z + Wᗮ` and apply `isLojasiewiczAt_of_injective`. It covers the synchronized states of `𝖤_β`, where `W = ℝ𝟙`. | — |
-| M2.2 | **Convergence for flows.** The flow analogue of `exists_tendsto_of_isLojasiewiczAt`, with translations `Λ`: a limit point taken modulo `Λ` at which the inequality holds is the limit. First check what the proof of `lojasiewicz_modulated_of_local_gradient_inequality` already gives; reuse it rather than duplicate it. | — |
+| M2.2 | **Convergence for flows, done.** The flow analogue of `exists_tendsto_of_isLojasiewiczAt`, with translations `Λ`: a limit point taken modulo `Λ` at which the inequality holds is the limit. First check what the proof of `lojasiewicz_modulated_of_local_gradient_inequality` already gives; reuse it rather than duplicate it. | — |
 | M2.3 | **Glue to Normalization, done.** Convert the form `\|E y - E z\| ^ α ≤ k ‖∇E y‖` used by the `hlocal` hypothesis of `lojasiewicz_modulated_of_local_gradient_inequality` into `IsLojasiewiczAt`, so the hard core plugs in once proved. | — |
 | M2.4 | **Hard core, not this plan's work.** Łojasiewicz at degenerate critical points of analytic functions: the remaining input of `Normalization.lojasiewicz_modulated`. The survey proves convergence of every trajectory by Łojasiewicz's theorem. For `β = 0` the repository replaced it by an explicit inequality (`AppendixA_Lojasiewicz`); for `β > 0` no replacement is known. So `beta_tiny`, `beta_tiny_circle`, `beta_interval` and `boumal_clustering` cannot close before M2.4. | Normalization |
 
@@ -246,7 +248,7 @@ Tasks: M4.1 #20, M4.2 #21, M4.3 #22.
 
 | Item | Deliverable | Depends on |
 | --- | --- | --- |
-| M4.1 | **Gradient descent.** `ae_exists_tendsto_isMinOn`: if every critical point is a global minimizer or a strict saddle, given `hloj` and a limit point modulo `Λ`, then almost every orbit converges to a global minimizer. Periodic corollary: when `Λ` is a lattice spanning `E`, every orbit has a limit point modulo `Λ`, so that hypothesis is free. | M3.4a for the example |
+| M4.1 | **Gradient descent, done.** `ae_exists_tendsto_isMinOn`: if every critical point is a global minimizer or a strict saddle, given `hloj` and a limit point modulo `Λ`, then almost every orbit converges to a global minimizer. Periodic corollary: when `Λ` is a lattice spanning `E`, every orbit has a limit point modulo `Λ`, so that hypothesis is free. | M3.4a for the example |
 | M4.2 | **Gradient flows.** The same statement for gradient flows. | M1.3, M2.2 |
 | M4.3 | **`𝖤_β` on angles (USA).** For every `β > 0`, almost every start converges to a synchronized state, given `hloj` at the non-synchronized critical points. M2.1 covers the synchronized ones. | M3.1, M4.2, M1.4, M2.1 |
 
