@@ -119,6 +119,9 @@ used by the append-only lookup machine (Percepta, transformer-vm), and
 `Transformer.Precision` proves the limits finite precision puts on attention:
 finite formats blind a head past a finite length, and a sequential sum in `p`
 significant bits is capped at `2^{p+1}` times its increments.
+`Transformer.SaddleAvoidance` proves that gradient descent almost never
+converges to a strict saddle (arXiv:1710.07406, §5.1; arXiv:1602.04915), with
+a cone estimate in place of the center-stable manifold theorem.
 
 This top-level module re-exports all included formalizations. Per-paper
 subdirectories follow the manuscript sections, splitting larger arguments
@@ -178,3 +181,4 @@ import Transformer.RecurrentGradients
 import Transformer.NoiseScale
 import Transformer.Surge
 import Transformer.Grokking
+import Transformer.SaddleAvoidance
