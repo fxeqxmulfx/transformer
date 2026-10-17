@@ -16,6 +16,7 @@ for the formal solution concepts,
   `def:weak_spde` at `ρ* = δ_0` forbids:
   `not_isWeakSpdeSolution_of_isMcKeanVlasovSolution`.
 
+`Section4_PocRefutation` refutes `thm:PoC_wellposedness` with the same data.
 Neither refutes the source, whose `𝒢` is the filtration of a noise
 independent of `x_0`: no such `𝒢` can learn `x_0`.
 

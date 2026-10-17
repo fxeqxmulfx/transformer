@@ -3,9 +3,10 @@
 
 Formalization of `prop:mckean_vlasov_common_noise` and `thm:PoC_wellposedness`
 of arXiv:2604.01978v1, *Homogenized Transformers*, §4: the conditional
-McKean–Vlasov SDE with common noise has a solution, and the conditional law of
-that solution is the unique weak solution of the nonlinear Fokker–Planck SPDE
-`eq: the.spde`.
+McKean–Vlasov SDE with common noise has a unique solution, and the conditional
+law of that solution is the unique weak solution of the nonlinear
+Fokker–Planck SPDE `eq: the.spde`.  Existence is stated here; the rest is false
+for the formal solution concepts.
 
 **What the formal solution concepts cannot carry.**  The source fixes a
 filtered probability space carrying a cylindrical Wiener process `W` on
@@ -18,14 +19,16 @@ what makes the source's statement true: on a space too small to carry `W` — a
 one-point space, say — there is no solution unless the fields vanish.  Since
 "carries `W`" cannot be a hypothesis, the space is existentially quantified.
 
-*Uniqueness and `prop: prop.3` are false.*  The formal `𝒢` is any filtration
-below `ℱ`; one that learns `x_0` after time `0` makes `μ(t) = Law(x(t) | 𝒢_t)`
-jump.  Under the trivial head, two solutions with one initial law then differ
-in law, and the conditional law of a solution need not solve the SPDE:
+*Uniqueness, `prop: prop.3` and `thm:PoC_wellposedness` are false.*  The
+formal `𝒢` is any filtration below `ℱ`; one that learns `x_0` after time `0`
+makes `μ(t) = Law(x(t) | 𝒢_t)` jump.  Under the trivial head, two solutions
+with one initial law then differ in law, the conditional law of a solution need
+not solve the SPDE, and it need not have the law of the weak solution at rest:
 `not_mckeanVlasovSolution_unique` and
 `not_isWeakSpdeSolution_of_isMcKeanVlasovSolution`, in
-`Section4_WellPosedRefutation`.  The source's pathwise uniqueness, for
-solutions driven by one `W`, is not refuted by them, and is not stated here.
+`Section4_WellPosedRefutation`, and `not_poc_wellposedness`, in
+`Section4_PocRefutation`.  The source's pathwise uniqueness, for solutions
+driven by one `W`, is not refuted by them, and is not stated here.
 -/
 
 import Transformer.Homogenized.McKeanVlasov
@@ -80,39 +83,10 @@ theorem exists_mckeanVlasovSolution {d : ℕ} (β : ℝ) (σV σA : ℝ≥0)
     HasMcKeanVlasovSolution β T ρ μ₀ := by
   sorry
 
-/-- **Theorem (thm:PoC_wellposedness).**  Under `ass:high_order_short`, for
-every `μ_0 ∈ 𝒫(𝕊^{d-1})` the McKean–Vlasov SDE `eq:non_linear_SDE_common` has
-a solution `(x, μ)`, unique in law; and `μ` is the unique weak solution of
-`eq: the.spde` in the sense of `def:weak_spde`.
-
-That `μ` *is* a weak solution is `prop: prop.3`, false for the formal solution
-concepts (`not_isWeakSpdeSolution_of_isMcKeanVlasovSolution`); what is stated
-here is the uniqueness half — every weak solution starting at `μ_0` has the law
-of the conditional law of a McKean–Vlasov solution.  The source obtains it from
-the superposition principle for conditional McKean–Vlasov equations, which
-lifts a weak solution of the SPDE to a solution of the SDE.
-
-Not proved here.
-
-Source: arXiv:2604.01978v1, `thm:PoC_wellposedness`. -/
-theorem poc_wellposedness {d : ℕ} (β : ℝ) (σV σA : ℝ≥0)
-    (ρ : Measure (HeadParam d)) (hρ : HasHighOrderLaw d σV σA ρ) (T : ℝ) (hT : 0 < T)
-    (μ₀ : Measure (EucSpace d)) (hμ₀ : IsProbabilityMeasure μ₀)
-    (hsupp : μ₀ {y : EucSpace d | ‖y‖ = 1}ᶜ = 0) :
-    HasMcKeanVlasovSolution β T ρ μ₀ ∧
-      ∀ (Ω : Type) (mΩ : MeasurableSpace Ω) (P : Measure Ω) (ℱ 𝒢 : Filtration ℝ mΩ)
-        (x₀ : Ω → EucSpace d) (x : ℝ → Ω → EucSpace d) (μ : ℝ → Ω → Measure (EucSpace d)),
-        IsProbabilityMeasure P → IsMcKeanVlasovSolution β T ρ P ℱ 𝒢 x₀ μ₀ x μ →
-      ∀ (Ω' : Type) (mΩ' : MeasurableSpace Ω') (P' : Measure Ω') (𝒢' : Filtration ℝ mΩ')
-        (μ' : ℝ → Ω' → Measure (EucSpace d)),
-        IsProbabilityMeasure P' → IsWeakSpdeSolution β T ρ P' 𝒢' μ' →
-        (∀ ω, μ' 0 ω = μ₀) → SameFdd T P P' μ μ' := by
-  sorry
-
-/-- The hypotheses shared by `exists_mckeanVlasovSolution` and
-`poc_wellposedness` are satisfiable: the degenerate weight law `ρ* = δ_0`
-satisfies `ass:high_order_short`, `T = 1` is positive, and
-`μ_0 = δ_{basePoint d}` is a probability measure carried by the sphere. -/
+/-- The hypotheses of `exists_mckeanVlasovSolution` are satisfiable: the
+degenerate weight law `ρ* = δ_0` satisfies `ass:high_order_short`, `T = 1` is
+positive, and `μ_0 = δ_{basePoint d}` is a probability measure carried by the
+sphere. -/
 example (d : ℕ) :
     HasHighOrderLaw (d + 1) 0 0 (Measure.dirac (0 : HeadParam (d + 1))) ∧ (0 : ℝ) < 1 ∧
       IsProbabilityMeasure
