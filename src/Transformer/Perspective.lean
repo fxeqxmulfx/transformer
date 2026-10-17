@@ -201,6 +201,7 @@ import Transformer.Perspective.AppendixA_FiniteLength
 import Transformer.Perspective.AppendixA_Convergence
 import Transformer.Perspective.AppendixA_SaddleNull
 import Transformer.Perspective.AppendixA_Saddle
+import Transformer.Perspective.Section3_ClusteredSets
 import Transformer.Perspective.AppendixB_BetaInterval
 import Transformer.Perspective.AppendixB_Taylor
 import Transformer.Perspective.StrictSaddle
