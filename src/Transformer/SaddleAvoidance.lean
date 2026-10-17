@@ -25,6 +25,7 @@ nondegenerate, almost every orbit does.
 | `SaddleAvoidance.Minimizers` | almost every limit is a local minimizer; almost every bounded orbit converges to one |
 | `SaddleAvoidance.CriticalPoints` | limit points up to translations are critical; the Łojasiewicz inequality at nondegenerate critical points |
 | `SaddleAvoidance.SecondOrder` | the second-order test; Hessians at nondegenerate critical points other than strict saddles are positive definite |
+| `SaddleAvoidance.Necessary` | the gradient vanishes and the Hessian is nonnegative at a local minimizer; a critical point with a direction of negative curvature is a strict saddle |
 | `SaddleAvoidance.Nondegenerate` | almost every orbit with a nondegenerate limit point converges to a local minimizer |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
@@ -49,4 +50,5 @@ import Transformer.SaddleAvoidance.Convergence
 import Transformer.SaddleAvoidance.Minimizers
 import Transformer.SaddleAvoidance.CriticalPoints
 import Transformer.SaddleAvoidance.SecondOrder
+import Transformer.SaddleAvoidance.Necessary
 import Transformer.SaddleAvoidance.Nondegenerate

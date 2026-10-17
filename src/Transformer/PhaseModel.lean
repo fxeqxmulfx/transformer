@@ -19,6 +19,10 @@ periods, and every zero is nondegenerate.
 | `PhaseModel.Descent` | limit points are critical; convergence from nondegenerate limit points; almost every orbit converges to a local minimizer when every critical point is nondegenerate |
 | `PhaseModel.Division` | the full division table: only `0` is orthogonal to every row; the characters are zeros of every `V_S` and, up to periods, the only zeros of `V_full`; the norms of the rows |
 | `PhaseModel.Generating` | sets of rows generating the full table over `ℤ`: the zeros of `V_S` are the characters up to periods, all nondegenerate; convergence from a character as a limit point |
+| `PhaseModel.Lift` | critical points near a zero: relations within `π` of `2πℤ` vanish at a critical point, and within `π` inclusive at a local minimizer |
+| `PhaseModel.Coordinates` | the gradient of `V_full` and the diagonal of its Hessian in coordinates; the chord inequality |
+| `PhaseModel.Basin` | critical points of `V_full` within `n/8` of `0` with a nonnegative Hessian diagonal are periods |
+| `PhaseModel.Characters` | the same near every character; there the other critical points are strict saddles |
 
 The convergence results instantiate `Transformer.SaddleAvoidance` with the
 lattice of periods as translations and the cube as a compact set meeting
@@ -31,3 +35,7 @@ import Transformer.PhaseModel.Periods
 import Transformer.PhaseModel.Descent
 import Transformer.PhaseModel.Division
 import Transformer.PhaseModel.Generating
+import Transformer.PhaseModel.Lift
+import Transformer.PhaseModel.Coordinates
+import Transformer.PhaseModel.Basin
+import Transformer.PhaseModel.Characters
