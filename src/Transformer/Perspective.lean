@@ -187,6 +187,9 @@ import Transformer.Perspective.AppendixA_Hessian
 import Transformer.Perspective.AppendixA_Rotation
 import Transformer.Perspective.AppendixA_CriticalShape
 import Transformer.Perspective.AppendixA_Barycenter
+import Transformer.Perspective.AppendixA_ConeForm
+import Transformer.Perspective.AppendixA_ConeError
+import Transformer.Perspective.AppendixA_ConeGrowth
 import Transformer.Perspective.AppendixA_Saddle
 import Transformer.Perspective.AppendixB_BetaInterval
 import Transformer.Perspective.AppendixB_Taylor
