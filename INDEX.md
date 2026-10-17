@@ -38808,19 +38808,19 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | --- | --- | --- |
 | [`measurable`](src/Transformer/Wiener/Basic.lean#L30) | theorem | proved |
 | [`hasLaw_eval`](src/Transformer/Wiener/Basic.lean#L34) | theorem | proved |
-| [`memLp_two`](src/Transformer/Wiener/Basic.lean#L40) | theorem | proved |
-| [`integrable`](src/Transformer/Wiener/Basic.lean#L43) | theorem | proved |
-| [`integral_eq_zero`](src/Transformer/Wiener/Basic.lean#L47) | theorem | proved |
-| [`integral_sq`](src/Transformer/Wiener/Basic.lean#L51) | theorem | proved |
-| [`integral_sub_mul`](src/Transformer/Wiener/Basic.lean#L56) | theorem | proved |
-| [`integral_mul`](src/Transformer/Wiener/Basic.lean#L67) | theorem | proved |
-| [`martingale`](src/Transformer/Wiener/Basic.lean#L82) | theorem | proved |
-| [`hasIndepIncrements`](src/Transformer/Wiener/Basic.lean#L96) | theorem | proved |
-| [`smul`](src/Transformer/Wiener/Basic.lean#L114) | theorem | proved |
-| [`isBrownian_one_iff`](src/Transformer/Wiener/Basic.lean#L136) | theorem | proved |
-| [`zero_ae`](src/Transformer/Wiener/Basic.lean#L151) | theorem | proved |
-| [`integral_mul_same_time`](src/Transformer/Wiener/Basic.lean#L155) | theorem | proved |
-| [`integral_mul`](src/Transformer/Wiener/Basic.lean#L174) | theorem | proved |
+| [`memLp_two`](src/Transformer/Wiener/Basic.lean#L38) | theorem | proved |
+| [`integrable`](src/Transformer/Wiener/Basic.lean#L41) | theorem | proved |
+| [`integral_eq_zero`](src/Transformer/Wiener/Basic.lean#L45) | theorem | proved |
+| [`integral_sq`](src/Transformer/Wiener/Basic.lean#L49) | theorem | proved |
+| [`integral_sub_mul`](src/Transformer/Wiener/Basic.lean#L54) | theorem | proved |
+| [`integral_mul`](src/Transformer/Wiener/Basic.lean#L65) | theorem | proved |
+| [`martingale`](src/Transformer/Wiener/Basic.lean#L80) | theorem | proved |
+| [`hasIndepIncrements`](src/Transformer/Wiener/Basic.lean#L94) | theorem | proved |
+| [`smul`](src/Transformer/Wiener/Basic.lean#L112) | theorem | proved |
+| [`isBrownian_one_iff`](src/Transformer/Wiener/Basic.lean#L131) | theorem | proved |
+| [`zero_ae`](src/Transformer/Wiener/Basic.lean#L146) | theorem | proved |
+| [`integral_mul_same_time`](src/Transformer/Wiener/Basic.lean#L150) | theorem | proved |
+| [`integral_mul`](src/Transformer/Wiener/Basic.lean#L169) | theorem | proved |
 
 **[Transformer.Wiener.Defs](src/Transformer/Wiener/Defs.lean)** — 188 lines
 

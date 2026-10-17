@@ -33,9 +33,7 @@ theorem measurable (hB : IsBrownian ℱ P v B) (t : ℝ≥0) : Measurable (B t) 
 /-- App. A.2: `B t` is a centred Gaussian of variance `v t`. -/
 theorem hasLaw_eval (hB : IsBrownian ℱ P v B) (t : ℝ≥0) :
     HasLaw (B t) (gaussianReal 0 (v * t)) P := by
-  have h := hB.hasLaw 0 t zero_le
-  rw [tsub_zero] at h
-  exact h.congr (hB.zero.mono fun ω hω => by simp [hω])
+  simpa only [tsub_zero] using (hB.hasLaw 0 t zero_le).congr (hB.zero.mono fun ω hω => by simp [hω])
 
 theorem memLp_two (hB : IsBrownian ℱ P v B) (t : ℝ≥0) : MemLp (B t) 2 P :=
   (hB.hasLaw_eval t).hasGaussianLaw.memLp_two
@@ -116,10 +114,7 @@ theorem smul (hB : IsBrownian ℱ P v B) (c : ℝ) : IsBrownian ℱ P (‖c‖�
   continuous := hB.continuous.mono fun ω hω => hω.const_smul c
   adapted t := (hB.adapted t).const_smul c
   indep s t hst := by
-    have h : (c • B) t - (c • B) s = (c * ·) ∘ (B t - B s) := by
-      ext ω
-      simp [mul_sub]
-    rw [h]
+    rw [show (c • B) t - (c • B) s = (c * ·) ∘ (B t - B s) from funext fun ω => by simp [mul_sub]]
     exact indep_of_indep_of_le_left (hB.indep s t hst)
       ((measurable_const_mul c).comp (comap_measurable _)).comap_le
   hasLaw s t hst := by
@@ -189,12 +184,17 @@ theorem integral_mul (hW : IsCylindricalWiener ρ ℱ P W) (s t : ℝ≥0) (h g 
 
 end IsCylindricalWiener
 
-example : Martingale (fun (_ : ℝ≥0) (_ : Unit) => (0 : ℝ)) (Filtration.const ℝ≥0 _ le_rfl)
-    (Measure.dirac ()) :=
-  (isBrownian_zero _).martingale
-
-example (h g : Lp ℝ 2 (0 : Measure ℝ)) :
-    ∫ _ : Unit, (0 : ℝ) * 0 ∂Measure.dirac () = ((min 2 1 : ℝ≥0) : ℝ) * ⟪h, g⟫_ℝ :=
-  (isCylindricalWiener_zero (Filtration.const ℝ≥0 _ le_rfl)).integral_mul 2 1 h g
+/-- The hypotheses of every result above hold for the zero process and the zero noise on `L²(0)`
+under the Dirac mass on `Unit`, with the constant filtration. -/
+example (h g : Lp ℝ 2 (0 : Measure ℝ)) :=
+  have hB := isBrownian_zero (P := Measure.dirac ()) (Filtration.const ℝ≥0 _ le_rfl)
+  have hW := isCylindricalWiener_zero (Θ := ℝ) (P := Measure.dirac ())
+    (Filtration.const ℝ≥0 _ le_rfl)
+  And.intro (And.intro (hB.measurable 1) (hB.hasLaw_eval 1)) <| And.intro (hB.memLp_two 1) <|
+  And.intro (And.intro (hB.integrable 1) (hB.integral_eq_zero 1)) <| And.intro (hB.integral_sq 1) <|
+  And.intro (hB.integral_sub_mul (zero_le_one' ℝ≥0) (stronglyMeasurable_const (b := 1))) <|
+  And.intro (And.intro (hB.integral_mul 1 2) hB.martingale) <|
+  And.intro (And.intro hB.hasIndepIncrements (hB.smul 2)) <| And.intro (hW.zero_ae 1) <|
+  And.intro (hW.integral_mul_same_time 1 h g) (hW.integral_mul 2 1 h g)
 
 end Transformer.Wiener
