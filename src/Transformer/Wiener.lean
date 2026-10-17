@@ -2,7 +2,9 @@
 # Stochastic calculus for the Wiener process
 
 Brownian motion, the cylindrical Wiener process on `L²(ρ)` and the filtrations
-built from it (`Wiener/Defs.lean`).  Doob's `L²` inequalities for martingales
+built from it (`Wiener/Defs.lean`); their moments, the martingale property, the
+covariance `𝔼[W(t)[h] W(s)[g]] = (s ∧ t) ⟪h, g⟫` and the bridge to Mathlib's
+`IsBrownianReal` (`Wiener/Basic.lean`).  Doob's `L²` inequalities for martingales
 indexed by `ℝ≥0` with right-continuous paths: on a finite grid
 (`Wiener/DoobFinite.lean`), along nested dyadic grids (`Wiener/DoobGrid.lean`),
 and over `[0, T]` (`Wiener/Doob.lean`).
@@ -12,6 +14,7 @@ cylindrical Wiener process) and §2.4.
 -/
 
 import Transformer.Wiener.Defs
+import Transformer.Wiener.Basic
 import Transformer.Wiener.DoobFinite
 import Transformer.Wiener.DoobGrid
 import Transformer.Wiener.Doob
