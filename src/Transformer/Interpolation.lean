@@ -198,3 +198,5 @@ import Transformer.Interpolation.Section2_PerceptronControls
 import Transformer.Interpolation.Section2_CollapsePhases
 import Transformer.Interpolation.Section2_CollapseChains
 import Transformer.Interpolation.Section2_ClusterCoupling
+import Transformer.Interpolation.Section2_HullLevels
+import Transformer.Interpolation.Section2_SupportRegions
