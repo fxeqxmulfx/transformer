@@ -20,7 +20,18 @@ experiments in `experiments/`. `./make.py` runs every task.
   pass `--agent <name>` to the claim, release, submit and review commands.
 - Take a `sorry` only by claiming its task: `claim-next`, or `claim ID`. After an
   hour another agent may take it over: claim again to renew, `release ID` to give up.
-- Done: commit, then `submit-review ID` with `--pass` or `--fail IDX EVIDENCE` for
+- Each agent works in its own worktree, made when it starts and removed with its
+  branch when it stops: `git worktree add -b <name> .claude/worktrees/<name> main`.
+  `agent-kanban` and `dt` find their files from there.
+- A worktree's ignored files die with it: link its `papers`, `.lake/packages` and
+  the `runs` of every experiment it trains to the root's, and `cp -a` the root's
+  `.lake/build` (10 GB, a minute). `lake update`, `lake clean`, `lake exe cache` and
+  a build with a `lake-manifest.json` other than the root's change the shared
+  packages: never in a worktree. A Mathlib bump is made in the root while none exists.
+- Land each commit on `main` at once: `git rebase main` (regenerate a conflicting
+  `INDEX.md`), rerun the checks if `main` had moved, and fast-forward the root:
+  `git -C <root> merge --ff-only <name>`. The root holds no uncommitted work.
+- Done: once landed, `submit-review ID` with `--pass` or `--fail IDX EVIDENCE` for
   every test; evidence cites the commit and the command output. Fix a reviewer's
   `changes` in a new commit and submit again.
 - Review: rerun every test at the submitted commit; `approve ID` if all hold, else

@@ -8,8 +8,9 @@ build/
 
 # ── Papers ───────────────────────────────────────────────────────────────
 # arXiv sources of the papers the tree cites, each in papers/arXiv-<id>/ at
-# the version cited; `./make.py papers` fetches the missing ones.
-/papers/
+# the version cited; `./make.py papers` fetches the missing ones.  No
+# trailing slash: in a worktree it is a link to the root's.
+/papers
 
 # ── Python ───────────────────────────────────────────────────────────────
 __pycache__/
@@ -33,6 +34,13 @@ venv/
 /discrtree.toml
 /.claude/skills/discrtree/
 
+# ── Agents ───────────────────────────────────────────────────────────────
+# The agent-kanban board and the agents' worktrees: local to the machine
+# (AGENTS.md, Board).
+/.kanban/
+/.claude/worktrees/
+
 # ── Experiments ──────────────────────────────────────────────────────────
-/experiments/*/runs/
+# No trailing slash: in a worktree `runs` is a link to the root's.
+/experiments/*/runs
 /experiments/archive/synthetic_trainers/runs/
