@@ -1,7 +1,8 @@
 /-
 # Weak solutions are the measures transported along trajectories
 
-Let `w` be a bounded field, continuous in `(t, x)`.
+Let `w` be a field continuous in `(t, x)` and bounded uniformly in `x`, locally
+uniformly in `t`.
 
 * **Transported measures are solutions.**  If every `t ↦ Y_t x` solves
   `ẏ = w(t, y)`, then `μ_t = (Y_t)_# μ₀` solves `∂_t μ + div(w μ) = 0` weakly,
@@ -42,7 +43,8 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [MeasurableSpace
 every `t ↦ Y_t x` solves `ẏ = w(t, y)`, then `μ_t = (Y_t)_# μ₀` satisfies
 `∫ g dμ_t = ∫ g dμ_0 + ∫_0^t ∫ Dg(x) w(σ, x) dμ_σ(x) dσ` for every `C¹` test
 function `g` with compact support and every time `t`. -/
-theorem weak_of_map (hw : Continuous (Function.uncurry w)) (hM : ∀ t x, ‖w t x‖ ≤ M)
+theorem weak_of_map (hw : Continuous (Function.uncurry w))
+    (hM : ∀ t₀, ∃ M, ∀ᶠ t in 𝓝 t₀, ∀ x, ‖w t x‖ ≤ M)
     {Y : ℝ → E → E} (hYc : ∀ t, Continuous (Y t))
     (hY : ∀ t x, HasDerivAt (fun t => Y t x) (w t (Y t x)) t) (μ₀ : Measure E)
     [IsFiniteMeasure μ₀] {g : E → ℝ} (hg : ContDiff ℝ 1 g) (hgc : HasCompactSupport g) (t : ℝ) :
@@ -54,27 +56,31 @@ theorem weak_of_map (hw : Continuous (Function.uncurry w)) (hM : ∀ t x, ‖w t
   have hwσ : ∀ σ, Continuous (w σ) := fun σ => hw.comp (Continuous.prodMk_right σ)
   have hYt : ∀ x, Continuous fun σ => Y σ x := fun x =>
     continuous_iff_continuousAt.2 fun σ => (hY σ x).continuousAt
-  have hbd : ∀ σ y, ‖fderiv ℝ g y (w σ y)‖ ≤ Cg * M := fun σ y =>
+  have hbd : ∀ {σ M}, (∀ x, ‖w σ x‖ ≤ M) → ∀ y, ‖fderiv ℝ g y (w σ y)‖ ≤ Cg * M := fun hσ y =>
     ((fderiv ℝ g y).le_opNorm _).trans
-      (mul_le_mul (hCg y) (hM σ y) (norm_nonneg _) ((norm_nonneg _).trans (hCg y)))
+      (mul_le_mul (hCg y) (hσ y) (norm_nonneg _) ((norm_nonneg _).trans (hCg y)))
   have hmap : ∀ σ {f : E → ℝ}, Continuous f → ∫ x, f x ∂μ₀.map (Y σ) = ∫ x, f (Y σ x) ∂μ₀ :=
     fun σ f hf => integral_map (hYc σ).aemeasurable hf.aestronglyMeasurable
   have hF'm : ∀ σ, Continuous fun x => fderiv ℝ g (Y σ x) (w σ (Y σ x)) := fun σ =>
     (hDg.comp (hYc σ)).clm_apply ((hwσ σ).comp (hYc σ))
   have hF' : Continuous fun σ => ∫ x, fderiv ℝ g (Y σ x) (w σ (Y σ x)) ∂μ₀ :=
-    continuous_of_dominated (bound := fun _ => Cg * M) (fun σ => (hF'm σ).aestronglyMeasurable)
-      (fun σ => Eventually.of_forall fun x => hbd σ _) (integrable_const _)
-      (Eventually.of_forall fun x =>
-        (hDg.comp (hYt x)).clm_apply (hw.comp (continuous_id.prodMk (hYt x))))
+    continuous_iff_continuousAt.2 fun σ₀ => by
+      obtain ⟨M, hM⟩ := hM σ₀
+      exact continuousAt_of_dominated (bound := fun _ => Cg * M)
+        (Eventually.of_forall fun σ => (hF'm σ).aestronglyMeasurable)
+        (hM.mono fun σ hσ => Eventually.of_forall fun x => hbd hσ _) (integrable_const _)
+        (Eventually.of_forall fun x =>
+          ((hDg.comp (hYt x)).clm_apply (hw.comp (continuous_id.prodMk (hYt x)))).continuousAt)
   have hF : ∀ σ, HasDerivAt (fun σ => ∫ x, g (Y σ x) ∂μ₀)
-      (∫ x, fderiv ℝ g (Y σ x) (w σ (Y σ x)) ∂μ₀) σ := fun σ =>
-    (hasDerivAt_integral_of_dominated_loc_of_deriv_le (μ := μ₀) (x₀ := σ)
+      (∫ x, fderiv ℝ g (Y σ x) (w σ (Y σ x)) ∂μ₀) σ := fun σ => by
+    obtain ⟨M, hM⟩ := hM σ
+    exact (hasDerivAt_integral_of_dominated_loc_of_deriv_le (μ := μ₀) (x₀ := σ)
       (F := fun σ x => g (Y σ x)) (F' := fun σ x => fderiv ℝ g (Y σ x) (w σ (Y σ x)))
-      (bound := fun _ => Cg * M) univ_mem
+      (bound := fun _ => Cg * M) hM
       (Eventually.of_forall fun σ => (hg.continuous.comp (hYc σ)).aestronglyMeasurable)
       (Integrable.of_bound (hg.continuous.comp (hYc σ)).aestronglyMeasurable C₀
         (Eventually.of_forall fun x => hC₀ _))
-      (hF'm σ).aestronglyMeasurable (Eventually.of_forall fun x σ _ => hbd σ _)
+      (hF'm σ).aestronglyMeasurable (Eventually.of_forall fun x σ hσ => hbd hσ _)
       (integrable_const _)
       (Eventually.of_forall fun x σ _ =>
         (hg.differentiable one_ne_zero (Y σ x)).hasFDerivAt.comp_hasDerivAt σ (hY σ x))).2
@@ -133,11 +139,13 @@ theorem eq_map_flow (hw : IsFlowField w L M) {A : ℝ → E → E →L[ℝ] E}
 their conclusions hold there: the zero field, whose trajectories and flow are
 constant, and the constant curve `δ_0`. -/
 example : IsFlowField (fun (_ : ℝ) (_ : ℝ) => (0 : ℝ)) 0 0 ∧
+    (∀ t₀ : ℝ, ∃ M : ℝ, ∀ᶠ t in 𝓝 t₀, ∀ x : ℝ, ‖(fun (_ : ℝ) (_ : ℝ) => (0 : ℝ)) t x‖ ≤ M) ∧
     (∀ t x : ℝ, HasDerivAt (fun (_ : ℝ) => x) ((fun (_ : ℝ) (_ : ℝ) => (0 : ℝ)) t x) t) ∧
     Continuous (Function.uncurry fun (_ _ : ℝ) => (0 : ℝ →L[ℝ] ℝ)) ∧
     (∀ t x : ℝ, HasFDerivAt ((fun (_ : ℝ) (_ : ℝ) => (0 : ℝ)) t) (0 : ℝ →L[ℝ] ℝ) x) ∧
     (∀ t₀ : ℝ, ∃ R : ℝ, ∀ᶠ _ in 𝓝 t₀, Measure.dirac (0 : ℝ) (closedBall 0 R)ᶜ = 0) :=
   ⟨⟨continuous_const, fun _ => LipschitzWith.const 0, fun _ _ => by simp⟩,
+    fun _ => ⟨0, Eventually.of_forall fun _ _ => by simp⟩,
     fun _ x => hasDerivAt_const _ x, continuous_const, fun _ _ => hasFDerivAt_const 0 _,
     fun _ => ⟨0, Eventually.of_forall fun _ => by simp⟩⟩
 

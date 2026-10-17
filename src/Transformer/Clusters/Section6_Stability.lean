@@ -33,11 +33,6 @@ open GlobalFlow Wasserstein
 
 variable {d : ℕ}
 
-/-- A measure carried by a ball is carried by every larger ball. -/
-theorem IsCarriedBy.mono {μ : Measure (EucSpace d)} {R R' : ℝ} (hμ : IsCarriedBy μ R)
-    (h : R ≤ R') : IsCarriedBy μ R' :=
-  measure_mono_null (compl_subset_compl.2 (closedBall_subset_closedBall h)) hμ
-
 /-- **`W₂` separates probability measures carried by a ball**: `W₂(μ, ν) = 0`
 forces `μ = ν`.  For smooth `g` with compact support, `g` is Lipschitz and
 `|∫ g dμ - ∫ g dν| ≤ Lip(g) W₂(μ, ν) = 0` (`norm_integral_sub_le_W2`), and

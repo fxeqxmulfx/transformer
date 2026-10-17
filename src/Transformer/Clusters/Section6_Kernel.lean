@@ -53,6 +53,11 @@ enters `lem: vectorfield.properties`. -/
 def IsCarriedBy (μ : Measure (EucSpace d)) (R : ℝ) : Prop :=
   μ (Metric.closedBall 0 R)ᶜ = 0
 
+/-- A measure carried by a ball is carried by every larger ball. -/
+theorem IsCarriedBy.mono {μ : Measure (EucSpace d)} {R R' : ℝ} (hμ : IsCarriedBy μ R)
+    (h : R ≤ R') : IsCarriedBy μ R' :=
+  measure_mono_null (Set.compl_subset_compl.2 (Metric.closedBall_subset_closedBall h)) hμ
+
 /-- The Dirac mass at the origin is carried by every ball of positive radius. -/
 theorem isCarriedBy_dirac (R : ℝ) (hR : 0 ≤ R) :
     IsCarriedBy (Measure.dirac (0 : EucSpace d)) R := by
