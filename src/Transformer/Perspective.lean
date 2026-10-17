@@ -184,6 +184,8 @@ import Transformer.Perspective.RussianPairs
 import Transformer.Perspective.AppendixA_Beta0
 import Transformer.Perspective.AppendixA_Hessian
 import Transformer.Perspective.AppendixA_Rotation
+import Transformer.Perspective.AppendixA_CriticalShape
+import Transformer.Perspective.AppendixA_Barycenter
 import Transformer.Perspective.AppendixA_Saddle
 import Transformer.Perspective.AppendixB_BetaInterval
 import Transformer.Perspective.AppendixB_Taylor
