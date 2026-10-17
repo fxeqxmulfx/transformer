@@ -1,15 +1,13 @@
 /-
 # Kinetic theory for Transformers — fluctuations
 
-Formalization of `th:mf-gpt`(ii) and `lem:correl` of arXiv:2605.09213v1,
+Formalization of `th:mf-gpt`(ii) of arXiv:2605.09213v1,
 *Kinetic theory for Transformers and the lost-in-the-middle phenomenon*.
 
 The printed quantitative mean-field estimate is refuted below by a smooth
-position test. The Glauber-calculus correlation estimates remain open:
-a two-point covariance of size `i⁻¹` and a
-third cumulant of size `(ij)⁻¹`, both with the nonstandard factor
-`e^{√(CT log(i/j))}` that the singular cumulative influence of small indices
-produces.
+position test. The third cumulant the Glauber-calculus estimates of
+`lem:correl` control is defined here; the estimates themselves are in
+`Section3_CumulantBounds`.
 -/
 
 import Transformer.Kinetic.MeanField
@@ -59,56 +57,6 @@ def InitConv (P : Measure Ω) (N : ℕ) (ϑ : Ω → Idx N → ℝ)
 Source: arXiv:2605.09213v1, before `lem:correl`. -/
 noncomputable def thirdCumulant (P : Measure Ω) (Y Y' Y'' : Ω → ℝ) : ℝ :=
   ∫ ω, (Y ω - ∫ ω', Y ω' ∂P) * (Y' ω - ∫ ω', Y' ω' ∂P) * (Y'' ω - ∫ ω', Y'' ω' ∂P) ∂P
-
-/-- **Lemma (lem:correl).**  For independent initial data, `φ ∈ C²(𝕋)`,
-`t,t',t'' ∈ [0,T]` and `i > j > k`,
-
-  `|Cov(φ(θ_i(t)), φ(θ_j(t')))| ≲ i⁻¹ e^{√(CT log(i/j))} e^{CT} ‖φ'‖_∞²`,
-  `|κ_{1,1,1}(φ(θ_i(t)), φ(θ_j(t')), φ(θ_k(t'')))|
-      ≲ (ij)⁻¹ e^{√(CT log(i/k))} e^{CT} ‖φ'‖_∞² ‖φ'‖_{W^{1,∞}}`.
-
-The source's `i, j, k` are `1`-based positions, so they are `i+1, j+1, k+1`
-here.  The two norms of `φ'` are carried as bounds `K ≥ ‖φ'‖_∞` and
-`K' ≥ ‖φ'‖_{W^{1,∞}} = max{‖φ'‖_∞, ‖φ''‖_∞}`, which is what `≲ ‖·‖` means and
-avoids the junk value an unbounded supremum would take.
-
-Not proved here.
-
-Source: arXiv:2605.09213v1, `lem:correl`, `eq:est-cov-th`, `eq:est-kap3-th`. -/
-theorem correlation_bounds (lam β : ℝ) :
-    ∃ C : ℝ, 0 < C ∧ ∀ (N : ℕ) (P : Measure Ω), IsProbabilityMeasure P →
-      ∀ ϑ : Ω → ℝ → Idx N → ℝ,
-        (∀ ω, IsGPTFlow lam β N (ϑ ω)) →
-        iIndepFun (fun (j : Idx N) (ω : Ω) => ϑ ω 0 j) P →
-      ∀ (φ dφ ddφ : ℝ → ℝ), (∀ x, HasDerivAt φ (dφ x) x) → (∀ x, HasDerivAt dφ (ddφ x) x) →
-      ∀ K K' : ℝ, (∀ x, |dφ x| ≤ K) → (∀ x, |dφ x| ≤ K') → (∀ x, |ddφ x| ≤ K') →
-      ∀ T : ℝ, 0 ≤ T → ∀ t ∈ Set.Icc (0 : ℝ) T, ∀ t' ∈ Set.Icc (0 : ℝ) T,
-        ∀ t'' ∈ Set.Icc (0 : ℝ) T, ∀ i j k : Idx N, k < j → j < i →
-          |covariance (fun ω => φ (ϑ ω t i)) (fun ω => φ (ϑ ω t' j)) P|
-              ≤ C * ((i : ℝ) + 1)⁻¹ *
-                Real.exp (Real.sqrt (C * T * Real.log (((i : ℝ) + 1) / ((j : ℝ) + 1)))) *
-                Real.exp (C * T) * K ^ 2 ∧
-            |thirdCumulant P (fun ω => φ (ϑ ω t i)) (fun ω => φ (ϑ ω t' j))
-                (fun ω => φ (ϑ ω t'' k))|
-              ≤ C * (((i : ℝ) + 1) * ((j : ℝ) + 1))⁻¹ *
-                Real.exp (Real.sqrt (C * T * Real.log (((i : ℝ) + 1) / ((k : ℝ) + 1)))) *
-                Real.exp (C * T) * K ^ 2 * K' := by
-  sorry
-
-/-- The hypotheses of `correlation_bounds` are satisfiable: the system of a
-single token, which never moves, on the one-point probability space.  The index
-hypotheses `k < j < i` are then unsatisfiable in `Idx 1`, which is why they are
-quantified inside the statement, where the source puts them, rather than in the
-binders. -/
-example : IsProbabilityMeasure (Measure.dirac () : Measure Unit) ∧
-    IsGPTFlow (1 : ℝ) 1 1 (fun _ _ => 0) ∧
-    iIndepFun (fun (_ : Idx 1) (_ : Unit) => (0 : ℝ)) (Measure.dirac ()) := by
-  refine ⟨inferInstance, ?_, iIndepFun.of_subsingleton⟩
-  intro t j
-  have : gptField (1 : ℝ) 1 1 (fun _ => (0 : ℝ)) j = 0 := by
-    simp [gptField, wBetaDeriv]
-  rw [this]
-  exact hasDerivAt_const t 0
 
 /-- **The printed error estimate of `th:mf-gpt` (ii) is false.**
 The actual constant Dirac profile solves the mean-field equation, but

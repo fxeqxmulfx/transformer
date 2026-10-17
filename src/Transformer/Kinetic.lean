@@ -18,6 +18,9 @@ derivative control. `mean_field_rate_false` proves a smooth grid-test
 counterexample, with actual stationary finite and continuum solutions.
 The claimed unique finite-accuracy minimum is also refuted: its actual
 integer source cells give an interval of minimizers at every minimum.
+The cumulant bounds of `lem:correl` need the source's periodic test: a test
+on `ℝ` reads the winding numbers of the angles, and
+`correlation_bounds_aperiodic_false` makes their covariance unbounded.
 -/
 
 import Transformer.Kinetic.Defs
@@ -50,6 +53,8 @@ import Transformer.Kinetic.MeanField
 import Transformer.Kinetic.Section1_GridQuadrature
 import Transformer.Kinetic.Section1_SourceCells
 import Transformer.Kinetic.Fluctuations
+import Transformer.Kinetic.Section3_ThreeTokens
+import Transformer.Kinetic.Section3_CumulantBounds
 import Transformer.Kinetic.Codewords
 import Transformer.Kinetic.Accuracy
 import Transformer.Kinetic.CorrelationEquations
