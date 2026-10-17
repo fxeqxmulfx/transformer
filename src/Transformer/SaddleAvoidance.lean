@@ -19,7 +19,9 @@ converges to a global minimizer.  The time-one map of the gradient flow of a
 derivative, and every strict saddle is a symmetric unstable fixed point of it.
 A compact sublevel set replaces the global bound on the Hessian: for small
 steps gradient descent maps it into itself, and the starts in it converging
-to a strict saddle form a null set.
+to a strict saddle form a null set.  Gradient flows, descending or ascending,
+almost never converge to a strict saddle: at integer times they are orbits of
+the time-one map.
 
 | Module | Contents |
 | --- | --- |
@@ -48,6 +50,7 @@ to a strict saddle form a null set.
 | `SaddleAvoidance.Landscape` | if every critical point is a global minimizer or a strict saddle, almost every orbit converges to a global minimizer; for periodic functions without a hypothesis on the orbits |
 | `SaddleAvoidance.TimeOne` | the gradient flow: its time-`t` maps are `C¹` with invertible derivatives, equal to `exp (-t ∇²f(z))` at a critical point `z`; strict saddles are symmetric unstable fixed points of the time-one map |
 | `SaddleAvoidance.Sublevel` | avoidance on a forward-invariant set; small steps keep gradient descent in a compact sublevel set, from which almost no start converges to a strict saddle |
+| `SaddleAvoidance.FlowAvoidance` | the gradient flow is a one-parameter group whose integer times iterate the time-one map; gradient descent and ascent flows almost never converge to a strict saddle |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
 and `thm:main` of arXiv:1602.04915.  Both rest on the center-stable manifold
@@ -82,3 +85,4 @@ import Transformer.SaddleAvoidance.FlowConvergence
 import Transformer.SaddleAvoidance.Landscape
 import Transformer.SaddleAvoidance.TimeOne
 import Transformer.SaddleAvoidance.Sublevel
+import Transformer.SaddleAvoidance.FlowAvoidance
