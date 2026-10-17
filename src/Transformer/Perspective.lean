@@ -107,6 +107,12 @@ and synchronized angles are global maxima.
 sign regions of `f_β'''` from the quartic `p(cos x)` (`positiveregion`,
 `positiveregion2`), and `∫_{-π}^{π} |f_β'''|₊` through `f_β''` at the sign
 changes (`integral_posPart_f_β'''_le`).
+`SphereCritical` and `SphereSaddle` follow Appendix C of arXiv:2405.18273
+(Criscitiello, Rebjock, McRae, Boumal): for `d ≥ 3` and `β > 0`, every
+critical point of `𝖤_β` on `(𝕊^{d-1})^n` with two distinct tokens is a strict
+saddle (`exists_secondDerivEBetaAt_pos_of_nonTrivial`), and the synchronized
+configurations are global maxima (`thm:spheres`,
+`synchronized_of_secondDerivEBetaAt_nonpos`).
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -233,6 +239,8 @@ import Transformer.Perspective.AppendixB_Expansion
 import Transformer.Perspective.AppendixB_HessBeta
 import Transformer.Perspective.AppendixB_HighD
 import Transformer.Perspective.AppendixB_Intrinsic
+import Transformer.Perspective.SphereCritical
+import Transformer.Perspective.SphereSaddle
 import Transformer.Perspective.AppendixB_ClaimYury
 import Transformer.Perspective.AppendixB_MetricGrad
 import Transformer.Perspective.AppendixB_MetricHess

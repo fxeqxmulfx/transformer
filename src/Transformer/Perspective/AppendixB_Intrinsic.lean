@@ -84,6 +84,45 @@ theorem isLittleO_selfEnergy_secondOrder
   simp only [selfEnergy, particleEnergy, hessQuad, ContinuousLinearMap.id_apply]
   ring
 
+/-- **The second derivative of `𝖤_β` along a curve through a critical point
+is `2 · hessQuad` of its velocity.**  The curve supplies a Taylor–Young
+expansion with coefficient `c/2`, `isLittleO_selfEnergy_secondOrder` supplies
+one with coefficient `hessQuad(X, v)`, and a Peano expansion has at most one
+pair of coefficients.
+
+Source: arXiv:2312.10794v5, Appendix B, `e:Hessianincoord`. -/
+theorem secondDerivEBetaAt_eq_two_mul_hessQuad
+    (β : ℝ) (X : SphereTuple d n) (hX : IsCriticalEBeta d n β X)
+    (Y : ℝ → SphereTuple d n) (v : Idx n → EucSpace d) (hY0 : Y 0 = X)
+    (hY : ∀ i : Idx n, HasDerivAt (fun s => (Y s i : EucSpace d)) (v i) 0)
+    (c : ℝ) (hc : SecondDerivEBetaAt d n β Y c) :
+    c = 2 * hessQuad d n β X v := by
+  obtain ⟨f', hf', hcc⟩ := hc
+  have hexp := isLittleO_selfEnergy_secondOrder d n β X hX Y v hY0 hY
+  have htay := isLittleO_secondOrder hf' hcc
+  have hf0 : selfEnergy d n β (Y 0) = selfEnergy d n β X := by rw [hY0]
+  have hsub : (fun t : ℝ => f' 0 * t + (c / 2 - hessQuad d n β X v) * t ^ 2)
+      =o[nhds 0] fun t : ℝ => t ^ 2 := by
+    refine (hexp.sub htay).congr' ?_ (by rfl)
+    filter_upwards with t
+    rw [hf0]; ring
+  have hlin : (fun t : ℝ => f' 0 * t ^ 1) =o[nhds 0] fun t : ℝ => t ^ 1 := by
+    have h1 : (fun t : ℝ => f' 0 * t + (c / 2 - hessQuad d n β X v) * t ^ 2)
+        =o[nhds 0] fun t : ℝ => t := hsub.trans_isBigO isLittleO_sq_id.isBigO
+    have h2 : (fun t : ℝ => (c / 2 - hessQuad d n β X v) * t ^ 2)
+        =o[nhds 0] fun t : ℝ => t := isLittleO_sq_id.const_mul_left _
+    refine (h1.sub h2).congr' ?_ ?_
+    · filter_upwards with t; ring
+    · filter_upwards with t; ring
+  have hf'0 : f' 0 = 0 := eq_zero_of_isLittleO_pow hlin
+  have hquad : (fun t : ℝ => (c / 2 - hessQuad d n β X v) * t ^ 2)
+      =o[nhds 0] fun t : ℝ => t ^ 2 := by
+    refine hsub.congr' ?_ (by rfl)
+    filter_upwards with t
+    rw [hf'0]; ring
+  have := eq_zero_of_isLittleO_pow hquad
+  linarith
+
 /-- **Equation (e:Hessianincoord).** *The Hessian at a critical point is
 intrinsic.*
 
@@ -91,10 +130,8 @@ At a critical point of `𝖤_β` the second derivative of `𝖤_β` along a curv
 depends on the curve only through its initial velocity — which is exactly why
 the strict-saddle property does not depend on the metric.
 
-The proof: both `c` and `c'` equal `2 · hessQuad(X, v)`.  The curve supplies a
-Taylor–Young expansion with coefficient `c/2`, `isLittleO_selfEnergy_secondOrder`
-supplies one with coefficient `hessQuad(X, v)`, and a Peano expansion has at
-most one pair of coefficients.
+The proof: both `c` and `c'` equal `2 · hessQuad(X, v)`
+(`secondDerivEBetaAt_eq_two_mul_hessQuad`).
 
 Source: arXiv:2312.10794v5, Appendix B, `e:Hessianincoord`. -/
 theorem hessian_at_critical_intrinsic
@@ -106,43 +143,16 @@ theorem hessian_at_critical_intrinsic
     (c c' : ℝ) (hc : SecondDerivEBetaAt d n β Y c)
     (hc' : SecondDerivEBetaAt d n β Z c') :
     c = c' := by
-  have key : ∀ (W : ℝ → SphereTuple d n) (cc : ℝ), W 0 = X →
-      (∀ i : Idx n, HasDerivAt (fun s => (W s i : EucSpace d)) (v i) 0) →
-      SecondDerivEBetaAt d n β W cc → cc = 2 * hessQuad d n β X v := by
-    rintro W cc hW0 hW ⟨f', hf', hcc⟩
-    have hexp := isLittleO_selfEnergy_secondOrder d n β X hX W v hW0 hW
-    have htay := isLittleO_secondOrder hf' hcc
-    have hf0 : selfEnergy d n β (W 0) = selfEnergy d n β X := by rw [hW0]
-    have hsub : (fun t : ℝ => f' 0 * t + (cc / 2 - hessQuad d n β X v) * t ^ 2)
-        =o[nhds 0] fun t : ℝ => t ^ 2 := by
-      refine (hexp.sub htay).congr' ?_ (by rfl)
-      filter_upwards with t
-      rw [hf0]; ring
-    have hlin : (fun t : ℝ => f' 0 * t ^ 1) =o[nhds 0] fun t : ℝ => t ^ 1 := by
-      have h1 : (fun t : ℝ => f' 0 * t + (cc / 2 - hessQuad d n β X v) * t ^ 2)
-          =o[nhds 0] fun t : ℝ => t := hsub.trans_isBigO isLittleO_sq_id.isBigO
-      have h2 : (fun t : ℝ => (cc / 2 - hessQuad d n β X v) * t ^ 2)
-          =o[nhds 0] fun t : ℝ => t := isLittleO_sq_id.const_mul_left _
-      refine (h1.sub h2).congr' ?_ ?_
-      · filter_upwards with t; ring
-      · filter_upwards with t; ring
-    have hf'0 : f' 0 = 0 := eq_zero_of_isLittleO_pow hlin
-    have hquad : (fun t : ℝ => (cc / 2 - hessQuad d n β X v) * t ^ 2)
-        =o[nhds 0] fun t : ℝ => t ^ 2 := by
-      refine hsub.congr' ?_ (by rfl)
-      filter_upwards with t
-      rw [hf'0]; ring
-    have := eq_zero_of_isLittleO_pow hquad
-    linarith
-  rw [key Y c hY0 hY hc, key Z c' hZ0 hZ hc']
+  rw [secondDerivEBetaAt_eq_two_mul_hessQuad d n β X hX Y v hY0 hY c hc,
+    secondDerivEBetaAt_eq_two_mul_hessQuad d n β X hX Z v hZ0 hZ c' hc']
 
 /-! ### The hypotheses are satisfiable -/
 
-/-- The hypotheses of `isLittleO_selfEnergy_secondOrder` and of
-`hessian_at_critical_intrinsic` are satisfiable: the single token sits still,
-so both curves are the constant one, their common velocity is `0`, and the
-energy they carry is constant, hence has second derivative `0` along each of
-them. -/
+/-- The hypotheses of `isLittleO_selfEnergy_secondOrder`,
+`secondDerivEBetaAt_eq_two_mul_hessQuad` and `hessian_at_critical_intrinsic` are
+satisfiable: the single token sits still, so both curves are the constant one,
+their common velocity is `0`, and the energy they carry is constant, hence has
+second derivative `0` along each of them. -/
 example :
     IsCriticalEBeta 1 1 1 singleToken ∧
       ((fun _ : ℝ => singleToken) 0 = singleToken) ∧
