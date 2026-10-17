@@ -205,3 +205,5 @@ import Transformer.Interpolation.Section2_BallGrouping
 import Transformer.Interpolation.Section2_GenericRoutePoints
 import Transformer.Interpolation.Section2_GreatArcs
 import Transformer.Interpolation.Section2_RouteChains
+import Transformer.Interpolation.Section2_RoutedCollapses
+import Transformer.Interpolation.Section2_HighDimClusters
