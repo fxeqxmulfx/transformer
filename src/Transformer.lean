@@ -125,7 +125,11 @@ a cone estimate in place of the center-stable manifold theorem, and that under
 the Łojasiewicz inequality at the critical points almost every bounded orbit
 converges, to a local minimizer under the strict saddle property; for a
 periodic function with nondegenerate critical points, almost every orbit
-converges to a local minimizer.
+converges to a local minimizer.  `Transformer.PhaseModel` applies this to
+phase energies `Σ_r (1 - cos ⟪m_r, ψ⟫)` with integer rows, such as the
+relations `ψ_x - ψ_y - ψ_{x-y}` of division in a cyclic group: every limit
+point up to periods is critical, and almost every orbit with a nondegenerate
+limit point converges to a local minimizer.
 
 This top-level module re-exports all included formalizations. Per-paper
 subdirectories follow the manuscript sections, splitting larger arguments
@@ -186,3 +190,4 @@ import Transformer.NoiseScale
 import Transformer.Surge
 import Transformer.Grokking
 import Transformer.SaddleAvoidance
+import Transformer.PhaseModel
