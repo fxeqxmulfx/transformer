@@ -2,34 +2,14 @@
 # The emergence of clusters in self-attention dynamics — the continuity
   equation
 
-`e:conteq`, `d:solconti` and `c:wellposedtransformers` of arXiv:2305.05465v6,
-§6: the mean-field form of the dynamics, its notion of solution, and global
-well-posedness with a `W_2` stability estimate.
+`c:wellposedtransformers` of arXiv:2305.05465v6, §6: global well-posedness of
+`e:conteq`, the mean-field form of the dynamics, with a `W_2` stability
+estimate.
 
 **What the source says and what is carried here.**
 
-* `d:solconti` asks for `μ ∈ C⁰_comp(ℝ, 𝒫_c(ℝ^d))`, absolute continuity of
-  `t ↦ ∫ g dμ_t` for every `g ∈ C_c^∞`, and the weak identity for almost
-  every `t`.  It is carried as: each `μ_t` a probability measure; supports
-  equi-contained in a ball on every compact time interval (the definition of
-  `C⁰_comp`); `t ↦ ∫ g dμ_t` continuous; and the weak identity for **every**
-  `t`.  Demanding the identity everywhere rather than almost everywhere is
-  not a strengthening here: both sides are continuous in `t`, so an identity
-  valid almost everywhere is valid everywhere, and absolute continuity then
-  comes from the right-hand side being an integral in `t`.
-
-* `C_c^∞(ℝ^d)` is `ContDiff ℝ (⊤ : ℕ∞)` with compact support.  The bare
-  `ContDiff ℝ ⊤` is `C^ω`, analytic, and on `ℝ^d`, `d ≥ 1`, the only analytic
-  function with compact support is `0`: with it the weak identity would test
-  nothing.
-
-* The source's weak identity writes `𝒳[μ_t]` inside the time integral, where
-  `s` is the integration variable; that is a typographical slip — the
-  vector field must be evaluated at the running time. It is carried as
-  `𝒳[μ_s]`, as the proof and every derivation of `e:conteq` require.
-
-* `∫_0^t` is the interval integral, which also gives the statement its meaning
-  for `t < 0`; the source's solutions are defined on all of `ℝ`.
+* `e:conteq` and its solutions (`d:solconti`) are `IsContEqSolution`, in
+  `Section6_WeakSolution`, where the way they are carried is explained.
 
 * `c:wellposedtransformers` is split in two: existence and uniqueness, and the
   stability estimate `e:w2estimate`, which quantifies over pairs of solutions.
@@ -38,9 +18,7 @@ Source: arXiv:2305.05465v6, `e:conteq`, `d:solconti`,
 `c:wellposedtransformers`, `e:w2estimate`.
 -/
 
-import Transformer.Clusters.Section6_Kernel
-import Mathlib.Analysis.Calculus.Gradient.Basic
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+import Transformer.Clusters.Section6_WeakSolution
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -49,37 +27,6 @@ namespace Transformer
 namespace Clusters
 
 variable {d : ℕ}
-
-/-- **Definition (d:solconti), a solution of `e:conteq`.**  A weakly
-continuous curve of compactly supported probability measures, equi-supported
-on compact time intervals, starting at `μ₀` and satisfying the weak
-formulation of `∂_t μ + div(𝒳[μ]μ) = 0`.
-
-Source: arXiv:2305.05465v6, `e:conteq`, `d:solconti`. -/
-def IsContEqSolution (Q K V : ParamMatrix d) (μ₀ : Measure (EucSpace d))
-    (μ : ℝ → Measure (EucSpace d)) : Prop :=
-  (∀ t : ℝ, IsProbabilityMeasure (μ t)) ∧
-    (∀ a b : ℝ, ∃ R : ℝ, 0 < R ∧ ∀ t ∈ Set.Icc a b, IsCarriedBy (μ t) R) ∧
-      (∀ g : EucSpace d → ℝ, ContDiff ℝ (⊤ : ℕ∞) g → HasCompactSupport g →
-        Continuous fun t => ∫ x, g x ∂(μ t)) ∧
-      μ 0 = μ₀ ∧
-      ∀ g : EucSpace d → ℝ, ContDiff ℝ (⊤ : ℕ∞) g → HasCompactSupport g → ∀ t : ℝ,
-        ∫ x, g x ∂(μ t) = (∫ x, g x ∂μ₀) +
-          ∫ s in (0 : ℝ)..t,
-            ∫ x, inner (𝕜 := ℝ) (gradient g x) (attentionKernel Q K V (μ s) x) ∂(μ s)
-
-/-- **The Dirac mass at the origin is a stationary solution.**  The attention
-kernel vanishes there — the only value averaged is `V 0 = 0` — so nothing
-moves.  This witnesses `d:solconti`.
-
-Source: arXiv:2305.05465v6, `e:vectorfield`, `d:solconti`. -/
-theorem isContEqSolution_dirac (Q K V : ParamMatrix d) :
-    IsContEqSolution Q K V (Measure.dirac (0 : EucSpace d))
-      (fun _ => Measure.dirac (0 : EucSpace d)) := by
-  refine ⟨fun _ => inferInstance, fun a b => ⟨1, one_pos, fun t _ => isCarriedBy_dirac 1 zero_le_one⟩,
-    fun g _ _ => ?_, rfl, fun g _ _ t => ?_⟩
-  · simpa using continuous_const
-  · simp [attentionKernel_dirac_zero]
 
 /-- **Proposition (c:wellposedtransformers), existence and uniqueness.**  Every
 compactly supported probability measure is the initial datum of exactly one
