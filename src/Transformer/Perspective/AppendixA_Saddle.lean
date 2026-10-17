@@ -8,7 +8,8 @@ This file formalizes the second half of Appendix A of the survey:
 
 * `Lemma lem: yury.lemma` — every non-trivial critical point of `𝖤_0` is a
                             strict saddle,
-* the assembly of `Theorem p:beta0`.
+* the assembly of `Theorem p:beta0`, and `beta0_consensus` itself, here after
+  its proof rather than in `Perspective.Section3_SmallBeta`.
 
 `Lemma l:nosaddleconv`, that gradient ascent avoids strict saddles, is
 `no_saddle_convergence`, in `Perspective.AppendixA_SaddleNull`.
@@ -128,10 +129,6 @@ example : 2 ≤ 2 ∧ IsCriticalE0 2 2 (antipodalPair 2 (basePoint 1)) ∧
 `d ≥ 2` the set of initial sequences whose `β = 0` trajectory does *not*
 converge to a single point is null for the uniform law on `(𝕊^{d-1})^n`.
 
-This is the statement `Perspective.beta0_consensus` should have; the latter
-quantifies over every initial sequence, which is false at the exceptional
-null set.
-
 The proof is Appendix A's.  The flow of `e:gradfl` from `X₀` converges to a
 critical point `Z` of `𝖤_0` (`exists_tendsto_isCriticalE0`, from the finite
 length of the trajectories, in place of Łojasiewicz's theorem), and every
@@ -173,6 +170,31 @@ theorem almost_sure_consensus_beta0 (hd : 2 ≤ d) :
 and the uniform law on three particles. -/
 example := almost_sure_consensus_beta0 2 3 le_rfl _
   (uniformTuple_shellLaw (d := 2) (by norm_num))
+
+/-- **Theorem (p:beta0).** *Consensus at zero temperature.*
+
+For `d, n ≥ 2`, and Lebesgue-almost any initial sequence
+`(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n`, the unique solution to the Cauchy problem
+for `e:Snonres0` satisfies `lim_{t → ∞} x_i(t) = x⋆` for some `x⋆ ∈ 𝕊^{d-1}`
+and all `i`.
+
+The almost-everywhere quantifier is necessary: the antipodal pair is a
+stationary point of `e:Snonres0` that never reaches consensus
+(`antipodalPair_not_mem_consensusSet0`).  The theorem is
+`almost_sure_consensus_beta0`, read as an almost-everywhere statement.
+
+**What the source says and what is changed here.**  The source assumes
+`d, n ≥ 2`; as in `almost_sure_consensus_beta0`, `n ≥ 2` is dropped.
+
+Source: arXiv:2312.10794v5, §4, `p:beta0`; Appendix A for the proof. -/
+theorem beta0_consensus (hd : 2 ≤ d) :
+    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+      ∀ᵐ X₀ ∂P, X₀ ∈ consensusSet0 d n := fun P hP =>
+  ae_iff.2 (almost_sure_consensus_beta0 d n hd P hP)
+
+/-- The hypotheses of `beta0_consensus` hold for the circle, `d = 2`, and the
+uniform law on three particles. -/
+example := beta0_consensus 2 3 le_rfl _ (uniformTuple_shellLaw (d := 2) (by norm_num))
 
 end Perspective
 end Transformer

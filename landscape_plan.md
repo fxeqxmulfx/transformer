@@ -54,7 +54,7 @@ Constraints:
 | Flows | `GlobalFlow.IsFlowField.contDiff_flow`, `hasFDerivAt_flow` (the variational equation), `flow_reverse` | proved |
 | C, phase model | `PhaseModel.exists_sub_characterPhase_mem_periods_of_isLocalMin` and `isStrictSaddle_of_divisionEnergy_lt` for `V < n²/8` | proved |
 | C, `𝖤_0` on spheres | `Perspective.yury_lemma` | proved |
-| p:beta0 | `Perspective.almost_sure_consensus_beta0`, via an explicit inequality for `𝖤_0` and a cone argument at the saddles | proved |
+| p:beta0 | `Perspective.beta0_consensus`, stated after its proof in `AppendixA_Saddle`, from `almost_sure_consensus_beta0`, via an explicit inequality for `𝖤_0` and a cone argument at the saddles | proved |
 | Bounds, periodic energies (M1.4) | `SaddleAvoidance.exists_lipschitzWith_gradient_of_periodic`: a `C²` function invariant under a set of translations spanning `E` has a bounded gradient, a bounded Hessian and a globally Lipschitz gradient; `exists_lipschitzWith_gradient_of_isCompact` for a compact set of representatives | proved |
 | B, phase model (M3.4a) | `PhaseModel.injective_fderiv_gradient_divisionEnergy_univ` and `isLojasiewiczAt_divisionEnergy_univ`: the Hessian of `V_full` is injective at the characters up to periods, and Łojasiewicz holds there with exponent `1/2`; `isLojasiewiczAt_divisionEnergy_of_mem_span` at every zero of a generating `V_S` | proved |
 | B, under a translation symmetry (M2.1) | `SaddleAvoidance.isLojasiewiczAt_of_invariant`: if `f` is invariant under the translations by a subspace `W` and its Hessian at a critical point is injective on `Wᗮ`, Łojasiewicz holds there with exponent `1/2`; the Hessian of an invariant `f` maps into `Wᗮ` (`mem_orthogonal_of_hasFDerivAt_gradient`) | proved |
@@ -284,10 +284,10 @@ The research items M2.4, M3.4b–d and M5.4 wait for an argument on paper.
 | `Perspective.beta_interval` | #29 | M2.1, M3.1 (`d = 2`), M3.3 (`d ≥ 3`), M4.2, M5.1–M5.3 | M2.4 |
 | `Perspective.boumal_clustering` | #30 | M2.1, M3.3, M4.2, M5.3 | M2.4 |
 | `Normalization.lojasiewicz_modulated` | #11 | M2.4 | Normalization line |
-| `Perspective.beta0_consensus` | #31 | outside the scheme | — |
+| `Perspective.beta0_consensus` | #31 | outside the scheme, done | — |
 
-`Perspective.beta0_consensus` already follows from
-`almost_sure_consensus_beta0`. `Section3_SmallBeta` comes before
-`AppendixA_Saddle` in the import order, so the statement has to move first.
+`Perspective.beta0_consensus` follows from `almost_sure_consensus_beta0`.
+`Section3_SmallBeta` comes before `AppendixA_Saddle` in the import order, so the
+statement moved to the end of `AppendixA_Saddle`, where it is proved.
 
 The other `sorry`s of `INDEX.md` have no tasks yet.

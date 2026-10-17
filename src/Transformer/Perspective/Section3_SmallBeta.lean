@@ -7,7 +7,9 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 This file formalizes §4 of the survey:
 
 * `e:Snonres0`              — the `β = 0` dynamics,
-* `Theorem p:beta0`         — almost-sure consensus at `β = 0`,
+* `Theorem p:beta0`         — almost-sure consensus at `β = 0`, whose
+  exceptional set is not empty; the theorem itself, `beta0_consensus`, is in
+  `Transformer.Perspective.AppendixA_Saddle`, after its proof,
 * `Theorem th:beta_small`   — probability of clustering tends to `1` as `β → 0`,
 * the auxiliary equations  `eq: harry.potter`, `e:Ps0n`
   (`e:approxsphere` and `eq: youareawizardharry` are in
@@ -62,32 +64,6 @@ def consensusSet0 : Set (SphereTuple d n) :=
               ∀ i : Idx n,
                 Filter.Tendsto (fun t : ℝ => ((X t i : EucSpace d) - x_star))
                   Filter.atTop (nhds 0) }
-
-/-- **Theorem (p:beta0).** *Consensus at zero temperature.*
-
-For `d, n ≥ 2`, and Lebesgue-almost any initial sequence
-`(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n`, the unique solution to the Cauchy problem
-for `e:Snonres0` satisfies
-
-  `lim_{t → ∞} x_i(t) = x⋆`  for some `x⋆ ∈ 𝕊^{d-1}` and all `i`.
-
-The almost-everywhere quantifier is not decoration, and the statement is false
-without it: the antipodal pair `n = 2`, `x₂ = -x₁` is a stationary point of
-`e:Snonres0` — the mean `(x₁ + x₂)/2` is `0`, so both velocities vanish — and
-it never reaches consensus.  The exceptional set is null but non-empty, which
-is why the conclusion is read against the uniform law `UniformTuple` and not
-against every `X₀`.
-
-Not proved here.
-
-Source: arXiv:2312.10794v5, §4, `p:beta0`. -/
-theorem beta0_consensus (hd : 2 ≤ d) (hn : 2 ≤ n) :
-    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-      ∀ᵐ X₀ ∂P, X₀ ∈ consensusSet0 d n := by
-  sorry
-
-/-- The hypotheses of `beta0_consensus` are satisfiable: `d = n = 2`. -/
-example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 
 /-- The antipode `-x` of a point of `𝕊^{d-1}`. -/
 def antipode (x : SSphere d) : SSphere d :=
@@ -221,7 +197,8 @@ For fixed `d, n ≥ 2`, the probability (w.r.t. uniform initialization on
 
 Not proved here: the proof runs through `beta0_consensus`,
 `sset0_probability_tendsto_one` and `distance_bound_at_time_m`.  Of the three
-only the last is proved.  Measurability of `clusteringSet` is part of what is being
+only `sset0_probability_tendsto_one` is not proved; `beta0_consensus` is proved
+after Appendix A, in `Perspective.AppendixA_Saddle`.  Measurability of `clusteringSet` is part of what is being
 asserted: `P (𝒮_β)` is the outer measure when the set is not measurable, so the
 statement is the one the paper makes in either case.
 
@@ -259,8 +236,8 @@ def Sset0 (m : ℕ) : Set (SphereTuple d n) :=
 sequence is `(3/4)`-clustered by the `β = 0` dynamics at a late enough integer
 time, so the measure of `Sset0 d n m` tends to `1`.
 
-Not proved here: it is the quantitative form of `beta0_consensus`, which is a
-`sorry` here.
+Not proved here: it is the quantitative form of `beta0_consensus`, which is
+proved after Appendix A, in `Perspective.AppendixA_Saddle`.
 
 Source: arXiv:2312.10794v5, §4, `e:Ps0n`. -/
 theorem sset0_probability_tendsto_one (hd : 2 ≤ d) (hn : 2 ≤ n) :
