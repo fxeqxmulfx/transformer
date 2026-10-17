@@ -123,7 +123,9 @@ significant bits is capped at `2^{p+1}` times its increments.
 converges to a strict saddle (arXiv:1710.07406, §5.1; arXiv:1602.04915), with
 a cone estimate in place of the center-stable manifold theorem, and that under
 the Łojasiewicz inequality at the critical points almost every bounded orbit
-converges, to a local minimizer under the strict saddle property.
+converges, to a local minimizer under the strict saddle property; for a
+periodic function with nondegenerate critical points, almost every orbit
+converges to a local minimizer.
 
 This top-level module re-exports all included formalizations. Per-paper
 subdirectories follow the manuscript sections, splitting larger arguments

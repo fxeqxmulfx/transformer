@@ -4,7 +4,10 @@
 Gradient descent with a small enough step almost never converges to a strict
 saddle.  Under the Łojasiewicz inequality at the critical points, almost
 every bounded orbit converges, to a local minimizer when every critical point
-is a local minimizer or a strict saddle.
+is a local minimizer or a strict saddle.  Almost every orbit with a limit
+point up to translations where the Hessian is injective converges to a local
+minimizer; for a periodic function whose critical points are all
+nondegenerate, almost every orbit does.
 
 | Module | Contents |
 | --- | --- |
@@ -20,6 +23,9 @@ is a local minimizer or a strict saddle.
 | `SaddleAvoidance.Trap` | orbits starting near a Łojasiewicz point stay near it, with finite length |
 | `SaddleAvoidance.Convergence` | orbits with a Łojasiewicz limit point converge |
 | `SaddleAvoidance.Minimizers` | almost every limit is a local minimizer; almost every bounded orbit converges to one |
+| `SaddleAvoidance.CriticalPoints` | limit points up to translations are critical; the Łojasiewicz inequality at nondegenerate critical points |
+| `SaddleAvoidance.SecondOrder` | the second-order test; Hessians at nondegenerate critical points other than strict saddles are positive definite |
+| `SaddleAvoidance.Nondegenerate` | almost every orbit with a nondegenerate limit point converges to a local minimizer |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
 and `thm:main` of arXiv:1602.04915.  Both rest on the center-stable manifold
@@ -41,3 +47,6 @@ import Transformer.SaddleAvoidance.Lojasiewicz
 import Transformer.SaddleAvoidance.Trap
 import Transformer.SaddleAvoidance.Convergence
 import Transformer.SaddleAvoidance.Minimizers
+import Transformer.SaddleAvoidance.CriticalPoints
+import Transformer.SaddleAvoidance.SecondOrder
+import Transformer.SaddleAvoidance.Nondegenerate
