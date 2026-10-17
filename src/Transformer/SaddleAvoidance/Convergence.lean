@@ -29,8 +29,10 @@ open scoped Topology NNReal
 namespace Transformer.SaddleAvoidance
 
 /-- **The values of a decreasing sequence near a value it comes close to
-infinitely often.**  They stay above it and converge to it. -/
-theorem le_and_tendsto_of_frequently {u : ℕ → ℝ} (hu : Antitone u) {c : ℝ}
+infinitely often.**  They stay above it and converge to it.  The index may be
+discrete, as for gradient descent, or continuous, as for gradient flows. -/
+theorem le_and_tendsto_of_frequently {ι : Type*} [SemilatticeSup ι] [Nonempty ι] {u : ι → ℝ}
+    (hu : Antitone u) {c : ℝ}
     (hc : ∀ ε > 0, ∃ᶠ k in atTop, |u k - c| < ε) :
     (∀ k, c ≤ u k) ∧ Tendsto u atTop (𝓝 c) := by
   have hle : ∀ k, c ≤ u k := by
@@ -56,7 +58,7 @@ variable {E : Type*} [NormedAddCommGroup E]
 in `Λ`, and `f` is continuous at `z` and invariant under `Λ`, then infinitely
 many values of `f` along the sequence lie near `f z`. -/
 theorem frequently_abs_sub_lt {f : E → ℝ} {z : E} (hcont : ContinuousAt f z) {Λ : Set E}
-    (hΛ : ∀ v ∈ Λ, ∀ y, f (y + v) = f y) {u : ℕ → E}
+    (hΛ : ∀ v ∈ Λ, ∀ y, f (y + v) = f y) {ι : Type*} [Preorder ι] {u : ι → E}
     (hcl : ∀ ε > 0, ∃ᶠ k in atTop, ∃ v ∈ Λ, ‖u k + v - z‖ < ε) :
     ∀ ε > 0, ∃ᶠ k in atTop, |f (u k) - f z| < ε := by
   intro ε hε

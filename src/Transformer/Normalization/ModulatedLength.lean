@@ -82,12 +82,12 @@ when the potential tends to zero. This closes the finite-length argument
 of Appendix D.1 of arXiv:2510.22026v2 once a desingularizing potential is
 available. The proof uses only the stated displacement bound and convergence
 of the potential. -/
-theorem converges_of_displacement_bound {N : ℕ}
-    (x : ℝ → EucSpace N) (p : ℝ → ℝ) (a : ℝ)
+theorem converges_of_displacement_bound {F : Type*} [NormedAddCommGroup F] [CompleteSpace F]
+    (x : ℝ → F) (p : ℝ → ℝ) (a : ℝ)
     (hp : Filter.Tendsto p Filter.atTop (nhds 0))
     (hbound : ∀ s t : ℝ, a ≤ s → s ≤ t → ‖x t - x s‖ ≤ p s) :
-    ∃ z : EucSpace N, Filter.Tendsto x Filter.atTop (nhds z) := by
-  let y : ℝ → EucSpace N := fun t => x (max a t)
+    ∃ z : F, Filter.Tendsto x Filter.atTop (nhds z) := by
+  let y : ℝ → F := fun t => x (max a t)
   have hc : CauchySeq y := by
     apply cauchySeq_of_le_tendsto_0' (fun t => p (max a t))
     · intro s t hst
