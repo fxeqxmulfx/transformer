@@ -208,3 +208,4 @@ import Transformer.Interpolation.Section2_RouteChains
 import Transformer.Interpolation.Section2_RoutedCollapses
 import Transformer.Interpolation.Section2_HighDimClusters
 import Transformer.Interpolation.Section2_CircleChart
+import Transformer.Interpolation.Section2_CircleArcs
