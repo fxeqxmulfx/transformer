@@ -18,6 +18,7 @@ __pycache__/
 .venv/
 venv/
 .ipynb_checkpoints/
+*.egg-info/
 
 # ── Editors / OS ─────────────────────────────────────────────────────────
 .vscode/
@@ -41,6 +42,15 @@ venv/
 /.claude/worktrees/
 
 # ── Experiments ──────────────────────────────────────────────────────────
-# No trailing slash: in a worktree `runs` is a link to the root's.
+# Run outputs, compile caches and generated datasets.  No trailing slash on
+# `runs`: in a worktree it is a link to the root's.  The reference runs
+# under experiments/archive/ are tracked, so `runs` is not ignored everywhere.
 /experiments/*/runs
 /experiments/archive/synthetic_trainers/runs/
+/experiments/runs
+/experiments/*/data
+/python/runs
+/python/results/
+# The GPTMini benchmark project moved to legacy/gpt_mini (2c81c3f0); what is
+# left here is its caches and a link to its runs.
+/python/src/infrastructure/
