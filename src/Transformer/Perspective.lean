@@ -102,6 +102,14 @@ cut-stability at most one gap exceeds `τ` (`not_two_circleGap_gt`).
 that paper: a critical point is stationary (C1), a point that is not a strict
 saddle is cut-stable (C2) for every set (`cutStable_of_torusHessianNonPos`),
 and synchronized angles are global maxima.
+`CircleGapBounds` through `CircleSync` prove that paper's criterion for a
+`2π`-periodic `C³` kernel `f` with `f'(0) > 0` and `f' < 0` off `[-τ, τ]`:
+a stationary configuration that is cut-stable for every set and not
+synchronized has `4 (1/τ + 1/τ_max) f'(0) ≤ ∫_{-π}^{π} |f'''|₊`
+(`taumax_sharp`, `lemma:taumax`), so it is synchronized once
+`τ ∫_{-π}^{π} |f'''|₊ ≤ 4 (1 + τ/M) f'(0)` with `M` above its largest gap
+(`synchronized_of_circleGapMax_lt`, `cor:main`), or with `M = 2π`
+(`synchronized_of_integral_le`, `thm:main`).
 `SyncKernel` through `SyncKernelIntegral` take that paper's kernel
 `f_β(x) = sin x e^{β(cos x - 1)}`: `f_β' < 0` off `[-τ_β, τ_β]` (`f_β'_neg`), the
 sign regions of `f_β'''` from the quartic `p(cos x)` (`positiveregion`,
@@ -227,6 +235,11 @@ import Transformer.Perspective.CircleCritical
 import Transformer.Perspective.StrictSaddle
 import Transformer.Perspective.CircleSites
 import Transformer.Perspective.CircleGaps
+import Transformer.Perspective.CircleGapBounds
+import Transformer.Perspective.CircleMult
+import Transformer.Perspective.CircleGapSum
+import Transformer.Perspective.CircleTaumax
+import Transformer.Perspective.CircleSync
 import Transformer.Perspective.SyncKernel
 import Transformer.Perspective.SyncKernelQuartic
 import Transformer.Perspective.SyncKernelSign
