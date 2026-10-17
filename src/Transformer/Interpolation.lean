@@ -211,3 +211,4 @@ import Transformer.Interpolation.Section2_CircleChart
 import Transformer.Interpolation.Section2_CircleArcs
 import Transformer.Interpolation.Section2_CircleCuts
 import Transformer.Interpolation.Section2_CircleSweep
+import Transformer.Interpolation.Section2_CircleClusters
