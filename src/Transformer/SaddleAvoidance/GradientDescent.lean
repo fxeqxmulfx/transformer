@@ -70,21 +70,28 @@ theorem contDiff_gradientStep {f : E → ℝ} (hf : ContDiff ℝ 2 f) (η : ℝ)
     ContDiff ℝ 1 (gradientStep f η) :=
   contDiff_id.sub ((contDiff_gradient hf).const_smul η)
 
-/-- **The step map has invertible derivative** when `η L < 1`
-(`prop:gd-det-not-0` of arXiv:1710.07406, whose step size `α < 1/L` is
-tacitly positive; `0 ≤ η` suffices here): `1 - η ∇²f(x)` is a unit since
+/-- **The step map has invertible derivative at a point** where
+`‖∇²f(x)‖ ≤ L`, when `0 ≤ η` and `η L < 1`: `1 - η ∇²f(x)` is a unit since
 `‖η ∇²f(x)‖ < 1`. -/
-theorem det_fderiv_gradientStep_ne_zero {f : E → ℝ} (hf : ContDiff ℝ 2 f) {L η : ℝ}
-    (hL : ∀ x, ‖fderiv ℝ (gradient f) x‖ ≤ L) (hη : 0 ≤ η) (hηL : η * L < 1) (x : E) :
+theorem det_fderiv_gradientStep_ne_zero_of_norm_le {f : E → ℝ} (hf : ContDiff ℝ 2 f)
+    {L η : ℝ} {x : E} (hx : ‖fderiv ℝ (gradient f) x‖ ≤ L) (hη : 0 ≤ η) (hηL : η * L < 1) :
     (fderiv ℝ (gradientStep f η) x).det ≠ 0 := by
   rw [(hasFDerivAt_gradientStep hf η x).fderiv]
   have hnorm : ‖η • fderiv ℝ (gradient f) x‖ < 1 := by
     rw [norm_smul, Real.norm_of_nonneg hη]
-    exact (mul_le_mul_of_nonneg_left (hL x) hη).trans_lt hηL
+    exact (mul_le_mul_of_nonneg_left hx hη).trans_lt hηL
   have hunit : IsUnit (ContinuousLinearMap.id ℝ E - η • fderiv ℝ (gradient f) x) := by
     simpa [Units.val_oneSub, ContinuousLinearMap.one_def] using (Units.oneSub _ hnorm).isUnit
   exact ((LinearMap.isUnit_iff_isUnit_det _).1
     (hunit.map ContinuousLinearMap.toLinearMapRingHom)).ne_zero
+
+/-- **The step map has invertible derivative** when `η L < 1`
+(`prop:gd-det-not-0` of arXiv:1710.07406, whose step size `α < 1/L` is
+tacitly positive; `0 ≤ η` suffices here). -/
+theorem det_fderiv_gradientStep_ne_zero {f : E → ℝ} (hf : ContDiff ℝ 2 f) {L η : ℝ}
+    (hL : ∀ x, ‖fderiv ℝ (gradient f) x‖ ≤ L) (hη : 0 ≤ η) (hηL : η * L < 1) (x : E) :
+    (fderiv ℝ (gradientStep f η) x).det ≠ 0 :=
+  det_fderiv_gradientStep_ne_zero_of_norm_le hf (hL x) hη hηL
 
 /-- **A strict saddle is a symmetric unstable fixed point of gradient
 descent** (`prop:gd-unstable` of arXiv:1710.07406): a negative eigenvalue `λ`

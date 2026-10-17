@@ -5,7 +5,8 @@ Let `f` be differentiable on a real inner product space with an `L`-Lipschitz
 gradient.  By the mean value inequality for `f - ⟪∇f(x), ·⟫`, whose
 derivative `∇f(w) - ∇f(x)` has norm at most `L ‖y - x‖` on the segment
 `[x, y]`, `f y ≤ f x + ⟪∇f(x), y - x⟫ + L ‖y - x‖²`
-(`le_add_inner_add_mul_norm_sq`).  The gradient step therefore decreases `f`
+(`le_add_inner_add_mul_norm_sq`); the bound on the segment is all it uses
+(`le_add_inner_add_mul_norm_sq_of_segment`).  The gradient step therefore decreases `f`
 by at least `η (1 - η L) ‖∇f(x)‖²` (`le_sub_of_gradientStep`), and `f`
 decreases along every orbit when `η L ≤ 1` (`antitone_iterate`).
 
@@ -33,11 +34,13 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
 
 local notation "⟪" x ", " y "⟫" => inner ℝ x y
 
-/-- **Descent lemma.**  For `f` with an `L`-Lipschitz gradient,
+/-- **Descent lemma along a segment.**  If `‖∇f(w) - ∇f(x)‖ ≤ L ‖w - x‖` for
+every `w` on the segment `[x, y]`, then
 `f y ≤ f x + ⟪∇f(x), y - x⟫ + L ‖y - x‖²`.  The usual constant `L/2` needs an
 integral; the mean value inequality gives `L`. -/
-theorem le_add_inner_add_mul_norm_sq {f : E → ℝ} (hf : Differentiable ℝ f) {L : ℝ≥0}
-    (hL : LipschitzWith L (gradient f)) (x y : E) :
+theorem le_add_inner_add_mul_norm_sq_of_segment {f : E → ℝ} (hf : Differentiable ℝ f) {L : ℝ}
+    (hL0 : 0 ≤ L) {x y : E}
+    (hL : ∀ w ∈ segment ℝ x y, ‖gradient f w - gradient f x‖ ≤ L * ‖w - x‖) :
     f y ≤ f x + ⟪gradient f x, y - x⟫ + L * ‖y - x‖ ^ 2 := by
   set h : E → ℝ := fun w => f w - toDual ℝ E (gradient f x) w with hh
   have hderiv : ∀ w, HasFDerivAt h (toDual ℝ E (gradient f w - gradient f x)) w := fun w => by
@@ -47,14 +50,20 @@ theorem le_add_inner_add_mul_norm_sq {f : E → ℝ} (hf : Differentiable ℝ f)
   have hbound : ∀ w ∈ segment ℝ x y,
       ‖toDual ℝ E (gradient f w - gradient f x)‖ ≤ L * ‖y - x‖ := fun w hw => by
     rw [LinearIsometryEquiv.norm_map]
-    exact (hL.norm_sub_le w x).trans
-      (mul_le_mul_of_nonneg_left (norm_sub_le_of_mem_segment hw) L.coe_nonneg)
+    exact (hL w hw).trans (mul_le_mul_of_nonneg_left (norm_sub_le_of_mem_segment hw) hL0)
   have hmv := Convex.norm_image_sub_le_of_norm_hasFDerivWithin_le
     (fun w _ => (hderiv w).hasFDerivWithinAt) hbound (convex_segment x y)
     (left_mem_segment ℝ x y) (right_mem_segment ℝ x y)
   have hle := (le_abs_self _).trans ((Real.norm_eq_abs _).symm.le.trans hmv)
   simp only [hh, toDual_apply_apply, inner_sub_right] at hle ⊢
   nlinarith
+
+/-- **Descent lemma.**  For `f` with an `L`-Lipschitz gradient,
+`f y ≤ f x + ⟪∇f(x), y - x⟫ + L ‖y - x‖²`. -/
+theorem le_add_inner_add_mul_norm_sq {f : E → ℝ} (hf : Differentiable ℝ f) {L : ℝ≥0}
+    (hL : LipschitzWith L (gradient f)) (x y : E) :
+    f y ≤ f x + ⟪gradient f x, y - x⟫ + L * ‖y - x‖ ^ 2 :=
+  le_add_inner_add_mul_norm_sq_of_segment hf L.coe_nonneg fun w _ => hL.norm_sub_le w x
 
 /-- **Sufficient decrease.**  One gradient step lowers `f` by at least
 `η (1 - η L) ‖∇f(x)‖²`. -/
@@ -139,16 +148,19 @@ theorem iterate_gradientStep_half_mul_norm_sq (η : ℝ) (k : ℕ) (x : E) :
   rw [gradientStep_half_mul_norm_sq, smul_iterate]
 
 /-- The hypotheses of the theorems above hold for `f(x) = ‖x‖² / 2` on the
-line, whose gradient `x` is `1`-Lipschitz, with `η = 1/2`, the translation by
-`0`, and the orbit `2⁻ᵏ` of `1`, which converges to `0`. -/
+line, whose gradient `x` is `1`-Lipschitz, with `L = 1`, `η = 1/2`, the
+translation by `0`, and the orbit `2⁻ᵏ` of `1`, which converges to `0`. -/
 example : let f := fun x : ℝ => (1 / 2 : ℝ) * ‖x‖ ^ 2
     Differentiable ℝ f ∧ LipschitzWith 1 (gradient f) ∧ (0 : ℝ) ≤ 1 / 2 ∧
       (1 / 2 : ℝ) * ((1 : ℝ≥0) : ℝ) ≤ 1 ∧ (∀ y, f (y + 0) = f y) ∧ Continuous (gradient f) ∧
-      (1 / 2 : ℝ) ≠ 0 ∧ Tendsto (fun k => (gradientStep f (1 / 2))^[k] 1) atTop (𝓝 0) := by
+      (1 / 2 : ℝ) ≠ 0 ∧ Tendsto (fun k => (gradientStep f (1 / 2))^[k] 1) atTop (𝓝 0) ∧
+      (0 : ℝ) ≤ 1 ∧
+      ∀ x y : ℝ, ∀ w ∈ segment ℝ x y, ‖gradient f w - gradient f x‖ ≤ 1 * ‖w - x‖ := by
   intro f
   have hg : gradient f = id := gradient_half_mul_norm_sq
   refine ⟨(contDiff_const.mul (contDiff_norm_sq ℝ)).differentiable one_ne_zero, ?_, by norm_num,
-    by norm_num, fun y => by rw [add_zero], ?_, by norm_num, ?_⟩
+    by norm_num, fun y => by rw [add_zero], ?_, by norm_num, ?_, zero_le_one,
+    fun x y w _ => by rw [hg, one_mul]; rfl⟩
   · rw [hg]
     exact LipschitzWith.id
   · rw [hg]

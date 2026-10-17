@@ -21,6 +21,10 @@ itself.
   step `m` on it lies in the corresponding `stayNear`, and its start lies in
   the preimage of that null set under `g^m`, again null
   (`measure_preimage_iterate_eq_zero`).
+* On a set `S` that `g` maps into itself it suffices that the determinant be
+  nonzero on `S`: the starts in `S` converging to such a point form a null set
+  (`measure_inter_tendsto_symmetricUnstable_eq_zero`), since their orbits stay
+  in `S` (`measure_inter_preimage_iterate_eq_zero`).
 
 This is the proof of `thm:main-general` in §4 of arXiv:1710.07406, for
 fixed points with a symmetric derivative, with the center-stable manifold
@@ -89,6 +93,36 @@ theorem exists_measure_stayNear_eq_zero (μ : Measure E) [μ.IsAddHaarMeasure] {
     (isBounded_closedBall.subset (stayNear_subset g z r))
     (line_meets_stayNear_once hP hc happrox hPe he0)⟩
 
+/-- **Gradient-like maps almost never converge to an unstable point from a
+forward-invariant set.**  If `g` is `C¹`, maps `S` into itself, and its
+derivative has nonzero determinant at every point of `S`, the starts in `S`
+whose orbit converges to a fixed point of `g` at which the derivative is
+symmetric and has an eigenvalue of modulus greater than one form a null set.
+Nothing is asked of the determinant off `S`. -/
+theorem measure_inter_tendsto_symmetricUnstable_eq_zero (μ : Measure E) [μ.IsAddHaarMeasure]
+    {g : E → E} (hg : ContDiff ℝ 1 g) {S : Set E} (hS : MapsTo g S S)
+    (hdet : ∀ x ∈ S, (fderiv ℝ g x).det ≠ 0) :
+    μ (S ∩ {x | ∃ z, IsSymmetricUnstable g z ∧ Tendsto (fun k => g^[k] x) atTop (𝓝 z)}) =
+      0 := by
+  have hloc : ∀ z : {z // IsSymmetricUnstable g z}, ∃ r > 0, μ (stayNear g z r) = 0 :=
+    fun z => by
+      obtain ⟨-, hsym, lam, hlam, hev⟩ := z.2
+      exact exists_measure_stayNear_eq_zero μ hg hsym hlam hev
+  choose r hr hnull using hloc
+  obtain ⟨T, hTc, hTU⟩ := TopologicalSpace.isOpen_iUnion_countable
+    (fun z : {z // IsSymmetricUnstable g z} => ball (z : E) (r z)) fun _ => isOpen_ball
+  refine measure_mono_null (t := ⋃ z ∈ T, ⋃ m : ℕ, S ∩ g^[m] ⁻¹' stayNear g z (r z)) ?_ ?_
+  · rintro x ⟨hxS, w, hw, hlim⟩
+    have hwU : w ∈ ⋃ z ∈ T, ball (z : E) (r z) := by
+      rw [hTU]
+      exact mem_iUnion.2 ⟨⟨w, hw⟩, mem_ball_self (hr _)⟩
+    obtain ⟨z, hzT, hwz⟩ := mem_iUnion₂.1 hwU
+    obtain ⟨m, hm⟩ := exists_iterate_mem_stayNear hlim hwz
+    exact mem_iUnion₂.2 ⟨z, hzT, mem_iUnion.2 ⟨m, hxS, hm⟩⟩
+  · rw [measure_biUnion_null_iff hTc]
+    exact fun z _ => measure_iUnion_null fun m =>
+      measure_inter_preimage_iterate_eq_zero μ hg hS hdet (hnull z) m
+
 /-- **Gradient-like maps almost never converge to an unstable point.**  If `g`
 is `C¹` and its derivative has nonzero determinant everywhere, the starts
 whose orbit converges to a fixed point of `g` at which the derivative is
@@ -101,24 +135,8 @@ descent (`measure_tendsto_strictSaddle_eq_zero`). -/
 theorem measure_tendsto_symmetricUnstable_eq_zero (μ : Measure E) [μ.IsAddHaarMeasure]
     {g : E → E} (hg : ContDiff ℝ 1 g) (hdet : ∀ x, (fderiv ℝ g x).det ≠ 0) :
     μ {x | ∃ z, IsSymmetricUnstable g z ∧ Tendsto (fun k => g^[k] x) atTop (𝓝 z)} = 0 := by
-  have hloc : ∀ z : {z // IsSymmetricUnstable g z}, ∃ r > 0, μ (stayNear g z r) = 0 :=
-    fun z => by
-      obtain ⟨-, hsym, lam, hlam, hev⟩ := z.2
-      exact exists_measure_stayNear_eq_zero μ hg hsym hlam hev
-  choose r hr hnull using hloc
-  obtain ⟨T, hTc, hTU⟩ := TopologicalSpace.isOpen_iUnion_countable
-    (fun z : {z // IsSymmetricUnstable g z} => ball (z : E) (r z)) fun _ => isOpen_ball
-  refine measure_mono_null (t := ⋃ z ∈ T, ⋃ m : ℕ, g^[m] ⁻¹' stayNear g z (r z)) ?_ ?_
-  · rintro x ⟨w, hw, hlim⟩
-    have hwU : w ∈ ⋃ z ∈ T, ball (z : E) (r z) := by
-      rw [hTU]
-      exact mem_iUnion.2 ⟨⟨w, hw⟩, mem_ball_self (hr _)⟩
-    obtain ⟨z, hzT, hwz⟩ := mem_iUnion₂.1 hwU
-    obtain ⟨m, hm⟩ := exists_iterate_mem_stayNear hlim hwz
-    exact mem_iUnion₂.2 ⟨z, hzT, mem_iUnion.2 ⟨m, hm⟩⟩
-  · rw [measure_biUnion_null_iff hTc]
-    exact fun z _ => measure_iUnion_null fun m =>
-      measure_preimage_iterate_eq_zero μ hg hdet (hnull z) m
+  simpa using measure_inter_tendsto_symmetricUnstable_eq_zero μ hg (mapsTo_univ g univ)
+    fun x _ => hdet x
 
 /-- **The same for any initial law with a density.**  A start drawn from a
 law absolutely continuous with respect to a Haar measure almost surely does
@@ -129,10 +147,10 @@ theorem measure_tendsto_symmetricUnstable_eq_zero_of_absolutelyContinuous
     ν {x | ∃ z, IsSymmetricUnstable g z ∧ Tendsto (fun k => g^[k] x) atTop (𝓝 z)} = 0 :=
   hν (measure_tendsto_symmetricUnstable_eq_zero μ hg hdet)
 
-/-- The hypotheses of the four theorems above, with `ε = 1` and the
-restriction of Lebesgue measure to the unit ball, hold for the doubling map of
-the line, whose derivative `2` is symmetric with eigenvalue `2` and has
-determinant `2`. -/
+/-- The hypotheses of the five theorems above, with `ε = 1`, the restriction
+of Lebesgue measure to the unit ball and `S = {0}`, hold for the doubling map
+of the line, whose derivative `2` is symmetric with eigenvalue `2` and has
+determinant `2`, and which fixes `0`. -/
 example : ContDiff ℝ 1 (fun x : EuclideanSpace ℝ (Fin 1) => (2 : ℝ) • x) ∧ (0 : ℝ) < 1 ∧
     (fderiv ℝ (fun x : EuclideanSpace ℝ (Fin 1) => (2 : ℝ) • x) 0 :
       EuclideanSpace ℝ (Fin 1) →ₗ[ℝ] EuclideanSpace ℝ (Fin 1)).IsSymmetric ∧
@@ -140,13 +158,14 @@ example : ContDiff ℝ 1 (fun x : EuclideanSpace ℝ (Fin 1) => (2 : ℝ) • x)
     Module.End.HasEigenvalue (fderiv ℝ (fun x : EuclideanSpace ℝ (Fin 1) => (2 : ℝ) • x) 0 :
       EuclideanSpace ℝ (Fin 1) →ₗ[ℝ] EuclideanSpace ℝ (Fin 1)) 2 ∧
     (∀ x, (fderiv ℝ (fun x : EuclideanSpace ℝ (Fin 1) => (2 : ℝ) • x) x).det ≠ 0) ∧
-    (volume : Measure (EuclideanSpace ℝ (Fin 1))).restrict (ball 0 1) ≪ volume := by
+    (volume : Measure (EuclideanSpace ℝ (Fin 1))).restrict (ball 0 1) ≪ volume ∧
+    MapsTo (fun x : EuclideanSpace ℝ (Fin 1) => (2 : ℝ) • x) {0} {0} := by
   have hd : ∀ x, fderiv ℝ (fun x : EuclideanSpace ℝ (Fin 1) => (2 : ℝ) • x) x =
       (2 : ℝ) • ContinuousLinearMap.id ℝ _ := fun x =>
     ((ContinuousLinearMap.id ℝ (EuclideanSpace ℝ (Fin 1))).hasFDerivAt.const_smul
       (2 : ℝ)).fderiv
   refine ⟨contDiff_const_smul 2, one_pos, fun u v => ?_, by norm_num, ?_, fun x => ?_,
-    Measure.absolutelyContinuous_of_le Measure.restrict_le_self⟩
+    Measure.absolutelyContinuous_of_le Measure.restrict_le_self, fun x hx => by simp_all⟩
   · simp [hd, real_inner_smul_left, real_inner_smul_right]
   · refine Module.End.hasEigenvalue_of_hasEigenvector (x := EuclideanSpace.single 0 1) ⟨?_, ?_⟩
     · simp [hd]

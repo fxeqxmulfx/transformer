@@ -65,6 +65,7 @@ Constraints:
 | A, time-one map of a gradient flow (M1.2) | `SaddleAvoidance.gradientFlow`, the flow of `-∇f` for `f` of class `C²` with `∇f` bounded and Lipschitz (`isFlowField_neg_gradient`): `contDiff_gradientFlow` and `det_fderiv_gradientFlow_ne_zero` for `t ≥ 0`; at a critical point the derivative is `exp (-t ∇²f z)` (`hasFDerivAt_gradientFlow_of_gradient_eq_zero`); `IsStrictSaddle.isSymmetricUnstable_gradientFlow` for the time-one map | proved |
 | C, spheres for `d ≥ 3` (M3.3) | `Perspective.exists_secondDerivEBetaAt_pos_of_nonTrivial`: for `d ≥ 3` and `β > 0`, every critical point of `𝖤_β` with two distinct tokens has a positive second derivative along a normalized line `s ↦ (x_i + s v_i)/‖x_i + s v_i‖`; `synchronized_of_secondDerivEBetaAt_nonpos`, `thm:spheres` of arXiv:2405.18273; `secondDerivEBetaAt_eq_two_mul_hessQuad`, the `key` of `hessian_at_critical_intrinsic` | proved |
 | C, criterion on the circle (M3.1c) | `Perspective.taumax_sharp`: for a `2π`-periodic `C³` kernel with `f' < 0` off `[-τ, τ]`, a stationary (C1) configuration that is cut-stable (C2) for every `S` and not synchronized has `4 (1/τ + 1/τ_max) f'(0) ≤ ∫_{-π}^{π} \|f'''\|₊` (`taumax`, `lemma:taumax`); `synchronized_of_circleGapMax_lt` (`cor:main`) and `synchronized_of_integral_le` (`thm:main`), with `f'(0) > 0` added (`zero_kernel_counterexample`) | proved |
+| A, gradient descent from a compact sublevel set (M1.6) | `SaddleAvoidance.exists_pos_measure_sublevel_tendsto_strictSaddle_eq_zero`: for `f` of class `C²` with `{f ≤ c}` compact, every step size below some `η₀ > 0` keeps gradient descent in `{f ≤ c}` (`mapsTo_gradientStep_sublevel`), and the starts in `{f ≤ c}` converging to a strict saddle form a null set; `measure_inter_tendsto_strictSaddle_eq_zero` on any forward-invariant set with a Hessian bound there, from `measure_inter_tendsto_symmetricUnstable_eq_zero` | proved |
 
 ## Milestones
 
@@ -202,7 +203,7 @@ Tasks: M1.1 #2, M1.2 #3, M1.3 #4, M1.4 #5, M1.5 #6, M1.6 #7.
 | M1.3 | **Avoidance for flows.** `ae_not_tendsto_flow_of_isStrictSaddle`: for `ν`-almost every `x`, `t ↦ flow (-∇f) 0 t x` converges to no strict saddle, because integer times are iterates of `Φ`. Ascent is the same statement for `-f`. | M1.2 |
 | M1.4 | **Periodic energies, done.** `exists_lipschitzWith_gradient_of_periodic`: if `f` is `C²` and invariant under a set of translations spanning `E`, such as a lattice, then `∇f` is bounded and globally Lipschitz. This supplies the hypotheses of M1.2 and of the descent theorems for `𝖤_β` on angles and for `V_full`. | — |
 | M1.5 | **Symmetrizable derivatives.** `IsSymmetrizableUnstable`: the derivative is conjugate to a symmetric map by a linear isomorphism. Extend `measure_tendsto_symmetricUnstable_eq_zero` to it, and M1.2 to `ẋ = -G(x) ∇f(x)` with `G` symmetric positive definite and `C¹`. SA and the sphere bridge M5.3 need it. | M1.3 |
-| M1.6 | **Optional, for networks.** Gradient descent with a compact forward-invariant sublevel set in place of a global Lipschitz constant. | — |
+| M1.6 | **Optional, for networks, done.** Gradient descent with a compact forward-invariant sublevel set in place of a global Lipschitz constant. | — |
 
 ### M2 — Layer B, convergence
 

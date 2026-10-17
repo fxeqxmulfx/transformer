@@ -17,6 +17,9 @@ critical point is a global minimizer or a strict saddle, almost every orbit
 converges to a global minimizer.  The time-one map of the gradient flow of a
 `C²` function with a bounded Lipschitz gradient is `C¹` with an invertible
 derivative, and every strict saddle is a symmetric unstable fixed point of it.
+A compact sublevel set replaces the global bound on the Hessian: for small
+steps gradient descent maps it into itself, and the starts in it converging
+to a strict saddle form a null set.
 
 | Module | Contents |
 | --- | --- |
@@ -24,8 +27,8 @@ derivative, and every strict saddle is a symmetric unstable fixed point of it.
 | `SaddleAvoidance.Basic` | orbits staying near a point; sets met once by every line of a direction |
 | `SaddleAvoidance.Cone` | the cone estimate: the stay set meets such a line at most once |
 | `SaddleAvoidance.Spectral` | the expanding splitting of a symmetric map |
-| `SaddleAvoidance.Preimage` | preimages of null sets under a local diffeomorphism are null |
-| `SaddleAvoidance.Global` | the starts converging to symmetric unstable fixed points are null |
+| `SaddleAvoidance.Preimage` | preimages of null sets are null where the derivative is invertible |
+| `SaddleAvoidance.Global` | the starts converging to symmetric unstable fixed points are null, also within a forward-invariant set on which the derivative is invertible |
 | `SaddleAvoidance.GradientDescent` | the starts converging to strict saddles are null |
 | `SaddleAvoidance.Descent` | the descent lemma, sufficient decrease, limits are critical points |
 | `SaddleAvoidance.Lojasiewicz` | the Łojasiewicz inequality bounds a step by a drop |
@@ -44,6 +47,7 @@ derivative, and every strict saddle is a symmetric unstable fixed point of it.
 | `SaddleAvoidance.FlowConvergence` | gradient flows with a Łojasiewicz limit point up to translations converge |
 | `SaddleAvoidance.Landscape` | if every critical point is a global minimizer or a strict saddle, almost every orbit converges to a global minimizer; for periodic functions without a hypothesis on the orbits |
 | `SaddleAvoidance.TimeOne` | the gradient flow: its time-`t` maps are `C¹` with invertible derivatives, equal to `exp (-t ∇²f(z))` at a critical point `z`; strict saddles are symmetric unstable fixed points of the time-one map |
+| `SaddleAvoidance.Sublevel` | avoidance on a forward-invariant set; small steps keep gradient descent in a compact sublevel set, from which almost no start converges to a strict saddle |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
 and `thm:main` of arXiv:1602.04915.  Both rest on the center-stable manifold
@@ -77,3 +81,4 @@ import Transformer.SaddleAvoidance.FlowTrap
 import Transformer.SaddleAvoidance.FlowConvergence
 import Transformer.SaddleAvoidance.Landscape
 import Transformer.SaddleAvoidance.TimeOne
+import Transformer.SaddleAvoidance.Sublevel
