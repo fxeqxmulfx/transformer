@@ -4,123 +4,30 @@
 ArXiv:2605.09213v1, §3, `lem:correl`: for independent initial data the
 covariance of two tokens is of size `i⁻¹` and their third cumulant of size
 `(ij)⁻¹`, both with the nonstandard factor `e^{√(CT log(i/j))}` that the
-singular cumulative influence of small indices produces. These Glauber-calculus
-estimates remain open.
+singular cumulative influence of small indices produces (`correlation_bounds`).
 
-The source's test is `φ ∈ C²(𝕋)`.
-The angles are carried on `ℝ`, and the dynamics sees them only modulo `2π`.
-A test on `ℝ` that is not periodic also reads the winding numbers, and these
-can be correlated with the residues the dynamics does see.
-
-Three tokens on a fair coin show this. The first token sits at `0` and the
-third starts at `π/2`. The second token sits at `0` on one side of the coin
-and at `π + 2πM` on the other; both are equilibria of its field. The third
-token feels a different field on the two sides, so at some time `t₀ > 0` its
-two positions differ by some `Δ ≠ 0`. With `φ = id`, which has `φ' = 1` and
-`φ'' = 0`, the covariance of the third and second tokens is
-`Δ (π + 2πM) / 4`. That is unbounded in `M`, while the bound of
-`eq:est-cov-th` does not depend on `M`. The statement therefore takes `φ`
-periodic, as the source does.
+The random flow is the flow map of its independent initial angles
+(`covariance_randomFlow`, `thirdCumulant_randomFlow`). Under their product law
+the Glauber calculus bounds both cumulants through the envelopes of the first and
+second differences of the flow (`abs_covariance_flow_le`,
+`abs_thirdCumulant_flow_le`). Their amplitudes are powers of `e^{αT/γ}`
+(`covariance_amp_le`, `thirdCumulant_amp_le`), and the choice
+`γ = min(1/16, √(T/log(i/k)))` turns them into the source's factors
+(`exists_gamma_exp_le`).
 -/
 
-import Transformer.Kinetic.Fluctuations
-import Transformer.Kinetic.Section3_ThreeTokens
+import Transformer.Kinetic.Section3_RandomFlow
+import Transformer.Kinetic.Section3_KappaBound
+import Transformer.Kinetic.Section3_GammaChoice
+import Transformer.Kinetic.Section3_Amplitudes
 import Transformer.Homogenized.RademacherLaw
 
-open Real MeasureTheory ProbabilityTheory Filter Topology
+open Real MeasureTheory ProbabilityTheory
 
 namespace Transformer
 namespace Kinetic
 
 variable {Ω : Type*} [MeasurableSpace Ω]
-
-/-- The covariance under the fair coin is a quarter of the product of the two
-jumps. -/
-theorem covariance_fairCoin (X Y : Bool → ℝ) :
-    covariance X Y Homogenized.fairCoin = (X true - X false) * (Y true - Y false) / 4 := by
-  simp only [covariance, Homogenized.integral_fairCoin, smul_eq_mul]
-  ring
-
-/-- **The former statement of `lem:correl` is false.** It took every
-`φ : ℝ → ℝ` with bounded `φ'` and `φ''`, while the source takes
-`φ ∈ C²(𝕋)`. For every `λ` and every `β ≠ 0` no constant bounds the
-covariance of `eq:est-cov-th` for `φ = id`. Three tokens on a fair coin
-give a covariance `Δ (π + 2πM) / 4` with `Δ ≠ 0` independent of the
-winding number `M` of the second token, and the bound does not depend on `M`.
-
-`correlation_bounds` now takes `φ` periodic, as the source does.
-
-Source: arXiv:2605.09213v1, §3, `lem:correl`, `eq:est-cov-th`. -/
-theorem correlation_bounds_aperiodic_false (lam β : ℝ) (hβ : β ≠ 0) :
-    ¬ ∃ C : ℝ, 0 < C ∧ ∀ (N : ℕ) (P : Measure Bool), IsProbabilityMeasure P →
-      ∀ ϑ : Bool → ℝ → Idx N → ℝ,
-        (∀ ω, IsGPTFlow lam β N (ϑ ω)) →
-        iIndepFun (fun (j : Idx N) (ω : Bool) => ϑ ω 0 j) P →
-      ∀ (φ dφ ddφ : ℝ → ℝ), (∀ x, HasDerivAt φ (dφ x) x) → (∀ x, HasDerivAt dφ (ddφ x) x) →
-      ∀ K K' : ℝ, (∀ x, |dφ x| ≤ K) → (∀ x, |dφ x| ≤ K') → (∀ x, |ddφ x| ≤ K') →
-      ∀ T : ℝ, 0 ≤ T → ∀ t ∈ Set.Icc (0 : ℝ) T, ∀ t' ∈ Set.Icc (0 : ℝ) T,
-        ∀ t'' ∈ Set.Icc (0 : ℝ) T, ∀ i j k : Idx N, k < j → j < i →
-          |covariance (fun ω => φ (ϑ ω t i)) (fun ω => φ (ϑ ω t' j)) P|
-              ≤ C * ((i : ℝ) + 1)⁻¹ *
-                Real.exp (Real.sqrt (C * T * Real.log (((i : ℝ) + 1) / ((j : ℝ) + 1)))) *
-                Real.exp (C * T) * K ^ 2 ∧
-            |thirdCumulant P (fun ω => φ (ϑ ω t i)) (fun ω => φ (ϑ ω t' j))
-                (fun ω => φ (ϑ ω t'' k))|
-              ≤ C * (((i : ℝ) + 1) * ((j : ℝ) + 1))⁻¹ *
-                Real.exp (Real.sqrt (C * T * Real.log (((i : ℝ) + 1) / ((k : ℝ) + 1)))) *
-                Real.exp (C * T) * K ^ 2 * K' := by
-  rintro ⟨C, -, hC⟩
-  obtain ⟨xA, hA0, hA⟩ := exists_three_flow lam β 0 Real.sin_zero
-  obtain ⟨xB, hB0, hB⟩ := exists_three_flow lam β π Real.sin_pi
-  have hd : HasDerivAt (fun t => xB t - xA t)
-      (gptField lam β 3 ![0, π, π / 2] 2 - gptField lam β 3 ![0, 0, π / 2] 2) 0 := by
-    have h := (hB 0).sub (hA 0)
-    rwa [hA0, hB0] at h
-  have hev : ∀ᶠ t in 𝓝[>] (0 : ℝ), 0 < t ∧ xB t - xA t ≠ 0 :=
-    eventually_mem_nhdsWithin.and ((hd.eventually_ne (gptField_three_pi_sub_zero lam β hβ)).filter_mono
-      (nhdsWithin_mono _ fun t (ht : 0 < t) => ht.ne'))
-  obtain ⟨t₀, ht₀, hΔ⟩ := hev.exists
-  set R : ℝ := C * (((2 : Idx 3) : ℝ) + 1)⁻¹ *
-    Real.exp (Real.sqrt (C * t₀ * Real.log ((((2 : Idx 3) : ℝ) + 1) / (((1 : Idx 3) : ℝ) + 1)))) *
-    Real.exp (C * t₀) * 1 ^ 2
-  have hR : ∀ M : ℕ, |(xB t₀ - xA t₀) * (π + 2 * π * M - 0) / 4| ≤ R := by
-    intro M
-    let ϑ : Bool → ℝ → Idx 3 → ℝ := fun ω t =>
-      bif ω then ![0, π + 2 * π * M, xB t] else ![0, 0, xA t]
-    have hsin : Real.sin (π + 2 * π * M) = 0 := by
-      rw [show π + 2 * π * M = π + M * (2 * π) by ring, Real.sin_add_nat_mul_two_pi,
-        Real.sin_pi]
-    have hflow : ∀ ω, IsGPTFlow lam β 3 (ϑ ω) := by
-      intro ω
-      cases ω
-      · exact isGPTFlow_three lam β 0 Real.sin_zero xA hA
-      · exact isGPTFlow_three lam β _ hsin xB fun t => by
-          rw [gptField_three_two_add_turns]
-          exact hB t
-    have hind : iIndepFun (fun (j : Idx 3) (ω : Bool) => ϑ ω 0 j) Homogenized.fairCoin := by
-      refine Homogenized.iIndepFun_of_const_of_ne _ 1 fun j hj => ?_
-      fin_cases j
-      · exact ⟨0, funext fun ω => by cases ω <;> rfl⟩
-      · exact absurd rfl hj
-      · exact ⟨π / 2, funext fun ω => by cases ω <;> simp [ϑ, hA0, hB0]⟩
-    have h := (hC 3 Homogenized.fairCoin inferInstance ϑ hflow hind (fun x => x) (fun _ => 1)
-      (fun _ => 0) (fun x => hasDerivAt_id' x) (fun x => hasDerivAt_const x 1) 1 1
-      (by simp) (by simp) (by simp) t₀ ht₀.le t₀ ⟨ht₀.le, le_rfl⟩ t₀ ⟨ht₀.le, le_rfl⟩
-      t₀ ⟨ht₀.le, le_rfl⟩ 2 1 0 (by decide) (by decide)).1
-    rw [covariance_fairCoin] at h
-    exact h
-  obtain ⟨M, hM⟩ := exists_nat_gt (4 * R / (2 * π * |xB t₀ - xA t₀|))
-  have hpos : 0 < 2 * π * |xB t₀ - xA t₀| := by
-    have := abs_pos.mpr hΔ
-    positivity
-  have h1 := hR M
-  rw [div_lt_iff₀ hpos] at hM
-  rw [sub_zero, abs_div, abs_mul, abs_of_pos (by positivity : 0 < π + 2 * π * M),
-    abs_of_pos (by norm_num : (0 : ℝ) < 4)] at h1
-  nlinarith [Real.pi_pos, abs_nonneg (xB t₀ - xA t₀)]
-
-/-- The hypothesis of `correlation_bounds_aperiodic_false` holds at `β = 1`. -/
-example : (1 : ℝ) ≠ 0 := one_ne_zero
 
 /-- **Lemma (lem:correl).**  For independent initial data, `φ ∈ C²(𝕋)`,
 `t,t',t'' ∈ [0,T]` and `i > j > k`,
@@ -149,7 +56,9 @@ avoids the junk value an unbounded supremum would take.
   `0`, and the covariance is `A²`, while `φ'` stays bounded independently of
   `A`.  This derivation is not checked in Lean.
 
-Not proved here.
+The constant is `C = 3π²/2 + 9π³/2 + 96(27ω + 2)π⁴ + 272α + (17α + 6)²` with
+`α = 2e^{2|λ|}L₁ + 1`, `ω = 2e^{2|λ|}L₂` and `L₁, L₂` Lipschitz constants of
+`w_β'` and `w_β''`.
 
 Source: arXiv:2605.09213v1, `lem:correl`, `eq:est-cov-th`, `eq:est-kap3-th`. -/
 theorem correlation_bounds (lam β : ℝ) :
@@ -172,7 +81,89 @@ theorem correlation_bounds (lam β : ℝ) :
               ≤ C * (((i : ℝ) + 1) * ((j : ℝ) + 1))⁻¹ *
                 Real.exp (Real.sqrt (C * T * Real.log (((i : ℝ) + 1) / ((k : ℝ) + 1)))) *
                 Real.exp (C * T) * K ^ 2 * K' := by
-  sorry
+  obtain ⟨L₁, L₂, hL₁, hL₂0, hd, hL, hL₂⟩ := exists_lipschitz_wBetaDeriv β
+  obtain ⟨α, hαd⟩ : ∃ α : ℝ, α = 2 * Real.exp (2 * |lam|) * L₁ + 1 := ⟨_, rfl⟩
+  obtain ⟨w, hwd⟩ : ∃ w : ℝ, w = 2 * Real.exp (2 * |lam|) * L₂ := ⟨_, rfl⟩
+  have he1 : 1 ≤ Real.exp (2 * |lam|) := Real.one_le_exp (by positivity)
+  have hα : 2 * Real.exp (2 * |lam|) * L₁ ≤ α := by rw [hαd]; linarith
+  have hα1 : 1 ≤ α := by rw [hαd]; linarith [mul_nonneg (by positivity :
+    (0 : ℝ) ≤ 2 * Real.exp (2 * |lam|)) hL₁]
+  have hL₁α : L₁ ≤ α := by rw [hαd]; nlinarith
+  have hα0 : 0 ≤ α := by linarith
+  have hw : 0 ≤ w := by rw [hwd]; positivity
+  obtain ⟨C, hCd⟩ : ∃ C : ℝ, C = 3 / 2 * π ^ 2 + (9 / 2 * π ^ 3 + 96 * (27 * w + 2) * π ^ 4) +
+      272 * α + (17 * α + 6) ^ 2 := ⟨_, rfl⟩
+  have hc₃ : 0 ≤ 9 / 2 * π ^ 3 + 96 * (27 * w + 2) * π ^ 4 := by positivity
+  have hsq : (6 * α + 1) ^ 2 ≤ (17 * α + 6) ^ 2 :=
+    pow_le_pow_left₀ (by linarith) (by linarith) 2
+  have hC0 : 0 < C := by rw [hCd]; positivity
+  have hC₁ : 3 / 2 * π ^ 2 ≤ C := by rw [hCd]; nlinarith [sq_nonneg (17 * α + 6)]
+  have hC₂ : 9 / 2 * π ^ 3 + 96 * (27 * w + 2) * π ^ 4 ≤ C := by
+    rw [hCd]; nlinarith [sq_nonneg (17 * α + 6), Real.pi_pos]
+  have hC₃ : ((6 : ℕ) : ℝ) * α / (1 / 16) ≤ C := by
+    rw [hCd]; push_cast; nlinarith [sq_nonneg (17 * α + 6), Real.pi_pos]
+  have hC₄ : (((6 : ℕ) : ℝ) * α + ((1 : ℕ) : ℝ)) ^ 2 ≤ C := by
+    rw [hCd]; push_cast; nlinarith [Real.pi_pos]
+  have hC₅ : ((17 : ℕ) : ℝ) * α / (1 / 16) ≤ C := by
+    rw [hCd]; push_cast; nlinarith [sq_nonneg (17 * α + 6), Real.pi_pos]
+  have hC₆ : (((17 : ℕ) : ℝ) * α + ((6 : ℕ) : ℝ)) ^ 2 ≤ C := by
+    rw [hCd]; push_cast; nlinarith [Real.pi_pos]
+  refine ⟨C, hC0, ?_⟩
+  intro N P hP ϑ hflow hind hmeas φ dφ ddφ hper hφ hdφ K K' hK hK' hK'' T hT t ht t' ht'
+    t'' ht'' i j k hkj hji
+  have := hP
+  rw [covariance_randomFlow lam β hflow hind hmeas hφ ht.1 ht'.1 i j,
+    thirdCumulant_randomFlow lam β hflow hind hmeas hφ ht.1 ht'.1 ht''.1 i j k]
+  set μs : Idx N → Measure ℝ := fun l => P.map fun ω => ϑ ω 0 l
+  have : ∀ l, IsProbabilityMeasure (μs l) := fun l =>
+    (Measure.isProbabilityMeasure_map_iff (hmeas l).aemeasurable).2 hP
+  have hK0 : 0 ≤ K := (abs_nonneg _).trans (hK 0)
+  have hK'0 : 0 ≤ K' := (abs_nonneg _).trans (hK' 0)
+  have hκ : ∀ x, |dφ x| ≤ min K K' := fun x => le_min (hK x) (hK' x)
+  have hκ0 : 0 ≤ min K K' := le_min hK0 hK'0
+  have hkj' : (k : ℕ) < j := hkj
+  have hji' : (j : ℕ) < i := hji
+  have hcij : ((j : ℕ) : ℝ) ≤ ((i : ℕ) : ℝ) := by exact_mod_cast hji'.le
+  have hcki : ((k : ℕ) : ℝ) ≤ ((i : ℕ) : ℝ) := by exact_mod_cast (hkj'.trans hji').le
+  have hℓij : 0 ≤ Real.log (((i : ℝ) + 1) / ((j : ℝ) + 1)) :=
+    Real.log_nonneg (by rw [one_le_div (by positivity)]; linarith)
+  have hℓik : 0 ≤ Real.log (((i : ℝ) + 1) / ((k : ℝ) + 1)) :=
+    Real.log_nonneg (by rw [one_le_div (by positivity)]; linarith)
+  have hv : (0 : ℝ) < ((i : ℝ) + 1) * ((j : ℝ) + 1) := by positivity
+  rcases hT.eq_or_lt with hT0 | hT0
+  · subst hT0
+    have hτ : profileRate α (1 / 16) 0 = 0 := by simp [profileRate]
+    refine ⟨(abs_covariance_flow_le μs lam β (α := α) hL hL₁ hα (γ := 1 / 16) (by norm_num)
+      (by norm_num) hper hφ hK ht ht' hji).trans ?_,
+      (abs_thirdCumulant_flow_le μs lam β (α := α) hd hL hL₁ hL₂ hL₂0 hα (γ := 1 / 16)
+        (by norm_num) (by norm_num) hper hφ hdφ hκ hK' hK'' ht ht' ht'' hkj hji).trans ?_⟩
+    · calc _ = (0 : ℝ) := by rw [hτ]; simp
+        _ ≤ _ := by positivity
+    · calc _ = (0 : ℝ) := by rw [hτ]; simp
+        _ ≤ _ := by positivity
+  constructor
+  · obtain ⟨γ, hγ0, hγ, hE⟩ := exists_gamma_exp_le hα0 6 1 (γ₀ := 1 / 16) (by norm_num) hT0
+      hℓij hC₃ hC₄
+    refine (abs_covariance_flow_le μs lam β hL hL₁ hα hγ0 (by linarith) hper hφ hK ht ht'
+      hji).trans ?_
+    refine (covariance_amp_le hα1 hL₁α hγ0 (by linarith) hT (ratioPow_pos γ i j).le
+      (by positivity : (0 : ℝ) < (i : ℝ) + 1)).trans ?_
+    rw [ratioPow_eq_exp]
+    calc _ ≤ C * ((i : ℝ) + 1)⁻¹ * K ^ 2 * (Real.exp (√(C * T *
+          Real.log (((i : ℝ) + 1) / ((j : ℝ) + 1)))) * Real.exp (C * T)) := by gcongr
+      _ = _ := by ring
+  · obtain ⟨γ, hγ0, hγ, hE⟩ := exists_gamma_exp_le hα0 17 6 (γ₀ := 1 / 16) (by norm_num) hT0
+      hℓik hC₅ hC₆
+    refine (abs_thirdCumulant_flow_le μs lam β hd hL hL₁ hL₂ hL₂0 hα hγ0 (by linarith) hper
+      hφ hdφ hκ hK' hK'' ht ht' ht'' hkj hji).trans ?_
+    rw [← hwd]
+    refine (thirdCumulant_amp_le hα1 hL₁α hγ0 (by linarith) hT hw hκ0 (min_le_left K K')
+      (min_le_right K K') (one_le_ratioPow hγ0.le (hkj'.trans hji').le)
+      (ratioPow_pos γ j k).le (ratioPow_le_ratioPow_left hγ0.le hji'.le k) hv).trans ?_
+    rw [ratioPow_eq_exp]
+    calc _ ≤ C * (((i : ℝ) + 1) * ((j : ℝ) + 1))⁻¹ * (K ^ 2 * K') * (Real.exp (√(C * T *
+          Real.log (((i : ℝ) + 1) / ((k : ℝ) + 1)))) * Real.exp (C * T)) := by gcongr
+      _ = _ := by ring
 
 /-- The hypotheses of `correlation_bounds` are satisfiable: three tokens resting
 at `0` on the one-point probability space, the periodic test `sin`, and the

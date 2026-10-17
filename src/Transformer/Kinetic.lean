@@ -21,6 +21,7 @@ integer source cells give an interval of minimizers at every minimum.
 The cumulant bounds of `lem:correl` need the source's periodic test: a test
 on `ℝ` reads the winding numbers of the angles, and
 `correlation_bounds_aperiodic_false` makes their covariance unbounded.
+For the periodic test they hold (`correlation_bounds`).
 -/
 
 import Transformer.Kinetic.Defs
@@ -54,6 +55,7 @@ import Transformer.Kinetic.Section1_GridQuadrature
 import Transformer.Kinetic.Section1_SourceCells
 import Transformer.Kinetic.Fluctuations
 import Transformer.Kinetic.Section3_ThreeTokens
+import Transformer.Kinetic.Section3_AperiodicCovariance
 import Transformer.Kinetic.Section3_CumulantBounds
 import Transformer.Kinetic.Section3_Observables
 import Transformer.Kinetic.Section3_ThirdCumulant
