@@ -8,8 +8,10 @@ This file formalizes the second half of Appendix A of the survey:
 
 * `Lemma lem: yury.lemma` — every non-trivial critical point of `𝖤_0` is a
                             strict saddle,
-* `Lemma l:nosaddleconv`  — gradient ascent avoids strict saddles,
 * the assembly of `Theorem p:beta0`.
+
+`Lemma l:nosaddleconv`, that gradient ascent avoids strict saddles, is
+`no_saddle_convergence`, in `Perspective.AppendixA_SaddleNull`.
 
 The energy itself, its gradient flow and `eq: taylor` are in
 `Perspective.AppendixA_Beta0`; `e:russiantrick` and `IsSkew` are in
@@ -18,11 +20,12 @@ perturbation `PerturbationBy` it is read along and the second derivative
 `SecondDerivE0At` it computes are in `Perspective.AppendixA_Hessian`, where
 the identity is proved; that the perturbation exists at all is
 `Perspective.exists_perturbationBy`, in `Perspective.AppendixA_Rotation`.
-`lem: yury.lemma` is proved here from those four; the other two statements are
-theorems closed by `sorry`.
+`lem: yury.lemma` is proved here from those four; the assembly of `p:beta0` is
+a theorem closed by `sorry`.
 -/
 
 import Transformer.Perspective.AppendixA_Rotation
+import Transformer.Perspective.AppendixA_SaddleNull
 
 open scoped BigOperators
 open Real MeasureTheory
@@ -119,29 +122,6 @@ example : 2 ≤ 2 ∧ IsCriticalE0 2 2 (antipodalPair 2 (basePoint 1)) ∧
     NonTrivialTuple 2 2 (antipodalPair 2 (basePoint 1)) :=
   ⟨le_rfl, antipodalPair_critical_nonTrivial 2 (basePoint 1)⟩
 
-/-- **Lemma (l:nosaddleconv).** *No-saddle-convergence lemma.*
-
-On a compact Riemannian manifold the set of initial conditions whose
-gradient-ascent trajectory converges to a strict saddle of a smooth `f` has
-zero volume (center-stable manifold theorem).  It is stated here in the only
-instance the survey uses it: `ℳ = (𝕊^{d-1})^n`, `f = 𝖤_0`, and — by
-`YuryLemma` — the strict saddles are the non-trivial critical points.  Volume
-is the uniform measure `UniformTuple`.
-
-Not proved here: the center-stable manifold theorem is not available.
-
-Source: arXiv:2312.10794v5, Appendix A, `l:nosaddleconv`. -/
-theorem no_saddle_convergence :
-    ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-      P { X₀ : SphereTuple d n |
-          ∃ X : ℝ → SphereTuple d n, X 0 = X₀ ∧ E0GradientAscent d n X ∧
-            ∃ Z : SphereTuple d n, IsCriticalE0 d n Z ∧ NonTrivialTuple d n Z ∧
-              ∀ i : Idx n,
-                Filter.Tendsto
-                  (fun t : ℝ => ((X t i : EucSpace d) - (Z i : EucSpace d)))
-                  Filter.atTop (nhds 0) } = 0 := by
-  sorry
-
 /-- **Theorem (p:beta0)**, in the almost-sure form Appendix A proves: for
 `d, n ≥ 2` the set of initial sequences whose `β = 0` trajectory does *not*
 converge to a single point is null for the uniform law on `(𝕊^{d-1})^n`.
@@ -150,11 +130,11 @@ This is the statement `Perspective.beta0_consensus` should have; the latter
 quantifies over every initial sequence, which is false at the exceptional
 null set.
 
-Not proved here.  The paper's proof assembles three ingredients, of which one
-is now available: (i) Łojasiewicz — `𝖤_0` is analytic on a compact analytic
+Not proved here.  The paper's proof assembles three ingredients, of which two
+are now available: (i) Łojasiewicz — `𝖤_0` is analytic on a compact analytic
 manifold, so every trajectory of `e:gradfl` converges to a critical point —
 not stated here; (ii) `no_saddle_convergence` — the non-trivial critical
-points are reached from a null set — a `sorry` above; (iii) `yury_lemma` —
+points are reached from a null set — proved; (iii) `yury_lemma` —
 those are exactly the strict saddles — proved.  The assembly is not recorded
 as a statement of its own: with the conclusion already a sorried theorem, the
 implication would be provable in one line and would assert nothing.
