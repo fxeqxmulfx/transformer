@@ -117,6 +117,7 @@ import Transformer.Perspective.UniformAtomless
 import Transformer.Perspective.UniformSlices
 import Transformer.Perspective.UniformShell
 import Transformer.Perspective.SphereUnique
+import Transformer.Perspective.UniformLipschitz
 import Transformer.Perspective.Section5_InvariantMeasure
 import Transformer.Perspective.Beta0Field
 import Transformer.Perspective.Softmax

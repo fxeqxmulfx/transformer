@@ -7,7 +7,9 @@ normalization `shellLaw` is a rotation-invariant probability measure, so its
 `n`-fold product is a `UniformTuple` (`uniformTuple_shellLaw`): the uniform law
 of `p:beta0` exists.  Being the only one (`Perspective.SphereUnique`), it lets
 the null sets of the uniform law be computed with Lebesgue measure on the
-product of shells (`Perspective.UniformLipschitz`).
+product of shells (`Perspective.UniformLipschitz`), where radial projection,
+`2`-Lipschitz outside the unit ball (`dist_sphereNormalize_le`), lifts Lipschitz
+maps of configurations to the shells.
 
 Source: arXiv:2312.10794v5, §4 (the uniform law `σ_d` of `p:beta0`).
 -/
@@ -79,6 +81,34 @@ theorem sphereMap_sphereNormalize (hd : 1 ≤ d) (U : EucSpace d ≃ₗᵢ[ℝ] 
 and a basis vector. -/
 example : 1 ≤ 2 ∧ (EuclideanSpace.single (0 : Fin 2) (1 : ℝ)) ≠ 0 :=
   ⟨by norm_num, by simp⟩
+
+/-- **Radial projection is `2`-Lipschitz outside the unit ball.** -/
+theorem dist_sphereNormalize_le (hd : 1 ≤ d) {y y' : EucSpace d} (hy : 1 ≤ ‖y‖)
+    (hy' : 1 ≤ ‖y'‖) : dist (sphereNormalize hd y) (sphereNormalize hd y') ≤ 2 * dist y y' := by
+  have ha : 0 < ‖y‖ := by linarith
+  have hb : 0 < ‖y'‖ := by linarith
+  rw [Subtype.dist_eq, coe_sphereNormalize hd (norm_pos_iff.mp ha),
+    coe_sphereNormalize hd (norm_pos_iff.mp hb), dist_eq_norm, dist_eq_norm]
+  have hsplit : ‖y‖⁻¹ • y - ‖y'‖⁻¹ • y' = ‖y‖⁻¹ • (y - y') + (‖y‖⁻¹ - ‖y'‖⁻¹) • y' := by
+    rw [smul_sub, sub_smul]
+    abel
+  have h1 : ‖‖y‖⁻¹ • (y - y')‖ ≤ ‖y - y'‖ := by
+    rw [norm_smul, norm_inv, norm_norm]
+    exact mul_le_of_le_one_left (norm_nonneg _) (inv_le_one_of_one_le₀ hy)
+  have h2 : ‖(‖y‖⁻¹ - ‖y'‖⁻¹) • y'‖ ≤ ‖y - y'‖ := by
+    have e : (‖y‖⁻¹ - ‖y'‖⁻¹) * ‖y'‖ = (‖y'‖ - ‖y‖) / ‖y‖ := by
+      field_simp
+    calc ‖(‖y‖⁻¹ - ‖y'‖⁻¹) • y'‖ = |(‖y‖⁻¹ - ‖y'‖⁻¹) * ‖y'‖| := by
+          rw [norm_smul, Real.norm_eq_abs, abs_mul, abs_norm]
+      _ = |‖y'‖ - ‖y‖| / ‖y‖ := by rw [e, abs_div, abs_of_pos ha]
+      _ ≤ |‖y'‖ - ‖y‖| := div_le_self (abs_nonneg _) hy
+      _ ≤ ‖y' - y‖ := abs_norm_sub_norm_le _ _
+      _ = ‖y - y'‖ := norm_sub_rev _ _
+  rw [hsplit]
+  linarith [norm_add_le (‖y‖⁻¹ • (y - y')) ((‖y‖⁻¹ - ‖y'‖⁻¹) • y')]
+
+/-- The hypotheses of `dist_sphereNormalize_le` hold for a basis vector of `ℝ²`. -/
+example : 1 ≤ ‖EuclideanSpace.single (0 : Fin 2) (1 : ℝ)‖ := by simp
 
 /-- **The shell measure:** Lebesgue measure on the shell `1 < ‖y‖ < 2`, projected
 radially onto the sphere. -/
