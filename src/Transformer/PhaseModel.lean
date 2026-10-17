@@ -9,7 +9,10 @@ relations `⟪m_r, ψ⟫ ∈ 2πℤ` through the energy
 the phases with `ψ_x - ψ_y - ψ_{x-y} ∈ 2πℤ` for every `(x, y) ∈ S`.  On the
 full table, and on every `S` whose rows generate those of the full table
 over `ℤ`, these are the phases `ψ_x = 2πjx/n` of the characters up to
-periods, and every zero is nondegenerate.
+periods, and every zero is nondegenerate.  For `n ≥ 4`, below `n²/8` every
+local minimizer of `V_full` is the phases of a character up to periods and
+every other critical point is a strict saddle, so for almost every start
+below `n²/8` a convergent orbit converges to the phases of a character.
 
 | Module | Contents |
 | --- | --- |
@@ -23,6 +26,9 @@ periods, and every zero is nondegenerate.
 | `PhaseModel.Coordinates` | the gradient of `V_full` and the diagonal of its Hessian in coordinates; the chord inequality |
 | `PhaseModel.Basin` | critical points of `V_full` within `n/8` of `0` with a nonnegative Hessian diagonal are periods |
 | `PhaseModel.Characters` | the same near every character; there the other critical points are strict saddles |
+| `PhaseModel.Orthogonality` | the orthogonality of the characters of `ℤ/n` |
+| `PhaseModel.Fourier` | Parseval's identity and a cubic identity: some character lies within `V_full/n` of every phases |
+| `PhaseModel.Landscape` | below `n²/8`: local minimizers of `V_full` are characters, other critical points strict saddles, and convergent orbits end at characters for almost every start |
 
 The convergence results instantiate `Transformer.SaddleAvoidance` with the
 lattice of periods as translations and the cube as a compact set meeting
@@ -39,3 +45,6 @@ import Transformer.PhaseModel.Lift
 import Transformer.PhaseModel.Coordinates
 import Transformer.PhaseModel.Basin
 import Transformer.PhaseModel.Characters
+import Transformer.PhaseModel.Orthogonality
+import Transformer.PhaseModel.Fourier
+import Transformer.PhaseModel.Landscape

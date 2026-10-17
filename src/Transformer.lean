@@ -131,7 +131,9 @@ relations `ψ_x - ψ_y - ψ_{x-y}` of division in a cyclic group: every limit
 point up to periods is critical, and almost every orbit with a nondegenerate
 limit point converges to a local minimizer; on the full division table, and
 on every set of rows generating it, the zeros are the phases of the
-characters up to periods, all nondegenerate.
+characters up to periods, all nondegenerate; for `n ≥ 4`, below `n²/8` the
+local minimizers of the full table's energy are these zeros and its other
+critical points are strict saddles.
 
 This top-level module re-exports all included formalizations. Per-paper
 subdirectories follow the manuscript sections, splitting larger arguments
