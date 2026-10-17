@@ -193,3 +193,5 @@ import Transformer.Interpolation.Section5_DiracPersistence
 import Transformer.Interpolation.Section5_EmpiricalLimits
 import Transformer.Interpolation.Section5_ClusterRotations
 import Transformer.Interpolation.Section5_IndependentClusters
+import Transformer.Interpolation.Section2_LocalPhases
+import Transformer.Interpolation.Section2_PerceptronControls
