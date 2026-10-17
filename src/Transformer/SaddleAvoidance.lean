@@ -12,7 +12,9 @@ translations spanning the space, such as a function of angles, has a bounded
 gradient and a globally Lipschitz gradient, as these theorems require.  Under
 a translation symmetry `W`, an injective Hessian on `Wᗮ` still gives the
 Łojasiewicz inequality.  A gradient flow with a limit point up to
-translations where the Łojasiewicz inequality holds converges.
+translations where the Łojasiewicz inequality holds converges.  If every
+critical point is a global minimizer or a strict saddle, almost every orbit
+converges to a global minimizer.
 
 | Module | Contents |
 | --- | --- |
@@ -38,6 +40,7 @@ translations where the Łojasiewicz inequality holds converges.
 | `SaddleAvoidance.LocalInequality` | the local gradient inequality of `Normalization` gives the Łojasiewicz inequality; analytic functions in dimension at most one satisfy it at every critical point |
 | `SaddleAvoidance.FlowTrap` | gradient flows starting near a Łojasiewicz point stay near it, with finite length |
 | `SaddleAvoidance.FlowConvergence` | gradient flows with a Łojasiewicz limit point up to translations converge |
+| `SaddleAvoidance.Landscape` | if every critical point is a global minimizer or a strict saddle, almost every orbit converges to a global minimizer; for periodic functions without a hypothesis on the orbits |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
 and `thm:main` of arXiv:1602.04915.  Both rest on the center-stable manifold
@@ -69,3 +72,4 @@ import Transformer.SaddleAvoidance.Invariant
 import Transformer.SaddleAvoidance.LocalInequality
 import Transformer.SaddleAvoidance.FlowTrap
 import Transformer.SaddleAvoidance.FlowConvergence
+import Transformer.SaddleAvoidance.Landscape
