@@ -192,6 +192,7 @@ import Transformer.Perspective.AppendixA_ConeError
 import Transformer.Perspective.AppendixA_ConeGrowth
 import Transformer.Perspective.AppendixA_Cone
 import Transformer.Perspective.AppendixA_StayNear
+import Transformer.Perspective.AppendixA_Flow
 import Transformer.Perspective.AppendixA_Saddle
 import Transformer.Perspective.AppendixB_BetaInterval
 import Transformer.Perspective.AppendixB_Taylor
