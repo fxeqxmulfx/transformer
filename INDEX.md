@@ -8680,22 +8680,22 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`norm_transformerField_le`](src/Transformer/Clusters/Section6_Field.lean#L58) | theorem | proved |
 | [`lipschitzOnWith_Icc_of_hasDerivAt`](src/Transformer/Clusters/Section6_Field.lean#L73) | theorem | proved |
 
-**[Transformer.Clusters.Section6_Kernel](src/Transformer/Clusters/Section6_Kernel.lean)** — 160 lines
+**[Transformer.Clusters.Section6_Kernel](src/Transformer/Clusters/Section6_Kernel.lean)** — 165 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`IsCarriedBy`](src/Transformer/Clusters/Section6_Kernel.lean#L53) | def |  |
 | [`IsCarriedBy.mono`](src/Transformer/Clusters/Section6_Kernel.lean#L57) | theorem | proved |
 | [`isCarriedBy_dirac`](src/Transformer/Clusters/Section6_Kernel.lean#L62) | theorem | proved |
-| [`attentionKernel`](src/Transformer/Clusters/Section6_Kernel.lean#L74) | def |  |
-| [`attentionKernel_dirac_zero`](src/Transformer/Clusters/Section6_Kernel.lean#L81) | theorem | proved |
-| [`ae_mem_closedBall`](src/Transformer/Clusters/Section6_Kernel.lean#L86) | theorem | proved |
-| [`integrable_attentionWeight`](src/Transformer/Clusters/Section6_Kernel.lean#L92) | theorem | proved |
-| [`scoreDual`](src/Transformer/Clusters/Section6_Kernel.lean#L104) | def |  |
-| [`scoreDual_apply`](src/Transformer/Clusters/Section6_Kernel.lean#L108) | theorem | proved |
-| [`continuous_scoreDual`](src/Transformer/Clusters/Section6_Kernel.lean#L113) | theorem | proved |
-| [`norm_scoreDual_le`](src/Transformer/Clusters/Section6_Kernel.lean#L117) | theorem | proved |
-| [`attentionKernel_norm_le`](src/Transformer/Clusters/Section6_Kernel.lean#L132) | theorem | proved |
+| [`attentionKernel`](src/Transformer/Clusters/Section6_Kernel.lean#L79) | def |  |
+| [`attentionKernel_dirac_zero`](src/Transformer/Clusters/Section6_Kernel.lean#L86) | theorem | proved |
+| [`ae_mem_closedBall`](src/Transformer/Clusters/Section6_Kernel.lean#L91) | theorem | proved |
+| [`integrable_attentionWeight`](src/Transformer/Clusters/Section6_Kernel.lean#L97) | theorem | proved |
+| [`scoreDual`](src/Transformer/Clusters/Section6_Kernel.lean#L109) | def |  |
+| [`scoreDual_apply`](src/Transformer/Clusters/Section6_Kernel.lean#L113) | theorem | proved |
+| [`continuous_scoreDual`](src/Transformer/Clusters/Section6_Kernel.lean#L118) | theorem | proved |
+| [`norm_scoreDual_le`](src/Transformer/Clusters/Section6_Kernel.lean#L122) | theorem | proved |
+| [`attentionKernel_norm_le`](src/Transformer/Clusters/Section6_Kernel.lean#L137) | theorem | proved |
 
 **[Transformer.Clusters.Section6_KernelDeriv](src/Transformer/Clusters/Section6_KernelDeriv.lean)** — 188 lines
 

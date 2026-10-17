@@ -58,13 +58,18 @@ theorem IsCarriedBy.mono {μ : Measure (EucSpace d)} {R R' : ℝ} (hμ : IsCarri
     (h : R ≤ R') : IsCarriedBy μ R' :=
   measure_mono_null (Set.compl_subset_compl.2 (Metric.closedBall_subset_closedBall h)) hμ
 
-/-- The Dirac mass at the origin is carried by every ball of positive radius. -/
+/-- The Dirac mass at the origin is carried by every ball of nonnegative radius. -/
 theorem isCarriedBy_dirac (R : ℝ) (hR : 0 ≤ R) :
     IsCarriedBy (Measure.dirac (0 : EucSpace d)) R := by
   have hmem : (0 : EucSpace d) ∈ Metric.closedBall (0 : EucSpace d) R := by
     simpa using hR
   rw [IsCarriedBy, Measure.dirac_apply' _ (measurableSet_closedBall.compl)]
   simp [hmem]
+
+/-- The hypotheses of `IsCarriedBy.mono` are satisfiable: the Dirac mass at the
+origin is carried by the unit ball, and `1 ≤ 2`. -/
+example : IsCarriedBy (Measure.dirac (0 : EucSpace d)) 1 ∧ (1 : ℝ) ≤ 2 :=
+  ⟨isCarriedBy_dirac 1 zero_le_one, one_le_two⟩
 
 /-- **Equation (e:vectorfield), the attention kernel.**
 
