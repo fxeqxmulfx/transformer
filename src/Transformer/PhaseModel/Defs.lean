@@ -12,7 +12,9 @@ For division in a cyclic group of order `n`, with phases indexed by discrete
 logarithms, the relation of the row `x / y = x - y` is
 `ψ_x - ψ_y - ψ_{x-y} ∈ 2πℤ`, with integer row `e_x - e_y - e_{x-y}`
 (`divisionRow`): the relation `χ(a) = χ(b) χ(a/b)` of a character `χ`.  The
-energy of a set `S` of rows is `divisionEnergy S`.
+energy of a set `S` of rows is `divisionEnergy S`.  The character
+`x ↦ e^{2πijx/n}` of `ℤ/n` has the phases `ψ_x = 2πjx/n`
+(`characterPhase`).
 -/
 
 import Transformer.Basic
@@ -42,6 +44,11 @@ def divisionRow {n : ℕ} (p : Fin n × Fin n) : Fin n → ℤ :=
 (`divisionEnergy_apply`). -/
 noncomputable def divisionEnergy {n : ℕ} (S : Finset (Fin n × Fin n)) : EucSpace n → ℝ :=
   phaseEnergy fun p : S => intVec (divisionRow p.1)
+
+/-- **The phases of the character** `x ↦ e^{2πijx/n}` of `ℤ/n`:
+`ψ_x = 2πjx/n` for `x = 0, …, n - 1`. -/
+noncomputable def characterPhase (n : ℕ) (j : ℤ) : EucSpace n :=
+  WithLp.toLp 2 fun x => 2 * π * j * (x : ℕ) / n
 
 /-- The lattice `2πℤⁿ` of periods. -/
 def periods (n : ℕ) : Set (EucSpace n) :=

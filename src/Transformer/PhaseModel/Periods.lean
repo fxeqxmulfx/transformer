@@ -4,7 +4,9 @@
 For an integer row `a`, `⟪a, v⟫ = Σ_i a_i v_i` (`inner_intVec`), a multiple
 of `2π` when `v` is a period (`exists_inner_intVec_eq`), so the periods
 `2πℤⁿ` leave a phase energy with integer rows invariant
-(`phaseEnergy_add_of_mem_periods`).  The periods form a closed set
+(`phaseEnergy_add_of_mem_periods`).  A relation `⟪a, v⟫ ∈ G`, for an additive
+subgroup `G` of `ℝ`, passes from rows to their integer combinations
+(`inner_intVec_mem_of_mem_span`).  The periods form a closed set
 (`isClosed_periods`), and every point has a translate by a period in the
 compact cube `[0, 2π]ⁿ` (`isCompact_cube`, `exists_add_mem_cube`).  The
 inner product with the row of `x / y` is `ψ_x - ψ_y - ψ_{x-y}`
@@ -41,6 +43,28 @@ theorem exists_inner_intVec_eq (a : Fin n → ℤ) {v : EucSpace n} (hv : v ∈ 
 theorem norm_intVec_sq (a : Fin n → ℤ) : ‖intVec a‖ ^ 2 = ∑ i, (a i : ℝ) ^ 2 := by
   rw [← real_inner_self_eq_norm_sq, inner_intVec]
   simp [intVec, sq]
+
+/-- The inner product with an integer row is additive in the row. -/
+theorem inner_intVec_add (a b : Fin n → ℤ) (v : EucSpace n) :
+    ⟪intVec (a + b), v⟫ = ⟪intVec a, v⟫ + ⟪intVec b, v⟫ := by
+  simp only [inner_intVec, Pi.add_apply, Int.cast_add, add_mul, Finset.sum_add_distrib]
+
+/-- The inner product with an integer row is homogeneous in the row. -/
+theorem inner_intVec_zsmul (c : ℤ) (a : Fin n → ℤ) (v : EucSpace n) :
+    ⟪intVec (c • a), v⟫ = c * ⟪intVec a, v⟫ := by
+  simp only [inner_intVec, Pi.smul_apply, smul_eq_mul, Int.cast_mul, mul_assoc, Finset.mul_sum]
+
+/-- **Relations pass to integer combinations of rows**: if `⟪a, v⟫` lies in
+an additive subgroup `G` of `ℝ` for every row `a ∈ A`, it does for every row
+in the `ℤ`-span of `A`. -/
+theorem inner_intVec_mem_of_mem_span (G : AddSubgroup ℝ) {A : Set (Fin n → ℤ)}
+    {v : EucSpace n} (hA : ∀ a ∈ A, ⟪intVec a, v⟫ ∈ G) {a : Fin n → ℤ}
+    (ha : a ∈ Submodule.span ℤ A) : ⟪intVec a, v⟫ ∈ G := by
+  induction ha using Submodule.span_induction with
+  | mem a ha => exact hA a ha
+  | zero => simp [inner_intVec]
+  | add a b _ _ ha hb => rw [inner_intVec_add]; exact G.add_mem ha hb
+  | smul c a _ ha => rw [inner_intVec_zsmul, ← zsmul_eq_mul]; exact G.zsmul_mem ha c
 
 /-- **The periods leave a phase energy with integer rows invariant.** -/
 theorem phaseEnergy_add_of_mem_periods {R : Type*} [Fintype R] (a : R → Fin n → ℤ)
@@ -95,8 +119,10 @@ theorem divisionEnergy_apply (S : Finset (Fin n × Fin n)) (ψ : EucSpace n) :
 
 /-- The hypothesis of `exists_inner_intVec_eq` and
 `phaseEnergy_add_of_mem_periods` holds for the point with every coordinate
-`2π`. -/
-example (n : ℕ) : (WithLp.toLp 2 fun _ : Fin n => 2 * π) ∈ periods n :=
-  fun _ => ⟨1, by simp⟩
+`2π`, and that of `inner_intVec_mem_of_mem_span` for `v = 0` and the trivial
+subgroup. -/
+example (n : ℕ) : (WithLp.toLp 2 fun _ : Fin n => 2 * π) ∈ periods n ∧
+    ∀ A : Set (Fin n → ℤ), ∀ a ∈ A, ⟪intVec a, (0 : EucSpace n)⟫ ∈ (⊥ : AddSubgroup ℝ) :=
+  ⟨fun _ => ⟨1, by simp⟩, fun _ _ _ => by simp⟩
 
 end Transformer.PhaseModel

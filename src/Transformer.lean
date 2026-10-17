@@ -129,7 +129,9 @@ converges to a local minimizer.  `Transformer.PhaseModel` applies this to
 phase energies `Σ_r (1 - cos ⟪m_r, ψ⟫)` with integer rows, such as the
 relations `ψ_x - ψ_y - ψ_{x-y}` of division in a cyclic group: every limit
 point up to periods is critical, and almost every orbit with a nondegenerate
-limit point converges to a local minimizer.
+limit point converges to a local minimizer; on the full division table, and
+on every set of rows generating it, the zeros are the phases of the
+characters up to periods, all nondegenerate.
 
 This top-level module re-exports all included formalizations. Per-paper
 subdirectories follow the manuscript sections, splitting larger arguments
