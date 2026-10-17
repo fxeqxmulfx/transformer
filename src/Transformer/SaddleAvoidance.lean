@@ -9,7 +9,9 @@ point up to translations where the Hessian is injective converges to a local
 minimizer; for a periodic function whose critical points are all
 nondegenerate, almost every orbit does.  A `C²` function invariant under
 translations spanning the space, such as a function of angles, has a bounded
-gradient and a globally Lipschitz gradient, as these theorems require.
+gradient and a globally Lipschitz gradient, as these theorems require.  Under
+a translation symmetry `W`, an injective Hessian on `Wᗮ` still gives the
+Łojasiewicz inequality.
 
 | Module | Contents |
 | --- | --- |
@@ -31,6 +33,7 @@ gradient and a globally Lipschitz gradient, as these theorems require.
 | `SaddleAvoidance.Nondegenerate` | almost every orbit with a nondegenerate limit point converges to a local minimizer |
 | `SaddleAvoidance.LinearFlow` | the linear flow `exp (τ A)`: it solves `J' = A J`, is symmetric for symmetric `A`, and has the eigenvalue `e^μ` for each eigenvalue `μ` of `A` |
 | `SaddleAvoidance.Periodic` | a `C²` function invariant under a spanning set of translations has a bounded gradient, a bounded Hessian and a Lipschitz gradient |
+| `SaddleAvoidance.Invariant` | the Łojasiewicz inequality at critical points nondegenerate transversally to a translation symmetry |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
 and `thm:main` of arXiv:1602.04915.  Both rest on the center-stable manifold
@@ -58,3 +61,4 @@ import Transformer.SaddleAvoidance.Necessary
 import Transformer.SaddleAvoidance.Nondegenerate
 import Transformer.SaddleAvoidance.LinearFlow
 import Transformer.SaddleAvoidance.Periodic
+import Transformer.SaddleAvoidance.Invariant
