@@ -2,7 +2,9 @@
 # Saddle avoidance
 
 Gradient descent with a small enough step almost never converges to a strict
-saddle.
+saddle.  Under the Łojasiewicz inequality at the critical points, almost
+every bounded orbit converges, to a local minimizer when every critical point
+is a local minimizer or a strict saddle.
 
 | Module | Contents |
 | --- | --- |
@@ -13,11 +15,18 @@ saddle.
 | `SaddleAvoidance.Preimage` | preimages of null sets under a local diffeomorphism are null |
 | `SaddleAvoidance.Global` | the starts converging to symmetric unstable fixed points are null |
 | `SaddleAvoidance.GradientDescent` | the starts converging to strict saddles are null |
+| `SaddleAvoidance.Descent` | the descent lemma, sufficient decrease, limits are critical points |
+| `SaddleAvoidance.Lojasiewicz` | the Łojasiewicz inequality bounds a step by a drop |
+| `SaddleAvoidance.Trap` | orbits starting near a Łojasiewicz point stay near it, with finite length |
+| `SaddleAvoidance.Convergence` | orbits with a Łojasiewicz limit point converge |
+| `SaddleAvoidance.Minimizers` | almost every limit is a local minimizer; almost every bounded orbit converges to one |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
 and `thm:main` of arXiv:1602.04915.  Both rest on the center-stable manifold
 theorem; here a cone estimate replaces it, at the price of a symmetric
-derivative at the unstable point, which gradient descent has.
+derivative at the unstable point, which gradient descent has.  The
+convergence follows Theorem 3.2 of Absil, Mahony and Andrews (SIAM J. Optim.
+16, 2005), which arXiv:1602.04915 cites for `prop:rates`.
 -/
 
 import Transformer.SaddleAvoidance.Defs
@@ -27,3 +36,8 @@ import Transformer.SaddleAvoidance.Spectral
 import Transformer.SaddleAvoidance.Preimage
 import Transformer.SaddleAvoidance.Global
 import Transformer.SaddleAvoidance.GradientDescent
+import Transformer.SaddleAvoidance.Descent
+import Transformer.SaddleAvoidance.Lojasiewicz
+import Transformer.SaddleAvoidance.Trap
+import Transformer.SaddleAvoidance.Convergence
+import Transformer.SaddleAvoidance.Minimizers
