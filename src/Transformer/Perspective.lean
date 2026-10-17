@@ -93,7 +93,11 @@ copy of it stay within `‖y_0 − x_0‖ Π_{j<N} L_j + Σ_{m<N} η_m Π_{m<j<N
 each other, with `L_j` the spreading of each step along the two trajectories
 and `η_m` the error it makes (`norm_sub_le_perturbBound`) — a bound that a linear
 stack attains (`norm_sub_linearStack`) and that does not ask whether the steps
-share their weights.
+share their weights.  `CircleSites` and `CircleGaps` begin arXiv:2507.22857v1
+(Polyanskiy, Rigollet, Yao), which answers `o:strictsaddle` on paper: the
+distinct positions of a configuration on `𝕋` in increasing order, the gaps
+between them, and `lemma:twoconsecutive_general`, by which under
+cut-stability at most one gap exceeds `τ` (`not_two_circleGap_gt`).
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -205,6 +209,8 @@ import Transformer.Perspective.Section3_ClusteredSets
 import Transformer.Perspective.AppendixB_BetaInterval
 import Transformer.Perspective.AppendixB_Taylor
 import Transformer.Perspective.StrictSaddle
+import Transformer.Perspective.CircleSites
+import Transformer.Perspective.CircleGaps
 import Transformer.Perspective.InnerAsymptotics
 import Transformer.Perspective.PeanoTaylor
 import Transformer.Perspective.AppendixB_EBeta
