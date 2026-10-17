@@ -8658,14 +8658,14 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`isGoodTripleMulti_smul_one`](src/Transformer/Clusters/Section5_Mix.lean#L131) | theorem | proved |
 | [`rescaledDynamics_smul_one_const`](src/Transformer/Clusters/Section5_Mix.lean#L144) | theorem | proved |
 
-**[Transformer.Clusters.Section6_ContEq](src/Transformer/Clusters/Section6_ContEq.lean)** — 126 lines
+**[Transformer.Clusters.Section6_ContEq](src/Transformer/Clusters/Section6_ContEq.lean)** — 131 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`IsContEqSolution`](src/Transformer/Clusters/Section6_ContEq.lean#L54) | def |  |
-| [`isContEqSolution_dirac`](src/Transformer/Clusters/Section6_ContEq.lean#L71) | theorem | proved |
-| [`wellposed_contEq`](src/Transformer/Clusters/Section6_ContEq.lean#L86) | theorem | sorry |
-| [`contEq_w2_stability`](src/Transformer/Clusters/Section6_ContEq.lean#L107) | theorem | sorry |
+| [`IsContEqSolution`](src/Transformer/Clusters/Section6_ContEq.lean#L59) | def |  |
+| [`isContEqSolution_dirac`](src/Transformer/Clusters/Section6_ContEq.lean#L76) | theorem | proved |
+| [`wellposed_contEq`](src/Transformer/Clusters/Section6_ContEq.lean#L91) | theorem | sorry |
+| [`contEq_w2_stability`](src/Transformer/Clusters/Section6_ContEq.lean#L112) | theorem | sorry |
 
 **[Transformer.Clusters.Section6_Field](src/Transformer/Clusters/Section6_Field.lean)** — 88 lines
 
@@ -39316,8 +39316,8 @@ Everything the build cannot vouch for, in one place.
 | [`idCase_tendsto_zero_or_frontier_generic`](src/Transformer/Clusters/Section12_Generic.lean#L101) | theorem | `Transformer.Clusters.Section12_Generic` |
 | [`multiplicity_dist_tendsto_zero_generic`](src/Transformer/Clusters/Section12_Generic.lean#L124) | theorem | `Transformer.Clusters.Section12_Generic` |
 | [`boolean_tendsto_isBooleanRows_ae`](src/Transformer/Clusters/Section2_LowRank.lean#L124) | theorem | `Transformer.Clusters.Section2_LowRank` |
-| [`wellposed_contEq`](src/Transformer/Clusters/Section6_ContEq.lean#L86) | theorem | `Transformer.Clusters.Section6_ContEq` |
-| [`contEq_w2_stability`](src/Transformer/Clusters/Section6_ContEq.lean#L107) | theorem | `Transformer.Clusters.Section6_ContEq` |
+| [`wellposed_contEq`](src/Transformer/Clusters/Section6_ContEq.lean#L91) | theorem | `Transformer.Clusters.Section6_ContEq` |
+| [`contEq_w2_stability`](src/Transformer/Clusters/Section6_ContEq.lean#L112) | theorem | `Transformer.Clusters.Section6_ContEq` |
 | [`layer_clustering`](src/Transformer/GPTMini/ClusteringTheorem.lean#L96) | theorem | `Transformer.GPTMini.ClusteringTheorem` |
 | [`weak_error_centered`](src/Transformer/Homogenized/GaussianInit.lean#L141) | theorem | `Transformer.Homogenized.GaussianInit` |
 | [`large_beta_logistic_limit`](src/Transformer/Homogenized/LogisticLimit.lean#L90) | theorem | `Transformer.Homogenized.LogisticLimit` |

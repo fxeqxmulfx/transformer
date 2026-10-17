@@ -18,6 +18,11 @@ well-posedness with a `W_2` stability estimate.
   valid almost everywhere is valid everywhere, and absolute continuity then
   comes from the right-hand side being an integral in `t`.
 
+* `C_c^∞(ℝ^d)` is `ContDiff ℝ (⊤ : ℕ∞)` with compact support.  The bare
+  `ContDiff ℝ ⊤` is `C^ω`, analytic, and on `ℝ^d`, `d ≥ 1`, the only analytic
+  function with compact support is `0`: with it the weak identity would test
+  nothing.
+
 * The source's weak identity writes `𝒳[μ_t]` inside the time integral, where
   `s` is the integration variable; that is a typographical slip — the
   vector field must be evaluated at the running time. It is carried as
@@ -55,10 +60,10 @@ def IsContEqSolution (Q K V : ParamMatrix d) (μ₀ : Measure (EucSpace d))
     (μ : ℝ → Measure (EucSpace d)) : Prop :=
   (∀ t : ℝ, IsProbabilityMeasure (μ t)) ∧
     (∀ a b : ℝ, ∃ R : ℝ, 0 < R ∧ ∀ t ∈ Set.Icc a b, IsCarriedBy (μ t) R) ∧
-      (∀ g : EucSpace d → ℝ, ContDiff ℝ ⊤ g → HasCompactSupport g →
+      (∀ g : EucSpace d → ℝ, ContDiff ℝ (⊤ : ℕ∞) g → HasCompactSupport g →
         Continuous fun t => ∫ x, g x ∂(μ t)) ∧
       μ 0 = μ₀ ∧
-      ∀ g : EucSpace d → ℝ, ContDiff ℝ ⊤ g → HasCompactSupport g → ∀ t : ℝ,
+      ∀ g : EucSpace d → ℝ, ContDiff ℝ (⊤ : ℕ∞) g → HasCompactSupport g → ∀ t : ℝ,
         ∫ x, g x ∂(μ t) = (∫ x, g x ∂μ₀) +
           ∫ s in (0 : ℝ)..t,
             ∫ x, inner (𝕜 := ℝ) (gradient g x) (attentionKernel Q K V (μ s) x) ∂(μ s)
