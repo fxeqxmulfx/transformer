@@ -121,6 +121,12 @@ critical point of `𝖤_β` on `(𝕊^{d-1})^n` with two distinct tokens is a st
 saddle (`exists_secondDerivEBetaAt_pos_of_nonTrivial`), and the synchronized
 configurations are global maxima (`thm:spheres`,
 `synchronized_of_secondDerivEBetaAt_nonpos`).
+`CircleAngles`, `CircleUniform` and `CircleNull` bridge the angles of §7.1
+and the circle `𝕊¹ ⊂ ℝ²`: solutions of `eq:onangles` are solutions of `USA`
+on `(𝕊¹)ⁿ` (`usa_anglesToSphere`), every uniform tuple law on the circle is
+the image of the normalized Lebesgue measure on `[0, 2π)ⁿ`
+(`eq_map_angleCube`), and a set whose preimage in angles is Lebesgue-null is
+null for it (`measure_eq_zero_of_volume_preimage`).
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -245,6 +251,9 @@ import Transformer.Perspective.SyncKernelQuartic
 import Transformer.Perspective.SyncKernelSign
 import Transformer.Perspective.SyncKernelRegions
 import Transformer.Perspective.SyncKernelIntegral
+import Transformer.Perspective.CircleAngles
+import Transformer.Perspective.CircleUniform
+import Transformer.Perspective.CircleNull
 import Transformer.Perspective.InnerAsymptotics
 import Transformer.Perspective.PeanoTaylor
 import Transformer.Perspective.AppendixB_EBeta

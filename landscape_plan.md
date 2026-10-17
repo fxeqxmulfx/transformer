@@ -66,6 +66,7 @@ Constraints:
 | C, spheres for `d ≥ 3` (M3.3) | `Perspective.exists_secondDerivEBetaAt_pos_of_nonTrivial`: for `d ≥ 3` and `β > 0`, every critical point of `𝖤_β` with two distinct tokens has a positive second derivative along a normalized line `s ↦ (x_i + s v_i)/‖x_i + s v_i‖`; `synchronized_of_secondDerivEBetaAt_nonpos`, `thm:spheres` of arXiv:2405.18273; `secondDerivEBetaAt_eq_two_mul_hessQuad`, the `key` of `hessian_at_critical_intrinsic` | proved |
 | C, criterion on the circle (M3.1c) | `Perspective.taumax_sharp`: for a `2π`-periodic `C³` kernel with `f' < 0` off `[-τ, τ]`, a stationary (C1) configuration that is cut-stable (C2) for every `S` and not synchronized has `4 (1/τ + 1/τ_max) f'(0) ≤ ∫_{-π}^{π} \|f'''\|₊` (`taumax`, `lemma:taumax`); `synchronized_of_circleGapMax_lt` (`cor:main`) and `synchronized_of_integral_le` (`thm:main`), with `f'(0) > 0` added (`zero_kernel_counterexample`) | proved |
 | A, gradient descent from a compact sublevel set (M1.6) | `SaddleAvoidance.exists_pos_measure_sublevel_tendsto_strictSaddle_eq_zero`: for `f` of class `C²` with `{f ≤ c}` compact, every step size below some `η₀ > 0` keeps gradient descent in `{f ≤ c}` (`mapsTo_gradientStep_sublevel`), and the starts in `{f ≤ c}` converging to a strict saddle form a null set; `measure_inter_tendsto_strictSaddle_eq_zero` on any forward-invariant set with a Hessian bound there, from `measure_inter_tendsto_symmetricUnstable_eq_zero` | proved |
+| D, angles and the circle (M5.1) | `Perspective.usa_anglesToSphere`: solutions of `eq:onangles` give solutions of USA on `SphereTuple 2 n`; `eq_map_angleCube`: every `UniformTuple 2 n P` is the image of the normalized Lebesgue measure on `[0, 2π)ⁿ`; `measure_eq_zero_of_volume_preimage`: a set whose preimage in angles is Lebesgue-null is `P`-null, measurable or not, so `ae_of_ae_volume` carries an almost-everywhere statement in angles to `P`, and `measure_image_eq_zero` takes a `2π`-periodic null set to a `P`-null set | proved |
 
 ## Milestones
 
@@ -262,7 +263,7 @@ Tasks: M5.1 #23, M5.2 #24, M5.3 #25, M5.4 #26.
 
 | Item | Deliverable | Depends on |
 | --- | --- | --- |
-| M5.1 | **Angles and the circle.** `θ ↦ (cos θ_i, sin θ_i)` carries `angularUSA` to USA on `SphereTuple 2 n`. `UniformTuple 2 n P` is the image of normalized Lebesgue measure on `[0, 2π)ⁿ`; the uniform law is unique (`57993faf`). A `2π`-periodic Lebesgue-null set therefore maps to a `P`-null set. | — |
+| M5.1 | **Angles and the circle, done.** `θ ↦ (cos θ_i, sin θ_i)` carries `angularUSA` to USA on `SphereTuple 2 n`. `UniformTuple 2 n P` is the image of normalized Lebesgue measure on `[0, 2π)ⁿ`; the uniform law is unique (`57993faf`). A `2π`-periodic Lebesgue-null set therefore maps to a `P`-null set. | — |
 | M5.2 | **SA in angles.** SA in angles is a gradient flow in the metric `diag(Z_i)`. | M1.5 |
 | M5.3 | **Spheres for `d ≥ 3`, without manifolds.** On `(ℝ^d∖0)^n`, the field `F_i(x) = ‖x_i‖² ∇_i(𝖤_β ∘ normalize)(x)` has the sphere flow on every slice. Radially invariant Lebesgue-null sets correspond to uniform-null sets (`Measure.measurePreserving_homeomorphUnitSphereProd`). | M1.5 |
 | M5.4 | **Research: grokking network to phase model.** No Lean until a statement is fixed on paper. | — |
