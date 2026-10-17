@@ -23,7 +23,9 @@ experiments in `experiments/`. `./make.py` runs every task.
   hour another agent may take it over: claim again to renew, `release ID` to give up.
 - Each agent works in its own worktree, made when it starts and removed with its
   branch when it stops: `git worktree add -b <name> .claude/worktrees/<name> main`.
-  `agent-kanban` and `dt` find their files from there.
+  One that trains nothing leaves out `experiments/` (43 MB instead of 1.3 GB): add
+  `--no-checkout`, then run `git sparse-checkout set --no-cone '/*' '!/experiments/'`
+  and `git checkout` in it. `agent-kanban` and `dt` find their files from there.
 - A worktree's ignored files die with it: link its `papers`, `.lake/packages` and
   the `runs` of every experiment it trains to the root's, and `cp -a` the root's
   `.lake/build` (10 GB, a minute). `lake update`, `lake clean`, `lake exe cache` and
