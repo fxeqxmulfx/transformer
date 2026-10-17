@@ -59,6 +59,7 @@ Constraints:
 | B, phase model (M3.4a) | `PhaseModel.injective_fderiv_gradient_divisionEnergy_univ` and `isLojasiewiczAt_divisionEnergy_univ`: the Hessian of `V_full` is injective at the characters up to periods, and Łojasiewicz holds there with exponent `1/2`; `isLojasiewiczAt_divisionEnergy_of_mem_span` at every zero of a generating `V_S` | proved |
 | B, under a translation symmetry (M2.1) | `SaddleAvoidance.isLojasiewiczAt_of_invariant`: if `f` is invariant under the translations by a subspace `W` and its Hessian at a critical point is injective on `Wᗮ`, Łojasiewicz holds there with exponent `1/2`; the Hessian of an invariant `f` maps into `Wᗮ` (`mem_orthogonal_of_hasFDerivAt_gradient`) | proved |
 | B, glue to Normalization (M2.3) | `SaddleAvoidance.exists_isLojasiewiczAt_of_local_gradient_inequality`: the local inequality in the form of `hlocal` of `lojasiewicz_modulated_of_local_gradient_inequality` gives `IsLojasiewiczAt` with an exponent `0 ≤ a < 1`, the form of `hloj`; `exists_isLojasiewiczAt_of_analyticAt_low_dimension` at every critical point of an analytic function on `EucSpace N`, `N ≤ 1` | proved |
+| C, reduction on the circle (M3.1a) | `Perspective.sum_sin_mul_exp_eq_zero_of_isCritical`: a critical point of `𝖤_β` is stationary (C1) for the kernel `sin x · e^{β (cos x - 1)}`; `cutStable_of_torusHessianNonPos`: a point with no positive second derivative is cut-stable (C2) for every `S`, so a negative cut sum makes a strict saddle (`isStrictSaddleTorusEnergy_of_cut_neg`); synchronized angles are global maxima (`isGlobalMaxTorusEnergy_of_synchronized`) | proved |
 
 ## Milestones
 
@@ -226,7 +227,7 @@ can close without M2.4.
 
 | Item | Deliverable | Depends on |
 | --- | --- | --- |
-| M3.1a | **Reduction.** Criticality (`IsCriticalTorusEnergy`) gives (C1) through `hasDerivAt_torusEnergy`. A point with no positive second derivative satisfies `TorusHessianNonPos`, so `taylor3_inequality` gives (C2) for every `S`. Synchronized angles are global maxima. | — |
+| M3.1a | **Reduction, done.** Criticality (`IsCriticalTorusEnergy`) gives (C1) through `hasDerivAt_torusEnergy`. A point with no positive second derivative satisfies `TorusHessianNonPos`, so `taylor3_inequality` gives (C2) for every `S`. Synchronized angles are global maxima. | — |
 | M3.1b | **Gaps.** Order the distinct positions as `θ_1 < ⋯ < θ_K` in `[0, 2π)` and take the gaps `Δ_k`. If (C2) holds for every `S` and `f' < 0` off `[-τ, τ]`, at most one gap exceeds `τ` (`lemma:twoconsecutive_general`). | — |
 | M3.1c | **The criterion for a general `f`.** For `f` `2π`-periodic, `C³`, with `f'(0) > 0`: first `lemma:taumax`, then `cor:main` and `thm:main`. A stationary configuration that is cut-stable for every `S` is synchronized. | M3.1b |
 | M3.1d | **The kernel `f_β`.** `f_β' < 0` off `[-τ_β, τ_β]`, where `τ_β = τ_β_star 2 β`. The sign regions of `f_β'''` come from the quartic `p(cos x)` (`lemma:positiveregion`, `lemma:positiveregion2`). `∫ \|f_β'''\|₊` is expressed through `f_β''` at the sign changes. | — |

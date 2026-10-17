@@ -15,10 +15,12 @@ is where unproved is recorded, so it is stated here as a theorem with
 The vocabulary is Appendix B's: `Perspective.SecondDerivTorusEnergy` is the
 second derivative along a straight line of `𝕋^n`, and
 `Perspective.TorusHessianNonPos` its non-positivity, which is what a critical
-point that is *not* a strict saddle satisfies.
+point that is *not* a strict saddle satisfies.  The predicates of the
+statement, and its reduction to the stationary (C1), cut-stable (C2)
+configurations of arXiv:2507.22857v1, are in `Perspective.CircleCritical`.
 -/
 
-import Transformer.Perspective.AppendixB_Taylor
+import Transformer.Perspective.CircleCritical
 
 open scoped BigOperators
 open Real
@@ -27,40 +29,6 @@ namespace Transformer
 namespace Perspective
 
 variable (n : ℕ)
-
-/-- *A critical point of `𝖤_β` on `𝕋^n`*: every partial derivative vanishes.
-
-The partial derivative is the one `hasDerivAt_torusEnergy` computes, so this
-says `Σ_j e^{β cos(θ_j - θ_i)} sin(θ_j - θ_i) = 0` for every `i`, written as
-a `HasDerivAt` so that no `deriv` of a non-differentiable function can slip
-in.
-
-Source: arXiv:2312.10794v5, §7, `o:strictsaddle`. -/
-def IsCriticalTorusEnergy (β : ℝ) (θ : Angles n) : Prop :=
-  ∀ i : Idx n,
-    HasDerivAt (fun x : ℝ => torusEnergy n β (Function.update θ i x)) 0 (θ i)
-
-/-- *A global maximum of `𝖤_β` on `𝕋^n`.*  The dynamics `eq:onangles` is a
-gradient **ascent** (`angularUSA_is_gradient_flow`), so the maxima are the
-attractors and the open problem is about everything else. -/
-def IsGlobalMaxTorusEnergy (β : ℝ) (θ : Angles n) : Prop :=
-  ∀ φ : Angles n, torusEnergy n β φ ≤ torusEnergy n β θ
-
-/-- *A strict saddle of `𝖤_β`*: some straight line through `θ` sees a
-strictly positive second derivative, so the ascent leaves along it.
-
-This is the negation of `TorusHessianNonPos` sharpened from `¬ (c ≤ 0)` to an
-exhibited direction, which is what "strict" asks for. -/
-def IsStrictSaddleTorusEnergy (β : ℝ) (θ : Angles n) : Prop :=
-  ∃ (v : Angles n) (c : ℝ), SecondDerivTorusEnergy n β θ v c ∧ 0 < c
-
-/-- A strict saddle has no non-positive Hessian, which is the form Appendix B
-uses its hypothesis in: `taylor2_inequality` and `taylor3_inequality` say
-nothing at a strict saddle. -/
-theorem not_torusHessianNonPos_of_strictSaddle (β : ℝ) (θ : Angles n)
-    (h : IsStrictSaddleTorusEnergy n β θ) : ¬ TorusHessianNonPos n β θ := by
-  obtain ⟨v, c, hc, hcpos⟩ := h
-  exact fun hhess => absurd (hhess v c hc) (not_le.mpr hcpos)
 
 /-- **Open Problem (o:strictsaddle).** *Non-maximal critical points are
 strict saddles.*

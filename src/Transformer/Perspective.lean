@@ -98,6 +98,10 @@ share their weights.  `CircleSites` and `CircleGaps` begin arXiv:2507.22857v1
 distinct positions of a configuration on `𝕋` in increasing order, the gaps
 between them, and `lemma:twoconsecutive_general`, by which under
 cut-stability at most one gap exceeds `τ` (`not_two_circleGap_gt`).
+`CircleCritical` holds the predicates of `o:strictsaddle` and takes `𝖤_β` to
+that paper: a critical point is stationary (C1), a point that is not a strict
+saddle is cut-stable (C2) for every set (`cutStable_of_torusHessianNonPos`),
+and synchronized angles are global maxima.
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -208,6 +212,7 @@ import Transformer.Perspective.AppendixA_Saddle
 import Transformer.Perspective.Section3_ClusteredSets
 import Transformer.Perspective.AppendixB_BetaInterval
 import Transformer.Perspective.AppendixB_Taylor
+import Transformer.Perspective.CircleCritical
 import Transformer.Perspective.StrictSaddle
 import Transformer.Perspective.CircleSites
 import Transformer.Perspective.CircleGaps
