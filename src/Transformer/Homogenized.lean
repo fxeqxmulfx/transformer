@@ -11,6 +11,8 @@ import Transformer.Homogenized.OverlapObservable
 import Transformer.Homogenized.MvGenerator
 import Transformer.Homogenized.McKeanVlasov
 import Transformer.Homogenized.WellPosed
+import Transformer.Homogenized.Section4_RevealingFiltration
+import Transformer.Homogenized.Section4_WellPosedRefutation
 import Transformer.Homogenized.UniformLaw
 import Transformer.Homogenized.SlowMotion
 import Transformer.Homogenized.CoupledPair

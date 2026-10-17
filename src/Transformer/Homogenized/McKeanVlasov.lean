@@ -15,13 +15,12 @@ so neither display can be transcribed.  Each is written instead as the
 martingale problem it is equivalent to: the compensated process is a
 martingale, and its square minus `∫_0^t∫_Θ (…)² ρ*(dθ) ds` — the quadratic
 variation that a cylindrical noise on `L²(ρ*)` produces — is a martingale too.
-Those two conditions, over all test functions, pin the law of a solution; what
-they do not record, and what the source's displays do, is *which* Wiener
-process drives the equation.  That is why the well-posedness of
-`thm:PoC_wellposedness` can only be uniqueness in law here, and not the
-pathwise uniqueness the source's proof establishes: two solutions of a
-martingale problem on one probability space may be driven by two different
-Wiener processes, and then they do not agree pathwise.
+What those two conditions do not record, and what the source's displays do, is
+*which* Wiener process drives the equation, and so which filtration
+`𝒢 = (ℱ_t^W)` the conditional law `μ(t)` is taken given.  The formal `𝒢` is
+any filtration below `ℱ`, and the uniqueness that `thm:PoC_wellposedness`
+asserts fails for it even in law: a `𝒢` that learns `x_0` gives a second
+solution (`Section4_RevealingFiltration`, `Section4_WellPosedRefutation`).
 -/
 
 import Transformer.Homogenized.MvGenerator
@@ -107,7 +106,8 @@ martingale problem for the generator `𝖫_{μ(t)}`, for the reason given in the
 module docstring.  The source's `x_0` is `ℱ_0`-measurable, independent of `W`,
 with law `μ_0`; independence of `W` is what makes `Law(x_0 | ℱ_0^W) = μ_0`
 deterministic, and it is that conclusion — `initLaw` — that is carried, since
-`W` itself is not available to be independent of.
+`W` itself is not available to be independent of.  Independence is thereby
+kept at time `0` only: a later `𝒢_t` may learn `x_0` (`isMcKeanVlasovSolution_reveal`).
 
 Source: arXiv:2604.01978v1, `def:nonlinear_SDE_common`, `eq:non_linear_SDE_common`. -/
 structure IsMcKeanVlasovSolution {d : ℕ} (β T : ℝ) (ρ : Measure (HeadParam d))
