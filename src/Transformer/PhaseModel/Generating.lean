@@ -7,7 +7,12 @@ table, so the energy `V_S` has the zeros of `V_full`: the phases of the
 characters up to periods (`divisionEnergy_eq_zero_iff_of_mem_span`).  Then
 only `0` is orthogonal to every row of `S`
 (`eq_zero_of_forall_inner_divisionRow_of_mem_span`), so every zero of `V_S`
-is nondegenerate (`injective_fderiv_gradient_divisionEnergy_of_mem_span`).
+is nondegenerate (`injective_fderiv_gradient_divisionEnergy_of_mem_span`),
+and the Łojasiewicz inequality holds there with exponent `1/2`
+(`isLojasiewiczAt_divisionEnergy_of_mem_span`).  In particular the Hessian of
+`V_full` is injective at the phases of every character up to periods
+(`injective_fderiv_gradient_divisionEnergy_univ`), where the Łojasiewicz
+inequality holds with exponent `1/2` (`isLojasiewiczAt_divisionEnergy_univ`).
 When only `0` is orthogonal to every row of `S`, for `0 < η` with
 `9 |S| η < 1`, an orbit of gradient descent on `V_S` with the phases of a
 character as a limit point up to periods converges to them up to a period
@@ -63,6 +68,46 @@ theorem injective_fderiv_gradient_divisionEnergy_of_mem_span
   injective_fderiv_gradient_of_phaseEnergy_eq_zero _ hz fun h hh =>
     eq_zero_of_forall_inner_divisionRow_of_mem_span hS h fun p hp => hh ⟨p, hp⟩
 
+/-- **When the rows of `S` generate those of the full division table, the
+Łojasiewicz inequality holds with exponent `1/2` at every zero of `V_S`**: a
+zero is a critical point where the Hessian is injective, so
+`SaddleAvoidance.isLojasiewiczAt_of_injective` applies. -/
+theorem isLojasiewiczAt_divisionEnergy_of_mem_span
+    (hS : ∀ p, divisionRow p ∈ Submodule.span ℤ (divisionRow '' (S : Set (Fin n × Fin n))))
+    {z : EucSpace n} (hz : divisionEnergy S z = 0) :
+    SaddleAvoidance.IsLojasiewiczAt (divisionEnergy S) z (1 / 2) :=
+  SaddleAvoidance.isLojasiewiczAt_of_injective
+    ((contDiff_phaseEnergy _ (k := 1)).differentiable one_ne_zero)
+    (hasFDerivAt_gradient_phaseEnergy _ z).differentiableAt.hasFDerivAt
+    (gradient_eq_zero_of_phaseEnergy_eq_zero _ hz)
+    (injective_fderiv_gradient_divisionEnergy_of_mem_span hS hz)
+
+/-- The rows of the full division table generate themselves. -/
+theorem divisionRow_mem_span_univ (p : Fin n × Fin n) :
+    divisionRow p ∈ Submodule.span ℤ
+      (divisionRow '' ((Finset.univ : Finset (Fin n × Fin n)) : Set (Fin n × Fin n))) :=
+  Submodule.subset_span ⟨p, Finset.mem_coe.2 (Finset.mem_univ p), rfl⟩
+
+/-- **The Hessian of `V_full` at the phases of a character is injective**, up
+to periods: if `ψ - (2πjx/n)_x ∈ 2πℤⁿ`, then `ψ` is a zero of `V_full`
+(`divisionEnergy_univ_eq_zero_iff`), and the rows `e_x - e_y - e_{x-y}` of the
+full table span `ℝⁿ` (`eq_zero_of_forall_inner_divisionRow`). -/
+theorem injective_fderiv_gradient_divisionEnergy_univ {ψ : EucSpace n} {j : ℤ}
+    (hψ : ψ - characterPhase n j ∈ periods n) :
+    Function.Injective
+      (fderiv ℝ (gradient (divisionEnergy (Finset.univ : Finset (Fin n × Fin n)))) ψ) :=
+  injective_fderiv_gradient_divisionEnergy_of_mem_span divisionRow_mem_span_univ
+    ((divisionEnergy_univ_eq_zero_iff ψ).2 ⟨j, hψ⟩)
+
+/-- **The Łojasiewicz inequality holds with exponent `1/2` for `V_full` at the
+phases of a character**, up to periods. -/
+theorem isLojasiewiczAt_divisionEnergy_univ {ψ : EucSpace n} {j : ℤ}
+    (hψ : ψ - characterPhase n j ∈ periods n) :
+    SaddleAvoidance.IsLojasiewiczAt (divisionEnergy (Finset.univ : Finset (Fin n × Fin n))) ψ
+      (1 / 2) :=
+  isLojasiewiczAt_divisionEnergy_of_mem_span divisionRow_mem_span_univ
+    ((divisionEnergy_univ_eq_zero_iff ψ).2 ⟨j, hψ⟩)
+
 /-- **An orbit with the phases of a character as a limit point converges to
 them** up to a period, for gradient descent on `V_S` with `0 < η` and
 `9 |S| η < 1`, when only `0` is orthogonal to every row of `S` (as when the
@@ -100,7 +145,7 @@ example (n : ℕ) (j : ℤ) : let S := (Finset.univ : Finset (Fin n × Fin n))
   have h0 : gradientStep (divisionEnergy S) η (characterPhase n j) = characterPhase n j := by
     simp [SaddleAvoidance.gradientStep, hg]
   have hcard : (S.card : ℝ) = n ^ 2 := by simp [S, sq]
-  refine ⟨fun p => Submodule.subset_span ⟨p, Finset.mem_coe.2 (Finset.mem_univ p), rfl⟩,
+  refine ⟨divisionRow_mem_span_univ,
     fun h hh => eq_zero_of_forall_inner_divisionRow h fun p => hh p (Finset.mem_univ p), hV,
     by simp only [η]; positivity, ?_, fun ε hε => ?_⟩
   · rw [hcard]
@@ -110,5 +155,12 @@ example (n : ℕ) (j : ℤ) : let S := (Finset.univ : Finset (Fin n × Fin n))
   · refine Frequently.of_forall fun k => ⟨0, fun _ => ⟨0, by simp⟩, ?_⟩
     rw [Function.iterate_fixed h0, add_zero, sub_self, norm_zero]
     exact hε
+
+/-- The hypothesis of `injective_fderiv_gradient_divisionEnergy_univ` and
+`isLojasiewiczAt_divisionEnergy_univ` holds for the phases of every character
+translated by the period `(2π, …, 2π)`. -/
+example (n : ℕ) (j : ℤ) :
+    (characterPhase n j + WithLp.toLp 2 fun _ => 2 * π) - characterPhase n j ∈ periods n :=
+  fun _ => ⟨1, by simp⟩
 
 end Transformer.PhaseModel

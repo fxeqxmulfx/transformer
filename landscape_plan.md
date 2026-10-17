@@ -56,6 +56,7 @@ Constraints:
 | C, `𝖤_0` on spheres | `Perspective.yury_lemma` | proved |
 | p:beta0 | `Perspective.almost_sure_consensus_beta0`, via an explicit inequality for `𝖤_0` and a cone argument at the saddles | proved |
 | Bounds, periodic energies (M1.4) | `SaddleAvoidance.exists_lipschitzWith_gradient_of_periodic`: a `C²` function invariant under a set of translations spanning `E` has a bounded gradient, a bounded Hessian and a globally Lipschitz gradient; `exists_lipschitzWith_gradient_of_isCompact` for a compact set of representatives | proved |
+| B, phase model (M3.4a) | `PhaseModel.injective_fderiv_gradient_divisionEnergy_univ` and `isLojasiewiczAt_divisionEnergy_univ`: the Hessian of `V_full` is injective at the characters up to periods, and Łojasiewicz holds there with exponent `1/2`; `isLojasiewiczAt_divisionEnergy_of_mem_span` at every zero of a generating `V_S` | proved |
 
 ## Milestones
 
@@ -231,7 +232,7 @@ can close without M2.4.
 | M3.1f | **`0 < β < 1`:** the same bound (`lemma:beta_0.75`, `lemma:beta_0.5`, `lemma:beta_0.33`, `lemma:beta_final`). Fallback for `0 < β ≤ 1`: `thm:taylorphi` of arXiv:2405.18273, which needs the second derivative along every direction, not only along `1_S`. | M3.1d |
 | M3.1 | **`Perspective.strict_saddle`.** By M3.1a, a non-maximal critical point is not synchronized. M3.1c with M3.1e–f then gives an `S` with `Σ_{i ∈ S, j ∉ S} g_β(θ_i - θ_j) < 0`. `secondDeriv_torusEnergy_block` turns `1_S` into a direction of positive second derivative. Rewrite the docstring: the survey leaves the problem open, and arXiv:2507.22857 answers it. | M3.1a, M3.1c, M3.1e, M3.1f |
 | M3.3 | **`d ≥ 3`.** The non-synchronized critical points of `𝖤_β` on `(𝕊^{d-1})^n` are strict saddles, as a new theorem with its own name (arXiv:2405.18273, App. C). Export the `key` of `hessian_at_critical_intrinsic` (second derivative `= 2 · hessQuad X v`). Sum `hessQuad X (Proj_X(e_k 𝟙ᵀ))` over an orthonormal basis `e_k`. The curve `s ↦ (x_i + s v_i)/‖x_i + s v_i‖` has velocity `v`. | — |
-| M3.4a | **Characters are nondegenerate.** The Hessian of `V_full` at a character is injective, since the rows `e_x - e_y - e_{x-y}` span `ℝⁿ`. This gives Łojasiewicz with exponent `1/2` at the characters. | — |
+| M3.4a | **Characters are nondegenerate, done.** The Hessian of `V_full` at a character is injective, since the rows `e_x - e_y - e_{x-y}` span `ℝⁿ`. This gives Łojasiewicz with exponent `1/2` at the characters. | — |
 | M3.4b | **Research: `V_full` above `n²/8`.** First a lab search for local minimizers with `V ≥ n²/8`, `n ≤ 30`; a hypothesis until proved. | lab |
 | M3.4c | **Research: partial tables `V_S`.** The analogy is Kuramoto on Erdős–Rényi graphs just above connectivity (abdalla2022expander, cited in arXiv:2312.10794v5 §6). A comment in that survey's TeX source (line 908) says the reference proves only that a convergent trajectory ends synchronized. So this is an analogy and a hypothesis. | — |
 | M3.4d | **Finite abelian groups.** Generalize `Fourier` and `Landscape` from `ℤ/n`. | — |

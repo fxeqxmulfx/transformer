@@ -21,7 +21,7 @@ below `n²/8` a convergent orbit converges to the phases of a character.
 | `PhaseModel.Periods` | integer rows and periods; translates into the cube; the energy of division |
 | `PhaseModel.Descent` | limit points are critical; convergence from nondegenerate limit points; almost every orbit converges to a local minimizer when every critical point is nondegenerate |
 | `PhaseModel.Division` | the full division table: only `0` is orthogonal to every row; the characters are zeros of every `V_S` and, up to periods, the only zeros of `V_full`; the norms of the rows |
-| `PhaseModel.Generating` | sets of rows generating the full table over `ℤ`: the zeros of `V_S` are the characters up to periods, all nondegenerate; convergence from a character as a limit point |
+| `PhaseModel.Generating` | sets of rows generating the full table over `ℤ`: the zeros of `V_S` are the characters up to periods, all nondegenerate, with the Łojasiewicz inequality of exponent `1/2`; convergence from a character as a limit point |
 | `PhaseModel.Lift` | critical points near a zero: relations within `π` of `2πℤ` vanish at a critical point, and within `π` inclusive at a local minimizer |
 | `PhaseModel.Coordinates` | the gradient of `V_full` and the diagonal of its Hessian in coordinates; the chord inequality |
 | `PhaseModel.Basin` | critical points of `V_full` within `n/8` of `0` with a nonnegative Hessian diagonal are periods |
