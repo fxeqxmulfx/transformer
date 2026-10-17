@@ -134,6 +134,7 @@ import Transformer.Wasserstein
 import Transformer.GlobalFlow
 import Transformer.SmoothApprox
 import Transformer.ContinuityEq
+import Transformer.Wiener
 import Transformer.ALM
 import Transformer.RASP
 import Transformer.RASPL
