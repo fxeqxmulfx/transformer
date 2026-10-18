@@ -271,7 +271,80 @@ Tasks: M5.1 #23, M5.2 #24, M5.3 #25, M5.4 #26.
 | M5.1 | **Angles and the circle, done.** `θ ↦ (cos θ_i, sin θ_i)` carries `angularUSA` to USA on `SphereTuple 2 n`. `UniformTuple 2 n P` is the image of normalized Lebesgue measure on `[0, 2π)ⁿ`; the uniform law is unique (`57993faf`). A `2π`-periodic Lebesgue-null set therefore maps to a `P`-null set. | — |
 | M5.2 | **SA in angles.** SA in angles is a gradient flow in the metric `diag(Z_i)`. | M1.5 |
 | M5.3 | **Spheres for `d ≥ 3`, without manifolds.** On `(ℝ^d∖0)^n`, the field `F_i(x) = ‖x_i‖² ∇_i(𝖤_β ∘ normalize)(x)` has the sphere flow on every slice. Radially invariant Lebesgue-null sets correspond to uniform-null sets (`Measure.measurePreserving_homeomorphUnitSphereProd`). | M1.5 |
-| M5.4 | **Research: grokking network to phase model.** No Lean until a statement is fixed on paper. | — |
+| M5.4 | **Research: grokking network to phase model, stated.** The clock network below reduces a phase code of Rotate90 Dense to `V_S`: exactly, one phase model per plane, with a linear readout; with the softmax, to `V_S + W_S` at first order in the logit scale. A hypothesis until proved in Lean. | — |
+
+#### M5.4, stated: the clock network
+
+**Hypothesis until proved in Lean.** Items 1–4 below are exact statements about the
+clock network, argued on paper and not yet in Lean. The claim that the grokking
+network trains like the clock network is the content of the hypotheses (H0)–(H4).
+Its measured training does not satisfy them (last paragraph).
+
+*The network.* Rotate90 Dense is the `a·b⁻¹ mod 97` network of the grokking_abmod
+lab (`docs/rotate90-mathematics.md` there, §1.1 and §2.3; its §8.4 introduces `V_S`
+as a model of the network's code). It computes `x0 = E_a + J E_b`,
+`x1 = x0 + ReLU(N(x0) A)` and `logit_q = ⟪N(x1), E_q⟫`, and it is trained by AdamW
+with weight decay on the cross-entropy. Plane `p` of `ℝ^W` is read as `ℂ`, so `J`
+multiplies each plane by `i`. The nonzero residues are indexed by their discrete
+logarithms `x ∈ ℤ/n`, `n = 96`. The row `(a, b)` is then the pair `(x, y)` of
+`divisionRow`, with answer `x - y`.
+
+*Hypotheses.*
+
+- (H0) Only the rows and answers with nonzero residues: the token `0` is dropped.
+- (H1) A phase code: plane `p` of `E_x` is `c_p e^{iψᵖ_x}`, with `c_p ≠ 0` fixed and
+  the phases `ψᵖ ∈ ℝⁿ` free.
+- (H2) A product block: on the row `(x, y)`, plane `p` of `N(x1)` is
+  `r_p c_p e^{i(ψᵖ_x - ψᵖ_y)}`, with `r_p > 0` fixed.
+- (H3) No competition between answers: a row costs `κ - logit_{x-y}`, with
+  `κ = Σ_p κ_p`, in place of `log Σ_z e^{logit_z} - logit_{x-y}`.
+- (H4) Gradient descent or the gradient flow on the phases, in place of AdamW with
+  batches and decay.
+
+Under (H0)–(H2) the logits are the clock readout
+`logit_z(x, y) = Σ_p κ_p cos(ψᵖ_z - ψᵖ_x + ψᵖ_y)` with `κ_p = r_p |c_p|²`.
+
+1. **Linear readout.** Under (H3) the training loss is `Σ_p κ_p V_S(ψᵖ)`, with
+   `V_S = divisionEnergy S`: one phase model per plane, uncoupled. Under (H4),
+   gradient descent of step `η` on `ψᵖ` is gradient descent on `V_S` of step `η κ_p`
+   (`gradientStep`), so `PhaseModel` applies plane by plane. For instance, on the
+   full table with `n ≥ 4` and `9 n² η κ_p < 1`, `ae_tendsto_characterPhase` applies:
+   from almost every start below `n²/8`, a convergent orbit ends at a character up
+   to periods.
+2. **Cartesian parameters.** Take `Eᵖ ∈ (ℂ∖0)ⁿ` as parameters and put `Eᵖ_x / |Eᵖ_x|`
+   in place of `e^{iψᵖ_x}`. The loss is then `κ_p V_S(arg Eᵖ)`. It does not change
+   when any `Eᵖ_x` is scaled by a positive number, so its gradient is tangent to the
+   circles. The gradient flow therefore keeps every radius `ρ_x = |Eᵖ_x|`, and its
+   angles solve `ψ̇_x = -(κ_p / ρ_x²) ∂_x V_S(ψ)`. In `φ_x = ρ_x ψ_x / √κ_p` this is
+   the gradient flow of `φ ↦ V_S(√κ_p φ / ρ)`. Critical points, local minimizers,
+   strict saddles and Lebesgue-null sets of starts correspond under `E ↦ arg E`.
+3. **Softmax readout.** Without (H3), the cross-entropy is
+   `|S| log n + Σ_p κ_p (V_S + W_S - |S|)(ψᵖ) + R`. Jensen's inequality and Hoeffding's
+   lemma give `0 ≤ R ≤ |S| κ² / 2`, and `∇R = O(κ²)`. Here
+   `W_S(ψ) = (1/n) Σ_{(x,y) ∈ S} Σ_z cos(ψ_z - ψ_x + ψ_y)` is the mean logit. To first
+   order in `κ`, the cross-entropy is a sum of the energies `V_S + W_S`, one per
+   plane, not of `V_S`.
+4. **What `W_S` changes.**
+   - On the full table, `V_full + W_full = n² - (1/n) Σ_{k ≠ 0} |û_k|² Re û_k`, in the
+     notation of `PhaseModel.Fourier`. This is `≥ 0`, and it vanishes exactly at the
+     characters with `k ≠ 0`, up to periods: the competition removes the trivial
+     character. When `V_full + W_full < n²`, some `j ≠ 0` has
+     `n Σ_x (1 - cos(ψ_x - 2πjx/n)) ≤ V_full + W_full`. This is the Fourier step of
+     the landscape (`exists_mul_sum_one_sub_cos_le`) without the trivial character.
+   - On a partial table, take the character `k` with `2k ≠ 0` in `ℤ/n`. There
+     `∂_z (V_S + W_S) = -(1/n) Im(e^{2πikz/n} · conj ĥ_S(k))`, with
+     `ĥ_S(k) = Σ_{(x,y) ∈ S} e^{2πik(x-y)/n}`. The character is therefore a critical
+     point only when the answers of `S` have a vanishing `k`-th Fourier coefficient.
+
+Items 1–3 are provable now on top of `PhaseModel`, and item 4 on top of its
+`Fourier` identities.
+
+*What the reduction does not cover.* (H1), (H2) and (H4) describe a family that the
+lab's training does not stay on. In trained networks `χ(a/b)` explains 19–33% of the
+variance of a plane of `N(x1)`, and 8–10 of the 48 frequencies are used (§2.4 of the
+note). In its small-step limit AdamW with decay follows `-F(θ) - wd·θ` (§7.3 of the
+note), which is not a gradient flow. Items 1–4 are statements about the clock network, not about
+the lab's trajectories.
 
 ## Order of work
 
@@ -284,7 +357,8 @@ Tasks: M5.1 #23, M5.2 #24, M5.3 #25, M5.4 #26.
 6. M5.1 → M4.3.
 7. M1.5 → M5.2, M5.3.
 
-The research items M2.4, M3.4b, M3.4c and M5.4 wait for an argument on paper.
+The research items M2.4, M3.4b and M3.4c wait for an argument on paper. M5.4 is
+stated on paper and waits for Lean.
 
 ## Target `sorry`s
 
