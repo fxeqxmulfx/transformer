@@ -67,6 +67,7 @@ Constraints:
 | C, criterion on the circle (M3.1c) | `Perspective.taumax_sharp`: for a `2π`-periodic `C³` kernel with `f' < 0` off `[-τ, τ]`, a stationary (C1) configuration that is cut-stable (C2) for every `S` and not synchronized has `4 (1/τ + 1/τ_max) f'(0) ≤ ∫_{-π}^{π} \|f'''\|₊` (`taumax`, `lemma:taumax`); `synchronized_of_circleGapMax_lt` (`cor:main`) and `synchronized_of_integral_le` (`thm:main`), with `f'(0) > 0` added (`zero_kernel_counterexample`) | proved |
 | A, gradient descent from a compact sublevel set (M1.6) | `SaddleAvoidance.exists_pos_measure_sublevel_tendsto_strictSaddle_eq_zero`: for `f` of class `C²` with `{f ≤ c}` compact, every step size below some `η₀ > 0` keeps gradient descent in `{f ≤ c}` (`mapsTo_gradientStep_sublevel`), and the starts in `{f ≤ c}` converging to a strict saddle form a null set; `measure_inter_tendsto_strictSaddle_eq_zero` on any forward-invariant set with a Hessian bound there, from `measure_inter_tendsto_symmetricUnstable_eq_zero` | proved |
 | D, angles and the circle (M5.1) | `Perspective.usa_anglesToSphere`: solutions of `eq:onangles` give solutions of USA on `SphereTuple 2 n`; `eq_map_angleCube`: every `UniformTuple 2 n P` is the image of the normalized Lebesgue measure on `[0, 2π)ⁿ`; `measure_eq_zero_of_volume_preimage`: a set whose preimage in angles is Lebesgue-null is `P`-null, measurable or not, so `ae_of_ae_volume` carries an almost-everywhere statement in angles to `P`, and `measure_image_eq_zero` takes a `2π`-periodic null set to a `P`-null set | proved |
+| C, phase model over finite abelian groups (M3.4d) | `PhaseModel.Abelian.exists_sub_characterPhase_mem_periods_of_isLocalMin`, `isStrictSaddle_of_divisionEnergy_lt` and `ae_tendsto_characterPhase`: the landscape below `n²/8` of `V_full` for a finite abelian group `G` of order `n ≥ 4`, with the characters `AddChar G ℂ` and their phases `arg χ(x)`; Parseval's identity and the cubic identity over the characters (`sum_normSq_fourier`, `sum_normSq_mul_re_fourier`) | proved |
 | A, gradient flows (M1.3) | `SaddleAvoidance.ae_not_tendsto_gradientFlow_of_isStrictSaddle`: for `f` of class `C²` with `∇f` bounded and Lipschitz and `ν` absolutely continuous, `ν`-almost every gradient flow converges to no strict saddle; the flow is a one-parameter group (`gradientFlow_gradientFlow`) whose integer times iterate the time-one map (`iterate_gradientFlow_one`); ascent, the flow of `-f`, almost never converges to a critical point with a positive Hessian eigenvalue (`measure_tendsto_gradientAscent_strictSaddle_eq_zero`, the Euclidean analog of `l:nosaddleconv`) | proved |
 
 ## Milestones
@@ -246,7 +247,7 @@ can close without M2.4.
 | M3.4a | **Characters are nondegenerate, done.** The Hessian of `V_full` at a character is injective, since the rows `e_x - e_y - e_{x-y}` span `ℝⁿ`. This gives Łojasiewicz with exponent `1/2` at the characters. | — |
 | M3.4b | **Research: `V_full` above `n²/8`.** First a lab search for local minimizers with `V ≥ n²/8`, `n ≤ 30`; a hypothesis until proved. | lab |
 | M3.4c | **Research: partial tables `V_S`.** The analogy is Kuramoto on Erdős–Rényi graphs just above connectivity (abdalla2022expander, cited in arXiv:2312.10794v5 §6). A comment in that survey's TeX source (line 908) says the reference proves only that a convergent trajectory ends synchronized. So this is an analogy and a hypothesis. | — |
-| M3.4d | **Finite abelian groups.** Generalize `Fourier` and `Landscape` from `ℤ/n`. | — |
+| M3.4d | **Finite abelian groups, done.** `PhaseModel.Abelian` generalizes `Fourier` and `Landscape`, with the chain from `Division` to `Characters` they rest on, from `ℤ/n` to a finite abelian group `G`, with the characters `AddChar G ℂ`. | — |
 
 ### M4 — The scheme theorems (general)
 
@@ -280,7 +281,7 @@ Tasks: M5.1 #23, M5.2 #24, M5.3 #25, M5.4 #26.
 6. M5.1 → M4.3.
 7. M1.5 → M5.2, M5.3.
 
-The research items M2.4, M3.4b–d and M5.4 wait for an argument on paper.
+The research items M2.4, M3.4b, M3.4c and M5.4 wait for an argument on paper.
 
 ## Target `sorry`s
 
