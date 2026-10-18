@@ -9,23 +9,18 @@ saddle (`Abelian.Characters`).  Hence, for `n ≥ 4`, every local minimizer of
 `V_full` below `n²/8` is the phases of a character up to periods
 (`exists_sub_characterPhase_mem_periods_of_isLocalMin`), a global minimizer
 (`divisionEnergy_eq_zero_of_isLocalMin`); every critical point with
-`0 < V_full < n²/8` is a strict saddle (`isStrictSaddle_of_divisionEnergy_lt`);
-and gradient descent with `0 < η`, `9 n² η < 1`, started below `n²/8`,
-almost surely converges to the phases of a character up to periods whenever
-it converges (`ae_tendsto_characterPhase`).  Whether the orbits converge,
-and the critical points above `n²/8`, are not settled here.
+`0 < V_full < n²/8` is a strict saddle (`isStrictSaddle_of_divisionEnergy_lt`).
+So gradient descent started below `n²/8` converges to a character for almost
+every start (`PhaseModel.Abelian.Convergence`).  The critical points above
+`n²/8` are not settled here.
 -/
 
 import Transformer.PhaseModel.Abelian.Characters
 import Transformer.PhaseModel.Abelian.Fourier
-import Transformer.SaddleAvoidance.Minimizers
 
-open Filter MeasureTheory Real
-open scoped Topology
+open Real
 
 namespace Transformer.PhaseModel.Abelian
-
-open SaddleAvoidance (gradientStep)
 
 local notation "⟪" x ", " y "⟫" => inner ℝ x y
 
@@ -77,44 +72,6 @@ theorem isStrictSaddle_of_divisionEnergy_lt (hn : 4 ≤ Fintype.card G) {ψ : Eu
   obtain ⟨χ, hχ⟩ := exists_sum_one_sub_cos_lt hV
   exact isStrictSaddle_of_sum_one_sub_cos_lt hn hg hχ fun h =>
     hV0 ((divisionEnergy_univ_eq_zero_iff ψ).2 ⟨χ, h⟩)
-
-/-- **Gradient descent on `V_full` started below `|G|²/8` converges, if at
-all, to the phases of a character**, for almost every start.  Let
-`|G| ≥ 4` and `0 < η` with `9 |G|² η < 1`.  For a start `x` drawn from a law
-`ν` absolutely continuous with respect to a Haar measure, almost surely: if
-`V_full(x) < |G|²/8` and the orbit converges to `w`, then `w` is the phases
-of a character up to periods.  The orbit decreases `V_full`, so
-`V_full(w) < |G|²/8`; `w` is critical, and almost surely not a strict saddle
-(`SaddleAvoidance.ae_not_tendsto_of_isStrictSaddle`). -/
-theorem ae_tendsto_characterPhase (hn : 4 ≤ Fintype.card G) (μ : Measure (EuclideanSpace ℝ G))
-    [μ.IsAddHaarMeasure] {ν : Measure (EuclideanSpace ℝ G)} (hν : ν ≪ μ) {η : ℝ} (hη : 0 < η)
-    (hηn : 9 * Fintype.card G ^ 2 * η < 1) :
-    ∀ᵐ x ∂ν, divisionEnergy (Finset.univ : Finset (G × G)) x < Fintype.card G ^ 2 / 8 →
-      ∀ w, Tendsto (fun k => (gradientStep (divisionEnergy (Finset.univ :
-        Finset (G × G))) η)^[k] x) atTop (𝓝 w) →
-        ∃ χ : AddChar G ℂ, w - characterPhase χ ∈ periods G := by
-  set V := divisionEnergy (Finset.univ : Finset (G × G)) with hVdef
-  have hL := lipschitzWith_gradient_phaseEnergy
-    (fun p : (Finset.univ : Finset (G × G)) => intVec (divisionRow p.1))
-  have hηL : η * ((∑ p : (Finset.univ : Finset (G × G)),
-      ‖intVec (divisionRow p.1)‖₊ ^ 2 : NNReal) : ℝ) < 1 := by
-    push_cast
-    have h := sum_norm_intVec_divisionRow_sq_le (Finset.univ : Finset (G × G))
-    have hcard : ((Finset.univ : Finset (G × G)).card : ℝ) = Fintype.card G ^ 2 := by
-      simp [sq]
-    rw [hcard] at h
-    nlinarith
-  have hfd : Differentiable ℝ V := (contDiff_phaseEnergy _ (k := 1)).differentiable one_ne_zero
-  filter_upwards [SaddleAvoidance.ae_not_tendsto_of_isStrictSaddle μ hν (contDiff_phaseEnergy _)
-    hL hη hηL] with x hx hx0 w hw
-  have hg : gradient V w = 0 := SaddleAvoidance.gradient_eq_zero_of_tendsto hL.continuous hη.ne' hw
-  have hanti := SaddleAvoidance.antitone_iterate hfd hL hη.le hηL.le x
-  have hle : V w ≤ V x :=
-    le_of_tendsto' ((hfd.continuous.tendsto w).comp hw) fun k => by
-      simpa using hanti (Nat.zero_le k)
-  by_contra hne
-  exact hx w (isStrictSaddle_of_divisionEnergy_lt hn hg
-    (fun h => hne ((divisionEnergy_univ_eq_zero_iff w).1 h)) (hle.trans_lt hx0)) hw
 
 /-- The hypotheses of the first four theorems hold in the Klein four-group
 `ℤ/2 × ℤ/2` at the phases of every character `χ`, a global minimizer with
@@ -186,15 +143,5 @@ example (hG : 49 ≤ Fintype.card G) :
       exact Finset.sum_le_sum fun p _ => hb p
     have hn' : (49 : ℝ) ≤ Fintype.card G := by exact_mod_cast hG
     nlinarith
-
-/-- The hypotheses of `ae_tendsto_characterPhase` hold in the Klein
-four-group `ℤ/2 × ℤ/2` with Lebesgue measure and `η = 1/145`, as
-`9 · 4² = 144`. -/
-example : 4 ≤ Fintype.card (ZMod 2 × ZMod 2) ∧
-    (volume : Measure (EuclideanSpace ℝ (ZMod 2 × ZMod 2))).IsAddHaarMeasure ∧
-    (volume : Measure (EuclideanSpace ℝ (ZMod 2 × ZMod 2))) ≪ volume ∧ (0 : ℝ) < 1 / 145 ∧
-    9 * (Fintype.card (ZMod 2 × ZMod 2) : ℝ) ^ 2 * (1 / 145) < 1 :=
-  ⟨by simp, inferInstance, Measure.AbsolutelyContinuous.rfl, by norm_num,
-    by norm_num [Fintype.card_prod, ZMod.card]⟩
 
 end Transformer.PhaseModel.Abelian

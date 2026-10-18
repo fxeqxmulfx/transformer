@@ -5,9 +5,11 @@ Gradient descent on a phase energy `V` with integer rows `a_r`, with a step
 `0 < η` and `η Σ_r ‖a_r‖² < 1`.  Every orbit comes arbitrarily close, up to
 periods, to a point of the cube (`exists_frequently_periods`), and each such
 limit point is a critical point of `V`
-(`gradient_eq_zero_of_frequently_periods`).  An orbit with a limit point at
-a zero of `V` where no nonzero vector is orthogonal to every row converges
-to a zero (`exists_tendsto_phaseEnergy_eq_zero`).  For almost every start,
+(`gradient_eq_zero_of_frequently_periods`).  As `V` is analytic, every orbit
+converges, to a critical point (`exists_tendsto_gradient_phaseEnergy_eq_zero`).
+An orbit with a limit point at a zero of `V` where no nonzero vector is
+orthogonal to every row converges to a zero
+(`exists_tendsto_phaseEnergy_eq_zero`).  For almost every start,
 an orbit with a limit point where the Hessian is injective converges to a
 local minimizer differing from it by a period
 (`ae_exists_tendsto_isLocalMin_of_frequently_periods`); when the Hessian is
@@ -17,6 +19,7 @@ minimizer (`ae_exists_tendsto_isLocalMin_periods`).
 
 import Transformer.PhaseModel.Periods
 import Transformer.SaddleAvoidance.Nondegenerate
+import Transformer.SaddleAvoidance.Analytic
 
 open Filter MeasureTheory Real
 open scoped Topology NNReal
@@ -47,6 +50,20 @@ theorem gradient_eq_zero_of_frequently_periods (hη : 0 < η)
     ((contDiff_phaseEnergy _ (k := 1)).differentiable one_ne_zero)
     (lipschitzWith_gradient_phaseEnergy _) hη (by push_cast; exact hηL) (isClosed_periods n)
     (fun _ hv ψ => phaseEnergy_add_of_mem_periods a hv ψ) hz
+
+/-- **Gradient descent on a phase energy with integer rows converges from
+every start, to a critical point**, for `0 < η` with `η Σ_r ‖a_r‖² < 1`: the
+orbit has a limit point up to periods, and the energy is analytic, so it
+satisfies the Łojasiewicz inequality there. -/
+theorem exists_tendsto_gradient_phaseEnergy_eq_zero (hη : 0 < η)
+    (hηL : η * ∑ r, ‖intVec (a r)‖ ^ 2 < 1) (x : EucSpace n) :
+    ∃ w, Tendsto (fun k => (gradientStep (phaseEnergy fun r => intVec (a r)) η)^[k] x) atTop
+      (𝓝 w) ∧ gradient (phaseEnergy fun r => intVec (a r)) w = 0 := by
+  obtain ⟨z, -, hz⟩ := exists_frequently_periods a η x
+  obtain ⟨w, hw, hwx⟩ := SaddleAvoidance.exists_tendsto_of_analyticOnNhd
+    (analyticOnNhd_phaseEnergy _) (lipschitzWith_gradient_phaseEnergy _) hη
+    (by push_cast; exact hηL) (fun _ hv ψ => phaseEnergy_add_of_mem_periods a hv ψ) hz
+  exact ⟨w, hwx, hw⟩
 
 /-- **An orbit with a nondegenerate zero as a limit point converges to a
 zero** of the phase energy.  Let `0 < η` with `η Σ_r ‖a_r‖² < 1`, let

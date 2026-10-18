@@ -4,13 +4,13 @@
 The phase energy is nonnegative and vanishes exactly where every relation
 holds (`phaseEnergy_eq_zero_iff`); a translation `v` with `⟪m_r, v⟫ ∈ 2πℤ`
 for every row leaves it invariant (`phaseEnergy_add`).  It is smooth
-(`contDiff_phaseEnergy`), with gradient `Σ_r sin ⟪m_r, ψ⟫ m_r`
-(`gradient_phaseEnergy`) and Hessian `h ↦ Σ_r cos ⟪m_r, ψ⟫ ⟪m_r, h⟫ m_r`
-(`hasFDerivAt_gradient_phaseEnergy`); the gradient is Lipschitz with
-constant `Σ_r ‖m_r‖²` (`lipschitzWith_gradient_phaseEnergy`).  At a zero of
-the energy the Hessian is `h ↦ Σ_r ⟪m_r, h⟫ m_r`, injective when no nonzero
-vector is orthogonal to every row
-(`injective_fderiv_gradient_of_phaseEnergy_eq_zero`).
+(`contDiff_phaseEnergy`) and analytic (`analyticOnNhd_phaseEnergy`), with
+gradient `Σ_r sin ⟪m_r, ψ⟫ m_r` (`gradient_phaseEnergy`) and Hessian
+`h ↦ Σ_r cos ⟪m_r, ψ⟫ ⟪m_r, h⟫ m_r` (`hasFDerivAt_gradient_phaseEnergy`);
+the gradient is Lipschitz with constant `Σ_r ‖m_r‖²`
+(`lipschitzWith_gradient_phaseEnergy`).  At a zero of the energy the
+Hessian is `h ↦ Σ_r ⟪m_r, h⟫ m_r`, injective when no nonzero vector is
+orthogonal to every row (`injective_fderiv_gradient_of_phaseEnergy_eq_zero`).
 -/
 
 import Transformer.PhaseModel.Defs
@@ -50,6 +50,11 @@ theorem phaseEnergy_add {v : E} (hv : ∀ r, ∃ k : ℤ, ⟪m r, v⟫ = k * (2 
 /-- The phase energy is smooth. -/
 theorem contDiff_phaseEnergy {k : WithTop ℕ∞} : ContDiff ℝ k (phaseEnergy m) :=
   ContDiff.sum fun _ _ => contDiff_const.sub (ContDiff.inner ℝ contDiff_const contDiff_id).cos
+
+/-- The phase energy is analytic. -/
+theorem analyticOnNhd_phaseEnergy : AnalyticOnNhd ℝ (phaseEnergy m) Set.univ := fun ψ _ =>
+  Finset.analyticAt_fun_sum _ fun r _ =>
+    analyticAt_const.fun_sub (Real.analyticAt_cos.comp ((innerSL ℝ (m r)).analyticAt ψ))
 
 variable [CompleteSpace E]
 

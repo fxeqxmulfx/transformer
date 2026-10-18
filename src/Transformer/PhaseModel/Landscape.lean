@@ -10,23 +10,18 @@ character up to periods or a strict saddle (`Characters`).  Hence, for
 character up to periods (`exists_sub_characterPhase_mem_periods_of_isLocalMin`),
 a global minimizer (`divisionEnergy_eq_zero_of_isLocalMin`); every critical
 point with `0 < V_full < n²/8` is a strict saddle
-(`isStrictSaddle_of_divisionEnergy_lt`); and gradient descent with `0 < η`,
-`9 n² η < 1`, started below `n²/8`, almost surely converges to the phases of
-a character up to periods whenever it converges
-(`ae_tendsto_characterPhase`).  Whether the orbits converge, and the critical
-points above `n²/8`, are not settled here.
+(`isStrictSaddle_of_divisionEnergy_lt`).  So gradient descent started below
+`n²/8` converges to a character for almost every start
+(`PhaseModel.Convergence`).  The critical points above `n²/8` are not
+settled here.
 -/
 
 import Transformer.PhaseModel.Characters
 import Transformer.PhaseModel.Fourier
-import Transformer.SaddleAvoidance.Minimizers
 
-open Filter MeasureTheory Real
-open scoped Topology
+open Real
 
 namespace Transformer.PhaseModel
-
-open SaddleAvoidance (gradientStep)
 
 local notation "⟪" x ", " y "⟫" => inner ℝ x y
 
@@ -77,42 +72,6 @@ theorem isStrictSaddle_of_divisionEnergy_lt (hn : 4 ≤ n) {ψ : EucSpace n}
   obtain ⟨j, hj⟩ := exists_sum_one_sub_cos_lt hV
   exact isStrictSaddle_of_sum_one_sub_cos_lt hn hg hj fun h =>
     hV0 ((divisionEnergy_univ_eq_zero_iff ψ).2 ⟨j, h⟩)
-
-/-- **Gradient descent on `V_full` started below `n²/8` converges, if at
-all, to the phases of a character**, for almost every start.  Let `n ≥ 4`
-and `0 < η` with `9 n² η < 1`.  For a start `x` drawn from a law `ν`
-absolutely continuous with respect to a Haar measure, almost surely: if
-`V_full(x) < n²/8` and the orbit converges to `w`, then `w` is the phases of
-a character up to periods.  The orbit decreases `V_full`, so
-`V_full(w) < n²/8`; `w` is critical, and almost surely not a strict saddle
-(`SaddleAvoidance.ae_not_tendsto_of_isStrictSaddle`). -/
-theorem ae_tendsto_characterPhase (hn : 4 ≤ n) (μ : Measure (EucSpace n)) [μ.IsAddHaarMeasure]
-    {ν : Measure (EucSpace n)} (hν : ν ≪ μ) {η : ℝ} (hη : 0 < η) (hηn : 9 * n ^ 2 * η < 1) :
-    ∀ᵐ x ∂ν, divisionEnergy (Finset.univ : Finset (Fin n × Fin n)) x < n ^ 2 / 8 →
-      ∀ w, Tendsto (fun k => (gradientStep (divisionEnergy (Finset.univ :
-        Finset (Fin n × Fin n))) η)^[k] x) atTop (𝓝 w) →
-        ∃ j : ℤ, w - characterPhase n j ∈ periods n := by
-  set V := divisionEnergy (Finset.univ : Finset (Fin n × Fin n)) with hVdef
-  have hL := lipschitzWith_gradient_phaseEnergy
-    (fun p : (Finset.univ : Finset (Fin n × Fin n)) => intVec (divisionRow p.1))
-  have hηL : η * ((∑ p : (Finset.univ : Finset (Fin n × Fin n)),
-      ‖intVec (divisionRow p.1)‖₊ ^ 2 : NNReal) : ℝ) < 1 := by
-    push_cast
-    have h := sum_norm_intVec_divisionRow_sq_le (Finset.univ : Finset (Fin n × Fin n))
-    have hcard : ((Finset.univ : Finset (Fin n × Fin n)).card : ℝ) = n ^ 2 := by simp [sq]
-    rw [hcard] at h
-    nlinarith
-  have hfd : Differentiable ℝ V := (contDiff_phaseEnergy _ (k := 1)).differentiable one_ne_zero
-  filter_upwards [SaddleAvoidance.ae_not_tendsto_of_isStrictSaddle μ hν (contDiff_phaseEnergy _)
-    hL hη hηL] with x hx hx0 w hw
-  have hg : gradient V w = 0 := SaddleAvoidance.gradient_eq_zero_of_tendsto hL.continuous hη.ne' hw
-  have hanti := SaddleAvoidance.antitone_iterate hfd hL hη.le hηL.le x
-  have hle : V w ≤ V x :=
-    le_of_tendsto' ((hfd.continuous.tendsto w).comp hw) fun k => by
-      simpa using hanti (Nat.zero_le k)
-  by_contra hne
-  exact hx w (isStrictSaddle_of_divisionEnergy_lt hn hg
-    (fun h => hne ((divisionEnergy_univ_eq_zero_iff w).1 h)) (hle.trans_lt hx0)) hw
 
 /-- The hypotheses of the first four theorems hold for `n = 4` at the phases
 of the character `j = 1`, a global minimizer with `V_full = 0 < 4²/8`. -/
@@ -184,12 +143,5 @@ example (n : ℕ) [NeZero n] (hn : 49 ≤ n) :
       exact Finset.sum_le_sum fun p _ => hb p
     have hn' : (49 : ℝ) ≤ n := by exact_mod_cast hn
     nlinarith
-
-/-- The hypotheses of `ae_tendsto_characterPhase` hold for `n = 4` with
-Lebesgue measure and `η = 1/145`, as `9 · 4² = 144`. -/
-example : 4 ≤ 4 ∧ (volume : Measure (EucSpace 4)).IsAddHaarMeasure ∧
-    (volume : Measure (EucSpace 4)) ≪ volume ∧ (0 : ℝ) < 1 / 145 ∧
-    9 * ((4 : ℕ) : ℝ) ^ 2 * (1 / 145) < 1 :=
-  ⟨le_rfl, inferInstance, Measure.AbsolutelyContinuous.rfl, by norm_num, by norm_num⟩
 
 end Transformer.PhaseModel
