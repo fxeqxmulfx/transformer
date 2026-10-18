@@ -180,6 +180,9 @@ cut-off turns the rescaled flows into metric gradient flows of all of `(ℝ^d)^n
 solution of `USA` or `SA` converges to a critical point with two distinct tokens
 (`ae_USA_not_tendsto_nonTrivial`, `ae_SA_not_tendsto_nonTrivial`); the solutions of
 `USA` are unique (`USA_unique`).
+`SphereClustering` concludes `thm: boumal` for `β > 0`: the limit of almost every
+solution is a consensus, and the solutions being unique, almost every start clusters
+(`ae_mem_clusteringSet_of_pos`).
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -341,6 +344,7 @@ import Transformer.Perspective.SphereCutoff
 import Transformer.Perspective.SphereCutoffFlow
 import Transformer.Perspective.SphereSaddleAvoidance
 import Transformer.Perspective.SphereFlowAvoidance
+import Transformer.Perspective.SphereClustering
 import Transformer.Perspective.AppendixB_ClaimYury
 import Transformer.Perspective.AppendixB_MetricGrad
 import Transformer.Perspective.AppendixB_MetricHess

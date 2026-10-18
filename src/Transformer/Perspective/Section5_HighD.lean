@@ -6,7 +6,8 @@ Geshkovski, Letrouit, Polyanskiy, Rigollet — arXiv:2312.10794v5,
 
 This file formalizes §6 of the survey:
 
-* `Theorem thm: boumal`            — clustering for `d ≥ 3`, any `β ≥ 0`,
+* `Theorem thm: boumal`            — clustering for `d ≥ 3`, any `β ≥ 0`, through
+  `Perspective.SphereClustering` for `β > 0`,
 * `Theorem thm: d.infty`, `eq: expconvtocons` — the exponential rate when
   `d ≥ n` — are `Perspective.Section5_ExpRate`,
 * `eq: therighthandside`,
@@ -42,6 +43,9 @@ sequences they have to exclude are exhibited in
 import Transformer.Basic
 import Transformer.Perspective.Section1_IPS
 import Transformer.Perspective.Section3_SmallBeta
+import Transformer.Perspective.AppendixA_Flow
+import Transformer.Perspective.AppendixA_Saddle
+import Transformer.Perspective.SphereClustering
 import Transformer.Perspective.Section5_Exceptional
 import Transformer.Perspective.Section5_Vanishing
 import Transformer.Perspective.WendelGeneralPosition
@@ -78,14 +82,26 @@ than unproved.  The exceptional set is null but non-empty, which is why the
 conclusion is read against the uniform law `UniformTuple` of §4, exactly as in
 `beta_interval`.
 
-Not proved here.
+**Proof.**  At `β = 0` both dynamics are the `β = 0` flow of §4, and almost every start
+reaches consensus (`beta0_consensus`, for `d ≥ 2`).  For `β > 0` the route is the one
+the survey outlines at the end of §5 for its clustering theorems: every solution
+converges to a critical point of `𝖤_β` (the Łojasiewicz theorem), every critical point
+with two distinct tokens is a strict saddle when `d ≥ 3` (arXiv:2405.18273,
+`thm:spheres`), and almost no start converges to a strict saddle (the center-stable
+manifold theorem); the solution being unique, it converges to a single cluster
+(`ae_mem_clusteringSet_of_pos`).
 
-Source: arXiv:2312.10794v5, §6.1, `thm: boumal`. -/
+Source: arXiv:2312.10794v5, §6, `thm: boumal`. -/
 theorem boumal_clustering
     (hd : 3 ≤ d) (hn : 2 ≤ n) (β : ℝ) (hβ : 0 ≤ β) :
     ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
       ∀ᵐ X₀ ∂P, X₀ ∈ clusteringSet d n β ∧ X₀ ∈ clusteringSetUSA d n β := by
-  sorry
+  intro P hP
+  rcases hβ.eq_or_lt with rfl | hβ
+  · filter_upwards [beta0_consensus d n (by omega) P hP] with X₀ ⟨x, hx⟩
+    exact ⟨⟨x, fun X h0 hX => hx X h0 fun t i => (hX t i).congr_deriv (by rw [SA_zero_drift])⟩,
+      ⟨x, fun X h0 hX => hx X h0 fun t i => (hX t i).congr_deriv (by simp)⟩⟩
+  · exact ae_mem_clusteringSet_of_pos hd (by omega) hβ P hP
 
 /-- The hypotheses of `boumal_clustering` are satisfiable: `d = 3`, `n = 2`,
 `β = 0`. -/
