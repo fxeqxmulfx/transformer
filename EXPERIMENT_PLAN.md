@@ -2632,9 +2632,11 @@ Rust repository's portable histories for the complete outcomes.
 
 ## Scalar MLP on mod 97 (2026-10-18)
 
-Status: active, requested by the user. Board tasks: #54 landed the lab
-blocks, #55 the experiment, #56 runs it, and #57 cites M8.3 once it is
-proved. The Lean side is M8 of `landscape_plan.md`, tasks #50 to #53.
+Status: active, requested by the user. The runs are done (#56,
+2026-10-18): every gradient-descent run ends in H4, which chooses no Lean
+step. Board tasks: #54 landed the lab blocks, #55 the experiment, #56 ran
+it, and #57 cites M8.3 once it is proved. The Lean side is M8 of
+`landscape_plan.md`, tasks #50 to #53.
 
 A perceptron reading x and y as two real numbers and answering with one
 represents x / y mod 97 exactly at depth 2 and width 2p + 1 = 195 (`lookup`
@@ -2695,6 +2697,14 @@ The outcome chooses the Lean step:
 - H3: the second alternative of the planned M8.3; no landscape theorem says
   more.
 - H4: none; M8 says nothing where (S) fails.
+
+Outcome (#56, 2026-10-18): every gradient-descent run ends in H4. In each,
+η·max(|λ_min|, λ_max) first reaches 1 between update 1,000 and 28,000 and
+never falls below it again: λ_max climbs to about 2/η and stays there. No
+gradient-descent run fits its table, and the list chooses H4: none. AdamW
+fits three of the four tables; on scalar division its parameter norm grows,
+H3, while its loss falls slowly. The numbers are in the Findings of the
+experiment's README.
 
 The explicit representation can itself be proved in Lean as a statement
 about two-hidden-layer ReLU networks on a finite grid.
