@@ -39,10 +39,19 @@ theorem contDiff_smul_of_tsupport_subset {E F : Type*} [NormedAddCommGroup E]
     filter_upwards [notMem_tsupport_iff_eventuallyEq.1 fun h => hx (hχU h)] with y hy
     simp [hy]
 
-/-- The hypotheses of `contDiff_smul_of_tsupport_subset` hold for the zero cut-off. -/
-example : ContDiff ℝ 1 (fun _ : ℝ => (0 : ℝ)) ∧
-    tsupport (fun _ : ℝ => (0 : ℝ)) ⊆ Set.univ :=
-  ⟨contDiff_const, Set.subset_univ _⟩
+/-- The hypotheses of `contDiff_smul_of_tsupport_subset` hold for a bump `χ` around `1`
+supported in `[1/2, 3/2]`, `φ x = x⁻¹` and `U = (0, ∞)`: `χ x • x⁻¹` is smooth on the
+whole line, although `x⁻¹` is not at `0`. -/
+example : ContDiff ℝ 1 fun x : ℝ =>
+    (⟨1 / 4, 1 / 2, by norm_num, by norm_num⟩ : ContDiffBump (1 : ℝ)) x • x⁻¹ := by
+  refine contDiff_smul_of_tsupport_subset (U := Ioi 0) (ContDiffBump.contDiff _) ?_
+    fun x hx => contDiffAt_inv ℝ (ne_of_gt hx)
+  rw [ContDiffBump.tsupport_eq]
+  intro y hy
+  rw [mem_closedBall, Real.dist_eq] at hy
+  have := (abs_le.1 hy).1
+  rw [mem_Ioi]
+  linarith
 
 section Cutoff
 

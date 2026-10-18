@@ -39089,14 +39089,14 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`gradient_eq_zero_of_frequently`](src/Transformer/SaddleAvoidance/CriticalPoints.lean#L58) | theorem | proved |
 | [`isLojasiewiczAt_of_injective`](src/Transformer/SaddleAvoidance/CriticalPoints.lean#L77) | theorem | proved |
 
-**[Transformer.SaddleAvoidance.Cutoff](src/Transformer/SaddleAvoidance/Cutoff.lean)** — 130 lines
+**[Transformer.SaddleAvoidance.Cutoff](src/Transformer/SaddleAvoidance/Cutoff.lean)** — 139 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`contDiff_smul_of_tsupport_subset`](src/Transformer/SaddleAvoidance/Cutoff.lean#L31) | theorem | proved |
-| [`exists_cutoff`](src/Transformer/SaddleAvoidance/Cutoff.lean#L55) | theorem | proved |
-| [`exists_isCompact_cover`](src/Transformer/SaddleAvoidance/Cutoff.lean#L79) | theorem | proved |
-| [`IsStrictSaddle.congr_of_eventuallyEq`](src/Transformer/SaddleAvoidance/Cutoff.lean#L110) | theorem | proved |
+| [`exists_cutoff`](src/Transformer/SaddleAvoidance/Cutoff.lean#L64) | theorem | proved |
+| [`exists_isCompact_cover`](src/Transformer/SaddleAvoidance/Cutoff.lean#L88) | theorem | proved |
+| [`IsStrictSaddle.congr_of_eventuallyEq`](src/Transformer/SaddleAvoidance/Cutoff.lean#L119) | theorem | proved |
 
 **[Transformer.SaddleAvoidance.Defs](src/Transformer/SaddleAvoidance/Defs.lean)** — 82 lines
 
