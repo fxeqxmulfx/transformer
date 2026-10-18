@@ -3,11 +3,14 @@
 
 Local uniformization (`Transformer.Uniformization`) gives every analytic energy that is
 not locally constant finitely many compact monomial charts at every point, the
-hypothesis of `analytic_gradient_inequality_of_compact_monomial_charts`. Auxiliary for
-Appendix D.1, `lem: loj`, of arXiv:2510.22026v2.
+hypothesis of `analytic_gradient_inequality_of_compact_monomial_charts`. So every analytic
+energy satisfies the local Łojasiewicz gradient inequality at every point
+(`analytic_gradient_inequality`). Auxiliary for Appendix D.1, `lem: loj`, of
+arXiv:2510.22026v2.
 -/
 
 import Transformer.Normalization.CompactMonomialCharts
+import Transformer.Normalization.OneDimensionalGradientInequality
 import Transformer.Uniformization
 
 open Filter Set
@@ -77,6 +80,23 @@ theorem hasCompactMonomialCharts_of_analyticAt {N : ℕ} (E : EucSpace N → ℝ
       ⟨a, by rw [hj]; exact ha, rfl⟩, ?_⟩
     simp only [hj, T.apply_symm_apply, hca, T.symm_apply_apply]
 
+/-- **The Łojasiewicz gradient inequality** (`lojasiewicz1963propriete`): near every point
+`z` at which `E` is analytic, `|E y - E z| ^ α ≤ k ‖∇E(y)‖` for some `0 < α < 1` and
+`k > 0`. It is immediate where `E` is locally constant
+(`local_gradient_inequality_of_eventually_constant`); elsewhere `E` has compact monomial
+charts (`hasCompactMonomialCharts_of_analyticAt`), which give it
+(`analytic_gradient_inequality_of_compact_monomial_charts`). The input of `lem: loj`,
+Appendix D.1 of arXiv:2510.22026v2. -/
+theorem analytic_gradient_inequality {N : ℕ} (E : EucSpace N → ℝ) (z : EucSpace N)
+    (hE : AnalyticAt ℝ E z) :
+    ∃ alpha k : ℝ, ∃ V : Set (EucSpace N),
+      0 < alpha ∧ alpha < 1 ∧ 0 < k ∧ IsOpen V ∧ z ∈ V ∧
+        ∀ y ∈ V, |E y - E z| ^ alpha ≤ k * ‖gradient E y‖ := by
+  by_cases hconstant : ∀ᶠ y in 𝓝 z, E y = E z
+  · exact local_gradient_inequality_of_eventually_constant E z hconstant
+  · exact analytic_gradient_inequality_of_compact_monomial_charts E z hE
+      (hasCompactMonomialCharts_of_analyticAt E z hE hconstant)
+
 /-- The energy `y₀²` on `ℝ¹` is analytic and not locally constant at the origin, so it has
 compact monomial charts there. Appendix D.1 of arXiv:2510.22026v2. -/
 example : HasCompactMonomialCharts (coordinateMonomial (fun _ : Fin 1 => 2)) 0 := by
@@ -88,5 +108,10 @@ example : HasCompactMonomialCharts (coordinateMonomial (fun _ : Fin 1 => 2)) 0 :
     exact half_lt_self hε)
   simp [coordinateMonomial] at hy
   linarith
+
+/-- The energy `y₀²` on `ℝ¹` is analytic at the origin, the hypothesis of
+`analytic_gradient_inequality`. Appendix D.1 of arXiv:2510.22026v2. -/
+example : AnalyticAt ℝ (coordinateMonomial (fun _ : Fin 1 => 2)) 0 :=
+  coordinateMonomial_analytic _ _
 
 end Transformer.Normalization

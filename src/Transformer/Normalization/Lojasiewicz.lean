@@ -70,12 +70,12 @@ Symmetry, like the matrix inequalities, is required only for `t ≥ 0`,
 matching the manuscript's quantifier.
 
 The proof takes from Łojasiewicz the local gradient inequality
-`|E(y) - E(z)|^α ≤ k ‖∇E(y)‖` near each critical point `z`. It is immediate for locally
-constant energies and otherwise follows from compact monomial charts, which local
-uniformization provides (`hasCompactMonomialCharts_of_analyticAt`). Everything after
-that inequality is proved by `lojasiewicz_modulated_of_local_gradient_inequality`,
-including compact uniformization, convergence of the trajectory, and criticality of the
-limit.
+`|E(y) - E(z)|^α ≤ k ‖∇E(y)‖` near each critical point `z`
+(`analytic_gradient_inequality`). It is immediate for locally constant energies and
+otherwise follows from compact monomial charts, which local uniformization provides
+(`hasCompactMonomialCharts_of_analyticAt`). Everything after that inequality is proved by
+`lojasiewicz_modulated_of_local_gradient_inequality`, including compact uniformization,
+convergence of the trajectory, and criticality of the limit.
 
 Source: arXiv:2510.22026v2, Appendix D.1, `lem: loj`. -/
 theorem lojasiewicz_modulated
@@ -96,13 +96,9 @@ theorem lojasiewicz_modulated
     (hx : ∀ t : ℝ, 0 ≤ t → HasDerivAt x (-(M t (gradient E (x t)))) t) :
     ∃ xstar ∈ U, Filter.Tendsto x Filter.atTop (nhds xstar) ∧
       gradient E xstar = 0 := by
-  apply lojasiewicz_modulated_of_local_gradient_inequality N U hU E hE C lam M
+  exact lojasiewicz_modulated_of_local_gradient_inequality N U hU E hE C lam M
     hlam hMsymm hMlower hMupper hint x K hK hKU hxK hx
-  intro z hz _
-  by_cases hconstant : ∀ᶠ y in nhds z, E y = E z
-  · exact local_gradient_inequality_of_eventually_constant E z hconstant
-  exact analytic_gradient_inequality_of_compact_monomial_charts E z (hE z hz)
-    (hasCompactMonomialCharts_of_analyticAt E z (hE z hz) hconstant)
+    fun z hz _ => analytic_gradient_inequality E z (hE z hz)
 
 /-- All inputs of the convergence theorem are simultaneously satisfiable for a
 constant energy and trajectory, `M = I`, `λ = 1/2`, `C = 4`; Appendix D.1 of

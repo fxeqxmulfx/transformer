@@ -9,15 +9,16 @@ every `y ∈ V`.  That form gives `IsLojasiewiczAt E z α` with `m = 1/k`
 (`isLojasiewiczAt_of_forall_mem`), so it supplies the hypothesis `hloj` of
 the convergence theorems of this directory at `z`
 (`exists_isLojasiewiczAt_of_local_gradient_inequality`).  Every case of the
-local inequality that `Normalization` proves therefore plugs in, and so will
-the general analytic case once it is proved there: the hard core of
-`Normalization.lojasiewicz_modulated`, Łojasiewicz's theorem at degenerate
-critical points.  In dimension at most one that case is proved, so an
-analytic function on `EucSpace N`, `N ≤ 1`, satisfies the inequality at
-every critical point (`exists_isLojasiewiczAt_of_analyticAt_low_dimension`).
+local inequality that `Normalization` proves therefore plugs in, the general
+analytic case `Normalization.analytic_gradient_inequality` included:
+Łojasiewicz's theorem, degenerate critical points included.  So an analytic
+function on `EucSpace N` satisfies the inequality at every point
+(`exists_isLojasiewiczAt_of_analyticAt`).  In dimension at most one an
+elementary proof gives the same (`exists_isLojasiewiczAt_of_analyticAt_low_dimension`).
 -/
 
 import Transformer.SaddleAvoidance.Lojasiewicz
+import Transformer.Normalization.AnalyticMonomialCharts
 import Transformer.Normalization.OneDimensionalGradientInequality
 
 open Filter
@@ -65,6 +66,15 @@ theorem exists_isLojasiewiczAt_of_analyticAt_low_dimension {N : ℕ} (hN : N ≤
   exists_isLojasiewiczAt_of_local_gradient_inequality
     (Normalization.analytic_gradient_inequality_low_dimension hN g w hg hw)
 
+/-- **Łojasiewicz's theorem: analytic functions satisfy the Łojasiewicz
+inequality at every point**, with an exponent `0 ≤ a < 1`, degenerate critical
+points included (`lojasiewicz1963propriete`).  The local inequality is
+`Normalization.analytic_gradient_inequality`, from local uniformization. -/
+theorem exists_isLojasiewiczAt_of_analyticAt {N : ℕ} {g : EucSpace N → ℝ} {w : EucSpace N}
+    (hg : AnalyticAt ℝ g w) : ∃ a, 0 ≤ a ∧ a < 1 ∧ IsLojasiewiczAt g w a :=
+  exists_isLojasiewiczAt_of_local_gradient_inequality
+    (Normalization.analytic_gradient_inequality g w hg)
+
 /-- The hypotheses of the first two theorems hold for `f(x) = ‖x‖² / 2` on
 the line at `z = 0`, with `a = 1/2`, `k = 1` and `V = ℝ`. -/
 example : let f := fun x : ℝ => (1 / 2 : ℝ) * ‖x‖ ^ 2
@@ -83,7 +93,7 @@ example : let f := fun x : ℝ => (1 / 2 : ℝ) * ‖x‖ ^ 2
   exact ⟨one_pos, isOpen_univ, Set.mem_univ 0, hineq,
     1 / 2, 1, Set.univ, by norm_num, by norm_num, one_pos, isOpen_univ, Set.mem_univ 0, hineq⟩
 
-/-- The hypotheses of the third theorem hold for `g(y) = y₀⁴` on `EucSpace 1`
+/-- The hypotheses of the last two theorems hold for `g(y) = y₀⁴` on `EucSpace 1`
 at its degenerate critical point `0`. -/
 example : let p : EucSpace 1 →L[ℝ] ℝ := EuclideanSpace.proj (0 : Fin 1)
     1 ≤ 1 ∧ AnalyticAt ℝ (fun y => p y ^ 4) 0 ∧ gradient (fun y => p y ^ 4) 0 = 0 := by
