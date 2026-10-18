@@ -161,6 +161,11 @@ Lebesgue-null (`measure_eq_zero_iff_volume_sphereCone`, `ae_iff_ae_volume`).
 `USA` and `SA` are the slices `‖x_i‖ = r_i` of flows on `(ℝ^d)^n`
 (`usa_iff_radialField`), whose fields are rescaled Euclidean gradients of
 `𝖤_β(x/‖x‖)` (`usa_iff_gradient`, `sa_iff_gradient`).
+`SphereTupleEnergy`, `SphereConvergence` and `SphereFlowLimit` give `(ℝ^d)^n` the
+`ℓ²` norm, where `𝖤_β(x/‖x‖)` is real-analytic off the tuples with a zero vector
+(`analyticOnNhd_tupleEnergy`), and run the Łojasiewicz theorem there: for `β ≠ 0`
+every solution of `USA` and of `SA` converges to a critical point of `𝖤_β`
+(`exists_tendsto_isCriticalEBeta_of_USA`, `exists_tendsto_isCriticalEBeta_of_SA`).
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -298,6 +303,9 @@ import Transformer.Perspective.SpherePolar
 import Transformer.Perspective.SphereNull
 import Transformer.Perspective.SphereRadial
 import Transformer.Perspective.SphereRadialGradient
+import Transformer.Perspective.SphereTupleEnergy
+import Transformer.Perspective.SphereConvergence
+import Transformer.Perspective.SphereFlowLimit
 import Transformer.Perspective.SyncKernelExp
 import Transformer.Perspective.SyncKernelSecond
 import Transformer.Perspective.SyncKernelBetaOne

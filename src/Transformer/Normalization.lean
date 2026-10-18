@@ -15,6 +15,7 @@ import Transformer.Normalization.ClusterSpeed
 import Transformer.Normalization.Convergence
 import Transformer.Normalization.Line
 import Transformer.Normalization.Lojasiewicz
+import Transformer.Normalization.LojasiewiczInnerProduct
 import Transformer.Normalization.Radial
 import Transformer.Normalization.Rates
 import Transformer.Normalization.Symmetric
