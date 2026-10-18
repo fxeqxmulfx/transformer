@@ -3,23 +3,22 @@
 Source: EXPERIMENT_PLAN.md, "Scalar MLP on mod 97 (2026-10-18)", which asks
 why gradient descent does not fit x / y mod p with a perceptron that reads x
 and y as two real numbers and answers with one. The proved landscape results
-narrow the answer. Let the loss be C^2 with an L-Lipschitz gradient, the step
-η satisfy ηL < 1, and the Łojasiewicz inequality hold at the critical points
-below a level c. If almost every orbit starting below c has a limit point,
-then almost every such orbit converges to a critical point that is no strict
-saddle
-(`Transformer.Landscape.SaddleAvoidance.ae_exists_tendsto_not_isStrictSaddle_of_lt`).
-Under GELU the loss is analytic, so the Łojasiewicz inequality holds at
-every point
+narrow the answer. An MLP's loss has a Lipschitz gradient on bounded sets
+only, so they bound the curvature along the run instead: the Hessian has
+norm at most L on the segment of every step of gradient descent, and the
+step η satisfies ηL < 1 (S). Let the loss be analytic, as it is under GELU,
+so that the Łojasiewicz inequality holds at every point
 (`Transformer.Landscape.SaddleAvoidance.exists_isLojasiewiczAt_of_analyticOnNhd`);
-under ReLU it is not C^2. Where the theorem applies, a run that does not
-fit the table ends at a critical point of positive loss whose Hessian has no
-negative eigenvalue, such as a spurious local minimizer or a degenerate
-saddle, or converges too slowly to fit it within its budget, or has an
-orbit leaving every bounded set; the regression task measures what tells
-them apart. The theorem asks for a globally Lipschitz gradient, which an
-MLP's loss has on bounded sets only, so the task also measures the
-curvature along the run, which the step is compared with. The one-hot
+under ReLU it is not C^2. Then almost every start whose orbit satisfies (S)
+has an orbit that converges to a critical point that is no strict saddle,
+or whose norm tends to infinity
+(`Transformer.Landscape.SaddleAvoidance.ae_exists_tendsto_not_isStrictSaddle_or_tendsto_norm_of_segment_of_analyticOnNhd`).
+So a run that does not fit the table ends at a critical point of positive
+loss whose Hessian has no negative eigenvalue, such as a spurious local
+minimizer or a degenerate saddle, or converges too slowly to fit it within
+its budget, or has parameters whose norm grows without bound, or breaks (S)
+with a step past the curvature; the regression task measures what tells
+them apart, the curvature along the run included. The one-hot
 encoding gives every operand value weights of its own, as the free phases
 of the phase model do: for |G| ≥ 4 and a step under 1 / (9|G|^2), gradient
 descent on them converges from almost every start of energy below

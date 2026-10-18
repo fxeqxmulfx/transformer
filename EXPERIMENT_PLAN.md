@@ -2635,7 +2635,7 @@ Rust repository's portable histories for the complete outcomes.
 Status: active, requested by the user. The runs are done (#56,
 2026-10-18): every gradient-descent run ends in H4, which chooses no Lean
 step. Board tasks: #54 landed the lab blocks, #55 the experiment, #56 ran
-it, and #57 cites M8.3 once it is proved. The Lean side is M8 of
+it, and #57 cites M8.3, which #52 proved. The Lean side is M8 of
 `landscape_plan.md`, tasks #50 to #53.
 
 A perceptron reading x and y as two real numbers and answering with one
@@ -2651,30 +2651,38 @@ along its own orbit x_k:
 > (S) ‖∇²f‖ ≤ L on every segment [x_k, x_{k+1}], with η L < 1.
 
 Proved (M8.1): under (S) the loss decreases along the orbit
-(`Transformer.Landscape.SaddleAvoidance.iterate_succ_le_sub_of_segment`),
-and the starts whose orbit satisfies (S) and converges to a strict saddle
-form a null set
-(`Transformer.Landscape.SaddleAvoidance.ae_not_tendsto_strictSaddle_of_segment`).
-Planned, not proved (M8.3, task #52): under the Łojasiewicz inequality,
-which an analytic loss satisfies
+(`Transformer.Landscape.SaddleAvoidance.iterate_succ_le_sub_of_segment`).
+Proved (M8.3): for an analytic loss, which satisfies the Łojasiewicz
+inequality at every point
 (`Transformer.Landscape.SaddleAvoidance.exists_isLojasiewiczAt_of_analyticOnNhd`),
-almost every orbit that satisfies (S) converges to a critical point that is
-not a strict saddle, or leaves every bounded set. A run that does not fit
-the table therefore ends in one of four ways:
+almost every start whose orbit satisfies (S), under any distribution of
+starts with a density, has an orbit that converges to a critical point
+that is not a strict saddle, or ‖x_k‖ → ∞
+(`Transformer.Landscape.SaddleAvoidance.ae_exists_tendsto_not_isStrictSaddle_or_tendsto_norm_of_segment_of_analyticOnNhd`).
+A GELU perceptron's loss is analytic, though Lean does not prove it. A run
+that does not fit the table therefore ends in one of four ways:
 
 - H1, a spurious minimum or a degenerate saddle: it converges with positive
   loss. The gradient norm falls to near 0, and λ_min ≥ 0 up to the Lanczos
-  error.
+  error. For gradient descent under (S) this is the first alternative of
+  M8.3, with a limit of positive loss.
 - H2, slowness: it still descends when the budget ends, with negative
-  final-decade slopes, and no theorem bounds the time. The residual's share
-  at high frequencies of the transform over Z/97 x Z/97 shows where the fit
-  lags: x / y keeps most of its energy there and x + y little.
-- H3, divergence: the parameter norm grows without bound.
-- H4, a step past the curvature: (S) fails, η·max(|λ_min|, λ_max) ≥ 1 at a
-  recorded update of a gradient-descent run. The runs sample it every 1,000
-  updates, not on every segment.
+  final-decade slopes. M8.3 leaves this open, for it bounds no time. Under
+  (S), M8.4 bounds the loss above the limit by C b^k or
+  C (k + 1)^(-1/(2a - 1)), by the Łojasiewicz exponent a there
+  (`Transformer.Landscape.SaddleAvoidance.exists_le_mul_pow_of_isLojasiewiczAt_of_segment`,
+  `Transformer.Landscape.SaddleAvoidance.exists_le_mul_rpow_of_isLojasiewiczAt_of_segment`),
+  with constants it does not give. The residual's share at high
+  frequencies of the transform over Z/97 x Z/97 shows where the fit lags:
+  x / y keeps most of its energy there and x + y little.
+- H3, divergence: the parameter norm grows without bound. For gradient
+  descent under (S) this is the second alternative of M8.3, ‖x_k‖ → ∞.
+- H4, a step past the curvature: (S), the hypothesis of M8.3, fails,
+  η·max(|λ_min|, λ_max) ≥ 1 at a recorded update of a gradient-descent run.
+  The runs sample it every 1,000 updates, not on every segment.
 
-AdamW runs are controls, and H4 does not apply to them.
+AdamW runs are controls: M8.3 concerns gradient descent, so for them H1 to
+H3 name only what a run does, and H4 does not apply.
 
 [`experiments/mod97_scalar_mlp`](experiments/mod97_scalar_mlp/README.md)
 fits two-hidden-layer perceptrons to the whole table with full batches:
@@ -2694,8 +2702,7 @@ The outcome chooses the Lean step:
   positive measure, applied where a spurious minimum is proved.
 - H2: a lower bound on the loss of gradient descent on a quadratic model by
   its spectrum, with the flat spectrum of division.
-- H3: the second alternative of the planned M8.3; no landscape theorem says
-  more.
+- H3: the second alternative of M8.3; no landscape theorem says more.
 - H4: none; M8 says nothing where (S) fails.
 
 Outcome (#56, 2026-10-18): every gradient-descent run ends in H4. In each,

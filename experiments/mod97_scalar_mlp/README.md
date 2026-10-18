@@ -16,39 +16,49 @@ own orbit x_k:
 
 > (S) ‖∇²f(y)‖ ≤ L at every y of every segment [x_k, x_{k+1}], with η L < 1.
 
-What is proved (M8.1): under (S) step k lowers the loss by at least
+What is proved: under (S) step k lowers the loss by at least
 η (1 - η L) ‖∇f(x_k)‖²
-(`Transformer.Landscape.SaddleAvoidance.iterate_succ_le_sub_of_segment`),
-and the starts whose orbit satisfies (S) and converges to a strict saddle
-form a null set
-(`Transformer.Landscape.SaddleAvoidance.ae_not_tendsto_strictSaddle_of_segment`).
-What is planned, and not proved (M8.3, task #52): if the loss is C² and
-satisfies the Łojasiewicz inequality at its critical points, as an analytic
-loss such as a GELU perceptron's does
+(`Transformer.Landscape.SaddleAvoidance.iterate_succ_le_sub_of_segment`,
+M8.1). An analytic loss satisfies the Łojasiewicz inequality at every
+point
 (`Transformer.Landscape.SaddleAvoidance.exists_isLojasiewiczAt_of_analyticOnNhd`),
-then almost every orbit that satisfies (S) converges to a critical point
-that is not a strict saddle, or leaves every bounded set.
+and for it M8.3 proves the scheme along the orbit
+(`Transformer.Landscape.SaddleAvoidance.ae_exists_tendsto_not_isStrictSaddle_or_tendsto_norm_of_segment_of_analyticOnNhd`):
+under any distribution of starts with a density, almost every start x_0
+whose orbit satisfies (S) has an orbit that converges to a critical point
+w with f(w) ≤ f(x_0) that is not a strict saddle, or ‖x_k‖ → ∞. A GELU
+perceptron's loss is analytic in its parameters, as GELU is, and PyTorch's
+uniform initialization has a density; Lean proves neither for this network.
 
 A run that does not fit the table therefore ends in one of four ways:
 
 - **H1, a spurious minimum or a degenerate saddle:** it converges with
   positive loss. The gradient norm falls to near 0, and λ_min ≥ 0 up to the
-  Lanczos error.
+  Lanczos error. For gradient descent under (S) this is the first
+  alternative of M8.3, with f(w) > 0.
 - **H2, slowness:** it still descends when the budget ends: the slopes of
-  the loss and of the gradient norm over the final decade are negative. No
-  theorem bounds the time it needs. The residual's share of energy at high
-  frequencies of the transform over Z/97 × Z/97 shows where the fit lags:
-  the table of x / y has 98% of its energy above frequency 5, that of
-  x + y 12%.
-- **H3, divergence:** the parameter norm grows without bound.
-- **H4, a step past the curvature:** (S) fails. η·max(|λ_min|, λ_max) ≥ 1
-  at a recorded update of a gradient-descent run, and M8 says nothing
-  there. The runs sample it every 1,000 updates, not on every segment.
-  Ritz values lie inside the spectrum, so a recorded value of at least 1
-  shows that (S) fails, and values below 1 do not show that it holds.
+  the loss and of the gradient norm over the final decade are negative.
+  M8.3 leaves this open, for it bounds no time. Under (S), M8.4 bounds
+  f(x_k) - f(w) by C b^k, b < 1, when the Łojasiewicz exponent a at the
+  limit w is at most 1/2
+  (`Transformer.Landscape.SaddleAvoidance.exists_le_mul_pow_of_isLojasiewiczAt_of_segment`),
+  and by C (k + 1)^(-1/(2a - 1)) when 1/2 < a < 1
+  (`Transformer.Landscape.SaddleAvoidance.exists_le_mul_rpow_of_isLojasiewiczAt_of_segment`),
+  but gives neither C, b nor a, so no theorem bounds the time a run needs.
+  The residual's share of energy at high frequencies of the transform over
+  Z/97 × Z/97 shows where the fit lags: the table of x / y has 98% of its
+  energy above frequency 5, that of x + y 12%.
+- **H3, divergence:** the parameter norm grows without bound. For gradient
+  descent under (S) this is the second alternative of M8.3, ‖x_k‖ → ∞.
+- **H4, a step past the curvature:** (S), the hypothesis of M8.3, fails.
+  η·max(|λ_min|, λ_max) ≥ 1 at a recorded update of a gradient-descent run,
+  and M8 says nothing there. The runs sample it every 1,000 updates, not on
+  every segment. Ritz values lie inside the spectrum, so a recorded value
+  of at least 1 shows that (S) fails, and values below 1 do not show that
+  it holds.
 
-The AdamW runs are controls: (S) concerns gradient descent, and H4 does
-not apply to them.
+The AdamW runs are controls: M8.3 concerns gradient descent, so for them
+H1 to H3 name only what a run does, and H4 does not apply.
 
 ## Runs
 
