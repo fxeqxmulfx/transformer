@@ -7,8 +7,10 @@ derivative `∇f(w) - ∇f(x)` has norm at most `L ‖y - x‖` on the segment
 `[x, y]`, `f y ≤ f x + ⟪∇f(x), y - x⟫ + L ‖y - x‖²`
 (`le_add_inner_add_mul_norm_sq`); the bound on the segment is all it uses
 (`le_add_inner_add_mul_norm_sq_of_segment`).  The gradient step therefore decreases `f`
-by at least `η (1 - η L) ‖∇f(x)‖²` (`le_sub_of_gradientStep`), and `f`
-decreases along every orbit when `η L ≤ 1` (`antitone_iterate`).
+by at least `η (1 - η L) ‖∇f(x)‖²` (`le_sub_of_gradientStep`), at every step of an
+orbit (`iterate_succ_le_sub`).  Along an orbit whose steps lower `f` by at least
+`η κ ‖∇f‖²`, `κ ≥ 0`, `f` decreases (`antitone_iterate_of_le_sub`): along every
+orbit when `η L ≤ 1` (`antitone_iterate`).
 
 When `f` is invariant under translation by `v`, so is its gradient
 (`gradient_add_eq`), and the orbits of gradient descent commute with the
@@ -79,17 +81,31 @@ theorem le_sub_of_gradientStep {f : E → ℝ} (hf : Differentiable ℝ f) {L : 
       ≤ f x + -(η * ‖gradient f x‖ ^ 2) + L * (η ^ 2 * ‖gradient f x‖ ^ 2) := h
     _ = f x - η * (1 - η * L) * ‖gradient f x‖ ^ 2 := by ring
 
+/-- **The decrease along an orbit**: step `k` lowers `f` by at least
+`η (1 - η L) ‖∇f(x_k)‖²`. -/
+theorem iterate_succ_le_sub {f : E → ℝ} (hf : Differentiable ℝ f) {L : ℝ≥0}
+    (hL : LipschitzWith L (gradient f)) (η : ℝ) (x : E) (k : ℕ) :
+    f ((gradientStep f η)^[k + 1] x) ≤ f ((gradientStep f η)^[k] x) -
+      η * (1 - η * L) * ‖gradient f ((gradientStep f η)^[k] x)‖ ^ 2 := by
+  rw [Function.iterate_succ_apply']
+  exact le_sub_of_gradientStep hf hL η _
+
+/-- `f` decreases along an orbit whose steps lower it by at least `η κ ‖∇f‖²`, when
+`0 ≤ η` and `0 ≤ κ`. -/
+theorem antitone_iterate_of_le_sub {f : E → ℝ} {η κ : ℝ} (hη : 0 ≤ η) (hκ : 0 ≤ κ) {x : E}
+    (hdec : ∀ k, f ((gradientStep f η)^[k + 1] x) ≤
+      f ((gradientStep f η)^[k] x) - η * κ * ‖gradient f ((gradientStep f η)^[k] x)‖ ^ 2) :
+    Antitone fun k => f ((gradientStep f η)^[k] x) :=
+  antitone_nat_of_succ_le fun k => by
+    linarith [hdec k, mul_nonneg (mul_nonneg hη hκ)
+      (sq_nonneg ‖gradient f ((gradientStep f η)^[k] x)‖)]
+
 /-- `f` decreases along every orbit of gradient descent when `0 ≤ η` and
 `η L ≤ 1`. -/
 theorem antitone_iterate {f : E → ℝ} (hf : Differentiable ℝ f) {L : ℝ≥0}
     (hL : LipschitzWith L (gradient f)) {η : ℝ} (hη : 0 ≤ η) (hηL : η * L ≤ 1) (x : E) :
-    Antitone fun k => f ((gradientStep f η)^[k] x) := by
-  refine antitone_nat_of_succ_le fun k => ?_
-  rw [Function.iterate_succ_apply']
-  have h := le_sub_of_gradientStep hf hL η ((gradientStep f η)^[k] x)
-  have hnn := mul_nonneg (mul_nonneg hη (sub_nonneg.2 hηL))
-    (sq_nonneg ‖gradient f ((gradientStep f η)^[k] x)‖)
-  linarith
+    Antitone fun k => f ((gradientStep f η)^[k] x) :=
+  antitone_iterate_of_le_sub hη (sub_nonneg.2 hηL) (iterate_succ_le_sub hf hL η x)
 
 /-- A function invariant under translation by `v` has a gradient invariant
 under it. -/
@@ -167,5 +183,16 @@ example : let f := fun x : ℝ => (1 / 2 : ℝ) * ‖x‖ ^ 2
     exact continuous_id
   · simp only [f, iterate_gradientStep_half_mul_norm_sq, smul_eq_mul, mul_one]
     exact tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num)
+
+/-- Along the orbit of `1` for `‖x‖² / 2`, `L = 1` and `η = 1/2`, step `k` lowers `f`
+by at least `η (1 - η L) ‖x_k‖²`, and so `f` decreases, with `κ = 1 - η L = 1/2`. -/
+example := iterate_succ_le_sub (f := fun x : ℝ => (1 / 2 : ℝ) * ‖x‖ ^ 2) (L := 1)
+  ((contDiff_const.mul (contDiff_norm_sq ℝ)).differentiable one_ne_zero)
+  (by rw [gradient_half_mul_norm_sq]; exact LipschitzWith.id) (1 / 2) 1 0
+
+example := antitone_iterate_of_le_sub (f := fun x : ℝ => (1 / 2 : ℝ) * ‖x‖ ^ 2) (η := 1 / 2)
+  (by norm_num) (by norm_num) (iterate_succ_le_sub (f := fun x : ℝ => (1 / 2 : ℝ) * ‖x‖ ^ 2)
+    (L := 1) ((contDiff_const.mul (contDiff_norm_sq ℝ)).differentiable one_ne_zero)
+    (by rw [gradient_half_mul_norm_sq]; exact LipschitzWith.id) (1 / 2) 1)
 
 end Transformer.Landscape.SaddleAvoidance

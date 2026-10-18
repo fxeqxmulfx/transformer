@@ -1,17 +1,19 @@
 /-
 # Saddle avoidance — the Łojasiewicz inequality bounds gradient steps
 
-`f` satisfies the Łojasiewicz gradient inequality at `z` with exponent `a`
-when `m |f x - f z| ^ a ≤ ‖∇f(x)‖` for all `x` near `z` with
-`f z < f x < f z + ε` (`IsLojasiewiczAt`); `‖x‖² / 2` satisfies it at `0`
-with `a = 1/2` (`isLojasiewiczAt_half_mul_norm_sq`), every `f` satisfies
-it where its gradient is continuous and does not vanish
-(`isLojasiewiczAt_of_gradient_ne_zero`), and it holds with every exponent
-larger than one it holds with (`IsLojasiewiczAt.mono`).  With `0 ≤ a < 1` it
-bounds a gradient step by the drop of `(f - f z) ^ (1 - a)`
-(`mul_norm_gradientStep_sub_le`): sufficient decrease and the concavity of
-`s ↦ s ^ (1 - a)`, a weighted AM-GM inequality (`mul_sub_le_rpow_mul_sub`),
-give `m (1 - a)(1 - η L) η ‖∇f‖² ≤ ‖∇f‖ · drop`.
+`f` satisfies the Łojasiewicz gradient inequality at `z` with exponent `a` when
+`m |f x - f z| ^ a ≤ ‖∇f(x)‖` for all `x` near `z` with `f z < f x < f z + ε`
+(`IsLojasiewiczAt`); `‖x‖² / 2` satisfies it at `0` with `a = 1/2`
+(`isLojasiewiczAt_half_mul_norm_sq`), every `f` satisfies it where its gradient is
+continuous and does not vanish (`isLojasiewiczAt_of_gradient_ne_zero`), and it holds
+with every exponent larger than one it holds with (`IsLojasiewiczAt.mono`).  With
+`0 ≤ a < 1` it bounds a gradient step that lowers `f` by at least `η κ ‖∇f‖²` by the
+drop of `(f - f z) ^ (1 - a)` (`mul_norm_gradientStep_sub_le_of_le_sub`): the
+decrease and the concavity of `s ↦ s ^ (1 - a)`, a weighted AM-GM inequality
+(`mul_sub_le_rpow_mul_sub`), give `m (1 - a) κ η ‖∇f‖² ≤ ‖∇f‖ · drop`.  For an
+`L`-Lipschitz gradient the sufficient decrease gives `κ = 1 - η L`
+(`mul_norm_gradientStep_sub_le`); on `‖x‖² / 2` a step lowers `f` by exactly
+`η (1 - η / 2) ‖∇f‖²` (`half_mul_norm_sq_gradientStep`), also where `η L ≥ 1`.
 
 This is the step estimate of the proof of Theorem 3.2 of Absil, Mahony and
 Andrews, *Convergence of the iterates of descent methods for analytic cost
@@ -20,7 +22,7 @@ functions* (SIAM J. Optim. 16, 2005), which arXiv:1602.04915 cites for
 -/
 
 import Transformer.Landscape.SaddleAvoidance.Descent
-import Mathlib.Analysis.MeanInequalities
+import Transformer.Landscape.SaddleAvoidance.Sequences
 
 open Filter Metric
 open scoped Topology NNReal
@@ -46,31 +48,32 @@ theorem half_mul_norm_sq_rpow_le (x : E) : ((1 / 2 : ℝ) * ‖x‖ ^ 2) ^ (1 / 
         Real.rpow_le_rpow (by positivity) (by nlinarith [sq_nonneg ‖x‖]) (by norm_num)
     _ = ‖x‖ := by rw [← Real.sqrt_eq_rpow, Real.sqrt_sq (norm_nonneg x)]
 
+/-- `‖x‖² / 2` satisfies the gradient inequality of its minimum `0` at every point,
+with exponent `1/2` and `m = 1`. -/
+theorem abs_sub_rpow_le_norm_gradient_half_mul_norm_sq (y : E) :
+    1 * |(1 / 2 : ℝ) * ‖y‖ ^ 2 - 1 / 2 * ‖(0 : E)‖ ^ 2| ^ (1 / 2 : ℝ) ≤
+      ‖gradient (fun x : E => (1 / 2 : ℝ) * ‖x‖ ^ 2) y‖ := by
+  rw [norm_zero, zero_pow two_ne_zero, mul_zero, sub_zero, abs_of_nonneg (by positivity),
+    one_mul, gradient_half_mul_norm_sq, id]
+  exact half_mul_norm_sq_rpow_le y
+
 /-- `‖x‖² / 2` satisfies the Łojasiewicz inequality at its minimum `0` with
 exponent `1/2` and `m = 1`. -/
 theorem isLojasiewiczAt_half_mul_norm_sq :
-    IsLojasiewiczAt (fun x : E => (1 / 2 : ℝ) * ‖x‖ ^ 2) 0 (1 / 2) := by
-  refine ⟨1, one_pos, 1, one_pos, Eventually.of_forall fun y _ _ => ?_⟩
-  have h0 : (1 / 2 : ℝ) * ‖y‖ ^ 2 - 1 / 2 * ‖(0 : E)‖ ^ 2 = 1 / 2 * ‖y‖ ^ 2 := by
-    rw [norm_zero]
-    ring
-  rw [h0, abs_of_nonneg (by positivity), one_mul, gradient_half_mul_norm_sq, id]
-  exact half_mul_norm_sq_rpow_le y
+    IsLojasiewiczAt (fun x : E => (1 / 2 : ℝ) * ‖x‖ ^ 2) 0 (1 / 2) :=
+  ⟨1, one_pos, 1, one_pos, Eventually.of_forall fun y _ _ =>
+    abs_sub_rpow_le_norm_gradient_half_mul_norm_sq y⟩
 
-/-- Concavity of `s ↦ s ^ (1 - a)` as the Łojasiewicz argument uses it:
-`(1 - a)(s - t) ≤ s ^ a (s ^ (1 - a) - t ^ (1 - a))`, the weighted AM-GM
-inequality `s ^ a t ^ (1 - a) ≤ a s + (1 - a) t`. -/
-theorem mul_sub_le_rpow_mul_sub {a s t : ℝ} (ha0 : 0 ≤ a) (ha1 : a ≤ 1) (hs : 0 ≤ s)
-    (ht : 0 ≤ t) : (1 - a) * (s - t) ≤ s ^ a * (s ^ (1 - a) - t ^ (1 - a)) := by
-  have hamgm := Real.geom_mean_le_arith_mean2_weighted ha0 (sub_nonneg.2 ha1) hs ht
-    (by ring)
-  have hss : s ^ a * s ^ (1 - a) = s := by
-    rw [← Real.rpow_add' hs (by norm_num), add_sub_cancel, Real.rpow_one]
-  have hlin : (1 - a) * (s - t) = s - (a * s + (1 - a) * t) := by ring
-  rw [hlin, mul_sub, hss]
-  linarith
+/-- A gradient step on `‖x‖² / 2` lowers it by exactly `η (1 - η / 2) ‖∇f(x)‖²`. -/
+theorem half_mul_norm_sq_gradientStep (η : ℝ) (x : E) :
+    (1 / 2 : ℝ) * ‖gradientStep (fun x : E => (1 / 2 : ℝ) * ‖x‖ ^ 2) η x‖ ^ 2 =
+      1 / 2 * ‖x‖ ^ 2 -
+        η * (1 - η / 2) * ‖gradient (fun x : E => (1 / 2 : ℝ) * ‖x‖ ^ 2) x‖ ^ 2 := by
+  simp only [gradientStep_half_mul_norm_sq, gradient_half_mul_norm_sq, id, norm_smul,
+    Real.norm_eq_abs, mul_pow, sq_abs]
+  ring
 
-variable {f : E → ℝ} {L : ℝ≥0} {η a m : ℝ}
+variable {f : E → ℝ} {L : ℝ≥0} {η κ a m : ℝ}
 
 /-- **Away from critical points the inequality is free**: where the gradient
 is continuous and does not vanish, it holds with every exponent `0 ≤ a`, with
@@ -99,6 +102,49 @@ theorem IsLojasiewiczAt.mono {z : E} {b : ℝ} (h : IsLojasiewiczAt f z a) (hab 
           (Real.rpow_le_rpow_of_exponent_ge (abs_pos.2 hpos.ne') hle hab) hm.le
     _ ≤ ‖gradient f y‖ := hy h1 (h2.trans_le (by linarith [min_le_left ε 1]))
 
+/-- **A gradient step that lowers `f` by at least `η κ ‖∇f‖²`, `κ > 0`, is bounded by
+the drop of `(f - f z) ^ (1 - a)`**: if `f z` stays below `f` after the step from `x`
+and the gradient inequality holds at `x` when `f z < f x`, then for the step `x'`
+`m (1 - a) κ ‖x' - x‖ ≤ (f x - f z) ^ (1 - a) - (f x' - f z) ^ (1 - a)`. -/
+theorem mul_norm_gradientStep_sub_le_of_le_sub (hη : 0 < η) (hκ : 0 < κ) (ha0 : 0 ≤ a)
+    (ha1 : a < 1) {z x : E} (hdec : f (gradientStep f η x) ≤ f x - η * κ * ‖gradient f x‖ ^ 2)
+    (hloj : f z < f x → m * |f x - f z| ^ a ≤ ‖gradient f x‖)
+    (hz : f z ≤ f (gradientStep f η x)) :
+    m * (1 - a) * κ * ‖gradientStep f η x - x‖ ≤
+      (f x - f z) ^ (1 - a) - (f (gradientStep f η x) - f z) ^ (1 - a) := by
+  have hstep : ‖gradientStep f η x - x‖ = η * ‖gradient f x‖ := by
+    simp [gradientStep, norm_smul, abs_of_pos hη]
+  set G := ‖gradient f x‖ with hG
+  set s := f x - f z with hs
+  set t := f (gradientStep f η x) - f z with htdef
+  have ht : 0 ≤ t := sub_nonneg.2 hz
+  have hst : η * κ * G ^ 2 ≤ s - t := by linarith
+  have hts : t ≤ s := by nlinarith [mul_nonneg (mul_nonneg hη.le hκ.le) (sq_nonneg G)]
+  have hdrop : 0 ≤ s ^ (1 - a) - t ^ (1 - a) :=
+    sub_nonneg.2 (Real.rpow_le_rpow ht hts (by linarith))
+  rw [hstep]
+  rcases le_or_gt m 0 with hm | hm
+  · have hP : 0 ≤ (1 - a) * κ * (η * G) :=
+      mul_nonneg (mul_nonneg (by linarith) hκ.le) (mul_nonneg hη.le (norm_nonneg _))
+    have := mul_nonpos_of_nonpos_of_nonneg hm hP
+    linarith
+  rcases (show (0 : ℝ) ≤ G from norm_nonneg _).eq_or_lt with hG0 | hGpos
+  · rw [← hG0]
+    simpa using hdrop
+  have hspos : 0 < s := by nlinarith [mul_pos (mul_pos hη hκ) (pow_pos hGpos 2)]
+  have hl := hloj (by linarith)
+  rw [abs_of_pos hspos] at hl
+  have hamgm := mul_sub_le_rpow_mul_sub ha0 ha1.le hspos.le ht
+  have key : G * (m * (1 - a) * κ * (η * G)) ≤ G * (s ^ (1 - a) - t ^ (1 - a)) := by
+    calc G * (m * (1 - a) * κ * (η * G))
+        = m * ((1 - a) * (η * κ * G ^ 2)) := by ring
+      _ ≤ m * ((1 - a) * (s - t)) :=
+        mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hst (by linarith)) hm.le
+      _ ≤ m * (s ^ a * (s ^ (1 - a) - t ^ (1 - a))) := mul_le_mul_of_nonneg_left hamgm hm.le
+      _ = m * s ^ a * (s ^ (1 - a) - t ^ (1 - a)) := by ring
+      _ ≤ G * (s ^ (1 - a) - t ^ (1 - a)) := mul_le_mul_of_nonneg_right hl hdrop
+  exact le_of_mul_le_mul_left key hGpos
+
 /-- **A gradient step is bounded by the drop of `(f - f z) ^ (1 - a)`.**  If
 `f z` stays below `f` after the step from `x`, and the gradient inequality
 holds at `x` when `f z < f x`, then
@@ -109,48 +155,16 @@ theorem mul_norm_gradientStep_sub_le (hf : Differentiable ℝ f)
     (ha1 : a < 1) {z x : E} (hloj : f z < f x → m * |f x - f z| ^ a ≤ ‖gradient f x‖)
     (hz : f z ≤ f (gradientStep f η x)) :
     m * (1 - a) * (1 - η * L) * ‖gradientStep f η x - x‖ ≤
-      (f x - f z) ^ (1 - a) - (f (gradientStep f η x) - f z) ^ (1 - a) := by
-  have hdec := le_sub_of_gradientStep hf hL η x
-  have hstep : ‖gradientStep f η x - x‖ = η * ‖gradient f x‖ := by
-    simp [gradientStep, norm_smul, abs_of_pos hη]
-  set G := ‖gradient f x‖ with hG
-  set s := f x - f z with hs
-  set t := f (gradientStep f η x) - f z with htdef
-  have hc : 0 < 1 - η * L := by linarith
-  have ht : 0 ≤ t := sub_nonneg.2 hz
-  have hst : η * (1 - η * L) * G ^ 2 ≤ s - t := by linarith
-  have hts : t ≤ s := by nlinarith [mul_nonneg (mul_nonneg hη.le hc.le) (sq_nonneg G)]
-  have hdrop : 0 ≤ s ^ (1 - a) - t ^ (1 - a) :=
-    sub_nonneg.2 (Real.rpow_le_rpow ht hts (by linarith))
-  rw [hstep]
-  rcases le_or_gt m 0 with hm | hm
-  · have hP : 0 ≤ (1 - a) * (1 - η * L) * (η * G) :=
-      mul_nonneg (mul_nonneg (by linarith) hc.le) (mul_nonneg hη.le (norm_nonneg _))
-    have := mul_nonpos_of_nonpos_of_nonneg hm hP
-    linarith
-  rcases (show (0 : ℝ) ≤ G from norm_nonneg _).eq_or_lt with hG0 | hGpos
-  · rw [← hG0]
-    simpa using hdrop
-  have hspos : 0 < s := by nlinarith [mul_pos (mul_pos hη hc) (pow_pos hGpos 2)]
-  have hl := hloj (by linarith)
-  rw [abs_of_pos hspos] at hl
-  have hamgm := mul_sub_le_rpow_mul_sub ha0 ha1.le hspos.le ht
-  have key : G * (m * (1 - a) * (1 - η * L) * (η * G)) ≤ G * (s ^ (1 - a) - t ^ (1 - a)) := by
-    calc G * (m * (1 - a) * (1 - η * L) * (η * G))
-        = m * ((1 - a) * (η * (1 - η * L) * G ^ 2)) := by ring
-      _ ≤ m * ((1 - a) * (s - t)) :=
-        mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hst (by linarith)) hm.le
-      _ ≤ m * (s ^ a * (s ^ (1 - a) - t ^ (1 - a))) := mul_le_mul_of_nonneg_left hamgm hm.le
-      _ = m * s ^ a * (s ^ (1 - a) - t ^ (1 - a)) := by ring
-      _ ≤ G * (s ^ (1 - a) - t ^ (1 - a)) := mul_le_mul_of_nonneg_right hl hdrop
-  exact le_of_mul_le_mul_left key hGpos
+      (f x - f z) ^ (1 - a) - (f (gradientStep f η x) - f z) ^ (1 - a) :=
+  mul_norm_gradientStep_sub_le_of_le_sub hη (by linarith) ha0 ha1
+    (le_sub_of_gradientStep hf hL η x) hloj hz
 
-/-- The hypotheses of the theorems above hold for `a = 1/2`, `s = 1` and
-`t = 0`, and for `f(x) = ‖x‖² / 2` on the line with `η = 1/2`, `L = 1`,
-`a = 1/2`, `m = 1`, `z = 0` and `x = 1/4`, where the inequality holds with
-`a = 1/2 ≤ 1`, and at `z = 1`, where the gradient is `1`. -/
+/-- The hypotheses of the theorems above but `mul_norm_gradientStep_sub_le_of_le_sub`
+hold for `f(x) = ‖x‖² / 2` on the line with `η = 1/2`, `L = 1`, `a = 1/2`, `m = 1`,
+`z = 0` and `x = 1/4`, where the inequality holds with `a = 1/2 ≤ 1`, and at `z = 1`,
+where the gradient is `1`. -/
 example : let f := fun x : ℝ => (1 / 2 : ℝ) * ‖x‖ ^ 2
-    ((0 : ℝ) ≤ 1 / 2 ∧ (1 / 2 : ℝ) ≤ 1 ∧ (0 : ℝ) ≤ 1 ∧ (0 : ℝ) ≤ 0) ∧
+    (1 / 2 : ℝ) ≤ 1 ∧
     Differentiable ℝ f ∧ LipschitzWith 1 (gradient f) ∧ (0 : ℝ) < 1 / 2 ∧
       (1 / 2 : ℝ) * ((1 : ℝ≥0) : ℝ) < 1 ∧ (0 : ℝ) ≤ 1 / 2 ∧ (1 / 2 : ℝ) < 1 ∧
       (f 0 < f (1 / 4) → 1 * |f (1 / 4) - f 0| ^ (1 / 2 : ℝ) ≤ ‖gradient f (1 / 4)‖) ∧
@@ -173,5 +187,13 @@ example : let f := fun x : ℝ => (1 / 2 : ℝ) * ‖x‖ ^ 2
     exact continuousAt_id
   · rw [hg]
     exact one_ne_zero
+
+/-- With `η = 3/2`, beyond `η L < 1` for every Lipschitz constant `L ≥ 1` of its
+gradient, a step on `‖x‖² / 2` lowers it by `η κ ‖∇f‖²` with `κ = 1 - η / 2 = 1/4`;
+with `a = 1/2`, `m = 1` and `z = 0` the step from `1/4` is bounded by the drop. -/
+example := mul_norm_gradientStep_sub_le_of_le_sub (f := fun x : ℝ => (1 / 2 : ℝ) * ‖x‖ ^ 2)
+  (η := 3 / 2) (a := 1 / 2) (m := 1) (z := 0) (x := 1 / 4) (by norm_num) (by norm_num)
+  (by norm_num) (by norm_num) (half_mul_norm_sq_gradientStep _ _).le
+  (fun _ => abs_sub_rpow_le_norm_gradient_half_mul_norm_sq _) (by simp; positivity)
 
 end Transformer.Landscape.SaddleAvoidance

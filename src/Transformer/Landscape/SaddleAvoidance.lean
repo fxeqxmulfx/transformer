@@ -54,7 +54,9 @@ hypothesis and the Łojasiewicz inequality are needed only below `c`, and for
 analytic `f` the latter holds anyway.  A run can check a bound on the Hessian
 only along its own orbit, and that is enough: on the segment of a step it gives
 the sufficient decrease, and the starts whose orbit has it at its points and
-converges to a strict saddle form a null set.
+converges to a strict saddle form a null set.  Nor does the Łojasiewicz
+convergence need a global Lipschitz constant: it needs only that every step of
+the orbit lowers `f` by at least `η κ ‖∇f‖²` for some `κ > 0`.
 
 | Module | Contents |
 | --- | --- |
@@ -65,14 +67,15 @@ converges to a strict saddle form a null set.
 | `SaddleAvoidance.Preimage` | preimages of null sets are null where the derivative is invertible |
 | `SaddleAvoidance.Global` | the starts converging to symmetric unstable fixed points are null, also within a forward-invariant set on which the derivative is invertible |
 | `SaddleAvoidance.GradientDescent` | the starts converging to strict saddles are null |
-| `SaddleAvoidance.Descent` | the descent lemma, sufficient decrease, limits are critical points |
-| `SaddleAvoidance.Lojasiewicz` | the Łojasiewicz inequality bounds a step by a drop; it holds with every larger exponent (`IsLojasiewiczAt.mono`) |
-| `SaddleAvoidance.Trap` | orbits starting near a Łojasiewicz point stay near it, with finite length |
-| `SaddleAvoidance.Convergence` | orbits with a Łojasiewicz limit point converge |
+| `SaddleAvoidance.Descent` | the descent lemma, sufficient decrease at every step of an orbit (`iterate_succ_le_sub`), `f` decreases along an orbit whose steps lower it by `η κ ‖∇f‖²` (`antitone_iterate_of_le_sub`), limits are critical points |
+| `SaddleAvoidance.Sequences` | sequences without gradients: a weighted AM-GM inequality, steps bounded by drops add up and trap a sequence near a point, the values of a decreasing sequence near a value it comes close to, limit points up to translations, and a bound along a sequence holds at them |
+| `SaddleAvoidance.Lojasiewicz` | the Łojasiewicz inequality bounds a step lowering `f` by `η κ ‖∇f‖²` by a drop (`mul_norm_gradientStep_sub_le_of_le_sub`); it holds with every larger exponent (`IsLojasiewiczAt.mono`) |
+| `SaddleAvoidance.Trap` | orbits starting near a Łojasiewicz point stay near it, with finite length, also when only a decrease along the orbit is known (`mul_norm_iterate_succ_sub_le_of_le_sub`, `iterate_mem_ball_of_le_sub`, `mul_norm_iterate_sub_le_of_le_sub`) |
+| `SaddleAvoidance.Convergence` | orbits with a Łojasiewicz limit point converge, also when only a decrease along the orbit is known (`exists_tendsto_of_isLojasiewiczAt_of_le_sub`, `tendsto_of_isLojasiewiczAt_of_le_sub`) |
 | `SaddleAvoidance.Decay` | sequences dropping by a power of themselves decay geometrically or polynomially |
 | `SaddleAvoidance.Rates` | rates of gradient descent at a Łojasiewicz limit: geometric for `a ≤ 1/2` (`exists_le_mul_pow_of_isLojasiewiczAt`), `(k + 1) ^ (-(1 - a)/(2a - 1))` for `1/2 < a < 1` (`exists_le_mul_rpow_of_isLojasiewiczAt`) |
 | `SaddleAvoidance.Minimizers` | almost every limit is a local minimizer; almost every bounded orbit converges to one |
-| `SaddleAvoidance.CriticalPoints` | limit points up to translations are critical, and a bound on `f` along a sequence holds at them; the Łojasiewicz inequality at nondegenerate critical points |
+| `SaddleAvoidance.CriticalPoints` | limit points up to translations are critical, also when only a decrease along the orbit is known (`gradient_eq_zero_of_frequently_of_le_sub`); the Łojasiewicz inequality at nondegenerate critical points |
 | `SaddleAvoidance.SecondOrder` | the second-order test; Hessians at nondegenerate critical points other than strict saddles are positive definite |
 | `SaddleAvoidance.Necessary` | the gradient vanishes and the Hessian is nonnegative at a local minimizer; a critical point with a direction of negative curvature is a strict saddle |
 | `SaddleAvoidance.SecondOrderCritical` | strict saddles are the critical points with a direction of negative curvature; the landscape hypothesis from its second-order form, for global and local minimizers, also below a level |
@@ -125,6 +128,7 @@ import Transformer.Landscape.SaddleAvoidance.Preimage
 import Transformer.Landscape.SaddleAvoidance.Global
 import Transformer.Landscape.SaddleAvoidance.GradientDescent
 import Transformer.Landscape.SaddleAvoidance.Descent
+import Transformer.Landscape.SaddleAvoidance.Sequences
 import Transformer.Landscape.SaddleAvoidance.Lojasiewicz
 import Transformer.Landscape.SaddleAvoidance.Trap
 import Transformer.Landscape.SaddleAvoidance.Convergence

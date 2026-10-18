@@ -25,7 +25,7 @@ their type, and dot notation needs them in its namespace.
 * Avoidance, layer A: `Defs`, `Basic`, `Cone`, `Spectral`, `Preimage`, `Global`,
   `GradientDescent`, `Sublevel`, `Symmetrizable`, `SquareRoot`, `LinearFlow`, `TimeOne`,
   `FlowAvoidance`, `MetricFlow`, `MetricAvoidance`, `Cutoff`, `OpenAvoidance`, `Orbit`.
-* Convergence, layer B: `Descent`, `Lojasiewicz`, `Trap`, `Convergence`,
+* Convergence, layer B: `Descent`, `Sequences`, `Lojasiewicz`, `Trap`, `Convergence`,
   `CriticalPoints`, `Invariant`, `LocalInequality`, `Periodic`, `FlowTrap`,
   `FlowConvergence`, `DescentCurve`, `DescentTrap`, `DescentConvergence`,
   `SublevelConvergence`, `Analytic`, `Symmetry`.
