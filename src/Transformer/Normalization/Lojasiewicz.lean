@@ -65,6 +65,7 @@ import Transformer.Normalization.GlobalMinimumLiftingExamples
 import Transformer.Normalization.AnalyticAtlasQueryExamples
 import Transformer.Normalization.CompactBallGradientQueries
 import Transformer.Normalization.AnalyticFiberValueRelation
+import Transformer.Normalization.AnalyticMonomialCharts
 import Transformer.RealAnalyticGerms
 import Transformer.Sturm
 import Transformer.Normalization.TimeChange
