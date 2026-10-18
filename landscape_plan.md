@@ -40,7 +40,9 @@ Constraints:
 - **Work through the board.** At the user's request, the board was created
   at the root on 2026-10-18 with tasks #1–#31. After M0.1, #13 and #15 were
   removed and #32–#37 added. M6, the reuse of the scheme, added #38–#47 the
-  same day (`--tag reuse`). Every title starts with its milestone code;
+  same day (`--tag reuse`). M7, one directory for the framework, and M8,
+  conditions along the orbit, added #49–#53 the same day (`--tag layout`,
+  `--tag orbit`). Every title starts with its milestone code;
   list them with `agent-kanban list --tag landscape`. Claim a task before
   working on it.
 
@@ -394,6 +396,71 @@ constant or a compact sublevel set. The third is its landscape.
 | M6.9 | **Rates, done.** Let `IsLojasiewiczAt f w a` hold at the limit `w`. For `a ≤ 1/2`, `‖x_k - w‖` and `f x_k - f w` decay geometrically; for `1/2 < a < 1`, they decay as `k^{-(1-a)/(2a-1)}`. Prove this for gradient descent and for flows. The lab can then compare measured rates with the theory. | — |
 | M6.10 | **Symmetries, done.** Let `g` be a linear isometry with `f ∘ g = f`. Then `∇f (g x) = g ∇f(x)`, gradient steps and flows commute with `g`, and the fixed subspace of a group of such isometries is invariant. This is a building block for bridges (D). An almost-everywhere statement on an invariant subspace is about that subspace's own Lebesgue measure, and the subspace is null in `E`. So a bridge also needs the subspace to attract. | — |
 
+### M7 — One directory for the framework
+
+Tasks: M7.1 #49.
+
+Added on 2026-10-18 at the user's request. The framework and what it imports
+lie in eight directories among some fifty others, most of them papers:
+`SaddleAvoidance`, whose name covers only layer A, its model `PhaseModel`,
+`GlobalFlow`, and Łojasiewicz's theorem for analytic functions, which sits in
+the paper directory `Normalization` with its foundations `Uniformization`,
+`AnalyticPreparation`, `RealAnalyticGerms` and `Sturm`. What is proved is hard
+to find: while M8 was planned, the descent lemma on a segment was taken for
+new, though `Descent` and `Sublevel` have it.
+
+| Item | Deliverable | Depends on |
+| --- | --- | --- |
+| M7.1 | **Move, without changing a statement.** Everything the framework imports, except `Transformer.Basic`, moves with `git mv` into `src/Transformer/Landscape/`, one subdirectory per part. `SaddleAvoidance` (layers A to C, the scheme theorems, the rates) and `PhaseModel`, with `Abelian`. `GlobalFlow`. `Lojasiewicz`: the 91 modules of `Normalization` that prove Łojasiewicz's gradient inequality for analytic functions and the convergence of modulated gradient flows (`lem: loj`, App. D.1 of arXiv:2510.22026); `Normalization/Lojasiewicz.lean` becomes `Lojasiewicz/Modulated.lean`. `Basic` and `TimeChange` use the paper's dynamics `NA` and stay, with the paper's other modules. `Uniformization`, `AnalyticPreparation`, `RealAnalyticGerms` and `Sturm`, on which that theorem rests. Namespaces follow the directories (`Transformer.Landscape.SaddleAvoidance`, `Transformer.Landscape.Lojasiewicz`, …). `SaddleAvoidance` stays one directory: `IsStrictSaddle`, `IsSymmetricUnstable`, `IsDescentCurve` and `IsLojasiewiczAt` have lemmas in other modules than their own, and dot notation such as `hz.isSymmetricUnstable` needs them in one namespace; its map groups the modules by layer instead. `Landscape.lean` holds only imports and the map: for each subdirectory, what it proves and its main theorems; `Lojasiewicz.lean` gets a map of its own. Every importer changes its imports, names and `open` lines: the papers `Normalization`, `Perspective`, `Clusters`, `Interpolation`, `Causal`, `Kinetic`, `Imbalance` and `ContinuityEq` (27 modules), `src/Transformer.lean`, `scripts/phase_minima.py`, `scripts/AnalyticPreparationAxioms.lean`, the notices in `third_party/`, `EXPERIMENT_PLAN.md` and the Lean names in this plan. No statement or proof changes beyond names, namespaces, imports and `open` lines. | — |
+
+### M8 — Conditions along the orbit
+
+Tasks: M8.1 #50, M8.2 #51, M8.3 #52, M8.4 #53.
+
+Added on 2026-10-18 for losses whose gradient is not globally Lipschitz and
+whose sublevel sets need not be compact, such as a perceptron without weight
+decay. The scheme so far asks for one of two things: a global Lipschitz
+constant `hL` (M4, M6.3), or a compact sublevel set and small steps (M6.6). It
+also asks for a limit point, `hcl`. M8 asks instead for a condition that a run
+can check along its own orbit `x_k = (gradientStep f η)^[k] x`:
+
+> (S) `‖∇²f(y)‖ ≤ L` at every `y` of every segment `[x_k, x_{k+1}]`, with
+> `η L < 1`.
+
+In place of `hcl`, the conclusion gets a second alternative: `‖x_k‖ → ∞`.
+
+The descent lemma of `Descent` has `L` where the usual one has `L/2`. So (S)
+asks for `η ‖∇²f‖ < 1`, half the edge-of-stability threshold `η λ_max = 2`.
+Avoidance needs `η λ ≠ 1` at every eigenvalue anyway, and (S) gives that. M8
+is about gradient descent only, not AdamW, schedules or batches.
+
+The pieces exist:
+
+- avoidance on a forward-invariant set, `measure_inter_tendsto_strictSaddle_eq_zero` (M1.6);
+- the descent lemma on a convex set, `le_add_inner_add_mul_norm_sq_of_convex`.
+
+`hL` enters the Łojasiewicz convergence only through the sufficient decrease,
+via `le_sub_of_gradientStep` and `antitone_iterate`.
+
+| Item | Deliverable | Depends on |
+| --- | --- | --- |
+| M8.1 | **One step at a time.** (a) Sufficient decrease from a bound on the segment of one step: if `‖∇²f‖ ≤ L` on `segment ℝ x (gradientStep f η x)`, then `f (gradientStep f η x) ≤ f x - η (1 - η L) ‖∇f x‖²`, by `le_add_inner_add_mul_norm_sq_of_convex` on the segment. So `f` decreases along every orbit satisfying (S). (b) Avoidance: take `0 < η`, `η L < 1` and any Haar measure. The starts whose orbit has `‖∇²f(x_k)‖ ≤ L` at every `k` and converges to a strict saddle form a null set. These starts form a forward-invariant set, so `measure_inter_tendsto_strictSaddle_eq_zero` applies. (b) needs the bound only at the points `x_k`, not on the segments. | M7.1 |
+| M8.2 | **Łojasiewicz convergence from a decrease.** New forms of `mul_norm_gradientStep_sub_le`, `mul_norm_iterate_succ_sub_le`, `iterate_mem_ball`, `mul_norm_iterate_sub_le`, `exists_tendsto_of_isLojasiewiczAt`, `tendsto_of_isLojasiewiczAt` and `gradient_eq_zero_of_frequently`. In them a decrease along the orbit, `f x_{k+1} ≤ f x_k - η κ ‖∇f x_k‖²` for every `k` with `κ > 0`, replaces `hL` and `η L < 1`. The constant `m (1 - a)(1 - η L)` becomes `m (1 - a) κ`. Where `hL` also gave the continuity of `∇f`, that continuity becomes a hypothesis. The present theorems keep their names and statements and follow with `κ = 1 - η L`; no proof is duplicated. | M7.1 |
+| M8.3 | **The scheme along the orbit.** Let `f` be `C²`, `0 < η`, `η L < 1`, `μ` a Haar measure and `ν ≪ μ`. Let `f` satisfy the Łojasiewicz inequality, with an exponent `0 ≤ a < 1`, at every critical point below `c`. Take `ν`-almost every `x` with `f x < c` whose orbit satisfies (S). Then either the orbit converges to a critical point `w` with `f w ≤ f x` that is not a strict saddle, or `‖x_k‖ → ∞`. There is no `hL`, no `hcl` and no compact sublevel set. Route: by M8.1, `f` decreases along the orbit. An orbit with a cluster point converges by M8.2; if the cluster point is not critical, Łojasiewicz holds there anyway (`isLojasiewiczAt_of_gradient_ne_zero`). By M8.1 (b), for almost every start the limit is no strict saddle. An orbit without a cluster point leaves every closed ball (`IsCompact.exists_mapClusterPt_of_frequently`). Also: the `hcrit` form, whose first alternative ends at a global minimizer, and the analytic forms, with neither `hloj` nor a level. Two examples. For `x⁴/4 - x²/2` on `ℝ`, with `η = 1/10` and `L = 23/4`, every start in `[-3/2, 3/2]` satisfies (S), although the Hessian is unbounded. For `-x`, every orbit satisfies (S) with `L = 0` and `‖x_k‖ → ∞`. | M8.1, M8.2 |
+| M8.4 | **Rates along the orbit.** The gradient-descent rates of M6.9 (`exists_rate_estimates_of_isLojasiewiczAt`, `exists_le_mul_pow_of_isLojasiewiczAt`, `exists_le_mul_rpow_of_isLojasiewiczAt`) with the decrease of M8.2 in place of `hL`, and their forms under (S). The present theorems keep their names and statements. | M8.1, M8.2 |
+
+What M8 tells about a run of gradient descent from almost every start: the run
+ends in one of four ways.
+
+1. It converges to a critical point with no negative Hessian eigenvalue: a
+   global minimizer, a spurious local minimizer or a degenerate saddle.
+2. It is still descending when the budget ends. M8.3 has no time scale; M8.4
+   gives the rates.
+3. `‖x_k‖` grows without bound.
+4. (S) fails at some step: `η ‖∇²f‖ ≥ 1` there, and M8 says nothing.
+
+A run checks (S) only at the points it samples, not on every segment.
+
 ## Order of work
 
 1. M0.1: done on 2026-10-18.
@@ -406,6 +473,8 @@ constant or a compact sublevel set. The third is its landscape.
 7. M1.5 → M5.2, M5.3.
 8. M6.1 → M6.2, M6.3 → M6.4 → M6.8, and M6.1 → M6.6. M6.5 and M6.7 are
    independent. M6.8, M6.9 and M6.10 have low priority.
+9. M7.1 first: it moves every module of the framework, so nothing runs
+   beside it. Then M8.1 and M8.2, which are independent, then M8.3 and M8.4.
 
 M2.4 is done. The research item M3.4b waits for an argument on paper. M5.4 is
 stated on paper and waits for Lean. M3.4c has a counterexample in Lean; its
