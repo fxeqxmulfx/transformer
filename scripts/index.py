@@ -37,6 +37,13 @@ OUT = "INDEX.md"
 STOP = re.compile(r"^(?:end|namespace|section|open|variable|universe|attribute|"
                   r"set_option|/-|#)\b", re.M)
 
+# What `code` looks for: outside comments and strings, inside a block comment,
+# inside a string literal.
+OUTSIDE = re.compile(r'--|/-|"')
+IN_BLOCK = re.compile(r"/-|-/")
+IN_STRING = re.compile(r'\\.|"', re.S)
+LINE_END = re.compile(r"$", re.M)
+
 DECL = re.compile(
     r"^(?:@\[[^\]]*\]\s*)?(?:private\s+|protected\s+|noncomputable\s+)*"
     r"(theorem|lemma|def|abbrev|structure|class|instance)\s+([^\s({\[:]+)", re.M)
@@ -45,12 +52,43 @@ TRIVIAL_BODY = re.compile(
     r"^(?:by\s+)?(?:exact\s+)?(?:(?:∀|∃)[^,]*,\s*)*(?:True|0|∅|⊥)$")
 
 
+def code(text):
+    """`text` with the inside of every comment and string literal blanked and
+    its newlines kept, so offsets and line numbers still hold.  The comments
+    are Lean's: `--` to the end of the line, and `/- … -/`, docstrings
+    included, which nest; inside a string `--` and `/-` are text.  A block
+    comment keeps its opening `/-`, at which `STOP` ends a declaration."""
+    out, i = [], 0
+    while m := OUTSIDE.search(text, i):
+        # Keep text[i:a] and text[b:j], blank text[a:b]; unclosed runs to the end.
+        a = b = j = len(text)
+        if m.group() == "--":
+            a = m.start()
+            b = j = LINE_END.search(text, a).start()
+        elif m.group() == "/-":
+            a = k = m.end()
+            depth = 1
+            while depth and (n := IN_BLOCK.search(text, k)):
+                depth, k = depth + (1 if n.group() == "/-" else -1), n.end()
+            if depth == 0:
+                b = j = k
+        else:
+            a = k = m.end()
+            while (n := IN_STRING.search(text, k)) and n.group() != '"':
+                k = n.end()
+            if n:
+                b, j = n.start(), n.end()
+        out += [text[i:a], re.sub(r"[^\n]", " ", text[a:b]), text[b:j]]
+        i = j
+    out.append(text[i:])
+    return "".join(out)
+
+
 def normalize(text):
-    """Strip comments and collapse whitespace, so multi-line and one-line
-    declarations can be matched by the same patterns."""
-    text = re.sub(r"/-.*?-/", " ", text, flags=re.S)
-    text = re.sub(r"--[^\n]*", " ", text)
-    return re.sub(r"\s+", " ", text).strip()
+    """Collapse whitespace, so multi-line and one-line declarations can be
+    matched by the same patterns; `text` comes from `code`, so its comments
+    are blank but for their opening `/-`."""
+    return re.sub(r"\s+", " ", text.replace("/-", " ")).strip()
 
 
 def modules():
@@ -92,7 +130,7 @@ def incomplete_declarations():
 
 
 def scan(path, incomplete):
-    text = open(path).read()
+    text = code(open(path).read())
     marks = list(DECL.finditer(text))
     out = []
     for i, m in enumerate(marks):
