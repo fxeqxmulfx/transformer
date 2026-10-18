@@ -9,14 +9,15 @@ neighborhood of `K` (`exists_cutoff`), and a product `χ • φ` is smooth where
 `φ` is smooth on a set containing the support of `χ`
 (`contDiff_smul_of_tsupport_subset`).  A strict saddle depends only on the germ
 of the function (`IsStrictSaddle.congr_of_eventuallyEq`), so the cut-off function
-has the same strict saddles near `K`.  An open set is covered by countably many
-compact subsets, one of them containing any given compact subset
-(`exists_isCompact_cover`).
+has the same strict saddles near `K`.  For `f` of class `C²`, `χ f` has a Lipschitz
+gradient and agrees with `f` near `K` (`exists_lipschitzWith_gradient_eqOn`).  An open
+set is covered by countably many compact subsets, one of them containing any given
+compact subset (`exists_isCompact_cover`).
 
-The cutoff of `Perspective.SphereCutoffFlow`, for a general open set.
+`Perspective.SphereCutoff` builds such a cutoff by hand on the shells of tuples.
 -/
 
-import Transformer.SaddleAvoidance.Defs
+import Transformer.SaddleAvoidance.GradientDescent
 import Mathlib.Geometry.Manifold.PartitionOfUnity
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
@@ -135,5 +136,32 @@ example : IsStrictSaddle (fun x : ℝ => min (Real.cos x) 1) 0 := by
     Module.End.hasEigenvalue_of_hasEigenvector (x := 1) ⟨by simp [hH], one_ne_zero⟩⟩
   exact hcos.congr_of_eventuallyEq
     (Eventually.of_forall fun x => min_eq_left (Real.cos_le_one x))
+
+variable [FiniteDimensional ℝ E] {f : E → ℝ} {K : Set E}
+
+/-- **A cutoff gives a Lipschitz gradient near a compact set.**  For `f` of class `C²` and
+a compact `K`, some `C²` function `F` with a Lipschitz gradient agrees with `f` on an open
+neighborhood of `K`: `F = χ f` for a cutoff `χ` equal to `1` near `K` (`exists_cutoff`),
+and `∇F` is `C¹` with compact support. -/
+theorem exists_lipschitzWith_gradient_eqOn (hf : ContDiff ℝ 2 f) (hK : IsCompact K) :
+    ∃ F : E → ℝ, ContDiff ℝ 2 F ∧ (∃ L, LipschitzWith L (gradient F)) ∧
+      ∃ V, IsOpen V ∧ K ⊆ V ∧ EqOn F f V := by
+  obtain ⟨χ, hχ, -, hχc, -, V, hV, hKV, hχV⟩ := exists_cutoff hK isOpen_univ (subset_univ K) 2
+  set F : E → ℝ := fun x => χ x * f x
+  have hF : ContDiff ℝ 2 F := hχ.mul hf
+  have hF0 : ∀ x, x ∉ tsupport χ → gradient F x = 0 := fun x hx => by
+    have h : F =ᶠ[𝓝 x] fun _ => 0 := by
+      filter_upwards [notMem_tsupport_iff_eventuallyEq.1 hx] with y hy
+      simp [F, show χ y = 0 from hy]
+    rw [h.gradient_eq, gradient_fun_const]
+  have hs : HasCompactSupport (gradient F) :=
+    hχc.mono' fun x hx => by_contra fun h => hx (hF0 x h)
+  exact ⟨F, hF, (contDiff_gradient hF).lipschitzWith_of_hasCompactSupport hs one_ne_zero, V,
+    hV, hKV, fun x hx => by simp [F, hχV x hx]⟩
+
+/-- The hypotheses of `exists_lipschitzWith_gradient_eqOn` hold for `x⁴` on the line,
+whose gradient `4x³` is not Lipschitz, and `K = [0, 1]`. -/
+example := exists_lipschitzWith_gradient_eqOn (by fun_prop : ContDiff ℝ 2 fun x : ℝ => x ^ 4)
+  (isCompact_Icc (a := 0) (b := 1))
 
 end Transformer.SaddleAvoidance

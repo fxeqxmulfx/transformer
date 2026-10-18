@@ -22,7 +22,9 @@ everywhere or below a level.  The time-one map of the gradient flow of a
 derivative, and every strict saddle is a symmetric unstable fixed point of it.
 A compact sublevel set replaces the global bound on the Hessian: for small
 steps gradient descent maps it into itself, and the starts in it converging
-to a strict saddle form a null set.  Gradient flows, descending or ascending,
+to a strict saddle form a null set.  If every critical point in it is a local
+minimizer or a strict saddle and satisfies the Łojasiewicz inequality, almost
+every start in it converges to a local minimizer.  Gradient flows, descending or ascending,
 almost never converge to a strict saddle: at integer times they are orbits of
 the time-one map.  So if every critical point is a global minimizer or a
 strict saddle, almost every trajectory converges to a global minimizer.  The
@@ -78,8 +80,9 @@ gradient descent is that of the restriction of `f`.
 | `SaddleAvoidance.SquareRoot` | the square root of a positive definite map `P`; `P H` for symmetric `H` is conjugate to a symmetric map, with a negative eigenvalue if `H` has one |
 | `SaddleAvoidance.MetricFlow` | the flow `ẋ = -G(x) ∇f(x)`: its time-`t` maps are `C¹` with invertible derivatives, equal to `exp (-t G(z) ∇²f(z))` at a critical point `z`; strict saddles are symmetrizable unstable fixed points of the time-one map |
 | `SaddleAvoidance.MetricAvoidance` | the flow `ẋ = -G(x) ∇f(x)` is a one-parameter group and almost never converges to a strict saddle |
-| `SaddleAvoidance.Cutoff` | smooth cutoffs equal to `1` near a compact subset of an open set; countably many compact subsets catching every compact subset of an open set; strict saddles depend only on the germ of the function |
+| `SaddleAvoidance.Cutoff` | smooth cutoffs equal to `1` near a compact subset of an open set; near a compact set a `C²` function agrees with one whose gradient is Lipschitz; countably many compact subsets catching every compact subset of an open set; strict saddles depend only on the germ of the function |
 | `SaddleAvoidance.OpenAvoidance` | for `f` and `G` given on an open set, almost no solution of `ẋ = -G(x) ∇f(x)` that stays in a compact subset converges to a strict saddle, nor one that stays in the open set to a strict saddle in it |
+| `SaddleAvoidance.SublevelConvergence` | orbits from a compact set that gradient descent maps into itself depend only on `f` near it, and converge for small steps under the Łojasiewicz inequality; from a compact sublevel set almost every orbit converges to a local minimizer for small steps, without a global Lipschitz constant, and for analytic `f` without the Łojasiewicz hypothesis |
 | `SaddleAvoidance.DescentCurve` | curves descending `f` at two rates: gradient flows and flows in a metric; translates, monotonicity of `f`, and a curve along which `f` is constant stops |
 | `SaddleAvoidance.DescentTrap` | descent curves starting near a Łojasiewicz point stay near it, with finite length |
 | `SaddleAvoidance.DescentConvergence` | descent curves with a Łojasiewicz limit point up to translations converge, to a critical point |
@@ -129,6 +132,7 @@ import Transformer.SaddleAvoidance.MetricFlow
 import Transformer.SaddleAvoidance.MetricAvoidance
 import Transformer.SaddleAvoidance.Cutoff
 import Transformer.SaddleAvoidance.OpenAvoidance
+import Transformer.SaddleAvoidance.SublevelConvergence
 import Transformer.SaddleAvoidance.DescentCurve
 import Transformer.SaddleAvoidance.DescentTrap
 import Transformer.SaddleAvoidance.DescentConvergence
