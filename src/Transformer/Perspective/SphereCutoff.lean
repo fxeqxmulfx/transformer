@@ -11,14 +11,15 @@ both.  On the shell `ε < ‖x_i‖² < K` (`blockShell`), `χ(x) = Π_i φ(‖x
 for a bump `φ` of `ℝ` equal to `1` on `[ε, K]` (`blockCutoff`); `χ` is smooth with
 compact support away from the zero vectors (`hasCompactSupport_blockCutoff`,
 `tsupport_blockCutoff_subset`).  A product `χ • φ` is then smooth wherever `φ` is
-smooth near the support of `χ` (`contDiff_smul_of_tsupport_subset`), and block scalings
-depend linearly on their scales (`blockScaleCLM`).
+smooth near the support of `χ` (`SaddleAvoidance.contDiff_smul_of_tsupport_subset`),
+and block scalings depend linearly on their scales (`blockScaleCLM`).
 
 Source: arXiv:2312.10794v5, Appendix A, `l:nosaddleconv` (the center-stable manifold
 theorem, applied here on a shell), for `thm: boumal` of §6.
 -/
 
 import Transformer.Perspective.SphereConvergence
+import Transformer.SaddleAvoidance.Cutoff
 import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
 
 open Filter
@@ -28,25 +29,6 @@ namespace Transformer
 namespace Perspective
 
 variable {d n : ℕ}
-
-/-- **A cut-off product is smooth where the other factor is:** if `χ` is `Cᵏ` and `φ`
-is `Cᵏ` at every point of a set containing the support of `χ`, then `χ • φ` is `Cᵏ`
-everywhere, being `0` near every other point. -/
-theorem contDiff_smul_of_tsupport_subset {E F : Type*} [NormedAddCommGroup E]
-    [NormedSpace ℝ E] [NormedAddCommGroup F] [NormedSpace ℝ F] {k : WithTop ℕ∞}
-    {χ : E → ℝ} {φ : E → F} {U : Set E} (hχ : ContDiff ℝ k χ) (hχU : tsupport χ ⊆ U)
-    (hφ : ∀ x ∈ U, ContDiffAt ℝ k φ x) : ContDiff ℝ k fun x => χ x • φ x := by
-  refine contDiff_iff_contDiffAt.2 fun x => ?_
-  by_cases hx : x ∈ U
-  · exact hχ.contDiffAt.smul (hφ x hx)
-  · refine (contDiffAt_const (c := (0 : F))).congr_of_eventuallyEq ?_
-    filter_upwards [notMem_tsupport_iff_eventuallyEq.1 fun h => hx (hχU h)] with y hy
-    simp [hy]
-
-/-- The hypotheses of `contDiff_smul_of_tsupport_subset` hold for the zero cut-off. -/
-example : ContDiff ℝ 1 (fun _ : ℝ => (0 : ℝ)) ∧
-    tsupport (fun _ : ℝ => (0 : ℝ)) ⊆ Set.univ :=
-  ⟨contDiff_const, Set.subset_univ _⟩
 
 /-- **Block scaling is linear in the scales:** `c ↦ blockScale c`. -/
 noncomputable def blockScaleCLM :
