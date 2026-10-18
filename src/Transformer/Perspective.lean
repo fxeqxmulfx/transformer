@@ -173,6 +173,13 @@ Lebesgue-null (`measure_eq_zero_iff_volume_sphereCone`, `ae_iff_ae_volume`).
 (`analyticOnNhd_tupleEnergy`), and run the Łojasiewicz theorem there: for `β ≠ 0`
 every solution of `USA` and of `SA` converges to a critical point of `𝖤_β`
 (`exists_tendsto_isCriticalEBeta_of_USA`, `exists_tendsto_isCriticalEBeta_of_SA`).
+`SphereCutoff`, `SphereCutoffFlow`, `SphereSaddleAvoidance` and `SphereFlowAvoidance`
+avoid the strict saddles of `SphereSaddle`.  On each shell `1/(k+2) < ‖x_i‖² < k+2` a
+cut-off turns the rescaled flows into metric gradient flows of all of `(ℝ^d)^n`
+(`ae_not_tendsto_of_cutoff`), so for `d ≥ 3` and `β > 0`, from almost every start no
+solution of `USA` or `SA` converges to a critical point with two distinct tokens
+(`ae_USA_not_tendsto_nonTrivial`, `ae_SA_not_tendsto_nonTrivial`); the solutions of
+`USA` are unique (`USA_unique`).
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -330,6 +337,10 @@ import Transformer.Perspective.AppendixB_HighD
 import Transformer.Perspective.AppendixB_Intrinsic
 import Transformer.Perspective.SphereCritical
 import Transformer.Perspective.SphereSaddle
+import Transformer.Perspective.SphereCutoff
+import Transformer.Perspective.SphereCutoffFlow
+import Transformer.Perspective.SphereSaddleAvoidance
+import Transformer.Perspective.SphereFlowAvoidance
 import Transformer.Perspective.AppendixB_ClaimYury
 import Transformer.Perspective.AppendixB_MetricGrad
 import Transformer.Perspective.AppendixB_MetricHess
