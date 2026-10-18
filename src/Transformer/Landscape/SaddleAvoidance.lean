@@ -59,7 +59,9 @@ convergence need a global Lipschitz constant: it needs only that every step of
 the orbit lowers `f` by at least `η κ ‖∇f‖²` for some `κ > 0`.  So almost
 every start below a level whose orbit has the bound on its segments converges to
 a critical point that is not a strict saddle, or runs off to infinity; for analytic
-`f` without the Łojasiewicz hypothesis and without a level.
+`f` without the Łojasiewicz hypothesis and without a level.  The rates too need
+only the decrease of every step, and a Hessian bound on the segments of the orbit
+gives them with `κ = 1 - η L`.
 
 | Module | Contents |
 | --- | --- |
@@ -76,7 +78,8 @@ a critical point that is not a strict saddle, or runs off to infinity; for analy
 | `SaddleAvoidance.Trap` | orbits starting near a Łojasiewicz point stay near it, with finite length, also when only a decrease along the orbit is known (`mul_norm_iterate_succ_sub_le_of_le_sub`, `iterate_mem_ball_of_le_sub`, `mul_norm_iterate_sub_le_of_le_sub`) |
 | `SaddleAvoidance.Convergence` | orbits with a Łojasiewicz limit point converge, also when only a decrease along the orbit is known (`exists_tendsto_of_isLojasiewiczAt_of_le_sub`, `tendsto_of_isLojasiewiczAt_of_le_sub`) |
 | `SaddleAvoidance.Decay` | sequences dropping by a power of themselves decay geometrically or polynomially |
-| `SaddleAvoidance.Rates` | rates of gradient descent at a Łojasiewicz limit: geometric for `a ≤ 1/2` (`exists_le_mul_pow_of_isLojasiewiczAt`), `(k + 1) ^ (-(1 - a)/(2a - 1))` for `1/2 < a < 1` (`exists_le_mul_rpow_of_isLojasiewiczAt`) |
+| `SaddleAvoidance.RateEstimates` | the estimates behind the rates of gradient descent at a Łojasiewicz limit, along an orbit whose steps lower `f` by `η κ ‖∇f‖²` (`exists_rate_estimates_of_isLojasiewiczAt_of_le_sub`) |
+| `SaddleAvoidance.Rates` | rates of gradient descent at a Łojasiewicz limit: geometric for `a ≤ 1/2` (`exists_le_mul_pow_of_isLojasiewiczAt`), `(k + 1) ^ (-(1 - a)/(2a - 1))` for `1/2 < a < 1` (`exists_le_mul_rpow_of_isLojasiewiczAt`), also when only a decrease along the orbit is known (`exists_le_mul_pow_of_isLojasiewiczAt_of_le_sub`, `exists_le_mul_rpow_of_isLojasiewiczAt_of_le_sub`) |
 | `SaddleAvoidance.Minimizers` | almost every limit is a local minimizer; almost every bounded orbit converges to one |
 | `SaddleAvoidance.CriticalPoints` | limit points up to translations are critical, also when only a decrease along the orbit is known (`gradient_eq_zero_of_frequently_of_le_sub`); the Łojasiewicz inequality at nondegenerate critical points |
 | `SaddleAvoidance.SecondOrder` | the second-order test; Hessians at nondegenerate critical points other than strict saddles are positive definite |
@@ -116,6 +119,7 @@ a critical point that is not a strict saddle, or runs off to infinity; for analy
 | `SaddleAvoidance.Orbit` | a Hessian bound along the orbit: on the segment of a step it gives the sufficient decrease (`le_sub_of_gradientStep_of_segment`, `iterate_succ_le_sub_of_segment`, `antitone_iterate_of_segment`); the starts whose orbit has it at its points, or on its segments, and converges to a strict saddle are null (`measure_iterate_norm_le_tendsto_strictSaddle_eq_zero`, `measure_segment_tendsto_strictSaddle_eq_zero`, `ae_not_tendsto_strictSaddle_of_segment`) |
 | `SaddleAvoidance.OrbitLandscape` | the scheme along the orbit: an orbit with `‖∇²f‖ ≤ L`, `η L < 1`, on the segment of every step converges to a critical point no higher than its start, or runs off to infinity (`exists_tendsto_or_tendsto_norm_of_segment`); for almost every start below a level, to one that is not a strict saddle (`ae_exists_tendsto_not_isStrictSaddle_or_tendsto_norm_of_lt_of_segment`), to a global minimizer if every critical point below the level is one or a strict saddle (`ae_exists_tendsto_isMinOn_or_tendsto_norm_of_lt_of_segment`) |
 | `SaddleAvoidance.AnalyticOrbitLandscape` | the same for analytic `f`, with neither the Łojasiewicz hypothesis nor a level (`ae_exists_tendsto_not_isStrictSaddle_or_tendsto_norm_of_segment_of_analyticOnNhd`, `ae_exists_tendsto_isMinOn_or_tendsto_norm_of_segment_of_analyticOnNhd`); the double well `x⁴/4 - x²/2`, whose Hessian is unbounded, has the bound along every orbit from `[-3/2, 3/2]` for `η = 1/10` |
+| `SaddleAvoidance.OrbitRates` | the rates of gradient descent at a Łojasiewicz limit under a Hessian bound on the segments of the orbit (`exists_rate_estimates_of_isLojasiewiczAt_of_segment`, `exists_le_mul_pow_of_isLojasiewiczAt_of_segment`, `exists_le_mul_rpow_of_isLojasiewiczAt_of_segment`) |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
 and `thm:main` of arXiv:1602.04915.  Both rest on the center-stable manifold
@@ -138,6 +142,7 @@ import Transformer.Landscape.SaddleAvoidance.Lojasiewicz
 import Transformer.Landscape.SaddleAvoidance.Trap
 import Transformer.Landscape.SaddleAvoidance.Convergence
 import Transformer.Landscape.SaddleAvoidance.Decay
+import Transformer.Landscape.SaddleAvoidance.RateEstimates
 import Transformer.Landscape.SaddleAvoidance.Rates
 import Transformer.Landscape.SaddleAvoidance.Minimizers
 import Transformer.Landscape.SaddleAvoidance.CriticalPoints
@@ -178,3 +183,4 @@ import Transformer.Landscape.SaddleAvoidance.AnalyticLevelLandscape
 import Transformer.Landscape.SaddleAvoidance.Orbit
 import Transformer.Landscape.SaddleAvoidance.OrbitLandscape
 import Transformer.Landscape.SaddleAvoidance.AnalyticOrbitLandscape
+import Transformer.Landscape.SaddleAvoidance.OrbitRates

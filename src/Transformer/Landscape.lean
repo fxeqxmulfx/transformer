@@ -29,7 +29,8 @@ their type, and dot notation needs them in its namespace.
   `CriticalPoints`, `Invariant`, `LocalInequality`, `Periodic`, `FlowTrap`,
   `FlowConvergence`, `DescentCurve`, `DescentTrap`, `DescentConvergence`,
   `SublevelConvergence`, `Analytic`, `Symmetry`.
-* Rates: `Decay`, `Rates`, `FlowDecay`, `DescentEstimates`, `FlowRates`.
+* Rates: `Decay`, `RateEstimates`, `Rates`, `OrbitRates`, `FlowDecay`, `DescentEstimates`,
+  `FlowRates`.
 * The scheme, layer C: `Minimizers`, `SecondOrder`, `Necessary`, `SecondOrderCritical`,
   `Nondegenerate`, `Landscape`, `FlowLandscape`, `AnalyticLandscape`, `LevelLandscape`,
   `FlowLevelLandscape`, `AnalyticLevelLandscape`, `OrbitLandscape`, `AnalyticOrbitLandscape`.
