@@ -114,7 +114,10 @@ synchronized has `4 (1/τ + 1/τ_max) f'(0) ≤ ∫_{-π}^{π} |f'''|₊`
 `f_β(x) = sin x e^{β(cos x - 1)}`: `f_β' < 0` off `[-τ_β, τ_β]` (`f_β'_neg`), the
 sign regions of `f_β'''` from the quartic `p(cos x)` (`positiveregion`,
 `positiveregion2`), and `∫_{-π}^{π} |f_β'''|₊` through `f_β''` at the sign
-changes (`integral_posPart_f_β'''_le`).
+changes (`integral_posPart_f_β'''_le`).  `SyncKernelExp` through
+`SyncKernelBetaOne` prove `τ_β < 1/√β` (`corollary:tau2`) and, for `β ≥ 1`,
+`-(8/5)√β ≤ f_β'' ≤ (2/5)√β` on `[0, π]`, hence `lemma:beta1` and
+`τ_β ∫_{-π}^{π} |f_β'''|₊ < 4` (`τ_mul_integral_posPart_f_β'''_lt_four`).
 `SphereCritical` and `SphereSaddle` follow Appendix C of arXiv:2405.18273
 (Criscitiello, Rebjock, McRae, Boumal): for `d ≥ 3` and `β > 0`, every
 critical point of `𝖤_β` on `(𝕊^{d-1})^n` with two distinct tokens is a strict
@@ -254,6 +257,9 @@ import Transformer.Perspective.SyncKernelIntegral
 import Transformer.Perspective.CircleAngles
 import Transformer.Perspective.CircleUniform
 import Transformer.Perspective.CircleNull
+import Transformer.Perspective.SyncKernelExp
+import Transformer.Perspective.SyncKernelSecond
+import Transformer.Perspective.SyncKernelBetaOne
 import Transformer.Perspective.InnerAsymptotics
 import Transformer.Perspective.PeanoTaylor
 import Transformer.Perspective.AppendixB_EBeta
