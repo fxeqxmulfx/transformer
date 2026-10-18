@@ -42,6 +42,9 @@ inequality at every point, so for analytic energies that hypothesis is dropped:
 an orbit of gradient descent or a trajectory of the gradient flow with a limit
 point up to translations converges to a critical point, every one does when
 the translations span the space, and so does every bounded one.
+At a limit where the Łojasiewicz inequality holds with exponent `a`, orbits
+of gradient descent and descent curves converge geometrically for `a ≤ 1/2`,
+and as `k ^ (-(1 - a)/(2a - 1))` for `1/2 < a < 1`, in `f` and in norm.
 A linear isometry preserving `f` commutes with gradient steps and gradient
 flows.  The subspace fixed by a set of such isometries is invariant, and on it
 gradient descent is that of the restriction of `f`.
@@ -56,9 +59,11 @@ gradient descent is that of the restriction of `f`.
 | `SaddleAvoidance.Global` | the starts converging to symmetric unstable fixed points are null, also within a forward-invariant set on which the derivative is invertible |
 | `SaddleAvoidance.GradientDescent` | the starts converging to strict saddles are null |
 | `SaddleAvoidance.Descent` | the descent lemma, sufficient decrease, limits are critical points |
-| `SaddleAvoidance.Lojasiewicz` | the Łojasiewicz inequality bounds a step by a drop |
+| `SaddleAvoidance.Lojasiewicz` | the Łojasiewicz inequality bounds a step by a drop; it holds with every larger exponent (`IsLojasiewiczAt.mono`) |
 | `SaddleAvoidance.Trap` | orbits starting near a Łojasiewicz point stay near it, with finite length |
 | `SaddleAvoidance.Convergence` | orbits with a Łojasiewicz limit point converge |
+| `SaddleAvoidance.Decay` | sequences dropping by a power of themselves decay geometrically or polynomially |
+| `SaddleAvoidance.Rates` | rates of gradient descent at a Łojasiewicz limit: geometric for `a ≤ 1/2` (`exists_le_mul_pow_of_isLojasiewiczAt`), `(k + 1) ^ (-(1 - a)/(2a - 1))` for `1/2 < a < 1` (`exists_le_mul_rpow_of_isLojasiewiczAt`) |
 | `SaddleAvoidance.Minimizers` | almost every limit is a local minimizer; almost every bounded orbit converges to one |
 | `SaddleAvoidance.CriticalPoints` | limit points up to translations are critical; the Łojasiewicz inequality at nondegenerate critical points |
 | `SaddleAvoidance.SecondOrder` | the second-order test; Hessians at nondegenerate critical points other than strict saddles are positive definite |
@@ -86,6 +91,9 @@ gradient descent is that of the restriction of `f`.
 | `SaddleAvoidance.DescentCurve` | curves descending `f` at two rates: gradient flows and flows in a metric; translates, monotonicity of `f`, and a curve along which `f` is constant stops |
 | `SaddleAvoidance.DescentTrap` | descent curves starting near a Łojasiewicz point stay near it, with finite length |
 | `SaddleAvoidance.DescentConvergence` | descent curves with a Łojasiewicz limit point up to translations converge, to a critical point |
+| `SaddleAvoidance.FlowDecay` | functions decreasing at a power of themselves decay exponentially or polynomially |
+| `SaddleAvoidance.DescentEstimates` | the estimates behind the rates of descent curves at a Łojasiewicz limit |
+| `SaddleAvoidance.FlowRates` | rates of descent curves and gradient flows at a Łojasiewicz limit: exponential for `a ≤ 1/2` (`IsDescentCurve.exists_le_mul_exp_of_isLojasiewiczAt`), `(t + 1) ^ (-(1 - a)/(2a - 1))` for `1/2 < a < 1` (`IsDescentCurve.exists_le_mul_rpow_of_isLojasiewiczAt`) |
 | `SaddleAvoidance.Symmetry` | isometries preserving `f` carry its gradient along and commute with gradient steps and flows; the subspace they fix is invariant, its critical points along it are critical (symmetric criticality), and gradient descent on it is that of the restriction of `f` |
 | `SaddleAvoidance.Analytic` | for an analytic function, orbits of gradient descent and gradient flows with a limit point up to translations converge, to a critical point (`exists_tendsto_of_analyticOnNhd`, `exists_tendsto_gradientFlow_of_analyticOnNhd`); every one when the translations span the space (`exists_tendsto_of_span_eq_top_of_analyticOnNhd`, `exists_tendsto_gradientFlow_of_span_eq_top_of_analyticOnNhd`); every bounded one (`exists_tendsto_of_isBounded_of_analyticOnNhd`, `exists_tendsto_gradientFlow_of_isBounded_of_analyticOnNhd`) |
 | `SaddleAvoidance.AnalyticLandscape` | the scheme theorems for analytic functions, without the Łojasiewicz hypothesis: `ae_exists_tendsto_isMinOn_of_analyticOnNhd`, `ae_exists_tendsto_isMinOn_of_span_eq_top_of_analyticOnNhd`, `ae_exists_tendsto_isLocalMin_of_analyticOnNhd`, `ae_exists_tendsto_gradientFlow_isMinOn_of_analyticOnNhd`, `ae_exists_tendsto_gradientFlow_isMinOn_of_span_eq_top_of_analyticOnNhd` |
@@ -109,6 +117,8 @@ import Transformer.SaddleAvoidance.Descent
 import Transformer.SaddleAvoidance.Lojasiewicz
 import Transformer.SaddleAvoidance.Trap
 import Transformer.SaddleAvoidance.Convergence
+import Transformer.SaddleAvoidance.Decay
+import Transformer.SaddleAvoidance.Rates
 import Transformer.SaddleAvoidance.Minimizers
 import Transformer.SaddleAvoidance.CriticalPoints
 import Transformer.SaddleAvoidance.SecondOrder
@@ -136,6 +146,9 @@ import Transformer.SaddleAvoidance.SublevelConvergence
 import Transformer.SaddleAvoidance.DescentCurve
 import Transformer.SaddleAvoidance.DescentTrap
 import Transformer.SaddleAvoidance.DescentConvergence
+import Transformer.SaddleAvoidance.FlowDecay
+import Transformer.SaddleAvoidance.DescentEstimates
+import Transformer.SaddleAvoidance.FlowRates
 import Transformer.SaddleAvoidance.Symmetry
 import Transformer.SaddleAvoidance.Analytic
 import Transformer.SaddleAvoidance.AnalyticLandscape

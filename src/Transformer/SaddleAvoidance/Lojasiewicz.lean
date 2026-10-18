@@ -4,9 +4,10 @@
 `f` satisfies the Łojasiewicz gradient inequality at `z` with exponent `a`
 when `m |f x - f z| ^ a ≤ ‖∇f(x)‖` for all `x` near `z` with
 `f z < f x < f z + ε` (`IsLojasiewiczAt`); `‖x‖² / 2` satisfies it at `0`
-with `a = 1/2` (`isLojasiewiczAt_half_mul_norm_sq`), and every `f` satisfies
+with `a = 1/2` (`isLojasiewiczAt_half_mul_norm_sq`), every `f` satisfies
 it where its gradient is continuous and does not vanish
-(`isLojasiewiczAt_of_gradient_ne_zero`).  With `0 ≤ a < 1` it
+(`isLojasiewiczAt_of_gradient_ne_zero`), and it holds with every exponent
+larger than one it holds with (`IsLojasiewiczAt.mono`).  With `0 ≤ a < 1` it
 bounds a gradient step by the drop of `(f - f z) ^ (1 - a)`
 (`mul_norm_gradientStep_sub_le`): sufficient decrease and the concavity of
 `s ↦ s ^ (1 - a)`, a weighted AM-GM inequality (`mul_sub_le_rpow_mul_sub`),
@@ -84,6 +85,20 @@ theorem isLojasiewiczAt_of_gradient_ne_zero {z : E} (hc : ContinuousAt (gradient
   have := mul_le_mul_of_nonneg_left h01 (half_pos hpos).le
   linarith
 
+/-- **A larger exponent.**  The Łojasiewicz inequality with exponent `a`
+gives it with every exponent `b ≥ a`: below `f z + 1`,
+`|f x - f z| ^ b ≤ |f x - f z| ^ a`. -/
+theorem IsLojasiewiczAt.mono {z : E} {b : ℝ} (h : IsLojasiewiczAt f z a) (hab : a ≤ b) :
+    IsLojasiewiczAt f z b := by
+  obtain ⟨m, hm, ε, hε, hev⟩ := h
+  refine ⟨m, hm, min ε 1, lt_min hε one_pos, hev.mono fun y hy h1 h2 => ?_⟩
+  have hpos : 0 < f y - f z := sub_pos.2 h1
+  have hle : |f y - f z| ≤ 1 := (abs_of_pos hpos).trans_le (by linarith [min_le_right ε 1])
+  calc m * |f y - f z| ^ b ≤ m * |f y - f z| ^ a :=
+        mul_le_mul_of_nonneg_left
+          (Real.rpow_le_rpow_of_exponent_ge (abs_pos.2 hpos.ne') hle hab) hm.le
+    _ ≤ ‖gradient f y‖ := hy h1 (h2.trans_le (by linarith [min_le_left ε 1]))
+
 /-- **A gradient step is bounded by the drop of `(f - f z) ^ (1 - a)`.**  If
 `f z` stays below `f` after the step from `x`, and the gradient inequality
 holds at `x` when `f z < f x`, then
@@ -132,22 +147,23 @@ theorem mul_norm_gradientStep_sub_le (hf : Differentiable ℝ f)
 
 /-- The hypotheses of the theorems above hold for `a = 1/2`, `s = 1` and
 `t = 0`, and for `f(x) = ‖x‖² / 2` on the line with `η = 1/2`, `L = 1`,
-`a = 1/2`, `m = 1`, `z = 0` and `x = 1/4`, and at `z = 1`, where the gradient
-is `1`. -/
+`a = 1/2`, `m = 1`, `z = 0` and `x = 1/4`, where the inequality holds with
+`a = 1/2 ≤ 1`, and at `z = 1`, where the gradient is `1`. -/
 example : let f := fun x : ℝ => (1 / 2 : ℝ) * ‖x‖ ^ 2
     ((0 : ℝ) ≤ 1 / 2 ∧ (1 / 2 : ℝ) ≤ 1 ∧ (0 : ℝ) ≤ 1 ∧ (0 : ℝ) ≤ 0) ∧
     Differentiable ℝ f ∧ LipschitzWith 1 (gradient f) ∧ (0 : ℝ) < 1 / 2 ∧
       (1 / 2 : ℝ) * ((1 : ℝ≥0) : ℝ) < 1 ∧ (0 : ℝ) ≤ 1 / 2 ∧ (1 / 2 : ℝ) < 1 ∧
       (f 0 < f (1 / 4) → 1 * |f (1 / 4) - f 0| ^ (1 / 2 : ℝ) ≤ ‖gradient f (1 / 4)‖) ∧
-      f 0 ≤ f (gradientStep f (1 / 2) (1 / 4)) ∧ ContinuousAt (gradient f) 1 ∧
-      gradient f 1 ≠ 0 := by
+      f 0 ≤ f (gradientStep f (1 / 2) (1 / 4)) ∧ IsLojasiewiczAt f 0 (1 / 2) ∧
+      ContinuousAt (gradient f) 1 ∧ gradient f 1 ≠ 0 := by
   intro f
   have hg : gradient f = id := gradient_half_mul_norm_sq
   have hf0 : ∀ y, f y - f 0 = 1 / 2 * ‖y‖ ^ 2 := fun y => by
     simp only [f, norm_zero]
     ring
   refine ⟨by norm_num, (contDiff_const.mul (contDiff_norm_sq ℝ)).differentiable one_ne_zero, ?_,
-    by norm_num, by norm_num, by norm_num, by norm_num, fun _ => ?_, ?_, ?_, ?_⟩
+    by norm_num, by norm_num, by norm_num, by norm_num, fun _ => ?_, ?_,
+    isLojasiewiczAt_half_mul_norm_sq, ?_, ?_⟩
   · rw [hg]
     exact LipschitzWith.id
   · rw [hf0, abs_of_nonneg (by positivity), one_mul, hg, id]
