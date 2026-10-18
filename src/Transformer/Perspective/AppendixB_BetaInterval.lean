@@ -14,7 +14,6 @@ The block Hessian on the circle (`eq: taylor2`, `eq: taylor3`) is in
 -/
 
 import Transformer.Basic
-import Transformer.Perspective.Section4_LargeBeta
 import Transformer.Perspective.Section1_IPS
 
 open scoped BigOperators

@@ -35635,20 +35635,20 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`subsingleton_slice_closure_stayNear`](src/Transformer/Perspective/AppendixA_StayNear.lean#L134) | theorem | proved |
 | [`measure_closure_stayNear`](src/Transformer/Perspective/AppendixA_StayNear.lean#L159) | theorem | proved |
 
-**[Transformer.Perspective.AppendixB_BetaInterval](src/Transformer/Perspective/AppendixB_BetaInterval.lean)** — 141 lines
+**[Transformer.Perspective.AppendixB_BetaInterval](src/Transformer/Perspective/AppendixB_BetaInterval.lean)** — 140 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
-| [`g_β_2d`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L31) | def |  |
-| [`g_β_d`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L37) | def |  |
-| [`cosTauStar`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L45) | def |  |
-| [`τ_β_star`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L53) | def |  |
-| [`sq_sqrt_disc`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L56) | theorem | proved |
-| [`cosTauStar_pos`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L64) | theorem | proved |
-| [`cosTauStar_le_one`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L74) | theorem | proved |
-| [`cosTauStar_quadratic`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L88) | theorem | proved |
-| [`τ_β_star_spec`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L98) | theorem | proved |
-| [`τ_β_star_unique`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L116) | theorem | proved |
+| [`g_β_2d`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L30) | def |  |
+| [`g_β_d`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L36) | def |  |
+| [`cosTauStar`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L44) | def |  |
+| [`τ_β_star`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L52) | def |  |
+| [`sq_sqrt_disc`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L55) | theorem | proved |
+| [`cosTauStar_pos`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L63) | theorem | proved |
+| [`cosTauStar_le_one`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L73) | theorem | proved |
+| [`cosTauStar_quadratic`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L87) | theorem | proved |
+| [`τ_β_star_spec`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L97) | theorem | proved |
+| [`τ_β_star_unique`](src/Transformer/Perspective/AppendixB_BetaInterval.lean#L115) | theorem | proved |
 
 **[Transformer.Perspective.AppendixB_ClaimYury](src/Transformer/Perspective/AppendixB_ClaimYury.lean)** — 117 lines
 
