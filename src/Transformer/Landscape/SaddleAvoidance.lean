@@ -51,7 +51,10 @@ gradient descent is that of the restriction of `f`.  Most landscape theorems
 describe only the critical points below a level `c`.  Gradient descent and
 gradient flows do not raise `f`, so for the starts below `c` the landscape
 hypothesis and the Łojasiewicz inequality are needed only below `c`, and for
-analytic `f` the latter holds anyway.
+analytic `f` the latter holds anyway.  A run can check a bound on the Hessian
+only along its own orbit, and that is enough: on the segment of a step it gives
+the sufficient decrease, and the starts whose orbit has it at its points and
+converges to a strict saddle form a null set.
 
 | Module | Contents |
 | --- | --- |
@@ -104,6 +107,7 @@ analytic `f` the latter holds anyway.
 | `SaddleAvoidance.LevelLandscape` | below a level `c`: almost every start of gradient descent below `c` converges to a critical point that is not a strict saddle, and to a global minimizer if every critical point below `c` is one or a strict saddle; the hypotheses are asked only below `c` |
 | `SaddleAvoidance.FlowLevelLandscape` | the same for gradient flows |
 | `SaddleAvoidance.AnalyticLevelLandscape` | both for analytic `f`, without the Łojasiewicz hypothesis |
+| `SaddleAvoidance.Orbit` | a Hessian bound along the orbit: on the segment of a step it gives the sufficient decrease (`le_sub_of_gradientStep_of_segment`, `iterate_succ_le_sub_of_segment`, `antitone_iterate_of_segment`); the starts whose orbit has it at its points, or on its segments, and converges to a strict saddle are null (`measure_iterate_norm_le_tendsto_strictSaddle_eq_zero`, `measure_segment_tendsto_strictSaddle_eq_zero`, `ae_not_tendsto_strictSaddle_of_segment`) |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
 and `thm:main` of arXiv:1602.04915.  Both rest on the center-stable manifold
@@ -162,3 +166,4 @@ import Transformer.Landscape.SaddleAvoidance.AnalyticLandscape
 import Transformer.Landscape.SaddleAvoidance.LevelLandscape
 import Transformer.Landscape.SaddleAvoidance.FlowLevelLandscape
 import Transformer.Landscape.SaddleAvoidance.AnalyticLevelLandscape
+import Transformer.Landscape.SaddleAvoidance.Orbit
