@@ -118,6 +118,12 @@ changes (`integral_posPart_f_β'''_le`).  `SyncKernelExp` through
 `SyncKernelBetaOne` prove `τ_β < 1/√β` (`corollary:tau2`) and, for `β ≥ 1`,
 `-(8/5)√β ≤ f_β'' ≤ (2/5)√β` on `[0, π]`, hence `lemma:beta1` and
 `τ_β ∫_{-π}^{π} |f_β'''|₊ < 4` (`τ_mul_integral_posPart_f_β'''_lt_four`).
+`SyncKernelPieces` bounds `f_β''` on
+pieces of `cos x`, `SyncKernelCert` turns such bounds into certificates, and
+`SyncKernelSmallBeta` derives `τ_β ∫_{-π}^{π} |f_β'''|₊ < 4` for `0 < β < 1`
+(`τ_mul_integral_posPart_f_β'''_lt_four_of_lt_one`) and `lemma:beta_0.75`,
+`lemma:beta_0.5`, `lemma:beta_0.33`, `lemma:beta_final` (`beta_0_75`, …,
+`beta_final`).
 `SphereCritical` and `SphereSaddle` follow Appendix C of arXiv:2405.18273
 (Criscitiello, Rebjock, McRae, Boumal): for `d ≥ 3` and `β > 0`, every
 critical point of `𝖤_β` on `(𝕊^{d-1})^n` with two distinct tokens is a strict
@@ -254,6 +260,9 @@ import Transformer.Perspective.SyncKernelQuartic
 import Transformer.Perspective.SyncKernelSign
 import Transformer.Perspective.SyncKernelRegions
 import Transformer.Perspective.SyncKernelIntegral
+import Transformer.Perspective.SyncKernelPieces
+import Transformer.Perspective.SyncKernelCert
+import Transformer.Perspective.SyncKernelSmallBeta
 import Transformer.Perspective.CircleAngles
 import Transformer.Perspective.CircleUniform
 import Transformer.Perspective.CircleNull
