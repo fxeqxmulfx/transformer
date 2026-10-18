@@ -22,7 +22,10 @@ steps gradient descent maps it into itself, and the starts in it converging
 to a strict saddle form a null set.  Gradient flows, descending or ascending,
 almost never converge to a strict saddle: at integer times they are orbits of
 the time-one map.  So if every critical point is a global minimizer or a
-strict saddle, almost every trajectory converges to a global minimizer.
+strict saddle, almost every trajectory converges to a global minimizer.  The
+avoidance theorem extends to fixed points whose derivative is conjugate to a
+symmetric map, and with it to the flows `ẋ = -G(x) ∇f(x)` with `G` symmetric
+positive definite at the strict saddles.
 
 | Module | Contents |
 | --- | --- |
@@ -53,6 +56,10 @@ strict saddle, almost every trajectory converges to a global minimizer.
 | `SaddleAvoidance.Sublevel` | avoidance on a forward-invariant set; small steps keep gradient descent in a compact sublevel set, from which almost no start converges to a strict saddle |
 | `SaddleAvoidance.FlowAvoidance` | the gradient flow is a one-parameter group whose integer times iterate the time-one map; gradient descent and ascent flows almost never converge to a strict saddle |
 | `SaddleAvoidance.FlowLandscape` | limits of gradient flows are critical; if every critical point is a global minimizer or a strict saddle, almost every trajectory converges to a global minimizer; for periodic functions without a hypothesis on the trajectories |
+| `SaddleAvoidance.Symmetrizable` | fixed points whose derivative is conjugate to a symmetric map: their stay sets are null, and so are the starts converging to them |
+| `SaddleAvoidance.SquareRoot` | the square root of a positive definite map `P`; `P H` for symmetric `H` is conjugate to a symmetric map, with a negative eigenvalue if `H` has one |
+| `SaddleAvoidance.MetricFlow` | the flow `ẋ = -G(x) ∇f(x)`: its time-`t` maps are `C¹` with invertible derivatives, equal to `exp (-t G(z) ∇²f(z))` at a critical point `z`; strict saddles are symmetrizable unstable fixed points of the time-one map |
+| `SaddleAvoidance.MetricAvoidance` | the flow `ẋ = -G(x) ∇f(x)` is a one-parameter group and almost never converges to a strict saddle |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
 and `thm:main` of arXiv:1602.04915.  Both rest on the center-stable manifold
@@ -89,3 +96,7 @@ import Transformer.SaddleAvoidance.TimeOne
 import Transformer.SaddleAvoidance.Sublevel
 import Transformer.SaddleAvoidance.FlowAvoidance
 import Transformer.SaddleAvoidance.FlowLandscape
+import Transformer.SaddleAvoidance.Symmetrizable
+import Transformer.SaddleAvoidance.SquareRoot
+import Transformer.SaddleAvoidance.MetricFlow
+import Transformer.SaddleAvoidance.MetricAvoidance
