@@ -18,19 +18,24 @@ energy `𝖤_β` in the regime `β ≪ 1`:
                           sphere, which this development does not carry.
 * `eq: metric.grad`, `eq: metric.hess` — already in `AppendixB`.
 
-The synthesis of `thm: beta.tiny` — non-synchronized critical points of `𝖤_β`
+The synthesis of the appendix — non-synchronized critical points of `𝖤_β`
 are strict saddles for `β ≤ c/n`, hence (with `l:nosaddleconv`) clustering for
-a.e. initial condition — is not formalized.
+a.e. initial condition — is not formalized.  `thm: beta.tiny` itself,
+`beta_tiny`, is proved at the end by another route: almost every initial tuple
+clusters for every `β ≥ 0` (`clustering_of_nonneg`), on the circle by
+`clustering_circle` and for `d ≥ 3` by `thm: boumal` (`boumal_clustering`).
 -/
 
 import Transformer.Basic
 import Transformer.Perspective.Section3_SmallBeta
 import Transformer.Perspective.AppendixA_Beta0
+import Transformer.Perspective.CircleClustering
+import Transformer.Perspective.Section5_HighD
 import Mathlib.Analysis.Calculus.Deriv.Slope
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 open scoped BigOperators
-open Real
+open Real MeasureTheory
 
 namespace Transformer
 namespace Perspective
@@ -136,6 +141,56 @@ theorem eigvalBetaConst_pos (hd : 2 ≤ d) (hn : 1 ≤ n) :
 /-- The hypotheses of `eigvalBetaConst_pos` are satisfiable: the survey's own
 regime `d = 2`, `n = 2` meets them. -/
 example : 2 ≤ 2 ∧ 1 ≤ 2 := ⟨le_refl 2, one_le_two⟩
+
+/-- **For `d, n ≥ 2` and every `β ≥ 0`, almost every initial tuple
+clusters**, for `SA` and for `USA`: on the circle by `clustering_circle`, for
+`d ≥ 3` by `thm: boumal` (`boumal_clustering`).
+
+Source: arXiv:2312.10794v5, §6, before `thm: boumal`: "the restrictions on
+`β` provided by Theorems `thm: beta.tiny` and `thm: beta.interval` are
+specific to the two-dimensional case"; for `d = 2` and `β ≥ -0.16`,
+arXiv:2507.22857v1, §2, `cor:conjecture` and `cor:conjecturenormal`. -/
+theorem clustering_of_nonneg (hd : 2 ≤ d) (hn : 2 ≤ n) {β : ℝ} (hβ : 0 ≤ β)
+    (P : Measure (SphereTuple d n)) (hP : UniformTuple d n P) :
+    ∀ᵐ X₀ ∂P, X₀ ∈ clusteringSet d n β ∧ X₀ ∈ clusteringSetUSA d n β := by
+  rcases hd.eq_or_lt with rfl | hd
+  · exact clustering_circle n hβ P hP
+  · exact boumal_clustering d n hd hn β hβ P hP
+
+/-- **Theorem (thm: beta.tiny).** *Cluster collapse when `β ≤ C/n`.*
+
+"Fix `d, n ≥ 2`.  There exists a numerical constant `C > 0` such that whenever
+`β ≤ C n⁻¹` the following holds": for Lebesgue-almost any
+`(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n` there exists `x⋆ ∈ 𝕊^{d-1}` with
+`lim_{t→∞} x_i(t) = x⋆` for all `i`, for the solution of `SA` (resp. `USA`)
+starting there — that is, `𝒮_β = clusteringSet` is co-null, and so is its
+`USA` counterpart `clusteringSetUSA`; both are concluded.
+
+Change: the constant is *numerical*, so `C` is chosen before `d` and `n`; the
+former statement chose it after them.  `C = 1` works: the conclusion holds for
+every `β ≥ 0` (`clustering_of_nonneg`).
+
+Moreover, when `d = 2` one can take `β ≤ 1` (`beta_tiny_circle`, in
+`Transformer.Perspective.CircleClustering`, after its proof).
+
+As in `beta0_consensus` the almost-everywhere quantifier is necessary: the
+antipodal pair `n = 2`, `x₂ = -x₁` is stationary for `SA` at every `β`, since
+the weighted mean `(e^{β} x₁ + e^{-β} x₂) / Z` is again a multiple of `x₁` and
+its projection onto `T_{x₁} 𝕊^{d-1}` vanishes.
+
+Source: arXiv:2312.10794v5, §4, `thm: beta.tiny`; its proof, Appendix C, runs
+through strict saddles for `β ≤ c/n` instead. -/
+theorem beta_tiny :
+    ∃ C : ℝ, 0 < C ∧ ∀ d n : ℕ, 2 ≤ d → 2 ≤ n → ∀ β : ℝ, 0 ≤ β → β ≤ C / n →
+      ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
+        ∀ᵐ X₀ ∂P, X₀ ∈ clusteringSet d n β ∧ X₀ ∈ clusteringSetUSA d n β :=
+  ⟨1, one_pos, fun d n hd hn _ hβ _ => clustering_of_nonneg d n hd hn hβ⟩
+
+/-- The hypotheses of `clustering_of_nonneg` and `beta_tiny` are satisfiable:
+`d = n = 2`, `β = 0 ≤ 1/2`, and the product of circle laws. -/
+example : 2 ≤ 2 ∧ 2 ≤ 2 ∧ (0 : ℝ) ≤ 0 ∧ (0 : ℝ) ≤ 1 / (2 : ℕ) ∧
+    UniformTuple 2 2 (Measure.pi fun _ : Idx 2 => circleLaw) :=
+  ⟨le_rfl, le_rfl, le_rfl, by norm_num, uniformTuple_circleLaw 2⟩
 
 end Perspective
 end Transformer

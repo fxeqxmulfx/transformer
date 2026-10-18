@@ -182,6 +182,9 @@ point with two distinct tokens (`ae_USA_not_tendsto_nonTrivial`,
 `ae_SA_not_tendsto_nonTrivial`); the limit of almost every solution is then a
 consensus, and the solutions being unique, almost every start clusters
 (`ae_mem_clusteringSet_of_pos`).
+With `clustering_circle` this gives clustering for every `d ≥ 2` and `β ≥ 0`
+(`clustering_of_nonneg`), so `thm: beta.tiny` holds with the numerical
+constant `C = 1` (`beta_tiny`, in `AppendixC_BetaTiny`).
 -/
 
 import Transformer.Perspective.Section1_IPS

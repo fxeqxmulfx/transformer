@@ -374,7 +374,7 @@ question for random `S` is open.
 | --- | --- | --- | --- |
 | `Perspective.strict_saddle` | #12 | M3.1, with parts M3.1a–f (#32–#37), done | — |
 | `Perspective.beta_tiny_circle` | #27 | M3.1, M4.3, M5.1, M5.2, descent curves, done | — |
-| `Perspective.beta_tiny` | #28 | M2.1, M3.1 (`d = 2`), M3.3 (`d ≥ 3`), M4.2, M5.1–M5.3 | — |
+| `Perspective.beta_tiny` | #28 | `clustering_circle` (`d = 2`) and `boumal_clustering` (`d ≥ 3`), done | — |
 | `Perspective.beta_interval` | #29 | M2.1, M3.1 (`d = 2`), M3.3 (`d ≥ 3`), M4.2, M5.1–M5.3 | — |
 | `Perspective.boumal_clustering` | #30 | M2.1, M3.3, M4.2, M5.3 | — |
 | `Normalization.lojasiewicz_modulated` | #11 | M2.4, done | — |
@@ -385,6 +385,8 @@ question for random `S` is open.
 statement moved to the end of `AppendixA_Saddle`, where it is proved.
 `Perspective.beta_tiny_circle` moved to `CircleClustering`, after its proof;
 it holds for every `β ≥ 0` (`clustering_circle`), and the source's `n ≥ 2` is
-dropped.
+dropped.  `Perspective.beta_tiny` moved to `AppendixC_BetaTiny`, after its proof
+by `clustering_of_nonneg`; its constant `C`, numerical in the source, is now
+chosen before `d` and `n`.
 
 The other `sorry`s of `INDEX.md` have no tasks yet.

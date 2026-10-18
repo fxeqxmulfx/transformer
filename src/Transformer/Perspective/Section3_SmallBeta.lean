@@ -14,9 +14,10 @@ This file formalizes §4 of the survey:
 * the auxiliary equations  `eq: harry.potter`, `e:Ps0n`
   (`e:approxsphere` and `eq: youareawizardharry` are in
    `Transformer.Perspective.Section3_Gronwall`),
-* `Theorem thm: beta.tiny`  — clustering when `β ≤ C/n`; its last sentence,
-  `β ≤ 1` when `d = 2`, is `beta_tiny_circle`, in
-  `Transformer.Perspective.CircleClustering`, after its proof.
+* `Theorem thm: beta.tiny`  — clustering when `β ≤ C/n`; the theorem itself,
+  `beta_tiny`, is in `Transformer.Perspective.AppendixC_BetaTiny`, and its
+  last sentence, `β ≤ 1` when `d = 2`, is `beta_tiny_circle`, in
+  `Transformer.Perspective.CircleClustering`, both after their proofs.
 -/
 
 import Transformer.Basic
@@ -250,37 +251,6 @@ theorem sset0_probability_tendsto_one (hd : 2 ≤ d) (hn : 2 ≤ n) :
 
 /-- The hypotheses of `sset0_probability_tendsto_one` are satisfiable:
 `d = n = 2`. -/
-example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
-
-
-/-- **Theorem (thm: beta.tiny).** *Cluster collapse when `β ≤ C/n`.*
-
-Fix `d, n ≥ 2`.  There is a numerical constant `C > 0` such that whenever
-`β ≤ C/n`:
-
-For Lebesgue-almost any `(x_i(0))_{i ∈ [n]} ∈ (𝕊^{d-1})^n`, there exists
-`x⋆ ∈ 𝕊^{d-1}` with `lim_{t→∞} x_i(t) = x⋆` for the unique solution of `SA`
-(resp. `USA`) starting from `X₀` — that is, `𝒮_β` is co-null, and so is its
-`USA` counterpart `clusteringSetUSA`; both are concluded.
-
-Moreover, when `d = 2` one can take `β ≤ 1` (`beta_tiny_circle`, in
-`Transformer.Perspective.CircleClustering`, after its proof).
-
-As in `beta0_consensus` the almost-everywhere quantifier is necessary: the
-antipodal pair `n = 2`, `x₂ = -x₁` is stationary for `SA` at every `β`, since
-the weighted mean `(e^{β} x₁ + e^{-β} x₂) / Z` is again a multiple of `x₁` and
-its projection onto `T_{x₁} 𝕊^{d-1}` vanishes.
-
-Not proved here.
-
-Source: arXiv:2312.10794v5, §4, `thm: beta.tiny`. -/
-theorem beta_tiny (hd : 2 ≤ d) (hn : 2 ≤ n) :
-    ∃ C : ℝ, 0 < C ∧ ∀ β : ℝ, 0 ≤ β → β ≤ C / n →
-      ∀ P : Measure (SphereTuple d n), UniformTuple d n P →
-        ∀ᵐ X₀ ∂P, X₀ ∈ clusteringSet d n β ∧ X₀ ∈ clusteringSetUSA d n β := by
-  sorry
-
-/-- The hypotheses of `beta_tiny` are satisfiable: `d = n = 2`. -/
 example : 2 ≤ 2 ∧ 2 ≤ 2 := ⟨le_rfl, le_rfl⟩
 
 end Perspective
