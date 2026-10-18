@@ -153,6 +153,14 @@ angles it is `eq:onangles` with `n` replaced by `Z_i` (`angularSA`,
 `diag(Z_i)` (`hasDerivAt_torusEnergy_of_angularSA`), and for Lebesgue-almost
 every start no solution converges to a strict saddle of `𝖤_β`
 (`ae_not_tendsto_angularSA_of_isStrictSaddle`).
+`SpherePolar`, `SphereNull`, `SphereRadial` and `SphereRadialGradient` bridge
+`(𝕊^{d-1})^n` and `(ℝ^d)^n` without manifolds.  Polar coordinates carry Lebesgue
+measure on `(ℝ^d ∖ 0)^n` to the product of surface measures and `r^{d-1} dr`,
+so a set of configurations is null for the uniform law exactly when its cone is
+Lebesgue-null (`measure_eq_zero_iff_volume_sphereCone`, `ae_iff_ae_volume`).
+`USA` and `SA` are the slices `‖x_i‖ = r_i` of flows on `(ℝ^d)^n`
+(`usa_iff_radialField`), whose fields are rescaled Euclidean gradients of
+`𝖤_β(x/‖x‖)` (`usa_iff_gradient`, `sa_iff_gradient`).
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -286,6 +294,10 @@ import Transformer.Perspective.CircleNull
 import Transformer.Perspective.CircleSA
 import Transformer.Perspective.CircleSAGradient
 import Transformer.Perspective.CircleSAFlow
+import Transformer.Perspective.SpherePolar
+import Transformer.Perspective.SphereNull
+import Transformer.Perspective.SphereRadial
+import Transformer.Perspective.SphereRadialGradient
 import Transformer.Perspective.SyncKernelExp
 import Transformer.Perspective.SyncKernelSecond
 import Transformer.Perspective.SyncKernelBetaOne
