@@ -28,7 +28,9 @@ symmetric map, and with it to the flows `ẋ = -G(x) ∇f(x)` with `G` symmetric
 positive definite at the strict saddles.  The trap and the convergence of
 gradient flows hold for every curve along which `f` decreases at least at a
 rate `c₁ ‖∇f‖²` while it moves at most at the speed `c₂ ‖∇f‖`, among them the
-flows `ẋ = -G(x) ∇f(x)` with `c₁ ≤ G ≤ c₂`.
+flows `ẋ = -G(x) ∇f(x)` with `c₁ ≤ G ≤ c₂`.  An analytic function on a
+finite-dimensional real inner product space satisfies the Łojasiewicz
+inequality at every point, so the hypothesis on it holds for analytic energies.
 
 | Module | Contents |
 | --- | --- |
@@ -51,7 +53,7 @@ flows `ẋ = -G(x) ∇f(x)` with `c₁ ≤ G ≤ c₂`.
 | `SaddleAvoidance.LinearFlow` | the linear flow `exp (τ A)`: it solves `J' = A J`, is symmetric for symmetric `A`, and has the eigenvalue `e^μ` for each eigenvalue `μ` of `A` |
 | `SaddleAvoidance.Periodic` | a `C²` function invariant under a spanning set of translations has a bounded gradient, a bounded Hessian and a Lipschitz gradient; an invariant `C¹` map is bounded and Lipschitz |
 | `SaddleAvoidance.Invariant` | the Łojasiewicz inequality at critical points nondegenerate transversally to a translation symmetry |
-| `SaddleAvoidance.LocalInequality` | the local gradient inequality of `Normalization` gives the Łojasiewicz inequality; analytic functions in dimension at most one satisfy it at every critical point |
+| `SaddleAvoidance.LocalInequality` | the local gradient inequality of `Normalization` gives the Łojasiewicz inequality; it depends only on the germ of the function (`isLojasiewiczAt_congr`) and is invariant under linear isometries (`isLojasiewiczAt_comp_linearIsometryEquiv_symm_iff`); analytic functions on a finite-dimensional real inner product space satisfy it at every point (`exists_isLojasiewiczAt_of_analyticAt`, `exists_isLojasiewiczAt_of_analyticOnNhd`) |
 | `SaddleAvoidance.FlowTrap` | gradient flows starting near a Łojasiewicz point stay near it, with finite length |
 | `SaddleAvoidance.FlowConvergence` | gradient flows with a Łojasiewicz limit point up to translations converge |
 | `SaddleAvoidance.Landscape` | if every critical point is a global minimizer or a strict saddle, almost every orbit converges to a global minimizer; for periodic functions without a hypothesis on the orbits |
