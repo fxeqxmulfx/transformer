@@ -49,7 +49,7 @@ Constraints:
 | B, gradient descent | `SaddleAvoidance.exists_tendsto_of_isLojasiewiczAt`, which converges from a Łojasiewicz limit point taken modulo translations `Λ`; `isLojasiewiczAt_of_injective` | proved |
 | A + B, gradient descent | `SaddleAvoidance.ae_exists_tendsto_isLocalMin`, with hypotheses `hcrit`, `hloj` and bounded orbits | proved |
 | B, flows | `Normalization.lojasiewicz_modulated_of_local_gradient_inequality`, which needs a compact `K`, an analytic `E` and the local inequality at every critical point; `analytic_gradient_inequality_of_nondegenerate` | proved |
-| B, degenerate analytic case | `Normalization.lojasiewicz_modulated` | sorry |
+| B, degenerate analytic case (M2.4) | `Normalization.lojasiewicz_modulated`: an analytic energy that is not locally constant has compact monomial charts at every point (`hasCompactMonomialCharts_of_analyticAt`, from local uniformization `Uniformization.hasMonomialCharts_of_analyticAt`), so the local inequality holds at every critical point (`analytic_gradient_inequality_of_compact_monomial_charts`) | proved |
 | Flows | `GlobalFlow.IsFlowField.contDiff_flow`, `hasFDerivAt_flow` (the variational equation), `flow_reverse` | proved |
 | C, phase model | `PhaseModel.exists_sub_characterPhase_mem_periods_of_isLocalMin` and `isStrictSaddle_of_divisionEnergy_lt` for `V < n²/8` | proved |
 | C, `𝖤_0` on spheres | `Perspective.yury_lemma` | proved |
@@ -224,7 +224,7 @@ Tasks: M2.1 #8, M2.2 #9, M2.3 #10, M2.4 #11.
 | M2.1 | **Łojasiewicz under a symmetry, done.** `isLojasiewiczAt_of_invariant`: if `f` is invariant under translations by a subspace `W` and its Hessian at the critical point `z` is injective on `Wᗮ`, then `IsLojasiewiczAt f z (1/2)`. Proof: restrict to `z + Wᗮ` and apply `isLojasiewiczAt_of_injective`. It covers the synchronized states of `𝖤_β`, where `W = ℝ𝟙`. | — |
 | M2.2 | **Convergence for flows, done.** The flow analogue of `exists_tendsto_of_isLojasiewiczAt`, with translations `Λ`: a limit point taken modulo `Λ` at which the inequality holds is the limit. First check what the proof of `lojasiewicz_modulated_of_local_gradient_inequality` already gives; reuse it rather than duplicate it. | — |
 | M2.3 | **Glue to Normalization, done.** Convert the form `\|E y - E z\| ^ α ≤ k ‖∇E y‖` used by the `hlocal` hypothesis of `lojasiewicz_modulated_of_local_gradient_inequality` into `IsLojasiewiczAt`, so the hard core plugs in once proved. | — |
-| M2.4 | **Hard core, not this plan's work.** Łojasiewicz at degenerate critical points of analytic functions: the remaining input of `Normalization.lojasiewicz_modulated`. The survey proves convergence of every trajectory by Łojasiewicz's theorem. For `β = 0` the repository replaced it by an explicit inequality (`AppendixA_Lojasiewicz`); for `β > 0` no replacement is known. So `beta_tiny`, `beta_tiny_circle`, `beta_interval` and `boumal_clustering` cannot close before M2.4. | Normalization |
+| M2.4 | **Hard core, done.** Łojasiewicz at degenerate critical points of analytic functions, the remaining input of `Normalization.lojasiewicz_modulated`. Local uniformization (`Uniformization.hasMonomialCharts_of_analyticAt`), by induction on the dimension and on the order in the last variable through Weierstrass preparation, ramified Newton charts and the principalization of `(y, t^p)` by monomial maps, gives every analytic energy that is not locally constant compact monomial charts (`hasCompactMonomialCharts_of_analyticAt`); `analytic_gradient_inequality_of_compact_monomial_charts` derives the local inequality from them. `beta_tiny`, `beta_tiny_circle`, `beta_interval` and `boumal_clustering` no longer wait for it. | Normalization |
 
 ### M3 — Layer C, landscape
 
@@ -238,8 +238,7 @@ circle, and M3.3 covers every `β > 0` for `d ≥ 3`.
 M3.1 follows arXiv:2507.22857. Its parts are new modules of
 `Transformer.Perspective`, with their own names and citing the paper;
 arXiv:2507.22857 is not formalized as a paper of its own. M3.1 is pure
-landscape and needs neither A nor B: it is the only Perspective `sorry` that
-can close without M2.4.
+landscape and needs neither A nor B.
 
 | Item | Deliverable | Depends on |
 | --- | --- | --- |
@@ -361,7 +360,7 @@ the lab's trajectories.
 6. M5.1 → M4.3.
 7. M1.5 → M5.2, M5.3.
 
-The research items M2.4 and M3.4b wait for an argument on paper. M5.4 is
+M2.4 is done. The research item M3.4b waits for an argument on paper. M5.4 is
 stated on paper and waits for Lean. M3.4c has a counterexample in Lean; its
 question for random `S` is open.
 
@@ -370,11 +369,11 @@ question for random `S` is open.
 | `sorry` | Task | Closed by | Blocked on |
 | --- | --- | --- | --- |
 | `Perspective.strict_saddle` | #12 | M3.1, with parts M3.1a–f (#32–#37), done | — |
-| `Perspective.beta_tiny_circle` | #27 | M3.1, M4.3, M5.1, M5.2 | M2.4 |
-| `Perspective.beta_tiny` | #28 | M2.1, M3.1 (`d = 2`), M3.3 (`d ≥ 3`), M4.2, M5.1–M5.3 | M2.4 |
-| `Perspective.beta_interval` | #29 | M2.1, M3.1 (`d = 2`), M3.3 (`d ≥ 3`), M4.2, M5.1–M5.3 | M2.4 |
-| `Perspective.boumal_clustering` | #30 | M2.1, M3.3, M4.2, M5.3 | M2.4 |
-| `Normalization.lojasiewicz_modulated` | #11 | M2.4 | Normalization line |
+| `Perspective.beta_tiny_circle` | #27 | M3.1, M4.3, M5.1, M5.2 | — |
+| `Perspective.beta_tiny` | #28 | M2.1, M3.1 (`d = 2`), M3.3 (`d ≥ 3`), M4.2, M5.1–M5.3 | — |
+| `Perspective.beta_interval` | #29 | M2.1, M3.1 (`d = 2`), M3.3 (`d ≥ 3`), M4.2, M5.1–M5.3 | — |
+| `Perspective.boumal_clustering` | #30 | M2.1, M3.3, M4.2, M5.3 | — |
+| `Normalization.lojasiewicz_modulated` | #11 | M2.4, done | — |
 | `Perspective.beta0_consensus` | #31 | outside the scheme, done | — |
 
 `Perspective.beta0_consensus` follows from `almost_sure_consensus_beta0`.
