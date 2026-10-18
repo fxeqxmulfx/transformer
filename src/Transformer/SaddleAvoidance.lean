@@ -46,7 +46,7 @@ positive definite at the strict saddles.
 | `SaddleAvoidance.Necessary` | the gradient vanishes and the Hessian is nonnegative at a local minimizer; a critical point with a direction of negative curvature is a strict saddle |
 | `SaddleAvoidance.Nondegenerate` | almost every orbit with a nondegenerate limit point converges to a local minimizer |
 | `SaddleAvoidance.LinearFlow` | the linear flow `exp (τ A)`: it solves `J' = A J`, is symmetric for symmetric `A`, and has the eigenvalue `e^μ` for each eigenvalue `μ` of `A` |
-| `SaddleAvoidance.Periodic` | a `C²` function invariant under a spanning set of translations has a bounded gradient, a bounded Hessian and a Lipschitz gradient |
+| `SaddleAvoidance.Periodic` | a `C²` function invariant under a spanning set of translations has a bounded gradient, a bounded Hessian and a Lipschitz gradient; an invariant `C¹` map is bounded and Lipschitz |
 | `SaddleAvoidance.Invariant` | the Łojasiewicz inequality at critical points nondegenerate transversally to a translation symmetry |
 | `SaddleAvoidance.LocalInequality` | the local gradient inequality of `Normalization` gives the Łojasiewicz inequality; analytic functions in dimension at most one satisfy it at every critical point |
 | `SaddleAvoidance.FlowTrap` | gradient flows starting near a Łojasiewicz point stay near it, with finite length |

@@ -16,7 +16,10 @@ The integer combinations of `Λ` leave the function invariant
 are invariant too (`gradient_add_eq`, `fderiv_gradient_add_eq`), so their
 bounds on that compact ball hold everywhere (`exists_bound_of_periodic`), and
 the mean value inequality turns the bound on the Hessian into a Lipschitz
-constant of the gradient (`exists_lipschitzWith_gradient_of_isCompact`).
+constant of the gradient (`exists_lipschitzWith_gradient_of_isCompact`).  The
+same argument bounds every invariant `C¹` map and its Lipschitz constant
+(`exists_lipschitzWith_of_periodic`), such as the field `G ∇f` of a flow
+`ẋ = -G(x) ∇f(x)` with `G` and `f` invariant.
 -/
 
 import Transformer.SaddleAvoidance.GradientDescent
@@ -82,6 +85,37 @@ theorem exists_add_mem_closedBall_of_span_eq_top {Λ : Set E}
   · exact Submodule.neg_mem _ (Submodule.span_mono hb (ZSpan.floor b y).2)
   · rw [mem_closedBall_zero_iff, ← sub_eq_add_neg, ← ZSpan.fract_apply]
     exact ZSpan.norm_fract_le b y
+
+/-- **A `C¹` map invariant under a set of translations spanning `E` is
+bounded and globally Lipschitz**, with one constant `L`: its derivative is
+invariant too, and both are bounded on the ball of
+`exists_add_mem_closedBall_of_span_eq_top`. -/
+theorem exists_lipschitzWith_of_periodic {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
+    {g : E → F} (hg : ContDiff ℝ 1 g) {Λ : Set E} (hspan : Submodule.span ℝ Λ = ⊤)
+    (hΛ : ∀ v ∈ Λ, ∀ y, g (y + v) = g y) :
+    ∃ L : ℝ≥0, (∀ x, ‖g x‖ ≤ L) ∧ LipschitzWith L g := by
+  obtain ⟨R, hR⟩ := exists_add_mem_closedBall_of_span_eq_top hspan
+  have hper : ∀ v ∈ Submodule.span ℤ Λ, ∀ y, g (y + v) = g y :=
+    fun _ hv => periodic_of_mem_span hΛ hv
+  obtain ⟨M, hM⟩ := exists_bound_of_periodic hg.continuous hper (isCompact_closedBall 0 R) hR
+  obtain ⟨H, hH⟩ := exists_bound_of_periodic (hg.continuous_fderiv one_ne_zero)
+    (fun v hv y => by
+      rw [← fderiv_comp_add_right]
+      exact congrArg (fun G => fderiv ℝ G y) (funext fun x => hper v hv x))
+    (isCompact_closedBall 0 R) hR
+  have hHL : ∀ x, ‖fderiv ℝ g x‖ ≤ (max M H).toNNReal := fun x =>
+    (hH x).trans ((le_max_right M H).trans (Real.le_coe_toNNReal _))
+  exact ⟨(max M H).toNNReal, fun x => (hM x).trans ((le_max_left M H).trans
+    (Real.le_coe_toNNReal _)),
+    lipschitzWith_of_nnnorm_fderiv_le (hg.differentiable one_ne_zero) fun x => hHL x⟩
+
+/-- The hypotheses of `exists_lipschitzWith_of_periodic` hold for `sin` on the
+line and the period `2π`, which spans `ℝ`. -/
+example : ContDiff ℝ 1 Real.sin ∧ Submodule.span ℝ {2 * Real.pi} = ⊤ ∧
+    ∀ v ∈ ({2 * Real.pi} : Set ℝ), ∀ y, Real.sin (y + v) = Real.sin y := by
+  refine ⟨Real.contDiff_sin, Ideal.span_singleton_eq_top.2
+    (isUnit_iff_ne_zero.2 Real.two_pi_pos.ne'), fun v hv y => ?_⟩
+  rw [Set.mem_singleton_iff.1 hv, Real.sin_add_two_pi]
 
 end Ball
 

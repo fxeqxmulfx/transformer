@@ -139,6 +139,12 @@ on `(𝕊¹)ⁿ` (`usa_anglesToSphere`), every uniform tuple law on the circle i
 the image of the normalized Lebesgue measure on `[0, 2π)ⁿ`
 (`eq_map_angleCube`), and a set whose preimage in angles is Lebesgue-null is
 null for it (`measure_eq_zero_of_volume_preimage`).
+`CircleSA`, `CircleSAGradient` and `CircleSAFlow` do the same for `SA`: in
+angles it is `eq:onangles` with `n` replaced by `Z_i` (`angularSA`,
+`sa_anglesToSphere`), the gradient flow of the energy of §3.4 for the metric
+`diag(Z_i)` (`hasDerivAt_torusEnergy_of_angularSA`), and for Lebesgue-almost
+every start no solution converges to a strict saddle of `𝖤_β`
+(`ae_not_tendsto_angularSA_of_isStrictSaddle`).
 -/
 
 import Transformer.Perspective.Section1_IPS
@@ -269,6 +275,9 @@ import Transformer.Perspective.SyncKernelSmallBeta
 import Transformer.Perspective.CircleAngles
 import Transformer.Perspective.CircleUniform
 import Transformer.Perspective.CircleNull
+import Transformer.Perspective.CircleSA
+import Transformer.Perspective.CircleSAGradient
+import Transformer.Perspective.CircleSAFlow
 import Transformer.Perspective.SyncKernelExp
 import Transformer.Perspective.SyncKernelSecond
 import Transformer.Perspective.SyncKernelBetaOne
