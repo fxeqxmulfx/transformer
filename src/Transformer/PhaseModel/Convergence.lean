@@ -88,12 +88,14 @@ theorem ae_tendsto_characterPhase (hn : 4 ≤ n) (μ : Measure (EucSpace n)) [μ
   obtain ⟨w', hw', hj⟩ := hx hx0
   rwa [tendsto_nhds_unique hw hw']
 
-/-- The hypotheses of `ae_exists_tendsto_characterPhase` and
-`ae_tendsto_characterPhase` hold for `n = 4` with Lebesgue measure and
-`η = 1/145`, as `9 · 4² = 144`. -/
-example : 4 ≤ 4 ∧ (volume : Measure (EucSpace 4)).IsAddHaarMeasure ∧
-    (volume : Measure (EucSpace 4)) ≪ volume ∧ (0 : ℝ) < 1 / 145 ∧
-    9 * ((4 : ℕ) : ℝ) ^ 2 * (1 / 145) < 1 :=
-  ⟨le_rfl, inferInstance, Measure.AbsolutelyContinuous.rfl, by norm_num, by norm_num⟩
+/-- `ae_exists_tendsto_characterPhase` applies for `n = 4` with Lebesgue
+measure, for starts drawn from it, and `η = 1/145`, as `9 · 4² = 144`. -/
+example := ae_exists_tendsto_characterPhase (n := 4) le_rfl volume
+  Measure.AbsolutelyContinuous.rfl (η := 1 / 145) (by norm_num) (by norm_num)
+
+/-- `ae_tendsto_characterPhase` applies for `n = 4` with Lebesgue measure,
+for starts drawn from it, and `η = 1/145`, as `9 · 4² = 144`. -/
+example := ae_tendsto_characterPhase (n := 4) le_rfl volume
+  Measure.AbsolutelyContinuous.rfl (η := 1 / 145) (by norm_num) (by norm_num)
 
 end Transformer.PhaseModel

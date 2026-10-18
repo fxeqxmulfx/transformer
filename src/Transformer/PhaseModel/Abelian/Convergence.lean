@@ -124,29 +124,32 @@ theorem ae_tendsto_characterPhase (hn : 4 ≤ Fintype.card G) (μ : Measure (Euc
   obtain ⟨w', hw', hχ⟩ := hx hx0
   rwa [tendsto_nhds_unique hw hw']
 
-/-- The hypotheses of `exists_tendsto_gradient_phaseEnergy_eq_zero` hold for
-the rows of the full division table of the Klein four-group `ℤ/2 × ℤ/2` and
-`η = 1/145`: the `16` rows have squared norms at most `9`. -/
-example : let a := fun p : (Finset.univ : Finset ((ZMod 2 × ZMod 2) × (ZMod 2 × ZMod 2))) =>
-      divisionRow p.1
-    (0 : ℝ) < 1 / 145 ∧ (1 / 145 : ℝ) * ∑ r, ‖intVec (a r)‖ ^ 2 < 1 := by
-  intro a
-  have h := sum_norm_intVec_divisionRow_sq_le
-    (Finset.univ : Finset ((ZMod 2 × ZMod 2) × (ZMod 2 × ZMod 2)))
-  have hcard : ((Finset.univ : Finset ((ZMod 2 × ZMod 2) × (ZMod 2 × ZMod 2))).card : ℝ) =
-      16 := by
-    simp [Fintype.card_prod, ZMod.card]
-  rw [hcard] at h
-  exact ⟨by norm_num, by simp only [a]; linarith⟩
+/-- `exists_tendsto_gradient_phaseEnergy_eq_zero` applies to the rows of the
+full division table of the Klein four-group `ℤ/2 × ℤ/2` with `η = 1/145`,
+from the start `0`: the `16` rows have squared norms at most `9`. -/
+example := exists_tendsto_gradient_phaseEnergy_eq_zero
+  (fun p : (Finset.univ : Finset ((ZMod 2 × ZMod 2) × (ZMod 2 × ZMod 2))) => divisionRow p.1)
+  (η := 1 / 145) (by norm_num) (by
+    have h := sum_norm_intVec_divisionRow_sq_le
+      (Finset.univ : Finset ((ZMod 2 × ZMod 2) × (ZMod 2 × ZMod 2)))
+    have hcard : ((Finset.univ : Finset ((ZMod 2 × ZMod 2) × (ZMod 2 × ZMod 2))).card : ℝ) =
+        16 := by
+      simp [Fintype.card_prod, ZMod.card]
+    rw [hcard] at h
+    linarith) 0
 
-/-- The hypotheses of `ae_exists_tendsto_characterPhase` and
-`ae_tendsto_characterPhase` hold in the Klein four-group `ℤ/2 × ℤ/2` with
-Lebesgue measure and `η = 1/145`, as `9 · 4² = 144`. -/
-example : 4 ≤ Fintype.card (ZMod 2 × ZMod 2) ∧
-    (volume : Measure (EuclideanSpace ℝ (ZMod 2 × ZMod 2))).IsAddHaarMeasure ∧
-    (volume : Measure (EuclideanSpace ℝ (ZMod 2 × ZMod 2))) ≪ volume ∧ (0 : ℝ) < 1 / 145 ∧
-    9 * (Fintype.card (ZMod 2 × ZMod 2) : ℝ) ^ 2 * (1 / 145) < 1 :=
-  ⟨by simp, inferInstance, Measure.AbsolutelyContinuous.rfl, by norm_num,
-    by norm_num [Fintype.card_prod, ZMod.card]⟩
+/-- `ae_exists_tendsto_characterPhase` applies in the Klein four-group
+`ℤ/2 × ℤ/2` with Lebesgue measure, for starts drawn from it, and
+`η = 1/145`, as `9 · 4² = 144`. -/
+example := ae_exists_tendsto_characterPhase (G := ZMod 2 × ZMod 2) (by simp) volume
+  Measure.AbsolutelyContinuous.rfl (η := 1 / 145) (by norm_num)
+  (by norm_num [Fintype.card_prod, ZMod.card])
+
+/-- `ae_tendsto_characterPhase` applies in the Klein four-group `ℤ/2 × ℤ/2`
+with Lebesgue measure, for starts drawn from it, and `η = 1/145`, as
+`9 · 4² = 144`. -/
+example := ae_tendsto_characterPhase (G := ZMod 2 × ZMod 2) (by simp) volume
+  Measure.AbsolutelyContinuous.rfl (η := 1 / 145) (by norm_num)
+  (by norm_num [Fintype.card_prod, ZMod.card])
 
 end Transformer.PhaseModel.Abelian

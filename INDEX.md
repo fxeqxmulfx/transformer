@@ -37636,7 +37636,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sub_characterPhase_mem_periods_of_isLocalMin`](src/Transformer/PhaseModel/Characters.lean#L36) | theorem | proved |
 | [`isStrictSaddle_of_sum_one_sub_cos_lt`](src/Transformer/PhaseModel/Characters.lean#L61) | theorem | proved |
 
-**[Transformer.PhaseModel.Convergence](src/Transformer/PhaseModel/Convergence.lean)** — 99 lines
+**[Transformer.PhaseModel.Convergence](src/Transformer/PhaseModel/Convergence.lean)** — 101 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -37670,7 +37670,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`periods`](src/Transformer/PhaseModel/Defs.lean#L54) | def |  |
 | [`cube`](src/Transformer/PhaseModel/Defs.lean#L58) | def |  |
 
-**[Transformer.PhaseModel.Descent](src/Transformer/PhaseModel/Descent.lean)** — 176 lines
+**[Transformer.PhaseModel.Descent](src/Transformer/PhaseModel/Descent.lean)** — 184 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -37823,7 +37823,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`sub_characterPhase_mem_periods_of_isLocalMin`](src/Transformer/PhaseModel/Abelian/Characters.lean#L30) | theorem | proved |
 | [`isStrictSaddle_of_sum_one_sub_cos_lt`](src/Transformer/PhaseModel/Abelian/Characters.lean#L56) | theorem | proved |
 
-**[Transformer.PhaseModel.Abelian.Convergence](src/Transformer/PhaseModel/Abelian/Convergence.lean)** — 152 lines
+**[Transformer.PhaseModel.Abelian.Convergence](src/Transformer/PhaseModel/Abelian/Convergence.lean)** — 155 lines
 
 | declaration | kind | status |
 | --- | --- | --- |

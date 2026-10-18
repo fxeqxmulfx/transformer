@@ -173,4 +173,12 @@ example : let a := fun (_ : Unit) (_ : Fin 1) => (1 : ℤ)
     obtain ⟨⟩ := r
     rcases sin_eq_zero_iff_cos_eq.1 hs with h | h <;> rw [h] <;> norm_num
 
+/-- `exists_tendsto_gradient_phaseEnergy_eq_zero` applies to the single row
+`e_0` in dimension one with `η = 1/2`, as `‖e_0‖² = 1`, from the start `0`. -/
+example := exists_tendsto_gradient_phaseEnergy_eq_zero (fun (_ : Unit) (_ : Fin 1) => (1 : ℤ))
+  (η := 1 / 2) (by norm_num) (by
+    simp only [norm_intVec_sq, Int.cast_one, one_pow, Finset.sum_const, Finset.card_univ,
+      Fintype.card_unit, Fintype.card_fin, one_smul]
+    norm_num) 0
+
 end Transformer.PhaseModel
