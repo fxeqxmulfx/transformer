@@ -14,7 +14,10 @@ a translation symmetry `W`, an injective Hessian on `Wᗮ` still gives the
 Łojasiewicz inequality.  A gradient flow with a limit point up to
 translations where the Łojasiewicz inequality holds converges.  If every
 critical point is a global minimizer or a strict saddle, almost every orbit
-converges to a global minimizer.  The time-one map of the gradient flow of a
+converges to a global minimizer.  This hypothesis on the critical points
+follows from the form in which papers state a landscape: every critical
+point with a positive semidefinite Hessian is a minimizer, global or local,
+everywhere or below a level.  The time-one map of the gradient flow of a
 `C²` function with a bounded Lipschitz gradient is `C¹` with an invertible
 derivative, and every strict saddle is a symmetric unstable fixed point of it.
 A compact sublevel set replaces the global bound on the Hessian: for small
@@ -49,6 +52,7 @@ inequality at every point, so the hypothesis on it holds for analytic energies.
 | `SaddleAvoidance.CriticalPoints` | limit points up to translations are critical; the Łojasiewicz inequality at nondegenerate critical points |
 | `SaddleAvoidance.SecondOrder` | the second-order test; Hessians at nondegenerate critical points other than strict saddles are positive definite |
 | `SaddleAvoidance.Necessary` | the gradient vanishes and the Hessian is nonnegative at a local minimizer; a critical point with a direction of negative curvature is a strict saddle |
+| `SaddleAvoidance.SecondOrderCritical` | strict saddles are the critical points with a direction of negative curvature; the landscape hypothesis from its second-order form, for global and local minimizers, also below a level |
 | `SaddleAvoidance.Nondegenerate` | almost every orbit with a nondegenerate limit point converges to a local minimizer |
 | `SaddleAvoidance.LinearFlow` | the linear flow `exp (τ A)`: it solves `J' = A J`, is symmetric for symmetric `A`, and has the eigenvalue `e^μ` for each eigenvalue `μ` of `A` |
 | `SaddleAvoidance.Periodic` | a `C²` function invariant under a spanning set of translations has a bounded gradient, a bounded Hessian and a Lipschitz gradient; an invariant `C¹` map is bounded and Lipschitz |
@@ -92,6 +96,7 @@ import Transformer.SaddleAvoidance.Minimizers
 import Transformer.SaddleAvoidance.CriticalPoints
 import Transformer.SaddleAvoidance.SecondOrder
 import Transformer.SaddleAvoidance.Necessary
+import Transformer.SaddleAvoidance.SecondOrderCritical
 import Transformer.SaddleAvoidance.Nondegenerate
 import Transformer.SaddleAvoidance.LinearFlow
 import Transformer.SaddleAvoidance.Periodic
