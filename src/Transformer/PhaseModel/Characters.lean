@@ -11,9 +11,17 @@ that is not is a strict saddle (`isStrictSaddle_of_sum_one_sub_cos_lt`):
 the Hessian has a negative diagonal entry.  The last example exhibits such
 a saddle for `n = 17` and `j = 0`: the phases `π e_0` keep every relation in
 `πℤ`, so they are critical, at `Σ_x (1 - cos ψ_x) = 2 < 17/8`.
+
+Each theorem is that of `PhaseModel.Abelian` at `G = Fin n` for the
+character `cyclicChar n j`, whose phases are `2πjx/n` up to periods
+(`characterPhase_sub_mem_periods`); for `n = 0` there is only one vector.
+
+Source: item M6.8 of `landscape_plan.md`.
 -/
 
+import Transformer.PhaseModel.Abelian.Characters
 import Transformer.PhaseModel.Basin
+import Transformer.PhaseModel.Orthogonality
 
 open Real
 
@@ -26,9 +34,16 @@ variable {n : ℕ}
 /-- **The phases of a character leave the energy of every set of rows
 invariant**: `V_S(ψ + (2πjx/n)_x) = V_S(ψ)`. -/
 theorem divisionEnergy_add_characterPhase (S : Finset (Fin n × Fin n)) (j : ℤ)
-    (ψ : EucSpace n) : divisionEnergy S (ψ + characterPhase n j) = divisionEnergy S ψ :=
-  phaseEnergy_add (fun p : S => intVec (divisionRow p.1))
-    (fun r => exists_inner_intVec_divisionRow_characterPhase j r.1) ψ
+    (ψ : EucSpace n) : divisionEnergy S (ψ + characterPhase n j) = divisionEnergy S ψ := by
+  rcases Nat.eq_zero_or_pos n with rfl | hn
+  · exact congrArg _ (PiLp.ext fun t => t.elim0)
+  have : NeZero n := ⟨hn.ne'⟩
+  have h1 := Abelian.divisionEnergy_add_characterPhase S (cyclicChar n j)
+    (ψ + (characterPhase n j - Abelian.characterPhase (cyclicChar n j)))
+  have h2 := Abelian.phaseEnergy_add_of_mem_periods (fun p : S => divisionRow p.1)
+    (characterPhase_sub_mem_periods j) ψ
+  rw [add_assoc, sub_add_cancel] at h1
+  exact h1.trans h2
 
 /-- **A local minimizer of `V_full` near a character is that character** up
 to periods: for `n ≥ 4`, if `ψ` is a local minimizer of `V_full` with
@@ -37,22 +52,11 @@ theorem sub_characterPhase_mem_periods_of_isLocalMin (hn : 4 ≤ n) {ψ : EucSpa
     (hmin : IsLocalMin (divisionEnergy (Finset.univ : Finset (Fin n × Fin n))) ψ) {j : ℤ}
     (hE : ∑ x, (1 - cos (ψ.ofLp x - (characterPhase n j).ofLp x)) < n / 8) :
     ψ - characterPhase n j ∈ periods n := by
-  have hcomp : divisionEnergy (Finset.univ : Finset (Fin n × Fin n)) ∘ (· + characterPhase n j) =
-      divisionEnergy Finset.univ := funext (divisionEnergy_add_characterPhase _ j)
-  have hmin' : IsLocalMin (divisionEnergy (Finset.univ : Finset (Fin n × Fin n)))
-      (ψ - characterPhase n j) := by
-    have h : IsLocalMin (divisionEnergy (Finset.univ : Finset (Fin n × Fin n)))
-        ((· + characterPhase n j) (ψ - characterPhase n j)) := by
-      simpa only [sub_add_cancel] using hmin
-    have h2 := IsLocalMin.comp_continuous (g := fun x => x + characterPhase n j) h
-      (by fun_prop : Continuous fun x : EucSpace n => x + characterPhase n j).continuousAt
-    rwa [hcomp] at h2
-  have hg := SaddleAvoidance.gradient_eq_zero_of_isLocalMin hmin'
-  refine mem_periods_of_forall_half_lt_cos hg (half_lt_cos_of_gradient_eq_zero hn hg
-    (fun t => SaddleAvoidance.inner_nonneg_of_isLocalMin
-      ((contDiff_phaseEnergy _ (k := 1)).differentiable one_ne_zero)
-      (hasFDerivAt_gradient_phaseEnergy _ _).differentiableAt.hasFDerivAt hmin' _) ?_)
-  simpa only [WithLp.ofLp_sub, Pi.sub_apply] using hE
+  have : NeZero n := ⟨by omega⟩
+  simp only [cos_sub_characterPhase] at hE
+  exact (sub_characterPhase_mem_periods_iff ψ j).2
+    (Abelian.sub_characterPhase_mem_periods_of_isLocalMin (G := Fin n)
+      (by rwa [Fintype.card_fin]) hmin (by rwa [Fintype.card_fin]))
 
 /-- **A critical point of `V_full` near a character that is not that
 character is a strict saddle**: for `n ≥ 4`, if `∇V_full(ψ) = 0`,
@@ -63,66 +67,45 @@ theorem isStrictSaddle_of_sum_one_sub_cos_lt (hn : 4 ≤ n) {ψ : EucSpace n}
     (hE : ∑ x, (1 - cos (ψ.ofLp x - (characterPhase n j).ofLp x)) < n / 8)
     (hψ : ψ - characterPhase n j ∉ periods n) :
     SaddleAvoidance.IsStrictSaddle (divisionEnergy (Finset.univ : Finset (Fin n × Fin n))) ψ := by
-  have hV := divisionEnergy_add_characterPhase (Finset.univ : Finset (Fin n × Fin n)) j
-  have hgrad := SaddleAvoidance.gradient_add_eq hV (ψ - characterPhase n j)
-  rw [sub_add_cancel] at hgrad
-  have hH : fderiv ℝ (gradient (divisionEnergy (Finset.univ : Finset (Fin n × Fin n)))) ψ =
-      fderiv ℝ (gradient (divisionEnergy Finset.univ)) (ψ - characterPhase n j) := by
-    have h1 := fderiv_comp_add_right (𝕜 := ℝ)
-      (f := gradient (divisionEnergy (Finset.univ : Finset (Fin n × Fin n))))
-      (x := ψ - characterPhase n j) (characterPhase n j)
-    rw [sub_add_cancel, funext (SaddleAvoidance.gradient_add_eq hV)] at h1
-    exact h1.symm
-  by_contra hs
-  refine hψ (mem_periods_of_forall_half_lt_cos (hgrad ▸ hg)
-    (half_lt_cos_of_gradient_eq_zero hn (hgrad ▸ hg) (fun t => ?_) ?_))
-  · by_contra ht
-    push Not at ht
-    exact hs (SaddleAvoidance.isStrictSaddle_of_inner_neg
-      (f := divisionEnergy (Finset.univ : Finset (Fin n × Fin n))) (contDiff_phaseEnergy _) hg
-      (h := PiLp.single 2 t 1) (by rw [hH]; exact ht))
-  · simpa only [WithLp.ofLp_sub, Pi.sub_apply] using hE
+  have : NeZero n := ⟨by omega⟩
+  simp only [cos_sub_characterPhase] at hE
+  exact Abelian.isStrictSaddle_of_sum_one_sub_cos_lt (G := Fin n) (by rwa [Fintype.card_fin]) hg
+    (by rwa [Fintype.card_fin]) fun h => hψ ((sub_characterPhase_mem_periods_iff ψ j).2 h)
 
 /-- The hypotheses of `sub_characterPhase_mem_periods_of_isLocalMin` hold
 for `n = 4` at the phases of the character `j = 1`, a global minimizer. -/
-example : let V := divisionEnergy (Finset.univ : Finset (Fin 4 × Fin 4))
-    4 ≤ 4 ∧ IsLocalMin V (characterPhase 4 1) ∧
-      ∑ x, (1 - cos ((characterPhase 4 1).ofLp x - (characterPhase 4 1).ofLp x)) <
-        ((4 : ℕ) : ℝ) / 8 := by
-  intro V
-  refine ⟨le_rfl, Filter.Eventually.of_forall fun y => ?_, by norm_num⟩
-  rw [show V (characterPhase 4 1) = 0 from divisionEnergy_characterPhase _ 1]
-  exact phaseEnergy_nonneg _ y
+example : characterPhase 4 1 - characterPhase 4 1 ∈ periods 4 :=
+  sub_characterPhase_mem_periods_of_isLocalMin le_rfl
+    (Filter.Eventually.of_forall fun y => by
+      rw [divisionEnergy_characterPhase]
+      exact phaseEnergy_nonneg _ y)
+    (by norm_num)
 
 /-- The hypotheses of `isStrictSaddle_of_sum_one_sub_cos_lt` hold for
 `n = 17`, `j = 0` and `ψ = π e_0`: every relation of `ψ` is a multiple of
 `π`, so `ψ` is critical; `Σ_x (1 - cos ψ_x) = 2 < 17/8`; and `π ∉ 2πℤ`. -/
-example : let V := divisionEnergy (Finset.univ : Finset (Fin 17 × Fin 17))
-    let ψ : EucSpace 17 := PiLp.single 2 0 π
-    4 ≤ 17 ∧ gradient V ψ = 0 ∧
-      ∑ x, (1 - cos (ψ.ofLp x - (characterPhase 17 0).ofLp x)) < ((17 : ℕ) : ℝ) / 8 ∧
-      ψ - characterPhase 17 0 ∉ periods 17 := by
-  intro V ψ
+example : SaddleAvoidance.IsStrictSaddle
+    (divisionEnergy (Finset.univ : Finset (Fin 17 × Fin 17))) (PiLp.single 2 0 π) := by
   have hc : characterPhase 17 0 = 0 := PiLp.ext fun x => by simp [characterPhase]
-  have hrel : ∀ a : Fin 17 → ℤ, ⟪intVec a, ψ⟫ = (a 0 : ℤ) * π := fun a => by
-    simp [ψ, inner_intVec]
-  refine ⟨by norm_num, ?_, ?_, ?_⟩
-  · simp only [V, divisionEnergy]
+  have hrel : ∀ a : Fin 17 → ℤ, ⟪intVec a, (PiLp.single 2 0 π : EucSpace 17)⟫ = (a 0 : ℤ) * π :=
+    fun a => by simp [inner_intVec]
+  refine isStrictSaddle_of_sum_one_sub_cos_lt (by norm_num) ?_ (j := 0) ?_ ?_
+  · simp only [divisionEnergy]
     rw [gradient_phaseEnergy]
     exact Finset.sum_eq_zero fun r _ => by rw [hrel, sin_int_mul_pi, zero_smul]
-  · have h : ∀ x : Fin 17, 1 - cos (ψ.ofLp x - (characterPhase 17 0).ofLp x) =
-        if x = 0 then 2 else 0 := fun x => by
+  · have h : ∀ x : Fin 17, 1 - cos ((PiLp.single 2 0 π : EucSpace 17).ofLp x -
+        (characterPhase 17 0).ofLp x) = if x = 0 then 2 else 0 := fun x => by
       by_cases hx : x = 0
-      · simp only [ψ, hx, hc, PiLp.ofLp_single, Pi.single_eq_same, WithLp.ofLp_zero,
+      · simp only [hx, hc, PiLp.ofLp_single, Pi.single_eq_same, WithLp.ofLp_zero,
           Pi.zero_apply, sub_zero, cos_pi, ite_true]
         norm_num
-      · simp [ψ, hx, hc]
+      · simp [hx, hc]
     simp only [h, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     norm_num
   · rw [hc, sub_zero]
     intro h
     obtain ⟨k, hk⟩ := h 0
-    simp only [ψ, PiLp.ofLp_single, Pi.single_eq_same] at hk
+    simp only [PiLp.ofLp_single, Pi.single_eq_same] at hk
     have h1 : (1 : ℝ) = 2 * k := by nlinarith [pi_pos]
     have h2 : (1 : ℤ) = 2 * k := by exact_mod_cast h1
     omega

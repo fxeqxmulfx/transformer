@@ -14,8 +14,15 @@ point with `0 < V_full < n²/8` is a strict saddle
 `n²/8` converges to a character for almost every start
 (`PhaseModel.Convergence`).  The critical points above `n²/8` are not
 settled here.
+
+Each theorem is that of `PhaseModel.Abelian.Landscape` at `G = Fin n`, the
+character `χ` found there being `cyclicChar n j` for some `j < n`
+(`bijective_cyclicChar`).
+
+Source: item M6.8 of `landscape_plan.md`.
 -/
 
+import Transformer.PhaseModel.Abelian.Landscape
 import Transformer.PhaseModel.Characters
 import Transformer.PhaseModel.Fourier
 
@@ -32,12 +39,13 @@ variable {n : ℕ}
 theorem exists_sum_one_sub_cos_lt [NeZero n] {ψ : EucSpace n}
     (hV : divisionEnergy (Finset.univ : Finset (Fin n × Fin n)) ψ < n ^ 2 / 8) :
     ∃ j : ℤ, ∑ x, (1 - cos (ψ.ofLp x - (characterPhase n j).ofLp x)) < n / 8 := by
-  obtain ⟨j, hj⟩ := exists_mul_sum_one_sub_cos_le ψ
-  have hn : (0 : ℝ) < n := by exact_mod_cast Nat.pos_of_ne_zero (NeZero.ne n)
-  refine ⟨j, ?_⟩
-  by_contra h
-  push Not at h
-  nlinarith
+  obtain ⟨χ, hχ⟩ := Abelian.exists_sum_one_sub_cos_lt (G := Fin n) (ψ := ψ)
+    (by rw [Fintype.card_fin]; exact hV)
+  obtain ⟨j, rfl⟩ := bijective_cyclicChar.2 χ
+  refine ⟨(j : ℕ), ?_⟩
+  simp only [Fintype.card_fin] at hχ
+  simp only [cos_sub_characterPhase]
+  exact hχ
 
 /-- **Below `n²/8`, every local minimizer of `V_full` is a character**: for
 `n ≥ 4`, a local minimizer `ψ` of `V_full` with `V_full(ψ) < n²/8` has
@@ -47,8 +55,10 @@ theorem exists_sub_characterPhase_mem_periods_of_isLocalMin (hn : 4 ≤ n) {ψ :
     (hV : divisionEnergy (Finset.univ : Finset (Fin n × Fin n)) ψ < n ^ 2 / 8) :
     ∃ j : ℤ, ψ - characterPhase n j ∈ periods n := by
   have : NeZero n := ⟨by omega⟩
-  obtain ⟨j, hj⟩ := exists_sum_one_sub_cos_lt hV
-  exact ⟨j, sub_characterPhase_mem_periods_of_isLocalMin hn hmin hj⟩
+  obtain ⟨χ, hχ⟩ := Abelian.exists_sub_characterPhase_mem_periods_of_isLocalMin (G := Fin n)
+    (by rwa [Fintype.card_fin]) hmin (by rw [Fintype.card_fin]; exact hV)
+  obtain ⟨j, rfl⟩ := bijective_cyclicChar.2 χ
+  exact ⟨(j : ℕ), (sub_characterPhase_mem_periods_iff ψ _).2 hχ⟩
 
 /-- **Below `n²/8`, `V_full` has no spurious local minimizer**: for `n ≥ 4`,
 a local minimizer `ψ` of `V_full` with `V_full(ψ) < n²/8` is a zero, a
@@ -56,9 +66,10 @@ global minimizer. -/
 theorem divisionEnergy_eq_zero_of_isLocalMin (hn : 4 ≤ n) {ψ : EucSpace n}
     (hmin : IsLocalMin (divisionEnergy (Finset.univ : Finset (Fin n × Fin n))) ψ)
     (hV : divisionEnergy (Finset.univ : Finset (Fin n × Fin n)) ψ < n ^ 2 / 8) :
-    divisionEnergy (Finset.univ : Finset (Fin n × Fin n)) ψ = 0 :=
-  (divisionEnergy_univ_eq_zero_iff ψ).2
-    (exists_sub_characterPhase_mem_periods_of_isLocalMin hn hmin hV)
+    divisionEnergy (Finset.univ : Finset (Fin n × Fin n)) ψ = 0 := by
+  have : NeZero n := ⟨by omega⟩
+  exact Abelian.divisionEnergy_eq_zero_of_isLocalMin (G := Fin n) (by rwa [Fintype.card_fin]) hmin
+    (by rw [Fintype.card_fin]; exact hV)
 
 /-- **Below `n²/8`, every critical point of `V_full` that is not a zero is a
 strict saddle**: for `n ≥ 4`, at a critical point `ψ` with
@@ -69,20 +80,25 @@ theorem isStrictSaddle_of_divisionEnergy_lt (hn : 4 ≤ n) {ψ : EucSpace n}
     (hV : divisionEnergy (Finset.univ : Finset (Fin n × Fin n)) ψ < n ^ 2 / 8) :
     SaddleAvoidance.IsStrictSaddle (divisionEnergy (Finset.univ : Finset (Fin n × Fin n))) ψ := by
   have : NeZero n := ⟨by omega⟩
-  obtain ⟨j, hj⟩ := exists_sum_one_sub_cos_lt hV
-  exact isStrictSaddle_of_sum_one_sub_cos_lt hn hg hj fun h =>
-    hV0 ((divisionEnergy_univ_eq_zero_iff ψ).2 ⟨j, h⟩)
+  exact Abelian.isStrictSaddle_of_divisionEnergy_lt (G := Fin n) (by rwa [Fintype.card_fin]) hg
+    hV0 (by rw [Fintype.card_fin]; exact hV)
 
-/-- The hypotheses of the first four theorems hold for `n = 4` at the phases
-of the character `j = 1`, a global minimizer with `V_full = 0 < 4²/8`. -/
-example : let V := divisionEnergy (Finset.univ : Finset (Fin 4 × Fin 4))
-    4 ≤ 4 ∧ IsLocalMin V (characterPhase 4 1) ∧
-      V (characterPhase 4 1) < ((4 : ℕ) : ℝ) ^ 2 / 8 := by
-  intro V
-  have h0 : V (characterPhase 4 1) = 0 := divisionEnergy_characterPhase _ 1
-  refine ⟨le_rfl, Filter.Eventually.of_forall fun y => ?_, by rw [h0]; norm_num⟩
-  rw [h0]
-  exact phaseEnergy_nonneg _ y
+/-- The hypotheses of the first three theorems hold for `n = 4` at the
+phases of the character `j = 1`, a global minimizer with
+`V_full = 0 < 4²/8`. -/
+example : (∃ j : ℤ, ∑ x, (1 - cos ((characterPhase 4 1).ofLp x - (characterPhase 4 j).ofLp x)) <
+      ((4 : ℕ) : ℝ) / 8) ∧ (∃ j : ℤ, characterPhase 4 1 - characterPhase 4 j ∈ periods 4) ∧
+    divisionEnergy (Finset.univ : Finset (Fin 4 × Fin 4)) (characterPhase 4 1) = 0 := by
+  have hV : divisionEnergy (Finset.univ : Finset (Fin 4 × Fin 4)) (characterPhase 4 1) <
+      ((4 : ℕ) : ℝ) ^ 2 / 8 := by
+    rw [divisionEnergy_characterPhase]
+    norm_num
+  have hmin : IsLocalMin (divisionEnergy (Finset.univ : Finset (Fin 4 × Fin 4)))
+      (characterPhase 4 1) := Filter.Eventually.of_forall fun y => by
+    rw [divisionEnergy_characterPhase]
+    exact phaseEnergy_nonneg _ y
+  exact ⟨exists_sum_one_sub_cos_lt hV, exists_sub_characterPhase_mem_periods_of_isLocalMin le_rfl
+    hmin hV, divisionEnergy_eq_zero_of_isLocalMin le_rfl hmin hV⟩
 
 /-- The hypotheses of `isStrictSaddle_of_divisionEnergy_lt` hold for
 `n ≥ 49` at `ψ = π e_0`: every relation of `ψ` is a multiple of `π`, so `ψ`
@@ -90,19 +106,18 @@ is critical; the relation of the pair `(0, 0)` is `-π`, so
 `V_full(ψ) ≥ 2`; and only the pairs `(x, y)` with `x = 0`, `y = 0` or
 `x = y` have a nonzero relation, each adding at most `2`, so
 `V_full(ψ) ≤ 6n < n²/8`. -/
-example (n : ℕ) [NeZero n] (hn : 49 ≤ n) :
-    let V := divisionEnergy (Finset.univ : Finset (Fin n × Fin n))
-    let ψ : EucSpace n := PiLp.single 2 0 π
-    4 ≤ n ∧ gradient V ψ = 0 ∧ V ψ ≠ 0 ∧ V ψ < n ^ 2 / 8 := by
-  intro V ψ
+example (n : ℕ) [NeZero n] (hn : 49 ≤ n) : SaddleAvoidance.IsStrictSaddle
+    (divisionEnergy (Finset.univ : Finset (Fin n × Fin n))) (PiLp.single 2 0 π) := by
+  set V := divisionEnergy (Finset.univ : Finset (Fin n × Fin n))
+  set ψ : EucSpace n := PiLp.single 2 0 π with hψdef
   have hψ : ∀ x : Fin n, ψ.ofLp x = if x = 0 then π else 0 := fun x => by
     simp [ψ]
   have hrel : ∀ a : Fin n → ℤ, ⟪intVec a, ψ⟫ = (a 0 : ℤ) * π := fun a => by
     simp [ψ, inner_intVec]
   have hV : V ψ = ∑ p : Fin n × Fin n,
       (1 - cos (ψ.ofLp p.1 - ψ.ofLp p.2 - ψ.ofLp (p.1 - p.2))) := divisionEnergy_apply _ ψ
-  refine ⟨by omega, ?_, ?_, ?_⟩
-  · simp only [V, divisionEnergy]
+  refine isStrictSaddle_of_divisionEnergy_lt (by omega) ?_ ?_ ?_
+  · simp only [divisionEnergy]
     rw [gradient_phaseEnergy]
     exact Finset.sum_eq_zero fun r _ => by rw [hrel, sin_int_mul_pi, zero_smul]
   · have hnn : ∀ p : Fin n × Fin n,

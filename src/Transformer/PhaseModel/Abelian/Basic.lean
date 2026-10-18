@@ -18,7 +18,7 @@ periods they are the only zeros of the energy `V_full` of the full table
 -/
 
 import Transformer.PhaseModel.Abelian.Defs
-import Transformer.PhaseModel.Orthogonality
+import Transformer.PhaseModel.Basic
 
 open Real
 

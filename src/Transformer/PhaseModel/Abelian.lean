@@ -9,7 +9,8 @@ the characters `χ : G → ℂ`, whose phases `arg χ(x)` take the place of
 periods.  For `n ≥ 4`, below `n²/8` every local minimizer of `V_full` is the
 phases of a character up to periods and every other critical point is a
 strict saddle, so for almost every start below `n²/8` gradient descent
-converges to the phases of a character.
+converges to the phases of a character.  At `G = Fin n` these give the
+landscape of `ℤ/n` (`PhaseModel.Coordinates` to `PhaseModel.Landscape`).
 
 | Module | Contents |
 | --- | --- |

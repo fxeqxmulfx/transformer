@@ -15,7 +15,7 @@ summands (`sub_le_sum_cos_add`, `sub_le_sum_cos_sub`).
 -/
 
 import Transformer.PhaseModel.Abelian.Basic
-import Transformer.PhaseModel.Coordinates
+import Transformer.PhaseModel.Lift
 
 open Real
 

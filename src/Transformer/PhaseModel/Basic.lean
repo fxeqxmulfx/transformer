@@ -11,6 +11,12 @@ the gradient is Lipschitz with constant `Σ_r ‖m_r‖²`
 (`lipschitzWith_gradient_phaseEnergy`).  At a zero of the energy the
 Hessian is `h ↦ Σ_r ⟪m_r, h⟫ m_r`, injective when no nonzero vector is
 orthogonal to every row (`injective_fderiv_gradient_of_phaseEnergy_eq_zero`).
+
+Three facts on the circle serve every phase model: `e^{i(x + 2πk)} = e^{ix}`
+(`exp_ofReal_add_int_mul_two_pi_mul_I`), `conj e^{iθ} = e^{-iθ}`
+(`conj_exp_ofReal_mul_I`), and the chord inequality
+`1 - cos (a ± b) ≤ 2 (1 - cos a) + 2 (1 - cos b)` (`one_sub_cos_add_le`,
+`one_sub_cos_sub_le`).
 -/
 
 import Transformer.PhaseModel.Defs
@@ -19,9 +25,39 @@ import Mathlib.Analysis.Calculus.Gradient.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 
-open Real
+open Real ComplexConjugate
 
 namespace Transformer.PhaseModel
+
+/-- `e^{i(x + 2πk)} = e^{ix}`. -/
+theorem exp_ofReal_add_int_mul_two_pi_mul_I (x : ℝ) (k : ℤ) :
+    Complex.exp (↑(x + k * (2 * π)) * Complex.I) = Complex.exp (↑x * Complex.I) := by
+  rw [show (↑(x + k * (2 * π)) : ℂ) * Complex.I = ↑x * Complex.I + k * (2 * π * Complex.I) by
+    push_cast; ring, Complex.exp_add, Complex.exp_int_mul_two_pi_mul_I, mul_one]
+
+/-- `conj e^{iθ} = e^{-iθ}`. -/
+theorem conj_exp_ofReal_mul_I (θ : ℝ) :
+    conj (Complex.exp (↑θ * Complex.I)) = Complex.exp (↑(-θ) * Complex.I) := by
+  rw [← Complex.exp_conj, map_mul, Complex.conj_ofReal, Complex.conj_I]
+  push_cast
+  ring_nf
+
+/-- **The chord inequality** for a sum: `1 - cos (a + b) ≤ 2 (1 - cos a) +
+2 (1 - cos b)`, the triangle inequality `|e^{i(a+b)} - 1| ≤ |e^{ia} - 1| +
+|e^{ib} - 1|` squared, with `(u + v)² ≤ 2u² + 2v²`. -/
+theorem one_sub_cos_add_le (a b : ℝ) : 1 - cos (a + b) ≤ 2 * (1 - cos a) + 2 * (1 - cos b) := by
+  rw [cos_add]
+  nlinarith [sin_sq_add_cos_sq a, sin_sq_add_cos_sq b, sq_nonneg (sin a - sin b),
+    sq_nonneg (1 - cos a), sq_nonneg (1 - cos b),
+    mul_nonneg (sub_nonneg.2 (cos_le_one a)) (sub_nonneg.2 (cos_le_one b))]
+
+/-- **The chord inequality** for a difference: `1 - cos (a - b) ≤
+2 (1 - cos a) + 2 (1 - cos b)`. -/
+theorem one_sub_cos_sub_le (a b : ℝ) : 1 - cos (a - b) ≤ 2 * (1 - cos a) + 2 * (1 - cos b) := by
+  rw [cos_sub]
+  nlinarith [sin_sq_add_cos_sq a, sin_sq_add_cos_sq b, sq_nonneg (sin a + sin b),
+    sq_nonneg (1 - cos a), sq_nonneg (1 - cos b),
+    mul_nonneg (sub_nonneg.2 (cos_le_one a)) (sub_nonneg.2 (cos_le_one b))]
 
 variable {E R : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [Fintype R] (m : R → E)
 
