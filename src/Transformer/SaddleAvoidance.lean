@@ -34,6 +34,9 @@ rate `c₁ ‖∇f‖²` while it moves at most at the speed `c₂ ‖∇f‖`, 
 flows `ẋ = -G(x) ∇f(x)` with `c₁ ≤ G ≤ c₂`.  An analytic function on a
 finite-dimensional real inner product space satisfies the Łojasiewicz
 inequality at every point, so the hypothesis on it holds for analytic energies.
+A linear isometry preserving `f` commutes with gradient steps and gradient
+flows.  The subspace fixed by a set of such isometries is invariant, and on it
+gradient descent is that of the restriction of `f`.
 
 | Module | Contents |
 | --- | --- |
@@ -72,6 +75,7 @@ inequality at every point, so the hypothesis on it holds for analytic energies.
 | `SaddleAvoidance.DescentCurve` | curves descending `f` at two rates: gradient flows and flows in a metric; translates, monotonicity of `f`, and a curve along which `f` is constant stops |
 | `SaddleAvoidance.DescentTrap` | descent curves starting near a Łojasiewicz point stay near it, with finite length |
 | `SaddleAvoidance.DescentConvergence` | descent curves with a Łojasiewicz limit point up to translations converge, to a critical point |
+| `SaddleAvoidance.Symmetry` | isometries preserving `f` carry its gradient along and commute with gradient steps and flows; the subspace they fix is invariant, its critical points along it are critical (symmetric criticality), and gradient descent on it is that of the restriction of `f` |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
 and `thm:main` of arXiv:1602.04915.  Both rest on the center-stable manifold
@@ -116,3 +120,4 @@ import Transformer.SaddleAvoidance.MetricAvoidance
 import Transformer.SaddleAvoidance.DescentCurve
 import Transformer.SaddleAvoidance.DescentTrap
 import Transformer.SaddleAvoidance.DescentConvergence
+import Transformer.SaddleAvoidance.Symmetry
