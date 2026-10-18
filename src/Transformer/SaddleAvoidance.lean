@@ -25,7 +25,10 @@ the time-one map.  So if every critical point is a global minimizer or a
 strict saddle, almost every trajectory converges to a global minimizer.  The
 avoidance theorem extends to fixed points whose derivative is conjugate to a
 symmetric map, and with it to the flows `ẋ = -G(x) ∇f(x)` with `G` symmetric
-positive definite at the strict saddles.
+positive definite at the strict saddles.  The trap and the convergence of
+gradient flows hold for every curve along which `f` decreases at least at a
+rate `c₁ ‖∇f‖²` while it moves at most at the speed `c₂ ‖∇f‖`, among them the
+flows `ẋ = -G(x) ∇f(x)` with `c₁ ≤ G ≤ c₂`.
 
 | Module | Contents |
 | --- | --- |
@@ -60,6 +63,9 @@ positive definite at the strict saddles.
 | `SaddleAvoidance.SquareRoot` | the square root of a positive definite map `P`; `P H` for symmetric `H` is conjugate to a symmetric map, with a negative eigenvalue if `H` has one |
 | `SaddleAvoidance.MetricFlow` | the flow `ẋ = -G(x) ∇f(x)`: its time-`t` maps are `C¹` with invertible derivatives, equal to `exp (-t G(z) ∇²f(z))` at a critical point `z`; strict saddles are symmetrizable unstable fixed points of the time-one map |
 | `SaddleAvoidance.MetricAvoidance` | the flow `ẋ = -G(x) ∇f(x)` is a one-parameter group and almost never converges to a strict saddle |
+| `SaddleAvoidance.DescentCurve` | curves descending `f` at two rates: gradient flows and flows in a metric; translates, monotonicity of `f`, and a curve along which `f` is constant stops |
+| `SaddleAvoidance.DescentTrap` | descent curves starting near a Łojasiewicz point stay near it, with finite length |
+| `SaddleAvoidance.DescentConvergence` | descent curves with a Łojasiewicz limit point up to translations converge, to a critical point |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
 and `thm:main` of arXiv:1602.04915.  Both rest on the center-stable manifold
@@ -100,3 +106,6 @@ import Transformer.SaddleAvoidance.Symmetrizable
 import Transformer.SaddleAvoidance.SquareRoot
 import Transformer.SaddleAvoidance.MetricFlow
 import Transformer.SaddleAvoidance.MetricAvoidance
+import Transformer.SaddleAvoidance.DescentCurve
+import Transformer.SaddleAvoidance.DescentTrap
+import Transformer.SaddleAvoidance.DescentConvergence
