@@ -15,6 +15,7 @@ from .model import Model
 from .atomic import (AtomicColumns, AtomicMatching, BindingPricing, MatchingBindings,
                      MatchingOrders, OrderPricing, PairedMatching)
 from .optimizers import ANSR, EVD, AdamW, Clipped, Optimizer
+from .regression import MLP, ModularRegression
 from .spec import Spec, describe, require, require_kind, swap, walk
 from .stopping import Solved, Stopping
 from .synthetic import Synthetic
@@ -102,6 +103,11 @@ class Experiment(Spec):
                     "AtomicMatching reports physical heads through the benchmark, not Transformer diagnostics")
             require(columns or isinstance(self.optimizer, AdamW),
                     "AtomicMatching supports AtomicColumns or raw AdamW control")
+        if isinstance(self.model, MLP) or isinstance(self.benchmark, ModularRegression):
+            require(isinstance(self.model, MLP) and isinstance(self.benchmark, ModularRegression),
+                    "An MLP fits a ModularRegression, and a ModularRegression needs an MLP")
+            require(self.model.context == self.benchmark.context, "An MLP reads exactly the benchmark's inputs")
+            require(isinstance(self.execution, Eager), "MLP regression runs Eager")
         if isinstance(self.model, TensorStack):
             check_tensor_benchmark(self.benchmark)
             require(isinstance(self.optimizer, AdamW), "TensorStack uses ordinary AdamW")

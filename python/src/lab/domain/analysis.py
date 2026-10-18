@@ -23,6 +23,36 @@ def transition(history, target=.99, patience=2):
             "scope": "two_way_exhaustive_fixed_prime_arithmetic; no_length_transfer_or_causal_claim"}
 
 
+def decade_slope(points):
+    """The least-squares slope of log value against log step over the last decade of `points`.
+
+    `points` are (step, value) pairs in step order; those of positive step,
+    at least a tenth of the last, and positive value count. A value that
+    settles has slope near zero, one decaying as a power of the step that
+    power. None with fewer than two such points.
+
+    Source: EXPERIMENT_PLAN.md, "Scalar MLP on mod 97 (2026-10-18)", where a
+    run too slow for its budget still has a falling loss when it ends. For
+    gradient descent on an f with an L-Lipschitz gradient, with a step under
+    1 / L, whose orbit converges to a point w where the Łojasiewicz
+    inequality holds with exponent a, f(x_k) - f(w) is at most C b^k for some
+    b < 1 when a ≤ 1/2
+    (`Transformer.Landscape.SaddleAvoidance.exists_le_mul_pow_of_isLojasiewiczAt`),
+    and at most C (k + 1)^(-1 / (2a - 1)) when 1/2 < a < 1
+    (`Transformer.Landscape.SaddleAvoidance.exists_le_mul_rpow_of_isLojasiewiczAt`).
+    These bound the decay that the slope measures.
+    """
+    last = points[-1][0] if points else 0
+    chosen = [(math.log(step), math.log(value)) for step, value in points
+              if step > 0 and 10 * step >= last and value is not None and value > 0]
+    if len({x for x, _ in chosen}) < 2:
+        return None
+    mean_x = sum(x for x, _ in chosen) / len(chosen)
+    mean_y = sum(y for _, y in chosen) / len(chosen)
+    return (sum((x - mean_x) * (y - mean_y) for x, y in chosen)
+            / sum((x - mean_x) ** 2 for x, _ in chosen))
+
+
 def curve_witness(points, tolerance=0.0):
     """Descent, ascent, descent at strictly increasing x: a double-descent witness.
 
