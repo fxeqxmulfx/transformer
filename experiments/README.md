@@ -19,6 +19,7 @@ it, which git ignores.
 | [`convex_binding`](convex_binding) | 18 | Does a factorized neighboring-token key encoder remove recall's binding obstruction while retaining convex atomic training and free original values? |
 | [`mod97_grokking`](mod97_grokking) | 12 | Do the openai/grok transformer and GPTMini generalize x / y mod 97 long after fitting it? |
 | [`mod97_size_search`](mod97_size_search) | 12 | What is the smallest tested dense GPTMini that groks mod 97 within 10,000 full epochs? |
+| [`mod97_scalar_mlp`](mod97_scalar_mlp) | 10 | A perceptron reading x and y as two numbers can represent x / y mod 97: why does gradient descent not fit it? A spurious minimum, slowness, divergence, or a step past the curvature? |
 | [`grokking_progress`](grokking_progress) | 4 | Does a causal held-out symmetry projection reveal rule formation in ordinary softmax transformers before accuracy rises, while rejecting memorization and immediate learning? |
 | [`grokking_internals`](grokking_internals) | 1 | Which frozen probes, answer/EOS gradients, spectra, neuron statistics, head ablations, computation-stage interactions, archived AdamW directions, finite-step curvature, same-gradient moment resets and exact current-logit certificates track ordinary transformer grokking? |
 | [`mod97_stability`](mod97_stability) | 6 | Once GPTMini generalizes x / y mod 97, does it stay generalized, under AdamW and raw AMSGradW? |

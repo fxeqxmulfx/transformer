@@ -1,5 +1,5 @@
 """Check the modular regression table, the perceptron, weights answering every row, the landscape
-measurements and a real run.
+measurements, the step against the curvature, and a real run with its report.
 
 The Hessian extremes are checked against the eigenvalues of the dense
 Hessian of a small perceptron, and the spectrum shares against a table whose
@@ -16,10 +16,12 @@ import torch
 from torch import nn
 from torch.func import functional_call
 
+from lab.application.report import curvature, report_study
 from lab.application.study import Study, run_study
-from lab.domain.analysis import decade_slope
-from lab.dsl import (GELU, MLP, SGD, Budget, Checkpoint, CudaGraph, Eager, Evaluate, Experiment, ModularDivision,
-                     ModularRegression, OneHot, ReLU, Scalar, ScaledResidual, Schedule, Seeds, TorchDefault, swap)
+from lab.domain.analysis import decade_slope, step_curvature
+from lab.dsl import (GELU, MLP, SGD, AdamW, Budget, Checkpoint, Cosine, CudaGraph, Eager, Evaluate, Experiment,
+                     ModularDivision, ModularRegression, OneHot, ReLU, Scalar, ScaledResidual, Schedule, Seeds,
+                     TorchDefault, swap)
 from lab.infrastructure.benchmarks import build_task
 from lab.infrastructure.benchmarks.regression import high_frequency_shares, lanczos
 from lab.infrastructure.engine import Engine
@@ -179,6 +181,15 @@ class RegressionTests(unittest.TestCase):
         self.assertAlmostEqual(decade_slope([(1, 9.0), (10, 9.0), (100, 1.0), (1000, 0.1)]), -1.0)
         self.assertIsNone(decade_slope([(0, 1.0), (1000, 1.0)]))
 
+    def test_step_curvature_finds_the_first_step_reaching_one(self):
+        history = [{"step": step, "landscape": {"hessian_min": low, "hessian_max": high}}
+                   for step, low, high in ((0, -0.5, 4.0), (1000, -8.0, 6.0), (2000, 1.0, 10.0))]
+        found = step_curvature(history, 0.125)
+        self.assertEqual(found["values"], [[0, 0.5], [1000, 1.0], [2000, 1.25]])
+        self.assertEqual((found["max"], found["first_step_reaching_one"]), (1.25, 1000))
+        self.assertIsNone(step_curvature(history[:1], 0.125)["first_step_reaching_one"])
+        self.assertIsNone(step_curvature([], 0.125)["max"])
+
     def test_only_a_perceptron_fits_the_regression_eagerly(self):
         base = regression()
         with self.assertRaises(ValueError):
@@ -200,6 +211,7 @@ class RegressionTests(unittest.TestCase):
             study = Study("regression", "Modular regression check", {"run": regression()})
             result = run_study(study, [], RunDirectories(Path(root)), Engine(), lambda label, row: None)["run"]
             history = RunDirectories(Path(root)).open("run").records("history")
+            report = report_study(study, [], RunDirectories(Path(root)))["runs"]["run"]
         self.assertEqual([row["step"] for row in history], [0, 10, 20])
         self.assertLess(history[-1]["train"]["loss"], history[0]["train"]["loss"])
         landscape = result["last"]["landscape"]
@@ -207,6 +219,18 @@ class RegressionTests(unittest.TestCase):
         self.assertLessEqual(landscape["hessian_min"], landscape["hessian_max"])
         self.assertEqual(set(history[0]["landscape"]["residual_high"]), {"5", "10", "20"})
         self.assertIn("loss", result["final_decade_slopes"])
+        values = [[point["step"], 0.1 * max(abs(point["landscape"]["hessian_min"]), point["landscape"]["hessian_max"])]
+                  for point in history]
+        self.assertEqual(report["step_curvature"]["values"], values)
+        self.assertEqual(report["step_curvature"]["max"], max(value for _, value in values))
+        self.assertEqual(report["step_curvature"]["first_step_reaching_one"],
+                         next((step for step, value in values if value >= 1), None))
+        controls = (swap(regression(), "optimizer", AdamW(lr=1e-3, betas=(0.9, 0.999), weight_decay=0.0)),
+                    swap(regression(), "optimizer.weight_decay", 0.1), swap(regression(), "budget.batch", 7),
+                    swap(regression(), "schedule.warmup", 5),
+                    swap(regression(), "schedule.anneal", Cosine(start=0, end=20, final=0.1)))
+        for control in controls:
+            self.assertIn("not_applicable", curvature(control, history))
 
 
 if __name__ == "__main__":

@@ -2629,3 +2629,72 @@ Widths 24 and 16 with the same decay failed within the cap. The Mesh stage
 is active; retain the fixed architecture-specific data and report the
 vocabulary, loss and split differences. See the experiment README and the
 Rust repository's portable histories for the complete outcomes.
+
+## Scalar MLP on mod 97 (2026-10-18)
+
+Status: active, requested by the user. Board tasks: #54 landed the lab
+blocks, #55 the experiment, #56 runs it, and #57 cites M8.3 once it is
+proved. The Lean side is M8 of `landscape_plan.md`, tasks #50 to #53.
+
+A perceptron reading x and y as two real numbers and answering with one
+represents x / y mod 97 exactly at depth 2 and width 2p + 1 = 195 (`lookup`
+in `python/tests/test_regression.py` builds the weights), yet gradient
+descent does not find such weights. Ask why, by experiment, before any Lean
+step.
+
+A perceptron's loss has a Lipschitz gradient on bounded sets only. M8 asks
+instead for a condition that a run of gradient descent with step η checks
+along its own orbit x_k:
+
+> (S) ‖∇²f‖ ≤ L on every segment [x_k, x_{k+1}], with η L < 1.
+
+Proved (M8.1): under (S) the loss decreases along the orbit
+(`Transformer.Landscape.SaddleAvoidance.iterate_succ_le_sub_of_segment`),
+and the starts whose orbit satisfies (S) and converges to a strict saddle
+form a null set
+(`Transformer.Landscape.SaddleAvoidance.ae_not_tendsto_strictSaddle_of_segment`).
+Planned, not proved (M8.3, task #52): under the Łojasiewicz inequality,
+which an analytic loss satisfies
+(`Transformer.Landscape.SaddleAvoidance.exists_isLojasiewiczAt_of_analyticOnNhd`),
+almost every orbit that satisfies (S) converges to a critical point that is
+not a strict saddle, or leaves every bounded set. A run that does not fit
+the table therefore ends in one of four ways:
+
+- H1, a spurious minimum or a degenerate saddle: it converges with positive
+  loss. The gradient norm falls to near 0, and λ_min ≥ 0 up to the Lanczos
+  error.
+- H2, slowness: it still descends when the budget ends, with negative
+  final-decade slopes, and no theorem bounds the time. The residual's share
+  at high frequencies of the transform over Z/97 x Z/97 shows where the fit
+  lags: x / y keeps most of its energy there and x + y little.
+- H3, divergence: the parameter norm grows without bound.
+- H4, a step past the curvature: (S) fails, η·max(|λ_min|, λ_max) ≥ 1 at a
+  recorded update of a gradient-descent run. The runs sample it every 1,000
+  updates, not on every segment.
+
+AdamW runs are controls, and H4 does not apply to them.
+
+[`experiments/mod97_scalar_mlp`](experiments/mod97_scalar_mlp/README.md)
+fits two-hidden-layer perceptrons to the whole table with full batches:
+gradient descent at a constant step of about half the inverse initial
+sharpness, and AdamW as a control. It compares scalar with one-hot operands
+and x / y with x + y, and varies the width (64, 1024) of the scalar
+division run. Every perceptron uses the analytic GELU; under ReLU the loss
+has no second derivative on its kinks, so the theorems do not apply. Each
+observation records the gradient norm, the extreme Hessian eigenvalues, the
+parameter norm and the residual's high-frequency shares. For every
+gradient-descent run the report adds η·max(|λ_min|, λ_max) at every
+observation, its maximum, and the first update at which it reaches 1.
+
+The outcome chooses the Lean step:
+
+- H1: a trap theorem, that a non-global local minimizer attracts starts of
+  positive measure, applied where a spurious minimum is proved.
+- H2: a lower bound on the loss of gradient descent on a quadratic model by
+  its spectrum, with the flat spectrum of division.
+- H3: the second alternative of the planned M8.3; no landscape theorem says
+  more.
+- H4: none; M8 says nothing where (S) fails.
+
+The explicit representation can itself be proved in Lean as a statement
+about two-hidden-layer ReLU networks on a finite grid.

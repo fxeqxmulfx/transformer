@@ -53,6 +53,35 @@ def decade_slope(points):
             / sum((x - mean_x) ** 2 for x, _ in chosen))
 
 
+def step_curvature(history, rate):
+    """The step times the norm of the Hessian at each observation, its maximum, and the first step where it
+    reaches 1.
+
+    `history` holds observations with a `step` and the extreme Hessian
+    eigenvalues `hessian_min` and `hessian_max` of their `landscape`, of
+    which the norm of the Hessian is max(|hessian_min|, hessian_max);
+    `rate` is the step η of gradient descent. The maximum is None for an
+    empty history, and the first step None when no value reaches 1.
+
+    Source: EXPERIMENT_PLAN.md, "Scalar MLP on mod 97 (2026-10-18)", outcome
+    H4, and the condition (S) of M8 in landscape_plan.md: the norm of the
+    Hessian is at most L, with η L < 1, at every point of every segment
+    [x_k, x_{k+1}] of the orbit. Under (S) step k lowers the loss by at
+    least η (1 - η L) |∇f(x_k)|^2
+    (`Transformer.Landscape.SaddleAvoidance.iterate_succ_le_sub_of_segment`),
+    and the starts whose orbit converges to a strict saddle form a null set
+    (`Transformer.Landscape.SaddleAvoidance.ae_not_tendsto_strictSaddle_of_segment`).
+    Ritz values lie inside the spectrum, so a value of at least 1 at an
+    observed x_k breaks (S) for every L. Values below 1 do not show that (S)
+    holds: the observations sample the orbit, not every point of every
+    segment.
+    """
+    values = [[point["step"], rate * max(abs(point["landscape"]["hessian_min"]), point["landscape"]["hessian_max"])]
+              for point in history]
+    return {"rate": rate, "values": values, "max": max((value for _, value in values), default=None),
+            "first_step_reaching_one": next((step for step, value in values if value >= 1), None)}
+
+
 def curve_witness(points, tolerance=0.0):
     """Descent, ascent, descent at strictly increasing x: a double-descent witness.
 

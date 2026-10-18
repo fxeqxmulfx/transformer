@@ -6,12 +6,15 @@ against the budget it trained to. Runs that differ in their learning rate
 alone are compared once each has trained the budget its file sets.
 """
 
+from ..domain.analysis import step_curvature
 from ..domain.benchmarks import ModularDivision
 from ..domain.grokking import available as grokking_available, norm_progress, progress as grokking_progress
 from ..domain.calibration import POLICIES, choose, crossing, rate_groups
 from ..domain.collapse import collapse, largest_gradients
 from ..domain.experiment import require_continuation
+from ..domain.optimizers import SGD
 from ..domain.phases import phases
+from ..domain.regression import ModularRegression
 from ..domain.spec import describe
 from ..domain.stability import persistence, recovery
 from .ports import Run, Runs
@@ -41,6 +44,22 @@ def stability(run: Run, history, budget, every, finished):
     return {"phases": phases(history), "persistence": persistence(history, budget, every, finished),
             "recovery": recovered, "collapse": neighborhoods,
             "largest_gradients": largest_gradients(diagnostics, neighborhoods["confirmed_step"])}
+
+
+def curvature(experiment, history):
+    """The step against the norm of the Hessian along a run of gradient descent on a modular regression.
+
+    Only gradient descent at a constant step, without decay, on batches of
+    the whole table follows the orbit x_{k+1} = x_k - η ∇f(x_k) of the loss
+    that the condition (S) of `step_curvature` concerns. AdamW runs are
+    controls, and (S) does not apply to them, nor to a schedule, a decay or a
+    smaller batch.
+    """
+    optimizer, schedule, benchmark = experiment.optimizer, experiment.schedule, experiment.benchmark
+    if (not isinstance(optimizer, SGD) or optimizer.weight_decay or schedule.warmup or schedule.anneal is not None
+            or experiment.budget.batch < benchmark.prime * (benchmark.prime - 1)):
+        return {"not_applicable": "(S) concerns full-batch gradient descent at a constant step without decay"}
+    return step_curvature(history, optimizer.lr)
 
 
 def candidate(label, experiment, history, result):
@@ -100,6 +119,8 @@ def report_study(study, labels, runs: Runs):
             found["grokking_progress"] = (grokking_progress(history) if grokking_available(history)
                                           else {"not_applicable": "Train/heldout accuracy and loss are required"})
             found["norm_progress"] = norm_progress(run.records("diagnostics"))
+        if history and isinstance(experiment.benchmark, ModularRegression):
+            found["step_curvature"] = curvature(experiment, history)
         if (found["status"] == "finished" and budget == experiment.budget.updates
                 and experiment.benchmark.selection is not None and hasattr(experiment.optimizer, "lr")):
             candidates[label] = candidate(label, experiment, history, result)
