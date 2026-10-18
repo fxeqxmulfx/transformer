@@ -35393,7 +35393,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 
 ### `Transformer.Perspective`
 
-**[Transformer.Perspective](src/Transformer/Perspective.lean)** — 364 lines, aggregator
+**[Transformer.Perspective](src/Transformer/Perspective.lean)** — 365 lines, aggregator
 
 **[Transformer.Perspective.AppendixA_Barycenter](src/Transformer/Perspective/AppendixA_Barycenter.lean)** — 194 lines
 
@@ -37042,7 +37042,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`tsupport_blockCutoff_subset`](src/Transformer/Perspective/SphereCutoff.lean#L108) | theorem | proved |
 | [`hasCompactSupport_blockCutoff`](src/Transformer/Perspective/SphereCutoff.lean#L116) | theorem | proved |
 
-**[Transformer.Perspective.SphereCutoffFlow](src/Transformer/Perspective/SphereCutoffFlow.lean)** — 157 lines
+**[Transformer.Perspective.SphereCutoffFlow](src/Transformer/Perspective/SphereCutoffFlow.lean)** — 126 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
@@ -37171,7 +37171,7 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`selfEnergy_le_of_not_nonTrivial`](src/Transformer/Perspective/SphereSaddle.lean#L115) | theorem | proved |
 | [`synchronized_of_secondDerivEBetaAt_nonpos`](src/Transformer/Perspective/SphereSaddle.lean#L142) | theorem | proved |
 
-**[Transformer.Perspective.SphereSaddleAvoidance](src/Transformer/Perspective/SphereSaddleAvoidance.lean)** — 149 lines
+**[Transformer.Perspective.SphereSaddleAvoidance](src/Transformer/Perspective/SphereSaddleAvoidance.lean)** — 148 lines
 
 | declaration | kind | status |
 | --- | --- | --- |

@@ -80,8 +80,7 @@ theorem ae_not_tendsto_nonTrivial_of_blockScale (hd1 : 1 ≤ d) (hd : 3 ≤ d) {
     (Measure.map (WithLp.toLp 2) (volume : Measure (Idx n → EucSpace d)))
     (isOpen_blockShell _ _) (contDiff_blockCutoff (hε k) (hK k))
     (hasCompactSupport_blockCutoff (hε k) (hK k)) (tsupport_blockCutoff_subset (hε k) (hK k))
-    (fun _ hx => blockCutoff_eq_one (hε k) (hK k) hx) (blockCutoff_nonneg (hε k) (hK k))
-    (blockCutoff_le_one (hε k) (hK k)) hg hw hwpos
+    (fun _ hx => blockCutoff_eq_one (hε k) (hK k) hx) hg hw hwpos
   have hvol := ae_of_ae_map (WithLp.measurable_toLp 2 _).aemeasurable hall
   filter_upwards [hvol, ae_forall_ne_zero hd1] with x hx hx0
   intro X hX0 hX Xstar hcrit hnt hlim
