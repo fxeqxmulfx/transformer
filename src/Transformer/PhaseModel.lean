@@ -14,7 +14,9 @@ local minimizer of `V_full` is the phases of a character up to periods and
 every other critical point is a strict saddle, so for almost every start
 below `n²/8` a convergent orbit converges to the phases of a character.  The
 same landscape holds over every finite abelian group in place of `ℤ/n`
-(`PhaseModel.Abelian`).
+(`PhaseModel.Abelian`).  It fails for partial tables: already for `n = 5`
+some `S` generating the full table has a local minimizer below `n²/8` that
+is not a character (`PhaseModel.Spurious`).
 
 | Module | Contents |
 | --- | --- |
@@ -32,6 +34,8 @@ same landscape holds over every finite abelian group in place of `ℤ/n`
 | `PhaseModel.Fourier` | Parseval's identity and a cubic identity: some character lies within `V_full/n` of every phases |
 | `PhaseModel.Landscape` | below `n²/8`: local minimizers of `V_full` are characters, other critical points strict saddles, and convergent orbits end at characters for almost every start |
 | `PhaseModel.Abelian` | the same over a finite abelian group: its characters, their orthogonality, and the landscape of `V_full` below `n²/8` for a group of order `n` |
+| `PhaseModel.Twisted` | critical points with positive cosines are local minimizers; twisted states, phases in `(π/3)ℤⁿ` with defects `0, ±1` modulo `6` and balanced rows, are local minimizers of generating partial tables |
+| `PhaseModel.Spurious` | for `n = 5`, a partial table generating the full one with a local minimizer of energy `3 < 5²/8` that is not a character |
 
 The convergence results instantiate `Transformer.SaddleAvoidance` with the
 lattice of periods as translations and the cube as a compact set meeting
@@ -52,3 +56,5 @@ import Transformer.PhaseModel.Orthogonality
 import Transformer.PhaseModel.Fourier
 import Transformer.PhaseModel.Landscape
 import Transformer.PhaseModel.Abelian
+import Transformer.PhaseModel.Twisted
+import Transformer.PhaseModel.Spurious
