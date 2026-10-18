@@ -127,6 +127,14 @@ pieces of `cos x`, `SyncKernelCert` turns such bounds into certificates, and
 `StrictSaddle` puts them together, as §5 of that paper does: for every
 `β > 0`, a critical point of `𝖤_β` on `𝕋^n` that is not a global maximum is a
 strict saddle (`strict_saddle`, `o:strictsaddle`).
+`CircleEnergyHessian`, `CircleLojasiewicz` and `CircleConvergence` draw the
+consequence the survey states after `o:strictsaddle`: `𝖤_β` on the Euclidean
+space of angles (`eucTorusEnergy`, `CircleSAGradient`) has the critical
+points and second derivatives of §7 and Appendix B, `-𝖤_β`
+satisfies the Łojasiewicz inequality at the synchronized states
+(`isLojasiewiczAt_of_synchronized`), and for `β > 0` almost every solution of
+`eq:onangles` converges to a synchronized state, given that inequality at the
+other critical points (`ae_tendsto_synchronized_of_angularUSA`).
 `SphereCritical` and `SphereSaddle` follow Appendix C of arXiv:2405.18273
 (Criscitiello, Rebjock, McRae, Boumal): for `d ≥ 3` and `β > 0`, every
 critical point of `𝖤_β` on `(𝕊^{d-1})^n` with two distinct tokens is a strict
@@ -281,6 +289,9 @@ import Transformer.Perspective.CircleSAFlow
 import Transformer.Perspective.SyncKernelExp
 import Transformer.Perspective.SyncKernelSecond
 import Transformer.Perspective.SyncKernelBetaOne
+import Transformer.Perspective.CircleEnergyHessian
+import Transformer.Perspective.CircleLojasiewicz
+import Transformer.Perspective.CircleConvergence
 import Transformer.Perspective.InnerAsymptotics
 import Transformer.Perspective.PeanoTaylor
 import Transformer.Perspective.AppendixB_EBeta
