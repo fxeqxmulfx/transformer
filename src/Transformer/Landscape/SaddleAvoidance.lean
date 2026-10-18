@@ -56,7 +56,10 @@ only along its own orbit, and that is enough: on the segment of a step it gives
 the sufficient decrease, and the starts whose orbit has it at its points and
 converges to a strict saddle form a null set.  Nor does the Łojasiewicz
 convergence need a global Lipschitz constant: it needs only that every step of
-the orbit lowers `f` by at least `η κ ‖∇f‖²` for some `κ > 0`.
+the orbit lowers `f` by at least `η κ ‖∇f‖²` for some `κ > 0`.  So almost
+every start below a level whose orbit has the bound on its segments converges to
+a critical point that is not a strict saddle, or runs off to infinity; for analytic
+`f` without the Łojasiewicz hypothesis and without a level.
 
 | Module | Contents |
 | --- | --- |
@@ -111,6 +114,8 @@ the orbit lowers `f` by at least `η κ ‖∇f‖²` for some `κ > 0`.
 | `SaddleAvoidance.FlowLevelLandscape` | the same for gradient flows |
 | `SaddleAvoidance.AnalyticLevelLandscape` | both for analytic `f`, without the Łojasiewicz hypothesis |
 | `SaddleAvoidance.Orbit` | a Hessian bound along the orbit: on the segment of a step it gives the sufficient decrease (`le_sub_of_gradientStep_of_segment`, `iterate_succ_le_sub_of_segment`, `antitone_iterate_of_segment`); the starts whose orbit has it at its points, or on its segments, and converges to a strict saddle are null (`measure_iterate_norm_le_tendsto_strictSaddle_eq_zero`, `measure_segment_tendsto_strictSaddle_eq_zero`, `ae_not_tendsto_strictSaddle_of_segment`) |
+| `SaddleAvoidance.OrbitLandscape` | the scheme along the orbit: an orbit with `‖∇²f‖ ≤ L`, `η L < 1`, on the segment of every step converges to a critical point no higher than its start, or runs off to infinity (`exists_tendsto_or_tendsto_norm_of_segment`); for almost every start below a level, to one that is not a strict saddle (`ae_exists_tendsto_not_isStrictSaddle_or_tendsto_norm_of_lt_of_segment`), to a global minimizer if every critical point below the level is one or a strict saddle (`ae_exists_tendsto_isMinOn_or_tendsto_norm_of_lt_of_segment`) |
+| `SaddleAvoidance.AnalyticOrbitLandscape` | the same for analytic `f`, with neither the Łojasiewicz hypothesis nor a level (`ae_exists_tendsto_not_isStrictSaddle_or_tendsto_norm_of_segment_of_analyticOnNhd`, `ae_exists_tendsto_isMinOn_or_tendsto_norm_of_segment_of_analyticOnNhd`); the double well `x⁴/4 - x²/2`, whose Hessian is unbounded, has the bound along every orbit from `[-3/2, 3/2]` for `η = 1/10` |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
 and `thm:main` of arXiv:1602.04915.  Both rest on the center-stable manifold
@@ -171,3 +176,5 @@ import Transformer.Landscape.SaddleAvoidance.LevelLandscape
 import Transformer.Landscape.SaddleAvoidance.FlowLevelLandscape
 import Transformer.Landscape.SaddleAvoidance.AnalyticLevelLandscape
 import Transformer.Landscape.SaddleAvoidance.Orbit
+import Transformer.Landscape.SaddleAvoidance.OrbitLandscape
+import Transformer.Landscape.SaddleAvoidance.AnalyticOrbitLandscape

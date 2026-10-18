@@ -32,7 +32,7 @@ their type, and dot notation needs them in its namespace.
 * Rates: `Decay`, `Rates`, `FlowDecay`, `DescentEstimates`, `FlowRates`.
 * The scheme, layer C: `Minimizers`, `SecondOrder`, `Necessary`, `SecondOrderCritical`,
   `Nondegenerate`, `Landscape`, `FlowLandscape`, `AnalyticLandscape`, `LevelLandscape`,
-  `FlowLevelLandscape`, `AnalyticLevelLandscape`.
+  `FlowLevelLandscape`, `AnalyticLevelLandscape`, `OrbitLandscape`, `AnalyticOrbitLandscape`.
 
 ## Dependencies
 
