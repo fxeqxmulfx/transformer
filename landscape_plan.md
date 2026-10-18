@@ -69,6 +69,7 @@ Constraints:
 | D, angles and the circle (M5.1) | `Perspective.usa_anglesToSphere`: solutions of `eq:onangles` give solutions of USA on `SphereTuple 2 n`; `eq_map_angleCube`: every `UniformTuple 2 n P` is the image of the normalized Lebesgue measure on `[0, 2π)ⁿ`; `measure_eq_zero_of_volume_preimage`: a set whose preimage in angles is Lebesgue-null is `P`-null, measurable or not, so `ae_of_ae_volume` carries an almost-everywhere statement in angles to `P`, and `measure_image_eq_zero` takes a `2π`-periodic null set to a `P`-null set | proved |
 | C, phase model over finite abelian groups (M3.4d) | `PhaseModel.Abelian.exists_sub_characterPhase_mem_periods_of_isLocalMin`, `isStrictSaddle_of_divisionEnergy_lt` and `ae_tendsto_characterPhase`: the landscape below `n²/8` of `V_full` for a finite abelian group `G` of order `n ≥ 4`, with the characters `AddChar G ℂ` and their phases `arg χ(x)`; Parseval's identity and the cubic identity over the characters (`sum_normSq_fourier`, `sum_normSq_mul_re_fourier`) | proved |
 | A, gradient flows (M1.3) | `SaddleAvoidance.ae_not_tendsto_gradientFlow_of_isStrictSaddle`: for `f` of class `C²` with `∇f` bounded and Lipschitz and `ν` absolutely continuous, `ν`-almost every gradient flow converges to no strict saddle; the flow is a one-parameter group (`gradientFlow_gradientFlow`) whose integer times iterate the time-one map (`iterate_gradientFlow_one`); ascent, the flow of `-f`, almost never converges to a critical point with a positive Hessian eigenvalue (`measure_tendsto_gradientAscent_strictSaddle_eq_zero`, the Euclidean analog of `l:nosaddleconv`) | proved |
+| A + B, gradient flows (M4.2) | `SaddleAvoidance.ae_exists_tendsto_gradientFlow_isMinOn`: if every critical point is a global minimizer or a strict saddle, given `hloj` and a limit point modulo `Λ`, almost every trajectory of the gradient flow converges to a global minimizer; a convergent trajectory ends at a critical point (`gradient_eq_zero_of_tendsto_gradientFlow`); `ae_exists_tendsto_gradientFlow_isMinOn_of_span_eq_top` needs neither a limit point nor bounds on `∇f` when `Λ` spans `E` | proved |
 
 ## Milestones
 
@@ -256,7 +257,7 @@ Tasks: M4.1 #20, M4.2 #21, M4.3 #22.
 | Item | Deliverable | Depends on |
 | --- | --- | --- |
 | M4.1 | **Gradient descent, done.** `ae_exists_tendsto_isMinOn`: if every critical point is a global minimizer or a strict saddle, given `hloj` and a limit point modulo `Λ`, then almost every orbit converges to a global minimizer. Periodic corollary: when `Λ` is a lattice spanning `E`, every orbit has a limit point modulo `Λ`, so that hypothesis is free. | M3.4a for the example |
-| M4.2 | **Gradient flows.** The same statement for gradient flows. | M1.3, M2.2 |
+| M4.2 | **Gradient flows, done.** `ae_exists_tendsto_gradientFlow_isMinOn`: the same statement for gradient flows, whose limits are critical (`gradient_eq_zero_of_tendsto_gradientFlow`); `ae_exists_tendsto_gradientFlow_isMinOn_of_span_eq_top` needs no limit point when `Λ` spans `E`. | M1.3, M2.2 |
 | M4.3 | **`𝖤_β` on angles (USA).** For every `β > 0`, almost every start converges to a synchronized state, given `hloj` at the non-synchronized critical points. M2.1 covers the synchronized ones. | M3.1, M4.2, M1.4, M2.1 |
 
 ### M5 — Bridges (D)
