@@ -37561,18 +37561,18 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`exists_mem_span_isLocalMin_divisionEnergy_eq_three`](src/Transformer/PhaseModel/Spurious.lean#L74) | theorem | proved |
 | [`not_forall_exists_sub_characterPhase_mem_periods_of_isLocalMin`](src/Transformer/PhaseModel/Spurious.lean#L91) | theorem | proved |
 
-**[Transformer.PhaseModel.Twisted](src/Transformer/PhaseModel/Twisted.lean)** — 171 lines
+**[Transformer.PhaseModel.Twisted](src/Transformer/PhaseModel/Twisted.lean)** — 178 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`not_isStrictSaddle_phaseEnergy`](src/Transformer/PhaseModel/Twisted.lean#L38) | theorem | proved |
-| [`isLocalMin_phaseEnergy_of_cos_pos`](src/Transformer/PhaseModel/Twisted.lean#L55) | theorem | proved |
-| [`twist`](src/Transformer/PhaseModel/Twisted.lean#L78) | def |  |
-| [`sin_cos_pi_div_three_mul`](src/Transformer/PhaseModel/Twisted.lean#L83) | theorem | proved |
-| [`defect`](src/Transformer/PhaseModel/Twisted.lean#L105) | def |  |
-| [`inner_intVec_divisionRow_smul_intVec`](src/Transformer/PhaseModel/Twisted.lean#L109) | theorem | proved |
-| [`isLocalMin_divisionEnergy_twisted`](src/Transformer/PhaseModel/Twisted.lean#L124) | theorem | proved |
-| [`divisionEnergy_twisted`](src/Transformer/PhaseModel/Twisted.lean#L149) | theorem | proved |
+| [`isLocalMin_phaseEnergy_of_cos_pos`](src/Transformer/PhaseModel/Twisted.lean#L62) | theorem | proved |
+| [`twist`](src/Transformer/PhaseModel/Twisted.lean#L85) | def |  |
+| [`sin_cos_pi_div_three_mul`](src/Transformer/PhaseModel/Twisted.lean#L90) | theorem | proved |
+| [`defect`](src/Transformer/PhaseModel/Twisted.lean#L112) | def |  |
+| [`inner_intVec_divisionRow_smul_intVec`](src/Transformer/PhaseModel/Twisted.lean#L116) | theorem | proved |
+| [`isLocalMin_divisionEnergy_twisted`](src/Transformer/PhaseModel/Twisted.lean#L131) | theorem | proved |
+| [`divisionEnergy_twisted`](src/Transformer/PhaseModel/Twisted.lean#L156) | theorem | proved |
 
 ### `Transformer.PhaseModel.Abelian`
 

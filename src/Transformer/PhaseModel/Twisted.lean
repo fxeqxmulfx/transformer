@@ -48,6 +48,13 @@ theorem not_isStrictSaddle_phaseEnergy {z : E} (hcos : ∀ r, 0 ≤ cos ⟪m r, 
   have h3 := mul_neg_of_neg_of_pos hμ (pow_pos (norm_pos_iff.2 hw.2) 2)
   linarith
 
+/-- The hypothesis of `not_isStrictSaddle_phaseEnergy` holds for the single row
+`1` on the line at `0`. -/
+example : let m := fun _ : Unit => (1 : ℝ)
+    ∀ r, 0 ≤ cos ⟪m r, 0⟫ := by
+  intro m r
+  simp [m]
+
 /-- **A critical point with positive cosines is a local minimizer of the phase
 energy** when no nonzero vector is orthogonal to every row: the Hessian is
 injective (`injective_fderiv_gradient_phaseEnergy`) and the point is not a
