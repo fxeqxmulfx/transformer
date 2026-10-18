@@ -124,6 +124,9 @@ pieces of `cos x`, `SyncKernelCert` turns such bounds into certificates, and
 (`τ_mul_integral_posPart_f_β'''_lt_four_of_lt_one`) and `lemma:beta_0.75`,
 `lemma:beta_0.5`, `lemma:beta_0.33`, `lemma:beta_final` (`beta_0_75`, …,
 `beta_final`).
+`StrictSaddle` puts them together, as §5 of that paper does: for every
+`β > 0`, a critical point of `𝖤_β` on `𝕋^n` that is not a global maximum is a
+strict saddle (`strict_saddle`, `o:strictsaddle`).
 `SphereCritical` and `SphereSaddle` follow Appendix C of arXiv:2405.18273
 (Criscitiello, Rebjock, McRae, Boumal): for `d ≥ 3` and `β > 0`, every
 critical point of `𝖤_β` on `(𝕊^{d-1})^n` with two distinct tokens is a strict

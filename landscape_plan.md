@@ -27,9 +27,8 @@ global optimum. It is then applied to the phase model of grokking
 Constraints:
 
 - **No conditional results on unproved claims.** Do not add a theorem whose
-  hypothesis is unproved in Lean. That excludes `strict_saddle` until M3.1
-  proves it (arXiv:2507.22857 answers `o:strictsaddle` on paper) and every
-  other unproved landscape claim.
+  hypothesis is unproved in Lean. That excludes every unproved landscape
+  claim. `strict_saddle` is proved (M3.1), so it may be used.
 - **Łojasiewicz enters only as a hypothesis.** Łojasiewicz's theorem
   (lojasiewicz1963propriete) is proved in the literature, not in Lean. It may
   enter only as an explicit hypothesis, as `hloj` does in
@@ -73,6 +72,7 @@ Constraints:
 | C, the kernel `f_β` for `0 < β < 1` (M3.1f) | `Perspective.τ_mul_integral_posPart_f_β'''_lt_four_of_lt_one`: `τ_β ∫_{-π}^{π} \|f_β'''\|₊ < 4` for `0 < β < 1`, the bound of `lemma:beta_0.75`, `lemma:beta_0.5`, `lemma:beta_0.33` and `lemma:beta_final`, with other constants: `-A ≤ f_β'' ≤ U` on `[0, π]` from pieces of `cos x` (`f_β''_mem_Icc_of_isChain`), `τ_β ≤ π/2 - cos τ_β` (`τ_β_star_two_le`), on nine intervals of `β` | proved |
 | A, symmetrizable derivatives and flows in a metric (M1.5) | `SaddleAvoidance.measure_tendsto_symmetrizableUnstable_eq_zero`: the starts converging to fixed points whose derivative is conjugate to a symmetric map with an eigenvalue of modulus greater than one form a null set; `ae_not_tendsto_metricGradientFlow_of_isStrictSaddle`: for `f` of class `C²` and `G` of class `C¹` with `G ∇f` bounded and Lipschitz and `G` symmetric positive definite at the strict saddles, `ν`-almost every trajectory of `ẋ = -G(x) ∇f(x)` converges to no strict saddle | proved |
 | C, partial tables (M3.4c) | `PhaseModel.not_forall_exists_sub_characterPhase_mem_periods_of_isLocalMin`: the landscape of `V_full` below `n²/8` fails for partial tables generating the full one, by `exists_mem_span_isLocalMin_divisionEnergy_eq_three` for `n = 5`; twisted states are local minimizers of generating `V_S` (`isLocalMin_divisionEnergy_twisted`); a critical point of a phase energy with positive cosines and spanning rows is a local minimizer (`isLocalMin_phaseEnergy_of_cos_pos`) | proved |
+| C, `o:strictsaddle` on the circle (M3.1) | `Perspective.strict_saddle`: for every `β > 0`, a critical point of `𝖤_β` on `𝕋^n` that is not a global maximum is a strict saddle. A critical point that is not a strict saddle is stationary (C1) and cut-stable (C2) for `f_β`, which meets `thm:main` of arXiv:2507.22857 with `τ = τ_β`, so it is synchronized and a global maximum | proved |
 
 ## Milestones
 
@@ -246,7 +246,7 @@ can close without M2.4.
 | M3.1d | **The kernel `f_β`.** `f_β' < 0` off `[-τ_β, τ_β]`, where `τ_β = τ_β_star 2 β`. The sign regions of `f_β'''` come from the quartic `p(cos x)` (`lemma:positiveregion`, `lemma:positiveregion2`). `∫ \|f_β'''\|₊` is expressed through `f_β''` at the sign changes. | — |
 | M3.1e | **`β ≥ 1`, done:** `τ_β ∫ \|f_β'''\|₊ < 4` (`τ_mul_integral_posPart_f_β'''_lt_four`, `Perspective.SyncKernelBetaOne`). `lemma:beta1` holds for all `a, b ∈ [0, π]`, from `-(8/5)√β ≤ f_β'' ≤ (2/5)√β` on `[0, π]`. `corollary:tau2`, `τ_β < 1/√β` for every `β > 0`, comes from `cos u ≤ 1 - u²/2 + u⁴/24` in place of `lemma:tau1`. | M3.1d |
 | M3.1f | **`0 < β < 1`, done:** the same bound (`lemma:beta_0.75`, `lemma:beta_0.5`, `lemma:beta_0.33`, `lemma:beta_final`). Fallback for `0 < β ≤ 1`: `thm:taylorphi` of arXiv:2405.18273, which needs the second derivative along every direction, not only along `1_S`. | M3.1d |
-| M3.1 | **`Perspective.strict_saddle`.** By M3.1a, a non-maximal critical point is not synchronized. M3.1c with M3.1e–f then gives an `S` with `Σ_{i ∈ S, j ∉ S} g_β(θ_i - θ_j) < 0`. `secondDeriv_torusEnergy_block` turns `1_S` into a direction of positive second derivative. Rewrite the docstring: the survey leaves the problem open, and arXiv:2507.22857 answers it. | M3.1a, M3.1c, M3.1e, M3.1f |
+| M3.1 | **`Perspective.strict_saddle`, done.** For every `β > 0`, by contradiction. A critical point that is not a strict saddle is stationary (C1) and cut-stable (C2) for every `S` (M3.1a). `f_β` meets the criterion of `thm:main` with `τ = τ_β` (M3.1e for `β ≥ 1`, M3.1f for `0 < β < 1`), so M3.1c synchronizes the point, and synchronized angles are global maxima. The hypothesis `2 ≤ n` is dropped: the survey states none, and the proof needs none. | M3.1a, M3.1c, M3.1e, M3.1f |
 | M3.3 | **`d ≥ 3`, done.** The non-synchronized critical points of `𝖤_β` on `(𝕊^{d-1})^n` are strict saddles, as a new theorem with its own name (arXiv:2405.18273, App. C). Export the `key` of `hessian_at_critical_intrinsic` (second derivative `= 2 · hessQuad X v`). Sum `hessQuad X (Proj_X(e_k 𝟙ᵀ))` over an orthonormal basis `e_k`. The curve `s ↦ (x_i + s v_i)/‖x_i + s v_i‖` has velocity `v`. | — |
 | M3.4a | **Characters are nondegenerate, done.** The Hessian of `V_full` at a character is injective, since the rows `e_x - e_y - e_{x-y}` span `ℝⁿ`. This gives Łojasiewicz with exponent `1/2` at the characters. | — |
 | M3.4b | **Research: `V_full` above `n²/8`, searched.** `scripts/phase_minima.py` (inside `python/`: `uv run --locked python ../scripts/phase_minima.py`, 44 min; seeded by `n`, so `--largest 8` reproduces rows 2–8) runs 4000 steps of gradient descent of step `1/(3n)` for each `2 ≤ n ≤ 30`. It starts from 400 uniform phases, 400 points of `{0, π}ⁿ`, 400 of `(2π/m)ℤⁿ` for `m ∈ {3, 4, 5, 6, 8}`, 400 mixtures of two characters, and 5 copies of each non-character critical point that Newton's method reaches from 200 uniform starts; every start but the uniform ones is moved by `10⁻²`. All 1600–2355 runs per `n` end at a character up to periods (`V < 10⁻⁸`), so no local minimizer with `V ≥ n²/8` was found. No Newton critical point has a positive semidefinite Hessian. The lowest non-character critical values found are `2, 4, 8, 12, 16, 24, 32, 36, 48, 60, 84` for `n = 2, …, 12`, all above `n²/8`; Newton's method is not exhaustive, finds few points for `n ≥ 18` and none for `n = 25` and `27 ≤ n ≤ 30`. **Hypothesis, not proved:** for `n ≤ 30`, every local minimizer of `V_full` is the phases of a character up to periods. | lab |
@@ -366,7 +366,7 @@ question for random `S` is open.
 
 | `sorry` | Task | Closed by | Blocked on |
 | --- | --- | --- | --- |
-| `Perspective.strict_saddle` | #12 | M3.1, with parts M3.1a–f (#32–#37) | — |
+| `Perspective.strict_saddle` | #12 | M3.1, with parts M3.1a–f (#32–#37), done | — |
 | `Perspective.beta_tiny_circle` | #27 | M3.1, M4.3, M5.1, M5.2 | M2.4 |
 | `Perspective.beta_tiny` | #28 | M2.1, M3.1 (`d = 2`), M3.3 (`d ≥ 3`), M4.2, M5.1–M5.3 | M2.4 |
 | `Perspective.beta_interval` | #29 | M2.1, M3.1 (`d = 2`), M3.3 (`d ≥ 3`), M4.2, M5.1–M5.3 | M2.4 |
