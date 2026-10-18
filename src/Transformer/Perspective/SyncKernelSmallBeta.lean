@@ -79,9 +79,9 @@ theorem τ_mul_integral_posPart_f_β'''_lt_four_of_lt_one {β : ℝ} (hβ : 0 < 
     (us := [7 / 25, 41 / 100, 51 / 100, 61 / 100, 37 / 50]) ⟨h₈.le, hβ1.le⟩
     (by norm_num [SmallBetaCert, NegPieceOK, PosPieceOK, expPoly, List.isChain_singleton])
 
-/-- The common form of `lemma:beta_0.75`, `lemma:beta_0.5` and `lemma:beta_0.33`:
-for `1/3 < β < 1` and `0 < b < a < π` of `lemma:positiveregion`,
-`τ_β (f_β''(a) - f_β''(b)) < 2`. -/
+/-- The common form of `lemma:beta_0.75`, `lemma:beta_0.5` and `lemma:beta_0.33`
+of arXiv:2507.22857v1, Appendix A: for `1/3 < β < 1` and `0 < b < a < π` of
+`lemma:positiveregion`, `τ_β (f_β''(a) - f_β''(b)) < 2`. -/
 theorem τ_mul_f_β''_sub_lt_two_of_lt_one {β : ℝ} (hβ : 1 / 3 < β) (hβ1 : β < 1) :
     ∃ b a, 0 < b ∧ b < a ∧ a < π ∧
       (∀ x ∈ Set.Ioc (-π) π, 0 < f_β''' β x ↔ x ∈ Set.Ioo (-a) (-b) ∪ Set.Ioo b a) ∧
@@ -92,10 +92,16 @@ theorem τ_mul_f_β''_sub_lt_two_of_lt_one {β : ℝ} (hβ : 1 / 3 < β) (hβ1 :
   rw [hint] at h
   linarith
 
+/-- The hypotheses `1/3 < β < 1` hold at `β = 1/2`. -/
+example : ∃ b a, 0 < b ∧ b < a ∧ a < π ∧
+    (∀ x ∈ Set.Ioc (-π) π, 0 < f_β''' (1 / 2) x ↔ x ∈ Set.Ioo (-a) (-b) ∪ Set.Ioo b a) ∧
+    τ_β_star 2 (1 / 2) * (f_β'' (1 / 2) a - f_β'' (1 / 2) b) < 2 :=
+  τ_mul_f_β''_sub_lt_two_of_lt_one (by norm_num) (by norm_num)
+
 /-- **`lemma:beta_0.75`.**  For `β ∈ [0.75, 1)`, `τ(f''(a) - f''(b)) < 2`, with
 `f = f_β`, `τ = τ_β` and `b < a` of `lemma:positiveregion`.
 
-Source: arXiv:2507.22857v1, `lemma:beta_0.75`. -/
+Source: arXiv:2507.22857v1, Appendix A, `lemma:beta_0.75`. -/
 theorem beta_0_75 {β : ℝ} (hβ : 3 / 4 ≤ β) (hβ1 : β < 1) :
     ∃ b a, 0 < b ∧ b < a ∧ a < π ∧
       (∀ x ∈ Set.Ioc (-π) π, 0 < f_β''' β x ↔ x ∈ Set.Ioo (-a) (-b) ∪ Set.Ioo b a) ∧
@@ -105,7 +111,7 @@ theorem beta_0_75 {β : ℝ} (hβ : 3 / 4 ≤ β) (hβ1 : β < 1) :
 /-- **`lemma:beta_0.5`.**  For `β ∈ [0.5, 0.75)`, `τ(f''(a) - f''(b)) < 2`, with
 `f = f_β`, `τ = τ_β` and `b < a` of `lemma:positiveregion`.
 
-Source: arXiv:2507.22857v1, `lemma:beta_0.5`. -/
+Source: arXiv:2507.22857v1, Appendix A, `lemma:beta_0.5`. -/
 theorem beta_0_5 {β : ℝ} (hβ : 1 / 2 ≤ β) (hβ1 : β < 3 / 4) :
     ∃ b a, 0 < b ∧ b < a ∧ a < π ∧
       (∀ x ∈ Set.Ioc (-π) π, 0 < f_β''' β x ↔ x ∈ Set.Ioo (-a) (-b) ∪ Set.Ioo b a) ∧
@@ -115,7 +121,7 @@ theorem beta_0_5 {β : ℝ} (hβ : 1 / 2 ≤ β) (hβ1 : β < 3 / 4) :
 /-- **`lemma:beta_0.33`.**  For `β ∈ (1/3, 0.5)`, `τ(f''(a) - f''(b)) < 2`, with
 `f = f_β`, `τ = τ_β` and `b < a` of `lemma:positiveregion`.
 
-Source: arXiv:2507.22857v1, `lemma:beta_0.33`. -/
+Source: arXiv:2507.22857v1, Appendix A, `lemma:beta_0.33`. -/
 theorem beta_0_33 {β : ℝ} (hβ : 1 / 3 < β) (hβ1 : β < 1 / 2) :
     ∃ b a, 0 < b ∧ b < a ∧ a < π ∧
       (∀ x ∈ Set.Ioc (-π) π, 0 < f_β''' β x ↔ x ∈ Set.Ioo (-a) (-b) ∪ Set.Ioo b a) ∧
@@ -125,7 +131,7 @@ theorem beta_0_33 {β : ℝ} (hβ : 1 / 3 < β) (hβ1 : β < 1 / 2) :
 /-- **`lemma:beta_final`.**  For `β ∈ (0, 1/3]`, `τ f''(a) > -2`, with `f = f_β`,
 `τ = τ_β` and `a ∈ (0, π/2)` of `lemma:positiveregion2`.
 
-Source: arXiv:2507.22857v1, `lemma:beta_final`. -/
+Source: arXiv:2507.22857v1, Appendix B, `lemma:beta_final`. -/
 theorem beta_final {β : ℝ} (hβ : 0 < β) (hβ' : β ≤ 1 / 3) :
     ∃ a ∈ Set.Ioo 0 (π / 2),
       (∀ x ∈ Set.Ico 0 (2 * π), 0 ≤ f_β''' β x ↔ x ∈ Set.Icc a (2 * π - a)) ∧

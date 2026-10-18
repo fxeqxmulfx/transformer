@@ -37135,16 +37135,16 @@ count or in `#print axioms`; see [Gaps](#gaps).
 | [`exists_kernelQuartic_roots`](src/Transformer/Perspective/SyncKernelSign.lean#L34) | theorem | proved |
 | [`exists_kernelQuartic_root`](src/Transformer/Perspective/SyncKernelSign.lean#L94) | theorem | proved |
 
-**[Transformer.Perspective.SyncKernelSmallBeta](src/Transformer/Perspective/SyncKernelSmallBeta.lean)** — 159 lines
+**[Transformer.Perspective.SyncKernelSmallBeta](src/Transformer/Perspective/SyncKernelSmallBeta.lean)** — 165 lines
 
 | declaration | kind | status |
 | --- | --- | --- |
 | [`τ_mul_integral_posPart_f_β'''_lt_four_of_lt_one`](src/Transformer/Perspective/SyncKernelSmallBeta.lean#L38) | theorem | proved |
 | [`τ_mul_f_β''_sub_lt_two_of_lt_one`](src/Transformer/Perspective/SyncKernelSmallBeta.lean#L85) | theorem | proved |
-| [`beta_0_75`](src/Transformer/Perspective/SyncKernelSmallBeta.lean#L99) | theorem | proved |
-| [`beta_0_5`](src/Transformer/Perspective/SyncKernelSmallBeta.lean#L109) | theorem | proved |
-| [`beta_0_33`](src/Transformer/Perspective/SyncKernelSmallBeta.lean#L119) | theorem | proved |
-| [`beta_final`](src/Transformer/Perspective/SyncKernelSmallBeta.lean#L129) | theorem | proved |
+| [`beta_0_75`](src/Transformer/Perspective/SyncKernelSmallBeta.lean#L105) | theorem | proved |
+| [`beta_0_5`](src/Transformer/Perspective/SyncKernelSmallBeta.lean#L115) | theorem | proved |
+| [`beta_0_33`](src/Transformer/Perspective/SyncKernelSmallBeta.lean#L125) | theorem | proved |
+| [`beta_final`](src/Transformer/Perspective/SyncKernelSmallBeta.lean#L135) | theorem | proved |
 
 **[Transformer.Perspective.UniformAtomless](src/Transformer/Perspective/UniformAtomless.lean)** — 120 lines
 
