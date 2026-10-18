@@ -39,7 +39,8 @@ Constraints:
   their own names, and the paper's theorem stays `sorry`.
 - **Work through the board.** At the user's request, the board was created
   at the root on 2026-10-18 with tasks #1–#31. After M0.1, #13 and #15 were
-  removed and #32–#37 added. Every title starts with its milestone code;
+  removed and #32–#37 added. M6, the reuse of the scheme, added #38–#47 the
+  same day (`--tag reuse`). Every title starts with its milestone code;
   list them with `agent-kanban list --tag landscape`. Claim a task before
   working on it.
 
@@ -353,6 +354,35 @@ note). In its small-step limit AdamW with decay follows `-F(θ) - wd·θ` (§7.3
 note), which is not a gradient flow. Items 1–4 are statements about the clock network, not about
 the lab's trajectories.
 
+### M6 — Reuse (general, `Transformer.SaddleAvoidance`)
+
+Tasks: M6.1 #38, M6.2 #39, M6.3 #40, M6.4 #41, M6.5 #42, M6.6 #43, M6.7 #44,
+M6.8 #45, M6.9 #46, M6.10 #47.
+
+Added on 2026-10-18 after a review of how the four models use the scheme. Only
+`𝖤_β` on angles uses it directly (M4.3). `PhaseModel.ae_tendsto_characterPhase` and
+its abelian twin assemble the conclusion by hand, and assume that the orbit
+converges. The spheres take `Normalization.lojasiewicz_modulated_of_finiteDimensional`
+for convergence, because Łojasiewicz's theorem in `SaddleAvoidance` is stated on
+`EucSpace N` only. For avoidance they write their own cutoff
+(`Perspective.ae_not_tendsto_of_cutoff`), because the flow theorems want global
+bounds. After M6 a new model brings three inputs. The first is analyticity, usually by
+`fun_prop` as in `Perspective.analyticAt_neg_eucTorusEnergy`. The second is a Lipschitz
+constant or a compact sublevel set. The third is its landscape.
+
+| Item | Deliverable | Depends on |
+| --- | --- | --- |
+| M6.1 | **Łojasiewicz's theorem on every finite-dimensional space.** Generalize `SaddleAvoidance.exists_isLojasiewiczAt_of_analyticAt` from `EucSpace N` to every finite-dimensional real inner product space `E`, keeping its name and its callers. Route: `IsLojasiewiczAt` is invariant under linear isometries (a new lemma, from `Normalization.gradient_comp_linearIsometryEquiv_symm`); apply the `EucSpace` case through `(stdOrthonormalBasis ℝ E).repr`, as `lojasiewicz_modulated_of_finiteDimensional` does. Also: `IsLojasiewiczAt` depends only on the germ of `f` (`Filter.EventuallyEq.gradient`), and `AnalyticOnNhd ℝ f univ` gives `hloj` at every point. The `LocalInequality` row of the `SaddleAvoidance` docstring still says dimension at most one; fix it. | — |
+| M6.2 | **The scheme without `hloj` for analytic energies.** (a) Let `f` be analytic, with `∇f` `L`-Lipschitz, and let `ηL < 1`. Then every orbit of gradient descent with a limit point modulo `f`-invariant translations converges to a critical point. So does every orbit when the translations span `E`, and every bounded orbit. (b) The same for gradient flows. (c) Analytic forms of `ae_exists_tendsto_isMinOn`, `ae_exists_tendsto_isMinOn_of_span_eq_top`, `ae_exists_tendsto_isLocalMin`, `ae_exists_tendsto_gradientFlow_isMinOn` and `ae_exists_tendsto_gradientFlow_isMinOn_of_span_eq_top`. In them `hf : AnalyticOnNhd ℝ f univ` replaces both `hf : ContDiff ℝ 2 f` (by `AnalyticOnNhd.contDiff`) and `hloj` (by M6.1). Names end in `_of_analyticOnNhd`. | M6.1 |
+| M6.3 | **Landscape below a level `c`.** `ae_exists_tendsto_isMinOn_of_lt`: suppose every critical point `z` with `f z < c` is a global minimizer or a strict saddle and satisfies the Łojasiewicz inequality. Then for almost every start with `f x₀ < c`, the orbit converges to a global minimizer, given a limit point modulo `Λ`; that limit point is free when `Λ` spans `E`. Route: `f` decreases along the orbit (`antitone_iterate`), so a limit point modulo `Λ` has `f < c`. It is critical (`gradient_eq_zero_of_frequently`), the orbit converges (`exists_tendsto_of_isLojasiewiczAt`), and the limit is no strict saddle (`ae_not_tendsto_of_isStrictSaddle`). Also the flow analogue, and analytic forms without `hloj`. This is the form of most landscape theorems: the landscape is benign below a level. | M6.1 |
+| M6.4 | **Phase models: convergence becomes a conclusion.** First, `PhaseModel.analyticOnNhd_phaseEnergy`. By M6.2, every orbit of gradient descent on a phase energy with integer rows and `η Σ_r ‖a_r‖² < 1` converges to a critical point. Then `PhaseModel.ae_exists_tendsto_characterPhase` and `PhaseModel.Abelian.ae_exists_tendsto_characterPhase`: for almost every start with `V_full < n²/8`, the orbit converges, and its limit is the phases of a character up to periods (M6.3 with `c = n²/8`). The present `ae_tendsto_characterPhase` assume convergence; keep them or derive them from the new theorems. | M6.2, M6.3 |
+| M6.5 | **The landscape hypothesis in second-order form.** Suppose every critical point with a positive semidefinite Hessian is a global minimizer (or a local minimizer, or either only below `c`). Then every critical point is a global minimizer (resp. a local minimizer) or a strict saddle. The proof is a case split through `isStrictSaddle_of_inner_neg`. Papers state landscapes this way: no spurious second-order critical points. | — |
+| M6.6 | **The scheme on a compact sublevel set.** Let `f` be `C²` with `{f ≤ c}` compact, and ask `hcrit` and `hloj` only on `{f ≤ c}`. Then there is `η₀ > 0` such that for `0 < η < η₀`, almost every start in `{f ≤ c}` converges to a local minimizer. Add an analytic form without `hloj`. No global Lipschitz constant is needed; polynomials of degree above two and networks lack one, while regularized losses have compact sublevel sets. Avoidance is M1.6 (`exists_pos_measure_sublevel_tendsto_strictSaddle_eq_zero`). For convergence, prove either a local trap or a cutoff. The cutoff: take `χ f`, with `χ` a smooth bump equal to `1` near `{f ≤ c}` (`ContDiffBump`, as in `Perspective.SphereCutoff`). Its orbits from `{f ≤ c}` are those of `f`, and its gradient is globally Lipschitz, so `tendsto_of_isLojasiewiczAt` applies to it. | M6.1 |
+| M6.7 | **Avoidance for flows on an open set.** Move the cutoff of `Perspective.ae_not_tendsto_of_cutoff` into `SaddleAvoidance`, for a general metric. Let `f` be `C²` and `G` be `C¹` on an open `U`, with `G` symmetric positive definite on `U`, and let `R` be open with compact closure in `U`. Then almost no start has a trajectory of `ẋ = -G(x) ∇f(x)` that stays in `R` and converges to a strict saddle in `R`. The same follows for a countable cover of `U` by such sets `R`. | — |
+| M6.8 | **The cyclic phase model as the abelian one at `G = Fin n`.** Derive the theorems of `PhaseModel.Coordinates`, `Basin`, `Characters`, `Orthogonality`, `Fourier` and `Landscape` (about 940 lines) from `PhaseModel.Abelian` (`Fin.addCommGroup`), keeping their names and statements. This needs `EucSpace n` identified with `EuclideanSpace ℝ (Fin n)`, and `characterPhase n j` with the phases of a character up to periods. A later task over a group then builds on `Abelian` alone. | M6.4 |
+| M6.9 | **Rates.** Let `IsLojasiewiczAt f w a` hold at the limit `w`. For `a ≤ 1/2`, `‖x_k - w‖` and `f x_k - f w` decay geometrically; for `1/2 < a < 1`, they decay as `k^{-(1-a)/(2a-1)}`. Prove this for gradient descent and for flows. The lab can then compare measured rates with the theory. | — |
+| M6.10 | **Symmetries.** Let `g` be a linear isometry with `f ∘ g = f`. Then `∇f (g x) = g ∇f(x)`, gradient steps and flows commute with `g`, and the fixed subspace of a group of such isometries is invariant. This is a building block for bridges (D). An almost-everywhere statement on an invariant subspace is about that subspace's own Lebesgue measure, and the subspace is null in `E`. So a bridge also needs the subspace to attract. | — |
+
 ## Order of work
 
 1. M0.1: done on 2026-10-18.
@@ -363,6 +393,8 @@ the lab's trajectories.
    chains, so separate agents can work on them. Then M3.1, and M3.3.
 6. M5.1 → M4.3.
 7. M1.5 → M5.2, M5.3.
+8. M6.1 → M6.2, M6.3 → M6.4 → M6.8, and M6.1 → M6.6. M6.5 and M6.7 are
+   independent. M6.8, M6.9 and M6.10 have low priority.
 
 M2.4 is done. The research item M3.4b waits for an argument on paper. M5.4 is
 stated on paper and waits for Lean. M3.4c has a counterexample in Lean; its
