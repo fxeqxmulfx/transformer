@@ -93,7 +93,7 @@ theorem beta1_upper_middle {z : ℝ} (hz : 1 ≤ z) (hz' : z ≤ 11 / 5) :
   nlinarith [mul_le_mul_of_nonneg_left hprod hr]
 
 /-- `2z(4 - 5z + z²)² ≤ (64/25) e^{2z}` for `0 ≤ z ≤ 2/5`.  The ratio peaks at
-`0.97`, near `z = 0.18`. -/
+`0.968`, near `z = 0.20`. -/
 theorem beta1_lower_start {z : ℝ} (hz : 0 ≤ z) (hz' : z ≤ 2 / 5) :
     2 * z * (4 - 5 * z + z ^ 2) ^ 2 ≤ 64 / 25 * Real.exp (2 * z) := by
   have h2z : (0 : ℝ) ≤ 2 * z := by linarith
@@ -105,7 +105,7 @@ theorem beta1_lower_start {z : ℝ} (hz : 0 ≤ z) (hz' : z ≤ 2 / 5) :
   nlinarith [taylor_five_le_exp h2z, pow_nonneg h2z 4, pow_nonneg h2z 5]
 
 /-- `2z(3 - 2z)² ≤ (64/25) e^{2z}` for `0 ≤ z ≤ 3/2`.  The ratio peaks at
-`0.75`, near `z = 0.28`. -/
+`0.744`, near `z = 0.28`. -/
 theorem beta1_lower_middle {z : ℝ} (hz : 0 ≤ z) (hz' : z ≤ 3 / 2) :
     2 * z * (3 - 2 * z) ^ 2 ≤ 64 / 25 * Real.exp (2 * z) := by
   have h2z : (0 : ℝ) ≤ 2 * z := by linarith

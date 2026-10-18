@@ -5,7 +5,9 @@ Polyanskiy, Rigollet, Yao — arXiv:2507.22857v1, Appendix A: `corollary:tau2`
 and `lemma:beta1`; `landscape_plan.md`, M3.1e.
 
 * `τ_β_star_two_lt_inv_sqrt` is `corollary:tau2`: `τ_β < 1/√β` for every
-  `β > 0`, where `τ_β = τ_β_star 2 β = arccos((√(1 + 4β²) - 1)/(2β))`.
+  `β > 0`, where `τ_β = τ_β_star 2 β = arccos((√(1 + 4β²) - 1)/(2β))`.  It is
+  the peak `Causal.interactionPeak β` of `e^{β(cos x - 1)} sin x`
+  (`τ_β_star_two_eq_interactionPeak`).
 * `f_β''_le_of_one_le`, `neg_le_f_β''_of_one_le`: `-(8/5)√β ≤ f_β'' ≤ (2/5)√β`
   on `[0, π]` for `β ≥ 1`, from the two cases of `Perspective.SyncKernelSecond`.
 * `τ_mul_f_β''_sub_lt_two` is `lemma:beta1`: for `β ≥ 1`,
@@ -15,8 +17,10 @@ and `lemma:beta1`; `landscape_plan.md`, M3.1e.
   `cor:conjecture`, since `f_β'(0) = 1`.
 
 The source derives `corollary:tau2` from `lemma:tau1` (`√x τ_x` is increasing)
-and the limit `√x τ_x → 1`.  Here it follows at once from
-`cos u ≤ 1 - u²/2 + u⁴/24` (`Causal.cos_le_quartic`) at `u = 1/√β`.
+and the limit `√x τ_x → 1`.  It notes that the corollary also appears as
+Lemma 4 of arXiv:2411.04990v2 (`lemma:interaction` (3), for `β ≥ 1`), which
+`Causal.interactionPeak_lt_scale` proves for every `β > 0` from
+`cos u ≤ 1 - u²/2 + u⁴/24` at `u = 1/√β`.  Here it is that theorem.
 `landscape_plan.md` (M3.1e) allows this replacement, so `lemma:tau1` is not
 formalized.
 
@@ -27,7 +31,7 @@ suffices for every `β ≥ 1`.
 
 import Transformer.Perspective.SyncKernelSecond
 import Transformer.Perspective.SyncKernelIntegral
-import Transformer.Causal.InteractionBounds
+import Transformer.Causal.SectionB_PeakTemperature
 
 open Real
 
@@ -85,46 +89,31 @@ example : -(8 / 5 * Real.sqrt 1) ≤ f_β'' 1 (π / 2) ∧ f_β'' 1 (π / 2) ≤
   have hx : π / 2 ∈ Set.Icc 0 π := ⟨by linarith [Real.pi_pos], by linarith [Real.pi_pos]⟩
   ⟨neg_le_f_β''_of_one_le le_rfl hx, f_β''_le_of_one_le le_rfl hx⟩
 
-/-- **`corollary:tau2`: `τ_β < 1/√β` for every `β > 0`.**
+/-- `τ_β = τ_β_star 2 β` is the peak `Causal.interactionPeak β` of the
+interaction `e^{β(cos x - 1)} sin x` of arXiv:2411.04990v2: both are
+`arccos((√(1 + 4β²) - 1)/(2β))`. -/
+theorem τ_β_star_two_eq_interactionPeak (β : ℝ) :
+    τ_β_star 2 β = Transformer.Causal.interactionPeak β := by
+  rw [τ_β_star, cosTauStar, Transformer.Causal.interactionPeak,
+    Transformer.Causal.interactionPeakCos, add_comm (4 * β ^ 2)]
+  congr 1
+  norm_num
+  ring
 
-If `1/√β ≥ π/2`, this is `τ_β < π/2`.  Otherwise put `u = 1/√β < π/2`.  Then
-`c' = 1 - u²/2 + u⁴/24` satisfies `βc'² + c' - β = βu⁴(u⁴/576 - 1/6) < 0`.  So
-`c' < cos τ_β`, the positive root of `βc² + c - β`, and
-`cos u ≤ c' < cos τ_β`.
+/-- **`corollary:tau2`: `τ_β < 1/√β` for every `β > 0`.**  `τ_β` is the peak
+`Causal.interactionPeak β` (`τ_β_star_two_eq_interactionPeak`), which
+`Causal.interactionPeak_lt_scale` bounds by `β^{-1/2}`, from
+`cos u ≤ 1 - u²/2 + u⁴/24` at `u = 1/√β`.
 
 Source: arXiv:2507.22857v1, Appendix A, `corollary:tau2`,
 "`arccos((√(1+4x²) - 1)/(2x)) < 1/√x` over `(0, ∞)`", proved there from
-`lemma:tau1`; also arXiv:2312.10794v5, Lemma 4. -/
+`lemma:tau1`.  The source notes that it also appears in `[Lemma 4]` of
+Karagodin, Polyanskiy and Rigollet, "Clustering in causal attention masking":
+arXiv:2411.04990v2, Appendix A.2, `lemma:interaction` (3), stated there for
+`β ≥ 1`. -/
 theorem τ_β_star_two_lt_inv_sqrt {β : ℝ} (hβ : 0 < β) : τ_β_star 2 β < 1 / Real.sqrt β := by
-  have hτ := τ_β_star_two_mem hβ
-  have hsq : 0 < Real.sqrt β := Real.sqrt_pos.2 hβ
-  set u := 1 / Real.sqrt β with hu
-  have hu0 : 0 < u := by positivity
-  rcases le_or_gt (π / 2) u with hπ | hπ
-  · exact lt_of_lt_of_le hτ.2 hπ
-  have hq := cosTauStar_two_quadratic hβ
-  have hc0 : 0 < cosTauStar 2 β := cosTauStar_pos 2 β hβ (by norm_num)
-  have hc1 : cosTauStar 2 β ≤ 1 := cosTauStar_le_one 2 β hβ (by norm_num)
-  set c := cosTauStar 2 β with hc
-  have hu2 : u ^ 2 * β = 1 := by
-    rw [hu, div_pow, Real.sq_sqrt hβ.le]; field_simp
-  have hu4 : u ^ 2 < 4 := by nlinarith [Real.pi_lt_four]
-  set c' := 1 - u ^ 2 / 2 + u ^ 4 / 24 with hc'
-  have hφ : β * c' ^ 2 + c' - β = β * u ^ 4 * (u ^ 4 / 576 - 1 / 6) := by
-    rw [hc']; linear_combination (-(1 - u ^ 2 / 2 + u ^ 4 / 24)) * hu2
-  have hneg : β * u ^ 4 * (u ^ 4 / 576 - 1 / 6) < 0 := by
-    have : 0 < β * u ^ 4 := by positivity
-    have : u ^ 4 < 16 := by nlinarith
-    nlinarith
-  have hlt : c' < c := by
-    by_contra h
-    have h' : c ≤ c' := le_of_not_gt h
-    nlinarith [mul_nonneg (sub_nonneg.2 h')
-      (add_nonneg (mul_nonneg hβ.le (by linarith)) zero_le_one : (0 : ℝ) ≤ β * (c' + c) + 1)]
-  have hcos : Real.cos u < c := lt_of_le_of_lt (Transformer.Causal.cos_le_quartic u) hlt
-  calc τ_β_star 2 β = Real.arccos c := rfl
-    _ < Real.arccos (Real.cos u) := Real.arccos_lt_arccos (Real.neg_one_le_cos u) hcos hc1
-    _ = u := Real.arccos_cos hu0.le (by linarith [Real.pi_pos])
+  rw [τ_β_star_two_eq_interactionPeak, Real.sqrt_eq_rpow, one_div, ← Real.rpow_neg hβ.le]
+  exact Transformer.Causal.interactionPeak_lt_scale β hβ
 
 /-- `corollary:tau2` multiplied out: `√β τ_β < 1` for every `β > 0`. -/
 theorem sqrt_mul_τ_β_star_two_lt_one {β : ℝ} (hβ : 0 < β) :
