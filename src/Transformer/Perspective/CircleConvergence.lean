@@ -21,16 +21,18 @@ applies, and the minimizers of `-𝖤_β` are synchronized
 (`synchronized_of_isGlobalMaxTorusEnergy`).
 
 The classical arguments of Appendix A use the Łojasiewicz theorem for
-real-analytic functions (`lojasiewicz1963propriete`), which is not formalized
-(`Normalization.lojasiewicz_modulated`).  The inequality is proved at the
-synchronized states (`isLojasiewiczAt_of_synchronized`) and taken as a
-hypothesis at the other critical points.  For two tokens it holds at every
-critical point (`isLojasiewiczAt_of_isCritical_two`).
+real-analytic functions (`lojasiewicz1963propriete`): `-𝖤_β` is analytic
+(`analyticAt_neg_eucTorusEnergy`), so it satisfies the Łojasiewicz inequality
+at every point (`exists_isLojasiewiczAt_neg_eucTorusEnergy`, from
+`SaddleAvoidance.exists_isLojasiewiczAt_of_analyticAt`).  At the synchronized
+states, and for two tokens at every critical point, the exponent is `1/2`
+(`isLojasiewiczAt_of_synchronized`, `isLojasiewiczAt_of_isCritical_two`).
 -/
 import Transformer.Perspective.CircleLojasiewicz
 import Transformer.Perspective.CircleSAFlow
 import Transformer.Perspective.StrictSaddle
 import Transformer.SaddleAvoidance.FlowLandscape
+import Transformer.SaddleAvoidance.LocalInequality
 import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 
 open scoped BigOperators Topology
@@ -115,10 +117,26 @@ theorem angularUSA_gradientFlow {β : ℝ} (hβ : β ≠ 0) (θ₀ : Angles n) :
   field_simp
   rfl
 
+/-- **`-𝖤_β` is analytic**: a sum of exponentials of cosines of differences
+of coordinates. -/
+theorem analyticAt_neg_eucTorusEnergy (β : ℝ) (ψ : EucSpace n) :
+    AnalyticAt ℝ (fun φ => -eucTorusEnergy n β φ) ψ := by
+  have h : ∀ i : Idx n, AnalyticAt ℝ (fun φ : EucSpace n => φ.ofLp i) ψ := fun i =>
+    (EuclideanSpace.proj i : EucSpace n →L[ℝ] ℝ).analyticAt ψ
+  unfold eucTorusEnergy torusEnergy
+  fun_prop
+
+/-- **`-𝖤_β` satisfies the Łojasiewicz inequality at every point**, with an
+exponent `0 ≤ a < 1`: it is analytic (`analyticAt_neg_eucTorusEnergy`), and
+analytic functions do (`SaddleAvoidance.exists_isLojasiewiczAt_of_analyticAt`,
+Łojasiewicz's theorem). -/
+theorem exists_isLojasiewiczAt_neg_eucTorusEnergy (β : ℝ) (z : EucSpace n) :
+    ∃ a, 0 ≤ a ∧ a < 1 ∧ SaddleAvoidance.IsLojasiewiczAt (fun φ => -eucTorusEnergy n β φ) z a :=
+  SaddleAvoidance.exists_isLojasiewiczAt_of_analyticAt (analyticAt_neg_eucTorusEnergy n β z)
+
 /-- **Almost every solution of `eq:onangles` synchronizes**, for every
-`β > 0`, given the Łojasiewicz inequality at the critical points that are not
-synchronized: for Lebesgue-almost every initial angle vector `θ₀ ∈ ℝⁿ` there
-is a `θ'` with `θ'_i - θ'_j ∈ 2πℤ` to which every solution with `θ(0) = θ₀`
+`β > 0`: for Lebesgue-almost every initial angle vector `θ₀ ∈ ℝⁿ` there is a
+`θ'` with `θ'_i - θ'_j ∈ 2πℤ` to which every solution with `θ(0) = θ₀`
 converges.  A solution exists (`angularUSA_gradientFlow`).
 
 Source: arXiv:2312.10794v5, §7, after `o:strictsaddle`: a positive answer to
@@ -126,14 +144,10 @@ that problem "would imply that for all initial conditions except a set of
 measure zero, all `θ_i(t)` converge under the dynamics `eq:onangles` to a
 common limit as `t → +∞`", by the arguments of Appendix A (`l:nosaddleconv`
 and the Łojasiewicz theorem).  The answer is `strict_saddle` (arXiv:2507.22857v1,
-§5).  Change: Appendix A takes the Łojasiewicz inequality from the analyticity
-of `𝖤_β`, which is not formalized; it is proved here at the synchronized
-states and is the hypothesis `hloj` at the other critical points.  The common
-limit on `𝕋` is a limit `θ'` in `ℝⁿ` whose coordinates agree modulo `2π`. -/
-theorem ae_tendsto_synchronized_of_angularUSA {β : ℝ} (hβ : 0 < β)
-    (hloj : ∀ θ : Angles n, IsCriticalTorusEnergy n β θ →
-      ¬ (∀ i j, ∃ k : ℤ, θ i - θ j = k * (2 * π)) → ∃ a, 0 ≤ a ∧ a < 1 ∧
-        SaddleAvoidance.IsLojasiewiczAt (fun ψ => -eucTorusEnergy n β ψ) (WithLp.toLp 2 θ) a) :
+§5), and the Łojasiewicz inequality is
+`exists_isLojasiewiczAt_neg_eucTorusEnergy`.  The common limit on `𝕋` is a
+limit `θ'` in `ℝⁿ` whose coordinates agree modulo `2π`. -/
+theorem ae_tendsto_synchronized_of_angularUSA {β : ℝ} (hβ : 0 < β) :
     ∀ᵐ θ₀ : Angles n, ∃ θ' : Angles n, (∀ i j, ∃ k : ℤ, θ' i - θ' j = k * (2 * π)) ∧
       ∀ θ : ℝ → Angles n, angularUSA n β θ → θ 0 = θ₀ → Tendsto θ atTop (𝓝 θ') := by
   rcases Nat.eq_zero_or_pos n with rfl | hn
@@ -143,11 +157,8 @@ theorem ae_tendsto_synchronized_of_angularUSA {β : ℝ} (hβ : 0 < β)
   have hae := SaddleAvoidance.ae_exists_tendsto_gradientFlow_isMinOn_of_span_eq_top volume
     Measure.AbsolutelyContinuous.rfl (contDiff_eucTorusEnergy n β).neg (span_periods n)
     (by rintro _ ⟨k, rfl⟩ y; simp only [eucTorusEnergy_add_period])
-    (fun z hz => isMinOn_or_isStrictSaddle_neg_eucTorusEnergy n hβ hz) fun z hz => by
-      by_cases hs : ∀ i j, ∃ k : ℤ, z.ofLp i - z.ofLp j = k * (2 * π)
-      · exact ⟨1 / 2, by norm_num, by norm_num, by
-          simpa using isLojasiewiczAt_of_synchronized n hβ.ne' hs⟩
-      · simpa using hloj z.ofLp ((gradient_neg_eucTorusEnergy_eq_zero_iff n hβ.ne' z).1 hz) hs
+    (fun z hz => isMinOn_or_isStrictSaddle_neg_eucTorusEnergy n hβ hz) fun z _ =>
+      exists_isLojasiewiczAt_neg_eucTorusEnergy n β z
   filter_upwards [(PiLp.volume_preserving_toLp (Idx n)).quasiMeasurePreserving.ae hae]
     with θ₀ ⟨w, hw, hlim⟩
   refine ⟨w.ofLp, synchronized_of_isGlobalMaxTorusEnergy n hβ fun φ => ?_, fun θ hθ h0 => ?_⟩
@@ -159,26 +170,16 @@ theorem ae_tendsto_synchronized_of_angularUSA {β : ℝ} (hβ : 0 < β)
     rw [← h0, ← angularUSA_eq_gradientFlow n hβ.ne' hn hθ t, WithLp.ofLp_toLp]
 
 /-- The hypotheses of `isMinOn_or_isStrictSaddle_neg_eucTorusEnergy`,
-`angularUSA_eq_gradientFlow` and `angularUSA_gradientFlow` hold for two tokens
-at `β = 1`: `∇(-𝖤_1)` vanishes at the synchronized state `0`, and
-`angularUSA_gradientFlow` gives a solution of `eq:onangles` from `θ₀ = 0`. -/
+`angularUSA_eq_gradientFlow`, `angularUSA_gradientFlow` and
+`ae_tendsto_synchronized_of_angularUSA` hold for two tokens at `β = 1`:
+`∇(-𝖤_1)` vanishes at the synchronized state `0`, and `angularUSA_gradientFlow`
+gives a solution of `eq:onangles` from `θ₀ = 0`. -/
 example : (1 : ℝ) ≠ 0 ∧ (0 : ℝ) < 1 ∧ 0 < 2 ∧
     gradient (fun ψ => -eucTorusEnergy 2 1 ψ) 0 = 0 ∧ angularUSA 2 1 fun t =>
       (SaddleAvoidance.gradientFlow (fun ψ => -eucTorusEnergy 2 1 ψ) (2 * t) (WithLp.toLp 2 0)).ofLp :=
   ⟨one_ne_zero, one_pos, two_pos, (gradient_neg_eucTorusEnergy_eq_zero_iff 2 one_ne_zero 0).2
     (isCriticalTorusEnergy_of_synchronized 2 one_ne_zero fun _ _ => ⟨0, by simp⟩),
     by simpa only [Nat.cast_ofNat] using angularUSA_gradientFlow 2 one_ne_zero 0⟩
-
-/-- The hypotheses of `ae_tendsto_synchronized_of_angularUSA` hold for two
-tokens and `β = 1`: `-𝖤_1` satisfies the Łojasiewicz inequality at every
-critical point (`isLojasiewiczAt_of_isCritical_two`).  The antipodal pairs,
-such as `(0, π)`, are critical and not synchronized, so `hloj` is not vacuous
-there. -/
-example : (0 : ℝ) < 1 ∧ ∀ θ : Angles 2, IsCriticalTorusEnergy 2 1 θ →
-    ¬ (∀ i j, ∃ k : ℤ, θ i - θ j = k * (2 * π)) → ∃ a, 0 ≤ a ∧ a < 1 ∧
-      SaddleAvoidance.IsLojasiewiczAt (fun ψ => -eucTorusEnergy 2 1 ψ) (WithLp.toLp 2 θ) a :=
-  ⟨one_pos, fun _ hθ _ => ⟨1 / 2, by norm_num, by norm_num,
-    isLojasiewiczAt_of_isCritical_two one_ne_zero hθ⟩⟩
 
 end Perspective
 end Transformer

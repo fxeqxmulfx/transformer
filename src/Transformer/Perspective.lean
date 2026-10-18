@@ -130,11 +130,11 @@ strict saddle (`strict_saddle`, `o:strictsaddle`).
 `CircleEnergyHessian`, `CircleLojasiewicz` and `CircleConvergence` draw the
 consequence the survey states after `o:strictsaddle`: `𝖤_β` on the Euclidean
 space of angles (`eucTorusEnergy`, `CircleSAGradient`) has the critical
-points and second derivatives of §7 and Appendix B, `-𝖤_β`
-satisfies the Łojasiewicz inequality at the synchronized states
-(`isLojasiewiczAt_of_synchronized`), and for `β > 0` almost every solution of
-`eq:onangles` converges to a synchronized state, given that inequality at the
-other critical points (`ae_tendsto_synchronized_of_angularUSA`).
+points and second derivatives of §7 and Appendix B, `-𝖤_β` is analytic and
+satisfies the Łojasiewicz inequality at every point
+(`exists_isLojasiewiczAt_neg_eucTorusEnergy`), and for `β > 0` almost every
+solution of `eq:onangles` converges to a synchronized state
+(`ae_tendsto_synchronized_of_angularUSA`).
 `SphereCritical` and `SphereSaddle` follow Appendix C of arXiv:2405.18273
 (Criscitiello, Rebjock, McRae, Boumal): for `d ≥ 3` and `β > 0`, every
 critical point of `𝖤_β` on `(𝕊^{d-1})^n` with two distinct tokens is a strict
@@ -153,6 +153,13 @@ angles it is `eq:onangles` with `n` replaced by `Z_i` (`angularSA`,
 `diag(Z_i)` (`hasDerivAt_torusEnergy_of_angularSA`), and for Lebesgue-almost
 every start no solution converges to a strict saddle of `𝖤_β`
 (`ae_not_tendsto_angularSA_of_isStrictSaddle`).
+`CircleSAConvergence` makes every solution of SA in angles converge to a
+critical point, since it descends `-𝖤_β` at rates between `n e^{-|β|}` and
+`n e^{|β|}` (`exists_tendsto_angularSA`), so that for `β > 0` almost every
+one synchronizes (`ae_tendsto_synchronized_of_angularSA`).
+`CircleClustering` carries both to the circle: for every `β ≥ 0` almost every
+initial tuple on `𝕊¹` clusters, for `SA` and for `USA` (`clustering_circle`),
+which is the last sentence of `thm: beta.tiny` (`beta_tiny_circle`).
 `SpherePolar`, `SphereNull`, `SphereRadial` and `SphereRadialGradient` bridge
 `(𝕊^{d-1})^n` and `(ℝ^d)^n` without manifolds.  Polar coordinates carry Lebesgue
 measure on `(ℝ^d ∖ 0)^n` to the product of surface measures and `r^{d-1} dr`,
@@ -312,6 +319,8 @@ import Transformer.Perspective.SyncKernelBetaOne
 import Transformer.Perspective.CircleEnergyHessian
 import Transformer.Perspective.CircleLojasiewicz
 import Transformer.Perspective.CircleConvergence
+import Transformer.Perspective.CircleSAConvergence
+import Transformer.Perspective.CircleClustering
 import Transformer.Perspective.InnerAsymptotics
 import Transformer.Perspective.PeanoTaylor
 import Transformer.Perspective.AppendixB_EBeta

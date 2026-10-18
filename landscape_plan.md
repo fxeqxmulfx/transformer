@@ -29,10 +29,12 @@ Constraints:
 - **No conditional results on unproved claims.** Do not add a theorem whose
   hypothesis is unproved in Lean. That excludes every unproved landscape
   claim. `strict_saddle` is proved (M3.1), so it may be used.
-- **Łojasiewicz enters only as a hypothesis.** Łojasiewicz's theorem
-  (lojasiewicz1963propriete) is proved in the literature, not in Lean. It may
-  enter only as an explicit hypothesis, as `hloj` does in
-  `SaddleAvoidance.ae_exists_tendsto_isLocalMin`.
+- **Łojasiewicz enters as a hypothesis, discharged for analytic energies.**
+  The general theorems take the Łojasiewicz inequality as an explicit
+  hypothesis, as `hloj` does in `SaddleAvoidance.ae_exists_tendsto_isLocalMin`.
+  Łojasiewicz's theorem (lojasiewicz1963propriete) is now proved in Lean
+  (M2.4, `SaddleAvoidance.exists_isLojasiewiczAt_of_analyticAt`), so an
+  analytic energy satisfies `hloj` at every point.
 - **Never weaken a paper's statement under its name.** Partial regimes get
   their own names, and the paper's theorem stays `sorry`.
 - **Work through the board.** At the user's request, the board was created
@@ -74,7 +76,9 @@ Constraints:
 | C, partial tables (M3.4c) | `PhaseModel.not_forall_exists_sub_characterPhase_mem_periods_of_isLocalMin`: the landscape of `V_full` below `n²/8` fails for partial tables generating the full one, by `exists_mem_span_isLocalMin_divisionEnergy_eq_three` for `n = 5`; twisted states are local minimizers of generating `V_S` (`isLocalMin_divisionEnergy_twisted`); a critical point of a phase energy with positive cosines and spanning rows is a local minimizer (`isLocalMin_phaseEnergy_of_cos_pos`) | proved |
 | C, `o:strictsaddle` on the circle (M3.1) | `Perspective.strict_saddle`: for every `β > 0`, a critical point of `𝖤_β` on `𝕋^n` that is not a global maximum is a strict saddle. A critical point that is not a strict saddle is stationary (C1) and cut-stable (C2) for `f_β`, which meets `thm:main` of arXiv:2507.22857 with `τ = τ_β`, so it is synchronized and a global maximum | proved |
 | D, SA in angles (M5.2) | `Perspective.ae_not_tendsto_angularSA_of_isStrictSaddle`: for `β ≠ 0` and Lebesgue-almost every start `θ₀`, no solution of SA in angles from `θ₀` converges to a critical point of `𝖤_β` with a line of positive second derivative; such a point is a strict saddle of `-𝖤_β` on `EucSpace n` (`isStrictSaddle_of_isStrictSaddleTorusEnergy`). SA in angles (`angularSA`) gives SA on `(𝕊¹)ⁿ` (`sa_anglesToSphere`), is the gradient flow of `n² 𝖤_β` for the metric `diag(Z_i)` (`hasDerivAt_torusEnergy_of_angularSA`), and its solutions are exactly the trajectories of `metricGradientFlow` for `G = diag(n²/Z_i)` (`angularSA_metricGradientFlow`, `toLp_eq_metricGradientFlow`), whose field is bounded and Lipschitz by `SaddleAvoidance.exists_lipschitzWith_of_periodic` | proved |
-| A + B + C, `𝖤_β` on angles (M4.3) | `Perspective.ae_tendsto_synchronized_of_angularUSA`: for every `β > 0` and Lebesgue-almost every `θ₀ ∈ ℝⁿ`, every solution of `eq:onangles` from `θ₀` converges to one synchronized state, given `hloj` at the non-synchronized critical points; every critical point of `-𝖤_β` is a global minimizer or a strict saddle (`isMinOn_or_isStrictSaddle_neg_eucTorusEnergy`, by `strict_saddle`), and `-𝖤_β` satisfies the Łojasiewicz inequality with exponent `1/2` wherever only the common rotations have zero second derivative (`isLojasiewiczAt_neg_eucTorusEnergy`): at the synchronized states (`isLojasiewiczAt_of_synchronized`) and, for two tokens, at every critical point (`isLojasiewiczAt_of_isCritical_two`) | proved |
+| A + B + C, `𝖤_β` on angles (M4.3) | `Perspective.ae_tendsto_synchronized_of_angularUSA`: for every `β > 0` and Lebesgue-almost every `θ₀ ∈ ℝⁿ`, every solution of `eq:onangles` from `θ₀` converges to one synchronized state; every critical point of `-𝖤_β` is a global minimizer or a strict saddle (`isMinOn_or_isStrictSaddle_neg_eucTorusEnergy`, by `strict_saddle`), and `-𝖤_β` is analytic, so it satisfies the Łojasiewicz inequality at every point (`exists_isLojasiewiczAt_neg_eucTorusEnergy`, by M2.4); with exponent `1/2` wherever only the common rotations have zero second derivative (`isLojasiewiczAt_neg_eucTorusEnergy`): at the synchronized states (`isLojasiewiczAt_of_synchronized`) and, for two tokens, at every critical point (`isLojasiewiczAt_of_isCritical_two`) | proved |
+| A + B, descent curves | `SaddleAvoidance.IsDescentCurve.exists_tendsto_of_isLojasiewiczAt`: a curve along which `f` decreases at least at the rate `c₁ ‖∇f‖²` while it moves at most at the speed `c₂ ‖∇f‖`, with a Łojasiewicz limit point up to `f`-invariant translations, converges, to a critical point (`IsDescentCurve.gradient_eq_zero_of_tendsto`); gradient flows and the flows `ẋ = -G(x) ∇f(x)` with `c₁ ≤ G ≤ c₂` are such curves (`isDescentCurve_of_gradientFlow`, `isDescentCurve_of_metric`) | proved |
+| A + B + C + D, clustering on the circle (#27) | `Perspective.clustering_circle`: for every `β ≥ 0` and every uniform tuple law on `(𝕊¹)ⁿ`, almost every initial tuple clusters, for SA and for USA; `beta_tiny_circle` is the case `β ≤ 1` of the survey. Every solution of SA in angles descends `-𝖤_β` at rates `n e^{∓|β|}` and converges to a critical point (`exists_tendsto_angularSA`), so for `β > 0` almost every one synchronizes (`ae_tendsto_synchronized_of_angularSA`); USA and SA on the sphere have unique solutions (`USA_unique`, `SA_unique`), which follow their angles (`exists_tendsto_of_angles`); `β = 0` is `beta0_consensus` | proved |
 | D, spheres without manifolds (M5.3) | `Perspective.ae_iff_ae_volume`: for every `d ≥ 1` and every uniform tuple law `P` on `(𝕊^{d-1})^n`, a property holds `P`-almost surely exactly when it holds at `x/‖x‖` for Lebesgue-almost every `x ∈ (ℝ^d)^n`; for sets, `measure_eq_zero_iff_volume_sphereCone` and `volume_eq_zero_iff_measure`, by polar coordinates (`measurePreserving_tuplePolar`) and `shellLaw_eq_surfaceMeasure`. `usa_iff_gradient`, `sa_iff_gradient`: for `β ≠ 0`, USA and SA are the slices `‖x_i‖ = r_i` of the flows `ẋ_i = n⁻¹ ‖x_i‖² ∇_i g(x)` and `ẋ_i = ‖x_i‖² Z_i⁻¹ ∇_i g(x)` on `(ℝ^d)^n`, `g(x) = 𝖤_β(x/‖x‖)` (`hasGradientAt_selfEnergy_update`); a solution of either from nonzero vectors keeps its norms, and its directions solve the sphere flow (`usa_of_radialField`, `sa_of_radialField`) | proved |
 
 ## Milestones
@@ -263,7 +267,7 @@ Tasks: M4.1 #20, M4.2 #21, M4.3 #22.
 | --- | --- | --- |
 | M4.1 | **Gradient descent, done.** `ae_exists_tendsto_isMinOn`: if every critical point is a global minimizer or a strict saddle, given `hloj` and a limit point modulo `Λ`, then almost every orbit converges to a global minimizer. Periodic corollary: when `Λ` is a lattice spanning `E`, every orbit has a limit point modulo `Λ`, so that hypothesis is free. | M3.4a for the example |
 | M4.2 | **Gradient flows, done.** `ae_exists_tendsto_gradientFlow_isMinOn`: the same statement for gradient flows, whose limits are critical (`gradient_eq_zero_of_tendsto_gradientFlow`); `ae_exists_tendsto_gradientFlow_isMinOn_of_span_eq_top` needs no limit point when `Λ` spans `E`. | M1.3, M2.2 |
-| M4.3 | **`𝖤_β` on angles (USA), done.** `Perspective.ae_tendsto_synchronized_of_angularUSA`: for every `β > 0` and Lebesgue-almost every `θ₀ ∈ ℝⁿ`, every solution of `eq:onangles` from `θ₀` converges to one synchronized state, given `hloj` at the non-synchronized critical points. The solutions are the gradient flow of `-𝖤_β` run at speed `n` (`angularUSA_eq_gradientFlow`, `angularUSA_gradientFlow`). M2.1 gives `hloj` at the synchronized states (`isLojasiewiczAt_of_synchronized`), and for two tokens at every critical point (`isLojasiewiczAt_of_isCritical_two`). | M3.1, M4.2, M1.4, M2.1 |
+| M4.3 | **`𝖤_β` on angles (USA), done.** `Perspective.ae_tendsto_synchronized_of_angularUSA`: for every `β > 0` and Lebesgue-almost every `θ₀ ∈ ℝⁿ`, every solution of `eq:onangles` from `θ₀` converges to one synchronized state. The solutions are the gradient flow of `-𝖤_β` run at speed `n` (`angularUSA_eq_gradientFlow`, `angularUSA_gradientFlow`). `-𝖤_β` is analytic, so M2.4 gives `hloj` at every point (`exists_isLojasiewiczAt_neg_eucTorusEnergy`); M2.1 gives it with exponent `1/2` at the synchronized states (`isLojasiewiczAt_of_synchronized`), and for two tokens at every critical point (`isLojasiewiczAt_of_isCritical_two`). | M3.1, M4.2, M1.4, M2.1 |
 
 ### M5 — Bridges (D)
 
@@ -369,7 +373,7 @@ question for random `S` is open.
 | `sorry` | Task | Closed by | Blocked on |
 | --- | --- | --- | --- |
 | `Perspective.strict_saddle` | #12 | M3.1, with parts M3.1a–f (#32–#37), done | — |
-| `Perspective.beta_tiny_circle` | #27 | M3.1, M4.3, M5.1, M5.2 | — |
+| `Perspective.beta_tiny_circle` | #27 | M3.1, M4.3, M5.1, M5.2, descent curves, done | — |
 | `Perspective.beta_tiny` | #28 | M2.1, M3.1 (`d = 2`), M3.3 (`d ≥ 3`), M4.2, M5.1–M5.3 | — |
 | `Perspective.beta_interval` | #29 | M2.1, M3.1 (`d = 2`), M3.3 (`d ≥ 3`), M4.2, M5.1–M5.3 | — |
 | `Perspective.boumal_clustering` | #30 | M2.1, M3.3, M4.2, M5.3 | — |
@@ -379,5 +383,8 @@ question for random `S` is open.
 `Perspective.beta0_consensus` follows from `almost_sure_consensus_beta0`.
 `Section3_SmallBeta` comes before `AppendixA_Saddle` in the import order, so the
 statement moved to the end of `AppendixA_Saddle`, where it is proved.
+`Perspective.beta_tiny_circle` moved to `CircleClustering`, after its proof;
+it holds for every `β ≥ 0` (`clustering_circle`), and the source's `n ≥ 2` is
+dropped.
 
 The other `sorry`s of `INDEX.md` have no tasks yet.
