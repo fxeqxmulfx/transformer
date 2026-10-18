@@ -3,7 +3,9 @@
 
 If a sequence converges to `w` and comes arbitrarily close to `z` up to
 translations in a closed set `Λ`, then `z - w ∈ Λ`
-(`sub_mem_of_tendsto_of_frequently`).  A limit point `z` of an orbit of
+(`sub_mem_of_tendsto_of_frequently`).  A bound on a function along the
+sequence holds at `z` if the translations leave the function invariant and it
+is continuous at `z` (`le_of_frequently_norm_add_sub_lt`).  A limit point `z` of an orbit of
 gradient descent up to translations leaving `f` invariant is a critical
 point (`gradient_eq_zero_of_frequently`): were `∇f(z) ≠ 0`, the Łojasiewicz
 inequality would hold at `z`, so the orbit would converge, to a critical
@@ -45,6 +47,21 @@ theorem sub_mem_of_tendsto_of_frequently {Λ : Set E} (hΛ : IsClosed Λ) {u : �
     _ ≤ ‖u k - w‖ + ‖u k + v - z‖ := norm_sub_le _ _
     _ < ε / 2 + ε / 2 := add_lt_add hk' hk
     _ = ε := add_halves ε
+
+/-- **A bound on `f` along a sequence holds at its limit points up to
+translations** leaving `f` invariant, where `f` is continuous: if
+`f (u i) ≤ b` eventually along `l` and, for every `ε > 0`, frequently some
+`u i + v` with `v ∈ Λ` lies within `ε` of `z`, then `f z ≤ b`. -/
+theorem le_of_frequently_norm_add_sub_lt {f : E → ℝ} {ι : Type*} {l : Filter ι} {u : ι → E}
+    {Λ : Set E} (hΛ : ∀ v ∈ Λ, ∀ y, f (y + v) = f y) {z : E} (hc : ContinuousAt f z)
+    (hz : ∀ ε > 0, ∃ᶠ i in l, ∃ v ∈ Λ, ‖u i + v - z‖ < ε) {b : ℝ}
+    (hb : ∀ᶠ i in l, f (u i) ≤ b) : f z ≤ b := by
+  refine le_of_forall_pos_lt_add fun δ hδ => ?_
+  obtain ⟨ε, hε, hball⟩ := Metric.continuousAt_iff.1 hc δ hδ
+  obtain ⟨i, ⟨v, hv, hi⟩, hbi⟩ := ((hz ε hε).and_eventually hb).exists
+  have h := hball (show dist (u i + v) z < ε by rwa [dist_eq_norm])
+  rw [Real.dist_eq, hΛ v hv] at h
+  linarith [(abs_lt.1 h).1]
 
 end Translate
 
@@ -132,7 +149,7 @@ theorem isLojasiewiczAt_of_injective [FiniteDimensional ℝ E] (hf : Differentia
 /-- The hypotheses of the theorems above hold for `f(x) = ‖x‖² / 2` on the
 line, `L = 1`, `η = 1/2`, the closed set `{0}` of translations, and the orbit
 `2⁻ᵏ` of `1`, which converges to the critical point `0`, where the Hessian is
-the identity. -/
+the identity; `f` is continuous, and along the orbit at most `f 1`. -/
 example : let f := fun x : ℝ => (1 / 2 : ℝ) * ‖x‖ ^ 2
     let u := fun k => (gradientStep f (1 / 2))^[k] 1
     IsClosed ({0} : Set ℝ) ∧ Tendsto u atTop (𝓝 0) ∧
@@ -140,16 +157,20 @@ example : let f := fun x : ℝ => (1 / 2 : ℝ) * ‖x‖ ^ 2
       Differentiable ℝ f ∧ LipschitzWith 1 (gradient f) ∧ (0 : ℝ) < 1 / 2 ∧
       (1 / 2 : ℝ) * ((1 : ℝ≥0) : ℝ) < 1 ∧ (∀ v ∈ ({0} : Set ℝ), ∀ y, f (y + v) = f y) ∧
       HasFDerivAt (gradient f) (ContinuousLinearMap.id ℝ ℝ) 0 ∧ gradient f 0 = 0 ∧
-      Function.Injective (ContinuousLinearMap.id ℝ ℝ) := by
+      Function.Injective (ContinuousLinearMap.id ℝ ℝ) ∧ ContinuousAt f 0 ∧
+      ∀ᶠ k in atTop, f (u k) ≤ f 1 := by
   intro f u
   have hg : gradient f = id := gradient_half_mul_norm_sq
   have hu : Tendsto u atTop (𝓝 0) := by
     simp only [u, f, iterate_gradientStep_half_mul_norm_sq, smul_eq_mul, mul_one]
     exact tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num)
-  refine ⟨isClosed_singleton, hu, fun ε hε => ?_,
-    (contDiff_const.mul (contDiff_norm_sq ℝ)).differentiable one_ne_zero,
-    by rw [hg]; exact LipschitzWith.id, by norm_num, by norm_num, by simp,
-    by rw [hg]; exact hasFDerivAt_id 0, by rw [hg]; rfl, Function.injective_id⟩
+  have hd : Differentiable ℝ f :=
+    (contDiff_const.mul (contDiff_norm_sq ℝ)).differentiable one_ne_zero
+  have hL : LipschitzWith 1 (gradient f) := by rw [hg]; exact LipschitzWith.id
+  refine ⟨isClosed_singleton, hu, fun ε hε => ?_, hd, hL, by norm_num, by norm_num, by simp,
+    by rw [hg]; exact hasFDerivAt_id 0, by rw [hg]; rfl, Function.injective_id,
+    hd.continuous.continuousAt, Eventually.of_forall fun k =>
+      antitone_iterate hd hL (by norm_num) (by norm_num) 1 (Nat.zero_le k)⟩
   exact (Metric.tendsto_nhds.1 hu ε hε).frequently.mono fun k hk =>
     ⟨0, Set.mem_singleton 0, by rwa [add_zero, ← dist_eq_norm]⟩
 

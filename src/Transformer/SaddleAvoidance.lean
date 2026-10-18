@@ -47,7 +47,11 @@ of gradient descent and descent curves converge geometrically for `a ≤ 1/2`,
 and as `k ^ (-(1 - a)/(2a - 1))` for `1/2 < a < 1`, in `f` and in norm.
 A linear isometry preserving `f` commutes with gradient steps and gradient
 flows.  The subspace fixed by a set of such isometries is invariant, and on it
-gradient descent is that of the restriction of `f`.
+gradient descent is that of the restriction of `f`.  Most landscape theorems
+describe only the critical points below a level `c`.  Gradient descent and
+gradient flows do not raise `f`, so for the starts below `c` the landscape
+hypothesis and the Łojasiewicz inequality are needed only below `c`, and for
+analytic `f` the latter holds anyway.
 
 | Module | Contents |
 | --- | --- |
@@ -65,7 +69,7 @@ gradient descent is that of the restriction of `f`.
 | `SaddleAvoidance.Decay` | sequences dropping by a power of themselves decay geometrically or polynomially |
 | `SaddleAvoidance.Rates` | rates of gradient descent at a Łojasiewicz limit: geometric for `a ≤ 1/2` (`exists_le_mul_pow_of_isLojasiewiczAt`), `(k + 1) ^ (-(1 - a)/(2a - 1))` for `1/2 < a < 1` (`exists_le_mul_rpow_of_isLojasiewiczAt`) |
 | `SaddleAvoidance.Minimizers` | almost every limit is a local minimizer; almost every bounded orbit converges to one |
-| `SaddleAvoidance.CriticalPoints` | limit points up to translations are critical; the Łojasiewicz inequality at nondegenerate critical points |
+| `SaddleAvoidance.CriticalPoints` | limit points up to translations are critical, and a bound on `f` along a sequence holds at them; the Łojasiewicz inequality at nondegenerate critical points |
 | `SaddleAvoidance.SecondOrder` | the second-order test; Hessians at nondegenerate critical points other than strict saddles are positive definite |
 | `SaddleAvoidance.Necessary` | the gradient vanishes and the Hessian is nonnegative at a local minimizer; a critical point with a direction of negative curvature is a strict saddle |
 | `SaddleAvoidance.SecondOrderCritical` | strict saddles are the critical points with a direction of negative curvature; the landscape hypothesis from its second-order form, for global and local minimizers, also below a level |
@@ -97,6 +101,9 @@ gradient descent is that of the restriction of `f`.
 | `SaddleAvoidance.Symmetry` | isometries preserving `f` carry its gradient along and commute with gradient steps and flows; the subspace they fix is invariant, its critical points along it are critical (symmetric criticality), and gradient descent on it is that of the restriction of `f` |
 | `SaddleAvoidance.Analytic` | for an analytic function, orbits of gradient descent and gradient flows with a limit point up to translations converge, to a critical point (`exists_tendsto_of_analyticOnNhd`, `exists_tendsto_gradientFlow_of_analyticOnNhd`); every one when the translations span the space (`exists_tendsto_of_span_eq_top_of_analyticOnNhd`, `exists_tendsto_gradientFlow_of_span_eq_top_of_analyticOnNhd`); every bounded one (`exists_tendsto_of_isBounded_of_analyticOnNhd`, `exists_tendsto_gradientFlow_of_isBounded_of_analyticOnNhd`) |
 | `SaddleAvoidance.AnalyticLandscape` | the scheme theorems for analytic functions, without the Łojasiewicz hypothesis: `ae_exists_tendsto_isMinOn_of_analyticOnNhd`, `ae_exists_tendsto_isMinOn_of_span_eq_top_of_analyticOnNhd`, `ae_exists_tendsto_isLocalMin_of_analyticOnNhd`, `ae_exists_tendsto_gradientFlow_isMinOn_of_analyticOnNhd`, `ae_exists_tendsto_gradientFlow_isMinOn_of_span_eq_top_of_analyticOnNhd` |
+| `SaddleAvoidance.LevelLandscape` | below a level `c`: almost every start of gradient descent below `c` converges to a critical point that is not a strict saddle, and to a global minimizer if every critical point below `c` is one or a strict saddle; the hypotheses are asked only below `c` |
+| `SaddleAvoidance.FlowLevelLandscape` | the same for gradient flows |
+| `SaddleAvoidance.AnalyticLevelLandscape` | both for analytic `f`, without the Łojasiewicz hypothesis |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
 and `thm:main` of arXiv:1602.04915.  Both rest on the center-stable manifold
@@ -152,3 +159,6 @@ import Transformer.SaddleAvoidance.FlowRates
 import Transformer.SaddleAvoidance.Symmetry
 import Transformer.SaddleAvoidance.Analytic
 import Transformer.SaddleAvoidance.AnalyticLandscape
+import Transformer.SaddleAvoidance.LevelLandscape
+import Transformer.SaddleAvoidance.FlowLevelLandscape
+import Transformer.SaddleAvoidance.AnalyticLevelLandscape
