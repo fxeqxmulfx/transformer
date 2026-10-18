@@ -36,7 +36,10 @@ gradient flows hold for every curve along which `f` decreases at least at a
 rate `c₁ ‖∇f‖²` while it moves at most at the speed `c₂ ‖∇f‖`, among them the
 flows `ẋ = -G(x) ∇f(x)` with `c₁ ≤ G ≤ c₂`.  An analytic function on a
 finite-dimensional real inner product space satisfies the Łojasiewicz
-inequality at every point, so the hypothesis on it holds for analytic energies.
+inequality at every point, so for analytic energies that hypothesis is dropped:
+an orbit of gradient descent or a trajectory of the gradient flow with a limit
+point up to translations converges to a critical point, every one does when
+the translations span the space, and so does every bounded one.
 A linear isometry preserving `f` commutes with gradient steps and gradient
 flows.  The subspace fixed by a set of such isometries is invariant, and on it
 gradient descent is that of the restriction of `f`.
@@ -81,6 +84,8 @@ gradient descent is that of the restriction of `f`.
 | `SaddleAvoidance.DescentTrap` | descent curves starting near a Łojasiewicz point stay near it, with finite length |
 | `SaddleAvoidance.DescentConvergence` | descent curves with a Łojasiewicz limit point up to translations converge, to a critical point |
 | `SaddleAvoidance.Symmetry` | isometries preserving `f` carry its gradient along and commute with gradient steps and flows; the subspace they fix is invariant, its critical points along it are critical (symmetric criticality), and gradient descent on it is that of the restriction of `f` |
+| `SaddleAvoidance.Analytic` | for an analytic function, orbits of gradient descent and gradient flows with a limit point up to translations converge, to a critical point (`exists_tendsto_of_analyticOnNhd`, `exists_tendsto_gradientFlow_of_analyticOnNhd`); every one when the translations span the space (`exists_tendsto_of_span_eq_top_of_analyticOnNhd`, `exists_tendsto_gradientFlow_of_span_eq_top_of_analyticOnNhd`); every bounded one (`exists_tendsto_of_isBounded_of_analyticOnNhd`, `exists_tendsto_gradientFlow_of_isBounded_of_analyticOnNhd`) |
+| `SaddleAvoidance.AnalyticLandscape` | the scheme theorems for analytic functions, without the Łojasiewicz hypothesis: `ae_exists_tendsto_isMinOn_of_analyticOnNhd`, `ae_exists_tendsto_isMinOn_of_span_eq_top_of_analyticOnNhd`, `ae_exists_tendsto_isLocalMin_of_analyticOnNhd`, `ae_exists_tendsto_gradientFlow_isMinOn_of_analyticOnNhd`, `ae_exists_tendsto_gradientFlow_isMinOn_of_span_eq_top_of_analyticOnNhd` |
 
 The sources are the gradient-descent corollary in §5.1 of arXiv:1710.07406
 and `thm:main` of arXiv:1602.04915.  Both rest on the center-stable manifold
@@ -128,3 +133,5 @@ import Transformer.SaddleAvoidance.DescentCurve
 import Transformer.SaddleAvoidance.DescentTrap
 import Transformer.SaddleAvoidance.DescentConvergence
 import Transformer.SaddleAvoidance.Symmetry
+import Transformer.SaddleAvoidance.Analytic
+import Transformer.SaddleAvoidance.AnalyticLandscape
