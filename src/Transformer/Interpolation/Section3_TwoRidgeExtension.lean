@@ -58,7 +58,7 @@ theorem norm_twoRidgeGlobalField_le (p u : EucSpace d) (b : ℝ) (q v : EucSpace
 Source: arXiv:2411.04551v3, §1, the Lipschitz well-posedness argument. -/
 theorem exists_lipschitzOnWith_twoRidgeField (p u : EucSpace d) (b : ℝ) (q v : EucSpace d) (c : ℝ) :
     ∃ K : ℝ≥0, LipschitzOnWith K (twoRidgeField p u b q v c) (Sphere d) := by
-  obtain ⟨K, hK⟩ := GlobalFlow.exists_lipschitzOnWith_closedBall (locallyLipschitz_twoRidgeGlobalField p u b q v c) 1
+  obtain ⟨K, hK⟩ := Landscape.GlobalFlow.exists_lipschitzOnWith_closedBall (locallyLipschitz_twoRidgeGlobalField p u b q v c) 1
   refine ⟨K, lipschitzOnWith_iff_norm_sub_le.mpr ?_⟩
   intro x hx y hy
   have hxu := mem_sphere_zero_iff_norm.mp hx
@@ -102,7 +102,7 @@ of the original two-neuron field. Source: arXiv:2411.04551v3,
 theorem exists_twoRidgeTrajectory (p u : EucSpace d) (b : ℝ) (q v : EucSpace d) (c : ℝ) (x₀ : SSphere d) :
     ∃ Y : ℝ → SSphere d, Y 0 = x₀ ∧ ∀ t : ℝ,
       HasDerivAt (fun s => (Y s : EucSpace d)) (twoRidgeField p u b q v c (Y t)) t := by
-  obtain ⟨Y, hY0, hY⟩ := GlobalFlow.exists_global (locallyLipschitz_twoRidgeGlobalField p u b q v c)
+  obtain ⟨Y, hY0, hY⟩ := Landscape.GlobalFlow.exists_global (locallyLipschitz_twoRidgeGlobalField p u b q v c)
     (C := 4 * (|b| + ‖u‖) * ‖p‖ + 4 * (|c| + ‖v‖) * ‖q‖) (by positivity)
     (norm_twoRidgeGlobalField_le p u b q v c) (x₀ : EucSpace d)
   have hunit (t : ℝ) : ‖Y t‖ = 1 := norm_eq_one_of_twoRidgeGlobalField p u b q v c Y hY
@@ -118,7 +118,7 @@ theorem twoRidgeTrajectory_unique (p u : EucSpace d) (b : ℝ) (q v : EucSpace d
     (hX : ∀ t : ℝ, HasDerivAt (fun s => (X s : EucSpace d)) (twoRidgeField p u b q v c (X t)) t)
     (hY : ∀ t : ℝ, HasDerivAt (fun s => (Y s : EucSpace d)) (twoRidgeField p u b q v c (Y t)) t)
     (h0 : X 0 = Y 0) : X = Y := by
-  have he := GlobalFlow.eq_of_hasDerivAt (locallyLipschitz_twoRidgeGlobalField p u b q v c)
+  have he := Landscape.GlobalFlow.eq_of_hasDerivAt (locallyLipschitz_twoRidgeGlobalField p u b q v c)
     (f := fun s => (X s : EucSpace d)) (g := fun s => (Y s : EucSpace d))
     (fun t => by rw [twoRidgeGlobalField_eq_of_unit _ _ _ _ _ _ _ (mem_sphere_zero_iff_norm.mp (X t).2)]; exact hX t)
     (fun t => by rw [twoRidgeGlobalField_eq_of_unit _ _ _ _ _ _ _ (mem_sphere_zero_iff_norm.mp (Y t).2)]; exact hY t)

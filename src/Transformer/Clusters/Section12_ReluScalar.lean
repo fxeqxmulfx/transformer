@@ -1,5 +1,5 @@
 import Transformer.Clusters.Section7_UnboundedParticles
-import Transformer.GlobalFlow.Existence
+import Transformer.Landscape.GlobalFlow.Existence
 
 /-!
 # Four scalar tokens for the ReLU feed-forward dynamics

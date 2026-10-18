@@ -145,7 +145,7 @@ example : ∃ (θ : TimeParams 2) (F : EucSpace 2 → EucSpace 2)
   let μ := ridgeLaw a 0 1 (Perspective.diracProb 2 (basePoint 1))
   let Y : ℝ → SSphere 2 := fun _ => basePoint 1
   have hF : ContDiff ℝ 1 F := contDiff_const.sub ((contDiff_id.inner ℝ contDiff_const).smul contDiff_id)
-  obtain ⟨K, hK⟩ := GlobalFlow.exists_lipschitzOnWith_closedBall hF.locallyLipschitz 1
+  obtain ⟨K, hK⟩ := Landscape.GlobalFlow.exists_lipschitzOnWith_closedBall hF.locallyLipschitz 1
   have hsphere : Sphere 2 ⊆ Metric.closedBall 0 1 := fun x hx =>
     mem_closedBall_zero_iff.mpr (mem_sphere_zero_iff_norm.mp hx).le
   have hfield (ρ : Perspective.ProbSphere 2) (s : ℝ) (x : SSphere 2) : fullVF 2 θ ρ s x = F x := by

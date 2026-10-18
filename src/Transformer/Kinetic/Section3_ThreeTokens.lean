@@ -5,7 +5,7 @@ ArXiv:2605.09213v1, §1, `eq:gpt-dyn-alibi`, for `N = 3`. The first token
 never moves. The second follows the first alone, so it rests whenever the
 two are at an equilibrium distance, `sin(θ₂ - θ₁) = 0`. The third token then
 follows an autonomous field of its own angle. That field vanishes at `0` and
-`π`, so `GlobalFlow.exists_global_Icc` gives it a complete trajectory from
+`π`, so `Landscape.GlobalFlow.exists_global_Icc` gives it a complete trajectory from
 `π/2`.
 
 Two such resting pairs, at distance `0` and at distance `π`, give the third
@@ -16,7 +16,7 @@ These flows are used for the counterexample in
 -/
 
 import Transformer.Kinetic.Defs
-import Transformer.GlobalFlow.Interval
+import Transformer.Landscape.GlobalFlow.Interval
 
 open Real
 
@@ -71,7 +71,7 @@ theorem isGPTFlow_three (lam β y : ℝ) (hy : Real.sin y = 0) (x : ℝ → ℝ)
 
 /-- The third token has a complete trajectory from `π/2` whenever the first two
 sit at an equilibrium distance. Source: arXiv:2605.09213v1, §1,
-`eq:gpt-dyn-alibi`, with `GlobalFlow.exists_global_Icc`. -/
+`eq:gpt-dyn-alibi`, with `Landscape.GlobalFlow.exists_global_Icc`. -/
 theorem exists_three_flow (lam β y : ℝ) (hy : Real.sin y = 0) :
     ∃ x : ℝ → ℝ, x 0 = π / 2 ∧ ∀ t, HasDerivAt x (gptField lam β 3 ![0, y, x t] 2) t := by
   let F : ℝ → ℝ := fun z => gptField lam β 3 ![0, y, z] 2
@@ -92,7 +92,7 @@ theorem exists_three_flow (lam β y : ℝ) (hy : Real.sin y = 0) :
     rw [hF]
     simp only [sub_zero, wBetaDeriv_eq_zero_of_sin_eq_zero β hz,
       wBetaDeriv_eq_zero_of_sin_eq_zero β h1, mul_zero, add_zero]
-  obtain ⟨x, hx0, hx⟩ := GlobalFlow.exists_global_Icc (x₀ := π / 2) hlip
+  obtain ⟨x, hx0, hx⟩ := Landscape.GlobalFlow.exists_global_Icc (x₀ := π / 2) hlip
     (hzero 0 Real.sin_zero) (hzero π Real.sin_pi) ⟨by positivity, by linarith [Real.pi_pos]⟩
   exact ⟨x, hx0, fun t => (hx t).1⟩
 

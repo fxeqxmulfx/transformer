@@ -14,7 +14,7 @@ these rates (`isDescentCurve_angularSA`).  `f` is analytic, so it satisfies the
 (`exists_isLojasiewiczAt_neg_eucTorusEnergy`), and it is invariant under the
 periods `2π e_k`, which span the space.  So every solution has a limit point
 up to the periods, and converges, to a critical point of `𝖤_β`
-(`exists_tendsto_angularSA`, by `SaddleAvoidance.DescentConvergence`).  For
+(`exists_tendsto_angularSA`, by `Landscape.SaddleAvoidance.DescentConvergence`).  For
 `β > 0` a critical point is a global maximum, hence synchronized, or a strict
 saddle (`strict_saddle`), to which almost no solution converges
 (`ae_not_tendsto_angularSA_of_isStrictSaddle`): almost every solution
@@ -29,7 +29,7 @@ the gradient flow of §3.4, for another metric (Appendix A, Remark
 -/
 
 import Transformer.Perspective.CircleConvergence
-import Transformer.SaddleAvoidance.DescentConvergence
+import Transformer.Landscape.SaddleAvoidance.DescentConvergence
 
 open scoped BigOperators Topology
 open Real Filter MeasureTheory
@@ -98,9 +98,9 @@ theorem norm_saGain_le (β : ℝ) (ψ v : EucSpace n) :
 `G` between them. -/
 theorem isDescentCurve_angularSA {β : ℝ} (hβ : β ≠ 0) {θ : ℝ → Angles n}
     (hθ : angularSA n β θ) :
-    SaddleAvoidance.IsDescentCurve (fun φ => -eucTorusEnergy n β φ) (n * exp (-|β|))
+    Landscape.SaddleAvoidance.IsDescentCurve (fun φ => -eucTorusEnergy n β φ) (n * exp (-|β|))
       (n * exp |β|) 0 fun t => WithLp.toLp 2 (θ t) :=
-  SaddleAvoidance.isDescentCurve_of_metric (le_inner_saGain n β) (norm_saGain_le n β)
+  Landscape.SaddleAvoidance.isDescentCurve_of_metric (le_inner_saGain n β) (norm_saGain_le n β)
     fun t _ => (angularSA_iff n β hβ θ).1 hθ t
 
 /-- **SA in angles has a solution from every start.** -/
@@ -108,8 +108,8 @@ theorem exists_angularSA {β : ℝ} (hβ : β ≠ 0) (θ₀ : Angles n) :
     ∃ θ : ℝ → Angles n, angularSA n β θ ∧ θ 0 = θ₀ := by
   obtain ⟨L, hM, hL⟩ := exists_lipschitzWith_saField n β
   refine ⟨_, angularSA_metricGradientFlow n β hβ (WithLp.toLp 2 θ₀), ?_⟩
-  simp [SaddleAvoidance.metricGradientFlow,
-    (SaddleAvoidance.isFlowField_neg_metricGradient hL hM).flow_self]
+  simp [Landscape.SaddleAvoidance.metricGradientFlow,
+    (Landscape.SaddleAvoidance.isFlowField_neg_metricGradient hL hM).flow_self]
 
 /-- **Every solution of SA in angles converges, to a critical point of
 `𝖤_β`**, for `β ≠ 0`: it descends `f = -𝖤_β` (`isDescentCurve_angularSA`) and
@@ -126,14 +126,14 @@ theorem exists_tendsto_angularSA {β : ℝ} (hβ : β ≠ 0) (hn : 0 < n) {θ : 
       ∀ y, -eucTorusEnergy n β (y + v) = -eucTorusEnergy n β y := by
     rintro _ ⟨k, rfl⟩ y
     simp only [eucTorusEnergy_add_period]
-  obtain ⟨z, hz⟩ := SaddleAvoidance.exists_frequently_norm_add_sub_lt_of_span_eq_top
+  obtain ⟨z, hz⟩ := Landscape.SaddleAvoidance.exists_frequently_norm_add_sub_lt_of_span_eq_top
     (span_periods n) fun t => WithLp.toLp 2 (θ t)
   obtain ⟨a, -, ha1, hza⟩ := exists_isLojasiewiczAt_neg_eucTorusEnergy n β z
   obtain ⟨w, hw⟩ := hx.exists_tendsto_of_isLojasiewiczAt (hf.differentiable (by norm_num)) hc₁
-    (by positivity) (fun v hv => SaddleAvoidance.periodic_of_mem_span
+    (by positivity) (fun v hv => Landscape.SaddleAvoidance.periodic_of_mem_span
       (f := fun φ : EucSpace n => -eucTorusEnergy n β φ) hΛ hv) ha1 hza hz
   have hw0 := hx.gradient_eq_zero_of_tendsto (hf.differentiable (by norm_num)) hc₁
-    (SaddleAvoidance.contDiff_gradient hf).continuous.continuousAt hw
+    (Landscape.SaddleAvoidance.contDiff_gradient hf).continuous.continuousAt hw
   exact ⟨w.ofLp, (gradient_neg_eucTorusEnergy_eq_zero_iff n hβ w).1 hw0,
     ((PiLp.continuous_ofLp 2 _).tendsto w).comp hw⟩
 

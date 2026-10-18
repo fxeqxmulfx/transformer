@@ -52,7 +52,7 @@ theorem USA_unique {d n : ℕ} (β : ℝ) (X Y : ℝ → SphereTuple d n) (hX : 
   have hpath (W : ℝ → SphereTuple d n) (hW : USA d n β W) (t : ℝ) :
       HasDerivAt (fun s i => (W s i : EucSpace d)) (F fun i => (W t i : EucSpace d)) t :=
     hasDerivAt_pi.2 fun i => hW t i
-  have heq := GlobalFlow.eq_of_hasDerivAt hF.locallyLipschitz (hpath X hX) (hpath Y hY)
+  have heq := Landscape.GlobalFlow.eq_of_hasDerivAt hF.locallyLipschitz (hpath X hX) (hpath Y hY)
     (by rw [h0])
   funext t i
   exact Subtype.ext (congrFun (congrFun heq t) i)
@@ -75,11 +75,11 @@ variable (n : ℕ)
 gradient flow of `-𝖤_β` run at speed `n` (`angularUSA_gradientFlow`). -/
 theorem exists_angularUSA {β : ℝ} (hβ : β ≠ 0) (θ₀ : Angles n) :
     ∃ θ : ℝ → Angles n, angularUSA n β θ ∧ θ 0 = θ₀ := by
-  obtain ⟨L, hM, -, hL⟩ := SaddleAvoidance.exists_lipschitzWith_gradient_of_periodic
+  obtain ⟨L, hM, -, hL⟩ := Landscape.SaddleAvoidance.exists_lipschitzWith_gradient_of_periodic
     (contDiff_eucTorusEnergy n β).neg (span_periods n)
     (by rintro _ ⟨k, rfl⟩ y; simp only [eucTorusEnergy_add_period])
   refine ⟨_, angularUSA_gradientFlow n hβ θ₀, ?_⟩
-  simp [SaddleAvoidance.gradientFlow, (SaddleAvoidance.isFlowField_neg_gradient hL hM).flow_self]
+  simp [Landscape.SaddleAvoidance.gradientFlow, (Landscape.SaddleAvoidance.isFlowField_neg_gradient hL hM).flow_self]
 
 /-- **Tokens whose angles synchronize converge to one point.**  If a dynamics
 `S` on `(𝕊¹)ⁿ` has at most one solution from each start, and the angles `θ`

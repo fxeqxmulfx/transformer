@@ -1,4 +1,4 @@
-import Transformer.GlobalFlow.Existence
+import Transformer.Landscape.GlobalFlow.Existence
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 /-!
@@ -115,7 +115,7 @@ Source: arXiv:2305.05465v6, `p:wellposedparticles`, applied
 to the actual linear-growth field of the four-corner configuration. -/
 theorem exists_squareScalar_solution (u₀ : ℝ) :
     ∃ u : ℝ → ℝ, u 0 = u₀ ∧ ∀ t : ℝ, HasDerivAt u (squareScalarDrift (u t)) t := by
-  apply GlobalFlow.exists_global (contDiff_squareScalarDrift.of_le (by simp)).locallyLipschitz
+  apply Landscape.GlobalFlow.exists_global (contDiff_squareScalarDrift.of_le (by simp)).locallyLipschitz
     zero_le_one (C := 1)
   intro u
   simpa only [one_mul] using norm_squareScalarDrift_le u

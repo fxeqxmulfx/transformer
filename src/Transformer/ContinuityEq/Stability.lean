@@ -33,7 +33,7 @@ open scoped NNReal
 namespace Transformer
 namespace ContinuityEq
 
-open GlobalFlow Wasserstein
+open Landscape.GlobalFlow Wasserstein
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
   {w u : ℝ → E → E} {Lw Lu : ℝ≥0} {Mw Mu : ℝ}

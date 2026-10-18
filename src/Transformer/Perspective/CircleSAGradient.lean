@@ -13,7 +13,7 @@ gradient (`gradient_eucTorusEnergy_apply`).  So along a solution of
 the energy of §3.4 for the metric `diag(Z_i)`, `e:scalarproduct` in angles, as
 `sa_is_gradient_flow` states it on spheres.  With the gain
 `G = diag(n²/Z_i)`, SA in angles is `θ̇ = -G(θ) ∇f(θ)` for `f = -𝖤_β`
-(`saGain_gradient_apply`), the form of `SaddleAvoidance.metricGradientFlow`;
+(`saGain_gradient_apply`), the form of `Landscape.SaddleAvoidance.metricGradientFlow`;
 `𝖤_β` and `G` are invariant under the periods `2π e_k`
 (`cos_sub_add_period`), which span the space (`span_periods`).
 

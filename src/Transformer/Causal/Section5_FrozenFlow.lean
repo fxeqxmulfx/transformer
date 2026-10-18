@@ -19,7 +19,7 @@ stability property is assumed in constructing it.
 -/
 
 import Transformer.Causal.Section5_FrozenField
-import Transformer.GlobalFlow.Existence
+import Transformer.Landscape.GlobalFlow.Existence
 import Mathlib.Analysis.Calculus.Deriv.Comp
 import Mathlib.Analysis.Calculus.FDeriv.Linear
 
@@ -61,7 +61,7 @@ Source: arXiv:2411.04990v2, §5, the global original flow in `thm:fixed_centers`
 theorem exists_frozenODE (β : ℝ) (θ a : Idx m → ℝ) (ha : ∀ j, 0 ≤ a j) (φ₀ : Idx n → ℝ) :
     ∃ φ : ℝ → Idx n → ℝ, φ 0 = φ₀ ∧ ∀ t, HasDerivAt φ (frozenVelocity n m β θ a (φ t)) t := by
   have hLip := ((contDiff_frozenLiftedField (n := n) β θ a ha).of_le (by simp)).locallyLipschitz
-  obtain ⟨Γ, hΓ0, hΓ⟩ := GlobalFlow.exists_global hLip zero_le_one
+  obtain ⟨Γ, hΓ0, hΓ⟩ := Landscape.GlobalFlow.exists_global hLip zero_le_one
     (fun p => by simpa only [one_mul] using norm_frozenLiftedField_le β θ a ha p) (φ₀, (1 : ℝ))
   have hsnd (t : ℝ) : HasDerivAt (fun s => (Γ s).2) 0 t := by
     have h := (ContinuousLinearMap.snd ℝ (Idx n → ℝ) ℝ).hasFDerivAt.comp_hasDerivAt t (hΓ t)
@@ -83,7 +83,7 @@ theorem frozenODE_unique (β : ℝ) (θ a : Idx m → ℝ) (ha : ∀ j, 0 ≤ a 
     (φ ψ : ℝ → Idx n → ℝ)
     (hφ : ∀ t, HasDerivAt φ (frozenVelocity n m β θ a (φ t)) t)
     (hψ : ∀ t, HasDerivAt ψ (frozenVelocity n m β θ a (ψ t)) t) (h0 : φ 0 = ψ 0) : φ = ψ :=
-  GlobalFlow.eq_of_hasDerivAt (locallyLipschitz_frozenVelocity β θ a ha) hφ hψ h0
+  Landscape.GlobalFlow.eq_of_hasDerivAt (locallyLipschitz_frozenVelocity β θ a ha) hφ hψ h0
 
 /-- Every original angular initial tuple has exactly one global original frozen-token trajectory.
 Source: arXiv:2411.04990v2, §5, the original deterministic dynamics in `thm:fixed_centers`. -/

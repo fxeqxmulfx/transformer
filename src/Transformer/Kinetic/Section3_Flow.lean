@@ -5,8 +5,8 @@ ArXiv:2605.09213v1, §1, `eq:gpt-dyn-alibi`, as used in the proof of
 `lem:correl`: the trajectories are functions of the initial angles.
 
 The field `gptVec` is globally Lipschitz and vanishes at `0`, so every initial
-configuration has exactly one solution on `ℝ` (`GlobalFlow.exists_global`,
-`GlobalFlow.eq_of_hasDerivAt`). `flowMap t x` is its value at time `t`, and
+configuration has exactly one solution on `ℝ` (`Landscape.GlobalFlow.exists_global`,
+`Landscape.GlobalFlow.eq_of_hasDerivAt`). `flowMap t x` is its value at time `t`, and
 every `IsGPTFlow` trajectory is `t ↦ flowMap t (θ 0)` (`eq_flowMap`). For
 `t ≥ 0` the map `x ↦ flowMap t x` is Lipschitz, by Grönwall, hence measurable.
 
@@ -16,7 +16,7 @@ unchanged (`flowMap_add_single`).
 -/
 
 import Transformer.Kinetic.Section3_Weights
-import Transformer.GlobalFlow.Existence
+import Transformer.Landscape.GlobalFlow.Existence
 import Mathlib.Analysis.ODE.Gronwall
 
 open Real
@@ -84,7 +84,7 @@ theorem isGPTFlow_iff (lam β : ℝ) (N : ℕ) (θ : ℝ → Idx N → ℝ) :
 theorem exists_isGPTFlow (lam β : ℝ) (N : ℕ) (x : Idx N → ℝ) :
     ∃ θ : ℝ → Idx N → ℝ, θ 0 = x ∧ IsGPTFlow lam β N θ := by
   obtain ⟨K, hK⟩ := exists_lipschitzWith_gptVec lam β N
-  obtain ⟨θ, h0, hθ⟩ := GlobalFlow.exists_global hK.locallyLipschitz K.2
+  obtain ⟨θ, h0, hθ⟩ := Landscape.GlobalFlow.exists_global hK.locallyLipschitz K.2
     (fun y => by simpa [gptVec_zero, dist_eq_norm] using hK.dist_le_mul y 0) x
   exact ⟨θ, h0, (isGPTFlow_iff lam β N θ).2 hθ⟩
 
@@ -107,7 +107,7 @@ theorem hasDerivAt_flowMap (lam β : ℝ) (N : ℕ) (x : Idx N → ℝ) (t : ℝ
 theorem eq_flowMap (lam β : ℝ) (N : ℕ) {θ : ℝ → Idx N → ℝ} (hθ : IsGPTFlow lam β N θ) (t : ℝ) :
     θ t = flowMap lam β N t (θ 0) := by
   obtain ⟨K, hK⟩ := exists_lipschitzWith_gptVec lam β N
-  have h := GlobalFlow.eq_of_hasDerivAt hK.locallyLipschitz ((isGPTFlow_iff lam β N θ).1 hθ)
+  have h := Landscape.GlobalFlow.eq_of_hasDerivAt hK.locallyLipschitz ((isGPTFlow_iff lam β N θ).1 hθ)
     ((isGPTFlow_iff lam β N _).1 (isGPTFlow_flowMap lam β N (θ 0)))
     (by simp [flowMap_zero])
   exact congrFun h t

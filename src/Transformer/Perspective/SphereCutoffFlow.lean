@@ -10,7 +10,7 @@ stay in an open shell `R`.  This is the flow `ẏ = -M(y) ∇(-g)(y)`, and off t
 vectors `M` is `C¹` and symmetric positive definite (`blockScale_isSymmetric_pos`).  For
 a cut-off `χ` equal to `1` on `R` with compact support away from the zero vectors, the
 trajectories in `R` stay in the support of `χ`, a compact set, so saddle avoidance on
-an open set (`SaddleAvoidance.ae_not_tendsto_metricGradient_of_isCompact`) applies.  A
+an open set (`Landscape.SaddleAvoidance.ae_not_tendsto_metricGradient_of_isCompact`) applies.  A
 critical point `z ∈ R` of `g` with a direction of positive second derivative is a
 strict saddle of `-χ g`, which is `C²` on the whole space, and so of `-g`, equal to it
 near `z`.  Hence for almost every start, no trajectory in `R` converges to such a point
@@ -24,8 +24,8 @@ for `thm: boumal` of §6.
 
 import Transformer.Perspective.SphereCutoff
 import Transformer.Perspective.CircleEnergyHessian
-import Transformer.SaddleAvoidance.OpenAvoidance
-import Transformer.SaddleAvoidance.Necessary
+import Transformer.Landscape.SaddleAvoidance.OpenAvoidance
+import Transformer.Landscape.SaddleAvoidance.Necessary
 
 open Filter MeasureTheory
 open scoped Topology
@@ -33,7 +33,7 @@ open scoped Topology
 namespace Transformer
 namespace Perspective
 
-open SaddleAvoidance
+open Landscape.SaddleAvoidance
 
 variable {d n : ℕ}
 

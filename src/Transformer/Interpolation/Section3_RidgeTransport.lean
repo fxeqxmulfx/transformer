@@ -31,7 +31,7 @@ and §3.2, the perceptron in `lem: perturbation`. -/
 theorem exists_lipschitzOnWith_ridge_field (p u : EucSpace d) (b : ℝ) :
     ∃ K : ℝ≥0, LipschitzOnWith K (fun x : EucSpace d =>
       max (b - inner ℝ x u) 0 • proj d x p) (Sphere d) := by
-  obtain ⟨K, hK⟩ := GlobalFlow.exists_lipschitzOnWith_closedBall
+  obtain ⟨K, hK⟩ := Landscape.GlobalFlow.exists_lipschitzOnWith_closedBall
     (locallyLipschitz_ridgeGlobalField p u b) 1
   refine ⟨K, lipschitzOnWith_iff_norm_sub_le.mpr ?_⟩
   intro x hx y hy

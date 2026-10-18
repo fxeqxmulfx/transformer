@@ -1,0 +1,147 @@
+/-
+# Phase model over a finite abelian group — the landscape below `|G|²/8`
+
+As for `ℤ/n` (`Landscape.PhaseModel.Landscape`), with `n = |G|`: some character `χ`
+has `n Σ_x (1 - cos (ψ_x - arg χ(x))) ≤ V_full(ψ)`, so below `n²/8` the
+phases lie within `n/8` of a character (`exists_sum_one_sub_cos_lt`), where
+for `n ≥ 4` every critical point is the character up to periods or a strict
+saddle (`Abelian.Characters`).  Hence, for `n ≥ 4`, every local minimizer of
+`V_full` below `n²/8` is the phases of a character up to periods
+(`exists_sub_characterPhase_mem_periods_of_isLocalMin`), a global minimizer
+(`divisionEnergy_eq_zero_of_isLocalMin`); every critical point with
+`0 < V_full < n²/8` is a strict saddle (`isStrictSaddle_of_divisionEnergy_lt`).
+So gradient descent started below `n²/8` converges to a character for almost
+every start (`Landscape.PhaseModel.Abelian.Convergence`).  The critical points above
+`n²/8` are not settled here.
+-/
+
+import Transformer.Landscape.PhaseModel.Abelian.Characters
+import Transformer.Landscape.PhaseModel.Abelian.Fourier
+
+open Real
+
+namespace Transformer.Landscape.PhaseModel.Abelian
+
+local notation "⟪" x ", " y "⟫" => inner ℝ x y
+
+variable {G : Type*} [AddCommGroup G] [Fintype G] [DecidableEq G]
+
+/-- **Below `|G|²/8`, the phases lie within `|G|/8` of a character**: if
+`V_full(ψ) < |G|²/8`, some character `χ` has
+`Σ_x (1 - cos (ψ_x - arg χ(x))) < |G|/8`. -/
+theorem exists_sum_one_sub_cos_lt {ψ : EuclideanSpace ℝ G}
+    (hV : divisionEnergy (Finset.univ : Finset (G × G)) ψ < Fintype.card G ^ 2 / 8) :
+    ∃ χ : AddChar G ℂ,
+      ∑ x, (1 - cos (ψ.ofLp x - (characterPhase χ).ofLp x)) < Fintype.card G / 8 := by
+  obtain ⟨χ, hχ⟩ := exists_mul_sum_one_sub_cos_le ψ
+  have hn : (0 : ℝ) < Fintype.card G := by exact_mod_cast Fintype.card_pos
+  refine ⟨χ, ?_⟩
+  by_contra h
+  push Not at h
+  nlinarith
+
+/-- **Below `|G|²/8`, every local minimizer of `V_full` is a character**: for
+`|G| ≥ 4`, a local minimizer `ψ` of `V_full` with `V_full(ψ) < |G|²/8` has
+`ψ - (arg χ(x))_x ∈ 2πℤ^G` for some character `χ`. -/
+theorem exists_sub_characterPhase_mem_periods_of_isLocalMin (hn : 4 ≤ Fintype.card G)
+    {ψ : EuclideanSpace ℝ G}
+    (hmin : IsLocalMin (divisionEnergy (Finset.univ : Finset (G × G))) ψ)
+    (hV : divisionEnergy (Finset.univ : Finset (G × G)) ψ < Fintype.card G ^ 2 / 8) :
+    ∃ χ : AddChar G ℂ, ψ - characterPhase χ ∈ periods G := by
+  obtain ⟨χ, hχ⟩ := exists_sum_one_sub_cos_lt hV
+  exact ⟨χ, sub_characterPhase_mem_periods_of_isLocalMin hn hmin hχ⟩
+
+/-- **Below `|G|²/8`, `V_full` has no spurious local minimizer**: for
+`|G| ≥ 4`, a local minimizer `ψ` of `V_full` with `V_full(ψ) < |G|²/8` is a
+zero, a global minimizer. -/
+theorem divisionEnergy_eq_zero_of_isLocalMin (hn : 4 ≤ Fintype.card G) {ψ : EuclideanSpace ℝ G}
+    (hmin : IsLocalMin (divisionEnergy (Finset.univ : Finset (G × G))) ψ)
+    (hV : divisionEnergy (Finset.univ : Finset (G × G)) ψ < Fintype.card G ^ 2 / 8) :
+    divisionEnergy (Finset.univ : Finset (G × G)) ψ = 0 :=
+  (divisionEnergy_univ_eq_zero_iff ψ).2
+    (exists_sub_characterPhase_mem_periods_of_isLocalMin hn hmin hV)
+
+/-- **Below `|G|²/8`, every critical point of `V_full` that is not a zero is
+a strict saddle**: for `|G| ≥ 4`, at a critical point `ψ` with
+`0 < V_full(ψ) < |G|²/8` the Hessian has a negative eigenvalue. -/
+theorem isStrictSaddle_of_divisionEnergy_lt (hn : 4 ≤ Fintype.card G) {ψ : EuclideanSpace ℝ G}
+    (hg : gradient (divisionEnergy (Finset.univ : Finset (G × G))) ψ = 0)
+    (hV0 : divisionEnergy (Finset.univ : Finset (G × G)) ψ ≠ 0)
+    (hV : divisionEnergy (Finset.univ : Finset (G × G)) ψ < Fintype.card G ^ 2 / 8) :
+    Landscape.SaddleAvoidance.IsStrictSaddle (divisionEnergy (Finset.univ : Finset (G × G))) ψ := by
+  obtain ⟨χ, hχ⟩ := exists_sum_one_sub_cos_lt hV
+  exact isStrictSaddle_of_sum_one_sub_cos_lt hn hg hχ fun h =>
+    hV0 ((divisionEnergy_univ_eq_zero_iff ψ).2 ⟨χ, h⟩)
+
+/-- The hypotheses of the first four theorems hold in the Klein four-group
+`ℤ/2 × ℤ/2` at the phases of every character `χ`, a global minimizer with
+`V_full = 0 < 4²/8`. -/
+example (χ : AddChar (ZMod 2 × ZMod 2) ℂ) :
+    let V := divisionEnergy (Finset.univ : Finset ((ZMod 2 × ZMod 2) × (ZMod 2 × ZMod 2)))
+    4 ≤ Fintype.card (ZMod 2 × ZMod 2) ∧ IsLocalMin V (characterPhase χ) ∧
+      V (characterPhase χ) < (Fintype.card (ZMod 2 × ZMod 2) : ℝ) ^ 2 / 8 := by
+  intro V
+  have h0 : V (characterPhase χ) = 0 := divisionEnergy_characterPhase _ χ
+  refine ⟨by simp, Filter.Eventually.of_forall fun y => ?_, by rw [h0]; positivity⟩
+  rw [h0]
+  exact phaseEnergy_nonneg _ y
+
+/-- The hypotheses of `isStrictSaddle_of_divisionEnergy_lt` hold in every
+group `G` of order at least `49`, such as `ℤ/7 × ℤ/7`, at `ψ = π e_0`: every
+relation of `ψ` is a multiple of `π`, so `ψ` is critical; the relation of
+the pair `(0, 0)` is `-π`, so `V_full(ψ) ≥ 2`; and only the pairs `(x, y)`
+with `x = 0`, `y = 0` or `x = y` have a nonzero relation, each adding at
+most `2`, so `V_full(ψ) ≤ 6 |G| < |G|²/8`. -/
+example (hG : 49 ≤ Fintype.card G) :
+    let V := divisionEnergy (Finset.univ : Finset (G × G))
+    let ψ : EuclideanSpace ℝ G := PiLp.single 2 0 π
+    4 ≤ Fintype.card G ∧ gradient V ψ = 0 ∧ V ψ ≠ 0 ∧ V ψ < Fintype.card G ^ 2 / 8 := by
+  intro V ψ
+  have hψ : ∀ x : G, ψ.ofLp x = if x = 0 then π else 0 := fun x => by
+    simp [ψ]
+  have hrel : ∀ a : G → ℤ, ⟪intVec a, ψ⟫ = (a 0 : ℤ) * π := fun a => by
+    simp [ψ, inner_intVec]
+  have hV : V ψ = ∑ p : G × G,
+      (1 - cos (ψ.ofLp p.1 - ψ.ofLp p.2 - ψ.ofLp (p.1 - p.2))) := divisionEnergy_apply _ ψ
+  refine ⟨by omega, ?_, ?_, ?_⟩
+  · simp only [V, divisionEnergy]
+    rw [gradient_phaseEnergy]
+    exact Finset.sum_eq_zero fun r _ => by rw [hrel, sin_int_mul_pi, zero_smul]
+  · have hnn : ∀ p : G × G, 0 ≤ 1 - cos (ψ.ofLp p.1 - ψ.ofLp p.2 - ψ.ofLp (p.1 - p.2)) :=
+      fun p => sub_nonneg.2 (cos_le_one _)
+    have h0 := Finset.single_le_sum (fun p _ => hnn p) (Finset.mem_univ ((0 : G), (0 : G)))
+    rw [← hV] at h0
+    simp only [sub_self, zero_sub, cos_neg, hψ, ite_true, cos_pi] at h0
+    intro h
+    linarith
+  · have hb : ∀ p : G × G, 1 - cos (ψ.ofLp p.1 - ψ.ofLp p.2 - ψ.ofLp (p.1 - p.2)) ≤
+        2 * ((if p.1 = 0 then 1 else 0) + (if p.2 = 0 then 1 else 0) +
+          (if p.1 = p.2 then 1 else 0)) := by
+      rintro ⟨x, y⟩
+      dsimp only
+      have hc := neg_one_le_cos (ψ.ofLp x - ψ.ofLp y - ψ.ofLp (x - y))
+      by_cases hx : x = 0
+      · rw [ite_eq_left hx]
+        split_ifs <;> linarith
+      by_cases hy : y = 0
+      · rw [ite_eq_left hy]
+        split_ifs <;> linarith
+      by_cases hxy : x = y
+      · rw [ite_eq_left hxy]
+        split_ifs
+        linarith
+      simp [hψ, hx, hy, hxy, sub_eq_zero]
+    have hsum : ∑ p : G × G, 2 * ((if p.1 = 0 then (1 : ℝ) else 0) +
+        (if p.2 = 0 then 1 else 0) + (if p.1 = p.2 then 1 else 0)) = 6 * Fintype.card G := by
+      rw [← Finset.mul_sum, Finset.sum_add_distrib, Finset.sum_add_distrib, Fintype.sum_prod_type,
+        Finset.sum_comm, Fintype.sum_prod_type, Fintype.sum_prod_type]
+      simp only [Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
+        Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_one]
+      ring
+    have hle : V ψ ≤ 6 * Fintype.card G := by
+      rw [hV, ← hsum]
+      exact Finset.sum_le_sum fun p _ => hb p
+    have hn' : (49 : ℝ) ≤ Fintype.card G := by exact_mod_cast hG
+    nlinarith
+
+end Transformer.Landscape.PhaseModel.Abelian

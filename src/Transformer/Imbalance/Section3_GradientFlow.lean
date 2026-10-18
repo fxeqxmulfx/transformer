@@ -7,7 +7,7 @@ field, and uniqueness identifies every global zero-initialized solution.
 -/
 
 import Transformer.Imbalance.Section3_SimpleModel
-import Transformer.GlobalFlow.Existence
+import Transformer.Landscape.GlobalFlow.Existence
 import Mathlib.Analysis.Calculus.ContDiff.RCLike
 
 open Filter Asymptotics
@@ -114,7 +114,7 @@ gradient trajectory is the explicitly solved matrix trajectory. -/
 theorem gradientFlow_unique (hc : 2 ≤ c) (π : Fin c → ℝ)
     (W : ℝ → Parameters c c) (hW : IsGradientFlow π W) : W = gdParameters c hc π := by
   have hg := gdParameters_flow c hc π
-  apply GlobalFlow.eq_of_hasDerivAt (gradientField_contDiff π).locallyLipschitz
+  apply Landscape.GlobalFlow.eq_of_hasDerivAt (gradientField_contDiff π).locallyLipschitz
   · intro t
     exact hasDerivAt_pi.2 fun i => hasDerivAt_pi.2 fun k => hW.2 t i k
   · intro t

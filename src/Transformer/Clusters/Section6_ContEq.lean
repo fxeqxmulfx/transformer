@@ -33,7 +33,7 @@ Source: arXiv:2305.05465v6, `e:conteq`, `d:solconti`,
 
 import Transformer.Clusters.Section6_LagrangianField
 import Transformer.Clusters.Section6_Stability
-import Transformer.GlobalFlow.Existence
+import Transformer.Landscape.GlobalFlow.Existence
 
 open Set Metric Filter Topology MeasureTheory
 open scoped BoundedContinuousFunction
@@ -41,7 +41,7 @@ open scoped BoundedContinuousFunction
 namespace Transformer
 namespace Clusters
 
-open GlobalFlow
+open Landscape.GlobalFlow
 
 variable {d : ℕ}
 

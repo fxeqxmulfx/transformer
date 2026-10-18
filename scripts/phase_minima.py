@@ -2,9 +2,9 @@
 """Search for local minimizers of the phase energy V_full above n²/8.
 
 `landscape_plan.md`, M3.4b.  `V_full(ψ) = Σ_{x, y} (1 - cos(ψ_x - ψ_y - ψ_{x-y}))`
-over all pairs of `ℤ/n` (`Transformer.PhaseModel.divisionEnergy` of the full
+over all pairs of `ℤ/n` (`Transformer.Landscape.PhaseModel.divisionEnergy` of the full
 table).  Its zeros are the phases `ψ_x = 2πjx/n` of the characters up to
-periods, and `PhaseModel.Landscape` proves that for `n ≥ 4` every local
+periods, and `Landscape.PhaseModel.Landscape` proves that for `n ≥ 4` every local
 minimizer with `V_full < n²/8` is one.  This search asks whether a local
 minimizer with `V_full ≥ n²/8` exists for `2 ≤ n ≤ 30`.
 

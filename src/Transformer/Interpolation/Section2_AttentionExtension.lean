@@ -10,7 +10,7 @@ restriction to the original sphere is exactly the manuscript's field.
 -/
 
 import Transformer.Interpolation.Section2_AttentionRegularity
-import Transformer.GlobalFlow.TimeDependent
+import Transformer.Landscape.GlobalFlow.TimeDependent
 
 open Real MeasureTheory Set
 open scoped Topology NNReal
@@ -98,8 +98,8 @@ theorem lipschitzWith_attentionCutoff : LipschitzWith 1 (attentionCutoff (d := d
 `eq: vf`. Off the sphere it uses the stated retraction and cutoff. -/
 noncomputable def attentionGlobalField (B : ParamMatrix d) (ν : Perspective.ProbSphere d)
     (x : EucSpace d) : EucSpace d :=
-  attentionCutoff x • proj d (GlobalFlow.ballRetract 2 x)
-    (attentionAverage B ν (GlobalFlow.ballRetract 2 x))
+  attentionCutoff x • proj d (Landscape.GlobalFlow.ballRetract 2 x)
+    (attentionAverage B ν (Landscape.GlobalFlow.ballRetract 2 x))
 
 /-- The extension equals the original velocity at every unit query.
 Source: arXiv:2411.04551v3, §1, `eq: vf`. -/
@@ -107,7 +107,7 @@ theorem attentionGlobalField_eq_fullVF (B : ParamMatrix d) (ν : Perspective.Pro
     (t : ℝ) (x : SSphere d) : attentionGlobalField B ν x =
       fullVF d (fun _ => ⟨ContinuousLinearMap.id ℝ (EucSpace d), B, 0, 0, 0⟩) ν t x := by
   have hx : ‖(x : EucSpace d)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
-  rw [attentionGlobalField, GlobalFlow.ballRetract_of_norm_le (by norm_num : (0 : ℝ) < 2) (by linarith),
+  rw [attentionGlobalField, Landscape.GlobalFlow.ballRetract_of_norm_le (by norm_num : (0 : ℝ) < 2) (by linarith),
     attentionCutoff_eq_one _ hx.le, one_smul, fullVF_eq_proj_attentionAverage]
 
 /-- Uniform bound for the characteristic extension of arXiv:2411.04551v3,
@@ -115,10 +115,10 @@ theorem attentionGlobalField_eq_fullVF (B : ParamMatrix d) (ν : Perspective.Pro
 theorem norm_attentionGlobalField_le (B : ParamMatrix d) (ν : Perspective.ProbSphere d) (x : EucSpace d) :
     ‖attentionGlobalField B ν x‖ ≤ 5 := by
   rw [attentionGlobalField, norm_smul, Real.norm_of_nonneg (attentionCutoff_nonneg x)]
-  have hp : ‖proj d (GlobalFlow.ballRetract 2 x)
-      (attentionAverage B ν (GlobalFlow.ballRetract 2 x))‖ ≤ 5 * 1 :=
-    (norm_proj_le_on_ball_two (GlobalFlow.ballRetract 2 x) _
-    (GlobalFlow.norm_ballRetract_le (by norm_num : (0 : ℝ) < 2) x)).trans
+  have hp : ‖proj d (Landscape.GlobalFlow.ballRetract 2 x)
+      (attentionAverage B ν (Landscape.GlobalFlow.ballRetract 2 x))‖ ≤ 5 * 1 :=
+    (norm_proj_le_on_ball_two (Landscape.GlobalFlow.ballRetract 2 x) _
+    (Landscape.GlobalFlow.norm_ballRetract_le (by norm_num : (0 : ℝ) < 2) x)).trans
       (mul_le_mul_of_nonneg_left (norm_attentionAverage_le_one B ν _) (by norm_num : (0 : ℝ) ≤ 5))
   calc
     _ ≤ 1 * (5 * 1) := mul_le_mul (attentionCutoff_le_one x) hp (norm_nonneg _) zero_le_one
@@ -129,16 +129,16 @@ arXiv:2411.04551v3, §1, uniformly over all original probability laws. -/
 theorem lipschitzWith_attentionGlobalField (B : ParamMatrix d) (ν : Perspective.ProbSphere d) :
     LipschitzWith ⟨2 * (5 * (2 * exp (2 * (‖B‖ * 2)) * ‖B‖) + 4) + 5, by positivity⟩
       (attentionGlobalField B ν) := by
-  let R (x : EucSpace d) := GlobalFlow.ballRetract 2 x
+  let R (x : EucSpace d) := Landscape.GlobalFlow.ballRetract 2 x
   let G (x : EucSpace d) := proj d (R x) (attentionAverage B ν (R x))
   let L : ℝ := 2 * exp (2 * (‖B‖ * 2)) * ‖B‖
-  have hR (x : EucSpace d) : ‖R x‖ ≤ 2 := GlobalFlow.norm_ballRetract_le (by norm_num) x
+  have hR (x : EucSpace d) : ‖R x‖ ≤ 2 := Landscape.GlobalFlow.norm_ballRetract_le (by norm_num) x
   have hG (x : EucSpace d) : ‖G x‖ ≤ 5 := by
     exact (norm_proj_le_on_ball_two _ _ (hR x)).trans
       ((mul_le_mul_of_nonneg_left (norm_attentionAverage_le_one B ν _) (by norm_num : (0 : ℝ) ≤ 5)).trans_eq (by ring))
   have hLip (x y : EucSpace d) : ‖G x - G y‖ ≤ 2 * (5 * L + 4) * ‖x - y‖ := by
     have hAv := norm_attentionAverage_sub_le B ν 2 (R x) (R y) (hR x) (hR y)
-    have hRet := (GlobalFlow.lipschitzWith_ballRetract (by norm_num : (0 : ℝ) < 2)).dist_le_mul x y
+    have hRet := (Landscape.GlobalFlow.lipschitzWith_ballRetract (by norm_num : (0 : ℝ) < 2)).dist_le_mul x y
     rw [dist_eq_norm, dist_eq_norm] at hRet
     change ‖R x - R y‖ ≤ 2 * ‖x - y‖ at hRet
     calc

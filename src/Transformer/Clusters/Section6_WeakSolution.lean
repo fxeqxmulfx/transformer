@@ -50,7 +50,7 @@ open Set Metric Filter Topology MeasureTheory
 namespace Transformer
 namespace Clusters
 
-open GlobalFlow
+open Landscape.GlobalFlow
 
 variable {d : ℕ}
 

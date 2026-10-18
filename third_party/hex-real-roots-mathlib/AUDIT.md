@@ -5,7 +5,7 @@
 Source: [leanprover/hex-real-roots-mathlib](https://github.com/leanprover/hex-real-roots-mathlib)
 revision `53ce31466dc5ff520463249d470119c1e0006e22`.
 The copied closure consists only of `Sign.lean`, `SturmChainDefs.lean`, and
-`SturmTheorem.lean`, split by proof dependency under `src/Transformer/Sturm`.
+`SturmTheorem.lean`, split by proof dependency under `src/Transformer/Landscape/Sturm`.
 The original Apache-2.0 license is retained byte for byte in `LICENSE`.
 The upstream toolchain is Lean 4.34.0-rc2; the adapted closure and all new
 proofs are built with this project's Lean and Mathlib 4.34.1.
@@ -62,13 +62,13 @@ Open-interval bounds and a strict objective improvement are additional
 actual polynomial signs. A zero query therefore eliminates comparison
 with every admissible scalar root exactly.
 
-`Normalization.AnalyticFiberMinimumQuery` combines this with real analytic
+`Landscape.Lojasiewicz.AnalyticFiberMinimumQuery` combines this with real analytic
 preparation and division on one fixed box, for arbitrary base coordinates.
 It retains the original equation, every finite analytic sign condition,
 and the full universal comparison within the distinguished-variable fiber.
 It assumes no analytic curve in the base.
 
-`Normalization.AnalyticBoxMinimumQuery` uses the candidate's actual objective
+`Landscape.Lojasiewicz.AnalyticBoxMinimumQuery` uses the candidate's actual objective
 as a common threshold. Its zero-query conditions compare with every admissible
 base coordinate in an arbitrary chosen base slice, including a prescribed
 energy coordinate. The scalar competitor is eliminated from a comparison on
@@ -76,7 +76,7 @@ the whole fixed box. The universal base quantifier remains explicit.
 
 The finite-atlas extension compares one common threshold on all constrained
 energy-graph chart images, with distinct degrees and dimensions allowed.
-`Normalization.CompactBallGradientQueries` constructs such comparisons for
+`Landscape.Lojasiewicz.CompactBallGradientQueries` constructs such comparisons for
 the entire original compact ball from analyticity. The nonflat part of the
 central fiber is compact. Its prepared charts have actual inverse energy
 coordinates, lie in the original ball, and contain all nearby source points.
@@ -106,7 +106,7 @@ signed cancellation, mixed sign constraints, and different minima of an
 actual polynomial objective.
 
 Run `lake env lean scripts/AnalyticPreparationAxioms.lean` after building.
-It checks every noninternal `Transformer.Sturm` declaration and the
+It checks every noninternal `Transformer.Landscape.Sturm` declaration and the
 external dependency roots of the final preparation, signed-query, and
 analytic minimum reductions transitively. Only `propext`,
 `Classical.choice`, and `Quot.sound` are accepted. The separate full-tree

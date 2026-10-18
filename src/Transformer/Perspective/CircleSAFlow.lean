@@ -6,7 +6,7 @@ SA in angles is `θ̇ = -G(θ) ∇f(θ)` on `EucSpace n`, with `f = -𝖤_β` an
 periods `2π e_k` (`cos_sub_add_period`), which span the space.  So `G ∇f` is
 bounded and globally Lipschitz (`exists_lipschitzWith_saField`), and the
 solutions of SA in angles are the trajectories of
-`SaddleAvoidance.metricGradientFlow` (`angularSA_iff`): one from every start
+`Landscape.SaddleAvoidance.metricGradientFlow` (`angularSA_iff`): one from every start
 (`angularSA_metricGradientFlow`), and no other (`toLp_eq_metricGradientFlow`).
 A critical point of `𝖤_β` with a line of positive second derivative is a
 strict saddle of `f` (`isStrictSaddle_of_isStrictSaddleTorusEnergy`), so for
@@ -16,14 +16,14 @@ Lebesgue-almost every start no solution converges to one
 Source: arXiv:2312.10794v5, Appendix A, Lemma `l:nosaddleconv` with Remark
 `r:extensiontoSAcase`: SA is a gradient flow for another metric, and the
 saddle property does not depend on the metric.  The time-one map of
-`SaddleAvoidance.MetricAvoidance` replaces the center-stable manifold theorem.
+`Landscape.SaddleAvoidance.MetricAvoidance` replaces the center-stable manifold theorem.
 -/
 
 import Transformer.Perspective.CircleSAGradient
 import Transformer.Perspective.CircleCritical
-import Transformer.SaddleAvoidance.MetricAvoidance
-import Transformer.SaddleAvoidance.Periodic
-import Transformer.SaddleAvoidance.Necessary
+import Transformer.Landscape.SaddleAvoidance.MetricAvoidance
+import Transformer.Landscape.SaddleAvoidance.Periodic
+import Transformer.Landscape.SaddleAvoidance.Necessary
 import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 
 open Filter MeasureTheory
@@ -33,7 +33,7 @@ open Real
 namespace Transformer
 namespace Perspective
 
-open SaddleAvoidance GlobalFlow
+open Landscape.SaddleAvoidance Landscape.GlobalFlow
 
 variable (n : ℕ)
 

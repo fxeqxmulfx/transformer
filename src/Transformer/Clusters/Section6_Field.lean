@@ -13,7 +13,7 @@ Source: arXiv:2305.05465v6, §6, `p:wellposedparticles`.
 -/
 
 import Transformer.Clusters.Section3_Rescaled
-import Transformer.GlobalFlow.Existence
+import Transformer.Landscape.GlobalFlow.Existence
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Analysis.Calculus.ContDiff.RCLike

@@ -159,7 +159,7 @@ example : ∃ (θ : TimeParams 2) (F : EucSpace 2 → EucSpace 2) (K : ℝ≥0)
   let Φ := ridgeFlow a 0 1
   let z : SSphere 2 := ⟨EuclideanSpace.single 1 1, by simp⟩
   have hF : ContDiff ℝ 1 F := contDiff_const.sub ((contDiff_id.inner ℝ contDiff_const).smul contDiff_id)
-  obtain ⟨K, hK⟩ := GlobalFlow.exists_lipschitzOnWith_closedBall hF.locallyLipschitz 1
+  obtain ⟨K, hK⟩ := Landscape.GlobalFlow.exists_lipschitzOnWith_closedBall hF.locallyLipschitz 1
   have hsphere : Sphere 2 ⊆ Metric.closedBall 0 1 := fun x hx =>
     mem_closedBall_zero_iff.mpr (mem_sphere_zero_iff_norm.mp hx).le
   refine ⟨θ, F, K, Φ, halfDirac 2 z (antipode 2 z), fun x => inner ℝ a x,

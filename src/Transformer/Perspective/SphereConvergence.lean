@@ -20,7 +20,7 @@ arXiv:2510.22026v2 for the theorem itself.
 -/
 
 import Transformer.Perspective.SphereTupleEnergy
-import Transformer.Normalization.LojasiewiczInnerProduct
+import Transformer.Landscape.Lojasiewicz.LojasiewiczInnerProduct
 
 open Filter
 open scoped Topology
@@ -90,7 +90,7 @@ theorem exists_tendsto_of_hasDerivAt_blockScale (hd : 1 ≤ d) {β a b : ℝ} (h
   have hgrad : ∀ x, gradient (-tupleEnergy hd β) x = -gradient (tupleEnergy (n := n) hd β) x :=
     fun x => by simp only [gradient, fderiv_neg, map_neg]
   have hb : 0 < b := ha.trans_le hab
-  obtain ⟨ystar, -, hlim, hcrit⟩ := Normalization.lojasiewicz_modulated_of_finiteDimensional
+  obtain ⟨ystar, -, hlim, hcrit⟩ := Landscape.Lojasiewicz.lojasiewicz_modulated_of_finiteDimensional
     {x | ∀ i, x.ofLp i ≠ 0} isOpen_setOf_ofLp_ne_zero (-tupleEnergy hd β)
     (analyticOnNhd_tupleEnergy hd β).neg (4 * b / a) (fun _ => a / 2) (fun t => blockScale (c t))
     (fun _ _ => half_pos ha)

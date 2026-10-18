@@ -53,7 +53,7 @@ initial point, including at negative times.
 Source: arXiv:2411.04551v3, §1, `eq: neural.ode.sphere`. -/
 theorem exists_lipschitzWith_ridgeFlow {d : ℕ} (p u : EucSpace d) (b t : ℝ) :
     ∃ L : ℝ≥0, LipschitzWith L (fun x : SSphere d => ridgeFlow p u b x t) := by
-  obtain ⟨K, hK⟩ := GlobalFlow.exists_lipschitzOnWith_closedBall
+  obtain ⟨K, hK⟩ := Landscape.GlobalFlow.exists_lipschitzOnWith_closedBall
     (locallyLipschitz_ridgeGlobalField p u b) 1
   refine ⟨Real.toNNReal (Real.exp ((K : ℝ) * |t|)), ?_⟩
   rw [lipschitzWith_iff_dist_le_mul]

@@ -11,7 +11,7 @@ both.  On the shell `ε < ‖x_i‖² < K` (`blockShell`), `χ(x) = Π_i φ(‖x
 for a bump `φ` of `ℝ` equal to `1` on `[ε, K]` (`blockCutoff`); `χ` is smooth with
 compact support away from the zero vectors (`hasCompactSupport_blockCutoff`,
 `tsupport_blockCutoff_subset`).  A product `χ • φ` is then smooth wherever `φ` is
-smooth near the support of `χ` (`SaddleAvoidance.contDiff_smul_of_tsupport_subset`),
+smooth near the support of `χ` (`Landscape.SaddleAvoidance.contDiff_smul_of_tsupport_subset`),
 and block scalings depend linearly on their scales (`blockScaleCLM`).
 
 Source: arXiv:2312.10794v5, Appendix A, `l:nosaddleconv` (the center-stable manifold
@@ -19,7 +19,7 @@ theorem, applied here on a shell), for `thm: boumal` of §6.
 -/
 
 import Transformer.Perspective.SphereConvergence
-import Transformer.SaddleAvoidance.Cutoff
+import Transformer.Landscape.SaddleAvoidance.Cutoff
 import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
 
 open Filter

@@ -22,7 +22,7 @@ derivative of the gradient (`inner_fderiv_gradient_eucTorusEnergy`, from
 
 import Transformer.Perspective.CircleSAGradient
 import Transformer.Perspective.CircleCritical
-import Transformer.SaddleAvoidance.GradientDescent
+import Transformer.Landscape.SaddleAvoidance.GradientDescent
 import Mathlib.Analysis.InnerProductSpace.Calculus
 
 open scoped BigOperators
@@ -113,7 +113,7 @@ theorem inner_fderiv_gradient_eq_of_hasDerivAt {E : Type*} [NormedAddCommGroup E
   have hf' : f' = fun s => ⟪gradient F (z + s • h), h⟫ := funext fun s => (h1 s).unique (by
     rw [inner_gradient_left]
     exact ((hF.differentiable (by norm_num)) _).hasFDerivAt.comp_hasDerivAt s (hline s))
-  have hG := (((SaddleAvoidance.contDiff_gradient hF).differentiable one_ne_zero) z).hasFDerivAt
+  have hG := (((Landscape.SaddleAvoidance.contDiff_gradient hF).differentiable one_ne_zero) z).hasFDerivAt
   have hc := (hG.comp_hasDerivAt_of_eq 0 (hline 0) (by simp)).inner ℝ (hasDerivAt_const 0 h)
   rw [hf'] at h2
   rw [h2.unique hc]

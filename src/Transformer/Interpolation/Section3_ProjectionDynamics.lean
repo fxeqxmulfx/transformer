@@ -8,7 +8,7 @@ inverse on the sphere. These are actual flow maps of `x' = Proj_x w`.
 -/
 
 import Transformer.Interpolation.Section3_ProjectionFlow
-import Transformer.GlobalFlow.Existence
+import Transformer.Landscape.GlobalFlow.Existence
 import Mathlib.Analysis.Calculus.ContDiff.RCLike
 import Mathlib.Analysis.InnerProductSpace.Calculus
 
@@ -70,7 +70,7 @@ theorem projectionFlow_add (w x : EucSpace d) (hw : ‖w‖ = 1) (hx : ‖x‖ =
     (s t : ℝ) : projectionFlow w s (projectionFlow w t x) = projectionFlow w (s + t) x := by
   have heq : (fun r => projectionFlow w r (projectionFlow w t x)) =
       (fun r => projectionFlow w (r + t) x) := by
-    apply GlobalFlow.eq_of_hasDerivAt (locallyLipschitz_projectionField w)
+    apply Landscape.GlobalFlow.eq_of_hasDerivAt (locallyLipschitz_projectionField w)
     · intro r
       exact hasDerivAt_projectionFlow w _ hw (norm_projectionFlow w x hw hx t) r
     · intro r
@@ -140,7 +140,7 @@ the two stationary points in the proof of `lem: first.quadrant`. -/
   have hz : proj d (-(w : EucSpace d)) (w : EucSpace d) = 0 := by
     simp only [proj, inner_neg_left, real_inner_self_eq_norm_sq, hw, one_pow,
       neg_one_smul, neg_neg, sub_self]
-  have heq := GlobalFlow.eq_of_hasDerivAt (locallyLipschitz_projectionField (w : EucSpace d))
+  have heq := Landscape.GlobalFlow.eq_of_hasDerivAt (locallyLipschitz_projectionField (w : EucSpace d))
     (fun s => hasDerivAt_projectionFlow _ _ hw (mem_sphere_zero_iff_norm.mp
       (antipode d w).2) s)
     (g := fun _ => -(w : EucSpace d))

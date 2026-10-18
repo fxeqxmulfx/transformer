@@ -119,13 +119,14 @@ used by the append-only lookup machine (Percepta, transformer-vm), and
 `Transformer.Precision` proves the limits finite precision puts on attention:
 finite formats blind a head past a finite length, and a sequential sum in `p`
 significant bits is capped at `2^{p+1}` times its increments.
-`Transformer.SaddleAvoidance` proves that gradient descent almost never
+`Transformer.Landscape` holds the landscape framework and everything it rests on.
+Its `SaddleAvoidance` proves that gradient descent almost never
 converges to a strict saddle (arXiv:1710.07406, §5.1; arXiv:1602.04915), with
 a cone estimate in place of the center-stable manifold theorem, and that under
 the Łojasiewicz inequality at the critical points almost every bounded orbit
 converges, to a local minimizer under the strict saddle property; for a
 periodic function with nondegenerate critical points, almost every orbit
-converges to a local minimizer.  `Transformer.PhaseModel` applies this to
+converges to a local minimizer.  Its `PhaseModel` applies this to
 phase energies `Σ_r (1 - cos ⟪m_r, ψ⟫)` with integer rows, such as the
 relations `ψ_x - ψ_y - ψ_{x-y}` of division in a cyclic group: every limit
 point up to periods is critical, and almost every orbit with a nondegenerate
@@ -146,7 +147,6 @@ cross-paper construction with explicit changes to the original models.
 import Transformer.Basic
 import Transformer.Basis
 import Transformer.Wasserstein
-import Transformer.GlobalFlow
 import Transformer.SmoothApprox
 import Transformer.ContinuityEq
 import Transformer.Wiener
@@ -193,5 +193,4 @@ import Transformer.RecurrentGradients
 import Transformer.NoiseScale
 import Transformer.Surge
 import Transformer.Grokking
-import Transformer.SaddleAvoidance
-import Transformer.PhaseModel
+import Transformer.Landscape

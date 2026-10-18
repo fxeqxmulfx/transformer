@@ -17,7 +17,7 @@ is carried by `B̄(0, ‖Y‖)` (`e:bddinx`); and `F` is Lipschitz on every ball
 point and in the measure (`exists_norm_attentionKernel_sub_le`) and
 `W₂(Y_# μ₀, Z_# μ₀) ≤ ‖Y - Z‖` through the coupling `(Y, Z)_# μ₀`
 (`W2_map_le_norm_sub`).  So the ODE has a solution on all of `ℝ`
-(`GlobalFlow.exists_global_of_lipschitzOnWith`), from which
+(`Landscape.GlobalFlow.exists_global_of_lipschitzOnWith`), from which
 `Section6_ContEq` builds the solution of `e:conteq`.
 
 Source: arXiv:2305.05465v6, `c:wellposedtransformers`; the Lagrangian form

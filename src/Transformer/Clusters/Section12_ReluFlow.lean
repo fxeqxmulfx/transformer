@@ -147,7 +147,7 @@ proved existence precedes verification that its truncation is inactive. -/
 theorem exists_reluClock_solution :
     ∃ γ : ℝ → ReluClockState, γ 0 = (0, (-8, 1)) ∧
       ∀ t : ℝ, HasDerivAt γ (reluClockField (γ t)) t := by
-  exact GlobalFlow.exists_global locallyLipschitz_reluClockField
+  exact Landscape.GlobalFlow.exists_global locallyLipschitz_reluClockField
     (C := 12) (by norm_num) norm_reluClockField_le (0, (-8, 1))
 
 end Transformer.Clusters

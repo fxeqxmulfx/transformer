@@ -16,7 +16,7 @@ point of `-𝖤_β` is a global minimizer or a strict saddle
 of `eq:onangles` are the gradient flow of `-𝖤_β` on `EucSpace n` run at speed
 `n` (`angularUSA_eq_gradientFlow`, `angularUSA_gradientFlow`).  `-𝖤_β` is
 invariant under the periods `2π e_k`, which span the space (`span_periods`),
-so `SaddleAvoidance.ae_exists_tendsto_gradientFlow_isMinOn_of_span_eq_top`
+so `Landscape.SaddleAvoidance.ae_exists_tendsto_gradientFlow_isMinOn_of_span_eq_top`
 applies, and the minimizers of `-𝖤_β` are synchronized
 (`synchronized_of_isGlobalMaxTorusEnergy`).
 
@@ -24,15 +24,15 @@ The classical arguments of Appendix A use the Łojasiewicz theorem for
 real-analytic functions (`lojasiewicz1963propriete`): `-𝖤_β` is analytic
 (`analyticAt_neg_eucTorusEnergy`), so it satisfies the Łojasiewicz inequality
 at every point (`exists_isLojasiewiczAt_neg_eucTorusEnergy`, from
-`SaddleAvoidance.exists_isLojasiewiczAt_of_analyticAt`).  At the synchronized
+`Landscape.SaddleAvoidance.exists_isLojasiewiczAt_of_analyticAt`).  At the synchronized
 states, and for two tokens at every critical point, the exponent is `1/2`
 (`isLojasiewiczAt_of_synchronized`, `isLojasiewiczAt_of_isCritical_two`).
 -/
 import Transformer.Perspective.CircleLojasiewicz
 import Transformer.Perspective.CircleSAFlow
 import Transformer.Perspective.StrictSaddle
-import Transformer.SaddleAvoidance.FlowLandscape
-import Transformer.SaddleAvoidance.LocalInequality
+import Transformer.Landscape.SaddleAvoidance.FlowLandscape
+import Transformer.Landscape.SaddleAvoidance.LocalInequality
 import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
 
 open scoped BigOperators Topology
@@ -50,7 +50,7 @@ saddle of `-𝖤_β` (`isStrictSaddle_of_isStrictSaddleTorusEnergy`). -/
 theorem isMinOn_or_isStrictSaddle_neg_eucTorusEnergy {β : ℝ} (hβ : 0 < β) {z : EucSpace n}
     (hz : gradient (fun ψ => -eucTorusEnergy n β ψ) z = 0) :
     IsMinOn (fun ψ => -eucTorusEnergy n β ψ) Set.univ z ∨
-      SaddleAvoidance.IsStrictSaddle (fun ψ => -eucTorusEnergy n β ψ) z := by
+      Landscape.SaddleAvoidance.IsStrictSaddle (fun ψ => -eucTorusEnergy n β ψ) z := by
   have hcrit := (gradient_neg_eucTorusEnergy_eq_zero_iff n hβ.ne' z).1 hz
   by_cases hmax : IsGlobalMaxTorusEnergy n β z.ofLp
   · exact Or.inl (isMinOn_univ_iff.2 fun y => neg_le_neg (hmax y.ofLp))
@@ -61,14 +61,14 @@ theorem isMinOn_or_isStrictSaddle_neg_eucTorusEnergy {β : ℝ} (hβ : 0 < β) {
 `n`**: `θ(t) = Φ^{n t}(θ(0))`.  The curve `s ↦ θ(s/n)` solves
 `ẋ = ∇𝖤_β(x) = -∇(-𝖤_β)(x)`, as `angularUSA_is_gradient_flow` says up to the
 factor `n`, and the gradient of `-𝖤_β` is Lipschitz and bounded
-(`SaddleAvoidance.exists_lipschitzWith_gradient_of_periodic`), so this
+(`Landscape.SaddleAvoidance.exists_lipschitzWith_gradient_of_periodic`), so this
 equation has one solution through each point. -/
 theorem angularUSA_eq_gradientFlow {β : ℝ} (hβ : β ≠ 0) (hn : 0 < n) {θ : ℝ → Angles n}
     (hθ : angularUSA n β θ) (t : ℝ) :
-    WithLp.toLp 2 (θ t) = SaddleAvoidance.gradientFlow (fun ψ => -eucTorusEnergy n β ψ) (n * t)
+    WithLp.toLp 2 (θ t) = Landscape.SaddleAvoidance.gradientFlow (fun ψ => -eucTorusEnergy n β ψ) (n * t)
       (WithLp.toLp 2 (θ 0)) := by
   have hf : ContDiff ℝ 2 fun ψ => -eucTorusEnergy n β ψ := (contDiff_eucTorusEnergy n β).neg
-  obtain ⟨L, hM, -, hL⟩ := SaddleAvoidance.exists_lipschitzWith_gradient_of_periodic hf
+  obtain ⟨L, hM, -, hL⟩ := Landscape.SaddleAvoidance.exists_lipschitzWith_gradient_of_periodic hf
     (span_periods n) (by rintro _ ⟨k, rfl⟩ y; simp only [eucTorusEnergy_add_period])
   have hn' : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.2 hn.ne'
   have hγ : ∀ s, HasDerivAt (fun s => WithLp.toLp 2 (θ (s / n)))
@@ -88,7 +88,7 @@ theorem angularUSA_eq_gradientFlow {β : ℝ} (hβ : β ≠ 0) (hn : 0 < n) {θ 
       Finset.sum_congr rfl fun j _ => hodd j, Finset.sum_neg_distrib]
     simp
     ring
-  have h := (SaddleAvoidance.isFlowField_neg_gradient hL hM).flow_eq hγ 0 (n * t)
+  have h := (Landscape.SaddleAvoidance.isFlowField_neg_gradient hL hM).flow_eq hγ 0 (n * t)
   simp only [zero_div, mul_div_cancel_left₀ _ hn'] at h
   exact h.symm
 
@@ -97,19 +97,19 @@ from every initial angles `θ₀`: its velocity `n ∇𝖤_β` has the coordinat
 `n · (1/n²) Σ_j e^{β cos(θ_j - θ_i)} sin(θ_j - θ_i)`, the right-hand side of
 `eq:onangles`. -/
 theorem angularUSA_gradientFlow {β : ℝ} (hβ : β ≠ 0) (θ₀ : Angles n) :
-    angularUSA n β fun t => (SaddleAvoidance.gradientFlow (fun ψ => -eucTorusEnergy n β ψ)
+    angularUSA n β fun t => (Landscape.SaddleAvoidance.gradientFlow (fun ψ => -eucTorusEnergy n β ψ)
       (n * t) (WithLp.toLp 2 θ₀)).ofLp := by
   intro t i
-  obtain ⟨L, hM, -, hL⟩ := SaddleAvoidance.exists_lipschitzWith_gradient_of_periodic
+  obtain ⟨L, hM, -, hL⟩ := Landscape.SaddleAvoidance.exists_lipschitzWith_gradient_of_periodic
     (contDiff_eucTorusEnergy n β).neg (span_periods n)
     (by rintro _ ⟨k, rfl⟩ y; simp only [eucTorusEnergy_add_period])
   have hn : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.2 (Fin.pos i).ne'
-  set y := SaddleAvoidance.gradientFlow (fun ψ => -eucTorusEnergy n β ψ) (n * t) (WithLp.toLp 2 θ₀)
+  set y := Landscape.SaddleAvoidance.gradientFlow (fun ψ => -eucTorusEnergy n β ψ) (n * t) (WithLp.toLp 2 θ₀)
   have hodd : ∀ j, exp (β * cos (y.ofLp j - y.ofLp i)) * sin (y.ofLp j - y.ofLp i) =
       -(exp (β * cos (y.ofLp i - y.ofLp j)) * sin (y.ofLp i - y.ofLp j)) := fun j => by
     rw [← neg_sub, cos_neg, sin_neg, mul_neg]
   refine ((PiLp.hasFDerivAt_apply 2 _ i).comp_hasDerivAt t
-    ((SaddleAvoidance.hasDerivAt_gradientFlow hL hM (n * t) (WithLp.toLp 2 θ₀)).scomp t
+    ((Landscape.SaddleAvoidance.hasDerivAt_gradientFlow hL hM (n * t) (WithLp.toLp 2 θ₀)).scomp t
       ((hasDerivAt_id t).const_mul (n : ℝ)))).congr_deriv ?_
   rw [PiLp.proj_apply, WithLp.ofLp_smul, Pi.smul_apply, gradient_neg_eucTorusEnergy, neg_neg,
     gradient_eucTorusEnergy_apply n β hβ, Finset.sum_congr rfl fun j _ => hodd j,
@@ -128,11 +128,11 @@ theorem analyticAt_neg_eucTorusEnergy (β : ℝ) (ψ : EucSpace n) :
 
 /-- **`-𝖤_β` satisfies the Łojasiewicz inequality at every point**, with an
 exponent `0 ≤ a < 1`: it is analytic (`analyticAt_neg_eucTorusEnergy`), and
-analytic functions do (`SaddleAvoidance.exists_isLojasiewiczAt_of_analyticAt`,
+analytic functions do (`Landscape.SaddleAvoidance.exists_isLojasiewiczAt_of_analyticAt`,
 Łojasiewicz's theorem). -/
 theorem exists_isLojasiewiczAt_neg_eucTorusEnergy (β : ℝ) (z : EucSpace n) :
-    ∃ a, 0 ≤ a ∧ a < 1 ∧ SaddleAvoidance.IsLojasiewiczAt (fun φ => -eucTorusEnergy n β φ) z a :=
-  SaddleAvoidance.exists_isLojasiewiczAt_of_analyticAt (analyticAt_neg_eucTorusEnergy n β z)
+    ∃ a, 0 ≤ a ∧ a < 1 ∧ Landscape.SaddleAvoidance.IsLojasiewiczAt (fun φ => -eucTorusEnergy n β φ) z a :=
+  Landscape.SaddleAvoidance.exists_isLojasiewiczAt_of_analyticAt (analyticAt_neg_eucTorusEnergy n β z)
 
 /-- **Almost every solution of `eq:onangles` synchronizes**, for every
 `β > 0`: for Lebesgue-almost every initial angle vector `θ₀ ∈ ℝⁿ` there is a
@@ -154,7 +154,7 @@ theorem ae_tendsto_synchronized_of_angularUSA {β : ℝ} (hβ : 0 < β) :
   · refine Eventually.of_forall fun θ₀ => ⟨θ₀, fun i => i.elim0, fun θ _ _ => ?_⟩
     rw [show θ = fun _ => θ₀ from funext fun _ => Subsingleton.elim _ _]
     exact tendsto_const_nhds
-  have hae := SaddleAvoidance.ae_exists_tendsto_gradientFlow_isMinOn_of_span_eq_top volume
+  have hae := Landscape.SaddleAvoidance.ae_exists_tendsto_gradientFlow_isMinOn_of_span_eq_top volume
     Measure.AbsolutelyContinuous.rfl (contDiff_eucTorusEnergy n β).neg (span_periods n)
     (by rintro _ ⟨k, rfl⟩ y; simp only [eucTorusEnergy_add_period])
     (fun z hz => isMinOn_or_isStrictSaddle_neg_eucTorusEnergy n hβ hz) fun z _ =>
@@ -176,7 +176,7 @@ theorem ae_tendsto_synchronized_of_angularUSA {β : ℝ} (hβ : 0 < β) :
 gives a solution of `eq:onangles` from `θ₀ = 0`. -/
 example : (1 : ℝ) ≠ 0 ∧ (0 : ℝ) < 1 ∧ 0 < 2 ∧
     gradient (fun ψ => -eucTorusEnergy 2 1 ψ) 0 = 0 ∧ angularUSA 2 1 fun t =>
-      (SaddleAvoidance.gradientFlow (fun ψ => -eucTorusEnergy 2 1 ψ) (2 * t) (WithLp.toLp 2 0)).ofLp :=
+      (Landscape.SaddleAvoidance.gradientFlow (fun ψ => -eucTorusEnergy 2 1 ψ) (2 * t) (WithLp.toLp 2 0)).ofLp :=
   ⟨one_ne_zero, one_pos, two_pos, (gradient_neg_eucTorusEnergy_eq_zero_iff 2 one_ne_zero 0).2
     (isCriticalTorusEnergy_of_synchronized 2 one_ne_zero fun _ _ => ⟨0, by simp⟩),
     by simpa only [Nat.cast_ofNat] using angularUSA_gradientFlow 2 one_ne_zero 0⟩

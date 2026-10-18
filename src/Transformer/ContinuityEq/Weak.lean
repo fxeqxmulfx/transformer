@@ -18,7 +18,7 @@ arXiv:2305.05465v6, §6, tests the equation against `h ∘ Φ`, with `Φ` the
 flow of `w`, which is only `C¹`.
 -/
 
-import Transformer.GlobalFlow.Variational
+import Transformer.Landscape.GlobalFlow.Variational
 import Transformer.SmoothApprox
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
@@ -70,7 +70,7 @@ theorem weak_of_contDiff_one
     (hR : ∀ t₀, ∃ R, ∀ᶠ t in 𝓝 t₀, μ t (closedBall 0 R)ᶜ = 0)
     (hμ : ∀ g : E → ℝ, ContDiff ℝ (⊤ : ℕ∞) g → HasCompactSupport g →
       Continuous fun t => ∫ x, g x ∂μ t)
-    {L : ℝ≥0} {M : ℝ} (hw : GlobalFlow.IsFlowField w L M) {T : ℝ}
+    {L : ℝ≥0} {M : ℝ} (hw : Landscape.GlobalFlow.IsFlowField w L M) {T : ℝ}
     (hweak : ∀ g : E → ℝ, ContDiff ℝ (⊤ : ℕ∞) g → HasCompactSupport g → ∀ t ∈ Icc 0 T,
       ∫ x, g x ∂μ t = ∫ x, g x ∂μ 0 + ∫ σ in (0 : ℝ)..t, ∫ x, fderiv ℝ g x (w σ x) ∂μ σ)
     {h : E → ℝ} (hh : ContDiff ℝ 1 h) (hc : HasCompactSupport h) {t : ℝ} (ht : t ∈ Icc 0 T) :
@@ -126,7 +126,7 @@ theorem weak_sub_of_contDiff_one
     (hR : ∀ t₀, ∃ R, ∀ᶠ t in 𝓝 t₀, μ t (closedBall 0 R)ᶜ = 0)
     (hμ : ∀ g : E → ℝ, ContDiff ℝ (⊤ : ℕ∞) g → HasCompactSupport g →
       Continuous fun t => ∫ x, g x ∂μ t)
-    {L : ℝ≥0} {M : ℝ} (hw : GlobalFlow.IsFlowField w L M) {T : ℝ}
+    {L : ℝ≥0} {M : ℝ} (hw : Landscape.GlobalFlow.IsFlowField w L M) {T : ℝ}
     (hweak : ∀ g : E → ℝ, ContDiff ℝ (⊤ : ℕ∞) g → HasCompactSupport g → ∀ t ∈ Icc 0 T,
       ∫ x, g x ∂μ t = ∫ x, g x ∂μ 0 + ∫ σ in (0 : ℝ)..t, ∫ x, fderiv ℝ g x (w σ x) ∂μ σ)
     {h : E → ℝ} (hh : ContDiff ℝ 1 h) (hc : HasCompactSupport h) {s t : ℝ} (hs : s ∈ Icc 0 T)
@@ -141,7 +141,7 @@ theorem weak_sub_of_contDiff_one
 `δ_0`, carried by `B̄(0, 0)`, solves the equation for the zero field on `[0, 1]`,
 `0` is a `C¹` test function with compact support, and `δ_{(0, 0)}` is carried
 by `B̄(0, 0)²`. -/
-example : GlobalFlow.IsFlowField (fun (_ : ℝ) (_ : E) => (0 : E)) 0 0 ∧
+example : Landscape.GlobalFlow.IsFlowField (fun (_ : ℝ) (_ : E) => (0 : E)) 0 0 ∧
     Continuous (Function.uncurry fun (_ : ℝ) (_ : E) => (0 : E)) ∧
     Measure.dirac (0 : E) (closedBall 0 0)ᶜ = 0 ∧
     (∀ t₀ : ℝ, ∃ R : ℝ, ∀ᶠ _ in 𝓝 t₀, Measure.dirac (0 : E) (closedBall 0 R)ᶜ = 0) ∧

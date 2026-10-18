@@ -15,13 +15,13 @@ The gradient ascent `eq:onangles` of `𝖤_β` is the gradient descent of
 `-𝖤_β`, the form `SaddleAvoidance` treats.  `-𝖤_β` satisfies the Łojasiewicz
 inequality with exponent `1/2` at a critical point where only the common
 rotations have zero second derivative (`isLojasiewiczAt_neg_eucTorusEnergy`):
-this is `SaddleAvoidance.isLojasiewiczAt_of_invariant` with `W = ℝ𝟙`.  That
+this is `Landscape.SaddleAvoidance.isLojasiewiczAt_of_invariant` with `W = ℝ𝟙`.  That
 covers the synchronized states (`isLojasiewiczAt_of_synchronized`) and, for
 two tokens, every critical point (`isLojasiewiczAt_of_isCritical_two`).
 -/
 
 import Transformer.Perspective.CircleEnergyHessian
-import Transformer.SaddleAvoidance.Invariant
+import Transformer.Landscape.SaddleAvoidance.Invariant
 
 open scoped BigOperators
 open Real
@@ -96,16 +96,16 @@ theorem eq_of_secondDerivTorusEnergy_synchronized {β : ℝ} (hβ : β ≠ 0) {�
 derivative `A` of `∇(-𝖤_β)` kills `v`, then `⟪A v, v⟫ = 0`, so the second
 derivative along `v` is `0` (`inner_fderiv_gradient_eucTorusEnergy`) and `v`
 is a common rotation; on `(ℝ𝟙)ᗮ` that forces `v = 0`, which is what
-`SaddleAvoidance.isLojasiewiczAt_of_invariant` asks. -/
+`Landscape.SaddleAvoidance.isLojasiewiczAt_of_invariant` asks. -/
 theorem isLojasiewiczAt_neg_eucTorusEnergy {β : ℝ} (hβ : β ≠ 0) {θ : Angles n}
     (hθ : IsCriticalTorusEnergy n β θ)
     (hv : ∀ v : Angles n, SecondDerivTorusEnergy n β θ v 0 → ∀ i j, v i = v j) :
-    SaddleAvoidance.IsLojasiewiczAt (fun ψ => -eucTorusEnergy n β ψ) (WithLp.toLp 2 θ) (1 / 2) := by
+    Landscape.SaddleAvoidance.IsLojasiewiczAt (fun ψ => -eucTorusEnergy n β ψ) (WithLp.toLp 2 θ) (1 / 2) := by
   set W := Submodule.span ℝ {WithLp.toLp 2 fun _ : Idx n => (1 : ℝ)}
   have hf : ContDiff ℝ 2 fun ψ => -eucTorusEnergy n β ψ := (contDiff_eucTorusEnergy n β).neg
-  refine SaddleAvoidance.isLojasiewiczAt_of_invariant (W := W) (hf.differentiable (by norm_num))
+  refine Landscape.SaddleAvoidance.isLojasiewiczAt_of_invariant (W := W) (hf.differentiable (by norm_num))
     (fun w hw y => by simp only [eucTorusEnergy_add_mem_span_one n β hw])
-    ((SaddleAvoidance.contDiff_gradient hf).differentiable one_ne_zero _).hasFDerivAt
+    ((Landscape.SaddleAvoidance.contDiff_gradient hf).differentiable one_ne_zero _).hasFDerivAt
     ((gradient_neg_eucTorusEnergy_eq_zero_iff n hβ _).2 hθ) fun v hvW hAv => ?_
   rw [show gradient (fun ψ => -eucTorusEnergy n β ψ) = -gradient (eucTorusEnergy n β) from
     funext (gradient_neg_eucTorusEnergy n β), fderiv_neg, neg_apply, neg_eq_zero] at hAv
@@ -129,7 +129,7 @@ rotations have zero second derivative
 Łojasiewicz inequality with exponent `1/2`. -/
 theorem isLojasiewiczAt_of_synchronized {β : ℝ} (hβ : β ≠ 0) {θ : Angles n}
     (hθ : ∀ i j, ∃ k : ℤ, θ i - θ j = k * (2 * π)) :
-    SaddleAvoidance.IsLojasiewiczAt (fun ψ => -eucTorusEnergy n β ψ) (WithLp.toLp 2 θ) (1 / 2) :=
+    Landscape.SaddleAvoidance.IsLojasiewiczAt (fun ψ => -eucTorusEnergy n β ψ) (WithLp.toLp 2 θ) (1 / 2) :=
   isLojasiewiczAt_neg_eucTorusEnergy n hβ (isCriticalTorusEnergy_of_synchronized n hβ hθ)
     fun _ hv => eq_of_secondDerivTorusEnergy_synchronized n hβ hθ hv
 
@@ -139,7 +139,7 @@ critical point.**  A critical `θ` has `sin(θ_0 - θ_1) = 0`, so
 derivative `-(1/4)(v_0 - v_1)² g_β(θ_0 - θ_1)` vanishes only if `v_0 = v_1`. -/
 theorem isLojasiewiczAt_of_isCritical_two {β : ℝ} (hβ : β ≠ 0) {θ : Angles 2}
     (hθ : IsCriticalTorusEnergy 2 β θ) :
-    SaddleAvoidance.IsLojasiewiczAt (fun ψ => -eucTorusEnergy 2 β ψ) (WithLp.toLp 2 θ) (1 / 2) := by
+    Landscape.SaddleAvoidance.IsLojasiewiczAt (fun ψ => -eucTorusEnergy 2 β ψ) (WithLp.toLp 2 θ) (1 / 2) := by
   have hs : sin (θ 0 - θ 1) = 0 := by
     have h := (hasDerivAt_torusEnergy 2 β hβ θ 0).unique (hθ 0)
     simp [Fin.sum_univ_two, exp_ne_zero] at h

@@ -14,13 +14,13 @@ with `c_i = Z_i⁻¹` (`softmaxNorm`) or `c_i = n⁻¹`.  They are weighted flow
 (`Perspective.IsWeightedFlow`) with weights `a_ij = c_i e^{β⟨Q x_i, K x_j⟩}`,
 which on the sphere lie in `[e^{-2L}/n, e^{2L}/n]`, `L = |β| ‖Q‖ ‖K‖`
 (`attnExp_bounds`, `softmaxNorm_bounds`).  Since the field is smooth, a
-solution through a given point is unique (`GlobalFlow.eq_of_hasDerivAt`), and
+solution through a given point is unique (`Landscape.GlobalFlow.eq_of_hasDerivAt`), and
 the exponential convergence of one solution
 (`exists_expLimit_of_weightedFlow`) is that of every solution:
 `expLimit_of_attnField`.
 -/
 
-import Transformer.GlobalFlow.Existence
+import Transformer.Landscape.GlobalFlow.Existence
 import Transformer.Perspective.ConeLimit
 import Mathlib.Analysis.Calculus.ContDiff.RCLike
 import Mathlib.Analysis.Calculus.Deriv.Prod
@@ -187,7 +187,7 @@ theorem expLimit_of_attnField {dyn : (ℝ → SphereTuple d n) → Prop}
     obtain ⟨xs, C, lam, hC, hlam, hb⟩ := exists_expLimit_of_weightedFlow hflow hm
       (fun t i j => hcb _ (norm_coe_tuple (X t)) i j) hn w (by rw [hX0]; exact hX₀)
     refine ⟨xs, C, lam, hC, hlam, fun Y hY0 hY i t ht => ?_⟩
-    have huniq := GlobalFlow.eq_of_hasDerivAt (locallyLipschitz_attnField hc)
+    have huniq := Landscape.GlobalFlow.eq_of_hasDerivAt (locallyLipschitz_attnField hc)
       (f := fun s j => (Y s j : EucSpace d)) (g := fun s j => (X s j : EucSpace d))
       (fun s => hasDerivAt_pi.2 fun j => hdyn Y hY s j)
       (fun s => hasDerivAt_pi.2 fun j => hdyn X hX s j) (by simp only [hY0, hX0])

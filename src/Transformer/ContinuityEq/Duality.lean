@@ -27,7 +27,7 @@ open scoped NNReal
 namespace Transformer
 namespace ContinuityEq
 
-open SmoothApprox GlobalFlow
+open SmoothApprox Landscape.GlobalFlow
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
   [MeasurableSpace E] [BorelSpace E]

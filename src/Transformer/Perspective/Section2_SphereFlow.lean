@@ -17,7 +17,7 @@ source's positive-temperature case is included without changing its field.
 -/
 
 import Transformer.Perspective.Section2_ExtendedField
-import Transformer.GlobalFlow.Existence
+import Transformer.Landscape.GlobalFlow.Existence
 
 open scoped BigOperators
 open Real Set Filter Topology
@@ -102,7 +102,7 @@ theorem exists_SA (β : ℝ) (X₀ : SphereTuple d n) :
     ∃ X : ℝ → SphereTuple d n, X 0 = X₀ ∧ SA d n β X := by
   have hF : LocallyLipschitz (saGlobalField (d := d) (n := n) β) :=
     ((contDiff_saGlobalField β).of_le (show (1 : WithTop ℕ∞) ≤ (⊤ : ℕ∞) by simp)).locallyLipschitz
-  obtain ⟨Y, hY0, hY⟩ := GlobalFlow.exists_global hF (C := (n : ℝ) + 1)
+  obtain ⟨Y, hY0, hY⟩ := Landscape.GlobalFlow.exists_global hF (C := (n : ℝ) + 1)
     (by positivity) (norm_saGlobalField_le β) (fun i => (X₀ i : EucSpace d))
   have hunit (t : ℝ) (i : Idx n) : ‖Y t i‖ = 1 :=
     norm_eq_one_of_saGlobalField β Y hY
@@ -131,7 +131,7 @@ theorem SA_unique (β : ℝ) (X Y : ℝ → SphereTuple d n)
       fun j => mem_sphere_zero_iff_norm.mp (W t j).2
     simpa only [saGlobalField, saExtensionScale_eq_one _ hunit, one_smul] using
       (SA_iff d n β W).mp hW t i
-  have heq := GlobalFlow.eq_of_hasDerivAt hF (hpath X hX) (hpath Y hY)
+  have heq := Landscape.GlobalFlow.eq_of_hasDerivAt hF (hpath X hX) (hpath Y hY)
     (by rw [h0])
   funext t i
   exact Subtype.ext (congrFun (congrFun heq t) i)

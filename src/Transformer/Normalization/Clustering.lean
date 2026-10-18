@@ -25,7 +25,7 @@ three statements at `d = 1`, `n = 2`.
 The gradient-flow identification the proof starts from is in
 `Normalization.Convergence`, the velocity lower bound behind the corollary in
 `Normalization.Radial`, and the convergence machinery of the proof in
-`Normalization.Lojasiewicz`.
+`Landscape.Lojasiewicz.Modulated`.
 -/
 
 import Transformer.Basic

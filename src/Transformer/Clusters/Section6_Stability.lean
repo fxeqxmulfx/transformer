@@ -29,7 +29,7 @@ open Set Metric Filter Topology MeasureTheory
 namespace Transformer
 namespace Clusters
 
-open GlobalFlow Wasserstein
+open Landscape.GlobalFlow Wasserstein
 
 variable {d : ℕ}
 

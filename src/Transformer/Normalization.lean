@@ -2,6 +2,9 @@
 Formalization of:
   Karagodin, Polyanskiy, Rigollet,
   "Normalization in Attention Dynamics", arXiv:2510.22026v2.
+
+Lemma `lem: loj` of Appendix D.1 and the analytic geometry behind it hold for any
+analytic energy; they live in `Transformer.Landscape.Lojasiewicz`.
 -/
 
 import Transformer.Normalization.Basic
@@ -14,8 +17,9 @@ import Transformer.Normalization.Section3_NGPTZeroStep
 import Transformer.Normalization.ClusterSpeed
 import Transformer.Normalization.Convergence
 import Transformer.Normalization.Line
-import Transformer.Normalization.Lojasiewicz
-import Transformer.Normalization.LojasiewiczInnerProduct
+import Transformer.Landscape.Lojasiewicz.Modulated
+import Transformer.Landscape.Lojasiewicz.LojasiewiczInnerProduct
+import Transformer.Normalization.TimeChange
 import Transformer.Normalization.Radial
 import Transformer.Normalization.Rates
 import Transformer.Normalization.Symmetric

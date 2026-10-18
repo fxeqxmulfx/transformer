@@ -137,7 +137,7 @@ example : ∃ (F : EucSpace 2 → EucSpace 2) (K : ℝ≥0) (Φ : SSphere 2 → 
   let F (x : EucSpace 2) := proj 2 x a
   let Φ := ridgeFlow a 0 1
   have hF : ContDiff ℝ 1 F := contDiff_const.sub ((contDiff_id.inner ℝ contDiff_const).smul contDiff_id)
-  obtain ⟨K, hK⟩ := GlobalFlow.exists_lipschitzOnWith_closedBall hF.locallyLipschitz 1
+  obtain ⟨K, hK⟩ := Landscape.GlobalFlow.exists_lipschitzOnWith_closedBall hF.locallyLipschitz 1
   have hsphere : Sphere 2 ⊆ Metric.closedBall 0 1 := fun x hx =>
     mem_closedBall_zero_iff.mpr (mem_sphere_zero_iff_norm.mp hx).le
   refine ⟨F, K, Φ, hF.continuous, hK.mono hsphere, ?_, ?_, ridgeFlow_zero _ _ _, zero_le_one⟩

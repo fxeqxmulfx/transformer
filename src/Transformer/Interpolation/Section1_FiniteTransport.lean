@@ -151,7 +151,7 @@ example : ∃ (θ : TimeParams 2) (F : EucSpace 2 → EucSpace 2) (K : ℝ≥0)
   let f (x : SSphere 2) := dist x (basePoint 1)
   let μ := ridgeLaw a 0 1 (Perspective.diracProb 2 z)
   have hF : ContDiff ℝ 1 F := contDiff_const.sub ((contDiff_id.inner ℝ contDiff_const).smul contDiff_id)
-  obtain ⟨K, hK⟩ := GlobalFlow.exists_lipschitzOnWith_closedBall hF.locallyLipschitz 1
+  obtain ⟨K, hK⟩ := Landscape.GlobalFlow.exists_lipschitzOnWith_closedBall hF.locallyLipschitz 1
   have hsphere : Sphere 2 ⊆ Metric.closedBall 0 1 := fun x hx =>
     mem_closedBall_zero_iff.mpr (mem_sphere_zero_iff_norm.mp hx).le
   have hY (i : Fin 2) (t : ℝ) : HasDerivAt (fun s => (Y i s : EucSpace 2)) (F (Y i t)) t := by

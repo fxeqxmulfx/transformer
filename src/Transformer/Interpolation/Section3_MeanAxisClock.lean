@@ -14,7 +14,7 @@ the source's reversal of the attention phase.
 -/
 
 import Transformer.Interpolation.Section3_MeanAxisClockSpeed
-import Transformer.GlobalFlow.TimeDependent
+import Transformer.Landscape.GlobalFlow.TimeDependent
 
 open Real MeasureTheory Set
 open scoped Topology NNReal
@@ -40,7 +40,7 @@ theorem lipschitzWith_meanAxis_clock_field (w : SSphere d) (κ : ℝ) (ν : Pers
 probability law. Auxiliary for arXiv:2411.04551v3, §3.2, Step 1. -/
 theorem exists_meanAxisClock (w : SSphere d) (κ : ℝ) (ν : Perspective.ProbSphere d) :
     ∃ q : ℝ → ℝ, q 0 = 0 ∧ ∀ t, HasDerivAt q (κ * meanAxisClockSpeed w ν (q t)) t := by
-  apply GlobalFlow.exists_timeDependent_global (fun _ q => κ * meanAxisClockSpeed w ν q)
+  apply Landscape.GlobalFlow.exists_timeDependent_global (fun _ q => κ * meanAxisClockSpeed w ν q)
     ‖κ‖₊ |κ| (abs_nonneg κ) (fun _ => lipschitzWith_meanAxis_clock_field w κ ν)
     (fun _ => continuous_const) ?_ 0
   intro t q
@@ -68,7 +68,7 @@ Auxiliary for arXiv:2411.04551v3, §3.2, flow reversal. -/
 theorem meanAxisClock_eq_of_solution (w : SSphere d) (κ : ℝ) (ν : Perspective.ProbSphere d)
     (q : ℝ → ℝ) (h0 : q 0 = 0) (hq : ∀ t, HasDerivAt q (κ * meanAxisClockSpeed w ν (q t)) t) :
     meanAxisClock w κ ν = q :=
-  GlobalFlow.timeDependent_unique (fun _ q => κ * meanAxisClockSpeed w ν q) ‖κ‖₊
+  Landscape.GlobalFlow.timeDependent_unique (fun _ q => κ * meanAxisClockSpeed w ν q) ‖κ‖₊
     (fun _ => lipschitzWith_meanAxis_clock_field w κ ν) _ q (hasDerivAt_meanAxisClock w κ ν)
     hq ((meanAxisClock_zero w κ ν).trans h0.symm)
 

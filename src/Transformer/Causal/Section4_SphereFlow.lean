@@ -55,7 +55,7 @@ Source: arXiv:2411.04990v2, §2, `eqn:csa`, and §4, the global flow used in `th
 The actual spherical constraint is a proved invariant of the ambient construction. -/
 theorem exists_CSA (β : ℝ) (Q K V : ParamMatrix d) (X₀ : SphereTuple d n) :
     ∃ X : ℝ → SphereTuple d n, X 0 = X₀ ∧ CSA d n β Q K V X := by
-  obtain ⟨Y, hY0, hY⟩ := GlobalFlow.exists_global (locallyLipschitz_csaGlobalField β Q K V)
+  obtain ⟨Y, hY0, hY⟩ := Landscape.GlobalFlow.exists_global (locallyLipschitz_csaGlobalField β Q K V)
     (C := ((n : ℝ) + 1) * ‖V‖) (by positivity) (norm_csaGlobalField_le β Q K V)
     (fun i => (X₀ i : EucSpace d))
   have hu (t : ℝ) (i : Idx n) : ‖Y t i‖ = 1 :=
@@ -80,7 +80,7 @@ theorem CSA_unique (β : ℝ) (Q K V : ParamMatrix d) (X Y : ℝ → SphereTuple
     rw [csaGlobalField_eq_of_unit β Q K V _
       (fun j => mem_sphere_zero_iff_norm.mp (W t j).2)]
     exact hasDerivAt_pi.mpr ((CSA_iff_csaAmbientField β Q K V W).mp hW t)
-  have he := GlobalFlow.eq_of_hasDerivAt (locallyLipschitz_csaGlobalField β Q K V)
+  have he := Landscape.GlobalFlow.eq_of_hasDerivAt (locallyLipschitz_csaGlobalField β Q K V)
     (hpath X hX) (hpath Y hY) (by rw [h0])
   funext t i
   exact Subtype.ext (congrFun (congrFun he t) i)

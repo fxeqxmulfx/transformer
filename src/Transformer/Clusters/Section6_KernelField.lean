@@ -12,7 +12,7 @@ are continuous in `(t, x)` (`continuous_attentionKernel_curve`,
 `∫ e^{⟨Qx, Ky⟩} dμ_t` is positive.  When all the measures are carried by one
 ball `B̄(0, R)`, `w` is moreover `2 ‖QᵀK‖ ‖V‖ R²`-Lipschitz in `x` by
 `e:lipinx` and bounded by `‖V‖ R` by `e:bddinx`: it is a
-`GlobalFlow.IsFlowField` (`isFlowField_attentionKernel`), whose flow
+`Landscape.GlobalFlow.IsFlowField` (`isFlowField_attentionKernel`), whose flow
 transports the solutions of `e:conteq`.  With `e:lipinmu`, `𝒳[μ](x)` is
 jointly Lipschitz in `x` and in `μ` for the distance `W₂`
 (`exists_norm_attentionKernel_sub_le`), the estimate behind both the
@@ -24,7 +24,7 @@ proof of `c:wellposedtransformers`.
 
 import Transformer.Clusters.Section6_KernelDeriv
 import Transformer.Clusters.Section6_KernelLip
-import Transformer.GlobalFlow.Flow
+import Transformer.Landscape.GlobalFlow.Flow
 import Transformer.SmoothApprox
 
 open Set Metric Filter Topology MeasureTheory
@@ -33,7 +33,7 @@ open scoped NNReal
 namespace Transformer
 namespace Clusters
 
-open GlobalFlow SmoothApprox
+open Landscape.GlobalFlow SmoothApprox
 
 variable {d : ℕ}
 

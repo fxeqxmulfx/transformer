@@ -2,7 +2,7 @@
 # The linear continuity equation
 
 A field `w : ℝ → E → E` on a finite-dimensional space, continuous, bounded
-and uniformly Lipschitz in space (`GlobalFlow.IsFlowField`), transports
+and uniformly Lipschitz in space (`Landscape.GlobalFlow.IsFlowField`), transports
 measures by `∂_t μ + div(w μ) = 0`.
 
 * `ContinuityEq/Weak.lean` extends the weak formulation from smooth test

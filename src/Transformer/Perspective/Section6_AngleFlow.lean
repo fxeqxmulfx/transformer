@@ -5,11 +5,11 @@ Auxiliary to arXiv:2312.10794v5, *A mathematical perspective on Transformers*,
 `thm: orthogonal` and `eq: ybeta`.
 
 The scalar drift is smooth and vanishes at `-1/(n-1)` and `1`. The interval
-between those equilibria contains zero. `GlobalFlow.exists_global_Icc` gives
+between those equilibria contains zero. `Landscape.GlobalFlow.exists_global_Icc` gives
 a genuine solution for every real time, with no assumed ODE solution.
 -/
 
-import Transformer.GlobalFlow.Interval
+import Transformer.Landscape.GlobalFlow.Interval
 import Mathlib.Analysis.Calculus.ContDiff.RCLike
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
@@ -116,7 +116,7 @@ theorem exists_saAngle (n : ℕ) (β : ℝ) (hn : 2 ≤ n) :
       γ t ∈ Icc (-(n - 1 : ℝ)⁻¹) 1 := by
   have hnreal : (2 : ℝ) ≤ n := by exact_mod_cast hn
   have hn' : (0 : ℝ) < n - 1 := by linarith
-  exact Transformer.GlobalFlow.exists_global_Icc
+  exact Transformer.Landscape.GlobalFlow.exists_global_Icc
     (contDiff_saAngleDrift n β hn).locallyLipschitz
     (saAngleDrift_lower n β hn) (saAngleDrift_one n β)
     ⟨neg_nonpos.mpr (inv_nonneg.mpr hn'.le), zero_le_one⟩

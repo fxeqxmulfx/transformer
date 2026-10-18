@@ -27,7 +27,7 @@ theorem exists_ridgeTrajectory {d : ℕ} (p u : EucSpace d) (b : ℝ) (x₀ : SS
     ∃ Y : ℝ → SSphere d, Y 0 = x₀ ∧ ∀ t : ℝ,
       HasDerivAt (fun s => (Y s : EucSpace d))
         (max (b - inner ℝ (Y t : EucSpace d) u) 0 • proj d (Y t) p) t := by
-  obtain ⟨Y, hY0, hY⟩ := GlobalFlow.exists_global (locallyLipschitz_ridgeGlobalField p u b)
+  obtain ⟨Y, hY0, hY⟩ := Landscape.GlobalFlow.exists_global (locallyLipschitz_ridgeGlobalField p u b)
     (C := 4 * (|b| + ‖u‖) * ‖p‖) (by positivity) (norm_ridgeGlobalField_le p u b)
     (x₀ : EucSpace d)
   have hunit (t : ℝ) : ‖Y t‖ = 1 := norm_eq_one_of_ridgeGlobalField p u b Y hY
@@ -46,7 +46,7 @@ theorem ridgeTrajectory_unique {d : ℕ} (p u : EucSpace d) (b : ℝ) (X Y : ℝ
     (hY : ∀ t : ℝ, HasDerivAt (fun s => (Y s : EucSpace d))
       (max (b - inner ℝ (Y t : EucSpace d) u) 0 • proj d (Y t) p) t)
     (h0 : X 0 = Y 0) : X = Y := by
-  have heq := GlobalFlow.eq_of_hasDerivAt (locallyLipschitz_ridgeGlobalField p u b)
+  have heq := Landscape.GlobalFlow.eq_of_hasDerivAt (locallyLipschitz_ridgeGlobalField p u b)
     (f := fun s => (X s : EucSpace d)) (g := fun s => (Y s : EucSpace d))
     (fun t => by
       rw [ridgeGlobalField_eq_of_unit _ _ _ _ (mem_sphere_zero_iff_norm.mp (X t).2)]

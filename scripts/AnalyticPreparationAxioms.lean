@@ -11,78 +11,78 @@ proofs are checked transitively. This audit
 supplements statement and definition inspection and the full-tree audit.
 -/
 
-import Transformer.Normalization.EnergyLevelPreparation
-import Transformer.Normalization.QuadraticCurveLifting
-import Transformer.Normalization.AnalyticPlaneCurveSelection
-import Transformer.Normalization.GlobalMinimumLiftingExamples
-import Transformer.Normalization.AnalyticFiberConstraints
-import Transformer.Normalization.AnalyticFiberMinimaReduction
-import Transformer.Normalization.AnalyticFiberValueRelation
-import Transformer.Normalization.AnalyticFiberMinimumQuery
-import Transformer.Normalization.AnalyticBoxMinimumQuery
-import Transformer.Normalization.AnalyticAtlasQueryExamples
-import Transformer.Normalization.CompactBallGradientQueries
-import Transformer.RealAnalyticGerms
-import Transformer.Sturm
+import Transformer.Landscape.Lojasiewicz.EnergyLevelPreparation
+import Transformer.Landscape.Lojasiewicz.QuadraticCurveLifting
+import Transformer.Landscape.Lojasiewicz.AnalyticPlaneCurveSelection
+import Transformer.Landscape.Lojasiewicz.GlobalMinimumLiftingExamples
+import Transformer.Landscape.Lojasiewicz.AnalyticFiberConstraints
+import Transformer.Landscape.Lojasiewicz.AnalyticFiberMinimaReduction
+import Transformer.Landscape.Lojasiewicz.AnalyticFiberValueRelation
+import Transformer.Landscape.Lojasiewicz.AnalyticFiberMinimumQuery
+import Transformer.Landscape.Lojasiewicz.AnalyticBoxMinimumQuery
+import Transformer.Landscape.Lojasiewicz.AnalyticAtlasQueryExamples
+import Transformer.Landscape.Lojasiewicz.CompactBallGradientQueries
+import Transformer.Landscape.RealAnalyticGerms
+import Transformer.Landscape.Sturm
 import Lean.Util.FoldConsts
 
 open Lean Elab Command
 
-#print axioms Transformer.Normalization.analytic_implicit_branch
-#print axioms Transformer.Normalization.directionCoordinates_axis
-#print axioms Transformer.Normalization.exists_regular_energy_coordinates
-#print axioms Transformer.Normalization.exists_weierstrass_energy_coordinates
-#print axioms Transformer.Normalization.analytic_energy_level_fibers_finite
-#print axioms Transformer.Normalization.exists_finite_fiber_energy_coordinates
-#print axioms Transformer.Normalization.analytic_square_root_after_ramification
-#print axioms Transformer.Normalization.analytic_quadratic_root_branches
-#print axioms Transformer.Normalization.analytic_newton_coefficient_scaling
-#print axioms Transformer.Normalization.centered_polynomial_root_multiplicity_lt
-#print axioms Transformer.Normalization.analytic_polynomial_preparation_at_root
-#print axioms Transformer.Normalization.analytic_ramified_polynomial_root
-#print axioms Transformer.Normalization.analytic_ramified_polynomial_branches
-#print axioms Transformer.Normalization.analytic_root_with_sign_constraints
-#print axioms Transformer.Normalization.analytic_equation_curve_lifting
-#print axioms Transformer.Normalization.analytic_zero_axis_isolated
-#print axioms Transformer.Normalization.prepared_plane_curve_selection
-#print axioms Transformer.Normalization.analytic_plane_level_curve_selection
-#print axioms Transformer.Normalization.analytic_finite_minimum_branch
-#print axioms Transformer.Normalization.analytic_polynomial_fiber_minimum
-#print axioms Transformer.Normalization.exists_prepared_analytic_slice
-#print axioms Transformer.Normalization.analytic_fiber_minimum_lifting
-#print axioms Transformer.Normalization.exists_energy_gradient_minimum_lifting_coordinates
-#print axioms Transformer.Normalization.analytic_global_gradient_minimum_lifting
-#print axioms Transformer.AnalyticPreparation.exists_isWeierstrassPreparation
-#print axioms Transformer.AnalyticPreparation.prepared_zero_fibers_finite
-#print axioms Transformer.AnalyticPreparation.exists_analyticWeierstrassDivision
-#print axioms Transformer.AnalyticPreparation.analyticWeierstrassDivision_unique
-#print axioms Transformer.RealAnalyticGerms.analyticGerm_isNoetherian_core
-#print axioms Transformer.RealAnalyticGerms.analyticGerm_finite_equations
-#print axioms Transformer.RealAnalyticGerms.analyticGerm_finite_parameterized_equations
-#print axioms Transformer.RealAnalyticGerms.preparedQuotientRemainderEquiv
-#print axioms Transformer.RealAnalyticGerms.preparedQuotient_moduleFinite
-#print axioms Transformer.RealAnalyticGerms.prepared_analytic_germ_integral_relation
-#print axioms Transformer.RealAnalyticGerms.prepared_analytic_germ_relation_degree
-#print axioms Transformer.RealAnalyticGerms.monic_analytic_germ_relation_representative
-#print axioms Transformer.Normalization.analytic_fiber_sign_conditions_polynomial
-#print axioms Transformer.Normalization.analytic_fiber_minima_polynomial
-#print axioms Transformer.Normalization.analytic_prepared_fiber_value_relation
-#print axioms Transformer.Sturm.IsSturmChain.sturm_Ioc
-#print axioms Transformer.Sturm.signedRemainderChain_isSturm
-#print axioms Transformer.Sturm.squarefreePart_real_roots
-#print axioms Transformer.Sturm.signedRemainderChain_query_Ioc
-#print axioms Transformer.Sturm.realRootQuery_eq
-#print axioms Transformer.Sturm.exists_root_with_signs_iff
-#print axioms Transformer.Sturm.polynomial_root_minimum_iff
-#print axioms Transformer.Normalization.analytic_fiber_minima_arithmetic
-#print axioms Transformer.Normalization.analytic_box_minima_arithmetic
-#print axioms Transformer.Normalization.analytic_atlas_lower_bounds_arithmetic
-#print axioms Transformer.Normalization.analytic_atlas_gradient_minima_arithmetic
-#print axioms Transformer.Normalization.exists_ball_energy_query_preparation
-#print axioms Transformer.Normalization.finite_cover_near_energy_level
-#print axioms Transformer.Normalization.analytic_compact_ball_lower_bounds_arithmetic
-#print axioms Transformer.Normalization.analytic_compact_ball_gradient_minima_arithmetic
-#print axioms Transformer.Sturm.polynomial_root_lower_bound_iff
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_implicit_branch
+#print axioms Transformer.Landscape.Lojasiewicz.directionCoordinates_axis
+#print axioms Transformer.Landscape.Lojasiewicz.exists_regular_energy_coordinates
+#print axioms Transformer.Landscape.Lojasiewicz.exists_weierstrass_energy_coordinates
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_energy_level_fibers_finite
+#print axioms Transformer.Landscape.Lojasiewicz.exists_finite_fiber_energy_coordinates
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_square_root_after_ramification
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_quadratic_root_branches
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_newton_coefficient_scaling
+#print axioms Transformer.Landscape.Lojasiewicz.centered_polynomial_root_multiplicity_lt
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_polynomial_preparation_at_root
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_ramified_polynomial_root
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_ramified_polynomial_branches
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_root_with_sign_constraints
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_equation_curve_lifting
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_zero_axis_isolated
+#print axioms Transformer.Landscape.Lojasiewicz.prepared_plane_curve_selection
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_plane_level_curve_selection
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_finite_minimum_branch
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_polynomial_fiber_minimum
+#print axioms Transformer.Landscape.Lojasiewicz.exists_prepared_analytic_slice
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_fiber_minimum_lifting
+#print axioms Transformer.Landscape.Lojasiewicz.exists_energy_gradient_minimum_lifting_coordinates
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_global_gradient_minimum_lifting
+#print axioms Transformer.Landscape.AnalyticPreparation.exists_isWeierstrassPreparation
+#print axioms Transformer.Landscape.AnalyticPreparation.prepared_zero_fibers_finite
+#print axioms Transformer.Landscape.AnalyticPreparation.exists_analyticWeierstrassDivision
+#print axioms Transformer.Landscape.AnalyticPreparation.analyticWeierstrassDivision_unique
+#print axioms Transformer.Landscape.RealAnalyticGerms.analyticGerm_isNoetherian_core
+#print axioms Transformer.Landscape.RealAnalyticGerms.analyticGerm_finite_equations
+#print axioms Transformer.Landscape.RealAnalyticGerms.analyticGerm_finite_parameterized_equations
+#print axioms Transformer.Landscape.RealAnalyticGerms.preparedQuotientRemainderEquiv
+#print axioms Transformer.Landscape.RealAnalyticGerms.preparedQuotient_moduleFinite
+#print axioms Transformer.Landscape.RealAnalyticGerms.prepared_analytic_germ_integral_relation
+#print axioms Transformer.Landscape.RealAnalyticGerms.prepared_analytic_germ_relation_degree
+#print axioms Transformer.Landscape.RealAnalyticGerms.monic_analytic_germ_relation_representative
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_fiber_sign_conditions_polynomial
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_fiber_minima_polynomial
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_prepared_fiber_value_relation
+#print axioms Transformer.Landscape.Sturm.IsSturmChain.sturm_Ioc
+#print axioms Transformer.Landscape.Sturm.signedRemainderChain_isSturm
+#print axioms Transformer.Landscape.Sturm.squarefreePart_real_roots
+#print axioms Transformer.Landscape.Sturm.signedRemainderChain_query_Ioc
+#print axioms Transformer.Landscape.Sturm.realRootQuery_eq
+#print axioms Transformer.Landscape.Sturm.exists_root_with_signs_iff
+#print axioms Transformer.Landscape.Sturm.polynomial_root_minimum_iff
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_fiber_minima_arithmetic
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_box_minima_arithmetic
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_atlas_lower_bounds_arithmetic
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_atlas_gradient_minima_arithmetic
+#print axioms Transformer.Landscape.Lojasiewicz.exists_ball_energy_query_preparation
+#print axioms Transformer.Landscape.Lojasiewicz.finite_cover_near_energy_level
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_compact_ball_lower_bounds_arithmetic
+#print axioms Transformer.Landscape.Lojasiewicz.analytic_compact_ball_gradient_minima_arithmetic
+#print axioms Transformer.Landscape.Sturm.polynomial_root_lower_bound_iff
 #print axioms Algebra.aeval_self_charpoly_lmul
 #print axioms OpenPartialHomeomorph.analyticAt_symm'
 #print axioms analyticAt_log
@@ -104,9 +104,9 @@ run_cmd do
   let standard := [``propext, ``Classical.choice, ``Quot.sound]
   let mut audited : Nat := 0
   for (name, ci) in env.constants.toList do
-    if !((`Transformer.AnalyticPreparation).isPrefixOf name ||
-        (`Transformer.RealAnalyticGerms).isPrefixOf name ||
-        (`Transformer.Sturm).isPrefixOf name) || name.isInternal then continue
+    if !((`Transformer.Landscape.AnalyticPreparation).isPrefixOf name ||
+        (`Transformer.Landscape.RealAnalyticGerms).isPrefixOf name ||
+        (`Transformer.Landscape.Sturm).isPrefixOf name) || name.isInternal then continue
     let axioms ← liftCoreM (collectAxioms name)
     for ax in axioms do
       if !standard.contains ax then throwError "Unaccepted axiom in {name}: {ax}"
@@ -116,25 +116,25 @@ run_cmd do
 
 run_cmd do
   let mut pending : Array Name := #[
-    ``Transformer.AnalyticPreparation.exists_isWeierstrassPreparation,
-    ``Transformer.AnalyticPreparation.exists_analyticWeierstrassDivision,
-    ``Transformer.AnalyticPreparation.analyticWeierstrassDivision_unique,
-    ``Transformer.RealAnalyticGerms.analyticGerm_isNoetherian_core,
-    ``Transformer.RealAnalyticGerms.analyticGerm_finite_parameterized_equations,
-    ``Transformer.Normalization.analytic_fiber_sign_conditions_polynomial,
-    ``Transformer.Normalization.analytic_fiber_minima_polynomial,
-    ``Transformer.Normalization.analytic_fiber_minima_arithmetic,
-    ``Transformer.Normalization.analytic_box_minima_arithmetic,
-    ``Transformer.Normalization.analytic_atlas_gradient_minima_arithmetic,
-    ``Transformer.Normalization.analytic_compact_ball_gradient_minima_arithmetic,
-    ``Transformer.Sturm.IsSturmChain.sturm_Ioc,
-    ``Transformer.Sturm.realRootQuery_eq,
-    ``Transformer.Sturm.exists_root_with_signs_iff,
-    ``Transformer.Sturm.polynomial_root_minimum_iff,
-    ``Transformer.Normalization.analytic_prepared_fiber_value_relation,
-    ``Transformer.Normalization.analytic_plane_level_curve_selection,
-    ``Transformer.Normalization.analytic_global_gradient_minimum_lifting,
-    ``Transformer.Normalization.exists_energy_gradient_minimum_lifting_coordinates]
+    ``Transformer.Landscape.AnalyticPreparation.exists_isWeierstrassPreparation,
+    ``Transformer.Landscape.AnalyticPreparation.exists_analyticWeierstrassDivision,
+    ``Transformer.Landscape.AnalyticPreparation.analyticWeierstrassDivision_unique,
+    ``Transformer.Landscape.RealAnalyticGerms.analyticGerm_isNoetherian_core,
+    ``Transformer.Landscape.RealAnalyticGerms.analyticGerm_finite_parameterized_equations,
+    ``Transformer.Landscape.Lojasiewicz.analytic_fiber_sign_conditions_polynomial,
+    ``Transformer.Landscape.Lojasiewicz.analytic_fiber_minima_polynomial,
+    ``Transformer.Landscape.Lojasiewicz.analytic_fiber_minima_arithmetic,
+    ``Transformer.Landscape.Lojasiewicz.analytic_box_minima_arithmetic,
+    ``Transformer.Landscape.Lojasiewicz.analytic_atlas_gradient_minima_arithmetic,
+    ``Transformer.Landscape.Lojasiewicz.analytic_compact_ball_gradient_minima_arithmetic,
+    ``Transformer.Landscape.Sturm.IsSturmChain.sturm_Ioc,
+    ``Transformer.Landscape.Sturm.realRootQuery_eq,
+    ``Transformer.Landscape.Sturm.exists_root_with_signs_iff,
+    ``Transformer.Landscape.Sturm.polynomial_root_minimum_iff,
+    ``Transformer.Landscape.Lojasiewicz.analytic_prepared_fiber_value_relation,
+    ``Transformer.Landscape.Lojasiewicz.analytic_plane_level_curve_selection,
+    ``Transformer.Landscape.Lojasiewicz.analytic_global_gradient_minimum_lifting,
+    ``Transformer.Landscape.Lojasiewicz.exists_energy_gradient_minimum_lifting_coordinates]
   let mut seen : NameSet := {}
   let mut external : NameSet := {}
   while !pending.isEmpty do

@@ -23,8 +23,8 @@
 * The source postpones the proof of `p:wellposedparticles` to the
   well-posedness of the continuity equation.  It is proved here directly:
   the field of `eq:trans_dyn` is smooth and grows linearly
-  (`Section6_Field.lean`), so `GlobalFlow.exists_global` and
-  `GlobalFlow.eq_of_hasDerivAt` apply.
+  (`Section6_Field.lean`), so `Landscape.GlobalFlow.exists_global` and
+  `Landscape.GlobalFlow.eq_of_hasDerivAt` apply.
 
 * `p:wellposednessrescaledparticles` is deduced, as in the source, through
   the change of variables `x_i = e^{tV}z_i`
@@ -70,14 +70,14 @@ theorem wellposed_particles (Q K V : ParamMatrix d) (X₀ : Idx n → EucSpace d
     ∃! X : ℝ → Idx n → EucSpace d,
       TransformerDynamics Q K V X ∧ X 0 = X₀ ∧ IsLocLipschitzCurve X := by
   have hF := (contDiff_transformerField (n := n) Q K V).locallyLipschitz
-  obtain ⟨γ, hγ0, hγ⟩ := GlobalFlow.exists_global hF (norm_nonneg V)
+  obtain ⟨γ, hγ0, hγ⟩ := Landscape.GlobalFlow.exists_global hF (norm_nonneg V)
     (norm_transformerField_le Q K V) X₀
   have hγc : Continuous γ := continuous_iff_continuousAt.2 fun t => (hγ t).continuousAt
   refine ⟨γ, ⟨(transformerDynamics_iff_hasDerivAt Q K V γ).2 hγ, hγ0,
     isLocLipschitzCurve_of_hasDerivAt (fun t i => (hasDerivAt_pi.1 (hγ t)) i) fun i =>
       (continuous_apply i).comp ((contDiff_transformerField Q K V).continuous.comp hγc)⟩, ?_⟩
   rintro Y ⟨hY, hY0, -⟩
-  exact GlobalFlow.eq_of_hasDerivAt hF ((transformerDynamics_iff_hasDerivAt Q K V Y).1 hY) hγ
+  exact Landscape.GlobalFlow.eq_of_hasDerivAt hF ((transformerDynamics_iff_hasDerivAt Q K V Y).1 hY) hγ
     (hY0.trans hγ0.symm)
 
 /-- **Proposition (p:wellposednessrescaledparticles).**  The same for the
@@ -108,7 +108,7 @@ theorem wellposed_rescaled_particles (Q K V : ParamMatrix d) (Z₀ : Idx n → E
   rintro Y ⟨hY, hY0, -⟩
   set X' : ℝ → Idx n → EucSpace d := fun t i => expTime V t (Y t i)
   have hX' := (transformerDynamics_iff_rescaled Q K V X' Y fun _ _ => rfl).2 hY
-  have hXX : X' = X := GlobalFlow.eq_of_hasDerivAt
+  have hXX : X' = X := Landscape.GlobalFlow.eq_of_hasDerivAt
     (contDiff_transformerField (n := n) Q K V).locallyLipschitz
     ((transformerDynamics_iff_hasDerivAt Q K V X').1 hX')
     ((transformerDynamics_iff_hasDerivAt Q K V X).1 hX) (by simp [X', hY0, hX0, expTime_zero])

@@ -14,7 +14,7 @@ limiting behavior is postulated in the definition of the field.
 -/
 
 import Transformer.Causal.Section4_AnisotropicCircle
-import Transformer.GlobalFlow.Existence
+import Transformer.Landscape.GlobalFlow.Existence
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 
 open Real
@@ -90,7 +90,7 @@ The ODE input is proved local Lipschitz regularity and actual linear growth. -/
 theorem exists_anisotropicAngleFlow (φ₀ : Fin 2 → ℝ) :
     ∃ φ : ℝ → Fin 2 → ℝ, φ 0 = φ₀ ∧
       ∀ t : ℝ, HasDerivAt φ (anisotropicAngleField (φ t)) t := by
-  exact GlobalFlow.exists_global contDiff_anisotropicAngleField.locallyLipschitz
+  exact Landscape.GlobalFlow.exists_global contDiff_anisotropicAngleField.locallyLipschitz
     (by norm_num : (0 : ℝ) ≤ 3) norm_anisotropicAngleField_le φ₀
 
 /-- Each coordinate of a true angular solution has its actual field

@@ -152,7 +152,7 @@ theorem tokenGram_eq_equiGram (d n : ℕ) (β : ℝ) (X : ℝ → SphereTuple d 
     (hγ : ∀ t, HasDerivAt γ (saAngleDrift n β (γ t)) t)
     (h0 : tokenGram (X 0) = equiGram n (γ 0)) :
     ∀ t, tokenGram (X t) = equiGram n (γ t) := by
-  have heq := Transformer.GlobalFlow.eq_of_hasDerivAt
+  have heq := Transformer.Landscape.GlobalFlow.eq_of_hasDerivAt
     (contDiff_gramDrift n β).locallyLipschitz
     (fun t => hasDerivAt_tokenGram d n β X hX t)
     (fun t => hasDerivAt_equiGram n β γ hγ t) h0
