@@ -87,5 +87,66 @@ small training run also passes through the lab's sampler, optimizer,
 evaluation and checkpoint interfaces. The complete 20-update source replay
 and the independently specified geometry examples pass on the updated stack.
 
-The nine CUDA runs are prepared; their training results will be added here.
-Analyticity alone is not evidence of improved training.
+All nine CUDA runs completed 10,000 updates. Every final train and held-out
+accuracy is 100%. The table reports epochs (ten updates per epoch). The
+last column is the first epoch after which every recorded observation stays
+at or above 99% through epoch 1,000; it is a finite-budget observation.
+
+| Branch | First held-out 99%, seeds 11 / 17 / 23 | Worst held-out accuracy after first 99% | At least 99% thereafter through the budget |
+| --- | --- | --- | --- |
+| ReLU | 29 / 31 / 30 | 99.08% / 99.38% / 99.31% | 29 / 31 / 30 |
+| SiLU | 28 / 26 / 27 | 99.18% / 99.27% / 99.31% | 28 / 26 / 27 |
+| SwiGLU | 14 / 15 / 16 | 94.05% / 95.25% / 86.10% | 967 / 926 / 909 |
+
+SwiGLU reaches the first crossing about twice as quickly but has 24, 14 and
+12 later observations below 99%. At its worst held-out observations,
+training accuracy also falls to 93.84%, 95.88% and 86.13%. These are losses
+of fit on both splits. ReLU and SiLU have no later observations below 99%.
+Thus a first-crossing comparison alone would conceal the gated model's
+instability at the ReLU baseline's learning rate. The next
+control should vary the step before attributing this difference to the
+analytic activation or a different attraction basin.
+
+The learned embeddings also develop a specific geometry. They begin with
+participation rank 53.78--54.88 and J overlap 0.631--0.646.
+
+| Branch | Final participation rank | Final J overlap | Character pairs carrying 90% of centered E energy |
+| --- | --- | --- | --- |
+| ReLU | 19.43--21.20 | 0.091--0.167 | 9--10 |
+| SiLU | 18.14--20.84 | 0.072--0.137 | 9--10 |
+| SwiGLU | 8.41--13.64 | 0.027--0.032 | 5--7 |
+
+Predetermined checkpoint ablations retain 0, 1, 2, 4, 8, 16 or all 48
+conjugate character pairs, chosen only by E's energy. They keep its row
+mean and zero row, with every branch matrix fixed, and replace all three
+tied uses of E together. Keeping eight pairs preserves 100% held-out
+accuracy in every run; training accuracy is 100% except for one missed row
+in `relu-s23` (99.9785%). Keeping all 48 reconstructs every FP32 parameter
+exactly and reproduces both recorded losses and accuracies. Four pairs
+already preserve at least 99.44% held-out accuracy in eight runs, but only
+78.67% in `swiglu-s23`. Concentration in one dominant character is therefore
+an inadequate description of the trained networks.
+
+These results support a character representation with separated operand
+subspaces. They do not yet explain how typical initialization finds it,
+prove that the character projection preserves the real-valued function, or
+resolve the scalar MLP's gradient-access question. The comparison remains
+at one fixed prime with known operand values; it does not test new numbers.
+
+Portable evidence is in [results.json](results.json), the full 9,009-row
+performance and geometry curves in [curves.csv](curves.csv), and the exact
+lab file hashes in [engine_code.json](engine_code.json). Raw checkpoints,
+per-update gradients and full character spectra remain under `runs/`; their
+hashes are exported. The runs began at `ae7e920d` with the lab changes later
+committed as `c59d4426`; the recorded engine hashes match that committed
+implementation. Analysis verifies the experiment, engine, complete budget,
+every checkpoint's original metrics and the full-reconstruction control.
+Runtime was recorded during concurrent CPU regression testing; the
+comparisons here use update counts.
+
+To regenerate the portable artifacts from the retained runs, run this from
+`python/` with the recorded lab implementation and PyTorch runtime:
+
+```sh
+uv run --locked python ../experiments/rotate90_analytic/analyze.py
+```

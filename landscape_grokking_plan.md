@@ -162,8 +162,17 @@ participation rank and overlap of the two centered operand subspaces.
 The prepared CUDA experiment pairs seeds 11, 17 and 23 across ReLU, SiLU
 and SwiGLU (H = 43), with the browser's W128 Fast optimizer settings and a
 1,000-epoch budget. The lab's locked PyTorch CUDA backend is an explicit
-deviation from the native/browser kernels. Tests check the protocol;
-training results and a mechanism for gradient access remain to be measured.
+deviation from the native/browser kernels. All nine runs completed with
+100% final train and held-out accuracy. First held-out 99% takes 29/31/30
+epochs for ReLU, 28/26/27 for SiLU and 14/15/16 for SwiGLU. The gated runs
+later dip to 94.05%, 95.25% and 86.10%, with corresponding training dips;
+the dense controls never fall below 99% after their first crossing.
+Eight energy-selected character pairs retain 100% held-out accuracy in all
+nine final checkpoints. The [experiment results](experiments/rotate90_analytic/README.md)
+contain every seed, full curves, projection ablations and provenance.
+The next control varies the step to test the gated model's instability.
+An actual gradient-attraction mechanism and matched scalar-input/readout
+controls remain open.
 
 ### M9.4 interaction obstruction
 
