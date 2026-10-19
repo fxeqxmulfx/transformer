@@ -95,9 +95,12 @@ experiments in `experiments/`. `./run.py` runs every task.
 - `INDEX.md` locates declarations. Never edit it; regenerate it in the commit of
   every `src/` change.
 - Iterate with `lake build Transformer.<Module>`. Before committing: `lake build`,
-  `lake --wfail lint --builtin-lint --linters=linter.all --code-quality`,
   `./run.py audit`, `./run.py index`, `./run.py forbidden`.
   `./run.py verify` runs these mandatory checks and the Python suite.
+- Strict lint is optional by the user's later instruction on 2026-10-19 and
+  does not run in `verify`. `./run.py lint` retains the manual command
+  `lake --wfail lint --builtin-lint --linters=linter.all --code-quality`.
+  Its previous failures remain recorded in `review/dependency_update.md`.
 - `./run.py kernel` (`lake check`) is optional while the existing 39 unfinished
   statements remain. The user explicitly retained them on 2026-10-19; do not
   remove them or present them as proved to obtain a green kernel check.

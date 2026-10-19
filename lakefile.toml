@@ -15,7 +15,7 @@ rev = "v4.35.0"
 name = "Transformer"
 srcDir = "src"
 # Mathlib's minImports linter keeps cumulative per-file state. Process commands
-# in source order so the mandatory all-linters run does not race that state.
+# in source order so an optional all-linters run does not race that state.
 leanOptions = { autoImplicit = false, relaxedAutoImplicit = false, Elab.async = false }
 
 [[lean_lib]]

@@ -50,8 +50,9 @@ extra axioms. The regenerated index has 3,675 modules, 18,883 theorems,
 39 `sorry`, zero vacuous statements and zero placeholders. The forbidden
 check passes.
 
-The mandatory strict all-linters gate remains enabled with its existing
-configuration blocker; see [dependency_update.md](dependency_update.md).
+At this commit the strict all-linters gate was mandatory and had its existing
+configuration blocker; see [dependency_update.md](dependency_update.md) for
+the later user instruction making it optional.
 The unchanged full command was attempted again with a 60-second process
 limit and returned timeout status 124. It is not reported as a lint pass.
 The ordinary build of the new module has no warnings. No linter has been

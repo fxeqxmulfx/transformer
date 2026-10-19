@@ -16,10 +16,11 @@ Lean in `src/` formalizes the manuscripts in `papers/`; the lab in
 - For the Lean tree, elan. It installs the toolchain that `lean-toolchain`
   names.
 
-Before committing, `./run.py verify` builds Lean, runs
-`lake --wfail lint --builtin-lint --linters=linter.all --code-quality`, audits
-axioms, regenerates the index, checks forbidden constructs, and runs the Python
-tests. `./run.py kernel` is an optional kernel replay; the 39 existing unfinished
+Before committing, `./run.py verify` builds Lean, audits axioms, regenerates
+the index, checks forbidden constructs, and runs the Python tests. Strict
+lint is optional following the user's instruction: `./run.py lint` runs
+`lake --wfail lint --builtin-lint --linters=linter.all --code-quality` manually.
+`./run.py kernel` is an optional kernel replay; the 39 existing unfinished
 statements are retained and are not claimed to pass that checker.
 
 ## The minimal run

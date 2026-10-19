@@ -6,7 +6,7 @@
 Lean
     lean                          build the tree (lake build)
     kernel                        replay the project through Lean's kernel
-    lint                          run all built-in linters and code-quality checks; fail on warnings
+    lint                          optional strict built-in linters and code-quality checks
     audit                         axioms of every Transformer.* declaration; `rests` must be 0
     index                         regenerate INDEX.md from src/ and the build
     forbidden                     search src/ for native_decide, axioms and disabled linters
@@ -22,7 +22,7 @@ Python (the uv project in python/; an experiment is a folder under experiments/)
     profile <experiment> <label>  train one run afresh under Scalene's CPU profiler; print where its time goes
 
 Together
-    verify                        build, lint, audit, index, forbidden and test
+    verify                        build, audit, index, forbidden and test
     papers [--dry-run]            fetch every cited arXiv paper missing from papers/
     clean                         remove Python bytecode caches
 
@@ -95,7 +95,7 @@ def test(arguments):
 
 
 def verify(arguments):
-    for task in (lean, lint, audit, index, forbidden):
+    for task in (lean, audit, index, forbidden):
         task(arguments)
     test(argparse.Namespace(patterns=[]))
 

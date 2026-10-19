@@ -48,8 +48,10 @@ zero indirect rests and zero extra axioms. The regenerated index has
 3,676 modules and 18,889 theorems, with zero vacuous statements and zero
 placeholders; the forbidden and whitespace checks pass.
 
-The unchanged mandatory strict all-linters command was attempted under a
+The then-mandatory strict all-linters command was attempted under a
 60-second bound and returned timeout status 124. Its existing configuration
 blocker remains in [dependency_update.md](dependency_update.md). No linter
 was suppressed and no successful strict-lint result is claimed. The normal
 build was restored after that attempt before the audit and index ran.
+The user subsequently made strict lint optional; its original failed
+validation remains a failed check in the board history.

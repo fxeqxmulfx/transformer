@@ -2,8 +2,11 @@
 
 The maintenance requested on 2026-10-19 precedes the active research cycle in
 `landscape_grokking_plan.md`. The full build, axiom audit, index and Python
-suite passed. The mandatory strict lint remains enabled and has not passed;
-its reproducible configuration blocker is recorded below.
+suite passed. Strict lint has not passed; its reproducible configuration
+blocker is recorded below. The user subsequently instructed that lint be
+disabled on 2026-10-19, superseding the earlier mandatory-lint instruction.
+`verify` now omits it; `./run.py lint` remains available for a manual attempt.
+This policy change does not relabel the previous failed checks as passes.
 
 The task entry point is now `./run.py`. Lean and Mathlib are updated from
 4.34.1 to stable 4.35.0. The Python lock refresh updates NumPy to 2.5.4,
@@ -34,14 +37,16 @@ vacuous statements and zero placeholders. `./run.py forbidden` and whitespace
 checks passed. The axiom and sorry counts have not been reduced by hiding or
 removing an unfinished result.
 
-`./run.py verify` retains the exact mandatory lint command:
+The manual `./run.py lint` command retains the exact flags originally
+required in `verify`:
 
 ```sh
 lake --wfail lint --builtin-lint --linters=linter.all --code-quality
 ```
 
-No linter is disabled. The user explicitly removed kernel replay from the
-mandatory checks and retained the 39 unfinished statements. `./run.py kernel`
+No Lean linter option is suppressed in the source. The user explicitly
+removed strict lint and kernel replay from the mandatory checks and retained
+the 39 unfinished statements. `./run.py kernel`
 remains available for an optional `lake check`; it is expected to reject
 `sorryAx` while these declarations are unfinished. Neither `--paranoid` nor
 `lake check` is run by `verify`. The axiom audit still requires zero proved
@@ -49,8 +54,8 @@ declarations resting on unfinished inputs and zero nonstandard extra axioms.
 
 ## Strict lint configuration blocker
 
-The command remains enabled exactly as requested. It has not passed. A full
-attempt also enables Mathlib's diagnostic import tracing and tactic-search
+The optional command has not passed. Before the user made it optional, a full
+attempt also enabled Mathlib's diagnostic import tracing and tactic-search
 profiling, which can spend many minutes on a small module. That attempt was
 stopped after a separate, bounded reproduction established a configuration
 conflict; no result from it is reported as a successful check.
@@ -95,9 +100,9 @@ warning: src/Transformer/LintConfigurationProbe.lean:9:0: Imports increased by 1
 The temporary source was then removed. The retained `sorry` declarations also
 produce build warnings; keeping them does not imply that a warning-fatal lint
 can pass. No linter option has been disabled, no exceptions have been recorded,
-and `verify` continues to expose a lint failure rather than treating it as a
-pass. The build, axiom audit and Python regressions are checked independently
-while this policy conflict is reviewed.
+and the recorded failed lint is not treated as a pass. The build, axiom audit
+and Python regressions remain mandatory. The task-board evidence for the
+original strict-lint request remains failed, preserving its historical status.
 
 ## Lean 4.35 compatibility
 
