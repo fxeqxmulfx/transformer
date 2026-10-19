@@ -104,6 +104,16 @@ No theorem may assume the desired training or generalization conclusion
 under another name. Only Lean results without `sorry` count as proved;
 numerical measurements remain measurements.
 
+### M9.1 results
+
+`Transformer.Landscape.Neural.Basic` proves analyticity of SiLU, a SwiGLU
+coordinate and positive-epsilon RMSNorm, including at zero activations.
+`Neural.Loss` proves analyticity and nonnegativity of finite cross-entropy
+and squared error. Its `crossEntropy_pos` proves that a competing class
+prevents finite logits from attaining zero cross-entropy. All proofs have
+concrete witnesses and no `sorry`. These are closure results; M9.2 must still
+instantiate the actual shared parameters and residual branch.
+
 ## Activation comparisons
 
 SiLU is a direct scalar replacement, s(t) = t / (1 + exp(-t)). Standard
