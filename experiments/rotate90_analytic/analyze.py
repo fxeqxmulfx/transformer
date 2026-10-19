@@ -105,6 +105,12 @@ def main(folder=HERE):
         checkpoint = run.checkpoint(device)
         assert checkpoint["step"] == budget
         model.load_state_dict(checkpoint["model"])
+        diagnostics = run.records("diagnostics")
+        every = experiment.diagnostics.every
+        assert [row["step"] for row in diagnostics] == (list(range(every, budget + 1, every)) if every else [])
+        for row in diagnostics:
+            assert set(row["parameters"]) == set(dict(model.named_parameters()))
+            assert all(math.isfinite(value) for fields in row["parameters"].values() for value in fields.values())
         for split in ("train", "heldout"):
             assert evaluate(task, model, task.splits[split], experiment.evaluate.batch) == result["final"][split]
         first = result["first_heldout99_update"]
@@ -138,6 +144,8 @@ def main(folder=HERE):
             "trajectory_start_commit": provenance["commit"],
             "history_sha256": sha256(run.path / "history.jsonl"),
             "gradients_sha256": sha256(run.path / "gradients.jsonl"),
+            "diagnostic_observations": len(diagnostics),
+            "diagnostics_sha256": (sha256(run.path / "diagnostics.jsonl") if diagnostics else None),
             "checkpoint_sha256": sha256(run.path / "checkpoint.pt"),
             "character_projections": ablations,
         }

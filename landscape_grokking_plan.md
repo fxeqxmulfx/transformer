@@ -170,7 +170,6 @@ the dense controls never fall below 99% after their first crossing.
 Eight energy-selected character pairs retain 100% held-out accuracy in all
 nine final checkpoints. The [experiment results](experiments/rotate90_analytic/README.md)
 contain every seed, full curves, projection ablations and provenance.
-The next control varies the step to test the gated model's instability.
 An actual gradient-attraction mechanism and matched scalar-input/readout
 controls remain open.
 
@@ -181,6 +180,14 @@ equal cumulative learning-rate times decay. Per-tensor update and moment
 observations help distinguish optimizer motion from held-out-only failures.
 The nominal clock is an experimental comparison, not an assumed gradient
 flow or exact AdamW orbit equivalence.
+All nine controls completed. The 0.01 baselines reproduce the earlier
+model tensors exactly, including their later loss of fit. Rates 0.003 and
+0.001 have no recorded post-crossing falls below 99% in any seed, either
+at the common 10,000-update prefix or through their longer matched-time
+budgets. Their first 99% crossings take 30/35/30 and 80/92/75 epochs.
+The [portable results](experiments/rotate90_swiglu_stability/results.json)
+and full curves preserve both finite horizons and every seed; this is not
+an asymptotic stability or gradient-attraction theorem.
 
 ### M9.4 interaction obstruction
 

@@ -2,7 +2,7 @@
   "protocol_commit": "c59d4426",
   "source_revision": "f49969393a7482490d45483d8a4fd3046b1adede",
   "source_export_sha256": "4c47127e42d5014147ae82129002a857eefa98a52cf928fb91eadec834eb25e2",
-  "analysis_script_sha256": "008ccc61e063e36ad05ab1607a51fd724fbb1eedd4a555038be68912077f0b8c",
+  "analysis_script_sha256": "7b6b25191b5d5deb76cfe3ad0577ad158699e76070718570101e1ae9366f5034",
   "engine": {
     "torch": "2.14.1+cu126",
     "device": "NVIDIA GeForce RTX 3050 Laptop GPU"
@@ -348,6 +348,8 @@
       },
       "history_sha256": "fea991ddde81ccc17119e4e56302c4a70c5e89229656d286ee188d540dd477c4",
       "gradients_sha256": "34a6ac5abb7609e9056857aa0c03a31f9c0865a1e531353ec55bae0d1f667a7b",
+      "diagnostic_observations": 0,
+      "diagnostics_sha256": null,
       "checkpoint_sha256": "bcec487f1087c2267a2efb4197863713bb05fd944c0179df03cf5d4e700dfb16",
       "character_projections": [
         {
@@ -925,6 +927,8 @@
       },
       "history_sha256": "ea5b9fc165baf0625f39356a8223936f9195fb88bec3afb4bfe046696fabec0b",
       "gradients_sha256": "6e25ca68e4566ae94b4d1751fa92329fbb338190514571f15288619516f89efe",
+      "diagnostic_observations": 0,
+      "diagnostics_sha256": null,
       "checkpoint_sha256": "20b0f6c07b0d527aa41c16edc17a8b276e3283f740d1a5af86df231dc88e6bc3",
       "character_projections": [
         {
@@ -1501,6 +1505,8 @@
       },
       "history_sha256": "51cd394d5845d74bf0058b1d9ac093d367a3f0e0a06fd1835eeca8d09e223bc7",
       "gradients_sha256": "a70ee1d56c21edb0096c615714be7e5fdacc8e92f7cd15b258def2398be85255",
+      "diagnostic_observations": 0,
+      "diagnostics_sha256": null,
       "checkpoint_sha256": "99c803a0721c3c1495c5ad1ac37e94fa3ec6a09033153ba53d3eebdbfdba750e",
       "character_projections": [
         {
@@ -2078,6 +2084,8 @@
       },
       "history_sha256": "1c0e83ae201cd1d6a42d1adc7fadb59f1f0f593a6738626f56463d0c7274565c",
       "gradients_sha256": "7017ec70d342b1f7b25c99fc498b8f0837fb760b1dfa61e3845866c10214f777",
+      "diagnostic_observations": 0,
+      "diagnostics_sha256": null,
       "checkpoint_sha256": "89c01922babbc7f6b742e9ee38783bcd3861029c611f6513a617ad23cff31ca7",
       "character_projections": [
         {
@@ -2654,6 +2662,8 @@
       },
       "history_sha256": "22b77537540daaeefb1b8d6d4af3e6e9346a70957fbf0052e2f91657be9d708e",
       "gradients_sha256": "201db2517273eadf4dee597f1ca72c800441bccd61e19e552ed9b5c44630fd6b",
+      "diagnostic_observations": 0,
+      "diagnostics_sha256": null,
       "checkpoint_sha256": "49dcc444f1bc90c0697f5a8ed656ea49ee3ba3a65c6ea77e998bc8753968fa09",
       "character_projections": [
         {
@@ -3231,6 +3241,8 @@
       },
       "history_sha256": "729516aa1710dc225c29f7ac1b45119d65a9aaeb59b98c4507dff25542d6248c",
       "gradients_sha256": "7d7edc2900d4092a8204f10350deea4d8a4c28d3db985bcd0bcb288820bf638f",
+      "diagnostic_observations": 0,
+      "diagnostics_sha256": null,
       "checkpoint_sha256": "232ce75c6194ddc5ee1404e57910ea6385f8e1c05c4f0dd1852c8bc5d00364b9",
       "character_projections": [
         {
@@ -3803,6 +3815,8 @@
       },
       "history_sha256": "8be8017a9b5cdc52b2e43e77503bee978940998d165884d65644fb203762eb06",
       "gradients_sha256": "ab099f068c643b3c779e0774bba7861974c8937dafa059a84620096fb9432fe4",
+      "diagnostic_observations": 0,
+      "diagnostics_sha256": null,
       "checkpoint_sha256": "0d72a5c360fbe4d2b3d779a98dc1b042cac00c8822bb27acc73967fc7ccdbee6",
       "character_projections": [
         {
@@ -4377,6 +4391,8 @@
       },
       "history_sha256": "cd43e74844b91a16e85e02547879bd4051ac9959eaf6eec8faf07240fe86c164",
       "gradients_sha256": "3f9eb95fa890c2d78de4c036d98b7feb7fa7c148c3296593f7a87e11e0dfde97",
+      "diagnostic_observations": 0,
+      "diagnostics_sha256": null,
       "checkpoint_sha256": "3d214876eb92396af66852708455a6dbb48165c2ef85f643abeb08cf30eccc69",
       "character_projections": [
         {
@@ -4951,6 +4967,8 @@
       },
       "history_sha256": "620b213accc53fbd0f2612b53fbc0c6b57857edcb62a4ec208128709678b9b74",
       "gradients_sha256": "60aed7858a7317ada96590835777702ef505c9e0ea63038e4c09ed436771c2f5",
+      "diagnostic_observations": 0,
+      "diagnostics_sha256": null,
       "checkpoint_sha256": "36b26ceeca9c091cdbd95e61d5bca4c62d0b90dde647765b8224c7a75ce85045",
       "character_projections": [
         {

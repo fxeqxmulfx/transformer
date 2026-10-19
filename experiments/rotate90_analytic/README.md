@@ -103,9 +103,10 @@ SwiGLU reaches the first crossing about twice as quickly but has 24, 14 and
 training accuracy also falls to 93.84%, 95.88% and 86.13%. These are losses
 of fit on both splits. ReLU and SiLU have no later observations below 99%.
 Thus a first-crossing comparison alone would conceal the gated model's
-instability at the ReLU baseline's learning rate. The next
-control should vary the step before attributing this difference to the
-analytic activation or a different attraction basin.
+instability at the ReLU baseline's learning rate. The
+[step-size controls](../rotate90_swiglu_stability/README.md) find no such
+relapses at 0.003 or 0.001 through nearly equal nominal optimizer times.
+An analytic activation alone does not supply that stability guarantee.
 
 The learned embeddings also develop a specific geometry. They begin with
 participation rank 53.78--54.88 and J overlap 0.631--0.646.
